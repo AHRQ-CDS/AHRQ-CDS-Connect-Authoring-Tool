@@ -1,19 +1,43 @@
 import React, { Component } from 'react';
+import axios from 'axios';
 import AuthorList from './AuthorList';
 import AuthorForm from './AuthorForm';
-import DATA from '../data';
 
 class AuthorBox extends Component {
   constructor(props) {
     super(props);
     this.state = { data: [] };
+    this.loadAuthorsFromServer = this.loadAuthorsFromServer.bind(this);
+    this.handleAuthorSubmit = this.handleAuthorSubmit.bind(this);
+  }
+
+  loadAuthorsFromServer() {
+    axios.get(this.props.url)
+      .then(res => {
+        this.setState({ data: res.data });
+      });
+  }
+  handleAuthorSubmit(author) {
+    let authors = this.state.data;
+    author.id = Date.now();
+    let newAuthors = authors.concat([author]);
+    this.setState({ data: newAuthors });
+    axios.post(this.props.url, author)
+      .catch(err => {
+        console.error(err);
+        this.setState({ data: authors });
+      });
+  }
+  componentDidMount() {
+    this.loadAuthorsFromServer();
+    setInterval(this.loadAuthorsFromServer, this.props.pollInterval);
   }
   render() {
     return (
       <div>
         <h2>Authors:</h2>
-        <AuthorList data={ DATA }/>
-        <AuthorForm />
+        <AuthorList data={ this.state.data }/>
+        <AuthorForm onAuthorSubmit={ this.handleAuthorSubmit } />
       </div>
     );
   }

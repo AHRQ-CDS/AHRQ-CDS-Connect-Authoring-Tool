@@ -4,7 +4,7 @@ class Author extends Component {
   render() {
     return (
       <p>
-        <strong>{ this.props.name }</strong> 
+        <strong>{ this.props.name }</strong>: 
         { this.props.text }
       </p>
 

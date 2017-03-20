@@ -5,7 +5,7 @@ class AuthorList extends Component {
  render() {
    let authorNodes = this.props.data.map(author => {
      return (
-      <Author name={ author.name } key={ author.id } text={ author.text } />
+      <Author name={ author.name } key={ author['_id'] } text={ author.text } />
      )
    })
    return (

@@ -4,12 +4,12 @@ class AuthorForm extends Component {
   constructor(props) {
     super(props);
     this.state = { name: '', text: '' };
-    this.handleAuthorChange = this.handleAuthorChange.bind(this);
+    this.handleNameChange = this.handleNameChange.bind(this);
     this.handleTextChange = this.handleTextChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
   }
-  handleAuthorChange(e) {
-    this.setState({ author: e.target.value });
+  handleNameChange(e) {
+    this.setState({ name: e.target.value });
   }
   handleTextChange(e) {
     this.setState({ text: e.target.value });
@@ -18,6 +18,13 @@ class AuthorForm extends Component {
     e.preventDefault();
     console.log(`${this.state.name} said "${this.state.text}"`)
     //we will be tying this into the POST method in a bit
+    let name = this.state.name.trim();
+    let text = this.state.text.trim();
+    if (!text || !name) {
+      return;
+    }
+    this.props.onAuthorSubmit({ name: name, text: text });
+    this.setState({ name: '', text: '' });
   }
   render() {
     return (
@@ -26,7 +33,7 @@ class AuthorForm extends Component {
           type='text'
           placeholder='Your name…'
           value={ this.state.name }
-          onChange={ this.handleAuthorChange } />
+          onChange={ this.handleNameChange } />
         <input
           type='text'
           placeholder='Say something…'

@@ -11,7 +11,10 @@ class App extends Component {
           <img src={logo} className="App-logo" alt="logo" />
           <h2>Welcome to React</h2>
         </div>
-        <AuthorBox />
+        <AuthorBox
+          url='http://localhost:3001/api/authors'
+          pollInterval={2000}
+        />
       </div>
     );
   }
