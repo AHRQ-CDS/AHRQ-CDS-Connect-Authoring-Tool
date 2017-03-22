@@ -5,7 +5,12 @@ class AuthorList extends Component {
  render() {
    let authorNodes = this.props.data.map(author => {
      return (
-      <Author name={ author.name } key={ author['_id'] } text={ author.text } />
+      <Author name={ author.name } 
+        uniqueID={ author['_id'] }
+        onAuthorDelete={ this.props.onAuthorDelete }
+        onAuthorUpdate={ this.props.onAuthorUpdate }
+        key={ (author['_id']) ? author['_id'] : 'holder' } 
+        text={ author.text } />
      )
    })
    return (

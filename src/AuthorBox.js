@@ -9,6 +9,8 @@ class AuthorBox extends Component {
     this.state = { data: [] };
     this.loadAuthorsFromServer = this.loadAuthorsFromServer.bind(this);
     this.handleAuthorSubmit = this.handleAuthorSubmit.bind(this);
+    this.handleAuthorDelete = this.handleAuthorDelete.bind(this);
+    this.handleAuthorUpdate = this.handleAuthorUpdate.bind(this);
   }
 
   loadAuthorsFromServer() {
@@ -28,6 +30,25 @@ class AuthorBox extends Component {
         this.setState({ data: authors });
       });
   }
+
+  handleAuthorDelete(id) {
+    axios.delete(`${this.props.url}/${id}`)
+      .then(res => {
+        console.log("Author deleted");
+      })
+      .catch(err => {
+        console.error(err);
+      });
+  }
+
+  handleAuthorUpdate(id, author) {
+    // Sends the author id and new name/text to our api
+    axios.put(`${this.props.url}/${id}`, author)
+      .catch(err => {
+        console.log(err);
+      });
+  }
+
   componentDidMount() {
     this.loadAuthorsFromServer();
     setInterval(this.loadAuthorsFromServer, this.props.pollInterval);
@@ -36,7 +57,9 @@ class AuthorBox extends Component {
     return (
       <div>
         <h2>Authors:</h2>
-        <AuthorList data={ this.state.data }/>
+        <AuthorList data={ this.state.data } 
+          onAuthorDelete={this.handleAuthorDelete} 
+          onAuthorUpdate={this.handleAuthorUpdate} />
         <AuthorForm onAuthorSubmit={ this.handleAuthorSubmit } />
       </div>
     );

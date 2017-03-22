@@ -11,6 +11,11 @@ var router = express.Router();
 //set our port to either a predetermined port number if you have set
 //it up, or 3001
 var port = process.env.API_PORT || 3001;
+
+//db config
+// mongoose.connect('mongodb://jafeltra:mlabusertest@ds137220.mlab.com:37220/testauthoring');
+mongoose.connect('mongodb://localhost/test')
+
 //now we should configure the API to use bodyParser and look for
 //JSON data in the request body
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -55,6 +60,42 @@ router.route('/authors')
         res.json({ message: 'Author successfully added!' })
     });
   });
+
+// Adding a route to a specific author based on the database ID
+router.route('/authors/:author_id')
+  // The put method gives us the chance to update our author based on
+  // the ID passed to the route
+  .put(function(req, res) {
+    Author.findById(req.params.author_id, function(err, author) {
+      if(err) {
+        res.send(err);
+      }
+      // Setting the new author text to whatever was changed.
+      // If nothing was changed we will not alter the field
+      (req.body.name) ? author.name = req.body.name : null;
+      (req.body.text) ? author.text = req.body.text : null;
+
+      // Save author
+      author.save(function(err) {
+        if(err) {
+          res.send(err);
+        }
+        res.json({ message: 'Author has been updated'})
+      });
+    });
+  })
+
+  // Delete method for removing an author from our database
+  .delete(function(req, res) {
+    // Selects the author by its ID, then removes it
+    Author.remove({ _id: req.params.author_id }, function(err, author) {
+      if(err) {
+        res.send(err);
+      }
+      res.json({ message: 'Author has been deleted'})
+    });
+  });
+
 //Use our router configuration when we call /api
 app.use('/api', router);
 //starts the server and listens for requests
