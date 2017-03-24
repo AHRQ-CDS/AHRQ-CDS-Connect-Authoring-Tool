@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import axios from 'axios';
 import AuthorList from './AuthorList';
 import AuthorForm from './AuthorForm';
+import Item from './Item';
+import DropBox from './DropBox';
 
 class AuthorBox extends Component {
   constructor(props) {
@@ -61,6 +63,8 @@ class AuthorBox extends Component {
           onAuthorDelete={this.handleAuthorDelete} 
           onAuthorUpdate={this.handleAuthorUpdate} />
         <AuthorForm onAuthorSubmit={ this.handleAuthorSubmit } />
+        <Item />
+        <DropBox />
       </div>
     );
   }
