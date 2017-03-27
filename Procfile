@@ -1,2 +1,3 @@
-web: react-scripts start
+db: mongod
 api: nodemon server.js
+web: react-scripts start
