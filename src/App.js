@@ -2,6 +2,9 @@ import React, { Component } from 'react';
 import logo from './logo.svg';
 import './App.css';
 import AuthorBox from './AuthorBox';
+import Item from './Item';
+import DropBox from './DropBox';
+import SaveButton from './SaveButton';
 
 class App extends Component {
   render() {
@@ -15,6 +18,10 @@ class App extends Component {
           url='http://localhost:3001/api/authors'
           pollInterval={2000}
         />
+        <div style={{padding: '10px'}}></div>
+        <Item />
+        <DropBox />
+        <SaveButton />
       </div>
     );
   }

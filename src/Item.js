@@ -2,8 +2,6 @@ import React, { Component } from 'react';
 
 class Item extends Component {
   dragStarted(event) {
-    // JULIA Why does this get called so often when you pass event in on this.dragStarted(event)
-    console.log("started drag")
     event.dataTransfer.setData('text', event.target.id);
   }
 
@@ -17,7 +15,7 @@ class Item extends Component {
         id='itemDiv'
         draggable='true'
         onDragStart={this.dragStarted}>
-        Test item to drag
+        Adult
       </div>
     )
   }

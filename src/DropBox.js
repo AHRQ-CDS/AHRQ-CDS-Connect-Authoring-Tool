@@ -7,7 +7,6 @@ class DropBox extends Component {
 
   onDrop(event) {
     event.preventDefault();
-    console.log("drop event");
     let data = event.dataTransfer.getData('text');
     event.target.appendChild(document.getElementById(data));
   }
