@@ -1,0 +1,21 @@
+.cds-header {
+  @include background-image(linear-gradient(to right, $primary-blue, $primary-grey));
+  padding: 0.5em 2em;
+  color: $white;
+  .cds-logo { font-weight: 700; }
+
+  .cds-nav {
+    display: inline-block;
+    margin: 0.5em 1em 0.5em 2em;
+
+    a {
+      color: $white;
+      text-decoration: none;
+      padding: 0.5em;
+
+      &:hover, &.active {
+        background-color: darken($primary-blue, 10%);
+      }
+    }
+  }
+}
