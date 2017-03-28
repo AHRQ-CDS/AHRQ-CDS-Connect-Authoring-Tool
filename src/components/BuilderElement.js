@@ -13,6 +13,7 @@ class BuilderElement extends Component {
       	draggable="true"
       	onDragStart={this.dragStarted}>
         <FontAwesome className='fa-fw' name='clock-o' /> Age Range
+        <br/> <em>(40 - 79 yo)</em>
       </div>
     );
   }
