@@ -1,4 +1,4 @@
 db: mongod
 api: nodemon server.js
-sass: npm run build-css && node-sass src/ -o src/ --watch --recursive
+sass: npm run watch-css
 web: react-scripts start
