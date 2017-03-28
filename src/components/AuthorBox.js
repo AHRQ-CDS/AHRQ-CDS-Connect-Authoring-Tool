@@ -51,14 +51,20 @@ class AuthorBox extends Component {
 
   componentDidMount() {
     this.loadAuthorsFromServer();
-    setInterval(this.loadAuthorsFromServer, this.props.pollInterval);
+    this.loadInterval = setInterval(this.loadAuthorsFromServer, this.props.pollInterval);
   }
+
+  componentWillUnmount () {
+    this.loadInterval && clearInterval(this.loadInterval);
+    this.loadInterval = false;
+  }
+
   render() {
     return (
       <div>
         <h2>Authors:</h2>
-        <AuthorList data={ this.state.data } 
-          onAuthorDelete={this.handleAuthorDelete} 
+        <AuthorList data={ this.state.data }
+          onAuthorDelete={this.handleAuthorDelete}
           onAuthorUpdate={this.handleAuthorUpdate} />
         <AuthorForm onAuthorSubmit={ this.handleAuthorSubmit } />
       </div>
