@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 import '../node_modules/font-awesome/css/font-awesome.css';
 import './styles/App.css';
-import Item from './Item';
-import DropBox from './DropBox';
-import SaveButton from './SaveButton';
+// import Item from './Item';
+// import DropBox from './DropBox';
+// import SaveButton from './SaveButton';
 
 class App extends Component {
   /* <Item />
