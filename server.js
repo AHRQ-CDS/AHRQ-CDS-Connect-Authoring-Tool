@@ -5,6 +5,7 @@ var express = require('express');
 var mongoose = require('mongoose');
 var bodyParser = require('body-parser');
 var Author = require('./model/author');
+
 //and create our instances
 var app = express();
 var router = express.Router();
@@ -13,7 +14,6 @@ var router = express.Router();
 var port = process.env.API_PORT || 3001;
 
 //db config
-// mongoose.connect('mongodb://jafeltra:mlabusertest@ds137220.mlab.com:37220/testauthoring');
 mongoose.connect('mongodb://localhost/test')
 
 //now we should configure the API to use bodyParser and look for
