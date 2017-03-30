@@ -5,15 +5,14 @@ class BuilderElement extends Component {
 	dragStarted(event) {
     event.dataTransfer.setData('elementId', event.target.id);
   }
-  
+
   render() {
     return (
       <div className="builder-element"
-        id="ageRange"
+        id={this.props.name}
       	draggable="true"
       	onDragStart={this.dragStarted}>
-        <FontAwesome className='fa-fw' name='clock-o' /> Age Range
-        <br/> <em>(40 - 79 yo)</em>
+        {this.props.name}
       </div>
     );
   }

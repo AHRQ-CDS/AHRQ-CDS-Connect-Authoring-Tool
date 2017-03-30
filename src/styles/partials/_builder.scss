@@ -7,25 +7,44 @@
     @include flex-grow(1);
     @include flex-shrink(1);
     @include flex-basis(100%);
-    background: $primary-orange;
-    color: $white;
-    font-weight: 500;
     padding: 0;
     margin-bottom: 1px;
-    text-transform: uppercase;
 
     li {
-      padding: 0.5em 0.75em;
+
       border-right: 1px $white solid;
 
       &:not(:first-of-type) {
         border-left: 1px $white solid;
       }
 
-      &:hover, &.active {
-        cursor: pointer;
-        background-color: darken($primary-orange, 20%);
+      a {
+        padding: 0.5em 0.75em;
+        background: $primary-orange;
+        color: $white;
+        font-weight: 500;
+        text-transform: uppercase;
+
+        &:hover, &.active {
+          cursor: pointer;
+          background-color: darken($primary-orange, 20%);
+        }
       }
+
+      &:last-of-type {
+        padding: 0.5em 0.75em;
+        background-color: green;
+        color: $white;
+        font-weight: 500;
+        text-transform: uppercase;
+
+        &:hover {
+          cursor: pointer;
+          background-color: darken(green, 20%);
+        }
+      }
+
+
     }
   }
 

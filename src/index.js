@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { BrowserRouter as Router, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import createBrowserHistory from 'history/createBrowserHistory';
 
 import App from './App';
@@ -15,9 +15,12 @@ ReactDOM.render(
     <div>
       <Header />
       <main>
+        <Switch>
+          <Route path='/build/:group' component={BuilderPage} />
+          <Route path='/build' component={BuilderPage} />
+        </Switch>
+        <Route path='/author' component={AuthorPage} />
         <Route exact path='/' component={App} />
-        <Route exact path='/author' component={AuthorPage} />
-        <Route exact path='/build' component={BuilderPage} />
       </main>
     </div>
   </Router>,
