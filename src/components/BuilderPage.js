@@ -1,7 +1,11 @@
 import React, { Component } from 'react';
 import BuilderSubPalette from './BuilderSubPalette';
 import BuilderPalette from './BuilderPalette';
+import BuilderTarget from './BuilderTarget';
 import groups from '../data/groupings';
+
+import HTML5Backend from 'react-dnd-html5-backend';
+import { DragDropContext } from 'react-dnd';
 
 class BuilderPage extends Component {
   constructor(props) {
@@ -12,26 +16,24 @@ class BuilderPage extends Component {
     }
   }
 
-  allowDrop(event) {
-    event.preventDefault();
-  }
-
-  onDrop(event) {
-    event.preventDefault();
-    let id = event.dataTransfer.getData('elementId');
-    event.target.appendChild(document.getElementById(id));
+  componentDidMount() {
+    if (this.props.match) {
+      this.setSelectedGroup(this.props.match.params.group);
+    }
   }
 
   componentWillReceiveProps(nextProps) {
     if (this.props.match != nextProps.match && this.props.match.params.group != nextProps.match.params.group) {
-      const g = nextProps.match.params.group;
-      console.log(g);
-      const group = groups.find(group => group.id == g);
-      if (group) {
-        this.setState({ selectedGroup: group });
-      } else {
-        this.setState({ selectedGroup: null });
-      }
+      this.setSelectedGroup(nextProps.match.params.group);
+    }
+  }
+
+  setSelectedGroup(groupId) {
+    const group = groups.find(group => group.id == groupId);
+    if (group) {
+      this.setState({ selectedGroup: group });
+    } else {
+      this.setState({ selectedGroup: null });
     }
   }
 
@@ -48,15 +50,10 @@ class BuilderPage extends Component {
       <div className="builder">
         <BuilderPalette />
         {this.renderSidebar()}
-
-        <section className="main"
-          onDragOver={this.allowDrop}
-          onDrop={this.onDrop}>
-          Drop content here.
-        </section>
+        <BuilderTarget />
       </div>
     );
   }
 }
 
-export default BuilderPage;
+export default DragDropContext(HTML5Backend)(BuilderPage);
