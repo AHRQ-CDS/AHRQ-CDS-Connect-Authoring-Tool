@@ -1,0 +1,49 @@
+// default styling for all elements
+
+
+
+html, body {
+  min-height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background: $body-bg;
+}
+
+main {
+  margin: 1em;
+  padding: 1em;
+
+  > div:not([class]) {
+    background-color: $page-bg;
+    padding: 1em;
+  }
+}
+
+#{$all-buttons},
+#{$all-text-inputs} {
+  font-weight: 400;
+  font-family: 'Rubik', sans-serif;
+  font-size: 1em;
+  padding: 0.25em 0.5em;
+  border-radius: $border-radius;
+  border-width: $border-width;
+  border-color: darken($page-bg, 20%);
+  border-style: solid;
+  outline: 0;
+}
+
+#{$all-buttons} {
+  @include button($default-button-bg-color, $default-button-text-color);
+
+  & + #{$all-buttons} {
+    // add margin between two buttons that are side by side!
+    margin-left: 0.25em;
+  }
+}
+
+#{$all-buttons-hover} {
+  cursor: pointer;
+}

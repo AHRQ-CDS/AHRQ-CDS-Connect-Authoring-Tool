@@ -1,0 +1,66 @@
+.builder {
+  @include display(flex);
+  @include flex-wrap(wrap);
+
+  &__header {
+    @include flex-basis(100%);
+  }
+
+  &__heading {
+    font-weight: 300;
+    color: $builder-text-color;
+    display: inline-block;
+    margin-top: 0;
+  }
+
+  &__buttonbar {
+    float: right;
+
+    & button {
+      display: inline-block;
+    }
+  }
+
+  &__savebutton {
+    @extend .primary-button;
+  }
+
+  &__deletebutton {
+    @extend .danger-button;
+  }
+
+  &__sidebar {
+    max-width: 12em;
+  }
+
+  &__palette {
+    @include navigation;
+    background: $builder-palette-bg-color;
+    color: $builder-palette-text-color;
+    font-weight: 500;
+    text-transform: uppercase;
+
+    li {
+      padding: 0.5em 0.75em;
+
+      &:hover, &.active {
+        cursor: pointer;
+        background-color: darken($builder-palette-bg-color, 10%);
+      }
+    }
+  }
+
+  &__subpalette {
+    font-weight: 500;
+    min-height: 6em;
+  }
+
+  &__canvas {
+    @include flex(1);
+    background-color: darken($stripe-color, 5%);
+    background-image: repeating-linear-gradient(45deg, transparent, transparent $stripe-width/2, $stripe-color $stripe-width/2, $stripe-color $stripe-width);
+    min-height: 10em;
+    padding: 1em;
+    margin-left: 1em;
+  }
+}

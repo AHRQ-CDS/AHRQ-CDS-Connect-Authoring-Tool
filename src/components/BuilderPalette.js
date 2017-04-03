@@ -13,7 +13,7 @@ class BuilderPalette extends Component {
 
   render() {
     return (
-      <nav className="builder-palette inline-nav">
+      <nav className="builder__palette">
         <ul>
           <li className="active"><FontAwesome className='fa-fw' name='users' /> Demographics</li>
           <li><FontAwesome className='fa-fw' name='stethoscope' /> Conditions</li>

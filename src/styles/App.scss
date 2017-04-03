@@ -1,47 +1,14 @@
+// third-party
 @import 'bourbon';
-@import 'partials/variables';
-@import 'partials/fonts';
-@import 'partials/header';
-@import 'partials/builder';
 
-html, body {
-  min-height: 100%;
-  margin: 0;
-  padding: 0;
-}
+// site-wide
+@import 'variables';
+@import 'mixins';
+@import 'typography';
+@import 'base';
+@import 'buttons';
 
-body {
-  @include background-image(linear-gradient(to right, $grey-light, $grey-lighter));
-  font-family: 'Rubik', sans-serif;
-  font-weight: 300;
-  font-size: 16px;
-  -webkit-font-smoothing: antialiased;
-	-moz-osx-font-smoothing: grayscale;
-}
-
-main {
-  margin: 1em;
-  padding: 1em;
-  background: $white;
-}
-
-#{$all-buttons},
-#{$all-text-inputs} {
-  font-size: 1em;
-  padding: 0.25em;
-  border-radius: 0.25em;
-}
-
-#{$all-buttons-hover} {
-  cursor: pointer;
-}
-
-.inline-nav ul {
-  list-style: none;
-  padding-left: 0;
-  margin: 0;
-
-  li {
-    display: inline-block;
-  }
-}
+// component-specific
+@import 'components/Navbar';
+@import 'components/Builder';
+@import 'components/Element';

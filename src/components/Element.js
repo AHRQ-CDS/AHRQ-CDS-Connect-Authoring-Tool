@@ -1,14 +1,14 @@
 import React, { Component } from 'react';
 import FontAwesome from 'react-fontawesome';
 
-class BuilderElement extends Component {
+class Element extends Component {
 	dragStarted(event) {
     event.dataTransfer.setData('elementId', event.target.id);
   }
-  
+
   render() {
     return (
-      <div className="builder-element"
+      <div className="element"
         id="ageRange"
       	draggable="true"
       	onDragStart={this.dragStarted}>
@@ -19,4 +19,4 @@ class BuilderElement extends Component {
   }
 }
 
-export default BuilderElement;
+export default Element;

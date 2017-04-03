@@ -28,3 +28,26 @@
   font-weight: 500;
   src: url('./fonts/Rubik-Medium.ttf') format('truetype');
 }
+
+:root {
+  font-size: 14px;
+}
+
+body {
+  font-family: 'Rubik', sans-serif;
+  font-weight: 300;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+@media (min-width: 600px){
+  :root { font-size: 16px; }
+}
+
+@media (min-width: 1440px){
+  :root { font-size: 20px; }
+}
+
+@media (min-width: 2000px){
+  :root { font-size: 28px; }
+}

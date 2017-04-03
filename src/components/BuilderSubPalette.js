@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import BuilderElement from './BuilderElement';
+import Element from './Element';
 
 class BuilderSubPalette extends Component {
   allowDrop(event) {
@@ -14,10 +14,10 @@ class BuilderSubPalette extends Component {
 
   render() {
     return (
-      <div className="builder-subpalette"
+      <div className="builder__subpalette"
       	onDragOver={this.allowDrop}
         onDrop={this.onDrop}>
-        <BuilderElement />
+        <Element />
       </div>
     );
   }

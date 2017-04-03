@@ -16,10 +16,19 @@ class BuilderPage extends Component {
   render() {
     return (
       <div className="builder">
-        <BuilderPalette />
-        <BuilderSubPalette />
+        <header className="builder__header">
+          <h2 className="builder__heading">Model title that's kind of long</h2>
 
-        <section className="main"
+          <div className="builder__buttonbar">
+            <button className="builder__savebutton is-unsaved">Save</button>
+            <button className="builder__deletebutton">Delete</button>
+          </div>   
+        </header>
+        <div className="builder__sidebar">
+          <BuilderPalette />
+          <BuilderSubPalette />
+        </div>
+        <section className="builder__canvas"
           onDragOver={this.allowDrop}
           onDrop={this.onDrop}>
           Drop content here.
