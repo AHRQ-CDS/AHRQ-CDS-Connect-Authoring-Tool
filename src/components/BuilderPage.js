@@ -45,11 +45,30 @@ class BuilderPage extends Component {
     }
   }
 
+  exportFile() {
+    let finalText = 'String to save!';
+
+    let saveElement = document.createElement('a');
+    saveElement.href = 'data:text/plain,' + encodeURIComponent(finalText);
+    saveElement.download = 'SaveMe.txt';
+    saveElement.click();
+  }
+
   render() {
     return (
       <div className="builder">
-        <BuilderPalette />
-        {this.renderSidebar()}
+        <header className="builder__header">
+          <h2 className="builder__heading">Model title that's kind of long</h2>
+
+          <div className="builder__buttonbar">
+            <button onClick={this.exportFile} className="builder__savebutton is-unsaved">Save</button>
+            <button className="builder__deletebutton">Delete</button>
+          </div>
+        </header>
+        <div className="builder__sidebar">
+          <BuilderPalette />
+          {this.renderSidebar()}
+        </div>
         <BuilderTarget />
       </div>
     );

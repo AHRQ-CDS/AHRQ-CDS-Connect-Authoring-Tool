@@ -4,7 +4,7 @@ import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import createBrowserHistory from 'history/createBrowserHistory';
 
 import App from './App';
-import Header from './components/Header';
+import Navbar from './components/Navbar';
 import AuthorPage from './components/AuthorPage';
 import BuilderPage from './components/BuilderPage';
 
@@ -13,7 +13,7 @@ const history = createBrowserHistory();
 ReactDOM.render(
   <Router history={history}>
     <div>
-      <Header />
+      <Navbar />
       <main>
         <Switch>
           <Route path='/build/:group' component={BuilderPage} />

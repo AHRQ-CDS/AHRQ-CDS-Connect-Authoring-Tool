@@ -16,7 +16,7 @@ class BuilderElement extends Component {
     }
 
     return connectDragSource(
-      <div className="builder-element">
+      <div className="element">
         {this.props.name}
       </div>
     );

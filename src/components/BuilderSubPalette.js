@@ -1,12 +1,12 @@
 import React, { Component } from 'react';
-import BuilderElement from './BuilderElement';
+import Element from './Element';
 
 class BuilderSubPalette extends Component {
   render() {
     return (
-      <div className="builder-subpalette">
+      <div className="builder__subpalette">
         {this.props.group.entries.map((element, index) => {
-          return <BuilderElement key={index + element} name={element} />;
+          return <Element key={index + element} name={element} />;
         })}
       </div>
     );

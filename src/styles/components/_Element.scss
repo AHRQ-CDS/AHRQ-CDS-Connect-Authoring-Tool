@@ -1,0 +1,23 @@
+.element {
+  padding: 0.5em;
+  background-color: $element-bg-color;
+  border: $element-border;
+  border-radius: $border-radius;
+  color: $element-text-color;
+  margin: 0.5em;
+  font-weight: 400;
+  max-width: 10em;
+
+  &:hover {
+    cursor: move;
+    box-shadow: 1px 1px 4px $element-text-color;
+  }
+}
+
+// different colors if it is a logicElement.
+.logic-element {
+  @extend .element;
+  background-color: $logic-element-bg-color;
+  border: $logic-element-border;
+  color: $logic-element-text-color;
+}

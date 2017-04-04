@@ -13,7 +13,7 @@ class BuilderTarget extends Component {
   render() {
     const { connectDropTarget } = this.props;
     return connectDropTarget(
-      <section className="main">
+      <section className="builder__canvas">
         Drop content here.
       </section>
     );

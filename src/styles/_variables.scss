@@ -1,0 +1,44 @@
+$dark-blue: #08101c;
+$white: #fffcfa;
+$blue: #102537;
+$light-brown: #fdf2eb;
+$light-blue: #c8e8e4;
+$green: #7fecb6;
+$brown: #9d5443;
+$orange: #d07d00;
+
+$border-radius: 0.25em;
+$border-width: 0.2em;
+
+$box-shadow: 1px 1px 4px $blue;
+
+$body-bg: $dark-blue;
+$page-bg: $light-brown;
+
+$default-button-text-color: $brown;
+$default-button-bg-color: lighten($orange, 30%);
+$default-button-hover-text-color: $white;
+$primary-button-text-color: $blue;
+$primary-button-bg-color: $green;
+$danger-button-text-color: darken(red, 20%);
+$danger-button-bg-color: lighten(red, 20%);
+
+$navbar-bg-color: $blue;
+$navbar-link-color: $white;
+$navbar-link-active-color: $white;
+
+$element-bg-color: $light-blue;
+$element-text-color: $blue;
+$element-border: $border-width solid darken($element-bg-color, 10%);
+
+$logic-element-bg-color: $brown;
+$logic-element-text-color: $white;
+$logic-element-border: $border-width solid darken($logic-element-bg-color, 10%);
+
+$builder-bg-color: $body-bg;
+$builder-text-color: $white;
+$builder-palette-bg-color: $blue;
+$builder-palette-text-color: $white;
+
+$stripe-color: $light-blue;
+$stripe-width: 10px;
