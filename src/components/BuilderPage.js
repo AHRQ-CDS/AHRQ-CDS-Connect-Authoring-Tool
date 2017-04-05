@@ -1,11 +1,10 @@
 import React, { Component } from 'react';
+import HTML5Backend from 'react-dnd-html5-backend';
+import { DragDropContext } from 'react-dnd';
 import BuilderSubPalette from './BuilderSubPalette';
 import BuilderPalette from './BuilderPalette';
 import BuilderTarget from './BuilderTarget';
 import groups from '../data/groupings';
-
-import HTML5Backend from 'react-dnd-html5-backend';
-import { DragDropContext } from 'react-dnd';
 
 class BuilderPage extends Component {
   constructor(props) {
@@ -13,6 +12,13 @@ class BuilderPage extends Component {
 
     this.state = {
       selectedGroup: null,
+    };
+    this.exportFile = () => {
+      const finalText = 'String to save!';
+      const saveElement = document.createElement('a');
+      saveElement.href = `data:text/plain,${encodeURIComponent(finalText)}`;
+      saveElement.download = 'SaveMe.txt';
+      saveElement.click();
     };
   }
 
@@ -23,13 +29,14 @@ class BuilderPage extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    if (this.props.match != nextProps.match && this.props.match.params.group != nextProps.match.params.group) {
+    if (!nextProps.match) { return; }
+    if (this.props.match.params.group !== nextProps.match.params.group) {
       this.setSelectedGroup(nextProps.match.params.group);
     }
   }
 
   setSelectedGroup(groupId) {
-    const group = groups.find(group => group.id == groupId);
+    const group = groups.find(g => parseInt(g.id, 10) === parseInt(groupId, 10));
     if (group) {
       this.setState({ selectedGroup: group });
     } else {
@@ -42,15 +49,6 @@ class BuilderPage extends Component {
       return <BuilderSubPalette selectedGroup={this.state.selectedGroup} />;
     }
     return null;
-  }
-
-  exportFile() {
-    const finalText = 'String to save!';
-
-    const saveElement = document.createElement('a');
-    saveElement.href = `data:text/plain,${encodeURIComponent(finalText)}`;
-    saveElement.download = 'SaveMe.txt';
-    saveElement.click();
   }
 
   render() {

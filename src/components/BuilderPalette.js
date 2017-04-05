@@ -46,7 +46,7 @@ class BuilderPalette extends Component {
 
   render() {
     return (
-      <nav className="builder__palette" role="navigation" aria-label="Element menu">
+      <nav className="builder__palette" aria-label="Element menu">
         <ul
           id="builder__palette-menu"
           role="menubar"

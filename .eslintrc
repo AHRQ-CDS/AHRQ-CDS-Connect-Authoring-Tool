@@ -3,5 +3,11 @@
     "react-app",
     "airbnb-base",
     "plugin:jsx-a11y/recommended"
-  ]
+  ],
+  "rules": {
+    "comma-dangle": 0,
+    "no-console": 0, // allow console.log statements,
+    "no-underscore-dangle": ["error", { "allow": ["_id"] }], // because mongo
+    "no-unused-vars": [ "error", { "args": "none" } ] // don't check function arguments
+  }
 }

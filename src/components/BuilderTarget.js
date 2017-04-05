@@ -6,8 +6,11 @@ class BuilderTarget extends Component {
     connectDropTarget: PropTypes.func.isRequired,
   }
 
-  addBox(item) {
-    console.log('Do something with this item');
+  constructor(props) {
+    super(props);
+    this.addItem = (item) => {
+      console.log('Do something with this item');
+    };
   }
 
   render() {
@@ -23,9 +26,12 @@ class BuilderTarget extends Component {
 const spec = {
   // describes how the drop target reacts to the drag and drop events
   drop(props, monitor, component) {
-    // Called when a compatible item is dropped on the target. You may either return undefined, or a plain object. If you return an object, it is going to become the drop result and will be available to the drag source in its endDrag method as monitor.getDropResult()
+    /* Called when a compatible item is dropped on the target. You may either return
+    undefined, or a plain object. If you return an object, it is going to become
+    the drop result and will be available to the drag source in its endDrag method
+    as monitor.getDropResult() */
     const item = monitor.getItem();
-    component.addBox(item);
+    component.addItem(item);
   },
 
   hover(props, monitor, component) {
@@ -34,7 +40,8 @@ const spec = {
   },
 
   canDrop(props, monitor) {
-    // Specifying it is handy if you'd like to disable dropping based on some predicate over props or monitor.getItem()
+    /* Specifying it is handy if you'd like to disable dropping based on some
+    predicate over props or monitor.getItem() */
     return true;
   },
 };

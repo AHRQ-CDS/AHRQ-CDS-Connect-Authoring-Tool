@@ -21,13 +21,14 @@ class AuthorBox extends Component {
   }
   handleAuthorSubmit(author) {
     const authors = this.state.data;
-    author.id = Date.now();
-    const newAuthors = authors.concat([author]);
+    const newAuthor = author;
+    newAuthor.id = Date.now();
+    const newAuthors = authors.concat([newAuthor]);
     this.setState({ data: newAuthors });
-    axios.post(this.props.url, author)
+    axios.post(this.props.url, newAuthor)
       .catch((err) => {
         console.error(err);
-        this.setState({ data: authors });
+        this.setState({ data: newAuthors });
       });
   }
 
@@ -55,7 +56,7 @@ class AuthorBox extends Component {
   }
 
   componentWillUnmount() {
-    this.loadInterval && clearInterval(this.loadInterval);
+    if (this.loadInterval) { clearInterval(this.loadInterval); }
     this.loadInterval = false;
   }
 

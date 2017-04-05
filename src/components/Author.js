@@ -9,7 +9,7 @@ class Author extends Component {
       text: '',
     };
 
-		// Binding all our functions to this class
+    // Binding all our functions to this class
     this.deleteAuthor = this.deleteAuthor.bind(this);
     this.updateAuthor = this.updateAuthor.bind(this);
     this.handleNameChange = this.handleNameChange.bind(this);
@@ -19,15 +19,15 @@ class Author extends Component {
 
   updateAuthor(e) {
     e.preventDefault();
-		// Brings up the update field when we click on the update link
+    // Brings up the update field when we click on the update link
     this.setState({ toBeUpdated: !this.state.toBeUpdated });
   }
 
   handleAuthorUpdate(e) {
     e.preventDefault();
     const id = this.props.uniqueID;
-		// If author or text changed, set it. If not, leave it null
-		// and our PUT request will ignore it
+    // If author or text changed, set it. If not, leave it null
+    // and our PUT request will ignore it
     const name = (this.state.name) ? this.state.name : null;
     const text = (this.state.text) ? this.state.text : null;
     const author = { name, text };
@@ -43,7 +43,6 @@ class Author extends Component {
     e.preventDefault();
     const id = this.props.uniqueID;
     this.props.onAuthorDelete(id);
-    console.log('oops author deleted');
   }
 
   handleTextChange(e) {
@@ -59,22 +58,22 @@ class Author extends Component {
       <div>
         <strong>{ this.props.name }</strong>:
         { this.props.text }
-        <a href='#' onClick={ this.updateAuthor }>update</a>
-        <a href='#' onClick={ this.deleteAuthor }>delete</a>
+        <button onClick={ this.updateAuthor }>update</button>
+        <button onClick={ this.deleteAuthor }>delete</button>
         { (this.state.toBeUpdated)
-        	? (<form onSubmit={ this.handleAuthorUpdate }>
-        	<input type='text'
-        		placeholder='Update name...'
-        		value={ this.state.name }
-        		onChange={ this.handleNameChange } />
-        	<input type='text'
-        		placeholder='Update your text...'
-        		value={ this.state.text }
-        		onChange={ this.handleTextChange } />
-        	<input type='submit'
-        		value='Update' />
-        	</form>)
-        	: null}
+          ? (<form onSubmit={ this.handleAuthorUpdate }>
+          <input type='text'
+            placeholder='Update name...'
+            value={ this.state.name }
+            onChange={ this.handleNameChange } />
+          <input type='text'
+            placeholder='Update your text...'
+            value={ this.state.text }
+            onChange={ this.handleTextChange } />
+          <input type='submit'
+            value='Update' />
+          </form>)
+          : null}
       </div>
 
     );

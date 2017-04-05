@@ -6,13 +6,13 @@ class BuilderElement extends Component {
   static propTypes = {
     name: PropTypes.string.isRequired,
     connectDragSource: PropTypes.func.isRequired,
-    connectDragPreview: PropTypes.func.isRequired,
+    connectDragPreview: PropTypes.func.isRequired
   }
 
   constructor(props) {
     super(props);
     this.state = {
-      isActive: false,
+      isActive: false
     };
   }
 
@@ -29,10 +29,10 @@ class BuilderElement extends Component {
             onMouseOver={() => this.setState({ isActive: true })}
             onMouseOut={() => this.setState({ isActive: false })}
             className="element__dragger" aria-label="move item"><FontAwesome fixedWidth name='arrows' /></button>,
-          { dropEffect: 'copy' },
+          { dropEffect: 'copy' }
         )}
         {this.props.name}
-      </div>,
+      </div>
     );
   }
 }
@@ -43,12 +43,14 @@ const spec = {
     component.setState({ isActive: true });
     // You must return a plain JavaScript object describing the data being dragged.
     return {
-      elementId: props.name,
+      elementId: props.name
     };
   },
 
   endDrag(props, monitor, component) {
-    // If it was handled, and the drop target specified a drop result by returning a plain object from its drop() method, it will be available as monitor.getDropResult(). This method is a good place to fire a Flux action.
+    /* If it was handled, and the drop target specified a drop result by returning a
+    plain object from its drop() method, it will be available as monitor.getDropResult().
+    This method is a good place to fire a Flux action. */
     const item = monitor.getItem();
     const dropResult = monitor.getDropResult();
     console.log(item);
@@ -61,17 +63,23 @@ const spec = {
     return true;
   },
 
-  // isDragging(props, monitor) {
-    // By default, only the drag source that initiated the drag operation is considered to be dragging. You can override this behavior by defining a custom isDragging method. It might return something like props.id === monitor.getItem().id. Do this if the original component may be unmounted during the dragging and later “resurrected” with a different parent. For example, when moving a card across the lists in a Kanban board, you want it to retain the dragged appearance—even though technically, the component gets unmounted and a different one gets mounted every time you move it to another list.
-    // return true;
-  // }
+  /* isDragging(props, monitor) {
+    // By default, only the drag source that initiated the drag operation is considered
+    to be dragging. You can override this behavior by defining a custom isDragging method.
+    It might return something like props.id === monitor.getItem().id. Do this if the
+    original component may be unmounted during the dragging and later "resurrected" with
+    a different parent. For example, when moving a card across the lists in a Kanban board,
+    you want it to retain the dragged appearance—even though technically, the component
+    gets unmounted and a different one gets mounted every time you move it to another list.
+    return true;
+  } */
 };
 
 function collect(connect, monitor) {
   // inject these properties into the component
   return {
     connectDragSource: connect.dragSource(),
-    connectDragPreview: connect.dragPreview(),
+    connectDragPreview: connect.dragPreview()
   };
 }
 
