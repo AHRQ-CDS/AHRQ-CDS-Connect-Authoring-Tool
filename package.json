@@ -19,6 +19,12 @@
     "react-router-dom": "^4.0.0"
   },
   "devDependencies": {
+    "eslint": "^3.19.0",
+    "eslint-config-airbnb": "^14.1.0",
+    "eslint-config-react-app": "^0.6.2",
+    "eslint-plugin-import": "^2.2.0",
+    "eslint-plugin-jsx-a11y": "^4.0.0",
+    "eslint-plugin-react": "^6.10.3",
     "node-bourbon": "^4.2.8",
     "node-sass": "^4.5.1",
     "react-scripts": "0.9.5"
@@ -30,6 +36,7 @@
     "build": "npm run build-css && react-scripts build",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject",
-    "start-dev": "nf start -p 3000"
+    "start-dev": "nf start -p 3000",
+    "lint": "eslint --fix src/*; exit 0"
   }
 }

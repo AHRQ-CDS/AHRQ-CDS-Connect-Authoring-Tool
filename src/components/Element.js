@@ -6,21 +6,21 @@ class BuilderElement extends Component {
   static propTypes = {
     name: PropTypes.string.isRequired,
     connectDragSource: PropTypes.func.isRequired,
-    connectDragPreview: PropTypes.func.isRequired
+    connectDragPreview: PropTypes.func.isRequired,
   }
 
   constructor(props) {
     super(props);
     this.state = {
-      isActive: false
-    }
+      isActive: false,
+    };
   }
 
   render() {
     const { connectDragSource, connectDragPreview } = this.props;
 
     return connectDragPreview(
-      <div className={this.state.isActive ? "element is-active" : "element"}>
+      <div className={this.state.isActive ? 'element is-active' : 'element'}>
         {connectDragSource(
           <button
             onClick={() => this.setState({ isActive: true })}
@@ -29,10 +29,10 @@ class BuilderElement extends Component {
             onMouseOver={() => this.setState({ isActive: true })}
             onMouseOut={() => this.setState({ isActive: false })}
             className="element__dragger" aria-label="move item"><FontAwesome fixedWidth name='arrows' /></button>,
-          { dropEffect: 'copy' }
+          { dropEffect: 'copy' },
         )}
         {this.props.name}
-      </div>
+      </div>,
     );
   }
 }
@@ -43,7 +43,7 @@ const spec = {
     component.setState({ isActive: true });
     // You must return a plain JavaScript object describing the data being dragged.
     return {
-      elementId: props.name
+      elementId: props.name,
     };
   },
 
@@ -71,7 +71,7 @@ function collect(connect, monitor) {
   // inject these properties into the component
   return {
     connectDragSource: connect.dragSource(),
-    connectDragPreview: connect.dragPreview()
+    connectDragPreview: connect.dragPreview(),
   };
 }
 

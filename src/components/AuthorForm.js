@@ -16,14 +16,14 @@ class AuthorForm extends Component {
   }
   handleSubmit(e) {
     e.preventDefault();
-    console.log(`${this.state.name} said "${this.state.text}"`)
-    //we will be tying this into the POST method in a bit
-    let name = this.state.name.trim();
-    let text = this.state.text.trim();
+    console.log(`${this.state.name} said "${this.state.text}"`);
+    // we will be tying this into the POST method in a bit
+    const name = this.state.name.trim();
+    const text = this.state.text.trim();
     if (!text || !name) {
       return;
     }
-    this.props.onAuthorSubmit({ name: name, text: text });
+    this.props.onAuthorSubmit({ name, text });
     this.setState({ name: '', text: '' });
   }
   render() {

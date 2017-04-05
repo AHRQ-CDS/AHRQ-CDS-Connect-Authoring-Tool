@@ -12,8 +12,8 @@ class BuilderPage extends Component {
     super(props);
 
     this.state = {
-      selectedGroup: null
-    }
+      selectedGroup: null,
+    };
   }
 
   componentDidMount() {
@@ -40,16 +40,15 @@ class BuilderPage extends Component {
   renderSidebar() {
     if (this.state.selectedGroup) {
       return <BuilderSubPalette selectedGroup={this.state.selectedGroup} />;
-    } else {
-      return null;
     }
+    return null;
   }
 
   exportFile() {
-    let finalText = 'String to save!';
+    const finalText = 'String to save!';
 
-    let saveElement = document.createElement('a');
-    saveElement.href = 'data:text/plain,' + encodeURIComponent(finalText);
+    const saveElement = document.createElement('a');
+    saveElement.href = `data:text/plain,${encodeURIComponent(finalText)}`;
     saveElement.download = 'SaveMe.txt';
     saveElement.click();
   }

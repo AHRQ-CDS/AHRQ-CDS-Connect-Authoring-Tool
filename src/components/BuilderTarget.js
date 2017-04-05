@@ -3,11 +3,11 @@ import { DropTarget } from 'react-dnd';
 
 class BuilderTarget extends Component {
   static propTypes = {
-    connectDropTarget: PropTypes.func.isRequired
+    connectDropTarget: PropTypes.func.isRequired,
   }
 
   addBox(item) {
-    console.log("Do something with this item");
+    console.log('Do something with this item');
   }
 
   render() {
@@ -15,7 +15,7 @@ class BuilderTarget extends Component {
     return connectDropTarget(
       <section className="builder__canvas">
         Drop content here.
-      </section>
+      </section>,
     );
   }
 }
@@ -30,19 +30,19 @@ const spec = {
 
   hover(props, monitor, component) {
     // Called when an item is hovered over the component
-    return;
+
   },
 
   canDrop(props, monitor) {
     // Specifying it is handy if you'd like to disable dropping based on some predicate over props or monitor.getItem()
     return true;
-  }
-}
+  },
+};
 
 function collect(connect, monitor) {
   // inject these properties into the component
   return {
-    connectDropTarget: connect.dropTarget()
+    connectDropTarget: connect.dropTarget(),
   };
 }
 

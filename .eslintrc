@@ -1,0 +1,7 @@
+{
+  "extends": [
+    "react-app",
+    "airbnb-base",
+    "plugin:jsx-a11y/recommended"
+  ]
+}
