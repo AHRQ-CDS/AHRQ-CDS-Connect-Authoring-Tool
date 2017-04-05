@@ -28,7 +28,7 @@ class BuilderElement extends Component {
             onBlur={() => this.setState({ isActive: false })}
             onMouseOver={() => this.setState({ isActive: true })}
             onMouseOut={() => this.setState({ isActive: false })}
-            className="element__dragger" aria-label="move item"><FontAwesome className='fa-fw' name='arrows' /></button>,
+            className="element__dragger" aria-label="move item"><FontAwesome fixedWidth name='arrows' /></button>,
           { dropEffect: 'copy' }
         )}
         {this.props.name}

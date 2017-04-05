@@ -19,7 +19,7 @@ class BuilderPalette extends Component {
         aria-label="Change displayed category"
         className={this.state.menuExpanded ? "is-expanded" : ""}
         onClick={() => this.setState({ menuExpanded: !this.state.menuExpanded })}>
-        <FontAwesome className='fa-fw' name={this.props.selectedGroup ? this.props.selectedGroup.icon : 'question-circle'} />
+        <FontAwesome fixedWidth name={this.props.selectedGroup ? this.props.selectedGroup.icon : 'question-circle'} />
         {this.props.selectedGroup ? this.props.selectedGroup.name : 'Find elements'}
         <FontAwesome className='fa-fw dropdown' name='caret-down' />
       </button>
@@ -35,7 +35,7 @@ class BuilderPalette extends Component {
             onClick={() => this.setState({ menuExpanded: false })}
             tabIndex={this.state.menuExpanded ? "0" : "-1"}
             to={location}>
-            <FontAwesome className='fa-fw' name={g.icon} />
+            <FontAwesome fixedWidth name={g.icon} />
             {g.name}
           </NavLink>
         </li>
