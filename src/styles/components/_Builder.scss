@@ -31,24 +31,50 @@
 
   &__sidebar {
     color: $builder-palette-text-color;
-    width: 12em;
+    width: 13em;
   }
 
   &__palette {
     @include navigation;
-    background: $builder-palette-bg-color;
-    color: $builder-palette-text-color;
-    font-weight: 500;
-    text-transform: uppercase;
 
-    li {
-      padding: 0.5em 0.75em;
+    [role="menubar"] {
+      button {
+        font-weight: 500;
+        text-transform: uppercase;
+        text-align: left;
+        width: 100%;
 
-      &:hover, &.active {
-        cursor: pointer;
-        background-color: darken($builder-palette-bg-color, 10%);
+        .dropdown {
+          float: right;
+        }
       }
     }
+
+    [role="menu"] {
+      display: none;
+    }
+
+    [role="menu"][aria-expanded="true"] {
+      display: block;
+      background: $builder-palette-bg-color;
+      color: $builder-palette-text-color;
+
+      [role="menuitem"] a {
+        display: block;
+        font-weight: 500;
+        padding: 0.5em 0.75em;
+        text-transform: uppercase;
+
+        &:hover, &.active {
+          cursor: pointer;
+          background-color: darken($builder-palette-bg-color, 5%);
+        }
+      }
+    }
+  }
+
+  &__subpalette {
+    margin-top: 2em;
   }
 
   &__canvas {

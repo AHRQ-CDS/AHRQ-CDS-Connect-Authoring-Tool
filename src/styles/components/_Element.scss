@@ -6,11 +6,24 @@
   color: $element-text-color;
   margin: 0.5em;
   font-weight: 400;
-  max-width: 10em;
 
-  &:hover {
-    cursor: move;
-    box-shadow: 1px 1px 4px $element-text-color;
+  &.is-active {
+    background-color: $logic-element-bg-color;
+    border: $logic-element-border;
+    color: $logic-element-text-color;
+  }
+
+  &__dragger {
+    font-size: 0.75em;
+    padding: 0;
+    margin-left: -1.5em;
+    margin-top: -1.5em;
+    display: block;
+
+    &:hover {
+      cursor: move;
+      box-shadow: $box-shadow;
+    }
   }
 }
 

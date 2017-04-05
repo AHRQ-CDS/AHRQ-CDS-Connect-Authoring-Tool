@@ -15,7 +15,7 @@ $box-shadow: 1px 1px 4px $blue;
 $body-bg: $dark-blue;
 $page-bg: $light-brown;
 
-$default-button-text-color: $brown;
+$default-button-text-color: darken($brown, 10%);
 $default-button-bg-color: lighten($orange, 30%);
 $default-button-hover-text-color: $white;
 $primary-button-text-color: $blue;

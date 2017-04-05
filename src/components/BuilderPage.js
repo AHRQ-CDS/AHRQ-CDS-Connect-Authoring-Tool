@@ -39,9 +39,9 @@ class BuilderPage extends Component {
 
   renderSidebar() {
     if (this.state.selectedGroup) {
-      return <BuilderSubPalette group={this.state.selectedGroup} />;
+      return <BuilderSubPalette selectedGroup={this.state.selectedGroup} />;
     } else {
-      return <p>Pick a collection</p>;
+      return null;
     }
   }
 
@@ -66,7 +66,7 @@ class BuilderPage extends Component {
           </div>
         </header>
         <div className="builder__sidebar">
-          <BuilderPalette />
+          <BuilderPalette selectedGroup={this.state.selectedGroup} />
           {this.renderSidebar()}
         </div>
         <BuilderTarget />

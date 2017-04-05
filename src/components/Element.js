@@ -1,22 +1,36 @@
 import React, { Component, PropTypes } from 'react';
 import { DragSource } from 'react-dnd';
+import FontAwesome from 'react-fontawesome';
 
 class BuilderElement extends Component {
   static propTypes = {
     name: PropTypes.string.isRequired,
     connectDragSource: PropTypes.func.isRequired,
-    isDragging: PropTypes.bool.isRequired
+    connectDragPreview: PropTypes.func.isRequired
+  }
+
+  constructor(props) {
+    super(props);
+    this.state = {
+      isActive: false
+    }
   }
 
   render() {
-    const { isDragging, connectDragSource } = this.props;
+    const { connectDragSource, connectDragPreview } = this.props;
 
-    if (isDragging) {
-      return null; // don't render source while dragging
-    }
-
-    return connectDragSource(
-      <div className="element">
+    return connectDragPreview(
+      <div className={this.state.isActive ? "element is-active" : "element"}>
+        {connectDragSource(
+          <button
+            onClick={() => this.setState({ isActive: true })}
+            onFocus={() => this.setState({ isActive: true })}
+            onBlur={() => this.setState({ isActive: false })}
+            onMouseOver={() => this.setState({ isActive: true })}
+            onMouseOut={() => this.setState({ isActive: false })}
+            className="element__dragger" aria-label="move item"><FontAwesome className='fa-fw' name='arrows' /></button>,
+          { dropEffect: 'copy' }
+        )}
         {this.props.name}
       </div>
     );
@@ -25,7 +39,8 @@ class BuilderElement extends Component {
 
 const spec = {
   // describes how the drag source reacts to the drag and drop events
-  beginDrag(props) {
+  beginDrag(props, monitor, component) {
+    component.setState({ isActive: true });
     // You must return a plain JavaScript object describing the data being dragged.
     return {
       elementId: props.name
@@ -38,6 +53,7 @@ const spec = {
     const dropResult = monitor.getDropResult();
     console.log(item);
     console.log(dropResult);
+    component.setState({ isActive: false });
   },
 
   canDrag(props, monitor) {
@@ -55,7 +71,7 @@ function collect(connect, monitor) {
   // inject these properties into the component
   return {
     connectDragSource: connect.dragSource(),
-    isDragging: monitor.isDragging()
+    connectDragPreview: connect.dragPreview()
   };
 }
 
