@@ -1,5 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 import { DropTarget } from 'react-dnd';
+import Element from './Element';
 
 class BuilderTarget extends Component {
   static propTypes = {
@@ -9,7 +10,17 @@ class BuilderTarget extends Component {
   constructor(props) {
     super(props);
     this.addItem = (item) => {
-      console.log('Do something with this item');
+      let oldData = this.state.droppedElements;
+      let newData = oldData.concat([item.elementId]);
+
+      // this.state.droppedElements is set up to mimic the information that is received when rendering the SubPalette
+      // TODO: If more information is added to identify and render those elements, 
+      // state.dropped elmeents may need this information, so it may be needed on the drag item
+      this.setState({ droppedElements: newData });
+    };
+
+    this.state = {
+      droppedElements: []
     };
   }
 
@@ -17,7 +28,11 @@ class BuilderTarget extends Component {
     const { connectDropTarget } = this.props;
     return connectDropTarget(
       <section className="builder__canvas">
-        Drop content here.
+        {this.state.droppedElements.length === 0 ? "Drop content here." :
+        null}
+        {this.state.droppedElements.map((element, index) => {
+          return <Element key={index + element} name={element} />;
+        })}
       </section>,
     );
   }
