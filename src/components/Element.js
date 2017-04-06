@@ -18,7 +18,6 @@ class BuilderElement extends Component {
 
   render() {
     const { connectDragSource, connectDragPreview } = this.props;
-
     return connectDragPreview(
       <div className={this.state.isActive ? 'element is-active' : 'element'}>
         {connectDragSource(
@@ -55,7 +54,11 @@ const spec = {
     const dropResult = monitor.getDropResult();
     console.log(item);
     console.log(dropResult);
-    component.setState({ isActive: false });
+    // Componenet will be null if it is unmounted while dragging
+    // TODO JULIA: Figure this out - can you not unmount it? Does this mess up the active highlight?
+    if(component !== null) {
+      component.setState({ isActive: false });
+    }
   },
 
   canDrag(props, monitor) {

@@ -10,18 +10,14 @@ class BuilderTarget extends Component {
   constructor(props) {
     super(props);
     this.addItem = (item) => {
-      const oldData = this.state.droppedElements;
+      const oldData = this.props.droppedElements;
       const newData = oldData.concat([item.elementId]);
 
       /* this.state.droppedElements is set up to mimic the information that is received when
       rendering the SubPalette */
       /* TODO: If more information is added to identify and render those elements,
       state.droppedElements may need this information, so it may be needed on the drag item */
-      this.setState({ droppedElements: newData });
-    };
-
-    this.state = {
-      droppedElements: []
+      this.props.updateDroppedElements(newData);
     };
   }
 
@@ -29,8 +25,8 @@ class BuilderTarget extends Component {
     const { connectDropTarget } = this.props;
     return connectDropTarget(
       <section className="builder__canvas">
-        {this.state.droppedElements.length === 0 ? 'Drop content here.' : null}
-        {this.state.droppedElements.map(
+        {this.props.droppedElements.length === 0 ? 'Drop content here.' : null}
+        {this.props.droppedElements.map(
           (element, index) => <Element key={index + element} name={element} />
         )}
       </section>,

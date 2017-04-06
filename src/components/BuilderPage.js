@@ -12,7 +12,11 @@ class BuilderPage extends Component {
 
     this.state = {
       selectedGroup: null,
+      droppedElements: [],
     };
+
+    this.setDroppedElements = this.setDroppedElements.bind(this);
+
     this.exportFile = () => {
       const finalText = 'String to save!';
       const saveElement = document.createElement('a');
@@ -44,9 +48,16 @@ class BuilderPage extends Component {
     }
   }
 
+  setDroppedElements(elements) {
+    this.setState({ droppedElements: elements });
+  }
+
   renderSidebar() {
     if (this.state.selectedGroup) {
-      return <BuilderSubPalette selectedGroup={this.state.selectedGroup} />;
+      return <BuilderSubPalette 
+        selectedGroup={this.state.selectedGroup} 
+        updateDroppedElements={this.setDroppedElements} 
+        droppedElements={this.state.droppedElements} />;
     }
     return null;
   }
@@ -66,7 +77,9 @@ class BuilderPage extends Component {
           <BuilderPalette selectedGroup={this.state.selectedGroup} />
           {this.renderSidebar()}
         </div>
-        <BuilderTarget />
+        <BuilderTarget 
+          updateDroppedElements={this.setDroppedElements} 
+          droppedElements={this.state.droppedElements} />
       </div>
     );
   }
