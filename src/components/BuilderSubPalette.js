@@ -5,7 +5,7 @@ import Element from './Element';
 class BuilderSubPalette extends Component {
   removeItem(item) {
     const data = this.props.droppedElements;
-    const indexToRemove = data.indexOf(item.elementId)
+    const indexToRemove = data.indexOf(item.elementId);
     data.splice(indexToRemove, 1);
     this.props.updateDroppedElements(data);
   }
@@ -23,12 +23,12 @@ class BuilderSubPalette extends Component {
 }
 
 const dropSpec = {
-  // Called when compatible itme is dropped on the target
+  // Called when compatible item is dropped on the target
   drop(props, monitor, component) {
     const item = monitor.getItem();
     component.removeItem(item);
   },
-}
+};
 
 function collect(connect, monitor) {
   return {

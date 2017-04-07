@@ -54,9 +54,9 @@ class BuilderPage extends Component {
 
   renderSidebar() {
     if (this.state.selectedGroup) {
-      return <BuilderSubPalette 
-        selectedGroup={this.state.selectedGroup} 
-        updateDroppedElements={this.setDroppedElements} 
+      return <BuilderSubPalette
+        selectedGroup={this.state.selectedGroup}
+        updateDroppedElements={this.setDroppedElements}
         droppedElements={this.state.droppedElements} />;
     }
     return null;
@@ -77,8 +77,8 @@ class BuilderPage extends Component {
           <BuilderPalette selectedGroup={this.state.selectedGroup} />
           {this.renderSidebar()}
         </div>
-        <BuilderTarget 
-          updateDroppedElements={this.setDroppedElements} 
+        <BuilderTarget
+          updateDroppedElements={this.setDroppedElements}
           droppedElements={this.state.droppedElements} />
       </div>
     );

@@ -56,7 +56,7 @@ const spec = {
     console.log(dropResult);
     // Componenet will be null if it is unmounted while dragging
     // TODO JULIA: Figure this out - can you not unmount it? Does this mess up the active highlight?
-    if(component !== null) {
+    if (component !== null) {
       component.setState({ isActive: false });
     }
   },
