@@ -1,7 +1,7 @@
 import React, { Component, PropTypes } from 'react';
 import { DropTarget } from 'react-dnd';
-import Element from './Element';
 import axios from 'axios';
+import Element from './Element';
 
 class BuilderTarget extends Component {
   static propTypes = {
@@ -11,23 +11,23 @@ class BuilderTarget extends Component {
   constructor(props) {
     super(props);
     this.addItem = (item) => {
-      let url = 'http://localhost:3001/api';
+      const url = 'http://localhost:3001/api';
 
-      //JULIA Will need to fix this
+      // TODO: If item reflects what the schema expects, this isn't needed
       const postItem = {
         type: item.elementId,
         low: item.low,
         high: item.high
-      }
+      };
 
       axios.post(`${url}/ageRange`, postItem)
-        .then(result => {
+        .then((result) => {
           const oldData = this.props.droppedElements;
-          
+
           // Save the database id on dropped elements so they can be deleted later
-          const newData = oldData.concat([{name: item.elementId, dbId: result.data.item._id}]);
+          const newData = oldData.concat([{ name: item.elementId, dbId: result.data.item._id }]);
           this.props.updateDroppedElements(newData);
-        })
+        });
     };
   }
 
@@ -37,11 +37,9 @@ class BuilderTarget extends Component {
       <section className="builder__canvas">
         {this.props.droppedElements.length === 0 ? 'Drop content here.' : null}
         {this.props.droppedElements.map(
-          (element, index) => {
-            return <Element key={index + element.name} 
-                    name={element.name} 
+          (element, index) => <Element key={index + element.name}
+                    name={element.name}
                     dbId={element.dbId}/>
-          }
         )}
       </section>,
     );

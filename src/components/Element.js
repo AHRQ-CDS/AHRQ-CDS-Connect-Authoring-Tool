@@ -44,7 +44,7 @@ const spec = {
     return {
       elementId: props.name,
       low: 40,
-      high: 79, //JULIA - need this on props really
+      high: 79, // TODO: The appropriate info will need to be on props
       dbId: props.dbId
     };
   },
