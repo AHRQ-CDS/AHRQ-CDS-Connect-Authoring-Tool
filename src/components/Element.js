@@ -42,7 +42,10 @@ const spec = {
     component.setState({ isActive: true });
     // You must return a plain JavaScript object describing the data being dragged.
     return {
-      elementId: props.name
+      elementId: props.name,
+      low: 40,
+      high: 79, //JULIA - need this on props really
+      dbId: props.dbId
     };
   },
 
@@ -50,12 +53,11 @@ const spec = {
     /* If it was handled, and the drop target specified a drop result by returning a
     plain object from its drop() method, it will be available as monitor.getDropResult().
     This method is a good place to fire a Flux action. */
-    const item = monitor.getItem();
-    const dropResult = monitor.getDropResult();
-    console.log(item);
-    console.log(dropResult);
-    // Componenet will be null if it is unmounted while dragging
-    // TODO JULIA: Figure this out - can you not unmount it? Does this mess up the active highlight?
+    // const item = monitor.getItem();
+    // const dropResult = monitor.getDropResult();
+    // console.log(item);
+    // console.log(dropResult);
+    // Componenet will be null if it is unmounted after the drag (i.e. remove from workspace)
     if (component !== null) {
       component.setState({ isActive: false });
     }

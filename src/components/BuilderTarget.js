@@ -1,6 +1,7 @@
 import React, { Component, PropTypes } from 'react';
 import { DropTarget } from 'react-dnd';
 import Element from './Element';
+import axios from 'axios';
 
 class BuilderTarget extends Component {
   static propTypes = {
@@ -10,14 +11,23 @@ class BuilderTarget extends Component {
   constructor(props) {
     super(props);
     this.addItem = (item) => {
-      const oldData = this.props.droppedElements;
-      const newData = oldData.concat([item.elementId]);
+      let url = 'http://localhost:3001/api';
 
-      /* this.state.droppedElements is set up to mimic the information that is received when
-      rendering the SubPalette */
-      /* TODO: If more information is added to identify and render those elements,
-      state.droppedElements may need this information, so it may be needed on the drag item */
-      this.props.updateDroppedElements(newData);
+      //JULIA Will need to fix this
+      const postItem = {
+        type: item.elementId,
+        low: item.low,
+        high: item.high
+      }
+
+      axios.post(`${url}/ageRange`, postItem)
+        .then(result => {
+          const oldData = this.props.droppedElements;
+          
+          // Save the database id on dropped elements so they can be deleted later
+          const newData = oldData.concat([{name: item.elementId, dbId: result.data.item._id}]);
+          this.props.updateDroppedElements(newData);
+        })
     };
   }
 
@@ -27,7 +37,11 @@ class BuilderTarget extends Component {
       <section className="builder__canvas">
         {this.props.droppedElements.length === 0 ? 'Drop content here.' : null}
         {this.props.droppedElements.map(
-          (element, index) => <Element key={index + element} name={element} />
+          (element, index) => {
+            return <Element key={index + element.name} 
+                    name={element.name} 
+                    dbId={element.dbId}/>
+          }
         )}
       </section>,
     );

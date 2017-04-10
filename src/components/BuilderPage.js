@@ -5,6 +5,7 @@ import BuilderSubPalette from './BuilderSubPalette';
 import BuilderPalette from './BuilderPalette';
 import BuilderTarget from './BuilderTarget';
 import groups from '../data/groupings';
+import axios from 'axios';
 
 class BuilderPage extends Component {
   constructor(props) {
@@ -16,14 +17,41 @@ class BuilderPage extends Component {
     };
 
     this.setDroppedElements = this.setDroppedElements.bind(this);
+    this.getAllElements = this.getAllElements.bind(this);
+  }
 
-    this.exportFile = () => {
-      const finalText = 'String to save!';
-      const saveElement = document.createElement('a');
-      saveElement.href = `data:text/plain,${encodeURIComponent(finalText)}`;
-      saveElement.download = 'SaveMe.txt';
-      saveElement.click();
-    };
+  getAllElements() {
+    let allElements = [];
+    axios.get('http://localhost:3001/api/ageRange')
+      .then(result => {
+        allElements = result.data;
+        this.exportFile(allElements);
+      });
+  }
+
+  exportFile(allElements) {
+    let cqlText = '';
+
+    // TODO: This will come from the inputs in the "Save" modal eventually.
+    let libraryName = 'AgeRangeAuthoringDemo';
+    let versionNumber = 1;
+    let dataModel = "FHIR version '1.0.2'";
+    let context = 'Patient';
+
+    let initialCQL = `library ${libraryName} version '${versionNumber}' \n\n`;
+    initialCQL += `using ${dataModel} \n\n`;
+    initialCQL += `context ${context} \n\n`;
+    cqlText += initialCQL;
+
+    // TODO: Some of this will be removed and put into separate templates eventually.
+    for(let i=0; i<allElements.length; i++) {
+      cqlText += `define AgeRange: AgeInYears()>=${allElements[i].low} and AgeInYears()<=${allElements[i].high} \n`
+    }
+
+    let saveElement = document.createElement('a');
+    saveElement.href = 'data:text/plain,' + encodeURIComponent(cqlText);
+    saveElement.download = `${libraryName}.cql`;
+    saveElement.click();
   }
 
   componentDidMount() {
@@ -69,7 +97,7 @@ class BuilderPage extends Component {
           <h2 className="builder__heading">Model title that's kind of long</h2>
 
           <div className="builder__buttonbar">
-            <button onClick={this.exportFile} className="builder__savebutton is-unsaved">Save</button>
+            <button onClick={this.getAllElements} className="builder__savebutton is-unsaved">Save</button>
             <button className="builder__deletebutton">Delete</button>
           </div>
         </header>

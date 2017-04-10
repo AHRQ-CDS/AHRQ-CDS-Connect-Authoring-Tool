@@ -1,13 +1,25 @@
 import React, { Component } from 'react';
 import { DropTarget } from 'react-dnd';
 import Element from './Element';
+import axios from 'axios';
 
 class BuilderSubPalette extends Component {
   removeItem(item) {
-    const data = this.props.droppedElements;
-    const indexToRemove = data.indexOf(item.elementId);
-    data.splice(indexToRemove, 1);
-    this.props.updateDroppedElements(data);
+    let url = 'http://localhost:3001/api';
+
+    axios.delete(`${url}/ageRange/${item.dbId}`)
+      .then(result => {
+        const data = this.props.droppedElements;
+        let indexToRemove = -1;
+        for(let i=0; i<data.length; i++) {
+          const id = data[i].dbId;
+          if(id === item.dbId) {
+            indexToRemove = i;
+          }
+        }
+        data.splice(indexToRemove, 1);
+        this.props.updateDroppedElements(data);
+      });
   }
 
   render() {
