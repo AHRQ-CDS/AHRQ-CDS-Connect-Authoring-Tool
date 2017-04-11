@@ -22,7 +22,7 @@ module.exports = [
     id: 4,
     icon: 'medkit',
     name: 'Medications',
-    entries: ['Antihypertensive', 'Static', 'Aspirin Therapy', 'Smoking Cessation'],
+    entries: ['Antihypertensive', 'Statin', 'Aspirin Therapy', 'Smoking Cessation'],
   },
   {
     id: 5,
