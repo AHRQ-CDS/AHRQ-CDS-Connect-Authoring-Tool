@@ -21,6 +21,8 @@
     "react-axe": "^2.1.1"
   },
   "devDependencies": {
+    "axios-mock-adapter": "^1.8.1",
+    "enzyme": "^2.8.0",
     "eslint": "^3.19.0",
     "eslint-config-airbnb": "^14.1.0",
     "eslint-config-react-app": "^0.6.2",
@@ -29,6 +31,9 @@
     "eslint-plugin-react": "^6.10.3",
     "node-bourbon": "^4.2.8",
     "node-sass": "^4.5.1",
+    "react-addons-test-utils": "^15.5.1",
+    "react-dnd-test-backend": "^2.3.0",
+    "react-router-test-context": "^0.1.0",
     "react-scripts": "0.9.5"
   },
   "scripts": {
@@ -36,7 +41,7 @@
     "watch-css": "npm run build-css && node-sass --include-path ./node_modules/bourbon/app/assets/stylesheets --include-path ./node_modules/font-awesome/scss src/ -o src/ --watch --recursive",
     "start": "npm run watch-css && react-scripts start",
     "build": "npm run build-css && react-scripts build",
-    "test": "react-scripts test --env=jsdom",
+    "test": "react-scripts test --env=jsdom --collectCoverageFrom='[\"src/**/*.{js,jsx}\", \"!src/index.js\"]' --noStackTrace",
     "eject": "react-scripts eject",
     "start-dev": "nf start -p 3000",
     "lint": "eslint --fix src/*; exit 0"
