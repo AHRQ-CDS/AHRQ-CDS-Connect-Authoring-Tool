@@ -1,7 +1,23 @@
-Setup and running.
+# CDS Connect Authoring Tool
+
+## Setup and running.
+`npm run start-dev` will run all of the items listed in the `Procfile`. Note: Mongo needs to be installed so `mongod` runs properly.
 ```bash
 npm install
 npm run start-dev
+```
+
+## Testing and linting.
+Linting is done by ESLint, extending the rulesets from [react-app](https://github.com/facebookincubator/create-react-app/tree/master/packages/eslint-config-react-app), [Airbnb](https://github.com/airbnb/javascript) _and_ [jsx-a11y](https://github.com/evcohen/eslint-plugin-jsx-a11y) for accessibility checking. Please refer to the [Airbnb JSX/React style guide](https://github.com/airbnb/javascript/tree/master/react).
+
+The script set up in `package.json` enables `--fix`, which will autocorrect minor errors.
+```bash
+npm run lint
+```
+
+Testing uses [jsdom](https://github.com/tmpvar/jsdom) with [Jest](https://facebook.github.io/jest/) as the test runner. Run tests with
+```bash
+npm run test
 ```
 
 This project was bootstrapped with [Create React App](https://github.com/facebookincubator/create-react-app).

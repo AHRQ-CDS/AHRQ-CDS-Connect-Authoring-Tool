@@ -1,0 +1,36 @@
+.element {
+  padding: 0.5em;
+  background-color: $element-bg-color;
+  border: $element-border;
+  border-radius: $border-radius;
+  color: $element-text-color;
+  margin: 0.5em;
+  font-weight: 400;
+
+  &.is-active {
+    background-color: $logic-element-bg-color;
+    border: $logic-element-border;
+    color: $logic-element-text-color;
+  }
+
+  &__dragger {
+    font-size: 0.75em;
+    padding: 0;
+    margin-left: -1.5em;
+    margin-top: -1.5em;
+    display: block;
+
+    &:hover {
+      cursor: move;
+      box-shadow: $box-shadow;
+    }
+  }
+}
+
+// different colors if it is a logicElement.
+.logic-element {
+  @extend .element;
+  background-color: $logic-element-bg-color;
+  border: $logic-element-border;
+  color: $logic-element-text-color;
+}

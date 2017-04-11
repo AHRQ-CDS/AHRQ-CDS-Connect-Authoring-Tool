@@ -5,6 +5,7 @@ var express = require('express');
 var mongoose = require('mongoose');
 var bodyParser = require('body-parser');
 var Author = require('./model/author');
+var AgeRange = require('./model/ageRange');
 
 //and create our instances
 var app = express();
@@ -94,6 +95,57 @@ router.route('/authors/:author_id')
       }
       res.json({ message: 'Author has been deleted'})
     });
+  });
+
+// Route for saving age range
+router.route('/ageRange')
+  // Get all age ranges saved in the ageranges collection
+  .get(function(request, result) {
+    AgeRange.find(function(err, ageRanges) {
+      if(err) {
+        result.send(err);
+      }
+      result.json(ageRanges);
+    });
+  })
+
+  // Post a new age range
+  .post(function(request, result) {
+    var ageRange = new AgeRange();
+    ageRange.type = request.body.type;
+    ageRange.low = request.body.low;
+    ageRange.high = request.body.high;
+    ageRange.save(function(err, savedItem) {
+      if(err) {
+        result.send(err);
+      }
+      result.json({
+        message: "Posted new age range",
+        item: savedItem 
+      })
+    });
+  });
+
+router.route('/ageRange/:ageRange_id')
+  // TODO: Update an age range (right now it just shows the specific one, it doesn't delete it)
+  .put(function(request, result) {
+    AgeRange.findById(request.params.ageRange_id, function(err, ageRange) {
+      if(err) {
+        result.send(err);
+      }
+      // Just gets a specific ageRange, doesn't actually update anything yet
+      result.json(ageRange)
+    })
+  })
+  
+  // Delete an age range
+  .delete(function(request, result) {
+    AgeRange.remove({ _id: request.params.ageRange_id }, function(err, ageRange) {
+      if(err) {
+        result.send(err);
+      }
+      result.json("Deleted something")
+    })
   });
 
 //Use our router configuration when we call /api

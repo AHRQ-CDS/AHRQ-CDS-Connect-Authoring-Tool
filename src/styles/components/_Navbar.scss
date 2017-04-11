@@ -1,0 +1,21 @@
+.navbar {
+  background-color: $navbar-bg-color;
+  color: $navbar-link-color;
+  padding: 0.5em 2em 0;
+
+  &__logo {
+    color: $navbar-link-color;
+    font-weight: 700;
+    text-decoration: none;
+  }
+
+  &__nav {
+    @include navigation(true);
+    display: inline-block;
+    margin: 0.5em 1em 0.5em 2em;
+
+    a:hover, a.active {
+      background-color: darken($navbar-bg-color, 10%);
+    }
+  }
+}
