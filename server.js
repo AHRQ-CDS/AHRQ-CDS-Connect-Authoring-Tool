@@ -151,6 +151,10 @@ router.route('/ageRange/:ageRange_id')
 //Use our router configuration when we call /api
 app.use('/api', router);
 //starts the server and listens for requests
-app.listen(port, function() {
-  console.log(`api running on port ${port}`);
-});
+if(!module.parent) { // check if within a test or not.
+  app.listen(port, function() {
+    console.log(`api running on port ${port}`);
+  });
+}
+
+export default app;
