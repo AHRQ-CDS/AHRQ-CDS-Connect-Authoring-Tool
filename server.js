@@ -15,7 +15,7 @@ var router = express.Router();
 var port = process.env.API_PORT || 3001;
 
 //db config
-mongoose.connect('mongodb://localhost/test')
+mongoose.connect('mongodb://localhost/cds_authoring')
 
 //now we should configure the API to use bodyParser and look for
 //JSON data in the request body
@@ -157,4 +157,4 @@ if(!module.parent) { // check if within a test or not.
   });
 }
 
-export default app;
+//export default app;
