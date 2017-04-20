@@ -49,6 +49,7 @@ class BuilderPage extends Component {
     this.state = {
       selectedGroup: null,
       droppedElements: [],
+      artifact: null
     };
 
     this.setDroppedElements = this.setDroppedElements.bind(this);
@@ -57,6 +58,16 @@ class BuilderPage extends Component {
   componentDidMount() {
     if (this.props.match) {
       this.setSelectedGroup(this.props.match.params.group);
+      if (this.props.match.params.id) {
+        // fetch the relevant artifact from the server.
+        const id = this.props.match.params.id;
+        axios.get(`http://localhost:3001/api/artifacts/${id}`)
+          .then((res) => {
+            this.setState({ artifact: res.data });
+          });
+      } else {
+        this.setState({ artifact: null });
+      }
     }
   }
 
@@ -94,8 +105,7 @@ class BuilderPage extends Component {
     return (
       <div className="builder">
         <header className="builder__header">
-          <h2 className="builder__heading">Model title that's kind of long</h2>
-
+          <h2 className="builder__heading">{this.state.artifact ? this.state.artifact.name : 'Untitled Artifact'}</h2>
           <div className="builder__buttonbar">
             <button onClick={getAllElements} className="builder__savebutton is-unsaved">Save</button>
             <button className="builder__deletebutton">Delete</button>

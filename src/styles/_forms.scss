@@ -1,0 +1,13 @@
+.input {
+  width: 18em;
+
+  &__long { width: 24em; }
+  &__short { width: 6em; }
+}
+
+.form__inline {
+  label {
+    display: inline-block;
+    margin-right: 1em;
+  }
+}

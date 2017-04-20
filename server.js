@@ -32,7 +32,7 @@ app.use(function(req, res, next) {
 // Set api routes
 routes(app);
 
-// Start Server
+// Starts Server
 if(!module.parent) { // check if within a test or not.
   app.listen(port, function() {
     console.log(`api running on port ${port}`);

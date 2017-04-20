@@ -1,5 +1,6 @@
-const AuthorRouter = require('./routers/AuthorRouter.js');
-const AgeRangeRouter = require('./routers/AgeRangeRouter.js');
+const ArtifactRouter = require('./routers/artifactRouter.js');
+const AuthorRouter = require('./routers/authorRouter.js');
+const AgeRangeRouter = require('./routers/ageRangeRouter.js');
 
 module.exports = function(app) {
 
@@ -7,6 +8,9 @@ module.exports = function(app) {
   app.get('/', function(req, res) {
     res.json({ message: 'API Initialized!'});
   });
+
+  // Routing for Artifacts
+  app.use('/api/artifacts', ArtifactRouter);
 
   // Routing for Authors
   app.use('/api/authors', AuthorRouter);
