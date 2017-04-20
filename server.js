@@ -6,6 +6,7 @@ var mongoose = require('mongoose');
 var bodyParser = require('body-parser');
 var Author = require('./model/author');
 var AgeRange = require('./model/ageRange');
+var Artifact = require('./model/artifact');
 
 //and create our instances
 var app = express();
@@ -147,6 +148,53 @@ router.route('/ageRange/:ageRange_id')
       result.json("Deleted something")
     })
   });
+  //adding the /artifacts route to our /api router
+  router.route('/artifacts')
+    //retrieve all artifacts from the database
+    .get(function(req, res) {
+      //looks at our Artifact Schema
+      Artifact.find(function(err, artifacts) {
+        if (err)
+          res.send(err);
+          //responds with a json object of our database artifacts.
+          res.json(artifacts);
+      });
+    })
+    //post new artifact to the database
+    .post(function(req, res) {
+      var artifact = new Artifact();
+      artifact.name = req.body.name;
+      artifact.version = req.body.version;
+      artifact.save(function(err) {
+        if (err)
+          res.send(err);
+          res.json({ message: 'Artifact successfully added!' })
+      });
+    });
+
+  // Adding a route to a specific artifact based on the database ID
+  router.route('/artifacts/:artifact_id')
+    // Get an artifact
+    .get(function(req, res) {
+      //looks at our Artifact Schema
+      Artifact.findOne({ _id: req.params.artifact_id }, function(err, artifact) {
+        if (err)
+          res.send(err);
+          //responds with a json object of our database artifacts.
+          res.json(artifact);
+      });
+    })
+    // Delete method for removing an artifact from our database
+    .delete(function(req, res) {
+      // Selects the author by its ID, then removes it
+      Artifact.remove({ _id: req.params.artifact_id }, function(err, artifact) {
+        if(err) {
+          res.send(err);
+        }
+        res.json({ message: 'Artifact has been deleted'})
+      });
+    });
+
 
 //Use our router configuration when we call /api
 app.use('/api', router);
