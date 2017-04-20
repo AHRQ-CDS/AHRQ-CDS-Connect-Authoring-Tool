@@ -23,8 +23,17 @@ function exportFile(allElements) {
   cqlText += initialCQL;
 
   // TODO: Some of this will be removed and put into separate templates eventually.
-  for (let i = 0; i < allElements.length; i++) {
-    cqlText += `define AgeRange: AgeInYears()>=${allElements[i].low} and AgeInYears()<=${allElements[i].high} \n`;
+  for (const element of allElements) {
+    var paramContext = {}
+    for (const parameter of element.parameters) {
+      paramContext[parameter.id] = parameter.value
+    }
+
+    cqlText += function(cql){
+      // eval the cql template with the context we created above
+      // this allows the variable in the template to resolve
+      return eval('`'+cql+'`');
+    }.call(paramContext,element.cql) + "\n";
   }
 
   const saveElement = document.createElement('a');
@@ -33,14 +42,6 @@ function exportFile(allElements) {
   saveElement.click();
 }
 
-function getAllElements() {
-  let allElements = [];
-  axios.get('http://localhost:3001/api/ageRange')
-    .then((result) => {
-      allElements = result.data;
-      exportFile(allElements);
-    });
-}
 
 class BuilderPage extends Component {
   constructor(props) {
@@ -48,16 +49,45 @@ class BuilderPage extends Component {
 
     this.state = {
       selectedGroup: null,
-      droppedElements: [],
+      droppedElements: []
     };
 
     this.setDroppedElements = this.setDroppedElements.bind(this);
+    this.saveArtifact = this.saveArtifact.bind(this);   
+    this.downloadCQL = this.downloadCQL.bind(this);   
   }
 
   componentDidMount() {
     if (this.props.match) {
       this.setSelectedGroup(this.props.match.params.group);
     }
+  }
+
+  downloadCQL() {
+    // let allElements = [];
+    // axios.get('http://localhost:3001/api/TemplateInstance')
+    //   .then((result) => {
+    //     allElements = result.data;
+    //     exportFile(allElements);
+    //   });
+    exportFile(this.state.droppedElements)
+  }
+
+  saveArtifact() {
+    var artifact = {
+      name: 'foo',
+      templateInstances: this.state.droppedElements
+    }
+    // TODO: This needs to be extracted to somewhere better
+    const url = 'http://localhost:3001/api';
+
+    axios.post(`${url}/Artifact`, artifact)
+      .then((result) => {
+        // TODO: 
+        // capture artifact and ID
+        // notification on save
+      });
+
   }
 
   componentWillReceiveProps(nextProps) {
@@ -97,7 +127,8 @@ class BuilderPage extends Component {
           <h2 className="builder__heading">Model title that's kind of long</h2>
 
           <div className="builder__buttonbar">
-            <button onClick={getAllElements} className="builder__savebutton is-unsaved">Save</button>
+            <button onClick={this.saveArtifact} className="builder__savebutton is-unsaved">Save</button>
+            <button onClick={this.downloadCQL} className="builder__cqlbutton is-unsaved">CQL</button>
             <button className="builder__deletebutton">Delete</button>
           </div>
         </header>

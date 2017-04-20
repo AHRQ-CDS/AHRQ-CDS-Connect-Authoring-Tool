@@ -1,7 +1,7 @@
 import React, { Component, PropTypes } from 'react';
 import { DropTarget } from 'react-dnd';
 import axios from 'axios';
-import Element from './Element';
+import TemplateInstance from './TemplateInstance'
 
 class BuilderTarget extends Component {
   static propTypes = {
@@ -11,23 +11,21 @@ class BuilderTarget extends Component {
   constructor(props) {
     super(props);
     this.addItem = (item) => {
-      const url = 'http://localhost:3001/api';
+      // TODO: clone is required because we are setting value on the parameter
+      // this may not be the best approach
+      var clone = JSON.parse(JSON.stringify(item))
+      this.props.updateDroppedElements(this.props.droppedElements.concat(clone));
+      // TODO: This needs to be extracted to somewhere better
+      // const url = 'http://localhost:3001/api';
 
-      // TODO: If item reflects what the schema expects, this isn't needed
-      const postItem = {
-        type: item.elementId,
-        low: item.low,
-        high: item.high
-      };
+      // axios.post(`${url}/TemplateInstance`, item)
+      //   .then((result) => {
+      //     const oldData = this.props.droppedElements;
 
-      axios.post(`${url}/ageRange`, postItem)
-        .then((result) => {
-          const oldData = this.props.droppedElements;
-
-          // Save the database id on dropped elements so they can be deleted later
-          const newData = oldData.concat([{ name: item.elementId, dbId: result.data.item._id }]);
-          this.props.updateDroppedElements(newData);
-        });
+      //     // Save the database id on dropped elements so they can be deleted later
+      //     const newData = oldData.concat([result.data.item]);
+      //     this.props.updateDroppedElements(newData);
+      //   });
     };
   }
 
@@ -37,9 +35,8 @@ class BuilderTarget extends Component {
       <section className="builder__canvas">
         {this.props.droppedElements.length === 0 ? 'Drop content here.' : null}
         {this.props.droppedElements.map(
-          (element, index) => <Element key={index + element.name}
-                    name={element.name}
-                    dbId={element.dbId}/>
+          (element, index) => 
+            <TemplateInstance key={element.id + index} templateInstance={element}/>
         )}
       </section>,
     );

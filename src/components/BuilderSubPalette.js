@@ -7,7 +7,7 @@ class BuilderSubPalette extends Component {
   removeItem(item) {
     const url = 'http://localhost:3001/api';
 
-    axios.delete(`${url}/ageRange/${item.dbId}`)
+    axios.delete(`${url}/templates/${item.dbId}`)
       .then((result) => {
         const data = this.props.droppedElements;
         let indexToRemove = -1;
@@ -27,7 +27,7 @@ class BuilderSubPalette extends Component {
     return connectDropTarget(
       <div aria-labelledby="palette-active-group" className="builder__subpalette">
         {this.props.selectedGroup.entries.map((element, index) =>
-          <Element key={index + element} name={element} />
+          <Element key={index + element} name={element.name} template={element}/>
         )}
       </div>
     );

@@ -5,7 +5,8 @@ var express = require('express');
 var mongoose = require('mongoose');
 var bodyParser = require('body-parser');
 var Author = require('./model/author');
-var AgeRange = require('./model/ageRange');
+var TemplateInstance = require('./model/templateInstance');
+var Artifact = require('./model/artifact');
 
 //and create our instances
 var app = express();
@@ -97,25 +98,40 @@ router.route('/authors/:author_id')
     });
   });
 
-// Route for saving age range
-router.route('/ageRange')
-  // Get all age ranges saved in the ageranges collection
-  .get(function(request, result) {
-    AgeRange.find(function(err, ageRanges) {
+// Route for saving artifact
+router.route('/Artifact')
+  // Post a new age range
+  .post(function(request, result) {
+    var artifact = new Artifact(request.body);
+    artifact.save(function(err, savedItem) {
       if(err) {
         result.send(err);
       }
-      result.json(ageRanges);
+      result.json({
+        message: "Posted new artifact",
+        item: savedItem 
+      })
+    });
+  });
+
+
+
+// Route for saving template instance
+router.route('/TemplateInstance')
+  // Get all age ranges saved in the templates collection
+  .get(function(request, result) {
+    TemplateInstance.find(function(err, instances) {
+      if(err) {
+        result.send(err);
+      }
+      result.json(instances);
     });
   })
 
   // Post a new age range
   .post(function(request, result) {
-    var ageRange = new AgeRange();
-    ageRange.type = request.body.type;
-    ageRange.low = request.body.low;
-    ageRange.high = request.body.high;
-    ageRange.save(function(err, savedItem) {
+    var instance = new TemplateInstance(request.body);
+    instance.save(function(err, savedItem) {
       if(err) {
         result.send(err);
       }
@@ -126,21 +142,21 @@ router.route('/ageRange')
     });
   });
 
-router.route('/ageRange/:ageRange_id')
+router.route('/TemplateInstance/:template_id')
   // TODO: Update an age range (right now it just shows the specific one, it doesn't delete it)
   .put(function(request, result) {
-    AgeRange.findById(request.params.ageRange_id, function(err, ageRange) {
+    TemplateInstance.findById(request.params.template_id, function(err, template) {
       if(err) {
         result.send(err);
       }
-      // Just gets a specific ageRange, doesn't actually update anything yet
-      result.json(ageRange)
+      // Just gets a specific template, doesn't actually update anything yet
+      result.json(template)
     })
   })
   
   // Delete an age range
   .delete(function(request, result) {
-    AgeRange.remove({ _id: request.params.ageRange_id }, function(err, ageRange) {
+    TemplateInstance.remove({ _id: request.params.template_id }, function(err, template) {
       if(err) {
         result.send(err);
       }
