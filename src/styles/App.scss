@@ -6,9 +6,11 @@
 @import 'mixins';
 @import 'typography';
 @import 'base';
+@import 'forms';
 @import 'buttons';
 
 // component-specific
 @import 'components/Navbar';
 @import 'components/Builder';
 @import 'components/Element';
+@import 'components/Artifact';
