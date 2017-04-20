@@ -5,6 +5,7 @@ import FontAwesome from 'react-fontawesome';
 class BuilderElement extends Component {
   static propTypes = {
     name: PropTypes.string.isRequired,
+    template: PropTypes.object.isRequired,
     connectDragSource: PropTypes.func.isRequired,
     connectDragPreview: PropTypes.func.isRequired
   }
@@ -41,12 +42,7 @@ const spec = {
   beginDrag(props, monitor, component) {
     component.setState({ isActive: true });
     // You must return a plain JavaScript object describing the data being dragged.
-    return {
-      elementId: props.name,
-      low: 40,
-      high: 79, // TODO: The appropriate info will need to be on props
-      dbId: props.dbId
-    };
+    return props.template;
   },
 
   endDrag(props, monitor, component) {
