@@ -5,16 +5,17 @@ module.exports = [
     icon: 'user',
     name: 'Demographics',
     entries: [
-    {
-      id: "age_range",
-      name: "Age Range",
-      category: "Demographics",
-      parameters: [
-        {id: 'min_age', type: 'integer', name: 'Minimum Age'},
-        {id: 'max_age', type: 'integer', name: 'Maximum Age'},
-      ],
-      cql: 'define AgeRange: AgeInYears()>=${this.min_age} and AgeInYears()<=${this.max_age}'
-    }]
+      {
+        id: 'age_range',
+        name: 'Age Range',
+        category: 'Demographics',
+        parameters: [
+        { id: 'min_age', type: 'integer', name: 'Minimum Age' },
+        { id: 'max_age', type: 'integer', name: 'Maximum Age' },
+        ],
+        cql: 'define AgeRange: AgeInYears()>=${this.min_age} and AgeInYears()<=${this.max_age}'
+      }
+    ]
   }
   //   'Gender',
   //   'Ethnicity',

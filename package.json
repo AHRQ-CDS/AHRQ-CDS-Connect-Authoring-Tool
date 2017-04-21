@@ -9,6 +9,8 @@
     "font-awesome": "^4.7.0",
     "foreman": "^2.0.0",
     "history": "^4.6.1",
+    "immutability-helper": "^2.1.2",
+    "lodash": "^4.17.4",
     "marked": "^0.3.6",
     "moment": "^2.18.1",
     "mongoose": "^4.9.1",

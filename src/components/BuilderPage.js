@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import HTML5Backend from 'react-dnd-html5-backend';
 import { DragDropContext } from 'react-dnd';
 import axios from 'axios';
-
+import update from 'immutability-helper';
 import BuilderSubPalette from './BuilderSubPalette';
 import BuilderPalette from './BuilderPalette';
 import BuilderTarget from './BuilderTarget';
@@ -23,18 +23,19 @@ function exportFile(allElements) {
   cqlText += initialCQL;
 
   // TODO: Some of this will be removed and put into separate templates eventually.
-  for (const element of allElements) {
-    var paramContext = {}
-    for (const parameter of element.parameters) {
-      paramContext[parameter.id] = parameter.value
-    }
+  allElements.forEach((element) => {
+    const paramContext = {};
 
-    cqlText += function(cql){
+    element.parameters.forEach((parameter) => {
+      paramContext[parameter.id] = parameter.value;
+    });
+
+    cqlText += `${function (cql) {
       // eval the cql template with the context we created above
       // this allows the variable in the template to resolve
-      return eval('`'+cql+'`');
-    }.call(paramContext,element.cql) + "\n";
-  }
+      return eval(`\`${cql}\``);
+    }.call(paramContext, element.cql)}\n`;
+  });
 
   const saveElement = document.createElement('a');
   saveElement.href = `data:text/plain,${encodeURIComponent(cqlText)}`;
@@ -56,6 +57,7 @@ class BuilderPage extends Component {
     this.setDroppedElements = this.setDroppedElements.bind(this);
     this.saveArtifact = this.saveArtifact.bind(this);
     this.downloadCQL = this.downloadCQL.bind(this);
+    this.updateSingleElement = this.updateSingleElement.bind(this);
   }
 
   componentDidMount() {
@@ -75,20 +77,14 @@ class BuilderPage extends Component {
   }
 
   downloadCQL() {
-    // let allElements = [];
-    // axios.get('http://localhost:3001/api/TemplateInstance')
-    //   .then((result) => {
-    //     allElements = result.data;
-    //     exportFile(allElements);
-    //   });
-    exportFile(this.state.droppedElements)
+    exportFile(this.state.droppedElements);
   }
 
   saveArtifact() {
-    var artifact = {
+    const artifact = {
       name: 'foo',
       templateInstances: this.state.droppedElements
-    }
+    };
     // TODO: This needs to be extracted to somewhere better
     const url = 'http://localhost:3001/api';
 
@@ -98,7 +94,6 @@ class BuilderPage extends Component {
         // capture artifact and ID
         // notification on save
       });
-
   }
 
   componentWillReceiveProps(nextProps) {
@@ -119,6 +114,35 @@ class BuilderPage extends Component {
 
   setDroppedElements(elements) {
     this.setState({ droppedElements: elements });
+  }
+
+  updateSingleElement(instanceId, state) {
+    const elements = this.state.droppedElements;
+    const elementIndex = elements.findIndex((element) => {
+      // get relevant element
+      return element.uniqueId === instanceId;
+    });
+
+    if (elementIndex !== undefined) {
+      // get relevant parameter
+      const paramIndex = elements[elementIndex].parameters.findIndex((param) => {
+        return state.hasOwnProperty(param.id) === true;
+      });
+
+      // edit element with new value using immutability-helper
+      const editedElements = update(elements, {
+        [elementIndex]: {
+          parameters: {
+            [paramIndex]: {
+              value: { $set: state[elements[elementIndex].parameters[paramIndex].id] }
+            }
+          }
+        }
+      });
+
+      // merge back into droppedElements
+      this.setState({ droppedElements: editedElements });
+    }
   }
 
   renderSidebar() {
@@ -148,6 +172,7 @@ class BuilderPage extends Component {
         </div>
         <BuilderTarget
           updateDroppedElements={this.setDroppedElements}
+          updateSingleElement={this.updateSingleElement}
           droppedElements={this.state.droppedElements} />
       </div>
     );
