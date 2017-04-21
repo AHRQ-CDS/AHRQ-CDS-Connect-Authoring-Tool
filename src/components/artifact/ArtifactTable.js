@@ -4,9 +4,11 @@ import { Link } from 'react-router-dom';
 import axios from 'axios';
 
 function renderDate(datetime) {
+  let formattedDate = '';
   if (datetime) {
-    return moment(datetime).fromNow();
+    formattedDate = moment(datetime).fromNow();
   }
+  return formattedDate;
 }
 
 function sortArtifacts(a, b) {
@@ -15,9 +17,8 @@ function sortArtifacts(a, b) {
     return -1;
   } else if (a.updatedAt < b.updatedAt || (!a.updatedAt && b.updatedAt)) {
     return 1;
-  } else {
-    return 0;
   }
+  return 0;
 }
 
 class ArtifactTable extends Component {
@@ -38,8 +39,8 @@ class ArtifactTable extends Component {
   deleteArtifact(id) {
     axios.delete(`http://localhost:3001/api/artifacts/${id}`)
       .then((res) => {
-        let list = this.state.artifacts;
-        const index = list.findIndex((a) => { return a._id === id; })
+        const list = this.state.artifacts;
+        const index = list.findIndex(a => a._id === id);
 
         const artifacts = [
           ...list.slice(0, index),

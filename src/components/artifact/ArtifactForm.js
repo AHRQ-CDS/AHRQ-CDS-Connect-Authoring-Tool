@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import axios from 'axios';
+import _ from 'lodash';
 
 class ArtifactForm extends Component {
   constructor(props) {
@@ -24,25 +25,31 @@ class ArtifactForm extends Component {
       version: this.state.version
     }).then((result) => {
       this.props.afterAddArtifact();
-      this.setState({ name: '', version: '' })
+      this.setState({ name: '', version: '' });
     });
+  }
+
+  componentWillMount() {
+    const nameID = _.uniqueId('artifact-name-');
+    const versionID = _.uniqueId('artifact-version-');
+    this.setState({ nameID, versionID });
   }
 
   render() {
     return (
       <form className='form__inline' onSubmit={this.addArtifact}>
-        <label>
+        <label htmlFor={this.state.nameID}>
           Artifact Name
-          <input
+          <input id={this.state.nameID}
             className='input__long'
             name='name'
             type='text'
             value={this.state.name}
             onChange={this.handleInputChange} />
         </label>
-        <label>
+        <label htmlFor={this.state.versionID}>
           Version
-          <input
+          <input id={this.state.versionID}
             className='input__short'
             name='version'
             type='text'

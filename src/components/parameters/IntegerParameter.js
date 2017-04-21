@@ -1,36 +1,27 @@
-import React, { Component, PropTypes } from 'react';
+import React from 'react';
+import _ from 'lodash';
 
-class IntegerParameter extends Component {
-  static propTypes = {
-    parameter: PropTypes.object.isRequired
-  }
+// props are from a templateInstance parameters object,
+// and a function called UpdateInstance that takes an object with
+// key-value pairs that represents that state of the templateInstance
+export default (props) => {
+  const id = _.uniqueId('parameter-');
 
-  constructor(props) {
-    super(props);
+  return (
+    <div>
+      <label htmlFor={id}>
+        {props.name}:
 
-    this.state = {
-      value: this.props.parameter.value
-    };
-
-    this.handleChange = this.handleChange.bind(this);    
-  }
-
-  handleChange(event) {
-    // TODO: I don't know if this is right per react... may want to link together in a better way
-    this.props.parameter.value = parseInt(event.target.value)
-    this.setState({value: this.props.parameter.value});
-  }
-
-  render() {
-    return (
-      <div>
-        <label>
-          {this.props.parameter.name}: 
-          <input type="number" name={this.props.parameter.id} defaultValue={this.state.value} onChange={this.handleChange}/>
-        </label>
-      </div>
-    );
-  }
+        <input id={id}
+          type="number"
+          name={props.id}
+          defaultValue={props.value}
+          onChange={(event) => {
+            const value = parseInt(event.target.value, 10);
+            props.updateInstance({ [event.target.name]: value })
+          }}
+        />
+      </label>
+    </div>
+  );
 }
-
-export default IntegerParameter;
