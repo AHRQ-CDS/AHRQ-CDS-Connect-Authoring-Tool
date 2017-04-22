@@ -14,7 +14,8 @@ function validateOneWord(value) {
 class TemplateInstance extends Component {
   static propTypes = {
     templateInstance: PropTypes.object.isRequired,
-    updateSingleElement: PropTypes.func.isRequired
+    updateSingleElement: PropTypes.func.isRequired,
+    deleteInstance: PropTypes.func.isRequired
   }
 
   constructor(props) {
@@ -81,6 +82,7 @@ class TemplateInstance extends Component {
           // todo: each parameter type should probably have its own component
           this.selectTemplate(param)
         )}
+        <button onClick={this.props.deleteInstance.bind(this, this.props.templateInstance.uniqueId)}  className="closebutton">Remove</button>
       </div>
     );
   }
