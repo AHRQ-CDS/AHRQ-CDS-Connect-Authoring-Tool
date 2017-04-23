@@ -1,7 +1,3 @@
-const ArtifactRouter = require('./routers/artifactRouter.js');
-const AuthorRouter = require('./routers/authorRouter.js');
-const AgeRangeRouter = require('./routers/ageRangeRouter.js');
-
 module.exports = function(app) {
 
   // Routing for API check
@@ -10,13 +6,16 @@ module.exports = function(app) {
   });
 
   // Routing for Artifacts
-  app.use('/api/artifacts', ArtifactRouter);
+  app.use('/api/artifacts', require('./routers/artifactRouter.js'));
 
   // Routing for Authors
-  app.use('/api/authors', AuthorRouter);
+  app.use('/api/authors', require('./routers/authorRouter.js'));
 
-  // Routing for Age Range
-  app.use('/api/ageRange', AgeRangeRouter);
+  // Routing for Templates
+  app.use('/api/TemplateInstance', require('./routers/templateRouter'));
+
+  // Routing for cql files
+  app.use('/api/cql', require('./routers/cqlRouter'))
 
   // Catch all other Api calls
   app.get('/api/*', function(req, res) { res.sendStatus(404); });

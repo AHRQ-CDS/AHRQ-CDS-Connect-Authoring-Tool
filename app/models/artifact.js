@@ -1,12 +1,12 @@
 'use strict';
 
-var mongoose = require('mongoose');
-var Schema = mongoose.Schema;
+let mongoose = require('mongoose');
+let Schema = mongoose.Schema;
 
-var ArtifactSchema = new Schema({
+let ArtifactSchema = new Schema({
   name: String,
   version: String,
-  template_instances: [{ type: Schema.Types.ObjectId, ref: 'TemplateInstance' }] // TODO: create a TemplateInstance model
+  template_instances: [{ type: Schema.Types.ObjectId, ref: 'TemplateInstance' }]
 },{
   timestamps: true // adds created_at, updated_at
 });
