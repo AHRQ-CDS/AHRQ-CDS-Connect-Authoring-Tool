@@ -42,10 +42,10 @@ class BuilderPage extends Component {
 
   downloadCQL() {
     const artifact = {
-      name: 'foo',
+      name: 'foo foo',
       template_instances: this.state.droppedElements
     };
-    
+
     axios.post('http://localhost:3001/api/cql', artifact)
       .then((result) => {
         const cqlData = result.data; 
@@ -72,6 +72,10 @@ class BuilderPage extends Component {
         // TODO:
         // capture artifact and ID
         // notification on save
+        console.log('Added Artifact')
+      })
+      .catch((error) => {
+        console.log(error);
       });
   }
 
