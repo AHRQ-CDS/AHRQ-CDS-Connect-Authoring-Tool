@@ -26,13 +26,18 @@ main {
 #{$all-text-inputs} {
   font-weight: 400;
   font-family: 'Rubik', sans-serif;
-  font-size: 1em;
+  font-size: 1rem;
   padding: 0.25em 0.5em;
   border-radius: $border-radius;
-  border-width: $border-width;
   border-color: darken($page-bg, 20%);
   border-style: solid;
+  border-width: 0.1em;
+  border-bottom-width: $border-width;
   outline: 0;
+
+  &:focus {
+    border-color: purple;
+  }
 }
 
 #{$all-buttons} {
@@ -46,4 +51,49 @@ main {
 
 #{$all-buttons-hover} {
   cursor: pointer;
+}
+
+label {
+  font-weight: 500;
+  display: block;
+  margin: 1em 0;
+  text-transform: uppercase;
+  font-size: 0.9em;
+
+  input {
+    display: block;
+  }
+}
+
+table {
+  border-collapse: collapse;
+
+  thead tr:last-child th, thead tr:last-child td {
+    border-bottom: 3px $brown solid;
+  }
+
+  thead th, thead td {
+    font-weight: 500;
+    text-transform: uppercase;
+    font-size: 0.9em;
+    text-align: left;
+  }
+
+  tbody th, tbody td {
+    text-align: left;
+    border-bottom: 1px $white solid;
+  }
+
+  th:not(:last-child), td:not(:last-child) {
+    padding-right: 2em;
+  }
+}
+
+a {
+  color: $brown;
+  font-weight: 500;
+
+  &:hover, &:focus, &:active {
+    color: darken($brown, 25%);
+  }
 }
