@@ -83,12 +83,12 @@ class BuilderPage extends Component {
   saveArtifact() {
     const artifact = {
       name: 'foo',
-      templateInstances: this.state.droppedElements
+      template_instances: this.state.droppedElements
     };
     // TODO: This needs to be extracted to somewhere better
     const url = 'http://localhost:3001/api';
 
-    axios.post(`${url}/Artifact`, artifact)
+    axios.post(`${url}/artifacts`, artifact)
       .then((result) => {
         // TODO:
         // capture artifact and ID

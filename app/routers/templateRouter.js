@@ -1,5 +1,6 @@
 const express = require('express');
 const router = express.Router();
+const TemplateInstance = require('../models/templateInstance');
 
 // Route for saving template instance
 router.route('/')
