@@ -14,14 +14,53 @@ module.exports = CQLRouter;
 
 // Creates the cql file from an artifact object
 function fromArtifactOBJ(req, res) {
-  let text = 'Testing File';
+  let cqlText = '';
+  const allElements = req.body.template_instances;
 
-  res.json({ 
-    filename : 'TheFileName',
-    text : text,
+  // TODO: This will come from the inputs in the "Save" modal eventually.
+  const libraryName = 'AgeRangeAuthoringDemo';
+  const versionNumber = 1;
+  const dataModel = "FHIR version '1.0.2'";
+  const context = 'Patient';
 
+  let initialCQL = `library ${libraryName} version '${versionNumber}' \n\n`;
+  initialCQL += `using ${dataModel} \n\n`;
+  initialCQL += `context ${context} \n\n`;
+  cqlText += initialCQL;
+
+  // TODO: Some of this will be removed and put into separate templates eventually.
+  allElements.forEach((element) => {
+    const paramContext = {};
+
+    element.parameters.forEach((parameter) => {
+      paramContext[parameter.id] = parameter.value;
+    });
+
+    cqlText += `${function (cql) {
+      // eval the cql template with the context we created above
+      // this allows the variable in the template to resolve
+      return eval(`\`${cql}\``);
+    }.call(paramContext, element.cql)}\n`;
   });
+
+  const artifact = { 
+    filename : 'TheFileName',
+    text : cqlText,
+    type : 'text/plain'
+  };
+  res.json(artifact);
 }
+
+// Creates the cql file from an artifact object
+// function fromArtifactOBJ(req, res) {
+//   let text = 'Testing File';
+
+//   res.json({ 
+//     filename : 'TheFileName',
+//     text : text,
+//     type : 'text/plain'
+//   });
+// }
 
 // Creates the cql file from an artifact ID
 function fromArtifactID(req, res) {

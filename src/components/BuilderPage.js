@@ -8,42 +8,6 @@ import BuilderPalette from './BuilderPalette';
 import BuilderTarget from './BuilderTarget';
 import groups from '../data/groupings';
 
-function exportFile(allElements) {
-  let cqlText = '';
-
-  // TODO: This will come from the inputs in the "Save" modal eventually.
-  const libraryName = 'AgeRangeAuthoringDemo';
-  const versionNumber = 1;
-  const dataModel = "FHIR version '1.0.2'";
-  const context = 'Patient';
-
-  let initialCQL = `library ${libraryName} version '${versionNumber}' \n\n`;
-  initialCQL += `using ${dataModel} \n\n`;
-  initialCQL += `context ${context} \n\n`;
-  cqlText += initialCQL;
-
-  // TODO: Some of this will be removed and put into separate templates eventually.
-  allElements.forEach((element) => {
-    const paramContext = {};
-
-    element.parameters.forEach((parameter) => {
-      paramContext[parameter.id] = parameter.value;
-    });
-
-    cqlText += `${function (cql) {
-      // eval the cql template with the context we created above
-      // this allows the variable in the template to resolve
-      return eval(`\`${cql}\``);
-    }.call(paramContext, element.cql)}\n`;
-  });
-
-  const saveElement = document.createElement('a');
-  saveElement.href = `data:text/plain,${encodeURIComponent(cqlText)}`;
-  saveElement.download = `${libraryName}.cql`;
-  saveElement.click();
-}
-
-
 class BuilderPage extends Component {
   constructor(props) {
     super(props);
@@ -77,7 +41,22 @@ class BuilderPage extends Component {
   }
 
   downloadCQL() {
-    exportFile(this.state.droppedElements);
+    const artifact = {
+      name: 'foo',
+      template_instances: this.state.droppedElements
+    };
+    
+    axios.post('http://localhost:3001/api/cql', artifact)
+      .then((result) => {
+        const cqlData = result.data; 
+        const saveElement = document.createElement('a');
+        saveElement.href = `data:${cqlData.type},${encodeURIComponent(cqlData.text)}`;
+        saveElement.download = `${cqlData.filename}.cql`;
+        saveElement.click();
+      })
+      .catch((error) => {
+        console.log(error);
+      })
   }
 
   saveArtifact() {
