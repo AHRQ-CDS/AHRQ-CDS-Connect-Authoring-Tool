@@ -32,7 +32,7 @@ class BuilderPage extends Component {
         const id = this.props.match.params.id;
         axios.get(`http://localhost:3001/api/artifacts/${id}`)
           .then((res) => {
-            this.setState({ artifact: res.data });
+            this.setState({ artifact: res.data[0] });
           });
       } else {
         this.setState({ artifact: null });

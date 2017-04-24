@@ -10,10 +10,11 @@ module.exports = [
         name: 'Age Range',
         category: 'Demographics',
         parameters: [
+        { id: 'element_name', type: 'string', name: 'Element Name' },
         { id: 'min_age', type: 'integer', name: 'Minimum Age' },
         { id: 'max_age', type: 'integer', name: 'Maximum Age' },
         ],
-        cql: 'define AgeRange: AgeInYears()>=${this.min_age} and AgeInYears()<=${this.max_age}'
+        cql: 'define ${this.element_name}: AgeInYears()>=${this.min_age} and AgeInYears()<=${this.max_age}'
       }
     ]
   }
