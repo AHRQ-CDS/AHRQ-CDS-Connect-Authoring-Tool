@@ -16,12 +16,13 @@
     "mongoose": "^4.9.1",
     "nodemon": "^1.11.0",
     "react": "^15.4.2",
+    "react-axe": "^2.1.1",
     "react-dnd": "^2.3.0",
     "react-dnd-html5-backend": "^2.3.0",
     "react-dom": "^15.4.2",
     "react-fontawesome": "^1.5.0",
     "react-router-dom": "^4.0.0",
-    "react-axe": "^2.1.1"
+    "slug": "^0.9.1"
   },
   "devDependencies": {
     "axios-mock-adapter": "^1.8.1",
