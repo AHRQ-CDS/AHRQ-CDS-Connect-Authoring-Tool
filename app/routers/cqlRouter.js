@@ -7,17 +7,23 @@ CQLRouter.route('/')
   .post(fromArtifactOBJ)
 
 // Routes for /api/cql/:artifact
-CQLRouter.route('/:author')
+CQLRouter.route('/:artifact')
   .get(fromArtifactID)
 
 module.exports = CQLRouter;
 
+// Creates the cql file from an artifact object
+function fromArtifactOBJ(req, res) {
+  let text = 'Testing File';
+
+  res.json({ 
+    filename : 'TheFileName',
+    text : text,
+
+  });
+}
+
 // Creates the cql file from an artifact ID
 function fromArtifactID(req, res) {
 
-}
-
-// Creates the cql file from an artifact object
-function fromArtifactOBJ(req, res) {
-   
 }
