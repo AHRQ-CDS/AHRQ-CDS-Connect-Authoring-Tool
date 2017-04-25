@@ -1,14 +1,19 @@
-import React, { Component } from 'react';
+import React, { Component, PropTypes } from 'react';
 import HTML5Backend from 'react-dnd-html5-backend';
 import { DragDropContext } from 'react-dnd';
 import axios from 'axios';
 import update from 'immutability-helper';
+
 import BuilderSubPalette from './BuilderSubPalette';
 import BuilderPalette from './BuilderPalette';
 import BuilderTarget from './BuilderTarget';
 import groups from '../data/groupings';
 
 class BuilderPage extends Component {
+  static contextTypes = {
+    router: PropTypes.object
+  };
+
   constructor(props) {
     super(props);
 
@@ -59,7 +64,7 @@ class BuilderPage extends Component {
       })
   }
 
-  saveArtifact() {
+  saveArtifact(exitPage) {
     const artifact = {
       name: 'foo',
       template_instances: this.state.droppedElements
@@ -73,6 +78,10 @@ class BuilderPage extends Component {
         // capture artifact and ID
         // notification on save
         console.log('Added Artifact')
+        if (exitPage) {
+          // Redirect the page to the artifact list after saving if click "Close" button
+          this.context.router.history.push('/artifacts');
+        }
       })
       .catch((error) => {
         console.log(error);
@@ -144,9 +153,9 @@ class BuilderPage extends Component {
         <header className="builder__header">
           <h2 className="builder__heading">{this.state.artifact ? this.state.artifact.name : 'Untitled Artifact'}</h2>
           <div className="builder__buttonbar">
-            <button onClick={this.saveArtifact} className="builder__savebutton is-unsaved">Save</button>
+            <button onClick={() => this.saveArtifact(false)} className="builder__savebutton is-unsaved">Save and Continue</button>
             <button onClick={this.downloadCQL} className="builder__cqlbutton is-unsaved">CQL</button>
-            <button className="builder__deletebutton">Delete</button>
+            <button onClick={() => this.saveArtifact(true)} className="builder__deletebutton"> Save and Close </button>
           </div>
         </header>
         <div className="builder__sidebar">
