@@ -26,6 +26,14 @@ class TemplateInstance extends Component {
     this.props.updateSingleElement(this.props.templateInstance.uniqueId, newState);
   }
 
+  validateOneWord(value) {
+    if (value.includes(' ')) {
+      return false;
+    } else {
+      return true;
+    }
+  }
+
   render() {
     return (
       <div className="element">
@@ -46,6 +54,7 @@ class TemplateInstance extends Component {
                 key={param.id}
                 {...param}
                 updateInstance={this.updateInstance}
+                validation={this.validateOneWord}
               />
             );
           }
