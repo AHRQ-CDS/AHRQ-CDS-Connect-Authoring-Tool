@@ -70,27 +70,38 @@ class BuilderPage extends Component {
   }
 
   saveArtifact(exitPage) {
-    const artifact = {
-      name: 'foo',
-      template_instances: this.state.droppedElements
-    };
+    let artifact = this.state.artifact || { name: 'Untitled Artifact' };
+    artifact.template_instances = this.state.droppedElements;
     // TODO: This needs to be extracted to somewhere better
     const url = 'http://localhost:3001/api';
 
-    axios.post(`${url}/artifacts`, artifact)
-      .then((result) => {
-        // TODO:
-        // capture artifact and ID
-        // notification on save
-        console.log('Added Artifact');
-        if (exitPage) {
-          // Redirect the page to the artifact list after saving if click "Close" button
-          this.context.router.history.push('/artifacts');
-        }
-      })
-      .catch((error) => {
-        console.log(error);
-      });
+    if (artifact._id) {
+      axios.put(`${url}/artifacts`, artifact)
+        .then((result) => {
+          console.log('Updated Artifact');
+          if (exitPage) {
+            this.context.router.history.push('/artifacts');
+          }
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+    } else {
+      axios.post(`${url}/artifacts`, artifact)
+        .then((result) => {
+          // TODO:
+          // capture artifact and ID
+          // notification on save
+          console.log('Added Artifact');
+          if (exitPage) {
+            // Redirect the page to the artifact list after saving if click "Close" button
+            this.context.router.history.push('/artifacts');
+          }
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    }
   }
 
   componentWillReceiveProps(nextProps) {

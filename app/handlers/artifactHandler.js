@@ -36,12 +36,15 @@ function singlePost(req, res) {
 
 // Update a single artifact
 function singlePut(req, res) {
-  console.log(req.body);
   let id = req.body._id;
   let artifact = req.body;
   Artifact.update(
     { _id : id },
-    { $set : artifact },
+    {
+      name: artifact.name,
+      version: artifact.version,
+      template_instances: artifact.template_instances
+    },
     function(error, response) {
       if (error) res.status(500).send(error);
       else res.sendStatus(200);
