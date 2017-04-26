@@ -1,6 +1,7 @@
 module.exports = {
-   AgeRange : `define AgeRange: AgeInYears()>=\$\{this.minInt\} and AgeInYears()<=\$\{this.maxInt\}\n`,
-   MostRecentObservation: `define \${this.observation.name\}:
+   AgeRange : `define \$\{this.element_name\}:
+              AgeInYears()>=\$\{this.min_age\} and AgeInYears()<=\$\{this.max_age\}\n`,
+   MostRecentObservation: `define \${this.element_name\}:
               Last (
                 [Observation: "\${this.observation.name\}"] O
                   where O.status.value = 'final'

@@ -9,9 +9,10 @@ module.exports = [
         id: 'AgeRange',
         name: 'Age Range',
         parameters: [
-          { id: 'minInt', type: 'integer', name: 'Minimum Age' },
-          { id: 'maxInt', type: 'integer', name: 'Maximum Age' },
-        ]
+          { id: 'element_name', type: 'string', name: 'Element Name' },
+          { id: 'min_age', type: 'integer', name: 'Minimum Age' },
+          { id: 'max_age', type: 'integer', name: 'Maximum Age' },
+        ],
       }
     ]
   },
@@ -23,7 +24,9 @@ module.exports = [
       {
         id: 'MostRecentObservation',
         name: 'Most Recent Observation',
+        category: 'Observations',
         parameters: [
+          { id: 'element_name', type: 'string', name: 'Element Name' },
           { id: 'observation', type: 'observation', name: 'Observation' }
         ],
       }

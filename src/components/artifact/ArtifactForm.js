@@ -38,6 +38,7 @@ class ArtifactForm extends Component {
   render() {
     return (
       <form className='form__inline' onSubmit={this.addArtifact}>
+      <div className='form__group'>
         <label htmlFor={this.state.nameID}>
           Artifact Name
           <input id={this.state.nameID}
@@ -47,6 +48,8 @@ class ArtifactForm extends Component {
             value={this.state.name}
             onChange={this.handleInputChange} />
         </label>
+        </div>
+        <div className='form__group'>
         <label htmlFor={this.state.versionID}>
           Version
           <input id={this.state.versionID}
@@ -56,6 +59,7 @@ class ArtifactForm extends Component {
             value={this.state.version}
             onChange={this.handleInputChange} />
         </label>
+        </div>
         <button type='submit' className='primary-button'>Add new artifact</button>
       </form>
     );

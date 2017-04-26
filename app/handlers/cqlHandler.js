@@ -23,14 +23,8 @@ function idToObj(req, res, next) {
 
 // Creates the cql file from an artifact object
 function objToCql(req, res) {
-  console.log(req.body);
   let artifact = new CqlArtifact(req.body);
-  const artifactObj = { 
-    filename : artifact.name,
-    text : artifact.toString(),
-    type : 'text/plain'
-  };
-  res.json(artifactObj);
+  res.json(artifact.toJson());
 }
 
 // Evaluates strings templates to inject variables
@@ -40,6 +34,7 @@ function interpolate(string, context) {
   }.call(context, string)}\n`  
 }
 
+// Class to handle all cql generation
 class CqlArtifact {
   constructor(artifact) {
     this.name = slug(artifact.name ? artifact.name : 'untitled');
@@ -53,7 +48,7 @@ class CqlArtifact {
 
   // Generate cql for a single element
   parseElement(element) {
-    const paramContext = { name : element.uniqueId };
+    const paramContext = {};
     element.parameters.forEach((parameter) => {
       switch (parameter.type) {
         case 'observation':
@@ -66,6 +61,12 @@ class CqlArtifact {
           break;
       }
     });
+
+    if ('element_name' in paramContext && paramContext.element_name.length) {
+      paramContext.element_name = slug(paramContext.element_name);
+    } else {
+      paramContext.element_name = slug(element.uniqueId);
+    }
     return interpolate(CqlTemplates[element.id], paramContext);
   }
 
@@ -94,11 +95,19 @@ class CqlArtifact {
     return headersCQL;
   }
 
+  // Produces the cql in string format
   toString() {
     let bodyCQL = this.parseElements();
     let headersCQL = this.headers();
-    console.log(`${headersCQL}${bodyCQL}`);
     return `${headersCQL}${bodyCQL}`;
+  }
 
+  // Return a cql file as a json object
+  toJson() {
+    return { 
+      filename : this.name,
+      text : this.toString(),
+      type : 'text/plain'
+    }
   }
 }

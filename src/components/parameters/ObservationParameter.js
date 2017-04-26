@@ -2,7 +2,6 @@ import React from 'react';
 import Select from 'react-select';
 import _ from 'lodash';
 
-const ID = _.uniqueId('parameter-');
 
 export default (props) => {
   const id = _.uniqueId('parameter-');
@@ -10,11 +9,12 @@ export default (props) => {
   const observations = props.resources['observations'];
   return (
     <div>
-      <label htmlFor={ID}>
+      <label htmlFor={id}>
         {props.param.name}:
 				<Select labelKey={"name"} 
 				        autofocus 
-				        options={observations} 
+				        options={observations}
+                inputProps={{'id': id}}
 				        clearable={true} 
 				        name={props.param.id}
 				        value={props.param.value} 

@@ -61,3 +61,16 @@
     }
   }
 }
+
+/* a fast way to inundate a selector and descendants
+   with a color! not intended for buttons.
+   this approach might change later */
+@mixin state-color($color) {
+  color: $color;
+  border-color: $color;
+
+  * {
+    color: $color;
+    border-color: $color;
+  }
+}

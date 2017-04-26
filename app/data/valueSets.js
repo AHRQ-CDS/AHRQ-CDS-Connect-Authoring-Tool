@@ -20,6 +20,13 @@ module.exports = {
       name: "Systolic Blood Pressure",
       oid: '2.16.840.1.113883.3.526.3.1032',
       units: {values: ['mm[Hg]', 'mmHg', 'mm Hg'], code: 'mm[Hg]'}
+    },
+    ldl_cholesterol : {
+      // https://ushik.ahrq.gov/ViewItemDetails?system=mu&itemKey=171113000
+      id: "ldl_cholesterol",
+      name: "LDL Cholesterol",
+      oid: '2.16.840.1.113883.3.464.1003.198.12.1016',
+      units: {values: ['mg/dL'], code: 'mg/dL'}
     }
   },
   conditions: {
