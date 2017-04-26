@@ -8,7 +8,7 @@ export default (props) => {
   const id = _.uniqueId('parameter-');
 
   return (
-    <div>
+    <div className='form__group'>
       <label htmlFor={id}>
         {props.name}:
 

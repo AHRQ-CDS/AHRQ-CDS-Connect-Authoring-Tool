@@ -10,20 +10,22 @@ import _ from 'lodash';
 class StringParameter extends Component {
   constructor(props) {
     super(props);
-    this.state = { valid: true };
+    this.state = { valid: null }; // no validation at start
   }
 
   render() {
     const id = _.uniqueId('parameter-');
 
     return (
-      <div>
+      <div className={`form__group ${
+        (this.state.valid) ? 'form__group-valid'
+        : (this.state.valid === false) ? 'form__group-invalid' : null
+      }`}>
         <label htmlFor={id}>
           {this.props.name}:
 
           <input id={id}
             type="text"
-            className={this.state.valid ? null : 'danger'}
             name={this.props.id}
             defaultValue={this.props.value}
             onChange={(event) => {
@@ -35,10 +37,12 @@ class StringParameter extends Component {
               }
             }}
           />
-          { !this.state.valid
-            ? <span className='danger'> Spaces are prohibited in element names </span>
-            : null }
         </label>
+        <span>
+        { this.state.valid === false
+          ? 'Spaces are prohibited in element names' /* TODO: Have validation message provided by the validation function or some other prop */
+          : null }
+        </span>
       </div>
     );
   }
