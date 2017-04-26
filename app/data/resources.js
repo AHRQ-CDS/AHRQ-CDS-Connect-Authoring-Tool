@@ -15,6 +15,13 @@ module.exports = {
       units: {values: ['mg/dL'], code: 'mg/dL'}
     },
     {
+      // https://ushik.ahrq.gov/ViewItemDetails?system=mu&itemKey=171113000
+      id: "ldl_cholesterol",
+      name: "LDL Cholesterol",
+      oid: '2.16.840.1.113883.3.464.1003.198.12.1016',
+      units: {values: ['mg/dL'], code: 'mg/dL'}
+    },
+    {
       // https://ushik.ahrq.gov/ViewItemDetails?system=mu&itemKey=211939000
       id: "systolic_blood_pressure",
       name: "Systolic Blood Pressure",
