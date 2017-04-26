@@ -6,12 +6,12 @@ module.exports = [
     name: 'Demographics',
     entries: [
       {
-        id: 'age_range',
+        id: 'AgeRange',
         name: 'Age Range',
         category: 'Demographics',
         parameters: [
-        { id: 'min_age', type: 'integer', name: 'Minimum Age' },
-        { id: 'max_age', type: 'integer', name: 'Maximum Age' },
+          { id: 'minInt', type: 'integer', name: 'Minimum Age' },
+          { id: 'maxInt', type: 'integer', name: 'Maximum Age' },
         ],
         cql: 'define AgeRange: AgeInYears()>=${this.min_age} and AgeInYears()<=${this.max_age}'
       }
