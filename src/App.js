@@ -1,6 +1,7 @@
 import React from 'react';
 import '../node_modules/font-awesome/css/font-awesome.css';
 import './styles/App.css';
+import 'react-select/dist/react-select.css';
 
 export default () => (
   <div>

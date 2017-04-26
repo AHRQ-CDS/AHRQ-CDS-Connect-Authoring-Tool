@@ -1,5 +1,7 @@
 import React, { Component, PropTypes } from 'react';
+import axios from 'axios';
 import IntegerParameter from './parameters/IntegerParameter';
+import ObservationParameter from './parameters/ObservationParameter';
 
 class TemplateInstance extends Component {
   static propTypes = {
@@ -10,19 +12,49 @@ class TemplateInstance extends Component {
   constructor(props) {
     super(props);
 
-    this.state = {};
+    this.state = {resources: {}};
     this.updateInstance = this.updateInstance.bind(this);
+    this.selectTemplate = this.selectTemplate.bind(this);
   }
 
   componentWillMount() {
     this.props.templateInstance.parameters.forEach(param => {
       this.setState({ [param.id]: param.value });
     });
+
+    axios.get('http://localhost:3001/api/resources')
+      .then((result) => {
+        this.setState({ resources: result.data });
+    })
+
   }
 
   updateInstance(newState) {
     this.setState(newState);
     this.props.updateSingleElement(this.props.templateInstance.uniqueId, newState);
+  }
+
+  selectTemplate(param) {
+    switch (param.type) {
+      case "integer":
+        return (
+          <IntegerParameter
+            key={param.id}
+            param={param}
+            updateInstance={this.updateInstance} />
+        );
+      case "observation":
+        return (
+          <ObservationParameter
+            key={param.id}
+            param={param}
+            resources={this.state.resources}
+            updateInstance={this.updateInstance} />
+        );
+      default:
+        return;
+    }
+
   }
 
   render() {
@@ -31,11 +63,7 @@ class TemplateInstance extends Component {
         <strong>{this.props.templateInstance.name}</strong>
         {this.props.templateInstance.parameters.map((param, index) =>
           // todo: each parameter type should probably have its own component
-          <IntegerParameter
-            key={param.id}
-            {...param}
-            updateInstance={this.updateInstance}
-          />
+          this.selectTemplate(param)
         )}
       </div>
     );
