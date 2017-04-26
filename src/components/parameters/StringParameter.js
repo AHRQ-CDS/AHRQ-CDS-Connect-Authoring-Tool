@@ -10,7 +10,7 @@ import _ from 'lodash';
 class StringParameter extends Component {
   constructor(props) {
     super(props);
-    this.state = { valid: true }
+    this.state = { valid: true };
   }
 
   render() {
@@ -27,7 +27,7 @@ class StringParameter extends Component {
             name={this.props.id}
             defaultValue={this.props.value}
             onChange={(event) => {
-            	const name = event.target.name;
+              const name = event.target.name;
               const value = event.target.value;
               this.setState({ valid: this.props.validation(value) });
               if (this.state.valid) {
@@ -35,8 +35,8 @@ class StringParameter extends Component {
               }
             }}
           />
-          { !this.state.valid 
-            ? <span className='danger'> Spaces are prohibited in element names </span> 
+          { !this.state.valid
+            ? <span className='danger'> Spaces are prohibited in element names </span>
             : null }
         </label>
       </div>

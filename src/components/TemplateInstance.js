@@ -2,6 +2,13 @@ import React, { Component, PropTypes } from 'react';
 import IntegerParameter from './parameters/IntegerParameter';
 import StringParameter from './parameters/StringParameter';
 
+function validateOneWord(value) {
+  if (value.includes(' ')) {
+    return false;
+  }
+  return true;
+}
+
 class TemplateInstance extends Component {
   static propTypes = {
     templateInstance: PropTypes.object.isRequired,
@@ -16,7 +23,7 @@ class TemplateInstance extends Component {
   }
 
   componentWillMount() {
-    this.props.templateInstance.parameters.forEach(param => {
+    this.props.templateInstance.parameters.forEach((param) => {
       this.setState({ [param.id]: param.value });
     });
   }
@@ -26,21 +33,13 @@ class TemplateInstance extends Component {
     this.props.updateSingleElement(this.props.templateInstance.uniqueId, newState);
   }
 
-  validateOneWord(value) {
-    if (value.includes(' ')) {
-      return false;
-    } else {
-      return true;
-    }
-  }
-
   render() {
     return (
       <div className="element">
         <strong>{this.props.templateInstance.name}</strong>
         {this.props.templateInstance.parameters.map((param, index) => {
           // todo: each parameter type should probably have its own component
-          if (param.type === 'integer'){
+          if (param.type === 'integer') {
             return (
               <IntegerParameter
                 key={param.id}
@@ -54,12 +53,11 @@ class TemplateInstance extends Component {
                 key={param.id}
                 {...param}
                 updateInstance={this.updateInstance}
-                validation={this.validateOneWord}
+                validation={validateOneWord}
               />
             );
-          } else {
-            return null;
           }
+          return null;
         })}
       </div>
     );

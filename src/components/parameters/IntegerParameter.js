@@ -18,10 +18,10 @@ export default (props) => {
           defaultValue={props.value}
           onChange={(event) => {
             const value = parseInt(event.target.value, 10);
-            props.updateInstance({ [event.target.name]: value })
+            props.updateInstance({ [event.target.name]: value });
           }}
         />
       </label>
     </div>
   );
-}
+};

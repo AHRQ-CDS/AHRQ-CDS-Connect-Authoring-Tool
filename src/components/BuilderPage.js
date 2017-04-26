@@ -53,7 +53,7 @@ class BuilderPage extends Component {
 
     axios.post('http://localhost:3001/api/cql', artifact)
       .then((result) => {
-        const cqlData = result.data; 
+        const cqlData = result.data;
         const saveElement = document.createElement('a');
         saveElement.href = `data:${cqlData.type},${encodeURIComponent(cqlData.text)}`;
         saveElement.download = `${cqlData.filename}.cql`;
@@ -61,7 +61,7 @@ class BuilderPage extends Component {
       })
       .catch((error) => {
         console.log(error);
-      })
+      });
   }
 
   saveArtifact(exitPage) {
@@ -77,7 +77,7 @@ class BuilderPage extends Component {
         // TODO:
         // capture artifact and ID
         // notification on save
-        console.log('Added Artifact')
+        console.log('Added Artifact');
         if (exitPage) {
           // Redirect the page to the artifact list after saving if click "Close" button
           this.context.router.history.push('/artifacts');
@@ -110,16 +110,14 @@ class BuilderPage extends Component {
 
   updateSingleElement(instanceId, state) {
     const elements = this.state.droppedElements;
-    const elementIndex = elements.findIndex((element) => {
+    const elementIndex = elements.findIndex(element =>
       // get relevant element
-      return element.uniqueId === instanceId;
-    });
+       element.uniqueId === instanceId);
 
     if (elementIndex !== undefined) {
       // get relevant parameter
-      const paramIndex = elements[elementIndex].parameters.findIndex((param) => {
-        return state.hasOwnProperty(param.id) === true;
-      });
+      const paramIndex = elements[elementIndex].parameters.findIndex(
+        param => state.hasOwnProperty(param.id) === true);
 
       // edit element with new value using immutability-helper
       const editedElements = update(elements, {
@@ -153,9 +151,18 @@ class BuilderPage extends Component {
         <header className="builder__header">
           <h2 className="builder__heading">{this.state.artifact ? this.state.artifact.name : 'Untitled Artifact'}</h2>
           <div className="builder__buttonbar">
-            <button onClick={() => this.saveArtifact(false)} className="builder__savebutton is-unsaved">Save and Continue</button>
-            <button onClick={this.downloadCQL} className="builder__cqlbutton is-unsaved">CQL</button>
-            <button onClick={() => this.saveArtifact(true)} className="builder__deletebutton"> Save and Close </button>
+            <button onClick={() => this.saveArtifact(false)}
+              className="builder__savebutton is-unsaved">
+              Save and Continue
+            </button>
+            <button onClick={this.downloadCQL}
+              className="builder__cqlbutton is-unsaved">
+              CQL
+            </button>
+            <button onClick={() => this.saveArtifact(true)}
+              className="builder__deletebutton">
+              Save and Close
+            </button>
           </div>
         </header>
         <div className="builder__sidebar">
