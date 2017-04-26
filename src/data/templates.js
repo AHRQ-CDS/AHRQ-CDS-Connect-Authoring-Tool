@@ -25,7 +25,7 @@ module.exports = [
       {
         id: 'most_recent_observation',
         name: 'Most Recent Observation',
-        category: 'Demographics',
+        category: 'Observations',
         parameters: [
         { id: 'observation', type: 'observation', name: 'Observation' }
         ],
