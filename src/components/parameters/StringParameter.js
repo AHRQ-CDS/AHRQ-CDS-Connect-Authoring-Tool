@@ -15,6 +15,7 @@ class StringParameter extends Component {
 
   render() {
     const id = _.uniqueId('parameter-');
+    const helpId = _.uniqueId('parameter-help-');
 
     return (
       <div className={`form__group ${
@@ -27,6 +28,7 @@ class StringParameter extends Component {
           <input id={id}
             type="text"
             name={this.props.id}
+            aria-describedby={helpId}
             defaultValue={this.props.value}
             onChange={(event) => {
               const name = event.target.name;
@@ -38,7 +40,7 @@ class StringParameter extends Component {
             }}
           />
         </label>
-        <span>
+        <span id={helpId} role='alert' aria-live='assertive'>        
         { this.state.valid === false
           ? 'Spaces are prohibited in element names' /* TODO: Have validation message provided by the validation function or some other prop */
           : null }
