@@ -2,8 +2,6 @@ import React, { Component, PropTypes } from 'react';
 import axios from 'axios';
 import IntegerParameter from './parameters/IntegerParameter';
 import ObservationParameter from './parameters/ObservationParameter';
-// import resources from '../data/resources';
-const resources = []
 
 class TemplateInstance extends Component {
   static propTypes = {
