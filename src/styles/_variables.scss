@@ -23,6 +23,9 @@ $primary-button-bg-color: $green;
 $danger-button-text-color: darken(red, 20%);
 $danger-button-bg-color: lighten(red, 20%);
 
+$form-validation-success-color: shade($green, 60%);
+$form-validation-error-color: darken(red, 20%);
+
 $navbar-bg-color: $blue;
 $navbar-link-color: $white;
 $navbar-link-active-color: $white;

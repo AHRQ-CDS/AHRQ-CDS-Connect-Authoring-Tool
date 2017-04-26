@@ -1,7 +1,15 @@
 import React, { Component, PropTypes } from 'react';
 import axios from 'axios';
 import IntegerParameter from './parameters/IntegerParameter';
+import StringParameter from './parameters/StringParameter';
 import ObservationParameter from './parameters/ObservationParameter';
+
+function validateOneWord(value) {
+  if (value.includes(' ')) {
+    return false;
+  }
+  return true;
+}
 
 class TemplateInstance extends Component {
   static propTypes = {
@@ -18,7 +26,7 @@ class TemplateInstance extends Component {
   }
 
   componentWillMount() {
-    this.props.templateInstance.parameters.forEach(param => {
+    this.props.templateInstance.parameters.forEach((param) => {
       this.setState({ [param.id]: param.value });
     });
 
@@ -51,6 +59,14 @@ class TemplateInstance extends Component {
             resources={this.state.resources}
             updateInstance={this.updateInstance} />
         );
+      case "string": 
+        return (
+          <StringParameter
+            key={param.id}
+            {...param}
+            updateInstance={this.updateInstance}
+            validation={validateOneWord} />
+        );
       default:
         return;
     }
@@ -61,7 +77,7 @@ class TemplateInstance extends Component {
     return (
       <div className="element">
         <strong>{this.props.templateInstance.name}</strong>
-        {this.props.templateInstance.parameters.map((param, index) =>
+        {this.props.templateInstance.parameters.map((param, index) => 
           // todo: each parameter type should probably have its own component
           this.selectTemplate(param)
         )}

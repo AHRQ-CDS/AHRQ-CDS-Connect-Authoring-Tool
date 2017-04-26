@@ -8,7 +8,7 @@ export default (props) => {
   const id = _.uniqueId('parameter-');
 
   return (
-    <div>
+    <div className='form__group'>
       <label htmlFor={id}>
         {props.param.name}:
 
@@ -18,10 +18,10 @@ export default (props) => {
           defaultValue={props.param.value}
           onChange={(event) => {
             const value = parseInt(event.target.value, 10);
-            props.updateInstance({ [event.target.name]: value })
+            props.updateInstance({ [event.target.name]: value });
           }}
         />
       </label>
     </div>
   );
-}
+};

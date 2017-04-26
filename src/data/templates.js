@@ -10,10 +10,11 @@ module.exports = [
         name: 'Age Range',
         category: 'Demographics',
         parameters: [
+        { id: 'element_name', type: 'string', name: 'Element Name' },
         { id: 'min_age', type: 'integer', name: 'Minimum Age' },
         { id: 'max_age', type: 'integer', name: 'Maximum Age' },
         ],
-        cql: 'define AgeRange: AgeInYears()>=${this.min_age} and AgeInYears()<=${this.max_age}'
+        cql: 'define ${this.element_name}: AgeInYears()>=${this.min_age} and AgeInYears()<=${this.max_age}'
       }
     ]
   },
@@ -27,11 +28,12 @@ module.exports = [
         name: 'Most Recent Observation',
         category: 'Observations',
         parameters: [
+        { id: 'element_name', type: 'string', name: 'Element Name' },
         { id: 'observation', type: 'observation', name: 'Observation' }
         ],
-        cql: `define LastSystolicBP:
+        cql: `define \$\{this.element_name\}:
               Last (
-                [Observation: \$\{this.observation.name\}] O
+                [Observation: "\$\{this.observation.name\}"] O
                   where O.status.value = 'final'
                   and (
                     O.valueQuantity.unit.value in {\$\{this.observation.units.values\}}
