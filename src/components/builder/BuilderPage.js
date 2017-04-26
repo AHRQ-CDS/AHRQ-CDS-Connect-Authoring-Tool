@@ -37,10 +37,13 @@ class BuilderPage extends Component {
         const id = this.props.match.params.id;
         axios.get(`http://localhost:3001/api/artifacts/${id}`)
           .then((res) => {
-            this.setState({ artifact: res.data[0] });
+            this.setState({
+              artifact: res.data[0],
+              droppedElements: res.data[0].template_instances
+            });
           });
       } else {
-        this.setState({ artifact: null });
+        this.setState({ artifact: null, droppedElements: null });
       }
     }
   }
