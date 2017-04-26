@@ -57,6 +57,8 @@ class TemplateInstance extends Component {
                 validation={this.validateOneWord}
               />
             );
+          } else {
+            return null;
           }
         })}
       </div>
