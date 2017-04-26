@@ -7,7 +7,7 @@ import update from 'immutability-helper';
 import BuilderSubPalette from './BuilderSubPalette';
 import BuilderPalette from './BuilderPalette';
 import BuilderTarget from './BuilderTarget';
-import groups from '../data/groupings';
+import groups from '../data/templates';
 
 class BuilderPage extends Component {
   static contextTypes = {
@@ -57,6 +57,8 @@ class BuilderPage extends Component {
         const saveElement = document.createElement('a');
         saveElement.href = `data:${cqlData.type},${encodeURIComponent(cqlData.text)}`;
         saveElement.download = `${cqlData.filename}.cql`;
+        // Open in a new tab rather than download - convenient for testing
+        //saveElement.target = "_blank"
         saveElement.click();
       })
       .catch((error) => {

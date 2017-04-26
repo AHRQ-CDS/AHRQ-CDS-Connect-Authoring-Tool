@@ -10,12 +10,12 @@ export default (props) => {
   return (
     <div className='form__group'>
       <label htmlFor={id}>
-        {props.name}:
+        {props.param.name}:
 
         <input id={id}
           type="number"
-          name={props.id}
-          defaultValue={props.value}
+          name={props.param.id}
+          defaultValue={props.param.value}
           onChange={(event) => {
             const value = parseInt(event.target.value, 10);
             props.updateInstance({ [event.target.name]: value });
