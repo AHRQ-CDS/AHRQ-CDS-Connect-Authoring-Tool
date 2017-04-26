@@ -26,7 +26,6 @@ const droppedElements = [
        "value": 45
      }
    ],
-   "cql": "define ${this.element_name}: AgeInYears()>=${this.min_age} and AgeInYears()<=${this.max_age}",
    "uniqueId": "age_range31"
  },
  {
@@ -57,7 +56,6 @@ const droppedElements = [
        }
      }
    ],
-   "cql": "define ${this.element_name}:\n              Last (\n                [Observation: \"${this.observation.name}\"] O\n                  where O.status.value = 'final'\n                  and (\n                    O.valueQuantity.unit.value in {${this.observation.units.values}}\n                    or O.valueQuantity.code.value = ${this.observation.units.code}\n                  )\n                  sort by O.issued\n              )",
    "uniqueId": "most_recent_observation67"
  }
 ];
