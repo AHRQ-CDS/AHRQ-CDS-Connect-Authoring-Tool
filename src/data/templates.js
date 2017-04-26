@@ -16,6 +16,31 @@ module.exports = [
         cql: 'define AgeRange: AgeInYears()>=${this.min_age} and AgeInYears()<=${this.max_age}'
       }
     ]
+  },
+  {
+    id: 2,
+    icon: 'eye',
+    name: 'Observations',
+    entries: [
+      {
+        id: 'most_recent_observation',
+        name: 'Most Recent Observation',
+        category: 'Demographics',
+        parameters: [
+        { id: 'observation', type: 'observation', name: 'Observation' }
+        ],
+        cql: `define LastSystolicBP:
+              Last (
+                [Observation: \$\{this.observation.name\}] O
+                  where O.status.value = 'final'
+                  and (
+                    O.valueQuantity.unit.value in {\$\{this.observation.units.values\}}
+                    or O.valueQuantity.code.value = \$\{this.observation.units.code\}
+                  )
+                  sort by O.issued
+              )`
+      }
+    ]
   }
   //   'Gender',
   //   'Ethnicity',

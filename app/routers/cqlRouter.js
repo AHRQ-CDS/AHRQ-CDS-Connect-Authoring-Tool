@@ -1,4 +1,5 @@
 const express = require('express');
+const _ = require('lodash');
 const Artifact = require('../models/artifact');
 const slug = require('slug');
 const CQLRouter = express.Router();
@@ -15,7 +16,6 @@ module.exports = CQLRouter;
 
 // Creates the cql file from an artifact object
 function fromArtifactOBJ(req, res) {
-  let cqlText = '';
   const allElements = req.body.template_instances;
   const libraryName = slug(req.body.name ? req.body.name : 'untitled');
 
@@ -26,23 +26,36 @@ function fromArtifactOBJ(req, res) {
 
   let initialCQL = `library ${libraryName} version '${versionNumber}' \n\n`;
   initialCQL += `using ${dataModel} \n\n`;
-  initialCQL += `context ${context} \n\n`;
-  cqlText += initialCQL;
 
+  const resourceMap = {}
+  let definitionsCQL = `context ${context} \n\n`;
   // TODO: Some of this will be removed and put into separate templates eventually.
   allElements.forEach((element) => {
     const paramContext = {};
 
     element.parameters.forEach((parameter) => {
-      paramContext[parameter.id] = parameter.value;
+      switch (parameter.type) {
+        case 'observation':
+          paramContext[parameter.id] = parameter.value;
+          resourceMap[parameter.value.id] = parameter.value
+          break;
+        default:
+          paramContext[parameter.id] = parameter.value;
+          break;
+      }
+
     });
 
-    cqlText += `${function (cql) {
-      // eval the cql template with the context we created above
-      // this allows the variable in the template to resolve
-      return eval(`\`${cql}\``);
-    }.call(paramContext, element.cql)}\n`;
+    definitionsCQL += interpolate(`${element.cql}\n`, paramContext);
   });
+
+  let valueSetCQL = ''
+  _.values(resourceMap).forEach((resource) => {
+    valueSetCQL += `valueset "${resource.name}": '${resource.oid}'\n`;
+  });
+  valueSetCQL += (valueSetCQL.length > 0) ? '\n' : '';
+
+  let cqlText = `${initialCQL}${valueSetCQL}${definitionsCQL}`
 
   const artifact = { 
     filename : libraryName,
@@ -50,6 +63,14 @@ function fromArtifactOBJ(req, res) {
     type : 'text/plain'
   };
   res.json(artifact);
+}
+
+function interpolate(string, context) {
+  return `${function (stringTemplate) {
+            // eval the string template with the context 
+            // this allows the variable in the template to resolve
+            return eval(`\`${stringTemplate}\``);
+          }.call(context, string)}\n`  
 }
 
 // Creates the cql file from an artifact ID

@@ -11,8 +11,8 @@ module.exports = function(app) {
   // Routing for Authors
   app.use('/api/authors', require('./routers/authorRouter.js'));
 
-  // Routing for Templates
-  app.use('/api/TemplateInstance', require('./routers/templateRouter'));
+  // Routing for Resources
+  app.use('/api/resources', require('./routers/resourceRouter.js'));
 
   // Routing for cql files
   app.use('/api/cql', require('./routers/cqlRouter'))
