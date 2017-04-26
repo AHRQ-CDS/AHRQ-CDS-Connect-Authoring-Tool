@@ -5,13 +5,39 @@
   &__short { width: 6em; }
 }
 
-.danger {
-	color: red
+.form__inline {
+  .form__group {
+    display: inline-block;
+
+    label {
+      display: inline-block;
+      margin-right: 1em;
+    }
+  }
 }
 
-.form__inline {
+.form__group {
+  margin: 1em 0;
+
   label {
-    display: inline-block;
-    margin-right: 1em;
+    font-weight: 500;
+    display: block;
+    text-transform: uppercase;
+    font-size: 0.9em;
+
+    input { display: block; }
+  }
+
+  span {
+    font-size: 0.8em;
+    text-transform: none;
+  }
+
+  &.form__group-valid {
+    @include state-color($form-validation-success-color);
+  }
+
+  &.form__group-invalid {
+    @include state-color($form-validation-error-color);
   }
 }
