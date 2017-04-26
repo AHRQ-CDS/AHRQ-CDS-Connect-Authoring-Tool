@@ -1,5 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 import axios from 'axios';
+import FontAwesome from 'react-fontawesome';
 import IntegerParameter from './parameters/IntegerParameter';
 import StringParameter from './parameters/StringParameter';
 import ObservationParameter from './parameters/ObservationParameter';
@@ -60,7 +61,7 @@ class TemplateInstance extends Component {
             resources={this.state.resources}
             updateInstance={this.updateInstance} />
         );
-      case "string": 
+      case "string":
         return (
           <StringParameter
             key={param.id}
@@ -76,13 +77,27 @@ class TemplateInstance extends Component {
 
   render() {
     return (
-      <div className="element">
-        <strong>{this.props.templateInstance.name}</strong>
-        {this.props.templateInstance.parameters.map((param, index) => 
+      <div className="element element__expanded">
+        <div className="element__header">
+          <span className="element__heading">
+            {this.props.templateInstance.name}
+          </span>
+
+          <div className="element__buttonbar">
+            <button
+              onClick={this.props.deleteInstance.bind(this, this.props.templateInstance.uniqueId)}
+              className="element__deletebutton"
+              aria-label={`remove ${this.props.templateInstance.name}`}>
+              <FontAwesome fixedWidth name='close'/>
+            </button>
+          </div>
+        </div>
+        <div className="element__body">
+        {this.props.templateInstance.parameters.map((param, index) =>
           // todo: each parameter type should probably have its own component
           this.selectTemplate(param)
         )}
-        <button onClick={this.props.deleteInstance.bind(this, this.props.templateInstance.uniqueId)}  className="closebutton">Remove</button>
+        </div>
       </div>
     );
   }
