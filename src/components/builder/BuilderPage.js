@@ -43,7 +43,7 @@ class BuilderPage extends Component {
             });
           });
       } else {
-        this.setState({ artifact: null, droppedElements: null });
+        this.setState({ artifact: null, droppedElements: [] });
       }
     }
   }
