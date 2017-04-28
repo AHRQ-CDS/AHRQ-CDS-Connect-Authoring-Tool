@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import moment from 'moment';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
+import FontAwesome from 'react-fontawesome';
 
 function renderDate(datetime) {
   let formattedDate = '';
@@ -24,7 +25,8 @@ function sortArtifacts(a, b) {
 class ArtifactTable extends Component {
   constructor(props) {
     super(props);
-    this.state = { artifacts: props.artifacts };
+    this.state = { artifacts: props.artifacts,
+      artifactEdit: null };
     this.deleteArtifact = this.deleteArtifact.bind(this);
     this.renderTableRow = this.renderTableRow.bind(this);
   }
@@ -55,11 +57,20 @@ class ArtifactTable extends Component {
       });
   }
 
+  editArtifactName(artifact) {
+    console.log(artifact);
+    artifact.name = "NEWer NAME";
+    axios.put(`http://localhost:3001/api/artifacts`, artifact);
+  }
+
   renderTableRow(artifact) {
     return (
-      <tr key={artifact._id}>
+    <tr key={artifact._id}>
         <td className="artifacts__tablecell-wide"
           data-th="Artifact Name">
+          <button onClick={() => this.editArtifactName(artifact)}>
+            <FontAwesome name='pencil' />
+          </button>
           <Link to={`${this.props.match.path}/${artifact._id}/build`}>
             {artifact.name}
           </Link>
@@ -76,7 +87,7 @@ class ArtifactTable extends Component {
           </button>
         </td>
       </tr>
-    );
+      );
   }
 
   render() {

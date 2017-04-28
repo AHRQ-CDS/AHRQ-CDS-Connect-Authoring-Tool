@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { DropTarget } from 'react-dnd';
+// import { DropTarget } from 'react-dnd';
 import axios from 'axios';
 import Element from './Element';
 
@@ -23,8 +23,8 @@ class BuilderSubPalette extends Component {
   }
 
   render() {
-    const { connectDropTarget } = this.props;
-    return connectDropTarget(
+    // const { connectDropTarget } = this.props;
+    return ( //connectDropTarget(
       <div aria-labelledby="palette-active-group" className="builder__subpalette">
         {this.props.selectedGroup.entries.map((element, index) =>
           <Element key={index + element} name={element.name} template={element}/>
@@ -34,18 +34,19 @@ class BuilderSubPalette extends Component {
   }
 }
 
-const dropSpec = {
-  // Called when compatible item is dropped on the target
-  drop(props, monitor, component) {
-    const item = monitor.getItem();
-    component.removeItem(item);
-  },
-};
+// const dropSpec = {
+//   // Called when compatible item is dropped on the target
+//   drop(props, monitor, component) {
+//     const item = monitor.getItem();
+//     component.removeItem(item);
+//   },
+// };
 
-function collect(connect, monitor) {
-  return {
-    connectDropTarget: connect.dropTarget(),
-  };
-}
+// function collect(connect, monitor) {
+//   return {
+//     connectDropTarget: connect.dropTarget(),
+//   };
+// }
 
-export default DropTarget('element', dropSpec, collect)(BuilderSubPalette);
+export default BuilderSubPalette;
+// export default DropTarget('element', dropSpec, collect)(BuilderSubPalette);
