@@ -43,7 +43,12 @@ function singlePut(req, res) {
   console.log(artifact)
   Artifact.update(
     { _id : id },
-    { $set : { artifact } }, //{name: artifact.name}},//
+    //{ $set : { artifact } }, //{name: artifact.name}},//
+    {
+      name: artifact.name,
+      version: artifact.version,
+      template_instances: artifact.template_instances
+    },
     function(error, response) {
       if (error) res.status(500).send(error);
       else res.sendStatus(200);

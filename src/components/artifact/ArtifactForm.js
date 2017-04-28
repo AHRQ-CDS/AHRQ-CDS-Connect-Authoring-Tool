@@ -12,7 +12,6 @@ class ArtifactForm extends Component {
 
     this.addArtifact = this.addArtifact.bind(this);
     this.handleInputChange = this.handleInputChange.bind(this);
-    this.editArtifact = this.editArtifact.bind(this);
   }
 
   handleInputChange(e) {
@@ -30,11 +29,6 @@ class ArtifactForm extends Component {
     });
   }
 
-  editArtifact(e) {
-    console.log("edit form!")
-    console.log(this.state)
-  }
-
   componentWillMount() {
     const nameID = _.uniqueId('artifact-name-');
     const versionID = _.uniqueId('artifact-version-');
@@ -43,7 +37,7 @@ class ArtifactForm extends Component {
 
   render() {
     return (
-      <form className='form__inline' onSubmit={ this.addArtifact }>
+      <form className='form__inline' onSubmit={this.addArtifact}>
       <div className='form__group'>
         <label htmlFor={this.state.nameID}>
           Artifact Name
@@ -66,7 +60,7 @@ class ArtifactForm extends Component {
             onChange={this.handleInputChange} />
         </label>
         </div>
-        <button type='submit' className='primary-button'>{this.props.buttonLabel}</button>
+        <button type='submit' className='primary-button'>Add new artifact</button>
       </form>
     );
   }

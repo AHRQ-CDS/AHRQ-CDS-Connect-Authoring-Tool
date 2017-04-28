@@ -6,6 +6,9 @@ import FontAwesome from 'react-fontawesome';
 import ReactModal from 'react-modal';
 import ArtifactForm from './ArtifactForm';
 
+// For screen readers to not see the background text
+ReactModal.setAppElement('#root');
+
 function renderDate(datetime) {
   let formattedDate = '';
   if (datetime) {
@@ -32,6 +35,8 @@ class ArtifactTable extends Component {
       showModal: false };
     this.deleteArtifact = this.deleteArtifact.bind(this);
     this.renderTableRow = this.renderTableRow.bind(this);
+    this.handleInputChange = this.handleInputChange.bind(this);
+    this.editArtifactName = this.editArtifactName.bind(this);
     this.openModal = this.openModal.bind(this);
     this.closeModal = this.closeModal.bind(this);
   }
@@ -62,13 +67,20 @@ class ArtifactTable extends Component {
       });
   }
 
-  editArtifactName(artifact) {
-    // TODO JULIA - get the text entered for name and version, make api call to update that artifact
-    
-    // console.log(artifact);
-    // this.setState({artifactEditing: artifact})
-    // artifact.name = "NEWer NAME";
-    // axios.put(`http://localhost:3001/api/artifacts`, artifact);
+  handleInputChange(e) {
+    let artifact = this.state.artifactEditing;
+    artifact[e.target.name] = e.target.value;
+    // JULIA - double check this is not modifying the state in the wrong way
+    this.setState({ artifactEditing: artifact });
+  }
+
+  editArtifactName(e) {
+    e.preventDefault();
+    axios.put(`http://localhost:3001/api/artifacts`, this.state.artifactEditing)
+      .then(result => {
+        this.props.afterAddArtifact();
+        this.setState({showModal: false, artifactEditing: null});
+      });
   }
 
   openModal(artifact) {
@@ -142,7 +154,9 @@ class ArtifactTable extends Component {
   render() {
     return (
       <div>
-      <ReactModal contentLabel="Edit modal" isOpen={this.state.showModal}>
+      <ReactModal contentLabel="Edit modal" 
+        isOpen={this.state.showModal}
+        onRequestClose={this.closeModal}>
         {this.renderEditForm()}
         <button onClick={this.closeModal}>Close</button>
       </ReactModal>
