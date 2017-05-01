@@ -6,9 +6,9 @@ import TemplateInstance from './TemplateInstance';
 class BuilderTarget extends Component {
   static propTypes = {
     connectDropTarget: PropTypes.func.isRequired,
-    droppedElements: PropTypes.array.isRequired,
+    templateInstances: PropTypes.array.isRequired,
     updateSingleElement: PropTypes.func.isRequired,
-    updateDroppedElements: PropTypes.func.isRequired
+    updateTemplateInstances: PropTypes.func.isRequired
   }
 
   render() {
@@ -16,9 +16,9 @@ class BuilderTarget extends Component {
     return connectDropTarget(
       <section className="builder__canvas">
         {
-          this.props.droppedElements.length === 0
+          this.props.templateInstances.length === 0
           ? 'Drop content here.'
-          : this.props.droppedElements.map(
+          : this.props.templateInstances.map(
             (element, index) =>
               <TemplateInstance
                 key={element.id + index}
@@ -49,7 +49,7 @@ const spec = {
     clone.parameters.forEach((param) => {
       param.value = '';
     });
-    props.updateDroppedElements(props.droppedElements.concat(clone));
+    props.updateTemplateInstances(props.templateInstances.concat(clone));
   },
 
   hover(props, monitor, component) {

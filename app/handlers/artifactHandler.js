@@ -40,11 +40,7 @@ function singlePut(req, res) {
   let artifact = req.body;
   Artifact.update(
     { _id : id },
-    {
-      name: artifact.name,
-      version: artifact.version,
-      template_instances: artifact.template_instances
-    },
+    { $set : artifact },
     function(error, response) {
       if (error) res.status(500).send(error);
       else res.sendStatus(200);

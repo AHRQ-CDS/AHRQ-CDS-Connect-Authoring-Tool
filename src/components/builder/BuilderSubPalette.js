@@ -9,7 +9,7 @@ class BuilderSubPalette extends Component {
 
     axios.delete(`${url}/templates/${item.dbId}`)
       .then((result) => {
-        const data = this.props.droppedElements;
+        const data = this.props.templateInstances;
         let indexToRemove = -1;
         for (let i = 0; i < data.length; i++) {
           const id = data[i].dbId;
@@ -18,7 +18,7 @@ class BuilderSubPalette extends Component {
           }
         }
         data.splice(indexToRemove, 1);
-        this.props.updateDroppedElements(data);
+        this.props.updateTemplateInstances(data);
       });
   }
 
