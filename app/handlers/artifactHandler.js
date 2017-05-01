@@ -36,11 +36,8 @@ function singlePost(req, res) {
 
 // Update a single artifact
 function singlePut(req, res) {
-  console.log("singlePut")
-  console.log(req.body);
   let id = req.body._id;
   let artifact = req.body;
-  console.log(artifact)
   Artifact.update(
     { _id : id },
     //{ $set : { artifact } }, //{name: artifact.name}},//

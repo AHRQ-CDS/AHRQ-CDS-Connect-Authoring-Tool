@@ -35,7 +35,6 @@ class ArtifactTable extends Component {
       showModal: false };
     this.deleteArtifact = this.deleteArtifact.bind(this);
     this.renderTableRow = this.renderTableRow.bind(this);
-    this.handleInputChange = this.handleInputChange.bind(this);
     this.editArtifactName = this.editArtifactName.bind(this);
     this.openModal = this.openModal.bind(this);
     this.closeModal = this.closeModal.bind(this);
@@ -67,15 +66,12 @@ class ArtifactTable extends Component {
       });
   }
 
-  handleInputChange(e) {
-    let artifact = this.state.artifactEditing;
-    artifact[e.target.name] = e.target.value;
-    // JULIA - double check this is not modifying the state in the wrong way
-    this.setState({ artifactEditing: artifact });
-  }
-
-  editArtifactName(e) {
+  editArtifactName(e, name, version) {
     e.preventDefault();
+    let artifact = this.state.artifactEditing;
+    artifact["name"] = name;
+    artifact["version"] = version;
+
     axios.put(`http://localhost:3001/api/artifacts`, this.state.artifactEditing)
       .then(result => {
         this.props.afterAddArtifact();
@@ -92,34 +88,40 @@ class ArtifactTable extends Component {
   }
 
   renderEditForm() {
+    // return (
+    //   <form className='form__inline' onSubmit={this.editArtifactName}>
+    //   <div className='form__group'>
+    //     <label htmlFor={this.state.nameID}>
+    //       Artifact Name
+    //       <input id={this.state.nameID}
+    //         className='input__long'
+    //         name='name'
+    //         type='text'
+    //         value={this.state.name}
+    //         defaultValue={this.state.artifactEditing ? this.state.artifactEditing.name : null}
+    //         onChange={this.handleInputChange} />
+    //     </label>
+    //     </div>
+    //     <div className='form__group'>
+    //     <label htmlFor={this.state.versionID}>
+    //       Version
+    //       <input id={this.state.versionID}
+    //         className='input__short'
+    //         name='version'
+    //         type='text'
+    //         value={this.state.version}
+    //         defaultValue={this.state.artifactEditing ? this.state.artifactEditing.version : null}
+    //         onChange={this.handleInputChange} />
+    //     </label>
+    //     </div>
+    //     <button type='submit' className='primary-button'>Edit artifact</button>
+    //   </form>
+    // );
     return (
-      <form className='form__inline' onSubmit={this.editArtifactName}>
-      <div className='form__group'>
-        <label htmlFor={this.state.nameID}>
-          Artifact Name
-          <input id={this.state.nameID}
-            className='input__long'
-            name='name'
-            type='text'
-            value={this.state.name}
-            defaultValue={this.state.artifactEditing ? this.state.artifactEditing.name : null}
-            onChange={this.handleInputChange} />
-        </label>
-        </div>
-        <div className='form__group'>
-        <label htmlFor={this.state.versionID}>
-          Version
-          <input id={this.state.versionID}
-            className='input__short'
-            name='version'
-            type='text'
-            value={this.state.version}
-            defaultValue={this.state.artifactEditing ? this.state.artifactEditing.version : null}
-            onChange={this.handleInputChange} />
-        </label>
-        </div>
-        <button type='submit' className='primary-button'>Edit artifact</button>
-      </form>
+      <ArtifactForm buttonLabel="Edit artifact"
+        onSubmitFunction={this.editArtifactName} 
+        defaultName={this.state.artifactEditing ? this.state.artifactEditing.name : null}
+        defaultVersion={this.state.artifactEditing ? this.state.artifactEditing.version : null} />
     );
   }
 
@@ -129,7 +131,7 @@ class ArtifactTable extends Component {
     <tr key={artifact._id}>
       <td className="artifacts__tablecell-wide"
         data-th="Artifact Name">
-        <button onClick={() => this.openModal(artifact)}>
+        <button aria-label="Edit" className="small-button" onClick={() => this.openModal(artifact)}>
           <FontAwesome name='pencil' />
         </button>
         <Link to={`${this.props.match.path}/${artifact._id}/build`}>
