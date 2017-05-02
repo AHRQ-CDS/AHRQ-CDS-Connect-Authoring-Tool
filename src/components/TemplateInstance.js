@@ -20,7 +20,7 @@ class TemplateInstance extends Component {
   constructor(props) {
     super(props);
 
-    this.state = {resources: {}};
+    this.state = { resources: {} };
     this.updateInstance = this.updateInstance.bind(this);
     this.selectTemplate = this.selectTemplate.bind(this);
   }
@@ -33,8 +33,7 @@ class TemplateInstance extends Component {
     axios.get('http://localhost:3001/api/resources')
       .then((result) => {
         this.setState({ resources: result.data });
-    })
-
+      });
   }
 
   updateInstance(newState) {
@@ -44,14 +43,14 @@ class TemplateInstance extends Component {
 
   selectTemplate(param) {
     switch (param.type) {
-      case "integer":
+      case 'integer':
         return (
           <IntegerParameter
             key={param.id}
             param={param}
             updateInstance={this.updateInstance} />
         );
-      case "observation":
+      case 'observation':
         return (
           <ObservationParameter
             key={param.id}
@@ -59,7 +58,7 @@ class TemplateInstance extends Component {
             resources={this.state.resources}
             updateInstance={this.updateInstance} />
         );
-      case "string": 
+      case 'string':
         return (
           <StringParameter
             key={param.id}
@@ -70,14 +69,13 @@ class TemplateInstance extends Component {
       default:
         return;
     }
-
   }
 
   render() {
     return (
       <div className="element">
         <strong>{this.props.templateInstance.name}</strong>
-        {this.props.templateInstance.parameters.map((param, index) => 
+        {this.props.templateInstance.parameters.map((param, index) =>
           // todo: each parameter type should probably have its own component
           this.selectTemplate(param)
         )}

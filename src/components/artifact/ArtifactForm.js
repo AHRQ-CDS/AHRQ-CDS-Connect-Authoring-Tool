@@ -34,18 +34,18 @@ class ArtifactForm extends Component {
     const versionID = _.uniqueId('artifact-version-');
     this.setState({ nameID, versionID });
     if (this.props.defaultName) {
-      this.setState({name: this.props.defaultName});
+      this.setState({ name: this.props.defaultName });
     }
     if (this.props.defaultVersion) {
-      this.setState({version: this.props.defaultVersion});
+      this.setState({ version: this.props.defaultVersion });
     }
   }
 
   render() {
     return (
-      <form className='form__inline' 
-        onSubmit={this.props.onSubmitFunction 
-          ? (event) => this.props.onSubmitFunction(event, this.state.name, this.state.version) 
+      <form className='form__inline'
+        onSubmit={this.props.onSubmitFunction
+          ? event => this.props.onSubmitFunction(event, this.state.name, this.state.version)
           : this.addArtifact}>
       <div className='form__group'>
         <label htmlFor={this.state.nameID}>

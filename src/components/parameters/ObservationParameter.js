@@ -11,18 +11,18 @@ export default (props) => {
     <div>
       <label htmlFor={id}>
         {props.param.name}:
-				<Select labelKey={"name"} 
-				        autofocus 
-				        options={observations}
-                inputProps={{'id': id}}
-				        clearable={true} 
-				        name={props.param.id}
-				        value={props.param.value} 
-				        onChange={(value) => {
-            				props.updateInstance({ [props.param.id]: value })
-          				}} 
-          				searchable={true} />
+        <Select labelKey={'name'}
+                autofocus
+                options={observations}
+                inputProps={{ id }}
+                clearable={true}
+                name={props.param.id}
+                value={props.param.value}
+                onChange={(value) => {
+                  props.updateInstance({ [props.param.id]: value });
+                }}
+                searchable={true} />
       </label>
     </div>
   );
-}
+};

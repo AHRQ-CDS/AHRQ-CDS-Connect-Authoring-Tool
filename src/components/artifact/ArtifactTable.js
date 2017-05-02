@@ -68,29 +68,29 @@ class ArtifactTable extends Component {
 
   editArtifactName(e, name, version) {
     e.preventDefault();
-    let artifact = this.state.artifactEditing;
-    artifact["name"] = name;
-    artifact["version"] = version;
+    const artifact = this.state.artifactEditing;
+    artifact.name = name;
+    artifact.version = version;
 
-    axios.put(`http://localhost:3001/api/artifacts`, this.state.artifactEditing)
-      .then(result => {
+    axios.put('http://localhost:3001/api/artifacts', this.state.artifactEditing)
+      .then((result) => {
         this.props.afterAddArtifact();
-        this.setState({showModal: false, artifactEditing: null});
+        this.setState({ showModal: false, artifactEditing: null });
       });
   }
 
   openModal(artifact) {
-    this.setState({showModal: true, artifactEditing: artifact});
+    this.setState({ showModal: true, artifactEditing: artifact });
   }
 
   closeModal() {
-    this.setState({showModal: false});
+    this.setState({ showModal: false });
   }
 
   renderEditForm() {
     return (
       <ArtifactForm buttonLabel="Edit artifact"
-        onSubmitFunction={this.editArtifactName} 
+        onSubmitFunction={this.editArtifactName}
         defaultName={this.state.artifactEditing ? this.state.artifactEditing.name : null}
         defaultVersion={this.state.artifactEditing ? this.state.artifactEditing.version : null} />
     );
@@ -101,8 +101,8 @@ class ArtifactTable extends Component {
       <tr key={artifact._id}>
         <td className="artifacts__tablecell-wide"
           data-th="Artifact Name">
-          <button aria-label="Edit" 
-            className="small-button" 
+          <button aria-label="Edit"
+            className="small-button"
             onClick={() => this.openModal(artifact)}>
             <FontAwesome name='pencil' />
           </button>
@@ -122,31 +122,31 @@ class ArtifactTable extends Component {
           </button>
         </td>
       </tr>
-      );
+    );
   }
 
   render() {
     return (
       <div>
-      <ReactModal contentLabel="Edit modal" 
-        isOpen={this.state.showModal}
-        onRequestClose={this.closeModal}>
-        {this.renderEditForm()}
-        <button onClick={this.closeModal}>Close</button>
-      </ReactModal>
-      <table className="artifacts__table">
-        <thead>
-          <tr>
-            <th scope="col" className="artifacts__tablecell-wide">Artifact Name</th>
-            <th scope="col" className="artifacts__tablecell-short">Version</th>
-            <th scope="col">Updated</th>
-            <td></td>
-          </tr>
-        </thead>
-        <tbody>
-        {this.state.artifacts.sort(sortArtifacts).map(this.renderTableRow)}
-        </tbody>
-      </table>
+        <ReactModal contentLabel="Edit modal"
+          isOpen={this.state.showModal}
+          onRequestClose={this.closeModal}>
+          {this.renderEditForm()}
+          <button onClick={this.closeModal}>Close</button>
+        </ReactModal>
+        <table className="artifacts__table">
+          <thead>
+            <tr>
+              <th scope="col" className="artifacts__tablecell-wide">Artifact Name</th>
+              <th scope="col" className="artifacts__tablecell-short">Version</th>
+              <th scope="col">Updated</th>
+              <td></td>
+            </tr>
+          </thead>
+          <tbody>
+          {this.state.artifacts.sort(sortArtifacts).map(this.renderTableRow)}
+          </tbody>
+        </table>
       </div>
     );
   }
