@@ -88,35 +88,6 @@ class ArtifactTable extends Component {
   }
 
   renderEditForm() {
-    // return (
-    //   <form className='form__inline' onSubmit={this.editArtifactName}>
-    //   <div className='form__group'>
-    //     <label htmlFor={this.state.nameID}>
-    //       Artifact Name
-    //       <input id={this.state.nameID}
-    //         className='input__long'
-    //         name='name'
-    //         type='text'
-    //         value={this.state.name}
-    //         defaultValue={this.state.artifactEditing ? this.state.artifactEditing.name : null}
-    //         onChange={this.handleInputChange} />
-    //     </label>
-    //     </div>
-    //     <div className='form__group'>
-    //     <label htmlFor={this.state.versionID}>
-    //       Version
-    //       <input id={this.state.versionID}
-    //         className='input__short'
-    //         name='version'
-    //         type='text'
-    //         value={this.state.version}
-    //         defaultValue={this.state.artifactEditing ? this.state.artifactEditing.version : null}
-    //         onChange={this.handleInputChange} />
-    //     </label>
-    //     </div>
-    //     <button type='submit' className='primary-button'>Edit artifact</button>
-    //   </form>
-    // );
     return (
       <ArtifactForm buttonLabel="Edit artifact"
         onSubmitFunction={this.editArtifactName} 
@@ -126,31 +97,32 @@ class ArtifactTable extends Component {
   }
 
   renderTableRow(artifact) {
-    //onClick={() => this.editArtifactName(artifact)}
     return (
-    <tr key={artifact._id}>
-      <td className="artifacts__tablecell-wide"
-        data-th="Artifact Name">
-        <button aria-label="Edit" className="small-button" onClick={() => this.openModal(artifact)}>
-          <FontAwesome name='pencil' />
-        </button>
-        <Link to={`${this.props.match.path}/${artifact._id}/build`}>
-          {artifact.name}
-        </Link>
-      </td>
-      <td className="artifacts__tablecell-short"
-        data-th="Version">
-        {artifact.version}
-      </td>
-      <td data-th="Updated">{renderDate(artifact.updatedAt)}</td>
-      <td data-th="">
-        <button className="danger-button"
-          onClick={() => this.deleteArtifact(artifact._id)}>
-          Delete
-        </button>
-      </td>
-    </tr>
-    );
+      <tr key={artifact._id}>
+        <td className="artifacts__tablecell-wide"
+          data-th="Artifact Name">
+          <button aria-label="Edit" 
+            className="small-button" 
+            onClick={() => this.openModal(artifact)}>
+            <FontAwesome name='pencil' />
+          </button>
+          <Link to={`${this.props.match.path}/${artifact._id}/build`}>
+            {artifact.name}
+          </Link>
+        </td>
+        <td className="artifacts__tablecell-short"
+          data-th="Version">
+          {artifact.version}
+        </td>
+        <td data-th="Updated">{renderDate(artifact.updatedAt)}</td>
+        <td data-th="">
+          <button className="danger-button"
+            onClick={() => this.deleteArtifact(artifact._id)}>
+            Delete
+          </button>
+        </td>
+      </tr>
+      );
   }
 
   render() {
