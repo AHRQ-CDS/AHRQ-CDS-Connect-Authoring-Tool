@@ -7,7 +7,7 @@ import update from 'immutability-helper';
 import BuilderSubPalette from './BuilderSubPalette';
 import BuilderPalette from './BuilderPalette';
 import BuilderTarget from './BuilderTarget';
-import groups from '../data/templates';
+import groups from '../../data/templates';
 
 class BuilderPage extends Component {
   static contextTypes = {

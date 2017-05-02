@@ -8,9 +8,6 @@ module.exports = function(app) {
   // Routing for Artifacts
   app.use('/api/artifacts', require('./routers/artifactRouter.js'));
 
-  // Routing for Authors
-  app.use('/api/authors', require('./routers/authorRouter.js'));
-
   // Routing for Resources
   app.use('/api/resources', require('./routers/resourceRouter.js'));
 

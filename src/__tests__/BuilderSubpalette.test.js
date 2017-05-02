@@ -1,4 +1,4 @@
-import BuilderSubPalette from '../components/BuilderSubPalette';
+import BuilderSubPalette from '../components/builder/BuilderSubPalette';
 import Element from '../components/Element';
 import { wrapInTestContext, shallowRenderComponent, fullRenderComponent } from '../helpers/test_helpers';
 
