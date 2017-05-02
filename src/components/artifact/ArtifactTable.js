@@ -130,9 +130,23 @@ class ArtifactTable extends Component {
       <div>
         <ReactModal contentLabel="Edit modal"
           isOpen={this.state.showModal}
-          onRequestClose={this.closeModal}>
+          onRequestClose={this.closeModal}
+          className="modal-style">
+          <div className="modal__header">
+            <span className="modal__heading">
+              Edit Artifact
+            </span>
+            <div className="modal__buttonbar">
+              <button onClick={this.closeModal} 
+                className="modal__deletebutton" 
+                aria-label="Close edit modal">
+                <FontAwesome fixedWidth name='close'/>
+              </button>
+            </div>
+          </div>
+          <div className="modal__body">
           {this.renderEditForm()}
-          <button onClick={this.closeModal}>Close</button>
+          </div>
         </ReactModal>
         <table className="artifacts__table">
           <thead>
