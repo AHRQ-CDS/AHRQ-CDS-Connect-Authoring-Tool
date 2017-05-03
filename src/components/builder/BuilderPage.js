@@ -52,7 +52,7 @@ class BuilderPage extends Component {
 
   downloadCQL() {
     const artifact = {
-      name: this.state.artifactName,
+      name: this.state.name,
       templateInstances: this.state.templateInstances
     };
 
