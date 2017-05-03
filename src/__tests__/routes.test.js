@@ -1,7 +1,6 @@
 import { Route } from 'react-router-dom';
 import App from '../App';
-import AuthorPage from '../components/AuthorPage';
-import BuilderPage from '../components/BuilderPage';
+import BuilderPage from '../components/builder/BuilderPage';
 import NoMatch from '../components/NotFoundPage';
 import Routes from '../routes';
 import { shallowRenderComponent } from '../helpers/test_helpers';
@@ -14,7 +13,6 @@ test('Routes renders correct routes', () => {
   }, {});
 
   expect(pathMap['/']).toBe(App);
-  expect(pathMap['/author']).toBe(AuthorPage);
   expect(pathMap['/build']).toBe(BuilderPage);
   expect(pathMap['/build/:group']).toBe(BuilderPage);
   expect(pathMap[undefined]).toBe(NoMatch);

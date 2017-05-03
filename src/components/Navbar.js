@@ -7,9 +7,8 @@ export default () => (
     <Link to="/" className="navbar__logo">CDS Authoring Tool</Link>
     <nav className="navbar__nav">
       <ul>
-        <li><NavLink to="/author"><FontAwesome fixedWidth name='user' /> Author Info</NavLink></li>
         <li><NavLink to="/artifacts"><FontAwesome fixedWidth name='eye' /> View Artifacts</NavLink></li>
-        <li><NavLink to="/build"><FontAwesome fixedWidth name='wrench' /> Go To Builder</NavLink></li>
+        <li><NavLink to="/build"><FontAwesome fixedWidth name='wrench' /> New Artifact</NavLink></li>
       </ul>
     </nav>
   </header>

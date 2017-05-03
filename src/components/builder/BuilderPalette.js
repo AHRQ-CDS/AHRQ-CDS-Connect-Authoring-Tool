@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import FontAwesome from 'react-fontawesome';
 import { NavLink } from 'react-router-dom';
-import groups from '../data/templates';
+import groups from '../../data/templates';
 
 class BuilderPalette extends Component {
   constructor(props) {

@@ -1,4 +1,4 @@
-import BuilderTarget from '../components/BuilderTarget';
+import BuilderTarget from '../components/builder/BuilderTarget';
 import Element from '../components/Element';
 import { wrapInTestContext, fullRenderComponent } from '../helpers/test_helpers';
 

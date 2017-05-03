@@ -7,7 +7,7 @@ import update from 'immutability-helper';
 import BuilderSubPalette from './BuilderSubPalette';
 import BuilderPalette from './BuilderPalette';
 import BuilderTarget from './BuilderTarget';
-import groups from '../data/templates';
+import groups from '../../data/templates';
 
 class BuilderPage extends Component {
   static contextTypes = {
@@ -19,14 +19,17 @@ class BuilderPage extends Component {
 
     this.state = {
       selectedGroup: null,
-      droppedElements: [],
-      artifact: null
+      templateInstances: [],
+      name: 'Untitled Artifact',
+      id: null,
+      version: null
     };
 
-    this.setDroppedElements = this.setDroppedElements.bind(this);
+    this.setTemplateInstances = this.setTemplateInstances.bind(this);
     this.saveArtifact = this.saveArtifact.bind(this);
     this.downloadCQL = this.downloadCQL.bind(this);
     this.updateSingleElement = this.updateSingleElement.bind(this);
+
   }
 
   componentDidMount() {
@@ -37,18 +40,20 @@ class BuilderPage extends Component {
         const id = this.props.match.params.id;
         axios.get(`http://localhost:3001/api/artifacts/${id}`)
           .then((res) => {
-            this.setState({ artifact: res.data[0] });
+            const artifact = res.data[0]
+            this.setState({ id: artifact._id})
+            this.setState({ name: artifact.name})
+            this.setState({ version: artifact.version });
+            this.setState({ templateInstances: artifact.templateInstances });
           });
-      } else {
-        this.setState({ artifact: null });
       }
     }
   }
 
   downloadCQL() {
     const artifact = {
-      name: 'foo foo',
-      template_instances: this.state.droppedElements
+      name: this.state.artifactName,
+      templateInstances: this.state.templateInstances
     };
 
     axios.post('http://localhost:3001/api/cql', artifact)
@@ -67,27 +72,39 @@ class BuilderPage extends Component {
   }
 
   saveArtifact(exitPage) {
-    const artifact = {
-      name: 'foo',
-      template_instances: this.state.droppedElements
-    };
+
     // TODO: This needs to be extracted to somewhere better
     const url = 'http://localhost:3001/api';
 
-    axios.post(`${url}/artifacts`, artifact)
-      .then((result) => {
+    const artifact = {name: this.state.name, templateInstances: this.state.templateInstances}
+    if (this.state.id) artifact._id = this.state.id
+
+    const handleSave = (result) => {
         // TODO:
-        // capture artifact and ID
         // notification on save
-        console.log('Added Artifact');
+        if (result.data._id) this.setState({id: result.data._id});
+          console.log('id: ' + this.state.id);
+
         if (exitPage) {
           // Redirect the page to the artifact list after saving if click "Close" button
           this.context.router.history.push('/artifacts');
         }
-      })
-      .catch((error) => {
-        console.log(error);
-      });
+      }
+
+    if (this.state.id) {
+      axios.put(`${url}/artifacts`, artifact)
+        .then(handleSave)
+        .catch((error) => {
+          console.log(error);
+        });
+    } else {
+      axios.post(`${url}/artifacts`, artifact)
+        .then(handleSave)
+        .catch((error) => {
+          console.log(error);
+        });
+    }
+
   }
 
   componentWillReceiveProps(nextProps) {
@@ -106,12 +123,12 @@ class BuilderPage extends Component {
     }
   }
 
-  setDroppedElements(elements) {
-    this.setState({ droppedElements: elements });
+  setTemplateInstances(elements) {
+    this.setState({ templateInstances: elements });
   }
 
   updateSingleElement(instanceId, state) {
-    const elements = this.state.droppedElements;
+    const elements = this.state.templateInstances;
     const elementIndex = elements.findIndex(element =>
       // get relevant element
        element.uniqueId === instanceId);
@@ -132,8 +149,8 @@ class BuilderPage extends Component {
         }
       });
 
-      // merge back into droppedElements
-      this.setState({ droppedElements: editedElements });
+      // merge back into templateInstances
+      this.setState({ templateInstances: editedElements });
     }
   }
 
@@ -141,8 +158,8 @@ class BuilderPage extends Component {
     if (this.state.selectedGroup) {
       return <BuilderSubPalette
         selectedGroup={this.state.selectedGroup}
-        updateDroppedElements={this.setDroppedElements}
-        droppedElements={this.state.droppedElements} />;
+        updateTemplateInstances={this.setTemplateInstances}
+        templateInstances={this.state.templateInstances} />;
     }
     return null;
   }
@@ -151,7 +168,7 @@ class BuilderPage extends Component {
     return (
       <div className="builder">
         <header className="builder__header">
-          <h2 className="builder__heading">{this.state.artifact ? this.state.artifact.name : 'Untitled Artifact'}</h2>
+          <h2 className="builder__heading">{this.state.name}</h2>
           <div className="builder__buttonbar">
             <button onClick={() => this.saveArtifact(false)}
               className="builder__savebutton is-unsaved">
@@ -172,9 +189,9 @@ class BuilderPage extends Component {
           {this.renderSidebar()}
         </div>
         <BuilderTarget
-          updateDroppedElements={this.setDroppedElements}
+          updateTemplateInstances={this.setTemplateInstances}
           updateSingleElement={this.updateSingleElement}
-          droppedElements={this.state.droppedElements} />
+          templateInstances={this.state.templateInstances} />
       </div>
     );
   }

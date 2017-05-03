@@ -3,9 +3,8 @@ import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import createBrowserHistory from 'history/createBrowserHistory';
 import App from './App';
 import Navbar from './components/Navbar';
-import AuthorPage from './components/AuthorPage';
 import Artifact from './components/artifact/Artifact';
-import BuilderPage from './components/BuilderPage';
+import BuilderPage from './components/builder/BuilderPage';
 import NoMatch from './components/NotFoundPage';
 
 const history = createBrowserHistory();
@@ -20,7 +19,6 @@ export default () => (
           <Route path='/build' component={BuilderPage} />
           <Route path='/artifacts/:id/build' component={BuilderPage} />
           <Route path='/artifacts' component={Artifact} />
-          <Route path='/author' component={AuthorPage} />
           <Route exact path='/' component={App} />
           <Route component={NoMatch}/>
         </Switch>

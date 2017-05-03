@@ -1,4 +1,4 @@
-import BuilderPage from '../components/BuilderPage';
+import BuilderPage from '../components/builder/BuilderPage';
 import { fullRenderComponent, deepState } from '../helpers/test_helpers';
 
 let component;
