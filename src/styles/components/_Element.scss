@@ -7,6 +7,44 @@
   margin: 0.5em;
   font-weight: 400;
 
+  &.element__expanded {
+    padding: 0;
+    background-color: $white;
+    border: $logic-element-border;
+    max-width: 18em;
+
+    .element__header {
+      display: flex;
+      background-color: $logic-element-bg-color;
+      color: $logic-element-text-color;
+      padding: 0.25em 0.5em;
+      align-items: center;
+      justify-content: center;
+
+      .element__heading {
+        flex: 1;
+        font-weight: 500;
+        color: $builder-text-color;
+      }
+
+      .element__buttonbar {
+        flex: 1;
+        text-align: right;
+
+        .element__deletebutton {
+          @extend .danger-button;
+          padding: 0.125em;
+        }
+      }
+    }
+
+    .element__body {
+      padding: 0.5em 1em;
+
+      input { width: 100%; }
+    }
+  }
+
   &.is-active {
     background-color: $logic-element-bg-color;
     border: $logic-element-border;
@@ -25,12 +63,4 @@
       box-shadow: $box-shadow;
     }
   }
-}
-
-// different colors if it is a logicElement.
-.logic-element {
-  @extend .element;
-  background-color: $logic-element-bg-color;
-  border: $logic-element-border;
-  color: $logic-element-text-color;
 }

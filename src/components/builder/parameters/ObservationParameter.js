@@ -8,7 +8,7 @@ export default (props) => {
 
   const observations = props.resources['observations'];
   return (
-    <div>
+    <div className="form__group">
       <label htmlFor={id}>
         {props.param.name}:
         <Select labelKey={'name'}
