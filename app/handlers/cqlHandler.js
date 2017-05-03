@@ -41,7 +41,7 @@ class CqlArtifact {
     this.version = artifact.version ? artifact.version : 1;
     this.dataModel = artifact.dataModel ? artifact.dataModel : "FHIR version '1.0.2'";
     this.context = artifact.context ? artifact.context : 'Patient';
-    this.elements = artifact.template_instances;
+    this.elements = artifact.templateInstances;
 
     this.resourceMap = {};
   }

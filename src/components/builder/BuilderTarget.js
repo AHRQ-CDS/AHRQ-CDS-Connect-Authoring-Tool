@@ -11,6 +11,18 @@ class BuilderTarget extends Component {
     updateTemplateInstances: PropTypes.func.isRequired
   }
 
+  deleteInstance(uniqueId) {
+    let newElements = this.props.templateInstances;
+    const index = newElements.findIndex((element) => {
+      return element.uniqueId === uniqueId;
+    });
+
+    if (index > -1) {
+      newElements.splice(index, 1);
+      this.props.updateTemplateInstances(newElements);
+    }
+  }
+
   render() {
     const { connectDropTarget } = this.props;
     return connectDropTarget(
@@ -21,8 +33,9 @@ class BuilderTarget extends Component {
           : this.props.templateInstances.map(
             (element, index) =>
               <TemplateInstance
-                key={element.id + index}
+                key={element.uniqueId}
                 templateInstance={element}
+                deleteInstance={this.deleteInstance.bind(this)}
                 updateSingleElement={this.props.updateSingleElement} />
             )
         }
