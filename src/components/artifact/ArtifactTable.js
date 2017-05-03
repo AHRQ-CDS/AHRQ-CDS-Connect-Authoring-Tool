@@ -68,11 +68,14 @@ class ArtifactTable extends Component {
 
   editArtifactName(e, name, version) {
     e.preventDefault();
-    const artifact = this.state.artifactEditing;
-    artifact.name = name;
-    artifact.version = version;
+    const artifactToUpdate = {
+      name: name,
+      version: version,
+      templateInstances: this.state.artifactEditing.templateInstances,
+      _id: this.state.artifactEditing._id
+    }
 
-    axios.put('http://localhost:3001/api/artifacts', this.state.artifactEditing)
+    axios.put('http://localhost:3001/api/artifacts', artifactToUpdate)
       .then((result) => {
         this.props.afterAddArtifact();
         this.setState({ showModal: false, artifactEditing: null });
