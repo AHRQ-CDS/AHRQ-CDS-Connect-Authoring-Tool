@@ -1,6 +1,7 @@
 import React, { Component, PropTypes } from 'react';
 import { DropTarget } from 'react-dnd';
 import _ from 'lodash';
+// import axios from 'axios';
 import TemplateInstance from './TemplateInstance';
 
 class BuilderTarget extends Component {
@@ -22,6 +23,17 @@ class BuilderTarget extends Component {
       this.props.updateTemplateInstances(newElements);
     }
   }
+  
+  // saveInstance(uniqueId) {
+  //   let elementList = this.props.templateInstances;
+  //   const index = elementList.findIndex((element) => {
+  //     return element.uniqueId === uniqueId;
+  //   });
+  //   if (index > -1) {
+  //     let element = elementList[index];
+
+  //   }
+  // }
 
   render() {
     const { connectDropTarget } = this.props;

@@ -1,0 +1,14 @@
+const express = require('express');
+const expression = require('../handlers/expressionHandler');
+const ExpressionRouter = express.Router();
+
+// Routes for /api/expressions
+ExpressionRouter.route('/')
+  .get(expression.allGet)
+  .post(expression.singlePost)
+
+// Routes for /api/expressions/:expression
+ExpressionRouter.route('/:expression')
+  .get(expression.singleGet)
+
+module.exports = ExpressionRouter;
