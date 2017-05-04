@@ -75,7 +75,7 @@ class TemplateInstance extends Component {
           <ValueSetParameter
             key={param.id}
             param={param}
-            valueset={this.state.resources.valuesets}
+            valueset={this.state.resources}
             updateInstance={this.updateInstance} />
         );
       default:

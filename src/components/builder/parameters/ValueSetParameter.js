@@ -6,13 +6,7 @@ import _ from 'lodash';
 export default (props) => {
   const id = _.uniqueId('parameter-');
 
-  let valueset;
-  if (props.valueset !== undefined) {
-    // Get the list of valusets based on the type of parameter
-    const indexOfValueset = props.valueset.findIndex((element) => { 
-      return element.id === props.param.id });
-    valueset = props.valueset[indexOfValueset].valuesets;
-  }
+  const valueset = props.valueset[props.param.id];
   return (
     <div className="form__group">
       <label htmlFor={id}>
