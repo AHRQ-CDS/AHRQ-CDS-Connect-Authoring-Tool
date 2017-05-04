@@ -4,6 +4,7 @@ import FontAwesome from 'react-fontawesome';
 import IntegerParameter from './parameters/IntegerParameter';
 import StringParameter from './parameters/StringParameter';
 import ObservationParameter from './parameters/ObservationParameter';
+import ValueSetParameter from './parameters/ValueSetParameter';
 
 function validateOneWord(value) {
   if (value.includes(' ')) {
@@ -69,8 +70,16 @@ class TemplateInstance extends Component {
             updateInstance={this.updateInstance}
             validation={validateOneWord} />
         );
+      case "valueset":
+        return (
+          <ValueSetParameter
+            key={param.id}
+            param={param}
+            valueset={this.state.resources.valuesets}
+            updateInstance={this.updateInstance} />
+        );
       default:
-        return;
+        return null;
     }
 
   }
