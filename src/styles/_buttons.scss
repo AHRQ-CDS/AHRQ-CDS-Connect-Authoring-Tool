@@ -7,3 +7,7 @@
   // use for critical negative actions like deletion
   @include button($danger-button-bg-color, $danger-button-text-color);
 }
+
+.small-button {
+  font-size: 0.75em;
+}

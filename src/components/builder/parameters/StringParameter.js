@@ -40,7 +40,7 @@ class StringParameter extends Component {
             }}
           />
         </label>
-        <span id={helpId} role='alert' aria-live='assertive'>        
+        <span id={helpId} role='alert' aria-live='assertive'>
         { this.state.valid === false
           ? 'Spaces are prohibited in element names' /* TODO: Have validation message provided by the validation function or some other prop */
           : null }
