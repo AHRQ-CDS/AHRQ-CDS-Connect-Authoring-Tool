@@ -12,10 +12,8 @@ class BuilderTarget extends Component {
   }
 
   deleteInstance(uniqueId) {
-    let newElements = this.props.templateInstances;
-    const index = newElements.findIndex((element) => {
-      return element.uniqueId === uniqueId;
-    });
+    const newElements = this.props.templateInstances;
+    const index = newElements.findIndex(element => element.uniqueId === uniqueId);
 
     if (index > -1) {
       newElements.splice(index, 1);
