@@ -78,7 +78,7 @@ class TemplateInstance extends Component {
             updateInstance={this.updateInstance} />
         );
       default:
-        return null;
+        return undefined;
     }
   }
 

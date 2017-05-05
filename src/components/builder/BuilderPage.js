@@ -133,7 +133,7 @@ class BuilderPage extends Component {
     if (elementIndex !== undefined) {
       // get relevant parameter
       const paramIndex = elements[elementIndex].parameters.findIndex(
-        param => state.hasOwnProperty(param.id) === true);
+        param => Object.prototype.hasOwnProperty.call(state, param.id));
 
       // edit element with new value using immutability-helper
       const editedElements = update(elements, {

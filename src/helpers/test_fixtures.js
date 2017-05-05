@@ -60,6 +60,4 @@ const droppedElements = [
   }
 ];
 
-export {
-  droppedElements
-};
+export default droppedElements;
