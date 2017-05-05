@@ -1,0 +1,41 @@
+.modal-style {
+  position: absolute;
+  top: 40px;
+  left: 40px;
+  right: 40px;
+  bottom: 40px;
+  outline: none;
+
+  padding: 0;
+  background-color: $white;
+  border: $logic-element-border;
+
+  .modal__header {
+    display: flex;
+    background-color: $logic-element-bg-color;
+    color: $logic-element-text-color;
+    padding: 0.25em 0.5em;
+    align-items: center;
+    justify-content: center;
+
+    .modal__heading {
+      flex: 1;
+      font-weight: 500;
+      color: $builder-text-color;
+    }
+
+    .modal__buttonbar {
+      flex: 1;
+      text-align: right;
+
+      .modal__deletebutton {
+        @extend .danger-button;
+        padding: 0.125em;
+      }
+    }
+  }
+
+  .modal__body {
+    padding: 1em;
+  }
+}
