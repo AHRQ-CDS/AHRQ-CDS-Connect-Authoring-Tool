@@ -6,7 +6,6 @@ let Schema = mongoose.Schema;
 let ExpressionSchema = new Schema({
 	id: String,
 	name: String,
-	category: String,
 	parameters: Array
 });
 

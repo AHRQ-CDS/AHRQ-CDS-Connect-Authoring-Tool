@@ -17,7 +17,8 @@ class TemplateInstance extends Component {
     templateInstance: PropTypes.object.isRequired,
     updateSingleElement: PropTypes.func.isRequired,
     deleteInstance: PropTypes.func.isRequired,
-    saveInstance: PropTypes.func.isRequired
+    saveInstance: PropTypes.func.isRequired,
+    showPresets: PropTypes.func.isRequired
   }
 
   constructor(props) {
@@ -83,10 +84,16 @@ class TemplateInstance extends Component {
           <span className="element__heading">
             {this.props.templateInstance.name}
           </span>
-
+          
           <div className="element__buttonbar">
             <button
-              onClick={this.props.deleteInstance.bind(this, this.props.templateInstance.uniqueId)}
+              onClick={this.props.showPresets.bind(this, this.props.templateInstance.id)}
+              className="element__presetbutton"
+              aria-label={`show presets ${this.props.templateInstance.id}`}>
+              <FontAwesome fixedWidth name='database'/>
+            </button>
+            <button
+              onClick={this.props.saveInstance.bind(this, this.props.templateInstance.uniqueId)}
               className="element__savebutton"
               aria-label={`save ${this.props.templateInstance.name}`}>
               <FontAwesome fixedWidth name='save'/>

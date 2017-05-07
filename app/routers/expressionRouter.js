@@ -7,6 +7,10 @@ ExpressionRouter.route('/')
   .get(expression.allGet)
   .post(expression.singlePost)
 
+// Routes for /api/expressions/group/:group_id
+ExpressionRouter.route('/group/:group_id')
+  .get(expression.groupGet)
+
 // Routes for /api/expressions/:expression
 ExpressionRouter.route('/:expression')
   .get(expression.singleGet)

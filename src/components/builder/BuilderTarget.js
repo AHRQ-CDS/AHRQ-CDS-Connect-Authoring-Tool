@@ -1,7 +1,7 @@
 import React, { Component, PropTypes } from 'react';
 import { DropTarget } from 'react-dnd';
 import _ from 'lodash';
-// import axios from 'axios';
+import axios from 'axios';
 import TemplateInstance from './TemplateInstance';
 
 class BuilderTarget extends Component {
@@ -24,16 +24,27 @@ class BuilderTarget extends Component {
     }
   }
   
-  // saveInstance(uniqueId) {
-  //   let elementList = this.props.templateInstances;
-  //   const index = elementList.findIndex((element) => {
-  //     return element.uniqueId === uniqueId;
-  //   });
-  //   if (index > -1) {
-  //     let element = elementList[index];
+  saveInstance(uniqueId) {
+    let elementList = this.props.templateInstances;
+    const index = elementList.findIndex((element) => {
+      return element.uniqueId === uniqueId;
+    });
+    if (index > -1) {
+      let element = elementList[index];
+      console.log(element);
+      axios.post('http://localhost:3001/api/expressions', element)
+        .then((result) => {
+          console.log('Done');
+        })
+        .catch((error) => {
+          console.log('Fail');
+        })
+    }
+  }
 
-  //   }
-  // }
+  showPresets(mongo_id) {
+    console.log(mongo_id);
+  }
 
   render() {
     const { connectDropTarget } = this.props;
@@ -48,6 +59,8 @@ class BuilderTarget extends Component {
                 key={element.uniqueId}
                 templateInstance={element}
                 deleteInstance={this.deleteInstance.bind(this)}
+                saveInstance={this.saveInstance.bind(this)}
+                showPresets={this.showPresets.bind(this)}
                 updateSingleElement={this.props.updateSingleElement} />
             )
         }
