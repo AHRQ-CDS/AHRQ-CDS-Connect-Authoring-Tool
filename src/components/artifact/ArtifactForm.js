@@ -33,11 +33,20 @@ class ArtifactForm extends Component {
     const nameID = _.uniqueId('artifact-name-');
     const versionID = _.uniqueId('artifact-version-');
     this.setState({ nameID, versionID });
+    if (this.props.defaultName) {
+      this.setState({ name: this.props.defaultName });
+    }
+    if (this.props.defaultVersion) {
+      this.setState({ version: this.props.defaultVersion });
+    }
   }
 
   render() {
     return (
-      <form className='form__inline' onSubmit={this.addArtifact}>
+      <form className='form__inline'
+        onSubmit={this.props.onSubmitFunction
+          ? event => this.props.onSubmitFunction(event, this.state.name, this.state.version)
+          : this.addArtifact}>
       <div className='form__group'>
         <label htmlFor={this.state.nameID}>
           Artifact Name
@@ -60,7 +69,7 @@ class ArtifactForm extends Component {
             onChange={this.handleInputChange} />
         </label>
         </div>
-        <button type='submit' className='primary-button'>Add new artifact</button>
+        <button type='submit' className='primary-button'>{this.props.buttonLabel}</button>
       </form>
     );
   }

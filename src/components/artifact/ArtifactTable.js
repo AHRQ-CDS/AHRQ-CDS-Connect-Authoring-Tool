@@ -2,6 +2,12 @@ import React, { Component } from 'react';
 import moment from 'moment';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
+import FontAwesome from 'react-fontawesome';
+import ReactModal from 'react-modal';
+import ArtifactForm from './ArtifactForm';
+
+// For screen readers to not see the background text
+ReactModal.setAppElement('#root');
 
 function renderDate(datetime) {
   let formattedDate = '';
@@ -24,9 +30,14 @@ function sortArtifacts(a, b) {
 class ArtifactTable extends Component {
   constructor(props) {
     super(props);
-    this.state = { artifacts: props.artifacts };
+    this.state = { artifacts: props.artifacts,
+      artifactEditing: null,
+      showModal: false };
     this.deleteArtifact = this.deleteArtifact.bind(this);
     this.renderTableRow = this.renderTableRow.bind(this);
+    this.editArtifactName = this.editArtifactName.bind(this);
+    this.openModal = this.openModal.bind(this);
+    this.closeModal = this.closeModal.bind(this);
   }
 
   componentWillReceiveProps(nextProps) {
@@ -55,11 +66,49 @@ class ArtifactTable extends Component {
       });
   }
 
+  editArtifactName(e, name, version) {
+    e.preventDefault();
+    const artifactToUpdate = {
+      name: name,
+      version: version,
+      templateInstances: this.state.artifactEditing.templateInstances,
+      _id: this.state.artifactEditing._id
+    }
+
+    axios.put('http://localhost:3001/api/artifacts', artifactToUpdate)
+      .then((result) => {
+        this.props.afterAddArtifact();
+        this.setState({ showModal: false, artifactEditing: null });
+      });
+  }
+
+  openModal(artifact) {
+    this.setState({ showModal: true, artifactEditing: artifact });
+  }
+
+  closeModal() {
+    this.setState({ showModal: false });
+  }
+
+  renderEditForm() {
+    return (
+      <ArtifactForm buttonLabel="Edit artifact"
+        onSubmitFunction={this.editArtifactName}
+        defaultName={this.state.artifactEditing ? this.state.artifactEditing.name : null}
+        defaultVersion={this.state.artifactEditing ? this.state.artifactEditing.version : null} />
+    );
+  }
+
   renderTableRow(artifact) {
     return (
       <tr key={artifact._id}>
         <td className="artifacts__tablecell-wide"
           data-th="Artifact Name">
+          <button aria-label="Edit"
+            className="small-button"
+            onClick={() => this.openModal(artifact)}>
+            <FontAwesome name='pencil' />
+          </button>
           <Link to={`${this.props.match.path}/${artifact._id}/build`}>
             {artifact.name}
           </Link>
@@ -81,19 +130,41 @@ class ArtifactTable extends Component {
 
   render() {
     return (
-      <table className="artifacts__table">
-        <thead>
-          <tr>
-            <th scope="col" className="artifacts__tablecell-wide">Artifact Name</th>
-            <th scope="col" className="artifacts__tablecell-short">Version</th>
-            <th scope="col">Updated</th>
-            <td></td>
-          </tr>
-        </thead>
-        <tbody>
-        {this.state.artifacts.sort(sortArtifacts).map(this.renderTableRow)}
-        </tbody>
-      </table>
+      <div>
+        <ReactModal contentLabel="Edit modal"
+          isOpen={this.state.showModal}
+          onRequestClose={this.closeModal}
+          className="modal-style">
+          <div className="modal__header">
+            <span className="modal__heading">
+              Edit Artifact
+            </span>
+            <div className="modal__buttonbar">
+              <button onClick={this.closeModal} 
+                className="modal__deletebutton" 
+                aria-label="Close edit modal">
+                <FontAwesome fixedWidth name='close'/>
+              </button>
+            </div>
+          </div>
+          <div className="modal__body">
+          {this.renderEditForm()}
+          </div>
+        </ReactModal>
+        <table className="artifacts__table">
+          <thead>
+            <tr>
+              <th scope="col" className="artifacts__tablecell-wide">Artifact Name</th>
+              <th scope="col" className="artifacts__tablecell-short">Version</th>
+              <th scope="col">Updated</th>
+              <td></td>
+            </tr>
+          </thead>
+          <tbody>
+          {this.state.artifacts.sort(sortArtifacts).map(this.renderTableRow)}
+          </tbody>
+        </table>
+      </div>
     );
   }
 }
