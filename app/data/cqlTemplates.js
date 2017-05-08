@@ -10,5 +10,15 @@ module.exports = {
                     or O.valueQuantity.code.value = \$\{this.observation.units.code\}
                   )
                   sort by O.issued
-              )\n`
+              )\n`,
+  LabValueRange: `define \$\{this.element_name\}: 
+              Last (
+                [Observation: "\$\{this.observation.name\}"] O
+                  where O.status.value = 'final'
+                  and (
+                    O.valueQuantity.unit.value in {\$\{this.observation.units.values\}}
+                    or O.valueQuantity.code.value = \$\{this.observation.units.code\}
+                  )
+                  sort by O.issued
+              )\n in \$\{this.lower_bound_exclusive ? '(' : '[' \}\$\{this.lower_bound\},\$\{this.upper_bound\}\$\{this.upper_bound_exclusive ? ')' : ']' \}`
 }
