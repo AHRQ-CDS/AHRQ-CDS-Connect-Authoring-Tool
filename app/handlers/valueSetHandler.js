@@ -14,6 +14,9 @@ function getAll(request, result) {
 function getOne(request, result) {
   // Gets the ValueSet category specified
   let selectedObject = ValueSets[request.params.valueset];
+  if (selectedObject === undefined ) {
+    result.status(404).send("This level of ValueSet does not exists");
+  }
 
   // Gets the nested ValueSet as deep as specified
   let path = request.params['0'].split('/');
@@ -22,7 +25,7 @@ function getOne(request, result) {
     if(variable !== '') {
       selectedObject = selectedObject[variable];
       if (selectedObject === undefined) {
-        result.json("This level of ValueSet does not exist");
+        result.status(404).send("This level of ValueSet does not exist");
         break;
       }
     }
