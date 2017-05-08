@@ -19,7 +19,7 @@ module.exports = [
         name: 'Gender',
         parameters: [
           { id: 'element_name', type: 'string', name: 'Element Name' },
-          { id: 'gender', type: 'valueset', name: 'Gender' },
+          { id: 'gender', type: 'valueset', select: 'demographics/gender', name: 'Gender' },
         ],
       }
     ]

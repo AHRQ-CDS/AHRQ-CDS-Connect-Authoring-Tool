@@ -29,6 +29,35 @@ module.exports = {
       units: {values: ["'mg/dL'"], code: "'mg/dL'"}
     }
   },
+  demographics: {
+    gender: {
+      id: "gender",
+      name: "Gender",
+      oid: '2.16.840.1.113883.4.642.3.1',
+      expansion: [
+        {
+          id: "male",
+          name: "Male",
+          value: "'male'",
+        },
+        {
+          id: "female",
+          name: "Female",
+          value: "'female'",
+        },
+        {
+          id: "other",
+          name: "Other",
+          value: "'other'",
+        },
+        {
+          id: "unknown",
+          name: "Unknown",
+          value: "'unknown'",
+        },
+      ]
+    }
+  },
   conditions: {
     diabetes : {
       // https://ushik.ahrq.gov/ViewItemDetails?system=mu&itemKey=211617000

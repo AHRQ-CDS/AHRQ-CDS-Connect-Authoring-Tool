@@ -17,26 +17,10 @@ module.exports = {
       name: "Systolic Blood Pressure",
     }
   ],
-  gender: [
+  demogragphics: [
     {
-      id: "male",
-      name: "Male",
-      value: "'male'",
-    },
-    {
-      id: "female",
-      name: "Female",
-      value: "'female'",
-    },
-    {
-      id: "other",
-      name: "Other",
-      value: "'other'",
-    },
-    {
-      id: "unknown",
-      name: "Unknown",
-      value: "'unknown'",
+      id: "gender",
+      name: "Gender"
     },
   ],
   conditions: [
