@@ -32,10 +32,32 @@ module.exports = [
       {
         id: 'MostRecentObservation',
         name: 'Most Recent Observation',
-        category: 'Observations',
         parameters: [
           { id: 'element_name', type: 'string', name: 'Element Name' },
           { id: 'observation', type: 'observation', name: 'Observation' }
+        ],
+      }
+    ]
+  },
+  {
+    id: 3,
+    icon: 'gear',
+    name: 'Operations',
+    entries: [
+      {
+        id: 'And',
+        name: 'And',
+        parameters: [
+          { id: 'element_name', type: 'string', name: 'Element Name' },
+          { id: 'entries', type: 'list', subType: 'boolean', value:[undefined, undefined], name: 'Elements' }
+        ],
+      },
+      {
+        id: 'Or',
+        name: 'Or',
+        parameters: [
+          { id: 'element_name', type: 'string', name: 'Element Name' },
+          { id: 'entries', type: 'list', subType: 'boolean', name: 'Elements' }
         ],
       }
     ]

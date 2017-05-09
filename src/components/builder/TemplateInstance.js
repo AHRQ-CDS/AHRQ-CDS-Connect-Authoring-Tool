@@ -5,6 +5,8 @@ import IntegerParameter from './parameters/IntegerParameter';
 import StringParameter from './parameters/StringParameter';
 import ObservationParameter from './parameters/ObservationParameter';
 import ValueSetParameter from './parameters/ValueSetParameter';
+import ListParameter from './parameters/ListParameter'
+import _ from 'lodash';
 
 function validateOneWord(value) {
   if (value.includes(' ')) {
@@ -26,6 +28,7 @@ class TemplateInstance extends Component {
     this.state = { resources: {} };
     this.updateInstance = this.updateInstance.bind(this);
     this.selectTemplate = this.selectTemplate.bind(this);
+    this.addComponent = this.addComponent.bind(this);
   }
 
   componentWillMount() {
@@ -39,8 +42,25 @@ class TemplateInstance extends Component {
       });
   }
 
-  updateInstance(newState) {
+  updateInstance(newState, index) {
+
+    if (index) {
+      let key = _.keys(newState)[0]
+      let value = _.values(newState)[0]
+      var arrayvar = this.state[key].slice()
+      arrayvar[index] = value
+      newState[key] = arrayvar
+    }
+    debugger
+
     this.setState(newState);
+    this.props.updateSingleElement(this.props.templateInstance.uniqueId, newState);
+  }
+  addComponent(listParameter) {
+    var arrayvar = this.state[listParameter].slice()
+    arrayvar.push(undefined)
+    let newState = { [listParameter]: arrayvar } 
+    this.setState(newState)
     this.props.updateSingleElement(this.props.templateInstance.uniqueId, newState);
   }
 
@@ -75,6 +95,13 @@ class TemplateInstance extends Component {
             key={param.id}
             param={param}
             valueset={this.state.resources}
+      case 'list':
+        return (
+          <ListParameter
+            key={param.id}
+            param={param}
+            foo={this.state.foo}
+            addComponent={this.addComponent}
             updateInstance={this.updateInstance} />
         );
       default:

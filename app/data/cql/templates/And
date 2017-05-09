@@ -1,0 +1,2 @@
+define "<%=element_name%>":
+  and(one, two, three)

@@ -60,9 +60,9 @@ class BuilderPage extends Component {
         const cqlData = result.data;
         const saveElement = document.createElement('a');
         saveElement.href = `data:${cqlData.type},${encodeURIComponent(cqlData.text)}`;
-        saveElement.download = `${cqlData.filename}.cql`;
+        //saveElement.download = `${cqlData.filename}.cql`;
         // Open in a new tab rather than download - convenient for testing
-        // saveElement.target = "_blank"
+        saveElement.target = "_blank"
         saveElement.click();
       })
       .catch((error) => {

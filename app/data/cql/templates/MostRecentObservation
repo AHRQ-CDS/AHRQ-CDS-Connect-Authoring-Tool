@@ -1,0 +1,10 @@
+define "<%=element_name%>":
+  Last (
+    [Observation: "<%=observation.name%>"] O
+      where O.status.value = 'final'
+      and (
+        O.valueQuantity.unit.value in {<%=observation.units.values%>}
+        or O.valueQuantity.code.value = <%=observation.units.code%>
+      )
+      sort by O.issued
+  )

@@ -1,0 +1,2 @@
+define "<%=element_name%>":
+  AgeInYears()>=<%=min_age%> and AgeInYears()<=<%=max_age%>

@@ -58,9 +58,6 @@ const spec = {
     */
     const clone = JSON.parse(JSON.stringify(item));
     clone.uniqueId = _.uniqueId(clone.id);
-    clone.parameters.forEach((param) => {
-      param.value = ''; // eslint-disable-line no-param-reassign
-    });
     props.updateTemplateInstances(props.templateInstances.concat(clone));
   },
 

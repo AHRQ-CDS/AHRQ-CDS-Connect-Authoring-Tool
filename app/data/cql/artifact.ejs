@@ -1,0 +1,8 @@
+library <%=name%> version '<%=version%>'
+
+using <%=dataModel.name%> version '<%= dataModel.version %>'
+<% resourceMap.forEach((resource, key) => {%>
+valueset "<%=resource.name%>": '<%=resource.oid%>';<%});%>
+
+context <%=context%>
+
