@@ -18,5 +18,5 @@ test:
   - yarn build && yarn test
 
 lint:
-  script:
-  - ./node_modules/.bin/eslint src/*
+  script: >-
+    ./node_modules/.bin/eslint --rule "import/no-unresolved: [2, { ignore: ['\.css$'] }]" src/*
