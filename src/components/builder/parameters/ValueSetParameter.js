@@ -7,15 +7,15 @@ class ValueSetParameter extends Component {
   constructor(props) {
     super(props);
 
-    this.state = {'valueset': []};
+    this.state = { valueset: [] };
   }
 
   componentWillMount() {
     const url = 'http://localhost:3001/api';
     axios.get(`${url}/valuesets/${this.props.param.select}`)
       .then((result) => {
-        this.setState({'valueset' : result.data.expansion });
-      })
+        this.setState({ valueset: result.data.expansion });
+      });
   }
 
   render() {
@@ -24,16 +24,16 @@ class ValueSetParameter extends Component {
       <div className="form__group">
         <label htmlFor={id}>
           {this.props.param.name}:
-          <Select labelKey={"name"} 
-            autofocus 
+          <Select labelKey={'name'}
+            autofocus
             options={this.state.valueset}
-            inputProps={{'id': id}}
-            clearable={true} 
+            inputProps={{ id }}
+            clearable={true}
             name={this.props.param.id}
-            value={this.props.param.value} 
+            value={this.props.param.value}
             onChange={(value) => {
-                this.props.updateInstance({ [this.props.param.id]: value })
-            }} 
+              this.props.updateInstance({ [this.props.param.id]: value });
+            }}
             searchable={true} />
         </label>
       </div>

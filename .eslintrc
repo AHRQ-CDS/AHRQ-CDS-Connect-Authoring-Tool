@@ -10,6 +10,7 @@
     "no-underscore-dangle": ["error", { "allow": ["_id"] }], // because mongo
     "no-unused-vars": [ "error", { "args": "none" } ], // don't check function arguments
     "no-plusplus": ["error", { "allowForLoopAfterthoughts": true }], // allow ++ in for loop expression
-    "import/no-extraneous-dependencies": ["error", {"devDependencies": ["src/helpers/*.js"]}] // don't check helpers for extraneous deps
+    "import/no-named-default": "off", // turning it off since it's currently broken w/ yarn (see: https://github.com/yarnpkg/yarn/issues/3332)
+    "import/no-extraneous-dependencies": ["error", {"devDependencies": ["**/src/helpers/*.js"]}] // don't check helpers for extraneous deps (note: this glob must be preceeded by '**' due to bug in eslint-plugin-import@2.0.1. See: https://github.com/benmosher/eslint-plugin-import/issues/602)
   }
 }

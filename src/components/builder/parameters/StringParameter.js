@@ -16,12 +16,15 @@ class StringParameter extends Component {
   render() {
     const id = _.uniqueId('parameter-');
     const helpId = _.uniqueId('parameter-help-');
+    let validityClassName = null;
+    if (this.state.valid) {
+      validityClassName = 'form__group-valid';
+    } else if (this.state.valid === false) {
+      validityClassName = 'form__group-invalid';
+    }
 
     return (
-      <div className={`form__group ${
-        (this.state.valid) ? 'form__group-valid'
-        : (this.state.valid === false) ? 'form__group-invalid' : null
-      }`}>
+      <div className={`form__group ${validityClassName}`}>
         <label htmlFor={id}>
           {this.props.name}:
 

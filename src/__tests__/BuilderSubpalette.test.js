@@ -1,6 +1,6 @@
 import BuilderSubPalette from '../components/builder/BuilderSubPalette';
 import Element from '../components/builder/Element';
-import { wrapInTestContext, shallowRenderComponent, fullRenderComponent } from '../helpers/test_helpers';
+import { shallowRenderComponent } from '../helpers/test_helpers';
 
 let component;
 const selectedGroup = {
