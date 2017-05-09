@@ -4,6 +4,7 @@ import FontAwesome from 'react-fontawesome';
 import IntegerParameter from './parameters/IntegerParameter';
 import StringParameter from './parameters/StringParameter';
 import ObservationParameter from './parameters/ObservationParameter';
+import Dropdown, {DropdownTrigger, DropdownContent} from 'react-simple-dropdown';
 
 function validateOneWord(value) {
   if (value.includes(' ')) {
@@ -24,7 +25,10 @@ class TemplateInstance extends Component {
   constructor(props) {
     super(props);
 
-    this.state = { resources: {} };
+    this.state = { 
+      resources: {}, 
+      presets : []
+    };
     this.updateInstance = this.updateInstance.bind(this);
     this.selectTemplate = this.selectTemplate.bind(this);
   }
@@ -75,6 +79,50 @@ class TemplateInstance extends Component {
     }
   }
 
+  showPresets(id) {
+    this.props.showPresets(id)
+      .then((result) => {
+        this.setState({presets : result.data})
+      })
+      .catch((error) => {
+        console.log(error);
+        this.setState({presets : []})
+      })
+  }
+
+  setPreset(stateIndex) {
+    console.log(this.state.presets[stateIndex])
+    this.props.templateInstance.parameters = this.state.presets[stateIndex].parameters;
+    for (var i in this.state.presets[stateIndex].parameters) {
+      let param = this.state.presets[stateIndex].parameters[i];
+      let newState = {};
+      newState[param.id] = param.value;
+      console.log(newState);
+      this.updateInstance(newState);
+    }
+  }
+
+  renderPreset(preset, stateIndex) {
+    let name = 'untitled';
+    const params = preset.parameters;
+    const index = params.findIndex((item) => {
+      return item.id === 'element_name';
+    });
+    if (index > -1) {
+      name = params[index];
+    }
+    return (
+      <tr key={stateIndex}>
+        <td
+          onClick={this.setPreset.bind(this, stateIndex)}>
+          {name.value}
+        </td>
+      </tr>
+    )
+  }
+
+  // <tr><td key={i}>{preset.parameters[0].value}</td></tr>
+
   render() {
     return (
       <div className="element element__expanded">
@@ -82,14 +130,26 @@ class TemplateInstance extends Component {
           <span className="element__heading">
             {this.props.templateInstance.name}
           </span>
-          
           <div className="element__buttonbar">
-            <button
-              onClick={this.props.showPresets.bind(this, this.props.templateInstance.id)}
-              className="element__presetbutton"
-              aria-label={`show presets ${this.props.templateInstance.id}`}>
-              <FontAwesome fixedWidth name='database'/>
-            </button>
+            <Dropdown>
+              <DropdownTrigger>
+                <button
+                  onClick={this.showPresets.bind(this, this.props.templateInstance.id)}
+                  className="element__presetbutton"
+                  aria-label={`show presets ${this.props.templateInstance.id}`}>
+                  <FontAwesome fixedWidth name='database'/>
+                </button>
+              </DropdownTrigger>
+              <DropdownContent>
+                <table>
+                  <tbody>
+                    {this.state.presets.map((preset, i) => 
+                      this.renderPreset(preset, i)
+                    )}
+                  </tbody>
+                </table>
+              </DropdownContent>
+            </Dropdown>
             <button
               onClick={this.props.saveInstance.bind(this, this.props.templateInstance.uniqueId)}
               className="element__savebutton"

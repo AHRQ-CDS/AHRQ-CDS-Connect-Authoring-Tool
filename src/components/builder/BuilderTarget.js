@@ -43,7 +43,7 @@ class BuilderTarget extends Component {
   }
 
   showPresets(mongo_id) {
-    console.log(mongo_id);
+    return axios.get(`http://localhost:3001/api/expressions/group/${mongo_id}`);
   }
 
   render() {
