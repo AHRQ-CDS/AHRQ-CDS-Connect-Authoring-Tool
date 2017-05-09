@@ -27,6 +27,7 @@ class TemplateInstance extends Component {
 
     this.state = { resources: {} };
     this.updateInstance = this.updateInstance.bind(this);
+    this.updateList = this.updateList.bind(this);
     this.selectTemplate = this.selectTemplate.bind(this);
     this.addComponent = this.addComponent.bind(this);
   }
@@ -42,22 +43,21 @@ class TemplateInstance extends Component {
       });
   }
 
-  updateInstance(newState, index) {
-
-    if (index) {
-      let key = _.keys(newState)[0]
-      let value = _.values(newState)[0]
-      var arrayvar = this.state[key].slice()
-      arrayvar[index] = value
-      newState[key] = arrayvar
-    }
-    debugger
-
+  updateInstance(newState) {
     this.setState(newState);
     this.props.updateSingleElement(this.props.templateInstance.uniqueId, newState);
   }
+
+  updateList(id, value, index) {
+    let newState = {}
+    let arrayvar = this.state[id].slice();
+    arrayvar[index] = value;
+    newState[id] = arrayvar;
+    this.updateInstance(newState);
+  }
+
   addComponent(listParameter) {
-    var arrayvar = this.state[listParameter].slice()
+    let arrayvar = this.state[listParameter].slice()
     arrayvar.push(undefined)
     let newState = { [listParameter]: arrayvar } 
     this.setState(newState)
@@ -100,9 +100,9 @@ class TemplateInstance extends Component {
           <ListParameter
             key={param.id}
             param={param}
-            foo={this.state.foo}
+            value={this.state[param.id]}
             addComponent={this.addComponent}
-            updateInstance={this.updateInstance} />
+            updateList={this.updateList} />
         );
       default:
         return undefined;

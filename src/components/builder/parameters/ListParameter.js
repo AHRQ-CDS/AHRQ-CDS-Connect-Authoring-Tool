@@ -21,7 +21,7 @@ export default (props) => {
                 name={props.param.id}
                 value={v}
                 onChange={(value) => {
-                  props.updateInstance({ [props.param.id]: value }, index);
+                  props.updateList(props.param.id, value, index);
                 }}
                 searchable={true} />
         )}
