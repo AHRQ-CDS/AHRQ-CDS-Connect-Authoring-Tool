@@ -16,6 +16,7 @@ export default (props) => {
           type="number"
           name={props.param.id}
           defaultValue={props.param.value}
+          value={props.value}
           onChange={(event) => {
             const value = parseInt(event.target.value, 10);
             props.updateInstance({ [event.target.name]: value });

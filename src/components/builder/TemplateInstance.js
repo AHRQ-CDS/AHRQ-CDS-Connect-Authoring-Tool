@@ -57,6 +57,7 @@ class TemplateInstance extends Component {
           <IntegerParameter
             key={param.id}
             param={param}
+            value={this.state[param.id]}
             updateInstance={this.updateInstance} />
         );
       case 'observation':
