@@ -17,6 +17,12 @@ module.exports = {
       name: "Systolic Blood Pressure",
     }
   ],
+  demogragphics: [
+    {
+      id: "gender",
+      name: "Gender"
+    },
+  ],
   conditions: [
     {
       id: "diabetes",

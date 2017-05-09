@@ -1,6 +1,7 @@
 module.exports = {
    AgeRange : `define \$\{this.element_name\}:
               AgeInYears()>=\$\{this.min_age\} and AgeInYears()<=\$\{this.max_age\}\n`,
+   Gender : `define \$\{this.element_name\}: Patient.gender.value = \$\{this.gender.value\}\n`,
    MostRecentObservation: `define \${this.element_name\}:
               Last (
                 [Observation: "\${this.observation.name\}"] O
