@@ -69,7 +69,7 @@ class TemplateInstance extends Component {
             updateInstance={this.updateInstance}
             validation={validateOneWord} />
         );
-      case "valueset":
+      case 'valueset':
         return (
           <ValueSetParameter
             key={param.id}
