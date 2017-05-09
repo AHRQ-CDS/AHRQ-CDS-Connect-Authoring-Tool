@@ -3,7 +3,6 @@ import Element from '../components/builder/Element';
 import { wrapInTestContext, shallowRenderComponent, fullRenderComponent } from '../helpers/test_helpers';
 
 let component;
-let droppableComponent;
 const selectedGroup = {
   id: 1,
   icon: 'user',
@@ -12,20 +11,11 @@ const selectedGroup = {
 };
 
 beforeEach(() => {
-  // Obtain the reference to the component before React DnD wrapping
-  // Stub the React DnD connector functions with an identity function
   component = shallowRenderComponent(
-    BuilderSubPalette.DecoratedComponent,
+    BuilderSubPalette,
     {
-      connectDropTarget: el => el,
       selectedGroup
     }
-  );
-
-  // mock the actual draggable component
-  droppableComponent = fullRenderComponent(
-    wrapInTestContext(BuilderSubPalette),
-    { selectedGroup }
   );
 });
 
@@ -35,6 +25,3 @@ test('indicates presence of Elements', () => {
   expect(component.find(Element)).toHaveLength(selectedGroup.entries.length);
 });
 
-test('can have Elements dropped', () => {
-  expect(droppableComponent).toBeDefined();
-});

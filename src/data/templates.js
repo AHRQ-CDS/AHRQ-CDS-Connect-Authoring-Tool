@@ -13,6 +13,14 @@ module.exports = [
           { id: 'min_age', type: 'integer', name: 'Minimum Age' },
           { id: 'max_age', type: 'integer', name: 'Maximum Age' },
         ],
+      },
+      {
+        id: 'Gender',
+        name: 'Gender',
+        parameters: [
+          { id: 'element_name', type: 'string', name: 'Element Name' },
+          { id: 'gender', type: 'valueset', select: 'demographics/gender', name: 'Gender' },
+        ],
       }
     ]
   },

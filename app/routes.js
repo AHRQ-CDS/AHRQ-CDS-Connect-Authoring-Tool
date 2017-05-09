@@ -12,7 +12,10 @@ module.exports = function(app) {
   app.use('/api/resources', require('./routers/resourceRouter.js'));
 
   // Routing for cql files
-  app.use('/api/cql', require('./routers/cqlRouter'))
+  app.use('/api/cql', require('./routers/cqlRouter'));
+
+  // Routing for ValueSets
+  app.use('/api/valuesets', require('./routers/valueSetRouter.js'));
 
   // Routing for Artifact Elements
   app.use('/api/expressions', require('./routers/expressionRouter'))
