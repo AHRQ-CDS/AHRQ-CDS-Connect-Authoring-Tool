@@ -59,7 +59,6 @@ class ArtifactTable extends Component {
         ];
 
         this.setState({ artifacts });
-        console.log('Artifact deleted');
       })
       .catch((err) => {
         console.error(err);

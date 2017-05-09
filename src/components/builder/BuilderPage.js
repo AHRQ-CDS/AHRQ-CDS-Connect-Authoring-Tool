@@ -66,7 +66,7 @@ class BuilderPage extends Component {
         saveElement.click();
       })
       .catch((error) => {
-        console.log(error);
+        console.error(error);
       });
   }
 
@@ -81,7 +81,6 @@ class BuilderPage extends Component {
         // TODO:
         // notification on save
       if (result.data._id) this.setState({ id: result.data._id });
-      console.log(`id: ${this.state.id}`);
 
       if (exitPage) {
           // Redirect the page to the artifact list after saving if click "Close" button
@@ -93,13 +92,13 @@ class BuilderPage extends Component {
       axios.put(`${url}/artifacts`, artifact)
         .then(handleSave)
         .catch((error) => {
-          console.log(error);
+          console.error(error);
         });
     } else {
       axios.post(`${url}/artifacts`, artifact)
         .then(handleSave)
         .catch((error) => {
-          console.log(error);
+          console.error(error);
         });
     }
   }
