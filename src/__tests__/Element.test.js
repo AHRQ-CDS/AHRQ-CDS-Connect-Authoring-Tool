@@ -1,5 +1,6 @@
 import Element from '../components/builder/Element';
 import { wrapInTestContext, shallowRenderComponent, fullRenderComponent, decoratedDeepState } from '../helpers/test_helpers';
+import templateInstances from '../helpers/test_fixtures';
 
 let component;
 let draggableComponent;
@@ -12,19 +13,23 @@ beforeEach(() => {
     {
       connectDragSource: el => el,
       connectDragPreview: el => el,
-      name: 'Age Range'
+      name: 'My Special Age Range',
+      template: templateInstances[0]
     }
   );
 
   // mock the actual draggable component
   draggableComponent = fullRenderComponent(
     wrapInTestContext(Element),
-    { name: 'Age Range' }
+    {
+      name: 'My Special Age Range',
+      template: templateInstances[0]
+    }
   );
 });
 
 test('renders Element with name and initial state', () => {
-  expect(component.text()).toContain('Age Range');
+  expect(component.text()).toContain('My Special Age Range');
   expect(component.hasClass('element')).toBe(true);
   expect(component.find('button').hasClass('element__dragger')).toBe(true);
   expect(component.hasClass('is-active')).toBe(false);
@@ -56,7 +61,7 @@ test('sets Element classes in response to state change', () => {
 });
 
 
-test.skip('Element can drag', () => {
+test('Element can drag', () => {
   expect(decoratedDeepState(draggableComponent, Element).isActive).toBe(false);
   expect(draggableComponent.hasClass('is-active')).toBe(false);
 
