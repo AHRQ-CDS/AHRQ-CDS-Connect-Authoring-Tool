@@ -69,11 +69,11 @@ class ArtifactTable extends Component {
   editArtifactName(e, name, version) {
     e.preventDefault();
     const artifactToUpdate = {
-      name: name,
-      version: version,
+      name,
+      version,
       templateInstances: this.state.artifactEditing.templateInstances,
       _id: this.state.artifactEditing._id
-    }
+    };
 
     axios.put('http://localhost:3001/api/artifacts', artifactToUpdate)
       .then((result) => {
@@ -140,8 +140,8 @@ class ArtifactTable extends Component {
               Edit Artifact
             </span>
             <div className="modal__buttonbar">
-              <button onClick={this.closeModal} 
-                className="modal__deletebutton" 
+              <button onClick={this.closeModal}
+                className="modal__deletebutton"
                 aria-label="Close edit modal">
                 <FontAwesome fixedWidth name='close'/>
               </button>

@@ -1,0 +1,22 @@
+image: artifacts.mitre.org:8200/node:6
+
+services:
+  - artifacts.mitre.org:8200/mongo:3.4
+
+before_script:
+  - export http_proxy=http://gatekeeper.mitre.org:80
+  - export https_proxy=http://gatekeeper.mitre.org:80
+  - export HTTP_PROXY=http://gatekeeper.mitre.org:80
+  - export HTTPS_PROXY=http://gatekeeper.mitre.org:80
+  - export no_proxy=*.local,169.254/16,*.mitre.org,mongo
+  - export CI=true
+  - yarn
+
+test:
+  script:
+  - export MONGO_URL=mongodb://mongo/cds_authoring
+  - yarn build && yarn test
+
+lint:
+  script: >-
+    ./node_modules/.bin/eslint --rule "import/no-unresolved: [2, { ignore: ['\.css$'] }]" src/*

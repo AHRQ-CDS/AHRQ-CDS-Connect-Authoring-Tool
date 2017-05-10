@@ -12,10 +12,8 @@ class BuilderTarget extends Component {
   }
 
   deleteInstance(uniqueId) {
-    let newElements = this.props.templateInstances;
-    const index = newElements.findIndex((element) => {
-      return element.uniqueId === uniqueId;
-    });
+    const newElements = this.props.templateInstances;
+    const index = newElements.findIndex(element => element.uniqueId === uniqueId);
 
     if (index > -1) {
       newElements.splice(index, 1);
@@ -55,12 +53,13 @@ const spec = {
 
     /*
       On drop, copy the element to create a new TemplateInstance.
-      TODO: clone is required because we are setting value on the parameter. this may not be the best approach
+      TODO: clone is required because we are setting value on the parameter.
+      This may not be the best approach
     */
     const clone = JSON.parse(JSON.stringify(item));
     clone.uniqueId = _.uniqueId(clone.id);
     clone.parameters.forEach((param) => {
-      param.value = '';
+      param.value = ''; // eslint-disable-line no-param-reassign
     });
     props.updateTemplateInstances(props.templateInstances.concat(clone));
   },

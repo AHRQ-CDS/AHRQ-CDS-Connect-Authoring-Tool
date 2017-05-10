@@ -12,7 +12,10 @@ module.exports = function(app) {
   app.use('/api/resources', require('./routers/resourceRouter.js'));
 
   // Routing for cql files
-  app.use('/api/cql', require('./routers/cqlRouter'))
+  app.use('/api/cql', require('./routers/cqlRouter'));
+
+  // Routing for ValueSets
+  app.use('/api/valuesets', require('./routers/valueSetRouter.js'));
 
   // Catch all other Api calls
   app.get('/api/*', function(req, res) { res.sendStatus(404); });
