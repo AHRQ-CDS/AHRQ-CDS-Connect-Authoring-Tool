@@ -20,5 +20,6 @@ module.exports = {
                     or O.valueQuantity.code.value = \$\{this.observation.units.code\}
                   )
                   sort by O.issued
-              )\n in \$\{this.lower_bound_exclusive ? '(' : '[' \}\$\{this.lower_bound\},\$\{this.upper_bound\}\$\{this.upper_bound_exclusive ? ')' : ']' \}`
+              )
+              in \$\{this.lower_bound_exclusive ? '(' : '[' \}\$\{this.lower_bound\},\$\{this.upper_bound\}\$\{this.upper_bound_exclusive ? ')' : ']' \}\n`,
 }

@@ -36,13 +36,11 @@ module.exports = [
         category: 'RangeOfObservation',
         parameters: [
           { id: 'element_name', type: 'string', name: 'Element Name' },
-          { id: 'lower_bound', type: 'integer', name: 'Lower Bound' },
-          { id: 'lower_bound_exclusive', type: 'checkbox', name: 'Exclusive' },
-          { id: 'upper_bound', type: 'integer', name: 'Upper Bound' },
-          { id: 'upper_bound_exclusive', type: 'checkbox', name: 'Exclusive' },
+          { id: 'lower_bound', type: 'integer', name: 'Lower Bound', exclusive: false },
+          { id: 'upper_bound', type: 'integer', name: 'Upper Bound', exclusive: false },
           { id: 'observation', type: 'observation', name: 'Observation' }
         ]
-      }
+      },
     ]
   }
   //   'Gender',

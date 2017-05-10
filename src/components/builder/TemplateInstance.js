@@ -4,7 +4,6 @@ import FontAwesome from 'react-fontawesome';
 import IntegerParameter from './parameters/IntegerParameter';
 import StringParameter from './parameters/StringParameter';
 import ObservationParameter from './parameters/ObservationParameter';
-import CheckboxParameter from './parameters/CheckboxParameter';
 
 function validateOneWord(value) {
   if (value.includes(' ')) {
@@ -68,13 +67,6 @@ class TemplateInstance extends Component {
             {...param}
             updateInstance={this.updateInstance}
             validation={validateOneWord} />
-        );
-      case 'checkbox':
-        return (
-          <CheckboxParameter
-            key={param.id}
-            param={param}
-            updateInstance={this.updateInstance} />
         );
       default:
         return;
