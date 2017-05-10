@@ -4,6 +4,8 @@ import _ from 'lodash';
 import FontAwesome from 'react-fontawesome';
 
 
+// *** filter by boolean
+
 export default (props) => {
   const id = _.uniqueId('parameter-');
   return (
@@ -12,7 +14,7 @@ export default (props) => {
         {props.param.name}:
         {props.param.value.map((v, index) =>
         <div key={index}>
-          {index > 0 && <div>AND</div> }
+          {index > 0 && <div>{props.joinOperator}</div> }
           <Select key={index}
                   labelKey={'name'}
                   autofocus

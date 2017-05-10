@@ -120,6 +120,7 @@ class TemplateInstance extends Component {
             param={param}
             value={this.state[param.id]}
             values={this.state.otherInstances}
+            joinOperator={this.props.templateInstance.name}
             addComponent={this.addComponent}
             updateList={this.updateList} />
         );

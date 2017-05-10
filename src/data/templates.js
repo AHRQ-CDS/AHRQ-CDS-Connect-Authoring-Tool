@@ -57,7 +57,7 @@ module.exports = [
         name: 'Or',
         parameters: [
           { id: 'element_name', type: 'string', name: 'Element Name' },
-          { id: 'entries', type: 'list', subType: 'boolean', name: 'Elements' }
+          { id: 'components', type: 'list', subType: 'boolean', value:[undefined, undefined], name: 'Elements' }
         ],
       }
     ]
