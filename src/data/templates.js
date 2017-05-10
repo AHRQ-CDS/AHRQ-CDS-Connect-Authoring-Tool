@@ -49,7 +49,7 @@ module.exports = [
         name: 'And',
         parameters: [
           { id: 'element_name', type: 'string', name: 'Element Name' },
-          { id: 'entries', type: 'list', subType: 'boolean', value:[undefined, undefined], name: 'Elements' }
+          { id: 'components', type: 'list', subType: 'boolean', value:[undefined, undefined], name: 'Elements' }
         ],
       },
       {

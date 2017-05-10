@@ -6,25 +6,26 @@ import FontAwesome from 'react-fontawesome';
 
 export default (props) => {
   const id = _.uniqueId('parameter-');
-
-  const values = [{name: 'A', id: 'AA'}, {name: 'B', id: 'BB'}, {name: 'C', id: 'CC'}];
   return (
     <div className="form__group">
       <label htmlFor={id}>
         {props.param.name}:
         {props.param.value.map((v, index) =>
-        <Select key={index}
-                labelKey={'name'}
-                autofocus
-                options={values}
-                clearable={true}
-                name={props.param.id}
-                value={v}
-                onChange={(value) => {
-                  props.updateList(props.param.id, value, index);
-                }}
-                searchable={true} />
-        )}
+        <div key={index}>
+          {index > 0 && <div>AND</div> }
+          <Select key={index}
+                  labelKey={'name'}
+                  autofocus
+                  options={props.values}
+                  clearable={true}
+                  name={props.param.id}
+                  value={v}
+                  onChange={(value) => {
+                    props.updateList(props.param.id, value, index);
+                  }}
+                  searchable={true} />
+        </div>
+          )}
         <button
           onClick={() => { props.addComponent(props.param.id); }}
           aria-label={"Add component"}>

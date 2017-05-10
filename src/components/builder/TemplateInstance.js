@@ -18,6 +18,7 @@ function validateOneWord(value) {
 class TemplateInstance extends Component {
   static propTypes = {
     templateInstance: PropTypes.object.isRequired,
+    otherInstances: PropTypes.array.isRequired,
     updateSingleElement: PropTypes.func.isRequired,
     deleteInstance: PropTypes.func.isRequired
   }
@@ -29,6 +30,7 @@ class TemplateInstance extends Component {
     this.updateInstance = this.updateInstance.bind(this);
     this.updateList = this.updateList.bind(this);
     this.selectTemplate = this.selectTemplate.bind(this);
+    this.notThisInstance = this.notThisInstance.bind(this);
     this.addComponent = this.addComponent.bind(this);
   }
 
@@ -37,10 +39,24 @@ class TemplateInstance extends Component {
       this.setState({ [param.id]: param.value });
     });
 
+    let otherInstances = this.props.otherInstances.filter(this.notThisInstance).map((instance) => {
+        return {name: this.getInstanceName(instance),
+                id: instance.id}
+      });
+    this.setState({ otherInstances: otherInstances });
+
     axios.get('http://localhost:3001/api/resources')
       .then((result) => {
         this.setState({ resources: result.data });
       });
+  }
+
+  notThisInstance(instance) {
+    return this.props.templateInstance.id != instance.id;
+  }
+
+  getInstanceName(instance) {
+    return (instance.parameters.find(function(p) {return p.id == 'element_name'}) || {}).value;
   }
 
   updateInstance(newState) {
@@ -95,12 +111,15 @@ class TemplateInstance extends Component {
             key={param.id}
             param={param}
             valueset={this.state.resources}
+            updateInstance={this.updateInstance} />
+        );
       case 'list':
         return (
           <ListParameter
             key={param.id}
             param={param}
             value={this.state[param.id]}
+            values={this.state.otherInstances}
             addComponent={this.addComponent}
             updateList={this.updateList} />
         );

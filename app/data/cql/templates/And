@@ -1,2 +1,2 @@
 define "<%=element_name%>":
-  and(one, two, three)
+  and(<%-components.map(function(c) { return `"${c.name}"`; }).join(',')%>)

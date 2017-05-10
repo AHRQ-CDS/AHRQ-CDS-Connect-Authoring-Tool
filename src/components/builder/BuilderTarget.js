@@ -33,6 +33,7 @@ class BuilderTarget extends Component {
               <TemplateInstance
                 key={element.uniqueId}
                 templateInstance={element}
+                otherInstances={this.props.templateInstances}
                 deleteInstance={this.deleteInstance.bind(this)}
                 updateSingleElement={this.props.updateSingleElement} />
             )
