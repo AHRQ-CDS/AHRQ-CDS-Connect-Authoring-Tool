@@ -39,16 +39,28 @@ class TemplateInstance extends Component {
       this.setState({ [param.id]: param.value });
     });
 
-    let otherInstances = this.props.otherInstances.filter(this.notThisInstance).map((instance) => {
-        return {name: this.getInstanceName(instance),
-                id: instance.id}
-      });
+    let otherInstances = this.getOtherInstances(this.props);
     this.setState({ otherInstances: otherInstances });
 
     axios.get('http://localhost:3001/api/resources')
       .then((result) => {
         this.setState({ resources: result.data });
       });
+  }
+
+  componentWillReceiveProps(nextProps) {
+    let otherInstances = this.getOtherInstances(nextProps);
+    this.setState({ otherInstances: otherInstances });
+  }
+
+  // Props will either be this.props or nextProps coming from componentWillReceiveProps
+  getOtherInstances(props) {
+    const otherInstances = props.otherInstances.filter(this.notThisInstance).map((instance) => {
+      return {name: this.getInstanceName(instance),
+              id: instance.id,
+              returnType: instance.returnType}
+    });
+    return otherInstances;
   }
 
   notThisInstance(instance) {

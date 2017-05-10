@@ -8,6 +8,7 @@ module.exports = [
       {
         id: 'AgeRange',
         name: 'Age Range',
+        returnType: 'boolean',
         parameters: [
           { id: 'element_name', type: 'string', name: 'Element Name' },
           { id: 'min_age', type: 'integer', name: 'Minimum Age' },
@@ -17,6 +18,7 @@ module.exports = [
       {
         id: 'Gender',
         name: 'Gender',
+        returnType: 'boolean',
         parameters: [
           { id: 'element_name', type: 'string', name: 'Element Name' },
           { id: 'gender', type: 'valueset', select: 'demographics/gender', name: 'Gender' },
@@ -32,6 +34,7 @@ module.exports = [
       {
         id: 'MostRecentObservation',
         name: 'Most Recent Observation',
+        returnType: 'observation',
         parameters: [
           { id: 'element_name', type: 'string', name: 'Element Name' },
           { id: 'observation', type: 'observation', name: 'Observation' }
@@ -47,6 +50,7 @@ module.exports = [
       {
         id: 'And',
         name: 'And',
+        returnType: 'boolean',
         parameters: [
           { id: 'element_name', type: 'string', name: 'Element Name' },
           { id: 'components', type: 'list', subType: 'boolean', value:[undefined, undefined], name: 'Elements' }
@@ -55,6 +59,7 @@ module.exports = [
       {
         id: 'Or',
         name: 'Or',
+        returnType: 'boolean',
         parameters: [
           { id: 'element_name', type: 'string', name: 'Element Name' },
           { id: 'components', type: 'list', subType: 'boolean', value:[undefined, undefined], name: 'Elements' }

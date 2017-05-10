@@ -8,6 +8,10 @@ import FontAwesome from 'react-fontawesome';
 
 export default (props) => {
   const id = _.uniqueId('parameter-');
+
+  const filteredValues = props.values.filter(
+    function(v) { return v.returnType === props.param.subType });
+  
   return (
     <div className="form__group">
       <label htmlFor={id}>
@@ -18,7 +22,7 @@ export default (props) => {
           <Select key={index}
                   labelKey={'name'}
                   autofocus
-                  options={props.values}
+                  options={filteredValues}
                   clearable={true}
                   name={props.param.id}
                   value={v}
