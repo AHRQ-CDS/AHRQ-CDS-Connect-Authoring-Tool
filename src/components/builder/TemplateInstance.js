@@ -28,7 +28,8 @@ class TemplateInstance extends Component {
 
     this.state = { 
       resources: {}, 
-      presets : []
+      presets : [],
+      showElement : true
     };
     this.updateInstance = this.updateInstance.bind(this);
     this.selectTemplate = this.selectTemplate.bind(this);
@@ -107,7 +108,6 @@ class TemplateInstance extends Component {
       let param = this.state.presets[stateIndex].parameters[i];
       let newState = {};
       newState[param.id] = param.value;
-      console.log(newState);
       this.updateInstance(newState);
     }
   }
@@ -131,7 +131,19 @@ class TemplateInstance extends Component {
     )
   }
 
-  // <tr><td key={i}>{preset.parameters[0].value}</td></tr>
+  showHideElementBody() {
+    this.setState({ showElement : !this.state.showElement});
+  }
+
+  renderBody() {
+    return (
+      <div className="element__body">
+        {this.props.templateInstance.parameters.map((param, index) =>
+          // todo: each parameter type should probably have its own component
+          this.selectTemplate(param)
+        )}
+      </div>)
+  }
 
   render() {
     return (
@@ -167,6 +179,12 @@ class TemplateInstance extends Component {
               <FontAwesome fixedWidth name='save'/>
             </button>
             <button
+              onClick={this.showHideElementBody.bind(this)}
+              className="element__hidebutton"
+              aria-label={`hide ${this.props.templateInstance.name}`}>
+              <FontAwesome fixedWidth name={this.state.showElement ? 'angle-double-down': 'angle-double-right'}/>
+            </button>
+            <button
               onClick={this.props.deleteInstance.bind(this, this.props.templateInstance.uniqueId)}
               className="element__deletebutton"
               aria-label={`remove ${this.props.templateInstance.name}`}>
@@ -174,11 +192,8 @@ class TemplateInstance extends Component {
             </button>
           </div>
         </div>
-        <div className="element__body">
-        {this.props.templateInstance.parameters.map((param, index) =>
-          // todo: each parameter type should probably have its own component
-          this.selectTemplate(param)
-        )}
+        <div>
+          { this.state.showElement ? this.renderBody() : null }
         </div>
       </div>
     );
