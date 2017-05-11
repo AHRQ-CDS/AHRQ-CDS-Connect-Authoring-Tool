@@ -37,10 +37,11 @@ class IntegerParameter extends Component {
           />
           { ('exclusive' in this.props.param)
           ? <div className="form__caption">
-              <input type='checkbox'
+              <input id={id}
+                type='checkbox'
                 checked={this.state.checked}
                 onChange={event => this.updateExclusive(event)}/>
-              <label htmlFor={'Exclusive'}>{'Exclusive'}</label>
+              <label htmlFor={`${id}-exclusive`}>{'Exclusive'}</label>
             </div>
           : null }
         </label>
