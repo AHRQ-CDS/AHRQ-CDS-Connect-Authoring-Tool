@@ -21,14 +21,12 @@ class BuilderTarget extends Component {
       this.props.updateTemplateInstances(newElements);
     }
   }
-  
+
   saveInstance(uniqueId) {
-    let elementList = this.props.templateInstances;
-    const index = elementList.findIndex((element) => {
-      return element.uniqueId === uniqueId;
-    });
+    const elementList = this.props.templateInstances;
+    const index = elementList.findIndex(element => element.uniqueId === uniqueId);
     if (index > -1) {
-      let element = elementList[index];
+      const element = elementList[index];
       console.log(element);
       axios.post('http://localhost:3001/api/expressions', element)
         .then((result) => {
@@ -36,12 +34,12 @@ class BuilderTarget extends Component {
         })
         .catch((error) => {
           console.log('Fail');
-        })
+        });
     }
   }
 
-  showPresets(mongo_id) {
-    return axios.get(`http://localhost:3001/api/expressions/group/${mongo_id}`);
+  showPresets(mongoId) {
+    return axios.get(`http://localhost:3001/api/expressions/group/${mongoId}`);
   }
 
   render() {

@@ -33,8 +33,8 @@ class TemplateInstance extends Component {
 
     this.state = {
       resources: {},
-      presets : [],
-      showElement : true,
+      presets: [],
+      showElement: true,
       showPresets: false
     };
     this.updateInstance = this.updateInstance.bind(this);
@@ -155,19 +155,20 @@ class TemplateInstance extends Component {
     this.setState({ showPresets: !this.state.showPresets });
     this.props.showPresets(id)
       .then((result) => {
-        this.setState({presets : result.data})
+        this.setState({ presets: result.data });
       })
       .catch((error) => {
         console.log(error);
-        this.setState({presets : []})
-      })
+        this.setState({ presets: [] });
+      });
   }
 
   setPreset(stateIndex) {
+    if (!this.state.presets) return;
     this.props.templateInstance.parameters = this.state.presets[stateIndex].parameters;
-    for (var i in this.state.presets[stateIndex].parameters) {
-      let param = this.state.presets[stateIndex].parameters[i];
-      let newState = {};
+    for (let i = 0; i < this.state.presets[stateIndex].parameters.length; i++) {
+      const param = this.state.presets[stateIndex].parameters[i];
+      const newState = {};
       newState[param.id] = param.value;
       this.updateInstance(newState);
     }
@@ -176,9 +177,7 @@ class TemplateInstance extends Component {
   renderPreset(preset, stateIndex) {
     let name = 'untitled';
     const params = preset.parameters;
-    const index = params.findIndex((item) => {
-      return item.id === 'element_name';
-    });
+    const index = params.findIndex(item => item.id === 'element_name');
     if (index > -1) {
       name = params[index];
     }
@@ -186,11 +185,11 @@ class TemplateInstance extends Component {
       <option key={stateIndex} value={stateIndex}>
         {name.value}
       </option>
-    )
+    );
   }
 
   showHideElementBody() {
-    this.setState({ showElement : !this.state.showElement});
+    this.setState({ showElement: !this.state.showElement });
   }
 
   renderBody() {
@@ -200,7 +199,7 @@ class TemplateInstance extends Component {
           // todo: each parameter type should probably have its own component
           this.selectTemplate(param)
         )}
-      </div>)
+      </div>);
   }
 
   render() {
@@ -229,7 +228,7 @@ class TemplateInstance extends Component {
               onClick={this.showHideElementBody.bind(this)}
               className="element__hidebutton"
               aria-label={`hide ${this.props.templateInstance.name}`}>
-              <FontAwesome fixedWidth name={this.state.showElement ? 'angle-double-down': 'angle-double-right'}/>
+              <FontAwesome fixedWidth name={this.state.showElement ? 'angle-double-down' : 'angle-double-right'}/>
             </button>
             <button
               onClick={this.props.deleteInstance.bind(this, this.props.templateInstance.uniqueId)}
@@ -239,8 +238,8 @@ class TemplateInstance extends Component {
             </button>
             <div id={`presets-list-${this.props.templateInstance.id}`} role="region" aria-live="polite">
               { this.state.showPresets
-                ?  <select
-                    onChange={(event) => this.setPreset(event.target.value)}
+                ? <select
+                    onChange={event => this.setPreset(event.target.value)}
                     aria-labelledby={`presets-${this.props.templateInstance.id}`}>
                   <optgroup><option>Use a preset</option></optgroup>
                   {this.state.presets.map((preset, i) =>
