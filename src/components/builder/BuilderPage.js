@@ -29,7 +29,6 @@ class BuilderPage extends Component {
     this.saveArtifact = this.saveArtifact.bind(this);
     this.downloadCQL = this.downloadCQL.bind(this);
     this.updateSingleElement = this.updateSingleElement.bind(this);
-
   }
 
   componentDidMount() {
@@ -40,9 +39,9 @@ class BuilderPage extends Component {
         const id = this.props.match.params.id;
         axios.get(`http://localhost:3001/api/artifacts/${id}`)
           .then((res) => {
-            const artifact = res.data[0]
-            this.setState({ id: artifact._id})
-            this.setState({ name: artifact.name})
+            const artifact = res.data[0];
+            this.setState({ id: artifact._id });
+            this.setState({ name: artifact.name });
             this.setState({ version: artifact.version });
             this.setState({ templateInstances: artifact.templateInstances });
           });
@@ -72,24 +71,23 @@ class BuilderPage extends Component {
   }
 
   saveArtifact(exitPage) {
-
     // TODO: This needs to be extracted to somewhere better
     const url = 'http://localhost:3001/api';
 
-    const artifact = {name: this.state.name, templateInstances: this.state.templateInstances}
-    if (this.state.id) artifact._id = this.state.id
+    const artifact = { name: this.state.name, templateInstances: this.state.templateInstances };
+    if (this.state.id) artifact._id = this.state.id;
 
     const handleSave = (result) => {
         // TODO:
         // notification on save
-        if (result.data._id) this.setState({id: result.data._id});
-          console.log('id: ' + this.state.id);
+      if (result.data._id) this.setState({ id: result.data._id });
+      console.log(`id: ${this.state.id}`);
 
-        if (exitPage) {
+      if (exitPage) {
           // Redirect the page to the artifact list after saving if click "Close" button
-          this.context.router.history.push('/artifacts');
-        }
+        this.context.router.history.push('/artifacts');
       }
+    };
 
     if (this.state.id) {
       axios.put(`${url}/artifacts`, artifact)
@@ -104,7 +102,6 @@ class BuilderPage extends Component {
           console.log(error);
         });
     }
-
   }
 
   componentWillReceiveProps(nextProps) {
@@ -136,7 +133,7 @@ class BuilderPage extends Component {
     if (elementIndex !== undefined) {
       // get relevant parameter
       const paramIndex = elements[elementIndex].parameters.findIndex(
-        param => state.hasOwnProperty(param.id) === true);
+        param => Object.prototype.hasOwnProperty.call(state, param.id));
 
       // edit element with new value using immutability-helper
       const editedElements = update(elements, {

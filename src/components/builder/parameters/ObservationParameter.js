@@ -6,7 +6,7 @@ import _ from 'lodash';
 export default (props) => {
   const id = _.uniqueId('parameter-');
 
-  const observations = props.resources['observations'];
+  const observations = props.resources.observations;
   return (
     <div className="form__group">
       <label htmlFor={id}>

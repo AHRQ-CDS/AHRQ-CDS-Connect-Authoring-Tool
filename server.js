@@ -1,4 +1,5 @@
 // Import Dependencies
+const process = require('process');
 const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
@@ -12,9 +13,9 @@ const app = express();
 const port = process.env.API_PORT || 3001;
 
 // MongoDB Configuration
-mongoose.connect(config.mongodb.localhost);
+mongoose.connect(process.env.MONGO_URL || config.mongodb.localhost);
 
-// Configure API to use BodyParser and handle json data 
+// Configure API to use BodyParser and handle json data
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
