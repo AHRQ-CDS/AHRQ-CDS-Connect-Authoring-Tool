@@ -5,14 +5,17 @@ import IntegerParameter from './parameters/IntegerParameter';
 import StringParameter from './parameters/StringParameter';
 import ObservationParameter from './parameters/ObservationParameter';
 import ValueSetParameter from './parameters/ValueSetParameter';
-import ListParameter from './parameters/ListParameter'
-import _ from 'lodash';
+import ListParameter from './parameters/ListParameter';
 
 function validateOneWord(value) {
   if (value.includes(' ')) {
     return false;
   }
   return true;
+}
+
+function getInstanceName(instance) {
+  return (instance.parameters.find(p => p.id === 'element_name') || {}).value;
 }
 
 class TemplateInstance extends Component {
@@ -39,8 +42,8 @@ class TemplateInstance extends Component {
       this.setState({ [param.id]: param.value });
     });
 
-    let otherInstances = this.getOtherInstances(this.props);
-    this.setState({ otherInstances: otherInstances });
+    const otherInstances = this.getOtherInstances(this.props);
+    this.setState({ otherInstances });
 
     axios.get('http://localhost:3001/api/resources')
       .then((result) => {
@@ -49,27 +52,26 @@ class TemplateInstance extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    let otherInstances = this.getOtherInstances(nextProps);
-    this.setState({ otherInstances: otherInstances });
+    const otherInstances = this.getOtherInstances(nextProps);
+    this.setState({ otherInstances });
   }
 
   // Props will either be this.props or nextProps coming from componentWillReceiveProps
   getOtherInstances(props) {
-    const otherInstances = props.otherInstances.filter(this.notThisInstance).map((instance) => {
-      return {name: this.getInstanceName(instance),
-              id: instance.id,
-              returnType: instance.returnType}
-    });
+    const otherInstances = props.otherInstances.filter(this.notThisInstance).map(
+      instance => ({ name: getInstanceName(instance),
+        id: instance.id,
+        returnType: instance.returnType }));
     return otherInstances;
   }
 
   notThisInstance(instance) {
-    return this.props.templateInstance.id != instance.id;
+    return this.props.templateInstance.id !== instance.id;
   }
 
-  getInstanceName(instance) {
-    return (instance.parameters.find(function(p) {return p.id == 'element_name'}) || {}).value;
-  }
+  // getInstanceName(instance) {
+  //   return (instance.parameters.find(p => p.id === 'element_name') || {}).value;
+  // }
 
   updateInstance(newState) {
     this.setState(newState);
@@ -77,18 +79,18 @@ class TemplateInstance extends Component {
   }
 
   updateList(id, value, index) {
-    let newState = {}
-    let arrayvar = this.state[id].slice();
+    const newState = {};
+    const arrayvar = this.state[id].slice();
     arrayvar[index] = value;
     newState[id] = arrayvar;
     this.updateInstance(newState);
   }
 
   addComponent(listParameter) {
-    let arrayvar = this.state[listParameter].slice()
-    arrayvar.push(undefined)
-    let newState = { [listParameter]: arrayvar } 
-    this.setState(newState)
+    const arrayvar = this.state[listParameter].slice();
+    arrayvar.push(undefined);
+    const newState = { [listParameter]: arrayvar };
+    this.setState(newState);
     this.props.updateSingleElement(this.props.templateInstance.uniqueId, newState);
   }
 

@@ -53,7 +53,7 @@ module.exports = [
         returnType: 'boolean',
         parameters: [
           { id: 'element_name', type: 'string', name: 'Element Name' },
-          { id: 'components', type: 'list', subType: 'boolean', value:[undefined, undefined], name: 'Elements' }
+          { id: 'components', type: 'list', subType: 'boolean', value: [undefined, undefined], name: 'Elements' }
         ],
       },
       {
@@ -62,7 +62,7 @@ module.exports = [
         returnType: 'boolean',
         parameters: [
           { id: 'element_name', type: 'string', name: 'Element Name' },
-          { id: 'components', type: 'list', subType: 'boolean', value:[undefined, undefined], name: 'Elements' }
+          { id: 'components', type: 'list', subType: 'boolean', value: [undefined, undefined], name: 'Elements' }
         ],
       }
     ]

@@ -10,8 +10,8 @@ export default (props) => {
   const id = _.uniqueId('parameter-');
 
   const filteredValues = props.values.filter(
-    function(v) { return v.returnType === props.param.subType });
-  
+    v => v.returnType === props.param.subType);
+
   return (
     <div className="form__group">
       <label htmlFor={id}>
@@ -34,7 +34,7 @@ export default (props) => {
           )}
         <button
           onClick={() => { props.addComponent(props.param.id); }}
-          aria-label={"Add component"}>
+          aria-label={'Add component'}>
           <FontAwesome fixedWidth name='plus'/>
         </button>
       </label>
