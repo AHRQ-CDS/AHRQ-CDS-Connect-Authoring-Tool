@@ -31,9 +31,19 @@
         flex: 1;
         text-align: right;
 
+        .element__savebutton,
+        .element__presetbutton,
+        .element__hidebutton,
+        .element__deletebutton {
+          padding: 0.125em;
+        }
+
         .element__deletebutton {
           @extend .danger-button;
-          padding: 0.125em;
+        }
+
+        .element__savebutton {
+          @extend .primary-button;
         }
       }
     }

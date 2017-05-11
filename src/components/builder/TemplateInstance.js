@@ -4,7 +4,6 @@ import FontAwesome from 'react-fontawesome';
 import IntegerParameter from './parameters/IntegerParameter';
 import StringParameter from './parameters/StringParameter';
 import ObservationParameter from './parameters/ObservationParameter';
-import Dropdown, {DropdownTrigger, DropdownContent} from 'react-simple-dropdown';
 import ValueSetParameter from './parameters/ValueSetParameter';
 import ListParameter from './parameters/ListParameter';
 
@@ -32,10 +31,11 @@ class TemplateInstance extends Component {
   constructor(props) {
     super(props);
 
-    this.state = { 
-      resources: {}, 
+    this.state = {
+      resources: {},
       presets : [],
-      showElement : true
+      showElement : true,
+      showPresets: false
     };
     this.updateInstance = this.updateInstance.bind(this);
     this.updateList = this.updateList.bind(this);
@@ -152,6 +152,7 @@ class TemplateInstance extends Component {
   }
 
   showPresets(id) {
+    this.setState({ showPresets: !this.state.showPresets });
     this.props.showPresets(id)
       .then((result) => {
         this.setState({presets : result.data})
@@ -163,7 +164,6 @@ class TemplateInstance extends Component {
   }
 
   setPreset(stateIndex) {
-    console.log(this.state.presets[stateIndex])
     this.props.templateInstance.parameters = this.state.presets[stateIndex].parameters;
     for (var i in this.state.presets[stateIndex].parameters) {
       let param = this.state.presets[stateIndex].parameters[i];
@@ -183,12 +183,9 @@ class TemplateInstance extends Component {
       name = params[index];
     }
     return (
-      <tr key={stateIndex}>
-        <td
-          onClick={this.setPreset.bind(this, stateIndex)}>
-          {name.value}
-        </td>
-      </tr>
+      <option key={stateIndex} value={stateIndex}>
+        {name.value}
+      </option>
     )
   }
 
@@ -214,25 +211,14 @@ class TemplateInstance extends Component {
             {this.props.templateInstance.name}
           </span>
           <div className="element__buttonbar">
-            <Dropdown>
-              <DropdownTrigger>
-                <button
-                  onClick={this.showPresets.bind(this, this.props.templateInstance.id)}
-                  className="element__presetbutton"
-                  aria-label={`show presets ${this.props.templateInstance.id}`}>
-                  <FontAwesome fixedWidth name='database'/>
-                </button>
-              </DropdownTrigger>
-              <DropdownContent>
-                <table>
-                  <tbody>
-                    {this.state.presets.map((preset, i) => 
-                      this.renderPreset(preset, i)
-                    )}
-                  </tbody>
-                </table>
-              </DropdownContent>
-            </Dropdown>
+            <button
+              id={`presets-${this.props.templateInstance.id}`}
+              aria-controls={`presets-list-${this.props.templateInstance.id}`}
+              onClick={this.showPresets.bind(this, this.props.templateInstance.id)}
+              className="element__presetbutton"
+              aria-label={`show presets ${this.props.templateInstance.id}`}>
+              <FontAwesome fixedWidth name='database'/>
+            </button>
             <button
               onClick={this.props.saveInstance.bind(this, this.props.templateInstance.uniqueId)}
               className="element__savebutton"
@@ -251,6 +237,19 @@ class TemplateInstance extends Component {
               aria-label={`remove ${this.props.templateInstance.name}`}>
               <FontAwesome fixedWidth name='close'/>
             </button>
+            <div id={`presets-list-${this.props.templateInstance.id}`} role="region" aria-live="polite">
+              { this.state.showPresets
+                ?  <select
+                    onChange={(event) => this.setPreset(event.target.value)}
+                    aria-labelledby={`presets-${this.props.templateInstance.id}`}>
+                  <optgroup><option>Use a preset</option></optgroup>
+                  {this.state.presets.map((preset, i) =>
+                    this.renderPreset(preset, i)
+                  )}
+                </select>
+                : null
+              }
+            </div>
           </div>
         </div>
         <div>
