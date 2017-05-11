@@ -4,6 +4,10 @@ import _ from 'lodash';
 import axios from 'axios';
 import TemplateInstance from './TemplateInstance';
 
+function showPresets(mongoId) {
+  return axios.get(`http://localhost:3001/api/expressions/group/${mongoId}`);
+}
+
 class BuilderTarget extends Component {
   static propTypes = {
     connectDropTarget: PropTypes.func.isRequired,
@@ -38,10 +42,6 @@ class BuilderTarget extends Component {
     }
   }
 
-  showPresets(mongoId) {
-    return axios.get(`http://localhost:3001/api/expressions/group/${mongoId}`);
-  }
-
   render() {
     const { connectDropTarget } = this.props;
     return connectDropTarget(
@@ -57,7 +57,7 @@ class BuilderTarget extends Component {
                 otherInstances={this.props.templateInstances}
                 deleteInstance={this.deleteInstance.bind(this)}
                 saveInstance={this.saveInstance.bind(this)}
-                showPresets={this.showPresets.bind(this)}
+                showPresets={showPresets.bind(this)}
                 updateSingleElement={this.props.updateSingleElement} />
             )
         }

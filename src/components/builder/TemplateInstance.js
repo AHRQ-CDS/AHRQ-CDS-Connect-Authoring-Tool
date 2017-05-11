@@ -18,6 +18,20 @@ function getInstanceName(instance) {
   return (instance.parameters.find(p => p.id === 'element_name') || {}).value;
 }
 
+function renderPreset(preset, stateIndex) {
+  let name = 'untitled';
+  const params = preset.parameters;
+  const index = params.findIndex(item => item.id === 'element_name');
+  if (index > -1) {
+    name = params[index];
+  }
+  return (
+    <option key={stateIndex} value={stateIndex}>
+      {name.value}
+    </option>
+  );
+}
+
 class TemplateInstance extends Component {
   static propTypes = {
     templateInstance: PropTypes.object.isRequired,
@@ -174,20 +188,6 @@ class TemplateInstance extends Component {
     }
   }
 
-  renderPreset(preset, stateIndex) {
-    let name = 'untitled';
-    const params = preset.parameters;
-    const index = params.findIndex(item => item.id === 'element_name');
-    if (index > -1) {
-      name = params[index];
-    }
-    return (
-      <option key={stateIndex} value={stateIndex}>
-        {name.value}
-      </option>
-    );
-  }
-
   showHideElementBody() {
     this.setState({ showElement: !this.state.showElement });
   }
@@ -243,7 +243,7 @@ class TemplateInstance extends Component {
                     aria-labelledby={`presets-${this.props.templateInstance.id}`}>
                   <optgroup><option>Use a preset</option></optgroup>
                   {this.state.presets.map((preset, i) =>
-                    this.renderPreset(preset, i)
+                    renderPreset(preset, i)
                   )}
                 </select>
                 : null
