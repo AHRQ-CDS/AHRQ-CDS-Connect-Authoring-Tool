@@ -14,7 +14,7 @@ class IntegerParameter extends Component {
 
   updateExclusive(event) {
     this.props.param.exclusive = event.target.checked;
-    this.setState({checked: event.target.checked});
+    this.setState({ checked: event.target.checked });
   }
 
   render() {
@@ -35,12 +35,12 @@ class IntegerParameter extends Component {
               this.props.updateInstance({ [event.target.name]: value });
             }}
           />
-          { ('exclusive' in this.props.param) 
-          ? <div className="form__caption"> 
-              <input type='checkbox' 
+          { ('exclusive' in this.props.param)
+          ? <div className="form__caption">
+              <input type='checkbox'
                 checked={this.state.checked}
-                onChange={(event) => this.updateExclusive(event)}/> 
-              <label>{'Exclusive'}</label>
+                onChange={event => this.updateExclusive(event)}/>
+              <label htmlFor={'Exclusive'}>{'Exclusive'}</label>
             </div>
           : null }
         </label>
@@ -48,6 +48,6 @@ class IntegerParameter extends Component {
       </div>
     );
   }
-};
+}
 
 export default IntegerParameter;

@@ -8,6 +8,7 @@ module.exports = [
       {
         id: 'AgeRange',
         name: 'Age Range',
+        returnType: 'boolean',
         parameters: [
           { id: 'element_name', type: 'string', name: 'Element Name' },
           { id: 'min_age', type: 'integer', name: 'Minimum Age' },
@@ -17,6 +18,7 @@ module.exports = [
       {
         id: 'Gender',
         name: 'Gender',
+        returnType: 'boolean',
         parameters: [
           { id: 'element_name', type: 'string', name: 'Element Name' },
           { id: 'gender', type: 'valueset', select: 'demographics/gender', name: 'Gender' },
@@ -32,7 +34,7 @@ module.exports = [
       {
         id: 'MostRecentObservation',
         name: 'Most Recent Observation',
-        category: 'Observations',
+        returnType: 'observation',
         parameters: [
           { id: 'element_name', type: 'string', name: 'Element Name' },
           { id: 'observation', type: 'observation', name: 'Observation' }
@@ -46,9 +48,34 @@ module.exports = [
           { id: 'element_name', type: 'string', name: 'Element Name' },
           { id: 'lower_bound', type: 'integer', name: 'Lower Bound', exclusive: false },
           { id: 'upper_bound', type: 'integer', name: 'Upper Bound', exclusive: false },
-          { id: 'observation', type: 'observation', name: 'Observation' }
+          { id: 'observation', type: 'list', subType: 'observation', value: [undefined], name: 'Observation' }
         ]
       },
+    ]
+  },
+  {
+    id: 3,
+    icon: 'gear',
+    name: 'Operations',
+    entries: [
+      {
+        id: 'And',
+        name: 'And',
+        returnType: 'boolean',
+        parameters: [
+          { id: 'element_name', type: 'string', name: 'Element Name' },
+          { id: 'components', type: 'list', subType: 'boolean', value: [undefined, undefined], name: 'Elements' }
+        ],
+      },
+      {
+        id: 'Or',
+        name: 'Or',
+        returnType: 'boolean',
+        parameters: [
+          { id: 'element_name', type: 'string', name: 'Element Name' },
+          { id: 'components', type: 'list', subType: 'boolean', value: [undefined, undefined], name: 'Elements' }
+        ],
+      }
     ]
   }
   //   'Gender',
