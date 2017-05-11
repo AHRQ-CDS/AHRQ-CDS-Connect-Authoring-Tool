@@ -6,6 +6,7 @@ import StringParameter from './parameters/StringParameter';
 import ObservationParameter from './parameters/ObservationParameter';
 import Dropdown, {DropdownTrigger, DropdownContent} from 'react-simple-dropdown';
 import ValueSetParameter from './parameters/ValueSetParameter';
+import ListParameter from './parameters/ListParameter';
 
 function validateOneWord(value) {
   if (value.includes(' ')) {
@@ -14,9 +15,14 @@ function validateOneWord(value) {
   return true;
 }
 
+function getInstanceName(instance) {
+  return (instance.parameters.find(p => p.id === 'element_name') || {}).value;
+}
+
 class TemplateInstance extends Component {
   static propTypes = {
     templateInstance: PropTypes.object.isRequired,
+    otherInstances: PropTypes.array.isRequired,
     updateSingleElement: PropTypes.func.isRequired,
     deleteInstance: PropTypes.func.isRequired,
     saveInstance: PropTypes.func.isRequired,
@@ -32,7 +38,10 @@ class TemplateInstance extends Component {
       showElement : true
     };
     this.updateInstance = this.updateInstance.bind(this);
+    this.updateList = this.updateList.bind(this);
     this.selectTemplate = this.selectTemplate.bind(this);
+    this.notThisInstance = this.notThisInstance.bind(this);
+    this.addComponent = this.addComponent.bind(this);
   }
 
   componentWillMount() {
@@ -40,13 +49,54 @@ class TemplateInstance extends Component {
       this.setState({ [param.id]: param.value });
     });
 
+    const otherInstances = this.getOtherInstances(this.props);
+    this.setState({ otherInstances });
+
     axios.get('http://localhost:3001/api/resources')
       .then((result) => {
         this.setState({ resources: result.data });
       });
   }
 
+  componentWillReceiveProps(nextProps) {
+    const otherInstances = this.getOtherInstances(nextProps);
+    this.setState({ otherInstances });
+  }
+
+  // Props will either be this.props or nextProps coming from componentWillReceiveProps
+  getOtherInstances(props) {
+    const otherInstances = props.otherInstances.filter(this.notThisInstance).map(
+      instance => ({ name: getInstanceName(instance),
+        id: instance.id,
+        returnType: instance.returnType }));
+    return otherInstances;
+  }
+
+  notThisInstance(instance) {
+    return this.props.templateInstance.id !== instance.id;
+  }
+
+  // getInstanceName(instance) {
+  //   return (instance.parameters.find(p => p.id === 'element_name') || {}).value;
+  // }
+
   updateInstance(newState) {
+    this.setState(newState);
+    this.props.updateSingleElement(this.props.templateInstance.uniqueId, newState);
+  }
+
+  updateList(id, value, index) {
+    const newState = {};
+    const arrayvar = this.state[id].slice();
+    arrayvar[index] = value;
+    newState[id] = arrayvar;
+    this.updateInstance(newState);
+  }
+
+  addComponent(listParameter) {
+    const arrayvar = this.state[listParameter].slice();
+    arrayvar.push(undefined);
+    const newState = { [listParameter]: arrayvar };
     this.setState(newState);
     this.props.updateSingleElement(this.props.templateInstance.uniqueId, newState);
   }
@@ -84,6 +134,17 @@ class TemplateInstance extends Component {
             param={param}
             valueset={this.state.resources}
             updateInstance={this.updateInstance} />
+        );
+      case 'list':
+        return (
+          <ListParameter
+            key={param.id}
+            param={param}
+            value={this.state[param.id]}
+            values={this.state.otherInstances}
+            joinOperator={this.props.templateInstance.name}
+            addComponent={this.addComponent}
+            updateList={this.updateList} />
         );
       default:
         return undefined;
