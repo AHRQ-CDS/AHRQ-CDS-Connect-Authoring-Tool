@@ -51,9 +51,7 @@ const spec = {
     This method is a good place to fire a Flux action. */
     // const item = monitor.getItem();
     // const dropResult = monitor.getDropResult();
-    // console.log(item);
-    // console.log(dropResult);
-    // Componenet will be null if it is unmounted after the drag (i.e. remove from workspace)
+    // Component will be null if it is unmounted after the drag (i.e. remove from workspace)
     if (component !== null) {
       component.setState({ isActive: false });
     }

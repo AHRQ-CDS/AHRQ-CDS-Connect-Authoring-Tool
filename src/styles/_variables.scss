@@ -20,9 +20,12 @@ $default-button-bg-color: lighten($orange, 30%);
 $default-button-hover-text-color: $white;
 $primary-button-text-color: $blue;
 $primary-button-bg-color: $green;
-$danger-button-text-color: darken(red, 20%);
-$danger-button-bg-color: lighten(red, 20%);
+$danger-button-text-color: darken(red, 25%);
+$danger-button-bg-color: lighten(red, 35%);
 
+$form-input-placeholder-color: $brown;
+$form-input-border-color: darken($page-bg, 20%);
+$form-input-focus-color: purple;
 $form-validation-success-color: shade($green, 60%);
 $form-validation-error-color: darken(red, 20%);
 

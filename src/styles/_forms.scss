@@ -33,6 +33,41 @@
     text-transform: none;
   }
 
+  /* Relevant to the react-select plugin */
+  .Select-placeholder,
+  .Select--single > .Select-control .Select-value {
+    color: $form-input-placeholder-color;
+  }
+
+  .Select-control {
+    border-radius: $border-radius;
+    border-color: $form-input-border-color;
+    border-style: solid;
+    border-width: 0.1em;
+    border-bottom-width: $border-width;
+    outline: 0;
+
+    &:focus {
+      border-color: $form-input-focus-color;
+    }
+  }
+
+  .Select-clear {
+    color: #333;
+  }
+
+  .is-open > .Select-control {
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+    border-color: $form-input-border-color;
+  }
+
+  .is-focused:not(.is-open) > .Select-control {
+    border-color: $form-input-focus-color;
+    box-shadow: none;
+  }
+
+  /* Validation states */
   &.form__group-valid {
     @include state-color($form-validation-success-color);
   }

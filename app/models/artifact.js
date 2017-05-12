@@ -6,8 +6,7 @@ let Schema = mongoose.Schema;
 let ArtifactSchema = new Schema({
   name: String,
   version: String,
-  templateInstances: Array // { type: mongoose.Schema.Types.ObjectId, ref: 'TemplateInstance' }
-  // In order to reference the TemplateInstance by ObjectId, it needs to be saved first
+  templateInstances: Array
 },{
   timestamps: true // adds created_at, updated_at
 });
