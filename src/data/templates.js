@@ -39,7 +39,18 @@ module.exports = [
           { id: 'element_name', type: 'string', name: 'Element Name' },
           { id: 'observation', type: 'observation', name: 'Observation' }
         ],
-      }
+      },
+      {
+        id: 'LabValueRange',
+        name: 'Lab Value Range',
+        category: 'RangeOfObservation',
+        parameters: [
+          { id: 'element_name', type: 'string', name: 'Element Name' },
+          { id: 'lower_bound', type: 'integer', name: 'Lower Bound', exclusive: false },
+          { id: 'upper_bound', type: 'integer', name: 'Upper Bound', exclusive: false },
+          { id: 'observation', type: 'list', subType: 'observation', value: [undefined], name: 'Observation' }
+        ]
+      },
     ]
   },
   {

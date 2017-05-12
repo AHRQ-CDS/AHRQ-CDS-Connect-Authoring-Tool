@@ -1,6 +1,7 @@
 import React, { Component, PropTypes } from 'react';
 import axios from 'axios';
 import FontAwesome from 'react-fontawesome';
+import _ from 'lodash';
 import IntegerParameter from './parameters/IntegerParameter';
 import StringParameter from './parameters/StringParameter';
 import ObservationParameter from './parameters/ObservationParameter';
@@ -178,7 +179,7 @@ class TemplateInstance extends Component {
   }
 
   setPreset(stateIndex) {
-    if (!this.state.presets) return;
+    if (!this.state.presets || _.isNaN(_.toNumber(stateIndex))) return;
     this.props.templateInstance.parameters = this.state.presets[stateIndex].parameters;
     for (let i = 0; i < this.state.presets[stateIndex].parameters.length; i++) {
       const param = this.state.presets[stateIndex].parameters[i];

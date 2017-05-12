@@ -26,6 +26,18 @@
     font-size: 0.9em;
 
     input { display: block; }
+
+    .form__caption {
+      label {
+        display: inline-block;
+        font-size: 0.8em;
+      }
+      input {
+        width: auto !important;
+        display: inline-block;
+      }
+    }
+
   }
 
   > span {

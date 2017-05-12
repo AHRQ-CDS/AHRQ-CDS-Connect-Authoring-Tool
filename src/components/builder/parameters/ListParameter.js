@@ -4,7 +4,8 @@ import _ from 'lodash';
 import FontAwesome from 'react-fontawesome';
 
 
-// *** filter by boolean
+// Don't allow additional components to be added in for observation lists.
+// NOTE - This may not be the functionality we want and may be changed in the future.
 
 export default (props) => {
   const id = _.uniqueId('parameter-');
@@ -32,11 +33,13 @@ export default (props) => {
                   searchable={true} />
         </div>
           )}
-        <button
-          onClick={() => { props.addComponent(props.param.id); }}
-          aria-label={'Add component'}>
-          <FontAwesome fixedWidth name='plus'/>
-        </button>
+        { (props.param.subType !== 'observation')
+        ? <button
+            onClick={() => { props.addComponent(props.param.id); }}
+            aria-label={'Add component'}>
+            <FontAwesome fixedWidth name='plus'/>
+          </button>
+        : null }
       </label>
 
     </div>
