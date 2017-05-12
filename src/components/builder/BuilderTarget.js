@@ -1,7 +1,12 @@
 import React, { Component, PropTypes } from 'react';
 import { DropTarget } from 'react-dnd';
 import _ from 'lodash';
+import axios from 'axios';
 import TemplateInstance from './TemplateInstance';
+
+function showPresets(mongoId) {
+  return axios.get(`http://localhost:3001/api/expressions/group/${mongoId}`);
+}
 
 class BuilderTarget extends Component {
   static propTypes = {
@@ -21,6 +26,22 @@ class BuilderTarget extends Component {
     }
   }
 
+  saveInstance(uniqueId) {
+    const elementList = this.props.templateInstances;
+    const index = elementList.findIndex(element => element.uniqueId === uniqueId);
+    if (index > -1) {
+      const element = elementList[index];
+      console.log(element);
+      axios.post('http://localhost:3001/api/expressions', element)
+        .then((result) => {
+          console.log('Done');
+        })
+        .catch((error) => {
+          console.log('Fail');
+        });
+    }
+  }
+
   render() {
     const { connectDropTarget } = this.props;
     return connectDropTarget(
@@ -35,6 +56,8 @@ class BuilderTarget extends Component {
                 templateInstance={element}
                 otherInstances={this.props.templateInstances}
                 deleteInstance={this.deleteInstance.bind(this)}
+                saveInstance={this.saveInstance.bind(this)}
+                showPresets={showPresets.bind(this)}
                 updateSingleElement={this.props.updateSingleElement} />
             )
         }

@@ -29,7 +29,7 @@ class IntegerParameter extends Component {
           <input id={id}
             type="number"
             name={this.props.param.id}
-            defaultValue={this.props.param.value}
+            value={this.props.value}
             onChange={(event) => {
               const value = parseInt(event.target.value, 10);
               this.props.updateInstance({ [event.target.name]: value });

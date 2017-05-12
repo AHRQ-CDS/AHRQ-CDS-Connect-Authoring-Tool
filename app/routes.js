@@ -17,6 +17,9 @@ module.exports = function(app) {
   // Routing for ValueSets
   app.use('/api/valuesets', require('./routers/valueSetRouter.js'));
 
+  // Routing for Artifact Elements
+  app.use('/api/expressions', require('./routers/expressionRouter'))
+
   // Catch all other Api calls
   app.get('/api/*', function(req, res) { res.sendStatus(404); });
 

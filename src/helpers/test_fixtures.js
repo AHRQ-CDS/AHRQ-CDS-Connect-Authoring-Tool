@@ -1,7 +1,7 @@
 /**
  * Example TemplateInstances
  */
-const droppedElements = [
+const templateInstances = [
   {
     id: 'age_range',
     name: 'Age Range',
@@ -60,4 +60,4 @@ const droppedElements = [
   }
 ];
 
-export default droppedElements;
+export default templateInstances;
