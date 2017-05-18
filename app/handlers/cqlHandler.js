@@ -81,6 +81,24 @@ class CqlArtifact {
           if ('exclusive' in parameter) {
             context[`${parameter.id}_exclusive`] = parameter.exclusive; 
           }
+          break;
+        case 'procedure' :
+          // TODO - if there is a better way to not group multiple procedure valuesets on one procedure element, this can more closely reflect the other cases
+          let procedureParam = ValueSets.procedures[parameter.value.id];
+          let valueSetProcedure = [];
+          let array = procedureParam.procedures;
+          for (let i = 0; i < array.length; i++) {
+            let parameterObject = {};
+            let procedure = array[i];
+            parameterObject['id'] = array.id;
+            parameterObject['units'] = array.units;
+            parameterObject['name'] = procedure.name;
+            parameterObject['oid'] = procedure.oid;
+            valueSetProcedure.push(parameterObject);
+          }
+          context[parameter.id] = procedureParam;
+          valueSetProcedure.forEach(valueset => this.resourceMap.set(valueset.name, valueset));
+          break;
         default:
           context[parameter.id] = parameter.value;
           break;
