@@ -77,6 +77,21 @@ module.exports = [
         ],
       }
     ]
+  },
+  {
+    id: 4,
+    icon: 'stethoscope',
+    name: 'Conditions',
+    entries: [
+      {
+        id: 'Diabetes',
+        name: 'Diabetes',
+        parameters: [
+          { id: 'element_name', type: 'string', name: 'Element Name' },
+          { id: 'condition', type: 'condition', value:{id: 'diabetes'}, name: 'Diabetes' }
+        ],
+      },
+    ]
   }
   //   'Gender',
   //   'Ethnicity',

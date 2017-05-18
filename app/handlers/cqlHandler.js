@@ -81,6 +81,13 @@ class CqlArtifact {
           if ('exclusive' in parameter) {
             context[`${parameter.id}_exclusive`] = parameter.exclusive; 
           }
+          break;
+        case 'condition':
+          let valueSetConditions = ValueSets.conditions[parameter.value.id];
+          context[parameter.id] = valueSetConditions;
+          this.resourceMap.set(parameter.value.id, valueSetConditions);
+          context.condition_title = parameter.name;
+          break;
         default:
           context[parameter.id] = parameter.value;
           break;
