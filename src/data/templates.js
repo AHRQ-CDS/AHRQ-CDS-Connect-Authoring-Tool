@@ -89,7 +89,8 @@ module.exports = [
         returnType: 'boolean',
         parameters: [
           { id: 'element_name', type: 'string', name: 'Element Name' },
-          { id: 'procedure', type: 'procedure', name: 'Procedure', value: {id: 'ascvd_procedures'}} // TODO eventually extension
+          { id: 'procedure', type: 'procedure', name: 'Procedure', value: {id: 'ascvd_procedures'}}, // TODO eventually extension
+          { id: 'in_last_weeks', type: 'integer', name: 'How Recent (weeks)'} // TODO - make this "Look Back" idea more general? -> a filter you can apply to anything?
         ],
       },
       {
@@ -98,7 +99,8 @@ module.exports = [
         returnType: 'boolean',
         parameters: [
           { id: 'element_name', type: 'string', name: 'Element Name' },
-          { id: 'procedure', type: 'procedure', name: 'Procedure', value: {id: 'palliative_care'} } //TODO with template extensions - this would be preset?
+          { id: 'procedure', type: 'procedure', name: 'Procedure', value: {id: 'palliative_care'} }, //TODO with template extensions - this would be preset?
+          { id: 'in_last_weeks', type: 'integer', name: 'How Recent (weeks)'}
         ],
       },
       {
@@ -107,7 +109,8 @@ module.exports = [
         returnType: 'boolean',
         parameters: [
           { id: 'element_name', type: 'string', name: 'Element Name' },
-          { id: 'procedure', type: 'procedure', name: 'Procedure', value: { id: 'dialysis' } } //TODO will use extension
+          { id: 'procedure', type: 'procedure', name: 'Procedure', value: { id: 'dialysis' } }, //TODO will use extension
+          { id: 'in_last_weeks', type: 'integer', name: 'How Recent (weeks)'}
         ],
       }
     ]

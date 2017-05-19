@@ -83,7 +83,6 @@ module.exports = {
           oid: '2.16.840.1.113883.3.600.1.1579',
         }
       ],
-      units: {status: ["'in-progress'", "'completed'"]}
     },
     ascvd_procedures: {
       id: 'ascvd_procedures',
@@ -101,7 +100,6 @@ module.exports = {
           oid: '2.16.840.1.113883.3.117.1.7.1.204'
         }
       ],
-      units: {status: ["'completed'"]}
     },
     dialysis: {
       id: 'dialysis',
@@ -111,7 +109,6 @@ module.exports = {
           oid: '2.16.840.1.113883.3.464.1003.109.12.1013'
         }
       ],
-      units: {status: ["'in-progress'", "'completed'"]}
     }
   }
 

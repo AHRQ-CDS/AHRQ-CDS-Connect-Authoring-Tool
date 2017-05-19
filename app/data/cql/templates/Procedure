@@ -1,3 +1,8 @@
 define "<%=element_name%>":
-  <%procedure.procedures.forEach((procedure, i) => { if(i>0) {%> 
-  or <%}%>C3F.HasCompleted([Procedure: "<%=procedure.name%>"])<%})%>
+  <%procedure.procedures.forEach((procedure, i) => { 
+  if(i>0) {%> 
+  or <%}%><%
+    if(in_last_weeks){
+      %>C3F.HasCompletedInLast([Procedure: "<%=procedure.name%>"], <%=in_last_weeks%><%if(in_last_weeks>1){%> weeks<%} else {%> week<%}%>)<%
+    } else {
+      %>C3F.HasCompleted([Procedure: "<%=procedure.name%>"])<%}})%>
