@@ -1,2 +1,0 @@
-define <%=element_name%>:
-  C3F.HasConfirmedActive([Condition: "<%=condition_title%>"])

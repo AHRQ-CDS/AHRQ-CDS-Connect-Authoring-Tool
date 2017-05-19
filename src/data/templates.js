@@ -84,13 +84,69 @@ module.exports = [
     name: 'Conditions',
     entries: [
       {
-        id: 'Diabetes',
+        id: 'Condition',
         name: 'Diabetes',
         parameters: [
           { id: 'element_name', type: 'string', name: 'Element Name' },
           { id: 'condition', type: 'condition', value:{id: 'diabetes'}, name: 'Diabetes' }
+        ]
+      },
+      {
+        id: 'Condition',
+        name: 'Essential Hypertension',
+        parameters: [
+          { id: 'element_name', type: 'string', name: 'Element Name' },
+          { id: 'condition', type: 'condition', value:{id: 'essential_hypertension'}, name: 'Essential Hypertension' }
+        ]
+      },
+      {
+        id: 'Condition',
+        name: 'ASCVD',
+        parameters: [
+          { id: 'element_name', type: 'string', name: 'Element Name' },
+          { id: 'condition', type: 'condition', value:{id: 'has_ascvd'}, name: 'hasASCVD' }
         ],
       },
+      {
+        id: 'Condition',
+        name: 'Hypercholesterolemia',
+        parameters: [
+          { id: 'element_name', type: 'string', name: 'Element Name' },
+          { id: 'condition', type: 'condition', value:{id: 'hypercholesterolemia'}, name: 'Hypercholesterolemia' }
+        ]
+      },
+      {
+        id: 'Condition',
+        name: 'Pregnancy dx',
+        parameters: [
+          { id: 'element_name', type: 'string', name: 'Element Name' },
+          { id: 'condition', type: 'condition', value:{id: 'pregnancy_dx'}, name: 'Pregnancy dx' }
+        ]
+      },
+      {
+        id: 'Condition',
+        name: 'Breastfeeding',
+        parameters: [
+          { id: 'element_name', type: 'string', name: 'Element Name' },
+          { id: 'condition', type: 'condition', value:{id: 'breastfeeding'}, name: 'Breastfeeding' }
+        ]
+      },
+      {
+        id: 'Condition',
+        name: 'End Stage Renal Disease',
+        parameters: [
+          { id: 'element_name', type: 'string', name: 'Element Name' },
+          { id: 'condition', type: 'condition', value:{id: 'end_stage_renal_disease'}, name: 'End Stage Renal Disease' }
+        ]
+      },
+      {
+        id: 'Condition',
+        name: 'Liver Disease',
+        parameters: [
+          { id: 'element_name', type: 'string', name: 'Element Name' },
+          { id: 'condition', type: 'condition', value:{id: 'liver_disease'}, name: 'Liver Disease' }
+        ]
+      }
     ]
   }
   //   'Gender',

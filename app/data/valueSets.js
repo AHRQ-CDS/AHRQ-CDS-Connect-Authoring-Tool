@@ -62,9 +62,103 @@ module.exports = {
     diabetes : {
       // https://ushik.ahrq.gov/ViewItemDetails?system=mu&itemKey=211617000
       id: "diabetes",
-      name: "Diabetes",
-      oid: '2.16.840.1.113883.3.464.1003.103.12.1001'
-    }
+      conditions: [
+        {
+          name: "Diabetes",
+          oid: '2.16.840.1.113883.3.464.1003.103.12.1001'
+        }
+      ]
+    },
+    essential_hypertension : {
+      // https://ushik.ahrq.gov/ViewItemDetails?&system=mu&itemKey=189078000
+      id: "essential_hypertension",
+      conditions: [
+        {
+          name: "Essential Hypertension",
+          oid: '2.16.840.1.113883.3.464.1003.104.12.1011'
+        }
+      ]
+    },
+    has_ascvd : {
+      id: "has_ascvd",
+      conditions: [
+        {
+       // https://ushik.ahrq.gov/ViewItemDetails?&system=mu&itemKey=189321000
+          name: "Myocardial Infarction",
+          oid: '2.16.840.1.113883.3.526.3.403'
+        },
+        {
+       // https://ushik.ahrq.gov/ViewItemDetails?&system=mu&itemKey=212224000
+          name: "Atherosclerosis and peripheral arterial disease",
+          oid: '2.16.840.1.113762.1.4.1047.21'
+        },
+        {
+       // TODO: Reused from statin CQM artifact; needs review against other value sets in VSAC.
+          name: "Cerebrovascular disease, Stroke, TIA",
+          oid: '2.16.840.1.113762.1.4.1047.44'
+        },
+        {
+       // TODO: Reused from statin CQM artifact; needs review against other value sets in VSAC.
+          name: "Stable and unstable angina",
+          oid: '2.16.840.1.113762.1.4.1047.47'
+        },
+        {
+       // TODO: Reused from statin CQM artifact; needs review against other value sets in VSAC.
+          name: "Ischemic heart disease or coronary occlusion, rupture, or thrombosis",
+          oid: '2.16.840.1.113762.1.4.1047.46'
+        }
+      ]
+    },
+    hypercholesterolemia : {
+     // TODO: Reused from statin CQM artifact; needs review against other value sets in VSAC.
+     id: "hypercholesterolemia",
+     conditions: [
+       {
+         name: "Hypercholesterolemia",
+         oid: '2.16.840.1.113762.1.4.1047.100'
+       }
+     ]
+    },
+    pregnancy_dx : {
+     // https://ushik.ahrq.gov/ViewItemDetails?&system=mu&itemKey=189087000
+     id: "pregnancy_dx",
+     conditions: [
+       {
+         name: "Pregnancy dx",
+         oid: '2.16.840.1.113883.3.600.1.1623'
+       }
+     ]
+    },
+    breastfeeding : {
+     //TODO: Reused from statin CQM artifact; needs review against other value sets in VSAC.
+     id: "breastfeeding",
+     conditions: [
+       {
+         name: "Breastfeeding",
+         oid: '2.16.840.1.113762.1.4.1047.73'
+       }
+     ]
+    },
+    end_stage_renal_disease : {
+    // https://ushik.ahrq.gov/ViewItemDetails?&system=mu&itemKey=189012000
+    id: "end_stage_renal_disease",
+    conditions: [
+      {
+        name: "End Stage Renal Disease",
+        oid: '2.16.840.1.113883.3.526.3.353'
+      }
+    ]
+    },
+    liver_disease : {
+      //TODO: Reused from statin CQM artifact; needs review against other value sets in VSAC.
+      id: "liver_disease",
+      conditions: [
+        {
+          name: "Liver Disease",
+          oid: '2.16.840.1.113762.1.4.1047.42'
+        }
+      ]
+    },
   },
   medications: {
     anti_hypertensive_medication : {
