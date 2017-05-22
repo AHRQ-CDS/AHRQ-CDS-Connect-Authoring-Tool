@@ -1,3 +1,5 @@
-define <%=element_name%>:
-  <%condition_titles.forEach((condition_title, i) => { if(i > 0) {%>
-  or <%}%>C3F.HasCompleted([Procedure: "<%=condition_title.name%>"])<%})%>
+define "<%=element_name%>":
+  <%conditions.forEach((condition, i) => { if(i > 0) {%>
+   or<%}%> Exists(C3F.Confirmed(-%>
+<%if(active){-%>C3F.ActiveCondition(<%}-%>[Procedure: "<%=condition.name%>"]))<%if(active){%>)<%}-%>
+<%})%>

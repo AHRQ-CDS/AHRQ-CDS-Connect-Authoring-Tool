@@ -104,7 +104,7 @@ module.exports = [
         name: 'ASCVD',
         parameters: [
           { id: 'element_name', type: 'string', name: 'Element Name' },
-          { id: 'condition', type: 'condition', value:{id: 'has_ascvd'}, name: 'hasASCVD' }
+          { id: 'condition', type: 'condition', value:{id: 'has_ascvd'}, name: 'hasASCVD', inactive: true} // C3F.ActiveCondition() is applied unless inactive is set
         ],
       },
       {

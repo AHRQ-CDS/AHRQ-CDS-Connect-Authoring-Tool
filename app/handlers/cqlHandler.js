@@ -8,6 +8,9 @@ const path = require( 'path' );
 const templatePath = 'app/data/cql/templates'
 const artifactPath = 'app/data/cql/artifact.ejs'
 const templateMap = loadTemplates();
+// Each library will be included. Aliases are optional.
+const includeLibraries = [{name: 'FHIRHelpers', version: '1.0.2', alias: 'FHIRHelpers'},
+                          {name: 'CDS_Connect_Commons_for_FHIRv102', version: '1', alias: 'C3F'}];
 
 module.exports = {
    objToCql : objToCql,
@@ -52,7 +55,7 @@ class CqlArtifact {
     this.name = slug(artifact.name ? artifact.name : 'untitled');
     this.version = artifact.version ? artifact.version : 1;
     this.dataModel = artifact.dataModel ? artifact.dataModel : {name: 'FHIR', version: '1.0.2'};
-    this.includeLibrary = artifact.includeLibrary ? artifact.includeLibrary : {name: 'CDS_Connect_Commons_for_FHIRv102', version : '1', alias: 'C3F'};
+    this.includeLibraries = artifact.includeLibraries ? artifact.includeLibraries : includeLibraries;
     this.context = artifact.context ? artifact.context : 'Patient';
     this.elements = artifact.templateInstances;
 
@@ -88,7 +91,8 @@ class CqlArtifact {
           valueSetConditions.conditions.map(condition => {
             this.resourceMap.set(condition.name, condition);
           })
-          context.condition_titles = valueSetConditions.conditions;
+          context.conditions = valueSetConditions.conditions;
+          context.active = !(parameter.inactive);
           break;
         case 'medication':
           let valueSetMedications = ValueSets.medications[parameter.value.id];
