@@ -1,2 +1,2 @@
-define "<%=element_name%>":
+define <%=element_name%>:
   <%-components.map(function(c) { return `"${c.name}"`; }).join(' and ')%>
