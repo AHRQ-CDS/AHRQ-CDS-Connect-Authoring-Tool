@@ -166,7 +166,49 @@ module.exports = {
       id: "anti_hypertensive_medication",
       name: "Anti-Hypertensive Medication",
       oid: '2.16.840.1.113883.3.600.1476'
-    }
+    },
+    on_statin_therapy : {
+      id: "on_statin_therapy",
+      medications: [
+        {
+          // TODO: Reused from statin CQM artifact; needs review against other value sets in VSAC.
+          name: "Low intensity statin therapy",
+          type: "MedicationStatement",
+          oid: '2.16.840.1.113762.1.4.1047.107'
+        },
+        {
+          // TODO: Reused from statin CQM artifact; needs review against other value sets in VSAC.
+          name: "Low intensity statin therapy",
+          type: "MedicationOrder",
+          oid: '2.16.840.1.113762.1.4.1047.107'
+        },
+        {
+       // TODO: Reused from statin CQM artifact; needs review against other value sets in VSAC.
+          name: "Moderate intensity statin therapy",
+          type: "MedicationStatement",
+          oid: '2.16.840.1.113762.1.4.1047.98'
+        },
+        {
+       // TODO: Reused from statin CQM artifact; needs review against other value sets in VSAC.
+          name: "Moderate intensity statin therapy",
+          type: "MedicationOrder",
+          oid: '2.16.840.1.113762.1.4.1047.98'
+        },
+        {
+       // TODO: Reused from statin CQM artifact; needs review against other value sets in VSAC.
+          name: "High intensity statin therapy",
+          type: "MedicationStatement",
+          oid: '2.16.840.1.113762.1.4.1047.97'
+        },
+        {
+       // TODO: Reused from statin CQM artifact; needs review against other value sets in VSAC.
+          name: "High intensity statin therapy",
+          type: "MedicationOrder",
+          oid: '2.16.840.1.113762.1.4.1047.97'
+        }
+      ]
+    },
+
   }
 
 }

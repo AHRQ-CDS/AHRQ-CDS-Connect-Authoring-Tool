@@ -89,6 +89,12 @@ class CqlArtifact {
           })
           context.condition_titles = valueSetConditions.conditions;
           break;
+        case 'medication':
+          let valueSetMedications = ValueSets.medications[parameter.value.id];
+          valueSetMedications.medications.map(medication => {
+            this.resourceMap.set(medication.name, medication);
+          })
+          context.medication_titles = valueSetMedications.medications;
         default:
           context[parameter.id] = parameter.value;
           break;

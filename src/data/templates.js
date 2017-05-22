@@ -148,6 +148,21 @@ module.exports = [
         ]
       }
     ]
+  },
+  {
+    id: 5,
+    icon: 'medkit',
+    name: 'Medications',
+    entries: [
+      {
+        id: 'Medication',
+        name: 'On Statin Therapy',
+        parameters: [
+          { id: 'element_name', type: 'string', name: 'Element Name' },
+          { id: 'medication', type: 'medication', value:{id: 'on_statin_therapy'}, name: 'On Statin Therapy' }
+        ]
+      },
+    ]
   }
   //   'Gender',
   //   'Ethnicity',

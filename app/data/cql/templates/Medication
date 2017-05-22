@@ -1,0 +1,3 @@
+define <%=element_name%>:
+  <%medication_titles.forEach((medication_title, i) => { if(i > 0) {%>
+  or <%}%>C3F.HasCompleted([<%=medication_title.type%>: "<%=medication_title.name%>"])<%})%>
