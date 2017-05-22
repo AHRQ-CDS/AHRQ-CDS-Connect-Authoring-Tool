@@ -1,6 +1,8 @@
 library <%=name%> version '<%=version%>'
 
 using <%=dataModel.name%> version '<%= dataModel.version %>'
+
+include <%=includeLibrary.name%> version '<%=includeLibrary.version%>' called <%=includeLibrary.alias%>
 <% resourceMap.forEach((resource, key) => {%>
 valueset "<%=resource.name%>": '<%=resource.oid%>';<%});%>
 

@@ -52,6 +52,7 @@ class CqlArtifact {
     this.name = slug(artifact.name ? artifact.name : 'untitled');
     this.version = artifact.version ? artifact.version : 1;
     this.dataModel = artifact.dataModel ? artifact.dataModel : {name: 'FHIR', version: '1.0.2'};
+    this.includeLibrary = artifact.includeLibrary ? artifact.includeLibrary : {name: 'CDS_Connect_Commons_for_FHIRv102', version : '1', alias: 'C3F'};
     this.context = artifact.context ? artifact.context : 'Patient';
     this.elements = artifact.templateInstances;
 
