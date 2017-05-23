@@ -43,6 +43,21 @@ module.exports = {
       ],
       display: 'Cardiovascular disease 10Y risk [Likelihood] ACC-AHA Pooled Cohort by Goff 2013'
     },
+    smoker : {
+      // A concept based observation - has codes and display keys instead of oid and units
+      id: "smoker",
+      name: "Tobacco smoking status",
+      toConceptValue: true, // take flags out eventually?
+      codes: [
+        {
+          name: 'Tobacco smoking status code',
+          code: '72166-2',
+          codeSystem: { name: 'LOINC', id: 'http://loinc.org'},
+          display: 'Tobacco smoking status',
+        }
+      ],
+      display: 'Tobacco smoking status',
+    },
   },
   demographics: {
     gender: {

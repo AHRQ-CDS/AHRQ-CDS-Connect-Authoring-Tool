@@ -20,6 +20,10 @@ module.exports = {
       id: 'ascvd_risk_assessment',
       name: "ASCVD Risk Assessment"
     },
+    {
+      id: 'smoker',
+      name: "Smoker"
+    },
   ],
   demogragphics: [
     {
