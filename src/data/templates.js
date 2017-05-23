@@ -1,6 +1,21 @@
 
 module.exports = [
   {
+    id: 0,
+    icon: 'user',
+    suppress: true,
+    name: 'Generic',
+    entries: [
+      {
+        id: 'Base',
+        name: 'Base Template',
+        parameters: [
+          { id: 'element_name', type: 'string', name: 'Element Name' },
+        ],
+      }
+    ]
+  },
+  {
     id: 1,
     icon: 'user',
     name: 'Demographics',
@@ -31,6 +46,52 @@ module.exports = [
     icon: 'eye',
     name: 'Observations',
     entries: [
+      {
+        id: 'GenericObservation',
+        name: 'Observation',
+        returnType: 'observation',
+        suppress: true,
+        extends: 'Base',
+        parameters: [
+          { id: 'observation', type: 'observation', name: 'Observation' }
+        ],
+      },
+      {
+        id: 'TotalCholesterol',
+        name: 'Total Cholesterol',
+        extends: 'GenericObservation',
+        parameters: [
+          { id: 'element_name', value: "TotalCholesterol"},
+          { id: 'observation', static: true, value: "total_cholesterol"}
+        ]
+      },
+      {
+        id: 'HDLCholesterol',
+        name: 'HDL Cholesterol',
+        extends: 'GenericObservation',
+        parameters: [
+          { id: 'element_name', value: "HDLCholesterol"},
+          { id: 'observation', static: true, value: "hdl_cholesterol"}
+        ]
+      },
+      {
+        id: 'LDLCholesterol',
+        name: 'LDL Cholesterol',
+        extends: 'GenericObservation',
+        parameters: [
+          { id: 'element_name', value: "LDLCholesterol"},
+          { id: 'observation', static: true, value: "ldl_cholesterol"}
+        ]
+      },
+      {
+        id: 'SystolicBloodPressure',
+        name: 'Systolic Blood Pressure',
+        extends: 'GenericObservation',
+        parameters: [
+          { id: 'element_name', value: "SystolicBloodPressure"},
+          { id: 'observation', static: true, value: "systolic_blood_pressure"}
+        ]
+      },
       {
         id: 'MostRecentObservation',
         name: 'Most Recent Observation',
