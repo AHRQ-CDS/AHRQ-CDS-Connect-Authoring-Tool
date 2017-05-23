@@ -92,8 +92,16 @@ module.exports = {
           oid: '2.16.840.1.113883.3.666.5.694'
         },
         {
-          name: 'PCI',
+          name: 'Coronary artery bypass graft',
+          oid: '2.16.840.1.113883.3.464.1003.104.12.1002'
+        },
+        {
+          name: 'PCI ICD10CM SNOMEDCT',
           oid: '2.16.840.1.113762.1.4.1045.67'
+        },
+        {
+          name: 'PCI ICD9CM',
+          oid: '2.16.840.1.113762.1.4.1045.86'
         },
         {
           name: 'Carotid intervention',
@@ -105,8 +113,16 @@ module.exports = {
       id: 'dialysis',
       procedures: [
         {
-          name: 'Dialysis Services',
+          name: 'Dialysis services',
           oid: '2.16.840.1.113883.3.464.1003.109.12.1013'
+        },
+        {
+          name: 'Vascular access for dialysis',
+          oid: '2.16.840.1.113883.3.464.1003.109.12.1011'
+        },
+        {
+          name: 'ESRD monthly outpatient services',
+          oid: '2.16.840.1.113883.3.464.1003.109.12.1014'
         }
       ],
     }
