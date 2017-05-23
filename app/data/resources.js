@@ -15,7 +15,11 @@ module.exports = {
     {
       id: "systolic_blood_pressure",
       name: "Systolic Blood Pressure",
-    }
+    },
+    {
+      id: 'ascvd_risk_assessment',
+      name: "ASCVD Risk Assessment"
+    },
   ],
   demogragphics: [
     {

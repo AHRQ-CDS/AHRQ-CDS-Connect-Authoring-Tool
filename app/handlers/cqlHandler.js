@@ -60,6 +60,9 @@ class CqlArtifact {
 
   initialize() {
     this.resourceMap = new Map();
+    this.codeSystemMap = new Map();
+    this.codeMap = new Map();
+    this.conceptMap = new Map();
     this.contexts = [];
     this.elements.forEach((element) => { 
       this.parseElement(element)
@@ -74,7 +77,16 @@ class CqlArtifact {
         case 'observation':
           let valueSet = ValueSets.observations[parameter.value.id];
           context[parameter.id] = valueSet;
-          this.resourceMap.set(parameter.value.id, valueSet);
+          // For observations that have codes associated with them instead of valuesets
+          if ("codes" in valueSet) {
+            valueSet.codes.forEach((code) => {
+              this.codeSystemMap.set(code.codeSystem.name, code.codeSystem.id);
+              this.codeMap.set(code.name, code);
+            });
+            this.conceptMap.set(valueSet.id, valueSet);
+          } else {
+            this.resourceMap.set(parameter.value.id, valueSet);
+          }
           break;
         case 'integer':
           context[parameter.id] = parameter.value;

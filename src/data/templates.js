@@ -37,7 +37,8 @@ module.exports = [
         returnType: 'observation',
         parameters: [
           { id: 'element_name', type: 'string', name: 'Element Name' },
-          { id: 'observation', type: 'observation', name: 'Observation' }
+          { id: 'observation', type: 'observation', name: 'Observation' },
+          { id: 'valid', type: 'integer', name: 'Look back (years)'}
         ],
       },
       {
