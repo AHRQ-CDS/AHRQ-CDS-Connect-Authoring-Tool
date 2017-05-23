@@ -11,4 +11,8 @@ define "<%=element_name%>":
     }
     if(valid){%>, <%=valid%> <%
       if(valid>1) {%>years<%} else {%>year<%}%>)<%
-    }%>)))
+    }%>)))<%
+
+    if(observation.checkInclusionInVS) {
+      %> in "<%=observation.checkInclusionInVS.name%>"<%
+    }%>
