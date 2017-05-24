@@ -180,7 +180,7 @@ module.exports = [
       {
         id: 'GenericCondition',
         name: 'Condition',
-        returnType: 'condition',
+        returnType: 'boolean',
         suppress: true,
         extends: 'Base',
         parameters: [
@@ -269,7 +269,7 @@ module.exports = [
       {
         id: 'GenericMedication',
         name: 'Medication',
-        returnType: 'medication',
+        returnType: 'boolean',
         suppress: true,
         extends: 'Base',
         parameters: [
