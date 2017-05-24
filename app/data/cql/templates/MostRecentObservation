@@ -1,3 +1,4 @@
+<%// This eventually needs to extend GenericObservation and GenericObservation needs to be more generic %>
 define "<%=element_name%>":
   <%if(!observation.toConceptValue){
       %>C3F.QuantityValue(<%

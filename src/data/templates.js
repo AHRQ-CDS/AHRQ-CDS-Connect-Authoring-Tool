@@ -53,53 +53,85 @@ module.exports = [
         suppress: true,
         extends: 'Base',
         parameters: [
-          { id: 'observation', type: 'observation', name: 'Observation' }
+          { id: 'observation', type: 'observation', name: 'Observation' },
+          { id: 'valid', type: 'integer', name: 'Look back (years)' }
         ],
       },
       {
         id: 'TotalCholesterol',
         name: 'Total Cholesterol',
         extends: 'GenericObservation',
+        returnType: 'number',
         parameters: [
           { id: 'element_name', value: "TotalCholesterol"},
-          { id: 'observation', static: true, value: "total_cholesterol"}
+          { id: 'observation', static: true, value: "total_cholesterol"},
+          { id: 'valid', static: true }
         ]
       },
       {
         id: 'HDLCholesterol',
         name: 'HDL Cholesterol',
         extends: 'GenericObservation',
+        returnType: 'number',
         parameters: [
           { id: 'element_name', value: "HDLCholesterol"},
-          { id: 'observation', static: true, value: "hdl_cholesterol"}
+          { id: 'observation', static: true, value: "hdl_cholesterol"},
+          { id: 'valid', value: 6 }
         ]
       },
       {
         id: 'LDLCholesterol',
         name: 'LDL Cholesterol',
         extends: 'GenericObservation',
+        returnType: 'number',
         parameters: [
           { id: 'element_name', value: "LDLCholesterol"},
-          { id: 'observation', static: true, value: "ldl_cholesterol"}
+          { id: 'observation', static: true, value: "ldl_cholesterol"},
+          { id: 'valid', value: 6 }
         ]
       },
       {
         id: 'SystolicBloodPressure',
         name: 'Systolic Blood Pressure',
         extends: 'GenericObservation',
+        returnType: 'number',
         parameters: [
           { id: 'element_name', value: "SystolicBloodPressure"},
-          { id: 'observation', static: true, value: "systolic_blood_pressure"}
+          { id: 'observation', static: true, value: "systolic_blood_pressure"},
+          { id: 'valid', static: true }
+        ]
+      },
+      {
+        id: 'ascvd_risk_assessment',
+        name: 'ASCVD Risk Assessment',
+        extends: 'GenericObservation',
+        returnType: 'number', // TODO observation types should be observations for LVR list
+        parameters: [
+          { id: 'element_name', value: "MostRecentASCVDRiskAssessmentResult"},
+          { id: 'observation', static: true, value: "ascvd_risk_assessment"},
+          { id: 'valid', value: 6 }
+        ]
+      },
+      {
+        id: 'smoker',
+        name: 'Is Smoker',
+        extends: 'GenericObservation',
+        returnType: 'boolean',
+        parameters: [
+          { id: 'element_name', value: "IsSmoker"},
+          { id: 'observation', static: true, value: "smoker"},
+          { id: 'valid', static: true }
         ]
       },
       {
         id: 'MostRecentObservation',
         name: 'Most Recent Observation',
+        // extends: 'GenericObservation', // TODO this should eventually extend generic?
         returnType: 'observation',
         parameters: [
           { id: 'element_name', type: 'string', name: 'Element Name' },
           { id: 'observation', type: 'observation', name: 'Observation' },
-          { id: 'valid', type: 'integer', name: 'Look back (years)'}
+          { id: 'valid', type: 'integer', name: 'Look back (years)', static: true }
         ],
       },
       {
