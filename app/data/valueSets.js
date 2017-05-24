@@ -208,7 +208,42 @@ module.exports = {
         }
       ]
     },
-
+  },
+  procedures: {
+    palliative_care: {
+      id: 'palliative_care',
+      procedures: [ // TODO better way to structure this to have multiple procedures in one group?
+        {
+          name: 'Palliative Care',
+          oid: '2.16.840.1.113883.3.600.1.1579',
+        }
+      ],
+    },
+    ascvd_procedures: {
+      id: 'ascvd_procedures',
+      procedures: [
+        {
+          name: 'CABG Surgeries',
+          oid: '2.16.840.1.113883.3.666.5.694'
+        },
+        {
+          name: 'PCI',
+          oid: '2.16.840.1.113762.1.4.1045.67'
+        },
+        {
+          name: 'Carotid intervention',
+          oid: '2.16.840.1.113883.3.117.1.7.1.204'
+        }
+      ],
+    },
+    dialysis: {
+      id: 'dialysis',
+      procedures: [
+        {
+          name: 'Dialysis Services',
+          oid: '2.16.840.1.113883.3.464.1003.109.12.1013'
+        }
+      ],
+    }
   }
-
 }
