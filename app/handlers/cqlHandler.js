@@ -4,6 +4,7 @@ const _ = require('lodash');
 const slug = require('slug');
 const ejs = require('ejs');
 const fs = require('fs');
+let archiver = require('archiver');
 const path = require( 'path' );
 const templatePath = 'app/data/cql/templates'
 const artifactPath = 'app/data/cql/artifact.ejs'
@@ -29,7 +30,21 @@ function idToObj(req, res, next) {
 // Creates the cql file from an artifact object
 function objToCql(req, res) {
   let artifact = new CqlArtifact(req.body);
-  res.json(artifact.toJson());
+  let cqlObject = artifact.toJson();
+
+  let archive = archiver('zip', {zlib : { level : 9 }});
+  archive.on('error', (err) => {
+    res.status(500).send({error : err.message});
+  });
+  res.attachment('archive-name.zip');
+  archive.pipe(res);
+
+  // Add helper Library
+  let path = __dirname + '/../data/library_helpers/';
+  archive.directory(path, '/');
+
+  archive.append(cqlObject.text, { name : `${cqlObject.filename}.cql` });
+  archive.finalize();
 }
 
 function loadTemplates() {

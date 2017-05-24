@@ -57,13 +57,20 @@ class BuilderPage extends Component {
 
     axios.post('http://localhost:3001/api/cql', artifact)
       .then((result) => {
-        const cqlData = result.data;
         const saveElement = document.createElement('a');
-        saveElement.href = `data:${cqlData.type},${encodeURIComponent(cqlData.text)}`;
-        saveElement.download = `${cqlData.filename}.cql`;
+        // document.body.appendChild(saveElement);
+        // saveElement.style = "display: none";
+        const blob = new Blob([result.data], {type: "application/zip"});
+        const url = window.URL.createObjectURL(blob);
+        console.log(url);
+        saveElement.href = url;
+        saveElement.download = `cql.zip`;
+        // saveElement.href = `data:application/zip,${encodeURIComponent(cqlData.text)}`;
+        
         // Open in a new tab rather than download - convenient for testing
         // saveElement.target = '_blank';
         saveElement.click();
+        window.URL.revokeObjectURL(url);
       })
       .catch((error) => {
         console.error(error);
