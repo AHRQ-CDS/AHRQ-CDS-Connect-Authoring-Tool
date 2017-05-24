@@ -27,7 +27,7 @@ class BuilderPalette extends Component {
   }
 
   renderMenu() {
-    return groups.map((g) => {
+    return groups.filter(g => !g.suppress).map((g) => {
       const location = `/build/${g.id}`;
       return (
         <li role="menuitem" key={g.name}>

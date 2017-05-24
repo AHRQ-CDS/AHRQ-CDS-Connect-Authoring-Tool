@@ -3,9 +3,11 @@ import { DropTarget } from 'react-dnd';
 import _ from 'lodash';
 import axios from 'axios';
 import TemplateInstance from './TemplateInstance';
+import Config from '../../../config'
+const API_BASE = Config.api.baseUrl;
 
 function showPresets(mongoId) {
-  return axios.get(`http://localhost:3001/api/expressions/group/${mongoId}`);
+  return axios.get(`${API_BASE}/expressions/group/${mongoId}`);
 }
 
 class BuilderTarget extends Component {
@@ -32,7 +34,7 @@ class BuilderTarget extends Component {
     if (index > -1) {
       const element = elementList[index];
       console.log(element);
-      axios.post('http://localhost:3001/api/expressions', element)
+      axios.post(`${API_BASE}/expressions`, element)
         .then((result) => {
           console.log('Done');
         })

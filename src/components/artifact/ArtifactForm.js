@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import axios from 'axios';
 import _ from 'lodash';
+import Config from '../../../config'
+const API_BASE = Config.api.baseUrl;
 
 class ArtifactForm extends Component {
   constructor(props) {
@@ -20,7 +22,7 @@ class ArtifactForm extends Component {
 
   addArtifact(e) {
     e.preventDefault();
-    axios.post('http://localhost:3001/api/artifacts', {
+    axios.post(`${API_BASE}/artifacts`, {
       name: this.state.name,
       version: this.state.version
     }).then((result) => {

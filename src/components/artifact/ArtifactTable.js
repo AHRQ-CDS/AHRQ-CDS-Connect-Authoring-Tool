@@ -5,6 +5,8 @@ import axios from 'axios';
 import FontAwesome from 'react-fontawesome';
 import ReactModal from 'react-modal';
 import ArtifactForm from './ArtifactForm';
+import Config from '../../../config'
+const API_BASE = Config.api.baseUrl;
 
 // For screen readers to not see the background text
 ReactModal.setAppElement('#root');
@@ -48,7 +50,7 @@ class ArtifactTable extends Component {
   }
 
   deleteArtifact(id) {
-    axios.delete(`http://localhost:3001/api/artifacts/${id}`)
+    axios.delete(`${API_BASE}/artifacts/${id}`)
       .then((res) => {
         const list = this.state.artifacts;
         const index = list.findIndex(a => a._id === id);
@@ -74,7 +76,7 @@ class ArtifactTable extends Component {
       _id: this.state.artifactEditing._id
     };
 
-    axios.put('http://localhost:3001/api/artifacts', artifactToUpdate)
+    axios.put(`${API_BASE}/artifacts`, artifactToUpdate)
       .then((result) => {
         this.props.afterAddArtifact();
         this.setState({ showModal: false, artifactEditing: null });

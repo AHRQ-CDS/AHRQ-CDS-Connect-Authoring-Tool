@@ -7,6 +7,10 @@ import StringParameter from './parameters/StringParameter';
 import ObservationParameter from './parameters/ObservationParameter';
 import ValueSetParameter from './parameters/ValueSetParameter';
 import ListParameter from './parameters/ListParameter';
+import StaticParameter from './parameters/StaticParameter';
+import Config from '../../../config'
+const API_BASE = Config.api.baseUrl;
+
 
 function validateOneWord(value) {
   if (value.includes(' ')) {
@@ -67,7 +71,7 @@ class TemplateInstance extends Component {
     const otherInstances = this.getOtherInstances(this.props);
     this.setState({ otherInstances });
 
-    axios.get('http://localhost:3001/api/resources')
+    axios.get(`${API_BASE}/resources`)
       .then((result) => {
         this.setState({ resources: result.data });
       });
@@ -117,6 +121,14 @@ class TemplateInstance extends Component {
   }
 
   selectTemplate(param) {
+    if (param.static) {
+        return (
+          <StaticParameter
+            key={param.id}
+            param={param}
+            updateInstance={this.updateInstance} />
+        );
+    }
     switch (param.type) {
       case 'integer':
         return (
