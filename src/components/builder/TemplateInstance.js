@@ -71,7 +71,7 @@ class TemplateInstance extends Component {
     const otherInstances = this.getOtherInstances(this.props);
     this.setState({ otherInstances });
 
-    axios.get('${API_BASE}/resources')
+    axios.get(`${API_BASE}/resources`)
       .then((result) => {
         this.setState({ resources: result.data });
       });
