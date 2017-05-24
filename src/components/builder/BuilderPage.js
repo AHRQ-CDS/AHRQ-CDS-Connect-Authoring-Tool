@@ -3,11 +3,16 @@ import HTML5Backend from 'react-dnd-html5-backend';
 import { DragDropContext } from 'react-dnd';
 import axios from 'axios';
 import update from 'immutability-helper';
+import _ from 'lodash';
 
 import BuilderSubPalette from './BuilderSubPalette';
 import BuilderPalette from './BuilderPalette';
 import BuilderTarget from './BuilderTarget';
 import groups from '../../data/templates';
+import Config from '../../../config'
+
+const CORE_TEMPLATE_FIELDS = ['id', 'name', 'parameters', 'extends', 'suppress'];
+const API_BASE = Config.api.baseUrl;
 
 class BuilderPage extends Component {
   static contextTypes = {
@@ -29,6 +34,8 @@ class BuilderPage extends Component {
     this.saveArtifact = this.saveArtifact.bind(this);
     this.downloadCQL = this.downloadCQL.bind(this);
     this.updateSingleElement = this.updateSingleElement.bind(this);
+    this.manageTemplateExtensions = this.manageTemplateExtensions.bind(this);
+    this.manageTemplateExtensions();
   }
 
   componentDidMount() {
@@ -37,7 +44,7 @@ class BuilderPage extends Component {
       if (this.props.match.params.id) {
         // fetch the relevant artifact from the server.
         const id = this.props.match.params.id;
-        axios.get(`http://localhost:3001/api/artifacts/${id}`)
+        axios.get(`${API_BASE}/artifacts/${id}`)
           .then((res) => {
             const artifact = res.data[0];
             this.setState({ id: artifact._id });
@@ -49,20 +56,52 @@ class BuilderPage extends Component {
     }
   }
 
+  manageTemplateExtensions() {
+    const entryMap = {};
+    groups.forEach((group) => {
+      group.entries.forEach((entry) => {
+        entryMap[entry.id] = entry;
+      })
+    })
+    Object.values(entryMap).forEach((entry) => {
+      if (entry.extends) {
+        this.mergeInParentTemplate(entry, entryMap);
+      }
+    })
+  }
+  mergeInParentTemplate(entry, entryMap) {
+    let extendWithEntry = entryMap[entry.extends]
+    if (extendWithEntry.extends) {
+      // handle transitive
+      this.mergeInParentTemplate(extendWithEntry, entryMap);
+    }
+    // merge entry fields with parent but remove core fields like ID
+    _.merge(entry, _.omit(extendWithEntry, CORE_TEMPLATE_FIELDS));
+
+    // merge parameters
+    entry.parameters.forEach((parameter) => {
+      let matchingParameter = _.find(extendWithEntry.parameters, { 'id': parameter.id});
+      _.merge(parameter, matchingParameter);
+
+    });
+    let missing = _.differenceBy(extendWithEntry.parameters, entry.parameters, 'id');
+    entry.parameters = missing.concat(entry.parameters);
+  }
+
   downloadCQL() {
     const artifact = {
       name: this.state.name,
       templateInstances: this.state.templateInstances
     };
 
-    axios.post('http://localhost:3001/api/cql', artifact)
+    axios.post(`${API_BASE}/cql`, artifact)
       .then((result) => {
         const cqlData = result.data;
         const saveElement = document.createElement('a');
         saveElement.href = `data:${cqlData.type},${encodeURIComponent(cqlData.text)}`;
         saveElement.download = `${cqlData.filename}.cql`;
         // Open in a new tab rather than download - convenient for testing
-        // saveElement.target = '_blank';
+        //saveElement.target = '_blank';
         saveElement.click();
       })
       .catch((error) => {
@@ -71,9 +110,6 @@ class BuilderPage extends Component {
   }
 
   saveArtifact(exitPage) {
-    // TODO: This needs to be extracted to somewhere better
-    const url = 'http://localhost:3001/api';
-
     const artifact = { name: this.state.name, templateInstances: this.state.templateInstances };
     if (this.state.id) artifact._id = this.state.id;
 
@@ -89,13 +125,13 @@ class BuilderPage extends Component {
     };
 
     if (this.state.id) {
-      axios.put(`${url}/artifacts`, artifact)
+      axios.put(`${API_BASE}/artifacts`, artifact)
         .then(handleSave)
         .catch((error) => {
           console.error(error);
         });
     } else {
-      axios.post(`${url}/artifacts`, artifact)
+      axios.post(`${API_BASE}/artifacts`, artifact)
         .then(handleSave)
         .catch((error) => {
           console.error(error);

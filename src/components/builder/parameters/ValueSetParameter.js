@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import Select from 'react-select';
 import axios from 'axios';
 import _ from 'lodash';
+import Config from '../../../../config'
+const API_BASE = Config.api.baseUrl;
 
 class ValueSetParameter extends Component {
   constructor(props) {
@@ -11,8 +13,7 @@ class ValueSetParameter extends Component {
   }
 
   componentWillMount() {
-    const url = 'http://localhost:3001/api';
-    axios.get(`${url}/valuesets/${this.props.param.select}`)
+    axios.get(`${API_BASE}/valuesets/${this.props.param.select}`)
       .then((result) => {
         this.setState({ valueset: result.data.expansion });
       });

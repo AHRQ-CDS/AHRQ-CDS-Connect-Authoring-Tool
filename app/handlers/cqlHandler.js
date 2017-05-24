@@ -75,14 +75,20 @@ class CqlArtifact {
 
   // Generate context and resources for a single element
   parseElement(element) {
+
     const context = {template: element.id};
+    // TODO: currently this assumes that if A extends B then the B element defines the CQL
+    if (element.extends && !templateMap[element.id]) {
+      context.template = element.extends;
+    }
+
     element.parameters.forEach((parameter) => {
       switch (parameter.type) {
         case 'observation':
-          let valueSet = ValueSets.observations[parameter.value.id];
+          let valueSet = ValueSets.observations[parameter.value];
           context[parameter.id] = valueSet;
           // For observations that have codes associated with them instead of valuesets
-          if ("codes" in valueSet) {
+          if ("codes" in valueSet) { // TODO Needs to be updated with extensions
             valueSet.codes.forEach((code) => {
               this.codeSystemMap.set(code.codeSystem.name, code.codeSystem.id);
               this.codeMap.set(code.name, code);
@@ -93,7 +99,7 @@ class CqlArtifact {
               this.resourceMap.set(valueSet.checkInclusionInVS.name, valueSet.checkInclusionInVS);
             }
           } else {
-            this.resourceMap.set(parameter.value.id, valueSet);
+            this.resourceMap.set(parameter.value, valueSet);
           }
           break;
         case 'integer':

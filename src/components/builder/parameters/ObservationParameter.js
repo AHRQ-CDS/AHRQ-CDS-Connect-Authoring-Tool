@@ -15,6 +15,8 @@ export default (props) => {
                 autofocus
                 options={observations}
                 inputProps={{ id }}
+                simpleValue
+                valueKey={"id"}
                 clearable={true}
                 name={props.param.id}
                 value={props.param.value}
