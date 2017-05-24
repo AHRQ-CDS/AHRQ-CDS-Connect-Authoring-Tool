@@ -124,7 +124,7 @@ class CqlArtifact {
           context.medication_titles = valueSetMedications.medications;
           break;
         case 'procedure' :
-          let procedureValuesets = ValueSets.procedures[parameter.value.id];
+          let procedureValuesets = ValueSets.procedures[parameter.value];
           context[parameter.id] = procedureValuesets;
           procedureValuesets.procedures.forEach(valueset => this.resourceMap.set(valueset.name, valueset));
           break;

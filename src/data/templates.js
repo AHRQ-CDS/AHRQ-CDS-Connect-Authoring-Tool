@@ -250,33 +250,48 @@ module.exports = [
     name: 'Procedures',
     entries: [
       {
-        id: 'Procedure', // TODO this matches the template that will be used - might change to more useful id when extending templates
+        id: 'GenericProcedure',
+        name: 'Procedure',
+        returnType: 'procedure',
+        suppress: true,
+        extends: 'Base',
+        parameters: [
+          { id: 'procedure', type: 'procedure', name: 'Procedure' },
+          { id: 'in_last_weeks', type: 'integer', name: 'How Recent (weeks)' }
+        ],
+      },
+      {
+        id: 'ASCVD_Procedures',
         name: 'ASCVD Procedures',
         returnType: 'boolean',
+        extends: 'GenericProcedure',
         parameters: [
-          { id: 'element_name', type: 'string', name: 'Element Name' },
-          { id: 'procedure', type: 'procedure', name: 'Procedure', value: {id: 'ascvd_procedures'}}, // TODO eventually extension
-          { id: 'in_last_weeks', type: 'integer', name: 'How Recent (weeks)'} // TODO - make this "Look Back" idea more general? -> a filter you can apply to anything?
+          { id: 'element_name', value: 'HasHadASCVDProcedures' },
+          { id: 'procedure', static: true, value: "ascvd_procedures" },
+          { id: 'in_last_weeks', static: true } // This procedure doesn't use a LookBack so this parameter is static with no value
         ],
       },
       {
-        id: 'Procedure',
+        id: 'Palliative_Care',
         name: 'Palliative Care',
         returnType: 'boolean',
+        extends: 'GenericProcedure',
         parameters: [
-          { id: 'element_name', type: 'string', name: 'Element Name' },
-          { id: 'procedure', type: 'procedure', name: 'Procedure', value: {id: 'palliative_care'} }, //TODO with template extensions - this would be preset?
-          { id: 'in_last_weeks', type: 'integer', name: 'How Recent (weeks)'}
+          { id: 'element_name', value: 'IsInPalliativeCare' },
+          { id: 'procedure', static: true, value: "palliative_care" },
+          { id: 'in_last_weeks', static: true }, // This procedure doesn't use a LookBack so this parameter is static with no value
+
         ],
       },
       {
-        id: 'Procedure',
+        id: 'Dialysis',
         name: 'Dialysis',
         returnType: 'boolean',
+        extends: 'GenericProcedure',
         parameters: [
-          { id: 'element_name', type: 'string', name: 'Element Name' },
-          { id: 'procedure', type: 'procedure', name: 'Procedure', value: { id: 'dialysis' } }, //TODO will use extension
-          { id: 'in_last_weeks', type: 'integer', name: 'How Recent (weeks)'}
+          { id: 'element_name', value: 'OnDialysis' },
+          { id: 'procedure', static: true, value: "dialysis" },
+          { id: 'in_last_weeks', value: 1 }
         ],
       }
     ]
