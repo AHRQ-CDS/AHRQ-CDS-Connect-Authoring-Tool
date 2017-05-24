@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import axios from 'axios';
 import ArtifactForm from './ArtifactForm';
 import ArtifactTable from './ArtifactTable';
+import Config from '../../../config'
+const API_BASE = Config.api.baseUrl;
 
 class Artifact extends Component {
   constructor(props) {
@@ -12,7 +14,7 @@ class Artifact extends Component {
   }
 
   loadArtifacts() {
-    axios.get('http://localhost:3001/api/artifacts').then((response) => {
+    axios.get(`${API_BASE}/artifacts`).then((response) => {
       this.setState({ data: response.data });
     });
   }
