@@ -109,7 +109,7 @@ class CqlArtifact {
           }
           break;
         case 'condition':
-          let valueSetConditions = ValueSets.conditions[parameter.value.id];
+          let valueSetConditions = ValueSets.conditions[parameter.value];
           valueSetConditions.conditions.map(condition => {
             this.resourceMap.set(condition.name, condition);
           })

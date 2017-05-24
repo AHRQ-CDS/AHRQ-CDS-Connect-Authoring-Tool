@@ -146,67 +146,85 @@ module.exports = [
     name: 'Conditions',
     entries: [
       {
-        id: 'Condition',
-        name: 'Diabetes',
+        id: 'GenericCondition',
+        name: 'Condition',
+        returnType: 'condition',
+        suppress: true,
+        extends: 'Base',
         parameters: [
-          { id: 'element_name', type: 'string', name: 'Element Name' },
-          { id: 'condition', type: 'condition', value:{id: 'diabetes'}, name: 'Diabetes' }
+          { id: 'condition', type: 'condition', name: 'Condition' }
         ]
       },
       {
-        id: 'Condition',
-        name: 'Essential Hypertension',
+        id: 'Diabetes',
+        name: 'Diabetes',
+        extends: 'GenericCondition',
         parameters: [
-          { id: 'element_name', type: 'string', name: 'Element Name' },
-          { id: 'condition', type: 'condition', value:{id: 'essential_hypertension'}, name: 'Essential Hypertension' }
+          { id: 'element_name', value: "HasDiabetes"},
+          { id: 'condition', static: true, value: "diabetes"}
+        ]
+      },
+      {
+        id: 'EssentialHypertension',
+        name: 'Essential Hypertension',
+        extends: 'GenericCondition',
+        parameters: [
+          { id: 'element_name', value: "HasHypertension"},
+          { id: 'condition', static: true, value: "essential_hypertension"}
         ]
       },
       {
         id: 'Condition',
         name: 'ASCVD',
+        extends: 'GenericCondition',
         parameters: [
-          { id: 'element_name', type: 'string', name: 'Element Name' },
-          { id: 'condition', type: 'condition', value:{id: 'has_ascvd'}, name: 'hasASCVD', inactive: true} // C3F.ActiveCondition() is applied unless inactive is set
+          { id: 'element_name', value: "HasASCVD"},
+          { id: 'condition', static: true, value: "has_ascvd", inactive: true} // C3F.ActiveCondition() is applied unless inactive is set
         ],
       },
       {
-        id: 'Condition',
+        id: 'Hypercholesterolemia',
         name: 'Hypercholesterolemia',
+        extends: 'GenericCondition',
         parameters: [
-          { id: 'element_name', type: 'string', name: 'Element Name' },
-          { id: 'condition', type: 'condition', value:{id: 'hypercholesterolemia'}, name: 'Hypercholesterolemia' }
+          { id: 'element_name', value: "HasFamilialHypercholesterolemia"},
+          { id: 'condition', static: true, value: "hypercholesterolemia"}
         ]
       },
       {
-        id: 'Condition',
+        id: 'Pregnancydx',
         name: 'Pregnancy dx',
+        extends: 'GenericCondition',
         parameters: [
-          { id: 'element_name', type: 'string', name: 'Element Name' },
-          { id: 'condition', type: 'condition', value:{id: 'pregnancy_dx'}, name: 'Pregnancy dx' }
+          { id: 'element_name', value: "IsPregnant"},
+          { id: 'condition', static: true, value: "pregnancy_dx"}
         ]
       },
       {
-        id: 'Condition',
+        id: 'Breastfeeding',
         name: 'Breastfeeding',
+        extends: 'GenericCondition',
         parameters: [
-          { id: 'element_name', type: 'string', name: 'Element Name' },
-          { id: 'condition', type: 'condition', value:{id: 'breastfeeding'}, name: 'Breastfeeding' }
+          { id: 'element_name', value: "IsBreastfeeding"},
+          { id: 'condition', static: true, value: "breastfeeding"}
         ]
       },
       {
-        id: 'Condition',
+        id: 'EndStageRenalDisease',
         name: 'End Stage Renal Disease',
+        extends: 'GenericCondition',
         parameters: [
-          { id: 'element_name', type: 'string', name: 'Element Name' },
-          { id: 'condition', type: 'condition', value:{id: 'end_stage_renal_disease'}, name: 'End Stage Renal Disease' }
+          { id: 'element_name', value: "HasEndStageRenalDisease"},
+          { id: 'condition', static: true, value: "end_stage_renal_disease"}
         ]
       },
       {
-        id: 'Condition',
+        id: 'LiverDisease',
         name: 'Liver Disease',
+        extends: 'GenericCondition',
         parameters: [
-          { id: 'element_name', type: 'string', name: 'Element Name' },
-          { id: 'condition', type: 'condition', value:{id: 'liver_disease'}, name: 'Liver Disease' }
+          { id: 'element_name', value: "HasCirrhosis"},
+          { id: 'condition', static: true, value: "liver_disease"}
         ]
       }
     ]
