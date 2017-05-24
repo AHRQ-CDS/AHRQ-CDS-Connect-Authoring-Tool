@@ -117,7 +117,7 @@ class CqlArtifact {
           context.active = !(parameter.inactive);
           break;
         case 'medication':
-          let valueSetMedications = ValueSets.medications[parameter.value.id];
+          let valueSetMedications = ValueSets.medications[parameter.value];
           valueSetMedications.medications.map(medication => {
             this.resourceMap.set(medication.name, medication);
           })

@@ -1,3 +1,0 @@
-define "<%=element_name%>":
-  <%medication_titles.forEach((medication_title, i) => { if(i > 0) {%>
-  or <%}%>Exists(C3F.ActiveMedicationStatement([<%=medication_title.type%>: "<%=medication_title.name%>"])<%})%>

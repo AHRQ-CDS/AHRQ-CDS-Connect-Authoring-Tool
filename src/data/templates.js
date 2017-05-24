@@ -174,7 +174,7 @@ module.exports = [
         ]
       },
       {
-        id: 'Condition',
+        id: 'ASCVD',
         name: 'ASCVD',
         extends: 'GenericCondition',
         parameters: [
@@ -235,11 +235,22 @@ module.exports = [
     name: 'Medications',
     entries: [
       {
-        id: 'Medication',
-        name: 'On Statin Therapy',
+        id: 'GenericMedication',
+        name: 'Medication',
+        returnType: 'medication',
+        suppress: true,
+        extends: 'Base',
         parameters: [
-          { id: 'element_name', type: 'string', name: 'Element Name' },
-          { id: 'medication', type: 'medication', value:{id: 'on_statin_therapy'}, name: 'On Statin Therapy' }
+          {id:'medication',type:'medication',name:'Medication'}
+        ]
+      },
+      {
+        id: 'OnStatinTherapy',
+        name: 'On Statin Therapy',
+        extends: 'GenericMedication',
+        parameters: [
+          { id: 'element_name', value: 'OnStatinTherapy'},
+          { id: 'medication', static: true, value: "on_statin_therapy"}
         ]
       },
     ]
