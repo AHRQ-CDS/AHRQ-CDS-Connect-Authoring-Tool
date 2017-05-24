@@ -57,6 +57,10 @@ module.exports = {
         }
       ],
       display: 'Tobacco smoking status',
+      checkInclusionInVS: { 
+        name: "Current Tobacco Smoker",  
+        oid: '2.16.840.1.113883.3.600.2390'
+      }
     },
   },
   demographics: {

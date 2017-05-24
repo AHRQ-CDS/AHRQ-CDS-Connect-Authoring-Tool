@@ -88,6 +88,10 @@ class CqlArtifact {
               this.codeMap.set(code.name, code);
             });
             this.conceptMap.set(valueSet.id, valueSet);
+            // For checking if a ConceptValue is in a valueset, incluce the valueset that will be used
+            if('checkInclusionInVS' in valueSet){
+              this.resourceMap.set(valueSet.checkInclusionInVS.name, valueSet.checkInclusionInVS);
+            }
           } else {
             this.resourceMap.set(parameter.value.id, valueSet);
           }
