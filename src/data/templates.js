@@ -138,6 +138,7 @@ module.exports = [
         id: 'LabValueRange',
         name: 'Lab Value Range',
         category: 'RangeOfObservation',
+        returnType: 'boolean',
         parameters: [
           { id: 'element_name', type: 'string', name: 'Element Name' },
           { id: 'lower_bound', type: 'integer', name: 'Lower Bound', exclusive: false },

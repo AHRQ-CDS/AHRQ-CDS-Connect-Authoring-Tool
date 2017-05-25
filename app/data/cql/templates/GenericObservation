@@ -1,5 +1,5 @@
-define "<%=element_name%>": <%
-    if(!observation.toConceptValue){
+define "<%=element_name%>": 
+  <%if(!observation.toConceptValue){
       %>C3F.QuantityValue(<%
     } else{
       %>C3F.ConceptValue(<%

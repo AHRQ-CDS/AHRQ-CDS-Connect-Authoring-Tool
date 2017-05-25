@@ -76,7 +76,12 @@ class BuilderPage extends Component {
       this.mergeInParentTemplate(extendWithEntry, entryMap);
     }
     // merge entry fields with parent but remove core fields like ID
-    _.merge(_.omit(extendWithEntry, CORE_TEMPLATE_FIELDS), entry);
+    _.mergeWith(entry, _.omit(extendWithEntry, CORE_TEMPLATE_FIELDS), (objectVal, sourceVal, key, object) => {
+      // TODO: This is to handle child extensions setting their own returnTypes - there might be a better way to do this
+      if(key === 'returnType' && objectVal !== undefined) {
+        return object[key] = objectVal;
+      }
+    });
 
     // merge parameters
     entry.parameters.forEach((parameter) => {
