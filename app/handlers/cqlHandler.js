@@ -88,7 +88,7 @@ class CqlArtifact {
           let valueSet = ValueSets.observations[parameter.value];
           context[parameter.id] = valueSet;
           // For observations that have codes associated with them instead of valuesets
-          if ("codes" in valueSet) { // TODO Needs to be updated with extensions
+          if ("codes" in valueSet) {
             valueSet.codes.forEach((code) => {
               this.codeSystemMap.set(code.codeSystem.name, code.codeSystem.id);
               this.codeMap.set(code.name, code);

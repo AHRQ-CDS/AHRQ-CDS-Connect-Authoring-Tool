@@ -61,7 +61,7 @@ module.exports = [
         id: 'TotalCholesterol',
         name: 'Total Cholesterol',
         extends: 'GenericObservation',
-        returnType: 'number',
+        returnType: 'number', //TODO: these are all numbers because of the GenericObservation template - when it gets made more general, this might change back to observation
         parameters: [
           { id: 'element_name', value: "TotalCholesterol"},
           { id: 'observation', static: true, value: "total_cholesterol"},
@@ -105,7 +105,7 @@ module.exports = [
         id: 'ascvd_risk_assessment',
         name: 'ASCVD Risk Assessment',
         extends: 'GenericObservation',
-        returnType: 'number', // TODO observation types should be observations for LVR list
+        returnType: 'number',
         parameters: [
           { id: 'element_name', value: "MostRecentASCVDRiskAssessmentResult"},
           { id: 'observation', static: true, value: "ascvd_risk_assessment"},
@@ -126,12 +126,12 @@ module.exports = [
       {
         id: 'MostRecentObservation',
         name: 'Most Recent Observation',
-        // extends: 'GenericObservation', // TODO this should eventually extend generic?
+        extends: 'GenericObservation',
         returnType: 'observation',
         parameters: [
           { id: 'element_name', type: 'string', name: 'Element Name' },
           { id: 'observation', type: 'observation', name: 'Observation' },
-          { id: 'valid', type: 'integer', name: 'Look back (years)', static: true }
+          { id: 'valid' }
         ],
       },
       {
@@ -142,7 +142,7 @@ module.exports = [
           { id: 'element_name', type: 'string', name: 'Element Name' },
           { id: 'lower_bound', type: 'integer', name: 'Lower Bound', exclusive: false },
           { id: 'upper_bound', type: 'integer', name: 'Upper Bound', exclusive: false },
-          { id: 'observation', type: 'list', subType: 'observation', value: [undefined], name: 'Observation' }
+          { id: 'observation', type: 'list', subType: 'number', value: [undefined], name: 'Observation' }
         ]
       },
     ]

@@ -32,7 +32,7 @@ module.exports = {
       // A concept based observation - has codes and display keys instead of oid and units
       id: "ascvd_risk_assessment",
       name: "ASCVD 10-year risk code",
-      toConceptValue: false, // take flags out eventually?
+      toConceptValue: false,
       codes: [
         {
           name: 'ASCVD 10-year risk code',
@@ -47,7 +47,7 @@ module.exports = {
       // A concept based observation - has codes and display keys instead of oid and units
       id: "smoker",
       name: "Tobacco smoking status",
-      toConceptValue: true, // take flags out eventually?
+      toConceptValue: true,
       codes: [
         {
           name: 'Tobacco smoking status code',
@@ -246,7 +246,7 @@ module.exports = {
   procedures: {
     palliative_care: {
       id: 'palliative_care',
-      procedures: [ // TODO better way to structure this to have multiple procedures in one group?
+      procedures: [
         {
           name: 'Palliative Care',
           oid: '2.16.840.1.113883.3.600.1.1579',

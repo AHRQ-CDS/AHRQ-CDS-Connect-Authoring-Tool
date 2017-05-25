@@ -76,7 +76,7 @@ class BuilderPage extends Component {
       this.mergeInParentTemplate(extendWithEntry, entryMap);
     }
     // merge entry fields with parent but remove core fields like ID
-    _.merge(entry, _.omit(extendWithEntry, CORE_TEMPLATE_FIELDS));
+    _.merge(_.omit(extendWithEntry, CORE_TEMPLATE_FIELDS), entry);
 
     // merge parameters
     entry.parameters.forEach((parameter) => {

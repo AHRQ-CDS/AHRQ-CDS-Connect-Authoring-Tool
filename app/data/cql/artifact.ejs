@@ -16,7 +16,7 @@ code "<%=code.name%>": '<%=code.code%>' from "<%=code.codeSystem.name%>"
 <%})%>
 
 <% conceptMap.forEach((concept) => {%>
-concept "<%=concept.name%>" : { <%codeMap.forEach((code) => {%>"<%=code.name%>", <%})%>}
+concept "<%=concept.name%>" : { <%concept.codes.forEach((code) => {%>"<%=code.name%>", <%})%>}
   display '<%=concept.display%>'
 <%})%>
 
