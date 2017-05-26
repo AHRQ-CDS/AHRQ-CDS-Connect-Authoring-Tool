@@ -198,12 +198,12 @@ module.exports = [
         ]
       },
       {
-        id: 'EssentialHypertension',
-        name: 'Essential Hypertension',
+        id: 'Hypertension',
+        name: 'Hypertension',
         extends: 'GenericCondition',
         parameters: [
           { id: 'element_name', value: "HasHypertension"},
-          { id: 'condition', static: true, value: "essential_hypertension"}
+          { id: 'condition', static: true, value: "hypertension"}
         ]
       },
       {
@@ -289,7 +289,7 @@ module.exports = [
     ]
   },
   {
-    id: 6,  
+    id: 6,
     icon: 'scissors',
     name: 'Procedures',
     entries: [

@@ -3,22 +3,22 @@ library <%=name%> version '<%=version%>'
 using <%=dataModel.name%> version '<%= dataModel.version %>'
 <% includeLibraries.map(includeLibrary => {%>
 include <%=includeLibrary.name%> version '<%=includeLibrary.version%>' <%if (includeLibrary.alias) {%> called <%=includeLibrary.alias%> <%}%>
-<%})%>
+<%})-%>
 <% resourceMap.forEach((resource, key) => {%>
-valueset "<%=resource.name%>": '<%=resource.oid%>'<%});%>
+valueset "<%=resource.name%>": '<%=resource.oid%>'<%});-%>
 
 <% codeSystemMap.forEach((resource, key) => {%>
-codesystem "<%=key%>": '<%=resource%>' <%}) %>
+codesystem "<%=key%>": '<%=resource%>' <%}) -%>
 
 <% codeMap.forEach((code) => { %>
 code "<%=code.name%>": '<%=code.code%>' from "<%=code.codeSystem.name%>"
   display '<%=code.display%>'
-<%})%>
+<%})-%>
 
 <% conceptMap.forEach((concept) => {%>
 concept "<%=concept.name%>" : { <%concept.codes.forEach((code) => {%>"<%=code.name%>", <%})%>}
   display '<%=concept.display%>'
-<%})%>
+<%})-%>
 
 context <%=context%>
 

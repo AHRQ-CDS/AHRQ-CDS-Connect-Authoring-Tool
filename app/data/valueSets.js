@@ -57,8 +57,8 @@ module.exports = {
         }
       ],
       display: 'Tobacco smoking status',
-      checkInclusionInVS: { 
-        name: "Current Tobacco Smoker",  
+      checkInclusionInVS: {
+        name: "Current Tobacco Smoker",
         oid: '2.16.840.1.113883.3.600.2390'
       }
     },
@@ -103,9 +103,9 @@ module.exports = {
         }
       ]
     },
-    essential_hypertension : {
+    hypertension : {
       // https://ushik.ahrq.gov/ViewItemDetails?&system=mu&itemKey=189078000
-      id: "essential_hypertension",
+      id: "hypertension",
       conditions: [
         {
           name: "Essential Hypertension",
