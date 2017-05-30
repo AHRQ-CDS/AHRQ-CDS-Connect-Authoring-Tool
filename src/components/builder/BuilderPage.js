@@ -3,6 +3,7 @@ import HTML5Backend from 'react-dnd-html5-backend';
 import { DragDropContext } from 'react-dnd';
 import axios from 'axios';
 import update from 'immutability-helper';
+import FileSaver from 'file-saver';
 import _ from 'lodash';
 
 import BuilderSubPalette from './BuilderSubPalette';
@@ -93,16 +94,14 @@ class BuilderPage extends Component {
       name: this.state.name,
       templateInstances: this.state.templateInstances
     };
-
-    axios.post(`${API_BASE}/cql`, artifact)
+    axios({
+      method : 'post',
+      url : `${API_BASE}/cql`,
+      responseType : 'blob',
+      data : artifact
+    })
       .then((result) => {
-        const cqlData = result.data;
-        const saveElement = document.createElement('a');
-        saveElement.href = `data:${cqlData.type},${encodeURIComponent(cqlData.text)}`;
-        saveElement.download = `${cqlData.filename}.cql`;
-        // Open in a new tab rather than download - convenient for testing
-        //saveElement.target = '_blank';
-        saveElement.click();
+        FileSaver.saveAs(result.data, 'cql.zip');
       })
       .catch((error) => {
         console.error(error);
