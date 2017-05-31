@@ -26,35 +26,43 @@ main {
   padding: 1em;
 
   > div:not([class]) {
-    background-color: $page-bg;
     padding: 1em;
+  }
+
+  > div:not([class]),
+  header + section {
+    background-color: $white;
+    border-radius: $border-radius;
   }
 }
 
 #{$all-buttons},
 #{$all-text-inputs} {
-  font-weight: 400;
+  font-weight: 500;
   font-family: 'Rubik', sans-serif;
   font-size: 1rem;
-  padding: 0.25em 0.5em;
+  padding: 0.4em 0.75em;
   border-radius: $border-radius;
-  border-color: darken($page-bg, 20%);
+  border-color: $form-input-border-color;
   border-style: solid;
-  border-width: 0.1em;
-  border-bottom-width: $border-width;
+  border-width: $border-width;
   outline: 0;
 
   &:focus {
-    border-color: purple;
+    border-color: $form-input-focus-color;
   }
 }
 
 #{$all-buttons} {
-  @include button($default-button-bg-color, $default-button-text-color);
+  @include button($default-button-text-color, $default-button-bg-color);
 
   & + #{$all-buttons} {
     // add margin between two buttons that are side by side!
     margin-left: 0.25em;
+  }
+
+  &:hover {
+    cursor: pointer;
   }
 }
 
@@ -67,7 +75,7 @@ table {
 
   thead tr:last-child th,
   thead tr:last-child td {
-    border-bottom: 3px $brown solid;
+    border-bottom: 3px $gray solid;
   }
 
   thead th,
@@ -91,12 +99,12 @@ table {
 }
 
 a {
-  color: $brown;
+  color: $gray;
   font-weight: 500;
 
   &:hover,
   &:focus,
   &:active {
-    color: darken($brown, 25%);
+    color: darken($gray, 25%);
   }
 }

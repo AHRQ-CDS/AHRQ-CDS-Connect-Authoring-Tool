@@ -1,11 +1,10 @@
 .primary-button {
   // use for critical positive actions like save, submit
-  @include button($primary-button-bg-color, $primary-button-text-color);
+  @include button($primary-button-text-color, $primary-button-bg-color);
 }
 
-.danger-button {
-  // use for critical negative actions like deletion
-  @include button($danger-button-bg-color, $danger-button-text-color);
+.transparent-button {
+  @include button($default-button-text-color, transparent);
 }
 
 .small-button {

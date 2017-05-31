@@ -1,7 +1,12 @@
 .artifacts__table {
   @include responsive-table;
 
+  width: 100%;
   margin: 1em 0;
+
+  td:last-of-type {
+    text-align: right;
+  }
 }
 
 .artifacts__tablecell-wide {

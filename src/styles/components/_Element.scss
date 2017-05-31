@@ -4,27 +4,24 @@
   border: $element-border;
   border-radius: $border-radius;
   color: $element-text-color;
-  margin: 0.5em;
-  font-weight: 400;
+  margin-bottom: 0.5em;
+  font-weight: 500;
 
   &.element__expanded {
     padding: 0;
-    background-color: $white;
+    background-color: $logic-element-bg-color;
     border: $logic-element-border;
-    max-width: 18em;
 
     .element__header {
       display: flex;
-      background-color: $logic-element-bg-color;
       color: $logic-element-text-color;
-      padding: 0.25em 0.5em;
+      border-bottom: $logic-element-border;
+      padding: 0.25em 0.75em;
       align-items: center;
       justify-content: center;
 
       .element__heading {
         flex: 1;
-        font-weight: 500;
-        color: $builder-text-color;
       }
 
       .element__buttonbar {
@@ -38,8 +35,10 @@
           padding: 0.125em;
         }
 
+        .element__presetbutton,
+        .element__hidebutton,
         .element__deletebutton {
-          @extend .danger-button;
+          @extend .transparent-button;
         }
 
         .element__savebutton {
@@ -49,7 +48,7 @@
     }
 
     .element__body {
-      padding: 0.5em 1em;
+      padding: 0.5em 0.75em;
     }
   }
 

@@ -34,7 +34,7 @@
 }
 
 :root {
-  font-size: 14px;
+  font-size: 12px;
 }
 
 body {
@@ -45,7 +45,7 @@ body {
 }
 
 @media (min-width: 600px) {
-  :root { font-size: 16px; }
+  :root { font-size: 14px; }
 }
 
 @media (min-width: 1440px) {
