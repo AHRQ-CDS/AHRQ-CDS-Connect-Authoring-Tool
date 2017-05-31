@@ -22,6 +22,10 @@
   label {
     font-weight: 400;
     display: block;
+
+    > input {
+      margin-left: 0.5em;
+    }
   }
 
   .form__caption {
