@@ -136,6 +136,15 @@ module.exports = [
           { id: 'element_name', type: 'string', name: 'Element Name' },
           { id: 'components', type: 'list', subType: 'boolean', value: [undefined, undefined], name: 'Elements' }
         ],
+      },
+      {
+        id: 'String',
+        name: 'String',
+        extends: 'Base',
+        returnType: 'string',
+        parameters: [
+          { id: 'element_value', type: 'string', name: 'Value' }
+        ],
       }
     ]
   }
