@@ -63,12 +63,16 @@ class BuilderPage extends Component {
       group.entries.forEach((entry) => {
         entryMap[entry.id] = entry;
       })
-    })
-    Object.values(entryMap).forEach((entry) => {
+    });
+    const entryArray = [];
+    for (let key in entryMap) {
+      entryArray.push(entryMap[key]);
+    }
+    entryArray.forEach((entry) => {
       if (entry.extends) {
         this.mergeInParentTemplate(entry, entryMap);
       }
-    })
+    });
   }
   mergeInParentTemplate(entry, entryMap) {
     let extendWithEntry = entryMap[entry.extends]
