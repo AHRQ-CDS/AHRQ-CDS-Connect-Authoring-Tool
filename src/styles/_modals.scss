@@ -5,7 +5,6 @@
   right: 40px;
   bottom: 40px;
   outline: none;
-
   padding: 0;
   background-color: $white;
   border: $logic-element-border;
@@ -30,6 +29,7 @@
 
       .modal__deletebutton {
         @extend .danger-button;
+
         padding: 0.125em;
       }
     }

@@ -24,20 +24,14 @@
     display: block;
     text-transform: uppercase;
     font-size: 0.9em;
+  }
 
-    input { display: block; }
+  .form__caption {
+    font-size: 0.9em;
 
-    .form__caption {
-      label {
-        display: inline-block;
-        font-size: 0.8em;
-      }
-      input {
-        width: auto !important;
-        display: inline-block;
-      }
+    label {
+      display: inline-block;
     }
-
   }
 
   > span {

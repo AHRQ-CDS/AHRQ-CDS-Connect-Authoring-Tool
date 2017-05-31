@@ -1,11 +1,13 @@
 .artifacts__table {
   @include responsive-table;
+
   margin: 1em 0;
 }
 
 .artifacts__tablecell-wide {
   width: 24em;
 }
+
 .artifacts__tablecell-short {
   width: 6em;
 }

@@ -65,7 +65,8 @@
         padding: 0.5em 0.75em;
         text-transform: uppercase;
 
-        &:hover, &.active {
+        &:hover,
+        &.active {
           cursor: pointer;
           background-color: darken($builder-palette-bg-color, 5%);
         }
