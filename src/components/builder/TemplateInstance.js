@@ -12,13 +12,6 @@ import Config from '../../../config'
 const API_BASE = Config.api.baseUrl;
 
 
-function validateOneWord(value) {
-  if (value.includes(' ')) {
-    return false;
-  }
-  return true;
-}
-
 function getInstanceName(instance) {
   return (instance.parameters.find(p => p.id === 'element_name') || {}).value;
 }
@@ -151,8 +144,7 @@ class TemplateInstance extends Component {
           <StringParameter
             key={param.id}
             {...param}
-            updateInstance={this.updateInstance}
-            validation={validateOneWord} />
+            updateInstance={this.updateInstance} />
         );
       case 'valueset':
         return (
