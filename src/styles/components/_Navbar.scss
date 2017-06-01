@@ -11,10 +11,12 @@
 
   &__nav {
     @include navigation(true);
+
     display: inline-block;
     margin: 0.5em 1em 0.5em 2em;
 
-    a:hover, a.active {
+    a:hover,
+    a.active {
       background-color: darken($navbar-bg-color, 10%);
     }
   }

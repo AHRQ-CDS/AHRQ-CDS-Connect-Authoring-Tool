@@ -20,24 +20,20 @@
   margin: 1em 0;
 
   label {
-    font-weight: 500;
+    font-weight: 400;
     display: block;
-    text-transform: uppercase;
+
+    > input {
+      margin-left: 0.5em;
+    }
+  }
+
+  .form__caption {
     font-size: 0.9em;
 
-    input { display: block; }
-
-    .form__caption {
-      label {
-        display: inline-block;
-        font-size: 0.8em;
-      }
-      input {
-        width: auto !important;
-        display: inline-block;
-      }
+    label {
+      display: inline-block;
     }
-
   }
 
   > span {

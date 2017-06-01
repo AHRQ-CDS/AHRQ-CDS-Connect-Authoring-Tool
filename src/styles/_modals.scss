@@ -3,16 +3,15 @@
   top: 40px;
   left: 40px;
   right: 40px;
-  bottom: 40px;
   outline: none;
-
   padding: 0;
   background-color: $white;
   border: $logic-element-border;
+  box-shadow: $box-shadow;
 
   .modal__header {
     display: flex;
-    background-color: $logic-element-bg-color;
+    background-color: $body-bg;
     color: $logic-element-text-color;
     padding: 0.25em 0.5em;
     align-items: center;
@@ -29,7 +28,8 @@
       text-align: right;
 
       .modal__deletebutton {
-        @extend .danger-button;
+        @extend .primary-button;
+
         padding: 0.125em;
       }
     }

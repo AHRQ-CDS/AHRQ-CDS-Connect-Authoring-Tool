@@ -7,6 +7,7 @@
 
     li {
       @if $horizontal { display: inline-block; }
+
       a {
         color: inherit;
         text-decoration: none;
@@ -16,15 +17,18 @@
   }
 }
 
-@mixin button($lightcolor, $darkcolor) {
-  background-color: $lightcolor;
-  color: $darkcolor;
-  border-color: darken($lightcolor, 10%);
+@mixin button($color-foreground: $default-button-text-color, $color-background: $default-button-bg-color) {
+  background-color: $color-background;
+  color: $color-foreground;
+  border-color: darken($color-background, 10%);
 
-  &:hover, &:focus, &:active {
-    background-color: $darkcolor;
-    color: $default-button-hover-text-color;
-    border-color: lighten($darkcolor, 10%)
+  &:hover,
+  &:focus,
+  &:active {
+    background-color: shade($color-background, 10%);
+    color: $color-foreground;
+    border-color: shade($color-background, 20%);
+    box-shadow: $box-shadow;
   }
 }
 
@@ -37,14 +41,15 @@
     }
   }
 
-  th, td {
+  th,
+  td {
     @media (max-width: $breakpoint) {
       display: block;
-      padding: .25em .5em;
+      padding: 0.25em 0.5em;
       border-bottom: 0;
     }
 
-    &:before {
+    &::before {
       @media (max-width: $breakpoint) {
         content: attr(data-th);
         display: block;
