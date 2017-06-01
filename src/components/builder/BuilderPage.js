@@ -12,7 +12,7 @@ import BuilderTarget from './BuilderTarget';
 import groups from '../../data/templates';
 import Config from '../../../config'
 
-const CORE_TEMPLATE_FIELDS = ['id', 'name', 'parameters', 'extends', 'suppress'];
+const CORE_TEMPLATE_FIELDS = ['id', 'name', 'parameters', 'extends', 'suppress', 'type'];
 const API_BASE = Config.api.baseUrl;
 
 class BuilderPage extends Component {

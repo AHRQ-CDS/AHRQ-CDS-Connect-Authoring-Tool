@@ -6,3 +6,6 @@ valueset "<%=resource.name%>": '<%=resource.oid%>';<%});%>
 
 context <%=context%>
 
+<% paramContexts.forEach((parameter, key) => {-%>
+parameter "<%=parameter.element_name%>" default <%=parameter.default%><%});%>
+
