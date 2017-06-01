@@ -64,11 +64,12 @@ class BuilderPage extends Component {
         entryMap[entry.id] = entry;
       })
     })
-    Object.values(entryMap).forEach((entry) => {
+    for (let key in entryMap) {
+      let entry = entryMap[key];
       if (entry.extends) {
         this.mergeInParentTemplate(entry, entryMap);
       }
-    })
+    }
   }
   mergeInParentTemplate(entry, entryMap) {
     let extendWithEntry = entryMap[entry.extends]
