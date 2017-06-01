@@ -108,7 +108,7 @@ class CqlArtifact {
       }
     });
 
-    context.element_name = slug(context.element_name || element.uniqueId);
+    context.element_name = (context.element_name || element.uniqueId);
     this.contexts.push(context)
   }
 
