@@ -145,6 +145,16 @@ module.exports = [
         parameters: [
           { id: 'element_value', type: 'string', name: 'Value' }
         ],
+      },
+      {
+        id: 'If',
+        name: 'If',
+        returnType: 'boolean', // JULIA - this is probably wrong
+        // extends: 'Base',
+        parameters: [
+          { id: 'element_name', type: 'string', name: 'Element Name' },
+          { id: 'components', type: 'conditional', name: 'Elements', value: [{condition: 'isMale', block: 'This patient is male.'}, {condition: 'isFemale', block: 'This patient is female.'}, {condition: 'isOther', block: 'This patient is other.'}, {else: true, block: 'null'}] }
+        ],
       }
     ]
   }

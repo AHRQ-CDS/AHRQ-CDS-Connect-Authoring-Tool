@@ -8,6 +8,7 @@ import ObservationParameter from './parameters/ObservationParameter';
 import ValueSetParameter from './parameters/ValueSetParameter';
 import ListParameter from './parameters/ListParameter';
 import StaticParameter from './parameters/StaticParameter';
+import ConditionalParameter from './parameters/ConditionalParameter';
 import Config from '../../../config'
 const API_BASE = Config.api.baseUrl;
 
@@ -164,6 +165,13 @@ class TemplateInstance extends Component {
             joinOperator={this.props.templateInstance.name}
             addComponent={this.addComponent}
             updateList={this.updateList} />
+        );
+      case 'conditional':
+        return (
+          <ConditionalParameter
+            key={param.id}
+            values={this.state.otherInstances}
+            param={param} />
         );
       default:
         return undefined;

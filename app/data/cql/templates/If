@@ -1,0 +1,15 @@
+define: "<%=element_name%>": <%
+components.forEach((component, index, array) => {
+if (index===0) {
+  %>
+  if "<%=component.condition%>" then 
+    {<%=component.block%>} <%
+} else if (index===array.length-1) {
+  %>
+  else <%if(component.block === 'null'){%>null<%}else{%>{<%=component.block%>}<%}%> <%
+} else {
+  %>
+  else if "<%=component.condition%>" then
+    {<%=component.block%>} <%
+}
+})%>
