@@ -1,6 +1,4 @@
 import React, { Component, PropTypes } from 'react';
-import HTML5Backend from 'react-dnd-html5-backend';
-import { DragDropContext } from 'react-dnd';
 import axios from 'axios';
 import update from 'immutability-helper';
 import FileSaver from 'file-saver';
@@ -234,4 +232,4 @@ class BuilderPage extends Component {
   }
 }
 
-export default DragDropContext(HTML5Backend)(BuilderPage);
+export default BuilderPage;
