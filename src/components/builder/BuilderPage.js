@@ -60,13 +60,10 @@ class BuilderPage extends Component {
     groups.forEach((group) => {
       group.entries.forEach((entry) => {
         entryMap[entry.id] = entry;
-      })
+      });
     });
-    const entryArray = [];
-    for (let key in entryMap) {
-      entryArray.push(entryMap[key]);
-    }
-    entryArray.forEach((entry) => {
+    Object.keys(entryMap).forEach((key) => {
+      let entry = entryMap[key];
       if (entry.extends) {
         this.mergeInParentTemplate(entry, entryMap);
       }
@@ -79,7 +76,12 @@ class BuilderPage extends Component {
       this.mergeInParentTemplate(extendWithEntry, entryMap);
     }
     // merge entry fields with parent but remove core fields like ID
-    _.merge(entry, _.omit(extendWithEntry, CORE_TEMPLATE_FIELDS));
+    _.mergeWith(entry, _.omit(extendWithEntry, CORE_TEMPLATE_FIELDS), (objectVal, sourceVal, key, object) => {
+      // TODO: This is to handle child extensions setting their own returnTypes - there might be a better way to do this
+      if(key === 'returnType' && objectVal !== undefined) {
+        return object[key] = objectVal;
+      }
+    });
 
     // merge parameters
     entry.parameters.forEach((parameter) => {
