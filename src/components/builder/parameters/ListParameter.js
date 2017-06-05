@@ -6,6 +6,7 @@ import FontAwesome from 'react-fontawesome';
 
 // Don't allow additional components to be added in for observation lists.
 // NOTE - This may not be the functionality we want and may be changed in the future.
+ // TODO: LVR is using 'number' now instead of 'observation' - this might be changed in the future with more comparison elements added in
 
 export default (props) => {
   const id = _.uniqueId('parameter-');
@@ -33,7 +34,7 @@ export default (props) => {
                   searchable={true} />
         </div>
           )}
-        { (props.param.subType !== 'observation')
+        { (props.param.subType !== 'number')
         ? <button
             onClick={() => { props.addComponent(props.param.id); }}
             aria-label={'Add component'}>

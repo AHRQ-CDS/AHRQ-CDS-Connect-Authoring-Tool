@@ -1,1 +1,2 @@
-define "<%=element_name%>": Patient.gender.value = <%- gender.value %>
+define "<%=element_name%>": 
+  Patient.gender.value = <%- gender.value %>
