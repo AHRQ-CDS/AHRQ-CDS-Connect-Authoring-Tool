@@ -31,7 +31,7 @@ class IntegerParameter extends Component {
             name={this.props.param.id}
             value={this.props.value}
             onChange={(event) => {
-              const value = parseInt(event.target.value, 10);
+              const value = (this.props.typeOfNumber === 'integer') ? parseInt(event.target.value, 10) : parseFloat(event.target.value, 10);
               this.props.updateInstance({ [event.target.name]: value });
             }}
           />

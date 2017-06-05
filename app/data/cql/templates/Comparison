@@ -1,0 +1,2 @@
+define "<%=element_name%>":
+  <%=observation[0].name%> <%-comparison%> <%-comparison_bound%><% if(comparisonUnit)%> <%-comparisonUnit%>

@@ -143,6 +143,12 @@ class CqlArtifact {
           context[parameter.id] = procedureValuesets;
           procedureValuesets.procedures.forEach(valueset => this.resourceMap.set(valueset.name, valueset));
           break;
+        case 'list':
+          if (parameter.category === "comparison") {
+           context.comparisonUnit = (ValueSets.observations[_.find(_.find(this.elements, { 'id': parameter.value[0].id }).parameters, {'name': parameter.name}).value].units.code);
+          }
+          context[parameter.id] = parameter.value;
+          break;
         default:
           context[parameter.id] = parameter.value;
           break;

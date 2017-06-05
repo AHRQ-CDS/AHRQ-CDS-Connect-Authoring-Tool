@@ -33,6 +33,7 @@ module.exports = {
       id: "ascvd_risk_assessment",
       name: "ASCVD 10-year risk code",
       toConceptValue: false,
+      units: {values: ["'%'"], code: "'%'"},
       codes: [
         {
           name: 'ASCVD 10-year risk code',

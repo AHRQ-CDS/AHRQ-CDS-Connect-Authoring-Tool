@@ -26,8 +26,8 @@ module.exports = [
         returnType: 'boolean',
         parameters: [
           { id: 'element_name', type: 'string', name: 'Element Name' },
-          { id: 'min_age', type: 'integer', name: 'Minimum Age' },
-          { id: 'max_age', type: 'integer', name: 'Maximum Age' },
+          { id: 'min_age', type: 'number', typeOfNumber: 'integer', name: 'Minimum Age' },
+          { id: 'max_age', type: 'number', typeOfNumber: 'integer', name: 'Maximum Age' },
         ],
       },
       {
@@ -54,7 +54,7 @@ module.exports = [
         extends: 'Base',
         parameters: [
           { id: 'observation', type: 'observation', name: 'Observation' },
-          { id: 'valid', type: 'integer', name: 'Look back (years)' }
+          { id: 'valid', type: 'number', typeOfNumber: 'integer', name: 'Look back (years)' }
         ],
       },
       {
@@ -141,8 +141,8 @@ module.exports = [
         returnType: 'boolean',
         parameters: [
           { id: 'element_name', type: 'string', name: 'Element Name' },
-          { id: 'lower_bound', type: 'integer', name: 'Lower Bound', exclusive: false },
-          { id: 'upper_bound', type: 'integer', name: 'Upper Bound', exclusive: false },
+          { id: 'lower_bound', type: 'number', typeOfNumber: 'integer', name: 'Lower Bound', exclusive: false },
+          { id: 'upper_bound', type: 'number', typeOfNumber: 'integer', name: 'Upper Bound', exclusive: false },
           { id: 'observation', type: 'list', subType: 'number', value: [undefined], name: 'Observation' }
         ]
       },
@@ -157,8 +157,9 @@ module.exports = [
         id: 'And',
         name: 'And',
         returnType: 'boolean',
+        extends: 'Base',
         parameters: [
-          { id: 'element_name', type: 'string', name: 'Element Name' },
+          { id: 'element_name', name: 'Element Name' },
           { id: 'components', type: 'list', subType: 'boolean', value: [undefined, undefined], name: 'Elements' }
         ],
       },
@@ -166,8 +167,9 @@ module.exports = [
         id: 'Or',
         name: 'Or',
         returnType: 'boolean',
+        extends: 'Base',
         parameters: [
-          { id: 'element_name', type: 'string', name: 'Element Name' },
+          { id: 'element_name', name: 'Element Name' },
           { id: 'components', type: 'list', subType: 'boolean', value: [undefined, undefined], name: 'Elements' }
         ],
       },
@@ -179,6 +181,17 @@ module.exports = [
         parameters: [
           { id: 'element_value', type: 'string', name: 'Value' }
         ],
+      },
+      {
+        id: 'Comparison',
+        name: 'Comparison',
+        returnType: 'boolean',
+        parameters: [
+          { id: 'element_name', type: 'string', name: 'Element Name' },
+          { id: 'observation', type: 'list', category: 'comparison', subType: 'number', value: [undefined], name: 'Observation' },
+          { id: 'comparison', type: 'comparison', value: null, name: 'Operator' },
+          { id: 'comparison_bound', type: 'number', typeOfNumber: 'float', name: 'Comparison Bound'},
+        ]
       }
     ]
   },
@@ -310,7 +323,7 @@ module.exports = [
         extends: 'Base',
         parameters: [
           { id: 'procedure', type: 'procedure', name: 'Procedure' },
-          { id: 'in_last_weeks', type: 'integer', name: 'How Recent (weeks)' }
+          { id: 'in_last_weeks', type: 'number', typeOfNumber: 'integer', name: 'How Recent (weeks)' }
         ],
       },
       {

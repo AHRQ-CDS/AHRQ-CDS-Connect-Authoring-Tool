@@ -2,12 +2,13 @@ import React, { Component, PropTypes } from 'react';
 import axios from 'axios';
 import FontAwesome from 'react-fontawesome';
 import _ from 'lodash';
-import IntegerParameter from './parameters/IntegerParameter';
+import IntegerParameter from './parameters/NumberParameter';
 import StringParameter from './parameters/StringParameter';
 import ObservationParameter from './parameters/ObservationParameter';
 import ValueSetParameter from './parameters/ValueSetParameter';
 import ListParameter from './parameters/ListParameter';
 import StaticParameter from './parameters/StaticParameter';
+import ComparisonParameter from './parameters/ComparisonParameter';
 import Config from '../../../config'
 const API_BASE = Config.api.baseUrl;
 
@@ -123,12 +124,13 @@ class TemplateInstance extends Component {
         );
     }
     switch (param.type) {
-      case 'integer':
+      case 'number':
         return (
           <IntegerParameter
             key={param.id}
             param={param}
             value={this.state[param.id]}
+            typeOfNumber={param.typeOfNumber}
             updateInstance={this.updateInstance} />
         );
       case 'observation':
@@ -164,6 +166,14 @@ class TemplateInstance extends Component {
             joinOperator={this.props.templateInstance.name}
             addComponent={this.addComponent}
             updateList={this.updateList} />
+        );
+      case 'comparison':
+        return (
+          <ComparisonParameter
+          key={param.id}
+          param={param}
+          value={null}
+          updateInstance={this.updateInstance} />
         );
       default:
         return undefined;
