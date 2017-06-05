@@ -7,6 +7,7 @@ import StringParameter from './parameters/StringParameter';
 import ObservationParameter from './parameters/ObservationParameter';
 import ValueSetParameter from './parameters/ValueSetParameter';
 import ListParameter from './parameters/ListParameter';
+import DoubleListParameter from './parameters/DoubleListParameter';
 import StaticParameter from './parameters/StaticParameter';
 import Config from '../../../config'
 const API_BASE = Config.api.baseUrl;
@@ -157,6 +158,17 @@ class TemplateInstance extends Component {
       case 'list':
         return (
           <ListParameter
+            key={param.id}
+            param={param}
+            value={this.state[param.id]}
+            values={this.state.otherInstances}
+            joinOperator={this.props.templateInstance.name}
+            addComponent={this.addComponent}
+            updateList={this.updateList} />
+        );
+      case 'doubleList':
+        return (
+          <DoubleListParameter
             key={param.id}
             param={param}
             value={this.state[param.id]}
