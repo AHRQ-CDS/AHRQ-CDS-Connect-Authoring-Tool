@@ -52,9 +52,11 @@ class TemplateInstance extends Component {
     };
     this.updateInstance = this.updateInstance.bind(this);
     this.updateList = this.updateList.bind(this);
+    this.updateCase = this.updateCase.bind(this);
     this.selectTemplate = this.selectTemplate.bind(this);
     this.notThisInstance = this.notThisInstance.bind(this);
     this.addComponent = this.addComponent.bind(this);
+    this.addCaseComponent = this.addCaseComponent.bind(this);
   }
 
   componentWillMount() {
@@ -101,16 +103,6 @@ class TemplateInstance extends Component {
   updateList(id, value, index) {
     const newState = {};
     const arrayvar = this.state[id].slice();
-    console.log(arrayvar);
-    console.log(id);
-    arrayvar[index] = value;
-    newState[id] = arrayvar;
-    this.updateInstance(newState);
-  }
-
-  updateCase(id, value, index) {
-    const newState = {};
-    const arrayvar = this.state[id].slice();
     arrayvar[index] = value;
     newState[id] = arrayvar;
     this.updateInstance(newState);
@@ -119,6 +111,22 @@ class TemplateInstance extends Component {
   addComponent(listParameter) {
     const arrayvar = this.state[listParameter].slice();
     arrayvar.push(undefined);
+    const newState = { [listParameter]: arrayvar };
+    this.setState(newState);
+    this.props.updateSingleElement(this.props.templateInstance.uniqueId, newState);
+  }
+
+  updateCase(id, value, index, option) {
+    const newState = {};
+    const arrayvar = this.state[id].slice();
+    arrayvar[index][option] = value;
+    newState[id] = arrayvar;
+    this.updateInstance(newState);
+  }
+
+  addCaseComponent(listParameter) {
+    const arrayvar = this.state[listParameter].slice();
+    arrayvar.push({case : null, result : null});
     const newState = { [listParameter]: arrayvar };
     this.setState(newState);
     this.props.updateSingleElement(this.props.templateInstance.uniqueId, newState);
@@ -184,8 +192,8 @@ class TemplateInstance extends Component {
             value={this.state[param.id]}
             values={this.state.otherInstances}
             joinOperator={this.props.templateInstance.name}
-            addComponent={this.addComponent}
-            updateList={this.updateList} />
+            addComponent={this.addCaseComponent}
+            updateCase={this.updateCase} />
         );
       default:
         return undefined;

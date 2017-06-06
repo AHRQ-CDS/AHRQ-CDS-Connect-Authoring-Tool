@@ -189,6 +189,7 @@ module.exports = [
             id: 'components', 
             type: 'case',
             value: [{case : undefined, result : undefined}],
+            default: {name : 'null'},
             name: 'Elements' }
         ],
       }
