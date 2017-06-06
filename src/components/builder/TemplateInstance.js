@@ -7,7 +7,7 @@ import StringParameter from './parameters/StringParameter';
 import ObservationParameter from './parameters/ObservationParameter';
 import ValueSetParameter from './parameters/ValueSetParameter';
 import ListParameter from './parameters/ListParameter';
-import DoubleListParameter from './parameters/DoubleListParameter';
+import CaseParameter from './parameters/CaseParameter';
 import StaticParameter from './parameters/StaticParameter';
 import Config from '../../../config'
 const API_BASE = Config.api.baseUrl;
@@ -101,6 +101,16 @@ class TemplateInstance extends Component {
   updateList(id, value, index) {
     const newState = {};
     const arrayvar = this.state[id].slice();
+    console.log(arrayvar);
+    console.log(id);
+    arrayvar[index] = value;
+    newState[id] = arrayvar;
+    this.updateInstance(newState);
+  }
+
+  updateCase(id, value, index) {
+    const newState = {};
+    const arrayvar = this.state[id].slice();
     arrayvar[index] = value;
     newState[id] = arrayvar;
     this.updateInstance(newState);
@@ -166,9 +176,9 @@ class TemplateInstance extends Component {
             addComponent={this.addComponent}
             updateList={this.updateList} />
         );
-      case 'doubleList':
+      case 'case':
         return (
-          <DoubleListParameter
+          <CaseParameter
             key={param.id}
             param={param}
             value={this.state[param.id]}

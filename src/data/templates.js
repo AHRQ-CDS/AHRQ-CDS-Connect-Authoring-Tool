@@ -183,10 +183,13 @@ module.exports = [
       {
         id: 'Case',
         name: 'Case',
-        returnType: 'boolean',
         parameters: [
           { id: 'element_name', type: 'string', name: 'Element Name' },
-          { id: 'components', type: 'doubleList', subType: 'boolean', value: [undefined, undefined], name: 'Cases' }
+          { 
+            id: 'components', 
+            type: 'case',
+            value: [{case : undefined, result : undefined}],
+            name: 'Elements' }
         ],
       }
     ]
