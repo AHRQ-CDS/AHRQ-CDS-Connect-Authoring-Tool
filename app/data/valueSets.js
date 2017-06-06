@@ -159,9 +159,23 @@ module.exports = {
      conditions: [
        {
          name: "Pregnancy dx",
-         oid: '2.16.840.1.113883.3.600.1.1623'
+         oid: '2.16.840.1.113883.3.526.3.378'
        }
-     ]
+     ],
+     codes: [
+       {
+         name: 'Pregnancy status',
+         code: '82810-3',
+         codeSystem: { name: 'LOINC', id: 'http://loinc.org'},
+         display: 'Pregnancy status',
+       },
+       {
+         name: 'Pregnant',
+         code: '77386006',
+         codeSystem: { name: 'LOINC', id: 'http://loinc.org'},
+         display: 'Patient currently pregnant (finding)',
+       }
+     ],
     },
     breastfeeding : {
      //TODO: Reused from statin CQM artifact; needs review against other value sets in VSAC.

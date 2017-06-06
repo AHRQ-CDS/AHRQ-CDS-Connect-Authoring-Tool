@@ -143,6 +143,16 @@ class CqlArtifact {
           context[parameter.id] = procedureValuesets;
           procedureValuesets.procedures.forEach(valueset => this.resourceMap.set(valueset.name, valueset));
           break;
+        case 'pregnancy':
+          let pregnancyValuesets = ValueSets.conditions[parameter.value];
+          if ("codes" in pregnancyValuesets) {
+            pregnancyValuesets.codes.forEach((code) => {
+              this.codeSystemMap.set(code.codeSystem.name, code.codeSystem.id);
+              this.codeMap.set(code.name, code);
+            });
+          }
+          context[parameter.id] = parameter.value;
+          break;
         default:
           context[parameter.id] = parameter.value;
           break;

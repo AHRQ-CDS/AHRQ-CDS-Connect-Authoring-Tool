@@ -1,0 +1,7 @@
+<%# In the lateset version of CQL, pregnancy can be represented as either a Condition or an Observation, hence the special template -%>
+define MostRecentPregnancyObservation:
+  C3F.MostRecent(C3F.Verified(C3F.ObservationLookBack(C3F.ObservationsByConcept("Pregnancy status"), 42 weeks)))
+
+define "<%=element_name%>":
+  Exists(C3F.Confirmed(C3F.ActiveCondition([Condition: "Pregnancy"])))
+  or C3F.ConceptValue(MostRecentPregnancyObservation) ~ "Pregnant"
