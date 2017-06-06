@@ -11,7 +11,8 @@ const artifactPath = 'app/data/cql/artifact.ejs'
 const templateMap = loadTemplates();
 // Each library will be included. Aliases are optional.
 const includeLibraries = [{name: 'FHIRHelpers', version: '1.0.2', alias: 'FHIRHelpers'},
-                          {name: 'CDS_Connect_Commons_for_FHIRv102', version: '1', alias: 'C3F'}];
+                          {name: 'CDS_Connect_Commons_for_FHIRv102', version: '1', alias: 'C3F'},
+                          {name: 'CDS_Connect_Conversions', version: '1', alias: 'Convert'}];
 
 module.exports = {
    objToCql : objToCql,
@@ -117,7 +118,7 @@ class CqlArtifact {
             this.resourceMap.set(parameter.value, valueSet);
           }
           break;
-        case 'integer':
+        case 'number':
           context[parameter.id] = parameter.value;
           if ('exclusive' in parameter) {
             context[`${parameter.id}_exclusive`] = parameter.exclusive; 
@@ -138,15 +139,19 @@ class CqlArtifact {
           })
           context.medication_titles = valueSetMedications.medications;
           break;
-        case 'procedure' :
+        case 'procedure':
           let procedureValuesets = ValueSets.procedures[parameter.value];
           context[parameter.id] = procedureValuesets;
           procedureValuesets.procedures.forEach(valueset => this.resourceMap.set(valueset.name, valueset));
           break;
         case 'list':
           if (parameter.category === "comparison") {
-           context.comparisonUnit = (ValueSets.observations[_.find(_.find(this.elements, { 'id': parameter.value[0].id }).parameters, {'name': parameter.name}).value].units.code);
+            context.comparisonUnit = (ValueSets.observations[_.find(_.find(this.elements, { 'id': parameter.value[0].id }).parameters, {'name': parameter.name}).value].units.code);
           }
+          context[parameter.id] = parameter.value;
+          break;
+        case 'comparison':
+          context.doubleSided = (parameter.id === "comparison_2");
           context[parameter.id] = parameter.value;
           break;
         default:
