@@ -9,6 +9,9 @@ const path = require( 'path' );
 const templatePath = 'app/data/cql/templates'
 const artifactPath = 'app/data/cql/artifact.ejs'
 const templateMap = loadTemplates();
+// Each library will be included. Aliases are optional.
+const includeLibraries = [{name: 'FHIRHelpers', version: '1.0.2', alias: 'FHIRHelpers'},
+                          {name: 'CDS_Connect_Commons_for_FHIRv102', version: '1', alias: 'C3F'}];
 
 module.exports = {
    objToCql : objToCql,
@@ -67,6 +70,7 @@ class CqlArtifact {
     this.name = slug(artifact.name ? artifact.name : 'untitled');
     this.version = artifact.version ? artifact.version : 1;
     this.dataModel = artifact.dataModel ? artifact.dataModel : {name: 'FHIR', version: '1.0.2'};
+    this.includeLibraries = artifact.includeLibraries ? artifact.includeLibraries : includeLibraries;
     this.context = artifact.context ? artifact.context : 'Patient';
     this.elements = artifact.templateInstances;
 
@@ -75,6 +79,9 @@ class CqlArtifact {
 
   initialize() {
     this.resourceMap = new Map();
+    this.codeSystemMap = new Map();
+    this.codeMap = new Map();
+    this.conceptMap = new Map();
     this.paramContexts = [];
     this.contexts = [];
     this.elements.forEach((element) => { 
@@ -108,13 +115,47 @@ class CqlArtifact {
         case 'observation':
           let valueSet = ValueSets.observations[parameter.value];
           context[parameter.id] = valueSet;
-          this.resourceMap.set(parameter.value, valueSet);
+          // For observations that have codes associated with them instead of valuesets
+          if ("codes" in valueSet) {
+            valueSet.codes.forEach((code) => {
+              this.codeSystemMap.set(code.codeSystem.name, code.codeSystem.id);
+              this.codeMap.set(code.name, code);
+            });
+            this.conceptMap.set(valueSet.id, valueSet);
+            // For checking if a ConceptValue is in a valueset, incluce the valueset that will be used
+            if('checkInclusionInVS' in valueSet){
+              this.resourceMap.set(valueSet.checkInclusionInVS.name, valueSet.checkInclusionInVS);
+            }
+          } else {
+            this.resourceMap.set(parameter.value, valueSet);
+          }
           break;
         case 'integer':
           context[parameter.id] = parameter.value;
           if ('exclusive' in parameter) {
             context[`${parameter.id}_exclusive`] = parameter.exclusive; 
           }
+          break;
+        case 'condition':
+          let valueSetConditions = ValueSets.conditions[parameter.value];
+          valueSetConditions.conditions.map(condition => {
+            this.resourceMap.set(condition.name, condition);
+          })
+          context.conditions = valueSetConditions.conditions;
+          context.active = !(parameter.inactive);
+          break;
+        case 'medication':
+          let valueSetMedications = ValueSets.medications[parameter.value];
+          valueSetMedications.medications.map(medication => {
+            this.resourceMap.set(medication.name, medication);
+          })
+          context.medication_titles = valueSetMedications.medications;
+          break;
+        case 'procedure' :
+          let procedureValuesets = ValueSets.procedures[parameter.value];
+          context[parameter.id] = procedureValuesets;
+          procedureValuesets.procedures.forEach(valueset => this.resourceMap.set(valueset.name, valueset));
+          break;
         default:
           context[parameter.id] = parameter.value;
           break;

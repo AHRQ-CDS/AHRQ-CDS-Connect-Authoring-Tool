@@ -1,10 +1,19 @@
+<%// This eventually needs to extend GenericObservation and GenericObservation needs to be more generic %>
 define "<%=element_name%>":
-  Last (
-    [Observation: "<%=observation.name%>"] O
-      where O.status.value = 'final'
-      and (
-        O.valueQuantity.unit.value in {<%-observation.units.values%>}
-        or O.valueQuantity.code.value = <%-observation.units.code%>
-      )
-      sort by O.issued
-  )
+  <%if(!observation.toConceptValue){
+      %>C3F.QuantityValue(<%
+    } else{
+      %>C3F.ConceptValue(<%
+    }%>C3F.MostRecent(C3F.Verified(<%if(valid){%>C3F.ObservationLookBack(<%}
+    if("codes" in observation){
+      %>C3F.ObservationsByConcept("<%=observation.name%>")<%} 
+    else {
+      %>C3F.WithUnit([Observation: "<%=observation.name%>"], <%-observation.units.values%>)<%
+    }
+    if(valid){%>, <%=valid%> <%
+      if(valid>1) {%>years<%} else {%>year<%}%>)<%
+    }%>)))<%
+
+    if(observation.checkInclusionInVS) {
+      %> in "<%=observation.checkInclusionInVS.name%>"<%
+    }%>
