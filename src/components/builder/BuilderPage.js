@@ -98,6 +98,7 @@ class BuilderPage extends Component {
       name: this.state.name,
       templateInstances: this.state.templateInstances
     };
+    console.log(artifact);
     axios({
       method : 'post',
       url : `${API_BASE}/cql`,
