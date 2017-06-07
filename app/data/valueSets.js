@@ -164,15 +164,15 @@ module.exports = {
      ],
      codes: [
        {
-         name: 'Pregnancy status',
+         name: 'Pregnancy status code',
          code: '82810-3',
          codeSystem: { name: 'LOINC', id: 'http://loinc.org'},
          display: 'Pregnancy status',
        },
        {
-         name: 'Pregnant',
+         name: 'Pregnant code',
          code: '77386006',
-         codeSystem: { name: 'LOINC', id: 'http://loinc.org'},
+         codeSystem: { name: 'SNOMED-CT', id: 'http://snomed.info'},
          display: 'Patient currently pregnant (finding)',
        }
      ],
