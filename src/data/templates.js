@@ -191,7 +191,7 @@ module.exports = [
             value: {
               cases : [{case : null, result : null}],
               default : null,
-              optionalVariable : null
+              variable : null
             },
             name: 'Elements' }
         ],

@@ -3,17 +3,6 @@ import Select from 'react-select';
 import _ from 'lodash';
 import FontAwesome from 'react-fontawesome';
 
-// Checks if there is an existing returnType in any of the select options
-function checkArrayTypeExists(array, option) {
-  for (let i in array) {
-    let item = array[i][option];
-    if (item != null && item.returnType != null) {
-      return false;
-    }
-  }
-  return true;
-}
-
 class CaseParameter extends Component {
   constructor(props) {
     super(props)
@@ -25,21 +14,38 @@ class CaseParameter extends Component {
       filteredOptions : {
         case : defaultOptions,
         result : defaultOptions
-      },
-      default : this.props.param.value.default
+      }
     }
   }
 
-  updateOptions(value, option) {
+  // Checks if there is an existing returnType in any of the select options
+  checkArrayTypeExists(option) {
     const cases = this.props.value.cases;
-    if (value == null && checkArrayTypeExists(cases, option)) {
+    for (let i in cases) {
+      let item = cases[i][option];
+      if (item != null && item.returnType != null) {
+        return false;
+      }
+    }
+    if (option === 'result' && this.props.param.value.default != null) {
+      return false;
+    } else if (option === 'case' && this.props.param.value.variable != null) {
+      return false;
+    } else {
+      return true;
+    }
+  }
+
+  // Update available options if necessary
+  updateOptions(value, option) {
+    if (value == null && this.checkArrayTypeExists(option)) {
       let newState = Object.assign({}, this.state.filteredOptions);
       newState[option] = this.state.defaultOptions;
-      this.setState({ filteredOptions : newState});
-    } else if (value != null && !checkArrayTypeExists(cases, option)) {
+      this.setState({filteredOptions : newState});
+    } else if (value != null && !this.checkArrayTypeExists(option)) {
       let newState = Object.assign({}, this.state.filteredOptions);
       newState[option] = this.props.values.filter(v => v.returnType === value.returnType);
-      this.setState({ filteredOptions : newState});
+      this.setState({filteredOptions : newState});
     }
   }
 
@@ -51,18 +57,20 @@ class CaseParameter extends Component {
 
   // Updates single selects
   updateSelect(value, option) {
+    this.props.param.value[option] = value;
     this.props.updateInstance(this.props.param.id, value, option);
-    let newOption = option === 'default' ? 'result' : 'case';
-    this.updateOptions(value, newOption);
+    this.updateOptions(value, option === 'default' ? 'result' : 'case');
   }
 
   renderCaseResult(index, val, option) {
+    let placeholder = option === 'case' ? 'Select...' : 'Null';
     return(
       <Select key={index}
         labelKey={'name'}
         autofocus
         options={this.state.filteredOptions[option]}
         clearable={true}
+        placeholder={placeholder}
         name={this.props.param.id}
         value={val[option]}
         onChange={(value) => {this.updateCase(value, index, option)}}
@@ -70,18 +78,32 @@ class CaseParameter extends Component {
     );
   }
 
-  renderDefault(option) {
-    return(
-      <Select
-        labelKey={'name'}
-        autofocus
-        options={this.state.filteredOptions.result}
-        clearable={true}
-        placeholder={'Null'}
-        name={this.props.param.id}
-        value={this.props.param.value.default}
-        onChange={(value) => {this.updateSelect(value, 'default')}}
-        searchable={true}/>
+  renderSingleSelect(name, option) {
+    let filter = option === 'default' ? 'result' : 'case';
+    return (
+      <table width="100%">
+        <thead>
+          <tr>
+            <th>{name}</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>
+              <Select
+                labelKey={'name'}
+                autofocus
+                options={this.state.filteredOptions[filter]}
+                clearable={true}
+                placeholder={'Null'}
+                name={this.props.param.id}
+                value={this.props.param.value[option]}
+                onChange={(value) => {this.updateSelect(value, option)}}
+                searchable={true}/>
+            </td>
+          </tr>
+        </tbody>
+      </table>
     );
   }
 
@@ -89,6 +111,7 @@ class CaseParameter extends Component {
     return (
     <div className="form__group">
       <label htmlFor={this.state.id}>
+        {this.renderSingleSelect('Variable', 'variable')}
         <table width="100%">
           <thead>
             <tr>
@@ -106,7 +129,6 @@ class CaseParameter extends Component {
               <td width="50%">
                 {this.renderCaseResult(index, v, 'result')}
               </td>
-          
             </tr>
           )}
           </tbody>
@@ -118,20 +140,7 @@ class CaseParameter extends Component {
             <FontAwesome fixedWidth name='plus'/>
           </button>
         : null }
-        <table width="100%">
-          <thead>
-            <tr>
-              <th>Default</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>
-                {this.renderDefault('default')}
-              </td>
-            </tr>
-          </tbody>
-        </table>
+        {this.renderSingleSelect('Default', 'default')}
       </label>
 
     </div>
