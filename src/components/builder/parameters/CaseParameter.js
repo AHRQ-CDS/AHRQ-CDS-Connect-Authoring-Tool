@@ -62,6 +62,7 @@ class CaseParameter extends Component {
     this.updateOptions(value, option === 'default' ? 'result' : 'case');
   }
 
+  // Renders selects for case and result
   renderCaseResult(index, val, option) {
     let placeholder = option === 'case' ? 'Select...' : 'Null';
     return(
@@ -78,6 +79,7 @@ class CaseParameter extends Component {
     );
   }
 
+  // Renders single selects for default and variable
   renderSingleSelect(name, option) {
     let filter = option === 'default' ? 'result' : 'case';
     return (
