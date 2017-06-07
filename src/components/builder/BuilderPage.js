@@ -10,7 +10,8 @@ import BuilderTarget from './BuilderTarget';
 import groups from '../../data/templates';
 import Config from '../../../config'
 
-const CORE_TEMPLATE_FIELDS = ['id', 'name', 'parameters', 'extends', 'suppress', 'type'];
+// Suppress is a flag that is specific to an element. It should not be inherited by children
+const ELEMENT_SPECIFIC_FIELDS = ['suppress'];
 const API_BASE = Config.api.baseUrl;
 
 class BuilderPage extends Component {
@@ -70,26 +71,25 @@ class BuilderPage extends Component {
     });
   }
   mergeInParentTemplate(entry, entryMap) {
-    let extendWithEntry = entryMap[entry.extends]
-    if (extendWithEntry.extends) {
+    let parent = entryMap[entry.extends]
+    if (parent.extends) {
       // handle transitive
-      this.mergeInParentTemplate(extendWithEntry, entryMap);
+      this.mergeInParentTemplate(parent, entryMap);
     }
-    // merge entry fields with parent but remove core fields like ID
-    _.mergeWith(entry, _.omit(extendWithEntry, CORE_TEMPLATE_FIELDS), (objectVal, sourceVal, key, object) => {
-      // TODO: This is to handle child extensions setting their own returnTypes - there might be a better way to do this
-      if(key === 'returnType' && objectVal !== undefined) {
-        return object[key] = objectVal;
-      }
-    });
+    
+    /* Merge entry fields with parent but remove fields that are should not be inherited.
+     * This merges the entry into the parent (minus non-inherited fields) so the entry updates the fields 
+     * it sets itself so inheritance works correctly. Then merge that object back onto entry so that 
+     * the entry object has the new updated values */
+    _.merge(entry, _.merge(_.omit(_.cloneDeep(parent), ELEMENT_SPECIFIC_FIELDS), entry));
 
     // merge parameters
     entry.parameters.forEach((parameter) => {
-      let matchingParameter = _.find(extendWithEntry.parameters, { 'id': parameter.id});
+      let matchingParameter = _.find(parent.parameters, { 'id': parameter.id});
       _.merge(parameter, matchingParameter);
 
     });
-    let missing = _.differenceBy(extendWithEntry.parameters, entry.parameters, 'id');
+    let missing = _.differenceBy(parent.parameters, entry.parameters, 'id');
     entry.parameters = missing.concat(entry.parameters);
   }
 
