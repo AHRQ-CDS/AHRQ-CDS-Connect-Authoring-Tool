@@ -55,6 +55,7 @@ class TemplateInstance extends Component {
     this.selectTemplate = this.selectTemplate.bind(this);
     this.notThisInstance = this.notThisInstance.bind(this);
     this.addComponent = this.addComponent.bind(this);
+    this.updateIf = this.updateIf.bind(this);
   }
 
   componentWillMount() {
@@ -103,6 +104,18 @@ class TemplateInstance extends Component {
     const arrayvar = this.state[id].slice();
     arrayvar[index] = value;
     newState[id] = arrayvar;
+    this.updateInstance(newState);
+  }
+
+  updateIf(paramId, value, index, place) {
+    const valueArray = this.state[paramId].slice();
+    if (place === 'default') {
+      valueArray[index]['block'] = value;
+    } else {
+      valueArray[index][place] = value;
+    }
+    const newState = {};
+    newState[paramId] = valueArray;
     this.updateInstance(newState);
   }
 
@@ -171,7 +184,10 @@ class TemplateInstance extends Component {
           <ConditionalParameter
             key={param.id}
             values={this.state.otherInstances}
-            param={param} />
+            param={param}
+            updateConditional={this.updateIf}
+            addComponent={this.addComponent}
+            value={param.value}/>
         );
       default:
         return undefined;

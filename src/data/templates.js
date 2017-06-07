@@ -153,7 +153,7 @@ module.exports = [
         // extends: 'Base',
         parameters: [
           { id: 'element_name', type: 'string', name: 'Element Name' },
-          { id: 'components', type: 'conditional', name: 'Elements', value: [{condition: 'isMale', block: 'This patient is male.'}, {condition: 'isFemale', block: 'This patient is female.'}, {condition: 'isOther', block: 'This patient is other.'}, {else: true, block: 'null'}] }
+          { id: 'components', type: 'conditional', name: 'Elements', value: [{},{else: true, block: ''}]}//[{condition: 'isMale', block: 'This patient is male.'}, {condition: 'isFemale', block: 'This patient is female.'}, {condition: 'isOther', block: 'This patient is other.'}, {else: true, block: 'null'}] }
         ],
       }
     ]
