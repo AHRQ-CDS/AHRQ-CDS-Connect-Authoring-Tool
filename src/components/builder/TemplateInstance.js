@@ -97,7 +97,6 @@ class TemplateInstance extends Component {
   // }
 
   updateInstance(newState) {
-    console.log(newState);
     this.setState(newState);
     this.props.updateSingleElement(this.props.templateInstance.uniqueId, newState);
   }
