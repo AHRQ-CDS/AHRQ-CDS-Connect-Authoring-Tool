@@ -188,8 +188,11 @@ module.exports = [
           { 
             id: 'components', 
             type: 'case',
-            value: [{case : undefined, result : undefined}],
-            default: {name : 'null'},
+            value: {
+              cases : [{case : null, result : null}],
+              default : null,
+              optionalVariable : null
+            },
             name: 'Elements' }
         ],
       }
