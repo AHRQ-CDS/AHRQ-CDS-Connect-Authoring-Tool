@@ -7,6 +7,7 @@ ARG NODE_ENV
 ENV NODE_ENV $NODE_ENV
 COPY . /usr/src/app
 RUN yarn install && yarn cache clean
+RUN npm rebuild node-sass
 RUN yarn run build
 RUN yarn global add pm2@2.4.6 -g
 
