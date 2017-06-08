@@ -1,6 +1,4 @@
 import React, { Component, PropTypes } from 'react';
-import HTML5Backend from 'react-dnd-html5-backend';
-import { DragDropContext } from 'react-dnd';
 import axios from 'axios';
 import update from 'immutability-helper';
 import FileSaver from 'file-saver';
@@ -62,13 +60,10 @@ class BuilderPage extends Component {
     groups.forEach((group) => {
       group.entries.forEach((entry) => {
         entryMap[entry.id] = entry;
-      })
+      });
     });
-    const entryArray = [];
-    for (let key in entryMap) {
-      entryArray.push(entryMap[key]);
-    }
-    entryArray.forEach((entry) => {
+    Object.keys(entryMap).forEach((key) => {
+      let entry = entryMap[key];
       if (entry.extends) {
         this.mergeInParentTemplate(entry, entryMap);
       }
@@ -81,7 +76,12 @@ class BuilderPage extends Component {
       this.mergeInParentTemplate(extendWithEntry, entryMap);
     }
     // merge entry fields with parent but remove core fields like ID
-    _.merge(entry, _.omit(extendWithEntry, CORE_TEMPLATE_FIELDS));
+    _.mergeWith(entry, _.omit(extendWithEntry, CORE_TEMPLATE_FIELDS), (objectVal, sourceVal, key, object) => {
+      // TODO: This is to handle child extensions setting their own returnTypes - there might be a better way to do this
+      if(key === 'returnType' && objectVal !== undefined) {
+        return object[key] = objectVal;
+      }
+    });
 
     // merge parameters
     entry.parameters.forEach((parameter) => {
@@ -234,4 +234,4 @@ class BuilderPage extends Component {
   }
 }
 
-export default DragDropContext(HTML5Backend)(BuilderPage);
+export default BuilderPage;
