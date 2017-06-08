@@ -149,7 +149,7 @@ module.exports = [
       {
         id: 'If',
         name: 'If',
-        returnType: 'boolean', // JULIA - this is probably wrong
+        returnType: 'recommendation', // JULIA - this is probably wrong
         // extends: 'Base',
         parameters: [
           { id: 'element_name', type: 'string', name: 'Element Name' },

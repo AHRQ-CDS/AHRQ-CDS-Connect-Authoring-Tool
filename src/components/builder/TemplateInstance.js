@@ -56,6 +56,7 @@ class TemplateInstance extends Component {
     this.notThisInstance = this.notThisInstance.bind(this);
     this.addComponent = this.addComponent.bind(this);
     this.updateIf = this.updateIf.bind(this);
+    this.addCondition = this.addCondition.bind(this);
   }
 
   componentWillMount() {
@@ -87,7 +88,10 @@ class TemplateInstance extends Component {
   }
 
   notThisInstance(instance) {
-    return this.props.templateInstance.id !== instance.id;
+    // Look up by uniqueId to correctly identify the current instance
+    // For example, "and" elements have access to all other "and" elements besides itself
+    // They have different uniqueId's but the id's of all "and" elements is "And"
+    return this.props.templateInstance.uniqueId !== instance.uniqueId;
   }
 
   // getInstanceName(instance) {
@@ -112,6 +116,10 @@ class TemplateInstance extends Component {
     if (place === 'default') {
       valueArray[index]['block'] = value;
     } else {
+      // Mongoose stops empty objects from being saved, so this will be null if it wasn't set yet
+      if(_.isNil(valueArray[index])) {
+        valueArray[index] = {};
+      }
       valueArray[index][place] = value;
     }
     const newState = {};
@@ -123,6 +131,15 @@ class TemplateInstance extends Component {
     const arrayvar = this.state[listParameter].slice();
     arrayvar.push(undefined);
     const newState = { [listParameter]: arrayvar };
+    this.setState(newState);
+    this.props.updateSingleElement(this.props.templateInstance.uniqueId, newState);
+  }
+  
+  addCondition(paramId) {
+    const currentParamValue =  this.state[paramId].slice();
+    currentParamValue.splice(currentParamValue.length-1, 0, {});
+    const newState = {};
+    newState[paramId] = currentParamValue;
     this.setState(newState);
     this.props.updateSingleElement(this.props.templateInstance.uniqueId, newState);
   }
@@ -186,8 +203,8 @@ class TemplateInstance extends Component {
             values={this.state.otherInstances}
             param={param}
             updateConditional={this.updateIf}
-            addComponent={this.addComponent}
-            value={param.value}/>
+            addCondition={this.addCondition}
+            value={this.state[param.id]} />
         );
       default:
         return undefined;
