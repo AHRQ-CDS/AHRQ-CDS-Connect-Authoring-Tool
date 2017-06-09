@@ -100,21 +100,21 @@ class CqlArtifact {
     element.parameters.forEach((parameter) => {
       switch (parameter.type) {
         case 'observation':
-          let valueSet = ValueSets.observations[parameter.value];
-          context[parameter.id] = valueSet;
+          let observationValueSets = ValueSets.observations[parameter.value];
+          context[parameter.id] = observationValueSets;
           // For observations that have codes associated with them instead of valuesets
-          if ("codes" in valueSet) {
-            valueSet.codes.forEach((code) => {
+          if ("codes" in observationValueSets) {
+            observationValueSets.codes.forEach((code) => {
               this.codeSystemMap.set(code.codeSystem.name, code.codeSystem.id);
               this.codeMap.set(code.name, code);
             });
-            this.conceptMap.set(valueSet.id, valueSet);
+            this.conceptMap.set(observationValueSets.id, observationValueSets);
             // For checking if a ConceptValue is in a valueset, incluce the valueset that will be used
-            if('checkInclusionInVS' in valueSet){
-              this.resourceMap.set(valueSet.checkInclusionInVS.name, valueSet.checkInclusionInVS);
+            if('checkInclusionInVS' in observationValueSets){
+              this.resourceMap.set(observationValueSets.checkInclusionInVS.name, observationValueSets.checkInclusionInVS);
             }
           } else {
-            this.resourceMap.set(parameter.value, valueSet);
+            this.resourceMap.set(parameter.value, observationValueSets);
           }
           break;
         case 'integer':
@@ -124,29 +124,32 @@ class CqlArtifact {
           }
           break;
         case 'condition':
-          let valueSetConditions = ValueSets.conditions[parameter.value];
-          valueSetConditions.conditions.map(condition => {
+          let conditionValueSets = ValueSets.conditions[parameter.value];
+          conditionValueSets.conditions.map(condition => {
             this.resourceMap.set(condition.name, condition);
           })
-          context.conditions = valueSetConditions.conditions;
+          context.conditions = conditionValueSets.conditions;
           context.active = !(parameter.inactive);
           break;
         case 'medication':
-          let valueSetMedications = ValueSets.medications[parameter.value];
-          valueSetMedications.medications.map(medication => {
+          let medicationValueSets = ValueSets.medications[parameter.value];
+          medicationValueSets.medications.map(medication => {
             this.resourceMap.set(medication.name, medication);
           })
-          context.medication_titles = valueSetMedications.medications;
+          context.medication_titles = medicationValueSets.medications;
           break;
         case 'procedure' :
-          let procedureValuesets = ValueSets.procedures[parameter.value];
-          context[parameter.id] = procedureValuesets;
-          procedureValuesets.procedures.forEach(valueset => this.resourceMap.set(valueset.name, valueset));
+          let procedureValueSets = ValueSets.procedures[parameter.value];
+          context[parameter.id] = procedureValueSets;
+          procedureValueSets.procedures.forEach(valueset => this.resourceMap.set(valueset.name, valueset));
           break;
         case 'pregnancy':
-          let pregnancyValuesets = ValueSets.conditions[parameter.value];
-          if ("codes" in pregnancyValuesets) {
-            pregnancyValuesets.codes.forEach((code) => {
+          let pregnancyValueSets = ValueSets.conditions[parameter.value];
+          pregnancyValueSets.conditions.map(condition => {
+            this.resourceMap.set(condition.name, condition);
+          })
+          if ("codes" in pregnancyValueSets) {
+            pregnancyValueSets.codes.forEach((code) => {
               this.codeSystemMap.set(code.codeSystem.name, code.codeSystem.id);
               this.codeMap.set(code.name, code);
             });
