@@ -31,32 +31,42 @@ module.exports = {
     ascvd_risk_assessment : {
       // A concept based observation - has codes and display keys instead of oid and units
       id: "ascvd_risk_assessment",
-      name: "ASCVD 10-year risk code",
+      name: "ASCVD 10-year risk", // Name matches the name of the concept being created
       toConceptValue: false,
-      codes: [
+      concepts: [
         {
-          name: 'ASCVD 10-year risk code',
-          code: '79423-0',
-          codeSystem: { name: 'LOINC', id: 'http://loinc.org'},
+          name: "ASCVD 10-year risk",
+          codes: [
+            {
+              name: 'ASCVD 10-year risk code',
+              code: '79423-0',
+              codeSystem: { name: 'LOINC', id: 'http://loinc.org'},
+              display: 'Cardiovascular disease 10Y risk [Likelihood] ACC-AHA Pooled Cohort by Goff 2013',
+            }
+          ],
           display: 'Cardiovascular disease 10Y risk [Likelihood] ACC-AHA Pooled Cohort by Goff 2013',
         }
       ],
-      display: 'Cardiovascular disease 10Y risk [Likelihood] ACC-AHA Pooled Cohort by Goff 2013'
     },
     smoker : {
       // A concept based observation - has codes and display keys instead of oid and units
       id: "smoker",
-      name: "Tobacco smoking status",
       toConceptValue: true,
-      codes: [
+      name: "Tobacco smoking status", // Name matches the name of the concept being creaged
+      concepts: [
         {
-          name: 'Tobacco smoking status code',
-          code: '72166-2',
-          codeSystem: { name: 'LOINC', id: 'http://loinc.org'},
+          name: "Tobacco smoking status",
+          codes: [
+            {
+              name: 'Tobacco smoking status code',
+              code: '72166-2',
+              codeSystem: { name: 'LOINC', id: 'http://loinc.org'},
+              display: 'Tobacco smoking status',
+            }
+          ],
           display: 'Tobacco smoking status',
         }
       ],
-      display: 'Tobacco smoking status',
       checkInclusionInVS: {
         name: "Current Tobacco Smoker",
         oid: '2.16.840.1.113883.3.600.2390'
@@ -162,18 +172,30 @@ module.exports = {
          oid: '2.16.840.1.113883.3.526.3.378'
        }
      ],
-     codes: [
+     concepts: [
        {
-         name: 'Pregnancy status code',
-         code: '82810-3',
-         codeSystem: { name: 'LOINC', id: 'http://loinc.org'},
-         display: 'Pregnancy status',
+         name: 'Pregnancy status',
+         codes: [
+           {
+             name: 'Pregnancy status code',
+             code: '82810-3',
+             codeSystem: { name: 'LOINC', id: 'http://loinc.org'},
+             display: 'Pregnancy status',
+           }
+         ],
+         display: 'Pregnancy status'
        },
        {
-         name: 'Pregnant code',
-         code: '77386006',
-         codeSystem: { name: 'SNOMED-CT', id: 'http://snomed.info'},
-         display: 'Patient currently pregnant (finding)',
+         name: 'Pregnant',
+         codes: [
+           {
+             name: 'Pregnant code',
+             code: '77386006',
+             codeSystem: { name: 'SNOMED-CT', id: 'http://snomed.info'},
+             display: 'Patient currently pregnant (finding)',
+           }
+         ],
+         display: 'Patient currently pregnant (finding)'
        }
      ],
     },

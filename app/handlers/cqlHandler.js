@@ -103,12 +103,14 @@ class CqlArtifact {
           let observationValueSets = ValueSets.observations[parameter.value];
           context[parameter.id] = observationValueSets;
           // For observations that have codes associated with them instead of valuesets
-          if ("codes" in observationValueSets) {
-            observationValueSets.codes.forEach((code) => {
-              this.codeSystemMap.set(code.codeSystem.name, code.codeSystem.id);
-              this.codeMap.set(code.name, code);
+          if ("concepts" in observationValueSets) {
+            observationValueSets.concepts.forEach((concept) => {
+              concept.codes.forEach((code) => {
+                this.codeSystemMap.set(code.codeSystem.name, code.codeSystem.id);
+                this.codeMap.set(code.name, code);
+              });
+              this.conceptMap.set(concept.name, concept);
             });
-            this.conceptMap.set(observationValueSets.id, observationValueSets);
             // For checking if a ConceptValue is in a valueset, incluce the valueset that will be used
             if('checkInclusionInVS' in observationValueSets){
               this.resourceMap.set(observationValueSets.checkInclusionInVS.name, observationValueSets.checkInclusionInVS);
@@ -148,10 +150,13 @@ class CqlArtifact {
           pregnancyValueSets.conditions.map(condition => {
             this.resourceMap.set(condition.name, condition);
           })
-          if ("codes" in pregnancyValueSets) {
-            pregnancyValueSets.codes.forEach((code) => {
-              this.codeSystemMap.set(code.codeSystem.name, code.codeSystem.id);
-              this.codeMap.set(code.name, code);
+          if ("concepts" in pregnancyValueSets) {
+            pregnancyValueSets.concepts.forEach((concept) => {
+              concept.codes.forEach((code) => {
+                this.codeSystemMap.set(code.codeSystem.name, code.codeSystem.id);
+                this.codeMap.set(code.name, code);
+              });
+              this.conceptMap.set(concept.name, concept);
             });
           }
           context[parameter.id] = parameter.value;
