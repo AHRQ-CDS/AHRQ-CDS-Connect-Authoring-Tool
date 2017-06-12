@@ -132,10 +132,12 @@ class TemplateInstance extends Component {
       lowerBound.name = "Lower Comparison Bound"
       upperBound.name = "Upper Comparison Bound"
       upperBound.id = `${upperBound.id}_2`
+      upperBound.value = undefined;
 
       // Using name for readability, could've been id, but {'id': 'Comparison'} isn't obvious
       let secondOperator = _.clone(_.find(parameter, { 'name': 'Operator' }));
       secondOperator.id = `${secondOperator.id}_2`
+      secondOperator.value = null;
 
       _.last(parameter).name = "Single Sided?";
       parameter.splice(parameter.length - 1, 0, secondOperator);
