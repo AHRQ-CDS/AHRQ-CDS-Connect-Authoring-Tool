@@ -2,9 +2,9 @@ import React from 'react';
 import Select from 'react-select';
 import _ from 'lodash';
 
-// TODO: Probably a way to use some of the other parameters in here (like import a <Component> and use it)
-// TODO: NESTING
-// TODO: __ is null option
+// TODO: We may want to have this parameter line up more closely with CaseParameter.
+// The two work similiarly now, but this might change, depending on how nesting is handled.
+// TODO: Handle nesting in a more user intuitive way.
 
 export default (props) => {
   const id = _.uniqueId('parameter-');
@@ -12,9 +12,9 @@ export default (props) => {
   const conditionalValues = props.values.filter((element) => {
     return element.returnType === 'boolean';
   });
-  // TODO: the blocks of statements are probably going to need to be more than the string parameters
+  
   const stringValues = props.values.filter((element) => {
-    return (element.returnType === 'string' || element.returnType === 'recommendation');
+    return (element.returnType !== undefined);
   });
   
   return (
@@ -53,9 +53,9 @@ export default (props) => {
                  <Select
                    labelKey={'name'}
                    autofocus
-                   options={stringValues.concat({name: 'null'})}
+                   options={stringValues.concat({name: 'Null'})}
                    value={value ? value.block : null}
-                   onChange={(value) => {props.updateConditional(props.param.id, value, index, 'default')}}/>
+                   onChange={(value) => {props.updateConditional(props.param.id, value, index, 'block')}}/>
                </div>
            </div>
            );

@@ -189,6 +189,22 @@ module.exports = [
           { id: 'element_name', type: 'string', name: 'Element Name' },
           { id: 'components', type: 'conditional', name: 'Elements', value: [{},{else: true, block: ''}]}//[{condition: 'isMale', block: 'This patient is male.'}, {condition: 'isFemale', block: 'This patient is female.'}, {condition: 'isOther', block: 'This patient is other.'}, {else: true, block: 'null'}] }
         ],
+      },
+      {
+        id: 'Case',
+        name: 'Case',
+        parameters: [
+          { id: 'element_name', type: 'string', name: 'Element Name' },
+          { 
+            id: 'components', 
+            type: 'case',
+            value: {
+              cases : [{case : null, result : null}],
+              default : null,
+              variable : null
+            },
+            name: 'Elements' }
+        ],
       }
     ]
   },

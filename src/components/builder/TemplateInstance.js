@@ -7,6 +7,7 @@ import StringParameter from './parameters/StringParameter';
 import ObservationParameter from './parameters/ObservationParameter';
 import ValueSetParameter from './parameters/ValueSetParameter';
 import ListParameter from './parameters/ListParameter';
+import CaseParameter from './parameters/CaseParameter';
 import StaticParameter from './parameters/StaticParameter';
 import ConditionalParameter from './parameters/ConditionalParameter';
 import Config from '../../../config'
@@ -51,12 +52,15 @@ class TemplateInstance extends Component {
       showPresets: false
     };
     this.updateInstance = this.updateInstance.bind(this);
+    this.updateNestedInstance = this.updateNestedInstance.bind(this);
     this.updateList = this.updateList.bind(this);
+    this.updateCase = this.updateCase.bind(this);
     this.selectTemplate = this.selectTemplate.bind(this);
     this.notThisInstance = this.notThisInstance.bind(this);
     this.addComponent = this.addComponent.bind(this);
     this.updateIf = this.updateIf.bind(this);
     this.addCondition = this.addCondition.bind(this);
+    this.addCaseComponent = this.addCaseComponent.bind(this);
   }
 
   componentWillMount() {
@@ -103,6 +107,14 @@ class TemplateInstance extends Component {
     this.props.updateSingleElement(this.props.templateInstance.uniqueId, newState);
   }
 
+  // Used to update value states that are nested objects
+  updateNestedInstance(id, value, element) {
+    let newState = {};
+    newState[id] = Object.assign({}, this.state[id]);
+    newState[id][element] = value;
+    this.updateInstance(newState);
+  }
+
   updateList(id, value, index) {
     const newState = {};
     const arrayvar = this.state[id].slice();
@@ -110,18 +122,15 @@ class TemplateInstance extends Component {
     newState[id] = arrayvar;
     this.updateInstance(newState);
   }
-
+  
+  // Updates an if statemement with selected value
   updateIf(paramId, value, index, place) {
     const valueArray = this.state[paramId].slice();
-    if (place === 'default') {
-      valueArray[index]['block'] = value;
-    } else {
-      // Mongoose stops empty objects from being saved, so this will be null if it wasn't set yet
-      if(_.isNil(valueArray[index])) {
-        valueArray[index] = {};
-      }
-      valueArray[index][place] = value;
+    // Mongoose stops empty objects from being saved, so this will be null if it wasn't set yet
+    if(_.isNil(valueArray[index])) {
+      valueArray[index] = {};
     }
+    valueArray[index][place] = value;
     const newState = {};
     newState[paramId] = valueArray;
     this.updateInstance(newState);
@@ -131,17 +140,30 @@ class TemplateInstance extends Component {
     const arrayvar = this.state[listParameter].slice();
     arrayvar.push(undefined);
     const newState = { [listParameter]: arrayvar };
-    this.setState(newState);
-    this.props.updateSingleElement(this.props.templateInstance.uniqueId, newState);
+    this.updateInstance(newState);
+  }
+
+  // Updates a case statement based on case or result
+  updateCase(id, value, index, option) {
+    const array = this.state[id].cases.slice();
+    array[index][option] = value;
+    this.updateNestedInstance(id, array, 'cases');
+  }
+
+  // Adds a new row of case statements
+  addCaseComponent(id) {
+    const array = this.state[id].cases.slice();
+    array.push({case : null, result : null});
+    this.updateNestedInstance(id, array, 'cases');
   }
   
+  // Adds new Condition/Block for If statements
   addCondition(paramId) {
     const currentParamValue =  this.state[paramId].slice();
     currentParamValue.splice(currentParamValue.length-1, 0, {});
     const newState = {};
     newState[paramId] = currentParamValue;
-    this.setState(newState);
-    this.props.updateSingleElement(this.props.templateInstance.uniqueId, newState);
+    this.updateInstance(newState);
   }
 
   selectTemplate(param) {
@@ -205,6 +227,17 @@ class TemplateInstance extends Component {
             updateConditional={this.updateIf}
             addCondition={this.addCondition}
             value={this.state[param.id]} />
+        );
+      case 'case':
+        return (
+          <CaseParameter
+            key={param.id}
+            param={param}
+            value={this.state[param.id]}
+            values={this.state.otherInstances}
+            addComponent={this.addCaseComponent}
+            updateCase={this.updateCase}
+            updateInstance={this.updateNestedInstance} />
         );
       default:
         return undefined;

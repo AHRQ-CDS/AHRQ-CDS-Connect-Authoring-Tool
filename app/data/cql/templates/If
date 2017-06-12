@@ -6,7 +6,7 @@ if (index===0) {
     "<%=component.block.name%>" <%
 } else if (index===array.length-1) {
   %>
-  else <%if(component.block.name === 'null'){%>null<%}else{%>"<%=component.block.name%>"<%}%> <%
+  else <%if(component.block.name === 'Null'){%>null<%}else{%>"<%=component.block.name%>"<%}%> <%
 } else {
   %>
   else if "<%=component.condition.name%>" then
