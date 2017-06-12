@@ -13,6 +13,16 @@ import IfParameter from './parameters/IfParameter';
 import Config from '../../../config'
 const API_BASE = Config.api.baseUrl;
 
+export function createTemplateInstance(template) {
+  /*
+    TODO: clone is required because we are setting value on the parameter.
+    This may not be the best approach
+  */
+  const instance = _.cloneDeep(template);
+  instance.uniqueId = _.uniqueId(instance.id);
+
+  return instance;
+}
 
 function getInstanceName(instance) {
   return (instance.parameters.find(p => p.id === 'element_name') || {}).value;

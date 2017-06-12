@@ -221,7 +221,10 @@ class BuilderPage extends Component {
         </header>
         <section className="builder__panel">
           <div className="builder__sidebar">
-            <BuilderPalette selectedGroup={this.state.selectedGroup} />
+            <BuilderPalette
+              selectedGroup={this.state.selectedGroup}
+              templateInstances={this.state.templateInstances}
+              updateTemplateInstances={this.setTemplateInstances} />
             {this.renderSidebar()}
           </div>
           <BuilderTarget
