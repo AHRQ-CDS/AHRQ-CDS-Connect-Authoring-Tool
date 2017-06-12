@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import FontAwesome from 'react-fontawesome';
 import { NavLink } from 'react-router-dom';
+import ElementTypeahead from './ElementTypeahead';
 import groups from '../../data/templates';
 
 class BuilderPalette extends Component {
@@ -8,7 +9,7 @@ class BuilderPalette extends Component {
     super(props);
 
     this.state = {
-      menuExpanded: false,
+      menuExpanded: false
     };
   }
 
@@ -43,7 +44,6 @@ class BuilderPalette extends Component {
     });
   }
 
-
   render() {
     return (
       <nav className="builder__palette" aria-label="Element menu">
@@ -60,6 +60,12 @@ class BuilderPalette extends Component {
               aria-expanded={this.state.menuExpanded ? 'true' : 'false'}>
               {this.renderMenu()}
             </ul>
+            <ElementTypeahead
+              groups={groups}
+              selectedGroup={this.props.selectedGroup}
+              templateInstances={this.props.templateInstances}
+              updateTemplateInstances={this.props.updateTemplateInstances}
+            />
           </li>
         </ul>
       </nav>
