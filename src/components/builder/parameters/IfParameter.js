@@ -13,7 +13,7 @@ export default (props) => {
     return element.returnType === 'boolean';
   });
   
-  const stringValues = props.values.filter((element) => {
+  const blockValues = props.values.filter((element) => {
     return (element.returnType !== undefined);
   });
   
@@ -30,22 +30,22 @@ export default (props) => {
                   autofocus
                   options={conditionalValues}
                   value={value ? value.condition : null}
-                  onChange={(value) => {props.updateConditional(props.param.id, value, index, 'condition')}}/>
+                  onChange={(value) => {props.updateIfStatement(props.param.id, value, index, 'condition')}}/>
               </div>
               <div>
                 Block:
                 <Select
                   labelKey={'name'}
                   autofocus
-                  options={stringValues}
+                  options={blockValues}
                   value={value ? value.block : null}
-                  onChange={(value) => {props.updateConditional(props.param.id, value, index, 'block')}}/>
+                  onChange={(value) => {props.updateIfStatement(props.param.id, value, index, 'block')}}/>
               </div>
             </div>);
          } else {
            return (
              <div key={index}>
-               <button onClick={() => props.addCondition(props.param.id)}>
+               <button onClick={() => props.addIfComponent(props.param.id)}>
                  Add Condition/Block
                </button>
                <div>
@@ -53,9 +53,9 @@ export default (props) => {
                  <Select
                    labelKey={'name'}
                    autofocus
-                   options={stringValues.concat({name: 'Null'})}
+                   options={blockValues.concat({name: 'Null'})}
                    value={value ? value.block : null}
-                   onChange={(value) => {props.updateConditional(props.param.id, value, index, 'block')}}/>
+                   onChange={(value) => {props.updateIfStatement(props.param.id, value, index, 'block')}}/>
                </div>
            </div>
            );

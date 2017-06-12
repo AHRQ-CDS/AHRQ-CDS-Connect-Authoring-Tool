@@ -183,11 +183,10 @@ module.exports = [
       {
         id: 'If',
         name: 'If',
-        returnType: 'recommendation', // JULIA - this is probably wrong
-        // extends: 'Base',
+        returnType: 'if',
+        extends: 'Base',
         parameters: [
-          { id: 'element_name', type: 'string', name: 'Element Name' },
-          { id: 'components', type: 'conditional', name: 'Elements', value: [{},{else: true, block: ''}]}//[{condition: 'isMale', block: 'This patient is male.'}, {condition: 'isFemale', block: 'This patient is female.'}, {condition: 'isOther', block: 'This patient is other.'}, {else: true, block: 'null'}] }
+          { id: 'components', type: 'if', name: 'Elements', value: [{},{else: true, block: ''}]}
         ],
       },
       {

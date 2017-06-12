@@ -9,7 +9,7 @@ import ValueSetParameter from './parameters/ValueSetParameter';
 import ListParameter from './parameters/ListParameter';
 import CaseParameter from './parameters/CaseParameter';
 import StaticParameter from './parameters/StaticParameter';
-import ConditionalParameter from './parameters/ConditionalParameter';
+import IfParameter from './parameters/IfParameter';
 import Config from '../../../config'
 const API_BASE = Config.api.baseUrl;
 
@@ -55,12 +55,12 @@ class TemplateInstance extends Component {
     this.updateNestedInstance = this.updateNestedInstance.bind(this);
     this.updateList = this.updateList.bind(this);
     this.updateCase = this.updateCase.bind(this);
+    this.updateIf = this.updateIf.bind(this);
     this.selectTemplate = this.selectTemplate.bind(this);
     this.notThisInstance = this.notThisInstance.bind(this);
     this.addComponent = this.addComponent.bind(this);
-    this.updateIf = this.updateIf.bind(this);
-    this.addCondition = this.addCondition.bind(this);
     this.addCaseComponent = this.addCaseComponent.bind(this);
+    this.addIfComponent = this.addIfComponent.bind(this);
   }
 
   componentWillMount() {
@@ -122,19 +122,6 @@ class TemplateInstance extends Component {
     newState[id] = arrayvar;
     this.updateInstance(newState);
   }
-  
-  // Updates an if statemement with selected value
-  updateIf(paramId, value, index, place) {
-    const valueArray = this.state[paramId].slice();
-    // Mongoose stops empty objects from being saved, so this will be null if it wasn't set yet
-    if(_.isNil(valueArray[index])) {
-      valueArray[index] = {};
-    }
-    valueArray[index][place] = value;
-    const newState = {};
-    newState[paramId] = valueArray;
-    this.updateInstance(newState);
-  }
 
   addComponent(listParameter) {
     const arrayvar = this.state[listParameter].slice();
@@ -157,8 +144,21 @@ class TemplateInstance extends Component {
     this.updateNestedInstance(id, array, 'cases');
   }
   
+  // Updates an if statemement with selected value
+  updateIf(paramId, value, index, place) {
+    const valueArray = this.state[paramId].slice();
+    // Mongoose stops empty objects from being saved, so this will be null if it wasn't set yet
+    if(_.isNil(valueArray[index])) {
+      valueArray[index] = {};
+    }
+    valueArray[index][place] = value;
+    const newState = {};
+    newState[paramId] = valueArray;
+    this.updateInstance(newState);
+  }
+  
   // Adds new Condition/Block for If statements
-  addCondition(paramId) {
+  addIfComponent(paramId) {
     const currentParamValue =  this.state[paramId].slice();
     currentParamValue.splice(currentParamValue.length-1, 0, {});
     const newState = {};
@@ -218,14 +218,14 @@ class TemplateInstance extends Component {
             addComponent={this.addComponent}
             updateList={this.updateList} />
         );
-      case 'conditional':
+      case 'if':
         return (
-          <ConditionalParameter
+          <IfParameter
             key={param.id}
             values={this.state.otherInstances}
             param={param}
-            updateConditional={this.updateIf}
-            addCondition={this.addCondition}
+            updateIfStatement={this.updateIf}
+            addIfComponent={this.addIfComponent}
             value={this.state[param.id]} />
         );
       case 'case':
