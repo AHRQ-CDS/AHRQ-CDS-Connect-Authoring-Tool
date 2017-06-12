@@ -111,8 +111,25 @@
     }
   }
 }
+
 // Extra selector needed to override default border-radius set in base.scss
 input.react-autosuggest__input--open {
   border-bottom-left-radius: 0;
   border-bottom-right-radius: 0;
+}
+
+.element-select {
+  display: flex;
+
+  &__element-field {
+    flex: 1;
+  }
+  &__category-field {
+    flex: 0 0 10em;
+    margin-left: .5em;
+  }
+  &__option-category {
+    margin-left: .5em;
+    color: $gray;
+  }
 }
