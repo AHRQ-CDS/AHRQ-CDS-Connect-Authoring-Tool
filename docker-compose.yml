@@ -1,0 +1,14 @@
+version: '3'
+services:
+  cat:
+    build: .
+    environment:
+      MONGO_URL: mongodb://cat-mongo/cds_authoring
+      NODE_ENV: production
+    ports:
+    - "9000:9000"
+    - "3001:3001"
+    links:
+    - cat-mongo
+  cat-mongo:
+    image: mongo:3.4.4
