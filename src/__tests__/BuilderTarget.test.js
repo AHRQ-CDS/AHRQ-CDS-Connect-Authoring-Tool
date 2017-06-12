@@ -1,7 +1,7 @@
 import BuilderTarget from '../components/builder/BuilderTarget';
 import TemplateInstance from '../components/builder/TemplateInstance';
 import { fullRenderComponent } from '../helpers/test_helpers';
-import templateInstances from '../helpers/test_fixtures';
+import { templateInstances } from '../helpers/test_fixtures';
 
 let component;
 let componentWithElements;

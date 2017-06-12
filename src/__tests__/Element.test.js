@@ -1,6 +1,6 @@
 import Element from '../components/builder/Element';
 import { fullRenderComponent } from '../helpers/test_helpers';
-import templateInstances from '../helpers/test_fixtures';
+import { templateInstances } from '../helpers/test_fixtures';
 
 let component;
 const updateTemplateInstances = jest.fn();
@@ -16,8 +16,7 @@ let thisElementsTemplate = {
       name: 'Element Name',
       value: 'name1'
     }
-  ],
-  uniqueId: 'gender1'
+  ]
 };
 
 
@@ -39,6 +38,9 @@ test('renders Element with name and initial state', () => {
 
 test('updates template instances with correct template when clicked', () => {
   component.simulate('click');
+
+  const argument = updateTemplateInstances.mock.calls[0][0][2];
+  delete argument['uniqueId']; // uniqueId tested by updateTemplateInstances unit test
 
   // Mock out what the new collection of template instances would be
   templateInstances.push(thisElementsTemplate);

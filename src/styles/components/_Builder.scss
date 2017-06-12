@@ -27,7 +27,7 @@
   &__sidebar {
     background-color: $gray-lightest;
     padding: 1em;
-    min-width: 15em;
+    width: 20rem;
   }
 
   &__palette {
@@ -74,4 +74,45 @@
     min-height: 10em;
     padding: 1em;
   }
+}
+
+.react-autosuggest {
+  &__container {
+    position: relative;
+    margin-top: 1em;
+  }
+
+  &__input {
+    width: 100%;
+  }
+
+  &__suggestions-container {
+    display: none;
+
+    &--open {
+      display: block;
+      position: absolute;
+      top: 100%;
+      width: 100%;
+      background-color: $white;
+      border: $border-width solid $form-input-border-color;
+      border-top: 0;
+      border-bottom-left-radius: $border-radius;
+      border-bottom-right-radius: $border-radius;
+    }
+  }
+
+  &__suggestion {
+    padding: 0.4em 0.75em;
+    cursor: pointer;
+
+    &--highlighted {
+      background-color: $gray-lightest;
+    }
+  }
+}
+// Extra selector needed to override default border-radius set in base.scss
+input.react-autosuggest__input--open {
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
 }
