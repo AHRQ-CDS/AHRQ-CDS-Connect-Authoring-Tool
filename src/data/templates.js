@@ -179,6 +179,22 @@ module.exports = [
         parameters: [
           { id: 'element_value', type: 'string', name: 'Value' }
         ],
+      },
+      {
+        id: 'Case',
+        name: 'Case',
+        parameters: [
+          { id: 'element_name', type: 'string', name: 'Element Name' },
+          { 
+            id: 'components', 
+            type: 'case',
+            value: {
+              cases : [{case : null, result : null}],
+              default : null,
+              variable : null
+            },
+            name: 'Elements' }
+        ],
       }
     ]
   },
