@@ -7,45 +7,54 @@ class CaseParameter extends Component {
   constructor(props) {
     super(props)
 
-    const defaultOptions = this.props.values.filter(v => v.returnType != null);
     this.state = {
       id : _.uniqueId('parameter-'),
-      defaultOptions : defaultOptions,
-      filteredOptions : {
-        case : defaultOptions,
-        result : defaultOptions
-      }
+      case : null,
+      result : null
     }
   }
 
-  // Checks if there is an existing returnType in any of the select options
-  checkArrayTypeExists(option) {
-    const cases = this.props.value.cases;
-    for (let i in cases) {
-      let item = cases[i][option];
-      if (item != null && item.returnType != null) {
-        return false;
-      }
+  filterOptions(v, option) {
+    let type;
+    if (option === 'case') {
+      type = this.state.case;
+    } else {
+      type = this.state.result;
     }
-    if (option === 'result' && this.props.param.value.default != null) {
+    
+    if (v.returnType == null) {
       return false;
-    } else if (option === 'case' && this.props.param.value.variable != null) {
+    } else if (type != null && type !== v.returnType) {
       return false;
     } else {
       return true;
     }
   }
 
+  // Checks if there is an existing returnType in any of the select options
+  checkArrayType(option) {
+    const cases = this.props.value.cases;
+    for (let i in cases) {
+      let item = cases[i][option];
+      if (item != null && item.returnType != null) {
+        return item.returnType;
+      }
+    }
+    if (option === 'result' && this.props.param.value.default != null) {
+      return this.props.param.value.default.returnType;
+    } else if (option === 'case' && this.props.param.value.variable != null) {
+      return this.props.param.value.variable.returnType;
+    } else {
+      return null;
+    }
+  }
+
   // Update available options if necessary
   updateOptions(value, option) {
-    if (value == null && this.checkArrayTypeExists(option)) {
-      let newState = Object.assign({}, this.state.filteredOptions);
-      newState[option] = this.state.defaultOptions;
-      this.setState({filteredOptions : newState});
-    } else if (value != null && !this.checkArrayTypeExists(option)) {
-      let newState = Object.assign({}, this.state.filteredOptions);
-      newState[option] = this.props.values.filter(v => v.returnType === value.returnType);
-      this.setState({filteredOptions : newState});
+    if (value == null && this.checkArrayType(option) == null) {
+      this.setState({[option] : null});
+    } else if (value != null && this.checkArrayType(option) != null) {
+      this.setState({[option] : value.returnType});
     }
   }
 
@@ -69,7 +78,7 @@ class CaseParameter extends Component {
       <Select key={index}
         labelKey={'name'}
         autofocus
-        options={this.state.filteredOptions[option]}
+        options={this.props.values.filter(v => this.filterOptions(v, option))}
         clearable={true}
         placeholder={placeholder}
         name={this.props.param.id}
@@ -95,7 +104,7 @@ class CaseParameter extends Component {
               <Select
                 labelKey={'name'}
                 autofocus
-                options={this.state.filteredOptions[filter]}
+                options={this.props.values.filter(v => this.filterOptions(v, filter))}
                 clearable={true}
                 placeholder={'Null'}
                 name={this.props.param.id}
