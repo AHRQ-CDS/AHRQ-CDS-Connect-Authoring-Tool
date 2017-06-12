@@ -9,6 +9,7 @@ import ValueSetParameter from './parameters/ValueSetParameter';
 import ListParameter from './parameters/ListParameter';
 import CaseParameter from './parameters/CaseParameter';
 import StaticParameter from './parameters/StaticParameter';
+import BooleanParameter from './parameters/BooleanParameter';
 import Config from '../../../config'
 const API_BASE = Config.api.baseUrl;
 
@@ -172,6 +173,13 @@ class TemplateInstance extends Component {
             key={param.id}
             param={param}
             resources={this.state.resources}
+            updateInstance={this.updateInstance} />
+        );
+      case 'boolean':
+        return (
+          <BooleanParameter
+            key={param.id}
+            param={param}
             updateInstance={this.updateInstance} />
         );
       case 'string':
