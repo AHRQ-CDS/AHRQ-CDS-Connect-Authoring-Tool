@@ -160,6 +160,10 @@ class CqlArtifact {
             });
           }
           context[parameter.id] = parameter.value;
+          // Get values for Pregnancy, due to the specific template
+          context.valueSetName = pregnancyValueSets.conditions[0].name;
+          context.pregnancyStatusConcept = pregnancyValueSets.concepts[0].name;
+          context.pregnancyCodeConcept = pregnancyValueSets.concepts[1].name;
           break;
         default:
           context[parameter.id] = parameter.value;
