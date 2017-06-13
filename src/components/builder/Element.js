@@ -1,6 +1,6 @@
 import React, { Component, PropTypes } from 'react';
-import _ from 'lodash';
 import FontAwesome from 'react-fontawesome';
+import { createTemplateInstance } from './TemplateInstance';
 
 class BuilderElement extends Component {
   static propTypes = {
@@ -11,14 +11,9 @@ class BuilderElement extends Component {
   }
 
   addElement() {
-    /*
-      TODO: clone is required because we are setting value on the parameter.
-      This may not be the best approach
-    */
-    const clone = JSON.parse(JSON.stringify(this.props.template));
-    clone.uniqueId = _.uniqueId(clone.id);
+    const instance = createTemplateInstance(this.props.template);
 
-    this.props.updateTemplateInstances(this.props.templateInstances.concat(clone));
+    this.props.updateTemplateInstances(this.props.templateInstances.concat(instance));
   }
 
   render() {

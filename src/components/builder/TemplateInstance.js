@@ -7,12 +7,24 @@ import StringParameter from './parameters/StringParameter';
 import ObservationParameter from './parameters/ObservationParameter';
 import ValueSetParameter from './parameters/ValueSetParameter';
 import ListParameter from './parameters/ListParameter';
+import CaseParameter from './parameters/CaseParameter';
 import StaticParameter from './parameters/StaticParameter';
 import ComparisonParameter from './parameters/ComparisonParameter';
 import CheckBoxParameter from './parameters/CheckBoxParameter';
+import BooleanParameter from './parameters/BooleanParameter';
 import Config from '../../../config'
 const API_BASE = Config.api.baseUrl;
 
+export function createTemplateInstance(template) {
+  /*
+    TODO: clone is required because we are setting value on the parameter.
+    This may not be the best approach
+  */
+  const instance = _.cloneDeep(template);
+  instance.uniqueId = _.uniqueId(instance.id);
+
+  return instance;
+}
 
 function getInstanceName(instance) {
   return (instance.parameters.find(p => p.id === 'element_name') || {}).value;
@@ -52,11 +64,14 @@ class TemplateInstance extends Component {
       showPresets: false
     };
     this.updateInstance = this.updateInstance.bind(this);
+    this.updateNestedInstance = this.updateNestedInstance.bind(this);
     this.updateList = this.updateList.bind(this);
+    this.updateCase = this.updateCase.bind(this);
     this.selectTemplate = this.selectTemplate.bind(this);
     this.notThisInstance = this.notThisInstance.bind(this);
     this.addComponent = this.addComponent.bind(this);
     this.updateComparison = this.updateComparison.bind(this);
+    this.addCaseComponent = this.addCaseComponent.bind(this);
   }
 
   componentWillMount() {
@@ -100,6 +115,14 @@ class TemplateInstance extends Component {
     this.props.updateSingleElement(this.props.templateInstance.uniqueId, newState);
   }
 
+  // Used to update value states that are nested objects
+  updateNestedInstance(id, value, element) {
+    let newState = {};
+    newState[id] = Object.assign({}, this.state[id]);
+    newState[id][element] = value;
+    this.updateInstance(newState);
+  }
+
   updateList(id, value, index) {
     const newState = {};
     const arrayvar = this.state[id].slice();
@@ -112,8 +135,21 @@ class TemplateInstance extends Component {
     const arrayvar = this.state[listParameter].slice();
     arrayvar.push(undefined);
     const newState = { [listParameter]: arrayvar };
-    this.setState(newState);
-    this.props.updateSingleElement(this.props.templateInstance.uniqueId, newState);
+    this.updateInstance(newState);
+  }
+
+  // Updates a case statement based on case or result
+  updateCase(id, value, index, option) {
+    const array = this.state[id].cases.slice();
+    array[index][option] = value;
+    this.updateNestedInstance(id, array, 'cases');
+  }
+
+  // Adds a new row of case statements
+  addCaseComponent(id) {
+    const array = this.state[id].cases.slice();
+    array.push({case : null, result : null});
+    this.updateNestedInstance(id, array, 'cases');
   }
 
   updateComparison(isSingledSided) {
@@ -174,6 +210,13 @@ class TemplateInstance extends Component {
             resources={this.state.resources}
             updateInstance={this.updateInstance} />
         );
+      case 'boolean':
+        return (
+          <BooleanParameter
+            key={param.id}
+            param={param}
+            updateInstance={this.updateInstance} />
+        );
       case 'string':
         return (
           <StringParameter
@@ -214,6 +257,17 @@ class TemplateInstance extends Component {
           key={param.id}
           param={param}
           updateComparison={this.updateComparison} />
+        );
+      case 'case':
+        return (
+          <CaseParameter
+            key={param.id}
+            param={param}
+            value={this.state[param.id]}
+            values={this.state.otherInstances}
+            addComponent={this.addCaseComponent}
+            updateCase={this.updateCase}
+            updateInstance={this.updateNestedInstance} />
         );
       default:
         return undefined;

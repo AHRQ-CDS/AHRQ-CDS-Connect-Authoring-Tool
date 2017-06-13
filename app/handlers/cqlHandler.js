@@ -83,10 +83,23 @@ class CqlArtifact {
     this.codeSystemMap = new Map();
     this.codeMap = new Map();
     this.conceptMap = new Map();
+    this.paramContexts = [];
     this.contexts = [];
     this.elements.forEach((element) => { 
-      this.parseElement(element)
+      if (element.type == 'parameter') {
+        this.parseParameter(element);
+      } else {
+        this.parseElement(element);
+      }
     });
+  }
+
+  parseParameter(element) {
+    const paramContext = {};
+    element.parameters.forEach((parameter) => {
+          paramContext[parameter.id] = parameter.value;
+    });
+    this.paramContexts.push(paramContext);
   }
 
   // Generate context and resources for a single element
