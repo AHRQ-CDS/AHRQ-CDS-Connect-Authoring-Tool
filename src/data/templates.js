@@ -9,6 +9,7 @@ module.exports = [
       {
         id: 'Base',
         name: 'Base Template',
+        type: 'element',
         parameters: [
           { id: 'element_name', type: 'string', name: 'Element Name' },
         ],
@@ -179,6 +180,22 @@ module.exports = [
         parameters: [
           { id: 'element_value', type: 'string', name: 'Value' }
         ],
+      },
+      {
+        id: 'Case',
+        name: 'Case',
+        parameters: [
+          { id: 'element_name', type: 'string', name: 'Element Name' },
+          { 
+            id: 'components', 
+            type: 'case',
+            value: {
+              cases : [{case : null, result : null}],
+              default : null,
+              variable : null
+            },
+            name: 'Elements' }
+        ],
       }
     ]
   },
@@ -348,7 +365,24 @@ module.exports = [
         ],
       }
     ]
-  }
+  },
+  {
+    id: 7,
+    icon: 'sign-in',
+    name: 'Parameters',
+    entries: [
+      {
+        id: 'Boolean',
+        name: 'Boolean',
+        type: 'parameter',
+        returnType: 'boolean',
+        extends: 'Base',
+        parameters: [
+          { id: 'default', type: 'boolean', value: 'true', name: 'Default' }
+        ],
+      },
+    ]
+  },
   //   'Gender',
   //   'Ethnicity',
   //   'Race'],
