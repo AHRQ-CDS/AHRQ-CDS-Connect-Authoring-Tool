@@ -253,10 +253,10 @@ module.exports = [
       {
         id: 'Pregnancydx',
         name: 'Pregnancy dx',
-        extends: 'GenericCondition',
+        extends: 'Base',
         parameters: [
-          { id: 'element_name', value: "IsPregnant"},
-          { id: 'condition', static: true, value: "pregnancy_dx"}
+          { id: 'element_name', value: "IsPregnant" },
+          { id: 'pregnancy', type: 'pregnancy', static: true, value: "pregnancy_dx" }
         ]
       },
       {
