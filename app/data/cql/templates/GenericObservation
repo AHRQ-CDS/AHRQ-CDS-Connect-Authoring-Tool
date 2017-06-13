@@ -4,7 +4,7 @@ define "<%=element_name%>":
     } else{
       %>C3F.ConceptValue(<%
     }%>C3F.MostRecent(C3F.Verified(<%if(valid){%>C3F.ObservationLookBack(<%}
-    if("codes" in observation){
+    if("concepts" in observation){
       %>C3F.ObservationsByConcept("<%=observation.name%>")<%} 
     else {
       %>C3F.WithUnit([Observation: "<%=observation.name%>"], <%-observation.units.values%>)<%
