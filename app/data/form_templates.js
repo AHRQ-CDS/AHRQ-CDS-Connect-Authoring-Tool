@@ -39,7 +39,7 @@ module.exports = [
           { id: 'element_name', type: 'string', name: 'Element Name' },
           { id: 'gender', type: 'valueset', select: 'demographics/gender', name: 'Gender' },
         ],
-      }
+      },
     ]
   },
   {
@@ -145,6 +145,14 @@ module.exports = [
           { id: 'upper_bound', type: 'number', typeOfNumber: 'integer', name: 'Upper Bound', exclusive: false },
           { id: 'observation', type: 'list', subType: 'number', value: [undefined], name: 'Observation' }
         ]
+      },
+      {
+        id: 'templateModifier',
+        name: 'Template Modifier',
+        modifiers: null, /* Any default modifiers can be applied here */
+        parameters: [
+          { id: 'element_name', type: 'string', name: 'Element Name', value : 'Modified Templates' },
+        ],
       },
     ]
   },

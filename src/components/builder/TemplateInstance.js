@@ -13,8 +13,8 @@ import ComparisonParameter from './parameters/ComparisonParameter';
 import CheckBoxParameter from './parameters/CheckBoxParameter';
 import IfParameter from './parameters/IfParameter';
 import BooleanParameter from './parameters/BooleanParameter';
-import Config from '../../../config';
-
+import Config from '../../../config'
+import BuilderButton from './BuilderButtons';
 const API_BASE = Config.api.baseUrl;
 
 export function createTemplateInstance(template) {
@@ -401,6 +401,9 @@ class TemplateInstance extends Component {
         </div>
         <div>
           { this.state.showElement ? this.renderBody() : null }
+          <BuilderButton
+            val={ this.props.templateInstance }
+          />
         </div>
       </div>
     );
