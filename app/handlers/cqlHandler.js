@@ -129,7 +129,9 @@ class CqlArtifact {
               this.resourceMap.set(observationValueSets.checkInclusionInVS.name, observationValueSets.checkInclusionInVS);
             }
           } else {
-            this.resourceMap.set(parameter.value, observationValueSets);
+            observationValueSets.observations.map(observation => {
+              this.resourceMap.set(observation.name, observation);
+            });
           }
           break;
         case 'integer':

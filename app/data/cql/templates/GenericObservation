@@ -1,3 +1,9 @@
+<%if(observation.observations && observation.observations.length > 1) {
+  %>define "<%=observation.id%>-valuesets":
+  <%-observation.observations.map(function(obs) {
+  return `[Observation: "${obs.name}"]` }).join(` 
+  union `);%>
+<%}%>
 define "<%=element_name%>": 
   <%if(!observation.toConceptValue){
       %>C3F.QuantityValue(<%
@@ -7,7 +13,12 @@ define "<%=element_name%>":
     if("concepts" in observation){
       %>C3F.ObservationsByConcept("<%=observation.name%>")<%} 
     else {
-      %>C3F.WithUnit([Observation: "<%=observation.name%>"], <%-observation.units.values%>)<%
+      %>C3F.WithUnit(<%
+        if(observation.observations.length > 1){
+          %><%-`"${observation.id}-valuesets"`%><%
+        } else { 
+          %><%-`[Observation: "${observation.observations[0].name}"]` %><%
+        }%>, <%-observation.units.values%>)<%
     }
     if(valid){%>, <%=valid%> <%
       if(valid>1) {%>years<%} else {%>year<%}%>)<%
