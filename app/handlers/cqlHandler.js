@@ -7,8 +7,10 @@ const fs = require('fs');
 let archiver = require('archiver');
 const path = require( 'path' );
 const templatePath = 'app/data/cql/templates'
+const modifierPath = 'app/data/cql/modifiers'
 const artifactPath = 'app/data/cql/artifact.ejs'
-const templateMap = loadTemplates();
+const templateMap = loadTemplates(templatePath);
+const modifierMap = loadTemplates(modifierPath);
 // Each library will be included. Aliases are optional.
 const includeLibraries = [{name: 'FHIRHelpers', version: '1.0.2', alias: 'FHIRHelpers'},
                           {name: 'CDS_Connect_Commons_for_FHIRv102', version: '1', alias: 'C3F'},
@@ -51,14 +53,14 @@ function objToCql(req, res) {
   archive.finalize();
 }
 
-function loadTemplates() {
+function loadTemplates(pathToTemplates) {
   let templateMap = {};
   // Loop through all the files in the temp directory
-  fs.readdir( templatePath, function( err, files ) {
+  fs.readdir( pathToTemplates, function( err, files ) {
     if( err ) { console.error( "Could not list the directory.", err ); } 
 
     files.forEach( function( file, index ) {
-      templateMap[file] = fs.readFileSync(path.join( templatePath, file ), 'utf-8');
+      templateMap[file] = fs.readFileSync(path.join( pathToTemplates, file ), 'utf-8');
     });
   });
   return templateMap;
@@ -229,6 +231,7 @@ class CqlArtifact {
       }
     });
 
+    context.modifiers = element.modifiers
     context.element_name = (context.element_name || element.uniqueId);
     this.contexts.push(context)
   }
@@ -237,7 +240,15 @@ class CqlArtifact {
   body() {
     return this.contexts.map((context) => {
       if (!templateMap[context.template]) console.error("Template could not be found: " + context.template);
-      return ejs.render(templateMap[context.template], context)
+      context.elementDetails = ejs.render(templateMap[context.template], context)
+      if (context.modifiers != null) {
+        context.modifiers.forEach(modifier => {
+          if (!modifierMap[modifier.template]) console.error("Modifier Template could not be found: " + modifier.template);
+          if (modifier.value) context.val = modifier.value
+          context.elementDetails = ejs.render(modifierMap[modifier.template], context)
+        })
+      }
+      return context.elementDetails;
     }).join("\n");
   }
   header() {
