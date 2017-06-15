@@ -1,1 +1,1 @@
-C3F.ConceptValue(<%=elementDetails%>)
+C3F.ConceptValue(<%-elementDetails%>)

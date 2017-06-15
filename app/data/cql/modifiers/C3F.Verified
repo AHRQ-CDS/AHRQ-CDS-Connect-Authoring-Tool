@@ -1,1 +1,1 @@
-C3F.Verified(<%=elementDetails%>)
+C3F.Verified(<%-elementDetails%>)

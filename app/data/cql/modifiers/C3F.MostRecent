@@ -1,1 +1,1 @@
-C3F.MostRecent(<%=elementDetails%>)
+C3F.MostRecent(<%-elementDetails%>)
