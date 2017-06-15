@@ -64,6 +64,16 @@ function loadTemplates() {
   return templateMap;
 }
 
+// This creates the context EJS uses to create a union of queries using different valuesets
+function createGroupedContext(id, valuesets, type) {
+  let groupedContext = {
+    template: 'MultipleValuesetsExpression',
+    name: `${id}-valuesets`,
+    valuesets: valuesets,
+    type: type
+  };
+  return groupedContext;
+}
 
 // Class to handle all cql generation
 class CqlArtifact {
@@ -83,6 +93,7 @@ class CqlArtifact {
     this.codeSystemMap = new Map();
     this.codeMap = new Map();
     this.conceptMap = new Map();
+    this.referenceVariables = [];
     this.paramContexts = [];
     this.contexts = [];
     this.elements.forEach((element) => { 
@@ -133,6 +144,13 @@ class CqlArtifact {
             observationValueSets.observations.map(observation => {
               this.resourceMap.set(observation.name, observation);
             });
+            // For observations that use more than one valueset, create a separate define statement that
+            // groups the queries for each valueset into one expression that is then referenced
+            if(observationValueSets.observations.length > 1) {
+              let groupedContext = createGroupedContext(observationValueSets.id, observationValueSets.observations, 'Observation');
+              this.contexts.push(groupedContext)
+              context.groupedVarName = groupedContext.name;
+            }
           }
           break;
         case 'number':
