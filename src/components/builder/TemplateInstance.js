@@ -511,6 +511,9 @@ class TemplateInstance extends Component {
             </div>
           </div>
         </div>
+        <div>
+          { this.state.showElement ? this.renderBody() : null }
+        </div>
       </div>
     );
   }
