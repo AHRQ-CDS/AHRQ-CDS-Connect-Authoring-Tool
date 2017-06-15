@@ -1,9 +1,3 @@
-<%if(observation.observations && observation.observations.length > 1) {
-  %>define "<%=observation.id%>-valuesets":
-  <%-observation.observations.map(function(obs) {
-  return `[Observation: "${obs.name}"]` }).join(` 
-  union `);%>
-<%}%>
 define "<%=element_name%>": 
   <%if(!observation.toConceptValue){
       %>C3F.QuantityValue(<%
@@ -15,7 +9,7 @@ define "<%=element_name%>":
     else {
       %>C3F.WithUnit(<%
         if(observation.observations.length > 1){
-          %><%-`"${observation.id}-valuesets"`%><%
+          %>"<%=groupedVarName%>"<%
         } else { 
           %><%-`[Observation: "${observation.observations[0].name}"]` %><%
         }%>, <%-observation.units.values%>)<%
