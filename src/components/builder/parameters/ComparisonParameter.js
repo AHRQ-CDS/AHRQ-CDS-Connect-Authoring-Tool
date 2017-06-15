@@ -5,12 +5,12 @@ import _ from 'lodash';
 class ComparisonParameter extends Component {
 
   render() {
-    const option = [  { value: '>', label: '>' },
-                      { value: '>=', label: '≥' },
-                      { value: '=', label: '=' },
-                      { value: '!=', label: '≠' },
-                      { value: '<', label: '<' },
-                      { value: '<=', label: '≤' },
+    const option = [  { value: '>', label: 'greater than' },
+                      { value: '>=', label: 'greater than or equal to' },
+                      { value: '=', label: 'equal to' },
+                      { value: '!=', label: 'not equal to' },
+                      { value: '<', label: 'less than' },
+                      { value: '<=', label: 'less than or equal to' },
                    ];
     const id = _.uniqueId('parameter-');
     return (
