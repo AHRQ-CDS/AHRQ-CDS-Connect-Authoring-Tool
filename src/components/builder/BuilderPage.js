@@ -34,6 +34,7 @@ class BuilderPage extends Component {
     this.saveArtifact = this.saveArtifact.bind(this);
     this.downloadCQL = this.downloadCQL.bind(this);
     this.updateSingleElement = this.updateSingleElement.bind(this);
+    this.updateSingleElementModifiers = this.updateSingleElementModifiers.bind(this);
     this.manageTemplateExtensions = this.manageTemplateExtensions.bind(this);
   }
 
@@ -181,7 +182,16 @@ class BuilderPage extends Component {
     this.setState({ templateInstances: elements });
   }
 
-  updateSingleElement(instanceId, state) {
+  // TODO: I don't like these methods... must be a better way.
+  updateSingleElementModifiers(instanceId, modifiers) {
+    const elements = this.state.templateInstances;
+    const elementIndex = elements.findIndex(element => element.uniqueId === instanceId);
+    if (elementIndex !== undefined) {
+      this.setState({ templateInstances: update(elements, {[elementIndex]: {modifiers: {$set: modifiers}} })});
+    }
+  }
+
+  updateSingleElement(instanceId, state, modifiers=[]) {
     const elements = this.state.templateInstances;
     const elementIndex = elements.findIndex(element =>
       // get relevant element
@@ -202,8 +212,7 @@ class BuilderPage extends Component {
           }
         }
       });
-
-      // merge back into templateInstances
+     // merge back into templateInstances
       this.setState({ templateInstances: editedElements });
     }
   }
@@ -250,8 +259,9 @@ class BuilderPage extends Component {
           <BuilderTarget
             updateTemplateInstances={this.setTemplateInstances}
             updateSingleElement={this.updateSingleElement}
-            templateInstances={this.state.templateInstances}
-            groups={this.state.groups} />
+            groups={this.state.groups}  
+            updateSingleElementModifiers={this.updateSingleElementModifiers}
+            templateInstances={this.state.templateInstances} />
         </section>
       </div>
     );

@@ -3,6 +3,8 @@ import axios from 'axios';
 import FontAwesome from 'react-fontawesome';
 import _ from 'lodash';
 import NumberParameter from './parameters/NumberParameter';
+import update from 'immutability-helper';
+import IntegerParameter from './parameters/IntegerParameter';
 import StringParameter from './parameters/StringParameter';
 import ObservationParameter from './parameters/ObservationParameter';
 import ValueSetParameter from './parameters/ValueSetParameter';
@@ -13,8 +15,10 @@ import ComparisonParameter from './parameters/ComparisonParameter';
 import CheckBoxParameter from './parameters/CheckBoxParameter';
 import IfParameter from './parameters/IfParameter';
 import BooleanParameter from './parameters/BooleanParameter';
-import Config from '../../../config'
-import BuilderButton from './BuilderButtons';
+import Config from '../../../config';
+import Modifiers from '../../data/modifiers.js';
+import LablModifier from './modifiers/LabelModifier';
+import ValueComparison from './modifiers/ValueComparison';
 const API_BASE = Config.api.baseUrl;
 
 export function createTemplateInstance(template) {
@@ -51,6 +55,7 @@ class TemplateInstance extends Component {
     templateInstance: PropTypes.object.isRequired,
     otherInstances: PropTypes.array.isRequired,
     updateSingleElement: PropTypes.func.isRequired,
+    updateSingleElementModifiers: PropTypes.func.isRequired,
     deleteInstance: PropTypes.func.isRequired,
     saveInstance: PropTypes.func.isRequired,
     showPresets: PropTypes.func.isRequired
@@ -59,18 +64,40 @@ class TemplateInstance extends Component {
   constructor(props) {
     super(props);
 
+
+    this.modifierMap = _.keyBy(Modifiers, 'id');
+    this.modifersByInputType = {}
+    Modifiers.forEach((modifier) => { 
+      modifier.inputTypes.forEach((inputType) => {
+        this.modifersByInputType[inputType] = (this.modifersByInputType[inputType] || []).concat(modifier)
+      });
+    });
+
     this.state = {
       resources: {},
       presets: [],
       showElement: true,
-      showPresets: false
+      showPresets: false,
+      relevantModifiers: (this.modifersByInputType[this.props.templateInstance.returnType] || []),
+      appliedModifiers: []
     };
+
     this.updateInstance = this.updateInstance.bind(this);
     this.updateNestedInstance = this.updateNestedInstance.bind(this);
     this.updateList = this.updateList.bind(this);
     this.updateCase = this.updateCase.bind(this);
     this.updateIf = this.updateIf.bind(this);
     this.selectTemplate = this.selectTemplate.bind(this);
+    
+    // TODO: all this modifier stuff should probably be pulled out into another component
+    this.renderAppliedModifiers = this.renderAppliedModifiers.bind(this);
+    this.renderAppliedModifier = this.renderAppliedModifier.bind(this);
+    this.renderModifierSelect = this.renderModifierSelect.bind(this);
+    this.removeLastModifier = this.removeLastModifier.bind(this);
+    this.updateAppliedModifier = this.updateAppliedModifier.bind(this);
+    this.handleModifierSelected = this.handleModifierSelected.bind(this);
+    this.filterRelevantModifiers = this.filterRelevantModifiers.bind(this);
+
     this.notThisInstance = this.notThisInstance.bind(this);
     this.addComponent = this.addComponent.bind(this);
     this.updateComparison = this.updateComparison.bind(this);
@@ -211,6 +238,87 @@ class TemplateInstance extends Component {
     this.setState({});
   }
 
+  renderAppliedModifier(modifier, index) {
+    switch (modifier.id) {
+      case 'ValueComparison':
+        return (
+          <ValueComparison
+            key={index}
+            index={index}
+            min={modifier.values.min}
+            updateAppliedModifier={this.updateAppliedModifier}/>
+        );
+      default:
+        return (<LablModifier key={index} name={modifier.name} id={modifier.id}/>);;
+    }
+
+    return (
+      <div key={index}>{modifier.name}</div>
+    )
+  }
+
+  renderAppliedModifiers() {
+    return (
+      <div>
+        {this.state.appliedModifiers.map((modifier, index) => 
+          this.renderAppliedModifier(modifier, index)
+        )}
+      </div>
+    );
+
+  }
+
+  filterRelevantModifiers(returnType) {
+    if (_.isUndefined(returnType)) {
+      returnType = (_.last(this.state.appliedModifiers) || this.props.templateInstance).returnType;
+    }
+    console.log("FILTER BY: " + returnType);
+    this.setState({relevantModifiers: (this.modifersByInputType[returnType] || [])});
+  }
+
+  handleModifierSelected(event) {
+    let selectedModifier = this.modifierMap[event.target.value]
+    this.setAppliedModifiers(this.state.appliedModifiers.concat([selectedModifier]));
+    event.target.value="" // reset the select box
+  }
+
+  updateAppliedModifier(index, value) {
+    this.setAppliedModifiers(update(this.state.appliedModifiers, {[index]: {values: {$set: value}} }));
+  }
+  setAppliedModifiers(appliedModifiers) {
+    this.setState({appliedModifiers: appliedModifiers}, this.filterRelevantModifiers);
+    this.props.updateSingleElementModifiers(this.props.templateInstance.uniqueId, appliedModifiers);
+  }
+
+  removeLastModifier() {
+    let newAppliedModifiers = this.state.appliedModifiers.slice();
+    newAppliedModifiers.pop();
+    this.setAppliedModifiers(newAppliedModifiers)
+  }
+
+  renderModifierSelect() {
+    // filter modifiers?
+    return (
+      <div>
+        { (this.state.relevantModifiers.length > 0)
+          ? <select onChange={this.handleModifierSelected}>
+              <option value="" selected disabled>add expression</option>
+              {this.state.relevantModifiers.map((modifier) => 
+                <option key={modifier.id} value={modifier.id}>{modifier.name}</option>
+              )}
+            </select>
+          : null}
+        { (this.state.appliedModifiers.length > 0)
+          ? <button
+            onClick={this.removeLastModifier}
+            className="element__deletebutton"
+            aria-label={'remove last expression'}>
+            Remove Expression</button>
+          : null}
+      </div>
+    );
+  }
+
   selectTemplate(param) {
     if (param.static) {
       return (
@@ -342,10 +450,14 @@ class TemplateInstance extends Component {
   renderBody() {
     return (
       <div className="element__body">
+      <div>
         {this.props.templateInstance.parameters.map((param, index) =>
           // todo: each parameter type should probably have its own component
           this.selectTemplate(param)
         )}
+        </div>
+        {this.renderAppliedModifiers()}
+        {this.renderModifierSelect()}
       </div>);
   }
 
@@ -398,12 +510,6 @@ class TemplateInstance extends Component {
               }
             </div>
           </div>
-        </div>
-        <div>
-          { this.state.showElement ? this.renderBody() : null }
-          <BuilderButton
-            val={ this.props.templateInstance }
-          />
         </div>
       </div>
     );

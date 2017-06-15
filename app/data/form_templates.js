@@ -62,7 +62,7 @@ module.exports = [
         id: 'TotalCholesterol',
         name: 'Total Cholesterol',
         extends: 'GenericObservation',
-        returnType: 'number', // TODO: these are all numbers because of the GenericObservation template - when it gets made more general, this might change back to observation
+        returnType: 'observations', //TODO: these are all numbers because of the GenericObservation template - when it gets made more general, this might change back to observation
         parameters: [
           { id: 'element_name', value: 'TotalCholesterol' },
           { id: 'observation', static: true, value: 'total_cholesterol' },
