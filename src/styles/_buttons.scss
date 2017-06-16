@@ -5,6 +5,13 @@
 
 .transparent-button {
   @include button($default-button-text-color, transparent, none);
+
+  &:hover,
+  &:focus,
+  &:active {
+    background-color: transparent;
+    text-decoration: underline;
+  }
 }
 
 .small-button {

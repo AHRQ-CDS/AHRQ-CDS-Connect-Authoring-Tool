@@ -41,12 +41,18 @@
     text-transform: none;
   }
 
-  /* Relevant to the react-select plugin */
-  .Select-placeholder,
-  .Select--single > .Select-control .Select-value {
-    color: $form-input-placeholder-color;
+  /* Validation states */
+  &.form__group-valid {
+    @include state-color($form-validation-success-color);
   }
 
+  &.form__group-invalid {
+    @include state-color($form-validation-error-color);
+  }
+}
+
+/* Relevant to the react-select plugin */
+.Select {
   .Select-control {
     color: $black;
     border: $border-global;
@@ -57,49 +63,37 @@
       box-shadow: $box-shadow;
     }
   }
-
+  .Select-placeholder,
+  .Select--single > .Select-control .Select-value {
+    color: $form-input-placeholder-color;
+  }
   .Select-menu-outer {
     box-shadow: $box-shadow;
     overflow: hidden;
   }
-
   .Select-option {
     color: $black;
   }
-
   .Select-clear {
     color: #333;
   }
 
-  .is-open > .Select-control {
+  &.is-open > .Select-control {
     border-bottom-left-radius: 0;
     border-bottom-right-radius: 0;
   }
-
-  .is-focused:not(.is-open) > .Select-control {
-    box-shadow: none;
-  }
-
-  .is-searchable {
+  &.is-searchable {
     .Select-control,
     .Select-control:hover {
       box-shadow: $box-shadow-inset;
     }
   }
-
-  /* Validation states */
-  &.form__group-valid {
-    @include state-color($form-validation-success-color);
-  }
-
-  &.form__group-invalid {
-    @include state-color($form-validation-error-color);
-  }
-}
-.Select {
   &.is-focused {
     .Select-control {
       @include native-focus();
     }
+  }
+  &.is-focused:not(.is-open) > .Select-control {
+    box-shadow: none;
   }
 }
