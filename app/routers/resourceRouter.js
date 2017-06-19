@@ -14,6 +14,7 @@ ResourceRouter.route('/')
 ResourceRouter.route('/templates')
   // Get all age ranges saved in the resources collection
   .get(function(request, result) {
+    console.log(templates)
     result.json(templates);
   })
 

@@ -7,7 +7,7 @@ import _ from 'lodash';
 import BuilderSubPalette from './BuilderSubPalette';
 import BuilderPalette from './BuilderPalette';
 import BuilderTarget from './BuilderTarget';
-// import groups from '../../data/templates';
+import groups from '../../data/templates';
 import Config from '../../../config'
 
 // Suppress is a flag that is specific to an element. It should not be inherited by children
@@ -28,7 +28,7 @@ class BuilderPage extends Component {
       name: 'Untitled Artifact',
       id: null,
       version: null,
-      groups: axios.get(`${API_BASE}/resources/templates`)
+      // groups: axios.get(`${API_BASE}/resources/templates`)
     };
 
     this.setTemplateInstances = this.setTemplateInstances.bind(this);
@@ -36,40 +36,69 @@ class BuilderPage extends Component {
     this.downloadCQL = this.downloadCQL.bind(this);
     this.updateSingleElement = this.updateSingleElement.bind(this);
     this.manageTemplateExtensions = this.manageTemplateExtensions.bind(this);
-    this.manageTemplateExtensions();
   }
 
-  componentDidMount() {
-    if (this.props.match) {
-      this.setSelectedGroup(this.props.match.params.group);
-      if (this.props.match.params.id) {
-        // fetch the relevant artifact from the server.
-        const id = this.props.match.params.id;
-        axios.get(`${API_BASE}/artifacts/${id}`)
-          .then((res) => {
-            const artifact = res.data[0];
-            this.setState({ id: artifact._id });
-            this.setState({ name: artifact.name });
-            this.setState({ version: artifact.version });
-            this.setState({ templateInstances: artifact.templateInstances });
-          });
-      }
+  loadExistingArtifact() {
+    if (this.props.match.params.id) {
+      // fetch the relevant artifact from the server.
+      const id = this.props.match.params.id;
+      axios.get(`${API_BASE}/artifacts/${id}`)
+        .then((res) => {
+          const artifact = res.data[0];
+          this.setState({ id: artifact._id });
+          this.setState({ name: artifact.name });
+          this.setState({ version: artifact.version });
+          this.setState({ templateInstances: artifact.templateInstances });
+        });
     }
   }
 
-  manageTemplateExtensions() {
-    const entryMap = {};
-    this.state.groups
+  componentDidMount() {
+    axios.get(`${API_BASE}/resources/templates`)
       .then((result) => {
-        result.data.forEach((group) => {
-          group.entries.forEach((entry) => {
-            entryMap[entry.id] = entry;
-          });
-        });
+        this.setState({groups : result.data})
+        this.manageTemplateExtensions();
+        if (this.props.match) {
+          this.setSelectedGroup(this.props.match.params.group);
+          this.loadExistingArtifact();
+        }
       })
       .catch((error) => {
         console.log(error);
-      })
+      });
+  }
+
+  manageTemplateExtensions() {
+    // this.state.groups
+    //   .then((result) => {
+    //     const groups = result.data;
+    //     const entryMap = {};
+    //     groups.forEach((group) => {
+    //       group.entries.forEach((entry) => {
+    //         entryMap[entry.id] = entry;
+    //       });
+    //     });
+    
+    //     Object.keys(entryMap).forEach((key) => {
+    //       let entry = entryMap[key];
+    //       if (entry.extends) {
+    //         this.mergeInParentTemplate(entry, entryMap);
+    //       }
+    //     });
+    //   })
+    //   .catch((error) => {
+    //     console.log(error);
+    //   })
+    console.log(this.state.groups)
+    console.log(groups)
+    console.log(JSON.stringify(this.state.groups)===JSON.stringify(groups))
+    const entryMap = {};
+    this.state.groups.forEach((group) => {
+    // groups.forEach((group) => {
+      group.entries.forEach((entry) => {
+        entryMap[entry.id] = entry;
+      });
+    });
     
     Object.keys(entryMap).forEach((key) => {
       let entry = entryMap[key];
@@ -158,18 +187,26 @@ class BuilderPage extends Component {
   }
 
   setSelectedGroup(groupId) {
-    this.state.groups
-      .then((result) => {
-        const group = result.data.find(g => parseInt(g.id, 10) === parseInt(groupId, 10));
+    // this.state.groups
+    //   .then((result) => {
+    //     const group = result.data.find(g => parseInt(g.id, 10) === parseInt(groupId, 10));
+    //     if (group) {
+    //       this.setState({ selectedGroup: group });
+    //     } else {
+    //       this.setState({ selectedGroup: null });
+    //     }
+    //   })
+    //   .catch((error) => {
+    //     console.log(error);
+    //   })
+    console.log('selected')
+    const group = this.state.groups.find(g => parseInt(g.id, 10) === parseInt(groupId, 10));
+    // const group = groups.find(g => parseInt(g.id, 10) === parseInt(groupId, 10));
         if (group) {
           this.setState({ selectedGroup: group });
         } else {
           this.setState({ selectedGroup: null });
         }
-      })
-      .catch((error) => {
-        console.log(error);
-      })
   }
 
   setTemplateInstances(elements) {
