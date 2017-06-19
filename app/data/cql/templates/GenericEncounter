@@ -1,0 +1,3 @@
+define "<%=element_name%>":
+  <%-encounter.encounters.map(encounter => `[Encounter: "${encounter.name}"]`).join(`
+  union `)%>

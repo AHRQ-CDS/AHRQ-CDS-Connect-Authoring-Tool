@@ -331,5 +331,20 @@ module.exports = {
         }
       ],
     }
+  },
+  encounters: {
+    outpatient_encounter: {
+      id: 'outpatient_encounter',
+      encounters: [
+        {
+          name: 'Office visit',
+          oid: '2.16.840.1.113883.3.464.1003.101.11.1005'
+        },
+        {
+          name: 'Annual wellness visit',
+          oid: '2.16.840.1.113883.3.526.2.1363'
+        }
+      ]
+    }
   }
 }

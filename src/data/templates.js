@@ -382,6 +382,33 @@ module.exports = [
       },
     ]
   },
+  {
+    id: 8,
+    icon: 'ambulance',
+    name: 'Encounters',
+    entries: [
+      {
+        id: 'GenericEncounter',
+        name: 'Encounter',
+        returnType: 'encounter',
+        suppress: true,
+        extends: 'Base',
+        parameters: [
+          { id: 'encounter', type: 'encounter', name: 'Encounter' },
+        ],
+      },
+      {
+        id: 'OutpatientEncounters',
+        name: 'Outpatient Encounter',
+        returnType: 'encounter',
+        extends: 'GenericEncounter',
+        parameters: [
+          { id: 'element_name', value: 'OutpatientEncounter' },
+          { id: 'encounter', static: true, value: "outpatient_encounter"}
+        ]
+      }
+    ]
+  }
   //   'Gender',
   //   'Ethnicity',
   //   'Race'],
