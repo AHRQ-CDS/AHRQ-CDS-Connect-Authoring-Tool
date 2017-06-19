@@ -2,6 +2,8 @@ import React, { Component, PropTypes } from 'react';
 import _ from 'lodash';
 import axios from 'axios';
 import TemplateInstance from './TemplateInstance';
+import ElementSelect from './ElementSelect';
+import elementGroups from '../../data/templates';
 import Config from '../../../config'
 const API_BASE = Config.api.baseUrl;
 
@@ -46,9 +48,7 @@ class BuilderTarget extends Component {
     return (
       <section className="builder__canvas">
         {
-          this.props.templateInstances.length === 0
-          ? 'Add a template from the left sidebar.'
-          : this.props.templateInstances.map(
+          this.props.templateInstances.map(
             (element, index) =>
               <TemplateInstance
                 key={element.uniqueId}
@@ -60,6 +60,11 @@ class BuilderTarget extends Component {
                 updateSingleElement={this.props.updateSingleElement} />
             )
         }
+        <ElementSelect
+          categories={elementGroups}
+          templateInstances={this.props.templateInstances}
+          updateTemplateInstances={this.props.updateTemplateInstances}
+          />
       </section>
     );
   }

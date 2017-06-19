@@ -52,7 +52,7 @@ class ElementTypeahead extends Component {
 
   getAllTemplates = () => {
     return flatten(this.props.groups.filter(g => !g.suppress).map(g => {
-      return g.entries;
+      return g.entries.filter(g => !g.suppress);
     }));
   }
 

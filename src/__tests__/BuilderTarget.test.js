@@ -27,14 +27,14 @@ beforeEach(() => {
 
 test('indicates absence of content', () => {
   expect(component.hasClass('builder__canvas')).toBe(true);
-  expect(component.text()).toContain('Add a template from the left sidebar.');
+  expect(component.text()).toContain('Add element');
 });
 
 test('indicates presence of content', () => {
   expect(componentWithElements.hasClass('builder__canvas')).toBe(true);
   expect(componentWithElements.text()).not.toContain('Add a template from the left sidebar.');
   expect(componentWithElements.props().templateInstances).toEqual(templateInstances);
-  expect(componentWithElements.children()).toHaveLength(templateInstances.length);
+  expect(componentWithElements.children()).toHaveLength(templateInstances.length + 1);
   expect(componentWithElements.find(TemplateInstance)).toHaveLength(templateInstances.length);
 });
 
