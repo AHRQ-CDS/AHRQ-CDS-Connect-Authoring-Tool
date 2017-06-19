@@ -1,8 +1,10 @@
 import React, { Component } from 'react';
 import FontAwesome from 'react-fontawesome';
 import { NavLink } from 'react-router-dom';
+import axios from 'axios';
 import ElementTypeahead from './ElementTypeahead';
-import groups from '../../data/templates';
+import Config from '../../../config'
+const API_BASE = Config.api.baseUrl;
 
 class BuilderPalette extends Component {
   constructor(props) {
@@ -11,6 +13,16 @@ class BuilderPalette extends Component {
     this.state = {
       menuExpanded: false
     };
+  }
+
+  componentWillMount() {
+    axios.get(`${API_BASE}/config/templates`)
+      .then((result) => {
+        this.setState({groups : result.data})
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   }
 
   renderActiveLink() {
@@ -28,7 +40,9 @@ class BuilderPalette extends Component {
   }
 
   renderMenu() {
-    return groups.filter(g => !g.suppress).map((g) => {
+    if (this.state.groups == null) 
+      return null;
+    return this.state.groups.filter(g => !g.suppress).map((g) => {
       const location = `/build/${g.id}`;
       return (
         <li role="menuitem" key={g.name}>
@@ -45,6 +59,8 @@ class BuilderPalette extends Component {
   }
 
   render() {
+    if (this.state.groups == null)
+      return null;
     return (
       <nav className="builder__palette" aria-label="Element menu">
         <ul
@@ -61,7 +77,7 @@ class BuilderPalette extends Component {
               {this.renderMenu()}
             </ul>
             <ElementTypeahead
-              groups={groups}
+              groups={this.state.groups}
               selectedGroup={this.props.selectedGroup}
               templateInstances={this.props.templateInstances}
               updateTemplateInstances={this.props.updateTemplateInstances}

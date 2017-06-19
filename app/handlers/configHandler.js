@@ -1,17 +1,31 @@
+const Resources = require('../data/resources');
+const Templates = require('../data/form_templates');
 const ValueSets = require('../data/valueSets');
 
 module.exports = {
-  getAll: getAll,
-  getOne: getOne
+  getResources : getResources,
+  getTemplates : getTemplates,
+  getValueSets : getValueSets,
+  getOneValueSet : getOneValueSet
 }
 
 // Returns all ValueSets saved
-function getAll(request, result) {
+function getResources(request, result) {
+  result.json(Resources);
+}
+
+// Returns all ValueSets saved
+function getTemplates(request, result) {
+  result.json(Templates);
+}
+
+// Returns all ValueSets saved
+function getValueSets(request, result) {
   result.json(ValueSets);
 }
 
 // Returns the nested ValueSet specified by the remaining path of the route
-function getOne(request, result) {
+function getOneValueSet(request, result) {
   // Gets the ValueSet category specified
   let selectedObject = ValueSets[request.params.valueset];
   if (selectedObject === undefined ) {
