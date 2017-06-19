@@ -40,9 +40,9 @@ class BuilderPalette extends Component {
   }
 
   renderMenu() {
-    if (this.state.groups == null) 
+    if (this.props.groups == null) 
       return null;
-    return this.state.groups.filter(g => !g.suppress).map((g) => {
+    return this.props.groups.filter(g => !g.suppress).map((g) => {
       const location = `/build/${g.id}`;
       return (
         <li role="menuitem" key={g.name}>
@@ -59,7 +59,7 @@ class BuilderPalette extends Component {
   }
 
   render() {
-    if (this.state.groups == null)
+    if (this.props.groups == null)
       return null;
     return (
       <nav className="builder__palette" aria-label="Element menu">
@@ -77,7 +77,7 @@ class BuilderPalette extends Component {
               {this.renderMenu()}
             </ul>
             <ElementTypeahead
-              groups={this.state.groups}
+              groups={this.props.groups}
               selectedGroup={this.props.selectedGroup}
               templateInstances={this.props.templateInstances}
               updateTemplateInstances={this.props.updateTemplateInstances}

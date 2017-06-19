@@ -237,7 +237,8 @@ class BuilderPage extends Component {
             <BuilderPalette
               selectedGroup={this.state.selectedGroup}
               templateInstances={this.state.templateInstances}
-              updateTemplateInstances={this.setTemplateInstances} />
+              updateTemplateInstances={this.setTemplateInstances} 
+              groups={this.state.groups} />
             {this.renderSidebar()}
           </div>
           <BuilderTarget
