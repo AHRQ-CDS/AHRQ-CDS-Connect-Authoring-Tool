@@ -79,7 +79,8 @@ class TemplateInstance extends Component {
       showElement: true,
       showPresets: false,
       relevantModifiers: (this.modifersByInputType[this.props.templateInstance.returnType] || []),
-      appliedModifiers: []
+      appliedModifiers: [],
+      showModifiers: false
     };
 
     this.updateInstance = this.updateInstance.bind(this);
@@ -239,33 +240,45 @@ class TemplateInstance extends Component {
   }
 
   renderAppliedModifier(modifier, index) {
-    switch (modifier.id) {
-      case 'ValueComparison':
-        return (
-          <ValueComparison
-            key={index}
-            index={index}
-            min={modifier.values.min}
-            updateAppliedModifier={this.updateAppliedModifier}/>
-        );
-      default:
-        return (<LablModifier key={index} name={modifier.name} id={modifier.id}/>);;
-    }
+    const modifierForm = ((modifier) => {
+      switch (modifier.id) {
+        case 'ValueComparison':
+          return (
+            <ValueComparison
+              key={index}
+              index={index}
+              min={modifier.values.min}
+              updateAppliedModifier={this.updateAppliedModifier}/>
+          );
+        default:
+          return (<LablModifier key={index} name={modifier.name} id={modifier.id}/>);
+      }
+    })(modifier);
 
     return (
-      <div key={index}>{modifier.name}</div>
-    )
+      <div key={index} className="modifier">
+        {modifierForm}
+        { (index + 1 == this.state.appliedModifiers.length)
+          ? <button
+            onClick={this.removeLastModifier}
+            className="modifier__deletebutton"
+            aria-label={'remove last expression'}>
+            Remove</button>
+          : null
+        }
+      </div>
+    );
+
   }
 
   renderAppliedModifiers() {
     return (
-      <div>
-        {this.state.appliedModifiers.map((modifier, index) => 
+      <div className="modifier__list">
+        {this.state.appliedModifiers.map((modifier, index) =>
           this.renderAppliedModifier(modifier, index)
         )}
       </div>
     );
-
   }
 
   filterRelevantModifiers(returnType) {
@@ -279,7 +292,7 @@ class TemplateInstance extends Component {
   handleModifierSelected(event) {
     let selectedModifier = this.modifierMap[event.target.value]
     this.setAppliedModifiers(this.state.appliedModifiers.concat([selectedModifier]));
-    event.target.value="" // reset the select box
+    this.setState({ showModifiers: false });
   }
 
   updateAppliedModifier(index, value) {
@@ -300,21 +313,25 @@ class TemplateInstance extends Component {
     // filter modifiers?
     return (
       <div>
-        { (this.state.relevantModifiers.length > 0)
-          ? <select onChange={this.handleModifierSelected}>
-              <option value="" selected disabled>add expression</option>
-              {this.state.relevantModifiers.map((modifier) => 
-                <option key={modifier.id} value={modifier.id}>{modifier.name}</option>
-              )}
-            </select>
-          : null}
-        { (this.state.appliedModifiers.length > 0)
-          ? <button
-            onClick={this.removeLastModifier}
-            className="element__deletebutton"
-            aria-label={'remove last expression'}>
-            Remove Expression</button>
-          : null}
+        { (this.state.relevantModifiers.length > 0 || this.state.appliedModifiers.length == 0)
+          ?
+            <div className="modifier__selection">
+              <button
+                onClick={() => this.setState({ showModifiers: !this.state.showModifiers })}
+                className="modifier__addbutton"
+                aria-label={'add expression'}>
+                Add Expression</button>
+              { (this.state.showModifiers)
+                ? this.state.relevantModifiers.map((modifier) =>
+                    <button key={modifier.id}
+                      value={modifier.id}
+                      onClick={this.handleModifierSelected} className="modifier__button">{modifier.name}</button>
+                  )
+                : null
+              }
+            </div>
+          : null
+        }
       </div>
     );
   }
