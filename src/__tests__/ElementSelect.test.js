@@ -3,9 +3,9 @@ import { fullRenderComponent } from '../helpers/test_helpers';
 import { elementGroups } from '../helpers/test_fixtures';
 
 let component,
-    elementField,
-    categoryField,
-    setInputValue;
+  elementField,
+  categoryField,
+  setInputValue;
 const updateTemplateInstances = jest.fn();
 
 beforeEach(() => {
@@ -13,7 +13,7 @@ beforeEach(() => {
     {
       categories: elementGroups,
       templateInstances: [],
-      updateTemplateInstances: updateTemplateInstances
+      updateTemplateInstances
     }
   );
 
@@ -75,10 +75,10 @@ describe('the select element field', () => {
     setInputValue(elementField.at(0).find('input'), element.name);
 
     const firstOption = elementField.find('.element-select__option').at(0);
-    firstOption.simulate('mouseDown', {button: 0});
+    firstOption.simulate('mouseDown', { button: 0 });
 
     const argument = updateTemplateInstances.mock.calls[0][0][0];
-    delete argument['uniqueId']; // uniqueId tested by updateTemplateInstances unit test
+    delete argument.uniqueId; // uniqueId tested by updateTemplateInstances unit test
 
     expect(updateTemplateInstances).toBeCalledWith([element]);
   });
@@ -91,14 +91,13 @@ describe('the select category field', () => {
 
   it('contains every original category plus "all" category in alphabetical order', () => {
     const categoryNames = ['All', 'Demographics', 'Observations'];
-    categoryField.find('.Select-control').simulate('mouseDown', {button: 0});
+    categoryField.find('.Select-control').simulate('mouseDown', { button: 0 });
     const options = categoryField.find('.Select-option');
 
     expect(options).toHaveLength(3);
     options.map((option, i) => {
       expect(option.text()).toEqual(categoryNames[i]);
     });
-
   });
 
   it('starts with "All" group selected', () => {
@@ -106,8 +105,8 @@ describe('the select category field', () => {
   });
 
   it('when selecting new category, updates value and element field options', () => {
-    categoryField.find('.Select-control').simulate('mouseDown', {button: 0});
-    categoryField.find('.Select-option').at(1).simulate('mouseDown', {button: 0});
+    categoryField.find('.Select-control').simulate('mouseDown', { button: 0 });
+    categoryField.find('.Select-option').at(1).simulate('mouseDown', { button: 0 });
     elementField.find('input').simulate('change');
 
     expect(categoryField.find('.Select-value').text()).toEqual('Demographics');

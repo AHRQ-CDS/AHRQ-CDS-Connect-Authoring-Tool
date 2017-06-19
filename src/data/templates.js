@@ -62,10 +62,10 @@ module.exports = [
         id: 'TotalCholesterol',
         name: 'Total Cholesterol',
         extends: 'GenericObservation',
-        returnType: 'number', //TODO: these are all numbers because of the GenericObservation template - when it gets made more general, this might change back to observation
+        returnType: 'number', // TODO: these are all numbers because of the GenericObservation template - when it gets made more general, this might change back to observation
         parameters: [
-          { id: 'element_name', value: "TotalCholesterol"},
-          { id: 'observation', static: true, value: "total_cholesterol"},
+          { id: 'element_name', value: 'TotalCholesterol' },
+          { id: 'observation', static: true, value: 'total_cholesterol' },
           { id: 'valid', static: true }
         ]
       },
@@ -75,8 +75,8 @@ module.exports = [
         extends: 'GenericObservation',
         returnType: 'number',
         parameters: [
-          { id: 'element_name', value: "HDLCholesterol"},
-          { id: 'observation', static: true, value: "hdl_cholesterol"},
+          { id: 'element_name', value: 'HDLCholesterol' },
+          { id: 'observation', static: true, value: 'hdl_cholesterol' },
           { id: 'valid', value: 6 }
         ]
       },
@@ -86,8 +86,8 @@ module.exports = [
         extends: 'GenericObservation',
         returnType: 'number',
         parameters: [
-          { id: 'element_name', value: "LDLCholesterol"},
-          { id: 'observation', static: true, value: "ldl_cholesterol"},
+          { id: 'element_name', value: 'LDLCholesterol' },
+          { id: 'observation', static: true, value: 'ldl_cholesterol' },
           { id: 'valid', value: 6 }
         ]
       },
@@ -97,8 +97,8 @@ module.exports = [
         extends: 'GenericObservation',
         returnType: 'number',
         parameters: [
-          { id: 'element_name', value: "SystolicBloodPressure"},
-          { id: 'observation', static: true, value: "systolic_blood_pressure"},
+          { id: 'element_name', value: 'SystolicBloodPressure' },
+          { id: 'observation', static: true, value: 'systolic_blood_pressure' },
           { id: 'valid', static: true }
         ]
       },
@@ -108,8 +108,8 @@ module.exports = [
         extends: 'GenericObservation',
         returnType: 'number',
         parameters: [
-          { id: 'element_name', value: "MostRecentASCVDRiskAssessmentResult"},
-          { id: 'observation', static: true, value: "ascvd_risk_assessment"},
+          { id: 'element_name', value: 'MostRecentASCVDRiskAssessmentResult' },
+          { id: 'observation', static: true, value: 'ascvd_risk_assessment' },
           { id: 'valid', value: 6 }
         ]
       },
@@ -119,8 +119,8 @@ module.exports = [
         extends: 'GenericObservation',
         returnType: 'boolean',
         parameters: [
-          { id: 'element_name', value: "IsSmoker"},
-          { id: 'observation', static: true, value: "smoker"},
+          { id: 'element_name', value: 'IsSmoker' },
+          { id: 'observation', static: true, value: 'smoker' },
           { id: 'valid', static: true }
         ]
       },
@@ -185,13 +185,13 @@ module.exports = [
         name: 'Case',
         parameters: [
           { id: 'element_name', type: 'string', name: 'Element Name' },
-          { 
-            id: 'components', 
+          {
+            id: 'components',
             type: 'case',
             value: {
-              cases : [{case : null, result : null}],
-              default : null,
-              variable : null
+              cases: [{ case: null, result: null }],
+              default: null,
+              variable: null
             },
             name: 'Elements' }
         ],
@@ -218,8 +218,8 @@ module.exports = [
         name: 'Diabetes',
         extends: 'GenericCondition',
         parameters: [
-          { id: 'element_name', value: "HasDiabetes"},
-          { id: 'condition', static: true, value: "diabetes"}
+          { id: 'element_name', value: 'HasDiabetes' },
+          { id: 'condition', static: true, value: 'diabetes' }
         ]
       },
       {
@@ -227,8 +227,8 @@ module.exports = [
         name: 'Hypertension',
         extends: 'GenericCondition',
         parameters: [
-          { id: 'element_name', value: "HasHypertension"},
-          { id: 'condition', static: true, value: "hypertension"}
+          { id: 'element_name', value: 'HasHypertension' },
+          { id: 'condition', static: true, value: 'hypertension' }
         ]
       },
       {
@@ -236,8 +236,8 @@ module.exports = [
         name: 'ASCVD',
         extends: 'GenericCondition',
         parameters: [
-          { id: 'element_name', value: "HasASCVD"},
-          { id: 'condition', static: true, value: "has_ascvd", inactive: true} // C3F.ActiveCondition() is applied unless inactive is set
+          { id: 'element_name', value: 'HasASCVD' },
+          { id: 'condition', static: true, value: 'has_ascvd', inactive: true } // C3F.ActiveCondition() is applied unless inactive is set
         ],
       },
       {
@@ -245,8 +245,8 @@ module.exports = [
         name: 'Hypercholesterolemia',
         extends: 'GenericCondition',
         parameters: [
-          { id: 'element_name', value: "HasFamilialHypercholesterolemia"},
-          { id: 'condition', static: true, value: "hypercholesterolemia"}
+          { id: 'element_name', value: 'HasFamilialHypercholesterolemia' },
+          { id: 'condition', static: true, value: 'hypercholesterolemia' }
         ]
       },
       {
@@ -254,8 +254,8 @@ module.exports = [
         name: 'Pregnancy dx',
         extends: 'Base',
         parameters: [
-          { id: 'element_name', value: "IsPregnant" },
-          { id: 'pregnancy', type: 'pregnancy', static: true, value: "pregnancy_dx" }
+          { id: 'element_name', value: 'IsPregnant' },
+          { id: 'pregnancy', type: 'pregnancy', static: true, value: 'pregnancy_dx' }
         ]
       },
       {
@@ -263,8 +263,8 @@ module.exports = [
         name: 'Breastfeeding',
         extends: 'GenericCondition',
         parameters: [
-          { id: 'element_name', value: "IsBreastfeeding"},
-          { id: 'condition', static: true, value: "breastfeeding"}
+          { id: 'element_name', value: 'IsBreastfeeding' },
+          { id: 'condition', static: true, value: 'breastfeeding' }
         ]
       },
       {
@@ -272,8 +272,8 @@ module.exports = [
         name: 'End Stage Renal Disease',
         extends: 'GenericCondition',
         parameters: [
-          { id: 'element_name', value: "HasEndStageRenalDisease"},
-          { id: 'condition', static: true, value: "end_stage_renal_disease"}
+          { id: 'element_name', value: 'HasEndStageRenalDisease' },
+          { id: 'condition', static: true, value: 'end_stage_renal_disease' }
         ]
       },
       {
@@ -281,8 +281,8 @@ module.exports = [
         name: 'Liver Disease',
         extends: 'GenericCondition',
         parameters: [
-          { id: 'element_name', value: "HasCirrhosis"},
-          { id: 'condition', static: true, value: "liver_disease"}
+          { id: 'element_name', value: 'HasCirrhosis' },
+          { id: 'condition', static: true, value: 'liver_disease' }
         ]
       }
     ]
@@ -299,7 +299,7 @@ module.exports = [
         suppress: true,
         extends: 'Base',
         parameters: [
-          {id:'medication',type:'medication',name:'Medication'}
+          { id: 'medication', type: 'medication', name: 'Medication' }
         ]
       },
       {
@@ -307,8 +307,8 @@ module.exports = [
         name: 'On Statin Therapy',
         extends: 'GenericMedication',
         parameters: [
-          { id: 'element_name', value: 'OnStatinTherapy'},
-          { id: 'medication', static: true, value: "on_statin_therapy"}
+          { id: 'element_name', value: 'OnStatinTherapy' },
+          { id: 'medication', static: true, value: 'on_statin_therapy' }
         ]
       },
     ]
@@ -336,7 +336,7 @@ module.exports = [
         extends: 'GenericProcedure',
         parameters: [
           { id: 'element_name', value: 'HasHadASCVDProcedures' },
-          { id: 'procedure', static: true, value: "ascvd_procedures" },
+          { id: 'procedure', static: true, value: 'ascvd_procedures' },
           { id: 'in_last_weeks', static: true } // This procedure doesn't use a LookBack so this parameter is static with no value
         ],
       },
@@ -347,7 +347,7 @@ module.exports = [
         extends: 'GenericProcedure',
         parameters: [
           { id: 'element_name', value: 'IsInPalliativeCare' },
-          { id: 'procedure', static: true, value: "palliative_care" },
+          { id: 'procedure', static: true, value: 'palliative_care' },
           { id: 'in_last_weeks', static: true }, // This procedure doesn't use a LookBack so this parameter is static with no value
 
         ],
@@ -359,7 +359,7 @@ module.exports = [
         extends: 'GenericProcedure',
         parameters: [
           { id: 'element_name', value: 'OnDialysis' },
-          { id: 'procedure', static: true, value: "dialysis" },
+          { id: 'procedure', static: true, value: 'dialysis' },
           { id: 'in_last_weeks', value: 1 }
         ],
       }
@@ -404,7 +404,7 @@ module.exports = [
         extends: 'GenericEncounter',
         parameters: [
           { id: 'element_name', value: 'OutpatientEncounter' },
-          { id: 'encounter', static: true, value: "outpatient_encounter"}
+          { id: 'encounter', static: true, value: 'outpatient_encounter' }
         ]
       }
     ]

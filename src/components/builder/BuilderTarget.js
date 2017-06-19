@@ -4,7 +4,7 @@ import axios from 'axios';
 import TemplateInstance from './TemplateInstance';
 import ElementSelect from './ElementSelect';
 import elementGroups from '../../data/templates';
-import Config from '../../../config'
+import Config from '../../../config';
 const API_BASE = Config.api.baseUrl;
 
 function showPresets(mongoId) {

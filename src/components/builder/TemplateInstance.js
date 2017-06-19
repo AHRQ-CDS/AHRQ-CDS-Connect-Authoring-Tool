@@ -10,7 +10,7 @@ import ListParameter from './parameters/ListParameter';
 import CaseParameter from './parameters/CaseParameter';
 import StaticParameter from './parameters/StaticParameter';
 import BooleanParameter from './parameters/BooleanParameter';
-import Config from '../../../config'
+import Config from '../../../config';
 const API_BASE = Config.api.baseUrl;
 
 export function createTemplateInstance(template) {
@@ -114,7 +114,7 @@ class TemplateInstance extends Component {
 
   // Used to update value states that are nested objects
   updateNestedInstance(id, value, element) {
-    let newState = {};
+    const newState = {};
     newState[id] = Object.assign({}, this.state[id]);
     newState[id][element] = value;
     this.updateInstance(newState);
@@ -145,18 +145,18 @@ class TemplateInstance extends Component {
   // Adds a new row of case statements
   addCaseComponent(id) {
     const array = this.state[id].cases.slice();
-    array.push({case : null, result : null});
+    array.push({ case: null, result: null });
     this.updateNestedInstance(id, array, 'cases');
   }
 
   selectTemplate(param) {
     if (param.static) {
-        return (
+      return (
           <StaticParameter
             key={param.id}
             param={param}
             updateInstance={this.updateInstance} />
-        );
+      );
     }
     switch (param.type) {
       case 'integer':

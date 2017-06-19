@@ -5,8 +5,8 @@ const originalInstance = templateInstances[0];
 
 test('creating a new template instance clones the correct instance', () => {
   const newInstance = createTemplateInstance(originalInstance);
-  delete originalInstance['uniqueId'];
-  delete newInstance['uniqueId'];
+  delete originalInstance.uniqueId;
+  delete newInstance.uniqueId;
 
   expect(newInstance).toEqual(originalInstance);
 });

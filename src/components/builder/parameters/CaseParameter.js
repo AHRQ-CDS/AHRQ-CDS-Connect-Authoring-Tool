@@ -5,13 +5,13 @@ import FontAwesome from 'react-fontawesome';
 
 class CaseParameter extends Component {
   constructor(props) {
-    super(props)
+    super(props);
 
     this.state = {
-      id : _.uniqueId('parameter-'),
-      case : null,
-      result : null
-    }
+      id: _.uniqueId('parameter-'),
+      case: null,
+      result: null
+    };
   }
 
   filterOptions(v, option) {
@@ -21,21 +21,20 @@ class CaseParameter extends Component {
     } else {
       type = this.state.result;
     }
-    
+
     if (v.returnType == null) {
       return false;
     } else if (type != null && type !== v.returnType) {
       return false;
-    } else {
-      return true;
     }
+    return true;
   }
 
   // Checks if there is an existing returnType in any of the select options
   checkArrayType(option) {
     const cases = this.props.value.cases;
-    for (let i in cases) {
-      let item = cases[i][option];
+    for (const i in cases) {
+      const item = cases[i][option];
       if (item != null && item.returnType != null) {
         return item.returnType;
       }
@@ -44,17 +43,16 @@ class CaseParameter extends Component {
       return this.props.param.value.default.returnType;
     } else if (option === 'case' && this.props.param.value.variable != null) {
       return this.props.param.value.variable.returnType;
-    } else {
-      return null;
     }
+    return null;
   }
 
   // Update available options if necessary
   updateOptions(value, option) {
     if (value == null && this.checkArrayType(option) == null) {
-      this.setState({[option] : null});
+      this.setState({ [option]: null });
     } else if (value != null && this.checkArrayType(option) != null) {
-      this.setState({[option] : value.returnType});
+      this.setState({ [option]: value.returnType });
     }
   }
 
@@ -73,8 +71,8 @@ class CaseParameter extends Component {
 
   // Renders selects for case and result
   renderCaseResult(index, val, option) {
-    let placeholder = option === 'case' ? 'Select...' : 'Null';
-    return(
+    const placeholder = option === 'case' ? 'Select...' : 'Null';
+    return (
       <Select key={index}
         labelKey={'name'}
         autofocus
@@ -83,14 +81,14 @@ class CaseParameter extends Component {
         placeholder={placeholder}
         name={this.props.param.id}
         value={val[option]}
-        onChange={(value) => {this.updateCase(value, index, option)}}
+        onChange={(value) => { this.updateCase(value, index, option); }}
         searchable={true}/>
     );
   }
 
   // Renders single selects for default and variable
   renderSingleSelect(name, option) {
-    let filter = option === 'default' ? 'result' : 'case';
+    const filter = option === 'default' ? 'result' : 'case';
     return (
       <table width="100%">
         <thead>
@@ -109,7 +107,7 @@ class CaseParameter extends Component {
                 placeholder={'Null'}
                 name={this.props.param.id}
                 value={this.props.param.value[option]}
-                onChange={(value) => {this.updateSelect(value, option)}}
+                onChange={(value) => { this.updateSelect(value, option); }}
                 searchable={true}/>
             </td>
           </tr>

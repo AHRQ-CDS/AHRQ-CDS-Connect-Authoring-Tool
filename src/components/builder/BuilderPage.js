@@ -8,7 +8,7 @@ import BuilderSubPalette from './BuilderSubPalette';
 import BuilderPalette from './BuilderPalette';
 import BuilderTarget from './BuilderTarget';
 import groups from '../../data/templates';
-import Config from '../../../config'
+import Config from '../../../config';
 
 // Suppress is a flag that is specific to an element. It should not be inherited by children
 const ELEMENT_SPECIFIC_FIELDS = ['suppress'];
@@ -64,32 +64,31 @@ class BuilderPage extends Component {
       });
     });
     Object.keys(entryMap).forEach((key) => {
-      let entry = entryMap[key];
+      const entry = entryMap[key];
       if (entry.extends) {
         this.mergeInParentTemplate(entry, entryMap);
       }
     });
   }
   mergeInParentTemplate(entry, entryMap) {
-    let parent = entryMap[entry.extends]
+    const parent = entryMap[entry.extends];
     if (parent.extends) {
       // handle transitive
       this.mergeInParentTemplate(parent, entryMap);
     }
-    
+
     /* Merge entry fields with parent but remove fields that are should not be inherited.
-     * This merges the entry into the parent (minus non-inherited fields) so the entry updates the fields 
-     * it sets itself so inheritance works correctly. Then merge that object back onto entry so that 
+     * This merges the entry into the parent (minus non-inherited fields) so the entry updates the fields
+     * it sets itself so inheritance works correctly. Then merge that object back onto entry so that
      * the entry object has the new updated values */
     _.merge(entry, _.merge(_.omit(_.cloneDeep(parent), ELEMENT_SPECIFIC_FIELDS), entry));
 
     // merge parameters
     entry.parameters.forEach((parameter) => {
-      let matchingParameter = _.find(parent.parameters, { 'id': parameter.id});
+      const matchingParameter = _.find(parent.parameters, { id: parameter.id });
       _.merge(parameter, matchingParameter);
-
     });
-    let missing = _.differenceBy(parent.parameters, entry.parameters, 'id');
+    const missing = _.differenceBy(parent.parameters, entry.parameters, 'id');
     entry.parameters = missing.concat(entry.parameters);
   }
 
@@ -99,10 +98,10 @@ class BuilderPage extends Component {
       templateInstances: this.state.templateInstances
     };
     axios({
-      method : 'post',
-      url : `${API_BASE}/cql`,
-      responseType : 'blob',
-      data : artifact
+      method: 'post',
+      url: `${API_BASE}/cql`,
+      responseType: 'blob',
+      data: artifact
     })
       .then((result) => {
         FileSaver.saveAs(result.data, 'cql.zip');

@@ -7,9 +7,7 @@ const flatten = arr => arr.reduce(
   (acc, val) => acc.concat(Array.isArray(val) ? flatten(val) : val), []
 );
 
-const filterUnsuppressed = (items) => {
-  return items.filter(item => !item.suppress);
-}
+const filterUnsuppressed = items => items.filter(item => !item.suppress);
 
 const sortAlphabeticallyByName = (a, b) => {
   if (a.name < b.name) return -1;
@@ -17,22 +15,14 @@ const sortAlphabeticallyByName = (a, b) => {
   return 0;
 };
 
-const getAllElements = (categories) => {
-  return flatten(filterUnsuppressed(categories).map(cat => {
-    return filterUnsuppressed(cat.entries).map(e => {
-      return Object.assign({category: cat.name.replace(/s\s*$/, "")}, e);
-    });
-  }));
-};
+const getAllElements = categories => flatten(filterUnsuppressed(categories).map(cat => filterUnsuppressed(cat.entries).map(e => Object.assign({ category: cat.name.replace(/s\s*$/, '') }, e))));
 
-const optionRenderer = (option) => {
-  return (
+const optionRenderer = option => (
     <div className="element-select__option">
       <span className="element-select__option-value">{option.name}</span>
       { option.category && <span className="element-select__option-category">({option.category})</span> }
     </div>
   );
-}
 
 class ElementSelect extends Component {
   constructor(props) {
@@ -61,7 +51,7 @@ class ElementSelect extends Component {
   }
 
   generateInternalCategories = () => {
-    let categoriesCopy = Object.assign([], this.props.categories);
+    const categoriesCopy = Object.assign([], this.props.categories);
 
     categoriesCopy.unshift({
       icon: 'bars',
@@ -74,7 +64,7 @@ class ElementSelect extends Component {
 
   onSuggestionSelected = (suggestion) => {
     const instance = createTemplateInstance(suggestion);
-    delete instance['category']; // Don't send the category which is only needed for this component
+    delete instance.category; // Don't send the category which is only needed for this component
     this.props.updateTemplateInstances(this.props.templateInstances.concat(instance));
   }
 
@@ -111,7 +101,7 @@ class ElementSelect extends Component {
           options={this.state.categories}
           labelKey='name'
           onChange={this.onSelectedCategoryChange}
-          inputProps={{ id: this.categoryInputId, 'aria-label': "Narrow elements by category" }}
+          inputProps={{ id: this.categoryInputId, 'aria-label': 'Narrow elements by category' }}
         />
       </div>
     );

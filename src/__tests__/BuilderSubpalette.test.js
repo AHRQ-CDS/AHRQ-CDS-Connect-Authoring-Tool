@@ -7,7 +7,7 @@ const selectedGroup = {
   id: 1,
   icon: 'user',
   name: 'Demographics',
-  entries: [ {name: 'Age Range'}, {name: 'Gender'}, {name: 'Ethnicity'}, {name: 'Race'}]
+  entries: [{ name: 'Age Range' }, { name: 'Gender' }, { name: 'Ethnicity' }, { name: 'Race' }]
 };
 
 beforeEach(() => {
