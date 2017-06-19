@@ -48,16 +48,30 @@
   }
 
   .Select-control {
+    color: $black;
     border-radius: $border-radius;
     border-color: $form-input-border-color;
     border-style: solid;
     border-width: 0.1em;
     border-bottom-width: $border-width;
     outline: 0;
+    box-shadow: $box-shadow;
 
+    &:hover {
+      box-shadow: $box-shadow;
+    }
     &:focus {
       border-color: $form-input-focus-color;
     }
+  }
+
+  .Select-menu-outer {
+    box-shadow: $box-shadow;
+    overflow: hidden;
+  }
+
+  .Select-option {
+    color: $black;
   }
 
   .Select-clear {
@@ -73,6 +87,13 @@
   .is-focused:not(.is-open) > .Select-control {
     border-color: $form-input-focus-color;
     box-shadow: none;
+  }
+
+  .is-searchable {
+    .Select-control,
+    .Select-control:hover {
+      box-shadow: $box-shadow-inset;
+    }
   }
 
   /* Validation states */

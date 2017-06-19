@@ -15,7 +15,8 @@ $red: #e31c3d;
 $border-radius: 0.2em;
 $border-width: 0.1em;
 
-$box-shadow: 0 1px 3px $gray-light;
+$box-shadow: 1px 1px 1px 0 fade-out($black, 0.9);
+$box-shadow-inset: inset 0 1px 2px 0 fade-out($black, 0.9);
 
 $body-bg: $dark-blue;
 $page-bg: $gray;

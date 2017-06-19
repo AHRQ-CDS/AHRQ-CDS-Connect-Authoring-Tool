@@ -20,5 +20,8 @@ concept "<%=concept.name%>" : { <%concept.codes.forEach((code) => {%>"<%=code.na
   display '<%=concept.display%>'
 <%})-%>
 
+<% paramContexts.forEach((parameter, key) => {-%>
+parameter "<%=parameter.element_name%>" default <%=parameter.default%><%});%>
+
 context <%=context%>
 

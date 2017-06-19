@@ -9,6 +9,7 @@ module.exports = [
       {
         id: 'Base',
         name: 'Base Template',
+        type: 'element',
         parameters: [
           { id: 'element_name', type: 'string', name: 'Element Name' },
         ],
@@ -137,7 +138,6 @@ module.exports = [
       {
         id: 'LabValueRange',
         name: 'Lab Value Range',
-        category: 'RangeOfObservation',
         returnType: 'boolean',
         parameters: [
           { id: 'element_name', type: 'string', name: 'Element Name' },
@@ -261,10 +261,10 @@ module.exports = [
       {
         id: 'Pregnancydx',
         name: 'Pregnancy dx',
-        extends: 'GenericCondition',
+        extends: 'Base',
         parameters: [
-          { id: 'element_name', value: "IsPregnant"},
-          { id: 'condition', static: true, value: "pregnancy_dx"}
+          { id: 'element_name', value: "IsPregnant" },
+          { id: 'pregnancy', type: 'pregnancy', static: true, value: "pregnancy_dx" }
         ]
       },
       {
@@ -373,7 +373,24 @@ module.exports = [
         ],
       }
     ]
-  }
+  },
+  {
+    id: 7,
+    icon: 'sign-in',
+    name: 'Parameters',
+    entries: [
+      {
+        id: 'Boolean',
+        name: 'Boolean',
+        type: 'parameter',
+        returnType: 'boolean',
+        extends: 'Base',
+        parameters: [
+          { id: 'default', type: 'boolean', value: 'true', name: 'Default' }
+        ],
+      },
+    ]
+  },
   //   'Gender',
   //   'Ethnicity',
   //   'Race'],
