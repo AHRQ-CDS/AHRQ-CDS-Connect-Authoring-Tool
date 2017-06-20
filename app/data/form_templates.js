@@ -138,7 +138,6 @@ module.exports = [
       {
         id: 'LabValueRange',
         name: 'Lab Value Range',
-        category: 'RangeOfObservation',
         returnType: 'boolean',
         parameters: [
           { id: 'element_name', type: 'string', name: 'Element Name' },
@@ -179,6 +178,15 @@ module.exports = [
         returnType: 'string',
         parameters: [
           { id: 'element_value', type: 'string', name: 'Value' }
+        ],
+      },
+      {
+        id: 'If',
+        name: 'If',
+        returnType: 'if',
+        extends: 'Base',
+        parameters: [
+          { id: 'components', type: 'if', name: 'Elements', value: [{},{else: true, block: ''}]}
         ],
       },
       {
