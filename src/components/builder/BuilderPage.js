@@ -224,7 +224,7 @@ class BuilderPage extends Component {
             </button>
             <button onClick={this.downloadCQL}
               className="builder__cqlbutton is-unsaved">
-              CQL
+              Download CQL
             </button>
             <button onClick={() => this.saveArtifact(true)}
               className="builder__deletebutton">
