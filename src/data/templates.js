@@ -181,6 +181,15 @@ module.exports = [
         ],
       },
       {
+        id: 'If',
+        name: 'If',
+        returnType: 'if',
+        extends: 'Base',
+        parameters: [
+          { id: 'components', type: 'if', name: 'Elements', value: [{},{else: true, block: ''}]}
+        ],
+      },
+      {
         id: 'Case',
         name: 'Case',
         parameters: [
