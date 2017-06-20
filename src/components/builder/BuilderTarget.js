@@ -3,7 +3,6 @@ import _ from 'lodash';
 import axios from 'axios';
 import TemplateInstance from './TemplateInstance';
 import ElementSelect from './ElementSelect';
-import elementGroups from '../../data/templates';
 import Config from '../../../config'
 const API_BASE = Config.api.baseUrl;
 
@@ -61,7 +60,7 @@ class BuilderTarget extends Component {
             )
         }
         <ElementSelect
-          categories={elementGroups}
+          categories={this.props.groups}
           templateInstances={this.props.templateInstances}
           updateTemplateInstances={this.props.updateTemplateInstances}
           />

@@ -244,7 +244,8 @@ class BuilderPage extends Component {
           <BuilderTarget
             updateTemplateInstances={this.setTemplateInstances}
             updateSingleElement={this.updateSingleElement}
-            templateInstances={this.state.templateInstances} />
+            templateInstances={this.state.templateInstances}
+            groups={this.state.groups} />
         </section>
       </div>
     );
