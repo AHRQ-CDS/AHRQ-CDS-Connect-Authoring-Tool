@@ -33,7 +33,7 @@ class CaseParameter extends Component {
   // Checks if there is an existing returnType in any of the select options
   checkArrayType(option) {
     const cases = this.props.value.cases;
-    for (const i in cases) {
+    for (let i = 0; i < cases.length; i++) {
       const item = cases[i][option];
       if (item != null && item.returnType != null) {
         return item.returnType;

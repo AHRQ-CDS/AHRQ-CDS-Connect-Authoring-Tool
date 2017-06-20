@@ -3,6 +3,7 @@ import axios from 'axios';
 import ArtifactForm from './ArtifactForm';
 import ArtifactTable from './ArtifactTable';
 import Config from '../../../config';
+
 const API_BASE = Config.api.baseUrl;
 
 class Artifact extends Component {

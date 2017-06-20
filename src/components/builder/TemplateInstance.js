@@ -11,6 +11,7 @@ import CaseParameter from './parameters/CaseParameter';
 import StaticParameter from './parameters/StaticParameter';
 import BooleanParameter from './parameters/BooleanParameter';
 import Config from '../../../config';
+
 const API_BASE = Config.api.baseUrl;
 
 export function createTemplateInstance(template) {

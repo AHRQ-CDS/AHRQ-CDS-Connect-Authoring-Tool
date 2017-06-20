@@ -6,6 +6,7 @@ import FontAwesome from 'react-fontawesome';
 import ReactModal from 'react-modal';
 import ArtifactForm from './ArtifactForm';
 import Config from '../../../config';
+
 const API_BASE = Config.api.baseUrl;
 
 // For screen readers to not see the background text

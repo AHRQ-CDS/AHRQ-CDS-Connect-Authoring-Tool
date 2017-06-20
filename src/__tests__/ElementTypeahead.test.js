@@ -2,10 +2,10 @@ import ElementTypeahead from '../components/builder/ElementTypeahead';
 import { fullRenderComponent } from '../helpers/test_helpers';
 import { elementGroups } from '../helpers/test_fixtures';
 
-let component,
-  input,
-  dropdown,
-  setInputValue;
+let component;
+let input;
+let dropdown;
+let setInputValue;
 const updateTemplateInstances = jest.fn();
 
 beforeEach(() => {

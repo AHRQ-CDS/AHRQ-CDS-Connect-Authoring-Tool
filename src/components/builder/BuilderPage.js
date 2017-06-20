@@ -78,9 +78,9 @@ class BuilderPage extends Component {
     }
 
     /* Merge entry fields with parent but remove fields that are should not be inherited.
-     * This merges the entry into the parent (minus non-inherited fields) so the entry updates the fields
-     * it sets itself so inheritance works correctly. Then merge that object back onto entry so that
-     * the entry object has the new updated values */
+     * This merges the entry into the parent (minus non-inherited fields) so the entry updates the
+     * fields it sets itself so inheritance works correctly. Then merge that object back onto entry
+     * so that the entry object has the new updated values */
     _.merge(entry, _.merge(_.omit(_.cloneDeep(parent), ELEMENT_SPECIFIC_FIELDS), entry));
 
     // merge parameters
@@ -89,7 +89,7 @@ class BuilderPage extends Component {
       _.merge(parameter, matchingParameter);
     });
     const missing = _.differenceBy(parent.parameters, entry.parameters, 'id');
-    entry.parameters = missing.concat(entry.parameters);
+    entry.parameters = missing.concat(entry.parameters); // eslint-disable-line no-param-reassign
   }
 
   downloadCQL() {

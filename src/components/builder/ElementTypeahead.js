@@ -9,7 +9,7 @@ const renderSuggestion = suggestion => (
   </span>
 );
 
-const sortTemplatesByRelevancy = searchValue => function (a, b) {
+const sortTemplatesByRelevancy = searchValue => function (a, b) { // eslint-disable-line func-names
   const aLower = a.name.toLowerCase();
   const bLower = b.name.toLowerCase();
   const queryPosA = aLower.indexOf(searchValue);
@@ -48,14 +48,17 @@ class ElementTypeahead extends Component {
     this.inputId = _.uniqueId('element-typeahead-');
   }
 
-  getAllTemplates = () => flatten(this.props.groups.filter(g => !g.suppress).map(g => g.entries.filter(g => !g.suppress)))
+  getAllTemplates = () => flatten(this.props.groups.filter(g => !g.suppress).map(
+    g => g.entries.filter(element => !element.suppress)))
 
   getSuggestions = (value) => {
     const inputValue = value.trim().toLowerCase();
 
     if (!inputValue.length) return [];
 
-    let templates = !this.props.selectedGroup ? this.getAllTemplates() : this.props.selectedGroup.entries;
+    let templates = !this.props.selectedGroup
+      ? this.getAllTemplates()
+      : this.props.selectedGroup.entries;
     templates = templates.filter(template => template.name.toLowerCase().includes(inputValue));
 
     return templates.sort(sortTemplatesByRelevancy(inputValue));
@@ -63,9 +66,9 @@ class ElementTypeahead extends Component {
 
   getSuggestionValue = suggestion => suggestion.name;
 
-  getPlaceholderValue = () => this.props.selectedGroup ?
+  getPlaceholderValue = () => (this.props.selectedGroup ?
            `Search ${this.props.selectedGroup.name.toLowerCase().replace(/s\s*$/, '')} elements` :
-           'Search all elements'
+           'Search all elements');
 
   onChange = (event, { newValue }) => {
     this.setState({

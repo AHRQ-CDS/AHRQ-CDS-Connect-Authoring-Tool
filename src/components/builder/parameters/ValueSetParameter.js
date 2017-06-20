@@ -3,6 +3,7 @@ import Select from 'react-select';
 import axios from 'axios';
 import _ from 'lodash';
 import Config from '../../../../config';
+
 const API_BASE = Config.api.baseUrl;
 
 class ValueSetParameter extends Component {

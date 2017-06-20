@@ -2,10 +2,10 @@ import ElementSelect from '../components/builder/ElementSelect';
 import { fullRenderComponent } from '../helpers/test_helpers';
 import { elementGroups } from '../helpers/test_fixtures';
 
-let component,
-  elementField,
-  categoryField,
-  setInputValue;
+let component;
+let elementField;
+let categoryField;
+let setInputValue;
 const updateTemplateInstances = jest.fn();
 
 beforeEach(() => {
@@ -22,7 +22,7 @@ beforeEach(() => {
 
   setInputValue = (input, value) => {
     input.simulate('focus');
-    input.node.value = value;
+    input.node.value = value;  // eslint-disable-line no-param-reassign
     input.simulate('change');
   };
 });
@@ -95,9 +95,7 @@ describe('the select category field', () => {
     const options = categoryField.find('.Select-option');
 
     expect(options).toHaveLength(3);
-    options.map((option, i) => {
-      expect(option.text()).toEqual(categoryNames[i]);
-    });
+    options.map((option, i) => expect(option.text()).toEqual(categoryNames[i]));
   });
 
   it('starts with "All" group selected', () => {

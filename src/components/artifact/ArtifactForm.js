@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import axios from 'axios';
 import _ from 'lodash';
 import Config from '../../../config';
+
 const API_BASE = Config.api.baseUrl;
 
 class ArtifactForm extends Component {
