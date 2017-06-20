@@ -59,7 +59,8 @@ class ElementTypeahead extends Component {
     let templates = !this.props.selectedGroup
       ? this.getAllTemplates()
       : this.props.selectedGroup.entries;
-    templates = templates.filter(template => template.name.toLowerCase().includes(inputValue));
+    templates = templates.filter(template =>
+      !template.suppress && template.name.toLowerCase().includes(inputValue));
 
     return templates.sort(sortTemplatesByRelevancy(inputValue));
   };
