@@ -138,7 +138,6 @@ module.exports = [
       {
         id: 'LabValueRange',
         name: 'Lab Value Range',
-        category: 'RangeOfObservation',
         returnType: 'boolean',
         parameters: [
           { id: 'element_name', type: 'string', name: 'Element Name' },
@@ -194,6 +193,15 @@ module.exports = [
           { id: 'comparison_bound', type: 'number', typeOfNumber: 'float', name: 'Comparison Bound'},
           { id: 'checkbox', type: 'checkbox', name: 'Double Sided?', checked: false}
         ]
+      },
+      {
+        id: 'If',
+        name: 'If',
+        returnType: 'if',
+        extends: 'Base',
+        parameters: [
+          { id: 'components', type: 'if', name: 'Elements', value: [{},{else: true, block: ''}]}
+        ],
       },
       {
         id: 'Case',
