@@ -9,6 +9,7 @@ import ValueSetParameter from './parameters/ValueSetParameter';
 import ListParameter from './parameters/ListParameter';
 import CaseParameter from './parameters/CaseParameter';
 import StaticParameter from './parameters/StaticParameter';
+import IfParameter from './parameters/IfParameter';
 import BooleanParameter from './parameters/BooleanParameter';
 import Config from '../../../config';
 
@@ -66,10 +67,12 @@ class TemplateInstance extends Component {
     this.updateNestedInstance = this.updateNestedInstance.bind(this);
     this.updateList = this.updateList.bind(this);
     this.updateCase = this.updateCase.bind(this);
+    this.updateIf = this.updateIf.bind(this);
     this.selectTemplate = this.selectTemplate.bind(this);
     this.notThisInstance = this.notThisInstance.bind(this);
     this.addComponent = this.addComponent.bind(this);
     this.addCaseComponent = this.addCaseComponent.bind(this);
+    this.addIfComponent = this.addIfComponent.bind(this);
   }
 
   componentWillMount() {
@@ -101,7 +104,10 @@ class TemplateInstance extends Component {
   }
 
   notThisInstance(instance) {
-    return this.props.templateInstance.id !== instance.id;
+    // Look up by uniqueId to correctly identify the current instance
+    // For example, "and" elements have access to all other "and" elements besides itself
+    // They have different uniqueId's but the id's of all "and" elements is "And"
+    return this.props.templateInstance.uniqueId !== instance.uniqueId;
   }
 
   // getInstanceName(instance) {
@@ -148,6 +154,28 @@ class TemplateInstance extends Component {
     const array = this.state[id].cases.slice();
     array.push({ case: null, result: null });
     this.updateNestedInstance(id, array, 'cases');
+  }
+  
+  // Updates an if statemement with selected value
+  updateIf(paramId, value, index, place) {
+    const valueArray = this.state[paramId].slice();
+    // Mongoose stops empty objects from being saved, so this will be null if it wasn't set yet
+    if(_.isNil(valueArray[index])) {
+      valueArray[index] = {};
+    }
+    valueArray[index][place] = value;
+    const newState = {};
+    newState[paramId] = valueArray;
+    this.updateInstance(newState);
+  }
+  
+  // Adds new Condition/Block for If statements
+  addIfComponent(paramId) {
+    const currentParamValue =  this.state[paramId].slice();
+    currentParamValue.splice(currentParamValue.length-1, 0, {});
+    const newState = {};
+    newState[paramId] = currentParamValue;
+    this.updateInstance(newState);
   }
 
   selectTemplate(param) {
@@ -208,6 +236,16 @@ class TemplateInstance extends Component {
             joinOperator={this.props.templateInstance.name}
             addComponent={this.addComponent}
             updateList={this.updateList} />
+        );
+      case 'if':
+        return (
+          <IfParameter
+            key={param.id}
+            values={this.state.otherInstances}
+            param={param}
+            updateIfStatement={this.updateIf}
+            addIfComponent={this.addIfComponent}
+            value={this.state[param.id]} />
         );
       case 'case':
         return (
