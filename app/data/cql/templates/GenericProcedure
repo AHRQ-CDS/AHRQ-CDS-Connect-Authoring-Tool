@@ -1,10 +1,1 @@
-define "<%=element_name%>":
-  <%procedure.procedures.forEach((procedure, i) => { 
-  if(i>0) {%> 
-  or <%}
-  %>Exists(<%if(in_last_weeks) {
-    %>C3F.ProcedureLookBack(<%}
-      %>C3F.Completed([Procedure: "<%=procedure.name%>"])<%
-      if(in_last_weeks) {
-        %>, <%=in_last_weeks%> <%if(in_last_weeks>1) {%>weeks<%} else {%>week<%}%>)<%
-      } %>)<%})%>
+[Procedure: "<%-element_context%>"]

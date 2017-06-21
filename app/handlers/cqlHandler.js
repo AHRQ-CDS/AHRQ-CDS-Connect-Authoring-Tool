@@ -252,7 +252,7 @@ class CqlArtifact {
         value = ejs.render(modifierMap[modifier.cqlTemplate], modifierContext)
       })
       return value;
-    }).join("\n  or  "); //consider using '\t' instead of spaces if desired
+    }).join("\n  or "); //consider using '\t' instead of spaces if desired
   }
 
   // Generate cql for all elements
