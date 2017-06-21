@@ -154,6 +154,7 @@ class CqlArtifact {
               }
             }
           }
+          context.values = [ observationValueSets.name ]; // Every context.values must be an array, so force it here. This will change.
           break;
         case 'number':
           context[parameter.id] = parameter.value;
@@ -163,23 +164,28 @@ class CqlArtifact {
           break;
         case 'condition':
           let conditionValueSets = ValueSets.conditions[parameter.value];
-          conditionValueSets.conditions.map(condition => {
+          context.values = conditionValueSets.conditions.map(condition => {
             this.resourceMap.set(condition.name, condition);
+            return condition.name;
           })
           context.conditions = conditionValueSets.conditions;
           context.active = !(parameter.inactive);
           break;
         case 'medication':
           let medicationValueSets = ValueSets.medications[parameter.value];
-          medicationValueSets.medications.map(medication => {
+          context.values = medicationValueSets.medications.map(medication => {
             this.resourceMap.set(medication.name, medication);
+            return `C3F.Active${medication.type}([${medication.type}: "${medication.name}"])`
           })
           context.medication_titles = medicationValueSets.medications;
           break;
-        case 'procedure' :
+        case 'procedure':
           let procedureValueSets = ValueSets.procedures[parameter.value];
           context[parameter.id] = procedureValueSets;
-          procedureValueSets.procedures.forEach(valueset => this.resourceMap.set(valueset.name, valueset));
+          context.values = procedureValueSets.procedures.map(procedure => {
+            this.resourceMap.set(procedure.name, procedure)
+            return procedure.name;
+          });
           break;
         case 'encounter':
           let encounterValueSets = ValueSets.encounters[parameter.value];
@@ -209,11 +215,11 @@ class CqlArtifact {
               this.conceptMap.set(concept.name, concept);
             });
           }
-          context[parameter.id] = parameter.value;
-          // Get values for Pregnancy, due to the specific template
-          context.valueSetName = pregnancyValueSets.conditions[0].name;
-          context.pregnancyStatusConcept = pregnancyValueSets.concepts[0].name;
-          context.pregnancyCodeConcept = pregnancyValueSets.concepts[1].name;
+          context.specificTemplate = 'Pregnancydx';
+          context.specificValues = { element_name: (context.element_name || element.uniqueId),
+                                     valueSetName: pregnancyValueSets.conditions[0].name,
+                                     pregnancyStatusConcept: pregnancyValueSets.concepts[0].name,
+                                     pregnancyCodeConcept: pregnancyValueSets.concepts[1].name }
           break;
         case 'list':
           if (parameter.category === "comparison") {
@@ -236,19 +242,32 @@ class CqlArtifact {
     this.contexts.push(context)
   }
 
+  // Both parameters are arrays. All modifiers will be applied to all values, and joined with "\n or". If `values` is empty, will return null.
+  applyModifiers (values, modifiers = []) { // default modifiers to []
+    return values.map((value) => {
+      modifiers.map(modifier => {
+        if (!modifier.template in modifierMap) console.error("Modifier Template could not be found: " + modifier.cqlTemplate);
+        let modifierContext = { cqlLibraryFunction: modifier.cqlLibraryFunction, value_name: value };
+        if (modifier.value) modifierContext.val = modifier.value; // Certain modifiers (such as lookback) require values, so provide them here
+        value = ejs.render(modifierMap[modifier.cqlTemplate], modifierContext)
+      })
+      return value;
+    }).join("\n  or  "); //consider using '\t' instead of spaces if desired
+  }
+
   // Generate cql for all elements
   body() {
     return this.contexts.map((context) => {
-      if (!templateMap[context.template]) console.error("Template could not be found: " + context.template);
-      context.elementDetails = ejs.render(templateMap[context.template], context)
-      if (context.modifiers != null) {
-        context.modifiers.forEach(modifier => {
-          if (!modifierMap[modifier.template]) console.error("Modifier Template could not be found: " + modifier.template);
-          if (modifier.value) context.val = modifier.value
-          context.elementDetails = ejs.render(modifierMap[modifier.template], context)
+      if (context.specificTemplate) {
+        return ejs.render(templateMap[context.specificTemplate], {element_context: context.specificValues});
+      } else {
+        if (!context.template in templateMap) console.error("Template could not be found: " + context.template);
+        context.values.forEach((value, index) => {
+          context.values[index] = ejs.render(templateMap[context.template], {element_context: value})
         })
+        let cqlString = this.applyModifiers(context.values, context.modifiers);
+        return ejs.render(templateMap['BaseTemplate'], {element_name: context.element_name, cqlString: cqlString})
       }
-      return context.elementDetails;
     }).join("\n");
   }
   header() {

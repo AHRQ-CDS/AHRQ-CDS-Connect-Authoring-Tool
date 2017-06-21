@@ -8,22 +8,45 @@ class ValueComparison extends Component {
   }
 
   render() {
-    const id = _.uniqueId('parameter-');
+    const minId = _.uniqueId('min-');
+    const minInclusiveId = _.uniqueId('minInclusive-');
+    const maxId = _.uniqueId('max-');
+    const maxInclusiveId = _.uniqueId('maxInclusive-');
 
     return (
       <div>
-        <div className='form__group'>
-          <label htmlFor={id}>
-            Value Comparison:
-
-            <input id={id}
-              type="number"
-              name="min"
-              value={this.props.min}
+        <div >
+          <label htmlFor={minId}>
+            Min:
+            <input id={minId} type="number" name="min" value={this.props.min}
               onChange={(event) => {
                 this.props.updateAppliedModifier(this.props.index, { min: parseInt(event.target.value, 10) });
               }}
             />
+          </label>
+          <label htmlFor={minInclusiveId}>
+            <input id={minInclusiveId} type="checkbox" name="minInclusive" checked={this.props.minInclusive}
+              onChange={(event) => {
+                this.props.updateAppliedModifier(this.props.index, { minInclusive: event.target.checked });
+              }}
+            />
+            Inclusive
+          </label>
+          <label htmlFor={maxId}>
+            Max:
+            <input id={maxId} type="number" name="max" value={this.props.max}
+              onChange={(event) => {
+                this.props.updateAppliedModifier(this.props.index, { max: parseInt(event.target.value, 10) });
+              }}
+            />
+          </label>
+          <label htmlFor={maxInclusiveId}>
+            <input id={maxInclusiveId} type="checkbox" name="maxInclusive" checked={this.props.maxInclusive}
+              onChange={(event) => {
+                this.props.updateAppliedModifier(this.props.index, { maxInclusive: event.target.checked });
+              }}
+            />
+            Inclusive
           </label>
 
         </div>

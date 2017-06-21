@@ -19,6 +19,8 @@ import Config from '../../../config';
 import Modifiers from '../../data/modifiers.js';
 import LablModifier from './modifiers/LabelModifier';
 import ValueComparison from './modifiers/ValueComparison';
+import LookBack from './modifiers/LookBack';
+import WithUnit from './modifiers/WithUnit';
 const API_BASE = Config.api.baseUrl;
 
 export function createTemplateInstance(template) {
@@ -79,7 +81,7 @@ class TemplateInstance extends Component {
       showElement: true,
       showPresets: false,
       relevantModifiers: (this.modifersByInputType[this.props.templateInstance.returnType] || []),
-      appliedModifiers: [],
+      appliedModifiers: [], // these get set in component did mount
       showModifiers: false
     };
 
@@ -118,6 +120,10 @@ class TemplateInstance extends Component {
       .then((result) => {
         this.setState({ resources: result.data });
       });
+  }
+
+  componentDidMount() {
+    this.setAppliedModifiers(this.props.templateInstance.modifiers || []);
   }
 
   componentWillReceiveProps(nextProps) {
@@ -241,13 +247,33 @@ class TemplateInstance extends Component {
 
   renderAppliedModifier(modifier, index) {
     const modifierForm = ((modifier) => {
-      switch (modifier.id) {
+      switch (modifier.type || modifier.id) {
         case 'ValueComparison':
           return (
             <ValueComparison
               key={index}
               index={index}
               min={modifier.values.min}
+              minInclusive={modifier.values.minInclusive}
+              max={modifier.values.max}
+              maxInclusive={modifier.values.maxInclusive}
+              updateAppliedModifier={this.updateAppliedModifier}/>
+          );
+        case 'LookBack':
+          return (
+            <LookBack
+              key={index}
+              index={index}
+              value={modifier.values.value}
+              unit={modifier.values.unit}
+              updateAppliedModifier={this.updateAppliedModifier}/>
+          );
+        case 'WithUnit':
+          return (
+            <WithUnit
+              key={index}
+              index={index}
+              unit={modifier.values.unit}
               updateAppliedModifier={this.updateAppliedModifier}/>
           );
         default:
@@ -296,7 +322,7 @@ class TemplateInstance extends Component {
   }
 
   updateAppliedModifier(index, value) {
-    this.setAppliedModifiers(update(this.state.appliedModifiers, {[index]: {values: {$set: value}} }));
+    this.setAppliedModifiers(update(this.state.appliedModifiers, {[index]: {values: {$merge: value}} }));
   }
   setAppliedModifiers(appliedModifiers) {
     this.setState({appliedModifiers: appliedModifiers}, this.filterRelevantModifiers);

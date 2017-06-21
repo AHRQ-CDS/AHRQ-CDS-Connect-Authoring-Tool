@@ -50,7 +50,7 @@ module.exports = [
       {
         id: 'GenericObservation',
         name: 'Observation',
-        returnType: 'observation',
+        returnType: 'observations',
         suppress: true,
         extends: 'Base',
         parameters: [
@@ -62,7 +62,6 @@ module.exports = [
         id: 'TotalCholesterol',
         name: 'Total Cholesterol',
         extends: 'GenericObservation',
-        returnType: 'observations', //TODO: these are all numbers because of the GenericObservation template - when it gets made more general, this might change back to observation
         parameters: [
           { id: 'element_name', value: 'TotalCholesterol' },
           { id: 'observation', static: true, value: 'total_cholesterol' },
@@ -73,7 +72,6 @@ module.exports = [
         id: 'HDLCholesterol',
         name: 'HDL Cholesterol',
         extends: 'GenericObservation',
-        returnType: 'number',
         parameters: [
           { id: 'element_name', value: 'HDLCholesterol' },
           { id: 'observation', static: true, value: 'hdl_cholesterol' },
@@ -84,7 +82,6 @@ module.exports = [
         id: 'LDLCholesterol',
         name: 'LDL Cholesterol',
         extends: 'GenericObservation',
-        returnType: 'number',
         parameters: [
           { id: 'element_name', value: 'LDLCholesterol' },
           { id: 'observation', static: true, value: 'ldl_cholesterol' },
@@ -95,7 +92,6 @@ module.exports = [
         id: 'SystolicBloodPressure',
         name: 'Systolic Blood Pressure',
         extends: 'GenericObservation',
-        returnType: 'number',
         parameters: [
           { id: 'element_name', value: 'SystolicBloodPressure' },
           { id: 'observation', static: true, value: 'systolic_blood_pressure' },
@@ -106,7 +102,6 @@ module.exports = [
         id: 'ascvd_risk_assessment',
         name: 'ASCVD Risk Assessment',
         extends: 'GenericObservation',
-        returnType: 'number',
         parameters: [
           { id: 'element_name', value: 'MostRecentASCVDRiskAssessmentResult' },
           { id: 'observation', static: true, value: 'ascvd_risk_assessment' },
@@ -128,7 +123,6 @@ module.exports = [
         id: 'MostRecentObservation',
         name: 'Most Recent Observation',
         extends: 'GenericObservation',
-        returnType: 'observation',
         parameters: [
           { id: 'element_name', type: 'string', name: 'Element Name' },
           { id: 'observation', type: 'observation', name: 'Observation' },
@@ -139,21 +133,14 @@ module.exports = [
         id: 'LabValueRange',
         name: 'Lab Value Range',
         returnType: 'boolean',
+        category: 'RangeOfObservation',
         parameters: [
           { id: 'element_name', type: 'string', name: 'Element Name' },
           { id: 'lower_bound', type: 'number', typeOfNumber: 'integer', name: 'Lower Bound', exclusive: false },
           { id: 'upper_bound', type: 'number', typeOfNumber: 'integer', name: 'Upper Bound', exclusive: false },
           { id: 'observation', type: 'list', subType: 'number', value: [undefined], name: 'Observation' }
         ]
-      },
-      {
-        id: 'templateModifier',
-        name: 'Template Modifier',
-        modifiers: null, /* Any default modifiers can be applied here */
-        parameters: [
-          { id: 'element_name', type: 'string', name: 'Element Name', value : 'Modified Templates' },
-        ],
-      },
+      }
     ]
   },
   {
@@ -246,7 +233,7 @@ module.exports = [
       {
         id: 'GenericCondition',
         name: 'Condition',
-        returnType: 'boolean',
+        returnType: 'conditions',
         suppress: true,
         extends: 'Base',
         parameters: [
@@ -363,7 +350,7 @@ module.exports = [
       {
         id: 'GenericMedication',
         name: 'Medication',
-        returnType: 'boolean',
+        returnType: 'medications',
         suppress: true,
         extends: 'Base',
         parameters: [
@@ -389,7 +376,7 @@ module.exports = [
       {
         id: 'GenericProcedure',
         name: 'Procedure',
-        returnType: 'procedure',
+        returnType: 'procedures',
         suppress: true,
         extends: 'Base',
         parameters: [
@@ -400,7 +387,6 @@ module.exports = [
       {
         id: 'ASCVD_Procedures',
         name: 'ASCVD Procedures',
-        returnType: 'boolean',
         extends: 'GenericProcedure',
         parameters: [
           { id: 'element_name', value: 'HasHadASCVDProcedures' },
@@ -411,7 +397,6 @@ module.exports = [
       {
         id: 'Palliative_Care',
         name: 'Palliative Care',
-        returnType: 'boolean',
         extends: 'GenericProcedure',
         parameters: [
           { id: 'element_name', value: 'IsInPalliativeCare' },
@@ -423,7 +408,6 @@ module.exports = [
       {
         id: 'Dialysis',
         name: 'Dialysis',
-        returnType: 'boolean',
         extends: 'GenericProcedure',
         parameters: [
           { id: 'element_name', value: 'OnDialysis' },
@@ -450,100 +434,4 @@ module.exports = [
       },
     ]
   },
-  {
-    id: 8,
-    icon: 'ambulance',
-    name: 'Encounters',
-    entries: [
-      {
-        id: 'GenericEncounter',
-        name: 'Encounter',
-        returnType: 'encounter',
-        suppress: true,
-        extends: 'Base',
-        parameters: [
-          { id: 'encounter', type: 'encounter', name: 'Encounter' },
-        ],
-      },
-      {
-        id: 'OutpatientEncounters',
-        name: 'Outpatient Encounter',
-        returnType: 'encounter',
-        extends: 'GenericEncounter',
-        parameters: [
-          { id: 'element_name', value: 'OutpatientEncounter' },
-          { id: 'encounter', static: true, value: 'outpatient_encounter' }
-        ]
-      }
-    ]
-  },
-  {
-    id: 9,
-    icon: 'thermometer-3',
-    name: 'Allergy Intolerances',
-    entries: [
-      {
-        id: 'GenericAllergyIntolerance',
-        name: 'Allergy Inteolerance',
-        returnType: 'allergyIntolerance',
-        suppress: true,
-        extends: 'Base',
-        parameters: [
-          { id: 'allergyIntolerance', type: 'allergyIntolerance', name: 'Allergy Intolerance' },
-        ],
-      },
-      {
-        id: 'StatinAllergen',
-        name: 'Statin Allergen',
-        returnType: 'boolean',
-        extends: 'GenericAllergyIntolerance',
-        parameters: [
-          { id: 'element_name', value: 'HasStatinAllergen' },
-          { id: 'allergyIntolerance', static: true, value: 'statin_allergen' }
-        ]
-      }
-    ]
-  }
-  //   'Gender',
-  //   'Ethnicity',
-  //   'Race'],
-  // },
-  // {
-  //   id: 2,
-  //   icon: 'stethoscope',
-  //   name: 'Diagnoses',
-  //   entries: [
-  //    'Myocardial Infarction', 'Cerebrovascular disease, Stroke, TIA',
-  //    'Atherosclerosis and Peripheral Arterial Disease',
-  //    'Ischemic heart disease or coronary occlusion, rupture, or thrombosis',
-  //    'Stable and Unstable Angina', 'Hypertension', 'Diabetes',
-  //    'Familial Hypercholesterolemia'
-  //   ],
-  // },
-  // {
-  //   id: 3,
-  //   icon: 'flask',
-  //   name: 'Lab Results',
-  //   entries: [
-  //     'Total Cholesterol', 'HDL Cholesterol', 'Systolic Blood Pressure', 'LDL Cholesterol'
-  //   ],
-  // },
-  // {
-  //   id: 4,
-  //   icon: 'medkit',
-  //   name: 'Medications',
-  //   entries: ['Antihypertensive', 'Statin', 'Aspirin Therapy', 'Smoking Cessation'],
-  // },
-  // {
-  //   id: 5,
-  //   icon: 'eye',
-  //   name: 'Observations',
-  //   entries: ['Smoker Status', 'Months abstinent from smoking'],
-  // },
-  // {
-  //   id: 6,
-  //   icon: 'scissors',
-  //   name: 'Procedures',
-  //   entries: ['CABG Surgeries', 'Carotid Intervention'],
-  // },
 ];

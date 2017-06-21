@@ -1,1 +1,0 @@
-C3F.LookBack(<%-elementDetails%>, "<%=val[0]%> weeks")
