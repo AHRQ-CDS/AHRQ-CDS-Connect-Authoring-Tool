@@ -4,7 +4,7 @@ import _ from 'lodash';
 // this.props are from a templateInstance parameters object,
 // and a function called UpdateInstance that takes an object with
 // key-value pairs that represents that state of the templateInstance
-class IntegerParameter extends Component {
+class NumberParameter extends Component {
   constructor(props) {
     super(props);
     this.state = { checked: this.props.param.exclusive };
@@ -31,7 +31,7 @@ class IntegerParameter extends Component {
             name={this.props.param.id}
             value={this.props.value}
             onChange={(event) => {
-              const value = parseInt(event.target.value, 10);
+              const value = (this.props.typeOfNumber === 'integer') ? parseInt(event.target.value, 10) : parseFloat(event.target.value, 10);
               this.props.updateInstance({ [event.target.name]: value });
             }}
           />
@@ -51,4 +51,4 @@ class IntegerParameter extends Component {
   }
 }
 
-export default IntegerParameter;
+export default NumberParameter;

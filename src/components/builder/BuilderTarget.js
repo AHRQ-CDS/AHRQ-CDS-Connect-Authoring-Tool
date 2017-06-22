@@ -2,7 +2,6 @@ import React, { Component, PropTypes } from 'react';
 import axios from 'axios';
 import TemplateInstance from './TemplateInstance';
 import ElementSelect from './ElementSelect';
-import elementGroups from '../../data/templates';
 import Config from '../../../config';
 
 const API_BASE = Config.api.baseUrl;
@@ -45,6 +44,8 @@ class BuilderTarget extends Component {
   }
 
   render() {
+    if (this.props.groups == null)
+      return null;
     return (
       <section className="builder__canvas">
         {
@@ -61,7 +62,7 @@ class BuilderTarget extends Component {
             )
         }
         <ElementSelect
-          categories={elementGroups}
+          categories={this.props.groups}
           templateInstances={this.props.templateInstances}
           updateTemplateInstances={this.props.updateTemplateInstances}
           />

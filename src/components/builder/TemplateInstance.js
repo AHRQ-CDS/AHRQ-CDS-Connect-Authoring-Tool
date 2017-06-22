@@ -2,13 +2,15 @@ import React, { Component, PropTypes } from 'react';
 import axios from 'axios';
 import FontAwesome from 'react-fontawesome';
 import _ from 'lodash';
-import IntegerParameter from './parameters/IntegerParameter';
+import NumberParameter from './parameters/NumberParameter';
 import StringParameter from './parameters/StringParameter';
 import ObservationParameter from './parameters/ObservationParameter';
 import ValueSetParameter from './parameters/ValueSetParameter';
 import ListParameter from './parameters/ListParameter';
 import CaseParameter from './parameters/CaseParameter';
 import StaticParameter from './parameters/StaticParameter';
+import ComparisonParameter from './parameters/ComparisonParameter';
+import CheckBoxParameter from './parameters/CheckBoxParameter';
 import IfParameter from './parameters/IfParameter';
 import BooleanParameter from './parameters/BooleanParameter';
 import Config from '../../../config';
@@ -71,6 +73,7 @@ class TemplateInstance extends Component {
     this.selectTemplate = this.selectTemplate.bind(this);
     this.notThisInstance = this.notThisInstance.bind(this);
     this.addComponent = this.addComponent.bind(this);
+    this.updateComparison = this.updateComparison.bind(this);
     this.addCaseComponent = this.addCaseComponent.bind(this);
     this.addIfComponent = this.addIfComponent.bind(this);
   }
@@ -83,7 +86,7 @@ class TemplateInstance extends Component {
     const otherInstances = this.getOtherInstances(this.props);
     this.setState({ otherInstances });
 
-    axios.get(`${API_BASE}/resources`)
+    axios.get(`${API_BASE}/config/resources`)
       .then((result) => {
         this.setState({ resources: result.data });
       });
@@ -178,6 +181,37 @@ class TemplateInstance extends Component {
     this.updateInstance(newState);
   }
 
+  updateComparison(isSingledSided) {
+    // TODO: Refactor this function to use React State
+    let parameter = this.props.templateInstance.parameters;
+    if (isSingledSided) {
+      _.remove(parameter, (param) => {
+        // Remove any instance with id ending in '_2'
+        return (RegExp('^.*(?=(_2))').test(param.id));
+      })
+      _.find(parameter, { 'id': 'comparison_bound' }).name = "Comparison Bound";
+      _.last(parameter).name = "Double Sided?";
+    } else {
+      let lowerBound = _.find(parameter, { 'id': 'comparison_bound' });
+      let upperBound = _.clone(lowerBound);
+      lowerBound.name = "Lower Comparison Bound"
+      upperBound.name = "Upper Comparison Bound"
+      upperBound.id = `${upperBound.id}_2`
+      upperBound.value = undefined;
+
+      // Using name for readability, could've been id, but {'id': 'Comparison'} isn't obvious
+      let secondOperator = _.clone(_.find(parameter, { 'name': 'Operator' }));
+      secondOperator.id = `${secondOperator.id}_2`
+      secondOperator.value = null;
+
+      _.last(parameter).name = "Single Sided?";
+      parameter.splice(parameter.length - 1, 0, secondOperator);
+      parameter.splice(parameter.length - 1, 0, upperBound);
+    }
+    // setState merges what you provide to the currentState, so this merely forces a re-render
+    this.setState({});
+  }
+
   selectTemplate(param) {
     if (param.static) {
       return (
@@ -188,12 +222,13 @@ class TemplateInstance extends Component {
       );
     }
     switch (param.type) {
-      case 'integer':
+      case 'number':
         return (
-          <IntegerParameter
+          <NumberParameter
             key={param.id}
             param={param}
             value={this.state[param.id]}
+            typeOfNumber={param.typeOfNumber}
             updateInstance={this.updateInstance} />
         );
       case 'observation':
@@ -236,6 +271,21 @@ class TemplateInstance extends Component {
             joinOperator={this.props.templateInstance.name}
             addComponent={this.addComponent}
             updateList={this.updateList} />
+        );
+      case 'comparison':
+        return (
+          <ComparisonParameter
+          key={param.id}
+          param={param}
+          value={null}
+          updateInstance={this.updateInstance} />
+        );
+      case 'checkbox':
+        return (
+          <CheckBoxParameter
+          key={param.id}
+          param={param}
+          updateComparison={this.updateComparison} />
         );
       case 'if':
         return (
