@@ -1,2 +1,1 @@
-<%# A majority of Medications use groups of two statements, one medicationOrder, one medicationStatement. This template has
-intentionally been left blank. The switch statement in CQLHandler manages this edge-case. This is probably something that should be re-factored-%>
+<%-element_context%>

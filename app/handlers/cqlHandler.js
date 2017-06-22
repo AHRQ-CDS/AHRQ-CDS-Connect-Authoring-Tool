@@ -7,8 +7,10 @@ const fs = require('fs');
 let archiver = require('archiver');
 const path = require( 'path' );
 const templatePath = 'app/data/cql/templates'
+const specificPath = 'app/data/cql/specificTemplates'
 const modifierPath = 'app/data/cql/modifiers'
 const artifactPath = 'app/data/cql/artifact.ejs'
+const specificMap = loadTemplates(specificPath);
 const templateMap = loadTemplates(templatePath);
 const modifierMap = loadTemplates(modifierPath);
 // Each library will be included. Aliases are optional.
@@ -121,8 +123,9 @@ class CqlArtifact {
     // TODO: currently this assumes that if A extends B then the B element defines the CQL
     if (element.extends && !templateMap[element.id]) {
       context.template = element.extends;
+    } else if (specificMap[element.id]) {
+      context.specificTemplate = element.id;
     }
-
     element.parameters.forEach((parameter) => {
       switch (parameter.type) {
         case 'observation':
@@ -216,10 +219,9 @@ class CqlArtifact {
             });
           }
           context.specificTemplate = 'Pregnancydx';
-          context.specificValues = { element_name: (context.element_name || element.uniqueId),
-                                     valueSetName: pregnancyValueSets.conditions[0].name,
-                                     pregnancyStatusConcept: pregnancyValueSets.concepts[0].name,
-                                     pregnancyCodeConcept: pregnancyValueSets.concepts[1].name }
+          context.valueSetName = pregnancyValueSets.conditions[0].name;
+          context.pregnancyStatusConcept = pregnancyValueSets.concepts[0].name;
+          context.pregnancyCodeConcept = pregnancyValueSets.concepts[1].name;
           break;
         case 'list':
           if (parameter.category === "comparison") {
@@ -242,7 +244,7 @@ class CqlArtifact {
     this.contexts.push(context)
   }
 
-  // Both parameters are arrays. All modifiers will be applied to all values, and joined with "\n or". If `values` is empty, will return null.
+  // Both parameters are arrays. All modifiers will be applied to all values, and joined with "\n or".
   applyModifiers (values, modifiers = []) { // default modifiers to []
     return values.map((value) => {
       modifiers.map(modifier => {
@@ -259,7 +261,7 @@ class CqlArtifact {
   body() {
     return this.contexts.map((context) => {
       if (context.specificTemplate) {
-        return ejs.render(templateMap[context.specificTemplate], {element_context: context.specificValues});
+        return ejs.render(specificMap[context.specificTemplate], context);
       } else {
         if (!context.template in templateMap) console.error("Template could not be found: " + context.template);
         context.values.forEach((value, index) => {
