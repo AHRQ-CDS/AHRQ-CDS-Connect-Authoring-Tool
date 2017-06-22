@@ -3,7 +3,8 @@ import FontAwesome from 'react-fontawesome';
 import { NavLink } from 'react-router-dom';
 import axios from 'axios';
 import ElementTypeahead from './ElementTypeahead';
-import Config from '../../../config'
+import Config from '../../../config';
+
 const API_BASE = Config.api.baseUrl;
 
 class BuilderPalette extends Component {
@@ -18,7 +19,7 @@ class BuilderPalette extends Component {
   componentWillMount() {
     axios.get(`${API_BASE}/config/templates`)
       .then((result) => {
-        this.setState({groups : result.data})
+        this.setState({ groups: result.data });
       })
       .catch((error) => {
         console.log(error);
@@ -40,8 +41,7 @@ class BuilderPalette extends Component {
   }
 
   renderMenu() {
-    if (this.props.groups == null) 
-      return null;
+    if (this.props.groups == null) { return null; }
     return this.props.groups.filter(g => !g.suppress).map((g) => {
       const location = `/build/${g.id}`;
       return (
@@ -59,8 +59,7 @@ class BuilderPalette extends Component {
   }
 
   render() {
-    if (this.props.groups == null)
-      return null;
+    if (this.props.groups == null) { return null; }
     return (
       <nav className="builder__palette" aria-label="Element menu">
         <ul

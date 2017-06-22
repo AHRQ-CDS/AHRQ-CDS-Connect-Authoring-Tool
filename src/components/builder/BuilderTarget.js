@@ -44,8 +44,7 @@ class BuilderTarget extends Component {
   }
 
   render() {
-    if (this.props.groups == null)
-      return null;
+    if (this.props.groups == null) { return null; }
     return (
       <section className="builder__canvas">
         {

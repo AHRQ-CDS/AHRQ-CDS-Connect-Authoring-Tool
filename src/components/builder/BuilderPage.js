@@ -56,7 +56,7 @@ class BuilderPage extends Component {
   componentDidMount() {
     axios.get(`${API_BASE}/config/templates`)
       .then((result) => {
-        this.setState({groups : result.data})
+        this.setState({ groups: result.data });
         this.manageTemplateExtensions();
         if (this.props.match) {
           this.setSelectedGroup(this.props.match.params.group);
@@ -75,7 +75,7 @@ class BuilderPage extends Component {
         entryMap[entry.id] = entry;
       });
     });
-    
+
     Object.keys(entryMap).forEach((key) => {
       const entry = entryMap[key];
       if (entry.extends) {
@@ -236,7 +236,7 @@ class BuilderPage extends Component {
             <BuilderPalette
               selectedGroup={this.state.selectedGroup}
               templateInstances={this.state.templateInstances}
-              updateTemplateInstances={this.setTemplateInstances} 
+              updateTemplateInstances={this.setTemplateInstances}
               groups={this.state.groups} />
             {this.renderSidebar()}
           </div>
