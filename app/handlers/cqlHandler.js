@@ -68,7 +68,7 @@ function loadTemplates() {
 function createGroupedContext(id, valuesets, type) {
   let groupedContext = {
     template: 'MultipleValuesetsExpression',
-    name: `${id}-valuesets`,
+    name: `${id}_valuesets`,
     valuesets: valuesets,
     type: type
   };
