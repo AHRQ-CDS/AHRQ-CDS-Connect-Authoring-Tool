@@ -8,14 +8,11 @@ module.exports = function(app) {
   // Routing for Artifacts
   app.use('/api/artifacts', require('./routers/artifactRouter.js'));
 
-  // Routing for Resources
-  app.use('/api/resources', require('./routers/resourceRouter.js'));
+  // Routing for Resources, ValueSets, Templates
+  app.use('/api/config', require('./routers/configRouter.js'));
 
   // Routing for cql files
   app.use('/api/cql', require('./routers/cqlRouter'));
-
-  // Routing for ValueSets
-  app.use('/api/valuesets', require('./routers/valueSetRouter.js'));
 
   // Routing for Artifact Elements
   app.use('/api/expressions', require('./routers/expressionRouter'))

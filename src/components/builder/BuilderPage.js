@@ -7,7 +7,6 @@ import _ from 'lodash';
 import BuilderSubPalette from './BuilderSubPalette';
 import BuilderPalette from './BuilderPalette';
 import BuilderTarget from './BuilderTarget';
-import groups from '../../data/templates';
 import Config from '../../../config'
 
 // Suppress is a flag that is specific to an element. It should not be inherited by children
@@ -35,34 +34,48 @@ class BuilderPage extends Component {
     this.downloadCQL = this.downloadCQL.bind(this);
     this.updateSingleElement = this.updateSingleElement.bind(this);
     this.manageTemplateExtensions = this.manageTemplateExtensions.bind(this);
-    this.manageTemplateExtensions();
   }
 
-  componentDidMount() {
-    if (this.props.match) {
-      this.setSelectedGroup(this.props.match.params.group);
-      if (this.props.match.params.id) {
-        // fetch the relevant artifact from the server.
-        const id = this.props.match.params.id;
-        axios.get(`${API_BASE}/artifacts/${id}`)
-          .then((res) => {
-            const artifact = res.data[0];
-            this.setState({ id: artifact._id });
-            this.setState({ name: artifact.name });
-            this.setState({ version: artifact.version });
-            this.setState({ templateInstances: artifact.templateInstances });
-          });
-      }
+  // Loads an existing artifact
+  loadExistingArtifact() {
+    if (this.props.match.params.id) {
+      // fetch the relevant artifact from the server.
+      const id = this.props.match.params.id;
+      axios.get(`${API_BASE}/artifacts/${id}`)
+        .then((res) => {
+          const artifact = res.data[0];
+          this.setState({ id: artifact._id });
+          this.setState({ name: artifact.name });
+          this.setState({ version: artifact.version });
+          this.setState({ templateInstances: artifact.templateInstances });
+        });
     }
+  }
+
+  // Loads templates and checks if existing artifact
+  componentDidMount() {
+    axios.get(`${API_BASE}/config/templates`)
+      .then((result) => {
+        this.setState({groups : result.data})
+        this.manageTemplateExtensions();
+        if (this.props.match) {
+          this.setSelectedGroup(this.props.match.params.group);
+          this.loadExistingArtifact();
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   }
 
   manageTemplateExtensions() {
     const entryMap = {};
-    groups.forEach((group) => {
+    this.state.groups.forEach((group) => {
       group.entries.forEach((entry) => {
         entryMap[entry.id] = entry;
       });
     });
+    
     Object.keys(entryMap).forEach((key) => {
       let entry = entryMap[key];
       if (entry.extends) {
@@ -150,7 +163,7 @@ class BuilderPage extends Component {
   }
 
   setSelectedGroup(groupId) {
-    const group = groups.find(g => parseInt(g.id, 10) === parseInt(groupId, 10));
+    const group = this.state.groups.find(g => parseInt(g.id, 10) === parseInt(groupId, 10));
     if (group) {
       this.setState({ selectedGroup: group });
     } else {
@@ -211,7 +224,7 @@ class BuilderPage extends Component {
             </button>
             <button onClick={this.downloadCQL}
               className="builder__cqlbutton is-unsaved">
-              CQL
+              Download CQL
             </button>
             <button onClick={() => this.saveArtifact(true)}
               className="builder__deletebutton">
@@ -224,13 +237,15 @@ class BuilderPage extends Component {
             <BuilderPalette
               selectedGroup={this.state.selectedGroup}
               templateInstances={this.state.templateInstances}
-              updateTemplateInstances={this.setTemplateInstances} />
+              updateTemplateInstances={this.setTemplateInstances} 
+              groups={this.state.groups} />
             {this.renderSidebar()}
           </div>
           <BuilderTarget
             updateTemplateInstances={this.setTemplateInstances}
             updateSingleElement={this.updateSingleElement}
-            templateInstances={this.state.templateInstances} />
+            templateInstances={this.state.templateInstances}
+            groups={this.state.groups} />
         </section>
       </div>
     );

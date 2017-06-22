@@ -53,6 +53,7 @@ module.exports = {
       id: "ascvd_risk_assessment",
       name: "ASCVD 10-year risk", // Name matches the name of the concept being created
       toConceptValue: false,
+      units: {values: ["'%'"], code: "'%'"},
       concepts: [
         {
           name: "ASCVD 10-year risk",
