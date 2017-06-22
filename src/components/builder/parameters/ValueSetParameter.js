@@ -13,7 +13,7 @@ class ValueSetParameter extends Component {
   }
 
   componentWillMount() {
-    axios.get(`${API_BASE}/valuesets/${this.props.param.select}`)
+    axios.get(`${API_BASE}/config/valuesets/${this.props.param.select}`)
       .then((result) => {
         this.setState({ valueset: result.data.expansion });
       });
