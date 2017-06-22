@@ -192,7 +192,7 @@ module.exports = [
       {
         id: 'Not',
         name: 'Not',
-        returnType: 'not',
+        returnType: 'boolean',
         extends: 'Base',
         parameters: [
           { id: 'components', type: 'list',subType: 'boolean',value: [undefined], name: 'Elements' }
