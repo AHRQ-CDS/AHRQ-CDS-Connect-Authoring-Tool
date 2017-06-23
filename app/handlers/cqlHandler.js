@@ -119,12 +119,14 @@ class CqlArtifact {
   // Generate context and resources for a single element
   parseElement(element) {
 
-    const context = {template: element.id};
+    const context = {};
     // TODO: currently this assumes that if A extends B then the B element defines the CQL
-    if (element.extends && !templateMap[element.id]) {
+    if (element.extends && !templateMap[element.id] && !specificMap[element.id]) {
       context.template = element.extends;
     } else if (specificMap[element.id]) {
       context.specificTemplate = element.id;
+    } else {
+      context.template = element.id;
     }
     element.parameters.forEach((parameter) => {
       switch (parameter.type) {
