@@ -285,6 +285,7 @@ module.exports = [
         id: 'Pregnancydx',
         name: 'Pregnancy dx',
         extends: 'Base',
+        returnType: 'boolean',
         parameters: [
           { id: 'element_name', value: 'IsPregnant' },
           { id: 'pregnancy', type: 'pregnancy', static: true, value: 'pregnancy_dx' }
@@ -316,7 +317,34 @@ module.exports = [
           { id: 'element_name', value: 'HasCirrhosis' },
           { id: 'condition', static: true, value: 'liver_disease' }
         ]
-      }
+      },
+      {
+        id: 'Rhabdomyolysis',
+        name: 'Rhabdomyolysis',
+        extends: 'GenericCondition',
+        parameters: [
+          { id: 'element_name', value: 'HasRhabdomyolysis' },
+          { id: 'condition', static: true, value: 'rhabdomyolysis' }
+        ]
+      },
+      {
+        id: 'HepatitisA',
+        name: 'Hepatitis A',
+        extends: 'GenericCondition',
+        parameters: [
+          { id: 'element_name', value: 'HasHepatitisA' },
+          { id: 'condition', static: true, value: 'hepatitis_a' }
+        ]
+      },
+      {
+        id: 'HepatitisB',
+        name: 'Hepatitis B',
+        extends: 'GenericCondition',
+        parameters: [
+          { id: 'element_name', value: 'HasHepatitisB' },
+          { id: 'condition', static: true, value: 'hepatitis_b' }
+        ]
+      },
     ]
   },
   {
@@ -437,6 +465,33 @@ module.exports = [
         parameters: [
           { id: 'element_name', value: 'OutpatientEncounter' },
           { id: 'encounter', static: true, value: 'outpatient_encounter' }
+        ]
+      }
+    ]
+  },
+  {
+    id: 9,
+    icon: 'thermometer-3',
+    name: 'Allergy Intolerances',
+    entries: [
+      {
+        id: 'GenericAllergyIntolerance',
+        name: 'Allergy Inteolerance',
+        returnType: 'allergyIntolerance',
+        suppress: true,
+        extends: 'Base',
+        parameters: [
+          { id: 'allergyIntolerance', type: 'allergyIntolerance', name: 'Allergy Intolerance' },
+        ],
+      },
+      {
+        id: 'StatinAllergen',
+        name: 'Statin Allergen',
+        returnType: 'boolean',
+        extends: 'GenericAllergyIntolerance',
+        parameters: [
+          { id: 'element_name', value: 'HasStatinAllergen' },
+          { id: 'allergyIntolerance', static: true, value: 'statin_allergen' }
         ]
       }
     ]

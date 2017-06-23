@@ -166,6 +166,13 @@ class CqlArtifact {
           });
           context[parameter.id] = encounterValueSets;
           break;
+        case 'allergyIntolerance' :
+          let allergyIntoleranceValueSets = ValueSets.allergyIntolerances[parameter.value];
+          allergyIntoleranceValueSets.allergyIntolerances.map(allergyIntolerance => {
+            this.resourceMap.set(allergyIntolerance.name, allergyIntolerance);
+          });
+          context[parameter.id] = allergyIntoleranceValueSets;
+          break;
         case 'pregnancy':
           let pregnancyValueSets = ValueSets.conditions[parameter.value];
           pregnancyValueSets.conditions.map(condition => {
