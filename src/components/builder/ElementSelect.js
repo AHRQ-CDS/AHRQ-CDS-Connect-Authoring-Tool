@@ -1,7 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 import _ from 'lodash';
 import Select from 'react-select';
-import { createTemplateInstance } from './TemplateInstance';
 
 const flatten = arr => arr.reduce(
   (acc, val) => acc.concat(Array.isArray(val) ? flatten(val) : val), []
@@ -51,7 +50,7 @@ class ElementSelect extends Component {
   static propTypes = {
     categories: PropTypes.array.isRequired,
     templateInstances: PropTypes.array.isRequired,
-    updateTemplateInstances: PropTypes.func.isRequired
+    onSuggestionSelected: PropTypes.func.isRequired
   }
 
   componentWillMount() {
@@ -73,9 +72,12 @@ class ElementSelect extends Component {
   }
 
   onSuggestionSelected = (suggestion) => {
-    const instance = createTemplateInstance(suggestion);
-    delete instance['category']; // Don't send the category which is only needed for this component
-    this.props.updateTemplateInstances(this.props.templateInstances.concat(instance));
+    // const instance = createTemplateInstance(suggestion, this.props.parentId );
+    let clone = _.cloneDeep(suggestion);
+    delete clone['category']; // Don't send the category which is only needed for this component
+    // this.props.updateTemplateInstances(clone);
+    this.props.onSuggestionSelected(clone);
+    // return clone;
   }
 
   onSelectedCategoryChange = (category) => {

@@ -7,10 +7,6 @@ import _ from 'lodash';
  * key-value pairs that represents that state of the templateInstance
  */
 class StringParameter extends Component {
-  constructor(props) {
-    super(props);
-  }
-
   render() {
     const id = _.uniqueId('parameter-');
     const helpId = _.uniqueId('parameter-help-');
