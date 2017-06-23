@@ -1,4 +1,3 @@
-
 module.exports = [
   {
     id: 0,
@@ -156,22 +155,20 @@ module.exports = [
       {
         id: 'And',
         name: 'And',
+        conjunction: true,
         returnType: 'boolean',
-        extends: 'Base',
         parameters: [
-          { id: 'element_name', name: 'Element Name' },
-          { id: 'components', type: 'list', subType: 'boolean', value: [undefined, undefined], name: 'Elements' }
-        ],
+          { id: 'element_name', type: 'string', name: 'Element Name' }
+        ]
       },
       {
         id: 'Or',
         name: 'Or',
+        conjunction: true,
         returnType: 'boolean',
-        extends: 'Base',
         parameters: [
-          { id: 'element_name', name: 'Element Name' },
-          { id: 'components', type: 'list', subType: 'boolean', value: [undefined, undefined], name: 'Elements' }
-        ],
+          { id: 'element_name', type: 'string', name: 'Element Name' }
+        ]
       },
       {
         id: 'String',
@@ -217,8 +214,8 @@ module.exports = [
         name: 'Case',
         parameters: [
           { id: 'element_name', type: 'string', name: 'Element Name' },
-          { 
-            id: 'components', 
+          {
+            id: 'components',
             type: 'case',
             value: {
               cases : [{case : null, result : null}],

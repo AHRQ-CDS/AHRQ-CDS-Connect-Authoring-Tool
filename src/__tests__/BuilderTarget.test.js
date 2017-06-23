@@ -11,7 +11,7 @@ beforeEach(() => {
   component = fullRenderComponent(BuilderTarget,
     {
       templateInstances: [],
-      updateSingleElement: jest.fn(),
+      updateSingleInstance: jest.fn(),
       updateTemplateInstances: jest.fn()
     }
   );
@@ -19,7 +19,7 @@ beforeEach(() => {
   componentWithElements = fullRenderComponent(BuilderTarget,
     {
       templateInstances,
-      updateSingleElement: jest.fn(),
+      updateSingleInstance: jest.fn(),
       updateTemplateInstances: jest.fn()
     }
   );

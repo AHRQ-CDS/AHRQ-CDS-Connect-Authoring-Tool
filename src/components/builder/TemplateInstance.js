@@ -16,13 +16,17 @@ import BooleanParameter from './parameters/BooleanParameter';
 import Config from '../../../config'
 const API_BASE = Config.api.baseUrl;
 
-export function createTemplateInstance(template) {
+export function createTemplateInstance(template, children = undefined) {
   /*
     TODO: clone is required because we are setting value on the parameter.
     This may not be the best approach
   */
   const instance = _.cloneDeep(template);
   instance.uniqueId = _.uniqueId(instance.id);
+
+  if (template.conjunction) {
+    instance.childInstances = children || [];
+  }
 
   return instance;
 }
@@ -49,7 +53,7 @@ class TemplateInstance extends Component {
   static propTypes = {
     templateInstance: PropTypes.object.isRequired,
     otherInstances: PropTypes.array.isRequired,
-    updateSingleElement: PropTypes.func.isRequired,
+    updateSingleInstance: PropTypes.func.isRequired,
     deleteInstance: PropTypes.func.isRequired,
     saveInstance: PropTypes.func.isRequired,
     showPresets: PropTypes.func.isRequired
@@ -98,10 +102,13 @@ class TemplateInstance extends Component {
 
   // Props will either be this.props or nextProps coming from componentWillReceiveProps
   getOtherInstances(props) {
-    const otherInstances = props.otherInstances.filter(this.notThisInstance).map(
-      instance => ({ name: getInstanceName(instance),
+    const otherInstances = props.otherInstances.filter(this.notThisInstance)
+      .filter(instance => !instance.conjunction)
+      .map(instance => ({
+        name: getInstanceName(instance),
         id: instance.id,
-        returnType: instance.returnType }));
+        returnType: instance.returnType
+      }));
     return otherInstances;
   }
 
@@ -112,13 +119,9 @@ class TemplateInstance extends Component {
     return this.props.templateInstance.uniqueId !== instance.uniqueId;
   }
 
-  // getInstanceName(instance) {
-  //   return (instance.parameters.find(p => p.id === 'element_name') || {}).value;
-  // }
-
   updateInstance(newState) {
     this.setState(newState);
-    this.props.updateSingleElement(this.props.templateInstance.uniqueId, newState);
+    this.props.updateSingleInstance(newState, this.getPath());
   }
 
   // Used to update value states that are nested objects
@@ -157,7 +160,7 @@ class TemplateInstance extends Component {
     array.push({case : null, result : null});
     this.updateNestedInstance(id, array, 'cases');
   }
-  
+
   // Updates an if statemement with selected value
   updateIf(paramId, value, index, place) {
     const valueArray = this.state[paramId].slice();
@@ -170,7 +173,7 @@ class TemplateInstance extends Component {
     newState[paramId] = valueArray;
     this.updateInstance(newState);
   }
-  
+
   // Adds new Condition/Block for If statements
   addIfComponent(paramId) {
     const currentParamValue =  this.state[paramId].slice();
@@ -339,6 +342,11 @@ class TemplateInstance extends Component {
     this.setState({ showElement: !this.state.showElement });
   }
 
+  getPath = () => {
+    return this.props.getPath(this.props.templateInstance.uniqueId);
+    // return this.props.templateInstance.path;
+  }
+
   renderBody() {
     return (
       <div className="element__body">
@@ -366,7 +374,7 @@ class TemplateInstance extends Component {
               <FontAwesome fixedWidth name='database'/>
             </button>
             <button
-              onClick={this.props.saveInstance.bind(this, this.props.templateInstance.uniqueId)}
+              onClick={this.props.saveInstance.bind(this, this.getPath())}
               className="element__savebutton"
               aria-label={`save ${this.props.templateInstance.name}`}>
               <FontAwesome fixedWidth name='save'/>
@@ -378,7 +386,7 @@ class TemplateInstance extends Component {
               <FontAwesome fixedWidth name={this.state.showElement ? 'angle-double-down' : 'angle-double-right'}/>
             </button>
             <button
-              onClick={this.props.deleteInstance.bind(this, this.props.templateInstance.uniqueId)}
+              onClick={() => this.props.deleteInstance(this.getPath())}
               className="element__deletebutton"
               aria-label={`remove ${this.props.templateInstance.name}`}>
               <FontAwesome fixedWidth name='close'/>
