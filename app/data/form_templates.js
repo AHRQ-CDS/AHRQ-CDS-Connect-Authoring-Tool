@@ -55,7 +55,6 @@ module.exports = [
         extends: 'Base',
         parameters: [
           { id: 'observation', type: 'observation', name: 'Observation' },
-          { id: 'valid', type: 'number', typeOfNumber: 'integer', name: 'Look back (years)' }
         ],
       },
       {

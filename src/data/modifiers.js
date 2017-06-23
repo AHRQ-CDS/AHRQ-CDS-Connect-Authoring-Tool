@@ -4,7 +4,7 @@ let elementLists = ['observations', 'conditions', 'medications', 'procedures'];
 module.exports = [
   // observations
   {
-    id: 'Verified',
+    id: 'VerifiedObservation',
     name: 'Verified',
     inputTypes: ['observations'],
     returnType: 'observations',
@@ -39,7 +39,8 @@ module.exports = [
     cqlLibraryFunction: 'Confirmed'
   },
   {
-    id: 'Active',
+    id: 'ActiveConiditon',
+    type: 'Active',
     name: 'Active',
     inputTypes: ['conditions'],
     returnType: 'conditions',
@@ -57,7 +58,8 @@ module.exports = [
   },
   // medications
   {
-    id: 'Active',
+    id: 'ActiveMedication',
+    type: 'Active',
     name: 'Active',
     inputTypes: ['medications'],
     returnType: 'medications',
