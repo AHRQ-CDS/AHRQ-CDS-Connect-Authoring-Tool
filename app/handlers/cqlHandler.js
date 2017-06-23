@@ -171,8 +171,6 @@ class CqlArtifact {
             this.resourceMap.set(condition.name, condition);
             return condition.name;
           })
-          context.conditions = conditionValueSets.conditions;
-          context.active = !(parameter.inactive);
           break;
         case 'medication':
           let medicationValueSets = ValueSets.medications[parameter.value];
@@ -180,7 +178,6 @@ class CqlArtifact {
             this.resourceMap.set(medication.name, medication);
             return `C3F.Active${medication.type}([${medication.type}: "${medication.name}"])`
           })
-          context.medication_titles = medicationValueSets.medications;
           break;
         case 'procedure':
           let procedureValueSets = ValueSets.procedures[parameter.value];

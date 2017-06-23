@@ -263,8 +263,8 @@ module.exports = [
         name: 'ASCVD',
         extends: 'GenericCondition',
         parameters: [
-          { id: 'element_name', value: 'HasASCVD' },
-          { id: 'condition', static: true, value: 'has_ascvd', inactive: true } // C3F.ActiveCondition() is applied unless inactive is set
+          { id: 'element_name', value: "HasASCVD"},
+          { id: 'condition', static: true, value: "has_ascvd"}
         ],
       },
       {
