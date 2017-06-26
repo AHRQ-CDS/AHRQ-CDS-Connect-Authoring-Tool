@@ -249,7 +249,7 @@ class CqlArtifact {
       modifiers.map(modifier => {
         if (!modifier.template in modifierMap) console.error("Modifier Template could not be found: " + modifier.cqlTemplate);
         let modifierContext = { cqlLibraryFunction: modifier.cqlLibraryFunction, value_name: value };
-        if (modifier.value) modifierContext.val = modifier.value; // Certain modifiers (such as lookback) require values, so provide them here
+        if (modifier.values) modifierContext.values = modifier.values; // Certain modifiers (such as lookback) require values, so provide them here
         value = ejs.render(modifierMap[modifier.cqlTemplate], modifierContext)
       })
       return value;

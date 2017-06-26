@@ -29,13 +29,13 @@ class LookBack extends Component {
                 this.props.updateAppliedModifier(this.props.index, { unit: event.target.value });
               }}>
               <option value="" disabled selected>-- Unit --</option>
-              <option value="year">Year(s)</option>
-              <option value="month">Month(s)</option>
-              <option value="week">Week(s)</option>
-              <option value="day">Day(s)</option>
-              <option value="hour" value="year">Hour(s)</option>
-              <option value="minute">Minute(s)</option>
-              <option value="second">Second(s)</option>
+              <option value="years">Year(s)</option>
+              <option value="months">Month(s)</option>
+              <option value="weeks">Week(s)</option>
+              <option value="days">Day(s)</option>
+              <option value="hours">Hour(s)</option>
+              <option value="minutes">Minute(s)</option>
+              <option value="seconds">Second(s)</option>
             </select>
           </label>
 
