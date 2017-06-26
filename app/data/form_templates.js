@@ -50,7 +50,7 @@ module.exports = [
       {
         id: 'GenericObservation',
         name: 'Observation',
-        returnType: 'observations',
+        returnType: 'list_of_observations',
         suppress: true,
         extends: 'Base',
         parameters: [
@@ -111,7 +111,6 @@ module.exports = [
         id: 'smoker',
         name: 'Is Smoker',
         extends: 'GenericObservation',
-        returnType: 'boolean',
         parameters: [
           { id: 'element_name', value: 'IsSmoker' },
           { id: 'observation', static: true, value: 'smoker' },
