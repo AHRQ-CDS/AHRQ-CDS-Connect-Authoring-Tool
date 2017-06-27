@@ -9,7 +9,7 @@ define "<%=element_name%>":
     else {
       %>C3F.WithUnit(<%
         if(observation.observations.length > 1){
-          %>"<%=groupedVarName%>"<%
+          %>"<%=observation.id%>_valuesets"<%
         } else { 
           %><%-`[Observation: "${observation.observations[0].name}"]` %><%
         }%>, <%-observation.units.values%>)<%

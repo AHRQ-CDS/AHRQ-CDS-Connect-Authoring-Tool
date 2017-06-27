@@ -147,9 +147,11 @@ class CqlArtifact {
             // For observations that use more than one valueset, create a separate define statement that 
             // groups the queries for each valueset into one expression that is then referenced
             if(observationValueSets.observations.length > 1) {
-              let groupedContext = createGroupedContext(observationValueSets.id, observationValueSets.observations, 'Observation');
-              this.contexts.push(groupedContext)
-              context.groupedVarName = groupedContext.name;
+              let groupedVarIndex = _.findIndex(this.contexts, o => o.name === `${observationValueSets.id}_valuesets`);
+              if(groupedVarIndex === -1) {
+                let groupedContext = createGroupedContext(observationValueSets.id, observationValueSets.observations, 'Observation');
+                this.contexts.push(groupedContext);
+              }
             }
           }
           break;
