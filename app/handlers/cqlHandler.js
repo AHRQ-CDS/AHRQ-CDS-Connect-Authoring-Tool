@@ -120,14 +120,12 @@ class CqlArtifact {
   parseElement(element) {
 
     const context = {};
-    // TODO: currently this assumes that if A extends B then the B element defines the CQL
-    if (element.extends && !templateMap[element.id] && !specificMap[element.id]) {
-      context.template = element.extends;
-    } else if (specificMap[element.id]) {
-      context.specificTemplate = element.id;
+    if (element.extends) {
+      context.template = (element.template) ? element.template : element.extends;
     } else {
-      context.template = element.id;
+      context.template = (element.template || element.id);
     }
+    context.withoutModifiers = _.has(specificMap, context.template);
     element.parameters.forEach((parameter) => {
       switch (parameter.type) {
         case 'observation':
@@ -217,7 +215,6 @@ class CqlArtifact {
               this.conceptMap.set(concept.name, concept);
             });
           }
-          context.specificTemplate = 'Pregnancydx';
           context.valueSetName = pregnancyValueSets.conditions[0].name;
           context.pregnancyStatusConcept = pregnancyValueSets.concepts[0].name;
           context.pregnancyCodeConcept = pregnancyValueSets.concepts[1].name;
@@ -259,8 +256,8 @@ class CqlArtifact {
   // Generate cql for all elements
   body() {
     return this.contexts.map((context) => {
-      if (context.specificTemplate) {
-        return ejs.render(specificMap[context.specificTemplate], context);
+      if (context.withoutModifiers) {
+        return ejs.render(specificMap[context.template], context);
       } else {
         if (!context.template in templateMap) console.error("Template could not be found: " + context.template);
         context.values.forEach((value, index) => {

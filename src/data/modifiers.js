@@ -1,6 +1,6 @@
 // NOTE -- Any cqlTemplates/cqlLibraryFunctions that are `null` are currently in development
 
-let elementLists = ['list_of_observations', 'conditions', 'medications', 'procedures'];
+let elementLists = ['list_of_observations', 'list_of_conditions', 'list_of_medications', 'list_of_procedures'];
 module.exports = [
   // observations
   {
@@ -26,8 +26,8 @@ module.exports = [
     inputTypes: ['list_of_observations'],
     returnType: 'list_of_observations',
     values: {min: undefined, max: undefined, minInclusive: undefined, maxInclusive: undefined},
-    cqlTemplate: 'ValueComparion',
-    cqlLibraryFunction: ''
+    cqlTemplate: null,
+    cqlLibraryFunction: null
   },
   {
     id: 'QuantityValue',
@@ -38,8 +38,16 @@ module.exports = [
     cqlLibraryFunction: 'C3F.QuantityValue'
   },
   {
+    id: 'ConceptValue',
+    name: 'Concept Value',
+    inputTypes: ['observation'],
+    returnType: 'system_quantity',
+    cqlTemplate: 'BaseModifier',
+    cqlLibraryFunction: 'C3F.ConceptValue'
+  },
+  {
     id: 'ConvertMgToDL',
-    name: 'Convert mg to dL',
+    name: 'Convert to mg per dL',
     inputTypes: ['system_quantity'],
     returnType: 'system_quantity',
     cqlTemplate: 'BaseModifier',
@@ -49,8 +57,8 @@ module.exports = [
   {
     id: 'ConfirmedCondition',
     name: 'Confirmed',
-    inputTypes: ['conditions'],
-    returnType: 'conditions',
+    inputTypes: ['list_of_conditions'],
+    returnType: 'list_of_conditions',
     cqlTemplate: 'BaseModifier',
     cqlLibraryFunction: 'C3F.Confirmed'
   },
@@ -58,8 +66,8 @@ module.exports = [
     id: 'ActiveConiditon',
     type: 'Active',
     name: 'Active',
-    inputTypes: ['conditions'],
-    returnType: 'conditions',
+    inputTypes: ['list_of_conditions'],
+    returnType: 'list_of_conditions',
     cqlTemplate: 'BaseModifier',
     cqlLibraryFunction: 'C3F.Active'
   },
@@ -67,8 +75,8 @@ module.exports = [
   {
     id: 'CompletedProcedure',
     name: 'Completed',
-    inputTypes: ['procedures'],
-    returnType: 'procedures',
+    inputTypes: ['list_of_procedures'],
+    returnType: 'list_of_procedures',
     cqlTemplate: 'BaseModifier',
     cqlLibraryFunction: 'C3F.Completed'
   },
@@ -76,17 +84,17 @@ module.exports = [
   {
     id: 'ActiveMedication',
     name: 'Active',
-    inputTypes: ['medications'],
-    returnType: 'medications',
+    inputTypes: ['list_of_medications'],
+    returnType: 'list_of_medications',
     cqlTemplate: 'BaseModifier',
     cqlLibraryFunction: 'C3F.Active'
   },
   // ALL
   // Most Recent
   { id: 'MostRecentObservation', name: 'Most Recent', inputTypes: ['list_of_observations'], returnType: 'observation',   cqlTemplate: 'BaseModifier', cqlLibraryFunction: 'C3F.MostRecent' },
-  { id: 'MostRecentCondition', name: 'Most Recent', inputTypes: ['conditions'], returnType: 'condition',   cqlTemplate: 'BaseModifier', cqlLibraryFunction: 'C3F.MostRecent' },
-  { id: 'MostRecentMedication', name: 'Most Recent', inputTypes: ['medications'], returnType: 'medication',   cqlTemplate: 'BaseModifier', cqlLibraryFunction: 'C3F.MostRecent' },
-  { id: 'MostRecentProcedure', name: 'Most Recent', inputTypes: ['procedures'], returnType: 'procedure',   cqlTemplate: 'BaseModifier', cqlLibraryFunction: 'C3F.MostRecent' },
+  { id: 'MostRecentCondition', name: 'Most Recent', inputTypes: ['list_of_conditions'], returnType: 'condition',   cqlTemplate: 'BaseModifier', cqlLibraryFunction: 'C3F.MostRecent' },
+  { id: 'MostRecentMedication', name: 'Most Recent', inputTypes: ['list_of_medications'], returnType: 'medication',   cqlTemplate: 'BaseModifier', cqlLibraryFunction: 'C3F.MostRecent' },
+  { id: 'MostRecentProcedure', name: 'Most Recent', inputTypes: ['list_of_procedures'], returnType: 'procedure',   cqlTemplate: 'BaseModifier', cqlLibraryFunction: 'C3F.MostRecent' },
   // Look Back
   { id: 'LookBackObservation', type: 'LookBack', name: 'Look Back', inputTypes: ['list_of_observations'], returnType: 'list_of_observations', values: {value: undefined, unit: undefined}, cqlTemplate: 'twoArgumentModifier', cqlLibraryFunction: 'C3F.ObservationLookBack' },
   { id: 'LookBackCondition', type: 'LookBack', name: 'Look Back', inputTypes: ['list_of_conditions'], returnType: 'list_of_conditions',       values: {value: undefined, unit: undefined}, cqlTemplate: 'twoArgumentModifier', cqlLibraryFunction: 'C3F.ConditionLookBack' },

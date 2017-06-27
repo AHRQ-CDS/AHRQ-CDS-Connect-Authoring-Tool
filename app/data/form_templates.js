@@ -62,9 +62,8 @@ module.exports = [
         name: 'Total Cholesterol',
         extends: 'GenericObservation',
         parameters: [
-          { id: 'element_name', value: 'TotalCholesterol' },
-          { id: 'observation', static: true, value: 'total_cholesterol' },
-          { id: 'valid', static: true }
+          { id: 'element_name', value: "TotalCholesterol"},
+          { id: 'observation', static: true, value: "total_cholesterol"},
         ]
       },
       {
@@ -72,9 +71,8 @@ module.exports = [
         name: 'HDL Cholesterol',
         extends: 'GenericObservation',
         parameters: [
-          { id: 'element_name', value: 'HDLCholesterol' },
-          { id: 'observation', static: true, value: 'hdl_cholesterol' },
-          { id: 'valid', value: 6 }
+          { id: 'element_name', value: "HDLCholesterol"},
+          { id: 'observation', static: true, value: "hdl_cholesterol"},
         ]
       },
       {
@@ -82,9 +80,8 @@ module.exports = [
         name: 'LDL Cholesterol',
         extends: 'GenericObservation',
         parameters: [
-          { id: 'element_name', value: 'LDLCholesterol' },
-          { id: 'observation', static: true, value: 'ldl_cholesterol' },
-          { id: 'valid', value: 6 }
+          { id: 'element_name', value: "LDLCholesterol"},
+          { id: 'observation', static: true, value: "ldl_cholesterol"},
         ]
       },
       {
@@ -92,29 +89,8 @@ module.exports = [
         name: 'Systolic Blood Pressure',
         extends: 'GenericObservation',
         parameters: [
-          { id: 'element_name', value: 'SystolicBloodPressure' },
-          { id: 'observation', static: true, value: 'systolic_blood_pressure' },
-          { id: 'valid', static: true }
-        ]
-      },
-      {
-        id: 'ascvd_risk_assessment',
-        name: 'ASCVD Risk Assessment',
-        extends: 'GenericObservation',
-        parameters: [
-          { id: 'element_name', value: 'MostRecentASCVDRiskAssessmentResult' },
-          { id: 'observation', static: true, value: 'ascvd_risk_assessment' },
-          { id: 'valid', value: 6 }
-        ]
-      },
-      {
-        id: 'smoker',
-        name: 'Is Smoker',
-        extends: 'GenericObservation',
-        parameters: [
-          { id: 'element_name', value: 'IsSmoker' },
-          { id: 'observation', static: true, value: 'smoker' },
-          { id: 'valid', value: 6 }
+          { id: 'element_name', value: "SystolicBloodPressure"},
+          { id: 'observation', static: true, value: "systolic_blood_pressure"},
         ]
       },
       {
@@ -124,19 +100,26 @@ module.exports = [
         parameters: [
           { id: 'element_name', type: 'string', name: 'Element Name' },
           { id: 'observation', type: 'observation', name: 'Observation' },
-          { id: 'valid' }
         ],
       },
       {
-        id: 'LabValueRange',
-        name: 'Lab Value Range',
-        returnType: 'boolean',
-        category: 'RangeOfObservation',
+        id: 'ASCVDRiskAssessment',
+        name: 'ASCVD Risk Assessment',
+        extends: 'GenericObservation',
+        template: 'ObservationByConcept',
         parameters: [
-          { id: 'element_name', type: 'string', name: 'Element Name' },
-          { id: 'lower_bound', type: 'number', typeOfNumber: 'integer', name: 'Lower Bound', exclusive: false },
-          { id: 'upper_bound', type: 'number', typeOfNumber: 'integer', name: 'Upper Bound', exclusive: false },
-          { id: 'observation', type: 'list', subType: 'number', value: [undefined], name: 'Observation' }
+          { id: 'element_name', value: "MostRecentASCVDRiskAssessmentResult"},
+          { id: 'observation', static: true, value: "ascvd_risk_assessment"},
+        ]
+      },
+      {
+        id: 'IsSmoker',
+        name: 'Is Smoker',
+        template: 'ObservationByConcept',
+        extends: 'GenericObservation',
+        parameters: [
+          { id: 'element_name', value: "IsSmoker"},
+          { id: 'observation',  static: true, value: "smoker"},
         ]
       }
     ]
@@ -231,7 +214,7 @@ module.exports = [
       {
         id: 'GenericCondition',
         name: 'Condition',
-        returnType: 'conditions',
+        returnType: 'list_of_conditions',
         suppress: true,
         extends: 'Base',
         parameters: [
@@ -277,6 +260,7 @@ module.exports = [
       {
         id: 'Pregnancydx',
         name: 'Pregnancy dx',
+        template: 'Pregnancydx',
         extends: 'Base',
         returnType: 'boolean',
         parameters: [
@@ -348,7 +332,7 @@ module.exports = [
       {
         id: 'GenericMedication',
         name: 'Medication',
-        returnType: 'medications',
+        returnType: 'list_of_medications',
         suppress: true,
         extends: 'Base',
         parameters: [
@@ -374,12 +358,11 @@ module.exports = [
       {
         id: 'GenericProcedure',
         name: 'Procedure',
-        returnType: 'procedures',
+        returnType: 'list_of_procedures',
         suppress: true,
         extends: 'Base',
         parameters: [
           { id: 'procedure', type: 'procedure', name: 'Procedure' },
-          { id: 'in_last_weeks', type: 'number', typeOfNumber: 'integer', name: 'How Recent (weeks)' }
         ],
       },
       {
@@ -388,8 +371,7 @@ module.exports = [
         extends: 'GenericProcedure',
         parameters: [
           { id: 'element_name', value: 'HasHadASCVDProcedures' },
-          { id: 'procedure', static: true, value: 'ascvd_procedures' },
-          { id: 'in_last_weeks', static: true } // This procedure doesn't use a LookBack so this parameter is static with no value
+          { id: 'procedure', static: true, value: "ascvd_procedures" },
         ],
       },
       {
@@ -398,9 +380,7 @@ module.exports = [
         extends: 'GenericProcedure',
         parameters: [
           { id: 'element_name', value: 'IsInPalliativeCare' },
-          { id: 'procedure', static: true, value: 'palliative_care' },
-          { id: 'in_last_weeks', static: true }, // This procedure doesn't use a LookBack so this parameter is static with no value
-
+          { id: 'procedure', static: true, value: "palliative_care" },
         ],
       },
       {
@@ -409,8 +389,7 @@ module.exports = [
         extends: 'GenericProcedure',
         parameters: [
           { id: 'element_name', value: 'OnDialysis' },
-          { id: 'procedure', static: true, value: 'dialysis' },
-          { id: 'in_last_weeks', value: 1 }
+          { id: 'procedure', static: true, value: "dialysis" },
         ],
       }
     ]
