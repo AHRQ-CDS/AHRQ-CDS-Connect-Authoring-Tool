@@ -59,6 +59,16 @@ class ElementSelect extends Component {
     this.elementInputId = _.uniqueId('element-select__element-input-');
     this.categoryInputId = _.uniqueId('element-select__category-input-');
   }
+  
+  // This is to get updated props - was needed to correctly update this.props.categories after parameters were merged in in BuilderPage
+  componentWillReceiveProps() {
+    this.internalCategories = this.generateInternalCategories();
+    this.setState({
+      categories: filterUnsuppressed(this.internalCategories).sort(sortAlphabeticallyByName)
+    });
+    let updatedCategory = this.state.categories.find(g => g.name === this.state.selectedCategory.name)
+    this.onSelectedCategoryChange(updatedCategory)
+  }
 
   generateInternalCategories = () => {
     let categoriesCopy = Object.assign([], this.props.categories);
