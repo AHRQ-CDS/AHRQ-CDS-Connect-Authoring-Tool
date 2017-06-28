@@ -1,5 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 import axios from 'axios';
+import update from 'immutability-helper';
 import FileSaver from 'file-saver';
 import _ from 'lodash';
 
@@ -33,6 +34,7 @@ const getValueAtPath = (obj, path) => {
         return getValueAtPath({}, path)
       }
     } else {
+      // Probably at the root
       if (obj[path[0]] === undefined || path[0].length === 0) {
         return obj;
       }
@@ -227,9 +229,17 @@ class BuilderPage extends Component {
       const paramIndex = target.parameters.findIndex(
         param => Object.prototype.hasOwnProperty.call(editedParams, param.id));
 
-      Object.keys(editedParams).forEach(function(key) {
-        target.parameters[paramIndex][key] = editedParams[key];
+      update(target, {
+        parameters: {
+          [paramIndex]: {
+            value: { $set: editedParams[target.parameters[paramIndex].id] }
+          }
+        }
       });
+
+      // Object.keys(editedParams).forEach(function(key) {
+      //   target.parameters[paramIndex][key] = editedParams[key];
+      // });
     }
 
     this.setState({ instanceTree: tree });

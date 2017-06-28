@@ -64,7 +64,7 @@ class ConjunctionGroup extends Component {
   render() {
     const elementNameParam = this.props.instance.parameters.find(param => param.id === 'element_name');
     return (
-      <div className="conjunction-group">
+      <div className={this.props.root ? "conjunction-group conjunction-group--root" : "conjunction-group"}>
         <div className="conjunction-group__header">
           <div className="conjunction-group__header-title">
             {
