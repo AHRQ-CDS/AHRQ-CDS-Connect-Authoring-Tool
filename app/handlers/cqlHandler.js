@@ -69,7 +69,7 @@ function loadTemplates(pathToTemplates) {
 }
 
 // This creates the context EJS uses to create a union of queries using different valuesets
-function createGroupedContext(id, valuesets, type) {
+function createMultipleValueSetExpression(id, valuesets, type) {
   let groupedContext = {
     template: 'MultipleValuesetsExpression',
     name: `${id}_valuesets`,
@@ -98,6 +98,7 @@ class CqlArtifact {
     this.codeMap = new Map();
     this.conceptMap = new Map();
     this.paramContexts = [];
+    this.referencedElements = [];
     this.contexts = [];
     this.elements.forEach((element) => { 
       if (element.type == 'parameter') {
@@ -144,20 +145,23 @@ class CqlArtifact {
             if('checkInclusionInVS' in observationValueSets){
               this.resourceMap.set(observationValueSets.checkInclusionInVS.name, observationValueSets.checkInclusionInVS);
             }
+            context.values = [ observationValueSets.name ];
           } else {
-            observationValueSets.observations.map(observation => {
+            context.values = observationValueSets.observations.map(observation => {
               this.resourceMap.set(observation.name, observation);
+              return observation.name;
             });
-            // For observations that use more than one valueset, create a separate define statement that 
+            // For observations that use more than one valueset, create a separate define statement that
             // groups the queries for each valueset into one expression that is then referenced
             if(observationValueSets.observations.length > 1) {
-              if(!this.contexts.find(context => context.name === `${observationValueSets.id}_valuesets`)) {
-                let groupedContext = createGroupedContext(observationValueSets.id, observationValueSets.observations, 'Observation');
-                this.contexts.push(groupedContext);
+              if(!this.referencedElements.find(concept => concept.name === `${observationValueSets.id}_valuesets`)) {
+                let multipleValueSetExpression = createMultipleValueSetExpression(observationValueSets.id, observationValueSets.observations, 'Observation');
+                this.referencedElements.push(multipleValueSetExpression);
               }
+              context.values = [`"${observationValueSets.id}_valuesets"`];
+              context.template = 'GenericStatement'; // Potentially move this to the object itself in form_templates
             }
           }
-          context.values = [ observationValueSets.name ]; // Every context.values must be an array, so force it here. This will change.
           break;
         case 'number':
           context[parameter.id] = parameter.value;

@@ -25,3 +25,10 @@ parameter "<%=parameter.element_name%>" default <%=parameter.default%><%});%>
 
 context <%=context%>
 
+<% referencedElements.forEach((element) => { -%>
+define "<%=element.name%>":
+  <%-element.valuesets.map(v => {
+  return `[${element.type}: "${v.name}"]` }).join(`
+  union `);%>
+<%}) -%>
+

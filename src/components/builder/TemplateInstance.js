@@ -116,6 +116,7 @@ class TemplateInstance extends Component {
     const otherInstances = this.getOtherInstances(this.props);
     this.setState({ otherInstances });
 
+    this.props.templateInstance.rootReturnType = this.props.templateInstance.returnType;
     axios.get(`${API_BASE}/config/resources`)
       .then((result) => {
         this.setState({ resources: result.data });
@@ -312,6 +313,7 @@ class TemplateInstance extends Component {
       returnType = (_.last(this.state.appliedModifiers) || this.props.templateInstance).returnType;
     }
     console.log("FILTER BY: " + returnType);
+    this.props.templateInstance.returnType = returnType; // Actually change the return type, instead of filtering
     this.setState({relevantModifiers: (this.modifersByInputType[returnType] || [])});
   }
 
@@ -332,6 +334,7 @@ class TemplateInstance extends Component {
   removeLastModifier() {
     let newAppliedModifiers = this.state.appliedModifiers.slice();
     newAppliedModifiers.pop();
+    this.props.templateInstance.returnType = _.isEmpty(newAppliedModifiers) ? this.props.templateInstance.rootReturnType : _.last(newAppliedModifiers).returnType;
     this.setAppliedModifiers(newAppliedModifiers)
   }
 
@@ -500,6 +503,9 @@ class TemplateInstance extends Component {
         )}
         </div>
         {this.renderAppliedModifiers()}
+        <div className='modifier__return_type'>
+          Return Type: {_.startCase(this.props.templateInstance.returnType)}
+        </div>
         {this.renderModifierSelect()}
       </div>);
   }

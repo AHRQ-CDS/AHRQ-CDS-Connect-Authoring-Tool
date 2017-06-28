@@ -1,1 +1,0 @@
-<%-cqlLibraryFunction%>(<%-value_name%>, <%-values.value%> <%-values.unit%>)

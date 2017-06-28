@@ -64,7 +64,7 @@ module.exports = [
   },
   {
     id: 'ActiveOrRecurring',
-    name: 'ActiveOrRecurring',
+    name: 'Active Or Recurring',
     inputTypes: ['list_of_conditions'],
     returnType: 'list_of_conditions',
     cqlTemplate: 'BaseModifier',
@@ -104,10 +104,10 @@ module.exports = [
   { id: 'MostRecentMedication', name: 'Most Recent', inputTypes: ['list_of_medications'], returnType: 'medication',   cqlTemplate: 'BaseModifier', cqlLibraryFunction: 'C3F.MostRecent' },
   { id: 'MostRecentProcedure', name: 'Most Recent', inputTypes: ['list_of_procedures'], returnType: 'procedure',   cqlTemplate: 'BaseModifier', cqlLibraryFunction: 'C3F.MostRecent' },
   // Look Back
-  { id: 'LookBackObservation', type: 'LookBack', name: 'Look Back', inputTypes: ['list_of_observations'], returnType: 'list_of_observations', values: {value: undefined, unit: undefined}, cqlTemplate: 'twoArgumentModifier', cqlLibraryFunction: 'C3F.ObservationLookBack' },
-  { id: 'LookBackCondition', type: 'LookBack', name: 'Look Back', inputTypes: ['list_of_conditions'], returnType: 'list_of_conditions',       values: {value: undefined, unit: undefined}, cqlTemplate: 'twoArgumentModifier', cqlLibraryFunction: 'C3F.ConditionLookBack' },
-  { id: 'LookBackMedication', type: 'LookBack', name: 'Look Back', inputTypes: ['list_of_medications'], returnType: 'list_of_medications',    values: {value: undefined, unit: undefined}, cqlTemplate: 'twoArgumentModifier', cqlLibraryFunction: 'C3F.MedicationLookBack' },
-  { id: 'LookBackProcedure', type: 'LookBack', name: 'Look Back', inputTypes: ['list_of_procedures'], returnType: 'list_of_procedures',       values: {value: undefined, unit: undefined}, cqlTemplate: 'twoArgumentModifier', cqlLibraryFunction: 'C3F.ProcedureLookBack' },
+  { id: 'LookBackObservation', type: 'LookBack', name: 'Look Back', inputTypes: ['list_of_observations'], returnType: 'list_of_observations', values: {value: undefined, unit: undefined}, cqlTemplate: 'LookBackModifier', cqlLibraryFunction: 'C3F.ObservationLookBack' },
+  { id: 'LookBackCondition', type: 'LookBack', name: 'Look Back', inputTypes: ['list_of_conditions'], returnType: 'list_of_conditions',       values: {value: undefined, unit: undefined}, cqlTemplate: 'LookBackModifier', cqlLibraryFunction: 'C3F.ConditionLookBack' },
+  { id: 'LookBackMedication', type: 'LookBack', name: 'Look Back', inputTypes: ['list_of_medications'], returnType: 'list_of_medications',    values: {value: undefined, unit: undefined}, cqlTemplate: 'LookBackModifier', cqlLibraryFunction: 'C3F.MedicationLookBack' },
+  { id: 'LookBackProcedure', type: 'LookBack', name: 'Look Back', inputTypes: ['list_of_procedures'], returnType: 'list_of_procedures',       values: {value: undefined, unit: undefined}, cqlTemplate: 'LookBackModifier', cqlLibraryFunction: 'C3F.ProcedureLookBack' },
   {
     id: 'BooleanExists',
     name: 'Exists',

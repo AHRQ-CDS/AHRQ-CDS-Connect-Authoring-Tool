@@ -94,15 +94,6 @@ module.exports = [
         ]
       },
       {
-        id: 'MostRecentObservation',
-        name: 'Most Recent Observation',
-        extends: 'GenericObservation',
-        parameters: [
-          { id: 'element_name', type: 'string', name: 'Element Name' },
-          { id: 'observation', type: 'observation', name: 'Observation' },
-        ],
-      },
-      {
         id: 'ASCVDRiskAssessment',
         name: 'ASCVD Risk Assessment',
         extends: 'GenericObservation',
@@ -134,6 +125,7 @@ module.exports = [
         name: 'And',
         returnType: 'boolean',
         extends: 'Base',
+        template: 'And',
         parameters: [
           { id: 'element_name', name: 'Element Name' },
           { id: 'components', type: 'list', subType: 'boolean', value: [undefined, undefined], name: 'Elements' }
@@ -144,6 +136,7 @@ module.exports = [
         name: 'Or',
         returnType: 'boolean',
         extends: 'Base',
+        template: 'Or',
         parameters: [
           { id: 'element_name', name: 'Element Name' },
           { id: 'components', type: 'list', subType: 'boolean', value: [undefined, undefined], name: 'Elements' }
@@ -154,6 +147,7 @@ module.exports = [
         name: 'String',
         extends: 'Base',
         returnType: 'string',
+        template: 'String',
         parameters: [
           { id: 'element_value', type: 'string', name: 'Value' }
         ],
@@ -162,6 +156,7 @@ module.exports = [
         id: 'Comparison',
         name: 'Comparison',
         returnType: 'boolean',
+        template: 'Comparison',
         parameters: [
           { id: 'element_name', type: 'string', name: 'Element Name' },
           { id: 'observation', type: 'list', category: 'comparison', subType: 'number', value: [undefined], name: 'Observation' },
@@ -175,6 +170,7 @@ module.exports = [
         name: 'If',
         returnType: 'if',
         extends: 'Base',
+        template: 'If',
         parameters: [
           { id: 'components', type: 'if', name: 'Elements', value: [{},{else: true, block: ''}]}
         ],
@@ -184,6 +180,7 @@ module.exports = [
         name: 'Not',
         returnType: 'boolean',
         extends: 'Base',
+        template: 'Not',
         parameters: [
           { id: 'components', type: 'list',subType: 'boolean',value: [undefined], name: 'Elements' }
         ],
@@ -261,6 +258,7 @@ module.exports = [
         id: 'Pregnancydx',
         name: 'Pregnancy dx',
         template: 'Pregnancydx',
+        returnType: 'boolean',
         extends: 'Base',
         returnType: 'boolean',
         parameters: [
@@ -343,6 +341,7 @@ module.exports = [
         id: 'OnStatinTherapy',
         name: 'On Statin Therapy',
         extends: 'GenericMedication',
+        template: 'GenericStatement', // See GenericStatement template for explanation
         parameters: [
           { id: 'element_name', value: 'OnStatinTherapy' },
           { id: 'medication', static: true, value: 'on_statin_therapy' }
