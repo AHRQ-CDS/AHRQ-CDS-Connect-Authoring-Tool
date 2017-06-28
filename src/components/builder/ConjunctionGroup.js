@@ -7,14 +7,23 @@ import TemplateInstance, { createTemplateInstance } from './TemplateInstance';
 import ElementSelect from './ElementSelect';
 import StringParameter from './parameters/StringParameter';
 
+const requiredIf = (type, condition) => {
+  return function(props) {
+    var test = condition(props) ? type.isRequired : type;
+    return test.apply(this, arguments);
+  };
+};
+
 class ConjunctionGroup extends Component {
   static propTypes = {
+    root: PropTypes.bool,
+    getPath: requiredIf(PropTypes.func, props => !props.root),
     instance: PropTypes.object.isRequired,
-    saveInstance: PropTypes.func.isRequired,
+    addInstance: PropTypes.func.isRequired,
+    editInstance: PropTypes.func.isRequired,
     deleteInstance: PropTypes.func.isRequired,
-    templateInstances: PropTypes.array.isRequired,
-    updateSingleInstance: PropTypes.func.isRequired,
-    updateTemplateInstances: PropTypes.func.isRequired,
+    saveInstance: PropTypes.func.isRequired,
+    getAllInstances: PropTypes.func.isRequired,
     showPresets: PropTypes.func.isRequired,
     categories: PropTypes.array.isRequired
   }
@@ -27,11 +36,11 @@ class ConjunctionGroup extends Component {
   }
 
   handleTypeChange = (type) => {
-    this.props.updateSingleInstance(type, this.getPath(), true);
+    this.props.editInstance(type, this.getPath(), true);
   }
 
   handleNameChange = (state) => {
-    this.props.updateSingleInstance(state, this.getPath());
+    this.props.editInstance(state, this.getPath());
   }
 
   addChild = (template) => {
@@ -57,9 +66,19 @@ class ConjunctionGroup extends Component {
     return (
       <div className="conjunction-group">
         <div className="conjunction-group__header">
-          <span>
-            {this.props.instance.name}
-          </span>
+          <div className="conjunction-group__header-title">
+            {
+              this.props.root ?
+                <h2 className="conjunction-group__root-title">{ elementNameParam.value }</h2>
+              :
+                <StringParameter
+                  id={ elementNameParam.id }
+                  name={ elementNameParam.name }
+                  value={ elementNameParam.value }
+                  updateInstance={ this.handleNameChange }
+                />
+            }
+          </div>
           <div className="conjunction-group__button-bar">
             {
               !this.props.root &&
@@ -71,29 +90,18 @@ class ConjunctionGroup extends Component {
             }
           </div>
         </div>
-        <StringParameter
-          id={ elementNameParam.id }
-          name={ elementNameParam.name }
-          value={ elementNameParam.value }
-          updateInstance={ this.handleNameChange }
-        />
         { this.props.instance.childInstances.map((instance, i) => {
-          if (!instance) {
-            return null;
-          }
           if (instance.conjunction) {
             return (
               <ConjunctionGroup
-                getPath={ this.getChildsPath }
                 key={ instance.uniqueId }
+                getPath={ this.getChildsPath }
                 instance={ instance }
                 addInstance={ this.props.addInstance }
-                saveInstance={ this.props.saveInstance }
+                editInstance={ this.props.editInstance }
                 deleteInstance={ this.props.deleteInstance }
-                getChildrenOfInstance={ this.props.getChildrenOfInstance }
-                templateInstances={ this.props.templateInstances }
-                updateSingleInstance={ this.props.updateSingleInstance }
-                updateTemplateInstances={ this.props.updateTemplateInstances }
+                saveInstance={ this.props.saveInstance }
+                getAllInstances={ this.props.getAllInstances }
                 showPresets={ this.props.showPresets }
                 categories={ this.props.categories }
               />
@@ -106,10 +114,10 @@ class ConjunctionGroup extends Component {
                 <TemplateInstance
                   getPath={ this.getChildsPath }
                   templateInstance={ instance }
-                  otherInstances={ this.props.instance.childInstances }
-                  saveInstance={ this.props.saveInstance }
+                  otherInstances={ this.props.getAllInstances() }
+                  editInstance={ this.props.editInstance }
                   deleteInstance={ this.props.deleteInstance }
-                  updateSingleInstance={ this.props.updateSingleInstance }
+                  saveInstance={ this.props.saveInstance }
                   showPresets={ this.props.showPresets }
                 />
                 <Select
@@ -118,6 +126,7 @@ class ConjunctionGroup extends Component {
                   value={ this.props.instance.name }
                   valueKey="name"
                   labelKey="name"
+                  placeholder="Select one"
                   searchable={ false }
                   clearable={ false }
                   options={ this.types }
@@ -129,9 +138,7 @@ class ConjunctionGroup extends Component {
           }
         }) }
         <ElementSelect
-          parentId={ this.props.instance.uniqueId }
           categories={ this.props.categories }
-          templateInstances={ this.props.templateInstances }
           onSuggestionSelected={ this.addChild }
         />
       </div>

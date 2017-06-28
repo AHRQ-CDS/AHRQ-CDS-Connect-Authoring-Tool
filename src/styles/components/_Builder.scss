@@ -129,13 +129,6 @@ input.react-autosuggest__input--open {
 }
 
 .conjunction-group {
-  padding: 1em;
-  border: 1px solid $gray-light;
-  border-radius: $border-radius;
-
-  .conjunction-group {
-    margin-left: 5em;
-  }
 
   &__header {
     display: flex;
@@ -147,5 +140,12 @@ input.react-autosuggest__input--open {
   &__conjunction-select {
     width: 5em;
     margin-bottom: .5em;
+  }
+
+  .conjunction-group {
+    margin-left: 5em;
+    padding: 1em;
+    border: 1px solid $gray-light;
+    border-radius: $border-radius;
   }
 }
