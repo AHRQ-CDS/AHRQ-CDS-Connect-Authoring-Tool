@@ -141,11 +141,14 @@ input.react-autosuggest__input--open {
     width: 5em;
     margin-bottom: .5em;
   }
+  &--root {
+    border: 1px solid $gray-light;
+    padding: 1em;
+  }
 
   .conjunction-group {
     margin-left: 5em;
     padding: 1em;
-    border: 1px solid $gray-light;
     border-radius: $border-radius;
   }
 }
