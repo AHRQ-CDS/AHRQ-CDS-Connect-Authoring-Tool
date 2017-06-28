@@ -39,7 +39,6 @@ class ElementSelect extends Component {
 
   static propTypes = {
     categories: PropTypes.array.isRequired,
-    templateInstances: PropTypes.array.isRequired,
     onSuggestionSelected: PropTypes.func.isRequired
   }
 

@@ -1,6 +1,5 @@
 import React, { Component, PropTypes } from 'react';
 import axios from 'axios';
-import update from 'immutability-helper';
 import FileSaver from 'file-saver';
 import _ from 'lodash';
 
@@ -69,9 +68,7 @@ class BuilderPage extends Component {
         } else {
           const operations = result.data.find(g => g.name === 'Operations');
           const andTemplate = operations.entries.find(e => e.name === 'And');
-          const andInstance = createTemplateInstance(andTemplate);
-          andInstance.path = '';
-          this.initializeInstanceTree(andInstance);
+          this.initializeInstanceTree(andTemplate);
         }
       })
       .catch((error) => {
@@ -198,7 +195,13 @@ class BuilderPage extends Component {
     }
   }
 
-  initializeInstanceTree = (instance) => {
+  initializeInstanceTree = (template) => {
+    const instance = createTemplateInstance(template);
+    const nameParam = instance.parameters.find(param => param.id === 'element_name');
+    instance.path = '';
+    instance.root = true;
+    nameParam.value = 'Includes';
+
     this.setState({ instanceTree: instance });
   }
 
@@ -210,7 +213,6 @@ class BuilderPage extends Component {
     target.push(instance);
 
     this.setState({ instanceTree: tree });
-    console.log(tree);
   }
 
   editInstance = (editedParams, path, editingConjunctionType = false) => {
@@ -243,6 +245,15 @@ class BuilderPage extends Component {
     this.setState({ instanceTree: tree});
   }
 
+  getAllInstances = (node = this.state.instanceTree) => {
+    return _.flatten(node.childInstances.map(instance => {
+      if (instance.childInstances) {
+        return _.flatten([instance, this.getAllInstances(instance)]);
+      }
+      return instance;
+    }));
+  }
+
   render() {
     return (
       <div className="builder">
@@ -269,16 +280,12 @@ class BuilderPage extends Component {
                 this.state.instanceTree.childInstances ?
                   <ConjunctionGroup
                     root={ true }
-                    getPath={ this.getPath }
-                    key={ this.state.instanceTree.uniqueId }
                     instance={ this.state.instanceTree }
                     addInstance={ this.addInstance }
-                    saveInstance={ this.saveInstance }
+                    editInstance={ this.editInstance }
                     deleteInstance={ this.deleteInstance }
-                    getChildrenOfInstance={ this.getChildrenOfInstance }
-                    templateInstances={ this.state.templateInstances }
-                    updateSingleInstance={ this.editInstance }
-                    updateTemplateInstances={ this.updateTemplateInstances }
+                    saveInstance={ this.saveInstance }
+                    getAllInstances={ this.getAllInstances }
                     showPresets={ showPresets }
                     categories={ this.state.categories }
                   />
