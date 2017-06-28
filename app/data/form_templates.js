@@ -411,4 +411,57 @@ module.exports = [
       },
     ]
   },
+  {
+    id: 8,
+    icon: 'ambulance',
+    name: 'Encounters',
+    entries: [
+      {
+        id: 'GenericEncounter',
+        name: 'Encounter',
+        returnType: 'encounter',
+        suppress: true,
+        extends: 'Base',
+        parameters: [
+          { id: 'encounter', type: 'encounter', name: 'Encounter' },
+        ],
+      },
+      {
+        id: 'OutpatientEncounters',
+        name: 'Outpatient Encounter',
+        returnType: 'encounter',
+        extends: 'GenericEncounter',
+        parameters: [
+          { id: 'element_name', value: 'OutpatientEncounter' },
+          { id: 'encounter', static: true, value: 'outpatient_encounter' }
+        ]
+      }
+    ]
+  },
+  {
+    id: 9,
+    icon: 'thermometer-3',
+    name: 'Allergy Intolerances',
+    entries: [
+      {
+        id: 'GenericAllergyIntolerance',
+        name: 'Allergy Inteolerance',
+        returnType: 'allergy_intolerance',
+        suppress: true,
+        extends: 'Base',
+        parameters: [
+          { id: 'allergyIntolerance', type: 'allergyIntolerance', name: 'Allergy Intolerance' },
+        ],
+      },
+      {
+        id: 'StatinAllergen',
+        name: 'Statin Allergen',
+        extends: 'GenericAllergyIntolerance',
+        parameters: [
+          { id: 'element_name', value: 'StatinAllergen' },
+          { id: 'allergyIntolerance', static: true, value: 'statin_allergen' }
+        ]
+      }
+    ]
+  }
 ];

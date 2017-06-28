@@ -189,15 +189,17 @@ class CqlArtifact {
           break;
         case 'encounter':
           let encounterValueSets = ValueSets.encounters[parameter.value];
-          encounterValueSets.encounters.map(encounter => {
+          context.values = encounterValueSets.encounters.map(encounter => {
             this.resourceMap.set(encounter.name, encounter);
+            return encounter.name;
           });
           context[parameter.id] = encounterValueSets;
           break;
         case 'allergyIntolerance' :
           let allergyIntoleranceValueSets = ValueSets.allergyIntolerances[parameter.value];
-          allergyIntoleranceValueSets.allergyIntolerances.map(allergyIntolerance => {
+          context.values = allergyIntoleranceValueSets.allergyIntolerances.map(allergyIntolerance => {
             this.resourceMap.set(allergyIntolerance.name, allergyIntolerance);
+            return allergyIntolerance.name;
           });
           context[parameter.id] = allergyIntoleranceValueSets;
           break;

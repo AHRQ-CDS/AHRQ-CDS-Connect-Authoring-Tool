@@ -1,6 +1,6 @@
 // NOTE -- Any cqlTemplates/cqlLibraryFunctions that are `null` are currently in development
 
-let elementLists = ['list_of_observations', 'list_of_conditions', 'list_of_medications', 'list_of_procedures'];
+let elementLists = ['list_of_observations', 'list_of_conditions', 'list_of_medications', 'list_of_procedures', 'allergy_intolerance', 'encounter'];
 module.exports = [
   // observations
   {
@@ -61,6 +61,14 @@ module.exports = [
     returnType: 'list_of_conditions',
     cqlTemplate: 'BaseModifier',
     cqlLibraryFunction: 'C3F.Confirmed'
+  },
+  {
+    id: 'ActiveOrRecurring',
+    name: 'ActiveOrRecurring',
+    inputTypes: ['list_of_conditions'],
+    returnType: 'list_of_conditions',
+    cqlTemplate: 'BaseModifier',
+    cqlLibraryFunction: 'C3F.ActiveOrRecurring'
   },
   {
     id: 'ActiveConiditon',

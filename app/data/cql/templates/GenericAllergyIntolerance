@@ -1,3 +1,1 @@
-define "<%=element_name%>":
-  <%-allergyIntolerance.allergyIntolerances.map(value => `Exists([AllergyIntolerance: "${value.name}"])`).join(`
-  union `)%>
+[AllergyIntolerance: "<%=element_context%>"]
