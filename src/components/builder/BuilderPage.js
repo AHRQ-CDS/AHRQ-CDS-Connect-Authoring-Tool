@@ -1,6 +1,5 @@
 import React, { Component, PropTypes } from 'react';
 import axios from 'axios';
-import update from 'immutability-helper';
 import FileSaver from 'file-saver';
 import _ from 'lodash';
 
@@ -200,6 +199,7 @@ class BuilderPage extends Component {
   initializeInstanceTree = (template) => {
     const instance = createTemplateInstance(template);
     const nameParam = instance.parameters.find(param => param.id === 'element_name');
+    instance.name = '';
     instance.path = '';
     instance.root = true;
     nameParam.value = 'Includes';
@@ -229,20 +229,11 @@ class BuilderPage extends Component {
       const paramIndex = target.parameters.findIndex(
         param => Object.prototype.hasOwnProperty.call(editedParams, param.id));
 
-      update(target, {
-        parameters: {
-          [paramIndex]: {
-            value: { $set: editedParams[target.parameters[paramIndex].id] }
-          }
-        }
-      });
-
-      // Object.keys(editedParams).forEach(function(key) {
-      //   target.parameters[paramIndex][key] = editedParams[key];
-      // });
+      target.parameters[paramIndex].value = editedParams[target.parameters[paramIndex].id];
     }
 
     this.setState({ instanceTree: tree });
+    console.log(tree);
   }
 
   deleteInstance = (path) => {

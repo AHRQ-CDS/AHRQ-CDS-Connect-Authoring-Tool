@@ -1,0 +1,15 @@
+.element-select {
+  display: flex;
+
+  &__element-field {
+    flex: 1;
+  }
+  &__category-field {
+    flex: 0 0 10em;
+    margin-left: .5em;
+  }
+  &__option-category {
+    margin-left: .5em;
+    color: $gray;
+  }
+}
