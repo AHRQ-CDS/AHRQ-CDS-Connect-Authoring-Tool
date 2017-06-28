@@ -61,10 +61,15 @@ class ConjunctionGroup extends Component {
     return this.getPath() + '.childInstances.' + childIndex;
   }
 
+  getNestingClassName = () => {
+    const level = this.getPath().split(".").filter(pathSection => pathSection === "childInstances").length;
+    return level % 2 === 0 ? '' : 'conjunction-group--odd';
+  }
+
   render() {
     const elementNameParam = this.props.instance.parameters.find(param => param.id === 'element_name');
     return (
-      <div className={this.props.root ? "conjunction-group conjunction-group--root" : "conjunction-group"}>
+      <div className={`conjunction-group ${this.getNestingClassName()}`}>
         <div className="conjunction-group__header">
           <div className="conjunction-group__header-title">
             {
