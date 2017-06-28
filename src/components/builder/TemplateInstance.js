@@ -51,9 +51,10 @@ function renderPreset(preset, stateIndex) {
 
 class TemplateInstance extends Component {
   static propTypes = {
+    getPath: PropTypes.func.isRequired,
     templateInstance: PropTypes.object.isRequired,
     otherInstances: PropTypes.array.isRequired,
-    updateSingleInstance: PropTypes.func.isRequired,
+    editInstance: PropTypes.func.isRequired,
     deleteInstance: PropTypes.func.isRequired,
     saveInstance: PropTypes.func.isRequired,
     showPresets: PropTypes.func.isRequired
@@ -103,7 +104,6 @@ class TemplateInstance extends Component {
   // Props will either be this.props or nextProps coming from componentWillReceiveProps
   getOtherInstances(props) {
     const otherInstances = props.otherInstances.filter(this.notThisInstance)
-      .filter(instance => !instance.conjunction)
       .map(instance => ({
         name: getInstanceName(instance),
         id: instance.id,
@@ -121,7 +121,7 @@ class TemplateInstance extends Component {
 
   updateInstance(newState) {
     this.setState(newState);
-    this.props.updateSingleInstance(newState, this.getPath());
+    this.props.editInstance(newState, this.getPath());
   }
 
   // Used to update value states that are nested objects

@@ -158,7 +158,7 @@ module.exports = [
         conjunction: true,
         returnType: 'boolean',
         parameters: [
-          { id: 'element_name', type: 'string', name: 'Element Name' }
+          { id: 'element_name', type: 'string', name: 'Group Name' }
         ]
       },
       {
@@ -167,7 +167,7 @@ module.exports = [
         conjunction: true,
         returnType: 'boolean',
         parameters: [
-          { id: 'element_name', type: 'string', name: 'Element Name' }
+          { id: 'element_name', type: 'string', name: 'Group Name' }
         ]
       },
       {
