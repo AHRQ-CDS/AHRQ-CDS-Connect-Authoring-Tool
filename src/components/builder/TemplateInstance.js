@@ -344,7 +344,6 @@ class TemplateInstance extends Component {
 
   getPath = () => {
     return this.props.getPath(this.props.templateInstance.uniqueId);
-    // return this.props.templateInstance.path;
   }
 
   renderBody() {

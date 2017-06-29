@@ -116,9 +116,10 @@ class ConjunctionGroup extends Component {
         { this.props.instance.childInstances.map((instance, i) => {
           if (instance.conjunction) {
             return (
-              <div>
+              <div
+                key={ instance.uniqueId }
+                className="conjunction-group__conjunction-child">
                 <ConjunctionGroup
-                  key={ instance.uniqueId }
                   getPath={ this.getChildsPath }
                   instance={ instance }
                   addInstance={ this.props.addInstance }
@@ -136,7 +137,7 @@ class ConjunctionGroup extends Component {
             return (
               <div
                 key={ instance.uniqueId }
-                className="conjunction-group__conjunction">
+                className="conjunction-group__conjunction-child">
                 <TemplateInstance
                   getPath={ this.getChildsPath }
                   templateInstance={ instance }

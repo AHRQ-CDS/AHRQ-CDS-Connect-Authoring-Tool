@@ -196,6 +196,7 @@ module.exports = [
         name: 'If',
         returnType: 'if',
         extends: 'Base',
+        suppress: true,
         parameters: [
           { id: 'components', type: 'if', name: 'Elements', value: [{},{else: true, block: ''}]}
         ],
@@ -205,6 +206,7 @@ module.exports = [
         name: 'Not',
         returnType: 'boolean',
         extends: 'Base',
+        suppress: true,
         parameters: [
           { id: 'components', type: 'list',subType: 'boolean',value: [undefined], name: 'Elements' }
         ],
@@ -212,6 +214,7 @@ module.exports = [
       {
         id: 'Case',
         name: 'Case',
+        suppress: true,
         parameters: [
           { id: 'element_name', type: 'string', name: 'Element Name' },
           {
