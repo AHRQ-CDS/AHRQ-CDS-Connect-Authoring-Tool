@@ -82,6 +82,10 @@ class BuilderPage extends Component {
         this.mergeInParentTemplate(entry, entryMap);
       }
     });
+
+    // This is needed to update the state because the functions above are manually updating 
+    // this.state.groups without using React's this.setState
+    this.setState({groups: this.state.groups})
   }
   mergeInParentTemplate(entry, entryMap) {
     let parent = entryMap[entry.extends]
@@ -169,9 +173,6 @@ class BuilderPage extends Component {
     } else {
       this.setState({ selectedGroup: null });
     }
-    // This is needed to update this.state.groups after merging templates
-    // We are directly manipulating this.state.groups without using this.setState() so updates aren't passed down which is causing the problems of not all elements added in with the ElementSelect component
-    this.setState({ groups: this.state.groups })
   }
 
   setTemplateInstances(elements) {

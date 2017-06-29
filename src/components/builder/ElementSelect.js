@@ -60,12 +60,15 @@ class ElementSelect extends Component {
     this.categoryInputId = _.uniqueId('element-select__category-input-');
   }
   
-  // This is to get updated props - was needed to correctly update this.props.categories after parameters were merged in in BuilderPage
+  // Needed to correctly update this.props.categories after parameters were merged in BuilderPage
   componentWillReceiveProps() {
+    // Updates the categories and their entries to have correct parameters
     this.internalCategories = this.generateInternalCategories();
     this.setState({
       categories: filterUnsuppressed(this.internalCategories).sort(sortAlphabeticallyByName)
     });
+    
+    // Keep the category that is selected the same
     let updatedCategory = this.state.categories.find(g => g.name === this.state.selectedCategory.name)
     this.onSelectedCategoryChange(updatedCategory)
   }
