@@ -119,7 +119,8 @@ class CqlArtifact {
 
   parseConjunction(element) {
     const conjunction = {template : element.id, components : []};
-    conjunction.element_name = (conjunction.element_name || element.uniqueId);
+    const name = element.parameters[0].value;
+    conjunction.element_name = (name || element.uniqueId);
     element.childInstances.forEach((child) => {
       conjunction.components.push({name : child.parameters[0].value})
     });
