@@ -230,7 +230,7 @@ class BuilderPage extends Component {
     }
 
     this.setState({ instanceTree: tree });
-    console.log(tree);
+    // console.log(tree);
   }
 
   deleteInstance = (path) => {
