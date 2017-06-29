@@ -114,6 +114,6 @@ module.exports = [
     inputTypes: elementLists,
     returnType: 'boolean',
     cqlTemplate: 'BaseModifier',
-    cqlLibraryFunction: 'C3F.Exists'
+    cqlLibraryFunction: 'exists'
   },
 ]
