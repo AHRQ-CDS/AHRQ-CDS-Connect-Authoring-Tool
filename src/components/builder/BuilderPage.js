@@ -201,7 +201,6 @@ class BuilderPage extends Component {
     const nameParam = instance.parameters.find(param => param.id === 'element_name');
     instance.name = '';
     instance.path = '';
-    instance.root = true;
     nameParam.value = 'Includes';
 
     this.setState({ instanceTree: instance });
@@ -233,7 +232,6 @@ class BuilderPage extends Component {
     }
 
     this.setState({ instanceTree: tree });
-    console.log(tree);
   }
 
   deleteInstance = (path) => {

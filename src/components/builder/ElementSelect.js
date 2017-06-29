@@ -75,12 +75,9 @@ class ElementSelect extends Component {
   }
 
   onSuggestionSelected = (suggestion) => {
-    // const instance = createTemplateInstance(suggestion, this.props.parentId );
     let clone = _.cloneDeep(suggestion);
     delete clone['category']; // Don't send the category which is only needed for this component
-    // this.props.updateTemplateInstances(clone);
     this.props.onSuggestionSelected(clone);
-    // return clone;
   }
 
   onSelectedCategoryChange = (category) => {
