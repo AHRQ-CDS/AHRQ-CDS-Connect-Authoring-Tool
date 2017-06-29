@@ -143,6 +143,9 @@ class CqlArtifact {
             });
             // For checking if a ConceptValue is in a valueset, incluce the valueset that will be used
             if('checkInclusionInVS' in observationValueSets){
+              if(_.last(element.modifiers).id === "InStatement") {
+                _.last(element.modifiers).values.valueSet = observationValueSets.checkInclusionInVS.name;
+              }
               this.resourceMap.set(observationValueSets.checkInclusionInVS.name, observationValueSets.checkInclusionInVS);
             }
             context.values = [ observationValueSets.name ];
@@ -236,6 +239,7 @@ class CqlArtifact {
           context[parameter.id] = parameter.value;
           break;
         default:
+          context.values = context.values || []
           context[parameter.id] = parameter.value;
           break;
       }

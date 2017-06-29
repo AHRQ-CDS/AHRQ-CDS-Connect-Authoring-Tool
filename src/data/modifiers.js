@@ -46,6 +46,15 @@ module.exports = [
     cqlLibraryFunction: 'C3F.ConceptValue'
   },
   {
+    id: 'InStatement',
+    name: 'Check Existance?',
+    inputTypes: ['system_quantity'],
+    returnType: 'boolean',
+    values: {valueSet: undefined},
+    cqlTemplate: 'InStatement',
+    cqlLibraryFunction: null
+  },
+  {
     id: 'ConvertMgToDL',
     name: 'Convert to mg per dL',
     inputTypes: ['system_quantity'],

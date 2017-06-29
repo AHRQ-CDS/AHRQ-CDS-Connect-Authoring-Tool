@@ -159,7 +159,7 @@ module.exports = [
         template: 'Comparison',
         parameters: [
           { id: 'element_name', type: 'string', name: 'Element Name' },
-          { id: 'observation', type: 'list', category: 'comparison', subType: 'number', value: [undefined], name: 'Observation' },
+          { id: 'observation', type: 'list', category: 'comparison', subType: 'system_quantity', value: [undefined], name: 'Observation' },
           { id: 'comparison', type: 'comparison', value: null, name: 'Operator' },
           { id: 'comparison_bound', type: 'number', typeOfNumber: 'float', name: 'Comparison Bound'},
           { id: 'checkbox', type: 'checkbox', name: 'Double Sided?', checked: false}

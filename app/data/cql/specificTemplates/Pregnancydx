@@ -3,5 +3,5 @@ define "MostRecentPregnancyObservation":
   C3F.MostRecent(C3F.Verified(C3F.ObservationLookBack(C3F.ObservationsByConcept("<%=pregnancyStatusConcept%>"), 42 weeks)))
 
 define "<%=element_name%>":
-  Exists(C3F.Confirmed(C3F.ActiveCondition([Condition: "<%=valueSetName%>"])))
+  exists(C3F.Confirmed(C3F.ActiveCondition([Condition: "<%=valueSetName%>"])))
   or C3F.ConceptValue("MostRecentPregnancyObservation") ~ "<%=pregnancyCodeConcept%>"
