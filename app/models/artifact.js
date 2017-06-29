@@ -6,7 +6,7 @@ let Schema = mongoose.Schema;
 let ArtifactSchema = new Schema({
   name: String,
   version: String,
-  instanceTree: Array
+  instanceTree: Object
 },{
   timestamps: true // adds created_at, updated_at
 });
