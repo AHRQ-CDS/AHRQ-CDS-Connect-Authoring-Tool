@@ -66,6 +66,24 @@ class ConjunctionGroup extends Component {
     return level % 2 === 0 ? '' : 'conjunction-group--odd';
   }
 
+  renderConjunctionSelect = (i) => {
+    return (
+      <Select
+        className="conjunction-group__conjunction-select"
+        name={ `conjunction-select-${i}` }
+        value={ this.props.instance.name }
+        valueKey="name"
+        labelKey="name"
+        placeholder="Select one"
+        searchable={ false }
+        clearable={ false }
+        options={ this.types }
+        onChange={ this.handleTypeChange }
+        inputProps={{ 'aria-label': "Select conjunction type" }}
+      />
+    );
+  }
+
   render() {
     const elementNameParam = this.props.instance.parameters.find(param => param.id === 'element_name');
     return (
@@ -98,24 +116,28 @@ class ConjunctionGroup extends Component {
         { this.props.instance.childInstances.map((instance, i) => {
           if (instance.conjunction) {
             return (
-              <ConjunctionGroup
+              <div
                 key={ instance.uniqueId }
-                getPath={ this.getChildsPath }
-                instance={ instance }
-                addInstance={ this.props.addInstance }
-                editInstance={ this.props.editInstance }
-                deleteInstance={ this.props.deleteInstance }
-                saveInstance={ this.props.saveInstance }
-                getAllInstances={ this.props.getAllInstances }
-                showPresets={ this.props.showPresets }
-                categories={ this.props.categories }
-              />
+                className="conjunction-group__conjunction-child">
+                <ConjunctionGroup
+                  getPath={ this.getChildsPath }
+                  instance={ instance }
+                  addInstance={ this.props.addInstance }
+                  editInstance={ this.props.editInstance }
+                  deleteInstance={ this.props.deleteInstance }
+                  saveInstance={ this.props.saveInstance }
+                  getAllInstances={ this.props.getAllInstances }
+                  showPresets={ this.props.showPresets }
+                  categories={ this.props.categories }
+                />
+                { this.renderConjunctionSelect(i) }
+              </div>
             );
           } else {
             return (
               <div
                 key={ instance.uniqueId }
-                className="conjunction-group__conjunction">
+                className="conjunction-group__conjunction-child">
                 <TemplateInstance
                   getPath={ this.getChildsPath }
                   templateInstance={ instance }
@@ -125,19 +147,7 @@ class ConjunctionGroup extends Component {
                   saveInstance={ this.props.saveInstance }
                   showPresets={ this.props.showPresets }
                 />
-                <Select
-                  className="conjunction-group__conjunction-select"
-                  name={ `conjunction-select-${i}` }
-                  value={ this.props.instance.name }
-                  valueKey="name"
-                  labelKey="name"
-                  placeholder="Select one"
-                  searchable={ false }
-                  clearable={ false }
-                  options={ this.types }
-                  onChange={ this.handleTypeChange }
-                  inputProps={{ 'aria-label': "Select conjunction type" }}
-                />
+                { this.renderConjunctionSelect(i) }
               </div>
             );
           }

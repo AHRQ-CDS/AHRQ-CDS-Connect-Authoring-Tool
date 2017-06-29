@@ -20,7 +20,9 @@
     background-color: $gray-lighter;
   }
 
+  // For nested conjunction-group's
   .conjunction-group {
     margin-left: 5em;
+    margin-bottom: .5em;
   }
 }

@@ -5229,7 +5229,7 @@ promise@7.1.1, promise@^7.1.1:
   dependencies:
     asap "~2.0.3"
 
-prop-types@^15.5.4, prop-types@^15.5.6, prop-types@^15.5.7, prop-types@^15.5.8, prop-types@~15.5.7:
+prop-types@^15.5.4, prop-types@^15.5.6, prop-types@^15.5.7, prop-types@~15.5.7:
   version "15.5.10"
   resolved "https://registry.yarnpkg.com/prop-types/-/prop-types-15.5.10.tgz#2797dfc3126182e3a95e3dfbb2e893ddd7456154"
   dependencies:
@@ -5330,22 +5330,6 @@ react-addons-test-utils@^15.5.1:
   dependencies:
     fbjs "^0.8.4"
     object-assign "^4.1.0"
-
-react-autosuggest@^9.0.1:
-  version "9.0.1"
-  resolved "https://registry.yarnpkg.com/react-autosuggest/-/react-autosuggest-9.0.1.tgz#b56eaf8fc3dd46d36b92c5395b6b07174bc10912"
-  dependencies:
-    prop-types "^15.5.8"
-    react-autowhatever "^10.0.0"
-    shallow-equal "^1.0.0"
-
-react-autowhatever@^10.0.0:
-  version "10.0.0"
-  resolved "https://registry.yarnpkg.com/react-autowhatever/-/react-autowhatever-10.0.0.tgz#2d7fd54f0a330e33c06c53a83ef789da0ebb65bf"
-  dependencies:
-    prop-types "^15.5.8"
-    react-themeable "^1.1.0"
-    section-iterator "^2.0.0"
 
 react-axe@^2.1.1:
   version "2.1.4"
@@ -5473,12 +5457,6 @@ react-select@1.0.0-rc.3:
   dependencies:
     classnames "^2.2.4"
     react-input-autosize "^1.1.0"
-
-react-themeable@^1.1.0:
-  version "1.1.0"
-  resolved "https://registry.yarnpkg.com/react-themeable/-/react-themeable-1.1.0.tgz#7d4466dd9b2b5fa75058727825e9f152ba379a0e"
-  dependencies:
-    object-assign "^3.0.0"
 
 react@^15.4.2:
   version "15.5.4"
@@ -5878,10 +5856,6 @@ scss-tokenizer@^0.2.3:
     js-base64 "^2.1.8"
     source-map "^0.4.2"
 
-section-iterator@^2.0.0:
-  version "2.0.0"
-  resolved "https://registry.yarnpkg.com/section-iterator/-/section-iterator-2.0.0.tgz#bf444d7afeeb94ad43c39ad2fb26151627ccba2a"
-
 semver-diff@^2.0.0:
   version "2.1.0"
   resolved "https://registry.yarnpkg.com/semver-diff/-/semver-diff-2.1.0.tgz#4bbb8437c8d37e4b0cf1a68fd726ec6d645d6d36"
@@ -5950,10 +5924,6 @@ setprototypeof@1.0.3:
 sha.js@2.2.6:
   version "2.2.6"
   resolved "https://registry.yarnpkg.com/sha.js/-/sha.js-2.2.6.tgz#17ddeddc5f722fb66501658895461977867315ba"
-
-shallow-equal@^1.0.0:
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/shallow-equal/-/shallow-equal-1.0.0.tgz#508d1838b3de590ab8757b011b25e430900945f7"
 
 shell-quote@~1.4.2:
   version "1.4.3"
