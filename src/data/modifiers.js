@@ -77,7 +77,7 @@ module.exports = [
     inputTypes: ['list_of_conditions'],
     returnType: 'list_of_conditions',
     cqlTemplate: 'BaseModifier',
-    cqlLibraryFunction: 'C3F.Active'
+    cqlLibraryFunction: 'C3F.ActiveCondition'
   },
   //procedures
   {

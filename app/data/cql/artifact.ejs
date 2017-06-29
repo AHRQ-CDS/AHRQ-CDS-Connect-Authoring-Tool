@@ -6,6 +6,8 @@ include <%=includeLibrary.name%> version '<%=includeLibrary.version%>'<%if (incl
 <%})-%>
 <% codeSystemMap.forEach((resource, key) => {%>
 codesystem "<%=key%>": '<%=resource%>' <%}) -%>
+<% resourceMap.forEach((resource, key) => {%>
+valueset "<%=resource.name%>": '<%=resource.oid%>'<%});-%>
 
 <% resourceMap.forEach((resource, key) => {%>
 valueset "<%=resource.name%>": '<%=resource.oid%>'<%});-%>
@@ -16,7 +18,7 @@ code "<%=code.name%>": '<%=code.code%>' from "<%=code.codeSystem.name%>"
 <%})-%>
 
 <% conceptMap.forEach((concept) => {%>
-concept "<%=concept.name%>" : { <%concept.codes.forEach((code) => {%>"<%=code.name%>", <%})%>}
+concept "<%=concept.name%>" : { <%concept.codes.forEach((code, index) => {%>"<%if (index > 0) {%>, <%}%><%=code.name%>"<%})%>}
   display '<%=concept.display%>'
 <%})-%>
 
