@@ -83,8 +83,7 @@ class CqlArtifact {
     this.dataModel = artifact.dataModel ? artifact.dataModel : {name: 'FHIR', version: '1.0.2'};
     this.includeLibraries = artifact.includeLibraries ? artifact.includeLibraries : includeLibraries;
     this.context = artifact.context ? artifact.context : 'Patient';
-    this.elements = artifact.templateInstances;
-
+    this.elements = artifact.instanceTree;
     this.initialize()
   }
 
@@ -95,13 +94,34 @@ class CqlArtifact {
     this.conceptMap = new Map();
     this.paramContexts = [];
     this.contexts = [];
-    this.elements.forEach((element) => { 
-      if (element.type == 'parameter') {
-        this.parseParameter(element);
+    this.conjunctions = [];
+
+    this.parseTree(this.elements);
+  }
+
+  parseTree(element) {
+    this.parseConjunction(element);
+    const children = element.childInstances;
+    children.forEach((child) => {
+      if ("childInstances" in child) {
+        this.parseTree(child)
       } else {
-        this.parseElement(element);
+        if (child.type == 'parameter') {
+          this.parseParameter(child);
+        } else {
+          this.parseElement(child);
+        }
       }
     });
+  }
+
+  parseConjunction(element) {
+    const conjunction = {template : element.id, components : []};
+    conjunction.element_name = (conjunction.element_name || element.uniqueId);
+    element.childInstances.forEach((child) => {
+      conjunction.components.push({name : child.parameters[0].value})
+    });
+    this.conjunctions.unshift(conjunction);
   }
 
   parseParameter(element) {
@@ -221,7 +241,8 @@ class CqlArtifact {
 
   // Generate cql for all elements
   body() {
-    return this.contexts.map((context) => {
+    const expressions = this.contexts.concat(this.conjunctions);
+    return expressions.map((context) => {
       if (!templateMap[context.template]) console.error("Template could not be found: " + context.template);
       return ejs.render(templateMap[context.template], context)
     }).join("\n");
