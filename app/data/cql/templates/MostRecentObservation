@@ -1,11 +1,11 @@
 <%// This eventually needs to extend GenericObservation and GenericObservation needs to be more generic %>
-define "<%=element_name%>":
+define "<%=element_name%>": 
   <%if(!observation.toConceptValue){
       %>C3F.QuantityValue(<%
     } else{
       %>C3F.ConceptValue(<%
     }%>C3F.MostRecent(C3F.Verified(<%if(valid){%>C3F.ObservationLookBack(<%}
-    if("codes" in observation){
+    if("concepts" in observation){
       %>C3F.ObservationsByConcept("<%=observation.name%>")<%} 
     else {
       %>C3F.WithUnit([Observation: "<%=observation.name%>"], <%-observation.units.values%>)<%
