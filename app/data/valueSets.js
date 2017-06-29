@@ -3,29 +3,49 @@ module.exports = {
     total_cholesterol : {
       // https://ushik.ahrq.gov/ViewItemDetails?system=mu&itemKey=211967000
       id: "total_cholesterol",
-      name: "Total Cholesterol",
-      oid: '2.16.840.1.113883.3.464.1003.104.12.1013',
+      observations: [
+        {
+          name: "Total Cholesterol",
+          oid: '2.16.840.1.113883.3.464.1003.104.12.1013',
+        }
+      ],
       units: {values: ["'mg/dL'"], code: "'mg/dL'"}
     },
     hdl_cholesterol : {
       // https://ushik.ahrq.gov/ViewItemDetails?system=mu&itemKey=211963000
       id: "hdl_cholesterol",
-      name: "HDL Cholesterol",
-      oid: '2.16.840.1.113883.3.464.1003.104.12.1012',
+      observations: [
+        {
+          name: "HDL-C Laboratory Test",
+          oid: '2.16.840.1.113883.3.464.1003.104.12.1012',
+        },
+        {
+          name: "High Density Lipoprotein (HDL)",
+          oid: '2.16.840.1.113883.3.600.875',
+        }
+      ],
       units: {values: ["'mg/dL'"], code: "'mg/dL'"}
     },
     systolic_blood_pressure : {
       // https://ushik.ahrq.gov/ViewItemDetails?system=mu&itemKey=211939000
       id: "systolic_blood_pressure",
-      name: "Systolic Blood Pressure",
-      oid: '2.16.840.1.113883.3.526.3.1032',
+      observations: [
+        {
+          name: "Systolic Blood Pressure",
+          oid: '2.16.840.1.113883.3.526.3.1032',
+        }
+      ],
       units: {values: ["'mm[Hg]'", "'mmHg'", "'mm Hg'"], code: "'mm[Hg]'"}
     },
     ldl_cholesterol : {
       // https://ushik.ahrq.gov/ViewItemDetails?system=mu&itemKey=171113000
       id: "ldl_cholesterol",
-      name: "LDL Cholesterol",
-      oid: '2.16.840.1.113883.3.464.1003.198.12.1016',
+      observations: [
+        {
+          name: "LDL Cholesterol",
+          oid: '2.16.840.1.113883.3.464.1003.198.12.1016',
+        }
+      ],
       units: {values: ["'mg/dL'"], code: "'mg/dL'"},
     },
     ascvd_risk_assessment : {

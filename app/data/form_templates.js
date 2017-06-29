@@ -121,7 +121,7 @@ module.exports = [
         parameters: [
           { id: 'element_name', value: 'IsSmoker' },
           { id: 'observation', static: true, value: 'smoker' },
-          { id: 'valid', static: true }
+          { id: 'valid', value: 6 }
         ]
       },
       {

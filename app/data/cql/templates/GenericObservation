@@ -7,7 +7,12 @@ define "<%=element_name%>":
     if("concepts" in observation){
       %>C3F.ObservationsByConcept("<%=observation.name%>")<%} 
     else {
-      %>C3F.WithUnit([Observation: "<%=observation.name%>"], <%-observation.units.values%>)<%
+      %>C3F.WithUnit(<%
+        if(observation.observations.length > 1){
+          %>"<%=observation.id%>_valuesets"<%
+        } else { 
+          %><%-`[Observation: "${observation.observations[0].name}"]` %><%
+        }%>, <%-observation.units.values%>)<%
     }
     if(valid){%>, <%=valid%> <%
       if(valid>1) {%>years<%} else {%>year<%}%>)<%
