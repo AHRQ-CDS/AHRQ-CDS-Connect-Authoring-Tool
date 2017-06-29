@@ -1,9 +1,4 @@
 .builder {
-  &__panel {
-    display: flex;
-    flex-wrap: wrap;
-  }
-
   &__heading {
     font-weight: 300;
     color: $builder-text-color;
@@ -24,47 +19,7 @@
     @extend .primary-button;
   }
 
-  &__palette {
-    @include navigation;
-
-    margin-bottom: 1em;
-
-    [role="menubar"] {
-      button {
-        box-shadow: $box-shadow;
-        font-weight: 400;
-        text-align: left;
-        width: 100%;
-
-        .dropdown {
-          float: right;
-        }
-      }
-    }
-
-    [role="menu"] {
-      display: none;
-    }
-
-    [role="menu"][aria-expanded="true"] {
-      display: block;
-
-      [role="menuitem"] a {
-        display: block;
-        font-weight: 400;
-        padding: 0.4em 0.75em;
-
-        &:hover,
-        &.active {
-          cursor: pointer;
-          background-color: $gray-lighter;
-        }
-      }
-    }
-  }
-
   &__canvas {
-    flex: 1;
     min-height: 8em;
   }
 }
