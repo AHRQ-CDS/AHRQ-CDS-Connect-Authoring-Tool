@@ -50,7 +50,7 @@ module.exports = [
     name: 'Check Existance?',
     inputTypes: ['system_quantity'],
     returnType: 'boolean',
-    values: {valueSet: undefined},
+    values: undefined,
     cqlTemplate: 'InStatement',
     cqlLibraryFunction: null
   },

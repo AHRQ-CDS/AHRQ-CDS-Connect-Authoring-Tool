@@ -144,7 +144,7 @@ class CqlArtifact {
             // For checking if a ConceptValue is in a valueset, incluce the valueset that will be used
             if('checkInclusionInVS' in observationValueSets){
               if(_.last(element.modifiers).id === "InStatement") {
-                _.last(element.modifiers).values.valueSet = observationValueSets.checkInclusionInVS.name;
+                _.last(element.modifiers).values = observationValueSets.checkInclusionInVS.name;
               }
               this.resourceMap.set(observationValueSets.checkInclusionInVS.name, observationValueSets.checkInclusionInVS);
             }
