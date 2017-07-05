@@ -2,18 +2,17 @@ import ElementSelect from '../components/builder/ElementSelect';
 import { fullRenderComponent } from '../helpers/test_helpers';
 import { elementGroups } from '../helpers/test_fixtures';
 
-let component;
-let elementField;
-let categoryField;
-let setInputValue;
-const updateTemplateInstances = jest.fn();
+let component,
+    elementField,
+    categoryField,
+    setInputValue;
+const addInstance = jest.fn();
 
 beforeEach(() => {
   component = fullRenderComponent(ElementSelect,
     {
       categories: elementGroups,
-      templateInstances: [],
-      updateTemplateInstances
+      onSuggestionSelected: addInstance
     }
   );
 
@@ -43,7 +42,7 @@ describe('the select element field', () => {
   it('starts with a list of all elements', () => {
     elementField.find('input').simulate('change');
     expect(elementField.hasClass('is-open')).toBeTruthy();
-    expect(elementField.find('.element-select__option')).toHaveLength(5);
+    expect(elementField.find('.element-select__option')).toHaveLength(7);
   });
 
   it('options display correct values', () => {
@@ -77,10 +76,7 @@ describe('the select element field', () => {
     const firstOption = elementField.find('.element-select__option').at(0);
     firstOption.simulate('mouseDown', { button: 0 });
 
-    const argument = updateTemplateInstances.mock.calls[0][0][0];
-    delete argument.uniqueId; // uniqueId tested by updateTemplateInstances unit test
-
-    expect(updateTemplateInstances).toBeCalledWith([element]);
+    expect(addInstance).toBeCalledWith(element);
   });
 });
 
@@ -90,12 +86,15 @@ describe('the select category field', () => {
   });
 
   it('contains every original category plus "all" category in alphabetical order', () => {
-    const categoryNames = ['All', 'Demographics', 'Observations'];
-    categoryField.find('.Select-control').simulate('mouseDown', { button: 0 });
+    const categoryNames = ['All', 'Demographics', 'Observations', 'Operations'];
+    categoryField.find('.Select-control').simulate('mouseDown', {button: 0});
     const options = categoryField.find('.Select-option');
 
-    expect(options).toHaveLength(3);
-    options.map((option, i) => expect(option.text()).toEqual(categoryNames[i]));
+    expect(options).toHaveLength(4);
+    options.map((option, i) => {
+      expect(option.text()).toEqual(categoryNames[i]);
+    });
+
   });
 
   it('starts with "All" group selected', () => {

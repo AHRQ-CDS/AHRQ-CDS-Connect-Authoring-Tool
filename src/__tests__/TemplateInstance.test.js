@@ -1,7 +1,7 @@
 import { createTemplateInstance } from '../components/builder/TemplateInstance';
-import { templateInstances } from '../helpers/test_fixtures';
+import { instanceTree } from '../helpers/test_fixtures';
 
-const originalInstance = templateInstances[0];
+const originalInstance = instanceTree.childInstances[0];
 
 test('creating a new template instance clones the correct instance', () => {
   const newInstance = createTemplateInstance(originalInstance);
