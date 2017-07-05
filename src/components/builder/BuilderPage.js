@@ -34,7 +34,7 @@ const getValueAtPath = (obj, path) => {
       }
     } else {
       // Probably at the root
-      if (obj[path[0]] === undefined || path[0].length === 0) {
+      if (obj[path[0]] === undefined || obj[path[0]].length === 0) {
         return obj;
       }
       return obj[path[0]];
@@ -270,25 +270,23 @@ class BuilderPage extends Component {
             </button>
           </div>
         </header>
-        <section className="builder__panel">
-            <section className="builder__canvas">
-              {
-                this.state.instanceTree.childInstances ?
-                  <ConjunctionGroup
-                    root={ true }
-                    instance={ this.state.instanceTree }
-                    addInstance={ this.addInstance }
-                    editInstance={ this.editInstance }
-                    deleteInstance={ this.deleteInstance }
-                    saveInstance={ this.saveInstance }
-                    getAllInstances={ this.getAllInstances }
-                    showPresets={ showPresets }
-                    categories={ this.state.categories }
-                  />
-                :
-                  <p>Loading...</p>
-              }
-            </section>
+        <section className="builder__canvas">
+          {
+            this.state.instanceTree.childInstances ?
+              <ConjunctionGroup
+                root={ true }
+                instance={ this.state.instanceTree }
+                addInstance={ this.addInstance }
+                editInstance={ this.editInstance }
+                deleteInstance={ this.deleteInstance }
+                saveInstance={ this.saveInstance }
+                getAllInstances={ this.getAllInstances }
+                showPresets={ showPresets }
+                categories={ this.state.categories }
+              />
+            :
+              <p>Loading...</p>
+          }
         </section>
       </div>
     );
