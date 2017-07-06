@@ -1,9 +1,9 @@
 import axios from 'axios';
 import app from './server';
 
-const baseurl = 'http://localhost:3001/api/';
 let server;
 const port = process.env.API_PORT || 3001;
+const baseurl = `http://localhost:${port}/api/`;
 
 beforeEach(() => {
   server = app.listen(port);
