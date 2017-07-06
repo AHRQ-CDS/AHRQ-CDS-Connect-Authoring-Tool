@@ -20,14 +20,23 @@ module.exports = [
     cqlTemplate: null,
     cqlLibraryFunction: null
   },
+  // {
+  //   id: 'ValueComparison',
+  //   name: 'Value Comparison',
+  //   inputTypes: ['list_of_observations'],
+  //   returnType: 'list_of_observations',
+  //   values: {min: undefined, max: undefined, minInclusive: undefined, maxInclusive: undefined},
+  //   cqlTemplate: null,
+  //   cqlLibraryFunction: null
+  // },
   {
-    id: 'ValueComparison',
+    id: 'ValueComparisonObservation',
     name: 'Value Comparison',
-    inputTypes: ['list_of_observations'],
-    returnType: 'list_of_observations',
-    values: {min: undefined, max: undefined, minInclusive: undefined, maxInclusive: undefined},
-    cqlTemplate: null,
-    cqlLibraryFunction: null
+    inputTypes: ['observation'],
+    returnType: 'boolean',
+    values: {minOperator: undefined, minValue: undefined, maxOperator: undefined, maxValue: undefined, unit: null},
+    cqlTemplate: 'ValueComparisonObservation',
+    comparisonOperator: null
   },
   {
     id: 'QuantityValue',
@@ -124,5 +133,13 @@ module.exports = [
     returnType: 'boolean',
     cqlTemplate: 'BaseModifier',
     cqlLibraryFunction: 'exists'
+  },
+  {
+    id: 'BooleanNot',
+    name: 'Not',
+    inputTypes: ['boolean'],
+    returnType: 'boolean',
+    cqlTemplate: 'BaseModifier',
+    cqlLibraryFunction: 'not'
   },
 ]

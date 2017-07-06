@@ -18,6 +18,7 @@ import Config from '../../../config';
 import Modifiers from '../../data/modifiers.js';
 import LablModifier from './modifiers/LabelModifier';
 import ValueComparison from './modifiers/ValueComparison';
+import ValueComparisonObservation from './modifiers/ValueComparisonObservation';
 import LookBack from './modifiers/LookBack';
 import WithUnit from './modifiers/WithUnit';
 const API_BASE = Config.api.baseUrl;
@@ -257,6 +258,17 @@ class TemplateInstance extends Component {
               minInclusive={modifier.values.minInclusive}
               max={modifier.values.max}
               maxInclusive={modifier.values.maxInclusive}
+              updateAppliedModifier={this.updateAppliedModifier}/>
+          );
+        case 'ValueComparisonObservation':
+          return (
+            <ValueComparisonObservation
+              key={index}
+              index={index}
+              minOperator={modifier.values.minOperator}
+              minValue={modifier.values.minValue}
+              maxOperator={modifier.values.maxOperator}
+              maxValue={modifier.values.maxValue}
               updateAppliedModifier={this.updateAppliedModifier}/>
           );
         case 'LookBack':
@@ -502,7 +514,7 @@ class TemplateInstance extends Component {
         )}
         </div>
         {this.renderAppliedModifiers()}
-        <div className='modifier__return_type'>
+        <div className='modifier__return__type'>
           Return Type: {_.startCase(this.props.templateInstance.returnType)}
         </div>
         {this.renderModifierSelect()}

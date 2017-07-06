@@ -165,6 +165,11 @@ class CqlArtifact {
               context.template = 'GenericStatement'; // Potentially move this to the object itself in form_templates
             }
           }
+          element.modifiers.forEach(modifier => {
+            if (_.has(modifier.values, 'unit')) {
+              modifier.values.unit = observationValueSets.units.code;
+            }
+          })
           break;
         case 'number':
           context[parameter.id] = parameter.value;
