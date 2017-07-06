@@ -8,10 +8,6 @@ import _ from 'lodash';
  * and a function called Validation that validates what is entered
  */
 class StaticParameter extends Component {
-  constructor(props) {
-    super(props);
-  }
-
   render() {
     const id = _.uniqueId('parameter-');
 

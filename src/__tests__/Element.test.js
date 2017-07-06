@@ -5,7 +5,7 @@ import { templateInstances } from '../helpers/test_fixtures';
 let component;
 const updateTemplateInstances = jest.fn();
 
-let thisElementsTemplate = {
+const thisElementsTemplate = {
   id: 'gender',
   name: 'Gender',
   category: 'Demographics',
@@ -40,7 +40,7 @@ test('updates template instances with correct template when clicked', () => {
   component.simulate('click');
 
   const argument = updateTemplateInstances.mock.calls[0][0][2];
-  delete argument['uniqueId']; // uniqueId tested by updateTemplateInstances unit test
+  delete argument.uniqueId; // uniqueId tested by updateTemplateInstances unit test
 
   // Mock out what the new collection of template instances would be
   templateInstances.push(thisElementsTemplate);

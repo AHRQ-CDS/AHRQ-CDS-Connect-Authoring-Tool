@@ -1,0 +1,3 @@
+define "<%=element_name%>":
+  <%-encounter.encounters.map(encounter => `Exists(C3F.InProgress([Encounter: "${encounter.name}"]))`).join(`
+  or `)%>

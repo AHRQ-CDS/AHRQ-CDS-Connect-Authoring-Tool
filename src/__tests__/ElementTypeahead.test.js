@@ -2,10 +2,10 @@ import ElementTypeahead from '../components/builder/ElementTypeahead';
 import { fullRenderComponent } from '../helpers/test_helpers';
 import { elementGroups } from '../helpers/test_fixtures';
 
-let component,
-    input,
-    dropdown,
-    setInputValue;
+let component;
+let input;
+let dropdown;
+let setInputValue;
 const updateTemplateInstances = jest.fn();
 
 beforeEach(() => {
@@ -14,7 +14,7 @@ beforeEach(() => {
       groups: elementGroups,
       selectedGroup: null,
       templateInstances: [],
-      updateTemplateInstances: updateTemplateInstances
+      updateTemplateInstances
     }
   );
 
@@ -77,13 +77,13 @@ test('adds an element and clears search when selected', () => {
   const selectedGroup = elementGroups[0];
   const entry = selectedGroup.entries[0];
 
-  component.setProps({ selectedGroup: selectedGroup });
+  component.setProps({ selectedGroup });
 
   setInputValue(entry.name);
   dropdown.find('li').first().simulate('click');
 
   const argument = updateTemplateInstances.mock.calls[0][0][0];
-  delete argument['uniqueId']; // uniqueId tested by updateTemplateInstances unit test
+  delete argument.uniqueId; // uniqueId tested by updateTemplateInstances unit test
 
   expect(input.get(0).value).toEqual('');
   expect(updateTemplateInstances).toBeCalledWith([entry]);

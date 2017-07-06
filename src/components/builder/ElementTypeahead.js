@@ -9,20 +9,18 @@ const renderSuggestion = suggestion => (
   </span>
 );
 
-const sortTemplatesByRelevancy = searchValue => {
-  return function(a, b) {
-    const aLower = a.name.toLowerCase();
-    const bLower = b.name.toLowerCase();
-    const queryPosA = aLower.indexOf(searchValue);
-    const queryPosB = bLower.indexOf(searchValue);
+const sortTemplatesByRelevancy = searchValue => function (a, b) { // eslint-disable-line func-names
+  const aLower = a.name.toLowerCase();
+  const bLower = b.name.toLowerCase();
+  const queryPosA = aLower.indexOf(searchValue);
+  const queryPosB = bLower.indexOf(searchValue);
 
-    if (queryPosA !== queryPosB) {
-      return queryPosA - queryPosB;
-    }
-
-    return aLower < bLower ? -1 : 1;
+  if (queryPosA !== queryPosB) {
+    return queryPosA - queryPosB;
   }
-}
+
+  return aLower < bLower ? -1 : 1;
+};
 
 const flatten = arr => arr.reduce(
   (acc, val) => acc.concat(Array.isArray(val) ? flatten(val) : val), []
@@ -50,30 +48,28 @@ class ElementTypeahead extends Component {
     this.inputId = _.uniqueId('element-typeahead-');
   }
 
-  getAllTemplates = () => {
-    return flatten(this.props.groups.filter(g => !g.suppress).map(g => {
-      return g.entries.filter(g => !g.suppress);
-    }));
-  }
+  getAllTemplates = () => flatten(this.props.groups.filter(g => !g.suppress).map(
+    g => g.entries.filter(element => !element.suppress)))
 
   getSuggestions = (value) => {
     const inputValue = value.trim().toLowerCase();
 
     if (!inputValue.length) return [];
 
-    let templates = !this.props.selectedGroup ? this.getAllTemplates() : this.props.selectedGroup.entries;
-    templates = templates.filter(template => template.name.toLowerCase().includes(inputValue));
+    let templates = !this.props.selectedGroup
+      ? this.getAllTemplates()
+      : this.props.selectedGroup.entries;
+    templates = templates.filter(template =>
+      !template.suppress && template.name.toLowerCase().includes(inputValue));
 
     return templates.sort(sortTemplatesByRelevancy(inputValue));
   };
 
   getSuggestionValue = suggestion => suggestion.name;
 
-  getPlaceholderValue = () => {
-    return this.props.selectedGroup ?
-           `Search ${this.props.selectedGroup.name.toLowerCase().replace(/s\s*$/, "")} elements` :
-           'Search all elements';
-  }
+  getPlaceholderValue = () => (this.props.selectedGroup ?
+           `Search ${this.props.selectedGroup.name.toLowerCase().replace(/s\s*$/, '')} elements` :
+           'Search all elements');
 
   onChange = (event, { newValue }) => {
     this.setState({

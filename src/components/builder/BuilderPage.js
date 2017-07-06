@@ -7,7 +7,7 @@ import _ from 'lodash';
 import BuilderSubPalette from './BuilderSubPalette';
 import BuilderPalette from './BuilderPalette';
 import BuilderTarget from './BuilderTarget';
-import Config from '../../../config'
+import Config from '../../../config';
 
 // Suppress is a flag that is specific to an element. It should not be inherited by children
 const ELEMENT_SPECIFIC_FIELDS = ['suppress'];
@@ -56,7 +56,7 @@ class BuilderPage extends Component {
   componentDidMount() {
     axios.get(`${API_BASE}/config/templates`)
       .then((result) => {
-        this.setState({groups : result.data})
+        this.setState({ groups: result.data });
         this.manageTemplateExtensions();
         if (this.props.match) {
           this.setSelectedGroup(this.props.match.params.group);
@@ -75,39 +75,38 @@ class BuilderPage extends Component {
         entryMap[entry.id] = entry;
       });
     });
-    
+
     Object.keys(entryMap).forEach((key) => {
-      let entry = entryMap[key];
+      const entry = entryMap[key];
       if (entry.extends) {
         this.mergeInParentTemplate(entry, entryMap);
       }
     });
 
-    // This is needed to update the state because the functions above are manually updating 
+    // This is needed to update the state because the functions above are manually updating
     // this.state.groups without using React's this.setState
-    this.setState({groups: this.state.groups})
+    this.setState({ groups: this.state.groups });
   }
   mergeInParentTemplate(entry, entryMap) {
-    let parent = entryMap[entry.extends]
+    const parent = entryMap[entry.extends];
     if (parent.extends) {
       // handle transitive
       this.mergeInParentTemplate(parent, entryMap);
     }
-    
+
     /* Merge entry fields with parent but remove fields that are should not be inherited.
-     * This merges the entry into the parent (minus non-inherited fields) so the entry updates the fields 
-     * it sets itself so inheritance works correctly. Then merge that object back onto entry so that 
-     * the entry object has the new updated values */
+     * This merges the entry into the parent (minus non-inherited fields) so the entry updates the
+     * fields it sets itself so inheritance works correctly. Then merge that object back onto entry
+     * so that the entry object has the new updated values */
     _.merge(entry, _.merge(_.omit(_.cloneDeep(parent), ELEMENT_SPECIFIC_FIELDS), entry));
 
     // merge parameters
     entry.parameters.forEach((parameter) => {
-      let matchingParameter = _.find(parent.parameters, { 'id': parameter.id});
+      const matchingParameter = _.find(parent.parameters, { id: parameter.id });
       _.merge(parameter, matchingParameter);
-
     });
-    let missing = _.differenceBy(parent.parameters, entry.parameters, 'id');
-    entry.parameters = missing.concat(entry.parameters);
+    const missing = _.differenceBy(parent.parameters, entry.parameters, 'id');
+    entry.parameters = missing.concat(entry.parameters); // eslint-disable-line no-param-reassign
   }
 
   downloadCQL() {
@@ -116,10 +115,10 @@ class BuilderPage extends Component {
       templateInstances: this.state.templateInstances
     };
     axios({
-      method : 'post',
-      url : `${API_BASE}/cql`,
-      responseType : 'blob',
-      data : artifact
+      method: 'post',
+      url: `${API_BASE}/cql`,
+      responseType: 'blob',
+      data: artifact
     })
       .then((result) => {
         FileSaver.saveAs(result.data, 'cql.zip');
@@ -241,7 +240,7 @@ class BuilderPage extends Component {
             <BuilderPalette
               selectedGroup={this.state.selectedGroup}
               templateInstances={this.state.templateInstances}
-              updateTemplateInstances={this.setTemplateInstances} 
+              updateTemplateInstances={this.setTemplateInstances}
               groups={this.state.groups} />
             {this.renderSidebar()}
           </div>

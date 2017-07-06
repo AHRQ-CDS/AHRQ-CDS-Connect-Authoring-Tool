@@ -1,9 +1,9 @@
 import React, { Component, PropTypes } from 'react';
-import _ from 'lodash';
 import axios from 'axios';
 import TemplateInstance from './TemplateInstance';
 import ElementSelect from './ElementSelect';
-import Config from '../../../config'
+import Config from '../../../config';
+
 const API_BASE = Config.api.baseUrl;
 
 function showPresets(mongoId) {
@@ -44,8 +44,7 @@ class BuilderTarget extends Component {
   }
 
   render() {
-    if (this.props.groups == null)
-      return null;
+    if (this.props.groups == null) { return null; }
     return (
       <section className="builder__canvas">
         {
