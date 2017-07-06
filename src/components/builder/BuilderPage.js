@@ -82,6 +82,10 @@ class BuilderPage extends Component {
         this.mergeInParentTemplate(entry, entryMap);
       }
     });
+
+    // This is needed to update the state because the functions above are manually updating 
+    // this.state.groups without using React's this.setState
+    this.setState({groups: this.state.groups})
   }
   mergeInParentTemplate(entry, entryMap) {
     const parent = entryMap[entry.extends];

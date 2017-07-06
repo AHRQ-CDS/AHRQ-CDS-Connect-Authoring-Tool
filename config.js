@@ -3,6 +3,6 @@ module.exports = {
       localhost : 'mongodb://localhost/cds_authoring'
    },
    api : {
-      baseUrl: "http://localhost:3001/api"
+      baseUrl: "/api"
    }
 }
