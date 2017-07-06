@@ -3,10 +3,17 @@ define "<%=element_name%>":
     <%-components.cases.map(function(c) {
       var case1 = c.case;
       var result = c.result;
-      if (case1) case1 = `"${case1.name}"`;
-      else case1 = "null";
-      if (result) result = `"${result.name}"`;
-      else result = "null";
+      var comparison = (!c.comparison || c.comparison.value === "is true") ?  '' : ` ${c.comparison.value}`  ;
+      if (case1) {
+        case1 = `"${case1.name}"${comparison}`;
+      } else {
+        case1 = "null";
+      }
+      if (result) {
+        result = `"${result.name}"`;
+      } else {
+        result = "null";
+      }
       return `when ${case1} then ${result}`;
       }).join(` 
     `)%>

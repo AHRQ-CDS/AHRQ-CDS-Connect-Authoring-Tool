@@ -1,0 +1,7 @@
+<%# Breastfeeding changed in the latest update to the artifact. A lot of these valuesets/concepts are hard-coded, whereas the ones in pregnancy are dynamic. #TODO be more consistent -%>
+define "MostRecentBreastfeedingObservation":
+  C3F.MostRecent(C3F.Verified(C3F.ObservationLookBack(C3F.ObservationsByConcept("Is Breastfeeding"), 1 year)))
+
+define "<%-element_name%>":
+  Exists(C3F.Confirmed(C3F.ActiveCondition([Condition: "Breastfeeding" ])))
+  or C3F.ConceptValue(MostRecentBreastfeedingObservation) ~ "Yes"

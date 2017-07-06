@@ -85,6 +85,22 @@ class CaseParameter extends Component {
         searchable={true}/>
     );
   }
+  renderCaseComparison(index, val, option) {
+    let placeholder = 'is true';
+    const option__ = [{value: 'is true', label: 'Is true'}, {value: 'is not true', label: 'Is not true'},
+                    {value: 'is false', label: 'Is false'}, {value: 'is not false', label: 'Is not false'},
+                    {value: 'is null', label: 'Is null'}, {value: 'is not null', label: 'Is not null'} ];
+    return(
+      <Select key={index}
+        autofocus
+        options={option__}
+        placeholder={placeholder}
+        name={this.props.param.id}
+        value={val[option]}
+        onChange={(value) => {this.updateCase(value, index, option)}}
+        searchable={true}/>
+    );
+  }
 
   // Renders single selects for default and variable
   renderSingleSelect(name, option) {
@@ -125,6 +141,7 @@ class CaseParameter extends Component {
           <thead>
             <tr>
               <th>Case</th>
+              <th>Comparison</th>
               <th>Result</th>
             </tr>
           </thead>
@@ -132,10 +149,13 @@ class CaseParameter extends Component {
             {this.props.param.value.cases.map((v, index) =>
             <tr key={index}>
               {index > 0}
-              <td width="50%">
+              <td width="35%">
                 {this.renderCaseResult(index, v, 'case')}
               </td>
-              <td width="50%">
+              <td width="30%">
+                {this.renderCaseComparison(index, v, 'comparison')}
+              </td>
+              <td width="35%">
                 {this.renderCaseResult(index, v, 'result')}
               </td>
             </tr>

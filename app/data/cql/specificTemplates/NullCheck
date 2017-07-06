@@ -1,0 +1,2 @@
+define "<%=element_name%>":
+  <%-components[0].name%> <%-comparison%>

@@ -112,7 +112,18 @@ module.exports = [
           { id: 'element_name', value: "IsSmoker"},
           { id: 'observation',  static: true, value: "smoker"},
         ]
-      }
+      },
+      {
+        id: 'Breastfeeding',
+        name: 'Breastfeeding',
+        template: 'Breastfeeding',
+        returnType: 'boolean',
+        extends: 'Base',
+        parameters: [
+          { id: 'element_name', value: "IsBreastfeeding"},
+          { id: 'observation', type:'breastfeeding', static: true, value: "breastfeeding"}
+        ]
+      },
     ]
   },
   {
@@ -264,15 +275,6 @@ module.exports = [
         parameters: [
           { id: 'element_name', value: 'IsPregnant' },
           { id: 'pregnancy', type: 'pregnancy', static: true, value: 'pregnancy_dx' }
-        ]
-      },
-      {
-        id: 'Breastfeeding',
-        name: 'Breastfeeding',
-        extends: 'GenericCondition',
-        parameters: [
-          { id: 'element_name', value: 'IsBreastfeeding' },
-          { id: 'condition', static: true, value: 'breastfeeding' }
         ]
       },
       {
