@@ -83,9 +83,7 @@ class CqlArtifact {
     this.dataModel = artifact.dataModel ? artifact.dataModel : {name: 'FHIR', version: '1.0.2'};
     this.includeLibraries = artifact.includeLibraries ? artifact.includeLibraries : includeLibraries;
     this.context = artifact.context ? artifact.context : 'Patient';
-    this.elements = artifact.instanceTree;
-    // let str = JSON.stringify(this.elements, null, 2)
-    // console.log(str)
+    this.elements = artifact.expTreeInclude;
     this.initialize()
   }
 
