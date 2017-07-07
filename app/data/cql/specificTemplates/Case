@@ -1,11 +1,10 @@
-define "<%=element_name%>":
-  case<%if(components.variable) {%> "<%=components.variable.name%>"<%}%>
+define "<%-element_name%>":
+  case<%if(components.variable) {%> "<%-components.variable.name%>"<%}%>
     <%-components.cases.map(function(c) {
       var case1 = c.case;
       var result = c.result;
-      var comparison = (!c.comparison || c.comparison.value === "is true") ?  '' : ` ${c.comparison.value}`  ;
       if (case1) {
-        case1 = `"${case1.name}"${comparison}`;
+        case1 = `"${case1.name}"`;
       } else {
         case1 = "null";
       }
@@ -19,7 +18,7 @@ define "<%=element_name%>":
     `)%>
     else<%
       if(components.default) {
-         %> "<%=components.default.name%>"<%}
+         %> "<%-components.default.name%>"<%}
       else {
          %> null<%}%>
   end

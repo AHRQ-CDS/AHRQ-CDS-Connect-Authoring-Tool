@@ -1,1 +1,1 @@
-<%-cqlLibraryFunction%>(<%-value_name%>, <%-values.value%> <%if (values.value === 1) {%><%-values.unit.slice(0,-1)%><%} else {%> <%-values.unit%><%}%>)
+<%-cqlLibraryFunction%>(<%-value_name%>, <%-values.value%> <%if (values.value === 1) {%><%-values.unit.slice(0,-1)%><%} else {%><%-values.unit%><%}%>)

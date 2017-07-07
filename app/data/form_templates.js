@@ -197,8 +197,31 @@ module.exports = [
         ],
       },
       {
+        id: 'BooleanComparison',
+        name: 'Boolean Comparison',
+        returnType: 'boolean',
+        extends: 'Base',
+        template: 'BooleanComparison',
+        parameters: [
+          { id: 'components', type: 'list',subType: 'boolean', value: [undefined], name: 'Elements' },
+          { id: 'comparison', type: 'booleanComparison', value: null, name: 'Comparison' },
+        ],
+      },
+      {
+        id: 'checkIfNull',
+        name: 'Check if Null',
+        returnType: 'boolean',
+        extends: 'Base',
+        template: 'checkIfNull',
+        parameters: [
+          { id: 'components', type: 'nullCheckingParameter', value: [undefined], name: 'Elements' },
+          { id: 'comparison', type: 'nullCheckingDropdownParameter', value: null, name: 'Comparison' },
+        ],
+      },
+      {
         id: 'Case',
         name: 'Case',
+        returnType: 'boolean',
         parameters: [
           { id: 'element_name', type: 'string', name: 'Element Name' },
           {

@@ -301,6 +301,18 @@ module.exports = {
           oid: '2.16.840.1.113762.1.4.1047.107'
         },
         {
+          // TODO: Reused from statin CQM artifact; needs review against other value sets in VSAC.
+          name: "Low Intensity Statin Therapy Branded",
+          type: "MedicationStatement",
+          oid: '2.16.840.1.113762.1.4.1032.16'
+        },
+        {
+          // TODO: Reused from statin CQM artifact; needs review against other value sets in VSAC.
+          name: "Low Intensity Statin Therapy Branded",
+          type: "MedicationOrder",
+          oid: '2.16.840.1.113762.1.4.1032.16'
+        },
+        {
        // TODO: Reused from statin CQM artifact; needs review against other value sets in VSAC.
           name: "Moderate intensity statin therapy",
           type: "MedicationStatement",
@@ -313,6 +325,18 @@ module.exports = {
           oid: '2.16.840.1.113762.1.4.1047.98'
         },
         {
+          // TODO: Reused from statin CQM artifact; needs review against other value sets in VSAC.
+          name: "Moderate Intensity Statin Therapy Branded",
+          type: "MedicationStatement",
+          oid: '2.16.840.1.113762.1.4.1032.17'
+        },
+        {
+          // TODO: Reused from statin CQM artifact; needs review against other value sets in VSAC.
+          name: "Moderate Intensity Statin Therapy Branded",
+          type: "MedicationOrder",
+          oid: '2.16.840.1.113762.1.4.1032.17'
+        },
+        {
        // TODO: Reused from statin CQM artifact; needs review against other value sets in VSAC.
           name: "High intensity statin therapy",
           type: "MedicationStatement",
@@ -323,6 +347,18 @@ module.exports = {
           name: "High intensity statin therapy",
           type: "MedicationOrder",
           oid: '2.16.840.1.113762.1.4.1047.97'
+        },
+        {
+          // TODO: Reused from statin CQM artifact; needs review against other value sets in VSAC.
+          name: "High Intensity Statin Therapy Branded",
+          type: "MedicationStatement",
+          oid: '2.16.840.1.113762.1.4.1032.18'
+        },
+        {
+          // TODO: Reused from statin CQM artifact; needs review against other value sets in VSAC.
+          name: "High Intensity Statin Therapy Branded",
+          type: "MedicationOrder",
+          oid: '2.16.840.1.113762.1.4.1032.18'
         }
       ]
     },

@@ -6,6 +6,9 @@ import update from 'immutability-helper';
 import NumberParameter from './parameters/NumberParameter';
 import StringParameter from './parameters/StringParameter';
 import ObservationParameter from './parameters/ObservationParameter';
+import BooleanComparisonParameter from './parameters/BooleanComparisonParameter'
+import NullCheckingParameter from './parameters/NullCheckingParameter';
+import NullCheckingDropdownParameter from './parameters/NullCheckingDropdownParameter';
 import ValueSetParameter from './parameters/ValueSetParameter';
 import ListParameter from './parameters/ListParameter';
 import CaseParameter from './parameters/CaseParameter';
@@ -19,6 +22,8 @@ import Modifiers from '../../data/modifiers.js';
 import LablModifier from './modifiers/LabelModifier';
 import ValueComparison from './modifiers/ValueComparison';
 import ValueComparisonObservation from './modifiers/ValueComparisonObservation';
+import BooleanComparison from './modifiers/BooleanComparison';
+import CheckExistence from './modifiers/CheckExistence';
 import LookBack from './modifiers/LookBack';
 import WithUnit from './modifiers/WithUnit';
 const API_BASE = Config.api.baseUrl;
@@ -220,9 +225,7 @@ class TemplateInstance extends Component {
     // TODO: Refactor this function to use React State
     const parameter = this.props.templateInstance.parameters;
     if (isSingledSided) {
-      _.remove(parameter, param =>
-        // Remove any instance with id ending in '_2'
-         (RegExp('^.*(?=(_2))').test(param.id)));
+      _.remove(parameter, param => (RegExp('^.*(?=(_2))').test(param.id))); // Remove any instance with id ending in '_2'
       _.find(parameter, { id: 'comparison_bound' }).name = 'Comparison Bound';
       _.last(parameter).name = 'Double Sided?';
     } else {
@@ -450,6 +453,30 @@ class TemplateInstance extends Component {
           key={param.id}
           param={param}
           updateComparison={this.updateComparison} />
+        );
+      case 'booleanComparison':
+        return (
+          <BooleanComparisonParameter
+          key={param.id}
+          param={param}
+          value={null}
+          updateInstance={this.updateInstance} />
+        );
+      case 'nullCheckingParameter':
+        return (
+          <NullCheckingParameter
+          key={param.id}
+          param={param}
+          values={this.state.otherInstances}
+          updateList={this.updateList} />
+        );
+      case 'nullCheckingDropdownParameter':
+        return (
+          <NullCheckingDropdownParameter
+          key={param.id}
+          param={param}
+          value={null}
+          updateInstance={this.updateInstance} />
         );
       case 'if':
         return (

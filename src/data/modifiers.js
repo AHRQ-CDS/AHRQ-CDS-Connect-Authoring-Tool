@@ -1,4 +1,6 @@
 // NOTE -- Any cqlTemplates/cqlLibraryFunctions that are `null` are currently in development
+// Any id's that are the same as cqlTemplates are pure coincidence. The id matches within src/components/builder/modifiers
+// while the cqlTemplate matches the cqlTemplate in app/data/cql/modifiers
 
 let elementLists = ['list_of_observations', 'list_of_conditions', 'list_of_medications', 'list_of_procedures', 'allergy_intolerance', 'encounter'];
 module.exports = [
@@ -34,8 +36,26 @@ module.exports = [
     name: 'Value Comparison',
     inputTypes: ['observation'],
     returnType: 'boolean',
-    values: {minOperator: undefined, minValue: undefined, maxOperator: undefined, maxValue: undefined, unit: null},
+    values: {minOperator: undefined, minValue: undefined, maxOperator: undefined, maxValue: undefined, comparisonUnit: null},
     cqlTemplate: 'ValueComparisonObservation',
+    comparisonOperator: null
+  },
+  {
+    id: 'BooleanComparison',
+    name: 'Equality Comparison',
+    inputTypes: ['boolean'],
+    returnType: 'boolean',
+    values: {value: undefined},
+    cqlTemplate: 'postModifier',
+    comparisonOperator: null
+  },
+  {
+    id: 'CheckExistence',
+    name: 'Check Existence',
+    inputTypes: elementLists,
+    returnType: 'boolean',
+    values: {value: undefined},
+    cqlTemplate: 'postModifier',
     comparisonOperator: null
   },
   {
@@ -56,7 +76,7 @@ module.exports = [
   },
   {
     id: 'InStatement',
-    name: 'Check Existance?',
+    name: 'Exists within Valueset?',
     inputTypes: ['system_quantity'],
     returnType: 'boolean',
     values: undefined,

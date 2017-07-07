@@ -142,10 +142,11 @@ class CqlArtifact {
               this.conceptMap.set(concept.name, concept);
             });
             // For checking if a ConceptValue is in a valueset, incluce the valueset that will be used
-            if('checkInclusionInVS' in observationValueSets){
-              if(_.last(element.modifiers).id === "InStatement") {
+            if('checkInclusionInVS' in observationValueSets) {
+              if(!_.isEmpty(element.modifiers) && _.last(element.modifiers).id === "InStatement") {
                 _.last(element.modifiers).values = observationValueSets.checkInclusionInVS.name;
               }
+              console.log(element.modifiers)
               this.resourceMap.set(observationValueSets.checkInclusionInVS.name, observationValueSets.checkInclusionInVS);
             }
             context.values = [ observationValueSets.name ];
@@ -166,7 +167,7 @@ class CqlArtifact {
             }
           }
           element.modifiers.forEach(modifier => {
-            if (_.has(modifier.values, 'unit')) {
+            if (_.has(modifier.values, 'comparisonUnit')) {
               modifier.values.unit = observationValueSets.units.code;
             }
           })
