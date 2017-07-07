@@ -53,6 +53,7 @@ function renderPreset(preset, stateIndex) {
 class TemplateInstance extends Component {
   static propTypes = {
     getPath: PropTypes.func.isRequired,
+    treeName: PropTypes.string.isRequired,
     templateInstance: PropTypes.object.isRequired,
     otherInstances: PropTypes.array.isRequired,
     editInstance: PropTypes.func.isRequired,
@@ -122,7 +123,7 @@ class TemplateInstance extends Component {
 
   updateInstance(newState) {
     this.setState(newState);
-    this.props.editInstance(newState, this.getPath());
+    this.props.editInstance(this.props.treeName, newState, this.getPath());
   }
 
   // Used to update value states that are nested objects
@@ -385,7 +386,7 @@ class TemplateInstance extends Component {
               <FontAwesome fixedWidth name={this.state.showElement ? 'angle-double-down' : 'angle-double-right'}/>
             </button>
             <button
-              onClick={() => this.props.deleteInstance(this.getPath())}
+              onClick={() => this.props.deleteInstance(this.props.treeName, this.getPath())}
               className="element__deletebutton"
               aria-label={`remove ${this.props.templateInstance.name}`}>
               <FontAwesome fixedWidth name='close'/>

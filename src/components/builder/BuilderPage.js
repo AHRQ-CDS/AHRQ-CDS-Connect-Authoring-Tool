@@ -52,6 +52,7 @@ class BuilderPage extends Component {
 
     this.state = {
       expTreeInclude: {},
+      expTreeExclude: {},
       name: 'Untitled Artifact',
       id: null,
       version: null,
@@ -209,7 +210,7 @@ class BuilderPage extends Component {
   }
 
   // Initialized and expression tree
-  initializeExpTree = (template, name) => {
+  initializeExpTree = (name, template) => {
     const expression = createTemplateInstance(template);
     expression.name = '';
     expression.path = '';
@@ -220,24 +221,24 @@ class BuilderPage extends Component {
 
   // Initializes both includes and excludes
   initializeExpTrees = (template) => {
-    const includeExpression = this.initializeExpTree(template, 'Includes');
-    const excludeExpression = this.initializeExpTree(template, 'Excludes');
+    const includeExpression = this.initializeExpTree('Includes', template);
+    const excludeExpression = this.initializeExpTree('Excludes', template);
     this.setState({ expTreeInclude: includeExpression });
     this.setState({ expTreeExclude: excludeExpression });
   }
 
-  addInstance = (instance, parentPath) => {
-    const tree = _.cloneDeep(this.state.expTreeInclude);
+  addInstance = (treeName, instance, parentPath) => {
+    const tree = _.cloneDeep(this.state[treeName]);
     const target = getValueAtPath(tree, parentPath).childInstances;
     const index = target.length;
     instance.path = parentPath + '.childInstances.' + index;
     target.push(instance);
 
-    this.setState({ expTreeInclude: tree });
+    this.setState({ [treeName] : tree });
   }
 
-  editInstance = (editedParams, path, editingConjunctionType = false) => {
-    const tree = _.cloneDeep(this.state.expTreeInclude);
+  editInstance = (treeName, editedParams, path, editingConjunctionType=false) => {
+    const tree = _.cloneDeep(this.state[treeName]);
     const target = getValueAtPath(tree, path);
 
     if (editingConjunctionType) {
@@ -251,26 +252,48 @@ class BuilderPage extends Component {
       target.parameters[paramIndex].value = editedParams[target.parameters[paramIndex].id];
     }
 
-    this.setState({ expTreeInclude: tree });
+    this.setState({ [treeName] : tree });
   }
 
-  deleteInstance = (path) => {
-    const tree = _.cloneDeep(this.state.expTreeInclude);
+  deleteInstance = (treeName, path) => {
+    const tree = _.cloneDeep(this.state[treeName]);
     const index = path.slice(-1);
     path = path.slice(0, path.length - 2);
     const target = getValueAtPath(tree, path);
     target.splice(index, 1);
 
-    this.setState({ expTreeInclude: tree});
+    this.setState({ [treeName] : tree});
   }
 
-  getAllInstances = (node = this.state.expTreeInclude) => {
+  getAllInstances = (treeName, node=undefined) => {
+    if (node === undefined)
+      node = this.state[treeName];
     return _.flatten(node.childInstances.map(instance => {
       if (instance.childInstances) {
-        return _.flatten([instance, this.getAllInstances(instance)]);
+        return _.flatten([instance, this.getAllInstances(treeName, instance)]);
       }
       return instance;
     }));
+  }
+
+  renderConjunctionGroup = (treeName) => {
+    return (
+      this.state[treeName].childInstances ?
+        <ConjunctionGroup
+          root={ true }
+          name={ treeName }
+          instance={ this.state[treeName] }
+          addInstance={ this.addInstance }
+          editInstance={ this.editInstance }
+          deleteInstance={ this.deleteInstance }
+          saveInstance={ this.saveInstance }
+          getAllInstances={ this.getAllInstances }
+          showPresets={ showPresets }
+          categories={ this.state.categories }
+        />
+      :
+        <p>Loading...</p>
+    )
   }
 
   render() {
@@ -302,40 +325,10 @@ class BuilderPage extends Component {
             </TabList>
 
             <TabPanel>
-              {
-                this.state.expTreeInclude.childInstances ?
-                  <ConjunctionGroup
-                    root={ true }
-                    instance={ this.state.expTreeInclude }
-                    addInstance={ this.addInstance }
-                    editInstance={ this.editInstance }
-                    deleteInstance={ this.deleteInstance }
-                    saveInstance={ this.saveInstance }
-                    getAllInstances={ this.getAllInstances }
-                    showPresets={ showPresets }
-                    categories={ this.state.categories }
-                  />
-                :
-                  <p>Loading...</p>
-              }
+              { this.renderConjunctionGroup('expTreeInclude') }
             </TabPanel>
             <TabPanel>
-              {
-                this.state.expTreeInclude.childInstances ?
-                  <ConjunctionGroup
-                    root={ true }
-                    instance={ this.state.expTreeInclude }
-                    addInstance={ this.addInstance }
-                    editInstance={ this.editInstance }
-                    deleteInstance={ this.deleteInstance }
-                    saveInstance={ this.saveInstance }
-                    getAllInstances={ this.getAllInstances }
-                    showPresets={ showPresets }
-                    categories={ this.state.categories }
-                  />
-                :
-                  <p>Loading...</p>
-              }
+              { this.renderConjunctionGroup('expTreeExclude') }
             </TabPanel>
             <TabPanel>
               Recommendations!
