@@ -14,7 +14,8 @@ class BuilderTarget extends Component {
   static propTypes = {
     templateInstances: PropTypes.array.isRequired,
     updateSingleElement: PropTypes.func.isRequired,
-    updateTemplateInstances: PropTypes.func.isRequired
+    updateTemplateInstances: PropTypes.func.isRequired,
+    groups: PropTypes.array.isRequired
   }
 
   deleteInstance(uniqueId) {
@@ -44,7 +45,6 @@ class BuilderTarget extends Component {
   }
 
   render() {
-    if (this.props.groups == null) { return null; }
     return (
       <section className="builder__canvas">
         {

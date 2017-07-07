@@ -12,7 +12,8 @@ beforeEach(() => {
     {
       templateInstances: [],
       updateSingleElement: jest.fn(),
-      updateTemplateInstances: jest.fn()
+      updateTemplateInstances: jest.fn(),
+      groups: []
     }
   );
 
@@ -20,7 +21,8 @@ beforeEach(() => {
     {
       templateInstances,
       updateSingleElement: jest.fn(),
-      updateTemplateInstances: jest.fn()
+      updateTemplateInstances: jest.fn(),
+      groups: []
     }
   );
 });
@@ -32,7 +34,6 @@ test('indicates absence of content', () => {
 
 test('indicates presence of content', () => {
   expect(componentWithElements.hasClass('builder__canvas')).toBe(true);
-  expect(componentWithElements.text()).not.toContain('Add a template from the left sidebar.');
   expect(componentWithElements.props().templateInstances).toEqual(templateInstances);
   expect(componentWithElements.children()).toHaveLength(templateInstances.length + 1);
   expect(componentWithElements.find(TemplateInstance)).toHaveLength(templateInstances.length);

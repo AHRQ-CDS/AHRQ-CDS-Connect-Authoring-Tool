@@ -1,5 +1,5 @@
 import BuilderPage from '../components/builder/BuilderPage';
-import { fullRenderComponent, deepState } from '../helpers/test_helpers';
+import { fullRenderComponent } from '../helpers/test_helpers';
 
 let component;
 let componentWithMatch;
@@ -12,14 +12,6 @@ const match = {
 beforeEach(() => {
   component = fullRenderComponent(BuilderPage);
   componentWithMatch = fullRenderComponent(BuilderPage, { match });
-});
-
-test('no match results in no selected group', () => {
-  expect(deepState(component).selectedGroup).toBeFalsy();
-});
-
-test('match results in selected group', () => {
-  expect(deepState(componentWithMatch).selectedGroup).toBeTruthy();
 });
 
 test('children have correct classes', () => {
