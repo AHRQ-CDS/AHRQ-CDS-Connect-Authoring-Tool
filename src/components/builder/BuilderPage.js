@@ -1,4 +1,5 @@
 import React, { Component, PropTypes } from 'react';
+import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import axios from 'axios';
 import FileSaver from 'file-saver';
 import _ from 'lodash';
@@ -50,7 +51,7 @@ class BuilderPage extends Component {
     super(props);
 
     this.state = {
-      instanceTree: {},
+      expTreeInclude: {},
       name: 'Untitled Artifact',
       id: null,
       version: null,
@@ -69,7 +70,7 @@ class BuilderPage extends Component {
         } else {
           const operations = result.data.find(g => g.name === 'Operations');
           const andTemplate = operations.entries.find(e => e.name === 'And');
-          this.initializeInstanceTree(andTemplate);
+          this.initializeExpTrees(andTemplate);
         }
       })
       .catch((error) => {
@@ -87,7 +88,8 @@ class BuilderPage extends Component {
         this.setState({ id: artifact._id });
         this.setState({ name: artifact.name });
         this.setState({ version: artifact.version });
-        this.setState({ instanceTree: artifact.instanceTree });
+        this.setState({ expTreeInclude: artifact.expTreeInclude });
+        this.setState({ expTreeExclude: artifact.expTreeExclude });
       });
   }
 
@@ -130,16 +132,22 @@ class BuilderPage extends Component {
     entry.parameters = missing.concat(entry.parameters);
   }
 
-  downloadCQL = () => {
-    const artifact = {
+  // Prepares the artifact for saving/cql download
+  prepareArtifact() {
+    return {
       name: this.state.name,
-      instanceTree: this.state.instanceTree
+      expTreeInclude: this.state.expTreeInclude,
+      expTreeExclude: this.state.expTreeExclude
     };
+  }
+
+  // Downloads the cql by making an API call and passing artifact
+  downloadCQL = () => {
     axios({
       method : 'post',
       url : `${API_BASE}/cql`,
       responseType : 'blob',
-      data : artifact
+      data : this.prepareArtifact()
     })
       .then((result) => {
         FileSaver.saveAs(result.data, 'cql.zip');
@@ -149,14 +157,17 @@ class BuilderPage extends Component {
       });
   }
 
+  // Saves artifact to the database
   saveArtifact = (exitPage) => {
-    const artifact = { name: this.state.name, instanceTree: this.state.instanceTree };
-    if (this.state.id) artifact._id = this.state.id;
+    const artifact = this.prepareArtifact();
+    if (this.state.id)
+      artifact._id = this.state.id;
 
     const handleSave = (result) => {
         // TODO:
         // notification on save
-      if (result.data._id) this.setState({ id: result.data._id });
+      if (result.data._id)
+        this.setState({ id: result.data._id });
 
       if (exitPage) {
           // Redirect the page to the artifact list after saving if click "Close" button
@@ -179,6 +190,7 @@ class BuilderPage extends Component {
     }
   }
 
+  // Saves a particular expression to the backend
   saveInstance = (path) => {
     const target = getValueAtPath(path);
 
@@ -193,28 +205,36 @@ class BuilderPage extends Component {
     }
   }
 
-  initializeInstanceTree = (template) => {
-    const instance = createTemplateInstance(template);
-    const nameParam = instance.parameters.find(param => param.id === 'element_name');
-    instance.name = '';
-    instance.path = '';
-    nameParam.value = 'Includes';
+  // Initialized and expression tree
+  initializeExpTree = (template, name) => {
+    const expression = createTemplateInstance(template);
+    expression.name = '';
+    expression.path = '';
+    const nameParam = expression.parameters.find(param => param.id === 'element_name');
+    nameParam.value = name;
+    return expression;
+  }
 
-    this.setState({ instanceTree: instance });
+  // Initializes both includes and excludes
+  initializeExpTrees = (template) => {
+    const includeExpression = this.initializeExpTree(template, 'Includes');
+    const excludeExpression = this.initializeExpTree(template, 'Excludes');
+    this.setState({ expTreeInclude: includeExpression });
+    this.setState({ expTreeExclude: excludeExpression });
   }
 
   addInstance = (instance, parentPath) => {
-    const tree = _.cloneDeep(this.state.instanceTree);
+    const tree = _.cloneDeep(this.state.expTreeInclude);
     const target = getValueAtPath(tree, parentPath).childInstances;
     const index = target.length;
     instance.path = parentPath + '.childInstances.' + index;
     target.push(instance);
 
-    this.setState({ instanceTree: tree });
+    this.setState({ expTreeInclude: tree });
   }
 
   editInstance = (editedParams, path, editingConjunctionType = false) => {
-    const tree = _.cloneDeep(this.state.instanceTree);
+    const tree = _.cloneDeep(this.state.expTreeInclude);
     const target = getValueAtPath(tree, path);
 
     if (editingConjunctionType) {
@@ -228,20 +248,20 @@ class BuilderPage extends Component {
       target.parameters[paramIndex].value = editedParams[target.parameters[paramIndex].id];
     }
 
-    this.setState({ instanceTree: tree });
+    this.setState({ expTreeInclude: tree });
   }
 
   deleteInstance = (path) => {
-    const tree = _.cloneDeep(this.state.instanceTree);
+    const tree = _.cloneDeep(this.state.expTreeInclude);
     const index = path.slice(-1);
     path = path.slice(0, path.length - 2);
     const target = getValueAtPath(tree, path);
     target.splice(index, 1);
 
-    this.setState({ instanceTree: tree});
+    this.setState({ expTreeInclude: tree});
   }
 
-  getAllInstances = (node = this.state.instanceTree) => {
+  getAllInstances = (node = this.state.expTreeInclude) => {
     return _.flatten(node.childInstances.map(instance => {
       if (instance.childInstances) {
         return _.flatten([instance, this.getAllInstances(instance)]);
@@ -271,22 +291,54 @@ class BuilderPage extends Component {
           </div>
         </header>
         <section className="builder__canvas">
-          {
-            this.state.instanceTree.childInstances ?
-              <ConjunctionGroup
-                root={ true }
-                instance={ this.state.instanceTree }
-                addInstance={ this.addInstance }
-                editInstance={ this.editInstance }
-                deleteInstance={ this.deleteInstance }
-                saveInstance={ this.saveInstance }
-                getAllInstances={ this.getAllInstances }
-                showPresets={ showPresets }
-                categories={ this.state.categories }
-              />
-            :
-              <p>Loading...</p>
-          }
+          <Tabs>
+            <TabList>
+              <Tab>Inclusions</Tab>
+              <Tab>Exclusions</Tab>
+              <Tab>Recommendations</Tab>
+            </TabList>
+            
+            <TabPanel>
+              {
+                this.state.expTreeInclude.childInstances ?
+                  <ConjunctionGroup
+                    root={ true }
+                    instance={ this.state.expTreeInclude }
+                    addInstance={ this.addInstance }
+                    editInstance={ this.editInstance }
+                    deleteInstance={ this.deleteInstance }
+                    saveInstance={ this.saveInstance }
+                    getAllInstances={ this.getAllInstances }
+                    showPresets={ showPresets }
+                    categories={ this.state.categories }
+                  />
+                :
+                  <p>Loading...</p>
+              }
+            </TabPanel>
+            <TabPanel>
+              {
+                this.state.expTreeInclude.childInstances ?
+                  <ConjunctionGroup
+                    root={ true }
+                    instance={ this.state.expTreeInclude }
+                    addInstance={ this.addInstance }
+                    editInstance={ this.editInstance }
+                    deleteInstance={ this.deleteInstance }
+                    saveInstance={ this.saveInstance }
+                    getAllInstances={ this.getAllInstances }
+                    showPresets={ showPresets }
+                    categories={ this.state.categories }
+                  />
+                :
+                  <p>Loading...</p>
+              }
+            </TabPanel>
+            <TabPanel>
+              Recommendations!
+            </TabPanel>
+            
+          </Tabs>
         </section>
       </div>
     );

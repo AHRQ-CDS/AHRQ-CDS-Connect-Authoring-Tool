@@ -26,6 +26,7 @@
     "react-modal": "^1.7.7",
     "react-router-dom": "^4.0.0",
     "react-select": "1.0.0-rc.3",
+    "react-tabs": "^1.1.0",
     "slug": "^0.9.1"
   },
   "devDependencies": {
