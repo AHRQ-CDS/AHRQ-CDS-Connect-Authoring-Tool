@@ -18,6 +18,7 @@ class ConjunctionGroup extends Component {
   static propTypes = {
     root: PropTypes.bool,
     getPath: requiredIf(PropTypes.func, props => !props.root),
+    name: PropTypes.string.isRequired,
     instance: PropTypes.object.isRequired,
     addInstance: PropTypes.func.isRequired,
     editInstance: PropTypes.func.isRequired,
@@ -36,16 +37,16 @@ class ConjunctionGroup extends Component {
   }
 
   handleTypeChange = (type) => {
-    this.props.editInstance(type, this.getPath(), true);
+    this.props.editInstance(this.props.name, type, this.getPath(), true);
   }
 
   handleNameChange = (state) => {
-    this.props.editInstance(state, this.getPath());
+    this.props.editInstance(this.props.name, state, this.getPath());
   }
 
   addChild = (template) => {
     let instance = createTemplateInstance(template);
-    this.props.addInstance(instance, this.getPath());
+    this.props.addInstance(this.props.name, instance, this.getPath());
   }
 
   getPath = () => {
@@ -121,6 +122,7 @@ class ConjunctionGroup extends Component {
                 className="conjunction-group__conjunction-child">
                 <ConjunctionGroup
                   getPath={ this.getChildsPath }
+                  name={ this.props.name }
                   instance={ instance }
                   addInstance={ this.props.addInstance }
                   editInstance={ this.props.editInstance }
@@ -140,8 +142,9 @@ class ConjunctionGroup extends Component {
                 className="conjunction-group__conjunction-child">
                 <TemplateInstance
                   getPath={ this.getChildsPath }
+                  treeName = {this.props.name }
                   templateInstance={ instance }
-                  otherInstances={ this.props.getAllInstances() }
+                  otherInstances={ this.props.getAllInstances(this.props.name) }
                   editInstance={ this.props.editInstance }
                   deleteInstance={ this.props.deleteInstance }
                   saveInstance={ this.props.saveInstance }
