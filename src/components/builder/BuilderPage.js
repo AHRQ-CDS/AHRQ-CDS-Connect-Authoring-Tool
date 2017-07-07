@@ -26,7 +26,8 @@ class BuilderPage extends Component {
       templateInstances: [],
       name: 'Untitled Artifact',
       id: null,
-      version: null
+      version: null,
+      groups: []
     };
 
     this.setTemplateInstances = this.setTemplateInstances.bind(this);
@@ -44,10 +45,12 @@ class BuilderPage extends Component {
       axios.get(`${API_BASE}/artifacts/${id}`)
         .then((res) => {
           const artifact = res.data[0];
-          this.setState({ id: artifact._id });
-          this.setState({ name: artifact.name });
-          this.setState({ version: artifact.version });
-          this.setState({ templateInstances: artifact.templateInstances });
+          this.setState({
+            id: artifact._id,
+            name: artifact.name,
+            version: artifact.version,
+            templateInstances: artifact.templateInstances
+          });
         });
     }
   }
