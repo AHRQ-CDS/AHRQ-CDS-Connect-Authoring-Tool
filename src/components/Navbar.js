@@ -11,5 +11,10 @@ export default () => (
         <li><NavLink to="/build"><FontAwesome fixedWidth name='wrench' /> New Artifact</NavLink></li>
       </ul>
     </nav>
+    <nav className="navbar__nav-secondary">
+      <ul>
+        <li><Link to="mailto:cds-authoring-list@lists.mitre.org">Feedback</Link></li>
+      </ul>
+    </nav>
   </header>
 );
