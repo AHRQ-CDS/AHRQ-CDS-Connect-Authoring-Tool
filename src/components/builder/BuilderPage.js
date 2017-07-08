@@ -3,6 +3,7 @@ import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import axios from 'axios';
 import FileSaver from 'file-saver';
 import _ from 'lodash';
+import moment from 'moment';
 
 import ConjunctionGroup from './ConjunctionGroup';
 import Config from '../../../config'
@@ -56,7 +57,8 @@ class BuilderPage extends Component {
       name: 'Untitled Artifact',
       id: null,
       version: null,
-      categories: []
+      categories: [],
+      statusMessage: null
     };
   }
 
@@ -273,6 +275,32 @@ class BuilderPage extends Component {
     }));
   }
 
+  updateStatusMessage = (statusType) => {
+    // TODO: tie this to actual save/download events, consider showing errors
+    const time = moment().format("dddd, MMMM Do YYYY, h:mm:ss a");
+    switch (statusType) {
+      case 'save':
+        this.setState({
+          statusMessage: `Saved ${time}.`
+        });
+        break;
+      case 'download':
+        this.setState({
+          statusMessage: `Downloaded ${time}.`
+        });
+        break;
+      case 'publish':
+        this.setState({
+          statusMessage: `Publishing not available. Saved ${time}.`
+        });
+        break;
+      default:
+        this.setState({
+          statusMessage: null
+        });
+    }
+  }
+
   renderConjunctionGroup = (treeName) => {
     return (
       this.state[treeName].childInstances ?
@@ -298,20 +326,6 @@ class BuilderPage extends Component {
       <div className="builder">
         <header className="builder__header">
           <h2 className="builder__heading">{ this.state.name }</h2>
-          <div className="builder__buttonbar">
-            <button onClick={ () => this.saveArtifact(false) }
-              className="builder__savebutton is-unsaved">
-              Save and Continue
-            </button>
-            <button onClick={ this.downloadCQL }
-              className="builder__cqlbutton is-unsaved">
-              Download CQL
-            </button>
-            <button onClick={ () => this.saveArtifact(true) }
-              className="builder__deletebutton">
-              Save and Close
-            </button>
-          </div>
         </header>
         <section className="builder__canvas">
           <Tabs>
@@ -319,6 +333,21 @@ class BuilderPage extends Component {
               <Tab>Inclusions</Tab>
               <Tab>Exclusions</Tab>
               <Tab>Recommendations</Tab>
+              <div className="tab__buttonbar">
+                <span role="status" aria-live="assertive">{this.state.statusMessage}</span>
+                <button onClick={ () => { this.updateStatusMessage('save'); this.saveArtifact(false); } }
+                  className="builder__savebutton is-unsaved">
+                  Save
+                </button>
+                <button onClick={ () => { this.updateStatusMessage('download'); this.downloadCQL(); } }
+                  className="builder__cqlbutton is-unsaved">
+                  Download CQL
+                </button>
+                <button onClick={ () => { this.updateStatusMessage('publish'); this.saveArtifact(false); }  }
+                  className="builder__publishbutton">
+                  Publish
+                </button>
+              </div>
             </TabList>
 
             <TabPanel>
