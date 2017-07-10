@@ -236,7 +236,6 @@ class BuilderPage extends Component {
     const index = target.length;
     instance.path = parentPath + '.childInstances.' + index;
     target.push(instance);
-<<<<<<< HEAD
 
     this.setState({ [treeName] : tree });
   }
@@ -245,16 +244,6 @@ class BuilderPage extends Component {
     const tree = _.cloneDeep(this.state[treeName]);
     const target = getValueAtPath(tree, path);
 
-=======
-
-    this.setState({ [treeName] : tree });
-  }
-
-  editInstance = (treeName, editedParams, path, editingConjunctionType=false) => {
-    const tree = _.cloneDeep(this.state[treeName]);
-    const target = getValueAtPath(tree, path);
-
->>>>>>> conjunction-rebase
     if (editingConjunctionType) {
       target.id = editedParams.id;
       target.name = editedParams.name;
@@ -280,11 +269,7 @@ class BuilderPage extends Component {
   }
 
   getAllInstances = (treeName, node=undefined) => {
-<<<<<<< HEAD
-    if (node === undefined) 
-=======
     if (node === undefined)
->>>>>>> conjunction-rebase
       node = this.state[treeName];
     return _.flatten(node.childInstances.map(instance => {
       if (instance.childInstances) {
@@ -378,11 +363,6 @@ class BuilderPage extends Component {
             <TabPanel>
               Recommendations!
             </TabPanel>
-<<<<<<< HEAD
-            
-=======
-
->>>>>>> conjunction-rebase
           </Tabs>
         </section>
       </div>
