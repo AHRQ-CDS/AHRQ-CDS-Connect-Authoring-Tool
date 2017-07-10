@@ -189,7 +189,7 @@ module.exports = [
       {
         id: 'If',
         name: 'If',
-        returnType: 'if',
+        returnType: 'null',
         extends: 'Base',
         template: 'If',
         parameters: [
@@ -231,7 +231,7 @@ module.exports = [
       {
         id: 'Case',
         name: 'Case',
-        returnType: 'boolean',
+        returnType: null,
         parameters: [
           { id: 'element_name', type: 'string', name: 'Element Name' },
           {

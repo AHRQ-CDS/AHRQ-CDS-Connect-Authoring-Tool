@@ -109,6 +109,7 @@ class TemplateInstance extends Component {
     this.updateNestedInstance = this.updateNestedInstance.bind(this);
     this.updateList = this.updateList.bind(this);
     this.updateCase = this.updateCase.bind(this);
+    this.setCaseReturnType = this.setCaseReturnType.bind(this);
     this.updateIf = this.updateIf.bind(this);
     this.selectTemplate = this.selectTemplate.bind(this);
     
@@ -136,7 +137,7 @@ class TemplateInstance extends Component {
     const otherInstances = this.getOtherInstances(this.props);
     this.setState({ otherInstances });
 
-    this.props.templateInstance.rootReturnType = this.props.templateInstance.returnType;
+    this.setState({returnType: this.props.templateInstance.returnType});
     axios.get(`${API_BASE}/config/resources`)
       .then((result) => {
         this.setState({ resources: result.data });
@@ -157,7 +158,7 @@ class TemplateInstance extends Component {
     const otherInstances = props.otherInstances.filter(this.notThisInstance).map(
       instance => ({ name: getInstanceName(instance),
         id: instance.id,
-        returnType: instance.returnType }));
+        returnType: (!_.isEmpty(instance.modifiers) ? _.last(instance.modifiers).returnType : instance.returnType) }));
     return otherInstances;
   }
 
@@ -205,6 +206,10 @@ class TemplateInstance extends Component {
     const array = this.state[id].cases.slice();
     array[index][option] = value;
     this.updateNestedInstance(id, array, 'cases');
+  }
+
+  setCaseReturnType(returnType) {
+    this.setState({returnType: returnType})
   }
 
   // Adds a new row of case statements
@@ -342,7 +347,7 @@ class TemplateInstance extends Component {
       returnType = (_.last(this.state.appliedModifiers) || this.props.templateInstance).returnType;
     }
     console.log("FILTER BY: " + returnType);
-    this.props.templateInstance.returnType = returnType; // Actually change the return type, instead of filtering
+    this.setState({returnType: returnType});
     this.setState({relevantModifiers: (this.modifersByInputType[returnType] || [])});
   }
 
@@ -363,7 +368,7 @@ class TemplateInstance extends Component {
   removeLastModifier() {
     let newAppliedModifiers = this.state.appliedModifiers.slice();
     newAppliedModifiers.pop();
-    this.props.templateInstance.returnType = _.isEmpty(newAppliedModifiers) ? this.props.templateInstance.rootReturnType : _.last(newAppliedModifiers).returnType;
+    this.setState({returnType: _.isEmpty(newAppliedModifiers) ? this.props.templateInstance.returnType : _.last(newAppliedModifiers).returnType});
     this.setAppliedModifiers(newAppliedModifiers)
   }
 
@@ -496,6 +501,7 @@ class TemplateInstance extends Component {
             value={this.state[param.id]}
             values={this.state.otherInstances}
             addComponent={this.addCaseComponent}
+            setCaseReturnType={this.setCaseReturnType}
             updateCase={this.updateCase}
             updateInstance={this.updateNestedInstance} />
         );
@@ -542,7 +548,7 @@ class TemplateInstance extends Component {
         </div>
         {this.renderAppliedModifiers()}
         <div className='modifier__return__type'>
-          Return Type: {_.startCase(this.props.templateInstance.returnType)}
+          Return Type: {_.startCase(this.state.returnType)}
         </div>
         {this.renderModifierSelect()}
       </div>);
