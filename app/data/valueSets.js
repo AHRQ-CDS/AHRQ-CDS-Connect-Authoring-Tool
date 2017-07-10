@@ -250,6 +250,33 @@ module.exports = {
         }
       ]
     },
+    rhabdomyolysis : {
+      id: "rhabdomyolysis",
+      conditions: [
+        {
+          name: "Rhabdomyolysis",
+          oid: '2.16.840.1.113762.1.4.1047.102'
+        }
+      ]
+    },
+    hepatitis_a : {
+      id: "hepatitis_a",
+      conditions: [
+        {
+          name: "Hepatitis A",
+          oid: '2.16.840.1.113883.3.464.1003.110.12.1024'
+        }
+      ]
+    },
+    hepatitis_b : {
+      id: "hepatitis_b",
+      conditions: [
+        {
+          name: "Hepatitis B",
+          oid: '2.16.840.1.113883.3.67.1.101.1.269'
+        }
+      ]
+    },
   },
   medications: {
     anti_hypertensive_medication : {
@@ -351,6 +378,32 @@ module.exports = {
           oid: '2.16.840.1.113883.3.464.1003.109.12.1014'
         }
       ],
+    }
+  },
+  encounters: {
+    outpatient_encounter: {
+      id: 'outpatient_encounter',
+      encounters: [
+        {
+          name: 'Office visit',
+          oid: '2.16.840.1.113883.3.464.1003.101.11.1005'
+        },
+        {
+          name: 'Annual wellness visit',
+          oid: '2.16.840.1.113883.3.526.2.1363'
+        }
+      ]
+    }
+  },
+  allergyIntolerances: {
+    statin_allergen: {
+      id: 'statin_allergen',
+      allergyIntolerances: [
+        {
+          name: 'Statin allergen',
+          oid: '2.16.840.1.113883.3.117.1.7.1.423'
+        }
+      ]
     }
   }
 }

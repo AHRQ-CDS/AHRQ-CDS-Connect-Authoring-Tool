@@ -5,7 +5,7 @@ import _ from 'lodash';
 class CheckBoxParameter extends Component {
   constructor(props) {
     super(props);
-    this.state={
+    this.state = {
       checked: this.props.param.checked
     };
   }
@@ -18,7 +18,7 @@ class CheckBoxParameter extends Component {
           <input id={id}
             type='checkbox'
             checked={this.state.checked}
-            onChange={event => {
+            onChange={(event) => {
               this.props.param.checked = event.target.checked;
               this.setState({ checked: event.target.checked });
               this.props.updateComparison(this.state.checked);

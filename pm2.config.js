@@ -17,7 +17,10 @@ module.exports = {
     // Fronted Server
     {
       name      : 'FrontEnd',
-      script    : 'frontend.js'
+      script    : 'frontend.js',
+      env_production : {
+        NODE_ENV: 'production'
+      }
     }
   ]
 };

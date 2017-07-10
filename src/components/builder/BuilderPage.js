@@ -105,11 +105,15 @@ class BuilderPage extends Component {
     });
 
     Object.keys(entryMap).forEach((key) => {
-      let entry = entryMap[key];
+      const entry = entryMap[key];
       if (entry.extends) {
         this.mergeInParentTemplate(entry, entryMap);
       }
     });
+
+    // This is needed to update the state because the functions above are manually updating
+    // this.state.groups without using React's this.setState
+    this.setState({ groups: this.state.groups });
   }
 
   mergeInParentTemplate = (entry, entryMap) => {
@@ -127,12 +131,11 @@ class BuilderPage extends Component {
 
     // merge parameters
     entry.parameters.forEach((parameter) => {
-      let matchingParameter = _.find(parent.parameters, { 'id': parameter.id});
+      const matchingParameter = _.find(parent.parameters, { id: parameter.id });
       _.merge(parameter, matchingParameter);
-
     });
-    let missing = _.differenceBy(parent.parameters, entry.parameters, 'id');
-    entry.parameters = missing.concat(entry.parameters);
+    const missing = _.differenceBy(parent.parameters, entry.parameters, 'id');
+    entry.parameters = missing.concat(entry.parameters); // eslint-disable-line no-param-reassign
   }
 
   // Prepares the artifact for saving/cql download
@@ -233,6 +236,7 @@ class BuilderPage extends Component {
     const index = target.length;
     instance.path = parentPath + '.childInstances.' + index;
     target.push(instance);
+<<<<<<< HEAD
 
     this.setState({ [treeName] : tree });
   }
@@ -241,6 +245,16 @@ class BuilderPage extends Component {
     const tree = _.cloneDeep(this.state[treeName]);
     const target = getValueAtPath(tree, path);
 
+=======
+
+    this.setState({ [treeName] : tree });
+  }
+
+  editInstance = (treeName, editedParams, path, editingConjunctionType=false) => {
+    const tree = _.cloneDeep(this.state[treeName]);
+    const target = getValueAtPath(tree, path);
+
+>>>>>>> conjunction-rebase
     if (editingConjunctionType) {
       target.id = editedParams.id;
       target.name = editedParams.name;
@@ -266,7 +280,11 @@ class BuilderPage extends Component {
   }
 
   getAllInstances = (treeName, node=undefined) => {
+<<<<<<< HEAD
     if (node === undefined) 
+=======
+    if (node === undefined)
+>>>>>>> conjunction-rebase
       node = this.state[treeName];
     return _.flatten(node.childInstances.map(instance => {
       if (instance.childInstances) {
@@ -360,7 +378,11 @@ class BuilderPage extends Component {
             <TabPanel>
               Recommendations!
             </TabPanel>
+<<<<<<< HEAD
             
+=======
+
+>>>>>>> conjunction-rebase
           </Tabs>
         </section>
       </div>

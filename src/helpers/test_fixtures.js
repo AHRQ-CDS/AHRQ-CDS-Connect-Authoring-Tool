@@ -106,10 +106,10 @@ const elementGroups = [
         id: 'TotalCholesterol',
         name: 'Total Cholesterol',
         extends: 'GenericObservation',
-        returnType: 'number', //TODO: these are all numbers because of the GenericObservation template - when it gets made more general, this might change back to observation
+        returnType: 'number', // TODO: these are all numbers because of the GenericObservation template - when it gets made more general, this might change back to observation
         parameters: [
-          { id: 'element_name', value: "TotalCholesterol"},
-          { id: 'observation', static: true, value: "total_cholesterol"},
+          { id: 'element_name', value: 'TotalCholesterol' },
+          { id: 'observation', static: true, value: 'total_cholesterol' },
           { id: 'valid', static: true }
         ]
       },
@@ -119,8 +119,8 @@ const elementGroups = [
         extends: 'GenericObservation',
         returnType: 'number',
         parameters: [
-          { id: 'element_name', value: "HDLCholesterol"},
-          { id: 'observation', static: true, value: "hdl_cholesterol"},
+          { id: 'element_name', value: 'HDLCholesterol' },
+          { id: 'observation', static: true, value: 'hdl_cholesterol' },
           { id: 'valid', value: 6 }
         ]
       },
@@ -130,8 +130,8 @@ const elementGroups = [
         extends: 'GenericObservation',
         returnType: 'number',
         parameters: [
-          { id: 'element_name', value: "Cholesterol"},
-          { id: 'observation', static: true, value: "cholesterol"},
+          { id: 'element_name', value: 'Cholesterol' },
+          { id: 'observation', static: true, value: 'cholesterol' },
           { id: 'valid', value: 6 }
         ]
       }

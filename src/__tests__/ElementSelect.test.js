@@ -21,7 +21,7 @@ beforeEach(() => {
 
   setInputValue = (input, value) => {
     input.simulate('focus');
-    input.node.value = value;
+    input.node.value = value;  // eslint-disable-line no-param-reassign
     input.simulate('change');
   };
 });
@@ -74,7 +74,7 @@ describe('the select element field', () => {
     setInputValue(elementField.at(0).find('input'), element.name);
 
     const firstOption = elementField.find('.element-select__option').at(0);
-    firstOption.simulate('mouseDown', {button: 0});
+    firstOption.simulate('mouseDown', { button: 0 });
 
     expect(addInstance).toBeCalledWith(element);
   });
@@ -102,8 +102,8 @@ describe('the select category field', () => {
   });
 
   it('when selecting new category, updates value and element field options', () => {
-    categoryField.find('.Select-control').simulate('mouseDown', {button: 0});
-    categoryField.find('.Select-option').at(1).simulate('mouseDown', {button: 0});
+    categoryField.find('.Select-control').simulate('mouseDown', { button: 0 });
+    categoryField.find('.Select-option').at(1).simulate('mouseDown', { button: 0 });
     elementField.find('input').simulate('change');
 
     expect(categoryField.find('.Select-value').text()).toEqual('Demographics');

@@ -87,11 +87,16 @@ docker build -t cdsauthoringtool .
 
 To run the authoring tool in a docker container, you must also run a docker container for MongoDB and link the authoring tool container to it.  The following commands show how to do this, as well as how to expose the necessary ports to access the application from your host system:
 ```
-docker run --name cat-mongo -d mongo
-docker run --name cat --link cat-mongo:mongo -e "MONGO_URL=mongodb://cat-mongo/cds_authoring" -p "9000:9000" -p "3001:3001" cdsauthoringtool
+docker run --name cat-mongo -d mongo:3.4
+docker run --name cat --link cat-mongo:mongo -e "MONGO_URL=mongodb://cat-mongo/cds_authoring" -p "9000:9000" cdsauthoringtool
 ```
 
-If you wish for the CDS Authoring Tool to run in a detached process, add a `-d` to the last command (before `cdsauthoringtool`).
+By default, the server on port 9000 will proxy requests on _/api_ to the local API server using express-http-proxy.  In production environments, you may wish to setup a dedicated external proxy server.  In that case, the external proxy server will be responsible for proxying _/api_ to port 3001.  To accomodate this, we must disable the express-http-proxy and also expose port 3001.  Instead of the last command above, issue this instead:
+```
+docker run --name cat --link cat-mongo:mongo -e "MONGO_URL=mongodb://cat-mongo/cds_authoring" -e "DISABLE_API_PROXY=true" -p "9000:9000" -p "3001:3001" cdsauthoringtool
+```
+
+If you wish for the CDS Authoring Tool to run in a detached process, add a `-d` to the run command (before `cdsauthoringtool`).
 
 When the containers are running, you can access the app at [http://localhost:9000](http://localhost:9000).
 

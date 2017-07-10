@@ -6,7 +6,7 @@ import _ from 'lodash';
 export default (props) => {
   const id = _.uniqueId('parameter-');
 
-  const values = [{id: 'true', name: 'True'},{id: 'false', name: 'False'}];
+  const values = [{ id: 'true', name: 'True' }, { id: 'false', name: 'False' }];
   return (
     <div className="form__group">
       <label htmlFor={id}>
@@ -16,7 +16,7 @@ export default (props) => {
                 options={values}
                 inputProps={{ id }}
                 simpleValue
-                valueKey={"id"}
+                valueKey={'id'}
                 clearable={false}
                 name={props.param.id}
                 value={props.param.value}

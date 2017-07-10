@@ -13,7 +13,8 @@ import ComparisonParameter from './parameters/ComparisonParameter';
 import CheckBoxParameter from './parameters/CheckBoxParameter';
 import IfParameter from './parameters/IfParameter';
 import BooleanParameter from './parameters/BooleanParameter';
-import Config from '../../../config'
+import Config from '../../../config';
+
 const API_BASE = Config.api.baseUrl;
 
 export function createTemplateInstance(template, children = undefined) {
@@ -127,7 +128,7 @@ class TemplateInstance extends Component {
 
   // Used to update value states that are nested objects
   updateNestedInstance(id, value, element) {
-    let newState = {};
+    const newState = {};
     newState[id] = Object.assign({}, this.state[id]);
     newState[id][element] = value;
     this.updateInstance(newState);
@@ -158,7 +159,7 @@ class TemplateInstance extends Component {
   // Adds a new row of case statements
   addCaseComponent(id) {
     const array = this.state[id].cases.slice();
-    array.push({case : null, result : null});
+    array.push({ case: null, result: null });
     this.updateNestedInstance(id, array, 'cases');
   }
 
@@ -166,7 +167,7 @@ class TemplateInstance extends Component {
   updateIf(paramId, value, index, place) {
     const valueArray = this.state[paramId].slice();
     // Mongoose stops empty objects from being saved, so this will be null if it wasn't set yet
-    if(_.isNil(valueArray[index])) {
+    if (_.isNil(valueArray[index])) {
       valueArray[index] = {};
     }
     valueArray[index][place] = value;
@@ -177,8 +178,8 @@ class TemplateInstance extends Component {
 
   // Adds new Condition/Block for If statements
   addIfComponent(paramId) {
-    const currentParamValue =  this.state[paramId].slice();
-    currentParamValue.splice(currentParamValue.length-1, 0, {});
+    const currentParamValue = this.state[paramId].slice();
+    currentParamValue.splice(currentParamValue.length - 1, 0, {});
     const newState = {};
     newState[paramId] = currentParamValue;
     this.updateInstance(newState);
@@ -186,28 +187,27 @@ class TemplateInstance extends Component {
 
   updateComparison(isSingledSided) {
     // TODO: Refactor this function to use React State
-    let parameter = this.props.templateInstance.parameters;
+    const parameter = this.props.templateInstance.parameters;
     if (isSingledSided) {
-      _.remove(parameter, (param) => {
+      _.remove(parameter, param =>
         // Remove any instance with id ending in '_2'
-        return (RegExp('^.*(?=(_2))').test(param.id));
-      })
-      _.find(parameter, { 'id': 'comparison_bound' }).name = "Comparison Bound";
-      _.last(parameter).name = "Double Sided?";
+         (RegExp('^.*(?=(_2))').test(param.id)));
+      _.find(parameter, { id: 'comparison_bound' }).name = 'Comparison Bound';
+      _.last(parameter).name = 'Double Sided?';
     } else {
-      let lowerBound = _.find(parameter, { 'id': 'comparison_bound' });
-      let upperBound = _.clone(lowerBound);
-      lowerBound.name = "Lower Comparison Bound"
-      upperBound.name = "Upper Comparison Bound"
-      upperBound.id = `${upperBound.id}_2`
+      const lowerBound = _.find(parameter, { id: 'comparison_bound' });
+      const upperBound = _.clone(lowerBound);
+      lowerBound.name = 'Lower Comparison Bound';
+      upperBound.name = 'Upper Comparison Bound';
+      upperBound.id = `${upperBound.id}_2`;
       upperBound.value = undefined;
 
       // Using name for readability, could've been id, but {'id': 'Comparison'} isn't obvious
-      let secondOperator = _.clone(_.find(parameter, { 'name': 'Operator' }));
-      secondOperator.id = `${secondOperator.id}_2`
+      const secondOperator = _.clone(_.find(parameter, { name: 'Operator' }));
+      secondOperator.id = `${secondOperator.id}_2`;
       secondOperator.value = null;
 
-      _.last(parameter).name = "Single Sided?";
+      _.last(parameter).name = 'Single Sided?';
       parameter.splice(parameter.length - 1, 0, secondOperator);
       parameter.splice(parameter.length - 1, 0, upperBound);
     }
@@ -217,12 +217,12 @@ class TemplateInstance extends Component {
 
   selectTemplate(param) {
     if (param.static) {
-        return (
+      return (
           <StaticParameter
             key={param.id}
             param={param}
             updateInstance={this.updateInstance} />
-        );
+      );
     }
     switch (param.type) {
       case 'number':
