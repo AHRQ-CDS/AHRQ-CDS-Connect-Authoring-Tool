@@ -222,14 +222,40 @@ module.exports = {
      ],
     },
     breastfeeding : {
-     //TODO: Reused from statin CQM artifact; needs review against other value sets in VSAC.
-     id: "breastfeeding",
-     conditions: [
-       {
-         name: "Breastfeeding",
-         oid: '2.16.840.1.113762.1.4.1047.73'
-       }
-     ]
+      //TODO: Reused from statin CQM artifact; needs review against other value sets in VSAC.
+      id: "breastfeeding",
+      conditions: [
+        {
+          name: "Breastfeeding",
+          oid: '2.16.840.1.113762.1.4.1047.73'
+        }
+      ],
+      concepts: [
+        {
+          name: "Is Breastfeeding",
+          codes: [
+            {
+              name: "Is Breastfeeding code",
+              code: "63895-7",
+              codeSystem: { name: 'LOINC', id: 'http://loinc.org'},
+              display: "Breastfeeding [PhenX]"
+            }
+          ],
+          display: "Breastfeeding [PhenX]"
+        },
+        {
+          name: "Yes",
+          codes: [
+            {
+              name: "Yes code",
+              code: "LA33-6",
+              codeSystem: { name: 'LOINC', id: 'http://loinc.org'},
+              display: "Yes"
+            }
+          ],
+          display: "Yes"
+        }
+      ]
     },
     end_stage_renal_disease : {
     // https://ushik.ahrq.gov/ViewItemDetails?&system=mu&itemKey=189012000

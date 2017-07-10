@@ -234,6 +234,24 @@ class CqlArtifact {
           context.pregnancyStatusConcept = pregnancyValueSets.concepts[0].name;
           context.pregnancyCodeConcept = pregnancyValueSets.concepts[1].name;
           break;
+          case 'breastfeeding':
+            let breastfeedingValueSets = ValueSets.conditions[parameter.value];
+            breastfeedingValueSets.conditions.map(condition => {
+              this.resourceMap.set(condition.name, condition);
+            })
+            if ("concepts" in breastfeedingValueSets) {
+              breastfeedingValueSets.concepts.forEach((concept) => {
+                concept.codes.forEach((code) => {
+                  this.codeSystemMap.set(code.codeSystem.name, code.codeSystem.id);
+                  this.codeMap.set(code.name, code);
+                });
+                this.conceptMap.set(concept.name, concept);
+              });
+            }
+            context.valueSetName = breastfeedingValueSets.conditions[0].name;
+            context.breastfeedingCodeConcept = breastfeedingValueSets.concepts[0].name;
+            context.breastfeedingYesConcept = breastfeedingValueSets.concepts[1].name;
+            break;
         case 'list':
           if (parameter.category === "comparison") {
             context.comparisonUnit = (ValueSets.observations[_.find(_.find(this.elements, { 'id': parameter.value[0].id }).parameters, {'name': parameter.name}).value].units.code);
