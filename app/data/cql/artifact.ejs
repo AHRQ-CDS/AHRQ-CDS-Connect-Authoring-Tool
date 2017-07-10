@@ -6,8 +6,6 @@ include <%=includeLibrary.name%> version '<%=includeLibrary.version%>'<%if (incl
 <%})-%>
 <% codeSystemMap.forEach((resource, key) => {%>
 codesystem "<%=key%>": '<%=resource%>' <%}) -%>
-<% resourceMap.forEach((resource, key) => {%>
-valueset "<%=resource.name%>": '<%=resource.oid%>'<%});-%>
 
 <% resourceMap.forEach((resource, key) => {%>
 valueset "<%=resource.name%>": '<%=resource.oid%>'<%});-%>
