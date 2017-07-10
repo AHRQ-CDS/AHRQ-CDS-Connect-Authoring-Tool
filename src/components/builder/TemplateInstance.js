@@ -6,14 +6,11 @@ import update from 'immutability-helper';
 import NumberParameter from './parameters/NumberParameter';
 import StringParameter from './parameters/StringParameter';
 import ObservationParameter from './parameters/ObservationParameter';
-import BooleanComparisonParameter from './parameters/BooleanComparisonParameter'
 import NullCheckingParameter from './parameters/NullCheckingParameter';
-import NullCheckingDropdownParameter from './parameters/NullCheckingDropdownParameter';
 import ValueSetParameter from './parameters/ValueSetParameter';
 import ListParameter from './parameters/ListParameter';
 import CaseParameter from './parameters/CaseParameter';
 import StaticParameter from './parameters/StaticParameter';
-import ComparisonParameter from './parameters/ComparisonParameter';
 import CheckBoxParameter from './parameters/CheckBoxParameter';
 import IfParameter from './parameters/IfParameter';
 import BooleanParameter from './parameters/BooleanParameter';
@@ -23,10 +20,28 @@ import LablModifier from './modifiers/LabelModifier';
 import ValueComparison from './modifiers/ValueComparison';
 import ValueComparisonObservation from './modifiers/ValueComparisonObservation';
 import BooleanComparison from './modifiers/BooleanComparison';
+import CommonDropdownParameter from './parameters/CommonDropdownParameter'
 import CheckExistence from './modifiers/CheckExistence';
 import LookBack from './modifiers/LookBack';
 import WithUnit from './modifiers/WithUnit';
 const API_BASE = Config.api.baseUrl;
+
+// TODO Move these options to a better spot
+// Within form_templates, specify the options tag to some object here
+const commonDropdownOptions = {
+  comparisonOption: [{ value: '>', label: 'greater than' },
+                     { value: '>=', label: 'greater than or equal to' },
+                     { value: '=', label: 'equal to' },
+                     { value: '!=', label: 'not equal to' },
+                     { value: '<', label: 'less than' },
+                     { value: '<=', label: 'less than or equal to' }],
+  nullCheckingOption: [{ value: 'is null', label: 'is null' },
+                       { value: 'is not null', label: 'is not null' }],
+  booleanCheckingOption: [{ value: 'is true', label: 'is true' },
+                          { value: 'is not true', label: 'is not true' },
+                          { value: 'is false', label: 'is false' },
+                          { value: 'is not false', label: 'is not false' }]
+};
 
 export function createTemplateInstance(template) {
   /*
@@ -439,28 +454,12 @@ class TemplateInstance extends Component {
             addComponent={this.addComponent}
             updateList={this.updateList} />
         );
-      case 'comparison':
-        return (
-          <ComparisonParameter
-          key={param.id}
-          param={param}
-          value={null}
-          updateInstance={this.updateInstance} />
-        );
       case 'checkbox':
         return (
           <CheckBoxParameter
           key={param.id}
           param={param}
           updateComparison={this.updateComparison} />
-        );
-      case 'booleanComparison':
-        return (
-          <BooleanComparisonParameter
-          key={param.id}
-          param={param}
-          value={null}
-          updateInstance={this.updateInstance} />
         );
       case 'nullCheckingParameter':
         return (
@@ -470,12 +469,13 @@ class TemplateInstance extends Component {
           values={this.state.otherInstances}
           updateList={this.updateList} />
         );
-      case 'nullCheckingDropdownParameter':
+      case 'dropdown':
         return (
-          <NullCheckingDropdownParameter
+          <CommonDropdownParameter
           key={param.id}
           param={param}
           value={null}
+          option={commonDropdownOptions[param.option]}
           updateInstance={this.updateInstance} />
         );
       case 'if':

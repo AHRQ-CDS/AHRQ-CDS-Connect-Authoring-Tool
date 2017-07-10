@@ -1,4 +1,5 @@
 
+
 module.exports = [
   {
     id: 0,
@@ -171,7 +172,7 @@ module.exports = [
         parameters: [
           { id: 'element_name', type: 'string', name: 'Element Name' },
           { id: 'observation', type: 'list', category: 'comparison', subType: 'system_quantity', value: [undefined], name: 'Observation' },
-          { id: 'comparison', type: 'comparison', value: null, name: 'Operator' },
+          { id: 'comparison', type: 'dropdown', value: null, name: 'Operator', option:'comparisonOption'}, // Specify desires options at top of TemplateInstance.js
           { id: 'comparison_bound', type: 'number', typeOfNumber: 'float', name: 'Comparison Bound'},
           { id: 'checkbox', type: 'checkbox', name: 'Double Sided?', checked: false}
         ]
@@ -201,10 +202,10 @@ module.exports = [
         name: 'Boolean Comparison',
         returnType: 'boolean',
         extends: 'Base',
-        template: 'BooleanComparison',
+        template: 'isComparison',
         parameters: [
           { id: 'components', type: 'list',subType: 'boolean', value: [undefined], name: 'Elements' },
-          { id: 'comparison', type: 'booleanComparison', value: null, name: 'Comparison' },
+          { id: 'dropdown', type: 'dropdown', value: null, name: 'Comparison', option:'booleanCheckingOption' }, // Specify desires options at top of TemplateInstance.js
         ],
       },
       {
@@ -212,10 +213,10 @@ module.exports = [
         name: 'Check if Null',
         returnType: 'boolean',
         extends: 'Base',
-        template: 'checkIfNull',
+        template: 'isComparison',
         parameters: [
           { id: 'components', type: 'nullCheckingParameter', value: [undefined], name: 'Elements' },
-          { id: 'comparison', type: 'nullCheckingDropdownParameter', value: null, name: 'Comparison' },
+          { id: 'dropdown', type: 'dropdown', value: null, name: 'Comparison', option: 'nullCheckingOption' }, // Specify desires options at top of TemplateInstance.js
         ],
       },
       {
