@@ -83,7 +83,8 @@ class CqlArtifact {
     this.dataModel = artifact.dataModel ? artifact.dataModel : {name: 'FHIR', version: '1.0.2'};
     this.includeLibraries = artifact.includeLibraries ? artifact.includeLibraries : includeLibraries;
     this.context = artifact.context ? artifact.context : 'Patient';
-    this.elements = artifact.expTreeInclude;
+    this.inclusions = artifact.expTreeInclude;
+    this.exclusions = artifact.expTreeExclude;
     this.initialize()
   }
 
@@ -95,8 +96,12 @@ class CqlArtifact {
     this.paramContexts = [];
     this.contexts = [];
     this.conjunctions = [];
+    this.conjunction_main = [];
 
-    this.parseTree(this.elements);
+    if (this.inclusions.childInstances.length)
+      this.parseTree(this.inclusions);
+    if (this.exclusions.childInstances.length)
+      this.parseTree(this.exclusions);
   }
 
   parseTree(element) {
@@ -122,7 +127,7 @@ class CqlArtifact {
     element.childInstances.forEach((child) => {
       conjunction.components.push({name : child.parameters[0].value})
     });
-    this.conjunctions.unshift(conjunction);
+    this.conjunction_main.push(conjunction);
   }
 
   parseParameter(element) {
@@ -222,7 +227,7 @@ class CqlArtifact {
           break;
         case 'list':
           if (parameter.category === "comparison") {
-            context.comparisonUnit = (ValueSets.observations[_.find(_.find(this.elements, { 'id': parameter.value[0].id }).parameters, {'name': parameter.name}).value].units.code);
+            context.comparisonUnit = (ValueSets.observations[_.find(_.find(this.inclusions, { 'id': parameter.value[0].id }).parameters, {'name': parameter.name}).value].units.code);
           }
           context[parameter.id] = parameter.value;
           break;
@@ -242,7 +247,8 @@ class CqlArtifact {
 
   // Generate cql for all elements
   body() {
-    const expressions = this.contexts.concat(this.conjunctions);
+    let expressions = this.contexts.concat(this.conjunctions);
+    expressions = expressions.concat(this.conjunction_main);
     return expressions.map((context) => {
       if (!templateMap[context.template]) console.error("Template could not be found: " + context.template);
       return ejs.render(templateMap[context.template], context)
@@ -251,11 +257,17 @@ class CqlArtifact {
   header() {
     return ejs.render(fs.readFileSync(artifactPath, 'utf-8'), this);
   }
+  population() {
+    let exists = {
+      include : this.inclusions.childInstances.length ? true : false,
+      exclude : this.exclusions.childInstances.length ? true : false,
+    }
+    return ejs.render(fs.readFileSync(templatePath + '/IncludeExclude', 'utf-8'), exists)
+  }
 
   // Produces the cql in string format
   toString() {
-    return this.header()+this.body()
-
+    return this.header()+this.body()+'\n'+this.population();
   }
 
   // Return a cql file as a json object
