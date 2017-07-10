@@ -24,12 +24,6 @@
     @extend .primary-button;
   }
 
-  &__sidebar {
-    background-color: $gray-lightest;
-    padding: 1em;
-    width: 20rem;
-  }
-
   &__palette {
     @include navigation;
 
@@ -131,5 +125,27 @@ input.react-autosuggest__input--open {
   &__option-category {
     margin-left: .5em;
     color: $gray;
+  }
+}
+
+.conjunction-group {
+  padding: 1em;
+  border: 1px solid $gray-light;
+  border-radius: $border-radius;
+
+  .conjunction-group {
+    margin-left: 5em;
+  }
+
+  &__header {
+    display: flex;
+    align-items: center;
+  }
+  &__button-bar {
+    margin-left: auto;
+  }
+  &__conjunction-select {
+    width: 5em;
+    margin-bottom: .5em;
   }
 }

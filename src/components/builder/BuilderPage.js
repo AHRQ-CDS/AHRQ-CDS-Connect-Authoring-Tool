@@ -4,14 +4,42 @@ import update from 'immutability-helper';
 import FileSaver from 'file-saver';
 import _ from 'lodash';
 
-import BuilderSubPalette from './BuilderSubPalette';
-import BuilderPalette from './BuilderPalette';
-import BuilderTarget from './BuilderTarget';
-import Config from '../../../config';
+import ConjunctionGroup from './ConjunctionGroup';
+import Config from '../../../config'
+import { createTemplateInstance } from './TemplateInstance';
 
 // Suppress is a flag that is specific to an element. It should not be inherited by children
 const ELEMENT_SPECIFIC_FIELDS = ['suppress'];
 const API_BASE = Config.api.baseUrl;
+
+const showPresets = (mongoId) => {
+  return axios.get(`${API_BASE}/expressions/group/${mongoId}`);
+}
+
+const getValueAtPath = (obj, path) => {
+    if (typeof path === "string") {
+      path = path.split(".");
+    }
+
+    if (path.length > 1) {
+      if (!path[0].length) {
+        path.shift();
+        return getValueAtPath(obj, path);
+      }
+      var e = path.shift();
+      if (Object.prototype.toString.call(obj[e]) === '[object Object]'
+          || Object.prototype.toString.call(obj[e]) === '[object Array]') {
+        return getValueAtPath(obj[e], path);
+      } else {
+        return getValueAtPath({}, path)
+      }
+    } else {
+      if (obj[path[0]] === undefined || path[0].length === 0) {
+        return obj;
+      }
+      return obj[path[0]];
+    }
+}
 
 class BuilderPage extends Component {
   static contextTypes = {
@@ -22,48 +50,28 @@ class BuilderPage extends Component {
     super(props);
 
     this.state = {
-      selectedGroup: null,
-      templateInstances: [],
+      instanceTree: {},
       name: 'Untitled Artifact',
       id: null,
       version: null,
-      groups: []
+      categories: []
     };
-
-    this.setTemplateInstances = this.setTemplateInstances.bind(this);
-    this.saveArtifact = this.saveArtifact.bind(this);
-    this.downloadCQL = this.downloadCQL.bind(this);
-    this.updateSingleElement = this.updateSingleElement.bind(this);
-    this.manageTemplateExtensions = this.manageTemplateExtensions.bind(this);
-  }
-
-  // Loads an existing artifact
-  loadExistingArtifact() {
-    if (this.props.match.params.id) {
-      // fetch the relevant artifact from the server.
-      const id = this.props.match.params.id;
-      axios.get(`${API_BASE}/artifacts/${id}`)
-        .then((res) => {
-          const artifact = res.data[0];
-          this.setState({
-            id: artifact._id,
-            name: artifact.name,
-            version: artifact.version,
-            templateInstances: artifact.templateInstances
-          });
-        });
-    }
   }
 
   // Loads templates and checks if existing artifact
   componentDidMount() {
     axios.get(`${API_BASE}/config/templates`)
       .then((result) => {
-        this.setState({ groups: result.data });
+        this.setState({categories : result.data});
         this.manageTemplateExtensions();
-        if (this.props.match) {
-          this.setSelectedGroup(this.props.match.params.group);
+        if (this.props.match.params.id) {
           this.loadExistingArtifact();
+        } else {
+          const operations = result.data.find(g => g.name === 'Operations');
+          const andTemplate = operations.entries.find(e => e.name === 'And');
+          const andInstance = createTemplateInstance(andTemplate);
+          andInstance.path = '';
+          this.initializeInstanceTree(andInstance);
         }
       })
       .catch((error) => {
@@ -71,10 +79,24 @@ class BuilderPage extends Component {
       });
   }
 
-  manageTemplateExtensions() {
+  // Loads an existing artifact
+  loadExistingArtifact = () => {
+    // fetch the relevant artifact from the server.
+    const id = this.props.match.params.id;
+    axios.get(`${API_BASE}/artifacts/${id}`)
+      .then((res) => {
+        const artifact = res.data[0];
+        this.setState({ id: artifact._id });
+        this.setState({ name: artifact.name });
+        this.setState({ version: artifact.version });
+        this.setState({ instanceTree: artifact.instanceTree });
+      });
+  }
+
+  manageTemplateExtensions = () => {
     const entryMap = {};
-    this.state.groups.forEach((group) => {
-      group.entries.forEach((entry) => {
+    this.state.categories.forEach((cat) => {
+      cat.entries.forEach((entry) => {
         entryMap[entry.id] = entry;
       });
     });
@@ -90,17 +112,18 @@ class BuilderPage extends Component {
     // this.state.groups without using React's this.setState
     this.setState({ groups: this.state.groups });
   }
-  mergeInParentTemplate(entry, entryMap) {
-    const parent = entryMap[entry.extends];
+
+  mergeInParentTemplate = (entry, entryMap) => {
+    let parent = entryMap[entry.extends]
     if (parent.extends) {
       // handle transitive
       this.mergeInParentTemplate(parent, entryMap);
     }
 
     /* Merge entry fields with parent but remove fields that are should not be inherited.
-     * This merges the entry into the parent (minus non-inherited fields) so the entry updates the
-     * fields it sets itself so inheritance works correctly. Then merge that object back onto entry
-     * so that the entry object has the new updated values */
+     * This merges the entry into the parent (minus non-inherited fields) so the entry updates the fields
+     * it sets itself so inheritance works correctly. Then merge that object back onto entry so that
+     * the entry object has the new updated values */
     _.merge(entry, _.merge(_.omit(_.cloneDeep(parent), ELEMENT_SPECIFIC_FIELDS), entry));
 
     // merge parameters
@@ -112,10 +135,10 @@ class BuilderPage extends Component {
     entry.parameters = missing.concat(entry.parameters); // eslint-disable-line no-param-reassign
   }
 
-  downloadCQL() {
+  downloadCQL = () => {
     const artifact = {
       name: this.state.name,
-      templateInstances: this.state.templateInstances
+      instanceTree: this.state.instanceTree
     };
     axios({
       method: 'post',
@@ -131,8 +154,8 @@ class BuilderPage extends Component {
       });
   }
 
-  saveArtifact(exitPage) {
-    const artifact = { name: this.state.name, templateInstances: this.state.templateInstances };
+  saveArtifact = (exitPage) => {
+    const artifact = { name: this.state.name, instanceTree: this.state.instanceTree };
     if (this.state.id) artifact._id = this.state.id;
 
     const handleSave = (result) => {
@@ -161,97 +184,108 @@ class BuilderPage extends Component {
     }
   }
 
-  componentWillReceiveProps(nextProps) {
-    if (!nextProps.match) { return; }
-    if (this.props.match.params.group !== nextProps.match.params.group) {
-      this.setSelectedGroup(nextProps.match.params.group);
+  saveInstance = (path) => {
+    const target = getValueAtPath(path);
+
+    if (target) {
+      axios.post(`${API_BASE}/expressions`, target)
+        .then((result) => {
+          console.log('Done');
+        })
+        .catch((error) => {
+          console.log('Fail');
+        });
     }
   }
 
-  setSelectedGroup(groupId) {
-    const group = this.state.groups.find(g => parseInt(g.id, 10) === parseInt(groupId, 10));
-    if (group) {
-      this.setState({ selectedGroup: group });
+  initializeInstanceTree = (instance) => {
+    this.setState({ instanceTree: instance });
+  }
+
+  addInstance = (instance, parentPath) => {
+    const tree = _.cloneDeep(this.state.instanceTree);
+    const target = getValueAtPath(tree, parentPath).childInstances;
+    const index = target.length;
+    instance.path = parentPath + '.childInstances.' + index;
+    target.push(instance);
+
+    this.setState({ instanceTree: tree });
+    console.log(tree);
+  }
+
+  editInstance = (editedParams, path, editingConjunctionType = false) => {
+    const tree = _.cloneDeep(this.state.instanceTree);
+    const target = getValueAtPath(tree, path);
+
+    if (editingConjunctionType) {
+      target.id = editedParams.id;
+      target.name = editedParams.name;
     } else {
-      this.setState({ selectedGroup: null });
-    }
-  }
+      // function to retrieve relevant parameter
+      const paramIndex = target.parameters.findIndex(
+        param => Object.prototype.hasOwnProperty.call(editedParams, param.id));
 
-  setTemplateInstances(elements) {
-    this.setState({ templateInstances: elements });
-  }
-
-  updateSingleElement(instanceId, state) {
-    const elements = this.state.templateInstances;
-    const elementIndex = elements.findIndex(element =>
-      // get relevant element
-       element.uniqueId === instanceId);
-
-    if (elementIndex !== undefined) {
-      // get relevant parameter
-      const paramIndex = elements[elementIndex].parameters.findIndex(
-        param => Object.prototype.hasOwnProperty.call(state, param.id));
-
-      // edit element with new value using immutability-helper
-      const editedElements = update(elements, {
-        [elementIndex]: {
-          parameters: {
-            [paramIndex]: {
-              value: { $set: state[elements[elementIndex].parameters[paramIndex].id] }
-            }
-          }
-        }
+      Object.keys(editedParams).forEach(function(key) {
+        target.parameters[paramIndex][key] = editedParams[key];
       });
-
-      // merge back into templateInstances
-      this.setState({ templateInstances: editedElements });
     }
+
+    this.setState({ instanceTree: tree });
   }
 
-  renderSidebar() {
-    if (this.state.selectedGroup) {
-      return <BuilderSubPalette
-        selectedGroup={this.state.selectedGroup}
-        updateTemplateInstances={this.setTemplateInstances}
-        templateInstances={this.state.templateInstances} />;
-    }
-    return null;
+  deleteInstance = (path) => {
+    const tree = _.cloneDeep(this.state.instanceTree);
+    const index = path.slice(-1);
+    path = path.slice(0, path.length - 2);
+    const target = getValueAtPath(tree, path);
+    target.splice(index, 1);
+
+    this.setState({ instanceTree: tree});
   }
 
   render() {
     return (
       <div className="builder">
         <header className="builder__header">
-          <h2 className="builder__heading">{this.state.name}</h2>
+          <h2 className="builder__heading">{ this.state.name }</h2>
           <div className="builder__buttonbar">
-            <button onClick={() => this.saveArtifact(false)}
+            <button onClick={ () => this.saveArtifact(false) }
               className="builder__savebutton is-unsaved">
               Save and Continue
             </button>
-            <button onClick={this.downloadCQL}
+            <button onClick={ this.downloadCQL }
               className="builder__cqlbutton is-unsaved">
               Download CQL
             </button>
-            <button onClick={() => this.saveArtifact(true)}
+            <button onClick={ () => this.saveArtifact(true) }
               className="builder__deletebutton">
               Save and Close
             </button>
           </div>
         </header>
         <section className="builder__panel">
-          <div className="builder__sidebar">
-            <BuilderPalette
-              selectedGroup={this.state.selectedGroup}
-              templateInstances={this.state.templateInstances}
-              updateTemplateInstances={this.setTemplateInstances}
-              groups={this.state.groups} />
-            {this.renderSidebar()}
-          </div>
-          <BuilderTarget
-            updateTemplateInstances={this.setTemplateInstances}
-            updateSingleElement={this.updateSingleElement}
-            templateInstances={this.state.templateInstances}
-            groups={this.state.groups} />
+            <section className="builder__canvas">
+              {
+                this.state.instanceTree.childInstances ?
+                  <ConjunctionGroup
+                    root={ true }
+                    getPath={ this.getPath }
+                    key={ this.state.instanceTree.uniqueId }
+                    instance={ this.state.instanceTree }
+                    addInstance={ this.addInstance }
+                    saveInstance={ this.saveInstance }
+                    deleteInstance={ this.deleteInstance }
+                    getChildrenOfInstance={ this.getChildrenOfInstance }
+                    templateInstances={ this.state.templateInstances }
+                    updateSingleInstance={ this.editInstance }
+                    updateTemplateInstances={ this.updateTemplateInstances }
+                    showPresets={ showPresets }
+                    categories={ this.state.categories }
+                  />
+                :
+                  <p>Loading...</p>
+              }
+            </section>
         </section>
       </div>
     );
