@@ -146,6 +146,7 @@ class BuilderPage extends Component {
 
   // Downloads the cql by making an API call and passing artifact
   downloadCQL = () => {
+    console.log(this.prepareArtifact())
     axios({
       method : 'post',
       url : `${API_BASE}/cql`,

@@ -142,7 +142,7 @@ class ConjunctionGroup extends Component {
                 className="conjunction-group__conjunction-child">
                 <TemplateInstance
                   getPath={ this.getChildsPath }
-                  treeName = {this.props.name }
+                  treeName={ this.props.name }
                   templateInstance={ instance }
                   otherInstances={ this.props.getAllInstances(this.props.name) }
                   editInstance={ this.props.editInstance }
