@@ -13,8 +13,8 @@ include FHIRHelpers version '1.0.2' called FHIRHelpers
  * @param C - a FHIR CodeableConcept
  * @returns {System.Concept} a CQL Concept or null if null was passed in
  */
-define function NullSafeToConcept(C FHIR.CodeableConcept):
-  if C is not null then FHIRHelpers.ToConcept(C) else null
+define function NullSafeToConcept(Cpt FHIR.CodeableConcept):
+  if Cpt is not null then FHIRHelpers.ToConcept(Cpt) else null
 
 /**
  * A null-safe version of ToInterval.  Whereas FHIRHelpers.ToInterval will take a null argument and produce a
@@ -22,8 +22,8 @@ define function NullSafeToConcept(C FHIR.CodeableConcept):
  * @param P - a FHIR Period
  * @returns {System.Interval} a CQL Interval or null if null was passed in
  */
-define function NullSafeToInterval(P FHIR.Period):
-  if P is not null then FHIRHelpers.ToInterval(P) else null
+define function NullSafeToInterval(Pd FHIR.Period):
+  if Pd is not null then Interval[Pd."start".value, Pd."end".value] else null
 
 /**
  * A null-safe version of ToQuantity.  Whereas FHIRHelpers.ToQuantity will take a null argument and produce a
@@ -31,11 +31,11 @@ define function NullSafeToInterval(P FHIR.Period):
  * @param C - a FHIR Quantity
  * @returns {System.Quantity} a CQL Quantity or null if null was passed in
  */
-define function NullSafeToQuantity(Q FHIR.Quantity):
-  if Q is not null then
+define function NullSafeToQuantity(Qty FHIR.Quantity):
+  if Qty is not null then
     System.Quantity {
-      value: Q.value.value,
-      unit: Coalesce(Q.unit.value, Q.code.value)
+      value: Qty.value.value,
+      unit: Coalesce(Qty.unit.value, Qty.code.value)
     }
   else null
 
@@ -93,7 +93,7 @@ define function ObservationLookBack(ObsList List<Observation>, LookBack System.Q
  * @returns {Observation} the most recent Observation from the list, or null if null was passed in
  */
 define function MostRecent(ObsList List<Observation>):
-  Last(ObsList O sort by FindDate(O))
+  Last(ObsList O sort by Coalesce(effectiveDateTime.value, effectivePeriod."end".value, effectivePeriod."start".value, issued.value))
 
 /**
  * Extracts the quantity value from an Observation, returning it as a CQL Quantity
@@ -121,6 +121,15 @@ define function FindDate(Obs Observation):
   Coalesce(Obs.effectiveDateTime.value, Obs.effectivePeriod."end".value, Obs.effectivePeriod."start".value, Obs.issued.value)
 
 // -------------------------------------------------- CONDITIONS -------------------------------------------------------
+
+/**
+ * Filters Conditions by a concept rather than by a ValueSet.  In CQL 1.3, this will be built into the retrieve,
+ * but for now, we must use a query where clause.
+ * @param Koncept - the concept to filter on (intentionally mispelled to avoid naming clashes)
+ * @returns {List<Observation>} a list of Conditions matching the concept, or null if null was passed in
+ */
+define function ConditionsByConcept(Koncept System.Concept):
+  [Condition] C where NullSafeToConcept(C.code) ~ Koncept
 
 /**
  * Conditions that are confirmed. In FHIR DSTU2, this is reflected by verificationStatus: 'confirmed'.
