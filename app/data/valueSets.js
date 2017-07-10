@@ -93,6 +93,17 @@ module.exports = {
         oid: '2.16.840.1.113883.3.600.2390'
       }
     },
+    ldl_test : {
+      // [See value set in VSAC](https://vsac.nlm.nih.gov/valueset/2.16.840.1.113883.3.464.1003.198.11.1029/expansion)
+      id: "ldl_test",
+      observations: [
+        {
+          name: "LDL Test",
+          oid: '2.16.840.1.113883.3.464.1003.198.11.1029',
+        }
+      ],
+      units: {values: ["'mg/dL'"], code: "'mg/dL'"},
+    },
   },
   demographics: {
     gender: {
@@ -139,8 +150,8 @@ module.exports = {
       id: "hypertension",
       conditions: [
         {
-          name: "Essential Hypertension",
-          oid: '2.16.840.1.113883.3.464.1003.104.12.1011'
+          name: "Hypertension",
+          oid: '2.16.840.1.113762.1.4.1032.9'
         }
       ]
     },
@@ -153,24 +164,14 @@ module.exports = {
           oid: '2.16.840.1.113883.3.526.3.403'
         },
         {
-       // https://ushik.ahrq.gov/ViewItemDetails?&system=mu&itemKey=212224000
-          name: "Atherosclerosis and peripheral arterial disease",
-          oid: '2.16.840.1.113762.1.4.1047.21'
+       // [See Acute myocardial infarction value set in VSAC](https://vsac.nlm.nih.gov/valueset/2.16.840.1.113883.3.464.1003.104.12.1001/expansion)
+          name: "Acute myocardial infarction",
+          oid: '2.16.840.1.113883.3.464.1003.104.12.1001'
         },
         {
-       // TODO: Reused from statin CQM artifact; needs review against other value sets in VSAC.
-          name: "Cerebrovascular disease, Stroke, TIA",
-          oid: '2.16.840.1.113762.1.4.1047.44'
-        },
-        {
-       // TODO: Reused from statin CQM artifact; needs review against other value sets in VSAC.
-          name: "Stable and unstable angina",
-          oid: '2.16.840.1.113762.1.4.1047.47'
-        },
-        {
-       // TODO: Reused from statin CQM artifact; needs review against other value sets in VSAC.
-          name: "Ischemic heart disease or coronary occlusion, rupture, or thrombosis",
-          oid: '2.16.840.1.113762.1.4.1047.46'
+       // [See value set in VSAC](https://vsac.nlm.nih.gov/valueset/2.16.840.1.113883.3.464.1003.104.12.1003/expansion)
+          name: "Ischemic vascular disease",
+          oid: '2.16.840.1.113883.3.464.1003.104.12.1003'
         }
       ]
     },
@@ -212,7 +213,7 @@ module.exports = {
            {
              name: 'Pregnant code',
              code: '77386006',
-             codeSystem: { name: 'SNOMED-CT', id: 'http://snomed.info'},
+             codeSystem: { name: 'SNOMED-CT', id: 'http://snomed.info/sct/1000124'},
              display: 'Patient currently pregnant (finding)',
            }
          ],
@@ -276,6 +277,25 @@ module.exports = {
           oid: '2.16.840.1.113883.3.67.1.101.1.269'
         }
       ]
+    },
+    cirrhosis : {
+      id: "cirrhosis",
+      conditions: [
+        {
+          name: "Cirrhosis",
+          oid: '2.16.840.1.113762.1.4.1032.14'
+        }
+      ]
+    },
+    familial_hypercholesterolemia : {
+     // TODO: Reused from statin CQM artifact; needs review against other value sets in VSAC.
+     id: "familial_hypercholesterolemia",
+     conditions: [
+       {
+         name: "Familial Hypercholesterolemia",
+         oid: '2.16.840.1.113762.1.4.1032.15'
+       }
+     ]
     },
   },
   medications: {

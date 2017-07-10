@@ -125,6 +125,15 @@ module.exports = [
           { id: 'observation', type:'breastfeeding', static: true, value: "breastfeeding"}
         ]
       },
+      {
+        id: 'LDLTest',
+        name: 'LDL Test',
+        extends: 'GenericObservation',
+        parameters: [
+          { id: 'element_name', value: "LDL Test"},
+          { id: 'observation', static: true, value: "ldl_test"}
+        ]
+      },
     ]
   },
   {
@@ -315,8 +324,17 @@ module.exports = [
         name: 'Liver Disease',
         extends: 'GenericCondition',
         parameters: [
-          { id: 'element_name', value: 'HasCirrhosis' },
+          { id: 'element_name', value: 'HasLiverDisease' },
           { id: 'condition', static: true, value: 'liver_disease' }
+        ]
+      },
+      {
+        id: 'Cirrhosis',
+        name: 'Cirrhosis',
+        extends: 'GenericCondition',
+        parameters: [
+          { id: 'element_name', value: 'HasCirrhosis' },
+          { id: 'condition', static: true, value: 'cirrhosis' }
         ]
       },
       {
@@ -344,6 +362,15 @@ module.exports = [
         parameters: [
           { id: 'element_name', value: 'HasHepatitisB' },
           { id: 'condition', static: true, value: 'hepatitis_b' }
+        ]
+      },
+      {
+        id: 'FamilialHypercholesterolemia',
+        name: 'Familial Hypercholesterolemia',
+        extends: 'GenericCondition',
+        parameters: [
+          { id: 'element_name', value: 'Familial Hypercholesterolemia' },
+          { id: 'condition', static: true, value: 'familial_hypercholesterolemia' }
         ]
       },
     ]
