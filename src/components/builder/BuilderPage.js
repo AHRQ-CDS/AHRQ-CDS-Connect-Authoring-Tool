@@ -6,7 +6,8 @@ import _ from 'lodash';
 import moment from 'moment';
 
 import ConjunctionGroup from './ConjunctionGroup';
-import Config from '../../../config';
+import Recommendations from './Recommendations';
+import Config from '../../../config'
 import { createTemplateInstance } from './TemplateInstance';
 
 // Suppress is a flag that is specific to an element. It should not be inherited by children
@@ -371,7 +372,7 @@ class BuilderPage extends Component {
               { this.renderConjunctionGroup('expTreeExclude') }
             </TabPanel>
             <TabPanel>
-              Recommendations!
+              <Recommendations />
             </TabPanel>
           </Tabs>
         </section>

@@ -1,5 +1,12 @@
 // third-party
 @import 'bourbon';
+// @import 'bulma';
+// @import "bulma/sass/utilities/_all.sass"; // figure out how to get node-sass to do this.
+@import "../bulma/sass/utilities/_all.sass"; // figure out how to get node-sass to do this.
+@import "../bulma/sass/base/helpers.sass"; // figure out how to get node-sass to do this.
+// @import "../bulma/sass/base/_all.sass"; // figure out how to get node-sass to do this.
+@import "../bulma/sass/elements/form.sass"; // figure out how to get node-sass to do this.
+@import "../bulma/sass/elements/button.sass"; // figure out how to get node-sass to do this.
 
 // site-wide
 @import 'variables';
