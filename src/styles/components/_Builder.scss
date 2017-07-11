@@ -11,7 +11,7 @@
   }
 
   &__canvas {
-    min-height: 8em;
+    padding-bottom: 1em;
   }
 
   .react-tabs {
@@ -46,7 +46,7 @@
     }
 
     [role=tabpanel] {
-      padding: 1em;
+      margin: 0 1em;
     }
 
     .tab__buttonbar {
