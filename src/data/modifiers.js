@@ -41,24 +41,6 @@ module.exports = [
     comparisonOperator: null
   },
   {
-    id: 'BooleanComparison',
-    name: 'Equality Comparison',
-    inputTypes: ['boolean'],
-    returnType: 'boolean',
-    values: {value: undefined},
-    cqlTemplate: 'postModifier',
-    comparisonOperator: null
-  },
-  {
-    id: 'CheckExistence',
-    name: 'Check Existence',
-    inputTypes: elementLists,
-    returnType: 'boolean',
-    values: {value: undefined},
-    cqlTemplate: 'postModifier',
-    comparisonOperator: null
-  },
-  {
     id: 'QuantityValue',
     name: 'Quantity Value',
     inputTypes: ['observation'],
@@ -84,7 +66,7 @@ module.exports = [
     cqlLibraryFunction: null
   },
   {
-    id: 'ConvertMgToDL',
+    id: 'ConvertToMgPerdL',
     name: 'Convert to mg per dL',
     inputTypes: ['system_quantity'],
     returnType: 'system_quantity',
@@ -154,6 +136,24 @@ module.exports = [
     cqlTemplate: 'BaseModifier',
     cqlLibraryFunction: 'exists'
   },
+  // {
+  //   id: 'BooleanComparison',
+  //   name: 'Equality Comparison',
+  //   inputTypes: ['boolean'],
+  //   returnType: 'boolean',
+  //   values: {value: undefined},
+  //   cqlTemplate: 'postModifier',
+  //   comparisonOperator: null
+  // },
+  // {
+  //   id: 'CheckExistence',
+  //   name: 'Check Existence',
+  //   inputTypes: elementLists,
+  //   returnType: 'boolean',
+  //   values: {value: undefined},
+  //   cqlTemplate: 'postModifier',
+  //   comparisonOperator: null
+  // },
   {
     id: 'BooleanNot',
     name: 'Not',

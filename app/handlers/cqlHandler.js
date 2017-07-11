@@ -146,7 +146,6 @@ class CqlArtifact {
               if(!_.isEmpty(element.modifiers) && _.last(element.modifiers).id === "InStatement") {
                 _.last(element.modifiers).values = observationValueSets.checkInclusionInVS.name;
               }
-              console.log(element.modifiers)
               this.resourceMap.set(observationValueSets.checkInclusionInVS.name, observationValueSets.checkInclusionInVS);
             }
             context.values = [ observationValueSets.name ];
@@ -258,8 +257,16 @@ class CqlArtifact {
           }
           context[parameter.id] = parameter.value;
           break;
-        case 'comparison':
-          context.doubleSided = (parameter.id === "comparison_2");
+        case 'dropdown':
+          if (parameter.id == "comparison") {
+            context.doubleSided = false;
+            element.parameters.forEach(parameter => {
+              if (parameter.id === "comparison_2") {
+                context.doubleSided = true;
+              }
+            })
+          }
+          context.values = context.values || []
           context[parameter.id] = parameter.value;
           break;
         default:
@@ -273,6 +280,20 @@ class CqlArtifact {
     context.element_name = (context.element_name || element.uniqueId);
     this.contexts.push(context)
   }
+
+  /* Modifiers Explanation:
+    Within `form_templates`, a template must be specified (unless extending an element that specifies a template).
+    If the element specifies a template within the folder `specificTemplates` it's assumed that element will not have modifiers
+      In this case, just render the element.
+    Otherwise:
+      At this point, context.values should contain an array of each part of this element's CQL
+        (e.g. ["CABG Surgeries", "Coronary artery bypass graft", "PCI ICD10CM SNOMEDCT", "PCI ICD9CM", "Carotid intervention"])
+      Because each of these elements requires the modifier to be applied to them, loop through and render the base template (not modifier!)
+        (e.g. ["[Procedure: "CABG Surgeries"]", "[Procedure: "Coronary artery bypass graft"]", "[Procedure: "PCI ICD10CM SNOMEDCT"]", "[Procedure: "PCI ICD9CM"]", "[Procedure: "Carotid intervention"]"])
+      Then call `applyModifiers`. For each of these values, go through and apply each of the modifiers to them (by rendering the modifier template, and passing them in)
+      Finally, join all these string with "\n  or " and return this (potentially-large) multi-line string.
+      Render the `BaseTemplate`, which just gives adds the `define` statement, and inserts this string below it
+  */
 
   // Both parameters are arrays. All modifiers will be applied to all values, and joined with "\n or".
   applyModifiers (values, modifiers = []) { // default modifiers to []

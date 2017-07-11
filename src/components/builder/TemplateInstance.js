@@ -3,27 +3,31 @@ import axios from 'axios';
 import FontAwesome from 'react-fontawesome';
 import _ from 'lodash';
 import update from 'immutability-helper';
-import NumberParameter from './parameters/NumberParameter';
-import StringParameter from './parameters/StringParameter';
-import ObservationParameter from './parameters/ObservationParameter';
-import NullCheckingParameter from './parameters/NullCheckingParameter';
-import ValueSetParameter from './parameters/ValueSetParameter';
-import ListParameter from './parameters/ListParameter';
-import CaseParameter from './parameters/CaseParameter';
-import StaticParameter from './parameters/StaticParameter';
-import CheckBoxParameter from './parameters/CheckBoxParameter';
-import IfParameter from './parameters/IfParameter';
-import BooleanParameter from './parameters/BooleanParameter';
 import Config from '../../../config';
+
+// Try to keep these ordered same as in folder (i.e. alphabetically)
+import BooleanParameter from './parameters/BooleanParameter';
+import CaseParameter from './parameters/CaseParameter';
+import CheckBoxParameter from './parameters/CheckBoxParameter';
+import CommonDropdownParameter from './parameters/CommonDropdownParameter'
+import IfParameter from './parameters/IfParameter';
+import ListParameter from './parameters/ListParameter';
+import NullCheckingParameter from './parameters/NullCheckingParameter';
+import NumberParameter from './parameters/NumberParameter';
+import ObservationParameter from './parameters/ObservationParameter';
+import StaticParameter from './parameters/StaticParameter';
+import StringParameter from './parameters/StringParameter';
+import ValueSetParameter from './parameters/ValueSetParameter';
+
 import Modifiers from '../../data/modifiers.js';
-import LablModifier from './modifiers/LabelModifier';
+import BooleanComparison from './modifiers/BooleanComparison';
+import CheckExistence from './modifiers/CheckExistence';
+import LabelModifier from './modifiers/LabelModifier';
+import LookBack from './modifiers/LookBack';
 import ValueComparison from './modifiers/ValueComparison';
 import ValueComparisonObservation from './modifiers/ValueComparisonObservation';
-import BooleanComparison from './modifiers/BooleanComparison';
-import CommonDropdownParameter from './parameters/CommonDropdownParameter'
-import CheckExistence from './modifiers/CheckExistence';
-import LookBack from './modifiers/LookBack';
 import WithUnit from './modifiers/WithUnit';
+
 const API_BASE = Config.api.baseUrl;
 
 // TODO Move these options to a better spot
@@ -312,7 +316,7 @@ class TemplateInstance extends Component {
               updateAppliedModifier={this.updateAppliedModifier}/>
           );
         default:
-          return (<LablModifier key={index} name={modifier.name} id={modifier.id}/>);
+          return (<LabelModifier key={index} name={modifier.name} id={modifier.id}/>);
       }
     })(modifier);
 
@@ -346,7 +350,6 @@ class TemplateInstance extends Component {
     if (_.isUndefined(returnType)) {
       returnType = (_.last(this.state.appliedModifiers) || this.props.templateInstance).returnType;
     }
-    console.log("FILTER BY: " + returnType);
     this.setState({returnType: returnType});
     this.setState({relevantModifiers: (this.modifersByInputType[returnType] || [])});
   }
