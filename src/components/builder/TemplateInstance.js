@@ -162,7 +162,7 @@ class TemplateInstance extends Component {
     const otherInstances = props.otherInstances.filter(this.notThisInstance).map(
       instance => ({ name: getInstanceName(instance),
         id: instance.id,
-        returnType: (!_.isEmpty(instance.modifiers) ? _.last(instance.modifiers).returnType : instance.returnType) }));
+        returnType: (_.isEmpty(instance.modifiers) ? instance.returnType : _.last(instance.modifiers).returnType) }));
     return otherInstances;
   }
 
@@ -323,7 +323,7 @@ class TemplateInstance extends Component {
     return (
       <div key={index} className="modifier">
         {modifierForm}
-        { (index + 1 == this.state.appliedModifiers.length)
+        { (index + 1 === this.state.appliedModifiers.length)
           ? <button
             onClick={this.removeLastModifier}
             className="modifier__deletebutton"
@@ -379,7 +379,7 @@ class TemplateInstance extends Component {
     // filter modifiers?
     return (
       <div>
-        { (this.state.relevantModifiers.length > 0 || this.state.appliedModifiers.length == 0)
+        { (this.state.relevantModifiers.length > 0 || this.state.appliedModifiers.length === 0)
           ?
             <div className="modifier__selection">
               <button

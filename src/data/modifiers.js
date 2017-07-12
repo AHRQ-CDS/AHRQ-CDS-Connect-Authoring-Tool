@@ -34,9 +34,9 @@ module.exports = [
   {
     id: 'ValueComparisonObservation',
     name: 'Value Comparison',
-    inputTypes: ['observation'],
+    inputTypes: ['system_quantity'],
     returnType: 'boolean',
-    values: {minOperator: undefined, minValue: undefined, maxOperator: undefined, maxValue: undefined, comparisonUnit: null},
+    values: {minOperator: undefined, minValue: '', maxOperator: undefined, maxValue: '', comparisonUnit: null},
     cqlTemplate: 'ValueComparisonObservation',
     comparisonOperator: null
   },

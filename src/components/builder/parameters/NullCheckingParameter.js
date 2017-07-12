@@ -1,7 +1,6 @@
 import React from 'react';
 import Select from 'react-select';
 import _ from 'lodash';
-import FontAwesome from 'react-fontawesome';
 
 export default (props) => {
   const id = _.uniqueId('parameter-');
