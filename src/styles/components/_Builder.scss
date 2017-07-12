@@ -12,13 +12,16 @@
 
   &__canvas {
     padding-bottom: 1em;
+    margin: 0 -2em;
   }
 
   .react-tabs {
+    margin: auto -2em;
+
     [role=tablist] {
       background-color: $body-bg;
-      margin: 0 0 1em;
-      padding: 0;
+      margin: 0 2em 2em;
+      padding: 0 2em;
       font-weight: 400;
     }
 
@@ -46,7 +49,8 @@
     }
 
     [role=tabpanel] {
-      margin: 0 1em;
+      margin: 0 2em 1em;
+      padding: 0 2em;
     }
 
     .tab__buttonbar {

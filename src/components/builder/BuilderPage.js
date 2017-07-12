@@ -343,7 +343,7 @@ class BuilderPage extends Component {
           <h2 className="builder__heading">{ this.state.name }</h2>
         </header>
         <section className="builder__canvas">
-          <Tabs>
+          <Tabs defaultIndex={2}>
             <TabList>
               <Tab>Inclusions</Tab>
               <Tab>Exclusions</Tab>
@@ -372,7 +372,7 @@ class BuilderPage extends Component {
               { this.renderConjunctionGroup('expTreeExclude') }
             </TabPanel>
             <TabPanel>
-              <Recommendations />
+              <Recommendations categories={this.state.categories} />
             </TabPanel>
           </Tabs>
         </section>

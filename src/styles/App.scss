@@ -1,12 +1,10 @@
 // third-party
 @import 'bourbon';
-// @import 'bulma';
-// @import "bulma/sass/utilities/_all.sass"; // figure out how to get node-sass to do this.
-@import "../bulma/sass/utilities/_all.sass"; // figure out how to get node-sass to do this.
-@import "../bulma/sass/base/helpers.sass"; // figure out how to get node-sass to do this.
-// @import "../bulma/sass/base/_all.sass"; // figure out how to get node-sass to do this.
-@import "../bulma/sass/elements/form.sass"; // figure out how to get node-sass to do this.
-@import "../bulma/sass/elements/button.sass"; // figure out how to get node-sass to do this.
+@import "../bulma/sass/utilities/_all.sass";
+@import "../bulma/sass/base/helpers.sass";
+@import "../bulma/sass/elements/title.sass";
+@import "../bulma/sass/elements/form.sass";
+@import "../bulma/sass/elements/button.sass";
 
 // site-wide
 @import 'variables';
@@ -24,3 +22,4 @@
 @import 'components/Artifact';
 @import 'components/ConjunctionGroup';
 @import 'components/ElementSelect';
+@import 'components/Recommendation';
