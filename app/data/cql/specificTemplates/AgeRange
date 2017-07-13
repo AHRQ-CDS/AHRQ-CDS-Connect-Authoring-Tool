@@ -1,2 +1,2 @@
-define "<%=element_name%>":
+define "<%-element_name%>":
   <%if (min_age >=0) {%>AgeInYears()>=<%=min_age%><%}%><%if (min_age >=0 && max_age >= 0) {%> and <%}%><%if (max_age >=0) {%>AgeInYears()<=<%=max_age%><%}%>

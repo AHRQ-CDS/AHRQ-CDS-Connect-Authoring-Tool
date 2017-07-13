@@ -1,0 +1,6 @@
+define "MostRecentBreastfeedingObservation":
+  C3F.MostRecent(C3F.Verified(C3F.ObservationLookBack(C3F.ObservationsByConcept("<%=breastfeedingCodeConcept%>"), 1 year)))
+
+define "<%-element_name%>":
+  Exists(C3F.Confirmed(C3F.ActiveCondition([Condition: "<%=valueSetName%>" ])))
+  or C3F.ConceptValue(MostRecentBreastfeedingObservation) ~ "<%=breastfeedingYesConcept%>"

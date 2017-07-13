@@ -60,6 +60,7 @@ class CaseParameter extends Component {
   updateCase(value, index, option) {
     this.props.updateCase(this.props.param.id, value, index, option);
     this.updateOptions(value, option);
+    this.props.setCaseReturnType(this.checkArrayType(option));
   }
 
   // Updates single selects

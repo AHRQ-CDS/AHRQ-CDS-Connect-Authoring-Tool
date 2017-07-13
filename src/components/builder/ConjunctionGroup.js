@@ -19,11 +19,12 @@ class ConjunctionGroup extends Component {
     instance: PropTypes.object.isRequired,
     addInstance: PropTypes.func.isRequired,
     editInstance: PropTypes.func.isRequired,
+    updateInstanceModifiers: PropTypes.func.isRequired,
     deleteInstance: PropTypes.func.isRequired,
     saveInstance: PropTypes.func.isRequired,
     getAllInstances: PropTypes.func.isRequired,
     showPresets: PropTypes.func.isRequired,
-    categories: PropTypes.array.isRequired
+    categories: PropTypes.array.isRequired,
   }
 
   constructor(props) {
@@ -120,6 +121,7 @@ class ConjunctionGroup extends Component {
                   instance={ instance }
                   addInstance={ this.props.addInstance }
                   editInstance={ this.props.editInstance }
+                  updateInstanceModifiers={ this.props.updateInstanceModifiers }
                   deleteInstance={ this.props.deleteInstance }
                   saveInstance={ this.props.saveInstance }
                   getAllInstances={ this.props.getAllInstances }
@@ -140,6 +142,7 @@ class ConjunctionGroup extends Component {
                   templateInstance={ instance }
                   otherInstances={ this.props.getAllInstances(this.props.name) }
                   editInstance={ this.props.editInstance }
+                  updateInstanceModifiers={ this.props.updateInstanceModifiers }
                   deleteInstance={ this.props.deleteInstance }
                   saveInstance={ this.props.saveInstance }
                   showPresets={ this.props.showPresets }

@@ -2,16 +2,9 @@ import React, { Component } from 'react';
 import Select from 'react-select';
 import _ from 'lodash';
 
-class ComparisonParameter extends Component {
+class CommonDropdownParameter extends Component {
 
   render() {
-    const option = [{ value: '>', label: 'greater than' },
-                      { value: '>=', label: 'greater than or equal to' },
-                      { value: '=', label: 'equal to' },
-                      { value: '!=', label: 'not equal to' },
-                      { value: '<', label: 'less than' },
-                      { value: '<=', label: 'less than or equal to' },
-    ];
     const id = _.uniqueId('parameter-');
     return (
       <div className="form__group">
@@ -19,7 +12,7 @@ class ComparisonParameter extends Component {
           {this.props.param.name}:
           <Select
             autofocus
-            options={option}
+            options={this.props.option}
             name={this.props.value}
             value={this.props.param.value}
             onChange={(operator) => {
@@ -33,4 +26,4 @@ class ComparisonParameter extends Component {
   }
 }
 
-export default ComparisonParameter;
+export default CommonDropdownParameter;

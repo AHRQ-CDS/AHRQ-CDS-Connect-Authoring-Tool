@@ -243,6 +243,15 @@ class BuilderPage extends Component {
 
     this.setState({ [treeName]: tree });
   }
+  
+  // TODO: I don't like these methods... must be a better way.
+  updateInstanceModifiers(instanceId, modifiers) {
+    const elements = this.state.templateInstances;
+    const elementIndex = elements.findIndex(element => element.uniqueId === instanceId);
+    if (elementIndex !== undefined) {
+      this.setState({ templateInstances: update(elements, {[elementIndex]: {modifiers: {$set: modifiers}} })});
+    }
+  }
 
   editInstance = (treeName, editedParams, path, editingConjunctionType = false) => {
     const tree = _.cloneDeep(this.state[treeName]);
@@ -316,6 +325,7 @@ class BuilderPage extends Component {
           instance={ this.state[treeName] }
           addInstance={ this.addInstance }
           editInstance={ this.editInstance }
+          updateInstanceModifiers={this.updateInstanceModifiers}
           deleteInstance={ this.deleteInstance }
           saveInstance={ this.saveInstance }
           getAllInstances={ this.getAllInstances }

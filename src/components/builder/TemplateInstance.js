@@ -2,20 +2,50 @@ import React, { Component, PropTypes } from 'react';
 import axios from 'axios';
 import FontAwesome from 'react-fontawesome';
 import _ from 'lodash';
-import NumberParameter from './parameters/NumberParameter';
-import StringParameter from './parameters/StringParameter';
-import ObservationParameter from './parameters/ObservationParameter';
-import ValueSetParameter from './parameters/ValueSetParameter';
-import ListParameter from './parameters/ListParameter';
-import CaseParameter from './parameters/CaseParameter';
-import StaticParameter from './parameters/StaticParameter';
-import ComparisonParameter from './parameters/ComparisonParameter';
-import CheckBoxParameter from './parameters/CheckBoxParameter';
-import IfParameter from './parameters/IfParameter';
-import BooleanParameter from './parameters/BooleanParameter';
+import update from 'immutability-helper';
 import Config from '../../../config';
 
+// Try to keep these ordered same as in folder (i.e. alphabetically)
+import BooleanParameter from './parameters/BooleanParameter';
+import CaseParameter from './parameters/CaseParameter';
+import CheckBoxParameter from './parameters/CheckBoxParameter';
+import CommonDropdownParameter from './parameters/CommonDropdownParameter'
+import IfParameter from './parameters/IfParameter';
+import ListParameter from './parameters/ListParameter';
+import NullCheckingParameter from './parameters/NullCheckingParameter';
+import NumberParameter from './parameters/NumberParameter';
+import ObservationParameter from './parameters/ObservationParameter';
+import StaticParameter from './parameters/StaticParameter';
+import StringParameter from './parameters/StringParameter';
+import ValueSetParameter from './parameters/ValueSetParameter';
+
+import Modifiers from '../../data/modifiers.js';
+import BooleanComparison from './modifiers/BooleanComparison';
+import CheckExistence from './modifiers/CheckExistence';
+import LabelModifier from './modifiers/LabelModifier';
+import LookBack from './modifiers/LookBack';
+import ValueComparison from './modifiers/ValueComparison';
+import ValueComparisonObservation from './modifiers/ValueComparisonObservation';
+import WithUnit from './modifiers/WithUnit';
+
 const API_BASE = Config.api.baseUrl;
+
+// TODO Move these options to a better spot
+// Within form_templates, specify the options tag to some object here
+const commonDropdownOptions = {
+  comparisonOption: [{ value: '>', label: 'greater than' },
+                     { value: '>=', label: 'greater than or equal to' },
+                     { value: '=', label: 'equal to' },
+                     { value: '!=', label: 'not equal to' },
+                     { value: '<', label: 'less than' },
+                     { value: '<=', label: 'less than or equal to' }],
+  nullCheckingOption: [{ value: 'is null', label: 'is null' },
+                       { value: 'is not null', label: 'is not null' }],
+  booleanCheckingOption: [{ value: 'is true', label: 'is true' },
+                          { value: 'is not true', label: 'is not true' },
+                          { value: 'is false', label: 'is false' },
+                          { value: 'is not false', label: 'is not false' }]
+};
 
 export function createTemplateInstance(template, children = undefined) {
   /*
@@ -57,6 +87,7 @@ class TemplateInstance extends Component {
     templateInstance: PropTypes.object.isRequired,
     otherInstances: PropTypes.array.isRequired,
     editInstance: PropTypes.func.isRequired,
+    updateInstanceModifiers: PropTypes.func.isRequired,
     deleteInstance: PropTypes.func.isRequired,
     saveInstance: PropTypes.func.isRequired,
     showPresets: PropTypes.func.isRequired
@@ -65,18 +96,42 @@ class TemplateInstance extends Component {
   constructor(props) {
     super(props);
 
+
+    this.modifierMap = _.keyBy(Modifiers, 'id');
+    this.modifersByInputType = {}
+    Modifiers.forEach((modifier) => { 
+      modifier.inputTypes.forEach((inputType) => {
+        this.modifersByInputType[inputType] = (this.modifersByInputType[inputType] || []).concat(modifier)
+      });
+    });
+
     this.state = {
       resources: {},
       presets: [],
       showElement: true,
-      showPresets: false
+      showPresets: false,
+      relevantModifiers: (this.modifersByInputType[this.props.templateInstance.returnType] || []),
+      appliedModifiers: [], // these get set in component did mount
+      showModifiers: false
     };
+
     this.updateInstance = this.updateInstance.bind(this);
     this.updateNestedInstance = this.updateNestedInstance.bind(this);
     this.updateList = this.updateList.bind(this);
     this.updateCase = this.updateCase.bind(this);
+    this.setCaseReturnType = this.setCaseReturnType.bind(this);
     this.updateIf = this.updateIf.bind(this);
     this.selectTemplate = this.selectTemplate.bind(this);
+    
+    // TODO: all this modifier stuff should probably be pulled out into another component
+    this.renderAppliedModifiers = this.renderAppliedModifiers.bind(this);
+    this.renderAppliedModifier = this.renderAppliedModifier.bind(this);
+    this.renderModifierSelect = this.renderModifierSelect.bind(this);
+    this.removeLastModifier = this.removeLastModifier.bind(this);
+    this.updateAppliedModifier = this.updateAppliedModifier.bind(this);
+    this.handleModifierSelected = this.handleModifierSelected.bind(this);
+    this.filterRelevantModifiers = this.filterRelevantModifiers.bind(this);
+
     this.notThisInstance = this.notThisInstance.bind(this);
     this.addComponent = this.addComponent.bind(this);
     this.updateComparison = this.updateComparison.bind(this);
@@ -92,10 +147,15 @@ class TemplateInstance extends Component {
     const otherInstances = this.getOtherInstances(this.props);
     this.setState({ otherInstances });
 
+    this.setState({returnType: this.props.templateInstance.returnType});
     axios.get(`${API_BASE}/config/resources`)
       .then((result) => {
         this.setState({ resources: result.data });
       });
+  }
+
+  componentDidMount() {
+    this.setAppliedModifiers(this.props.templateInstance.modifiers || []);
   }
 
   componentWillReceiveProps(nextProps) {
@@ -109,8 +169,7 @@ class TemplateInstance extends Component {
       .map(instance => ({
         name: getInstanceName(instance),
         id: instance.id,
-        returnType: instance.returnType
-      }));
+        returnType: (_.isEmpty(instance.modifiers) ? instance.returnType : _.last(instance.modifiers).returnType) }));
     return otherInstances;
   }
 
@@ -156,6 +215,10 @@ class TemplateInstance extends Component {
     this.updateNestedInstance(id, array, 'cases');
   }
 
+  setCaseReturnType(returnType) {
+    this.setState({returnType: returnType})
+  }
+
   // Adds a new row of case statements
   addCaseComponent(id) {
     const array = this.state[id].cases.slice();
@@ -189,9 +252,7 @@ class TemplateInstance extends Component {
     // TODO: Refactor this function to use React State
     const parameter = this.props.templateInstance.parameters;
     if (isSingledSided) {
-      _.remove(parameter, param =>
-        // Remove any instance with id ending in '_2'
-         (RegExp('^.*(?=(_2))').test(param.id)));
+      _.remove(parameter, param => (RegExp('^.*(?=(_2))').test(param.id))); // Remove any instance with id ending in '_2'
       _.find(parameter, { id: 'comparison_bound' }).name = 'Comparison Bound';
       _.last(parameter).name = 'Double Sided?';
     } else {
@@ -213,6 +274,135 @@ class TemplateInstance extends Component {
     }
     // setState merges what you provide to the currentState, so this merely forces a re-render
     this.setState({});
+  }
+
+  renderAppliedModifier(modifier, index) {
+    const modifierForm = ((modifier) => {
+      switch (modifier.type || modifier.id) {
+        case 'ValueComparison':
+          return (
+            <ValueComparison
+              key={index}
+              index={index}
+              min={modifier.values.min}
+              minInclusive={modifier.values.minInclusive}
+              max={modifier.values.max}
+              maxInclusive={modifier.values.maxInclusive}
+              updateAppliedModifier={this.updateAppliedModifier}/>
+          );
+        case 'ValueComparisonObservation':
+          return (
+            <ValueComparisonObservation
+              key={index}
+              index={index}
+              minOperator={modifier.values.minOperator}
+              minValue={modifier.values.minValue}
+              maxOperator={modifier.values.maxOperator}
+              maxValue={modifier.values.maxValue}
+              updateAppliedModifier={this.updateAppliedModifier}/>
+          );
+        case 'LookBack':
+          return (
+            <LookBack
+              key={index}
+              index={index}
+              value={modifier.values.value}
+              unit={modifier.values.unit}
+              updateAppliedModifier={this.updateAppliedModifier}/>
+          );
+        case 'WithUnit':
+          return (
+            <WithUnit
+              key={index}
+              index={index}
+              unit={modifier.values.unit}
+              updateAppliedModifier={this.updateAppliedModifier}/>
+          );
+        default:
+          return (<LabelModifier key={index} name={modifier.name} id={modifier.id}/>);
+      }
+    })(modifier);
+
+    return (
+      <div key={index} className="modifier">
+        {modifierForm}
+        { (index + 1 === this.state.appliedModifiers.length)
+          ? <button
+            onClick={this.removeLastModifier}
+            className="modifier__deletebutton"
+            aria-label={'remove last expression'}>
+            Remove</button>
+          : null
+        }
+      </div>
+    );
+
+  }
+
+  renderAppliedModifiers() {
+    return (
+      <div className="modifier__list">
+        {this.state.appliedModifiers.map((modifier, index) =>
+          this.renderAppliedModifier(modifier, index)
+        )}
+      </div>
+    );
+  }
+
+  filterRelevantModifiers(returnType) {
+    if (_.isUndefined(returnType)) {
+      returnType = (_.last(this.state.appliedModifiers) || this.props.templateInstance).returnType;
+    }
+    this.setState({returnType: returnType});
+    this.setState({relevantModifiers: (this.modifersByInputType[returnType] || [])});
+  }
+
+  handleModifierSelected(event) {
+    let selectedModifier = this.modifierMap[event.target.value]
+    this.setAppliedModifiers(this.state.appliedModifiers.concat([selectedModifier]));
+    this.setState({ showModifiers: false });
+  }
+
+  updateAppliedModifier(index, value) {
+    this.setAppliedModifiers(update(this.state.appliedModifiers, {[index]: {values: {$merge: value}} }));
+  }
+  setAppliedModifiers(appliedModifiers) {
+    this.setState({appliedModifiers: appliedModifiers}, this.filterRelevantModifiers);
+    this.props.updateInstanceModifiers(this.props.templateInstance.uniqueId, appliedModifiers);
+  }
+
+  removeLastModifier() {
+    let newAppliedModifiers = this.state.appliedModifiers.slice();
+    newAppliedModifiers.pop();
+    this.setState({returnType: _.isEmpty(newAppliedModifiers) ? this.props.templateInstance.returnType : _.last(newAppliedModifiers).returnType});
+    this.setAppliedModifiers(newAppliedModifiers)
+  }
+
+  renderModifierSelect() {
+    // filter modifiers?
+    return (
+      <div>
+        { (this.state.relevantModifiers.length > 0 || this.state.appliedModifiers.length === 0)
+          ?
+            <div className="modifier__selection">
+              <button
+                onClick={() => this.setState({ showModifiers: !this.state.showModifiers })}
+                className="modifier__addbutton"
+                aria-label={'add expression'}>
+                Add Expression</button>
+              { (this.state.showModifiers)
+                ? this.state.relevantModifiers.map((modifier) =>
+                    <button key={modifier.id}
+                      value={modifier.id}
+                      onClick={this.handleModifierSelected} className="modifier__button">{modifier.name}</button>
+                  )
+                : null
+              }
+            </div>
+          : null
+        }
+      </div>
+    );
   }
 
   selectTemplate(param) {
@@ -275,20 +465,29 @@ class TemplateInstance extends Component {
             addComponent={this.addComponent}
             updateList={this.updateList} />
         );
-      case 'comparison':
-        return (
-          <ComparisonParameter
-          key={param.id}
-          param={param}
-          value={null}
-          updateInstance={this.updateInstance} />
-        );
       case 'checkbox':
         return (
           <CheckBoxParameter
           key={param.id}
           param={param}
           updateComparison={this.updateComparison} />
+        );
+      case 'nullCheckingParameter':
+        return (
+          <NullCheckingParameter
+          key={param.id}
+          param={param}
+          values={this.state.otherInstances}
+          updateList={this.updateList} />
+        );
+      case 'dropdown':
+        return (
+          <CommonDropdownParameter
+          key={param.id}
+          param={param}
+          value={null}
+          option={commonDropdownOptions[param.option]}
+          updateInstance={this.updateInstance} />
         );
       case 'if':
         return (
@@ -308,6 +507,7 @@ class TemplateInstance extends Component {
             value={this.state[param.id]}
             values={this.state.otherInstances}
             addComponent={this.addCaseComponent}
+            setCaseReturnType={this.setCaseReturnType}
             updateCase={this.updateCase}
             updateInstance={this.updateNestedInstance} />
         );
@@ -348,10 +548,17 @@ class TemplateInstance extends Component {
   renderBody() {
     return (
       <div className="element__body">
+      <div>
         {this.props.templateInstance.parameters.map((param, index) =>
           // todo: each parameter type should probably have its own component
           this.selectTemplate(param)
         )}
+        </div>
+        {this.renderAppliedModifiers()}
+        <div className='modifier__return__type'>
+          Return Type: {_.startCase(this.state.returnType)}
+        </div>
+        {this.renderModifierSelect()}
       </div>);
   }
 

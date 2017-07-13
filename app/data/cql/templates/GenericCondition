@@ -1,5 +1,1 @@
-define "<%=element_name%>":
-<%conditions.forEach((condition, i) => { if(i > 0) {%>
- or<%}%> Exists(C3F.Confirmed(-%>
-<%if(active){-%>C3F.ActiveCondition(<%}-%>[Condition: "<%=condition.name%>"]))<%if(active){%>)<%}-%>
-<%})%>
+[Condition: "<%=element_context%>"]

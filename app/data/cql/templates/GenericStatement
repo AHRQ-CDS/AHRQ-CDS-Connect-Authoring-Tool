@@ -1,0 +1,3 @@
+<%# There are several cases (medications, observations that reference a common element) where a custom string may be desired, while still allowing
+modifiers to be applied. This template merely renders the string without applying anything else. -%>
+<%-element_context%>

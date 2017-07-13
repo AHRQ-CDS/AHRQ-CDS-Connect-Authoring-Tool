@@ -1,0 +1,2 @@
+C3F.QuantityValue(<%-value_name%>) <%-values.minOperator%> <%-values.minValue%> <%-values.comparisonUnit%> and
+C3F.QuantityValue(<%-value_name%>) <%-values.maxOperator%> <%-values.maxValue%> <%-values.comparisonUnit%>

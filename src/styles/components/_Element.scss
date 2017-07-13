@@ -71,3 +71,37 @@
     }
   }
 }
+
+.modifier__list {
+  .modifier {
+    display: flex;
+    align-items: center;
+    height: 2.5em;
+
+    > div { flex-grow: 1 }
+
+    .modifier__deletebutton {
+      text-align: right;
+      padding: 0.125em;
+      @extend .transparent-button;
+    }
+  }
+}
+
+.modifier__selection {
+  border-top: $element-border;
+  margin-top: 0.5em;
+  padding-top: 0.5em;
+
+  .modifier__addbutton {
+    @extend .primary-button;
+  }
+}
+
+.modifier__return__type {
+  color: $gray;
+}
+
+.modifier__comparison__value {
+  width: 5em;
+}
