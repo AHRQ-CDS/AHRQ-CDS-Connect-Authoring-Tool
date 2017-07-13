@@ -29,7 +29,6 @@ beforeEach(() => {
     editInstance,
     deleteInstance: jest.fn(),
     saveInstance: jest.fn(),
-    updateInstanceModifiers: jest.fn(),
     getAllInstances,
     showPresets: jest.fn(),
     categories: elementGroups
