@@ -7,8 +7,12 @@ const fs = require('fs');
 let archiver = require('archiver');
 const path = require( 'path' );
 const templatePath = 'app/data/cql/templates'
+const specificPath = 'app/data/cql/specificTemplates'
+const modifierPath = 'app/data/cql/modifiers'
 const artifactPath = 'app/data/cql/artifact.ejs'
-const templateMap = loadTemplates();
+const specificMap = loadTemplates(specificPath);
+const templateMap = loadTemplates(templatePath);
+const modifierMap = loadTemplates(modifierPath);
 // Each library will be included. Aliases are optional.
 const includeLibraries = [{name: 'FHIRHelpers', version: '1.0.2', alias: 'FHIRHelpers'},
                           {name: 'CDS_Connect_Commons_for_FHIRv102', version: '1', alias: 'C3F'},
@@ -51,21 +55,21 @@ function objToCql(req, res) {
   archive.finalize();
 }
 
-function loadTemplates() {
+function loadTemplates(pathToTemplates) {
   let templateMap = {};
   // Loop through all the files in the temp directory
-  fs.readdir( templatePath, function( err, files ) {
+  fs.readdir( pathToTemplates, function( err, files ) {
     if( err ) { console.error( "Could not list the directory.", err ); } 
 
     files.forEach( function( file, index ) {
-      templateMap[file] = fs.readFileSync(path.join( templatePath, file ), 'utf-8');
+      templateMap[file] = fs.readFileSync(path.join( pathToTemplates, file ), 'utf-8');
     });
   });
   return templateMap;
 }
 
 // This creates the context EJS uses to create a union of queries using different valuesets
-function createGroupedContext(id, valuesets, type) {
+function createMultipleValueSetExpression(id, valuesets, type) {
   let groupedContext = {
     template: 'MultipleValuesetsExpression',
     name: `${id}_valuesets`,
@@ -94,6 +98,7 @@ class CqlArtifact {
     this.codeMap = new Map();
     this.conceptMap = new Map();
     this.paramContexts = [];
+    this.referencedElements = [];
     this.contexts = [];
     this.elements.forEach((element) => { 
       if (element.type == 'parameter') {
@@ -115,12 +120,13 @@ class CqlArtifact {
   // Generate context and resources for a single element
   parseElement(element) {
 
-    const context = {template: element.id};
-    // TODO: currently this assumes that if A extends B then the B element defines the CQL
-    if (element.extends && !templateMap[element.id]) {
-      context.template = element.extends;
+    const context = {};
+    if (element.extends) {
+      context.template = (element.template) ? element.template : element.extends;
+    } else {
+      context.template = (element.template || element.id);
     }
-
+    context.withoutModifiers = _.has(specificMap, context.template);
     element.parameters.forEach((parameter) => {
       switch (parameter.type) {
         case 'observation':
@@ -136,22 +142,34 @@ class CqlArtifact {
               this.conceptMap.set(concept.name, concept);
             });
             // For checking if a ConceptValue is in a valueset, incluce the valueset that will be used
-            if('checkInclusionInVS' in observationValueSets){
+            if('checkInclusionInVS' in observationValueSets) {
+              if(!_.isEmpty(element.modifiers) && _.last(element.modifiers).id === "InStatement") {
+                _.last(element.modifiers).values = observationValueSets.checkInclusionInVS.name;
+              }
               this.resourceMap.set(observationValueSets.checkInclusionInVS.name, observationValueSets.checkInclusionInVS);
             }
+            context.values = [ observationValueSets.name ];
           } else {
-            observationValueSets.observations.map(observation => {
+            context.values = observationValueSets.observations.map(observation => {
               this.resourceMap.set(observation.name, observation);
+              return observation.name;
             });
-            // For observations that use more than one valueset, create a separate define statement that 
+            // For observations that use more than one valueset, create a separate define statement that
             // groups the queries for each valueset into one expression that is then referenced
             if(observationValueSets.observations.length > 1) {
-              if(!this.contexts.find(context => context.name === `${observationValueSets.id}_valuesets`)) {
-                let groupedContext = createGroupedContext(observationValueSets.id, observationValueSets.observations, 'Observation');
-                this.contexts.push(groupedContext);
+              if(!this.referencedElements.find(concept => concept.name === `${observationValueSets.id}_valuesets`)) {
+                let multipleValueSetExpression = createMultipleValueSetExpression(observationValueSets.id, observationValueSets.observations, 'Observation');
+                this.referencedElements.push(multipleValueSetExpression);
               }
+              context.values = [`"${observationValueSets.id}_valuesets"`];
+              context.template = 'GenericStatement'; // Potentially move this to the object itself in form_templates
             }
           }
+          element.modifiers.forEach(modifier => {
+            if (_.has(modifier.values, 'comparisonUnit')) {
+              modifier.values.unit = observationValueSets.units.code;
+            }
+          })
           break;
         case 'number':
           context[parameter.id] = parameter.value;
@@ -161,35 +179,39 @@ class CqlArtifact {
           break;
         case 'condition':
           let conditionValueSets = ValueSets.conditions[parameter.value];
-          conditionValueSets.conditions.map(condition => {
+          context.values = conditionValueSets.conditions.map(condition => {
             this.resourceMap.set(condition.name, condition);
+            return condition.name;
           })
-          context.conditions = conditionValueSets.conditions;
-          context.active = !(parameter.inactive);
           break;
         case 'medication':
           let medicationValueSets = ValueSets.medications[parameter.value];
-          medicationValueSets.medications.map(medication => {
+          context.values = medicationValueSets.medications.map(medication => {
             this.resourceMap.set(medication.name, medication);
+            return `C3F.Active${medication.type}([${medication.type}: "${medication.name}"])`
           })
-          context.medication_titles = medicationValueSets.medications;
           break;
-        case 'procedure' :
+        case 'procedure':
           let procedureValueSets = ValueSets.procedures[parameter.value];
           context[parameter.id] = procedureValueSets;
-          procedureValueSets.procedures.forEach(valueset => this.resourceMap.set(valueset.name, valueset));
+          context.values = procedureValueSets.procedures.map(procedure => {
+            this.resourceMap.set(procedure.name, procedure)
+            return procedure.name;
+          });
           break;
         case 'encounter':
           let encounterValueSets = ValueSets.encounters[parameter.value];
-          encounterValueSets.encounters.map(encounter => {
+          context.values = encounterValueSets.encounters.map(encounter => {
             this.resourceMap.set(encounter.name, encounter);
+            return encounter.name;
           });
           context[parameter.id] = encounterValueSets;
           break;
         case 'allergyIntolerance' :
           let allergyIntoleranceValueSets = ValueSets.allergyIntolerances[parameter.value];
-          allergyIntoleranceValueSets.allergyIntolerances.map(allergyIntolerance => {
+          context.values = allergyIntoleranceValueSets.allergyIntolerances.map(allergyIntolerance => {
             this.resourceMap.set(allergyIntolerance.name, allergyIntolerance);
+            return allergyIntolerance.name;
           });
           context[parameter.id] = allergyIntoleranceValueSets;
           break;
@@ -207,37 +229,98 @@ class CqlArtifact {
               this.conceptMap.set(concept.name, concept);
             });
           }
-          context[parameter.id] = parameter.value;
-          // Get values for Pregnancy, due to the specific template
           context.valueSetName = pregnancyValueSets.conditions[0].name;
           context.pregnancyStatusConcept = pregnancyValueSets.concepts[0].name;
           context.pregnancyCodeConcept = pregnancyValueSets.concepts[1].name;
           break;
+          case 'breastfeeding':
+            let breastfeedingValueSets = ValueSets.conditions[parameter.value];
+            breastfeedingValueSets.conditions.map(condition => {
+              this.resourceMap.set(condition.name, condition);
+            })
+            if ("concepts" in breastfeedingValueSets) {
+              breastfeedingValueSets.concepts.forEach((concept) => {
+                concept.codes.forEach((code) => {
+                  this.codeSystemMap.set(code.codeSystem.name, code.codeSystem.id);
+                  this.codeMap.set(code.name, code);
+                });
+                this.conceptMap.set(concept.name, concept);
+              });
+            }
+            context.valueSetName = breastfeedingValueSets.conditions[0].name;
+            context.breastfeedingCodeConcept = breastfeedingValueSets.concepts[0].name;
+            context.breastfeedingYesConcept = breastfeedingValueSets.concepts[1].name;
+            break;
         case 'list':
           if (parameter.category === "comparison") {
             context.comparisonUnit = (ValueSets.observations[_.find(_.find(this.elements, { 'id': parameter.value[0].id }).parameters, {'name': parameter.name}).value].units.code);
           }
           context[parameter.id] = parameter.value;
           break;
-        case 'comparison':
-          context.doubleSided = (parameter.id === "comparison_2");
+        case 'dropdown':
+          if (parameter.id == "comparison") {
+            context.doubleSided = false;
+            element.parameters.forEach(parameter => {
+              if (parameter.id === "comparison_2") {
+                context.doubleSided = true;
+              }
+            })
+          }
+          context.values = context.values || []
           context[parameter.id] = parameter.value;
           break;
         default:
+          context.values = context.values || []
           context[parameter.id] = parameter.value;
           break;
       }
     });
 
+    context.modifiers = element.modifiers
     context.element_name = (context.element_name || element.uniqueId);
     this.contexts.push(context)
+  }
+
+  /* Modifiers Explanation:
+    Within `form_templates`, a template must be specified (unless extending an element that specifies a template).
+    If the element specifies a template within the folder `specificTemplates` it's assumed that element will not have modifiers
+      In this case, just render the element.
+    Otherwise:
+      At this point, context.values should contain an array of each part of this element's CQL
+        (e.g. ["CABG Surgeries", "Coronary artery bypass graft", "PCI ICD10CM SNOMEDCT", "PCI ICD9CM", "Carotid intervention"])
+      Because each of these elements requires the modifier to be applied to them, loop through and render the base template (not modifier!)
+        (e.g. ["[Procedure: "CABG Surgeries"]", "[Procedure: "Coronary artery bypass graft"]", "[Procedure: "PCI ICD10CM SNOMEDCT"]", "[Procedure: "PCI ICD9CM"]", "[Procedure: "Carotid intervention"]"])
+      Then call `applyModifiers`. For each of these values, go through and apply each of the modifiers to them (by rendering the modifier template, and passing them in)
+      Finally, join all these string with "\n  or " and return this (potentially-large) multi-line string.
+      Render the `BaseTemplate`, which just gives adds the `define` statement, and inserts this string below it
+  */
+
+  // Both parameters are arrays. All modifiers will be applied to all values, and joined with "\n or".
+  applyModifiers (values, modifiers = []) { // default modifiers to []
+    return values.map((value) => {
+      modifiers.map(modifier => {
+        if (!modifier.template in modifierMap) console.error("Modifier Template could not be found: " + modifier.cqlTemplate);
+        let modifierContext = { cqlLibraryFunction: modifier.cqlLibraryFunction, value_name: value };
+        if (modifier.values) modifierContext.values = modifier.values; // Certain modifiers (such as lookback) require values, so provide them here
+        value = ejs.render(modifierMap[modifier.cqlTemplate], modifierContext)
+      })
+      return value;
+    }).join("\n  or "); //consider using '\t' instead of spaces if desired
   }
 
   // Generate cql for all elements
   body() {
     return this.contexts.map((context) => {
-      if (!templateMap[context.template]) console.error("Template could not be found: " + context.template);
-      return ejs.render(templateMap[context.template], context)
+      if (context.withoutModifiers) {
+        return ejs.render(specificMap[context.template], context);
+      } else {
+        if (!context.template in templateMap) console.error("Template could not be found: " + context.template);
+        context.values.forEach((value, index) => {
+          context.values[index] = ejs.render(templateMap[context.template], {element_context: value})
+        })
+        let cqlString = this.applyModifiers(context.values, context.modifiers);
+        return ejs.render(templateMap['BaseTemplate'], {element_name: context.element_name, cqlString: cqlString})
+      }
     }).join("\n");
   }
   header() {

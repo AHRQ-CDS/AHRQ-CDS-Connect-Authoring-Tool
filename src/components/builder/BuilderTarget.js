@@ -15,7 +15,8 @@ class BuilderTarget extends Component {
     templateInstances: PropTypes.array.isRequired,
     updateSingleElement: PropTypes.func.isRequired,
     updateTemplateInstances: PropTypes.func.isRequired,
-    groups: PropTypes.array.isRequired
+    groups: PropTypes.array.isRequired,
+    updateSingleElementModifiers: PropTypes.func.isRequired
   }
 
   deleteInstance(uniqueId) {
@@ -57,7 +58,8 @@ class BuilderTarget extends Component {
                 deleteInstance={this.deleteInstance.bind(this)}
                 saveInstance={this.saveInstance.bind(this)}
                 showPresets={showPresets.bind(this)}
-                updateSingleElement={this.props.updateSingleElement} />
+                updateSingleElement={this.props.updateSingleElement}
+                updateSingleElementModifiers={this.props.updateSingleElementModifiers} />
             )
         }
         <ElementSelect

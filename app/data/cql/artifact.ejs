@@ -1,8 +1,8 @@
-library <%=name%> version '<%=version%>'
+library "<%=name%>" version '<%=version%>'
 
 using <%=dataModel.name%> version '<%= dataModel.version %>'
 <% includeLibraries.map(includeLibrary => {%>
-include <%=includeLibrary.name%> version '<%=includeLibrary.version%>' <%if (includeLibrary.alias) {%> called <%=includeLibrary.alias%> <%}%>
+include <%=includeLibrary.name%> version '<%=includeLibrary.version%>'<%if (includeLibrary.alias) {%> called <%=includeLibrary.alias%> <%}%>
 <%})-%>
 <% codeSystemMap.forEach((resource, key) => {%>
 codesystem "<%=key%>": '<%=resource%>' <%}) -%>
@@ -16,7 +16,7 @@ code "<%=code.name%>": '<%=code.code%>' from "<%=code.codeSystem.name%>"
 <%})-%>
 
 <% conceptMap.forEach((concept) => {%>
-concept "<%=concept.name%>" : { <%concept.codes.forEach((code) => {%>"<%=code.name%>", <%})%>}
+concept "<%=concept.name%>" : { <%concept.codes.forEach((code, index) => {%>"<%if (index > 0) {%>, <%}%><%=code.name%>"<%})%>}
   display '<%=concept.display%>'
 <%})-%>
 
@@ -24,4 +24,11 @@ concept "<%=concept.name%>" : { <%concept.codes.forEach((code) => {%>"<%=code.na
 parameter "<%=parameter.element_name%>" default <%=parameter.default%><%});%>
 
 context <%=context%>
+
+<% referencedElements.forEach((element) => { -%>
+define "<%=element.name%>":
+  <%-element.valuesets.map(v => {
+  return `[${element.type}: "${v.name}"]` }).join(`
+  union `);%>
+<%}) -%>
 

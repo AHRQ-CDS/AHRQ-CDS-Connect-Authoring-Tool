@@ -1,4 +1,4 @@
-define "<%=element_name%>": <%
+define "<%-element_name%>": <%
 components.forEach((component, index, array) => {
 if (index===0) {
   %>
