@@ -24,7 +24,7 @@ function idToObj(req, res, next) {
   Artifact.findOne({ _id : req.params.artifact },
     (error, artifact) => {
       if (error) console.log(error);
-      else { 
+      else {
         req.body = artifact;
         next();
       }
@@ -55,7 +55,7 @@ function loadTemplates() {
   let templateMap = {};
   // Loop through all the files in the temp directory
   fs.readdir( templatePath, function( err, files ) {
-    if( err ) { console.error( "Could not list the directory.", err ); } 
+    if( err ) { console.error( "Could not list the directory.", err ); }
 
     files.forEach( function( file, index ) {
       templateMap[file] = fs.readFileSync(path.join( templatePath, file ), 'utf-8');
@@ -169,7 +169,7 @@ class CqlArtifact {
             observationValueSets.observations.map(observation => {
               this.resourceMap.set(observation.name, observation);
             });
-            // For observations that use more than one valueset, create a separate define statement that 
+            // For observations that use more than one valueset, create a separate define statement that
             // groups the queries for each valueset into one expression that is then referenced
             if(observationValueSets.observations.length > 1) {
               if(!this.contexts.find(context => context.name === `${observationValueSets.id}_valuesets`)) {
@@ -182,7 +182,7 @@ class CqlArtifact {
         case 'number':
           context[parameter.id] = parameter.value;
           if ('exclusive' in parameter) {
-            context[`${parameter.id}_exclusive`] = parameter.exclusive; 
+            context[`${parameter.id}_exclusive`] = parameter.exclusive;
           }
           break;
         case 'condition':
@@ -272,11 +272,25 @@ class CqlArtifact {
     return ejs.render(fs.readFileSync(artifactPath, 'utf-8'), this);
   }
   population() {
-    let exists = {
-      include : this.inclusions.childInstances.length ? true : false,
-      exclude : this.exclusions.childInstances.length ? true : false,
+    const getTreeName = (tree) => {
+      return tree.parameters.find(p => p.id === 'element_name').value || tree.uniqueId;
     }
-    return ejs.render(fs.readFileSync(templatePath + '/IncludeExclude', 'utf-8'), exists)
+
+    const treeData = {
+      inclusions: false,
+      exclusions: false
+    };
+
+    if (this.inclusions.childInstances.length) {
+      treeData.inclusions = true;
+      treeData.inclusionsName = getTreeName(this.inclusions);
+    }
+    if (this.exclusions.childInstances.length) {
+      treeData.exclusions = true;
+      treeData.exclusionsName = getTreeName(this.exclusions);
+    }
+
+    return ejs.render(fs.readFileSync(templatePath + '/IncludeExclude', 'utf-8'), treeData)
   }
 
   // Produces the cql in string format
@@ -286,7 +300,7 @@ class CqlArtifact {
 
   // Return a cql file as a json object
   toJson() {
-    return { 
+    return {
       filename : this.name,
       text : this.toString(),
       type : 'text/plain'

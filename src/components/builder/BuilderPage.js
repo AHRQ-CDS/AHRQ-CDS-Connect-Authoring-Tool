@@ -236,8 +236,8 @@ class BuilderPage extends Component {
 
   // Initializes both includes and excludes
   initializeExpTrees = (template) => {
-    const includeExpression = this.initializeExpTree('Includes', template);
-    const excludeExpression = this.initializeExpTree('Excludes', template);
+    const includeExpression = this.initializeExpTree('Inclusions', template);
+    const excludeExpression = this.initializeExpTree('Exclusions', template);
     this.setState({ expTreeInclude: includeExpression });
     this.setState({ expTreeExclude: excludeExpression });
   }

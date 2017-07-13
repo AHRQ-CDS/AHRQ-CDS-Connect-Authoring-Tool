@@ -93,7 +93,7 @@ class ConjunctionGroup extends Component {
           <div className="conjunction-group__header-title">
             {
               this.props.root ?
-                <h2 className="conjunction-group__root-title">{ elementNameParam.value }</h2>
+                null
               :
                 <StringParameter
                   id={ elementNameParam.id }
