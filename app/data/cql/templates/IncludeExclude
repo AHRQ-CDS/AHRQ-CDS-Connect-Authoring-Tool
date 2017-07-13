@@ -1,4 +1,4 @@
 define "Population":
-  <% if(inclusions && exclusions) {%>"<%= inclusionsName %>" and not "<%= exclusionsName %>" <%}
-  else if (inclusions) {%> "<%= inclusionsName %>" <%}
-  else {%>not "<%= exclusionsName %>"<%}%>
+  <% if(inclusions.length && exclusions.length) {%>"<%= inclusions %>" and not "<%= exclusions %>" <%}
+  else if (inclusions.length) {%> "<%= inclusions %>" <%}
+  else {%>not "<%= exclusions %>"<%}%>

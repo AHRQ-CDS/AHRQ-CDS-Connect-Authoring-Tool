@@ -276,21 +276,12 @@ class CqlArtifact {
       return tree.parameters.find(p => p.id === 'element_name').value || tree.uniqueId;
     }
 
-    const treeData = {
-      inclusions: false,
-      exclusions: false
+    const treeNames = {
+      inclusions: this.inclusions.childInstances.length ? getTreeName(this.inclusions) : "",
+      exclusions: this.exclusions.childInstances.length ? getTreeName(this.exclusions) : ""
     };
 
-    if (this.inclusions.childInstances.length) {
-      treeData.inclusions = true;
-      treeData.inclusionsName = getTreeName(this.inclusions);
-    }
-    if (this.exclusions.childInstances.length) {
-      treeData.exclusions = true;
-      treeData.exclusionsName = getTreeName(this.exclusions);
-    }
-
-    return ejs.render(fs.readFileSync(templatePath + '/IncludeExclude', 'utf-8'), treeData)
+    return ejs.render(fs.readFileSync(templatePath + '/IncludeExclude', 'utf-8'), treeNames);
   }
 
   // Produces the cql in string format
