@@ -1,5 +1,4 @@
 import React, { Component, PropTypes } from 'react';
-import _ from 'lodash';
 import Select from 'react-select';
 import FontAwesome from 'react-fontawesome';
 
@@ -7,11 +6,9 @@ import TemplateInstance, { createTemplateInstance } from './TemplateInstance';
 import ElementSelect from './ElementSelect';
 import StringParameter from './parameters/StringParameter';
 
-const requiredIf = (type, condition) => {
-  return function(props) {
-    var test = condition(props) ? type.isRequired : type;
-    return test.apply(this, arguments);
-  };
+const requiredIf = (type, condition) => function (props) {
+  const test = condition(props) ? type.isRequired : type;
+  return test.apply(this, arguments);
 };
 
 class ConjunctionGroup extends Component {
@@ -45,30 +42,28 @@ class ConjunctionGroup extends Component {
   }
 
   addChild = (template) => {
-    let instance = createTemplateInstance(template);
+    const instance = createTemplateInstance(template);
     this.props.addInstance(this.props.name, instance, this.getPath());
   }
 
   getPath = () => {
     if (this.props.root) {
       return this.props.instance.path;
-    } else {
-      return this.props.getPath(this.props.instance.uniqueId);
     }
+    return this.props.getPath(this.props.instance.uniqueId);
   }
 
   getChildsPath = (id) => {
     const childIndex = this.props.instance.childInstances.findIndex(instance => instance.uniqueId === id);
-    return this.getPath() + '.childInstances.' + childIndex;
+    return `${this.getPath()}.childInstances.${childIndex}`;
   }
 
   getNestingClassName = () => {
-    const level = this.getPath().split(".").filter(pathSection => pathSection === "childInstances").length;
+    const level = this.getPath().split('.').filter(pathSection => pathSection === 'childInstances').length;
     return level % 2 === 0 ? '' : 'conjunction-group--odd';
   }
 
-  renderConjunctionSelect = (i) => {
-    return (
+  renderConjunctionSelect = i => (
       <Select
         className="conjunction-group__conjunction-select"
         name={ `conjunction-select-${i}` }
@@ -80,10 +75,9 @@ class ConjunctionGroup extends Component {
         clearable={ false }
         options={ this.types }
         onChange={ this.handleTypeChange }
-        inputProps={{ 'aria-label': "Select conjunction type" }}
+        inputProps={{ 'aria-label': 'Select conjunction type' }}
       />
-    );
-  }
+    )
 
   render() {
     const elementNameParam = this.props.instance.parameters.find(param => param.id === 'element_name');
@@ -135,8 +129,8 @@ class ConjunctionGroup extends Component {
                 { this.renderConjunctionSelect(i) }
               </div>
             );
-          } else {
-            return (
+          }
+          return (
               <div
                 key={ instance.uniqueId }
                 className="conjunction-group__conjunction-child">
@@ -152,8 +146,7 @@ class ConjunctionGroup extends Component {
                 />
                 { this.renderConjunctionSelect(i) }
               </div>
-            );
-          }
+          );
         }) }
         <ElementSelect
           categories={ this.props.categories }

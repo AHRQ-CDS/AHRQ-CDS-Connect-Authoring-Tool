@@ -75,8 +75,8 @@ class ElementSelect extends Component {
   }
 
   onSuggestionSelected = (suggestion) => {
-    let clone = _.cloneDeep(suggestion);
-    delete clone['category']; // Don't send the category which is only needed for this component
+    const clone = _.cloneDeep(suggestion);
+    delete clone.category; // Don't send the category which is only needed for this component
     this.props.onSuggestionSelected(clone);
   }
 

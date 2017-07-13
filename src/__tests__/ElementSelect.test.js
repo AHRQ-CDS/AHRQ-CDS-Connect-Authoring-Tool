@@ -3,9 +3,9 @@ import { fullRenderComponent } from '../helpers/test_helpers';
 import { elementGroups } from '../helpers/test_fixtures';
 
 let component,
-    elementField,
-    categoryField,
-    setInputValue;
+  elementField,
+  categoryField,
+  setInputValue;
 const addInstance = jest.fn();
 
 beforeEach(() => {
@@ -87,14 +87,13 @@ describe('the select category field', () => {
 
   it('contains every original category plus "all" category in alphabetical order', () => {
     const categoryNames = ['All', 'Demographics', 'Observations', 'Operations'];
-    categoryField.find('.Select-control').simulate('mouseDown', {button: 0});
+    categoryField.find('.Select-control').simulate('mouseDown', { button: 0 });
     const options = categoryField.find('.Select-option');
 
     expect(options).toHaveLength(4);
     options.map((option, i) => {
       expect(option.text()).toEqual(categoryNames[i]);
     });
-
   });
 
   it('starts with "All" group selected', () => {

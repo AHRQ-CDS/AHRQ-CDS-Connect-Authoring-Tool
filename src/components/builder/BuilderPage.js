@@ -6,42 +6,38 @@ import _ from 'lodash';
 import moment from 'moment';
 
 import ConjunctionGroup from './ConjunctionGroup';
-import Config from '../../../config'
+import Config from '../../../config';
 import { createTemplateInstance } from './TemplateInstance';
 
 // Suppress is a flag that is specific to an element. It should not be inherited by children
 const ELEMENT_SPECIFIC_FIELDS = ['suppress'];
 const API_BASE = Config.api.baseUrl;
 
-const showPresets = (mongoId) => {
-  return axios.get(`${API_BASE}/expressions/group/${mongoId}`);
-}
+const showPresets = mongoId => axios.get(`${API_BASE}/expressions/group/${mongoId}`);
 
 const getValueAtPath = (obj, path) => {
-    if (typeof path === "string") {
-      path = path.split(".");
-    }
+  if (typeof path === 'string') {
+    path = path.split('.');
+  }
 
-    if (path.length > 1) {
-      if (!path[0].length) {
-        path.shift();
-        return getValueAtPath(obj, path);
-      }
-      var e = path.shift();
-      if (Object.prototype.toString.call(obj[e]) === '[object Object]'
-          || Object.prototype.toString.call(obj[e]) === '[object Array]') {
-        return getValueAtPath(obj[e], path);
-      } else {
-        return getValueAtPath({}, path)
-      }
-    } else {
-      // Probably at the root
-      if (obj[path[0]] === undefined || obj[path[0]].length === 0) {
-        return obj;
-      }
-      return obj[path[0]];
+  if (path.length > 1) {
+    if (!path[0].length) {
+      path.shift();
+      return getValueAtPath(obj, path);
     }
-}
+    const e = path.shift();
+    if (Object.prototype.toString.call(obj[e]) === '[object Object]'
+          || Object.prototype.toString.call(obj[e]) === '[object Array]') {
+      return getValueAtPath(obj[e], path);
+    }
+    return getValueAtPath({}, path);
+  }
+      // Probably at the root
+  if (obj[path[0]] === undefined || obj[path[0]].length === 0) {
+    return obj;
+  }
+  return obj[path[0]];
+};
 
 class BuilderPage extends Component {
   static contextTypes = {
@@ -66,7 +62,7 @@ class BuilderPage extends Component {
   componentDidMount() {
     axios.get(`${API_BASE}/config/templates`)
       .then((result) => {
-        this.setState({categories : result.data});
+        this.setState({ categories: result.data });
         this.manageTemplateExtensions();
         if (this.props.match.params.id) {
           this.loadExistingArtifact();
@@ -130,7 +126,7 @@ class BuilderPage extends Component {
   }
 
   mergeInParentTemplate = (entry, entryMap) => {
-    let parent = entryMap[entry.extends]
+    const parent = entryMap[entry.extends];
     if (parent.extends) {
       // handle transitive
       this.mergeInParentTemplate(parent, entryMap);
@@ -163,10 +159,10 @@ class BuilderPage extends Component {
   // Downloads the cql by making an API call and passing artifact
   downloadCQL = () => {
     axios({
-      method : 'post',
-      url : `${API_BASE}/cql`,
-      responseType : 'blob',
-      data : this.prepareArtifact()
+      method: 'post',
+      url: `${API_BASE}/cql`,
+      responseType: 'blob',
+      data: this.prepareArtifact()
     })
       .then((result) => {
         FileSaver.saveAs(result.data, 'cql.zip');
@@ -179,14 +175,12 @@ class BuilderPage extends Component {
   // Saves artifact to the database
   saveArtifact = (exitPage) => {
     const artifact = this.prepareArtifact();
-    if (this.state.id)
-      artifact._id = this.state.id;
+    if (this.state.id) { artifact._id = this.state.id; }
 
     const handleSave = (result) => {
         // TODO:
         // notification on save
-      if (result.data._id)
-        this.setState({ id: result.data._id });
+      if (result.data._id) { this.setState({ id: result.data._id }); }
 
       if (exitPage) {
           // Redirect the page to the artifact list after saving if click "Close" button
@@ -245,14 +239,12 @@ class BuilderPage extends Component {
   addInstance = (treeName, instance, parentPath) => {
     const tree = _.cloneDeep(this.state[treeName]);
     const target = getValueAtPath(tree, parentPath).childInstances;
-    const index = target.length;
-    instance.path = parentPath + '.childInstances.' + index;
     target.push(instance);
 
-    this.setState({ [treeName] : tree });
+    this.setState({ [treeName]: tree });
   }
 
-  editInstance = (treeName, editedParams, path, editingConjunctionType=false) => {
+  editInstance = (treeName, editedParams, path, editingConjunctionType = false) => {
     const tree = _.cloneDeep(this.state[treeName]);
     const target = getValueAtPath(tree, path);
 
@@ -267,7 +259,7 @@ class BuilderPage extends Component {
       target.parameters[paramIndex].value = editedParams[target.parameters[paramIndex].id];
     }
 
-    this.setState({ [treeName] : tree });
+    this.setState({ [treeName]: tree });
   }
 
   deleteInstance = (treeName, path) => {
@@ -277,13 +269,12 @@ class BuilderPage extends Component {
     const target = getValueAtPath(tree, path);
     target.splice(index, 1);
 
-    this.setState({ [treeName] : tree});
+    this.setState({ [treeName]: tree });
   }
 
-  getAllInstances = (treeName, node=undefined) => {
-    if (node === undefined)
-      node = this.state[treeName];
-    return _.flatten(node.childInstances.map(instance => {
+  getAllInstances = (treeName, node = undefined) => {
+    if (node === undefined) { node = this.state[treeName]; }
+    return _.flatten(node.childInstances.map((instance) => {
       if (instance.childInstances) {
         return _.flatten([instance, this.getAllInstances(treeName, instance)]);
       }
@@ -293,7 +284,7 @@ class BuilderPage extends Component {
 
   updateStatusMessage = (statusType) => {
     // TODO: tie this to actual save/download events, consider showing errors
-    const time = moment().format("dddd, MMMM Do YYYY, h:mm:ss a");
+    const time = moment().format('dddd, MMMM Do YYYY, h:mm:ss a');
     switch (statusType) {
       case 'save':
         this.setState({
@@ -317,8 +308,7 @@ class BuilderPage extends Component {
     }
   }
 
-  renderConjunctionGroup = (treeName) => {
-    return (
+  renderConjunctionGroup = treeName => (
       this.state[treeName].childInstances ?
         <ConjunctionGroup
           root={ true }
@@ -335,7 +325,6 @@ class BuilderPage extends Component {
       :
         <p>Loading...</p>
     )
-  }
 
   render() {
     return (
@@ -359,7 +348,7 @@ class BuilderPage extends Component {
                   className="builder__cqlbutton is-unsaved">
                   Download CQL
                 </button>
-                <button onClick={ () => { this.updateStatusMessage('publish'); this.saveArtifact(false); }  }
+                <button onClick={ () => { this.updateStatusMessage('publish'); this.saveArtifact(false); } }
                   className="builder__publishbutton">
                   Publish
                 </button>
