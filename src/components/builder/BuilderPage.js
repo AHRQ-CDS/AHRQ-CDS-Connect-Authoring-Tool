@@ -91,6 +91,19 @@ class BuilderPage extends Component {
         this.setState({ id: artifact._id });
         this.setState({ name: artifact.name });
         this.setState({ version: artifact.version });
+
+        if (!artifact.expTreeInclude || !artifact.expTreeExclude) {
+          const operations = this.state.categories.find(g => g.name === 'Operations');
+          const andTemplate = operations.entries.find(e => e.name === 'And');
+
+          if (!artifact.expTreeInclude) {
+            artifact.expTreeInclude = this.initializeExpTree('Includes', andTemplate);
+          }
+          if (!artifact.expTreeExclude) {
+            artifact.expTreeExclude = this.initializeExpTree('Excludes', andTemplate);
+          }
+        }
+
         this.setState({ expTreeInclude: artifact.expTreeInclude });
         this.setState({ expTreeExclude: artifact.expTreeExclude });
       });
@@ -149,7 +162,6 @@ class BuilderPage extends Component {
 
   // Downloads the cql by making an API call and passing artifact
   downloadCQL = () => {
-    console.log(this.prepareArtifact())
     axios({
       method : 'post',
       url : `${API_BASE}/cql`,

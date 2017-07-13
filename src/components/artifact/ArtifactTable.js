@@ -73,7 +73,8 @@ class ArtifactTable extends Component {
     const artifactToUpdate = {
       name,
       version,
-      templateInstances: this.state.artifactEditing.templateInstances,
+      expTreeInclude: this.state.artifactEditing.expTreeInclude,
+      expTreeExclude: this.state.artifactEditing.expTreeExclude,
       _id: this.state.artifactEditing._id
     };
 
