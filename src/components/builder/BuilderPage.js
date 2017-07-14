@@ -4,6 +4,7 @@ import axios from 'axios';
 import FileSaver from 'file-saver';
 import _ from 'lodash';
 import moment from 'moment';
+import update from 'immutability-helper';
 
 import ConjunctionGroup from './ConjunctionGroup';
 import Config from '../../../config';
