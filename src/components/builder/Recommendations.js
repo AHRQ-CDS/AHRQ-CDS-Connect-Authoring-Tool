@@ -1,22 +1,28 @@
-import React, { Component } from 'react';
+import React, { Component, PropTypes } from 'react';
 import _ from 'lodash';
 import update from 'immutability-helper';
 import Recommendation from './Recommendation';
 
 class Recommendations extends Component {
+  static propTypes = {
+    updateRecommendations: PropTypes.func.isRequired,
+    recommendations: PropTypes.array.isRequired,
+    categories: PropTypes.array.isRequired
+  }
+
   constructor(props) {
     super(props);
 
     this.state = {
       mode: 'every',
-      recommendations: []
     };
   }
 
   componentDidMount() {
     // TODO: Get the current recommendations of this artifact.
     // Use those to populate the initial state.
-    this.addRecommendation(); // add initial rec
+    if (this.props.recommendations.length === 0)
+      this.addRecommendation();
   }
 
   handleModeChange = (event) => {
@@ -30,33 +36,30 @@ class Recommendations extends Component {
       subpopulations: [],
       text: ''
     }
-
-    let newRecs = update(this.state.recommendations, {
-      $push: [newRec]
-    });
-    this.setState({ recommendations: newRecs });
+    let newRecs = this.props.recommendations.concat([newRec])
+    this.props.updateRecommendations({ recommendations: newRecs });
   }
 
   updateRecommendation = (uid, newValues) => {
-    const index = this.state.recommendations.findIndex((rec) => rec.uid == uid);
-    let newRecs = update(this.state.recommendations, {
+    const index = this.props.recommendations.findIndex((rec) => rec.uid === uid);
+    let newRecs = update(this.props.recommendations, {
       [index]: { $merge: newValues }
     });
-    this.setState({ recommendations: newRecs });
+    this.props.updateRecommendations({ recommendations: newRecs });
   }
 
   removeRecommendation = (uid) => {
-    const index = this.state.recommendations.findIndex((rec) => rec.uid == uid);
-    let newRecs = update(this.state.recommendations, {
+    const index = this.props.recommendations.findIndex((rec) => rec.uid === uid);
+    let newRecs = update(this.props.recommendations, {
       $splice: [[index, 1]]
     });
-    this.setState({ recommendations: newRecs });
+    this.props.updateRecommendations({ recommendations: newRecs });
   }
 
   render() {
     return (
       <div className="recommendations">
-        {(this.state.recommendations.length > 1)
+        {(this.props.recommendations.length > 1)
           ? <p className="title is-5">
               Deliver
               <span className="field recommendations__mode">
@@ -74,7 +77,7 @@ class Recommendations extends Component {
           : null
         }
 
-        {this.state.recommendations && this.state.recommendations.map((rec) => {
+        {this.props.recommendations && this.props.recommendations.map((rec) => {
           return (
             <Recommendation
               key={rec.uid}

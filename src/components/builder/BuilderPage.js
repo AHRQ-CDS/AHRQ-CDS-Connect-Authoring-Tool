@@ -51,6 +51,7 @@ class BuilderPage extends Component {
     this.state = {
       expTreeInclude: {},
       expTreeExclude: {},
+      recommendations: [],
       name: 'Untitled Artifact',
       id: null,
       version: null,
@@ -153,7 +154,8 @@ class BuilderPage extends Component {
     return {
       name: this.state.name,
       expTreeInclude: this.state.expTreeInclude,
-      expTreeExclude: this.state.expTreeExclude
+      expTreeExclude: this.state.expTreeExclude,
+      recommendations: this.state.recommendations
     };
   }
 
@@ -238,6 +240,7 @@ class BuilderPage extends Component {
   }
 
   addInstance = (treeName, instance, parentPath) => {
+    console.log(this.state.recommendations)
     const tree = _.cloneDeep(this.state[treeName]);
     const target = getValueAtPath(tree, parentPath).childInstances;
     target.push(instance);
@@ -279,6 +282,10 @@ class BuilderPage extends Component {
     target.splice(index, 1);
 
     this.setState({ [treeName]: tree });
+  }
+
+  updateRecommendations = (newState) => {
+    this.setState(newState);
   }
 
   getAllInstances = (treeName, node = undefined) => {
@@ -372,7 +379,10 @@ class BuilderPage extends Component {
               { this.renderConjunctionGroup('expTreeExclude') }
             </TabPanel>
             <TabPanel>
-              <Recommendations categories={this.state.categories} />
+              <Recommendations
+                updateRecommendations={ this.updateRecommendations }
+                recommendations={ this.state.recommendations }
+                categories={ this.state.categories } />
             </TabPanel>
           </Tabs>
         </section>
