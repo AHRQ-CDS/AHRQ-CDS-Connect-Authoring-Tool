@@ -339,7 +339,7 @@ class CqlArtifact {
     let expressions = this.contexts.concat(this.conjunctions);
     expressions = expressions.concat(this.conjunction_main);
     return expressions.map((context) => {
-      if (context.withoutModifiers) {
+      if (context.withoutModifiers || context.components) {
         return ejs.render(specificMap[context.template], context);
       } else {
         if (!context.template in templateMap) console.error("Template could not be found: " + context.template);

@@ -247,11 +247,7 @@ class BuilderPage extends Component {
   
   // TODO: I don't like these methods... must be a better way.
   updateInstanceModifiers(instanceId, modifiers) {
-    const elements = this.state.templateInstances;
-    const elementIndex = elements.findIndex(element => element.uniqueId === instanceId);
-    if (elementIndex !== undefined) {
-      this.setState({ templateInstances: update(elements, {[elementIndex]: {modifiers: {$set: modifiers}} })});
-    }
+    this.templateInstance.modifiers = modifiers;
   }
 
   editInstance = (treeName, editedParams, path, editingConjunctionType = false) => {
