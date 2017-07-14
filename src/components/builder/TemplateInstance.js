@@ -99,7 +99,7 @@ class TemplateInstance extends Component {
 
     this.modifierMap = _.keyBy(Modifiers, 'id');
     this.modifersByInputType = {}
-    Modifiers.forEach((modifier) => { 
+    Modifiers.forEach((modifier) => {
       modifier.inputTypes.forEach((inputType) => {
         this.modifersByInputType[inputType] = (this.modifersByInputType[inputType] || []).concat(modifier)
       });
@@ -122,7 +122,7 @@ class TemplateInstance extends Component {
     this.setCaseReturnType = this.setCaseReturnType.bind(this);
     this.updateIf = this.updateIf.bind(this);
     this.selectTemplate = this.selectTemplate.bind(this);
-    
+
     // TODO: all this modifier stuff should probably be pulled out into another component
     this.renderAppliedModifiers = this.renderAppliedModifiers.bind(this);
     this.renderAppliedModifier = this.renderAppliedModifier.bind(this);
@@ -384,7 +384,7 @@ class TemplateInstance extends Component {
   }
   setAppliedModifiers(appliedModifiers) {
     this.setState({appliedModifiers: appliedModifiers}, this.filterRelevantModifiers);
-    this.props.updateInstanceModifiers(this.props.templateInstance.uniqueId, appliedModifiers);
+    this.props.updateInstanceModifiers(this.props.treeName, appliedModifiers, this.getPath());
   }
 
   removeLastModifier() {

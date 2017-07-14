@@ -4,7 +4,6 @@ import axios from 'axios';
 import FileSaver from 'file-saver';
 import _ from 'lodash';
 import moment from 'moment';
-import update from 'immutability-helper';
 
 import ConjunctionGroup from './ConjunctionGroup';
 import Config from '../../../config';
@@ -244,10 +243,13 @@ class BuilderPage extends Component {
 
     this.setState({ [treeName]: tree });
   }
-  
-  // TODO: I don't like these methods... must be a better way.
-  updateInstanceModifiers(instanceId, modifiers) {
-    this.templateInstance.modifiers = modifiers;
+
+  updateInstanceModifiers = (treeName, modifiers, path) => {
+    const tree = _.cloneDeep(this.state[treeName]);
+    const target = getValueAtPath(tree, path);
+    target.modifiers = modifiers;
+
+    this.setState({ [treeName]: tree });
   }
 
   editInstance = (treeName, editedParams, path, editingConjunctionType = false) => {
@@ -322,7 +324,7 @@ class BuilderPage extends Component {
           instance={ this.state[treeName] }
           addInstance={ this.addInstance }
           editInstance={ this.editInstance }
-          updateInstanceModifiers={this.updateInstanceModifiers}
+          updateInstanceModifiers={ this.updateInstanceModifiers }
           deleteInstance={ this.deleteInstance }
           saveInstance={ this.saveInstance }
           getAllInstances={ this.getAllInstances }

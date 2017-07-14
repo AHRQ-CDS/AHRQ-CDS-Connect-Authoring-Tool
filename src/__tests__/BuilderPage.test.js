@@ -153,6 +153,28 @@ test('edits a conjunction instance', () => {
   expect(addedInstance.name).toEqual('And');
 });
 
+test('updates an instance\'s modifiers', () => {
+  const modifiers = [
+    {
+      "id": "BooleanNot",
+      "name": "Not",
+      "inputTypes": [
+        "boolean"
+      ],
+      "returnType": "boolean",
+      "cqlTemplate": "BaseModifier",
+      "cqlLibraryFunction": "not"
+    }
+  ];
+  initializedComponent.setState({
+    expTreeInclude: instanceTree
+  });
+
+  initializedComponent.node.updateInstanceModifiers('expTreeInclude', modifiers, 'childInstances.0');
+
+  expect(initializedComponent.state().expTreeInclude.childInstances[0].modifiers).toEqual(modifiers);
+});
+
 test('deletes instance at correct tree position', () => {
   initializedComponent.setState({
     expTreeInclude: instanceTree
