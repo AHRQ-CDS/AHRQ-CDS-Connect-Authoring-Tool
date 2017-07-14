@@ -136,24 +136,24 @@ module.exports = [
     cqlTemplate: 'BaseModifier',
     cqlLibraryFunction: 'exists'
   },
-  // {
-  //   id: 'BooleanComparison',
-  //   name: 'Equality Comparison',
-  //   inputTypes: ['boolean'],
-  //   returnType: 'boolean',
-  //   values: {value: undefined},
-  //   cqlTemplate: 'postModifier',
-  //   comparisonOperator: null
-  // },
-  // {
-  //   id: 'CheckExistence',
-  //   name: 'Check Existence',
-  //   inputTypes: elementLists,
-  //   returnType: 'boolean',
-  //   values: {value: undefined},
-  //   cqlTemplate: 'postModifier',
-  //   comparisonOperator: null
-  // },
+  {
+    id: 'BooleanComparison',
+    name: 'Is (Not) True/False?',
+    inputTypes: ['boolean'],
+    returnType: 'boolean',
+    values: {value: undefined},
+    cqlTemplate: 'postModifier',
+    comparisonOperator: null
+  },
+  {
+    id: 'CheckExistence',
+    name: 'Is (Not) Null?',
+    inputTypes: elementLists,
+    returnType: 'boolean',
+    values: {value: undefined},
+    cqlTemplate: 'postModifier',
+    comparisonOperator: null
+  },
   {
     id: 'BooleanNot',
     name: 'Not',

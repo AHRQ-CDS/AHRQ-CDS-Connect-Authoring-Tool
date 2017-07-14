@@ -318,6 +318,22 @@ class TemplateInstance extends Component {
               unit={modifier.values.unit}
               updateAppliedModifier={this.updateAppliedModifier}/>
           );
+        case 'BooleanComparison':
+          return (
+            <BooleanComparison
+              key={index}
+              index={index}
+              value={modifier.values.value}
+              updateAppliedModifier={this.updateAppliedModifier}/>
+          );
+          case 'CheckExistence':
+            return (
+              <CheckExistence
+                key={index}
+                index={index}
+                value={modifier.values.value}
+                updateAppliedModifier={this.updateAppliedModifier}/>
+            );
         default:
           return (<LabelModifier key={index} name={modifier.name} id={modifier.id}/>);
       }
