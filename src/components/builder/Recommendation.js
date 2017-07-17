@@ -3,7 +3,7 @@ import _ from 'lodash';
 import FontAwesome from 'react-fontawesome';
 import update from 'immutability-helper';
 import ElementSelect from './ElementSelect';
-import createTemplateInstance from './TemplateInstance';
+import { createTemplateInstance } from './TemplateInstance';
 
 class Recommendation extends Component {
   constructor(props) {
