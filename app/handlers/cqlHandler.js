@@ -59,7 +59,7 @@ function loadTemplates(pathToTemplates) {
   let templateMap = {};
   // Loop through all the files in the temp directory
   fs.readdir( pathToTemplates, function( err, files ) {
-    if( err ) { console.error( "Could not list the directory.", err ); } 
+    if( err ) { console.error( "Could not list the directory.", err ); }
 
     files.forEach( function( file, index ) {
       templateMap[file] = fs.readFileSync(path.join( pathToTemplates, file ), 'utf-8');

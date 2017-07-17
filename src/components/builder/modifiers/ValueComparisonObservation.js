@@ -16,11 +16,15 @@ class ValueComparisonObservation extends Component {
       <div>
         <div >
           <label htmlFor={minOperatorId}>
-            <select id={minOperatorId} name="Min Operator" value={this.props.minOperator}
+            <select
+              id={minOperatorId}
+              name="Min Operator"
+              value={this.props.minOperator}
+              defaultValue=""
               onChange={(event) => {
                 this.props.updateAppliedModifier(this.props.index, { minOperator: event.target.value });
               }}>
-              <option defaultValue="">{"-- Operator --"}</option>
+              <option value="">{"-- Operator --"}</option>
               <option value=">">{'>'}</option>
               <option value=">=">{'>='}</option>
               <option value="=">{'='}</option>
@@ -39,13 +43,15 @@ class ValueComparisonObservation extends Component {
             />
           </label>
 
-
           <label htmlFor={maxOperatorId}>
-            <select id={maxOperatorId} name="Max Operator" value={this.props.maxOperator}
+            <select id={maxOperatorId}
+              name="Max Operator"
+              value={this.props.maxOperator}
+              defaultValue=""
               onChange={(event) => {
                 this.props.updateAppliedModifier(this.props.index, { maxOperator: event.target.value });
               }}>
-              <option defaultValue="">{"-- Operator --"}</option>
+              <option value="">{"-- Operator --"}</option>
               <option value=">">{'>'}</option>
               <option value=">=">{'>='}</option>
               <option value="=">{'='}</option>

@@ -1,2 +1,2 @@
-C3F.QuantityValue(<%-value_name%>) <%-values.minOperator%> <%-values.minValue%> <%-values.unit%> and
-  C3F.QuantityValue(<%-value_name%>) <%-values.maxOperator%> <%-values.maxValue%> <%-values.unit%>
+<% if (values.minOperator && parseInt(values.minValue, 10)) { %>C3F.QuantityValue(<%-value_name%>) <%-values.minOperator%> <%-values.minValue%> <%-values.unit%><% } %><% if ((values.minOperator && parseInt(values.minValue, 10)) && (values.maxOperator && parseInt(values.maxValue, 10))) { %> 
+  and <% } %><% if (values.maxOperator && parseInt(values.maxValue, 10)) { %>C3F.QuantityValue(<%-value_name%>) <%-values.maxOperator%> <%-values.maxValue%> <%-values.unit%><% } %>
