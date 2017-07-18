@@ -25,6 +25,11 @@ class ConjunctionGroup extends Component {
     getAllInstances: PropTypes.func.isRequired,
     showPresets: PropTypes.func.isRequired,
     categories: PropTypes.array.isRequired,
+    includeConjunctionSelect: PropTypes.bool
+  }
+
+  static defaultProps = {
+    includeConjunctionSelect: true
   }
 
   constructor(props) {
@@ -64,7 +69,8 @@ class ConjunctionGroup extends Component {
     return level % 2 === 0 ? '' : 'conjunction-group--odd';
   }
 
-  renderConjunctionSelect = i => (
+  renderConjunctionSelect = i => {
+    return this.props.includeConjunctionSelect ? (
       <Select
         className="conjunction-group__conjunction-select"
         name={ `conjunction-select-${i}` }
@@ -78,7 +84,8 @@ class ConjunctionGroup extends Component {
         onChange={ this.handleTypeChange }
         inputProps={{ 'aria-label': 'Select conjunction type' }}
       />
-    )
+    ) : null
+}
 
   render() {
     const elementNameParam = this.props.instance.parameters.find(param => param.id === 'element_name');

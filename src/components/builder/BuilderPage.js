@@ -51,6 +51,7 @@ class BuilderPage extends Component {
     this.state = {
       expTreeInclude: {},
       expTreeExclude: {},
+      logicExpressions: {},
       recommendations: [],
       name: 'Untitled Artifact',
       id: null,
@@ -161,6 +162,7 @@ class BuilderPage extends Component {
 
   // Downloads the cql by making an API call and passing artifact
   downloadCQL = () => {
+    console.log(this.prepareArtifact())
     axios({
       method: 'post',
       url: `${API_BASE}/cql`,
@@ -235,12 +237,13 @@ class BuilderPage extends Component {
   initializeExpTrees = (template) => {
     const includeExpression = this.initializeExpTree('Inclusions', template);
     const excludeExpression = this.initializeExpTree('Exclusions', template);
+    const logicExpression = this.initializeExpTree('Logic', template);
     this.setState({ expTreeInclude: includeExpression });
     this.setState({ expTreeExclude: excludeExpression });
+    this.setState({ logicExpressions: logicExpression });
   }
 
   addInstance = (treeName, instance, parentPath) => {
-    console.log(this.state.recommendations)
     const tree = _.cloneDeep(this.state[treeName]);
     const target = getValueAtPath(tree, parentPath).childInstances;
     target.push(instance);
@@ -324,7 +327,7 @@ class BuilderPage extends Component {
     }
   }
 
-  renderConjunctionGroup = treeName => (
+  renderConjunctionGroup = (treeName, includeConSelect=true) => (
       this.state[treeName].childInstances ?
         <ConjunctionGroup
           root={ true }
@@ -338,6 +341,7 @@ class BuilderPage extends Component {
           getAllInstances={ this.getAllInstances }
           showPresets={ showPresets }
           categories={ this.state.categories }
+          includeConjunctionSelect={ includeConSelect }
         />
       :
         <p>Loading...</p>
@@ -350,10 +354,11 @@ class BuilderPage extends Component {
           <h2 className="builder__heading">{ this.state.name }</h2>
         </header>
         <section className="builder__canvas">
-          <Tabs defaultIndex={2}>
+          <Tabs defaultIndex={3}>
             <TabList>
               <Tab>Inclusions</Tab>
               <Tab>Exclusions</Tab>
+              <Tab>Logic</Tab>
               <Tab>Recommendations</Tab>
               <div className="tab__buttonbar">
                 <span role="status" aria-live="assertive">{this.state.statusMessage}</span>
@@ -379,10 +384,15 @@ class BuilderPage extends Component {
               { this.renderConjunctionGroup('expTreeExclude') }
             </TabPanel>
             <TabPanel>
+              { this.renderConjunctionGroup('logicExpressions', false) }
+            </TabPanel>
+            <TabPanel>
               <Recommendations
                 updateRecommendations={ this.updateRecommendations }
                 recommendations={ this.state.recommendations }
-                categories={ this.state.categories } />
+                categories={ this.state.categories } 
+                allExpressions={ this.getAllInstances }
+                />
             </TabPanel>
           </Tabs>
         </section>

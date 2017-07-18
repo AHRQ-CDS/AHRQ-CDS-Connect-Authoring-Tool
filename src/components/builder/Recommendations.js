@@ -7,7 +7,8 @@ class Recommendations extends Component {
   static propTypes = {
     updateRecommendations: PropTypes.func.isRequired,
     recommendations: PropTypes.array.isRequired,
-    categories: PropTypes.array.isRequired
+    categories: PropTypes.array.isRequired,
+    allExpressions: PropTypes.func.isRequired
   }
 
   constructor(props) {
