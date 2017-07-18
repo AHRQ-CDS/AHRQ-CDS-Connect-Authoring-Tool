@@ -99,7 +99,7 @@ class Recommendations extends Component {
           );
         })}
         <button className="button" onClick={this.addRecommendation}>
-          Add new recommendation
+          New recommendation
         </button>
       </div>
     );

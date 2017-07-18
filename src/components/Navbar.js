@@ -1,5 +1,4 @@
 import React from 'react';
-import FontAwesome from 'react-fontawesome';
 import { Link, NavLink } from 'react-router-dom';
 
 export default () => (
@@ -13,7 +12,7 @@ export default () => (
     </nav>
     <nav className="navbar__nav-secondary">
       <ul>
-        <li><Link to="mailto:cds-authoring-list@lists.mitre.org">Feedback</Link></li>
+        <li><a href="mailto:cds-authoring-list@lists.mitre.org">Feedback</a></li>
       </ul>
     </nav>
   </header>

@@ -22,9 +22,6 @@ body {
 }
 
 main {
-  margin: 1em;
-  padding: 1em;
-
   > div:not([class]) {
     padding: 1em;
   }
@@ -32,25 +29,15 @@ main {
   > div:not([class]),
   header + section {
     background-color: $white;
-    border-radius: $border-radius;
   }
 }
 
 #{$all-buttons},
 #{$all-text-inputs} {
-  font-weight: 500;
   font-family: 'Rubik', sans-serif;
   font-size: 1rem;
   padding: 0.4em 0.75em;
   border-radius: $border-radius;
-  border-color: $form-input-border-color;
-  border-style: solid;
-  border-width: $border-width;
-  outline: 0;
-
-  &:focus {
-    border-color: $form-input-focus-color;
-  }
 }
 
 #{$all-buttons} {
@@ -70,6 +57,11 @@ main {
   cursor: pointer;
 }
 
+#{$all-text-inputs} {
+  border: $border-global;
+  box-shadow: $box-shadow-inset;
+}
+
 table {
   border-collapse: collapse;
 
@@ -80,7 +72,7 @@ table {
 
   thead th,
   thead td {
-    font-weight: 500;
+    font-weight: $font-weight-bold;
     text-transform: uppercase;
     font-size: 0.9em;
     text-align: left;
@@ -99,12 +91,12 @@ table {
 }
 
 a {
-  color: $gray;
+  color: $blue-link;
 
   &:hover,
   &:focus,
   &:active {
-    color: darken($gray, 25%);
+    color: darken($blue-link, 15%);
   }
 }
 
@@ -114,5 +106,5 @@ h3,
 h4,
 h5,
 h6 {
-  font-weight: 300;
+  font-weight: $font-weight-regular;
 }

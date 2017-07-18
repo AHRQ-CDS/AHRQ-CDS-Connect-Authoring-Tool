@@ -20,7 +20,7 @@
   margin: 1em 0;
 
   label {
-    font-weight: 400;
+    font-weight: $font-weight-regular;
     display: block;
 
     > input {
@@ -49,19 +49,12 @@
 
   .Select-control {
     color: $black;
+    border: $border-global;
     border-radius: $border-radius;
-    border-color: $form-input-border-color;
-    border-style: solid;
-    border-width: 0.1em;
-    border-bottom-width: $border-width;
-    outline: 0;
     box-shadow: $box-shadow;
 
     &:hover {
       box-shadow: $box-shadow;
-    }
-    &:focus {
-      border-color: $form-input-focus-color;
     }
   }
 
@@ -81,11 +74,9 @@
   .is-open > .Select-control {
     border-bottom-left-radius: 0;
     border-bottom-right-radius: 0;
-    border-color: $form-input-border-color;
   }
 
   .is-focused:not(.is-open) > .Select-control {
-    border-color: $form-input-focus-color;
     box-shadow: none;
   }
 
@@ -103,5 +94,12 @@
 
   &.form__group-invalid {
     @include state-color($form-validation-error-color);
+  }
+}
+.Select {
+  &.is-focused {
+    .Select-control {
+      @include native-focus();
+    }
   }
 }

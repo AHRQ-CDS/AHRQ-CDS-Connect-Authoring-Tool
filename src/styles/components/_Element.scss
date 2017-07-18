@@ -1,21 +1,16 @@
 .element {
   padding: 0.5em;
-  background-color: $element-bg-color;
-  border: $element-border;
+  border: $border-global;
   border-radius: $border-radius;
-  color: $element-text-color;
   margin-bottom: 0.5em;
-  font-weight: 500;
+  font-weight: $font-weight-bold;
 
   &.element__expanded {
     padding: 0;
-    background-color: $logic-element-bg-color;
-    border: $logic-element-border;
 
     .element__header {
       display: flex;
-      color: $logic-element-text-color;
-      border-bottom: $logic-element-border;
+      border-bottom: $border-global;
       padding: 0.25em 0.75em;
       align-items: center;
       justify-content: center;
@@ -27,23 +22,6 @@
       .element__buttonbar {
         flex: 1;
         text-align: right;
-
-        .element__savebutton,
-        .element__presetbutton,
-        .element__hidebutton,
-        .element__deletebutton {
-          padding: 0.125em;
-        }
-
-        .element__presetbutton,
-        .element__hidebutton,
-        .element__deletebutton {
-          @extend .transparent-button;
-        }
-
-        .element__savebutton {
-          @extend .primary-button;
-        }
       }
     }
 
@@ -60,9 +38,7 @@
 
     &:hover,
     &:focus {
-      background-color: $logic-element-bg-color;
-      border: $logic-element-border;
-      color: $logic-element-text-color;
+      border: $border-global;
       cursor: pointer;
     }
 
@@ -82,14 +58,12 @@
 
     .modifier__deletebutton {
       text-align: right;
-      padding: 0.125em;
-      @extend .transparent-button;
     }
   }
 }
 
 .modifier__selection {
-  border-top: $element-border;
+  border-top: $border-global;
   margin-top: 0.5em;
   padding-top: 0.5em;
 

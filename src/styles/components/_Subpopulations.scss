@@ -1,12 +1,11 @@
-.new-subpopulation {
-  margin-bottom: 1em;
-}
-
 .subpopulation {
-  margin-bottom: 1em;
   background-color: $gray-lighter;
-  border: 1px solid $gray;
-  border-radius: .2em;
+  border: $border-global;
+  border-radius: $border-radius;
+
+  &:not(:last-child) {
+    margin-bottom: 1em;
+  }
 
   &__header {
     display: flex;
@@ -18,15 +17,26 @@
       margin-left: auto;
     }
   }
+
   &__title {
     display: flex;
     align-items: center;
 
     h3 {
-      margin: 0;
+      margin: 0 0 0 .5em;
     }
   }
+
   &__name-input {
+    margin-left: .5em;
     cursor: default;
+  }
+
+  &__logic {
+    > .conjunction-group {
+      border-top-left-radius: 0;
+      border-top-right-radius: 0;
+      border: none;
+    }
   }
 }

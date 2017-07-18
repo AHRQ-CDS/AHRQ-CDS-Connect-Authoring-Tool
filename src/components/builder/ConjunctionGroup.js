@@ -86,31 +86,26 @@ class ConjunctionGroup extends Component {
     const elementNameParam = this.props.instance.parameters.find(param => param.id === 'element_name');
     return (
       <div className={`conjunction-group ${this.getNestingClassName()}`}>
-        <div className="conjunction-group__header">
-          <div className="conjunction-group__header-title">
-            {
-              this.props.root ?
-                null
-              :
-                <StringParameter
-                  id={ elementNameParam.id }
-                  name={ elementNameParam.name }
-                  value={ elementNameParam.value }
-                  updateInstance={ this.handleNameChange }
-                />
-            }
+        {
+          !this.props.root &&
+          <div className="conjunction-group__header">
+            <div className="conjunction-group__header-title">
+              <StringParameter
+                id={ elementNameParam.id }
+                name={ elementNameParam.name }
+                value={ elementNameParam.value }
+                updateInstance={ this.handleNameChange }
+              />
+            </div>
+            <div className="conjunction-group__button-bar">
+              <button
+                onClick={ () => this.props.deleteInstance(this.props.name, this.getPath()) }
+                aria-label={ `remove ${this.props.instance.name}` }>
+                <FontAwesome fixedWidth name='close'/>
+              </button>
+            </div>
           </div>
-          <div className="conjunction-group__button-bar">
-            {
-              !this.props.root &&
-                <button
-                  onClick={ () => this.props.deleteInstance(this.props.name, this.getPath()) }
-                  aria-label={ `remove ${this.props.instance.name}` }>
-                  <FontAwesome fixedWidth name='close'/>
-                </button>
-            }
-          </div>
-        </div>
+        }
         { this.props.instance.childInstances.map((instance, i) => {
           if (instance.conjunction) {
             return (

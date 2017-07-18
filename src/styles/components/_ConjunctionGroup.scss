@@ -1,12 +1,18 @@
 .conjunction-group {
   padding: 1em;
   background-color: $gray-lightest;
-  border: 1px solid $gray-light;
+  border: $border-global;
   border-radius: $border-radius;
 
   &__header {
     display: flex;
     align-items: center;
+    margin-bottom: 1em;
+  }
+  &__header-title {
+    > .form__group {
+      margin: 0;
+    }
   }
   &__button-bar {
     margin-left: auto;

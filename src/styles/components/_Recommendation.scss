@@ -1,11 +1,12 @@
 .recommendation {
   background: $gray-lightest;
-  border: 1px $gray-lighter solid;
+  border: $border-global;
+  border-radius: $border-radius;
   padding: 1em;
   margin-bottom: 1em;
 
   label {
-    font-weight: 300;
+    font-weight: $font-weight-regular;
   }
 
   &__subpopulations {
@@ -18,8 +19,8 @@
     margin-bottom: 1em;
     padding: .5em;
     background-color: $gray-lighter;
-    border: 1px solid $gray;
-    border-radius: .2em;
+    border: $border-global;
+    border-radius: $border-radius;
 
     button {
       margin-left: auto;

@@ -6,7 +6,7 @@
 
   &__logo {
     color: $navbar-link-color;
-    font-weight: 700;
+    font-weight: $font-weight-bold;
     text-decoration: none;
 
     &:hover,
@@ -20,6 +20,20 @@
 
     display: inline-block;
     margin: 0.5em 1em 0.75em 2em;
+
+    li {
+      margin-right: 0.25em;
+    }
+
+    a {
+      border-top-left-radius: .2em;
+      border-top-right-radius: .2em;
+
+      &:hover,
+      &.active {
+        background-color: $body-bg;
+      }
+    }
   }
 
   &__nav-secondary {
@@ -28,11 +42,5 @@
     display: inline-block;
     margin: 0.5em 1em 0.75em 2em;
     float: right;
-  }
-
-  nav a:hover,
-  nav a:focus,
-  nav a.active {
-    background-color: darken($navbar-bg-color, 10%);
   }
 }

@@ -74,9 +74,6 @@ class Subpopulations extends Component {
   render() {
     return (
       <div className="subpopulations">
-        <button className="button new-subpopulation" onClick={ this.addSubpopulation }>
-          New subpopulation
-        </button>
         { this.state.subpopulations.map((subpop, i) => {
           return (
             <Subpopulation
@@ -97,6 +94,9 @@ class Subpopulations extends Component {
               categories={ this.props.categories } />
           );
         })}
+        <button className="button" onClick={ this.addSubpopulation }>
+          New subpopulation
+        </button>
       </div>
     );
   }

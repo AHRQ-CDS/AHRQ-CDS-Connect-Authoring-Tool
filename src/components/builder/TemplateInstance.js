@@ -332,7 +332,8 @@ class TemplateInstance extends Component {
             onClick={this.removeLastModifier}
             className="modifier__deletebutton"
             aria-label={'remove last expression'}>
-            Remove</button>
+              <FontAwesome fixedWidth name='close'/>
+            </button>
           : null
         }
       </div>
