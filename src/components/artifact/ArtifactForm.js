@@ -28,7 +28,12 @@ class ArtifactForm extends Component {
       version: this.state.version
     }).then((result) => {
       this.props.afterAddArtifact();
-      this.setState({ name: '', version: '' });
+      this.setState({
+        name: '',
+        version: '',
+        recommendations: [],
+        subpopulations: []
+      });
     });
   }
 

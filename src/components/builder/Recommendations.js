@@ -18,10 +18,9 @@ class Recommendations extends Component {
   }
 
   componentDidMount() {
-    // TODO: Get the current recommendations of this artifact.
-    // Use those to populate the initial state.
-    if (this.props.recommendations.length === 0)
+    if (this.props.recommendations.length === 0) {
       this.addRecommendation();
+    }
   }
 
   handleModeChange = (event) => {
@@ -58,7 +57,7 @@ class Recommendations extends Component {
   render() {
     return (
       <div className="recommendations">
-        {(this.props.recommendations.length > 1)
+        {(this.props.recommendations && this.props.recommendations.length > 1)
           ? <p className="title is-5">
               Deliver
               <span className="field recommendations__mode">

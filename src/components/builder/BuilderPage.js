@@ -106,6 +106,8 @@ class BuilderPage extends Component {
 
         this.setState({ expTreeInclude: artifact.expTreeInclude });
         this.setState({ expTreeExclude: artifact.expTreeExclude });
+        this.setState({ recommendations: artifact.recommendations });
+        this.setState({ subpopulations: artifact.subpopulations });
       });
   }
 
@@ -157,7 +159,8 @@ class BuilderPage extends Component {
       name: this.state.name,
       expTreeInclude: this.state.expTreeInclude,
       expTreeExclude: this.state.expTreeExclude,
-      recommendations: this.state.recommendations
+      recommendations: this.state.recommendations,
+      subpopulations: this.state.subpopulations
     };
   }
 
@@ -180,6 +183,7 @@ class BuilderPage extends Component {
   // Saves artifact to the database
   saveArtifact = (exitPage) => {
     const artifact = this.prepareArtifact();
+    console.log(artifact)
     if (this.state.id) { artifact._id = this.state.id; }
 
     const handleSave = (result) => {
