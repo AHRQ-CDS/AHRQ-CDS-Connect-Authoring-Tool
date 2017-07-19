@@ -7,6 +7,7 @@ import moment from 'moment';
 
 import ConjunctionGroup from './ConjunctionGroup';
 import Recommendations from './Recommendations';
+import Subpopulations from './Subpopulations';
 import Config from '../../../config'
 import { createTemplateInstance } from './TemplateInstance';
 
@@ -53,6 +54,7 @@ class BuilderPage extends Component {
       expTreeExclude: {},
       logicExpressions: {},
       recommendations: [],
+      subpopulations: [],
       name: 'Untitled Artifact',
       id: null,
       version: null,
@@ -291,6 +293,10 @@ class BuilderPage extends Component {
     this.setState(newState);
   }
 
+  updateSubpopulations = (updatedSubpopulations) => {
+    this.setState({ subpopulations: updatedSubpopulations });
+  }
+
   getAllInstances = (treeName, node = undefined) => {
     if (node === undefined) { node = this.state[treeName]; }
     return _.flatten(node.childInstances.map((instance) => {
@@ -327,7 +333,7 @@ class BuilderPage extends Component {
     }
   }
 
-  renderConjunctionGroup = (treeName, includeConSelect=true) => (
+  renderConjunctionGroup = (treeName) => (
       this.state[treeName].childInstances ?
         <ConjunctionGroup
           root={ true }
@@ -341,7 +347,6 @@ class BuilderPage extends Component {
           getAllInstances={ this.getAllInstances }
           showPresets={ showPresets }
           categories={ this.state.categories }
-          includeConjunctionSelect={ includeConSelect }
         />
       :
         <p>Loading...</p>
@@ -354,12 +359,12 @@ class BuilderPage extends Component {
           <h2 className="builder__heading">{ this.state.name }</h2>
         </header>
         <section className="builder__canvas">
-          <Tabs defaultIndex={3}>
+          <Tabs defaultIndex={2}>
             <TabList>
               <Tab>Inclusions</Tab>
               <Tab>Exclusions</Tab>
-              <Tab>Logic</Tab>
               <Tab>Recommendations</Tab>
+              <Tab>Subpopulations</Tab>
               <div className="tab__buttonbar">
                 <span role="status" aria-live="assertive">{this.state.statusMessage}</span>
                 <button onClick={ () => { this.updateStatusMessage('save'); this.saveArtifact(false); } }
@@ -384,15 +389,24 @@ class BuilderPage extends Component {
               { this.renderConjunctionGroup('expTreeExclude') }
             </TabPanel>
             <TabPanel>
-              { this.renderConjunctionGroup('logicExpressions', false) }
-            </TabPanel>
-            <TabPanel>
               <Recommendations
                 updateRecommendations={ this.updateRecommendations }
                 recommendations={ this.state.recommendations }
-                categories={ this.state.categories } 
-                allExpressions={ this.getAllInstances }
+                subpopulations={ this.state.subpopulations }
                 />
+            </TabPanel>
+            <TabPanel>
+              <Subpopulations
+                subpopulations={ this.state.subpopulations }
+                updateSubpopulations={ this.updateSubpopulations }
+                addInstance={ this.addInstance }
+                editInstance={ this.editInstance }
+                deleteInstance={ this.deleteInstance }
+                saveInstance={ this.saveInstance }
+                getAllInstances={ this.getAllInstances }
+                showPresets={ showPresets }
+                categories={ this.state.categories }
+              />
             </TabPanel>
           </Tabs>
         </section>

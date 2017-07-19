@@ -1,0 +1,28 @@
+.new-subpopulation {
+  margin-bottom: 1em;
+}
+
+.subpopulation {
+  margin-bottom: 1em;
+  background-color: $gray-lighter;
+  border: 1px solid $gray;
+  border-radius: .2em;
+
+  &__header {
+    display: flex;
+    align-items: center;
+    padding: .5em;
+
+    .button-bar {
+      margin-left: auto;
+    }
+  }
+  &__title {
+    display: flex;
+    align-items: center;
+
+    h3 {
+      margin: 0;
+    }
+  }
+}

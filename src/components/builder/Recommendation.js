@@ -2,8 +2,7 @@ import React, { Component } from 'react';
 import _ from 'lodash';
 import FontAwesome from 'react-fontawesome';
 import update from 'immutability-helper';
-import ElementSelect from './ElementSelect';
-import { createTemplateInstance } from './TemplateInstance';
+import Select from 'react-select';
 
 class Recommendation extends Component {
   constructor(props) {
@@ -12,26 +11,45 @@ class Recommendation extends Component {
     this.state = {
       uid: props.rec.uid,
       grade: props.rec.grade,
-      subpopulations: props.rec.subpopulations,
-      text: props.rec.text
+      text: props.rec.text,
+      showSubpopulations: false
     }
   }
 
-  addSubPopulation = () => {
-    const newSubPop = {
-      uid: _.uniqueId("sub-population-"),
-      something: "else"
+  revealSubpopulations = () => {
+    if (!this.props.subpopulations.length) {
+      // No subpopulations to select from yet
+      // TODO: Address concerns of following alert and then remove it
+      alert('Direct user to subpopulation tab and have a blank one ready. Note: to test subpops here you can go over to subpopulation tab and just add a few blank ones');
+    } else {
+      this.setState({ showSubpopulations: true });
     }
+  }
 
-    let newSubPops = update(this.state.subpopulations, {
-      $push: [newSubPop]
+  applySubpopulation = (subpop) => {
+    const index = this.props.recommendations.findIndex(rec => rec.uid === this.state.uid);
+    let newRecs = update(this.props.recommendations, {
+      [index]: {
+        subpopulations: { $push: [subpop] }
+      }
     });
-    this.setState({ subpopulations: newSubPops });
+
+    this.props.updateRecommendations({ recommendations: newRecs });
   }
 
-  addSubPopElement = (template) => {
-    let instance = createTemplateInstance(template);
-    this.props.addInstance(this.props.name, instance, this.getPath());
+  removeSubpopulation = (i) => {
+    const recIndex = this.props.recommendations.findIndex(rec => rec.uid === this.state.uid);
+    let newRecs = update(this.props.recommendations, {
+      [recIndex]: {
+        subpopulations: { $splice: [[i, 1]] }
+      }
+    });
+
+    this.props.updateRecommendations({ recommendations: newRecs });
+  }
+
+  getRelevantSubpopulations = () => {
+    return this.props.subpopulations.filter(sp => !this.props.rec.subpopulations.includes(sp));
   }
 
   handleChange = (event) => {
@@ -43,9 +61,63 @@ class Recommendation extends Component {
     this.setState(newState);
   }
 
+  shouldShowSubpopulations = () => {
+    return this.state.showSubpopulations || this.props.rec.subpopulations.length;
+  }
+
+  renderSubpopulations = () => {
+    if (this.shouldShowSubpopulations()) {
+      return (
+        <div className="recommendation__subpopulations">
+          <div className="field is-horizontal">
+            <div className="field-label is-large">
+              {
+                // TODO: The following should to be options between somethign like
+                //       'all' of the following and 'any' of the following
+              }
+              <label className="label has-text-left">If all of the following apply...</label>
+            </div>
+          </div>
+          <div className="recommendation__subpopulation-pills">
+            { this.props.rec.subpopulations.map((subpop, i) => {
+              return (
+                <div
+                  key={subpop.uniqueId}
+                  className="recommendation__subpopulation-pill">
+                  { subpop.uniqueId }
+                  <button onClick={ () => this.removeSubpopulation(i) }><FontAwesome fixedWidth name='times'/></button>
+                </div>
+              );
+            }) }
+          </div>
+          <div className="recommendation__add-subpopulation">
+            <Select
+              className="recommendation__subpopulation-select"
+              name="recommendation__subpopulation-select"
+              value="start"
+              placeholder={ 'Add a subpopuation' }
+              aria-label={ 'Add a subpopuation' }
+              clearable={ false }
+              options={ this.getRelevantSubpopulations() }
+              labelKey='uniqueId'
+              onChange={ this.applySubpopulation }
+            />
+            {
+              // TODO: This should link to the subpopulations tab
+            }
+            <a>Create new subpopulation</a>
+          </div>
+        </div>
+      );
+    } else {
+      return null;
+    }
+  }
+
   render() {
     return (
       <section className="section is-clearfix recommendation">
+        { this.renderSubpopulations() }
         <div className="field is-horizontal">
           <div className="field-label is-large">
             <label className="label has-text-left">Recommend...</label>
@@ -70,23 +142,13 @@ class Recommendation extends Component {
             </div>
           </div>
         </div>
-        {this.state.subpopulations && this.state.subpopulations.map((subpop) => {
-          return (
-            <div key={subpop.uid} className="field">
-              <ElementSelect
-                 categories={this.props.categories}
-                 onSuggestionSelected={this.addSubPopElement}
-                 />
-            </div>
-          );
-        })}
         <div className="field">
           <div className="control">
             <textarea className="textarea" name="text" aria-label="Recommendation"
             placeholder='Describe your recommendation' value={this.state.text} onChange={this.handleChange} />
           </div>
         </div>
-        <button className="button is-pulled-right" name="subpopulation" onClick={this.addSubPopulation}>Add sub-population</button>
+        { this.shouldShowSubpopulations() ? null : <button className="button is-pulled-right" name="subpopulation" onClick={this.revealSubpopulations}>Add subpopulation</button> }
       </section>
     )
   }

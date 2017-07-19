@@ -7,6 +7,37 @@
   label {
     font-weight: 300;
   }
+
+  &__subpopulations {
+    margin-bottom: 1em;
+  }
+
+  &__subpopulation-pill {
+    display: flex;
+    align-items: center;
+    margin-bottom: 1em;
+    padding: .5em;
+    background-color: $gray-lighter;
+    border: 1px solid $gray;
+    border-radius: .2em;
+
+    button {
+      margin-left: auto;
+    }
+  }
+
+  &__add-subpopulation {
+    display: flex;
+    align-items: center;
+
+    a {
+      margin-left: 1em;
+    }
+  }
+
+  &__subpopulation-select {
+    flex: 1;
+  }
 }
 
 .recommendations {
