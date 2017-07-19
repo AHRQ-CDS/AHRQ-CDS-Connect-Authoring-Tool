@@ -32,7 +32,8 @@ class Recommendations extends Component {
       uid: _.uniqueId("rec-"),
       grade: 'A',
       subpopulations: [],
-      text: ''
+      text: '',
+      rationale: ''
     }
     let newRecs = this.props.recommendations.concat([newRec])
     this.props.updateRecommendations({ recommendations: newRecs });

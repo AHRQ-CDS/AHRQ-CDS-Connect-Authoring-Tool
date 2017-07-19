@@ -12,7 +12,9 @@ class Recommendation extends Component {
       uid: props.rec.uid,
       grade: props.rec.grade,
       text: props.rec.text,
-      showSubpopulations: false
+      rationale: props.rec.rationale,
+      showSubpopulations: (props.rec.subpopulations && props.rec.subpopulations.length) ? true : false,
+      showRationale: props.rec.rationale.length ? true : false,
     }
   }
 
@@ -148,6 +150,20 @@ class Recommendation extends Component {
             placeholder='Describe your recommendation' value={this.state.text} onChange={this.handleChange} />
           </div>
         </div>
+        {
+          this.state.showRationale ?
+            <div className="field">
+              <div className="field-label is-large">
+                <label className="label has-text-left">Rationale...</label>
+              </div>
+              <div className="control">
+                <textarea className="textarea" name="rationale" aria-label="Rationale"
+                placeholder='Describe the rationale for your recommendation' value={this.state.rationale} onChange={this.handleChange} />
+              </div>
+            </div>
+          :
+            <button className="button" onClick={() => this.setState({ showRationale: !this.state.showRationale })}>Add rationale</button>
+        }
         { this.shouldShowSubpopulations() ? null : <button className="button is-pulled-right" name="subpopulation" onClick={this.revealSubpopulations}>Add subpopulation</button> }
       </section>
     )
