@@ -182,7 +182,7 @@ class TemplateInstance extends Component {
 
   updateInstance(newState) {
     this.setState(newState);
-    this.props.editInstance(this.props.treeName, newState, this.getPath());
+    this.props.editInstance(this.props.treeName, newState, this.getPath(), false);
   }
 
   // Used to update value states that are nested objects
@@ -595,7 +595,7 @@ class TemplateInstance extends Component {
               <FontAwesome fixedWidth name='database'/>
             </button>
             <button
-              onClick={this.props.saveInstance.bind(this, this.getPath())}
+              onClick={() => this.props.saveInstance(this.props.treeName, this.getPath())}
               className="element__savebutton"
               aria-label={`save ${this.props.templateInstance.name}`}>
               <FontAwesome fixedWidth name='save'/>

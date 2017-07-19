@@ -163,7 +163,6 @@ class BuilderPage extends Component {
 
   // Downloads the cql by making an API call and passing artifact
   downloadCQL = () => {
-    console.log(this.prepareArtifact())
     axios({
       method: 'post',
       url: `${API_BASE}/cql`,
@@ -210,8 +209,9 @@ class BuilderPage extends Component {
   }
 
   // Saves a particular expression to the backend
-  saveInstance = (path) => {
-    const target = getValueAtPath(path);
+  saveInstance = (treeName, path, uid=null) => {
+    const tree = this.findTree(treeName, uid).tree;
+    const target = getValueAtPath(tree, path);
 
     if (target) {
       axios.post(`${API_BASE}/expressions`, target)
@@ -242,6 +242,7 @@ class BuilderPage extends Component {
     this.setState({ expTreeExclude: excludeExpression });
   }
 
+  // Identifies tree to modify whether state tree or tree in an array.
   findTree = (treeName, uid) => {
     const clone = _.cloneDeep(this.state[treeName]);
     if (uid == null) {
@@ -256,12 +257,8 @@ class BuilderPage extends Component {
     }
   }
 
-  addInstance = (treeName, instance, parentPath, uid=null) => {
-    const treeData = this.findTree(treeName, uid)
-    const tree = treeData.tree;
-    const target = getValueAtPath(tree, parentPath).childInstances;
-    target.push(instance);
-
+  // Sets new tree based on if state tree or array tree
+  setTree = (treeName, treeData, tree) => {
     if ('array' in treeData) {
       const index = treeData.index;
       treeData.array[index] = tree;
@@ -271,16 +268,18 @@ class BuilderPage extends Component {
     }
   }
 
-  updateInstanceModifiers = (treeName, modifiers, path) => {
-    const tree = _.cloneDeep(this.state[treeName]);
-    const target = getValueAtPath(tree, path);
-    target.modifiers = modifiers;
+  addInstance = (treeName, instance, parentPath, uid=null) => {
+    const treeData = this.findTree(treeName, uid);
+    const tree = treeData.tree;
+    const target = getValueAtPath(tree, parentPath).childInstances;
+    target.push(instance);
 
-    this.setState({ [treeName]: tree });
+    this.setTree(treeName, treeData, tree);
   }
 
-  editInstance = (treeName, editedParams, path, editingConjunctionType = false) => {
-    const tree = _.cloneDeep(this.state[treeName]);
+  editInstance = (treeName, editedParams, path, editingConjunctionType=false, uid=null) => {
+    const treeData = this.findTree(treeName, uid);
+    const tree = treeData.tree;
     const target = getValueAtPath(tree, path);
 
     if (editingConjunctionType) {
@@ -294,17 +293,18 @@ class BuilderPage extends Component {
       target.parameters[paramIndex].value = editedParams[target.parameters[paramIndex].id];
     }
 
-    this.setState({ [treeName]: tree });
+    this.setTree(treeName, treeData, tree);
   }
 
-  deleteInstance = (treeName, path) => {
-    const tree = _.cloneDeep(this.state[treeName]);
+  deleteInstance = (treeName, path, uid=null) => {
+    const treeData = this.findTree(treeName, uid);
+    const tree = treeData.tree;
     const index = path.slice(-1);
     path = path.slice(0, path.length - 2);
     const target = getValueAtPath(tree, path);
     target.splice(index, 1);
 
-    this.setState({ [treeName]: tree });
+    this.setTree(treeName, treeData, tree);
   }
 
   updateRecommendations = (newState) => {

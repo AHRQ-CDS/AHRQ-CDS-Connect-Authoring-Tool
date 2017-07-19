@@ -37,6 +37,18 @@ class Subpopulation extends Component {
     return this.props.getAllInstances(name, null, this.props.id);
   }
 
+  editInstance = (treeName, params, path, editingConjunction) => {
+    this.props.editInstance(treeName, params, path, editingConjunction, this.props.id);
+  }
+
+  deleteInstance = (treeName, path) => {
+    this.props.deleteInstance(treeName, path, this.props.id);
+  }
+
+  saveInstance = (treeName, path) => {
+    this.props.saveInstance(treeName, path, this.props.id);
+  }
+
   render() {
     return (
       <div className="subpopulation">
@@ -67,22 +79,15 @@ class Subpopulation extends Component {
           <div className="subpopulation__logic">
             <ConjunctionGroup
               root={ true }
-              name={
-                // TODO: Updating a tree will be a bit different here since it will be a member of the
-                      // subpopulations array on BuilderPage's state.
-                      // Should maybe rely on UID lookup in the array rather than treename for this case,
-                      // but perhaps there's a way to adapt the add/edit/delete instance
-                      // functions in BuilderPage to accomdate both scenarios easily
-                this.props.treeName
-              }
+              name={ this.props.treeName }
               instance={
                 // TODO: None of the following instance-modifying functions are going to work cause of ^ above
                 this.props.subpopulation
               }
               addInstance={ this.addInstance }
-              editInstance={ this.props.editInstance }
-              deleteInstance={ this.props.deleteInstance }
-              saveInstance={ this.props.saveInstance }
+              editInstance={ this.editInstance }
+              deleteInstance={ this.deleteInstance }
+              saveInstance={ this.saveInstance }
               getAllInstances={ this.getAllInstances }
               showPresets={ this.props.showPresets }
               categories={ this.props.categories }

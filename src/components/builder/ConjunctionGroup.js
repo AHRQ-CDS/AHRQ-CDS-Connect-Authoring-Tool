@@ -39,7 +39,7 @@ class ConjunctionGroup extends Component {
   }
 
   handleNameChange = (state) => {
-    this.props.editInstance(this.props.name, state, this.getPath());
+    this.props.editInstance(this.props.name, state, this.getPath(), false);
   }
 
   addChild = (template) => {
