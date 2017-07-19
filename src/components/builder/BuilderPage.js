@@ -52,7 +52,6 @@ class BuilderPage extends Component {
     this.state = {
       expTreeInclude: {},
       expTreeExclude: {},
-      logicExpressions: {},
       recommendations: [],
       subpopulations: [],
       name: 'Untitled Artifact',
@@ -239,18 +238,37 @@ class BuilderPage extends Component {
   initializeExpTrees = (template) => {
     const includeExpression = this.initializeExpTree('Inclusions', template);
     const excludeExpression = this.initializeExpTree('Exclusions', template);
-    const logicExpression = this.initializeExpTree('Logic', template);
     this.setState({ expTreeInclude: includeExpression });
     this.setState({ expTreeExclude: excludeExpression });
-    this.setState({ logicExpressions: logicExpression });
   }
 
-  addInstance = (treeName, instance, parentPath) => {
-    const tree = _.cloneDeep(this.state[treeName]);
+  findTree = (treeName, uid) => {
+    const clone = _.cloneDeep(this.state[treeName]);
+    if (uid == null) {
+      return { tree: clone };
+    } else {
+      const index = clone.findIndex(sub => sub.uniqueId === uid);
+      return {
+        array: clone,
+        tree: clone[index],
+        index: index
+      };
+    }
+  }
+
+  addInstance = (treeName, instance, parentPath, uid=null) => {
+    const treeData = this.findTree(treeName, uid)
+    const tree = treeData.tree;
     const target = getValueAtPath(tree, parentPath).childInstances;
     target.push(instance);
 
-    this.setState({ [treeName]: tree });
+    if ('array' in treeData) {
+      const index = treeData.index;
+      treeData.array[index] = tree;
+      this.setState({ [treeName]: treeData.array });  
+    } else {
+      this.setState({ [treeName]: tree });
+    }
   }
 
   updateInstanceModifiers = (treeName, modifiers, path) => {
@@ -297,8 +315,10 @@ class BuilderPage extends Component {
     this.setState({ subpopulations: updatedSubpopulations });
   }
 
-  getAllInstances = (treeName, node = undefined) => {
-    if (node === undefined) { node = this.state[treeName]; }
+  getAllInstances = (treeName, node=null, uid=null) => {
+    if (node == null) { 
+      node = this.findTree(treeName, uid).tree;
+    }
     return _.flatten(node.childInstances.map((instance) => {
       if (instance.childInstances) {
         return _.flatten([instance, this.getAllInstances(treeName, instance)]);
@@ -397,6 +417,7 @@ class BuilderPage extends Component {
             </TabPanel>
             <TabPanel>
               <Subpopulations
+                name={ 'subpopulations' }
                 subpopulations={ this.state.subpopulations }
                 updateSubpopulations={ this.updateSubpopulations }
                 addInstance={ this.addInstance }

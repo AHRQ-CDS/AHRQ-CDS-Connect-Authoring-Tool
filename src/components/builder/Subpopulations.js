@@ -46,7 +46,9 @@ class Subpopulations extends Component {
             <Subpopulation
               key={ subpop.uniqueId }
               id={ subpop.uniqueId }
+              treeName={ this.props.name }
               subpopulation={ subpop }
+
               subpopulationIndex={
                 // TODO: Can remove this if we get a better default name for new subpops
                 i
