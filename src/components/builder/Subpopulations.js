@@ -56,10 +56,9 @@ class Subpopulations extends Component {
           return (
             <Subpopulation
               key={ subpop.uniqueId }
-              id={ subpop.uniqueId }
               treeName={ this.props.name }
               subpopulation={ subpop }
-
+              subpopulations={ this.props.subpopulations }
               subpopulationIndex={
                 // TODO: Can remove this if we get a better default name for new subpops
                 i
@@ -70,7 +69,6 @@ class Subpopulations extends Component {
               updateInstanceModifiers={ this.props.updateInstanceModifiers }
               deleteInstance={ this.props.deleteInstance }
               saveInstance={ this.props.saveInstance }
-              getAllInstances={ this.props.getAllInstances }
               showPresets={ this.props.showPresets }
               getSubpopulationName={ this.getSubpopulationName }
               setSubpopulationName={ this.setSubpopulationName }

@@ -28,6 +28,11 @@ import ValueComparison from './modifiers/ValueComparison';
 import ValueComparisonObservation from './modifiers/ValueComparisonObservation';
 import WithUnit from './modifiers/WithUnit';
 
+const requiredIf = (type, condition) => function (props) {
+  const test = condition(props) ? type.isRequired : type;
+  return test.apply(this, arguments);
+};
+
 const API_BASE = Config.api.baseUrl;
 
 // TODO Move these options to a better spot
@@ -85,12 +90,14 @@ class TemplateInstance extends Component {
     getPath: PropTypes.func.isRequired,
     treeName: PropTypes.string.isRequired,
     templateInstance: PropTypes.object.isRequired,
-    otherInstances: PropTypes.array.isRequired,
     editInstance: PropTypes.func.isRequired,
     updateInstanceModifiers: PropTypes.func.isRequired,
     deleteInstance: PropTypes.func.isRequired,
     saveInstance: PropTypes.func.isRequired,
-    showPresets: PropTypes.func.isRequired
+    showPresets: PropTypes.func.isRequired,
+    inSubpopulations: PropTypes.bool,
+    otherSubpopulations: requiredIf(PropTypes.array, props => props.inSubpopulations)
+
   }
 
   constructor(props) {
@@ -132,7 +139,6 @@ class TemplateInstance extends Component {
     this.handleModifierSelected = this.handleModifierSelected.bind(this);
     this.filterRelevantModifiers = this.filterRelevantModifiers.bind(this);
 
-    this.notThisInstance = this.notThisInstance.bind(this);
     this.addComponent = this.addComponent.bind(this);
     this.updateComparison = this.updateComparison.bind(this);
     this.addCaseComponent = this.addCaseComponent.bind(this);
@@ -144,9 +150,6 @@ class TemplateInstance extends Component {
       this.setState({ [param.id]: param.value });
     });
 
-    const otherInstances = this.getOtherInstances(this.props);
-    this.setState({ otherInstances });
-
     this.setState({returnType: this.props.templateInstance.returnType});
     axios.get(`${API_BASE}/config/resources`)
       .then((result) => {
@@ -156,28 +159,6 @@ class TemplateInstance extends Component {
 
   componentDidMount() {
     this.setAppliedModifiers(this.props.templateInstance.modifiers || []);
-  }
-
-  componentWillReceiveProps(nextProps) {
-    const otherInstances = this.getOtherInstances(nextProps);
-    this.setState({ otherInstances });
-  }
-
-  // Props will either be this.props or nextProps coming from componentWillReceiveProps
-  getOtherInstances(props) {
-    const otherInstances = props.otherInstances.filter(this.notThisInstance)
-      .map(instance => ({
-        name: getInstanceName(instance),
-        id: instance.id,
-        returnType: (_.isEmpty(instance.modifiers) ? instance.returnType : _.last(instance.modifiers).returnType) }));
-    return otherInstances;
-  }
-
-  notThisInstance(instance) {
-    // Look up by uniqueId to correctly identify the current instance
-    // For example, "and" elements have access to all other "and" elements besides itself
-    // They have different uniqueId's but the id's of all "and" elements is "And"
-    return this.props.templateInstance.uniqueId !== instance.uniqueId;
   }
 
   updateInstance(newState) {
@@ -476,7 +457,7 @@ class TemplateInstance extends Component {
             key={param.id}
             param={param}
             value={this.state[param.id]}
-            values={this.state.otherInstances}
+            values={this.props.otherSubpopulations}
             joinOperator={this.props.templateInstance.name}
             addComponent={this.addComponent}
             updateList={this.updateList} />
@@ -493,7 +474,7 @@ class TemplateInstance extends Component {
           <NullCheckingParameter
           key={param.id}
           param={param}
-          values={this.state.otherInstances}
+          values={this.props.otherSubpopulations}
           updateList={this.updateList} />
         );
       case 'dropdown':
@@ -509,7 +490,7 @@ class TemplateInstance extends Component {
         return (
           <IfParameter
             key={param.id}
-            values={this.state.otherInstances}
+            values={this.props.otherSubpopulations}
             param={param}
             updateIfStatement={this.updateIf}
             addIfComponent={this.addIfComponent}
@@ -521,7 +502,7 @@ class TemplateInstance extends Component {
             key={param.id}
             param={param}
             value={this.state[param.id]}
-            values={this.state.otherInstances}
+            values={this.props.otherSubpopulations}
             addComponent={this.addCaseComponent}
             setCaseReturnType={this.setCaseReturnType}
             updateCase={this.updateCase}

@@ -2,7 +2,7 @@ module.exports = [
   {
     id: 0,
     icon: 'user',
-    suppress: true,
+    suppress: 'global',
     name: 'Generic',
     entries: [
       {
@@ -50,7 +50,7 @@ module.exports = [
         id: 'GenericObservation',
         name: 'Observation',
         returnType: 'list_of_observations',
-        suppress: true,
+        suppress: 'global',
         extends: 'Base',
         parameters: [
           { id: 'observation', type: 'observation', name: 'Observation' },
@@ -185,7 +185,7 @@ module.exports = [
         name: 'If',
         returnType: 'null', // TODO: make returnType dynamic just like `case`
         extends: 'Base',
-        suppress: true,
+        suppress: 'inpopulation',
         template: 'If',
         parameters: [
           { id: 'components', type: 'if', name: 'Elements', value: [{},{else: true, block: ''}]}
@@ -196,7 +196,7 @@ module.exports = [
         name: 'Not',
         returnType: 'boolean',
         extends: 'Base',
-        suppress: true,
+        suppress: 'inpopulation',
         template: 'Not',
         parameters: [
           { id: 'components', type: 'list',subType: 'boolean',value: [undefined], name: 'Elements' }
@@ -227,7 +227,7 @@ module.exports = [
       {
         id: 'Case',
         name: 'Case',
-        suppress: true,
+        suppress: 'global',
         returnType: null,
         parameters: [
           { id: 'element_name', type: 'string', name: 'Element Name' },
@@ -253,7 +253,7 @@ module.exports = [
         id: 'GenericCondition',
         name: 'Condition',
         returnType: 'list_of_conditions',
-        suppress: true,
+        suppress: 'global',
         extends: 'Base',
         parameters: [
           { id: 'condition', type: 'condition', name: 'Condition' }
@@ -381,7 +381,7 @@ module.exports = [
         id: 'GenericMedication',
         name: 'Medication',
         returnType: 'list_of_medications',
-        suppress: true,
+        suppress: 'global',
         extends: 'Base',
         parameters: [
           { id: 'medication', type: 'medication', name: 'Medication' }
@@ -408,7 +408,7 @@ module.exports = [
         id: 'GenericProcedure',
         name: 'Procedure',
         returnType: 'list_of_procedures',
-        suppress: true,
+        suppress: 'global',
         extends: 'Base',
         parameters: [
           { id: 'procedure', type: 'procedure', name: 'Procedure' },
@@ -469,7 +469,7 @@ module.exports = [
         id: 'GenericEncounter',
         name: 'Encounter',
         returnType: 'encounter',
-        suppress: true,
+        suppress: 'global',
         extends: 'Base',
         parameters: [
           { id: 'encounter', type: 'encounter', name: 'Encounter' },
@@ -496,7 +496,7 @@ module.exports = [
         id: 'GenericAllergyIntolerance',
         name: 'Allergy Inteolerance',
         returnType: 'allergy_intolerance',
-        suppress: true,
+        suppress: 'global',
         extends: 'Base',
         parameters: [
           { id: 'allergyIntolerance', type: 'allergyIntolerance', name: 'Allergy Intolerance' },

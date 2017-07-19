@@ -23,7 +23,7 @@ export default (props) => {
         <div key={index}>
           {index > 0 && <div>{props.joinOperator}</div> }
           <Select key={index}
-                  labelKey={'name'}
+                  labelKey={'subpopulationName'}
                   autofocus
                   options={filteredValues}
                   clearable={true}
