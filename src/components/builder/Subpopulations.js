@@ -19,9 +19,19 @@ class Subpopulations extends Component {
     this.baseTemplate = (andTemplate);
   }
 
+  getSubpopulationName = (subpopulationId) => {
+    return this.props.subpopulations[subpopulationId].subpopulationName;
+  }
+
+  setSubpopulationName = (event, subpopulationId) => {
+    this.props.subpopulations[subpopulationId].subpopulationName = event.target.value;
+    this.props.updateSubpopulations(this.props.subpopulations); // calls setState to get re-render, and updates `subpopulationName` key
+  }
+
   addSubpopulation = () => {
     const newSubpopulation = createTemplateInstance(this.baseTemplate);
     newSubpopulation.path = '';
+    newSubpopulation.subpopulationName = `Subpopulation ${this.props.subpopulations.length + 1}`;
     const newSubpopulations = this.props.subpopulations.concat([ newSubpopulation ]);
 
     this.props.updateSubpopulations(newSubpopulations);
@@ -60,6 +70,8 @@ class Subpopulations extends Component {
               saveInstance={ this.props.saveInstance }
               getAllInstances={ this.props.getAllInstances }
               showPresets={ this.props.showPresets }
+              getSubpopulationName={ this.getSubpopulationName }
+              setSubpopulationName={ this.setSubpopulationName }
               categories={ this.props.categories } />
           );
         })}

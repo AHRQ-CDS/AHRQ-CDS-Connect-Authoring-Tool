@@ -82,9 +82,9 @@ class Recommendation extends Component {
             { this.props.rec.subpopulations.map((subpop, i) => {
               return (
                 <div
-                  key={subpop.uniqueId}
+                  key={subpop.subpopulationName}
                   className="recommendation__subpopulation-pill">
-                  { subpop.uniqueId }
+                  { subpop.subpopulationName }
                   <button onClick={ () => this.removeSubpopulation(i) }><FontAwesome fixedWidth name='times'/></button>
                 </div>
               );
@@ -95,11 +95,11 @@ class Recommendation extends Component {
               className="recommendation__subpopulation-select"
               name="recommendation__subpopulation-select"
               value="start"
-              placeholder={ 'Add a subpopuation' }
-              aria-label={ 'Add a subpopuation' }
+              placeholder={ 'Add a subpopulation' }
+              aria-label={ 'Add a subpopulation' }
               clearable={ false }
               options={ this.getRelevantSubpopulations() }
-              labelKey='uniqueId'
+              labelKey='subpopulationName'
               onChange={ this.applySubpopulation }
             />
             {

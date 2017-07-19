@@ -13,14 +13,6 @@ class Subpopulation extends Component {
     };
   }
 
-  getSubpopulationName = () => {
-    return this.props.subpopulation.parameters[0].value || `Subpopulation ${this.props.subpopulationIndex + 1}`;
-  }
-
-  handleNameChange = (event) => {
-    // TODO: Update name parameter for this subpopulation
-  }
-
   expand = () => {
     this.setState({ isExpanded: true });
   }
@@ -58,14 +50,14 @@ class Subpopulation extends Component {
               <FontAwesome fixedWidth name='angle-double-down'/>
               <input
                 type="text"
-                value={ this.getSubpopulationName() }
-                onChange={ this.handleNameChange }
+                value={ this.props.getSubpopulationName(this.props.subpopulationIndex) }
+                onChange={ event => { this.props.setSubpopulationName(event, this.props.subpopulationIndex) } }
               />
             </div>
           :
             <div className="subpopulation__title">
               <FontAwesome fixedWidth name='angle-double-right'/>
-              <h3>{ this.getSubpopulationName() }</h3>
+              <h3>{ this.props.getSubpopulationName(this.props.subpopulationIndex) }</h3>
             </div>
           }
           <div className="button-bar">
