@@ -8,7 +8,8 @@ class Subpopulations extends Component {
   static propTypes = {
     subpopulations: PropTypes.array.isRequired,
     updateSubpopulations: PropTypes.func.isRequired,
-    categories: PropTypes.array.isRequired
+    categories: PropTypes.array.isRequired,
+    updateInstanceModifiers: PropTypes.func.isRequired
   };
 
   constructor(props) {
@@ -66,6 +67,7 @@ class Subpopulations extends Component {
               deleteSubpopulation={ this.deleteSubpopulation }
               addInstance={ this.props.addInstance }
               editInstance={ this.props.editInstance }
+              updateInstanceModifiers={ this.props.updateInstanceModifiers }
               deleteInstance={ this.props.deleteInstance }
               saveInstance={ this.props.saveInstance }
               getAllInstances={ this.props.getAllInstances }

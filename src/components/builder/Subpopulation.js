@@ -1,10 +1,13 @@
-import React, { Component } from 'react';
+import React, { Component, PropTypes } from 'react';
 import _ from 'lodash';
 import FontAwesome from 'react-fontawesome';
 
 import ConjunctionGroup from './ConjunctionGroup';
 
 class Subpopulation extends Component {
+  static propTypes = {
+    updateInstanceModifiers: PropTypes.func.isRequired,
+  }
   constructor(props) {
     super(props);
 
@@ -78,6 +81,7 @@ class Subpopulation extends Component {
               }
               addInstance={ this.addInstance }
               editInstance={ this.editInstance }
+              updateInstanceModifiers={ this.props.updateInstanceModifiers }
               deleteInstance={ this.deleteInstance }
               saveInstance={ this.saveInstance }
               getAllInstances={ this.getAllInstances }

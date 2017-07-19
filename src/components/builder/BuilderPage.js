@@ -281,6 +281,14 @@ class BuilderPage extends Component {
     this.setTree(treeName, treeData, tree);
   }
 
+  updateInstanceModifiers = (treeName, modifiers, path) => {
+    const tree = _.cloneDeep(this.state[treeName]);
+    const target = getValueAtPath(tree, path);
+    target.modifiers = modifiers;
+
+    this.setState({ [treeName]: tree });
+  }
+
   editInstance = (treeName, editedParams, path, editingConjunctionType=false, uid=null) => {
     const treeData = this.findTree(treeName, uid);
     const tree = treeData.tree;
@@ -426,6 +434,7 @@ class BuilderPage extends Component {
                 updateSubpopulations={ this.updateSubpopulations }
                 addInstance={ this.addInstance }
                 editInstance={ this.editInstance }
+                updateInstanceModifiers={ this.updateInstanceModifiers }
                 deleteInstance={ this.deleteInstance }
                 saveInstance={ this.saveInstance }
                 getAllInstances={ this.getAllInstances }
