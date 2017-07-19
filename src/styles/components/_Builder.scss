@@ -1,13 +1,26 @@
 .builder {
-  &__heading {
-    font-weight: 300;
+  &__header {
     color: $builder-text-color;
-    margin-top: 0;
+    display: flex;
+    align-items: flex-start;
+    margin-bottom: 1em;
   }
 
-  &__savebutton,
-  &__deletebutton {
-    @extend .primary-button;
+  &__heading {
+    flex: 1;
+    font-weight: 300;
+    margin: 0;
+    padding-right: 1em;
+  }
+
+  &__buttonbar {
+    .field {
+      margin-bottom: 0.25em;
+      text-align: right;
+    }
+    [role=status] {
+      font-style: italic;
+    }
   }
 
   &__canvas {
@@ -51,27 +64,6 @@
     [role=tabpanel] {
       margin: 0 2em 1em;
       padding: 0 2em;
-    }
-
-    .tab__buttonbar {
-      display: inline-block;
-      color: $white;
-      float: right;
-
-      span {
-        margin-right: 0.5em;
-        font-style: italic;
-        top: 1px;
-        position: relative;
-      }
-
-      button {
-        display: inline-block;
-
-        &.builder__publishbutton {
-          @extend .primary-button;
-        }
-      }
     }
   }
 }

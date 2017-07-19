@@ -389,6 +389,38 @@ class BuilderPage extends Component {
       <div className="builder">
         <header className="builder__header">
           <h2 className="builder__heading">{ this.state.name }</h2>
+          <div className="builder__buttonbar">
+            <div className="field has-addons has-addons-right">
+              <span className="control">
+                <button onClick={ () => { this.updateStatusMessage('download'); this.downloadCQL(); } }
+                  className="button builder__cqlbutton is-unsaved">
+                  <span className="icon is-small">
+                    <i className="fa fa-download"></i>
+                  </span>
+                  <span>Download CQL</span>
+                </button>
+              </span>
+              <span className="control">
+                <button onClick={ () => { this.updateStatusMessage('save'); this.saveArtifact(false); } }
+                  className="button builder__savebutton is-unsaved">
+                  <span className="icon is-small">
+                    <i className="fa fa-save"></i>
+                  </span>
+                  <span>Save</span>
+                </button>
+              </span>
+              <span className="control">
+                <button onClick={ () => { this.updateStatusMessage('publish'); this.saveArtifact(false); } }
+                  className="button builder__publishbutton">
+                  <span className="icon is-small">
+                    <i className="fa fa-align-right"></i>
+                  </span>
+                  <span>Publish</span>
+                </button>
+              </span>
+            </div>
+            <div role="status" aria-live="assertive">{this.state.statusMessage}</div>
+          </div>
         </header>
         <section className="builder__canvas">
           <Tabs defaultIndex={2}>
@@ -397,23 +429,7 @@ class BuilderPage extends Component {
               <Tab>Exclusions</Tab>
               <Tab>Recommendations</Tab>
               <Tab>Subpopulations</Tab>
-              <div className="tab__buttonbar">
-                <span role="status" aria-live="assertive">{this.state.statusMessage}</span>
-                <button onClick={ () => { this.updateStatusMessage('save'); this.saveArtifact(false); } }
-                  className="builder__savebutton is-unsaved">
-                  Save
-                </button>
-                <button onClick={ () => { this.updateStatusMessage('download'); this.downloadCQL(); } }
-                  className="builder__cqlbutton is-unsaved">
-                  Download CQL
-                </button>
-                <button onClick={ () => { this.updateStatusMessage('publish'); this.saveArtifact(false); } }
-                  className="builder__publishbutton">
-                  Publish
-                </button>
-              </div>
             </TabList>
-
             <TabPanel>
               { this.renderConjunctionGroup('expTreeInclude') }
             </TabPanel>
