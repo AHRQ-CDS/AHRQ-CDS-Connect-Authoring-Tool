@@ -249,7 +249,7 @@ class TemplateInstance extends Component {
   }
 
   updateComparison(isSingledSided) {
-    // TODO: Refactor this function to use React State
+    // TODO: Refactor this function to occur within the component itself
     const parameter = this.props.templateInstance.parameters;
     if (isSingledSided) {
       _.remove(parameter, param => (RegExp('^.*(?=(_2))').test(param.id))); // Remove any instance with id ending in '_2'

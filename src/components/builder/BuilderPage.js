@@ -326,6 +326,8 @@ class BuilderPage extends Component {
   }
 
   updateSubpopulations = (updatedSubpopulations) => {
+    updatedSubpopulations.push({'special': true, 'subpopulationName': "Doesn't Meet Inclusion Criteria", 'special_subpopulationName': 'not "Includes"'},
+                               {'special': true, 'subpopulationName': "Meets Exclusion Criteria", 'special_subpopulationName': '"Excludes"'});
     this.setState({ subpopulations: updatedSubpopulations });
   }
 
@@ -480,7 +482,7 @@ class BuilderPage extends Component {
             <TabPanel>
               <Subpopulations
                 name={ 'subpopulations' }
-                subpopulations={ this.state.subpopulations }
+                subpopulations={ this.state.subpopulations.slice(0,-2) } // We preset `Doesn't Meet Inclusion` and `Meets Exclusion`. We don't want to show these in `Subpopulations Tab`
                 updateSubpopulations={ this.updateSubpopulations }
                 addInstance={ this.addInstance }
                 editInstance={ this.editInstance }

@@ -110,8 +110,10 @@ class CqlArtifact {
     if (this.exclusions.childInstances.length)
       this.parseTree(this.exclusions);
     this.subpopulations.forEach(subpopulation => {
-      if (subpopulation.childInstances.length)
-        this.parseTree(subpopulation);
+      if (!subpopulation.special) { // `Doesn't Meet Inclusion Criteria` and `Meets Exclusion Criteria` are special
+        if (subpopulation.childInstances.length)
+          this.parseTree(subpopulation);
+        }
       }
     )
   }
@@ -134,6 +136,7 @@ class CqlArtifact {
 
   parseConjunction(element) {
     const conjunction = {template : element.id, components : []};
+    conjunction.assumeInPopulation = _.has(element, 'subpopulationName');
     const name = element.parameters[0].value;
     conjunction.element_name = (name || element.subpopulationName || element.uniqueId);
     element.childInstances.forEach((child) => {
@@ -316,6 +319,7 @@ class CqlArtifact {
 
   /* Modifiers Explanation:
     Within `form_templates`, a template must be specified (unless extending an element that specifies a template).
+    If no template is specified, it will look for a template named the same as the `id`.
     If the element specifies a template within the folder `specificTemplates` it's assumed that element will not have modifiers
       In this case, just render the element.
     Otherwise:
@@ -377,9 +381,9 @@ class CqlArtifact {
   recommendation() {
     let recommendationText = this.recommendations.map(recommendation => {
       let conjunction = 'and'; // possible that this may become `or`, or some combo of the two conjunctions
-      let conditionalText = recommendation.subpopulations.map(subpopulation => `"${subpopulation.subpopulationName}"`).join(` ${conjunction} `);
-      return `if ${conditionalText} then "${recommendation.text}"`;
-    }).join("\n  ");
+      let conditionalText = recommendation.subpopulations.map(subpopulation => subpopulation.special_subpopulationName ? subpopulation.special_subpopulationName : `"${subpopulation.subpopulationName}"`).join(` ${conjunction} `);
+      return `if ${conditionalText} then '${recommendation.text}'`;
+    }).join("\n  ").concat('\n  else null');
     return ejs.render(templateMap['BaseTemplate'], {element_name: 'Recommendations', cqlString: recommendationText})
   }
 
@@ -387,9 +391,10 @@ class CqlArtifact {
     let rationaleText = this.recommendations.map(recommendation => {
       if (_.isEmpty(recommendation.rationale)) return '';
       let conjunction = 'and'; // possible that this may become `or`, or some combo of the two conjunctions
-      let conditionalText = recommendation.subpopulations.map(subpopulation => `"${subpopulation.subpopulationName}"`).join(` ${conjunction} `);
-      return `if ${conditionalText} then "${recommendation.rationale}"`;
-    }).join('\n  ');
+      console.log(recommendation.subpopulations);
+      let conditionalText = recommendation.subpopulations.map(subpopulation => subpopulation.special_subpopulationName ? subpopulation.special_subpopulationName : `"${subpopulation.subpopulationName}"`).join(` ${conjunction} `);
+      return `if ${conditionalText} then '${recommendation.rationale}'`;
+    }).join('\n  ').concat('\n  else null');
     if (_.isEmpty(rationaleText)) return '';
     return ejs.render(templateMap['BaseTemplate'], {element_name: 'Rationale', cqlString: rationaleText})
 

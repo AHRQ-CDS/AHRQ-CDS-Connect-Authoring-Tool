@@ -1,3 +1,6 @@
-define "<%-element_name%>":
-  <%-components.map(function(c) { return `"${c.name}"`; }).join(` 
-  or `)%>
+define "<%-element_name%>":<%if(assumeInPopulation){%>
+  if InPopulation is not true then
+    null
+  else<%}%>
+  <%-components.map(c => `"${c.name}"`).join(`
+    or `)%>
