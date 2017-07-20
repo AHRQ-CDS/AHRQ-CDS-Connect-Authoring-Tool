@@ -18,6 +18,11 @@ class Subpopulations extends Component {
     const operations = this.props.categories.find(g => g.name === 'Operations');
     const andTemplate = operations.entries.find(e => e.name === 'And');
     this.baseTemplate = (andTemplate);
+
+    this.state = {
+      subpopulations: this.props.subpopulations.filter(sp => !sp.special), // Don't want to allow user interaction with the two default subpopulations added by the system
+      numOfSpecialSubpopulations: this.props.subpopulations.filter(sp => sp.special).length
+    };
   }
 
   componentWillMount() {
@@ -26,19 +31,17 @@ class Subpopulations extends Component {
     }
   }
 
-  getSubpopulationName = (subpopulationId) => {
-    return this.props.subpopulations[subpopulationId].subpopulationName;
-  }
-
-  setSubpopulationName = (event, subpopulationId) => {
-    this.props.subpopulations[subpopulationId].subpopulationName = event.target.value;
-    this.props.updateSubpopulations(this.props.subpopulations); // calls setState to get re-render, and updates `subpopulationName` key
+  componentWillReceiveProps(nextProps) {
+    this.setState({
+      subpopulations: nextProps.subpopulations.filter(sp => !sp.special),
+      numOfSpecialSubpopulations: nextProps.subpopulations.filter(sp => sp.special).length
+    });
   }
 
   addSubpopulation = () => {
     const newSubpopulation = createTemplateInstance(this.baseTemplate);
     newSubpopulation.path = '';
-    newSubpopulation.subpopulationName = `Subpopulation ${this.props.subpopulations.length + 1}`;
+    newSubpopulation.subpopulationName = `Subpopulation ${this.state.subpopulations.length + 1}`;
     newSubpopulation.expanded = true;
     const newSubpopulations = this.props.subpopulations.concat([ newSubpopulation ]);
 
@@ -64,18 +67,14 @@ class Subpopulations extends Component {
         <button className="button new-subpopulation" onClick={ this.addSubpopulation }>
           New subpopulation
         </button>
-        { this.props.subpopulations && this.props.subpopulations.map((subpop, i) => {
+        { this.state.subpopulations.map((subpop, i) => {
           return (
             <Subpopulation
               key={ subpop.uniqueId }
-              id={ subpop.uniqueId }
               treeName={ this.props.name }
               subpopulation={ subpop }
-
-              subpopulationIndex={
-                // TODO: Can remove this if we get a better default name for new subpops
-                i
-              }
+              subpopulationIndex={ i + this.state.numOfSpecialSubpopulations } // System needs to know true index out of all subpopulations
+              updateSubpopulations={ this.props.updateSubpopulations }
               deleteSubpopulation={ this.deleteSubpopulation }
               addInstance={ this.props.addInstance }
               editInstance={ this.props.editInstance }
@@ -84,8 +83,6 @@ class Subpopulations extends Component {
               saveInstance={ this.props.saveInstance }
               getAllInstances={ this.props.getAllInstances }
               showPresets={ this.props.showPresets }
-              getSubpopulationName={ this.getSubpopulationName }
-              setSubpopulationName={ this.setSubpopulationName }
               categories={ this.props.categories } />
           );
         })}

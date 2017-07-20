@@ -31,13 +31,7 @@ class Recommendation extends Component {
   }
 
   revealSubpopulations = () => {
-    if (!this.props.subpopulations.length) {
-      // TODO: This shouldn't be alert and this shouldn't be the messaged used.
-      alert('You don\'t have any subpopulations built yet. Let\'s go build one!');
-      this.props.setActiveTab(subpopTabIndex);
-    } else {
-      this.setState({ showSubpopulations: true });
-    }
+    this.setState({ showSubpopulations: true });
   }
 
   applySubpopulation = (subpop) => {

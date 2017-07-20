@@ -53,7 +53,10 @@ class BuilderPage extends Component {
       expTreeInclude: {},
       expTreeExclude: {},
       recommendations: [],
-      subpopulations: [],
+      subpopulations: [
+        {special: true, subpopulationName: "Doesn't Meet Inclusion Criteria", special_subpopulationName: 'not "Includes"'},
+        {special: true, subpopulationName: "Meets Exclusion Criteria", special_subpopulationName: '"Excludes"'}
+      ],
       name: 'Untitled Artifact',
       id: null,
       version: null,
@@ -73,6 +76,10 @@ class BuilderPage extends Component {
         const operations = result.data.find(g => g.name === 'Operations');
         const andTemplate = operations.entries.find(e => e.name === 'And');
         this.setState({ andTemplate: andTemplate });
+
+        if (this.state.subpopulations.length <= 2) {
+          this.addBlankSubpopulation(andTemplate);
+        }
 
         if (this.props.match.params.id) {
           this.loadExistingArtifact();
@@ -267,7 +274,7 @@ class BuilderPage extends Component {
     if ('array' in treeData) {
       const index = treeData.index;
       treeData.array[index] = tree;
-      this.setState({ [treeName]: treeData.array });  
+      this.setState({ [treeName]: treeData.array });
     } else {
       this.setState({ [treeName]: tree });
     }
@@ -326,13 +333,11 @@ class BuilderPage extends Component {
   }
 
   updateSubpopulations = (updatedSubpopulations) => {
-    updatedSubpopulations.push({'special': true, 'subpopulationName': "Doesn't Meet Inclusion Criteria", 'special_subpopulationName': 'not "Includes"'},
-                               {'special': true, 'subpopulationName': "Meets Exclusion Criteria", 'special_subpopulationName': '"Excludes"'});
     this.setState({ subpopulations: updatedSubpopulations });
   }
 
   getAllInstances = (treeName, node=null, uid=null) => {
-    if (node == null) { 
+    if (node == null) {
       node = this.findTree(treeName, uid).tree;
     }
     return _.flatten(node.childInstances.map((instance) => {
@@ -381,10 +386,11 @@ class BuilderPage extends Component {
     return false;
   }
 
-  addBlankSubpopulation = () => {
-    const newSubpopulation = createTemplateInstance(this.state.andTemplate);
+  addBlankSubpopulation = (template = this.state.andTemplate) => {
+    const newSubpopulation = createTemplateInstance(template);
     newSubpopulation.path = '';
-    newSubpopulation.subpopulationName = `Subpopulation ${this.state.subpopulations.length + 1}`;
+    const numOfSpecialSubpopulations = this.state.subpopulations.filter(sp => sp.special).length;
+    newSubpopulation.subpopulationName = `Subpopulation ${this.state.subpopulations.length + 1 - numOfSpecialSubpopulations}`;
     newSubpopulation.expanded = true;
     const newSubpopulations = this.state.subpopulations.concat([ newSubpopulation ]);
 
@@ -482,7 +488,7 @@ class BuilderPage extends Component {
             <TabPanel>
               <Subpopulations
                 name={ 'subpopulations' }
-                subpopulations={ this.state.subpopulations.slice(0,-2) } // We preset `Doesn't Meet Inclusion` and `Meets Exclusion`. We don't want to show these in `Subpopulations Tab`
+                subpopulations={ this.state.subpopulations }
                 updateSubpopulations={ this.updateSubpopulations }
                 addInstance={ this.addInstance }
                 editInstance={ this.editInstance }

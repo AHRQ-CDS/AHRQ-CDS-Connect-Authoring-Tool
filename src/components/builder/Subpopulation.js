@@ -25,23 +25,28 @@ class Subpopulation extends Component {
   }
 
   addInstance = (name, template, path) => {
-    this.props.addInstance(name, template, path, this.props.id)
+    this.props.addInstance(name, template, path, this.props.subpopulation.uniqueId)
   }
 
   getAllInstances = (name) => {
-    return this.props.getAllInstances(name, null, this.props.id);
+    return this.props.getAllInstances(name, null, this.props.subpopulation.uniqueId);
   }
 
   editInstance = (treeName, params, path, editingConjunction) => {
-    this.props.editInstance(treeName, params, path, editingConjunction, this.props.id);
+    this.props.editInstance(treeName, params, path, editingConjunction, this.props.subpopulation.uniqueId);
   }
 
   deleteInstance = (treeName, path) => {
-    this.props.deleteInstance(treeName, path, this.props.id);
+    this.props.deleteInstance(treeName, path, this.props.subpopulation.uniqueId);
   }
 
   saveInstance = (treeName, path) => {
-    this.props.saveInstance(treeName, path, this.props.id);
+    this.props.saveInstance(treeName, path, this.props.subpopulation.uniqueId);
+  }
+
+  setSubpopulationName = (value) => {
+    this.props.subpopulation.subpopulationName = value;
+    this.props.updateSubpopulations(this.props.subpopulations); // calls setState to get re-render, and updates `subpopulationName` key
   }
 
   render() {
@@ -53,14 +58,14 @@ class Subpopulation extends Component {
               <FontAwesome fixedWidth name='angle-double-down'/>
               <input
                 type="text"
-                value={ this.props.getSubpopulationName(this.props.subpopulationIndex) }
-                onChange={ event => { this.props.setSubpopulationName(event, this.props.subpopulationIndex) } }
+                value={ this.props.subpopulation.subpopulationName }
+                onChange={ event => { this.setSubpopulationName(event.target.value) } }
               />
             </div>
           :
             <div className="subpopulation__title">
               <FontAwesome fixedWidth name='angle-double-right'/>
-              <h3>{ this.props.getSubpopulationName(this.props.subpopulationIndex) }</h3>
+              <h3>{ this.props.subpopulation.subpopulationName }</h3>
             </div>
           }
           <div className="button-bar">
@@ -75,10 +80,7 @@ class Subpopulation extends Component {
             <ConjunctionGroup
               root={ true }
               name={ this.props.treeName }
-              instance={
-                // TODO: None of the following instance-modifying functions are going to work cause of ^ above
-                this.props.subpopulation
-              }
+              instance={ this.props.subpopulation }
               addInstance={ this.addInstance }
               editInstance={ this.editInstance }
               updateInstanceModifiers={ this.props.updateInstanceModifiers }
