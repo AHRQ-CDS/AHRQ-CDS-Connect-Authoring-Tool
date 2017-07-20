@@ -90,6 +90,7 @@ class CqlArtifact {
     this.inclusions = artifact.expTreeInclude;
     this.exclusions = artifact.expTreeExclude;
     this.subpopulations = artifact.subpopulations;
+    this.recommendations = artifact.recommendations;
     this.initialize()
   }
 
@@ -157,6 +158,7 @@ class CqlArtifact {
     } else {
       context.template = (element.template || element.id);
     }
+    element.modifiers = element.modifiers || [];
     context.withoutModifiers = _.has(specificMap, context.template);
     element.parameters.forEach((parameter) => {
       switch (parameter.type) {
@@ -307,7 +309,7 @@ class CqlArtifact {
       }
     });
 
-    context.modifiers = element.modifiers
+    context.modifiers = element.modifiers;
     context.element_name = (context.element_name || element.uniqueId);
     this.contexts.push(context)
   }
@@ -372,9 +374,30 @@ class CqlArtifact {
     return ejs.render(fs.readFileSync(templatePath + '/IncludeExclude', 'utf-8'), treeNames);
   }
 
+  recommendation() {
+    let recommendationText = this.recommendations.map(recommendation => {
+      let conjunction = 'and'; // possible that this may become `or`, or some combo of the two conjunctions
+      let conditionalText = recommendation.subpopulations.map(subpopulation => `"${subpopulation.subpopulationName}"`).join(` ${conjunction} `);
+      return `if ${conditionalText} then "${recommendation.text}"`;
+    }).join("\n  ");
+    return ejs.render(templateMap['BaseTemplate'], {element_name: 'Recommendations', cqlString: recommendationText})
+  }
+
+  rationale() {
+    let rationaleText = this.recommendations.map(recommendation => {
+      if (_.isEmpty(recommendation.rationale)) return '';
+      let conjunction = 'and'; // possible that this may become `or`, or some combo of the two conjunctions
+      let conditionalText = recommendation.subpopulations.map(subpopulation => `"${subpopulation.subpopulationName}"`).join(` ${conjunction} `);
+      return `if ${conditionalText} then "${recommendation.rationale}"`;
+    }).join('\n  ');
+    if (_.isEmpty(rationaleText)) return '';
+    return ejs.render(templateMap['BaseTemplate'], {element_name: 'Rationale', cqlString: rationaleText})
+
+  }
+
   // Produces the cql in string format
   toString() {
-    return this.header()+this.body()+'\n'+this.population();
+    return this.header()+this.body()+'\n'+this.population()+'\n'+this.recommendation()+'\n'+this.rationale();
   }
 
   // Return a cql file as a json object
