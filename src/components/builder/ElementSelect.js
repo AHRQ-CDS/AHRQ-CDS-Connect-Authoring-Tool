@@ -14,7 +14,7 @@ const sortAlphabeticallyByName = (a, b) => {
   return 0;
 };
 
-const getAllElements = categories => flatten(filterUnsuppressed(categories).map(cat => filterUnsuppressed(cat.entries).map(e => Object.assign({ category: cat.name.replace(/s\s*$/, '') }, e))));
+const getAllElements = categories => flatten(categories.map(cat => cat.entries.map(e => Object.assign({ category: cat.name.replace(/s\s*$/, '') }, e))));
 
 const optionRenderer = option => (
     <div className="element-select__option">
@@ -30,7 +30,7 @@ class ElementSelect extends Component {
     this.internalCategories = this.generateInternalCategories();
 
     this.state = {
-      categories: filterUnsuppressed(this.internalCategories).sort(sortAlphabeticallyByName)
+      categories: this.internalCategories.sort(sortAlphabeticallyByName)
     };
 
     this.elementInputId = '';
@@ -53,7 +53,7 @@ class ElementSelect extends Component {
     // Updates the categories and their entries to have correct parameters
     this.internalCategories = this.generateInternalCategories();
     this.setState({
-      categories: filterUnsuppressed(this.internalCategories).sort(sortAlphabeticallyByName)
+      categories: this.internalCategories.sort(sortAlphabeticallyByName)
     });
 
     // Keep the category that is selected the same
@@ -63,7 +63,12 @@ class ElementSelect extends Component {
   }
 
   generateInternalCategories = () => {
-    const categoriesCopy = Object.assign([], this.props.categories);
+    let categoriesCopy = Object.assign([], this.props.categories);
+    categoriesCopy = filterUnsuppressed(categoriesCopy);
+
+    _.each(categoriesCopy, (cat) => {
+      cat.entries = filterUnsuppressed(cat.entries);
+    });
 
     categoriesCopy.unshift({
       icon: 'bars',

@@ -172,6 +172,7 @@ module.exports = [
         name: 'Comparison',
         returnType: 'boolean',
         template: 'Comparison',
+        suppress: true,
         parameters: [
           { id: 'element_name', type: 'string', name: 'Element Name' },
           { id: 'observation', type: 'list', category: 'comparison', subType: 'system_quantity', value: [undefined], name: 'Observation' },
@@ -208,6 +209,7 @@ module.exports = [
         returnType: 'boolean',
         extends: 'Base',
         template: 'isComparison',
+        suppress: true,
         parameters: [
           { id: 'components', type: 'list',subType: 'boolean', value: [undefined], name: 'Elements' },
           { id: 'dropdown', type: 'dropdown', value: null, name: 'Comparison', option:'booleanCheckingOption' }, // Specify desired options at top of TemplateInstance.js
@@ -219,6 +221,7 @@ module.exports = [
         returnType: 'boolean',
         extends: 'Base',
         template: 'isComparison',
+        suppress: true,
         parameters: [
           { id: 'components', type: 'nullCheckingParameter', value: [undefined], name: 'Elements' },
           { id: 'dropdown', type: 'dropdown', value: null, name: 'Comparison', option: 'nullCheckingOption' }, // Specify desires options at top of TemplateInstance.js
