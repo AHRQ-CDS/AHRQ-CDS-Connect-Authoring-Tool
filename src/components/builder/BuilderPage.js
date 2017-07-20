@@ -281,11 +281,12 @@ class BuilderPage extends Component {
     this.setTree(treeName, treeData, tree);
   }
 
-  updateInstanceModifiers = (treeName, modifiers, path) => {
+  // subpop_index is an optional parameter, for determing which tree within subpop we are referring to
+  updateInstanceModifiers = (treeName, modifiers, path, subpop_index) => {
     const tree = _.cloneDeep(this.state[treeName]);
-    const target = getValueAtPath(tree, path);
+    const valuePath = _.isNumber(subpop_index) ? tree[subpop_index] : tree;
+    const target = getValueAtPath(valuePath, path);
     target.modifiers = modifiers;
-
     this.setState({ [treeName]: tree });
   }
 

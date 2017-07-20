@@ -150,6 +150,7 @@ class ConjunctionGroup extends Component {
                   saveInstance={ this.props.saveInstance }
                   showPresets={ this.props.showPresets }
                   inSubpopulations={ this.props.inSubpopulations }
+                  subpopulationIndex={ this.props.subPopulationIndex }
                   otherSubpopulations={ this.props.otherSubpopulations }
                 />
                 { this.renderConjunctionSelect(i) }

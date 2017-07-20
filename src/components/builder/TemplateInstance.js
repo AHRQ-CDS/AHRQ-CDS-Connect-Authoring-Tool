@@ -365,7 +365,7 @@ class TemplateInstance extends Component {
   }
   setAppliedModifiers(appliedModifiers) {
     this.setState({appliedModifiers: appliedModifiers}, this.filterRelevantModifiers);
-    this.props.updateInstanceModifiers(this.props.treeName, appliedModifiers, this.getPath());
+    this.props.updateInstanceModifiers(this.props.treeName, appliedModifiers, this.getPath(), this.props.subpopulationIndex);
   }
 
   removeLastModifier() {
