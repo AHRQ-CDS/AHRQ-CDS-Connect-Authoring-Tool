@@ -49,7 +49,7 @@ class Subpopulation extends Component {
   render() {
     return (
       <div className="subpopulation">
-        <div className="subpopulation__header">
+        <div className="subpopulation__header" onClick={ this.state.isExpanded ? this.collapse : this.expand }>
           { this.state.isExpanded ?
             <div className="subpopulation__title">
               <FontAwesome fixedWidth name='angle-double-down'/>
