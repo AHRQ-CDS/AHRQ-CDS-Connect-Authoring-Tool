@@ -101,7 +101,7 @@ class ElementSelect extends Component {
           placeholder={placeholderText}
           aria-label={placeholderText}
           clearable={false}
-          options={this.state.selectedCategory.entries.filter(g => !g.suppress)}
+          options={this.state.selectedCategory.entries}
           labelKey='name'
           matchProp='label'
           optionRenderer={optionRenderer}
