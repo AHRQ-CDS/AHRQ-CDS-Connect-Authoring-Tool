@@ -38,6 +38,10 @@
   &__subpopulation-select {
     flex: 1;
   }
+
+  &__new-subpopulation {
+    cursor: pointer;
+  }
 }
 
 .recommendations {

@@ -113,7 +113,10 @@ class Recommendation extends Component {
             {
               // TODO: This should link to the subpopulations tab
             }
-            <a onClick={() => this.props.setActiveTab(subpopTabIndex, 'addBlankSubpopulation')}>New subpopulation</a>
+            <a className="recommendation__new-subpopulation"
+               onClick={() => this.props.setActiveTab(subpopTabIndex, 'addBlankSubpopulation')}>
+               New subpopulation
+            </a>
           </div>
         </div>
       );

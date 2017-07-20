@@ -58,7 +58,9 @@ class Subpopulation extends Component {
               <FontAwesome fixedWidth name='angle-double-down'/>
               <input
                 type="text"
+                className="subpopulation__name-input"
                 value={ this.props.subpopulation.subpopulationName }
+                onClick={ event => event.stopPropagation() }
                 onChange={ event => { this.setSubpopulationName(event.target.value) } }
               />
             </div>
