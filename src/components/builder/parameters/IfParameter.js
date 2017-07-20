@@ -22,7 +22,7 @@ export default (props) => {
                 Condition { index + 1 }:
                 <Select
                   inputProps={{ id: `${id}-condition-${index}` }}
-                  labelKey={'subpopulationName'}
+                  labelKey={'name'}
                   autofocus
                   options={conditionalValues}
                   value={value ? value.condition : null}
@@ -32,7 +32,7 @@ export default (props) => {
                 Block:
                 <Select
                   inputProps={{ id: `${id}-block-${index}` }}
-                  labelKey={'subpopulationName'}
+                  labelKey={'name'}
                   autofocus
                   options={blockValues}
                   value={value ? value.block : null}
@@ -49,9 +49,9 @@ export default (props) => {
                  Default:
                  <Select
                    inputProps={{ id: `${id}-default` }}
-                   labelKey={'subpopulationName'}
+                   labelKey={'name'}
                    autofocus
-                   options={blockValues.concat({ subpopulationName: 'Null' })}
+                   options={blockValues.concat({ name: 'Null' })}
                    value={value ? value.block : null}
                    onChange={(v) => { props.updateIfStatement(props.param.id, v, index, 'block'); }}/>
                </label>

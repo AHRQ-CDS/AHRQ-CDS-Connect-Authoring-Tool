@@ -22,10 +22,9 @@ class ConjunctionGroup extends Component {
     updateInstanceModifiers: PropTypes.func.isRequired,
     deleteInstance: PropTypes.func.isRequired,
     saveInstance: PropTypes.func.isRequired,
+    getAllInstances: PropTypes.func.isRequired,
     showPresets: PropTypes.func.isRequired,
     categories: PropTypes.array.isRequired,
-    inSubpopulations: PropTypes.bool,
-    otherSubpopulations: requiredIf(PropTypes.array, props => props.inSubpopulations)
   }
 
   constructor(props) {
@@ -127,10 +126,9 @@ class ConjunctionGroup extends Component {
                   updateInstanceModifiers={ this.props.updateInstanceModifiers }
                   deleteInstance={ this.props.deleteInstance }
                   saveInstance={ this.props.saveInstance }
+                  getAllInstances={ this.props.getAllInstances }
                   showPresets={ this.props.showPresets }
                   categories={ this.props.categories }
-                  inSubpopulations={ this.props.inSubpopulations }
-                  otherSubpopulations={ this.props.otherSubpopulations }
                 />
                 { this.renderConjunctionSelect(i) }
               </div>
@@ -144,14 +142,13 @@ class ConjunctionGroup extends Component {
                   getPath={ this.getChildsPath }
                   treeName={ this.props.name }
                   templateInstance={ instance }
+                  otherInstances={ this.props.getAllInstances(this.props.name) }
                   editInstance={ this.props.editInstance }
                   updateInstanceModifiers={ this.props.updateInstanceModifiers }
                   deleteInstance={ this.props.deleteInstance }
                   saveInstance={ this.props.saveInstance }
                   showPresets={ this.props.showPresets }
-                  inSubpopulations={ this.props.inSubpopulations }
                   subpopulationIndex={ this.props.subPopulationIndex }
-                  otherSubpopulations={ this.props.otherSubpopulations }
                 />
                 { this.renderConjunctionSelect(i) }
               </div>
@@ -160,7 +157,6 @@ class ConjunctionGroup extends Component {
         <ElementSelect
           categories={ this.props.categories }
           onSuggestionSelected={ this.addChild }
-          inSubpopulations={ this.props.inSubpopulations }
         />
       </div>
     );

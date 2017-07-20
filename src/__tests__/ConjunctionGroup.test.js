@@ -14,6 +14,9 @@ const orInstance = createTemplateInstance(orTemplate);
 instanceTree.path = '';
 instanceTree.childInstances.push(orInstance);
 
+const getAllInstances = jest.fn();
+getAllInstances.mockReturnValue(instanceTree.childInstances);
+
 const addInstance = jest.fn();
 const editInstance = jest.fn();
 
@@ -26,6 +29,7 @@ beforeEach(() => {
     editInstance,
     deleteInstance: jest.fn(),
     saveInstance: jest.fn(),
+    getAllInstances,
     showPresets: jest.fn(),
     categories: elementGroups
   });

@@ -267,7 +267,7 @@ class BuilderPage extends Component {
     if ('array' in treeData) {
       const index = treeData.index;
       treeData.array[index] = tree;
-      this.setState({ [treeName]: treeData.array });
+      this.setState({ [treeName]: treeData.array });  
     } else {
       this.setState({ [treeName]: tree });
     }
@@ -327,6 +327,18 @@ class BuilderPage extends Component {
 
   updateSubpopulations = (updatedSubpopulations) => {
     this.setState({ subpopulations: updatedSubpopulations });
+  }
+
+  getAllInstances = (treeName, node=null, uid=null) => {
+    if (node == null) { 
+      node = this.findTree(treeName, uid).tree;
+    }
+    return _.flatten(node.childInstances.map((instance) => {
+      if (instance.childInstances) {
+        return _.flatten([instance, this.getAllInstances(treeName, instance)]);
+      }
+      return instance;
+    }));
   }
 
   updateStatusMessage = (statusType) => {
@@ -397,9 +409,9 @@ class BuilderPage extends Component {
           updateInstanceModifiers={ this.updateInstanceModifiers }
           deleteInstance={ this.deleteInstance }
           saveInstance={ this.saveInstance }
+          getAllInstances={ this.getAllInstances }
           showPresets={ showPresets }
           categories={ this.state.categories }
-          inSubpopulations={ false }
         />
       :
         <p>Loading...</p>
@@ -475,6 +487,7 @@ class BuilderPage extends Component {
                 updateInstanceModifiers={ this.updateInstanceModifiers }
                 deleteInstance={ this.deleteInstance }
                 saveInstance={ this.saveInstance }
+                getAllInstances={ this.getAllInstances }
                 showPresets={ showPresets }
                 categories={ this.state.categories }
                 checkSubpopulationUsage={ this.checkSubpopulationUsage }

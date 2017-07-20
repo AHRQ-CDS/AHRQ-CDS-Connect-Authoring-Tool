@@ -6,11 +6,15 @@ const flatten = arr => arr.reduce(
   (acc, val) => acc.concat(Array.isArray(val) ? flatten(val) : val), []
 );
 
+const filterUnsuppressed = items => items.filter(item => !item.suppress);
+
 const sortAlphabeticallyByName = (a, b) => {
   if (a.name < b.name) return -1;
   if (a.name > b.name) return 1;
   return 0;
 };
+
+const getAllElements = categories => flatten(filterUnsuppressed(categories).map(cat => filterUnsuppressed(cat.entries).map(e => Object.assign({ category: cat.name.replace(/s\s*$/, '') }, e))));
 
 const optionRenderer = option => (
     <div className="element-select__option">
@@ -26,7 +30,7 @@ class ElementSelect extends Component {
     this.internalCategories = this.generateInternalCategories();
 
     this.state = {
-      categories: this.filterUnsuppressed(this.internalCategories).sort(sortAlphabeticallyByName)
+      categories: filterUnsuppressed(this.internalCategories).sort(sortAlphabeticallyByName)
     };
 
     this.elementInputId = '';
@@ -35,8 +39,7 @@ class ElementSelect extends Component {
 
   static propTypes = {
     categories: PropTypes.array.isRequired,
-    onSuggestionSelected: PropTypes.func.isRequired,
-    inSubpopulations: PropTypes.bool.isRequired
+    onSuggestionSelected: PropTypes.func.isRequired
   }
 
   componentWillMount() {
@@ -50,7 +53,7 @@ class ElementSelect extends Component {
     // Updates the categories and their entries to have correct parameters
     this.internalCategories = this.generateInternalCategories();
     this.setState({
-      categories: this.filterUnsuppressed(this.internalCategories).sort(sortAlphabeticallyByName)
+      categories: filterUnsuppressed(this.internalCategories).sort(sortAlphabeticallyByName)
     });
 
     // Keep the category that is selected the same
@@ -59,19 +62,13 @@ class ElementSelect extends Component {
     this.onSelectedCategoryChange(updatedCategory);
   }
 
-  filterUnsuppressed = items => items.filter(item => {
-    return this.props.inSubpopulations ? !(item.suppress === 'global') : !item.suppress;
-  });
-
-  getAllElements = (categories) => flatten(this.filterUnsuppressed(categories).map(cat => this.filterUnsuppressed(cat.entries).map(e => Object.assign({ category: cat.name.replace(/s\s*$/, '') }, e))));
-
   generateInternalCategories = () => {
     const categoriesCopy = Object.assign([], this.props.categories);
 
     categoriesCopy.unshift({
       icon: 'bars',
       name: 'All',
-      entries: this.getAllElements(categoriesCopy)
+      entries: getAllElements(categoriesCopy)
     });
 
     return categoriesCopy;
@@ -99,7 +96,7 @@ class ElementSelect extends Component {
           placeholder={placeholderText}
           aria-label={placeholderText}
           clearable={false}
-          options={this.state.selectedCategory.entries}
+          options={this.state.selectedCategory.entries.filter(g => !g.suppress)}
           labelKey='name'
           matchProp='label'
           optionRenderer={optionRenderer}

@@ -75,7 +75,7 @@ class CaseParameter extends Component {
     const placeholder = option === 'case' ? 'Select...' : 'Null';
     return (
       <Select key={index}
-        labelKey={'subpopulationName'}
+        labelKey={'name'}
         autofocus
         options={this.props.values.filter(v => this.filterOptions(v, option))}
         clearable={true}
@@ -101,7 +101,7 @@ class CaseParameter extends Component {
           <tr>
             <td>
               <Select
-                labelKey={'subpopulationName'}
+                labelKey={'name'}
                 autofocus
                 options={this.props.values.filter(v => this.filterOptions(v, filter))}
                 clearable={true}

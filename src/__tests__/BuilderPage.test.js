@@ -191,3 +191,14 @@ test('deletes instance at correct tree position', () => {
   expect(children.find(c => c.id === 'age_range')).toEqual(undefined);
   expect(children[0].id).toEqual('most_recent_observation');
 });
+
+test('gets a list of all instances', () => {
+  expect(initializedComponent.node.getAllInstances('expTreeExclude')).toHaveLength(0);
+
+  const conjunctionInstance = createTemplateInstance(orTemplate);
+  const observationInstance = createTemplateInstance(cholesterolTemplate);
+  initializedComponent.node.addInstance('expTreeExclude', conjunctionInstance, 'childInstances');
+  initializedComponent.node.addInstance('expTreeExclude', observationInstance, 'childInstances.0');
+
+  expect(initializedComponent.node.getAllInstances('expTreeExclude')).toHaveLength(2);
+});

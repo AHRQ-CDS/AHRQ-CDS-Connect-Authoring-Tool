@@ -6,8 +6,6 @@ import ConjunctionGroup from './ConjunctionGroup';
 
 class Subpopulation extends Component {
   static propTypes = {
-    subpopulation: PropTypes.object.isRequired,
-    subpopulations: PropTypes.array.isRequired,
     updateInstanceModifiers: PropTypes.func.isRequired,
   }
   constructor(props) {
@@ -27,23 +25,23 @@ class Subpopulation extends Component {
   }
 
   addInstance = (name, template, path) => {
-    this.props.addInstance(name, template, path, this.props.subpopulation.uniqueId)
+    this.props.addInstance(name, template, path, this.props.id)
+  }
+
+  getAllInstances = (name) => {
+    return this.props.getAllInstances(name, null, this.props.id);
   }
 
   editInstance = (treeName, params, path, editingConjunction) => {
-    this.props.editInstance(treeName, params, path, editingConjunction, this.props.subpopulation.uniqueId);
+    this.props.editInstance(treeName, params, path, editingConjunction, this.props.id);
   }
 
   deleteInstance = (treeName, path) => {
-    this.props.deleteInstance(treeName, path, this.props.subpopulation.uniqueId);
+    this.props.deleteInstance(treeName, path, this.props.id);
   }
 
   saveInstance = (treeName, path) => {
-    this.props.saveInstance(treeName, path, this.props.subpopulation.uniqueId);
-  }
-
-  getOtherSubpopulations = () => {
-    return this.props.subpopulations.filter(sp => sp.uniqueId !== this.props.subpopulation.uniqueId);
+    this.props.saveInstance(treeName, path, this.props.id);
   }
 
   render() {
@@ -77,18 +75,19 @@ class Subpopulation extends Component {
             <ConjunctionGroup
               root={ true }
               name={ this.props.treeName }
-              instance={ this.props.subpopulation }
+              instance={
+                // TODO: None of the following instance-modifying functions are going to work cause of ^ above
+                this.props.subpopulation
+              }
               addInstance={ this.addInstance }
               editInstance={ this.editInstance }
               updateInstanceModifiers={ this.props.updateInstanceModifiers }
               deleteInstance={ this.deleteInstance }
               saveInstance={ this.saveInstance }
-              subpopulations={ this.props.subpopulations }
+              getAllInstances={ this.getAllInstances }
               showPresets={ this.props.showPresets }
               categories={ this.props.categories }
-              inSubpopulations={ true }
               subPopulationIndex={ this.props.subpopulationIndex }
-              otherSubpopulations={ this.getOtherSubpopulations() }
             />
           </div>
           :
