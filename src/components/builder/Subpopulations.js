@@ -46,12 +46,16 @@ class Subpopulations extends Component {
   }
 
   deleteSubpopulation = (uniqueId) => {
-    console.log(this.props.checkSubpopulationUsage(uniqueId));
-    // const newSubpopulations = _.cloneDeep(this.props.subpopulations);
-    // const subpopulationIndex = this.props.subpopulations.findIndex(sp => sp.uniqueId === uniqueId);
-    // newSubpopulations.splice(subpopulationIndex, 1);
+    const subpopExists = this.props.checkSubpopulationUsage(uniqueId);
+    if (subpopExists) {
+      alert('Subpopulation in use')
+    } else {
+      const newSubpopulations = _.cloneDeep(this.props.subpopulations);
+      const subpopulationIndex = this.props.subpopulations.findIndex(sp => sp.uniqueId === uniqueId);
+      newSubpopulations.splice(subpopulationIndex, 1);
 
-    // this.props.updateSubpopulations(newSubpopulations);
+      this.props.updateSubpopulations(newSubpopulations);
+    }
   }
 
   render() {

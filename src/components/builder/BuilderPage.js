@@ -355,18 +355,16 @@ class BuilderPage extends Component {
     }
   }
 
-  checkSubpopulationUsage = (uid) => {
+  checkSubpopulationUsage = (uniqueId) => {
     for (let i = 0; i < this.state.recommendations.length; i++) {
       let subpops = this.state.recommendations[i].subpopulations;
       for (let j = 0; j < subpops.length; j++) {
-        if (subpops[j].uniqueId === uid) {
+        if (subpops[j].uniqueId === uniqueId) {
           return true;
         }
       }
     }
-    for (let i = 0; i < this.state.subpopulations.length; i++) {
-      ;
-    }
+    return false;
   }
 
   addBlankSubpopulation = () => {
