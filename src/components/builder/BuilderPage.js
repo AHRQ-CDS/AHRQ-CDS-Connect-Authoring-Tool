@@ -167,6 +167,7 @@ class BuilderPage extends Component {
 
   // Downloads the cql by making an API call and passing artifact
   downloadCQL = () => {
+    console.log(this.prepareArtifact())
     axios({
       method: 'post',
       url: `${API_BASE}/cql`,
@@ -353,6 +354,20 @@ class BuilderPage extends Component {
     }
   }
 
+  checkSubpopulationUsage = (uid) => {
+    for (let i = 0; i < this.state.recommendations.length; i++) {
+      let subpops = this.state.recommendations[i].subpopulations;
+      for (let j = 0; j < subpops.length; j++) {
+        if (subpops[j].uniqueId === uid) {
+          return true;
+        }
+      }
+    }
+    for (let i = 0; i < this.state.subpopulations.length; i++) {
+      ;
+    }
+  }
+
   addBlankSubpopulation = () => {
     const newSubpopulation = createTemplateInstance(this.state.andTemplate);
     newSubpopulation.path = '';
@@ -463,6 +478,7 @@ class BuilderPage extends Component {
                 saveInstance={ this.saveInstance }
                 showPresets={ showPresets }
                 categories={ this.state.categories }
+                checkSubpopulationUsage={ this.checkSubpopulationUsage }
               />
             </TabPanel>
           </Tabs>
