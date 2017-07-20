@@ -14,7 +14,7 @@ class Subpopulation extends Component {
     super(props);
 
     this.state = {
-      isExpanded: false
+      isExpanded: this.props.subpopulation.expanded || false
     };
   }
 

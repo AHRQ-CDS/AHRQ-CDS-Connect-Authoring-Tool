@@ -6,7 +6,8 @@ import Recommendation from './Recommendation';
 class Recommendations extends Component {
   static propTypes = {
     updateRecommendations: PropTypes.func.isRequired,
-    recommendations: PropTypes.array.isRequired
+    recommendations: PropTypes.array.isRequired,
+    setActiveTab: PropTypes.func.isRequired
   }
 
   constructor(props) {
@@ -80,13 +81,13 @@ class Recommendations extends Component {
           return (
             <Recommendation
               key={rec.uid}
-              id={rec.uid}
               rec={rec}
               onUpdate={this.updateRecommendation}
               onRemove={this.removeRecommendation}
               recommendations={this.props.recommendations}
               updateRecommendations={this.props.updateRecommendations}
-              subpopulations={this.props.subpopulations} />
+              subpopulations={this.props.subpopulations}
+              setActiveTab={this.props.setActiveTab} />
           );
         })}
         <button className="button" onClick={this.addRecommendation}>

@@ -20,6 +20,12 @@ class Subpopulations extends Component {
     this.baseTemplate = (andTemplate);
   }
 
+  componentWillMount() {
+    if (!this.props.subpopulations.length) {
+      this.addSubpopulation();
+    }
+  }
+
   getSubpopulationName = (subpopulationId) => {
     return this.props.subpopulations[subpopulationId].subpopulationName;
   }
@@ -33,6 +39,7 @@ class Subpopulations extends Component {
     const newSubpopulation = createTemplateInstance(this.baseTemplate);
     newSubpopulation.path = '';
     newSubpopulation.subpopulationName = `Subpopulation ${this.props.subpopulations.length + 1}`;
+    newSubpopulation.expanded = true;
     const newSubpopulations = this.props.subpopulations.concat([ newSubpopulation ]);
 
     this.props.updateSubpopulations(newSubpopulations);
@@ -50,7 +57,7 @@ class Subpopulations extends Component {
     return (
       <div className="subpopulations">
         <button className="button new-subpopulation" onClick={ this.addSubpopulation }>
-          Add new subpopulation
+          New subpopulation
         </button>
         { this.props.subpopulations && this.props.subpopulations.map((subpop, i) => {
           return (

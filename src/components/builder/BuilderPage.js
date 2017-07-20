@@ -58,7 +58,8 @@ class BuilderPage extends Component {
       id: null,
       version: null,
       categories: [],
-      statusMessage: null
+      statusMessage: null,
+      activeTabIndex: 0
     };
   }
 
@@ -68,11 +69,14 @@ class BuilderPage extends Component {
       .then((result) => {
         this.setState({ categories: result.data });
         this.manageTemplateExtensions();
+
+        const operations = result.data.find(g => g.name === 'Operations');
+        const andTemplate = operations.entries.find(e => e.name === 'And');
+        this.setState({ andTemplate: andTemplate });
+
         if (this.props.match.params.id) {
           this.loadExistingArtifact();
         } else {
-          const operations = result.data.find(g => g.name === 'Operations');
-          const andTemplate = operations.entries.find(e => e.name === 'And');
           this.initializeExpTrees(andTemplate);
         }
       })
@@ -93,14 +97,11 @@ class BuilderPage extends Component {
         this.setState({ version: artifact.version });
 
         if (!artifact.expTreeInclude || !artifact.expTreeExclude) {
-          const operations = this.state.categories.find(g => g.name === 'Operations');
-          const andTemplate = operations.entries.find(e => e.name === 'And');
-
           if (!artifact.expTreeInclude) {
-            artifact.expTreeInclude = this.initializeExpTree('Includes', andTemplate);
+            artifact.expTreeInclude = this.initializeExpTree('Includes', this.state.andTemplate);
           }
           if (!artifact.expTreeExclude) {
-            artifact.expTreeExclude = this.initializeExpTree('Excludes', andTemplate);
+            artifact.expTreeExclude = this.initializeExpTree('Excludes', this.state.andTemplate);
           }
         }
 
@@ -183,7 +184,6 @@ class BuilderPage extends Component {
   // Saves artifact to the database
   saveArtifact = (exitPage) => {
     const artifact = this.prepareArtifact();
-    console.log(artifact)
     if (this.state.id) { artifact._id = this.state.id; }
 
     const handleSave = (result) => {
@@ -353,6 +353,25 @@ class BuilderPage extends Component {
     }
   }
 
+  addBlankSubpopulation = () => {
+    const newSubpopulation = createTemplateInstance(this.state.andTemplate);
+    newSubpopulation.path = '';
+    newSubpopulation.subpopulationName = `Subpopulation ${this.state.subpopulations.length + 1}`;
+    newSubpopulation.expanded = true;
+    const newSubpopulations = this.state.subpopulations.concat([ newSubpopulation ]);
+
+    this.setState({ subpopulations: newSubpopulations })
+  }
+
+  setActiveTab = (tabIndex, callback) => {
+    this.setState({ activeTabIndex: tabIndex });
+
+    // This is a bit hacky I guess
+    if (callback) {
+      this[callback].call();
+    }
+  }
+
   renderConjunctionGroup = (treeName) => (
       this.state[treeName].childInstances ?
         <ConjunctionGroup
@@ -411,7 +430,7 @@ class BuilderPage extends Component {
           </div>
         </header>
         <section className="builder__canvas">
-          <Tabs defaultIndex={2}>
+          <Tabs selectedIndex={this.state.activeTabIndex} onSelect={tabIndex => this.setActiveTab(tabIndex)}>
             <TabList>
               <Tab>Inclusions</Tab>
               <Tab>Exclusions</Tab>
@@ -429,6 +448,7 @@ class BuilderPage extends Component {
                 updateRecommendations={ this.updateRecommendations }
                 recommendations={ this.state.recommendations }
                 subpopulations={ this.state.subpopulations }
+                setActiveTab={ this.setActiveTab }
                 />
             </TabPanel>
             <TabPanel>

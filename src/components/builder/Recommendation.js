@@ -1,10 +1,22 @@
-import React, { Component } from 'react';
+import React, { Component, PropTypes } from 'react';
 import _ from 'lodash';
 import FontAwesome from 'react-fontawesome';
 import update from 'immutability-helper';
 import Select from 'react-select';
 
+const subpopTabIndex = 3;
+
 class Recommendation extends Component {
+  static propTypes = {
+    rec: PropTypes.object.isRequired,
+    onUpdate: PropTypes.func.isRequired,
+    onRemove: PropTypes.func.isRequired,
+    recommendations: PropTypes.array.isRequired,
+    updateRecommendations: PropTypes.func.isRequired,
+    subpopulations: PropTypes.array.isRequired,
+    setActiveTab: PropTypes.func.isRequired
+  };
+
   constructor(props) {
     super(props);
 
@@ -20,9 +32,9 @@ class Recommendation extends Component {
 
   revealSubpopulations = () => {
     if (!this.props.subpopulations.length) {
-      // No subpopulations to select from yet
-      // TODO: Address concerns of following alert and then remove it
-      alert('Direct user to subpopulation tab and have a blank one ready. Note: to test subpops here you can go over to subpopulation tab and just add a few blank ones');
+      // TODO: This shouldn't be alert and this shouldn't be the messaged used.
+      alert('You don\'t have any subpopulations built yet. Let\'s go build one!');
+      this.props.setActiveTab(subpopTabIndex);
     } else {
       this.setState({ showSubpopulations: true });
     }
@@ -107,7 +119,7 @@ class Recommendation extends Component {
             {
               // TODO: This should link to the subpopulations tab
             }
-            <a>Create new subpopulation</a>
+            <a onClick={() => this.props.setActiveTab(subpopTabIndex, 'addBlankSubpopulation')}>New subpopulation</a>
           </div>
         </div>
       );
