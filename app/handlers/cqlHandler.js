@@ -89,6 +89,7 @@ class CqlArtifact {
     this.context = artifact.context ? artifact.context : 'Patient';
     this.inclusions = artifact.expTreeInclude;
     this.exclusions = artifact.expTreeExclude;
+    this.subpopulations = artifact.subpopulations;
     this.initialize()
   }
 
@@ -107,6 +108,11 @@ class CqlArtifact {
       this.parseTree(this.inclusions);
     if (this.exclusions.childInstances.length)
       this.parseTree(this.exclusions);
+    this.subpopulations.forEach(subpopulation => {
+      if (subpopulation.childInstances.length)
+        this.parseTree(subpopulation);
+      }
+    )
   }
 
   parseTree(element) {
@@ -128,7 +134,7 @@ class CqlArtifact {
   parseConjunction(element) {
     const conjunction = {template : element.id, components : []};
     const name = element.parameters[0].value;
-    conjunction.element_name = (name || element.uniqueId);
+    conjunction.element_name = (name || element.subpopulationName || element.uniqueId);
     element.childInstances.forEach((child) => {
       conjunction.components.push({name : child.parameters[0].value})
     });
@@ -145,7 +151,6 @@ class CqlArtifact {
 
   // Generate context and resources for a single element
   parseElement(element) {
-
     const context = {};
     if (element.extends) {
       context.template = (element.template) ? element.template : element.extends;

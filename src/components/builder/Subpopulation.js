@@ -87,6 +87,7 @@ class Subpopulation extends Component {
               showPresets={ this.props.showPresets }
               categories={ this.props.categories }
               inSubpopulations={ true }
+              subPopulationIndex={ this.props.subpopulationIndex }
               otherSubpopulations={ this.getOtherSubpopulations() }
             />
           </div>
