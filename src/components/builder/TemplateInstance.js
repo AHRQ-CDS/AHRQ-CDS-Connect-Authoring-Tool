@@ -354,8 +354,17 @@ class TemplateInstance extends Component {
     if (_.isUndefined(returnType)) {
       returnType = (_.last(this.state.appliedModifiers) || this.props.templateInstance).returnType;
     }
+    if (!this.props.templateInstance.checkInclusionInVS) {
+      _.remove(this.modifersByInputType[returnType], modifier => modifier.id === "CheckInclusionInVS");
+    }
+    let relevantModifiers = this.modifersByInputType[returnType] || [];
+    if (_.has(this.props.templateInstance, 'surpressedModifiers')) {
+      this.props.templateInstance.surpressedModifiers.forEach(surpressedModifier =>
+        _.remove(relevantModifiers, relevantModifier => relevantModifier.id === surpressedModifier)
+      )
+    }
     this.setState({returnType: returnType});
-    this.setState({relevantModifiers: (this.modifersByInputType[returnType] || [])});
+    this.setState({relevantModifiers: relevantModifiers});
   }
 
   handleModifierSelected(event) {

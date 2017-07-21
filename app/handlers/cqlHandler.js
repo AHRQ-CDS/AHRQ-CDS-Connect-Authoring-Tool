@@ -179,7 +179,7 @@ class CqlArtifact {
             });
             // For checking if a ConceptValue is in a valueset, incluce the valueset that will be used
             if('checkInclusionInVS' in observationValueSets) {
-              if(!_.isEmpty(element.modifiers) && _.last(element.modifiers).id === "InStatement") {
+              if(!_.isEmpty(element.modifiers) && _.last(element.modifiers).id === "CheckInclusionInVS") {
                 _.last(element.modifiers).values = observationValueSets.checkInclusionInVS.name;
               }
               this.resourceMap.set(observationValueSets.checkInclusionInVS.name, observationValueSets.checkInclusionInVS);
@@ -222,10 +222,18 @@ class CqlArtifact {
           break;
         case 'medication':
           let medicationValueSets = ValueSets.medications[parameter.value];
+          const activeApplied = (!_.isEmpty(element.modifiers) && _.head(element.modifiers).id === "ActiveMedication");
           context.values = medicationValueSets.medications.map(medication => {
             this.resourceMap.set(medication.name, medication);
-            return `C3F.Active${medication.type}([${medication.type}: "${medication.name}"])`
+            let medicationText = `[${medication.type}: "${medication.name}"]`;
+            if (activeApplied) {
+              medicationText = `C3F.Active${medication.type}(${medicationText})`;
+            }
+            return medicationText;
           })
+          if (activeApplied) {
+            element.modifiers.shift(); // remove 'active' modifier because we supply it above
+          }
           break;
         case 'procedure':
           let procedureValueSets = ValueSets.procedures[parameter.value];
@@ -269,24 +277,24 @@ class CqlArtifact {
           context.pregnancyStatusConcept = pregnancyValueSets.concepts[0].name;
           context.pregnancyCodeConcept = pregnancyValueSets.concepts[1].name;
           break;
-          case 'breastfeeding':
-            let breastfeedingValueSets = ValueSets.conditions[parameter.value];
-            breastfeedingValueSets.conditions.map(condition => {
-              this.resourceMap.set(condition.name, condition);
-            })
-            if ("concepts" in breastfeedingValueSets) {
-              breastfeedingValueSets.concepts.forEach((concept) => {
-                concept.codes.forEach((code) => {
-                  this.codeSystemMap.set(code.codeSystem.name, code.codeSystem.id);
-                  this.codeMap.set(code.name, code);
-                });
-                this.conceptMap.set(concept.name, concept);
+        case 'breastfeeding':
+          let breastfeedingValueSets = ValueSets.conditions[parameter.value];
+          breastfeedingValueSets.conditions.map(condition => {
+            this.resourceMap.set(condition.name, condition);
+          })
+          if ("concepts" in breastfeedingValueSets) {
+            breastfeedingValueSets.concepts.forEach((concept) => {
+              concept.codes.forEach((code) => {
+                this.codeSystemMap.set(code.codeSystem.name, code.codeSystem.id);
+                this.codeMap.set(code.name, code);
               });
-            }
-            context.valueSetName = breastfeedingValueSets.conditions[0].name;
-            context.breastfeedingCodeConcept = breastfeedingValueSets.concepts[0].name;
-            context.breastfeedingYesConcept = breastfeedingValueSets.concepts[1].name;
-            break;
+              this.conceptMap.set(concept.name, concept);
+            });
+          }
+          context.valueSetName = breastfeedingValueSets.conditions[0].name;
+          context.breastfeedingCodeConcept = breastfeedingValueSets.concepts[0].name;
+          context.breastfeedingYesConcept = breastfeedingValueSets.concepts[1].name;
+          break;
         case 'list':
           if (parameter.category === "comparison") {
             context.comparisonUnit = (ValueSets.observations[_.find(_.find(this.inclusions, { 'id': parameter.value[0].id }).parameters, {'name': parameter.name}).value].units.code);
@@ -295,12 +303,7 @@ class CqlArtifact {
           break;
         case 'dropdown':
           if (parameter.id == "comparison") {
-            context.doubleSided = false;
-            element.parameters.forEach(parameter => {
-              if (parameter.id === "comparison_2") {
-                context.doubleSided = true;
-              }
-            })
+            context.doubleSided = element.parameters.some(parameter => parameter.id === "comparison_2");
           }
           context.values = context.values || []
           context[parameter.id] = parameter.value;

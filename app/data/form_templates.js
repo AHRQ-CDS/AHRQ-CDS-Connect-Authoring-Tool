@@ -107,6 +107,7 @@ module.exports = [
         name: 'Is Smoker',
         template: 'ObservationByConcept',
         extends: 'GenericObservation',
+        checkInclusionInVS: true, // Very few elements can check this, so this makes sense to require it to be specified
         parameters: [
           { id: 'element_name', value: "IsSmoker"},
           { id: 'observation',  static: true, value: "smoker"},
@@ -128,7 +129,7 @@ module.exports = [
         name: 'LDL Test',
         extends: 'GenericObservation',
         parameters: [
-          { id: 'element_name', value: "LDL Test"},
+          { id: 'element_name', value: "LDL_Test"},
           { id: 'observation', static: true, value: "ldl_test"}
         ]
       },
@@ -369,7 +370,7 @@ module.exports = [
         name: 'Familial Hypercholesterolemia',
         extends: 'GenericCondition',
         parameters: [
-          { id: 'element_name', value: 'Familial Hypercholesterolemia' },
+          { id: 'element_name', value: 'Familial_Hypercholesterolemia' },
           { id: 'condition', static: true, value: 'familial_hypercholesterolemia' }
         ]
       },

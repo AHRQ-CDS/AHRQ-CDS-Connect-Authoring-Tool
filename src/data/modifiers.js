@@ -2,7 +2,7 @@
 // Any id's that are the same as cqlTemplates are pure coincidence. The id matches within src/components/builder/modifiers
 // while the cqlTemplate matches the cqlTemplate in app/data/cql/modifiers
 
-let elementLists = ['list_of_observations', 'list_of_conditions', 'list_of_medications', 'list_of_procedures', 'allergy_intolerance', 'encounter'];
+let elementLists = ['list_of_observations', 'list_of_conditions', 'list_of_medications', 'list_of_procedures', 'allergy_intolerance', 'list_of_encounters'];
 module.exports = [
   // observations
   {
@@ -57,17 +57,17 @@ module.exports = [
     cqlLibraryFunction: 'C3F.ConceptValue'
   },
   {
-    id: 'InStatement',
+    id: 'CheckInclusionInVS',
     name: 'Exists within Valueset?',
     inputTypes: ['system_quantity'],
     returnType: 'boolean',
     values: undefined,
-    cqlTemplate: 'InStatement',
+    cqlTemplate: 'CheckInclusionInVS',
     cqlLibraryFunction: null
   },
   {
     id: 'ConvertToMgPerdL',
-    name: 'Convert to mg per dL',
+    name: 'Convert to mg/dL from mmol/L',
     inputTypes: ['system_quantity'],
     returnType: 'system_quantity',
     cqlTemplate: 'BaseModifier',
@@ -162,4 +162,12 @@ module.exports = [
     cqlTemplate: 'BaseModifier',
     cqlLibraryFunction: 'not'
   },
+  {
+    id: 'InProgress',
+    name: 'In Progress',
+    inputTypes: ['list_of_encounters'],
+    returnType: 'list_of_encounters',
+    cqlTemplate: 'BaseModifier',
+    cqlLibraryFunction: 'C3F.InProgress'
+  }
 ]
