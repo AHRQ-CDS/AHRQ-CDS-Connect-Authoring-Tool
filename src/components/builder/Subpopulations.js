@@ -63,7 +63,6 @@ class Subpopulations extends Component {
   }
 
   setSubpopulationName = (name, uniqueId) => {
-    const updatedSubpopulations = _.cloneDeep(this.props.subpopulations);
     const newSubpopulations = _.cloneDeep(this.props.subpopulations);
     const subpopulationIndex = this.props.subpopulations.findIndex(sp => sp.uniqueId === uniqueId);
     newSubpopulations[subpopulationIndex].subpopulationName = name;
