@@ -53,8 +53,18 @@ class BuilderPage extends Component {
       expTreeExclude: {},
       recommendations: [],
       subpopulations: [
-        {special: true, subpopulationName: "Doesn't Meet Inclusion Criteria", special_subpopulationName: 'not "Includes"'},
-        {special: true, subpopulationName: "Meets Exclusion Criteria", special_subpopulationName: '"Excludes"'}
+        { 
+          special: true,
+          subpopulationName: "Doesn't Meet Inclusion Criteria",
+          special_subpopulationName: 'not "Includes"',
+          uniqueId: 'default-subpopulation-1'
+        },
+        { 
+          special: true,
+          subpopulationName: "Meets Exclusion Criteria",
+          special_subpopulationName: '"Excludes"',
+          uniqueId: 'default-subpopulation-2'
+        }
       ],
       name: 'Untitled Artifact',
       id: null,
@@ -317,7 +327,7 @@ class BuilderPage extends Component {
       let subpops = recs[i].subpopulations;
       for (let j = 0; j < subpops.length; j++) {
         if (subpops[j].uniqueId === uniqueId) {
-          subpops[j].name = newName;
+          subpops[j].subpopulationName = newName;
         }
       }
     }
