@@ -90,7 +90,7 @@ class Recommendation extends Component {
             { this.props.rec.subpopulations.map((subpop, i) => {
               return (
                 <div
-                  key={subpop.subpopulationName}
+                  key={subpop.uniqueId}
                   className="recommendation__subpopulation-pill">
                   { subpop.subpopulationName }
                   <button onClick={ () => this.removeSubpopulation(i) }><FontAwesome fixedWidth name='times'/></button>

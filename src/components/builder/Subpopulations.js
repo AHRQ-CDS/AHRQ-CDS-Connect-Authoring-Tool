@@ -61,6 +61,15 @@ class Subpopulations extends Component {
     }
   }
 
+  setSubpopulationName = (name, uniqueId) => {
+    const updatedSubpopulations = _.cloneDeep(this.props.subpopulations);
+    const newSubpopulations = _.cloneDeep(this.props.subpopulations);
+    const subpopulationIndex = this.props.subpopulations.findIndex(sp => sp.uniqueId === uniqueId);
+    newSubpopulations[subpopulationIndex].subpopulationName = name;
+
+    this.props.updateSubpopulations(newSubpopulations);
+  }
+
   render() {
     return (
       <div className="subpopulations">
@@ -74,7 +83,7 @@ class Subpopulations extends Component {
               treeName={ this.props.name }
               subpopulation={ subpop }
               subpopulationIndex={ i + this.state.numOfSpecialSubpopulations } // System needs to know true index out of all subpopulations
-              updateSubpopulations={ this.props.updateSubpopulations }
+              setSubpopulationName={ this.setSubpopulationName }
               deleteSubpopulation={ this.deleteSubpopulation }
               addInstance={ this.props.addInstance }
               editInstance={ this.props.editInstance }

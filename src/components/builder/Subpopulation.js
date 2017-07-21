@@ -44,11 +44,6 @@ class Subpopulation extends Component {
     this.props.saveInstance(treeName, path, this.props.subpopulation.uniqueId);
   }
 
-  setSubpopulationName = (value) => {
-    this.props.subpopulation.subpopulationName = value;
-    this.props.updateSubpopulations(this.props.subpopulations); // calls setState to get re-render, and updates `subpopulationName` key
-  }
-
   render() {
     return (
       <div className="subpopulation">
@@ -61,7 +56,7 @@ class Subpopulation extends Component {
                 className="subpopulation__name-input"
                 value={ this.props.subpopulation.subpopulationName }
                 onClick={ event => event.stopPropagation() }
-                onChange={ event => { this.setSubpopulationName(event.target.value) } }
+                onChange={ event => { this.props.setSubpopulationName(event.target.value, this.props.subpopulation.uniqueId) } }
               />
             </div>
           :
