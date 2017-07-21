@@ -27,6 +27,7 @@ beforeEach(() => {
     instance: instanceTree,
     addInstance,
     editInstance,
+    updateInstanceModifiers: jest.fn(),
     deleteInstance: jest.fn(),
     saveInstance: jest.fn(),
     getAllInstances,
@@ -86,5 +87,5 @@ test('edits own name', () => {
 
   nameParamater.find('input').simulate('change', { target: { name: 'element_name', value: newName } });
 
-  expect(editInstance).lastCalledWith(rootConjunction.props().name, { element_name: newName }, '.childInstances.2');
+  expect(editInstance).lastCalledWith(rootConjunction.props().name, { element_name: newName }, '.childInstances.2', false);
 });
