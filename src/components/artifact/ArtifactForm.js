@@ -60,6 +60,7 @@ class ArtifactForm extends Component {
         <label htmlFor={this.state.nameID}>
           Artifact Name
           <input id={this.state.nameID}
+            required
             className='input__long'
             name='name'
             type='text'
