@@ -59,7 +59,9 @@ class Recommendations extends Component {
   render() {
     return (
       <div className="recommendations">
-        {(this.props.recommendations && this.props.recommendations.length > 1)
+        {
+          // TODO: Leaving this commented out for now in case we decide to go back to it
+          /* {(this.props.recommendations && this.props.recommendations.length > 1)
           ? <p className="title is-5">
               Deliver
               <span className="field recommendations__mode">
@@ -74,6 +76,12 @@ class Recommendations extends Component {
               </span>
               recommendation
             </p>
+          : null
+        } */}
+
+        {
+          (this.props.recommendations && this.props.recommendations.length > 1)
+          ? <p className="title is-5">Deliver every recommendation</p>
           : null
         }
 
