@@ -386,7 +386,7 @@ class CqlArtifact {
       let conjunction = 'and'; // possible that this may become `or`, or some combo of the two conjunctions
       let conditionalText = recommendation.subpopulations.map(subpopulation => subpopulation.special_subpopulationName ? subpopulation.special_subpopulationName : `"${subpopulation.subpopulationName}"`).join(` ${conjunction} `);
       return `if ${conditionalText} then '${recommendation.text}'`;
-    }).join("\n  ").concat('\n  else null');
+    }).join('\n  else ').concat('\n  else null');
     return ejs.render(templateMap['BaseTemplate'], {element_name: 'Recommendations', cqlString: recommendationText})
   }
 
@@ -396,7 +396,7 @@ class CqlArtifact {
       let conjunction = 'and'; // possible that this may become `or`, or some combo of the two conjunctions
       let conditionalText = recommendation.subpopulations.map(subpopulation => subpopulation.special_subpopulationName ? subpopulation.special_subpopulationName : `"${subpopulation.subpopulationName}"`).join(` ${conjunction} `);
       return `if ${conditionalText} then '${recommendation.rationale}'`;
-    }).join('\n  ').concat('\n  else null');
+    }).join('\n  else ').concat('\n  else null');
     if (_.isEmpty(rationaleText)) return '';
     return ejs.render(templateMap['BaseTemplate'], {element_name: 'Rationale', cqlString: rationaleText})
 

@@ -21,7 +21,8 @@ concept "<%=concept.name%>" : { <%concept.codes.forEach((code, index) => {%>"<%i
 <%})-%>
 
 <% paramContexts.forEach((parameter, key) => {-%>
-parameter "<%=parameter.element_name%>" default <%=parameter.default%><%});%>
+parameter "<%=parameter.element_name%>" default <%=parameter.default%>
+<%});%>
 
 context <%=context%>
 

@@ -97,6 +97,7 @@ module.exports = [
         name: 'ASCVD Risk Assessment',
         extends: 'GenericObservation',
         template: 'ObservationByConcept',
+        surpressedModifiers: ['ConceptValue'],
         parameters: [
           { id: 'element_name', value: "MostRecentASCVDRiskAssessmentResult"},
           { id: 'observation', static: true, value: "ascvd_risk_assessment"},
@@ -108,6 +109,7 @@ module.exports = [
         template: 'ObservationByConcept',
         extends: 'GenericObservation',
         checkInclusionInVS: true, // Very few elements can check this, so this makes sense to require it to be specified
+        surpressedModifiers: ['QuantityValue'],
         parameters: [
           { id: 'element_name', value: "IsSmoker"},
           { id: 'observation',  static: true, value: "smoker"},
