@@ -13,6 +13,7 @@ beforeEach(() => {
       templateInstances: [],
       updateSingleElement: jest.fn(),
       updateTemplateInstances: jest.fn(),
+      updateSingleElementModifiers: jest.fn(),
       groups: []
     }
   );
@@ -22,6 +23,7 @@ beforeEach(() => {
       templateInstances,
       updateSingleElement: jest.fn(),
       updateTemplateInstances: jest.fn(),
+      updateSingleElementModifiers: jest.fn(),
       groups: []
     }
   );
