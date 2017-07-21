@@ -125,6 +125,7 @@ module.exports = [
         returnType: 'boolean',
         extends: 'Base',
         surpressedModifiers: ['BooleanComparison'],
+        cannotHaveModifiers: true, // Flag to hide the 'Add Expression' button
         parameters: [
           { id: 'element_name', value: "IsBreastfeeding"},
           { id: 'observation', type:'breastfeeding', static: true, value: "breastfeeding"}
@@ -168,6 +169,7 @@ module.exports = [
         id: 'String',
         name: 'String',
         extends: 'Base',
+        cannotHaveModifiers: true,
         returnType: 'string',
         template: 'String',
         parameters: [
@@ -179,6 +181,7 @@ module.exports = [
         name: 'Comparison',
         returnType: 'boolean',
         template: 'Comparison',
+        cannotHaveModifiers: true,
         suppress: true,
         parameters: [
           { id: 'element_name', type: 'string', name: 'Element Name' },
@@ -193,6 +196,7 @@ module.exports = [
         name: 'If',
         returnType: 'null', // TODO: make returnType dynamic just like `case`
         extends: 'Base',
+        cannotHaveModifiers: true,
         suppress: true,
         template: 'If',
         parameters: [
@@ -204,6 +208,7 @@ module.exports = [
         name: 'Not',
         returnType: 'boolean',
         extends: 'Base',
+        cannotHaveModifiers: true,
         suppress: true,
         template: 'Not',
         parameters: [
@@ -215,6 +220,7 @@ module.exports = [
         name: 'Boolean Comparison',
         returnType: 'boolean',
         extends: 'Base',
+        cannotHaveModifiers: true,
         template: 'isComparison',
         suppress: true,
         parameters: [
@@ -227,6 +233,7 @@ module.exports = [
         name: 'Check if Null',
         returnType: 'boolean',
         extends: 'Base',
+        cannotHaveModifiers: true,
         template: 'isComparison',
         suppress: true,
         parameters: [
@@ -239,6 +246,7 @@ module.exports = [
         name: 'Case',
         suppress: true,
         returnType: null,
+        cannotHaveModifiers: true,
         parameters: [
           { id: 'element_name', type: 'string', name: 'Element Name' },
           {
@@ -313,6 +321,7 @@ module.exports = [
         extends: 'Base',
         returnType: 'boolean',
         surpressedModifiers: ['BooleanComparison'],
+        cannotHaveModifiers: true,
         parameters: [
           { id: 'element_name', value: 'IsPregnant' },
           { id: 'pregnancy', type: 'pregnancy', static: true, value: 'pregnancy_dx' }

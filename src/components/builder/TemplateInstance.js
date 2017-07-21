@@ -392,7 +392,7 @@ class TemplateInstance extends Component {
     // filter modifiers?
     return (
       <div>
-        { (this.state.relevantModifiers.length > 0 || this.state.appliedModifiers.length === 0)
+        { (!this.props.templateInstance.cannotHaveModifiers && (this.state.relevantModifiers.length > 0 || this.state.appliedModifiers.length === 0))
           ?
             <div className="modifier__selection">
               <button
