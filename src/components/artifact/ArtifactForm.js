@@ -27,7 +27,10 @@ class ArtifactForm extends Component {
       name: this.state.name,
       version: this.state.version,
       recommendations: [],
-      subpopulations: [],
+      subpopulations: [
+        {special: true, subpopulationName: "Doesn't Meet Inclusion Criteria", special_subpopulationName: 'not "Includes"'},
+        {special: true, subpopulationName: "Meets Exclusion Criteria", special_subpopulationName: '"Excludes"'}
+      ],
       uniqueIdCounter: 0
     }).then((result) => {
       this.props.afterAddArtifact();
