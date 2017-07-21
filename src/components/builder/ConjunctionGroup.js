@@ -2,7 +2,7 @@ import React, { Component, PropTypes } from 'react';
 import Select from 'react-select';
 import FontAwesome from 'react-fontawesome';
 
-import TemplateInstance, { createTemplateInstance } from './TemplateInstance';
+import TemplateInstance from './TemplateInstance';
 import ElementSelect from './ElementSelect';
 import StringParameter from './parameters/StringParameter';
 
@@ -43,7 +43,7 @@ class ConjunctionGroup extends Component {
   }
 
   addChild = (template) => {
-    const instance = createTemplateInstance(template);
+    const instance = this.props.createTemplateInstance(template);
     this.props.addInstance(this.props.name, instance, this.getPath());
   }
 
@@ -121,6 +121,7 @@ class ConjunctionGroup extends Component {
                   getPath={ this.getChildsPath }
                   name={ this.props.name }
                   instance={ instance }
+                  createTemplateInstance={ this.props.createTemplateInstance }
                   addInstance={ this.props.addInstance }
                   editInstance={ this.props.editInstance }
                   updateInstanceModifiers={ this.props.updateInstanceModifiers }

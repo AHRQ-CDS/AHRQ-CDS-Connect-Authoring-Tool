@@ -1,7 +1,6 @@
 import ConjunctionGroup from '../components/builder/ConjunctionGroup';
-import { createTemplateInstance } from '../components/builder/TemplateInstance';
 import StringParameter from '../components/builder/parameters/StringParameter';
-import { fullRenderComponent } from '../helpers/test_helpers';
+import { fullRenderComponent, createTemplateInstance } from '../helpers/test_helpers';
 import { instanceTree, elementGroups } from '../helpers/test_fixtures';
 
 let rootConjunction;
@@ -25,6 +24,7 @@ beforeEach(() => {
     root: true,
     name: 'Inclusions',
     instance: instanceTree,
+    createTemplateInstance: createTemplateInstance,
     addInstance,
     editInstance,
     updateInstanceModifiers: jest.fn(),

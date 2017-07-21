@@ -8,8 +8,7 @@ import moment from 'moment';
 import ConjunctionGroup from './ConjunctionGroup';
 import Recommendations from './Recommendations';
 import Subpopulations from './Subpopulations';
-import Config from '../../../config'
-import { createTemplateInstance } from './TemplateInstance';
+import Config from '../../../config';
 
 // Suppress is a flag that is specific to an element. It should not be inherited by children
 const ELEMENT_SPECIFIC_FIELDS = ['suppress'];
@@ -62,7 +61,8 @@ class BuilderPage extends Component {
       version: null,
       categories: [],
       statusMessage: null,
-      activeTabIndex: 0
+      activeTabIndex: 0,
+      uniqueIdCounter: 0
     };
   }
 
@@ -102,6 +102,7 @@ class BuilderPage extends Component {
         this.setState({ id: artifact._id });
         this.setState({ name: artifact.name });
         this.setState({ version: artifact.version });
+        this.setState({ uniqueIdCounter: artifact.uniqueIdCounter });
 
         if (!artifact.expTreeInclude || !artifact.expTreeExclude) {
           if (!artifact.expTreeInclude) {
@@ -168,7 +169,8 @@ class BuilderPage extends Component {
       expTreeInclude: this.state.expTreeInclude,
       expTreeExclude: this.state.expTreeExclude,
       recommendations: this.state.recommendations,
-      subpopulations: this.state.subpopulations
+      subpopulations: this.state.subpopulations,
+      uniqueIdCounter: this.state.uniqueIdCounter
     };
   }
 
@@ -238,7 +240,7 @@ class BuilderPage extends Component {
 
   // Initialized and expression tree
   initializeExpTree = (name, template) => {
-    const expression = createTemplateInstance(template);
+    const expression = this.createTemplateInstance(template);
     expression.name = '';
     expression.path = '';
     const nameParam = expression.parameters.find(param => param.id === 'element_name');
@@ -278,6 +280,18 @@ class BuilderPage extends Component {
     } else {
       this.setState({ [treeName]: tree });
     }
+  }
+
+  createTemplateInstance = (template, children = undefined) => {
+    const instance = _.cloneDeep(template);
+    instance.uniqueId = `${instance.id}-${this.state.uniqueIdCounter}`;
+    this.setState({ uniqueIdCounter: this.state.uniqueIdCounter + 1 });
+
+    if (template.conjunction) {
+      instance.childInstances = children || [];
+    }
+
+    return instance;
   }
 
   addInstance = (treeName, instance, parentPath, uid=null) => {
@@ -387,7 +401,7 @@ class BuilderPage extends Component {
   }
 
   addBlankSubpopulation = (template = this.state.andTemplate) => {
-    const newSubpopulation = createTemplateInstance(template);
+    const newSubpopulation = this.createTemplateInstance(template);
     newSubpopulation.name = '';
     newSubpopulation.path = '';
     const numOfSpecialSubpopulations = this.state.subpopulations.filter(sp => sp.special).length;
@@ -413,6 +427,7 @@ class BuilderPage extends Component {
           root={ true }
           name={ treeName }
           instance={ this.state[treeName] }
+          createTemplateInstance={ this.createTemplateInstance }
           addInstance={ this.addInstance }
           editInstance={ this.editInstance }
           updateInstanceModifiers={ this.updateInstanceModifiers }
@@ -491,6 +506,7 @@ class BuilderPage extends Component {
                 name={ 'subpopulations' }
                 subpopulations={ this.state.subpopulations }
                 updateSubpopulations={ this.updateSubpopulations }
+                createTemplateInstance={ this.createTemplateInstance }
                 addInstance={ this.addInstance }
                 editInstance={ this.editInstance }
                 updateInstanceModifiers={ this.updateInstanceModifiers }

@@ -1,7 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 import _ from 'lodash';
 
-import { createTemplateInstance } from './TemplateInstance';
 import Subpopulation from './Subpopulation';
 
 class Subpopulations extends Component {
@@ -39,7 +38,7 @@ class Subpopulations extends Component {
   }
 
   addSubpopulation = () => {
-    const newSubpopulation = createTemplateInstance(this.baseTemplate);
+    const newSubpopulation = this.props.createTemplateInstance(this.baseTemplate);
     newSubpopulation.name = '';
     newSubpopulation.path = '';
     newSubpopulation.subpopulationName = `Subpopulation ${this.state.subpopulations.length + 1}`;
@@ -86,6 +85,7 @@ class Subpopulations extends Component {
               subpopulationIndex={ i + this.state.numOfSpecialSubpopulations } // System needs to know true index out of all subpopulations
               setSubpopulationName={ this.setSubpopulationName }
               deleteSubpopulation={ this.deleteSubpopulation }
+              createTemplateInstance={ this.props.createTemplateInstance }
               addInstance={ this.props.addInstance }
               editInstance={ this.props.editInstance }
               updateInstanceModifiers={ this.props.updateInstanceModifiers }

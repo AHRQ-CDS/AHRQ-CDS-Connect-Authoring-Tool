@@ -9,7 +9,8 @@ let ArtifactSchema = new Schema({
   expTreeInclude: Object,
   expTreeExclude: Object,
   recommendations: Array,
-  subpopulations: Array
+  subpopulations: Array,
+  uniqueIdCounter: Number
 },{
   timestamps: true // adds created_at, updated_at
 });

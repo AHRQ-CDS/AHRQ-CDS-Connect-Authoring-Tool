@@ -47,21 +47,6 @@ const commonDropdownOptions = {
                           { value: 'is not false', label: 'is not false' }]
 };
 
-export function createTemplateInstance(template, children = undefined) {
-  /*
-    TODO: clone is required because we are setting value on the parameter.
-    This may not be the best approach
-  */
-  const instance = _.cloneDeep(template);
-  instance.uniqueId = _.uniqueId(instance.id);
-
-  if (template.conjunction) {
-    instance.childInstances = children || [];
-  }
-
-  return instance;
-}
-
 function getInstanceName(instance) {
   return (instance.parameters.find(p => p.id === 'element_name') || {}).value;
 }
