@@ -40,6 +40,7 @@ class Subpopulations extends Component {
 
   addSubpopulation = () => {
     const newSubpopulation = createTemplateInstance(this.baseTemplate);
+    newSubpopulation.name = '';
     newSubpopulation.path = '';
     newSubpopulation.subpopulationName = `Subpopulation ${this.state.subpopulations.length + 1}`;
     newSubpopulation.expanded = true;

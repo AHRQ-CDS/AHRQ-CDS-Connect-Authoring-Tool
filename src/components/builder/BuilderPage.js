@@ -388,6 +388,7 @@ class BuilderPage extends Component {
 
   addBlankSubpopulation = (template = this.state.andTemplate) => {
     const newSubpopulation = createTemplateInstance(template);
+    newSubpopulation.name = '';
     newSubpopulation.path = '';
     const numOfSpecialSubpopulations = this.state.subpopulations.filter(sp => sp.special).length;
     newSubpopulation.subpopulationName = `Subpopulation ${this.state.subpopulations.length + 1 - numOfSpecialSubpopulations}`;
