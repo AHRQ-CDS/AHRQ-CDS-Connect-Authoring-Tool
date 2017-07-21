@@ -35,10 +35,14 @@ class Recommendation extends Component {
   }
 
   applySubpopulation = (subpop) => {
+    let refSubpop = {
+      uniqueId: subpop.uniqueId,
+      name: subpop.subpopulationName
+    }
     const index = this.props.recommendations.findIndex(rec => rec.uid === this.state.uid);
     let newRecs = update(this.props.recommendations, {
       [index]: {
-        subpopulations: { $push: [subpop] }
+        subpopulations: { $push: [refSubpop] }
       }
     });
 
@@ -92,7 +96,7 @@ class Recommendation extends Component {
                 <div
                   key={subpop.uniqueId}
                   className="recommendation__subpopulation-pill">
-                  { subpop.subpopulationName }
+                  { subpop.name }
                   <button onClick={ () => this.removeSubpopulation(i) }><FontAwesome fixedWidth name='times'/></button>
                 </div>
               );

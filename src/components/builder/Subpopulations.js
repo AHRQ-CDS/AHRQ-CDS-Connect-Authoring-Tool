@@ -8,7 +8,8 @@ class Subpopulations extends Component {
     subpopulations: PropTypes.array.isRequired,
     updateSubpopulations: PropTypes.func.isRequired,
     categories: PropTypes.array.isRequired,
-    updateInstanceModifiers: PropTypes.func.isRequired
+    updateInstanceModifiers: PropTypes.func.isRequired,
+    updateRecsSubpop: PropTypes.func.isRequired
   };
 
   constructor(props) {
@@ -68,6 +69,7 @@ class Subpopulations extends Component {
     newSubpopulations[subpopulationIndex].subpopulationName = name;
 
     this.props.updateSubpopulations(newSubpopulations);
+    this.props.updateRecsSubpop(name, uniqueId);
   }
 
   render() {

@@ -312,6 +312,19 @@ class BuilderPage extends Component {
     this.setState({ [treeName]: tree });
   }
 
+  updateRecsSubpop = (newName, uniqueId) => {
+    const recs = _.cloneDeep(this.state.recommendations);
+    for (let i = 0; i < recs.length; i++) {
+      let subpops = recs[i].subpopulations;
+      for (let j = 0; j < subpops.length; j++) {
+        if (subpops[j].uniqueId === uniqueId) {
+          subpops[j].name = newName;
+        }
+      }
+    }
+    this.setState({recommendations : recs})
+  }
+
   editInstance = (treeName, editedParams, path, editingConjunctionType=false, uid=null) => {
     const treeData = this.findTree(treeName, uid);
     const tree = treeData.tree;
@@ -516,6 +529,7 @@ class BuilderPage extends Component {
                 showPresets={ showPresets }
                 categories={ this.state.categories }
                 checkSubpopulationUsage={ this.checkSubpopulationUsage }
+                updateRecsSubpop={ this.updateRecsSubpop }
               />
             </TabPanel>
           </Tabs>
