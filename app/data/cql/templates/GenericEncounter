@@ -1,1 +1,1 @@
-[Encounter: "<%=element_context%>"]
+[Encounter: "<%-element_context%>"]

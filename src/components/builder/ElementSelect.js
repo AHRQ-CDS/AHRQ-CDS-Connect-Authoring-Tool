@@ -1,7 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 import _ from 'lodash';
 import Select from 'react-select';
-import { createTemplateInstance } from './TemplateInstance';
 
 const flatten = arr => arr.reduce(
   (acc, val) => acc.concat(Array.isArray(val) ? flatten(val) : val), []
@@ -15,7 +14,7 @@ const sortAlphabeticallyByName = (a, b) => {
   return 0;
 };
 
-const getAllElements = categories => flatten(filterUnsuppressed(categories).map(cat => filterUnsuppressed(cat.entries).map(e => Object.assign({ category: cat.name.replace(/s\s*$/, '') }, e))));
+const getAllElements = categories => flatten(categories.map(cat => cat.entries.map(e => Object.assign({ category: cat.name.replace(/s\s*$/, '') }, e))));
 
 const optionRenderer = option => (
     <div className="element-select__option">
@@ -31,7 +30,7 @@ class ElementSelect extends Component {
     this.internalCategories = this.generateInternalCategories();
 
     this.state = {
-      categories: filterUnsuppressed(this.internalCategories).sort(sortAlphabeticallyByName)
+      categories: this.internalCategories.sort(sortAlphabeticallyByName)
     };
 
     this.elementInputId = '';
@@ -40,8 +39,7 @@ class ElementSelect extends Component {
 
   static propTypes = {
     categories: PropTypes.array.isRequired,
-    templateInstances: PropTypes.array.isRequired,
-    updateTemplateInstances: PropTypes.func.isRequired
+    onSuggestionSelected: PropTypes.func.isRequired
   }
 
   componentWillMount() {
@@ -55,7 +53,7 @@ class ElementSelect extends Component {
     // Updates the categories and their entries to have correct parameters
     this.internalCategories = this.generateInternalCategories();
     this.setState({
-      categories: filterUnsuppressed(this.internalCategories).sort(sortAlphabeticallyByName)
+      categories: this.internalCategories.sort(sortAlphabeticallyByName)
     });
 
     // Keep the category that is selected the same
@@ -65,7 +63,12 @@ class ElementSelect extends Component {
   }
 
   generateInternalCategories = () => {
-    const categoriesCopy = Object.assign([], this.props.categories);
+    let categoriesCopy = Object.assign([], this.props.categories);
+    categoriesCopy = filterUnsuppressed(categoriesCopy);
+
+    _.each(categoriesCopy, (cat) => {
+      cat.entries = filterUnsuppressed(cat.entries);
+    });
 
     categoriesCopy.unshift({
       icon: 'bars',
@@ -77,9 +80,9 @@ class ElementSelect extends Component {
   }
 
   onSuggestionSelected = (suggestion) => {
-    const instance = createTemplateInstance(suggestion);
-    delete instance.category; // Don't send the category which is only needed for this component
-    this.props.updateTemplateInstances(this.props.templateInstances.concat(instance));
+    const clone = _.cloneDeep(suggestion);
+    delete clone.category; // Don't send the category which is only needed for this component
+    this.props.onSuggestionSelected(clone);
   }
 
   onSelectedCategoryChange = (category) => {
@@ -98,7 +101,7 @@ class ElementSelect extends Component {
           placeholder={placeholderText}
           aria-label={placeholderText}
           clearable={false}
-          options={this.state.selectedCategory.entries.filter(g => !g.suppress)}
+          options={this.state.selectedCategory.entries}
           labelKey='name'
           matchProp='label'
           optionRenderer={optionRenderer}

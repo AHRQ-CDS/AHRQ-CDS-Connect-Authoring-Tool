@@ -1,4 +1,5 @@
 import React from 'react';
+import _ from 'lodash';
 import { mount, shallow } from 'enzyme';
 import createRouterContext from 'react-router-test-context';
 
@@ -37,9 +38,21 @@ function decoratedDeepState(renderedComponent, realComponent) {
   return renderedComponent.find(realComponent).at(0).node.decoratedComponentInstance.state;
 }
 
+function createTemplateInstance(template, children = undefined) {
+  const instance = _.cloneDeep(template);
+  instance.uniqueId = _.uniqueId(instance.id);
+
+  if (template.conjunction) {
+    instance.childInstances = children || [];
+  }
+
+  return instance;
+}
+
 export {
   fullRenderComponent,
   shallowRenderComponent,
   deepState,
-  decoratedDeepState
+  decoratedDeepState,
+  createTemplateInstance
 };

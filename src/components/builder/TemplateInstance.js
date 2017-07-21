@@ -47,17 +47,6 @@ const commonDropdownOptions = {
                           { value: 'is not false', label: 'is not false' }]
 };
 
-export function createTemplateInstance(template) {
-  /*
-    TODO: clone is required because we are setting value on the parameter.
-    This may not be the best approach
-  */
-  const instance = _.cloneDeep(template);
-  instance.uniqueId = _.uniqueId(instance.id);
-
-  return instance;
-}
-
 function getInstanceName(instance) {
   return (instance.parameters.find(p => p.id === 'element_name') || {}).value;
 }
@@ -78,10 +67,12 @@ function renderPreset(preset, stateIndex) {
 
 class TemplateInstance extends Component {
   static propTypes = {
+    getPath: PropTypes.func.isRequired,
+    treeName: PropTypes.string.isRequired,
     templateInstance: PropTypes.object.isRequired,
     otherInstances: PropTypes.array.isRequired,
-    updateSingleElement: PropTypes.func.isRequired,
-    updateSingleElementModifiers: PropTypes.func.isRequired,
+    editInstance: PropTypes.func.isRequired,
+    updateInstanceModifiers: PropTypes.func.isRequired,
     deleteInstance: PropTypes.func.isRequired,
     saveInstance: PropTypes.func.isRequired,
     showPresets: PropTypes.func.isRequired
@@ -93,7 +84,7 @@ class TemplateInstance extends Component {
 
     this.modifierMap = _.keyBy(Modifiers, 'id');
     this.modifersByInputType = {}
-    Modifiers.forEach((modifier) => { 
+    Modifiers.forEach((modifier) => {
       modifier.inputTypes.forEach((inputType) => {
         this.modifersByInputType[inputType] = (this.modifersByInputType[inputType] || []).concat(modifier)
       });
@@ -116,7 +107,7 @@ class TemplateInstance extends Component {
     this.setCaseReturnType = this.setCaseReturnType.bind(this);
     this.updateIf = this.updateIf.bind(this);
     this.selectTemplate = this.selectTemplate.bind(this);
-    
+
     // TODO: all this modifier stuff should probably be pulled out into another component
     this.renderAppliedModifiers = this.renderAppliedModifiers.bind(this);
     this.renderAppliedModifier = this.renderAppliedModifier.bind(this);
@@ -159,8 +150,9 @@ class TemplateInstance extends Component {
 
   // Props will either be this.props or nextProps coming from componentWillReceiveProps
   getOtherInstances(props) {
-    const otherInstances = props.otherInstances.filter(this.notThisInstance).map(
-      instance => ({ name: getInstanceName(instance),
+    const otherInstances = props.otherInstances.filter(this.notThisInstance)
+      .map(instance => ({
+        name: getInstanceName(instance),
         id: instance.id,
         returnType: (_.isEmpty(instance.modifiers) ? instance.returnType : _.last(instance.modifiers).returnType) }));
     return otherInstances;
@@ -173,13 +165,9 @@ class TemplateInstance extends Component {
     return this.props.templateInstance.uniqueId !== instance.uniqueId;
   }
 
-  // getInstanceName(instance) {
-  //   return (instance.parameters.find(p => p.id === 'element_name') || {}).value;
-  // }
-
   updateInstance(newState) {
     this.setState(newState);
-    this.props.updateSingleElement(this.props.templateInstance.uniqueId, newState);
+    this.props.editInstance(this.props.treeName, newState, this.getPath(), false);
   }
 
   // Used to update value states that are nested objects
@@ -246,7 +234,7 @@ class TemplateInstance extends Component {
   }
 
   updateComparison(isSingledSided) {
-    // TODO: Refactor this function to use React State
+    // TODO: Refactor this function to occur within the component itself
     const parameter = this.props.templateInstance.parameters;
     if (isSingledSided) {
       _.remove(parameter, param => (RegExp('^.*(?=(_2))').test(param.id))); // Remove any instance with id ending in '_2'
@@ -315,6 +303,22 @@ class TemplateInstance extends Component {
               unit={modifier.values.unit}
               updateAppliedModifier={this.updateAppliedModifier}/>
           );
+        case 'BooleanComparison':
+          return (
+            <BooleanComparison
+              key={index}
+              index={index}
+              value={modifier.values.value}
+              updateAppliedModifier={this.updateAppliedModifier}/>
+          );
+          case 'CheckExistence':
+            return (
+              <CheckExistence
+                key={index}
+                index={index}
+                value={modifier.values.value}
+                updateAppliedModifier={this.updateAppliedModifier}/>
+            );
         default:
           return (<LabelModifier key={index} name={modifier.name} id={modifier.id}/>);
       }
@@ -350,8 +354,17 @@ class TemplateInstance extends Component {
     if (_.isUndefined(returnType)) {
       returnType = (_.last(this.state.appliedModifiers) || this.props.templateInstance).returnType;
     }
+    if (!this.props.templateInstance.checkInclusionInVS) {
+      _.remove(this.modifersByInputType[returnType], modifier => modifier.id === "CheckInclusionInVS");
+    }
+    let relevantModifiers = this.modifersByInputType[returnType] || [];
+    if (_.has(this.props.templateInstance, 'surpressedModifiers')) {
+      this.props.templateInstance.surpressedModifiers.forEach(surpressedModifier =>
+        _.remove(relevantModifiers, relevantModifier => relevantModifier.id === surpressedModifier)
+      )
+    }
     this.setState({returnType: returnType});
-    this.setState({relevantModifiers: (this.modifersByInputType[returnType] || [])});
+    this.setState({relevantModifiers: relevantModifiers});
   }
 
   handleModifierSelected(event) {
@@ -365,7 +378,7 @@ class TemplateInstance extends Component {
   }
   setAppliedModifiers(appliedModifiers) {
     this.setState({appliedModifiers: appliedModifiers}, this.filterRelevantModifiers);
-    this.props.updateSingleElementModifiers(this.props.templateInstance.uniqueId, appliedModifiers);
+    this.props.updateInstanceModifiers(this.props.treeName, appliedModifiers, this.getPath(), this.props.subpopulationIndex);
   }
 
   removeLastModifier() {
@@ -379,7 +392,7 @@ class TemplateInstance extends Component {
     // filter modifiers?
     return (
       <div>
-        { (this.state.relevantModifiers.length > 0 || this.state.appliedModifiers.length === 0)
+        { (!this.props.templateInstance.cannotHaveModifiers && (this.state.relevantModifiers.length > 0 || this.state.appliedModifiers.length === 0))
           ?
             <div className="modifier__selection">
               <button
@@ -540,6 +553,8 @@ class TemplateInstance extends Component {
     this.setState({ showElement: !this.state.showElement });
   }
 
+  getPath = () => this.props.getPath(this.props.templateInstance.uniqueId)
+
   renderBody() {
     return (
       <div className="element__body">
@@ -574,7 +589,7 @@ class TemplateInstance extends Component {
               <FontAwesome fixedWidth name='database'/>
             </button>
             <button
-              onClick={this.props.saveInstance.bind(this, this.props.templateInstance.uniqueId)}
+              onClick={() => this.props.saveInstance(this.props.treeName, this.getPath())}
               className="element__savebutton"
               aria-label={`save ${this.props.templateInstance.name}`}>
               <FontAwesome fixedWidth name='save'/>
@@ -586,7 +601,7 @@ class TemplateInstance extends Component {
               <FontAwesome fixedWidth name={this.state.showElement ? 'angle-double-down' : 'angle-double-right'}/>
             </button>
             <button
-              onClick={this.props.deleteInstance.bind(this, this.props.templateInstance.uniqueId)}
+              onClick={() => this.props.deleteInstance(this.props.treeName, this.getPath())}
               className="element__deletebutton"
               aria-label={`remove ${this.props.templateInstance.name}`}>
               <FontAwesome fixedWidth name='close'/>

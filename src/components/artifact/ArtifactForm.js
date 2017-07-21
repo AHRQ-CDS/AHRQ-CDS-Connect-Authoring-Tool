@@ -25,10 +25,29 @@ class ArtifactForm extends Component {
     e.preventDefault();
     axios.post(`${API_BASE}/artifacts`, {
       name: this.state.name,
-      version: this.state.version
+      version: this.state.version,
+      recommendations: [],
+      subpopulations: [
+        { 
+          special: true,
+          subpopulationName: "Doesn't Meet Inclusion Criteria",
+          special_subpopulationName: 'not "Includes"',
+          uniqueId: 'default-subpopulation-1'
+        },
+        { 
+          special: true,
+          subpopulationName: "Meets Exclusion Criteria",
+          special_subpopulationName: '"Excludes"',
+          uniqueId: 'default-subpopulation-2'
+        }
+      ],
+      uniqueIdCounter: 0
     }).then((result) => {
       this.props.afterAddArtifact();
-      this.setState({ name: '', version: '' });
+      this.setState({
+        name: '',
+        version: ''
+      });
     });
   }
 
@@ -54,6 +73,7 @@ class ArtifactForm extends Component {
         <label htmlFor={this.state.nameID}>
           Artifact Name
           <input id={this.state.nameID}
+            required
             className='input__long'
             name='name'
             type='text'

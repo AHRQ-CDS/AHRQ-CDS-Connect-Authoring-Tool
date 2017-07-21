@@ -16,7 +16,7 @@ class LookBack extends Component {
         <div >
           <label htmlFor={valueId}>
             Value:
-            <input id={valueId} type="number" name="value" value={this.props.value}
+            <input id={valueId} type="number" name="value" value={this.props.value || ""}
               onChange={(event) => {
                 this.props.updateAppliedModifier(this.props.index, { value: parseInt(event.target.value, 10) });
               }}

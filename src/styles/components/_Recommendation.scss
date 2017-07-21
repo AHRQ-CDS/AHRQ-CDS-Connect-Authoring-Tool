@@ -1,0 +1,53 @@
+.recommendation {
+  background: $gray-lightest;
+  border: 1px $gray-lighter solid;
+  padding: 1em;
+  margin-bottom: 1em;
+
+  label {
+    font-weight: 300;
+  }
+
+  &__subpopulations {
+    margin-bottom: 1em;
+  }
+
+  &__subpopulation-pill {
+    display: flex;
+    align-items: center;
+    margin-bottom: 1em;
+    padding: .5em;
+    background-color: $gray-lighter;
+    border: 1px solid $gray;
+    border-radius: .2em;
+
+    button {
+      margin-left: auto;
+    }
+  }
+
+  &__add-subpopulation {
+    display: flex;
+    align-items: center;
+
+    a {
+      margin-left: 1em;
+    }
+  }
+
+  &__subpopulation-select {
+    flex: 1;
+  }
+
+  &__new-subpopulation {
+    cursor: pointer;
+  }
+}
+
+.recommendations {
+  &__mode {
+    margin: 0 0.5em;
+    top: -0.375em;
+    position: relative;
+  }
+}

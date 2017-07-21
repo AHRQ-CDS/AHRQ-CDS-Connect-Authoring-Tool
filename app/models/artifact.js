@@ -6,7 +6,11 @@ let Schema = mongoose.Schema;
 let ArtifactSchema = new Schema({
   name: String,
   version: String,
-  templateInstances: Array
+  expTreeInclude: Object,
+  expTreeExclude: Object,
+  recommendations: Array,
+  subpopulations: Array,
+  uniqueIdCounter: Number
 },{
   timestamps: true // adds created_at, updated_at
 });

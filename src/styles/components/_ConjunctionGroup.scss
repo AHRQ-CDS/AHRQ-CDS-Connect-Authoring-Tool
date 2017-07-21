@@ -1,0 +1,28 @@
+.conjunction-group {
+  padding: 1em;
+  background-color: $gray-lightest;
+  border: 1px solid $gray-light;
+  border-radius: $border-radius;
+
+  &__header {
+    display: flex;
+    align-items: center;
+  }
+  &__button-bar {
+    margin-left: auto;
+  }
+  &__conjunction-select {
+    width: 12em;
+    margin-bottom: .5em;
+  }
+
+  &--odd {
+    background-color: $gray-lighter;
+  }
+
+  // For nested conjunction-group's
+  .conjunction-group {
+    margin-left: 5em;
+    margin-bottom: .5em;
+  }
+}

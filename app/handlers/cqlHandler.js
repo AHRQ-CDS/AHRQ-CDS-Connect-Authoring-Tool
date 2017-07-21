@@ -28,7 +28,7 @@ function idToObj(req, res, next) {
   Artifact.findOne({ _id : req.params.artifact },
     (error, artifact) => {
       if (error) console.log(error);
-      else { 
+      else {
         req.body = artifact;
         next();
       }
@@ -59,7 +59,7 @@ function loadTemplates(pathToTemplates) {
   let templateMap = {};
   // Loop through all the files in the temp directory
   fs.readdir( pathToTemplates, function( err, files ) {
-    if( err ) { console.error( "Could not list the directory.", err ); } 
+    if( err ) { console.error( "Could not list the directory.", err ); }
 
     files.forEach( function( file, index ) {
       templateMap[file] = fs.readFileSync(path.join( pathToTemplates, file ), 'utf-8');
@@ -87,8 +87,10 @@ class CqlArtifact {
     this.dataModel = artifact.dataModel ? artifact.dataModel : {name: 'FHIR', version: '1.0.2'};
     this.includeLibraries = artifact.includeLibraries ? artifact.includeLibraries : includeLibraries;
     this.context = artifact.context ? artifact.context : 'Patient';
-    this.elements = artifact.templateInstances;
-
+    this.inclusions = artifact.expTreeInclude;
+    this.exclusions = artifact.expTreeExclude;
+    this.subpopulations = artifact.subpopulations;
+    this.recommendations = artifact.recommendations;
     this.initialize()
   }
 
@@ -100,13 +102,47 @@ class CqlArtifact {
     this.paramContexts = [];
     this.referencedElements = [];
     this.contexts = [];
-    this.elements.forEach((element) => { 
-      if (element.type == 'parameter') {
-        this.parseParameter(element);
+    this.conjunctions = [];
+    this.conjunction_main = [];
+
+    if (this.inclusions.childInstances.length)
+      this.parseTree(this.inclusions);
+    if (this.exclusions.childInstances.length)
+      this.parseTree(this.exclusions);
+    this.subpopulations.forEach(subpopulation => {
+      if (!subpopulation.special) { // `Doesn't Meet Inclusion Criteria` and `Meets Exclusion Criteria` are special
+        if (subpopulation.childInstances.length)
+          this.parseTree(subpopulation);
+        }
+      }
+    )
+  }
+
+  parseTree(element) {
+    this.parseConjunction(element);
+    const children = element.childInstances;
+    children.forEach((child) => {
+      if ("childInstances" in child) {
+        this.parseTree(child)
       } else {
-        this.parseElement(element);
+        if (child.type == 'parameter') {
+          this.parseParameter(child);
+        } else {
+          this.parseElement(child);
+        }
       }
     });
+  }
+
+  parseConjunction(element) {
+    const conjunction = {template : element.id, components : []};
+    conjunction.assumeInPopulation = _.has(element, 'subpopulationName');
+    const name = element.parameters[0].value;
+    conjunction.element_name = (name || element.subpopulationName || element.uniqueId);
+    element.childInstances.forEach((child) => {
+      conjunction.components.push({name : child.parameters[0].value})
+    });
+    this.conjunction_main.push(conjunction);
   }
 
   parseParameter(element) {
@@ -119,13 +155,13 @@ class CqlArtifact {
 
   // Generate context and resources for a single element
   parseElement(element) {
-
     const context = {};
     if (element.extends) {
       context.template = (element.template) ? element.template : element.extends;
     } else {
       context.template = (element.template || element.id);
     }
+    element.modifiers = element.modifiers || [];
     context.withoutModifiers = _.has(specificMap, context.template);
     element.parameters.forEach((parameter) => {
       switch (parameter.type) {
@@ -143,7 +179,7 @@ class CqlArtifact {
             });
             // For checking if a ConceptValue is in a valueset, incluce the valueset that will be used
             if('checkInclusionInVS' in observationValueSets) {
-              if(!_.isEmpty(element.modifiers) && _.last(element.modifiers).id === "InStatement") {
+              if(!_.isEmpty(element.modifiers) && _.last(element.modifiers).id === "CheckInclusionInVS") {
                 _.last(element.modifiers).values = observationValueSets.checkInclusionInVS.name;
               }
               this.resourceMap.set(observationValueSets.checkInclusionInVS.name, observationValueSets.checkInclusionInVS);
@@ -166,7 +202,7 @@ class CqlArtifact {
             }
           }
           element.modifiers.forEach(modifier => {
-            if (_.has(modifier.values, 'comparisonUnit')) {
+            if (modifier.id === 'ValueComparisonObservation') { // TODO put a key on modifiers to identify modifiers that require unit
               modifier.values.unit = observationValueSets.units.code;
             }
           })
@@ -174,7 +210,7 @@ class CqlArtifact {
         case 'number':
           context[parameter.id] = parameter.value;
           if ('exclusive' in parameter) {
-            context[`${parameter.id}_exclusive`] = parameter.exclusive; 
+            context[`${parameter.id}_exclusive`] = parameter.exclusive;
           }
           break;
         case 'condition':
@@ -186,10 +222,19 @@ class CqlArtifact {
           break;
         case 'medication':
           let medicationValueSets = ValueSets.medications[parameter.value];
+          // TODO Look through entire modifier list for `active` instead of just head
+          const activeApplied = (!_.isEmpty(element.modifiers) && _.head(element.modifiers).id === "ActiveMedication");
           context.values = medicationValueSets.medications.map(medication => {
             this.resourceMap.set(medication.name, medication);
-            return `C3F.Active${medication.type}([${medication.type}: "${medication.name}"])`
+            let medicationText = `[${medication.type}: "${medication.name}"]`;
+            if (activeApplied) {
+              medicationText = `C3F.Active${medication.type}(${medicationText})`;
+            }
+            return medicationText;
           })
+          if (activeApplied) {
+            element.modifiers.shift(); // remove 'active' modifier because we supply it above
+          }
           break;
         case 'procedure':
           let procedureValueSets = ValueSets.procedures[parameter.value];
@@ -229,42 +274,39 @@ class CqlArtifact {
               this.conceptMap.set(concept.name, concept);
             });
           }
+          context.pregnancyNegated = element.modifiers.some(modifier => modifier.id === "BooleanNot");
           context.valueSetName = pregnancyValueSets.conditions[0].name;
           context.pregnancyStatusConcept = pregnancyValueSets.concepts[0].name;
           context.pregnancyCodeConcept = pregnancyValueSets.concepts[1].name;
           break;
-          case 'breastfeeding':
-            let breastfeedingValueSets = ValueSets.conditions[parameter.value];
-            breastfeedingValueSets.conditions.map(condition => {
-              this.resourceMap.set(condition.name, condition);
-            })
-            if ("concepts" in breastfeedingValueSets) {
-              breastfeedingValueSets.concepts.forEach((concept) => {
-                concept.codes.forEach((code) => {
-                  this.codeSystemMap.set(code.codeSystem.name, code.codeSystem.id);
-                  this.codeMap.set(code.name, code);
-                });
-                this.conceptMap.set(concept.name, concept);
+        case 'breastfeeding':
+          let breastfeedingValueSets = ValueSets.conditions[parameter.value];
+          breastfeedingValueSets.conditions.map(condition => {
+            this.resourceMap.set(condition.name, condition);
+          })
+          if ("concepts" in breastfeedingValueSets) {
+            breastfeedingValueSets.concepts.forEach((concept) => {
+              concept.codes.forEach((code) => {
+                this.codeSystemMap.set(code.codeSystem.name, code.codeSystem.id);
+                this.codeMap.set(code.name, code);
               });
-            }
-            context.valueSetName = breastfeedingValueSets.conditions[0].name;
-            context.breastfeedingCodeConcept = breastfeedingValueSets.concepts[0].name;
-            context.breastfeedingYesConcept = breastfeedingValueSets.concepts[1].name;
-            break;
+              this.conceptMap.set(concept.name, concept);
+            });
+          }
+          context.breastfeedingNegated = element.modifiers.some(modifier => modifier.id === "BooleanNot");
+          context.valueSetName = breastfeedingValueSets.conditions[0].name;
+          context.breastfeedingCodeConcept = breastfeedingValueSets.concepts[0].name;
+          context.breastfeedingYesConcept = breastfeedingValueSets.concepts[1].name;
+          break;
         case 'list':
           if (parameter.category === "comparison") {
-            context.comparisonUnit = (ValueSets.observations[_.find(_.find(this.elements, { 'id': parameter.value[0].id }).parameters, {'name': parameter.name}).value].units.code);
+            context.comparisonUnit = (ValueSets.observations[_.find(_.find(this.inclusions, { 'id': parameter.value[0].id }).parameters, {'name': parameter.name}).value].units.code);
           }
           context[parameter.id] = parameter.value;
           break;
         case 'dropdown':
           if (parameter.id == "comparison") {
-            context.doubleSided = false;
-            element.parameters.forEach(parameter => {
-              if (parameter.id === "comparison_2") {
-                context.doubleSided = true;
-              }
-            })
+            context.doubleSided = element.parameters.some(parameter => parameter.id === "comparison_2");
           }
           context.values = context.values || []
           context[parameter.id] = parameter.value;
@@ -276,13 +318,14 @@ class CqlArtifact {
       }
     });
 
-    context.modifiers = element.modifiers
+    context.modifiers = element.modifiers;
     context.element_name = (context.element_name || element.uniqueId);
     this.contexts.push(context)
   }
 
   /* Modifiers Explanation:
     Within `form_templates`, a template must be specified (unless extending an element that specifies a template).
+    If no template is specified, it will look for a template named the same as the `id`.
     If the element specifies a template within the folder `specificTemplates` it's assumed that element will not have modifiers
       In this case, just render the element.
     Otherwise:
@@ -310,8 +353,10 @@ class CqlArtifact {
 
   // Generate cql for all elements
   body() {
-    return this.contexts.map((context) => {
-      if (context.withoutModifiers) {
+    let expressions = this.contexts.concat(this.conjunctions);
+    expressions = expressions.concat(this.conjunction_main);
+    return expressions.map((context) => {
+      if (context.withoutModifiers || context.components) {
         return ejs.render(specificMap[context.template], context);
       } else {
         if (!context.template in templateMap) console.error("Template could not be found: " + context.template);
@@ -326,16 +371,48 @@ class CqlArtifact {
   header() {
     return ejs.render(fs.readFileSync(artifactPath, 'utf-8'), this);
   }
+  population() {
+    const getTreeName = (tree) => {
+      return tree.parameters.find(p => p.id === 'element_name').value || tree.uniqueId;
+    }
+
+    const treeNames = {
+      inclusions: this.inclusions.childInstances.length ? getTreeName(this.inclusions) : "",
+      exclusions: this.exclusions.childInstances.length ? getTreeName(this.exclusions) : ""
+    };
+
+    return ejs.render(fs.readFileSync(templatePath + '/IncludeExclude', 'utf-8'), treeNames);
+  }
+
+  recommendation() {
+    let recommendationText = this.recommendations.map(recommendation => {
+      let conjunction = 'and'; // possible that this may become `or`, or some combo of the two conjunctions
+      let conditionalText = recommendation.subpopulations.map(subpopulation => subpopulation.special_subpopulationName ? subpopulation.special_subpopulationName : `"${subpopulation.subpopulationName}"`).join(` ${conjunction} `);
+      return `if ${conditionalText} then '${recommendation.text}'`;
+    }).join('\n  else ').concat('\n  else null');
+    return ejs.render(templateMap['BaseTemplate'], {element_name: 'Recommendations', cqlString: recommendationText})
+  }
+
+  rationale() {
+    let rationaleText = this.recommendations.map(recommendation => {
+      if (_.isEmpty(recommendation.rationale)) return '';
+      let conjunction = 'and'; // possible that this may become `or`, or some combo of the two conjunctions
+      let conditionalText = recommendation.subpopulations.map(subpopulation => subpopulation.special_subpopulationName ? subpopulation.special_subpopulationName : `"${subpopulation.subpopulationName}"`).join(` ${conjunction} `);
+      return `if ${conditionalText} then '${recommendation.rationale}'`;
+    }).join('\n  else ').concat('\n  else null');
+    if (_.isEmpty(rationaleText)) return '';
+    return ejs.render(templateMap['BaseTemplate'], {element_name: 'Rationale', cqlString: rationaleText})
+
+  }
 
   // Produces the cql in string format
   toString() {
-    return this.header()+this.body()
-
+    return this.header()+this.body()+'\n'+this.population()+'\n'+this.recommendation()+'\n'+this.rationale();
   }
 
   // Return a cql file as a json object
   toJson() {
-    return { 
+    return {
       filename : this.name,
       text : this.toString(),
       type : 'text/plain'

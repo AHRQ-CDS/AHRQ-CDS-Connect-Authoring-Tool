@@ -1,0 +1,4 @@
+define "InPopulation":
+  <% if(inclusions.length && exclusions.length) {%>"<%= inclusions %>" and not "<%= exclusions %>" <%}
+  else if (inclusions.length) {%> "<%= inclusions %>" <%}
+  else {%>not "<%= exclusions %>"<%}%>

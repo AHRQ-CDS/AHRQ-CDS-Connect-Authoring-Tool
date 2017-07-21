@@ -1,5 +1,3 @@
-
-
 module.exports = [
   {
     id: 0,
@@ -26,6 +24,7 @@ module.exports = [
         id: 'AgeRange',
         name: 'Age Range',
         returnType: 'boolean',
+        cannotHaveModifiers: true,
         parameters: [
           { id: 'element_name', type: 'string', name: 'Element Name' },
           { id: 'min_age', type: 'number', typeOfNumber: 'integer', name: 'Minimum Age' },
@@ -36,6 +35,7 @@ module.exports = [
         id: 'Gender',
         name: 'Gender',
         returnType: 'boolean',
+        cannotHaveModifiers: true,
         parameters: [
           { id: 'element_name', type: 'string', name: 'Element Name' },
           { id: 'gender', type: 'valueset', select: 'demographics/gender', name: 'Gender' },
@@ -62,6 +62,7 @@ module.exports = [
         id: 'TotalCholesterol',
         name: 'Total Cholesterol',
         extends: 'GenericObservation',
+        surpressedModifiers: ['ConceptValue'],
         parameters: [
           { id: 'element_name', value: "TotalCholesterol"},
           { id: 'observation', static: true, value: "total_cholesterol"},
@@ -71,6 +72,7 @@ module.exports = [
         id: 'HDLCholesterol',
         name: 'HDL Cholesterol',
         extends: 'GenericObservation',
+        surpressedModifiers: ['ConceptValue'],
         parameters: [
           { id: 'element_name', value: "HDLCholesterol"},
           { id: 'observation', static: true, value: "hdl_cholesterol"},
@@ -80,6 +82,7 @@ module.exports = [
         id: 'LDLCholesterol',
         name: 'LDL Cholesterol',
         extends: 'GenericObservation',
+        surpressedModifiers: ['ConceptValue'],
         parameters: [
           { id: 'element_name', value: "LDLCholesterol"},
           { id: 'observation', static: true, value: "ldl_cholesterol"},
@@ -99,6 +102,7 @@ module.exports = [
         name: 'ASCVD Risk Assessment',
         extends: 'GenericObservation',
         template: 'ObservationByConcept',
+        surpressedModifiers: ['ConceptValue', 'ConvertToMgPerdL'],
         parameters: [
           { id: 'element_name', value: "MostRecentASCVDRiskAssessmentResult"},
           { id: 'observation', static: true, value: "ascvd_risk_assessment"},
@@ -109,6 +113,8 @@ module.exports = [
         name: 'Is Smoker',
         template: 'ObservationByConcept',
         extends: 'GenericObservation',
+        checkInclusionInVS: true, // Very few elements can check this, so this makes sense to require it to be specified
+        surpressedModifiers: ['QuantityValue', 'ConvertToMgPerdL'],
         parameters: [
           { id: 'element_name', value: "IsSmoker"},
           { id: 'observation',  static: true, value: "smoker"},
@@ -120,6 +126,7 @@ module.exports = [
         template: 'Breastfeeding',
         returnType: 'boolean',
         extends: 'Base',
+        surpressedModifiers: ['BooleanComparison'],
         parameters: [
           { id: 'element_name', value: "IsBreastfeeding"},
           { id: 'observation', type:'breastfeeding', static: true, value: "breastfeeding"}
@@ -130,7 +137,7 @@ module.exports = [
         name: 'LDL Test',
         extends: 'GenericObservation',
         parameters: [
-          { id: 'element_name', value: "LDL Test"},
+          { id: 'element_name', value: "LDL_Test"},
           { id: 'observation', static: true, value: "ldl_test"}
         ]
       },
@@ -144,29 +151,26 @@ module.exports = [
       {
         id: 'And',
         name: 'And',
+        conjunction: true,
         returnType: 'boolean',
-        extends: 'Base',
-        template: 'And',
         parameters: [
-          { id: 'element_name', name: 'Element Name' },
-          { id: 'components', type: 'list', subType: 'boolean', value: [undefined, undefined], name: 'Elements' }
-        ],
+          { id: 'element_name', type: 'string', name: 'Group Name' }
+        ]
       },
       {
         id: 'Or',
         name: 'Or',
+        conjunction: true,
         returnType: 'boolean',
-        extends: 'Base',
-        template: 'Or',
         parameters: [
-          { id: 'element_name', name: 'Element Name' },
-          { id: 'components', type: 'list', subType: 'boolean', value: [undefined, undefined], name: 'Elements' }
-        ],
+          { id: 'element_name', type: 'string', name: 'Group Name' }
+        ]
       },
       {
         id: 'String',
         name: 'String',
         extends: 'Base',
+        cannotHaveModifiers: true,
         returnType: 'string',
         template: 'String',
         parameters: [
@@ -178,6 +182,8 @@ module.exports = [
         name: 'Comparison',
         returnType: 'boolean',
         template: 'Comparison',
+        cannotHaveModifiers: true,
+        suppress: true,
         parameters: [
           { id: 'element_name', type: 'string', name: 'Element Name' },
           { id: 'observation', type: 'list', category: 'comparison', subType: 'system_quantity', value: [undefined], name: 'Observation' },
@@ -191,6 +197,8 @@ module.exports = [
         name: 'If',
         returnType: 'null', // TODO: make returnType dynamic just like `case`
         extends: 'Base',
+        cannotHaveModifiers: true,
+        suppress: true,
         template: 'If',
         parameters: [
           { id: 'components', type: 'if', name: 'Elements', value: [{},{else: true, block: ''}]}
@@ -201,6 +209,8 @@ module.exports = [
         name: 'Not',
         returnType: 'boolean',
         extends: 'Base',
+        cannotHaveModifiers: true,
+        suppress: true,
         template: 'Not',
         parameters: [
           { id: 'components', type: 'list',subType: 'boolean',value: [undefined], name: 'Elements' }
@@ -211,7 +221,9 @@ module.exports = [
         name: 'Boolean Comparison',
         returnType: 'boolean',
         extends: 'Base',
+        cannotHaveModifiers: true,
         template: 'isComparison',
+        suppress: true,
         parameters: [
           { id: 'components', type: 'list',subType: 'boolean', value: [undefined], name: 'Elements' },
           { id: 'dropdown', type: 'dropdown', value: null, name: 'Comparison', option:'booleanCheckingOption' }, // Specify desired options at top of TemplateInstance.js
@@ -222,7 +234,9 @@ module.exports = [
         name: 'Check if Null',
         returnType: 'boolean',
         extends: 'Base',
+        cannotHaveModifiers: true,
         template: 'isComparison',
+        suppress: true,
         parameters: [
           { id: 'components', type: 'nullCheckingParameter', value: [undefined], name: 'Elements' },
           { id: 'dropdown', type: 'dropdown', value: null, name: 'Comparison', option: 'nullCheckingOption' }, // Specify desires options at top of TemplateInstance.js
@@ -231,7 +245,9 @@ module.exports = [
       {
         id: 'Case',
         name: 'Case',
+        suppress: true,
         returnType: null,
+        cannotHaveModifiers: true,
         parameters: [
           { id: 'element_name', type: 'string', name: 'Element Name' },
           {
@@ -305,6 +321,7 @@ module.exports = [
         returnType: 'boolean',
         extends: 'Base',
         returnType: 'boolean',
+        surpressedModifiers: ['BooleanComparison'],
         parameters: [
           { id: 'element_name', value: 'IsPregnant' },
           { id: 'pregnancy', type: 'pregnancy', static: true, value: 'pregnancy_dx' }
@@ -369,7 +386,7 @@ module.exports = [
         name: 'Familial Hypercholesterolemia',
         extends: 'GenericCondition',
         parameters: [
-          { id: 'element_name', value: 'Familial Hypercholesterolemia' },
+          { id: 'element_name', value: 'Familial_Hypercholesterolemia' },
           { id: 'condition', static: true, value: 'familial_hypercholesterolemia' }
         ]
       },
