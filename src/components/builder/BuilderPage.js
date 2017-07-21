@@ -242,7 +242,7 @@ class BuilderPage extends Component {
           console.log('Done');
         })
         .catch((error) => {
-          console.log('Fail');
+          console.log("Fail", error);
         });
     }
   }

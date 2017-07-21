@@ -202,7 +202,7 @@ class CqlArtifact {
             }
           }
           element.modifiers.forEach(modifier => {
-            if (modifier.id === 'ValueComparisonObservation') {
+            if (modifier.id === 'ValueComparisonObservation') { // TODO put a key on modifiers to identify modifiers that require unit
               modifier.values.unit = observationValueSets.units.code;
             }
           })
@@ -222,6 +222,7 @@ class CqlArtifact {
           break;
         case 'medication':
           let medicationValueSets = ValueSets.medications[parameter.value];
+          // TODO Look through entire modifier list for `active` instead of just head
           const activeApplied = (!_.isEmpty(element.modifiers) && _.head(element.modifiers).id === "ActiveMedication");
           context.values = medicationValueSets.medications.map(medication => {
             this.resourceMap.set(medication.name, medication);

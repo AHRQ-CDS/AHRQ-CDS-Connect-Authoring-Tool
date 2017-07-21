@@ -81,7 +81,7 @@ class Recommendations extends Component {
 
         {
           (this.props.recommendations && this.props.recommendations.length > 1)
-          ? <p className="title is-5">Deliver every recommendation</p>
+          ? <p className="title is-5">Deliver first recommendation</p>
           : null
         }
 
