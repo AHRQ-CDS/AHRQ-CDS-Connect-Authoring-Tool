@@ -202,7 +202,7 @@ class CqlArtifact {
             }
           }
           element.modifiers.forEach(modifier => {
-            if (_.has(modifier.values, 'comparisonUnit')) {
+            if (modifier.id === 'ValueComparisonObservation') {
               modifier.values.unit = observationValueSets.units.code;
             }
           })
@@ -391,7 +391,6 @@ class CqlArtifact {
     let rationaleText = this.recommendations.map(recommendation => {
       if (_.isEmpty(recommendation.rationale)) return '';
       let conjunction = 'and'; // possible that this may become `or`, or some combo of the two conjunctions
-      console.log(recommendation.subpopulations);
       let conditionalText = recommendation.subpopulations.map(subpopulation => subpopulation.special_subpopulationName ? subpopulation.special_subpopulationName : `"${subpopulation.subpopulationName}"`).join(` ${conjunction} `);
       return `if ${conditionalText} then '${recommendation.rationale}'`;
     }).join('\n  ').concat('\n  else null');
