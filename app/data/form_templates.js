@@ -24,6 +24,7 @@ module.exports = [
         id: 'AgeRange',
         name: 'Age Range',
         returnType: 'boolean',
+        cannotHaveModifiers: true,
         parameters: [
           { id: 'element_name', type: 'string', name: 'Element Name' },
           { id: 'min_age', type: 'number', typeOfNumber: 'integer', name: 'Minimum Age' },
@@ -34,6 +35,7 @@ module.exports = [
         id: 'Gender',
         name: 'Gender',
         returnType: 'boolean',
+        cannotHaveModifiers: true,
         parameters: [
           { id: 'element_name', type: 'string', name: 'Element Name' },
           { id: 'gender', type: 'valueset', select: 'demographics/gender', name: 'Gender' },
@@ -125,7 +127,6 @@ module.exports = [
         returnType: 'boolean',
         extends: 'Base',
         surpressedModifiers: ['BooleanComparison'],
-        cannotHaveModifiers: true, // Flag to hide the 'Add Expression' button
         parameters: [
           { id: 'element_name', value: "IsBreastfeeding"},
           { id: 'observation', type:'breastfeeding', static: true, value: "breastfeeding"}
@@ -321,7 +322,6 @@ module.exports = [
         extends: 'Base',
         returnType: 'boolean',
         surpressedModifiers: ['BooleanComparison'],
-        cannotHaveModifiers: true,
         parameters: [
           { id: 'element_name', value: 'IsPregnant' },
           { id: 'pregnancy', type: 'pregnancy', static: true, value: 'pregnancy_dx' }
