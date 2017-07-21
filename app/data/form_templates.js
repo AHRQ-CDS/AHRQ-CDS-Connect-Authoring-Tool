@@ -121,6 +121,7 @@ module.exports = [
         template: 'Breastfeeding',
         returnType: 'boolean',
         extends: 'Base',
+        surpressedModifiers: ['BooleanComparison'],
         parameters: [
           { id: 'element_name', value: "IsBreastfeeding"},
           { id: 'observation', type:'breastfeeding', static: true, value: "breastfeeding"}
@@ -308,6 +309,7 @@ module.exports = [
         returnType: 'boolean',
         extends: 'Base',
         returnType: 'boolean',
+        surpressedModifiers: ['BooleanComparison'],
         parameters: [
           { id: 'element_name', value: 'IsPregnant' },
           { id: 'pregnancy', type: 'pregnancy', static: true, value: 'pregnancy_dx' }

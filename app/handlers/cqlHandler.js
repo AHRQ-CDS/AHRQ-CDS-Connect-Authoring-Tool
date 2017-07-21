@@ -273,6 +273,7 @@ class CqlArtifact {
               this.conceptMap.set(concept.name, concept);
             });
           }
+          context.pregnancyNegated = element.modifiers.some(modifier => modifier.id === "BooleanNot");
           context.valueSetName = pregnancyValueSets.conditions[0].name;
           context.pregnancyStatusConcept = pregnancyValueSets.concepts[0].name;
           context.pregnancyCodeConcept = pregnancyValueSets.concepts[1].name;
@@ -291,6 +292,7 @@ class CqlArtifact {
               this.conceptMap.set(concept.name, concept);
             });
           }
+          context.breastfeedingNegated = element.modifiers.some(modifier => modifier.id === "BooleanNot");
           context.valueSetName = breastfeedingValueSets.conditions[0].name;
           context.breastfeedingCodeConcept = breastfeedingValueSets.concepts[0].name;
           context.breastfeedingYesConcept = breastfeedingValueSets.concepts[1].name;

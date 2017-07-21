@@ -1,1 +1,1 @@
-[Condition: "<%=element_context%>"]
+[Condition: "<%-element_context%>"]

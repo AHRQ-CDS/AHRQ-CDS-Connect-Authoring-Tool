@@ -1,1 +1,1 @@
-[AllergyIntolerance: "<%=element_context%>"]
+[AllergyIntolerance: "<%-element_context%>"]

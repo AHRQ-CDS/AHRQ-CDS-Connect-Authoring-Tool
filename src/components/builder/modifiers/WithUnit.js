@@ -15,7 +15,7 @@ class WithUnit extends Component {
         <div >
           <label htmlFor={unitId}>
             Value:
-            <input id={unitId} type="text" name="unit" value={this.props.unit}
+            <input id={unitId} type="text" name="unit" value={this.props.unit || ""}
               onChange={(event) => {
                 this.props.updateAppliedModifier(this.props.index, { unit: event.target.value });
               }}
