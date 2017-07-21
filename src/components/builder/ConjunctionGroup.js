@@ -104,7 +104,7 @@ class ConjunctionGroup extends Component {
             {
               !this.props.root &&
                 <button
-                  onClick={ () => this.props.deleteInstance(this.getPath()) }
+                  onClick={ () => this.props.deleteInstance(this.props.name, this.getPath()) }
                   aria-label={ `remove ${this.props.instance.name}` }>
                   <FontAwesome fixedWidth name='close'/>
                 </button>
