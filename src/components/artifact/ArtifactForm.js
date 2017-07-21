@@ -25,14 +25,15 @@ class ArtifactForm extends Component {
     e.preventDefault();
     axios.post(`${API_BASE}/artifacts`, {
       name: this.state.name,
-      version: this.state.version
+      version: this.state.version,
+      recommendations: [],
+      subpopulations: [],
+      uniqueIdCounter: 0
     }).then((result) => {
       this.props.afterAddArtifact();
       this.setState({
         name: '',
-        version: '',
-        recommendations: [],
-        subpopulations: []
+        version: ''
       });
     });
   }
