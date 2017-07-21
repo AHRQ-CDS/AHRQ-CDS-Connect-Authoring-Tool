@@ -1,5 +1,5 @@
 define "<%-element_name%>":<%if(assumeInPopulation){%>
-  if InPopulation is not true then
+  if "InPopulation" is not true then
     null
   else<%}%>
   <%-components.map(c => `"${c.name}"`).join(`
