@@ -60,6 +60,7 @@ module.exports = [
         id: 'TotalCholesterol',
         name: 'Total Cholesterol',
         extends: 'GenericObservation',
+        surpressedModifiers: ['ConceptValue'],
         parameters: [
           { id: 'element_name', value: "TotalCholesterol"},
           { id: 'observation', static: true, value: "total_cholesterol"},
@@ -69,6 +70,7 @@ module.exports = [
         id: 'HDLCholesterol',
         name: 'HDL Cholesterol',
         extends: 'GenericObservation',
+        surpressedModifiers: ['ConceptValue'],
         parameters: [
           { id: 'element_name', value: "HDLCholesterol"},
           { id: 'observation', static: true, value: "hdl_cholesterol"},
@@ -78,6 +80,7 @@ module.exports = [
         id: 'LDLCholesterol',
         name: 'LDL Cholesterol',
         extends: 'GenericObservation',
+        surpressedModifiers: ['ConceptValue'],
         parameters: [
           { id: 'element_name', value: "LDLCholesterol"},
           { id: 'observation', static: true, value: "ldl_cholesterol"},
@@ -97,7 +100,7 @@ module.exports = [
         name: 'ASCVD Risk Assessment',
         extends: 'GenericObservation',
         template: 'ObservationByConcept',
-        surpressedModifiers: ['ConceptValue'],
+        surpressedModifiers: ['ConceptValue', 'ConvertToMgPerdL'],
         parameters: [
           { id: 'element_name', value: "MostRecentASCVDRiskAssessmentResult"},
           { id: 'observation', static: true, value: "ascvd_risk_assessment"},
@@ -109,7 +112,7 @@ module.exports = [
         template: 'ObservationByConcept',
         extends: 'GenericObservation',
         checkInclusionInVS: true, // Very few elements can check this, so this makes sense to require it to be specified
-        surpressedModifiers: ['QuantityValue'],
+        surpressedModifiers: ['QuantityValue', 'ConvertToMgPerdL'],
         parameters: [
           { id: 'element_name', value: "IsSmoker"},
           { id: 'observation',  static: true, value: "smoker"},
