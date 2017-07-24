@@ -371,7 +371,7 @@ class BuilderPage extends Component {
 
     // elementsToAdd is an array of elements to be readded when indenting or outdenting
     if(elementsToAdd) {
-      elementsToAdd.forEach(element => {this.addInstance(treeName, element.instance, element.path, null, element.index, localTree)})
+      elementsToAdd.forEach(element => {this.addInstance(treeName, element.instance, element.path, uid, element.index, localTree)})
     }
   }
 

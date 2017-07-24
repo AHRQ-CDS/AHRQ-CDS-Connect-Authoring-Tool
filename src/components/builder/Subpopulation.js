@@ -36,8 +36,8 @@ class Subpopulation extends Component {
     this.props.editInstance(treeName, params, path, editingConjunction, this.props.subpopulation.uniqueId);
   }
 
-  deleteInstance = (treeName, path) => {
-    this.props.deleteInstance(treeName, path, this.props.subpopulation.uniqueId);
+  deleteInstance = (treeName, path, uid, toAdd) => {
+    this.props.deleteInstance(treeName, path, this.props.subpopulation.uniqueId, toAdd);
   }
 
   saveInstance = (treeName, path) => {
