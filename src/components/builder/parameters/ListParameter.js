@@ -25,6 +25,7 @@ export default (props) => {
           <Select key={index}
                   labelKey={'name'}
                   autofocus
+                  inputProps={{ id }}
                   options={filteredValues}
                   clearable={true}
                   name={props.param.id}

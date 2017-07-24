@@ -3,12 +3,12 @@ import _ from 'lodash';
 
 class BooleanComparison extends Component {
   render() {
-    const booleanCompareId = _.uniqueId('booleanCompare-');
     return (
       <div>
-        <div>
-          <label htmlFor={booleanCompareId}>
-            <select id={booleanCompareId} name="Boolean Compare?" value={this.props.value}
+        <span className="field">
+         <span className="control">
+           <span className="select">
+            <select name="Boolean Compare?" aria-label="Boolean Comparison" value={this.props.value}
               onChange={(event) => {
                 this.props.updateAppliedModifier(this.props.index, { value: event.target.value });
               }}>
@@ -18,8 +18,9 @@ class BooleanComparison extends Component {
               <option value="is false">{'is false'}</option>
               <option value="is not false">{'is not false'}</option>
             </select>
-          </label>
-        </div>
+            </span>
+          </span>
+        </span>
       </div>
     );
   }

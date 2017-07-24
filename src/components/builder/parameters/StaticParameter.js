@@ -9,12 +9,11 @@ import _ from 'lodash';
  */
 class StaticParameter extends Component {
   render() {
-    const id = _.uniqueId('parameter-');
-
     return (
       <div>
-        <input id={id}
+        <input
           type="hidden"
+          aria-hidden="true"
           name={this.props.id}
           defaultValue={this.props.value}
         />

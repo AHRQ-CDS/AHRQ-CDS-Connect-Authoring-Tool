@@ -9,17 +9,15 @@ import _ from 'lodash';
 class StringParameter extends Component {
   render() {
     const id = _.uniqueId('parameter-');
-    const helpId = _.uniqueId('parameter-help-');
 
     return (
-      <div className={'form__group'}>
+      <div className="form__group">
         <label htmlFor={id}>
           {this.props.name}:
 
           <input id={id}
             type="text"
             name={this.props.id}
-            aria-describedby={helpId}
             defaultValue={this.props.value}
             onChange={(event) => {
               const name = event.target.name;

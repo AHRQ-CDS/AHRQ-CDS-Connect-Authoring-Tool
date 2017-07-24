@@ -12,6 +12,7 @@ class CommonDropdownParameter extends Component {
           {this.props.param.name}:
           <Select
             autofocus
+            inputProps={{ id }}
             options={this.props.option}
             name={this.props.value}
             value={this.props.param.value}

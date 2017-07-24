@@ -97,7 +97,7 @@ class Recommendation extends Component {
                   key={subpop.uniqueId}
                   className="recommendation__subpopulation-pill">
                   { subpop.subpopulationName }
-                  <button onClick={ () => this.removeSubpopulation(i) }><FontAwesome fixedWidth name='times'/></button>
+                  <button aria-label={`Remove ${subpop.subpopulationName}`} onClick={ () => this.removeSubpopulation(i) }><FontAwesome fixedWidth name='times'/></button>
                 </div>
               );
             }) }

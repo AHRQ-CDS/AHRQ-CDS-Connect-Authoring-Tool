@@ -1,23 +1,23 @@
 import React, { Component } from 'react';
-import _ from 'lodash';
 
 class CheckExistence extends Component {
   render() {
-    const existenceId = _.uniqueId('existence-');
     return (
       <div>
-        <div>
-          <label htmlFor={existenceId}>
-            <select id={existenceId} name="Check Existence?" value={this.props.value}
-              onChange={(event) => {
-                this.props.updateAppliedModifier(this.props.index, { value: event.target.value });
-              }}>
-              <option defaultValue="">{"-- Check Existence --"}</option>
-              <option value="is null">{'is null'}</option>
-              <option value="is not null">{'is not null'}</option>
-            </select>
-          </label>
-        </div>
+        <span className="field">
+         <span className="control">
+           <span className="select">
+              <select name="Check Existence?" aria-label="Check Existence" value={this.props.value}
+                onChange={(event) => {
+                  this.props.updateAppliedModifier(this.props.index, { value: event.target.value });
+                }}>
+                <option defaultValue="">{"-- Check Existence --"}</option>
+                <option value="is null">{'is null'}</option>
+                <option value="is not null">{'is not null'}</option>
+              </select>
+            </span>
+          </span>
+        </span>
       </div>
     );
   }
