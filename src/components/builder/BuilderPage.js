@@ -14,6 +14,9 @@ import Config from '../../../config';
 const ELEMENT_SPECIFIC_FIELDS = ['suppress'];
 const API_BASE = Config.api.baseUrl;
 
+// TODO: This is needed because the tree on this.state is not updated in time. Figure out a better way to handle this
+let localTree;
+
 const showPresets = mongoId => axios.get(`${API_BASE}/expressions/group/${mongoId}`);
 
 const getValueAtPath = (obj, path) => {
@@ -303,11 +306,13 @@ class BuilderPage extends Component {
     return instance;
   }
 
-  addInstance = (treeName, instance, parentPath, uid=null) => {
+  addInstance = (treeName, instance, parentPath, uid=null, currentIndex=undefined, incomingTree=undefined) => {
     const treeData = this.findTree(treeName, uid);
-    const tree = treeData.tree;
+    const tree = incomingTree ? incomingTree : treeData.tree;
     const target = getValueAtPath(tree, parentPath).childInstances;
-    target.push(instance);
+    const index = currentIndex !== undefined ? currentIndex : target.length;
+    target.splice(index, 0, instance); // Insert instance at specific instance - only used for indenting now
+    localTree = tree;
 
     this.setTree(treeName, treeData, tree);
   }
@@ -353,7 +358,7 @@ class BuilderPage extends Component {
     this.setTree(treeName, treeData, tree);
   }
 
-  deleteInstance = (treeName, path, uid=null) => {
+  deleteInstance = (treeName, path, uid=null, elementsToAdd=undefined) => {
     const treeData = this.findTree(treeName, uid);
     const tree = treeData.tree;
     const index = path.slice(-1);
@@ -362,6 +367,12 @@ class BuilderPage extends Component {
     target.splice(index, 1);
 
     this.setTree(treeName, treeData, tree);
+    localTree = tree;
+
+    // elementsToAdd is an array of elements to be readded when indenting or outdenting
+    if(elementsToAdd) {
+      elementsToAdd.forEach(element => {this.addInstance(treeName, element.instance, element.path, null, element.index, localTree)})
+    }
   }
 
   updateRecommendations = (newState) => {

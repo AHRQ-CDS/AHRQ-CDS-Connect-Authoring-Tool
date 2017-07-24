@@ -581,6 +581,7 @@ class TemplateInstance extends Component {
             {this.props.templateInstance.name}
           </span>
           <div className="element__buttonbar">
+            { this.props.renderIndentButtons(this.props.templateInstance) }
             <button
               id={`presets-${this.props.templateInstance.id}`}
               aria-controls={`presets-list-${this.props.templateInstance.id}`}

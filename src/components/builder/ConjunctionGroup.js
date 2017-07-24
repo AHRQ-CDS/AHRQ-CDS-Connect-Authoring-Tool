@@ -63,6 +63,74 @@ class ConjunctionGroup extends Component {
     const level = this.getPath().split('.').filter(pathSection => pathSection === 'childInstances').length;
     return level % 2 === 0 ? '' : 'conjunction-group--odd';
   }
+  
+  indentClickHandler = (instance) => {
+    // Decide what type of conjunction group to create when indenting
+    let type;
+    if (this.props.instance.id === 'Or') {
+      type = this.types.find(type => type.id === 'And');;
+    } else { // Default is adding an OR
+      type = this.types.find(type => type.id === 'Or');;
+    }
+    
+    if(instance.conjunction) {
+      // Indenting a conjunction group (and it's children)
+      let newInstance = this.props.createTemplateInstance(type, [instance])
+      let parentPath = this.getPath().split('.').slice(0,-2).join('.'); // Path of parent of conjunction group
+      let index = this.getPath().split('.').pop() // Index of to indent group at
+      let toAdd = [{instance: newInstance, path: parentPath, index: index}]
+      this.props.deleteInstance(this.props.name, this.getPath(), null, toAdd);
+    } else {
+      // Indent a single templateInstance
+      let newInstance = this.props.createTemplateInstance(type, [instance]);
+      let index = this.getChildsPath(instance.uniqueId).split('.').pop(); // Index to add new conjuction at
+      let toAdd = [{instance: newInstance, path: this.getPath(), index: index}]
+      this.props.deleteInstance(this.props.name, this.getChildsPath(instance.uniqueId), null, toAdd);
+    }
+  }
+  
+  outdentClickHandler = (instance) => {
+    if(instance.conjunction) {
+      // Outdenting a conjunction group. Removes the conjunction, readds each child to the conjunction's parent
+      let toAdd = [];
+      instance.childInstances.forEach( (child, i) => {
+        // Path of the parent where items get added
+        let parentPath = this.getPath().split('.').slice(0,-2).join('.');
+        let index = this.getPath().split('.').pop(); // Index of the conjunction group
+        index = Number(index) + i; // Index to add the conjunction's children at
+        return toAdd.push({instance: child, path: parentPath, index: index})
+      });
+      this.props.deleteInstance(this.props.name, this.getPath(), null, toAdd);
+    } else {
+      // Outdenting a single templateInstance
+      // Path of the parent of the group instance is coming from. This is where it will be readded
+      let parentPath = this.getPath().split('.').slice(0,-2).join('.');
+      let index = this.getPath().split('.').pop(); // Index of the parent
+      index = Number(index) + 1; // Readd the child that is being outdented right below the parent it came from
+      let toAdd = [{instance: instance, path: parentPath, index: index}]
+      this.props.deleteInstance(this.props.name, this.getChildsPath(instance.uniqueId), null, toAdd);
+    }
+  }
+  
+  renderIndentButtons = (instance) => {
+    // TODO: put aria attributes on the button
+    // TODO: update css/placement of button to match designs
+    
+    // Indenting is always possible, outdent only possilbe when not at root already
+    return (
+      <span>
+        { this.getPath() !== '' ? 
+          <button className='element__hidebutton' onClick={()=> this.outdentClickHandler(instance)}>
+            <FontAwesome name="dedent" />
+          </button> :
+          null
+        }
+        <button className='element__hidebutton' onClick={()=> this.indentClickHandler(instance)}>
+          <FontAwesome name="indent" />
+        </button> 
+      </span>
+    )
+  }
 
   renderConjunctionSelect = i => {
     return (
@@ -98,6 +166,7 @@ class ConjunctionGroup extends Component {
               />
             </div>
             <div className="conjunction-group__button-bar">
+              {this.renderIndentButtons(this.props.instance)}
               <button
                 onClick={ () => this.props.deleteInstance(this.props.name, this.getPath()) }
                 aria-label={ `remove ${this.props.instance.name}` }>
@@ -145,6 +214,7 @@ class ConjunctionGroup extends Component {
                   saveInstance={ this.props.saveInstance }
                   showPresets={ this.props.showPresets }
                   subpopulationIndex={ this.props.subPopulationIndex }
+                  renderIndentButtons={ this.renderIndentButtons }
                 />
                 { this.renderConjunctionSelect(i) }
               </div>
