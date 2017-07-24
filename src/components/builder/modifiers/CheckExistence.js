@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import _ from 'lodash';
 
-class BooleanComparison extends Component {
+class CheckExistence extends Component {
   render() {
     const existenceId = _.uniqueId('existence-');
     return (
@@ -23,4 +23,4 @@ class BooleanComparison extends Component {
   }
 }
 
-export default BooleanComparison;
+export default CheckExistence;
