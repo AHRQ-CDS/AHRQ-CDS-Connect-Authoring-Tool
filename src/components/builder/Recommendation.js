@@ -39,6 +39,10 @@ class Recommendation extends Component {
       uniqueId: subpop.uniqueId,
       subpopulationName: subpop.subpopulationName
     }
+    if (subpop.special) {
+      refSubpop.special = subpop.special;
+      refSubpop.special_subpopulationName = subpop.special_subpopulationName;
+    }
     const index = this.props.recommendations.findIndex(rec => rec.uid === this.state.uid);
     let newRecs = update(this.props.recommendations, {
       [index]: {
@@ -61,7 +65,15 @@ class Recommendation extends Component {
   }
 
   getRelevantSubpopulations = () => {
-    return this.props.subpopulations.filter(sp => !this.props.rec.subpopulations.includes(sp));
+    return this.props.subpopulations.filter(sp => {
+      let match = false;
+      _.each(this.props.rec.subpopulations, appliedSp => {
+        if (sp.uniqueId === appliedSp.uniqueId) {
+          match = true;
+        }
+      });
+      return !match;
+    });
   }
 
   handleChange = (event) => {
