@@ -23,7 +23,7 @@ class Artifact extends Component {
   render() {
     return (
       <div>
-        <ArtifactForm afterAddArtifact={this.loadArtifacts} buttonLabel={'Add new artifact'}/>
+        <ArtifactForm afterAddArtifact={this.loadArtifacts} buttonLabel={'New artifact'}/>
         { (this.state.data.length > 0)
           ? <ArtifactTable artifacts={this.state.data}
               match={this.props.match}

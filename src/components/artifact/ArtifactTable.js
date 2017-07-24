@@ -95,7 +95,7 @@ class ArtifactTable extends Component {
 
   renderEditForm() {
     return (
-      <ArtifactForm buttonLabel="Edit artifact"
+      <ArtifactForm buttonLabel="Save"
         onSubmitFunction={this.editArtifactName}
         defaultName={this.state.artifactEditing ? this.state.artifactEditing.name : null}
         defaultVersion={this.state.artifactEditing ? this.state.artifactEditing.version : null} />
@@ -108,7 +108,7 @@ class ArtifactTable extends Component {
         <td className="artifacts__tablecell-wide"
           data-th="Artifact Name">
           <button aria-label="Edit"
-            className="small-button"
+            className="small-button edit-artifact-button"
             onClick={() => this.openModal(artifact)}>
             <FontAwesome name='pencil' />
           </button>

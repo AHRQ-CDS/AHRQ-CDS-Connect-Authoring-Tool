@@ -53,13 +53,13 @@ class BuilderPage extends Component {
       expTreeExclude: {},
       recommendations: [],
       subpopulations: [
-        { 
+        {
           special: true,
           subpopulationName: "Doesn't Meet Inclusion Criteria",
           special_subpopulationName: 'not "Includes"',
           uniqueId: 'default-subpopulation-1'
         },
-        { 
+        {
           special: true,
           subpopulationName: "Meets Exclusion Criteria",
           special_subpopulationName: '"Excludes"',
@@ -509,38 +509,40 @@ class BuilderPage extends Component {
               <Tab>Recommendations</Tab>
               <Tab>Subpopulations</Tab>
             </TabList>
-            <TabPanel>
-              { this.renderConjunctionGroup('expTreeInclude') }
-            </TabPanel>
-            <TabPanel>
-              { this.renderConjunctionGroup('expTreeExclude') }
-            </TabPanel>
-            <TabPanel>
-              <Recommendations
-                updateRecommendations={ this.updateRecommendations }
-                recommendations={ this.state.recommendations }
-                subpopulations={ this.state.subpopulations }
-                setActiveTab={ this.setActiveTab }
+            <div className="tab-panel-container">
+              <TabPanel>
+                { this.renderConjunctionGroup('expTreeInclude') }
+              </TabPanel>
+              <TabPanel>
+                { this.renderConjunctionGroup('expTreeExclude') }
+              </TabPanel>
+              <TabPanel>
+                <Recommendations
+                  updateRecommendations={ this.updateRecommendations }
+                  recommendations={ this.state.recommendations }
+                  subpopulations={ this.state.subpopulations }
+                  setActiveTab={ this.setActiveTab }
+                  />
+              </TabPanel>
+              <TabPanel>
+                <Subpopulations
+                  name={ 'subpopulations' }
+                  subpopulations={ this.state.subpopulations }
+                  updateSubpopulations={ this.updateSubpopulations }
+                  createTemplateInstance={ this.createTemplateInstance }
+                  addInstance={ this.addInstance }
+                  editInstance={ this.editInstance }
+                  updateInstanceModifiers={ this.updateInstanceModifiers }
+                  deleteInstance={ this.deleteInstance }
+                  saveInstance={ this.saveInstance }
+                  getAllInstances={ this.getAllInstances }
+                  showPresets={ showPresets }
+                  categories={ this.state.categories }
+                  checkSubpopulationUsage={ this.checkSubpopulationUsage }
+                  updateRecsSubpop={ this.updateRecsSubpop }
                 />
-            </TabPanel>
-            <TabPanel>
-              <Subpopulations
-                name={ 'subpopulations' }
-                subpopulations={ this.state.subpopulations }
-                updateSubpopulations={ this.updateSubpopulations }
-                createTemplateInstance={ this.createTemplateInstance }
-                addInstance={ this.addInstance }
-                editInstance={ this.editInstance }
-                updateInstanceModifiers={ this.updateInstanceModifiers }
-                deleteInstance={ this.deleteInstance }
-                saveInstance={ this.saveInstance }
-                getAllInstances={ this.getAllInstances }
-                showPresets={ showPresets }
-                categories={ this.state.categories }
-                checkSubpopulationUsage={ this.checkSubpopulationUsage }
-                updateRecsSubpop={ this.updateRecsSubpop }
-              />
-            </TabPanel>
+              </TabPanel>
+            </div>
           </Tabs>
         </section>
       </div>

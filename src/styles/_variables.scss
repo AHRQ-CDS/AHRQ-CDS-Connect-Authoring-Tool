@@ -1,51 +1,40 @@
 // Accessible foreground/background combinations include:
 //   - $black on $gray-light, $gray-lighter, $white
-//   - $white on $black, $gray-dark, $gray, $dark-blue, $blue
+//   - $white on $black, $gray-dark, $gray, $blue-dark, $blue
 $white: #fff;
-$gray-lightest: #f1f1f1;
-$gray-lighter: #d6d7d9;
+$black: #151515;
+$gray-lightest: #f8f8f8;
+$gray-lighter: #ececec;
 $gray-light: #aeb0b5;
 $gray: #5b616b;
 $gray-dark: #323a45;
-$black: #212121;
-$dark-blue: #08101c;
 $blue: #102537;
+$blue-dark: #08101c;
+$blue-link: #2874DB;
 $red: #e31c3d;
+$border-color: darken($gray-lighter, 10%);
 
 $border-radius: 0.2em;
 $border-width: 0.1em;
+$border-global: $border-width solid $border-color;
 
 $box-shadow: 1px 1px 1px 0 fade-out($black, 0.9);
 $box-shadow-inset: inset 0 1px 2px 0 fade-out($black, 0.9);
 
-$body-bg: $dark-blue;
-$page-bg: $gray;
+$font-weight-regular: 400;
+$font-weight-bold: 500;
 
-$default-button-text-color: $gray-dark;
+$body-bg: $blue-dark;
+
+$default-button-text-color: $black;
 $default-button-bg-color: $gray-lightest;
-$default-button-hover-text-color: $black;
 $primary-button-text-color: $white;
-$primary-button-bg-color: $gray-dark;
+$primary-button-bg-color: $blue;
 
 $form-input-placeholder-color: $gray;
-$form-input-border-color: $gray-lighter;
-$form-input-focus-color: $dark-blue;
 $form-validation-success-color: shade($blue, 60%);
 $form-validation-error-color: darken($red, 20%);
 
 $navbar-bg-color: $blue;
 $navbar-link-color: $white;
 $navbar-link-active-color: $white;
-
-$element-bg-color: $white;
-$element-text-color: $dark-blue;
-$element-border: $border-width solid darken($element-bg-color, 10%);
-
-$logic-element-bg-color: $white;
-$logic-element-text-color: $dark-blue;
-$logic-element-border: $border-width solid $gray-light;
-
-$builder-bg-color: $body-bg;
-$builder-text-color: $white;
-$builder-palette-bg-color: $blue;
-$builder-palette-text-color: $white;

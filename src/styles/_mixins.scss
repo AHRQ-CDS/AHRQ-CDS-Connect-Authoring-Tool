@@ -17,18 +17,21 @@
   }
 }
 
-@mixin button($color-foreground: $default-button-text-color, $color-background: $default-button-bg-color) {
+@mixin button($color-foreground: $default-button-text-color, $color-background: $default-button-bg-color, $box-shadow: $box-shadow) {
   background-color: $color-background;
   color: $color-foreground;
-  border-color: darken($color-background, 10%);
+  border: $border-width solid darken($color-background, 15%);
+  box-shadow: $box-shadow;
 
   &:hover,
   &:focus,
   &:active {
     background-color: shade($color-background, 10%);
     color: $color-foreground;
-    border-color: shade($color-background, 20%);
     box-shadow: $box-shadow;
+  }
+  &:active {
+    box-shadow: none;
   }
 }
 
@@ -53,7 +56,7 @@
       @media (max-width: $breakpoint) {
         content: attr(data-th);
         display: block;
-        font-weight: 500;
+        font-weight: $font-weight-bold;
         text-transform: uppercase;
         font-size: 0.9em;
       }
@@ -77,5 +80,19 @@
   * {
     color: $color;
     border-color: $color;
+  }
+}
+
+@mixin native-focus() {
+  outline-width: 2px;
+  outline-style: solid;
+  outline-color: Highlight;
+
+  /* WebKit gets its native focus styles.
+   */
+  @media (-webkit-min-device-pixel-ratio:0) {
+    outline-width: 5px;
+    outline-style: auto;
+    outline-color: -webkit-focus-ring-color;
   }
 }

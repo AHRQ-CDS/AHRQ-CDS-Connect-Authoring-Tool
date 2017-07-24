@@ -1,21 +1,20 @@
 .builder {
   &__header {
-    color: $builder-text-color;
     display: flex;
-    align-items: flex-start;
-    margin-bottom: 1em;
+    align-items: center;
+    padding: 1em;
   }
 
   &__heading {
     flex: 1;
-    font-weight: 300;
     margin: 0;
     padding-right: 1em;
+    font-weight: $font-weight-regular;
   }
 
   &__buttonbar {
     .field {
-      margin-bottom: 0.25em;
+      margin-bottom: 0;
       text-align: right;
     }
     [role=status] {
@@ -23,19 +22,13 @@
     }
   }
 
-  &__canvas {
-    padding-bottom: 1em;
-    margin: 0 -2em;
-  }
-
   .react-tabs {
-    margin: auto -2em;
 
     [role=tablist] {
       background-color: $body-bg;
-      margin: 0 2em 2em;
-      padding: 0 2em;
-      font-weight: 400;
+      margin: 0;
+      padding-left: 1em;
+      font-weight: $font-weight-regular;
     }
 
     [role=tab] {
@@ -61,9 +54,8 @@
       }
     }
 
-    [role=tabpanel] {
-      margin: 0 2em 1em;
-      padding: 0 2em;
+    .tab-panel-container {
+      padding: 1em;
     }
   }
 }
