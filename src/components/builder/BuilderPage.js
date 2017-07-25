@@ -358,7 +358,7 @@ class BuilderPage extends Component {
     this.setTree(treeName, treeData, tree);
   }
 
-  deleteInstance = (treeName, path, uid=null, elementsToAdd=undefined) => {
+  deleteInstance = (treeName, path, elementsToAdd=undefined, uid=null) => {
     const treeData = this.findTree(treeName, uid);
     const tree = treeData.tree;
     const index = path.slice(-1);

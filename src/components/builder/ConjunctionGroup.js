@@ -79,13 +79,13 @@ class ConjunctionGroup extends Component {
       let parentPath = this.getPath().split('.').slice(0,-2).join('.'); // Path of parent of conjunction group
       let index = Number(this.getPath().split('.').pop()) // Index of to indent group at
       let toAdd = [{instance: newInstance, path: parentPath, index: index}]
-      this.props.deleteInstance(this.props.name, this.getPath(), null, toAdd);
+      this.props.deleteInstance(this.props.name, this.getPath(), toAdd);
     } else {
       // Indent a single templateInstance
       let newInstance = this.props.createTemplateInstance(type, [instance]);
       let index = Number(this.getChildsPath(instance.uniqueId).split('.').pop()); // Index to add new conjuction at
       let toAdd = [{instance: newInstance, path: this.getPath(), index: index}]
-      this.props.deleteInstance(this.props.name, this.getChildsPath(instance.uniqueId), null, toAdd);
+      this.props.deleteInstance(this.props.name, this.getChildsPath(instance.uniqueId), toAdd);
     }
   }
   
@@ -100,7 +100,7 @@ class ConjunctionGroup extends Component {
         index = Number(index) + i; // Index to add the conjunction's children at
         return toAdd.push({instance: child, path: parentPath, index: index})
       });
-      this.props.deleteInstance(this.props.name, this.getPath(), null, toAdd);
+      this.props.deleteInstance(this.props.name, this.getPath(), toAdd);
     } else {
       // Outdenting a single templateInstance
       // Path of the parent of the group instance is coming from. This is where it will be readded
@@ -108,7 +108,7 @@ class ConjunctionGroup extends Component {
       let index = this.getPath().split('.').pop(); // Index of the parent
       index = Number(index) + 1; // Readd the child that is being outdented right below the parent it came from
       let toAdd = [{instance: instance, path: parentPath, index: index}]
-      this.props.deleteInstance(this.props.name, this.getChildsPath(instance.uniqueId), null, toAdd);
+      this.props.deleteInstance(this.props.name, this.getChildsPath(instance.uniqueId), toAdd);
     }
   }
   
