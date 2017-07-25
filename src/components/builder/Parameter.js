@@ -5,11 +5,6 @@ import StringParameter from './parameters/StringParameter';
 import _ from 'lodash';
 
 class Parameter extends Component {
-  constructor(props) {
-    super(props);
-    const values = [{ value: 'true', label: 'True' },
-                    { value: 'false', label: 'False' }];
-  }
 
   updateParameter = (object) => {
     this.props.updateInstanceOfParameter(object, this.props.index);
@@ -22,14 +17,15 @@ class Parameter extends Component {
             <div key={"index"}>
               <div className="parameter__content">
                 <label htmlFor={`parameter-${this.props.index}`}>
+                  <button className="button is-pulled-right" onClick={ () => { this.props.deleteBooleanParam(this.props.index) } }><FontAwesome fixedWidth name='times'/></button>
                   <StringParameter
-                    id={"param-name"}
+                    id={`param-name-${this.props.index}`}
                     name={"Parameter Name"}
                     value={this.props.name}
-                    updateInstance={ e => this.updateParameter({name: e["param-name"], value: this.props.value}) }/>
-                  <button onClick={ () => { this.props.deleteBooleanParam(this.props.index) } }><FontAwesome fixedWidth name='times'/></button>
+                    updateInstance={ e => this.updateParameter({name: e[`param-name-${this.props.index}`], value: this.props.value}) }/>
                   <Select
                     autofocus
+                    clearable={false}
                     options={[{ value: 'true', label: 'True' },
                               { value: 'false', label: 'False' }]}
                     value={this.props.value}

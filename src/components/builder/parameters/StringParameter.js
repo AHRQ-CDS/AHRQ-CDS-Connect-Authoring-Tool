@@ -18,7 +18,6 @@ class StringParameter extends Component {
           <input id={id}
             type="text"
             name={this.props.id}
-            aria-describedby={helpId}
             value={this.props.value || ""}
             onChange={(event) => {
               const name = event.target.name;

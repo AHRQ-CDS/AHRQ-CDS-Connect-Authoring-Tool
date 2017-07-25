@@ -97,7 +97,7 @@ class BuilderPage extends Component {
         }
 
         if (this.props.match.params.id) {
-          let thing = this.loadExistingArtifact();
+          this.loadExistingArtifact();
         } else {
           this.initializeExpTrees(andTemplate);
         }
