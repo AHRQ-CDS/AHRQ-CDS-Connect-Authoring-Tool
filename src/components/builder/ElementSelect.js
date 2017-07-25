@@ -85,7 +85,8 @@ class ElementSelect extends Component {
         return ({
           category: 'Parameter',
           name: booleanParameter.name,
-          parameters: [],
+          parameters: [{value: booleanParameter.name}],
+          template: 'EmptyParameter',
           cannotHaveModifiers: true,
           returnType: 'boolean'
         })

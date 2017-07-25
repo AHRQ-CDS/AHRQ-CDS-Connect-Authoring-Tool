@@ -20,9 +20,9 @@ concept "<%=concept.name%>" : { <%concept.codes.forEach((code, index) => {%>"<%i
   display '<%=concept.display%>'
 <%})-%>
 
-<% paramContexts.forEach((parameter, key) => {-%>
-parameter "<%=parameter.element_name%>" default <%=parameter.default%>
-<%});%>
+<% booleanParameters.forEach(parameter => {-%>
+parameter "<%=parameter.name%>" default <%=parameter.value%>
+<%});-%>
 
 context <%=context%>
 
