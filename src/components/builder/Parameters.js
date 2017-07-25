@@ -1,10 +1,6 @@
 import React, {Component} from 'react';
-import Select from 'react-select';
 import Parameter from './Parameter';
 import _ from 'lodash';
-
-
-
 
 class Parameters extends Component {
   constructor(props) {
@@ -14,7 +10,6 @@ class Parameters extends Component {
     }
   }
 
-  
   addParameter = () => {
     const newParameter = ({name: null, value: null});
     const booleanParameters = _.clone(this.state.booleanParameters);
@@ -40,7 +35,7 @@ class Parameters extends Component {
   render() {
     return (
       <div>
-        <button className="button new-subpopulation" onClick={ this.addParameter }>
+        <button className="button new-parameter" onClick={ this.addParameter }>
           New parameter
         </button>
           { this.state.booleanParameters.map((booleanParameter, i) => {
@@ -58,8 +53,7 @@ class Parameters extends Component {
         }
       </div>
     )
-  }  
-  
+  }
 };
 
 export default Parameters;
