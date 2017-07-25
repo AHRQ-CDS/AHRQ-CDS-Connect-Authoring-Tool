@@ -37,13 +37,13 @@ module.exports = {
       ],
       units: {values: ["'mm[Hg]'", "'mmHg'", "'mm Hg'"], code: "'mm[Hg]'"}
     },
-    ldl_cholesterol : {
-      // https://ushik.ahrq.gov/ViewItemDetails?system=mu&itemKey=171113000
-      id: "ldl_cholesterol",
+    ldl_test : {
+      // [See value set in VSAC](https://vsac.nlm.nih.gov/valueset/2.16.840.1.113883.3.464.1003.198.11.1029/expansion)
+      id: "ldl_test",
       observations: [
         {
-          name: "LDL Cholesterol",
-          oid: '2.16.840.1.113883.3.464.1003.198.12.1016',
+          name: "LDL Test",
+          oid: '2.16.840.1.113883.3.464.1003.198.11.1029',
         }
       ],
       units: {values: ["'mg/dL'"], code: "'mg/dL'"},
@@ -92,17 +92,6 @@ module.exports = {
         name: "Current Tobacco Smoker",
         oid: '2.16.840.1.113883.3.600.2390'
       }
-    },
-    ldl_test : {
-      // [See value set in VSAC](https://vsac.nlm.nih.gov/valueset/2.16.840.1.113883.3.464.1003.198.11.1029/expansion)
-      id: "ldl_test",
-      observations: [
-        {
-          name: "LDL Test",
-          oid: '2.16.840.1.113883.3.464.1003.198.11.1029',
-        }
-      ],
-      units: {values: ["'mg/dL'"], code: "'mg/dL'"},
     },
   },
   demographics: {
@@ -174,16 +163,6 @@ module.exports = {
           oid: '2.16.840.1.113883.3.464.1003.104.12.1003'
         }
       ]
-    },
-    hypercholesterolemia : {
-     // TODO: Reused from statin CQM artifact; needs review against other value sets in VSAC.
-     id: "hypercholesterolemia",
-     conditions: [
-       {
-         name: "Hypercholesterolemia",
-         oid: '2.16.840.1.113762.1.4.1047.100'
-       }
-     ]
     },
     pregnancy_dx : {
      // https://ushik.ahrq.gov/ViewItemDetails?&system=mu&itemKey=189087000
@@ -267,16 +246,6 @@ module.exports = {
       }
     ]
     },
-    liver_disease : {
-      //TODO: Reused from statin CQM artifact; needs review against other value sets in VSAC.
-      id: "liver_disease",
-      conditions: [
-        {
-          name: "Liver Disease",
-          oid: '2.16.840.1.113762.1.4.1047.42'
-        }
-      ]
-    },
     rhabdomyolysis : {
       id: "rhabdomyolysis",
       conditions: [
@@ -314,15 +283,28 @@ module.exports = {
       ]
     },
     familial_hypercholesterolemia : {
-     // TODO: Reused from statin CQM artifact; needs review against other value sets in VSAC.
      id: "familial_hypercholesterolemia",
-     conditions: [
-       {
-         name: "Familial Hypercholesterolemia",
-         oid: '2.16.840.1.113762.1.4.1032.15'
-       }
-     ]
-    },
+        conditions: [
+          {
+            name: "Familial hypercholesterolemia",
+            oid: '2.16.840.1.113762.1.4.1032.15'
+          }
+        ],
+        concepts: [
+          {
+            name: "Familial hypercholesterolemia concept",
+            codes: [
+              {
+                name: "Familial hypercholesterolemia code",
+                code: "E78.01",
+                codeSystem: { name: 'ICD-10-CM', id: 'urn:oid:2.16.840.1.113883.6.90'},
+                display: "Familial hypercholesterolemia"
+              }
+            ],
+            display: "Familial hypercholesterolemia"
+          },
+        ],
+      }
   },
   medications: {
     anti_hypertensive_medication : {

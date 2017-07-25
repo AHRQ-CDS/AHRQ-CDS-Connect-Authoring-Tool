@@ -215,6 +215,22 @@ class CqlArtifact {
           break;
         case 'condition':
           let conditionValueSets = ValueSets.conditions[parameter.value];
+          if ('concepts' in conditionValueSets) {
+            conditionValueSets.concepts.forEach((concept) => {
+              concept.codes.forEach((code) => {
+                this.codeSystemMap.set(code.codeSystem.name, code.codeSystem.id);
+                this.codeMap.set(code.name, code);
+              });
+              this.conceptMap.set(concept.name, concept);
+            });
+            // For checking if a ConceptValue is in a valueset, incluce the valueset that will be used
+            if('checkInclusionInVS' in conditionValueSets) {
+              if(!_.isEmpty(element.modifiers) && _.last(element.modifiers).id === "CheckInclusionInVS") {
+                _.last(element.modifiers).values = conditionValueSets.checkInclusionInVS.name;
+              }
+              this.resourceMap.set(conditionValueSets.checkInclusionInVS.name, conditionValueSets.checkInclusionInVS);
+            }
+          }
           context.values = conditionValueSets.conditions.map(condition => {
             this.resourceMap.set(condition.name, condition);
             return condition.name;
