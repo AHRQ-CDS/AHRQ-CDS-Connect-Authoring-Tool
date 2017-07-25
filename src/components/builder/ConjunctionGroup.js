@@ -20,6 +20,7 @@ class ConjunctionGroup extends Component {
     addInstance: PropTypes.func.isRequired,
     editInstance: PropTypes.func.isRequired,
     updateInstanceModifiers: PropTypes.func.isRequired,
+    booleanParameters: PropTypes.array.isRequired,
     deleteInstance: PropTypes.func.isRequired,
     saveInstance: PropTypes.func.isRequired,
     getAllInstances: PropTypes.func.isRequired,
@@ -191,6 +192,7 @@ class ConjunctionGroup extends Component {
                   getPath={ this.getChildsPath }
                   name={ this.props.name }
                   instance={ instance }
+                  booleanParameters={ this.props.booleanParameters }
                   createTemplateInstance={ this.props.createTemplateInstance }
                   addInstance={ this.props.addInstance }
                   editInstance={ this.props.editInstance }
@@ -229,6 +231,7 @@ class ConjunctionGroup extends Component {
         <ElementSelect
           categories={ this.props.categories }
           onSuggestionSelected={ this.addChild }
+          booleanParameters={ this.props.booleanParameters }
         />
       </div>
     );
