@@ -77,13 +77,13 @@ class ConjunctionGroup extends Component {
       // Indenting a conjunction group (and it's children)
       let newInstance = this.props.createTemplateInstance(type, [instance])
       let parentPath = this.getPath().split('.').slice(0,-2).join('.'); // Path of parent of conjunction group
-      let index = this.getPath().split('.').pop() // Index of to indent group at
+      let index = Number(this.getPath().split('.').pop()) // Index of to indent group at
       let toAdd = [{instance: newInstance, path: parentPath, index: index}]
       this.props.deleteInstance(this.props.name, this.getPath(), null, toAdd);
     } else {
       // Indent a single templateInstance
       let newInstance = this.props.createTemplateInstance(type, [instance]);
-      let index = this.getChildsPath(instance.uniqueId).split('.').pop(); // Index to add new conjuction at
+      let index = Number(this.getChildsPath(instance.uniqueId).split('.').pop()); // Index to add new conjuction at
       let toAdd = [{instance: newInstance, path: this.getPath(), index: index}]
       this.props.deleteInstance(this.props.name, this.getChildsPath(instance.uniqueId), null, toAdd);
     }
@@ -120,12 +120,18 @@ class ConjunctionGroup extends Component {
     return (
       <span>
         { this.getPath() !== '' ? 
-          <button className='element__hidebutton' onClick={()=> this.outdentClickHandler(instance)}>
+          <button 
+            aria-label="outdent"
+            className='element__hidebutton' 
+            onClick={()=> this.outdentClickHandler(instance)}>
             <FontAwesome name="dedent" />
           </button> :
           null
         }
-        <button className='element__hidebutton' onClick={()=> this.indentClickHandler(instance)}>
+        <button 
+          aria-label="indent"
+          className='element__hidebutton' 
+          onClick={()=> this.indentClickHandler(instance)}>
           <FontAwesome name="indent" />
         </button> 
       </span>
