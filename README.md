@@ -12,9 +12,9 @@ The project leverages the MERN application architecture, using MongoDB, Express,
 
 ```bash
 brew install mongodb # install mongodb on host system
-brew services start mongodb # for the first time, start mongo
+brew services start mongodb # start mongo
 brew install node # install node
-npm install -g yarn # node comes with npm. use it to install yarn
+npm install -g yarn # npm included with node, install yarn
 yarn # e.g. yarn install. installs this app's dependencies based on this project's yarn.lock / package.json
 ```
 
