@@ -231,11 +231,17 @@ class CqlArtifact {
               }
               this.resourceMap.set(conditionValueSets.checkInclusionInVS.name, conditionValueSets.checkInclusionInVS);
             }
+            context.values = [`[Condition: "${conditionValueSets.conditions[0].name}"]`, `C3F.ConditionsByConcept("${conditionValueSets.concepts[0].name}")`];
+            context.template = 'GenericStatement'; // Potentially move this to the object itself in form_templates
+            conditionValueSets.conditions.forEach(condition => {
+              this.resourceMap.set(condition.name, condition);
+            })
+          } else {
+            context.values = conditionValueSets.conditions.map(condition => {
+              this.resourceMap.set(condition.name, condition);
+              return condition.name;
+            })
           }
-          context.values = conditionValueSets.conditions.map(condition => {
-            this.resourceMap.set(condition.name, condition);
-            return condition.name;
-          })
           break;
         case 'medication':
           let medicationValueSets = ValueSets.medications[parameter.value];
