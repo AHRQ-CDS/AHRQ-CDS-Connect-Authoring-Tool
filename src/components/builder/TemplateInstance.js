@@ -582,8 +582,8 @@ class TemplateInstance extends Component {
           </span>
           <div className="element__buttonbar">
             <button
-              id={`presets-${this.props.templateInstance.id}`}
-              aria-controls={`presets-list-${this.props.templateInstance.id}`}
+              id={`presets-${this.props.templateInstance.uniqueId}`}
+              aria-controls={`presets-list-${this.props.templateInstance.uniqueId}`}
               onClick={this.showPresets.bind(this, this.props.templateInstance.id)}
               className="element__presetbutton"
               aria-label={`show presets ${this.props.templateInstance.id}`}>
@@ -607,12 +607,12 @@ class TemplateInstance extends Component {
               aria-label={`remove ${this.props.templateInstance.name}`}>
               <FontAwesome fixedWidth name='close'/>
             </button>
-            <div id={`presets-list-${this.props.templateInstance.id}`} role="region" aria-live="polite">
+            <div id={`presets-list-${this.props.templateInstance.uniqueId}`} role="region" aria-live="polite">
               { this.state.showPresets
                 ? <select
                     onChange={event => this.setPreset(event.target.value)}
                     onBlur={event => this.setPreset(event.target.value)}
-                    aria-labelledby={`presets-${this.props.templateInstance.id}`}>
+                    aria-labelledby={`presets-${this.props.templateInstance.uniqueId}`}>
                   <optgroup><option>Use a preset</option></optgroup>
                   {this.state.presets.map((preset, i) =>
                     renderPreset(preset, i)
