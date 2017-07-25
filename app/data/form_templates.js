@@ -488,7 +488,7 @@ module.exports = [
       {
         id: 'GenericEncounter',
         name: 'Encounter',
-        returnType: 'encounter',
+        returnType: 'list_of_encounters',
         suppress: true,
         extends: 'Base',
         parameters: [
@@ -498,7 +498,7 @@ module.exports = [
       {
         id: 'OutpatientEncounters',
         name: 'Outpatient Encounter',
-        returnType: 'encounter',
+        returnType: 'list_of_encounters',
         extends: 'GenericEncounter',
         parameters: [
           { id: 'element_name', value: 'OutpatientEncounter' },
