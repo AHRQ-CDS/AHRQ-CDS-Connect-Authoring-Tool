@@ -464,6 +464,7 @@ class BuilderPage extends Component {
         root={ true }
         name={ treeName }
         instance={ this.state[treeName] }
+        booleanParameters={ this.state.booleanParameters}
         createTemplateInstance={ this.createTemplateInstance }
         addInstance={ this.addInstance }
         editInstance={ this.editInstance }
@@ -541,6 +542,7 @@ class BuilderPage extends Component {
                 name={ 'subpopulations' }
                 subpopulations={ this.state.subpopulations }
                 updateSubpopulations={ this.updateSubpopulations }
+                booleanParameters={ this.state.booleanParameters }
                 createTemplateInstance={ this.createTemplateInstance }
                 addInstance={ this.addInstance }
                 editInstance={ this.editInstance }

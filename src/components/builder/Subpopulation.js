@@ -78,6 +78,7 @@ class Subpopulation extends Component {
               root={ true }
               name={ this.props.treeName }
               instance={ this.props.subpopulation }
+              booleanParameters={ this.props.booleanParameters }
               createTemplateInstance={ this.props.createTemplateInstance }
               addInstance={ this.addInstance }
               editInstance={ this.editInstance }
