@@ -413,7 +413,7 @@ class CqlArtifact {
       let conditionalText = recommendation.subpopulations.map(subpopulation => subpopulation.special_subpopulationName ? subpopulation.special_subpopulationName : `"${subpopulation.subpopulationName}"`).join(` ${conjunction} `);
       return `if ${conditionalText} then '${recommendation.text}'`;
     }).join('\n  else ').concat('\n  else null');
-    return ejs.render(templateMap['BaseTemplate'], {element_name: 'Recommendations', cqlString: recommendationText})
+    return ejs.render(templateMap['BaseTemplate'], {element_name: 'Recommendation', cqlString: recommendationText})
   }
 
   rationale() {
