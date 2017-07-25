@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import Select from 'react-select';
+import FontAwesome from 'react-fontawesome';
 import StringParameter from './parameters/StringParameter';
 import _ from 'lodash';
 
@@ -8,18 +9,13 @@ class Parameter extends Component {
     super(props);
     const values = [{ value: 'true', label: 'True' },
                     { value: 'false', label: 'False' }];
-    this.state = {
-      name: this.props.param,
-      value: this.props.value
-    }
   }
 
   updateParameter = (object) => {
     this.props.updateInstanceOfParameter(object, this.props.index);
   }
 
-  render(){
-    let val = null;
+  render() {
     return (
       <div className="parameter__header">
           <div className="form__group">
@@ -27,24 +23,17 @@ class Parameter extends Component {
               <div className="parameter__content">
                 <label htmlFor={`parameter-${this.props.index}`}>
                   <StringParameter
-                    id={ "param-name" }
-                    name={ "Parameter Name" }
-                    value={ this.state.name }
-                    updateInstance={ (v) => {
-                      this.setState({name: v["param-name"]})
-                      this.updateParameter({name: v["param-name"], value: this.state.value})
-                    }
-                    }
-                  />
+                    id={"param-name"}
+                    name={"Parameter Name"}
+                    value={this.props.name}
+                    updateInstance={ e => this.updateParameter({name: e["param-name"], value: this.props.value}) }/>
+                  <button onClick={ () => { this.props.deleteBooleanParam(this.props.index) } }><FontAwesome fixedWidth name='times'/></button>
                   <Select
                     autofocus
                     options={[{ value: 'true', label: 'True' },
                               { value: 'false', label: 'False' }]}
-                    value={this.state.value}
-                    onChange={(v) => {
-                      this.setState({value: v.value})
-                      this.updateParameter({name: this.state.name, value: v.value})
-                    }}/>
+                    value={this.props.value}
+                    onChange={ e => this.updateParameter({name: this.props.name, value: e.value}) }/>
                 </label>
               </div>
             </div>
