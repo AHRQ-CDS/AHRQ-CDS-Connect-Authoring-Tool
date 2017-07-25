@@ -358,7 +358,7 @@ module.exports = [
         name: 'Familial Hypercholesterolemia',
         extends: 'GenericCondition',
         parameters: [
-          { id: 'element_name', value: 'Familial_Hypercholesterolemia' },
+          { id: 'element_name', value: 'HasFamilialHypercholesterolemia' },
           { id: 'condition', static: true, value: 'familial_hypercholesterolemia' }
         ]
       },
