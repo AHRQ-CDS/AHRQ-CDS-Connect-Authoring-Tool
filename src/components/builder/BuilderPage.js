@@ -9,6 +9,7 @@ import ConjunctionGroup from './ConjunctionGroup';
 import Recommendations from './Recommendations';
 import Subpopulations from './Subpopulations';
 import Parameters from './Parameters';
+import ErrorStatement from './ErrorStatement';
 import Config from '../../../config';
 
 // Suppress is a flag that is specific to an element. It should not be inherited by children
@@ -71,6 +72,7 @@ class BuilderPage extends Component {
         }
       ],
       booleanParameters: [],
+      errorStatements: [],
       name: 'Untitled Artifact',
       id: null,
       version: null,
@@ -133,6 +135,7 @@ class BuilderPage extends Component {
         this.setState({ recommendations: artifact.recommendations });
         this.setState({ subpopulations: artifact.subpopulations });
         this.setState({ booleanParameters: artifact.booleanParameters });
+        this.setState({ errorStatements: artifact.errorStatements });
       });
   }
 
@@ -187,6 +190,7 @@ class BuilderPage extends Component {
       recommendations: this.state.recommendations,
       subpopulations: this.state.subpopulations,
       booleanParameters: this.state.booleanParameters,
+      errorStatements: this.state.errorStatements,
       uniqueIdCounter: this.state.uniqueIdCounter
     };
   }
@@ -529,6 +533,7 @@ class BuilderPage extends Component {
               <Tab>Recommendations</Tab>
               <Tab>Subpopulations</Tab>
               <Tab>Parameters</Tab>
+              <Tab>Handle Errors</Tab>
             </TabList>
             <div className="tab-panel-container">
               <TabPanel>
@@ -568,6 +573,13 @@ class BuilderPage extends Component {
                 <Parameters
                   booleanParameters={ this.state.booleanParameters }
                   updateParameters={this.updateParameters}
+                />
+              </TabPanel>
+              <TabPanel>
+                <ErrorStatement
+                  booleanParameters={ this.state.booleanParameters }
+                  subpopulations={ this.state.subpopulations }
+                  value={ null }
                 />
               </TabPanel>
             </div>
