@@ -187,7 +187,8 @@ class BuilderPage extends Component {
       recommendations: this.state.recommendations,
       subpopulations: this.state.subpopulations,
       booleanParameters: this.state.booleanParameters,
-      uniqueIdCounter: this.state.uniqueIdCounter
+      uniqueIdCounter: this.state.uniqueIdCounter,
+      version: this.state.version
     };
   }
 
