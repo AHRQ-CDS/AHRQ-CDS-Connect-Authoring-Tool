@@ -1,0 +1,14 @@
+define "<%-element_name%>":
+<%errorStatement.statements.forEach(statement => {-%>
+  if <%-statement.condition.value%> then
+<%if (statement.useThenClause) {-%>
+    {'<%-statement.thenClause%>'}
+<%} else {-%>
+<%statement.child.statements.forEach(childStatement => {-%>
+    if <%-childStatement.condition.value%> then
+      {'<%-childStatement.thenClause%>'}
+<%})-%>
+    else {'<%-String(statement.child.elseClause)%>'}
+<%}-%>
+<%})-%>
+  else {'<%-String(errorStatement.elseClause)%>'}

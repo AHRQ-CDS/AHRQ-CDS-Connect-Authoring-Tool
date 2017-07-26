@@ -92,6 +92,7 @@ class CqlArtifact {
     this.exclusions = artifact.expTreeExclude;
     this.subpopulations = artifact.subpopulations;
     this.recommendations = artifact.recommendations;
+    this.errorStatement = artifact.errorStatement;
     this.initialize()
   }
 
@@ -346,6 +347,11 @@ class CqlArtifact {
     this.contexts.push(context)
   }
 
+  // Goes through CQL strings and escapes any single quotes
+  sanitizeCQLString(cqlString) {
+    return _.replace(cqlString, '\'', '\\\'');
+  }
+
   /* Modifiers Explanation:
     Within `form_templates`, a template must be specified (unless extending an element that specifies a template).
     If no template is specified, it will look for a template named the same as the `id`.
@@ -413,7 +419,7 @@ class CqlArtifact {
       let conditionalText = recommendation.subpopulations.map(subpopulation => subpopulation.special_subpopulationName ? subpopulation.special_subpopulationName : `"${subpopulation.subpopulationName}"`).join(` ${conjunction} `);
       return `if ${conditionalText} then '${recommendation.text}'`;
     }).join('\n  else ').concat('\n  else null');
-    return ejs.render(templateMap['BaseTemplate'], {element_name: 'Recommendations', cqlString: recommendationText})
+    return ejs.render(templateMap['BaseTemplate'], {element_name: 'Recommendations', cqlString: this.sanitizeCQLString(recommendationText)})
   }
 
   rationale() {
@@ -424,13 +430,19 @@ class CqlArtifact {
       return `if ${conditionalText} then '${recommendation.rationale}'`;
     }).join('\n  else ').concat('\n  else null');
     if (_.isEmpty(rationaleText)) return '';
-    return ejs.render(templateMap['BaseTemplate'], {element_name: 'Rationale', cqlString: rationaleText})
+    return ejs.render(templateMap['BaseTemplate'], {element_name: 'Rationale', cqlString: this.sanitizeCQLString(rationaleText)})
 
+  }
+
+  errors() {
+    this.errorStatement.elseClause = this.sanitizeCQLString(this.errorStatement.elseClause);
+    const retVal = ejs.render(templateMap['ErrorStatements'], {element_name: 'Error', errorStatement: this.errorStatement});
+    return retVal;
   }
 
   // Produces the cql in string format
   toString() {
-    return this.header()+this.body()+'\n'+this.population()+'\n'+this.recommendation()+'\n'+this.rationale();
+    return this.header()+this.body()+'\n'+this.population()+'\n'+this.recommendation()+'\n'+this.rationale()+'\n'+this.errors();
   }
 
   // Return a cql file as a json object
