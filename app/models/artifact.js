@@ -11,7 +11,7 @@ let ArtifactSchema = new Schema({
   recommendations: Array,
   subpopulations: Array,
   booleanParameters: Array,
-  errorStatements: Array,
+  errorStatement: Object,
   uniqueIdCounter: Number
 },{
   timestamps: true // adds created_at, updated_at

@@ -42,7 +42,15 @@ class ArtifactForm extends Component {
         }
       ],
       booleanParameters: [],
-      errorStatements: [],
+      errorStatement: {
+        statements: [{
+          parent: null,
+          condition: null,
+          block: '',
+          child: null
+        }],
+        else: null
+      },
       uniqueIdCounter: 0
     }).then((result) => {
       this.props.afterAddArtifact();

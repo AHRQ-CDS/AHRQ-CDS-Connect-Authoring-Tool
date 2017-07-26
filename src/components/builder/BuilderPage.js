@@ -72,7 +72,15 @@ class BuilderPage extends Component {
         }
       ],
       booleanParameters: [],
-      errorStatements: [],
+      errorStatement: {
+        statements: [{
+          parent: null,
+          condition: null,
+          block: '',
+          child: null
+        }],
+        else: null
+      },
       name: 'Untitled Artifact',
       id: null,
       version: null,
@@ -135,7 +143,7 @@ class BuilderPage extends Component {
         this.setState({ recommendations: artifact.recommendations });
         this.setState({ subpopulations: artifact.subpopulations });
         this.setState({ booleanParameters: artifact.booleanParameters });
-        this.setState({ errorStatements: artifact.errorStatements });
+        this.setState({ errorStatement: artifact.errorStatement });
       });
   }
 
@@ -190,7 +198,7 @@ class BuilderPage extends Component {
       recommendations: this.state.recommendations,
       subpopulations: this.state.subpopulations,
       booleanParameters: this.state.booleanParameters,
-      errorStatements: this.state.errorStatements,
+      errorStatement: this.state.errorStatement,
       uniqueIdCounter: this.state.uniqueIdCounter
     };
   }
@@ -383,7 +391,7 @@ class BuilderPage extends Component {
     }
   }
 
-  updateRecommendations = (newState) => {
+  updateState = (newState) => {
     this.setState(newState);
   }
 
@@ -544,7 +552,7 @@ class BuilderPage extends Component {
               </TabPanel>
               <TabPanel>
                 <Recommendations
-                  updateRecommendations={ this.updateRecommendations }
+                  updateRecommendations={ this.updateState }
                   recommendations={ this.state.recommendations }
                   subpopulations={ this.state.subpopulations }
                   setActiveTab={ this.setActiveTab }
@@ -579,6 +587,8 @@ class BuilderPage extends Component {
                 <ErrorStatement
                   booleanParameters={ this.state.booleanParameters }
                   subpopulations={ this.state.subpopulations }
+                  errorStatement={ this.state.errorStatement }
+                  updateParentState={ this.updateState }
                   value={ null }
                 />
               </TabPanel>
