@@ -17,14 +17,14 @@ class Parameters extends Component {
     this.setState({booleanParameters: booleanParameters})
     this.props.updateParameters(booleanParameters)
   }
-  
+
   deleteBooleanParam = (index) => {
     let booleanParameters = _.cloneDeep(this.props.booleanParameters);
     booleanParameters.splice(index, 1);
     this.props.updateParameters(booleanParameters);
     this.setState({booleanParameters: booleanParameters})
   }
-  
+
   updateInstanceOfParameter = (booleanParameter , index) => {
     const booleanParameters = _.clone(this.state.booleanParameters);
     booleanParameters[index] = booleanParameter ;
@@ -35,9 +35,6 @@ class Parameters extends Component {
   render() {
     return (
       <div>
-        <button className="button new-parameter" onClick={ this.addParameter }>
-          New parameter
-        </button>
           { this.state.booleanParameters.map((booleanParameter, i) => {
             return (
               <Parameter
@@ -51,6 +48,9 @@ class Parameters extends Component {
             );
           })
         }
+        <button className="button new-parameter" onClick={ this.addParameter }>
+          New parameter
+        </button>
       </div>
     )
   }
