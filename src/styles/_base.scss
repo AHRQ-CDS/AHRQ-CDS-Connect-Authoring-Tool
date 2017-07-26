@@ -32,6 +32,7 @@ main {
   }
 }
 
+.button-style,
 #{$all-buttons},
 #{$all-text-inputs} {
   font-family: 'Rubik', sans-serif;
@@ -40,6 +41,7 @@ main {
   border-radius: $border-radius;
 }
 
+.button-style,
 #{$all-buttons} {
   @include button($default-button-text-color, $default-button-bg-color);
 

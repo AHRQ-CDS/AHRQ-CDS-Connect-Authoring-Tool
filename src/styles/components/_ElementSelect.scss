@@ -1,5 +1,6 @@
 .element-select {
   display: flex;
+  align-items: center;
   margin: 0;
 
   &__element-field {
@@ -12,5 +13,78 @@
   &__option-category {
     margin-left: .5em;
     color: $gray;
+  }
+  &__modal {
+    margin-left: .5em;
+  }
+}
+.element-modal {
+  .modal__header,
+  .modal__footer {
+    padding: 1em;
+  }
+  .modal__body {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    padding: 0;
+    border-bottom: $border-global;
+  }
+  .modal__footer {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+  }
+  &__container {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+  }
+  &__content {
+    display: flex;
+    flex: 1;
+  }
+  &__sidebar {
+    flex: 0 0 12em;
+    padding: 1em;
+    overflow-y: auto;
+
+    .transparent-button {
+      display: block;
+      width: 100%;
+      margin-left: 0;
+      margin-bottom: .1em;
+      padding: .35em;
+      text-align: left;
+    }
+    .selected {
+      background-color: $gray-lighter;
+    }
+  }
+  &__list {
+    flex: 1;
+    padding: 1em;
+    overflow-y: auto;
+  }
+  &__search {
+    padding: 1em;
+    background-color: $gray-lightest;
+    border-bottom: $border-global;
+
+    input {
+      width: 100%;
+    }
+  }
+  .element-select__option {
+    display: block;
+    margin-bottom: .5em;
+    margin-left: 0;
+    padding: .35em;
+
+    .button-style {
+      display: inline-block;
+      padding: .2em;
+      margin-right: .5em;
+    }
   }
 }
