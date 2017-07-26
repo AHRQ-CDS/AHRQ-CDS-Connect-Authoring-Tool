@@ -407,22 +407,30 @@ class CqlArtifact {
     return ejs.render(fs.readFileSync(templatePath + '/IncludeExclude', 'utf-8'), treeNames);
   }
 
+  constructOneRecommendationConditional(recommendation, text) {
+    const conjunction = 'and'; // possible that this may become `or`, or some combo of the two conjunctions
+    let conditionalText;
+    if (!_.isEmpty(recommendation.subpopulations)) {
+      conditionalText = recommendation.subpopulations.map(subpopulation => subpopulation.special_subpopulationName || `"${subpopulation.subpopulationName}"`).join(` ${conjunction} `);
+    } else {
+      conditionalText = '"InPopulation"'; // TODO: Is there a better way than hard-coding this?
+    }
+    return `if ${conditionalText} then `;
+  }
+
   recommendation() {
     let recommendationText = this.recommendations.map(recommendation => {
-      let conjunction = 'and'; // possible that this may become `or`, or some combo of the two conjunctions
-      let conditionalText = recommendation.subpopulations.map(subpopulation => subpopulation.special_subpopulationName ? subpopulation.special_subpopulationName : `"${subpopulation.subpopulationName}"`).join(` ${conjunction} `);
-      return `if ${conditionalText} then '${recommendation.text}'`;
+      const conditional = this.constructOneRecommendationConditional(recommendation);
+      return conditional + `'${recommendation.text}'`;
     }).join('\n  else ').concat('\n  else null');
     return ejs.render(templateMap['BaseTemplate'], {element_name: 'Recommendation', cqlString: recommendationText})
   }
 
   rationale() {
     let rationaleText = this.recommendations.map(recommendation => {
-      if (_.isEmpty(recommendation.rationale)) return '';
-      let conjunction = 'and'; // possible that this may become `or`, or some combo of the two conjunctions
-      let conditionalText = recommendation.subpopulations.map(subpopulation => subpopulation.special_subpopulationName ? subpopulation.special_subpopulationName : `"${subpopulation.subpopulationName}"`).join(` ${conjunction} `);
-      return `if ${conditionalText} then '${recommendation.rationale}'`;
-    }).join('\n  else ').concat('\n  else null');
+      const conditional = this.constructOneRecommendationConditional(recommendation);
+      return conditional + (_.isEmpty(recommendation.rationale) ? 'null' : `'${recommendation.rationale}'`);
+    }).join('\n  else ').concat('\n  else null')
     if (_.isEmpty(rationaleText)) return '';
     return ejs.render(templateMap['BaseTemplate'], {element_name: 'Rationale', cqlString: rationaleText})
 
