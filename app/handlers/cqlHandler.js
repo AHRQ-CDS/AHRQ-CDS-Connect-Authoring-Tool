@@ -141,7 +141,8 @@ class CqlArtifact {
     const name = element.parameters[0].value;
     conjunction.element_name = (name || element.subpopulationName || element.uniqueId);
     element.childInstances.forEach((child) => {
-      conjunction.components.push({name : child.parameters[0].value})
+      // TODO: Could a child of a conjuction ever be a subpopulation?
+      conjunction.components.push({name : child.parameters[0].value || child.uniqueId})
     });
     this.conjunction_main.push(conjunction);
   }
@@ -411,6 +412,7 @@ class CqlArtifact {
     const conjunction = 'and'; // possible that this may become `or`, or some combo of the two conjunctions
     let conditionalText;
     if (!_.isEmpty(recommendation.subpopulations)) {
+      // TODO: Either check for blank subpopulation names or make this fall back to the uniqueId of the subpopulation.
       conditionalText = recommendation.subpopulations.map(subpopulation => subpopulation.special_subpopulationName || `"${subpopulation.subpopulationName}"`).join(` ${conjunction} `);
     } else {
       conditionalText = '"InPopulation"'; // TODO: Is there a better way than hard-coding this?
