@@ -413,7 +413,12 @@ class CqlArtifact {
     let conditionalText;
     if (!_.isEmpty(recommendation.subpopulations)) {
       // TODO: Either check for blank subpopulation names or make this fall back to the uniqueId of the subpopulation.
-      conditionalText = recommendation.subpopulations.map(subpopulation => subpopulation.special_subpopulationName || `"${subpopulation.subpopulationName}"`).join(` ${conjunction} `);
+      conditionalText = recommendation.subpopulations.map(subpopulation => {
+        if (subpopulation.special_subpopulationName) {
+          return subpopulation.special_subpopulationName;
+        }
+        return subpopulation.subpopulationName ? `"${subpopulation.subpopulationName}"` : `"${subpopulation.uniqueId}"`;
+      }).join(` ${conjunction} `);
     } else {
       conditionalText = '"InPopulation"'; // TODO: Is there a better way than hard-coding this?
     }
