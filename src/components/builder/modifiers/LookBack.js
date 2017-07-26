@@ -24,21 +24,26 @@ class LookBack extends Component {
           </label>
           <label htmlFor={unitId}>
             Unit:
-            <select id={unitId} name="unit" value={this.props.unit}
-              onChange={(event) => {
-                this.props.updateAppliedModifier(this.props.index, { unit: event.target.value });
-              }}>
-              <option value="" disabled selected>-- Unit --</option>
-              <option value="years">Year(s)</option>
-              <option value="months">Month(s)</option>
-              <option value="weeks">Week(s)</option>
-              <option value="days">Day(s)</option>
-              <option value="hours">Hour(s)</option>
-              <option value="minutes">Minute(s)</option>
-              <option value="seconds">Second(s)</option>
-            </select>
+            <span className="field">
+              <span className="control">
+                <span className="select">
+                  <select id={unitId} name="unit" value={this.props.unit}
+                    onChange={(event) => {
+                      this.props.updateAppliedModifier(this.props.index, { unit: event.target.value });
+                    }}>
+                    <option value="" disabled selected>-- Unit --</option>
+                    <option value="years">Year(s)</option>
+                    <option value="months">Month(s)</option>
+                    <option value="weeks">Week(s)</option>
+                    <option value="days">Day(s)</option>
+                    <option value="hours">Hour(s)</option>
+                    <option value="minutes">Minute(s)</option>
+                    <option value="seconds">Second(s)</option>
+                  </select>
+                </span>
+              </span>
+            </span>
           </label>
-
         </div>
       </div>
     );

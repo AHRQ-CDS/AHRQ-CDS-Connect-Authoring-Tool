@@ -37,7 +37,7 @@ class NumberParameter extends Component {
           />
           { ('exclusive' in this.props.param)
           ? <div className="form__caption">
-              <input id={id}
+              <input id={`${id}-exclusive`}
                 type='checkbox'
                 checked={this.state.checked}
                 onChange={event => this.updateExclusive(event)}/>

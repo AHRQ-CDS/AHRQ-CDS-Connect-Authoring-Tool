@@ -5,13 +5,18 @@
   font-weight: 400;
 
   &__logo {
-    color: $navbar-link-color;
-    font-weight: $font-weight-bold;
-    text-decoration: none;
+    display: inline;
+    font-size: inherit;
+    font-weight: inherit;
+    a {
+      color: $navbar-link-color;
+      font-weight: $font-weight-bold;
+      text-decoration: none;
 
-    &:hover,
-    &:focus {
-      color: $gray-light;
+      &:hover,
+      &:focus {
+        color: $gray-light;
+      }
     }
   }
 

@@ -3,7 +3,7 @@ import { Link, NavLink } from 'react-router-dom';
 
 export default () => (
   <header className="navbar">
-    <Link to="/" className="navbar__logo">CDS Authoring Tool</Link>
+    <h1 className="navbar__logo"><Link to="/">CDS Authoring Tool</Link></h1>
     <nav className="navbar__nav">
       <ul>
         <li><NavLink to="/artifacts">Artifacts</NavLink></li>

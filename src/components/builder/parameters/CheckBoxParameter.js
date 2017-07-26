@@ -15,7 +15,7 @@ class CheckBoxParameter extends Component {
 
     return (
       <div className="form__caption">
-          <input id={id}
+          <input id={`${id}-double-sided`}
             type='checkbox'
             checked={this.state.checked}
             onChange={(event) => {
@@ -23,7 +23,7 @@ class CheckBoxParameter extends Component {
               this.setState({ checked: event.target.checked });
               this.props.updateComparison(this.state.checked);
             }}
-            aria-label={'Make double sided?'}/>
+            aria-label={`Make ${this.props.param.name} double sided?`}/>
           <label htmlFor={`${id}-double-sided`}>{this.props.param.name}</label>
         </div>
     );

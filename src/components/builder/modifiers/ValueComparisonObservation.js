@@ -15,24 +15,29 @@ class ValueComparisonObservation extends Component {
     return (
       <div>
         <div >
-          <label htmlFor={minOperatorId}>
-            <select
-              id={minOperatorId}
-              name="Min Operator"
-              value={this.props.minOperator}
-              defaultValue=""
-              onChange={(event) => {
-                this.props.updateAppliedModifier(this.props.index, { minOperator: event.target.value });
-              }}>
-              <option value="">{"-- Operator --"}</option>
-              <option value=">">{'>'}</option>
-              <option value=">=">{'>='}</option>
-              <option value="=">{'='}</option>
-              <option value="!=">{'!='}</option>
-              <option value="<">{'<'}</option>
-              <option value="<=">{'<='}</option>
-            </select>
-          </label>
+          <span className="field">
+            <span className="control">
+              <span className="select">
+                <select
+                  id={minOperatorId}
+                  aria-label="Min Operator"
+                  name="Min Operator"
+                  value={this.props.minOperator}
+                  defaultValue=""
+                  onChange={(event) => {
+                    this.props.updateAppliedModifier(this.props.index, { minOperator: event.target.value });
+                  }}>
+                  <option value="">{"-- Operator --"}</option>
+                  <option value=">">{'>'}</option>
+                  <option value=">=">{'>='}</option>
+                  <option value="=">{'='}</option>
+                  <option value="!=">{'!='}</option>
+                  <option value="<">{'<'}</option>
+                  <option value="<=">{'<='}</option>
+                </select>
+              </span>
+            </span>
+          </span>
 
           <label htmlFor={minValueId}>
             Value:
@@ -43,23 +48,28 @@ class ValueComparisonObservation extends Component {
             />
           </label>
 
-          <label htmlFor={maxOperatorId}>
-            <select id={maxOperatorId}
-              name="Max Operator"
-              value={this.props.maxOperator}
-              defaultValue=""
-              onChange={(event) => {
-                this.props.updateAppliedModifier(this.props.index, { maxOperator: event.target.value });
-              }}>
-              <option value="">{"-- Operator --"}</option>
-              <option value=">">{'>'}</option>
-              <option value=">=">{'>='}</option>
-              <option value="=">{'='}</option>
-              <option value="!=">{'!='}</option>
-              <option value="<">{'<'}</option>
-              <option value="<=">{'<='}</option>
-            </select>
-          </label>
+          <span className="field">
+            <span className="control">
+              <span className="select">
+                <select id={maxOperatorId}
+                  name="Max Operator"
+                  aria-label="Max Operator"
+                  value={this.props.maxOperator}
+                  defaultValue=""
+                  onChange={(event) => {
+                    this.props.updateAppliedModifier(this.props.index, { maxOperator: event.target.value });
+                  }}>
+                  <option value="">{"-- Operator --"}</option>
+                  <option value=">">{'>'}</option>
+                  <option value=">=">{'>='}</option>
+                  <option value="=">{'='}</option>
+                  <option value="!=">{'!='}</option>
+                  <option value="<">{'<'}</option>
+                  <option value="<=">{'<='}</option>
+                </select>
+              </span>
+            </span>
+          </span>
 
           <label htmlFor={maxValueId}>
             Value:
