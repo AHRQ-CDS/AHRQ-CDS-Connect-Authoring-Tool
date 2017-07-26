@@ -74,6 +74,7 @@ function pushToRepo(artifact, elm, req, res) {
             }
         }
     };
+    console.log(payload);
     request.post(`${Config.repo.baseUrl}/jsonapi/file/zip`, payload, function(err,res, body){
       console.log(res);
     });

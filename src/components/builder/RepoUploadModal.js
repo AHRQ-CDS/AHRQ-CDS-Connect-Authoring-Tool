@@ -45,13 +45,12 @@ class RepoUploadModal extends Component {
       // TODO Remove me
       authToken: '1234',
       // TODO Remove me
-      showModal: true,
+      showModal: props.showModal,
       page: LIST,
       artifactNID: null,
       uploadStatus: null
     }
 
-    this.openModal = this._openModal.bind(this);
     this.closeModal = this._closeModal.bind(this);
     this.updateUserName = this._updateUserName.bind(this);
     this.updatePassword = this._updatePassword.bind(this);
@@ -65,7 +64,9 @@ class RepoUploadModal extends Component {
   }
 
   _closeModal() {
+
     this.setState({showModal: false, page: AUTHENTICATE, authToken:null});
+    this.props.closeModal();
   }
 
   // This function needs to invalidate the authToken state
@@ -103,10 +104,8 @@ class RepoUploadModal extends Component {
   }
 
   _uploadArtifact(nid) {
-    const artifact = {
-      name: this.props.name,
-      templateInstances: this.props.templateInstances
-    };
+    const artifact = this.props.prepareArtifact();
+    debugger
     let auth = {username: this.state.userName, password: this.state.password};
     post(`${Config.api.baseUrl}/cql/publish`, {data: artifact, nid: nid, auth})
     this.setState({page: STATUS, artifactNID: nid});
@@ -194,15 +193,12 @@ class RepoUploadModal extends Component {
 
   render() {
     return (
-      <div>
         <ReactModal contentLabel="Submit to Repository"
-          isOpen={this.state.showModal}
+          isOpen={this.props.showModal}
           onRequestClose={this.closeModal}
           className="modal-style">
           {this.renderPage()}
         </ReactModal>
-        <button className="btn btn-primary" onClick={this.openModal}>Submit to Repository</button>
-      </div>
     );
   }
 }
