@@ -412,7 +412,6 @@ class CqlArtifact {
     const conjunction = 'and'; // possible that this may become `or`, or some combo of the two conjunctions
     let conditionalText;
     if (!_.isEmpty(recommendation.subpopulations)) {
-      // TODO: Either check for blank subpopulation names or make this fall back to the uniqueId of the subpopulation.
       conditionalText = recommendation.subpopulations.map(subpopulation => {
         if (subpopulation.special_subpopulationName) {
           return subpopulation.special_subpopulationName;
