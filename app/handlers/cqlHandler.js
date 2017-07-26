@@ -424,18 +424,18 @@ class CqlArtifact {
     let recommendationText = this.recommendations.map(recommendation => {
       const conditional = this.constructOneRecommendationConditional(recommendation);
       return conditional + `'${recommendation.text}'`;
-    }).join('\n  else ').concat('\n  else null');
-    return ejs.render(templateMap['BaseTemplate'], {element_name: 'Recommendation', cqlString: recommendationText})
+    })
+    recommendationText = _.isEmpty(recommendationText) ? "null" : recommendationText.join('\n  else ').concat('\n  else null');
+    return ejs.render(templateMap['BaseTemplate'], {element_name: 'Recommendation', cqlString: recommendationText});
   }
 
   rationale() {
     let rationaleText = this.recommendations.map(recommendation => {
       const conditional = this.constructOneRecommendationConditional(recommendation);
       return conditional + (_.isEmpty(recommendation.rationale) ? 'null' : `'${recommendation.rationale}'`);
-    }).join('\n  else ').concat('\n  else null')
-    if (_.isEmpty(rationaleText)) return '';
-    return ejs.render(templateMap['BaseTemplate'], {element_name: 'Rationale', cqlString: rationaleText})
-
+    })
+    rationaleText = _.isEmpty(rationaleText) ? "null" : rationaleText.join('\n  else ').concat('\n  else null');
+    return ejs.render(templateMap['BaseTemplate'], {element_name: 'Rationale', cqlString: rationaleText});
   }
 
   // Produces the cql in string format
