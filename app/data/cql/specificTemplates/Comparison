@@ -1,5 +1,0 @@
-define "<%-element_name%>":
-  "<%=observation[0].name%>" <%-comparison%> <%-comparison_bound%><% if(typeof(comparisonUnit) !== undefined)%> <%-comparisonUnit%>
-  <% if(doubleSided){-%>
-and "<%=observation[0].name%>" <%-comparison_2%> <%-comparison_bound_2%><% if(typeof(comparisonUnit) !== undefined)%> <%-comparisonUnit%>
-<%}-%>

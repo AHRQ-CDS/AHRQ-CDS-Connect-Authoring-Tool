@@ -328,19 +328,6 @@ class CqlArtifact {
           context.breastfeedingCodeConcept = breastfeedingValueSets.concepts[0].name;
           context.breastfeedingYesConcept = breastfeedingValueSets.concepts[1].name;
           break;
-        case 'list':
-          if (parameter.category === "comparison") {
-            context.comparisonUnit = (ValueSets.observations[_.find(_.find(this.inclusions, { 'id': parameter.value[0].id }).parameters, {'name': parameter.name}).value].units.code);
-          }
-          context[parameter.id] = parameter.value;
-          break;
-        case 'dropdown':
-          if (parameter.id == "comparison") {
-            context.doubleSided = element.parameters.some(parameter => parameter.id === "comparison_2");
-          }
-          context.values = context.values || []
-          context[parameter.id] = parameter.value;
-          break;
         default:
           context.values = context.values || []
           context[parameter.id] = parameter.value;

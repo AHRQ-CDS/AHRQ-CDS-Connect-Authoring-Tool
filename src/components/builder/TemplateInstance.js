@@ -6,15 +6,7 @@ import update from 'immutability-helper';
 import Config from '../../../config';
 
 // Try to keep these ordered same as in folder (i.e. alphabetically)
-import BooleanParameter from './parameters/BooleanParameter';
-import CaseParameter from './parameters/CaseParameter';
-import CheckBoxParameter from './parameters/CheckBoxParameter';
-import CommonDropdownParameter from './parameters/CommonDropdownParameter'
-import IfParameter from './parameters/IfParameter';
-import ListParameter from './parameters/ListParameter';
-import NullCheckingParameter from './parameters/NullCheckingParameter';
 import NumberParameter from './parameters/NumberParameter';
-import ObservationParameter from './parameters/ObservationParameter';
 import StaticParameter from './parameters/StaticParameter';
 import StringParameter from './parameters/StringParameter';
 import ValueSetParameter from './parameters/ValueSetParameter';
@@ -29,23 +21,6 @@ import ValueComparisonObservation from './modifiers/ValueComparisonObservation';
 import WithUnit from './modifiers/WithUnit';
 
 const API_BASE = Config.api.baseUrl;
-
-// TODO Move these options to a better spot
-// Within form_templates, specify the options tag to some object here
-const commonDropdownOptions = {
-  comparisonOption: [{ value: '>', label: 'greater than' },
-                     { value: '>=', label: 'greater than or equal to' },
-                     { value: '=', label: 'equal to' },
-                     { value: '!=', label: 'not equal to' },
-                     { value: '<', label: 'less than' },
-                     { value: '<=', label: 'less than or equal to' }],
-  nullCheckingOption: [{ value: 'is null', label: 'is null' },
-                       { value: 'is not null', label: 'is not null' }],
-  booleanCheckingOption: [{ value: 'is true', label: 'is true' },
-                          { value: 'is not true', label: 'is not true' },
-                          { value: 'is false', label: 'is false' },
-                          { value: 'is not false', label: 'is not false' }]
-};
 
 function getInstanceName(instance) {
   return (instance.parameters.find(p => p.id === 'element_name') || {}).value;
@@ -101,12 +76,8 @@ class TemplateInstance extends Component {
     };
 
     this.updateInstance = this.updateInstance.bind(this);
-    this.updateNestedInstance = this.updateNestedInstance.bind(this);
-    this.updateList = this.updateList.bind(this);
-    this.updateCase = this.updateCase.bind(this);
-    this.setCaseReturnType = this.setCaseReturnType.bind(this);
-    this.updateIf = this.updateIf.bind(this);
     this.selectTemplate = this.selectTemplate.bind(this);
+    this.notThisInstance = this.notThisInstance.bind(this);
 
     // TODO: all this modifier stuff should probably be pulled out into another component
     this.renderAppliedModifiers = this.renderAppliedModifiers.bind(this);
@@ -116,12 +87,6 @@ class TemplateInstance extends Component {
     this.updateAppliedModifier = this.updateAppliedModifier.bind(this);
     this.handleModifierSelected = this.handleModifierSelected.bind(this);
     this.filterRelevantModifiers = this.filterRelevantModifiers.bind(this);
-
-    this.notThisInstance = this.notThisInstance.bind(this);
-    this.addComponent = this.addComponent.bind(this);
-    this.updateComparison = this.updateComparison.bind(this);
-    this.addCaseComponent = this.addCaseComponent.bind(this);
-    this.addIfComponent = this.addIfComponent.bind(this);
   }
 
   componentWillMount() {
@@ -170,96 +135,6 @@ class TemplateInstance extends Component {
     this.props.editInstance(this.props.treeName, newState, this.getPath(), false);
   }
 
-  // Used to update value states that are nested objects
-  updateNestedInstance(id, value, element) {
-    const newState = {};
-    newState[id] = Object.assign({}, this.state[id]);
-    newState[id][element] = value;
-    this.updateInstance(newState);
-  }
-
-  updateList(id, value, index) {
-    const newState = {};
-    const arrayvar = this.state[id].slice();
-    arrayvar[index] = value;
-    newState[id] = arrayvar;
-    this.updateInstance(newState);
-  }
-
-  addComponent(listParameter) {
-    const arrayvar = this.state[listParameter].slice();
-    arrayvar.push(undefined);
-    const newState = { [listParameter]: arrayvar };
-    this.updateInstance(newState);
-  }
-
-  // Updates a case statement based on case or result
-  updateCase(id, value, index, option) {
-    const array = this.state[id].cases.slice();
-    array[index][option] = value;
-    this.updateNestedInstance(id, array, 'cases');
-  }
-
-  setCaseReturnType(returnType) {
-    this.setState({returnType: returnType})
-  }
-
-  // Adds a new row of case statements
-  addCaseComponent(id) {
-    const array = this.state[id].cases.slice();
-    array.push({ case: null, result: null });
-    this.updateNestedInstance(id, array, 'cases');
-  }
-
-  // Updates an if statemement with selected value
-  updateIf(paramId, value, index, place) {
-    const valueArray = this.state[paramId].slice();
-    // Mongoose stops empty objects from being saved, so this will be null if it wasn't set yet
-    if (_.isNil(valueArray[index])) {
-      valueArray[index] = {};
-    }
-    valueArray[index][place] = value;
-    const newState = {};
-    newState[paramId] = valueArray;
-    this.updateInstance(newState);
-  }
-
-  // Adds new Condition/Block for If statements
-  addIfComponent(paramId) {
-    const currentParamValue = this.state[paramId].slice();
-    currentParamValue.splice(currentParamValue.length - 1, 0, {});
-    const newState = {};
-    newState[paramId] = currentParamValue;
-    this.updateInstance(newState);
-  }
-
-  updateComparison(isSingledSided) {
-    // TODO: Refactor this function to occur within the component itself
-    const parameter = this.props.templateInstance.parameters;
-    if (isSingledSided) {
-      _.remove(parameter, param => (RegExp('^.*(?=(_2))').test(param.id))); // Remove any instance with id ending in '_2'
-      _.find(parameter, { id: 'comparison_bound' }).name = 'Comparison Bound';
-      _.last(parameter).name = 'Double Sided?';
-    } else {
-      const lowerBound = _.find(parameter, { id: 'comparison_bound' });
-      const upperBound = _.clone(lowerBound);
-      lowerBound.name = 'Lower Comparison Bound';
-      upperBound.name = 'Upper Comparison Bound';
-      upperBound.id = `${upperBound.id}_2`;
-      upperBound.value = undefined;
-
-      // Using name for readability, could've been id, but {'id': 'Comparison'} isn't obvious
-      const secondOperator = _.clone(_.find(parameter, { name: 'Operator' }));
-      secondOperator.id = `${secondOperator.id}_2`;
-      secondOperator.value = null;
-
-      _.last(parameter).name = 'Single Sided?';
-      parameter.splice(parameter.length - 1, 0, secondOperator);
-      parameter.splice(parameter.length - 1, 0, upperBound);
-    }
-    // setState merges what you provide to the currentState, so this merely forces a re-render
-    this.setState({});
-  }
 
   renderAppliedModifier(modifier, index) {
     const modifierForm = ((modifier) => {
@@ -435,21 +310,6 @@ class TemplateInstance extends Component {
             typeOfNumber={param.typeOfNumber}
             updateInstance={this.updateInstance} />
         );
-      case 'observation':
-        return (
-          <ObservationParameter
-            key={param.id}
-            param={param}
-            resources={this.state.resources}
-            updateInstance={this.updateInstance} />
-        );
-      case 'boolean':
-        return (
-          <BooleanParameter
-            key={param.id}
-            param={param}
-            updateInstance={this.updateInstance} />
-        );
       case 'string':
         return (
           <StringParameter
@@ -464,63 +324,6 @@ class TemplateInstance extends Component {
             param={param}
             valueset={this.state.resources}
             updateInstance={this.updateInstance} />
-        );
-      case 'list':
-        return (
-          <ListParameter
-            key={param.id}
-            param={param}
-            value={this.state[param.id]}
-            values={this.state.otherInstances}
-            joinOperator={this.props.templateInstance.name}
-            addComponent={this.addComponent}
-            updateList={this.updateList} />
-        );
-      case 'checkbox':
-        return (
-          <CheckBoxParameter
-          key={param.id}
-          param={param}
-          updateComparison={this.updateComparison} />
-        );
-      case 'nullCheckingParameter':
-        return (
-          <NullCheckingParameter
-          key={param.id}
-          param={param}
-          values={this.state.otherInstances}
-          updateList={this.updateList} />
-        );
-      case 'dropdown':
-        return (
-          <CommonDropdownParameter
-          key={param.id}
-          param={param}
-          value={null}
-          option={commonDropdownOptions[param.option]}
-          updateInstance={this.updateInstance} />
-        );
-      case 'if':
-        return (
-          <IfParameter
-            key={param.id}
-            values={this.state.otherInstances}
-            param={param}
-            updateIfStatement={this.updateIf}
-            addIfComponent={this.addIfComponent}
-            value={this.state[param.id]} />
-        );
-      case 'case':
-        return (
-          <CaseParameter
-            key={param.id}
-            param={param}
-            value={this.state[param.id]}
-            values={this.state.otherInstances}
-            addComponent={this.addCaseComponent}
-            setCaseReturnType={this.setCaseReturnType}
-            updateCase={this.updateCase}
-            updateInstance={this.updateNestedInstance} />
         );
       default:
         return undefined;
