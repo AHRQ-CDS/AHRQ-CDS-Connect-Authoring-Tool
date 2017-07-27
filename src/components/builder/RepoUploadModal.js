@@ -105,7 +105,6 @@ class RepoUploadModal extends Component {
 
   _uploadArtifact(nid) {
     const artifact = this.props.prepareArtifact();
-    debugger
     let auth = {username: this.state.userName, password: this.state.password};
     post(`${Config.api.baseUrl}/cql/publish`, {data: artifact, nid: nid, auth})
     this.setState({page: STATUS, artifactNID: nid});

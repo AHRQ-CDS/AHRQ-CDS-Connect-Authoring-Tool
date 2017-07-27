@@ -6,6 +6,8 @@ const glob = require('glob');
 const fs = require('fs');
 const archiver = require('archiver');
 const tmp = require('tmp');
+const Busboy = require('busboy');
+const Path = require('path');
 
 
 module.exports = {
@@ -30,31 +32,61 @@ function convertToElm(req, res) {
     })
 
     let cqlReq = request.post(Config.repo.CQLToElmURL, function(err, resp, body){
-      pushToRepo(artifact.toJson(), body, req, res);
+      splitELM(artifact.toJson(), {resp, body}, req, res);
     })
     let artifactJson = artifact.toJson();
     let form = cqlReq.form();
-    form.append('file', `${artifact.toString()}`, {
+    form.append(artifactJson.filename, `${artifact.toString()}`, {
       filename: artifactJson.filename,
       contentType: artifactJson.type
     });
     fileStreams.map(function(f){
-      form.append('file', f);
+      form.append(Path.basename(f.path, '.cql'), f);
     })
   })
+}
+
+function splitELM(artifact, elm, req, res) {
+  // Because ELM comes back as a multipart response we use busboy to split it up
+  let contentType = elm.resp.headers['Content-Type'] || elm.resp.headers['content-type'];
+  let bb = new Busboy({ headers: { 'content-type': contentType }});
+  let elmFiles = [];
+  bb.on('file', function (fieldname, file, filename, encoding, mimetype) {
+   console.log('File [%s]: filename=%j; encoding=%j; mimetype=%j', fieldname, filename, encoding, mimetype);
+   file
+   .on('data', data => console.log('File [%s] got %d bytes', fieldname, data.length))
+   .on('end', () => console.log('File [%s] Finished', fieldname));
+  })
+  .on('field', (fieldname, val) => {
+    elmFiles.push({name: fieldname, content: val})
+  })
+  .on('finish', () => {
+   console.log('Done parsing form!');
+   pushToRepo(artifact, elmFiles, req, res);
+  })
+  .on('error', err => {
+   console.log('failed', err);
+  });
+
+  bb.end(elm.body);
 }
 
 function pushToRepo(artifact, elm, req, res) {
   let archive = archiver('zip', {zlib : { level : 9 }});
   let fd = tmp.fileSync({postfix: '.zip'});
   let output = fs.createWriteStream(fd.name)
+  console.log(fd.name);
   archive.pipe(output)
 
   archive.on('error', (err) => {
     res.status(500).send({error : err.message});
   });
   archive.append(artifact.text, {name: `${artifact.filename}.cql`})
-  archive.append(elm, { name : `${artifact.filename}.elm` });
+
+  elm.map((e, i) => {
+      archive.append(e.content, { name : `${e.name}.elm` });
+  })
+  // archive.append(elm, { name : `${artifact.filename}.elm` });
   // Add helper Library
   let path = __dirname + '/../data/library_helpers/';
   archive.directory(path, '/');
@@ -74,7 +106,7 @@ function pushToRepo(artifact, elm, req, res) {
             }
         }
     };
-    console.log(payload);
+    // console.log(payload);
     request.post(`${Config.repo.baseUrl}/jsonapi/file/zip`, payload, function(err,res, body){
       console.log(res);
     });
