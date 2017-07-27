@@ -151,7 +151,7 @@ class ErrorStatement extends Component {
                 <label className="label">{ifLabel}</label>
                 <div className="form__group control">
                   {this.renderCondition(cStatement, parent, i)}
-                  {this.renderDeleteButton(parent, i)}
+                  {statement.child.statements.length > 1 && this.renderDeleteButton(parent, i)}
                 </div>
               </div>
               {this.renderThen(cStatement, parent, i)}
@@ -198,7 +198,7 @@ class ErrorStatement extends Component {
   }
 
   // Renders else text box
-  renderElse = (parent, index) => {
+  renderElse = (parent) => {
     let elseText = '';
     if (parent == null) {
       elseText = this.props.errorStatement.elseClause;
@@ -238,7 +238,7 @@ class ErrorStatement extends Component {
                 <label className="label">{ifLabel}</label>
                 <div className="form__group control">
                   {this.renderCondition(statement, null, i)}
-                  {this.renderDeleteButton(null, i)}
+                  {this.props.errorStatement.statements.length > 1 && this.renderDeleteButton(null, i)}
                 </div>
                 {this.renderNestingButton(statement, i)}
               </div>
