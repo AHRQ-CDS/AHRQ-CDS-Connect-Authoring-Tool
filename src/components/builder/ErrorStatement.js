@@ -79,6 +79,8 @@ class ErrorStatement extends Component {
     const newErrorStatement = _.cloneDeep(this.props.errorStatement);
     if (parent == null) {
       newErrorStatement.else = value;
+    } else {
+      newErrorStatement.statements[parent].child.else = value
     }
     this.props.updateParentState({errorStatement: newErrorStatement});
   }
@@ -122,6 +124,8 @@ class ErrorStatement extends Component {
             </div>)
         })}
         { this.renderAddIfButton(parent) }
+        Else:
+        { this.renderElse(parent) }
       </div>
     )
   }
@@ -160,6 +164,28 @@ class ErrorStatement extends Component {
     )
   }
 
+  renderElse = (parent) => {
+    let elseText = '';
+    if (parent == null) {
+      elseText = this.props.errorStatement.else;
+    } else {
+      elseText = this.props.errorStatement.statements[parent].child.else;
+    }
+    return (
+      <div className="field">
+        <div className="control">
+          <textarea 
+            className="textarea"
+            name="text"
+            aria-label="Else"
+            placeholder='If none of the conditions hold...'
+            value={elseText}
+            onChange={e => this.setElse(e.target.value, parent)} />
+        </div>
+      </div>
+    )
+  }
+
   render() {
     return (
       <section className="section is-clearfix recommendation">
@@ -188,17 +214,7 @@ class ErrorStatement extends Component {
         })}        
         { this.renderAddIfButton(null) }
         Else:
-        <div className="field">
-          <div className="control">
-            <textarea 
-              className="textarea"
-              name="text"
-              aria-label="Else"
-              placeholder='If none of the conditions hold...'
-              value={this.props.errorStatement.else}
-              onChange={e => this.setElse(e.target.value, null, 'else')} />
-          </div>
-        </div>
+        { this.renderElse(null) }
       </section>
     )
   }
