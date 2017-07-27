@@ -95,10 +95,10 @@ class ErrorStatement extends Component {
 
   renderThen = (statement, parent, index) => {
     return (
-      <div className="field">
+      <div className="field recommendation__clause">
+        <label className="label">Then</label>
         <div className="control">
-          Then:
-          <textarea 
+          <textarea
             className="textarea"
             name="text"
             aria-label="ThenClause"
@@ -112,17 +112,21 @@ class ErrorStatement extends Component {
 
   renderChildren = (statement, parent) => {
     return (
-      <div>
+      <div className="recommendation__block">
         { statement.child && statement.child.statements.map((cStatement, i) => {
           let ifLabel = i ? 'Else if' : 'If';
           return (
             <div key={i}>
-              {ifLabel}: {this.renderCondition(cStatement, parent, i)}
+              <div className="field recommendation__clause">
+                <label className="label">{ifLabel}</label>
+                <div className="control">
+                  {this.renderCondition(cStatement, parent, i)}
+                </div>
+              </div>
               {this.renderThen(cStatement, parent, i)}
             </div>)
         })}
         { this.renderAddIfButton(parent) }
-        Else:
         { this.renderElse(parent) }
       </div>
     )
@@ -141,10 +145,9 @@ class ErrorStatement extends Component {
 
   renderNestingButton = (statement, index) => {
     return (
-      <div className="control recommendation__remove">
-        <button 
+      <div className="field recommendation__action">
+        <button
           className="button"
-          aria-label="remove recommendation"
           onClick={e => this.handleUseThenClause(index)}>
           {this.props.errorStatement.statements[index].useThenClause ? 'Use Nested If' : 'No Nested If'}
         </button>
@@ -153,10 +156,9 @@ class ErrorStatement extends Component {
 
   renderAddIfButton = (parent) => {
     return (
-      <div className="control recommendation__remove">
-        <button 
+      <div className="field recommendation__action">
+        <button
           className="button"
-          aria-label="remove recommendation" 
           onClick={e => this.addStatement(parent)}> Add If Clause </button>
       </div>
     )
@@ -170,9 +172,10 @@ class ErrorStatement extends Component {
       elseText = this.props.errorStatement.statements[parent].child.elseClause;
     }
     return (
-      <div className="field">
+      <div className="field recommendation__clause">
+        <label className="label">Else</label>
         <div className="control">
-          <textarea 
+          <textarea
             className="textarea"
             name="text"
             aria-label="Else"
@@ -191,27 +194,25 @@ class ErrorStatement extends Component {
           <div className="field-label is-large">
             <label className="label has-text-left">Errors</label>
           </div>
-          <div className="field-body">
-            <div className="field is-grouped is-grouped-right">
-              <div className="control recommendation__remove">
-                <button className="button" aria-label="remove recommendation"  onClick={() => {}}><FontAwesome fixedWidth name='times' /></button>
-              </div>
-            </div>
-          </div>
         </div>
         { this.props.errorStatement && this.props.errorStatement.statements.map((statement, i) => {
           let ifLabel = i ? 'Else if' : 'If';
           return (
             <div key={i}>
-              {ifLabel}: {this.renderCondition(statement, null, i)}
-              {this.renderNestingButton(statement, i)}
+              <div className="field recommendation__clause">
+                <label className="label">{ifLabel}</label>
+                <div className="control">
+                  {this.renderCondition(statement, null, i)}
+                </div>
+                {this.renderNestingButton(statement, i)}
+              </div>
+
               {statement.useThenClause
               ? this.renderThen(statement, null, i)
               : this.renderChildren(statement, i)}
             </div>)
-        })}        
+        })}
         { this.renderAddIfButton(null) }
-        Else:
         { this.renderElse(null) }
       </section>
     )
