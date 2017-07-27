@@ -417,9 +417,9 @@ class CqlArtifact {
     let recommendationText = this.recommendations.map(recommendation => {
       let conjunction = 'and'; // possible that this may become `or`, or some combo of the two conjunctions
       let conditionalText = recommendation.subpopulations.map(subpopulation => subpopulation.special_subpopulationName ? subpopulation.special_subpopulationName : `"${subpopulation.subpopulationName}"`).join(` ${conjunction} `);
-      return `if ${conditionalText} then '${recommendation.text}'`;
+      return `if ${conditionalText} then '${this.sanitizeCQLString(recommendation.text)}'`;
     }).join('\n  else ').concat('\n  else null');
-    return ejs.render(templateMap['BaseTemplate'], {element_name: 'Recommendations', cqlString: this.sanitizeCQLString(recommendationText)})
+    return ejs.render(templateMap['BaseTemplate'], {element_name: 'Recommendations', cqlString: recommendationText})
   }
 
   rationale() {
@@ -427,10 +427,10 @@ class CqlArtifact {
       if (_.isEmpty(recommendation.rationale)) return '';
       let conjunction = 'and'; // possible that this may become `or`, or some combo of the two conjunctions
       let conditionalText = recommendation.subpopulations.map(subpopulation => subpopulation.special_subpopulationName ? subpopulation.special_subpopulationName : `"${subpopulation.subpopulationName}"`).join(` ${conjunction} `);
-      return `if ${conditionalText} then '${recommendation.rationale}'`;
+      return `if ${conditionalText} then '${this.sanitizeCQLString(recommendation.rationale)}'`;
     }).join('\n  else ').concat('\n  else null');
     if (_.isEmpty(rationaleText)) return '';
-    return ejs.render(templateMap['BaseTemplate'], {element_name: 'Rationale', cqlString: this.sanitizeCQLString(rationaleText)})
+    return ejs.render(templateMap['BaseTemplate'], {element_name: 'Rationale', cqlString: rationaleText})
 
   }
 
@@ -444,10 +444,10 @@ class CqlArtifact {
           this.errorStatement.statements[index].child.statements[childIndex].condition.label = this.sanitizeCQLString(childStatement.condition.label);
           this.errorStatement.statements[index].child.statements[childIndex].thenClause = this.sanitizeCQLString(childStatement.thenClause);
         })
-        this.errorStatement.statements[index].child.elseClause = this.sanitizeCQLString(statement.child.elseClause);
+      this.errorStatement.statements[index].child.elseClause = _.isEmpty(this.errorStatement.elseClause) ? null : this.sanitizeCQLString(statement.child.elseClause);
       }
     });
-    this.errorStatement.elseClause = this.sanitizeCQLString(this.errorStatement.elseClause);
+    this.errorStatement.elseClause = _.isEmpty(this.errorStatement.elseClause) ? null : this.sanitizeCQLString(this.errorStatement.elseClause);
     return ejs.render(templateMap['ErrorStatements'], {element_name: 'Error', errorStatement: this.errorStatement});
   }
 
