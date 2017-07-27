@@ -517,8 +517,8 @@ class BuilderPage extends Component {
             <TabList>
               <Tab>Inclusions</Tab>
               <Tab>Exclusions</Tab>
-              <Tab>Recommendations</Tab>
               <Tab>Subpopulations</Tab>
+              <Tab>Recommendations</Tab>
             </TabList>
             <div className="tab-panel-container">
               <TabPanel>
@@ -526,14 +526,6 @@ class BuilderPage extends Component {
               </TabPanel>
               <TabPanel>
                 { this.renderConjunctionGroup('expTreeExclude') }
-              </TabPanel>
-              <TabPanel>
-                <Recommendations
-                  updateRecommendations={ this.updateRecommendations }
-                  recommendations={ this.state.recommendations }
-                  subpopulations={ this.state.subpopulations }
-                  setActiveTab={ this.setActiveTab }
-                  />
               </TabPanel>
               <TabPanel>
                 <Subpopulations
@@ -552,6 +544,14 @@ class BuilderPage extends Component {
                   checkSubpopulationUsage={ this.checkSubpopulationUsage }
                   updateRecsSubpop={ this.updateRecsSubpop }
                 />
+              </TabPanel>
+              <TabPanel>
+                <Recommendations
+                  updateRecommendations={ this.updateRecommendations }
+                  recommendations={ this.state.recommendations }
+                  subpopulations={ this.state.subpopulations }
+                  setActiveTab={ this.setActiveTab }
+                  />
               </TabPanel>
             </div>
           </Tabs>
