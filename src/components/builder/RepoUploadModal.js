@@ -37,8 +37,8 @@ class RepoUploadModal extends Component {
     ];
 
     this.state = {
-      userName: 'preview-cds',
-      password: 'preview',
+      userName: '',
+      password: '',
       // TODO remove me
       artifacts: mockResponse,
       errors: [],
@@ -46,7 +46,7 @@ class RepoUploadModal extends Component {
       authToken: '1234',
       // TODO Remove me
       showModal: props.showModal,
-      page: LIST,
+      page: AUTHENTICATE,
       artifactNID: null,
       uploadStatus: null
     }
