@@ -557,18 +557,18 @@ class BuilderPage extends Component {
                 />
               </TabPanel>
               <TabPanel>
-                <Parameters
-                  booleanParameters={ this.state.booleanParameters }
-                  updateParameters={this.updateParameters}
-                />
-              </TabPanel>
-              <TabPanel>
                 <Recommendations
                   updateRecommendations={ this.updateRecommendations }
                   recommendations={ this.state.recommendations }
                   subpopulations={ this.state.subpopulations }
                   setActiveTab={ this.setActiveTab }
                   />
+              </TabPanel>
+              <TabPanel>
+                <Parameters
+                  booleanParameters={ this.state.booleanParameters }
+                  updateParameters={this.updateParameters}
+                />
               </TabPanel>
             </div>
           </Tabs>
