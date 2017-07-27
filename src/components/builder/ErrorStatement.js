@@ -124,7 +124,7 @@ class ErrorStatement extends Component {
   // Renders then part of statement
   renderThen = (statement, parent, index) => {
     return (
-      <div className="field">
+      <div className="field recommendation__block-then">
         <label className="label">Then</label>
         <div className="control">
           <textarea
@@ -147,7 +147,7 @@ class ErrorStatement extends Component {
           let ifLabel = i ? 'Else if' : 'If';
           return (
             <div key={i}>
-              <div className="field">
+              <div className="field recommendation__block-if">
                 <label className="label">{ifLabel}</label>
                 <div className="form__group control">
                   {this.renderCondition(cStatement, parent, i)}
@@ -206,7 +206,7 @@ class ErrorStatement extends Component {
       elseText = this.props.errorStatement.statements[parent].child.elseClause;
     }
     return (
-      <div className="field">
+      <div className="field recommendation__block-else">
         <label className="label">Else</label>
         <div className="control">
           <textarea
@@ -234,7 +234,7 @@ class ErrorStatement extends Component {
           let ifLabel = i ? 'Else if' : 'If';
           return (
             <div key={i}>
-              <div className="field">
+              <div className="field recommendation__block-if">
                 <label className="label">{ifLabel}</label>
                 <div className="form__group control">
                   {this.renderCondition(statement, null, i)}

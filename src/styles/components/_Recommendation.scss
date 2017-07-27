@@ -15,10 +15,16 @@
 
   &__block {
     padding: 0.5em 0 0.5em 2.5em;
-  }
 
-  .field {
-    margin: 1em 0;
+    &-if,
+    &-then,
+    &-else {
+      margin: 1em 0;
+    }
+
+    &-then {
+      padding-left: 2em;
+    }
   }
 
   .form__group {
