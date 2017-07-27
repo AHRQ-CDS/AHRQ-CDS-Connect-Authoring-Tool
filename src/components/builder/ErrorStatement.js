@@ -59,7 +59,7 @@ class ErrorStatement extends Component {
     if (parent == null) {
       statements.push(newStatement);
     } else {
-      statements[parent].statements.push(newStatement);
+      statements[parent].child.statements.push(newStatement);
     }
     this.props.updateParentState({errorStatement: newErrorStatement});
   }
@@ -110,7 +110,7 @@ class ErrorStatement extends Component {
     )
   }
 
-  renderChildren = (statement, index) => {
+  renderChildren = (statement, parent) => {
     return (
       <div>
         { statement.child && statement.child.statements.map((cStatement, i) => {
@@ -121,6 +121,7 @@ class ErrorStatement extends Component {
               {this.renderBlock(cStatement, i)}
             </div>)
         })}
+        { this.renderAddIfButton(parent) }
       </div>
     )
   }
@@ -146,6 +147,17 @@ class ErrorStatement extends Component {
           {this.props.errorStatement.statements[index].useBlock ? 'Use Nested If' : 'No Nested If'}
         </button>
       </div>)
+  }
+
+  renderAddIfButton = (parent) => {
+    return (
+      <div className="control recommendation__remove">
+        <button 
+          className="button"
+          aria-label="remove recommendation" 
+          onClick={e => this.addStatement(parent)}> Add If Clause </button>
+      </div>
+    )
   }
 
   render() {
@@ -174,12 +186,7 @@ class ErrorStatement extends Component {
               : this.renderChildren(statement, i)}
             </div>)
         })}        
-        <div className="control recommendation__remove">
-          <button 
-            className="button"
-            aria-label="remove recommendation" 
-            onClick={e => this.addStatement(null)}> Add If Clause </button>
-        </div>
+        { this.renderAddIfButton(null) }
         Else:
         <div className="field">
           <div className="control">
