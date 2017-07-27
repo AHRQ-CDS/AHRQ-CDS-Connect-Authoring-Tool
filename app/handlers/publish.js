@@ -51,17 +51,10 @@ function splitELM(artifact, elm, req, res) {
   let contentType = elm.resp.headers['Content-Type'] || elm.resp.headers['content-type'];
   let bb = new Busboy({ headers: { 'content-type': contentType }});
   let elmFiles = [];
-  // bb.on('file', function (fieldname, file, filename, encoding, mimetype) {
-  //  console.log('File [%s]: filename=%j; encoding=%j; mimetype=%j', fieldname, filename, encoding, mimetype);
-  //  file
-  //  .on('data', data => console.log('File [%s] got %d bytes', fieldname, data.length))
-  //  .on('end', () => console.log('File [%s] Finished', fieldname));
-  // })
-  bb.on('field', (fieldname, val) => {
+  .on('field', (fieldname, val) => {
     elmFiles.push({name: fieldname, content: val})
   })
   .on('finish', () => {
-  //  console.log('Done parsing form!');
    pushToRepo(artifact, elmFiles, req, res);
   })
   .on('error', err => {
@@ -83,9 +76,8 @@ function pushToRepo(artifact, elm, req, res) {
   archive.append(artifact.text, {name: `${artifact.filename}.cql`})
 
   elm.map((e, i) => {
-      archive.append(e.content, { name : `${e.name}.elm` });
+      archive.append(e.content, { name : `${e.name}.json` });
   })
-  // archive.append(elm, { name : `${artifact.filename}.elm` });
   // Add helper Library
   let path = __dirname + '/../data/library_helpers/';
   archive.directory(path, '/');
