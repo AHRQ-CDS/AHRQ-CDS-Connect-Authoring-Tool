@@ -28,7 +28,6 @@ class ErrorStatement extends Component {
   // Generic statement used to handle if then
   baseStatement = (parent) => {
     return {
-      parent: parent,
       condition: null,
       thenClause: '',
       child: null,
@@ -41,7 +40,6 @@ class ErrorStatement extends Component {
     return {
       statements: [
         {
-          parent: parent,
           condition: null,
           thenClause: '',
           child: null,
@@ -85,17 +83,17 @@ class ErrorStatement extends Component {
     this.props.updateParentState({errorStatement: newErrorStatement});
   }
 
-  renderCondition = (statement, index) => {
+  renderCondition = (statement, parent, index) => {
     return (<Select
-      key={`condition-${statement.parent ? statement.parent : -1}-${index}`}
+      key={`condition-${parent != null ? parent : -1}-${index}`}
       index={index}
       value={statement.condition}
       options={this.options()}
-      onChange={ e => this.setStatement(e, statement.parent, index, 'condition')}
+      onChange={ e => this.setStatement(e, parent, index, 'condition')}
     />)
   }
 
-  renderThen = (statement, index) => {
+  renderThen = (statement, parent, index) => {
     return (
       <div className="field">
         <div className="control">
@@ -106,7 +104,7 @@ class ErrorStatement extends Component {
             aria-label="ThenClause"
             placeholder='Describe your error'
             value={statement.thenClause}
-            onChange={e => this.setStatement(e.target.value, statement.parent, index, 'thenClause')} />
+            onChange={e => this.setStatement(e.target.value, parent, index, 'thenClause')} />
         </div>
       </div>
     )
@@ -119,8 +117,8 @@ class ErrorStatement extends Component {
           let ifLabel = i ? 'Else if' : 'If';
           return (
             <div key={i}>
-              {ifLabel}: {this.renderCondition(cStatement, i)}
-              {this.renderThen(cStatement, i)}
+              {ifLabel}: {this.renderCondition(cStatement, parent, i)}
+              {this.renderThen(cStatement, parent, i)}
             </div>)
         })}
         { this.renderAddIfButton(parent) }
@@ -205,10 +203,10 @@ class ErrorStatement extends Component {
           let ifLabel = i ? 'Else if' : 'If';
           return (
             <div key={i}>
-              {ifLabel}: {this.renderCondition(statement, i)}
+              {ifLabel}: {this.renderCondition(statement, null, i)}
               {this.renderNestingButton(statement, i)}
               {statement.useThenClause
-              ? this.renderThen(statement, i)
+              ? this.renderThen(statement, null, i)
               : this.renderChildren(statement, i)}
             </div>)
         })}        
