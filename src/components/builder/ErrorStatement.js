@@ -30,9 +30,9 @@ class ErrorStatement extends Component {
     return {
       parent: parent,
       condition: null,
-      then: '',
+      thenClause: '',
       child: null,
-      useThen: true
+      useThenClause: true
     };
   }
 
@@ -43,12 +43,12 @@ class ErrorStatement extends Component {
         {
           parent: parent,
           condition: null,
-          then: '',
+          thenClause: '',
           child: null,
-          useThen: true
+          useThenClause: true
         }
       ],
-      else: 'null'
+      elseClause: 'null'
     }
   }
 
@@ -78,9 +78,9 @@ class ErrorStatement extends Component {
   setElse = (value, parent) => {
     const newErrorStatement = _.cloneDeep(this.props.errorStatement);
     if (parent == null) {
-      newErrorStatement.else = value;
+      newErrorStatement.elseClause = value;
     } else {
-      newErrorStatement.statements[parent].child.else = value
+      newErrorStatement.statements[parent].child.elseClause = value
     }
     this.props.updateParentState({errorStatement: newErrorStatement});
   }
@@ -103,10 +103,10 @@ class ErrorStatement extends Component {
           <textarea 
             className="textarea"
             name="text"
-            aria-label="Then"
+            aria-label="ThenClause"
             placeholder='Describe your error'
-            value={statement.then}
-            onChange={e => this.setStatement(e.target.value, statement.parent, index, 'then')} />
+            value={statement.thenClause}
+            onChange={e => this.setStatement(e.target.value, statement.parent, index, 'thenClause')} />
         </div>
       </div>
     )
@@ -130,14 +130,14 @@ class ErrorStatement extends Component {
     )
   }
 
-  handleUseThen = (parent) => {
+  handleUseThenClause = (parent) => {
     const newErrorStatement = _.cloneDeep(this.props.errorStatement);
     const statement = newErrorStatement.statements[parent];
     if (statement.child == null) {
       const newChild = this.baseChild(parent);
       statement.child = newChild;
     }
-    statement.useThen = !statement.useThen;
+    statement.useThenClause = !statement.useThenClause;
     this.props.updateParentState({errorStatement: newErrorStatement});
   }
 
@@ -147,8 +147,8 @@ class ErrorStatement extends Component {
         <button 
           className="button"
           aria-label="remove recommendation"
-          onClick={e => this.handleUseThen(index)}>
-          {this.props.errorStatement.statements[index].useThen ? 'Use Nested If' : 'No Nested If'}
+          onClick={e => this.handleUseThenClause(index)}>
+          {this.props.errorStatement.statements[index].useThenClause ? 'Use Nested If' : 'No Nested If'}
         </button>
       </div>)
   }
@@ -167,9 +167,9 @@ class ErrorStatement extends Component {
   renderElse = (parent) => {
     let elseText = '';
     if (parent == null) {
-      elseText = this.props.errorStatement.else;
+      elseText = this.props.errorStatement.elseClause;
     } else {
-      elseText = this.props.errorStatement.statements[parent].child.else;
+      elseText = this.props.errorStatement.statements[parent].child.elseClause;
     }
     return (
       <div className="field">
@@ -207,7 +207,7 @@ class ErrorStatement extends Component {
             <div key={i}>
               {ifLabel}: {this.renderCondition(statement, i)}
               {this.renderNestingButton(statement, i)}
-              {statement.useThen
+              {statement.useThenClause
               ? this.renderThen(statement, i)
               : this.renderChildren(statement, i)}
             </div>)
