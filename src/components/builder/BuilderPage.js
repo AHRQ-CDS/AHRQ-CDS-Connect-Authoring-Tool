@@ -73,13 +73,8 @@ class BuilderPage extends Component {
       ],
       booleanParameters: [],
       errorStatement: {
-        statements: [{
-          parent: null,
-          condition: null,
-          block: '',
-          child: null
-        }],
-        else: null
+        statements: [],
+        else: 'null'
       },
       name: 'Untitled Artifact',
       id: null,
@@ -589,7 +584,6 @@ class BuilderPage extends Component {
                   subpopulations={ this.state.subpopulations }
                   errorStatement={ this.state.errorStatement }
                   updateParentState={ this.updateState }
-                  value={ null }
                 />
               </TabPanel>
             </div>

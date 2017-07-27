@@ -7,52 +7,89 @@ import _ from 'lodash';
 class ErrorStatement extends Component {
   constructor(props) {
     super(props)
-    this.state ={
+  }
+
+  // Ensures there is at least one statement to start
+  componentWillMount = () => {
+    const statements = this.props.errorStatement.statements;
+    if (statements.length < 1) {
+      this.addStatement(null);
     }
   }
 
+  // Prepopulates dropdown with recommendation is null and then adds bool params
   options = () => {
-    let dropdown = [{label: 'Recommendations is null', value:'"Recommendations" is null'}];
-    let params = this.props.booleanParameters.map(p => {return({label: p.name, value: p.value})});
-    return dropdown.concat(params);
+    const dropdown = [{label: 'Recommendations is null', value:'"Recommendations" is null'}];
+    const params = this.props.booleanParameters.map(p => {return({label: p.name, value: p.value})});
+    const subpops = this.props.subpopulations.map(s => {return({label: s.subpopulationName, value: s.subpopulationName})});
+    return dropdown.concat(params).concat(subpops);
   }
 
-
-  nestIf = () => {
-    console.log("nesting the if")
-  }
-
-  addStatement = (parent) => {
-    const newStatement = {
+  // Generic statement used to handle if then
+  baseStatement = (parent) => {
+    return {
       parent: parent,
       condition: null,
       block: '',
-      child: null
+      child: null,
+      useBlock: true
     };
+  }
+
+  // Child object when doing single layer nesting
+  baseChild = (parent) => {
+    return {
+      statements: [
+        {
+          parent: parent,
+          condition: null,
+          block: '',
+          child: null,
+          useBlock: true
+        }
+      ],
+      else: 'null'
+    }
+  }
+
+  addStatement = (parent) => {
+    const newStatement = this.baseStatement(parent)
     const newErrorStatement = _.cloneDeep(this.props.errorStatement);
+    const statements = newErrorStatement.statements;
     if (parent == null) {
-      newErrorStatement.statements.push(newStatement)
-    };
-    this.props.updateParentState({errorStatement: newErrorStatement})
+      statements.push(newStatement);
+    } else {
+      statements[parent].statements.push(newStatement);
+    }
+    this.props.updateParentState({errorStatement: newErrorStatement});
   }
 
   setStatement = (value, parent, index, type) => {
     const newErrorStatement = _.cloneDeep(this.props.errorStatement);
+    const statements = newErrorStatement.statements;
     if (parent == null) {
-      newErrorStatement.statements[index][type] = value;
+      statements[index][type] = value;
+    } else {
+      statements[parent].child.statements[index][type] = value;
     }
-    this.props.updateParentState({errorStatement: newErrorStatement})
+    this.props.updateParentState({errorStatement: newErrorStatement});
+  }
+
+  setElse = (value, parent) => {
+    const newErrorStatement = _.cloneDeep(this.props.errorStatement);
+    if (parent == null) {
+      newErrorStatement.else = value;
+    }
+    this.props.updateParentState({errorStatement: newErrorStatement});
   }
 
   renderCondition = (statement, index) => {
-    const parent = statement.parent;
-    const level = parent ? parent : -1
     return (<Select
-      key={`condition-${level}-${index}`}
+      key={`condition-${statement.parent ? statement.parent : -1}-${index}`}
       index={index}
       value={statement.condition}
       options={this.options()}
-      onChange={ e => this.setStatement(e, parent, index, 'condition')}
+      onChange={ e => this.setStatement(e, statement.parent, index, 'condition')}
     />)
   }
 
@@ -60,6 +97,7 @@ class ErrorStatement extends Component {
     return (
       <div className="field">
         <div className="control">
+          Block:
           <textarea 
             className="textarea"
             name="text"
@@ -70,6 +108,44 @@ class ErrorStatement extends Component {
         </div>
       </div>
     )
+  }
+
+  renderChildren = (statement, index) => {
+    return (
+      <div>
+        { statement.child && statement.child.statements.map((cStatement, i) => {
+          let ifLabel = i ? 'Else if' : 'If';
+          return (
+            <div key={i}>
+              {ifLabel}: {this.renderCondition(cStatement, i)}
+              {this.renderBlock(cStatement, i)}
+            </div>)
+        })}
+      </div>
+    )
+  }
+
+  handleUseBlock = (parent) => {
+    const newErrorStatement = _.cloneDeep(this.props.errorStatement);
+    const statement = newErrorStatement.statements[parent];
+    if (statement.child == null) {
+      const newChild = this.baseChild(parent);
+      statement.child = newChild;
+    }
+    statement.useBlock = !statement.useBlock;
+    this.props.updateParentState({errorStatement: newErrorStatement});
+  }
+
+  renderNestingButton = (statement, index) => {
+    return (
+      <div className="control recommendation__remove">
+        <button 
+          className="button"
+          aria-label="remove recommendation"
+          onClick={e => this.handleUseBlock(index)}>
+          {this.props.errorStatement.statements[index].useBlock ? 'Use Nested If' : 'No Nested If'}
+        </button>
+      </div>)
   }
 
   render() {
@@ -92,18 +168,29 @@ class ErrorStatement extends Component {
           return (
             <div key={i}>
               {ifLabel}: {this.renderCondition(statement, i)}
-              Block: {this.renderBlock(statement, i)}
+              {this.renderNestingButton(statement, i)}
+              {statement.useBlock
+              ? this.renderBlock(statement, i)
+              : this.renderChildren(statement, i)}
             </div>)
-        })}
-        <div className="control recommendation__remove">
-          <button className="button" aria-label="remove recommendation"  onClick={this.nestIf}> Nest 'If' </button>
-        </div>
-        
+        })}        
         <div className="control recommendation__remove">
           <button 
             className="button"
             aria-label="remove recommendation" 
-            onClick={e => this.addStatement(null)}> Add 'If' </button>
+            onClick={e => this.addStatement(null)}> Add If Clause </button>
+        </div>
+        Else:
+        <div className="field">
+          <div className="control">
+            <textarea 
+              className="textarea"
+              name="text"
+              aria-label="Else"
+              placeholder='If none of the conditions hold...'
+              value={this.props.errorStatement.else}
+              onChange={e => this.setElse(e.target.value, null, 'else')} />
+          </div>
         </div>
       </section>
     )
