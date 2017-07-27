@@ -347,9 +347,9 @@ class CqlArtifact {
     this.contexts.push(context)
   }
 
-  // Goes through CQL strings and escapes any single quotes
+  // Replaces all instances of `'` in the string with the escaped `\'` - Might be expanded in the future
   sanitizeCQLString(cqlString) {
-    return _.replace(cqlString, '\'', '\\\'');
+    return _.replace(cqlString, /\'/g, '\\\'');
   }
 
   /* Modifiers Explanation:
@@ -435,9 +435,20 @@ class CqlArtifact {
   }
 
   errors() {
+    this.errorStatement.statements.forEach((statement, index) => {
+      this.errorStatement.statements[index].condition.label = this.sanitizeCQLString(statement.condition.label);
+      if (statement.useThenClause) {
+        this.errorStatement.statements[index].thenClause = this.sanitizeCQLString(statement.thenClause);
+      } else {
+        statement.child.statements.forEach((childStatement, childIndex) => {
+          this.errorStatement.statements[index].child.statements[childIndex].condition.label = this.sanitizeCQLString(childStatement.condition.label);
+          this.errorStatement.statements[index].child.statements[childIndex].thenClause = this.sanitizeCQLString(childStatement.thenClause);
+        })
+        this.errorStatement.statements[index].child.elseClause = this.sanitizeCQLString(statement.child.elseClause);
+      }
+    });
     this.errorStatement.elseClause = this.sanitizeCQLString(this.errorStatement.elseClause);
-    const retVal = ejs.render(templateMap['ErrorStatements'], {element_name: 'Error', errorStatement: this.errorStatement});
-    return retVal;
+    return ejs.render(templateMap['ErrorStatements'], {element_name: 'Error', errorStatement: this.errorStatement});
   }
 
   // Produces the cql in string format
