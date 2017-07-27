@@ -1,0 +1,21 @@
+.parameter__header {
+  background-color: $gray-lightest;
+  border: $border-global;
+  border-radius: $border-radius;
+
+  &:not(:last-child) {
+    margin-bottom: 1em;
+  }
+
+  > .form__group {
+    margin: 0;
+  }
+}
+
+.parameter__content {
+  padding: 1em;
+
+  .form__group {
+    margin: 0 0 1em 0;
+  }
+}

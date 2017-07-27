@@ -8,6 +8,7 @@ import moment from 'moment';
 import ConjunctionGroup from './ConjunctionGroup';
 import Recommendations from './Recommendations';
 import Subpopulations from './Subpopulations';
+import Parameters from './Parameters';
 import Config from '../../../config';
 
 // Suppress is a flag that is specific to an element. It should not be inherited by children
@@ -69,6 +70,7 @@ class BuilderPage extends Component {
           uniqueId: 'default-subpopulation-2'
         }
       ],
+      booleanParameters: [],
       name: 'Untitled Artifact',
       id: null,
       version: null,
@@ -130,6 +132,7 @@ class BuilderPage extends Component {
         this.setState({ expTreeExclude: artifact.expTreeExclude });
         this.setState({ recommendations: artifact.recommendations });
         this.setState({ subpopulations: artifact.subpopulations });
+        this.setState({ booleanParameters: artifact.booleanParameters });
       });
   }
 
@@ -183,6 +186,7 @@ class BuilderPage extends Component {
       expTreeExclude: this.state.expTreeExclude,
       recommendations: this.state.recommendations,
       subpopulations: this.state.subpopulations,
+      booleanParameters: this.state.booleanParameters,
       uniqueIdCounter: this.state.uniqueIdCounter
     };
   }
@@ -455,24 +459,29 @@ class BuilderPage extends Component {
   }
 
   renderConjunctionGroup = (treeName) => (
-      this.state[treeName].childInstances ?
-        <ConjunctionGroup
-          root={ true }
-          name={ treeName }
-          instance={ this.state[treeName] }
-          createTemplateInstance={ this.createTemplateInstance }
-          addInstance={ this.addInstance }
-          editInstance={ this.editInstance }
-          updateInstanceModifiers={ this.updateInstanceModifiers }
-          deleteInstance={ this.deleteInstance }
-          saveInstance={ this.saveInstance }
-          getAllInstances={ this.getAllInstances }
-          showPresets={ showPresets }
-          categories={ this.state.categories }
-        />
-      :
-        <p>Loading...</p>
-    )
+    this.state[treeName].childInstances ?
+      <ConjunctionGroup
+        root={ true }
+        name={ treeName }
+        instance={ this.state[treeName] }
+        booleanParameters={ this.state.booleanParameters}
+        createTemplateInstance={ this.createTemplateInstance }
+        addInstance={ this.addInstance }
+        editInstance={ this.editInstance }
+        updateInstanceModifiers={ this.updateInstanceModifiers }
+        deleteInstance={ this.deleteInstance }
+        saveInstance={ this.saveInstance }
+        getAllInstances={ this.getAllInstances }
+        showPresets={ showPresets }
+        categories={ this.state.categories }
+      />
+    :
+      <p>Loading...</p>
+  )
+
+  updateParameters = (BooleanParameter) => {
+    this.setState({booleanParameters: BooleanParameter});
+  }
 
   render() {
     return (
@@ -519,6 +528,7 @@ class BuilderPage extends Component {
               <Tab>Exclusions</Tab>
               <Tab>Subpopulations</Tab>
               <Tab>Recommendations</Tab>
+              <Tab>Parameters</Tab>
             </TabList>
             <div className="tab-panel-container">
               <TabPanel>
@@ -529,20 +539,21 @@ class BuilderPage extends Component {
               </TabPanel>
               <TabPanel>
                 <Subpopulations
-                  name={ 'subpopulations' }
-                  subpopulations={ this.state.subpopulations }
-                  updateSubpopulations={ this.updateSubpopulations }
-                  createTemplateInstance={ this.createTemplateInstance }
-                  addInstance={ this.addInstance }
-                  editInstance={ this.editInstance }
-                  updateInstanceModifiers={ this.updateInstanceModifiers }
-                  deleteInstance={ this.deleteInstance }
-                  saveInstance={ this.saveInstance }
-                  getAllInstances={ this.getAllInstances }
-                  showPresets={ showPresets }
-                  categories={ this.state.categories }
-                  checkSubpopulationUsage={ this.checkSubpopulationUsage }
-                  updateRecsSubpop={ this.updateRecsSubpop }
+                name={ 'subpopulations' }
+                subpopulations={ this.state.subpopulations }
+                updateSubpopulations={ this.updateSubpopulations }
+                booleanParameters={ this.state.booleanParameters }
+                createTemplateInstance={ this.createTemplateInstance }
+                addInstance={ this.addInstance }
+                editInstance={ this.editInstance }
+                updateInstanceModifiers={ this.updateInstanceModifiers }
+                deleteInstance={ this.deleteInstance }
+                saveInstance={ this.saveInstance }
+                getAllInstances={ this.getAllInstances }
+                showPresets={ showPresets }
+                categories={ this.state.categories }
+                checkSubpopulationUsage={ this.checkSubpopulationUsage }
+                updateRecsSubpop={ this.updateRecsSubpop }
                 />
               </TabPanel>
               <TabPanel>
@@ -552,6 +563,12 @@ class BuilderPage extends Component {
                   subpopulations={ this.state.subpopulations }
                   setActiveTab={ this.setActiveTab }
                   />
+              </TabPanel>
+              <TabPanel>
+                <Parameters
+                  booleanParameters={ this.state.booleanParameters }
+                  updateParameters={this.updateParameters}
+                />
               </TabPanel>
             </div>
           </Tabs>

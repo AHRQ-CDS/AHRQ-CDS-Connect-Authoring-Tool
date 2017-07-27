@@ -18,7 +18,7 @@ class StringParameter extends Component {
           <input id={id}
             type="text"
             name={this.props.id}
-            defaultValue={this.props.value}
+            value={this.props.value || ""}
             onChange={(event) => {
               const name = event.target.name;
               const value = event.target.value;

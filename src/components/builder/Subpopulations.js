@@ -83,6 +83,7 @@ class Subpopulations extends Component {
               subpopulationIndex={ i + this.state.numOfSpecialSubpopulations } // System needs to know true index out of all subpopulations
               setSubpopulationName={ this.setSubpopulationName }
               deleteSubpopulation={ this.deleteSubpopulation }
+              booleanParameters={ this.props.booleanParameters }
               createTemplateInstance={ this.props.createTemplateInstance }
               addInstance={ this.props.addInstance }
               editInstance={ this.props.editInstance }

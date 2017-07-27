@@ -88,6 +88,7 @@ class CqlArtifact {
     this.includeLibraries = artifact.includeLibraries ? artifact.includeLibraries : includeLibraries;
     this.context = artifact.context ? artifact.context : 'Patient';
     this.inclusions = artifact.expTreeInclude;
+    this.booleanParameters = artifact.booleanParameters;
     this.exclusions = artifact.expTreeExclude;
     this.subpopulations = artifact.subpopulations;
     this.recommendations = artifact.recommendations;
@@ -215,10 +216,32 @@ class CqlArtifact {
           break;
         case 'condition':
           let conditionValueSets = ValueSets.conditions[parameter.value];
-          context.values = conditionValueSets.conditions.map(condition => {
-            this.resourceMap.set(condition.name, condition);
-            return condition.name;
-          })
+          if ('concepts' in conditionValueSets) {
+            conditionValueSets.concepts.forEach((concept) => {
+              concept.codes.forEach((code) => {
+                this.codeSystemMap.set(code.codeSystem.name, code.codeSystem.id);
+                this.codeMap.set(code.name, code);
+              });
+              this.conceptMap.set(concept.name, concept);
+            });
+            // For checking if a ConceptValue is in a valueset, incluce the valueset that will be used
+            if('checkInclusionInVS' in conditionValueSets) {
+              if(!_.isEmpty(element.modifiers) && _.last(element.modifiers).id === "CheckInclusionInVS") {
+                _.last(element.modifiers).values = conditionValueSets.checkInclusionInVS.name;
+              }
+              this.resourceMap.set(conditionValueSets.checkInclusionInVS.name, conditionValueSets.checkInclusionInVS);
+            }
+            context.values = [`[Condition: "${conditionValueSets.conditions[0].name}"]`, `C3F.ConditionsByConcept("${conditionValueSets.concepts[0].name}")`];
+            context.template = 'GenericStatement'; // Potentially move this to the object itself in form_templates
+            conditionValueSets.conditions.forEach(condition => {
+              this.resourceMap.set(condition.name, condition);
+            })
+          } else {
+            context.values = conditionValueSets.conditions.map(condition => {
+              this.resourceMap.set(condition.name, condition);
+              return condition.name;
+            })
+          }
           break;
         case 'medication':
           let medicationValueSets = ValueSets.medications[parameter.value];

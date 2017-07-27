@@ -79,13 +79,12 @@ module.exports = [
         ]
       },
       {
-        id: 'LDLCholesterol',
-        name: 'LDL Cholesterol',
+        id: 'LDLTest',
+        name: 'LDL Test',
         extends: 'GenericObservation',
-        surpressedModifiers: ['ConceptValue'],
         parameters: [
-          { id: 'element_name', value: "LDLCholesterol"},
-          { id: 'observation', static: true, value: "ldl_cholesterol"},
+          { id: 'element_name', value: "LDL_Test"},
+          { id: 'observation', static: true, value: "ldl_test"}
         ]
       },
       {
@@ -130,15 +129,6 @@ module.exports = [
         parameters: [
           { id: 'element_name', value: "IsBreastfeeding"},
           { id: 'observation', type:'breastfeeding', static: true, value: "breastfeeding"}
-        ]
-      },
-      {
-        id: 'LDLTest',
-        name: 'LDL Test',
-        extends: 'GenericObservation',
-        parameters: [
-          { id: 'element_name', value: "LDL_Test"},
-          { id: 'observation', static: true, value: "ldl_test"}
         ]
       },
     ]
@@ -306,15 +296,6 @@ module.exports = [
         ],
       },
       {
-        id: 'Hypercholesterolemia',
-        name: 'Hypercholesterolemia',
-        extends: 'GenericCondition',
-        parameters: [
-          { id: 'element_name', value: 'HasFamilialHypercholesterolemia' },
-          { id: 'condition', static: true, value: 'hypercholesterolemia' }
-        ]
-      },
-      {
         id: 'Pregnancydx',
         name: 'Pregnancy dx',
         template: 'Pregnancydx',
@@ -334,15 +315,6 @@ module.exports = [
         parameters: [
           { id: 'element_name', value: 'HasEndStageRenalDisease' },
           { id: 'condition', static: true, value: 'end_stage_renal_disease' }
-        ]
-      },
-      {
-        id: 'LiverDisease',
-        name: 'Liver Disease',
-        extends: 'GenericCondition',
-        parameters: [
-          { id: 'element_name', value: 'HasLiverDisease' },
-          { id: 'condition', static: true, value: 'liver_disease' }
         ]
       },
       {
@@ -386,7 +358,7 @@ module.exports = [
         name: 'Familial Hypercholesterolemia',
         extends: 'GenericCondition',
         parameters: [
-          { id: 'element_name', value: 'Familial_Hypercholesterolemia' },
+          { id: 'element_name', value: 'HasFamilialHypercholesterolemia' },
           { id: 'condition', static: true, value: 'familial_hypercholesterolemia' }
         ]
       },

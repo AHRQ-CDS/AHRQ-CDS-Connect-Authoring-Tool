@@ -28,6 +28,7 @@ beforeEach(() => {
     addInstance,
     editInstance,
     updateInstanceModifiers: jest.fn(),
+    booleanParameters: [],
     deleteInstance: jest.fn(),
     saveInstance: jest.fn(),
     getAllInstances,

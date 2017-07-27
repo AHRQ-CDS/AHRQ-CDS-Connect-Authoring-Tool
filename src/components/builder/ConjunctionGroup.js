@@ -20,6 +20,7 @@ class ConjunctionGroup extends Component {
     addInstance: PropTypes.func.isRequired,
     editInstance: PropTypes.func.isRequired,
     updateInstanceModifiers: PropTypes.func.isRequired,
+    booleanParameters: PropTypes.array.isRequired,
     deleteInstance: PropTypes.func.isRequired,
     saveInstance: PropTypes.func.isRequired,
     getAllInstances: PropTypes.func.isRequired,
@@ -63,7 +64,7 @@ class ConjunctionGroup extends Component {
     const level = this.getPath().split('.').filter(pathSection => pathSection === 'childInstances').length;
     return level % 2 === 0 ? '' : 'conjunction-group--odd';
   }
-  
+
   indentClickHandler = (instance) => {
     // Decide what type of conjunction group to create when indenting
     let type;
@@ -72,7 +73,7 @@ class ConjunctionGroup extends Component {
     } else { // Default is adding an OR
       type = this.types.find(type => type.id === 'Or');;
     }
-    
+
     if(instance.conjunction) {
       // Indenting a conjunction group (and it's children)
       let newInstance = this.props.createTemplateInstance(type, [instance])
@@ -88,7 +89,7 @@ class ConjunctionGroup extends Component {
       this.props.deleteInstance(this.props.name, this.getChildsPath(instance.uniqueId), toAdd);
     }
   }
-  
+
   outdentClickHandler = (instance) => {
     if(instance.conjunction) {
       // Outdenting a conjunction group. Removes the conjunction, readds each child to the conjunction's parent
@@ -111,29 +112,29 @@ class ConjunctionGroup extends Component {
       this.props.deleteInstance(this.props.name, this.getChildsPath(instance.uniqueId), toAdd);
     }
   }
-  
+
   renderIndentButtons = (instance) => {
     // TODO: put aria attributes on the button
     // TODO: update css/placement of button to match designs
-    
+
     // Indenting is always possible, outdent only possilbe when not at root already
     return (
-      <span>
-        { this.getPath() !== '' ? 
-          <button 
+      <span className="indent-outdent-container">
+        { this.getPath() !== '' ?
+          <button
             aria-label="outdent"
-            className='element__hidebutton' 
+            className='element__hidebutton'
             onClick={()=> this.outdentClickHandler(instance)}>
             <FontAwesome name="dedent" />
           </button> :
           null
         }
-        <button 
+        <button
           aria-label="indent"
-          className='element__hidebutton' 
+          className='element__hidebutton'
           onClick={()=> this.indentClickHandler(instance)}>
           <FontAwesome name="indent" />
-        </button> 
+        </button>
       </span>
     )
   }
@@ -191,6 +192,7 @@ class ConjunctionGroup extends Component {
                   getPath={ this.getChildsPath }
                   name={ this.props.name }
                   instance={ instance }
+                  booleanParameters={ this.props.booleanParameters }
                   createTemplateInstance={ this.props.createTemplateInstance }
                   addInstance={ this.props.addInstance }
                   editInstance={ this.props.editInstance }
@@ -229,6 +231,7 @@ class ConjunctionGroup extends Component {
         <ElementSelect
           categories={ this.props.categories }
           onSuggestionSelected={ this.addChild }
+          booleanParameters={ this.props.booleanParameters }
         />
       </div>
     );

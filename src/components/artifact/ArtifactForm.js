@@ -41,6 +41,7 @@ class ArtifactForm extends Component {
           uniqueId: 'default-subpopulation-2'
         }
       ],
+      booleanParameters: [],
       uniqueIdCounter: 0
     }).then((result) => {
       this.props.afterAddArtifact();

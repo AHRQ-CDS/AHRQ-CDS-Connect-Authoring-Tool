@@ -12,7 +12,8 @@ beforeEach(() => {
   component = fullRenderComponent(ElementSelect,
     {
       categories: elementGroups,
-      onSuggestionSelected: addInstance
+      onSuggestionSelected: addInstance,
+      booleanParameters: []
     }
   );
 
