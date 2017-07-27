@@ -1,13 +1,9 @@
 import React, {Component} from 'react';
 import Select from 'react-select';
-import FontAwesome from 'react-fontawesome';
 import _ from 'lodash';
 
 
 class ErrorStatement extends Component {
-  constructor(props) {
-    super(props)
-  }
 
   // Ensures there is at least one statement to start
   componentWillMount = () => {
