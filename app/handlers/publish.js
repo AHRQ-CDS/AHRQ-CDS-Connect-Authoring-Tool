@@ -51,17 +51,17 @@ function splitELM(artifact, elm, req, res) {
   let contentType = elm.resp.headers['Content-Type'] || elm.resp.headers['content-type'];
   let bb = new Busboy({ headers: { 'content-type': contentType }});
   let elmFiles = [];
-  bb.on('file', function (fieldname, file, filename, encoding, mimetype) {
-   console.log('File [%s]: filename=%j; encoding=%j; mimetype=%j', fieldname, filename, encoding, mimetype);
-   file
-   .on('data', data => console.log('File [%s] got %d bytes', fieldname, data.length))
-   .on('end', () => console.log('File [%s] Finished', fieldname));
-  })
+  // bb.on('file', function (fieldname, file, filename, encoding, mimetype) {
+  //  console.log('File [%s]: filename=%j; encoding=%j; mimetype=%j', fieldname, filename, encoding, mimetype);
+  //  file
+  //  .on('data', data => console.log('File [%s] got %d bytes', fieldname, data.length))
+  //  .on('end', () => console.log('File [%s] Finished', fieldname));
+  // })
   .on('field', (fieldname, val) => {
     elmFiles.push({name: fieldname, content: val})
   })
   .on('finish', () => {
-   console.log('Done parsing form!');
+  //  console.log('Done parsing form!');
    pushToRepo(artifact, elmFiles, req, res);
   })
   .on('error', err => {
@@ -75,7 +75,6 @@ function pushToRepo(artifact, elm, req, res) {
   let archive = archiver('zip', {zlib : { level : 9 }});
   let fd = tmp.fileSync({postfix: '.zip'});
   let output = fs.createWriteStream(fd.name)
-  console.log(fd.name);
   archive.pipe(output)
 
   archive.on('error', (err) => {
@@ -106,7 +105,6 @@ function pushToRepo(artifact, elm, req, res) {
             }
         }
     };
-    // console.log(payload);
     request.post(`${Config.repo.baseUrl}/jsonapi/file/zip`, payload, function(err,res, body){
       console.log(res);
     });
