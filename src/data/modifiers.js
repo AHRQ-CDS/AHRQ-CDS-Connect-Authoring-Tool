@@ -20,8 +20,8 @@ module.exports = [
     inputTypes: ['list_of_observations'],
     returnType: 'list_of_observations',
     values: {unit: undefined},
-    cqlTemplate: null,
-    cqlLibraryFunction: null
+    cqlTemplate: 'WithUnit',
+    cqlLibraryFunction: 'C3F.WithUnit',
   },
   // {
   //   id: 'ValueComparison',

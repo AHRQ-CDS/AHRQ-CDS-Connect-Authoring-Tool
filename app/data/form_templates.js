@@ -92,6 +92,7 @@ module.exports = [
         id: 'SystolicBloodPressure',
         name: 'Systolic Blood Pressure',
         extends: 'GenericObservation',
+        surpressedModifiers: ['WithUnit'], // TODO add unit for this element
         parameters: [
           { id: 'element_name', value: "SystolicBloodPressure"},
           { id: 'observation', static: true, value: "systolic_blood_pressure"},
@@ -102,7 +103,7 @@ module.exports = [
         name: 'ASCVD Risk Assessment',
         extends: 'GenericObservation',
         template: 'ObservationByConcept',
-        surpressedModifiers: ['ConceptValue', 'ConvertToMgPerdL'],
+        surpressedModifiers: ['ConceptValue', 'ConvertToMgPerdL', 'WithUnit'],
         parameters: [
           { id: 'element_name', value: "MostRecentASCVDRiskAssessmentResult"},
           { id: 'observation', static: true, value: "ascvd_risk_assessment"},
@@ -114,7 +115,7 @@ module.exports = [
         template: 'ObservationByConcept',
         extends: 'GenericObservation',
         checkInclusionInVS: true, // Very few elements can check this, so this makes sense to require it to be specified
-        surpressedModifiers: ['QuantityValue', 'ConvertToMgPerdL'],
+        surpressedModifiers: ['QuantityValue', 'ConvertToMgPerdL', 'WithUnit'],
         parameters: [
           { id: 'element_name', value: "IsSmoker"},
           { id: 'observation',  static: true, value: "smoker"},
@@ -126,7 +127,7 @@ module.exports = [
         template: 'Breastfeeding',
         returnType: 'boolean',
         extends: 'Base',
-        surpressedModifiers: ['BooleanComparison'],
+        surpressedModifiers: ['BooleanComparison', 'WithUnit'],
         parameters: [
           { id: 'element_name', value: "IsBreastfeeding"},
           { id: 'observation', type:'breastfeeding', static: true, value: "breastfeeding"}
