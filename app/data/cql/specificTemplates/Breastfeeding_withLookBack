@@ -1,0 +1,15 @@
+<% if (breastfeedingNegated) {-%>
+define "<%-element_name%>"
+  not "__breastfeeding"
+
+<% } -%>
+define "MostRecentBreastfeedingObservationInLastYear":
+  C3F.MostRecent(C3F.Verified(C3F.ObservationLookBack(C3F.ObservationsByConcept("<%=breastfeedingCodeConcept%>"), 1 year)))
+
+<% if (breastfeedingNegated) {-%>
+define "__breastfeeding":
+<% } else { -%>
+define "<%-element_name%>":
+<% } -%>
+  exists(C3F.Confirmed(C3F.ActiveCondition(C3F.ConditionLookBack([Condition: "<%=valueSetName%>" ], 1 year))))
+  or C3F.ConceptValue(MostRecentBreastfeedingObservationInLastYear) ~ "<%=breastfeedingYesConcept%>"

@@ -133,6 +133,27 @@ module.exports = [
           { id: 'observation', type:'breastfeeding', static: true, value: "breastfeeding"}
         ]
       },
+      {
+        id: 'Breastfeeding_ecqm',
+        name: 'Breastfeeding ecqm',
+        template: 'Breastfeeding_withLookBack',
+        returnType: 'boolean',
+        extends: 'Base',
+        surpressedModifiers: ['BooleanComparison', 'WithUnit'],
+        parameters: [
+          { id: 'element_name', value: "IsBreastfeeding"},
+          { id: 'observation', type:'breastfeeding', static: true, value: "breastfeeding"}
+        ]
+      },
+      {
+        id: 'ALT',
+        name: 'ALT',
+        extends: 'GenericObservation',
+        parameters: [
+          { id: 'element_name', value: "HasALT"},
+          { id: 'observation', static: true, value: "alt"}
+        ]
+      },
     ]
   },
   {
@@ -203,6 +224,15 @@ module.exports = [
         ],
       },
       {
+        id: 'ASCVD_eqcm',
+        name: 'ASCVD Diagnosis',
+        extends: 'GenericCondition',
+        parameters: [
+          { id: 'element_name', value: "ASCVDDiagnosis"},
+          { id: 'condition', static: true, value: "ascvd_diagnosis"}
+        ],
+      },
+      {
         id: 'Pregnancydx',
         name: 'Pregnancy dx',
         template: 'Pregnancydx',
@@ -213,6 +243,19 @@ module.exports = [
         parameters: [
           { id: 'element_name', value: 'IsPregnant' },
           { id: 'pregnancy', type: 'pregnancy', static: true, value: 'pregnancy_dx' }
+        ]
+      },
+      {
+        id: 'Pregnancydx_ecqm',
+        name: 'Pregnancy dx ecqm',
+        template: 'Pregnancydx_withLookBack',
+        returnType: 'boolean',
+        extends: 'Base',
+        returnType: 'boolean',
+        surpressedModifiers: ['BooleanComparison'],
+        parameters: [
+          { id: 'element_name', value: 'IsPregnant' },
+          { id: 'pregnancy', type: 'pregnancy', static: true, value: 'pregnancy_dx_ecqm' }
         ]
       },
       {
@@ -323,6 +366,15 @@ module.exports = [
         ],
       },
       {
+        id: 'ASCVD_Procedures_ecqm',
+        name: 'ASCVD Procedures ecqm',
+        extends: 'GenericProcedure',
+        parameters : [
+          { id: 'element_name', value: 'ASCVDProcedures' },
+          { id: 'procedure', static: true, value: "ascvd_procedures_ecqm" }
+        ]
+      },
+      {
         id: 'Palliative_Care',
         name: 'Palliative Care',
         extends: 'GenericProcedure',
@@ -394,7 +446,7 @@ module.exports = [
       {
         id: 'GenericAllergyIntolerance',
         name: 'Allergy Inteolerance',
-        returnType: 'allergy_intolerance',
+        returnType: 'lis_of_allergy_intolerance',
         suppress: true,
         extends: 'Base',
         parameters: [

@@ -93,6 +93,16 @@ module.exports = {
         oid: '2.16.840.1.113883.3.600.2390'
       }
     },
+    alt : {
+      id: "alt",
+      observations: [
+        {
+          name: "ALT",
+          oid: '2.16.840.1.113762.1.4.1032.21',
+        }
+      ],
+      units: {values: ["'U/L'"], code: "'U/L'"},
+    },
   },
   demographics: {
     gender: {
@@ -164,6 +174,32 @@ module.exports = {
         }
       ]
     },
+    ascvd_diagnosis : { //ecqm
+      id: "ascvd_diagnosis",
+      conditions: [
+        {
+       // https://ushik.ahrq.gov/ViewItemDetails?&system=mu&itemKey=189321000
+          name: "Myocardial Infarction",
+          oid: '2.16.840.1.113883.3.526.3.403'
+        },
+        {
+          name: "Atherosclerosis and Peripheral Arterial Disease",
+          oid: '2.16.840.1.113762.1.4.1047.21'
+        },
+        {
+          name: "Cerebrovascular disease, Stroke, TIA",
+          oid: '2.16.840.1.113762.1.4.1047.44'
+        },
+        {
+          name: "Stable and Unstable Angina",
+          oid: '2.16.840.1.113762.1.4.1047.47'
+        },
+        {
+          name: "Ischemic heart disease or coronary occlusion, rupture, or thrombosis",
+          oid: '2.16.840.1.113762.1.4.1047.46'
+        }
+      ]
+    },
     pregnancy_dx : {
      // https://ushik.ahrq.gov/ViewItemDetails?&system=mu&itemKey=189087000
      id: "pregnancy_dx",
@@ -193,6 +229,42 @@ module.exports = {
              name: 'Pregnant code',
              code: '77386006',
              codeSystem: { name: 'SNOMED-CT', id: 'http://snomed.info/sct/1000124'},
+             display: 'Patient currently pregnant (finding)',
+           }
+         ],
+         display: 'Patient currently pregnant (finding)'
+       }
+     ],
+    },
+    pregnancy_dx_ecqm : {
+     // https://ushik.ahrq.gov/ViewItemDetails?&system=mu&itemKey=189087000
+     id: "pregnancy_dx_ecqm",
+     conditions: [
+       {
+         name: "Pregnancy dx",
+         oid: '2.16.840.1.113883.3.600.1.1623'
+       }
+     ],
+     concepts: [
+       {
+         name: 'Pregnancy status',
+         codes: [
+           {
+             name: 'Pregnancy status code',
+             code: '82810-3',
+             codeSystem: { name: 'LOINC', id: 'http://loinc.org'},
+             display: 'Pregnancy status',
+           }
+         ],
+         display: 'Pregnancy status'
+       },
+       {
+         name: 'Pregnant',
+         codes: [
+           {
+             name: 'Pregnant code',
+             code: '77386006',
+             codeSystem: { name: 'SNOMED-CT', id: 'http://snomed.info/sct'},
              display: 'Patient currently pregnant (finding)',
            }
          ],
@@ -419,6 +491,23 @@ module.exports = {
         {
           name: 'PCI ICD9CM',
           oid: '2.16.840.1.113762.1.4.1045.86'
+        },
+        {
+          name: 'Carotid intervention',
+          oid: '2.16.840.1.113883.3.117.1.7.1.204'
+        }
+      ],
+    },
+    ascvd_procedures_ecqm: {
+      id: 'ascvd_procedures_ecqm',
+      procedures: [
+        {
+          name: 'CABG Surgeries',
+          oid: '2.16.840.1.113883.3.666.5.694'
+        },
+        {
+          name: 'PCI',
+          oid: '2.16.840.1.113762.1.4.1045.67'
         },
         {
           name: 'Carotid intervention',

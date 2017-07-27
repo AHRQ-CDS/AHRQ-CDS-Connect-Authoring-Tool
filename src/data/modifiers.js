@@ -74,6 +74,14 @@ module.exports = [
     cqlTemplate: 'BaseModifier',
     cqlLibraryFunction: 'Convert.to_mg_per_dL'
   },
+  {
+    id: 'HighestObservationValue',
+    name: 'Highest Observation Value',
+    inputTypes: ['list_of_observations'],
+    returnType: 'system_quantity',
+    cqlTemplate: 'BaseModifier',
+    cqlLibraryFunction: 'C3F.HighestObservation'
+  },
   // conditions
   {
     id: 'ConfirmedCondition',
@@ -109,6 +117,14 @@ module.exports = [
     cqlTemplate: 'BaseModifier',
     cqlLibraryFunction: 'C3F.Completed'
   },
+  {
+    id: 'InProgressProcedure',
+    name: 'In Progress',
+    inputTypes: ['list_of_procedures'],
+    returnType: 'list_of_procedures',
+    cqlTemplate: 'BaseModifier',
+    cqlLibraryFunction: 'C3F.ProcedureInProgress'
+  },
   // medications
   {
     id: 'ActiveMedication',
@@ -117,6 +133,15 @@ module.exports = [
     returnType: 'list_of_medications',
     cqlTemplate: 'BaseModifier',
     cqlLibraryFunction: 'C3F.Active'
+  },
+  // allergy intolerances
+  {
+    id: 'ActiveOrConfirmedAllergyIntolerance',
+    name: 'Active Or Confirmed',
+    inputTypes: ['list_of_allergy_intolerances'],
+    returnType: 'list_of_allergy_intolerances',
+    cqlTemplate: 'BaseModifier',
+    cqlLibraryFunction: 'C3F.ActiveOrConfirmedAllergyIntolerance'
   },
   // ALL
   // Most Recent
