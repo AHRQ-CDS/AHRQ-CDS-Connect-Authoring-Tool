@@ -9,6 +9,18 @@
     font-weight: $font-weight-regular;
   }
 
+  &__action {
+    margin-top: 1em;
+  }
+
+  &__block {
+    padding: 2em;
+  }
+
+  &__clause {
+    margin: 1em 0;
+  }
+
   &__subpopulations {
     margin-bottom: 1em;
   }
