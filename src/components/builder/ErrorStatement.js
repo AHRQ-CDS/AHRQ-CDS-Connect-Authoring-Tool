@@ -124,7 +124,7 @@ class ErrorStatement extends Component {
   // Renders then part of statement
   renderThen = (statement, parent, index) => {
     return (
-      <div className="field recommendation__clause">
+      <div className="field">
         <label className="label">Then</label>
         <div className="control">
           <textarea
@@ -147,9 +147,9 @@ class ErrorStatement extends Component {
           let ifLabel = i ? 'Else if' : 'If';
           return (
             <div key={i}>
-              <div className="field recommendation__clause">
+              <div className="field">
                 <label className="label">{ifLabel}</label>
-                <div className="control">
+                <div className="form__group control">
                   {this.renderCondition(cStatement, parent, i)}
                   {this.renderDeleteButton(parent, i)}
                 </div>
@@ -170,7 +170,7 @@ class ErrorStatement extends Component {
         <button
           className="button"
           onClick={e => this.handleUseThenClause(index)}>
-          {this.props.errorStatement.statements[index].useThenClause ? 'Use Nested If' : 'No Nested If'}
+          {this.props.errorStatement.statements[index].useThenClause ? 'And Also If...' : '(Remove nested statements)'}
         </button>
       </div>)
   }
@@ -181,7 +181,7 @@ class ErrorStatement extends Component {
       <div className="field recommendation__action">
         <button
           className="button"
-          onClick={e => this.addStatement(parent)}> Add If Clause </button>
+          onClick={e => this.addStatement(parent)}> Or Else If... </button>
       </div>
     )
   }
@@ -189,7 +189,7 @@ class ErrorStatement extends Component {
   // Renders delete if/then button
   renderDeleteButton = (parent, index) => {
     return (
-      <div className="field recommendation__action">
+      <div className="recommendation__action">
         <button
           className="button"
           onClick={e => this.deleteStatement(parent, index)}> Delete If Clause </button>
@@ -206,7 +206,7 @@ class ErrorStatement extends Component {
       elseText = this.props.errorStatement.statements[parent].child.elseClause;
     }
     return (
-      <div className="field recommendation__clause">
+      <div className="field">
         <label className="label">Else</label>
         <div className="control">
           <textarea
@@ -234,13 +234,13 @@ class ErrorStatement extends Component {
           let ifLabel = i ? 'Else if' : 'If';
           return (
             <div key={i}>
-              <div className="field recommendation__clause">
+              <div className="field">
                 <label className="label">{ifLabel}</label>
-                <div className="control">
+                <div className="form__group control">
                   {this.renderCondition(statement, null, i)}
+                  {this.renderDeleteButton(null, i)}
                 </div>
                 {this.renderNestingButton(statement, i)}
-                {this.renderDeleteButton(null, i)}
               </div>
               {statement.useThenClause
               ? this.renderThen(statement, null, i)

@@ -14,11 +14,25 @@
   }
 
   &__block {
-    padding: 2em;
+    padding: 0.5em 0 0.5em 2.5em;
   }
 
-  &__clause {
+  .field {
     margin: 1em 0;
+  }
+
+  .form__group {
+    display: flex;
+    align-items: center;
+    margin: 0;
+
+    .Select {
+      flex: 1;
+    }
+    .recommendation__action {
+      margin-left: .5em;
+      margin-top: 0;
+    }
   }
 
   &__subpopulations {
