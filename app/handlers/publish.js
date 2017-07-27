@@ -49,8 +49,9 @@ function convertToElm(req, res) {
 function splitELM(artifact, elm, req, res) {
   // Because ELM comes back as a multipart response we use busboy to split it up
   let contentType = elm.resp.headers['Content-Type'] || elm.resp.headers['content-type'];
-  let bb = new Busboy({ headers: { 'content-type': contentType }});
   let elmFiles = [];
+
+  let bb = new Busboy({ headers: { 'content-type': contentType }})
   .on('field', (fieldname, val) => {
     elmFiles.push({name: fieldname, content: val})
   })
