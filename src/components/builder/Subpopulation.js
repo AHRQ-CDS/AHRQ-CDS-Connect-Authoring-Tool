@@ -54,6 +54,7 @@ class Subpopulation extends Component {
               <input
                 type="text"
                 className="subpopulation__name-input"
+                aria-label="Subpopulation Title"
                 value={ this.props.subpopulation.subpopulationName }
                 onClick={ event => event.stopPropagation() }
                 onChange={ event => { this.props.setSubpopulationName(event.target.value, this.props.subpopulation.uniqueId) } }
@@ -69,7 +70,7 @@ class Subpopulation extends Component {
             <button onClick={ this.state.isExpanded ? this.collapse : this.expand }>
               { this.state.isExpanded ? 'Done' : 'Edit' }
             </button>
-            <button onClick={ () => this.props.deleteSubpopulation(this.props.subpopulation.uniqueId) }><FontAwesome fixedWidth name='times'/></button>
+            <button aria-label="Remove subpopulation" onClick={ () => this.props.deleteSubpopulation(this.props.subpopulation.uniqueId) }><FontAwesome fixedWidth name='times'/></button>
           </div>
         </div>
         { this.state.isExpanded ?
