@@ -50,6 +50,7 @@ class ErrorStatement extends Component {
     }
   }
 
+  // Adds and if/then statement to base or child
   addStatement = (parent) => {
     const newStatement = this.baseStatement(parent)
     const newErrorStatement = _.cloneDeep(this.props.errorStatement);
@@ -62,6 +63,7 @@ class ErrorStatement extends Component {
     this.props.updateParentState({errorStatement: newErrorStatement});
   }
 
+  // Updates the if/then statements in base and child
   setStatement = (value, parent, index, type) => {
     const newErrorStatement = _.cloneDeep(this.props.errorStatement);
     const statements = newErrorStatement.statements;
@@ -73,6 +75,7 @@ class ErrorStatement extends Component {
     this.props.updateParentState({errorStatement: newErrorStatement});
   }
 
+  // Updates the else statements in base and child
   setElse = (value, parent) => {
     const newErrorStatement = _.cloneDeep(this.props.errorStatement);
     if (parent == null) {
@@ -83,6 +86,19 @@ class ErrorStatement extends Component {
     this.props.updateParentState({errorStatement: newErrorStatement});
   }
 
+  // Functionality on whether to use then or nested if
+  handleUseThenClause = (parent) => {
+    const newErrorStatement = _.cloneDeep(this.props.errorStatement);
+    const statement = newErrorStatement.statements[parent];
+    if (statement.child == null) {
+      const newChild = this.baseChild(parent);
+      statement.child = newChild;
+    }
+    statement.useThenClause = !statement.useThenClause;
+    this.props.updateParentState({errorStatement: newErrorStatement});
+  }
+
+  // Renders if part
   renderCondition = (statement, parent, index) => {
     return (<Select
       key={`condition-${parent != null ? parent : -1}-${index}`}
@@ -93,6 +109,7 @@ class ErrorStatement extends Component {
     />)
   }
 
+  // Renders then part of statement
   renderThen = (statement, parent, index) => {
     return (
       <div className="field recommendation__clause">
@@ -110,6 +127,7 @@ class ErrorStatement extends Component {
     )
   }
 
+  // Renders nested if
   renderChildren = (statement, parent) => {
     return (
       <div className="recommendation__block">
@@ -132,17 +150,7 @@ class ErrorStatement extends Component {
     )
   }
 
-  handleUseThenClause = (parent) => {
-    const newErrorStatement = _.cloneDeep(this.props.errorStatement);
-    const statement = newErrorStatement.statements[parent];
-    if (statement.child == null) {
-      const newChild = this.baseChild(parent);
-      statement.child = newChild;
-    }
-    statement.useThenClause = !statement.useThenClause;
-    this.props.updateParentState({errorStatement: newErrorStatement});
-  }
-
+  // Renders button to manage then or nested if
   renderNestingButton = (statement, index) => {
     return (
       <div className="field recommendation__action">
@@ -154,6 +162,7 @@ class ErrorStatement extends Component {
       </div>)
   }
 
+  // Renders button to add if else statements
   renderAddIfButton = (parent) => {
     return (
       <div className="field recommendation__action">
@@ -164,6 +173,7 @@ class ErrorStatement extends Component {
     )
   }
 
+  // Renders else text box
   renderElse = (parent) => {
     let elseText = '';
     if (parent == null) {
@@ -187,6 +197,7 @@ class ErrorStatement extends Component {
     )
   }
 
+  // Main render function
   render() {
     return (
       <section className="section is-clearfix recommendation">
