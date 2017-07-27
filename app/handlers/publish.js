@@ -57,7 +57,7 @@ function splitELM(artifact, elm, req, res) {
   //  .on('data', data => console.log('File [%s] got %d bytes', fieldname, data.length))
   //  .on('end', () => console.log('File [%s] Finished', fieldname));
   // })
-  .on('field', (fieldname, val) => {
+  bb.on('field', (fieldname, val) => {
     elmFiles.push({name: fieldname, content: val})
   })
   .on('finish', () => {
