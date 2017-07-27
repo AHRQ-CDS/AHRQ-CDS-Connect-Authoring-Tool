@@ -21,7 +21,13 @@ class ErrorStatement extends Component {
   options = () => {
     const dropdown = [{label: 'Recommendations is null', value:'"Recommendations" is null'}];
     const params = this.props.booleanParameters.map(p => {return({label: p.name, value: p.value})});
-    const subpops = this.props.subpopulations.map(s => {return({label: s.subpopulationName, value: s.subpopulationName})});
+    const subpops = this.props.subpopulations.map(s => {
+      if (s.special) {
+        return({label: s.subpopulationName, value: s.special_subpopulationName});
+      } else {
+        return({label: s.subpopulationName, value: s.subpopulationName});
+      }
+    });
     return dropdown.concat(params).concat(subpops);
   }
 
