@@ -75,6 +75,18 @@ class ErrorStatement extends Component {
     this.props.updateParentState({errorStatement: newErrorStatement});
   }
 
+  // Delete an if/then statement in base and child
+  deleteStatement = (parent, index) => {
+    const newErrorStatement = _.cloneDeep(this.props.errorStatement);
+    const statements = newErrorStatement.statements;
+    if (parent == null) {
+      statements.splice(index, 1);
+    } else {
+      statements[parent].child.statements.splice(index, 1);
+    }
+    this.props.updateParentState({errorStatement: newErrorStatement});
+  }
+
   // Updates the else statements in base and child
   setElse = (value, parent) => {
     const newErrorStatement = _.cloneDeep(this.props.errorStatement);
@@ -139,6 +151,7 @@ class ErrorStatement extends Component {
                 <label className="label">{ifLabel}</label>
                 <div className="control">
                   {this.renderCondition(cStatement, parent, i)}
+                  {this.renderDeleteButton(parent, i)}
                 </div>
               </div>
               {this.renderThen(cStatement, parent, i)}
@@ -173,8 +186,19 @@ class ErrorStatement extends Component {
     )
   }
 
+  // Renders delete if/then button
+  renderDeleteButton = (parent, index) => {
+    return (
+      <div className="field recommendation__action">
+        <button
+          className="button"
+          onClick={e => this.deleteStatement(parent, index)}> Delete If Clause </button>
+      </div>
+    )
+  }
+
   // Renders else text box
-  renderElse = (parent) => {
+  renderElse = (parent, index) => {
     let elseText = '';
     if (parent == null) {
       elseText = this.props.errorStatement.elseClause;
@@ -216,8 +240,8 @@ class ErrorStatement extends Component {
                   {this.renderCondition(statement, null, i)}
                 </div>
                 {this.renderNestingButton(statement, i)}
+                {this.renderDeleteButton(null, i)}
               </div>
-
               {statement.useThenClause
               ? this.renderThen(statement, null, i)
               : this.renderChildren(statement, i)}
