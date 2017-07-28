@@ -60,13 +60,13 @@ class BuilderPage extends Component {
         {
           special: true,
           subpopulationName: "Doesn't Meet Inclusion Criteria",
-          special_subpopulationName: 'not "Inclusions"',
+          special_subpopulationName: 'not "MeetsInclusionCriteria"',
           uniqueId: 'default-subpopulation-1'
         },
         {
           special: true,
           subpopulationName: "Meets Exclusion Criteria",
-          special_subpopulationName: '"Exclusions"',
+          special_subpopulationName: '"MeetsExclusionCriteria"',
           uniqueId: 'default-subpopulation-2'
         }
       ],
@@ -121,10 +121,10 @@ class BuilderPage extends Component {
 
         if (!artifact.expTreeInclude || !artifact.expTreeExclude) {
           if (!artifact.expTreeInclude) {
-            artifact.expTreeInclude = this.initializeExpTree('Includes', this.state.andTemplate);
+            artifact.expTreeInclude = this.initializeExpTree('MeetsInclusionCriteria', this.state.andTemplate);
           }
           if (!artifact.expTreeExclude) {
-            artifact.expTreeExclude = this.initializeExpTree('Excludes', this.state.andTemplate);
+            artifact.expTreeExclude = this.initializeExpTree('MeetsExclusionCriteria', this.state.andTemplate);
           }
         }
 
@@ -187,7 +187,8 @@ class BuilderPage extends Component {
       recommendations: this.state.recommendations,
       subpopulations: this.state.subpopulations,
       booleanParameters: this.state.booleanParameters,
-      uniqueIdCounter: this.state.uniqueIdCounter
+      uniqueIdCounter: this.state.uniqueIdCounter,
+      version: this.state.version
     };
   }
 
@@ -266,8 +267,8 @@ class BuilderPage extends Component {
 
   // Initializes both includes and excludes
   initializeExpTrees = (template) => {
-    const includeExpression = this.initializeExpTree('Inclusions', template);
-    const excludeExpression = this.initializeExpTree('Exclusions', template);
+    const includeExpression = this.initializeExpTree('MeetsInclusionCriteria', template);
+    const excludeExpression = this.initializeExpTree('MeetsExclusionCriteria', template);
     this.setState({ expTreeInclude: includeExpression });
     this.setState({ expTreeExclude: excludeExpression });
   }
