@@ -8,7 +8,8 @@ define "<%-element_name%>":
     if <%-childStatement.condition.value%> then
       {'<%-childStatement.thenClause%>'}
 <%})-%>
-    else <%if (statement.child.elseClause === null) {%>null<%} else {%>{'<%-String(statement.child.elseClause)%>'}<%}%>
+    else
+      <%if (statement.child.elseClause === null) {%>null<%} else {%>{'<%-String(statement.child.elseClause)%>'}<%}%>
 <%}-%>
 <%})-%>
   else <%if (errorStatement.elseClause === null) {%>null<%} else {%>{'<%-String(errorStatement.elseClause)%>'}<%}%>

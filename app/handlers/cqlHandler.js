@@ -182,9 +182,11 @@ class CqlArtifact {
             });
             // For checking if a ConceptValue is in a valueset, incluce the valueset that will be used
             if('checkInclusionInVS' in observationValueSets) {
-              if(!_.isEmpty(element.modifiers) && _.last(element.modifiers).id === "CheckInclusionInVS") {
-                _.last(element.modifiers).values = observationValueSets.checkInclusionInVS.name;
-              }
+              element.modifiers.forEach((modifier, index) => {
+                if (modifier.id === 'CheckInclusionInVS') {
+                  element.modifiers[index].values = observationValueSets.checkInclusionInVS.name;
+                }
+              })
               this.resourceMap.set(observationValueSets.checkInclusionInVS.name, observationValueSets.checkInclusionInVS);
             }
             context.values = [ observationValueSets.name ];
@@ -228,9 +230,11 @@ class CqlArtifact {
             });
             // For checking if a ConceptValue is in a valueset, incluce the valueset that will be used
             if('checkInclusionInVS' in conditionValueSets) {
-              if(!_.isEmpty(element.modifiers) && _.last(element.modifiers).id === "CheckInclusionInVS") {
-                _.last(element.modifiers).values = conditionValueSets.checkInclusionInVS.name;
-              }
+              element.modifiers.forEach((modifier, index) => {
+                if (modifier.id === 'CheckInclusionInVS') {
+                element.modifiers[index].values = conditionValueSets.checkInclusionInVS.name;
+                }
+              })
               this.resourceMap.set(conditionValueSets.checkInclusionInVS.name, conditionValueSets.checkInclusionInVS);
             }
             context.values = [`[Condition: "${conditionValueSets.conditions[0].name}"]`, `C3F.ConditionsByConcept("${conditionValueSets.concepts[0].name}")`];
@@ -458,7 +462,7 @@ class CqlArtifact {
           this.errorStatement.statements[index].child.statements[childIndex].condition.label = this.sanitizeCQLString(childStatement.condition.label);
           this.errorStatement.statements[index].child.statements[childIndex].thenClause = this.sanitizeCQLString(childStatement.thenClause);
         })
-      this.errorStatement.statements[index].child.elseClause = _.isEmpty(this.errorStatement.elseClause) ? null : this.sanitizeCQLString(statement.child.elseClause);
+      this.errorStatement.statements[index].child.elseClause = _.isEmpty(statement.child.elseClause) ? null : this.sanitizeCQLString(statement.child.elseClause);
       }
     });
     this.errorStatement.elseClause = _.isEmpty(this.errorStatement.elseClause) ? null : this.sanitizeCQLString(this.errorStatement.elseClause);

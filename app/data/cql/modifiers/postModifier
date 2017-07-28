@@ -1,2 +1,2 @@
 <%# For any modifiers that apply after the text -%>
-<%-value_name%> <%-values.value-%>
+(<%-value_name%>) <%-values.value-%>
