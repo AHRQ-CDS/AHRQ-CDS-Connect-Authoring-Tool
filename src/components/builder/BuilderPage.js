@@ -9,6 +9,7 @@ import ConjunctionGroup from './ConjunctionGroup';
 import Recommendations from './Recommendations';
 import Subpopulations from './Subpopulations';
 import Parameters from './Parameters';
+import ErrorStatement from './ErrorStatement';
 import Config from '../../../config';
 
 // Suppress is a flag that is specific to an element. It should not be inherited by children
@@ -71,6 +72,10 @@ class BuilderPage extends Component {
         }
       ],
       booleanParameters: [],
+      errorStatement: {
+        statements: [],
+        else: 'null'
+      },
       name: 'Untitled Artifact',
       id: null,
       version: null,
@@ -133,6 +138,7 @@ class BuilderPage extends Component {
         this.setState({ recommendations: artifact.recommendations });
         this.setState({ subpopulations: artifact.subpopulations });
         this.setState({ booleanParameters: artifact.booleanParameters });
+        this.setState({ errorStatement: artifact.errorStatement });
       });
   }
 
@@ -187,6 +193,7 @@ class BuilderPage extends Component {
       recommendations: this.state.recommendations,
       subpopulations: this.state.subpopulations,
       booleanParameters: this.state.booleanParameters,
+      errorStatement: this.state.errorStatement,
       uniqueIdCounter: this.state.uniqueIdCounter,
       version: this.state.version
     };
@@ -380,7 +387,7 @@ class BuilderPage extends Component {
     }
   }
 
-  updateRecommendations = (newState) => {
+  updateState = (newState) => {
     this.setState(newState);
   }
 
@@ -530,6 +537,7 @@ class BuilderPage extends Component {
               <Tab>Subpopulations</Tab>
               <Tab>Recommendations</Tab>
               <Tab>Parameters</Tab>
+              <Tab>Handle Errors</Tab>
             </TabList>
             <div className="tab-panel-container">
               <TabPanel>
@@ -559,7 +567,7 @@ class BuilderPage extends Component {
               </TabPanel>
               <TabPanel>
                 <Recommendations
-                  updateRecommendations={ this.updateRecommendations }
+                  updateRecommendations={ this.updateState }
                   recommendations={ this.state.recommendations }
                   subpopulations={ this.state.subpopulations }
                   setActiveTab={ this.setActiveTab }
@@ -569,6 +577,14 @@ class BuilderPage extends Component {
                 <Parameters
                   booleanParameters={ this.state.booleanParameters }
                   updateParameters={this.updateParameters}
+                />
+              </TabPanel>
+              <TabPanel>
+                <ErrorStatement
+                  booleanParameters={ this.state.booleanParameters }
+                  subpopulations={ this.state.subpopulations }
+                  errorStatement={ this.state.errorStatement }
+                  updateParentState={ this.updateState }
                 />
               </TabPanel>
             </div>

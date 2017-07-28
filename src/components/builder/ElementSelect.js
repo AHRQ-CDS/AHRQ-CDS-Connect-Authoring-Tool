@@ -96,6 +96,24 @@ class ElementSelect extends Component {
     this.setState({ selectedCategory: category });
   }
 
+  getEntries = () => {
+    if (this.props.booleanParameters) {
+      const bp = this.props.booleanParameters.map(booleanParameter => {
+        return ({
+          category: 'Parameter',
+          name: booleanParameter.name,
+          parameters: [{value: booleanParameter.name}],
+          template: 'EmptyParameter',
+          cannotHaveModifiers: true,
+          returnType: 'boolean'
+        })
+      })
+      return _.concat(this.state.selectedCategory.entries, bp);
+    } else {
+      return this.state.selectedCategory.entries;
+    }
+  }
+
   render() {
     const placeholderText = 'Add element';
 
@@ -108,7 +126,7 @@ class ElementSelect extends Component {
           placeholder={placeholderText}
           aria-label={placeholderText}
           clearable={false}
-          options={this.state.selectedCategory.entries}
+          options={this.getEntries()}
           labelKey='name'
           matchProp='label'
           optionRenderer={optionRenderer}

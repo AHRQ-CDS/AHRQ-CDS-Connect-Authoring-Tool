@@ -17,14 +17,14 @@ class Parameters extends Component {
     this.setState({booleanParameters: booleanParameters})
     this.props.updateParameters(booleanParameters)
   }
-
+  
   deleteBooleanParam = (index) => {
     let booleanParameters = _.cloneDeep(this.props.booleanParameters);
     booleanParameters.splice(index, 1);
     this.props.updateParameters(booleanParameters);
     this.setState({booleanParameters: booleanParameters})
   }
-
+  
   updateInstanceOfParameter = (booleanParameter , index) => {
     const booleanParameters = _.clone(this.state.booleanParameters);
     booleanParameters[index] = booleanParameter ;

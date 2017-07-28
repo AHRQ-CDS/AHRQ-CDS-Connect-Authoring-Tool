@@ -92,6 +92,7 @@ class CqlArtifact {
     this.exclusions = artifact.expTreeExclude;
     this.subpopulations = artifact.subpopulations;
     this.recommendations = artifact.recommendations;
+    this.errorStatement = artifact.errorStatement;
     this.initialize()
   }
 
@@ -347,6 +348,11 @@ class CqlArtifact {
     this.contexts.push(context)
   }
 
+  // Replaces all instances of `'` in the string with the escaped `\'` - Might be expanded in the future
+  sanitizeCQLString(cqlString) {
+    return _.replace(cqlString, /\'/g, '\\\'');
+  }
+
   /* Modifiers Explanation:
     Within `form_templates`, a template must be specified (unless extending an element that specifies a template).
     If no template is specified, it will look for a template named the same as the `id`.
@@ -442,9 +448,26 @@ class CqlArtifact {
     return ejs.render(templateMap['BaseTemplate'], {element_name: 'Rationale', cqlString: rationaleText});
   }
 
+  errors() {
+    this.errorStatement.statements.forEach((statement, index) => {
+      this.errorStatement.statements[index].condition.label = this.sanitizeCQLString(statement.condition.label);
+      if (statement.useThenClause) {
+        this.errorStatement.statements[index].thenClause = this.sanitizeCQLString(statement.thenClause);
+      } else {
+        statement.child.statements.forEach((childStatement, childIndex) => {
+          this.errorStatement.statements[index].child.statements[childIndex].condition.label = this.sanitizeCQLString(childStatement.condition.label);
+          this.errorStatement.statements[index].child.statements[childIndex].thenClause = this.sanitizeCQLString(childStatement.thenClause);
+        })
+      this.errorStatement.statements[index].child.elseClause = _.isEmpty(this.errorStatement.elseClause) ? null : this.sanitizeCQLString(statement.child.elseClause);
+      }
+    });
+    this.errorStatement.elseClause = _.isEmpty(this.errorStatement.elseClause) ? null : this.sanitizeCQLString(this.errorStatement.elseClause);
+    return ejs.render(templateMap['ErrorStatements'], {element_name: 'Error', errorStatement: this.errorStatement});
+  }
+
   // Produces the cql in string format
   toString() {
-    return this.header()+this.body()+'\n'+this.population()+'\n'+this.recommendation()+'\n'+this.rationale();
+    return this.header()+this.body()+'\n'+this.population()+'\n'+this.recommendation()+'\n'+this.rationale()+'\n'+this.errors();
   }
 
   // Return a cql file as a json object

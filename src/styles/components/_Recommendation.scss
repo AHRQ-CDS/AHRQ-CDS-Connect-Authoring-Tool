@@ -9,6 +9,38 @@
     font-weight: $font-weight-regular;
   }
 
+  &__action {
+    margin-top: 1em;
+  }
+
+  &__block {
+    padding: 0.5em 0 0.5em 2.5em;
+
+    &-if,
+    &-then,
+    &-else {
+      margin: 1em 0;
+    }
+
+    &-then {
+      padding-left: 2em;
+    }
+  }
+
+  .form__group {
+    display: flex;
+    align-items: center;
+    margin: 0;
+
+    .Select {
+      flex: 1;
+    }
+    .recommendation__action {
+      margin-left: .5em;
+      margin-top: 0;
+    }
+  }
+
   &__subpopulations {
     margin-bottom: 1em;
   }
