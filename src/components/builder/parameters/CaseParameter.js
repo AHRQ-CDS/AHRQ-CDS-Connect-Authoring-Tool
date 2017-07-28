@@ -79,6 +79,7 @@ class CaseParameter extends Component {
         autofocus
         options={this.props.values.filter(v => this.filterOptions(v, option))}
         clearable={true}
+        inputProps={{ 'aria-label': placeholder, 'title': placeholder }}
         placeholder={placeholder}
         name={this.props.param.id}
         value={val[option]}
@@ -105,6 +106,7 @@ class CaseParameter extends Component {
                 autofocus
                 options={this.props.values.filter(v => this.filterOptions(v, filter))}
                 clearable={true}
+                inputProps={{ 'aria-label': name, 'title': name }}
                 placeholder={'Null'}
                 name={this.props.param.id}
                 value={this.props.param.value[option]}

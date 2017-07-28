@@ -7,7 +7,7 @@ class CheckExistence extends Component {
         <span className="field">
          <span className="control">
            <span className="select">
-              <select name="Check Existence?" aria-label="Check Existence" value={this.props.value}
+              <select name="Check Existence?" aria-label="Check Existence" title="Check Existence" value={this.props.value}
                 onChange={(event) => {
                   this.props.updateAppliedModifier(this.props.index, { value: event.target.value });
                 }}>

@@ -20,6 +20,7 @@ class ValueComparisonObservation extends Component {
               <span className="select">
                 <select
                   id={minOperatorId}
+                  title="Min Operator"
                   aria-label="Min Operator"
                   name="Min Operator"
                   value={this.props.minOperator}
@@ -53,6 +54,7 @@ class ValueComparisonObservation extends Component {
               <span className="select">
                 <select id={maxOperatorId}
                   name="Max Operator"
+                  title="Max Operator"
                   aria-label="Max Operator"
                   value={this.props.maxOperator}
                   defaultValue=""

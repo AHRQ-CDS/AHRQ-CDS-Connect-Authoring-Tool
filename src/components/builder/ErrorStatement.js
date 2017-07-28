@@ -114,6 +114,7 @@ class ErrorStatement extends Component {
   renderCondition = (statement, parent, index) => {
     return (<Select
       key={`condition-${parent != null ? parent : -1}-${index}`}
+      inputProps={{ id: `condition-${parent != null ? parent : -1}-${i}` }}
       index={index}
       value={statement.condition}
       options={this.options()}
@@ -130,6 +131,7 @@ class ErrorStatement extends Component {
           <textarea
             className="textarea"
             name="text"
+            title="ThenClause"
             aria-label="ThenClause"
             placeholder='Describe your error'
             value={statement.thenClause}
@@ -148,7 +150,7 @@ class ErrorStatement extends Component {
           return (
             <div key={i}>
               <div className="field recommendation__block-if">
-                <label className="label">{ifLabel}</label>
+                <label className="label" htmlFor={`condition-${parent != null ? parent : -1}-${i}`}>{ifLabel}</label>
                 <div className="form__group control">
                   {this.renderCondition(cStatement, parent, i)}
                   {statement.child.statements.length > 1 && this.renderDeleteButton(parent, i)}
@@ -212,6 +214,7 @@ class ErrorStatement extends Component {
           <textarea
             className="textarea"
             name="text"
+            title="Else"
             aria-label="Else"
             placeholder='If none of the conditions hold...'
             value={elseText}
@@ -235,7 +238,7 @@ class ErrorStatement extends Component {
           return (
             <div key={i}>
               <div className="field recommendation__block-if">
-                <label className="label">{ifLabel}</label>
+                <label className="label" htmlFor={`condition-${i}`}>{ifLabel}</label>
                 <div className="form__group control">
                   {this.renderCondition(statement, null, i)}
                   {this.props.errorStatement.statements.length > 1 && this.renderDeleteButton(null, i)}
