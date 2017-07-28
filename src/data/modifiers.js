@@ -3,6 +3,7 @@
 // while the cqlTemplate matches the cqlTemplate in app/data/cql/modifiers
 
 let elementLists = ['list_of_observations', 'list_of_conditions', 'list_of_medications', 'list_of_procedures', 'allergy_intolerance', 'list_of_encounters'];
+let everyElement = elementLists.concat(['boolean', 'system_quantity']);
 module.exports = [
   // observations
   {
@@ -148,7 +149,7 @@ module.exports = [
   {
     id: 'CheckExistence',
     name: 'Is (Not) Null?',
-    inputTypes: elementLists,
+    inputTypes: everyElement,
     returnType: 'boolean',
     values: {value: undefined},
     cqlTemplate: 'postModifier',

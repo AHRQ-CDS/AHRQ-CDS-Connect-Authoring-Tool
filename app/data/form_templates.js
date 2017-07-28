@@ -82,6 +82,7 @@ module.exports = [
         id: 'LDLTest',
         name: 'LDL Test',
         extends: 'GenericObservation',
+        surpressedModifiers: ['ConceptValue'],
         parameters: [
           { id: 'element_name', value: "LDL_Test"},
           { id: 'observation', static: true, value: "ldl_test"}
