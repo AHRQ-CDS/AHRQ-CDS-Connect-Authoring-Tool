@@ -385,7 +385,7 @@ class TemplateInstance extends Component {
           </span>
           <div className="element__buttonbar">
             { this.props.renderIndentButtons(this.props.templateInstance) }
-            <button
+            {/* <button
               id={`presets-${this.props.templateInstance.uniqueId}`}
               aria-controls={`presets-list-${this.props.templateInstance.uniqueId}`}
               onClick={this.showPresets.bind(this, this.props.templateInstance.id)}
@@ -398,7 +398,7 @@ class TemplateInstance extends Component {
               className="element__savebutton"
               aria-label={`save ${this.props.templateInstance.name}`}>
               <FontAwesome fixedWidth name='save'/>
-            </button>
+            </button> */}
             <button
               onClick={this.showHideElementBody.bind(this)}
               className="element__hidebutton"
