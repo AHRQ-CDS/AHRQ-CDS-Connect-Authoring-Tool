@@ -95,7 +95,7 @@ class CaseParameter extends Component {
       <table width="100%">
         <thead>
           <tr>
-            <th>{name}</th>
+            <th scope="col">{name}</th>
           </tr>
         </thead>
         <tbody>
@@ -127,8 +127,8 @@ class CaseParameter extends Component {
         <table width="100%">
           <thead>
             <tr>
-              <th>Case</th>
-              <th>Result</th>
+              <th scope="col">Case</th>
+              <th scope="col">Result</th>
             </tr>
           </thead>
           <tbody>
