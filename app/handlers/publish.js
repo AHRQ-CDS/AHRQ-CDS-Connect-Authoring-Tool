@@ -16,10 +16,22 @@ module.exports = {
 
 // This is a wrapper because I wanted to split the requests into discrete callbacks
 function publish(req, res) {
-  convertToElm(req, res);
+  getArtifactDetails(req, res);
 }
 
-function convertToElm(req, res) {
+function getArtifactDetails(req, res) {
+  request.get(`${Config.repo.baseUrl}/rest/session/token`, {auth:req.auth}, function(err, resp, body) {
+    if(err) { res.sendStatus(500); return;}
+    let headers = {'Accept':'application/vnd.api+json',
+                        'Content-type':'application/vnd.api+json'};
+    request.get(`${Config.repo.baseUrl}/node/${req.artifactNID}?_format=hal_json`, {auth: req.auth, headers: headers}, function(err, resp, body){
+      let paragraphUuid = body.data._embedded['http://localhost/rest/relation/node/artifact/field_artifact_representation'][0].uuid[0].value;
+      convertToElm(req, res, {paragraph: paragraphUuid});
+    })
+  })
+}
+
+function convertToElm(req, res, context) {
   let artifact = cqlHandler.buildCQL(req.body.data);
   let repoNid = req.body.nid;
 
@@ -32,7 +44,7 @@ function convertToElm(req, res) {
     })
 
     let cqlReq = request.post(Config.repo.CQLToElmURL, function(err, resp, body){
-      splitELM(artifact.toJson(), {resp, body}, req, res);
+      splitELM(artifact.toJson(), {resp, body}, req, res, context);
     })
     let artifactJson = artifact.toJson();
     let form = cqlReq.form();
@@ -46,7 +58,7 @@ function convertToElm(req, res) {
   })
 }
 
-function splitELM(artifact, elm, req, res) {
+function splitELM(artifact, elm, req, res, context) {
   // Because ELM comes back as a multipart response we use busboy to split it up
   let contentType = elm.resp.headers['Content-Type'] || elm.resp.headers['content-type'];
   let elmFiles = [];
@@ -56,7 +68,7 @@ function splitELM(artifact, elm, req, res) {
     elmFiles.push({name: fieldname, content: val})
   })
   .on('finish', () => {
-   pushToRepo(artifact, elmFiles, req, res);
+   pushToRepo(artifact, elmFiles, req, res, context);
   })
   .on('error', err => {
    console.log('failed', err);
@@ -65,7 +77,7 @@ function splitELM(artifact, elm, req, res) {
   bb.end(elm.body);
 }
 
-function pushToRepo(artifact, elm, req, res) {
+function pushToRepo(artifact, elm, req, res, context) {
   let archive = archiver('zip', {zlib : { level : 9 }});
   let fd = tmp.fileSync({postfix: '.zip'});
   let output = fs.createWriteStream(fd.name)
@@ -89,20 +101,39 @@ function pushToRepo(artifact, elm, req, res) {
     let headerData = {'Accept':'application/vnd.api+json',
                           'Content-type':'application/vnd.api+json'};
     let date = new Date();
-    var payload = {
+    let logicPath = `cds/artifact/logic/${date.getUTCFullYear() + 1}-${date.getUTCMonth() + 1}/logic-version-${artifact.version}.zip`;
+    let payload = {
         "data": {
             "type": "file--zip",
             "attributes": {
             "data": base64,
-            "uri": `public://cds/artifact/logic/${date.getUTCFullYear() + 1}-${date.getUTCMonth() + 1}/logic-version-${artifact.version}.zip`
-            }
+            "uri": `public://${logicPath}`
+          },
+          auth: req.auth
         }
     };
     request.post(`${Config.repo.baseUrl}/jsonapi/file/zip`, payload, function(err,response, body){
       if(err) {
-        res.send(500);
+        res.sendStatus(500);
+        return;
       }
-      res.send(200);
+      let update = {
+          "data": {
+              "type":"node--artifact",
+              "id": `${context.paragraphUuid}`,
+              "attributes": {
+                  "field_artifact_representation": {
+                      "field_logic_files": logicPath
+                  }
+              }
+          }
+      };
+      let headers = {'Accept':'application/vnd.api+json',
+                          'Content-type':'application/vnd.api+json'};
+      request.patch(`${Config.repo.baseUrl}/jsonapi/node/artifact${context.paragraphUuid}`, update, {auth: req.auth, headers: headers}, function(err, resp, body){
+        if(err) { res.sendStatus(500); return}
+        res.sendStatus(200)
+      })
     })
 
 
