@@ -31,13 +31,13 @@ class ArtifactForm extends Component {
         {
           special: true,
           subpopulationName: "Doesn't Meet Inclusion Criteria",
-          special_subpopulationName: 'not "Inclusions"',
+          special_subpopulationName: 'not "MeetsInclusionCriteria"',
           uniqueId: 'default-subpopulation-1'
         },
         {
           special: true,
           subpopulationName: "Meets Exclusion Criteria",
-          special_subpopulationName: '"Exclusions"',
+          special_subpopulationName: '"MeetsExclusionCriteria"',
           uniqueId: 'default-subpopulation-2'
         }
       ],
