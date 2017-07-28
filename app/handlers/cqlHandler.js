@@ -138,7 +138,8 @@ class CqlArtifact {
 
   parseConjunction(element) {
     const conjunction = {template : element.id, components : []};
-    conjunction.assumeInPopulation = _.has(element, 'subpopulationName');
+    // Assume it's in the population if they're referenced from the `Recommendations` tab
+    conjunction.assumeInPopulation = this.recommendations.some(recommendation => (_.head(recommendation.subpopulations).subpopulationName) === element.subpopulationName);
     const name = element.parameters[0].value;
     conjunction.element_name = (name || element.subpopulationName || element.uniqueId);
     element.childInstances.forEach((child) => {
@@ -466,7 +467,7 @@ class CqlArtifact {
       }
     });
     this.errorStatement.elseClause = _.isEmpty(this.errorStatement.elseClause) ? null : this.sanitizeCQLString(this.errorStatement.elseClause);
-    return ejs.render(templateMap['ErrorStatements'], {element_name: 'Error', errorStatement: this.errorStatement});
+    return ejs.render(templateMap['ErrorStatements'], {element_name: 'Errors', errorStatement: this.errorStatement});
   }
 
   // Produces the cql in string format
