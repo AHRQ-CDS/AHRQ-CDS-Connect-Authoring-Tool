@@ -105,7 +105,7 @@ module.exports = [
         template: 'ObservationByConcept',
         surpressedModifiers: ['ConceptValue', 'ConvertToMgPerdL', 'WithUnit'],
         parameters: [
-          { id: 'element_name', value: "MostRecentASCVDRiskAssessmentResult"},
+          { id: 'element_name', value: "ASCVDRiskAssessment"},
           { id: 'observation', static: true, value: "ascvd_risk_assessment"},
         ]
       },
