@@ -349,14 +349,6 @@ class TemplateInstance extends Component {
     preset.uniqueId = uniqueId;
     this.props.setPreset(this.props.treeName, preset, this.getPath());
     this.setState({ showPresets: !this.state.showPresets })
-
-    // this.props.templateInstance.parameters = this.state.presets[stateIndex].parameters;
-    // for (let i = 0; i < this.state.presets[stateIndex].parameters.length; i++) {
-    //   const param = this.state.presets[stateIndex].parameters[i];
-    //   const newState = {};
-    //   newState[param.id] = param.value;
-    //   this.updateInstance(newState);
-    // }
   }
 
   showHideElementBody() {
