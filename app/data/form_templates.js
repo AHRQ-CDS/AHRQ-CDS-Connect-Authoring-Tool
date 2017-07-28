@@ -339,6 +339,16 @@ module.exports = [
           { id: 'medication', static: true, value: 'on_statin_therapy' }
         ]
       },
+      {
+        id: 'OnStatinTherapy_ecqm',
+        name: 'On Statin Therapy ecqm',
+        extends: 'GenericMedication',
+        template: 'GenericStatement', // See GenericStatement template for explanation
+        parameters: [
+          { id: 'element_name', value: 'OnStatinTherapy' },
+          { id: 'medication', static: true, value: 'on_statin_therapy_ecqm' }
+        ]
+      },
     ]
   },
   {
@@ -446,7 +456,7 @@ module.exports = [
       {
         id: 'GenericAllergyIntolerance',
         name: 'Allergy Inteolerance',
-        returnType: 'lis_of_allergy_intolerance',
+        returnType: 'list_of_allergy_intolerances',
         suppress: true,
         extends: 'Base',
         parameters: [
