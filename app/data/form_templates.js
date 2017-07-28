@@ -134,8 +134,8 @@ module.exports = [
         ]
       },
       {
-        id: 'Breastfeeding_ecqm',
-        name: 'Breastfeeding ecqm',
+        id: 'Breastfeeding_CMS347v1',
+        name: 'Breastfeeding (CMS347v1)',
         template: 'Breastfeeding_withLookBack',
         returnType: 'boolean',
         extends: 'Base',
@@ -224,12 +224,12 @@ module.exports = [
         ],
       },
       {
-        id: 'ASCVD_eqcm',
-        name: 'ASCVD Diagnosis',
+        id: 'ASCVD_CMS347v1',
+        name: 'ASCVD (CMS347v1)',
         extends: 'GenericCondition',
         parameters: [
           { id: 'element_name', value: "ASCVDDiagnosis"},
-          { id: 'condition', static: true, value: "ascvd_diagnosis"}
+          { id: 'condition', static: true, value: "ascvd_CMS347v1"}
         ],
       },
       {
@@ -246,8 +246,8 @@ module.exports = [
         ]
       },
       {
-        id: 'Pregnancydx_ecqm',
-        name: 'Pregnancy dx ecqm',
+        id: 'Pregnancydx_CMS347v1',
+        name: 'Pregnancy dx (CMS347v1)',
         template: 'Pregnancydx_withLookBack',
         returnType: 'boolean',
         extends: 'Base',
@@ -255,7 +255,7 @@ module.exports = [
         surpressedModifiers: ['BooleanComparison'],
         parameters: [
           { id: 'element_name', value: 'IsPregnant' },
-          { id: 'pregnancy', type: 'pregnancy', static: true, value: 'pregnancy_dx_ecqm' }
+          { id: 'pregnancy', type: 'pregnancy', static: true, value: 'pregnancy_dx_CMS347v1' }
         ]
       },
       {
@@ -340,13 +340,13 @@ module.exports = [
         ]
       },
       {
-        id: 'OnStatinTherapy_ecqm',
-        name: 'On Statin Therapy ecqm',
+        id: 'OnStatinTherapy_CMS347v1',
+        name: 'On Statin Therapy (CMS347v1)',
         extends: 'GenericMedication',
         template: 'GenericStatement', // See GenericStatement template for explanation
         parameters: [
           { id: 'element_name', value: 'OnStatinTherapy' },
-          { id: 'medication', static: true, value: 'on_statin_therapy_ecqm' }
+          { id: 'medication', static: true, value: 'on_statin_therapy_CMS347v1' }
         ]
       },
     ]
@@ -376,12 +376,12 @@ module.exports = [
         ],
       },
       {
-        id: 'ASCVD_Procedures_ecqm',
-        name: 'ASCVD Procedures ecqm',
+        id: 'ASCVD_Procedures_CMS347v1',
+        name: 'ASCVD Procedures (CMS347v1)',
         extends: 'GenericProcedure',
         parameters : [
           { id: 'element_name', value: 'ASCVDProcedures' },
-          { id: 'procedure', static: true, value: "ascvd_procedures_ecqm" }
+          { id: 'procedure', static: true, value: "ascvd_procedures_CMS347v1" }
         ]
       },
       {

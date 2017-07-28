@@ -202,6 +202,7 @@ class ConjunctionGroup extends Component {
                   getAllInstances={ this.props.getAllInstances }
                   showPresets={ this.props.showPresets }
                   categories={ this.props.categories }
+                  subPopulationIndex={ this.props.subPopulationIndex }
                 />
                 { this.renderConjunctionSelect(i) }
               </div>

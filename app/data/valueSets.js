@@ -174,8 +174,8 @@ module.exports = {
         }
       ]
     },
-    ascvd_diagnosis : { //ecqm
-      id: "ascvd_diagnosis",
+    ascvd_CMS347v1 : {
+      id: "ascvd_CMS347v1",
       conditions: [
         {
        // https://ushik.ahrq.gov/ViewItemDetails?&system=mu&itemKey=189321000
@@ -236,9 +236,9 @@ module.exports = {
        }
      ],
     },
-    pregnancy_dx_ecqm : {
+    pregnancy_dx_CMS347v1 : {
      // https://ushik.ahrq.gov/ViewItemDetails?&system=mu&itemKey=189087000
-     id: "pregnancy_dx_ecqm",
+     id: "pregnancy_dx_CMS347v1",
      conditions: [
        {
          name: "Pregnancy dx",
@@ -462,8 +462,8 @@ module.exports = {
         }
       ]
     },
-    on_statin_therapy_ecqm : {
-      id: "on_statin_therapy_ecqm",
+    on_statin_therapy_CMS347v1 : {
+      id: "on_statin_therapy_CMS347v1",
       medications: [
         {
           // TODO: Reused from statin CQM artifact; needs review against other value sets in VSAC.
@@ -539,8 +539,8 @@ module.exports = {
         }
       ],
     },
-    ascvd_procedures_ecqm: {
-      id: 'ascvd_procedures_ecqm',
+    ascvd_procedures_CMS347v1: {
+      id: 'ascvd_procedures_CMS347v1',
       procedures: [
         {
           name: 'CABG Surgeries',
