@@ -98,10 +98,13 @@ function pushToRepo(artifact, elm, req, res) {
             }
         }
     };
-    request.post(`${Config.repo.baseUrl}/jsonapi/file/zip`, payload, function(err,res, body){
-      console.log(res);
-    });
+    request.post(`${Config.repo.baseUrl}/jsonapi/file/zip`, payload, function(err,response, body){
+      if(err) {
+        res.send(500);
+      }
+      res.send(200);
+    })
 
-    res.send(200)
+
   });
 }

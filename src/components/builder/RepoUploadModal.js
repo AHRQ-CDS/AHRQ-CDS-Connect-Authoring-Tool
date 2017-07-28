@@ -9,6 +9,7 @@ ReactModal.setAppElement('#root');
 const AUTHENTICATE = 'AUTHENTICATE';
 const LIST = 'LIST';
 const STATUS = 'STATUS';
+const ERROR = 'ERROR';
 
 class RepoUploadModal extends Component {
   constructor(props) {
@@ -90,7 +91,7 @@ class RepoUploadModal extends Component {
       this.setState({authToken: res.data});
       this.fetchArtifacts();
     }).catch((res) =>{
-      this.setState({errors: [res.message]})
+      this.setState({page: ERROR})
     });
   }
 
@@ -99,14 +100,14 @@ class RepoUploadModal extends Component {
     get(`${Config.repo.baseUrl}/rest/views/artifacts`, {headers}).then((res) => {
       this.setState({artifacts: res.data, page: LIST})
     }).catch((res) =>{
-      this.setState({errors: [res.message]})
+      this.setState({page: ERROR})
     });
   }
 
   _uploadArtifact(nid) {
     const artifact = this.props.prepareArtifact();
     let auth = {username: this.state.userName, password: this.state.password};
-    post(`${Config.api.baseUrl}/cql/publish`, {data: artifact, nid: nid, auth})
+    post(`${Config.api.baseUrl}/cql/publish`, {data: artifact, nid: nid, auth}).catch(() => this.setState({page: ERROR}))
     this.setState({page: STATUS, artifactNID: nid});
   }
 
@@ -176,6 +177,14 @@ class RepoUploadModal extends Component {
     );
   }
 
+  renderErrorState() {
+    return (
+      <div>
+        The Artifact Repository could not be reached.
+      </div>
+    )
+  }
+
   renderPage() {
     switch (this.state.page) {
       case AUTHENTICATE:
@@ -184,6 +193,8 @@ class RepoUploadModal extends Component {
         return this.renderRepositoryArtifacts();
       case STATUS:
         return this.renderUploadStatus();
+      case ERROR:
+        return this.renderErrorState();
       default:
         return null
 
