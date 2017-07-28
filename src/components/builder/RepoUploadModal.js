@@ -15,37 +15,12 @@ class RepoUploadModal extends Component {
   constructor(props) {
     super(props);
 
-    // TODO REMOVE ME Temporary to bypass
-    let mockResponse = [
-        {
-            "title": "<a href=\"/cds/artifact/aspirin-therapy-primary-prevention-cvd-and-colorectal-cancer\" hreflang=\"en\">Aspirin Therapy for Primary Prevention of CVD and Colorectal Cancer</a>",
-            "nid": "26",
-            "uuid": "09a63d55-33ad-463e-a7c8-9390a2cd77ff",
-            "field_version": "0.1.0"
-        },
-        {
-            "title": "<a href=\"/cds/artifact/statin-therapy-prevention-and-treatment-cardiovascular-disease-cvd-ecqm\" hreflang=\"en\">Statin Therapy for the Prevention and Treatment of Cardiovascular Disease (CVD) eCQM</a>",
-            "nid": "21",
-            "uuid": "262d9bcd-c79a-4894-a59c-b0218ed1820a",
-            "field_version": "0.1.0"
-        },
-        {
-            "title": "<a href=\"/cds/artifact/statin-use-primary-prevention-cvd-adults\" hreflang=\"en\">Statin Use for the Primary Prevention of CVD in Adults</a>",
-            "nid": "18",
-            "uuid": "0f9f07fe-c5cf-4282-b567-38747b25b816",
-            "field_version": "0.1.0"
-        }
-    ];
-
     this.state = {
       userName: '',
       password: '',
-      // TODO remove me
-      artifacts: mockResponse,
+      artifacts: [],
       errors: [],
-      // TODO Remove me
-      authToken: '1234',
-      // TODO Remove me
+      authToken: null,
       showModal: props.showModal,
       page: AUTHENTICATE,
       artifactNID: null,
@@ -83,9 +58,6 @@ class RepoUploadModal extends Component {
   }
 
   _authenticate() {
-    this.setState({page: LIST});
-    // TODO this is short circuiting the entire function
-    return;
     let auth = {username: this.state.userName, password: this.state.password};
     get(`${Config.repo.baseUrl}/rest/session/token`, {auth}).then((res) => {
       this.setState({authToken: res.data});
