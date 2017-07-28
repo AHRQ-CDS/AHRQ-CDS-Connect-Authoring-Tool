@@ -1,6 +1,6 @@
 import React from 'react';
 import _ from 'lodash';
-import { mount, shallow } from 'enzyme';
+import { mount, shallow, ReactWrapper } from 'enzyme';
 import createRouterContext from 'react-router-test-context';
 
 /**
@@ -54,5 +54,6 @@ export {
   shallowRenderComponent,
   deepState,
   decoratedDeepState,
-  createTemplateInstance
+  createTemplateInstance,
+  ReactWrapper
 };

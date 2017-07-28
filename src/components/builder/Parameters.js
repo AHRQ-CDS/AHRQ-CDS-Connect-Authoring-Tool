@@ -35,9 +35,6 @@ class Parameters extends Component {
   render() {
     return (
       <div>
-        <button className="button new-parameter" onClick={ this.addParameter }>
-          New parameter
-        </button>
           { this.state.booleanParameters.map((booleanParameter, i) => {
             return (
               <Parameter
@@ -51,6 +48,9 @@ class Parameters extends Component {
             );
           })
         }
+        <button className="button new-parameter" onClick={ this.addParameter }>
+          New parameter
+        </button>
       </div>
     )
   }

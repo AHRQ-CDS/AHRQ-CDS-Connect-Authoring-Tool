@@ -61,13 +61,13 @@ class BuilderPage extends Component {
         {
           special: true,
           subpopulationName: "Doesn't Meet Inclusion Criteria",
-          special_subpopulationName: 'not "Includes"',
+          special_subpopulationName: 'not "Inclusions"',
           uniqueId: 'default-subpopulation-1'
         },
         {
           special: true,
           subpopulationName: "Meets Exclusion Criteria",
-          special_subpopulationName: '"Excludes"',
+          special_subpopulationName: '"Exclusions"',
           uniqueId: 'default-subpopulation-2'
         }
       ],
@@ -533,8 +533,8 @@ class BuilderPage extends Component {
             <TabList>
               <Tab>Inclusions</Tab>
               <Tab>Exclusions</Tab>
-              <Tab>Recommendations</Tab>
               <Tab>Subpopulations</Tab>
+              <Tab>Recommendations</Tab>
               <Tab>Parameters</Tab>
               <Tab>Handle Errors</Tab>
             </TabList>
@@ -544,14 +544,6 @@ class BuilderPage extends Component {
               </TabPanel>
               <TabPanel>
                 { this.renderConjunctionGroup('expTreeExclude') }
-              </TabPanel>
-              <TabPanel>
-                <Recommendations
-                  updateRecommendations={ this.updateState }
-                  recommendations={ this.state.recommendations }
-                  subpopulations={ this.state.subpopulations }
-                  setActiveTab={ this.setActiveTab }
-                  />
               </TabPanel>
               <TabPanel>
                 <Subpopulations
@@ -571,6 +563,14 @@ class BuilderPage extends Component {
                 checkSubpopulationUsage={ this.checkSubpopulationUsage }
                 updateRecsSubpop={ this.updateRecsSubpop }
                 />
+              </TabPanel>
+              <TabPanel>
+                <Recommendations
+                  updateRecommendations={ this.updateState }
+                  recommendations={ this.state.recommendations }
+                  subpopulations={ this.state.subpopulations }
+                  setActiveTab={ this.setActiveTab }
+                  />
               </TabPanel>
               <TabPanel>
                 <Parameters
