@@ -234,8 +234,8 @@ class TemplateInstance extends Component {
       _.remove(this.modifersByInputType[returnType], modifier => modifier.id === "CheckInclusionInVS");
     }
     let relevantModifiers = this.modifersByInputType[returnType] || [];
-    if (_.has(this.props.templateInstance, 'surpressedModifiers')) {
-      this.props.templateInstance.surpressedModifiers.forEach(surpressedModifier =>
+    if (_.has(this.props.templateInstance, 'supressedModifiers')) {
+      this.props.templateInstance.supressedModifiers.forEach(surpressedModifier =>
         _.remove(relevantModifiers, relevantModifier => relevantModifier.id === surpressedModifier)
       )
     }
@@ -344,13 +344,19 @@ class TemplateInstance extends Component {
 
   setPreset(stateIndex) {
     if (!this.state.presets || _.isNaN(_.toNumber(stateIndex))) return;
-    this.props.templateInstance.parameters = this.state.presets[stateIndex].parameters;
-    for (let i = 0; i < this.state.presets[stateIndex].parameters.length; i++) {
-      const param = this.state.presets[stateIndex].parameters[i];
-      const newState = {};
-      newState[param.id] = param.value;
-      this.updateInstance(newState);
-    }
+    const uniqueId = this.props.templateInstance.uniqueId;
+    const preset = this.state.presets[stateIndex];
+    preset.uniqueId = uniqueId;
+    this.props.setPreset(this.props.treeName, preset, this.getPath());
+    this.setState({ showPresets: !this.state.showPresets })
+
+    // this.props.templateInstance.parameters = this.state.presets[stateIndex].parameters;
+    // for (let i = 0; i < this.state.presets[stateIndex].parameters.length; i++) {
+    //   const param = this.state.presets[stateIndex].parameters[i];
+    //   const newState = {};
+    //   newState[param.id] = param.value;
+    //   this.updateInstance(newState);
+    // }
   }
 
   showHideElementBody() {

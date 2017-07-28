@@ -19,6 +19,7 @@ function allGet(req, res) {
 
 // Get all expressions in a group
 function groupGet(req, res) {
+  console.log(req.params)
   Expression.find({ id : req.params.group_id }, (error, expressions) => {
     if (error) res.status(500).send(error);
     else res.json(expressions);
@@ -36,7 +37,11 @@ function singleGet(req, res) {
 
 // Post a single expression
 function singlePost(req, res) {
-  Expression.create(req.body,
+  req.body.name = req.body.name.length ? req.body.name : 'Untitled';
+  Expression.findOneAndUpdate(
+    { name : req.body.name },
+    req.body,
+    { upsert : true },
     (error, response) => {
       if (error) res.status(500).send(error);
       else res.status(201).json(response);
