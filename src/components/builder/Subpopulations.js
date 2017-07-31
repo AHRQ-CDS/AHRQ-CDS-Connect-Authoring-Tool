@@ -8,8 +8,18 @@ class Subpopulations extends Component {
     subpopulations: PropTypes.array.isRequired,
     updateSubpopulations: PropTypes.func.isRequired,
     categories: PropTypes.array.isRequired,
+    addInstance: PropTypes.func.isRequired,
+    editInstance: PropTypes.func.isRequired,
     updateInstanceModifiers: PropTypes.func.isRequired,
-    updateRecsSubpop: PropTypes.func.isRequired
+    deleteInstance: PropTypes.func.isRequired,
+    saveInstance: PropTypes.func.isRequired,
+    getAllInstances: PropTypes.func.isRequired,
+    updateRecsSubpop: PropTypes.func.isRequired,
+    createTemplateInstance: PropTypes.func.isRequired,
+    checkSubpopulationUsage: PropTypes.func.isRequired,
+    booleanParameters: PropTypes.array.isRequired,
+    name: PropTypes.string.isRequired,
+    showPresets: PropTypes.func.isRequired
   };
 
   constructor(props) {
