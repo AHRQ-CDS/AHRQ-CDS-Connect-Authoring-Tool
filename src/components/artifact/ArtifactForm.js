@@ -28,16 +28,16 @@ class ArtifactForm extends Component {
       version: this.state.version,
       recommendations: [],
       subpopulations: [
-        { 
+        {
           special: true,
           subpopulationName: "Doesn't Meet Inclusion Criteria",
-          special_subpopulationName: 'not "Includes"',
+          special_subpopulationName: 'not "MeetsInclusionCriteria"',
           uniqueId: 'default-subpopulation-1'
         },
-        { 
+        {
           special: true,
           subpopulationName: "Meets Exclusion Criteria",
-          special_subpopulationName: '"Excludes"',
+          special_subpopulationName: '"MeetsExclusionCriteria"',
           uniqueId: 'default-subpopulation-2'
         }
       ],

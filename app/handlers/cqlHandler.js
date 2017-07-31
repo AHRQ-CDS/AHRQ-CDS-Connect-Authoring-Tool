@@ -92,6 +92,7 @@ class CqlArtifact {
     this.exclusions = artifact.expTreeExclude;
     this.subpopulations = artifact.subpopulations;
     this.recommendations = artifact.recommendations;
+    this.errorStatement = artifact.errorStatement;
     this.initialize()
   }
 
@@ -137,11 +138,13 @@ class CqlArtifact {
 
   parseConjunction(element) {
     const conjunction = {template : element.id, components : []};
-    conjunction.assumeInPopulation = _.has(element, 'subpopulationName');
+    // Assume it's in the population if they're referenced from the `Recommendations` tab
+    conjunction.assumeInPopulation = this.recommendations.some(recommendation => (_.head(recommendation.subpopulations).subpopulationName) === element.subpopulationName);
     const name = element.parameters[0].value;
     conjunction.element_name = (name || element.subpopulationName || element.uniqueId);
     element.childInstances.forEach((child) => {
-      conjunction.components.push({name : child.parameters[0].value})
+      // TODO: Could a child of a conjuction ever be a subpopulation?
+      conjunction.components.push({name : child.parameters[0].value || child.uniqueId})
     });
     this.conjunction_main.push(conjunction);
   }
@@ -180,9 +183,11 @@ class CqlArtifact {
             });
             // For checking if a ConceptValue is in a valueset, incluce the valueset that will be used
             if('checkInclusionInVS' in observationValueSets) {
-              if(!_.isEmpty(element.modifiers) && _.last(element.modifiers).id === "CheckInclusionInVS") {
-                _.last(element.modifiers).values = observationValueSets.checkInclusionInVS.name;
-              }
+              element.modifiers.forEach((modifier, index) => {
+                if (modifier.id === 'CheckInclusionInVS') {
+                  element.modifiers[index].values = observationValueSets.checkInclusionInVS.name;
+                }
+              })
               this.resourceMap.set(observationValueSets.checkInclusionInVS.name, observationValueSets.checkInclusionInVS);
             }
             context.values = [ observationValueSets.name ];
@@ -226,9 +231,11 @@ class CqlArtifact {
             });
             // For checking if a ConceptValue is in a valueset, incluce the valueset that will be used
             if('checkInclusionInVS' in conditionValueSets) {
-              if(!_.isEmpty(element.modifiers) && _.last(element.modifiers).id === "CheckInclusionInVS") {
-                _.last(element.modifiers).values = conditionValueSets.checkInclusionInVS.name;
-              }
+              element.modifiers.forEach((modifier, index) => {
+                if (modifier.id === 'CheckInclusionInVS') {
+                element.modifiers[index].values = conditionValueSets.checkInclusionInVS.name;
+                }
+              })
               this.resourceMap.set(conditionValueSets.checkInclusionInVS.name, conditionValueSets.checkInclusionInVS);
             }
             context.values = [`[Condition: "${conditionValueSets.conditions[0].name}"]`, `C3F.ConditionsByConcept("${conditionValueSets.concepts[0].name}")`];
@@ -321,19 +328,6 @@ class CqlArtifact {
           context.breastfeedingCodeConcept = breastfeedingValueSets.concepts[0].name;
           context.breastfeedingYesConcept = breastfeedingValueSets.concepts[1].name;
           break;
-        case 'list':
-          if (parameter.category === "comparison") {
-            context.comparisonUnit = (ValueSets.observations[_.find(_.find(this.inclusions, { 'id': parameter.value[0].id }).parameters, {'name': parameter.name}).value].units.code);
-          }
-          context[parameter.id] = parameter.value;
-          break;
-        case 'dropdown':
-          if (parameter.id == "comparison") {
-            context.doubleSided = element.parameters.some(parameter => parameter.id === "comparison_2");
-          }
-          context.values = context.values || []
-          context[parameter.id] = parameter.value;
-          break;
         default:
           context.values = context.values || []
           context[parameter.id] = parameter.value;
@@ -344,6 +338,11 @@ class CqlArtifact {
     context.modifiers = element.modifiers;
     context.element_name = (context.element_name || element.uniqueId);
     this.contexts.push(context)
+  }
+
+  // Replaces all instances of `'` in the string with the escaped `\'` - Might be expanded in the future
+  sanitizeCQLString(cqlString) {
+    return _.replace(cqlString, /\'/g, '\\\'');
   }
 
   /* Modifiers Explanation:
@@ -407,30 +406,60 @@ class CqlArtifact {
     return ejs.render(fs.readFileSync(templatePath + '/IncludeExclude', 'utf-8'), treeNames);
   }
 
+  constructOneRecommendationConditional(recommendation, text) {
+    const conjunction = 'and'; // possible that this may become `or`, or some combo of the two conjunctions
+    let conditionalText;
+    if (!_.isEmpty(recommendation.subpopulations)) {
+      conditionalText = recommendation.subpopulations.map(subpopulation => {
+        if (subpopulation.special_subpopulationName) {
+          return subpopulation.special_subpopulationName;
+        }
+        return subpopulation.subpopulationName ? `"${subpopulation.subpopulationName}"` : `"${subpopulation.uniqueId}"`;
+      }).join(` ${conjunction} `);
+    } else {
+      conditionalText = '"InPopulation"'; // TODO: Is there a better way than hard-coding this?
+    }
+    return `if ${conditionalText} then `;
+  }
+
   recommendation() {
     let recommendationText = this.recommendations.map(recommendation => {
-      let conjunction = 'and'; // possible that this may become `or`, or some combo of the two conjunctions
-      let conditionalText = recommendation.subpopulations.map(subpopulation => subpopulation.special_subpopulationName ? subpopulation.special_subpopulationName : `"${subpopulation.subpopulationName}"`).join(` ${conjunction} `);
-      return `if ${conditionalText} then '${recommendation.text}'`;
-    }).join('\n  else ').concat('\n  else null');
-    return ejs.render(templateMap['BaseTemplate'], {element_name: 'Recommendations', cqlString: recommendationText})
+      const conditional = this.constructOneRecommendationConditional(recommendation);
+      return conditional + `'${recommendation.text}'`;
+    })
+    recommendationText = _.isEmpty(recommendationText) ? "null" : recommendationText.join('\n  else ').concat('\n  else null');
+    return ejs.render(templateMap['BaseTemplate'], {element_name: 'Recommendation', cqlString: recommendationText});
   }
 
   rationale() {
     let rationaleText = this.recommendations.map(recommendation => {
-      if (_.isEmpty(recommendation.rationale)) return '';
-      let conjunction = 'and'; // possible that this may become `or`, or some combo of the two conjunctions
-      let conditionalText = recommendation.subpopulations.map(subpopulation => subpopulation.special_subpopulationName ? subpopulation.special_subpopulationName : `"${subpopulation.subpopulationName}"`).join(` ${conjunction} `);
-      return `if ${conditionalText} then '${recommendation.rationale}'`;
-    }).join('\n  else ').concat('\n  else null');
-    if (_.isEmpty(rationaleText)) return '';
-    return ejs.render(templateMap['BaseTemplate'], {element_name: 'Rationale', cqlString: rationaleText})
+      const conditional = this.constructOneRecommendationConditional(recommendation);
+      return conditional + (_.isEmpty(recommendation.rationale) ? 'null' : `'${recommendation.rationale}'`);
+    })
+    rationaleText = _.isEmpty(rationaleText) ? "null" : rationaleText.join('\n  else ').concat('\n  else null');
+    return ejs.render(templateMap['BaseTemplate'], {element_name: 'Rationale', cqlString: rationaleText});
+  }
 
+  errors() {
+    this.errorStatement.statements.forEach((statement, index) => {
+      this.errorStatement.statements[index].condition.label = this.sanitizeCQLString(statement.condition.label);
+      if (statement.useThenClause) {
+        this.errorStatement.statements[index].thenClause = this.sanitizeCQLString(statement.thenClause);
+      } else {
+        statement.child.statements.forEach((childStatement, childIndex) => {
+          this.errorStatement.statements[index].child.statements[childIndex].condition.label = this.sanitizeCQLString(childStatement.condition.label);
+          this.errorStatement.statements[index].child.statements[childIndex].thenClause = this.sanitizeCQLString(childStatement.thenClause);
+        })
+      this.errorStatement.statements[index].child.elseClause = _.isEmpty(statement.child.elseClause) ? null : this.sanitizeCQLString(statement.child.elseClause);
+      }
+    });
+    this.errorStatement.elseClause = _.isEmpty(this.errorStatement.elseClause) ? null : this.sanitizeCQLString(this.errorStatement.elseClause);
+    return ejs.render(templateMap['ErrorStatements'], {element_name: 'Errors', errorStatement: this.errorStatement});
   }
 
   // Produces the cql in string format
   toString() {
-    return this.header()+this.body()+'\n'+this.population()+'\n'+this.recommendation()+'\n'+this.rationale();
+    return this.header()+this.body()+'\n'+this.population()+'\n'+this.recommendation()+'\n'+this.rationale()+'\n'+this.errors();
   }
 
   // Return a cql file as a json object

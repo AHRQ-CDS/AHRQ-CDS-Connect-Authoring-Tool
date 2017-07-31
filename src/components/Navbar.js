@@ -3,6 +3,7 @@ import { Link, NavLink } from 'react-router-dom';
 
 export default () => (
   <header className="navbar">
+    <a className="skiplink" href="#maincontent">Skip to main content</a>
     <h1 className="navbar__logo"><Link to="/">CDS Authoring Tool</Link></h1>
     <nav className="navbar__nav">
       <ul>

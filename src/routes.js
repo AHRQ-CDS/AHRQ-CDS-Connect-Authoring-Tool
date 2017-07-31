@@ -13,7 +13,7 @@ export default () => (
   <Router history={history}>
     <div>
       <Navbar />
-      <main>
+      <main id="maincontent">
         <Switch>
           <Route path='/build/:group' component={BuilderPage} />
           <Route path='/build' component={BuilderPage} />

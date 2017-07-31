@@ -22,9 +22,9 @@
       font-weight: $font-weight-bold;
     }
 
-    .modal__buttonbar {
-      flex: 1;
-      text-align: right;
+  .modal__buttonbar {
+    flex: 1;
+    text-align: right;
 
       .modal__deletebutton {
         @extend .transparent-button;
@@ -34,5 +34,12 @@
 
   .modal__body {
     padding: 1em;
+  }
+
+  &--full-height {
+    top: 10%;
+    bottom: 10%;
+    left: 15%;
+    right: 15%;
   }
 }

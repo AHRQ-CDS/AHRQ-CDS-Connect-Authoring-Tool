@@ -1,20 +1,10 @@
 import React, { Component, PropTypes } from 'react';
 import _ from 'lodash';
 import Select from 'react-select';
+import ElementModal from './ElementModal';
+import { filterUnsuppressed, sortAlphabeticallyByKey } from '../../helpers/utils';
 
-const flatten = arr => arr.reduce(
-  (acc, val) => acc.concat(Array.isArray(val) ? flatten(val) : val), []
-);
-
-const filterUnsuppressed = items => items.filter(item => !item.suppress);
-
-const sortAlphabeticallyByName = (a, b) => {
-  if (a.name < b.name) return -1;
-  if (a.name > b.name) return 1;
-  return 0;
-};
-
-const getAllElements = categories => flatten(categories.map(cat => cat.entries.map(e => Object.assign({ category: cat.name.replace(/s\s*$/, '') }, e))));
+const getAllElements = categories => _.flatten(categories.map(cat => cat.entries.map(e => Object.assign({ category: cat.name.replace(/s\s*$/, '') }, e))));
 
 const optionRenderer = option => (
     <div className="element-select__option">
@@ -30,7 +20,7 @@ class ElementSelect extends Component {
     this.internalCategories = this.generateInternalCategories();
 
     this.state = {
-      categories: this.internalCategories.sort(sortAlphabeticallyByName)
+      categories: this.internalCategories.sort(sortAlphabeticallyByKey('name'))
     };
 
     this.elementInputId = '';
@@ -53,7 +43,7 @@ class ElementSelect extends Component {
     // Updates the categories and their entries to have correct parameters
     this.internalCategories = this.generateInternalCategories();
     this.setState({
-      categories: this.internalCategories.sort(sortAlphabeticallyByName)
+      categories: this.internalCategories.sort(sortAlphabeticallyByKey('name'))
     });
 
     // Keep the category that is selected the same
@@ -63,8 +53,25 @@ class ElementSelect extends Component {
   }
 
   generateInternalCategories = () => {
-    let categoriesCopy = Object.assign([], this.props.categories);
+    let categoriesCopy = _.cloneDeep(this.props.categories);
     categoriesCopy = filterUnsuppressed(categoriesCopy);
+
+    if (this.props.booleanParameters.length) {
+      const paramsIndex = categoriesCopy.findIndex(cat => cat.name === 'Parameters');
+      const parametersCategory = paramsIndex >= 0 ? categoriesCopy.splice(paramsIndex, 1)[0] : { icon: 'sign-in', name: 'Parameters', entries: [] };
+
+      parametersCategory.entries = parametersCategory.entries.concat(this.props.booleanParameters.map(booleanParameter => {
+        return ({
+          name: booleanParameter.name,
+          parameters: [{value: booleanParameter.name}],
+          template: 'EmptyParameter',
+          cannotHaveModifiers: true,
+          returnType: 'boolean'
+        })
+      }));
+
+      categoriesCopy.push(parametersCategory);
+    }
 
     _.each(categoriesCopy, (cat) => {
       cat.entries = filterUnsuppressed(cat.entries);
@@ -89,24 +96,6 @@ class ElementSelect extends Component {
     this.setState({ selectedCategory: category });
   }
 
-  getEntries = () => {
-    if (this.props.booleanParameters) {
-      const bp = this.props.booleanParameters.map(booleanParameter => {
-        return ({
-          category: 'Parameter',
-          name: booleanParameter.name,
-          parameters: [{value: booleanParameter.name}],
-          template: 'EmptyParameter',
-          cannotHaveModifiers: true,
-          returnType: 'boolean'
-        })
-      })
-      return _.concat(this.state.selectedCategory.entries, bp);
-    } else {
-      return this.state.selectedCategory.entries;
-    }
-  }
-
   render() {
     const placeholderText = 'Add element';
 
@@ -119,7 +108,7 @@ class ElementSelect extends Component {
           placeholder={placeholderText}
           aria-label={placeholderText}
           clearable={false}
-          options={this.getEntries()}
+          options={this.state.selectedCategory.entries}
           labelKey='name'
           matchProp='label'
           optionRenderer={optionRenderer}
@@ -137,6 +126,13 @@ class ElementSelect extends Component {
           labelKey='name'
           onChange={this.onSelectedCategoryChange}
           inputProps={{ id: this.categoryInputId, 'aria-label': 'Narrow elements by category', 'title': 'Narrow elements by category' }}
+        />
+        <ElementModal
+          className="element-select__modal"
+          categories={this.state.categories}
+          selectedCategory={this.state.selectedCategory}
+          setSelectedCategory={this.onSelectedCategoryChange}
+          onElementSelected={this.onSuggestionSelected}
         />
       </div>
     );

@@ -39,6 +39,10 @@ class Recommendation extends Component {
       uniqueId: subpop.uniqueId,
       subpopulationName: subpop.subpopulationName
     }
+    if (subpop.special) {
+      refSubpop.special = subpop.special;
+      refSubpop.special_subpopulationName = subpop.special_subpopulationName;
+    }
     const index = this.props.recommendations.findIndex(rec => rec.uid === this.state.uid);
     let newRecs = update(this.props.recommendations, {
       [index]: {
@@ -61,7 +65,15 @@ class Recommendation extends Component {
   }
 
   getRelevantSubpopulations = () => {
-    return this.props.subpopulations.filter(sp => !this.props.rec.subpopulations.includes(sp));
+    return this.props.subpopulations.filter(sp => {
+      let match = false;
+      _.each(this.props.rec.subpopulations, appliedSp => {
+        if (sp.uniqueId === appliedSp.uniqueId) {
+          match = true;
+        }
+      });
+      return !match;
+    });
   }
 
   handleChange = (event) => {
@@ -139,7 +151,7 @@ class Recommendation extends Component {
           </div>
           <div className="field-body">
             <div className="field is-grouped is-grouped-right">
-              <div className="control">
+              {/* <div className="control">
                 <span className="select">
                   <select name="grade" aria-label="Recommendation grade" title="Recommendation grade" value={this.state.grade} onChange={this.handleChange}>
                     <option value='A'>Grade A</option>
@@ -150,7 +162,7 @@ class Recommendation extends Component {
               </div>
               <div className="control">
                 <button className="button" aria-label="copy recommendation"><FontAwesome fixedWidth name='copy' /></button>
-              </div>
+              </div> */}
               <div className="control recommendation__remove">
                 <button className="button" aria-label="remove recommendation"  onClick={() => this.props.onRemove(this.props.id)}><FontAwesome fixedWidth name='times' /></button>
               </div>
