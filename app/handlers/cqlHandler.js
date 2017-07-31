@@ -458,7 +458,7 @@ class CqlArtifact {
           this.errorStatement.statements[index].child.statements[childIndex].condition.label = this.sanitizeCQLString(childStatement.condition.label);
           this.errorStatement.statements[index].child.statements[childIndex].thenClause = this.sanitizeCQLString(childStatement.thenClause);
         })
-      this.errorStatement.statements[index].child.elseClause = _.isEmpty(statement.child.elseClause) ? null : this.sanitizeCQLString(statement.child.elseClause);
+      this.errorStatement.statements[index].child.elseClause = (_.isEmpty(statement.child.elseClause) || statement.child.elseClause === 'null') ? null : this.sanitizeCQLString(statement.child.elseClause);
       }
     });
     this.errorStatement.elseClause = _.isEmpty(this.errorStatement.elseClause) ? null : this.sanitizeCQLString(this.errorStatement.elseClause);
