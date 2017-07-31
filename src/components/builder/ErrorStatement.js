@@ -116,7 +116,7 @@ class ErrorStatement extends Component {
   renderCondition = (statement, parent, index) => {
     return (<Select
       key={`condition-${parent != null ? parent : -1}-${index}`}
-      inputProps={{ id: `condition-${parent != null ? parent : -1}-${i}` }}
+      inputProps={{ id: `condition-${parent != null ? parent : -1}-${index}` }}
       index={index}
       value={statement.condition}
       options={this.options()}
