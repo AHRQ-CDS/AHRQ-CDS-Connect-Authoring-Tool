@@ -40,7 +40,6 @@ function objToCql(req, res) {
   let artifact = new CqlArtifact(req.body);
   let cqlObject = artifact.toJson();
 
-  // res.json(cqlObject)
   let archive = archiver('zip', {zlib : { level : 9 }});
   archive.on('error', (err) => {
     res.status(500).send({error : err.message});

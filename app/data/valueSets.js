@@ -178,7 +178,6 @@ module.exports = {
       id: "ascvd_CMS347v1",
       conditions: [
         {
-       // https://ushik.ahrq.gov/ViewItemDetails?&system=mu&itemKey=189321000
           name: "Myocardial Infarction",
           oid: '2.16.840.1.113883.3.526.3.403'
         },
@@ -237,7 +236,6 @@ module.exports = {
      ],
     },
     pregnancy_dx_CMS347v1 : {
-     // https://ushik.ahrq.gov/ViewItemDetails?&system=mu&itemKey=189087000
      id: "pregnancy_dx_CMS347v1",
      conditions: [
        {
@@ -466,37 +464,31 @@ module.exports = {
       id: "on_statin_therapy_CMS347v1",
       medications: [
         {
-          // TODO: Reused from statin CQM artifact; needs review against other value sets in VSAC.
           name: "Low intensity statin therapy",
           type: "MedicationStatement",
           oid: '2.16.840.1.113762.1.4.1047.107'
         },
         {
-          // TODO: Reused from statin CQM artifact; needs review against other value sets in VSAC.
           name: "Low intensity statin therapy",
           type: "MedicationOrder",
           oid: '2.16.840.1.113762.1.4.1047.107'
         },
         {
-       // TODO: Reused from statin CQM artifact; needs review against other value sets in VSAC.
           name: "Moderate intensity statin therapy",
           type: "MedicationStatement",
           oid: '2.16.840.1.113762.1.4.1047.98'
         },
         {
-       // TODO: Reused from statin CQM artifact; needs review against other value sets in VSAC.
           name: "Moderate intensity statin therapy",
           type: "MedicationOrder",
           oid: '2.16.840.1.113762.1.4.1047.98'
         },
         {
-       // TODO: Reused from statin CQM artifact; needs review against other value sets in VSAC.
           name: "High intensity statin therapy",
           type: "MedicationStatement",
           oid: '2.16.840.1.113762.1.4.1047.97'
         },
         {
-       // TODO: Reused from statin CQM artifact; needs review against other value sets in VSAC.
           name: "High intensity statin therapy",
           type: "MedicationOrder",
           oid: '2.16.840.1.113762.1.4.1047.97'

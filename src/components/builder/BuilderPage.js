@@ -209,7 +209,6 @@ class BuilderPage extends Component {
     })
       .then((result) => {
         FileSaver.saveAs(result.data, 'cql.zip');
-        // console.log(result.data.text)
       })
       .catch((error) => {
         console.error(error);
