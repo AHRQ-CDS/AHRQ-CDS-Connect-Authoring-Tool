@@ -1,2 +1,0 @@
-define "<%-element_name%>":
-  not "<%=components[0].name%>"
