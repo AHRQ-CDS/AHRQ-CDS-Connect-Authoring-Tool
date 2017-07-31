@@ -168,6 +168,13 @@ class CqlArtifact {
     }
     element.modifiers = element.modifiers || [];
     context.withoutModifiers = _.has(specificMap, context.template);
+    if(context.template === 'AgeRange') {
+      context.checkExistence = element.modifiers.some(modifier => modifier.id === "CheckExistence");
+      if (context.checkExistence) {
+        const checkExistenceModifier = element.modifiers.find(modifier => modifier.id === "CheckExistence");
+        context.checkExistenceValue = checkExistenceModifier.values.value;
+      }
+    }
     element.parameters.forEach((parameter) => {
       switch (parameter.type) {
         case 'observation':

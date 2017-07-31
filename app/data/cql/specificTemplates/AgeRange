@@ -1,2 +1,11 @@
+<% if (checkExistence) {-%>
 define "<%-element_name%>":
+  "__ageRange" <%-checkExistenceValue%>
+  
+<% } -%>
+<% if (checkExistence) {-%>
+define "__ageRange":
+<% } else { -%>
+define "<%-element_name%>":
+<% } -%>
   <%if (min_age >=0) {%>AgeInYears()>=<%=min_age%><%}%><%if (min_age >=0 && max_age >= 0) {%> and <%}%><%if (max_age >=0) {%>AgeInYears()<=<%=max_age%><%}%>
