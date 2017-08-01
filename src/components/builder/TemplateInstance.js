@@ -416,6 +416,7 @@ class TemplateInstance extends Component {
                 ? <select
                     onChange={event => this.setPreset(event.target.value)}
                     onBlur={event => this.setPreset(event.target.value)}
+                    title={`show presets for ${this.props.templateInstance.id}`}
                     aria-labelledby={`presets-${this.props.templateInstance.uniqueId}`}>
                   <optgroup><option>Use a preset</option></optgroup>
                   {this.state.presets.map((preset, i) =>

@@ -113,7 +113,7 @@ class ElementSelect extends Component {
           matchProp='label'
           optionRenderer={optionRenderer}
           onChange={this.onSuggestionSelected}
-          inputProps={{ id: this.elementInputId }}
+          inputProps={{ id: this.elementInputId, 'aria-label': placeholderText, 'title': placeholderText  }}
         />
         <Select
           className="element-select__category-field"
@@ -125,7 +125,7 @@ class ElementSelect extends Component {
           options={this.state.categories}
           labelKey='name'
           onChange={this.onSelectedCategoryChange}
-          inputProps={{ id: this.categoryInputId, 'aria-label': 'Narrow elements by category' }}
+          inputProps={{ id: this.categoryInputId, 'aria-label': 'Narrow elements by category', 'title': 'Narrow elements by category' }}
         />
         <ElementModal
           className="element-select__modal"

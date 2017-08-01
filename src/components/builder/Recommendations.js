@@ -67,7 +67,7 @@ class Recommendations extends Component {
               <span className="field recommendations__mode">
                <span className="control">
                  <span className="select">
-                   <select value={this.state.mode} onChange={this.handleModeChange} aria-label="Recommendation mode">
+                   <select value={this.state.mode} onChange={this.handleModeChange} title="Recommendation mode" aria-label="Recommendation mode">
                      <option value='every'>every</option>
                      <option value='first'>first</option>
                    </select>

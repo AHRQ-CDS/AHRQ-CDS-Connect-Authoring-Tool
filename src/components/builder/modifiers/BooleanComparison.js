@@ -8,7 +8,7 @@ class BooleanComparison extends Component {
         <span className="field">
          <span className="control">
            <span className="select">
-            <select name="Boolean Compare?" aria-label="Boolean Comparison" value={this.props.value}
+            <select name="Boolean Compare?" aria-label="Boolean Comparison" title="Boolean Comparison" value={this.props.value}
               onChange={(event) => {
                 this.props.updateAppliedModifier(this.props.index, { value: event.target.value });
               }}>

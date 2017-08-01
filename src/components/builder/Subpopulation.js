@@ -54,6 +54,7 @@ class Subpopulation extends Component {
               <input
                 type="text"
                 className="subpopulation__name-input"
+                title="Subpopulation Title"
                 aria-label="Subpopulation Title"
                 value={ this.props.subpopulation.subpopulationName }
                 onClick={ event => event.stopPropagation() }

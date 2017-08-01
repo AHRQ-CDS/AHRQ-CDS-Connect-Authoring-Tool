@@ -142,6 +142,7 @@ class ElementModal extends Component {
                   type="text"
                   placeholder={ modalInputLabel }
                   aria-label={ modalInputLabel }
+                  title={ modalInputLabel }
                   value={ this.state.searchValue }
                   onChange={ this.handleSearchValueChange } />
               </div>

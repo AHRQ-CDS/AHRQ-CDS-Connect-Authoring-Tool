@@ -152,7 +152,7 @@ class ConjunctionGroup extends Component {
         clearable={ false }
         options={ this.types }
         onChange={ this.handleTypeChange }
-        inputProps={{ 'aria-label': 'Select conjunction type' }}
+        inputProps={{ 'aria-label': 'Select conjunction type', 'title': 'Select conjunction type' }}
       />
     )
 }

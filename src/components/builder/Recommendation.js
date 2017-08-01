@@ -153,7 +153,7 @@ class Recommendation extends Component {
             <div className="field is-grouped is-grouped-right">
               {/* <div className="control">
                 <span className="select">
-                  <select name="grade" aria-label="Recommendation grade" value={this.state.grade} onChange={this.handleChange}>
+                  <select name="grade" aria-label="Recommendation grade" title="Recommendation grade" value={this.state.grade} onChange={this.handleChange}>
                     <option value='A'>Grade A</option>
                     <option value='B'>Grade B</option>
                     <option value='C'>Grade C</option>
@@ -171,7 +171,7 @@ class Recommendation extends Component {
         </div>
         <div className="field">
           <div className="control">
-            <textarea className="textarea" name="text" aria-label="Recommendation"
+            <textarea className="textarea" name="text" aria-label="Recommendation" title="Recommendation text"
             placeholder='Describe your recommendation' value={this.state.text} onChange={this.handleChange} />
           </div>
         </div>
@@ -182,7 +182,7 @@ class Recommendation extends Component {
                 <label className="label has-text-left">Rationale...</label>
               </div>
               <div className="control">
-                <textarea className="textarea" name="rationale" aria-label="Rationale"
+                <textarea className="textarea" name="rationale" aria-label="Rationale" title="Rationale text"
                 placeholder='Describe the rationale for your recommendation' value={this.state.rationale} onChange={this.handleChange} />
               </div>
             </div>

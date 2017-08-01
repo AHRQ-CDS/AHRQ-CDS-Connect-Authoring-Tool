@@ -24,6 +24,7 @@ class Parameter extends Component {
                   updateInstance={ e => this.updateParameter({name: e[`param-name-${this.props.index}`], value: this.props.value}) }/>
                 <Select
                   aria-label={'Select True or False'}
+                  inputProps={{ title: 'Select True or False' }}
                   clearable={false}
                   options={[{ value: 'true', label: 'True' },
                             { value: 'false', label: 'False' }]}
