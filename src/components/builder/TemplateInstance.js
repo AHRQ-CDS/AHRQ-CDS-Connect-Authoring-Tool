@@ -2,7 +2,6 @@ import React, { Component, PropTypes } from 'react';
 import axios from 'axios';
 import FontAwesome from 'react-fontawesome';
 import _ from 'lodash';
-import update from 'immutability-helper';
 import Config from '../../../config';
 
 // Try to keep these ordered same as in folder (i.e. alphabetically)
