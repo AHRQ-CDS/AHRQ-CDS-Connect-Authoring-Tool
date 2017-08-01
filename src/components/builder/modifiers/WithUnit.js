@@ -17,7 +17,7 @@ class WithUnit extends Component {
             <span className="field">
              <span className="control">
                <span className="select">
-                  <select name="With Unit" aria-label="With Unit" value={this.props.unit}
+                  <select id={unitId} name="With Unit" aria-label="With Unit" value={this.props.unit}
                     onChange={(event) => {
                       this.props.updateAppliedModifier(this.props.index, { unit: event.target.value });
                     }}>
