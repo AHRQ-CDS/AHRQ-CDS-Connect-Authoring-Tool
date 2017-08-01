@@ -110,7 +110,10 @@ class TemplateInstance extends Component {
 
   componentWillReceiveProps(nextProps) {
     const otherInstances = this.getOtherInstances(nextProps);
-    this.setState({ otherInstances });
+    this.setState({
+      otherInstances,
+      returnType: !(_.isEmpty(nextProps.templateInstance.modifiers)) ? _.last(nextProps.templateInstance.modifiers).returnType : this.props.templateInstance.returnType
+    })
   }
 
   // Props will either be this.props or nextProps coming from componentWillReceiveProps
@@ -202,7 +205,7 @@ class TemplateInstance extends Component {
     return (
       <div key={index} className="modifier">
         {modifierForm}
-        { (index + 1 === this.state.appliedModifiers.length)
+        { (index + 1 === this.props.templateInstance.modifiers.length)
           ? <button
             onClick={this.removeLastModifier}
             className="modifier__deletebutton"
@@ -219,7 +222,7 @@ class TemplateInstance extends Component {
   renderAppliedModifiers() {
     return (
       <div className="modifier__list">
-        {this.state.appliedModifiers.map((modifier, index) =>
+        {(this.props.templateInstance.modifiers || []).map((modifier, index) =>
           this.renderAppliedModifier(modifier, index)
         )}
       </div>
