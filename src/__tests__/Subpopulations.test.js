@@ -15,17 +15,17 @@ beforeEach(() => {
   checkSubpopulationUsage = jest.fn();
   updateRecsSubpop = jest.fn();
   const baseProps = {
-    updateSubpopulations: updateSubpopulations,
+    updateSubpopulations,
     categories: elementGroups,
     addInstance: jest.fn(),
     editInstance: jest.fn(),
     updateInstanceModifiers: jest.fn(),
-    editInstance: jest.fn(),
     deleteInstance: jest.fn(),
     saveInstance: jest.fn(),
-    updateRecsSubpop: updateRecsSubpop,
-    createTemplateInstance: createTemplateInstance,
-    checkSubpopulationUsage: checkSubpopulationUsage,
+    getAllInstances: jest.fn(),
+    updateRecsSubpop,
+    createTemplateInstance,
+    checkSubpopulationUsage,
     booleanParameters: [],
     name: '',
     showPresets: jest.fn()
@@ -90,14 +90,12 @@ test('can add subpopulations', () => {
 });
 
 test('can delete subpopulation not in use', () => {
-  // const deleteSubpopulationSpy = jest.spyOn(componentWithSubpopulations.instance(), 'deleteSubpopulation');
   checkSubpopulationUsage.mockReturnValueOnce(false);
   expect(componentWithSubpopulations.props().subpopulations).toHaveLength(2);
 
   componentWithSubpopulations.find(Subpopulation).at(0).find('button').at(1).simulate('click');
   const newSubpopulations = updateSubpopulations.mock.calls[0][0];
 
-  // expect(deleteSubpopulationSpy).toHaveBeenCalled();
   expect(updateSubpopulations).toHaveBeenCalledTimes(1);
   expect(newSubpopulations).toHaveLength(1);
 });
