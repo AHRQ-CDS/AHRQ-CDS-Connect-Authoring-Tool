@@ -202,3 +202,10 @@ test('gets a list of all instances', () => {
 
   expect(initializedComponent.node.getAllInstances('expTreeExclude')).toHaveLength(2);
 });
+
+test('increments the uniqueId counter', () => {
+  const currentValue = initializedComponent.state().uniqueIdCounter;
+  initializedComponent.instance().incrementUniqueIdCounter();
+
+  expect(initializedComponent.state().uniqueIdCounter).toEqual(currentValue + 1);
+});

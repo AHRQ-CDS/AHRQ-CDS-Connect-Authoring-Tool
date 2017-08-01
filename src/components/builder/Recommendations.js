@@ -5,8 +5,9 @@ import Recommendation from './Recommendation';
 
 class Recommendations extends Component {
   static propTypes = {
-    updateRecommendations: PropTypes.func.isRequired,
     recommendations: PropTypes.array.isRequired,
+    updateRecommendations: PropTypes.func.isRequired,
+    subpopulations: PropTypes.array.isRequired,
     setActiveTab: PropTypes.func.isRequired
   }
 
@@ -30,12 +31,13 @@ class Recommendations extends Component {
 
   addRecommendation = () => {
     const newRec = {
-      uid: _.uniqueId("rec-"),
+      uid: `rec-${this.props.uniqueIdCounter}`,
       grade: 'A',
       subpopulations: [],
       text: '',
       rationale: ''
-    }
+    };
+    this.props.incrementUniqueIdCounter();
     let newRecs = this.props.recommendations.concat([newRec])
     this.props.updateRecommendations({ recommendations: newRecs });
   }
