@@ -78,7 +78,7 @@ test('NumberParameter renders without crashing', () => {
   expect(component).toBeDefined();
 });
 
-test('NumberParameter changes input', () => {
+test('NumberParameter changes input with type integer', () => {
   const updateInstanceMock = jest.fn();
 
   const component = shallowRenderComponent(NumberParameter, {
@@ -97,6 +97,37 @@ test('NumberParameter changes input', () => {
   const checkboxInput = component.find('input[type="checkbox"]');
 
   numberInput.value = 10;
+  numberInput.simulate('change', { target: { name: numberInput.name, value: numberInput.value } });
+  expect(updateInstanceMock).toHaveBeenCalled();
+  expect(updateInstanceMock).toBeCalledWith({ [numberInput.name]: numberInput.value });
+
+  checkboxInput.simulate('change', { target: { checked: true } });
+  expect(component.state('checked')).toEqual(true);
+
+  component.instance().updateExclusive = jest.fn();
+  checkboxInput.simulate('change', { target: { checked: false } });
+  expect(component.instance().updateExclusive).toHaveBeenCalled();
+});
+
+test('NumberParameter changes input with type not integer', () => {
+  const updateInstanceMock = jest.fn();
+
+  const component = shallowRenderComponent(NumberParameter, {
+    value: '',
+    typeOfNumber: 'float',
+    updateInstance: updateInstanceMock,
+    param: {
+      exclusive: false,
+      name: '',
+      id: '',
+    }
+  });
+
+
+  const numberInput = component.find('input[type="number"]');
+  const checkboxInput = component.find('input[type="checkbox"]');
+
+  numberInput.value = 10.02345;
   numberInput.simulate('change', { target: { name: numberInput.name, value: numberInput.value } });
   expect(updateInstanceMock).toHaveBeenCalled();
   expect(updateInstanceMock).toBeCalledWith({ [numberInput.name]: numberInput.value });
