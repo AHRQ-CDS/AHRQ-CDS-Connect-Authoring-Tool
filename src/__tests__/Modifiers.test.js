@@ -184,23 +184,3 @@ test('WithUnit changes input', () => {
   expect(updateAppliedModifierMock).toHaveBeenCalled();
   expect(updateAppliedModifierMock).toBeCalledWith(5, { unit: 'foo' });
 });
-
-// test('Parameter changes input', () => {
-//   const updateInstanceOfParameterMock = jest.fn();
-//   const component = shallowRenderComponent(Parameter, {
-//     updateInstanceOfParameter: updateInstanceOfParameterMock,
-//     deleteBooleanParam: jest.fn(),
-//     index: '',
-//     value: '',
-//     name: ''
-//   });
-//
-//   const selectInput = component.find(Select);
-//   selectInput.simulate('change', { value: '' });
-//   expect(updateInstanceOfParameterMock).toHaveBeenCalled();
-//   expect(updateInstanceOfParameterMock.mock.calls[0][0]).toEqual({ name: '', value: '' });
-//
-//   component.instance().updateParameter = jest.fn();
-//   selectInput.simulate('change', { value: '' });
-//   expect(component.instance().updateParameter).toHaveBeenCalled();
-// });
