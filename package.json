@@ -2,6 +2,7 @@
   "name": "cds_authoring_tool",
   "version": "0.1.0",
   "private": true,
+  "engine": "node 6.10.x",
   "proxy": "http://localhost:3001",
   "dependencies": {
     "archiver": "^1.3.0",
