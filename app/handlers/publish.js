@@ -26,9 +26,10 @@ function getArtifactDetails(req, res) {
     let headers = {'Accept':'application/vnd.api+json',
                     'Content-type':'application/vnd.api+json'};
     request.get(`${Config.repo.baseUrl}/node/${req.body.nid}?_format=hal_json`, {auth: req.auth, headers: headers}, function(err, resp, body){
-      // res.send(body)
-      // return;
-      let paragraphUuid = null;//body._embedded[`${Config.repo.baseUrl}/rest/relation/node/artifact/field_artifact_representation`][0].uuid[0].value;
+
+      let responseBody = JSON.parse(body);
+      // Eventually, this will extract the exact node
+      let paragraphUuid = null//responseBody._embedded[`${Config.repo.baseUrl}/rest/relation/node/artifact/field_artifact_representation`][0].uuid[0].value;
       request.get(`${Config.repo.baseUrl}/rest/session/token`, function(err, response, body){
           convertToElm(req, res, {paragraph: paragraphUuid, csrf: body});
       })
@@ -128,9 +129,15 @@ function pushToRepo(artifact, elm, req, res, context) {
 
     axios.post(`${Config.repo.baseUrl}/jsonapi/file/zip`, payload, {auth: req.body.auth, headers: headers})
       .then(function(response){
-        res.sendStatus(200);
-        console.log(response);
-        // res.send({fileUuid: response.data.data.id, fileNid: res.data.data.attributes.fid});
+        // res.sendStatus(200);
+        axios.patch(`${Config.repo.baseUrl}/node/${req.body.nid}`, {path: response.data, version: req.body.version}, {auth: req.body.auth, headers: {}})
+          .then((patchResponse) => {
+            res.send(200);
+          })
+          .catch((err) =>{
+            console.log(err);
+            res.sendStatus(500)
+          })
       }).catch((err) =>{
         console.log(err);
         res.sendStatus(500)
