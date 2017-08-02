@@ -24,7 +24,7 @@ module.exports = [
         id: 'AgeRange',
         name: 'Age Range',
         returnType: 'boolean',
-        cannotHaveModifiers: true,
+        surpressedModifiers: ['BooleanNot', 'BooleanComparison'],
         parameters: [
           { id: 'element_name', type: 'string', name: 'Element Name' },
           { id: 'min_age', type: 'number', typeOfNumber: 'integer', name: 'Minimum Age' },
@@ -92,6 +92,7 @@ module.exports = [
         id: 'SystolicBloodPressure',
         name: 'Systolic Blood Pressure',
         extends: 'GenericObservation',
+        surpressedModifiers: ['WithUnit'], // TODO add unit for this element
         parameters: [
           { id: 'element_name', value: "SystolicBloodPressure"},
           { id: 'observation', static: true, value: "systolic_blood_pressure"},
@@ -102,9 +103,9 @@ module.exports = [
         name: 'ASCVD Risk Assessment',
         extends: 'GenericObservation',
         template: 'ObservationByConcept',
-        surpressedModifiers: ['ConceptValue', 'ConvertToMgPerdL'],
+        surpressedModifiers: ['ConceptValue', 'ConvertToMgPerdL', 'WithUnit'],
         parameters: [
-          { id: 'element_name', value: "MostRecentASCVDRiskAssessmentResult"},
+          { id: 'element_name', value: "ASCVDRiskAssessment"},
           { id: 'observation', static: true, value: "ascvd_risk_assessment"},
         ]
       },
@@ -114,7 +115,7 @@ module.exports = [
         template: 'ObservationByConcept',
         extends: 'GenericObservation',
         checkInclusionInVS: true, // Very few elements can check this, so this makes sense to require it to be specified
-        surpressedModifiers: ['QuantityValue', 'ConvertToMgPerdL'],
+        surpressedModifiers: ['QuantityValue', 'ConvertToMgPerdL', 'WithUnit'],
         parameters: [
           { id: 'element_name', value: "IsSmoker"},
           { id: 'observation',  static: true, value: "smoker"},
@@ -126,10 +127,31 @@ module.exports = [
         template: 'Breastfeeding',
         returnType: 'boolean',
         extends: 'Base',
-        surpressedModifiers: ['BooleanComparison'],
+        surpressedModifiers: ['BooleanComparison', 'WithUnit', 'CheckExistence'],
         parameters: [
           { id: 'element_name', value: "IsBreastfeeding"},
           { id: 'observation', type:'breastfeeding', static: true, value: "breastfeeding"}
+        ]
+      },
+      {
+        id: 'Breastfeeding_CMS347v1',
+        name: 'Breastfeeding (CMS347v1)',
+        template: 'Breastfeeding_withLookBack',
+        returnType: 'boolean',
+        extends: 'Base',
+        surpressedModifiers: ['BooleanComparison', 'WithUnit', 'CheckExistence'],
+        parameters: [
+          { id: 'element_name', value: "IsBreastfeeding"},
+          { id: 'observation', type:'breastfeeding', static: true, value: "breastfeeding"}
+        ]
+      },
+      {
+        id: 'ALT',
+        name: 'ALT',
+        extends: 'GenericObservation',
+        parameters: [
+          { id: 'element_name', value: "HasALT"},
+          { id: 'observation', static: true, value: "alt"}
         ]
       },
     ]
@@ -202,16 +224,38 @@ module.exports = [
         ],
       },
       {
+        id: 'ASCVD_CMS347v1',
+        name: 'ASCVD (CMS347v1)',
+        extends: 'GenericCondition',
+        parameters: [
+          { id: 'element_name', value: "ASCVDDiagnosis"},
+          { id: 'condition', static: true, value: "ascvd_CMS347v1"}
+        ],
+      },
+      {
         id: 'Pregnancydx',
         name: 'Pregnancy dx',
         template: 'Pregnancydx',
         returnType: 'boolean',
         extends: 'Base',
         returnType: 'boolean',
-        surpressedModifiers: ['BooleanComparison'],
+        surpressedModifiers: ['BooleanComparison', 'CheckExistence'], //TODO these might eventually be applicable, but the specificTemplate will need to handle them
         parameters: [
           { id: 'element_name', value: 'IsPregnant' },
           { id: 'pregnancy', type: 'pregnancy', static: true, value: 'pregnancy_dx' }
+        ]
+      },
+      {
+        id: 'Pregnancydx_CMS347v1',
+        name: 'Pregnancy dx (CMS347v1)',
+        template: 'Pregnancydx_withLookBack',
+        returnType: 'boolean',
+        extends: 'Base',
+        returnType: 'boolean',
+        surpressedModifiers: ['BooleanComparison', 'CheckExistence'],
+        parameters: [
+          { id: 'element_name', value: 'IsPregnant' },
+          { id: 'pregnancy', type: 'pregnancy', static: true, value: 'pregnancy_dx_CMS347v1' }
         ]
       },
       {
@@ -295,6 +339,16 @@ module.exports = [
           { id: 'medication', static: true, value: 'on_statin_therapy' }
         ]
       },
+      {
+        id: 'OnStatinTherapy_CMS347v1',
+        name: 'On Statin Therapy (CMS347v1)',
+        extends: 'GenericMedication',
+        template: 'GenericStatement', // See GenericStatement template for explanation
+        parameters: [
+          { id: 'element_name', value: 'OnStatinTherapy' },
+          { id: 'medication', static: true, value: 'on_statin_therapy_CMS347v1' }
+        ]
+      },
     ]
   },
   {
@@ -320,6 +374,15 @@ module.exports = [
           { id: 'element_name', value: 'HasHadASCVDProcedures' },
           { id: 'procedure', static: true, value: "ascvd_procedures" },
         ],
+      },
+      {
+        id: 'ASCVD_Procedures_CMS347v1',
+        name: 'ASCVD Procedures (CMS347v1)',
+        extends: 'GenericProcedure',
+        parameters : [
+          { id: 'element_name', value: 'ASCVDProcedures' },
+          { id: 'procedure', static: true, value: "ascvd_procedures_CMS347v1" }
+        ]
       },
       {
         id: 'Palliative_Care',
@@ -393,7 +456,7 @@ module.exports = [
       {
         id: 'GenericAllergyIntolerance',
         name: 'Allergy Inteolerance',
-        returnType: 'allergy_intolerance',
+        returnType: 'list_of_allergy_intolerances',
         suppress: true,
         extends: 'Base',
         parameters: [

@@ -2,8 +2,8 @@
 // Any id's that are the same as cqlTemplates are pure coincidence. The id matches within src/components/builder/modifiers
 // while the cqlTemplate matches the cqlTemplate in app/data/cql/modifiers
 
-let elementLists = ['list_of_observations', 'list_of_conditions', 'list_of_medications', 'list_of_procedures', 'allergy_intolerance', 'list_of_encounters'];
-let everyElement = elementLists.concat(['boolean', 'system_quantity']);
+let elementLists = ['list_of_observations', 'list_of_conditions', 'list_of_medications', 'list_of_procedures', 'list_of_allergy_intolerances', 'list_of_encounters'];
+let everyElement = elementLists.concat(['boolean', 'system_quantity', 'observation']); // TODO Add other single elements
 module.exports = [
   // observations
   {
@@ -20,8 +20,8 @@ module.exports = [
     inputTypes: ['list_of_observations'],
     returnType: 'list_of_observations',
     values: {unit: undefined},
-    cqlTemplate: null,
-    cqlLibraryFunction: null
+    cqlTemplate: 'WithUnit',
+    cqlLibraryFunction: 'C3F.WithUnit',
   },
   // {
   //   id: 'ValueComparison',
@@ -74,6 +74,14 @@ module.exports = [
     cqlTemplate: 'BaseModifier',
     cqlLibraryFunction: 'Convert.to_mg_per_dL'
   },
+  {
+    id: 'HighestObservationValue',
+    name: 'Highest Observation Value',
+    inputTypes: ['list_of_observations'],
+    returnType: 'system_quantity',
+    cqlTemplate: 'BaseModifier',
+    cqlLibraryFunction: 'C3F.HighestObservation'
+  },
   // conditions
   {
     id: 'ConfirmedCondition',
@@ -109,6 +117,14 @@ module.exports = [
     cqlTemplate: 'BaseModifier',
     cqlLibraryFunction: 'C3F.Completed'
   },
+  {
+    id: 'InProgressProcedure',
+    name: 'In Progress',
+    inputTypes: ['list_of_procedures'],
+    returnType: 'list_of_procedures',
+    cqlTemplate: 'BaseModifier',
+    cqlLibraryFunction: 'C3F.ProcedureInProgress'
+  },
   // medications
   {
     id: 'ActiveMedication',
@@ -117,6 +133,15 @@ module.exports = [
     returnType: 'list_of_medications',
     cqlTemplate: 'BaseModifier',
     cqlLibraryFunction: 'C3F.Active'
+  },
+  // allergy intolerances
+  {
+    id: 'ActiveOrConfirmedAllergyIntolerance',
+    name: 'Active Or Confirmed',
+    inputTypes: ['list_of_allergy_intolerances'],
+    returnType: 'list_of_allergy_intolerances',
+    cqlTemplate: 'BaseModifier',
+    cqlLibraryFunction: 'C3F.ActiveOrConfirmedAllergyIntolerance'
   },
   // ALL
   // Most Recent

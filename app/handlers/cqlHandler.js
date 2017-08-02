@@ -46,11 +46,11 @@ function objToCql(req, res) {
   });
   res.attachment('archive-name.zip');
   archive.pipe(res);
-
+  
   // Add helper Library
   let path = __dirname + '/../data/library_helpers/';
   archive.directory(path, '/');
-
+  
   archive.append(cqlObject.text, { name : `${cqlObject.filename}.cql` });
   archive.finalize();
 }
@@ -167,6 +167,13 @@ class CqlArtifact {
     }
     element.modifiers = element.modifiers || [];
     context.withoutModifiers = _.has(specificMap, context.template);
+    if(context.template === 'AgeRange') {
+      context.checkExistence = element.modifiers.some(modifier => modifier.id === "CheckExistence");
+      if (context.checkExistence) {
+        const checkExistenceModifier = element.modifiers.find(modifier => modifier.id === "CheckExistence");
+        context.checkExistenceValue = checkExistenceModifier.values.value;
+      }
+    }
     element.parameters.forEach((parameter) => {
       switch (parameter.type) {
         case 'observation':
@@ -450,7 +457,7 @@ class CqlArtifact {
           this.errorStatement.statements[index].child.statements[childIndex].condition.label = this.sanitizeCQLString(childStatement.condition.label);
           this.errorStatement.statements[index].child.statements[childIndex].thenClause = this.sanitizeCQLString(childStatement.thenClause);
         })
-      this.errorStatement.statements[index].child.elseClause = _.isEmpty(statement.child.elseClause) ? null : this.sanitizeCQLString(statement.child.elseClause);
+      this.errorStatement.statements[index].child.elseClause = (_.isEmpty(statement.child.elseClause) || statement.child.elseClause === 'null') ? null : this.sanitizeCQLString(statement.child.elseClause);
       }
     });
     this.errorStatement.elseClause = _.isEmpty(this.errorStatement.elseClause) ? null : this.sanitizeCQLString(this.errorStatement.elseClause);
