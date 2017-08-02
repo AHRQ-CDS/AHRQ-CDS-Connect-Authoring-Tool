@@ -9,6 +9,27 @@ let updateSubpopulations;
 let checkSubpopulationUsage;
 let updateRecsSubpop;
 const userSubpopUniqueId = 'foo123';
+const specialSubpop = {
+  special: true,
+  subpopulationName: "Doesn't Meet Inclusion Criteria",
+  special_subpopulationName: 'not "MeetsInclusionCriteria"',
+  uniqueId: 'default-subpopulation-1'
+};
+const fullSubpops = [
+  specialSubpop,
+  {
+    id: 'And',
+    name: '',
+    conjunction: true,
+    returnType: 'boolean',
+    parameters: [ { id: 'element_name', type: 'string', name: 'Group Name' } ],
+    uniqueId: userSubpopUniqueId,
+    childInstances: [],
+    path: '',
+    subpopulationName: 'Subpopulation 1',
+    expanded: true
+  }
+];
 
 beforeEach(() => {
   updateSubpopulations = jest.fn();
@@ -32,37 +53,11 @@ beforeEach(() => {
   };
 
   component = fullRenderComponent(Subpopulations, Object.assign({
-    subpopulations: [
-      {
-        special: true,
-        subpopulationName: "Doesn't Meet Inclusion Criteria",
-        special_subpopulationName: 'not "MeetsInclusionCriteria"',
-        uniqueId: 'default-subpopulation-1'
-      }
-    ]
+    subpopulations: [ specialSubpop ]
   }, baseProps));
 
   componentWithSubpopulations = fullRenderComponent(Subpopulations, Object.assign({
-    subpopulations: [
-      {
-        special: true,
-        subpopulationName: "Doesn't Meet Inclusion Criteria",
-        special_subpopulationName: 'not "MeetsInclusionCriteria"',
-        uniqueId: 'default-subpopulation-1'
-      },
-      {
-        id: 'And',
-        name: '',
-        conjunction: true,
-        returnType: 'boolean',
-        parameters: [ { id: 'element_name', type: 'string', name: 'Group Name' } ],
-        uniqueId: userSubpopUniqueId,
-        childInstances: [],
-        path: '',
-        subpopulationName: 'Subpopulation 1',
-        expanded: true
-      }
-    ],
+    subpopulations: fullSubpops,
   }, baseProps));
 });
 
@@ -121,3 +116,13 @@ test('can update a subpopulation name', () => {
   expect(updatedSubpopulation.subpopulationName).toEqual(newSubpopName);
   expect(updateRecsSubpop).toHaveBeenCalledWith(newSubpopName, userSubpopUniqueId);
 });
+
+test('updates relevant state when new props passed in', () => {
+  expect(component.state().subpopulations).toHaveLength(0);
+  expect(component.state().numOfSpecialSubpopulations).toEqual(1);
+
+  component.setProps({ subpopulations: fullSubpops });
+
+  expect(component.state().subpopulations).toHaveLength(1);
+  expect(component.state().numOfSpecialSubpopulations).toEqual(1);
+})

@@ -35,12 +35,6 @@ class Subpopulations extends Component {
     };
   }
 
-  componentWillMount() {
-    if (!this.props.subpopulations.length) {
-      this.addSubpopulation();
-    }
-  }
-
   componentWillReceiveProps(nextProps) {
     this.setState({
       subpopulations: nextProps.subpopulations.filter(sp => !sp.special),
@@ -62,7 +56,7 @@ class Subpopulations extends Component {
   deleteSubpopulation = (uniqueId) => {
     const subpopExists = this.props.checkSubpopulationUsage(uniqueId);
     if (subpopExists) {
-      alert('Subpopulation in use')
+      alert('Subpopulation in use');
     } else {
       const newSubpopulations = _.cloneDeep(this.props.subpopulations);
       const subpopulationIndex = this.props.subpopulations.findIndex(sp => sp.uniqueId === uniqueId);
