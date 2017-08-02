@@ -8,13 +8,60 @@ import ValueSetParameter from '../components/builder/parameters/ValueSetParamete
 import { shallowRenderComponent } from '../helpers/test_helpers';
 
 test('Parameter renders without crashing', () => {
-  const component = shallowRenderComponent(Parameter);
+  const component = shallowRenderComponent(Parameter, {
+    updateInstanceOfParameter: jest.fn(),
+    deleteBooleanParam: jest.fn(),
+    index: '',
+    value: '',
+    name: ''
+  });
   expect(component).toBeDefined();
 });
 
+test('Parameter changes input', () => {
+  const updateInstanceOfParameterMock = jest.fn();
+  const component = shallowRenderComponent(Parameter, {
+    updateInstanceOfParameter: updateInstanceOfParameterMock,
+    deleteBooleanParam: jest.fn(),
+    index: '',
+    value: '',
+    name: ''
+  });
+
+  const selectInput = component.find(Select);
+  selectInput.simulate('change', { value: '' });
+  expect(updateInstanceOfParameterMock).toHaveBeenCalled();
+  expect(updateInstanceOfParameterMock.mock.calls[0][0]).toEqual({ name: '', value: '' });
+
+  component.instance().updateParameter = jest.fn();
+  selectInput.simulate('change', { value: '' });
+  expect(component.instance().updateParameter).toHaveBeenCalled();
+});
+
 test('Parameters renders without crashing', () => {
-  const component = shallowRenderComponent(Parameters);
+  const component = shallowRenderComponent(Parameters, {
+    booleanParameters: [],
+    updateParameters: jest.fn()
+  });
   expect(component).toBeDefined();
+});
+
+test('Parameters adds parameter', () => {
+  const updateParameterMock = jest.fn();
+  const component = shallowRenderComponent(Parameters, {
+    booleanParameters: [],
+    updateParameters: updateParameterMock
+  });
+
+  const booleansLength1 = component.state('booleanParameters').length;
+  component.find('button').simulate('click');
+  const booleansLength2 = component.state('booleanParameters').length;
+  expect(booleansLength1 + 1).toEqual(booleansLength2)
+  expect(updateParameterMock).toHaveBeenCalled();
+
+  // component.instance().addParameter = jest.fn();
+  // component.find('button').simulate('click');
+  // expect(component.instance().addParameter).toHaveBeenCalled();
 });
 
 test('NumberParameter renders without crashing', () => {
@@ -45,6 +92,7 @@ test('NumberParameter changes input', () => {
     }
   });
 
+
   const numberInput = component.find('input[type="number"]');
   const checkboxInput = component.find('input[type="checkbox"]');
 
@@ -56,8 +104,9 @@ test('NumberParameter changes input', () => {
   checkboxInput.simulate('change', { target: { checked: true } });
   expect(component.state('checked')).toEqual(true);
 
+  component.instance().updateExclusive = jest.fn();
   checkboxInput.simulate('change', { target: { checked: false } });
-  expect(component.state('checked')).toEqual(false);
+  expect(component.instance().updateExclusive).toHaveBeenCalled();
 });
 
 test('StaticParameter renders without crashing', () => {
