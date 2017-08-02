@@ -8,6 +8,7 @@ const archiver = require('archiver');
 const tmp = require('tmp');
 const Busboy = require('busboy');
 const Path = require('path');
+const axios = require('axios');
 
 
 module.exports = {
@@ -23,10 +24,15 @@ function getArtifactDetails(req, res) {
   request.get(`${Config.repo.baseUrl}/rest/session/token`, {auth:req.auth}, function(err, resp, body) {
     if(err) { res.sendStatus(500); return;}
     let headers = {'Accept':'application/vnd.api+json',
-                        'Content-type':'application/vnd.api+json'};
-    request.get(`${Config.repo.baseUrl}/node/${req.artifactNID}?_format=hal_json`, {auth: req.auth, headers: headers}, function(err, resp, body){
-      let paragraphUuid = body.data._embedded['http://localhost/rest/relation/node/artifact/field_artifact_representation'][0].uuid[0].value;
-      convertToElm(req, res, {paragraph: paragraphUuid});
+                    'Content-type':'application/vnd.api+json'};
+    request.get(`${Config.repo.baseUrl}/node/${req.body.nid}?_format=hal_json`, {auth: req.auth, headers: headers}, function(err, resp, body){
+      // res.send(body)
+      // return;
+      let paragraphUuid = null;//body._embedded[`${Config.repo.baseUrl}/rest/relation/node/artifact/field_artifact_representation`][0].uuid[0].value;
+      request.get(`${Config.repo.baseUrl}/rest/session/token`, function(err, response, body){
+          convertToElm(req, res, {paragraph: paragraphUuid, csrf: body});
+      })
+
     })
   })
 }
@@ -99,43 +105,35 @@ function pushToRepo(artifact, elm, req, res, context) {
   output.on('close', function() {
     let base64 = fs.readFileSync(fd.name).toString('base64');
     let headerData = {'Accept':'application/vnd.api+json',
-                          'Content-type':'application/vnd.api+json'};
+                          'Content-type':'application/vnd.api+json',
+                        'X-CSRF-Token': context.csrf};
     let date = new Date();
-    let logicPath = `cds/artifact/logic/${date.getUTCFullYear() + 1}-${date.getUTCMonth() + 1}/logic-version-${artifact.version}.zip`;
+
+    let logicPath = `cds/artifact/logic/${date.getUTCFullYear() + 1}-${date.getUTCMonth() + 1}/logic-version-${req.body.version}.zip`;
+
     let payload = {
         "data": {
             "type": "file--zip",
             "attributes": {
-            "data": base64,
-            "uri": `public://${logicPath}`
-          },
-          auth: req.auth
+                "data": base64,
+                "uri": `public://${logicPath}`
+            }
         }
-    };
-    request.post(`${Config.repo.baseUrl}/jsonapi/file/zip`, payload, function(err,response, body){
-      if(err) {
-        res.sendStatus(500);
-        return;
-      }
-      let update = {
-          "data": {
-              "type":"node--artifact",
-              "id": `${context.paragraphUuid}`,
-              "attributes": {
-                  "field_artifact_representation": {
-                      "field_logic_files": logicPath
-                  }
-              }
-          }
       };
-      let headers = {'Accept':'application/vnd.api+json',
-                          'Content-type':'application/vnd.api+json'};
-      request.patch(`${Config.repo.baseUrl}/jsonapi/node/artifact${context.paragraphUuid}`, update, {auth: req.auth, headers: headers}, function(err, resp, body){
-        if(err) { res.sendStatus(500); return}
-        res.sendStatus(200)
+    let headers = {
+      'Accept': 'application/vnd.api+json',
+      'Content-type': 'application/vnd.api+json',
+      'X-CSRF-Token': context.csrf
+    }
+
+    axios.post(`${Config.repo.baseUrl}/jsonapi/file/zip`, payload, {auth: req.body.auth, headers: headers})
+      .then(function(response){
+        res.sendStatus(200);
+        console.log(response);
+        // res.send({fileUuid: response.data.data.id, fileNid: res.data.data.attributes.fid});
+      }).catch((err) =>{
+        console.log(err);
+        res.sendStatus(500)
       })
-    })
-
-
   });
 }

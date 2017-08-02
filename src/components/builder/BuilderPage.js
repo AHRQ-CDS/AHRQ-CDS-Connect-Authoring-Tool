@@ -509,7 +509,7 @@ class BuilderPage extends Component {
   render() {
     return (
       <div className="builder">
-        <RepoUploadModal showModal={this.state.showPublishModal} closeModal={this.togglePublishModal} prepareArtifact={this.prepareArtifact.bind(this)}/>
+        <RepoUploadModal showModal={this.state.showPublishModal} closeModal={this.togglePublishModal} prepareArtifact={this.prepareArtifact.bind(this)} version={this.state.version}/>
         <header className="builder__header">
           <h2 className="builder__heading">{ this.state.name }</h2>
           <div className="builder__buttonbar">

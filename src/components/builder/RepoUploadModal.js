@@ -40,7 +40,6 @@ class RepoUploadModal extends Component {
   }
 
   _closeModal() {
-
     this.setState({showModal: false, page: AUTHENTICATE, authToken:null});
     this.props.closeModal();
   }
@@ -58,8 +57,8 @@ class RepoUploadModal extends Component {
   }
 
   _authenticate() {
-    let auth = {username: this.state.userName, password: this.state.password};
-    get(`${Config.repo.baseUrl}/rest/session/token`, {auth}).then((res) => {
+    // let auth = {username: this.state.userName, password: this.state.password};
+    get(`${Config.repo.baseUrl}/rest/session/token`).then((res) => {
       this.setState({authToken: res.data});
       this.fetchArtifacts();
     }).catch((res) =>{
@@ -79,7 +78,13 @@ class RepoUploadModal extends Component {
   _uploadArtifact(nid) {
     const artifact = this.props.prepareArtifact();
     let auth = {username: this.state.userName, password: this.state.password};
-    post(`${Config.api.baseUrl}/cql/publish`, {data: artifact, nid: nid, auth}).catch(() => this.setState({page: ERROR}))
+    let closeModal = this.closeModal;
+    post(`${Config.api.baseUrl}/cql/publish`, {data: artifact, nid: nid, auth, version:this.props.version})
+    .then((res) => {
+        console.log("Success");
+        closeModal();
+      })
+    .catch(() => this.setState({page: ERROR}))
     this.setState({page: STATUS, artifactNID: nid});
   }
 
@@ -143,8 +148,7 @@ class RepoUploadModal extends Component {
   renderUploadStatus() {
     return (
       <div>
-        Uploading artifact {this.state.artifactNID}.
-        The status of the upload goes here
+        Uploading artifact {this.state.artifactNID} to <a href={`${Config.repo.baseUrl}`}>repository</a>.
       </div>
     );
   }
@@ -152,7 +156,7 @@ class RepoUploadModal extends Component {
   renderErrorState() {
     return (
       <div>
-        The Artifact Repository could not be reached.
+        The <a href={`${Config.repo.baseUrl}`}>Artifact Repository</a> could not be reached.
       </div>
     )
   }
