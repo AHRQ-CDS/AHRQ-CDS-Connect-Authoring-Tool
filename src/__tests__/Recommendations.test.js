@@ -1,7 +1,7 @@
 import _ from 'lodash';
 import Recommendations from '../components/builder/Recommendations';
 import Recommendation from '../components/builder/Recommendation';
-import { fullRenderComponent, createTemplateInstance } from '../helpers/test_helpers';
+import { fullRenderComponent } from '../helpers/test_helpers';
 import { instanceTree, elementGroups } from '../helpers/test_fixtures';
 
 let component;
@@ -10,7 +10,7 @@ let updateRecommendations;
 let incrementUniqueIdCounter;
 let newRec;
 let existingRec;
-let existingRecUid = 'rec-100';
+const existingRecUid = 'rec-100';
 
 beforeEach(() => {
   updateRecommendations = jest.fn();
