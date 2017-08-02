@@ -1,0 +1,45 @@
+Demo Script for CDS Authoring Tool (8/1/17)
+This is a list of steps to run a demonstration of the main features of the CDS Authoring Tool.
+
+1. User selects "Artifacts" tab
+2. Create a new artifact by entering the "Artifact Name" and "Version" and clicking "New Artifact"
+  Name: Basic_Statin_Artifact
+  Version: 1
+3. User opens the artifact by clicking the name of the artifact in the list.
+4. User searches for and selects "Age Range" element
+  - User can use the scroll on the dropdown, the search bar, filter by the dropdown on the right, or use the browse modal by selecting "Browse" on the far right.
+5. User enters an element name (target_age) and any age (minimum = 40, maximum = 75)
+6. User selects AND from the dropdown directly beneath the element
+7. User search for and selects "Diabetes" element
+8. User clicks "Add Expression" on the element to add expressions
+9. User selects expressions in the following order: Active, Confirmed, Exists
+10. User searches for and selects "ASCVD Risk Assessment"
+11. User clicks "Add Expression" on the element to add expressions 
+12. User selects the following expressions: 
+  - Look Back and enters a number and selects the unit from the dropdown (6 years)
+  - Verified
+  - Most Recent
+  - Quantity Value
+  - Value Comparison and selects either one or both operators and enters either one or both numbers in the value box. (>= 7.5)
+13. User can click "Save" at the top right at any time to save progress on the artifact.
+14. User switches to Exclusions tab
+15. User searches for and adds "Pregnancy dx" element
+16. User selects OR from the dropdown directly beneath the element
+17. User searches for and adds "On Statin Therapy" element and adds the following expressions: Active, Exists
+18. User switches to the Subpopulations tab
+19. User clicks the "New Subpopulation" button
+20. User renames the subpopulation from "Subpopulation 1" to "ShouldStartStatin"
+21. User searches for and selects "ASCVD Risk Assessment" element
+22. User selects the same expressions as 12. (Value Comparison will be >= 10 instead)
+23. User switches to Recommendations tab
+24. User clicks "Add Subpopulation button"
+25. User selects a subpopulation to use or clicks "New Subpopulation" link to redirect back to Subpopulation tab. (select "ShouldStartStatin")
+26. User types a recommendation ("Start low to moderate statin")
+27. User clicks "Add Rationale" and types a rationale ("Based on guidelines...")
+28. User could click "Add Recommendation" to add a second recommendation for a different subpopulation
+29. User could switch to Parameters tab, click "New parameter" button and create a new parameter
+30. User switches to Handle Errors tab
+31. User selects "Recommendations is null" from the first select box under "If"
+32. User describes the error in the box under "Then" ("This is an error...")
+33. User clicks "Download CQL" button at the top right to download a zip file of the CQL artifact that was authored and the helper libraries the artifact uses.
+34. User clicks "Publish" button to publish the artifact to the repository
