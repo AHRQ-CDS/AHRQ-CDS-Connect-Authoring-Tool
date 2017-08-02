@@ -1,16 +1,16 @@
 <%# In the lateset version of CQL, pregnancy can be represented as either a Condition or an Observation, hence the special template -%>
 <% if (pregnancyNegated) {-%>
 define "<%-element_name%>"
-  not "__pregnancy"
+  not "__pregnancy_for_<%-element_name%>"
 
 <% } -%>
-define "MostRecentPregnancyObservationInLast42Weeks":
+define "MostRecentPregnancyObservationInLast42Weeks_for_<%-element_name%>":
   C3F.MostRecent(C3F.Verified(C3F.ObservationLookBack(C3F.ObservationsByConcept("<%=pregnancyStatusConcept%>"), 42 weeks)))
 
 <% if (pregnancyNegated) {-%>
-define "__pregnancy":
+define "__pregnancy_for_<%-element_name%>":
 <% } else { -%>
 define "<%-element_name%>":
 <% } -%>
   exists(C3F.Confirmed(C3F.ActiveCondition(C3F.ConditionLookBack([Condition: "<%=valueSetName%>"], 42 weeks))))
-  or C3F.ConceptValue("MostRecentPregnancyObservationInLast42Weeks") ~ "<%=pregnancyCodeConcept%>"
+  or C3F.ConceptValue("MostRecentPregnancyObservationInLast42Weeks_for_<%-element_name%>") ~ "<%=pregnancyCodeConcept%>"

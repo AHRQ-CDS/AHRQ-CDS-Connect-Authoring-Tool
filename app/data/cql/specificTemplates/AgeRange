@@ -1,10 +1,10 @@
 <% if (checkExistence) {-%>
 define "<%-element_name%>":
-  "__ageRange" <%-checkExistenceValue%>
+  "__ageRange_for_<%-element_name%>" <%-checkExistenceValue%>
   
 <% } -%>
 <% if (checkExistence) {-%>
-define "__ageRange":
+define "__ageRange_for_<%-element_name%>":
 <% } else { -%>
 define "<%-element_name%>":
 <% } -%>
