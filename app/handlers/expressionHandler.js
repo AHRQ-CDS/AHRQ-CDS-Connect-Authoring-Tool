@@ -19,7 +19,6 @@ function allGet(req, res) {
 
 // Get all expressions in a group
 function groupGet(req, res) {
-  console.log(req.params)
   Expression.find({ id : req.params.group_id }, (error, expressions) => {
     if (error) res.status(500).send(error);
     else res.json(expressions);

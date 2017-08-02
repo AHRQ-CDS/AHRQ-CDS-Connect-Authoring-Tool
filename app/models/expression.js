@@ -8,7 +8,7 @@ let ExpressionSchema = new Schema({
 	name: String,
 	extends: String,
 	modifiers: Array,
-	supressedModifiers: Array,
+	suppressedModifiers: Array,
 	returnType: String,
 	parameters: Array,
 	type: String

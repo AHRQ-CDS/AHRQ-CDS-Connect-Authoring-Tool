@@ -229,9 +229,9 @@ class TemplateInstance extends Component {
     if (!this.props.templateInstance.checkInclusionInVS) { // Rather than suppressing `CheckInclusionInVS` in every element, assume it's suppressed unless explicity stated otherwise
       _.remove(relevantModifiers, modifier => modifier.id === "CheckInclusionInVS");
     }
-    if (_.has(this.props.templateInstance, 'supressedModifiers')) {
-      this.props.templateInstance.supressedModifiers.forEach(surpressedModifier =>
-        _.remove(relevantModifiers, relevantModifier => relevantModifier.id === surpressedModifier)
+    if (_.has(this.props.templateInstance, 'suppressedModifiers')) {
+      this.props.templateInstance.suppressedModifiers.forEach(suppressedModifier =>
+        _.remove(relevantModifiers, relevantModifier => relevantModifier.id === suppressedModifier)
       )
     }
     this.setState({relevantModifiers});
