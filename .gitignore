@@ -21,4 +21,4 @@ yarn-error.log*
 
 # artifacts stored by mock-server
 /mock-repo/artifacts
-/mock-repo/node_modeuls
+/mock-repo/node_modules
