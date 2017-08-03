@@ -7,14 +7,15 @@ const instanceTree = {
   conjunction: true,
   returnType: 'boolean',
   path: '',
+  uniqueId: 'And-1',
   parameters: [
-    { id: 'element_name', type: 'string', name: 'Group Name', value: 'Includes' }
+    { id: 'element_name', type: 'string', name: 'Group Name', value: 'MeetsInclusionCriteria' }
   ],
   childInstances: [
     {
-      id: 'age_range',
+      id: 'AgeRange',
       name: 'Age Range',
-      category: 'Demographics',
+      returnType: 'boolean',
       parameters: [
         {
           id: 'element_name',
@@ -24,48 +25,47 @@ const instanceTree = {
         },
         {
           id: 'min_age',
-          type: 'integer',
+          type: 'number',
+          typeOfNumber: 'integer',
           name: 'Minimum Age',
           value: 30
         },
         {
           id: 'max_age',
-          type: 'integer',
+          type: 'number',
+          typeOfNumber: 'integer',
           name: 'Maximum Age',
           value: 45
         }
       ],
-      uniqueId: 'age_range31'
+      modifiers: [],
+      suppressedModifiers: [ "BooleanNot", "BooleanComparison"],
+      uniqueId: 'AgeRange-3'
     },
     {
-      id: 'most_recent_observation',
-      name: 'Most Recent Observation',
-      category: 'Observations',
+      id: 'LDLTest',
+      name: 'LDL Test',
+      extends: 'GenericObservation',
+      type: 'element',
+      returnType: 'list_of_observations',
       parameters: [
         {
           id: 'element_name',
-          type: 'string',
           name: 'Element Name',
-          value: 'name2'
+          type: 'string',
+          value: 'LDL_Test'
         },
         {
           id: 'observation',
-          type: 'observation',
           name: 'Observation',
-          value: {
-            id: 'ldl_cholesterol',
-            name: 'LDL Cholesterol',
-            oid: '2.16.840.1.113883.3.464.1003.198.12.1016',
-            units: {
-              values: [
-                'mg/dL'
-              ],
-              code: 'mg/dL'
-            }
-          }
+          static: true,
+          type: 'observation',
+          value: 'ldl_test'
         }
       ],
-      uniqueId: 'most_recent_observation67'
+      modifiers: [],
+      suppressedModifiers: ["ConceptValue"],
+      uniqueId: 'LDLTest-4'
     }
   ]
 };
@@ -80,16 +80,18 @@ const elementGroups = [
         id: 'AgeRange',
         name: 'Age Range',
         returnType: 'boolean',
+        suppressedModifiers: ['BooleanNot', 'BooleanComparison'],
         parameters: [
           { id: 'element_name', type: 'string', name: 'Element Name' },
-          { id: 'min_age', type: 'integer', name: 'Minimum Age' },
-          { id: 'max_age', type: 'integer', name: 'Maximum Age' },
+          { id: 'min_age', type: 'number', typeOfNumber: 'integer', name: 'Minimum Age' },
+          { id: 'max_age', type: 'number', typeOfNumber: 'integer', name: 'Maximum Age' },
         ],
       },
       {
         id: 'Gender',
         name: 'Gender',
         returnType: 'boolean',
+        cannotHaveModifiers: true,
         parameters: [
           { id: 'element_name', type: 'string', name: 'Element Name' },
           { id: 'gender', type: 'valueset', select: 'demographics/gender', name: 'Gender' },
@@ -106,33 +108,33 @@ const elementGroups = [
         id: 'TotalCholesterol',
         name: 'Total Cholesterol',
         extends: 'GenericObservation',
-        returnType: 'number', // TODO: these are all numbers because of the GenericObservation template - when it gets made more general, this might change back to observation
+        returnType: 'list_of_observations',
+        suppressedModifiers: ['ConceptValue'],
         parameters: [
           { id: 'element_name', value: 'TotalCholesterol' },
           { id: 'observation', static: true, value: 'total_cholesterol' },
-          { id: 'valid', static: true }
         ]
       },
       {
         id: 'HDLCholesterol',
         name: 'HDL Cholesterol',
         extends: 'GenericObservation',
-        returnType: 'number',
+        returnType: 'list_of_observations',
+        suppressedModifiers: ['ConceptValue'],
         parameters: [
           { id: 'element_name', value: 'HDLCholesterol' },
           { id: 'observation', static: true, value: 'hdl_cholesterol' },
-          { id: 'valid', value: 6 }
         ]
       },
       {
-        id: 'Cholesterol',
-        name: 'Cholesterol',
+        id: 'LDLTest',
+        name: 'LDL Test',
         extends: 'GenericObservation',
-        returnType: 'number',
+        returnType: 'list_of_observations',
+        suppressedModifiers: ['ConceptValue'],
         parameters: [
-          { id: 'element_name', value: 'Cholesterol' },
-          { id: 'observation', static: true, value: 'cholesterol' },
-          { id: 'valid', value: 6 }
+          { id: 'element_name', value: 'LDL_Test' },
+          { id: 'observation', static: true, value: 'ldl_test' },
         ]
       }
     ]
