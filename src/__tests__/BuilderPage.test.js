@@ -189,7 +189,7 @@ test('deletes instance at correct tree position', () => {
   expect(children).toHaveLength(initialInstancesLength - 1);
   expect(initializedComponent.find(TemplateInstance)).toHaveLength(initialInstancesLength - 1);
   expect(children.find(c => c.id === 'age_range')).toEqual(undefined);
-  expect(children[0].id).toEqual('most_recent_observation');
+  expect(children[0].id).toEqual('LDLTest');
 });
 
 test('gets a list of all instances', () => {

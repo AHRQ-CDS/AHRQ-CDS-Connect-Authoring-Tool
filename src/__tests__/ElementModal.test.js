@@ -114,7 +114,7 @@ describe('with modal open', () => {
     setInputValue('cholest');
 
     expect(component.state().searchValue).toEqual('cholest');
-    expect(component.state().elementList).toHaveLength(3);
+    expect(component.state().elementList).toHaveLength(2);
 
     setInputValue('age');
 
