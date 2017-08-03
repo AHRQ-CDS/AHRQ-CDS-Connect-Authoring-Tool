@@ -1,0 +1,23 @@
+.repo-upload-modal {
+  padding: 1em;
+
+  .repo-login-form {
+    display: flex;
+    flex-direction: column;
+  }
+  .repo-login-form,
+  .repo-upload-error-message {
+    margin-bottom: 0;
+  }
+  .repo-login-field {
+    margin-bottom: 1em;
+  }
+  .repo-list .buttonbar {
+    text-align: right;
+  }
+  &.repo-login-modal {
+    max-width: 300px;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+}
