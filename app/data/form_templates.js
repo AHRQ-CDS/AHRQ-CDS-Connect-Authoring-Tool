@@ -24,7 +24,7 @@ module.exports = [
         id: 'AgeRange',
         name: 'Age Range',
         returnType: 'boolean',
-        surpressedModifiers: ['BooleanNot', 'BooleanComparison'],
+        suppressedModifiers: ['BooleanNot', 'BooleanComparison'],
         parameters: [
           { id: 'element_name', type: 'string', name: 'Element Name' },
           { id: 'min_age', type: 'number', typeOfNumber: 'integer', name: 'Minimum Age' },
@@ -62,7 +62,7 @@ module.exports = [
         id: 'TotalCholesterol',
         name: 'Total Cholesterol',
         extends: 'GenericObservation',
-        surpressedModifiers: ['ConceptValue'],
+        suppressedModifiers: ['ConceptValue'],
         parameters: [
           { id: 'element_name', value: "TotalCholesterol"},
           { id: 'observation', static: true, value: "total_cholesterol"},
@@ -72,7 +72,7 @@ module.exports = [
         id: 'HDLCholesterol',
         name: 'HDL Cholesterol',
         extends: 'GenericObservation',
-        surpressedModifiers: ['ConceptValue'],
+        suppressedModifiers: ['ConceptValue'],
         parameters: [
           { id: 'element_name', value: "HDLCholesterol"},
           { id: 'observation', static: true, value: "hdl_cholesterol"},
@@ -82,7 +82,7 @@ module.exports = [
         id: 'LDLTest',
         name: 'LDL Test',
         extends: 'GenericObservation',
-        surpressedModifiers: ['ConceptValue'],
+        suppressedModifiers: ['ConceptValue'],
         parameters: [
           { id: 'element_name', value: "LDL_Test"},
           { id: 'observation', static: true, value: "ldl_test"}
@@ -92,7 +92,7 @@ module.exports = [
         id: 'SystolicBloodPressure',
         name: 'Systolic Blood Pressure',
         extends: 'GenericObservation',
-        surpressedModifiers: ['WithUnit'], // TODO add unit for this element
+        suppressedModifiers: ['WithUnit'], // TODO add unit for this element
         parameters: [
           { id: 'element_name', value: "SystolicBloodPressure"},
           { id: 'observation', static: true, value: "systolic_blood_pressure"},
@@ -103,7 +103,7 @@ module.exports = [
         name: 'ASCVD Risk Assessment',
         extends: 'GenericObservation',
         template: 'ObservationByConcept',
-        surpressedModifiers: ['ConceptValue', 'ConvertToMgPerdL', 'WithUnit'],
+        suppressedModifiers: ['ConceptValue', 'ConvertToMgPerdL', 'WithUnit'],
         parameters: [
           { id: 'element_name', value: "ASCVDRiskAssessment"},
           { id: 'observation', static: true, value: "ascvd_risk_assessment"},
@@ -115,7 +115,7 @@ module.exports = [
         template: 'ObservationByConcept',
         extends: 'GenericObservation',
         checkInclusionInVS: true, // Very few elements can check this, so this makes sense to require it to be specified
-        surpressedModifiers: ['QuantityValue', 'ConvertToMgPerdL', 'WithUnit'],
+        suppressedModifiers: ['QuantityValue', 'ConvertToMgPerdL', 'WithUnit'],
         parameters: [
           { id: 'element_name', value: "IsSmoker"},
           { id: 'observation',  static: true, value: "smoker"},
@@ -127,7 +127,7 @@ module.exports = [
         template: 'Breastfeeding',
         returnType: 'boolean',
         extends: 'Base',
-        surpressedModifiers: ['BooleanComparison', 'WithUnit', 'CheckExistence'],
+        suppressedModifiers: ['BooleanComparison', 'WithUnit', 'CheckExistence'],
         parameters: [
           { id: 'element_name', value: "IsBreastfeeding"},
           { id: 'observation', type:'breastfeeding', static: true, value: "breastfeeding"}
@@ -139,7 +139,7 @@ module.exports = [
         template: 'Breastfeeding_withLookBack',
         returnType: 'boolean',
         extends: 'Base',
-        surpressedModifiers: ['BooleanComparison', 'WithUnit', 'CheckExistence'],
+        suppressedModifiers: ['BooleanComparison', 'WithUnit', 'CheckExistence'],
         parameters: [
           { id: 'element_name', value: "IsBreastfeeding"},
           { id: 'observation', type:'breastfeeding', static: true, value: "breastfeeding"}
@@ -239,7 +239,7 @@ module.exports = [
         returnType: 'boolean',
         extends: 'Base',
         returnType: 'boolean',
-        surpressedModifiers: ['BooleanComparison', 'CheckExistence'], //TODO these might eventually be applicable, but the specificTemplate will need to handle them
+        suppressedModifiers: ['BooleanComparison', 'CheckExistence'], //TODO these might eventually be applicable, but the specificTemplate will need to handle them
         parameters: [
           { id: 'element_name', value: 'IsPregnant' },
           { id: 'pregnancy', type: 'pregnancy', static: true, value: 'pregnancy_dx' }
@@ -252,7 +252,7 @@ module.exports = [
         returnType: 'boolean',
         extends: 'Base',
         returnType: 'boolean',
-        surpressedModifiers: ['BooleanComparison', 'CheckExistence'],
+        suppressedModifiers: ['BooleanComparison', 'CheckExistence'],
         parameters: [
           { id: 'element_name', value: 'IsPregnant' },
           { id: 'pregnancy', type: 'pregnancy', static: true, value: 'pregnancy_dx_CMS347v1' }

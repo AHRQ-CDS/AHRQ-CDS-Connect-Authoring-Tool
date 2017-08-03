@@ -351,6 +351,14 @@ class BuilderPage extends Component {
     this.setState({recommendations : recs})
   }
 
+  setPreset = (treeName, preset, path, uid=null) => {
+    const treeData = this.findTree(treeName, uid);
+    const tree = treeData.tree;
+    let target = getValueAtPath(tree, path);
+    Object.assign(target, preset);
+    this.setTree(treeName, treeData, tree);
+  }
+
   editInstance = (treeName, editedParams, path, editingConjunctionType=false, uid=null) => {
     const treeData = this.findTree(treeName, uid);
     const tree = treeData.tree;
@@ -481,6 +489,7 @@ class BuilderPage extends Component {
         saveInstance={ this.saveInstance }
         getAllInstances={ this.getAllInstances }
         showPresets={ showPresets }
+        setPreset={ this.setPreset }
         categories={ this.state.categories }
       />
     :
@@ -560,6 +569,7 @@ class BuilderPage extends Component {
                 saveInstance={ this.saveInstance }
                 getAllInstances={ this.getAllInstances }
                 showPresets={ showPresets }
+                setPreset={ this.setPreset }
                 categories={ this.state.categories }
                 checkSubpopulationUsage={ this.checkSubpopulationUsage }
                 updateRecsSubpop={ this.updateRecsSubpop }

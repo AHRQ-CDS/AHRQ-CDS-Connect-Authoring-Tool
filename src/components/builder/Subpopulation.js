@@ -36,6 +36,10 @@ class Subpopulation extends Component {
     this.props.editInstance(treeName, params, path, editingConjunction, this.props.subpopulation.uniqueId);
   }
 
+  setPreset = (treeName, preset, path) => {
+    this.props.setPreset(treeName, preset, path, this.props.subpopulation.uniqueId);
+  }
+
   deleteInstance = (treeName, path, toAdd) => {
     this.props.deleteInstance(treeName, path, toAdd, this.props.subpopulation.uniqueId);
   }
@@ -89,6 +93,7 @@ class Subpopulation extends Component {
               saveInstance={ this.saveInstance }
               getAllInstances={ this.getAllInstances }
               showPresets={ this.props.showPresets }
+              setPreset={ this.setPreset }
               categories={ this.props.categories }
               subPopulationIndex={ this.props.subpopulationIndex }
             />

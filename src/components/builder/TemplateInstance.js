@@ -2,7 +2,6 @@ import React, { Component, PropTypes } from 'react';
 import axios from 'axios';
 import FontAwesome from 'react-fontawesome';
 import _ from 'lodash';
-import update from 'immutability-helper';
 import Config from '../../../config';
 
 // Try to keep these ordered same as in folder (i.e. alphabetically)
@@ -71,22 +70,12 @@ class TemplateInstance extends Component {
       showElement: true,
       showPresets: false,
       relevantModifiers: (this.modifersByInputType[this.props.templateInstance.returnType] || []),
-      appliedModifiers: [], // these get set in component did mount
       showModifiers: false
     };
 
     this.updateInstance = this.updateInstance.bind(this);
     this.selectTemplate = this.selectTemplate.bind(this);
     this.notThisInstance = this.notThisInstance.bind(this);
-
-    // TODO: all this modifier stuff should probably be pulled out into another component
-    this.renderAppliedModifiers = this.renderAppliedModifiers.bind(this);
-    this.renderAppliedModifier = this.renderAppliedModifier.bind(this);
-    this.renderModifierSelect = this.renderModifierSelect.bind(this);
-    this.removeLastModifier = this.removeLastModifier.bind(this);
-    this.updateAppliedModifier = this.updateAppliedModifier.bind(this);
-    this.handleModifierSelected = this.handleModifierSelected.bind(this);
-    this.filterRelevantModifiers = this.filterRelevantModifiers.bind(this);
   }
 
   componentWillMount() {
@@ -110,7 +99,10 @@ class TemplateInstance extends Component {
 
   componentWillReceiveProps(nextProps) {
     const otherInstances = this.getOtherInstances(nextProps);
-    this.setState({ otherInstances });
+    this.setState({
+      otherInstances,
+      returnType: !(_.isEmpty(nextProps.templateInstance.modifiers)) ? _.last(nextProps.templateInstance.modifiers).returnType : this.props.templateInstance.returnType
+    })
   }
 
   // Props will either be this.props or nextProps coming from componentWillReceiveProps
@@ -136,7 +128,7 @@ class TemplateInstance extends Component {
   }
 
 
-  renderAppliedModifier(modifier, index) {
+  renderAppliedModifier = (modifier, index) => {
     const modifierForm = ((modifier) => {
       switch (modifier.type || modifier.id) {
         case 'ValueComparison':
@@ -202,7 +194,7 @@ class TemplateInstance extends Component {
     return (
       <div key={index} className="modifier">
         {modifierForm}
-        { (index + 1 === this.state.appliedModifiers.length)
+        { (index + 1 === this.props.templateInstance.modifiers.length)
           ? <button
             onClick={this.removeLastModifier}
             className="modifier__deletebutton"
@@ -216,59 +208,57 @@ class TemplateInstance extends Component {
 
   }
 
-  renderAppliedModifiers() {
+  renderAppliedModifiers = () => {
     return (
       <div className="modifier__list">
-        {this.state.appliedModifiers.map((modifier, index) =>
+        {(this.props.templateInstance.modifiers || []).map((modifier, index) =>
           this.renderAppliedModifier(modifier, index)
         )}
       </div>
     );
   }
 
-  filterRelevantModifiers(returnType) {
-    if (_.isUndefined(returnType)) {
-      returnType = (_.last(this.state.appliedModifiers) || this.props.templateInstance).returnType;
+  setAppliedModifiers = (modifiers) => {
+    const returnType = _.isEmpty(modifiers) ? this.props.templateInstance.returnType : _.last(modifiers).returnType;
+    this.setState({returnType}, this.filterRelevantModifiers);
+    this.props.updateInstanceModifiers(this.props.treeName, modifiers, this.getPath(), this.props.subpopulationIndex);
+  }
+
+  filterRelevantModifiers = () => {
+    let relevantModifiers = this.modifersByInputType[this.state.returnType] || [];
+    if (!this.props.templateInstance.checkInclusionInVS) { // Rather than suppressing `CheckInclusionInVS` in every element, assume it's suppressed unless explicity stated otherwise
+      _.remove(relevantModifiers, modifier => modifier.id === "CheckInclusionInVS");
     }
-    if (!this.props.templateInstance.checkInclusionInVS) {
-      _.remove(this.modifersByInputType[returnType], modifier => modifier.id === "CheckInclusionInVS");
-    }
-    let relevantModifiers = this.modifersByInputType[returnType] || [];
-    if (_.has(this.props.templateInstance, 'surpressedModifiers')) {
-      this.props.templateInstance.surpressedModifiers.forEach(surpressedModifier =>
-        _.remove(relevantModifiers, relevantModifier => relevantModifier.id === surpressedModifier)
+    if (_.has(this.props.templateInstance, 'suppressedModifiers')) {
+      this.props.templateInstance.suppressedModifiers.forEach(suppressedModifier =>
+        _.remove(relevantModifiers, relevantModifier => relevantModifier.id === suppressedModifier)
       )
     }
-    this.setState({returnType: returnType});
-    this.setState({relevantModifiers: relevantModifiers});
+    this.setState({relevantModifiers});
   }
 
-  handleModifierSelected(event) {
-    let selectedModifier = this.modifierMap[event.target.value]
-    this.setAppliedModifiers(this.state.appliedModifiers.concat([selectedModifier]));
+  handleModifierSelected = (event) => {
+    const selectedModifier = _.cloneDeep(this.modifierMap[event.target.value]);
+    const modifiers = (this.props.templateInstance.modifiers || []).concat(selectedModifier);
     this.setState({ showModifiers: false });
+    this.setAppliedModifiers(modifiers);
   }
 
-  updateAppliedModifier(index, value) {
-    this.setAppliedModifiers(update(this.state.appliedModifiers, {[index]: {values: {$merge: value}} }));
-  }
-  setAppliedModifiers(appliedModifiers) {
-    this.setState({appliedModifiers: appliedModifiers}, this.filterRelevantModifiers);
-    this.props.updateInstanceModifiers(this.props.treeName, appliedModifiers, this.getPath(), this.props.subpopulationIndex);
+  removeLastModifier = () => {
+    const modifiers = _.initial(this.props.templateInstance.modifiers);
+    this.setAppliedModifiers(modifiers);
   }
 
-  removeLastModifier() {
-    let newAppliedModifiers = this.state.appliedModifiers.slice();
-    newAppliedModifiers.pop();
-    this.setState({returnType: _.isEmpty(newAppliedModifiers) ? this.props.templateInstance.returnType : _.last(newAppliedModifiers).returnType});
-    this.setAppliedModifiers(newAppliedModifiers)
+  updateAppliedModifier = (index, value) => {
+    let modifiers = this.props.templateInstance.modifiers;
+    _.assign(modifiers[index].values, value);
+    this.setAppliedModifiers(modifiers);
   }
 
-  renderModifierSelect() {
-    // filter modifiers?
+  renderModifierSelect = () => {
     return (
       <div>
-        { (!this.props.templateInstance.cannotHaveModifiers && (this.state.relevantModifiers.length > 0 || this.state.appliedModifiers.length === 0))
+        { (!this.props.templateInstance.cannotHaveModifiers && (this.state.relevantModifiers.length > 0 || this.props.templateInstance.modifiers.length === 0))
           ?
             <div className="modifier__selection">
               <button
@@ -344,13 +334,11 @@ class TemplateInstance extends Component {
 
   setPreset(stateIndex) {
     if (!this.state.presets || _.isNaN(_.toNumber(stateIndex))) return;
-    this.props.templateInstance.parameters = this.state.presets[stateIndex].parameters;
-    for (let i = 0; i < this.state.presets[stateIndex].parameters.length; i++) {
-      const param = this.state.presets[stateIndex].parameters[i];
-      const newState = {};
-      newState[param.id] = param.value;
-      this.updateInstance(newState);
-    }
+    const uniqueId = this.props.templateInstance.uniqueId;
+    const preset = this.state.presets[stateIndex];
+    preset.uniqueId = uniqueId;
+    this.props.setPreset(this.props.treeName, preset, this.getPath());
+    this.setState({ showPresets: !this.state.showPresets })
   }
 
   showHideElementBody() {
@@ -385,7 +373,7 @@ class TemplateInstance extends Component {
           </span>
           <div className="element__buttonbar">
             { this.props.renderIndentButtons(this.props.templateInstance) }
-            {/* <button
+            <button
               id={`presets-${this.props.templateInstance.uniqueId}`}
               aria-controls={`presets-list-${this.props.templateInstance.uniqueId}`}
               onClick={this.showPresets.bind(this, this.props.templateInstance.id)}
@@ -398,7 +386,7 @@ class TemplateInstance extends Component {
               className="element__savebutton"
               aria-label={`save ${this.props.templateInstance.name}`}>
               <FontAwesome fixedWidth name='save'/>
-            </button> */}
+            </button>
             <button
               onClick={this.showHideElementBody.bind(this)}
               className="element__hidebutton"

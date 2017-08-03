@@ -36,7 +36,11 @@ function singleGet(req, res) {
 
 // Post a single expression
 function singlePost(req, res) {
-  Expression.create(req.body,
+  req.body.name = req.body.name.length ? req.body.name : 'Untitled';
+  Expression.findOneAndUpdate(
+    { name : req.body.name },
+    req.body,
+    { upsert : true },
     (error, response) => {
       if (error) res.status(500).send(error);
       else res.status(201).json(response);

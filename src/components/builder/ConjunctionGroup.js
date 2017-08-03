@@ -201,6 +201,7 @@ class ConjunctionGroup extends Component {
                   saveInstance={ this.props.saveInstance }
                   getAllInstances={ this.props.getAllInstances }
                   showPresets={ this.props.showPresets }
+                  setPreset={ this.props.setPreset }
                   categories={ this.props.categories }
                   subPopulationIndex={ this.props.subPopulationIndex }
                 />
@@ -222,6 +223,7 @@ class ConjunctionGroup extends Component {
                   deleteInstance={ this.props.deleteInstance }
                   saveInstance={ this.props.saveInstance }
                   showPresets={ this.props.showPresets }
+                  setPreset={ this.props.setPreset }
                   subpopulationIndex={ this.props.subPopulationIndex }
                   renderIndentButtons={ this.renderIndentButtons }
                 />

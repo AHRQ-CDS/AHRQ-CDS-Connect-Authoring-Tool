@@ -92,6 +92,7 @@ class Subpopulations extends Component {
               saveInstance={ this.props.saveInstance }
               getAllInstances={ this.props.getAllInstances }
               showPresets={ this.props.showPresets }
+              setPreset={ this.props.setPreset }
               categories={ this.props.categories } />
           );
         })}
