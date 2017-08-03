@@ -1,4 +1,4 @@
-library CDS_Connect_Commons_for_FHIRv102 version '1'
+library CDS_Connect_Commons_for_FHIRv102 version '1.1.0'
 
 using FHIR version '1.0.2'
 
@@ -120,6 +120,17 @@ define function ConceptValue(Obs Observation):
 define function FindDate(Obs Observation):
   Coalesce(Obs.effectiveDateTime.value, Obs.effectivePeriod."end".value, Obs.effectivePeriod."start".value, Obs.issued.value)
 
+// TODO: Confirm that this works as expected
+/**
+ * The highest observation. 
+ * The value will be used to compare Observations and determine the highest one.
+ * @param ObsList - a list of Observations
+ * @returns {System.Quantity} the quantity with the highest value from the list, or null if null was passed in
+ */
+define function HighestObservation(ObsList List<Observation>):
+  Max(ObsList O return NullSafeToQuantity(O.valueQuantity))
+
+
 // -------------------------------------------------- CONDITIONS -------------------------------------------------------
 
 /**
@@ -169,6 +180,22 @@ define function ActiveCondition(CondList List<Condition>):
 define function ActiveOrRecurring(CondList List<Condition>):
   CondList C where C.clinicalStatus.value in {'active', 'relapse'}
 
+/**
+ * Conditions with an onset or recorded date in the specified "look back" period.  For example, pregnancy in
+ * the last 42 weeks.
+ * TODO: Rename to LookBack once the execution engine supports overloaded functions.
+ * @param CondList - a list of Conditions
+ * @returns {List<Condition>} a list of Conditions with onset or recorded date specified lookback period, or null
+ * if null was passed in
+ */
+define function ConditionLookBack(CondList List<Condition>, LookBack System.Quantity):
+  CondList C
+    let LookBackInterval: Interval[Now() - LookBack, Now()]
+    where C.onsetDateTime.value in LookBackInterval
+      or NullSafeToInterval(C.onsetPeriod) overlaps LookBackInterval
+      or C.dateRecorded in LookBackInterval 
+      // TODO Confirm these are the correct fields to use
+
  // -------------------------------------------------- PROCEDURES ------------------------------------------------------
 
 /**
@@ -181,6 +208,18 @@ define function ActiveOrRecurring(CondList List<Condition>):
 define function Completed(ProcList List<Procedure>):
   ProcList P
     where P.status.value = 'completed'
+      and P.notPerformed.value is not true
+
+/**
+ * Procedures that are in progress. In FHIR DSTU2, this is reflected by status: 'in-progress'.  In addition, the
+ * notPerformed flag must be checked to ensure it is not 'true'.
+ * @see http://hl7.org/fhir/DSTU2/valueset-procedure-status.html
+ * @param ProcList - a list of Procedures
+ * @returns {List<Procedure>} a list of completed Procedures, or null if null was passed in
+ */
+define function ProcedureInProgress(ProcList List<Procedure>):
+  ProcList P
+    where P.status.value = 'in-progress'
       and P.notPerformed.value is not true
 
 /**
@@ -231,3 +270,41 @@ define function ActiveMedicationOrder(MedList List<MedicationOrder>):
   MedList M
     where M.status.value = 'active'
       and M.dateEnded.value is null
+      
+/**
+* Medications that are active or completed, according to a prescription.  In FHIR DSTU2, this is reflected by MedicationOrder
+* with status 'active' or 'completed'
+* @see http://hl7.org/fhir/DSTU2/valueset-medication-order-status.html
+* @param MedList - a list of MedicationOrders
+* @returns {List<MedicationOrder>} a list of active medication orders, or null if null was passed in
+*/
+define function ActiveOrCompletedMedicationOrder(MedList List<MedicationOrder>):
+  MedList M
+    where M.status.value = 'active'
+      or M.status.value = 'completed'
+
+// -------------------------------------------------- ENCOUNTERS ------------------------------------------------------
+
+/**
+ * Encounters that are in progress. In FHIR DSTU2, this is reflected by status: 'in-progress'.
+ * @see http://hl7.org/fhir/DSTU2/valueset-encounter-state.html
+ * @param EncList - a list of Encounters
+ * @returns {List<Encounter>} a list of in progress encounters, or null if null was passed in
+ */
+define function InProgress(EncList List<Encounter>):
+  EncList E
+    where E.status.value = 'in-progress'
+    
+// -------------------------------------------------- ALLERGY INTOLERANCES ------------------------------------------------------
+
+/**
+* AllergyIntolerances that are active or confirmed.  In FHIR DSTU2, this is reflected by AllergyIntolerance
+* with status 'active' or 'confirmed'
+* @see http://hl7.org/fhir/DSTU2/valueset-allergy-intolerance-status.html
+* @param AllergyIntolList - a list of AllergyIntolerances
+* @returns {List<AllergyIntolerance>} a list of active or confirmed allergy intolerances, or null if null was passed in
+*/
+define function ActiveOrConfirmedAllergyIntolerance(AllergyIntolList List<AllergyIntolerance>):
+  AllergyIntolList A
+    where A.status.value = 'active'
+      or A.status.value = 'confirmed'
