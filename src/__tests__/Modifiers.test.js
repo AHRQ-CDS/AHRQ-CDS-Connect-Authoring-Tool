@@ -172,7 +172,7 @@ test('WithUnit renders without crashing', () => {
   expect(component).toBeDefined();
 });
 
-test('WithUnit changes input', () => {
+test('WithUnit changes select', () => {
   const updateAppliedModifierMock = jest.fn();
   const component = shallowRenderComponent(WithUnit, {
     updateAppliedModifier: updateAppliedModifierMock,
@@ -180,7 +180,7 @@ test('WithUnit changes input', () => {
     unit: ''
   });
 
-  component.find('input').simulate('change', { target: { value: 'foo' }})
+  component.find('select').simulate('change', { target: { value: 'mg/dL' }})
   expect(updateAppliedModifierMock).toHaveBeenCalled();
-  expect(updateAppliedModifierMock).toBeCalledWith(5, { unit: 'foo' });
+  expect(updateAppliedModifierMock).toBeCalledWith(5, { unit: 'mg/dL' });
 });
