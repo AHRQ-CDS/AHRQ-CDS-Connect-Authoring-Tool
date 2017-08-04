@@ -21,7 +21,7 @@ class ErrorStatement extends Component {
       if (s.special) {
         return({label: s.subpopulationName, value: s.special_subpopulationName});
       } else {
-        return({label: s.subpopulationName, value: s.subpopulationName});
+        return({label: s.subpopulationName, value: s.subpopulationName ? `"${s.subpopulationName}"` : `"${s.uniqueId}"`});
       }
     });
     return dropdown.concat(params).concat(subpops);

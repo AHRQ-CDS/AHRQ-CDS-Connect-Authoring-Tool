@@ -140,7 +140,9 @@ class CqlArtifact {
   parseConjunction(element) {
     const conjunction = {template : element.id, components : []};
     // Assume it's in the population if they're referenced from the `Recommendations` tab
-    conjunction.assumeInPopulation = this.recommendations.some(recommendation => (_.head(recommendation.subpopulations).subpopulationName) === element.subpopulationName);
+    conjunction.assumeInPopulation = this.recommendations.some(recommendation => {
+              return recommendation.subpopulations.some(subpopref => subpopref.subpopulationName === element.subpopulationName);
+    });
     const name = element.parameters[0].value;
     conjunction.element_name = (name || element.subpopulationName || element.uniqueId);
     element.childInstances.forEach((child) => {
