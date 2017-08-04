@@ -4,7 +4,7 @@ import FontAwesome from 'react-fontawesome';
 import update from 'immutability-helper';
 import Select from 'react-select';
 
-const subpopTabIndex = 3;
+const subpopTabIndex = 2;
 
 class Recommendation extends Component {
   static propTypes = {
@@ -164,7 +164,7 @@ class Recommendation extends Component {
                 <button className="button" aria-label="copy recommendation"><FontAwesome fixedWidth name='copy' /></button>
               </div> */}
               <div className="control recommendation__remove">
-                <button className="button" aria-label="remove recommendation"  onClick={() => this.props.onRemove(this.props.id)}><FontAwesome fixedWidth name='times' /></button>
+                <button className="button" aria-label="remove recommendation"  onClick={() => this.props.onRemove(this.props.rec.uid)}><FontAwesome fixedWidth name='times' /></button>
               </div>
             </div>
           </div>
@@ -177,7 +177,7 @@ class Recommendation extends Component {
         </div>
         {
           this.state.showRationale ?
-            <div className="field">
+            <div className="field recommendation__rationale">
               <div className="field-label is-large">
                 <label className="label has-text-left">Rationale...</label>
               </div>
@@ -187,7 +187,7 @@ class Recommendation extends Component {
               </div>
             </div>
           :
-            <button className="button" onClick={() => this.setState({ showRationale: !this.state.showRationale })}>Add rationale</button>
+            <button className="button recommendation__add-rationale" onClick={() => this.setState({ showRationale: !this.state.showRationale })}>Add rationale</button>
         }
         { this.shouldShowSubpopulations() ? null : <button className="button is-pulled-right" name="subpopulation" onClick={this.revealSubpopulations}>Add subpopulation</button> }
       </section>

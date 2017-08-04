@@ -307,10 +307,14 @@ class BuilderPage extends Component {
     }
   }
 
+  incrementUniqueIdCounter = () => {
+    this.setState({ uniqueIdCounter: this.state.uniqueIdCounter + 1 });
+  }
+
   createTemplateInstance = (template, children = undefined) => {
     const instance = _.cloneDeep(template);
     instance.uniqueId = `${instance.id}-${this.state.uniqueIdCounter}`;
-    this.setState({ uniqueIdCounter: this.state.uniqueIdCounter + 1 });
+    this.incrementUniqueIdCounter();
 
     if (template.conjunction) {
       instance.childInstances = children || [];
@@ -588,6 +592,8 @@ class BuilderPage extends Component {
                   recommendations={ this.state.recommendations }
                   subpopulations={ this.state.subpopulations }
                   setActiveTab={ this.setActiveTab }
+                  uniqueIdCounter={ this.state.uniqueIdCounter }
+                  incrementUniqueIdCounter={ this.incrementUniqueIdCounter }
                   />
               </TabPanel>
               <TabPanel>

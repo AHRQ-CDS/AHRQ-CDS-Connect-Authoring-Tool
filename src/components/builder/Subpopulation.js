@@ -6,7 +6,21 @@ import ConjunctionGroup from './ConjunctionGroup';
 
 class Subpopulation extends Component {
   static propTypes = {
+    subpopulation: PropTypes.object.isRequired,
+    subpopulationIndex: PropTypes.number.isRequired,
+    setSubpopulationName: PropTypes.func.isRequired,
+    deleteSubpopulation: PropTypes.func.isRequired,
+    addInstance: PropTypes.func.isRequired,
+    editInstance: PropTypes.func.isRequired,
     updateInstanceModifiers: PropTypes.func.isRequired,
+    deleteInstance: PropTypes.func.isRequired,
+    saveInstance: PropTypes.func.isRequired,
+    getAllInstances: PropTypes.func.isRequired,
+    treeName: PropTypes.string.isRequired,
+    booleanParameters: PropTypes.array.isRequired,
+    createTemplateInstance: PropTypes.func.isRequired,
+    showPresets: PropTypes.func.isRequired,
+    categories: PropTypes.array.isRequired
   }
   constructor(props) {
     super(props);

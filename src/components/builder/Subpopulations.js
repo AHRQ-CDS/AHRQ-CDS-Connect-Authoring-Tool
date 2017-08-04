@@ -8,8 +8,18 @@ class Subpopulations extends Component {
     subpopulations: PropTypes.array.isRequired,
     updateSubpopulations: PropTypes.func.isRequired,
     categories: PropTypes.array.isRequired,
+    addInstance: PropTypes.func.isRequired,
+    editInstance: PropTypes.func.isRequired,
     updateInstanceModifiers: PropTypes.func.isRequired,
-    updateRecsSubpop: PropTypes.func.isRequired
+    deleteInstance: PropTypes.func.isRequired,
+    saveInstance: PropTypes.func.isRequired,
+    getAllInstances: PropTypes.func.isRequired,
+    updateRecsSubpop: PropTypes.func.isRequired,
+    createTemplateInstance: PropTypes.func.isRequired,
+    checkSubpopulationUsage: PropTypes.func.isRequired,
+    booleanParameters: PropTypes.array.isRequired,
+    name: PropTypes.string.isRequired,
+    showPresets: PropTypes.func.isRequired
   };
 
   constructor(props) {
@@ -23,12 +33,6 @@ class Subpopulations extends Component {
       subpopulations: this.props.subpopulations.filter(sp => !sp.special), // Don't want to allow user interaction with the two default subpopulations added by the system
       numOfSpecialSubpopulations: this.props.subpopulations.filter(sp => sp.special).length
     };
-  }
-
-  componentWillMount() {
-    if (!this.props.subpopulations.length) {
-      this.addSubpopulation();
-    }
   }
 
   componentWillReceiveProps(nextProps) {
@@ -52,7 +56,7 @@ class Subpopulations extends Component {
   deleteSubpopulation = (uniqueId) => {
     const subpopExists = this.props.checkSubpopulationUsage(uniqueId);
     if (subpopExists) {
-      alert('Subpopulation in use')
+      alert('Subpopulation in use');
     } else {
       const newSubpopulations = _.cloneDeep(this.props.subpopulations);
       const subpopulationIndex = this.props.subpopulations.findIndex(sp => sp.uniqueId === uniqueId);
