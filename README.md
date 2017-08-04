@@ -50,12 +50,14 @@ yarn run lint-css # runs stylelint 'src/styles/**/*.scss' using the configuratio
 ```
 
 ### Testing
-Testing uses [jsdom](https://github.com/tmpvar/jsdom) with [Jest](https://facebook.github.io/jest/) as the test runner. [Enzyme](http://airbnb.io/enzyme/docs/api/index.html) provides helpers. Run tests with
+Frontend testing uses [jsdom](https://github.com/tmpvar/jsdom) with [Jest](https://facebook.github.io/jest/) as the test runner. [Enzyme](http://airbnb.io/enzyme/docs/api/index.html) provides helpers. Backend testing uses [Chai](http://chaijs.com/) with [Mocha](http://mochajs.org/) as the test runner. Run tests with
 
 ```bash
-yarn run test # runs all tests
-yarn test # also runs all tests
-yarn test -- --coverage # view test coverage
+yarn run test # runs all frontend tests
+yarn test # also runs all frontend tests
+yarn test -- --coverage # view frontend test coverage
+yarn run test-backend # runs all backend tests
+yarn test-backend # also runs all backend tests
 ```
 
 Jest provides the overall testing framework. The default setup running Jest via `yarn run test` will only run any tests that have been updated since the last commit. Use the prompt to specify running all tests or specific tests. Useful tools it provides are:
