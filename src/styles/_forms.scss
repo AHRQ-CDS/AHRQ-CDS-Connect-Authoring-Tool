@@ -97,3 +97,15 @@
     box-shadow: none;
   }
 }
+
+// Fix issue with Bulma where hovered/focused/active Publish button would display over modal.
+// Below copied from Bulma output CSS.
+.field.has-addons .control .button {
+  &:hover,
+  &:focus,
+  &.is-focused,
+  &:active,
+  &.is-active {
+    z-index: 0;
+  }
+}

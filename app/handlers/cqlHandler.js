@@ -20,7 +20,8 @@ const includeLibraries = [{name: 'FHIRHelpers', version: '1.0.2', alias: 'FHIRHe
 
 module.exports = {
    objToCql : objToCql,
-   idToObj : idToObj
+   idToObj : idToObj,
+   buildCQL: buildCQL
 }
 
 // Creates the cql file from an artifact ID
@@ -477,4 +478,8 @@ class CqlArtifact {
       type : 'text/plain'
     }
   }
+}
+
+function buildCQL(artifactBody) {
+  return new CqlArtifact(artifactBody);
 }

@@ -11,6 +11,7 @@ import Subpopulations from './Subpopulations';
 import Parameters from './Parameters';
 import ErrorStatement from './ErrorStatement';
 import Config from '../../../config';
+import RepoUploadModal from './RepoUploadModal';
 
 // Suppress is a flag that is specific to an element. It should not be inherited by children
 const ELEMENT_SPECIFIC_FIELDS = ['suppress'];
@@ -474,6 +475,11 @@ class BuilderPage extends Component {
     }
   }
 
+  togglePublishModal = () => {
+    this.setState({showPublishModal: !this.state.showPublishModal});
+  }
+
+
   renderConjunctionGroup = (treeName) => (
     this.state[treeName].childInstances ?
       <ConjunctionGroup
@@ -503,6 +509,7 @@ class BuilderPage extends Component {
   render() {
     return (
       <div className="builder">
+        <RepoUploadModal showModal={this.state.showPublishModal} closeModal={this.togglePublishModal} prepareArtifact={this.prepareArtifact.bind(this)} version={this.state.version}/>
         <header className="builder__header">
           <h2 className="builder__heading">{ this.state.name }</h2>
           <div className="builder__buttonbar">
@@ -526,7 +533,7 @@ class BuilderPage extends Component {
                 </button>
               </span>
               <span className="control">
-                <button onClick={ () => { this.updateStatusMessage('publish'); this.saveArtifact(false); } }
+                <button onClick={ () => { this.saveArtifact(false); this.togglePublishModal() } }
                   className="button builder__publishbutton">
                   <span className="icon is-small">
                     <i className="fa fa-align-right"></i>

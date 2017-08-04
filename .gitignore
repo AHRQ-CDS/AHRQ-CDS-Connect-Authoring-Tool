@@ -18,3 +18,7 @@ yarn-error.log*
 
 # sass outputs
 *.css
+
+# artifacts stored by mock-server
+/mock-repo/artifacts
+/mock-repo/node_modules
