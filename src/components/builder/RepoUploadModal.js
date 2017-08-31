@@ -17,8 +17,8 @@ class RepoUploadModal extends Component {
     super(props);
 
     this.state = {
-      userName: 'cds-authoring-tool',
-      password: '65ebd1ea',
+      userName: '',
+      password: '',
       artifacts: [],
       errors: [],
       authToken: null,
