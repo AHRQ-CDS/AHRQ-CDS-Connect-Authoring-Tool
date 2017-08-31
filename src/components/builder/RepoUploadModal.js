@@ -17,8 +17,8 @@ class RepoUploadModal extends Component {
     super(props);
 
     this.state = {
-      userName: '',
-      password: '',
+      userName: 'cds-authoring-tool',
+      password: '65ebd1ea',
       artifacts: [],
       errors: [],
       authToken: null,
@@ -69,11 +69,9 @@ class RepoUploadModal extends Component {
 
   _fetchArtifacts() {
     let headers = {'Content-type':'application/hal+json','X-CSRF-Token':this.state.authToken};
-    get(`${Config.repo.baseUrl}/rest/views/artifacts`, {headers}).then((res) => {
+    get('/api/repository/artifacts').then((res) => {
       this.setState({artifacts: res.data, page: LIST})
-    }).catch((res) =>{
-      this.setState({page: ERROR})
-    });
+    })
   }
 
   _uploadArtifact(nid) {
@@ -131,7 +129,7 @@ class RepoUploadModal extends Component {
               this.updatePassword(event.target.value)
             }}
           />
-          <button className="primary-button" onClick={this.authenticate}>Login</button>
+          <button className="primary-button" onClick={this.fetchArtifacts}>Login</button>
         </div>
       </div>
     );

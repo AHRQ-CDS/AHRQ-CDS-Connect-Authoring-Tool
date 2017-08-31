@@ -17,6 +17,8 @@ module.exports = function(app) {
   // Routing for Artifact Elements
   app.use('/api/expressions', require('./routers/expressionRouter'))
 
+  app.use('/api/repository', require('./routers/repository'))
+
   // Catch all other Api calls
   app.get('/api/*', function(req, res) { res.sendStatus(404); });
 
