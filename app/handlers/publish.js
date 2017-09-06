@@ -116,10 +116,9 @@ function pushToRepo(artifact, elm, req, res, context) {
     let name = req.body.auth.username;
     let pass = req.body.auth.password;
     let authData = {name:name, pass: pass};
-    let version = req.body.version;
     let NID = req.body.nid;
-    upload.submitArtifactToRepo(Config.repo.baseUrl, authData, NID, version, base64).then((upload) => {
-      res.send(upload);
+    upload.submitArtifactFileToRepo(Config.repo.baseUrl, authData, NID, artifact.name, artifact.version, base64).then((uploaded) => {
+      res.send(uploaded);
     });
 
   });
