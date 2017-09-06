@@ -47,11 +47,11 @@ function objToCql(req, res) {
   });
   res.attachment('archive-name.zip');
   archive.pipe(res);
-  
+
   // Add helper Library
   let path = __dirname + '/../data/library_helpers/';
   archive.directory(path, '/');
-  
+
   archive.append(cqlObject.text, { name : `${cqlObject.filename}.cql` });
   archive.finalize();
 }
@@ -475,6 +475,8 @@ class CqlArtifact {
   // Return a cql file as a json object
   toJson() {
     return {
+      name : this.name,
+      version : this.version,
       filename : this.name,
       text : this.toString(),
       type : 'text/plain'

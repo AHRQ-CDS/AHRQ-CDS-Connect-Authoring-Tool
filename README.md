@@ -87,15 +87,16 @@ docker build -t cdsauthoringtool .
 
 ### Running the docker container
 
-For the authoring tool to run in a docker container, a MongoDB docker container must be linked.  The following commands create the link, as well as expose the necessary ports to access the application from the host system:
+For the authoring tool to run in a docker container, MongoDB and CQL-to-ELM docker containers must be linked.  The following commands create the links, as well as expose the necessary ports to access the application from the host system:
 ```
+docker run --name cat-cql2elm -d cqframework/cql-translation-service:v1.2.10-SNAPSHOT
 docker run --name cat-mongo -d mongo:3.4
-docker run --name cat --link cat-mongo:mongo -e "MONGO_URL=mongodb://cat-mongo/cds_authoring" -p "9000:9000" cdsauthoringtool
+docker run --name cat --link cat-cql2elm:cql2elm --link cat-mongo:mongo -e "REPO_BASE_URL=https://cdsconnect.ahrqdev.org" -e "CQL_TO_ELM_URL=http://cql2elm:8080/cql/translator" -e "MONGO_URL=mongodb://mongo/cds_authoring" -p "9000:9000" cdsauthoringtool
 ```
 
 By default, the server on port 9000 will proxy requests on _/api_ to the local API server using express-http-proxy.  In production environments, a dedicated external proxy server may be desired.  In that case, the external proxy server will be responsible for proxying _/api_ to port 3001.  To accomodate this, disable the express-http-proxy and expose port 3001.  Instead of the last command above, run this instead:
 ```
-docker run --name cat --link cat-mongo:mongo -e "MONGO_URL=mongodb://cat-mongo/cds_authoring" -e "DISABLE_API_PROXY=true" -p "9000:9000" -p "3001:3001" cdsauthoringtool
+docker run --name cat --link cat-cql2elm:cql2elm --link cat-mongo:mongo -e "REPO_BASE_URL=https://cdsconnect.ahrqdev.org" -e "CQL_TO_ELM_URL=http://cql2elm:8080/cql/translator" -e "MONGO_URL=mongodb://mongo/cds_authoring" -e "DISABLE_API_PROXY=true" -p "9000:9000" -p "3001:3001" cdsauthoringtool
 ```
 
 To run the CDS Authoring Tool in a detached process, add a `-d` to the run command (before `cdsauthoringtool`).
@@ -104,17 +105,17 @@ When the containers are running, access the app at [http://localhost:9000](http:
 
 To stop the containers:
 ```
-docker stop cat cat-mongo
+docker stop cat cat-mongo cat-cql2elm
 ```
 
 To start the containers again:
 ```
-docker start cat-mongo cat
+docker start cat-cql2elm cat-mongo cat
 ```
 
 To remove the containers (usually when building new images):
 ```
-docker rm cat-mongo cat
+docker rm cat cat-mongo cat-cql2elm
 ```
 
 **NOTE: This configuration stores data in Mongo's container.  This means it is tied to the lifecycle of the mongo container and is _not_ persisted when the container is removed.**
