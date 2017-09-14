@@ -26,7 +26,7 @@ class RepoUploadModal extends Component {
       page: AUTHENTICATE,
       artifactNID: null,
       uploadStatus: null
-    }
+    };
 
     this.closeModal = this._closeModal.bind(this);
     this.updateUserName = this._updateUserName.bind(this);
@@ -37,54 +37,54 @@ class RepoUploadModal extends Component {
   }
 
   _openModal() {
-    this.setState({showModal: true});
+    this.setState({ showModal: true });
   }
 
   _closeModal() {
-    this.setState({showModal: false, page: AUTHENTICATE, authToken:null});
+    this.setState({ showModal: false, page: AUTHENTICATE, authToken: null });
     this.props.closeModal();
   }
 
   // This function needs to invalidate the authToken state
   // in the case of changing anything we don't know if it's valid.
   _updateUserName(name) {
-    this.setState({page: AUTHENTICATE, authToken: null, userName: name});
+    this.setState({ page: AUTHENTICATE, authToken: null, userName: name });
   }
 
   // This function needs to invalidate the authToken state
   // in the case of changing anything we don't know if it's valid.
   _updatePassword(password) {
-    this.setState({page: AUTHENTICATE, authToken: null, password: password});
+    this.setState({ page: AUTHENTICATE, authToken: null, password });
   }
 
   _authenticate() {
     // let auth = {username: this.state.userName, password: this.state.password};
     get(`${Config.repo.baseUrl}/rest/session/token`).then((res) => {
-      this.setState({authToken: res.data});
+      this.setState({ authToken: res.data });
       this.fetchArtifacts();
-    }).catch((res) =>{
-      this.setState({page: ERROR})
+    }).catch((res) => {
+      this.setState({ page: ERROR });
     });
   }
 
   _fetchArtifacts() {
-    let headers = {'Content-type':'application/hal+json','X-CSRF-Token':this.state.authToken};
+    const headers = { 'Content-type': 'application/hal+json', 'X-CSRF-Token': this.state.authToken };
     get('/api/repository/artifacts').then((res) => {
-      this.setState({artifacts: res.data, page: LIST})
-    })
+      this.setState({ artifacts: res.data, page: LIST });
+    });
   }
 
   _uploadArtifact(nid) {
     const artifact = this.props.prepareArtifact();
-    let auth = {username: this.state.userName, password: this.state.password};
-    let closeModal = this.closeModal;
-    post(`${Config.api.baseUrl}/cql/publish`, {data: artifact, nid: nid, auth, version:this.props.version})
+    const auth = { username: this.state.userName, password: this.state.password };
+    const closeModal = this.closeModal;
+    post(`${Config.api.baseUrl}/cql/publish`, { data: artifact, nid, auth, version: this.props.version })
     .then((res) => {
-        console.log("Success");
-        closeModal();
-      })
-    .catch(() => this.setState({page: ERROR}))
-    this.setState({page: STATUS, artifactNID: nid});
+      console.log('Success');
+      closeModal();
+    })
+    .catch(() => this.setState({ page: ERROR }));
+    this.setState({ page: STATUS, artifactNID: nid });
   }
 
   renderLogin() {
@@ -113,7 +113,7 @@ class RepoUploadModal extends Component {
             name={this.state.userName}
             aria-describedby={'repoUserName'}
             onChange={(event) => {
-              this.updateUserName(event.target.value)
+              this.updateUserName(event.target.value);
             }}
           />
           <label htmlFor={'repoPassword'}>
@@ -126,7 +126,7 @@ class RepoUploadModal extends Component {
             name={this.state.password}
             aria-describedby={'repoPassword'}
             onChange={(event) => {
-              this.updatePassword(event.target.value)
+              this.updatePassword(event.target.value);
             }}
           />
           <button className="primary-button" onClick={this.fetchArtifacts}>Login</button>
@@ -147,15 +147,13 @@ class RepoUploadModal extends Component {
             </tr>
           </thead>
           <tbody>
-          {this.state.artifacts.map((a)=> {
-            return (
+          {this.state.artifacts.map(a => (
               <tr key={a.nid}>
-                <td>{a.title.replace(/<\/?[^>]+(>|$)/g, "")}</td>
+                <td>{a.title.replace(/<\/?[^>]+(>|$)/g, '')}</td>
                 <td>{a.field_version}</td>
                 <td><button onClick={() => this.uploadArtifact(a.nid)}>Update</button></td>
               </tr>
-            );
-          })}
+            ))}
           </tbody>
         </table>
         <div className="buttonbar">
@@ -200,7 +198,7 @@ class RepoUploadModal extends Component {
           The <a href={`${Config.repo.baseUrl}`}>Artifact Repository</a> could not be reached.
         </p>
       </div>
-    )
+    );
   }
 
   renderPage() {
@@ -214,7 +212,7 @@ class RepoUploadModal extends Component {
       case ERROR:
         return this.renderErrorState();
       default:
-        return null
+        return null;
 
     }
   }

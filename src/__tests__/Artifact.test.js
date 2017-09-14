@@ -12,12 +12,12 @@ const artifactsMock = [{
   _id: 'blah',
   name: 'My CDS Artifact',
   version: 'Alpha',
-  updatedAt: "2012-10-15T21:26:17Z"
-},{
+  updatedAt: '2012-10-15T21:26:17Z'
+}, {
   _id: 'blah2',
   name: 'My Second CDS Artifact',
   version: 'Alpha',
-  updatedAt: "2012-11-15T21:26:17Z"
+  updatedAt: '2012-11-15T21:26:17Z'
 }];
 
 test('Artifact renders without crashing', () => {
@@ -30,7 +30,7 @@ test('Artifact shows form and no table when there is no data', () => {
   const component = shallowRenderComponent(Artifact, { match });
 
   component.setState({ data: [] });
-  expect(component.text()).toContain("No artifacts to show");
+  expect(component.text()).toContain('No artifacts to show');
   expect(component.find(ArtifactForm)).toBeDefined();
   expect(component.find(ArtifactTable)).toHaveLength(0);
 });
@@ -40,7 +40,7 @@ test('Artifact shows a table when there is data', () => {
 
   component.setState({ data: artifactsMock }, () => {
     component.update();
-    expect(component.text()).not.toContain("No artifacts to show");
+    expect(component.text()).not.toContain('No artifacts to show');
   });
   expect(component.find(ArtifactTable)).toHaveLength(1);
 });
@@ -91,7 +91,7 @@ test('ArtifactTable allows editing of artifacts', () => {
     component.find(ReactModal).node.portal, true
   );
 
-  expect(modalContent.text()).toContain("Edit Artifact");
+  expect(modalContent.text()).toContain('Edit Artifact');
   expect(modalContent.find(ArtifactForm)).toHaveLength(1);
 
   modalContent.find('.modal__deletebutton').simulate('click');
@@ -112,7 +112,7 @@ test('ArtifactTable allows deleting of artifacts', () => {
   const button = component.find('button.danger-button').first();
   component.instance().deleteArtifact = jest.fn();
   button.simulate('click');
-  expect(component.instance().deleteArtifact).toHaveBeenCalled()
+  expect(component.instance().deleteArtifact).toHaveBeenCalled();
 });
 
 test('ArtifactForm renders without crashing', () => {
@@ -141,8 +141,8 @@ test('ArtifactForm allows submission without an onSubmitFunction', () => {
 
   expect(component.state('name')).toEqual('');
   expect(component.state('version')).toEqual('');
-  nameInput.simulate('change', { target: { name: 'name', value: 'NewArtifactName' }});
-  versionInput.simulate('change', { target: { name: 'version', value: 'NewArtifactVersion' }});
+  nameInput.simulate('change', { target: { name: 'name', value: 'NewArtifactName' } });
+  versionInput.simulate('change', { target: { name: 'version', value: 'NewArtifactVersion' } });
 
   expect(component.state('name')).toEqual('NewArtifactName');
   expect(component.state('version')).toEqual('NewArtifactVersion');
@@ -169,8 +169,8 @@ test('ArtifactForm allows submission with an onSubmitFunction', () => {
 
   expect(component.state('name')).toEqual('');
   expect(component.state('version')).toEqual('');
-  nameInput.simulate('change', { target: { name: 'name', value: 'NewArtifactName' }});
-  versionInput.simulate('change', { target: { name: 'version', value: 'NewArtifactVersion' }});
+  nameInput.simulate('change', { target: { name: 'name', value: 'NewArtifactName' } });
+  versionInput.simulate('change', { target: { name: 'version', value: 'NewArtifactVersion' } });
 
   expect(component.state('name')).toEqual('NewArtifactName');
   expect(component.state('version')).toEqual('NewArtifactVersion');

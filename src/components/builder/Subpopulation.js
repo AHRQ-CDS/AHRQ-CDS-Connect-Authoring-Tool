@@ -39,12 +39,10 @@ class Subpopulation extends Component {
   }
 
   addInstance = (name, template, path) => {
-    this.props.addInstance(name, template, path, this.props.subpopulation.uniqueId)
+    this.props.addInstance(name, template, path, this.props.subpopulation.uniqueId);
   }
 
-  getAllInstances = (name) => {
-    return this.props.getAllInstances(name, null, this.props.subpopulation.uniqueId);
-  }
+  getAllInstances = name => this.props.getAllInstances(name, null, this.props.subpopulation.uniqueId)
 
   editInstance = (treeName, params, path, editingConjunction) => {
     this.props.editInstance(treeName, params, path, editingConjunction, this.props.subpopulation.uniqueId);
@@ -76,7 +74,7 @@ class Subpopulation extends Component {
                 aria-label="Subpopulation Title"
                 value={ this.props.subpopulation.subpopulationName }
                 onClick={ event => event.stopPropagation() }
-                onChange={ event => { this.props.setSubpopulationName(event.target.value, this.props.subpopulation.uniqueId) } }
+                onChange={ (event) => { this.props.setSubpopulationName(event.target.value, this.props.subpopulation.uniqueId); } }
               />
             </div>
           :
@@ -116,7 +114,7 @@ class Subpopulation extends Component {
           null
         }
       </div>
-    )
+    );
   }
 }
 

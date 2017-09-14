@@ -65,6 +65,7 @@
     "eject": "react-scripts eject",
     "start-dev": "nf start -p 3000",
     "lint-css": "stylelint 'src/styles/**/*.scss'",
-    "lint": "eslint --fix src/*; exit 0"
+    "lint": "eslint .",
+    "lint-fix": "eslint --fix .; exit 0"
   }
 }

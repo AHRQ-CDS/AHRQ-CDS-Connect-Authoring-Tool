@@ -1,9 +1,8 @@
-'use strict';
 
-let mongoose = require('mongoose');
-let Schema = mongoose.Schema;
+const mongoose = require('mongoose');
+const Schema = mongoose.Schema;
 
-let ArtifactSchema = new Schema({
+const ArtifactSchema = new Schema({
   name: String,
   version: String,
   expTreeInclude: Object,
@@ -13,7 +12,7 @@ let ArtifactSchema = new Schema({
   booleanParameters: Array,
   errorStatement: Object,
   uniqueIdCounter: Number
-},{
+}, {
   timestamps: true // adds created_at, updated_at
 });
 

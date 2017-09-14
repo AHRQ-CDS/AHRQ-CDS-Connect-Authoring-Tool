@@ -39,7 +39,7 @@ const instanceTree = {
         }
       ],
       modifiers: [],
-      suppressedModifiers: [ "BooleanNot", "BooleanComparison"],
+      suppressedModifiers: ['BooleanNot', 'BooleanComparison'],
       uniqueId: 'AgeRange-3'
     },
     {
@@ -64,7 +64,7 @@ const instanceTree = {
         }
       ],
       modifiers: [],
-      suppressedModifiers: ["ConceptValue"],
+      suppressedModifiers: ['ConceptValue'],
       uniqueId: 'LDLTest-4'
     }
   ]

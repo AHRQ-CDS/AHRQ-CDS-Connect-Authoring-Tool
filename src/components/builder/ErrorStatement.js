@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import Select from 'react-select';
 import _ from 'lodash';
 
@@ -15,46 +15,41 @@ class ErrorStatement extends Component {
 
   // Prepopulates dropdown with recommendation is null and then adds bool params
   options = () => {
-    const dropdown = [{label: 'Recommendations is null', value:'"Recommendation" is null'}];
-    const params = this.props.booleanParameters.map(p => {return({label: p.name, value: p.value})});
-    const subpops = this.props.subpopulations.map(s => {
+    const dropdown = [{ label: 'Recommendations is null', value: '"Recommendation" is null' }];
+    const params = this.props.booleanParameters.map(p => ({ label: p.name, value: p.value }));
+    const subpops = this.props.subpopulations.map((s) => {
       if (s.special) {
-        return({label: s.subpopulationName, value: s.special_subpopulationName});
-      } else {
-        return({label: s.subpopulationName, value: s.subpopulationName ? `"${s.subpopulationName}"` : `"${s.uniqueId}"`});
+        return ({ label: s.subpopulationName, value: s.special_subpopulationName });
       }
+      return ({ label: s.subpopulationName, value: s.subpopulationName ? `"${s.subpopulationName}"` : `"${s.uniqueId}"` });
     });
     return dropdown.concat(params).concat(subpops);
   }
 
   // Generic statement used to handle if then
-  baseStatement = (parent) => {
-    return {
-      condition: null,
-      thenClause: '',
-      child: null,
-      useThenClause: true
-    };
-  }
+  baseStatement = parent => ({
+    condition: null,
+    thenClause: '',
+    child: null,
+    useThenClause: true
+  })
 
   // Child object when doing single layer nesting
-  baseChild = (parent) => {
-    return {
-      statements: [
-        {
-          condition: null,
-          thenClause: '',
-          child: null,
-          useThenClause: true
-        }
-      ],
-      elseClause: 'null'
-    }
-  }
+  baseChild = parent => ({
+    statements: [
+      {
+        condition: null,
+        thenClause: '',
+        child: null,
+        useThenClause: true
+      }
+    ],
+    elseClause: 'null'
+  })
 
   // Adds and if/then statement to base or child
   addStatement = (parent) => {
-    const newStatement = this.baseStatement(parent)
+    const newStatement = this.baseStatement(parent);
     const newErrorStatement = _.cloneDeep(this.props.errorStatement);
     const statements = newErrorStatement.statements;
     if (parent == null) {
@@ -62,7 +57,7 @@ class ErrorStatement extends Component {
     } else {
       statements[parent].child.statements.push(newStatement);
     }
-    this.props.updateParentState({errorStatement: newErrorStatement});
+    this.props.updateParentState({ errorStatement: newErrorStatement });
   }
 
   // Updates the if/then statements in base and child
@@ -74,7 +69,7 @@ class ErrorStatement extends Component {
     } else {
       statements[parent].child.statements[index][type] = value;
     }
-    this.props.updateParentState({errorStatement: newErrorStatement});
+    this.props.updateParentState({ errorStatement: newErrorStatement });
   }
 
   // Delete an if/then statement in base and child
@@ -86,7 +81,7 @@ class ErrorStatement extends Component {
     } else {
       statements[parent].child.statements.splice(index, 1);
     }
-    this.props.updateParentState({errorStatement: newErrorStatement});
+    this.props.updateParentState({ errorStatement: newErrorStatement });
   }
 
   // Updates the else statements in base and child
@@ -95,9 +90,9 @@ class ErrorStatement extends Component {
     if (parent == null) {
       newErrorStatement.elseClause = value;
     } else {
-      newErrorStatement.statements[parent].child.elseClause = value
+      newErrorStatement.statements[parent].child.elseClause = value;
     }
-    this.props.updateParentState({errorStatement: newErrorStatement});
+    this.props.updateParentState({ errorStatement: newErrorStatement });
   }
 
   // Functionality on whether to use then or nested if
@@ -109,12 +104,11 @@ class ErrorStatement extends Component {
       statement.child = newChild;
     }
     statement.useThenClause = !statement.useThenClause;
-    this.props.updateParentState({errorStatement: newErrorStatement});
+    this.props.updateParentState({ errorStatement: newErrorStatement });
   }
 
   // Renders if part
-  renderCondition = (statement, parent, index) => {
-    return (<Select
+  renderCondition = (statement, parent, index) => (<Select
       key={`condition-${parent != null ? parent : -1}-${index}`}
       inputProps={{ id: `condition-${parent != null ? parent : -1}-${index}` }}
       index={index}
@@ -122,11 +116,9 @@ class ErrorStatement extends Component {
       options={this.options()}
       onChange={ e => this.setStatement(e, parent, index, 'condition')}
     />)
-  }
 
   // Renders then part of statement
-  renderThen = (statement, parent, index) => {
-    return (
+  renderThen = (statement, parent, index) => (
       <div className="field recommendation__block-then">
         <label className="label">Then</label>
         <div className="control">
@@ -141,14 +133,12 @@ class ErrorStatement extends Component {
         </div>
       </div>
     )
-  }
 
   // Renders nested if
-  renderChildren = (statement, parent) => {
-    return (
+  renderChildren = (statement, parent) => (
       <div className="recommendation__block">
         { statement.child && statement.child.statements.map((cStatement, i) => {
-          let ifLabel = i ? 'Else if' : 'If';
+          const ifLabel = i ? 'Else if' : 'If';
           return (
             <div key={i}>
               <div className="field recommendation__block-if">
@@ -159,17 +149,15 @@ class ErrorStatement extends Component {
                 </div>
               </div>
               {this.renderThen(cStatement, parent, i)}
-            </div>)
+            </div>);
         })}
         { this.renderAddIfButton(parent) }
         { this.renderElse(parent) }
       </div>
     )
-  }
 
   // Renders button to manage then or nested if
-  renderNestingButton = (statement, index) => {
-    return (
+  renderNestingButton = (statement, index) => (
       <div className="field recommendation__action">
         <button
           className="button"
@@ -177,29 +165,24 @@ class ErrorStatement extends Component {
           {this.props.errorStatement.statements[index].useThenClause ? 'And Also If...' : '(Remove nested statements)'}
         </button>
       </div>)
-  }
 
   // Renders button to add if else statements
-  renderAddIfButton = (parent) => {
-    return (
+  renderAddIfButton = parent => (
       <div className="field recommendation__action">
         <button
           className="button"
           onClick={e => this.addStatement(parent)}> Or Else If... </button>
       </div>
     )
-  }
 
   // Renders delete if/then button
-  renderDeleteButton = (parent, index) => {
-    return (
+  renderDeleteButton = (parent, index) => (
       <div className="recommendation__action">
         <button
           className="button"
           onClick={e => this.deleteStatement(parent, index)}> Delete If Clause </button>
       </div>
     )
-  }
 
   // Renders else text box
   renderElse = (parent) => {
@@ -223,7 +206,7 @@ class ErrorStatement extends Component {
             onChange={e => this.setElse(e.target.value, parent)} />
         </div>
       </div>
-    )
+    );
   }
 
   // Main render function
@@ -236,7 +219,7 @@ class ErrorStatement extends Component {
           </div>
         </div>
         { this.props.errorStatement && this.props.errorStatement.statements.map((statement, i) => {
-          let ifLabel = i ? 'Else if' : 'If';
+          const ifLabel = i ? 'Else if' : 'If';
           return (
             <div key={i}>
               <div className="field recommendation__block-if">
@@ -250,12 +233,12 @@ class ErrorStatement extends Component {
               {statement.useThenClause
               ? this.renderThen(statement, null, i)
               : this.renderChildren(statement, i)}
-            </div>)
+            </div>);
         })}
         { this.renderAddIfButton(null) }
         { this.renderElse(null) }
       </section>
-    )
+    );
   }
 
 }

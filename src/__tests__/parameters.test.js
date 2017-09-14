@@ -56,7 +56,7 @@ test('Parameters adds parameter', () => {
   const booleansLength1 = component.state('booleanParameters').length;
   component.find('button').simulate('click');
   const booleansLength2 = component.state('booleanParameters').length;
-  expect(booleansLength1 + 1).toEqual(booleansLength2)
+  expect(booleansLength1 + 1).toEqual(booleansLength2);
   expect(updateParameterMock).toHaveBeenCalled();
 
   // component.instance().addParameter = jest.fn();
@@ -152,7 +152,7 @@ test('StringParameter renders without crashing', () => {
 
 test('ValueSetParameter renders without crashing', () => {
   const component = shallowRenderComponent(ValueSetParameter, {
-    updateInstance:  jest.fn(),
+    updateInstance: jest.fn(),
     param: {
       id: '',
       value: '',

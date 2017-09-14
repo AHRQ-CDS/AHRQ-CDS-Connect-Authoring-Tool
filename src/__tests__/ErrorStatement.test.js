@@ -10,15 +10,15 @@ beforeEach(() => {
   component = fullRenderComponent(ErrorStatement, {
     booleanParameters: [],
     subpopulations: [
-      {label: 'Recommendations is null', value:'"Recommendation" is null'}
+      { label: 'Recommendations is null', value: '"Recommendation" is null' }
     ],
     errorStatement: {
       statements: [
-        {condition: null,
-         thenClause: '',
-         child: null,
-         useThenClause: true },
-       ],
+        { condition: null,
+          thenClause: '',
+          child: null,
+          useThenClause: true },
+      ],
       else: 'null'
     },
     updateParentState: updateParentStateMock,
@@ -27,24 +27,24 @@ beforeEach(() => {
   componentWithNest = fullRenderComponent(ErrorStatement, {
     booleanParameters: [],
     subpopulations: [
-      {label: 'Recommendations is null', value:'"Recommendation" is null'}
+      { label: 'Recommendations is null', value: '"Recommendation" is null' }
     ],
     errorStatement: {
       statements: [
-        {condition: null,
-         thenClause: '',
-         child: null,
-         useThenClause: true },
-       {condition: null,
-        thenClause: '',
-        child: null,
-        useThenClause: true }
-       ],
+        { condition: null,
+          thenClause: '',
+          child: null,
+          useThenClause: true },
+        { condition: null,
+          thenClause: '',
+          child: null,
+          useThenClause: true }
+      ],
       else: 'null'
     },
     updateParentState: updateParentStateMock,
   });
-})
+});
 
 test('ErrorStatement renders without Crashing', () => {
   expect(component).toBeDefined();
@@ -64,19 +64,19 @@ test('ErrorStatement adds an if when `Or Else If...` is clicked', () => {
 });
 
 test('ErrorStatement can select one of the special populations', () => {
-  component.find('Select').simulate('change', { target: {value: 'Recommendations is null'} });
+  component.find('Select').simulate('change', { target: { value: 'Recommendations is null' } });
   expect(updateParentStateMock).toHaveBeenCalled();
 });
 
 test('ErrorStatement can change `ThenClause` (on root element) input', () => {
   updateParentStateMock.mockClear();
-  component.find('textarea[title="ThenClause"]').simulate('change', { target: { value: 'foo-thenClause' }});
+  component.find('textarea[title="ThenClause"]').simulate('change', { target: { value: 'foo-thenClause' } });
   expect(updateParentStateMock.mock.calls[0][0].errorStatement.statements[0].thenClause).toBe('foo-thenClause');
 });
 
 test('ErrorStatement can change `Else` (on root element) input', () => {
   updateParentStateMock.mockClear();
-  component.find('textarea[title="Else"]').simulate('change', { target: { value: 'bar-elseClause' }});
+  component.find('textarea[title="Else"]').simulate('change', { target: { value: 'bar-elseClause' } });
   expect(updateParentStateMock.mock.calls[0][0].errorStatement.elseClause).toBe('bar-elseClause');
 });
 

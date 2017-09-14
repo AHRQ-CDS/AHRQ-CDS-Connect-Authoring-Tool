@@ -4,7 +4,7 @@ import _ from 'lodash';
 class LookBack extends Component {
   constructor(props) {
     super(props);
-    this.state = {  };
+    this.state = { };
   }
 
   render() {
@@ -16,7 +16,7 @@ class LookBack extends Component {
         <div >
           <label htmlFor={valueId}>
             Value:
-            <input id={valueId} type="number" name="value" value={this.props.value || ""}
+            <input id={valueId} type="number" name="value" value={this.props.value || ''}
               onChange={(event) => {
                 this.props.updateAppliedModifier(this.props.index, { value: parseInt(event.target.value, 10) });
               }}

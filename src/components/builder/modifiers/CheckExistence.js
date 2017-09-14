@@ -11,7 +11,7 @@ class CheckExistence extends Component {
                 onChange={(event) => {
                   this.props.updateAppliedModifier(this.props.index, { value: event.target.value });
                 }}>
-                <option defaultValue="">{"-- Check Existence --"}</option>
+                <option defaultValue="">{'-- Check Existence --'}</option>
                 <option value="is null">{'is null'}</option>
                 <option value="is not null">{'is not null'}</option>
               </select>

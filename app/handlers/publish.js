@@ -13,11 +13,11 @@ const upload = require('cds-upload');
 
 
 module.exports = {
-  publish: publish,
-  getArtifacts: getArtifacts
-}
+  publish,
+  getArtifacts
+};
 
-function getArtifacts(req, res){
+function getArtifacts(req, res) {
   upload.requestArtifacts(Config.repo.baseUrl).then((art) => {
     res.send(art);
   });
@@ -47,79 +47,76 @@ function publish(req, res) {
 // }
 
 function convertToElm(req, res, context) {
-  let artifact = cqlHandler.buildCQL(req.body.data);
-  let repoNid = req.body.nid;
+  const artifact = cqlHandler.buildCQL(req.body.data);
+  const repoNid = req.body.nid;
 
-  let path = __dirname + '/../data/library_helpers/';
+  const path = `${__dirname}/../data/library_helpers/`;
 
   // Load all the supplementary CQL files and open file streams to them
-  glob(`${path}/*.cql`, function(err, files){
-    let fileStreams = files.map(function(f){
-      return fs.createReadStream(f);
-    })
+  glob(`${path}/*.cql`, (err, files) => {
+    const fileStreams = files.map(f => fs.createReadStream(f));
 
-    let cqlReq = request.post(Config.repo.CQLToElmURL, function(err, resp, body){
-      splitELM(artifact.toJson(), {resp, body}, req, res, context);
-    })
-    let artifactJson = artifact.toJson();
-    let form = cqlReq.form();
+    const cqlReq = request.post(Config.repo.CQLToElmURL, (err, resp, body) => {
+      splitELM(artifact.toJson(), { resp, body }, req, res, context);
+    });
+    const artifactJson = artifact.toJson();
+    const form = cqlReq.form();
     form.append(artifactJson.filename, `${artifact.toString()}`, {
       filename: artifactJson.filename,
       contentType: artifactJson.type
     });
-    fileStreams.map(function(f){
+    fileStreams.map((f) => {
       form.append(Path.basename(f.path, '.cql'), f);
-    })
-  })
+    });
+  });
 }
 
 function splitELM(artifact, elm, req, res, context) {
   // Because ELM comes back as a multipart response we use busboy to split it up
-  let contentType = elm.resp.headers['Content-Type'] || elm.resp.headers['content-type'];
-  let elmFiles = [];
+  const contentType = elm.resp.headers['Content-Type'] || elm.resp.headers['content-type'];
+  const elmFiles = [];
 
-  let bb = new Busboy({ headers: { 'content-type': contentType }})
+  const bb = new Busboy({ headers: { 'content-type': contentType } })
   .on('field', (fieldname, val) => {
-    elmFiles.push({name: fieldname, content: val})
+    elmFiles.push({ name: fieldname, content: val });
   })
   .on('finish', () => {
-   pushToRepo(artifact, elmFiles, req, res, context);
+    pushToRepo(artifact, elmFiles, req, res, context);
   })
-  .on('error', err => {
-   console.log('failed', err);
+  .on('error', (err) => {
+    console.log('failed', err);
   });
 
   bb.end(elm.body);
 }
 
 function pushToRepo(artifact, elm, req, res, context) {
-  let archive = archiver('zip', {zlib : { level : 9 }});
-  let fd = tmp.fileSync({postfix: '.zip'});
-  let output = fs.createWriteStream(fd.name)
-  archive.pipe(output)
+  const archive = archiver('zip', { zlib: { level: 9 } });
+  const fd = tmp.fileSync({ postfix: '.zip' });
+  const output = fs.createWriteStream(fd.name);
+  archive.pipe(output);
 
   archive.on('error', (err) => {
-    res.status(500).send({error : err.message});
+    res.status(500).send({ error: err.message });
   });
-  archive.append(artifact.text, {name: `${artifact.filename}.cql`})
+  archive.append(artifact.text, { name: `${artifact.filename}.cql` });
 
   elm.map((e, i) => {
-      archive.append(e.content, { name : `${e.name}.json` });
-  })
+    archive.append(e.content, { name: `${e.name}.json` });
+  });
   // Add helper Library
-  let path = __dirname + '/../data/library_helpers/';
+  const path = `${__dirname}/../data/library_helpers/`;
   archive.directory(path, '/');
 
   archive.finalize();
-  output.on('close', function() {
-    let base64 = fs.readFileSync(fd.name).toString('base64');
-    let name = req.body.auth.username;
-    let pass = req.body.auth.password;
-    let authData = {name:name, pass: pass};
-    let NID = req.body.nid;
+  output.on('close', () => {
+    const base64 = fs.readFileSync(fd.name).toString('base64');
+    const name = req.body.auth.username;
+    const pass = req.body.auth.password;
+    const authData = { name, pass };
+    const NID = req.body.nid;
     upload.submitArtifactFileToRepo(Config.repo.baseUrl, authData, NID, artifact.name, artifact.version, base64).then((uploaded) => {
       res.send(uploaded);
     });
-
   });
 }

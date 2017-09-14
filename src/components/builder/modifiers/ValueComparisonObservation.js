@@ -4,7 +4,7 @@ import _ from 'lodash';
 class ValueComparisonObservation extends Component {
   constructor(props) {
     super(props);
-    this.state = {  };
+    this.state = { };
   }
 
   render() {
@@ -28,7 +28,7 @@ class ValueComparisonObservation extends Component {
                   onChange={(event) => {
                     this.props.updateAppliedModifier(this.props.index, { minOperator: event.target.value });
                   }}>
-                  <option value="">{"-- Operator --"}</option>
+                  <option value="">{'-- Operator --'}</option>
                   <option value=">">{'>'}</option>
                   <option value=">=">{'>='}</option>
                   <option value="=">{'='}</option>
@@ -42,7 +42,7 @@ class ValueComparisonObservation extends Component {
 
           <label htmlFor={minValueId}>
             Value:
-            <input id={minValueId} className="modifier__comparison__value" type="number" step="any" name="Min value" value={this.props.minValue || ""}
+            <input id={minValueId} className="modifier__comparison__value" type="number" step="any" name="Min value" value={this.props.minValue || ''}
               onChange={(event) => {
                 this.props.updateAppliedModifier(this.props.index, { minValue: parseFloat(event.target.value, 10) });
               }}
@@ -61,7 +61,7 @@ class ValueComparisonObservation extends Component {
                   onChange={(event) => {
                     this.props.updateAppliedModifier(this.props.index, { maxOperator: event.target.value });
                   }}>
-                  <option value="">{"-- Operator --"}</option>
+                  <option value="">{'-- Operator --'}</option>
                   <option value=">">{'>'}</option>
                   <option value=">=">{'>='}</option>
                   <option value="=">{'='}</option>
@@ -75,7 +75,7 @@ class ValueComparisonObservation extends Component {
 
           <label htmlFor={maxValueId}>
             Value:
-            <input id={maxValueId} className="modifier__comparison__value" type="number" step="any" name="Max value" value={this.props.maxValue || ""}
+            <input id={maxValueId} className="modifier__comparison__value" type="number" step="any" name="Max value" value={this.props.maxValue || ''}
               onChange={(event) => {
                 this.props.updateAppliedModifier(this.props.index, { maxValue: parseFloat(event.target.value, 10) });
               }}

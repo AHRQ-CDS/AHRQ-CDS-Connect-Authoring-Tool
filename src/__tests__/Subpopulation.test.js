@@ -3,14 +3,14 @@ import { fullRenderComponent, createTemplateInstance } from '../helpers/test_hel
 import { instanceTree, elementGroups } from '../helpers/test_fixtures';
 
 let component;
-let setSubpopulationName = jest.fn();
-let deleteSubpopulation = jest.fn();
-let addInstance = jest.fn();
-let editInstance = jest.fn();
-let updateInstanceModifiers = jest.fn();
-let deleteInstance = jest.fn();
-let saveInstance = jest.fn();
-let getAllInstances = jest.fn();
+const setSubpopulationName = jest.fn();
+const deleteSubpopulation = jest.fn();
+const addInstance = jest.fn();
+const editInstance = jest.fn();
+const updateInstanceModifiers = jest.fn();
+const deleteInstance = jest.fn();
+const saveInstance = jest.fn();
+const getAllInstances = jest.fn();
 const userSubpopUniqueId = 'foo123';
 const treeName = 'testtree';
 
@@ -21,7 +21,7 @@ beforeEach(() => {
       name: '',
       conjunction: true,
       returnType: 'boolean',
-      parameters: [ { id: 'element_name', type: 'string', name: 'Group Name' } ],
+      parameters: [{ id: 'element_name', type: 'string', name: 'Group Name' }],
       uniqueId: userSubpopUniqueId,
       childInstances: [],
       path: '',

@@ -5,20 +5,20 @@
  * This is mainly used in our Docker image.
  */
 module.exports = {
-  apps : [
+  apps: [
     // API Server
     {
-      name      : 'API',
-      script    : 'server.js',
-      env_production : {
+      name: 'API',
+      script: 'server.js',
+      env_production: {
         NODE_ENV: 'production'
       }
     },
     // Fronted Server
     {
-      name      : 'FrontEnd',
-      script    : 'frontend.js',
-      env_production : {
+      name: 'FrontEnd',
+      script: 'frontend.js',
+      env_production: {
         NODE_ENV: 'production'
       }
     }

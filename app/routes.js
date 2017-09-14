@@ -1,8 +1,7 @@
-module.exports = function(app) {
-
+module.exports = function (app) {
   // Routing for API check
-  app.get('/', function(req, res) {
-    res.json({ message: 'API Initialized!'});
+  app.get('/', (req, res) => {
+    res.json({ message: 'API Initialized!' });
   });
 
   // Routing for Artifacts
@@ -15,11 +14,10 @@ module.exports = function(app) {
   app.use('/api/cql', require('./routers/cqlRouter'));
 
   // Routing for Artifact Elements
-  app.use('/api/expressions', require('./routers/expressionRouter'))
+  app.use('/api/expressions', require('./routers/expressionRouter'));
 
-  app.use('/api/repository', require('./routers/repository'))
+  app.use('/api/repository', require('./routers/repository'));
 
   // Catch all other Api calls
-  app.get('/api/*', function(req, res) { res.sendStatus(404); });
-
-}
+  app.get('/api/*', (req, res) => { res.sendStatus(404); });
+};

@@ -20,7 +20,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
 // Setting headers to Prevent Errors from Cross Origin Resource Sharing
-app.use(function(req, res, next) {
+app.use((req, res, next) => {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Credentials', 'true');
   res.setHeader('Access-Control-Allow-Methods', 'GET,HEAD,OPTIONS,POST,PUT,DELETE');
@@ -34,8 +34,8 @@ app.use(function(req, res, next) {
 routes(app);
 
 // Starts Server
-if(!module.parent) { // check if within a test or not.
-  app.listen(port, function() {
+if (!module.parent) { // check if within a test or not.
+  app.listen(port, () => {
     console.log(`api running on port ${port}`);
   });
-};
+}

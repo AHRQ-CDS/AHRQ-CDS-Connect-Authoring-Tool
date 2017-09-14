@@ -4,7 +4,7 @@ import _ from 'lodash';
 class WithUnit extends Component {
   constructor(props) {
     super(props);
-    this.state = {  };
+    this.state = { };
   }
 
   render() {
@@ -21,7 +21,7 @@ class WithUnit extends Component {
                     onChange={(event) => {
                       this.props.updateAppliedModifier(this.props.index, { unit: event.target.value });
                     }}>
-                    <option defaultValue="">{"-- Select Unit --"}</option>
+                    <option defaultValue="">{'-- Select Unit --'}</option>
                     <option value="mg/dL">{'mg/dL'}</option>
                   </select>
                 </span>

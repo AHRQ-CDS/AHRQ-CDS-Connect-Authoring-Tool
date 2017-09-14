@@ -32,7 +32,7 @@ const props = {
   root: true,
   name: treeName,
   instance: instanceTree,
-  createTemplateInstance: createTemplateInstance,
+  createTemplateInstance,
   addInstance,
   editInstance,
   updateInstanceModifiers: jest.fn(),
@@ -123,11 +123,11 @@ test('can indent a child group', () => {
   childConjunction.find('button[aria-label="indent"]').simulate('click');
 
   const instance = createTemplateInstance(andTemplate, [childConjunction.node.props.instance]);
-  const path = childConjunctionPath.split('.').slice(0,-2).join('.');
+  const path = childConjunctionPath.split('.').slice(0, -2).join('.');
   const index = Number(childConjunctionPath.split('.').pop());
 
-  delete instance['uniqueId'];
-  delete deleteInstance.mock.calls[0][2][0].instance['uniqueId'];
+  delete instance.uniqueId;
+  delete deleteInstance.mock.calls[0][2][0].instance.uniqueId;
 
   expect(deleteInstance).toHaveBeenCalledWith(treeName, childConjunctionPath, [{ instance, path, index }]);
 });
@@ -142,9 +142,9 @@ describe('for deeper nested conjunction groups', () => {
   beforeEach(() => {
     const ageInstance = createTemplateInstance(elementGroups[0].entries[0]);
     const deeperOr = _.cloneDeep(orInstance);
-    deeperOr.childInstances = [ ageInstance ];
+    deeperOr.childInstances = [ageInstance];
     const deeperTree = _.cloneDeep(instanceTree);
-    deeperTree.childInstances = [ deeperOr ];
+    deeperTree.childInstances = [deeperOr];
     const deeperProps = _.cloneDeep(props);
     deeperProps.instance = deeperTree;
     deeperConjunction = fullRenderComponent(ConjunctionGroup, deeperProps);

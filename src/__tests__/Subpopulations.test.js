@@ -22,7 +22,7 @@ const fullSubpops = [
     name: '',
     conjunction: true,
     returnType: 'boolean',
-    parameters: [ { id: 'element_name', type: 'string', name: 'Group Name' } ],
+    parameters: [{ id: 'element_name', type: 'string', name: 'Group Name' }],
     uniqueId: userSubpopUniqueId,
     childInstances: [],
     path: '',
@@ -53,7 +53,7 @@ beforeEach(() => {
   };
 
   component = fullRenderComponent(Subpopulations, Object.assign({
-    subpopulations: [ specialSubpop ]
+    subpopulations: [specialSubpop]
   }, baseProps));
 
   componentWithSubpopulations = fullRenderComponent(Subpopulations, Object.assign({
@@ -125,4 +125,4 @@ test('updates relevant state when new props passed in', () => {
 
   expect(component.state().subpopulations).toHaveLength(1);
   expect(component.state().numOfSpecialSubpopulations).toEqual(1);
-})
+});
