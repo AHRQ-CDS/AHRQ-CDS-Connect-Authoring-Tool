@@ -25,7 +25,7 @@ class ValueComparisonObservation extends Component {
                   name="Min Operator"
                   value={this.props.minOperator}
                   defaultValue=""
-                  onChange={(event) => {
+                  onBlur={(event) => {
                     this.props.updateAppliedModifier(this.props.index, { minOperator: event.target.value });
                   }}>
                   <option value="">{'-- Operator --'}</option>
@@ -42,7 +42,8 @@ class ValueComparisonObservation extends Component {
 
           <label htmlFor={minValueId}>
             Value:
-            <input id={minValueId} className="modifier__comparison__value" type="number" step="any" name="Min value" value={this.props.minValue || ''}
+            <input id={minValueId} className="modifier__comparison__value" type="number" step="any" name="Min value"
+              value={this.props.minValue || ''}
               onChange={(event) => {
                 this.props.updateAppliedModifier(this.props.index, { minValue: parseFloat(event.target.value, 10) });
               }}
@@ -58,7 +59,7 @@ class ValueComparisonObservation extends Component {
                   aria-label="Max Operator"
                   value={this.props.maxOperator}
                   defaultValue=""
-                  onChange={(event) => {
+                  onBlur={(event) => {
                     this.props.updateAppliedModifier(this.props.index, { maxOperator: event.target.value });
                   }}>
                   <option value="">{'-- Operator --'}</option>
@@ -75,7 +76,8 @@ class ValueComparisonObservation extends Component {
 
           <label htmlFor={maxValueId}>
             Value:
-            <input id={maxValueId} className="modifier__comparison__value" type="number" step="any" name="Max value" value={this.props.maxValue || ''}
+            <input id={maxValueId} className="modifier__comparison__value" type="number" step="any" name="Max value"
+              value={this.props.maxValue || ''}
               onChange={(event) => {
                 this.props.updateAppliedModifier(this.props.index, { maxValue: parseFloat(event.target.value, 10) });
               }}

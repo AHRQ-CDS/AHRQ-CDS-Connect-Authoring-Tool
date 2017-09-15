@@ -238,7 +238,6 @@ module.exports = [
         template: 'Pregnancydx',
         returnType: 'boolean',
         extends: 'Base',
-        returnType: 'boolean',
         suppressedModifiers: ['BooleanComparison', 'CheckExistence'], // TODO these might eventually be applicable, but the specificTemplate will need to handle them
         parameters: [
           { id: 'element_name', value: 'IsPregnant' },
@@ -251,7 +250,6 @@ module.exports = [
         template: 'Pregnancydx_withLookBack',
         returnType: 'boolean',
         extends: 'Base',
-        returnType: 'boolean',
         suppressedModifiers: ['BooleanComparison', 'CheckExistence'],
         parameters: [
           { id: 'element_name', value: 'IsPregnant' },

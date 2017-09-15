@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import _ from 'lodash';
 
 /**
  * props are from a templateInstance parameters object,

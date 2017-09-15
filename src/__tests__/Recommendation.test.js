@@ -1,7 +1,6 @@
 import _ from 'lodash';
 import Recommendation from '../components/builder/Recommendation';
 import { fullRenderComponent } from '../helpers/test_helpers';
-import { instanceTree, elementGroups } from '../helpers/test_fixtures';
 
 let component;
 let componentFilledIn;
@@ -161,14 +160,14 @@ test('applies special subpopulations correctly', () => {
   const specialProps = _.cloneDeep(baseProps);
   specialProps.subpopulations = [specialSubpop];
 
-  const component = fullRenderComponent(Recommendation, Object.assign({
+  const recComponent = fullRenderComponent(Recommendation, Object.assign({
     rec,
     recommendations: [rec]
   }, specialProps));
 
-  component.find('button').findWhere(button => button.text() === 'Add subpopulation').simulate('click');
-  component.find('.recommendation__subpopulation-select input').simulate('change');
-  component.find('.Select-option').at(0).simulate('mouseDown', { button: 0 });
+  recComponent.find('button').findWhere(button => button.text() === 'Add subpopulation').simulate('click');
+  recComponent.find('.recommendation__subpopulation-select input').simulate('change');
+  recComponent.find('.Select-option').at(0).simulate('mouseDown', { button: 0 });
 
   const updatedRec = _.cloneDeep(rec);
   updatedRec.subpopulations = [specialSubpop];

@@ -10,6 +10,7 @@ module.exports = {
 
 // Get all artifacts
 function allGet(req, res) {
+  // eslint-disable-next-line array-callback-return
   Artifact.find((error, artifacts) => {
     if (error) res.status(500).send(error);
     else res.json(artifacts);

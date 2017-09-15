@@ -2,7 +2,7 @@ import axios from 'axios';
 import MockAdapter from 'axios-mock-adapter';
 
 const port = process.env.API_PORT || 3001;
-const baseurl = `http://localhost:${port}/api/`;
+const baseUrl = `http://localhost:${port}/api/`;
 const mock = new MockAdapter(axios);
 jest.unmock('../components/AuthorBox');
 
@@ -14,7 +14,7 @@ const authorsFixture = [{
   text: 'A Thousand Reasons to Swoon'
 }];
 
-mock.onGet(`${baseurl}authors`)
+mock.onGet(`${baseUrl}authors`)
   .reply(200, { response: { data: authorsFixture } });
 
 mock.onPut(`${baseUrl}authors/1`).reply(200, { response: {} });

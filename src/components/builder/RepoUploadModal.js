@@ -28,36 +28,36 @@ class RepoUploadModal extends Component {
       uploadStatus: null
     };
 
-    this.closeModal = this._closeModal.bind(this);
-    this.updateUserName = this._updateUserName.bind(this);
-    this.updatePassword = this._updatePassword.bind(this);
-    this.fetchArtifacts = this._fetchArtifacts.bind(this);
-    this.authenticate = this._authenticate.bind(this);
-    this.uploadArtifact = this._uploadArtifact.bind(this);
+    this.closeModal = this.closeModal.bind(this);
+    this.updateUserName = this.updateUserName.bind(this);
+    this.updatePassword = this.updatePassword.bind(this);
+    this.fetchArtifacts = this.fetchArtifacts.bind(this);
+    this.authenticate = this.authenticate.bind(this);
+    this.uploadArtifact = this.uploadArtifact.bind(this);
   }
 
-  _openModal() {
+  openModal() {
     this.setState({ showModal: true });
   }
 
-  _closeModal() {
+  closeModal() {
     this.setState({ showModal: false, page: AUTHENTICATE, authToken: null });
     this.props.closeModal();
   }
 
   // This function needs to invalidate the authToken state
   // in the case of changing anything we don't know if it's valid.
-  _updateUserName(name) {
+  updateUserName(name) {
     this.setState({ page: AUTHENTICATE, authToken: null, userName: name });
   }
 
   // This function needs to invalidate the authToken state
   // in the case of changing anything we don't know if it's valid.
-  _updatePassword(password) {
+  updatePassword(password) {
     this.setState({ page: AUTHENTICATE, authToken: null, password });
   }
 
-  _authenticate() {
+  authenticate() {
     // let auth = {username: this.state.userName, password: this.state.password};
     get(`${Config.repo.baseUrl}/rest/session/token`).then((res) => {
       this.setState({ authToken: res.data });
@@ -67,14 +67,13 @@ class RepoUploadModal extends Component {
     });
   }
 
-  _fetchArtifacts() {
-    const headers = { 'Content-type': 'application/hal+json', 'X-CSRF-Token': this.state.authToken };
+  fetchArtifacts() {
     get('/api/repository/artifacts').then((res) => {
       this.setState({ artifacts: res.data, page: LIST });
     });
   }
 
-  _uploadArtifact(nid) {
+  uploadArtifact(nid) {
     const artifact = this.props.prepareArtifact();
     const auth = { username: this.state.userName, password: this.state.password };
     const closeModal = this.closeModal;

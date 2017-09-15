@@ -1,7 +1,7 @@
 import Subpopulations from '../components/builder/Subpopulations';
 import Subpopulation from '../components/builder/Subpopulation';
 import { fullRenderComponent, createTemplateInstance } from '../helpers/test_helpers';
-import { instanceTree, elementGroups } from '../helpers/test_fixtures';
+import { elementGroups } from '../helpers/test_fixtures';
 
 let component;
 let componentWithSubpopulations;
@@ -88,7 +88,12 @@ test('can delete subpopulation not in use', () => {
   checkSubpopulationUsage.mockReturnValueOnce(false);
   expect(componentWithSubpopulations.props().subpopulations).toHaveLength(2);
 
-  componentWithSubpopulations.find(Subpopulation).at(0).find('button').at(1).simulate('click');
+  componentWithSubpopulations
+    .find(Subpopulation)
+    .at(0)
+    .find('button')
+    .at(1)
+    .simulate('click');
   const newSubpopulations = updateSubpopulations.mock.calls[0][0];
 
   expect(updateSubpopulations).toHaveBeenCalledTimes(1);
@@ -98,7 +103,12 @@ test('can delete subpopulation not in use', () => {
 test('can\'t delete subpopulation in use', () => {
   checkSubpopulationUsage.mockReturnValueOnce(true);
 
-  componentWithSubpopulations.find(Subpopulation).at(0).find('button').at(0).simulate('click');
+  componentWithSubpopulations
+    .find(Subpopulation)
+    .at(0)
+    .find('button')
+    .at(0)
+    .simulate('click');
 
   expect(updateSubpopulations).not.toHaveBeenCalled();
 });

@@ -1,6 +1,7 @@
 const express = require('express');
 const artifact = require('../handlers/cqlHandler');
 const publish = require('../handlers/publish');
+
 const CQLRouter = express.Router();
 
 // Routes for /api/cql

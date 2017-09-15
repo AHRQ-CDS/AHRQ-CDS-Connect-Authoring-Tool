@@ -11,6 +11,7 @@ module.exports = {
 
 // Get all expressions
 function allGet(req, res) {
+  // eslint-disable-next-line array-callback-return
   Expression.find((error, expressions) => {
     if (error) res.status(500).send(error);
     else res.json(expressions);

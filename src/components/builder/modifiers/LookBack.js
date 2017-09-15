@@ -28,7 +28,7 @@ class LookBack extends Component {
               <span className="control">
                 <span className="select">
                   <select id={unitId} name="unit" value={this.props.unit}
-                    onChange={(event) => {
+                    onBlur={(event) => {
                       this.props.updateAppliedModifier(this.props.index, { unit: event.target.value });
                     }}>
                     <option value="" disabled selected>-- Unit --</option>

@@ -24,6 +24,7 @@ const showPresets = mongoId => axios.get(`${API_BASE}/expressions/group/${mongoI
 
 const getValueAtPath = (obj, path) => {
   if (typeof path === 'string') {
+    // eslint-disable-next-line no-param-reassign
     path = path.split('.');
   }
 
@@ -334,9 +335,9 @@ class BuilderPage extends Component {
   }
 
   // subpop_index is an optional parameter, for determing which tree within subpop we are referring to
-  updateInstanceModifiers = (treeName, modifiers, path, subpop_index) => {
+  updateInstanceModifiers = (treeName, modifiers, path, subpopIndex) => {
     const tree = _.cloneDeep(this.state[treeName]);
-    const valuePath = _.isNumber(subpop_index) ? tree[subpop_index] : tree;
+    const valuePath = _.isNumber(subpopIndex) ? tree[subpopIndex] : tree;
     const target = getValueAtPath(valuePath, path);
     target.modifiers = modifiers;
     this.setState({ [treeName]: tree });
@@ -386,8 +387,7 @@ class BuilderPage extends Component {
     const treeData = this.findTree(treeName, uid);
     const tree = treeData.tree;
     const index = path.slice(-1);
-    path = path.slice(0, path.length - 2);
-    const target = getValueAtPath(tree, path);
+    const target = getValueAtPath(tree, path.slice(0, path.length - 2));
     target.splice(index, 1);
 
     this.setTree(treeName, treeData, tree);
@@ -395,7 +395,9 @@ class BuilderPage extends Component {
 
     // elementsToAdd is an array of elements to be readded when indenting or outdenting
     if (elementsToAdd) {
-      elementsToAdd.forEach((element) => { this.addInstance(treeName, element.instance, element.path, uid, element.index, localTree); });
+      elementsToAdd.forEach((element) => {
+        this.addInstance(treeName, element.instance, element.path, uid, element.index, localTree);
+      });
     }
   }
 
@@ -409,6 +411,7 @@ class BuilderPage extends Component {
 
   getAllInstances = (treeName, node = null, uid = null) => {
     if (node == null) {
+      // eslint-disable-next-line no-param-reassign
       node = this.findTree(treeName, uid).tree;
     }
     return _.flatten(node.childInstances.map((instance) => {
@@ -462,7 +465,8 @@ class BuilderPage extends Component {
     newSubpopulation.name = '';
     newSubpopulation.path = '';
     const numOfSpecialSubpopulations = this.state.subpopulations.filter(sp => sp.special).length;
-    newSubpopulation.subpopulationName = `Subpopulation ${this.state.subpopulations.length + 1 - numOfSpecialSubpopulations}`;
+    const subPopNumber = (this.state.subpopulations.length + 1) - numOfSpecialSubpopulations;
+    newSubpopulation.subpopulationName = `Subpopulation ${subPopNumber}`;
     newSubpopulation.expanded = true;
     const newSubpopulations = this.state.subpopulations.concat([newSubpopulation]);
 
@@ -513,7 +517,11 @@ class BuilderPage extends Component {
     return (
       <div className="builder">
         <div className="upload__modal">
-          <RepoUploadModal showModal={this.state.showPublishModal} closeModal={this.togglePublishModal} prepareArtifact={this.prepareArtifact.bind(this)} version={this.state.version}/>
+          <RepoUploadModal
+            showModal={this.state.showPublishModal}
+            closeModal={this.togglePublishModal}
+            prepareArtifact={this.prepareArtifact.bind(this)}
+            version={this.state.version}/>
         </div>
         <header className="builder__header">
           <h2 className="builder__heading">{ this.state.name }</h2>

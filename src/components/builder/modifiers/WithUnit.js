@@ -18,7 +18,7 @@ class WithUnit extends Component {
              <span className="control">
                <span className="select">
                   <select id={unitId} name="With Unit" aria-label="With Unit" value={this.props.unit}
-                    onChange={(event) => {
+                    onBlur={(event) => {
                       this.props.updateAppliedModifier(this.props.index, { unit: event.target.value });
                     }}>
                     <option defaultValue="">{'-- Select Unit --'}</option>

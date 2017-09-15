@@ -1,7 +1,6 @@
-import _ from 'lodash';
 import ErrorStatement from '../components/builder/ErrorStatement';
-import { shallowRenderComponent, fullRenderComponent } from '../helpers/test_helpers';
-import { instanceTree, elementGroups } from '../helpers/test_fixtures';
+import { fullRenderComponent } from '../helpers/test_helpers';
+
 const updateParentStateMock = jest.fn();
 
 let component;

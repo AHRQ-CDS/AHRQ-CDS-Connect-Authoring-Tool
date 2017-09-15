@@ -4,15 +4,14 @@ const _ = require('lodash');
 
 const baseArtifact = {
   name: 'a test',
-  version: '0.0.1',
+  version: null,
   expTreeInclude: {},
   expTreeExclude: {},
   subpopulations: [],
   recommendations: [],
   booleanParameters: [],
   errorStatement: {},
-  uniqueIdCounter: 9999,
-  version: null
+  uniqueIdCounter: 9999
 };
 
 describe('Basic CQL Handler Tests', () => {
@@ -346,9 +345,9 @@ describe('Subpopulation tests', () => {
     expect(converted).to.match(/.*^\s*define "Recommendation":\s+if "Subpopulation 1" and "Subpopulation 2" then 'Both subpopulations rec.'\s+else if "Subpopulation 1" then 'subpop 1 only'\s+else if "Subpopulation 2" then 'subpop 2 only'\s+else if not "MeetsInclusionCriteria" then 'Not included rec.'\s+else if "InPopulation" then 'Fallback rec.'\s+else null\s+/m);
   });
   it('second subpopulation is detected in a recommendation', () => {
-    const with_one_rec = _.cloneDeep(raw);
-    with_one_rec.recommendations.splice(1);
-    const artifact = buildCQL(with_one_rec);
+    const withOneRec = _.cloneDeep(raw);
+    withOneRec.recommendations.splice(1);
+    const artifact = buildCQL(withOneRec);
     const converted = artifact.toString();
     // define "Subpopulation 1":
     //   if "InPopulation" is not true then
@@ -356,15 +355,15 @@ describe('Subpopulation tests', () => {
     //   else
     // "HasDiabetes"
 
-    const inpop_suffix = '\\s+if "InPopulation" is not true then\\s+null\\s+else\\s+';
-    expect(converted).to.match(new RegExp(`.*^\s*define "Subpopulation 1":${inpop_suffix}`, 'm'));
-    expect(converted).to.match(new RegExp(`.*^\s*define "Subpopulation 2":${inpop_suffix}`, 'm'));
+    const inPopSuffic = '\\s+if "InPopulation" is not true then\\s+null\\s+else\\s+';
+    expect(converted).to.match(new RegExp(`.*^\\s*define "Subpopulation 1":${inPopSuffic}`, 'm'));
+    expect(converted).to.match(new RegExp(`.*^\\s*define "Subpopulation 2":${inPopSuffic}`, 'm'));
   });
   it('rationales', () => {
-    const with_rationales = _.cloneDeep(raw);
-    with_rationales.recommendations[1].rationale = 'subpop 1 with rationale';
-    with_rationales.recommendations[4].rationale = 'fallback rationale';
-    const artifact = buildCQL(with_rationales);
+    const withRationales = _.cloneDeep(raw);
+    withRationales.recommendations[1].rationale = 'subpop 1 with rationale';
+    withRationales.recommendations[4].rationale = 'fallback rationale';
+    const artifact = buildCQL(withRationales);
     const converted = artifact.toString();
     // if "Subpopulation 1" and "Subpopulation 2" then null
     // else if "Subpopulation 1" then 'subpop 1 with rationale'
@@ -375,8 +374,8 @@ describe('Subpopulation tests', () => {
     expect(converted).to.match(/.*^\s*define "Rationale":\s+if "Subpopulation 1" and "Subpopulation 2" then null\s+else if "Subpopulation 1" then 'subpop 1 with rationale'\s+else if "Subpopulation 2" then null\s+else if not "MeetsInclusionCriteria" then null\s+else if "InPopulation" then 'fallback rationale'\s+else null\s+/m);
   });
   it('errors', () => {
-    const with_errors = _.cloneDeep(raw);
-    with_errors.errorStatement = {
+    const withErrors = _.cloneDeep(raw);
+    withErrors.errorStatement = {
       statements: [
         {
           condition: { label: 'Recommendations is null', value: '"Recommendation" is null' },
@@ -410,7 +409,7 @@ describe('Subpopulation tests', () => {
       ],
       else: 'null'
     };
-    const artifact = buildCQL(with_errors);
+    const artifact = buildCQL(withErrors);
     const converted = artifact.toString();
 
     // define "Errors":
@@ -429,9 +428,9 @@ describe('Subpopulation tests', () => {
     expect(converted).to.match(/.*^\s*define "Errors":\s+if "Recommendation" is null then\s+{'Something went wrong\.'}\s+else if "Subpopulation 1" then\s+if "Subpopulation 2" then\s+{'Dual subpopulation error\.'}\s+else\s+null\s+else if "MeetsExclusionCriteria" then\s+{'default sp 2'}\s+else if not "MeetsInclusionCriteria" then\s+{'default sp 1'}\s+else\s+null\s+/m);
   });
   it('subpopulations not used in recommendations do not include in population check.', () => {
-    const no_recs = _.cloneDeep(raw);
-    no_recs.recommendations = [];
-    const artifact = buildCQL(no_recs);
+    const noRecs = _.cloneDeep(raw);
+    noRecs.recommendations = [];
+    const artifact = buildCQL(noRecs);
     const converted = artifact.toString();
     // define "Subpopulation 1":
     //   if "InPopulation" is not true then

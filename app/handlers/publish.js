@@ -1,4 +1,3 @@
-const Artifact = require('../models/artifact');
 const Config = require('../../config');
 const cqlHandler = require('./cqlHandler');
 const request = require('request');
@@ -8,7 +7,6 @@ const archiver = require('archiver');
 const tmp = require('tmp');
 const Busboy = require('busboy');
 const Path = require('path');
-const axios = require('axios');
 const upload = require('cds-upload');
 
 
@@ -33,11 +31,13 @@ function publish(req, res) {
 //     if(err) { res.sendStatus(500); return;}
 //     let headers = {'Accept':'application/vnd.api+json',
 //                     'Content-type':'application/vnd.api+json'};
-//     request.get(`${Config.repo.baseUrl}/node/${req.body.nid}?_format=hal_json`, {auth: req.auth, headers: headers}, function(err, resp, body){
+//     request.get(`${Config.repo.baseUrl}/node/${req.body.nid}?_format=hal_json`,
+//                 {auth: req.auth, headers: headers}, function(err, resp, body){
 //
 //       let responseBody = JSON.parse(body);
 //       // Eventually, this will extract the exact node
-//       let paragraphUuid = null//responseBody._embedded[`${Config.repo.baseUrl}/rest/relation/node/artifact/field_artifact_representation`][0].uuid[0].value;
+// eslint-disable-next-line max-len
+//       let paragraphUuid = null //responseBody._embedded[`${Config.repo.baseUrl}/rest/relation/node/artifact/field_artifact_representation`][0].uuid[0].value;
 //       request.get(`${Config.repo.baseUrl}/rest/session/token`, function(err, response, body){
 //           convertToElm(req, res, {paragraph: paragraphUuid, csrf: body});
 //       })
@@ -48,7 +48,6 @@ function publish(req, res) {
 
 function convertToElm(req, res, context) {
   const artifact = cqlHandler.buildCQL(req.body.data);
-  const repoNid = req.body.nid;
 
   const path = `${__dirname}/../data/library_helpers/`;
 
@@ -56,7 +55,7 @@ function convertToElm(req, res, context) {
   glob(`${path}/*.cql`, (err, files) => {
     const fileStreams = files.map(f => fs.createReadStream(f));
 
-    const cqlReq = request.post(Config.repo.CQLToElmURL, (err, resp, body) => {
+    const cqlReq = request.post(Config.repo.CQLToElmURL, (err2, resp, body) => {
       splitELM(artifact.toJson(), { resp, body }, req, res, context);
     });
     const artifactJson = artifact.toJson();
@@ -65,7 +64,7 @@ function convertToElm(req, res, context) {
       filename: artifactJson.filename,
       contentType: artifactJson.type
     });
-    fileStreams.map((f) => {
+    fileStreams.forEach((f) => {
       form.append(Path.basename(f.path, '.cql'), f);
     });
   });
@@ -101,7 +100,7 @@ function pushToRepo(artifact, elm, req, res, context) {
   });
   archive.append(artifact.text, { name: `${artifact.filename}.cql` });
 
-  elm.map((e, i) => {
+  elm.forEach((e, i) => {
     archive.append(e.content, { name: `${e.name}.json` });
   });
   // Add helper Library
@@ -115,7 +114,8 @@ function pushToRepo(artifact, elm, req, res, context) {
     const pass = req.body.auth.password;
     const authData = { name, pass };
     const NID = req.body.nid;
-    upload.submitArtifactFileToRepo(Config.repo.baseUrl, authData, NID, artifact.name, artifact.version, base64).then((uploaded) => {
+    upload.submitArtifactFileToRepo(Config.repo.baseUrl, authData, NID, artifact.name, artifact.version, base64)
+    .then((uploaded) => {
       res.send(uploaded);
     });
   });

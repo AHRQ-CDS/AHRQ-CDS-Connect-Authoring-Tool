@@ -112,7 +112,10 @@ test('edits own name', () => {
 
   nameParamater.find('input').simulate('change', { target: { name: 'element_name', value: newName } });
 
-  expect(editInstance).lastCalledWith(rootConjunction.props().name, { element_name: newName }, childConjunctionPath, false);
+  expect(editInstance).lastCalledWith(rootConjunction.props().name,
+                                      { element_name: newName },
+                                      childConjunctionPath,
+                                      false);
 });
 
 test('can\'t indent or outdent root group', () => {
@@ -166,13 +169,23 @@ describe('for deeper nested conjunction groups', () => {
   });
 
   test('can indent a child TemplateInstance', () => {
-    deeperConjunction.find(TemplateInstance).first().find('button[aria-label="indent"]').first().simulate('click');
+    deeperConjunction
+      .find(TemplateInstance)
+      .first()
+      .find('button[aria-label="indent"]')
+      .first()
+      .simulate('click');
 
     expect(deleteInstance).toHaveBeenCalled();
   });
 
   test('can outdent a child TemplateInstance', () => {
-    deeperConjunction.find(TemplateInstance).first().find('button[aria-label="outdent"]').first().simulate('click');
+    deeperConjunction
+      .find(TemplateInstance)
+      .first()
+      .find('button[aria-label="outdent"]')
+      .first()
+      .simulate('click');
 
     expect(deleteInstance).toHaveBeenCalled();
   });

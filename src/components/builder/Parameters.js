@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
-import Parameter from './Parameter';
 import _ from 'lodash';
+import Parameter from './Parameter';
 
 class Parameters extends Component {
   constructor(props) {

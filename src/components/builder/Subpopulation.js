@@ -1,8 +1,10 @@
 import React, { Component, PropTypes } from 'react';
-import _ from 'lodash';
 import FontAwesome from 'react-fontawesome';
 
 import ConjunctionGroup from './ConjunctionGroup';
+
+// For now, set the next rules to warn.  We don't want to forget about them, but don't want to deal with them now.
+/* eslint jsx-a11y/click-events-have-key-events: "warn", jsx-a11y/onclick-has-role: "warn" */
 
 class Subpopulation extends Component {
   static propTypes = {
@@ -74,7 +76,9 @@ class Subpopulation extends Component {
                 aria-label="Subpopulation Title"
                 value={ this.props.subpopulation.subpopulationName }
                 onClick={ event => event.stopPropagation() }
-                onChange={ (event) => { this.props.setSubpopulationName(event.target.value, this.props.subpopulation.uniqueId); } }
+                onChange={ (event) => {
+                  this.props.setSubpopulationName(event.target.value, this.props.subpopulation.uniqueId);
+                }}
               />
             </div>
           :
@@ -87,7 +91,9 @@ class Subpopulation extends Component {
             <button onClick={ this.state.isExpanded ? this.collapse : this.expand }>
               { this.state.isExpanded ? 'Done' : 'Edit' }
             </button>
-            <button aria-label="Remove subpopulation" onClick={ () => this.props.deleteSubpopulation(this.props.subpopulation.uniqueId) }><FontAwesome fixedWidth name='times'/></button>
+            <button aria-label="Remove subpopulation"
+                    onClick={ () => this.props.deleteSubpopulation(this.props.subpopulation.uniqueId) }
+            ><FontAwesome fixedWidth name='times'/></button>
           </div>
         </div>
         { this.state.isExpanded ?

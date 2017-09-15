@@ -2,10 +2,10 @@ import ElementSelect from '../components/builder/ElementSelect';
 import { fullRenderComponent } from '../helpers/test_helpers';
 import { elementGroups } from '../helpers/test_fixtures';
 
-let component,
-  elementField,
-  categoryField,
-  setInputValue;
+let component;
+let elementField;
+let categoryField;
+let setInputValue;
 const addInstance = jest.fn();
 
 beforeEach(() => {
@@ -56,7 +56,10 @@ describe('the select element field', () => {
 
   it('options of category "all" show their true category in the dropdown', () => {
     elementField.find('input').simulate('change');
-    const firstOptionCategory = elementField.find('.element-select__option').at(0).find('.element-select__option-category');
+    const firstOptionCategory = elementField
+      .find('.element-select__option')
+      .at(0)
+      .find('.element-select__option-category');
 
     expect(firstOptionCategory).toHaveLength(1);
     expect(firstOptionCategory.text()).toEqual('(Demographic)');
@@ -92,7 +95,7 @@ describe('the select category field', () => {
     const options = categoryField.find('.Select-option');
 
     expect(options).toHaveLength(4);
-    options.map((option, i) => {
+    options.forEach((option, i) => {
       expect(option.text()).toEqual(categoryNames[i]);
     });
   });

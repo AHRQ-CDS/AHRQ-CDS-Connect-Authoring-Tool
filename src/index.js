@@ -1,8 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import axe from 'react-axe';
-import Routes from './routes';
 import Modal from 'react-modal';
+import Routes from './routes';
 
 // Override overlay background color for all modals in app
 Modal.defaultStyles.overlay.backgroundColor = 'rgba(100,100,100,0.75)';

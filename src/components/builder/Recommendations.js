@@ -1,5 +1,4 @@
 import React, { Component, PropTypes } from 'react';
-import _ from 'lodash';
 import update from 'immutability-helper';
 import Recommendation from './Recommendation';
 
@@ -69,7 +68,8 @@ class Recommendations extends Component {
               <span className="field recommendations__mode">
                <span className="control">
                  <span className="select">
-                   <select value={this.state.mode} onChange={this.handleModeChange} title="Recommendation mode" aria-label="Recommendation mode">
+                   <select value={this.state.mode} onChange={this.handleModeChange} title="Recommendation mode"
+                           aria-label="Recommendation mode">
                      <option value='every'>every</option>
                      <option value='first'>first</option>
                    </select>

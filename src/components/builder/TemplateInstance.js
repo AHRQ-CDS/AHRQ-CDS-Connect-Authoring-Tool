@@ -10,7 +10,7 @@ import StaticParameter from './parameters/StaticParameter';
 import StringParameter from './parameters/StringParameter';
 import ValueSetParameter from './parameters/ValueSetParameter';
 
-import Modifiers from '../../data/modifiers.js';
+import Modifiers from '../../data/modifiers';
 import BooleanComparison from './modifiers/BooleanComparison';
 import CheckExistence from './modifiers/CheckExistence';
 import LabelModifier from './modifiers/LabelModifier';
@@ -99,9 +99,15 @@ class TemplateInstance extends Component {
 
   componentWillReceiveProps(nextProps) {
     const otherInstances = this.getOtherInstances(nextProps);
+    let returnType;
+    if (!(_.isEmpty(nextProps.templateInstance.modifiers))) {
+      returnType = _.last(nextProps.templateInstance.modifiers).returnType;
+    } else {
+      returnType = this.props.templateInstance.returnType;
+    }
     this.setState({
       otherInstances,
-      returnType: !(_.isEmpty(nextProps.templateInstance.modifiers)) ? _.last(nextProps.templateInstance.modifiers).returnType : this.props.templateInstance.returnType
+      returnType
     });
   }
 
@@ -129,17 +135,17 @@ class TemplateInstance extends Component {
 
 
   renderAppliedModifier = (modifier, index) => {
-    const modifierForm = ((modifier) => {
-      switch (modifier.type || modifier.id) {
+    const modifierForm = ((mod) => {
+      switch (mod.type || mod.id) {
         case 'ValueComparison':
           return (
             <ValueComparison
               key={index}
               index={index}
-              min={modifier.values.min}
-              minInclusive={modifier.values.minInclusive}
-              max={modifier.values.max}
-              maxInclusive={modifier.values.maxInclusive}
+              min={mod.values.min}
+              minInclusive={mod.values.minInclusive}
+              max={mod.values.max}
+              maxInclusive={mod.values.maxInclusive}
               updateAppliedModifier={this.updateAppliedModifier}/>
           );
         case 'ValueComparisonObservation':
@@ -147,10 +153,10 @@ class TemplateInstance extends Component {
             <ValueComparisonObservation
               key={index}
               index={index}
-              minOperator={modifier.values.minOperator}
-              minValue={modifier.values.minValue}
-              maxOperator={modifier.values.maxOperator}
-              maxValue={modifier.values.maxValue}
+              minOperator={mod.values.minOperator}
+              minValue={mod.values.minValue}
+              maxOperator={mod.values.maxOperator}
+              maxValue={mod.values.maxValue}
               updateAppliedModifier={this.updateAppliedModifier}/>
           );
         case 'LookBack':
@@ -158,8 +164,8 @@ class TemplateInstance extends Component {
             <LookBack
               key={index}
               index={index}
-              value={modifier.values.value}
-              unit={modifier.values.unit}
+              value={mod.values.value}
+              unit={mod.values.unit}
               updateAppliedModifier={this.updateAppliedModifier}/>
           );
         case 'WithUnit':
@@ -167,7 +173,7 @@ class TemplateInstance extends Component {
             <WithUnit
               key={index}
               index={index}
-              unit={modifier.values.unit}
+              unit={mod.values.unit}
               updateAppliedModifier={this.updateAppliedModifier}/>
           );
         case 'BooleanComparison':
@@ -175,7 +181,7 @@ class TemplateInstance extends Component {
             <BooleanComparison
               key={index}
               index={index}
-              value={modifier.values.value}
+              value={mod.values.value}
               updateAppliedModifier={this.updateAppliedModifier}/>
           );
         case 'CheckExistence':
@@ -183,11 +189,11 @@ class TemplateInstance extends Component {
               <CheckExistence
                 key={index}
                 index={index}
-                value={modifier.values.value}
+                value={mod.values.value}
                 updateAppliedModifier={this.updateAppliedModifier}/>
           );
         default:
-          return (<LabelModifier key={index} name={modifier.name} id={modifier.id}/>);
+          return (<LabelModifier key={index} name={mod.name} id={mod.id}/>);
       }
     })(modifier);
 
@@ -254,8 +260,10 @@ class TemplateInstance extends Component {
 
   renderModifierSelect = () => (
       <div>
-        { (!this.props.templateInstance.cannotHaveModifiers && (this.state.relevantModifiers.length > 0 || this.props.templateInstance.modifiers.length === 0))
-          ?
+        { (
+            !this.props.templateInstance.cannotHaveModifiers
+            && (this.state.relevantModifiers.length > 0 || this.props.templateInstance.modifiers.length === 0)
+          ) ?
             <div className="modifier__selection">
               <button
                 onClick={() => this.setState({ showModifiers: !this.state.showModifiers })}

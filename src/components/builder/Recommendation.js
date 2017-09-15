@@ -4,6 +4,11 @@ import FontAwesome from 'react-fontawesome';
 import update from 'immutability-helper';
 import Select from 'react-select';
 
+/* eslint-disable jsx-a11y/label-has-for */
+
+// For now, set the next rules to warn.  We don't want to forget about them, but don't want to deal with them now.
+/* eslint jsx-a11y/click-events-have-key-events: "warn", jsx-a11y/onclick-has-role: "warn" */
+
 const subpopTabIndex = 2;
 
 class Recommendation extends Component {
@@ -104,7 +109,9 @@ class Recommendation extends Component {
                   key={subpop.uniqueId}
                   className="recommendation__subpopulation-pill">
                   { subpop.subpopulationName }
-                  <button aria-label={`Remove ${subpop.subpopulationName}`} onClick={ () => this.removeSubpopulation(i) }><FontAwesome fixedWidth name='times'/></button>
+                  <button aria-label={`Remove ${subpop.subpopulationName}`}
+                          onClick={ () => this.removeSubpopulation(i) }
+                  ><FontAwesome fixedWidth name='times'/></button>
                 </div>
               )) }
           </div>
@@ -146,7 +153,8 @@ class Recommendation extends Component {
             <div className="field is-grouped is-grouped-right">
               {/* <div className="control">
                 <span className="select">
-                  <select name="grade" aria-label="Recommendation grade" title="Recommendation grade" value={this.state.grade} onChange={this.handleChange}>
+                  <select name="grade" aria-label="Recommendation grade" title="Recommendation grade"
+                          value={this.state.grade} onChange={this.handleChange}>
                     <option value='A'>Grade A</option>
                     <option value='B'>Grade B</option>
                     <option value='C'>Grade C</option>
@@ -154,10 +162,13 @@ class Recommendation extends Component {
                 </span>
               </div>
               <div className="control">
-                <button className="button" aria-label="copy recommendation"><FontAwesome fixedWidth name='copy' /></button>
+                <button className="button" aria-label="copy recommendation"
+                ><FontAwesome fixedWidth name='copy' /></button>
               </div> */}
               <div className="control recommendation__remove">
-                <button className="button" aria-label="remove recommendation" onClick={() => this.props.onRemove(this.props.rec.uid)}><FontAwesome fixedWidth name='times' /></button>
+                <button className="button" aria-label="remove recommendation"
+                        onClick={() => this.props.onRemove(this.props.rec.uid)}
+                ><FontAwesome fixedWidth name='times' /></button>
               </div>
             </div>
           </div>
@@ -176,13 +187,16 @@ class Recommendation extends Component {
               </div>
               <div className="control">
                 <textarea className="textarea" name="rationale" aria-label="Rationale" title="Rationale text"
-                placeholder='Describe the rationale for your recommendation' value={this.state.rationale} onChange={this.handleChange} />
+                          placeholder='Describe the rationale for your recommendation' value={this.state.rationale}
+                          onChange={this.handleChange} />
               </div>
             </div>
           :
-            <button className="button recommendation__add-rationale" onClick={() => this.setState({ showRationale: !this.state.showRationale })}>Add rationale</button>
+            <button className="button recommendation__add-rationale"
+                    onClick={() => this.setState({ showRationale: !this.state.showRationale })}>Add rationale</button>
         }
-        { this.shouldShowSubpopulations() ? null : <button className="button is-pulled-right" name="subpopulation" onClick={this.revealSubpopulations}>Add subpopulation</button> }
+        { this.shouldShowSubpopulations() ? null : <button className="button is-pulled-right" name="subpopulation"
+                                                   onClick={this.revealSubpopulations}>Add subpopulation</button> }
       </section>
     );
   }

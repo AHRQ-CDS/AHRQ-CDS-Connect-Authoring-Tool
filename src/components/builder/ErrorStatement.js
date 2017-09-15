@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import Select from 'react-select';
 import _ from 'lodash';
 
+/* eslint-disable jsx-a11y/label-has-for */
 
 class ErrorStatement extends Component {
 
@@ -21,7 +22,10 @@ class ErrorStatement extends Component {
       if (s.special) {
         return ({ label: s.subpopulationName, value: s.special_subpopulationName });
       }
-      return ({ label: s.subpopulationName, value: s.subpopulationName ? `"${s.subpopulationName}"` : `"${s.uniqueId}"` });
+      return ({
+        label: s.subpopulationName,
+        value: s.subpopulationName ? `"${s.subpopulationName}"` : `"${s.uniqueId}"`
+      });
     });
     return dropdown.concat(params).concat(subpops);
   }

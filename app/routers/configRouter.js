@@ -1,5 +1,6 @@
 const express = require('express');
 const config = require('../handlers/configHandler');
+
 const ConfigRouter = express.Router();
 
 // Routes for /api/config

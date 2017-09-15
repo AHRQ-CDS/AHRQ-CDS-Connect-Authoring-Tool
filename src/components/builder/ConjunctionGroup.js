@@ -6,8 +6,9 @@ import TemplateInstance from './TemplateInstance';
 import ElementSelect from './ElementSelect';
 import StringParameter from './parameters/StringParameter';
 
-const requiredIf = (type, condition) => function (props) {
+const requiredIf = (type, condition) => function testProps(props) {
   const test = condition(props) ? type.isRequired : type;
+  // eslint-disable-next-line prefer-rest-params
   return test.apply(this, arguments);
 };
 
@@ -69,9 +70,9 @@ class ConjunctionGroup extends Component {
     // Decide what type of conjunction group to create when indenting
     let type;
     if (this.props.instance.id === 'Or') {
-      type = this.types.find(type => type.id === 'And');
+      type = this.types.find(t => t.id === 'And');
     } else { // Default is adding an OR
-      type = this.types.find(type => type.id === 'Or');
+      type = this.types.find(t => t.id === 'Or');
     }
 
     if (instance.conjunction) {

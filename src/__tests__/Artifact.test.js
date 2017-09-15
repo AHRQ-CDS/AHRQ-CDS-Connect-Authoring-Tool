@@ -137,7 +137,6 @@ test('ArtifactForm allows submission without an onSubmitFunction', () => {
   const form = component.find('form');
   const nameInput = form.find('input[name="name"]');
   const versionInput = form.find('input[name="version"]');
-  const button = form.find('button');
 
   expect(component.state('name')).toEqual('');
   expect(component.state('version')).toEqual('');
@@ -165,7 +164,6 @@ test('ArtifactForm allows submission with an onSubmitFunction', () => {
   const form = component.find('form');
   const nameInput = form.find('input[name="name"]');
   const versionInput = form.find('input[name="version"]');
-  const button = form.find('button');
 
   expect(component.state('name')).toEqual('');
   expect(component.state('version')).toEqual('');
