@@ -462,7 +462,7 @@ function applyModifiers(values, modifiers = []) { // default modifiers to []
   return values.map((value) => {
     let newValue = value;
     modifiers.forEach((modifier) => {
-      if (!(modifier.template in modifierMap)) {
+      if (!(modifier.cqlTemplate in modifierMap)) {
         console.error(`Modifier Template could not be found: ${modifier.cqlTemplate}`);
       }
       const modifierContext = { cqlLibraryFunction: modifier.cqlLibraryFunction, value_name: newValue };
