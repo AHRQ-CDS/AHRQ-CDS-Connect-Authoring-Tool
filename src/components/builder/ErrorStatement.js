@@ -32,7 +32,7 @@ class ErrorStatement extends Component {
 
   // Generic statement used to handle if then
   baseStatement = parent => ({
-    condition: null,
+    condition: [{ label: null, value: null }],
     thenClause: '',
     child: null,
     useThenClause: true
@@ -42,7 +42,7 @@ class ErrorStatement extends Component {
   baseChild = parent => ({
     statements: [
       {
-        condition: null,
+        condition: [{ label: null, value: null }],
         thenClause: '',
         child: null,
         useThenClause: true
@@ -116,7 +116,7 @@ class ErrorStatement extends Component {
       key={`condition-${parent != null ? parent : -1}-${index}`}
       inputProps={{ id: `condition-${parent != null ? parent : -1}-${index}` }}
       index={index}
-      value={statement.condition}
+      value={statement.condition.value}
       options={this.options()}
       onChange={ e => this.setStatement(e, parent, index, 'condition')}
     />)

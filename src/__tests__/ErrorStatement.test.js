@@ -13,7 +13,7 @@ beforeEach(() => {
     ],
     errorStatement: {
       statements: [
-        { condition: null,
+        { condition: [{ label: null, value: null }],
           thenClause: '',
           child: null,
           useThenClause: true },
@@ -30,11 +30,11 @@ beforeEach(() => {
     ],
     errorStatement: {
       statements: [
-        { condition: null,
+        { condition: [{ label: null, value: null }],
           thenClause: '',
           child: null,
           useThenClause: true },
-        { condition: null,
+        { condition: [{ label: null, value: null }],
           thenClause: '',
           child: null,
           useThenClause: true }
