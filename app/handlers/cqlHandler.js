@@ -1,3 +1,4 @@
+const Config = require('../../config');
 const Artifact = require('../models/artifact');
 const ValueSets = require('../data/valueSets');
 const _ = require('lodash');
@@ -6,6 +7,9 @@ const ejs = require('ejs');
 const fs = require('fs');
 const archiver = require('archiver');
 const path = require('path');
+const glob = require('glob');
+const request = require('request');
+const Busboy = require('busboy');
 
 const templatePath = 'app/data/cql/templates';
 const specificPath = 'app/data/cql/specificTemplates';
@@ -24,6 +28,7 @@ const includeLibraries = [
 module.exports = {
   objToCql,
   idToObj,
+  writeZip,
   buildCQL
 };
 
@@ -492,21 +497,100 @@ function constructOneRecommendationConditional(recommendation, text) {
 // Creates the cql file from an artifact object
 function objToCql(req, res) {
   const artifact = new CqlArtifact(req.body);
-  const cqlObject = artifact.toJson();
-
-  const archive = archiver('zip', { zlib: { level: 9 } });
-  archive.on('error', (err) => {
-    res.status(500).send({ error: err.message });
-  });
   res.attachment('archive-name.zip');
-  archive.pipe(res);
+  writeZip(artifact, res, (err) => {
+    if (err) {
+      res.status(500).send({ error: err.message });
+    }
+  });
+}
 
-  // Add helper Library
+function writeZip(cqlArtifact, writeStream, callback /* (error) */) {
+  // We must first convert to ELM before packaging up
+  convertToElm(cqlArtifact, (err, elmFiles) => {
+    if (err) {
+      callback(err);
+      return;
+    }
+    // Now build the zip, piping it to the writestream
+    const archive = archiver('zip', { zlib: { level: 9 } })
+    .on('error', callback);
+    writeStream.on('close', callback);
+    archive.pipe(writeStream);
+    const artifactJson = cqlArtifact.toJson();
+    archive.append(artifactJson.text, { name: `${artifactJson.filename}.cql` });
+    elmFiles.forEach((e, i) => {
+      archive.append(e.content, { name: `${e.name}.json` });
+    });
+    const helperPath = `${__dirname}/../data/library_helpers/`;
+    archive.directory(helperPath, '/');
+    archive.finalize();
+  });
+}
+
+function convertToElm(cqlArtifact, callback /* (error, elmFiles) */) {
+  // If CQL-to-ELM is disabled, this function should basically be a no-op
+  if (Config.cql2elm.disabled) {
+    callback(null, []);
+    return;
+  }
+
+  // Load all the supplementary CQL files, open file streams to them, and convert to ELM
   const helperPath = `${__dirname}/../data/library_helpers/`;
-  archive.directory(helperPath, '/');
+  glob(`${helperPath}/*.cql`, (err, files) => {
+    if (err) {
+      callback(err);
+      return;
+    }
 
-  archive.append(cqlObject.text, { name: `${cqlObject.filename}.cql` });
-  archive.finalize();
+    const fileStreams = files.map(f => fs.createReadStream(f));
+
+    // NOTE: the request isn't posted until the next event loop, so we can modify it after calling request.post
+    const cqlReq = request.post(Config.cql2elm.baseUrl, (err2, resp, body) => {
+      if (err2) {
+        callback(err2);
+        return;
+      }
+      const contentType = resp.headers['Content-Type'] || resp.headers['content-type'];
+      if (contentType === 'text/html') {
+        console.log(body);
+      }
+      // The body is multi-part containing an ELM file in each part, so we need to split it
+      splitELM(body, contentType, callback);
+    });
+    const artifactJson = cqlArtifact.toJson();
+    const form = cqlReq.form();
+    form.append(artifactJson.filename, cqlArtifact.toString(), {
+      filename: artifactJson.filename,
+      contentType: artifactJson.type
+    });
+    fileStreams.forEach((f) => {
+      form.append(path.basename(f.path, '.cql'), f);
+    });
+  });
+}
+
+function splitELM(body, contentType, callback /* (error, elmFiles) */) {
+  // Because ELM comes back as a multipart response we use busboy to split it up
+  const elmFiles = [];
+
+  let bb;
+  try {
+    bb = new Busboy({ headers: { 'content-type': contentType } });
+  } catch (err) {
+    callback(err);
+    return;
+  }
+  bb.on('field', (fieldname, val) => {
+    elmFiles.push({ name: fieldname, content: val });
+  })
+  .on('finish', () => {
+    callback(null, elmFiles);
+  })
+  .on('error', (err) => {
+    callback(err);
+  });
+  bb.end(body);
 }
 
 function buildCQL(artifactBody) {

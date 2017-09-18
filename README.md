@@ -18,6 +18,12 @@ npm install -g yarn # npm included with node, install yarn
 yarn # e.g. yarn install. installs this app's dependencies based on this project's yarn.lock / package.json
 ```
 
+By default, the project will attempt to convert CQL to ELM on download or publish.  This can be disabled for development purposes.  If enabled, you will need the CQL-to-ELM translation service, a Java application that can be run locally via Maven or Docker.
+* To run locally with Maven: https://github.com/cqframework/cql-translation-service
+* To run locally with Docker, install Docker and run: `docker run -p 8080:8080 cqframework/cql-translation-service:v1.2.10-SNAPSHOT`
+
+To disable CQL-to-ELM translation, modify `config.js` or set the environment variable `CQL_TO_ELM_DISABLED` to `true`
+
 The React part was bootstrapped with [Create React App](https://github.com/facebookincubator/create-react-app). Relevant files are in the `src/` filter. Refer to the Create React App [User Guide](https://github.com/facebookincubator/create-react-app/blob/master/packages/react-scripts/template/README.md) for guidance on features and how to perform common tasks.
 
 The backend is an Express-based Node app, with relevant files located in `app/`.
