@@ -48,7 +48,7 @@ class Subpopulations extends Component {
     newSubpopulation.path = '';
     newSubpopulation.subpopulationName = `Subpopulation ${this.state.subpopulations.length + 1}`;
     newSubpopulation.expanded = true;
-    const newSubpopulations = this.props.subpopulations.concat([ newSubpopulation ]);
+    const newSubpopulations = this.props.subpopulations.concat([newSubpopulation]);
 
     this.props.updateSubpopulations(newSubpopulations);
   }
@@ -78,8 +78,7 @@ class Subpopulations extends Component {
   render() {
     return (
       <div className="subpopulations">
-        { this.state.subpopulations.map((subpop, i) => {
-          return (
+        { this.state.subpopulations.map((subpop, i) => (
             <Subpopulation
               key={ subpop.uniqueId }
               treeName={ this.props.name }
@@ -98,8 +97,7 @@ class Subpopulations extends Component {
               showPresets={ this.props.showPresets }
               setPreset={ this.props.setPreset }
               categories={ this.props.categories } />
-          );
-        })}
+          ))}
         <button className="button" onClick={ this.addSubpopulation }>
           New subpopulation
         </button>

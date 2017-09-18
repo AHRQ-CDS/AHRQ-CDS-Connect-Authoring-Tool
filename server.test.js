@@ -15,14 +15,14 @@ afterEach((done) => {
 });
 
 test.skip('GET /api', (done) => {
-  axios.get(baseurl).then(res => {
+  axios.get(baseurl).then((res) => {
     expect(res.data.message).toBe('API Initialized!');
     done();
   }).catch(err => console.error(err));
 });
 
 test.skip('GET /api/authors', (done) => {
-  axios.get(baseurl + 'authors').then(res => {
+  axios.get(`${baseurl}authors`).then((res) => {
     expect(res.data).toBeDefined();
     // mock more detailed response?
     done();

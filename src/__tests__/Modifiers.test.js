@@ -25,7 +25,7 @@ test('BooleanComparison changes input', () => {
     value: ''
   });
 
-  component.find('select').simulate('change', { target: { value: 'is not true' }});
+  component.find('select').simulate('blur', { target: { value: 'is not true' } });
   expect(updateAppliedModifierMock).toHaveBeenCalled();
   expect(updateAppliedModifierMock).toBeCalledWith(80, { value: 'is not true' });
 });
@@ -47,10 +47,9 @@ test('CheckExistence changes input', () => {
     value: ''
   });
 
-  component.find('select').simulate('change', { target: { value: 'is null' }});
+  component.find('select').simulate('blur', { target: { value: 'is null' } });
   expect(updateAppliedModifierMock).toHaveBeenCalled();
   expect(updateAppliedModifierMock).toBeCalledWith(7, { value: 'is null' });
-
 });
 
 test('LabelModifier renders without crashing', () => {
@@ -79,11 +78,11 @@ test('LookBack changes input', () => {
     unit: 'days'
   });
 
-  component.find('input').simulate('change', { target: { value: 13 }});
+  component.find('input').simulate('change', { target: { value: 13 } });
   expect(updateAppliedModifierMock).toHaveBeenCalled();
   expect(updateAppliedModifierMock).toBeCalledWith(5, { value: 13 });
 
-  component.find('select').simulate('change', { target: { value: 'years' }});
+  component.find('select').simulate('blur', { target: { value: 'years' } });
   expect(updateAppliedModifierMock).toBeCalledWith(5, { unit: 'years' });
 });
 
@@ -115,14 +114,14 @@ test('ValueComparisonObservation changes input', () => {
   const maxInput = component.find('input[name="Max value"]');
   const maxSelect = component.find('select[name="Max Operator"]');
 
-  minInput.simulate('change', { target: { value: 21 }});
+  minInput.simulate('change', { target: { value: 21 } });
   expect(updateAppliedModifierMock).toBeCalledWith(303, { minValue: 21 });
-  minSelect.simulate('change', { target: { value: "<" }});
-  expect(updateAppliedModifierMock).toBeCalledWith(303, { minOperator: "<" });
-  maxInput.simulate('change', { target: { value: 189 }});
+  minSelect.simulate('blur', { target: { value: '<' } });
+  expect(updateAppliedModifierMock).toBeCalledWith(303, { minOperator: '<' });
+  maxInput.simulate('change', { target: { value: 189 } });
   expect(updateAppliedModifierMock).toBeCalledWith(303, { maxValue: 189 });
-  maxSelect.simulate('change', { target: { value: "!=" }});
-  expect(updateAppliedModifierMock).toBeCalledWith(303, { maxOperator: "!=" });
+  maxSelect.simulate('blur', { target: { value: '!=' } });
+  expect(updateAppliedModifierMock).toBeCalledWith(303, { maxOperator: '!=' });
 });
 
 test('ValueComparison renders without crashing', () => {
@@ -153,13 +152,13 @@ test('ValueComparison changes input', () => {
   const maxInput = component.find('input[name="max"]');
   const maxCheckbox = component.find('input[name="maxInclusive"]');
 
-  minInput.simulate('change', { target: { value: 3 }});
+  minInput.simulate('change', { target: { value: 3 } });
   expect(updateAppliedModifierMock).toBeCalledWith(271, { min: 3 });
-  minCheckbox.simulate('change', { target: { checked: false }});
+  minCheckbox.simulate('change', { target: { checked: false } });
   expect(updateAppliedModifierMock).toBeCalledWith(271, { minInclusive: false });
-  maxInput.simulate('change', { target: { value: 89 }});
+  maxInput.simulate('change', { target: { value: 89 } });
   expect(updateAppliedModifierMock).toBeCalledWith(271, { max: 89 });
-  maxCheckbox.simulate('change', { target: { checked: true }});
+  maxCheckbox.simulate('change', { target: { checked: true } });
   expect(updateAppliedModifierMock).toBeCalledWith(271, { maxInclusive: true });
 });
 
@@ -180,7 +179,7 @@ test('WithUnit changes select', () => {
     unit: ''
   });
 
-  component.find('select').simulate('change', { target: { value: 'mg/dL' }})
+  component.find('select').simulate('blur', { target: { value: 'mg/dL' } });
   expect(updateAppliedModifierMock).toHaveBeenCalled();
   expect(updateAppliedModifierMock).toBeCalledWith(5, { unit: 'mg/dL' });
 });

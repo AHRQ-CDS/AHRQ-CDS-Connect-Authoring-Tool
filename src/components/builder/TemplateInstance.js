@@ -10,7 +10,7 @@ import StaticParameter from './parameters/StaticParameter';
 import StringParameter from './parameters/StringParameter';
 import ValueSetParameter from './parameters/ValueSetParameter';
 
-import Modifiers from '../../data/modifiers.js';
+import Modifiers from '../../data/modifiers';
 import BooleanComparison from './modifiers/BooleanComparison';
 import CheckExistence from './modifiers/CheckExistence';
 import LabelModifier from './modifiers/LabelModifier';
@@ -57,10 +57,10 @@ class TemplateInstance extends Component {
 
 
     this.modifierMap = _.keyBy(Modifiers, 'id');
-    this.modifersByInputType = {}
+    this.modifersByInputType = {};
     Modifiers.forEach((modifier) => {
       modifier.inputTypes.forEach((inputType) => {
-        this.modifersByInputType[inputType] = (this.modifersByInputType[inputType] || []).concat(modifier)
+        this.modifersByInputType[inputType] = (this.modifersByInputType[inputType] || []).concat(modifier);
       });
     });
 
@@ -86,7 +86,7 @@ class TemplateInstance extends Component {
     const otherInstances = this.getOtherInstances(this.props);
     this.setState({ otherInstances });
 
-    this.setState({returnType: this.props.templateInstance.returnType});
+    this.setState({ returnType: this.props.templateInstance.returnType });
     axios.get(`${API_BASE}/config/resources`)
       .then((result) => {
         this.setState({ resources: result.data });
@@ -99,10 +99,16 @@ class TemplateInstance extends Component {
 
   componentWillReceiveProps(nextProps) {
     const otherInstances = this.getOtherInstances(nextProps);
+    let returnType;
+    if (!(_.isEmpty(nextProps.templateInstance.modifiers))) {
+      returnType = _.last(nextProps.templateInstance.modifiers).returnType;
+    } else {
+      returnType = this.props.templateInstance.returnType;
+    }
     this.setState({
       otherInstances,
-      returnType: !(_.isEmpty(nextProps.templateInstance.modifiers)) ? _.last(nextProps.templateInstance.modifiers).returnType : this.props.templateInstance.returnType
-    })
+      returnType
+    });
   }
 
   // Props will either be this.props or nextProps coming from componentWillReceiveProps
@@ -129,17 +135,17 @@ class TemplateInstance extends Component {
 
 
   renderAppliedModifier = (modifier, index) => {
-    const modifierForm = ((modifier) => {
-      switch (modifier.type || modifier.id) {
+    const modifierForm = ((mod) => {
+      switch (mod.type || mod.id) {
         case 'ValueComparison':
           return (
             <ValueComparison
               key={index}
               index={index}
-              min={modifier.values.min}
-              minInclusive={modifier.values.minInclusive}
-              max={modifier.values.max}
-              maxInclusive={modifier.values.maxInclusive}
+              min={mod.values.min}
+              minInclusive={mod.values.minInclusive}
+              max={mod.values.max}
+              maxInclusive={mod.values.maxInclusive}
               updateAppliedModifier={this.updateAppliedModifier}/>
           );
         case 'ValueComparisonObservation':
@@ -147,10 +153,10 @@ class TemplateInstance extends Component {
             <ValueComparisonObservation
               key={index}
               index={index}
-              minOperator={modifier.values.minOperator}
-              minValue={modifier.values.minValue}
-              maxOperator={modifier.values.maxOperator}
-              maxValue={modifier.values.maxValue}
+              minOperator={mod.values.minOperator}
+              minValue={mod.values.minValue}
+              maxOperator={mod.values.maxOperator}
+              maxValue={mod.values.maxValue}
               updateAppliedModifier={this.updateAppliedModifier}/>
           );
         case 'LookBack':
@@ -158,8 +164,8 @@ class TemplateInstance extends Component {
             <LookBack
               key={index}
               index={index}
-              value={modifier.values.value}
-              unit={modifier.values.unit}
+              value={mod.values.value}
+              unit={mod.values.unit}
               updateAppliedModifier={this.updateAppliedModifier}/>
           );
         case 'WithUnit':
@@ -167,7 +173,7 @@ class TemplateInstance extends Component {
             <WithUnit
               key={index}
               index={index}
-              unit={modifier.values.unit}
+              unit={mod.values.unit}
               updateAppliedModifier={this.updateAppliedModifier}/>
           );
         case 'BooleanComparison':
@@ -175,19 +181,19 @@ class TemplateInstance extends Component {
             <BooleanComparison
               key={index}
               index={index}
-              value={modifier.values.value}
+              value={mod.values.value}
               updateAppliedModifier={this.updateAppliedModifier}/>
           );
-          case 'CheckExistence':
-            return (
+        case 'CheckExistence':
+          return (
               <CheckExistence
                 key={index}
                 index={index}
-                value={modifier.values.value}
+                value={mod.values.value}
                 updateAppliedModifier={this.updateAppliedModifier}/>
-            );
+          );
         default:
-          return (<LabelModifier key={index} name={modifier.name} id={modifier.id}/>);
+          return (<LabelModifier key={index} name={mod.name} id={mod.id}/>);
       }
     })(modifier);
 
@@ -205,36 +211,33 @@ class TemplateInstance extends Component {
         }
       </div>
     );
-
   }
 
-  renderAppliedModifiers = () => {
-    return (
+  renderAppliedModifiers = () => (
       <div className="modifier__list">
         {(this.props.templateInstance.modifiers || []).map((modifier, index) =>
           this.renderAppliedModifier(modifier, index)
         )}
       </div>
-    );
-  }
+    )
 
   setAppliedModifiers = (modifiers) => {
     const returnType = _.isEmpty(modifiers) ? this.props.templateInstance.returnType : _.last(modifiers).returnType;
-    this.setState({returnType}, this.filterRelevantModifiers);
+    this.setState({ returnType }, this.filterRelevantModifiers);
     this.props.updateInstanceModifiers(this.props.treeName, modifiers, this.getPath(), this.props.subpopulationIndex);
   }
 
   filterRelevantModifiers = () => {
-    let relevantModifiers = this.modifersByInputType[this.state.returnType] || [];
+    const relevantModifiers = this.modifersByInputType[this.state.returnType] || [];
     if (!this.props.templateInstance.checkInclusionInVS) { // Rather than suppressing `CheckInclusionInVS` in every element, assume it's suppressed unless explicity stated otherwise
-      _.remove(relevantModifiers, modifier => modifier.id === "CheckInclusionInVS");
+      _.remove(relevantModifiers, modifier => modifier.id === 'CheckInclusionInVS');
     }
     if (_.has(this.props.templateInstance, 'suppressedModifiers')) {
       this.props.templateInstance.suppressedModifiers.forEach(suppressedModifier =>
         _.remove(relevantModifiers, relevantModifier => relevantModifier.id === suppressedModifier)
-      )
+      );
     }
-    this.setState({relevantModifiers});
+    this.setState({ relevantModifiers });
   }
 
   handleModifierSelected = (event) => {
@@ -250,16 +253,17 @@ class TemplateInstance extends Component {
   }
 
   updateAppliedModifier = (index, value) => {
-    let modifiers = this.props.templateInstance.modifiers;
+    const modifiers = this.props.templateInstance.modifiers;
     _.assign(modifiers[index].values, value);
     this.setAppliedModifiers(modifiers);
   }
 
-  renderModifierSelect = () => {
-    return (
+  renderModifierSelect = () => (
       <div>
-        { (!this.props.templateInstance.cannotHaveModifiers && (this.state.relevantModifiers.length > 0 || this.props.templateInstance.modifiers.length === 0))
-          ?
+        { (
+            !this.props.templateInstance.cannotHaveModifiers
+            && (this.state.relevantModifiers.length > 0 || this.props.templateInstance.modifiers.length === 0)
+          ) ?
             <div className="modifier__selection">
               <button
                 onClick={() => this.setState({ showModifiers: !this.state.showModifiers })}
@@ -267,7 +271,7 @@ class TemplateInstance extends Component {
                 aria-label={'add expression'}>
                 Add Expression</button>
               { (this.state.showModifiers)
-                ? this.state.relevantModifiers.map((modifier) =>
+                ? this.state.relevantModifiers.map(modifier =>
                     <button key={modifier.id}
                       value={modifier.id}
                       onClick={this.handleModifierSelected} className="modifier__button">{modifier.name}</button>
@@ -278,8 +282,7 @@ class TemplateInstance extends Component {
           : null
         }
       </div>
-    );
-  }
+    )
 
   selectTemplate(param) {
     if (param.static) {
@@ -338,7 +341,7 @@ class TemplateInstance extends Component {
     const preset = this.state.presets[stateIndex];
     preset.uniqueId = uniqueId;
     this.props.setPreset(this.props.treeName, preset, this.getPath());
-    this.setState({ showPresets: !this.state.showPresets })
+    this.setState({ showPresets: !this.state.showPresets });
   }
 
   showHideElementBody() {

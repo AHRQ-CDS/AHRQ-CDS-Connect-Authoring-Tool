@@ -36,7 +36,7 @@ class ArtifactForm extends Component {
         },
         {
           special: true,
-          subpopulationName: "Meets Exclusion Criteria",
+          subpopulationName: 'Meets Exclusion Criteria',
           special_subpopulationName: '"MeetsExclusionCriteria"',
           uniqueId: 'default-subpopulation-2'
         }

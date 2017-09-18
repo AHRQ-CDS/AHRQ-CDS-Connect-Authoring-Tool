@@ -32,7 +32,7 @@ const props = {
   root: true,
   name: treeName,
   instance: instanceTree,
-  createTemplateInstance: createTemplateInstance,
+  createTemplateInstance,
   addInstance,
   editInstance,
   updateInstanceModifiers: jest.fn(),
@@ -112,7 +112,10 @@ test('edits own name', () => {
 
   nameParamater.find('input').simulate('change', { target: { name: 'element_name', value: newName } });
 
-  expect(editInstance).lastCalledWith(rootConjunction.props().name, { element_name: newName }, childConjunctionPath, false);
+  expect(editInstance).lastCalledWith(rootConjunction.props().name,
+                                      { element_name: newName },
+                                      childConjunctionPath,
+                                      false);
 });
 
 test('can\'t indent or outdent root group', () => {
@@ -123,11 +126,11 @@ test('can indent a child group', () => {
   childConjunction.find('button[aria-label="indent"]').simulate('click');
 
   const instance = createTemplateInstance(andTemplate, [childConjunction.node.props.instance]);
-  const path = childConjunctionPath.split('.').slice(0,-2).join('.');
+  const path = childConjunctionPath.split('.').slice(0, -2).join('.');
   const index = Number(childConjunctionPath.split('.').pop());
 
-  delete instance['uniqueId'];
-  delete deleteInstance.mock.calls[0][2][0].instance['uniqueId'];
+  delete instance.uniqueId;
+  delete deleteInstance.mock.calls[0][2][0].instance.uniqueId;
 
   expect(deleteInstance).toHaveBeenCalledWith(treeName, childConjunctionPath, [{ instance, path, index }]);
 });
@@ -142,9 +145,9 @@ describe('for deeper nested conjunction groups', () => {
   beforeEach(() => {
     const ageInstance = createTemplateInstance(elementGroups[0].entries[0]);
     const deeperOr = _.cloneDeep(orInstance);
-    deeperOr.childInstances = [ ageInstance ];
+    deeperOr.childInstances = [ageInstance];
     const deeperTree = _.cloneDeep(instanceTree);
-    deeperTree.childInstances = [ deeperOr ];
+    deeperTree.childInstances = [deeperOr];
     const deeperProps = _.cloneDeep(props);
     deeperProps.instance = deeperTree;
     deeperConjunction = fullRenderComponent(ConjunctionGroup, deeperProps);
@@ -166,13 +169,23 @@ describe('for deeper nested conjunction groups', () => {
   });
 
   test('can indent a child TemplateInstance', () => {
-    deeperConjunction.find(TemplateInstance).first().find('button[aria-label="indent"]').first().simulate('click');
+    deeperConjunction
+      .find(TemplateInstance)
+      .first()
+      .find('button[aria-label="indent"]')
+      .first()
+      .simulate('click');
 
     expect(deleteInstance).toHaveBeenCalled();
   });
 
   test('can outdent a child TemplateInstance', () => {
-    deeperConjunction.find(TemplateInstance).first().find('button[aria-label="outdent"]').first().simulate('click');
+    deeperConjunction
+      .find(TemplateInstance)
+      .first()
+      .find('button[aria-label="outdent"]')
+      .first()
+      .simulate('click');
 
     expect(deleteInstance).toHaveBeenCalled();
   });

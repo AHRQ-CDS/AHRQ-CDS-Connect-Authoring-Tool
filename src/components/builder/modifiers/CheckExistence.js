@@ -7,11 +7,12 @@ class CheckExistence extends Component {
         <span className="field">
          <span className="control">
            <span className="select">
-              <select name="Check Existence?" aria-label="Check Existence" title="Check Existence" value={this.props.value}
-                onChange={(event) => {
+              <select name="Check Existence?" aria-label="Check Existence" title="Check Existence"
+                value={this.props.value}
+                onBlur={(event) => {
                   this.props.updateAppliedModifier(this.props.index, { value: event.target.value });
                 }}>
-                <option defaultValue="">{"-- Check Existence --"}</option>
+                <option defaultValue="">{'-- Check Existence --'}</option>
                 <option value="is null">{'is null'}</option>
                 <option value="is not null">{'is not null'}</option>
               </select>

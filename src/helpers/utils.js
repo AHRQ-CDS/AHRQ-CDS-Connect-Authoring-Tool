@@ -9,7 +9,7 @@ export function filterUnsuppressed(items) {
 }
 
 export function sortAlphabeticallyByKey(key, key2 = undefined) {
-  return function (a, b) {
+  return function sortFunc(a, b) {
     if (a[key] === b[key]) {
       if (key2) {
         return sortDifference(a[key2], b[key2]);

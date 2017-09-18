@@ -1,8 +1,6 @@
-import _ from 'lodash';
 import Recommendations from '../components/builder/Recommendations';
 import Recommendation from '../components/builder/Recommendation';
 import { fullRenderComponent } from '../helpers/test_helpers';
-import { instanceTree, elementGroups } from '../helpers/test_fixtures';
 
 let component;
 let componentWithRecs;
@@ -36,16 +34,15 @@ beforeEach(() => {
     setActiveTab: jest.fn(),
     uniqueIdCounter: 0,
     incrementUniqueIdCounter
-  }
+  };
 
   component = fullRenderComponent(Recommendations, Object.assign({
     recommendations: []
   }, baseProps));
 
   componentWithRecs = fullRenderComponent(Recommendations, Object.assign({
-    recommendations: [ existingRec ]
+    recommendations: [existingRec]
   }, baseProps));
-
 });
 
 test('has correct base class', () => {
@@ -76,7 +73,7 @@ test('updates a recommendation', () => {
 
   existingRec.text = newText;
 
-  expect(updateRecommendations).toHaveBeenCalledWith({ recommendations: [ existingRec ]});
+  expect(updateRecommendations).toHaveBeenCalledWith({ recommendations: [existingRec] });
 });
 
 test('deletes a recommendation', () => {

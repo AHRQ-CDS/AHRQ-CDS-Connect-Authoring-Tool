@@ -20,11 +20,12 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
 // Setting headers to Prevent Errors from Cross Origin Resource Sharing
-app.use(function(req, res, next) {
+app.use((req, res, next) => {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Credentials', 'true');
   res.setHeader('Access-Control-Allow-Methods', 'GET,HEAD,OPTIONS,POST,PUT,DELETE');
-  res.setHeader('Access-Control-Allow-Headers', 'Access-Control-Allow-Headers, Origin,Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers');
+  // eslint-disable-next-line max-len
+  res.setHeader('Access-Control-Allow-Headers', 'Access-Control-Allow-Headers, Origin, Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers');
   // Remove caching for most recent authors
   res.setHeader('Cache-Control', 'no-cache');
   next();
@@ -34,8 +35,8 @@ app.use(function(req, res, next) {
 routes(app);
 
 // Starts Server
-if(!module.parent) { // check if within a test or not.
-  app.listen(port, function() {
+if (!module.parent) { // check if within a test or not.
+  app.listen(port, () => {
     console.log(`api running on port ${port}`);
   });
-};
+}

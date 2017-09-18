@@ -1,67 +1,67 @@
 module.exports = {
   observations: {
-    total_cholesterol : {
+    total_cholesterol: {
       // https://ushik.ahrq.gov/ViewItemDetails?system=mu&itemKey=211967000
-      id: "total_cholesterol",
+      id: 'total_cholesterol',
       observations: [
         {
-          name: "Total Cholesterol",
+          name: 'Total Cholesterol',
           oid: '2.16.840.1.113883.3.464.1003.104.12.1013',
         }
       ],
-      units: {values: ["'mg/dL'"], code: "'mg/dL'"}
+      units: { values: ["'mg/dL'"], code: "'mg/dL'" }
     },
-    hdl_cholesterol : {
+    hdl_cholesterol: {
       // https://ushik.ahrq.gov/ViewItemDetails?system=mu&itemKey=211963000
-      id: "hdl_cholesterol",
+      id: 'hdl_cholesterol',
       observations: [
         {
-          name: "HDL-C Laboratory Test",
+          name: 'HDL-C Laboratory Test',
           oid: '2.16.840.1.113883.3.464.1003.104.12.1012',
         },
         {
-          name: "High Density Lipoprotein (HDL)",
+          name: 'High Density Lipoprotein (HDL)',
           oid: '2.16.840.1.113883.3.600.875',
         }
       ],
-      units: {values: ["'mg/dL'"], code: "'mg/dL'"}
+      units: { values: ["'mg/dL'"], code: "'mg/dL'" }
     },
-    systolic_blood_pressure : {
+    systolic_blood_pressure: {
       // https://ushik.ahrq.gov/ViewItemDetails?system=mu&itemKey=211939000
-      id: "systolic_blood_pressure",
+      id: 'systolic_blood_pressure',
       observations: [
         {
-          name: "Systolic Blood Pressure",
+          name: 'Systolic Blood Pressure',
           oid: '2.16.840.1.113883.3.526.3.1032',
         }
       ],
-      units: {values: ["'mm[Hg]'", "'mmHg'", "'mm Hg'"], code: "'mm[Hg]'"}
+      units: { values: ["'mm[Hg]'", "'mmHg'", "'mm Hg'"], code: "'mm[Hg]'" }
     },
-    ldl_test : {
+    ldl_test: {
       // [See value set in VSAC](https://vsac.nlm.nih.gov/valueset/2.16.840.1.113883.3.464.1003.198.11.1029/expansion)
-      id: "ldl_test",
+      id: 'ldl_test',
       observations: [
         {
-          name: "LDL Test",
+          name: 'LDL Test',
           oid: '2.16.840.1.113883.3.464.1003.198.11.1029',
         }
       ],
-      units: {values: ["'mg/dL'"], code: "'mg/dL'"},
+      units: { values: ["'mg/dL'"], code: "'mg/dL'" },
     },
-    ascvd_risk_assessment : {
+    ascvd_risk_assessment: {
       // A concept based observation - has codes and display keys instead of oid and units
-      id: "ascvd_risk_assessment",
-      name: "ASCVD 10-year risk", // Name matches the name of the concept being created
+      id: 'ascvd_risk_assessment',
+      name: 'ASCVD 10-year risk', // Name matches the name of the concept being created
       toConceptValue: false,
-      units: {values: ["'%'"], code: "'%'"},
+      units: { values: ["'%'"], code: "'%'" },
       concepts: [
         {
-          name: "ASCVD 10-year risk",
+          name: 'ASCVD 10-year risk',
           codes: [
             {
               name: 'ASCVD 10-year risk code',
               code: '79423-0',
-              codeSystem: { name: 'LOINC', id: 'http://loinc.org'},
+              codeSystem: { name: 'LOINC', id: 'http://loinc.org' },
               display: 'Cardiovascular disease 10Y risk [Likelihood] ACC-AHA Pooled Cohort by Goff 2013',
             }
           ],
@@ -69,19 +69,19 @@ module.exports = {
         }
       ],
     },
-    smoker : {
+    smoker: {
       // A concept based observation - has codes and display keys instead of oid and units
-      id: "smoker",
+      id: 'smoker',
       toConceptValue: true,
-      name: "Tobacco smoking status", // Name matches the name of the concept being creaged
+      name: 'Tobacco smoking status', // Name matches the name of the concept being creaged
       concepts: [
         {
-          name: "Tobacco smoking status",
+          name: 'Tobacco smoking status',
           codes: [
             {
               name: 'Tobacco smoking status code',
               code: '72166-2',
-              codeSystem: { name: 'LOINC', id: 'http://loinc.org'},
+              codeSystem: { name: 'LOINC', id: 'http://loinc.org' },
               display: 'Tobacco smoking status',
             }
           ],
@@ -89,408 +89,408 @@ module.exports = {
         }
       ],
       checkInclusionInVS: {
-        name: "Current Tobacco Smoker",
+        name: 'Current Tobacco Smoker',
         oid: '2.16.840.1.113883.3.600.2390'
       }
     },
-    alt : {
-      id: "alt",
+    alt: {
+      id: 'alt',
       observations: [
         {
-          name: "ALT",
+          name: 'ALT',
           oid: '2.16.840.1.113762.1.4.1032.21',
         }
       ],
-      units: {values: ["'U/L'"], code: "'U/L'"},
+      units: { values: ["'U/L'"], code: "'U/L'" },
     },
   },
   demographics: {
     gender: {
-      id: "gender",
-      name: "Gender",
+      id: 'gender',
+      name: 'Gender',
       oid: '2.16.840.1.113883.4.642.3.1',
       expansion: [
         {
-          id: "male",
-          name: "Male",
+          id: 'male',
+          name: 'Male',
           value: "'male'",
         },
         {
-          id: "female",
-          name: "Female",
+          id: 'female',
+          name: 'Female',
           value: "'female'",
         },
         {
-          id: "other",
-          name: "Other",
+          id: 'other',
+          name: 'Other',
           value: "'other'",
         },
         {
-          id: "unknown",
-          name: "Unknown",
+          id: 'unknown',
+          name: 'Unknown',
           value: "'unknown'",
         },
       ]
     }
   },
   conditions: {
-    diabetes : {
+    diabetes: {
       // https://ushik.ahrq.gov/ViewItemDetails?system=mu&itemKey=211617000
-      id: "diabetes",
+      id: 'diabetes',
       conditions: [
         {
-          name: "Diabetes",
+          name: 'Diabetes',
           oid: '2.16.840.1.113883.3.464.1003.103.12.1001'
         }
       ]
     },
-    hypertension : {
+    hypertension: {
       // https://ushik.ahrq.gov/ViewItemDetails?&system=mu&itemKey=189078000
-      id: "hypertension",
+      id: 'hypertension',
       conditions: [
         {
-          name: "Hypertension",
+          name: 'Hypertension',
           oid: '2.16.840.1.113762.1.4.1032.9'
         }
       ]
     },
-    has_ascvd : {
-      id: "has_ascvd",
+    has_ascvd: {
+      id: 'has_ascvd',
       conditions: [
         {
        // https://ushik.ahrq.gov/ViewItemDetails?&system=mu&itemKey=189321000
-          name: "Myocardial Infarction",
+          name: 'Myocardial Infarction',
           oid: '2.16.840.1.113883.3.526.3.403'
         },
         {
        // [See Acute myocardial infarction value set in VSAC](https://vsac.nlm.nih.gov/valueset/2.16.840.1.113883.3.464.1003.104.12.1001/expansion)
-          name: "Acute myocardial infarction",
+          name: 'Acute myocardial infarction',
           oid: '2.16.840.1.113883.3.464.1003.104.12.1001'
         },
         {
        // [See value set in VSAC](https://vsac.nlm.nih.gov/valueset/2.16.840.1.113883.3.464.1003.104.12.1003/expansion)
-          name: "Ischemic vascular disease",
+          name: 'Ischemic vascular disease',
           oid: '2.16.840.1.113883.3.464.1003.104.12.1003'
         }
       ]
     },
-    ascvd_CMS347v1 : {
-      id: "ascvd_CMS347v1",
+    ascvd_CMS347v1: {
+      id: 'ascvd_CMS347v1',
       conditions: [
         {
-          name: "Myocardial Infarction",
+          name: 'Myocardial Infarction',
           oid: '2.16.840.1.113883.3.526.3.403'
         },
         {
-          name: "Atherosclerosis and Peripheral Arterial Disease",
+          name: 'Atherosclerosis and Peripheral Arterial Disease',
           oid: '2.16.840.1.113762.1.4.1047.21'
         },
         {
-          name: "Cerebrovascular disease, Stroke, TIA",
+          name: 'Cerebrovascular disease, Stroke, TIA',
           oid: '2.16.840.1.113762.1.4.1047.44'
         },
         {
-          name: "Stable and Unstable Angina",
+          name: 'Stable and Unstable Angina',
           oid: '2.16.840.1.113762.1.4.1047.47'
         },
         {
-          name: "Ischemic heart disease or coronary occlusion, rupture, or thrombosis",
+          name: 'Ischemic heart disease or coronary occlusion, rupture, or thrombosis',
           oid: '2.16.840.1.113762.1.4.1047.46'
         }
       ]
     },
-    pregnancy_dx : {
+    pregnancy_dx: {
      // https://ushik.ahrq.gov/ViewItemDetails?&system=mu&itemKey=189087000
-     id: "pregnancy_dx",
-     conditions: [
-       {
-         name: "Pregnancy dx",
-         oid: '2.16.840.1.113883.3.526.3.378'
-       }
-     ],
-     concepts: [
-       {
-         name: 'Pregnancy status',
-         codes: [
-           {
-             name: 'Pregnancy status code',
-             code: '82810-3',
-             codeSystem: { name: 'LOINC', id: 'http://loinc.org'},
-             display: 'Pregnancy status',
-           }
-         ],
-         display: 'Pregnancy status'
-       },
-       {
-         name: 'Pregnant',
-         codes: [
-           {
-             name: 'Pregnant code',
-             code: '77386006',
-             codeSystem: { name: 'SNOMED-CT', id: 'http://snomed.info/sct/1000124'},
-             display: 'Patient currently pregnant (finding)',
-           }
-         ],
-         display: 'Patient currently pregnant (finding)'
-       }
-     ],
-    },
-    pregnancy_dx_CMS347v1 : {
-     id: "pregnancy_dx_CMS347v1",
-     conditions: [
-       {
-         name: "Pregnancy dx",
-         oid: '2.16.840.1.113883.3.600.1.1623'
-       }
-     ],
-     concepts: [
-       {
-         name: 'Pregnancy status',
-         codes: [
-           {
-             name: 'Pregnancy status code',
-             code: '82810-3',
-             codeSystem: { name: 'LOINC', id: 'http://loinc.org'},
-             display: 'Pregnancy status',
-           }
-         ],
-         display: 'Pregnancy status'
-       },
-       {
-         name: 'Pregnant',
-         codes: [
-           {
-             name: 'Pregnant code',
-             code: '77386006',
-             codeSystem: { name: 'SNOMED-CT', id: 'http://snomed.info/sct'},
-             display: 'Patient currently pregnant (finding)',
-           }
-         ],
-         display: 'Patient currently pregnant (finding)'
-       }
-     ],
-    },
-    breastfeeding : {
-      //TODO: Reused from statin CQM artifact; needs review against other value sets in VSAC.
-      id: "breastfeeding",
+      id: 'pregnancy_dx',
       conditions: [
         {
-          name: "Breastfeeding",
+          name: 'Pregnancy dx',
+          oid: '2.16.840.1.113883.3.526.3.378'
+        }
+      ],
+      concepts: [
+        {
+          name: 'Pregnancy status',
+          codes: [
+            {
+              name: 'Pregnancy status code',
+              code: '82810-3',
+              codeSystem: { name: 'LOINC', id: 'http://loinc.org' },
+              display: 'Pregnancy status',
+            }
+          ],
+          display: 'Pregnancy status'
+        },
+        {
+          name: 'Pregnant',
+          codes: [
+            {
+              name: 'Pregnant code',
+              code: '77386006',
+              codeSystem: { name: 'SNOMED-CT', id: 'http://snomed.info/sct/1000124' },
+              display: 'Patient currently pregnant (finding)',
+            }
+          ],
+          display: 'Patient currently pregnant (finding)'
+        }
+      ],
+    },
+    pregnancy_dx_CMS347v1: {
+      id: 'pregnancy_dx_CMS347v1',
+      conditions: [
+        {
+          name: 'Pregnancy dx',
+          oid: '2.16.840.1.113883.3.600.1.1623'
+        }
+      ],
+      concepts: [
+        {
+          name: 'Pregnancy status',
+          codes: [
+            {
+              name: 'Pregnancy status code',
+              code: '82810-3',
+              codeSystem: { name: 'LOINC', id: 'http://loinc.org' },
+              display: 'Pregnancy status',
+            }
+          ],
+          display: 'Pregnancy status'
+        },
+        {
+          name: 'Pregnant',
+          codes: [
+            {
+              name: 'Pregnant code',
+              code: '77386006',
+              codeSystem: { name: 'SNOMED-CT', id: 'http://snomed.info/sct' },
+              display: 'Patient currently pregnant (finding)',
+            }
+          ],
+          display: 'Patient currently pregnant (finding)'
+        }
+      ],
+    },
+    breastfeeding: {
+      // TODO: Reused from statin CQM artifact; needs review against other value sets in VSAC.
+      id: 'breastfeeding',
+      conditions: [
+        {
+          name: 'Breastfeeding',
           oid: '2.16.840.1.113762.1.4.1047.73'
         }
       ],
       concepts: [
         {
-          name: "Is Breastfeeding",
+          name: 'Is Breastfeeding',
           codes: [
             {
-              name: "Is Breastfeeding code",
-              code: "63895-7",
-              codeSystem: { name: 'LOINC', id: 'http://loinc.org'},
-              display: "Breastfeeding [PhenX]"
+              name: 'Is Breastfeeding code',
+              code: '63895-7',
+              codeSystem: { name: 'LOINC', id: 'http://loinc.org' },
+              display: 'Breastfeeding [PhenX]'
             }
           ],
-          display: "Breastfeeding [PhenX]"
+          display: 'Breastfeeding [PhenX]'
         },
         {
-          name: "Yes",
+          name: 'Yes',
           codes: [
             {
-              name: "Yes code",
-              code: "LA33-6",
-              codeSystem: { name: 'LOINC', id: 'http://loinc.org'},
-              display: "Yes"
+              name: 'Yes code',
+              code: 'LA33-6',
+              codeSystem: { name: 'LOINC', id: 'http://loinc.org' },
+              display: 'Yes'
             }
           ],
-          display: "Yes"
+          display: 'Yes'
         }
       ]
     },
-    end_stage_renal_disease : {
+    end_stage_renal_disease: {
     // https://ushik.ahrq.gov/ViewItemDetails?&system=mu&itemKey=189012000
-    id: "end_stage_renal_disease",
-    conditions: [
-      {
-        name: "End Stage Renal Disease",
-        oid: '2.16.840.1.113883.3.526.3.353'
-      }
-    ]
-    },
-    rhabdomyolysis : {
-      id: "rhabdomyolysis",
+      id: 'end_stage_renal_disease',
       conditions: [
         {
-          name: "Rhabdomyolysis",
+          name: 'End Stage Renal Disease',
+          oid: '2.16.840.1.113883.3.526.3.353'
+        }
+      ]
+    },
+    rhabdomyolysis: {
+      id: 'rhabdomyolysis',
+      conditions: [
+        {
+          name: 'Rhabdomyolysis',
           oid: '2.16.840.1.113762.1.4.1047.102'
         }
       ]
     },
-    hepatitis_a : {
-      id: "hepatitis_a",
+    hepatitis_a: {
+      id: 'hepatitis_a',
       conditions: [
         {
-          name: "Hepatitis A",
+          name: 'Hepatitis A',
           oid: '2.16.840.1.113883.3.464.1003.110.12.1024'
         }
       ]
     },
-    hepatitis_b : {
-      id: "hepatitis_b",
+    hepatitis_b: {
+      id: 'hepatitis_b',
       conditions: [
         {
-          name: "Hepatitis B",
+          name: 'Hepatitis B',
           oid: '2.16.840.1.113883.3.67.1.101.1.269'
         }
       ]
     },
-    cirrhosis : {
-      id: "cirrhosis",
+    cirrhosis: {
+      id: 'cirrhosis',
       conditions: [
         {
-          name: "Cirrhosis",
+          name: 'Cirrhosis',
           oid: '2.16.840.1.113762.1.4.1032.14'
         }
       ]
     },
-    familial_hypercholesterolemia : {
-     id: "familial_hypercholesterolemia",
-        conditions: [
-          {
-            name: "Familial hypercholesterolemia",
-            oid: '2.16.840.1.113762.1.4.1032.15'
-          }
-        ],
-        concepts: [
-          {
-            name: "Familial hypercholesterolemia concept",
-            codes: [
-              {
-                name: "Familial hypercholesterolemia code",
-                code: "E78.01",
-                codeSystem: { name: 'ICD-10-CM', id: 'urn:oid:2.16.840.1.113883.6.90'},
-                display: "Familial hypercholesterolemia"
-              }
-            ],
-            display: "Familial hypercholesterolemia"
-          },
-        ],
-      }
+    familial_hypercholesterolemia: {
+      id: 'familial_hypercholesterolemia',
+      conditions: [
+        {
+          name: 'Familial hypercholesterolemia',
+          oid: '2.16.840.1.113762.1.4.1032.15'
+        }
+      ],
+      concepts: [
+        {
+          name: 'Familial hypercholesterolemia concept',
+          codes: [
+            {
+              name: 'Familial hypercholesterolemia code',
+              code: 'E78.01',
+              codeSystem: { name: 'ICD-10-CM', id: 'urn:oid:2.16.840.1.113883.6.90' },
+              display: 'Familial hypercholesterolemia'
+            }
+          ],
+          display: 'Familial hypercholesterolemia'
+        },
+      ],
+    }
   },
   medications: {
-    anti_hypertensive_medication : {
+    anti_hypertensive_medication: {
       // https://ushik.ahrq.gov/ViewItemDetails?system=mu&itemKey=211974000
-      id: "anti_hypertensive_medication",
-      name: "Anti-Hypertensive Medication",
+      id: 'anti_hypertensive_medication',
+      name: 'Anti-Hypertensive Medication',
       oid: '2.16.840.1.113883.3.600.1476'
     },
-    on_statin_therapy : {
-      id: "on_statin_therapy",
+    on_statin_therapy: {
+      id: 'on_statin_therapy',
       medications: [
         {
           // TODO: Reused from statin CQM artifact; needs review against other value sets in VSAC.
-          name: "Low intensity statin therapy",
-          type: "MedicationStatement",
+          name: 'Low intensity statin therapy',
+          type: 'MedicationStatement',
           oid: '2.16.840.1.113762.1.4.1047.107'
         },
         {
           // TODO: Reused from statin CQM artifact; needs review against other value sets in VSAC.
-          name: "Low intensity statin therapy",
-          type: "MedicationOrder",
+          name: 'Low intensity statin therapy',
+          type: 'MedicationOrder',
           oid: '2.16.840.1.113762.1.4.1047.107'
         },
         {
           // TODO: Reused from statin CQM artifact; needs review against other value sets in VSAC.
-          name: "Low Intensity Statin Therapy Branded",
-          type: "MedicationStatement",
+          name: 'Low Intensity Statin Therapy Branded',
+          type: 'MedicationStatement',
           oid: '2.16.840.1.113762.1.4.1032.16'
         },
         {
           // TODO: Reused from statin CQM artifact; needs review against other value sets in VSAC.
-          name: "Low Intensity Statin Therapy Branded",
-          type: "MedicationOrder",
+          name: 'Low Intensity Statin Therapy Branded',
+          type: 'MedicationOrder',
           oid: '2.16.840.1.113762.1.4.1032.16'
         },
         {
        // TODO: Reused from statin CQM artifact; needs review against other value sets in VSAC.
-          name: "Moderate intensity statin therapy",
-          type: "MedicationStatement",
+          name: 'Moderate intensity statin therapy',
+          type: 'MedicationStatement',
           oid: '2.16.840.1.113762.1.4.1047.98'
         },
         {
        // TODO: Reused from statin CQM artifact; needs review against other value sets in VSAC.
-          name: "Moderate intensity statin therapy",
-          type: "MedicationOrder",
+          name: 'Moderate intensity statin therapy',
+          type: 'MedicationOrder',
           oid: '2.16.840.1.113762.1.4.1047.98'
         },
         {
           // TODO: Reused from statin CQM artifact; needs review against other value sets in VSAC.
-          name: "Moderate Intensity Statin Therapy Branded",
-          type: "MedicationStatement",
+          name: 'Moderate Intensity Statin Therapy Branded',
+          type: 'MedicationStatement',
           oid: '2.16.840.1.113762.1.4.1032.17'
         },
         {
           // TODO: Reused from statin CQM artifact; needs review against other value sets in VSAC.
-          name: "Moderate Intensity Statin Therapy Branded",
-          type: "MedicationOrder",
+          name: 'Moderate Intensity Statin Therapy Branded',
+          type: 'MedicationOrder',
           oid: '2.16.840.1.113762.1.4.1032.17'
         },
         {
        // TODO: Reused from statin CQM artifact; needs review against other value sets in VSAC.
-          name: "High intensity statin therapy",
-          type: "MedicationStatement",
+          name: 'High intensity statin therapy',
+          type: 'MedicationStatement',
           oid: '2.16.840.1.113762.1.4.1047.97'
         },
         {
        // TODO: Reused from statin CQM artifact; needs review against other value sets in VSAC.
-          name: "High intensity statin therapy",
-          type: "MedicationOrder",
+          name: 'High intensity statin therapy',
+          type: 'MedicationOrder',
           oid: '2.16.840.1.113762.1.4.1047.97'
         },
         {
           // TODO: Reused from statin CQM artifact; needs review against other value sets in VSAC.
-          name: "High Intensity Statin Therapy Branded",
-          type: "MedicationStatement",
+          name: 'High Intensity Statin Therapy Branded',
+          type: 'MedicationStatement',
           oid: '2.16.840.1.113762.1.4.1032.18'
         },
         {
           // TODO: Reused from statin CQM artifact; needs review against other value sets in VSAC.
-          name: "High Intensity Statin Therapy Branded",
-          type: "MedicationOrder",
+          name: 'High Intensity Statin Therapy Branded',
+          type: 'MedicationOrder',
           oid: '2.16.840.1.113762.1.4.1032.18'
         }
       ]
     },
-    on_statin_therapy_CMS347v1 : {
-      id: "on_statin_therapy_CMS347v1",
+    on_statin_therapy_CMS347v1: {
+      id: 'on_statin_therapy_CMS347v1',
       medications: [
         {
-          name: "Low intensity statin therapy",
-          type: "MedicationStatement",
+          name: 'Low intensity statin therapy',
+          type: 'MedicationStatement',
           oid: '2.16.840.1.113762.1.4.1047.107'
         },
         {
-          name: "Low intensity statin therapy",
-          type: "MedicationOrder",
+          name: 'Low intensity statin therapy',
+          type: 'MedicationOrder',
           oid: '2.16.840.1.113762.1.4.1047.107'
         },
         {
-          name: "Moderate intensity statin therapy",
-          type: "MedicationStatement",
+          name: 'Moderate intensity statin therapy',
+          type: 'MedicationStatement',
           oid: '2.16.840.1.113762.1.4.1047.98'
         },
         {
-          name: "Moderate intensity statin therapy",
-          type: "MedicationOrder",
+          name: 'Moderate intensity statin therapy',
+          type: 'MedicationOrder',
           oid: '2.16.840.1.113762.1.4.1047.98'
         },
         {
-          name: "High intensity statin therapy",
-          type: "MedicationStatement",
+          name: 'High intensity statin therapy',
+          type: 'MedicationStatement',
           oid: '2.16.840.1.113762.1.4.1047.97'
         },
         {
-          name: "High intensity statin therapy",
-          type: "MedicationOrder",
+          name: 'High intensity statin therapy',
+          type: 'MedicationOrder',
           oid: '2.16.840.1.113762.1.4.1047.97'
         },
       ]
@@ -592,4 +592,4 @@ module.exports = {
       ]
     }
   }
-}
+};

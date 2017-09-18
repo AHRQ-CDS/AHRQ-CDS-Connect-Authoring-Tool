@@ -4,6 +4,11 @@ import FontAwesome from 'react-fontawesome';
 import update from 'immutability-helper';
 import Select from 'react-select';
 
+/* eslint-disable jsx-a11y/label-has-for */
+
+// For now, set the next rules to warn.  We don't want to forget about them, but don't want to deal with them now.
+/* eslint jsx-a11y/click-events-have-key-events: "warn", jsx-a11y/onclick-has-role: "warn" */
+
 const subpopTabIndex = 2;
 
 class Recommendation extends Component {
@@ -25,9 +30,9 @@ class Recommendation extends Component {
       grade: props.rec.grade,
       text: props.rec.text,
       rationale: props.rec.rationale,
-      showSubpopulations: (props.rec.subpopulations && props.rec.subpopulations.length) ? true : false,
-      showRationale: props.rec.rationale.length ? true : false,
-    }
+      showSubpopulations: !!((props.rec.subpopulations && props.rec.subpopulations.length)),
+      showRationale: !!props.rec.rationale.length,
+    };
   }
 
   revealSubpopulations = () => {
@@ -35,16 +40,16 @@ class Recommendation extends Component {
   }
 
   applySubpopulation = (subpop) => {
-    let refSubpop = {
+    const refSubpop = {
       uniqueId: subpop.uniqueId,
       subpopulationName: subpop.subpopulationName
-    }
+    };
     if (subpop.special) {
       refSubpop.special = subpop.special;
       refSubpop.special_subpopulationName = subpop.special_subpopulationName;
     }
     const index = this.props.recommendations.findIndex(rec => rec.uid === this.state.uid);
-    let newRecs = update(this.props.recommendations, {
+    const newRecs = update(this.props.recommendations, {
       [index]: {
         subpopulations: { $push: [refSubpop] }
       }
@@ -55,7 +60,7 @@ class Recommendation extends Component {
 
   removeSubpopulation = (i) => {
     const recIndex = this.props.recommendations.findIndex(rec => rec.uid === this.state.uid);
-    let newRecs = update(this.props.recommendations, {
+    const newRecs = update(this.props.recommendations, {
       [recIndex]: {
         subpopulations: { $splice: [[i, 1]] }
       }
@@ -64,17 +69,15 @@ class Recommendation extends Component {
     this.props.updateRecommendations({ recommendations: newRecs });
   }
 
-  getRelevantSubpopulations = () => {
-    return this.props.subpopulations.filter(sp => {
-      let match = false;
-      _.each(this.props.rec.subpopulations, appliedSp => {
-        if (sp.uniqueId === appliedSp.uniqueId) {
-          match = true;
-        }
-      });
-      return !match;
+  getRelevantSubpopulations = () => this.props.subpopulations.filter((sp) => {
+    let match = false;
+    _.each(this.props.rec.subpopulations, (appliedSp) => {
+      if (sp.uniqueId === appliedSp.uniqueId) {
+        match = true;
+      }
     });
-  }
+    return !match;
+  })
 
   handleChange = (event) => {
     const newValues = { [event.target.name]: event.target.value };
@@ -85,9 +88,7 @@ class Recommendation extends Component {
     this.setState(newState);
   }
 
-  shouldShowSubpopulations = () => {
-    return this.state.showSubpopulations || this.props.rec.subpopulations.length;
-  }
+  shouldShowSubpopulations = () => this.state.showSubpopulations || this.props.rec.subpopulations.length
 
   renderSubpopulations = () => {
     if (this.shouldShowSubpopulations()) {
@@ -103,16 +104,16 @@ class Recommendation extends Component {
             </div>
           </div>
           <div className="recommendation__subpopulation-pills">
-            { this.props.rec.subpopulations.map((subpop, i) => {
-              return (
+            { this.props.rec.subpopulations.map((subpop, i) => (
                 <div
                   key={subpop.uniqueId}
                   className="recommendation__subpopulation-pill">
                   { subpop.subpopulationName }
-                  <button aria-label={`Remove ${subpop.subpopulationName}`} onClick={ () => this.removeSubpopulation(i) }><FontAwesome fixedWidth name='times'/></button>
+                  <button aria-label={`Remove ${subpop.subpopulationName}`}
+                          onClick={ () => this.removeSubpopulation(i) }
+                  ><FontAwesome fixedWidth name='times'/></button>
                 </div>
-              );
-            }) }
+              )) }
           </div>
           <div className="recommendation__add-subpopulation">
             <Select
@@ -136,9 +137,8 @@ class Recommendation extends Component {
           </div>
         </div>
       );
-    } else {
-      return null;
     }
+    return null;
   }
 
   render() {
@@ -153,7 +153,8 @@ class Recommendation extends Component {
             <div className="field is-grouped is-grouped-right">
               {/* <div className="control">
                 <span className="select">
-                  <select name="grade" aria-label="Recommendation grade" title="Recommendation grade" value={this.state.grade} onChange={this.handleChange}>
+                  <select name="grade" aria-label="Recommendation grade" title="Recommendation grade"
+                          value={this.state.grade} onChange={this.handleChange}>
                     <option value='A'>Grade A</option>
                     <option value='B'>Grade B</option>
                     <option value='C'>Grade C</option>
@@ -161,10 +162,13 @@ class Recommendation extends Component {
                 </span>
               </div>
               <div className="control">
-                <button className="button" aria-label="copy recommendation"><FontAwesome fixedWidth name='copy' /></button>
+                <button className="button" aria-label="copy recommendation"
+                ><FontAwesome fixedWidth name='copy' /></button>
               </div> */}
               <div className="control recommendation__remove">
-                <button className="button" aria-label="remove recommendation"  onClick={() => this.props.onRemove(this.props.rec.uid)}><FontAwesome fixedWidth name='times' /></button>
+                <button className="button" aria-label="remove recommendation"
+                        onClick={() => this.props.onRemove(this.props.rec.uid)}
+                ><FontAwesome fixedWidth name='times' /></button>
               </div>
             </div>
           </div>
@@ -183,15 +187,18 @@ class Recommendation extends Component {
               </div>
               <div className="control">
                 <textarea className="textarea" name="rationale" aria-label="Rationale" title="Rationale text"
-                placeholder='Describe the rationale for your recommendation' value={this.state.rationale} onChange={this.handleChange} />
+                          placeholder='Describe the rationale for your recommendation' value={this.state.rationale}
+                          onChange={this.handleChange} />
               </div>
             </div>
           :
-            <button className="button recommendation__add-rationale" onClick={() => this.setState({ showRationale: !this.state.showRationale })}>Add rationale</button>
+            <button className="button recommendation__add-rationale"
+                    onClick={() => this.setState({ showRationale: !this.state.showRationale })}>Add rationale</button>
         }
-        { this.shouldShowSubpopulations() ? null : <button className="button is-pulled-right" name="subpopulation" onClick={this.revealSubpopulations}>Add subpopulation</button> }
+        { this.shouldShowSubpopulations() ? null : <button className="button is-pulled-right" name="subpopulation"
+                                                   onClick={this.revealSubpopulations}>Add subpopulation</button> }
       </section>
-    )
+    );
   }
 }
 

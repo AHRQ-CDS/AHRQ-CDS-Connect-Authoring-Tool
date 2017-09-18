@@ -24,6 +24,7 @@ const showPresets = mongoId => axios.get(`${API_BASE}/expressions/group/${mongoI
 
 const getValueAtPath = (obj, path) => {
   if (typeof path === 'string') {
+    // eslint-disable-next-line no-param-reassign
     path = path.split('.');
   }
 
@@ -67,7 +68,7 @@ class BuilderPage extends Component {
         },
         {
           special: true,
-          subpopulationName: "Meets Exclusion Criteria",
+          subpopulationName: 'Meets Exclusion Criteria',
           special_subpopulationName: '"MeetsExclusionCriteria"',
           uniqueId: 'default-subpopulation-2'
         }
@@ -96,7 +97,7 @@ class BuilderPage extends Component {
 
         const operations = result.data.find(g => g.name === 'Operations');
         const andTemplate = operations.entries.find(e => e.name === 'And');
-        this.setState({ andTemplate: andTemplate });
+        this.setState({ andTemplate });
 
         if (this.state.subpopulations.length <= 2) {
           this.addBlankSubpopulation(andTemplate);
@@ -248,7 +249,7 @@ class BuilderPage extends Component {
   }
 
   // Saves a particular expression to the backend
-  saveInstance = (treeName, path, uid=null) => {
+  saveInstance = (treeName, path, uid = null) => {
     const tree = this.findTree(treeName, uid).tree;
     const target = getValueAtPath(tree, path);
 
@@ -258,7 +259,7 @@ class BuilderPage extends Component {
           console.log('Done');
         })
         .catch((error) => {
-          console.log("Fail", error);
+          console.log('Fail', error);
         });
     }
   }
@@ -286,14 +287,13 @@ class BuilderPage extends Component {
     const clone = _.cloneDeep(this.state[treeName]);
     if (uid == null) {
       return { tree: clone };
-    } else {
-      const index = clone.findIndex(sub => sub.uniqueId === uid);
-      return {
-        array: clone,
-        tree: clone[index],
-        index: index
-      };
     }
+    const index = clone.findIndex(sub => sub.uniqueId === uid);
+    return {
+      array: clone,
+      tree: clone[index],
+      index
+    };
   }
 
   // Sets new tree based on if state tree or array tree
@@ -323,9 +323,9 @@ class BuilderPage extends Component {
     return instance;
   }
 
-  addInstance = (treeName, instance, parentPath, uid=null, currentIndex=undefined, incomingTree=undefined) => {
+  addInstance = (treeName, instance, parentPath, uid = null, currentIndex = undefined, incomingTree = undefined) => {
     const treeData = this.findTree(treeName, uid);
-    const tree = incomingTree ? incomingTree : treeData.tree;
+    const tree = incomingTree || treeData.tree;
     const target = getValueAtPath(tree, parentPath).childInstances;
     const index = currentIndex !== undefined ? currentIndex : target.length;
     target.splice(index, 0, instance); // Insert instance at specific instance - only used for indenting now
@@ -335,9 +335,9 @@ class BuilderPage extends Component {
   }
 
   // subpop_index is an optional parameter, for determing which tree within subpop we are referring to
-  updateInstanceModifiers = (treeName, modifiers, path, subpop_index) => {
+  updateInstanceModifiers = (treeName, modifiers, path, subpopIndex) => {
     const tree = _.cloneDeep(this.state[treeName]);
-    const valuePath = _.isNumber(subpop_index) ? tree[subpop_index] : tree;
+    const valuePath = _.isNumber(subpopIndex) ? tree[subpopIndex] : tree;
     const target = getValueAtPath(valuePath, path);
     target.modifiers = modifiers;
     this.setState({ [treeName]: tree });
@@ -346,25 +346,25 @@ class BuilderPage extends Component {
   updateRecsSubpop = (newName, uniqueId) => {
     const recs = _.cloneDeep(this.state.recommendations);
     for (let i = 0; i < recs.length; i++) {
-      let subpops = recs[i].subpopulations;
+      const subpops = recs[i].subpopulations;
       for (let j = 0; j < subpops.length; j++) {
         if (subpops[j].uniqueId === uniqueId) {
           subpops[j].subpopulationName = newName;
         }
       }
     }
-    this.setState({recommendations : recs})
+    this.setState({ recommendations: recs });
   }
 
-  setPreset = (treeName, preset, path, uid=null) => {
+  setPreset = (treeName, preset, path, uid = null) => {
     const treeData = this.findTree(treeName, uid);
     const tree = treeData.tree;
-    let target = getValueAtPath(tree, path);
+    const target = getValueAtPath(tree, path);
     Object.assign(target, preset);
     this.setTree(treeName, treeData, tree);
   }
 
-  editInstance = (treeName, editedParams, path, editingConjunctionType=false, uid=null) => {
+  editInstance = (treeName, editedParams, path, editingConjunctionType = false, uid = null) => {
     const treeData = this.findTree(treeName, uid);
     const tree = treeData.tree;
     const target = getValueAtPath(tree, path);
@@ -383,20 +383,21 @@ class BuilderPage extends Component {
     this.setTree(treeName, treeData, tree);
   }
 
-  deleteInstance = (treeName, path, elementsToAdd=undefined, uid=null) => {
+  deleteInstance = (treeName, path, elementsToAdd = undefined, uid = null) => {
     const treeData = this.findTree(treeName, uid);
     const tree = treeData.tree;
     const index = path.slice(-1);
-    path = path.slice(0, path.length - 2);
-    const target = getValueAtPath(tree, path);
+    const target = getValueAtPath(tree, path.slice(0, path.length - 2));
     target.splice(index, 1);
 
     this.setTree(treeName, treeData, tree);
     localTree = tree;
 
     // elementsToAdd is an array of elements to be readded when indenting or outdenting
-    if(elementsToAdd) {
-      elementsToAdd.forEach(element => {this.addInstance(treeName, element.instance, element.path, uid, element.index, localTree)})
+    if (elementsToAdd) {
+      elementsToAdd.forEach((element) => {
+        this.addInstance(treeName, element.instance, element.path, uid, element.index, localTree);
+      });
     }
   }
 
@@ -408,8 +409,9 @@ class BuilderPage extends Component {
     this.setState({ subpopulations: updatedSubpopulations });
   }
 
-  getAllInstances = (treeName, node=null, uid=null) => {
+  getAllInstances = (treeName, node = null, uid = null) => {
     if (node == null) {
+      // eslint-disable-next-line no-param-reassign
       node = this.findTree(treeName, uid).tree;
     }
     return _.flatten(node.childInstances.map((instance) => {
@@ -448,7 +450,7 @@ class BuilderPage extends Component {
 
   checkSubpopulationUsage = (uniqueId) => {
     for (let i = 0; i < this.state.recommendations.length; i++) {
-      let subpops = this.state.recommendations[i].subpopulations;
+      const subpops = this.state.recommendations[i].subpopulations;
       for (let j = 0; j < subpops.length; j++) {
         if (subpops[j].uniqueId === uniqueId) {
           return true;
@@ -463,11 +465,12 @@ class BuilderPage extends Component {
     newSubpopulation.name = '';
     newSubpopulation.path = '';
     const numOfSpecialSubpopulations = this.state.subpopulations.filter(sp => sp.special).length;
-    newSubpopulation.subpopulationName = `Subpopulation ${this.state.subpopulations.length + 1 - numOfSpecialSubpopulations}`;
+    const subPopNumber = (this.state.subpopulations.length + 1) - numOfSpecialSubpopulations;
+    newSubpopulation.subpopulationName = `Subpopulation ${subPopNumber}`;
     newSubpopulation.expanded = true;
-    const newSubpopulations = this.state.subpopulations.concat([ newSubpopulation ]);
+    const newSubpopulations = this.state.subpopulations.concat([newSubpopulation]);
 
-    this.setState({ subpopulations: newSubpopulations })
+    this.setState({ subpopulations: newSubpopulations });
   }
 
   setActiveTab = (tabIndex, callback) => {
@@ -480,11 +483,11 @@ class BuilderPage extends Component {
   }
 
   togglePublishModal = () => {
-    this.setState({showPublishModal: !this.state.showPublishModal});
+    this.setState({ showPublishModal: !this.state.showPublishModal });
   }
 
 
-  renderConjunctionGroup = (treeName) => (
+  renderConjunctionGroup = treeName => (
     this.state[treeName].childInstances ?
       <ConjunctionGroup
         root={ true }
@@ -507,14 +510,18 @@ class BuilderPage extends Component {
   )
 
   updateParameters = (BooleanParameter) => {
-    this.setState({booleanParameters: BooleanParameter});
+    this.setState({ booleanParameters: BooleanParameter });
   }
 
   render() {
     return (
       <div className="builder">
         <div className="upload__modal">
-          <RepoUploadModal showModal={this.state.showPublishModal} closeModal={this.togglePublishModal} prepareArtifact={this.prepareArtifact.bind(this)} version={this.state.version}/>
+          <RepoUploadModal
+            showModal={this.state.showPublishModal}
+            closeModal={this.togglePublishModal}
+            prepareArtifact={this.prepareArtifact.bind(this)}
+            version={this.state.version}/>
         </div>
         <header className="builder__header">
           <h2 className="builder__heading">{ this.state.name }</h2>
@@ -539,7 +546,7 @@ class BuilderPage extends Component {
                 </button>
               </span>
               <span className="control">
-                <button onClick={ () => { this.saveArtifact(false); this.togglePublishModal() } }
+                <button onClick={ () => { this.saveArtifact(false); this.togglePublishModal(); } }
                   className="button builder__publishbutton">
                   <span className="icon is-small">
                     <i className="fa fa-align-right"></i>

@@ -1,14 +1,15 @@
 const express = require('express');
 const config = require('../handlers/configHandler');
+
 const ConfigRouter = express.Router();
 
 // Routes for /api/config
 ConfigRouter.route('/resources')
-  .get(config.getResources)
+  .get(config.getResources);
 
 // Routes for /api/config/templates
 ConfigRouter.route('/templates')
-  .get(config.getTemplates)
+  .get(config.getTemplates);
 
 // Routes for /api/config/valuesets
 ConfigRouter.route('/valuesets')

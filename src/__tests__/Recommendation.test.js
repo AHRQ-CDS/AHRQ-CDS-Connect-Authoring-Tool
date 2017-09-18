@@ -1,7 +1,6 @@
 import _ from 'lodash';
 import Recommendation from '../components/builder/Recommendation';
 import { fullRenderComponent } from '../helpers/test_helpers';
-import { instanceTree, elementGroups } from '../helpers/test_fixtures';
 
 let component;
 let componentFilledIn;
@@ -37,24 +36,24 @@ beforeEach(() => {
   completedRec = _.cloneDeep(rec);
   completedRec.text = recText;
   completedRec.rationale = rationaleText;
-  completedRec.subpopulations = [ subpop ];
+  completedRec.subpopulations = [subpop];
 
   baseProps = {
     onUpdate,
     onRemove,
     updateRecommendations,
     setActiveTab,
-    subpopulations: [ subpop ]
+    subpopulations: [subpop]
   };
 
   component = fullRenderComponent(Recommendation, Object.assign({
     rec,
-    recommendations: [ rec ]
+    recommendations: [rec]
   }, baseProps));
 
   componentFilledIn = fullRenderComponent(Recommendation, Object.assign({
     rec: completedRec,
-    recommendations: [ completedRec ]
+    recommendations: [completedRec]
   }, baseProps));
 });
 
@@ -87,7 +86,7 @@ test('can edit recommendation text', () => {
   const newText = 'This is a test.';
   const recTextarea = componentFilledIn.find('textarea[name="text"]');
 
-  recTextarea.simulate('change', { target: { name: 'text', value: newText }});
+  recTextarea.simulate('change', { target: { name: 'text', value: newText } });
 
   expect(onUpdate).toHaveBeenCalledWith(recUid, { text: newText });
   expect(componentFilledIn.state('text')).toEqual(newText);
@@ -97,7 +96,7 @@ test('can edit rationale text', () => {
   const newText = 'This is a test.';
   const rationaleTextarea = componentFilledIn.find('.recommendation__rationale textarea');
 
-  rationaleTextarea.simulate('change', { target: { name: 'rationale', value: newText }});
+  rationaleTextarea.simulate('change', { target: { name: 'rationale', value: newText } });
 
   expect(onUpdate).toHaveBeenCalledWith(recUid, { rationale: newText });
   expect(componentFilledIn.state('rationale')).toEqual(newText);
@@ -133,9 +132,9 @@ test('applies subpopulations', () => {
   component.find('.Select-option').at(0).simulate('mouseDown', { button: 0 });
 
   const updatedRec = _.cloneDeep(rec);
-  updatedRec.subpopulations = [ subpop ];
+  updatedRec.subpopulations = [subpop];
 
-  expect(updateRecommendations).toHaveBeenCalledWith({ recommendations: [ updatedRec ] });
+  expect(updateRecommendations).toHaveBeenCalledWith({ recommendations: [updatedRec] });
 });
 
 test('deletes subpopulations', () => {
@@ -144,7 +143,7 @@ test('deletes subpopulations', () => {
   const updatedRec = _.cloneDeep(completedRec);
   updatedRec.subpopulations = [];
 
-  expect(updateRecommendations).toHaveBeenCalledWith({ recommendations: [ updatedRec ] });
+  expect(updateRecommendations).toHaveBeenCalledWith({ recommendations: [updatedRec] });
 });
 
 test('opens Subpopulations tab when clicking "New Subpopulation"', () => {
@@ -159,19 +158,19 @@ test('applies special subpopulations correctly', () => {
   specialSubpop.special_subpopulationName = 'TestSubpop1';
 
   const specialProps = _.cloneDeep(baseProps);
-  specialProps.subpopulations = [ specialSubpop ];
+  specialProps.subpopulations = [specialSubpop];
 
-  const component = fullRenderComponent(Recommendation, Object.assign({
+  const recComponent = fullRenderComponent(Recommendation, Object.assign({
     rec,
-    recommendations: [ rec ]
+    recommendations: [rec]
   }, specialProps));
 
-  component.find('button').findWhere(button => button.text() === 'Add subpopulation').simulate('click');
-  component.find('.recommendation__subpopulation-select input').simulate('change');
-  component.find('.Select-option').at(0).simulate('mouseDown', { button: 0 });
+  recComponent.find('button').findWhere(button => button.text() === 'Add subpopulation').simulate('click');
+  recComponent.find('.recommendation__subpopulation-select input').simulate('change');
+  recComponent.find('.Select-option').at(0).simulate('mouseDown', { button: 0 });
 
   const updatedRec = _.cloneDeep(rec);
-  updatedRec.subpopulations = [ specialSubpop ];
+  updatedRec.subpopulations = [specialSubpop];
 
-  expect(updateRecommendations).toHaveBeenCalledWith({ recommendations: [ updatedRec ] });
+  expect(updateRecommendations).toHaveBeenCalledWith({ recommendations: [updatedRec] });
 });

@@ -1,5 +1,4 @@
 import React, { Component, PropTypes } from 'react';
-import _ from 'lodash';
 import update from 'immutability-helper';
 import Recommendation from './Recommendation';
 
@@ -26,7 +25,7 @@ class Recommendations extends Component {
   }
 
   handleModeChange = (event) => {
-    this.setState({ mode: event.target.value })
+    this.setState({ mode: event.target.value });
   }
 
   addRecommendation = () => {
@@ -38,21 +37,21 @@ class Recommendations extends Component {
       rationale: ''
     };
     this.props.incrementUniqueIdCounter();
-    let newRecs = this.props.recommendations.concat([newRec])
+    const newRecs = this.props.recommendations.concat([newRec]);
     this.props.updateRecommendations({ recommendations: newRecs });
   }
 
   updateRecommendation = (uid, newValues) => {
-    const index = this.props.recommendations.findIndex((rec) => rec.uid === uid);
-    let newRecs = update(this.props.recommendations, {
+    const index = this.props.recommendations.findIndex(rec => rec.uid === uid);
+    const newRecs = update(this.props.recommendations, {
       [index]: { $merge: newValues }
     });
     this.props.updateRecommendations({ recommendations: newRecs });
   }
 
   removeRecommendation = (uid) => {
-    const index = this.props.recommendations.findIndex((rec) => rec.uid === uid);
-    let newRecs = update(this.props.recommendations, {
+    const index = this.props.recommendations.findIndex(rec => rec.uid === uid);
+    const newRecs = update(this.props.recommendations, {
       $splice: [[index, 1]]
     });
     this.props.updateRecommendations({ recommendations: newRecs });
@@ -69,7 +68,8 @@ class Recommendations extends Component {
               <span className="field recommendations__mode">
                <span className="control">
                  <span className="select">
-                   <select value={this.state.mode} onChange={this.handleModeChange} title="Recommendation mode" aria-label="Recommendation mode">
+                   <select value={this.state.mode} onChange={this.handleModeChange} title="Recommendation mode"
+                           aria-label="Recommendation mode">
                      <option value='every'>every</option>
                      <option value='first'>first</option>
                    </select>
@@ -87,8 +87,7 @@ class Recommendations extends Component {
           : null
         }
 
-        {this.props.recommendations && this.props.recommendations.map((rec) => {
-          return (
+        {this.props.recommendations && this.props.recommendations.map(rec => (
             <Recommendation
               key={rec.uid}
               rec={rec}
@@ -98,8 +97,7 @@ class Recommendations extends Component {
               updateRecommendations={this.props.updateRecommendations}
               subpopulations={this.props.subpopulations}
               setActiveTab={this.props.setActiveTab} />
-          );
-        })}
+          ))}
         <button className="button" onClick={this.addRecommendation}>
           New recommendation
         </button>

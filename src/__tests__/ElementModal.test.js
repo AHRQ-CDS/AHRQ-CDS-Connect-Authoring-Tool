@@ -13,7 +13,9 @@ let internalModal;
 const setSelectedCategory = jest.fn();
 const onElementSelected = jest.fn();
 
-const getAllElements = categories => _.flatten(filterUnsuppressed(categories).map(cat => filterUnsuppressed(cat.entries).map(e => Object.assign({ category: cat.name.replace(/s\s*$/, '') }, e))));
+const getAllElements = categories => _.flatten(filterUnsuppressed(categories).map(cat => (
+  filterUnsuppressed(cat.entries).map(e => Object.assign({ category: cat.name.replace(/s\s*$/, '') }, e))
+)));
 
 const generateCategories = () => {
   const categoriesCopy = Object.assign([], elementGroups);

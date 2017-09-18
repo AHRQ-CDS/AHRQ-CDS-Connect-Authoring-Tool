@@ -156,14 +156,14 @@ test('edits a conjunction instance', () => {
 test('updates an instance\'s modifiers', () => {
   const modifiers = [
     {
-      "id": "BooleanNot",
-      "name": "Not",
-      "inputTypes": [
-        "boolean"
+      id: 'BooleanNot',
+      name: 'Not',
+      inputTypes: [
+        'boolean'
       ],
-      "returnType": "boolean",
-      "cqlTemplate": "BaseModifier",
-      "cqlLibraryFunction": "not"
+      returnType: 'boolean',
+      cqlTemplate: 'BaseModifier',
+      cqlLibraryFunction: 'not'
     }
   ];
   initializedComponent.setState({

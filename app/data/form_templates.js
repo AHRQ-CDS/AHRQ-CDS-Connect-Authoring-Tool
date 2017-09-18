@@ -64,8 +64,8 @@ module.exports = [
         extends: 'GenericObservation',
         suppressedModifiers: ['ConceptValue'],
         parameters: [
-          { id: 'element_name', value: "TotalCholesterol"},
-          { id: 'observation', static: true, value: "total_cholesterol"},
+          { id: 'element_name', value: 'TotalCholesterol' },
+          { id: 'observation', static: true, value: 'total_cholesterol' },
         ]
       },
       {
@@ -74,8 +74,8 @@ module.exports = [
         extends: 'GenericObservation',
         suppressedModifiers: ['ConceptValue'],
         parameters: [
-          { id: 'element_name', value: "HDLCholesterol"},
-          { id: 'observation', static: true, value: "hdl_cholesterol"},
+          { id: 'element_name', value: 'HDLCholesterol' },
+          { id: 'observation', static: true, value: 'hdl_cholesterol' },
         ]
       },
       {
@@ -84,8 +84,8 @@ module.exports = [
         extends: 'GenericObservation',
         suppressedModifiers: ['ConceptValue'],
         parameters: [
-          { id: 'element_name', value: "LDL_Test"},
-          { id: 'observation', static: true, value: "ldl_test"}
+          { id: 'element_name', value: 'LDL_Test' },
+          { id: 'observation', static: true, value: 'ldl_test' }
         ]
       },
       {
@@ -94,8 +94,8 @@ module.exports = [
         extends: 'GenericObservation',
         suppressedModifiers: ['WithUnit'], // TODO add unit for this element
         parameters: [
-          { id: 'element_name', value: "SystolicBloodPressure"},
-          { id: 'observation', static: true, value: "systolic_blood_pressure"},
+          { id: 'element_name', value: 'SystolicBloodPressure' },
+          { id: 'observation', static: true, value: 'systolic_blood_pressure' },
         ]
       },
       {
@@ -105,8 +105,8 @@ module.exports = [
         template: 'ObservationByConcept',
         suppressedModifiers: ['ConceptValue', 'ConvertToMgPerdL', 'WithUnit'],
         parameters: [
-          { id: 'element_name', value: "ASCVDRiskAssessment"},
-          { id: 'observation', static: true, value: "ascvd_risk_assessment"},
+          { id: 'element_name', value: 'ASCVDRiskAssessment' },
+          { id: 'observation', static: true, value: 'ascvd_risk_assessment' },
         ]
       },
       {
@@ -117,8 +117,8 @@ module.exports = [
         checkInclusionInVS: true, // Very few elements can check this, so this makes sense to require it to be specified
         suppressedModifiers: ['QuantityValue', 'ConvertToMgPerdL', 'WithUnit'],
         parameters: [
-          { id: 'element_name', value: "IsSmoker"},
-          { id: 'observation',  static: true, value: "smoker"},
+          { id: 'element_name', value: 'IsSmoker' },
+          { id: 'observation', static: true, value: 'smoker' },
         ]
       },
       {
@@ -129,8 +129,8 @@ module.exports = [
         extends: 'Base',
         suppressedModifiers: ['BooleanComparison', 'WithUnit', 'CheckExistence'],
         parameters: [
-          { id: 'element_name', value: "IsBreastfeeding"},
-          { id: 'observation', type:'breastfeeding', static: true, value: "breastfeeding"}
+          { id: 'element_name', value: 'IsBreastfeeding' },
+          { id: 'observation', type: 'breastfeeding', static: true, value: 'breastfeeding' }
         ]
       },
       {
@@ -141,8 +141,8 @@ module.exports = [
         extends: 'Base',
         suppressedModifiers: ['BooleanComparison', 'WithUnit', 'CheckExistence'],
         parameters: [
-          { id: 'element_name', value: "IsBreastfeeding"},
-          { id: 'observation', type:'breastfeeding', static: true, value: "breastfeeding"}
+          { id: 'element_name', value: 'IsBreastfeeding' },
+          { id: 'observation', type: 'breastfeeding', static: true, value: 'breastfeeding' }
         ]
       },
       {
@@ -150,8 +150,8 @@ module.exports = [
         name: 'ALT',
         extends: 'GenericObservation',
         parameters: [
-          { id: 'element_name', value: "HasALT"},
-          { id: 'observation', static: true, value: "alt"}
+          { id: 'element_name', value: 'HasALT' },
+          { id: 'observation', static: true, value: 'alt' }
         ]
       },
     ]
@@ -219,8 +219,8 @@ module.exports = [
         name: 'ASCVD',
         extends: 'GenericCondition',
         parameters: [
-          { id: 'element_name', value: "HasASCVD"},
-          { id: 'condition', static: true, value: "has_ascvd"}
+          { id: 'element_name', value: 'HasASCVD' },
+          { id: 'condition', static: true, value: 'has_ascvd' }
         ],
       },
       {
@@ -228,8 +228,8 @@ module.exports = [
         name: 'ASCVD (CMS347v1)',
         extends: 'GenericCondition',
         parameters: [
-          { id: 'element_name', value: "ASCVDDiagnosis"},
-          { id: 'condition', static: true, value: "ascvd_CMS347v1"}
+          { id: 'element_name', value: 'ASCVDDiagnosis' },
+          { id: 'condition', static: true, value: 'ascvd_CMS347v1' }
         ],
       },
       {
@@ -238,8 +238,7 @@ module.exports = [
         template: 'Pregnancydx',
         returnType: 'boolean',
         extends: 'Base',
-        returnType: 'boolean',
-        suppressedModifiers: ['BooleanComparison', 'CheckExistence'], //TODO these might eventually be applicable, but the specificTemplate will need to handle them
+        suppressedModifiers: ['BooleanComparison', 'CheckExistence'], // TODO these might eventually be applicable, but the specificTemplate will need to handle them
         parameters: [
           { id: 'element_name', value: 'IsPregnant' },
           { id: 'pregnancy', type: 'pregnancy', static: true, value: 'pregnancy_dx' }
@@ -251,7 +250,6 @@ module.exports = [
         template: 'Pregnancydx_withLookBack',
         returnType: 'boolean',
         extends: 'Base',
-        returnType: 'boolean',
         suppressedModifiers: ['BooleanComparison', 'CheckExistence'],
         parameters: [
           { id: 'element_name', value: 'IsPregnant' },
@@ -372,16 +370,16 @@ module.exports = [
         extends: 'GenericProcedure',
         parameters: [
           { id: 'element_name', value: 'HasHadASCVDProcedures' },
-          { id: 'procedure', static: true, value: "ascvd_procedures" },
+          { id: 'procedure', static: true, value: 'ascvd_procedures' },
         ],
       },
       {
         id: 'ASCVD_Procedures_CMS347v1',
         name: 'ASCVD Procedures (CMS347v1)',
         extends: 'GenericProcedure',
-        parameters : [
+        parameters: [
           { id: 'element_name', value: 'ASCVDProcedures' },
-          { id: 'procedure', static: true, value: "ascvd_procedures_CMS347v1" }
+          { id: 'procedure', static: true, value: 'ascvd_procedures_CMS347v1' }
         ]
       },
       {
@@ -390,7 +388,7 @@ module.exports = [
         extends: 'GenericProcedure',
         parameters: [
           { id: 'element_name', value: 'IsInPalliativeCare' },
-          { id: 'procedure', static: true, value: "palliative_care" },
+          { id: 'procedure', static: true, value: 'palliative_care' },
         ],
       },
       {
@@ -399,7 +397,7 @@ module.exports = [
         extends: 'GenericProcedure',
         parameters: [
           { id: 'element_name', value: 'OnDialysis' },
-          { id: 'procedure', static: true, value: "dialysis" },
+          { id: 'procedure', static: true, value: 'dialysis' },
         ],
       }
     ]

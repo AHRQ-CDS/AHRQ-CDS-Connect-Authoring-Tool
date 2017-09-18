@@ -9,8 +9,10 @@ const getRelevantElements = (category, value) => {
 
   if (inputValue.length) {
     elements = elements.filter(elem => elem.name.toLowerCase().indexOf(inputValue) >= 0);
+  } else if (category.name === 'All') {
+    return elements.sort(sortAlphabeticallyByKey('category', 'name'));
   } else {
-    return category.name === 'All' ? elements.sort(sortAlphabeticallyByKey('category', 'name')) : elements.sort(sortAlphabeticallyByKey('name'));
+    return elements.sort(sortAlphabeticallyByKey('name'));
   }
 
   return elements.sort((a, b) => {
@@ -90,7 +92,7 @@ class ElementModal extends Component {
         { this.props.categories.map((cat, i) =>
           <button
             key={ `${cat.name}-${i}` }
-            className={ cat.name === this.props.selectedCategory.name ? 'transparent-button selected' : 'transparent-button' }
+            className={ `transparent-button${cat.name === this.props.selectedCategory.name ? ' selected' : ''}` }
             onClick={ () => this.handleCategorySelected(cat) }
             onKeyDown={ this.enterKeyCheck.bind(this, this.handleCategorySelected, cat) }>
               { cat.name }

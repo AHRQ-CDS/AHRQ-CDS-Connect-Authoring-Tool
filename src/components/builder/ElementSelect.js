@@ -4,7 +4,9 @@ import Select from 'react-select';
 import ElementModal from './ElementModal';
 import { filterUnsuppressed, sortAlphabeticallyByKey } from '../../helpers/utils';
 
-const getAllElements = categories => _.flatten(categories.map(cat => cat.entries.map(e => Object.assign({ category: cat.name.replace(/s\s*$/, '') }, e))));
+const getAllElements = categories => _.flatten(categories.map(cat => (
+  cat.entries.map(e => Object.assign({ category: cat.name.replace(/s\s*$/, '') }, e))
+)));
 
 const optionRenderer = option => (
     <div className="element-select__option">
@@ -58,17 +60,19 @@ class ElementSelect extends Component {
 
     if (this.props.booleanParameters.length) {
       const paramsIndex = categoriesCopy.findIndex(cat => cat.name === 'Parameters');
-      const parametersCategory = paramsIndex >= 0 ? categoriesCopy.splice(paramsIndex, 1)[0] : { icon: 'sign-in', name: 'Parameters', entries: [] };
-
-      parametersCategory.entries = parametersCategory.entries.concat(this.props.booleanParameters.map(booleanParameter => {
-        return ({
-          name: booleanParameter.name,
-          parameters: [{value: booleanParameter.name}],
-          template: 'EmptyParameter',
-          cannotHaveModifiers: true,
-          returnType: 'boolean'
-        })
-      }));
+      let parametersCategory;
+      if (paramsIndex >= 0) {
+        parametersCategory = categoriesCopy.splice(paramsIndex, 1)[0];
+      } else {
+        parametersCategory = { icon: 'sign-in', name: 'Parameters', entries: [] };
+      }
+      parametersCategory.entries = parametersCategory.entries.concat(this.props.booleanParameters.map(boolParam => ({
+        name: boolParam.name,
+        parameters: [{ value: boolParam.name }],
+        template: 'EmptyParameter',
+        cannotHaveModifiers: true,
+        returnType: 'boolean'
+      })));
 
       categoriesCopy.push(parametersCategory);
     }
@@ -113,7 +117,7 @@ class ElementSelect extends Component {
           matchProp='label'
           optionRenderer={optionRenderer}
           onChange={this.onSuggestionSelected}
-          inputProps={{ id: this.elementInputId, 'aria-label': placeholderText, 'title': placeholderText  }}
+          inputProps={{ id: this.elementInputId, 'aria-label': placeholderText, title: placeholderText }}
         />
         <Select
           className="element-select__category-field"
@@ -125,7 +129,11 @@ class ElementSelect extends Component {
           options={this.state.categories}
           labelKey='name'
           onChange={this.onSelectedCategoryChange}
-          inputProps={{ id: this.categoryInputId, 'aria-label': 'Narrow elements by category', 'title': 'Narrow elements by category' }}
+          inputProps={{
+            id: this.categoryInputId,
+            'aria-label': 'Narrow elements by category',
+            title: 'Narrow elements by category'
+          }}
         />
         <ElementModal
           className="element-select__modal"
