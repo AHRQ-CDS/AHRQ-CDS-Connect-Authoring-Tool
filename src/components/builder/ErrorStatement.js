@@ -32,7 +32,7 @@ class ErrorStatement extends Component {
 
   // Generic statement used to handle if then
   baseStatement = parent => ({
-    condition: [{label: null, value: null}],
+    condition: [{ label: null, value: null }],
     thenClause: '',
     child: null,
     useThenClause: true
@@ -42,7 +42,7 @@ class ErrorStatement extends Component {
   baseChild = parent => ({
     statements: [
       {
-        condition: [{label: null, value: null}],
+        condition: [{ label: null, value: null }],
         thenClause: '',
         child: null,
         useThenClause: true
