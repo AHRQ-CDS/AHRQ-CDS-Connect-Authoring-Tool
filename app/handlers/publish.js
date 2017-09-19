@@ -18,7 +18,7 @@ function getArtifacts(req, res) {
 function publish(req, res) {
   const artifact = cqlHandler.buildCQL(req.body.data);
   const fd = tmp.fileSync({ postfix: '.zip' });
-  const output = fs.createWriteStream(fd.name)
+  const output = fs.createWriteStream(fd.name);
   cqlHandler.writeZip(artifact, output, (err) => {
     if (err) {
       res.status(500).send({ error: err.message });
