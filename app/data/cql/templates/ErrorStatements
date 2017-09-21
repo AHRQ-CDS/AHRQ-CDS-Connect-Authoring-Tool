@@ -1,19 +1,19 @@
 define "<%-element_name%>":
 <%errorStatement.statements.forEach((statement, index) => {-%>
 <%if (index > 0) {-%>
-  else if <%-statement.condition.value%> then
+  else if <%if(statement.condition.value === null){%>null<%} else { %><%-statement.condition.value%><%}%> then
 <%} else {-%>
-  if <%-statement.condition.value%> then
+  if <%if(statement.condition.value === null){%>null<%} else { %><%-statement.condition.value%><%}%> then
 <%}-%>
 <%if (statement.useThenClause) {-%>
     {'<%-statement.thenClause%>'}
 <%} else {-%>
 <%statement.child.statements.forEach((childStatement, childIndex) => {-%>
 <%if (childIndex > 0) {-%>
-    else if <%-childStatement.condition.value%> then
+    else if <%if(childStatement.condition.value === null){%>null<%} else { %><%-childStatement.condition.value%><%}%> then
       {'<%-childStatement.thenClause%>'}
 <%} else {-%>
-    if <%-childStatement.condition.value%> then
+    if <%if(childStatement.condition.value === null){%>null<%} else { %><%-childStatement.condition.value%><%}%> then
       {'<%-childStatement.thenClause%>'}
 <%}-%>
 <%})-%>
@@ -21,4 +21,5 @@ define "<%-element_name%>":
       <%if (statement.child.elseClause === null) {%>null<%} else {%>{'<%-String(statement.child.elseClause)%>'}<%}%>
 <%}-%>
 <%})-%>
-  else <%if (errorStatement.elseClause === null) {%>null<%} else {%>{'<%-String(errorStatement.elseClause)%>'}<%}%>
+  <%if(errorStatement.statements.length > 0) {%>else <%if (errorStatement.elseClause === null) {%>null<%} else {%>{'<%-String(errorStatement.elseClause)%>'}<%}}
+  else {%>null<%}%>

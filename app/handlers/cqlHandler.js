@@ -506,8 +506,11 @@ function objToCql(req, res) {
 }
 
 function writeZip(cqlArtifact, writeStream, callback /* (error) */) {
+  // Artifact JSON is generated first and passed in to avoid incorrect EJS rendering.
+  // TODO: Consider separating EJS rendering from toJSON() or toString() methods.
+  const artifactJson = cqlArtifact.toJson();
   // We must first convert to ELM before packaging up
-  convertToElm(cqlArtifact, (err, elmFiles) => {
+  convertToElm(artifactJson, (err, elmFiles) => {
     if (err) {
       callback(err);
       return;
@@ -517,7 +520,6 @@ function writeZip(cqlArtifact, writeStream, callback /* (error) */) {
     .on('error', callback);
     writeStream.on('close', callback);
     archive.pipe(writeStream);
-    const artifactJson = cqlArtifact.toJson();
     archive.append(artifactJson.text, { name: `${artifactJson.filename}.cql` });
     elmFiles.forEach((e, i) => {
       archive.append(e.content, { name: `${e.name}.json` });
@@ -528,7 +530,7 @@ function writeZip(cqlArtifact, writeStream, callback /* (error) */) {
   });
 }
 
-function convertToElm(cqlArtifact, callback /* (error, elmFiles) */) {
+function convertToElm(artifactJson, callback /* (error, elmFiles) */) {
   // If CQL-to-ELM is disabled, this function should basically be a no-op
   if (Config.cql2elm.disabled) {
     callback(null, []);
@@ -558,9 +560,8 @@ function convertToElm(cqlArtifact, callback /* (error, elmFiles) */) {
       // The body is multi-part containing an ELM file in each part, so we need to split it
       splitELM(body, contentType, callback);
     });
-    const artifactJson = cqlArtifact.toJson();
     const form = cqlReq.form();
-    form.append(artifactJson.filename, cqlArtifact.toString(), {
+    form.append(artifactJson.filename, artifactJson.text, {
       filename: artifactJson.filename,
       contentType: artifactJson.type
     });

@@ -76,7 +76,6 @@ class BuilderPage extends Component {
       booleanParameters: [],
       errorStatement: {
         statements: [],
-        else: 'null'
       },
       name: 'Untitled Artifact',
       id: null,
