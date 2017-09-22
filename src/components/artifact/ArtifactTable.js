@@ -35,12 +35,16 @@ class ArtifactTable extends Component {
     super(props);
     this.state = { artifacts: props.artifacts,
       artifactEditing: null,
-      showModal: false };
+      showModal: false,
+      showConfirmDeleteModal: false,
+      artifactToDelete: null };
     this.deleteArtifact = this.deleteArtifact.bind(this);
     this.renderTableRow = this.renderTableRow.bind(this);
     this.editArtifactName = this.editArtifactName.bind(this);
     this.openModal = this.openModal.bind(this);
     this.closeModal = this.closeModal.bind(this);
+    this.openConfirmDeleteModal = this.openConfirmDeleteModal.bind(this);
+    this.closeConfirmDeleteModal = this.closeConfirmDeleteModal.bind(this);
   }
 
   componentWillReceiveProps(nextProps) {
@@ -66,6 +70,7 @@ class ArtifactTable extends Component {
       .catch((err) => {
         console.error(err);
       });
+    this.closeConfirmDeleteModal();
   }
 
   editArtifactName(e, name, version) {
@@ -92,6 +97,20 @@ class ArtifactTable extends Component {
   closeModal() {
     this.setState({ showModal: false });
   }
+  
+  openConfirmDeleteModal(artifact) {
+    this.setState({ 
+      showConfirmDeleteModal: true,
+      artifactToDelete: artifact 
+    });
+  }
+  
+  closeConfirmDeleteModal() {
+    this.setState({ 
+      showConfirmDeleteModal: false,
+      artifactToDelete: null
+    });
+  }
 
   renderEditForm() {
     return (
@@ -100,6 +119,43 @@ class ArtifactTable extends Component {
         defaultName={this.state.artifactEditing ? this.state.artifactEditing.name : null}
         defaultVersion={this.state.artifactEditing ? this.state.artifactEditing.version : null} />
     );
+  }
+  
+  renderConfirmDeleteModal () {
+    return (
+      <ReactModal contentLabel="Confirm Delete modal"
+        isOpen={this.state.showConfirmDeleteModal}
+        onRequestClose={this.closeConfirmDeleteModal}
+        className="modal-style">
+        <div className="modal__header">
+          <span className="modal__heading">
+            Delete Artifact Confirmation
+          </span>
+          <div className="modal__buttonbar">
+            <button onClick={this.closeConfirmDeleteModal}
+              className="modal__deletebutton"
+              aria-label="Close edit modal">
+              <FontAwesome fixedWidth name='close'/>
+            </button>
+          </div>
+        </div>
+        <div className="modal__body">
+          <div className="">Are you sure you want to permenantly delete the following CDS Artifact?</div>
+          <br/><br/>
+          Name: {this.state.artifactToDelete !== null ? this.state.artifactToDelete.name : 'name_placeholder'}<br/>
+          Version: {this.state.artifactToDelete !== null ? this.state.artifactToDelete.version : 'version_placeholder'}<br/>
+          <br/><br/>
+          <div>
+            <button onClick={this.closeConfirmDeleteModal}>Cancel</button>
+            <button 
+              className='primary-button'
+              onClick={() => this.deleteArtifact(this.state.artifactToDelete._id)}>
+              Delete
+            </button>
+          </div>
+        </div>
+      </ReactModal>
+    )
   }
 
   renderTableRow(artifact) {
@@ -123,7 +179,7 @@ class ArtifactTable extends Component {
         <td data-th="Updated">{renderDate(artifact.updatedAt)}</td>
         <td data-th="">
           <button className="danger-button"
-            onClick={() => this.deleteArtifact(artifact._id)}>
+            onClick={() => this.openConfirmDeleteModal(artifact)}>
             Delete
           </button>
         </td>
@@ -154,6 +210,7 @@ class ArtifactTable extends Component {
           {this.renderEditForm()}
           </div>
         </ReactModal>
+        {this.renderConfirmDeleteModal()}
         <table className="artifacts__table">
           <thead>
             <tr>
