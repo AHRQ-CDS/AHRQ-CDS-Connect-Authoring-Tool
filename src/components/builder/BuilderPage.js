@@ -76,7 +76,6 @@ class BuilderPage extends Component {
       booleanParameters: [],
       errorStatement: {
         statements: [],
-        else: 'null'
       },
       name: 'Untitled Artifact',
       id: null,
@@ -487,13 +486,13 @@ class BuilderPage extends Component {
   }
 
 
-  renderConjunctionGroup = treeName => (
+  renderConjunctionGroup = (treeName, namedBooleanParameters) => (
     this.state[treeName].childInstances ?
       <ConjunctionGroup
         root={ true }
         name={ treeName }
         instance={ this.state[treeName] }
-        booleanParameters={ this.state.booleanParameters}
+        booleanParameters={ namedBooleanParameters }
         createTemplateInstance={ this.createTemplateInstance }
         addInstance={ this.addInstance }
         editInstance={ this.editInstance }
@@ -514,6 +513,7 @@ class BuilderPage extends Component {
   }
 
   render() {
+    const namedBooleanParameters = _.filter(this.state.booleanParameters, p => (!_.isNull(p.name) && p.name.length));
     return (
       <div className="builder">
         <div className="upload__modal">
@@ -570,17 +570,17 @@ class BuilderPage extends Component {
             </TabList>
             <div className="tab-panel-container">
               <TabPanel>
-                { this.renderConjunctionGroup('expTreeInclude') }
+                { this.renderConjunctionGroup('expTreeInclude', namedBooleanParameters) }
               </TabPanel>
               <TabPanel>
-                { this.renderConjunctionGroup('expTreeExclude') }
+                { this.renderConjunctionGroup('expTreeExclude', namedBooleanParameters) }
               </TabPanel>
               <TabPanel>
                 <Subpopulations
                 name={ 'subpopulations' }
                 subpopulations={ this.state.subpopulations }
                 updateSubpopulations={ this.updateSubpopulations }
-                booleanParameters={ this.state.booleanParameters }
+                booleanParameters={ namedBooleanParameters }
                 createTemplateInstance={ this.createTemplateInstance }
                 addInstance={ this.addInstance }
                 editInstance={ this.editInstance }
@@ -613,7 +613,7 @@ class BuilderPage extends Component {
               </TabPanel>
               <TabPanel>
                 <ErrorStatement
-                  booleanParameters={ this.state.booleanParameters }
+                  booleanParameters={ namedBooleanParameters }
                   subpopulations={ this.state.subpopulations }
                   errorStatement={ this.state.errorStatement }
                   updateParentState={ this.updateState }

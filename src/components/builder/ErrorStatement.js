@@ -32,7 +32,7 @@ class ErrorStatement extends Component {
 
   // Generic statement used to handle if then
   baseStatement = parent => ({
-    condition: [{ label: null, value: null }],
+    condition: { label: null, value: null },
     thenClause: '',
     child: null,
     useThenClause: true
@@ -42,7 +42,7 @@ class ErrorStatement extends Component {
   baseChild = parent => ({
     statements: [
       {
-        condition: [{ label: null, value: null }],
+        condition: { label: null, value: null },
         thenClause: '',
         child: null,
         useThenClause: true
@@ -66,12 +66,16 @@ class ErrorStatement extends Component {
 
   // Updates the if/then statements in base and child
   setStatement = (value, parent, index, type) => {
+    let newValue = value;
+    if (newValue === null) {
+      newValue = { label: null, value: null };
+    }
     const newErrorStatement = _.cloneDeep(this.props.errorStatement);
     const statements = newErrorStatement.statements;
     if (parent == null) {
-      statements[index][type] = value;
+      statements[index][type] = newValue;
     } else {
-      statements[parent].child.statements[index][type] = value;
+      statements[parent].child.statements[index][type] = newValue;
     }
     this.props.updateParentState({ errorStatement: newErrorStatement });
   }
