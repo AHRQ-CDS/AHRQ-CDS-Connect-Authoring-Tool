@@ -1,19 +1,19 @@
 define "<%-element_name%>":
 <%errorStatement.statements.forEach((statement, index) => {-%>
 <%if (index > 0) {-%>
-  else if <%if(statement.condition.value === null){%>null<%} else { %><%-statement.condition.value%><%}%> then
+  else if <%- statement.condition.value !== null ? statement.condition.value : 'null' %> then
 <%} else {-%>
-  if <%if(statement.condition.value === null){%>null<%} else { %><%-statement.condition.value%><%}%> then
+  if <%- statement.condition.value !== null ? statement.condition.value : 'null' %> then
 <%}-%>
 <%if (statement.useThenClause) {-%>
     {'<%-statement.thenClause%>'}
 <%} else {-%>
 <%statement.child.statements.forEach((childStatement, childIndex) => {-%>
 <%if (childIndex > 0) {-%>
-    else if <%if(childStatement.condition.value === null){%>null<%} else { %><%-childStatement.condition.value%><%}%> then
+    else if <%- childStatement.condition.value !== null ? childStatement.condition.value : 'null' %> then
       {'<%-childStatement.thenClause%>'}
 <%} else {-%>
-    if <%if(childStatement.condition.value === null){%>null<%} else { %><%-childStatement.condition.value%><%}%> then
+    if <%- childStatement.condition.value !== null ? childStatement.condition.value : 'null' %> then
       {'<%-childStatement.thenClause%>'}
 <%}-%>
 <%})-%>
