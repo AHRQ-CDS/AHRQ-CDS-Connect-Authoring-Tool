@@ -1,4 +1,3 @@
-import ReactModal from 'react-modal';
 import Artifact from '../components/artifact/Artifact';
 import ArtifactTable from '../components/artifact/ArtifactTable';
 import ArtifactForm from '../components/artifact/ArtifactForm';
@@ -76,19 +75,20 @@ test('ArtifactTable allows editing of artifacts', () => {
   });
 
   const button = component.find('button.edit-artifact-button').first();
+  const editModal = component.children().findWhere(n => n.node.props && n.node.props.id === 'edit-modal');
 
   expect(component.state('showModal')).toEqual(false);
   expect(component.state('artifactEditing')).toEqual(null);
-  expect(component.find(ReactModal).prop('isOpen')).toEqual(false);
+  expect(editModal.prop('isOpen')).toEqual(false);
   button.simulate('click');
   component.update();
   expect(component.state('showModal')).toEqual(true);
   expect(component.state('artifactEditing')).not.toEqual(null);
-  expect(component.find(ReactModal).prop('isOpen')).toEqual(true);
+  expect(editModal.prop('isOpen')).toEqual(true);
 
   // this allows you to continue using the enzyme wrapper API
   const modalContent = new ReactWrapper(
-    component.find(ReactModal).node.portal, true
+    editModal.node.portal, true
   );
 
   expect(modalContent.text()).toContain('Edit Artifact');
@@ -98,20 +98,37 @@ test('ArtifactTable allows editing of artifacts', () => {
   component.update();
   expect(component.state('showModal')).toEqual(false);
   // expect(component.state('artifactEditing')).toEqual(null);
-  expect(component.find(ReactModal).prop('isOpen')).toEqual(false);
+  expect(editModal.prop('isOpen')).toEqual(false);
 });
 
-test('ArtifactTable allows deleting of artifacts', () => {
+test('ArtifactTable delete opens confirmation modal and deletes from modal', () => {
   const afterAddArtifactMock = jest.fn();
-  const component = shallowRenderComponent(ArtifactTable, {
+  const component = fullRenderComponent(ArtifactTable, {
     match,
     afterAddArtifact: afterAddArtifactMock,
     artifacts: artifactsMock
   });
 
+  const confirmDeleteModal = component.children().findWhere(n => (
+    n.node.props && n.node.props.id === 'confirm-delete-modal'
+  ));
   const button = component.find('button.danger-button').first();
-  component.instance().deleteArtifact = jest.fn();
+
+  expect(confirmDeleteModal.prop('isOpen')).toEqual(false);
+  expect(component.state('showConfirmDeleteModal')).toEqual(false);
+  expect(component.state('artifactToDelete')).toEqual(null);
   button.simulate('click');
+  expect(confirmDeleteModal.prop('isOpen')).toEqual(true);
+  expect(component.state('showConfirmDeleteModal')).toEqual(true);
+  expect(component.state('artifactToDelete')).not.toEqual(null);
+
+  const modalContent = new ReactWrapper(
+    confirmDeleteModal.node.portal, true
+  );
+  expect(modalContent.text()).toContain('Delete Artifact Confirmation');
+
+  component.instance().deleteArtifact = jest.fn();
+  modalContent.find('.primary-button').simulate('click');
   expect(component.instance().deleteArtifact).toHaveBeenCalled();
 });
 

@@ -97,16 +97,16 @@ class ArtifactTable extends Component {
   closeModal() {
     this.setState({ showModal: false });
   }
-  
+
   openConfirmDeleteModal(artifact) {
-    this.setState({ 
+    this.setState({
       showConfirmDeleteModal: true,
-      artifactToDelete: artifact 
+      artifactToDelete: artifact
     });
   }
-  
+
   closeConfirmDeleteModal() {
-    this.setState({ 
+    this.setState({
       showConfirmDeleteModal: false,
       artifactToDelete: null
     });
@@ -120,10 +120,11 @@ class ArtifactTable extends Component {
         defaultVersion={this.state.artifactEditing ? this.state.artifactEditing.version : null} />
     );
   }
-  
-  renderConfirmDeleteModal () {
+
+  renderConfirmDeleteModal() {
     return (
       <ReactModal contentLabel="Confirm Delete modal"
+        id="confirm-delete-modal"
         isOpen={this.state.showConfirmDeleteModal}
         onRequestClose={this.closeConfirmDeleteModal}
         className="modal-style">
@@ -142,12 +143,14 @@ class ArtifactTable extends Component {
         <div className="modal__body">
           <div className="">Are you sure you want to permenantly delete the following CDS Artifact?</div>
           <br/><br/>
-          Name: {this.state.artifactToDelete !== null ? this.state.artifactToDelete.name : 'name_placeholder'}<br/>
-          Version: {this.state.artifactToDelete !== null ? this.state.artifactToDelete.version : 'version_placeholder'}<br/>
+          Name: {this.state.artifactToDelete !== null ? this.state.artifactToDelete.name : 'name_placeholder'}
+          <br/>
+          Version: {this.state.artifactToDelete !== null ? this.state.artifactToDelete.version : 'version_placeholder'}
+          <br/>
           <br/><br/>
           <div>
             <button onClick={this.closeConfirmDeleteModal}>Cancel</button>
-            <button 
+            <button
               className='primary-button'
               onClick={() => this.deleteArtifact(this.state.artifactToDelete._id)}>
               Delete
@@ -155,7 +158,7 @@ class ArtifactTable extends Component {
           </div>
         </div>
       </ReactModal>
-    )
+    );
   }
 
   renderTableRow(artifact) {
@@ -191,6 +194,7 @@ class ArtifactTable extends Component {
     return (
       <div>
         <ReactModal contentLabel="Edit modal"
+          id='edit-modal'
           isOpen={this.state.showModal}
           onRequestClose={this.closeModal}
           className="modal-style">
