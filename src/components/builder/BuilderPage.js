@@ -12,6 +12,7 @@ import Parameters from './Parameters';
 import ErrorStatement from './ErrorStatement';
 import Config from '../../../config';
 import RepoUploadModal from './RepoUploadModal';
+import EditModal from '../artifact/EditModal';
 
 // Suppress is a flag that is specific to an element. It should not be inherited by children
 const ELEMENT_SPECIFIC_FIELDS = ['suppress'];
@@ -79,11 +80,12 @@ class BuilderPage extends Component {
       },
       name: 'Untitled Artifact',
       id: null,
-      version: null,
+      version: 1,
       categories: [],
       statusMessage: null,
       activeTabIndex: 0,
-      uniqueIdCounter: 0
+      uniqueIdCounter: 0,
+      showEditModal: false,
     };
   }
 
@@ -261,6 +263,22 @@ class BuilderPage extends Component {
           console.log('Fail', error);
         });
     }
+  }
+
+  openEditModal = () => {
+    this.setState({ showEditModal: true });
+  }
+
+  closeEditModal = () => {
+    this.setState({ showEditModal: false });
+  }
+
+  editArtifactName = (e, name, version) => {
+    e.preventDefault();
+    this.setState({ name, version, showEditModal: false }, () => {
+      this.updateStatusMessage('save');
+      this.saveArtifact(false);
+    });
   }
 
   // Initialized and expression tree
@@ -523,8 +541,22 @@ class BuilderPage extends Component {
             prepareArtifact={this.prepareArtifact.bind(this)}
             version={this.state.version}/>
         </div>
+        <div className="edit__modal">
+          <EditModal
+            showModal={this.state.showEditModal}
+            closeModal={this.closeEditModal}
+            artifactEditingName={this.state.name}
+            artifactEditingVersion={this.state.version}
+            editArtifactName={this.editArtifactName}/>
+        </div>
         <header className="builder__header">
-          <h2 className="builder__heading">{ this.state.name }</h2>
+          <h2 className="builder__heading">
+            <button className="primary-button"
+              onClick={this.openEditModal}>
+              <i className="fa fa-pencil"></i>
+            </button>
+            { this.state.name }
+          </h2>
           <div className="builder__buttonbar">
             <div className="field has-addons has-addons-right">
               <span className="control">
