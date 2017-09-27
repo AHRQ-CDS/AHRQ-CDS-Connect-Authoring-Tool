@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import axios from 'axios';
 import FontAwesome from 'react-fontawesome';
 import ReactModal from 'react-modal';
-import ArtifactForm from './ArtifactForm';
+import EditModal from './EditModal';
 import Config from '../../../config';
 
 const API_BASE = Config.api.baseUrl;
@@ -112,15 +112,6 @@ class ArtifactTable extends Component {
     });
   }
 
-  renderEditForm() {
-    return (
-      <ArtifactForm buttonLabel="Save"
-        onSubmitFunction={this.editArtifactName}
-        defaultName={this.state.artifactEditing ? this.state.artifactEditing.name : null}
-        defaultVersion={this.state.artifactEditing ? this.state.artifactEditing.version : null} />
-    );
-  }
-
   renderConfirmDeleteModal() {
     return (
       <ReactModal contentLabel="Confirm Delete modal"
@@ -193,27 +184,13 @@ class ArtifactTable extends Component {
   render() {
     return (
       <div>
-        <ReactModal contentLabel="Edit modal"
-          id='edit-modal'
-          isOpen={this.state.showModal}
-          onRequestClose={this.closeModal}
-          className="modal-style">
-          <div className="modal__header">
-            <span className="modal__heading">
-              Edit Artifact
-            </span>
-            <div className="modal__buttonbar">
-              <button onClick={this.closeModal}
-                className="modal__deletebutton"
-                aria-label="Close edit modal">
-                <FontAwesome fixedWidth name='close'/>
-              </button>
-            </div>
-          </div>
-          <div className="modal__body">
-          {this.renderEditForm()}
-          </div>
-        </ReactModal>
+        <EditModal
+          showModal={this.state.showModal}
+          closeModal={this.closeModal}
+          artifactEditingName={this.state.artifactEditing ? this.state.artifactEditing.name : null}
+          artifactEditingVersion={this.state.artifactEditing ? this.state.artifactEditing.version : null}
+          editArtifactName={this.editArtifactName}
+        />
         {this.renderConfirmDeleteModal()}
         <table className="artifacts__table">
           <thead>
