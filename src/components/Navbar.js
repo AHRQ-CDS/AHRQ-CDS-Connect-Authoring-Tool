@@ -8,7 +8,7 @@ export default () => (
     <nav className="navbar__nav">
       <ul>
         <li><NavLink to="/artifacts">Artifacts</NavLink></li>
-        <li><NavLink to="/build">New Artifact</NavLink></li>
+        <li><NavLink to="/build">Workspace</NavLink></li>
       </ul>
     </nav>
     <nav className="navbar__nav-secondary">

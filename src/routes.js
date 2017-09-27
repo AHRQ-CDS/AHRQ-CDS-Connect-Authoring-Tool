@@ -15,9 +15,8 @@ export default () => (
       <Navbar />
       <main id="maincontent">
         <Switch>
-          <Route path='/build/:group' component={BuilderPage} />
+          <Route path='/build/:id' component={BuilderPage} />
           <Route path='/build' component={BuilderPage} />
-          <Route path='/artifacts/:id/build' component={BuilderPage} />
           <Route path='/artifacts' component={Artifact} />
           <Route exact path='/' component={App} />
           <Route component={NoMatch}/>
