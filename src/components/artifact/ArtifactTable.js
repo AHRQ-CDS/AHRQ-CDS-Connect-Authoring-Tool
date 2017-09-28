@@ -162,7 +162,7 @@ class ArtifactTable extends Component {
             onClick={() => this.openModal(artifact)}>
             <FontAwesome name='pencil' />
           </button>
-          <Link to={`${this.props.match.path}/${artifact._id}/build`}>
+          <Link to={`build/${artifact._id}`}>
             {artifact.name}
           </Link>
         </td>
