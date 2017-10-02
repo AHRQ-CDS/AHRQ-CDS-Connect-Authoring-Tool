@@ -132,7 +132,7 @@ class ArtifactTable extends Component {
           </div>
         </div>
         <div className="modal__body">
-          <div className="">Are you sure you want to permenantly delete the following CDS Artifact?</div>
+          <div>Are you sure you want to permanently delete the following CDS Artifact?</div>
           <br/><br/>
           Name: {this.state.artifactToDelete !== null ? this.state.artifactToDelete.name : 'name_placeholder'}
           <br/>

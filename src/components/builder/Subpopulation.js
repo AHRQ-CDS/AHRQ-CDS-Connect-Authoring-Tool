@@ -3,9 +3,6 @@ import FontAwesome from 'react-fontawesome';
 
 import ConjunctionGroup from './ConjunctionGroup';
 
-// For now, set the next rules to warn.  We don't want to forget about them, but don't want to deal with them now.
-/* eslint jsx-a11y/click-events-have-key-events: "warn", jsx-a11y/onclick-has-role: "warn" */
-
 class Subpopulation extends Component {
   static propTypes = {
     subpopulation: PropTypes.object.isRequired,
@@ -65,10 +62,19 @@ class Subpopulation extends Component {
   render() {
     return (
       <div className="subpopulation">
-        <div className="subpopulation__header" onClick={ this.state.isExpanded ? this.collapse : this.expand }>
+        <div className="subpopulation__header">
           { this.state.isExpanded ?
             <div className="subpopulation__title">
-              <FontAwesome fixedWidth name='angle-double-down'/>
+              <FontAwesome fixedWidth name='angle-double-down'
+                tabIndex="0"
+                onClick={ this.state.isExpanded ? this.collapse : this.expand }
+                onKeyPress={ (e) => {
+                  e.which = e.which || e.keyCode;
+                  if (e.which === 13) {
+                    if (this.state.isExpanded) this.collapse();
+                    else this.expand();
+                  }
+                }}/>
               <input
                 type="text"
                 className="subpopulation__name-input"
@@ -83,7 +89,16 @@ class Subpopulation extends Component {
             </div>
           :
             <div className="subpopulation__title">
-              <FontAwesome fixedWidth name='angle-double-right'/>
+              <FontAwesome fixedWidth name='angle-double-right'
+                tabIndex="0"
+                onClick={ this.state.isExpanded ? this.collapse : this.expand }
+                onKeyPress={ (e) => {
+                  e.which = e.which || e.keyCode;
+                  if (e.which === 13) {
+                    if (this.state.isExpanded) this.collapse();
+                    else this.expand();
+                  }
+                }}/>
               <h3>{ this.props.subpopulation.subpopulationName }</h3>
             </div>
           }

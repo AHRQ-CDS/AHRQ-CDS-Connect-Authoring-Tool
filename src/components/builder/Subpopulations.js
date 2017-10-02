@@ -56,6 +56,7 @@ class Subpopulations extends Component {
   deleteSubpopulation = (uniqueId) => {
     const subpopExists = this.props.checkSubpopulationUsage(uniqueId);
     if (subpopExists) {
+      // eslint-disable-next-line no-alert
       alert('Subpopulation in use');
     } else {
       const newSubpopulations = _.cloneDeep(this.props.subpopulations);
