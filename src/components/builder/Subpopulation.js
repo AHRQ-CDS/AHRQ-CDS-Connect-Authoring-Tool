@@ -58,7 +58,7 @@ class Subpopulation extends Component {
   saveInstance = (treeName, path) => {
     this.props.saveInstance(treeName, path, this.props.subpopulation.uniqueId);
   }
-  
+
   onEnterKey = (e) => {
     e.which = e.which || e.keyCode;
     if (e.which === 13) {
@@ -74,6 +74,7 @@ class Subpopulation extends Component {
           { this.state.isExpanded ?
             <div className="subpopulation__title">
               <FontAwesome fixedWidth name='angle-double-down'
+                id="collapse-icon"
                 tabIndex="0"
                 onClick={ this.state.isExpanded ? this.collapse : this.expand }
                 onKeyPress={ this.onEnterKey }/>
@@ -92,6 +93,7 @@ class Subpopulation extends Component {
           :
             <div className="subpopulation__title">
               <FontAwesome fixedWidth name='angle-double-right'
+                id="collapse-icon"
                 tabIndex="0"
                 onClick={ this.state.isExpanded ? this.collapse : this.expand }
                 onKeyPress={ this.onEnterKey }/>

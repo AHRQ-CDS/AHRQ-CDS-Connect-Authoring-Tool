@@ -54,12 +54,12 @@ test('starts expanded if expanded property is set to true on subpop object', () 
 });
 
 test('can be expanded and collapsed via header', () => {
-  const subpopHeader = component.find('.subpopulation__header');
+  const subpopCollapseButton = component.find('#collapse-icon');
 
   expect(component.state().isExpanded).toBeTruthy();
-  subpopHeader.simulate('click');
+  subpopCollapseButton.simulate('click');
   expect(component.state().isExpanded).toBeFalsy();
-  subpopHeader.simulate('click');
+  subpopCollapseButton.simulate('click');
   expect(component.state().isExpanded).toBeTruthy();
 });
 
