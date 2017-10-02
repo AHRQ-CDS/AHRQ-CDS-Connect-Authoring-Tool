@@ -2,6 +2,7 @@ const artifactRouter = require('./routers/artifactRouter.js');
 const configRouter = require('./routers/configRouter.js');
 const cqlRouter = require('./routers/cqlRouter');
 const expressionRouter = require('./routers/expressionRouter');
+const authRouter = require('./routers/authRouter.js');
 const repository = require('./routers/repository');
 
 module.exports = (app) => {
@@ -22,6 +23,10 @@ module.exports = (app) => {
   // Routing for Artifact Elements
   app.use('/api/expressions', expressionRouter);
 
+  // Routing for Auth
+  app.use('/api/auth', authRouter);
+
+  // Routing for repository
   app.use('/api/repository', repository);
 
   // Catch all other Api calls
