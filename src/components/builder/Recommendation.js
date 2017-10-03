@@ -6,9 +6,6 @@ import Select from 'react-select';
 
 /* eslint-disable jsx-a11y/label-has-for */
 
-// For now, set the next rules to warn.  We don't want to forget about them, but don't want to deal with them now.
-/* eslint jsx-a11y/click-events-have-key-events: "warn", jsx-a11y/onclick-has-role: "warn" */
-
 const subpopTabIndex = 2;
 
 class Recommendation extends Component {
@@ -131,7 +128,12 @@ class Recommendation extends Component {
               // TODO: This should link to the subpopulations tab
             }
             <a className="recommendation__new-subpopulation"
-               onClick={() => this.props.setActiveTab(subpopTabIndex, 'addBlankSubpopulation')}>
+               tabIndex="0"
+               onClick={() => this.props.setActiveTab(subpopTabIndex, 'addBlankSubpopulation')}
+               onKeyPress={(e) => {
+                 e.which = e.which || e.keyCode;
+                 if (e.which === 13) this.props.setActiveTab(subpopTabIndex, 'addBlankSubpopulation');
+               }}>
                New subpopulation
             </a>
           </div>
