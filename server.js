@@ -4,6 +4,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const config = require('./config');
+const configPassport = require('./app/configLdapPassport');
 const routes = require('./app/routes');
 
 // Create App
@@ -18,6 +19,9 @@ mongoose.connect(process.env.MONGO_URL || config.mongodb.localhost);
 // Configure API to use BodyParser and handle json data
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
+
+// Configure passport authentication
+configPassport(app);
 
 // Setting headers to Prevent Errors from Cross Origin Resource Sharing
 app.use((req, res, next) => {
