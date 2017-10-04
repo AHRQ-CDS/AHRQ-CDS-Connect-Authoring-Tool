@@ -14,6 +14,15 @@ $blue-link: #004198;
 $red: #e31c3d;
 $border-color: darken($gray-lighter, 10%);
 
+$ahrq-color-background-light-gradient: -webkit-linear-gradient(top, #d1d1d1 0%, #ffffff 100%);
+$ahrq-color-background-light: #E9E9E9;
+$ahrq-color-text: #4D4D4D;
+$ahrq-color-purple: #6D1A7F;
+$ahrq-color-light-blue: #4EDEEB;
+$ahrq-color-orange: #FFAF5A;
+$ahrq-color-green: #4BEF6D;
+$ahrq-color-dark-blue: #6693EE;
+
 $border-radius: 0.2em;
 $border-width: 0.1em;
 $border-global: $border-width solid $border-color;

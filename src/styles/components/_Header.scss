@@ -1,0 +1,85 @@
+.header {
+  height: 130px;
+  margin: 0;
+  padding: 0;
+  font-size: 14px;
+  font-family: Arial, "Helvetica Neue", Helvetica, sans-serif;
+  -webkit-font-smoothing: auto;
+  a { text-decoration: none; }
+
+  //------------------------ HHS Banner -------------------------------------//
+  &__hhsbanner {
+    padding: 10px 40px;
+    background: $ahrq-color-background-light-gradient;
+  }
+
+  &__hhsbannerlink {
+    img { vertical-align: middle; }
+  }
+
+  &__hhstext {
+    color: $ahrq-color-text;
+    padding-left: 10px;
+  }
+
+  //------------------------ AHRQ Banner ------------------------------------//
+  &__ahrqbanner {
+    background-color: $white;
+    padding: 0 40px;
+  }
+
+  //------------------------ Links ------------------------------------------//
+  &__links {
+    float: right;
+    a { color: $ahrq-color-purple; }
+    span { padding: 0 10px; }
+    img { vertical-align: middle; }
+  }
+}
+
+//-------------------------- Header Stripe --------------------------------//
+  .header__stripe-container {
+    display: block;
+  }
+
+  .header__stripe {
+    width: 20.5%;
+    position: relative;
+    overflow: hidden;
+    height: 15px;
+    float: left;
+
+    &:before {
+      content: '';
+      position: absolute;
+      left: 51%;
+      width: 100%;
+      height: 200%;
+      top: 0;
+      transform: rotate(150deg);
+    }
+
+    &--purple {
+      background-color: $ahrq-color-purple;
+      &:before { background-color: $ahrq-color-light-blue; }
+    }
+
+    &--light-blue {
+      background-color: $ahrq-color-light-blue;
+      &:before { background-color: $ahrq-color-orange; }
+    }
+
+    &--orange {
+      background-color: $ahrq-color-orange;
+      &:before { background-color: $ahrq-color-green; }
+    }
+
+    &--green {
+      background-color: $ahrq-color-green;
+      &:before { background-color: $ahrq-color-dark-blue; }
+    }
+    &--dark-blue {
+      background-color: $ahrq-color-dark-blue;
+      width: 18%;
+    }
+  }

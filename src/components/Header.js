@@ -4,8 +4,8 @@ const Header = () => {
   return (
     <header className="header">
       <div className="header__hhsbanner">
-        <a href="https://www.hhs.gov/">
-          <img src="/themes/custom/cds_connect/images/hhs-logo-small-graybg.png"
+        <a href="https://www.hhs.gov/" className="header__hhsbannerlink">
+          <img src="/assets/images/hhs-logo.png"
                title="HHS--US Department of Health and Human Services"
                alt="HHS--US Department of Health and Human Services" />
           <span className="header__hhstext">U.S. Department of Health &amp; Human Services</span>
@@ -18,7 +18,7 @@ const Header = () => {
           <span><a href="https://info.ahrq.gov/">FAQ</a></span>
           <span>
             <a href="http://subscriptions.ahrq.gov/service/multi_subscribe.html?code=USAHRQ">
-              <img src="/themes/custom/cds_connect/images/primary-mail-list-icon.png" alt="mail icon" /> Email Updates
+              <img src="/assets/images/primary-mail-list-icon.png" alt="mail icon" /> Email Updates
             </a>
           </span>
         </div>
@@ -26,10 +26,18 @@ const Header = () => {
 
       <div className="header__ahrqbanner">
         <a href="http://www.ahrq.gov/index.html" title="AHRQ Home" rel="home" id="logo">
-          <img src="/themes/custom/cds_connect/images/ahrq-logo.png"
+          <img src="/assets/images/ahrq-logo.png"
                title="AHRQ--Agency for Healthcare Research and Quality: Advancing Excellence in Health Care"
                alt="AHRQ--Agency for Healthcare Research and Quality: Advancing Excellence in Health Care" />
         </a>
+      </div>
+
+      <div className="header__stripe-container">
+        <div className="header__stripe header__stripe--purple"></div>
+        <div className="header__stripe header__stripe--light-blue"></div>
+        <div className="header__stripe header__stripe--orange"></div>
+        <div className="header__stripe header__stripe--green"></div>
+        <div className="header__stripe header__stripe--dark-blue"></div>
       </div>
     </header>
   );

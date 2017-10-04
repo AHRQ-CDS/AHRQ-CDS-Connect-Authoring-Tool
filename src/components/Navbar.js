@@ -23,7 +23,7 @@ class Navbar extends Component {
   render() {
     const { user, status } = this.state;
     return (
-      <header className="navbar">
+      <nav className="navbar">
         <a className="skiplink" href="#maincontent">Skip to main content</a>
         <h1 className="navbar__logo"><Link to="/">CDS Authoring Tool</Link></h1>
         { status === AUTHENTICATED ?
@@ -40,7 +40,7 @@ class Navbar extends Component {
             <li><a href="mailto:cds-authoring-list@lists.mitre.org">Feedback</a></li>
           </ul>
         </nav>
-      </header>
+      </nav>
     );
   }
 }
