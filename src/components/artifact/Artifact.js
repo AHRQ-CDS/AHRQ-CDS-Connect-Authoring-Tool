@@ -21,7 +21,7 @@ class Artifact extends Component {
 
   render() {
     return (
-      <div>
+      <div className="artifact">
         <ArtifactForm afterAddArtifact={this.loadArtifacts} buttonLabel={'New artifact'}/>
         { (this.state.data.length > 0)
           ? <ArtifactTable artifacts={this.state.data}

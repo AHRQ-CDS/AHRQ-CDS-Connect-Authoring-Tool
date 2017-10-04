@@ -27,7 +27,7 @@ if (!disableProxy) {
 }
 
 app.get('/*', (req, res) => {
-  res.sendFile(path.join(__dirname, 'build', 'index.html'));
+  res.sendFile(path.join(__dirname, 'build', 'index.tmpl.html'));
 });
 
 app.listen(9000);

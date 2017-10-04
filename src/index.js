@@ -1,5 +1,5 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
+import { render } from 'react-dom';
 import Modal from 'react-modal';
 import Routes from './routes';
 
@@ -12,7 +12,7 @@ if (process.env.NODE_ENV === 'development') {
   // axe(React, ReactDOM, 1000);
 }
 
-ReactDOM.render(
+render(
   <Routes />,
   document.getElementById('root'),
 );
