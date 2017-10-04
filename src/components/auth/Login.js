@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { AUTHENTICATED, UNAUTHENTICATED, CHECKING_AUTHENTICATION, login, logout } from '../../lib/auth';
+import { login } from '../../lib/auth';
 
-class LoginForm extends Component {
+class Login extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -12,7 +12,6 @@ class LoginForm extends Component {
     };
 
     this.login = this.login.bind(this);
-    this.logout = this.logout.bind(this);
     this.handleInputChange = this.handleInputChange.bind(this);
   }
 
@@ -28,28 +27,11 @@ class LoginForm extends Component {
       });
   }
 
-  logout(e) {
-    logout()
-      .then(result => this.props.onAuthChange())
-      .catch(() => this.props.onAuthChange());
-  }
-
   handleInputChange(e) {
     this.setState({ [e.target.name]: e.target.value });
   }
 
   render() {
-    switch (this.props.authStatus) {
-      case UNAUTHENTICATED:
-        return this.renderLogin();
-      case AUTHENTICATED:
-        return this.renderLogout();
-      default:
-        return <div>Checking authentication status</div>;
-    }
-  }
-
-  renderLogin() {
     const { username, password, failed } = this.state;
     return (
       <form action="/" className="form__inline" onSubmit={this.login}>
@@ -78,22 +60,10 @@ class LoginForm extends Component {
       </form>
     );
   }
-
-  renderLogout() {
-    const { authUser } = this.props;
-    return (
-    <div>
-      Logged in as {authUser.uid}
-      <button onClick={this.logout} className='primary-button' style={{ marginLeft: '10px' }}>Logout</button>
-    </div>
-    );
-  }
 }
 
-LoginForm.propTypes = {
-  authUser: PropTypes.shape({ uid: PropTypes.string }),
-  authStatus: PropTypes.oneOf([AUTHENTICATED, UNAUTHENTICATED, CHECKING_AUTHENTICATION]).isRequired,
+Login.propTypes = {
   onAuthChange: PropTypes.func.isRequired
 };
 
-export default LoginForm;
+export default Login;

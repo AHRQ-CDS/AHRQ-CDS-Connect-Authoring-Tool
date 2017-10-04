@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Link, NavLink } from 'react-router-dom';
 import { AUTHENTICATED, UNAUTHENTICATED, CHECKING_AUTHENTICATION, getCurrentUser } from '../lib/auth';
-import LoginForm from './login/LoginForm';
+import Authentication from './auth/Authentication';
 
 class Navbar extends Component {
   constructor(props) {
@@ -37,7 +37,7 @@ class Navbar extends Component {
         : '' }
         <nav className="navbar__nav-secondary">
           <ul>
-            <li><LoginForm authStatus={status} authUser={user} onAuthChange={this.updateAuth}/></li>
+            <li><Authentication authStatus={status} authUser={user} onAuthChange={this.updateAuth}/></li>
             <li><a href="mailto:cds-authoring-list@lists.mitre.org">Feedback</a></li>
           </ul>
         </nav>
