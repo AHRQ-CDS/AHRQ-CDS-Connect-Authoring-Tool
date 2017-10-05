@@ -2,15 +2,15 @@ import React from 'react';
 
 export default () => (
   <header className="header">
-    <div className="header__hhsbanner columns is-mobile">
-      <a href="https://www.hhs.gov/" className="header__hhsbannerlink column">
+    <div className="header__hhsbanner row align-items-center">
+      <a href="https://www.hhs.gov/" className="header__hhsbannerlink col-sm">
         <img src="/assets/images/hhs-logo.png"
              title="HHS--US Department of Health and Human Services"
              alt="HHS--US Department of Health and Human Services" />
         <span className="header__hhstext">U.S. Department of Health &amp; Human Services</span>
       </a>
 
-      <div className="header__links column">
+      <div className="header__links col-sm">
         <span><a href="https://www.ahrq.gov/">AHRQ Home</a></span>
         <span><a href="https://www.ahrq.gov/cpi/about/index.html">About AHRQ</a></span>
         <span><a href="https://www.ahrq.gov/contact/index.html">Contact AHRQ</a></span>

@@ -1,5 +1,4 @@
 .header {
-  height: 130px;
   margin: 0;
   padding: 0;
   font-size: 14px;
@@ -11,36 +10,61 @@
   &__hhsbanner {
     padding: 10px 40px;
     background: $ahrq-color-background-light-gradient;
+    @include respond-to('mobile') { padding: 10px; }
   }
 
   &__hhsbannerlink {
+    white-space: nowrap;
     img { vertical-align: middle; }
+    @include respond-to('mobile') { text-align: center; }
   }
 
   &__hhstext {
     color: $ahrq-color-text;
     padding-left: 10px;
+    white-space: nowrap;
   }
 
   //------------------------ AHRQ Banner ------------------------------------//
   &__ahrqbanner {
     background-color: $white;
-    padding: 0 40px;
+    padding: 5px 40px;
+    img { max-width: 100%; }
+
+    @include respond-to('mobile') {
+      text-align: center;
+      padding: 5px 10px;
+    }
   }
 
   //------------------------ Links ------------------------------------------//
   &__links {
-    float: right;
-    a { color: $ahrq-color-purple; }
-    span { padding: 0 10px; }
+    max-width: 100%;
+    white-space: nowrap;
+    text-align: right;
+    padding-left: 40px;
     img { vertical-align: middle; }
+    @include respond-to('tablet') { text-align: left; }
+
+    @include respond-to('mobile') {
+      padding: 0;
+      text-align: center;
+    }
+
+    span {
+      padding: 0 10px;
+      @include respond-to('mobile') { padding: 5px; }
+    }
+
+    a {
+      color: $ahrq-color-purple;
+      @include respond-to('500px') { font-size: 0.8em; }
+    }
   }
 }
 
   //-------------------------- Header Stripe --------------------------------//
-  .header__stripe-container {
-    display: block;
-  }
+  .header__stripe-container { display: block; }
 
   .header__stripe {
     width: 20.5%;

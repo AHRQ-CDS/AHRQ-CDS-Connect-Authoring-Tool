@@ -66,50 +66,70 @@ $font-weight-regular: 400;
 $font-weight-bold: 500;
 
 // ------------------------- PATHS ----------------------------------------- //
-
 $icon-font-path: '/assets/bootstrap/';
 $fa-font-path: '/assets/fontawesome';
 
+// ------------------------- BOOTSTRAP VARIABLES --------------------------- //
+$navbar-height: 80px;
+$panel-border-radius: 0px;
+$border-radius-large: 0px;
+$headings-font-weight: 200;
+
+$screen-xs: 480px;
+$screen-sm: 768px;
+$screen-md: 949px;
+$screen-lg: 1200px;
+
+$container-sm: $screen-sm;
+$container-md: $screen-md;
+$container-lg: $screen-lg;
+
+$grid-float-breakpoint: $screen-md;
+$grid-gutter-width: 30px;
+$container-tablet: $screen-sm + $grid-gutter-width;
+$container-desktop: $screen-md + $grid-gutter-width;
+$container-large-desktop: $screen-lg + $grid-gutter-width;
+
 //------------------------ Media Queries ------------------------------------//
 
-// $screen-xs: 480px;
-// $screen-sm: 768px;
-// $screen-md: 1200px;
-// $screen-lg: 1600px;
+$break-mobile: $screen-sm - 1;  // mobile and tablet-portrait
+$break-tablet: $screen-md - 1;  // tablet-landscape
+$break-desktop: $screen-lg - 1; // desktop-regular (> desktop-wide)
 
-// $break-mobile: $screen-sm - 1;  // mobile and tablet-portrait
-// $break-tablet: $screen-md - 1;  // tablet-landscape
-// $break-desktop: $screen-lg - 1; // desktop-regular (> desktop-wide)
-
-// @mixin respond-to($media) {
-//   @if $media == mobile {
-//     @media only screen and (max-width: $break-mobile) {
-//       @content;
-//     }
-//   }
-//   @else if $media == tablet {
-//     @media only screen and (min-width: $break-mobile + 1) and (max-width: $break-tablet) {
-//       @content;
-//     }
-//   }
-//   @else if $media == desktop {
-//     @media only screen and (min-width: $break-tablet + 1) and (max-width: $break-desktop) {
-//       @content;
-//     }
-//   }
-//   @else if $media == desktop-wide {
-//     @media only screen and (min-width: $break-desktop + 1) {
-//       @content;
-//     }
-//   }
-//   @else if $media == handheld {
-//     @media only screen and (max-width: $break-tablet) {
-//       @content;
-//     }
-//   }
-//   @else if $media == non-handheld {
-//     @media only screen and (min-width: $break-tablet +1) {
-//       @content;
-//     }
-//   }
-// }
+@mixin respond-to($media) {
+  @if $media == mobile {
+    @media only screen and (max-width: $break-mobile) {
+      @content;
+    }
+  }
+  @else if $media == tablet {
+    @media only screen and (min-width: $break-mobile + 1) and (max-width: $break-tablet) {
+      @content;
+    }
+  }
+  @else if $media == desktop {
+    @media only screen and (min-width: $break-tablet + 1) and (max-width: $break-desktop) {
+      @content;
+    }
+  }
+  @else if $media == desktop-wide {
+    @media only screen and (min-width: $break-desktop + 1) {
+      @content;
+    }
+  }
+  @else if $media == handheld {
+    @media only screen and (max-width: $break-tablet) {
+      @content;
+    }
+  }
+  @else if $media == non-handheld {
+    @media only screen and (min-width: $break-tablet +1) {
+      @content;
+    }
+  }
+  @else {
+    @media only screen and (max-width: $media) {
+      @content;
+    }
+  }
+}
