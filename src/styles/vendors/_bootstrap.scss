@@ -1,0 +1,19 @@
+.col-no-pad {
+  padding: 0;
+}
+
+.alert.alert-full {
+  position: relative;
+  width: auto;
+  top: 0;
+  left: 0;
+  padding: 15px;
+}
+
+.text-danger {
+  color: $brand-danger;
+}
+
+.text-success {
+  color: $brand-success;
+}

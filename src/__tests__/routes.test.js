@@ -1,5 +1,5 @@
 import { Route } from 'react-router-dom';
-import App from '../App';
+import Landing from '../components/Landing';
 import BuilderPage from '../components/builder/BuilderPage';
 import Artifact from '../components/artifact/Artifact';
 import NoMatch from '../components/NotFoundPage';
@@ -13,7 +13,7 @@ test('Routes renders correct routes', () => {
     return paths;
   }, {});
 
-  expect(pathMap['/']).toBe(App);
+  expect(pathMap['/']).toBe(Landing);
   expect(pathMap['/build']).toBe(BuilderPage);
   expect(pathMap['/build/:id']).toBe(BuilderPage);
   expect(pathMap['/artifacts']).toBe(Artifact);

@@ -1,20 +1,18 @@
-// third-party
-@import 'bourbon';
-@import "../bulma/sass/utilities/_all.sass";
-@import "../bulma/sass/elements/icon.sass";
-@import "../bulma/sass/base/helpers.sass";
-@import "../bulma/sass/elements/title.sass";
-@import "../bulma/sass/elements/form.sass";
-@import "../bulma/sass/elements/button.sass";
+/* ------------------------- IMPORT VARIABLES ------------------------------ */
+@import "elements/variables";
 
-// site-wide
-@import 'variables';
-@import 'mixins';
-@import 'typography';
-@import 'base';
-@import 'forms';
-@import 'buttons';
-@import 'modals';
+/* ------------------------- IMPORT 3RD PARTY VENDORS ---------------------- */
+@import "node_modules/bootstrap-sass/assets/stylesheets/bootstrap";
+@import "node_modules/bourbon/app/assets/stylesheets/bourbon";
+
+/* ------------------------- IMPORT CUSTOM SCSS ---------------------------- */
+// site-wide elements
+@import 'elements/mixins';
+@import 'elements/typography';
+@import 'elements/base';
+@import 'elements/forms';
+@import 'elements/buttons';
+@import 'elements/modals';
 
 // component-specific
 @import 'components/Navbar';
@@ -29,3 +27,6 @@
 @import 'components/RepoUploadModal';
 @import 'components/Landing';
 @import 'components/Header';
+
+// vendors
+@import "vendors/bootstrap";
