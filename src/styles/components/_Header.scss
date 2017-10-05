@@ -28,7 +28,7 @@
   //------------------------ AHRQ Banner ------------------------------------//
   &__ahrqbanner {
     background-color: $white;
-    padding: 5px 40px;
+    padding: 0 40px 5px 40px;
     img { max-width: 100%; }
 
     @include respond-to('mobile') {
@@ -61,12 +61,11 @@
       @include respond-to('500px') { font-size: 0.8em; }
     }
   }
-}
 
-  //-------------------------- Header Stripe --------------------------------//
-  .header__stripe-container { display: block; }
+  //------------------------ Header Stripe ----------------------------------//
+  &__stripe-container { display: block; }
 
-  .header__stripe {
+  &__stripe {
     width: 20.5%;
     position: relative;
     overflow: hidden;
@@ -107,3 +106,25 @@
       width: 18%;
     }
   }
+
+  //------------------------ CDS Banner -------------------------------------//
+  &__cdsbanner {
+    background: $ahrq-color-dark-gradient;
+    padding: 25px 40px 10px 40px;
+
+    a {
+      color: $white;
+
+      .text-top {
+        font-size: 16px;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+      }
+
+      .text-bottom {
+        font-size: 38px;
+        font-weight: bold;
+      }
+    }
+  }
+}

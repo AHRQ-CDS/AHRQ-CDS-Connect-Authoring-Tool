@@ -38,5 +38,14 @@ export default () => (
       <div className="header__stripe header__stripe--green"></div>
       <div className="header__stripe header__stripe--dark-blue"></div>
     </div>
+
+    <div className="header__cdsbanner">
+      <div className="header__cdsbanner-text">
+        <a href="/" alt="home">
+          <div className="text-top">Clinical Decision Support</div>
+          <div className="text-bottom">Authoring Tool</div>
+        </a>
+      </div>
+    </div>
   </header>
 );
