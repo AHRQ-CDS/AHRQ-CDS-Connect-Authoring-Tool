@@ -6,7 +6,8 @@ const ExpressionRouter = express.Router();
 // Routes for /api/expressions
 ExpressionRouter.route('/')
   .get(expression.allGet)
-  .post(expression.singlePost);
+  .post(expression.singlePost)
+  .put(expression.singlePut);
 
 // Routes for /api/expressions/group/:group_id
 ExpressionRouter.route('/group/:group_id')
