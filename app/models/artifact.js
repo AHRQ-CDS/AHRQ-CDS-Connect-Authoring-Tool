@@ -11,7 +11,8 @@ const ArtifactSchema = new Schema({
   subpopulations: Array,
   booleanParameters: Array,
   errorStatement: Object,
-  uniqueIdCounter: Number
+  uniqueIdCounter: Number,
+  user: String
 }, {
   timestamps: true // adds created_at, updated_at
 });

@@ -255,13 +255,23 @@ class BuilderPage extends Component {
     const target = getValueAtPath(tree, path);
 
     if (target) {
-      axios.post(`${API_BASE}/expressions`, target)
-        .then((result) => {
-          console.log('Done');
-        })
-        .catch((error) => {
-          console.log('Fail', error);
-        });
+      if (target._id) {
+        axios.put(`${API_BASE}/expressions`, target)
+          .then((result) => {
+            console.log('Done');
+          })
+          .catch((error) => {
+            console.log('Fail', error);
+          });
+      } else {
+        axios.post(`${API_BASE}/expressions`, target)
+          .then((result) => {
+            console.log('Done');
+          })
+          .catch((error) => {
+            console.log('Fail', error);
+          });
+      }
     }
   }
 

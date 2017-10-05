@@ -10,7 +10,8 @@ const ExpressionSchema = new Schema({
   suppressedModifiers: Array,
   returnType: String,
   parameters: Array,
-  type: String
+  type: String,
+  user: String
 });
 
 module.exports = mongoose.model('Expression', ExpressionSchema);
