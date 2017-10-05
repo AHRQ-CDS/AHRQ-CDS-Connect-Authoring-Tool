@@ -18,7 +18,7 @@ export function getCurrentUser() {
 export function login(username, password) {
   return new Promise((resolve, reject) => {
     axios.post(`${API_BASE}/auth/login`, { username, password })
-      .then((result) => resolve(result.data))
+      .then(result => resolve(result.data))
       .catch(() => reject('Authentication Failure'));
   });
 }
