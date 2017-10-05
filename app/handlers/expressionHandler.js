@@ -40,6 +40,7 @@ function singleGet(req, res) {
     const id = req.params.expression;
     Expression.find({ user: req.user.uid, _id: id }, (error, expression) => {
       if (error) res.status(500).send(error);
+      else if (expression.length === 0) res.sendStatus(404);
       else res.json(expression);
     });
   } else {
@@ -52,10 +53,7 @@ function singlePost(req, res) {
   if (req.user) {
     req.body.name = req.body.name.length ? req.body.name : 'Untitled';
     req.body.user = req.user.uid;
-    Expression.findOneAndUpdate(
-      { user: req.user.uid, name: req.body.name },
-      req.body,
-      { upsert: true },
+    Expression.create(req.body,
       (error, response) => {
         if (error) res.status(500).send(error);
         else res.status(201).json(response);
@@ -75,6 +73,7 @@ function singlePut(req, res) {
       { $set: expression },
       (error, response) => {
         if (error) res.status(500).send(error);
+        else if (response.n === 0) res.sendStatus(404);
         else res.sendStatus(200);
       });
   } else {
@@ -88,6 +87,7 @@ function singleDelete(req, res) {
     const id = req.params.expression;
     Expression.remove({ user: req.user.uid, _id: id }, (error, response) => {
       if (error) res.status(500).send(error);
+      else if (response.result.n === 0) res.sendStatus(404);
       else res.sendStatus(200);
     });
   } else {

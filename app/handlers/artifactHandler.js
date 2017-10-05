@@ -27,6 +27,7 @@ function singleGet(req, res) {
     const id = req.params.artifact;
     Artifact.find({ user: req.user.uid, _id: id }, (error, artifact) => {
       if (error) res.status(500).send(error);
+      else if (artifact.length === 0) res.sendStatus(404);
       else res.json(artifact);
     });
   } else {
@@ -59,6 +60,7 @@ function singlePut(req, res) {
       { $set: artifact },
       (error, response) => {
         if (error) res.status(500).send(error);
+        else if (response.n === 0) res.sendStatus(404);
         else res.sendStatus(200);
       });
   } else {
@@ -72,6 +74,7 @@ function singleDelete(req, res) {
     const id = req.params.artifact;
     Artifact.remove({ user: req.user.uid, _id: id }, (error, response) => {
       if (error) res.status(500).send(error);
+      else if (response.result.n === 0) res.sendStatus(404);
       else res.sendStatus(200);
     });
   } else {
