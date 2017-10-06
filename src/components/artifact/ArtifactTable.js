@@ -38,13 +38,6 @@ class ArtifactTable extends Component {
       showModal: false,
       showConfirmDeleteModal: false,
       artifactToDelete: null };
-    this.deleteArtifact = this.deleteArtifact.bind(this);
-    this.renderTableRow = this.renderTableRow.bind(this);
-    this.editArtifactName = this.editArtifactName.bind(this);
-    this.openModal = this.openModal.bind(this);
-    this.closeModal = this.closeModal.bind(this);
-    this.openConfirmDeleteModal = this.openConfirmDeleteModal.bind(this);
-    this.closeConfirmDeleteModal = this.closeConfirmDeleteModal.bind(this);
   }
 
   componentWillReceiveProps(nextProps) {
@@ -54,7 +47,7 @@ class ArtifactTable extends Component {
     }
   }
 
-  deleteArtifact(id) {
+  deleteArtifact = (id) => {
     axios.delete(`${API_BASE}/artifacts/${id}`)
       .then((res) => {
         const list = this.state.artifacts;
@@ -73,7 +66,7 @@ class ArtifactTable extends Component {
     this.closeConfirmDeleteModal();
   }
 
-  editArtifactName(e, name, version) {
+  editArtifactName = (e, name, version) => {
     e.preventDefault();
     const artifactToUpdate = {
       name,
@@ -90,22 +83,22 @@ class ArtifactTable extends Component {
       });
   }
 
-  openModal(artifact) {
+  openModal = (artifact) => {
     this.setState({ showModal: true, artifactEditing: artifact });
   }
 
-  closeModal() {
+  closeModal = () => {
     this.setState({ showModal: false });
   }
 
-  openConfirmDeleteModal(artifact) {
+  openConfirmDeleteModal = (artifact) => {
     this.setState({
       showConfirmDeleteModal: true,
       artifactToDelete: artifact
     });
   }
 
-  closeConfirmDeleteModal() {
+  closeConfirmDeleteModal = () => {
     this.setState({
       showConfirmDeleteModal: false,
       artifactToDelete: null
@@ -152,7 +145,7 @@ class ArtifactTable extends Component {
     );
   }
 
-  renderTableRow(artifact) {
+  renderTableRow = (artifact) => {
     return (
       <tr key={artifact._id}>
         <td className="artifacts__tablecell-wide"

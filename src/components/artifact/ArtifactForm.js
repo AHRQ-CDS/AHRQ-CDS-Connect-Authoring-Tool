@@ -12,16 +12,13 @@ class ArtifactForm extends Component {
       name: '',
       version: ''
     };
-
-    this.addArtifact = this.addArtifact.bind(this);
-    this.handleInputChange = this.handleInputChange.bind(this);
   }
 
-  handleInputChange(e) {
+  handleInputChange = (e) => {
     this.setState({ [e.target.name]: e.target.value });
   }
 
-  addArtifact(e) {
+  addArtifact = (e) => {
     e.preventDefault();
     axios.post(`${API_BASE}/artifacts`, {
       name: this.state.name,

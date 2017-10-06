@@ -10,12 +10,9 @@ class Login extends Component {
       password: '',
       failed: false
     };
-
-    this.login = this.login.bind(this);
-    this.handleInputChange = this.handleInputChange.bind(this);
   }
 
-  login(e) {
+  login = (e) => {
     e.preventDefault();
     login(this.state.username, this.state.password)
       .then((result) => {
@@ -27,7 +24,7 @@ class Login extends Component {
       });
   }
 
-  handleInputChange(e) {
+  handleInputChange = (e) => {
     this.setState({ [e.target.name]: e.target.value });
   }
 

@@ -10,12 +10,11 @@ class Navbar extends Component {
       username: '',
       status: CHECKING_AUTHENTICATION
     };
-    this.updateAuth = this.updateAuth.bind(this);
 
     this.updateAuth();
   }
 
-  updateAuth() {
+  updateAuth = () => {
     getCurrentUser()
       .then(user => this.setState({ user, status: AUTHENTICATED }))
       .catch(() => this.setState({ user: null, status: UNAUTHENTICATED }));
