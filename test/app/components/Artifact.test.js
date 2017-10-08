@@ -1,7 +1,7 @@
-import Artifact from '../components/artifact/Artifact';
-import ArtifactTable from '../components/artifact/ArtifactTable';
-import ArtifactForm from '../components/artifact/ArtifactForm';
-import { shallowRenderComponent, fullRenderComponent, ReactWrapper } from '../helpers/test_helpers';
+import Artifact from '../../../src/components/artifact/Artifact';
+import ArtifactTable from '../../../src/components/artifact/ArtifactTable';
+import ArtifactForm from '../../../src/components/artifact/ArtifactForm';
+import { shallowRenderComponent, fullRenderComponent, ReactWrapper } from '../../test_helpers';
 
 const match = {
   path: ''

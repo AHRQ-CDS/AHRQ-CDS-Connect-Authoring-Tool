@@ -1,10 +1,10 @@
 import { Tab } from 'react-tabs';
 import _ from 'lodash';
-import BuilderPage from '../components/builder/BuilderPage';
-import ConjunctionGroup from '../components/builder/ConjunctionGroup';
-import TemplateInstance from '../components/builder/TemplateInstance';
-import { fullRenderComponent, createTemplateInstance } from '../helpers/test_helpers';
-import { instanceTree, elementGroups } from '../helpers/test_fixtures';
+import BuilderPage from '../../../src/components/builder/BuilderPage';
+import ConjunctionGroup from '../../../src/components/builder/ConjunctionGroup';
+import TemplateInstance from '../../../src/components/builder/TemplateInstance';
+import { fullRenderComponent, createTemplateInstance } from '../../test_helpers';
+import { instanceTree, elementGroups } from '../../test_fixtures';
 
 let component;
 let componentWithMatch;

@@ -1,6 +1,8 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import _ from 'lodash';
 import { mount, shallow, ReactWrapper } from 'enzyme';
+import { shallowWithStore } from 'enzyme-redux';
 import createRouterContext from 'react-router-test-context';
 
 /**
@@ -9,7 +11,7 @@ import createRouterContext from 'react-router-test-context';
 function fullRenderComponent(ComponentClass, props = {}) {
   const context = createRouterContext();
   ComponentClass.contextTypes = { // eslint-disable-line no-param-reassign
-    router: React.PropTypes.object
+    router: PropTypes.object
   };
   return mount(
     <ComponentClass {...props} />,
@@ -22,6 +24,13 @@ function shallowRenderComponent(ComponentClass, props = {}) {
   return shallow(
     <ComponentClass {...props} />,
     { context }
+  );
+}
+
+function shallowRenderContainer(ComponentClass, props = {}, store) {
+  return shallowWithStore(
+    <ComponentClass {...props} />,
+    store
   );
 }
 
@@ -52,6 +61,7 @@ function createTemplateInstance(template, children = undefined) {
 export {
   fullRenderComponent,
   shallowRenderComponent,
+  shallowRenderContainer,
   deepState,
   decoratedDeepState,
   createTemplateInstance,

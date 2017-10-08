@@ -1,48 +1,65 @@
 import React, { Component } from 'react';
-import { Link, NavLink } from 'react-router-dom';
-import { AUTHENTICATED, UNAUTHENTICATED, CHECKING_AUTHENTICATION, getCurrentUser } from '../lib/auth';
-import Authentication from './auth/Authentication';
+import PropTypes from 'prop-types';
+import { NavLink } from 'react-router-dom';
+import Login from './auth/Login';
+import Logout from './auth/Logout';
 
-class Navbar extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      username: '',
-      status: CHECKING_AUTHENTICATION
-    };
+export default class Navbar extends Component {
+  renderedNavbar = () => {
+    const {
+      isAuthenticated,
+      authUser,
+      authStatus,
+      authStatusText,
+      loginUser,
+      logoutUser,
+      setAuthStatus
+    } = this.props;
 
-    this.updateAuth();
-  }
+    if (isAuthenticated) {
+      return (
+        <nav className="navbar__nav" aria-labelledby="cds-main-navigation">
+          <div className="sr-only" id="cds-main-navigation">Main navigation</div>
 
-  updateAuth = () => {
-    getCurrentUser()
-      .then(user => this.setState({ user, status: AUTHENTICATED }))
-      .catch(() => this.setState({ user: null, status: UNAUTHENTICATED }));
+          <ul>
+            <li><NavLink exact to="/">Home</NavLink></li>
+            <li><NavLink to="/artifacts">Artifacts</NavLink></li>
+            <li><NavLink to="/build">Workspace</NavLink></li>
+          </ul>
+
+          <Logout
+            onLogoutClick={logoutUser}
+            authUser={authUser}
+            authStatus={authStatus}
+            authStatusText={authStatusText} />
+        </nav>
+      );
+    }
+
+    return (
+      <Login
+        onLoginClick={loginUser}
+        authStatus={authStatus}
+        authStatusText={authStatusText}
+        setAuthStatus={setAuthStatus} />
+    );
   }
 
   render() {
-    const { user, status } = this.state;
     return (
-      <nav className="navbar">
-        <a className="skiplink" href="#maincontent">Skip to main content</a>
-        <h1 className="navbar__logo"><Link to="/">CDS Authoring Tool</Link></h1>
-        { status === AUTHENTICATED ?
-          <nav className="navbar__nav">
-            <ul>
-              <li><NavLink to="/artifacts">Artifacts</NavLink></li>
-              <li><NavLink to="/build">Workspace</NavLink></li>
-            </ul>
-          </nav>
-        : '' }
-        <nav className="navbar__nav-secondary">
-          <ul>
-            <li><Authentication authStatus={status} authUser={user} onAuthChange={this.updateAuth}/></li>
-            <li><a href="mailto:cds-authoring-list@lists.mitre.org">Feedback</a></li>
-          </ul>
-        </nav>
-      </nav>
+      <div className="navbar">
+        {this.renderedNavbar()}
+      </div>
     );
   }
 }
 
-export default Navbar;
+Navbar.propTypes = {
+  isAuthenticated: PropTypes.bool.isRequired,
+  authUser: PropTypes.string,
+  authStatus: PropTypes.string,
+  authStatusText: PropTypes.string,
+  loginUser: PropTypes.func.isRequired,
+  logoutUser: PropTypes.func.isRequired,
+  setAuthStatus: PropTypes.func.isRequired
+};

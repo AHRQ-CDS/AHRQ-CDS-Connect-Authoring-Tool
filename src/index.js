@@ -1,18 +1,20 @@
 import React from 'react';
 import { render } from 'react-dom';
-import Modal from 'react-modal';
-import Routes from './routes';
+import { BrowserRouter as Router } from 'react-router-dom';
+import 'react-select/dist/react-select.css';
 
-// Override overlay background color for all modals in app
-Modal.defaultStyles.overlay.backgroundColor = 'rgba(100,100,100,0.75)';
+import configureStore from './store/configureStore';
+import Root from './containers/Root';
+import '../node_modules/font-awesome/css/font-awesome.css';
+import './styles/App.css';
 
-// log accessibility errors to the console.
-// works in Chrome, with limited functionality in Safari and Firefox
-if (process.env.NODE_ENV === 'development') {
-  // axe(React, ReactDOM, 1000);
-}
+const store = configureStore();
+
+window.store = store;
 
 render(
-  <Routes />,
-  document.getElementById('root'),
+  <Router>
+    <Root store={store} />
+  </Router>,
+  document.getElementById('root')
 );

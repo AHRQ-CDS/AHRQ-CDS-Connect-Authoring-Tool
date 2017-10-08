@@ -1,6 +1,6 @@
-import Subpopulation from '../components/builder/Subpopulation';
-import { fullRenderComponent, createTemplateInstance } from '../helpers/test_helpers';
-import { elementGroups } from '../helpers/test_fixtures';
+import Subpopulation from '../../../src/components/builder/Subpopulation';
+import { fullRenderComponent, createTemplateInstance } from '../../test_helpers';
+import { elementGroups } from '../../test_fixtures';
 
 let component;
 const setSubpopulationName = jest.fn();

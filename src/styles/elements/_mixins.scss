@@ -1,22 +1,3 @@
-// turn a list of links into a navigation bar
-@mixin navigation($horizontal: false) {
-  ul {
-    list-style: none;
-    padding-left: 0;
-    margin: 0;
-
-    li {
-      @if $horizontal { display: inline-block; }
-
-      a {
-        color: inherit;
-        text-decoration: none;
-        padding: 0.75em 1em;
-      }
-    }
-  }
-}
-
 @mixin button($color-foreground: $default-button-text-color, $color-background: $default-button-bg-color, $box-shadow: $box-shadow) {
   background-color: $color-background;
   color: $color-foreground;
@@ -30,6 +11,7 @@
     color: $color-foreground;
     box-shadow: $box-shadow;
   }
+
   &:active {
     box-shadow: none;
   }

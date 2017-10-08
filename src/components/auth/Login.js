@@ -1,66 +1,76 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { login } from '../../lib/auth';
+import FontAwesome from 'react-fontawesome';
 
-class Login extends Component {
+export default class Login extends Component {
   constructor(props) {
     super(props);
-    this.state = {
-      username: '',
-      password: '',
-      failed: false
-    };
+
+    this.state = { showLogin: false };
   }
 
-  login = (e) => {
-    e.preventDefault();
-    login(this.state.username, this.state.password)
-      .then((result) => {
-        this.setState({ username: result.uid, password: '', failed: false });
-        this.props.onAuthChange();
-      })
-      .catch(() => {
-        this.setState({ username: this.state.username, password: this.state.password, failed: true });
-      });
+  handleClick(event) {
+    if (this.state.showLogin === false) { // slide out login
+      this.toggleShowLogin();
+    } else { // submit login
+      const username = this.refs.username;
+      const password = this.refs.password;
+      this.props.onLoginClick(username.value.trim(), password.value.trim());
+    }
   }
 
-  handleInputChange = (e) => {
-    this.setState({ [e.target.name]: e.target.value });
+  toggleShowLogin = () => {
+    this.setState({ showLogin: !this.state.showLogin });
+    this.props.setAuthStatus(null);
+  }
+
+  renderedAuthStatusText() {
+    const { authStatus, authStatusText } = this.props;
+
+    if (authStatus !== 'loginFailure') { return null; }
+
+    return (
+      <div className="login__auth-status">
+        <FontAwesome name="exclamation-circle" /> {authStatusText}
+      </div>
+    );
+  }
+
+  renderedLoginInputs() {
+    if (!this.state.showLogin) {
+      return null;
+    }
+
+    return (
+      <div className="login__inputs">
+        <input type='text' ref='username' className="form-control col" placeholder='username'/>
+        <input type='password' ref='password' className="form-control col" placeholder='password'/>
+
+        <button className="login__inputs-reset" onClick={this.toggleShowLogin}>
+          <FontAwesome name="angle-double-right" />
+        </button>
+
+        {this.renderedAuthStatusText()}
+      </div>
+    );
   }
 
   render() {
-    const { username, password, failed } = this.state;
     return (
-      <form action="/" className="form__inline" onSubmit={this.login}>
-        { failed ? <div className="form__group">Login Failed</div> : ''}
-        <div className="form__group" style={{ margin: '0px', marginLeft: '10px', marginRight: '10px' }}>
-          <input
-            id="username"
-            name="username"
-            type="text"
-            placeholder="username"
-            onChange={this.handleInputChange}
-            value={username}
-          />
-        </div>
-        <div className="form__group" style={{ margin: '0px', marginRight: '10px' }}>
-          <input
-            id="password"
-            name="password"
-            type="password"
-            placeholder="password"
-            onChange={this.handleInputChange}
-            value={password}
-          />
-        </div>
-        <button type="submit" className='primary-button'>Login</button>
-      </form>
+      <div className="login row">
+        {this.renderedLoginInputs()}
+
+        <button onClick={event => this.handleClick(event)} className="btn btn-primary login__button col">
+          Login
+        </button>
+      </div>
     );
   }
 }
 
 Login.propTypes = {
-  onAuthChange: PropTypes.func.isRequired
+  authStatus: PropTypes.string,
+  authStatusText: PropTypes.string,
+  onLoginClick: PropTypes.func.isRequired,
+  setAuthStatus: PropTypes.func.isRequired
 };
-
-export default Login;

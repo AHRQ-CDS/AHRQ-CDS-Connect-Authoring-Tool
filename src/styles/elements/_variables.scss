@@ -49,14 +49,17 @@ $form-validation-success-color: shade($blue, 60%);
 $form-validation-error-color: darken($red, 20%);
 
 // nav colors
-$navbar-bg-color: $blue;
+$navbar-bg-color: #1e2f40;
 $navbar-link-color: $white;
-$navbar-link-active-color: $white;
+$navbar-link-active-color: #4A5968;
 
 //-------------------------- Borders ----------------------------------------//
 $border-radius: 0.2em;
 $border-width: 0.1em;
 $border-global: $border-width solid $border-color;
+
+//-------------------------- Spacing ----------------------------------------//
+$global-padding: 60px;
 
 //-------------------------- Box Shadows ------------------------------------//
 $box-shadow: 1px 1px 1px 0 fade-out($black, 0.9);

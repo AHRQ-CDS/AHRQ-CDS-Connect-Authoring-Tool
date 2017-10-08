@@ -2,7 +2,7 @@
 @import "elements/variables";
 
 /* ------------------------- IMPORT 3RD PARTY VENDORS ---------------------- */
-@import "node_modules/bootstrap/scss/bootstrap";
+@import "node_modules/bootstrap/scss/bootstrap.scss";
 @import "node_modules/bourbon/app/assets/stylesheets/bourbon";
 
 /* ------------------------- IMPORT CUSTOM SCSS ---------------------------- */
@@ -13,20 +13,23 @@
 @import 'elements/forms';
 @import 'elements/buttons';
 @import 'elements/modals';
+@import 'elements/accessibility';
 
 // component-specific
-@import 'components/Navbar';
-@import 'components/Builder';
-@import 'components/Element';
-@import 'components/Artifact';
-@import 'components/ConjunctionGroup';
-@import 'components/ElementSelect';
-@import 'components/Recommendation';
-@import 'components/Subpopulations';
-@import 'components/Parameters';
-@import 'components/RepoUploadModal';
-@import 'components/Landing';
 @import 'components/Header';
+@import 'components/Navbar';
+@import 'components/Landing';
+@import 'components/builder/Builder';
+@import 'components/builder/Element';
+@import 'components/artifact/Artifact';
+@import 'components/builder/ConjunctionGroup';
+@import 'components/builder/ElementSelect';
+@import 'components/builder/Recommendation';
+@import 'components/builder/Subpopulations';
+@import 'components/builder/Parameters';
+@import 'components/builder/RepoUploadModal';
+@import 'components/auth/Login';
+@import 'components/auth/Logout';
 
 // vendors
 @import "vendors/bootstrap";

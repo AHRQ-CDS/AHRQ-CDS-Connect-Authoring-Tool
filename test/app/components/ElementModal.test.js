@@ -1,9 +1,9 @@
 import _ from 'lodash';
 import Modal from 'react-modal';
-import ElementModal from '../components/builder/ElementModal';
-import { filterUnsuppressed } from '../helpers/utils';
-import { fullRenderComponent, ReactWrapper } from '../helpers/test_helpers';
-import { elementGroups } from '../helpers/test_fixtures';
+import ElementModal from '../../../src/components/builder/ElementModal';
+import { filterUnsuppressed } from '../../../src/helpers/utils';
+import { fullRenderComponent, ReactWrapper } from '../../test_helpers';
+import { elementGroups } from '../../test_fixtures';
 
 let component;
 let input;

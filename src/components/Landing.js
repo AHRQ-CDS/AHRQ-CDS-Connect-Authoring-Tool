@@ -2,7 +2,7 @@ import React from 'react';
 import { NavLink } from 'react-router-dom';
 
 export default () => (
-  <div className="landing">
+  <div className="landing" id="maincontent">
     <h2>Welcome to the Clinical Decision Support Authoring Tool</h2>
 
     <p>

@@ -1,5 +1,5 @@
-import ErrorStatement from '../components/builder/ErrorStatement';
-import { fullRenderComponent } from '../helpers/test_helpers';
+import ErrorStatement from '../../../src/components/builder/ErrorStatement';
+import { fullRenderComponent } from '../../test_helpers';
 
 const updateParentStateMock = jest.fn();
 

@@ -1,5 +1,5 @@
-import NotFoundPage from '../components/NotFoundPage';
-import { shallowRenderComponent } from '../helpers/test_helpers';
+import NotFoundPage from '../../../src/components/NotFoundPage';
+import { shallowRenderComponent } from '../../test_helpers';
 
 test('App renders without crashing', () => {
   const component = shallowRenderComponent(NotFoundPage, {

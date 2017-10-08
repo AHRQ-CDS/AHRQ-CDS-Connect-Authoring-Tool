@@ -1,0 +1,47 @@
+// ------------------------- LOGIN ----------------------------------------- //
+.login {
+  width: 100%;
+  margin: 0;
+  padding: 20px 40px;
+  justify-content: flex-end;
+
+  input,
+  &__button {
+    margin: 0 10px;
+  }
+
+  input {
+    border: none;
+  }
+
+  &__button,
+  &__button:focus {
+    max-width: 100px;
+    border: 1px solid $white;
+    background-color: inherit;
+    color: $white;
+  }
+
+  &__inputs {
+    position: absolute;
+    display: inherit;
+    right: 160px;
+
+    &-reset,
+    &-reset:hover,
+    &-reset:focus,
+    &-reset:visited {
+      border: none;
+      outline: none;
+      background-color: inherit;
+      color: $white;
+    }
+  }
+
+  &__auth-status {
+    position: absolute;
+    top: 32px;
+    left: 10px;
+    color: $red;
+  }
+}
