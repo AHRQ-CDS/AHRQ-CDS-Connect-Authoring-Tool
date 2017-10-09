@@ -9,7 +9,9 @@ export default class Login extends Component {
     this.state = { showLogin: false };
   }
 
-  handleClick(event) {
+  login = (event) => {
+    event.preventDefault();
+
     if (this.state.showLogin === false) { // slide out login
       this.toggleShowLogin();
     } else { // submit login
@@ -46,7 +48,7 @@ export default class Login extends Component {
         <input type='text' ref='username' className="form-control col" placeholder='username'/>
         <input type='password' ref='password' className="form-control col" placeholder='password'/>
 
-        <button className="login__inputs-reset" onClick={this.toggleShowLogin}>
+        <button type="button" className="login__inputs-reset" onClick={this.toggleShowLogin}>
           <FontAwesome name="angle-double-right" />
         </button>
 
@@ -57,13 +59,13 @@ export default class Login extends Component {
 
   render() {
     return (
-      <div className="login row">
+      <form className="login row" onSubmit={this.login}>
         {this.renderedLoginInputs()}
 
-        <button onClick={event => this.handleClick(event)} className="btn btn-primary login__button col">
+        <button type="submit" className="btn btn-primary login__button col">
           Login
         </button>
-      </div>
+      </form>
     );
   }
 }

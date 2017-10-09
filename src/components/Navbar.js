@@ -1,20 +1,10 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { NavLink } from 'react-router-dom';
-import Login from './auth/Login';
-import Logout from './auth/Logout';
 
 export default class Navbar extends Component {
   renderedNavbar = () => {
-    const {
-      isAuthenticated,
-      authUser,
-      authStatus,
-      authStatusText,
-      loginUser,
-      logoutUser,
-      setAuthStatus
-    } = this.props;
+    const { isAuthenticated } = this.props;
 
     if (isAuthenticated) {
       return (
@@ -26,23 +16,11 @@ export default class Navbar extends Component {
             <li><NavLink to="/artifacts">Artifacts</NavLink></li>
             <li><NavLink to="/build">Workspace</NavLink></li>
           </ul>
-
-          <Logout
-            onLogoutClick={logoutUser}
-            authUser={authUser}
-            authStatus={authStatus}
-            authStatusText={authStatusText} />
         </nav>
       );
     }
 
-    return (
-      <Login
-        onLoginClick={loginUser}
-        authStatus={authStatus}
-        authStatusText={authStatusText}
-        setAuthStatus={setAuthStatus} />
-    );
+    return null;
   }
 
   render() {
@@ -55,11 +33,5 @@ export default class Navbar extends Component {
 }
 
 Navbar.propTypes = {
-  isAuthenticated: PropTypes.bool.isRequired,
-  authUser: PropTypes.string,
-  authStatus: PropTypes.string,
-  authStatusText: PropTypes.string,
-  loginUser: PropTypes.func.isRequired,
-  logoutUser: PropTypes.func.isRequired,
-  setAuthStatus: PropTypes.func.isRequired
+  isAuthenticated: PropTypes.bool.isRequired
 };

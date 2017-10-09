@@ -8,6 +8,7 @@ import { setErrorMessage } from '../actions/errors';
 
 import Header from '../components/Header';
 import Navbar from '../components/Navbar';
+import Footer from '../components/Footer';
 
 class App extends Component {
   handleDismissClick = (e) => {
@@ -33,8 +34,8 @@ class App extends Component {
     return (
       <div className="app">
         <a className="skiplink" href="#maincontent">Skip to main content</a>
-        <Header />
-        <Navbar
+
+        <Header
           isAuthenticated={isAuthenticated}
           authUser={authUser}
           authStatus={authStatus}
@@ -42,8 +43,13 @@ class App extends Component {
           loginUser={this.props.loginUser}
           logoutUser={this.props.logoutUser}
           setAuthStatus={this.props.setAuthStatus} />
+
+        <Navbar isAuthenticated={isAuthenticated} />
+
         {this.renderedErrorMessage()}
         {children}
+
+        <Footer />
       </div>
     );
   }

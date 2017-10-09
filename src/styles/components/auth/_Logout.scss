@@ -1,4 +1,39 @@
 // ------------------------- LOGOUT ---------------------------------------- //
 .logout {
+  display: flex;
+  justify-content: flex-end;
+  margin: 0;
 
+  &__button,
+  &__button:focus {
+    width: 100px;
+    border: 1px solid $white;
+    background-color: inherit;
+    color: $white;
+  }
+
+  &__authname {
+    color: $white;
+
+    button {
+      box-shadow: none;
+    }
+
+    .btn-secondary.dropdown-toggle {
+      color: $white;
+      background-color: inherit;
+      border: none;
+
+      &:hover {
+        background-color: $primary-button-hover-color;
+      }
+    }
+
+    .btn-secondary.dropdown-toggle:active,
+    .btn-secondary.dropdown-toggle:focus {
+      background-color: $navbar-link-active-color;
+      border: 0;
+      box-shadow: none;
+    }
+  }
 }

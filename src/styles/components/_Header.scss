@@ -110,20 +110,24 @@
   //------------------------ CDS Banner -------------------------------------//
   &__cdsbanner {
     background: $ahrq-color-dark-gradient;
-    padding: 25px $global-padding 10px $global-padding;
+    padding: 25px $global-padding;
 
-    a {
-      color: $white;
+    &-text {
+      white-space: nowrap;
 
-      .text-top {
-        font-size: 16px;
-        text-transform: uppercase;
-        letter-spacing: 1px;
-      }
+      a {
+        color: $white;
 
-      .text-bottom {
-        font-size: 38px;
-        font-weight: bold;
+        .text-top {
+          font-size: 16px;
+          text-transform: uppercase;
+          letter-spacing: 1px;
+        }
+
+        .text-bottom {
+          font-size: 38px;
+          font-weight: bold;
+        }
       }
     }
   }

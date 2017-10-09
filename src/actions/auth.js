@@ -61,16 +61,21 @@ function loginFailure(error) {
   };
 }
 
+function sendLoginRequest(username, password) {
+  return new Promise((resolve, reject) => {
+    axios.post(`${API_BASE}/auth/login`, { username, password })
+      .then(result => resolve(result.data))
+      .catch(error => reject(error));
+  });
+}
+
 export function loginUser(username, password) {
   return (dispatch) => {
     dispatch(requestLogin());
 
-    return new Promise((resolve, reject) => {
-      axios.post(`${API_BASE}/auth/login`, { username, password })
-        .then(result => resolve(result.data))
-        .then(data => dispatch(loginSuccess(data.username)))
-        .catch(error => dispatch(loginFailure(error)));
-    });
+    return sendLoginRequest(username, password)
+      .then(data => dispatch(loginSuccess(data.uid)))
+      .catch(error => dispatch(loginFailure(error)));
   };
 }
 
