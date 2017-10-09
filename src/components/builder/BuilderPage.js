@@ -188,8 +188,8 @@ class BuilderPage extends Component {
   }
 
   // Prepares the artifact for saving/cql download
-  prepareArtifact() {
-    return {
+  prepareArtifact = () => (
+    {
       name: this.state.name,
       expTreeInclude: this.state.expTreeInclude,
       expTreeExclude: this.state.expTreeExclude,
@@ -199,8 +199,8 @@ class BuilderPage extends Component {
       errorStatement: this.state.errorStatement,
       uniqueIdCounter: this.state.uniqueIdCounter,
       version: this.state.version
-    };
-  }
+    }
+  )
 
   // Downloads the cql by making an API call and passing artifact
   downloadCQL = () => {
@@ -548,7 +548,7 @@ class BuilderPage extends Component {
           <RepoUploadModal
             showModal={this.state.showPublishModal}
             closeModal={this.togglePublishModal}
-            prepareArtifact={this.prepareArtifact.bind(this)}
+            prepareArtifact={this.prepareArtifact}
             version={this.state.version}/>
         </div>
         <div className="edit__modal">

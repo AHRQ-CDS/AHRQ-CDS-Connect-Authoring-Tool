@@ -27,37 +27,30 @@ class RepoUploadModal extends Component {
       artifactNID: null,
       uploadStatus: null
     };
-
-    this.closeModal = this.closeModal.bind(this);
-    this.updateUserName = this.updateUserName.bind(this);
-    this.updatePassword = this.updatePassword.bind(this);
-    this.fetchArtifacts = this.fetchArtifacts.bind(this);
-    this.authenticate = this.authenticate.bind(this);
-    this.uploadArtifact = this.uploadArtifact.bind(this);
   }
 
   openModal() {
     this.setState({ showModal: true });
   }
 
-  closeModal() {
+  closeModal = () => {
     this.setState({ showModal: false, page: AUTHENTICATE, authToken: null });
     this.props.closeModal();
   }
 
   // This function needs to invalidate the authToken state
   // in the case of changing anything we don't know if it's valid.
-  updateUserName(name) {
+  updateUserName = (name) => {
     this.setState({ page: AUTHENTICATE, authToken: null, userName: name });
   }
 
   // This function needs to invalidate the authToken state
   // in the case of changing anything we don't know if it's valid.
-  updatePassword(password) {
+  updatePassword = (password) => {
     this.setState({ page: AUTHENTICATE, authToken: null, password });
   }
 
-  authenticate() {
+  authenticate = () => {
     // let auth = {username: this.state.userName, password: this.state.password};
     get(`${Config.repo.baseUrl}/rest/session/token`).then((res) => {
       this.setState({ authToken: res.data });
@@ -67,13 +60,13 @@ class RepoUploadModal extends Component {
     });
   }
 
-  fetchArtifacts() {
+  fetchArtifacts = () => {
     get('/api/repository/artifacts').then((res) => {
       this.setState({ artifacts: res.data, page: LIST });
     });
   }
 
-  uploadArtifact(nid) {
+  uploadArtifact = (nid) => {
     const artifact = this.props.prepareArtifact();
     const auth = { username: this.state.userName, password: this.state.password };
     const closeModal = this.closeModal;

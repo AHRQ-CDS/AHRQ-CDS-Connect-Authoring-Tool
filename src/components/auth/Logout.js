@@ -4,12 +4,7 @@ import PropTypes from 'prop-types';
 import { logout } from '../../lib/auth';
 
 class Logout extends Component {
-  constructor(props) {
-    super(props);
-    this.logout = this.logout.bind(this);
-  }
-
-  logout(e) {
+  logout = (e) => {
     logout()
       .then(() => {
         this.props.onAuthChange();

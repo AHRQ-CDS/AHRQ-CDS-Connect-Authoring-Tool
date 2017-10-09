@@ -10,11 +10,10 @@ class Artifact extends Component {
   constructor(props) {
     super(props);
     this.state = { data: [] };
-    this.loadArtifacts = this.loadArtifacts.bind(this);
     this.loadArtifacts();
   }
 
-  loadArtifacts() {
+  loadArtifacts = () => {
     axios.get(`${API_BASE}/artifacts`).then((response) => {
       this.setState({ data: response.data });
     });

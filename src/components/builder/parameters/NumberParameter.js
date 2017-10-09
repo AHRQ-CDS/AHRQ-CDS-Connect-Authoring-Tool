@@ -8,11 +8,9 @@ class NumberParameter extends Component {
   constructor(props) {
     super(props);
     this.state = { checked: this.props.param.exclusive };
-
-    this.updateExclusive = this.updateExclusive.bind(this);
   }
 
-  updateExclusive(event) {
+  updateExclusive = (event) => {
     this.props.param.exclusive = event.target.checked;
     this.setState({ checked: event.target.checked });
   }
