@@ -4,10 +4,6 @@ import PropTypes from 'prop-types';
 import { logout } from '../../lib/auth';
 
 class Logout extends Component {
-  constructor(props) {
-    super(props);
-  }
-
   logout = (e) => {
     logout()
       .then(() => {

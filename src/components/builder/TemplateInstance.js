@@ -117,12 +117,12 @@ class TemplateInstance extends Component {
     return otherInstances;
   }
 
-  notThisInstance = (instance) => {
+  notThisInstance = instance => (
     // Look up by uniqueId to correctly identify the current instance
     // For example, "and" elements have access to all other "and" elements besides itself
     // They have different uniqueId's but the id's of all "and" elements is "And"
-    return this.props.templateInstance.uniqueId !== instance.uniqueId;
-  }
+    this.props.templateInstance.uniqueId !== instance.uniqueId
+  )
 
   updateInstance = (newState) => {
     this.setState(newState);
@@ -319,7 +319,7 @@ class TemplateInstance extends Component {
     }
   }
 
-  showPresets(id) {
+  showPresets = (id) => {
     this.setState({ showPresets: !this.state.showPresets });
     this.props.showPresets(id)
       .then((result) => {
@@ -340,7 +340,7 @@ class TemplateInstance extends Component {
     this.setState({ showPresets: !this.state.showPresets });
   }
 
-  showHideElementBody() {
+  showHideElementBody = () => {
     this.setState({ showElement: !this.state.showElement });
   }
 
@@ -375,7 +375,7 @@ class TemplateInstance extends Component {
             <button
               id={`presets-${this.props.templateInstance.uniqueId}`}
               aria-controls={`presets-list-${this.props.templateInstance.uniqueId}`}
-              onClick={this.showPresets.bind(this, this.props.templateInstance.id)}
+              onClick={() => this.showPresets(this.props.templateInstance.id)}
               className="element__presetbutton"
               aria-label={`show presets ${this.props.templateInstance.id}`}>
               <FontAwesome fixedWidth name='database'/>
@@ -387,7 +387,7 @@ class TemplateInstance extends Component {
               <FontAwesome fixedWidth name='save'/>
             </button>
             <button
-              onClick={this.showHideElementBody.bind(this)}
+              onClick={this.showHideElementBody}
               className="element__hidebutton"
               aria-label={`hide ${this.props.templateInstance.name}`}>
               <FontAwesome fixedWidth name={this.state.showElement ? 'angle-double-down' : 'angle-double-right'}/>

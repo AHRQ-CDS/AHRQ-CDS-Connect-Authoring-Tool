@@ -145,8 +145,7 @@ class ArtifactTable extends Component {
     );
   }
 
-  renderTableRow = (artifact) => {
-    return (
+  renderTableRow = artifact => (
       <tr key={artifact._id}>
         <td className="artifacts__tablecell-wide"
           data-th="Artifact Name">
@@ -172,7 +171,6 @@ class ArtifactTable extends Component {
         </td>
       </tr>
     );
-  }
 
   render() {
     return (

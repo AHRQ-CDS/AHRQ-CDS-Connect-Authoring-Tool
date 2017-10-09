@@ -94,7 +94,7 @@ class ElementModal extends Component {
             key={ `${cat.name}-${i}` }
             className={ `transparent-button${cat.name === this.props.selectedCategory.name ? ' selected' : ''}` }
             onClick={ () => this.handleCategorySelected(cat) }
-            onKeyDown={ this.enterKeyCheck.bind(this, this.handleCategorySelected, cat) }>
+            onKeyDown={ e => this.enterKeyCheck(this.handleCategorySelected, cat, e) }>
               { cat.name }
           </button>
         ) }
@@ -108,7 +108,7 @@ class ElementModal extends Component {
             key={ `${elem.name}-${i}` }
             className="transparent-button element-select__option"
             onClick={ () => this.handleElementSelected(elem) }
-            onKeyDown={ this.enterKeyCheck.bind(this, this.handleElementSelected, elem) }>
+            onKeyDown={ e => this.enterKeyCheck(this.handleElementSelected, elem, e) }>
               <div className="button-style"><FontAwesome className='fa-fw fa-plus' name='plus' /></div>
               { elem.name }
               { elem.category && <span className="element-select__option-category">({ elem.category })</span> }
@@ -125,7 +125,7 @@ class ElementModal extends Component {
         <button
            className="transparent-button link-style"
            onClick={ this.openModal }
-           onKeyDown={ this.enterKeyCheck.bind(this, this.openModal, null) }>
+           onKeyDown={ e => this.enterKeyCheck(this.openModal, null, e) }>
            Browse
         </button>
         <Modal
@@ -156,7 +156,7 @@ class ElementModal extends Component {
             <footer className="modal__footer">
               <button className="primary-button"
                       onClick={ this.closeModal }
-                      onKeyDown={ this.enterKeyCheck.bind(this, this.closeModal, null) }>
+                      onKeyDown={ e => this.enterKeyCheck(this.closeModal, null, e) }>
                       Close
               </button>
             </footer>
