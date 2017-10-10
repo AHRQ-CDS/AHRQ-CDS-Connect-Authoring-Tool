@@ -124,6 +124,21 @@
           white-space: nowrap;
         }
       }
+
+      .at-icon-wrapper {
+        line-height: 32px;
+        height: 32px;
+        width: 32px;
+        &.facebook { background-color: rgb(59, 89, 152); }
+        &.twitter { background-color: rgb(29, 161, 242); }
+        &.youtube { background-color: rgb(205, 32, 31); }
+        &.linkedin { background-color: rgb(0, 119, 181); }
+      }
+
+      .at-icon {
+        width: 32px;
+        height: 32px;
+      }
     }
   }
 }

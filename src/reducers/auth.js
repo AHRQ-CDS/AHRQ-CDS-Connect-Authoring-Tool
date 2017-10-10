@@ -11,11 +11,17 @@ export default function auth(state = {
   username: null,
   authStatus: null,
   authStatusText: '' }, action) {
+  const isAuthenticated = action.username != null;
+
   switch (action.type) {
     case USER_REQUEST:
       return Object.assign({}, state, { isAuthenticating: true });
     case USER_RECEIVED:
-      return Object.assign({}, state, { isAuthenticating: false, username: action.username });
+      return Object.assign({}, state, {
+        isAuthenticating: false,
+        isAuthenticated,
+        username: action.username
+      });
     case LOGIN_REQUEST:
       return Object.assign({}, state, { isAuthenticating: true, authStatus: null });
     case LOGIN_SUCCESS:

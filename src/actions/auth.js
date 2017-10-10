@@ -21,20 +21,26 @@ function requestUser() {
 
 function userReceived(username) {
   return {
-    type: USER_RECEIVED
+    type: USER_RECEIVED,
+    username
   };
+}
+
+function sendUserRequest() {
+  return new Promise((resolve, reject) => {
+    axios.get(`${API_BASE}/auth/user`)
+      .then(result => resolve(result.data))
+      .catch(error => reject(error));
+  });
 }
 
 export function getCurrentUser() {
   return (dispatch) => {
     dispatch(requestUser());
 
-    return new Promise((resolve, reject) => {
-      axios.get(`${API_BASE}/auth/user`)
-        .then(result => resolve(result.data))
-        .then(data => dispatch(userReceived(data.username)))
-        .catch(() => dispatch(userReceived(null)));
-    });
+    sendUserRequest()
+      .then(data => dispatch(userReceived(data.uid)))
+      .catch(() => dispatch(userReceived(null)));
   };
 }
 

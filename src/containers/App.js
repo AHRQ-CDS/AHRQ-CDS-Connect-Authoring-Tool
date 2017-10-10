@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 
-import { loginUser, logoutUser, setAuthStatus } from '../actions/auth';
+import { loginUser, logoutUser, setAuthStatus, getCurrentUser } from '../actions/auth';
 import { setErrorMessage } from '../actions/errors';
 
 import Header from '../components/Header';
@@ -11,6 +11,10 @@ import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 
 class App extends Component {
+  componentWillMount() {
+    this.props.getCurrentUser();
+  }
+
   handleDismissClick = (e) => {
     this.props.setErrorMessage('');
     e.preventDefault();
@@ -60,6 +64,7 @@ App.propTypes = {
   authUser: PropTypes.string,
   authStatus: PropTypes.string,
   authStatusText: PropTypes.string,
+  getCurrentUser: PropTypes.func.isRequired,
   loginUser: PropTypes.func.isRequired,
   logoutUser: PropTypes.func.isRequired,
   setAuthStatus: PropTypes.func.isRequired
@@ -68,6 +73,7 @@ App.propTypes = {
 // these props are used for dispatching actions
 function mapDispatchToProps(dispatch) {
   return bindActionCreators({
+    getCurrentUser,
     loginUser,
     logoutUser,
     setAuthStatus,
