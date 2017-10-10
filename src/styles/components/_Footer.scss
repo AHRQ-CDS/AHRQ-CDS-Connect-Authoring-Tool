@@ -8,7 +8,7 @@
 
   nav {
     flex-direction: column;
-    padding: 10px $global-padding;
+    padding: $global-padding;
 
     ul {
       padding: 0;
@@ -75,7 +75,7 @@
   &__sitelinks {
     background-color: $ahrq-color-background-light;
     border-top: 1px solid $white;
-    padding: 20px $global-padding;
+    padding: $global-padding;
     font-family: Arial, sans-serif;
     font-size: 13.44px;
 

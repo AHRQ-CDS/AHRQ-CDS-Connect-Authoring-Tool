@@ -8,7 +8,9 @@
 
   //------------------------ HHS Banner -------------------------------------//
   &__hhsbanner {
-    padding: 10px $global-padding;
+    padding: $global-padding;
+    padding-bottom: 5px;
+    padding-top: 5px;
     background: $ahrq-color-background-light-gradient;
     @include respond-to('mobile') { padding: 10px; }
   }
@@ -28,7 +30,7 @@
   //------------------------ AHRQ Banner ------------------------------------//
   &__ahrqbanner {
     background-color: $white;
-    padding: 0 $global-padding 5px $global-padding;
+    padding: 5px 60px;
     img { max-width: 100%; }
 
     @include respond-to('mobile') {
@@ -110,7 +112,7 @@
   //------------------------ CDS Banner -------------------------------------//
   &__cdsbanner {
     background: $ahrq-color-dark-gradient;
-    padding: 25px $global-padding;
+    padding: $global-padding;
 
     &-text {
       white-space: nowrap;

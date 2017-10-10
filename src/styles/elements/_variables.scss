@@ -68,7 +68,7 @@ $border-width: 0.1em;
 $border-global: $border-width solid $border-color;
 
 //-------------------------- Spacing ----------------------------------------//
-$global-padding: 60px;
+$global-padding: 20px 60px;
 
 //-------------------------- Box Shadows ------------------------------------//
 $box-shadow: 1px 1px 1px 0 fade-out($black, 0.9);
