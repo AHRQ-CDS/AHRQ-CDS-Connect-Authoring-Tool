@@ -55,6 +55,13 @@ $navbar-bg-color: #1e2f40;
 $navbar-link-color: $white;
 $navbar-link-active-color: #4A5968;
 
+// footer colors
+$footer-background: #006aaa;
+$footer-background-medium: #0079c1;
+$footer-background-light: #1986c7;
+$footer-background-gradient-1: linear-gradient(to bottom, $footer-background 0%, $footer-background-medium 3%, $footer-background-light 100%);
+$footer-links: #6C1F7E;
+
 //-------------------------- Borders ----------------------------------------//
 $border-radius: 0.2em;
 $border-width: 0.1em;

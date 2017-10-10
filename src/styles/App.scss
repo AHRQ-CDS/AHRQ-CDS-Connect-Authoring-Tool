@@ -34,3 +34,75 @@
 
 // vendors
 @import "vendors/bootstrap";
+@import "vendors/addthis";
+
+/* ------------------------- FONTS ----------------------------------------- */
+@font-face {
+  font-family: 'Code-Pro';
+  src: url("~/assets/fonts/233341_0_0.eot");
+  src: url("~/assets/fonts/233341_0_0.eot?#iefix") format("embedded-opentype"),
+  url("~/assets/fonts/233341_0_0.woff") format("woff"),
+  url("~/assets/fonts/233341_0_0.ttf") format("truetype");
+}
+
+@font-face {
+  font-family: 'Code-Pro-LC';
+  src: url("~/assets/fonts/235257_0_0.eot");
+  src: url("~/assets/fonts/235257_0_0.eot?#iefix") format("embedded-opentype"),
+  url("~/assets/fonts/235257_0_0.woff") format("woff"),
+  url("~/assets/fonts/235257_0_0.ttf") format("truetype");
+}
+
+@font-face {
+  font-family: 'CartoGothicStdBook';
+  src: url("~/assets/fonts/CartoGothicStd-Book-webfont.eot");
+  src: url("~/assets/fonts/CartoGothicStd-Book-webfont.eot?#iefix") format("embedded-opentype"),
+  url("~/assets/fonts/CartoGothicStd-Book-webfont.woff") format("woff"),
+  url("~/assets/fonts/CartoGothicStd-Book-webfont.ttf") format("truetype"),
+  url("~/assets/fonts/CartoGothicStd-Book-webfont.svg#CartoGothicStdBook") format("svg");
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'CartoGothicStdItalic';
+  src: url("~/assets/fonts/CartoGothicStd-Italic-webfont.eot");
+  src: url("~/assets/fonts/CartoGothicStd-Italic-webfont.eot?#iefix") format("embedded-opentype"),
+  url("~/assets/fonts/CartoGothicStd-Italic-webfont.woff") format("woff"),
+  url("~/assets/fonts/CartoGothicStd-Italic-webfont.ttf") format("truetype"),
+  url("~/assets/fonts/CartoGothicStd-Italic-webfont.svg#CartoGothicStdItalic") format("svg");
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'CartoGothicStdBold';
+  src: url("~/assets/fonts/CartoGothicStd-Bold-webfont.eot");
+  src: url("~/assets/fonts/CartoGothicStd-Bold-webfont.eot?#iefix") format("embedded-opentype"),
+  url("~/assets/fonts/CartoGothicStd-Bold-webfont.woff") format("woff"),
+  url("~/assets/fonts/CartoGothicStd-Bold-webfont.ttf") format("truetype"),
+  url("~/assets/fonts/CartoGothicStd-Bold-webfont.svg#CartoGothicStdBold") format("svg");
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'CartoGothicStdBoldItalic';
+  src: url("~/assets/fonts/CartoGothicStd-BoldItalic-webfont.eot");
+  src: url("~/assets/fonts/CartoGothicStd-BoldItalic-webfont.eot?#iefix") format("embedded-opentype"),
+  url("~/assets/fonts/CartoGothicStd-BoldItalic-webfont.woff") format("woff"),
+  url("~/assets/fonts/CartoGothicStd-BoldItalic-webfont.ttf") format("truetype"),
+  url("~/assets/fonts/CartoGothicStd-BoldItalic-webfont.svg#CartoGothicStdBoldItalic") format("svg");
+  font-weight: normal;
+  font-style: normal;
+}
+
+/* ------------------------- APP-WIDE STYLES ------------------------------- */
+.visually-hidden {
+  position: absolute !important;
+  clip: rect(1px, 1px, 1px, 1px);
+  overflow: hidden;
+  height: 1px;
+  width: 1px;
+  word-wrap: normal;
+}
