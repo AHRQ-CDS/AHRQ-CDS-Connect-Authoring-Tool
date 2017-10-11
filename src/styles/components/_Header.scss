@@ -1,0 +1,136 @@
+.header {
+  margin: 0;
+  padding: 0;
+  font-size: 14px;
+  font-family: Arial, "Helvetica Neue", Helvetica, sans-serif;
+  -webkit-font-smoothing: auto;
+  a { text-decoration: none; }
+
+  //------------------------ HHS Banner -------------------------------------//
+  &__hhsbanner {
+    padding: $global-padding;
+    padding-bottom: 5px;
+    padding-top: 5px;
+    background: $ahrq-color-background-light-gradient;
+    @include respond-to('mobile') { padding: 10px; }
+  }
+
+  &__hhsbannerlink {
+    white-space: nowrap;
+    img { vertical-align: middle; }
+    @include respond-to('mobile') { text-align: center; }
+  }
+
+  &__hhstext {
+    color: $ahrq-color-text;
+    padding-left: 10px;
+    white-space: nowrap;
+  }
+
+  //------------------------ AHRQ Banner ------------------------------------//
+  &__ahrqbanner {
+    background-color: $white;
+    padding: 5px 60px;
+    img { max-width: 100%; }
+
+    @include respond-to('mobile') {
+      text-align: center;
+      padding: 5px 10px;
+    }
+  }
+
+  //------------------------ Links ------------------------------------------//
+  &__links {
+    max-width: 100%;
+    white-space: nowrap;
+    text-align: right;
+    padding-left: 40px;
+    img { vertical-align: middle; }
+    @include respond-to('tablet') { text-align: left; }
+
+    @include respond-to('mobile') {
+      padding: 0;
+      text-align: center;
+    }
+
+    span {
+      padding: 0 10px;
+      @include respond-to('mobile') { padding: 5px; }
+    }
+
+    a {
+      color: $ahrq-color-purple;
+      @include respond-to('500px') { font-size: 0.8em; }
+    }
+  }
+
+  //------------------------ Header Stripe ----------------------------------//
+  &__stripe-container { display: block; }
+
+  &__stripe {
+    width: 20.5%;
+    position: relative;
+    overflow: hidden;
+    height: 15px;
+    float: left;
+
+    &:before {
+      content: '';
+      position: absolute;
+      left: 51%;
+      width: 100%;
+      height: 200%;
+      top: 0;
+      transform: rotate(150deg);
+    }
+
+    &--purple {
+      background-color: $ahrq-color-purple;
+      &:before { background-color: $ahrq-color-light-blue; }
+    }
+
+    &--light-blue {
+      background-color: $ahrq-color-light-blue;
+      &:before { background-color: $ahrq-color-orange; }
+    }
+
+    &--orange {
+      background-color: $ahrq-color-orange;
+      &:before { background-color: $ahrq-color-green; }
+    }
+
+    &--green {
+      background-color: $ahrq-color-green;
+      &:before { background-color: $ahrq-color-dark-blue; }
+    }
+    &--dark-blue {
+      background-color: $ahrq-color-dark-blue;
+      width: 18%;
+    }
+  }
+
+  //------------------------ CDS Banner -------------------------------------//
+  &__cdsbanner {
+    background: $ahrq-color-dark-gradient;
+    padding: $global-padding;
+
+    &-text {
+      white-space: nowrap;
+
+      a {
+        color: $white;
+
+        .text-top {
+          font-size: 16px;
+          text-transform: uppercase;
+          letter-spacing: 1px;
+        }
+
+        .text-bottom {
+          font-size: 38px;
+          font-weight: bold;
+        }
+      }
+    }
+  }
+}

@@ -1,4 +1,5 @@
-import React, { Component, PropTypes } from 'react';
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import axios from 'axios';
 import FileSaver from 'file-saver';
@@ -543,7 +544,7 @@ class BuilderPage extends Component {
   render() {
     const namedBooleanParameters = _.filter(this.state.booleanParameters, p => (!_.isNull(p.name) && p.name.length));
     return (
-      <div className="builder">
+      <div className="builder" id="maincontent">
         <div className="upload__modal">
           <RepoUploadModal
             showModal={this.state.showPublishModal}

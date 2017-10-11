@@ -1,0 +1,148 @@
+//-------------------------- Colors -----------------------------------------//
+// accessible foreground/background combinations include:
+//   - $black on $gray-light, $gray-lighter, $white
+//   - $white on $black, $gray-dark, $gray, $blue-dark, $blue
+$white: #fff;
+$black: #151515;
+$gray-lightest: #f8f8f8;
+$gray-lighter: #ececec;
+$gray-light: #aeb0b5;
+$gray: #5b616b;
+$gray-dark: #323a45;
+$blue: #102537;
+$blue-dark: #08101c;
+$blue-darkest: #071119;
+$blue-link: #004198;
+$red: #e31c3d;
+$green: #41C682;
+
+// ahrq colors
+$ahrq-color-background-light-gradient: -webkit-linear-gradient(top, #d1d1d1 0%, #ffffff 100%);
+$ahrq-color-dark-gradient: linear-gradient(#324a64, #1e2f40);
+$ahrq-color-background-light: #E9E9E9;
+$ahrq-color-text: #4D4D4D;
+$ahrq-color-purple: #6D1A7F;
+$ahrq-color-light-blue: #4EDEEB;
+$ahrq-color-orange: #FFAF5A;
+$ahrq-color-green: #4BEF6D;
+$ahrq-color-dark-blue: #6693EE;
+
+// brand colors
+$brand-primary: $blue;
+$brand-success: $green;
+$brand-danger: $red;
+
+// border colors
+$border-color: darken($gray-lighter, 10%);
+
+// background colors
+$body-bg: $blue-dark;
+
+// button colors
+$default-button-text-color: $black;
+$default-button-bg-color: $gray-lightest;
+$primary-button-text-color: $white;
+$primary-button-bg-color: $blue;
+$primary-button-hover-color: $blue-darkest;
+
+// form colors
+$form-input-placeholder-color: $gray;
+$form-validation-success-color: shade($blue, 60%);
+$form-validation-error-color: darken($red, 20%);
+
+// nav colors
+$navbar-bg-color: #1e2f40;
+$navbar-link-color: $white;
+$navbar-link-active-color: #4A5968;
+
+// footer colors
+$footer-background: #006aaa;
+$footer-background-medium: #0079c1;
+$footer-background-light: #1986c7;
+$footer-background-gradient-1: linear-gradient(to bottom, $footer-background 0%, $footer-background-medium 3%, $footer-background-light 100%);
+$footer-links: #6C1F7E;
+
+//-------------------------- Borders ----------------------------------------//
+$border-radius: 0.2em;
+$border-width: 0.1em;
+$border-global: $border-width solid $border-color;
+
+//-------------------------- Spacing ----------------------------------------//
+$global-padding: 20px 60px;
+
+//-------------------------- Box Shadows ------------------------------------//
+$box-shadow: 1px 1px 1px 0 fade-out($black, 0.9);
+$box-shadow-inset: inset 0 1px 2px 0 fade-out($black, 0.9);
+
+//-------------------------- Fonts ------------------------------------------//
+$font-weight-regular: 400;
+$font-weight-bold: 500;
+
+// ------------------------- PATHS ----------------------------------------- //
+$icon-font-path: '/assets/bootstrap/';
+$fa-font-path: '/assets/fontawesome';
+
+// ------------------------- BOOTSTRAP VARIABLES --------------------------- //
+$navbar-height: 80px;
+$panel-border-radius: 0px;
+$border-radius-large: 0px;
+$headings-font-weight: 200;
+
+$screen-xs: 480px;
+$screen-sm: 768px;
+$screen-md: 949px;
+$screen-lg: 1200px;
+
+$container-sm: $screen-sm;
+$container-md: $screen-md;
+$container-lg: $screen-lg;
+
+$grid-float-breakpoint: $screen-md;
+$grid-gutter-width: 30px;
+$container-tablet: $screen-sm + $grid-gutter-width;
+$container-desktop: $screen-md + $grid-gutter-width;
+$container-large-desktop: $screen-lg + $grid-gutter-width;
+
+//------------------------ Media Queries ------------------------------------//
+
+$break-mobile: $screen-sm - 1;  // mobile and tablet-portrait
+$break-tablet: $screen-md - 1;  // tablet-landscape
+$break-desktop: $screen-lg - 1; // desktop-regular (> desktop-wide)
+
+@mixin respond-to($media) {
+  @if $media == mobile {
+    @media only screen and (max-width: $break-mobile) {
+      @content;
+    }
+  }
+  @else if $media == tablet {
+    @media only screen and (min-width: $break-mobile + 1) and (max-width: $break-tablet) {
+      @content;
+    }
+  }
+  @else if $media == desktop {
+    @media only screen and (min-width: $break-tablet + 1) and (max-width: $break-desktop) {
+      @content;
+    }
+  }
+  @else if $media == desktop-wide {
+    @media only screen and (min-width: $break-desktop + 1) {
+      @content;
+    }
+  }
+  @else if $media == handheld {
+    @media only screen and (max-width: $break-tablet) {
+      @content;
+    }
+  }
+  @else if $media == non-handheld {
+    @media only screen and (min-width: $break-tablet +1) {
+      @content;
+    }
+  }
+  @else {
+    @media only screen and (max-width: $media) {
+      @content;
+    }
+  }
+}

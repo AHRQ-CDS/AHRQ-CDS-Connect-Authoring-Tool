@@ -1,48 +1,37 @@
 import React, { Component } from 'react';
-import { Link, NavLink } from 'react-router-dom';
-import { AUTHENTICATED, UNAUTHENTICATED, CHECKING_AUTHENTICATION, getCurrentUser } from '../lib/auth';
-import Authentication from './auth/Authentication';
+import PropTypes from 'prop-types';
+import { NavLink } from 'react-router-dom';
 
-class Navbar extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      username: '',
-      status: CHECKING_AUTHENTICATION
-    };
+export default class Navbar extends Component {
+  renderedNavbar = () => {
+    const { isAuthenticated } = this.props;
 
-    this.updateAuth();
-  }
+    if (isAuthenticated) {
+      return (
+        <nav className="navbar__nav" aria-labelledby="cds-main-navigation">
+          <div className="sr-only" id="cds-main-navigation">Main navigation</div>
 
-  updateAuth = () => {
-    getCurrentUser()
-      .then(user => this.setState({ user, status: AUTHENTICATED }))
-      .catch(() => this.setState({ user: null, status: UNAUTHENTICATED }));
+          <ul>
+            <li><NavLink exact to="/">Home</NavLink></li>
+            <li><NavLink to="/artifacts">Artifacts</NavLink></li>
+            <li><NavLink to="/build">Workspace</NavLink></li>
+          </ul>
+        </nav>
+      );
+    }
+
+    return null;
   }
 
   render() {
-    const { user, status } = this.state;
     return (
-      <header className="navbar">
-        <a className="skiplink" href="#maincontent">Skip to main content</a>
-        <h1 className="navbar__logo"><Link to="/">CDS Authoring Tool</Link></h1>
-        { status === AUTHENTICATED ?
-          <nav className="navbar__nav">
-            <ul>
-              <li><NavLink to="/artifacts">Artifacts</NavLink></li>
-              <li><NavLink to="/build">Workspace</NavLink></li>
-            </ul>
-          </nav>
-        : '' }
-        <nav className="navbar__nav-secondary">
-          <ul>
-            <li><Authentication authStatus={status} authUser={user} onAuthChange={this.updateAuth}/></li>
-            <li><a href="mailto:cds-authoring-list@lists.mitre.org">Feedback</a></li>
-          </ul>
-        </nav>
-      </header>
+      <div className="navbar">
+        {this.renderedNavbar()}
+      </div>
     );
   }
 }
 
-export default Navbar;
+Navbar.propTypes = {
+  isAuthenticated: PropTypes.bool.isRequired
+};

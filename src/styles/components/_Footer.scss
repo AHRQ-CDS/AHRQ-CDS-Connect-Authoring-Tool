@@ -1,0 +1,142 @@
+.footer {
+  background-color: $footer-background;
+  color: $white;
+  padding: 0;
+  font-family: 'CartoGothicStdBook';
+  font-weight: bold;
+  font-size: 13.44px;
+
+  nav {
+    flex-direction: column;
+    padding: $global-padding;
+
+    ul {
+      padding: 0;
+
+      li {
+        list-style: none;
+        padding: 3px 0;
+      }
+    }
+
+    a {
+      padding: 4px 0;
+      text-decoration: none;
+      color: $white;
+      &:hover { text-decoration: underline; }
+    }
+  }
+
+  .link-header {
+    font-family: 'Code-Pro-LC', sans-serif;
+    margin: 20px 0 10px 0;
+    text-transform: uppercase;
+    font-size: 16px;
+    line-height: 20px;
+    img { padding-right: 5px; }
+  }
+
+  &__ahrq,
+  &__contact {
+    background: $footer-background-gradient-1;
+  }
+
+  &__cds {
+    background-color: $footer-background;
+    background: linear-gradient(to bottom, $footer-background 0%, $footer-background-light 100%);
+    border-left: 1px solid $footer-background;
+    border-right: 1px solid $footer-background;
+    min-height: 390px;
+
+    li {
+      width: 50%;
+      float: left;
+    }
+  }
+
+  &__contact {
+    padding: 20px 40px;
+
+    &-hhs,
+    &-ahrq {
+      padding: 20px 10px;
+    }
+
+    &-hhs { border-bottom: 1px solid $footer-background; }
+    &-ahrq { border-top: 1px solid $footer-background-light; }
+
+    a {
+      text-decoration: none;
+      color: $white;
+      &:hover { text-decoration: underline; }
+    }
+  }
+
+  &__sitelinks {
+    background-color: $ahrq-color-background-light;
+    border-top: 1px solid $white;
+    padding: $global-padding;
+    font-family: Arial, sans-serif;
+    font-size: 13.44px;
+
+    &-links {
+      li {
+        display: list-item;
+        float: left;
+        margin: 0 15px 5px 0;
+        width: auto;
+
+        a {
+          color: $footer-links;
+          text-decoration: none;
+        }
+      }
+    }
+
+    &-social {
+      .social-title {
+        text-transform: uppercase;
+        color: $gray-dark;
+        font: 18px 'Code-Pro', sans-serif;
+        float: left;
+        margin: 2px;
+        position: relative;
+        width: auto;
+        white-space: nowrap;
+        text-align: right;
+
+        @include respond-to(tablet) {
+          text-align: left;
+          margin-right: 120px;
+        }
+      }
+
+      .social-links {
+        white-space: nowrap;
+
+        @include respond-to(tablet) {
+          margin-top: -70px;
+        }
+
+        .social-links-icons {
+          white-space: nowrap;
+        }
+      }
+
+      .at-icon-wrapper {
+        line-height: 32px;
+        height: 32px;
+        width: 32px;
+        &.facebook { background-color: rgb(59, 89, 152); }
+        &.twitter { background-color: rgb(29, 161, 242); }
+        &.youtube { background-color: rgb(205, 32, 31); }
+        &.linkedin { background-color: rgb(0, 119, 181); }
+      }
+
+      .at-icon {
+        width: 32px;
+        height: 32px;
+      }
+    }
+  }
+}

@@ -1,74 +1,36 @@
 .navbar {
   background-color: $navbar-bg-color;
-  color: $navbar-link-color;
-  padding: 0.5em 2em 0;
-  font-weight: 400;
+  padding: 0;
 
-  &__logo {
-    display: inline;
-    font-size: inherit;
-    font-weight: inherit;
-    a {
-      color: $navbar-link-color;
-      font-weight: $font-weight-bold;
-      text-decoration: none;
-
-      &:hover,
-      &:focus {
-        color: $gray-light;
-      }
-    }
-  }
-
+  // ----------------------- MAIN NAVIGATION ------------------------------- //
   &__nav {
-    @include navigation(true);
-
-    display: inline-block;
-    margin: 0.5em 1em 0.75em 2em;
+    display: block;
+    padding: 0 20px 10px 20px;
 
     li {
-      margin-right: 0.25em;
+      display: block;
+      margin-right: 15px;
+      position: relative;
+      float: left;
     }
 
     a {
-      border-top-left-radius: .2em;
-      border-top-right-radius: .2em;
+      position: relative;
+      display: block;
+      line-height: 20px;
+      color: $navbar-link-color;
+      border-radius: 5px;
+      padding: 10px;
+      font-size: 1.1em;
+
+      &:hover {
+        text-decoration: none;
+      }
 
       &:hover,
       &.active {
-        background-color: $body-bg;
+        background-color: $navbar-link-active-color;
       }
-    }
-  }
-
-  &__nav-secondary {
-    @include navigation(true);
-
-    display: inline-block;
-    margin: 0.5em 1em 0.75em 2em;
-    float: right;
-  }
-
-  .skiplink {
-    position: absolute;
-    top: -1000px;
-    left: -1000px;
-    height: 1px;
-    width: 1px;
-    text-align: left;
-    overflow: hidden;
-
-    &:active,
-    &:focus,
-    &:hover {
-        left: 0;
-        top: 0;
-        width: auto;
-        height: auto;
-        overflow: visible;
-        color: black;
-        background-color: white;
-        padding: 1em;
     }
   }
 }

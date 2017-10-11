@@ -1,39 +1,35 @@
 import React, { Component } from 'react';
-import { withRouter } from 'react-router-dom';
 import PropTypes from 'prop-types';
-import { logout } from '../../lib/auth';
+import { Dropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
 
-class Logout extends Component {
-  logout = (e) => {
-    logout()
-      .then(() => {
-        this.props.onAuthChange();
-        this.props.history.push('/');
-      })
-      .catch(() => {
-        this.props.onAuthChange();
-        this.props.history.push('/');
-      });
+export default class Logout extends Component {
+  constructor(props) {
+    super(props);
+
+    this.state = { showMenu: false };
+  }
+
+  toggleMenu = () => {
+    this.setState({ showMenu: !this.state.showMenu });
   }
 
   render() {
-    const { authUser } = this.props;
+    const { authUser, onLogoutClick } = this.props;
+
     return (
-      <div>
-        Logged in as {authUser.uid}
-        <button onClick={this.logout} className='primary-button' style={{ marginLeft: '10px' }}>Logout</button>
+      <div className="logout">
+        <Dropdown isOpen={this.state.showMenu} toggle={this.toggleMenu} className="logout__authname">
+          <DropdownToggle caret>{authUser}</DropdownToggle>
+          <DropdownMenu>
+            <DropdownItem onClick={onLogoutClick}>Logout</DropdownItem>
+          </DropdownMenu>
+        </Dropdown>
       </div>
     );
   }
 }
 
 Logout.propTypes = {
-  authUser: PropTypes.shape({ uid: PropTypes.string }),
-  onAuthChange: PropTypes.func.isRequired
+  authUser: PropTypes.string.isRequired,
+  onLogoutClick: PropTypes.func.isRequired
 };
-
-// This allows us to access the router history to redirect when necessary.
-// See: https://github.com/ReactTraining/react-router/blob/master/packages/react-router/docs/api/withRouter.md
-const LogoutWithRouter = withRouter(Logout);
-
-export default LogoutWithRouter;
