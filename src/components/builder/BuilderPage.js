@@ -87,6 +87,7 @@ class BuilderPage extends Component {
       activeTabIndex: 0,
       uniqueIdCounter: 0,
       showEditModal: false,
+      publish_enabled: false,
     };
   }
 
@@ -110,6 +111,14 @@ class BuilderPage extends Component {
         } else {
           this.initializeExpTrees(andTemplate);
         }
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+
+    axios.get(`${API_BASE}/config/publish`)
+      .then((result) => {
+        this.setState({ publish_enabled: result.data.enabled });
       })
       .catch((error) => {
         console.log(error);
@@ -588,15 +597,16 @@ class BuilderPage extends Component {
                   <span>Save</span>
                 </button>
               </span>
-              <span className="control">
-                <button onClick={ () => { this.saveArtifact(false); this.togglePublishModal(); } }
-                  className="button builder__publishbutton">
-                  <span className="icon is-small">
-                    <i className="fa fa-align-right"></i>
-                  </span>
-                  <span>Publish</span>
-                </button>
-              </span>
+              { this.state.publish_enabled ?
+                <span className="control">
+                  <button onClick={ () => { this.saveArtifact(false); this.togglePublishModal(); } }
+                    className="button builder__publishbutton">
+                    <span className="icon is-small">
+                      <i className="fa fa-align-right"></i>
+                    </span>
+                    <span>Publish</span>
+                  </button>
+                </span> : '' }
             </div>
             <div role="status" aria-live="assertive">{this.state.statusMessage}</div>
           </div>

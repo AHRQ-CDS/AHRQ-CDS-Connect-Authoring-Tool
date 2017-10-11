@@ -24,5 +24,8 @@ module.exports = {
         searchFilter: process.env.AUTH_LDAP_SEARCH_FILTER || '(uid={{username}})'
       }
     }
+  },
+  publish: {
+    enabled: process.env.PUBLISH_TO_REPO_ENABLED === 'true' || false
   }
 };
