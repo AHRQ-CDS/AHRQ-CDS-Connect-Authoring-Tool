@@ -1,4 +1,5 @@
 .builder {
+  &-wrapper { @include componentWidth; }
   padding: $global-padding;
 
   &__header {

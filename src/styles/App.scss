@@ -96,13 +96,3 @@
   font-weight: normal;
   font-style: normal;
 }
-
-/* ------------------------- APP-WIDE STYLES ------------------------------- */
-.visually-hidden {
-  position: absolute !important;
-  clip: rect(1px, 1px, 1px, 1px);
-  overflow: hidden;
-  height: 1px;
-  width: 1px;
-  word-wrap: normal;
-}

@@ -1,3 +1,17 @@
+@mixin fullBleed($background) {
+  margin: 0 -9999rem;
+  padding: 0.25rem 9999rem;
+  background: $background;
+}
+
+@mixin componentWidth {
+  margin: 0 auto;
+  @include respond-to('desktop-wide') { width: 1170px; } // 1200px and over
+  @include respond-to('desktop') { width: 970px; }       // 992px to 1199px
+  @include respond-to('tablet') { width: 750px; }        // 768px to 991px
+  @include respond-to('mobile') { width: 100%; }         // 767px and under
+}
+
 @mixin button($color-foreground: $default-button-text-color, $color-background: $default-button-bg-color, $box-shadow: $box-shadow) {
   background-color: $color-background;
   color: $color-foreground;

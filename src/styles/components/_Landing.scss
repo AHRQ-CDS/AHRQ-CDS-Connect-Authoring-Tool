@@ -1,4 +1,4 @@
 .landing {
-  background-color: $white;
+  &-wrapper { @include componentWidth; }
   padding: $global-padding;
 }

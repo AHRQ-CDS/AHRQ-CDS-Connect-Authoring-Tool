@@ -44,14 +44,14 @@ beforeEach(() => {
 
 test('children have correct classes', () => {
   const classNames = ['upload__modal', 'edit__modal', 'builder__header', 'builder__canvas'];
-  component.children().forEach((node, i) => {
+  component.find('.builder-wrapper').children().forEach((node, i) => {
     expect(node.hasClass(classNames[i])).toBeTruthy();
   });
 });
 
 test('renders with children with or without a route match', () => {
-  expect(component.children()).toHaveLength(4);
-  expect(componentWithMatch.children()).toHaveLength(4);
+  expect(component.find('.builder-wrapper').children()).toHaveLength(4);
+  expect(componentWithMatch.find('.builder-wrapper').children()).toHaveLength(4);
 });
 
 test('indicates absence of content', () => {

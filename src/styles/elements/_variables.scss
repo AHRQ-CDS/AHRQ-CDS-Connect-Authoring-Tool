@@ -36,7 +36,7 @@ $brand-danger: $red;
 $border-color: darken($gray-lighter, 10%);
 
 // background colors
-$body-bg: $blue-dark;
+$body-bg: $white;
 
 // button colors
 $default-button-text-color: $black;
@@ -68,7 +68,7 @@ $border-width: 0.1em;
 $border-global: $border-width solid $border-color;
 
 //-------------------------- Spacing ----------------------------------------//
-$global-padding: 20px 60px;
+$global-padding: 40px 0;
 
 //-------------------------- Box Shadows ------------------------------------//
 $box-shadow: 1px 1px 1px 0 fade-out($black, 0.9);
@@ -90,7 +90,7 @@ $headings-font-weight: 200;
 
 $screen-xs: 480px;
 $screen-sm: 768px;
-$screen-md: 949px;
+$screen-md: 992px;
 $screen-lg: 1200px;
 
 $container-sm: $screen-sm;
