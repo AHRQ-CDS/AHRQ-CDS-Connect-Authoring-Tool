@@ -4,8 +4,7 @@ import { NavLink } from 'react-router-dom';
 
 export default class Navbar extends Component {
   renderedNavbar = () => {
-    // const { isAuthenticated } = this.props; // TODO: add
-    const isAuthenticated = true; // TODO: remove
+    const { isAuthenticated } = this.props;
 
     if (isAuthenticated) {
       return (
