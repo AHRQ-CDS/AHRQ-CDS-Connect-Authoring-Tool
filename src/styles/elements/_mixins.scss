@@ -12,17 +12,22 @@
   @include respond-to('mobile') { width: 100%; }         // 767px and under
 }
 
-@mixin button($color-foreground: $default-button-text-color, $color-background: $default-button-bg-color, $box-shadow: $box-shadow) {
+@mixin button(
+    $color-text: $default-button-text-color,
+    $color-background: $default-button-bg-color,
+    $color-border: $default-button-border-color,
+    $box-shadow: $box-shadow) {
   background-color: $color-background;
-  color: $color-foreground;
-  border: $border-width solid darken($color-background, 15%);
+  color: $color-text;
+  border: $border-width solid $color-border;
   box-shadow: $box-shadow;
+  transition: 0.2s ease-in-out;
 
   &:hover,
   &:focus,
   &:active {
-    background-color: shade($color-background, 10%);
-    color: $color-foreground;
+    background-color: $color-text;
+    color: $color-background;
     box-shadow: $box-shadow;
   }
 

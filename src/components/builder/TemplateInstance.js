@@ -200,7 +200,7 @@ class TemplateInstance extends Component {
         { (index + 1 === this.props.templateInstance.modifiers.length)
           ? <button
             onClick={this.removeLastModifier}
-            className="modifier__deletebutton"
+            className="modifier__deletebutton secondary-button"
             aria-label={'remove last expression'}>
               <FontAwesome fixedWidth name='close'/>
             </button>
@@ -264,14 +264,16 @@ class TemplateInstance extends Component {
             <div className="modifier__selection">
               <button
                 onClick={() => this.setState({ showModifiers: !this.state.showModifiers })}
-                className="modifier__addbutton"
+                className="modifier__addbutton secondary-button"
                 aria-label={'add expression'}>
                 Add Expression</button>
               { (this.state.showModifiers)
                 ? this.state.relevantModifiers.map(modifier =>
                     <button key={modifier.id}
                       value={modifier.id}
-                      onClick={this.handleModifierSelected} className="modifier__button">{modifier.name}</button>
+                      onClick={this.handleModifierSelected} className="modifier__button secondary-button">
+                      {modifier.name}
+                    </button>
                   )
                 : null
               }
@@ -373,32 +375,37 @@ class TemplateInstance extends Component {
           </span>
           <div className="element__buttonbar">
             { this.props.renderIndentButtons(this.props.templateInstance) }
+
             <button
               id={`presets-${this.props.templateInstance.uniqueId}`}
               aria-controls={`presets-list-${this.props.templateInstance.uniqueId}`}
               onClick={() => this.showPresets(this.props.templateInstance.id)}
-              className="element__presetbutton"
+              className="element__presetbutton secondary-button"
               aria-label={`show presets ${this.props.templateInstance.id}`}>
               <FontAwesome fixedWidth name='database'/>
             </button>
+
             <button
               onClick={() => this.props.saveInstance(this.props.treeName, this.getPath())}
-              className="element__savebutton"
+              className="element__savebutton secondary-button"
               aria-label={`save ${this.props.templateInstance.name}`}>
               <FontAwesome fixedWidth name='save'/>
             </button>
+
             <button
               onClick={this.showHideElementBody}
-              className="element__hidebutton"
+              className="element__hidebutton secondary-button"
               aria-label={`hide ${this.props.templateInstance.name}`}>
               <FontAwesome fixedWidth name={this.state.showElement ? 'angle-double-down' : 'angle-double-right'}/>
             </button>
+
             <button
               onClick={() => this.props.deleteInstance(this.props.treeName, this.getPath())}
-              className="element__deletebutton"
+              className="element__deletebutton secondary-button"
               aria-label={`remove ${this.props.templateInstance.name}`}>
               <FontAwesome fixedWidth name='close'/>
             </button>
+
             <div id={`presets-list-${this.props.templateInstance.uniqueId}`} role="region" aria-live="polite">
               { this.state.showPresets
                 ? <select

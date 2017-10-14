@@ -1,16 +1,29 @@
-.primary-button {
-  // use for critical positive actions like save, submit
-  @include button($primary-button-text-color, $primary-button-bg-color);
+button.primary-button {
+  @include button(
+    $primary-button-text-color,
+    $primary-button-bg-color,
+    $primary-button-border-color
+  );
 }
 
-.transparent-button {
-  @include button($default-button-text-color, transparent, none);
+button.secondary-button {
+  @include button(
+    $secondary-button-text-color,
+    $secondary-button-bg-color,
+    $secondary-button-border-color,
+    none
+  );
+}
+
+button.transparent-button {
+  @include button($default-button-text-color, transparent, transparent, none);
 
   &:hover,
   &:focus,
   &:active {
     background-color: transparent;
     text-decoration: underline;
+    color: $default-button-text-color;
   }
 }
 

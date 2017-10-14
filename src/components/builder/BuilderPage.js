@@ -585,7 +585,7 @@ class BuilderPage extends Component {
               <div className="field has-addons has-addons-right">
                 <span className="control">
                   <button onClick={ () => { this.updateStatusMessage('download'); this.downloadCQL(); } }
-                    className="button builder__cqlbutton is-unsaved">
+                    className="button builder__cqlbutton is-unsaved secondary-button">
                     <span className="icon is-small">
                       <i className="fa fa-download"></i>
                     </span>
@@ -595,7 +595,7 @@ class BuilderPage extends Component {
 
                 <span className="control">
                   <button onClick={ () => { this.updateStatusMessage('save'); this.saveArtifact(false); } }
-                    className="button builder__savebutton is-unsaved">
+                    className="button builder__savebutton is-unsaved secondary-button">
                     <span className="icon is-small">
                       <i className="fa fa-save"></i>
                     </span>

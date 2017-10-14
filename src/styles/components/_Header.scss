@@ -133,5 +133,10 @@
         }
       }
     }
+
+    &-auth {
+      padding-right: 0;
+      button { margin-right: 0; }
+    }
   }
 }

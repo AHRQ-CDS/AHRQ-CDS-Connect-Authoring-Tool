@@ -1,11 +1,18 @@
 .builder {
   &-wrapper { @include componentWidth; }
   padding: $global-padding;
+  padding-bottom: 0;
+  background-color: $blue-darkest;
 
   &__header {
     display: flex;
     align-items: center;
-    padding: 1em;
+    padding: 1em 0;
+
+    button {
+      margin-right: 10px;
+      vertical-align: middle;
+    }
   }
 
   &__heading {
@@ -17,23 +24,38 @@
     font-weight: $font-weight-regular;
   }
 
+  &__canvas {
+    margin: 0 -9999rem;
+    padding: 0 9999rem;
+    background: $white;
+    min-height: 400px;
+  }
+
   &__buttonbar {
     .field {
       margin-bottom: 0;
       text-align: right;
     }
+
     [role=status] {
       color: $white;
       font-style: italic;
     }
+
+    button {
+      margin: 0 0 0 20px;
+
+      .icon {
+        padding-right: 10px;
+      }
+    }
   }
 
   .react-tabs {
-
     [role=tablist] {
-      background-color: $body-bg;
-      margin: 0;
-      padding-left: 1em;
+      margin: 0 -9999rem;
+      padding: 0 9999rem;
+      background: $blue-darkest;
       font-weight: $font-weight-regular;
     }
 
@@ -61,8 +83,13 @@
     }
 
     .tab-panel-container {
-      padding: 1em;
+      padding: 2em 0;
       background-color: $white;
     }
+  }
+
+  .Select-input input {
+    border: 0;
+    box-shadow: none;
   }
 }

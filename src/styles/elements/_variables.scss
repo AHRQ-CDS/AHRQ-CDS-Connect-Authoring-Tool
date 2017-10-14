@@ -41,9 +41,15 @@ $body-bg: $white;
 // button colors
 $default-button-text-color: $black;
 $default-button-bg-color: $gray-lightest;
+$default-button-border-color: $white;
+
 $primary-button-text-color: $white;
 $primary-button-bg-color: $blue;
-$primary-button-hover-color: $blue-darkest;
+$primary-button-border-color: $white;
+
+$secondary-button-text-color: $black;
+$secondary-button-bg-color: $white;
+$secondary-button-border-color: $gray-lighter;
 
 // form colors
 $form-input-placeholder-color: $gray;
@@ -68,7 +74,7 @@ $border-width: 0.1em;
 $border-global: $border-width solid $border-color;
 
 //-------------------------- Spacing ----------------------------------------//
-$global-padding: 40px 0;
+$global-padding: 30px 0;
 
 //-------------------------- Box Shadows ------------------------------------//
 $box-shadow: 1px 1px 1px 0 fade-out($black, 0.9);

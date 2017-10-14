@@ -168,7 +168,7 @@ class ErrorStatement extends Component {
   renderNestingButton = (statement, index) => (
       <div className="field recommendation__action">
         <button
-          className="button"
+          className="button secondary-button"
           onClick={e => this.handleUseThenClause(index)}>
           {this.props.errorStatement.statements[index].useThenClause ? 'And Also If...' : '(Remove nested statements)'}
         </button>
@@ -178,7 +178,7 @@ class ErrorStatement extends Component {
   renderAddIfButton = parent => (
       <div className="field recommendation__action">
         <button
-          className="button"
+          className="button secondary-button"
           onClick={e => this.addStatement(parent)}> Or Else If... </button>
       </div>
     )

@@ -99,7 +99,7 @@ class Recommendations extends Component {
               subpopulations={this.props.subpopulations}
               setActiveTab={this.props.setActiveTab} />
           ))}
-        <button className="button" onClick={this.addRecommendation}>
+        <button className="button secondary-button" onClick={this.addRecommendation}>
           New recommendation
         </button>
       </div>
