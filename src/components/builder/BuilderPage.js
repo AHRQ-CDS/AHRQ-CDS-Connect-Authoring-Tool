@@ -540,8 +540,7 @@ class BuilderPage extends Component {
         getAllInstances={ this.getAllInstances }
         showPresets={ showPresets }
         setPreset={ this.setPreset }
-        categories={ this.state.categories }
-      />
+        categories={ this.state.categories } />
     :
       <p>Loading...</p>
   )
@@ -552,129 +551,141 @@ class BuilderPage extends Component {
 
   render() {
     const namedBooleanParameters = _.filter(this.state.booleanParameters, p => (!_.isNull(p.name) && p.name.length));
+
     return (
       <div className="builder" id="maincontent">
-        <div className="upload__modal">
-          <RepoUploadModal
-            showModal={this.state.showPublishModal}
-            closeModal={this.togglePublishModal}
-            prepareArtifact={this.prepareArtifact}
-            version={this.state.version}/>
-        </div>
-        <div className="edit__modal">
-          <EditModal
-            showModal={this.state.showEditModal}
-            closeModal={this.closeEditModal}
-            artifactEditingName={this.state.name}
-            artifactEditingVersion={this.state.version}
-            editArtifactName={this.editArtifactName}/>
-        </div>
-        <header className="builder__header">
-          <h2 className="builder__heading">
-            <button className="primary-button"
-              onClick={this.openEditModal}>
-              <i className="fa fa-pencil"></i>
-            </button>
-            { this.state.name }
-          </h2>
-          <div className="builder__buttonbar">
-            <div className="field has-addons has-addons-right">
-              <span className="control">
-                <button onClick={ () => { this.updateStatusMessage('download'); this.downloadCQL(); } }
-                  className="button builder__cqlbutton is-unsaved">
-                  <span className="icon is-small">
-                    <i className="fa fa-download"></i>
-                  </span>
-                  <span>Download CQL</span>
-                </button>
-              </span>
-              <span className="control">
-                <button onClick={ () => { this.updateStatusMessage('save'); this.saveArtifact(false); } }
-                  className="button builder__savebutton is-unsaved">
-                  <span className="icon is-small">
-                    <i className="fa fa-save"></i>
-                  </span>
-                  <span>Save</span>
-                </button>
-              </span>
-              { this.state.publish_enabled ?
-                <span className="control">
-                  <button onClick={ () => { this.saveArtifact(false); this.togglePublishModal(); } }
-                    className="button builder__publishbutton">
-                    <span className="icon is-small">
-                      <i className="fa fa-align-right"></i>
-                    </span>
-                    <span>Publish</span>
-                  </button>
-                </span> : '' }
-            </div>
-            <div role="status" aria-live="assertive">{this.state.statusMessage}</div>
+        <div className="builder-wrapper">
+          <div className="upload__modal">
+            <RepoUploadModal
+              showModal={this.state.showPublishModal}
+              closeModal={this.togglePublishModal}
+              prepareArtifact={this.prepareArtifact}
+              version={this.state.version}/>
           </div>
-        </header>
-        <section className="builder__canvas">
-          <Tabs selectedIndex={this.state.activeTabIndex} onSelect={tabIndex => this.setActiveTab(tabIndex)}>
-            <TabList>
-              <Tab>Inclusions</Tab>
-              <Tab>Exclusions</Tab>
-              <Tab>Subpopulations</Tab>
-              <Tab>Recommendations</Tab>
-              <Tab>Parameters</Tab>
-              <Tab>Handle Errors</Tab>
-            </TabList>
-            <div className="tab-panel-container">
-              <TabPanel>
-                { this.renderConjunctionGroup('expTreeInclude', namedBooleanParameters) }
-              </TabPanel>
-              <TabPanel>
-                { this.renderConjunctionGroup('expTreeExclude', namedBooleanParameters) }
-              </TabPanel>
-              <TabPanel>
-                <Subpopulations
-                name={ 'subpopulations' }
-                subpopulations={ this.state.subpopulations }
-                updateSubpopulations={ this.updateSubpopulations }
-                booleanParameters={ namedBooleanParameters }
-                createTemplateInstance={ this.createTemplateInstance }
-                addInstance={ this.addInstance }
-                editInstance={ this.editInstance }
-                updateInstanceModifiers={ this.updateInstanceModifiers }
-                deleteInstance={ this.deleteInstance }
-                saveInstance={ this.saveInstance }
-                getAllInstances={ this.getAllInstances }
-                showPresets={ showPresets }
-                setPreset={ this.setPreset }
-                categories={ this.state.categories }
-                checkSubpopulationUsage={ this.checkSubpopulationUsage }
-                updateRecsSubpop={ this.updateRecsSubpop }
-                />
-              </TabPanel>
-              <TabPanel>
-                <Recommendations
-                  updateRecommendations={ this.updateState }
-                  recommendations={ this.state.recommendations }
-                  subpopulations={ this.state.subpopulations }
-                  setActiveTab={ this.setActiveTab }
-                  uniqueIdCounter={ this.state.uniqueIdCounter }
-                  incrementUniqueIdCounter={ this.incrementUniqueIdCounter }
-                  />
-              </TabPanel>
-              <TabPanel>
-                <Parameters
-                  booleanParameters={ this.state.booleanParameters }
-                  updateParameters={this.updateParameters}
-                />
-              </TabPanel>
-              <TabPanel>
-                <ErrorStatement
-                  booleanParameters={ namedBooleanParameters }
-                  subpopulations={ this.state.subpopulations }
-                  errorStatement={ this.state.errorStatement }
-                  updateParentState={ this.updateState }
-                />
-              </TabPanel>
+
+          <div className="edit__modal">
+            <EditModal
+              showModal={this.state.showEditModal}
+              closeModal={this.closeEditModal}
+              artifactEditingName={this.state.name}
+              artifactEditingVersion={this.state.version}
+              editArtifactName={this.editArtifactName}/>
+          </div>
+
+          <header className="builder__header">
+            <h2 className="builder__heading">
+              <button className="primary-button"
+                onClick={this.openEditModal}>
+                <i className="fa fa-pencil"></i>
+              </button>
+              { this.state.name }
+            </h2>
+
+            <div className="builder__buttonbar">
+              <div className="field has-addons has-addons-right">
+                <span className="control">
+                  <button onClick={ () => { this.updateStatusMessage('download'); this.downloadCQL(); } }
+                    className="button builder__cqlbutton is-unsaved secondary-button">
+                    <span className="icon is-small">
+                      <i className="fa fa-download"></i>
+                    </span>
+                    <span>Download CQL</span>
+                  </button>
+                </span>
+
+                <span className="control">
+                  <button onClick={ () => { this.updateStatusMessage('save'); this.saveArtifact(false); } }
+                    className="button builder__savebutton is-unsaved secondary-button">
+                    <span className="icon is-small">
+                      <i className="fa fa-save"></i>
+                    </span>
+                    <span>Save</span>
+                  </button>
+                </span>
+
+                { this.state.publish_enabled ?
+                  <span className="control">
+                    <button onClick={ () => { this.saveArtifact(false); this.togglePublishModal(); } }
+                      className="button builder__publishbutton">
+                      <span className="icon is-small">
+                        <i className="fa fa-align-right"></i>
+                      </span>
+                      <span>Publish</span>
+                    </button>
+                  </span> : '' }
+              </div>
+
+              <div role="status" aria-live="assertive">{this.state.statusMessage}</div>
             </div>
-          </Tabs>
-        </section>
+          </header>
+
+          <section className="builder__canvas">
+            <Tabs selectedIndex={this.state.activeTabIndex} onSelect={tabIndex => this.setActiveTab(tabIndex)}>
+              <TabList>
+                <Tab>Inclusions</Tab>
+                <Tab>Exclusions</Tab>
+                <Tab>Subpopulations</Tab>
+                <Tab>Recommendations</Tab>
+                <Tab>Parameters</Tab>
+                <Tab>Handle Errors</Tab>
+              </TabList>
+
+              <div className="tab-panel-container">
+                <TabPanel>
+                  { this.renderConjunctionGroup('expTreeInclude', namedBooleanParameters) }
+                </TabPanel>
+
+                <TabPanel>
+                  { this.renderConjunctionGroup('expTreeExclude', namedBooleanParameters) }
+                </TabPanel>
+
+                <TabPanel>
+                  <Subpopulations
+                  name={ 'subpopulations' }
+                  subpopulations={ this.state.subpopulations }
+                  updateSubpopulations={ this.updateSubpopulations }
+                  booleanParameters={ namedBooleanParameters }
+                  createTemplateInstance={ this.createTemplateInstance }
+                  addInstance={ this.addInstance }
+                  editInstance={ this.editInstance }
+                  updateInstanceModifiers={ this.updateInstanceModifiers }
+                  deleteInstance={ this.deleteInstance }
+                  saveInstance={ this.saveInstance }
+                  getAllInstances={ this.getAllInstances }
+                  showPresets={ showPresets }
+                  setPreset={ this.setPreset }
+                  categories={ this.state.categories }
+                  checkSubpopulationUsage={ this.checkSubpopulationUsage }
+                  updateRecsSubpop={ this.updateRecsSubpop } />
+                </TabPanel>
+
+                <TabPanel>
+                  <Recommendations
+                    updateRecommendations={ this.updateState }
+                    recommendations={ this.state.recommendations }
+                    subpopulations={ this.state.subpopulations }
+                    setActiveTab={ this.setActiveTab }
+                    uniqueIdCounter={ this.state.uniqueIdCounter }
+                    incrementUniqueIdCounter={ this.incrementUniqueIdCounter } />
+                </TabPanel>
+
+                <TabPanel>
+                  <Parameters
+                    booleanParameters={ this.state.booleanParameters }
+                    updateParameters={this.updateParameters} />
+                </TabPanel>
+
+                <TabPanel>
+                  <ErrorStatement
+                    booleanParameters={ namedBooleanParameters }
+                    subpopulations={ this.state.subpopulations }
+                    errorStatement={ this.state.errorStatement }
+                    updateParentState={ this.updateState } />
+                </TabPanel>
+              </div>
+            </Tabs>
+          </section>
+        </div>
       </div>
     );
   }

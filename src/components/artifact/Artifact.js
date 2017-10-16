@@ -22,12 +22,14 @@ class Artifact extends Component {
   render() {
     return (
       <div className="artifact" id="maincontent">
-        <ArtifactForm afterAddArtifact={this.loadArtifacts} buttonLabel={'New artifact'}/>
-        { (this.state.data.length > 0)
-          ? <ArtifactTable artifacts={this.state.data}
-              match={this.props.match}
-              afterAddArtifact={this.loadArtifacts}/>
-          : <p>No artifacts to show.</p>}
+        <div className="artifact-wrapper">
+          <ArtifactForm afterAddArtifact={this.loadArtifacts} buttonLabel={'New artifact'}/>
+          { (this.state.data.length > 0)
+            ? <ArtifactTable artifacts={this.state.data}
+                match={this.props.match}
+                afterAddArtifact={this.loadArtifacts}/>
+            : <p>No artifacts to show.</p>}
+        </div>
       </div>
     );
   }

@@ -1,7 +1,7 @@
 // ------------------------- LOGIN ----------------------------------------- //
 .login {
   width: 100%;
-  margin: 0;
+  margin: 20px 0;
   justify-content: flex-end;
 
   input,
@@ -16,9 +16,12 @@
   &__button,
   &__button:focus {
     max-width: 100px;
+    max-height: 35px;
     border: 1px solid $white;
     background-color: inherit;
     color: $white;
+    line-height: 17px;
+    @include respond-to('mobile') { line-height: 15px; }
   }
 
   &__button:focus {
@@ -28,7 +31,8 @@
   &__inputs {
     position: absolute;
     display: inherit;
-    right: 150px;
+    right: 110px;
+    max-height: 35px;
 
     &-reset,
     &-reset:hover,
@@ -47,7 +51,8 @@
 
   &__auth-status {
     position: absolute;
-    top: 32px;
+    white-space: nowrap;
+    top: -20px;
     left: 10px;
     color: $ahrq-color-orange;
   }

@@ -1,12 +1,31 @@
+.recommendations {
+  &__mode {
+    margin: 0 0.5em;
+    top: -0.375em;
+    position: relative;
+  }
+}
+
 .recommendation {
   background: $gray-lightest;
   border: $border-global;
   border-radius: $border-radius;
-  padding: 1em;
+  padding: 1em 1em 4em 1em;
   margin-bottom: 1em;
+
+  &__remove button {
+    float: right;
+  }
+
+  textarea {
+    width: 100%;
+    min-height: 100px;
+    margin: 10px 0;
+  }
 
   label {
     font-weight: $font-weight-regular;
+    font-size: 1.2em;
   }
 
   &__action {
@@ -74,13 +93,5 @@
 
   &__new-subpopulation {
     cursor: pointer;
-  }
-}
-
-.recommendations {
-  &__mode {
-    margin: 0 0.5em;
-    top: -0.375em;
-    position: relative;
   }
 }

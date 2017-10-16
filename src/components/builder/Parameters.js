@@ -46,7 +46,7 @@ class Parameters extends Component {
               />
             ))
         }
-        <button className="button new-parameter" onClick={ this.addParameter }>
+        <button className="button secondary-button new-parameter" onClick={ this.addParameter }>
           New parameter
         </button>
       </div>

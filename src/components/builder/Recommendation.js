@@ -101,6 +101,7 @@ class Recommendation extends Component {
               <label className="label has-text-left">If all of the following apply...</label>
             </div>
           </div>
+
           <div className="recommendation__subpopulation-pills">
             { this.props.rec.subpopulations.map((subpop, i) => (
                 <div
@@ -148,11 +149,12 @@ class Recommendation extends Component {
     return (
       <section className="section is-clearfix recommendation">
         { this.renderSubpopulations() }
-        <div className="field is-horizontal">
-          <div className="field-label is-large">
+        <div className="field is-horizontal row">
+          <div className="field-label is-large col-11">
             <label className="label has-text-left">Recommend...</label>
           </div>
-          <div className="field-body">
+
+          <div className="field-body col-1">
             <div className="field is-grouped is-grouped-right">
               {/* <div className="control">
                 <span className="select">
@@ -169,25 +171,29 @@ class Recommendation extends Component {
                 ><FontAwesome fixedWidth name='copy' /></button>
               </div> */}
               <div className="control recommendation__remove">
-                <button className="button" aria-label="remove recommendation"
-                        onClick={() => this.props.onRemove(this.props.rec.uid)}
-                ><FontAwesome fixedWidth name='times' /></button>
+                <button className="button secondary-button" aria-label="remove recommendation"
+                        onClick={() => this.props.onRemove(this.props.rec.uid)}>
+                  <FontAwesome fixedWidth name='times' />
+                </button>
               </div>
             </div>
           </div>
         </div>
+
         <div className="field">
           <div className="control">
             <textarea className="textarea" name="text" aria-label="Recommendation" title="Recommendation text"
             placeholder='Describe your recommendation' value={this.state.text} onChange={this.handleChange} />
           </div>
         </div>
+
         {
           this.state.showRationale ?
             <div className="field recommendation__rationale">
               <div className="field-label is-large">
                 <label className="label has-text-left">Rationale...</label>
               </div>
+
               <div className="control">
                 <textarea className="textarea" name="rationale" aria-label="Rationale" title="Rationale text"
                           placeholder='Describe the rationale for your recommendation' value={this.state.rationale}
@@ -195,11 +201,14 @@ class Recommendation extends Component {
               </div>
             </div>
           :
-            <button className="button recommendation__add-rationale"
+            <button className="button secondary-button recommendation__add-rationale"
                     onClick={() => this.setState({ showRationale: !this.state.showRationale })}>Add rationale</button>
         }
-        { this.shouldShowSubpopulations() ? null : <button className="button is-pulled-right" name="subpopulation"
-                                                   onClick={this.revealSubpopulations}>Add subpopulation</button> }
+
+        { this.shouldShowSubpopulations() ? null : <button className="button secondary-button pull-right"
+                                                    name="subpopulation" onClick={this.revealSubpopulations}>
+                                                    Add subpopulation
+                                                  </button> }
       </section>
     );
   }

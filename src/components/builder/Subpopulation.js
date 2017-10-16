@@ -102,14 +102,17 @@ class Subpopulation extends Component {
             </div>
           }
           <div className="button-bar">
-            <button onClick={ this.state.isExpanded ? this.collapse : this.expand }>
+            <button className="secondary-button" onClick={ this.state.isExpanded ? this.collapse : this.expand }>
               { this.state.isExpanded ? 'Done' : 'Edit' }
             </button>
-            <button aria-label="Remove subpopulation"
-                    onClick={ () => this.props.deleteSubpopulation(this.props.subpopulation.uniqueId) }
-            ><FontAwesome fixedWidth name='times'/></button>
+
+            <button aria-label="Remove subpopulation" className="secondary-button"
+                    onClick={ () => this.props.deleteSubpopulation(this.props.subpopulation.uniqueId) }>
+              <FontAwesome fixedWidth name='times'/>
+            </button>
           </div>
         </div>
+
         { this.state.isExpanded ?
           <div className="subpopulation__logic">
             <ConjunctionGroup

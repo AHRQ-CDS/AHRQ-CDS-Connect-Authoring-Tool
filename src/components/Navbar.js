@@ -8,7 +8,7 @@ export default class Navbar extends Component {
 
     if (isAuthenticated) {
       return (
-        <nav className="navbar__nav" aria-labelledby="cds-main-navigation">
+        <nav className="navbar__wrapper" aria-labelledby="cds-main-navigation">
           <div className="sr-only" id="cds-main-navigation">Main navigation</div>
 
           <ul>

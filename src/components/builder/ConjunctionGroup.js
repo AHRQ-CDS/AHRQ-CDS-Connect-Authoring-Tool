@@ -125,7 +125,7 @@ class ConjunctionGroup extends Component {
         { this.getPath() !== '' ?
           <button
             aria-label="outdent"
-            className='element__hidebutton'
+            className='element__hidebutton secondary-button'
             onClick={() => this.outdentClickHandler(instance)}>
             <FontAwesome name="dedent" />
           </button> :
@@ -133,7 +133,7 @@ class ConjunctionGroup extends Component {
         }
         <button
           aria-label="indent"
-          className='element__hidebutton'
+          className='element__hidebutton secondary-button'
           onClick={() => this.indentClickHandler(instance)}>
           <FontAwesome name="indent" />
         </button>
