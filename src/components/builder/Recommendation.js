@@ -205,8 +205,10 @@ class Recommendation extends Component {
                     onClick={() => this.setState({ showRationale: !this.state.showRationale })}>Add rationale</button>
         }
 
-        { this.shouldShowSubpopulations() ? null : <button className="button secondary-button pull-right" name="subpopulation"
-                                                   onClick={this.revealSubpopulations}>Add subpopulation</button> }
+        { this.shouldShowSubpopulations() ? null : <button className="button secondary-button pull-right"
+                                                    name="subpopulation" onClick={this.revealSubpopulations}>
+                                                    Add subpopulation
+                                                  </button> }
       </section>
     );
   }
