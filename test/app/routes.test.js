@@ -1,4 +1,5 @@
 import { Route } from 'react-router-dom';
+import PrivateRoute from '../../src/containers/PrivateRoute';
 import Landing from '../../src/components/Landing';
 import BuilderPage from '../../src/components/builder/BuilderPage';
 import Artifact from '../../src/components/artifact/Artifact';
@@ -13,9 +14,15 @@ test('Routes renders correct routes', () => {
     return paths;
   }, {});
 
+  const privatePathMap = component.find(PrivateRoute).reduce((paths, route) => {
+    Object.assign(paths, { [route.props().path]: route.props().component });
+    return paths;
+  }, {});
+
   expect(pathMap['/']).toBe(Landing);
-  expect(pathMap['/build']).toBe(BuilderPage);
-  expect(pathMap['/build/:id']).toBe(BuilderPage);
-  expect(pathMap['/artifacts']).toBe(Artifact);
   expect(pathMap[undefined]).toBe(NoMatch);
+
+  expect(privatePathMap['/build']).toBe(BuilderPage);
+  expect(privatePathMap['/build/:id']).toBe(BuilderPage);
+  expect(privatePathMap['/artifacts']).toBe(Artifact);
 });
