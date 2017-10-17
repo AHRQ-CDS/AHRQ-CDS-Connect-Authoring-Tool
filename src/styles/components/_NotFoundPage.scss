@@ -1,0 +1,4 @@
+.notFound {
+  &-wrapper { @include componentWidth; }
+  padding: $global-padding;
+}
