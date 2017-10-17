@@ -13,7 +13,7 @@ const store = configureStore();
 window.store = store;
 
 render(
-  <Router>
+  <Router basename={process.env.PUBLIC_URL}>
     <Root store={store} />
   </Router>,
   document.getElementById('root')

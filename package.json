@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "proxy": "http://localhost:3001",
+  "homepage": "https://cds.ahrq.gov/authoring",
   "dependencies": {
     "archiver": "^1.3.0",
     "axios": "^0.15.3",
