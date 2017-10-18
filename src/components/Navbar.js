@@ -23,9 +23,9 @@ export default class Navbar extends Component {
         <ul>
           <li><NavLink exact to="/">Home</NavLink></li>
           {/* TODO: Add link. */}
-          <li><a href="">Request an Account</a></li>
-          {/* TODO: Add link. */}
           <li><a href="">Documentation</a></li>
+          {/* TODO: Add link. */}
+          <li><a href="">Sign Up</a></li>
           <li><a href="mailto:cds-authoring-list@lists.mitre.org">Feedback</a></li>
         </ul>
     );
