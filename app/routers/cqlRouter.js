@@ -4,15 +4,15 @@ const publish = require('../handlers/publish');
 
 const CQLRouter = express.Router();
 
-// Routes for /api/cql
+// Routes for /authoring/api/cql
 CQLRouter.route('/')
   .post(artifact.objToCql);
 
-// Routes for /api/cql/:artifact
+// Routes for /authoring/api/cql/:artifact
 CQLRouter.route('/:artifact')
   .get(artifact.idToObj, artifact.objToCql);
 
-// Route for api/cql/publish
+// Route for /authoring/api/cql/publish
 CQLRouter.route('/publish')
   .post(publish.publish);
 

@@ -2,7 +2,7 @@ import axios from 'axios';
 import MockAdapter from 'axios-mock-adapter';
 
 const port = process.env.API_PORT || 3001;
-const baseUrl = `http://localhost:${port}/api/`;
+const baseUrl = `http://localhost:${port}/authoring/api/`;
 const mock = new MockAdapter(axios);
 jest.unmock('../components/AuthorBox');
 
