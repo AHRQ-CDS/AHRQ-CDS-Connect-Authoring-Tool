@@ -46,7 +46,8 @@ export default class Header extends Component {
               <span><a href="https://info.ahrq.gov/">FAQ</a></span>
               <span>
                 <a href="http://subscriptions.ahrq.gov/service/multi_subscribe.html?code=USAHRQ">
-                  <img src={`${process.env.PUBLIC_URL}/assets/images/primary-mail-list-icon.png`} alt="mail icon" /> Email Updates
+                  <img src={`${process.env.PUBLIC_URL}/assets/images/primary-mail-list-icon.png`} alt="mail icon" />
+                  Email Updates
                 </a>
               </span>
             </div>

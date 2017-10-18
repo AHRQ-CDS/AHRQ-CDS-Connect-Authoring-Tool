@@ -83,7 +83,7 @@
     "start": "npm run watch-css && react-scripts start",
     "build": "npm run build-css && react-scripts build",
     "test": "react-scripts test --env=jsdom --collectCoverageFrom='[\"*.js\", \"model/*.js\", \"src/**/*.{js,jsx}\", \"!src/index.js\", \"!setupTests.js\"]' --noStackTrace",
-    "test-backend": "./node_modules/.bin/mocha --reporter spec --recursive --timeout 4000",
+    "test-backend": "./node_modules/.bin/mocha --reporter spec --recursive --timeout 4000 test/api",
     "eject": "react-scripts eject",
     "start-dev": "nf start -p 3000",
     "lint-css": "stylelint 'src/styles/**/*.scss'",
