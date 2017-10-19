@@ -33,7 +33,7 @@ export default class Header extends Component {
         <div className="header__hhsbanner">
           <div className="header__hhsbanner-wrapper row">
             <a href="https://www.hhs.gov/" className="header__hhsbannerlink col-sm">
-              <img src="/assets/images/hhs-logo.png"
+              <img src={`${process.env.PUBLIC_URL}/assets/images/hhs-logo.png`}
                    title="HHS--US Department of Health and Human Services"
                    alt="HHS--US Department of Health and Human Services" />
               <span className="header__hhstext">U.S. Department of Health &amp; Human Services</span>
@@ -46,7 +46,8 @@ export default class Header extends Component {
               <span><a href="https://info.ahrq.gov/">FAQ</a></span>
               <span>
                 <a href="http://subscriptions.ahrq.gov/service/multi_subscribe.html?code=USAHRQ">
-                  <img src="/assets/images/primary-mail-list-icon.png" alt="mail icon" /> Email Updates
+                  <img src={`${process.env.PUBLIC_URL}/assets/images/primary-mail-list-icon.png`} alt="mail icon" />
+                  Email Updates
                 </a>
               </span>
             </div>
@@ -56,7 +57,7 @@ export default class Header extends Component {
         <div className="header__ahrqbanner">
           <div className="header__ahrqbanner-wrapper">
             <a href="http://www.ahrq.gov/index.html" title="AHRQ Home" rel="home" id="logo">
-              <img src="/assets/images/ahrq-logo.png"
+              <img src={`${process.env.PUBLIC_URL}/assets/images/ahrq-logo.png`}
                    title="AHRQ--Agency for Healthcare Research and Quality: Advancing Excellence in Health Care"
                    alt="AHRQ--Agency for Healthcare Research and Quality: Advancing Excellence in Health Care" />
             </a>

@@ -61,7 +61,7 @@ class RepoUploadModal extends Component {
   }
 
   fetchArtifacts = () => {
-    get('/api/repository/artifacts').then((res) => {
+    get(`${Config.api.baseUrl}/repository/artifacts`).then((res) => {
       this.setState({ artifacts: res.data, page: LIST });
     });
   }

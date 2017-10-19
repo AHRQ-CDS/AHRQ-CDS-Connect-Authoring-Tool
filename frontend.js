@@ -14,20 +14,24 @@ const url = require('url');
 
 const app = express();
 
-app.use(express.static(path.join(__dirname, 'build')));
+app.use('/authoring', express.static(path.join(__dirname, 'build')));
 
-// When running this in Docker without a proxy in front of it, we need to proxy /api in Express.
+// When running this in Docker without a proxy in front of it, we need to proxy /authoring/api in Express.
 const disableProxy = process.env.DISABLE_API_PROXY && /^(true|t|yes|y|1)$/i.test(process.env.DISABLE_API_PROXY);
 if (!disableProxy) {
   const apiPort = process.env.API_PORT || 3001;
-  app.use('/api', proxy(`localhost:${apiPort}`, {
-    // By default, the /api isn't preserved, so we need to add it back
-    proxyReqPathResolver: req => `/api${url.parse(req.url).path}` }
+  app.use('/authoring/api', proxy(`localhost:${apiPort}`, {
+    // By default, the /authoring/api isn't preserved, so we need to add it back
+    proxyReqPathResolver: req => `/authoring/api${url.parse(req.url).path}` }
   ));
 }
 
-app.get('/*', (req, res) => {
+app.get('/authoring/*', (req, res) => {
   res.sendFile(path.join(__dirname, 'build', 'index.html'));
+});
+
+app.get('/', (req, res) => {
+  res.redirect('/authoring');
 });
 
 app.listen(9000);

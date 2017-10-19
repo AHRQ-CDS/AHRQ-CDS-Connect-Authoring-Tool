@@ -16,7 +16,7 @@ const ahrqLinks = [
 ];
 
 const cdsAuthoringToolLinks = [
-  { name: 'CDS Authoring Tool Home', link: '/' },
+  { name: 'CDS Authoring Tool Home', link: `${process.env.PUBLIC_URL}/` },
   { name: 'Documentation', link: '' }, // TODO: add link
   { name: 'Request an Account', link: '' }, // TODO: add link
   { name: 'Feedback', link: 'mailto:cds-authoring-list@lists.mitre.org' }
@@ -75,8 +75,8 @@ export default class Footer extends Component {
             <div className="footer__top-cds col-12 col-md-6">
               <nav className="nav" aria-labelledby="sitemap-cds-authoring-tool">
                 <div className="link-header" id="sitemap-cds-authoring-tool">
-                  <img src="/assets/images/home-icon.png" alt="cds authoring tool home" />
-                  <a href="/" alt="home">CDS Authoring Tool Site</a>
+                  <img src={`${process.env.PUBLIC_URL}/assets/images/home-icon.png`} alt="cds authoring tool home" />
+                  <a href={`${process.env.PUBLIC_URL}/`} alt="home">CDS Authoring Tool Site</a>
                 </div>
 
                 <ul>{this.renderedNav(cdsAuthoringToolLinks)}</ul>
@@ -109,7 +109,7 @@ export default class Footer extends Component {
           <div className="footer__bottom-wrapper row">
             <div className="footer__bottom-sitelinks col-12 row">
               <div className="footer__bottom-sitelinks-ahrq col-12 col-md-1">
-                <img src="/assets/images/ahrq-footer-logo.png" alt="footer logo" />
+                <img src={`${process.env.PUBLIC_URL}/assets/images/ahrq-footer-logo.png`} alt="footer logo" />
               </div>
 
               <div className="footer__bottom-sitelinks-links col-12 col-md-7">

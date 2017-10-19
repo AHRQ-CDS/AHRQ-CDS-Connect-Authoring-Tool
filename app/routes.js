@@ -12,23 +12,23 @@ module.exports = (app) => {
   });
 
   // Routing for Artifacts
-  app.use('/api/artifacts', artifactRouter);
+  app.use('/authoring/api/artifacts', artifactRouter);
 
   // Routing for Resources, ValueSets, Templates
-  app.use('/api/config', configRouter);
+  app.use('/authoring/api/config', configRouter);
 
   // Routing for cql files
-  app.use('/api/cql', cqlRouter);
+  app.use('/authoring/api/cql', cqlRouter);
 
   // Routing for Artifact Elements
-  app.use('/api/expressions', expressionRouter);
+  app.use('/authoring/api/expressions', expressionRouter);
 
   // Routing for Auth
-  app.use('/api/auth', authRouter);
+  app.use('/authoring/api/auth', authRouter);
 
   // Routing for repository
-  app.use('/api/repository', repository);
+  app.use('/authoring/api/repository', repository);
 
   // Catch all other Api calls
-  app.get('/api/*', (req, res) => { res.sendStatus(404); });
+  app.get('/authoring/api/*', (req, res) => { res.sendStatus(404); });
 };

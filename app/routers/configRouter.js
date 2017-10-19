@@ -3,23 +3,23 @@ const config = require('../handlers/configHandler');
 
 const ConfigRouter = express.Router();
 
-// Routes for /api/config
+// Routes for /authoring/api/config
 ConfigRouter.route('/resources')
   .get(config.getResources);
 
-// Routes for /api/config/templates
+// Routes for /authoring/api/config/templates
 ConfigRouter.route('/templates')
   .get(config.getTemplates);
 
-// Routes for /api/config/valuesets
+// Routes for /authoring/api/config/valuesets
 ConfigRouter.route('/valuesets')
   .get(config.getValueSets);
 
-// Routes for /api/config/valuesets/:valueset*
+// Routes for /authoring/api/config/valuesets/:valueset*
 ConfigRouter.route('/valuesets/:valueset*')
   .get(config.getOneValueSet);
 
-// Routes for /api/publish
+// Routes for /authoring/api/publish
 ConfigRouter.route('/publish')
   .get(config.getPublishConfig);
 

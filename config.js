@@ -3,7 +3,7 @@ module.exports = {
     localhost: 'mongodb://localhost/cds_authoring'
   },
   api: {
-    baseUrl: '/api'
+    baseUrl: '/authoring/api'
   },
   repo: {
     baseUrl: process.env.REPO_BASE_URL || 'https://cdsconnect.ahrqdev.org',
