@@ -20,7 +20,7 @@ yarn # e.g. yarn install. installs this app's dependencies based on this project
 
 By default, the project will attempt to convert CQL to ELM on download or publish.  This can be disabled for development purposes.  If enabled, you will need the CQL-to-ELM translation service, a Java application that can be run locally via Maven or Docker.
 * To run locally with Maven: https://github.com/cqframework/cql-translation-service
-* To run locally with Docker, install Docker and run: `docker run -p 8080:8080 cqframework/cql-translation-service:v1.2.10-SNAPSHOT`
+* To run locally with Docker, install Docker and run: `docker run -p 8080:8080 cqframework/cql-translation-service:v1.2.16`
 
 To disable CQL-to-ELM translation, modify `config.js` or set the environment variable `CQL_TO_ELM_DISABLED` to `true`
 
@@ -95,7 +95,7 @@ docker build -t cdsauthoringtool .
 
 For the authoring tool to run in a docker container, MongoDB and CQL-to-ELM docker containers must be linked.  The following commands create the links, as well as expose the necessary ports to access the application from the host system:
 ```
-docker run --name cat-cql2elm -d cqframework/cql-translation-service:v1.2.10-SNAPSHOT
+docker run --name cat-cql2elm -d cqframework/cql-translation-service:v1.2.16
 docker run --name cat-mongo -d mongo:3.4
 docker run --name cat --link cat-cql2elm:cql2elm --link cat-mongo:mongo -e "REPO_BASE_URL=https://cdsconnect.ahrqdev.org" -e "CQL_TO_ELM_URL=http://cql2elm:8080/cql/translator" -e "MONGO_URL=mongodb://mongo/cds_authoring" -p "9000:9000" cdsauthoringtool
 ```
