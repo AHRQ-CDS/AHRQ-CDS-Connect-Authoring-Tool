@@ -574,7 +574,8 @@ class BuilderPage extends Component {
 
           <header className="builder__header">
             <h2 className="builder__heading">
-              <button className="primary-button"
+              <button aria-label="Edit"
+                className="primary-button"
                 onClick={this.openEditModal}>
                 <i className="fa fa-pencil"></i>
               </button>
