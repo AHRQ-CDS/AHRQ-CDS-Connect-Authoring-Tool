@@ -13,7 +13,7 @@ export default class Navbar extends Component {
             <li><NavLink to="/artifacts">Artifacts</NavLink></li>
             <li><NavLink to="/build">Workspace</NavLink></li>
             {/* TODO: Add link. */}
-            <li><a href="">Documentation</a></li>
+            <li><a href={`${process.env.PUBLIC_URL}/UserGuide.html`}>Documentation</a></li>
             <li><a href="mailto:cds-authoring-list@lists.mitre.org">Feedback</a></li>
           </ul>
       );
@@ -23,7 +23,7 @@ export default class Navbar extends Component {
         <ul>
           <li><NavLink exact to="/">Home</NavLink></li>
           {/* TODO: Add link. */}
-          <li><a href="">Documentation</a></li>
+          <li><a href={`${process.env.PUBLIC_URL}/UserGuide.html`}>Documentation</a></li>
           {/* TODO: Add link. */}
           <li><a href="">Sign Up</a></li>
           <li><a href="mailto:cds-authoring-list@lists.mitre.org">Feedback</a></li>
