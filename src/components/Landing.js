@@ -1,36 +1,57 @@
 import React from 'react';
-import { NavLink } from 'react-router-dom';
+import statinUseScreenshot from '../../public/assets/images/statin-use-screenshot.png';
 
 export default () => (
   <div className="landing" id="maincontent">
     <div className="landing-wrapper">
-      <h2>Welcome to the Clinical Decision Support Authoring Tool</h2>
-
       <p>
-        Build and export your first Clinicial Decision Support artifact by clicking
-        <NavLink to="/build"> here</NavLink>.
-      </p>
-
-      <h3>About</h3>
-
-      <p>
-        The <strong>CDS Authoring Tool</strong> is a key part of CDS Connect, a project sponsored by the &nbsp;
-        <a href="https://www.ahrq.gov/">Agency for Healthcare Research and Quality</a> that will offer a systematic
-        and replicable process for transforming patient-centered outcomes research (PCOR) findings into shareable and
-        standards-based clinical decision support (CDS) digital, computable artifacts.
+        The <strong>Clinical Decision Support (CDS) Authoring Tool</strong> is a component of the <strong>CDS
+        Connect</strong> project.
       </p>
 
       <p>
-        The CDS Authoring Tool, along with the <a href="https://cds.ahrq.gov">CDS Connect Repository</a>, will
-        promote the creation and use of CDS in everyday clinical settings, and that it will serve as the linchpin for
-        connecting high-quality CDS to the U.S. healthcare community.
+        CDS Connect, sponsored by the <a href="https://www.ahrq.gov/">Agency for Healthcare Research and Quality</a>,
+        aims to offer a systematic and replicable process for transforming patient-centered outcomes research (PCOR)
+        findings into shareable standards-based CDS artifacts. CDS Connect provides a repository of CDS artifacts and
+        will create a prototype infrastructure for sharing CDS across different health care settings and technologies.
       </p>
 
       <p>
-        As an alpha capability, the CDS Authoring Tool is targeted to a select audience for internal testing and
-        validation. It lacks many of the features that would be required for the final production version. As we move
-        to beta, the target audience will need to be expanded to a broader set of users for testing, validation, and
-        usability acceptance.
+        The CDS Authoring Tool, along with the <a href="https://cds.ahrq.gov/cdsconnect">CDS Connect Repository</a>,
+        is designed to promote the creation and use of CDS in everyday clinical settings, connecting high-quality CDS to
+        the U.S. healthcare community.  The CDS Authoring Tool provides an interface for creating CDS logic using
+        simple forms and exporting it as <a
+        href="http://www.hl7.org/implement/standards/product_brief.cfm?product_id=400">Health Level Seven (HL7)
+        Clinical Quality Language (CQL) 1.2</a> artifacts using the <a href="http://hl7.org/fhir/DSTU2/index.html">HL7
+        Fast Healthcare Interoperability Resources (FHIR) DSTU 2</a> data model.
+      </p>
+
+      <p>
+        <img
+          className="img-fluid img-thumbnail rounded mx-auto d-block"
+          alt="screenshot of authoring a CDS artifact about statin use"
+          src={statinUseScreenshot} />
+      </p>
+
+      <p>
+        The CDS Authoring Tool is currently under development and released as an alpha capability. Although the
+        development team strives to release bug-free code, alpha software typically exhibits minor bugs and other
+        limitations that would not be expected in production level software. Users should be aware of the following
+        known limitations in this release of the authoring tool:
+        <ul>
+          <li>a limited set of data elements, primarily focused on the cholesterol domain</li>
+          <li>a limited set of logical capabilities, primarily focused on inclusion/exclusion logic</li>
+          <li>support for only rule-based CDS, providing string-based recommendation statements</li>
+          <li>pre-selected value sets with no ability to change them</li>
+          <li>no automated integration with the CDS Connect repository</li>
+        </ul>
+      </p>
+      <p>
+        Given these limitations, the current version of the CDS Authoring Tool serves more as a proof-of-concept,
+        showing the promise of what CDS development might look like.  Future versions will address these limitations,
+        allowing more general CDS development across a variety of domains.  The CDS Connect team appreciates your <a
+        href="mailto:cds-authoring-list@lists.mitre.org">feedback</a> and participation to help shape the CDS Authoring
+        Tool as it moves forward.
       </p>
     </div>
   </div>
