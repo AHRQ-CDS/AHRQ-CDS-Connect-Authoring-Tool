@@ -135,7 +135,7 @@ Expressions chain onto one another in succession. The Return Type from the first
 Logic Elements are groups of Elements tied together by a particular conjunction, "And" or "Or". By stringing Elements together with conjunctions, a set of logic can be created to define a population.
 
 ![Basic Logic Element](Basic_Logic_Element.png)
-1. The outermost light gray box is the first level ("root", or "main") Logic Element, which houses all other Elements and ties them together with a conjunction (2).
+1. The outermost light grey box is the first level ("root", or "main") Logic Element, which houses all other Elements and ties them together with a conjunction (2).
 2. Between every Element inside a Logic Element group, there will be a dropdown denoting the conjunction used to tie them together. The options for conjunctions are "And" or "Or". Note that within any particular group, the same conjunction must be used. For instance, in the example above, if one changes the first occurance of the conjunction (the first (2) marker) to "Or", the second conjunction will also update to "Or". This avoids creating ambiguous logic for the system to interpret. The user can think of "And" as meaning every Element must be true, while "Or" means at least one of the Elements must be true.
 3. Every Logic Element will have an Element Picker (Section 3.2) at the bottom to allow the user to add new Elements to the group.
 
@@ -149,5 +149,81 @@ Logic Elements can also be "nested", which is to say, Logic Elements can have ot
 5. Again, note that every logic element group will have its own Element Picker, allowing the user to add more Elements or nested Logic Elements to the group.
 
 ### 3.7 Inclusions
-  
+The Inclusions section user Elements, Expressions, and Logic Elements to create a target population that is qualified to receive a Recommendation from the Artifact. The Inclusions population, with the Exclusions population filtered out, creates the general population for the Artifact. Every interaction required to build Inclusions is covered in the above sections.
+
+### 3.8 Exclusions
+The Exclusions section uses Elements, Expressions, and Logic Elements to create a target population that is generally excluded from receiving a Recommendation from the Artifact. The population matching Exclusions are filtered out of the Inclusions population, which creates the general population for the Artifact. Every interaction required to build Exclusions is covered in above sections.
+
+### 3.9 Subpopulations
+The Subpopulations section uses Elements, Expressions, and Logic Elements to create named target populations, which can then be applied to a Recommendation. This helps the user further filter the general population created from the combination of Inclusions and Exclusions. There are two default "Subpopulations" that can be applied to a recommendation, "Doesn't Meet Inclusion Criteria" and "Meets Exclusion Criteria" (more in section 3.10 Recommendations). Most interactions required to build Subpopulations are covered in above sections, but Subpopulations has a few differences.
+
+Subpopulations are presented as a list of named populations, which can be expanded or collapsed. The following shows a collapsed Subpopulation.
+
+![Collapsed Subpopulation](Collapsed_Subpopulation.png)
+1. In this example, the Subpopulation "CholesterolLessThan100" is collapsed. Clicking the right facing arrows will expand the Subpopulation for editing.
+2. The "Edit" button is one way to expand the Subpopulation for editing.
+3. The "X" button is used to delete the Subpopulation.
+4. "New Subpopulation" will add a new Subpopuation at the bottom of the list, ready for editing.
+
+The following demonstrates an expanded Subpopulation, ready for editing.
+
+![Expanded Subpopulation](Expanded_Subpopulation.png)
+1. The name of the Subpopulation can be edited when the Subpopulation is expanded.
+2. Clicking "Done" will save changes to and collapse the Subpopulation.
+3. The content of a Subpopulation is built the same as Inclusions and Exclusions. It uses items covered in above sections (Elements, Logic Elements, Element Picker, etc).
+
+### 3.10 Recommendations
+Recommendations are the resulting notices that should be delivered to the clinician after the CDS Artifact is executed. Recommendations are written as free text and can have an accompanying Rationale. Most Recommendations will apply to the population that meets Inclusion logic and does not meet Exclusions logic. Subpopulations, either the default options or the subpopulations the user built, can be applied to a Recommendation.
+
+![Blank Recommendation](Blank_Recommendation.png)
+1. A blank Recommendation shown as the light grey box.
+2. The "X" button is used to delete a Recommendation.
+3. The Recommendation's content is written in free text using this field. This is the message that the clinician will read in the EHR if the Recommendation is triggered.
+4. Clicking "Add rationale" will append an additional free text field where the user can enter the supporting evidence or reasoning for the Recommendation. This is covered below.
+5. Recommendations can be further filtered by Subpopulations, which is performed by clicking "Add subpopulation". This will prepend an area above the Recommendation to add Subpopulations, covered below.
+6. "New recommendation" adds a new Recommendation to the list of Recommendations.
+
+Any Recommendation supports having an optional accompanying Rationale, pictured below.
+
+![Recommendation with Rationale](Recommendation_with_Rationale.png)
+1. A free text field to enter the Rationale for the Recommendation.
+
+Recommendations can be further filtered by Subpopulations to target different Recommendations for different groups within the general target population.
+
+![Recommendation with Subpopulations](Recommendation_with_Subpopulations.png)
+1. An applied Subpopulation on this Recommendation. This means this Subpopulation's logic will have to evaluate to true for a given patient in order for the Recommendation to be delivered. 
+2. The "X" button removes the Subpopulation from the Recommendation.
+3. A field to search for and select the Subpopulations to apply to the Recommendation. Search for Subpopulations by typing here. Click a Subpopulation in the dropdown list below to add it to the Recommendation. Any subpopulation the user created and the two default subpopulations will appear in the dropdown.
+4. A link to add a new Subpopulation in the Subpopulations tab.
+5. One of the default Subpopulation options. This default option is supplied to allow the user to add Recommendations for patients who did not meet the Inclusion criteria and thus were not part of the general population for this CDS Artifact.
+6. One of the default Subpopulation options. This default option is supplied to allow the user to add Recommendations for patients who met the Exclusion criteria and thus were not part of the general population for this CDS Artifact.
+
+### 3.11 Parameters
+Parameters allow the user to create named, reusable Boolean values. They can be used to change the logic in an artifact in different implementations of the artifact. The naming of the Parameter should be readable and communicate its intent within the resulting CQL code. An example of this might be a Parameter called "GradeCRecommendationEnabled". One user might choose to accept this value as true, while another may prefer to set the GradeCRecommendation to false and not execute that part of the CQL code. Parameters are optional additions to the artifact. They can be used in building Inclusions, Exclusions, and Subpopulations, and can be used in Error Handling.
+
+![Parameters](Parameters.png)
+1. Each light grey box is an individual Parameter object.
+2. Parameters should be aptly named using this field.
+3. The "X" button deletes a Parameter.
+4. Parameters can have a Boolean value ("True" or "False"), selected by the user with this dropdown.
+5. The "New parameter" button adds a new Parameter to the list.
+
+### 3.12 Handle Errors
+The "Handle Errors" tab is an area to optionally direct the system how to handle various errors that may be encoutered when running the CDS Artifact. This allows the user to define what error messages to display when certain situations are encountered, such as when data is missing. Error handling is built by chaining together "If" statements, which say "if this condition is met, then deliver this error message."
+
+![Errors](Errors.png)
+1. Each "If" statement will require a condition, which is selected by the user with this dropdown. Conditions can include Subpopulations and Parameters the user created, as well as a few default options. More below.
+2. The user can opt to have a second "If" statement tied to the first, meaning both conditions must be met in order to deliver the error.
+3. This free-text field is used to enter the error message associated with the "If" condition.
+4. The user can add as many "If" statements to the error handling as desired. Clicking "Or Else If..." will add another "If" statement to the list.
+5. The final free-text area is used to define the error message that will be displayed if none of the "If" conditions are met.
+
+Similar to Recommendations' Subpopulations, "If" statement conditions for errors support a few default options.
+
+![Errors Conditions Options](Errors_Condition_Options.png)
+1. This default option will be met if none of the user-defined recommendation conditions are met.
+2. The same as Recommendations' Subpopulations, the "Doesn't Meet Inclusion Criteria" condition will be met for patients who did not meet the Inclusion criteria and thus were not part of the general population for this CDS Artifact.
+3. The same as Recommendations' Subpopulations, the "Meets Exclusion Criteria" condition will be met for patients who meet the Exclusion criteria and thus were not part of the general population of this CDS Artifact.
+4. The user-defined Subpopulations and Parameters will be displayed after the three default options.
+
 
