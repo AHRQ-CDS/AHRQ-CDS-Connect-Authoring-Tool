@@ -50,7 +50,8 @@ export default () => (
         Given these limitations, the current version of the CDS Authoring Tool serves more as a proof-of-concept,
         showing the promise of what CDS development might look like.  Future versions will address these limitations,
         allowing more general CDS development across a variety of domains.  The CDS Connect team appreciates your <a
-        href="">feedback</a> and participation to help shape the CDS Authoring Tool as it moves forward.
+        href="mailto:cds-authoring-list@lists.mitre.org">feedback</a> and participation to help shape the CDS Authoring
+        Tool as it moves forward.
       </p>
     </div>
   </div>
