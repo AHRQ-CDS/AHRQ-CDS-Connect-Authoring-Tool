@@ -1,0 +1,4 @@
+.userguide {
+  &-wrapper { @include componentWidth; }
+  padding: $global-padding;
+}
