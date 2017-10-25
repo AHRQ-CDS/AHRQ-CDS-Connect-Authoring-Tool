@@ -94,7 +94,7 @@ export default () => (
         <li>Pencil button opens a modal to edit the artifact name and version. For more details, see section 2.2 Edit Artifact modal.</li>
         <li>The workspace menu bar, which allows the user to perform actions on the entire artifact.
           <ol type='a'>
-            <li>Clicking "Download CQL" will generate the CQL files for the current artifact and will download the result onto their computer inside a zip file. The zip file will contain a fold with the artifact's CQL code, as well as any necessary dependencies. It will also contain the corresponding ELM files for all CQL files.</li>
+            <li>Clicking "Download CQL" will generate the CQL files for the current artifact and will download the result onto their computer inside a zip file. The zip file will contain a folder with the artifact's CQL code, as well as any necessary dependencies. It will also contain the corresponding ELM files for all CQL files.</li>
             <li>Clicking "Save" will save all changes made to the artifact.</li>
           </ol>
         </li>
@@ -117,7 +117,7 @@ export default () => (
         <li>The element search field. Type in this field to narrow the results in the element list (3) by the term typed.</li>
         <li>The element category list. Clicking on a category will filter the results in the element list (3) by the selected category. The selected category is highlighted with a grey background.</li>
         <li>The element list is the result of the filtering by category and search term within the modal. Click on an element (name or "+" button) to add it to the artifact and close the modal.</li>
-        <li>Clicking "Close" with close the modal without adding any elements to the artifact.</li>
+        <li>Clicking "Close" will close the modal without adding any elements to the artifact.</li>
         </ol>
         <h3>3.4 Elements</h3>
         <p>Elements are the main building blocks for an artifact. Each artifact represents different conditions, medications, demographics, etc. Using a combination of elements together in groups (covered below in Section 3.6 "Logic Elements") helps the user define different populations for the artifact.</p>
@@ -128,7 +128,7 @@ export default () => (
         <li>Move this element inside a new group. (Indent)</li>
         <li>Clicking this button allows the user to select a saved preset to use for this particular element type.
           <ol type='a'>
-            <li>Upon clicking the "Presets" button (4), a dropdown menu will appear to pick the appropriate preset to apply.</li>
+            <li>Upon clicking the "Presets" button (4), a dropdown menu will appear to pick the appropriate preset to apply. Choosing a preset option will populate the element with the preset's name and all expressions. These can then be changed on the current element.</li>
           </ol>
         </li>
         <li>Save the current element configuration as a preset.</li>
@@ -136,7 +136,7 @@ export default () => (
         <li>Clicking "X" on an element will delete it.</li>
         <li>The name of this specific element which the user can specify in the field.</li>
         <li>The current "Return Type" of this element based on the Expressions (more in section 3.5 Expressions).</li>
-        <li>Add an expression to this element (more in section 3.6 Expressions).</li>
+        <li>Add an expression to this element (more in section 3.5 Expressions).</li>
         </ol>
         <p>Some elements require additional fields to be filled in, or don't support adding Expressions.</p>
         <p><img alt="Gender Element" src={Gender_Element} className="img-fluid img-thumbnail rounded mx-auto d-block"/></p>
@@ -151,7 +151,7 @@ export default () => (
         <ol>
         <li>The list of Expressions applied to the element so far (in this example "Most Recent", "Quantity Value", and a comparison).</li>
         <li>The last Expression that has been applied will appear at the bottom of the Expression list, directly above the "Return Type" label. In this example, the last Expression is a comparison. Note that the comparison Expression has additional fields that need to be filled in. With comparisons, it is acceptable to fill in one or both sides of the comparison.</li>
-        <li>The last Expression can be removed by clicking the "X" button on the far right side of the Expression item. Because of the nature of the Expression chaining, only the last most Expression can be deleted. If the user wishes to delete an Expression higher up in the list, they must first delete all the ones below it.</li>
+        <li>The last Expression can be removed by clicking the "X" button on the far right side of the Expression item. Because of the nature of the Expression chaining, only the last Expression can be deleted. If the user wishes to delete an Expression higher up in the list, they must first delete all the ones below it.</li>
         <li>The "Return Type" of the Element will always be listed at the end of the Expressions list.</li>
         <li>Clicking the "Add Expression" button will reveal a list (to the right of the button) of relevant Expressions that can be applied on the Element.
           <ol type='a'>
@@ -185,7 +185,7 @@ export default () => (
         <p>Subpopulations are presented as a list of named populations, which can be expanded or collapsed. The following shows a collapsed Subpopulation.</p>
         <p><img alt="Collapsed Subpopulation" src={Collapsed_Subpopulation} className="img-fluid img-thumbnail rounded mx-auto d-block"/></p>
         <ol>
-        <li>In this example, the Subpopulation "CholesterolLessThan100" is collapsed. Clicking the right facing arrows will expand the Subpopulation for editing.</li>
+        <li>In this example, the Subpopulation "CholesterolLessThan200" is collapsed. Clicking the right facing arrows will expand the Subpopulation for editing.</li>
         <li>The "Edit" button is one way to expand the Subpopulation for editing.</li>
         <li>The "X" button is used to delete the Subpopulation.</li>
         <li>"New Subpopulation" will add a new Subpopulation at the bottom of the list, ready for editing.</li>

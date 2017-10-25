@@ -1,3 +1,4 @@
+NOTE: This file is outdated and updates have been made directly to src/components/UserGuide.js
 # CDS Authoring Tool User Guide
 
 This document helps new users of the Clinical Decision Support Authoring Tool navigate the features of the application and acquire the knowledge of how to use the tool to build CDS artifacts.
@@ -17,8 +18,7 @@ This dark blue bar is present across the top of all pages and allows the user to
 
 The options on the navigation bar differ depending on whether a user is logged in to the application.
 
-#### 1.2.1 Unauthenticated User Navigation
-TODO: Where should the screenshots live?  
+#### 1.2.1 Unauthenticated User Navigation 
 ![Unauthenticated Nav Bar](Unauthenticated_NavBar.png) 
 
 1. Clicking "Home" will return user to the Homepage.
@@ -71,7 +71,7 @@ The Workspace tab is the main space for building artifacts in the CDS Authoring 
 1. The workspace header, which contains the name of the artifact currently being worked on and the artifact menu bar (3). This header will be present across all workspace tabs (4).  
 2. Pencil button opens a modal to edit the artifact name and version. For more details, see section 2.2 Edit Artifact modal.
 3. The workspace menu bar, which allows the user to perform actions on the entire artifact.  
-  a. Clicking "Download CQL" will generate the CQL files for the current artifact and will download the result onto their computer inside a zip file. The zip file will contain a fold with the artifact's CQL code, as well as any necessary dependencies. It will also contain the corresponding ELM files for all CQL files.  
+  a. Clicking "Download CQL" will generate the CQL files for the current artifact and will download the result onto their computer inside a zip file. The zip file will contain a folder with the artifact's CQL code, as well as any necessary dependencies. It will also contain the corresponding ELM files for all CQL files.  
   b. Clicking "Save" will save all changes made to the artifact.  
 4. The workspace tabs, which divide the workspace into workflow sections for building an artifact. This helps keep sections of the artifact organized for the user (more on each tab below in sections 3.7-3.12).
 
@@ -94,7 +94,7 @@ Similar to the Element Picker, the Element Browse modal enables the user to have
 1. The element search field. Type in this field to narrow the results in the element list (3) by the term typed.
 2. The element category list. Clicking on a category will filter the results in the element list (3) by the selected category. The selected category is highlighted with a grey background.
 3. The element list is the result of the filtering by category and search term within the modal. Click on an element (name or "+" button) to add it to the artifact and close the modal.
-4. Clicking "Close" with close the modal without adding any elements to the artifact.
+4. Clicking "Close" will close the modal without adding any elements to the artifact.
 
 ### 3.4 Elements
 Elements are the main building blocks for an artifact. Each artifact represents different conditions, medications, demographics, etc. Using a combination of elements together in groups (covered below in Section 3.6 "Logic Elements") helps the user define different populations for the artifact.
@@ -105,13 +105,13 @@ Elements are the main building blocks for an artifact. Each artifact represents 
 2. Move this element out of the current group it belongs to. (Outdent)
 3. Move this element inside a new group. (Indent)
 4. Clicking this button allows the user to select a saved preset to use for this particular element type.
-  a. Upon clicking the "Presets" button (4), a dropdown menu will appear to pick the appropriate preset to apply.
+  a. Upon clicking the "Presets" button (4), a dropdown menu will appear to pick the appropriate preset to apply. Choosing a preset option will populate the element with the preset's name and all expressions. These can then be changed on the current element.
 5. Save the current element configuration as a preset.
 6. Expand or collapse the current element (helps preserve space and keep workspace tidy).
 7. Clicking "X" on an element will delete it.
 8. The name of this specific element which the user can specify in the field.
 9. The current "Return Type" of this element based on the Expressions (more in section 3.5 Expressions).
-10. Add an expression to this element (more in section 3.6 Expressions).
+10. Add an expression to this element (more in section 3.5 Expressions).
 
 Some elements require additional fields to be filled in, or don't support adding Expressions.
 
@@ -128,7 +128,7 @@ Expressions chain onto one another in succession. The Return Type from the first
 ![Expressions on an Element](Expressions_on_Element.png) 
 1. The list of Expressions applied to the element so far (in this example "Most Recent", "Quantity Value", and a comparison).
 2. The last Expression that has been applied will appear at the bottom of the Expression list, directly above the "Return Type" label. In this example, the last Expression is a comparison. Note that the comparison Expression has additional fields that need to be filled in. With comparisons, it is acceptable to fill in one or both sides of the comparison.
-3. The last Expression can be removed by clicking the "X" button on the far right side of the Expression item. Because of the nature of the Expression chaining, only the last most Expression can be deleted. If the user wishes to delete an Expression higher up in the list, they must first delete all the ones below it.
+3. The last Expression can be removed by clicking the "X" button on the far right side of the Expression item. Because of the nature of the Expression chaining, only the last Expression can be deleted. If the user wishes to delete an Expression higher up in the list, they must first delete all the ones below it.
 4. The "Return Type" of the Element will always be listed at the end of the Expressions list.
 5. Clicking the "Add Expression" button will reveal a list (to the right of the button) of relevant Expressions that can be applied on the Element.  
   a. Clicking a revealed Expression button will add that Expression to the Element.
@@ -162,7 +162,7 @@ The Subpopulations section uses Elements, Expressions, and Logic Elements to cre
 Subpopulations are presented as a list of named populations, which can be expanded or collapsed. The following shows a collapsed Subpopulation.
 
 ![Collapsed Subpopulation](Collapsed_Subpopulation.png)
-1. In this example, the Subpopulation "CholesterolLessThan100" is collapsed. Clicking the right facing arrows will expand the Subpopulation for editing.
+1. In this example, the Subpopulation "CholesterolLessThan200" is collapsed. Clicking the right facing arrows will expand the Subpopulation for editing.
 2. The "Edit" button is one way to expand the Subpopulation for editing.
 3. The "X" button is used to delete the Subpopulation.
 4. "New Subpopulation" will add a new Subpopulation at the bottom of the list, ready for editing.
