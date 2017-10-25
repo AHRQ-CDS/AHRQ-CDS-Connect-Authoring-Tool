@@ -11,10 +11,10 @@ The homepage is the first page arrived at when entering the CDS Authoring Tool a
 
 1. Main navigation for the CDS Authoring Tool.
 2. The Login button opens a form for the user to log in to the CDS Authoring Tool. The user must enter the username and password they created when signing up for an account with the CDS Authoring Tool.
-3. A brief introduction to the CDS Authoring Tool and its current limitations.  
+3. A brief introduction to the CDS Authoring Tool.  
 
 ### 1.2 Main Navigation
-This dark blue bar is present across the top of all pages and allows the user to traverse between different sections of the application.
+This dark blue bar is present across the top of all pages and allows the user to traverse between different sections of the application. When currently on a page, the background of the tab will be grey.
 
 The options on the navigation bar differ depending on whether a user is logged in to the application.
 
@@ -30,8 +30,8 @@ The options on the navigation bar differ depending on whether a user is logged i
 ![Authenticated Nav Bar](Authenticated_NavBar.png)
 
 1. Clicking "Home" returns user to Homepage.
-2. Clicking "Artifacts" navigates to the Artifacts page. When currently on this page, the background of this tab will be grey.
-3. Clicking "Workspace" navigates to the Workspace page with a new, blank artifact. When currently on this page, the background of this tab will be grey.
+2. Clicking "Artifacts" navigates to the Artifacts page.
+3. Clicking "Workspace" navigates to the Workspace page with a new, blank artifact.
 4. Clicking on "Documentation" opens the CDS Authoring Tool User Guide.
 5. Clicking "Feedback" opens the user's mail application to email questions, concerns, or general feedback to the CDS Authoring Tool creators.
 
@@ -105,8 +105,10 @@ Elements are the main building blocks for an artifact. Each artifact represents 
 2. Move this element out of the current group it belongs to. (Outdent)
 3. Move this element inside a new group. (Indent)
 4. Clicking this button allows the user to select a saved preset to use for this particular element type.
-  a. Upon clicking the "Presets" button (4), a dropdown menu will appear to pick the appropriate preset to apply. Choosing a preset option will populate the element with the preset's name and all expressions. These can then be changed on the current element.
-5. Save the current element configuration as a preset.
+  a. Upon clicking the "Presets" button (4), a dropdown menu will appear to pick the appropriate preset to apply. Choosing a preset option will populate the element with the preset's name and all expressions. These can then be changed on the current element.  
+  Note: Use of the preset buttons is currently discouraged, as they are considered to be deprecated. Future versions of the CDS Authoring Tool will likely replace this functionality with more robust approaches to re-usability. When this happens, existing presets may be lost.
+5. Save the current element configuration as a preset.  
+  Note: Use of the preset buttons is currently discouraged, as they are considered to be deprecated. Future versions of the CDS Authoring Tool will likely replace this functionality with more robust approaches to re-usability. When this happens, existing presets may be lost.
 6. Expand or collapse the current element (helps preserve space and keep workspace tidy).
 7. Clicking "X" on an element will delete it.
 8. The name of this specific element which the user can specify in the field.
@@ -151,7 +153,7 @@ Logic Elements can also be "nested", which is to say, Logic Elements can have ot
 5. Again, note that every logic element group will have its own Element Picker, allowing the user to add more Elements or nested Logic Elements to the group.
 
 ### 3.7 Inclusions
-The Inclusions section user Elements, Expressions, and Logic Elements to create a target population that is qualified to receive a Recommendation from the Artifact. The Inclusions population, with the Exclusions population filtered out, creates the general population for the Artifact. Every interaction required to build Inclusions is covered in the above sections.
+The Inclusions section uses Elements, Expressions, and Logic Elements to create a target population that is qualified to receive a Recommendation from the Artifact. The Inclusions population, with the Exclusions population filtered out, creates the general population for the Artifact. Every interaction required to build Inclusions is covered in the above sections.
 
 ### 3.8 Exclusions
 The Exclusions section uses Elements, Expressions, and Logic Elements to create a target population that is generally excluded from receiving a Recommendation from the Artifact. The population matching Exclusions are filtered out of the Inclusions population, which creates the general population for the Artifact. Every interaction required to build Exclusions is covered in above sections.
