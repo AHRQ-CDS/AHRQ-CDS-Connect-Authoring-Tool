@@ -1,5 +1,6 @@
 /* eslint-disable max-len */
 import React, { Component } from 'react';
+import { onVisitExternalLink } from '../helpers/handlers';
 
 const ahrqLinks = [
   { name: 'AHRQ Home', link: 'https://www.ahrq.gov/' },
@@ -125,7 +126,7 @@ export default class Footer extends Component {
                 <div className="addthis_horizontal_follow_toolbox social-links col-7">
                   <div id="atftbx" className="at-follow-tbx-element addthis-smartlayers addthis-animated at4-show">
                     <div className="addthis_toolbox addthis_default_style addthis_32x32_style">
-                      <a className="at300b at-follow-btn ext" data-svc="facebook" data-svc-id="ahrq.gov" title="Follow on Facebook" href="http://www.facebook.com/ahrq.gov" target="_blank">
+                      <a className="at300b at-follow-btn ext" data-svc="facebook" data-svc-id="ahrq.gov" title="Follow on Facebook" href="http://www.facebook.com/ahrq.gov" target="_blank" onClick={onVisitExternalLink}>
                         <div className="at4-icon-left at4-icon">
                           <span className="at-icon-wrapper facebook">
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" title="Facebook" alt="Facebook" className="at-icon at-icon-facebook">
@@ -139,7 +140,7 @@ export default class Footer extends Component {
                         <span className="addthis_follow_label">Facebook</span>
                       </a>
 
-                      <a className="at300b at-follow-btn ext" data-svc="twitter" data-svc-id="ahrqnews" title="Follow on Twitter" href="http://twitter.com/intent/follow?source=followbutton&amp;variant=1.0&amp;screen_name=ahrqnews" target="_blank">
+                      <a className="at300b at-follow-btn ext" data-svc="twitter" data-svc-id="ahrqnews" title="Follow on Twitter" href="http://twitter.com/intent/follow?source=followbutton&amp;variant=1.0&amp;screen_name=ahrqnews" target="_blank" onClick={onVisitExternalLink}>
                         <div className="at4-icon-left at4-icon">
                           <span className="at-icon-wrapper twitter">
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" title="Twitter" alt="Twitter" className="at-icon at-icon-twitter">
@@ -153,7 +154,7 @@ export default class Footer extends Component {
                         <span className="addthis_follow_label">Twitter</span>
                       </a>
 
-                      <a className="at300b at-follow-btn ext" data-svc="youtube" data-svc-id="AHRQHealthTV?sub_confirmation=1" title="Follow on YouTube" href="http://www.youtube.com/user/AHRQHealthTV?sub_confirmation=1" target="_blank">
+                      <a className="at300b at-follow-btn ext" data-svc="youtube" data-svc-id="AHRQHealthTV?sub_confirmation=1" title="Follow on YouTube" href="http://www.youtube.com/user/AHRQHealthTV?sub_confirmation=1" target="_blank" onClick={onVisitExternalLink}>
                         <div className="at4-icon-left at4-icon">
                           <span className="at-icon-wrapper youtube">
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" title="YouTube" alt="YouTube" className="at-icon at-icon-youtube">
@@ -167,7 +168,7 @@ export default class Footer extends Component {
                         <span className="addthis_follow_label">YouTube</span>
                       </a>
 
-                      <a className="at300b at-follow-btn ext" data-svc="linkedin" data-svc-id="agency-for-healthcare-research-and-quality" title="Follow on LinkedIn" href="http://www.linkedin.com/company/agency-for-healthcare-research-and-quality" target="_blank">
+                      <a className="at300b at-follow-btn ext" data-svc="linkedin" data-svc-id="agency-for-healthcare-research-and-quality" title="Follow on LinkedIn" href="http://www.linkedin.com/company/agency-for-healthcare-research-and-quality" target="_blank" onClick={onVisitExternalLink}>
                         <div className="at4-icon-left at4-icon">
                           <span className="at-icon-wrapper linkedin">
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" title="LinkedIn" alt="LinkedIn" className="at-icon at-icon-linkedin">
