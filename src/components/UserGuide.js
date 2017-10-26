@@ -1,3 +1,4 @@
+/* eslint-disable max-len,camelcase */
 import React from 'react';
 import Artifact_List from '../../documentation/userguide/screenshots/Artifact_List.png';
 import Artifact_Modal from '../../documentation/userguide/screenshots/Artifact_Modal.png';
@@ -33,7 +34,7 @@ export default () => (
         <ol>
         <li>Main navigation for the CDS Authoring Tool.</li>
         <li>The Login button opens a form for the user to log in to the CDS Authoring Tool. The user must enter the username and password they created when signing up for an account with the CDS Authoring Tool.</li>
-        <li>A brief introduction to the CDS Authoring Tool.  </li>
+        <li>A brief introduction to the CDS Authoring Tool.</li>
         </ol>
         <h3>1.2 Main Navigation</h3>
         <p>This dark blue bar is present across the top of all pages and allows the user to traverse between different sections of the application. When currently on a page, the background of the tab will be grey.</p>
@@ -80,8 +81,8 @@ export default () => (
         <p>Upon clicking the pencil button, this modal will open allowing the user to edit an existing artifact's name and/or version number.</p>
         <p><img alt="Edit Artifact Modal" src={Artifact_Modal} className="img-fluid img-thumbnail rounded mx-auto d-block"/></p>
         <ol>
-        <li>The field to edit the artifact's name, which cannot be blank.  </li>
-        <li>The field to edit the artifact's version number.  </li>
+        <li>The field to edit the artifact's name, which cannot be blank.</li>
+        <li>The field to edit the artifact's version number.</li>
         <li>"Save" button to confirm and save changes made to the artifact and close the modal.</li>
         <li>"X" button to cancel changes made to the artifact and close the modal.</li>
         </ol>
@@ -90,7 +91,7 @@ export default () => (
         <p>The Workspace tab is the main space for building artifacts in the CDS Authoring Tool.</p>
         <p><img alt="Workspace" src={Workspace} className="img-fluid img-thumbnail rounded mx-auto d-block"/></p>
         <ol>
-        <li>The workspace header, which contains the name of the artifact currently being worked on and the artifact menu bar (3). This header will be present across all workspace tabs (4).  </li>
+        <li>The workspace header, which contains the name of the artifact currently being worked on and the artifact menu bar (3). This header will be present across all workspace tabs (4).</li>
         <li>Pencil button opens a modal to edit the artifact name and version. For more details, see section 2.2 Edit Artifact modal.</li>
         <li>The workspace menu bar, which allows the user to perform actions on the entire artifact.
           <ol type='a'>
