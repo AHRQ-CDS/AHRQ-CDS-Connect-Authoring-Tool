@@ -43,3 +43,12 @@
     right: 15%;
   }
 }
+
+.modal-overlay {
+  position: fixed;
+  top: 0px;
+  left: 0px;
+  right: 0px;
+  bottom: 0px;
+  background-color: $grey-with-opacity;
+}

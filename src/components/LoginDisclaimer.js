@@ -22,9 +22,10 @@ class LoginDisclaimer extends Component {
       <ReactModal contentLabel="Login Disclaimer"
         id='login-disclaimer'
         isOpen={this.props.showModal}
-        onRequestClose={this.props.closeModal}
+        onRequestClose={() => this.props.closeModal(false)}
         className="modal-style"
-        shouldCloseOnOverlayClick={false}>
+        shouldCloseOnOverlayClick={false}
+        overlayClassName='modal-overlay'>
         <div className="modal__header">
           <span className="modal__heading">
             Login Disclaimer
