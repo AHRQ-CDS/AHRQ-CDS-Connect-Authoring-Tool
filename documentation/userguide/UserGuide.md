@@ -11,15 +11,15 @@ The homepage is the first page arrived at when entering the CDS Authoring Tool a
 
 1. Main navigation for the CDS Authoring Tool.
 2. The Login button opens a form for the user to log in to the CDS Authoring Tool. The user must enter the username and password they created when signing up for an account with the CDS Authoring Tool.
-3. A brief introduction to the CDS Authoring Tool.  
+3. A brief introduction to the CDS Authoring Tool.
 
 ### 1.2 Main Navigation
 This dark blue bar is present across the top of all pages and allows the user to traverse between different sections of the application. When currently on a page, the background of the tab will be grey.
 
 The options on the navigation bar differ depending on whether a user is logged in to the application.
 
-#### 1.2.1 Unauthenticated User Navigation 
-![Unauthenticated Nav Bar](Unauthenticated_NavBar.png) 
+#### 1.2.1 Unauthenticated User Navigation
+![Unauthenticated Nav Bar](Unauthenticated_NavBar.png)
 
 1. Clicking "Home" will return user to the Homepage.
 2. Clicking "Documentation" will open the CDS Authoring Tool User Guide.
@@ -40,24 +40,24 @@ The options on the navigation bar differ depending on whether a user is logged i
 ### 2.1 Artifacts Page
 ![Artifact Page](Artifact_Page.png)
 
-1. "New Artifact" form  
-  a. The field to enter the new artifact's name, which is required to create a new artifact.  
-  b. The field to enter the new artifact's version number.  
-  c. Submit button to create the new artifact and add it to the list below.  
-2. Artifacts list  
-  a. Pencil button opens a modal to edit the artifact information (edit modal detailed below).  
-  b. The name of the artifact. This serves as a link, which upon clicking will open the artifact in the Workspace.  
-  c. The version number of the artifact.  
-  d. The date/time the artifact was last updated.  
-  e. Button to delete the artifact entirely.  
+1. "New Artifact" form
+  a. The field to enter the new artifact's name, which is required to create a new artifact.
+  b. The field to enter the new artifact's version number.
+  c. Submit button to create the new artifact and add it to the list below.
+2. Artifacts list
+  a. Pencil button opens a modal to edit the artifact information (edit modal detailed below).
+  b. The name of the artifact. This serves as a link, which upon clicking will open the artifact in the Workspace.
+  c. The version number of the artifact.
+  d. The date/time the artifact was last updated.
+  e. Button to delete the artifact entirely.
 
-### 2.2 Edit Artifact modal  
+### 2.2 Edit Artifact modal
 Upon clicking the pencil button, this modal will open allowing the user to edit an existing artifact's name and/or version number.
 
 ![Edit Artifact Modal](Artifact_Modal.png)
 
-1. The field to edit the artifact's name, which cannot be blank.  
-2. The field to edit the artifact's version number.  
+1. The field to edit the artifact's name, which cannot be blank.
+2. The field to edit the artifact's version number.
 3. "Save" button to confirm and save changes made to the artifact and close the modal.
 4. "X" button to cancel changes made to the artifact and close the modal.
 
@@ -68,11 +68,11 @@ The Workspace tab is the main space for building artifacts in the CDS Authoring 
 
 ![Workspace](Workspace.png)
 
-1. The workspace header, which contains the name of the artifact currently being worked on and the artifact menu bar (3). This header will be present across all workspace tabs (4).  
+1. The workspace header, which contains the name of the artifact currently being worked on and the artifact menu bar (3). This header will be present across all workspace tabs (4).
 2. Pencil button opens a modal to edit the artifact name and version. For more details, see section 2.2 Edit Artifact modal.
-3. The workspace menu bar, which allows the user to perform actions on the entire artifact.  
-  a. Clicking "Download CQL" will generate the CQL files for the current artifact and will download the result onto their computer inside a zip file. The zip file will contain a folder with the artifact's CQL code, as well as any necessary dependencies. It will also contain the corresponding ELM files for all CQL files.  
-  b. Clicking "Save" will save all changes made to the artifact.  
+3. The workspace menu bar, which allows the user to perform actions on the entire artifact.
+  a. Clicking "Download CQL" will generate the CQL files for the current artifact and will download the result onto their computer inside a zip file. The zip file will contain a folder with the artifact's CQL code, as well as any necessary dependencies. It will also contain the corresponding ELM files for all CQL files.
+  b. Clicking "Save" will save all changes made to the artifact.
 4. The workspace tabs, which divide the workspace into workflow sections for building an artifact. This helps keep sections of the artifact organized for the user (more on each tab below in sections 3.7-3.12).
 
 ### 3.2 Element Picker
@@ -104,16 +104,11 @@ Elements are the main building blocks for an artifact. Each artifact represents 
 1. The name of the type of element, in this case the "Diabetes" condition.
 2. Move this element out of the current group it belongs to. (Outdent)
 3. Move this element inside a new group. (Indent)
-4. Clicking this button allows the user to select a saved preset to use for this particular element type.
-  a. Upon clicking the "Presets" button (4), a dropdown menu will appear to pick the appropriate preset to apply. Choosing a preset option will populate the element with the preset's name and all expressions. These can then be changed on the current element.  
-  Note: Use of the preset buttons is currently discouraged, as they are considered to be deprecated. Future versions of the CDS Authoring Tool will likely replace this functionality with more robust approaches to re-usability. When this happens, existing presets may be lost.
-5. Save the current element configuration as a preset.  
-  Note: Use of the preset buttons is currently discouraged, as they are considered to be deprecated. Future versions of the CDS Authoring Tool will likely replace this functionality with more robust approaches to re-usability. When this happens, existing presets may be lost.
-6. Expand or collapse the current element (helps preserve space and keep workspace tidy).
-7. Clicking "X" on an element will delete it.
-8. The name of this specific element which the user can specify in the field.
-9. The current "Return Type" of this element based on the Expressions (more in section 3.5 Expressions).
-10. Add an expression to this element (more in section 3.5 Expressions).
+4. Expand or collapse the current element (helps preserve space and keep workspace tidy).
+5. Clicking "X" on an element will delete it.
+6. The name of this specific element which the user can specify in the field.
+7. The current "Return Type" of this element based on the Expressions (more in section 3.5 Expressions).
+8. Add an expression to this element (more in section 3.5 Expressions).
 
 Some elements require additional fields to be filled in, or don't support adding Expressions.
 
@@ -125,14 +120,14 @@ Some elements require additional fields to be filled in, or don't support adding
 ### 3.5 Expressions
 Expressions modify an Element to define or narrow its intent. Many Elements will start as a list, which if left as such, _will generate invalid CQL_. The user must ensure that the Return Type of every Element returns a "Boolean" value. To achieve this, the user can apply Expressions to narrow or filter the previous Expression further. For example, one could start with a list of conditions, then apply the "Most Recent" Expression to find the most recent condition in the list, then apply "Quantity Value" and "Value Comparison" to achieve a Boolean Return Type (pictured below).
 
-Expressions chain onto one another in succession. The Return Type from the first Expression applied will narrow the types of Expressions that can be applied as the second, and so on. The CDS Authoring Tool performs this filtering for the user automatically. 
+Expressions chain onto one another in succession. The Return Type from the first Expression applied will narrow the types of Expressions that can be applied as the second, and so on. The CDS Authoring Tool performs this filtering for the user automatically.
 
-![Expressions on an Element](Expressions_on_Element.png) 
+![Expressions on an Element](Expressions_on_Element.png)
 1. The list of Expressions applied to the element so far (in this example "Most Recent", "Quantity Value", and a comparison).
 2. The last Expression that has been applied will appear at the bottom of the Expression list, directly above the "Return Type" label. In this example, the last Expression is a comparison. Note that the comparison Expression has additional fields that need to be filled in. With comparisons, it is acceptable to fill in one or both sides of the comparison.
 3. The last Expression can be removed by clicking the "X" button on the far right side of the Expression item. Because of the nature of the Expression chaining, only the last Expression can be deleted. If the user wishes to delete an Expression higher up in the list, they must first delete all the ones below it.
 4. The "Return Type" of the Element will always be listed at the end of the Expressions list.
-5. Clicking the "Add Expression" button will reveal a list (to the right of the button) of relevant Expressions that can be applied on the Element.  
+5. Clicking the "Add Expression" button will reveal a list (to the right of the button) of relevant Expressions that can be applied on the Element.
   a. Clicking a revealed Expression button will add that Expression to the Element.
 
 ### 3.6 Logic Elements
@@ -195,7 +190,7 @@ Any Recommendation supports having an optional accompanying Rationale, pictured 
 Recommendations can be further filtered by Subpopulations to target different Recommendations for different groups within the general target population.
 
 ![Recommendation with Subpopulations](Recommendation_with_Subpopulations.png)
-1. An applied Subpopulation on this Recommendation. This means this Subpopulation's logic will have to evaluate to true for a given patient in order for the Recommendation to be delivered. 
+1. An applied Subpopulation on this Recommendation. This means this Subpopulation's logic will have to evaluate to true for a given patient in order for the Recommendation to be delivered.
 2. The "X" button removes the Subpopulation from the Recommendation.
 3. A field to search for and select the Subpopulations to apply to the Recommendation. Search for Subpopulations by typing here. Click a Subpopulation in the dropdown list below to add it to the Recommendation. Any subpopulation the user created and the two default subpopulations will appear in the dropdown.
 4. A link to add a new Subpopulation in the Subpopulations tab.
