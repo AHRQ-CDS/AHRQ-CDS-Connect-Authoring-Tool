@@ -3,8 +3,6 @@ const passport = require('passport');
 const LdapStrategy = require('passport-ldapauth');
 const config = require('../config');
 
-// process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
-
 function getLdapConfiguration(req, callback) {
   // Replace {{username}} and {{password}} with values from request
   const ldapConfig = JSON.parse(JSON.stringify(config.auth.ldap)
@@ -15,8 +13,18 @@ function getLdapConfiguration(req, callback) {
 }
 
 module.exports = (app) => {
+  // Configuring cookie security as suggested at: https://github.com/expressjs/session#cookiesecure
+  const sess = {
+    secret: config.auth.sessionSecret,
+    cookie: {}
+  };
+  if (app.get('env') === 'production') {
+    app.set('trust proxy', 1); // trust first proxy
+    sess.cookie.secure = true; // serve secure cookies
+  }
+  app.use(session(sess));
+
   // Configure authentication using Passport
-  app.use(session({ secret: config.auth.sessionSecret }));
   passport.use(new LdapStrategy(getLdapConfiguration));
   app.use(passport.initialize());
   app.use(passport.session());
