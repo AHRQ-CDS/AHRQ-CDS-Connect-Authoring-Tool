@@ -134,7 +134,8 @@ class ElementModal extends Component {
           onRequestClose={ this.closeModal }
           shouldCloseOnOverlayClick={ true }
           contentLabel="Browse elements"
-          className="modal-style modal-style--full-height element-modal">
+          className="modal-style modal-style--full-height element-modal"
+          overlayClassName='modal-overlay'>
           <div className="element-modal__container">
             <header className="modal__header">
               <span className="modal__heading">Elements</span>

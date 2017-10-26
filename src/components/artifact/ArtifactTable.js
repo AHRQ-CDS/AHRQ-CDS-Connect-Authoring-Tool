@@ -111,7 +111,8 @@ class ArtifactTable extends Component {
         id="confirm-delete-modal"
         isOpen={this.state.showConfirmDeleteModal}
         onRequestClose={this.closeConfirmDeleteModal}
-        className="modal-style">
+        className="modal-style"
+        overlayClassName='modal-overlay'>
         <div className="modal__header">
           <span className="modal__heading">
             Delete Artifact Confirmation
