@@ -127,14 +127,6 @@ export default () => (
         <li>The name of the type of element, in this case the "Diabetes" condition.</li>
         <li>Move this element out of the current group it belongs to. (Outdent)</li>
         <li>Move this element inside a new group. (Indent)</li>
-        <li>Clicking this button allows the user to select a saved preset to use for this particular element type.
-          <ol type='a'>
-            <li>Upon clicking the "Presets" button (4), a dropdown menu will appear to pick the appropriate preset to apply. Choosing a preset option will populate the element with the preset's name and all expressions. These can then be changed on the current element.</li>
-          </ol>
-          <b>Note:</b> Use of the preset buttons is currently discouraged, as they are considered to be deprecated. Future versions of the CDS Authoring Tool will likely replace this functionality with more robust approaches to re-usability. When this happens, existing presets may be lost.
-        </li>
-        <li>Save the current element configuration as a preset.
-        <br/><b>Note:</b> Use of the preset buttons is currently discouraged, as they are considered to be deprecated. Future versions of the CDS Authoring Tool will likely replace this functionality with more robust approaches to re-usability. When this happens, existing presets may be lost.</li>
         <li>Expand or collapse the current element (helps preserve space and keep workspace tidy).</li>
         <li>Clicking "X" on an element will delete it.</li>
         <li>The name of this specific element which the user can specify in the field.</li>

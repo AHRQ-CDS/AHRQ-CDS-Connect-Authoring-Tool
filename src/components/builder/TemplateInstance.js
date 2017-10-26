@@ -26,6 +26,7 @@ function getInstanceName(instance) {
   return (instance.parameters.find(p => p.id === 'element_name') || {}).value;
 }
 
+/* PRESETS ARE CURRENTLY DISABLED
 function renderPreset(preset, stateIndex) {
   let name = 'untitled';
   const params = preset.parameters;
@@ -39,6 +40,7 @@ function renderPreset(preset, stateIndex) {
     </option>
   );
 }
+*/
 
 class TemplateInstance extends Component {
   static propTypes = {
@@ -376,6 +378,7 @@ class TemplateInstance extends Component {
           <div className="element__buttonbar">
             { this.props.renderIndentButtons(this.props.templateInstance) }
 
+            {/* PRESETS ARE CURRENTLY DISABLED
             <button
               id={`presets-${this.props.templateInstance.uniqueId}`}
               aria-controls={`presets-list-${this.props.templateInstance.uniqueId}`}
@@ -391,6 +394,7 @@ class TemplateInstance extends Component {
               aria-label={`save ${this.props.templateInstance.name}`}>
               <FontAwesome fixedWidth name='save'/>
             </button>
+            */}
 
             <button
               onClick={this.showHideElementBody}
@@ -406,6 +410,7 @@ class TemplateInstance extends Component {
               <FontAwesome fixedWidth name='close'/>
             </button>
 
+            {/* PRESETS ARE CURRENTLY DISABLED
             <div id={`presets-list-${this.props.templateInstance.uniqueId}`} role="region" aria-live="polite">
               { this.state.showPresets
                 ? <select
@@ -421,6 +426,7 @@ class TemplateInstance extends Component {
                 : null
               }
             </div>
+            */}
           </div>
         </div>
         <div>
