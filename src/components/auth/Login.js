@@ -1,19 +1,27 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import FontAwesome from 'react-fontawesome';
+import LoginDisclaimer from '../LoginDisclaimer';
 
 export default class Login extends Component {
   constructor(props) {
     super(props);
 
-    this.state = { showLogin: false };
+    this.state = { showLogin: false, showDisclaimer: false };
+  }
+
+  closeDisclaimer = (confirmed) => {
+    this.setState({ showDisclaimer: false });
+    if (confirmed) {
+      this.toggleShowLogin();
+    }
   }
 
   login = (event) => {
     event.preventDefault();
 
     if (this.state.showLogin === false) { // slide out login
-      this.toggleShowLogin();
+      this.setState({ showDisclaimer: true });
     } else { // submit login
       const username = this.refs.username;
       const password = this.refs.password;
@@ -60,6 +68,9 @@ export default class Login extends Component {
   render() {
     return (
       <form className="login row" onSubmit={this.login}>
+        <LoginDisclaimer
+          showModal={this.state.showDisclaimer}
+          closeModal={this.closeDisclaimer} />
         {this.renderedLoginInputs()}
 
         <button type="submit" className="btn btn-primary login__button col">
