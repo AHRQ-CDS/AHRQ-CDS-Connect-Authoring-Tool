@@ -1,3 +1,4 @@
+const process = require('process');
 const session = require('express-session');
 const passport = require('passport');
 const LdapStrategy = require('passport-ldapauth');
@@ -18,7 +19,7 @@ module.exports = (app) => {
     secret: config.auth.sessionSecret,
     cookie: {}
   };
-  if (app.get('env') === 'production') {
+  if (process.env.NODE_ENV === 'production') {
     app.set('trust proxy', 1); // trust first proxy
     sess.cookie.secure = true; // serve secure cookies
   }
