@@ -3,6 +3,13 @@ import { render } from 'react-dom';
 import { BrowserRouter as Router } from 'react-router-dom';
 import 'react-select/dist/react-select.css';
 
+/* Polyfills for IE 11 */
+import 'core-js/fn/array/find';
+import 'core-js/fn/array/find-index';
+import 'core-js/fn/array/from';
+import 'core-js/fn/array/includes';
+import 'core-js/fn/function/bind';
+
 import configureStore from './store/configureStore';
 import Root from './containers/Root';
 import '../node_modules/font-awesome/css/font-awesome.css';
