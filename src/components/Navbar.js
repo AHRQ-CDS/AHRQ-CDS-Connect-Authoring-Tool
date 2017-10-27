@@ -22,8 +22,8 @@ export default class Navbar extends Component {
         <ul>
           <li><NavLink exact to="/">Home</NavLink></li>
           <li><NavLink to="/userguide">Documentation</NavLink></li>
-          {/* TODO: Add link. */}
-          <li><a href="">Sign Up</a></li>
+          {/* TODO: TODO: Change to absolute link to production form when available. */}
+          <li><a href="/form/cds-authoring-tool-sign-up">Sign Up</a></li>
           <li><a href="mailto:cds-authoring-list@lists.mitre.org">Feedback</a></li>
         </ul>
     );
