@@ -45,7 +45,7 @@ export default () => (
         <li>Clicking "Home" will return user to the Homepage.</li>
         <li>Clicking "Documentation" will open the CDS Authoring Tool User Guide.</li>
         <li>Clicking "Sign Up" will allow a user to register for an account for the CDS Authoring Tool. A separate form will open, and the user must fill out the relevant information to request an account.</li>
-        <li>Clicking "Feedback" opens the user's mail application to email questions, concerns, or general feedback to the CDS Authoring Tool creators.</li>
+        <li>Clicking "Feedback" opens a new window with a contact form to submit questions, concerns, or general feedback to the CDS Connect team.</li>
         </ol>
         <h4>1.2.2 Authenticated User Navigation</h4>
         <p><img alt="Authenticated Nav Bar" src={Authenticated_NavBar} className="img-fluid img-thumbnail rounded mx-auto d-block"/></p>
@@ -54,7 +54,7 @@ export default () => (
         <li>Clicking "Artifacts" navigates to the Artifacts page.</li>
         <li>Clicking "Workspace" navigates to the Workspace page with a new, blank artifact.</li>
         <li>Clicking on "Documentation" opens the CDS Authoring Tool User Guide.</li>
-        <li>Clicking "Feedback" opens the user's mail application to email questions, concerns, or general feedback to the CDS Authoring Tool creators.</li>
+        <li>Clicking "Feedback" opens a new window with a contact form to submit questions, concerns, or general feedback to the CDS Connect team.</li>
         </ol>
         <h2>2. Manage Artifacts</h2>
         <h3>2.1 Artifacts Page</h3>
