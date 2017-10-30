@@ -13,7 +13,7 @@ export default class Navbar extends Component {
             <li><NavLink to="/artifacts">Artifacts</NavLink></li>
             <li><NavLink to="/build">Workspace</NavLink></li>
             <li><NavLink to="/userguide">Documentation</NavLink></li>
-            <li><a href="mailto:cds-authoring-list@lists.mitre.org">Feedback</a></li>
+            <li><a href="https://cds.ahrq.gov/contact-us" target="_blank">Feedback</a></li>
           </ul>
       );
     }
@@ -24,7 +24,7 @@ export default class Navbar extends Component {
           <li><NavLink to="/userguide">Documentation</NavLink></li>
           {/* TODO: TODO: Change to absolute link to production form when available. */}
           <li><a href="/form/cds-authoring-tool-sign-up">Sign Up</a></li>
-          <li><a href="mailto:cds-authoring-list@lists.mitre.org">Feedback</a></li>
+          <li><a href="https://cds.ahrq.gov/contact-us" target="_blank">Feedback</a></li>
         </ul>
     );
   }

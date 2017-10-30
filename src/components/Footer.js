@@ -20,7 +20,7 @@ const cdsAuthoringToolLinks = [
   { name: 'CDS Authoring Tool Home', link: `${process.env.PUBLIC_URL}/` },
   { name: 'Documentation', link: `${process.env.PUBLIC_URL}/userguide` },
   { name: 'Sign Up', link: '/form/cds-authoring-tool-sign-up' }, // TODO: Change to absolute link to production form when available
-  { name: 'Feedback', link: 'mailto:cds-authoring-list@lists.mitre.org' }
+  { name: 'Feedback', link: 'https://cds.ahrq.gov/contact-us' }
 ];
 
 const cdsToolLinks = [
