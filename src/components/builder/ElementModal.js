@@ -89,7 +89,7 @@ class ElementModal extends Component {
   }
 
   renderSidebar = () => (
-      <aside className="element-modal__sidebar">
+      <aside className="element-modal__sidebar" aria-label="Element Categories">
         { this.props.categories.map((cat, i) =>
           <button
             key={ `${cat.name}-${i}` }
@@ -103,7 +103,7 @@ class ElementModal extends Component {
     )
 
   renderList = () => (
-      <section className="element-modal__list">
+      <section className="element-modal__list" aria-label="Element List">
         { this.state.elementList.map((elem, i) =>
           <button
             key={ `${elem.name}-${i}` }

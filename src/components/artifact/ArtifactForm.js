@@ -68,6 +68,7 @@ class ArtifactForm extends Component {
   render() {
     return (
       <form className='form__inline'
+        aria-label="New Artifact Form"
         onSubmit={this.props.onSubmitFunction
           ? event => this.props.onSubmitFunction(event, this.state.name, this.state.version)
           : this.addArtifact}>

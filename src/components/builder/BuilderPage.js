@@ -572,7 +572,8 @@ class BuilderPage extends Component {
               editArtifactName={this.editArtifactName}/>
           </div>
 
-          <header className="builder__header">
+          <header className="builder__header"
+            aria-label="Workspace Header">
             <h2 className="builder__heading">
               <button aria-label="Edit"
                 className="primary-button"
@@ -583,7 +584,8 @@ class BuilderPage extends Component {
             </h2>
 
             <div className="builder__buttonbar">
-              <div className="field has-addons has-addons-right">
+              <div className="field has-addons has-addons-right"
+                aria-label="Workspace Menu Bar">
                 <span className="control">
                   <button onClick={ () => { this.updateStatusMessage('download'); this.downloadCQL(); } }
                     className="button builder__cqlbutton is-unsaved secondary-button">
@@ -622,7 +624,7 @@ class BuilderPage extends Component {
 
           <section className="builder__canvas">
             <Tabs selectedIndex={this.state.activeTabIndex} onSelect={tabIndex => this.setActiveTab(tabIndex)}>
-              <TabList>
+              <TabList aria-label="Workspace Tabs">
                 <Tab>Inclusions</Tab>
                 <Tab>Exclusions</Tab>
                 <Tab>Subpopulations</Tab>

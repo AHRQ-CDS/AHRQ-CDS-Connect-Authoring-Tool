@@ -37,7 +37,7 @@ export default () => (
         <ol>
           <li>Main navigation for the CDS Authoring Tool.</li>
           <li>The Login button opens a form for the user to log in to the CDS Authoring Tool. The user must enter the username and password they created when signing up for an account with the CDS Authoring Tool.</li>
-          <li>A brief introduction to the CDS Authoring Tool.</li>
+          <li>The main content provides a brief introduction to the CDS Authoring Tool.</li>
         </ol>
 
         <h3>1.2 Main Navigation</h3>
@@ -47,9 +47,9 @@ export default () => (
         <h4>1.2.1 Unauthenticated User Navigation</h4>
         <p><br/><img alt="Unauthenticated Nav Bar" src={UnauthenticatedNavBar} className="img-fluid img-thumbnail rounded mx-auto d-block"/> </p>
         <ol>
-          <li>Clicking "Home" will return user to the Homepage.</li>
-          <li>Clicking "Documentation" will open the CDS Authoring Tool User Guide.</li>
-          <li>Clicking "Sign Up" will allow a user to register for an account for the CDS Authoring Tool. A separate form will open, and the user must fill out the relevant information to request an account.</li>
+          <li>Clicking "Home" returns user to the Homepage.</li>
+          <li>Clicking "Documentation" opens the CDS Authoring Tool User Guide.</li>
+          <li>Clicking "Sign Up" allows a user to register for an account for the CDS Authoring Tool. A separate form will open, and the user must fill out the relevant information to request an account.</li>
           <li>Clicking "Feedback" opens a new window with a contact form to submit questions, concerns, or general feedback to the CDS Connect team.</li>
         </ol>
 
@@ -59,7 +59,7 @@ export default () => (
           <li>Clicking "Home" returns user to Homepage.</li>
           <li>Clicking "Artifacts" navigates to the Artifacts page.</li>
           <li>Clicking "Workspace" navigates to the Workspace page with a new, blank artifact.</li>
-          <li>Clicking on "Documentation" opens the CDS Authoring Tool User Guide.</li>
+          <li>Clicking "Documentation" opens the CDS Authoring Tool User Guide.</li>
           <li>Clicking "Feedback" opens a new window with a contact form to submit questions, concerns, or general feedback to the CDS Connect team.</li>
         </ol>
 
@@ -71,30 +71,30 @@ export default () => (
         <ol>
           <li>"New Artifact" form
             <ol type='a'>
-              <li>The field to enter the new artifact's name, which is required to create a new artifact.</li>
-              <li>The field to enter the new artifact's version number.</li>
-              <li>Submit button to create the new artifact and add it to the list below.</li>
+              <li>The "Artifact Name" field is used to enter the new artifact's name, which is required to create a new artifact.</li>
+              <li>The "Version" field is used to enter the new artifact's version number.</li>
+              <li>The "New Artifact" button creates the new artifact and adds it to the list below.</li>
             </ol>
           </li>
           <li>Artifacts list
             <ol type='a'>
-              <li>Pencil button opens a modal to edit the artifact information (edit modal detailed below).</li>
-              <li>The name of the artifact. This serves as a link, which upon clicking will open the artifact in the Workspace.</li>
-              <li>The version number of the artifact.</li>
-              <li>The date/time the artifact was last updated.</li>
-              <li>Button to delete the artifact entirely.</li>
+              <li>The "Edit" button, shown with the image of a pencil, opens a modal to edit the artifact information (edit modal detailed below).</li>
+              <li>The name of the artifact serves as a link, which upon clicking will open the artifact in the Workspace.</li>
+              <li>The "Version" specifies the version number of the artifact.</li>
+              <li>The "Updated" column specifies the date/time the artifact was last updated.</li>
+              <li>The "Delete" button opens a modal to confirm permanently deleting an artifact.</li>
             </ol>
           </li>
         </ol>
 
         <h3>2.2 Edit Artifact modal</h3>
-        <p>Upon clicking the pencil button, this modal will open allowing the user to edit an existing artifact's name and/or version number.</p>
+        <p>Upon clicking the "Edit" button, the "Edit modal" will open allowing the user to edit an existing artifact's name and/or version number.</p>
         <p><img alt="Edit Artifact Modal" src={ArtifactModal} className="img-fluid img-thumbnail rounded mx-auto d-block"/></p>
         <ol>
-          <li>The field to edit the artifact's name, which cannot be blank.</li>
-          <li>The field to edit the artifact's version number.</li>
-          <li>"Save" button to confirm and save changes made to the artifact and close the modal.</li>
-          <li>"X" button to cancel changes made to the artifact and close the modal.</li>
+          <li>The "Artifact Name" field is used to edit the artifact's name, which cannot be blank. It is prepopulated with the current name of the artifact.</li>
+          <li>The "Version" field is used to edit the artifact's version number. It is prepopulated with the current version of the artifact.</li>
+          <li>The "Save" button is used to confirm and save changes made to the artifact and close the modal.</li>
+          <li>The "Close Edit Modal" button, shown with the image of an "X", is used to cancel changes made to the artifact and close the modal.</li>
         </ol>
 
 
@@ -104,36 +104,36 @@ export default () => (
         <p>The Workspace tab is the main space for building artifacts in the CDS Authoring Tool.</p>
         <p><img alt="Workspace" src={Workspace} className="img-fluid img-thumbnail rounded mx-auto d-block"/></p>
         <ol>
-          <li>The workspace header, which contains the name of the artifact currently being worked on and the artifact menu bar (3). This header will be present across all workspace tabs (4).</li>
-          <li>Pencil button opens a modal to edit the artifact name and version. For more details, see section 2.2 Edit Artifact modal.</li>
-          <li>The workspace menu bar, which allows the user to perform actions on the entire artifact.
+          <li>The "Workspace Header" contains the name of the artifact currently being worked on and the workspace menu bar (3). This header will be present across all workspace tabs (4).</li>
+          <li>The "Edit" button, shown with the image of a pencil, opens a modal to edit the artifact name and version. For more details, see section 2.2 Edit Artifact modal.</li>
+          <li>The "Workspace Menu Bar" allows the user to perform actions on the entire artifact.
             <ol type='a'>
               <li>Clicking "Download CQL" will generate the CQL files for the current artifact and will download the result onto their computer inside a zip file. The zip file will contain a folder with the artifact's CQL code, as well as any necessary dependencies. It will also contain the corresponding ELM files for all CQL files.</li>
               <li>Clicking "Save" will save all changes made to the artifact.</li>
             </ol>
           </li>
-          <li>The workspace tabs, which divide the workspace into workflow sections for building an artifact. This helps keep sections of the artifact organized for the user (more on each tab below in sections 3.7-3.12).</li>
+          <li>The "Workspace Tabs" divide the workspace into workflow sections for building an artifact. This helps keep sections of the artifact organized for the user (more on each tab below in sections 3.7-3.12).</li>
         </ol>
 
         <h3>3.2 Element Picker</h3>
         <p>The element picker is used to find and add elements into various sections of the artifact. This same module is used across the "Inclusions", "Exclusions", and "Subpopulations" sections of the application.</p>
         <p><img alt="Element Picker" src={ElementPicker} className="img-fluid img-thumbnail rounded mx-auto d-block"/></p>
         <ol>
-          <li>The element search field. Click in this field to open the element dropdown (2). Type in this field to narrow the results in the dropdown by the term typed.</li>
-          <li>The element dropdown, which shows relevant elements filtered by the category selected (4) and the search term (1).</li>
-          <li>An individual element which can be added to the artifact. The element name is displayed, and if looking in "All" categories, will be followed by the category type in parenthesis. Clicking on an element will add it to the artifact.</li>
-          <li>The category dropdown, which allows the user to select which category of elements they wish to filter results by.</li>
-          <li>Clicking "Browse" will launch the "Element Browse" modal.</li>
+          <li>The "Add Element" search field. Click in this field to open the "Add Element" dropdown (2). Type in this field to narrow the results in the dropdown by the term typed.</li>
+          <li>The "Add Element" dropdown shows relevant elements filtered by the category selected (4) and the search term (1).</li>
+          <li>Individual elements can be added to the artifact from the dropdown opened by the "Add Element" search field. The element name is displayed, and if looking in "All" categories, will be followed by the category type in parenthesis. Clicking on an element will add it to the artifact.</li>
+          <li>The "Narrow elements by category" dropdown allows the user to select which category of elements they wish to filter results by.</li>
+          <li>Clicking the "Browse" button will launch the "Element Browse" modal.</li>
         </ol>
 
         <h3>3.3 Element Browse</h3>
         <p>Similar to the Element Picker, the Element Browse modal enables the user to have a more spacious area to search, view, and add elements to an artifact.</p>
         <p><img alt="Element Browse" src={ElementBrowse} className="img-fluid img-thumbnail rounded mx-auto d-block"/></p>
         <ol>
-          <li>The element search field. Type in this field to narrow the results in the element list (3) by the term typed.</li>
-          <li>The element category list. Clicking on a category will filter the results in the element list (3) by the selected category. The selected category is highlighted with a grey background.</li>
-          <li>The element list is the result of the filtering by category and search term within the modal. Click on an element (name or "+" button) to add it to the artifact and close the modal.</li>
-          <li>Clicking "Close" will close the modal without adding any elements to the artifact.</li>
+          <li>The "Search Elements" field allows a user to type in this field to narrow the results in the element list (3) by the term typed.</li>
+          <li>The "Element Categories" list contains all possible categories. Clicking on a category will filter the results in the element list (3) by the selected category. The selected category is highlighted with a grey background.</li>
+          <li>The "Element List" is the result of the filtering by category and search term within the modal. Click on an element (name or "+" button) to add it to the artifact and close the modal.</li>
+          <li>Clicking the "Close" button will close the modal without adding any elements to the artifact.</li>
         </ol>
 
         <h3>3.4 Elements</h3>
