@@ -58,9 +58,9 @@ export default class Login extends Component {
           id='login'
           isOpen={this.state.showLoginModal}
           onRequestClose={this.closeLoginModal}
-          className="login-modal modal-style"
+          className="login-modal modal-style modal-style__dark"
           shouldCloseOnOverlayClick={false}
-          overlayClassName='modal-overlay'>
+          overlayClassName='modal-overlay modal-overlay__light'>
 
           <div className="modal__header">
             <div className="modal__heading">Login to your account</div>

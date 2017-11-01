@@ -1,10 +1,22 @@
 .modal-style {
-  max-width: 800px;
-  margin: 20px auto;
-  background-color: $gray-with-opacity;
   border-radius: $border-radius;
   box-shadow: $box-shadow;
-  color: $white;
+
+  &__light {
+    background-color: $white;
+    color: $gray-dark;
+    position: absolute;
+    top: 50px;
+    left: 40px;
+    right: 40px;
+  }
+
+  &__dark {
+    background-color: $gray-with-opacity;
+    color: $white;
+    max-width: 800px;
+    margin: 20px auto;
+  }
 
   .modal__header {
     display: flex;
@@ -55,10 +67,17 @@
 }
 
 .modal-overlay {
-  background-color: $white-with-opacity;
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
+
+  &__dark {
+    background-color: $gray-with-opacity;
+  }
+
+  &__light {
+    background-color: $white-with-opacity;
+  }
 }
