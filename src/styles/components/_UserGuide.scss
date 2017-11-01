@@ -1,4 +1,21 @@
 .userguide {
   &-wrapper { @include componentWidth; }
+
   padding: $global-padding;
+
+  .h2-wrapper {
+    border-top: 1px solid $gray-lighter;
+    margin-top: 30px;
+    padding-top: 30px;
+  }
+
+  .h3-wrapper {
+    border-left: 3px solid $gray-lighter;
+    padding-left: 20px;
+  }
+
+  .h4-wrapper {
+    border-left: 3px solid $ahrq-color-dark-blue;
+    padding-left: 20px;
+  }
 }
