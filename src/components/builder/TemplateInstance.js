@@ -213,7 +213,7 @@ class TemplateInstance extends Component {
   }
 
   renderAppliedModifiers = () => (
-      <div className="modifier__list">
+      <div className="modifier__list" aria-label="Expression List">
         {(this.props.templateInstance.modifiers || []).map((modifier, index) =>
           this.renderAppliedModifier(modifier, index)
         )}

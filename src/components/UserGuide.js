@@ -140,20 +140,20 @@ export default () => (
         <p>Elements are the main building blocks for an artifact. Each artifact represents different conditions, medications, demographics, etc. Using a combination of elements together in groups (covered below in Section 3.6 "Logic Elements") helps the user define different populations for the artifact.</p>
         <p><img alt="Element" src={Element} className="img-fluid img-thumbnail rounded mx-auto d-block"/></p>
         <ol>
-          <li>The name of the type of element, in this case the "Diabetes" condition.</li>
-          <li>Move this element out of the current group it belongs to. (Outdent)</li>
-          <li>Move this element inside a new group. (Indent)</li>
-          <li>Expand or collapse the current element (helps preserve space and keep workspace tidy).</li>
-          <li>Clicking "X" on an element will delete it.</li>
-          <li>The name of this specific element which the user can specify in the field.</li>
-          <li>The current "Return Type" of this element based on the Expressions (more in section 3.5 Expressions).</li>
-          <li>Add an expression to this element (more in section 3.5 Expressions).</li>
+          <li>The name of the type of element appears at the top of the element, in this case the "Diabetes" condition.</li>
+          <li>The "Outdent" button moves the element out of the current group it belongs to.</li>
+          <li>The "Indent" button moves the element inside a new group.</li>
+          <li>The "Hide" element button expands or collapses the current element (helps preserve space and keep workspace tidy).</li>
+          <li>Clicking the "Remove" element button, shown with the image of an "X", will delete the element.</li>
+          <li>The "Element Name" field provides the name of this specific element, which the user can specify in the field.</li>
+          <li>The "Return Type" gives the current return type of this element based on the Expressions (more in section 3.5 Expressions).</li>
+          <li>The "Add Expression" button adds an expression to this element (more in section 3.5 Expressions).</li>
         </ol>
         <p>Some elements require additional fields to be filled in, or don't support adding Expressions.</p>
         <p><img alt="Gender Element" src={GenderElement} className="img-fluid img-thumbnail rounded mx-auto d-block"/></p>
         <ol>
-          <li>Some elements have more fields to fill in beyond just the "Element Name". This element ("Gender") requires the user to select which gender is desired, using the select menu. Fill out every field in an element to ensure proper CQL code is generated.</li>
-          <li>Some elements do not support "Expressions". This element ("Gender") does not have any expressions that can be applied to it, and automatically returns a Boolean value.</li>
+          <li>Some elements have more fields to fill in beyond just the "Element Name". For example, the "Gender" element requires the user to select which gender is desired, using the select menu. Fill out every field in an element to ensure proper CQL code is generated.</li>
+          <li>Some elements do not support "Expressions". These elements will not have an "Add Expression" button. For example, "Gender" does not have any expressions that can be applied to it, and automatically returns a Boolean value.</li>
         </ol>
 
         <h3>3.5 Expressions</h3>
@@ -161,9 +161,9 @@ export default () => (
         <p>Expressions chain onto one another in succession. The Return Type from the first Expression applied will narrow the types of Expressions that can be applied as the second, and so on. The CDS Authoring Tool performs this filtering for the user automatically. </p>
         <p><img alt="Expressions on an Element" src={ExpressionsOnElement} className="img-fluid img-thumbnail rounded mx-auto d-block"/> </p>
         <ol>
-          <li>The list of Expressions applied to the element so far (in this example "Most Recent", "Quantity Value", and a comparison).</li>
+          <li>The "Expression List" lists all expressions applied to the element so far (in this example "Most Recent", "Quantity Value", and a comparison).</li>
           <li>The last Expression that has been applied will appear at the bottom of the Expression list, directly above the "Return Type" label. In this example, the last Expression is a comparison. Note that the comparison Expression has additional fields that need to be filled in. With comparisons, it is acceptable to fill in one or both sides of the comparison.</li>
-          <li>The last Expression can be removed by clicking the "X" button on the far right side of the Expression item. Because of the nature of the Expression chaining, only the last Expression can be deleted. If the user wishes to delete an Expression higher up in the list, they must first delete all the ones below it.</li>
+          <li>The last Expression can be removed by clicking the "Remove last expression" button on the far right side of the Expression item, shown with the image of an "X". Because of the nature of the Expression chaining, only the last Expression can be deleted. If the user wishes to delete an Expression higher up in the list, they must first delete all the ones below it.</li>
           <li>The "Return Type" of the Element will always be listed at the end of the Expressions list.</li>
           <li>Clicking the "Add Expression" button will reveal a list (to the right of the button) of relevant Expressions that can be applied on the Element.
             <ol type='a'>
@@ -177,14 +177,14 @@ export default () => (
         <p><img alt="Basic Logic Element" src={BasicLogicElement} className="img-fluid img-thumbnail rounded mx-auto d-block"/></p>
         <ol>
           <li>The outermost light grey box is the first level ("root", or "main") Logic Element, which houses all other Elements and ties them together with a conjunction (2).</li>
-          <li>Between every Element inside a Logic Element group, there will be a dropdown denoting the conjunction used to tie them together. The options for conjunctions are "And" or "Or". Note that within any particular group, the same conjunction must be used. For instance, in the example above, if one changes the first occurrence of the conjunction (the first (2) marker) to "Or", the second conjunction will also update to "Or". This avoids creating ambiguous logic for the system to interpret. The user can think of "And" as meaning every Element must be true, while "Or" means at least one of the Elements must be true.</li>
+          <li>Between every Element inside a Logic Element group, there will be a "Select conjunction type" dropdown denoting the conjunction used to tie them together. The options for conjunctions are "And" or "Or". Note that within any particular group, the same conjunction must be used. For instance, in the example above, if one changes the first occurrence of the conjunction (the first (2) marker) to "Or", the second conjunction will also update to "Or". This avoids creating ambiguous logic for the system to interpret. The user can think of "And" as meaning every Element must be true, while "Or" means at least one of the Elements must be true.</li>
           <li>Every Logic Element will have an Element Picker (Section 3.2) at the bottom to allow the user to add new Elements to the group.</li>
         </ol>
         <p>Logic Elements can also be "nested", which is to say, Logic Elements can have other Logic Elements inside them. Logic Elements can be nested as much as the user desires. Using the Indent/Outdent buttons helps the user quickly group and ungroup individual Elements and entire Logic Element groups.</p>
         <p><img alt="Nested Logic Element" src={NestedLogicElement} className="img-fluid img-thumbnail rounded mx-auto d-block"/></p>
         <ol>
           <li>Once again, the outermost Logic Element here is represented as the light grey box.</li>
-          <li>A nested Logic Element, represented by a level of indentation as well as a darker colored grey background.</li>
+          <li>A nested Logic Element is represented by a level of indentation as well as a darker colored grey background.</li>
           <li>Nested Logic Elements can be named using the "Group Name" field, similar to Elements.</li>
           <li>Entire Logic Element groups can be indented or outdented, similar to individual Elements. This helps the user move entire groups, rather than just one Element at a time.</li>
           <li>Again, note that every logic element group will have its own Element Picker, allowing the user to add more Elements or nested Logic Elements to the group.</li>
@@ -203,13 +203,13 @@ export default () => (
         <ol>
           <li>In this example, the Subpopulation "CholesterolLessThan200" is collapsed. Clicking the right facing arrows will expand the Subpopulation for editing.</li>
           <li>The "Edit" button is one way to expand the Subpopulation for editing.</li>
-          <li>The "X" button is used to delete the Subpopulation.</li>
-          <li>"New Subpopulation" will add a new Subpopulation at the bottom of the list, ready for editing.</li>
+          <li>The "Remove Subpopulation" button, shown with the image of an "X" button, is used to delete the Subpopulation.</li>
+          <li>The "New Subpopulation" button will add a new Subpopulation at the bottom of the list, ready for editing.</li>
         </ol>
         <p>The following demonstrates an expanded Subpopulation, ready for editing.</p>
         <p><img alt="Expanded Subpopulation" src={ExpandedSubpopulation} className="img-fluid img-thumbnail rounded mx-auto d-block"/></p>
         <ol>
-          <li>The name of the Subpopulation can be edited when the Subpopulation is expanded.</li>
+          <li>The name of the Subpopulation can be edited when the Subpopulation is expanded using the "Subpopulation Title" field.</li>
           <li>Clicking "Done" will save changes to and collapse the Subpopulation.</li>
           <li>The content of a Subpopulation is built the same as Inclusions and Exclusions. It uses items covered in above sections (Elements, Logic Elements, Element Picker, etc.).</li>
         </ol>
@@ -219,26 +219,26 @@ export default () => (
         <p><img alt="Blank Recommendation" src={BlankRecommendation} className="img-fluid img-thumbnail rounded mx-auto d-block"/></p>
         <ol>
           <li>A blank Recommendation shown as the light grey box.</li>
-          <li>The "X" button is used to delete a Recommendation.</li>
-          <li>The Recommendation's content is written in free text using this field. This is the message that the clinician will read in the EHR if the Recommendation is triggered.</li>
-          <li>Clicking "Add rationale" will append an additional free text field where the user can enter the supporting evidence or reasoning for the Recommendation. This is covered below.</li>
-          <li>Recommendations can be further filtered by Subpopulations, which is performed by clicking "Add subpopulation". This will prepend an area above the Recommendation to add Subpopulations, covered below.</li>
-          <li>"New recommendation" adds a new Recommendation to the list of Recommendations.</li>
+          <li>The "Remove Recommendation" button, shown with the image of an "X", is used to delete a Recommendation.</li>
+          <li>The Recommendation's content is written in free text using the "Recommendation" text area. This is the message that the clinician will read in the EHR if the Recommendation is triggered.</li>
+          <li>Clicking the "Add rationale" button will append an additional free text field where the user can enter the supporting evidence or reasoning for the Recommendation. This is covered below.</li>
+          <li>Recommendations can be further filtered by Subpopulations, which is performed by clicking the "Add subpopulation" button. This will prepend an area above the Recommendation to add Subpopulations, covered below.</li>
+          <li>The "New recommendation" button adds a new Recommendation to the list of Recommendations.</li>
         </ol>
         <p>Any Recommendation supports having an optional accompanying Rationale, pictured below.</p>
         <p><img alt="Recommendation with Rationale" src={RecommendationWithRationale} className="img-fluid img-thumbnail rounded mx-auto d-block"/></p>
         <ol>
-          <li>A free text field to enter the Rationale for the Recommendation.</li>
+          <li>The "Rationale" free text field is used to enter the Rationale for the Recommendation.</li>
         </ol>
         <p>Recommendations can be further filtered by Subpopulations to target different Recommendations for different groups within the general target population.</p>
         <p><img alt="Recommendation with Subpopulations" src={RecommendationWithSubpopulations} className="img-fluid img-thumbnail rounded mx-auto d-block"/></p>
         <ol>
-          <li>An applied Subpopulation on this Recommendation. This means this Subpopulation's logic will have to evaluate to true for a given patient in order for the Recommendation to be delivered. </li>
-          <li>The "X" button removes the Subpopulation from the Recommendation.</li>
-          <li>A field to search for and select the Subpopulations to apply to the Recommendation. Search for Subpopulations by typing here. Click a Subpopulation in the dropdown list below to add it to the Recommendation. Any subpopulation the user created and the two default subpopulations will appear in the dropdown.</li>
-          <li>A link to add a new Subpopulation in the Subpopulations tab.</li>
-          <li>One of the default Subpopulation options. This default option is supplied to allow the user to add Recommendations for patients who did not meet the Inclusion criteria and thus were not part of the general population for this CDS Artifact.</li>
-          <li>One of the default Subpopulation options. This default option is supplied to allow the user to add Recommendations for patients who met the Exclusion criteria and thus were not part of the general population for this CDS Artifact.</li>
+          <li>An applied Subpopulation on the Recommendation appears above the free text areas. This means this Subpopulation's logic will have to evaluate to true for a given patient in order for the Recommendation to be delivered. </li>
+          <li>The "Remove" button, shown with the image of an "X", removes the Subpopulation from the Recommendation.</li>
+          <li>The "Add a subpopulation" field is used to search for and select the Subpopulations to apply to the Recommendation. Search for Subpopulations by typing here. Click a Subpopulation in the dropdown list below to add it to the Recommendation. Any subpopulation the user created and the two default subpopulations will appear in the dropdown.</li>
+          <li>The "New Subpopulation" link adds a new Subpopulation in the Subpopulations tab and switches to the Subpopulations tab.</li>
+          <li>"Doesn't Meet Inclusion Criteria" is one of the default Subpopulation options. This default option is supplied to allow the user to add Recommendations for patients who did not meet the Inclusion criteria and thus were not part of the general population for this CDS Artifact.</li>
+          <li>"Meets Exclusion Criteria" is one of the default Subpopulation options. This default option is supplied to allow the user to add Recommendations for patients who met the Exclusion criteria and thus were not part of the general population for this CDS Artifact.</li>
         </ol>
 
         <h3>3.11 Parameters</h3>
@@ -246,9 +246,9 @@ export default () => (
         <p><img alt="Parameters" src={Parameters} className="img-fluid img-thumbnail rounded mx-auto d-block"/></p>
         <ol>
           <li>Each light grey box is an individual Parameter object.</li>
-          <li>Parameters should be aptly named using this field.</li>
-          <li>The "X" button deletes a Parameter.</li>
-          <li>Parameters can have a Boolean value ("True" or "False"), selected by the user with this dropdown.</li>
+          <li>Parameters should be aptly named using the "Parameter Name" field.</li>
+          <li>The "Delete Parameter" button, shown with the image of an "X", deletes a Parameter.</li>
+          <li>Parameters can have a Boolean value ("True" or "False"), selected by the user with the "Select" dropdown.</li>
           <li>The "New parameter" button adds a new Parameter to the list.</li>
         </ol>
 
@@ -256,16 +256,16 @@ export default () => (
         <p>The "Handle Errors" tab is an area to optionally direct the system how to handle various errors that may be encountered when running the CDS Artifact. This allows the user to define what error messages to display when certain situations are encountered, such as when data is missing. Error handling is built by chaining together "If" statements, which say "if this condition is met, then deliver this error message."</p>
         <p><img alt="Errors" src={Errors} className="img-fluid img-thumbnail rounded mx-auto d-block"/></p>
         <ol>
-          <li>Each "If" statement will require a condition, which is selected by the user with this dropdown. Conditions can include Subpopulations and Parameters the user created, as well as a few default options. More below.</li>
-          <li>The user can opt to have a second "If" statement tied to the first, meaning both conditions must be met in order to deliver the error.</li>
-          <li>This free-text field is used to enter the error message associated with the "If" condition.</li>
-          <li>The user can add as many "If" statements to the error handling as desired. Clicking "Or Else If..." will add another "If" statement to the list.</li>
-          <li>The final free-text area is used to define the error message that will be displayed if none of the "If" conditions are met.</li>
+          <li>Each "If" statement will require a condition, which is selected by the user with the "Select" dropdown. Conditions can include Subpopulations and Parameters the user created, as well as a few default options. More below.</li>
+          <li>The user can opt to have a second "If" statement tied to the first, meaning both conditions must be met in order to deliver the error. This is added using the "And Also If" button.</li>
+          <li>The "Then Clause" free text field is used to enter the error message associated with the "If" condition.</li>
+          <li>The user can add as many "If" statements to the error handling as desired. Clicking the "Or Else If..." button will add another "If" statement to the list with a "Then Clause" free text field.</li>
+          <li>The final free text area, the "Else" text area, is used to define the error message that will be displayed if none of the "If" conditions are met.</li>
         </ol>
-        <p>Similar to Recommendations' Subpopulations, "If" statement conditions for errors support a few default options.</p>
+        <p>Similar to Recommendations' Subpopulations, "If" statement conditions for errors support a few default options available in the dropdown list.</p>
         <p><img alt="Errors Conditions Options" src={ErrorsConditionOptions} className="img-fluid img-thumbnail rounded mx-auto d-block"/></p>
         <ol>
-          <li>This default option will be met if none of the user-defined recommendation conditions are met.</li>
+          <li>The "Recommendations is null" default option will be met if none of the user-defined recommendation conditions are met.</li>
           <li>The same as Recommendations' Subpopulations, the "Doesn't Meet Inclusion Criteria" condition will be met for patients who did not meet the Inclusion criteria and thus were not part of the general population for this CDS Artifact.</li>
           <li>The same as Recommendations' Subpopulations, the "Meets Exclusion Criteria" condition will be met for patients who meet the Exclusion criteria and thus were not part of the general population of this CDS Artifact.</li>
           <li>The user-defined Subpopulations and Parameters will be displayed after the three default options.</li>
