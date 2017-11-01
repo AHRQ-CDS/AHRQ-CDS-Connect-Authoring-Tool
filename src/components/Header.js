@@ -74,14 +74,14 @@ export default class Header extends Component {
 
         <div className="header__cdsbanner">
           <div className="header__cdsbanner-wrapper row">
-            <div className="header__cdsbanner-text col-xs-12 col-lg-5">
+            <div className="header__cdsbanner-text col-xs-12 col-md-5">
               <a href="/" alt="home">
                 <div className="text-top">Patient-centered Outcomes Research</div>
                 <div className="text-bottom">Clinical Decision Support Authoring</div>
               </a>
             </div>
 
-            <div className="header__cdsbanner-auth col-xs-12 col-lg-7">
+            <div className="header__cdsbanner-auth col-xs-12 col-md-7">
               {this.renderedAuth()}
             </div>
           </div>

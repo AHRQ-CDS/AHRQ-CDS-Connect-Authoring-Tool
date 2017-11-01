@@ -1,18 +1,14 @@
 .modal-style {
-  position: absolute;
-  top: 50px;
-  left: 40px;
-  right: 40px;
-  outline: none;
-  padding: 0;
-  background-color: $white;
-  border: $border-global;
+  max-width: 800px;
+  margin: 20px auto;
+  background-color: $gray-with-opacity;
   border-radius: $border-radius;
   box-shadow: $box-shadow;
+  color: $white;
 
   .modal__header {
     display: flex;
-    padding: .5em 1em;
+    padding: 0.5em 2em;
     align-items: center;
     justify-content: center;
     border-bottom: $border-global;
@@ -22,18 +18,26 @@
       font-weight: $font-weight-bold;
     }
 
-  .modal__buttonbar {
-    flex-shrink: 0;
-    text-align: right;
+    .modal__buttonbar {
+      flex-shrink: 0;
+      text-align: right;
 
       .modal__deletebutton {
-        @extend .transparent-button;
+        @include button($white, transparent, transparent, none);
+
+        &:hover,
+        &:focus,
+        &:active {
+          background-color: transparent;
+          text-decoration: underline;
+          color: $white;
+        }
       }
     }
   }
 
   .modal__body {
-    padding: 1em;
+    padding: 2em;
   }
 
   &--full-height {
@@ -42,13 +46,19 @@
     left: 15%;
     right: 15%;
   }
+
+  .modal__buttons {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 40px;
+  }
 }
 
 .modal-overlay {
+  background-color: $white-with-opacity;
   position: fixed;
-  top: 0px;
-  left: 0px;
-  right: 0px;
-  bottom: 0px;
-  background-color: $grey-with-opacity;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
 }
