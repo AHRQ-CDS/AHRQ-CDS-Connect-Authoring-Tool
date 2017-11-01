@@ -78,7 +78,7 @@ export default () => (
           </li>
           <li>Artifacts list
             <ol type='a'>
-              <li>The "Edit" button, shown with the image of a pencil, opens a modal to edit the artifact information (edit modal detailed below).</li>
+              <li>The "Edit" button opens a modal to edit the artifact information (edit modal detailed below).</li>
               <li>The name of the artifact serves as a link, which upon clicking will open the artifact in the Workspace.</li>
               <li>The "Version" specifies the version number of the artifact.</li>
               <li>The "Updated" column specifies the date/time the artifact was last updated.</li>
@@ -94,7 +94,7 @@ export default () => (
           <li>The "Artifact Name" field is used to edit the artifact's name, which cannot be blank. It is prepopulated with the current name of the artifact.</li>
           <li>The "Version" field is used to edit the artifact's version number. It is prepopulated with the current version of the artifact.</li>
           <li>The "Save" button is used to confirm and save changes made to the artifact and close the modal.</li>
-          <li>The "Close Edit Modal" button, shown with the image of an "X", is used to cancel changes made to the artifact and close the modal.</li>
+          <li>The "Close Edit Modal" button is used to cancel changes made to the artifact and close the modal.</li>
         </ol>
 
 
@@ -105,7 +105,7 @@ export default () => (
         <p><img alt="Workspace" src={Workspace} className="img-fluid img-thumbnail rounded mx-auto d-block"/></p>
         <ol>
           <li>The "Workspace Header" contains the name of the artifact currently being worked on and the workspace menu bar (3). This header will be present across all workspace tabs (4).</li>
-          <li>The "Edit" button, shown with the image of a pencil, opens a modal to edit the artifact name and version. For more details, see section 2.2 Edit Artifact modal.</li>
+          <li>The "Edit" button opens a modal to edit the artifact name and version. For more details, see section 2.2 Edit Artifact modal.</li>
           <li>The "Workspace Menu Bar" allows the user to perform actions on the entire artifact.
             <ol type='a'>
               <li>Clicking "Download CQL" will generate the CQL files for the current artifact and will download the result onto their computer inside a zip file. The zip file will contain a folder with the artifact's CQL code, as well as any necessary dependencies. It will also contain the corresponding ELM files for all CQL files.</li>
@@ -131,7 +131,7 @@ export default () => (
         <p><img alt="Element Browse" src={ElementBrowse} className="img-fluid img-thumbnail rounded mx-auto d-block"/></p>
         <ol>
           <li>The "Search Elements" field allows a user to type in this field to narrow the results in the element list (3) by the term typed.</li>
-          <li>The "Element Categories" list contains all possible categories. Clicking on a category will filter the results in the element list (3) by the selected category. The selected category is highlighted with a grey background.</li>
+          <li>The "Element Categories" list on the left contains all possible categories. Clicking on a category will filter the results in the element list (3) by the selected category. The selected category is highlighted with a grey background.</li>
           <li>The "Element List" is the result of the filtering by category and search term within the modal. Click on an element (name or "+" button) to add it to the artifact and close the modal.</li>
           <li>Clicking the "Close" button will close the modal without adding any elements to the artifact.</li>
         </ol>
@@ -144,7 +144,7 @@ export default () => (
           <li>The "Outdent" button moves the element out of the current group it belongs to.</li>
           <li>The "Indent" button moves the element inside a new group.</li>
           <li>The "Hide" element button expands or collapses the current element (helps preserve space and keep workspace tidy).</li>
-          <li>Clicking the "Remove" element button, shown with the image of an "X", will delete the element.</li>
+          <li>Clicking the "Remove" element button will delete the element.</li>
           <li>The "Element Name" field provides the name of this specific element, which the user can specify in the field.</li>
           <li>The "Return Type" gives the current return type of this element based on the Expressions (more in section 3.5 Expressions).</li>
           <li>The "Add Expression" button adds an expression to this element (more in section 3.5 Expressions).</li>
@@ -163,7 +163,7 @@ export default () => (
         <ol>
           <li>The "Expression List" lists all expressions applied to the element so far (in this example "Most Recent", "Quantity Value", and a comparison).</li>
           <li>The last Expression that has been applied will appear at the bottom of the Expression list, directly above the "Return Type" label. In this example, the last Expression is a comparison. Note that the comparison Expression has additional fields that need to be filled in. With comparisons, it is acceptable to fill in one or both sides of the comparison.</li>
-          <li>The last Expression can be removed by clicking the "Remove last expression" button on the far right side of the Expression item, shown with the image of an "X". Because of the nature of the Expression chaining, only the last Expression can be deleted. If the user wishes to delete an Expression higher up in the list, they must first delete all the ones below it.</li>
+          <li>The last Expression can be removed by clicking the "Remove last expression" button on the far right side of the Expression item. Because of the nature of the Expression chaining, only the last Expression can be deleted. If the user wishes to delete an Expression higher up in the list, they must first delete all the ones below it.</li>
           <li>The "Return Type" of the Element will always be listed at the end of the Expressions list.</li>
           <li>Clicking the "Add Expression" button will reveal a list (to the right of the button) of relevant Expressions that can be applied on the Element.
             <ol type='a'>
@@ -203,7 +203,7 @@ export default () => (
         <ol>
           <li>In this example, the Subpopulation "CholesterolLessThan200" is collapsed. Clicking the right facing arrows will expand the Subpopulation for editing.</li>
           <li>The "Edit" button is one way to expand the Subpopulation for editing.</li>
-          <li>The "Remove Subpopulation" button, shown with the image of an "X" button, is used to delete the Subpopulation.</li>
+          <li>The "Remove Subpopulation" button is used to delete the Subpopulation.</li>
           <li>The "New Subpopulation" button will add a new Subpopulation at the bottom of the list, ready for editing.</li>
         </ol>
         <p>The following demonstrates an expanded Subpopulation, ready for editing.</p>
@@ -218,8 +218,8 @@ export default () => (
         <p>Recommendations are the resulting notices that should be delivered to the clinician after the CDS Artifact is executed. Recommendations are written as free text and can have an accompanying Rationale. Most Recommendations will apply to the population that meets Inclusion logic and does not meet Exclusions logic. Subpopulations, either the default options or the subpopulations the user built, can be applied to a Recommendation.</p>
         <p><img alt="Blank Recommendation" src={BlankRecommendation} className="img-fluid img-thumbnail rounded mx-auto d-block"/></p>
         <ol>
-          <li>A blank Recommendation shown as the light grey box.</li>
-          <li>The "Remove Recommendation" button, shown with the image of an "X", is used to delete a Recommendation.</li>
+          <li>A blank Recommendation is shown as the light grey box.</li>
+          <li>The "Remove Recommendation" button is used to delete a Recommendation.</li>
           <li>The Recommendation's content is written in free text using the "Recommendation" text area. This is the message that the clinician will read in the EHR if the Recommendation is triggered.</li>
           <li>Clicking the "Add rationale" button will append an additional free text field where the user can enter the supporting evidence or reasoning for the Recommendation. This is covered below.</li>
           <li>Recommendations can be further filtered by Subpopulations, which is performed by clicking the "Add subpopulation" button. This will prepend an area above the Recommendation to add Subpopulations, covered below.</li>
@@ -234,7 +234,7 @@ export default () => (
         <p><img alt="Recommendation with Subpopulations" src={RecommendationWithSubpopulations} className="img-fluid img-thumbnail rounded mx-auto d-block"/></p>
         <ol>
           <li>An applied Subpopulation on the Recommendation appears above the free text areas. This means this Subpopulation's logic will have to evaluate to true for a given patient in order for the Recommendation to be delivered. </li>
-          <li>The "Remove" button, shown with the image of an "X", removes the Subpopulation from the Recommendation.</li>
+          <li>The "Remove" button removes the Subpopulation from the Recommendation.</li>
           <li>The "Add a subpopulation" field is used to search for and select the Subpopulations to apply to the Recommendation. Search for Subpopulations by typing here. Click a Subpopulation in the dropdown list below to add it to the Recommendation. Any subpopulation the user created and the two default subpopulations will appear in the dropdown.</li>
           <li>The "New Subpopulation" link adds a new Subpopulation in the Subpopulations tab and switches to the Subpopulations tab.</li>
           <li>"Doesn't Meet Inclusion Criteria" is one of the default Subpopulation options. This default option is supplied to allow the user to add Recommendations for patients who did not meet the Inclusion criteria and thus were not part of the general population for this CDS Artifact.</li>
@@ -247,7 +247,7 @@ export default () => (
         <ol>
           <li>Each light grey box is an individual Parameter object.</li>
           <li>Parameters should be aptly named using the "Parameter Name" field.</li>
-          <li>The "Delete Parameter" button, shown with the image of an "X", deletes a Parameter.</li>
+          <li>The "Delete Parameter" button deletes a Parameter.</li>
           <li>Parameters can have a Boolean value ("True" or "False"), selected by the user with the "Select" dropdown.</li>
           <li>The "New parameter" button adds a new Parameter to the list.</li>
         </ol>
