@@ -621,16 +621,15 @@ class BuilderPage extends Component {
               <div role="status" aria-live="assertive">{this.state.statusMessage}</div>
             </div>
           </header>
-
           <section className="builder__canvas">
             <Tabs selectedIndex={this.state.activeTabIndex} onSelect={tabIndex => this.setActiveTab(tabIndex)}>
               <TabList aria-label="Workspace Tabs">
-                <Tab>Inclusions</Tab>
-                <Tab>Exclusions</Tab>
-                <Tab>Subpopulations</Tab>
-                <Tab>Recommendations</Tab>
-                <Tab>Parameters</Tab>
-                <Tab>Handle Errors</Tab>
+                <Tab tabIndex="0">Inclusions</Tab>
+                <Tab tabIndex="0">Exclusions</Tab>
+                <Tab tabIndex="0">Subpopulations</Tab>
+                <Tab tabIndex="0">Recommendations</Tab>
+                <Tab tabIndex="0">Parameters</Tab>
+                <Tab tabIndex="0">Handle Errors</Tab>
               </TabList>
 
               <div className="tab-panel-container">
