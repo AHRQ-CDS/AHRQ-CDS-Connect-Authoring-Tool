@@ -210,11 +210,12 @@ class RepoUploadModal extends Component {
   }
 
   render() {
+    const isAuth = this.state.page === AUTHENTICATE;
     return (
         <ReactModal contentLabel="Submit to Repository"
           isOpen={this.props.showModal}
           onRequestClose={this.closeModal}
-          className={`${this.state.page === AUTHENTICATE ? 'repo-login-modal' : ''} modal-style modal-style__light repo-upload-modal`}
+          className={`${isAuth ? 'repo-login-modal' : ''} modal-style modal-style__light repo-upload-modal`}
           overlayClassName='modal-overlay modal-overlay__dark'>
           {this.renderPage()}
         </ReactModal>
