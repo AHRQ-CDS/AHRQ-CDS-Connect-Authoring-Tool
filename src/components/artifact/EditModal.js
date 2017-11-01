@@ -13,8 +13,8 @@ class EditModal extends Component {
         id='edit-modal'
         isOpen={this.props.showModal}
         onRequestClose={this.props.closeModal}
-        className="modal-style"
-        overlayClassName='modal-overlay'>
+        className="modal-style modal-style__light"
+        overlayClassName='modal-overlay modal-overlay__dark'>
         <div className="modal__header">
           <span className="modal__heading">
             Edit Artifact
