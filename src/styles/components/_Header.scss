@@ -7,16 +7,24 @@
 
   //------------------------ HHS Banner -------------------------------------//
   &__hhsbanner {
-    &-wrapper { @include componentWidth; }
+    &-wrapper {
+      @include componentWidth;
+    }
+
     background: $ahrq-color-background-light-gradient;
-    padding: 8px 0 7px 0;
+    padding: 8px 0 7px;
+
     @include respond-to('mobile') { padding: 10px; }
   }
 
   &__hhsbannerlink {
     padding: 0;
     white-space: nowrap;
-    img { vertical-align: middle; }
+
+    img {
+      vertical-align: middle;
+    }
+
     @include respond-to('mobile') { text-align: center; }
   }
 
@@ -44,6 +52,7 @@
     white-space: nowrap;
     text-align: right;
     img { vertical-align: middle; }
+
     @include respond-to('tablet') { text-align: left; }
 
     @include respond-to('mobile') {
@@ -53,18 +62,23 @@
 
     span {
       padding: 0 11px;
+
       @include respond-to('mobile') { padding: 5px; }
     }
 
     a {
       color: $ahrq-color-purple;
       padding: 5px 0;
+
       @include respond-to('500px') { font-size: 0.8em; }
     }
   }
 
   //------------------------ Header Stripe ----------------------------------//
-  &__stripe-container { display: block; width: 100%; }
+  &__stripe-container {
+    display: block;
+    width: 100%;
+  }
 
   &__stripe {
     width: 20.5%;
@@ -73,7 +87,7 @@
     height: 15px;
     float: left;
 
-    &:before {
+    &::before {
       content: '';
       position: absolute;
       left: 51%;
@@ -85,23 +99,24 @@
 
     &--purple {
       background-color: $ahrq-color-purple;
-      &:before { background-color: $ahrq-color-light-blue; }
+      &::before { background-color: $ahrq-color-light-blue; }
     }
 
     &--light-blue {
       background-color: $ahrq-color-light-blue;
-      &:before { background-color: $ahrq-color-orange; }
+      &::before { background-color: $ahrq-color-orange; }
     }
 
     &--orange {
       background-color: $ahrq-color-orange;
-      &:before { background-color: $ahrq-color-green; }
+      &::before { background-color: $ahrq-color-green; }
     }
 
     &--green {
       background-color: $ahrq-color-green;
-      &:before { background-color: $ahrq-color-dark-blue; }
+      &::before { background-color: $ahrq-color-dark-blue; }
     }
+
     &--dark-blue {
       background-color: $ahrq-color-dark-blue;
       width: 18%;
@@ -110,12 +125,15 @@
 
   //------------------------ CDS Banner -------------------------------------//
   &__cdsbanner {
-    &-wrapper { @include componentWidth; }
     background: $ahrq-color-dark-gradient;
+
+    &-wrapper { @include componentWidth; }
 
     &-text {
       padding: 20px 10px;
       white-space: nowrap;
+
+      @include respond-to('670px') { text-align: center; }
 
       a {
         color: $white;
@@ -129,14 +147,20 @@
         .text-bottom {
           font-size: 38px;
           font-weight: bold;
+
           @include respond-to('670px') { font-size: 1.6em; }
         }
       }
     }
 
     &-auth {
-      padding-right: 0;
-      button { margin-right: 0; }
+      padding: 0;
+      button { margin: 0; }
+
+      @include respond-to(mobile) {
+        order: -1;
+        margin-bottom: -25px;
+      }
     }
   }
 }

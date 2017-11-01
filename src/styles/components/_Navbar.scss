@@ -4,8 +4,9 @@
 
   // ----------------------- MAIN NAVIGATION ------------------------------- //
   &__wrapper {
-    @include componentWidth;
     display: block;
+
+    @include componentWidth;
 
     ul {
       padding: 0;
@@ -16,6 +17,11 @@
         position: relative;
         float: left;
         padding-bottom: 10px;
+
+        @include respond-to('670px') {
+          width: 100%;
+          text-align: center;
+        }
       }
 
       a {

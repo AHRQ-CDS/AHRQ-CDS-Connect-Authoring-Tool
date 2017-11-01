@@ -1,27 +1,16 @@
 // ------------------------- LOGIN ----------------------------------------- //
 .login {
-  width: 100%;
-  margin: 20px 0;
+  display: flex;
   justify-content: flex-end;
-
-  input,
-  &__button {
-    margin: 0 10px;
-  }
-
-  input {
-    border: none;
-  }
+  margin: 10px 0;
+  padding: 0;
 
   &__button,
   &__button:focus {
     max-width: 100px;
-    max-height: 35px;
     border: 1px solid $white;
     background-color: inherit;
     color: $white;
-    line-height: 17px;
-    @include respond-to('mobile') { line-height: 15px; }
   }
 
   &__button:focus {
@@ -50,10 +39,27 @@
   }
 
   &__auth-status {
-    position: absolute;
-    white-space: nowrap;
-    top: -20px;
-    left: 10px;
+    font-size: 0.8em;
     color: $ahrq-color-orange;
+  }
+}
+
+// ------------------------- LOGIN MODAL ----------------------------------- //
+.login-modal {
+  &__disclaimer {
+    font-size: 0.8em;
+    margin-bottom: 40px;
+  }
+
+  input[type='checkbox'] {
+    margin: 20px 20px 0 0;
+  }
+
+  input[type='text'],
+  input[type='password'] {
+    border: 0;
+    box-shadow: none;
+    margin: 5px 0;
+    height: 50px;
   }
 }
