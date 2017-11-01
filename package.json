@@ -45,7 +45,7 @@
     "react-router-redux": "^4.0.8",
     "react-router-test-context": "^0.1.0",
     "react-select": "1.0.0-rc.3",
-    "react-tabs": "^1.1.0",
+    "react-tabs": "^2.1.0",
     "reactstrap": "^5.0.0-alpha.3",
     "redux": "^3.7.2",
     "redux-auth": "^0.0.5-beta5",
