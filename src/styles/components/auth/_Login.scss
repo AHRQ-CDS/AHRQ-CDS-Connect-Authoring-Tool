@@ -1,9 +1,6 @@
 // ------------------------- LOGIN ----------------------------------------- //
 .login {
-  display: flex;
-  justify-content: flex-end;
-  margin: 10px 0;
-  padding: 0;
+  margin: 20px 0 0 20px;
 
   &__button,
   &__button:focus {
@@ -11,6 +8,8 @@
     border: 1px solid $white;
     background-color: inherit;
     color: $white;
+    padding: 0 30px;
+    height: 35px;
   }
 
   &__button:focus {

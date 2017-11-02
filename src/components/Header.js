@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import FontAwesome from 'react-fontawesome';
+
 import Login from './auth/Login';
 import Logout from './auth/Logout';
 
@@ -82,6 +84,10 @@ export default class Header extends Component {
             </div>
 
             <div className="header__cdsbanner-auth col-xs-12 col-md-7">
+              <a href="https://cds.ahrq.gov" className="cds-home-link">
+                <FontAwesome name="link" /> CDS Home
+              </a>
+
               {this.renderedAuth()}
             </div>
           </div>
