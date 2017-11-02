@@ -7,7 +7,7 @@ import PrivateRoute from './PrivateRoute';
 import App from './App';
 import Landing from '../components/Landing';
 import BuilderPage from '../components/builder/BuilderPage';
-import Artifact from '../components/artifact/Artifact';
+import Artifact from '../containers/Artifact';
 import UserGuide from '../components/UserGuide';
 import NoMatch from '../components/NotFoundPage';
 

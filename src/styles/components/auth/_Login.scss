@@ -1,6 +1,6 @@
 // ------------------------- LOGIN ----------------------------------------- //
 .login {
-  margin: 20px 0 0 20px;
+  margin: 5px 0 0 20px;
 
   &__button,
   &__button:focus {
@@ -9,8 +9,8 @@
     border: 1px solid $white;
     background-color: inherit;
     color: $white;
-    padding: 0 30px;
-    height: 35px;
+    padding: 5px 30px;
+    // height: 35px;
   }
 
   &__button:focus {

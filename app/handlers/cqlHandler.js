@@ -202,7 +202,7 @@ class CqlArtifact {
                 this.referencedElements.push(multipleValueSetExpression);
               }
               context.values = [`"${observationValueSets.id}_valuesets"`];
-              context.template = 'GenericStatement'; // Potentially move this to the object itself in form_templates
+              context.template = 'GenericStatement'; // Potentially move this to the object itself in formTemplates
             }
           }
           element.modifiers.forEach((modifier) => {
@@ -242,7 +242,7 @@ class CqlArtifact {
               `[Condition: "${conditionValueSets.conditions[0].name}"]`,
               `C3F.ConditionsByConcept("${conditionValueSets.concepts[0].name}")`
             ];
-            context.template = 'GenericStatement'; // Potentially move this to the object itself in form_templates
+            context.template = 'GenericStatement'; // Potentially move this to the object itself in formTemplates
             conditionValueSets.conditions.forEach((condition) => {
               this.resourceMap.set(condition.name, condition);
             });
@@ -352,7 +352,7 @@ class CqlArtifact {
   }
 
   /* Modifiers Explanation:
-    Within `form_templates`, a template must be specified (unless extending an element that specifies a template).
+    Within `formTemplates`, a template must be specified (unless extending an element that specifies a template).
     If no template is specified, it will look for a template named the same as the `id`.
     If the element specifies a template within the folder `specificTemplates` it's assumed that element will not have
       modifiers. In this case, just render the element.

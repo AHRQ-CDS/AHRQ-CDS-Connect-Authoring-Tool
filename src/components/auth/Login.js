@@ -1,10 +1,8 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import ReactModal from 'react-modal';
 import FontAwesome from 'react-fontawesome';
 
-// For screen readers to not see the background text
-ReactModal.setAppElement('#root');
+import Modal from '../elements/Modal';
 
 export default class Login extends Component {
   constructor(props) {
@@ -13,19 +11,13 @@ export default class Login extends Component {
     this.state = { showLoginModal: false };
   }
 
-  componentWillUnmount() { // eslint-disable-line class-methods-use-this
-    document.getElementById('root').classList.remove('blur-10');
-  }
-
   openLoginModal = () => {
     this.setState({ showLoginModal: true });
-    document.getElementById('root').classList.add('blur-10');
   }
 
   closeLoginModal = () => {
     this.setState({ showLoginModal: false });
     this.props.setAuthStatus(null);
-    document.getElementById('root').classList.remove('blur-10');
   }
 
   login = (event) => {
@@ -53,28 +45,16 @@ export default class Login extends Component {
       <div className="login">
         <button onClick={this.openLoginModal} className="btn btn-primary login__button col">Login</button>
 
-        <ReactModal
-          contentLabel="Login"
-          id='login'
-          isOpen={this.state.showLoginModal}
-          onRequestClose={this.closeLoginModal}
-          className="login-modal modal-style modal-style__dark"
-          shouldCloseOnOverlayClick={false}
-          overlayClassName='modal-overlay modal-overlay__light'>
+        <Modal
+          modalTitle="Login to your account"
+          modalId="login"
+          modalTheme="dark"
+          modalSubmitButtonText="Login"
+          handleShowModal={this.state.showLoginModal}
+          handleCloseModal={this.closeLoginModal}
+          handleSaveModal={this.login}>
 
-          <div className="modal__header">
-            <div className="modal__heading">Login to your account</div>
-
-            <div className="modal__buttonbar">
-              <button onClick={this.closeLoginModal}
-                className="modal__deletebutton"
-                aria-label="Close login disclaimer">
-                <FontAwesome fixedWidth name='close'/>
-              </button>
-            </div>
-          </div>
-
-          <div className="modal__body">
+          <div className="login-modal">
             <div className="login-modal__disclaimer">
               This warning banner provides privacy and security notices consistent with applicable federal laws,
               directives, and other federal guidance for accessing this Government system, which includes all
@@ -87,21 +67,13 @@ export default class Login extends Component {
               Government purpose.
             </div>
 
-            <form onSubmit={this.login}>
+            <div className="login-modal__form">
               <input type='text' ref='username' className="form-control col" placeholder='username' />
               <input type='password' ref='password' className="form-control col" placeholder='password' />
               {this.renderedAuthStatusText()}
-
-              <div className="modal__buttons">
-                <button type="button" onClick={this.closeLoginModal}>Cancel</button>
-
-                <button type="submit" className="primary-button">
-                  Login
-                </button>
-              </div>
-            </form>
+            </div>
           </div>
-        </ReactModal>
+        </Modal>
       </div>
     );
   }

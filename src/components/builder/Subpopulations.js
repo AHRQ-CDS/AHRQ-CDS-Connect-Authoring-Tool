@@ -100,7 +100,7 @@ class Subpopulations extends Component {
               setPreset={ this.props.setPreset }
               categories={ this.props.categories } />
           ))}
-        <button className="button secondary-button" onClick={ this.addSubpopulation }>
+        <button className="button primary-button" onClick={ this.addSubpopulation }>
           New subpopulation
         </button>
       </div>

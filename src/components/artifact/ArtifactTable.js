@@ -1,204 +1,174 @@
 import React, { Component } from 'react';
-import moment from 'moment';
+import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
-import axios from 'axios';
 import FontAwesome from 'react-fontawesome';
-import ReactModal from 'react-modal';
-import EditModal from './EditModal';
 
-const API_BASE = process.env.REACT_APP_API_URL;
+import { renderDate, sortMostRecent } from '../../helpers/utils';
+import Modal from '../elements/Modal';
+import EditArtifactModal from './EditArtifactModal';
 
-// For screen readers to not see the background text
-ReactModal.setAppElement('#root');
-
-function renderDate(datetime) {
-  let formattedDate = '';
-  if (datetime) {
-    formattedDate = moment(datetime).fromNow();
-  }
-  return formattedDate;
-}
-
-function sortArtifacts(a, b) {
-  // most recently updated at top
-  if (a.updatedAt > b.updatedAt || (a.updatedAt && !b.updatedAt)) {
-    return -1;
-  } else if (a.updatedAt < b.updatedAt || (!a.updatedAt && b.updatedAt)) {
-    return 1;
-  }
-  return 0;
-}
-
-class ArtifactTable extends Component {
+export default class ArtifactTable extends Component {
   constructor(props) {
     super(props);
-    this.state = { artifacts: props.artifacts,
+
+    this.state = {
       artifactEditing: null,
-      showModal: false,
-      showConfirmDeleteModal: false,
-      artifactToDelete: null };
-  }
-
-  componentWillReceiveProps(nextProps) {
-    if (!nextProps.artifacts) { return; }
-    if (this.state.artifacts !== nextProps.artifacts) {
-      this.setState({ artifacts: nextProps.artifacts });
-    }
-  }
-
-  deleteArtifact = (id) => {
-    axios.delete(`${API_BASE}/artifacts/${id}`)
-      .then((res) => {
-        const list = this.state.artifacts;
-        const index = list.findIndex(a => a._id === id);
-
-        const artifacts = [
-          ...list.slice(0, index),
-          ...list.slice(index + 1),
-        ];
-
-        this.setState({ artifacts });
-      })
-      .catch((err) => {
-        console.error(err);
-      });
-    this.closeConfirmDeleteModal();
-  }
-
-  editArtifactName = (e, name, version) => {
-    e.preventDefault();
-    const artifactToUpdate = {
-      name,
-      version,
-      expTreeInclude: this.state.artifactEditing.expTreeInclude,
-      expTreeExclude: this.state.artifactEditing.expTreeExclude,
-      _id: this.state.artifactEditing._id
+      name: '',
+      version: '',
+      artifactToDelete: null,
+      showEditArtifactModal: false,
+      showConfirmDeleteModal: false
     };
-
-    axios.put(`${API_BASE}/artifacts`, artifactToUpdate)
-      .then((result) => {
-        this.props.afterAddArtifact();
-        this.setState({ showModal: false, artifactEditing: null });
-      });
   }
 
-  openModal = (artifact) => {
-    this.setState({ showModal: true, artifactEditing: artifact });
+  // ----------------------- EDIT ARTIFACT MODAL --------------------------- //
+
+  openEditArtifactModal = (artifact) => {
+    this.setState({
+      showEditArtifactModal: true,
+      artifactEditing: artifact,
+      name: artifact.name,
+      version: artifact.version
+    });
   }
 
-  closeModal = () => {
-    this.setState({ showModal: false });
+  closeEditArtifactModal = () => {
+    this.setState({
+      showEditArtifactModal: false,
+      artifactEditing: null,
+      name: '',
+      version: ''
+    });
   }
+
+  handleEditArtifact = (event) => {
+    const artifactToEdit = this.state.artifactEditing;
+    artifactToEdit.name = this.state.name;
+    artifactToEdit.version = this.state.version;
+
+    this.props.editArtifact(artifactToEdit);
+    this.closeEditArtifactModal();
+  }
+
+  handleInputChange = (event) => {
+    this.setState({ [event.target.name]: event.target.value });
+  }
+
+  // ----------------------- CONFIRM DELETE MODAL -------------------------- //
 
   openConfirmDeleteModal = (artifact) => {
-    this.setState({
-      showConfirmDeleteModal: true,
-      artifactToDelete: artifact
-    });
+    this.setState({ showConfirmDeleteModal: true, artifactToDelete: artifact });
   }
 
   closeConfirmDeleteModal = () => {
-    this.setState({
-      showConfirmDeleteModal: false,
-      artifactToDelete: null
-    });
+    this.setState({ showConfirmDeleteModal: false, artifactToDelete: null });
+  }
+
+  handleDeleteArtifact = () => {
+    this.props.deleteArtifact(this.state.artifactToDelete);
   }
 
   renderConfirmDeleteModal() {
     return (
-      <ReactModal contentLabel="Confirm Delete modal"
-        id="confirm-delete-modal"
-        isOpen={this.state.showConfirmDeleteModal}
-        onRequestClose={this.closeConfirmDeleteModal}
-        className="modal-style modal-style__light"
-        overlayClassName='modal-overlay modal-overlay__dark'>
-        <div className="modal__header">
-          <span className="modal__heading">
-            Delete Artifact Confirmation
-          </span>
-          <div className="modal__buttonbar">
-            <button onClick={this.closeConfirmDeleteModal}
-              className="modal__deletebutton"
-              aria-label="Close edit modal">
-              <FontAwesome fixedWidth name='close'/>
-            </button>
+      <Modal
+        modalTitle="Delete Artifact Confirmation"
+        modalId="confirm-delete-modal"
+        modalTheme="light"
+        modalSubmitButtonText="Delete"
+        handleShowModal={this.state.showConfirmDeleteModal}
+        handleCloseModal={this.closeConfirmDeleteModal}
+        handleSaveModal={this.handleDeleteArtifact}>
+
+        <div className="delete-artifact-confirmation-modal">
+          <h5>Are you sure you want to permanently delete the following CDS Artifact?</h5>
+
+          <div className="artifact-info">
+            <span>Name: </span>
+            <span>
+              {this.state.artifactToDelete !== null ? this.state.artifactToDelete.name : 'name_placeholder'}
+            </span>
+          </div>
+
+          <div className="artifact-info">
+            <span>Version: </span>
+            <span>
+              {this.state.artifactToDelete !== null ? this.state.artifactToDelete.version : 'version_placeholder'}
+            </span>
           </div>
         </div>
-        <div className="modal__body">
-          <div>Are you sure you want to permanently delete the following CDS Artifact?</div>
-          <br/><br/>
-          Name: {this.state.artifactToDelete !== null ? this.state.artifactToDelete.name : 'name_placeholder'}
-          <br/>
-          Version: {this.state.artifactToDelete !== null ? this.state.artifactToDelete.version : 'version_placeholder'}
-          <br/>
-          <br/><br/>
-          <div>
-            <button onClick={this.closeConfirmDeleteModal}>Cancel</button>
-            <button
-              className='primary-button'
-              onClick={() => this.deleteArtifact(this.state.artifactToDelete._id)}>
-              Delete
-            </button>
-          </div>
-        </div>
-      </ReactModal>
+      </Modal>
     );
   }
 
+  // ----------------------- ARTIFACT TABLE -------------------------------- //
+
   renderTableRow = artifact => (
-      <tr key={artifact._id}>
-        <td className="artifacts__tablecell-wide"
-          data-th="Artifact Name">
-          <button aria-label="Edit"
-            className="small-button edit-artifact-button"
-            onClick={() => this.openModal(artifact)}>
-            <FontAwesome name='pencil' />
-          </button>
-          <Link to={`build/${artifact._id}`}>
-            {artifact.name}
-          </Link>
-        </td>
-        <td className="artifacts__tablecell-short"
-          data-th="Version">
-          {artifact.version}
-        </td>
-        <td data-th="Updated">{renderDate(artifact.updatedAt)}</td>
-        <td data-th="">
-          <button className="danger-button"
-            onClick={() => this.openConfirmDeleteModal(artifact)}>
-            Delete
-          </button>
-        </td>
-      </tr>
-    );
+    <tr key={artifact._id}>
+      <td className="artifacts__tablecell-wide" data-th="Artifact Name">
+        <Link to={`build/${artifact._id}`}>
+          {artifact.name}
+        </Link>
+      </td>
+
+      <td className="artifacts__tablecell-short"
+        data-th="Version">
+        {artifact.version}
+      </td>
+
+      <td data-th="Updated">{renderDate(artifact.updatedAt)}</td>
+
+      <td data-th="">
+        <button aria-label="Edit"
+          className="primary-button edit-artifact-button"
+          onClick={() => this.openEditArtifactModal(artifact)}>
+          <FontAwesome name='pencil' />
+        </button>
+
+        <button className="danger-button"
+          onClick={() => this.openConfirmDeleteModal(artifact)}>
+          Delete
+        </button>
+      </td>
+    </tr>
+  );
 
   render() {
+    const { artifacts } = this.props;
+
     return (
-      <div>
-        <EditModal
-          showModal={this.state.showModal}
-          closeModal={this.closeModal}
-          artifactEditingName={this.state.artifactEditing ? this.state.artifactEditing.name : null}
-          artifactEditingVersion={this.state.artifactEditing ? this.state.artifactEditing.version : null}
-          editArtifactName={this.editArtifactName}
-        />
-        {this.renderConfirmDeleteModal()}
+      <div className="artifact-table">
         <table className="artifacts__table">
           <thead>
             <tr>
               <th scope="col" className="artifacts__tablecell-wide">Artifact Name</th>
               <th scope="col" className="artifacts__tablecell-short">Version</th>
-              <th scope="col">Updated</th>
+              <th scope="col">Last Updated</th>
               <td></td>
             </tr>
           </thead>
+
           <tbody>
-          {this.state.artifacts.sort(sortArtifacts).map(this.renderTableRow)}
+            {artifacts.sort(sortMostRecent).map(this.renderTableRow)}
           </tbody>
         </table>
+
+        <EditArtifactModal
+          artifactEditing={this.state.artifactEditing}
+          name={this.state.name}
+          version={this.state.version}
+          handleInputChange={this.handleInputChange}
+          showModal={this.state.showEditArtifactModal}
+          closeModal={this.closeEditArtifactModal}
+          saveModal={this.handleEditArtifact} />
+
+        {this.renderConfirmDeleteModal()}
       </div>
     );
   }
 }
 
-export default ArtifactTable;
+ArtifactTable.propTypes = {
+  artifacts: PropTypes.array,
+  editArtifact: PropTypes.func.isRequired,
+  deleteArtifact: PropTypes.func.isRequired
+};

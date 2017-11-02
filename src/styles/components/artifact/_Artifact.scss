@@ -1,6 +1,17 @@
 .artifact {
   &-wrapper { @include componentWidth; }
+
   padding: $global-padding;
+
+  &-form__inputs {
+    margin: 20px 0 40px;
+
+    button {
+      margin: 0.5rem 0;
+      width: 7.5em;
+      padding: 0.4em 0.75em !important;
+    }
+  }
 }
 
 .artifacts__table {
@@ -10,13 +21,15 @@
   margin: 1em 0;
 
   th {
-    padding-bottom: .5em;
+    padding-bottom: 0.5em;
   }
+
   td {
-    padding: .25em;
+    padding: 0.25em;
   }
+
   tr:first-of-type td {
-    padding-top: .5em;
+    padding-top: 0.5em;
   }
 
   td:last-of-type {
@@ -34,4 +47,9 @@
 
 .artifacts__tablecell-short {
   width: 6em;
+}
+
+.artifact-info {
+  font-size: 0.9em;
+  color: $gray;
 }

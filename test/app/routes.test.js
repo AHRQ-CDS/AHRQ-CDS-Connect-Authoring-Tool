@@ -2,7 +2,7 @@ import { Route } from 'react-router-dom';
 import PrivateRoute from '../../src/containers/PrivateRoute';
 import Landing from '../../src/components/Landing';
 import BuilderPage from '../../src/components/builder/BuilderPage';
-import Artifact from '../../src/components/artifact/Artifact';
+import Artifact from '../../src/containers/Artifact';
 import NoMatch from '../../src/components/NotFoundPage';
 import Root from '../../src/containers/Root';
 import { shallowRenderComponent } from '../test_helpers';

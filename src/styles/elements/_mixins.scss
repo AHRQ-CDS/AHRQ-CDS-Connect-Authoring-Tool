@@ -6,6 +6,7 @@
 
 @mixin componentWidth {
   margin: 0 auto;
+
   @include respond-to('desktop-wide') { width: 1170px; } // 1200px and over
   @include respond-to('desktop') { width: 970px; }       // 992px to 1199px
   @include respond-to('tablet') { width: 750px; }        // 768px to 991px
@@ -13,10 +14,11 @@
 }
 
 @mixin button(
-    $color-text: $default-button-text-color,
-    $color-background: $default-button-bg-color,
-    $color-border: $default-button-border-color,
-    $box-shadow: $box-shadow) {
+  $color-text: $default-button-text-color,
+  $color-background: $default-button-bg-color,
+  $color-border: $default-button-border-color,
+  $color-border-hover: $default-button-border-hover-color,
+  $box-shadow: $box-shadow) {
   background-color: $color-background;
   color: $color-text;
   border: $border-width solid $color-border;
@@ -28,6 +30,7 @@
   &:active {
     background-color: $color-text;
     color: $color-background;
+    border-color: $color-border-hover;
     box-shadow: $box-shadow;
   }
 

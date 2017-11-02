@@ -201,11 +201,11 @@ class Recommendation extends Component {
               </div>
             </div>
           :
-            <button className="button secondary-button recommendation__add-rationale"
+            <button className="button primary-button recommendation__add-rationale"
                     onClick={() => this.setState({ showRationale: !this.state.showRationale })}>Add rationale</button>
         }
 
-        { this.shouldShowSubpopulations() ? null : <button className="button secondary-button pull-right"
+        { this.shouldShowSubpopulations() ? null : <button className="button primary-button pull-right"
                                                     name="subpopulation" onClick={this.revealSubpopulations}>
                                                     Add subpopulation
                                                   </button> }

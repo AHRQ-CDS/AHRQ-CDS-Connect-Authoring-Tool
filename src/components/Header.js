@@ -29,9 +29,13 @@ export default class Header extends Component {
     );
   }
 
-  render() {
+  renderedAhrqBanner() { // eslint-disable-line class-methods-use-this
+    if (process.env.REACT_APP_DISABLE_BRANDING === 'true') {
+      return null;
+    }
+
     return (
-      <header className="header">
+      <div>
         <div className="header__hhsbanner">
           <div className="header__hhsbanner-wrapper row">
             <a href="https://www.hhs.gov/" className="header__hhsbannerlink col-sm">
@@ -73,6 +77,14 @@ export default class Header extends Component {
           <div className="header__stripe header__stripe--green"></div>
           <div className="header__stripe header__stripe--dark-blue"></div>
         </div>
+      </div>
+    );
+  }
+
+  render() {
+    return (
+      <header className="header">
+        {this.renderedAhrqBanner()}
 
         <div className="header__cdsbanner">
           <div className="header__cdsbanner-wrapper row">

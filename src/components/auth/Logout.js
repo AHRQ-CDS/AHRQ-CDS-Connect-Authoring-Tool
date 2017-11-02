@@ -7,7 +7,9 @@ class Logout extends Component {
   constructor(props) {
     super(props);
 
-    this.state = { showMenu: false };
+    this.state = {
+      showMenu: false
+    };
   }
 
   toggleMenu = () => {

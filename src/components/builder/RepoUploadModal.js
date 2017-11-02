@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
-import ReactModal from 'react-modal';
+import PropTypes from 'prop-types';
 import { get, post } from 'axios';
 import FontAwesome from 'react-fontawesome';
 
-ReactModal.setAppElement('#root');
+import Modal from '../elements/Modal';
+
 
 const API_BASE = process.env.REACT_APP_API_URL;
 const REPO_BASE = process.env.REACT_APP_REPO_URL;
@@ -13,7 +14,7 @@ const LIST = 'LIST';
 const STATUS = 'STATUS';
 const ERROR = 'ERROR';
 
-class RepoUploadModal extends Component {
+export default class RepoUploadModal extends Component {
   constructor(props) {
     super(props);
 
@@ -205,22 +206,30 @@ class RepoUploadModal extends Component {
         return this.renderErrorState();
       default:
         return null;
-
     }
   }
 
   render() {
-    const isAuth = this.state.page === AUTHENTICATE;
+    // const isAuth = this.state.page === AUTHENTICATE;
+
     return (
-        <ReactModal contentLabel="Submit to Repository"
-          isOpen={this.props.showModal}
-          onRequestClose={this.closeModal}
-          className={`${isAuth ? 'repo-login-modal' : ''} modal-style modal-style__light repo-upload-modal`}
-          overlayClassName='modal-overlay modal-overlay__dark'>
-          {this.renderPage()}
-        </ReactModal>
+      <Modal
+        modalTitle="Submit to Repository"
+        modalId="submit-to-repository-modal"
+        modalTheme="light"
+        modalSubmitButtonText="Save"
+        handleShowModal={this.props.showModal}
+        handleCloseModal={this.closeModal}
+        handleSaveModal={this.closeModal}>
+        {this.renderPage()}
+      </Modal>
     );
   }
 }
 
-export default RepoUploadModal;
+RepoUploadModal.propTypes = {
+  showModal: PropTypes.bool.isRequired,
+  closeModal: PropTypes.func.isRequired,
+  prepareArtifact: PropTypes.func.isRequired,
+  version: PropTypes.string.isRequired
+};

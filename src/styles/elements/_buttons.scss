@@ -2,7 +2,9 @@ button.primary-button {
   @include button(
     $primary-button-text-color,
     $primary-button-bg-color,
-    $primary-button-border-color
+    $primary-button-border-color,
+    $primary-button-border-hover-color,
+    none
   );
 }
 
@@ -11,12 +13,13 @@ button.secondary-button {
     $secondary-button-text-color,
     $secondary-button-bg-color,
     $secondary-button-border-color,
+    $secondary-button-border-hover-color,
     none
   );
 }
 
 button.transparent-button {
-  @include button($default-button-text-color, transparent, transparent, none);
+  @include button($default-button-text-color, transparent, transparent, transparent, none);
 
   &:hover,
   &:focus,
@@ -25,6 +28,10 @@ button.transparent-button {
     text-decoration: underline;
     color: $default-button-text-color;
   }
+}
+
+button.danger-button {
+  @include button($white, darken($red, 10%), darken($red, 10%), darken($red, 10%), none);
 }
 
 .small-button {
