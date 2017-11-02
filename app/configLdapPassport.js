@@ -2,6 +2,8 @@ const process = require('process');
 const session = require('express-session');
 const passport = require('passport');
 const LdapStrategy = require('passport-ldapauth');
+const MongoStore = require('connect-mongo')(session);
+const mongoose = require('mongoose');
 const config = require('../config');
 
 function getLdapConfiguration(req, callback) {
@@ -17,7 +19,8 @@ module.exports = (app) => {
   // Configuring cookie security as suggested at: https://github.com/expressjs/session#cookiesecure
   const sess = {
     secret: config.auth.sessionSecret,
-    cookie: {}
+    cookie: {},
+    store: new MongoStore({ mongooseConnection: mongoose.connection })
   };
   if (process.env.NODE_ENV === 'production') {
     app.set('trust proxy', 1); // trust first proxy

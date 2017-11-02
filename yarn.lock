@@ -1999,6 +1999,12 @@ connect-history-api-fallback@1.3.0, connect-history-api-fallback@^1.3.0:
   version "1.3.0"
   resolved "https://registry.yarnpkg.com/connect-history-api-fallback/-/connect-history-api-fallback-1.3.0.tgz#e51d17f8f0ef0db90a64fdb47de3051556e9f169"
 
+connect-mongo@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/connect-mongo/-/connect-mongo-2.0.0.tgz#3e4d036a6869385b0191a3737d3051a86abc2fb8"
+  dependencies:
+    mongodb "^2.0.36"
+
 console-browserify@^1.1.0:
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/console-browserify/-/console-browserify-1.1.0.tgz#f0241c45730a9fc6323b206dbf38edc741d0bb10"
@@ -5303,12 +5309,27 @@ mongodb-core@2.1.11:
     bson "~1.0.4"
     require_optional "~1.0.0"
 
+mongodb-core@2.1.17:
+  version "2.1.17"
+  resolved "https://registry.yarnpkg.com/mongodb-core/-/mongodb-core-2.1.17.tgz#a418b337a14a14990fb510b923dee6a813173df8"
+  dependencies:
+    bson "~1.0.4"
+    require_optional "~1.0.0"
+
 mongodb@2.2.27:
   version "2.2.27"
   resolved "https://registry.yarnpkg.com/mongodb/-/mongodb-2.2.27.tgz#34122034db66d983bcf6ab5adb26a24a70fef6e6"
   dependencies:
     es6-promise "3.2.1"
     mongodb-core "2.1.11"
+    readable-stream "2.2.7"
+
+mongodb@^2.0.36:
+  version "2.2.33"
+  resolved "https://registry.yarnpkg.com/mongodb/-/mongodb-2.2.33.tgz#b537c471d34a6651b48f36fdbf29750340e08b50"
+  dependencies:
+    es6-promise "3.2.1"
+    mongodb-core "2.1.17"
     readable-stream "2.2.7"
 
 mongoose@^4.9.1:
