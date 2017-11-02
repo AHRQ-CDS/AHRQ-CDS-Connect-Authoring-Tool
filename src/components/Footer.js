@@ -19,7 +19,7 @@ const ahrqLinks = [
 const cdsAuthoringToolLinks = [
   { name: 'CDS Authoring Tool Home', link: `${process.env.PUBLIC_URL}/` },
   { name: 'Documentation', link: `${process.env.PUBLIC_URL}/userguide` },
-  { name: 'Sign Up', link: '/form/cds-authoring-tool-sign-up' }, // TODO: Change to absolute link to production form when available
+  { name: 'Sign Up', link: 'https://cds.ahrq.gov/form/cds-authoring-tool-sign-up' },
   { name: 'Feedback', link: 'https://cds.ahrq.gov/contact-us' }
 ];
 
@@ -84,7 +84,7 @@ export default class Footer extends Component {
               </nav>
 
               <nav className="nav" aria-labelledby="sitemap-cds">
-                <div className="link-header" id="sitemap-cds">CDS Site</div>
+                <div className="link-header" id="sitemap-cds"><a href="https://cds.ahrq.gov/">CDS Site</a></div>
                 <ul>{this.renderedNav(cdsToolLinks)}</ul>
               </nav>
             </div>
