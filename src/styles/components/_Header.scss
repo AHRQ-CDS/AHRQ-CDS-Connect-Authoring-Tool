@@ -154,12 +154,27 @@
     }
 
     &-auth {
+      display: flex;
+      justify-content: flex-end;
       padding: 0;
       button { margin: 0; }
 
       @include respond-to(mobile) {
         order: -1;
         margin-bottom: -25px;
+      }
+
+      .cds-home-link {
+        margin-top: 28px;
+        color: $white;
+
+        .fa {
+          margin-right: 3px;
+        }
+
+        &:hover {
+          text-decoration: underline;
+        }
       }
     }
   }
