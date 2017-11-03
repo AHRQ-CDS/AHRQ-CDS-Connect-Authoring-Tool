@@ -89,7 +89,7 @@ export default () => (
               </li>
 
               <li>
-                Clicking "Feedback" opens a new window with a contact form to submit questions, concerns, or general
+                Clicking "Feedback" loads a contact form to submit questions, concerns, or general
                 feedback to the CDS Connect team.
               </li>
             </ol>
@@ -112,7 +112,7 @@ export default () => (
               <li>Clicking "Documentation" opens the CDS Authoring Tool User Guide.</li>
 
               <li>
-                Clicking "Feedback" opens a new window with a contact form to submit questions, concerns, or general
+                Clicking "Feedback" loads a contact form to submit questions, concerns, or general
                 feedback to the CDS Connect team.
               </li>
             </ol>

@@ -53,7 +53,7 @@ class App extends Component {
         {this.renderedErrorMessage()}
         {children}
 
-        <Footer />
+        <Footer isAuthenticated={isAuthenticated} />
       </div>
     );
   }
