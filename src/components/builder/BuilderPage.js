@@ -124,6 +124,11 @@ class BuilderPage extends Component {
         console.log(error);
       });
   }
+  
+  componentWillUnmount() {
+    // TODO: This should only save if you have actually made changes to the artifact.
+    this.saveArtifact(false, true);
+  }
 
   // Loads an existing artifact
   loadExistingArtifact = () => {
@@ -229,14 +234,14 @@ class BuilderPage extends Component {
   }
 
   // Saves artifact to the database
-  saveArtifact = (exitPage) => {
+  saveArtifact = (exitPage, fromUnmount = false) => {
     const artifact = this.prepareArtifact();
     if (this.state.id) { artifact._id = this.state.id; }
 
     const handleSave = (result) => {
         // TODO:
         // notification on save
-      if (result.data._id) { this.setState({ id: result.data._id }); }
+      if (result.data._id && !fromUnmount) { this.setState({ id: result.data._id }); }
 
       if (exitPage) {
           // Redirect the page to the artifact list after saving if click "Close" button
