@@ -1,23 +1,9 @@
-@font-face {
-  font-family: 'Rubik';
-  font-style: normal;
-  font-weight: $font-weight-regular;
-  src: url('./fonts/Rubik-Regular.ttf') format('truetype');
-}
-
-@font-face {
-  font-family: 'Rubik';
-  font-style: normal;
-  font-weight: $font-weight-bold;
-  src: url('./fonts/Rubik-Medium.ttf') format('truetype');
-}
-
 :root {
   font-size: 12px;
 }
 
 body {
-  font-family: 'Rubik', sans-serif;
+  font-family: "Open Sans", Arial, sans-serif;
   font-weight: $font-weight-regular;
   color: $black;
   -webkit-font-smoothing: antialiased;
