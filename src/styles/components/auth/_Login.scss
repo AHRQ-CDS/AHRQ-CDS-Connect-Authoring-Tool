@@ -4,7 +4,8 @@
 
   &__button,
   &__button:focus {
-    max-width: 100px;
+    min-width: 100px;
+    max-width: 200px;
     border: 1px solid $white;
     background-color: inherit;
     color: $white;
