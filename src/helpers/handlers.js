@@ -5,11 +5,25 @@ const warning = 'You are leaving a U.S. Department of Health and Human Service\'
   'leave the HHS site.\n\nPress "OK" to accept.\n\nNote: A new window is about to open. If you have trouble ' +
   'accessing this link, please disable your pop-up blocker.';
 
-// Disabling prefer-default-export rule because we expect other functions to be exported in the future.
-// eslint-disable-next-line import/prefer-default-export
+
+/**
+ * Prompts the user to confirm that they acknowledge they are navigating to a non-gov site
+ * @param {Event} e - The event from the handler that invoked this function
+ */
 export function onVisitExternalLink(e) {
   // eslint-disable-next-line no-alert
   if (!window.confirm(warning)) {
     e.preventDefault();
   }
+}
+
+/**
+ * Opens the external link (e.g., signup or feedback) in a new browser window
+ * @param {Event} e - The event from the handler that invoked this function
+ */
+export function onVisitExternalForm(e) {
+  const width = window.innerWidth * 0.9 || 800;
+  const height = window.innerHeight * 0.9 || 800;
+  window.open(e.target.href, '', `width=${width}, height=${height} ,resizable=yes , scrollbars=yes`);
+  e.preventDefault();
 }

@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { NavLink } from 'react-router-dom';
+import { onVisitExternalForm } from '../helpers/handlers';
 
 export default class Navbar extends Component {
   renderedNavbar = () => {
@@ -13,7 +14,7 @@ export default class Navbar extends Component {
             <li><NavLink to="/artifacts">Artifacts</NavLink></li>
             <li><NavLink to="/build">Workspace</NavLink></li>
             <li><NavLink to="/userguide">Documentation</NavLink></li>
-            <li><a href="https://cds.ahrq.gov/contact-us">Feedback</a></li>
+            <li><a href="https://cds.ahrq.gov/contact-us" onClick={onVisitExternalForm}>Feedback</a></li>
           </ul>
       );
     }
@@ -22,8 +23,8 @@ export default class Navbar extends Component {
         <ul>
           <li><NavLink exact to="/">Home</NavLink></li>
           <li><NavLink to="/userguide">Documentation</NavLink></li>
-          <li><a href="https://cds.ahrq.gov/form/cds-authoring-tool-sign-up">Sign Up</a></li>
-          <li><a href="https://cds.ahrq.gov/contact-us">Feedback</a></li>
+          <li><a href="https://cds.ahrq.gov/form/cds-authoring-tool-sign-up" onClick={onVisitExternalForm}>Sign Up</a></li>
+          <li><a href="https://cds.ahrq.gov/contact-us" onClick={onVisitExternalForm}>Feedback</a></li>
         </ul>
     );
   }

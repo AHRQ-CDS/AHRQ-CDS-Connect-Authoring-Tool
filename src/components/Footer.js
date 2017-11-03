@@ -1,7 +1,7 @@
 /* eslint-disable max-len */
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { onVisitExternalLink } from '../helpers/handlers';
+import { onVisitExternalLink, onVisitExternalForm } from '../helpers/handlers';
 
 const ahrqLinks = [
   { name: 'AHRQ Home', link: 'https://www.ahrq.gov/' },
@@ -22,8 +22,8 @@ const cdsAuthoringToolLinks = [
   { name: 'Artifacts', link: `${process.env.PUBLIC_URL}/artifacts`, onlyWithAuth: true },
   { name: 'Workspace', link: `${process.env.PUBLIC_URL}/build`, onlyWithAuth: true },
   { name: 'Documentation', link: `${process.env.PUBLIC_URL}/userguide` },
-  { name: 'Sign Up', link: 'https://cds.ahrq.gov/form/cds-authoring-tool-sign-up', onlyWithoutAuth: true },
-  { name: 'Feedback', link: 'https://cds.ahrq.gov/contact-us' }
+  { name: 'Sign Up', link: 'https://cds.ahrq.gov/form/cds-authoring-tool-sign-up', onlyWithoutAuth: true, onClick: onVisitExternalForm },
+  { name: 'Feedback', link: 'https://cds.ahrq.gov/contact-us', onClick: onVisitExternalForm }
 ];
 
 const cdsToolLinks = [
@@ -63,11 +63,20 @@ export default class Footer extends Component {
       else if (link.onlyWithoutAuth) return !isAuthenticated;
       return true;
     });
-    return filteredLinks.map((link, index) =>
-      <li key={`link-${index}`}>
-        <a href={link.link}>{link.name}</a>
-      </li>
-    );
+    return filteredLinks.map((link, index) => {
+      if (typeof link.onClick === 'function') {
+        return (
+          <li key={`link-${index}`}>
+            <a href={link.link} onClick={link.onClick}>{link.name}</a>
+          </li>
+        );
+      }
+      return (
+        <li key={`link-${index}`}>
+          <a href={link.link}>{link.name}</a>
+        </li>
+      );
+    });
   }
 
   render() {
