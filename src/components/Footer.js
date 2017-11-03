@@ -1,5 +1,6 @@
 /* eslint-disable max-len */
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import { onVisitExternalLink } from '../helpers/handlers';
 
 const ahrqLinks = [
@@ -18,8 +19,10 @@ const ahrqLinks = [
 
 const cdsAuthoringToolLinks = [
   { name: 'CDS Authoring Tool Home', link: `${process.env.PUBLIC_URL}/` },
+  { name: 'Artifacts', link: `${process.env.PUBLIC_URL}/artifacts`, onlyWithAuth: true },
+  { name: 'Workspace', link: `${process.env.PUBLIC_URL}/build`, onlyWithAuth: true },
   { name: 'Documentation', link: `${process.env.PUBLIC_URL}/userguide` },
-  { name: 'Sign Up', link: 'https://cds.ahrq.gov/form/cds-authoring-tool-sign-up' },
+  { name: 'Sign Up', link: 'https://cds.ahrq.gov/form/cds-authoring-tool-sign-up', onlyWithoutAuth: true },
   { name: 'Feedback', link: 'https://cds.ahrq.gov/contact-us' }
 ];
 
@@ -54,7 +57,13 @@ export default class Footer extends Component {
   renderedNav = (links) => {
     if (links == null || links.length === 0) { return null; }
 
-    return links.map((link, index) =>
+    const { isAuthenticated } = this.props;
+    const filteredLinks = links.filter((link) => {
+      if (link.onlyWithAuth) return isAuthenticated;
+      else if (link.onlyWithoutAuth) return !isAuthenticated;
+      return true;
+    });
+    return filteredLinks.map((link, index) =>
       <li key={`link-${index}`}>
         <a href={link.link}>{link.name}</a>
       </li>
@@ -193,3 +202,7 @@ export default class Footer extends Component {
     );
   }
 }
+
+Footer.propTypes = {
+  isAuthenticated: PropTypes.bool.isRequired
+};
