@@ -28,7 +28,7 @@ function userReceived(username) {
 
 function sendUserRequest() {
   return new Promise((resolve, reject) => {
-    axios.get(`${API_BASE}/auth/user`)
+    axios.get(`${API_BASE}/auth/user`, { params: { _: +(new Date()) } })
       .then(result => resolve(result.data))
       .catch(error => reject(error));
   });
