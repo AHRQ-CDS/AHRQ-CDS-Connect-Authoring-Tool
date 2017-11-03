@@ -13,8 +13,10 @@
   }
 
   &__authname {
-    margin: 13px 0 0 20px;
+    margin: 5px 0 0 20px;
     color: $white;
+
+    @include respond-to('1440px') { margin-top: 13px; }
 
     button {
       box-shadow: none;
