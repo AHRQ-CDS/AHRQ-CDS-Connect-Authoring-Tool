@@ -93,6 +93,21 @@ class BuilderPage extends Component {
 
   // Loads templates and checks if existing artifact
   componentDidMount() {
+    // To ensure the artifact is saved, even if the user navigates away from the page, we must use
+    // an event listener on window's beforeunload event.  This is because navigating away from the
+    // app does not call componentWillUnmount.  But... we must also store a reference to the
+    // function so we can successfully *remove* the event listener when the user goes to a
+    // different route
+    const that = this;
+    this.saveOnExit = () => {
+      const artifact = that.prepareArtifact();
+      // Skip the save if the artifact is completely blank
+      if (!isBlankArtifact(artifact)) {
+        that.saveArtifact(false, true);
+      }
+    };
+    window.addEventListener('beforeunload', this.saveOnExit);
+
     axios.get(`${API_BASE}/config/templates`)
       .then((result) => {
         this.setState({ categories: result.data });
@@ -123,6 +138,14 @@ class BuilderPage extends Component {
       .catch((error) => {
         console.log(error);
       });
+  }
+
+  componentWillUnmount() {
+    // We're navigating to a different route, so remove the beforeunload handler, since we are
+    // about to save the artifact anyway.
+    window.removeEventListener('beforeunload', this.saveOnExit);
+    // Save the artifact
+    this.saveOnExit();
   }
 
   // Loads an existing artifact
@@ -229,14 +252,14 @@ class BuilderPage extends Component {
   }
 
   // Saves artifact to the database
-  saveArtifact = (exitPage) => {
+  saveArtifact = (exitPage, fromUnmount = false) => {
     const artifact = this.prepareArtifact();
     if (this.state.id) { artifact._id = this.state.id; }
 
     const handleSave = (result) => {
         // TODO:
         // notification on save
-      if (result.data._id) { this.setState({ id: result.data._id }); }
+      if (result.data._id && !fromUnmount) { this.setState({ id: result.data._id }); }
 
       if (exitPage) {
           // Redirect the page to the artifact list after saving if click "Close" button
@@ -691,6 +714,88 @@ class BuilderPage extends Component {
       </div>
     );
   }
+}
+
+/**
+ * Determines if the artifact is blank (meaning there is no meaningful user-entered information).
+ * This is used to determine if an artifact should be auto-saved.
+ * WARNING: This function may be fragile to changes.  This should be revisited when Redux is used.
+ * @param {Object} artifact - the artifact to check for blankness
+ * @return {boolean} true if the artifact has no meaningful data, false otherwise
+ */
+function isBlankArtifact(artifact) {
+  // If it has an ID, it is pre-existing and considered non-blank
+  if (artifact._id) {
+    return false;
+  }
+  // If it has a non-default name or version, it is NOT blank
+  if (artifact.name !== 'Untitled Artifact' || artifact.version !== 1) {
+    return false;
+  }
+  // If the counter is above 4, the user must have entered something somewhere.
+  // This is probably the fastest detection of many changes, but is not complete.
+  if (artifact.uniqueIdCounter > 4) {
+    return false;
+  }
+  // If it has any inclusion elements, it is NOT blank
+  if (artifact.expTreeInclude.childInstances.length > 0) {
+    return false;
+  }
+  // If it has any exclusion elements, it is NOT blank
+  if (artifact.expTreeExclude.childInstances.length > 0) {
+    return false;
+  }
+  // If it has more than one recommendation, it is NOT blank
+  if (artifact.recommendations.length > 1) {
+    return false;
+  }
+  // If it has only one recommendation, check if it is a blank recommendation
+  if (artifact.recommendations.length === 1) {
+    const r = artifact.recommendations[0];
+    if (r.grade !== 'A' || r.text !== '' || r.rationale !== '' || r.subpopulations.length > 1) {
+      return false;
+    }
+  }
+  // If it has more than three subpopulations, it is not blank
+  if (artifact.subpopulations.length > 3) {
+    return false;
+  }
+  // If it has exactly three populations, check if the third is a blank population
+  // (The first two populations are always hard-coded and un-editable)
+  if (artifact.subpopulations.length === 3) {
+    const subpop = artifact.subpopulations[2];
+    if (subpop.subpopulationName !== 'Subpopulation 1') {
+      return false;
+    }
+    if (subpop.childInstances.length > 0) {
+      return false;
+    }
+  }
+  // If it has any parameters, it is NOT blank
+  if (artifact.booleanParameters.length > 0) {
+    return false;
+  }
+  // If the error statement has an else clause, it is NOT blank
+  if (artifact.errorStatement.elseClause) {
+    return false;
+  }
+  // If it has more than one error statement (else if), it is NOT blank
+  if (artifact.errorStatement.statements.length > 1) {
+    return false;
+  }
+  // If it has exactly one error statement, check if it is blank
+  if (artifact.errorStatement.statements.length === 1) {
+    const st = artifact.errorStatement.statements[0];
+    if (st.child !== null || st.thenClause !== '') {
+      return false;
+    }
+    const c = st.condition;
+    if (c.label !== null || c.value !== null) {
+      return false;
+    }
+  }
+  // If we safely made it here, it is BLANK!
+  return true;
 }
 
 export default BuilderPage;
