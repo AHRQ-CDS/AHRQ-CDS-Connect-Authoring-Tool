@@ -6,6 +6,7 @@
  *
  * This is mainly used by PM2 and our Docker image.
  */
+require('dotenv').config();
 const express = require('express');
 const proxy = require('express-http-proxy');
 const path = require('path');
@@ -20,9 +21,9 @@ app.use('/authoring', express.static(path.join(__dirname, 'build')));
 const disableProxy = process.env.DISABLE_API_PROXY && /^(true|t|yes|y|1)$/i.test(process.env.DISABLE_API_PROXY);
 if (!disableProxy) {
   const apiPort = process.env.API_PORT || 3001;
-  app.use('/authoring/api', proxy(`localhost:${apiPort}`, {
-    // By default, the /authoring/api isn't preserved, so we need to add it back
-    proxyReqPathResolver: req => `/authoring/api${url.parse(req.url).path}` }
+  app.use(process.env.REACT_APP_API_URL, proxy(`localhost:${apiPort}`, {
+    // By default, the API base URL (e.g., /authoring/api) isn't preserved, so we need to add it back
+    proxyReqPathResolver: req => `${process.env.REACT_APP_API_URL}${url.parse(req.url).path}` }
   ));
 }
 

@@ -3,9 +3,10 @@ import ReactModal from 'react-modal';
 import { get, post } from 'axios';
 import FontAwesome from 'react-fontawesome';
 
-import Config from '../../../config';
-
 ReactModal.setAppElement('#root');
+
+const API_BASE = process.env.REACT_APP_API_URL;
+const REPO_BASE = process.env.REACT_APP_REPO_URL;
 
 const AUTHENTICATE = 'AUTHENTICATE';
 const LIST = 'LIST';
@@ -51,8 +52,7 @@ class RepoUploadModal extends Component {
   }
 
   authenticate = () => {
-    // let auth = {username: this.state.userName, password: this.state.password};
-    get(`${Config.repo.baseUrl}/rest/session/token`).then((res) => {
+    get(`${API_BASE}/rest/session/token`).then((res) => {
       this.setState({ authToken: res.data });
       this.fetchArtifacts();
     }).catch((res) => {
@@ -61,7 +61,7 @@ class RepoUploadModal extends Component {
   }
 
   fetchArtifacts = () => {
-    get(`${Config.api.baseUrl}/repository/artifacts`).then((res) => {
+    get(`${API_BASE}/repository/artifacts`).then((res) => {
       this.setState({ artifacts: res.data, page: LIST });
     });
   }
@@ -70,7 +70,7 @@ class RepoUploadModal extends Component {
     const artifact = this.props.prepareArtifact();
     const auth = { username: this.state.userName, password: this.state.password };
     const closeModal = this.closeModal;
-    post(`${Config.api.baseUrl}/cql/publish`, { data: artifact, nid, auth, version: this.props.version })
+    post(`${API_BASE}/cql/publish`, { data: artifact, nid, auth, version: this.props.version })
     .then((res) => {
       console.log('Success');
       closeModal();
@@ -162,7 +162,7 @@ class RepoUploadModal extends Component {
   renderUploadStatus() {
     return (
       <div>
-        Uploading artifact {this.state.artifactNID} to <a href={`${Config.repo.baseUrl}`}>repository</a>...
+        Uploading artifact {this.state.artifactNID} to <a href={`${REPO_BASE}`}>repository</a>...
       </div>
     );
   }
@@ -187,7 +187,7 @@ class RepoUploadModal extends Component {
             // TODO: Should put more detailed error info here when API is ready
             //       Should also include 'Retry' button when applicable.
           }
-          The <a href={`${Config.repo.baseUrl}`}>Artifact Repository</a> could not be reached.
+          The <a href={`${REPO_BASE}`}>Artifact Repository</a> could not be reached.
         </p>
       </div>
     );

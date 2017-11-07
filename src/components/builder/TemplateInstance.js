@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import axios from 'axios';
 import FontAwesome from 'react-fontawesome';
 import _ from 'lodash';
-import Config from '../../../config';
 
 // Try to keep these ordered same as in folder (i.e. alphabetically)
 import NumberParameter from './parameters/NumberParameter';
@@ -20,7 +19,7 @@ import ValueComparison from './modifiers/ValueComparison';
 import ValueComparisonObservation from './modifiers/ValueComparisonObservation';
 import WithUnit from './modifiers/WithUnit';
 
-const API_BASE = Config.api.baseUrl;
+const API_BASE = process.env.REACT_APP_API_URL;
 
 function getInstanceName(instance) {
   return (instance.parameters.find(p => p.id === 'element_name') || {}).value;

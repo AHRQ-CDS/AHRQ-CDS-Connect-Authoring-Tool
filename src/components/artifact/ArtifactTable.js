@@ -5,9 +5,8 @@ import axios from 'axios';
 import FontAwesome from 'react-fontawesome';
 import ReactModal from 'react-modal';
 import EditModal from './EditModal';
-import Config from '../../../config';
 
-const API_BASE = Config.api.baseUrl;
+const API_BASE = process.env.REACT_APP_API_URL;
 
 // For screen readers to not see the background text
 ReactModal.setAppElement('#root');

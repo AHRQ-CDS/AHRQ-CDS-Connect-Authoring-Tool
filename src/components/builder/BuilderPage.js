@@ -11,13 +11,12 @@ import Recommendations from './Recommendations';
 import Subpopulations from './Subpopulations';
 import Parameters from './Parameters';
 import ErrorStatement from './ErrorStatement';
-import Config from '../../../config';
 import RepoUploadModal from './RepoUploadModal';
 import EditModal from '../artifact/EditModal';
 
 // Suppress is a flag that is specific to an element. It should not be inherited by children
 const ELEMENT_SPECIFIC_FIELDS = ['suppress'];
-const API_BASE = Config.api.baseUrl;
+const API_BASE = process.env.REACT_APP_API_URL;
 
 // TODO: This is needed because the tree on this.state is not updated in time. Figure out a better way to handle this
 let localTree;

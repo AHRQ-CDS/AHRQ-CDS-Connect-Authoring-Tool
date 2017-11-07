@@ -13,6 +13,7 @@
     "cds-upload": "file:./localDependencies/cds-upload-1.0.0.tgz",
     "connect-mongo": "^2.0.0",
     "core-js": "^2.5.1",
+    "dotenv": "2.0.0",
     "ejs": "^2.5.6",
     "enzyme": "^2.8.0",
     "enzyme-redux": "^0.1.7",

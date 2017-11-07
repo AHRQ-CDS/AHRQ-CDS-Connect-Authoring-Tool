@@ -1,6 +1,5 @@
 import axios from 'axios';
 import Promise from 'promise';
-import Config from '../../config';
 
 import {
   USER_REQUEST, USER_RECEIVED,
@@ -9,7 +8,7 @@ import {
   SET_AUTH_STATUS
 } from './types';
 
-const API_BASE = Config.api.baseUrl;
+const API_BASE = process.env.REACT_APP_API_URL;
 
 // ------------------------- USER ------------------------------------------ //
 
