@@ -102,6 +102,12 @@ const config = convict({
           env: 'AUTH_LDAP_SEARCH_FILTER',
         }
       }
+    },
+    useLocalStrategy: {
+      doc: 'Indicates if the local auth strategy should be used',
+      format: 'Boolean',
+      default: false,
+      env: 'AUTH_USE_LOCAL_STRATEGY',
     }
   },
   tlsRejectUnauthorized: {

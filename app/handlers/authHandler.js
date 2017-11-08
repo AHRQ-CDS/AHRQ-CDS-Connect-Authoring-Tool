@@ -1,11 +1,19 @@
 const passport = require('passport');
+const config = require('../../config');
 
 function login(req, res, next) {
   // If the user is already logged in, log out first
   if (req.user) {
     req.logout();
   }
-  passport.authenticate('ldapauth')(req, res, (err) => {
+
+  // Always use LDAP Strategy - add Local Strategy based on configuration
+  const strategies = ['ldapauth'];
+  if (config.get('auth.useLocalStrategy')) {
+    strategies.push('local');
+  }
+
+  passport.authenticate(strategies)(req, res, (err) => {
     if (err) {
       next(err);
     } else {

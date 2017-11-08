@@ -2,9 +2,11 @@ const process = require('process');
 const session = require('express-session');
 const passport = require('passport');
 const LdapStrategy = require('passport-ldapauth');
+const LocalStrategy = require('passport-local').Strategy;
 const MongoStore = require('connect-mongo')(session);
 const mongoose = require('mongoose');
 const config = require('./config');
+const findLocalUserById = require('./localAuthUsers').findByUsername;
 
 function getLdapConfiguration(req, callback) {
   // Replace {{username}} and {{password}} with values from request
@@ -13,6 +15,19 @@ function getLdapConfiguration(req, callback) {
     .replace(/\{\{password\}\}/g, req.body.password)
   );
   callback(null, ldapConfig);
+}
+
+function getLocalConfiguration(username, password, done) {
+  findLocalUserById(username, (err, user) => {
+    if (err) { return done(err); }
+    if (!user) {
+      return done(null, false, { message: 'Incorrect username.' });
+    }
+    if (user.password !== password) {
+      return done(null, false, { message: 'Incorrect password.' });
+    }
+    return done(null, user);
+  });
 }
 
 module.exports = (app) => {
@@ -28,8 +43,14 @@ module.exports = (app) => {
   }
   app.use(session(sess));
 
-  // Configure authentication using Passport
+  // Configure authentication using Passport LDAP Strategy
   passport.use(new LdapStrategy(getLdapConfiguration));
+
+  // Configure authentication using Passport Local Strategy - enabled based on configuration
+  if (config.get('auth.useLocalStrategy')) {
+    passport.use(new LocalStrategy(getLocalConfiguration));
+  }
+
   app.use(passport.initialize());
   app.use(passport.session());
   passport.serializeUser((user, done) => {
