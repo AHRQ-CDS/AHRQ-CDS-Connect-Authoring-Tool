@@ -27,7 +27,8 @@
         "searchBase": "ou=passport-ldapauth",
         "searchFilter": "(uid={{username}})"
       }
-    }
+    },
+    "useLocalStrategy": false
   },
   "tlsRejectUnauthorized": "1"
 }

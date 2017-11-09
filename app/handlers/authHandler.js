@@ -1,5 +1,5 @@
 const passport = require('passport');
-const config = require('../../config');
+const config = require('../config');
 
 function login(req, res, next) {
   // If the user is already logged in, log out first
