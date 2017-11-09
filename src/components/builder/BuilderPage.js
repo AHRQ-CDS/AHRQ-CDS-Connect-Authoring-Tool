@@ -268,16 +268,18 @@ export default class BuilderPage extends Component {
     const handleSave = (result) => {
       // TODO:
       // notification on save
-      const newState = {
-        name: artifact.name,
-        version: artifact.version
-      };
+      if (!fromUnmount) {
+        const newState = {
+          name: artifact.name,
+          version: artifact.version
+        };
 
-      if (result.data._id && !fromUnmount) {
-        newState.id = result.data._id;
+        if (result.data._id) {
+          newState.id = result.data._id;
+        }
+
+        this.setState(newState);
       }
-
-      this.setState(newState);
 
       if (exitPage) {
           // Redirect the page to the artifact list after saving if click "Close" button
