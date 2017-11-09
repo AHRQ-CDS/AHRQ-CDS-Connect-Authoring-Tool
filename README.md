@@ -18,11 +18,9 @@ npm install -g yarn # npm included with node, install yarn
 yarn # e.g. yarn install. installs this app's dependencies based on this project's yarn.lock / package.json
 ```
 
-By default, the project will attempt to convert CQL to ELM on download or publish.  This can be disabled for development purposes.  If enabled, you will need the CQL-to-ELM translation service, a Java application that can be run locally via Maven or Docker.
+By default, the project will attempt to convert CQL to ELM on download or publish.  To disable this in development, see the configuration section below.  If enabled, you will need the CQL-to-ELM translation service, a Java application that can be run locally via Maven or Docker.
 * To run locally with Maven: https://github.com/cqframework/cql-translation-service
 * To run locally with Docker, install Docker and run: `docker run -p 8080:8080 cqframework/cql-translation-service:v1.2.16`
-
-To disable CQL-to-ELM translation, modify `config.js` or set the environment variable `CQL_TO_ELM_DISABLED` to `true`
 
 The React part was bootstrapped with [Create React App](https://github.com/facebookincubator/create-react-app). Relevant files are in the `src/` filter. Refer to the Create React App [User Guide](https://github.com/facebookincubator/create-react-app/blob/master/packages/react-scripts/template/README.md) for guidance on features and how to perform common tasks.
 
@@ -34,6 +32,22 @@ yarn add <thing> # add a package. add --dev if this is a development dependency.
 yarn add <thing>@<version> # will adjust version
 yarn remove <thing> # remove a package.
 ```
+
+### Configuration
+
+#### React Frontend
+
+The React frontend has very few configuration needs.  Currently, only two data points are configurable: the backend API URL and the CDS Connect repo URL.  The default values can be found in the `.env` file and overridden via environment variables.  Note that during a production build, the values in `.env` will be hard-coded into the resulting html and js.
+
+#### API Backend
+
+The API backend requires significantly more configuration than the React frontend.  This project uses the popular [convict](https://www.npmjs.com/package/convict) module to manage configuration.  The configuration schema and default values can be found at `app/config.js`, and an example config file can be found at `config/example.json`.
+
+The API server will uses the `NODE_ENV` environment variable to detect the active environment: `production`, `development`, or `test` (defaulting to `development` when no environment is supplied).  If a corresponding configuration file (`config/${NODE_ENV}.json`) is present, it will merge its values into the default configuration.
+
+For local development, a `config/local.json` file can also be used to override configuration settings.  It has precedence over the environment-based configuration and default configuration.
+
+Lastly, most aspects of config can also be overridden via specific environment variables.  See the `app/config.js` configuration schema for the relevant environment variable names.
 
 ### Run
 
@@ -97,12 +111,12 @@ For the authoring tool to run in a docker container, MongoDB and CQL-to-ELM dock
 ```
 docker run --name cat-cql2elm -d cqframework/cql-translation-service:v1.2.16
 docker run --name cat-mongo -d mongo:3.4
-docker run --name cat --link cat-cql2elm:cql2elm --link cat-mongo:mongo -e "REPO_BASE_URL=https://cdsconnect.ahrqdev.org" -e "CQL_TO_ELM_URL=http://cql2elm:8080/cql/translator" -e "MONGO_URL=mongodb://mongo/cds_authoring" -p "9000:9000" cdsauthoringtool
+docker run --name cat --link cat-cql2elm:cql2elm --link cat-mongo:mongo -e "REPO_URL=https://cdsconnect.ahrqdev.org" -e "CQL_TO_ELM_URL=http://cql2elm:8080/cql/translator" -e "MONGO_URL=mongodb://mongo/cds_authoring" -p "9000:9000" cdsauthoringtool
 ```
 
 By default, the server on port 9000 will proxy requests on _/api_ to the local API server using express-http-proxy.  In production environments, a dedicated external proxy server may be desired.  In that case, the external proxy server will be responsible for proxying _/api_ to port 3001.  To accomodate this, disable the express-http-proxy and expose port 3001.  Instead of the last command above, run this instead:
 ```
-docker run --name cat --link cat-cql2elm:cql2elm --link cat-mongo:mongo -e "REPO_BASE_URL=https://cdsconnect.ahrqdev.org" -e "CQL_TO_ELM_URL=http://cql2elm:8080/cql/translator" -e "MONGO_URL=mongodb://mongo/cds_authoring" -e "DISABLE_API_PROXY=true" -p "9000:9000" -p "3001:3001" cdsauthoringtool
+docker run --name cat --link cat-cql2elm:cql2elm --link cat-mongo:mongo -e "REPO_URL=https://cdsconnect.ahrqdev.org" -e "CQL_TO_ELM_URL=http://cql2elm:8080/cql/translator" -e "MONGO_URL=mongodb://mongo/cds_authoring" -e "DISABLE_API_PROXY=true" -p "9000:9000" -p "3001:3001" cdsauthoringtool
 ```
 
 To run the CDS Authoring Tool in a detached process, add a `-d` to the run command (before `cdsauthoringtool`).

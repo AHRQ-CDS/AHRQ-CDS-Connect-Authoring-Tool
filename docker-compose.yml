@@ -5,7 +5,7 @@ services:
     environment:
       MONGO_URL: mongodb://cat-mongo/cds_authoring
       CQL_TO_ELM_URL: http://cat-cql2elm:8080/cql/translator
-      REPO_BASE_URL: https://cdsconnect.ahrqdev.org
+      REPO_URL: https://cdsconnect.ahrqdev.org
       NODE_ENV: production
     ports:
     - "9000:9000"

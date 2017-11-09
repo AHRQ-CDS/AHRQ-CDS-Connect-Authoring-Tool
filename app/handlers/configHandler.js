@@ -1,14 +1,14 @@
 const Resources = require('../data/resources');
 const Templates = require('../data/form_templates');
 const ValueSets = require('../data/valueSets');
-const config = require('../../config');
+const config = require('../config');
 
 module.exports = {
   getResources,
   getTemplates,
   getValueSets,
   getOneValueSet,
-  getPublishConfig
+  getRepoPublishConfig
 };
 
 // Returns all ValueSets saved
@@ -49,6 +49,6 @@ function getOneValueSet(request, result) {
   result.json(selectedObject);
 }
 
-function getPublishConfig(request, result) {
-  result.json(config.publish);
+function getRepoPublishConfig(request, result) {
+  result.json(config.get('repo.publish'));
 }

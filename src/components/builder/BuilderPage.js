@@ -130,9 +130,9 @@ class BuilderPage extends Component {
         console.log(error);
       });
 
-    axios.get(`${API_BASE}/config/publish`)
+    axios.get(`${API_BASE}/config/repo/publish`)
       .then((result) => {
-        this.setState({ publish_enabled: result.data.enabled });
+        this.setState({ publish_enabled: result.data.active });
       })
       .catch((error) => {
         console.log(error);
