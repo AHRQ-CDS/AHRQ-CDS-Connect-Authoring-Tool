@@ -1,4 +1,4 @@
-const Config = require('../../config');
+const config = require('../config');
 const Artifact = require('../models/artifact');
 const ValueSets = require('../data/valueSets');
 const _ = require('lodash');
@@ -532,7 +532,7 @@ function writeZip(cqlArtifact, writeStream, callback /* (error) */) {
 
 function convertToElm(artifactJson, callback /* (error, elmFiles) */) {
   // If CQL-to-ELM is disabled, this function should basically be a no-op
-  if (Config.cql2elm.disabled) {
+  if (!config.get('cqlToElm.active')) {
     callback(null, []);
     return;
   }
@@ -548,7 +548,7 @@ function convertToElm(artifactJson, callback /* (error, elmFiles) */) {
     const fileStreams = files.map(f => fs.createReadStream(f));
 
     // NOTE: the request isn't posted until the next event loop, so we can modify it after calling request.post
-    const cqlReq = request.post(Config.cql2elm.baseUrl, (err2, resp, body) => {
+    const cqlReq = request.post(config.get('cqlToElm.url'), (err2, resp, body) => {
       if (err2) {
         callback(err2);
         return;

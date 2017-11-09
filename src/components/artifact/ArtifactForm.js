@@ -1,9 +1,8 @@
 import React, { Component } from 'react';
 import axios from 'axios';
 import _ from 'lodash';
-import Config from '../../../config';
 
-const API_BASE = Config.api.baseUrl;
+const API_BASE = process.env.REACT_APP_API_URL;
 
 class ArtifactForm extends Component {
   constructor(props) {

@@ -4,11 +4,11 @@ const passport = require('passport');
 const LdapStrategy = require('passport-ldapauth');
 const MongoStore = require('connect-mongo')(session);
 const mongoose = require('mongoose');
-const config = require('../config');
+const config = require('./config');
 
 function getLdapConfiguration(req, callback) {
   // Replace {{username}} and {{password}} with values from request
-  const ldapConfig = JSON.parse(JSON.stringify(config.auth.ldap)
+  const ldapConfig = JSON.parse(JSON.stringify(config.get('auth.ldap'))
     .replace(/\{\{username\}\}/g, req.body.username)
     .replace(/\{\{password\}\}/g, req.body.password)
   );
@@ -18,7 +18,7 @@ function getLdapConfiguration(req, callback) {
 module.exports = (app) => {
   // Configuring cookie security as suggested at: https://github.com/expressjs/session#cookiesecure
   const sess = {
-    secret: config.auth.sessionSecret,
+    secret: config.get('auth.session.secret'),
     cookie: {},
     store: new MongoStore({ mongooseConnection: mongoose.connection })
   };

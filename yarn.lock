@@ -2039,6 +2039,19 @@ convert-source-map@^1.1.0, convert-source-map@^1.5.0:
   version "1.5.0"
   resolved "https://registry.yarnpkg.com/convert-source-map/-/convert-source-map-1.5.0.tgz#9acd70851c6d5dfdd93d9282e5edf94a03ff46b5"
 
+convict@^4.0.1:
+  version "4.0.1"
+  resolved "https://registry.yarnpkg.com/convict/-/convict-4.0.1.tgz#df286e9df68d8a4e3789c09f92f49d2ba7b9d59e"
+  dependencies:
+    depd "1.1.1"
+    json5 "0.5.1"
+    lodash.clonedeep "4.5.0"
+    moment "2.18.1"
+    validator "7.2.0"
+    yargs-parser "7.0.0"
+  optionalDependencies:
+    varify "0.2.0"
+
 cookie-signature@1.0.6:
   version "1.0.6"
   resolved "https://registry.yarnpkg.com/cookie-signature/-/cookie-signature-1.0.6.tgz#e303a882b342cc3ee8ca513a79999734dab3ae2c"
@@ -2439,7 +2452,7 @@ depd@1.1.0, depd@~1.1.0:
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/depd/-/depd-1.1.0.tgz#e1bd82c6aab6ced965b97b88b17ed3e528ca18c3"
 
-depd@~1.1.1:
+depd@1.1.1, depd@~1.1.1:
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/depd/-/depd-1.1.1.tgz#5783b4e1c459f06fa5ca27f991f3d06e7a310359"
 
@@ -4635,7 +4648,7 @@ json3@3.3.2, json3@^3.3.2:
   version "3.3.2"
   resolved "https://registry.yarnpkg.com/json3/-/json3-3.3.2.tgz#3c0434743df93e2f5c42aee7b19bcb483575f4e1"
 
-json5@^0.5.0, json5@^0.5.1:
+json5@0.5.1, json5@^0.5.0, json5@^0.5.1:
   version "0.5.1"
   resolved "https://registry.yarnpkg.com/json5/-/json5-0.5.1.tgz#1eade7acc012034ad84e2396767ead9fa5495821"
 
@@ -4908,16 +4921,16 @@ lodash.camelcase@^4.3.0:
   version "4.3.0"
   resolved "https://registry.yarnpkg.com/lodash.camelcase/-/lodash.camelcase-4.3.0.tgz#b28aa6288a2b9fc651035c7711f65ab6190331a6"
 
+lodash.clonedeep@4.5.0, lodash.clonedeep@^4.3.2:
+  version "4.5.0"
+  resolved "https://registry.yarnpkg.com/lodash.clonedeep/-/lodash.clonedeep-4.5.0.tgz#e23f3f9c4f8fbdde872529c1071857a086e5ccef"
+
 lodash.clonedeep@^3.0.0:
   version "3.0.2"
   resolved "https://registry.yarnpkg.com/lodash.clonedeep/-/lodash.clonedeep-3.0.2.tgz#a0a1e40d82a5ea89ff5b147b8444ed63d92827db"
   dependencies:
     lodash._baseclone "^3.0.0"
     lodash._bindcallback "^3.0.0"
-
-lodash.clonedeep@^4.3.2:
-  version "4.5.0"
-  resolved "https://registry.yarnpkg.com/lodash.clonedeep/-/lodash.clonedeep-4.5.0.tgz#e23f3f9c4f8fbdde872529c1071857a086e5ccef"
 
 lodash.cond@^4.3.0:
   version "4.5.2"
@@ -5298,7 +5311,7 @@ mocha@^3.5.0:
     mkdirp "0.5.1"
     supports-color "3.1.2"
 
-moment@^2.10.6, moment@^2.18.1:
+moment@2.18.1, moment@^2.10.6, moment@^2.18.1:
   version "2.18.1"
   resolved "https://registry.yarnpkg.com/moment/-/moment-2.18.1.tgz#c36193dd3ce1c2eed2adb7c802dbbc77a81b1c0f"
 
@@ -7017,7 +7030,7 @@ redent@^1.0.0:
     indent-string "^2.1.0"
     strip-indent "^1.0.1"
 
-redeyed@~1.0.0:
+redeyed@~1.0.0, redeyed@~1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/redeyed/-/redeyed-1.0.1.tgz#e96c193b40c0816b00aec842698e61185e55498a"
   dependencies:
@@ -8313,9 +8326,24 @@ validate-npm-package-license@^3.0.1:
     spdx-correct "~1.0.0"
     spdx-expression-parse "~1.0.0"
 
+validator@7.2.0:
+  version "7.2.0"
+  resolved "https://registry.yarnpkg.com/validator/-/validator-7.2.0.tgz#a63dcbaba51d4350bf8df20988e0d5a54d711791"
+
+validator@^9.1.1:
+  version "9.1.1"
+  resolved "https://registry.yarnpkg.com/validator/-/validator-9.1.1.tgz#3bdd1065cbd28f9d96ac806dee01030d32fd97ef"
+
 value-equal@^0.2.0:
   version "0.2.1"
   resolved "https://registry.yarnpkg.com/value-equal/-/value-equal-0.2.1.tgz#c220a304361fce6994dbbedaa3c7e1a1b895871d"
+
+varify@0.2.0:
+  version "0.2.0"
+  resolved "https://registry.yarnpkg.com/varify/-/varify-0.2.0.tgz#191da9fe9dc4cd68d0d14498d4e2a910ff4e6516"
+  dependencies:
+    redeyed "~1.0.1"
+    through "~2.3.4"
 
 vary@~1.1.0, vary@~1.1.1:
   version "1.1.1"
@@ -8657,6 +8685,12 @@ yallist@^2.0.0, yallist@^2.1.2:
   version "2.1.2"
   resolved "https://registry.yarnpkg.com/yallist/-/yallist-2.1.2.tgz#1c11f9218f076089a47dd512f93c6699a6a81d52"
 
+yargs-parser@7.0.0, yargs-parser@^7.0.0:
+  version "7.0.0"
+  resolved "https://registry.yarnpkg.com/yargs-parser/-/yargs-parser-7.0.0.tgz#8d0ac42f16ea55debd332caf4c4038b3e3f5dfd9"
+  dependencies:
+    camelcase "^4.1.0"
+
 yargs-parser@^4.2.0:
   version "4.2.1"
   resolved "https://registry.yarnpkg.com/yargs-parser/-/yargs-parser-4.2.1.tgz#29cceac0dc4f03c6c87b4a9f217dd18c9f74871c"
@@ -8668,12 +8702,6 @@ yargs-parser@^5.0.0:
   resolved "https://registry.yarnpkg.com/yargs-parser/-/yargs-parser-5.0.0.tgz#275ecf0d7ffe05c77e64e7c86e4cd94bf0e1228a"
   dependencies:
     camelcase "^3.0.0"
-
-yargs-parser@^7.0.0:
-  version "7.0.0"
-  resolved "https://registry.yarnpkg.com/yargs-parser/-/yargs-parser-7.0.0.tgz#8d0ac42f16ea55debd332caf4c4038b3e3f5dfd9"
-  dependencies:
-    camelcase "^4.1.0"
 
 yargs@^1.2.6:
   version "1.3.3"

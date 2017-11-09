@@ -2,9 +2,8 @@ import React, { Component } from 'react';
 import axios from 'axios';
 import ArtifactForm from './ArtifactForm';
 import ArtifactTable from './ArtifactTable';
-import Config from '../../../config';
 
-const API_BASE = Config.api.baseUrl;
+const API_BASE = process.env.REACT_APP_API_URL;
 
 class Artifact extends Component {
   constructor(props) {

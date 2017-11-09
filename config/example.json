@@ -1,0 +1,33 @@
+// Use this file as a template to create a production.json, development.json, test.json, or local.json file.
+// If a local.json file exists, it will override environment-based files and defaults.  Only those values
+// which differ from the default values need to be included in the file.
+{
+  "mongo": {
+    "url": "mongodb://localhost/cds_authoring"
+  },
+  "repo": {
+    "url": "https://cdsconnect.ahrqdev.org",
+    "publish": {
+      "active": false
+    }
+  },
+  "cqlToElm": {
+    "url": "http://localhost:8080/cql/translator",
+    "active": true
+  },
+  "auth": {
+    "session": {
+      "secret": "secret"
+    },
+    "ldap": {
+      "server": {
+        "url": "ldap://localhost:389",
+        "bindDN": "cn=root",
+        "bindCredentials": "secret",
+        "searchBase": "ou=passport-ldapauth",
+        "searchFilter": "(uid={{username}})"
+      }
+    }
+  },
+  "tlsRejectUnauthorized": "1"
+}

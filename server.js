@@ -3,9 +3,12 @@ const process = require('process');
 const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
-const config = require('./config');
+const config = require('./app/config');
 const configPassport = require('./app/configLdapPassport');
 const routes = require('./app/routes');
+
+// Turn on/off strict SSL (turn off in dev only, use with caution!)
+process.env.NODE_TLS_REJECT_UNAUTHORIZED = config.get('tlsRejectUnauthorized');
 
 // Create App
 const app = express();
@@ -14,7 +17,7 @@ const app = express();
 const port = process.env.API_PORT || 3001;
 
 // MongoDB Configuration
-mongoose.connect(process.env.MONGO_URL || config.mongodb.localhost);
+mongoose.connect(config.get('mongo.url'));
 
 // Configure API to use BodyParser and handle json data
 app.use(bodyParser.urlencoded({ extended: true }));
