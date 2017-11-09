@@ -4,7 +4,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const config = require('./app/config');
-const configPassport = require('./app/configLdapPassport');
+const configPassport = require('./app/configPassport');
 const routes = require('./app/routes');
 
 // Turn on/off strict SSL (turn off in dev only, use with caution!)
