@@ -1,5 +1,5 @@
 const Resources = require('../data/resources');
-const Templates = require('../data/form_templates');
+const Templates = require('../data/formTemplates');
 const ValueSets = require('../data/valueSets');
 const config = require('../config');
 

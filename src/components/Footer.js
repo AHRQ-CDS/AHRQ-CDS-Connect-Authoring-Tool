@@ -80,6 +80,10 @@ export default class Footer extends Component {
   }
 
   render() {
+    if (process.env.REACT_APP_DISABLE_BRANDING === 'true') {
+      return null;
+    }
+
     return (
       <div className="footer">
         <div className="footer__top">

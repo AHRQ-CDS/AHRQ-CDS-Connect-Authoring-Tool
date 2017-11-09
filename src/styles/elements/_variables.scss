@@ -41,17 +41,20 @@ $border-color: darken($gray-lighter, 10%);
 $body-bg: $white;
 
 // button colors
-$default-button-text-color: $black;
+$default-button-text-color: $blue;
 $default-button-bg-color: $gray-lightest;
-$default-button-border-color: $white;
+$default-button-border-color: $gray-lightest;
+$default-button-border-hover-color: $blue;
 
 $primary-button-text-color: $white;
 $primary-button-bg-color: $blue;
-$primary-button-border-color: $white;
+$primary-button-border-color: $blue;
+$primary-button-border-hover-color: $blue;
 
-$secondary-button-text-color: $black;
+$secondary-button-text-color: $blue;
 $secondary-button-bg-color: $white;
-$secondary-button-border-color: $gray-lighter;
+$secondary-button-border-color: $white;
+$secondary-button-border-hover-color: $blue;
 
 // form colors
 $form-input-placeholder-color: $gray;

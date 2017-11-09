@@ -1,0 +1,9 @@
+.dropdown {
+  &-item {
+    &:hover {
+      background-color: $gray;
+      color: $white;
+      border-radius: 0;
+    }
+  }
+}

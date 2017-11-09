@@ -12,7 +12,7 @@ import Subpopulations from './Subpopulations';
 import Parameters from './Parameters';
 import ErrorStatement from './ErrorStatement';
 import RepoUploadModal from './RepoUploadModal';
-import EditModal from '../artifact/EditModal';
+import EditArtifactModal from '../artifact/EditArtifactModal';
 
 // Suppress is a flag that is specific to an element. It should not be inherited by children
 const ELEMENT_SPECIFIC_FIELDS = ['suppress'];
@@ -48,7 +48,7 @@ const getValueAtPath = (obj, path) => {
   return obj[path[0]];
 };
 
-class BuilderPage extends Component {
+export default class BuilderPage extends Component {
   static contextTypes = {
     router: PropTypes.object
   };
@@ -80,13 +80,16 @@ class BuilderPage extends Component {
       },
       name: 'Untitled Artifact',
       id: null,
-      version: 1,
+      version: '1',
+      editName: '',
+      editVersion: '',
       categories: [],
       statusMessage: null,
       activeTabIndex: 0,
       uniqueIdCounter: 0,
-      showEditModal: false,
-      publish_enabled: false,
+      showEditArtifactModal: false,
+      showPublishModal: false,
+      publishEnabled: false,
     };
   }
 
@@ -132,7 +135,7 @@ class BuilderPage extends Component {
 
     axios.get(`${API_BASE}/config/repo/publish`)
       .then((result) => {
-        this.setState({ publish_enabled: result.data.active });
+        this.setState({ publishEnabled: result.data.active });
       })
       .catch((error) => {
         console.log(error);
@@ -154,10 +157,12 @@ class BuilderPage extends Component {
     axios.get(`${API_BASE}/artifacts/${id}`)
       .then((res) => {
         const artifact = res.data[0];
-        this.setState({ id: artifact._id });
-        this.setState({ name: artifact.name });
-        this.setState({ version: artifact.version });
-        this.setState({ uniqueIdCounter: artifact.uniqueIdCounter });
+        this.setState({
+          id: artifact._id,
+          name: artifact.name,
+          version: artifact.version,
+          uniqueIdCounter: artifact.uniqueIdCounter
+        });
 
         if (!artifact.expTreeInclude || !artifact.expTreeExclude) {
           if (!artifact.expTreeInclude) {
@@ -168,12 +173,14 @@ class BuilderPage extends Component {
           }
         }
 
-        this.setState({ expTreeInclude: artifact.expTreeInclude });
-        this.setState({ expTreeExclude: artifact.expTreeExclude });
-        this.setState({ recommendations: artifact.recommendations });
-        this.setState({ subpopulations: artifact.subpopulations });
-        this.setState({ booleanParameters: artifact.booleanParameters });
-        this.setState({ errorStatement: artifact.errorStatement });
+        this.setState({
+          expTreeInclude: artifact.expTreeInclude,
+          expTreeExclude: artifact.expTreeExclude,
+          recommendations: artifact.recommendations,
+          subpopulations: artifact.subpopulations,
+          booleanParameters: artifact.booleanParameters,
+          errorStatement: artifact.errorStatement
+        });
       });
   }
 
@@ -223,14 +230,14 @@ class BuilderPage extends Component {
   prepareArtifact = () => (
     {
       name: this.state.name,
+      version: this.state.version,
       expTreeInclude: this.state.expTreeInclude,
       expTreeExclude: this.state.expTreeExclude,
       recommendations: this.state.recommendations,
       subpopulations: this.state.subpopulations,
       booleanParameters: this.state.booleanParameters,
       errorStatement: this.state.errorStatement,
-      uniqueIdCounter: this.state.uniqueIdCounter,
-      version: this.state.version
+      uniqueIdCounter: this.state.uniqueIdCounter
     }
   )
 
@@ -253,12 +260,26 @@ class BuilderPage extends Component {
   // Saves artifact to the database
   saveArtifact = (exitPage, fromUnmount = false) => {
     const artifact = this.prepareArtifact();
-    if (this.state.id) { artifact._id = this.state.id; }
+
+    if (this.state.id) {
+      artifact._id = this.state.id;
+    }
 
     const handleSave = (result) => {
-        // TODO:
-        // notification on save
-      if (result.data._id && !fromUnmount) { this.setState({ id: result.data._id }); }
+      // TODO:
+      // notification on save
+      if (!fromUnmount) {
+        const newState = {
+          name: artifact.name,
+          version: artifact.version
+        };
+
+        if (result.data._id) {
+          newState.id = result.data._id;
+        }
+
+        this.setState(newState);
+      }
 
       if (exitPage) {
           // Redirect the page to the artifact list after saving if click "Close" button
@@ -267,6 +288,8 @@ class BuilderPage extends Component {
     };
 
     if (this.state.id) {
+      console.debug('editing artifact...');
+
       axios.put(`${API_BASE}/artifacts`, artifact)
         .then(handleSave)
         .catch((error) => {
@@ -307,21 +330,46 @@ class BuilderPage extends Component {
     }
   }
 
-  openEditModal = () => {
-    this.setState({ showEditModal: true });
-  }
+  // ----------------------- EDIT ARTIFACT MODAL --------------------------- //
 
-  closeEditModal = () => {
-    this.setState({ showEditModal: false });
-  }
-
-  editArtifactName = (e, name, version) => {
-    e.preventDefault();
-    this.setState({ name, version, showEditModal: false }, () => {
-      this.updateStatusMessage('save');
-      this.saveArtifact(false);
+  openEditArtifactModal = () => {
+    this.setState({
+      showEditArtifactModal: true,
+      editName: this.state.name,
+      editVersion: this.state.version
     });
   }
+
+  closeEditArtifactModal = (reset = true) => {
+    const newState = {
+      showEditArtifactModal: false,
+      editName: '',
+      editVersion: ''
+    };
+
+    if (reset) {
+      newState.name = this.state.editName;
+      newState.version = this.state.editVersion;
+    }
+
+    this.setState(newState);
+  }
+
+  handleEditArtifact = (event) => {
+    this.updateStatusMessage('save');
+    this.saveArtifact(false);
+    this.closeEditArtifactModal(false);
+  }
+
+  handleInputChange = (event) => {
+    this.setState({ [event.target.name]: event.target.value });
+  }
+
+  getArtifact() {
+    return { name: this.state.name, version: this.state.version };
+  }
+
+  // ----------------------------------------------------------------------- //
 
   // Initialized and expression tree
   initializeExpTree = (name, template) => {
@@ -545,7 +593,6 @@ class BuilderPage extends Component {
     this.setState({ showPublishModal: !this.state.showPublishModal });
   }
 
-
   renderConjunctionGroup = (treeName, namedBooleanParameters) => (
     this.state[treeName].childInstances ?
       <ConjunctionGroup
@@ -586,23 +633,26 @@ class BuilderPage extends Component {
           </div>
 
           <div className="edit__modal">
-            <EditModal
-              showModal={this.state.showEditModal}
-              closeModal={this.closeEditModal}
-              artifactEditingName={this.state.name}
-              artifactEditingVersion={this.state.version}
-              editArtifactName={this.editArtifactName}/>
+            <EditArtifactModal
+              artifactEditing={this.getArtifact()}
+              name={this.state.name}
+              version={this.state.version}
+              handleInputChange={this.handleInputChange}
+              showModal={this.state.showEditArtifactModal}
+              closeModal={this.closeEditArtifactModal}
+              saveModal={this.handleEditArtifact} />
           </div>
 
           <header className="builder__header"
             aria-label="Workspace Header">
             <h2 className="builder__heading">
               <button aria-label="Edit"
-                className="primary-button"
-                onClick={this.openEditModal}>
+                className="secondary-button"
+                onClick={this.openEditArtifactModal}>
                 <i className="fa fa-pencil"></i>
               </button>
-              { this.state.name }
+
+              {this.state.name}
             </h2>
 
             <div className="builder__buttonbar">
@@ -628,7 +678,7 @@ class BuilderPage extends Component {
                   </button>
                 </span>
 
-                { this.state.publish_enabled ?
+                { this.state.publishEnabled ?
                   <span className="control">
                     <button onClick={ () => { this.saveArtifact(false); this.togglePublishModal(); } }
                       className="button builder__publishbutton">
@@ -637,7 +687,8 @@ class BuilderPage extends Component {
                       </span>
                       <span>Publish</span>
                     </button>
-                  </span> : '' }
+                  </span> : ''
+                }
               </div>
 
               <div role="status" aria-live="assertive">{this.state.statusMessage}</div>
@@ -665,22 +716,22 @@ class BuilderPage extends Component {
 
                 <TabPanel>
                   <Subpopulations
-                  name={ 'subpopulations' }
-                  subpopulations={ this.state.subpopulations }
-                  updateSubpopulations={ this.updateSubpopulations }
-                  booleanParameters={ namedBooleanParameters }
-                  createTemplateInstance={ this.createTemplateInstance }
-                  addInstance={ this.addInstance }
-                  editInstance={ this.editInstance }
-                  updateInstanceModifiers={ this.updateInstanceModifiers }
-                  deleteInstance={ this.deleteInstance }
-                  saveInstance={ this.saveInstance }
-                  getAllInstances={ this.getAllInstances }
-                  showPresets={ showPresets }
-                  setPreset={ this.setPreset }
-                  categories={ this.state.categories }
-                  checkSubpopulationUsage={ this.checkSubpopulationUsage }
-                  updateRecsSubpop={ this.updateRecsSubpop } />
+                    name={ 'subpopulations' }
+                    subpopulations={ this.state.subpopulations }
+                    updateSubpopulations={ this.updateSubpopulations }
+                    booleanParameters={ namedBooleanParameters }
+                    createTemplateInstance={ this.createTemplateInstance }
+                    addInstance={ this.addInstance }
+                    editInstance={ this.editInstance }
+                    updateInstanceModifiers={ this.updateInstanceModifiers }
+                    deleteInstance={ this.deleteInstance }
+                    saveInstance={ this.saveInstance }
+                    getAllInstances={ this.getAllInstances }
+                    showPresets={ showPresets }
+                    setPreset={ this.setPreset }
+                    categories={ this.state.categories }
+                    checkSubpopulationUsage={ this.checkSubpopulationUsage }
+                    updateRecsSubpop={ this.updateRecsSubpop } />
                 </TabPanel>
 
                 <TabPanel>
@@ -728,7 +779,7 @@ function isBlankArtifact(artifact) {
     return false;
   }
   // If it has a non-default name or version, it is NOT blank
-  if (artifact.name !== 'Untitled Artifact' || artifact.version !== 1) {
+  if (artifact.name !== 'Untitled Artifact' || artifact.version !== '1') {
     return false;
   }
   // If the counter is above 4, the user must have entered something somewhere.
@@ -796,5 +847,3 @@ function isBlankArtifact(artifact) {
   // If we safely made it here, it is BLANK!
   return true;
 }
-
-export default BuilderPage;

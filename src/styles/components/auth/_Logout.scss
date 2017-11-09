@@ -2,7 +2,6 @@
 .logout {
   display: flex;
   justify-content: flex-end;
-  margin: 10px 0;
 
   &__button,
   &__button:focus {
@@ -13,13 +12,12 @@
   }
 
   &__authname {
-    margin: 5px 0 0 20px;
     color: $white;
-
-    @include respond-to('1440px') { margin-top: 13px; }
 
     button {
       box-shadow: none;
+      padding: 10px 15px;
+      margin-top: 2px;
     }
 
     .btn-secondary.dropdown-toggle {
@@ -39,4 +37,9 @@
       box-shadow: none;
     }
   }
+}
+
+// ------------------------- CONFIGURATION --------------------------------- //
+
+.configuration-modal {
 }

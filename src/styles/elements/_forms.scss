@@ -1,40 +1,33 @@
+// ------------------------- INPUT ----------------------------------------- //
+
 .input {
   width: 18em;
 
-  &__long { width: 24em; }
-  &__short { width: 6em; }
-}
+  &__long {
+    width: 32em;
 
-.form__inline {
-  .form__group {
-    display: inline-block;
+    @include respond-to(tablet) { width: 24em; }
 
-    label {
-      display: inline-block;
-      margin-right: 1em;
-    }
+    @include respond-to(mobile) { width: 12em; }
+  }
+
+  &__short {
+    width: 6em;
+
+    @include respond-to(tablet) { width: 4em; }
+
+    @include respond-to(mobile) { width: 3em; }
   }
 }
+
+// ------------------------- FORM GROUP ------------------------------------ //
 
 .form__group {
-  margin: 1em 0;
+  &-inline { display: inline-block; }
 
-  label {
-    font-weight: $font-weight-regular;
-    display: block;
-
-    > input {
-      margin-left: 0.5em;
-    }
-  }
-
-  .form__caption {
-    font-size: 0.9em;
-
-    label {
-      display: inline-block;
-    }
-  }
+  label { margin: 0; }
+  input { margin-left: 0.5em; }
+  .form__caption { font-size: 0.9em; }
 
   > span {
     font-size: 0.8em;
@@ -51,29 +44,115 @@
   }
 }
 
-/* Relevant to the react-select plugin */
+// ------------------------- CHECKBOXES ------------------------------------ //
+// From: http://doodlenerd.com/html-control/css-checkbox-generator
+
+.html-control {
+  font-family: arial;
+  display: block;
+  position: relative;
+  padding-left: 30px;
+  margin-bottom: 5px;
+  padding-top: 3px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.html-control input {
+  position: absolute;
+  z-index: -1;
+  opacity: 0;
+}
+
+.html-control_indicator {
+  position: absolute;
+  top: 2px;
+  left: 0;
+  height: 20px;
+  width: 20px;
+  background: #e6e6e6;
+  border: 0 solid #000;
+}
+
+.html-control-radio .html-control_indicator {
+  border-radius: 0;
+}
+
+.html-html-control:hover input ~ .html-control_indicator,
+.html-html-control input:focus ~ .html-control_indicator {
+  background: #ccc;
+}
+
+.html-control input:checked ~ .html-control_indicator {
+  background: #2aa1c0;
+}
+
+.html-control:hover input:not([disabled]):checked ~ .html-control_indicator,
+.html-control input:checked:focus ~ .html-control_indicator {
+  background: #e6647d;
+}
+
+.html-control input:disabled ~ .html-control_indicator {
+  background: #e6e6e6;
+  opacity: 0.6;
+  pointer-events: none;
+}
+
+.html-control_indicator::after {
+  box-sizing: unset;
+  content: '';
+  position: absolute;
+  display: none;
+}
+
+.html-control input:checked ~ .html-control_indicator::after {
+  display: block;
+}
+
+.html-control-checkbox .html-control_indicator::after {
+  left: 8px;
+  top: 4px;
+  width: 3px;
+  height: 8px;
+  border: solid $white;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+}
+
+.html-control-checkbox input:disabled ~ .html-control_indicator::after {
+  border-color: #7b7b7b;
+}
+
+// ------------------------- SELECT ---------------------------------------- //
+// Relevant to the react-select plugin
+
 .Select {
   .Select-control {
     color: $black;
     border: $border-global;
     border-radius: $border-radius;
     box-shadow: $box-shadow;
+    min-width: 200px;
 
     &:hover {
       box-shadow: $box-shadow;
     }
   }
+
   .Select-placeholder,
   .Select--single > .Select-control .Select-value {
     color: $form-input-placeholder-color;
   }
+
   .Select-menu-outer {
     box-shadow: $box-shadow;
     overflow: hidden;
   }
+
   .Select-option {
     color: $black;
   }
+
   .Select-clear {
     color: #333;
   }
@@ -82,21 +161,26 @@
     border-bottom-left-radius: 0;
     border-bottom-right-radius: 0;
   }
+
   &.is-searchable {
     .Select-control,
     .Select-control:hover {
       box-shadow: $box-shadow-inset;
     }
   }
+
   &.is-focused {
     .Select-control {
       @include native-focus();
     }
   }
+
   &.is-focused:not(.is-open) > .Select-control {
     box-shadow: none;
   }
 }
+
+// ------------------------- FIXES ----------------------------------------- //
 
 // Fix issue with Bulma where hovered/focused/active Publish button would display over modal.
 // Below copied from Bulma output CSS.
