@@ -66,6 +66,7 @@ export default class ArtifactTable extends Component {
 
   handleDeleteArtifact = () => {
     this.props.deleteArtifact(this.state.artifactToDelete);
+    this.closeConfirmDeleteModal();
   }
 
   renderConfirmDeleteModal() {
