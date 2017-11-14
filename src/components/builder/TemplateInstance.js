@@ -134,6 +134,11 @@ class TemplateInstance extends Component {
 
   renderAppliedModifier = (modifier, index) => {
     const modifierForm = ((mod) => {
+      // Reset values on maodiers that were not previously set or saved in the database
+      if (!mod.values && this.modifierMap[mod.id].values) {
+        mod.values = this.modifierMap[mod.id].values;
+      }
+
       switch (mod.type || mod.id) {
         case 'ValueComparison':
           return (
