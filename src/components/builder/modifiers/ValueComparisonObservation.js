@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import _ from 'lodash';
 
+/* eslint-disable jsx-a11y/no-onchange */
 class ValueComparisonObservation extends Component {
   constructor(props) {
     super(props);
@@ -25,7 +26,7 @@ class ValueComparisonObservation extends Component {
                   name="Min Operator"
                   value={this.props.minOperator}
                   defaultValue=""
-                  onBlur={(event) => {
+                  onChange={(event) => {
                     this.props.updateAppliedModifier(this.props.index, { minOperator: event.target.value });
                   }}>
                   <option value="">{'-- Operator --'}</option>
@@ -59,7 +60,7 @@ class ValueComparisonObservation extends Component {
                   aria-label="Max Operator"
                   value={this.props.maxOperator}
                   defaultValue=""
-                  onBlur={(event) => {
+                  onChange={(event) => {
                     this.props.updateAppliedModifier(this.props.index, { maxOperator: event.target.value });
                   }}>
                   <option value="">{'-- Operator --'}</option>
