@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 
+/* eslint-disable jsx-a11y/no-onchange */
 class BooleanComparison extends Component {
   render() {
     return (
@@ -9,7 +10,7 @@ class BooleanComparison extends Component {
            <span className="select">
             <select name="Boolean Compare?" aria-label="Boolean Comparison" title="Boolean Comparison"
               value={this.props.value}
-              onBlur={(event) => {
+              onChange={(event) => {
                 this.props.updateAppliedModifier(this.props.index, { value: event.target.value });
               }}>
               <option value="" disabled selected>-- Boolean Compare --</option>

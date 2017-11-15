@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 
+/* eslint-disable jsx-a11y/no-onchange */
 class CheckExistence extends Component {
   render() {
     return (
@@ -9,7 +10,7 @@ class CheckExistence extends Component {
            <span className="select">
               <select name="Check Existence?" aria-label="Check Existence" title="Check Existence"
                 value={this.props.value}
-                onBlur={(event) => {
+                onChange={(event) => {
                   this.props.updateAppliedModifier(this.props.index, { value: event.target.value });
                 }}>
                 <option defaultValue="">{'-- Check Existence --'}</option>

@@ -25,7 +25,7 @@ test('BooleanComparison changes input', () => {
     value: ''
   });
 
-  component.find('select').simulate('blur', { target: { value: 'is not true' } });
+  component.find('select').simulate('change', { target: { value: 'is not true' } });
   expect(updateAppliedModifierMock).toHaveBeenCalled();
   expect(updateAppliedModifierMock).toBeCalledWith(80, { value: 'is not true' });
 });
@@ -47,7 +47,7 @@ test('CheckExistence changes input', () => {
     value: ''
   });
 
-  component.find('select').simulate('blur', { target: { value: 'is null' } });
+  component.find('select').simulate('change', { target: { value: 'is null' } });
   expect(updateAppliedModifierMock).toHaveBeenCalled();
   expect(updateAppliedModifierMock).toBeCalledWith(7, { value: 'is null' });
 });
@@ -82,7 +82,7 @@ test('LookBack changes input', () => {
   expect(updateAppliedModifierMock).toHaveBeenCalled();
   expect(updateAppliedModifierMock).toBeCalledWith(5, { value: 13 });
 
-  component.find('select').simulate('blur', { target: { value: 'years' } });
+  component.find('select').simulate('change', { target: { value: 'years' } });
   expect(updateAppliedModifierMock).toBeCalledWith(5, { unit: 'years' });
 });
 
@@ -116,11 +116,11 @@ test('ValueComparisonObservation changes input', () => {
 
   minInput.simulate('change', { target: { value: 21 } });
   expect(updateAppliedModifierMock).toBeCalledWith(303, { minValue: 21 });
-  minSelect.simulate('blur', { target: { value: '<' } });
+  minSelect.simulate('change', { target: { value: '<' } });
   expect(updateAppliedModifierMock).toBeCalledWith(303, { minOperator: '<' });
   maxInput.simulate('change', { target: { value: 189 } });
   expect(updateAppliedModifierMock).toBeCalledWith(303, { maxValue: 189 });
-  maxSelect.simulate('blur', { target: { value: '!=' } });
+  maxSelect.simulate('change', { target: { value: '!=' } });
   expect(updateAppliedModifierMock).toBeCalledWith(303, { maxOperator: '!=' });
 });
 
@@ -179,7 +179,7 @@ test('WithUnit changes select', () => {
     unit: ''
   });
 
-  component.find('select').simulate('blur', { target: { value: 'mg/dL' } });
+  component.find('select').simulate('change', { target: { value: 'mg/dL' } });
   expect(updateAppliedModifierMock).toHaveBeenCalled();
   expect(updateAppliedModifierMock).toBeCalledWith(5, { unit: 'mg/dL' });
 });
