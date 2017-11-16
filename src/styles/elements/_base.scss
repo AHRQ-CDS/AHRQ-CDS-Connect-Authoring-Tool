@@ -92,6 +92,16 @@ table {
   }
 }
 
+a.light-link {
+  color: $light-blue-link;
+
+  &:hover,
+  &:focus,
+  &:active {
+    color: darken($light-blue-link, 15%);
+  }
+}
+
 a {
   color: $blue-link;
 

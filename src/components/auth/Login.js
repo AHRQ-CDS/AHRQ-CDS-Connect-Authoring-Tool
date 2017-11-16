@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import FontAwesome from 'react-fontawesome';
 
 import Modal from '../elements/Modal';
+import { onVisitExternalForm } from '../../helpers/handlers';
 
 export default class Login extends Component {
   constructor(props) {
@@ -71,6 +72,12 @@ export default class Login extends Component {
               <input type='text' ref='username' className="form-control col" placeholder='username' />
               <input type='password' ref='password' className="form-control col" placeholder='password' />
               {this.renderedAuthStatusText()}
+            </div>
+
+            <div className="login-modal__forgot-password">
+              <a href="https://ahrqadmin.org/UMA/password" className="light-link" onClick={onVisitExternalForm}>
+                Forgot password?
+              </a>
             </div>
           </div>
         </Modal>
