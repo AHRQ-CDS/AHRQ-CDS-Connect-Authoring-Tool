@@ -75,8 +75,12 @@ export default class Login extends Component {
             </div>
 
             <div className="login-modal__forgot-password">
-              <a href="https://ahrqadmin.org/UMA/password" className="light-link" onClick={onVisitExternalForm}>
-                Forgot password?
+              <a href="https://ahrqadmin.org/UMA/password" className="light-link hover-link-to-button" onClick={onVisitExternalForm}>
+                <span className="text">Forgot password?</span>
+                <span className="line -right"></span>
+                <span className="line -top"></span>
+                <span className="line -left"></span>
+                <span className="line -bottom"></span>
               </a>
             </div>
           </div>

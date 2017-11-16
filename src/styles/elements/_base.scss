@@ -92,13 +92,14 @@ table {
   }
 }
 
-a.light-link {
+a.light-link, {
   color: $light-blue-link;
 
   &:hover,
   &:focus,
   &:active {
-    color: darken($light-blue-link, 15%);
+    color: $light-blue-link;
+    text-decoration: none;
   }
 }
 
