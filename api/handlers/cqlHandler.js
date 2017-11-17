@@ -11,10 +11,10 @@ const glob = require('glob');
 const request = require('request');
 const Busboy = require('busboy');
 
-const templatePath = 'app/data/cql/templates';
-const specificPath = 'app/data/cql/specificTemplates';
-const modifierPath = 'app/data/cql/modifiers';
-const artifactPath = 'app/data/cql/artifact.ejs';
+const templatePath = './data/cql/templates';
+const specificPath = './data/cql/specificTemplates';
+const modifierPath = './data/cql/modifiers';
+const artifactPath = './data/cql/artifact.ejs';
 const specificMap = loadTemplates(specificPath);
 const templateMap = loadTemplates(templatePath);
 const modifierMap = loadTemplates(modifierPath);

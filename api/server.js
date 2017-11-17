@@ -3,9 +3,9 @@ const process = require('process');
 const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
-const config = require('./app/config');
-const configPassport = require('./app/configPassport');
-const routes = require('./app/routes');
+const config = require('./config');
+const configPassport = require('./configPassport');
+const routes = require('./routes');
 
 // Turn on/off strict SSL (turn off in dev only, use with caution!)
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = config.get('tlsRejectUnauthorized');

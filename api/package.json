@@ -1,0 +1,42 @@
+{
+  "name": "cds_authoring_tool_api",
+  "version": "0.1.0",
+  "private": true,
+  "homepage": "https://cds.ahrq.gov/authoring",
+  "dependencies": {
+    "archiver": "^2.1.0",
+    "body-parser": "^1.18.2",
+    "busboy": "^0.2.14",
+    "cds-upload": "file:./localDependencies/cds-upload-1.0.0.tgz",
+    "connect-mongo": "^2.0.0",
+    "convict": "^4.0.1",
+    "ejs": "^2.5.7",
+    "express": "^4.16.2",
+    "express-session": "^1.15.6",
+    "glob": "^7.1.2",
+    "lodash": "^4.17.4",
+    "mongoose": "^4.13.3",
+    "passport": "^0.4.0",
+    "passport-ldapauth": "^2.0.0",
+    "passport-local": "^1.0.0",
+    "request": "^2.83.0",
+    "slug": "^0.9.1",
+    "tmp": "^0.0.33",
+    "validator": "^9.1.1"
+  },
+  "devDependencies": {
+    "chai": "^4.1.2",
+    "eslint": "^4.11.0",
+    "eslint-plugin-flowtype": "^2.39.1",
+    "mocha": "^4.0.1",
+    "nodemon": "^1.12.1"
+  },
+  "scripts": {
+    "start": "node ./server.js",
+    "start-dev": "nodemon",
+    "test": "./node_modules/.bin/mocha --reporter spec --recursive",
+    "test:watch": "./node_modules/.bin/mocha --reporter spec --recursive --watch",
+    "lint": "eslint .",
+    "lint:fix": "eslint --fix .; exit 0"
+  }
+}

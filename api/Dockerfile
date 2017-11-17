@@ -7,18 +7,17 @@ ARG NODE_ENV
 ENV NODE_ENV $NODE_ENV
 
 # First just copy over things necessary for yarn install (multi-stage build optimization)
+COPY ./localDependencies /usr/src/app/localDependencies
 COPY ./package.json /usr/src/app
 COPY ./yarn.lock /usr/src/app
 RUN yarn global add pm2@2.4.6 -g
 RUN yarn install && yarn cache clean
-RUN npm rebuild node-sass
 
-# Now copy over the rest and build the app
+# Now copy over the rest
 COPY . /usr/src/app
-RUN yarn run build
 
 # Expose the api server port and the app server port
-EXPOSE 9000
+EXPOSE 3001
 
 # Run using the node user (otherwise runs as root, which is security risk)
 USER node
