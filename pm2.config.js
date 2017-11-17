@@ -6,6 +6,15 @@
  */
 module.exports = {
   apps: [
+    // API Server
+    {
+      name: 'API',
+      script: 'api/server.js',
+      cwd: 'api',
+      env_production: {
+        NODE_ENV: 'production'
+      }
+    },
     // Fronted Server
     {
       name: 'FrontEnd',

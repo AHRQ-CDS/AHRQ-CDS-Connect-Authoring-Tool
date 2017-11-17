@@ -1,22 +1,14 @@
 version: '3'
 services:
   cat:
-    build: ..
-    environment:
-      PROXY_API_HOST: cat-api
-      NODE_ENV: production
-    ports:
-    - "9000:9000"
-    links:
-    - cat-api
-  cat-api:
-    build: ../api
+    build: .
     environment:
       MONGO_URL: mongodb://cat-mongo/cds_authoring
       CQL_TO_ELM_URL: http://cat-cql2elm:8080/cql/translator
       NODE_ENV: development
     ports:
     - "3001:3001"
+    - "9000:9000"
     links:
     - cat-mongo
     - cat-cql2elm

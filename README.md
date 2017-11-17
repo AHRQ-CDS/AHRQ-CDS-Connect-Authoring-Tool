@@ -111,17 +111,31 @@ docker build -t cdsauthoringtool .
 
 ### Running the docker container
 
-For the authoring tool frontend to run in a docker container, you must be running the CDS Authoring Tool API container and its dependencies already.  See the [API](api) project for instructions to do that.  Once those containers are running, you can run the CDS Authoring Tool container via the following command:
-```
-docker run --name cat
-  --link cat-api:cat-api
-  -e "NODE_ENV=production"
-  -e "API_PROXY_HOST=cat-api"
-  -p "9000:9000"
+For the authoring tool to run in a docker container, MongoDB and CQL-to-ELM docker containers must be linked.  The following commands run the necessary containers, with the required links and exposed ports:
+```bash
+docker run --name cat-cql2elm -d cqframework/cql-translation-service:v1.2.16
+docker run --name cat-mongo -d mongo:3.4
+docker run --name cat \
+  --link cat-cql2elm:cql2elm \
+  --link cat-mongo:mongo \
+  -e "NODE_ENV=development" \
+  -e "REPO_BASE_URL=https://cdsconnect.ahrqdev.org/" \
+  -e "REPO_URL=https://cdsconnect.ahrqdev.org/" \
+  -e "CQL_TO_ELM_URL=http://cql2elm:8080/cql/translator" \
+  -e "MONGO_URL=mongodb://mongo/cds_authoring" \
+  -e "AUTH_SESSION_SECRET=secret" \
+  -e "AUTH_LDAP_URL=ldap://localhost:389" \
+  -e "AUTH_LDAP_BIND_DN=cn=root" \
+  -e "AUTH_LDAP_BIND_CREDENTIALS={{password}}" \
+  -e "AUTH_LDAP_SEARCH_BASE=ou=passport-ldapauth" \
+  -e "AUTH_LDAP_SEARCH_FILTER=(uid={{username}})" \
+  -p "3001:3001" \
+  -p "9000:9000" \
   cdsauthoringtool
 ```
+Of course you will need to modify some of the values above according to your environment (e.g., LDAP details).
 
-By default, the server on port 9000 will proxy requests on _/authoring/api_ to the API server using express-http-proxy.  In production environments, a dedicated external proxy server may be desired.  In that case, the external proxy server will be responsible for proxying _/authoring/api_ to port 3001.  To accomodate this, disable the express-http-proxy by adding this addition flag to the last command above:
+By default, the server on port 9000 will proxy requests on _/authoring/api_ to the local API server using express-http-proxy.  In production environments, a dedicated external proxy server may be desired.  In that case, the external proxy server will be responsible for proxying _/authoring/api_ to port 3001.  To accomodate this, disable the express-http-proxy by adding this addition flag to the last command above:
 ```
   -e "API_PROXY_ACTIVE=false" \
 ```
@@ -132,18 +146,20 @@ When the container is running, access the app at [http://localhost:9000](http://
 
 To stop the container:
 ```
-docker stop cat
+docker stop cat cat-mongo cat-cql2elm
 ```
 
 To start the containers again:
 ```
-docker start cat
+docker start cat-cql2elm cat-mongo cat
 ```
 
 To remove the containers (usually when building new images):
 ```
-docker rm cat
+docker rm cat cat-mongo cat-cql2elm
 ```
+
+**NOTE: This configuration stores data in Mongo's container.  This means it is tied to the lifecycle of the mongo container and is _not_ persisted when the container is removed.**
 
 ### Using Docker Compose
 
@@ -159,11 +175,13 @@ To stop _and remove_ the containers, run:
 docker-compose down
 ```
 
-**NOTE: This configuration stores data in Mongo's container.  This means it is tied to the lifecycle of the mongo container and is _not_ persisted when the container is removed.**
-
 ### Bonus: Running Tests in Docker
 
-To run the tests in the docker image (for example, to ensure it works before deploying), run the following command:
-```
+CDS Authoring Tool tests are broken up into frontend and backend tests.  To run the frontend tests in a temporary docker container (for example, to ensure it works before deploying), run the following command:
+```bash
 docker run --rm -e "CI=true" -e "NODE_ENV=test" cdsauthoringtool yarn test
+```
+To run the backend tests in a temporary docker container:
+```bash
+docker run --rm -e "CI=true" -e "NODE_ENV=test" -w /usr/src/app/api cdsauthoringtool yarn test
 ```
