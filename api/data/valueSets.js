@@ -158,17 +158,17 @@ module.exports = {
       id: 'has_ascvd',
       conditions: [
         {
-       // https://ushik.ahrq.gov/ViewItemDetails?&system=mu&itemKey=189321000
+          // https://ushik.ahrq.gov/ViewItemDetails?&system=mu&itemKey=189321000
           name: 'Myocardial Infarction',
           oid: '2.16.840.1.113883.3.526.3.403'
         },
         {
-       // [See Acute myocardial infarction value set in VSAC](https://vsac.nlm.nih.gov/valueset/2.16.840.1.113883.3.464.1003.104.12.1001/expansion)
+          // [See Acute myocardial infarction value set in VSAC](https://vsac.nlm.nih.gov/valueset/2.16.840.1.113883.3.464.1003.104.12.1001/expansion)
           name: 'Acute myocardial infarction',
           oid: '2.16.840.1.113883.3.464.1003.104.12.1001'
         },
         {
-       // [See value set in VSAC](https://vsac.nlm.nih.gov/valueset/2.16.840.1.113883.3.464.1003.104.12.1003/expansion)
+          // [See value set in VSAC](https://vsac.nlm.nih.gov/valueset/2.16.840.1.113883.3.464.1003.104.12.1003/expansion)
           name: 'Ischemic vascular disease',
           oid: '2.16.840.1.113883.3.464.1003.104.12.1003'
         }
@@ -200,7 +200,7 @@ module.exports = {
       ]
     },
     pregnancy_dx: {
-     // https://ushik.ahrq.gov/ViewItemDetails?&system=mu&itemKey=189087000
+      // https://ushik.ahrq.gov/ViewItemDetails?&system=mu&itemKey=189087000
       id: 'pregnancy_dx',
       conditions: [
         {
@@ -411,13 +411,13 @@ module.exports = {
           oid: '2.16.840.1.113762.1.4.1032.16'
         },
         {
-       // TODO: Reused from statin CQM artifact; needs review against other value sets in VSAC.
+          // TODO: Reused from statin CQM artifact; needs review against other value sets in VSAC.
           name: 'Moderate intensity statin therapy',
           type: 'MedicationStatement',
           oid: '2.16.840.1.113762.1.4.1047.98'
         },
         {
-       // TODO: Reused from statin CQM artifact; needs review against other value sets in VSAC.
+          // TODO: Reused from statin CQM artifact; needs review against other value sets in VSAC.
           name: 'Moderate intensity statin therapy',
           type: 'MedicationOrder',
           oid: '2.16.840.1.113762.1.4.1047.98'
@@ -435,13 +435,13 @@ module.exports = {
           oid: '2.16.840.1.113762.1.4.1032.17'
         },
         {
-       // TODO: Reused from statin CQM artifact; needs review against other value sets in VSAC.
+          // TODO: Reused from statin CQM artifact; needs review against other value sets in VSAC.
           name: 'High intensity statin therapy',
           type: 'MedicationStatement',
           oid: '2.16.840.1.113762.1.4.1047.97'
         },
         {
-       // TODO: Reused from statin CQM artifact; needs review against other value sets in VSAC.
+          // TODO: Reused from statin CQM artifact; needs review against other value sets in VSAC.
           name: 'High intensity statin therapy',
           type: 'MedicationOrder',
           oid: '2.16.840.1.113762.1.4.1047.97'
