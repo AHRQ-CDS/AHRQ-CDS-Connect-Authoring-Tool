@@ -24,6 +24,25 @@ export function onVisitExternalLink(e) {
 export function onVisitExternalForm(e) {
   const width = window.innerWidth * 0.9 || 800;
   const height = window.innerHeight * 0.9 || 800;
-  window.open(e.target.href, '', `width=${width}, height=${height} ,resizable=yes , scrollbars=yes`);
+  window.open(findClosest(e.target, 'a').href, '', `width=${width}, height=${height} ,resizable=yes , scrollbars=yes`);
   e.preventDefault();
+}
+
+/**
+ * Finds the closest element that matches the given tag, walking the parent tree until one is found
+ * @param {Node} element - The element to start at
+ * @param {String} tagName - The tag name of the element to find
+ * @return {Node} - The matched element, or null if none is found
+ */
+function findClosest(element, tagName) {
+  const expectedTagName = tagName.toUpperCase();
+  let el = element;
+  while (el) {
+    if (el.tagName === expectedTagName) {
+      return el;
+    }
+
+    el = el.parentNode;
+  }
+  return null;
 }

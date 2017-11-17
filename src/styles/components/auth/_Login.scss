@@ -10,7 +10,6 @@
     background-color: inherit;
     color: $white;
     padding: 5px 30px;
-    // height: 35px;
   }
 
   &__button:focus {
@@ -61,5 +60,10 @@
     box-shadow: none;
     margin: 5px 0;
     height: 50px;
+  }
+
+  &__forgot-password {
+    font-size: 0.8em;
+    margin-top: 20px;
   }
 }
