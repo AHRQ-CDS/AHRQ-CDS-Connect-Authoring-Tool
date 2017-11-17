@@ -1,4 +1,4 @@
-FROM node:6.11.4-alpine
+FROM node:8.9.1-alpine
 
 RUN mkdir -p /usr/src/app/api
 WORKDIR /usr/src/app
@@ -7,7 +7,7 @@ ARG NODE_ENV
 ENV NODE_ENV $NODE_ENV
 
 # Install the globabl pm2 process manager
-RUN yarn global add pm2@2.4.6 -g
+RUN yarn global add pm2@2.7.2 -g
 
 # First just copy over the yarn files (multi-stage build optimization)
 # Frontend yarn files
