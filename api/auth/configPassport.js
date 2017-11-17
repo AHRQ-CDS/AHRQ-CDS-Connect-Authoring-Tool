@@ -5,7 +5,7 @@ const LdapStrategy = require('passport-ldapauth');
 const LocalStrategy = require('passport-local').Strategy;
 const MongoStore = require('connect-mongo')(session);
 const mongoose = require('mongoose');
-const config = require('./config');
+const config = require('../config');
 const findLocalUserById = require('./localAuthUsers').findByUsername;
 
 function getLdapConfiguration(req, callback) {
