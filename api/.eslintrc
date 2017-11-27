@@ -1,4 +1,7 @@
 {
+  "parserOptions": {
+    "ecmaVersion": 6
+  },
   "rules": {
     "comma-dangle": 0,
     "max-len": ["error", { "code": 120, "ignoreUrls": true , "ignoreTrailingComments": true, "ignoreRegExpLiterals": true }], // allow longer lines when there is a url or trailing comment

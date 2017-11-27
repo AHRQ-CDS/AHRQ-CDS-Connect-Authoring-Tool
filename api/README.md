@@ -15,7 +15,7 @@ To develop and run this project, your must install mongodb, node, and yarn.  On 
 brew install mongodb # install mongodb on host system
 brew services start mongodb # start mongo
 brew install node # install node
-brew install yarn # install node
+brew install yarn # install yarn
 ```
 For other operating systems, use the instructions provided in each tool's online documentation.
 
@@ -73,3 +73,7 @@ API server testing uses [Chai](http://chaijs.com/) with [Mocha](http://mochajs.o
 ```bash
 yarn test # runs all api tests
 ```
+
+### Docker
+
+For information on running the CDS Authoring Tool in Docker, see the main [README](../README.md).

@@ -8,95 +8,27 @@ TODO
 
 ## Development Details
 
-This project provides the R (React) in the MERN application architecture.  It was bootstrapped with [Create React App](https://github.com/facebookincubator/create-react-app). Relevant files are in the `src/` filter. Refer to the Create React App [User Guide](https://github.com/facebookincubator/create-react-app/blob/master/packages/react-scripts/template/README.md) for guidance on features and how to perform common tasks.
+This project uses the MERN stack: Mongo, Express, React, and NodeJS.  The project is split into two components:
+- [api](api): the backend Express API server
+- [frontend](frontend): the frontend React web application
 
-To develop this project, you must node and yarn.  On Mac OS X, this can be done through brew:
+For specific development details of each component, including configuration, see their respective README files.
 
-```bash
-brew install node # install node
-brew install yarn # install node
-```
+### Run (Development)
 
-For other operating systems, use the instructions provided in each tool's online documentation.
-
-Once the prerequisite tools are installed, use yarn to install the dependency libraries:
-
-```
-yarn # e.g. yarn install. installs this app's dependencies based on this project's yarn.lock / package.json
-```
-
-To run the project, you'll also need to install and run the [CDS Authoring Tool API](api).
-
-### Add / Remove / Adjust dependencies
+To allow for simple development, a _Procfile_ is provided which will launch the _api_ and _frontend_ projects in development mode.  To use the Procfile, you must install [node-foreman](https://www.npmjs.com/package/foreman) _(prerequisites: [Node.js LTS](https://nodejs.org/) and [Yarn](https://yarnpkg.com/)_.
 
 ```bash
-yarn add <thing> # add a package. add --dev if this is a development dependency.
-yarn add <thing>@<version> # will adjust version
-yarn remove <thing> # remove a package.
+yarn add global foreman
 ```
 
-### Configuration
-
-This project has very few configuration needs.  Currently, only two data points are configurable: the backend API URL and the CDS Connect repo URL.  The default values can be found in the `.env` file and overridden via environment variables.  Note that during a production build, the values in `.env` will be hard-coded into the resulting HTML and JS.
-
-### Run
-
-`yarn run start-dev` will run all of the items listed in the `Procfile` (including the API backend). Note: Previous versions of the Procfile launched MongoDB, but that has been removed due to causing many issues on developer systems.  Please ensure MongoDB is running before starting the CDS Authoring Tool.
+Once node-foreman is installed, you can run the Procfile via:
 
 ```bash
-yarn run start-dev # run the app in development mode, watching files for changes
+nf start
 ```
 
-### Production Build and Run
-
-A production build compiles all of the files to standard HTML, CSS, and JavaScript that can be run from any web server.  It does require, however, that the path _/authoring/api_ be proxied to the API server.
-
-```bash
-yarn build # does a production build, putting resulting files in ./build.
-```
-
-You can run the production code simply by launching the `frontend.js` script.  It uses Express to host the production code and proxy to the API server.  This requires the API server to be running.
-
-```bash
-node frontend.js
-```
-
-### Linting
-
-JavaScript linting is done on the React components by ESLint, extending the rulesets from [react-app](https://github.com/facebookincubator/create-react-app/tree/master/packages/eslint-config-react-app), [Airbnb](https://github.com/airbnb/javascript) _and_ [jsx-a11y](https://github.com/evcohen/eslint-plugin-jsx-a11y) for accessibility checking. Please refer to those rulesets and use the [Airbnb JSX/React style guide](https://github.com/airbnb/javascript/tree/master/react).
-
-Sass linting is done by Stylelint, using the [Stylelint standard config](https://github.com/stylelint/stylelint-config-standard).
-
-```bash
-yarn run lint # runs eslint using the configuration in .eslintrc.
-yarn run lint:fix # runs eslint --fix using the configuration in .eslintrc. The --fix flag will autocorrect minor errors
-yarn run lint-css # runs stylelint 'src/styles/**/*.scss' using the configuration in .stylelintrc
-```
-
-### Testing
-Frontend testing uses [jsdom](https://github.com/tmpvar/jsdom) with [Jest](https://facebook.github.io/jest/) as the test runner. [Enzyme](http://airbnb.io/enzyme/docs/api/index.html) provides helpers.
-
-```bash
-yarn run test # runs all frontend tests
-yarn test # also runs all frontend tests
-yarn test -- --coverage # view frontend test coverage
-yarn run test-backend # runs all backend tests
-yarn test-backend # also runs all backend tests
-```
-
-Jest provides the overall testing framework. The default setup running Jest via `yarn run test` will only run any tests that have been updated since the last commit. Use the prompt to specify running all tests or specific tests. Useful tools it provides are:
-* [Setup and teardown](https://facebook.github.io/jest/docs/setup-teardown.html#content) methods
-* [Matchers](https://facebook.github.io/jest/docs/expect.html) (assertions) to write statements expressing what a given value should be
-* [Mock functions](https://facebook.github.io/jest/docs/mock-function-api.html#content) to test a component without having to include all needed functionality
-* [Snapshot testing](https://facebook.github.io/jest/docs/snapshot-testing.html)
-
-Enzyme is used for rendering and manipulating DOM elements. Shallow rendering will render a component without rendering any other components that are children, whereas full rendering will render a component with all its children components. Our rendered components can get and set state or props, find certain strings, classes, or tags, and simulate events.
-* [Shallow rendering](http://airbnb.io/enzyme/docs/api/shallow.html) API reference
-* [Full rendering](http://airbnb.io/enzyme/docs/api/mount.html) API reference
-
-Helpful articles on working with Jest and Enzyme:
-* https://hackernoon.com/testing-react-components-with-jest-and-enzyme-41d592c174f (apparently Enzyme has a debug method that I learned just now from this..)
-* https://www.sitepoint.com/test-react-components-jest/
+NOTE: Please ensure MongoDB is running before starting the CDS Authoring Tool.
 
 ## Docker
 
@@ -104,7 +36,7 @@ This project can also be built into a Docker image and deployed as a Docker cont
 
 ### Building the docker image
 
-To build the Docker image, execute the following command from the project's root directory:
+To build the Docker image, execute the following command from the project's root directory (the directory containing _api_ and _frontend_):
 ```
 docker build -t cdsauthoringtool .
 ```
@@ -177,10 +109,13 @@ docker-compose down
 
 ### Bonus: Running Tests in Docker
 
-CDS Authoring Tool tests are broken up into frontend and backend tests.  To run the frontend tests in a temporary docker container (for example, to ensure it works before deploying), run the following command:
+CDS Authoring Tool tests are broken up into frontend and backend tests.
+
+To run the frontend tests in a temporary docker container (for example, to ensure it works before deploying), run the following command:
 ```bash
-docker run --rm -e "CI=true" -e "NODE_ENV=test" cdsauthoringtool yarn test
+docker run --rm -e "CI=true" -e "NODE_ENV=test" -w /usr/src/app/frontend cdsauthoringtool yarn test
 ```
+
 To run the backend tests in a temporary docker container:
 ```bash
 docker run --rm -e "CI=true" -e "NODE_ENV=test" -w /usr/src/app/api cdsauthoringtool yarn test

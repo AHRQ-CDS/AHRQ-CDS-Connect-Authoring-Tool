@@ -1,37 +1,43 @@
 FROM node:8.9.1-alpine
 
-RUN mkdir -p /usr/src/app/api
-WORKDIR /usr/src/app
-
 ARG NODE_ENV
 ENV NODE_ENV $NODE_ENV
 
 # Install the globabl pm2 process manager
 RUN yarn global add pm2@2.7.2 -g
 
-# First just copy over the yarn files (multi-stage build optimization)
-# Frontend yarn files
-COPY ./package.json /usr/src/app
-COPY ./yarn.lock /usr/src/app
-# API yarn files
-COPY ./api/localDependencies /usr/src/app/api/localDependencies
-COPY ./api/package.json /usr/src/app/api
-COPY ./api/yarn.lock /usr/src/app/api
+# First copy over the yarn files and install dependencies (multi-stage build optimization)
 
-# Then install the dependencies using yarn/npm
-# Frontend dependencies
+# Frontend
+RUN mkdir -p /usr/src/app/frontend
+WORKDIR /usr/src/app/frontend
+COPY ./frontend/package.json .
+COPY ./frontend/yarn.lock .
 RUN yarn install
 RUN npm rebuild node-sass
-# API dependencies
-WORKDIR /usr/src/app/api
-RUN yarn install
-WORKDIR /usr/src/app
 
-# Copy over the rest of the files
-COPY . /usr/src/app
-# Build the frontend app
-RUN yarn run build
-# Clean up a bit
+# API
+RUN mkdir -p /usr/src/app/api
+WORKDIR /usr/src/app/api
+COPY ./api/localDependencies ./localDependencies
+COPY ./api/package.json .
+COPY ./api/yarn.lock .
+RUN yarn install
+
+# Now copy over the remaining files and build as necessary
+
+#Frontend
+WORKDIR /usr/src/app/frontend
+COPY ./frontend /usr/src/app/frontend
+RUN yarn build
+
+# API
+COPY ./api /usr/src/app/api
+
+# PM2 Config
+COPY ./pm2.config.js /usr/src/app
+
+# Clean up a bit to save space
 RUN yarn cache clean
 
 # Expose the api server port and the app server port
@@ -41,4 +47,5 @@ EXPOSE 9000
 # Run using the node user (otherwise runs as root, which is security risk)
 USER node
 
+WORKDIR /usr/src/app
 CMD [ "pm2-docker", "pm2.config.js" ]

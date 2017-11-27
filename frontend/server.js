@@ -37,4 +37,5 @@ app.get('/', (req, res) => {
   res.redirect('/authoring');
 });
 
+console.log('Listening on port 9000...');
 app.listen(9000);
