@@ -1,5 +1,5 @@
 const { expect } = require('chai');
-const { buildCQL } = require('../../../../app/handlers/cqlHandler');
+const { buildCQL } = require('../../../handlers/cqlHandler');
 const _ = require('lodash');
 
 const baseArtifact = {

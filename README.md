@@ -8,91 +8,27 @@ TODO
 
 ## Development Details
 
-The project leverages the MERN application architecture, using MongoDB, Express, React, and Node. One way to install the requisite tools:
+This project uses the MERN stack: Mongo, Express, React, and NodeJS.  The project is split into two components:
+- [api](api): the backend Express API server
+- [frontend](frontend): the frontend React web application
+
+For specific development details of each component, including configuration, see their respective README files.
+
+### Run (Development)
+
+To allow for simple development, a _Procfile_ is provided which will launch the _api_ and _frontend_ projects in development mode.  To use the Procfile, you must install [node-foreman](https://www.npmjs.com/package/foreman) _(prerequisites: [Node.js LTS](https://nodejs.org/) and [Yarn](https://yarnpkg.com/)_.
 
 ```bash
-brew install mongodb # install mongodb on host system
-brew services start mongodb # start mongo
-brew install node # install node
-npm install -g yarn # npm included with node, install yarn
-yarn # e.g. yarn install. installs this app's dependencies based on this project's yarn.lock / package.json
+yarn add global foreman
 ```
 
-By default, the project will attempt to convert CQL to ELM on download or publish.  To disable this in development, see the configuration section below.  If enabled, you will need the CQL-to-ELM translation service, a Java application that can be run locally via Maven or Docker.
-* To run locally with Maven: https://github.com/cqframework/cql-translation-service
-* To run locally with Docker, install Docker and run: `docker run -p 8080:8080 cqframework/cql-translation-service:v1.2.16`
-
-The React part was bootstrapped with [Create React App](https://github.com/facebookincubator/create-react-app). Relevant files are in the `src/` filter. Refer to the Create React App [User Guide](https://github.com/facebookincubator/create-react-app/blob/master/packages/react-scripts/template/README.md) for guidance on features and how to perform common tasks.
-
-The backend is an Express-based Node app, with relevant files located in `app/`.
-
-### Add / Remove / Adjust dependencies
-```bash
-yarn add <thing> # add a package. add --dev if this is a development dependency.
-yarn add <thing>@<version> # will adjust version
-yarn remove <thing> # remove a package.
-```
-
-### Configuration
-
-#### React Frontend
-
-The React frontend has very few configuration needs.  Currently, only two data points are configurable: the backend API URL and the CDS Connect repo URL.  The default values can be found in the `.env` file and overridden via environment variables.  Note that during a production build, the values in `.env` will be hard-coded into the resulting html and js.
-
-#### API Backend
-
-The API backend requires significantly more configuration than the React frontend.  This project uses the popular [convict](https://www.npmjs.com/package/convict) module to manage configuration.  The configuration schema and default values can be found at `app/config.js`, and an example config file can be found at `config/example.json`.
-
-The API server will uses the `NODE_ENV` environment variable to detect the active environment: `production`, `development`, or `test` (defaulting to `development` when no environment is supplied).  If a corresponding configuration file (`config/${NODE_ENV}.json`) is present, it will merge its values into the default configuration.
-
-For local development, a `config/local.json` file can also be used to override configuration settings.  It has precedence over the environment-based configuration and default configuration.
-
-Lastly, most aspects of config can also be overridden via specific environment variables.  See the `app/config.js` configuration schema for the relevant environment variable names.
-
-### Run
-
-`yarn run start-dev` will run all of the items listed in the `Procfile`. Note: Mongodb needs to be installed so `mongod` runs properly.
+Once node-foreman is installed, you can run the Procfile via:
 
 ```bash
-yarn run start-dev # run the app
+nf start
 ```
 
-### Linting
-TODO: Add linting for the API javascript
-
-JavaScript linting is done on the React components by ESLint, extending the rulesets from [react-app](https://github.com/facebookincubator/create-react-app/tree/master/packages/eslint-config-react-app), [Airbnb](https://github.com/airbnb/javascript) _and_ [jsx-a11y](https://github.com/evcohen/eslint-plugin-jsx-a11y) for accessibility checking. Please refer to those rulesets and use the [Airbnb JSX/React style guide](https://github.com/airbnb/javascript/tree/master/react).
-
-Sass linting is done by Stylelint, using the [Stylelint standard config](https://github.com/stylelint/stylelint-config-standard).
-
-```bash
-yarn run lint # runs eslint --fix src/* using the configuration in .eslintrc. The --fix flag will autocorrect minor errors
-yarn run lint-css # runs stylelint 'src/styles/**/*.scss' using the configuration in .stylelintrc
-```
-
-### Testing
-Frontend testing uses [jsdom](https://github.com/tmpvar/jsdom) with [Jest](https://facebook.github.io/jest/) as the test runner. [Enzyme](http://airbnb.io/enzyme/docs/api/index.html) provides helpers. Backend testing uses [Chai](http://chaijs.com/) with [Mocha](http://mochajs.org/) as the test runner. Run tests with
-
-```bash
-yarn run test # runs all frontend tests
-yarn test # also runs all frontend tests
-yarn test -- --coverage # view frontend test coverage
-yarn run test-backend # runs all backend tests
-yarn test-backend # also runs all backend tests
-```
-
-Jest provides the overall testing framework. The default setup running Jest via `yarn run test` will only run any tests that have been updated since the last commit. Use the prompt to specify running all tests or specific tests. Useful tools it provides are:
-* [Setup and teardown](https://facebook.github.io/jest/docs/setup-teardown.html#content) methods
-* [Matchers](https://facebook.github.io/jest/docs/expect.html) (assertions) to write statements expressing what a given value should be
-* [Mock functions](https://facebook.github.io/jest/docs/mock-function-api.html#content) to test a component without having to include all needed functionality
-* [Snapshot testing](https://facebook.github.io/jest/docs/snapshot-testing.html)
-
-Enzyme is used for rendering and manipulating DOM elements. Shallow rendering will render a component without rendering any other components that are children, whereas full rendering will render a component with all its children components. Our rendered components can get and set state or props, find certain strings, classes, or tags, and simulate events.
-* [Shallow rendering](http://airbnb.io/enzyme/docs/api/shallow.html) API reference
-* [Full rendering](http://airbnb.io/enzyme/docs/api/mount.html) API reference
-
-Helpful articles on working with Jest and Enzyme:
-* https://hackernoon.com/testing-react-components-with-jest-and-enzyme-41d592c174f (apparently Enzyme has a debug method that I learned just now from this..)
-* https://www.sitepoint.com/test-react-components-jest/
+NOTE: Please ensure MongoDB is running before starting the CDS Authoring Tool.
 
 ## Docker
 
@@ -100,30 +36,47 @@ This project can also be built into a Docker image and deployed as a Docker cont
 
 ### Building the docker image
 
-To build the Docker image, execute the following command from the project's root directory:
+To build the Docker image, execute the following command from the project's root directory (the directory containing _api_ and _frontend_):
 ```
 docker build -t cdsauthoringtool .
 ```
 
 ### Running the docker container
 
-For the authoring tool to run in a docker container, MongoDB and CQL-to-ELM docker containers must be linked.  The following commands create the links, as well as expose the necessary ports to access the application from the host system:
-```
+For the authoring tool to run in a docker container, MongoDB and CQL-to-ELM docker containers must be linked.  The following commands run the necessary containers, with the required links and exposed ports:
+```bash
 docker run --name cat-cql2elm -d cqframework/cql-translation-service:v1.2.16
 docker run --name cat-mongo -d mongo:3.4
-docker run --name cat --link cat-cql2elm:cql2elm --link cat-mongo:mongo -e "REPO_URL=https://cdsconnect.ahrqdev.org" -e "CQL_TO_ELM_URL=http://cql2elm:8080/cql/translator" -e "MONGO_URL=mongodb://mongo/cds_authoring" -p "9000:9000" cdsauthoringtool
+docker run --name cat \
+  --link cat-cql2elm:cql2elm \
+  --link cat-mongo:mongo \
+  -e "NODE_ENV=development" \
+  -e "REPO_BASE_URL=https://cdsconnect.ahrqdev.org/" \
+  -e "REPO_URL=https://cdsconnect.ahrqdev.org/" \
+  -e "CQL_TO_ELM_URL=http://cql2elm:8080/cql/translator" \
+  -e "MONGO_URL=mongodb://mongo/cds_authoring" \
+  -e "AUTH_SESSION_SECRET=secret" \
+  -e "AUTH_LDAP_URL=ldap://localhost:389" \
+  -e "AUTH_LDAP_BIND_DN=cn=root" \
+  -e "AUTH_LDAP_BIND_CREDENTIALS={{password}}" \
+  -e "AUTH_LDAP_SEARCH_BASE=ou=passport-ldapauth" \
+  -e "AUTH_LDAP_SEARCH_FILTER=(uid={{username}})" \
+  -p "3001:3001" \
+  -p "9000:9000" \
+  cdsauthoringtool
 ```
+Of course you will need to modify some of the values above according to your environment (e.g., LDAP details).
 
-By default, the server on port 9000 will proxy requests on _/api_ to the local API server using express-http-proxy.  In production environments, a dedicated external proxy server may be desired.  In that case, the external proxy server will be responsible for proxying _/api_ to port 3001.  To accomodate this, disable the express-http-proxy and expose port 3001.  Instead of the last command above, run this instead:
+By default, the server on port 9000 will proxy requests on _/authoring/api_ to the local API server using express-http-proxy.  In production environments, a dedicated external proxy server may be desired.  In that case, the external proxy server will be responsible for proxying _/authoring/api_ to port 3001.  To accomodate this, disable the express-http-proxy by adding this addition flag to the last command above:
 ```
-docker run --name cat --link cat-cql2elm:cql2elm --link cat-mongo:mongo -e "REPO_URL=https://cdsconnect.ahrqdev.org" -e "CQL_TO_ELM_URL=http://cql2elm:8080/cql/translator" -e "MONGO_URL=mongodb://mongo/cds_authoring" -e "DISABLE_API_PROXY=true" -p "9000:9000" -p "3001:3001" cdsauthoringtool
+  -e "API_PROXY_ACTIVE=false" \
 ```
 
 To run the CDS Authoring Tool in a detached process, add a `-d` to the run command (before `cdsauthoringtool`).
 
-When the containers are running, access the app at [http://localhost:9000](http://localhost:9000).
+When the container is running, access the app at [http://localhost:9000](http://localhost:9000).
 
-To stop the containers:
+To stop the container:
 ```
 docker stop cat cat-mongo cat-cql2elm
 ```
@@ -142,23 +95,28 @@ docker rm cat cat-mongo cat-cql2elm
 
 ### Using Docker Compose
 
-Alternately, use Docker Compose to build and run the containers.  Execute:
+Alternately, use Docker Compose to build and run all of the containers.  Execute:
 ```
 docker-compose up
 ```
 
-The first time, it will build the cdsauthoringtool_cat image.  Subsequent times it may re-use the already built image.  To force it to rebuild, pass in the `--build` flag.
+The first time, it will build the cdsauthoringtoolapi\_cat and cdsauthoringtool\_cat images.  Subsequent times it may re-use the already built images.  To force it to rebuild, pass in the `--build` flag.
 
 To stop _and remove_ the containers, run:
 ```
 docker-compose down
 ```
 
-**NOTE: This configuration stores data in Mongo's container.  This means it is tied to the lifecycle of the mongo container and is _not_ persisted when the container is removed.**
-
 ### Bonus: Running Tests in Docker
 
-To run the tests in the docker image (for example, to ensure it works before deploying), run the following command:
+CDS Authoring Tool tests are broken up into frontend and backend tests.
+
+To run the frontend tests in a temporary docker container (for example, to ensure it works before deploying), run the following command:
+```bash
+docker run --rm -e "CI=true" -e "NODE_ENV=test" -w /usr/src/app/frontend cdsauthoringtool yarn test
 ```
-docker run --rm -e "CI=true" cdsauthoringtool yarn test
+
+To run the backend tests in a temporary docker container:
+```bash
+docker run --rm -e "CI=true" -e "NODE_ENV=test" -w /usr/src/app/api cdsauthoringtool yarn test
 ```

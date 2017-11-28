@@ -11,10 +11,10 @@ const glob = require('glob');
 const request = require('request');
 const Busboy = require('busboy');
 
-const templatePath = 'app/data/cql/templates';
-const specificPath = 'app/data/cql/specificTemplates';
-const modifierPath = 'app/data/cql/modifiers';
-const artifactPath = 'app/data/cql/artifact.ejs';
+const templatePath = './data/cql/templates';
+const specificPath = './data/cql/specificTemplates';
+const modifierPath = './data/cql/modifiers';
+const artifactPath = './data/cql/artifact.ejs';
 const specificMap = loadTemplates(specificPath);
 const templateMap = loadTemplates(templatePath);
 const modifierMap = loadTemplates(modifierPath);
@@ -197,8 +197,8 @@ class CqlArtifact {
             if (observationValueSets.observations.length > 1) {
               if (!this.referencedElements.find(concept => concept.name === `${observationValueSets.id}_valuesets`)) {
                 const multipleValueSetExpression = createMultipleValueSetExpression(observationValueSets.id,
-                                                                                    observationValueSets.observations,
-                                                                                    'Observation');
+                  observationValueSets.observations,
+                  'Observation');
                 this.referencedElements.push(multipleValueSetExpression);
               }
               context.values = [`"${observationValueSets.id}_valuesets"`];
@@ -517,7 +517,7 @@ function writeZip(cqlArtifact, writeStream, callback /* (error) */) {
     }
     // Now build the zip, piping it to the writestream
     const archive = archiver('zip', { zlib: { level: 9 } })
-    .on('error', callback);
+      .on('error', callback);
     writeStream.on('close', callback);
     archive.pipe(writeStream);
     archive.append(artifactJson.text, { name: `${artifactJson.filename}.cql` });
@@ -585,12 +585,12 @@ function splitELM(body, contentType, callback /* (error, elmFiles) */) {
   bb.on('field', (fieldname, val) => {
     elmFiles.push({ name: fieldname, content: val });
   })
-  .on('finish', () => {
-    callback(null, elmFiles);
-  })
-  .on('error', (err) => {
-    callback(err);
-  });
+    .on('finish', () => {
+      callback(null, elmFiles);
+    })
+    .on('error', (err) => {
+      callback(err);
+    });
   bb.end(body);
 }
 

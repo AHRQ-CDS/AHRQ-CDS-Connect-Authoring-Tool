@@ -31,9 +31,9 @@ function publish(req, res) {
     const authData = { name, pass };
     const NID = req.body.nid;
     upload.submitArtifactFileToRepo(config.get('repo.url'), authData, NID, artifact.name, artifact.version, base64)
-    .then((uploaded) => {
-      res.send(uploaded);
-    });
+      .then((uploaded) => {
+        res.send(uploaded);
+      });
   });
 }
 

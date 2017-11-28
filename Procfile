@@ -1,4 +1,2 @@
-db: mongod
-api: nodemon server.js
-sass: npm run watch-css
-web: react-scripts start
+api: pushd api && ./node_modules/.bin/nodemon server.js && popd
+web: pushd frontend && npm start && popd
