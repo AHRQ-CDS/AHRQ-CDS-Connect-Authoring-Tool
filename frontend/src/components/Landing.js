@@ -1,6 +1,5 @@
 import React from 'react';
 import { onVisitExternalLink, onVisitExternalForm } from '../helpers/handlers';
-import statinUseScreenshot from '../../public/assets/images/statin-use-screenshot.png';
 
 export default () => (
   <div className="landing" id="maincontent">
@@ -21,18 +20,19 @@ export default () => (
         The CDS Authoring Tool, along with the <a href="https://cds.ahrq.gov/cdsconnect">CDS Connect Repository</a>,
         is designed to promote the creation and use of CDS in everyday clinical settings, connecting high-quality CDS to
         the U.S. healthcare community.  The CDS Authoring Tool provides an interface for creating CDS logic using
-        simple forms and exporting it as <a target="_blank" rel="nofollow" onClick={onVisitExternalLink}
-        href="http://www.hl7.org/implement/standards/product_brief.cfm?product_id=400">Health Level Seven (HL7)
-        Clinical Quality Language (CQL) 1.2</a> <i className="fa fa-external-link"></i> artifacts using the <a
-        target="_blank" rel="nofollow" onClick={onVisitExternalLink} href="http://hl7.org/fhir/DSTU2/index.html">HL7
-        Fast Healthcare Interoperability Resources (FHIR) DSTU 2</a> <i className="fa fa-external-link"></i> data model.
+        simple forms and exporting it as <a target="_blank" rel="nofollow noopener noreferrer"
+        onClick={onVisitExternalLink} href="http://www.hl7.org/implement/standards/product_brief.cfm?product_id=400">
+        Health Level Seven (HL7) Clinical Quality Language (CQL) 1.2</a> <i className="fa fa-external-link"></i>{' '}
+        artifacts using the <a target="_blank" rel="nofollow noopener noreferrer" onClick={onVisitExternalLink}
+        href="http://hl7.org/fhir/DSTU2/index.html">HL7 Fast Healthcare Interoperability Resources (FHIR) DSTU 2</a>
+        {' '}<i className="fa fa-external-link"></i> data model.
       </p>
 
       <p>
         <img
           className="img-fluid img-thumbnail rounded mx-auto d-block"
           alt="screenshot of authoring a CDS artifact about statin use"
-          src={statinUseScreenshot} />
+          src={`${process.env.PUBLIC_URL}/assets/images/statin-use-screenshot.png`} />
       </p>
 
       <p>

@@ -1,26 +1,8 @@
 import React from 'react';
-import ArtifactList from '../../documentation/userguide/screenshots/Artifact_List.png';
-import ArtifactModal from '../../documentation/userguide/screenshots/Artifact_Modal.png';
-import AuthenticatedNavBar from '../../documentation/userguide/screenshots/Authenticated_NavBar.png';
-import BasicLogicElement from '../../documentation/userguide/screenshots/Basic_Logic_Element.png';
-import BlankRecommendation from '../../documentation/userguide/screenshots/Blank_Recommendation.png';
-import CollapsedSubpopulation from '../../documentation/userguide/screenshots/Collapsed_Subpopulation.png';
-import ElementBrowse from '../../documentation/userguide/screenshots/Element_Browse.png';
-import ElementPicker from '../../documentation/userguide/screenshots/Element_Picker.png';
-import Element from '../../documentation/userguide/screenshots/Element.png';
-import ErrorsConditionOptions from '../../documentation/userguide/screenshots/Errors_Condition_Options.png';
-import Errors from '../../documentation/userguide/screenshots/Errors.png';
-import ExpandedSubpopulation from '../../documentation/userguide/screenshots/Expanded_Subpopulation.png';
-import ExpressionsOnElement from '../../documentation/userguide/screenshots/Expressions_on_Element.png';
-import GenderElement from '../../documentation/userguide/screenshots/Gender_Element.png';
-import Homepage from '../../documentation/userguide/screenshots/Homepage.png';
-import NestedLogicElement from '../../documentation/userguide/screenshots/Nested_Logic_Element.png';
-import Parameters from '../../documentation/userguide/screenshots/Parameters.png';
-import RecommendationWithRationale from '../../documentation/userguide/screenshots/Recommendation_with_Rationale.png';
-import UnauthenticatedNavBar from '../../documentation/userguide/screenshots/Unauthenticated_NavBar.png';
-import Workspace from '../../documentation/userguide/screenshots/Workspace.png';
-import RecommendationWithSubpopulations from
-  '../../documentation/userguide/screenshots/Recommendation_with_Subpopulations.png';
+
+function screenshotUrl(name) {
+  return `${process.env.PUBLIC_URL}/assets/images/userguide_screenshots/${name}.png`;
+}
 
 export default () => (
   <div className="userguide" id="maincontent">
@@ -44,7 +26,10 @@ export default () => (
           </p>
 
           <p>
-            <img alt="Homepage" src={Homepage} className="img-fluid img-thumbnail rounded mx-auto d-block" />
+            <img
+              alt="Homepage"
+              src={screenshotUrl('Homepage')}
+              className="img-fluid img-thumbnail rounded mx-auto d-block" />
           </p>
 
           <ol>
@@ -75,7 +60,7 @@ export default () => (
             <p>
               <img
                 alt="Unauthenticated Nav Bar"
-                src={UnauthenticatedNavBar}
+                src={screenshotUrl('Unauthenticated_NavBar')}
                 className="img-fluid img-thumbnail rounded mx-auto d-block" />
             </p>
 
@@ -101,7 +86,7 @@ export default () => (
             <p>
               <img
                 alt="Authenticated Nav Bar"
-                src={AuthenticatedNavBar}
+                src={screenshotUrl('Authenticated_NavBar')}
                 className="img-fluid img-thumbnail rounded mx-auto d-block" />
             </p>
 
@@ -127,7 +112,10 @@ export default () => (
           <h3>2.1 Artifacts Page</h3>
 
           <p>
-            <img alt="Artifact Page" src={ArtifactList} className="img-fluid img-thumbnail rounded mx-auto d-block"/>
+            <img
+              alt="Artifact Page"
+              src={screenshotUrl('Artifact_List')}
+              className="img-fluid img-thumbnail rounded mx-auto d-block" />
           </p>
 
           <ol>
@@ -171,7 +159,7 @@ export default () => (
           <p>
             <img
               alt="Edit Artifact Modal"
-              src={ArtifactModal}
+              src={screenshotUrl('Artifact_Modal')}
               className="img-fluid img-thumbnail rounded mx-auto d-block" />
           </p>
 
@@ -200,7 +188,12 @@ export default () => (
 
           <p>The Workspace tab is the main space for building artifacts in the CDS Authoring Tool.</p>
 
-          <p><img alt="Workspace" src={Workspace} className="img-fluid img-thumbnail rounded mx-auto d-block" /></p>
+          <p>
+            <img
+              alt="Workspace"
+              src={screenshotUrl('Workspace')}
+              className="img-fluid img-thumbnail rounded mx-auto d-block" />
+          </p>
 
           <ol>
             <li>
@@ -244,7 +237,10 @@ export default () => (
           </p>
 
           <p>
-            <img alt="Element Picker" src={ElementPicker} className="img-fluid img-thumbnail rounded mx-auto d-block" />
+            <img
+              alt="Element Picker"
+              src={screenshotUrl('Element_Picker')}
+              className="img-fluid img-thumbnail rounded mx-auto d-block" />
           </p>
 
           <ol>
@@ -282,7 +278,10 @@ export default () => (
           </p>
 
           <p>
-            <img alt="Element Browse" src={ElementBrowse} className="img-fluid img-thumbnail rounded mx-auto d-block" />
+            <img
+              alt="Element Browse"
+              src={screenshotUrl('Element_Browse')}
+              className="img-fluid img-thumbnail rounded mx-auto d-block" />
           </p>
 
           <ol>
@@ -315,7 +314,12 @@ export default () => (
             Section 3.6 "Logic Elements") helps the user define different populations for the artifact.
           </p>
 
-          <p><img alt="Element" src={Element} className="img-fluid img-thumbnail rounded mx-auto d-block" /></p>
+          <p>
+            <img
+              alt="Element"
+              src={screenshotUrl('Element')}
+              className="img-fluid img-thumbnail rounded mx-auto d-block" />
+          </p>
 
           <ol>
             <li>
@@ -348,7 +352,10 @@ export default () => (
           <p>Some elements require additional fields to be filled in, or don't support adding Expressions.</p>
 
           <p>
-            <img alt="Gender Element" src={GenderElement} className="img-fluid img-thumbnail rounded mx-auto d-block" />
+            <img
+              alt="Gender Element"
+              src={screenshotUrl('Gender_Element')}
+              className="img-fluid img-thumbnail rounded mx-auto d-block" />
           </p>
 
           <ol>
@@ -387,7 +394,7 @@ export default () => (
           <p>
             <img
               alt="Expressions on an Element"
-              src={ExpressionsOnElement}
+              src={screenshotUrl('Expressions_on_Element')}
               className="img-fluid img-thumbnail rounded mx-auto d-block" />
           </p>
 
@@ -435,7 +442,7 @@ export default () => (
           <p>
             <img
               alt="Basic Logic Element"
-              src={BasicLogicElement}
+              src={screenshotUrl('Basic_Logic_Element')}
               className="img-fluid img-thumbnail rounded mx-auto d-block" />
           </p>
 
@@ -470,7 +477,7 @@ export default () => (
           <p>
             <img
               alt="Nested Logic Element"
-              src={NestedLogicElement}
+              src={screenshotUrl('Nested_Logic_Element')}
               className="img-fluid img-thumbnail rounded mx-auto d-block" />
           </p>
 
@@ -538,7 +545,7 @@ export default () => (
           <p>
             <img
               alt="Collapsed Subpopulation"
-              src={CollapsedSubpopulation}
+              src={screenshotUrl('Collapsed_Subpopulation')}
               className="img-fluid img-thumbnail rounded mx-auto d-block" />
           </p>
 
@@ -561,7 +568,7 @@ export default () => (
           <p>
             <img
               alt="Expanded Subpopulation"
-              src={ExpandedSubpopulation}
+              src={screenshotUrl('Expanded_Subpopulation')}
               className="img-fluid img-thumbnail rounded mx-auto d-block" />
           </p>
 
@@ -594,7 +601,7 @@ export default () => (
           <p>
             <img
               alt="Blank Recommendation"
-              src={BlankRecommendation}
+              src={screenshotUrl('Blank_Recommendation')}
               className="img-fluid img-thumbnail rounded mx-auto d-block" />
           </p>
 
@@ -626,7 +633,7 @@ export default () => (
           <p>
             <img
               alt="Recommendation with Rationale"
-              src={RecommendationWithRationale}
+              src={screenshotUrl('Recommendation_with_Rationale')}
               className="img-fluid img-thumbnail rounded mx-auto d-block" />
           </p>
 
@@ -642,7 +649,7 @@ export default () => (
           <p>
             <img
               alt="Recommendation with Subpopulations"
-              src={RecommendationWithSubpopulations}
+              src={screenshotUrl('Recommendation_with_Subpopulations')}
               className="img-fluid img-thumbnail rounded mx-auto d-block" />
           </p>
 
@@ -694,7 +701,12 @@ export default () => (
             and Subpopulations, and can be used in Error Handling.
           </p>
 
-          <p><img alt="Parameters" src={Parameters} className="img-fluid img-thumbnail rounded mx-auto d-block"/></p>
+          <p>
+            <img
+              alt="Parameters"
+              src={screenshotUrl('Parameters')}
+              className="img-fluid img-thumbnail rounded mx-auto d-block" />
+          </p>
 
           <ol>
             <li>Each light grey box is an individual Parameter object.</li>
@@ -719,7 +731,12 @@ export default () => (
             together "If" statements, which say "if this condition is met, then deliver this error message."
           </p>
 
-          <p><img alt="Errors" src={Errors} className="img-fluid img-thumbnail rounded mx-auto d-block"/></p>
+          <p>
+            <img
+              alt="Errors"
+              src={screenshotUrl('Errors')}
+              className="img-fluid img-thumbnail rounded mx-auto d-block" />
+          </p>
 
           <ol>
             <li>
@@ -756,7 +773,7 @@ export default () => (
           <p>
             <img
               alt="Errors Conditions Options"
-              src={ErrorsConditionOptions}
+              src={screenshotUrl('Errors_Condition_Options')}
               className="img-fluid img-thumbnail rounded mx-auto d-block" />
           </p>
 

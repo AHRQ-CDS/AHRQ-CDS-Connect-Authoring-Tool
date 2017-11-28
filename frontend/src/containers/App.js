@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 
 import { loginUser, logoutUser, setAuthStatus, getCurrentUser } from '../actions/auth';
-import { setErrorMessage } from '../actions/errors';
+import setErrorMessage from '../actions/errors';
 
 import Header from '../components/Header';
 import Navbar from '../components/Navbar';
