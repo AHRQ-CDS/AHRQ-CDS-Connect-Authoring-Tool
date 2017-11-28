@@ -137,7 +137,6 @@ class Recommendation extends Component {
             }
             <a className="recommendation__new-subpopulation"
                tabIndex="0"
-               href="#"
                role="button"
                onClick={this.addBlankSubpopulation}
                onKeyPress={(e) => {
