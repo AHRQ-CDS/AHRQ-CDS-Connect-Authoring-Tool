@@ -6,6 +6,7 @@ import update from 'immutability-helper';
 import Select from 'react-select';
 
 /* eslint-disable jsx-a11y/label-has-for */
+/* eslint-disable jsx-a11y/anchor-is-valid */
 
 const subpopTabIndex = 2;
 
@@ -31,6 +32,11 @@ class Recommendation extends Component {
       showSubpopulations: !!((props.rec.subpopulations && props.rec.subpopulations.length)),
       showRationale: !!props.rec.rationale.length,
     };
+  }
+
+  addBlankSubpopulation = (event) => {
+    event.preventDefault();
+    this.props.setActiveTab(subpopTabIndex, 'addBlankSubpopulation');
   }
 
   revealSubpopulations = () => {
@@ -131,7 +137,9 @@ class Recommendation extends Component {
             }
             <a className="recommendation__new-subpopulation"
                tabIndex="0"
-               onClick={() => this.props.setActiveTab(subpopTabIndex, 'addBlankSubpopulation')}
+               href="#"
+               role="button"
+               onClick={this.addBlankSubpopulation}
                onKeyPress={(e) => {
                  e.which = e.which || e.keyCode;
                  if (e.which === 13) this.props.setActiveTab(subpopTabIndex, 'addBlankSubpopulation');

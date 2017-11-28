@@ -24,8 +24,7 @@ export default class Login extends Component {
   login = (event) => {
     event.preventDefault();
 
-    const username = this.refs.username;
-    const password = this.refs.password;
+    const { username, password } = this.refs;
     this.props.onLoginClick(username.value.trim(), password.value.trim());
   }
 

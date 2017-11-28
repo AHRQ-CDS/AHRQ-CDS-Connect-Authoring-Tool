@@ -1,6 +1,6 @@
-import ElementSelect from '../../../src/components/builder/ElementSelect';
-import { fullRenderComponent } from '../../test_helpers';
-import { elementGroups } from '../../test_fixtures';
+import ElementSelect from '../../../components/builder/ElementSelect';
+import { fullRenderComponent } from '../../../utils/test_helpers';
+import { elementGroups } from '../../../utils/test_fixtures';
 
 let component;
 let elementField;
@@ -9,7 +9,8 @@ let setInputValue;
 const addInstance = jest.fn();
 
 beforeEach(() => {
-  component = fullRenderComponent(ElementSelect,
+  component = fullRenderComponent(
+    ElementSelect,
     {
       categories: elementGroups,
       onSuggestionSelected: addInstance,
@@ -22,7 +23,7 @@ beforeEach(() => {
 
   setInputValue = (input, value) => {
     input.simulate('focus');
-    input.node.value = value;  // eslint-disable-line no-param-reassign
+    input.node.value = value; // eslint-disable-line no-param-reassign
     input.simulate('change');
   };
 });

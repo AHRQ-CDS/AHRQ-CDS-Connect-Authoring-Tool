@@ -1,11 +1,11 @@
 import { Route } from 'react-router-dom';
-import PrivateRoute from '../../src/containers/PrivateRoute';
-import Landing from '../../src/components/Landing';
-import BuilderPage from '../../src/components/builder/BuilderPage';
-import Artifact from '../../src/containers/Artifact';
-import NoMatch from '../../src/components/NotFoundPage';
-import Root from '../../src/containers/Root';
-import { shallowRenderComponent } from '../test_helpers';
+import PrivateRoute from '../../containers/PrivateRoute';
+import Landing from '../../components/Landing';
+import BuilderPage from '../../components/builder/BuilderPage';
+import Artifact from '../../containers/Artifact';
+import NoMatch from '../../components/NotFoundPage';
+import Root from '../../containers/Root';
+import { shallowRenderComponent } from '../../utils/test_helpers';
 
 test('Routes renders correct routes', () => {
   const component = shallowRenderComponent(Root);

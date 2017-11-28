@@ -1,9 +1,9 @@
 import _ from 'lodash';
-import ConjunctionGroup from '../../../src/components/builder/ConjunctionGroup';
-import TemplateInstance from '../../../src/components/builder/TemplateInstance';
-import StringParameter from '../../../src/components/builder/parameters/StringParameter';
-import { fullRenderComponent, shallowRenderComponent, createTemplateInstance } from '../../test_helpers';
-import { instanceTree, elementGroups } from '../../test_fixtures';
+import ConjunctionGroup from '../../../components/builder/ConjunctionGroup';
+import TemplateInstance from '../../../components/builder/TemplateInstance';
+import StringParameter from '../../../components/builder/parameters/StringParameter';
+import { fullRenderComponent, shallowRenderComponent, createTemplateInstance } from '../../../utils/test_helpers';
+import { instanceTree, elementGroups } from '../../../utils/test_fixtures';
 
 let rootConjunction;
 let childConjunction;
@@ -78,8 +78,10 @@ test('adds children at correct tree position', () => {
   rootConjunction.node.addChild(orTemplate);
 
   let argument = addInstance.mock.calls[0];
-  argument[1].uniqueId = orInstance.uniqueId; // Unique ID generation tested in TemplateInstance.test.js
-                                              // Make them the same to easily compare whilst avoiding React warning
+
+  // Unique ID generation tested in TemplateInstance.test.js
+  // Make them the same to easily compare whilst avoiding React warning
+  argument[1].uniqueId = orInstance.uniqueId;
 
   expect(addInstance).lastCalledWith(rootConjunction.props().name, orInstance, '');
 
@@ -112,10 +114,12 @@ test('edits own name', () => {
 
   nameParamater.find('input').simulate('change', { target: { name: 'element_name', value: newName } });
 
-  expect(editInstance).lastCalledWith(rootConjunction.props().name,
-                                      { element_name: newName },
-                                      childConjunctionPath,
-                                      false);
+  expect(editInstance).lastCalledWith(
+    rootConjunction.props().name,
+    { element_name: newName },
+    childConjunctionPath,
+    false
+  );
 });
 
 test('can\'t indent or outdent root group', () => {

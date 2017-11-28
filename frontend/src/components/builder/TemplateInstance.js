@@ -115,7 +115,8 @@ class TemplateInstance extends Component {
       .map(instance => ({
         name: getInstanceName(instance),
         id: instance.id,
-        returnType: (_.isEmpty(instance.modifiers) ? instance.returnType : _.last(instance.modifiers).returnType) }));
+        returnType: (_.isEmpty(instance.modifiers) ? instance.returnType : _.last(instance.modifiers).returnType)
+      }));
     return otherInstances;
   }
 
@@ -189,11 +190,11 @@ class TemplateInstance extends Component {
           );
         case 'CheckExistence':
           return (
-              <CheckExistence
-                key={index}
-                index={index}
-                value={mod.values.value}
-                updateAppliedModifier={this.updateAppliedModifier}/>
+            <CheckExistence
+              key={index}
+              index={index}
+              value={mod.values.value}
+              updateAppliedModifier={this.updateAppliedModifier}/>
           );
         default:
           return (<LabelModifier key={index} name={mod.name} id={mod.id}/>);
@@ -217,12 +218,11 @@ class TemplateInstance extends Component {
   }
 
   renderAppliedModifiers = () => (
-      <div className="modifier__list" aria-label="Expression List">
-        {(this.props.templateInstance.modifiers || []).map((modifier, index) =>
-          this.renderAppliedModifier(modifier, index)
-        )}
-      </div>
-    )
+    <div className="modifier__list" aria-label="Expression List">
+      {(this.props.templateInstance.modifiers || []).map((modifier, index) =>
+        this.renderAppliedModifier(modifier, index))}
+    </div>
+  )
 
   setAppliedModifiers = (modifiers) => {
     const returnType = _.isEmpty(modifiers) ? this.props.templateInstance.returnType : _.last(modifiers).returnType;
@@ -237,8 +237,7 @@ class TemplateInstance extends Component {
     }
     if (_.has(this.props.templateInstance, 'suppressedModifiers')) {
       this.props.templateInstance.suppressedModifiers.forEach(suppressedModifier =>
-        _.remove(relevantModifiers, relevantModifier => relevantModifier.id === suppressedModifier)
-      );
+        _.remove(relevantModifiers, relevantModifier => relevantModifier.id === suppressedModifier));
     }
     this.setState({ relevantModifiers });
   }
@@ -262,40 +261,39 @@ class TemplateInstance extends Component {
   }
 
   renderModifierSelect = () => (
-      <div>
-        { (
-            !this.props.templateInstance.cannotHaveModifiers
-            && (this.state.relevantModifiers.length > 0 || this.props.templateInstance.modifiers.length === 0)
-          ) ?
-            <div className="modifier__selection">
-              <button
-                onClick={() => this.setState({ showModifiers: !this.state.showModifiers })}
-                className="modifier__addbutton secondary-button"
-                aria-label={'add expression'}>
-                Add Expression</button>
-              { (this.state.showModifiers)
-                ? this.state.relevantModifiers.map(modifier =>
-                    <button key={modifier.id}
-                      value={modifier.id}
-                      onClick={this.handleModifierSelected} className="modifier__button secondary-button">
-                      {modifier.name}
-                    </button>
-                  )
-                : null
-              }
-            </div>
-          : null
-        }
-      </div>
-    )
+    <div>
+      { (
+          !this.props.templateInstance.cannotHaveModifiers
+          && (this.state.relevantModifiers.length > 0 || this.props.templateInstance.modifiers.length === 0)
+        ) ?
+          <div className="modifier__selection">
+            <button
+              onClick={() => this.setState({ showModifiers: !this.state.showModifiers })}
+              className="modifier__addbutton secondary-button"
+              aria-label={'add expression'}>
+              Add Expression</button>
+            { (this.state.showModifiers)
+              ? this.state.relevantModifiers.map(modifier =>
+                  <button key={modifier.id}
+                    value={modifier.id}
+                    onClick={this.handleModifierSelected} className="modifier__button secondary-button">
+                    {modifier.name}
+                  </button>)
+              : null
+            }
+          </div>
+        : null
+      }
+    </div>
+  )
 
   selectTemplate = (param) => {
     if (param.static) {
       return (
-          <StaticParameter
-            key={param.id}
-            param={param}
-            updateInstance={this.updateInstance} />
+        <StaticParameter
+          key={param.id}
+          param={param}
+          updateInstance={this.updateInstance} />
       );
     }
     switch (param.type) {
@@ -361,8 +359,7 @@ class TemplateInstance extends Component {
       <div>
         {this.props.templateInstance.parameters.map((param, index) =>
           // todo: each parameter type should probably have its own component
-          this.selectTemplate(param)
-        )}
+          this.selectTemplate(param))}
         </div>
         {this.renderAppliedModifiers()}
         <div className='modifier__return__type'>

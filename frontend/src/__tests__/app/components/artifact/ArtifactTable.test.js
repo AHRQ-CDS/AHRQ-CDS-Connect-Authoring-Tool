@@ -1,5 +1,5 @@
-import ArtifactTable from '../../../../src/components/artifact/ArtifactTable';
-import { shallowRenderComponent, fullRenderComponent, ReactWrapper } from '../../../test_helpers';
+import ArtifactTable from '../../../../components/artifact/ArtifactTable';
+import { shallowRenderComponent, fullRenderComponent, ReactWrapper } from '../../../../utils/test_helpers';
 
 const match = {
   path: ''
@@ -60,9 +60,7 @@ test('ArtifactTable allows editing of artifacts', () => {
   expect(editModal.prop('isOpen')).toEqual(true);
 
   // this allows you to continue using the enzyme wrapper API
-  const modalContent = new ReactWrapper(
-    editModal.node.portal, true
-  );
+  const modalContent = new ReactWrapper(editModal.node.portal, true);
 
   expect(modalContent.text()).toContain('Edit Artifact');
   modalContent.find('.modal__deletebutton').simulate('click');
@@ -96,9 +94,7 @@ test('ArtifactTable delete opens confirmation modal and deletes from modal', () 
   expect(component.state('showConfirmDeleteModal')).toEqual(true);
   expect(component.state('artifactToDelete')).not.toEqual(null);
 
-  const modalContent = new ReactWrapper(
-    confirmDeleteModal.node.portal, true
-  );
+  const modalContent = new ReactWrapper(confirmDeleteModal.node.portal, true);
   expect(modalContent.text()).toContain('Delete Artifact Confirmation');
 
   modalContent.find('form').simulate('submit');

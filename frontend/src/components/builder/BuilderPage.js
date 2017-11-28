@@ -41,7 +41,7 @@ const getValueAtPath = (obj, path) => {
     }
     return getValueAtPath({}, path);
   }
-      // Probably at the root
+  // Probably at the root
   if (obj[path[0]] === undefined || obj[path[0]].length === 0) {
     return obj;
   }
@@ -153,7 +153,7 @@ export default class BuilderPage extends Component {
   // Loads an existing artifact
   loadExistingArtifact = () => {
     // fetch the relevant artifact from the server.
-    const id = this.props.match.params.id;
+    const { id } = this.props.match.params;
     axios.get(`${API_BASE}/artifacts/${id}`)
       .then((res) => {
         const artifact = res.data[0];
@@ -282,7 +282,7 @@ export default class BuilderPage extends Component {
       }
 
       if (exitPage) {
-          // Redirect the page to the artifact list after saving if click "Close" button
+        // Redirect the page to the artifact list after saving if click "Close" button
         this.context.router.history.push('/artifacts');
       }
     };
@@ -306,7 +306,7 @@ export default class BuilderPage extends Component {
 
   // Saves a particular expression to the backend
   saveInstance = (treeName, path, uid = null) => {
-    const tree = this.findTree(treeName, uid).tree;
+    const { tree } = this.findTree(treeName, uid);
     const target = getValueAtPath(tree, path);
 
     if (target) {
@@ -406,7 +406,7 @@ export default class BuilderPage extends Component {
   // Sets new tree based on if state tree or array tree
   setTree = (treeName, treeData, tree) => {
     if ('array' in treeData) {
-      const index = treeData.index;
+      const { index } = treeData;
       treeData.array[index] = tree;
       this.setState({ [treeName]: treeData.array });
     } else {
@@ -465,7 +465,7 @@ export default class BuilderPage extends Component {
 
   setPreset = (treeName, preset, path, uid = null) => {
     const treeData = this.findTree(treeName, uid);
-    const tree = treeData.tree;
+    const { tree } = treeData;
     const target = getValueAtPath(tree, path);
     Object.assign(target, preset);
     this.setTree(treeName, treeData, tree);
@@ -473,7 +473,7 @@ export default class BuilderPage extends Component {
 
   editInstance = (treeName, editedParams, path, editingConjunctionType = false, uid = null) => {
     const treeData = this.findTree(treeName, uid);
-    const tree = treeData.tree;
+    const { tree } = treeData;
     const target = getValueAtPath(tree, path);
 
     if (editingConjunctionType) {
@@ -481,8 +481,8 @@ export default class BuilderPage extends Component {
       target.name = editedParams.name;
     } else {
       // function to retrieve relevant parameter
-      const paramIndex = target.parameters.findIndex(
-        param => Object.prototype.hasOwnProperty.call(editedParams, param.id));
+      const paramIndex = target.parameters.findIndex(param =>
+        Object.prototype.hasOwnProperty.call(editedParams, param.id));
 
       target.parameters[paramIndex].value = editedParams[target.parameters[paramIndex].id];
     }
@@ -492,7 +492,7 @@ export default class BuilderPage extends Component {
 
   deleteInstance = (treeName, path, elementsToAdd = undefined, uid = null) => {
     const treeData = this.findTree(treeName, uid);
-    const tree = treeData.tree;
+    const { tree } = treeData;
     const index = path.slice(-1);
     const target = getValueAtPath(tree, path.slice(0, path.length - 2));
     target.splice(index, 1);
@@ -610,7 +610,7 @@ export default class BuilderPage extends Component {
         showPresets={ showPresets }
         setPreset={ this.setPreset }
         categories={ this.state.categories } />
-    :
+      :
       <p>Loading...</p>
   )
 

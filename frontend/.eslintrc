@@ -13,7 +13,10 @@
     "no-unused-vars": [ "error", { "args": "none" } ], // don't check function arguments
     "no-use-before-define": ["error", "nofunc"],
     "no-plusplus": ["error", { "allowForLoopAfterthoughts": true }], // allow ++ in for loop expression
+    "prefer-destructuring": ["error", { "AssignmentExpression": { "array": false, "object": false } }],
     "import/no-named-default": "off", // turning it off since it's currently broken w/ yarn (see: https://github.com/yarnpkg/yarn/issues/3332)
-    "import/no-extraneous-dependencies": ["error", {"devDependencies": ["src/helpers/*.js", "test/**/*.js", "setupTests.js"]}] // don't check helpers for extraneous deps
+    "import/no-extraneous-dependencies": ["error", {"devDependencies": ["src/helpers/*.js", "test/**/*.js", "setupTests.js"]}], // don't check helpers for extraneous deps
+    "jsx-a11y/href-no-hash": 0,
+    "jsx-a11y/label-has-for": ["error", { "required": { "some": ["nesting", "id"] } }]
   }
 }

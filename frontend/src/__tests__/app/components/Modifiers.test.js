@@ -1,12 +1,12 @@
-import BooleanComparison from '../../../src/components/builder/modifiers/BooleanComparison';
-import CheckExistence from '../../../src/components/builder/modifiers/CheckExistence';
-import LabelModifier from '../../../src/components/builder/modifiers/LabelModifier';
-import LookBack from '../../../src/components/builder/modifiers/LookBack';
-import ValueComparisonObservation from '../../../src/components/builder/modifiers/ValueComparisonObservation';
-import ValueComparison from '../../../src/components/builder/modifiers/ValueComparison';
-import WithUnit from '../../../src/components/builder/modifiers/WithUnit';
+import BooleanComparison from '../../../components/builder/modifiers/BooleanComparison';
+import CheckExistence from '../../../components/builder/modifiers/CheckExistence';
+import LabelModifier from '../../../components/builder/modifiers/LabelModifier';
+import LookBack from '../../../components/builder/modifiers/LookBack';
+import ValueComparisonObservation from '../../../components/builder/modifiers/ValueComparisonObservation';
+import ValueComparison from '../../../components/builder/modifiers/ValueComparison';
+import WithUnit from '../../../components/builder/modifiers/WithUnit';
 
-import { shallowRenderComponent } from '../../test_helpers';
+import { shallowRenderComponent } from '../../../utils/test_helpers';
 
 test('BooleanComparison renders without crashing', () => {
   const component = shallowRenderComponent(BooleanComparison, {

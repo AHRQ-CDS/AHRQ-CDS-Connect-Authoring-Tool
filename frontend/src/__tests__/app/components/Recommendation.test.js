@@ -1,6 +1,6 @@
 import _ from 'lodash';
-import Recommendation from '../../../src/components/builder/Recommendation';
-import { fullRenderComponent } from '../../test_helpers';
+import Recommendation from '../../../components/builder/Recommendation';
+import { fullRenderComponent } from '../../../utils/test_helpers';
 
 let component;
 let componentFilledIn;

@@ -5,10 +5,9 @@ import _ from 'lodash';
 /* eslint-disable jsx-a11y/label-has-for */
 
 class ErrorStatement extends Component {
-
   // Ensures there is at least one statement to start
   componentWillMount = () => {
-    const statements = this.props.errorStatement.statements;
+    const { statements } = this.props.errorStatement;
     if (statements.length < 1) {
       this.addStatement(null);
     }
@@ -55,7 +54,7 @@ class ErrorStatement extends Component {
   addStatement = (parent) => {
     const newStatement = this.baseStatement(parent);
     const newErrorStatement = _.cloneDeep(this.props.errorStatement);
-    const statements = newErrorStatement.statements;
+    const { statements } = newErrorStatement;
     if (parent == null) {
       statements.push(newStatement);
     } else {
@@ -71,7 +70,7 @@ class ErrorStatement extends Component {
       newValue = { label: null, value: null };
     }
     const newErrorStatement = _.cloneDeep(this.props.errorStatement);
-    const statements = newErrorStatement.statements;
+    const { statements } = newErrorStatement;
     if (parent == null) {
       statements[index][type] = newValue;
     } else {
@@ -83,7 +82,7 @@ class ErrorStatement extends Component {
   // Delete an if/then statement in base and child
   deleteStatement = (parent, index) => {
     const newErrorStatement = _.cloneDeep(this.props.errorStatement);
-    const statements = newErrorStatement.statements;
+    const { statements } = newErrorStatement;
     if (parent == null) {
       statements.splice(index, 1);
     } else {
@@ -127,70 +126,71 @@ class ErrorStatement extends Component {
 
   // Renders then part of statement
   renderThen = (statement, parent, index) => (
-      <div className="field recommendation__block-then">
-        <label className="label">Then</label>
-        <div className="control">
-          <textarea
-            className="textarea"
-            name="text"
-            title="ThenClause"
-            aria-label="ThenClause"
-            placeholder='Describe your error'
-            value={statement.thenClause}
-            onChange={e => this.setStatement(e.target.value, parent, index, 'thenClause')} />
-        </div>
+    <div className="field recommendation__block-then">
+      <label className="label">Then</label>
+      <div className="control">
+        <textarea
+          className="textarea"
+          name="text"
+          title="ThenClause"
+          aria-label="ThenClause"
+          placeholder='Describe your error'
+          value={statement.thenClause}
+          onChange={e => this.setStatement(e.target.value, parent, index, 'thenClause')} />
       </div>
-    )
+    </div>
+  )
 
   // Renders nested if
   renderChildren = (statement, parent) => (
-      <div className="recommendation__block">
-        { statement.child && statement.child.statements.map((cStatement, i) => {
-          const ifLabel = i ? 'Else if' : 'If';
-          return (
-            <div key={i}>
-              <div className="field recommendation__block-if">
-                <label className="label" htmlFor={`condition-${parent != null ? parent : -1}-${i}`}>{ifLabel}</label>
-                <div className="form__group control">
-                  {this.renderCondition(cStatement, parent, i)}
-                  {statement.child.statements.length > 1 && this.renderDeleteButton(parent, i)}
-                </div>
+    <div className="recommendation__block">
+      { statement.child && statement.child.statements.map((cStatement, i) => {
+        const ifLabel = i ? 'Else if' : 'If';
+        return (
+          <div key={i}>
+            <div className="field recommendation__block-if">
+              <label className="label" htmlFor={`condition-${parent != null ? parent : -1}-${i}`}>{ifLabel}</label>
+              <div className="form__group control">
+                {this.renderCondition(cStatement, parent, i)}
+                {statement.child.statements.length > 1 && this.renderDeleteButton(parent, i)}
               </div>
-              {this.renderThen(cStatement, parent, i)}
-            </div>);
-        })}
-        { this.renderAddIfButton(parent) }
-        { this.renderElse(parent) }
-      </div>
-    )
+            </div>
+            {this.renderThen(cStatement, parent, i)}
+          </div>);
+      })}
+      { this.renderAddIfButton(parent) }
+      { this.renderElse(parent) }
+    </div>
+  )
 
   // Renders button to manage then or nested if
   renderNestingButton = (statement, index) => (
-      <div className="field recommendation__action">
-        <button
-          className="button primary-button"
-          onClick={e => this.handleUseThenClause(index)}>
-          {this.props.errorStatement.statements[index].useThenClause ? 'And Also If...' : '(Remove nested statements)'}
-        </button>
-      </div>)
+    <div className="field recommendation__action">
+      <button
+        className="button primary-button"
+        onClick={e => this.handleUseThenClause(index)}>
+        {this.props.errorStatement.statements[index].useThenClause ? 'And Also If...' : '(Remove nested statements)'}
+      </button>
+    </div>
+  )
 
   // Renders button to add if else statements
   renderAddIfButton = parent => (
-      <div className="field recommendation__action">
-        <button
-          className="button primary-button"
-          onClick={e => this.addStatement(parent)}> Or Else If... </button>
-      </div>
-    )
+    <div className="field recommendation__action">
+      <button
+        className="button primary-button"
+        onClick={e => this.addStatement(parent)}> Or Else If... </button>
+    </div>
+  )
 
   // Renders delete if/then button
   renderDeleteButton = (parent, index) => (
-      <div className="recommendation__action">
-        <button
-          className="button"
-          onClick={e => this.deleteStatement(parent, index)}> Delete If Clause </button>
-      </div>
-    )
+    <div className="recommendation__action">
+      <button
+        className="button"
+        onClick={e => this.deleteStatement(parent, index)}> Delete If Clause </button>
+    </div>
+  )
 
   // Renders else text box
   renderElse = (parent) => {
@@ -248,7 +248,6 @@ class ErrorStatement extends Component {
       </section>
     );
   }
-
 }
 
 export default ErrorStatement;

@@ -1,4 +1,5 @@
 /* eslint-disable max-len */
+/* eslint-disable object-curly-newline */
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { onVisitExternalLink, onVisitExternalForm } from '../helpers/handlers';

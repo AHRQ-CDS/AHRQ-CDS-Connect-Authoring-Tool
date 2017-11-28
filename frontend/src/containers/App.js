@@ -33,7 +33,9 @@ class App extends Component {
   }
 
   render() {
-    const { children, isAuthenticated, authUser, authStatus, authStatusText } = this.props;
+    const {
+      children, isAuthenticated, authUser, authStatus, authStatusText
+    } = this.props;
 
     return (
       <div className="app">
