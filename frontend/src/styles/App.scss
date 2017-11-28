@@ -4,6 +4,8 @@
 /* ------------------------- IMPORT 3RD PARTY VENDORS ---------------------- */
 @import "node_modules/bootstrap/scss/bootstrap.scss";
 @import "node_modules/bourbon/app/assets/stylesheets/bourbon";
+@import 'node_modules/tocbot/src/scss/tocbot-core';
+@import 'node_modules/tocbot/src/scss/tocbot-default-theme';
 
 /* ------------------------- IMPORT CUSTOM SCSS ---------------------------- */
 // site-wide elements

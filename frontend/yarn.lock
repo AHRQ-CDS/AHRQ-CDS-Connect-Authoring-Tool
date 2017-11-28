@@ -7871,6 +7871,12 @@ to-fast-properties@^2.0.0:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/to-fast-properties/-/to-fast-properties-2.0.0.tgz#dc5e698cbd079265bc73e0377681a4e4e83f616e"
 
+tocbot@^3.0.7:
+  version "3.0.7"
+  resolved "https://registry.yarnpkg.com/tocbot/-/tocbot-3.0.7.tgz#cc3973ad96ba35e7d525e0875f20a5bee5d34e1e"
+  dependencies:
+    zenscroll "^4.0.0"
+
 toposort@^1.0.0:
   version "1.0.3"
   resolved "https://registry.yarnpkg.com/toposort/-/toposort-1.0.3.tgz#f02cd8a74bd8be2fc0e98611c3bacb95a171869c"
@@ -8513,3 +8519,7 @@ yargs@~3.10.0:
     cliui "^2.1.0"
     decamelize "^1.0.0"
     window-size "0.1.0"
+
+zenscroll@^4.0.0:
+  version "4.0.0"
+  resolved "https://registry.yarnpkg.com/zenscroll/-/zenscroll-4.0.0.tgz#4baefa4a1b9fb3bcc6d365e200648ff339e447a8"

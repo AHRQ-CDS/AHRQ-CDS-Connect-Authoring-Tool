@@ -1,5 +1,17 @@
 .userguide {
-  &-wrapper { @include componentWidth; }
+  &-wrapper {
+    @include componentWidth;
+  }
+  
+  &-guide {
+    width: 75%;
+
+    @include respond-to(mobile) { width: 100%; }
+  }
+
+  &.is-position-relative {
+    position: relative;
+  }
 
   padding: $global-padding;
 
@@ -17,5 +29,29 @@
   .h4-wrapper {
     border-left: 3px solid $ahrq-color-dark-blue;
     padding-left: 20px;
+  }
+  
+  .userguide-toc {
+    position: absolute;
+    background-color: rgba(255, 255, 255, 0.9);
+    padding: 8px;
+    width: 25%;
+    right: 10px;
+
+    @include respond-to(mobile) { display: none; }
+
+    .is-active-link::before {
+      background-color: $ahrq-color-dark-blue;
+    }
+
+    &.is-position-fixed {
+      padding-top: 30px;
+    }
+
+    &.is-position-fixed.at-bottom {
+      position: absolute !important;
+      top: auto;
+      bottom: 30px;
+    }
   }
 }
