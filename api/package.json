@@ -35,7 +35,8 @@
     "start": "node ./server.js",
     "start-dev": "nodemon",
     "test": "./node_modules/.bin/mocha --reporter spec --recursive",
-    "test:watch": "./node_modules/.bin/mocha --reporter spec --recursive --watch",
+    "test-watch": "./node_modules/.bin/mocha --reporter spec --recursive --watch",
+    "test-ci": "./node_modules/.bin/mocha --reporter spec --recursive --no-colors",
     "lint": "eslint .",
     "lint:fix": "eslint --fix .; exit 0"
   }
