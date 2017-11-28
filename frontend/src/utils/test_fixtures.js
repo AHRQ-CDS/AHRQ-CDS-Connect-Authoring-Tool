@@ -138,6 +138,24 @@ const elementGroups = [
           { id: 'element_name', value: 'LDL_Test' },
           { id: 'observation', static: true, value: 'ldl_test' },
         ]
+      },
+      {
+        id: 'Base',
+        name: 'Base Template',
+        type: 'element',
+        parameters: [{ id: 'element_name', type: 'string', name: 'Element Name' }]
+      },
+      {
+        id: 'GenericObservation',
+        name: 'Observation',
+        returnType: 'list_of_observations',
+        suppress: true,
+        extends: 'Base',
+        parameters: [
+          { id: 'element_name', type: 'string' },
+          { id: 'observation', type: 'observation', name: 'Observation' }
+        ],
+        type: 'element'
       }
     ]
   },

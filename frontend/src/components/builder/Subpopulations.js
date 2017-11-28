@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import _ from 'lodash';
 
 import Subpopulation from './Subpopulation';
+import createTemplateInstance from '../../utils/templates';
 
 class Subpopulations extends Component {
   static propTypes = {
@@ -16,7 +17,6 @@ class Subpopulations extends Component {
     saveInstance: PropTypes.func.isRequired,
     getAllInstances: PropTypes.func.isRequired,
     updateRecsSubpop: PropTypes.func.isRequired,
-    createTemplateInstance: PropTypes.func.isRequired,
     checkSubpopulationUsage: PropTypes.func.isRequired,
     booleanParameters: PropTypes.array.isRequired,
     name: PropTypes.string.isRequired,
@@ -44,7 +44,7 @@ class Subpopulations extends Component {
   }
 
   addSubpopulation = () => {
-    const newSubpopulation = this.props.createTemplateInstance(this.baseTemplate);
+    const newSubpopulation = createTemplateInstance(this.baseTemplate);
     newSubpopulation.name = '';
     newSubpopulation.path = '';
     newSubpopulation.subpopulationName = `Subpopulation ${this.state.subpopulations.length + 1}`;
@@ -89,7 +89,6 @@ class Subpopulations extends Component {
               setSubpopulationName={ this.setSubpopulationName }
               deleteSubpopulation={ this.deleteSubpopulation }
               booleanParameters={ this.props.booleanParameters }
-              createTemplateInstance={ this.props.createTemplateInstance }
               addInstance={ this.props.addInstance }
               editInstance={ this.props.editInstance }
               updateInstanceModifiers={ this.props.updateInstanceModifiers }

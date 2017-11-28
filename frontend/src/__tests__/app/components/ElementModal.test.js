@@ -1,7 +1,7 @@
 import _ from 'lodash';
 import Modal from 'react-modal';
 import ElementModal from '../../../components/builder/ElementModal';
-import { filterUnsuppressed } from '../../../helpers/utils';
+import { filterUnsuppressed } from '../../../utils/filter';
 import { fullRenderComponent, ReactWrapper } from '../../../utils/test_helpers';
 import { elementGroups } from '../../../utils/test_fixtures';
 

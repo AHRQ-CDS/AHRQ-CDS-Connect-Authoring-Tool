@@ -2,7 +2,7 @@
 /* eslint-disable object-curly-newline */
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { onVisitExternalLink, onVisitExternalForm } from '../helpers/handlers';
+import { onVisitExternalLink, onVisitExternalForm } from '../utils/handlers';
 
 const ahrqLinks = [
   { name: 'AHRQ Home', link: 'https://www.ahrq.gov/' },

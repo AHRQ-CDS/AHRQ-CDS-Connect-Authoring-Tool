@@ -1,5 +1,6 @@
 .builder {
   &-wrapper { @include componentWidth; }
+
   padding: $global-padding;
   padding-bottom: 0;
   background-color: $blue-darkest;

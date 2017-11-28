@@ -18,7 +18,6 @@ class Subpopulation extends Component {
     getAllInstances: PropTypes.func.isRequired,
     treeName: PropTypes.string.isRequired,
     booleanParameters: PropTypes.array.isRequired,
-    createTemplateInstance: PropTypes.func.isRequired,
     showPresets: PropTypes.func.isRequired,
     categories: PropTypes.array.isRequired
   }
@@ -120,7 +119,6 @@ class Subpopulation extends Component {
               name={ this.props.treeName }
               instance={ this.props.subpopulation }
               booleanParameters={ this.props.booleanParameters }
-              createTemplateInstance={ this.props.createTemplateInstance }
               addInstance={ this.addInstance }
               editInstance={ this.editInstance }
               updateInstanceModifiers={ this.props.updateInstanceModifiers }

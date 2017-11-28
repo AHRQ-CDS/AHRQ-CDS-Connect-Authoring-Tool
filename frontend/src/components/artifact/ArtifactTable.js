@@ -3,7 +3,8 @@ import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import FontAwesome from 'react-fontawesome';
 
-import { renderDate, sortMostRecent } from '../../helpers/utils';
+import renderDate from '../../utils/dates';
+import { sortMostRecent } from '../../utils/sort';
 import Modal from '../elements/Modal';
 import EditArtifactModal from './EditArtifactModal';
 

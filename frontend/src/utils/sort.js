@@ -1,5 +1,3 @@
-import moment from 'moment';
-
 const sortDifference = (a, b) => {
   if (a < b) return -1;
   if (a > b) return 1;
@@ -16,16 +14,6 @@ export function sortAlphabeticallyByKey(key, key2 = undefined) {
     }
     return sortDifference(a[key], b[key]);
   };
-}
-
-export function filterUnsuppressed(items) {
-  return items.filter(item => !item.suppress);
-}
-
-export function renderDate(datetime) {
-  let formattedDate = '';
-  if (datetime) { formattedDate = moment(datetime).fromNow(); }
-  return formattedDate;
 }
 
 export function sortMostRecent(a, b) {

@@ -7,6 +7,8 @@ import TemplateInstance from './TemplateInstance';
 import ElementSelect from './ElementSelect';
 import StringParameter from './parameters/StringParameter';
 
+import createTemplateInstance from '../../utils/templates';
+
 const requiredIf = (type, condition) => function testProps(props) {
   const test = condition(props) ? type.isRequired : type;
   // eslint-disable-next-line prefer-rest-params
@@ -14,22 +16,6 @@ const requiredIf = (type, condition) => function testProps(props) {
 };
 
 class ConjunctionGroup extends Component {
-  static propTypes = {
-    root: PropTypes.bool,
-    getPath: requiredIf(PropTypes.func, props => !props.root),
-    name: PropTypes.string.isRequired,
-    instance: PropTypes.object.isRequired,
-    addInstance: PropTypes.func.isRequired,
-    editInstance: PropTypes.func.isRequired,
-    updateInstanceModifiers: PropTypes.func.isRequired,
-    booleanParameters: PropTypes.array.isRequired,
-    deleteInstance: PropTypes.func.isRequired,
-    saveInstance: PropTypes.func.isRequired,
-    getAllInstances: PropTypes.func.isRequired,
-    showPresets: PropTypes.func.isRequired,
-    categories: PropTypes.array.isRequired,
-  }
-
   constructor(props) {
     super(props);
 
@@ -46,7 +32,7 @@ class ConjunctionGroup extends Component {
   }
 
   addChild = (template) => {
-    const instance = this.props.createTemplateInstance(template);
+    const instance = createTemplateInstance(template);
     this.props.addInstance(this.props.name, instance, this.getPath());
   }
 
@@ -78,14 +64,14 @@ class ConjunctionGroup extends Component {
 
     if (instance.conjunction) {
       // Indenting a conjunction group (and it's children)
-      const newInstance = this.props.createTemplateInstance(type, [instance]);
+      const newInstance = createTemplateInstance(type, [instance]);
       const parentPath = this.getPath().split('.').slice(0, -2).join('.'); // Path of parent of conjunction group
       const index = Number(this.getPath().split('.').pop()); // Index of to indent group at
       const toAdd = [{ instance: newInstance, path: parentPath, index }];
       this.props.deleteInstance(this.props.name, this.getPath(), toAdd);
     } else {
       // Indent a single templateInstance
-      const newInstance = this.props.createTemplateInstance(type, [instance]);
+      const newInstance = createTemplateInstance(type, [instance]);
       const index = Number(this.getChildsPath(instance.uniqueId).split('.').pop()); // Index to add new conjuction at
       const toAdd = [{ instance: newInstance, path: this.getPath(), index }];
       this.props.deleteInstance(this.props.name, this.getChildsPath(instance.uniqueId), toAdd);
@@ -192,7 +178,6 @@ class ConjunctionGroup extends Component {
                   name={ this.props.name }
                   instance={ instance }
                   booleanParameters={ this.props.booleanParameters }
-                  createTemplateInstance={ this.props.createTemplateInstance }
                   addInstance={ this.props.addInstance }
                   editInstance={ this.props.editInstance }
                   updateInstanceModifiers={ this.props.updateInstanceModifiers }
@@ -239,5 +224,21 @@ class ConjunctionGroup extends Component {
     );
   }
 }
+
+ConjunctionGroup.propTypes = {
+  root: PropTypes.bool,
+  getPath: requiredIf(PropTypes.func, props => !props.root),
+  name: PropTypes.string.isRequired,
+  instance: PropTypes.object.isRequired,
+  addInstance: PropTypes.func.isRequired,
+  editInstance: PropTypes.func.isRequired,
+  updateInstanceModifiers: PropTypes.func.isRequired,
+  booleanParameters: PropTypes.array.isRequired,
+  deleteInstance: PropTypes.func.isRequired,
+  saveInstance: PropTypes.func.isRequired,
+  getAllInstances: PropTypes.func.isRequired,
+  showPresets: PropTypes.func.isRequired,
+  categories: PropTypes.array.isRequired
+};
 
 export default ConjunctionGroup;

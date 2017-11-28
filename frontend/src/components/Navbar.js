@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { NavLink } from 'react-router-dom';
-import { onVisitExternalForm } from '../helpers/handlers';
+import { onVisitExternalForm } from '../utils/handlers';
 
 export default class Navbar extends Component {
   renderedNavbar = () => {

@@ -3,7 +3,8 @@ import PropTypes from 'prop-types';
 import _ from 'lodash';
 import Select from 'react-select';
 import ElementModal from './ElementModal';
-import { filterUnsuppressed, sortAlphabeticallyByKey } from '../../helpers/utils';
+import { filterUnsuppressed } from '../../utils/filter';
+import { sortAlphabeticallyByKey } from '../../utils/sort';
 
 const getAllElements = categories => _.flatten(categories.map(cat => (
   cat.entries.map(e => Object.assign({ category: cat.name.replace(/s\s*$/, '') }, e))
@@ -41,7 +42,7 @@ class ElementSelect extends Component {
     this.categoryInputId = _.uniqueId('element-select__category-input-');
   }
 
-  // Needed to correctly update this.props.categories after parameters were merged in BuilderPage
+  // Needed to correctly update this.props.categories after parameters were merged in Builder
   componentWillReceiveProps() {
     // Updates the categories and their entries to have correct parameters
     this.internalCategories = this.generateInternalCategories();
