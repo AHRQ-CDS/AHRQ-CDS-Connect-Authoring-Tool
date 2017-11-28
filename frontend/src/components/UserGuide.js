@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 import React, { Component } from 'react';
 import tocbot from 'tocbot';
 import _ from 'lodash';
