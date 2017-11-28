@@ -1,7 +1,7 @@
-import Subpopulations from '../../../src/components/builder/Subpopulations';
-import Subpopulation from '../../../src/components/builder/Subpopulation';
-import { fullRenderComponent, createTemplateInstance } from '../../test_helpers';
-import { elementGroups } from '../../test_fixtures';
+import Subpopulations from '../../../components/builder/Subpopulations';
+import Subpopulation from '../../../components/builder/Subpopulation';
+import { fullRenderComponent, createTemplateInstance } from '../../../utils/test_helpers';
+import { elementGroups } from '../../../utils/test_fixtures';
 
 let component;
 let componentWithSubpopulations;

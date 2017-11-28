@@ -5,7 +5,6 @@ import FontAwesome from 'react-fontawesome';
 
 import Modal from '../elements/Modal';
 
-
 const API_BASE = process.env.REACT_APP_API_URL;
 const REPO_BASE = process.env.REACT_APP_REPO_URL;
 
@@ -70,13 +69,21 @@ export default class RepoUploadModal extends Component {
   uploadArtifact = (nid) => {
     const artifact = this.props.prepareArtifact();
     const auth = { username: this.state.userName, password: this.state.password };
-    const closeModal = this.closeModal;
-    post(`${API_BASE}/cql/publish`, { data: artifact, nid, auth, version: this.props.version })
-    .then((res) => {
-      console.log('Success');
-      closeModal();
-    })
-    .catch(() => this.setState({ page: ERROR }));
+    const { closeModal } = this;
+    const options = {
+      data: artifact,
+      nid,
+      auth,
+      version: this.props.version
+    };
+
+    post(`${API_BASE}/cql/publish`, options)
+      .then((res) => {
+        console.log('Success');
+        closeModal();
+      })
+      .catch(() => this.setState({ page: ERROR }));
+
     this.setState({ page: STATUS, artifactNID: nid });
   }
 

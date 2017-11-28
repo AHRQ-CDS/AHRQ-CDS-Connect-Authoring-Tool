@@ -1,9 +1,9 @@
 import _ from 'lodash';
 import Modal from 'react-modal';
-import ElementModal from '../../../src/components/builder/ElementModal';
-import { filterUnsuppressed } from '../../../src/helpers/utils';
-import { fullRenderComponent, ReactWrapper } from '../../test_helpers';
-import { elementGroups } from '../../test_fixtures';
+import ElementModal from '../../../components/builder/ElementModal';
+import { filterUnsuppressed } from '../../../helpers/utils';
+import { fullRenderComponent, ReactWrapper } from '../../../utils/test_helpers';
+import { elementGroups } from '../../../utils/test_fixtures';
 
 let component;
 let input;
@@ -31,7 +31,8 @@ const generateCategories = () => {
 const categories = generateCategories();
 
 beforeEach(() => {
-  component = fullRenderComponent(ElementModal,
+  component = fullRenderComponent(
+    ElementModal,
     {
       categories,
       selectedCategory: categories.find(g => g.name === 'All'),
@@ -40,9 +41,7 @@ beforeEach(() => {
     }
   );
 
-  internalModal = new ReactWrapper(
-    component.find(Modal).node.portal, true
-  );
+  internalModal = new ReactWrapper(component.find(Modal).node.portal, true);
 
   getInput = () => internalModal.find('.element-modal__search input');
 });
@@ -85,7 +84,7 @@ describe('with modal open', () => {
 
     setInputValue = (value) => {
       input.simulate('focus');
-      input.node.value = value;  // eslint-disable-line no-param-reassign
+      input.node.value = value; // eslint-disable-line no-param-reassign
       input.simulate('change');
     };
   });

@@ -7,8 +7,9 @@ import Logout from './auth/Logout';
 
 export default class Header extends Component {
   renderedAuth() {
-    const { isAuthenticated, authUser, authStatus, authStatusText, loginUser, logoutUser,
-      setAuthStatus } = this.props;
+    const {
+      isAuthenticated, authUser, authStatus, authStatusText, loginUser, logoutUser, setAuthStatus
+    } = this.props;
 
     if (isAuthenticated) {
       return (

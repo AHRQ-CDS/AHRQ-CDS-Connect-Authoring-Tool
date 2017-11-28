@@ -97,10 +97,9 @@ class ElementModal extends Component {
             onClick={ () => this.handleCategorySelected(cat) }
             onKeyDown={ e => this.enterKeyCheck(this.handleCategorySelected, cat, e) }>
               { cat.name }
-          </button>
-        ) }
+          </button>) }
       </aside>
-    )
+  )
 
   renderList = () => (
       <section className="element-modal__list" aria-label="Element List">
@@ -113,10 +112,9 @@ class ElementModal extends Component {
               <div className="button-style"><FontAwesome className='fa-fw fa-plus' name='plus' /></div>
               { elem.name }
               { elem.category && <span className="element-select__option-category">({ elem.category })</span> }
-          </button>
-        ) }
+          </button>) }
       </section>
-    )
+  )
 
   render() {
     const modalInputLabel = 'Search elements';

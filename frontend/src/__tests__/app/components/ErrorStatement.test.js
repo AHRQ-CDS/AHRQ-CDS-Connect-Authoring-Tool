@@ -1,5 +1,5 @@
-import ErrorStatement from '../../../src/components/builder/ErrorStatement';
-import { fullRenderComponent } from '../../test_helpers';
+import ErrorStatement from '../../../components/builder/ErrorStatement';
+import { fullRenderComponent } from '../../../utils/test_helpers';
 
 const updateParentStateMock = jest.fn();
 
@@ -13,10 +13,12 @@ beforeEach(() => {
     ],
     errorStatement: {
       statements: [
-        { condition: { label: null, value: null },
+        {
+          condition: { label: null, value: null },
           thenClause: '',
           child: null,
-          useThenClause: true },
+          useThenClause: true
+        }
       ],
       else: 'null'
     },
@@ -30,14 +32,18 @@ beforeEach(() => {
     ],
     errorStatement: {
       statements: [
-        { condition: { label: null, value: null },
+        {
+          condition: { label: null, value: null },
           thenClause: '',
           child: null,
-          useThenClause: true },
-        { condition: [{ label: null, value: null }],
+          useThenClause: true
+        },
+        {
+          condition: [{ label: null, value: null }],
           thenClause: '',
           child: null,
-          useThenClause: true }
+          useThenClause: true
+        }
       ],
       else: 'null'
     },

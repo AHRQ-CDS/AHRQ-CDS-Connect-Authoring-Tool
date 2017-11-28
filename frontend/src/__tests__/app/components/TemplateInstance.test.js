@@ -1,5 +1,5 @@
-import { createTemplateInstance } from '../../test_helpers';
-import { instanceTree } from '../../test_fixtures';
+import { createTemplateInstance } from '../../../utils/test_helpers';
+import { instanceTree } from '../../../utils/test_fixtures';
 
 const originalInstance = instanceTree.childInstances[0];
 

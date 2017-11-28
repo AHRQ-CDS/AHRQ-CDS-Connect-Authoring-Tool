@@ -8,6 +8,7 @@
  * This is mainly used by PM2 and our Docker image.
  */
 require('dotenv').config();
+
 const express = require('express');
 const proxy = require('express-http-proxy');
 const path = require('path');
@@ -25,8 +26,8 @@ if (proxyActive) {
   const apiPort = process.env.API_PROXY_PORT || 3001;
   app.use(process.env.REACT_APP_API_URL, proxy(`${apiHost}:${apiPort}`, {
     // By default, the API base URL (e.g., /authoring/api) isn't preserved, so we need to add it back
-    proxyReqPathResolver: req => `${process.env.REACT_APP_API_URL}${url.parse(req.url).path}` }
-  ));
+    proxyReqPathResolver: req => `${process.env.REACT_APP_API_URL}${url.parse(req.url).path}`
+  }));
 }
 
 app.get('/authoring/*', (req, res) => {

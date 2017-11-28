@@ -20,8 +20,7 @@ class StringParameter extends Component {
             name={this.props.id}
             value={this.props.value || ''}
             onChange={(event) => {
-              const name = event.target.name;
-              const value = event.target.value;
+              const { name, value } = event.target;
               this.props.updateInstance({ [name]: value });
             }}
           />

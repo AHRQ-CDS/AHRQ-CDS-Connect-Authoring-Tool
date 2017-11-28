@@ -4,7 +4,7 @@ import {
   EDIT_ARTIFACT_REQUEST, EDIT_ARTIFACT_SUCCESS, EDIT_ARTIFACT_FAILURE,
   DELETE_ARTIFACT_REQUEST, DELETE_ARTIFACT_SUCCESS, DELETE_ARTIFACT_FAILURE } from '../actions/types';
 
-export default function auth(state = {
+const defaultState = {
   isFetching: false,
   fetchStatus: null,
   isAdding: false,
@@ -13,7 +13,10 @@ export default function auth(state = {
   editStatus: null,
   isDeleting: false,
   deleteStatus: null,
-  artifacts: null }, action) {
+  artifacts: null
+};
+
+export default function auth(state = defaultState, action) {
   switch (action.type) {
     case ARTIFACTS_REQUEST:
       return Object.assign({}, state, { isFetching: true, fetchStatus: null });

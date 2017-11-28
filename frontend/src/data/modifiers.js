@@ -1,3 +1,5 @@
+/* eslint-disable object-curly-newline */
+
 // NOTE -- Any cqlTemplates/cqlLibraryFunctions that are `null` are currently in development
 // Any id's that are the same as cqlTemplates are pure coincidence. The id matches within
 // src/components/builder/modifiers while the cqlTemplate matches the cqlTemplate in app/data/cql/modifiers
@@ -6,7 +8,8 @@ const elementLists = ['list_of_observations', 'list_of_conditions', 'list_of_med
   'list_of_allergy_intolerances', 'list_of_encounters'];
 const everyElement = elementLists.concat(['boolean', 'system_quantity', 'observation', 'condition', 'medication',
   'procedure']);
-module.exports = [
+
+export default [
   // observations
   {
     id: 'VerifiedObservation',

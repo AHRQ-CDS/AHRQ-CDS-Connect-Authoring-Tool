@@ -5,12 +5,15 @@ import {
   SET_AUTH_STATUS
 } from '../actions/types';
 
-export default function auth(state = {
+const defaultState = {
   isAuthenticating: false,
   isAuthenticated: false,
   username: null,
   authStatus: null,
-  authStatusText: '' }, action) {
+  authStatusText: ''
+};
+
+export default function auth(state = defaultState, action) {
   const isAuthenticated = action.username != null;
 
   switch (action.type) {

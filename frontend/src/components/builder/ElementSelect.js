@@ -10,11 +10,11 @@ const getAllElements = categories => _.flatten(categories.map(cat => (
 )));
 
 const optionRenderer = option => (
-    <div className="element-select__option">
-      <span className="element-select__option-value">{option.name}</span>
-      { option.category && <span className="element-select__option-category">({option.category})</span> }
-    </div>
-  );
+  <div className="element-select__option">
+    <span className="element-select__option-value">{option.name}</span>
+    { option.category && <span className="element-select__option-category">({option.category})</span> }
+  </div>
+);
 
 class ElementSelect extends Component {
   constructor(props) {
@@ -50,8 +50,8 @@ class ElementSelect extends Component {
     });
 
     // Keep the category that is selected the same
-    const updatedCategory = this.state.categories.find(
-      g => g.name === this.state.selectedCategory.name);
+    const updatedCategory = this.state.categories.find(g =>
+      g.name === this.state.selectedCategory.name);
     this.onSelectedCategoryChange(updatedCategory);
   }
 
@@ -63,7 +63,7 @@ class ElementSelect extends Component {
       const paramsIndex = categoriesCopy.findIndex(cat => cat.name === 'Parameters');
       let parametersCategory;
       if (paramsIndex >= 0) {
-        parametersCategory = categoriesCopy.splice(paramsIndex, 1)[0];
+        [parametersCategory] = categoriesCopy.splice(paramsIndex, 1);
       } else {
         parametersCategory = { icon: 'sign-in', name: 'Parameters', entries: [] };
       }

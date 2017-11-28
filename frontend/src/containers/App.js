@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 
 import { loginUser, logoutUser, setAuthStatus, getCurrentUser } from '../actions/auth';
-import { setErrorMessage } from '../actions/errors';
+import setErrorMessage from '../actions/errors';
 
 import Header from '../components/Header';
 import Navbar from '../components/Navbar';
@@ -33,7 +33,9 @@ class App extends Component {
   }
 
   render() {
-    const { children, isAuthenticated, authUser, authStatus, authStatusText } = this.props;
+    const {
+      children, isAuthenticated, authUser, authStatus, authStatusText
+    } = this.props;
 
     return (
       <div className="app">

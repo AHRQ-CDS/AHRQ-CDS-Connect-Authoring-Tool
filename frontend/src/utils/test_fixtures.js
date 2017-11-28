@@ -1,3 +1,5 @@
+/* eslint-disable object-curly-newline */
+
 /**
  * Example TemplateInstances
  */

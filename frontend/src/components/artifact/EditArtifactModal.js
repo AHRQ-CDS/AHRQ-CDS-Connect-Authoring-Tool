@@ -6,7 +6,9 @@ import Modal from '../elements/Modal';
 
 export default class EditArtifactModal extends Component {
   render() {
-    const { name, version, handleInputChange, showModal, closeModal, saveModal, artifactEditing } = this.props;
+    const {
+      name, version, handleInputChange, showModal, closeModal, saveModal, artifactEditing
+    } = this.props;
     const nameID = artifactEditing ? artifactEditing.name : _.uniqueId('artifact-name-');
     const versionID = artifactEditing ? artifactEditing.version : _.uniqueId('artifact-version-');
 

@@ -120,7 +120,7 @@ class ConjunctionGroup extends Component {
     // TODO: update css/placement of button to match designs
 
     // Indenting is always possible, outdent only possilbe when not at root already
-     (
+    (
       <span className="indent-outdent-container">
         { this.getPath() !== '' ?
           <button
@@ -154,7 +154,7 @@ class ConjunctionGroup extends Component {
         onChange={ this.handleTypeChange }
         inputProps={{ 'aria-label': 'Select conjunction type', title: 'Select conjunction type' }}
       />
-    )
+  )
 
   render() {
     const elementNameParam = this.props.instance.parameters.find(param => param.id === 'element_name');
