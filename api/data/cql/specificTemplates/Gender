@@ -1,2 +1,2 @@
 define "<%-element_name%>": 
-  Patient.gender.value = <%- gender.value %>
+  Patient.gender.value = <% if(gender) { %><%- gender.value %><% } else { %>null<% } %>
