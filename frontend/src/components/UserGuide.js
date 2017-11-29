@@ -1,4 +1,4 @@
-/* eslint-disable max-len */
+/* eslint max-len: ["error", 130] */
 import React, { Component } from 'react';
 import tocbot from 'tocbot';
 import _ from 'lodash';
