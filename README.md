@@ -1,10 +1,12 @@
 # CDS Connect Authoring Tool
 
 ## About
+
 Developed by The MITRE Corporation, the CDS Connect Authoring Tool is a project aimed at simplifying the creation of production-ready CQL code. The project is based on "concept templates" (e.g. gender, HDL Cholesterol, etc.), which allow for additional clinical concepts to be included in the future. Concept modifiers are included to allow for more flexible definitions (e.g. most recent, value comparisons, etc.).
 
-## License
-TODO
+## Contributions
+
+For information about contributing to this project, please see [CONTRIBUTING](CONTRIBUTING.md).
 
 ## Development Details
 
@@ -120,3 +122,21 @@ To run the backend tests in a temporary docker container:
 ```bash
 docker run --rm -e "CI=true" -e "NODE_ENV=test" -w /usr/src/app/api cdsauthoringtool yarn test
 ```
+
+## LICENSE
+
+**NOTE: THE APACHE 2.0 LICENSE NOT YET BEEN APPROVED BY AHRQ.  UNTIL IT IS APPROVED, THIS LICENSE DOES NOT APPLY TO THE CDS AUTHORING TOOL.**
+
+Copyright 2016-2017 Agency for Healthcare Research and Quality
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
