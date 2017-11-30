@@ -1,10 +1,12 @@
 # CDS Connect Authoring Tool API
 
 ## About
+
 The CDS Connect Authoring Tool API provides a RESTful backend for the CDS Authoring Tool React web frontend.
 
-## License
-TODO
+## Contributions
+
+For information about contributing to this project, please see [CONTRIBUTING](../CONTRIBUTING.md).
 
 ## Development Details
 
@@ -29,6 +31,7 @@ By default, the project will attempt to convert CQL to ELM on download or publis
 * To run locally with Docker, install Docker and run: `docker run -p 8080:8080 cqframework/cql-translation-service:v1.2.16`
 
 ### Add / Remove / Adjust dependencies
+
 ```bash
 yarn add <thing> # add a package. add --dev if this is a development dependency.
 yarn add <thing>@<version> # will adjust version
@@ -77,3 +80,21 @@ yarn test # runs all api tests
 ### Docker
 
 For information on running the CDS Authoring Tool in Docker, see the main [README](../README.md).
+
+## LICENSE
+
+**NOTE: THE APACHE 2.0 LICENSE NOT YET BEEN APPROVED BY AHRQ.  UNTIL IT IS APPROVED, THIS LICENSE DOES NOT APPLY TO THE CDS AUTHORING TOOL.**
+
+Copyright 2016-2017 Agency for Healthcare Research and Quality
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
