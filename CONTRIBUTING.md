@@ -36,6 +36,7 @@ If you are planning to work on a reported bug, suggestion, or feature request, p
 ### Coding Practices
 
 Code that is contributed to this project should follow these practices:
+
 - Make changes in a personal [fork](https://help.github.com/articles/fork-a-repo/) of this repository
 - Use descriptive commit messages, referencing relevant issues as appropriate (e.g., "Fixes #555: Update component to...")
 - Follow the styles and conventions as enforced by the lint configurations and as evidenced by the existing code
@@ -49,7 +50,7 @@ Code that is contributed to this project should follow these practices:
 Before submitting a Pull Request for a code contribution:
 
 - [Rebase](https://git-scm.com/book/en/v2/Git-Branching-Rebasing) on master if your code is out of synch with master
-  - If you need help with this, submit your Pull Request without rebasing and indicate you need help
+    - If you need help with this, submit your Pull Request without rebasing and indicate you need help
 - Build the code (if applicable) and ensure there are no new warnings or errors
 - Run the tests and ensure that all tests pass
 - Run the linter and ensure that there are no linter warnings or errors
@@ -66,10 +67,10 @@ When project maintainers review the pull request, they will:
 - Run the project's unit tests and linters to ensure there are no violations
 - Deploy the code locally to ensure it works as expected
 - Review all code changes in detail, looking for:
-  - potential bugs, regressions, security issues, or unintended consequences
-  - edge cases that may not be properly handled
-  - application of generally accepted best practices
-  - adequate unit tests and documentation
+    - potential bugs, regressions, security issues, or unintended consequences
+    - edge cases that may not be properly handled
+    - application of generally accepted best practices
+    - adequate unit tests and documentation
 
 ### If the Pull Request Passes Review
 
