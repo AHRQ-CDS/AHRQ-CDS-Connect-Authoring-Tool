@@ -7,9 +7,12 @@ function login(req, res, next) {
     req.logout();
   }
 
-  // Always use LDAP Strategy - add Local Strategy based on configuration
-  const strategies = ['ldapauth'];
-  if (config.get('auth.useLocalStrategy')) {
+  // Add strategies for authentication based on configuration
+  const strategies = [];
+  if (config.get('auth.ldap.active')) {
+    strategies.push('ldapauth');
+  }
+  if (config.get('auth.localStrategy.active')) {
     strategies.push('local');
   }
 

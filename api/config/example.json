@@ -20,6 +20,7 @@
       "secret": "secret"
     },
     "ldap": {
+      "active": true,
       "server": {
         "url": "ldap://localhost:389",
         "bindDN": "cn=root",
@@ -28,7 +29,7 @@
         "searchFilter": "(uid={{username}})"
       }
     },
-    "useLocalStrategy": {
+    "localStrategy": {
       "active": false,
       "file": "demo_users.json"
     }
