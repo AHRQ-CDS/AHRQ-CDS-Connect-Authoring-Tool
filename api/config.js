@@ -111,16 +111,11 @@ const config = convict({
     },
     local: {
       active: {
-        doc: 'Indicates if the local authentication strategy should be used',
+        doc: 'Indicates if the local authentication strategy should be used. If active, a ' + 
+          '`config/local-users.json` file must be created to specify credentials.',
         format: 'Boolean',
         default: false,
-        env: 'AUTH_LOCAL_STRATEGY_ACTIVE',
-      },
-      file: {
-        doc: 'File to authenticate user credentials against',
-        format: 'String',
-        default: 'demo_users.json',
-        env: 'AUTH_LOCAL_STRATEGY_FILEPATH'
+        env: 'AUTH_LOCAL_ACTIVE',
       }
     }
   },

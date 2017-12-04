@@ -1,7 +1,12 @@
 // Load the username/passwords that will be authenticated using the local authentication strategy
-const config = require('../config');
-const filePath = '../config/' + config.get('auth.local.file');
-const users = require(filePath);
+let users = {};
+try {
+  users = require('../config/local-users.json');
+} catch (err) {
+  if (err.code === "MODULE_NOT_FOUND") {
+    console.log("No users specified.")
+  }
+}
 
 const userNames = Object.keys(users);
 
