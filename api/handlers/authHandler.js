@@ -12,7 +12,7 @@ function login(req, res, next) {
   if (config.get('auth.ldap.active')) {
     strategies.push('ldapauth');
   }
-  if (config.get('auth.localStrategy.active')) {
+  if (config.get('auth.local.active')) {
     strategies.push('local');
   }
 

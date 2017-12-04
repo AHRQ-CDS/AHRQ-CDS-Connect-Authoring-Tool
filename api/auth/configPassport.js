@@ -10,7 +10,7 @@ const findLocalUserById = require('./localAuthUsers').findByUsername;
 
 function getLdapConfiguration(req, callback) {
   // Replace {{username}} and {{password}} with values from request
-  const ldapConfig = JSON.parse(JSON.stringify(config.get('auth.ldap.server'))
+  const ldapConfig = JSON.parse(JSON.stringify(config.get('auth.ldap'))
     .replace(/\{\{username\}\}/g, req.body.username)
     .replace(/\{\{password\}\}/g, req.body.password)
   );
@@ -49,7 +49,7 @@ module.exports = (app) => {
   }
 
   // Configure authentication using Passport Local Strategy - enabled based on configuration
-  if (config.get('auth.localStrategy.active')) {
+  if (config.get('auth.local.active')) {
     passport.use(new LocalStrategy(getLocalConfiguration));
   }
 

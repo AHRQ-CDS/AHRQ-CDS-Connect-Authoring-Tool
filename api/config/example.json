@@ -29,7 +29,7 @@
         "searchFilter": "(uid={{username}})"
       }
     },
-    "localStrategy": {
+    "local": {
       "active": false,
       "file": "demo_users.json"
     }
