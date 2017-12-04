@@ -31,7 +31,6 @@
     },
     "local": {
       "active": false,
-      "file": "demo_users.json"
     }
   },
   "tlsRejectUnauthorized": "1"
