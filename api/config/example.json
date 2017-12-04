@@ -28,7 +28,10 @@
         "searchFilter": "(uid={{username}})"
       }
     },
-    "useLocalStrategy": false
+    "useLocalStrategy": {
+      "active": false,
+      "file": "demo_users.json"
+    }
   },
   "tlsRejectUnauthorized": "1"
 }

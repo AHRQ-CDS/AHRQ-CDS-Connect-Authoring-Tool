@@ -104,10 +104,18 @@ const config = convict({
       }
     },
     useLocalStrategy: {
-      doc: 'Indicates if the local auth strategy should be used',
-      format: 'Boolean',
-      default: false,
-      env: 'AUTH_USE_LOCAL_STRATEGY',
+      active: {
+        doc: 'Indicates if the local auth strategy should be used',
+        format: 'Boolean',
+        default: false,
+        env: 'AUTH_USE_LOCAL_STRATEGY',
+      },
+      file: {
+        doc: 'File to authenticate user credentials against',
+        fomrat: 'String',
+        default: 'demo_users.json',
+        env: 'AUTH_LOCAL_STRATEGY_FILEPATH'
+      }
     }
   },
   tlsRejectUnauthorized: {
