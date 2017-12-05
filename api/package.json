@@ -20,6 +20,7 @@
     "passport-ldapauth": "^2.0.0",
     "passport-local": "^1.0.0",
     "request": "^2.83.0",
+    "request-promise-native": "^1.0.5",
     "slug": "^0.9.1",
     "tmp": "^0.0.33",
     "validator": "^9.1.1"
