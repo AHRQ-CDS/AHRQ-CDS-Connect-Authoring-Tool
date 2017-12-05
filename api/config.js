@@ -67,6 +67,12 @@ const config = convict({
       }
     },
     ldap: {
+      active: {
+        doc: 'Indicates if the LDAP authentication strategy should be used',
+        format: 'Boolean',
+        default: true,
+        env: 'AUTH_LDAP_ACTIVE',
+      },
       server: {
         doc: 'LDAP config passed into passport for authentication.  The tokens `{{username}}` and `{{password}}`' +
           'will be replaced during authentication with the authenticating username and password.',
@@ -103,11 +109,14 @@ const config = convict({
         }
       }
     },
-    useLocalStrategy: {
-      doc: 'Indicates if the local auth strategy should be used',
-      format: 'Boolean',
-      default: false,
-      env: 'AUTH_USE_LOCAL_STRATEGY',
+    local: {
+      active: {
+        doc: 'Indicates if the local authentication strategy should be used. If active, a ' + 
+          '`config/local-users.json` file must be created to specify credentials.',
+        format: 'Boolean',
+        default: false,
+        env: 'AUTH_LOCAL_ACTIVE',
+      }
     }
   },
   tlsRejectUnauthorized: {

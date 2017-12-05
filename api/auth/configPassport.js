@@ -44,10 +44,12 @@ module.exports = (app) => {
   app.use(session(sess));
 
   // Configure authentication using Passport LDAP Strategy
-  passport.use(new LdapStrategy(getLdapConfiguration));
+  if (config.get('auth.ldap.active')) {
+    passport.use(new LdapStrategy(getLdapConfiguration));
+  }
 
   // Configure authentication using Passport Local Strategy - enabled based on configuration
-  if (config.get('auth.useLocalStrategy')) {
+  if (config.get('auth.local.active')) {
     passport.use(new LocalStrategy(getLocalConfiguration));
   }
 

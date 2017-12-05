@@ -2,6 +2,7 @@
 
 # local config
 /config/local.*
+/config/local-users.*
 
 # dependencies
 /node_modules
