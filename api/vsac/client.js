@@ -4,7 +4,7 @@
  */
 const rpn = require('request-promise-native');
 
-const VSAC_ENDPOINT = 'https://vsac.nlm.nih.gov/vsac/ws'
+const VSAC_ENDPOINT = 'https://vsac.nlm.nih.gov/vsac';
 
 /**
  * Gets a ticket granting ticket.  This is essentially a session token that is valid for 8 hours.
@@ -17,7 +17,7 @@ const VSAC_ENDPOINT = 'https://vsac.nlm.nih.gov/vsac/ws'
 function getTicketGrantingTicket(username, password) {
   const options = {
     method: 'POST',
-    url: `${VSAC_ENDPOINT}/Ticket`,
+    url: `${VSAC_ENDPOINT}/ws/Ticket`,
     form: { username, password }
   };
   return rpn(options);
@@ -33,13 +33,30 @@ function getTicketGrantingTicket(username, password) {
 function getServiceTicket(ticketGrantingTicket) {
   const options = {
     method: 'POST',
-    url: `${VSAC_ENDPOINT}/Ticket/${ticketGrantingTicket}`,
+    url: `${VSAC_ENDPOINT}/ws/Ticket/${ticketGrantingTicket}`,
     form: { service: 'http://umlsks.nlm.nih.gov' }
+  };
+  return rpn(options);
+}
+
+/**
+ * Gets the details of a value set based on an OID. A service ticket is required to make this API call.
+ *
+ * @param {string} oid the OID of the value set to retrieve
+ * @param {string} serviceTicket the service ticket to be used when making the API call
+ * @return {Promise<string>} the XML that contains all value set details
+ */
+function getVSDetailsByOID(oid, serviceTicket) {
+  const options = {
+    method: 'GET',
+    uri: `${VSAC_ENDPOINT}/svs/RetrieveValueSet`,
+    qs: { id: oid, ticket: serviceTicket }
   };
   return rpn(options);
 }
 
 module.exports = {
   getTicketGrantingTicket,
-  getServiceTicket
+  getServiceTicket,
+  getVSDetailsByOID
 };
