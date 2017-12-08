@@ -2,7 +2,6 @@
  * This is a simple command-line class for testing the VSAC API client.
  */
 const client = require('./client');
-const { parseVsacDetails} = require('./parseVsac');
 
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
 
@@ -27,8 +26,7 @@ client.getTicketGrantingTicket(user, pass)
     return client.getVSDetailsByOID(oid, t);
   })
   .then(details => {
-    const parsedVS = parseVsacDetails(details);
-    console.log('Parsed VS details:', parsedVS);
+    console.log('Parsed VS details:', details);
   })
   .catch(e => {
     console.log('Error:', e.message);
