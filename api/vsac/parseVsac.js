@@ -4,8 +4,8 @@ function parseVsacDetails(vsacXML) {
   return new Promise((resolve, reject) => {
     parseString(vsacXML, (err, res) => {
       if (err) { reject(err); }
-      resolve(res); 
-    })
+      resolve(res);
+    });
   })
   .then(parsedXML => {
     // Pull out the OID, version, and display name for the valueset.
@@ -18,8 +18,8 @@ function parseVsacDetails(vsacXML) {
 
     // Loop over the codes and build the JSON.
     const codeList = [];
-    for (let concept in conceptList) {
-      codeList.push(conceptList[concept]['$'])
+    for (let i = 0; i < conceptList.length; i++) {
+      codeList.push(conceptList[i]['$'])
     }
 
     const parsedVS = {
