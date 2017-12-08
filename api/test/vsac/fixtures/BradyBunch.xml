@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<ns0:RetrieveValueSetResponse xmlns:ns0="urn:ihe:iti:svs:2008" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <ns0:ValueSet ID="1.00.000.0.000000.0.000.0.0000" displayName="Brady Bunch" version="19740308">
+        <ns0:ConceptList>
+            <ns0:Concept code="1" codeSystem="2.00.000.0.000000.0.0" codeSystemName="BRADY" codeSystemVersion="1.00" displayName="Mike Brady"/>
+            <ns0:Concept code="2" codeSystem="2.00.000.0.000000.0.0" codeSystemName="BRADY" codeSystemVersion="1.00" displayName="Carol Brady"/>
+            <ns0:Concept code="10" codeSystem="2.00.000.0.000000.0.0" codeSystemName="BRADY" codeSystemVersion="1.00" displayName="Greg Brady"/>
+            <ns0:Concept code="11" codeSystem="2.00.000.0.000000.0.0" codeSystemName="BRADY" codeSystemVersion="1.00" displayName="Marcia Brady"/>
+            <ns0:Concept code="12" codeSystem="2.00.000.0.000000.0.0" codeSystemName="BRADY" codeSystemVersion="1.00" displayName="Peter Brady"/>
+            <ns0:Concept code="13" codeSystem="2.00.000.0.000000.0.0" codeSystemName="BRADY" codeSystemVersion="1.00" displayName="Jan Brady"/>
+            <ns0:Concept code="14" codeSystem="2.00.000.0.000000.0.0" codeSystemName="BRADY" codeSystemVersion="1.00" displayName="Bobby Brady"/>
+            <ns0:Concept code="15" codeSystem="2.00.000.0.000000.0.0" codeSystemName="BRADY" codeSystemVersion="1.00" displayName="Cindy Brady"/>
+        </ns0:ConceptList>
+    </ns0:ValueSet>
+</ns0:RetrieveValueSetResponse>
