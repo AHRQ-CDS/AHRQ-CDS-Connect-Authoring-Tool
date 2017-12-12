@@ -29,7 +29,7 @@ module.exports = (app) => {
 
   // Routing for repository
   app.use('/authoring/api/repository', repository);
-  
+
   // Routing for VSAC
   app.use('/authoring/api/vsac', vsacRouter);
 
