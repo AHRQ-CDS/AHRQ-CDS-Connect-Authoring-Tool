@@ -4,6 +4,7 @@ const cqlRouter = require('./routers/cqlRouter');
 const expressionRouter = require('./routers/expressionRouter');
 const authRouter = require('./routers/authRouter.js');
 const repository = require('./routers/repository');
+const vsacRouter = require('./routers/vsacRouter');
 
 module.exports = (app) => {
   // Routing for API check
@@ -28,6 +29,9 @@ module.exports = (app) => {
 
   // Routing for repository
   app.use('/authoring/api/repository', repository);
+
+  // Routing for VSAC
+  app.use('/authoring/api/vsac', vsacRouter);
 
   // Catch all other Api calls
   app.get('/authoring/api/*', (req, res) => { res.sendStatus(404); });
