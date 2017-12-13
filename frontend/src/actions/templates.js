@@ -42,7 +42,7 @@ export default function loadTemplates() {
   return (dispatch) => {
     dispatch(requestTemplates());
 
-    sendTemplatesRequest()
+    return sendTemplatesRequest()
       .then(data => dispatch(loadTemplatesSuccess(data)))
       .catch(error => dispatch(loadTemplatesFailure(error)));
   };

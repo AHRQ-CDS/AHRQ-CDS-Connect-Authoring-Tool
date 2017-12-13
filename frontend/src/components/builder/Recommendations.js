@@ -5,6 +5,8 @@ import Recommendation from './Recommendation';
 
 class Recommendations extends Component {
   static propTypes = {
+    uniqueIdCounter: PropTypes.number.isRequired,
+    incrementUniqueIdCounter: PropTypes.func.isRequired,
     recommendations: PropTypes.array.isRequired,
     updateRecommendations: PropTypes.func.isRequired,
     subpopulations: PropTypes.array.isRequired,

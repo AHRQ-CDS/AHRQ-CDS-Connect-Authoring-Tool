@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import _ from 'lodash';
 
 /**
@@ -6,22 +7,25 @@ import _ from 'lodash';
  * and a function called UpdateInstance that takes an object with
  * key-value pairs that represents that state of the templateInstance
  */
-class StringParameter extends Component {
+export default class StringParameter extends Component {
   render() {
-    const id = _.uniqueId('parameter-');
+    const {
+      id, name, value, updateInstance
+    } = this.props;
+    const formId = _.uniqueId('parameter-');
 
     return (
       <div className="form__group">
-        <label htmlFor={id}>
-          {this.props.name}:
+        <label htmlFor={formId}>
+          {name}:
 
-          <input id={id}
+          <input
+            id={formId}
             type="text"
-            name={this.props.id}
-            value={this.props.value || ''}
+            name={id}
+            value={value || ''}
             onChange={(event) => {
-              const { name, value } = event.target;
-              this.props.updateInstance({ [name]: value });
+              updateInstance({ [event.targetname]: event.targetvalue });
             }}
           />
         </label>
@@ -30,4 +34,9 @@ class StringParameter extends Component {
   }
 }
 
-export default StringParameter;
+StringParameter.propTypes = {
+  id: PropTypes.string.isRequired,
+  name: PropTypes.string.isRequired,
+  value: PropTypes.string.isRequired,
+  updateInstance: PropTypes.func.isRequired
+};

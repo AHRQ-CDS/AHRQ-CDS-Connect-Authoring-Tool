@@ -1,5 +1,4 @@
 /* eslint-disable no-multi-spaces */
-
 import changeCase from 'change-case';
 
 export default function changeToCase(string, desiredCase) {

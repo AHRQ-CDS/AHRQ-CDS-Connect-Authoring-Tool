@@ -1,8 +1,8 @@
-import {
-  SET_ERROR_MESSAGE
-} from '../actions/types';
+import { SET_ERROR_MESSAGE } from '../actions/types';
 
-export default function errors(state = { errorMessage: '' }, action) {
+const defaultState = { errorMessage: '' };
+
+export default function errors(state = defaultState, action) {
   switch (action.type) {
     case SET_ERROR_MESSAGE:
       return Object.assign({}, state, { errorMessage: action.errorMessage });

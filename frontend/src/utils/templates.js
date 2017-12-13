@@ -1,5 +1,10 @@
 import _ from 'lodash';
 
+/**
+ * Returns an instance with the given template and children and a unique id.
+ * @param {Node} template - The event template to clone
+ * @param {Node} children - Child instances to add to template instance
+ */
 export default function createTemplateInstance(template, children) {
   // create an instance (copy) of the given template (ex. AND template)
   const instance = _.cloneDeep(template);
