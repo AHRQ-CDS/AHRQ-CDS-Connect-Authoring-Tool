@@ -10,8 +10,7 @@ export default class EditArtifactModal extends Component {
   constructor(props) {
     super(props);
 
-    const { artifact } = props;
-
+    const { artifactEditing: artifact } = props;
     this.state = {
       name: artifact ? artifact.name : '',
       version: artifact ? artifact.version : ''
@@ -19,7 +18,7 @@ export default class EditArtifactModal extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    const { artifact } = nextProps;
+    const { artifactEditing: artifact } = nextProps;
 
     if (artifact) {
       this.setState({ name: artifact.name, version: artifact.version });

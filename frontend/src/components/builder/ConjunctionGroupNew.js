@@ -4,7 +4,7 @@ import Select from 'react-select';
 import FontAwesome from 'react-fontawesome';
 
 import TemplateInstance from './TemplateInstance';
-import ElementSelect from './ElementSelect';
+// import ElementSelect from './ElementSelect';
 import StringParameter from './parameters/StringParameter';
 
 import createTemplateInstance from '../../utils/templates';
@@ -234,13 +234,13 @@ export default class ConjunctionGroupNew extends Component {
     return (
       <div className={conjunctionGroupClassName}>
         {this.renderHeader()}
-        {this.renderChildren()}
+        {/* {this.renderChildren()} */}
 
-        <ElementSelect
+        {/* <ElementSelect
           categories={this.props.templates}
           onSuggestionSelected={this.addChild}
           booleanParameters={this.props.booleanParameters}
-        />
+        /> */}
       </div>
     );
   }

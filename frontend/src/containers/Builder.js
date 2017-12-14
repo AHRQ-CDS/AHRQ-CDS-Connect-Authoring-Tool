@@ -10,7 +10,7 @@ import _ from 'lodash';
 
 import {
   setStatusMessage, downloadArtifact, saveArtifact, editArtifact, loadArtifact, updateArtifact,
-  initializeArtifact
+  initializeArtifact, updateAndSaveArtifact
 } from '../actions/artifacts';
 import loadTemplates from '../actions/templates';
 
@@ -181,7 +181,7 @@ class Builder extends Component {
     const target = findValueAtPath(valuePath, path);
     target.modifiers = modifiers;
 
-    this.props.updateArtifact({ [treeName]: tree });
+    this.props.updateArtifact(this.props.artifact, { [treeName]: tree });
   }
 
   // ----------------------- ARTIFACTS ------------------------------------- //
@@ -208,7 +208,7 @@ class Builder extends Component {
   }
 
   handleEditArtifact = (name, version) => {
-    this.props.updateArtifact({ name, version });
+    this.props.updateAndSaveArtifact(this.props.artifact, { name, version });
     this.closeEditArtifactModal(false);
   }
 
@@ -228,9 +228,9 @@ class Builder extends Component {
     if ('array' in treeData) {
       const index = treeData.index;
       treeData.array[index] = tree;
-      this.props.updateArtifact({ [treeName]: treeData.array });
+      this.props.updateArtifact(this.props.artifact, { [treeName]: treeData.array });
     } else {
-      this.props.updateArtifact({ [treeName]: tree });
+      this.props.updateArtifact(this.props.artifact, { [treeName]: tree });
     }
   }
 
@@ -496,7 +496,8 @@ Builder.propTypes = {
   setStatusMessage: PropTypes.func.isRequired,
   downloadArtifact: PropTypes.func.isRequired,
   saveArtifact: PropTypes.func.isRequired,
-  editArtifact: PropTypes.func.isRequired
+  editArtifact: PropTypes.func.isRequired,
+  updateAndSaveArtifact: PropTypes.func.isRequired
 };
 
 // these props are used for dispatching actions
@@ -509,7 +510,8 @@ function mapDispatchToProps(dispatch) {
     setStatusMessage,
     downloadArtifact,
     saveArtifact,
-    editArtifact
+    editArtifact,
+    updateAndSaveArtifact
   }, dispatch);
 }
 

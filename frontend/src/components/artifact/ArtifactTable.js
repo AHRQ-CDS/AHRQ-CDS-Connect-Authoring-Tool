@@ -5,6 +5,8 @@ import FontAwesome from 'react-fontawesome';
 
 import renderDate from '../../utils/dates';
 import { sortMostRecent } from '../../utils/sort';
+import artifactProps from '../../prop-types/artifact';
+
 import Modal from '../elements/Modal';
 import EditArtifactModal from './EditArtifactModal';
 
@@ -22,8 +24,8 @@ export default class ArtifactTable extends Component {
 
   // ----------------------- EDIT ARTIFACT MODAL --------------------------- //
 
-  openEditArtifactModal = () => {
-    this.setState({ showEditArtifactModal: true });
+  openEditArtifactModal = (artifact) => {
+    this.setState({ artifactEditing: artifact, showEditArtifactModal: true });
   }
 
   closeEditArtifactModal = () => {
@@ -31,7 +33,7 @@ export default class ArtifactTable extends Component {
   }
 
   handleEditArtifact = (name, version) => {
-    this.props.updateArtifact({ name, version });
+    this.props.updateAndSaveArtifact(this.state.artifactEditing, { name, version });
     this.closeEditArtifactModal(false);
   }
 
@@ -147,7 +149,8 @@ export default class ArtifactTable extends Component {
 }
 
 ArtifactTable.propTypes = {
-  artifacts: PropTypes.array,
+  artifacts: PropTypes.arrayOf(artifactProps),
   editArtifact: PropTypes.func.isRequired,
-  deleteArtifact: PropTypes.func.isRequired
+  deleteArtifact: PropTypes.func.isRequired,
+  updateAndSaveArtifact: PropTypes.func.isRequired
 };

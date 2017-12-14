@@ -37,14 +37,22 @@ export function setStatusMessage(statusType) {
 
 // ------------------------- UPDATE ARTIFACT ------------------------------- //
 
-export function updateArtifact(props) {
+export function updateArtifact(artifactToUpdate, props) {
   return (dispatch, getState) => {
-    const artifact = Object.assign({}, getState().artifacts.artifact, props);
+    const artifact = Object.assign({}, artifactToUpdate, props);
 
     return dispatch({
       type: UPDATE_ARTIFACT,
       artifact
     });
+  };
+}
+
+export function updateAndSaveArtifact(artifactToUpdate, props) {
+  return (dispatch, getState) => {
+    const artifact = Object.assign({}, artifactToUpdate, props);
+
+    return dispatch(editArtifact(artifact));
   };
 }
 
@@ -397,16 +405,8 @@ function editArtifactFailure(error) {
 }
 
 function sendEditArtifactRequest(artifact) {
-  const artifactToUpdate = {
-    name: artifact.name,
-    version: artifact.version,
-    expTreeInclude: artifact.expTreeInclude,
-    expTreeExclude: artifact.expTreeExclude,
-    _id: artifact._id
-  };
-
   return new Promise((resolve, reject) => {
-    axios.put(`${API_BASE}/artifacts`, artifactToUpdate)
+    axios.put(`${API_BASE}/artifacts`, artifact)
       .then(result => resolve(result.data))
       .catch(error => reject(error));
   });

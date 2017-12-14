@@ -67,6 +67,7 @@ export default function auth(state = defaultState, action) {
       });
     case EDIT_ARTIFACT_SUCCESS:
       return Object.assign({}, state, {
+        artifact: action.artifact,
         statusMessage: `Last saved ${time}.`,
         editArtifact: { isEditing: false, editStatus: 'success' }
       });
