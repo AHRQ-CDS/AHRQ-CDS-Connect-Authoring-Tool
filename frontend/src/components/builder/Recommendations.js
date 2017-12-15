@@ -3,13 +3,14 @@ import PropTypes from 'prop-types';
 import update from 'immutability-helper';
 import Recommendation from './Recommendation';
 
-class Recommendations extends Component {
+let uniqueIdCounter = 0;
+
+export default class Recommendations extends Component {
   static propTypes = {
-    uniqueIdCounter: PropTypes.number.isRequired,
-    incrementUniqueIdCounter: PropTypes.func.isRequired,
-    recommendations: PropTypes.array.isRequired,
+    artifact: PropTypes.object.isRequired,
+    templates: PropTypes.array.isRequired,
     updateRecommendations: PropTypes.func.isRequired,
-    subpopulations: PropTypes.array.isRequired,
+    updateSubpopulations: PropTypes.func.isRequired,
     setActiveTab: PropTypes.func.isRequired
   }
 
@@ -22,7 +23,7 @@ class Recommendations extends Component {
   }
 
   componentDidMount() {
-    if (this.props.recommendations.length === 0) {
+    if (this.props.artifact.recommendations.length === 0) {
       this.addRecommendation();
     }
   }
@@ -33,31 +34,30 @@ class Recommendations extends Component {
 
   addRecommendation = () => {
     const newRec = {
-      uid: `rec-${this.props.uniqueIdCounter}`,
+      uid: `rec-${++uniqueIdCounter}`, // eslint-disable-line no-plusplus
       grade: 'A',
       subpopulations: [],
       text: '',
       rationale: ''
     };
-    this.props.incrementUniqueIdCounter();
-    const newRecs = this.props.recommendations.concat([newRec]);
-    this.props.updateRecommendations({ recommendations: newRecs });
+    const newRecs = this.props.artifact.recommendations.concat([newRec]);
+    this.props.updateRecommendations(newRecs);
   }
 
   updateRecommendation = (uid, newValues) => {
-    const index = this.props.recommendations.findIndex(rec => rec.uid === uid);
-    const newRecs = update(this.props.recommendations, {
+    const index = this.props.artifact.recommendations.findIndex(rec => rec.uid === uid);
+    const newRecs = update(this.props.artifact.recommendations, {
       [index]: { $merge: newValues }
     });
-    this.props.updateRecommendations({ recommendations: newRecs });
+    this.props.updateRecommendations(newRecs);
   }
 
   removeRecommendation = (uid) => {
-    const index = this.props.recommendations.findIndex(rec => rec.uid === uid);
-    const newRecs = update(this.props.recommendations, {
+    const index = this.props.artifact.recommendations.findIndex(rec => rec.uid === uid);
+    const newRecs = update(this.props.artifact.recommendations, {
       $splice: [[index, 1]]
     });
-    this.props.updateRecommendations({ recommendations: newRecs });
+    this.props.updateRecommendations(newRecs);
   }
 
   render() {
@@ -65,7 +65,7 @@ class Recommendations extends Component {
       <div className="recommendations">
         {
           // TODO: Leaving this commented out for now in case we decide to go back to it
-          /* {(this.props.recommendations && this.props.recommendations.length > 1)
+          /* {(this.props.artifact.recommendations && this.props.artifact.recommendations.length > 1)
           ? <p className="title is-5">
               Deliver
               <span className="field recommendations__mode">
@@ -85,20 +85,21 @@ class Recommendations extends Component {
         } */}
 
         {
-          (this.props.recommendations && this.props.recommendations.length > 1)
+          (this.props.artifact.recommendations && this.props.artifact.recommendations.length > 1)
           ? <p className="title is-5">Deliver first recommendation</p>
           : null
         }
 
-        {this.props.recommendations && this.props.recommendations.map(rec => (
+        {this.props.artifact.recommendations && this.props.artifact.recommendations.map(rec => (
             <Recommendation
               key={rec.uid}
+              artifact={this.props.artifact}
+              templates={this.props.templates}
               rec={rec}
               onUpdate={this.updateRecommendation}
               onRemove={this.removeRecommendation}
-              recommendations={this.props.recommendations}
               updateRecommendations={this.props.updateRecommendations}
-              subpopulations={this.props.subpopulations}
+              updateSubpopulations={this.props.updateSubpopulations}
               setActiveTab={this.props.setActiveTab} />
           ))}
         <button className="button primary-button" onClick={this.addRecommendation}>
@@ -108,5 +109,3 @@ class Recommendations extends Component {
     );
   }
 }
-
-export default Recommendations;

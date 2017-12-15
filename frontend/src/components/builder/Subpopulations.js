@@ -5,41 +5,39 @@ import _ from 'lodash';
 import Subpopulation from './Subpopulation';
 import createTemplateInstance from '../../utils/templates';
 
-class Subpopulations extends Component {
+export default class Subpopulations extends Component {
   static propTypes = {
-    subpopulations: PropTypes.array.isRequired,
+    artifact: PropTypes.object.isRequired,
     updateSubpopulations: PropTypes.func.isRequired,
-    categories: PropTypes.array.isRequired,
+    templates: PropTypes.array.isRequired,
     addInstance: PropTypes.func.isRequired,
     editInstance: PropTypes.func.isRequired,
     updateInstanceModifiers: PropTypes.func.isRequired,
     deleteInstance: PropTypes.func.isRequired,
-    saveInstance: PropTypes.func.isRequired,
     getAllInstances: PropTypes.func.isRequired,
     updateRecsSubpop: PropTypes.func.isRequired,
     checkSubpopulationUsage: PropTypes.func.isRequired,
     booleanParameters: PropTypes.array.isRequired,
-    name: PropTypes.string.isRequired,
-    showPresets: PropTypes.func.isRequired
+    name: PropTypes.string.isRequired
   };
 
   constructor(props) {
     super(props);
 
-    const operations = this.props.categories.find(g => g.name === 'Operations');
+    const operations = this.props.templates.find(g => g.name === 'Operations');
     const andTemplate = operations.entries.find(e => e.name === 'And');
     this.baseTemplate = (andTemplate);
 
     this.state = {
-      subpopulations: this.props.subpopulations.filter(sp => !sp.special), // Don't want to allow user interaction with the two default subpopulations added by the system
-      numOfSpecialSubpopulations: this.props.subpopulations.filter(sp => sp.special).length
+      subpopulations: this.props.artifact.subpopulations.filter(sp => !sp.special), // Don't want to allow user interaction with the two default subpopulations added by the system
+      numOfSpecialSubpopulations: this.props.artifact.subpopulations.filter(sp => sp.special).length
     };
   }
 
   componentWillReceiveProps(nextProps) {
     this.setState({
-      subpopulations: nextProps.subpopulations.filter(sp => !sp.special),
-      numOfSpecialSubpopulations: nextProps.subpopulations.filter(sp => sp.special).length
+      subpopulations: nextProps.artifact.subpopulations.filter(sp => !sp.special),
+      numOfSpecialSubpopulations: nextProps.artifact.subpopulations.filter(sp => sp.special).length
     });
   }
 
@@ -49,7 +47,7 @@ class Subpopulations extends Component {
     newSubpopulation.path = '';
     newSubpopulation.subpopulationName = `Subpopulation ${this.state.subpopulations.length + 1}`;
     newSubpopulation.expanded = true;
-    const newSubpopulations = this.props.subpopulations.concat([newSubpopulation]);
+    const newSubpopulations = this.props.artifact.subpopulations.concat([newSubpopulation]);
 
     this.props.updateSubpopulations(newSubpopulations);
   }
@@ -60,8 +58,8 @@ class Subpopulations extends Component {
       // eslint-disable-next-line no-alert
       alert('Subpopulation in use');
     } else {
-      const newSubpopulations = _.cloneDeep(this.props.subpopulations);
-      const subpopulationIndex = this.props.subpopulations.findIndex(sp => sp.uniqueId === uniqueId);
+      const newSubpopulations = _.cloneDeep(this.props.artifact.subpopulations);
+      const subpopulationIndex = this.props.artifact.subpopulations.findIndex(sp => sp.uniqueId === uniqueId);
       newSubpopulations.splice(subpopulationIndex, 1);
 
       this.props.updateSubpopulations(newSubpopulations);
@@ -69,8 +67,8 @@ class Subpopulations extends Component {
   }
 
   setSubpopulationName = (name, uniqueId) => {
-    const newSubpopulations = _.cloneDeep(this.props.subpopulations);
-    const subpopulationIndex = this.props.subpopulations.findIndex(sp => sp.uniqueId === uniqueId);
+    const newSubpopulations = _.cloneDeep(this.props.artifact.subpopulations);
+    const subpopulationIndex = this.props.artifact.subpopulations.findIndex(sp => sp.uniqueId === uniqueId);
     newSubpopulations[subpopulationIndex].subpopulationName = name;
 
     this.props.updateSubpopulations(newSubpopulations);
@@ -93,11 +91,9 @@ class Subpopulations extends Component {
               editInstance={ this.props.editInstance }
               updateInstanceModifiers={ this.props.updateInstanceModifiers }
               deleteInstance={ this.props.deleteInstance }
-              saveInstance={ this.props.saveInstance }
               getAllInstances={ this.props.getAllInstances }
-              showPresets={ this.props.showPresets }
-              setPreset={ this.props.setPreset }
-              categories={ this.props.categories } />
+              templates={ this.props.templates }
+              artifact={this.props.artifact} />
           ))}
         <button className="button primary-button" onClick={ this.addSubpopulation }>
           New subpopulation
@@ -106,5 +102,3 @@ class Subpopulations extends Component {
     );
   }
 }
-
-export default Subpopulations;

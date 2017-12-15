@@ -67,14 +67,14 @@ export default class RepoUploadModal extends Component {
   }
 
   uploadArtifact = (nid) => {
-    const artifact = this.props.prepareArtifact();
+    const { artifact } = this.props;
     const auth = { username: this.state.userName, password: this.state.password };
     const { closeModal } = this;
     const options = {
       data: artifact,
       nid,
       auth,
-      version: this.props.version
+      version: this.props.artifact.version
     };
 
     post(`${API_BASE}/cql/publish`, options)
@@ -237,6 +237,5 @@ export default class RepoUploadModal extends Component {
 RepoUploadModal.propTypes = {
   showModal: PropTypes.bool.isRequired,
   closeModal: PropTypes.func.isRequired,
-  prepareArtifact: PropTypes.func.isRequired,
-  version: PropTypes.string.isRequired
+  artifact: PropTypes.object.isRequired
 };

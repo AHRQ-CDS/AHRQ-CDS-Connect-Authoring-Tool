@@ -1,5 +1,7 @@
 import _ from 'lodash';
 
+let uniqueIdCounter = 1;
+
 /**
  * Returns an instance with the given template and children and a unique id.
  * @param {Node} template - The event template to clone
@@ -10,7 +12,7 @@ export default function createTemplateInstance(template, children) {
   const instance = _.cloneDeep(template);
 
   // add a unique id to the instance
-  instance.uniqueId = _.uniqueId(`${instance.id}-`);
+  instance.uniqueId = _.uniqueId(`${instance.id}-${++uniqueIdCounter}`); // eslint-disable-line no-plusplus
 
   // if the template has a conjunction, add the given children or an empty array
   if (template.conjunction) {

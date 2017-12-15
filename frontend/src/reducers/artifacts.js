@@ -34,13 +34,15 @@ export default function auth(state = defaultState, action) {
     case UPDATE_ARTIFACT:
       return Object.assign({}, state, { artifact: action.artifact });
     case INITIALIZE_ARTIFACT:
-      return Object.assign({}, state, { artifact: action.artifact });
+      return Object.assign({}, state, {
+        statusMessage: null,
+        artifact: action.artifact
+      });
     case ARTIFACTS_REQUEST:
       return Object.assign({}, state, { loadArtifacts: { isLoading: true, loadStatus: null } });
     case LOAD_ARTIFACTS_SUCCESS:
       return Object.assign({}, state, {
         artifacts: action.artifacts,
-        statusMessage: null,
         loadArtifacts: { isLoading: false, loadStatus: 'success' }
       });
     case LOAD_ARTIFACTS_FAILURE:
@@ -113,6 +115,7 @@ export default function auth(state = defaultState, action) {
       });
     case SAVE_ARTIFACT_SUCCESS:
       return Object.assign({}, state, {
+        artifact: action.artifact,
         statusMessage: `Last saved ${time}.`,
         saveArtifact: { isSaving: false, saveStatus: 'success' }
       });

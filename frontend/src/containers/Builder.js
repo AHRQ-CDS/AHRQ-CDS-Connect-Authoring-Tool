@@ -4,7 +4,6 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import withGracefulUnmount from 'react-graceful-unmount';
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
-import axios from 'axios';
 import FontAwesome from 'react-fontawesome';
 import _ from 'lodash';
 
@@ -14,28 +13,21 @@ import {
 } from '../actions/artifacts';
 import loadTemplates from '../actions/templates';
 
-import ConjunctionGroup from '../components/builder/ConjunctionGroup';
-import ConjunctionGroupNew from '../components/builder/ConjunctionGroupNew';
-// import ErrorStatement from '../components/builder/ErrorStatement';
-// import Parameters from '../components/builder/Parameters';
-// import Recommendations from '../components/builder/Recommendations';
-
-// import Subpopulations from '../components/builder/Subpopulations';
-// import RepoUploadModal from '../components/builder/RepoUploadModal';
 import EditArtifactModal from '../components/artifact/EditArtifactModal';
+import ConjunctionGroup from '../components/builder/ConjunctionGroup';
+import Subpopulations from '../components/builder/Subpopulations';
+import ErrorStatement from '../components/builder/ErrorStatement';
+import Parameters from '../components/builder/Parameters';
+import Recommendations from '../components/builder/Recommendations';
+import RepoUploadModal from '../components/builder/RepoUploadModal';
 
 import isBlankArtifact from '../utils/artifacts';
-// import createTemplateInstance from '../utils/templates';
 import { findValueAtPath } from '../utils/find';
 
 import artifactProps from '../prop-types/artifact';
 
-const API_BASE = process.env.REACT_APP_API_URL;
-
 // TODO: This is needed because the tree on this.state is not updated in time. Figure out a better way to handle this
 let localTree;
-
-const showPresets = mongoId => axios.get(`${API_BASE}/expressions/group/${mongoId}`);
 
 class Builder extends Component {
   constructor(props) {
@@ -56,7 +48,7 @@ class Builder extends Component {
       if (this.props.match.params.id) {
         this.props.loadArtifact(this.props.match.params.id);
       } else {
-        const operations = result.data.find(template => template.name === 'Operations');
+        const operations = result.templates.find(template => template.name === 'Operations');
         const andTemplate = operations.entries.find(entry => entry.name === 'And');
         this.props.initializeArtifact(andTemplate);
       }
@@ -73,26 +65,22 @@ class Builder extends Component {
 
   // ----------------------- TABS ------------------------------------------ //
 
-  setActiveTab = (tabIndex, callback) => {
-    this.setState({ activeTabIndex: tabIndex });
-
-    // This is a bit hacky I guess -- TODO: remove when redux conversion complete
-    if (callback) {
-      this[callback].call();
-    }
+  setActiveTab = (activeTabIndex) => {
+    this.setState({ activeTabIndex });
   }
 
   // ----------------------- INSTANCES ------------------------------------- //
 
-  //
-  // CALLED: recursively, <ConjunctionGroup />, and <Subpopulations />
-  getAllInstances = (treeName, node = null, uid = null) => {
-    // if node is null, find and assign tree
-    if (node == null) {
-      node = this.findTree(treeName, uid).tree; // eslint-disable-line no-param-reassign
+  // ConjunctionGroupNew: this.props.getAllInstances(this.props.treeName)
+  // Subpopulation: this.props.getAllInstances(treeName, null, this.props.subpopulation.uniqueId)
+  // Builder: this.getAllInstances(treeName, instance)
+  getAllInstances = (treeName, treeInstance = null, uid = null) => {
+    // if treeInstance is null, find and assign tree (only used recursively)
+    if (treeInstance == null) {
+      treeInstance = this.findTree(treeName, uid).tree; // eslint-disable-line no-param-reassign
     }
 
-    return _.flatten(node.childInstances.map((instance) => {
+    return _.flatten(treeInstance.childInstances.map((instance) => {
       if (instance.childInstances) {
         return _.flatten([instance, this.getAllInstances(treeName, instance)]);
       }
@@ -100,7 +88,7 @@ class Builder extends Component {
     }));
   }
 
-  addInstance = (treeName, instance, parentPath, uid = null, currentIndex = undefined, incomingTree = undefined) => {
+  addInstance = (treeName, instance, parentPath, uid = null, currentIndex, incomingTree) => {
     const treeData = this.findTree(treeName, uid);
     const tree = incomingTree || treeData.tree;
     const target = findValueAtPath(tree, parentPath).childInstances;
@@ -109,32 +97,6 @@ class Builder extends Component {
     localTree = tree;
 
     this.setTree(treeName, treeData, tree);
-  }
-
-  // Saves a particular expression to the backend
-  saveInstance = (treeName, path, uid = null) => {
-    const tree = this.findTree(treeName, uid).tree;
-    const target = findValueAtPath(tree, path);
-
-    if (target) {
-      if (target._id) {
-        axios.put(`${API_BASE}/expressions`, target)
-          .then((result) => {
-            console.log('Done');
-          })
-          .catch((error) => {
-            console.log('Fail', error);
-          });
-      } else {
-        axios.post(`${API_BASE}/expressions`, target)
-          .then((result) => {
-            console.log('Done');
-          })
-          .catch((error) => {
-            console.log('Fail', error);
-          });
-      }
-    }
   }
 
   editInstance = (treeName, editedParams, path, editingConjunctionType = false, uid = null) => {
@@ -156,7 +118,7 @@ class Builder extends Component {
     this.setTree(treeName, treeData, tree);
   }
 
-  deleteInstance = (treeName, path, elementsToAdd = undefined, uid = null) => {
+  deleteInstance = (treeName, path, elementsToAdd, uid = null) => {
     const treeData = this.findTree(treeName, uid);
     const tree = treeData.tree;
     const index = path.slice(-1);
@@ -186,10 +148,6 @@ class Builder extends Component {
 
   // ----------------------- ARTIFACTS ------------------------------------- //
 
-  getArtifact() {
-    return { name: this.state.name, version: this.state.version };
-  }
-
   openEditArtifactModal = () => {
     this.setState({ showEditArtifactModal: true });
   }
@@ -199,7 +157,7 @@ class Builder extends Component {
   }
 
   handleSaveArtifact = (artifact) => {
-    if (this.state.id) {
+    if (artifact._id) {
       this.props.editArtifact(artifact);
       this.closeEditArtifactModal(false);
     } else {
@@ -241,7 +199,7 @@ class Builder extends Component {
   }
 
   updateRecsSubpop = (newName, uniqueId) => {
-    const recs = _.cloneDeep(this.state.recommendations);
+    const recs = _.cloneDeep(this.props.artifact.recommendations);
     for (let i = 0; i < recs.length; i++) {
       const subpops = recs[i].subpopulations;
       for (let j = 0; j < subpops.length; j++) {
@@ -253,26 +211,29 @@ class Builder extends Component {
     this.setState({ recommendations: recs });
   }
 
-  setPreset = (treeName, preset, path, uid = null) => {
-    const treeData = this.findTree(treeName, uid);
-    const tree = treeData.tree;
-    const target = findValueAtPath(tree, path);
+  // updateState = (newState) => {
+  //   this.setState(newState);
+  // }
 
-    Object.assign(target, preset);
-    this.setTree(treeName, treeData, tree);
+  updateSubpopulations = (subpopulations) => {
+    this.props.updateArtifact(this.props.artifact, { subpopulations });
   }
 
-  updateState = (newState) => {
-    this.setState(newState);
+  updateRecommendations = (recommendations) => {
+    this.props.updateArtifact(this.props.artifact, { recommendations });
   }
 
-  updateSubpopulations = (updatedSubpopulations) => {
-    this.setState({ subpopulations: updatedSubpopulations });
+  updateParameters = (booleanParameters) => {
+    this.props.updateArtifact(this.props.artifact, { booleanParameters });
+  }
+
+  updateErrorStatement = (errorStatement) => {
+    this.props.updateArtifact(this.props.artifact, { errorStatement });
   }
 
   checkSubpopulationUsage = (uniqueId) => {
-    for (let i = 0; i < this.state.recommendations.length; i++) {
-      const subpops = this.state.recommendations[i].subpopulations;
+    for (let i = 0; i < this.props.artifact.recommendations.length; i++) {
+      const subpops = this.props.artifact.recommendations[i].subpopulations;
       for (let j = 0; j < subpops.length; j++) {
         if (subpops[j].uniqueId === uniqueId) {
           return true;
@@ -286,57 +247,26 @@ class Builder extends Component {
     this.setState({ showPublishModal: !this.state.showPublishModal });
   }
 
-  updateParameters = (BooleanParameter) => {
-    this.setState({ booleanParameters: BooleanParameter });
-  }
-
   // ----------------------- RENDER ---------------------------------------- //
 
   renderConjunctionGroup = (treeName) => {
-    const { artifact } = this.props;
-    const namedBooleanParameters = _.filter(this.state.booleanParameters, p => (!_.isNull(p.name) && p.name.length));
-
-    if (artifact && artifact[treeName].childInstances) {
-      return (
-        <ConjunctionGroup
-          root={ true }
-          name={ treeName }
-          instance={ this.state[treeName] }
-          booleanParameters={ namedBooleanParameters }
-          addInstance={ this.addInstance }
-          editInstance={ this.editInstance }
-          updateInstanceModifiers={ this.updateInstanceModifiers }
-          deleteInstance={ this.deleteInstance }
-          saveInstance={ this.saveInstance }
-          getAllInstances={ this.getAllInstances }
-          showPresets={ showPresets }
-          setPreset={ this.setPreset }
-          categories={ this.props.templates } />
-      );
-    }
-
-    return <div>Loading...</div>;
-  }
-
-  renderConjunctionGroupNew = (treeName) => {
     const { artifact, templates } = this.props;
     const namedBooleanParameters = _.filter(artifact.booleanParameters, p => (!_.isNull(p.name) && p.name.length));
 
     if (artifact && artifact[treeName].childInstances) {
       return (
-        <ConjunctionGroupNew
+        <ConjunctionGroup
           root={true}
           treeName={treeName}
           artifact={artifact}
           templates={templates}
           instance={artifact[treeName]}
+          addInstance={this.addInstance}
           editInstance={this.editInstance}
           deleteInstance={this.deleteInstance}
           getAllInstances={this.getAllInstances}
           updateInstanceModifiers={this.updateInstanceModifiers}
-          booleanParameters={namedBooleanParameters}
-          showPresets={showPresets}
-          setPreset={this.setPreset} />
+          booleanParameters={namedBooleanParameters} />
       );
     }
 
@@ -385,7 +315,11 @@ class Builder extends Component {
   }
 
   render() {
-    const { artifact } = this.props;
+    const { artifact, templates } = this.props;
+    let namedBooleanParameters = [];
+    if (artifact) {
+      namedBooleanParameters = _.filter(artifact.booleanParameters, p => (!_.isNull(p.name) && p.name.length));
+    }
 
     if (artifact == null) {
       return (
@@ -415,65 +349,63 @@ class Builder extends Component {
 
               <div className="tab-panel-container">
                 <TabPanel>
-                  {this.renderConjunctionGroupNew('expTreeInclude')}
+                  {this.renderConjunctionGroup('expTreeInclude')}
                 </TabPanel>
 
                 <TabPanel>
-                  {/* { this.renderConjunctionGroup('expTreeExclude', namedBooleanParameters) } */}
+                  {this.renderConjunctionGroup('expTreeExclude')}
                 </TabPanel>
 
                 <TabPanel>
-                  {/* <Subpopulations
-                    name={ 'subpopulations' }
-                    subpopulations={ this.state.subpopulations }
-                    updateSubpopulations={ this.updateSubpopulations }
-                    booleanParameters={ namedBooleanParameters }
-                    addInstance={ this.addInstance }
-                    editInstance={ this.editInstance }
-                    updateInstanceModifiers={ this.updateInstanceModifiers }
-                    deleteInstance={ this.deleteInstance }
-                    saveInstance={ this.saveInstance }
-                    getAllInstances={ this.getAllInstances }
-                    showPresets={ showPresets }
-                    setPreset={ this.setPreset }
-                    categories={ this.props.templates }
-                    checkSubpopulationUsage={ this.checkSubpopulationUsage }
-                    updateRecsSubpop={ this.updateRecsSubpop } /> */}
+                  <Subpopulations
+                    name={'subpopulations'}
+                    artifact={artifact}
+                    updateSubpopulations={this.updateSubpopulations}
+                    booleanParameters={namedBooleanParameters}
+                    addInstance={this.addInstance}
+                    editInstance={this.editInstance}
+                    updateInstanceModifiers={this.updateInstanceModifiers}
+                    deleteInstance={this.deleteInstance}
+                    getAllInstances={this.getAllInstances}
+                    templates={templates}
+                    checkSubpopulationUsage={this.checkSubpopulationUsage}
+                    updateRecsSubpop={this.updateRecsSubpop} />
                 </TabPanel>
 
                 <TabPanel>
-                  {/* <Recommendations
-                    updateRecommendations={ this.updateState }
-                    recommendations={ this.state.recommendations }
-                    subpopulations={ this.state.subpopulations }
-                    setActiveTab={ this.setActiveTab }
-                    uniqueIdCounter={ this.state.uniqueIdCounter }
-                    incrementUniqueIdCounter={ this.incrementUniqueIdCounter } /> */}
+                  <Recommendations
+                    artifact={artifact}
+                    templates={templates}
+                    updateRecommendations={this.updateRecommendations}
+                    updateSubpopulations={this.updateSubpopulations}
+                    setActiveTab={this.setActiveTab}
+                    uniqueIdCounter={this.state.uniqueIdCounter}
+                    incrementUniqueIdCounter={this.incrementUniqueIdCounter} />
                 </TabPanel>
 
                 <TabPanel>
-                  {/* <Parameters
-                    booleanParameters={ this.state.booleanParameters }
-                    updateParameters={ this.updateParameters } /> */}
+                  <Parameters
+                    booleanParameters={this.props.artifact.booleanParameters}
+                    updateParameters={this.updateParameters} />
                 </TabPanel>
 
                 <TabPanel>
-                  {/* <ErrorStatement
-                    booleanParameters={ namedBooleanParameters }
-                    subpopulations={ this.state.subpopulations }
-                    errorStatement={ this.state.errorStatement }
-                    updateParentState={ this.updateState } /> */}
+                  <ErrorStatement
+                    booleanParameters={namedBooleanParameters}
+                    subpopulations={this.props.artifact.subpopulations}
+                    errorStatement={this.props.artifact.errorStatement}
+                    updateErrorStatement={this.updateErrorStatement} />
                 </TabPanel>
               </div>
             </Tabs>
           </section>
         </div>
 
-        {/* <RepoUploadModal
-            showModal={this.state.showPublishModal}
-            closeModal={this.togglePublishModal}
-            prepareArtifact={this.prepareArtifact}
-            version={this.state.version} /> */}
+        <RepoUploadModal
+          artifact={artifact}
+          showModal={this.state.showPublishModal}
+          closeModal={this.togglePublishModal}
+          version={artifact.version} />
 
         <EditArtifactModal
           artifactEditing={artifact}

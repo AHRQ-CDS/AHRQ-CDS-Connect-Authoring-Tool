@@ -9,9 +9,7 @@ import _ from 'lodash';
  */
 export default class StringParameter extends Component {
   render() {
-    const {
-      id, name, value, updateInstance
-    } = this.props;
+    const { id, name, value, updateInstance } = this.props;
     const formId = _.uniqueId('parameter-');
 
     return (
@@ -25,7 +23,7 @@ export default class StringParameter extends Component {
             name={id}
             value={value || ''}
             onChange={(event) => {
-              updateInstance({ [event.targetname]: event.targetvalue });
+              updateInstance({ [event.target.name]: event.target.value });
             }}
           />
         </label>
@@ -37,6 +35,6 @@ export default class StringParameter extends Component {
 StringParameter.propTypes = {
   id: PropTypes.string.isRequired,
   name: PropTypes.string.isRequired,
-  value: PropTypes.string.isRequired,
+  value: PropTypes.string,
   updateInstance: PropTypes.func.isRequired
 };

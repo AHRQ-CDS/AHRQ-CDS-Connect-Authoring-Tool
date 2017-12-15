@@ -2,6 +2,7 @@ import axios from 'axios';
 import Promise from 'promise';
 import moment from 'moment';
 import FileSaver from 'file-saver';
+import _ from 'lodash';
 import changeToCase from '../utils/strings';
 import createTemplateInstance from '../utils/templates';
 
@@ -78,7 +79,7 @@ export function initializeArtifact(andTemplate) {
   newExpTreeExcludeNameParam.value = 'MeetsExclusionCriteria';
 
   const artifact = {
-    id: null,
+    _id: null,
     name: 'Untitled Artifact',
     version: '1',
     expTreeInclude: newExpTreeInclude,
@@ -188,7 +189,8 @@ export function loadArtifact(id) {
 
     return sendArtifactRequest(id)
       .then(data => dispatch(loadArtifactSuccess(data)))
-      .catch(error => dispatch(loadArtifactFailure(error)));
+      .catch(error => dispatch(loadArtifactFailure(error)))
+      .then(dispatch(setStatusMessage(null)));
   };
 }
 
@@ -324,7 +326,7 @@ function saveArtifactFailure(error) {
 
 function sendSaveArtifactRequest(artifact) {
   return new Promise((resolve, reject) => {
-    axios.post(`${API_BASE}/artifacts`, artifact)
+    axios.post(`${API_BASE}/artifacts`, _.omit(artifact, ['_id']))
       .then(result => resolve(result.data))
       .catch(error => reject(error));
   });
@@ -335,7 +337,7 @@ export function saveArtifact(artifact) {
     dispatch(requestSaveArtifact());
 
     return sendSaveArtifactRequest(artifact)
-      .then(data => dispatch(saveArtifactSuccess(artifact)))
+      .then(data => dispatch(saveArtifactSuccess(data)))
       .catch(error => dispatch(saveArtifactFailure(error)));
   };
 }

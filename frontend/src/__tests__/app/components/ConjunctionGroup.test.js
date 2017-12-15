@@ -38,9 +38,7 @@ const props = {
   updateInstanceModifiers: jest.fn(),
   booleanParameters: [],
   deleteInstance,
-  saveInstance: jest.fn(),
   getAllInstances,
-  showPresets: jest.fn(),
   categories: elementGroups
 };
 

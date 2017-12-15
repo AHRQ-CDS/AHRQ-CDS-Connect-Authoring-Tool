@@ -4,6 +4,7 @@ import _ from 'lodash';
 import FontAwesome from 'react-fontawesome';
 import update from 'immutability-helper';
 import Select from 'react-select';
+import createTemplateInstance from '../../utils/templates';
 
 /* eslint-disable jsx-a11y/label-has-for */
 /* eslint-disable jsx-a11y/anchor-is-valid */
@@ -12,12 +13,12 @@ const subpopTabIndex = 2;
 
 class Recommendation extends Component {
   static propTypes = {
+    artifact: PropTypes.object.isRequired,
+    templates: PropTypes.array.isRequired,
     rec: PropTypes.object.isRequired,
     onUpdate: PropTypes.func.isRequired,
     onRemove: PropTypes.func.isRequired,
-    recommendations: PropTypes.array.isRequired,
     updateRecommendations: PropTypes.func.isRequired,
-    subpopulations: PropTypes.array.isRequired,
     setActiveTab: PropTypes.func.isRequired
   };
 
@@ -36,7 +37,22 @@ class Recommendation extends Component {
 
   addBlankSubpopulation = (event) => {
     event.preventDefault();
-    this.props.setActiveTab(subpopTabIndex, 'addBlankSubpopulation');
+
+    const operations = this.props.templates.find(template => template.name === 'Operations');
+    const andTemplate = operations.entries.find(entry => entry.name === 'And');
+    const newSubpopulation = createTemplateInstance(andTemplate);
+
+    newSubpopulation.name = '';
+    newSubpopulation.path = '';
+
+    const numOfSpecialSubpopulations = this.props.artifact.subpopulations.filter(sp => sp.special).length;
+    const subPopNumber = (this.props.artifact.subpopulations.length + 1) - numOfSpecialSubpopulations;
+    newSubpopulation.subpopulationName = `Subpopulation ${subPopNumber}`;
+    newSubpopulation.expanded = true;
+    const newSubpopulations = this.props.artifact.subpopulations.concat([newSubpopulation]);
+
+    this.props.updateSubpopulations(newSubpopulations);
+    this.props.setActiveTab(subpopTabIndex);
   }
 
   revealSubpopulations = () => {
@@ -52,28 +68,28 @@ class Recommendation extends Component {
       refSubpop.special = subpop.special;
       refSubpop.special_subpopulationName = subpop.special_subpopulationName;
     }
-    const index = this.props.recommendations.findIndex(rec => rec.uid === this.state.uid);
-    const newRecs = update(this.props.recommendations, {
+    const index = this.props.artifact.recommendations.findIndex(rec => rec.uid === this.state.uid);
+    const newRecs = update(this.props.artifact.recommendations, {
       [index]: {
         subpopulations: { $push: [refSubpop] }
       }
     });
 
-    this.props.updateRecommendations({ recommendations: newRecs });
+    this.props.updateRecommendations(newRecs);
   }
 
   removeSubpopulation = (i) => {
-    const recIndex = this.props.recommendations.findIndex(rec => rec.uid === this.state.uid);
-    const newRecs = update(this.props.recommendations, {
+    const recIndex = this.props.artifact.recommendations.findIndex(rec => rec.uid === this.state.uid);
+    const newRecs = update(this.props.artifact.recommendations, {
       [recIndex]: {
         subpopulations: { $splice: [[i, 1]] }
       }
     });
 
-    this.props.updateRecommendations({ recommendations: newRecs });
+    this.props.updateRecommendations(newRecs);
   }
 
-  getRelevantSubpopulations = () => this.props.subpopulations.filter((sp) => {
+  getRelevantSubpopulations = () => this.props.artifact.subpopulations.filter((sp) => {
     let match = false;
     _.each(this.props.rec.subpopulations, (appliedSp) => {
       if (sp.uniqueId === appliedSp.uniqueId) {
@@ -141,7 +157,7 @@ class Recommendation extends Component {
                onClick={this.addBlankSubpopulation}
                onKeyPress={(e) => {
                  e.which = e.which || e.keyCode;
-                 if (e.which === 13) this.props.setActiveTab(subpopTabIndex, 'addBlankSubpopulation');
+                 if (e.which === 13) this.addBlankSubpopulation(e);
                }}>
                New subpopulation
             </a>

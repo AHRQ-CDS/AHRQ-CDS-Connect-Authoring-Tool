@@ -1,10 +1,18 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import Select from 'react-select';
 import _ from 'lodash';
 
 /* eslint-disable jsx-a11y/label-has-for */
 
-class ErrorStatement extends Component {
+export default class ErrorStatement extends Component {
+  static propTypes = {
+    booleanParameters: PropTypes.array.isRequired,
+    subpopulations: PropTypes.array.isRequired,
+    errorStatement: PropTypes.object.isRequired,
+    updateErrorStatement: PropTypes.func.isRequired
+  };
+
   // Ensures there is at least one statement to start
   componentWillMount = () => {
     const { statements } = this.props.errorStatement;
@@ -60,7 +68,7 @@ class ErrorStatement extends Component {
     } else {
       statements[parent].child.statements.push(newStatement);
     }
-    this.props.updateParentState({ errorStatement: newErrorStatement });
+    this.props.updateErrorStatement(newErrorStatement);
   }
 
   // Updates the if/then statements in base and child
@@ -76,7 +84,7 @@ class ErrorStatement extends Component {
     } else {
       statements[parent].child.statements[index][type] = newValue;
     }
-    this.props.updateParentState({ errorStatement: newErrorStatement });
+    this.props.updateErrorStatement(newErrorStatement);
   }
 
   // Delete an if/then statement in base and child
@@ -88,7 +96,7 @@ class ErrorStatement extends Component {
     } else {
       statements[parent].child.statements.splice(index, 1);
     }
-    this.props.updateParentState({ errorStatement: newErrorStatement });
+    this.props.updateErrorStatement(newErrorStatement);
   }
 
   // Updates the else statements in base and child
@@ -99,7 +107,7 @@ class ErrorStatement extends Component {
     } else {
       newErrorStatement.statements[parent].child.elseClause = value;
     }
-    this.props.updateParentState({ errorStatement: newErrorStatement });
+    this.props.updateErrorStatement(newErrorStatement);
   }
 
   // Functionality on whether to use then or nested if
@@ -111,7 +119,7 @@ class ErrorStatement extends Component {
       statement.child = newChild;
     }
     statement.useThenClause = !statement.useThenClause;
-    this.props.updateParentState({ errorStatement: newErrorStatement });
+    this.props.updateErrorStatement(newErrorStatement);
   }
 
   // Renders if part
@@ -249,5 +257,3 @@ class ErrorStatement extends Component {
     );
   }
 }
-
-export default ErrorStatement;

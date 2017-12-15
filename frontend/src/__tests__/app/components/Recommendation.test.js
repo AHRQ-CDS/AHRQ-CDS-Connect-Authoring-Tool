@@ -149,7 +149,7 @@ test('deletes subpopulations', () => {
 test('opens Subpopulations tab when clicking "New Subpopulation"', () => {
   componentFilledIn.find('.recommendation__new-subpopulation').simulate('click');
 
-  expect(setActiveTab).toHaveBeenCalledWith(2, 'addBlankSubpopulation');
+  expect(setActiveTab).toHaveBeenCalledWith(2);
 });
 
 test('applies special subpopulations correctly', () => {

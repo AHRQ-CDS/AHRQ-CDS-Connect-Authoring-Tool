@@ -9,7 +9,6 @@ const addInstance = jest.fn();
 const editInstance = jest.fn();
 const updateInstanceModifiers = jest.fn();
 const deleteInstance = jest.fn();
-const saveInstance = jest.fn();
 const getAllInstances = jest.fn();
 const userSubpopUniqueId = 'foo123';
 const treeName = 'testtree';
@@ -35,12 +34,10 @@ beforeEach(() => {
     editInstance,
     updateInstanceModifiers,
     deleteInstance,
-    saveInstance,
     getAllInstances,
     createTemplateInstance,
     booleanParameters: [],
     treeName,
-    showPresets: jest.fn(),
     categories: elementGroups
   });
 });
@@ -125,11 +122,6 @@ describe('instance functions call correct prop functions', () => {
   test('deleteInstance', () => {
     component.instance().deleteInstance(treeName, testPath, genericTestObj);
     expect(deleteInstance).toHaveBeenCalledWith(treeName, testPath, genericTestObj, userSubpopUniqueId);
-  });
-
-  test('saveInstance', () => {
-    component.instance().saveInstance(treeName, testPath);
-    expect(saveInstance).toHaveBeenCalledWith(treeName, testPath, userSubpopUniqueId);
   });
 
   test('getAllInstances', () => {

@@ -42,14 +42,12 @@ beforeEach(() => {
     editInstance: jest.fn(),
     updateInstanceModifiers: jest.fn(),
     deleteInstance: jest.fn(),
-    saveInstance: jest.fn(),
     getAllInstances: jest.fn(),
     updateRecsSubpop,
     createTemplateInstance,
     checkSubpopulationUsage,
     booleanParameters: [],
-    name: '',
-    showPresets: jest.fn()
+    name: ''
   };
 
   component = fullRenderComponent(Subpopulations, Object.assign({
