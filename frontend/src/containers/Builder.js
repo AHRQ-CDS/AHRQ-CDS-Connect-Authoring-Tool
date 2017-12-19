@@ -9,7 +9,7 @@ import _ from 'lodash';
 
 import {
   setStatusMessage, downloadArtifact, saveArtifact, editArtifact, loadArtifact, updateArtifact,
-  initializeArtifact, updateAndSaveArtifact
+  initializeArtifact, updateAndSaveArtifact, publishArtifactEnabled
 } from '../actions/artifacts';
 import loadTemplates from '../actions/templates';
 
@@ -52,6 +52,9 @@ class Builder extends Component {
         const andTemplate = operations.entries.find(entry => entry.name === 'And');
         this.props.initializeArtifact(andTemplate);
       }
+    });
+    this.props.publishArtifactEnabled().then((result) => {
+      this.setState({ publishEnabled: result.active });
     });
   }
 
@@ -443,7 +446,8 @@ function mapDispatchToProps(dispatch) {
     downloadArtifact,
     saveArtifact,
     editArtifact,
-    updateAndSaveArtifact
+    updateAndSaveArtifact,
+    publishArtifactEnabled
   }, dispatch);
 }
 

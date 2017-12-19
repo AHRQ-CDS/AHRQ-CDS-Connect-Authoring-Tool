@@ -342,22 +342,22 @@ export function saveArtifact(artifact) {
   };
 }
 
-// ------------------------- PUBLISH ARTIFACT ------------------------------ //
+// ------------------------- PUBLISH ARTIFACT ENABLED ---------------------- //
 
-function requestPublishArtifact() {
+function requestPublishArtifactEnabled() {
   return {
     type: PUBLISH_ARTIFACT_REQUEST
   };
 }
 
-function publishArtifactSuccess(artifact) {
+function publishArtifactEnabledSuccess(data) {
   return {
     type: PUBLISH_ARTIFACT_SUCCESS,
-    artifact
+    active: data.active
   };
 }
 
-function publishArtifactFailure(error) {
+function publishArtifactEnabledFailure(error) {
   return {
     type: PUBLISH_ARTIFACT_FAILURE,
     status: error.response.status,
@@ -365,7 +365,7 @@ function publishArtifactFailure(error) {
   };
 }
 
-function sendPublishArtifactRequest(artifact) {
+function sendPublishArtifactEnabledRequest(artifact) {
   return new Promise((resolve, reject) => {
     axios.get(`${API_BASE}/config/repo/publish`)
       .then(result => resolve(result.data))
@@ -373,13 +373,13 @@ function sendPublishArtifactRequest(artifact) {
   });
 }
 
-export function publishArtifact(artifact) {
+export function publishArtifactEnabled(artifact) {
   return (dispatch) => {
-    dispatch(requestPublishArtifact());
+    dispatch(requestPublishArtifactEnabled());
 
-    return sendPublishArtifactRequest(artifact)
-      .then(data => dispatch(publishArtifactSuccess(artifact)))
-      .catch(error => dispatch(publishArtifactFailure(error)));
+    return sendPublishArtifactEnabledRequest(artifact)
+      .then(data => dispatch(publishArtifactEnabledSuccess(data)))
+      .catch(error => dispatch(publishArtifactEnabledFailure(error)));
   };
 }
 
