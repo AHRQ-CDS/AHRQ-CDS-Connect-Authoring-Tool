@@ -43,7 +43,7 @@ export default class EditArtifactModal extends Component {
         modalSubmitButtonText="Save"
         handleShowModal={showModal}
         handleCloseModal={closeModal}
-        handleSaveModal={() => saveModal(name, version)}>
+        handleSaveModal={() => saveModal(this.state)}>
 
         <div className="artifact-table__modal">
           <div className="artifact-form__edit">

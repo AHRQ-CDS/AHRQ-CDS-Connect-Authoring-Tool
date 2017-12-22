@@ -8,8 +8,8 @@ import FontAwesome from 'react-fontawesome';
 import _ from 'lodash';
 
 import {
-  setStatusMessage, downloadArtifact, saveArtifact, editArtifact, loadArtifact, updateArtifact,
-  initializeArtifact, updateAndEditArtifact, publishArtifactEnabled
+  setStatusMessage, downloadArtifact, saveArtifact, loadArtifact, updateArtifact, initializeArtifact,
+  updateAndSaveArtifact, publishArtifactEnabled
 } from '../actions/artifacts';
 import loadTemplates from '../actions/templates';
 
@@ -59,7 +59,7 @@ class Builder extends Component {
   }
 
   componentWillUnmount() {
-    const artifact = this.props.artifact;
+    const { artifact } = this.props;
 
     if (!isBlankArtifact(artifact)) {
       this.handleSaveArtifact(artifact);
@@ -159,17 +159,8 @@ class Builder extends Component {
     this.setState({ showEditArtifactModal: false });
   }
 
-  handleSaveArtifact = (artifact) => {
-    if (artifact._id) {
-      this.props.editArtifact(artifact);
-      this.closeEditArtifactModal(false);
-    } else {
-      this.props.saveArtifact(artifact);
-    }
-  }
-
-  handleEditArtifact = (name, version) => {
-    this.props.updateAndEditArtifact(this.props.artifact, { name, version });
+  handleSaveArtifact = (artifactPropsChanged) => {
+    this.props.updateAndSaveArtifact(this.props.artifact, artifactPropsChanged);
     this.closeEditArtifactModal(false);
   }
 
@@ -213,10 +204,6 @@ class Builder extends Component {
     }
     this.setState({ recommendations: recs });
   }
-
-  // updateState = (newState) => {
-  //   this.setState(newState);
-  // }
 
   updateSubpopulations = (subpopulations) => {
     this.props.updateArtifact(this.props.artifact, { subpopulations });
@@ -414,7 +401,7 @@ class Builder extends Component {
           artifactEditing={artifact}
           showModal={this.state.showEditArtifactModal}
           closeModal={this.closeEditArtifactModal}
-          saveModal={this.handleEditArtifact} />
+          saveModal={this.handleSaveArtifact} />
       </div>
     );
   }
@@ -431,8 +418,7 @@ Builder.propTypes = {
   setStatusMessage: PropTypes.func.isRequired,
   downloadArtifact: PropTypes.func.isRequired,
   saveArtifact: PropTypes.func.isRequired,
-  editArtifact: PropTypes.func.isRequired,
-  updateAndEditArtifact: PropTypes.func.isRequired
+  updateAndSaveArtifact: PropTypes.func.isRequired
 };
 
 // these props are used for dispatching actions
@@ -445,8 +431,7 @@ function mapDispatchToProps(dispatch) {
     setStatusMessage,
     downloadArtifact,
     saveArtifact,
-    editArtifact,
-    updateAndEditArtifact,
+    updateAndSaveArtifact,
     publishArtifactEnabled
   }, dispatch);
 }

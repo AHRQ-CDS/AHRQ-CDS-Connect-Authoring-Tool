@@ -5,7 +5,6 @@ import {
   ARTIFACTS_REQUEST, LOAD_ARTIFACTS_SUCCESS, LOAD_ARTIFACTS_FAILURE,
   ARTIFACT_REQUEST, LOAD_ARTIFACT_SUCCESS, LOAD_ARTIFACT_FAILURE,
   ADD_ARTIFACT_REQUEST, ADD_ARTIFACT_SUCCESS, ADD_ARTIFACT_FAILURE,
-  EDIT_ARTIFACT_REQUEST, EDIT_ARTIFACT_SUCCESS, EDIT_ARTIFACT_FAILURE,
   DELETE_ARTIFACT_REQUEST, DELETE_ARTIFACT_SUCCESS, DELETE_ARTIFACT_FAILURE,
   DOWNLOAD_ARTIFACT_REQUEST, DOWNLOAD_ARTIFACT_SUCCESS, DOWNLOAD_ARTIFACT_FAILURE,
   SAVE_ARTIFACT_REQUEST, SAVE_ARTIFACT_SUCCESS, SAVE_ARTIFACT_FAILURE,
@@ -62,22 +61,6 @@ export default function auth(state = defaultState, action) {
       return Object.assign({}, state, { addArtifact: { isAdding: false, addStatus: 'success' } });
     case ADD_ARTIFACT_FAILURE:
       return Object.assign({}, state, { addArtifact: { isAdding: false, addStatus: 'failure' } });
-    case EDIT_ARTIFACT_REQUEST:
-      return Object.assign({}, state, {
-        statusMessage: null,
-        editArtifact: { isEditing: true, editStatus: null }
-      });
-    case EDIT_ARTIFACT_SUCCESS:
-      return Object.assign({}, state, {
-        artifact: action.artifact,
-        statusMessage: `Last saved ${time}.`,
-        editArtifact: { isEditing: false, editStatus: 'success' }
-      });
-    case EDIT_ARTIFACT_FAILURE:
-      return Object.assign({}, state, {
-        statusMessage: `Edit failed. ${action.statusText}.`,
-        editArtifact: { isEditing: false, editStatus: 'failure' }
-      });
     case DELETE_ARTIFACT_REQUEST:
       return Object.assign({}, state, {
         statusMessage: null,

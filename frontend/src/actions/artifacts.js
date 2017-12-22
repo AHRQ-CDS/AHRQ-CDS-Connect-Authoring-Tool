@@ -13,7 +13,6 @@ import {
   ARTIFACTS_REQUEST, LOAD_ARTIFACTS_SUCCESS, LOAD_ARTIFACTS_FAILURE,
   ARTIFACT_REQUEST, LOAD_ARTIFACT_SUCCESS, LOAD_ARTIFACT_FAILURE,
   ADD_ARTIFACT_REQUEST, ADD_ARTIFACT_SUCCESS, ADD_ARTIFACT_FAILURE,
-  EDIT_ARTIFACT_REQUEST, EDIT_ARTIFACT_SUCCESS, EDIT_ARTIFACT_FAILURE,
   DELETE_ARTIFACT_REQUEST, DELETE_ARTIFACT_SUCCESS, DELETE_ARTIFACT_FAILURE,
   DOWNLOAD_ARTIFACT_REQUEST, DOWNLOAD_ARTIFACT_SUCCESS, DOWNLOAD_ARTIFACT_FAILURE,
   SAVE_ARTIFACT_REQUEST, SAVE_ARTIFACT_SUCCESS, SAVE_ARTIFACT_FAILURE,
@@ -51,14 +50,6 @@ export function updateArtifact(artifactToUpdate, props) {
   };
 }
 
-export function updateAndEditArtifact(artifactToUpdate, props) {
-  return (dispatch) => {
-    const artifact = Object.assign({}, artifactToUpdate, props);
-
-    return dispatch(editArtifact(artifact));
-  };
-}
-
 export function updateAndSaveArtifact(artifactToUpdate, props) {
   return (dispatch) => {
     const artifact = Object.assign({}, artifactToUpdate, props);
@@ -92,7 +83,7 @@ function initializeTrees(template) {
     newSubpopulation,
     newExpTreeInclude,
     newExpTreeExclude
-  }
+  };
 }
 
 export function initializeArtifact(andTemplate) {
@@ -156,7 +147,7 @@ function loadArtifactsFailure(error) {
 
 function sendArtifactsRequest() {
   return new Promise((resolve, reject) => {
-    axios.get(`${API_BASE}/artifacts`)
+    axios.get(`${API_BASE}/artifacts?_=${+new Date()}`)
       .then(result => resolve(result.data))
       .catch(error => reject(error));
   });
@@ -301,47 +292,6 @@ export function downloadArtifact(artifact) {
   };
 }
 
-// ------------------------- SAVE ARTIFACT --------------------------------- //
-
-function requestSaveArtifact() {
-  return {
-    type: SAVE_ARTIFACT_REQUEST
-  };
-}
-
-function saveArtifactSuccess(artifact) {
-  return {
-    type: SAVE_ARTIFACT_SUCCESS,
-    artifact
-  };
-}
-
-function saveArtifactFailure(error) {
-  return {
-    type: SAVE_ARTIFACT_FAILURE,
-    status: error.response.status,
-    statusText: error.response.statusText
-  };
-}
-
-function sendSaveArtifactRequest(artifact) {
-  return new Promise((resolve, reject) => {
-    axios.post(`${API_BASE}/artifacts`, _.omit(artifact, ['_id']))
-      .then(result => resolve(result.data))
-      .catch(error => reject(error));
-  });
-}
-
-export function saveArtifact(artifact) {
-  return (dispatch) => {
-    dispatch(requestSaveArtifact());
-
-    return sendSaveArtifactRequest(artifact)
-      .then(data => dispatch(saveArtifactSuccess(data)))
-      .catch(error => dispatch(saveArtifactFailure(error)));
-  };
-}
-
 // ------------------------- PUBLISH ARTIFACT ENABLED ---------------------- //
 
 function requestPublishArtifactEnabled() {
@@ -383,44 +333,46 @@ export function publishArtifactEnabled(artifact) {
   };
 }
 
-// ------------------------- EDIT ARTIFACT ---------------------------------- //
+// ------------------------- SAVE ARTIFACT --------------------------------- //
 
-function requestEditArtifact() {
+function requestSaveArtifact() {
   return {
-    type: EDIT_ARTIFACT_REQUEST
+    type: SAVE_ARTIFACT_REQUEST
   };
 }
 
-function editArtifactSuccess(artifact) {
+function saveArtifactSuccess(artifact) {
   return {
-    type: EDIT_ARTIFACT_SUCCESS,
+    type: SAVE_ARTIFACT_SUCCESS,
     artifact
   };
 }
 
-function editArtifactFailure(error) {
+function saveArtifactFailure(error) {
   return {
-    type: EDIT_ARTIFACT_FAILURE,
+    type: SAVE_ARTIFACT_FAILURE,
     status: error.response.status,
     statusText: error.response.statusText
   };
 }
 
-function sendEditArtifactRequest(artifact) {
-  return new Promise((resolve, reject) => {
-    axios.put(`${API_BASE}/artifacts`, artifact)
-      .then(result => resolve(result.data))
-      .catch(error => reject(error));
-  });
+function sendSaveArtifactRequest(artifact) {
+  if (artifact._id == null) {
+    const artifactWithoutId = _.omit(artifact, ['_id']);
+    return axios.post(`${API_BASE}/artifacts`, artifactWithoutId)
+      .then(result => result.data);
+  }
+
+  return axios.put(`${API_BASE}/artifacts`, artifact).then(() => artifact);
 }
 
-export function editArtifact(artifact) {
+export function saveArtifact(artifact) {
   return (dispatch) => {
-    dispatch(requestEditArtifact());
+    dispatch(requestSaveArtifact());
 
-    return sendEditArtifactRequest(artifact)
-      .then(data => dispatch(editArtifactSuccess(artifact)))
-      .catch(error => dispatch(editArtifactFailure(error)))
+    return sendSaveArtifactRequest(artifact)
+      .then(data => dispatch(saveArtifactSuccess(data)))
+      .catch(error => dispatch(saveArtifactFailure(error)))
       .then(dispatch(loadArtifacts()));
   };
 }

@@ -3,9 +3,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 
-import {
-  loadArtifacts, addArtifact, editArtifact, deleteArtifact, updateAndEditArtifact
-} from '../actions/artifacts';
+import { loadArtifacts, addArtifact, deleteArtifact, updateAndSaveArtifact } from '../actions/artifacts';
 import artifactProps from '../prop-types/artifact';
 
 import NewArtifactForm from '../components/artifact/NewArtifactForm';
@@ -23,9 +21,8 @@ class Artifact extends Component {
       return (
         <ArtifactTable
           artifacts={artifacts}
-          editArtifact={this.props.editArtifact}
           deleteArtifact={this.props.deleteArtifact}
-          updateAndEditArtifact={this.props.updateAndEditArtifact} />
+          updateAndSaveArtifact={this.props.updateAndSaveArtifact} />
       );
     }
 
@@ -49,9 +46,8 @@ Artifact.propTypes = {
   artifacts: PropTypes.arrayOf(artifactProps),
   loadArtifacts: PropTypes.func.isRequired,
   addArtifact: PropTypes.func.isRequired,
-  editArtifact: PropTypes.func.isRequired,
   deleteArtifact: PropTypes.func.isRequired,
-  updateAndEditArtifact: PropTypes.func.isRequired
+  updateAndSaveArtifact: PropTypes.func.isRequired
 };
 
 // these props are used for dispatching actions
@@ -59,9 +55,8 @@ function mapDispatchToProps(dispatch) {
   return bindActionCreators({
     loadArtifacts,
     addArtifact,
-    editArtifact,
     deleteArtifact,
-    updateAndEditArtifact
+    updateAndSaveArtifact
   }, dispatch);
 }
 
