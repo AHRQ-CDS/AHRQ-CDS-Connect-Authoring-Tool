@@ -3,8 +3,10 @@ import Promise from 'promise';
 import moment from 'moment';
 import FileSaver from 'file-saver';
 import _ from 'lodash';
+
 import changeToCase from '../utils/strings';
 import createTemplateInstance from '../utils/templates';
+import loadTemplates from './templates';
 
 import {
   SET_STATUS_MESSAGE, UPDATE_ARTIFACT, INITIALIZE_ARTIFACT,
@@ -39,7 +41,7 @@ export function setStatusMessage(statusType) {
 // ------------------------- UPDATE ARTIFACT ------------------------------- //
 
 export function updateArtifact(artifactToUpdate, props) {
-  return (dispatch, getState) => {
+  return (dispatch) => {
     const artifact = Object.assign({}, artifactToUpdate, props);
 
     return dispatch({
@@ -49,11 +51,19 @@ export function updateArtifact(artifactToUpdate, props) {
   };
 }
 
-export function updateAndSaveArtifact(artifactToUpdate, props) {
-  return (dispatch, getState) => {
+export function updateAndEditArtifact(artifactToUpdate, props) {
+  return (dispatch) => {
     const artifact = Object.assign({}, artifactToUpdate, props);
 
     return dispatch(editArtifact(artifact));
+  };
+}
+
+export function updateAndSaveArtifact(artifactToUpdate, props) {
+  return (dispatch) => {
+    const artifact = Object.assign({}, artifactToUpdate, props);
+
+    return dispatch(saveArtifact(artifact));
   };
 }
 
@@ -77,7 +87,7 @@ function initializeTrees(template) {
   newExpTreeExclude.path = '';
   const newExpTreeExcludeNameParam = newExpTreeExclude.parameters.find(param => param.id === 'element_name');
   newExpTreeExcludeNameParam.value = 'MeetsExclusionCriteria';
-  
+
   return {
     newSubpopulation,
     newExpTreeInclude,
@@ -111,7 +121,8 @@ export function initializeArtifact(andTemplate) {
       newTrees.newSubpopulation
     ],
     booleanParameters: [],
-    errorStatement: { statements: [] }
+    errorStatement: { statements: [] },
+    uniqueIdCounter: 0
   };
 
   return {
@@ -212,10 +223,9 @@ function requestAddArtifact() {
   };
 }
 
-function addArtifactSuccess(artifact) {
+function addArtifactSuccess() {
   return {
-    type: ADD_ARTIFACT_SUCCESS,
-    artifact
+    type: ADD_ARTIFACT_SUCCESS
   };
 }
 
@@ -227,65 +237,25 @@ function addArtifactFailure(error) {
   };
 }
 
-function sendAddArtifactRequest(artifact) {
-  return new Promise((resolve, reject) => {
-    axios.get(`${API_BASE}/config/templates`)
-      .then(result => {
-        const name = artifact.name ? artifact.name : 'Untitled Artifact';
-        const version = artifact.version ? artifact.version : "1";
+function sendAddArtifactRequest(artifactProps) {
+  return (dispatch, getState) => dispatch(loadTemplates())
+    .then((result) => {
+      const operations = result.templates.find(template => template.name === 'Operations');
+      const andTemplate = operations.entries.find(entry => entry.name === 'And');
 
-        const operations = result.data.find(template => template.name === 'Operations');
-        const andTemplate = operations.entries.find(entry => entry.name === 'And');
-
-        const newTrees = initializeTrees(andTemplate);
-
-        return axios.post(`${API_BASE}/artifacts`, {
-          _id: null,
-          name: name,
-          version: version,
-          expTreeInclude: newTrees.newExpTreeInclude,
-          expTreeExclude: newTrees.newExpTreeExclude,
-          recommendations: [],
-          subpopulations: [
-            {
-              special: true,
-              subpopulationName: "Doesn't Meet Inclusion Criteria",
-              special_subpopulationName: 'not "MeetsInclusionCriteria"',
-              uniqueId: 'default-subpopulation-1'
-            },
-            {
-              special: true,
-              subpopulationName: 'Meets Exclusion Criteria',
-              special_subpopulationName: '"MeetsExclusionCriteria"',
-              uniqueId: 'default-subpopulation-2'
-            },
-            newTrees.newSubpopulation
-          ],
-          booleanParameters: [],
-          errorStatement: {
-            statements: [],
-            else: 'null'
-          },
-          uniqueIdCounter: 0
-        })
-      })
-      .then(result => {
-        resolve(result.data)
-      })
-      .catch(error => reject(error));
-  });
+      return dispatch(initializeArtifact(andTemplate));
+    })
+    .then(() => dispatch(updateAndSaveArtifact(getState().artifacts.artifact, artifactProps)));
 }
 
-export function addArtifact(artifact) {
+export function addArtifact(artifactProps) {
   return (dispatch) => {
     dispatch(requestAddArtifact());
 
-    return sendAddArtifactRequest(artifact)
-      .then(data => {
-        dispatch(addArtifactSuccess(artifact));
-        dispatch(loadArtifacts());
-      })
-      .catch(error => dispatch(addArtifactFailure(error)));
+    return dispatch(sendAddArtifactRequest(artifactProps))
+      .then(data => dispatch(addArtifactSuccess()))
+      .catch(error => dispatch(addArtifactFailure(error)))
+      .then(() => dispatch(loadArtifacts()));
   };
 }
 

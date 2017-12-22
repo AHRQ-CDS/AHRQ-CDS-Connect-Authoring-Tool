@@ -33,7 +33,7 @@ export default class ArtifactTable extends Component {
   }
 
   handleEditArtifact = (name, version) => {
-    this.props.updateAndSaveArtifact(this.state.artifactEditing, { name, version });
+    this.props.updateAndEditArtifact(this.state.artifactEditing, { name, version });
     this.closeEditArtifactModal(false);
   }
 
@@ -152,5 +152,5 @@ ArtifactTable.propTypes = {
   artifacts: PropTypes.arrayOf(artifactProps),
   editArtifact: PropTypes.func.isRequired,
   deleteArtifact: PropTypes.func.isRequired,
-  updateAndSaveArtifact: PropTypes.func.isRequired
+  updateAndEditArtifact: PropTypes.func.isRequired
 };

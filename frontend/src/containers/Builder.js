@@ -9,7 +9,7 @@ import _ from 'lodash';
 
 import {
   setStatusMessage, downloadArtifact, saveArtifact, editArtifact, loadArtifact, updateArtifact,
-  initializeArtifact, updateAndSaveArtifact, publishArtifactEnabled
+  initializeArtifact, updateAndEditArtifact, publishArtifactEnabled
 } from '../actions/artifacts';
 import loadTemplates from '../actions/templates';
 
@@ -169,7 +169,7 @@ class Builder extends Component {
   }
 
   handleEditArtifact = (name, version) => {
-    this.props.updateAndSaveArtifact(this.props.artifact, { name, version });
+    this.props.updateAndEditArtifact(this.props.artifact, { name, version });
     this.closeEditArtifactModal(false);
   }
 
@@ -432,7 +432,7 @@ Builder.propTypes = {
   downloadArtifact: PropTypes.func.isRequired,
   saveArtifact: PropTypes.func.isRequired,
   editArtifact: PropTypes.func.isRequired,
-  updateAndSaveArtifact: PropTypes.func.isRequired
+  updateAndEditArtifact: PropTypes.func.isRequired
 };
 
 // these props are used for dispatching actions
@@ -446,7 +446,7 @@ function mapDispatchToProps(dispatch) {
     downloadArtifact,
     saveArtifact,
     editArtifact,
-    updateAndSaveArtifact,
+    updateAndEditArtifact,
     publishArtifactEnabled
   }, dispatch);
 }
