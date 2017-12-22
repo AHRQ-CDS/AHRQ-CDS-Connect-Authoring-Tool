@@ -59,31 +59,41 @@ export function updateAndSaveArtifact(artifactToUpdate, props) {
 
 // ------------------------- INITIALIZE ARTIFACT --------------------------- //
 
-export function initializeArtifact(andTemplate) {
-  const newSubpopulation = createTemplateInstance(andTemplate);
+function initializeTrees(template) {
+  const newSubpopulation = createTemplateInstance(template);
   newSubpopulation.name = '';
   newSubpopulation.path = '';
   newSubpopulation.subpopulationName = 'Subpopulation 1';
   newSubpopulation.expanded = true;
 
-  const newExpTreeInclude = createTemplateInstance(andTemplate);
+  const newExpTreeInclude = createTemplateInstance(template);
   newExpTreeInclude.name = '';
   newExpTreeInclude.path = '';
   const newExpTreeIncludeNameParam = newExpTreeInclude.parameters.find(param => param.id === 'element_name');
   newExpTreeIncludeNameParam.value = 'MeetsInclusionCriteria';
 
-  const newExpTreeExclude = createTemplateInstance(andTemplate);
+  const newExpTreeExclude = createTemplateInstance(template);
   newExpTreeExclude.name = '';
   newExpTreeExclude.path = '';
   const newExpTreeExcludeNameParam = newExpTreeExclude.parameters.find(param => param.id === 'element_name');
   newExpTreeExcludeNameParam.value = 'MeetsExclusionCriteria';
+  
+  return {
+    newSubpopulation,
+    newExpTreeInclude,
+    newExpTreeExclude
+  }
+}
+
+export function initializeArtifact(andTemplate) {
+  const newTrees = initializeTrees(andTemplate);
 
   const artifact = {
     _id: null,
     name: 'Untitled Artifact',
     version: '1',
-    expTreeInclude: newExpTreeInclude,
-    expTreeExclude: newExpTreeExclude,
+    expTreeInclude: newTrees.newExpTreeInclude,
+    expTreeExclude: newTrees.newExpTreeExclude,
     recommendations: [],
     subpopulations: [
       {
@@ -98,7 +108,7 @@ export function initializeArtifact(andTemplate) {
         special_subpopulationName: '"MeetsExclusionCriteria"',
         uniqueId: 'default-subpopulation-2'
       },
-      newSubpopulation
+      newTrees.newSubpopulation
     ],
     booleanParameters: [],
     errorStatement: { statements: [] }
@@ -219,31 +229,49 @@ function addArtifactFailure(error) {
 
 function sendAddArtifactRequest(artifact) {
   return new Promise((resolve, reject) => {
-    axios.post(`${API_BASE}/artifacts`, {
-      name: artifact.name,
-      version: artifact.version,
-      recommendations: [],
-      subpopulations: [
-        {
-          special: true,
-          subpopulationName: "Doesn't Meet Inclusion Criteria",
-          special_subpopulationName: 'not "MeetsInclusionCriteria"',
-          uniqueId: 'default-subpopulation-1'
-        },
-        {
-          special: true,
-          subpopulationName: 'Meets Exclusion Criteria',
-          special_subpopulationName: '"MeetsExclusionCriteria"',
-          uniqueId: 'default-subpopulation-2'
-        }
-      ],
-      booleanParameters: [],
-      errorStatement: {
-        statements: [],
-        else: 'null'
-      },
-      uniqueIdCounter: 0
-    }).then(result => resolve(result.data))
+    axios.get(`${API_BASE}/config/templates`)
+      .then(result => {
+        const name = artifact.name ? artifact.name : 'Untitled Artifact';
+        const version = artifact.version ? artifact.version : "1";
+
+        const operations = result.data.find(template => template.name === 'Operations');
+        const andTemplate = operations.entries.find(entry => entry.name === 'And');
+
+        const newTrees = initializeTrees(andTemplate);
+
+        return axios.post(`${API_BASE}/artifacts`, {
+          _id: null,
+          name: name,
+          version: version,
+          expTreeInclude: newTrees.newExpTreeInclude,
+          expTreeExclude: newTrees.newExpTreeExclude,
+          recommendations: [],
+          subpopulations: [
+            {
+              special: true,
+              subpopulationName: "Doesn't Meet Inclusion Criteria",
+              special_subpopulationName: 'not "MeetsInclusionCriteria"',
+              uniqueId: 'default-subpopulation-1'
+            },
+            {
+              special: true,
+              subpopulationName: 'Meets Exclusion Criteria',
+              special_subpopulationName: '"MeetsExclusionCriteria"',
+              uniqueId: 'default-subpopulation-2'
+            },
+            newTrees.newSubpopulation
+          ],
+          booleanParameters: [],
+          errorStatement: {
+            statements: [],
+            else: 'null'
+          },
+          uniqueIdCounter: 0
+        })
+      })
+      .then(result => {
+        resolve(result.data)
+      })
       .catch(error => reject(error));
   });
 }
@@ -253,9 +281,11 @@ export function addArtifact(artifact) {
     dispatch(requestAddArtifact());
 
     return sendAddArtifactRequest(artifact)
-      .then(data => dispatch(addArtifactSuccess(artifact)))
-      .catch(error => dispatch(addArtifactFailure(error)))
-      .then(dispatch(loadArtifacts()));
+      .then(data => {
+        dispatch(addArtifactSuccess(artifact));
+        dispatch(loadArtifacts());
+      })
+      .catch(error => dispatch(addArtifactFailure(error)));
   };
 }
 
