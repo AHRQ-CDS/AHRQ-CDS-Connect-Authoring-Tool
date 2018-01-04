@@ -111,6 +111,7 @@ class ElementSelect extends Component {
           className="element-select__element-field"
           name="element-select__element-field"
           value="start"
+          valueKey="name"
           placeholder={placeholderText}
           aria-label={placeholderText}
           clearable={false}

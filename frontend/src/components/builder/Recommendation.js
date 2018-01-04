@@ -141,6 +141,7 @@ class Recommendation extends Component {
               className="recommendation__subpopulation-select"
               name="recommendation__subpopulation-select"
               value="start"
+              valueKey="subpopulationName"
               placeholder={ 'Add a subpopulation' }
               aria-label={ 'Add a subpopulation' }
               clearable={ false }
