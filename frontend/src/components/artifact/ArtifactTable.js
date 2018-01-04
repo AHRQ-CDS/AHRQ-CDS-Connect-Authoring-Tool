@@ -32,8 +32,8 @@ export default class ArtifactTable extends Component {
     this.setState({ showEditArtifactModal: false });
   }
 
-  handleEditArtifact = (name, version) => {
-    this.props.updateAndSaveArtifact(this.state.artifactEditing, { name, version });
+  handleEditArtifact = (props) => {
+    this.props.updateAndSaveArtifact(this.state.artifactEditing, props);
     this.closeEditArtifactModal(false);
   }
 

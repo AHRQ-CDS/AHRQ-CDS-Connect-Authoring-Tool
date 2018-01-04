@@ -11,6 +11,7 @@ export default class EditArtifactModal extends Component {
     super(props);
 
     const { artifactEditing: artifact } = props;
+
     this.state = {
       name: artifact ? artifact.name : '',
       version: artifact ? artifact.version : ''
