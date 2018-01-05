@@ -50,9 +50,31 @@ Lastly, most aspects of config can also be overridden via specific environment v
 
 ### Authentication
 
-This project uses [Passport](http://www.passportjs.org/) to authenticate users. By default, the project uses the [LDAP Authentication Strategy](https://github.com/vesse/passport-ldapauth). 
+This project uses [Passport](http://www.passportjs.org/) to authenticate users. By default, the project uses the [LDAP Authentication Strategy](https://github.com/vesse/passport-ldapauth).
 
 For development purposes, the [Local Authentication Strategy](https://github.com/jaredhanson/passport-local) can be enabled via configuration. In order to do so, a `config/local-users.json` file must be created. For an example of the structure of this file, see `config/example-local-users.json`.
+
+### VSAC
+
+Currently, the VSAC API does not support searching by keyword.  As a stop-gap measure, we've added support for importing a spreadsheet of value set "summaries" into the MongoDB database.  When the database is loaded, our vsac/search endpoint will search against it.  Note that since VSAC data requires a VSAC account, the search API will still check to ensure you have a VSAC ticket in your session.
+
+To load the database:
+1. Go to the VSAC search all page (and authenticate if necessary): https://vsac.nlm.nih.gov/valueset/expansions?pr=all
+2. This should already default to a search of all terms.  Confirm by looking at the table header, which should say something like "View 1 - 20 of 5,035"
+3. Click the "Export Search Results" button to download a "ValueSets.xls" file
+4. Copy that file to `config/ValueSets.xls` (this path is also configurable, if necessary)
+5. Run `node vsac/vsxls2db.js` to import the spreadsheet into MongoDB
+6. If successful, you should see a message like:
+   ```
+   Loaded file: config/ValueSets.xls (updated: Thu Jan 04 2018 16:40:33 GMT-0500 (EST))
+   Inserted 5035 items.
+   ```
+
+The following are sample HTTP GET queries to confirm it is working:
+- http://localhost:3001/authoring/api/vsac/search?keyword=Diabetes
+- http://localhost:3001/authoring/api/vsac/search?oid=2.16.840.1.113883.3.464.1003.103.12.1012
+
+_NOTE: The above queries will only work if you've first established a valid VSAC session via the API._
 
 ### Run
 
