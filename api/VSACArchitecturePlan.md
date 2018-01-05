@@ -13,7 +13,8 @@ valueSets.js:
     - All value set OIDs are defined in `api/data/valueSets.js`
     - These are applied to the CQL output in `api/handlers/cqlHandler.js`
     - It should be simple to apply an OID that was stored based on user's selection from UI.
-      - TODO: Decide on the best way to store this type of information.
+      - Approach 1: This could be stored directly on the element. When the artifact is saved in the database, we can store the chosen value set as another parameter on an individual element.
+        - This is how the "Element Name" field is saved now. Each element has a parameter element_name, who's value is the name entered by the user.
     - The UI should allow the user to select multiple value sets for one element. These multiple value sets can be looped over in cqlHandler similar to how it is now.
   - Codes and Concepts
     - The user will also have the option to enter individual codes, rather than a value set.
