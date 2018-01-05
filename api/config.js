@@ -111,12 +111,22 @@ const config = convict({
     },
     local: {
       active: {
-        doc: 'Indicates if the local authentication strategy should be used. If active, a ' + 
+        doc: 'Indicates if the local authentication strategy should be used. If active, a ' +
           '`config/local-users.json` file must be created to specify credentials.',
         format: 'Boolean',
         default: false,
         env: 'AUTH_LOCAL_ACTIVE',
       }
+    }
+  },
+  valueSets: {
+    localFile: {
+      doc: 'The path to an Excel-formatted file exported from VSAC.  This should be exported from the results of ' +
+        'searching over all value sets in the VSAC search interface.  This is a stop-gap solution until VSAC ' +
+        'supports a search API.',
+      format: 'String',
+      default: 'config/ValueSets.xls',
+      env: 'VALUE_SETS_LOCAL_FILE',
     }
   },
   tlsRejectUnauthorized: {

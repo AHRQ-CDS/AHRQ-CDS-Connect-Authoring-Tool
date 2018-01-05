@@ -89,6 +89,13 @@ acorn@^5.0.0, acorn@^5.2.1:
   version "5.2.1"
   resolved "https://registry.yarnpkg.com/acorn/-/acorn-5.2.1.tgz#317ac7821826c22c702d66189ab8359675f135d7"
 
+adler-32@~1.1.0:
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/adler-32/-/adler-32-1.1.0.tgz#03551a5c7f0edfbd4fc8fa12a6814978eab651c3"
+  dependencies:
+    exit-on-epipe "~1.0.1"
+    printj "~1.1.0"
+
 ajv-keywords@^2.0.0, ajv-keywords@^2.1.0:
   version "2.1.1"
   resolved "https://registry.yarnpkg.com/ajv-keywords/-/ajv-keywords-2.1.1.tgz#617997fc5f60576894c435f940d819e135b80762"
@@ -1135,6 +1142,13 @@ center-align@^0.1.1:
     align-text "^0.1.3"
     lazy-cache "^1.0.3"
 
+cfb@~1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/cfb/-/cfb-1.0.1.tgz#557bb24f67dae78803785a1595d365bc82c5fab4"
+  dependencies:
+    commander "^2.12.1"
+    printj "~1.1.0"
+
 chai-as-promised@^7.1.1:
   version "7.1.1"
   resolved "https://registry.yarnpkg.com/chai-as-promised/-/chai-as-promised-7.1.1.tgz#08645d825deb8696ee61725dbf590c012eb00ca0"
@@ -1246,6 +1260,14 @@ code-point-at@^1.0.0:
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/code-point-at/-/code-point-at-1.1.0.tgz#0d070b4d043a5bea33a2f1a40e2edb3d9a4ccf77"
 
+codepage@~1.11.0:
+  version "1.11.0"
+  resolved "https://registry.yarnpkg.com/codepage/-/codepage-1.11.0.tgz#1076095b9f03b5ca04f43873fa1a627742285de2"
+  dependencies:
+    commander "~2.11.0"
+    exit-on-epipe "~1.0.1"
+    voc "~1.0.0"
+
 color-convert@^1.9.0:
   version "1.9.1"
   resolved "https://registry.yarnpkg.com/color-convert/-/color-convert-1.9.1.tgz#c1261107aeb2f294ebffec9ed9ecad529a6097ed"
@@ -1262,7 +1284,7 @@ combined-stream@^1.0.5, combined-stream@~1.0.5:
   dependencies:
     delayed-stream "~1.0.0"
 
-commander@2.11.0, commander@^2.11.0:
+commander@2.11.0, commander@^2.11.0, commander@~2.11.0:
   version "2.11.0"
   resolved "https://registry.yarnpkg.com/commander/-/commander-2.11.0.tgz#157152fd1e7a6c8d98a5b715cf376df928004563"
 
@@ -1271,6 +1293,10 @@ commander@2.9.0:
   resolved "https://registry.yarnpkg.com/commander/-/commander-2.9.0.tgz#9c99094176e12240cb22d6c5146098400fe0f7d4"
   dependencies:
     graceful-readlink ">= 1.0.0"
+
+commander@^2.12.1:
+  version "2.12.2"
+  resolved "https://registry.yarnpkg.com/commander/-/commander-2.12.2.tgz#0f5946c427ed9ec0d91a46bb9def53e54650e555"
 
 commondir@^1.0.1:
   version "1.0.1"
@@ -1368,6 +1394,13 @@ core-js@^2.4.0, core-js@^2.5.0:
 core-util-is@1.0.2, core-util-is@~1.0.0:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/core-util-is/-/core-util-is-1.0.2.tgz#b5fd54220aa2bc5ab57aab7140c940754503c1a7"
+
+crc-32@~1.1.1:
+  version "1.1.1"
+  resolved "https://registry.yarnpkg.com/crc-32/-/crc-32-1.1.1.tgz#5d739d5e4c6e352ad8304d73223d483fe55adb8d"
+  dependencies:
+    exit-on-epipe "~1.0.1"
+    printj "~1.1.0"
 
 crc32-stream@^2.0.0:
   version "2.0.0"
@@ -1899,6 +1932,10 @@ execa@^0.7.0:
     signal-exit "^3.0.0"
     strip-eof "^1.0.0"
 
+exit-on-epipe@~1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/exit-on-epipe/-/exit-on-epipe-1.0.1.tgz#0bdd92e87d5285d267daa8171d0eb06159689692"
+
 expand-brackets@^0.1.4:
   version "0.1.5"
   resolved "https://registry.yarnpkg.com/expand-brackets/-/expand-brackets-0.1.5.tgz#df07284e342a807cd733ac5af72411e581d1177b"
@@ -2099,6 +2136,12 @@ form-data@~2.3.1:
 forwarded@~0.1.2:
   version "0.1.2"
   resolved "https://registry.yarnpkg.com/forwarded/-/forwarded-0.1.2.tgz#98c23dab1175657b8c0573e8ceccd91b0ff18c84"
+
+frac@~1.1.0:
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/frac/-/frac-1.1.0.tgz#dc437e9c6a646b60b127d82ac4902464445cc1e3"
+  dependencies:
+    voc "~1.0.0"
 
 fresh@0.5.2:
   version "0.5.2"
@@ -3578,6 +3621,10 @@ preserve@^0.2.0:
   version "0.2.0"
   resolved "https://registry.yarnpkg.com/preserve/-/preserve-0.2.0.tgz#815ed1f6ebc65926f865b310c0713bcb3315ce4b"
 
+printj@~1.1.0:
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/printj/-/printj-1.1.0.tgz#85487b5e8f96763b0b4a253613bef9dd9b387e3c"
+
 private@^0.1.6, private@^0.1.7:
   version "0.1.8"
   resolved "https://registry.yarnpkg.com/private/-/private-0.1.8.tgz#2381edb3689f7a53d653190060fcf822d2f368ff"
@@ -4155,6 +4202,12 @@ sprintf-js@~1.0.2:
   version "1.0.3"
   resolved "https://registry.yarnpkg.com/sprintf-js/-/sprintf-js-1.0.3.tgz#04e6926f662895354f3dd015203633b857297e2c"
 
+ssf@~0.10.1:
+  version "0.10.1"
+  resolved "https://registry.yarnpkg.com/ssf/-/ssf-0.10.1.tgz#f23d82b63792ef56089089c1cd0c848e911cdba6"
+  dependencies:
+    frac "~1.1.0"
+
 sshpk@^1.7.0:
   version "1.13.1"
   resolved "https://registry.yarnpkg.com/sshpk/-/sshpk-1.13.1.tgz#512df6da6287144316dc4c18fe1cf1d940739be3"
@@ -4589,6 +4642,10 @@ vm-browserify@0.0.4:
   dependencies:
     indexof "0.0.1"
 
+voc@~1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/voc/-/voc-1.0.0.tgz#5465c0ce11d0881f7d8e36d8ca587043f33a25ae"
+
 watchpack@^1.4.0:
   version "1.4.0"
   resolved "https://registry.yarnpkg.com/watchpack/-/watchpack-1.4.0.tgz#4a1472bcbb952bd0a9bb4036801f954dfb39faac"
@@ -4693,6 +4750,18 @@ write@^0.2.1:
 xdg-basedir@^3.0.0:
   version "3.0.0"
   resolved "https://registry.yarnpkg.com/xdg-basedir/-/xdg-basedir-3.0.0.tgz#496b2cc109eca8dbacfe2dc72b603c17c5870ad4"
+
+xlsx@^0.11.16:
+  version "0.11.16"
+  resolved "https://registry.yarnpkg.com/xlsx/-/xlsx-0.11.16.tgz#e85e44e9e85d5e43e104256d8db480068aa927a3"
+  dependencies:
+    adler-32 "~1.1.0"
+    cfb "~1.0.1"
+    codepage "~1.11.0"
+    commander "~2.11.0"
+    crc-32 "~1.1.1"
+    exit-on-epipe "~1.0.1"
+    ssf "~0.10.1"
 
 xml2js@^0.4.19:
   version "0.4.19"
