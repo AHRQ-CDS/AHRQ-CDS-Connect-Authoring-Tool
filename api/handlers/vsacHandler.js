@@ -1,4 +1,5 @@
 const vsacClient = require('../vsac/client');
+const vsacSearch = require('../vsac/search');
 
 function login(req, res) {
   const user = req.body.username;
@@ -33,7 +34,20 @@ function getVSDetailsByOID(req, res) {
   }
 }
 
+function search(req, res) {
+  const ticketGrantingTicket = req.session.ticketGrantingTicket;
+  if (ticketGrantingTicket) {
+    vsacSearch(req.query)
+      .then(result => res.json(result))
+      .catch(err => res.status(500).send(error));
+  } else {
+    // No TGT on the session. Must login first.
+    res.sendStatus(401);
+  }
+}
+
 module.exports = {
   login,
-  getVSDetailsByOID
+  getVSDetailsByOID,
+  search
 };
