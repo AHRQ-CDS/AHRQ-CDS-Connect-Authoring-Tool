@@ -1,8 +1,8 @@
 import { createMockStore } from 'redux-test-utils';
-import Artifact from '../../../containers/Artifact';
-import ArtifactTable from '../../../components/artifact/ArtifactTable';
-import NewArtifactForm from '../../../components/artifact/NewArtifactForm';
-import { shallowRenderContainer } from '../../../utils/test_helpers';
+import Artifact from '../../containers/Artifact';
+import ArtifactTable from '../../components/artifact/ArtifactTable';
+import NewArtifactForm from '../../components/artifact/NewArtifactForm';
+import { shallowRenderContainer } from '../../utils/test_helpers';
 
 const match = {
   path: ''

@@ -1,7 +1,7 @@
-import Subpopulations from '../../../components/builder/Subpopulations';
-import Subpopulation from '../../../components/builder/Subpopulation';
-import { fullRenderComponent, createTemplateInstance } from '../../../utils/test_helpers';
-import { elementGroups } from '../../../utils/test_fixtures';
+import Subpopulations from '../../components/builder/Subpopulations';
+import Subpopulation from '../../components/builder/Subpopulation';
+import { fullRenderComponent, createTemplateInstance } from '../../utils/test_helpers';
+import { elementGroups } from '../../utils/test_fixtures';
 
 let component;
 let componentWithSubpopulations;
@@ -37,7 +37,7 @@ beforeEach(() => {
   updateRecsSubpop = jest.fn();
   const baseProps = {
     updateSubpopulations,
-    categories: elementGroups,
+    templates: elementGroups,
     addInstance: jest.fn(),
     editInstance: jest.fn(),
     updateInstanceModifiers: jest.fn(),
@@ -51,11 +51,15 @@ beforeEach(() => {
   };
 
   component = fullRenderComponent(Subpopulations, Object.assign({
-    subpopulations: [specialSubpop]
+    artifact: {
+      subpopulations: [specialSubpop]
+    }
   }, baseProps));
 
   componentWithSubpopulations = fullRenderComponent(Subpopulations, Object.assign({
-    subpopulations: fullSubpops,
+    artifact: {
+      subpopulations: fullSubpops
+    }
   }, baseProps));
 });
 
@@ -64,7 +68,7 @@ test('has correct base class', () => {
 });
 
 test('filters out "default" subpopulations', () => {
-  expect(component.props().subpopulations).toHaveLength(1);
+  expect(component.props().artifact.subpopulations).toHaveLength(1);
   expect(component.state().numOfSpecialSubpopulations).toEqual(1);
   expect(component.state().subpopulations).toHaveLength(0);
 });
@@ -84,7 +88,7 @@ test('can add subpopulations', () => {
 
 test('can delete subpopulation not in use', () => {
   checkSubpopulationUsage.mockReturnValueOnce(false);
-  expect(componentWithSubpopulations.props().subpopulations).toHaveLength(2);
+  expect(componentWithSubpopulations.props().artifact.subpopulations).toHaveLength(2);
 
   componentWithSubpopulations
     .find(Subpopulation)
@@ -129,7 +133,7 @@ test('updates relevant state when new props passed in', () => {
   expect(component.state().subpopulations).toHaveLength(0);
   expect(component.state().numOfSpecialSubpopulations).toEqual(1);
 
-  component.setProps({ subpopulations: fullSubpops });
+  component.setProps({ artifact: { subpopulations: fullSubpops } });
 
   expect(component.state().subpopulations).toHaveLength(1);
   expect(component.state().numOfSpecialSubpopulations).toEqual(1);

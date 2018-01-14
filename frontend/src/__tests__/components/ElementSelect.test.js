@@ -1,6 +1,6 @@
-import ElementSelect from '../../../components/builder/ElementSelect';
-import { fullRenderComponent } from '../../../utils/test_helpers';
-import { elementGroups } from '../../../utils/test_fixtures';
+import ElementSelect from '../../components/builder/ElementSelect';
+import { fullRenderComponent } from '../../utils/test_helpers';
+import { elementGroups } from '../../utils/test_fixtures';
 
 let component;
 let elementField;
@@ -44,7 +44,7 @@ describe('the select element field', () => {
   it('starts with a list of all elements', () => {
     elementField.find('input').simulate('change');
     expect(elementField.hasClass('is-open')).toBeTruthy();
-    expect(elementField.find('.element-select__option')).toHaveLength(7);
+    expect(elementField.find('.element-select__option')).toHaveLength(8);
   });
 
   it('options display correct values', () => {

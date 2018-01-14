@@ -1,9 +1,9 @@
 import _ from 'lodash';
-import ConjunctionGroup from '../../../components/builder/ConjunctionGroup';
-import TemplateInstance from '../../../components/builder/TemplateInstance';
-import StringParameter from '../../../components/builder/parameters/StringParameter';
-import { fullRenderComponent, shallowRenderComponent, createTemplateInstance } from '../../../utils/test_helpers';
-import { instanceTree, elementGroups } from '../../../utils/test_fixtures';
+import ConjunctionGroup from '../../components/builder/ConjunctionGroup';
+import TemplateInstance from '../../components/builder/TemplateInstance';
+import StringParameter from '../../components/builder/parameters/StringParameter';
+import { fullRenderComponent, shallowRenderComponent, createTemplateInstance } from '../../utils/test_helpers';
+import { instanceTree, elementGroups } from '../../utils/test_fixtures';
 
 let rootConjunction;
 let childConjunction;
@@ -30,16 +30,18 @@ const treeName = 'MeetsInclusionCriteria';
 
 const props = {
   root: true,
-  name: treeName,
+  treeName,
   instance: instanceTree,
-  createTemplateInstance,
   addInstance,
   editInstance,
   updateInstanceModifiers: jest.fn(),
-  booleanParameters: [],
   deleteInstance,
   getAllInstances,
-  categories: elementGroups
+  templates: elementGroups,
+  artifact: {
+    [treeName]: { id: 'Or' }
+  },
+  booleanParameters: []
 };
 
 beforeEach(() => {
@@ -81,13 +83,13 @@ test('adds children at correct tree position', () => {
   // Make them the same to easily compare whilst avoiding React warning
   argument[1].uniqueId = orInstance.uniqueId;
 
-  expect(addInstance).lastCalledWith(rootConjunction.props().name, orInstance, '');
+  expect(addInstance).lastCalledWith(rootConjunction.props().treeName, orInstance, '');
 
   childConjunction.node.addChild(orTemplate);
   argument = addInstance.mock.calls[1];
   argument[1].uniqueId = orInstance.uniqueId;
 
-  expect(addInstance).lastCalledWith(rootConjunction.props().name, orInstance, childConjunctionPath);
+  expect(addInstance).lastCalledWith(rootConjunction.props().treeName, orInstance, childConjunctionPath);
 });
 
 test('can delete group', () => {
@@ -103,7 +105,7 @@ test('edits own type', () => {
   typeSelect.find('.Select-option').at(1).simulate('mouseDown', { button: 0 }); // Change to 'Or' type
 
   expect(editInstance).toHaveBeenCalled();
-  expect(editInstance).lastCalledWith(rootConjunction.props().name, orType, '', true);
+  expect(editInstance).lastCalledWith(rootConjunction.props().treeName, orType, '', true);
 });
 
 test('edits own name', () => {
@@ -113,7 +115,7 @@ test('edits own name', () => {
   nameParamater.find('input').simulate('change', { target: { name: 'element_name', value: newName } });
 
   expect(editInstance).lastCalledWith(
-    rootConjunction.props().name,
+    rootConjunction.props().treeName,
     { element_name: newName },
     childConjunctionPath,
     false

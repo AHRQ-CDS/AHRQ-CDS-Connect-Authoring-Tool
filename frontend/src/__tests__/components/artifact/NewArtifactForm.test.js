@@ -1,5 +1,5 @@
-import NewArtifactForm from '../../../../components/artifact/NewArtifactForm';
-import { shallowRenderComponent, fullRenderComponent } from '../../../../utils/test_helpers';
+import NewArtifactForm from '../../../components/artifact/NewArtifactForm';
+import { shallowRenderComponent, fullRenderComponent } from '../../../utils/test_helpers';
 
 test('NewArtifactForm renders without crashing', () => {
   const afterAddArtifactMock = jest.fn();

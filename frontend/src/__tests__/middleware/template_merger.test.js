@@ -1,6 +1,6 @@
-import templateMerger from '../../../middleware/template_merger';
-import { LOAD_TEMPLATES_SUCCESS } from '../../../actions/types';
-import { elementGroups } from '../../../utils/test_fixtures';
+import templateMerger from '../../middleware/template_merger';
+import { LOAD_TEMPLATES_SUCCESS } from '../../actions/types';
+import { elementGroups } from '../../utils/test_fixtures';
 
 test('Merges template entries', () => {
   const tester = templateMerger()((action) => {

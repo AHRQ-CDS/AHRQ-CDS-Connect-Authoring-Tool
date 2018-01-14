@@ -1,6 +1,7 @@
 import _ from 'lodash';
-import Recommendation from '../../../components/builder/Recommendation';
-import { fullRenderComponent } from '../../../utils/test_helpers';
+import Recommendation from '../../components/builder/Recommendation';
+import { fullRenderComponent } from '../../utils/test_helpers';
+import { elementGroups } from '../../utils/test_fixtures';
 
 let component;
 let componentFilledIn;
@@ -14,6 +15,7 @@ const subpopUid = 'sp-100';
 let onUpdate;
 let updateRecommendations;
 let onRemove;
+let updateSubpopulations;
 let setActiveTab;
 let baseProps;
 
@@ -21,6 +23,7 @@ beforeEach(() => {
   onUpdate = jest.fn();
   updateRecommendations = jest.fn();
   onRemove = jest.fn();
+  updateSubpopulations = jest.fn();
   setActiveTab = jest.fn();
   rec = {
     uid: recUid,
@@ -42,18 +45,25 @@ beforeEach(() => {
     onUpdate,
     onRemove,
     updateRecommendations,
+    updateSubpopulations,
     setActiveTab,
-    subpopulations: [subpop]
+    templates: elementGroups
   };
 
   component = fullRenderComponent(Recommendation, Object.assign({
     rec,
-    recommendations: [rec]
+    artifact: {
+      subpopulations: [subpop],
+      recommendations: [rec]
+    }
   }, baseProps));
 
   componentFilledIn = fullRenderComponent(Recommendation, Object.assign({
     rec: completedRec,
-    recommendations: [completedRec]
+    artifact: {
+      subpopulations: [subpop],
+      recommendations: [completedRec]
+    }
   }, baseProps));
 });
 
@@ -134,7 +144,7 @@ test('applies subpopulations', () => {
   const updatedRec = _.cloneDeep(rec);
   updatedRec.subpopulations = [subpop];
 
-  expect(updateRecommendations).toHaveBeenCalledWith({ recommendations: [updatedRec] });
+  expect(updateRecommendations).toHaveBeenCalledWith([updatedRec]);
 });
 
 test('deletes subpopulations', () => {
@@ -143,7 +153,7 @@ test('deletes subpopulations', () => {
   const updatedRec = _.cloneDeep(completedRec);
   updatedRec.subpopulations = [];
 
-  expect(updateRecommendations).toHaveBeenCalledWith({ recommendations: [updatedRec] });
+  expect(updateRecommendations).toHaveBeenCalledWith([updatedRec]);
 });
 
 test('opens Subpopulations tab when clicking "New Subpopulation"', () => {
@@ -158,11 +168,10 @@ test('applies special subpopulations correctly', () => {
   specialSubpop.special_subpopulationName = 'TestSubpop1';
 
   const specialProps = _.cloneDeep(baseProps);
-  specialProps.subpopulations = [specialSubpop];
+  specialProps.artifact = { subpopulations: [specialSubpop], recommendations: [rec] };
 
   const recComponent = fullRenderComponent(Recommendation, Object.assign({
-    rec,
-    recommendations: [rec]
+    rec
   }, specialProps));
 
   recComponent.find('button').findWhere(button => button.text() === 'Add subpopulation').simulate('click');
@@ -172,5 +181,5 @@ test('applies special subpopulations correctly', () => {
   const updatedRec = _.cloneDeep(rec);
   updatedRec.subpopulations = [specialSubpop];
 
-  expect(updateRecommendations).toHaveBeenCalledWith({ recommendations: [updatedRec] });
+  expect(updateRecommendations).toHaveBeenCalledWith([updatedRec]);
 });

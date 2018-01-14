@@ -3,8 +3,6 @@ import PropTypes from 'prop-types';
 import update from 'immutability-helper';
 import Recommendation from './Recommendation';
 
-let uniqueIdCounter = 0;
-
 export default class Recommendations extends Component {
   static propTypes = {
     artifact: PropTypes.object.isRequired,
@@ -34,13 +32,14 @@ export default class Recommendations extends Component {
 
   addRecommendation = () => {
     const newRec = {
-      uid: `rec-${++uniqueIdCounter}`, // eslint-disable-line no-plusplus
+      uid: `rec-${+new Date()}`, // eslint-disable-line no-plusplus
       grade: 'A',
       subpopulations: [],
       text: '',
       rationale: ''
     };
     const newRecs = this.props.artifact.recommendations.concat([newRec]);
+
     this.props.updateRecommendations(newRecs);
   }
 

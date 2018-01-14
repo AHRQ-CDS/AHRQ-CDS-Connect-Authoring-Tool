@@ -49,3 +49,15 @@ export const PUBLISH_ARTIFACT_FAILURE = 'PUBLISH_ARTIFACT_FAILURE';
 export const TEMPLATES_REQUEST = 'TEMPLATES_REQUEST';
 export const LOAD_TEMPLATES_SUCCESS = 'LOAD_TEMPLATES_SUCCESS';
 export const LOAD_TEMPLATES_FAILURE = 'LOAD_TEMPLATES_FAILURE';
+
+// ------------------------- RESOURCES ------------------------------------- //
+
+export const RESOURCES_REQUEST = 'RESOURCES_REQUEST';
+export const LOAD_RESOURCES_SUCCESS = 'LOAD_RESOURCES_SUCCESS';
+export const LOAD_RESOURCES_FAILURE = 'LOAD_RESOURCES_FAILURE';
+
+// ------------------------- VALUE SETS ------------------------------------- //
+
+export const VALUE_SETS_REQUEST = 'VALUE_SETS_REQUEST';
+export const LOAD_VALUE_SETS_SUCCESS = 'LOAD_VALUE_SETS_SUCCESS';
+export const LOAD_VALUE_SETS_FAILURE = 'LOAD_VALUE_SETS_FAILURE';

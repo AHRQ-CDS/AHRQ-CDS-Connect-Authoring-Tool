@@ -1,27 +1,17 @@
-import Recommendations from '../../../components/builder/Recommendations';
-import Recommendation from '../../../components/builder/Recommendation';
-import { fullRenderComponent } from '../../../utils/test_helpers';
+import Recommendations from '../../components/builder/Recommendations';
+import Recommendation from '../../components/builder/Recommendation';
+import { fullRenderComponent } from '../../utils/test_helpers';
 
 let component;
 let componentWithRecs;
 let updateRecommendations;
-let incrementUniqueIdCounter;
-let newRec;
 let existingRec;
 const existingRecUid = 'rec-100';
 
 beforeEach(() => {
   updateRecommendations = jest.fn();
-  incrementUniqueIdCounter = jest.fn();
   existingRec = {
     uid: existingRecUid,
-    grade: 'A',
-    subpopulations: [],
-    text: '',
-    rationale: ''
-  };
-  newRec = {
-    uid: 'rec-0',
     grade: 'A',
     subpopulations: [],
     text: '',
@@ -30,18 +20,21 @@ beforeEach(() => {
 
   const baseProps = {
     updateRecommendations,
-    subpopulations: [],
-    setActiveTab: jest.fn(),
-    uniqueIdCounter: 0,
-    incrementUniqueIdCounter
+    setActiveTab: jest.fn()
   };
 
   component = fullRenderComponent(Recommendations, Object.assign({
-    recommendations: []
+    artifact: {
+      subpopulations: [],
+      recommendations: []
+    }
   }, baseProps));
 
   componentWithRecs = fullRenderComponent(Recommendations, Object.assign({
-    recommendations: [existingRec]
+    artifact: {
+      subpopulations: [],
+      recommendations: [existingRec]
+    }
   }, baseProps));
 });
 
@@ -63,8 +56,9 @@ test('can change mode type', () => {
 test('can add a new recommendation with button', () => {
   component.find('button').at(0).simulate('click');
 
-  expect(incrementUniqueIdCounter).toHaveBeenCalled();
-  expect(updateRecommendations).toHaveBeenCalledWith({ recommendations: [newRec] });
+  expect(updateRecommendations).toHaveBeenLastCalledWith([
+    expect.objectContaining({ grade: 'A', subpopulations: [], text: '', rationale: '' })
+  ]);
 });
 
 test('updates a recommendation', () => {
@@ -73,11 +67,11 @@ test('updates a recommendation', () => {
 
   existingRec.text = newText;
 
-  expect(updateRecommendations).toHaveBeenCalledWith({ recommendations: [existingRec] });
+  expect(updateRecommendations).toHaveBeenCalledWith([existingRec]);
 });
 
 test('deletes a recommendation', () => {
   componentWithRecs.instance().removeRecommendation(existingRecUid);
 
-  expect(updateRecommendations).toHaveBeenCalledWith({ recommendations: [] });
+  expect(updateRecommendations).toHaveBeenCalledWith([]);
 });

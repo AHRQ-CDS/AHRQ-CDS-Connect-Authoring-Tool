@@ -1,9 +1,9 @@
 import { createMockStore } from 'redux-test-utils';
 import { Route } from 'react-router-dom';
-import PrivateRoute from '../../../containers/PrivateRoute';
-import NotLoggedInPage from '../../../components/NotLoggedInPage';
-import Artifact from '../../../containers/Artifact';
-import { shallowRenderContainer } from '../../../utils/test_helpers';
+import PrivateRoute from '../../containers/PrivateRoute';
+import NotLoggedInPage from '../../components/NotLoggedInPage';
+import Artifact from '../../containers/Artifact';
+import { shallowRenderContainer } from '../../utils/test_helpers';
 
 test('Unauthenticated user is rendered a Not Logged In message', () => {
   const state = {

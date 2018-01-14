@@ -1,11 +1,11 @@
 import Select from 'react-select';
-import Parameter from '../../components/builder/Parameter';
-import Parameters from '../../components/builder/Parameters';
-import NumberParameter from '../../components/builder/parameters/NumberParameter';
-import StaticParameter from '../../components/builder/parameters/StaticParameter';
-import StringParameter from '../../components/builder/parameters/StringParameter';
-import ValueSetParameter from '../../components/builder/parameters/ValueSetParameter';
-import { shallowRenderComponent } from '../../utils/test_helpers';
+import Parameter from '../components/builder/Parameter';
+import Parameters from '../components/builder/Parameters';
+import NumberParameter from '../components/builder/parameters/NumberParameter';
+import StaticParameter from '../components/builder/parameters/StaticParameter';
+import StringParameter from '../components/builder/parameters/StringParameter';
+import ValueSetParameter from '../components/builder/parameters/ValueSetParameter';
+import { shallowRenderComponent } from '../utils/test_helpers';
 
 test('Parameter renders without crashing', () => {
   const component = shallowRenderComponent(Parameter, {
@@ -53,15 +53,9 @@ test('Parameters adds parameter', () => {
     updateParameters: updateParameterMock
   });
 
-  const booleansLength1 = component.state('booleanParameters').length;
   component.find('button').simulate('click');
-  const booleansLength2 = component.state('booleanParameters').length;
-  expect(booleansLength1 + 1).toEqual(booleansLength2);
-  expect(updateParameterMock).toHaveBeenCalled();
 
-  // component.instance().addParameter = jest.fn();
-  // component.find('button').simulate('click');
-  // expect(component.instance().addParameter).toHaveBeenCalled();
+  expect(updateParameterMock).toHaveBeenCalledWith([{ name: null, value: null }]);
 });
 
 test('NumberParameter renders without crashing', () => {
@@ -152,6 +146,7 @@ test('StringParameter renders without crashing', () => {
 
 test('ValueSetParameter renders without crashing', () => {
   const component = shallowRenderComponent(ValueSetParameter, {
+    loadValueSets: jest.fn(),
     updateInstance: jest.fn(),
     param: {
       id: '',
@@ -166,6 +161,7 @@ test('ValueSetParameter changes input', () => {
   const updateInstanceMock = jest.fn();
 
   const component = shallowRenderComponent(ValueSetParameter, {
+    loadValueSets: jest.fn(),
     updateInstance: updateInstanceMock,
     param: {
       id: '',

@@ -12,6 +12,8 @@ import {
   updateAndSaveArtifact, publishArtifactEnabled
 } from '../actions/artifacts';
 import loadTemplates from '../actions/templates';
+import loadResources from '../actions/resources';
+import loadValueSets from '../actions/value_sets';
 
 import EditArtifactModal from '../components/artifact/EditArtifactModal';
 import ConjunctionGroup from '../components/builder/ConjunctionGroup';
@@ -53,6 +55,9 @@ class Builder extends Component {
         this.props.initializeArtifact(andTemplate);
       }
     });
+
+    this.props.loadResources();
+
     this.props.publishArtifactEnabled().then((result) => {
       this.setState({ publishEnabled: result.active });
     });
@@ -74,9 +79,6 @@ class Builder extends Component {
 
   // ----------------------- INSTANCES ------------------------------------- //
 
-  // ConjunctionGroupNew: this.props.getAllInstances(this.props.treeName)
-  // Subpopulation: this.props.getAllInstances(treeName, null, this.props.subpopulation.uniqueId)
-  // Builder: this.getAllInstances(treeName, instance)
   getAllInstances = (treeName, treeInstance = null, uid = null) => {
     // if treeInstance is null, find and assign tree (only used recursively)
     if (treeInstance == null) {
@@ -240,7 +242,7 @@ class Builder extends Component {
   // ----------------------- RENDER ---------------------------------------- //
 
   renderConjunctionGroup = (treeName) => {
-    const { artifact, templates } = this.props;
+    const { artifact, templates, resources, valueSets } = this.props;
     const namedBooleanParameters = _.filter(artifact.booleanParameters, p => (!_.isNull(p.name) && p.name.length));
 
     if (artifact && artifact[treeName].childInstances) {
@@ -250,6 +252,9 @@ class Builder extends Component {
           treeName={treeName}
           artifact={artifact}
           templates={templates}
+          resources={resources}
+          valueSets={valueSets}
+          loadValueSets={this.props.loadValueSets}
           instance={artifact[treeName]}
           addInstance={this.addInstance}
           editInstance={this.editInstance}
@@ -411,7 +416,10 @@ Builder.propTypes = {
   artifact: artifactProps,
   statusMessage: PropTypes.string,
   templates: PropTypes.array,
+  resources: PropTypes.object,
   loadTemplates: PropTypes.func.isRequired,
+  loadResources: PropTypes.func.isRequired,
+  loadValueSets: PropTypes.func.isRequired,
   loadArtifact: PropTypes.func.isRequired,
   initializeArtifact: PropTypes.func.isRequired,
   updateArtifact: PropTypes.func.isRequired,
@@ -425,6 +433,8 @@ Builder.propTypes = {
 function mapDispatchToProps(dispatch) {
   return bindActionCreators({
     loadTemplates,
+    loadResources,
+    loadValueSets,
     loadArtifact,
     initializeArtifact,
     updateArtifact,
@@ -441,7 +451,9 @@ function mapStateToProps(state) {
   return {
     artifact: state.artifacts.artifact,
     statusMessage: state.artifacts.statusMessage,
-    templates: state.templates.templates
+    templates: state.templates.templates,
+    resources: state.resources.resources,
+    valueSets: state.valueSets.valueSets
   };
 }
 

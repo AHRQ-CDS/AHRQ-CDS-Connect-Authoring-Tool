@@ -1,6 +1,6 @@
-import Subpopulation from '../../../components/builder/Subpopulation';
-import { fullRenderComponent, createTemplateInstance } from '../../../utils/test_helpers';
-import { elementGroups } from '../../../utils/test_fixtures';
+import Subpopulation from '../../components/builder/Subpopulation';
+import { fullRenderComponent, createTemplateInstance } from '../../utils/test_helpers';
+import { elementGroups } from '../../utils/test_fixtures';
 
 let component;
 const setSubpopulationName = jest.fn();
@@ -38,7 +38,7 @@ beforeEach(() => {
     createTemplateInstance,
     booleanParameters: [],
     treeName,
-    categories: elementGroups
+    templates: elementGroups
   });
 });
 

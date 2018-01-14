@@ -1,22 +1,11 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import Select from 'react-select';
-import axios from 'axios';
 import _ from 'lodash';
 
-const API_BASE = process.env.REACT_APP_API_URL;
-
-class ValueSetParameter extends Component {
-  constructor(props) {
-    super(props);
-
-    this.state = { valueset: [] };
-  }
-
+export default class ValueSetParameter extends Component {
   componentWillMount() {
-    axios.get(`${API_BASE}/config/valuesets/${this.props.param.select}`)
-      .then((result) => {
-        this.setState({ valueset: result.data.expansion });
-      });
+    this.props.loadValueSets(this.props.param.select);
   }
 
   render() {
@@ -27,7 +16,7 @@ class ValueSetParameter extends Component {
           {this.props.param.name}:
           <Select labelKey={'name'}
             autofocus
-            options={this.state.valueset}
+            options={this.props.valueSets}
             inputProps={{ id }}
             clearable={true}
             name={this.props.param.id}
@@ -42,4 +31,11 @@ class ValueSetParameter extends Component {
   }
 }
 
-export default ValueSetParameter;
+ValueSetParameter.propTypes = {
+  key: PropTypes.string,
+  param: PropTypes.string,
+  valueset: PropTypes.object,
+  valueSets: PropTypes.array,
+  loadValueSets: PropTypes.func.isRequired,
+  updateInstance: PropTypes.func.isRequired
+};

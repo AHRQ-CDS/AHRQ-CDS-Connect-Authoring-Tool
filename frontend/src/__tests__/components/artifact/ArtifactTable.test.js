@@ -1,5 +1,5 @@
-import ArtifactTable from '../../../../components/artifact/ArtifactTable';
-import { shallowRenderComponent, fullRenderComponent, ReactWrapper } from '../../../../utils/test_helpers';
+import ArtifactTable from '../../../components/artifact/ArtifactTable';
+import { shallowRenderComponent, fullRenderComponent, ReactWrapper } from '../../../utils/test_helpers';
 
 const match = {
   path: ''

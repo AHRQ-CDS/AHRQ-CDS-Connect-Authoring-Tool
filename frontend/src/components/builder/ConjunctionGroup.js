@@ -179,7 +179,9 @@ export default class ConjunctionGroup extends Component {
   }
 
   renderChildren() {
-    const { artifact, treeName, templates, addInstance, editInstance, deleteInstance } = this.props;
+    const {
+      artifact, treeName, templates, resources, valueSets, addInstance, editInstance, deleteInstance
+    } = this.props;
 
     return this.props.instance.childInstances.map((instance, i) => {
       // return null if child instance conjunction is false
@@ -191,6 +193,9 @@ export default class ConjunctionGroup extends Component {
               treeName={treeName}
               artifact={artifact}
               templates={templates}
+              resources={resources}
+              valueSets={valueSets}
+              loadValueSets={this.props.loadValueSets}
               instance={instance}
               addInstance={addInstance}
               editInstance={editInstance}
@@ -213,6 +218,9 @@ export default class ConjunctionGroup extends Component {
     return (
       <div key={ instance.uniqueId } className="conjunction-group__conjunction-child">
         <TemplateInstance
+          resources={this.props.resources}
+          valueSets={this.props.valueSets}
+          loadValueSets={this.props.loadValueSets}
           getPath={this.getChildsPath}
           treeName={this.props.treeName}
           templateInstance={instance}
@@ -251,6 +259,8 @@ ConjunctionGroup.propTypes = {
   treeName: PropTypes.string.isRequired,
   artifact: PropTypes.object,
   templates: PropTypes.array,
+  resources: PropTypes.object,
+  valueSets: PropTypes.array,
   getPath: requiredIf(PropTypes.func, props => !props.root), // path needed for children
   getAllInstances: PropTypes.func.isRequired,
   deleteInstance: PropTypes.func.isRequired

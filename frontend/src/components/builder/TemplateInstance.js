@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import axios from 'axios';
 import FontAwesome from 'react-fontawesome';
 import _ from 'lodash';
 
@@ -19,23 +18,11 @@ import ValueComparison from './modifiers/ValueComparison';
 import ValueComparisonObservation from './modifiers/ValueComparisonObservation';
 import WithUnit from './modifiers/WithUnit';
 
-const API_BASE = process.env.REACT_APP_API_URL;
-
 function getInstanceName(instance) {
   return (instance.parameters.find(p => p.id === 'element_name') || {}).value;
 }
 
-class TemplateInstance extends Component {
-  static propTypes = {
-    getPath: PropTypes.func.isRequired,
-    treeName: PropTypes.string.isRequired,
-    templateInstance: PropTypes.object.isRequired,
-    otherInstances: PropTypes.array.isRequired,
-    editInstance: PropTypes.func.isRequired,
-    updateInstanceModifiers: PropTypes.func.isRequired,
-    deleteInstance: PropTypes.func.isRequired
-  }
-
+export default class TemplateInstance extends Component {
   constructor(props) {
     super(props);
 
@@ -49,7 +36,6 @@ class TemplateInstance extends Component {
     });
 
     this.state = {
-      resources: {},
       showElement: true,
       relevantModifiers: (this.modifersByInputType[this.props.templateInstance.returnType] || []),
       showModifiers: false
@@ -65,10 +51,6 @@ class TemplateInstance extends Component {
     this.setState({ otherInstances });
 
     this.setState({ returnType: this.props.templateInstance.returnType });
-    axios.get(`${API_BASE}/config/resources`)
-      .then((result) => {
-        this.setState({ resources: result.data });
-      });
   }
 
   componentDidMount() {
@@ -111,7 +93,6 @@ class TemplateInstance extends Component {
     this.setState(newState);
     this.props.editInstance(this.props.treeName, newState, this.getPath(), false);
   }
-
 
   renderAppliedModifier = (modifier, index) => {
     const modifierForm = ((mod) => {
@@ -276,6 +257,7 @@ class TemplateInstance extends Component {
           updateInstance={this.updateInstance} />
       );
     }
+
     switch (param.type) {
       case 'number':
         return (
@@ -310,7 +292,9 @@ class TemplateInstance extends Component {
           <ValueSetParameter
             key={param.id}
             param={param}
-            valueset={this.state.resources}
+            valueset={this.props.resources}
+            valueSets={this.props.valueSets}
+            loadValueSets={this.props.loadValueSets}
             updateInstance={this.updateInstance} />
         );
       default:
@@ -327,17 +311,21 @@ class TemplateInstance extends Component {
   renderBody() {
     return (
       <div className="element__body">
-      <div>
-        {this.props.templateInstance.parameters.map((param, index) =>
-          // todo: each parameter type should probably have its own component
-          this.selectTemplate(param))}
+        <div>
+          {this.props.templateInstance.parameters.map((param, index) =>
+            // todo: each parameter type should probably have its own component
+            this.selectTemplate(param))}
         </div>
+
         {this.renderAppliedModifiers()}
+
         <div className='modifier__return__type'>
           Return Type: {_.startCase(this.state.returnType)}
         </div>
+
         {this.renderModifierSelect()}
-      </div>);
+      </div>
+    );
   }
 
   render() {
@@ -347,8 +335,9 @@ class TemplateInstance extends Component {
           <span className="element__heading">
             {this.props.templateInstance.name}
           </span>
+
           <div className="element__buttonbar">
-            { this.props.renderIndentButtons(this.props.templateInstance) }
+            {this.props.renderIndentButtons(this.props.templateInstance)}
 
             <button
               onClick={this.showHideElementBody}
@@ -365,12 +354,24 @@ class TemplateInstance extends Component {
             </button>
           </div>
         </div>
+
         <div>
-          { this.state.showElement ? this.renderBody() : null }
+          {this.state.showElement ? this.renderBody() : null}
         </div>
       </div>
     );
   }
 }
 
-export default TemplateInstance;
+TemplateInstance.propTypes = {
+  resources: PropTypes.object.isRequired,
+  valueSets: PropTypes.array,
+  loadValueSets: PropTypes.func.isRequired,
+  getPath: PropTypes.func.isRequired,
+  treeName: PropTypes.string.isRequired,
+  templateInstance: PropTypes.object.isRequired,
+  otherInstances: PropTypes.array.isRequired,
+  editInstance: PropTypes.func.isRequired,
+  updateInstanceModifiers: PropTypes.func.isRequired,
+  deleteInstance: PropTypes.func.isRequired
+};

@@ -1,9 +1,9 @@
 import _ from 'lodash';
 import Modal from 'react-modal';
-import ElementModal from '../../../components/builder/ElementModal';
-import { filterUnsuppressed } from '../../../utils/filter';
-import { fullRenderComponent, ReactWrapper } from '../../../utils/test_helpers';
-import { elementGroups } from '../../../utils/test_fixtures';
+import ElementModal from '../../components/builder/ElementModal';
+import filterUnsuppressed from '../../utils/filter';
+import { fullRenderComponent, ReactWrapper } from '../../utils/test_helpers';
+import { elementGroups } from '../../utils/test_fixtures';
 
 let component;
 let input;
@@ -110,7 +110,7 @@ describe('with modal open', () => {
   });
 
   test('updates list when searching', () => {
-    expect(component.state().elementList).toHaveLength(7);
+    expect(component.state().elementList).toHaveLength(8);
 
     setInputValue('cholest');
 

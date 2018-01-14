@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import _ from 'lodash';
 import Select from 'react-select';
 import ElementModal from './ElementModal';
-import { filterUnsuppressed } from '../../utils/filter';
+import filterUnsuppressed from '../../utils/filter';
 import { sortAlphabeticallyByKey } from '../../utils/sort';
 
 const getAllElements = categories => _.flatten(categories.map(cat => (
