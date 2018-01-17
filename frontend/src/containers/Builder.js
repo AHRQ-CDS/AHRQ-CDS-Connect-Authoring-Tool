@@ -36,7 +36,6 @@ class Builder extends Component {
     super(props);
 
     this.state = {
-      publishEnabled: false,
       showEditArtifactModal: false,
       showPublishModal: false,
       activeTabIndex: 0,
@@ -55,12 +54,8 @@ class Builder extends Component {
         this.props.initializeArtifact(andTemplate);
       }
     });
-
     this.props.loadResources();
-
-    this.props.publishArtifactEnabled().then((result) => {
-      this.setState({ publishEnabled: result.active });
-    });
+    this.props.publishArtifactEnabled();
   }
 
   componentWillUnmount() {
@@ -269,8 +264,7 @@ class Builder extends Component {
   }
 
   renderHeader() {
-    const { publishEnabled } = this.state;
-    const { statusMessage, artifact } = this.props;
+    const { statusMessage, artifact, publishEnabled } = this.props;
     const artifactName = artifact ? artifact.name : null;
 
     return (
@@ -453,7 +447,8 @@ function mapStateToProps(state) {
     statusMessage: state.artifacts.statusMessage,
     templates: state.templates.templates,
     resources: state.resources.resources,
-    valueSets: state.valueSets.valueSets
+    valueSets: state.valueSets.valueSets,
+    publishEnabled: state.artifacts.publishEnabled
   };
 }
 

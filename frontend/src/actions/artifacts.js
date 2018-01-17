@@ -16,7 +16,8 @@ import {
   DELETE_ARTIFACT_REQUEST, DELETE_ARTIFACT_SUCCESS, DELETE_ARTIFACT_FAILURE,
   DOWNLOAD_ARTIFACT_REQUEST, DOWNLOAD_ARTIFACT_SUCCESS, DOWNLOAD_ARTIFACT_FAILURE,
   SAVE_ARTIFACT_REQUEST, SAVE_ARTIFACT_SUCCESS, SAVE_ARTIFACT_FAILURE,
-  PUBLISH_ARTIFACT_REQUEST, PUBLISH_ARTIFACT_SUCCESS, PUBLISH_ARTIFACT_FAILURE
+  PUBLISH_ARTIFACT_REQUEST, PUBLISH_ARTIFACT_SUCCESS, PUBLISH_ARTIFACT_FAILURE,
+  PUBLISH_ARTIFACT_ENABLED_REQUEST, PUBLISH_ARTIFACT_ENABLED_SUCCESS, PUBLISH_ARTIFACT_ENABLED_FAILURE
 } from './types';
 
 const API_BASE = process.env.REACT_APP_API_URL;
@@ -292,24 +293,66 @@ export function downloadArtifact(artifact) {
   };
 }
 
-// ------------------------- PUBLISH ARTIFACT ENABLED ---------------------- //
+// ------------------------- PUBLISH ARTIFACT ---------------------- //
 
-function requestPublishArtifactEnabled() {
+function requestPublishArtifact() {
   return {
     type: PUBLISH_ARTIFACT_REQUEST
   };
 }
 
-function publishArtifactEnabledSuccess(data) {
+function publishArtifactSuccess(artifact) {
   return {
     type: PUBLISH_ARTIFACT_SUCCESS,
+    artifact
+  };
+}
+
+function publishArtifactFailure(error) {
+  return {
+    type: PUBLISH_ARTIFACT_FAILURE,
+    status: error.response.status,
+    statusText: error.response.statusText
+  };
+}
+
+function sendPublishArtifactRequest(artifact) {
+  return new Promise((resolve, reject) => {
+    // TODO: This is not the correct API call. This will need to work with the RepoUploadModal.
+    axios.get(`${API_BASE}/config/repo/publish`)
+      .then(result => resolve(result.data))
+      .catch(error => reject(error));
+  });
+}
+
+export function publishArtifact(artifact) {
+  return (dispatch) => {
+    dispatch(requestPublishArtifact());
+
+    return sendPublishArtifactRequest(artifact)
+      .then(data => dispatch(publishArtifactSuccess(data)))
+      .catch(error => dispatch(publishArtifactFailure(error)));
+  };
+}
+
+// ------------------------- PUBLISH ARTIFACT ENABLED ---------------------- //
+
+function requestPublishArtifactEnabled() {
+  return {
+    type: PUBLISH_ARTIFACT_ENABLED_REQUEST
+  };
+}
+
+function publishArtifactEnabledSuccess(data) {
+  return {
+    type: PUBLISH_ARTIFACT_ENABLED_SUCCESS,
     active: data.active
   };
 }
 
 function publishArtifactEnabledFailure(error) {
   return {
-    type: PUBLISH_ARTIFACT_FAILURE,
+    type: PUBLISH_ARTIFACT_ENABLED_FAILURE,
     status: error.response.status,
     statusText: error.response.statusText
   };

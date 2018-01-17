@@ -8,7 +8,8 @@ import {
   DELETE_ARTIFACT_REQUEST, DELETE_ARTIFACT_SUCCESS, DELETE_ARTIFACT_FAILURE,
   DOWNLOAD_ARTIFACT_REQUEST, DOWNLOAD_ARTIFACT_SUCCESS, DOWNLOAD_ARTIFACT_FAILURE,
   SAVE_ARTIFACT_REQUEST, SAVE_ARTIFACT_SUCCESS, SAVE_ARTIFACT_FAILURE,
-  PUBLISH_ARTIFACT_REQUEST, PUBLISH_ARTIFACT_SUCCESS, PUBLISH_ARTIFACT_FAILURE
+  PUBLISH_ARTIFACT_REQUEST, PUBLISH_ARTIFACT_SUCCESS, PUBLISH_ARTIFACT_FAILURE,
+  PUBLISH_ARTIFACT_ENABLED_REQUEST, PUBLISH_ARTIFACT_ENABLED_SUCCESS, PUBLISH_ARTIFACT_ENABLED_FAILURE
 } from '../actions/types';
 
 const defaultState = {
@@ -21,7 +22,8 @@ const defaultState = {
   editArtifact: { isEditing: false, editStatus: null },
   deleteArtifact: { isDeleting: false, deleteStatus: null },
   saveArtifact: { isSaving: false, saveStatus: null },
-  publishArtifact: { isPublishing: false, publishStatus: null }
+  publishArtifact: { isPublishing: false, publishStatus: null },
+  publishEnabled: false
 };
 
 const time = moment().format('dddd, MMMM Do YYYY, h:mm:ss a');
@@ -121,6 +123,16 @@ export default function auth(state = defaultState, action) {
       return Object.assign({}, state, {
         statusMessage: `Publish failed. ${action.statusText}.`,
         publishArtifact: { isPublishing: false, publishStatus: 'failure' }
+      });
+    case PUBLISH_ARTIFACT_ENABLED_REQUEST:
+      return Object.assign({}, state);
+    case PUBLISH_ARTIFACT_ENABLED_SUCCESS:
+      return Object.assign({}, state, {
+        publishEnabled: action.active
+      });
+    case PUBLISH_ARTIFACT_ENABLED_FAILURE:
+      return Object.assign({}, state, {
+        publishEnabled: false
       });
     default:
       return state;
