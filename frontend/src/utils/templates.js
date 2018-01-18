@@ -21,3 +21,10 @@ export default function createTemplateInstance(template, children) {
 
   return instance;
 }
+
+/**
+ * Used in testing, resets the global unique ID counter
+ */
+export function resetUniqueIdCounter() {
+  uniqueIdCounter = 1;
+}

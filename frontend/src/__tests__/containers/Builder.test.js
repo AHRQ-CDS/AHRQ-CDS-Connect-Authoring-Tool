@@ -60,7 +60,7 @@ test('shows loading screen when artifact is not loaded', () => {
   expect(component.dive().dive().text()).toContain('Loading...');
 });
 
-// test.only('renders a single level tree for Inclusions and Exclusions', () => {
+// test('renders a single level tree for Inclusions and Exclusions', () => {
 //   const differentTree = _.cloneDeep(instanceTree);
 //   differentTree.childInstances.pop();
 
@@ -87,7 +87,7 @@ test('shows loading screen when artifact is not loaded', () => {
 //   // expect(initializedComponent.find(TemplateInstance)).toHaveLength(1);
 // });
 
-// test.only('adds a template instance', () => {
+// test('adds a template instance', () => {
 //   const instance = createTemplateInstance(cholesterolTemplate);
 
 //   expect(initializedComponent.state().expTreeInclude.childInstances).toHaveLength(0);

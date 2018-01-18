@@ -72,13 +72,13 @@ function initializeTrees(template) {
   newExpTreeInclude.name = '';
   newExpTreeInclude.path = '';
   const newExpTreeIncludeNameParam = newExpTreeInclude.parameters.find(param => param.id === 'element_name');
-  newExpTreeIncludeNameParam.value = 'MeetsInclusionCriteria';
+  if (newExpTreeIncludeNameParam) newExpTreeIncludeNameParam.value = 'MeetsInclusionCriteria';
 
   const newExpTreeExclude = createTemplateInstance(template);
   newExpTreeExclude.name = '';
   newExpTreeExclude.path = '';
   const newExpTreeExcludeNameParam = newExpTreeExclude.parameters.find(param => param.id === 'element_name');
-  newExpTreeExcludeNameParam.value = 'MeetsExclusionCriteria';
+  if (newExpTreeExcludeNameParam) newExpTreeExcludeNameParam.value = 'MeetsExclusionCriteria';
 
   return {
     newSubpopulation,
@@ -224,8 +224,8 @@ function addArtifactSuccess() {
 function addArtifactFailure(error) {
   return {
     type: ADD_ARTIFACT_FAILURE,
-    status: error.response.status,
-    statusText: error.response.statusText
+    status: error.response ? error.response.status : '',
+    statusText: error.response ? error.response.statusText : ''
   };
 }
 
@@ -246,8 +246,7 @@ export function addArtifact(artifactProps) {
 
     return dispatch(sendAddArtifactRequest(artifactProps))
       .then(data => dispatch(addArtifactSuccess()))
-      .catch(error => dispatch(addArtifactFailure(error)))
-      .then(() => dispatch(loadArtifacts()));
+      .catch(error => dispatch(addArtifactFailure(error)));
   };
 }
 
@@ -268,8 +267,8 @@ function downloadArtifactSuccess() {
 function downloadArtifactFailure(error) {
   return {
     type: DOWNLOAD_ARTIFACT_FAILURE,
-    status: error.response.status,
-    statusText: error.response.statusText
+    status: error.response ? error.response.status : '',
+    statusText: error.response ? error.response.statusText : ''
   };
 }
 
@@ -394,8 +393,8 @@ function saveArtifactSuccess(artifact) {
 function saveArtifactFailure(error) {
   return {
     type: SAVE_ARTIFACT_FAILURE,
-    status: error.response.status,
-    statusText: error.response.statusText
+    status: error.response ? error.response.status : '',
+    statusText: error.response ? error.response.statusText : ''
   };
 }
 
