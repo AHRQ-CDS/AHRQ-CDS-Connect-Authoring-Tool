@@ -59,6 +59,17 @@ module.exports = [
         ],
       },
       {
+        id: 'GenericObservation_vsac',
+        name: 'Observation',
+        returnType: 'list_of_observations',
+        suppress: true,
+        extends: 'Base',
+        template: 'GenericObservation',
+        parameters: [
+          { id: 'observation', type: 'observation_vsac', name: 'Observation' },
+        ]
+      },
+      {
         id: 'TotalCholesterol',
         name: 'Total Cholesterol',
         extends: 'GenericObservation',
@@ -197,6 +208,17 @@ module.exports = [
         ]
       },
       {
+        id: 'GenericCondition_vsac',
+        name: 'Condition',
+        returnType: 'list_of_conditions',
+        suppress: true,
+        extends: 'Base',
+        template: 'GenericCondition',
+        parameters: [
+          { id: 'condition', type: 'condition_vsac', name: 'Condition' }
+        ]
+      },
+      {
         id: 'Diabetes',
         name: 'Diabetes',
         extends: 'GenericCondition',
@@ -328,6 +350,17 @@ module.exports = [
         ]
       },
       {
+        id: 'GenericMedication_vsac',
+        name: 'Medication',
+        returnType: 'list_of_medications',
+        suppress: true,
+        extends: 'Base',
+        template: 'GenericStatement',
+        parameters: [
+          { id: 'medication', type: 'medication_vsac', name: 'Medication' }
+        ]
+      },
+      {
         id: 'OnStatinTherapy',
         name: 'On Statin Therapy',
         extends: 'GenericMedication',
@@ -363,6 +396,17 @@ module.exports = [
         parameters: [
           { id: 'procedure', type: 'procedure', name: 'Procedure' },
         ],
+      },
+      {
+        id: 'GenericProcedure_vsac',
+        name: 'Procedure',
+        returnType: 'list_of_procedures',
+        suppress: true,
+        extends: 'Base',
+        template: 'GenericProcedure',
+        parameters: [
+          { id: 'procedure', type: 'procedure_vsac', name: 'Procedure' }
+        ]
       },
       {
         id: 'ASCVD_Procedures',
@@ -435,6 +479,17 @@ module.exports = [
         ],
       },
       {
+        id: 'GenericEncounter_vsac',
+        name: 'Encounter',
+        returnType: 'list_of_encounters',
+        suppress: true,
+        extends: 'Base',
+        template: 'GenericEncounter',
+        parameters: [
+          { id: 'encounter', type: 'encounter_vsac', name: 'Encounter' }
+        ]
+      },
+      {
         id: 'OutpatientEncounters',
         name: 'Outpatient Encounter',
         returnType: 'list_of_encounters',
@@ -460,6 +515,17 @@ module.exports = [
         parameters: [
           { id: 'allergyIntolerance', type: 'allergyIntolerance', name: 'Allergy Intolerance' },
         ],
+      },
+      {
+        id: 'GenericAllergyIntolerance_vsac',
+        name: 'Allergy Intolerance',
+        returnType: 'list_of_allergy_intolerances',
+        suppress: true,
+        extends: 'Base',
+        template: 'GenericAllergyIntolerance',
+        parameters: [
+          { id: 'allergyIntolerance', type: 'allergyIntolerance_vsac', name: 'Allergy Intolerance' }
+        ]
       },
       {
         id: 'StatinAllergen',

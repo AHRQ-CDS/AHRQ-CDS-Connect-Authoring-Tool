@@ -1,5 +1,7 @@
 # DRAFT: VSAC Architecture Plan
 
+## Plan
+
 In general, we need to remove information that was saved on an individual element, such as value set OIDs, and instead leave it up to the user to identify the information. Once the user has selected the value, the vast majority of the code to create the CQL will remain the same.
 
 We need to replace the information we have in the `api/data/valueSets.js` file with information that comes from the user.
@@ -49,3 +51,51 @@ There is also some information in `api/data/formTemplates.js` that will need to 
   - Most cases, this list will need to be removed and more options will be given to the users. 
     - For example, we can no longer decide for the user if a Quantity Value or a Concept Value is appropriate. Instead, both options will be displayed in the Expressions list.
 
+
+## Updates during implementation
+
+Changes made to cqlHandler:
+- Added a new object to each generic element, which replaces the information coming from `api/data/valueSets.js` to each generic element.
+  - Structure:
+  ```
+    const valueSets = {
+      id: string  // Used to create a separate element of union'ed value sets. If this is something we still want, this will need to be unique.
+      observations: [ // Key changes based on which element. This may be generalized further in the future.
+        { name: string, oid: string }, // Name and OID can come from the search to get the value set on the front end.
+        { name: string, oid: string },
+      ],
+      concepts: [ // Will need to decide what information is entered by the user and what needs to be inferred.
+        {
+          name: 'Concept Name A',
+          codes: [
+            {
+              name: 'Code  Name A',
+              code: 'A01',
+              codeSystem: { name: 'CS A', id: 'A.90' },
+              display: 'DisplayName A'
+            }, 
+          ],
+          display: 'A'
+        },
+        {
+          name: 'Concept Name B',
+          codes: [
+            {
+              name: 'Code Name B',
+              code: 'B.01',
+              codeSystem: { name: 'CS B', id: 'B.90' },
+              display: 'DisplayName B'
+            }, 
+          ],
+          display: 'B'
+        },
+      ]
+    }
+  ```
+    - This new object does not include units, which `api/data/valueSets.js` does provide. This will need to be addressed when selecting units for a comparison is needed.
+
+Changes to continue making:
+- Conditions and Observations can only support providing codes/concepts OR value sets, not both.
+- Handle adding value sets into the EJS context when checking inclusion in a chosen value set as a modifier
+- Handle adding and using a unit when comparing values as a modifier.
+- Address the possible modifiers that are available with generic elements.

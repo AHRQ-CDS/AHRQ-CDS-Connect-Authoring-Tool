@@ -313,6 +313,18 @@ class TemplateInstance extends Component {
             {...param}
             updateInstance={this.updateInstance} />
         );
+      case 'observation_vsac':
+      case 'condition_vsac':
+      case 'medication_vsac':
+      case 'procedure_vsac':
+      case 'encounter_vsac':
+      case 'allergyIntolerance_vsac':
+        return (
+          <StringParameter
+            key={param.id}
+            {...param}
+            updateInstance={this.updateInstance} />
+        );
       case 'valueset':
         return (
           <ValueSetParameter
