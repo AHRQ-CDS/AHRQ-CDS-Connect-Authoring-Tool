@@ -2,7 +2,10 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import _ from 'lodash';
 import Select from 'react-select';
-import ElementModal from './ElementModal';
+import FontAwesome from 'react-fontawesome';
+
+// import ElementModal from './ElementModal';
+import ElementSelectMenuRenderer from './ElementSelectMenuRenderer';
 import filterUnsuppressed from '../../utils/filter';
 import { sortAlphabeticallyByKey } from '../../utils/sort';
 
@@ -15,8 +18,11 @@ const getAllElements = categories => _.flatten(categories.map(cat => (
 
 const optionRenderer = option => (
   <div className="element-select__option">
-    <span className="element-select__option-value">{option.name}</span>
-    { option.category && <span className="element-select__option-category">({option.category})</span> }
+    <span className="element-select__option-value">{option.label}</span>
+
+    {option.vsacAuthRequired &&
+      <FontAwesome name="key" className="element-select__option-category" />
+    }
   </div>
 );
 
@@ -27,7 +33,8 @@ class ElementSelect extends Component {
     this.internalCategories = this.generateInternalCategories();
 
     this.state = {
-      categories: this.internalCategories.sort(sortAlphabeticallyByKey('name'))
+      categories: this.internalCategories.sort(sortAlphabeticallyByKey('name')),
+      selectedElement: null
     };
 
     this.elementInputId = '';
@@ -105,51 +112,124 @@ class ElementSelect extends Component {
     this.setState({ selectedCategory: category });
   }
 
+  onDemographicElementSelected = (demographic) => {
+    this.setState({
+      selectedElement: null
+    });
+    const suggestion = this.state.categories
+      .find(cat => cat.name === 'Demographics')
+      .entries.find(entry => entry.id === demographic.value);
+    this.onSuggestionSelected(suggestion);
+  }
+
+  onElementSelected = (selectedElement) => {
+    this.setState({ selectedElement });
+  }
+
   render() {
-    const placeholderText = 'Add element';
+    const { selectedElement } = this.state;
+    // const placeholderText = 'Add element';
+    const placeholderText = 'Choose element type';
+    const elementOptions = [
+      { value: 'condition', label: 'Condition', vsacAuthRequired: true },
+      { value: 'demographics', label: 'Demographics', vsacAuthRequired: false },
+      { value: 'encounter', label: 'Encounter', vsacAuthRequired: true },
+      { value: 'medication', label: 'Medication', vsacAuthRequired: true },
+      { value: 'observation', label: 'Observation', vsacAuthRequired: true }
+    ];
+    const demographicOptions = this.state.categories
+      .find(cat => cat.name === 'Demographics')
+      .entries.map(({ id, name }) => ({ value: id, label: name }));
+    const value = selectedElement && selectedElement.value;
 
     return (
-      <div className="form__group element-select">
-        <Select
-          className="element-select__element-field"
-          name="element-select__element-field"
-          value="start"
-          valueKey="name"
-          placeholder={placeholderText}
-          aria-label={placeholderText}
-          clearable={false}
-          options={this.state.selectedCategory.entries}
-          labelKey='name'
-          matchProp='label'
-          optionRenderer={optionRenderer}
-          onChange={this.onSuggestionSelected}
-          inputProps={{ id: this.elementInputId, 'aria-label': placeholderText, title: placeholderText }}
-        />
-        <Select
-          className="element-select__category-field"
-          name="element-select__category-field"
-          value={this.state.selectedCategory}
-          valueKey='name'
-          searchable={false}
-          clearable={false}
-          options={this.state.categories}
-          labelKey='name'
-          onChange={this.onSelectedCategoryChange}
-          inputProps={{
-            id: this.categoryInputId,
-            'aria-label': 'Narrow elements by category',
-            title: 'Narrow elements by category'
-          }}
-        />
-        <ElementModal
-          className="element-select__modal"
-          categories={this.state.categories}
-          selectedCategory={this.state.selectedCategory}
-          setSelectedCategory={this.onSelectedCategoryChange}
-          onElementSelected={this.onSuggestionSelected}
-        />
+      <div>
+        <div className="element-select form__group">
+          <div className="element-select__label">
+            <FontAwesome name="plus" />
+            Add element
+          </div>
+
+          <Select
+            className="element-select__element-field"
+            name="element-select__element-field"
+            value={value}
+            placeholder={placeholderText}
+            aria-label={placeholderText}
+            clearable={false}
+            options={elementOptions}
+            onChange={this.onElementSelected}
+            optionRenderer={optionRenderer}
+            menuRenderer={ElementSelectMenuRenderer}
+            menuContainerStyle={{ maxHeight: '320px' }}
+            menuStyle={{ minHeight: '320px' }}
+          />
+
+          {
+            selectedElement && selectedElement.value === 'demographics' &&
+              <Select
+                className="element-select__element-field"
+                placeholder="Select demographic type"
+                aria-label="Select demographic type"
+                options={demographicOptions}
+                onChange={this.onDemographicElementSelected}
+                />
+          }
+
+          {/* <ElementModal
+            className="element-select__modal"
+            categories={this.state.categories}
+            selectedCategory={this.state.selectedCategory}
+            setSelectedCategory={this.onSelectedCategoryChange}
+            onElementSelected={this.onSuggestionSelected}
+          /> */}
+        </div>
+        {
+          selectedElement && selectedElement.vsacAuthRequired &&
+            <button className="primary-button">
+              <FontAwesome name="key" />
+              {' '}Authenticate VSAC
+            </button>
+        }
       </div>
     );
+
+    // return (
+    //   <div className="form__group element-select">
+    //     <Select
+    //       className="element-select__element-field"
+    //       name="element-select__element-field"
+    //       value="start"
+    //       valueKey="name"
+    //       placeholder={placeholderText}
+    //       aria-label={placeholderText}
+    //       clearable={false}
+    //       options={this.state.selectedCategory.entries}
+    //       labelKey='name'
+    //       matchProp='label'
+    //       optionRenderer={optionRenderer}
+    //       onChange={this.onSuggestionSelected}
+    //       inputProps={{ id: this.elementInputId, 'aria-label': placeholderText, title: placeholderText }}
+    //     />
+
+    //     <Select
+    //       className="element-select__category-field"
+    //       name="element-select__category-field"
+    //       value={this.state.selectedCategory}
+    //       valueKey='name'
+    //       searchable={false}
+    //       clearable={false}
+    //       options={this.state.categories}
+    //       labelKey='name'
+    //       onChange={this.onSelectedCategoryChange}
+    //       inputProps={{
+    //         id: this.categoryInputId,
+    //         'aria-label': 'Narrow elements by category',
+    //         title: 'Narrow elements by category'
+    //       }}
+    //     />
+    //   </div>
+    // );
   }
 }
 

@@ -8,6 +8,7 @@
     "axios": "^0.15.3",
     "bootstrap": "^4.0.0-beta",
     "change-case": "^3.0.1",
+    "classnames": "^2.2.5",
     "core-js": "^2.5.1",
     "dotenv": "2.0.0",
     "enzyme": "^2.8.0",
