@@ -15,7 +15,7 @@ export default function valueSets(state = defaultState, action) {
       });
     case LOAD_VALUE_SETS_SUCCESS:
       return Object.assign({}, state, {
-        valueSets: action.valueSets,
+        valueSets: action.valueSets.expansion,
         loadValueSets: { isLoadingValueSets: false, loadValueSetsStatus: 'success' }
       });
     case LOAD_VALUE_SETS_FAILURE:
