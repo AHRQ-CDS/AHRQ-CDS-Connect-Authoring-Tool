@@ -3,7 +3,6 @@
   background-color: $white;
   border: $border-global;
   border-radius: $border-radius;
-  margin-bottom: 0.5em;
   font-weight: $font-weight-bold;
 
   &.element__expanded {
@@ -12,7 +11,7 @@
     .element__header {
       display: flex;
       border-bottom: $border-global;
-      padding: 0.25em 0.75em;
+      padding: 1em 2em;
       align-items: center;
       justify-content: center;
 
@@ -23,11 +22,15 @@
       .element__buttonbar {
         flex: 1;
         text-align: right;
+
+        button {
+          margin-left: 1em;
+        }
       }
     }
 
     .element__body {
-      padding: 0.5em 0.75em;
+      padding: 1em 2em;
     }
   }
 
@@ -55,7 +58,7 @@
     flex-wrap: wrap;
     align-items: center;
 
-    > div { flex-grow: 1 }
+    > div { flex-grow: 1; }
 
     .modifier__deletebutton {
       text-align: right;
@@ -69,8 +72,7 @@
 
 .modifier__selection {
   border-top: $border-global;
-  margin-top: 0.5em;
-  padding-top: 0.5em;
+  padding-top: 1em;
 
   .modifier__addbutton {
     @extend .primary-button;
@@ -78,6 +80,7 @@
 }
 
 .modifier__return__type {
+  margin: 1em 0;
   color: $gray;
 }
 

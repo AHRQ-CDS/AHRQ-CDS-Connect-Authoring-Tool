@@ -13,9 +13,9 @@ export default class StringParameter extends Component {
     const formId = _.uniqueId('parameter-');
 
     return (
-      <div className="form__group">
+      <div className="string-parameter form__group">
         <label htmlFor={formId}>
-          {name}:
+          <span className="label">{name}:</span>
 
           <input
             id={formId}

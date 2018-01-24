@@ -1,35 +1,32 @@
 .footer {
   position: relative;
   padding-top: 0;
-
   font-family: 'CartoGothicStdBook';
   font-weight: bold;
   font-size: 13.44px;
 
   // ----------------------- FOOTER-TOP ------------------------------------ //
   &__top {
-    background-color: $footer-background;
-    background: $footer-background-gradient-1;
     @include fullBleed($footer-background-gradient-1);
+
+    background: $footer-background-gradient-1;
     color: $white;
     padding-top: 0;
     padding-bottom: 0;
 
     &-wrapper {
       @include componentWidth;
+
       min-height: 390px;
     }
 
     &-ahrq,
     &-contact {
-      // @include fullBleed($footer-background-gradient-1);
       background: $footer-background-gradient-1;
       padding: 0 30px;
-      // max-height: 400px;
     }
 
     &-cds {
-      background-color: $footer-background;
       background: linear-gradient(to bottom, $footer-background 0%, $footer-background-light 100%);
       border-left: 1px solid $footer-background;
       border-right: 1px solid $footer-background;
@@ -87,7 +84,7 @@
 
       .link-header {
         font-family: 'Code-Pro-LC', sans-serif;
-        margin: 20px 0 10px 0;
+        margin: 20px 0 10px;
         text-transform: uppercase;
         font-size: 16px;
         line-height: 18px;
@@ -99,8 +96,9 @@
   // ----------------------- FOOTER-BOTTOM --------------------------------- //
   &__bottom {
     &-wrapper { @include componentWidth; }
+
     background: $ahrq-color-background-light;
-    padding: 20px 0 6px 0;
+    padding: 20px 0 6px;
     border-top: 1px solid $white;
 
     &-sitelinks {

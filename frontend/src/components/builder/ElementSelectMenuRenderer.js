@@ -56,8 +56,8 @@ const ElementSelectMenuRenderer = ({
           </Option>
         );
       })}
-      <hr />
-      <div className="Select-option is-disabled">
+
+      <div className="Select-option select-notice is-disabled">
         <FontAwesome name="key" /> VSAC authentication required
       </div>
     </div>

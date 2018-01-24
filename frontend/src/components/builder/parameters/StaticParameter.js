@@ -9,7 +9,7 @@ import React, { Component } from 'react';
 class StaticParameter extends Component {
   render() {
     return (
-      <div>
+      <div className="static-parameter">
         <input
           type="hidden"
           aria-hidden="true"

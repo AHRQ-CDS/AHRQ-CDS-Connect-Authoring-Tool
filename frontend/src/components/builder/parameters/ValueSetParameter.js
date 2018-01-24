@@ -11,9 +11,10 @@ export default class ValueSetParameter extends Component {
   render() {
     const id = _.uniqueId('parameter-');
     return (
-      <div className="form__group">
+      <div className="value-set-parameter form__group">
         <label htmlFor={id}>
-          {this.props.param.name}:
+          <span className="label">{this.props.param.name}:</span>
+
           <Select labelKey={'name'}
             autofocus
             options={this.props.valueSets}

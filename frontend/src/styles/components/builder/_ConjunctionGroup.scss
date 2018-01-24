@@ -1,8 +1,14 @@
 .conjunction-group {
-  padding: 1em;
-  background-color: $gray-lightest;
-  border: $border-global;
-  border-radius: $border-radius;
+  &__section {
+    background-color: $gray-lightest;
+    border: $border-global;
+    border-radius: $border-radius;
+    padding: 1em;
+  }
+
+  .element.element__expanded {
+    background-color: $gray-lightest;
+  }
 
   &__header {
     display: flex;
@@ -22,15 +28,12 @@
 
   &__conjunction-select {
     width: 12em;
-    margin-bottom: 0.5em;
+    // margin-bottom: 0.5em;
+    margin: 20px 0;
   }
 
   &--odd {
     background-color: $gray-lighter;
-  }
-
-  .form__group {
-    margin: 10px 0;
   }
 
   // For nested conjunction-group's
@@ -38,8 +41,4 @@
     margin-left: 5em;
     margin-bottom: 0.5em;
   }
-}
-
-.indent-outdent-container {
-  margin-right: 0.25em;
 }

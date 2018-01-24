@@ -26,6 +26,14 @@ const optionRenderer = option => (
   </div>
 );
 
+const elementOptions = [
+  { value: 'condition', label: 'Condition', vsacAuthRequired: true },
+  { value: 'demographics', label: 'Demographics', vsacAuthRequired: false },
+  { value: 'encounter', label: 'Encounter', vsacAuthRequired: true },
+  { value: 'medication', label: 'Medication', vsacAuthRequired: true },
+  { value: 'observation', label: 'Observation', vsacAuthRequired: true }
+];
+
 class ElementSelect extends Component {
   constructor(props) {
     super(props);
@@ -72,6 +80,7 @@ class ElementSelect extends Component {
 
     if (this.props.parameters.length) {
       const paramsIndex = categoriesCopy.findIndex(cat => cat.name === 'Parameters');
+
       let parametersCategory;
       if (paramsIndex >= 0) {
         [parametersCategory] = categoriesCopy.splice(paramsIndex, 1);
@@ -113,12 +122,12 @@ class ElementSelect extends Component {
   }
 
   onDemographicElementSelected = (demographic) => {
-    this.setState({
-      selectedElement: null
-    });
+    this.setState({ selectedElement: null });
+
     const suggestion = this.state.categories
       .find(cat => cat.name === 'Demographics')
       .entries.find(entry => entry.id === demographic.value);
+
     this.onSuggestionSelected(suggestion);
   }
 
@@ -128,7 +137,6 @@ class ElementSelect extends Component {
 
   render() {
     const { selectedElement } = this.state;
-    // const placeholderText = 'Add element';
     const placeholderText = 'Choose element type';
     const elementOptions = [
       { value: 'condition', label: 'Condition', vsacAuthRequired: true },
