@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 import moxios from 'moxios';
@@ -192,7 +193,7 @@ describe('artifact actions', () => {
     beforeEach(() => { moxios.install(); });
     afterEach(() => { moxios.uninstall(); });
 
-    it('creates SAVE_ARTIFACT_SUCCESS after successfully saving an artifact', (done) => {
+    it('makes a POST request to save a new artifact', (done) => {
       moxios.stubs.track({
         url: '/authoring/api/artifacts', method: 'POST', response: { status: 200, response: mockArtifact }
       });
@@ -208,6 +209,30 @@ describe('artifact actions', () => {
       ];
 
       store.dispatch(actions.saveArtifact(mockArtifact)).then(() => {
+        expect(store.getActions()).toEqual(expectedActions);
+        done();
+      });
+    });
+
+    it('makes a PUT request to update an existing artifact', (done) => {
+      const mockArtifactWithId = _.cloneDeep(mockArtifact);
+      mockArtifactWithId._id = '1234abcd';
+
+      moxios.stubs.track({
+        url: '/authoring/api/artifacts', method: 'PUT', response: { status: 200, response: {} }
+      });
+      moxios.stubs.track({
+        url: '/authoring/api/artifacts', method: 'GET', response: { status: 200, response: [mockArtifactWithId] }
+      });
+
+      const store = mockStore({});
+      const expectedActions = [
+        { type: types.SAVE_ARTIFACT_REQUEST },
+        { type: types.ARTIFACTS_REQUEST },
+        { type: types.SAVE_ARTIFACT_SUCCESS, artifact: mockArtifactWithId }
+      ];
+
+      store.dispatch(actions.saveArtifact(mockArtifactWithId)).then(() => {
         expect(store.getActions()).toEqual(expectedActions);
         done();
       });
