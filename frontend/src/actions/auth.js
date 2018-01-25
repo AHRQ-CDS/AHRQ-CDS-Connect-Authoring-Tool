@@ -37,7 +37,7 @@ export function getCurrentUser() {
   return (dispatch) => {
     dispatch(requestUser());
 
-    sendUserRequest()
+    return sendUserRequest()
       .then(data => dispatch(userReceived(data.uid)))
       .catch(() => dispatch(userReceived(null)));
   };
@@ -110,12 +110,9 @@ export function logoutUser() {
   return (dispatch) => {
     dispatch(requestLogout());
 
-    return new Promise((resolve, reject) => {
-      axios.get(`${API_BASE}/auth/logout`)
-        .then(() => resolve())
-        .then(() => dispatch(logoutSuccess()))
-        .catch(error => dispatch(logoutFailure(error)));
-    });
+    return axios.get(`${API_BASE}/auth/logout`)
+      .then(() => dispatch(logoutSuccess()))
+      .catch(error => dispatch(logoutFailure(error)));
   };
 }
 
@@ -127,4 +124,3 @@ export function setAuthStatus(status) {
     status
   };
 }
-
