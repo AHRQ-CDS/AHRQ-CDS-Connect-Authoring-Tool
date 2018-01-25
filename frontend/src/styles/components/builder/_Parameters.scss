@@ -25,8 +25,22 @@
 .value-set-parameter {
   margin: 10px 0;
 
+  label {
+    display: flex;
+    align-items: center;
+  }
+
   .label {
     display: inline-block;
-    min-width: 150px;
+    min-width: 160px;
   }
+
+  .Select {
+    margin-left: 10px;
+    min-width: 245px;
+  }
+}
+
+.value-set-parameter .Select {
+  display: inline-block;
 }

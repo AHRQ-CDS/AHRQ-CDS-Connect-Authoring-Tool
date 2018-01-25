@@ -1,6 +1,15 @@
 .Select {
-  margin: 0 10px;
+  margin-right: 10px;
   max-width: 400px;
+
+  &-input {
+    @include respond-to-min('1440px') { height: 46px; }
+  }
+
+  &-value-label,
+  &-placeholder {
+    @include respond-to-min('1440px') { line-height: 46px; }
+  }
 
   &-placeholder {
     color: #aaa;

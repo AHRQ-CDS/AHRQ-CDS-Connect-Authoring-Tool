@@ -16,15 +16,14 @@ export default class ValueSetParameter extends Component {
           <span className="label">{this.props.param.name}:</span>
 
           <Select labelKey={'name'}
+            placeholder={`Select ${this.props.param.name}`}
             autofocus
             options={this.props.valueSets}
             inputProps={{ id }}
             clearable={true}
             name={this.props.param.id}
             value={this.props.param.value}
-            onChange={(value) => {
-              this.props.updateInstance({ [this.props.param.id]: value });
-            }}
+            onChange={(value) => { this.props.updateInstance({ [this.props.param.id]: value }); }}
             searchable={true} />
         </label>
       </div>

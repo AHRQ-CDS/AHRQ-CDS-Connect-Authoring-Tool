@@ -127,34 +127,46 @@ $break-desktop: $screen-lg - 1; // desktop-regular (> desktop-wide)
       @content;
     }
   }
+
   @else if $media == tablet {
     @media only screen and (min-width: $break-mobile + 1) and (max-width: $break-tablet) {
       @content;
     }
   }
+
   @else if $media == desktop {
     @media only screen and (min-width: $break-tablet + 1) and (max-width: $break-desktop) {
       @content;
     }
   }
+
   @else if $media == desktop-wide {
     @media only screen and (min-width: $break-desktop + 1) {
       @content;
     }
   }
+
   @else if $media == handheld {
     @media only screen and (max-width: $break-tablet) {
       @content;
     }
   }
+
   @else if $media == non-handheld {
     @media only screen and (min-width: $break-tablet +1) {
       @content;
     }
   }
+
   @else {
     @media only screen and (max-width: $media) {
       @content;
     }
+  }
+}
+
+@mixin respond-to-min($media) {
+  @media only screen and (min-width: $media) {
+    @content;
   }
 }

@@ -192,9 +192,10 @@ class ElementSelect extends Component {
             onElementSelected={this.onSuggestionSelected}
           /> */}
         </div>
+
         {
           selectedElement && selectedElement.vsacAuthRequired &&
-            <button className="primary-button">
+            <button className="primary-button vsac-authenticate">
               <FontAwesome name="key" />
               {' '}Authenticate VSAC
             </button>
