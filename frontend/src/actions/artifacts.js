@@ -203,7 +203,7 @@ export function loadArtifact(id) {
     return sendArtifactRequest(id)
       .then(data => dispatch(loadArtifactSuccess(data)))
       .catch(error => dispatch(loadArtifactFailure(error)))
-      .then(dispatch(setStatusMessage(null)));
+      .then(() => dispatch(setStatusMessage(null)));
   };
 }
 
@@ -415,7 +415,7 @@ export function saveArtifact(artifact) {
     return sendSaveArtifactRequest(artifact)
       .then(data => dispatch(saveArtifactSuccess(data)))
       .catch(error => dispatch(saveArtifactFailure(error)))
-      .then(dispatch(loadArtifacts()));
+      .then(() => dispatch(loadArtifacts()));
   };
 }
 
@@ -457,6 +457,6 @@ export function deleteArtifact(artifact) {
     return sendDeleteArtifactRequest(artifact)
       .then(data => dispatch(deleteArtifactSuccess(artifact)))
       .catch(error => dispatch(deleteArtifactFailure(error)))
-      .then(dispatch(loadArtifacts()));
+      .then(() => dispatch(loadArtifacts()));
   };
 }

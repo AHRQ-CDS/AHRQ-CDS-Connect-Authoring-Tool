@@ -89,18 +89,19 @@ describe('artifact actions', () => {
     afterEach(() => { moxios.uninstall(); });
 
     it('creates LOAD_ARTIFACT_SUCCESS after successfully loading an artifact', () => {
-      moxios.wait(() => {
-        const request = moxios.requests.mostRecent();
-        request.respondWith({ status: 200, response: [mockArtifact] });
-      });
-
       const id = '1';
       const store = mockStore({ artifacts: [] });
       const expectedActions = [
         { type: types.ARTIFACT_REQUEST, id },
-        { type: types.SET_STATUS_MESSAGE, message: null },
-        { type: types.LOAD_ARTIFACT_SUCCESS, artifact: mockArtifact }
+        { type: types.LOAD_ARTIFACT_SUCCESS, artifact: mockArtifact },
+        { type: types.SET_STATUS_MESSAGE, message: null }
       ];
+
+      moxios.stubs.track({
+        url: `/authoring/api/artifacts/${id}`,
+        method: 'GET',
+        response: { status: 200, response: [mockArtifact] }
+      });
 
       return store.dispatch(actions.loadArtifact(id)).then(() => {
         expect(store.getActions()).toEqual(expectedActions);
@@ -131,8 +132,8 @@ describe('artifact actions', () => {
         { type: types.LOAD_TEMPLATES_SUCCESS, templates: mockTemplates },
         { type: types.INITIALIZE_ARTIFACT, artifact: mockArtifact },
         { type: types.SAVE_ARTIFACT_REQUEST },
-        { type: types.ARTIFACTS_REQUEST },
         { type: types.SAVE_ARTIFACT_SUCCESS, artifact: {} },
+        { type: types.ARTIFACTS_REQUEST },
         { type: types.LOAD_ARTIFACTS_SUCCESS, artifacts: [mockArtifact] },
         { type: types.ADD_ARTIFACT_SUCCESS }
       ];
@@ -193,28 +194,31 @@ describe('artifact actions', () => {
     beforeEach(() => { moxios.install(); });
     afterEach(() => { moxios.uninstall(); });
 
-    it('makes a POST request to save a new artifact', (done) => {
+    it('makes a POST request to save a new artifact', () => {
+      const mockArtifactWithId = _.cloneDeep(mockArtifact);
+      mockArtifactWithId._id = '1234abcd';
+
       moxios.stubs.track({
         url: '/authoring/api/artifacts', method: 'POST', response: { status: 200, response: mockArtifact }
       });
       moxios.stubs.track({
-        url: '/authoring/api/artifacts', method: 'GET', response: { status: 200, response: [mockArtifact] }
+        url: /\/artifacts.*/, method: 'GET', response: { status: 200, response: [mockArtifactWithId] }
       });
 
       const store = mockStore({});
       const expectedActions = [
         { type: types.SAVE_ARTIFACT_REQUEST },
+        { type: types.SAVE_ARTIFACT_SUCCESS, artifact: mockArtifact },
         { type: types.ARTIFACTS_REQUEST },
-        { type: types.SAVE_ARTIFACT_SUCCESS, artifact: mockArtifact }
+        { type: types.LOAD_ARTIFACTS_SUCCESS, artifacts: [mockArtifactWithId] }
       ];
 
-      store.dispatch(actions.saveArtifact(mockArtifact)).then(() => {
+      return store.dispatch(actions.saveArtifact(mockArtifact)).then(() => {
         expect(store.getActions()).toEqual(expectedActions);
-        done();
       });
     });
 
-    it('makes a PUT request to update an existing artifact', (done) => {
+    it('makes a PUT request to update an existing artifact', () => {
       const mockArtifactWithId = _.cloneDeep(mockArtifact);
       mockArtifactWithId._id = '1234abcd';
 
@@ -222,19 +226,51 @@ describe('artifact actions', () => {
         url: '/authoring/api/artifacts', method: 'PUT', response: { status: 200, response: {} }
       });
       moxios.stubs.track({
-        url: '/authoring/api/artifacts', method: 'GET', response: { status: 200, response: [mockArtifactWithId] }
+        url: /\/artifacts.*/, method: 'GET', response: { status: 200, response: [mockArtifactWithId] }
       });
 
       const store = mockStore({});
       const expectedActions = [
         { type: types.SAVE_ARTIFACT_REQUEST },
+        { type: types.SAVE_ARTIFACT_SUCCESS, artifact: mockArtifactWithId },
         { type: types.ARTIFACTS_REQUEST },
-        { type: types.SAVE_ARTIFACT_SUCCESS, artifact: mockArtifactWithId }
+        { type: types.LOAD_ARTIFACTS_SUCCESS, artifacts: [mockArtifactWithId] }
       ];
 
-      store.dispatch(actions.saveArtifact(mockArtifactWithId)).then(() => {
+      return store.dispatch(actions.saveArtifact(mockArtifactWithId)).then(() => {
         expect(store.getActions()).toEqual(expectedActions);
-        done();
+      });
+    });
+  });
+
+  // ----------------------- DELETE ARTIFACT ------------------------------- //
+  describe('delete artifact', () => {
+    beforeEach(() => { moxios.install(); });
+    afterEach(() => { moxios.uninstall(); });
+
+    it('makes a DELETE request to delete an artifact', () => {
+      const mockArtifactWithId = _.cloneDeep(mockArtifact);
+      mockArtifactWithId._id = '1234abcd';
+
+      moxios.stubs.track({
+        url: `/authoring/api/artifacts/${mockArtifactWithId._id}`,
+        method: 'DELETE',
+        response: { status: 200, response: {} }
+      });
+      moxios.stubs.track({
+        url: /\/artifacts.*/, method: 'GET', response: { status: 200, response: [] }
+      });
+
+      const store = mockStore({});
+      const expectedActions = [
+        { type: types.DELETE_ARTIFACT_REQUEST },
+        { type: types.DELETE_ARTIFACT_SUCCESS, artifact: mockArtifactWithId },
+        { type: types.ARTIFACTS_REQUEST },
+        { type: types.LOAD_ARTIFACTS_SUCCESS, artifacts: [] }
+      ];
+
+      return store.dispatch(actions.deleteArtifact(mockArtifactWithId)).then(() => {
+        expect(store.getActions()).toEqual(expectedActions);
       });
     });
   });
