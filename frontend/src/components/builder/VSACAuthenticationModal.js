@@ -7,10 +7,17 @@ import Modal from '../elements/Modal';
 class VSACAuthenticationModal extends Component {
   constructor(props) {
     super(props);
+<<<<<<< a971ab19c192ccc42276ede23e44e6a9b20e6199
 
     this.state = { showVSACAuthModal: false };
   }
 
+=======
+    
+    this.state = { showVSACAuthModal: false };
+  }
+  
+>>>>>>> Added modal, actions, and reducers for logging into VSAC
   openVSACLoginModal = () => {
     this.setState({ showVSACAuthModal: true });
   }
@@ -19,14 +26,22 @@ class VSACAuthenticationModal extends Component {
     this.setState({ showVSACAuthModal: false });
     this.props.setVSACAuthStatus(null);
   }
+<<<<<<< a971ab19c192ccc42276ede23e44e6a9b20e6199
 
+=======
+  
+>>>>>>> Added modal, actions, and reducers for logging into VSAC
   loginToVSAC = (event) => {
     event.preventDefault();
 
     const { username, password } = this.refs;
     this.props.loginVSACUser(username.value.trim(), password.value.trim());
   }
+<<<<<<< a971ab19c192ccc42276ede23e44e6a9b20e6199
 
+=======
+  
+>>>>>>> Added modal, actions, and reducers for logging into VSAC
   renderedAuthStatusText() {
     const { vsacStatus, vsacStatusText } = this.props;
 
@@ -38,9 +53,15 @@ class VSACAuthenticationModal extends Component {
       </div>
     );
   }
+<<<<<<< a971ab19c192ccc42276ede23e44e6a9b20e6199
 
   render() {
     return (
+=======
+  
+  render() {
+    return(
+>>>>>>> Added modal, actions, and reducers for logging into VSAC
       <div>
         <button className="primary-button vsac-authenticate" onClick={this.openVSACLoginModal}>
           <FontAwesome name="key" />{' '}Authenticate VSAC
@@ -66,7 +87,11 @@ class VSACAuthenticationModal extends Component {
           </div>
         </Modal>
       </div>
+<<<<<<< a971ab19c192ccc42276ede23e44e6a9b20e6199
     );
+=======
+    )
+>>>>>>> Added modal, actions, and reducers for logging into VSAC
   }
 }
 
@@ -75,6 +100,12 @@ VSACAuthenticationModal.propTypes = {
   setVSACAuthStatus: PropTypes.func.isRequired,
   vsacStatus: PropTypes.string,
   vsacStatusText: PropTypes.string.isRequired
+<<<<<<< a971ab19c192ccc42276ede23e44e6a9b20e6199
 };
 
 export default VSACAuthenticationModal;
+=======
+}
+
+export default VSACAuthenticationModal;
+>>>>>>> Added modal, actions, and reducers for logging into VSAC
