@@ -14,6 +14,7 @@ import {
 import loadTemplates from '../actions/templates';
 import loadResources from '../actions/resources';
 import loadValueSets from '../actions/value_sets';
+import { loginVSACUser, setVSACAuthStatus } from '../actions/vsac';
 
 import EditArtifactModal from '../components/artifact/EditArtifactModal';
 import ConjunctionGroup from '../components/builder/ConjunctionGroup';
@@ -254,7 +255,8 @@ export class Builder extends Component {
   // ----------------------- RENDER ---------------------------------------- //
 
   renderConjunctionGroup = (treeName) => {
-    const { artifact, templates, resources, valueSets } = this.props;
+    const { artifact, templates, resources, valueSets, loginVSACUser,
+      setVSACAuthStatus, vsacStatus, vsacStatusText, timeLastAuthenticated } = this.props;
     const namedParameters = _.filter(artifact.parameters, p => (!_.isNull(p.name) && p.name.length));
 
     if (artifact && artifact[treeName].childInstances) {
@@ -273,7 +275,12 @@ export class Builder extends Component {
           deleteInstance={this.deleteInstance}
           getAllInstances={this.getAllInstances}
           updateInstanceModifiers={this.updateInstanceModifiers}
-          parameters={namedParameters} />
+          parameters={namedParameters}
+          loginVSACUser={loginVSACUser}
+          setVSACAuthStatus={setVSACAuthStatus}
+          vsacStatus={vsacStatus}
+          vsacStatusText={vsacStatusText}
+          timeLastAuthenticated={timeLastAuthenticated}/>
       );
     }
 
@@ -458,6 +465,8 @@ function mapDispatchToProps(dispatch) {
     saveArtifact,
     updateAndSaveArtifact,
     publishArtifact,
+    loginVSACUser,
+    setVSACAuthStatus,
     clearArtifactValidationWarnings
   }, dispatch);
 }
@@ -471,7 +480,10 @@ function mapStateToProps(state) {
     templates: state.templates.templates,
     resources: state.resources.resources,
     valueSets: state.valueSets.valueSets,
-    publishEnabled: state.artifacts.publishEnabled
+    publishEnabled: state.artifacts.publishEnabled,
+    vsacStatus: state.vsac.authStatus,
+    vsacStatusText: state.vsac.authStatusText,
+    timeLastAuthenticated: state.vsac.timeLastAuthenticated
   };
 }
 

@@ -7,6 +7,7 @@ import artifactsReducer from './artifacts';
 import templatesReducer from './templates';
 import resourcesReducer from './resources';
 import valueSetsReducer from './value_sets';
+import vsacReducer from './vsac';
 
 const rootReducer = combineReducers({
   routing: routerReducer,
@@ -15,7 +16,8 @@ const rootReducer = combineReducers({
   artifacts: artifactsReducer,
   templates: templatesReducer,
   resources: resourcesReducer,
-  valueSets: valueSetsReducer
+  valueSets: valueSetsReducer,
+  vsac: vsacReducer
 });
 
 export default rootReducer;

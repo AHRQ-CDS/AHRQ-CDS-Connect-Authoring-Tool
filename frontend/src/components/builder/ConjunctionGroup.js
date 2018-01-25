@@ -261,6 +261,11 @@ export default class ConjunctionGroup extends Component {
             categories={this.props.templates}
             onSuggestionSelected={this.addChild}
             parameters={this.props.parameters}
+            loginVSACUser={this.props.loginVSACUser}
+            setVSACAuthStatus={this.props.setVSACAuthStatus}
+            vsacStatus={this.props.vsacStatus}
+            vsacStatusText={this.props.vsacStatusText}
+            timeLastAuthenticated={this.props.timeLastAuthenticated}
           />
         </div>
       </div>

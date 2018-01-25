@@ -57,6 +57,11 @@ $secondary-button-bg-color: $white;
 $secondary-button-border-color: $white;
 $secondary-button-border-hover-color: $blue;
 
+$disabled-button-text-color: $gray-light;
+$disabled-button-bg-color: $gray-lighter;
+$disabled-button-border-color: $gray-lighter;
+$disabled-button-border-hover-color: $gray-lighter;
+
 // form colors
 $form-input-placeholder-color: $gray;
 $form-validation-success-color: shade($blue, 60%);

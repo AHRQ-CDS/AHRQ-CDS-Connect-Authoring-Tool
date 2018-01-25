@@ -6,6 +6,7 @@ import FontAwesome from 'react-fontawesome';
 
 // import ElementModal from './ElementModal';
 import ElementSelectMenuRenderer from './ElementSelectMenuRenderer';
+import VSACAuthenticationModal from './VSACAuthenticationModal';
 import filterUnsuppressed from '../../utils/filter';
 import { sortAlphabeticallyByKey } from '../../utils/sort';
 
@@ -121,6 +122,29 @@ class ElementSelect extends Component {
     this.setState({ selectedCategory: category });
   }
 
+  renderVSACLogin = () => {
+    // If last time authenticated was less than 7.5 hours ago, force user to log in again.
+    if (this.props.timeLastAuthenticated < new Date() - 27000000) {
+      return (
+        <VSACAuthenticationModal
+          loginVSACUser={this.props.loginVSACUser}
+          setVSACAuthStatus={this.props.setVSACAuthStatus}
+          vsacStatus={this.props.vsacStatus}
+          vsacStatusText={this.props.vsacStatusText}
+        />
+      );
+    } else {
+      return (
+        <div>
+          <button className="disabled-button vsac-authenticate" disabled={true}>
+            <FontAwesome name="check" /> VSAC Authenticated
+          </button>
+          <button className="primary-button">Choose Value Sets</button>
+        </div>
+      );
+    }
+  }
+
   onDemographicElementSelected = (demographic) => {
     this.setState({ selectedElement: null });
 
@@ -195,10 +219,7 @@ class ElementSelect extends Component {
 
         {
           selectedElement && selectedElement.vsacAuthRequired &&
-            <button className="primary-button vsac-authenticate">
-              <FontAwesome name="key" />
-              {' '}Authenticate VSAC
-            </button>
+            this.renderVSACLogin()
         }
       </div>
     );

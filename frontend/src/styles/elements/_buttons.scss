@@ -34,6 +34,23 @@ button.transparent-button {
   opacity: .45;
 }
 
+button.disabled-button {
+  @include button(
+    $disabled-button-text-color,
+    $disabled-button-bg-color,
+    $disabled-button-border-color,
+    $disabled-button-border-hover-color,
+    none
+  );
+
+  &:hover,
+   &:focus,
+   &:active {
+     background-color: $disabled-button-bg-color;
+     color: $disabled-button-text-color;
+   }
+}
+
 button.danger-button {
   @include button($white, darken($red, 10%), darken($red, 10%), darken($red, 10%), none);
 }

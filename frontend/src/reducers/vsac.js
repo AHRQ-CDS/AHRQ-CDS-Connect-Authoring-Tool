@@ -1,0 +1,44 @@
+import {
+  VSAC_AUTHENTICATION_REQUEST, VSAC_AUTHENTICATION_RECEIVED,
+  VSAC_LOGIN_REQUEST, VSAC_LOGIN_SUCCESS, VSAC_LOGIN_FAILURE,
+  SET_VSAC_AUTH_STATUS
+} from '../actions/types';
+
+const defaultState = {
+  isAuthenticating: false,
+  timeLastAuthenticated: null,
+  authStatus: null,
+  authStatusText: ''
+};
+
+export default function auth(state = defaultState, action) {
+  switch (action.type) {
+    case VSAC_AUTHENTICATION_REQUEST:
+      return Object.assign({}, state, { isAuthenticating: true });
+    case VSAC_AUTHENTICATION_RECEIVED:
+      return Object.assign({}, state, {
+        isAuthenticating: false,
+        timeLastAuthenticated: action.timeLastAuthenticated
+      });
+    case VSAC_LOGIN_REQUEST:
+      return Object.assign({}, state, { isAuthenticating: true, authStatus: null });
+    case VSAC_LOGIN_SUCCESS:
+      return Object.assign({}, state, {
+        isAuthenticating: false,
+        timeLastAuthenticated: action.timeLastAuthenticated,
+        authStatus: 'loginSuccess',
+        authStatusText: 'You have been successfully logged in to VSAC.'
+      });
+    case VSAC_LOGIN_FAILURE:
+      return Object.assign({}, state, {
+        isAuthenticating: false,
+        timeLastAuthenticated: null,
+        authStatus: 'loginFailure',
+        authStatusText: `Authentication Error: ${action.status} ${action.statusText}, please try again.`
+      });
+    case SET_VSAC_AUTH_STATUS:
+      return Object.assign({}, state, { authStatus: action.status });
+    default:
+      return state;
+  }
+}
