@@ -7,12 +7,9 @@ import * as actions from '../../actions/artifacts';
 import * as types from '../../actions/types';
 import mockArtifact from '../../mocks/mockArtifact';
 import mockTemplates from '../../mocks/mockTemplates';
-import { resetUniqueIdCounter } from '../../utils/templates';
 
 const middlewares = [thunk];
 const mockStore = configureMockStore(middlewares);
-
-afterEach(() => resetUniqueIdCounter());
 
 describe('artifact actions', () => {
   // ----------------------- SET STATUS MESSAGE ---------------------------- //
@@ -126,10 +123,6 @@ describe('artifact actions', () => {
         url: /\/artifacts.*/, method: 'GET', response: { status: 200, response: [mockArtifact] }
       });
 
-      // moxios.wait(() => {
-      //   moxios.requests.debug();
-      // });
-
       const store = mockStore({ artifacts: { artifact: {} } });
       const expectedActions = [
         { type: types.ADD_ARTIFACT_REQUEST },
@@ -180,12 +173,12 @@ describe('artifact actions', () => {
       const store = mockStore({ artifacts: [] });
       const expectedActions = [
         { type: types.PUBLISH_ARTIFACT_REQUEST },
-        { type: types.PUBLISH_ARTIFACT_SUCCESS, active: [] }
+        { type: types.PUBLISH_ARTIFACT_SUCCESS, artifact: {} }
       ];
 
       moxios.wait(() => {
         const request = moxios.requests.mostRecent();
-        request.respondWith({ status: 200, response: { active: [] } });
+        request.respondWith({ status: 200, response: {} });
       });
 
       return store.dispatch(actions.publishArtifact(mockArtifact)).then(() => {
@@ -195,32 +188,29 @@ describe('artifact actions', () => {
   });
 
   // ----------------------- SAVE ARTIFACT --------------------------------- //
-  // describe('save artifact', () => {
-  //   beforeEach(() => { moxios.install(); });
-  //   afterEach(() => { moxios.uninstall(); });
+  describe('save artifact', () => {
+    beforeEach(() => { moxios.install(); });
+    afterEach(() => { moxios.uninstall(); });
 
-  //   it('creates SAVE_ARTIFACT_SUCCESS after successfully saving an artifact', (done) => {
-  //     moxios.stubRequest('/authoring/api/config/templates', { status: 200, response: mockTemplates });
-  //     moxios.stubs.track({
-  //       url: '/authoring/api/artifacts', method: 'PUT', response: { status: 200, response: [] }
-  //     });
-  //     moxios.stubs.track({
-  //       url: '/authoring/api/artifacts', method: 'GET', response: { status: 200, response: [mockArtifact] }
-  //     });
+    it('creates SAVE_ARTIFACT_SUCCESS after successfully saving an artifact', (done) => {
+      moxios.stubs.track({
+        url: '/authoring/api/artifacts', method: 'POST', response: { status: 200, response: mockArtifact }
+      });
+      moxios.stubs.track({
+        url: '/authoring/api/artifacts', method: 'GET', response: { status: 200, response: [mockArtifact] }
+      });
 
-  //     const store = mockStore({ artifacts: [] });
-  //     const expectedActions = [
-  //       { type: types.SAVE_ARTIFACT_REQUEST },
-  //       { type: types.LOAD_ARTIFACTS_SUCCESS, artifacts: [mockArtifact] },
-  //       { type: types.SAVE_ARTIFACT_SUCCESS }
-  //     ];
+      const store = mockStore({});
+      const expectedActions = [
+        { type: types.SAVE_ARTIFACT_REQUEST },
+        { type: types.ARTIFACTS_REQUEST },
+        { type: types.SAVE_ARTIFACT_SUCCESS, artifact: mockArtifact }
+      ];
 
-  //     moxios.wait(() => {
-  //       store.dispatch(actions.saveArtifact(mockArtifact)).then(() => {
-  //         expect(store.getActions()).toEqual(expectedActions);
-  //         done();
-  //       });
-  //     });
-  //   });
-  // });
+      store.dispatch(actions.saveArtifact(mockArtifact)).then(() => {
+        expect(store.getActions()).toEqual(expectedActions);
+        done();
+      });
+    });
+  });
 });

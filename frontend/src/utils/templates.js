@@ -1,5 +1,6 @@
 import _ from 'lodash';
 
+const testMode = process.env.NODE_ENV === 'test';
 let uniqueIdCounter = 1;
 
 /**
@@ -12,7 +13,12 @@ export default function createTemplateInstance(template, children) {
   const instance = _.cloneDeep(template);
 
   // add a unique id to the instance
-  instance.uniqueId = _.uniqueId(`${instance.id}-${++uniqueIdCounter}`); // eslint-disable-line no-plusplus
+  if (testMode) {
+    // TODO: find a better way to implement this
+    instance.uniqueId = `${instance.id}-TEST-1`;
+  } else {
+    instance.uniqueId = _.uniqueId(`${instance.id}-${++uniqueIdCounter}`); // eslint-disable-line no-plusplus
+  }
 
   // if the template has a conjunction, add the given children or an empty array
   if (template.conjunction) {
@@ -20,11 +26,4 @@ export default function createTemplateInstance(template, children) {
   }
 
   return instance;
-}
-
-/**
- * Used in testing, resets the global unique ID counter
- */
-export function resetUniqueIdCounter() {
-  uniqueIdCounter = 1;
 }

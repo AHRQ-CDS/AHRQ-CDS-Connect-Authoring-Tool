@@ -5,7 +5,7 @@ const mockArtifact = {
   uniqueIdCounter: 0,
   expTreeInclude: {
     id: 'And',
-    uniqueId: 'And-32',
+    uniqueId: 'And-TEST-1',
     name: '',
     conjunction: true,
     returnType: 'boolean',
@@ -15,7 +15,7 @@ const mockArtifact = {
   },
   expTreeExclude: {
     id: 'And',
-    uniqueId: 'And-43',
+    uniqueId: 'And-TEST-1',
     name: '',
     conjunction: true,
     returnType: 'boolean',
@@ -47,7 +47,7 @@ const mockArtifact = {
       path: '',
       returnType: 'boolean',
       subpopulationName: 'Subpopulation 1',
-      uniqueId: 'And-21',
+      uniqueId: 'And-TEST-1',
     }
   ],
   booleanParameters: [],
