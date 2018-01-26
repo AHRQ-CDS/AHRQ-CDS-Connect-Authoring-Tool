@@ -212,6 +212,63 @@ class CqlArtifact {
           });
           break;
         }
+        case 'observation_vsac': {
+          // All information in observations array will be provided by the selections made on the frontend.
+          const observationValueSets = {
+            id: 'generic_observation', // This is needed for creating a separate union'ed variable name. Needs to be unique.
+            observations: [
+              { name: 'observation_vs1', oid: parameter.value },
+              { name: 'observation_vs2', oid: parameter.value }
+            ],
+            // TODO: Decide what if this information is provided by the user and which needs to be inferred
+            // concepts: [
+            //   {
+            //     name: 'Concept Name A',
+            //     codes: [
+            //       {
+            //         name: 'Code  Name A',
+            //         code: 'A01',
+            //         codeSystem: { name: 'CS A', id: 'A.90' },
+            //         display: 'DisplayName A'
+            //       }, 
+            //     ],
+            //     display: 'A'
+            //   },
+            // ]
+          };
+          // For observations that have codes associated with them instead of valuesets
+          if (observationValueSets.concepts) {
+            const values = [];
+            observationValueSets .concepts.forEach((concept) => {
+              concept.codes.forEach((code) => {
+                this.codeSystemMap.set(code.codeSystem.name, code.codeSystem.id);
+                this.codeMap.set(code.name, code);
+              });
+              this.conceptMap.set(concept.name, concept);
+              values.push(concept.name);
+            });
+            context.values = values;
+            context.template = 'ObservationByConcept';
+          } else {
+            context.values = observationValueSets.observations.map((observation) => {
+              this.resourceMap.set(observation.name, observation);
+              return observation.name;
+            });
+            // For observations that use more than one valueset, create a separate define statement that
+            // groups the queries for each valueset into one expression that is then referenced
+            if (observationValueSets.observations.length > 1) {
+              if (!this.referencedElements.find(concept => concept.name === `${observationValueSets.id}_valuesets`)) {
+                const multipleValueSetExpression = createMultipleValueSetExpression(observationValueSets.id,
+                  observationValueSets.observations,
+                  'Observation');
+                this.referencedElements.push(multipleValueSetExpression);
+              }
+              context.values = [`"${observationValueSets.id}_valuesets"`];
+              context.template = 'GenericStatement'; // Potentially move this to the object itself in formTemplates
+            }
+          }
+          break;
+        }
         case 'number': {
           context[parameter.id] = parameter.value;
           if ('exclusive' in parameter) {
@@ -254,6 +311,60 @@ class CqlArtifact {
           }
           break;
         }
+        case 'condition_vsac': {
+          const conditionValueSets = {
+            id: 'generic_condition',
+            conditions: [
+              { name: 'condition_vs1', oid: parameter.value },
+              { name: 'condition_vs2', oid: parameter.value },
+            ],
+            // concepts: [
+            //   {
+            //     name: 'Concept Name',
+            //     codes: [
+            //       {
+            //         name: 'Code Name',
+            //         code: 'E78.01',
+            //         codeSystem: { name: 'ICD-10-CM', id: 'urn:oid:.1.2' },
+            //         display: 'Code Display'
+            //       }
+            //     ],
+            //     display: 'Concept Display'
+            //   }
+            // ]
+          }
+          if (conditionValueSets.concepts) {
+            const values = [];
+            conditionValueSets.concepts.forEach((concept) => {
+              concept.codes.forEach((code) => {
+                this.codeSystemMap.set(code.codeSystem.name, code.codeSystem.id);
+                this.codeMap.set(code.name, code);
+              });
+              this.conceptMap.set(concept.name, concept);
+              values.push(concept.name);
+            });
+            context.values = values;
+            context.template = 'ConditionsByConcept';
+          } else {
+            context.values = conditionValueSets.conditions.map((condition) => {
+              this.resourceMap.set(condition.name, condition);
+              return condition.name;
+            });
+            // For conditions that use more than one valueset, create a separate define statement that
+            // groups the queries for each valueset into one expression that is then referenced
+            if (conditionValueSets.conditions.length > 1) {
+              if (!this.referencedElements.find(concept => concept.name === `${conditionValueSets.id}_valuesets`)) {
+                const multipleValueSetExpression = createMultipleValueSetExpression(conditionValueSets.id,
+                  conditionValueSets.conditions,
+                  'Conditions');
+                this.referencedElements.push(multipleValueSetExpression);
+              }
+              context.values = [`"${conditionValueSets.id}_valuesets"`];
+              context.template = 'GenericStatement'; // Potentially move this to the object itself in formTemplates
+            }
+          }
+          break;
+        }
         case 'medication': {
           const medicationValueSets = ValueSets.medications[parameter.value];
           // TODO Look through entire modifier list for `active` instead of just head
@@ -271,9 +382,49 @@ class CqlArtifact {
           }
           break;
         }
+        case 'medication_vsac': {
+          const medicationValueSets = {
+            name: 'medication_vsac',
+            medications: [
+              { name: "medication_vs1", oid: parameter.value }
+            ]
+          };
+          // TODO Look through entire modifier list for `active` instead of just head
+          const activeApplied = (!_.isEmpty(element.modifiers) && _.head(element.modifiers).id === 'ActiveMedication');
+          medicationValueSets.medications.map((medication) => {
+            this.resourceMap.set(medication.name, medication);
+            let medicationStatement = `[MedicationStatement: "${medication.name}"]`;
+            let medicationOrder = `[MedicationOrder: "${medication.name}"]`;
+            if (activeApplied) {
+              context.values.push(`C3F.ActiveMedicationStatement(${medicationStatement})`);
+              context.values.push(`C3F.ActiveMedicationOrder(${medicationOrder})`);
+            } else {
+              context.values.push(medicationStatement);
+              context.values.push(medicationOrder);
+            }
+          });
+          if (activeApplied) {
+            element.modifiers.shift(); // remove 'active' modifier because we supply it above
+          }
+          break;
+        }
         case 'procedure': {
           const procedureValueSets = ValueSets.procedures[parameter.value];
           context[parameter.id] = procedureValueSets;
+          context.values = procedureValueSets.procedures.map((procedure) => {
+            this.resourceMap.set(procedure.name, procedure);
+            return procedure.name;
+          });
+          break;
+        }
+        case 'procedure_vsac': {
+          const procedureValueSets = {
+            name: 'procedure_vsac',
+            procedures: [
+              { name: 'procedure_vs1', oid: parameter.value },
+              { name: 'procedure_vs2', oid: parameter.value }
+            ]
+          };
           context.values = procedureValueSets.procedures.map((procedure) => {
             this.resourceMap.set(procedure.name, procedure);
             return procedure.name;
@@ -289,6 +440,20 @@ class CqlArtifact {
           context[parameter.id] = encounterValueSets;
           break;
         }
+        case 'encounter_vsac': {
+          const encounterValueSets = {
+            name: 'encounter_vsac',
+            encounters: [
+              { name: 'encounter_vs1', oid: parameter.value },
+              { name: 'encounter_vs2', oid: parameter.value }
+            ]
+          };
+          context.values = encounterValueSets.encounters.map((encounter) => {
+            this.resourceMap.set(encounter.name, encounter);
+            return encounter.name;
+          });
+          break;
+        }
         case 'allergyIntolerance' : {
           const allergyIntoleranceValueSets = ValueSets.allergyIntolerances[parameter.value];
           context.values = allergyIntoleranceValueSets.allergyIntolerances.map((allergyIntolerance) => {
@@ -296,6 +461,19 @@ class CqlArtifact {
             return allergyIntolerance.name;
           });
           context[parameter.id] = allergyIntoleranceValueSets;
+          break;
+        }
+        case 'allergyIntolerance_vsac' : {
+          const allergyIntoleranceValueSets = {
+            name: 'allergyIntolerance_vsac',
+            allergyIntolerances: [
+              { name: 'allergyIntolerance_vs1', oid: parameter.value }
+            ]
+          };
+          context.values = allergyIntoleranceValueSets.allergyIntolerances.map((allergyIntolerance) => {
+            this.resourceMap.set(allergyIntolerance.name, allergyIntolerance);
+            return allergyIntolerance.name;
+          });
           break;
         }
         case 'pregnancy': {
