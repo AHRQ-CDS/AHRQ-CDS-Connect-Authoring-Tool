@@ -255,8 +255,10 @@ export class Builder extends Component {
   // ----------------------- RENDER ---------------------------------------- //
 
   renderConjunctionGroup = (treeName) => {
-    const { artifact, templates, resources, valueSets, loginVSACUser,
-      setVSACAuthStatus, vsacStatus, vsacStatusText, timeLastAuthenticated } = this.props;
+    const {
+      artifact, templates, resources, valueSets,
+      vsacStatus, vsacStatusText, timeLastAuthenticated
+    } = this.props;
     const namedParameters = _.filter(artifact.parameters, p => (!_.isNull(p.name) && p.name.length));
 
     if (artifact && artifact[treeName].childInstances) {
@@ -276,8 +278,8 @@ export class Builder extends Component {
           getAllInstances={this.getAllInstances}
           updateInstanceModifiers={this.updateInstanceModifiers}
           parameters={namedParameters}
-          loginVSACUser={loginVSACUser}
-          setVSACAuthStatus={setVSACAuthStatus}
+          loginVSACUser={this.props.loginVSACUser}
+          setVSACAuthStatus={this.props.setVSACAuthStatus}
           vsacStatus={vsacStatus}
           vsacStatusText={vsacStatusText}
           timeLastAuthenticated={timeLastAuthenticated}/>

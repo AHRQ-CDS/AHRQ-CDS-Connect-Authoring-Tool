@@ -28,7 +28,7 @@ function authenticationReceived(time) {
 function sendAuthenticationRequest() {
   return new Promise((resolve, reject) => {
     axios.get(`${API_BASE}/vsac/checkAuthentication`)
-      .then(result => {console.log(result); resolve(result.data)})
+      .then(result => resolve(result.data))
       .catch(error => reject(error));
   });
 }

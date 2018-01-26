@@ -133,16 +133,15 @@ class ElementSelect extends Component {
           vsacStatusText={this.props.vsacStatusText}
         />
       );
-    } else {
-      return (
-        <div>
-          <button className="disabled-button vsac-authenticate" disabled={true}>
-            <FontAwesome name="check" /> VSAC Authenticated
-          </button>
-          <button className="primary-button">Choose Value Sets</button>
-        </div>
-      );
     }
+    return (
+      <div>
+        <button className="disabled-button vsac-authenticate" disabled={true}>
+          <FontAwesome name="check" /> VSAC Authenticated
+        </button>
+        <button className="primary-button">Choose Value Sets</button>
+      </div>
+    );
   }
 
   onDemographicElementSelected = (demographic) => {

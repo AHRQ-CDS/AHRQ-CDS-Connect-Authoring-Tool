@@ -7,10 +7,10 @@ import Modal from '../elements/Modal';
 class VSACAuthenticationModal extends Component {
   constructor(props) {
     super(props);
-    
+
     this.state = { showVSACAuthModal: false };
   }
-  
+
   openVSACLoginModal = () => {
     this.setState({ showVSACAuthModal: true });
   }
@@ -19,14 +19,14 @@ class VSACAuthenticationModal extends Component {
     this.setState({ showVSACAuthModal: false });
     this.props.setVSACAuthStatus(null);
   }
-  
+
   loginToVSAC = (event) => {
     event.preventDefault();
 
     const { username, password } = this.refs;
     this.props.loginVSACUser(username.value.trim(), password.value.trim());
   }
-  
+
   renderedAuthStatusText() {
     const { vsacStatus, vsacStatusText } = this.props;
 
@@ -38,9 +38,9 @@ class VSACAuthenticationModal extends Component {
       </div>
     );
   }
-  
+
   render() {
-    return(
+    return (
       <div>
         <button className="primary-button vsac-authenticate" onClick={this.openVSACLoginModal}>
           <FontAwesome name="key" />{' '}Authenticate VSAC
@@ -66,7 +66,7 @@ class VSACAuthenticationModal extends Component {
           </div>
         </Modal>
       </div>
-    )
+    );
   }
 }
 
@@ -75,6 +75,6 @@ VSACAuthenticationModal.propTypes = {
   setVSACAuthStatus: PropTypes.func.isRequired,
   vsacStatus: PropTypes.string,
   vsacStatusText: PropTypes.string.isRequired
-}
+};
 
 export default VSACAuthenticationModal;
