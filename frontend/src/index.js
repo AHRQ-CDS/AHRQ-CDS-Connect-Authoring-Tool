@@ -14,7 +14,6 @@ import 'core-js/fn/function/bind';
 import configureStore from './store/configureStore';
 import Root from './containers/Root';
 import '../node_modules/font-awesome/css/font-awesome.css';
-import '../node_modules/react-select/dist/react-select.css';
 import './styles/App.css';
 
 /* setup redux store */
