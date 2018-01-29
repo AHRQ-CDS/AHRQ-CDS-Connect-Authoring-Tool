@@ -48,7 +48,15 @@ export default class ConjunctionGroup extends Component {
   // returns class name for odd conjunction groups determined from length of child instances
   getNestingClassName = () => {
     const level = this.getPath().split('.').filter(pathSection => pathSection === 'childInstances').length;
-    return level % 2 === 0 ? '' : 'conjunction-group--odd';
+
+    if (level === 1) {
+      return 'conjunction-group--top conjunction-group--odd';
+    } else if (level % 2 === 0) {
+      return 'conjunction-group--even';
+    }
+
+    return 'conjunction-group--odd';
+    // return level % 2 === 0 ? 'conjunction-group--even' : 'conjunction-group--odd';
   }
 
   // ----------------------- CLICK HANDLERS -------------------------------- //
@@ -138,6 +146,7 @@ export default class ConjunctionGroup extends Component {
         </button> :
         null
       }
+
       <button
         aria-label="indent"
         className='element__hidebutton secondary-button'
@@ -166,6 +175,7 @@ export default class ConjunctionGroup extends Component {
             {this.renderIndentButtons(this.props.instance)}
 
             <button
+              className="element__deletebutton"
               onClick={() => this.props.deleteInstance(this.props.treeName, this.getPath())}
               aria-label={`remove ${this.props.instance.name}`}>
               <FontAwesome fixedWidth name='close'/>
@@ -237,18 +247,22 @@ export default class ConjunctionGroup extends Component {
   }
 
   render() {
-    const conjunctionGroupClassName = `conjunction-group ${this.getNestingClassName()}`;
+    const classname = `conjunction-group ${this.getNestingClassName()}`;
 
     return (
-      <div className={conjunctionGroupClassName}>
-        {this.renderRoot()}
-        {this.renderChildren()}
+      <div className={classname}>
+        <div>
+          {this.renderRoot()}
+          {this.renderChildren()}
+        </div>
 
-        <ElementSelect
-          categories={this.props.templates}
-          onSuggestionSelected={this.addChild}
-          parameters={this.props.parameters}
-        />
+        <div className="conjunction-group__section">
+          <ElementSelect
+            categories={this.props.templates}
+            onSuggestionSelected={this.addChild}
+            parameters={this.props.parameters}
+          />
+        </div>
       </div>
     );
   }

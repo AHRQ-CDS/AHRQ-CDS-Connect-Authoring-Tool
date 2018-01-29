@@ -32,13 +32,13 @@
     margin: 20px 0;
   }
 
-  &--odd {
-    background-color: $gray-lighter;
-  }
-
   // For nested conjunction-group's
   .conjunction-group {
-    margin-left: 5em;
-    margin-bottom: 0.5em;
+    margin-left: 3em;
+    padding: 2em;
+
+    &--top { margin-left: 0; }
+    &--odd { background-color: darken($gray-lightest, 3%); }
+    &--even { background-color: $white; }
   }
 }
