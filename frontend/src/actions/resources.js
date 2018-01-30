@@ -1,9 +1,7 @@
 import axios from 'axios';
 import Promise from 'promise';
 
-import {
-  RESOURCES_REQUEST, LOAD_RESOURCES_SUCCESS, LOAD_RESOURCES_FAILURE
-} from './types';
+import * as types from './types';
 
 const API_BASE = process.env.REACT_APP_API_URL;
 
@@ -11,20 +9,20 @@ const API_BASE = process.env.REACT_APP_API_URL;
 
 function requestResources() {
   return {
-    type: RESOURCES_REQUEST
+    type: types.RESOURCES_REQUEST
   };
 }
 
 function loadResourcesSuccess(resources) {
   return {
-    type: LOAD_RESOURCES_SUCCESS,
+    type: types.LOAD_RESOURCES_SUCCESS,
     resources
   };
 }
 
 function loadResourcesFailure(error) {
   return {
-    type: LOAD_RESOURCES_FAILURE,
+    type: types.LOAD_RESOURCES_FAILURE,
     status: error.response.status,
     statusText: error.response.statusText
   };

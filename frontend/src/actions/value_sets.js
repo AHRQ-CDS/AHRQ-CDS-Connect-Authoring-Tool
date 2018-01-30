@@ -1,9 +1,7 @@
 import axios from 'axios';
 import Promise from 'promise';
 
-import {
-  VALUE_SETS_REQUEST, LOAD_VALUE_SETS_SUCCESS, LOAD_VALUE_SETS_FAILURE
-} from './types';
+import * as types from './types';
 
 const API_BASE = process.env.REACT_APP_API_URL;
 
@@ -11,20 +9,20 @@ const API_BASE = process.env.REACT_APP_API_URL;
 
 function requestValueSets() {
   return {
-    type: VALUE_SETS_REQUEST
+    type: types.VALUE_SETS_REQUEST
   };
 }
 
 function loadValueSetsSuccess(valueSets) {
   return {
-    type: LOAD_VALUE_SETS_SUCCESS,
+    type: types.LOAD_VALUE_SETS_SUCCESS,
     valueSets
   };
 }
 
 function loadValueSetsFailure(error) {
   return {
-    type: LOAD_VALUE_SETS_FAILURE,
+    type: types.LOAD_VALUE_SETS_FAILURE,
     status: error.response.status,
     statusText: error.response.statusText
   };

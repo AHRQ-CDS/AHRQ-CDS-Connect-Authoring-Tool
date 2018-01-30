@@ -1,6 +1,4 @@
-import {
-  TEMPLATES_REQUEST, LOAD_TEMPLATES_SUCCESS, LOAD_TEMPLATES_FAILURE
-} from '../actions/types';
+import * as types from '../actions/types';
 
 const defaultState = {
   templates: null,
@@ -9,16 +7,16 @@ const defaultState = {
 
 export default function templates(state = defaultState, action) {
   switch (action.type) {
-    case TEMPLATES_REQUEST:
+    case types.TEMPLATES_REQUEST:
       return Object.assign({}, state, {
         loadTemplates: { isLoadingTemplates: true, loadTemplatesStatus: null }
       });
-    case LOAD_TEMPLATES_SUCCESS:
+    case types.LOAD_TEMPLATES_SUCCESS:
       return Object.assign({}, state, {
         templates: action.templates,
         loadTemplates: { isLoadingTemplates: false, loadTemplatesStatus: 'success' }
       });
-    case LOAD_TEMPLATES_FAILURE:
+    case types.LOAD_TEMPLATES_FAILURE:
       return Object.assign({}, state, {
         loadTemplates: { isLoadingTemplates: false, loadTemplatesStatus: 'failure' }
       });

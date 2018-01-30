@@ -7,18 +7,7 @@ import _ from 'lodash';
 import changeToCase from '../utils/strings';
 import createTemplateInstance from '../utils/templates';
 import loadTemplates from './templates';
-
-import {
-  SET_STATUS_MESSAGE, UPDATE_ARTIFACT, INITIALIZE_ARTIFACT,
-  ARTIFACTS_REQUEST, LOAD_ARTIFACTS_SUCCESS, LOAD_ARTIFACTS_FAILURE,
-  ARTIFACT_REQUEST, LOAD_ARTIFACT_SUCCESS, LOAD_ARTIFACT_FAILURE,
-  ADD_ARTIFACT_REQUEST, ADD_ARTIFACT_SUCCESS, ADD_ARTIFACT_FAILURE,
-  DELETE_ARTIFACT_REQUEST, DELETE_ARTIFACT_SUCCESS, DELETE_ARTIFACT_FAILURE,
-  DOWNLOAD_ARTIFACT_REQUEST, DOWNLOAD_ARTIFACT_SUCCESS, DOWNLOAD_ARTIFACT_FAILURE,
-  SAVE_ARTIFACT_REQUEST, SAVE_ARTIFACT_SUCCESS, SAVE_ARTIFACT_FAILURE,
-  PUBLISH_ARTIFACT_REQUEST, PUBLISH_ARTIFACT_SUCCESS, PUBLISH_ARTIFACT_FAILURE,
-  PUBLISH_ARTIFACT_ENABLED_REQUEST, PUBLISH_ARTIFACT_ENABLED_SUCCESS, PUBLISH_ARTIFACT_ENABLED_FAILURE
-} from './types';
+import * as types from './types';
 
 const API_BASE = process.env.REACT_APP_API_URL;
 
@@ -33,7 +22,7 @@ export function setStatusMessage(statusType) {
   if (statusType === 'publish') message = `Publishing not available. Saved ${time}.`;
 
   return {
-    type: SET_STATUS_MESSAGE,
+    type: types.SET_STATUS_MESSAGE,
     message
   };
 }
@@ -45,7 +34,7 @@ export function updateArtifact(artifactToUpdate, props) {
     const artifact = Object.assign({}, artifactToUpdate, props);
 
     return dispatch({
-      type: UPDATE_ARTIFACT,
+      type: types.UPDATE_ARTIFACT,
       artifact
     });
   };
@@ -118,7 +107,7 @@ export function initializeArtifact(andTemplate) {
   };
 
   return {
-    type: INITIALIZE_ARTIFACT,
+    type: types.INITIALIZE_ARTIFACT,
     artifact
   };
 }
@@ -127,20 +116,20 @@ export function initializeArtifact(andTemplate) {
 
 function requestArtifacts() {
   return {
-    type: ARTIFACTS_REQUEST
+    type: types.ARTIFACTS_REQUEST
   };
 }
 
 function loadArtifactsSuccess(artifacts) {
   return {
-    type: LOAD_ARTIFACTS_SUCCESS,
+    type: types.LOAD_ARTIFACTS_SUCCESS,
     artifacts
   };
 }
 
 function loadArtifactsFailure(error) {
   return {
-    type: LOAD_ARTIFACTS_FAILURE,
+    type: types.LOAD_ARTIFACTS_FAILURE,
     status: error.response.status,
     statusText: error.response.statusText
   };
@@ -168,21 +157,21 @@ export function loadArtifacts() {
 
 function requestArtifact(id) {
   return {
-    type: ARTIFACT_REQUEST,
+    type: types.ARTIFACT_REQUEST,
     id
   };
 }
 
 function loadArtifactSuccess(artifact) {
   return {
-    type: LOAD_ARTIFACT_SUCCESS,
+    type: types.LOAD_ARTIFACT_SUCCESS,
     artifact
   };
 }
 
 function loadArtifactFailure(error) {
   return {
-    type: LOAD_ARTIFACT_FAILURE,
+    type: types.LOAD_ARTIFACT_FAILURE,
     status: error.response.status,
     statusText: error.response.statusText
   };
@@ -211,19 +200,19 @@ export function loadArtifact(id) {
 
 function requestAddArtifact() {
   return {
-    type: ADD_ARTIFACT_REQUEST
+    type: types.ADD_ARTIFACT_REQUEST
   };
 }
 
 function addArtifactSuccess() {
   return {
-    type: ADD_ARTIFACT_SUCCESS
+    type: types.ADD_ARTIFACT_SUCCESS
   };
 }
 
 function addArtifactFailure(error) {
   return {
-    type: ADD_ARTIFACT_FAILURE,
+    type: types.ADD_ARTIFACT_FAILURE,
     status: error.response ? error.response.status : '',
     statusText: error.response ? error.response.statusText : ''
   };
@@ -254,19 +243,19 @@ export function addArtifact(artifactProps) {
 
 function requestDownloadArtifact() {
   return {
-    type: DOWNLOAD_ARTIFACT_REQUEST
+    type: types.DOWNLOAD_ARTIFACT_REQUEST
   };
 }
 
 function downloadArtifactSuccess() {
   return {
-    type: DOWNLOAD_ARTIFACT_SUCCESS
+    type: types.DOWNLOAD_ARTIFACT_SUCCESS
   };
 }
 
 function downloadArtifactFailure(error) {
   return {
-    type: DOWNLOAD_ARTIFACT_FAILURE,
+    type: types.DOWNLOAD_ARTIFACT_FAILURE,
     status: error.response ? error.response.status : '',
     statusText: error.response ? error.response.statusText : ''
   };
@@ -296,20 +285,20 @@ export function downloadArtifact(artifact) {
 
 function requestPublishArtifact() {
   return {
-    type: PUBLISH_ARTIFACT_REQUEST
+    type: types.PUBLISH_ARTIFACT_REQUEST
   };
 }
 
 function publishArtifactSuccess(artifact) {
   return {
-    type: PUBLISH_ARTIFACT_SUCCESS,
+    type: types.PUBLISH_ARTIFACT_SUCCESS,
     artifact
   };
 }
 
 function publishArtifactFailure(error) {
   return {
-    type: PUBLISH_ARTIFACT_FAILURE,
+    type: types.PUBLISH_ARTIFACT_FAILURE,
     status: error.response.status,
     statusText: error.response.statusText
   };
@@ -338,20 +327,20 @@ export function publishArtifact(artifact) {
 
 function requestPublishArtifactEnabled() {
   return {
-    type: PUBLISH_ARTIFACT_ENABLED_REQUEST
+    type: types.PUBLISH_ARTIFACT_ENABLED_REQUEST
   };
 }
 
 function publishArtifactEnabledSuccess(data) {
   return {
-    type: PUBLISH_ARTIFACT_ENABLED_SUCCESS,
+    type: types.PUBLISH_ARTIFACT_ENABLED_SUCCESS,
     active: data.active
   };
 }
 
 function publishArtifactEnabledFailure(error) {
   return {
-    type: PUBLISH_ARTIFACT_ENABLED_FAILURE,
+    type: types.PUBLISH_ARTIFACT_ENABLED_FAILURE,
     status: error.response.status,
     statusText: error.response.statusText
   };
@@ -379,20 +368,20 @@ export function publishArtifactEnabled(artifact) {
 
 function requestSaveArtifact() {
   return {
-    type: SAVE_ARTIFACT_REQUEST
+    type: types.SAVE_ARTIFACT_REQUEST
   };
 }
 
 function saveArtifactSuccess(artifact) {
   return {
-    type: SAVE_ARTIFACT_SUCCESS,
+    type: types.SAVE_ARTIFACT_SUCCESS,
     artifact
   };
 }
 
 function saveArtifactFailure(error) {
   return {
-    type: SAVE_ARTIFACT_FAILURE,
+    type: types.SAVE_ARTIFACT_FAILURE,
     status: error.response ? error.response.status : '',
     statusText: error.response ? error.response.statusText : ''
   };
@@ -423,20 +412,20 @@ export function saveArtifact(artifact) {
 
 function requestDeleteArtifact() {
   return {
-    type: DELETE_ARTIFACT_REQUEST
+    type: types.DELETE_ARTIFACT_REQUEST
   };
 }
 
 function deleteArtifactSuccess(artifact) {
   return {
-    type: DELETE_ARTIFACT_SUCCESS,
+    type: types.DELETE_ARTIFACT_SUCCESS,
     artifact
   };
 }
 
 function deleteArtifactFailure(error) {
   return {
-    type: DELETE_ARTIFACT_FAILURE,
+    type: types.DELETE_ARTIFACT_FAILURE,
     status: error.response.status,
     statusText: error.response.statusText
   };

@@ -1,9 +1,7 @@
 import axios from 'axios';
 import Promise from 'promise';
 
-import {
-  TEMPLATES_REQUEST, LOAD_TEMPLATES_SUCCESS, LOAD_TEMPLATES_FAILURE
-} from './types';
+import * as types from './types';
 
 const API_BASE = process.env.REACT_APP_API_URL;
 
@@ -11,20 +9,20 @@ const API_BASE = process.env.REACT_APP_API_URL;
 
 function requestTemplates() {
   return {
-    type: TEMPLATES_REQUEST
+    type: types.TEMPLATES_REQUEST
   };
 }
 
 function loadTemplatesSuccess(templates) {
   return {
-    type: LOAD_TEMPLATES_SUCCESS,
+    type: types.LOAD_TEMPLATES_SUCCESS,
     templates
   };
 }
 
 function loadTemplatesFailure(error) {
   return {
-    type: LOAD_TEMPLATES_FAILURE,
+    type: types.LOAD_TEMPLATES_FAILURE,
     status: error.response.status,
     statusText: error.response.statusText
   };
