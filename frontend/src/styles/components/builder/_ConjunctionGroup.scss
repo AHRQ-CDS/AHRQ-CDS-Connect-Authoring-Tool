@@ -22,20 +22,31 @@
     }
   }
 
-  &__button-bar {
+  &__button-bar,
+  .element__buttonbar {
     margin-left: auto;
+
+    button {
+      border: $border-global;
+      border-radius: $border-radius;
+
+      &:hover {
+        border-color: $secondary-button-border-hover-color;
+      }
+    }
   }
 
   &__conjunction-select {
     width: 12em;
-    // margin-bottom: 0.5em;
     margin: 20px 0;
   }
 
   // For nested conjunction-group's
   .conjunction-group {
     margin-left: 3em;
-    padding: 2em;
+    padding: 1em 1.5em;
+    border: $border-global;
+    border-radius: $border-radius;
 
     &--top { margin-left: 0; }
     &--odd { background-color: darken($gray-lightest, 3%); }

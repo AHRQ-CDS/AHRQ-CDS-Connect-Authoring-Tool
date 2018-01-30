@@ -178,7 +178,7 @@ export default class ConjunctionGroup extends Component {
               className="element__deletebutton"
               onClick={() => this.props.deleteInstance(this.props.treeName, this.getPath())}
               aria-label={`remove ${this.props.instance.name}`}>
-              <FontAwesome fixedWidth name='close'/>
+              <FontAwesome name='close'/>
             </button>
           </div>
         </div>

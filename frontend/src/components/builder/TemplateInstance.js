@@ -174,14 +174,13 @@ export default class TemplateInstance extends Component {
       <div key={index} className="modifier">
 
         {modifierForm}
-        { (index + 1 === this.props.templateInstance.modifiers.length)
-          ? <button
+        { index + 1 === this.props.templateInstance.modifiers.length &&
+          <button
             onClick={this.removeLastModifier}
             className="modifier__deletebutton secondary-button"
             aria-label={'remove last expression'}>
-              <FontAwesome fixedWidth name='close'/>
-            </button>
-          : null
+            <FontAwesome name='close'/>
+          </button>
         }
         <div className='warning'>{validationWarning}</div>
       </div>
@@ -373,14 +372,14 @@ export default class TemplateInstance extends Component {
               onClick={this.showHideElementBody}
               className="element__hidebutton secondary-button"
               aria-label={`hide ${this.props.templateInstance.name}`}>
-              <FontAwesome fixedWidth name={this.state.showElement ? 'angle-double-down' : 'angle-double-right'}/>
+              <FontAwesome name={this.state.showElement ? 'angle-double-down' : 'angle-double-right'}/>
             </button>
 
             <button
               onClick={() => this.props.deleteInstance(this.props.treeName, this.getPath())}
               className="element__deletebutton secondary-button"
               aria-label={`remove ${this.props.templateInstance.name}`}>
-              <FontAwesome fixedWidth name='close'/>
+              <FontAwesome name='close'/>
             </button>
           </div>
         </div>

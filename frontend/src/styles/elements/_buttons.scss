@@ -44,5 +44,11 @@ button.danger-button {
 
 .element__hidebutton,
 .element__deletebutton {
-  margin-left: 1em;
+  margin-left: 0.5em;
+  box-shadow: none;
+  background-color: $white;
+
+  &:hover {
+    border-color: $secondary-button-border-hover-color;
+  }
 }
