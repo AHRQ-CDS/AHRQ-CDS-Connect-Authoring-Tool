@@ -175,12 +175,12 @@ describe('artifact actions', () => {
       const store = mockStore({ artifacts: [] });
       const expectedActions = [
         { type: types.PUBLISH_ARTIFACT_REQUEST },
-        { type: types.PUBLISH_ARTIFACT_SUCCESS, artifact: {} }
+        { type: types.PUBLISH_ARTIFACT_SUCCESS, active: false }
       ];
 
       moxios.wait(() => {
         const request = moxios.requests.mostRecent();
-        request.respondWith({ status: 200, response: {} });
+        request.respondWith({ status: 200, response: { active: false } });
       });
 
       return store.dispatch(actions.publishArtifact(mockArtifact)).then(() => {

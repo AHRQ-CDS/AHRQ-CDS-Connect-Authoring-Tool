@@ -53,21 +53,6 @@ export default function auth(state = defaultState, action) {
       return Object.assign({}, state, { addArtifact: { isAdding: false, addStatus: 'success' } });
     case types.ADD_ARTIFACT_FAILURE:
       return Object.assign({}, state, { addArtifact: { isAdding: false, addStatus: 'failure' } });
-    case types.DELETE_ARTIFACT_REQUEST:
-      return Object.assign({}, state, {
-        statusMessage: null,
-        deleteArtifact: { isDeleting: true, deleteStatus: null }
-      });
-    case types.DELETE_ARTIFACT_SUCCESS:
-      return Object.assign({}, state, {
-        statusMessage: `Deleted ${time}.`,
-        deleteArtifact: { isDeleting: false, deleteStatus: 'success' }
-      });
-    case types.DELETE_ARTIFACT_FAILURE:
-      return Object.assign({}, state, {
-        statusMessage: `Delete failed. ${action.statusText}.`,
-        deleteArtifact: { isDeleting: false, deleteStatus: 'failure' }
-      });
     case types.DOWNLOAD_ARTIFACT_REQUEST:
       return Object.assign({}, state, {
         statusMessage: null,
@@ -82,22 +67,6 @@ export default function auth(state = defaultState, action) {
       return Object.assign({}, state, {
         statusMessage: `Download failed. ${action.statusText}.`,
         downloadArtifact: { isDownloading: false, downloadStatus: 'failure' }
-      });
-    case types.SAVE_ARTIFACT_REQUEST:
-      return Object.assign({}, state, {
-        statusMessage: null,
-        saveArtifact: { isSaving: true, saveStatus: null }
-      });
-    case types.SAVE_ARTIFACT_SUCCESS:
-      return Object.assign({}, state, {
-        artifact: action.artifact,
-        statusMessage: `Last saved ${time}.`,
-        saveArtifact: { isSaving: false, saveStatus: 'success' }
-      });
-    case types.SAVE_ARTIFACT_FAILURE:
-      return Object.assign({}, state, {
-        statusMessage: `Save failed. ${action.statusText}.`,
-        saveArtifact: { isSaving: false, saveStatus: 'failure' }
       });
     case types.PUBLISH_ARTIFACT_REQUEST:
       return Object.assign({}, state, {
@@ -114,15 +83,38 @@ export default function auth(state = defaultState, action) {
         statusMessage: `Publish failed. ${action.statusText}.`,
         publishArtifact: { isPublishing: false, publishStatus: 'failure' }
       });
-    case types.PUBLISH_ARTIFACT_ENABLED_REQUEST:
-      return Object.assign({}, state);
-    case types.PUBLISH_ARTIFACT_ENABLED_SUCCESS:
+    case types.UPDATE_PUBLISH_ENABLED:
+      return Object.assign({}, state, { publishEnabled: action.bool });
+    case types.SAVE_ARTIFACT_REQUEST:
       return Object.assign({}, state, {
-        publishEnabled: action.active
+        statusMessage: null,
+        saveArtifact: { isSaving: true, saveStatus: null }
       });
-    case types.PUBLISH_ARTIFACT_ENABLED_FAILURE:
+    case types.SAVE_ARTIFACT_SUCCESS:
       return Object.assign({}, state, {
-        publishEnabled: false
+        artifact: action.artifact,
+        statusMessage: `Last saved ${time}.`,
+        saveArtifact: { isSaving: false, saveStatus: 'success' }
+      });
+    case types.SAVE_ARTIFACT_FAILURE:
+      return Object.assign({}, state, {
+        statusMessage: `Save failed. ${action.statusText}.`,
+        saveArtifact: { isSaving: false, saveStatus: 'failure' }
+      });
+    case types.DELETE_ARTIFACT_REQUEST:
+      return Object.assign({}, state, {
+        statusMessage: null,
+        deleteArtifact: { isDeleting: true, deleteStatus: null }
+      });
+    case types.DELETE_ARTIFACT_SUCCESS:
+      return Object.assign({}, state, {
+        statusMessage: `Deleted ${time}.`,
+        deleteArtifact: { isDeleting: false, deleteStatus: 'success' }
+      });
+    case types.DELETE_ARTIFACT_FAILURE:
+      return Object.assign({}, state, {
+        statusMessage: `Delete failed. ${action.statusText}.`,
+        deleteArtifact: { isDeleting: false, deleteStatus: 'failure' }
       });
     default:
       return state;

@@ -9,7 +9,7 @@ import _ from 'lodash';
 
 import {
   setStatusMessage, downloadArtifact, saveArtifact, loadArtifact, updateArtifact, initializeArtifact,
-  updateAndSaveArtifact, publishArtifactEnabled
+  updateAndSaveArtifact, publishArtifact
 } from '../actions/artifacts';
 import loadTemplates from '../actions/templates';
 import loadResources from '../actions/resources';
@@ -55,7 +55,7 @@ class Builder extends Component {
       }
     });
     this.props.loadResources();
-    this.props.publishArtifactEnabled();
+    this.props.publishArtifact();
   }
 
   componentWillUnmount() {
@@ -436,7 +436,7 @@ function mapDispatchToProps(dispatch) {
     downloadArtifact,
     saveArtifact,
     updateAndSaveArtifact,
-    publishArtifactEnabled
+    publishArtifact
   }, dispatch);
 }
 
