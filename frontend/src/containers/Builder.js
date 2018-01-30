@@ -14,7 +14,7 @@ import {
 import loadTemplates from '../actions/templates';
 import loadResources from '../actions/resources';
 import loadValueSets from '../actions/value_sets';
-import { loginVSACUser, setVSACAuthStatus } from '../actions/vsac';
+import { loginVSACUser, setVSACAuthStatus, searchVSACByKeyword } from '../actions/vsac';
 
 import EditArtifactModal from '../components/artifact/EditArtifactModal';
 import ConjunctionGroup from '../components/builder/ConjunctionGroup';
@@ -283,7 +283,11 @@ export class Builder extends Component {
           setVSACAuthStatus={setVSACAuthStatus}
           vsacStatus={vsacStatus}
           vsacStatusText={vsacStatusText}
-          timeLastAuthenticated={timeLastAuthenticated}/>
+          timeLastAuthenticated={timeLastAuthenticated}
+          searchVSACByKeyword={this.props.searchVSACByKeyword}
+          isSearchingVSAC={this.props.isSearchingVSAC}
+          vsacSearchResults={this.props.vsacSearchResults}
+          vsacSearchCount={this.props.vsacSearchCount}/>
       );
     }
 
@@ -471,6 +475,7 @@ function mapDispatchToProps(dispatch) {
     publishArtifactEnabled,
     loginVSACUser,
     setVSACAuthStatus,
+    searchVSACByKeyword,
     clearArtifactValidationWarnings
   }, dispatch);
 }
@@ -487,7 +492,10 @@ function mapStateToProps(state) {
     publishEnabled: state.artifacts.publishEnabled,
     vsacStatus: state.vsac.authStatus,
     vsacStatusText: state.vsac.authStatusText,
-    timeLastAuthenticated: state.vsac.timeLastAuthenticated
+    timeLastAuthenticated: state.vsac.timeLastAuthenticated,
+    isSearchingVSAC: state.vsac.isSearchingVSAC,
+    vsacSearchResults: state.vsac.searchResults,
+    vsacSearchCount: state.vsac.searchCount
   };
 }
 

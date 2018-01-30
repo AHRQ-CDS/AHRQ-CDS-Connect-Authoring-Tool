@@ -50,6 +50,11 @@
     align-items: center;
     justify-content: flex-end;
   }
+  
+  .selectable-tr:hover {
+    background-color: $blue;
+    color: $white;
+  }
 
   &__container {
     display: flex;
@@ -60,7 +65,8 @@
   &__content {
     display: flex;
     flex: 1;
-    overflow: hidden;
+    overflow: auto;
+    padding: 2em;
   }
 
   &__sidebar {
@@ -92,6 +98,7 @@
     padding: 1em;
     background-color: $gray-lightest;
     border-bottom: $border-global;
+    display: flex;
 
     input {
       width: 100%;

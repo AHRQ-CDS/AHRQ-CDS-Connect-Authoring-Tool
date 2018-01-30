@@ -74,7 +74,7 @@ class VSACAuthenticationModal extends Component {
           handleShowModal={this.state.showVSACAuthModal}
           handleCloseModal={this.closeVSACLoginModal}
           handleSaveModal={this.loginToVSAC}>
-          <div className="login-modal">
+          <div className="login-modal modal__content">
             <div className="login-modal__disclaimer">
               Use your UMLS account to log in to VSAC to access value sets and codes within the CDS Authoring Tool.
             </div>

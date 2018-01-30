@@ -2,33 +2,33 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import Modal from 'react-modal';
 import FontAwesome from 'react-fontawesome';
-import { sortAlphabeticallyByKey } from '../../utils/sort';
+// import { sortAlphabeticallyByKey } from '../../utils/sort';
 
-const getRelevantElements = (category, value) => {
-  let elements = category.entries;
-  const inputValue = value.trim().toLowerCase();
-
-  if (inputValue.length) {
-    elements = elements.filter(elem => elem.name.toLowerCase().indexOf(inputValue) >= 0);
-  } else if (category.name === 'All') {
-    return elements.sort(sortAlphabeticallyByKey('category', 'name'));
-  } else {
-    return elements.sort(sortAlphabeticallyByKey('name'));
-  }
-
-  return elements.sort((a, b) => {
-    const aLower = a.name.toLowerCase();
-    const bLower = b.name.toLowerCase();
-    const queryPosA = aLower.indexOf(inputValue);
-    const queryPosB = bLower.indexOf(inputValue);
-
-    if (queryPosA !== queryPosB) {
-      return queryPosA - queryPosB;
-    }
-
-    return aLower < bLower ? -1 : 1;
-  });
-};
+// const getRelevantElements = (category, value) => {
+//   let elements = category.entries;
+//   const inputValue = value.trim().toLowerCase();
+//
+//   if (inputValue.length) {
+//     elements = elements.filter(elem => elem.name.toLowerCase().indexOf(inputValue) >= 0);
+//   } else if (category.name === 'All') {
+//     return elements.sort(sortAlphabeticallyByKey('category', 'name'));
+//   } else {
+//     return elements.sort(sortAlphabeticallyByKey('name'));
+//   }
+//
+//   return elements.sort((a, b) => {
+//     const aLower = a.name.toLowerCase();
+//     const bLower = b.name.toLowerCase();
+//     const queryPosA = aLower.indexOf(inputValue);
+//     const queryPosB = bLower.indexOf(inputValue);
+//
+//     if (queryPosA !== queryPosB) {
+//       return queryPosA - queryPosB;
+//     }
+//
+//     return aLower < bLower ? -1 : 1;
+//   });
+// };
 
 class ElementModal extends Component {
   constructor(props) {
@@ -37,40 +37,31 @@ class ElementModal extends Component {
     this.state = {
       isOpen: false,
       searchValue: '',
-      elementList: []
     };
   }
 
   static propTypes = {
-    categories: PropTypes.array.isRequired,
-    selectedCategory: PropTypes.object.isRequired,
-    setSelectedCategory: PropTypes.func.isRequired,
-    onElementSelected: PropTypes.func.isRequired
-  }
-
-  componentWillReceiveProps(props) {
-    const elementList = getRelevantElements(props.selectedCategory, this.state.searchValue);
-
-    this.setState({ elementList });
+    onElementSelected: PropTypes.func.isRequired,
+    searchVSACByKeyword: PropTypes.func.isRequired,
+    isSearchingVSAC: PropTypes.bool.isRequired,
+    vsacSearchResults: PropTypes.array.isRequired,
+    vsacSearchCount: PropTypes.number.isRequired
   }
 
   handleSearchValueChange = (event) => {
     const searchValue = event.target.value;
-    const elementList = getRelevantElements(this.props.selectedCategory, searchValue);
 
-    this.setState({
-      searchValue,
-      elementList
-    });
+    this.setState({ searchValue });
+  }
+
+  searchVSAC = () => {
+    this.props.searchVSACByKeyword(this.state.searchValue);
   }
 
   handleElementSelected = (element) => {
-    this.props.onElementSelected(element);
+    // TODO: Add elements into the workspace
+    // this.props.onElementSelected(element);
     this.closeModal();
-  }
-
-  handleCategorySelected = (cat) => {
-    this.props.setSelectedCategory(cat);
   }
 
   openModal = () => {
@@ -88,44 +79,70 @@ class ElementModal extends Component {
     if (argument) { func(argument); } else { func(); }
   }
 
-  renderSidebar = () => (
-      <aside className="element-modal__sidebar" aria-label="Element Categories">
-        { this.props.categories.map((cat, i) =>
-          <button
-            key={ `${cat.name}-${i}` }
-            className={ `transparent-button${cat.name === this.props.selectedCategory.name ? ' selected' : ''}` }
-            onClick={ () => this.handleCategorySelected(cat) }
-            onKeyDown={ e => this.enterKeyCheck(this.handleCategorySelected, cat, e) }>
-              { cat.name }
-          </button>) }
-      </aside>
+  // TODO: Make the table keyboard accessible, add labels to icons
+  renderList = () => (
+    <tbody aria-label="Element List">
+      { this.props.vsacSearchResults.map((elem, i) =>
+        <tr key={ `${elem.name}-${i}` }
+          className="selectable-tr"
+          onClick={() => this.handleElementSelected(elem)}
+          onKeyDown={ e => this.enterKeyCheck(this.handleElementSelected, elem, e) }>
+            <td data-th="Type">
+              { elem.type === 'Grouping' ?
+                <FontAwesome name="puzzle-piece" /> :
+                <FontAwesome name="sitemap" />
+              }
+            </td>
+            <td data-th="Name">{ elem.name }</td>
+            <td data-th="Code System">
+                { elem.codeSystem.map((cs, j) => {
+                  if (j < elem.codeSystem.length - 1) {
+                    return `${cs}, `;
+                  }
+                  return cs;
+                })}
+            </td>
+            <td data-th="Steward">{ elem.steward }</td>
+            <td data-th="Codes">{ elem.codeCount }</td>
+        </tr>)
+      }
+    </tbody>
   )
 
-  renderList = () => (
-      <section className="element-modal__list" aria-label="Element List">
-        { this.state.elementList.map((elem, i) =>
-          <button
-            key={ `${elem.name}-${i}` }
-            className="transparent-button element-select__option"
-            onClick={ () => this.handleElementSelected(elem) }
-            onKeyDown={ e => this.enterKeyCheck(this.handleElementSelected, elem, e) }>
-              <div className="button-style"><FontAwesome className='fa-fw fa-plus' name='plus' /></div>
-              { elem.name }
-              { elem.category && <span className="element-select__option-category">({ elem.category })</span> }
-          </button>) }
-      </section>
-  )
+  renderSearchResultsTable = () => {
+    if (this.props.isSearchingVSAC) {
+      return (
+        <div>Loading...</div>
+      );
+    } else if (this.props.vsacSearchResults.length > 0) {
+      return (
+        <table className="element-modal__list">
+          <thead>
+            <tr>
+              <th>Type</th>
+              <th>Name</th>
+              <th>Code System</th>
+              <th>Steward</th>
+              <th>Codes</th>
+            </tr>
+          </thead>
+          { this.renderList() }
+        </table>
+      );
+    }
+    return null;
+  }
 
   render() {
-    const modalInputLabel = 'Search elements';
+    const modalInputLabel = 'Enter value set code or keyword...';
 
     return (
-      <div className={ `${this.props.className} element-modal` }>
+      <span className={ `${this.props.className} element-modal` }>
         <button
-           className="transparent-button link-style"
-           onClick={ this.openModal }
-           onKeyDown={ e => this.enterKeyCheck(this.openModal, null, e) }>
-           Browse
+          className="primary-button"
+          onClick={ this.openModal }
+          onKeyDown={ e => this.enterKeyCheck(this.openModal, null, e) }>
+          <FontAwesome name="th-list" />{' '}Choose Value Sets
         </button>
         <Modal
           isOpen={ this.state.isOpen }
@@ -136,7 +153,10 @@ class ElementModal extends Component {
           overlayClassName='modal-overlay modal-overlay__dark'>
           <div className="element-modal__container">
             <header className="modal__header">
-              <span className="modal__heading">Elements</span>
+              <span className="modal__heading">Choose Value Sets</span>
+              { this.props.vsacSearchCount > 0 ?
+                <span><FontAwesome name="th-list" />{' '}{this.props.vsacSearchCount}</span> :
+                null}
             </header>
             <main className="modal__body">
               <div className="element-modal__search">
@@ -146,11 +166,12 @@ class ElementModal extends Component {
                   aria-label={ modalInputLabel }
                   title={ modalInputLabel }
                   value={ this.state.searchValue }
-                  onChange={ this.handleSearchValueChange } />
+                  onChange={ this.handleSearchValueChange }
+                  onKeyDown={ e => this.enterKeyCheck(this.searchVSAC, this.state.searchValue, e)}/>
+                  <button onClick={ this.searchVSAC }>Search</button>
               </div>
               <div className="element-modal__content">
-                { this.renderSidebar() }
-                { this.renderList() }
+                { this.renderSearchResultsTable() }
               </div>
             </main>
             <footer className="modal__footer">
@@ -162,7 +183,7 @@ class ElementModal extends Component {
             </footer>
           </div>
         </Modal>
-      </div>
+      </span>
     );
   }
 }

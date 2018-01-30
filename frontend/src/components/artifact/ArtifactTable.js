@@ -65,7 +65,7 @@ export default class ArtifactTable extends Component {
         handleCloseModal={this.closeConfirmDeleteModal}
         handleSaveModal={this.handleDeleteArtifact}>
 
-        <div className="delete-artifact-confirmation-modal">
+        <div className="delete-artifact-confirmation-modal modal__content">
           <h5>Are you sure you want to permanently delete the following CDS Artifact?</h5>
 
           <div className="artifact-info">

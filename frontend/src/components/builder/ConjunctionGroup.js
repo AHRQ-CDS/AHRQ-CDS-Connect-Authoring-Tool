@@ -266,6 +266,10 @@ export default class ConjunctionGroup extends Component {
             vsacStatus={this.props.vsacStatus}
             vsacStatusText={this.props.vsacStatusText}
             timeLastAuthenticated={this.props.timeLastAuthenticated}
+            searchVSACByKeyword={this.props.searchVSACByKeyword}
+            isSearchingVSAC={this.props.isSearchingVSAC}
+            vsacSearchResults={this.props.vsacSearchResults}
+            vsacSearchCount={this.props.vsacSearchCount}
           />
         </div>
       </div>

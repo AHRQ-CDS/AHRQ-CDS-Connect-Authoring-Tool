@@ -1,14 +1,18 @@
 import {
   VSAC_AUTHENTICATION_REQUEST, VSAC_AUTHENTICATION_RECEIVED,
   VSAC_LOGIN_REQUEST, VSAC_LOGIN_SUCCESS, VSAC_LOGIN_FAILURE,
-  SET_VSAC_AUTH_STATUS
+  SET_VSAC_AUTH_STATUS,
+  VSAC_SEARCH_REQUEST, VSAC_SEARCH_SUCCESS, VSAC_SEARCH_FAILURE
 } from '../actions/types';
 
 const defaultState = {
   isAuthenticating: false,
   timeLastAuthenticated: null,
   authStatus: null,
-  authStatusText: ''
+  authStatusText: '',
+  isSearchingVSAC: false,
+  searchResults: [],
+  searchCount: 0
 };
 
 export default function auth(state = defaultState, action) {
@@ -38,6 +42,20 @@ export default function auth(state = defaultState, action) {
       });
     case SET_VSAC_AUTH_STATUS:
       return Object.assign({}, state, { authStatus: action.status });
+    case VSAC_SEARCH_REQUEST:
+      return Object.assign({}, state, { isSearchingVSAC: true });
+    case VSAC_SEARCH_SUCCESS:
+      return Object.assign({}, state, {
+        isSearchingVSAC: false,
+        searchResults: action.searchResults,
+        searchCount: action.searchCount
+      });
+    case VSAC_SEARCH_FAILURE:
+      return Object.assign({}, state, {
+        isSearchingVSAC: false,
+        searchResults: [],
+        searchCount: 0
+      });
     default:
       return state;
   }

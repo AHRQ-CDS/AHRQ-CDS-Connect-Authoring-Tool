@@ -3,6 +3,10 @@
   box-shadow: $box-shadow;
   max-width: 1000px;
   margin: 20px auto;
+  position: absolute;
+  top: 10%;
+  left: 15%;
+  right: 15%;
 
   &__light {
     background-color: $white;
@@ -51,7 +55,7 @@
     }
   }
 
-  .modal__body {
+  .modal__content {
     padding: 2em;
   }
 

@@ -4,7 +4,8 @@ import Promise from 'promise';
 import {
   VSAC_AUTHENTICATION_REQUEST, VSAC_AUTHENTICATION_RECEIVED,
   VSAC_LOGIN_REQUEST, VSAC_LOGIN_SUCCESS, VSAC_LOGIN_FAILURE,
-  SET_VSAC_AUTH_STATUS
+  SET_VSAC_AUTH_STATUS,
+  VSAC_SEARCH_REQUEST, VSAC_SEARCH_SUCCESS, VSAC_SEARCH_FAILURE
 } from './types';
 
 const API_BASE = process.env.REACT_APP_API_URL;
@@ -108,6 +109,46 @@ export function setVSACAuthStatus(status) {
   return {
     type: SET_VSAC_AUTH_STATUS,
     status
+  };
+}
+
+// ------------------------- SEARCH VSAC ----------------------------------- //
+
+function requestSearch() {
+  return {
+    type: VSAC_SEARCH_REQUEST
+  };
+}
+
+function searchSuccess(data) {
+  return {
+    type: VSAC_SEARCH_SUCCESS,
+    searchCount: data.count,
+    searchResults: data.results
+  };
+}
+
+function searchFailure(error) {
+  return {
+    type: VSAC_SEARCH_FAILURE
+  };
+}
+
+function searchVSAC(keyword) {
+  return new Promise((resolve, reject) => {
+    axios.get(`${API_BASE}/vsac/search?keyword=${keyword}`)
+      .then(result => resolve(result.data))
+      .catch(error => reject(error));
+  });
+}
+
+export function searchVSACByKeyword(keyword) {
+  return (dispatch) => {
+    dispatch(requestSearch());
+
+    return searchVSAC(keyword)
+      .then(data => dispatch(searchSuccess(data)))
+      .catch(error => dispatch(searchFailure(error)));
   };
 }
 

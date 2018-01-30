@@ -4,7 +4,7 @@ import _ from 'lodash';
 import Select from 'react-select';
 import FontAwesome from 'react-fontawesome';
 
-// import ElementModal from './ElementModal';
+import ElementModal from './ElementModal';
 import ElementSelectMenuRenderer from './ElementSelectMenuRenderer';
 import VSACAuthenticationModal from './VSACAuthenticationModal';
 import filterUnsuppressed from '../../utils/filter';
@@ -140,7 +140,14 @@ class ElementSelect extends Component {
         <button className="disabled-button vsac-authenticate" disabled={true}>
           <FontAwesome name="check" /> VSAC Authenticated
         </button>
-        <button className="primary-button">Choose Value Sets</button>
+        <ElementModal
+          className="element-select__modal"
+          onElementSelected={this.onSuggestionSelected}
+          searchVSACByKeyword={this.props.searchVSACByKeyword}
+          isSearchingVSAC={this.props.isSearchingVSAC}
+          vsacSearchResults={this.props.vsacSearchResults}
+          vsacSearchCount={this.props.vsacSearchCount}
+        />
       </div>
     );
 =======
