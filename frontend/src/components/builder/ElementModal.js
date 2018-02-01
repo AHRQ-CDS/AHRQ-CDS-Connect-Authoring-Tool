@@ -89,7 +89,7 @@ class ElementModal extends Component {
           className="tr__selectable"
           onClick={() => this.handleElementSelected(elem)}
           onKeyDown={ e => this.enterKeyCheck(this.handleElementSelected, elem, e) }>
-            <td data-th="Type" className="td__right-align" title={elem.type}>
+            <td data-th="Type" className="td__center-align" title={elem.type}>
               { elem.type === 'Grouping' ?
                 <FontAwesome name="puzzle-piece" /> :
                 <FontAwesome name="sitemap" />
