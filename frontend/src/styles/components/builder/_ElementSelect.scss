@@ -50,18 +50,44 @@
     align-items: center;
     justify-content: flex-end;
   }
-  
-  .tr__selectable {
-    &:hover,
-    &:focus,
-    &:active {
-      background-color: $blue;
-      color: $white;
+
+  .search__table {
+    @include responsive-table;
+
+    width: 100%;
+    margin: 1em 0;
+
+    th {
+      padding-bottom: 0.5em;
     }
-  }
-  
-  .td__center-align {
-    text-align: center;
+
+    td {
+      padding: 0.25em;
+    }
+
+    tr:first-of-type td {
+      padding-top: 0.5em;
+    }
+
+    th:first-of-type,
+    th:last-of-type,
+    tr td:first-of-type,
+    tr td:last-of-type {
+      text-align: center;
+    }
+
+    tr td:first-of-type {
+      padding-right: 2em;
+    }
+
+    tbody tr {
+      &:hover,
+      &:focus,
+      &:active {
+        background-color: $blue;
+        color: $white;
+      }
+    }
   }
 
   &__container {

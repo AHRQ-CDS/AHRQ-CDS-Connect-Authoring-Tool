@@ -86,10 +86,9 @@ class ElementModal extends Component {
         <tr key={ `${elem.name}-${i}` }
           tabIndex="0"
           aria-label={elem.name}
-          className="tr__selectable"
           onClick={() => this.handleElementSelected(elem)}
           onKeyDown={ e => this.enterKeyCheck(this.handleElementSelected, elem, e) }>
-            <td data-th="Type" className="td__center-align" title={elem.type}>
+            <td data-th="Type" title={elem.type}>
               { elem.type === 'Grouping' ?
                 <FontAwesome name="puzzle-piece" /> :
                 <FontAwesome name="sitemap" />
@@ -118,7 +117,7 @@ class ElementModal extends Component {
       );
     } else if (this.props.vsacSearchResults.length > 0) {
       return (
-        <table className="element-modal__list">
+        <table className="search__table">
           <thead>
             <tr>
               <th>Type</th>
