@@ -60,7 +60,8 @@ button.danger-button {
 }
 
 .element__hidebutton,
-.element__deletebutton {
+.element__deletebutton,
+.element-modal__searchbutton {
   margin-left: 0.5em;
   box-shadow: none;
   background-color: $white;

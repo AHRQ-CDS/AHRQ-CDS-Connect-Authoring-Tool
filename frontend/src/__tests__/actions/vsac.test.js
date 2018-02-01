@@ -120,4 +120,52 @@ describe('vsac actions', () => {
       ]);
     });
   });
+
+  // ----------------------- SEARCH ---------------------------------------- //
+  describe('search vsac', () => {
+    beforeEach(() => { moxios.install(); });
+    afterEach(() => { moxios.uninstall(); });
+
+    it('dispatches a VSAC_LOGIN_SUCCESS action upon a successful search', () => {
+      const store = mockStore({});
+      const keyword = 'key';
+      const count = 2;
+      const results = [{ a: 1 }, { b: 2 }];
+
+      moxios.stubs.track({
+        url: `/authoring/api/vsac/search?keyword=${keyword}`,
+        method: 'GET',
+        response: { status: 200, response: { keyword, count, results } }
+      });
+
+      const expectedActions = [
+        { type: types.VSAC_SEARCH_REQUEST },
+        { type: types.VSAC_SEARCH_SUCCESS, searchCount: count, searchResults: results }
+      ];
+
+      return store.dispatch(actions.searchVSACByKeyword(keyword)).then(() => {
+        expect(store.getActions()).toEqual(expectedActions);
+      });
+    });
+
+    it('dispatches a VSAC_SEARCH_FAILURE action upon an unsuccessful search attempt', () => {
+      const store = mockStore({});
+      const keyword = 'key';
+
+      moxios.stubs.track({
+        url: `/authoring/api/vsac/search?keyword=${keyword}`,
+        method: 'GET',
+        response: { status: 401, statusText: 'Unauthorized' }
+      });
+
+      const expectedActions = [
+        { type: types.VSAC_SEARCH_REQUEST },
+        { type: types.VSAC_SEARCH_FAILURE }
+      ];
+
+      return store.dispatch(actions.searchVSACByKeyword(keyword)).then(() => {
+        expect(store.getActions()).toEqual(expectedActions);
+      });
+    });
+  });
 });

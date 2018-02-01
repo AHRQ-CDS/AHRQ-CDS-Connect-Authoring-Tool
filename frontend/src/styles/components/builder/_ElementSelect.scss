@@ -51,9 +51,17 @@
     justify-content: flex-end;
   }
   
-  .selectable-tr:hover {
-    background-color: $blue;
-    color: $white;
+  .tr__selectable {
+    &:hover,
+    &:focus,
+    &:active {
+      background-color: $blue;
+      color: $white;
+    }
+  }
+  
+  .td__right-align {
+    text-align: right;
   }
 
   &__container {

@@ -65,11 +65,12 @@ class ElementModal extends Component {
   }
 
   openModal = () => {
-    this.handleSearchValueChange({ target: { value: '' } }); // Always start with no search term filtering
     this.setState({ isOpen: true });
   }
 
   closeModal = () => {
+    this.handleSearchValueChange({ target: { value: '' } }); // Always start with no search term filtering
+    this.props.searchVSACByKeyword('');
     this.setState({ isOpen: false });
   }
 
@@ -79,15 +80,16 @@ class ElementModal extends Component {
     if (argument) { func(argument); } else { func(); }
   }
 
-  // TODO: Make the table keyboard accessible, add labels to icons
   renderList = () => (
     <tbody aria-label="Element List">
       { this.props.vsacSearchResults.map((elem, i) =>
         <tr key={ `${elem.name}-${i}` }
-          className="selectable-tr"
+          tabIndex="0"
+          aria-label={elem.name}
+          className="tr__selectable"
           onClick={() => this.handleElementSelected(elem)}
           onKeyDown={ e => this.enterKeyCheck(this.handleElementSelected, elem, e) }>
-            <td data-th="Type">
+            <td data-th="Type" className="td__right-align" title={elem.type}>
               { elem.type === 'Grouping' ?
                 <FontAwesome name="puzzle-piece" /> :
                 <FontAwesome name="sitemap" />
@@ -168,7 +170,7 @@ class ElementModal extends Component {
                   value={ this.state.searchValue }
                   onChange={ this.handleSearchValueChange }
                   onKeyDown={ e => this.enterKeyCheck(this.searchVSAC, this.state.searchValue, e)}/>
-                  <button onClick={ this.searchVSAC }>Search</button>
+                  <button className="button element-modal__searchbutton" onClick={ this.searchVSAC }>Search</button>
               </div>
               <div className="element-modal__content">
                 { this.renderSearchResultsTable() }
