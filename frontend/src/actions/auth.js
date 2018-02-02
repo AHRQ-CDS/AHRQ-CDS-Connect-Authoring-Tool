@@ -1,12 +1,7 @@
 import axios from 'axios';
 import Promise from 'promise';
 
-import {
-  USER_REQUEST, USER_RECEIVED,
-  LOGIN_REQUEST, LOGIN_SUCCESS, LOGIN_FAILURE,
-  LOGOUT_REQUEST, LOGOUT_SUCCESS, LOGOUT_FAILURE,
-  SET_AUTH_STATUS
-} from './types';
+import * as types from './types';
 
 const API_BASE = process.env.REACT_APP_API_URL;
 
@@ -14,13 +9,13 @@ const API_BASE = process.env.REACT_APP_API_URL;
 
 function requestUser() {
   return {
-    type: USER_REQUEST
+    type: types.USER_REQUEST
   };
 }
 
 function userReceived(username) {
   return {
-    type: USER_RECEIVED,
+    type: types.USER_RECEIVED,
     username
   };
 }
@@ -37,7 +32,7 @@ export function getCurrentUser() {
   return (dispatch) => {
     dispatch(requestUser());
 
-    sendUserRequest()
+    return sendUserRequest()
       .then(data => dispatch(userReceived(data.uid)))
       .catch(() => dispatch(userReceived(null)));
   };
@@ -47,20 +42,20 @@ export function getCurrentUser() {
 
 function requestLogin() {
   return {
-    type: LOGIN_REQUEST
+    type: types.LOGIN_REQUEST
   };
 }
 
 function loginSuccess(username) {
   return {
-    type: LOGIN_SUCCESS,
+    type: types.LOGIN_SUCCESS,
     username
   };
 }
 
 function loginFailure(error) {
   return {
-    type: LOGIN_FAILURE,
+    type: types.LOGIN_FAILURE,
     status: error.response.status,
     statusText: error.response.statusText
   };
@@ -88,19 +83,19 @@ export function loginUser(username, password) {
 
 function requestLogout() {
   return {
-    type: LOGOUT_REQUEST
+    type: types.LOGOUT_REQUEST
   };
 }
 
 function logoutSuccess() {
   return {
-    type: LOGOUT_SUCCESS
+    type: types.LOGOUT_SUCCESS
   };
 }
 
 function logoutFailure(error) {
   return {
-    type: LOGOUT_FAILURE,
+    type: types.LOGOUT_FAILURE,
     status: error.response.status,
     statusText: error.response.statusText
   };
@@ -110,12 +105,9 @@ export function logoutUser() {
   return (dispatch) => {
     dispatch(requestLogout());
 
-    return new Promise((resolve, reject) => {
-      axios.get(`${API_BASE}/auth/logout`)
-        .then(() => resolve())
-        .then(() => dispatch(logoutSuccess()))
-        .catch(error => dispatch(logoutFailure(error)));
-    });
+    return axios.get(`${API_BASE}/auth/logout`)
+      .then(() => dispatch(logoutSuccess()))
+      .catch(error => dispatch(logoutFailure(error)));
   };
 }
 
@@ -123,8 +115,7 @@ export function logoutUser() {
 
 export function setAuthStatus(status) {
   return {
-    type: SET_AUTH_STATUS,
+    type: types.SET_AUTH_STATUS,
     status
   };
 }
-

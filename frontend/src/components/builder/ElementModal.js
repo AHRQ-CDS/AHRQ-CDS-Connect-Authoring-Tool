@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import Modal from 'react-modal';
 import FontAwesome from 'react-fontawesome';
-import { sortAlphabeticallyByKey } from '../../helpers/utils';
+import { sortAlphabeticallyByKey } from '../../utils/sort';
 
 const getRelevantElements = (category, value) => {
   let elements = category.entries;

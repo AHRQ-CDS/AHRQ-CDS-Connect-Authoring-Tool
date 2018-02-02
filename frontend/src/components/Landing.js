@@ -1,5 +1,5 @@
 import React from 'react';
-import { onVisitExternalLink, onVisitExternalForm } from '../helpers/handlers';
+import { onVisitExternalLink, onVisitExternalForm } from '../utils/handlers';
 
 export default () => (
   <div className="landing" id="maincontent">

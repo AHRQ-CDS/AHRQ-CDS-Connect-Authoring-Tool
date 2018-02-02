@@ -4,11 +4,35 @@ import _ from 'lodash';
 
 import Modal from '../elements/Modal';
 
+import artifactProps from '../../prop-types/artifact';
+
 export default class EditArtifactModal extends Component {
+  constructor(props) {
+    super(props);
+
+    const { artifactEditing: artifact } = props;
+
+    this.state = {
+      name: artifact ? artifact.name : '',
+      version: artifact ? artifact.version : ''
+    };
+  }
+
+  componentWillReceiveProps(nextProps) {
+    const { artifactEditing: artifact } = nextProps;
+
+    if (artifact) {
+      this.setState({ name: artifact.name, version: artifact.version });
+    }
+  }
+
+  handleInputChange = (event) => {
+    this.setState({ [event.target.name]: event.target.value });
+  }
+
   render() {
-    const {
-      name, version, handleInputChange, showModal, closeModal, saveModal, artifactEditing
-    } = this.props;
+    const { showModal, closeModal, saveModal, artifactEditing } = this.props;
+    const { name, version } = this.state;
     const nameID = artifactEditing ? artifactEditing.name : _.uniqueId('artifact-name-');
     const versionID = artifactEditing ? artifactEditing.version : _.uniqueId('artifact-version-');
 
@@ -20,7 +44,7 @@ export default class EditArtifactModal extends Component {
         modalSubmitButtonText="Save"
         handleShowModal={showModal}
         handleCloseModal={closeModal}
-        handleSaveModal={saveModal}>
+        handleSaveModal={() => saveModal(this.state)}>
 
         <div className="artifact-table__modal">
           <div className="artifact-form__edit">
@@ -28,13 +52,13 @@ export default class EditArtifactModal extends Component {
               <div className='form__group p-2'>
                 <label htmlFor={nameID}>Artifact Name</label>
                 <input id={nameID} required className='input__long' name='name' type='text'
-                  value={name} onChange={handleInputChange} />
+                  value={name} onChange={this.handleInputChange} />
               </div>
 
               <div className='form__group p-2'>
                 <label htmlFor={versionID}>Version</label>
                 <input id={versionID} className='input__short' name='version' type='text'
-                  value={version} onChange={handleInputChange} />
+                  value={version} onChange={this.handleInputChange} />
               </div>
             </div>
           </div>
@@ -45,10 +69,7 @@ export default class EditArtifactModal extends Component {
 }
 
 EditArtifactModal.propTypes = {
-  artifactEditing: PropTypes.object,
-  name: PropTypes.string.isRequired,
-  version: PropTypes.string.isRequired,
-  handleInputChange: PropTypes.func.isRequired,
+  artifactEditing: artifactProps,
   showModal: PropTypes.bool.isRequired,
   closeModal: PropTypes.func.isRequired,
   saveModal: PropTypes.func.isRequired

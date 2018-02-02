@@ -6,6 +6,7 @@ import ConjunctionGroup from './ConjunctionGroup';
 
 class Subpopulation extends Component {
   static propTypes = {
+    artifact: PropTypes.object.isRequired,
     subpopulation: PropTypes.object.isRequired,
     subpopulationIndex: PropTypes.number.isRequired,
     setSubpopulationName: PropTypes.func.isRequired,
@@ -14,14 +15,12 @@ class Subpopulation extends Component {
     editInstance: PropTypes.func.isRequired,
     updateInstanceModifiers: PropTypes.func.isRequired,
     deleteInstance: PropTypes.func.isRequired,
-    saveInstance: PropTypes.func.isRequired,
     getAllInstances: PropTypes.func.isRequired,
     treeName: PropTypes.string.isRequired,
     booleanParameters: PropTypes.array.isRequired,
-    createTemplateInstance: PropTypes.func.isRequired,
-    showPresets: PropTypes.func.isRequired,
-    categories: PropTypes.array.isRequired
+    templates: PropTypes.array.isRequired
   }
+
   constructor(props) {
     super(props);
 
@@ -42,22 +41,14 @@ class Subpopulation extends Component {
     this.props.addInstance(name, template, path, this.props.subpopulation.uniqueId);
   }
 
-  getAllInstances = name => this.props.getAllInstances(name, null, this.props.subpopulation.uniqueId)
+  getAllInstances = treeName => this.props.getAllInstances(treeName, null, this.props.subpopulation.uniqueId)
 
   editInstance = (treeName, params, path, editingConjunction) => {
     this.props.editInstance(treeName, params, path, editingConjunction, this.props.subpopulation.uniqueId);
   }
 
-  setPreset = (treeName, preset, path) => {
-    this.props.setPreset(treeName, preset, path, this.props.subpopulation.uniqueId);
-  }
-
   deleteInstance = (treeName, path, toAdd) => {
     this.props.deleteInstance(treeName, path, toAdd, this.props.subpopulation.uniqueId);
-  }
-
-  saveInstance = (treeName, path) => {
-    this.props.saveInstance(treeName, path, this.props.subpopulation.uniqueId);
   }
 
   onEnterKey = (e) => {
@@ -116,22 +107,18 @@ class Subpopulation extends Component {
         { this.state.isExpanded ?
           <div className="subpopulation__logic">
             <ConjunctionGroup
-              root={ true }
-              name={ this.props.treeName }
-              instance={ this.props.subpopulation }
-              booleanParameters={ this.props.booleanParameters }
-              createTemplateInstance={ this.props.createTemplateInstance }
-              addInstance={ this.addInstance }
-              editInstance={ this.editInstance }
-              updateInstanceModifiers={ this.props.updateInstanceModifiers }
-              deleteInstance={ this.deleteInstance }
-              saveInstance={ this.saveInstance }
-              getAllInstances={ this.getAllInstances }
-              showPresets={ this.props.showPresets }
-              setPreset={ this.setPreset }
-              categories={ this.props.categories }
-              subPopulationIndex={ this.props.subpopulationIndex }
-            />
+              root={true}
+              treeName={this.props.treeName}
+              artifact={this.props.artifact}
+              templates={this.props.templates}
+              instance={this.props.subpopulation}
+              addInstance={this.addInstance}
+              editInstance={this.editInstance}
+              deleteInstance={this.deleteInstance}
+              getAllInstances={this.getAllInstances}
+              updateInstanceModifiers={this.props.updateInstanceModifiers}
+              booleanParameters={this.props.booleanParameters}
+              subPopulationIndex={this.props.subpopulationIndex} />
           </div>
           :
           null

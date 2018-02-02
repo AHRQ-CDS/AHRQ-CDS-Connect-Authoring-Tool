@@ -1,9 +1,4 @@
-import {
-  USER_REQUEST, USER_RECEIVED,
-  LOGIN_REQUEST, LOGIN_SUCCESS, LOGIN_FAILURE,
-  LOGOUT_REQUEST, LOGOUT_SUCCESS, LOGOUT_FAILURE,
-  SET_AUTH_STATUS
-} from '../actions/types';
+import * as types from '../actions/types';
 
 const defaultState = {
   isAuthenticating: false,
@@ -17,17 +12,17 @@ export default function auth(state = defaultState, action) {
   const isAuthenticated = action.username != null;
 
   switch (action.type) {
-    case USER_REQUEST:
+    case types.USER_REQUEST:
       return Object.assign({}, state, { isAuthenticating: true });
-    case USER_RECEIVED:
+    case types.USER_RECEIVED:
       return Object.assign({}, state, {
         isAuthenticating: false,
         isAuthenticated,
         username: action.username
       });
-    case LOGIN_REQUEST:
+    case types.LOGIN_REQUEST:
       return Object.assign({}, state, { isAuthenticating: true, authStatus: null });
-    case LOGIN_SUCCESS:
+    case types.LOGIN_SUCCESS:
       return Object.assign({}, state, {
         isAuthenticating: false,
         isAuthenticated: true,
@@ -35,16 +30,16 @@ export default function auth(state = defaultState, action) {
         authStatus: 'loginSuccess',
         authStatusText: 'You have been successfully logged in.'
       });
-    case LOGIN_FAILURE:
+    case types.LOGIN_FAILURE:
       return Object.assign({}, state, {
         isAuthenticating: false,
         isAuthenticated: false,
         authStatus: 'loginFailure',
         authStatusText: `Authentication Error: ${action.status} ${action.statusText}, please try again.`
       });
-    case LOGOUT_REQUEST:
+    case types.LOGOUT_REQUEST:
       return Object.assign({}, state, { isAuthenticating: false, authStatus: null });
-    case LOGOUT_SUCCESS:
+    case types.LOGOUT_SUCCESS:
       return Object.assign({}, state, {
         isAuthenticating: false,
         isAuthenticated: false,
@@ -52,14 +47,14 @@ export default function auth(state = defaultState, action) {
         authStatus: 'logoutSuccess',
         authStatusText: 'You have been successfully logged out.'
       });
-    case LOGOUT_FAILURE:
+    case types.LOGOUT_FAILURE:
       return Object.assign({}, state, {
         isAuthenticating: false,
         isAuthenticated: false,
         authStatus: 'logoutFailure',
         authStatusText: `Authentication Error: ${action.status} ${action.statusText}, please try again.`
       });
-    case SET_AUTH_STATUS:
+    case types.SET_AUTH_STATUS:
       return Object.assign({}, state, { authStatus: action.status });
     default:
       return state;

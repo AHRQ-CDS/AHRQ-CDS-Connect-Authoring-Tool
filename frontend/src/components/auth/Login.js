@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import FontAwesome from 'react-fontawesome';
 
 import Modal from '../elements/Modal';
-import { onVisitExternalForm } from '../../helpers/handlers';
+import { onVisitExternalForm } from '../../utils/handlers';
 
 export default class Login extends Component {
   constructor(props) {

@@ -3,7 +3,10 @@ import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import FontAwesome from 'react-fontawesome';
 
-import { renderDate, sortMostRecent } from '../../helpers/utils';
+import renderDate from '../../utils/dates';
+import { sortMostRecent } from '../../utils/sort';
+import artifactProps from '../../prop-types/artifact';
+
 import Modal from '../elements/Modal';
 import EditArtifactModal from './EditArtifactModal';
 
@@ -13,8 +16,6 @@ export default class ArtifactTable extends Component {
 
     this.state = {
       artifactEditing: null,
-      name: '',
-      version: '',
       artifactToDelete: null,
       showEditArtifactModal: false,
       showConfirmDeleteModal: false
@@ -24,34 +25,16 @@ export default class ArtifactTable extends Component {
   // ----------------------- EDIT ARTIFACT MODAL --------------------------- //
 
   openEditArtifactModal = (artifact) => {
-    this.setState({
-      showEditArtifactModal: true,
-      artifactEditing: artifact,
-      name: artifact.name,
-      version: artifact.version
-    });
+    this.setState({ artifactEditing: artifact, showEditArtifactModal: true });
   }
 
   closeEditArtifactModal = () => {
-    this.setState({
-      showEditArtifactModal: false,
-      artifactEditing: null,
-      name: '',
-      version: ''
-    });
+    this.setState({ showEditArtifactModal: false });
   }
 
-  handleEditArtifact = (event) => {
-    const artifactToEdit = this.state.artifactEditing;
-    artifactToEdit.name = this.state.name;
-    artifactToEdit.version = this.state.version;
-
-    this.props.editArtifact(artifactToEdit);
-    this.closeEditArtifactModal();
-  }
-
-  handleInputChange = (event) => {
-    this.setState({ [event.target.name]: event.target.value });
+  handleEditArtifact = (props) => {
+    this.props.updateAndSaveArtifact(this.state.artifactEditing, props);
+    this.closeEditArtifactModal(false);
   }
 
   // ----------------------- CONFIRM DELETE MODAL -------------------------- //
@@ -68,6 +51,8 @@ export default class ArtifactTable extends Component {
     this.props.deleteArtifact(this.state.artifactToDelete);
     this.closeConfirmDeleteModal();
   }
+
+  // ----------------------- RENDER ---------------------------------------- //
 
   renderConfirmDeleteModal() {
     return (
@@ -100,8 +85,6 @@ export default class ArtifactTable extends Component {
       </Modal>
     );
   }
-
-  // ----------------------- ARTIFACT TABLE -------------------------------- //
 
   renderTableRow = artifact => (
     <tr key={artifact._id}>
@@ -155,9 +138,6 @@ export default class ArtifactTable extends Component {
 
         <EditArtifactModal
           artifactEditing={this.state.artifactEditing}
-          name={this.state.name}
-          version={this.state.version}
-          handleInputChange={this.handleInputChange}
           showModal={this.state.showEditArtifactModal}
           closeModal={this.closeEditArtifactModal}
           saveModal={this.handleEditArtifact} />
@@ -169,7 +149,7 @@ export default class ArtifactTable extends Component {
 }
 
 ArtifactTable.propTypes = {
-  artifacts: PropTypes.array,
-  editArtifact: PropTypes.func.isRequired,
-  deleteArtifact: PropTypes.func.isRequired
+  artifacts: PropTypes.arrayOf(artifactProps),
+  deleteArtifact: PropTypes.func.isRequired,
+  updateAndSaveArtifact: PropTypes.func.isRequired
 };

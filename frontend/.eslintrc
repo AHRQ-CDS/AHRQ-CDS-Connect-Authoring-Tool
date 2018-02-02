@@ -17,6 +17,7 @@
     "import/no-named-default": "off", // turning it off since it's currently broken w/ yarn (see: https://github.com/yarnpkg/yarn/issues/3332)
     "import/no-extraneous-dependencies": ["error", {"devDependencies": ["src/helpers/*.js", "test/**/*.js", "setupTests.js"]}], // don't check helpers for extraneous deps
     "jsx-a11y/href-no-hash": 0,
-    "jsx-a11y/label-has-for": ["error", { "required": { "some": ["nesting", "id"] } }]
+    "jsx-a11y/label-has-for": ["error", { "required": { "some": ["nesting", "id"] } }],
+    "object-curly-newline": ["error", { "minProperties": 8, "consistent": true }]
   }
 }

@@ -1,5 +1,6 @@
 .builder {
   &-wrapper { @include componentWidth; }
+
   padding: $global-padding;
   padding-bottom: 0;
   background-color: $blue-darkest;
@@ -20,7 +21,6 @@
     flex: 1;
     margin: 0;
     padding-right: 1em;
-    color: $white;
     font-weight: $font-weight-regular;
   }
 
@@ -32,14 +32,16 @@
   }
 
   &__buttonbar {
-    .field {
-      margin-bottom: 0;
+    &-menu {
+      margin-bottom: 5px;
       text-align: right;
     }
 
     [role=status] {
+      height: 30px;
       color: $white;
       font-style: italic;
+      text-align: right;
     }
 
     button {

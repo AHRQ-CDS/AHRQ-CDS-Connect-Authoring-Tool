@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import axios from 'axios';
 import FontAwesome from 'react-fontawesome';
 import _ from 'lodash';
 
@@ -19,47 +18,17 @@ import ValueComparison from './modifiers/ValueComparison';
 import ValueComparisonObservation from './modifiers/ValueComparisonObservation';
 import WithUnit from './modifiers/WithUnit';
 
-const API_BASE = process.env.REACT_APP_API_URL;
-
 function getInstanceName(instance) {
   return (instance.parameters.find(p => p.id === 'element_name') || {}).value;
 }
 
-/* PRESETS ARE CURRENTLY DISABLED
-function renderPreset(preset, stateIndex) {
-  let name = 'untitled';
-  const params = preset.parameters;
-  const index = params.findIndex(item => item.id === 'element_name');
-  if (index > -1) {
-    name = params[index];
-  }
-  return (
-    <option key={stateIndex} value={stateIndex}>
-      {name.value}
-    </option>
-  );
-}
-*/
-
-class TemplateInstance extends Component {
-  static propTypes = {
-    getPath: PropTypes.func.isRequired,
-    treeName: PropTypes.string.isRequired,
-    templateInstance: PropTypes.object.isRequired,
-    otherInstances: PropTypes.array.isRequired,
-    editInstance: PropTypes.func.isRequired,
-    updateInstanceModifiers: PropTypes.func.isRequired,
-    deleteInstance: PropTypes.func.isRequired,
-    saveInstance: PropTypes.func.isRequired,
-    showPresets: PropTypes.func.isRequired
-  }
-
+export default class TemplateInstance extends Component {
   constructor(props) {
     super(props);
 
-
     this.modifierMap = _.keyBy(Modifiers, 'id');
     this.modifersByInputType = {};
+
     Modifiers.forEach((modifier) => {
       modifier.inputTypes.forEach((inputType) => {
         this.modifersByInputType[inputType] = (this.modifersByInputType[inputType] || []).concat(modifier);
@@ -67,10 +36,7 @@ class TemplateInstance extends Component {
     });
 
     this.state = {
-      resources: {},
-      presets: [],
       showElement: true,
-      showPresets: false,
       relevantModifiers: (this.modifersByInputType[this.props.templateInstance.returnType] || []),
       showModifiers: false
     };
@@ -85,10 +51,6 @@ class TemplateInstance extends Component {
     this.setState({ otherInstances });
 
     this.setState({ returnType: this.props.templateInstance.returnType });
-    axios.get(`${API_BASE}/config/resources`)
-      .then((result) => {
-        this.setState({ resources: result.data });
-      });
   }
 
   componentDidMount() {
@@ -131,7 +93,6 @@ class TemplateInstance extends Component {
     this.setState(newState);
     this.props.editInstance(this.props.treeName, newState, this.getPath(), false);
   }
-
 
   renderAppliedModifier = (modifier, index) => {
     const modifierForm = ((mod) => {
@@ -296,6 +257,7 @@ class TemplateInstance extends Component {
           updateInstance={this.updateInstance} />
       );
     }
+
     switch (param.type) {
       case 'number':
         return (
@@ -330,33 +292,14 @@ class TemplateInstance extends Component {
           <ValueSetParameter
             key={param.id}
             param={param}
-            valueset={this.state.resources}
+            valueset={this.props.resources}
+            valueSets={this.props.valueSets}
+            loadValueSets={this.props.loadValueSets}
             updateInstance={this.updateInstance} />
         );
       default:
         return undefined;
     }
-  }
-
-  showPresets = (id) => {
-    this.setState({ showPresets: !this.state.showPresets });
-    this.props.showPresets(id)
-      .then((result) => {
-        this.setState({ presets: result.data });
-      })
-      .catch((error) => {
-        console.log(error);
-        this.setState({ presets: [] });
-      });
-  }
-
-  setPreset(stateIndex) {
-    if (!this.state.presets || _.isNaN(_.toNumber(stateIndex))) return;
-    const uniqueId = this.props.templateInstance.uniqueId;
-    const preset = this.state.presets[stateIndex];
-    preset.uniqueId = uniqueId;
-    this.props.setPreset(this.props.treeName, preset, this.getPath());
-    this.setState({ showPresets: !this.state.showPresets });
   }
 
   showHideElementBody = () => {
@@ -368,17 +311,21 @@ class TemplateInstance extends Component {
   renderBody() {
     return (
       <div className="element__body">
-      <div>
-        {this.props.templateInstance.parameters.map((param, index) =>
-          // todo: each parameter type should probably have its own component
-          this.selectTemplate(param))}
+        <div>
+          {this.props.templateInstance.parameters.map((param, index) =>
+            // todo: each parameter type should probably have its own component
+            this.selectTemplate(param))}
         </div>
+
         {this.renderAppliedModifiers()}
+
         <div className='modifier__return__type'>
           Return Type: {_.startCase(this.state.returnType)}
         </div>
+
         {this.renderModifierSelect()}
-      </div>);
+      </div>
+    );
   }
 
   render() {
@@ -388,26 +335,9 @@ class TemplateInstance extends Component {
           <span className="element__heading">
             {this.props.templateInstance.name}
           </span>
+
           <div className="element__buttonbar">
-            { this.props.renderIndentButtons(this.props.templateInstance) }
-
-            {/* PRESETS ARE CURRENTLY DISABLED
-            <button
-              id={`presets-${this.props.templateInstance.uniqueId}`}
-              aria-controls={`presets-list-${this.props.templateInstance.uniqueId}`}
-              onClick={() => this.showPresets(this.props.templateInstance.id)}
-              className="element__presetbutton secondary-button"
-              aria-label={`show presets ${this.props.templateInstance.id}`}>
-              <FontAwesome fixedWidth name='database'/>
-            </button>
-
-            <button
-              onClick={() => this.props.saveInstance(this.props.treeName, this.getPath())}
-              className="element__savebutton secondary-button"
-              aria-label={`save ${this.props.templateInstance.name}`}>
-              <FontAwesome fixedWidth name='save'/>
-            </button>
-            */}
+            {this.props.renderIndentButtons(this.props.templateInstance)}
 
             <button
               onClick={this.showHideElementBody}
@@ -422,32 +352,26 @@ class TemplateInstance extends Component {
               aria-label={`remove ${this.props.templateInstance.name}`}>
               <FontAwesome fixedWidth name='close'/>
             </button>
-
-            {/* PRESETS ARE CURRENTLY DISABLED
-            <div id={`presets-list-${this.props.templateInstance.uniqueId}`} role="region" aria-live="polite">
-              { this.state.showPresets
-                ? <select
-                    onChange={event => this.setPreset(event.target.value)}
-                    onBlur={event => this.setPreset(event.target.value)}
-                    title={`show presets for ${this.props.templateInstance.id}`}
-                    aria-labelledby={`presets-${this.props.templateInstance.uniqueId}`}>
-                  <optgroup><option>Use a preset</option></optgroup>
-                  {this.state.presets.map((preset, i) =>
-                    renderPreset(preset, i)
-                  )}
-                </select>
-                : null
-              }
-            </div>
-            */}
           </div>
         </div>
+
         <div>
-          { this.state.showElement ? this.renderBody() : null }
+          {this.state.showElement ? this.renderBody() : null}
         </div>
       </div>
     );
   }
 }
 
-export default TemplateInstance;
+TemplateInstance.propTypes = {
+  resources: PropTypes.object.isRequired,
+  valueSets: PropTypes.array,
+  loadValueSets: PropTypes.func.isRequired,
+  getPath: PropTypes.func.isRequired,
+  treeName: PropTypes.string.isRequired,
+  templateInstance: PropTypes.object.isRequired,
+  otherInstances: PropTypes.array.isRequired,
+  editInstance: PropTypes.func.isRequired,
+  updateInstanceModifiers: PropTypes.func.isRequired,
+  deleteInstance: PropTypes.func.isRequired
+};
