@@ -133,7 +133,6 @@ class ElementSelect extends Component {
           vsacStatusText={this.props.vsacStatusText}
         />
       );
-<<<<<<< a971ab19c192ccc42276ede23e44e6a9b20e6199
     }
     return (
       <div>
@@ -150,18 +149,6 @@ class ElementSelect extends Component {
         />
       </div>
     );
-=======
-    } else {
-      return (
-        <div>
-          <button className="disabled-button vsac-authenticate" disabled={true}>
-            <FontAwesome name="check" /> VSAC Authenticated
-          </button>
-          <button className="primary-button">Choose Value Sets</button>
-        </div>
-      );
-    }
->>>>>>> Added modal, actions, and reducers for logging into VSAC
   }
 
   onDemographicElementSelected = (demographic) => {

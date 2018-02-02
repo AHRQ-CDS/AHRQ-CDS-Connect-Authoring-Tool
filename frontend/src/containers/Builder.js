@@ -255,9 +255,9 @@ export class Builder extends Component {
   // ----------------------- RENDER ---------------------------------------- //
 
   renderConjunctionGroup = (treeName) => {
-
     const { artifact, templates, resources, valueSets, loginVSACUser,
       setVSACAuthStatus, vsacStatus, vsacStatusText, timeLastAuthenticated } = this.props;
+
     const namedParameters = _.filter(artifact.parameters, p => (!_.isNull(p.name) && p.name.length));
 
     if (artifact && artifact[treeName].childInstances) {

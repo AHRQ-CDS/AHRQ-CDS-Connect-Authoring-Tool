@@ -29,11 +29,7 @@ function authenticationReceived(time) {
 function sendAuthenticationRequest() {
   return new Promise((resolve, reject) => {
     axios.get(`${API_BASE}/vsac/checkAuthentication`)
-<<<<<<< a971ab19c192ccc42276ede23e44e6a9b20e6199
       .then(result => resolve(result.data))
-=======
-      .then(result => {console.log(result); resolve(result.data)})
->>>>>>> Added modal, actions, and reducers for logging into VSAC
       .catch(error => reject(error));
   });
 }
@@ -42,11 +38,7 @@ export function checkVSACAuthentication() {
   return (dispatch) => {
     dispatch(requestAuthentication());
 
-<<<<<<< a971ab19c192ccc42276ede23e44e6a9b20e6199
     return sendAuthenticationRequest()
-=======
-    sendAuthenticationRequest()
->>>>>>> Added modal, actions, and reducers for logging into VSAC
       .then(data => dispatch(authenticationReceived(data)))
       .catch(() => dispatch(authenticationReceived(null)));
   };
@@ -61,7 +53,6 @@ function requestLogin() {
 }
 
 function loginSuccess() {
-<<<<<<< a971ab19c192ccc42276ede23e44e6a9b20e6199
   // Round date to nearest second.
   const date = new Date();
   date.setSeconds(date.getSeconds() + (Math.round(date.getMilliseconds() / 1000)));
@@ -69,11 +60,6 @@ function loginSuccess() {
   return {
     type: VSAC_LOGIN_SUCCESS,
     timeLastAuthenticated: date
-=======
-  return {
-    type: VSAC_LOGIN_SUCCESS,
-    timeLastAuthenticated: new Date()
->>>>>>> Added modal, actions, and reducers for logging into VSAC
   };
 }
 
