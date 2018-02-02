@@ -137,7 +137,7 @@ function loadArtifactsFailure(error) {
 
 function sendArtifactsRequest() {
   return new Promise((resolve, reject) => {
-    axios.get(`${API_BASE}/artifacts?_=${+new Date()}`)
+    axios.get(`${API_BASE}/artifacts`)
       .then(result => resolve(result.data))
       .catch(error => reject(error));
   });
