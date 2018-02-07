@@ -190,9 +190,16 @@ export default class TemplateInstance extends Component {
   }
 
   renderAppliedModifiers = () => (
-    <div className="modifier__list" aria-label="Expression List">
-      {(this.props.templateInstance.modifiers || []).map((modifier, index) =>
-        this.renderAppliedModifier(modifier, index))}
+    <div>
+      {
+        this.props.templateInstance.modifiers && this.props.templateInstance.modifiers.length > 0 ?
+        <span className="bold">Applied Expressions:</span> :
+        null
+      }
+      <div className="modifier__list" aria-label="Expression List">
+        {(this.props.templateInstance.modifiers || []).map((modifier, index) =>
+          this.renderAppliedModifier(modifier, index))}
+      </div>
     </div>
   )
 
@@ -267,7 +274,7 @@ export default class TemplateInstance extends Component {
         <div>
           {this.renderVSACOptions()}
           <div className='modifier__return__type'>
-            Selected Value Set: {`${vsacParameter.vsName} (${vsacParameter.value})`}
+            <span className="bold">Selected Value Set: </span>{`${vsacParameter.vsName} (${vsacParameter.value})`}
           </div>
         </div>
       );
@@ -295,7 +302,7 @@ export default class TemplateInstance extends Component {
         <button className="disabled-button" disabled={true}>
           <FontAwesome name="check" /> VSAC Authenticated
         </button>
-        <button className="primary-button">
+        <button className="primary-button view-edit-vs">
           {/* TODO: Add functionality for this */}
           <FontAwesome name="th-list" /> View/Edit Value Set
         </button>
@@ -387,9 +394,12 @@ export default class TemplateInstance extends Component {
         <div className="warning">{validationError}</div>
         <div className="warning">{returnError}</div>
         <div>
-          {this.props.templateInstance.parameters.map((param, index) =>
+          {this.props.templateInstance.parameters.map((param, index) => {
             // todo: each parameter type should probably have its own component
-            this.selectTemplate(param))}
+            if (param.id !== 'element_name') {
+              return this.selectTemplate(param);
+            }
+          })}
         </div>
 
         {this.renderVSInfo()}
@@ -397,7 +407,7 @@ export default class TemplateInstance extends Component {
         {this.renderAppliedModifiers()}
 
         <div className='modifier__return__type'>
-          Return Type: {_.startCase(this.state.returnType)}
+          <span className="bold">Return Type: </span>{_.startCase(this.state.returnType)}
         </div>
 
         {this.renderModifierSelect()}
@@ -406,11 +416,16 @@ export default class TemplateInstance extends Component {
   }
 
   render() {
+    const elementNameParameter = this.props.templateInstance.parameters.find(param => param.id === 'element_name');
     return (
       <div className="element element__expanded">
         <div className="element__header">
           <span className="element__heading">
-            {this.props.templateInstance.name}
+            <StringParameter
+              key={elementNameParameter.id}
+              {...elementNameParameter}
+              updateInstance={this.updateInstance}
+              name={this.props.templateInstance.name}/>
           </span>
 
           <div className="element__buttonbar">
