@@ -3,6 +3,8 @@ import PropTypes from 'prop-types';
 import FontAwesome from 'react-fontawesome';
 import _ from 'lodash';
 
+import VSACAuthenticationModal from './VSACAuthenticationModal';
+
 // Try to keep these ordered same as in folder (i.e. alphabetically)
 import NumberParameter from './parameters/NumberParameter';
 import StaticParameter from './parameters/StaticParameter';
@@ -251,12 +253,55 @@ export default class TemplateInstance extends Component {
                   </button>)
               : null
             }
-            <button> View/Edit Value Set </button>
           </div>
         : null
       }
     </div>
   )
+
+  renderVSInfo = () => {
+    // All generic VSAC elements save the VS information on this parameter. Only VSAC elements have a vsName property.
+    const vsacParameter = this.props.templateInstance.parameters[1];
+    if (vsacParameter.vsName) {
+      return (
+        <div>
+          {this.renderVSACOptions()}
+          <div className='modifier__return__type'>
+            Selected Value Set: {`${vsacParameter.vsName} (${vsacParameter.value})`}
+          </div>
+        </div>
+      );
+    }
+    return null;
+  }
+
+  renderVSACOptions = () => {
+    // If last time authenticated was less than 7.5 hours ago, force user to log in again.
+    if (this.props.timeLastAuthenticated < new Date() - 27000000) {
+      return (
+        <div>
+          <VSACAuthenticationModal
+            loginVSACUser={this.props.loginVSACUser}
+            setVSACAuthStatus={this.props.setVSACAuthStatus}
+            vsacStatus={this.props.vsacStatus}
+            vsacStatusText={this.props.vsacStatusText}
+          />
+        </div>
+      );
+    }
+
+    return (
+      <div>
+        <button className="disabled-button" disabled={true}>
+          <FontAwesome name="check" /> VSAC Authenticated
+        </button>
+        <button className="primary-button">
+          {/* TODO: Add functionality for this */}
+          <FontAwesome name="th-list" /> View/Edit Value Set
+        </button>
+      </div>
+    );
+  }
 
   selectTemplate = (param) => {
     if (param.static) {
@@ -347,11 +392,9 @@ export default class TemplateInstance extends Component {
             this.selectTemplate(param))}
         </div>
 
-        {this.renderAppliedModifiers()}
+        {this.renderVSInfo()}
 
-        <div className='modifier__return__type'>
-          Selected Value Set: TODO
-        </div>
+        {this.renderAppliedModifiers()}
 
         <div className='modifier__return__type'>
           Return Type: {_.startCase(this.state.returnType)}

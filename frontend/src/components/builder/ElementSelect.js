@@ -120,6 +120,7 @@ class ElementSelect extends Component {
   }
 
   onSuggestionSelected = (suggestion) => {
+    this.setState({ selectedElement: null });
     const clone = _.cloneDeep(suggestion);
     delete clone.category; // Don't send the category which is only needed for this component
     this.props.onSuggestionSelected(clone);
@@ -133,12 +134,14 @@ class ElementSelect extends Component {
     // If last time authenticated was less than 7.5 hours ago, force user to log in again.
     if (this.props.timeLastAuthenticated < new Date() - 27000000) {
       return (
-        <VSACAuthenticationModal
-          loginVSACUser={this.props.loginVSACUser}
-          setVSACAuthStatus={this.props.setVSACAuthStatus}
-          vsacStatus={this.props.vsacStatus}
-          vsacStatusText={this.props.vsacStatusText}
-        />
+        <div className="vsac-authenticate">
+          <VSACAuthenticationModal
+            loginVSACUser={this.props.loginVSACUser}
+            setVSACAuthStatus={this.props.setVSACAuthStatus}
+            vsacStatus={this.props.vsacStatus}
+            vsacStatusText={this.props.vsacStatusText}
+          />
+        </div>
       );
     }
     const { selectedElement } = this.state;
@@ -155,8 +158,8 @@ class ElementSelect extends Component {
     }
 
     return (
-      <div>
-        <button className="disabled-button vsac-authenticate" disabled={true}>
+      <div className="vsac-authenticate">
+        <button className="disabled-button" disabled={true}>
           <FontAwesome name="check" /> VSAC Authenticated
         </button>
         <ElementModal
@@ -173,8 +176,6 @@ class ElementSelect extends Component {
   }
 
   onDemographicElementSelected = (demographic) => {
-    this.setState({ selectedElement: null });
-
     const suggestion = this.state.categories
       .find(cat => cat.name === 'Demographics')
       .entries.find(entry => entry.id === demographic.value);

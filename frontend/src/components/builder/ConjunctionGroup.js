@@ -239,7 +239,12 @@ export default class ConjunctionGroup extends Component {
           updateInstanceModifiers={this.props.updateInstanceModifiers}
           deleteInstance={this.props.deleteInstance}
           subpopulationIndex={this.props.subPopulationIndex}
-          renderIndentButtons={this.renderIndentButtons} />
+          renderIndentButtons={this.renderIndentButtons}
+          loginVSACUser={this.props.loginVSACUser}
+          setVSACAuthStatus={this.props.setVSACAuthStatus}
+          vsacStatus={this.props.vsacStatus}
+          vsacStatusText={this.props.vsacStatusText}
+          timeLastAuthenticated={this.props.timeLastAuthenticated} />
 
         {this.renderConjunctionSelect(instance)}
       </div>

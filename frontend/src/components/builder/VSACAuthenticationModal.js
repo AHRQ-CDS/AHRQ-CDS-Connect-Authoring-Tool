@@ -42,7 +42,7 @@ class VSACAuthenticationModal extends Component {
   render() {
     return (
       <div>
-        <button className="primary-button vsac-authenticate" onClick={this.openVSACLoginModal}>
+        <button className="primary-button" onClick={this.openVSACLoginModal}>
           <FontAwesome name="key" />{' '}Authenticate VSAC
         </button>
         <Modal
