@@ -224,10 +224,10 @@ class CqlArtifact {
         case 'observation_vsac': {
           // All information in observations array will be provided by the selections made on the frontend.
           const observationValueSets = {
-            id: 'generic_observation', // This is needed for creating a separate union'ed variable name. Needs to be unique.
+            id: _.uniqueId('generic_observation_'), // This is needed for creating a separate union'ed variable name. Needs to be unique.
             observations: [
-              { name: 'observation_vs1', oid: parameter.value },
-              { name: 'observation_vs2', oid: parameter.value }
+              { name: _.uniqueId(`${parameter.vsName} `), oid: parameter.value },
+              // { name: _.uniqueId(`${parameter.vsName} `), oid: parameter.value }
             ],
             // TODO: Decide what if this information is provided by the user and which needs to be inferred
             // concepts: [
@@ -322,10 +322,10 @@ class CqlArtifact {
         }
         case 'condition_vsac': {
           const conditionValueSets = {
-            id: 'generic_condition',
+            id: _.uniqueId('generic_condition_'),
             conditions: [
-              { name: 'condition_vs1', oid: parameter.value },
-              { name: 'condition_vs2', oid: parameter.value },
+              { name: _.uniqueId(`${parameter.vsName} `), oid: parameter.value },
+              // { name: 'condition_vs2', oid: parameter.value },
             ],
             // concepts: [
             //   {
@@ -393,9 +393,9 @@ class CqlArtifact {
         }
         case 'medication_vsac': {
           const medicationValueSets = {
-            name: 'medication_vsac',
+            name: _.uniqueId('generic_medication_'),
             medications: [
-              { name: "medication_vs1", oid: parameter.value }
+              { name: _.uniqueId(`${parameter.vsName} `), oid: parameter.value }
             ]
           };
           // TODO Look through entire modifier list for `active` instead of just head
@@ -428,10 +428,10 @@ class CqlArtifact {
         }
         case 'procedure_vsac': {
           const procedureValueSets = {
-            name: 'procedure_vsac',
+            name: _.uniqueId('generic_procedure_'),
             procedures: [
-              { name: 'procedure_vs1', oid: parameter.value },
-              { name: 'procedure_vs2', oid: parameter.value }
+              { name: _.uniqueId(`${parameter.vsName} `), oid: parameter.value },
+              // { name: 'procedure_vs2', oid: parameter.value }
             ]
           };
           context.values = procedureValueSets.procedures.map((procedure) => {
@@ -451,10 +451,10 @@ class CqlArtifact {
         }
         case 'encounter_vsac': {
           const encounterValueSets = {
-            name: 'encounter_vsac',
+            name: _.uniqueId('generic_encounter_'),
             encounters: [
-              { name: 'encounter_vs1', oid: parameter.value },
-              { name: 'encounter_vs2', oid: parameter.value }
+              { name: _.uniqueId(`${parameter.vsName} `), oid: parameter.value },
+              // { name: 'encounter_vs2', oid: parameter.value }
             ]
           };
           context.values = encounterValueSets.encounters.map((encounter) => {
@@ -474,9 +474,9 @@ class CqlArtifact {
         }
         case 'allergyIntolerance_vsac' : {
           const allergyIntoleranceValueSets = {
-            name: 'allergyIntolerance_vsac',
+            name: _.uniqueId('generic_allergyIntolerance_'),
             allergyIntolerances: [
-              { name: 'allergyIntolerance_vs1', oid: parameter.value }
+              { name: _.uniqueId(`${parameter.vsName} `), oid: parameter.value }
             ]
           };
           context.values = allergyIntoleranceValueSets.allergyIntolerances.map((allergyIntolerance) => {

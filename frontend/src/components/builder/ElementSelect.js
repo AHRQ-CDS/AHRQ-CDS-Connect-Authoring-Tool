@@ -28,11 +28,18 @@ const optionRenderer = option => (
 );
 
 const elementOptions = [
-  { value: 'condition', label: 'Condition', vsacAuthRequired: true },
+  {
+    value: 'allergy_intolerance',
+    label: 'Allergy Intolerance',
+    vsacAuthRequired: true,
+    template: 'GenericAllergyIntolerance_vsac'
+  },
+  { value: 'condition', label: 'Condition', vsacAuthRequired: true, template: 'GenericCondition_vsac' },
   { value: 'demographics', label: 'Demographics', vsacAuthRequired: false },
-  { value: 'encounter', label: 'Encounter', vsacAuthRequired: true },
-  { value: 'medication', label: 'Medication', vsacAuthRequired: true },
-  { value: 'observation', label: 'Observation', vsacAuthRequired: true }
+  { value: 'encounter', label: 'Encounter', vsacAuthRequired: true, template: 'GenericEncounter_vsac' },
+  { value: 'medication', label: 'Medication', vsacAuthRequired: true, template: 'GenericMedication_vsac' },
+  { value: 'procedure', label: 'Procedure', vsacAuthRequired: true, template: 'GenericProcedure_vsac' },
+  { value: 'observation', label: 'Observation', vsacAuthRequired: true, template: 'GenericObservation_vsac' }
 ];
 
 class ElementSelect extends Component {
@@ -134,6 +141,19 @@ class ElementSelect extends Component {
         />
       );
     }
+    const { selectedElement } = this.state;
+    // Get template for selected element
+    let selectedTemplate;
+    this.props.categories.find((group) => {
+      selectedTemplate = group.entries.find(entry => entry.id === selectedElement.template);
+      // If a template is found in the entries of a group, stop searching.
+      return selectedTemplate !== undefined;
+    });
+
+    if (selectedTemplate === undefined) {
+      console.error('No template found for selected element.');
+    }
+
     return (
       <div>
         <button className="disabled-button vsac-authenticate" disabled={true}>
@@ -146,6 +166,7 @@ class ElementSelect extends Component {
           isSearchingVSAC={this.props.isSearchingVSAC}
           vsacSearchResults={this.props.vsacSearchResults}
           vsacSearchCount={this.props.vsacSearchCount}
+          template={selectedTemplate}
         />
       </div>
     );

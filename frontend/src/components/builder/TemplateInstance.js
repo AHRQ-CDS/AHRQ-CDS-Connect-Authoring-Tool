@@ -251,6 +251,7 @@ export default class TemplateInstance extends Component {
                   </button>)
               : null
             }
+            <button> View/Edit Value Set </button>
           </div>
         : null
       }
@@ -347,6 +348,10 @@ export default class TemplateInstance extends Component {
         </div>
 
         {this.renderAppliedModifiers()}
+
+        <div className='modifier__return__type'>
+          Selected Value Set: TODO
+        </div>
 
         <div className='modifier__return__type'>
           Return Type: {_.startCase(this.state.returnType)}

@@ -59,8 +59,16 @@ class ElementModal extends Component {
   }
 
   handleElementSelected = (element) => {
-    // TODO: Add elements into the workspace
-    // this.props.onElementSelected(element);
+    const selectedTemplate = this.props.template;
+    if (selectedTemplate === undefined) return;
+
+    // Update template with value set selection
+    selectedTemplate.parameters[0].value = element.name;
+    selectedTemplate.parameters[1].value = element.oid;
+    selectedTemplate.parameters[1].vsName = element.name;
+    selectedTemplate.parameters[1].static = true;
+
+    this.props.onElementSelected(selectedTemplate);
     this.closeModal();
   }
 
