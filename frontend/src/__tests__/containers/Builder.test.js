@@ -27,9 +27,10 @@ test('children have correct classes', () => {
 });
 
 test('shows loading screen when artifact is not loaded', () => {
-  const component = shallowRenderContainer(Builder, {}, createMockStore(Object.assign({}, baseState, {
+  const component = shallowRenderContainer(Builder, {}, createMockStore({
+    ...baseState,
     artifacts: { artifact: null }
-  })));
+  }));
 
   expect(component.dive().dive().hasClass('builder')).toBe(true);
   expect(component.dive().dive().text()).toContain('Loading...');

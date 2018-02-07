@@ -31,7 +31,10 @@ export function setStatusMessage(statusType) {
 
 export function updateArtifact(artifactToUpdate, props) {
   return (dispatch) => {
-    const artifact = Object.assign({}, artifactToUpdate, props);
+    const artifact = {
+      ...artifactToUpdate,
+      ...props
+    };
 
     return dispatch({
       type: types.UPDATE_ARTIFACT,
@@ -42,7 +45,10 @@ export function updateArtifact(artifactToUpdate, props) {
 
 export function updateAndSaveArtifact(artifactToUpdate, props) {
   return (dispatch) => {
-    const artifact = Object.assign({}, artifactToUpdate, props);
+    const artifact = {
+      ...artifactToUpdate,
+      ...props
+    };
 
     return dispatch(saveArtifact(artifact));
   };

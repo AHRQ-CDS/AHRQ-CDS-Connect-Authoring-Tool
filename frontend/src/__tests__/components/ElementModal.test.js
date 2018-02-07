@@ -14,11 +14,14 @@ const setSelectedCategory = jest.fn();
 const onElementSelected = jest.fn();
 
 const getAllElements = categories => _.flatten(filterUnsuppressed(categories).map(cat => (
-  filterUnsuppressed(cat.entries).map(e => Object.assign({ category: cat.name.replace(/s\s*$/, '') }, e))
+  filterUnsuppressed(cat.entries).map(e => ({
+    category: cat.name.replace(/s\s*$/, ''),
+    ...e
+  }))
 )));
 
 const generateCategories = () => {
-  const categoriesCopy = Object.assign([], elementGroups);
+  const categoriesCopy = elementGroups.slice();
 
   categoriesCopy.unshift({
     icon: 'bars',

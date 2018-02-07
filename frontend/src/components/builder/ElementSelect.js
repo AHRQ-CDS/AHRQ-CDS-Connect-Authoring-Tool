@@ -7,7 +7,10 @@ import filterUnsuppressed from '../../utils/filter';
 import { sortAlphabeticallyByKey } from '../../utils/sort';
 
 const getAllElements = categories => _.flatten(categories.map(cat => (
-  cat.entries.map(e => Object.assign({ category: cat.name.replace(/s\s*$/, '') }, e))
+  cat.entries.map(e => ({
+    category: cat.name.replace(/s\s*$/, ''),
+    ...e
+  }))
 )));
 
 const optionRenderer = option => (
