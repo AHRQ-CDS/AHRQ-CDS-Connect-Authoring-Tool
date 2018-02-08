@@ -50,21 +50,23 @@ beforeEach(() => {
     templates: elementGroups
   };
 
-  component = fullRenderComponent(Recommendation, Object.assign({
+  component = fullRenderComponent(Recommendation, {
     rec,
     artifact: {
       subpopulations: [subpop],
       recommendations: [rec]
-    }
-  }, baseProps));
+    },
+    ...baseProps
+  });
 
-  componentFilledIn = fullRenderComponent(Recommendation, Object.assign({
+  componentFilledIn = fullRenderComponent(Recommendation, {
     rec: completedRec,
     artifact: {
       subpopulations: [subpop],
       recommendations: [completedRec]
-    }
-  }, baseProps));
+    },
+    ...baseProps
+  });
 });
 
 test('has correct base class', () => {
@@ -170,9 +172,10 @@ test('applies special subpopulations correctly', () => {
   const specialProps = _.cloneDeep(baseProps);
   specialProps.artifact = { subpopulations: [specialSubpop], recommendations: [rec] };
 
-  const recComponent = fullRenderComponent(Recommendation, Object.assign({
-    rec
-  }, specialProps));
+  const recComponent = fullRenderComponent(Recommendation, {
+    rec,
+    ...specialProps
+  });
 
   recComponent.find('button').findWhere(button => button.text() === 'Add subpopulation').simulate('click');
   recComponent.find('.recommendation__subpopulation-select input').simulate('change');

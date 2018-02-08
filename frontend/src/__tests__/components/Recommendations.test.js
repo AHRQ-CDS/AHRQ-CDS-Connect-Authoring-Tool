@@ -23,19 +23,21 @@ beforeEach(() => {
     setActiveTab: jest.fn()
   };
 
-  component = fullRenderComponent(Recommendations, Object.assign({
+  component = fullRenderComponent(Recommendations, {
     artifact: {
       subpopulations: [],
       recommendations: []
-    }
-  }, baseProps));
+    },
+    ...baseProps
+  });
 
-  componentWithRecs = fullRenderComponent(Recommendations, Object.assign({
+  componentWithRecs = fullRenderComponent(Recommendations, {
     artifact: {
       subpopulations: [],
       recommendations: [existingRec]
-    }
-  }, baseProps));
+    },
+    ...baseProps
+  });
 });
 
 test('has correct base class', () => {

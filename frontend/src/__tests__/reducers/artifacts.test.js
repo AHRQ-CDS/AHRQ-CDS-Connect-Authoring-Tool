@@ -3,7 +3,9 @@ import moment from 'moment';
 import * as types from '../../actions/types';
 import reducer from '../../reducers/artifacts';
 
-const time = moment().format('dddd, MMMM Do YYYY, h:mm:ss a');
+// Get the time right now.  Note that tests can fail if the clock changes to the next minute
+// between when the code was run (to get actual) and when the assertion is made (expected).
+function time() { return moment().format('dddd, MMMM Do YYYY, h:mm:ss a'); }
 
 describe.only('artifacts reducer', () => {
   it('should return the initial state', () => {
@@ -121,7 +123,7 @@ describe.only('artifacts reducer', () => {
     action = { type: types.DOWNLOAD_ARTIFACT_SUCCESS };
 
     newState = {
-      statusMessage: `Downloaded ${time}.`,
+      statusMessage: `Downloaded ${time()}.`,
       downloadArtifact: { isDownloading: false, downloadStatus: 'success' }
     };
     expect(reducer(previousState, action)).toEqual(newState);
@@ -145,7 +147,7 @@ describe.only('artifacts reducer', () => {
 
     action = { type: types.PUBLISH_ARTIFACT_SUCCESS };
     newState = {
-      statusMessage: `Published ${time}.`,
+      statusMessage: `Published ${time()}.`,
       publishArtifact: { isPublishing: false, publishStatus: 'success' }
     };
     expect(reducer(previousState, action)).toEqual(newState);
@@ -174,7 +176,7 @@ describe.only('artifacts reducer', () => {
     action = { type: types.SAVE_ARTIFACT_SUCCESS, artifact: 'Test artifact' };
     newState = {
       artifact: 'Test artifact',
-      statusMessage: `Last saved ${time}.`,
+      statusMessage: `Last saved ${time()}.`,
       saveArtifact: { isSaving: false, saveStatus: 'success' }
     };
     expect(reducer(previousState, action)).toEqual(newState);
@@ -197,7 +199,7 @@ describe.only('artifacts reducer', () => {
     expect(reducer(previousState, action)).toEqual(newState);
 
     action = { type: types.DELETE_ARTIFACT_SUCCESS };
-    newState = { statusMessage: `Deleted ${time}.`, deleteArtifact: { isDeleting: false, deleteStatus: 'success' } };
+    newState = { statusMessage: `Deleted ${time()}.`, deleteArtifact: { isDeleting: false, deleteStatus: 'success' } };
     expect(reducer(previousState, action)).toEqual(newState);
 
     action = { type: types.DELETE_ARTIFACT_FAILURE, status: 'Test status', statusText: 'Test status message' };

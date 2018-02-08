@@ -5,7 +5,10 @@ const defaultState = { errorMessage: '' };
 export default function errors(state = defaultState, action) {
   switch (action.type) {
     case types.SET_ERROR_MESSAGE:
-      return Object.assign({}, state, { errorMessage: action.errorMessage });
+      return {
+        ...state,
+        errorMessage: action.errorMessage
+      };
     default:
       return state;
   }

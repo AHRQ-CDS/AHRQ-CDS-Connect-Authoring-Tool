@@ -50,17 +50,19 @@ beforeEach(() => {
     name: ''
   };
 
-  component = fullRenderComponent(Subpopulations, Object.assign({
+  component = fullRenderComponent(Subpopulations, {
     artifact: {
       subpopulations: [specialSubpop]
-    }
-  }, baseProps));
+    },
+    ...baseProps
+  });
 
-  componentWithSubpopulations = fullRenderComponent(Subpopulations, Object.assign({
+  componentWithSubpopulations = fullRenderComponent(Subpopulations, {
     artifact: {
       subpopulations: fullSubpops
-    }
-  }, baseProps));
+    },
+    ...baseProps
+  });
 });
 
 test('has correct base class', () => {
