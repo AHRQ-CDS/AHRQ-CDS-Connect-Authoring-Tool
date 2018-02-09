@@ -38,8 +38,9 @@ const elementOptions = [
   { value: 'demographics', label: 'Demographics', vsacAuthRequired: false },
   { value: 'encounter', label: 'Encounter', vsacAuthRequired: true, template: 'GenericEncounter_vsac' },
   { value: 'medication', label: 'Medication', vsacAuthRequired: true, template: 'GenericMedication_vsac' },
-  { value: 'procedure', label: 'Procedure', vsacAuthRequired: true, template: 'GenericProcedure_vsac' },
-  { value: 'observation', label: 'Observation', vsacAuthRequired: true, template: 'GenericObservation_vsac' }
+  { value: 'observation', label: 'Observation', vsacAuthRequired: true, template: 'GenericObservation_vsac' },
+  { value: 'booleanParameter', label: 'Parameters', vsacAuthRequired: false },
+  { value: 'procedure', label: 'Procedure', vsacAuthRequired: true, template: 'GenericProcedure_vsac' }
 ];
 
 class ElementSelect extends Component {
@@ -175,10 +176,10 @@ class ElementSelect extends Component {
     );
   }
 
-  onDemographicElementSelected = (demographic) => {
+  onNoAuthElementSelected = (element) => {
     const suggestion = this.state.categories
-      .find(cat => cat.name === 'Demographics')
-      .entries.find(entry => entry.id === demographic.value);
+      .find(cat => cat.name === element.type)
+      .entries.find(entry => entry.id === element.value);
 
     this.onSuggestionSelected(suggestion);
   }
@@ -190,16 +191,12 @@ class ElementSelect extends Component {
   render() {
     const { selectedElement } = this.state;
     const placeholderText = 'Choose element type';
-    const elementOptions = [
-      { value: 'condition', label: 'Condition', vsacAuthRequired: true },
-      { value: 'demographics', label: 'Demographics', vsacAuthRequired: false },
-      { value: 'encounter', label: 'Encounter', vsacAuthRequired: true },
-      { value: 'medication', label: 'Medication', vsacAuthRequired: true },
-      { value: 'observation', label: 'Observation', vsacAuthRequired: true }
-    ];
-    const demographicOptions = this.state.categories
-      .find(cat => cat.name === 'Demographics')
-      .entries.map(({ id, name }) => ({ value: id, label: name }));
+    let noAuthElementOptions;
+    if (selectedElement && !selectedElement.vsacAuthRequired) {
+      noAuthElementOptions = this.state.categories
+        .find(cat => cat.name === selectedElement.label)
+        .entries.map(({ id, name }) => ({ value: id, label: name, type: selectedElement.label }));
+    }
     const value = selectedElement && selectedElement.value;
 
     return (
@@ -221,18 +218,16 @@ class ElementSelect extends Component {
             onChange={this.onElementSelected}
             optionRenderer={optionRenderer}
             menuRenderer={ElementSelectMenuRenderer}
-            menuContainerStyle={{ maxHeight: '320px' }}
-            menuStyle={{ minHeight: '320px' }}
           />
 
           {
-            selectedElement && selectedElement.value === 'demographics' &&
+            selectedElement && !selectedElement.vsacAuthRequired &&
               <Select
                 className="element-select__element-field"
-                placeholder="Select demographic type"
-                aria-label="Select demographic type"
-                options={demographicOptions}
-                onChange={this.onDemographicElementSelected}
+                placeholder={`Select ${selectedElement.label} element`}
+                aria-label={`Select ${selectedElement.label} element`}
+                options={noAuthElementOptions}
+                onChange={this.onNoAuthElementSelected}
                 />
           }
 

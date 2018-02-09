@@ -399,6 +399,7 @@ export default class TemplateInstance extends Component {
             if (param.id !== 'element_name') {
               return this.selectTemplate(param);
             }
+            return null;
           })}
         </div>
 
