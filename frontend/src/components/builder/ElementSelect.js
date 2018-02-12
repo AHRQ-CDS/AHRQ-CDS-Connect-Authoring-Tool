@@ -86,6 +86,7 @@ class ElementSelect extends Component {
   generateInternalCategories = () => {
     let categoriesCopy = _.cloneDeep(this.props.categories);
     categoriesCopy = filterUnsuppressed(categoriesCopy);
+    const paramsIndex = categoriesCopy.findIndex(cat => cat.name === 'Parameters');
 
     if (this.props.parameters.length) {
       const paramsIndex = categoriesCopy.findIndex(cat => cat.name === 'Parameters');
@@ -96,15 +97,27 @@ class ElementSelect extends Component {
       } else {
         parametersCategory = { icon: 'sign-in', name: 'Parameters', entries: [] };
       }
-      parametersCategory.entries = parametersCategory.entries.concat(this.props.parameters.map(param => ({
+
+      // Only include boolean parameters. Don't include blank parameters to add to workspace.
+      parametersCategory.entries = this.props.parameters.map(param => ({
+        id: param.name,
         name: param.name,
-        parameters: [{ value: param.name }],
-        template: 'EmptyParameter',
-        cannotHaveModifiers: true,
-        returnType: 'boolean'
-      })));
+        type: 'parameter',
+        returnType: 'boolean',
+        extends: 'Base',
+        parameters: [
+          { id: 'element_name', type: 'string', name: 'Element Name', value: param.name },
+          { id: 'default', type: 'boolean', name: 'Default', value: param.value }
+        ]
+      }));
 
       categoriesCopy.push(parametersCategory);
+    } else {
+      // No parameters have been made
+      if (paramsIndex >= 0) {
+        // Restrict creating new parameters within the workspace.
+        categoriesCopy[paramsIndex].entries = [];
+      }
     }
 
     _.each(categoriesCopy, (cat) => {

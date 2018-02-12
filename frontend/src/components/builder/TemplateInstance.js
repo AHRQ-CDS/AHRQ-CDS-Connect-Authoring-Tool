@@ -422,11 +422,13 @@ export default class TemplateInstance extends Component {
       <div className="element element__expanded">
         <div className="element__header">
           <span className="element__heading">
-            <StringParameter
-              key={elementNameParameter.id}
-              {...elementNameParameter}
-              updateInstance={this.updateInstance}
-              name={this.props.templateInstance.name}/>
+            {this.props.templateInstance.type === 'parameter' && elementNameParameter.value ?
+              <span className="label">{elementNameParameter.value}</span> :
+              <StringParameter
+                key={elementNameParameter.id}
+                {...elementNameParameter}
+                updateInstance={this.updateInstance}
+                name={this.props.templateInstance.name}/> }
           </span>
 
           <div className="element__buttonbar">
