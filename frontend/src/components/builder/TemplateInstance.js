@@ -267,17 +267,20 @@ export default class TemplateInstance extends Component {
   )
 
   renderVSInfo = () => {
-    // All generic VSAC elements save the VS information on this parameter. Only VSAC elements have a vsName property.
-    const vsacParameter = this.props.templateInstance.parameters[1];
-    if (vsacParameter.vsName) {
-      return (
-        <div>
-          {this.renderVSACOptions()}
-          <div className='modifier__return__type'>
-            <span className="bold">Selected Value Set: </span>{`${vsacParameter.vsName} (${vsacParameter.value})`}
+    if (this.props.templateInstance.parameters.length > 1) {
+      // All generic VSAC elements save the VS information on this parameter. Only VSAC elements have a vsName property.
+      const vsacParameter = this.props.templateInstance.parameters[1];
+      if (vsacParameter.vsName) {
+        return (
+          <div>
+            {this.renderVSACOptions()}
+            <div className='modifier__return__type'>
+              <span className="bold">Selected Value Set: </span>{`${vsacParameter.vsName} (${vsacParameter.value})`}
+            </div>
           </div>
-        </div>
-      );
+        );
+      }
+      return null;
     }
     return null;
   }
@@ -416,19 +419,33 @@ export default class TemplateInstance extends Component {
     );
   }
 
-  render() {
+  renderHeader = () => {
     const elementNameParameter = this.props.templateInstance.parameters.find(param => param.id === 'element_name');
+    if (elementNameParameter) {
+      if (this.props.templateInstance.type === 'parameter') {
+        if (elementNameParameter.value) {
+          return (<span className="label">{elementNameParameter.value}</span>);
+        }
+        return null;
+      }
+      return (
+        <StringParameter
+          key={elementNameParameter.id}
+          {...elementNameParameter}
+          updateInstance={this.updateInstance}
+          name={this.props.templateInstance.name}/>
+      );
+    }
+    // Handles the case for old parameters, which did not have an 'element_name' parameter.
+    return (<span className="label">{this.props.templateInstance.name}</span>);
+  }
+
+  render() {
     return (
       <div className="element element__expanded">
         <div className="element__header">
           <span className="element__heading">
-            {this.props.templateInstance.type === 'parameter' && elementNameParameter.value ?
-              <span className="label">{elementNameParameter.value}</span> :
-              <StringParameter
-                key={elementNameParameter.id}
-                {...elementNameParameter}
-                updateInstance={this.updateInstance}
-                name={this.props.templateInstance.name}/> }
+            {this.renderHeader()}
           </span>
 
           <div className="element__buttonbar">

@@ -7,6 +7,9 @@ import ConjunctionGroup from './ConjunctionGroup';
 class Subpopulation extends Component {
   static propTypes = {
     artifact: PropTypes.object.isRequired,
+    resources: PropTypes.object,
+    valueSets: PropTypes.array,
+    loadValueSets: PropTypes.func.isRequired,
     subpopulation: PropTypes.object.isRequired,
     subpopulationIndex: PropTypes.number.isRequired,
     setSubpopulationName: PropTypes.func.isRequired,
@@ -18,7 +21,16 @@ class Subpopulation extends Component {
     getAllInstances: PropTypes.func.isRequired,
     treeName: PropTypes.string.isRequired,
     parameters: PropTypes.array.isRequired,
-    templates: PropTypes.array.isRequired
+    templates: PropTypes.array.isRequired,
+    loginVSACUser: PropTypes.func.isRequired,
+    setVSACAuthStatus: PropTypes.func.isRequired,
+    vsacStatus: PropTypes.string,
+    vsacStatusText: PropTypes.string,
+    timeLastAuthenticated: PropTypes.instanceOf(Date).isRequired,
+    searchVSACByKeyword: PropTypes.func.isRequired,
+    isSearchingVSAC: PropTypes.bool.isRequired,
+    vsacSearchResults: PropTypes.array.isRequired,
+    vsacSearchCount: PropTypes.number.isRequired
   }
 
   constructor(props) {
@@ -115,6 +127,9 @@ class Subpopulation extends Component {
               treeName={this.props.treeName}
               artifact={this.props.artifact}
               templates={this.props.templates}
+              resources={this.props.resources}
+              valueSets={this.props.valueSets}
+              loadValueSets={this.props.loadValueSets}
               instance={this.props.subpopulation}
               addInstance={this.addInstance}
               editInstance={this.editInstance}
@@ -122,7 +137,16 @@ class Subpopulation extends Component {
               getAllInstances={this.getAllInstances}
               updateInstanceModifiers={this.props.updateInstanceModifiers}
               parameters={this.props.parameters}
-              subPopulationIndex={this.props.subpopulationIndex} />
+              subPopulationIndex={this.props.subpopulationIndex}
+              loginVSACUser={this.props.loginVSACUser}
+              setVSACAuthStatus={this.props.setVSACAuthStatus}
+              vsacStatus={this.props.vsacStatus}
+              vsacStatusText={this.props.vsacStatusText}
+              timeLastAuthenticated={this.props.timeLastAuthenticated}
+              searchVSACByKeyword={this.props.searchVSACByKeyword}
+              isSearchingVSAC={this.props.isSearchingVSAC}
+              vsacSearchResults={this.props.vsacSearchResults}
+              vsacSearchCount={this.props.vsacSearchCount} />
           </div>
           :
           null

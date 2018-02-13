@@ -380,6 +380,9 @@ export class Builder extends Component {
                   <Subpopulations
                     name={'subpopulations'}
                     artifact={artifact}
+                    resources={this.props.resources}
+                    valueSets={this.props.valueSets}
+                    loadValueSets={this.props.loadValueSets}
                     updateSubpopulations={this.updateSubpopulations}
                     parameters={namedParameters}
                     addInstance={this.addInstance}
@@ -389,7 +392,16 @@ export class Builder extends Component {
                     getAllInstances={this.getAllInstances}
                     templates={templates}
                     checkSubpopulationUsage={this.checkSubpopulationUsage}
-                    updateRecsSubpop={this.updateRecsSubpop} />
+                    updateRecsSubpop={this.updateRecsSubpop}
+                    loginVSACUser={this.props.loginVSACUser}
+                    setVSACAuthStatus={this.props.setVSACAuthStatus}
+                    vsacStatus={this.props.vsacStatus}
+                    vsacStatusText={this.props.vsacStatusText}
+                    timeLastAuthenticated={this.props.timeLastAuthenticated}
+                    searchVSACByKeyword={this.props.searchVSACByKeyword}
+                    isSearchingVSAC={this.props.isSearchingVSAC}
+                    vsacSearchResults={this.props.vsacSearchResults}
+                    vsacSearchCount={this.props.vsacSearchCount} />
                 </TabPanel>
 
                 <TabPanel>

@@ -8,6 +8,9 @@ import createTemplateInstance from '../../utils/templates';
 export default class Subpopulations extends Component {
   static propTypes = {
     artifact: PropTypes.object.isRequired,
+    resources: PropTypes.object,
+    valueSets: PropTypes.array,
+    loadValueSets: PropTypes.func.isRequired,
     updateSubpopulations: PropTypes.func.isRequired,
     templates: PropTypes.array.isRequired,
     addInstance: PropTypes.func.isRequired,
@@ -18,7 +21,16 @@ export default class Subpopulations extends Component {
     updateRecsSubpop: PropTypes.func.isRequired,
     checkSubpopulationUsage: PropTypes.func.isRequired,
     parameters: PropTypes.array.isRequired,
-    name: PropTypes.string.isRequired
+    name: PropTypes.string.isRequired,
+    loginVSACUser: PropTypes.func.isRequired,
+    setVSACAuthStatus: PropTypes.func.isRequired,
+    vsacStatus: PropTypes.string,
+    vsacStatusText: PropTypes.string,
+    timeLastAuthenticated: PropTypes.instanceOf(Date).isRequired,
+    searchVSACByKeyword: PropTypes.func.isRequired,
+    isSearchingVSAC: PropTypes.bool.isRequired,
+    vsacSearchResults: PropTypes.array.isRequired,
+    vsacSearchCount: PropTypes.number.isRequired
   };
 
   constructor(props) {
@@ -82,6 +94,9 @@ export default class Subpopulations extends Component {
             <Subpopulation
               key={ subpop.uniqueId }
               treeName={ this.props.name }
+              resources={this.props.resources}
+              valueSets={this.props.valueSets}
+              loadValueSets={this.props.loadValueSets}
               subpopulation={ subpop }
               subpopulationIndex={ i + this.state.numOfSpecialSubpopulations } // System needs to know true index out of all subpopulations
               setSubpopulationName={ this.setSubpopulationName }
@@ -93,7 +108,16 @@ export default class Subpopulations extends Component {
               deleteInstance={ this.props.deleteInstance }
               getAllInstances={ this.props.getAllInstances }
               templates={ this.props.templates }
-              artifact={this.props.artifact} />
+              artifact={this.props.artifact}
+              loginVSACUser={this.props.loginVSACUser}
+              setVSACAuthStatus={this.props.setVSACAuthStatus}
+              vsacStatus={this.props.vsacStatus}
+              vsacStatusText={this.props.vsacStatusText}
+              timeLastAuthenticated={this.props.timeLastAuthenticated}
+              searchVSACByKeyword={this.props.searchVSACByKeyword}
+              isSearchingVSAC={this.props.isSearchingVSAC}
+              vsacSearchResults={this.props.vsacSearchResults}
+              vsacSearchCount={this.props.vsacSearchCount} />
           ))}
         <button className="button primary-button" onClick={ this.addSubpopulation }>
           New subpopulation

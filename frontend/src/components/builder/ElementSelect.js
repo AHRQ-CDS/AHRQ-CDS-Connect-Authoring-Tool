@@ -89,8 +89,6 @@ class ElementSelect extends Component {
     const paramsIndex = categoriesCopy.findIndex(cat => cat.name === 'Parameters');
 
     if (this.props.parameters.length) {
-      const paramsIndex = categoriesCopy.findIndex(cat => cat.name === 'Parameters');
-
       let parametersCategory;
       if (paramsIndex >= 0) {
         [parametersCategory] = categoriesCopy.splice(paramsIndex, 1);
@@ -112,12 +110,11 @@ class ElementSelect extends Component {
       }));
 
       categoriesCopy.push(parametersCategory);
+    } else if (this.props.parameters.length === 0 && paramsIndex >= 0) {
+      // No parameters have been made. Restrict creating new parameters within the workspace.
+      categoriesCopy[paramsIndex].entries = [];
     } else {
-      // No parameters have been made
-      if (paramsIndex >= 0) {
-        // Restrict creating new parameters within the workspace.
-        categoriesCopy[paramsIndex].entries = [];
-      }
+      categoriesCopy.push({ icon: 'sign-in', name: 'Parameters', entries: [] });
     }
 
     _.each(categoriesCopy, (cat) => {

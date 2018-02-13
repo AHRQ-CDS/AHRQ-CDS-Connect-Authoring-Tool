@@ -213,7 +213,16 @@ export default class ConjunctionGroup extends Component {
               getAllInstances={this.props.getAllInstances}
               updateInstanceModifiers={this.props.updateInstanceModifiers}
               parameters={this.props.parameters}
-              getPath={this.getChildsPath} />
+              getPath={this.getChildsPath}
+              loginVSACUser={this.props.loginVSACUser}
+              setVSACAuthStatus={this.props.setVSACAuthStatus}
+              vsacStatus={this.props.vsacStatus}
+              vsacStatusText={this.props.vsacStatusText}
+              timeLastAuthenticated={this.props.timeLastAuthenticated}
+              searchVSACByKeyword={this.props.searchVSACByKeyword}
+              isSearchingVSAC={this.props.isSearchingVSAC}
+              vsacSearchResults={this.props.vsacSearchResults}
+              vsacSearchCount={this.props.vsacSearchCount} />
 
             {this.renderConjunctionSelect(i)}
           </div>
@@ -289,7 +298,17 @@ ConjunctionGroup.propTypes = {
   templates: PropTypes.array,
   resources: PropTypes.object,
   valueSets: PropTypes.array,
+  loadValueSets: PropTypes.func.isRequired,
   getPath: requiredIf(PropTypes.func, props => !props.root), // path needed for children
   getAllInstances: PropTypes.func.isRequired,
-  deleteInstance: PropTypes.func.isRequired
+  deleteInstance: PropTypes.func.isRequired,
+  loginVSACUser: PropTypes.func.isRequired,
+  setVSACAuthStatus: PropTypes.func.isRequired,
+  vsacStatus: PropTypes.string,
+  vsacStatusText: PropTypes.string,
+  timeLastAuthenticated: PropTypes.instanceOf(Date).isRequired,
+  searchVSACByKeyword: PropTypes.func.isRequired,
+  isSearchingVSAC: PropTypes.bool.isRequired,
+  vsacSearchResults: PropTypes.array.isRequired,
+  vsacSearchCount: PropTypes.number.isRequired
 };
