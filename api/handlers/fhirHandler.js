@@ -10,7 +10,7 @@ function getValueSet(req, res) {
       res.json(t);
     })
     .catch((t) => {
-      res.sendStatus(t.status);
+      res.sendStatus(t.statusCode);
     });
 }
 
@@ -21,7 +21,7 @@ function searchForValueSets(req, res) {
     res.json(t);
   })
   .catch((t) => {
-    res.sendStatus(t.status);
+    res.sendStatus(t.statusCode);
   });
 }
 
