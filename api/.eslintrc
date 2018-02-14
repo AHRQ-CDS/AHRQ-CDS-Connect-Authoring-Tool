@@ -11,5 +11,11 @@
     "no-unused-vars": [ "error", { "args": "none" } ], // don't check function arguments
     "no-use-before-define": ["error", "nofunc"],
     "no-plusplus": ["error", { "allowForLoopAfterthoughts": true }] // allow ++ in for loop expression
-  }
+  },
+  "env": {
+    "es6": true,
+    "node": true,
+    "mocha": true
+  },
+  "extends": ["eslint:recommended"]
 }

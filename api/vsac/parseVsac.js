@@ -14,7 +14,8 @@ function parseVsacDetails(vsacXML) {
     const vsDisplayName = parsedXML['ns0:RetrieveValueSetResponse']['ns0:ValueSet'][0]['$']['displayName'];
 
     // Grab the list of codes.
-    const conceptList = parsedXML['ns0:RetrieveValueSetResponse']['ns0:ValueSet'][0]['ns0:ConceptList'][0]['ns0:Concept'];
+    const conceptList =
+      parsedXML['ns0:RetrieveValueSetResponse']['ns0:ValueSet'][0]['ns0:ConceptList'][0]['ns0:Concept'];
 
     // Loop over the codes and build the JSON.
     const codeList = [];

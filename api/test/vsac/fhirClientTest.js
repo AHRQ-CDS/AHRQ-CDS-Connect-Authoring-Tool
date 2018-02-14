@@ -47,7 +47,8 @@ describe('vsac/FHIRClient', () =>{
             "system": "http://hl7.org/fhir/sid/icd-9-cm",
              "version": "2013",
              "code": "250.00",
-             "display": "Diabetes mellitus without mention of complication, type II or unspecified type, not stated as uncontrolled"
+             "display": "Diabetes mellitus without mention of complication, type II or unspecified type, not stated "
+               + "as uncontrolled"
           }
         ]
       });
