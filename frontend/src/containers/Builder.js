@@ -260,7 +260,7 @@ export class Builder extends Component {
       );
     }
 
-    return <div class="wtf">Loading...</div>;
+    return <div>Loading...</div>;
   }
 
   renderHeader() {
