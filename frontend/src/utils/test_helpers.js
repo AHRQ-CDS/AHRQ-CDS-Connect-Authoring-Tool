@@ -27,6 +27,21 @@ function shallowRenderComponent(ComponentClass, props = {}) {
   );
 }
 
+function fullRenderContainer(ComponentClass, props = {}, store) {
+  const routerContext = createRouterContext();
+  const context = { ...routerContext, store };
+
+  ComponentClass.contextTypes = { // eslint-disable-line no-param-reassign
+    router: PropTypes.object,
+    store: PropTypes.object
+  };
+
+  return mount(
+    <ComponentClass {...props} />,
+    { context }
+  );
+}
+
 function shallowRenderContainer(ComponentClass, props = {}, store) {
   return shallowWithStore(
     <ComponentClass {...props} />,
@@ -60,6 +75,7 @@ function createTemplateInstance(template, children = undefined) {
 
 export {
   fullRenderComponent,
+  fullRenderContainer,
   shallowRenderComponent,
   shallowRenderContainer,
   deepState,

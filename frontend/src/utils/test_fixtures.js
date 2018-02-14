@@ -72,6 +72,19 @@ const instanceTree = {
   ]
 };
 
+const emptyInstanceTree = {
+  id: 'And',
+  name: 'And',
+  conjunction: true,
+  returnType: 'boolean',
+  path: '',
+  uniqueId: 'And-1',
+  parameters: [
+    { id: 'element_name', type: 'string', name: 'Group Name', value: 'MeetsInclusionCriteria' }
+  ],
+  childInstances: []
+};
+
 const elementGroups = [
   {
     id: 0,
@@ -188,5 +201,6 @@ const elementGroups = [
 
 export {
   instanceTree,
+  emptyInstanceTree,
   elementGroups
 };

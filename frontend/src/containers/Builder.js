@@ -31,7 +31,7 @@ import artifactProps from '../prop-types/artifact';
 // TODO: This is needed because the tree on this.state is not updated in time. Figure out a better way to handle this
 let localTree;
 
-class Builder extends Component {
+export class Builder extends Component {
   constructor(props) {
     super(props);
 
@@ -260,7 +260,7 @@ class Builder extends Component {
       );
     }
 
-    return <div>Loading...</div>;
+    return <div class="wtf">Loading...</div>;
   }
 
   renderHeader() {
