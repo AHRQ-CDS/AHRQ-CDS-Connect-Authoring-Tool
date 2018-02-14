@@ -5,6 +5,7 @@ const expressionRouter = require('./routers/expressionRouter');
 const authRouter = require('./routers/authRouter.js');
 const repository = require('./routers/repository');
 const vsacRouter = require('./routers/vsacRouter');
+const fhirRouter = require('./routers/fhirRouter');
 
 module.exports = (app) => {
   // Routing for API check
@@ -32,6 +33,9 @@ module.exports = (app) => {
 
   // Routing for VSAC
   app.use('/authoring/api/vsac', vsacRouter);
+
+  // Routing for FHIR VSAC endpoint
+  app.use('/authoring/api/fhir', fhirRouter);
 
   // Catch all other Api calls
   app.get('/authoring/api/*', (req, res) => { res.sendStatus(404); });

@@ -39,7 +39,7 @@ function search(req, res) {
   if (ticketGrantingTicket) {
     vsacSearch(req.query)
       .then(result => res.json(result))
-      .catch(err => res.status(500).send(error));
+      .catch(error => res.status(500).send(error));
   } else {
     // No TGT on the session. Must login first.
     res.sendStatus(401);

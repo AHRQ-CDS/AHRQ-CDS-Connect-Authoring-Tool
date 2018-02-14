@@ -7,7 +7,11 @@ const client = require('../../vsac/client');
 
 describe('vsac/client', () =>{
   // before the tests, disable network connections to ensure tests never hit real network
-  before(() => nock.disableNetConnect());
+  before(() => {
+    // if another test suite de-activated nock, we need to re-activate it
+    if (!nock.isActive()) nock.activate();
+    nock.disableNetConnect()
+  });
 
   // after the tests, re-enable network connections
   after(() => {
