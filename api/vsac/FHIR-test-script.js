@@ -11,11 +11,20 @@ if (process.argv.length < 4) {
 }
 
 let [user, pass, oid] = process.argv.slice(2);
-console.log('Logging in w/ user:', user, pass);
-FHIRClient.getValueSet(oid, user, pass).then((t) => {
+// A default OID for LDL Test
+if (oid === undefined) {
+  oid = '2.16.840.1.113883.3.464.1003.198.12.1016';
+}
+console.log('Using basic auth w/ user:', user, pass);
+console.log('Getting VS details for', oid);
+FHIRClient.getValueSet(oid, user, pass)
+.then((t) => {
   console.log(t);
-});
-
-FHIRClient.searchForValueSets("Diabetes", user, pass).then((t) => {
+})
+.then(() => {
+  console.log('Searching for VS w/ keyword Diabetes');
+  return FHIRClient.searchForValueSets("Diabetes", user, pass)
+})
+.then((t) => {
   console.log(t);
 });

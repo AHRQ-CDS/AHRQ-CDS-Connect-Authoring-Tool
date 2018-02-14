@@ -3,9 +3,12 @@ var auth = require('basic-auth')
 
 
 function getValueSet(req, res) {
-  const {name, pass} = auth(req)
-  const oid = req.params.id;
-  FHIRClient.getValueSet(id, name, pass)
+  const user = auth(req);
+  if (user == null) {
+    return res.sendStatus(401);
+  }
+  const id = req.params.id;
+  FHIRClient.getValueSet(id, user.name, user.pass)
     .then((t) => {
       res.json(t);
     })
@@ -15,9 +18,12 @@ function getValueSet(req, res) {
 }
 
 function searchForValueSets(req, res) {
-  const {name, pass} = auth(req)
-  const query = req.query.query;
-  FHIRClient.searchForValueSets(query, name, pass).then((t) => {
+  const user = auth(req);
+  if (user == null) {
+    return res.sendStatus(401);
+  }
+  const keyword = req.query.keyword;
+  FHIRClient.searchForValueSets(keyword, user.name, user.pass).then((t) => {
     res.json(t);
   })
   .catch((t) => {
