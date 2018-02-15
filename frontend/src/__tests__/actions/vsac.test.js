@@ -168,4 +168,51 @@ describe('vsac actions', () => {
       });
     });
   });
+
+  // ----------------------- DETAILS --------------------------------------- //
+  describe('get vsac vs details', () => {
+    beforeEach(() => { moxios.install(); });
+    afterEach(() => { moxios.uninstall(); });
+
+    it('dispatches a VSAC_DETAILS_SUCCESS action upon a successful attempt to get details', () => {
+      const store = mockStore({});
+      const oid = '1.2.3';
+      const codes = [{ code: '123-4' }, { code: '987-6' }];
+
+      moxios.stubs.track({
+        url: `/authoring/api/vsac/vs/${oid}`,
+        method: 'GET',
+        response: { status: 200, response: { oid, codes } }
+      });
+
+      const expectedActions = [
+        { type: types.VSAC_DETAILS_REQUEST },
+        { type: types.VSAC_DETAILS_SUCCESS, codes }
+      ];
+
+      return store.dispatch(actions.getVSDetails(oid)).then(() => {
+        expect(store.getActions()).toEqual(expectedActions);
+      });
+    });
+
+    it('dispatches a VSAC_DETAILS_FAILURE action upon an unsuccessful attempt to get details', () => {
+      const store = mockStore({});
+      const oid = '1.2.3';
+
+      moxios.stubs.track({
+        url: `/authoring/api/vsac/vs/${oid}`,
+        method: 'GET',
+        response: { status: 404, statusText: 'Not Found' }
+      });
+
+      const expectedActions = [
+        { type: types.VSAC_DETAILS_REQUEST },
+        { type: types.VSAC_DETAILS_FAILURE }
+      ];
+
+      return store.dispatch(actions.getVSDetails(oid)).then(() => {
+        expect(store.getActions()).toEqual(expectedActions);
+      });
+    });
+  });
 });
