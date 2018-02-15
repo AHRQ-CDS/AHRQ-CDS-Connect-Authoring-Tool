@@ -227,7 +227,6 @@ class CqlArtifact {
             id: _.uniqueId('generic_observation_'), // This is needed for creating a separate union'ed variable name. Needs to be unique.
             observations: [
               { name: _.uniqueId(`${parameter.vsName} `), oid: parameter.value },
-              // { name: _.uniqueId(`${parameter.vsName} `), oid: parameter.value }
             ],
             // TODO: Decide what if this information is provided by the user and which needs to be inferred
             // concepts: [
@@ -325,7 +324,6 @@ class CqlArtifact {
             id: _.uniqueId('generic_condition_'),
             conditions: [
               { name: _.uniqueId(`${parameter.vsName} `), oid: parameter.value },
-              // { name: 'condition_vs2', oid: parameter.value },
             ],
             // concepts: [
             //   {
@@ -431,7 +429,6 @@ class CqlArtifact {
             name: _.uniqueId('generic_procedure_'),
             procedures: [
               { name: _.uniqueId(`${parameter.vsName} `), oid: parameter.value },
-              // { name: 'procedure_vs2', oid: parameter.value }
             ]
           };
           context.values = procedureValueSets.procedures.map((procedure) => {
@@ -454,7 +451,6 @@ class CqlArtifact {
             name: _.uniqueId('generic_encounter_'),
             encounters: [
               { name: _.uniqueId(`${parameter.vsName} `), oid: parameter.value },
-              // { name: 'encounter_vs2', oid: parameter.value }
             ]
           };
           context.values = encounterValueSets.encounters.map((encounter) => {
