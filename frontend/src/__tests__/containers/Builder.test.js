@@ -42,14 +42,15 @@ test('renders a single level tree for Inclusions and Exclusions', () => {
   const differentTree = _.cloneDeep(instanceTree);
   differentTree.childInstances.pop();
 
-  const component = shallowRenderContainer(Builder, {}, createMockStore(Object.assign({}, baseState, {
+  const component = shallowRenderContainer(Builder, {}, createMockStore({
+    ...baseState,
     artifacts: {
       artifact: {
         expTreeInclude: instanceTree,
         expTreeExclude: differentTree
       }
     }
-  })));
+  }));
 
   // Inclusions Tab
 
@@ -75,14 +76,15 @@ test('renders a single level tree for Inclusions and Exclusions', () => {
 });
 
 test('adds instance', () => {
-  const store = createMockStore(Object.assign({}, baseState, {
+  const store = createMockStore({
+    ...baseState,
     artifacts: {
       artifact: {
         expTreeInclude: emptyInstanceTree,
         expTreeExclude: emptyInstanceTree
       }
     }
-  }));
+  });
   const component = shallowRenderContainer(Builder, {}, store);
 
   const instance = createTemplateInstance(cholesterolTemplate);
@@ -107,14 +109,15 @@ test('adds instance', () => {
 test('adds instance at correct tree position', () => {
   const conjunctionInstance = createTemplateInstance(orTemplate);
 
-  const store = createMockStore(Object.assign({}, baseState, {
+  const store = createMockStore({
+    ...baseState,
     artifacts: {
       artifact: {
         expTreeInclude: { ...emptyInstanceTree, childInstances: [conjunctionInstance] },
         expTreeExclude: emptyInstanceTree
       }
     }
-  }));
+  });
   const component = shallowRenderContainer(Builder, {}, store);
 
   const observationInstance = createTemplateInstance(cholesterolTemplate);
@@ -131,14 +134,15 @@ test('adds instance at correct tree position', () => {
 });
 
 test('edits a template instance', () => {
-  const store = createMockStore(Object.assign({}, baseState, {
+  const store = createMockStore({
+    ...baseState,
     artifacts: {
       artifact: {
         expTreeInclude: instanceTree,
         expTreeExclude: instanceTree
       }
     }
-  }));
+  });
   const component = shallowRenderContainer(Builder, {}, store);
 
   const name = 'test';
@@ -151,14 +155,15 @@ test('edits a template instance', () => {
 });
 
 test('edits a conjunction instance', () => {
-  const store = createMockStore(Object.assign({}, baseState, {
+  const store = createMockStore({
+    ...baseState,
     artifacts: {
       artifact: {
         expTreeInclude: instanceTree,
         expTreeExclude: instanceTree
       }
     }
-  }));
+  });
   const component = shallowRenderContainer(Builder, {}, store);
 
   expect(store.getState().artifacts.artifact.expTreeInclude.childInstances[0].id).toEqual('AgeRange');
@@ -176,14 +181,15 @@ test('edits a conjunction instance', () => {
 });
 
 test('updates an instance\'s modifiers', () => {
-  const store = createMockStore(Object.assign({}, baseState, {
+  const store = createMockStore({
+    ...baseState,
     artifacts: {
       artifact: {
         expTreeInclude: instanceTree,
         expTreeExclude: instanceTree
       }
     }
-  }));
+  });
   const component = shallowRenderContainer(Builder, {}, store);
 
   const modifiers = [
@@ -210,14 +216,15 @@ test('updates an instance\'s modifiers', () => {
 });
 
 test('deletes instance at correct tree position', () => {
-  const store = createMockStore(Object.assign({}, baseState, {
+  const store = createMockStore({
+    ...baseState,
     artifacts: {
       artifact: {
         expTreeInclude: instanceTree,
         expTreeExclude: instanceTree
       }
     }
-  }));
+  });
   const component = shallowRenderContainer(Builder, {}, store);
 
   const initialInstancesLength = instanceTree.childInstances.length;
@@ -243,14 +250,15 @@ test('deletes instance at correct tree position', () => {
 });
 
 test('gets a list of all instances', () => {
-  const store = createMockStore(Object.assign({}, baseState, {
+  const store = createMockStore({
+    ...baseState,
     artifacts: {
       artifact: {
         expTreeInclude: instanceTree,
         expTreeExclude: emptyInstanceTree
       }
     }
-  }));
+  });
   const component = shallowRenderContainer(Builder, {}, store);
 
   expect(component.dive().dive().instance()
@@ -262,14 +270,15 @@ test('gets a list of all instances', () => {
     createTemplateInstance(cholesterolTemplate)
   ];
 
-  const storeWithTemplateInstances = createMockStore(Object.assign({}, baseState, {
+  const storeWithTemplateInstances = createMockStore({
+    ...baseState,
     artifacts: {
       artifact: {
         expTreeInclude: instanceTree,
         expTreeExclude: fullInstanceTree
       }
     }
-  }));
+  });
   const componentWithTemplateInstances = shallowRenderContainer(Builder, {}, storeWithTemplateInstances);
 
   expect(componentWithTemplateInstances.dive().dive().instance()
