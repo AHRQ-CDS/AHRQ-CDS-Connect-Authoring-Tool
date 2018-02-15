@@ -1,6 +1,7 @@
 import React from 'react';
 import { render } from 'react-dom';
 import { BrowserRouter as Router } from 'react-router-dom';
+import ReactModal from 'react-modal';
 import 'react-select/dist/react-select.css';
 
 /* Polyfills for IE 11 */
@@ -15,9 +16,12 @@ import Root from './containers/Root';
 import '../node_modules/font-awesome/css/font-awesome.css';
 import './styles/App.css';
 
+/* setup redux store */
 const store = configureStore();
-
 window.store = store;
+
+/* set modal root */
+ReactModal.setAppElement('#root');
 
 render(
   <Router basename={process.env.PUBLIC_URL}>
