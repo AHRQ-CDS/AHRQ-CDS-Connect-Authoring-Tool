@@ -37,6 +37,7 @@ class ElementModal extends Component {
     this.state = {
       isOpen: false,
       searchValue: '',
+      selectedElement: null
     };
   }
 
@@ -45,7 +46,11 @@ class ElementModal extends Component {
     searchVSACByKeyword: PropTypes.func.isRequired,
     isSearchingVSAC: PropTypes.bool.isRequired,
     vsacSearchResults: PropTypes.array.isRequired,
-    vsacSearchCount: PropTypes.number.isRequired
+    vsacSearchCount: PropTypes.number.isRequired,
+    template: PropTypes.object,
+    getVSDetails: PropTypes.func.isRequired,
+    isRetrievingDetails: PropTypes.bool.isRequired,
+    vsacDetailsCodes: PropTypes.array.isRequired
   }
 
   handleSearchValueChange = (event) => {
@@ -59,6 +64,12 @@ class ElementModal extends Component {
   }
 
   handleElementSelected = (element) => {
+    this.props.getVSDetails(element.oid);
+    this.setState({ selectedElement: element });
+  }
+
+  handleChosenVS = () => {
+    const element = this.state.selectedElement;
     const selectedTemplate = this.props.template;
     if (selectedTemplate === undefined) return;
 
@@ -72,6 +83,10 @@ class ElementModal extends Component {
     this.closeModal();
   }
 
+  backToSearchResults = () => {
+    this.setState({ selectedElement: null });
+  }
+
   openModal = () => {
     this.setState({ isOpen: true });
   }
@@ -79,7 +94,7 @@ class ElementModal extends Component {
   closeModal = () => {
     this.handleSearchValueChange({ target: { value: '' } }); // Always start with no search term filtering
     this.props.searchVSACByKeyword('');
-    this.setState({ isOpen: false });
+    this.setState({ isOpen: false, selectedElement: null });
   }
 
   enterKeyCheck = (func, argument, event) => {
@@ -118,14 +133,40 @@ class ElementModal extends Component {
     </tbody>
   )
 
+  renderDetailsList = () => (
+    <tbody aria-label="Value Set Details List">
+      { this.props.vsacDetailsCodes.map((code, i) =>
+        <tr key={`${code.code}-${i}`}
+          aria-label={code.displayName}>
+          <td data-th="Code">{code.code}</td>
+          <td data-th="Name">{code.displayName}</td>
+          <td data-th="Code System">{code.codeSystemName}</td>
+        </tr>)
+      }
+    </tbody>
+  );
+
   renderSearchResultsTable = () => {
-    if (this.props.isSearchingVSAC) {
+    if (this.props.isSearchingVSAC || this.props.isRetrievingDetails) {
       return (
         <div>Loading...</div>
       );
-    } else if (this.props.vsacSearchResults.length > 0) {
+    } else if (this.state.selectedElement) {
       return (
         <table className="search__table">
+          <thead>
+            <tr>
+              <th>Code</th>
+              <th>Name</th>
+              <th>Code System</th>
+            </tr>
+          </thead>
+          { this.renderDetailsList() }
+        </table>
+      );
+    } else if (this.props.vsacSearchResults.length > 0) {
+      return (
+        <table className="search__table selectable icons">
           <thead>
             <tr>
               <th>Type</th>
@@ -144,6 +185,12 @@ class ElementModal extends Component {
 
   render() {
     const modalInputLabel = 'Enter value set code or keyword...';
+    let inputDisplayValue;
+    if (this.state.selectedElement) {
+      inputDisplayValue = `${this.state.selectedElement.name} (${this.state.selectedElement.oid})`;
+    } else {
+      inputDisplayValue = this.state.searchValue;
+    }
 
     return (
       <span className={ `${this.props.className} element-modal` }>
@@ -164,20 +211,37 @@ class ElementModal extends Component {
             <header className="modal__header">
               <span className="modal__heading">Choose Value Sets</span>
               { this.props.vsacSearchCount > 0 ?
-                <span><FontAwesome name="th-list" />{' '}{this.props.vsacSearchCount}</span> :
+                <span><FontAwesome name="th-list" />
+                  {' '}{this.state.selectedElement ? 1 : this.props.vsacSearchCount}
+                </span> :
                 null}
             </header>
             <main className="modal__body">
               <div className="element-modal__search">
+                {this.state.selectedElement ?
+                  <span className="nav-icon">
+                    <FontAwesome name="arrow-left"
+                      tabIndex="0"
+                      onClick={this.backToSearchResults}
+                      onKeyDown={ e => this.enterKeyCheck(this.backToSearchResults, null, e) }/>
+                  </span> : null}
                 <input
                   type="text"
                   placeholder={ modalInputLabel }
                   aria-label={ modalInputLabel }
                   title={ modalInputLabel }
-                  value={ this.state.searchValue }
+                  value={ inputDisplayValue }
                   onChange={ this.handleSearchValueChange }
                   onKeyDown={ e => this.enterKeyCheck(this.searchVSAC, this.state.searchValue, e)}/>
-                  <button className="button element-modal__searchbutton" onClick={ this.searchVSAC }>Search</button>
+                  {
+                    this.state.selectedElement ?
+                      <button className="primary-button element-modal__searchbutton" onClick={ this.handleChosenVS }>
+                        Select
+                      </button> :
+                      <button className="primary-button element-modal__searchbutton" onClick={ this.searchVSAC }>
+                        Search
+                      </button>
+                  }
               </div>
               <div className="element-modal__content">
                 { this.renderSearchResultsTable() }

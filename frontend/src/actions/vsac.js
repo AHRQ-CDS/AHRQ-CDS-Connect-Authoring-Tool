@@ -5,7 +5,8 @@ import {
   VSAC_AUTHENTICATION_REQUEST, VSAC_AUTHENTICATION_RECEIVED,
   VSAC_LOGIN_REQUEST, VSAC_LOGIN_SUCCESS, VSAC_LOGIN_FAILURE,
   SET_VSAC_AUTH_STATUS,
-  VSAC_SEARCH_REQUEST, VSAC_SEARCH_SUCCESS, VSAC_SEARCH_FAILURE
+  VSAC_SEARCH_REQUEST, VSAC_SEARCH_SUCCESS, VSAC_SEARCH_FAILURE,
+  VSAC_DETAILS_REQUEST, VSAC_DETAILS_SUCCESS, VSAC_DETAILS_FAILURE
 } from './types';
 
 const API_BASE = process.env.REACT_APP_API_URL;
@@ -135,6 +136,45 @@ export function searchVSACByKeyword(keyword) {
     return searchVSAC(keyword)
       .then(data => dispatch(searchSuccess(data)))
       .catch(error => dispatch(searchFailure(error)));
+  };
+}
+
+// ------------------------- VSAC DETAILS ---------------------------------- //
+
+function requestDetails() {
+  return {
+    type: VSAC_DETAILS_REQUEST
+  };
+}
+
+function detailsSuccess(data) {
+  return {
+    type: VSAC_DETAILS_SUCCESS,
+    codes: data.codes
+  };
+}
+
+function detailsFailure(error) {
+  return {
+    type: VSAC_DETAILS_FAILURE
+  };
+}
+
+function getVSDetailsByOID(oid) {
+  return new Promise((resolve, reject) => {
+    axios.get(`${API_BASE}/vsac/vs/${oid}`)
+      .then(result => resolve(result.data))
+      .catch(error => reject(error));
+  });
+}
+
+export function getVSDetails(oid) {
+  return (dispatch) => {
+    dispatch(requestDetails());
+
+    return getVSDetailsByOID(oid)
+      .then(data => dispatch(detailsSuccess(data)))
+      .catch(error => dispatch(detailsFailure(error)));
   };
 }
 

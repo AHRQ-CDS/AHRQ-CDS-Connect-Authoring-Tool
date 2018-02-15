@@ -60,7 +60,23 @@ class ElementSelect extends Component {
 
   static propTypes = {
     categories: PropTypes.array.isRequired,
-    onSuggestionSelected: PropTypes.func.isRequired
+    onSuggestionSelected: PropTypes.func.isRequired,
+    booleanParameters: PropTypes.arrayOf(PropTypes.shape({
+      name: PropTypes.string,
+      value: PropTypes.string
+    })),
+    loginVSACUser: PropTypes.func.isRequired,
+    setVSACAuthStatus: PropTypes.func.isRequired,
+    vsacStatus: PropTypes.string,
+    vsacStatusText: PropTypes.string,
+    timeLastAuthenticated: PropTypes.instanceOf(Date),
+    searchVSACByKeyword: PropTypes.func.isRequired,
+    isSearchingVSAC: PropTypes.bool.isRequired,
+    vsacSearchResults: PropTypes.array.isRequired,
+    vsacSearchCount: PropTypes.number.isRequired,
+    getVSDetails: PropTypes.func.isRequired,
+    isRetrievingDetails: PropTypes.bool.isRequired,
+    vsacDetailsCodes: PropTypes.array.isRequired
   }
 
   componentWillMount() {
@@ -181,6 +197,9 @@ class ElementSelect extends Component {
           vsacSearchResults={this.props.vsacSearchResults}
           vsacSearchCount={this.props.vsacSearchCount}
           template={selectedTemplate}
+          getVSDetails={this.props.getVSDetails}
+          isRetrievingDetails={this.props.isRetrievingDetails}
+          vsacDetailsCodes={this.props.vsacDetailsCodes}
         />
       </div>
     );

@@ -26,11 +26,14 @@ class Subpopulation extends Component {
     setVSACAuthStatus: PropTypes.func.isRequired,
     vsacStatus: PropTypes.string,
     vsacStatusText: PropTypes.string,
-    timeLastAuthenticated: PropTypes.instanceOf(Date).isRequired,
+    timeLastAuthenticated: PropTypes.instanceOf(Date),
     searchVSACByKeyword: PropTypes.func.isRequired,
     isSearchingVSAC: PropTypes.bool.isRequired,
     vsacSearchResults: PropTypes.array.isRequired,
-    vsacSearchCount: PropTypes.number.isRequired
+    vsacSearchCount: PropTypes.number.isRequired,
+    getVSDetails: PropTypes.func.isRequired,
+    isRetrievingDetails: PropTypes.bool.isRequired,
+    vsacDetailsCodes: PropTypes.array.isRequired
   }
 
   constructor(props) {
@@ -146,7 +149,10 @@ class Subpopulation extends Component {
               searchVSACByKeyword={this.props.searchVSACByKeyword}
               isSearchingVSAC={this.props.isSearchingVSAC}
               vsacSearchResults={this.props.vsacSearchResults}
-              vsacSearchCount={this.props.vsacSearchCount} />
+              vsacSearchCount={this.props.vsacSearchCount}
+              getVSDetails={this.props.getVSDetails}
+              isRetrievingDetails={this.props.isRetrievingDetails}
+              vsacDetailsCodes={this.props.vsacDetailsCodes} />
           </div>
           :
           null

@@ -14,7 +14,7 @@ import {
 import loadTemplates from '../actions/templates';
 import loadResources from '../actions/resources';
 import loadValueSets from '../actions/value_sets';
-import { loginVSACUser, setVSACAuthStatus, searchVSACByKeyword } from '../actions/vsac';
+import { loginVSACUser, setVSACAuthStatus, searchVSACByKeyword, getVSDetails } from '../actions/vsac';
 
 import EditArtifactModal from '../components/artifact/EditArtifactModal';
 import ConjunctionGroup from '../components/builder/ConjunctionGroup';
@@ -255,9 +255,11 @@ export class Builder extends Component {
   // ----------------------- RENDER ---------------------------------------- //
 
   renderConjunctionGroup = (treeName) => {
-    const { artifact, templates, resources, valueSets, loginVSACUser,
-      setVSACAuthStatus, vsacStatus, vsacStatusText, timeLastAuthenticated } = this.props;
-
+    const {
+      artifact, templates, resources, valueSets, loginVSACUser,
+      setVSACAuthStatus, vsacStatus, vsacStatusText, timeLastAuthenticated,
+      isRetrievingDetails, vsacDetailsCodes
+    } = this.props;
     const namedParameters = _.filter(artifact.parameters, p => (!_.isNull(p.name) && p.name.length));
 
     if (artifact && artifact[treeName].childInstances) {
@@ -287,7 +289,10 @@ export class Builder extends Component {
           searchVSACByKeyword={this.props.searchVSACByKeyword}
           isSearchingVSAC={this.props.isSearchingVSAC}
           vsacSearchResults={this.props.vsacSearchResults}
-          vsacSearchCount={this.props.vsacSearchCount}/>
+          vsacSearchCount={this.props.vsacSearchCount}
+          getVSDetails={this.props.getVSDetails}
+          isRetrievingDetails={isRetrievingDetails}
+          vsacDetailsCodes={vsacDetailsCodes}/>
       );
     }
 
@@ -401,7 +406,10 @@ export class Builder extends Component {
                     searchVSACByKeyword={this.props.searchVSACByKeyword}
                     isSearchingVSAC={this.props.isSearchingVSAC}
                     vsacSearchResults={this.props.vsacSearchResults}
-                    vsacSearchCount={this.props.vsacSearchCount} />
+                    vsacSearchCount={this.props.vsacSearchCount}
+                    getVSDetails={this.props.getVSDetails}
+                    isRetrievingDetails={this.props.isRetrievingDetails}
+                    vsacDetailsCodes={this.props.vsacDetailsCodes} />
                 </TabPanel>
 
                 <TabPanel>
@@ -484,10 +492,10 @@ function mapDispatchToProps(dispatch) {
     saveArtifact,
     updateAndSaveArtifact,
     publishArtifact,
-    publishArtifactEnabled,
     loginVSACUser,
     setVSACAuthStatus,
     searchVSACByKeyword,
+    getVSDetails,
     clearArtifactValidationWarnings
   }, dispatch);
 }
@@ -507,7 +515,9 @@ function mapStateToProps(state) {
     timeLastAuthenticated: state.vsac.timeLastAuthenticated,
     isSearchingVSAC: state.vsac.isSearchingVSAC,
     vsacSearchResults: state.vsac.searchResults,
-    vsacSearchCount: state.vsac.searchCount
+    vsacSearchCount: state.vsac.searchCount,
+    isRetrievingDetails: state.vsac.isRetrievingDetails,
+    vsacDetailsCodes: state.vsac.detailsCodes
   };
 }
 

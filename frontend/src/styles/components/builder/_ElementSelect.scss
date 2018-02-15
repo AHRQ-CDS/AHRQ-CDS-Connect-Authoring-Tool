@@ -77,23 +77,27 @@
       padding-top: 0.5em;
     }
 
-    th:first-of-type,
-    th:last-of-type,
-    tr td:first-of-type,
-    tr td:last-of-type {
-      text-align: center;
+    &.selectable {
+      tbody tr {
+        &:hover,
+        &:focus,
+        &:active {
+          background-color: $blue;
+          color: $white;
+        }
+      }
     }
 
-    tr td:first-of-type {
-      padding-right: 2em;
-    }
+    &.icons {
+      th:first-of-type,
+      th:last-of-type,
+      tr td:first-of-type,
+      tr td:last-of-type {
+        text-align: center;
+      }
 
-    tbody tr {
-      &:hover,
-      &:focus,
-      &:active {
-        background-color: $blue;
-        color: $white;
+      tr td:first-of-type {
+        padding-right: 2em;
       }
     }
   }
@@ -141,6 +145,10 @@
     background-color: $gray-lightest;
     border-bottom: $border-global;
     display: flex;
+
+    .nav-icon {
+      padding: 0.75em;
+    }
 
     input {
       width: 100%;
