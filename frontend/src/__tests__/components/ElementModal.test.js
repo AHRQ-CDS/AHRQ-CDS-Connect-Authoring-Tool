@@ -1,46 +1,50 @@
-import _ from 'lodash';
 import Modal from 'react-modal';
 import ElementModal from '../../components/builder/ElementModal';
-import filterUnsuppressed from '../../utils/filter';
 import { fullRenderComponent, ReactWrapper } from '../../utils/test_helpers';
-import { elementGroups } from '../../utils/test_fixtures';
 
 let component;
 let input;
 let getInput;
 let setInputValue;
 let internalModal;
-const setSelectedCategory = jest.fn();
 const onElementSelected = jest.fn();
+const searchVSACByKeyword = jest.fn();
+const getVSDetails = jest.fn();
 
-const getAllElements = categories => _.flatten(filterUnsuppressed(categories).map(cat => (
-  filterUnsuppressed(cat.entries).map(e => ({
-    category: cat.name.replace(/s\s*$/, ''),
-    ...e
-  }))
-)));
+const testVsacSearchResults = [
+  { name: 'Test VS', type: 'Grouping', steward: 'Test Steward', oid: '1.2.3', codeCount: 4, codeSystem: ['Test CS'] },
+  { name: 'New VS', type: 'Extentional', steward: 'New Steward', oid: '3.4.5', codeCount: 8, codeSystem: ['New CS'] }
+];
 
-const generateCategories = () => {
-  const categoriesCopy = elementGroups.slice();
+const testVsacDetails = [
+  { code: '123-4', codeSystem: '1.2.3', codeSystemName: 'CodeSysName', codeSystemVersion: '1.2', displayName: 'Name' }
+];
 
-  categoriesCopy.unshift({
-    icon: 'bars',
-    name: 'All',
-    entries: getAllElements(categoriesCopy)
-  });
-
-  return categoriesCopy;
+const testTemplate = {
+  id: 'GenericObservation',
+  name: 'Observation',
+  returnType: 'list_of_observations',
+  suppress: true,
+  extends: 'Base',
+  parameters: [
+    { id: 'element_name', type: 'string', name: 'Element Name' },
+    { id: 'observation', type: 'observation', name: 'Observation' }
+  ],
 };
-const categories = generateCategories();
 
 beforeEach(() => {
   component = fullRenderComponent(
     ElementModal,
     {
-      categories,
-      selectedCategory: categories.find(g => g.name === 'All'),
-      setSelectedCategory,
-      onElementSelected
+      onElementSelected,
+      searchVSACByKeyword,
+      isSearchingVSAC: false,
+      vsacSearchResults: testVsacSearchResults,
+      vsacSearchCount: 0,
+      template: testTemplate,
+      getVSDetails,
+      isRetrievingDetails: false,
+      vsacDetailsCodes: testVsacDetails
     }
   );
 
@@ -52,7 +56,7 @@ beforeEach(() => {
 test('renders the component with proper elements', () => {
   expect(component.hasClass('element-modal')).toBeTruthy();
   expect(component.find(Modal)).toHaveLength(1);
-  expect(component.find('button').first().text()).toEqual('Browse');
+  expect(component.find('button').first().text()).toEqual(' Choose Value Sets');
 });
 
 test('can set open and close state', () => {
@@ -69,8 +73,6 @@ test('renders the proper children', () => {
   expect(internalModal.find('.element-modal__container')).toHaveLength(1);
   expect(internalModal.find('.element-modal__search')).toHaveLength(1);
   expect(internalModal.find('.element-modal__content')).toHaveLength(1);
-  expect(internalModal.find('.element-modal__sidebar')).toHaveLength(1);
-  expect(internalModal.find('.element-modal__list')).toHaveLength(1);
 });
 
 test('can open modal with "Browse" button', () => {
@@ -84,11 +86,13 @@ describe('with modal open', () => {
     component.instance().openModal();
 
     input = getInput();
+    const searchButton = internalModal.find('.element-modal__search button');
 
     setInputValue = (value) => {
       input.simulate('focus');
       input.node.value = value; // eslint-disable-line no-param-reassign
       input.simulate('change');
+      searchButton.simulate('click');
     };
   });
 
@@ -97,45 +101,41 @@ describe('with modal open', () => {
     expect(component.state().isOpen).toEqual(false);
   });
 
-  test('can change selected category', () => {
-    const index = 1;
-    internalModal.find('.element-modal__sidebar button').at(index).simulate('click');
+  test('can select a valueset', () => {
+    const element = component.props().vsacSearchResults[0];
+    internalModal.find('.search__table tbody tr').first().simulate('click');
 
-    expect(setSelectedCategory).toBeCalledWith(categories[index]);
+    expect(component.state().selectedElement).toEqual(element);
+    expect(internalModal.find('.search__table')).toHaveLength(1);
+    expect(internalModal.find('.search__table thead th')).toHaveLength(3);
+
+    const code = component.props().vsacDetailsCodes[0];
+    const codeToString = code.code + code.displayName + code.codeSystemName;
+
+    expect(internalModal.find('.search__table tbody tr').first().text()).toEqual(codeToString);
+    expect(input.node.value).toEqual(`${element.name} (${element.oid})`);
+
+    const selectButton = internalModal.find('.element-modal__search button');
+    selectButton.simulate('click');
+    expect(component.props().onElementSelected).toBeCalledWith(component.props().template);
   });
 
-  test('can select an element', () => {
-    const element = component.state().elementList[0];
-    internalModal.find('.element-modal__list button').first().simulate('click');
-
-    expect(onElementSelected).toBeCalledWith(element);
-    expect(component.state().isOpen).toEqual(false);
-  });
-
-  test('updates list when searching', () => {
-    expect(component.state().elementList).toHaveLength(8);
+  test('calls vsac search action when searching', () => {
+    expect(component.props().vsacSearchResults).toHaveLength(2);
 
     setInputValue('cholest');
 
     expect(component.state().searchValue).toEqual('cholest');
-    expect(component.state().elementList).toHaveLength(2);
-
-    setInputValue('age');
-
-    expect(component.state().searchValue).toEqual('age');
-    expect(component.state().elementList).toHaveLength(1);
+    expect(component.props().searchVSACByKeyword).toBeCalled();
   });
 
-  test('resets search term when reopening modal', () => {
+  test('resets search term when closing modal', () => {
     const searchTerm = 'derp';
     setInputValue(searchTerm);
 
     expect(input.node.value).toEqual(searchTerm);
 
     component.instance().closeModal();
-    component.instance().openModal();
-
-    input = getInput();
 
     expect(input.node.value).toEqual('');
   });
