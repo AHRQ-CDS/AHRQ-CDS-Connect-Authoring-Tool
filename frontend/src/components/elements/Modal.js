@@ -3,9 +3,6 @@ import PropTypes from 'prop-types';
 import ReactModal from 'react-modal';
 import FontAwesome from 'react-fontawesome';
 
-// For screen readers to not see the background text
-ReactModal.setAppElement('#root');
-
 export default class Modal extends Component {
   constructor(props) {
     super(props);

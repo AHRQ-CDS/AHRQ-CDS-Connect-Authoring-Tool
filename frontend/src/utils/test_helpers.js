@@ -14,7 +14,7 @@ function fullRenderComponent(ComponentClass, props = {}) {
     router: PropTypes.object
   };
   return mount(
-    <ComponentClass {...props} />,
+    <ComponentClass id="root" {...props} />,
     { context }
   );
 }
@@ -22,7 +22,7 @@ function fullRenderComponent(ComponentClass, props = {}) {
 function shallowRenderComponent(ComponentClass, props = {}) {
   const context = createRouterContext();
   return shallow(
-    <ComponentClass {...props} />,
+    <ComponentClass id="root" {...props} />,
     { context }
   );
 }
@@ -44,7 +44,7 @@ function fullRenderContainer(ComponentClass, props = {}, store) {
 
 function shallowRenderContainer(ComponentClass, props = {}, store) {
   return shallowWithStore(
-    <ComponentClass {...props} />,
+    <ComponentClass id="root" {...props} />,
     store
   );
 }
