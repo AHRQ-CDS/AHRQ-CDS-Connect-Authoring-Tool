@@ -67,6 +67,7 @@
     "npm-run-all": "^4.1.2",
     "react-addons-test-utils": "^15.5.1",
     "react-scripts": "1.0.17",
+    "react-test-renderer": "^15.5.1",
     "stylelint": "^7.10.1",
     "stylelint-config-standard": "^16.0.0"
   },
