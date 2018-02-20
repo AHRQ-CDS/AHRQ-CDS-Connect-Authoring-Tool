@@ -1,8 +1,8 @@
 {
   "name": "cds_authoring_tool_api",
   "version": "0.1.0",
-  "private": true,
   "homepage": "https://cds.ahrq.gov/authoring",
+  "license": "Apache-2.0",
   "dependencies": {
     "archiver": "^2.1.0",
     "basic-auth": "^2.0.0",

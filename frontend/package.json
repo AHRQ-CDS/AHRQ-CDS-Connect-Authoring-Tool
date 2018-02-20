@@ -1,9 +1,9 @@
 {
   "name": "cds_authoring_tool",
   "version": "0.1.0",
-  "private": true,
   "proxy": "http://localhost:3001",
   "homepage": "https://cds.ahrq.gov/authoring",
+  "license": "Apache-2.0",
   "dependencies": {
     "axios": "^0.15.3",
     "bootstrap": "^4.0.0-beta",
