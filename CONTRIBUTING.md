@@ -86,6 +86,4 @@ If the review process uncovers any issues or concerns, a maintainer will communi
 
 ## Apache 2.0
 
-**NOTE: THE APACHE 2.0 LICENSE NOT YET BEEN APPROVED BY AHRQ.  UNTIL IT IS APPROVED, THIS LICENSE DOES NOT APPLY TO THE CDS AUTHORING TOOL.**
-
 All contributions to this project will be released under the [Apache 2.0 license](http://www.apache.org/licenses/LICENSE-2.0). By submitting a pull request, you are agreeing to comply with this license.  As indicated by the license, you are also attesting that you are the copyright owner, or an individual or Legal Entity authorized to submit the contribution on behalf of the copyright owner.

@@ -57,8 +57,21 @@ export default class UserGuide extends Component {
             <h1 id="CDS_Authoring_Tool_User_Guide">CDS Authoring Tool User Guide</h1>
 
             <p>
-              This document helps new users of the Clinical Decision Support Authoring Tool navigate the features of the
-              application and acquire the knowledge of how to use the tool to build CDS artifacts.
+              The Clinical Decision Support (CDS) Authoring Tool is a web-based application aimed at simplifying the
+              creation of production-ready CQL code. The project is based on "concept templates" (e.g. gender, HDL
+              Cholesterol, etc.), which allow for additional clinical concepts to be included in the future. Concept
+              modifiers are included to allow for more flexible definitions (e.g. most recent, value comparisons, etc.).
+            </p>
+
+            <p>
+              The CDS Authoring Tool is part of the CDS Connect project, sponsored by the Agency for Healthcare
+              Research and Quality (AHRQ), and developed under contract with AHRQ by MITRE's CMS Alliance to Modernize
+              Healthcare (CAMH) FFRDC.
+            </p>
+
+            <p>
+              This document helps new users of the CDS Authoring Tool navigate the features of the application and
+              acquire the knowledge of how to use the tool to build CDS artifacts.
             </p>
 
             <div className="h2-wrapper">
