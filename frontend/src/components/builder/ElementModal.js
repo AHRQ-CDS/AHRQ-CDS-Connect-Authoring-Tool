@@ -63,9 +63,9 @@ class ElementModal extends Component {
     this.props.searchVSACByKeyword(this.state.searchValue);
   }
 
-  handleElementSelected = (element) => {
-    this.props.getVSDetails(element.oid);
-    this.setState({ selectedElement: element });
+  handleElementSelected = (selectedElement) => {
+    this.props.getVSDetails(selectedElement.oid);
+    this.setState({ selectedElement });
   }
 
   handleChosenVS = () => {
