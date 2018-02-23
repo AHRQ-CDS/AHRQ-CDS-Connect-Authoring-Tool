@@ -4,6 +4,7 @@ import FontAwesome from 'react-fontawesome';
 import _ from 'lodash';
 
 import VSACAuthenticationModal from './VSACAuthenticationModal';
+import ElementModal from './ElementModal';
 
 // Try to keep these ordered same as in folder (i.e. alphabetically)
 import NumberParameter from './parameters/NumberParameter';
@@ -300,15 +301,34 @@ export default class TemplateInstance extends Component {
       );
     }
 
+    const selectedElement = {
+      name: this.props.templateInstance.parameters[1].vsName,
+      oid: this.props.templateInstance.parameters[1].value
+    };
+
+    const modalLabels = {
+      openButtonText: 'View/Edit Value Set',
+      closeButtonText: 'Cancel'
+    };
+
     return (
       <div>
         <button className="disabled-button" disabled={true}>
           <FontAwesome name="check" /> VSAC Authenticated
         </button>
-        <button className="primary-button view-edit-vs">
-          {/* TODO: Add functionality for this */}
-          <FontAwesome name="th-list" /> View/Edit Value Set
-        </button>
+        <ElementModal
+          className="element-select__modal"
+          searchVSACByKeyword={this.props.searchVSACByKeyword}
+          isSearchingVSAC={this.props.isSearchingVSAC}
+          vsacSearchResults={this.props.vsacSearchResults}
+          vsacSearchCount={this.props.vsacSearchCount}
+          template={this.props.templateInstance}
+          getVSDetails={this.props.getVSDetails}
+          isRetrievingDetails={this.props.isRetrievingDetails}
+          vsacDetailsCodes={this.props.vsacDetailsCodes}
+          selectedElement={selectedElement}
+          labels={modalLabels}
+        />
       </div>
     );
   }
@@ -485,5 +505,19 @@ TemplateInstance.propTypes = {
   otherInstances: PropTypes.array.isRequired,
   editInstance: PropTypes.func.isRequired,
   updateInstanceModifiers: PropTypes.func.isRequired,
-  deleteInstance: PropTypes.func.isRequired
+  deleteInstance: PropTypes.func.isRequired,
+  subpopulationIndex: PropTypes.number,
+  renderIndentButtons: PropTypes.func.isRequired,
+  loginVSACUser: PropTypes.func.isRequired,
+  setVSACAuthStatus: PropTypes.func.isRequired,
+  vsacStatus: PropTypes.string,
+  vsacStatusText: PropTypes.string,
+  timeLastAuthenticated: PropTypes.instanceOf(Date),
+  searchVSACByKeyword: PropTypes.func.isRequired,
+  isSearchingVSAC: PropTypes.bool.isRequired,
+  vsacSearchResults: PropTypes.array.isRequired,
+  vsacSearchCount: PropTypes.number.isRequired,
+  getVSDetails: PropTypes.func.isRequired,
+  isRetrievingDetails: PropTypes.bool.isRequired,
+  vsacDetailsCodes: PropTypes.array.isRequired,
 };

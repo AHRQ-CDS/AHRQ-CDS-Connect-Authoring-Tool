@@ -42,7 +42,7 @@ class ElementModal extends Component {
   }
 
   static propTypes = {
-    onElementSelected: PropTypes.func.isRequired,
+    onElementSelected: PropTypes.func,
     searchVSACByKeyword: PropTypes.func.isRequired,
     isSearchingVSAC: PropTypes.bool.isRequired,
     vsacSearchResults: PropTypes.array.isRequired,
@@ -50,13 +50,16 @@ class ElementModal extends Component {
     template: PropTypes.object,
     getVSDetails: PropTypes.func.isRequired,
     isRetrievingDetails: PropTypes.bool.isRequired,
-    vsacDetailsCodes: PropTypes.array.isRequired
+    vsacDetailsCodes: PropTypes.array.isRequired,
+    selectedElement: PropTypes.shape({ name: PropTypes.string.isRequired, oid: PropTypes.string.isRequired }),
+    labels: PropTypes.object
   }
 
   handleSearchValueChange = (event) => {
     const searchValue = event.target.value;
 
-    this.setState({ searchValue });
+    // Only update input box value if searching, not if viewing VS details.
+    if (!this.state.selectedElement) this.setState({ searchValue });
   }
 
   searchVSAC = () => {
@@ -65,7 +68,7 @@ class ElementModal extends Component {
 
   handleElementSelected = (selectedElement) => {
     this.props.getVSDetails(selectedElement.oid);
-    this.setState({ selectedElement });
+    this.setState({ selectedElement: { name: selectedElement.name, oid: selectedElement.oid } });
   }
 
   handleChosenVS = () => {
@@ -79,7 +82,8 @@ class ElementModal extends Component {
     selectedTemplate.parameters[1].vsName = element.name;
     selectedTemplate.parameters[1].static = true;
 
-    this.props.onElementSelected(selectedTemplate);
+    // Only call this function if adding a new element. Existing elements will be updated automatically.
+    if (this.props.onElementSelected) this.props.onElementSelected(selectedTemplate);
     this.closeModal();
   }
 
@@ -88,7 +92,9 @@ class ElementModal extends Component {
   }
 
   openModal = () => {
-    this.setState({ isOpen: true });
+    const { selectedElement } = this.props;
+    this.setState({ isOpen: true, selectedElement });
+    if (selectedElement) this.props.getVSDetails(selectedElement.oid);
   }
 
   closeModal = () => {
@@ -184,7 +190,16 @@ class ElementModal extends Component {
   }
 
   render() {
-    const modalInputLabel = 'Enter value set code or keyword...';
+    const modalInputLabel = 'Enter value set keyword...';
+
+    let buttonLabels = {
+      openButtonText: 'Choose Value Sets',
+      closeButtonText: 'Close'
+    };
+    if (this.props.labels) {
+      buttonLabels = this.props.labels;
+    }
+
     let inputDisplayValue;
     if (this.state.selectedElement) {
       inputDisplayValue = `${this.state.selectedElement.name} (${this.state.selectedElement.oid})`;
@@ -198,7 +213,7 @@ class ElementModal extends Component {
           className="primary-button"
           onClick={ this.openModal }
           onKeyDown={ e => this.enterKeyCheck(this.openModal, null, e) }>
-          <FontAwesome name="th-list" />{' '}Choose Value Sets
+          <FontAwesome name="th-list" />{' '}{buttonLabels.openButtonText}
         </button>
         <Modal
           isOpen={ this.state.isOpen }
@@ -227,6 +242,7 @@ class ElementModal extends Component {
                   </span> : null}
                 <input
                   type="text"
+                  disabled={this.state.selectedElement ? true : false}
                   placeholder={ modalInputLabel }
                   aria-label={ modalInputLabel }
                   title={ modalInputLabel }
@@ -251,7 +267,7 @@ class ElementModal extends Component {
               <button className="primary-button"
                       onClick={ this.closeModal }
                       onKeyDown={ e => this.enterKeyCheck(this.closeModal, null, e) }>
-                      Close
+                      {buttonLabels.closeButtonText}
               </button>
             </footer>
           </div>
