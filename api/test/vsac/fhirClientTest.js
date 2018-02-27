@@ -6,7 +6,7 @@ const expect = chai.expect;
 
 const client = require('../../vsac/FHIRClient');
 
-const FHIRMocks = require('./fixtures/FHIRFixtures');
+const FHIRMocks = require('./fixtures/FHIRfixtures');
 
 describe('vsac/FHIRClient', () =>{
   // before the tests, disable network connections to ensure tests never hit real network
