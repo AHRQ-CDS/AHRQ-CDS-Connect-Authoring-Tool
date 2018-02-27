@@ -43,7 +43,19 @@ const props = {
   },
   parameters: [],
   resources: {},
-  loadValueSets: jest.fn()
+  loadValueSets: jest.fn(),
+  loginVSACUser: jest.fn(),
+  setVSACAuthStatus: jest.fn(),
+  vsacStatus: '',
+  vsacStatusText: '',
+  timeLastAuthenticated: new Date(),
+  searchVSACByKeyword: jest.fn(),
+  isSearchingVSAC: false,
+  vsacSearchResults: [],
+  vsacSearchCount: 0,
+  getVSDetails: jest.fn(),
+  isRetrievingDetails: false,
+  vsacDetailsCodes: []
 };
 
 beforeEach(() => {
@@ -72,8 +84,8 @@ test('child level returns correct path', () => {
 });
 
 test('applies correct nesting class', () => {
-  expect(rootConjunction.node.getNestingClassName()).toEqual('');
-  expect(childConjunction.node.getNestingClassName()).toEqual('conjunction-group--odd');
+  expect(rootConjunction.node.getNestingClassName()).toEqual('conjunction-group--even');
+  expect(childConjunction.node.getNestingClassName()).toEqual('conjunction-group--top conjunction-group--odd');
 });
 
 test('adds children at correct tree position', () => {

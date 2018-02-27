@@ -40,6 +40,18 @@ beforeEach(() => {
     treeName,
     templates: elementGroups,
     artifact: {}
+    loginVSACUser: jest.fn(),
+    setVSACAuthStatus: jest.fn(),
+    vsacStatus: '',
+    vsacStatusText: '',
+    timeLastAuthenticated: new Date(),
+    searchVSACByKeyword: jest.fn(),
+    isSearchingVSAC: false,
+    vsacSearchResults: [],
+    vsacSearchCount: 0,
+    getVSDetails: jest.fn(),
+    isRetrievingDetails: false,
+    vsacDetailsCodes: []
   });
 });
 

@@ -170,7 +170,7 @@ class ElementModal extends Component {
           { this.renderDetailsList() }
         </table>
       );
-    } else if (this.props.vsacSearchResults.length > 0) {
+    } else if (this.props.vsacSearchResults && this.props.vsacSearchResults.length > 0) {
       return (
         <table className="search__table selectable icons">
           <thead>
@@ -234,15 +234,16 @@ class ElementModal extends Component {
             <main className="modal__body">
               <div className="element-modal__search">
                 {this.state.selectedElement ?
-                  <span className="nav-icon">
-                    <FontAwesome name="arrow-left"
-                      tabIndex="0"
-                      onClick={this.backToSearchResults}
-                      onKeyDown={ e => this.enterKeyCheck(this.backToSearchResults, null, e) }/>
+                  <span className="nav-icon"
+                    role="button"
+                    tabIndex="0"
+                    onClick={this.backToSearchResults}
+                    onKeyDown={ e => this.enterKeyCheck(this.backToSearchResults, null, e) }>
+                    <FontAwesome name="arrow-left" />
                   </span> : null}
                 <input
                   type="text"
-                  disabled={this.state.selectedElement ? true : false}
+                  disabled={this.state.selectedElement}
                   placeholder={ modalInputLabel }
                   aria-label={ modalInputLabel }
                   title={ modalInputLabel }

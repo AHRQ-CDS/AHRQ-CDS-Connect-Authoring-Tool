@@ -75,7 +75,7 @@ test('renders the proper children', () => {
   expect(internalModal.find('.element-modal__content')).toHaveLength(1);
 });
 
-test('can open modal with "Browse" button', () => {
+test('can open modal with "Choose Value Sets" button', () => {
   expect(component.state().isOpen).toEqual(false);
   component.find('button').first().simulate('click');
   expect(component.state().isOpen).toEqual(true);
@@ -102,10 +102,14 @@ describe('with modal open', () => {
   });
 
   test('can select a valueset', () => {
-    const element = component.props().vsacSearchResults[0];
+    const vsacSearchResult = component.props().vsacSearchResults[0];
+    const element = { name: vsacSearchResult.name, oid: vsacSearchResult.oid };
+    // Click on a VS returned by the search.
     internalModal.find('.search__table tbody tr').first().simulate('click');
 
+    // Clicking an individual VS gets the details and displays them in the table and input field.
     expect(component.state().selectedElement).toEqual(element);
+    expect(component.props().getVSDetails).toBeCalledWith(component.state().selectedElement.oid);
     expect(internalModal.find('.search__table')).toHaveLength(1);
     expect(internalModal.find('.search__table thead th')).toHaveLength(3);
 
@@ -115,6 +119,7 @@ describe('with modal open', () => {
     expect(internalModal.find('.search__table tbody tr').first().text()).toEqual(codeToString);
     expect(input.node.value).toEqual(`${element.name} (${element.oid})`);
 
+    // Clicking the select button class the onElementSelected function
     const selectButton = internalModal.find('.element-modal__search button');
     selectButton.simulate('click');
     expect(component.props().onElementSelected).toBeCalledWith(component.props().template);
@@ -127,6 +132,24 @@ describe('with modal open', () => {
 
     expect(component.state().searchValue).toEqual('cholest');
     expect(component.props().searchVSACByKeyword).toBeCalled();
+  });
+
+  test('using the back arrow returns to search results table', () => {
+    const vsacSearchResult = component.props().vsacSearchResults[0];
+    const element = { name: vsacSearchResult.name, oid: vsacSearchResult.oid };
+
+    // Click on a VS returned by the search, changes to the details table.
+    internalModal.find('.search__table tbody tr').first().simulate('click');
+    expect(internalModal.find('.search__table thead th')).toHaveLength(3);
+    expect(internalModal.find('.search__table thead').text()).toEqual('CodeNameCode System'); // Details table headings
+    expect(component.state().selectedElement).toEqual(element);
+
+    // Clicking the arrow button changes to search table and resets selectedElement.
+    internalModal.find('.nav-icon').simulate('click');
+    expect(internalModal.find('.search__table thead th')).toHaveLength(5);
+    expect(internalModal.find('.search__table thead').text())
+      .toEqual('TypeNameCode SystemStewardCodes'); // Search table headings
+    expect(component.state().selectedElement).toEqual(null);
   });
 
   test('resets search term when closing modal', () => {

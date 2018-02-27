@@ -199,8 +199,86 @@ const elementGroups = [
   }
 ];
 
+const genericElementTypes = [
+  {
+    value: 'allergy_intolerance',
+    label: 'Allergy Intolerance',
+    vsacAuthRequired: true,
+    template: 'GenericAllergyIntolerance_vsac'
+  },
+  { value: 'condition', label: 'Condition', vsacAuthRequired: true, template: 'GenericCondition_vsac' },
+  { value: 'demographics', label: 'Demographics', vsacAuthRequired: false },
+  { value: 'encounter', label: 'Encounter', vsacAuthRequired: true, template: 'GenericEncounter_vsac' },
+  { value: 'medication', label: 'Medication', vsacAuthRequired: true, template: 'GenericMedication_vsac' },
+  { value: 'observation', label: 'Observation', vsacAuthRequired: true, template: 'GenericObservation_vsac' },
+  { value: 'booleanParameter', label: 'Parameters', vsacAuthRequired: false },
+  { value: 'procedure', label: 'Procedure', vsacAuthRequired: true, template: 'GenericProcedure_vsac' }
+];
+
+const genericElementGroups = [
+  {
+    id: 1,
+    icon: 'user',
+    name: 'Demographics',
+    entries: [
+      {
+        id: 'AgeRange',
+        name: 'Age Range',
+        returnType: 'boolean',
+        suppressedModifiers: ['BooleanNot', 'BooleanComparison'],
+        parameters: [
+          { id: 'element_name', type: 'string', name: 'Element Name' },
+          { id: 'min_age', type: 'number', typeOfNumber: 'integer', name: 'Minimum Age' },
+          { id: 'max_age', type: 'number', typeOfNumber: 'integer', name: 'Maximum Age' },
+        ],
+      },
+      {
+        id: 'Gender',
+        name: 'Gender',
+        returnType: 'boolean',
+        cannotHaveModifiers: true,
+        parameters: [
+          { id: 'element_name', type: 'string', name: 'Element Name' },
+          { id: 'gender', type: 'valueset', select: 'demographics/gender', name: 'Gender' },
+        ],
+      },
+    ]
+  },
+  {
+    id: 2,
+    icon: 'eye',
+    name: 'Observations',
+    entries: [
+      {
+        id: 'GenericObservation',
+        name: 'Observation',
+        returnType: 'list_of_observations',
+        suppress: true,
+        extends: 'Base',
+        parameters: [
+          { id: 'observation', type: 'observation', name: 'Observation' },
+        ],
+      },
+      {
+        id: 'GenericObservation_vsac',
+        name: 'Observation',
+        returnType: 'list_of_observations',
+        suppress: true,
+        extends: 'Base',
+        template: 'GenericObservation',
+        suppressedModifiers: ['WithUnit', 'ConvertToMgPerdL'], // checkInclusionInVS is assumed to be suppressed
+        parameters: [
+          { id: 'observation', type: 'observation_vsac', name: 'Observation' },
+        ]
+      }
+    ]
+  }
+];
+
 export {
   instanceTree,
   emptyInstanceTree,
-  elementGroups
+  elementGroups,
+  genericElementTypes,
+  genericElementGroups
 };

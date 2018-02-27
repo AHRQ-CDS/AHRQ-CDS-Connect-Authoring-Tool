@@ -1,25 +1,37 @@
 import ElementSelect from '../../components/builder/ElementSelect';
 import { fullRenderComponent } from '../../utils/test_helpers';
-import { elementGroups } from '../../utils/test_fixtures';
+import { genericElementTypes, genericElementGroups } from '../../utils/test_fixtures';
 
 let component;
 let elementField;
-let categoryField;
 let setInputValue;
 const addInstance = jest.fn();
+
+const props = {
+  categories: genericElementGroups,
+  onSuggestionSelected: addInstance,
+  booleanParameters: [],
+  loginVSACUser: jest.fn(),
+  setVSACAuthStatus: jest.fn(),
+  vsacStatus: '',
+  vsacStatusText: '',
+  timeLastAuthenticated: new Date(),
+  searchVSACByKeyword: jest.fn(),
+  isSearchingVSAC: false,
+  vsacSearchResults: [],
+  vsacSearchCount: 0,
+  getVSDetails: jest.fn(),
+  isRetrievingDetails: false,
+  vsacDetailsCodes: []
+};
 
 beforeEach(() => {
   component = fullRenderComponent(
     ElementSelect,
-    {
-      categories: elementGroups,
-      onSuggestionSelected: addInstance,
-      parameters: []
-    }
+    { ...props }
   );
 
   elementField = component.find('.element-select__element-field');
-  categoryField = component.find('.element-select__category-field');
 
   setInputValue = (input, value) => {
     input.simulate('focus');
@@ -29,16 +41,16 @@ beforeEach(() => {
 });
 
 test('renders the component with proper elements', () => {
-  expect(component.hasClass('form__group')).toBeTruthy();
-  expect(component.hasClass('element-select')).toBeTruthy();
-  expect(component.find('.Select')).toHaveLength(2);
+  expect(component.childAt(0).hasClass('form__group')).toBeTruthy();
+  expect(component.childAt(0).hasClass('element-select')).toBeTruthy();
+  expect(component.find('.Select')).toHaveLength(1);
   expect(component.find('.is-open')).toHaveLength(0);
 });
 
 describe('the select element field', () => {
   it('starts with correct placeholder text', () => {
-    expect(elementField.find('.Select-placeholder').text()).toEqual('Add element');
-    expect(elementField.find('input').at(0).prop('aria-label')).toEqual('Add element');
+    expect(elementField.find('.Select-placeholder').text()).toEqual('Choose element type');
+    expect(elementField.find('input').at(0).prop('aria-label')).toEqual('Choose element type');
   });
 
   it('starts with a list of all elements', () => {
@@ -47,70 +59,82 @@ describe('the select element field', () => {
     expect(elementField.find('.element-select__option')).toHaveLength(8);
   });
 
-  it('options display correct values', () => {
+  it('options display correct values and have key icon if VSAC auth required', () => {
     elementField.find('input').simulate('change');
-    const firstOptionValue = elementField.find('.element-select__option').at(0).find('.element-select__option-value');
-
-    expect(firstOptionValue).toHaveLength(1);
-    expect(firstOptionValue.text()).toEqual('Age Range');
-  });
-
-  it('options of category "all" show their true category in the dropdown', () => {
-    elementField.find('input').simulate('change');
-    const firstOptionCategory = elementField
-      .find('.element-select__option')
-      .at(0)
-      .find('.element-select__option-category');
-
-    expect(firstOptionCategory).toHaveLength(1);
-    expect(firstOptionCategory.text()).toEqual('(Demographic)');
+    const allOptions = elementField.find('.element-select__option');
+    const numOptions = allOptions.length;
+    for (let i = 0; i < numOptions; i++) {
+      const option = allOptions.at(i);
+      expect(option.find('.element-select__option-value')).toHaveLength(1);
+      expect(option.find('.element-select__option-value').text()).toEqual(genericElementTypes[i].label);
+      expect(option.find('.element-select__option-category').exists()).toBe(genericElementTypes[i].vsacAuthRequired);
+    }
   });
 
   it('filters correct options when typing', () => {
-    setInputValue(elementField.find('input'), 'Gen');
+    setInputValue(elementField.find('input'), 'Med');
     const options = elementField.find('.element-select__option');
 
     expect(options).toHaveLength(1);
-    expect(options.at(0).text().includes('Gender')).toBeTruthy();
+    expect(options.at(0).text().includes('Medication')).toBeTruthy();
   });
 
-  it('adds element to builder when selected', () => {
-    const element = elementGroups[0].entries[0];
-    setInputValue(elementField.at(0).find('input'), element.name);
+  it('selects a generic type without VSAC authentication and adds it to the workspace', () => {
+    const demographics = genericElementGroups[0];
+    setInputValue(elementField.find('input'), 'Demographics');
 
-    const firstOption = elementField.find('.element-select__option').at(0);
-    firstOption.simulate('mouseDown', { button: 0 });
+    const firstResult = elementField.find('.element-select__option').at(0);
+    firstResult.simulate('mouseDown');
 
-    expect(addInstance).toBeCalledWith(element);
-  });
-});
+    // Choosing no VSAC auth element renders second select box.
+    expect(component.state().selectedElement).toEqual(genericElementTypes[2]);
+    expect(component.state().selectedElement.vsacAuthRequired).toBe(false);
+    expect(component.find('.element-select__element-field').length).toEqual(2);
 
-describe('the select category field', () => {
-  it('has the correct aria label', () => {
-    expect(categoryField.find('.Select-input').at(0).prop('aria-label')).toEqual('Narrow elements by category');
-  });
+    // Get options in second select box for Demographics elements
+    const demographicsOptions = component.find('.element-select__element-field').at(1);
+    demographicsOptions.find('input').simulate('change');
+    expect(demographicsOptions.hasClass('is-open')).toBeTruthy();
+    expect(demographicsOptions.find('.Select-option')).toHaveLength(demographics.entries.length);
 
-  it('contains every original category plus "all" category in alphabetical order', () => {
-    const categoryNames = ['All', 'Demographics', 'Observations', 'Operations'];
-    categoryField.find('.Select-control').simulate('mouseDown', { button: 0 });
-    const options = categoryField.find('.Select-option');
-
-    expect(options).toHaveLength(4);
-    options.forEach((option, i) => {
-      expect(option.text()).toEqual(categoryNames[i]);
-    });
+    // Choosing first option adds it to workspace
+    const firstOption = demographicsOptions.find('.Select-option').at(0);
+    firstOption.simulate('mouseDown');
+    expect(addInstance).toBeCalledWith(genericElementGroups[0].entries[0]);
+    expect(component.state().selectedElement).toBeNull();
   });
 
-  it('starts with "All" group selected', () => {
-    expect(categoryField.find('.Select-value').text()).toEqual('All');
-  });
+  it('selects a generic type with VSAC auth controls based on timeLastAuthenticated', () => {
+    props.timeLastAuthenticated = new Date() - 30000000;
+    const unauthenticatedComponent = fullRenderComponent(
+      ElementSelect,
+      { ...props }
+    );
+    const unauthElementField = unauthenticatedComponent.find('.element-select__element-field');
 
-  it('when selecting new category, updates value and element field options', () => {
-    categoryField.find('.Select-control').simulate('mouseDown', { button: 0 });
-    categoryField.find('.Select-option').at(1).simulate('mouseDown', { button: 0 });
-    elementField.find('input').simulate('change');
+    setInputValue(elementField.find('input'), 'Observation');
+    setInputValue(unauthElementField.find('input'), 'Observation');
 
-    expect(categoryField.find('.Select-value').text()).toEqual('Demographics');
-    expect(elementField.find('.element-select__option')).toHaveLength(2);
+    const obsResult = elementField.find('.element-select__option').at(0);
+    const unauthObsResult = unauthElementField.find('.element-select__option').at(0);
+    obsResult.simulate('mouseDown');
+    unauthObsResult.simulate('mouseDown');
+
+    // Choosing VSAC auth element with recent timeLastAuthenticated has 2 VSAC control buttons.
+    expect(component.state().selectedElement).toEqual(genericElementTypes[5]);
+    expect(component.state().selectedElement.vsacAuthRequired).toEqual(true);
+    expect(component.find('.element-select__element-field').length).toEqual(1);
+    expect(component.find('.vsac-authenticate').length).toEqual(1);
+    expect(component.find('.vsac-authenticate button').length).toEqual(2);
+    expect(component.find('.vsac-authenticate button').at(0).text()).toEqual(' VSAC Authenticated');
+    expect(component.find('.vsac-authenticate button').at(1).text()).toEqual(' Choose Value Sets');
+
+    // Choosing VSAC auth element with recent timeLastAuthenticated has 1 VSAC control buttons.
+    expect(unauthenticatedComponent.state().selectedElement).toEqual(genericElementTypes[5]);
+    expect(unauthenticatedComponent.state().selectedElement.vsacAuthRequired).toEqual(true);
+    expect(unauthenticatedComponent.find('.element-select__element-field').length).toEqual(1);
+    expect(unauthenticatedComponent.find('.vsac-authenticate').length).toEqual(1);
+    expect(unauthenticatedComponent.find('.vsac-authenticate button').length).toEqual(1);
+    expect(unauthenticatedComponent.find('.vsac-authenticate button').at(0).text()).toEqual(' Authenticate VSAC');
   });
 });

@@ -17,7 +17,8 @@ const baseState = {
   artifacts: { artifact: {}, downloadArtifact: { elmErrors: [] } },
   resources: { resources: {} },
   valueSets: { valueSets: [] },
-  templates: { templates: elementGroups }
+  templates: { templates: elementGroups },
+  vsac: {}
 };
 
 const props = {
