@@ -9,6 +9,8 @@ import createTemplateInstance from '../utils/templates';
 import loadTemplates from './templates';
 import * as types from './types';
 
+import setErrorMessage from './errors';
+
 const API_BASE = process.env.REACT_APP_API_URL;
 
 // ------------------------- SET STATUS MESSAGE ---------------------------- //
@@ -253,9 +255,10 @@ function requestDownloadArtifact() {
   };
 }
 
-function downloadArtifactSuccess() {
+function downloadArtifactSuccess(data) {
   return {
-    type: types.DOWNLOAD_ARTIFACT_SUCCESS
+    type: types.DOWNLOAD_ARTIFACT_SUCCESS,
+    data
   };
 }
 
@@ -282,7 +285,23 @@ export function downloadArtifact(artifact) {
     dispatch(requestDownloadArtifact());
 
     return sendDownloadArtifactRequest(artifact)
-      .then(data => dispatch(downloadArtifactSuccess()))
+      .then(data => {
+        let reader = new FileReader();
+        reader.addEventListener("loadend", (res) => {
+          // I have no idea why express is replacing the closing } with a P
+          // TODO Figure out and remove this step
+          let errors = JSON.parse(res.target.result.replace("]P", "]}"));
+          console.log(errors);
+          if(errors.elmErrors.length > 0){
+            let errorMessage = `There were issues with the ELM files you downloaded: \n ${errors.elmErrors.map((e) => e.message).join("\n")}`;
+            dispatch(setErrorMessage(errorMessage));
+          }
+
+        });
+        reader.readAsText(data);
+        dispatch(downloadArtifactSuccess())
+
+      })
       .catch(error => dispatch(downloadArtifactFailure(error)));
   };
 }
