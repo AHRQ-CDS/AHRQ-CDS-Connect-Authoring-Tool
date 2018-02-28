@@ -230,7 +230,7 @@ class CqlArtifact {
             //         code: 'A01',
             //         codeSystem: { name: 'CS A', id: 'A.90' },
             //         display: 'DisplayName A'
-            //       }, 
+            //       },
             //     ],
             //     display: 'A'
             //   },
@@ -690,6 +690,7 @@ function writeZip(cqlArtifact, writeStream, callback /* (error) */) {
   // We must first convert to ELM before packaging up
   convertToElm(artifactJson, (err, elmFiles) => {
     if (err) {
+      console.log(err);
       callback(err);
       return;
     }
@@ -699,9 +700,15 @@ function writeZip(cqlArtifact, writeStream, callback /* (error) */) {
     writeStream.on('close', callback);
     archive.pipe(writeStream);
     archive.append(artifactJson.text, { name: `${artifactJson.filename}.cql` });
+    let elmErrors = [];
     elmFiles.forEach((e, i) => {
+      const fileErrors = JSON.parse(e.content).library.annotation
+      if(fileErrors){
+        elmErrors = elmErrors.concat(fileErrors);
+      }
       archive.append(e.content, { name: `${e.name}.json` });
     });
+    writeStream.json({elmErrors: elmErrors});
     const helperPath = `${__dirname}/../data/library_helpers/`;
     archive.directory(helperPath, '/');
     archive.finalize();
