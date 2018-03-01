@@ -135,3 +135,11 @@ h6 {
 .warning {
   color: $red;
 }
+
+.error-message {
+  width: 60%;
+  margin-right: auto;
+  margin-left: auto;
+  background: $body-bg;
+  color: $red;
+}

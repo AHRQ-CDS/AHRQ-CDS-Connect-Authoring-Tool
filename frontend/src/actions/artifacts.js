@@ -291,16 +291,9 @@ export function downloadArtifact(artifact) {
           // I have no idea why express is replacing the closing } with a P
           // TODO Figure out and remove this step
           let errors = JSON.parse(res.target.result.replace("]P", "]}"));
-          console.log(errors);
-          if(errors.elmErrors.length > 0){
-            let errorMessage = `There were issues with the ELM files you downloaded: \n ${errors.elmErrors.map((e) => e.message).join("\n")}`;
-            dispatch(setErrorMessage(errorMessage));
-          }
-
+          dispatch(downloadArtifactSuccess(errors.elmErrors));
         });
         reader.readAsText(data);
-        dispatch(downloadArtifactSuccess())
-
       })
       .catch(error => dispatch(downloadArtifactFailure(error)));
   };

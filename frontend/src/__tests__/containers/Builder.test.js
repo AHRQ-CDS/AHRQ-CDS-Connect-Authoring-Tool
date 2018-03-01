@@ -14,7 +14,7 @@ const orTemplate = operations.entries.find(e => e.id === 'Or');
 const cholesterolTemplate = observations.entries.find(e => e.id === 'TotalCholesterol');
 
 const baseState = {
-  artifacts: { artifact: {} },
+  artifacts: { artifact: {}, downloadArtifact: {elmWarnings: []} },
   resources: { resources: [] },
   valueSets: { valueSets: [] },
   templates: { templates: elementGroups }
@@ -48,7 +48,8 @@ test('renders a single level tree for Inclusions and Exclusions', () => {
       artifact: {
         expTreeInclude: instanceTree,
         expTreeExclude: differentTree
-      }
+      },
+      downloadArtifact: {}
     }
   }));
 
@@ -82,7 +83,8 @@ test('adds instance', () => {
       artifact: {
         expTreeInclude: emptyInstanceTree,
         expTreeExclude: emptyInstanceTree
-      }
+      },
+      downloadArtifact: {}
     }
   });
   const component = shallowRenderContainer(Builder, {}, store);
@@ -115,7 +117,8 @@ test('adds instance at correct tree position', () => {
       artifact: {
         expTreeInclude: { ...emptyInstanceTree, childInstances: [conjunctionInstance] },
         expTreeExclude: emptyInstanceTree
-      }
+      },
+      downloadArtifact: {}
     }
   });
   const component = shallowRenderContainer(Builder, {}, store);
@@ -140,7 +143,8 @@ test('edits a template instance', () => {
       artifact: {
         expTreeInclude: instanceTree,
         expTreeExclude: instanceTree
-      }
+      },
+      downloadArtifact: {}
     }
   });
   const component = shallowRenderContainer(Builder, {}, store);
@@ -161,7 +165,8 @@ test('edits a conjunction instance', () => {
       artifact: {
         expTreeInclude: instanceTree,
         expTreeExclude: instanceTree
-      }
+      },
+      downloadArtifact: {}
     }
   });
   const component = shallowRenderContainer(Builder, {}, store);
@@ -187,7 +192,8 @@ test('updates an instance\'s modifiers', () => {
       artifact: {
         expTreeInclude: instanceTree,
         expTreeExclude: instanceTree
-      }
+      },
+      downloadArtifact: {}
     }
   });
   const component = shallowRenderContainer(Builder, {}, store);
@@ -222,7 +228,8 @@ test('deletes instance at correct tree position', () => {
       artifact: {
         expTreeInclude: instanceTree,
         expTreeExclude: instanceTree
-      }
+      },
+      downloadArtifact: {}
     }
   });
   const component = shallowRenderContainer(Builder, {}, store);
@@ -256,7 +263,8 @@ test('gets a list of all instances', () => {
       artifact: {
         expTreeInclude: instanceTree,
         expTreeExclude: emptyInstanceTree
-      }
+      },
+      downloadArtifact: {}
     }
   });
   const component = shallowRenderContainer(Builder, {}, store);
@@ -276,7 +284,8 @@ test('gets a list of all instances', () => {
       artifact: {
         expTreeInclude: instanceTree,
         expTreeExclude: fullInstanceTree
-      }
+      },
+      downloadArtifact: {}
     }
   });
   const componentWithTemplateInstances = shallowRenderContainer(Builder, {}, storeWithTemplateInstances);

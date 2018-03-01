@@ -23,13 +23,28 @@ class App extends Component {
   renderedErrorMessage() {
     const { errorMessage } = this.props;
     if (errorMessage === '') { return null; }
+    switch (typeof errorMessage) {
+      case 'object':
+        return (
+          <div className='error-message'>
+            <button className="close" aria-label="Close" onClick={this.handleDismissClick}>  <span aria-hidden="true">&times;</span> </button>
+            There were errors translating the CQL to ELM:
+            <ul>
+              {errorMessage.map((e) => <li>{e}</li>)}
+            </ul>
+            See the downloaded ELM for more details.
 
-    return (
-      <div className="error-message">
-        <span>{errorMessage}</span>
-        <button onClick={this.handleDismissClick}>Dismiss</button>
-      </div>
-    );
+
+          </div>
+        );
+      default:
+      return (
+        <div className="error-message">
+          {errorMessage}
+          <button className="close" aria-label="Close" onClick={this.handleDismissClick}>  <span aria-hidden="true">&times;</span> </button>
+        </div>
+      );
+    }
   }
 
   render() {

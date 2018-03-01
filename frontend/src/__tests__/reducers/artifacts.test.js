@@ -20,6 +20,7 @@ describe.only('artifacts reducer', () => {
       deleteArtifact: { isDeleting: false, deleteStatus: null },
       saveArtifact: { isSaving: false, saveStatus: null },
       publishArtifact: { isPublishing: false, publishStatus: null },
+      downloadArtifact: { isDownloading: false, downloadStatus: null ,elmWarnings: []},
       publishEnabled: false
     });
   });
@@ -111,7 +112,7 @@ describe.only('artifacts reducer', () => {
   // ----------------------- DOWNLOAD ARTIFACT ----------------------------- //
   it('should handle downloading an artifact', () => {
     let action = { type: types.DOWNLOAD_ARTIFACT_REQUEST };
-    let newState = { statusMessage: null, downloadArtifact: { isDownloading: true, downloadStatus: null } };
+    let newState = { statusMessage: null, downloadArtifact: { isDownloading: true, downloadStatus: null, elmWarnings:[] } };
     expect(reducer([], action)).toEqual(newState);
 
     const previousState = {
@@ -131,7 +132,7 @@ describe.only('artifacts reducer', () => {
     action = { type: types.DOWNLOAD_ARTIFACT_FAILURE, status: 'Test status', statusText: 'Test status message' };
     newState = {
       statusMessage: 'Download failed. Test status message.',
-      downloadArtifact: { isDownloading: false, downloadStatus: 'failure' }
+      downloadArtifact: { isDownloading: false, downloadStatus: 'failure', elmWarnings: []}
     };
     expect(reducer(previousState, action)).toEqual(newState);
   });
