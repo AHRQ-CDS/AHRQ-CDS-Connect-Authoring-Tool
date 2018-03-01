@@ -134,7 +134,21 @@ const config = convict({
     format: ['0', '1'],
     default: '1',
     env: 'NODE_TLS_REJECT_UNAUTHORIZED',
-  }
+  },
+  foreSee: {
+    src: {
+      doc: 'The special ForeSee source string to include in the ForeSee javascript snippet.',
+      format: 'String',
+      default: '//gateway.foresee.com/sites/[your sitekey]/staging/gateway.min.js',
+      env: 'FORESEE_SRC',
+    },
+    active: {
+      doc: 'Indicates if ForeSee integration is active',
+      format: 'Boolean',
+      default: false,
+      env: 'FORESEE_ACTIVE',
+    }
+  },
 });
 
 // Load environment dependent configuration
