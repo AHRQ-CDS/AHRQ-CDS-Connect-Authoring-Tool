@@ -9,8 +9,6 @@ import createTemplateInstance from '../utils/templates';
 import loadTemplates from './templates';
 import * as types from './types';
 
-import setErrorMessage from './errors';
-
 const API_BASE = process.env.REACT_APP_API_URL;
 
 // ------------------------- SET STATUS MESSAGE ---------------------------- //
