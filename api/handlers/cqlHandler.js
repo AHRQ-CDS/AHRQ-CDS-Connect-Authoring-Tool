@@ -226,7 +226,7 @@ class CqlArtifact {
           const observationValueSets = {
             id: _.uniqueId('generic_observation_'), // This is needed for creating a separate union'ed variable name. Needs to be unique.
             observations: [
-              { name: _.uniqueId(`${parameter.vsName} `), oid: parameter.value },
+              { name: `${parameter.vsName} VS`, oid: parameter.value },
             ],
             // TODO: Decide what if this information is provided by the user and which needs to be inferred
             // concepts: [
@@ -259,7 +259,10 @@ class CqlArtifact {
             context.template = 'ObservationByConcept';
           } else {
             context.values = observationValueSets.observations.map((observation) => {
-              this.resourceMap.set(observation.name, observation);
+              const count = getCountForUniqueExpressionName(observation, this.resourceMap);
+              if (count > 0) {
+                return `${observation.name}_${count}`;
+              }
               return observation.name;
             });
             // For observations that use more than one valueset, create a separate define statement that
@@ -323,7 +326,7 @@ class CqlArtifact {
           const conditionValueSets = {
             id: _.uniqueId('generic_condition_'),
             conditions: [
-              { name: _.uniqueId(`${parameter.vsName} `), oid: parameter.value },
+              { name: `${parameter.vsName} VS`, oid: parameter.value },
             ],
             // concepts: [
             //   {
@@ -354,7 +357,10 @@ class CqlArtifact {
             context.template = 'ConditionsByConcept';
           } else {
             context.values = conditionValueSets.conditions.map((condition) => {
-              this.resourceMap.set(condition.name, condition);
+              const count = getCountForUniqueExpressionName(condition, this.resourceMap);
+              if (count > 0) {
+                return `${condition.name}_${count}`;
+              }
               return condition.name;
             });
             // For conditions that use more than one valueset, create a separate define statement that
@@ -393,15 +399,19 @@ class CqlArtifact {
           const medicationValueSets = {
             name: _.uniqueId('generic_medication_'),
             medications: [
-              { name: _.uniqueId(`${parameter.vsName} `), oid: parameter.value }
+              { name: `${parameter.vsName} VS`, oid: parameter.value }
             ]
           };
           // TODO Look through entire modifier list for `active` instead of just head
           const activeApplied = (!_.isEmpty(element.modifiers) && _.head(element.modifiers).id === 'ActiveMedication');
           medicationValueSets.medications.map((medication) => {
-            this.resourceMap.set(medication.name, medication);
-            let medicationStatement = `[MedicationStatement: "${medication.name}"]`;
-            let medicationOrder = `[MedicationOrder: "${medication.name}"]`;
+            const count = getCountForUniqueExpressionName(medication, this.resourceMap);
+            let name = medication.name;
+            if (count > 0) {
+              name = `${medication.name}_${count}`;
+            }
+            let medicationStatement = `[MedicationStatement: "${name}"]`;
+            let medicationOrder = `[MedicationOrder: "${name}"]`;
             if (activeApplied) {
               context.values.push(`C3F.ActiveMedicationStatement(${medicationStatement})`);
               context.values.push(`C3F.ActiveMedicationOrder(${medicationOrder})`);
@@ -428,11 +438,14 @@ class CqlArtifact {
           const procedureValueSets = {
             name: _.uniqueId('generic_procedure_'),
             procedures: [
-              { name: _.uniqueId(`${parameter.vsName} `), oid: parameter.value },
+              { name: `${parameter.vsName} VS`, oid: parameter.value },
             ]
           };
           context.values = procedureValueSets.procedures.map((procedure) => {
-            this.resourceMap.set(procedure.name, procedure);
+            const count = getCountForUniqueExpressionName(procedure, this.resourceMap);
+            if (count > 0) {
+              return `${procedure.name}_${count}`;
+            }
             return procedure.name;
           });
           break;
@@ -450,11 +463,14 @@ class CqlArtifact {
           const encounterValueSets = {
             name: _.uniqueId('generic_encounter_'),
             encounters: [
-              { name: _.uniqueId(`${parameter.vsName} `), oid: parameter.value },
+              { name: `${parameter.vsName} VS`, oid: parameter.value },
             ]
           };
           context.values = encounterValueSets.encounters.map((encounter) => {
-            this.resourceMap.set(encounter.name, encounter);
+            const count = getCountForUniqueExpressionName(encounter, this.resourceMap);
+            if (count > 0) {
+              return `${encounter.name}_${count}`;
+            }
             return encounter.name;
           });
           break;
@@ -472,11 +488,14 @@ class CqlArtifact {
           const allergyIntoleranceValueSets = {
             name: _.uniqueId('generic_allergyIntolerance_'),
             allergyIntolerances: [
-              { name: _.uniqueId(`${parameter.vsName} `), oid: parameter.value }
+              { name: `${parameter.vsName} VS`, oid: parameter.value }
             ]
           };
           context.values = allergyIntoleranceValueSets.allergyIntolerances.map((allergyIntolerance) => {
-            this.resourceMap.set(allergyIntolerance.name, allergyIntolerance);
+            const count = getCountForUniqueExpressionName(allergyIntolerance, this.resourceMap);
+            if (count > 0) {
+              return `${allergyIntolerance.name}_${count}`;
+            }
             return allergyIntolerance.name;
           });
           break;
@@ -675,6 +694,45 @@ function constructOneRecommendationConditional(recommendation, text) {
     conditionalText = '"InPopulation"'; // TODO: Is there a better way than hard-coding this?
   }
   return `if ${conditionalText} then `;
+}
+
+function getCountForUniqueExpressionName(valueset, map) {
+  if (map.size > 0) {
+    let newOID = true;
+    let count = 0;
+    let existingOID = 0;
+    map.forEach((val, key) => {
+      const baseKeyArray = key.split('_');
+      // Check if the last entry is a number, meaning _n was appended to account for nonunique VS names.
+      const lastChar = baseKeyArray[baseKeyArray.length - 1];
+      if (Number.isInteger(parseInt(lastChar))) {
+        baseKeyArray.pop();
+      }
+      const baseKeyString = baseKeyArray.join('_'); // The original VS name
+      if (baseKeyString === valueset.name) {
+        // If the name and OID of the VS are the same, the same VS is being used. Don't add it to the CQL.
+        if (val.oid === valueset.oid) {
+          newOID = false;
+          existingOID = count;
+        } else {
+          // If the VS name has been used but the OID is unique, increment the count to append to the VS name.
+          count = count + 1;
+        }
+      }
+    });
+    if (newOID) {
+      const cloneVS = _.cloneDeep(valueset);
+      if (count > 0) {
+        cloneVS.name += `_${count}`;
+      }
+      map.set(cloneVS.name, cloneVS);
+      return count;
+    }
+    return existingOID;
+  } else {
+    map.set(valueset.name, valueset);
+    return 0;
+  }
 }
 
 // Creates the cql file from an artifact object
