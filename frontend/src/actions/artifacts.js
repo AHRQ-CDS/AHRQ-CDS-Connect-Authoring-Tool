@@ -292,27 +292,26 @@ function sendDownloadArtifactRequest(artifact) {
   });
 }
 
+export function clearArtifactValidationWarnings(){
+  return {
+    type: types.CLEAR_ARTIFACT_VALIDATION_WARNINGS
+  };
+}
+
 function sendValidateArtifactRequest(artifact) {
-  return new Promise((resolve, reject) => {
-    axios.post(`${API_BASE}/cql/validate`, artifact)
-      .then(data => data)
-      .catch(error => reject(error));
-  });
+    return axios.post(`${API_BASE}/cql/validate`, artifact)
 }
 
 export function downloadArtifact(artifact) {
   return (dispatch) => {
     dispatch(requestDownloadArtifact());
 
-    sendValidateArtifactRequest(artifact)
-      .then(data => {
-        dispatch(validateArtifactSuccess(data));
-      })
-      .catch(error => dispatch(validateArtifactFailure(error)))
-
     return sendDownloadArtifactRequest(artifact)
       .then(data => {
           dispatch(downloadArtifactSuccess());
+          sendValidateArtifactRequest(artifact)
+            .then(data => dispatch(validateArtifactSuccess(data.data)))
+            // .catch(error => dispatch(validateArtifactFailure(error)))
       })
       .catch(error => dispatch(downloadArtifactFailure(error)));
   };

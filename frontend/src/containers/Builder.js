@@ -9,7 +9,7 @@ import _ from 'lodash';
 
 import {
   setStatusMessage, downloadArtifact, saveArtifact, loadArtifact, updateArtifact, initializeArtifact,
-  updateAndSaveArtifact, publishArtifact
+  updateAndSaveArtifact, publishArtifact, clearArtifactValidationWarnings
 } from '../actions/artifacts';
 import loadTemplates from '../actions/templates';
 import loadResources from '../actions/resources';
@@ -159,6 +159,7 @@ export class Builder extends Component {
 
   closeELMErrorModal = () => {
     this.setState({ showELMErrorModal: false});
+    this.props.clearArtifactValidationWarnings()
   }
 
   // ----------------------- ARTIFACTS ------------------------------------- //
@@ -456,7 +457,8 @@ function mapDispatchToProps(dispatch) {
     downloadArtifact,
     saveArtifact,
     updateAndSaveArtifact,
-    publishArtifact
+    publishArtifact,
+    clearArtifactValidationWarnings
   }, dispatch);
 }
 

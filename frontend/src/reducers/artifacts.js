@@ -93,8 +93,14 @@ export default function auth(state = defaultState, action) {
     case types.VALIDATE_ARTIFACT_SUCCESS:
       return {
         ...state,
+        downloadArtifact: {...state.downloadArtifact, elmWarnings:action.data.elmWarnings}
+      };
+    case types.CLEAR_ARTIFACT_VALIDATION_WARNINGS:
+      return {
+        ...state,
         downloadArtifact: {...state.downloadArtifact, elmWarnings:[]}
       };
+
     case types.DOWNLOAD_ARTIFACT_SUCCESS:
       return {
         ...state,
