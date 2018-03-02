@@ -690,7 +690,6 @@ function writeZip(cqlArtifact, writeStream, callback /* (error) */) {
   // We must first convert to ELM before packaging up
   convertToElm(artifactJson, (err, elmFiles) => {
     if (err) {
-      console.log(err);
       callback(err);
       return;
     }
