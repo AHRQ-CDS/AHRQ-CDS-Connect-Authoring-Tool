@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import Modal from 'react-modal';
 
 class ELMErrorModal extends Component {
-
   static propTypes = {
     isOpen: PropTypes.bool.isRequired,
     closeModal: PropTypes.func.isRequired,
@@ -35,9 +34,7 @@ class ELMErrorModal extends Component {
             <main className="modal__body">
               We detected some errors in the ELM files you just downloaded:
               <ul>
-                {uniqueErrors.map((e, i) => {
-                  return <li key={i}> {e} </li>
-                 })}
+                {uniqueErrors.map((e, i) => <li key={i}> {e} </li>)}
               </ul>
             </main>
             <footer className="modal__footer">
@@ -50,8 +47,7 @@ class ELMErrorModal extends Component {
           </div>
         </Modal>
       </div>
-    )
-
+    );
   }
 }
 

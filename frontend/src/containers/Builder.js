@@ -69,7 +69,7 @@ export class Builder extends Component {
   }
 
   componentWillReceiveProps(newProps) {
-    this.setState({showELMErrorModal: newProps.downloadedArtifact.elmWarnings.length > 0})
+    this.setState({ showELMErrorModal: newProps.downloadedArtifact.elmWarnings.length > 0 });
   }
 
   // ----------------------- TABS ------------------------------------------ //
@@ -154,12 +154,12 @@ export class Builder extends Component {
 
 
   showELMErrorModal = () => {
-    this.setState({ showELMErrorModal: true});
+    this.setState({ showELMErrorModal: true });
   }
 
   closeELMErrorModal = () => {
-    this.setState({ showELMErrorModal: false});
-    this.props.clearArtifactValidationWarnings()
+    this.setState({ showELMErrorModal: false });
+    this.props.clearArtifactValidationWarnings();
   }
 
   // ----------------------- ARTIFACTS ------------------------------------- //

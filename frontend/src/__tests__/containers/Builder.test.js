@@ -14,7 +14,7 @@ const orTemplate = operations.entries.find(e => e.id === 'Or');
 const cholesterolTemplate = observations.entries.find(e => e.id === 'TotalCholesterol');
 
 const baseState = {
-  artifacts: { artifact: {}, downloadArtifact: {elmWarnings: []} },
+  artifacts: { artifact: {}, downloadArtifact: { elmWarnings: [] } },
   resources: { resources: [] },
   valueSets: { valueSets: [] },
   templates: { templates: elementGroups }

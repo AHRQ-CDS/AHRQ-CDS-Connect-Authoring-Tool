@@ -26,9 +26,11 @@ class App extends Component {
     return (
       <div className="error-message">
         {errorMessage}
-        <button className="close" aria-label="Close" onClick={this.handleDismissClick}>  <span aria-hidden="true">&times;</span> </button>
+        <button className="close" aria-label="Close" onClick={this.handleDismissClick}>
+          <span aria-hidden="true">&times;</span>
+        </button>
       </div>
-      );
+    );
   }
 
   render() {

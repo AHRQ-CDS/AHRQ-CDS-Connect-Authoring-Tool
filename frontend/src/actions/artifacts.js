@@ -266,14 +266,6 @@ function validateArtifactSuccess(data) {
   };
 }
 
-function validateArtifactFailure(error) {
-  return {
-    type: types.VALIDATE_ARTIFACT_FAILURE,
-    status: error.response ? error.response.status : '',
-    statusText: error.response ? error.response.statusText : ''
-  };
-}
-
 function downloadArtifactFailure(error) {
   return {
     type: types.DOWNLOAD_ARTIFACT_FAILURE,
@@ -292,14 +284,14 @@ function sendDownloadArtifactRequest(artifact) {
   });
 }
 
-export function clearArtifactValidationWarnings(){
+export function clearArtifactValidationWarnings() {
   return {
     type: types.CLEAR_ARTIFACT_VALIDATION_WARNINGS
   };
 }
 
 function sendValidateArtifactRequest(artifact) {
-    return axios.post(`${API_BASE}/cql/validate`, artifact)
+  return axios.post(`${API_BASE}/cql/validate`, artifact);
 }
 
 export function downloadArtifact(artifact) {
@@ -307,11 +299,10 @@ export function downloadArtifact(artifact) {
     dispatch(requestDownloadArtifact());
 
     return sendDownloadArtifactRequest(artifact)
-      .then(data => {
-          dispatch(downloadArtifactSuccess());
-          sendValidateArtifactRequest(artifact)
-            .then(data => dispatch(validateArtifactSuccess(data.data)))
-            // .catch(error => dispatch(validateArtifactFailure(error)))
+      .then(() => {
+        dispatch(downloadArtifactSuccess());
+        sendValidateArtifactRequest(artifact)
+          .then(res => dispatch(validateArtifactSuccess(res.data)));
       })
       .catch(error => dispatch(downloadArtifactFailure(error)));
   };

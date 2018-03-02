@@ -20,7 +20,7 @@ describe.only('artifacts reducer', () => {
       deleteArtifact: { isDeleting: false, deleteStatus: null },
       saveArtifact: { isSaving: false, saveStatus: null },
       publishArtifact: { isPublishing: false, publishStatus: null },
-      downloadArtifact: { isDownloading: false, downloadStatus: null ,elmWarnings: []},
+      downloadArtifact: { isDownloading: false, downloadStatus: null, elmWarnings: [] },
       publishEnabled: false
     });
   });
@@ -112,12 +112,15 @@ describe.only('artifacts reducer', () => {
   // ----------------------- DOWNLOAD ARTIFACT ----------------------------- //
   it('should handle downloading an artifact', () => {
     let action = { type: types.DOWNLOAD_ARTIFACT_REQUEST };
-    let newState = { statusMessage: null, downloadArtifact: { isDownloading: true, downloadStatus: null, elmWarnings:[] } };
+    let newState = {
+      statusMessage: null,
+      downloadArtifact: { isDownloading: true, downloadStatus: null, elmWarnings: [] }
+    };
     expect(reducer([], action)).toEqual(newState);
 
     const previousState = {
       statusMessage: 'message',
-      downloadArtifact: { isDownloading: false, downloadStatus: 'test' }
+      downloadArtifact: { isDownloading: false, downloadStatus: 'test', elmWarnings: []}
     };
     expect(reducer(previousState, action)).toEqual(newState);
 
@@ -125,14 +128,14 @@ describe.only('artifacts reducer', () => {
 
     newState = {
       statusMessage: `Downloaded ${time()}.`,
-      downloadArtifact: { isDownloading: false, downloadStatus: 'success' }
+      downloadArtifact: { isDownloading: false, downloadStatus: 'success', elmWarnings: []}
     };
     expect(reducer(previousState, action)).toEqual(newState);
 
     action = { type: types.DOWNLOAD_ARTIFACT_FAILURE, status: 'Test status', statusText: 'Test status message' };
     newState = {
       statusMessage: 'Download failed. Test status message.',
-      downloadArtifact: { isDownloading: false, downloadStatus: 'failure', elmWarnings: []}
+      downloadArtifact: { isDownloading: false, downloadStatus: 'failure', elmWarnings: [] }
     };
     expect(reducer(previousState, action)).toEqual(newState);
   });

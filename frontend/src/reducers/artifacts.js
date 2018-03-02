@@ -13,7 +13,7 @@ const defaultState = {
   deleteArtifact: { isDeleting: false, deleteStatus: null },
   saveArtifact: { isSaving: false, saveStatus: null },
   publishArtifact: { isPublishing: false, publishStatus: null },
-  downloadArtifact: { isDownloading: false, downloadStatus: null ,elmWarnings: []},
+  downloadArtifact: { isDownloading: false, downloadStatus: null, elmWarnings: [] },
   publishEnabled: false
 };
 
@@ -88,17 +88,17 @@ export default function auth(state = defaultState, action) {
       return {
         ...state,
         statusMessage: null,
-        downloadArtifact: { isDownloading: true, downloadStatus: null, elmWarnings: []}
+        downloadArtifact: { isDownloading: true, downloadStatus: null, elmWarnings: [] }
       };
     case types.VALIDATE_ARTIFACT_SUCCESS:
       return {
         ...state,
-        downloadArtifact: {...state.downloadArtifact, elmWarnings:action.data.elmWarnings}
+        downloadArtifact: { ...state.downloadArtifact, elmWarnings: action.data.elmWarnings }
       };
     case types.CLEAR_ARTIFACT_VALIDATION_WARNINGS:
       return {
         ...state,
-        downloadArtifact: {...state.downloadArtifact, elmWarnings:[]}
+        downloadArtifact: { ...state.downloadArtifact, elmWarnings: [] }
       };
 
     case types.DOWNLOAD_ARTIFACT_SUCCESS:
@@ -111,7 +111,7 @@ export default function auth(state = defaultState, action) {
       return {
         ...state,
         statusMessage: `Download failed. ${action.statusText}.`,
-        downloadArtifact: { isDownloading: false, downloadStatus: 'failure', elmWarnings: []}
+        downloadArtifact: { isDownloading: false, downloadStatus: 'failure', elmWarnings: [] }
       };
     case types.PUBLISH_ARTIFACT_REQUEST:
       return {
