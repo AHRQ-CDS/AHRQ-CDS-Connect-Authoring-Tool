@@ -8,6 +8,9 @@ const CQLRouter = express.Router();
 CQLRouter.route('/')
   .post(artifact.objToCql);
 
+CQLRouter.route('/validate')
+  .post(artifact.objToELM);
+
 // Routes for /authoring/api/cql/:artifact
 CQLRouter.route('/:artifact')
   .get(artifact.idToObj, artifact.objToCql);

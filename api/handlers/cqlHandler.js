@@ -27,6 +27,7 @@ const includeLibraries = [
 
 module.exports = {
   objToCql,
+  objToELM,
   idToObj,
   writeZip,
   buildCQL
@@ -683,6 +684,35 @@ function objToCql(req, res) {
   });
 }
 
+function objToELM(req, res) {
+  const artifact = new CqlArtifact(req.body);
+  validateELM(artifact, res, (err) => {
+    if(err) {
+      res.status(500).send({error: err.message});
+    }
+  })
+}
+
+
+function validateELM(cqlArtifact, writeStream, callback) {
+  const artifactJSON = cqlArtifact.toJson();
+  convertToElm(artifactJSON, (err, elmFiles) => {
+    if(err) {
+      callback(err);
+      return;
+    }
+    let elmWarnings = [];
+    elmFiles.forEach((e) => {
+      const fileErrors = JSON.parse(e.content).library.annotation;
+      if(fileErrors) {
+        elmWarnings = elmWarnings.concat(fileErrors);
+      }
+    });
+    writeStream.json({elmWarnings});
+  });
+}
+
+
 function writeZip(cqlArtifact, writeStream, callback /* (error) */) {
   // Artifact JSON is generated first and passed in to avoid incorrect EJS rendering.
   // TODO: Consider separating EJS rendering from toJSON() or toString() methods.
@@ -699,15 +729,9 @@ function writeZip(cqlArtifact, writeStream, callback /* (error) */) {
     writeStream.on('close', callback);
     archive.pipe(writeStream);
     archive.append(artifactJson.text, { name: `${artifactJson.filename}.cql` });
-    let elmErrors = [];
     elmFiles.forEach((e, i) => {
-      const fileErrors = JSON.parse(e.content).library.annotation
-      if(fileErrors){
-        elmErrors = elmErrors.concat(fileErrors);
-      }
       archive.append(e.content, { name: `${e.name}.json` });
     });
-    writeStream.json({elmErrors: elmErrors});
     const helperPath = `${__dirname}/../data/library_helpers/`;
     archive.directory(helperPath, '/');
     archive.finalize();

@@ -253,10 +253,24 @@ function requestDownloadArtifact() {
   };
 }
 
-function downloadArtifactSuccess(data) {
+function downloadArtifactSuccess() {
   return {
     type: types.DOWNLOAD_ARTIFACT_SUCCESS,
+  };
+}
+
+function validateArtifactSuccess(data) {
+  return {
+    type: types.VALIDATE_ARTIFACT_SUCCESS,
     data
+  };
+}
+
+function validateArtifactFailure(error) {
+  return {
+    type: types.VALIDATE_ARTIFACT_FAILURE,
+    status: error.response ? error.response.status : '',
+    statusText: error.response ? error.response.statusText : ''
   };
 }
 
@@ -278,20 +292,27 @@ function sendDownloadArtifactRequest(artifact) {
   });
 }
 
+function sendValidateArtifactRequest(artifact) {
+  return new Promise((resolve, reject) => {
+    axios.post(`${API_BASE}/cql/validate`, artifact)
+      .then(data => data)
+      .catch(error => reject(error));
+  });
+}
+
 export function downloadArtifact(artifact) {
   return (dispatch) => {
     dispatch(requestDownloadArtifact());
 
+    sendValidateArtifactRequest(artifact)
+      .then(data => {
+        dispatch(validateArtifactSuccess(data));
+      })
+      .catch(error => dispatch(validateArtifactFailure(error)))
+
     return sendDownloadArtifactRequest(artifact)
       .then(data => {
-        let reader = new FileReader();
-        reader.addEventListener("loadend", (res) => {
-          // I have no idea why express is replacing the closing } with a P
-          // TODO Figure out and remove this step
-          let errors = JSON.parse(res.target.result.replace("]P", "]}"));
-          dispatch(downloadArtifactSuccess(errors.elmErrors));
-        });
-        reader.readAsText(data);
+          dispatch(downloadArtifactSuccess());
       })
       .catch(error => dispatch(downloadArtifactFailure(error)));
   };

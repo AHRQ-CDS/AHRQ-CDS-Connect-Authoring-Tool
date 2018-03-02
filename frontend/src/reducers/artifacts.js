@@ -90,11 +90,16 @@ export default function auth(state = defaultState, action) {
         statusMessage: null,
         downloadArtifact: { isDownloading: true, downloadStatus: null, elmWarnings: []}
       };
+    case types.VALIDATE_ARTIFACT_SUCCESS:
+      return {
+        ...state,
+        downloadArtifact: {...state.downloadArtifact, elmWarnings:[]}
+      };
     case types.DOWNLOAD_ARTIFACT_SUCCESS:
       return {
         ...state,
         statusMessage: `Downloaded ${time}.`,
-        downloadArtifact: { isDownloading: false, downloadStatus: 'success', elmWarnings: action.data }
+        downloadArtifact: { isDownloading: false, downloadStatus: 'success', elmWarnings: [] }
       };
     case types.DOWNLOAD_ARTIFACT_FAILURE:
       return {
