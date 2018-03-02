@@ -1,7 +1,7 @@
 import { Route } from 'react-router-dom';
 import PrivateRoute from '../containers/PrivateRoute';
 import Landing from '../components/Landing';
-import Builder from '../containers/Builder';
+import BuilderContainer from '../containers/Builder';
 import Artifact from '../containers/Artifact';
 import NoMatch from '../components/NotFoundPage';
 import Root from '../containers/Root';
@@ -22,7 +22,7 @@ test('Routes renders correct routes', () => {
   expect(pathMap['/']).toBe(Landing);
   expect(pathMap[undefined]).toBe(NoMatch);
 
-  expect(privatePathMap['/build']).toBe(Builder);
-  expect(privatePathMap['/build/:id']).toBe(Builder);
+  expect(privatePathMap['/build']).toBe(BuilderContainer);
+  expect(privatePathMap['/build/:id']).toBe(BuilderContainer);
   expect(privatePathMap['/artifacts']).toBe(Artifact);
 });

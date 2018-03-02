@@ -120,7 +120,7 @@ describe.only('artifacts reducer', () => {
 
     const previousState = {
       statusMessage: 'message',
-      downloadArtifact: { isDownloading: false, downloadStatus: 'test', elmWarnings: []}
+      downloadArtifact: { isDownloading: false, downloadStatus: 'test', elmWarnings: [] }
     };
     expect(reducer(previousState, action)).toEqual(newState);
 
@@ -128,7 +128,7 @@ describe.only('artifacts reducer', () => {
 
     newState = {
       statusMessage: `Downloaded ${time()}.`,
-      downloadArtifact: { isDownloading: false, downloadStatus: 'success', elmWarnings: []}
+      downloadArtifact: { isDownloading: false, downloadStatus: 'success', elmWarnings: [] }
     };
     expect(reducer(previousState, action)).toEqual(newState);
 
