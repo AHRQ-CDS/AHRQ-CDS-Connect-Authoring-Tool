@@ -29,6 +29,13 @@ export default () => (
       </p>
 
       <p>
+        The CDS Authoring Tool is released under an open source Apache 2.0 license and is available on GitHub at:{' '}
+        <a target="_blank" rel="nofollow noopener noreferrer" onClick={onVisitExternalLink}
+        href="https://github.com/ahrq-cds/ahrq-cds-connect-authoring-tool">https://github.com/ahrq-cds/ahrq-cds-connect-authoring-tool</a>
+        {' '}<i className="fa fa-external-link"></i>.
+      </p>
+
+      <p>
         <img
           className="img-fluid img-thumbnail rounded mx-auto d-block"
           alt="screenshot of authoring a CDS artifact about statin use"

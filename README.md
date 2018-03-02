@@ -20,7 +20,7 @@ For specific development details of each component, including configuration, see
 
 ### Run (Development)
 
-To allow for simple development, a _Procfile_ is provided which will launch the _api_ and _frontend_ projects in development mode.  To use the Procfile, you must install [node-foreman](https://www.npmjs.com/package/foreman) _(prerequisites: [Node.js LTS](https://nodejs.org/) and [Yarn](https://yarnpkg.com/)_.
+To allow for simple development, a _Procfile_ is provided which will launch the _api_ and _frontend_ projects in development mode.  To use the Procfile, you must install [node-foreman](https://www.npmjs.com/package/foreman) _(prerequisites: [Node.js LTS](https://nodejs.org/) and [Yarn](https://yarnpkg.com/))_.
 
 ```bash
 yarn add global foreman
