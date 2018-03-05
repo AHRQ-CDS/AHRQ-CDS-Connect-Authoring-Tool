@@ -75,8 +75,10 @@ function getCode(code, system, username, password) {
   };
   return rpn(options).then((res) => {
 
-    const code = JSON.parse(res).parameter;
-    return _.zipObject(_.map(code, 'name'), _.map(code, 'valueString'));
+    const codeJSON = JSON.parse(res).parameter;
+    let codeObject = _.zipObject(_.map(codeJSON, 'name'), _.map(codeJSON, 'valueString'));
+    codeObject.code = code;
+    return codeObject;
   })
 }
 

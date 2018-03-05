@@ -67,6 +67,7 @@ describe('vsac/FHIRClient', () =>{
         return expect(result).to.eventually.eql({
             "name": "LOINC",
             "version": "2.63",
+            "code": "1963-8",
             "display": "Bicarbonate [Moles/volume] in Serum",
             "Oid": "2.16.840.1.113883.6.1"
         });
