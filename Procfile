@@ -1,2 +1,2 @@
-api: pushd api && ./node_modules/.bin/nodemon server.js && popd
-web: pushd frontend && npm start && popd
+api: cd api && ./node_modules/.bin/nodemon server.js && cd ../
+web: cd frontend && npm start && cd ../
