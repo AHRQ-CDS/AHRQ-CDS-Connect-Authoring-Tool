@@ -109,6 +109,33 @@ describe.only('artifacts reducer', () => {
     expect(reducer(previousState, action)).toEqual(newState);
   });
 
+  it('should handle valid artifacts', () => {
+    const action = { type: types.VALIDATE_ARTIFACT_SUCCESS, data: { elmWarnings: [] } };
+    const newState = {
+      statusMessage: null,
+      downloadArtifact: { isDownloading: false, downloadStatus: null, elmWarnings: [] }
+    };
+    expect(reducer([], action)).toEqual(newState);
+  });
+
+  it('should handle artifacts with errors', () => {
+    const action = { type: types.VALIDATE_ARTIFACT_SUCCESS, data: { elmWarnings: [{ message: 'test' }] } };
+    const newState = {
+      statusMessage: null,
+      downloadArtifact: { isDownloading: false, downloadStatus: null, elmWarnings: [{ message: 'test' }] }
+    };
+    expect(reducer([], action)).toEqual(newState);
+  });
+
+  it('should handle clear artifact errors', () => {
+    const action = { type: types.CLEAR_ARTIFACT_VALIDATION_WARNINGS };
+    const newState = {
+      statusMessage: null,
+      downloadArtifact: { isDownloading: false, downloadStatus: null, elmWarnings: [] }
+    };
+    expect(reducer([], action)).toEqual(newState);
+  });
+
   // ----------------------- DOWNLOAD ARTIFACT ----------------------------- //
   it('should handle downloading an artifact', () => {
     let action = { type: types.DOWNLOAD_ARTIFACT_REQUEST };
