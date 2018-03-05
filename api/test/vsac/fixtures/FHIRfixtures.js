@@ -1307,7 +1307,30 @@ let ValueSet = {
   }
 };
 
+const Code = {
+    "resourceType": "Parameters",
+    "parameter": [
+        {
+            "name": "name",
+            "valueString": "LOINC"
+        },
+        {
+            "name": "version",
+            "valueString": "2.63"
+        },
+        {
+            "name": "display",
+            "valueString": "Bicarbonate [Moles/volume] in Serum"
+        },
+        {
+            "name": "Oid",
+            "valueString": "2.16.840.1.113883.6.1"
+        }
+    ]
+}
+
 module.exports = {
   Search,
-  ValueSet
+  ValueSet,
+  Code
 };
