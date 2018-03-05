@@ -31,7 +31,23 @@ function searchForValueSets(req, res) {
   });
 }
 
+function getCode(req, res) {
+  const user = auth(req);
+  if (user == null) {
+    return res.sendStatus(401);
+  }
+  const code = req.query.code;
+  const system = req.query.system;
+  FHIRClient.getCode(code, system, user.name, user.pass).then((t) => {
+    res.json(t);
+  })
+  .catch((t) => {
+    res.sendStatus(t.statusCode);
+  });
+}
+
 module.exports = {
   getValueSet,
-  searchForValueSets
+  searchForValueSets,
+  getCode
 };

@@ -9,4 +9,9 @@ FHIRRouter.route('/search')
 FHIRRouter.route('/vs/:id')
   .get(fhir.getValueSet);
 
+FHIRRouter.route('/code')
+  .get(fhir.getCode);
+
+
+
 module.exports = FHIRRouter;

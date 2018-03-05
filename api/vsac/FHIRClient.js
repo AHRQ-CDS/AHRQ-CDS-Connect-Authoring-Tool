@@ -1,4 +1,5 @@
 const rpn = require('request-promise-native');
+const _ = require('lodash');
 
 
 const VSAC_FHIR_ENDPOINT = 'https://cts.nlm.nih.gov/fhir';
@@ -63,8 +64,25 @@ function searchForValueSets(search, username, password) {
   });
 }
 
+function getCode(code, system, username, password) {
+  const options = {
+    method: 'GET',
+    url: `${VSAC_FHIR_ENDPOINT}/CodeSystem/$lookup?code=${code}&system=${system}`,
+    headers: {
+      'Accept': 'application/json',
+      'Authorization': `Basic ${new Buffer(`${username}:${password}`).toString('base64')}`
+    }
+  };
+  return rpn(options).then((res) => {
+
+    const code = JSON.parse(res).parameter;
+    return _.zipObject(_.map(code, 'name'), _.map(code, 'valueString'));
+  })
+}
+
 
 module.exports = {
   getValueSet,
-  searchForValueSets
+  searchForValueSets,
+  getCode
 }
