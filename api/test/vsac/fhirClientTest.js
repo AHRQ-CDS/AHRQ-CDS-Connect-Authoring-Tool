@@ -53,6 +53,40 @@ describe('vsac/FHIRClient', () =>{
         ]
       });
     });
+
+    describe('#getCode', () => {
+      it('should get a code', () => {
+        const [username, password] = ['test-user', 'test-pass'];
+
+        nock('https://cts.nlm.nih.gov')
+          .get('/fhir/CodeSystem/$lookup?code=1963-8&system=http://loinc.org')
+          .reply(200, FHIRMocks.Code);
+
+        // Invoke the request and verify the result
+        const result = client.getCode("1963-8", "http://loinc.org", username, password);
+        return expect(result).to.eventually.eql(
+          {
+              "system": "http://loinc.org",
+              "systemName": "LOINC",
+              "systemOID": "2.16.840.1.113883.6.1",
+              "version": "2.63",
+              "code": "1963-8",
+              "display": "Bicarbonate [Moles/volume] in Serum"
+          }
+        );
+      });
+      it('should 404', () => {
+        const [username, password] = ['test-user', 'test-pass'];
+
+        nock('https://cts.nlm.nih.gov')
+          .get('/fhir/CodeSystem/$lookup?code=abcd&system=http://not-a-system.org')
+          .reply(404, FHIRMocks.Code);
+        const result = client.getCode("abcd", "http://not-a-system.org", username, password);
+        return expect(result).to.be.rejectedWith(404);
+      });
+    });
+
+
     it('should send a 401 back to the client', () => {
       const [username, password] = ['bad-test-user', 'bad-test-pass'];
       nock('https://cts.nlm.nih.gov').get('/fhir/ValueSet/1234/$expand')
