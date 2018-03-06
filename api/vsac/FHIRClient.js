@@ -77,8 +77,14 @@ function getCode(code, system, username, password) {
 
     const codeJSON = JSON.parse(res).parameter;
     let codeObject = _.zipObject(_.map(codeJSON, 'name'), _.map(codeJSON, 'valueString'));
-    codeObject.code = code;
-    return codeObject;
+    return {
+      system,
+      systemName: codeObject.name,
+      systemOID: codeObject.Oid,
+      version: codeObject.version,
+      code,
+      display: codeObject.display
+    };
   })
 }
 

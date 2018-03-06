@@ -64,13 +64,16 @@ describe('vsac/FHIRClient', () =>{
 
         // Invoke the request and verify the result
         const result = client.getCode("1963-8", "http://loinc.org", username, password);
-        return expect(result).to.eventually.eql({
-            "name": "LOINC",
-            "version": "2.63",
-            "code": "1963-8",
-            "display": "Bicarbonate [Moles/volume] in Serum",
-            "Oid": "2.16.840.1.113883.6.1"
-        });
+        return expect(result).to.eventually.eql(
+          {
+              "system": "http://loinc.org",
+              "systemName": "LOINC",
+              "systemOID": "2.16.840.1.113883.6.1",
+              "version": "2.63",
+              "code": "1963-8",
+              "display": "Bicarbonate [Moles/volume] in Serum"
+          }
+        );
       });
       it('should 404', () => {
         const [username, password] = ['test-user', 'test-pass'];
