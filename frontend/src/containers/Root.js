@@ -6,7 +6,7 @@ import { Route, Switch } from 'react-router-dom';
 import PrivateRoute from './PrivateRoute';
 import App from './App';
 import Landing from '../components/Landing';
-import Builder from '../containers/Builder';
+import BuilderContainer from '../containers/Builder';
 import Artifact from '../containers/Artifact';
 import UserGuide from '../components/UserGuide';
 import NoMatch from '../components/NotFoundPage';
@@ -19,8 +19,8 @@ const Root = (props) => {
       <App>
         <Switch>
           <Route exact path="/" component={Landing} />
-          <PrivateRoute path='/build/:id' component={Builder} />
-          <PrivateRoute path='/build' component={Builder} />
+          <PrivateRoute path='/build/:id' component={BuilderContainer} />
+          <PrivateRoute path='/build' component={BuilderContainer} />
           <PrivateRoute path='/artifacts' component={Artifact} />
           <Route path='/userguide' component={UserGuide} />
           <Route component={NoMatch} />

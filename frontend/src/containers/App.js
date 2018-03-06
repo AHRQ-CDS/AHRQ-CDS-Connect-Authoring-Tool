@@ -23,11 +23,12 @@ class App extends Component {
   renderedErrorMessage() {
     const { errorMessage } = this.props;
     if (errorMessage === '') { return null; }
-
     return (
       <div className="error-message">
-        <span>{errorMessage}</span>
-        <button onClick={this.handleDismissClick}>Dismiss</button>
+        {errorMessage}
+        <button className="close" aria-label="Close" onClick={this.handleDismissClick}>
+          <span aria-hidden="true">&times;</span>
+        </button>
       </div>
     );
   }

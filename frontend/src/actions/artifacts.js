@@ -255,7 +255,14 @@ function requestDownloadArtifact() {
 
 function downloadArtifactSuccess() {
   return {
-    type: types.DOWNLOAD_ARTIFACT_SUCCESS
+    type: types.DOWNLOAD_ARTIFACT_SUCCESS,
+  };
+}
+
+function validateArtifactSuccess(data) {
+  return {
+    type: types.VALIDATE_ARTIFACT_SUCCESS,
+    data
   };
 }
 
@@ -277,12 +284,26 @@ function sendDownloadArtifactRequest(artifact) {
   });
 }
 
+export function clearArtifactValidationWarnings() {
+  return {
+    type: types.CLEAR_ARTIFACT_VALIDATION_WARNINGS
+  };
+}
+
+function sendValidateArtifactRequest(artifact) {
+  return axios.post(`${API_BASE}/cql/validate`, artifact);
+}
+
 export function downloadArtifact(artifact) {
   return (dispatch) => {
     dispatch(requestDownloadArtifact());
 
     return sendDownloadArtifactRequest(artifact)
-      .then(data => dispatch(downloadArtifactSuccess()))
+      .then(() => {
+        dispatch(downloadArtifactSuccess());
+        sendValidateArtifactRequest(artifact)
+          .then(res => dispatch(validateArtifactSuccess(res.data)));
+      })
       .catch(error => dispatch(downloadArtifactFailure(error)));
   };
 }

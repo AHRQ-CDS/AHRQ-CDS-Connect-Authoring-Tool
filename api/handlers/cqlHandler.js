@@ -27,6 +27,7 @@ const includeLibraries = [
 
 module.exports = {
   objToCql,
+  objToELM,
   idToObj,
   writeZip,
   buildCQL
@@ -230,7 +231,7 @@ class CqlArtifact {
             //         code: 'A01',
             //         codeSystem: { name: 'CS A', id: 'A.90' },
             //         display: 'DisplayName A'
-            //       }, 
+            //       },
             //     ],
             //     display: 'A'
             //   },
@@ -682,6 +683,35 @@ function objToCql(req, res) {
     }
   });
 }
+
+function objToELM(req, res) {
+  const artifact = new CqlArtifact(req.body);
+  validateELM(artifact, res, (err) => {
+    if(err) {
+      res.status(500).send({error: err.message});
+    }
+  })
+}
+
+
+function validateELM(cqlArtifact, writeStream, callback) {
+  const artifactJSON = cqlArtifact.toJson();
+  convertToElm(artifactJSON, (err, elmFiles) => {
+    if(err) {
+      callback(err);
+      return;
+    }
+    let elmWarnings = [];
+    elmFiles.forEach((e) => {
+      const fileErrors = JSON.parse(e.content).library.annotation;
+      if(fileErrors) {
+        elmWarnings = elmWarnings.concat(fileErrors);
+      }
+    });
+    writeStream.json({elmWarnings});
+  });
+}
+
 
 function writeZip(cqlArtifact, writeStream, callback /* (error) */) {
   // Artifact JSON is generated first and passed in to avoid incorrect EJS rendering.

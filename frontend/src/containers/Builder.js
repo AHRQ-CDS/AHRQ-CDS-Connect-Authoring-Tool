@@ -9,7 +9,7 @@ import _ from 'lodash';
 
 import {
   setStatusMessage, downloadArtifact, saveArtifact, loadArtifact, updateArtifact, initializeArtifact,
-  updateAndSaveArtifact, publishArtifact
+  updateAndSaveArtifact, publishArtifact, clearArtifactValidationWarnings
 } from '../actions/artifacts';
 import loadTemplates from '../actions/templates';
 import loadResources from '../actions/resources';
@@ -22,6 +22,7 @@ import ErrorStatement from '../components/builder/ErrorStatement';
 import Parameters from '../components/builder/Parameters';
 import Recommendations from '../components/builder/Recommendations';
 import RepoUploadModal from '../components/builder/RepoUploadModal';
+import ELMErrorModal from '../components/builder/ELMErrorModal';
 
 import isBlankArtifact from '../utils/artifacts';
 import { findValueAtPath } from '../utils/find';
@@ -38,6 +39,7 @@ export class Builder extends Component {
     this.state = {
       showEditArtifactModal: false,
       showPublishModal: false,
+      showELMErrorModal: false,
       activeTabIndex: 0,
       uniqueIdCounter: 0
     };
@@ -64,6 +66,10 @@ export class Builder extends Component {
     if (!isBlankArtifact(artifact)) {
       this.handleSaveArtifact(artifact);
     }
+  }
+
+  componentWillReceiveProps(newProps) {
+    this.setState({ showELMErrorModal: newProps.downloadedArtifact.elmWarnings.length > 0 });
   }
 
   // ----------------------- TABS ------------------------------------------ //
@@ -146,6 +152,16 @@ export class Builder extends Component {
     this.props.updateArtifact(this.props.artifact, { [treeName]: tree });
   }
 
+
+  showELMErrorModal = () => {
+    this.setState({ showELMErrorModal: true });
+  }
+
+  closeELMErrorModal = () => {
+    this.setState({ showELMErrorModal: false });
+    this.props.clearArtifactValidationWarnings();
+  }
+
   // ----------------------- ARTIFACTS ------------------------------------- //
 
   openEditArtifactModal = () => {
@@ -155,6 +171,7 @@ export class Builder extends Component {
   closeEditArtifactModal = () => {
     this.setState({ showEditArtifactModal: false });
   }
+
 
   handleSaveArtifact = (artifactPropsChanged) => {
     this.props.updateAndSaveArtifact(this.props.artifact, artifactPropsChanged);
@@ -401,6 +418,10 @@ export class Builder extends Component {
           showModal={this.state.showEditArtifactModal}
           closeModal={this.closeEditArtifactModal}
           saveModal={this.handleSaveArtifact} />
+        <ELMErrorModal
+          isOpen={this.state.showELMErrorModal}
+          closeModal={this.closeELMErrorModal}
+          errors={this.props.downloadedArtifact.elmWarnings}/>
       </div>
     );
   }
@@ -436,7 +457,8 @@ function mapDispatchToProps(dispatch) {
     downloadArtifact,
     saveArtifact,
     updateAndSaveArtifact,
-    publishArtifact
+    publishArtifact,
+    clearArtifactValidationWarnings
   }, dispatch);
 }
 
@@ -444,6 +466,7 @@ function mapDispatchToProps(dispatch) {
 function mapStateToProps(state) {
   return {
     artifact: state.artifacts.artifact,
+    downloadedArtifact: state.artifacts.downloadArtifact,
     statusMessage: state.artifacts.statusMessage,
     templates: state.templates.templates,
     resources: state.resources.resources,
