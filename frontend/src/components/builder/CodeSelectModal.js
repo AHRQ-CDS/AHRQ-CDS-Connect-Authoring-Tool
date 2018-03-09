@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import FontAwesome from 'react-fontawesome';
 import Select from 'react-select';
+import _ from 'lodash';
 
 import Modal from 'react-modal';
 
@@ -17,8 +18,19 @@ class CodeSelectModal extends Component {
       displayOtherInput: false
     };
   }
-  
+
+  // TODO reload "Other"
   openCodeSelectModal = () => {
+    const { selectedCode } = this.props;
+    if (selectedCode) {
+      // Set up the object to be selected in the dropdown
+      const selectedCS = {
+        value: selectedCode[0].codeSystem.name,
+        label: selectedCode[0].codeSystem.name,
+        id: selectedCode[0].codeSystem.id
+      }
+      this.setState({ codeText: selectedCode[0].code, selectedCS });
+    }
     this.setState({ showCodeSelectModal: true });
   }
 
@@ -56,32 +68,61 @@ class CodeSelectModal extends Component {
       this.setState({ selectedCS, displayOtherInput: false });
     }
   }
-  
+
   chooseCode = () => {
-    const codes = [{ code: this.state.codeText, codeSystem: this.state.selectedCS.value }];
-    const selectedTemplate = this.props.template;
-    selectedTemplate.parameters[0].value = `${codes[0].codeSystem} ${codes[0].code}`;
-    selectedTemplate.parameters[1].codes = codes;
-    selectedTemplate.parameters[1].static = true;
-    this.props.onElementSelected(selectedTemplate);
+    const codes = [
+      {
+        code: this.state.codeText, codeSystem: { name: this.state.selectedCS.value, id: this.state.selectedCS.id }
+      }
+    ];
+    const selectedTemplate = _.cloneDeep(this.props.template);
+    if (selectedTemplate === undefined) return;
+
+    // Adding a new element and editing an exisitng element use different functions that take different parameters
+    if (this.props.onElementSelected) {
+      // Set the template's values initially to add it to the workspace.
+      selectedTemplate.parameters[0].value = `${codes[0].codeSystem.name} ${codes[0].code}`; // TODO: Best name for element
+      selectedTemplate.parameters[1].codes = codes;
+      selectedTemplate.parameters[1].static = true;
+      this.props.onElementSelected(selectedTemplate);
+    } else if (this.props.updateElement) {
+      // Update an existing element in the workspace
+      // Create array of which parameter to update, the new value to set, and the attribute to update (value is default)
+      const arrayToUpdate = [
+        { [selectedTemplate.parameters[0].id]: `${codes[0].codeSystem.name} ${codes[0].code}` },
+        { [selectedTemplate.parameters[1].id]: codes, attributeToEdit: 'codes' },
+        { [selectedTemplate.parameters[1].id]: true, attributeToEdit: 'static' }
+      ];
+      this.props.updateElement(arrayToUpdate);
+    }
     this.closeCodeSelectModal();
   }
   
   render() {
     const codeInputLabel = 'Enter code';
     const otherInputLabel = 'Enter code system URI or OID';
+    let buttonLabels = {
+      openButtonText: 'Choose Code',
+      closeButtonText: 'Close'
+    };
+    if (this.props.labels) {
+      buttonLabels = this.props.labels;
+    }
+
     const codeSystemOptions = [
-      { value: 'SNOMED', label: 'SNOMED'},
-      { value: 'ICD-9', label: 'ICD-9'},
-      { value: 'ICD-10', label: 'ICD-10'},
-      { value: 'NIC', label: 'NIC'},
-      { value: 'LOINC', label: 'LOINC'},
+      { value: 'SNOMED', label: 'SNOMED', id: 'http://snomed.info/sct' },
+      { value: 'ICD-9', label: 'ICD-9', id: 'http://hl7.org/fhir/sid/icd-9-cm' },
+      { value: 'ICD-10', label: 'ICD-10', id: 'http://hl7.org/fhir/sid/icd-10' },
+      { value: 'NCI', label: 'NCI', id: 'http://ncimeta.nci.nih.gov' },
+      { value: 'LOINC', label: 'LOINC', id: 'http://loinc.org' },
+      { value: 'RXNORM', label: 'RXNORM', id: 'http://www.nlm.nih.gov/research/umls/rxnorm' },
       { value: 'Other', label: 'Other'}
     ];
+
     return (
       <span className={ `element-select__modal element-modal` }>
         <button className="primary-button" onClick={this.openCodeSelectModal}>
-          <FontAwesome name="medkit" />{' '}Choose Code
+          <FontAwesome name="medkit" />{' '}{buttonLabels.openButtonText}
         </button>
         <Modal
           isOpen={ this.state.showCodeSelectModal }
@@ -135,7 +176,7 @@ class CodeSelectModal extends Component {
               <button className="primary-button"
                       onClick={ this.closeCodeSelectModal }
                       onKeyDown={ e => this.enterKeyCheck(this.closeCodeSelectModal, null, e) }>
-                      Close
+                      {buttonLabels.closeButtonText}
               </button>
             </footer>
           </div>

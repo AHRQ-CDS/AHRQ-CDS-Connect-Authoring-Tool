@@ -115,11 +115,23 @@ export class Builder extends Component {
       target.id = editedParams.id;
       target.name = editedParams.name;
     } else {
-      // function to retrieve relevant parameter
-      const paramIndex = target.parameters.findIndex(param =>
-        Object.prototype.hasOwnProperty.call(editedParams, param.id));
+      // If only one parameter is being updated, it comes in as a single object. Put it into an array of objects.
+      if (!Array.isArray(editedParams)) {
+        editedParams = [editedParams];
+      }
+      // Update each parameter attribute that needs updating. Then updated the full tree with changes.
+      editedParams.forEach((editedParam) => {
+        // function to retrieve relevant parameter
+        const paramIndex = target.parameters.findIndex(param =>
+          Object.prototype.hasOwnProperty.call(editedParam, param.id));
 
-      target.parameters[paramIndex].value = editedParams[target.parameters[paramIndex].id];
+        // If an attribute was specified, update that one. Otherwise update the value attribute.
+        if (editedParam.attributeToEdit) {
+          target.parameters[paramIndex][editedParam.attributeToEdit] = editedParam[target.parameters[paramIndex].id];
+        } else {
+          target.parameters[paramIndex].value = editedParam[target.parameters[paramIndex].id];
+        }
+      });
     }
 
     this.setTree(treeName, treeData, tree);

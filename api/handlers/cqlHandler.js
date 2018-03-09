@@ -714,16 +714,16 @@ function addConceptForCodes(codes, valueSetObject) {
   if (codes) {
     codes.forEach((code) => {
       const concept = {
-        name: `${code.codeSystem} ${code.code} Concept`,
+        name: `${code.codeSystem.name} ${code.code} Concept`,
         codes: [
           {
             name: `${code.code} Name`,
             code: code.code,
-            codeSystem: { name: code.codeSystem, id: 'TODO get id' },
-            display: `${code.codeSystem} ${code.code} Display`
+            codeSystem: { name: code.codeSystem.name, id: code.codeSystem.id },
+            display: `${code.codeSystem.name} ${code.code} Display`
           }
         ],
-        display: `${code.codeSystem} ${code.code} Concept Display`
+        display: `${code.codeSystem.name} ${code.code} Concept Display`
       }
       valueSetObject.concepts.push(concept);
     });

@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import Modal from 'react-modal';
 import FontAwesome from 'react-fontawesome';
+import _ from 'lodash';
 // import { sortAlphabeticallyByKey } from '../../utils/sort';
 
 // const getRelevantElements = (category, value) => {
@@ -73,17 +74,28 @@ class ElementModal extends Component {
 
   handleChosenVS = () => {
     const element = this.state.selectedElement;
-    const selectedTemplate = this.props.template;
+    const selectedTemplate = _.cloneDeep(this.props.template);
     if (selectedTemplate === undefined) return;
 
-    // Update template with value set selection
-    selectedTemplate.parameters[0].value = element.name;
-    selectedTemplate.parameters[1].value = element.oid;
-    selectedTemplate.parameters[1].vsName = element.name;
-    selectedTemplate.parameters[1].static = true;
-
-    // Only call this function if adding a new element. Existing elements will be updated automatically.
-    if (this.props.onElementSelected) this.props.onElementSelected(selectedTemplate);
+    // Adding a new element and editing an exisitng element use different functions that take different parameters
+    if (this.props.onElementSelected) {
+      // Set the template's values based on value set selection initially to add it to the workspace.
+      selectedTemplate.parameters[0].value = element.name;
+      selectedTemplate.parameters[1].value = element.oid;
+      selectedTemplate.parameters[1].vsName = element.name;
+      selectedTemplate.parameters[1].static = true;
+      this.props.onElementSelected(selectedTemplate);
+    } else if (this.props.updateElement) {
+      // Update an existing element in the workspace
+      // Create array of which parameter to update, the new value to set, and the attribute to update (value is default)
+      const arrayToUpdate = [
+        { [selectedTemplate.parameters[0].id]: element.name },
+        { [selectedTemplate.parameters[1].id]: element.oid },
+        { [selectedTemplate.parameters[1].id]: element.name, attributeToEdit: 'vsName' },
+        { [selectedTemplate.parameters[1].id]: true, attributeToEdit: 'static' }
+      ];
+      this.props.updateElement(arrayToUpdate);
+    }
     this.closeModal();
   }
 

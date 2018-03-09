@@ -5,6 +5,7 @@ import _ from 'lodash';
 
 import VSACAuthenticationModal from './VSACAuthenticationModal';
 import ElementModal from './ElementModal';
+import CodeSelectModal from './CodeSelectModal';
 
 // Try to keep these ordered same as in folder (i.e. alphabetically)
 import NumberParameter from './parameters/NumberParameter';
@@ -273,26 +274,28 @@ export default class TemplateInstance extends Component {
       const vsacParameter = this.props.templateInstance.parameters[1];
       if (vsacParameter.vsName) {
         return (
-          <div>
-            {this.renderVSACOptions()}
-            <div className='modifier__return__type'>
-              <span className="bold">Selected Value Set: </span>{`${vsacParameter.vsName} (${vsacParameter.value})`}
-            </div>
+          <div className='modifier__return__type'>
+            <span className="bold">Selected Value Set: </span>{`${vsacParameter.vsName} (${vsacParameter.value})`}
           </div>
         );
       }
+    }
+    return null;
+  }
+  
+  renderCodeInfo = () => {
+    if (this.props.templateInstance.parameters.length > 1) {
+      // All generic VSAC elements save the VS information on this parameter. Only VSAC elements have a vsName property.
+      const vsacParameter = this.props.templateInstance.parameters[1];
       if (vsacParameter.codes) {
         return (
-          <div>
-            {this.renderVSACOptions()}
-            <div className='modifier__return__type'>
-              {/* Code name will come with validation */}
-              <span className="bold">Selected Code: </span>{`${vsacParameter.codes[0].codeSystem} (${vsacParameter.codes[0].code})`}
-            </div>
+          <div className='modifier__return__type'>
+            {/* Code name will come with validation */}
+            <span className="bold">Selected Code: </span>
+            {`${vsacParameter.codes[0].codeSystem.name} (${vsacParameter.codes[0].code})`}
           </div>
-        )
+        );
       }
-      return null;
     }
     return null;
   }
@@ -312,16 +315,30 @@ export default class TemplateInstance extends Component {
       );
     }
 
-    // TODO this will need to be updated too.
-    const selectedElement = {
-      name: this.props.templateInstance.parameters[1].vsName,
-      oid: this.props.templateInstance.parameters[1].value
-    };
+    const templateInstance = this.props.templateInstance;
+    let selectedValueSet;
+    if (templateInstance.parameters[1].vsName) {
+      selectedValueSet = {
+        name: templateInstance.parameters[1].vsName,
+        oid: templateInstance.parameters[1].value
+      };
+    }
 
-    const modalLabels = {
+    let selectedCode;
+    if (templateInstance.parameters[1].codes) {
+      selectedCode = templateInstance.parameters[1].codes;
+    }
+
+    const allowCodeSelect = (templateInstance.name === 'Observation' || templateInstance.name === 'Condition');
+
+    const elementModalLabels = {
       openButtonText: 'View/Edit Value Set',
       closeButtonText: 'Cancel'
     };
+    const codeSelectModalLabels = {
+      openButtonText: 'Edit Code',
+      closeButtonText: 'Cancel'
+    }
 
     return (
       <div>
@@ -330,6 +347,7 @@ export default class TemplateInstance extends Component {
         </button>
         <ElementModal
           className="element-select__modal"
+          updateElement={this.updateInstance}
           searchVSACByKeyword={this.props.searchVSACByKeyword}
           isSearchingVSAC={this.props.isSearchingVSAC}
           vsacSearchResults={this.props.vsacSearchResults}
@@ -338,9 +356,18 @@ export default class TemplateInstance extends Component {
           getVSDetails={this.props.getVSDetails}
           isRetrievingDetails={this.props.isRetrievingDetails}
           vsacDetailsCodes={this.props.vsacDetailsCodes}
-          selectedElement={selectedElement}
-          labels={modalLabels}
+          selectedElement={selectedValueSet}
+          labels={elementModalLabels}
         />
+        { allowCodeSelect ?
+          <CodeSelectModal
+            className="element-select__modal"
+            updateElement={this.updateInstance}
+            template={this.props.templateInstance}
+            selectedCode={selectedCode}
+            labels={codeSelectModalLabels}
+          />
+          : null }
       </div>
     );
   }
@@ -438,7 +465,16 @@ export default class TemplateInstance extends Component {
           })}
         </div>
 
-        {this.renderVSInfo()}
+        {
+          // If the template instance is a VSAC generic element, render VSAC controls
+          this.props.templateInstance.id.includes('_vsac') ?
+          <div>
+            {this.renderVSACOptions()}
+            {this.renderVSInfo()}
+            {this.renderCodeInfo()}
+          </div>
+          : null
+        }
 
         {this.renderAppliedModifiers()}
 

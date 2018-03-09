@@ -147,13 +147,6 @@ class ElementSelect extends Component {
     return categoriesCopy;
   }
 
-  onCodeSelected = (code) => {
-    this.setState({ selectedElement: null });
-    const clone = _.cloneDeep(code);
-    delete clone.category; // Don't send the category which is only needed for this component
-    this.props.onSuggestionSelected(clone);
-  }
-
   onSuggestionSelected = (suggestion) => {
     this.setState({ selectedElement: null });
     const clone = _.cloneDeep(suggestion);
@@ -191,6 +184,8 @@ class ElementSelect extends Component {
     if (selectedTemplate === undefined) {
       console.error('No template found for selected element.');
     }
+    
+    const allowCodeSelect = (selectedElement.value === 'observation' || selectedElement.value === 'condition');
 
     return (
       <div className="vsac-authenticate">
@@ -209,11 +204,13 @@ class ElementSelect extends Component {
           isRetrievingDetails={this.props.isRetrievingDetails}
           vsacDetailsCodes={this.props.vsacDetailsCodes}
         />
-        <CodeSelectModal
-          className="element-select__modal"
-          onElementSelected={this.onCodeSelected}
-          template={selectedTemplate}
-        />
+        { allowCodeSelect ?
+          <CodeSelectModal
+            className="element-select__modal"
+            onElementSelected={this.onSuggestionSelected}
+            template={selectedTemplate}
+          />
+          : null }
       </div>
     );
   }
