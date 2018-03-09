@@ -281,6 +281,17 @@ export default class TemplateInstance extends Component {
           </div>
         );
       }
+      if (vsacParameter.codes) {
+        return (
+          <div>
+            {this.renderVSACOptions()}
+            <div className='modifier__return__type'>
+              {/* Code name will come with validation */}
+              <span className="bold">Selected Code: </span>{`${vsacParameter.codes[0].codeSystem} (${vsacParameter.codes[0].code})`}
+            </div>
+          </div>
+        )
+      }
       return null;
     }
     return null;
@@ -301,6 +312,7 @@ export default class TemplateInstance extends Component {
       );
     }
 
+    // TODO this will need to be updated too.
     const selectedElement = {
       name: this.props.templateInstance.parameters[1].vsName,
       oid: this.props.templateInstance.parameters[1].value

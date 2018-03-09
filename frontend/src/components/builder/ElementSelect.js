@@ -7,6 +7,7 @@ import FontAwesome from 'react-fontawesome';
 import ElementModal from './ElementModal';
 import ElementSelectMenuRenderer from './ElementSelectMenuRenderer';
 import VSACAuthenticationModal from './VSACAuthenticationModal';
+import CodeSelectModal from './CodeSelectModal';
 import filterUnsuppressed from '../../utils/filter';
 import { sortAlphabeticallyByKey } from '../../utils/sort';
 
@@ -146,6 +147,13 @@ class ElementSelect extends Component {
     return categoriesCopy;
   }
 
+  onCodeSelected = (code) => {
+    this.setState({ selectedElement: null });
+    const clone = _.cloneDeep(code);
+    delete clone.category; // Don't send the category which is only needed for this component
+    this.props.onSuggestionSelected(clone);
+  }
+
   onSuggestionSelected = (suggestion) => {
     this.setState({ selectedElement: null });
     const clone = _.cloneDeep(suggestion);
@@ -200,6 +208,11 @@ class ElementSelect extends Component {
           getVSDetails={this.props.getVSDetails}
           isRetrievingDetails={this.props.isRetrievingDetails}
           vsacDetailsCodes={this.props.vsacDetailsCodes}
+        />
+        <CodeSelectModal
+          className="element-select__modal"
+          onElementSelected={this.onCodeSelected}
+          template={selectedTemplate}
         />
       </div>
     );

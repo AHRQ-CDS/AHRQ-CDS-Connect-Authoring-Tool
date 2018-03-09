@@ -228,22 +228,9 @@ class CqlArtifact {
             observations: [
               { name: `${parameter.vsName} VS`, oid: parameter.value },
             ],
-            // TODO: Decide what if this information is provided by the user and which needs to be inferred
-            // concepts: [
-            //   {
-            //     name: 'Concept Name A',
-            //     codes: [
-            //       {
-            //         name: 'Code  Name A',
-            //         code: 'A01',
-            //         codeSystem: { name: 'CS A', id: 'A.90' },
-            //         display: 'DisplayName A'
-            //       },
-            //     ],
-            //     display: 'A'
-            //   },
-            // ]
+            concepts: []
           };
+          addConceptForCodes(parameter.codes, observationValueSets);
           // For observations that have codes associated with them instead of valuesets
           if (observationValueSets.concepts) {
             const values = [];
@@ -328,21 +315,9 @@ class CqlArtifact {
             conditions: [
               { name: `${parameter.vsName} VS`, oid: parameter.value },
             ],
-            // concepts: [
-            //   {
-            //     name: 'Concept Name',
-            //     codes: [
-            //       {
-            //         name: 'Code Name',
-            //         code: 'E78.01',
-            //         codeSystem: { name: 'ICD-10-CM', id: 'urn:oid:.1.2' },
-            //         display: 'Code Display'
-            //       }
-            //     ],
-            //     display: 'Concept Display'
-            //   }
-            // ]
+            concepts: []
           }
+          addConceptForCodes(parameter.codes, conditionValueSets);
           if (conditionValueSets.concepts) {
             const values = [];
             conditionValueSets.concepts.forEach((concept) => {
@@ -732,6 +707,26 @@ function getCountForUniqueExpressionName(valueset, map) {
   } else {
     map.set(valueset.name, valueset);
     return 0;
+  }
+}
+
+function addConceptForCodes(codes, valueSetObject) {
+  if (codes) {
+    codes.forEach((code) => {
+      const concept = {
+        name: `${code.codeSystem} ${code.code} Concept`,
+        codes: [
+          {
+            name: `${code.code} Name`,
+            code: code.code,
+            codeSystem: { name: code.codeSystem, id: 'TODO get id' },
+            display: `${code.codeSystem} ${code.code} Display`
+          }
+        ],
+        display: `${code.codeSystem} ${code.code} Concept Display`
+      }
+      valueSetObject.concepts.push(concept);
+    });
   }
 }
 
