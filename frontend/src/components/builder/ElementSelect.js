@@ -184,7 +184,7 @@ class ElementSelect extends Component {
     if (selectedTemplate === undefined) {
       console.error('No template found for selected element.');
     }
-    
+
     const allowCodeSelect = (selectedElement.value === 'observation' || selectedElement.value === 'condition');
 
     return (

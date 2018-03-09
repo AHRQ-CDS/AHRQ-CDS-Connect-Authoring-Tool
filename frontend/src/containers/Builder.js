@@ -117,7 +117,7 @@ export class Builder extends Component {
     } else {
       // If only one parameter is being updated, it comes in as a single object. Put it into an array of objects.
       if (!Array.isArray(editedParams)) {
-        editedParams = [editedParams];
+        editedParams = [editedParams]; // eslint-disable-line no-param-reassign
       }
       // Update each parameter attribute that needs updating. Then updated the full tree with changes.
       editedParams.forEach((editedParam) => {

@@ -282,7 +282,7 @@ export default class TemplateInstance extends Component {
     }
     return null;
   }
-  
+
   renderCodeInfo = () => {
     if (this.props.templateInstance.parameters.length > 1) {
       // All generic VSAC elements save the VS information on this parameter. Only VSAC elements have a vsName property.
@@ -338,7 +338,7 @@ export default class TemplateInstance extends Component {
     const codeSelectModalLabels = {
       openButtonText: 'Edit Code',
       closeButtonText: 'Cancel'
-    }
+    };
 
     return (
       <div>

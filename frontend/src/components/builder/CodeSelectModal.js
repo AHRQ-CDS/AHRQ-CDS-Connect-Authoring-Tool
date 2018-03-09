@@ -19,7 +19,6 @@ class CodeSelectModal extends Component {
     };
   }
 
-  // TODO reload "Other"
   openCodeSelectModal = () => {
     const { selectedCode } = this.props;
     if (selectedCode) {
@@ -28,15 +27,27 @@ class CodeSelectModal extends Component {
         value: selectedCode[0].codeSystem.name,
         label: selectedCode[0].codeSystem.name,
         id: selectedCode[0].codeSystem.id
+      };
+      let codeSystemText = '';
+      const otherSelected = selectedCode[0].codeSystem.name === 'Other';
+      if (otherSelected) {
+        codeSystemText = selectedCode[0].codeSystem.id;
       }
-      this.setState({ codeText: selectedCode[0].code, selectedCS });
+      this.setState({
+        showCodeSelectModal: true,
+        codeText: selectedCode[0].code,
+        codeSystemText,
+        selectedCS,
+        displayOtherInput: otherSelected
+      });
+    } else {
+      this.setState({ showCodeSelectModal: true });
     }
-    this.setState({ showCodeSelectModal: true });
   }
 
   closeCodeSelectModal = () => {
     // Reset modal when closing
-    this.setState({ 
+    this.setState({
       showCodeSelectModal: false,
       codeText: '',
       codeSystemText: '',
@@ -44,23 +55,23 @@ class CodeSelectModal extends Component {
       displayOtherInput: false
     });
   }
-  
+
   enterKeyCheck = (func, argument, event) => {
     if (!event || event.type !== 'keydown' || event.key !== 'Enter') return;
     event.preventDefault();
     if (argument) { func(argument); } else { func(); }
   }
-  
+
   handleSearchValueChange = (event) => {
     const codeText = event.target.value;
     this.setState({ codeText });
   }
-  
+
   handleOtherCodeSystemChange = (event) => {
     const codeSystemText = event.target.value;
     this.setState({ codeSystemText });
   }
-  
+
   onCodeSystemSelected = (selectedCS) => {
     if (selectedCS.value === 'Other') {
       this.setState({ selectedCS, displayOtherInput: true });
@@ -75,6 +86,9 @@ class CodeSelectModal extends Component {
         code: this.state.codeText, codeSystem: { name: this.state.selectedCS.value, id: this.state.selectedCS.id }
       }
     ];
+    if (this.state.selectedCS.value === 'Other') {
+      codes[0].codeSystem.id = this.state.codeSystemText;
+    }
     const selectedTemplate = _.cloneDeep(this.props.template);
     if (selectedTemplate === undefined) return;
 
@@ -97,7 +111,7 @@ class CodeSelectModal extends Component {
     }
     this.closeCodeSelectModal();
   }
-  
+
   render() {
     const codeInputLabel = 'Enter code';
     const otherInputLabel = 'Enter code system URI or OID';
@@ -116,11 +130,11 @@ class CodeSelectModal extends Component {
       { value: 'NCI', label: 'NCI', id: 'http://ncimeta.nci.nih.gov' },
       { value: 'LOINC', label: 'LOINC', id: 'http://loinc.org' },
       { value: 'RXNORM', label: 'RXNORM', id: 'http://www.nlm.nih.gov/research/umls/rxnorm' },
-      { value: 'Other', label: 'Other'}
+      { value: 'Other', label: 'Other' }
     ];
 
     return (
-      <span className={ `element-select__modal element-modal` }>
+      <span className="element-select__modal element-modal">
         <button className="primary-button" onClick={this.openCodeSelectModal}>
           <FontAwesome name="medkit" />{' '}{buttonLabels.openButtonText}
         </button>
@@ -147,8 +161,8 @@ class CodeSelectModal extends Component {
                 />
                 <Select
                   className="element-select__element-field"
-                  placeholder={`Select code system`}
-                  aria-label={`Select code system`}
+                  placeholder={'Select code system'}
+                  aria-label={'Select code system'}
                   clearable={false}
                   value={this.state.selectedCS}
                   options={codeSystemOptions}
@@ -156,7 +170,7 @@ class CodeSelectModal extends Component {
                   />
                   {/* TODO style this under the select element */}
                   {
-                    this.state.displayOtherInput ? 
+                    this.state.displayOtherInput ?
                     <input
                       type="text"
                       placeholder={ otherInputLabel }
@@ -187,7 +201,14 @@ class CodeSelectModal extends Component {
 }
 
 CodeSelectModal.propTypes = {
-  // TODO
+  onElementSelected: PropTypes.func,
+  template: PropTypes.object.isRequired,
+  updateElement: PropTypes.func,
+  selectedCode: PropTypes.arrayOf(PropTypes.shape({
+    code: PropTypes.string.isRequired,
+    codeSystem: PropTypes.shape({ name: PropTypes.string.isRequired, id: PropTypes.string.isRequired })
+  })),
+  labels: PropTypes.object
 };
 
 export default CodeSelectModal;
