@@ -20,7 +20,7 @@ describe.only('artifacts reducer', () => {
       deleteArtifact: { isDeleting: false, deleteStatus: null },
       saveArtifact: { isSaving: false, saveStatus: null },
       publishArtifact: { isPublishing: false, publishStatus: null },
-      downloadArtifact: { isDownloading: false, downloadStatus: null, elmWarnings: [] },
+      downloadArtifact: { isDownloading: false, downloadStatus: null, elmErrors: [] },
       publishEnabled: false
     });
   });
@@ -110,19 +110,32 @@ describe.only('artifacts reducer', () => {
   });
 
   it('should handle valid artifacts', () => {
-    const action = { type: types.VALIDATE_ARTIFACT_SUCCESS, data: { elmWarnings: [] } };
+    const action = { type: types.VALIDATE_ARTIFACT_SUCCESS, data: { elmErrors: [] } };
     const newState = {
       statusMessage: null,
-      downloadArtifact: { isDownloading: false, downloadStatus: null, elmWarnings: [] }
+      downloadArtifact: { isDownloading: false, downloadStatus: null, elmErrors: [] }
     };
     expect(reducer([], action)).toEqual(newState);
   });
 
   it('should handle artifacts with errors', () => {
-    const action = { type: types.VALIDATE_ARTIFACT_SUCCESS, data: { elmWarnings: [{ message: 'test' }] } };
+    const action = {
+      type: types.VALIDATE_ARTIFACT_SUCCESS,
+      data: {
+        elmErrors: [
+          { message: 'Syntax error at define', errorType: 'syntax', errorSeverity: 'error', type: 'CqlToElmError' }
+        ]
+      }
+    };
     const newState = {
       statusMessage: null,
-      downloadArtifact: { isDownloading: false, downloadStatus: null, elmWarnings: [{ message: 'test' }] }
+      downloadArtifact: {
+        isDownloading: false,
+        downloadStatus: null,
+        elmErrors: [
+          { message: 'Syntax error at define', errorType: 'syntax', errorSeverity: 'error', type: 'CqlToElmError' }
+        ]
+      }
     };
     expect(reducer([], action)).toEqual(newState);
   });
@@ -131,7 +144,7 @@ describe.only('artifacts reducer', () => {
     const action = { type: types.CLEAR_ARTIFACT_VALIDATION_WARNINGS };
     const newState = {
       statusMessage: null,
-      downloadArtifact: { isDownloading: false, downloadStatus: null, elmWarnings: [] }
+      downloadArtifact: { isDownloading: false, downloadStatus: null, elmErrors: [] }
     };
     expect(reducer([], action)).toEqual(newState);
   });
@@ -141,13 +154,13 @@ describe.only('artifacts reducer', () => {
     let action = { type: types.DOWNLOAD_ARTIFACT_REQUEST };
     let newState = {
       statusMessage: null,
-      downloadArtifact: { isDownloading: true, downloadStatus: null, elmWarnings: [] }
+      downloadArtifact: { isDownloading: true, downloadStatus: null, elmErrors: [] }
     };
     expect(reducer([], action)).toEqual(newState);
 
     const previousState = {
       statusMessage: 'message',
-      downloadArtifact: { isDownloading: false, downloadStatus: 'test', elmWarnings: [] }
+      downloadArtifact: { isDownloading: false, downloadStatus: 'test', elmErrors: [] }
     };
     expect(reducer(previousState, action)).toEqual(newState);
 
@@ -155,14 +168,14 @@ describe.only('artifacts reducer', () => {
 
     newState = {
       statusMessage: `Downloaded ${time()}.`,
-      downloadArtifact: { isDownloading: false, downloadStatus: 'success', elmWarnings: [] }
+      downloadArtifact: { isDownloading: false, downloadStatus: 'success', elmErrors: [] }
     };
     expect(reducer(previousState, action)).toEqual(newState);
 
     action = { type: types.DOWNLOAD_ARTIFACT_FAILURE, status: 'Test status', statusText: 'Test status message' };
     newState = {
       statusMessage: 'Download failed. Test status message.',
-      downloadArtifact: { isDownloading: false, downloadStatus: 'failure', elmWarnings: [] }
+      downloadArtifact: { isDownloading: false, downloadStatus: 'failure', elmErrors: [] }
     };
     expect(reducer(previousState, action)).toEqual(newState);
   });
