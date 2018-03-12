@@ -701,14 +701,18 @@ function validateELM(cqlArtifact, writeStream, callback) {
       callback(err);
       return;
     }
-    let elmWarnings = [];
+    let elmErrors = [];
     elmFiles.forEach((e) => {
-      const fileErrors = JSON.parse(e.content).library.annotation;
-      if(fileErrors) {
-        elmWarnings = elmWarnings.concat(fileErrors);
+      const annotations = JSON.parse(e.content).library.annotation;
+      if (Array.isArray(annotations)) {
+        // Only return true errors (not warnings)
+        const fileErrors = annotations.filter(a => a.errorSeverity === 'error');
+        if(fileErrors.length) {
+          elmErrors = elmErrors.concat(fileErrors);
+        }
       }
     });
-    writeStream.json({elmWarnings});
+    writeStream.json({elmErrors});
   });
 }
 

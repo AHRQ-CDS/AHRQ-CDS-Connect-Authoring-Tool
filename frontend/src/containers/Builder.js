@@ -69,7 +69,7 @@ export class Builder extends Component {
   }
 
   componentWillReceiveProps(newProps) {
-    this.setState({ showELMErrorModal: newProps.downloadedArtifact.elmWarnings.length > 0 });
+    this.setState({ showELMErrorModal: newProps.downloadedArtifact.elmErrors.length > 0 });
   }
 
   // ----------------------- TABS ------------------------------------------ //
@@ -421,7 +421,7 @@ export class Builder extends Component {
         <ELMErrorModal
           isOpen={this.state.showELMErrorModal}
           closeModal={this.closeELMErrorModal}
-          errors={this.props.downloadedArtifact.elmWarnings}/>
+          errors={this.props.downloadedArtifact.elmErrors}/>
       </div>
     );
   }
