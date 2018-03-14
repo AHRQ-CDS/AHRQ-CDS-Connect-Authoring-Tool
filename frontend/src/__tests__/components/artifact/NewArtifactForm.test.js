@@ -7,7 +7,8 @@ test('NewArtifactForm renders without crashing', () => {
   const component = shallowRenderComponent(NewArtifactForm, {
     afterAddArtifact: afterAddArtifactMock,
     onSubmitFunction: onSubmitMock,
-    buttonLabel: 'Submit'
+    buttonLabel: 'Submit',
+    addArtifact: jest.fn()
   });
 
   expect(component).toBeDefined();

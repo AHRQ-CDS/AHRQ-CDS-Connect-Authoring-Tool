@@ -15,13 +15,30 @@ const cholesterolTemplate = observations.entries.find(e => e.id === 'TotalCholes
 
 const baseState = {
   artifacts: { artifact: {}, downloadArtifact: { elmErrors: [] } },
-  resources: { resources: [] },
+  resources: { resources: {} },
   valueSets: { valueSets: [] },
   templates: { templates: elementGroups }
 };
 
+const props = {
+  artifact: {},
+  statusMessage: "",
+  templates: [],
+  resources: {},
+  loadTemplates: jest.fn(),
+  loadResources: jest.fn(),
+  loadValueSets: jest.fn(),
+  loadArtifact: jest.fn(),
+  initializeArtifact: jest.fn(),
+  updateArtifact: jest.fn(),
+  setStatusMessage: jest.fn(),
+  downloadArtifact: jest.fn(),
+  saveArtifact: jest.fn(),
+  updateAndSaveArtifact: jest.fn()
+};
+
 test('children have correct classes', () => {
-  const component = shallowRenderContainer(Builder, {}, createMockStore(baseState));
+  const component = shallowRenderContainer(Builder, props, createMockStore(baseState));
   const classNames = ['upload__modal', 'edit__modal', 'builder__header', 'builder__canvas'];
   component.find('.builder-wrapper').children().forEach((node, i) => {
     expect(node.hasClass(classNames[i])).toBeTruthy();
@@ -29,7 +46,7 @@ test('children have correct classes', () => {
 });
 
 test('shows loading screen when artifact is not loaded', () => {
-  const component = shallowRenderContainer(Builder, {}, createMockStore({
+  const component = shallowRenderContainer(Builder, props, createMockStore({
     ...baseState,
     artifacts: { artifact: null }
   }));
@@ -42,7 +59,7 @@ test('renders a single level tree for Inclusions and Exclusions', () => {
   const differentTree = _.cloneDeep(instanceTree);
   differentTree.childInstances.pop();
 
-  const component = shallowRenderContainer(Builder, {}, createMockStore({
+  const component = shallowRenderContainer(Builder, props, createMockStore({
     ...baseState,
     artifacts: {
       artifact: {
@@ -87,7 +104,7 @@ test('adds instance', () => {
       downloadArtifact: {}
     }
   });
-  const component = shallowRenderContainer(Builder, {}, store);
+  const component = shallowRenderContainer(Builder, props, store);
 
   const instance = createTemplateInstance(cholesterolTemplate);
 
@@ -121,7 +138,7 @@ test('adds instance at correct tree position', () => {
       downloadArtifact: {}
     }
   });
-  const component = shallowRenderContainer(Builder, {}, store);
+  const component = shallowRenderContainer(Builder, props, store);
 
   const observationInstance = createTemplateInstance(cholesterolTemplate);
 
@@ -147,7 +164,7 @@ test('edits a template instance', () => {
       downloadArtifact: {}
     }
   });
-  const component = shallowRenderContainer(Builder, {}, store);
+  const component = shallowRenderContainer(Builder, props, store);
 
   const name = 'test';
   component.dive().dive().instance().editInstance('expTreeInclude', { element_name: name }, 'childInstances.0');
@@ -169,7 +186,7 @@ test('edits a conjunction instance', () => {
       downloadArtifact: {}
     }
   });
-  const component = shallowRenderContainer(Builder, {}, store);
+  const component = shallowRenderContainer(Builder, props, store);
 
   expect(store.getState().artifacts.artifact.expTreeInclude.childInstances[0].id).toEqual('AgeRange');
   expect(store.getState().artifacts.artifact.expTreeInclude.childInstances[0].name).toEqual('Age Range');
@@ -196,7 +213,7 @@ test('updates an instance\'s modifiers', () => {
       downloadArtifact: {}
     }
   });
-  const component = shallowRenderContainer(Builder, {}, store);
+  const component = shallowRenderContainer(Builder, props, store);
 
   const modifiers = [
     {
@@ -232,7 +249,7 @@ test('deletes instance at correct tree position', () => {
       downloadArtifact: {}
     }
   });
-  const component = shallowRenderContainer(Builder, {}, store);
+  const component = shallowRenderContainer(Builder, props, store);
 
   const initialInstancesLength = instanceTree.childInstances.length;
 
@@ -267,7 +284,7 @@ test('gets a list of all instances', () => {
       downloadArtifact: {}
     }
   });
-  const component = shallowRenderContainer(Builder, {}, store);
+  const component = shallowRenderContainer(Builder, props, store);
 
   expect(component.dive().dive().instance()
     .getAllInstances('expTreeExclude')).toHaveLength(0);
@@ -288,14 +305,14 @@ test('gets a list of all instances', () => {
       downloadArtifact: {}
     }
   });
-  const componentWithTemplateInstances = shallowRenderContainer(Builder, {}, storeWithTemplateInstances);
+  const componentWithTemplateInstances = shallowRenderContainer(Builder, props, storeWithTemplateInstances);
 
   expect(componentWithTemplateInstances.dive().dive().instance()
     .getAllInstances('expTreeExclude')).toHaveLength(2);
 });
 
 test('increments the uniqueId counter', () => {
-  const component = shallowRenderComponent(BuilderComponent);
+  const component = shallowRenderComponent(BuilderComponent, props);
 
   const currentValue = component.state().uniqueIdCounter;
   component.instance().incrementUniqueIdCounter();
