@@ -95,7 +95,7 @@ function addGroupedValueSetExpression(referencedElements, resourceMap, valuesets
   }
 
   // Add value sets to be grouped onto the list of value sets defined at the top
-  valuesets[`${type.toLowerCase()}s`].forEach(vs => {
+  valuesets.valuesets.forEach(vs => {
     const count = getCountForUniqueExpressionName(vs, resourceMap);
     if (count > 0) {
       vs.name = `${vs.name}_${count}`;
@@ -104,7 +104,7 @@ function addGroupedValueSetExpression(referencedElements, resourceMap, valuesets
 
   // Create grouped expression
   const multipleValueSetExpression = createMultipleValueSetExpression(uniqueName,
-    valuesets[`${type.toLowerCase()}s`],
+    valuesets.valuesets,
     type);
   referencedElements.push(multipleValueSetExpression);
 }
@@ -177,6 +177,49 @@ class CqlArtifact {
       }
     }
     );
+  }
+
+  setParamterContexts(elementDetails, valuesetQueryName, conceptTemplateName, context) {
+    if (elementDetails.concepts.length > 0) {
+      const values = [];
+      elementDetails.concepts.forEach((concept) => {
+        concept.codes.forEach((code) => {
+          this.codeSystemMap.set(code.codeSystem.name, code.codeSystem.id);
+          this.codeMap.set(code.name, code);
+        });
+        this.conceptMap.set(concept.name, concept);
+        values.push(concept.name);
+      });
+      context.values = values;
+      context.template = conceptTemplateName;
+    }
+    if (elementDetails.valuesets.length > 0) {
+      let concepts = [];
+      if (context.values.length > 0) {
+        concepts = context.values;
+      }
+      if (elementDetails.valuesets.length > 1) {
+        addGroupedValueSetExpression(this.referencedElements, this.resourceMap, elementDetails, valuesetQueryName, context);
+        context.template = 'GenericStatement';
+        if (concepts.length > 0) {
+          addGroupedConceptExpression(this.referencedConceptElements, this.resourceMap, elementDetails, conceptTemplateName, context);
+        }
+      } else { // elementDetails.valuesets.length = 1;
+        if (concepts.length > 0) {
+          addGroupedValueSetExpression(this.referencedElements, this.resourceMap, elementDetails, valuesetQueryName, context);
+          addGroupedConceptExpression(this.referencedConceptElements, this.resourceMap, elementDetails, conceptTemplateName, context);
+          context.template = 'GenericStatement';
+        } else {
+          context.values = elementDetails.valuesets.map((vs) => {
+            const count = getCountForUniqueExpressionName(vs, this.resourceMap);
+            if (count > 0) {
+              return `${vs.name}_${count}`;
+            }
+            return vs.name;
+          });
+        }
+      }
+    }
   }
 
   parseTree(element) {
@@ -289,52 +332,12 @@ class CqlArtifact {
           // All information in observations array will be provided by the selections made on the frontend.
           const observationValueSets = {
             id: 'generic_observation_', // This is needed for creating a separate union'ed variable name.
-            observations: [],
+            valuesets: [],
             concepts: []
           };
           addConceptForCodes(parameter.codes, observationValueSets);
-          addValueSets(parameter, observationValueSets, 'observations');
-          // For observations that have codes associated with them instead of valuesets
-          if (observationValueSets.concepts.length > 0) {
-            const values = [];
-            observationValueSets .concepts.forEach((concept) => {
-              concept.codes.forEach((code) => {
-                this.codeSystemMap.set(code.codeSystem.name, code.codeSystem.id);
-                this.codeMap.set(code.name, code);
-              });
-              this.conceptMap.set(concept.name, concept);
-              values.push(concept.name);
-            });
-            context.values = values;
-            context.template = 'ObservationByConcept';
-          }
-          if(observationValueSets.observations.length > 0) {
-            let concepts = [];
-            if (context.values.length > 0) {
-              concepts = context.values;
-            }
-            if (observationValueSets.observations.length > 1) {
-              addGroupedValueSetExpression(this.referencedElements, this.resourceMap, observationValueSets, 'Observation', context);
-              context.template = 'GenericStatement';
-              if (concepts.length > 0) {
-                addGroupedConceptExpression(this.referencedConceptElements, this.resourceMap, observationValueSets, 'ObservationsByConcept', context);
-              }
-            } else { // observationValueSets.observations.length = 1
-              if (concepts.length > 0) {
-                addGroupedValueSetExpression(this.referencedElements, this.resourceMap, observationValueSets, 'Observation', context);
-                addGroupedConceptExpression(this.referencedConceptElements, this.resourceMap, observationValueSets, 'ObservationsByConcept', context);
-                context.template = 'GenericStatement';
-              } else {
-                context.values = observationValueSets.observations.map((observation) => {
-                  const count = getCountForUniqueExpressionName(observation, this.resourceMap);
-                  if (count > 0) {
-                    return `${observation.name}_${count}`;
-                  }
-                  return observation.name;
-                });
-              }
-            }
-          }
+          addValueSets(parameter, observationValueSets, 'valuesets');
+          this.setParamterContexts(observationValueSets, 'Observation', 'ObservationsByConcept', context);
           break;
         }
         case 'number': {
@@ -382,51 +385,12 @@ class CqlArtifact {
         case 'condition_vsac': {
           const conditionValueSets = {
             id: 'generic_condition',
-            conditions: [],
+            valuesets: [],
             concepts: []
           }
           addConceptForCodes(parameter.codes, conditionValueSets);
-          addValueSets(parameter, conditionValueSets, 'conditions');
-          if (conditionValueSets.concepts.length > 0) {
-            const values = [];
-            conditionValueSets.concepts.forEach((concept) => {
-              concept.codes.forEach((code) => {
-                this.codeSystemMap.set(code.codeSystem.name, code.codeSystem.id);
-                this.codeMap.set(code.name, code);
-              });
-              this.conceptMap.set(concept.name, concept);
-              values.push(concept.name);
-            });
-            context.values = values;
-            context.template = 'ConditionsByConcept';
-          }
-          if (conditionValueSets.conditions.length > 0) {
-            let concepts = [];
-            if (context.values.length > 0) {
-              concepts = context.values;
-            }
-            if (conditionValueSets.conditions.length > 1) {
-              addGroupedValueSetExpression(this.referencedElements, this.resourceMap, conditionValueSets, 'Condition', context);
-              context.template = 'GenericStatement';
-              if (concepts.length > 0) {
-                addGroupedConceptExpression(this.referencedConceptElements, this.resourceMap, conditionValueSets, 'ConditionsByConcept', context);
-              }
-            } else { // conditionValueSets.conditions.length = 1;
-              if (concepts.length > 0) {
-                addGroupedValueSetExpression(this.referencedElements, this.resourceMap, conditionValueSets, 'Condition', context);
-                addGroupedConceptExpression(this.referencedConceptElements, this.resourceMap, conditionValueSets, 'ConditionsByConcept', context);
-                context.template = 'GenericStatement';
-              } else {
-                context.values = conditionValueSets.conditions.map((condition) => {
-                  const count = getCountForUniqueExpressionName(condition, this.resourceMap);
-                  if (count > 0) {
-                    return `${condition.name}_${count}`;
-                  }
-                  return condition.name;
-                });
-              }
-            }
-          }
+          addValueSets(parameter, conditionValueSets, 'valuesets');
+          this.setParamterContexts(conditionValueSets, 'Condition', 'ConditionsByConcept', context);
           break;
         }
         case 'medication': {
