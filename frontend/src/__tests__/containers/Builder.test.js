@@ -21,7 +21,13 @@ const baseState = {
 };
 
 const props = {
-  artifact: {},
+  artifact: {
+    expTreeInclude: {childInstances: []},
+    expTreeExclude: {childInstances: []},
+    booleanParameters:[],
+    subpopulations: [],
+
+  },
   statusMessage: "",
   templates: [],
   resources: {},
@@ -34,7 +40,8 @@ const props = {
   setStatusMessage: jest.fn(),
   downloadArtifact: jest.fn(),
   saveArtifact: jest.fn(),
-  updateAndSaveArtifact: jest.fn()
+  updateAndSaveArtifact: jest.fn(),
+  downloadedArtifact: {elmErrors: []}
 };
 
 test('children have correct classes', () => {
@@ -312,8 +319,7 @@ test('gets a list of all instances', () => {
 });
 
 test('increments the uniqueId counter', () => {
-  const component = shallowRenderComponent(BuilderComponent, props);
-
+  const component = shallowRenderComponent(BuilderComponent, props, {});
   const currentValue = component.state().uniqueIdCounter;
   component.instance().incrementUniqueIdCounter();
 
