@@ -204,13 +204,11 @@ class ElementSelect extends Component {
           isRetrievingDetails={this.props.isRetrievingDetails}
           vsacDetailsCodes={this.props.vsacDetailsCodes}
         />
-        { allowCodeSelect ?
           <CodeSelectModal
             className="element-select__modal"
             onElementSelected={this.onSuggestionSelected}
             template={selectedTemplate}
           />
-          : null }
       </div>
     );
   }

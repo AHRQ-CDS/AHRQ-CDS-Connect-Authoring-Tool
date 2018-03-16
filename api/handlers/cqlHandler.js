@@ -331,7 +331,7 @@ class CqlArtifact {
         case 'observation_vsac': {
           // All information in observations array will be provided by the selections made on the frontend.
           const observationValueSets = {
-            id: 'generic_observation_', // This is needed for creating a separate union'ed variable name.
+            id: 'generic_observation', // This is needed for creating a separate union'ed variable name.
             valuesets: [],
             concepts: []
           };
@@ -451,18 +451,13 @@ class CqlArtifact {
         }
         case 'procedure_vsac': {
           const procedureValueSets = {
-            name: _.uniqueId('generic_procedure_'),
-            procedures: [
-              { name: `${parameter.vsName} VS`, oid: parameter.value },
-            ]
+            id: 'generic_procedure',
+            valuesets: [],
+            concepts: []
           };
-          context.values = procedureValueSets.procedures.map((procedure) => {
-            const count = getCountForUniqueExpressionName(procedure, this.resourceMap);
-            if (count > 0) {
-              return `${procedure.name}_${count}`;
-            }
-            return procedure.name;
-          });
+          addConceptForCodes(parameter.codes, procedureValueSets);
+          addValueSets(parameter, procedureValueSets, 'valuesets');
+          this.setParamterContexts(procedureValueSets, 'Procedure', 'ProceduresByConcept', context);
           break;
         }
         case 'encounter': {
@@ -476,18 +471,13 @@ class CqlArtifact {
         }
         case 'encounter_vsac': {
           const encounterValueSets = {
-            name: _.uniqueId('generic_encounter_'),
-            encounters: [
-              { name: `${parameter.vsName} VS`, oid: parameter.value },
-            ]
+            id: 'generic_encounter',
+            valuesets: [],
+            concepts: []
           };
-          context.values = encounterValueSets.encounters.map((encounter) => {
-            const count = getCountForUniqueExpressionName(encounter, this.resourceMap);
-            if (count > 0) {
-              return `${encounter.name}_${count}`;
-            }
-            return encounter.name;
-          });
+          addConceptForCodes(parameter.codes, encounterValueSets);
+          addValueSets(parameter, encounterValueSets, 'valuesets');
+          this.setParamterContexts(encounterValueSets, 'Encounter', 'EncountersByConcept', context);
           break;
         }
         case 'allergyIntolerance' : {
@@ -501,18 +491,13 @@ class CqlArtifact {
         }
         case 'allergyIntolerance_vsac' : {
           const allergyIntoleranceValueSets = {
-            name: _.uniqueId('generic_allergyIntolerance_'),
-            allergyIntolerances: [
-              { name: `${parameter.vsName} VS`, oid: parameter.value }
-            ]
+            id: 'generic_allergyIntolerance',
+            valuesets: [],
+            concepts: []
           };
-          context.values = allergyIntoleranceValueSets.allergyIntolerances.map((allergyIntolerance) => {
-            const count = getCountForUniqueExpressionName(allergyIntolerance, this.resourceMap);
-            if (count > 0) {
-              return `${allergyIntolerance.name}_${count}`;
-            }
-            return allergyIntolerance.name;
-          });
+          addConceptForCodes(parameter.codes, allergyIntoleranceValueSets);
+          addValueSets(parameter, allergyIntoleranceValueSets, 'valuesets');
+          this.setParamterContexts(allergyIntoleranceValueSets, 'AllergyIntolerance', 'AllergyIntolerancesByConcept', context);
           break;
         }
         case 'pregnancy': {

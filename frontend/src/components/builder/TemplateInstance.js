@@ -359,7 +359,6 @@ export default class TemplateInstance extends Component {
           selectedElement={selectedValueSet}
           labels={elementModalLabels}
         />
-        { allowCodeSelect ?
           <CodeSelectModal
             className="element-select__modal"
             updateElement={this.updateInstance}
@@ -367,7 +366,6 @@ export default class TemplateInstance extends Component {
             selectedCode={selectedCode}
             labels={codeSelectModalLabels}
           />
-          : null }
       </div>
     );
   }

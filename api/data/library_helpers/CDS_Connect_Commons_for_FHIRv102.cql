@@ -198,6 +198,15 @@ define function ConditionLookBack(CondList List<Condition>, LookBack System.Quan
 
  // -------------------------------------------------- PROCEDURES ------------------------------------------------------
 
+ /**
+  * Filters Procedures by a concept rather than by a ValueSet.  In CQL 1.3, this will be built into the retrieve,
+  * but for now, we must use a query where clause.
+  * @param Koncept - the concept to filter on (intentionally mispelled to avoid naming clashes)
+  * @returns {List<Procedure>} a list of Procedures matching the concept, or null if null was passed in
+  */
+ define function ProceduresByConcept(Koncept System.Concept):
+   [Procedure] P where NullSafeToConcept(P.code) ~ Koncept
+
 /**
  * Procedures that are completed. In FHIR DSTU2, this is reflected by status: 'completed'.  In addition, the
  * notPerformed flag must be checked to ensure it is not 'true'.
@@ -286,6 +295,15 @@ define function ActiveOrCompletedMedicationOrder(MedList List<MedicationOrder>):
 // -------------------------------------------------- ENCOUNTERS ------------------------------------------------------
 
 /**
+ * Filters Encounters by a concept rather than by a ValueSet.  In CQL 1.3, this will be built into the retrieve,
+ * but for now, we must use a query where clause.
+ * @param Koncept - the concept to filter on (intentionally mispelled to avoid naming clashes)
+ * @returns {List<Encounter>} a list of Encounters matching the concept, or null if null was passed in
+ */
+define function EncountersByConcept(Koncept System.Concept):
+  [Encounter] E where exists( (E.type) ET where NullSafeToConcept(ET) ~ Koncept )
+
+/**
  * Encounters that are in progress. In FHIR DSTU2, this is reflected by status: 'in-progress'.
  * @see http://hl7.org/fhir/DSTU2/valueset-encounter-state.html
  * @param EncList - a list of Encounters
@@ -296,6 +314,15 @@ define function InProgress(EncList List<Encounter>):
     where E.status.value = 'in-progress'
     
 // -------------------------------------------------- ALLERGY INTOLERANCES ------------------------------------------------------
+
+/**
+ * Filters AllergyIntolerances by a concept rather than by a ValueSet.  In CQL 1.3, this will be built into the retrieve,
+ * but for now, we must use a query where clause.
+ * @param Koncept - the concept to filter on (intentionally mispelled to avoid naming clashes)
+ * @returns {List<AllergyIntolerance>} a list of Allergy Intolerances matching the concept, or null if null was passed in
+ */
+define function AllergyIntolerancesByConcept(Koncept System.Concept):
+  [AllergyIntolerance] A where NullSafeToConcept(A.substance) ~ Koncept
 
 /**
 * AllergyIntolerances that are active or confirmed.  In FHIR DSTU2, this is reflected by AllergyIntolerance
