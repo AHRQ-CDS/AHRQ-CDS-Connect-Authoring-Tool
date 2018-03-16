@@ -40,3 +40,10 @@ define "<%=element.name%>":
   union `);%>
 <%}) -%>
 
+<% unionedElements.forEach((element) => {-%>
+define "<%=element.name%>":
+  <%-element.expressionList.map(e => {
+  return e}).join(`
+  union `);%>
+<%}) -%>
+

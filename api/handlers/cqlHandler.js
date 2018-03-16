@@ -69,6 +69,7 @@ function createMultipleValueSetExpression(id, valuesets, type) {
   return groupedContext;
 }
 
+// This creates the context EJS uses to create a union of C3F function calls for comparing for a specific concept
 function createMultipleConceptExpression(id, concepts, type) {
   const groupedContext = {
     name: id,
@@ -76,6 +77,23 @@ function createMultipleConceptExpression(id, concepts, type) {
     type
   };
   return groupedContext;
+}
+
+// This creates the context EJS uses to simply union expression together and referencing that expression.
+function unionExpressions(context, name, unionedElementsList) {
+  let duplicateNameElements = unionedElementsList.filter(element => element.name.includes(name));
+  const count = duplicateNameElements.length;
+  let uniqueName = `${name}_union`;
+  if (count > 0) {
+    uniqueName = `${name}_union_${count}`;
+  }
+
+  const expressionToUnion = {
+    name: uniqueName,
+    expressionList: context.values
+  }
+  unionedElementsList.push(expressionToUnion);
+  context.values = [ `"${uniqueName}"` ];
 }
 
 function addGroupedValueSetExpression(referencedElements, resourceMap, valuesets, type, context) {
@@ -157,6 +175,7 @@ class CqlArtifact {
     this.paramContexts = [];
     this.referencedElements = [];
     this.referencedConceptElements = [];
+    this.unionedElements = [];
     this.contexts = [];
     this.conjunctions = [];
     this.conjunction_main = [];
@@ -203,11 +222,15 @@ class CqlArtifact {
         context.template = 'GenericStatement';
         if (concepts.length > 0) {
           addGroupedConceptExpression(this.referencedConceptElements, this.resourceMap, elementDetails, conceptTemplateName, context);
+          // If both value sets and concepts are applied, union the individual expression together to create valid CQL
+          unionExpressions(context, elementDetails.id, this.unionedElements);
         }
       } else { // elementDetails.valuesets.length = 1;
         if (concepts.length > 0) {
           addGroupedValueSetExpression(this.referencedElements, this.resourceMap, elementDetails, valuesetQueryName, context);
           addGroupedConceptExpression(this.referencedConceptElements, this.resourceMap, elementDetails, conceptTemplateName, context);
+          // If both value sets and concepts are applied, union the individual expression together to create valid CQL
+          unionExpressions(context, elementDetails.id, this.unionedElements);
           context.template = 'GenericStatement';
         } else {
           context.values = elementDetails.valuesets.map((vs) => {
