@@ -140,7 +140,7 @@ test('StaticParameter renders without crashing', () => {
 });
 
 test('StringParameter renders without crashing', () => {
-  const component = shallowRenderComponent(StringParameter, {updateInstance: jest.fn(), name: ''});
+  const component = shallowRenderComponent(StringParameter, { updateInstance: jest.fn(), name: '' });
   expect(component).toBeDefined();
 });
 

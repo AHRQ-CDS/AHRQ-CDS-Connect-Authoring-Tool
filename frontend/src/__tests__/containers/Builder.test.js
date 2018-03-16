@@ -22,13 +22,13 @@ const baseState = {
 
 const props = {
   artifact: {
-    expTreeInclude: {childInstances: []},
-    expTreeExclude: {childInstances: []},
-    booleanParameters:[],
+    expTreeInclude: { childInstances: [] },
+    expTreeExclude: { childInstances: [] },
+    booleanParameters: [],
     subpopulations: [],
 
   },
-  statusMessage: "",
+  statusMessage: '',
   templates: [],
   resources: {},
   loadTemplates: jest.fn(),
@@ -41,7 +41,7 @@ const props = {
   downloadArtifact: jest.fn(),
   saveArtifact: jest.fn(),
   updateAndSaveArtifact: jest.fn(),
-  downloadedArtifact: {elmErrors: []}
+  downloadedArtifact: { elmErrors: [] }
 };
 
 test('children have correct classes', () => {

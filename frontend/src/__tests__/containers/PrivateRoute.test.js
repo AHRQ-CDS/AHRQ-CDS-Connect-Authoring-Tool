@@ -11,7 +11,7 @@ test('Unauthenticated user is rendered a Not Logged In message', () => {
   };
   const props = {
     component: Artifact,
-    path: ""
+    path: ''
   };
   const component = shallowRenderContainer(PrivateRoute, props, createMockStore(state));
 
@@ -25,7 +25,7 @@ test('Authenticated user is rendered the correct component', () => {
   };
   const props = {
     component: Artifact,
-    path: ""
+    path: ''
   };
   const component = shallowRenderContainer(PrivateRoute, props, createMockStore(state));
 
