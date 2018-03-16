@@ -440,6 +440,28 @@ class CqlArtifact {
           }
           break;
         }
+        case 'medicationStatement_vsac': {
+          const medicationStatementValueSets = {
+            id: 'generic_medication_statement',
+            valuesets: [],
+            concepts: []
+          };
+          addConceptForCodes(parameter.codes, medicationStatementValueSets);
+          addValueSets(parameter, medicationStatementValueSets, 'valuesets');
+          this.setParamterContexts(medicationStatementValueSets, 'MedicationStatement', 'MedicationStatementsByConcept', context);
+          break;
+        }
+        case 'medicationOrder_vsac': {
+          const medicationOrderValueSets = {
+            id: 'generic_medication_order',
+            valuesets: [],
+            concepts: []
+          };
+          addConceptForCodes(parameter.codes, medicationOrderValueSets);
+          addValueSets(parameter, medicationOrderValueSets, 'valuesets');
+          this.setParamterContexts(medicationOrderValueSets, 'MedicationOrder', 'MedicationOrdersByConcept', context);
+          break;
+        }
         case 'procedure': {
           const procedureValueSets = ValueSets.procedures[parameter.value];
           context[parameter.id] = procedureValueSets;

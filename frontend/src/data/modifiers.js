@@ -4,10 +4,10 @@
 // Any id's that are the same as cqlTemplates are pure coincidence. The id matches within
 // src/components/builder/modifiers while the cqlTemplate matches the cqlTemplate in app/data/cql/modifiers
 
-const elementLists = ['list_of_observations', 'list_of_conditions', 'list_of_medications', 'list_of_procedures',
-  'list_of_allergy_intolerances', 'list_of_encounters'];
-const everyElement = elementLists.concat(['boolean', 'system_quantity', 'observation', 'condition', 'medication',
-  'procedure']);
+const elementLists = ['list_of_observations', 'list_of_conditions', 'list_of_medication_statements',
+  'list_of_medication_orders', 'list_of_procedures', 'list_of_allergy_intolerances', 'list_of_encounters'];
+const everyElement = elementLists.concat(['boolean', 'system_quantity', 'observation', 'condition',
+  'medication_statement', 'medication_order', 'procedure']);
 
 export default [
   // observations
@@ -134,12 +134,20 @@ export default [
   },
   // medications
   {
-    id: 'ActiveMedication',
+    id: 'ActiveMedicationStatement',
     name: 'Active',
-    inputTypes: ['list_of_medications'],
-    returnType: 'list_of_medications',
+    inputTypes: ['list_of_medication_statements'],
+    returnType: 'list_of_medication_statements',
     cqlTemplate: 'BaseModifier',
-    cqlLibraryFunction: 'C3F.Active'
+    cqlLibraryFunction: 'C3F.ActiveMedicationStatement'
+  },
+  {
+    id: 'ActiveMedicationOrder',
+    name: 'Active',
+    inputTypes: ['list_of_medication_orders'],
+    returnType: 'list_of_medication_orders',
+    cqlTemplate: 'BaseModifier',
+    cqlLibraryFunction: 'C3F.ActiveMedicationOrder'
   },
   // allergy intolerances
   {
@@ -167,13 +175,13 @@ export default [
     returnType: 'condition',
     cqlTemplate: 'BaseModifier',
     cqlLibraryFunction: 'C3F.MostRecent' },
-  {
-    id: 'MostRecentMedication',
-    name: 'Most Recent',
-    inputTypes: ['list_of_medications'],
-    returnType: 'medication',
-    cqlTemplate: 'BaseModifier',
-    cqlLibraryFunction: 'C3F.MostRecent' },
+  // { // TODO: not valid
+  //   id: 'MostRecentMedication',
+  //   name: 'Most Recent',
+  //   inputTypes: ['list_of_medications'],
+  //   returnType: 'medication',
+  //   cqlTemplate: 'BaseModifier',
+  //   cqlLibraryFunction: 'C3F.MostRecent' },
   {
     id: 'MostRecentProcedure',
     name: 'Most Recent',
@@ -202,16 +210,15 @@ export default [
     validator: { type: 'require', fields: ['value', 'unit'], args: null },
     cqlTemplate: 'LookBackModifier',
     cqlLibraryFunction: 'C3F.ConditionLookBack' },
-  {
-    id: 'LookBackMedication',
-    type: 'LookBack',
-    name: 'Look Back',
-    inputTypes: ['list_of_medications'],
-    returnType: 'list_of_medications',
-    values: { value: undefined, unit: undefined },
-    validator: { type: 'require', fields: ['value', 'unit'], args: null },
-    cqlTemplate: 'LookBackModifier',
-    cqlLibraryFunction: 'C3F.MedicationLookBack' },
+  // { // TODO: not valid
+  //   id: 'LookBackMedication',
+  //   type: 'LookBack',
+  //   name: 'Look Back',
+  //   inputTypes: ['list_of_medications'],
+  //   returnType: 'list_of_medications',
+  //   values: { value: undefined, unit: undefined },
+  //   cqlTemplate: 'LookBackModifier',
+  //   cqlLibraryFunction: 'C3F.MedicationLookBack' },
   {
     id: 'LookBackProcedure',
     type: 'LookBack',

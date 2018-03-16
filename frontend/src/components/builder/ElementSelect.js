@@ -38,7 +38,8 @@ const elementOptions = [
   { value: 'condition', label: 'Condition', vsacAuthRequired: true, template: 'GenericCondition_vsac' },
   { value: 'demographics', label: 'Demographics', vsacAuthRequired: false },
   { value: 'encounter', label: 'Encounter', vsacAuthRequired: true, template: 'GenericEncounter_vsac' },
-  { value: 'medication', label: 'Medication', vsacAuthRequired: true, template: 'GenericMedication_vsac' },
+  { value: 'medicationStatement', label: 'Medication Statement', vsacAuthRequired: true, template: 'GenericMedicationStatement_vsac' },
+  { value: 'medicationOrder', label: 'Medication Order', vsacAuthRequired: true, template: 'GenericMedicationOrder_vsac' },
   { value: 'observation', label: 'Observation', vsacAuthRequired: true, template: 'GenericObservation_vsac' },
   { value: 'booleanParameter', label: 'Parameters', vsacAuthRequired: false },
   { value: 'procedure', label: 'Procedure', vsacAuthRequired: true, template: 'GenericProcedure_vsac' }

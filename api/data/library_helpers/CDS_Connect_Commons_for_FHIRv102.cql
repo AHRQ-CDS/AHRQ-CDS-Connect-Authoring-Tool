@@ -249,6 +249,24 @@ define function ProcedureLookBack(ProcList List<Procedure>, LookBack System.Quan
 // -------------------------------------------------- MEDICATIONS ------------------------------------------------------
 
 /**
+ * Filters MedicationStatements by a concept rather than by a ValueSet.  In CQL 1.3, this will be built into the retrieve,
+ * but for now, we must use a query where clause.
+ * @param Koncept - the concept to filter on (intentionally mispelled to avoid naming clashes)
+ * @returns {List<MedicationStatement>} a list of MedicationStatement matching the concept, or null if null was passed in
+ */
+define function MedicationStatementsByConcept(Koncept System.Concept):
+  [MedicationStatement] M where NullSafeToConcept(M.medicationCodeableConcept) ~ Koncept
+
+/**
+ * Filters MedicationOrders by a concept rather than by a ValueSet.  In CQL 1.3, this will be built into the retrieve,
+ * but for now, we must use a query where clause.
+ * @param Koncept - the concept to filter on (intentionally mispelled to avoid naming clashes)
+ * @returns {List<MedicationOrder>} a list of MedicationOrders matching the concept, or null if null was passed in
+ */
+define function MedicationOrdersByConcept(Koncept System.Concept):
+  [MedicationOrder] M where NullSafeToConcept(M.medicationCodeableConcept) ~ Koncept
+
+/**
  * Medications that are active, according to a statement, but not necessarily verified via a prescription.  For example,
  * medications that a patient has self-reported to be taking.  In FHIR DSTU2, this is reflected by MedicationStatement
  * with status 'active', no flag indicating it wasn't taken, and no end date or an end date in the future.
