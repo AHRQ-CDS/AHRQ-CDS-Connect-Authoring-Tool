@@ -329,8 +329,6 @@ export default class TemplateInstance extends Component {
       selectedCode = templateInstance.parameters[1].codes;
     }
 
-    const allowCodeSelect = (templateInstance.name === 'Observation' || templateInstance.name === 'Condition');
-
     const elementModalLabels = {
       openButtonText: 'View/Edit Value Set',
       closeButtonText: 'Cancel'

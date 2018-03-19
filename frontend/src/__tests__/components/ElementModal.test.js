@@ -119,10 +119,17 @@ describe('with modal open', () => {
     expect(internalModal.find('.search__table tbody tr').first().text()).toEqual(codeToString);
     expect(input.node.value).toEqual(`${element.name} (${element.oid})`);
 
+    // Set selected values on base template
+    const templateWithSelectedValue = { ...component.props().template };
+    templateWithSelectedValue.parameters[0].value = element.name;
+    templateWithSelectedValue.parameters[1].value = element.oid;
+    templateWithSelectedValue.parameters[1].vsName = element.name;
+    templateWithSelectedValue.parameters[1].static = true;
+
     // Clicking the select button class the onElementSelected function
     const selectButton = internalModal.find('.element-modal__search button');
     selectButton.simulate('click');
-    expect(component.props().onElementSelected).toBeCalledWith(component.props().template);
+    expect(component.props().onElementSelected).toBeCalledWith(templateWithSelectedValue);
   });
 
   test('calls vsac search action when searching', () => {

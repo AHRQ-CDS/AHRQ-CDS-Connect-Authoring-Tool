@@ -56,7 +56,7 @@ describe('the select element field', () => {
   it('starts with a list of all elements', () => {
     elementField.find('input').simulate('change');
     expect(elementField.hasClass('is-open')).toBeTruthy();
-    expect(elementField.find('.element-select__option')).toHaveLength(8);
+    expect(elementField.find('.element-select__option')).toHaveLength(9);
   });
 
   it('options display correct values and have key icon if VSAC auth required', () => {
@@ -75,8 +75,8 @@ describe('the select element field', () => {
     setInputValue(elementField.find('input'), 'Med');
     const options = elementField.find('.element-select__option');
 
-    expect(options).toHaveLength(1);
-    expect(options.at(0).text().includes('Medication')).toBeTruthy();
+    expect(options).toHaveLength(2);
+    expect(options.at(0).text().includes('Medication Statement')).toBeTruthy();
   });
 
   it('selects a generic type without VSAC authentication and adds it to the workspace', () => {
@@ -121,16 +121,16 @@ describe('the select element field', () => {
     unauthObsResult.simulate('mouseDown');
 
     // Choosing VSAC auth element with recent timeLastAuthenticated has 2 VSAC control buttons.
-    expect(component.state().selectedElement).toEqual(genericElementTypes[5]);
+    expect(component.state().selectedElement).toEqual(genericElementTypes[6]);
     expect(component.state().selectedElement.vsacAuthRequired).toEqual(true);
     expect(component.find('.element-select__element-field').length).toEqual(1);
     expect(component.find('.vsac-authenticate').length).toEqual(1);
-    expect(component.find('.vsac-authenticate button').length).toEqual(2);
+    expect(component.find('.vsac-authenticate button').length).toEqual(3);
     expect(component.find('.vsac-authenticate button').at(0).text()).toEqual(' VSAC Authenticated');
     expect(component.find('.vsac-authenticate button').at(1).text()).toEqual(' Choose Value Sets');
 
     // Choosing VSAC auth element with recent timeLastAuthenticated has 1 VSAC control buttons.
-    expect(unauthenticatedComponent.state().selectedElement).toEqual(genericElementTypes[5]);
+    expect(unauthenticatedComponent.state().selectedElement).toEqual(genericElementTypes[6]);
     expect(unauthenticatedComponent.state().selectedElement.vsacAuthRequired).toEqual(true);
     expect(unauthenticatedComponent.find('.element-select__element-field').length).toEqual(1);
     expect(unauthenticatedComponent.find('.vsac-authenticate').length).toEqual(1);

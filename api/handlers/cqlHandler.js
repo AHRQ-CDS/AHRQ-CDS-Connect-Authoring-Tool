@@ -218,17 +218,41 @@ class CqlArtifact {
         concepts = context.values;
       }
       if (elementDetails.valuesets.length > 1) {
-        addGroupedValueSetExpression(this.referencedElements, this.resourceMap, elementDetails, valuesetQueryName, context);
+        addGroupedValueSetExpression(
+          this.referencedElements,
+          this.resourceMap,
+          elementDetails,
+          valuesetQueryName,
+          context
+        );
         context.template = 'GenericStatement';
         if (concepts.length > 0) {
-          addGroupedConceptExpression(this.referencedConceptElements, this.resourceMap, elementDetails, conceptTemplateName, context);
+          addGroupedConceptExpression(
+            this.referencedConceptElements,
+            this.resourceMap,
+            elementDetails,
+            conceptTemplateName,
+            context
+          );
           // If both value sets and concepts are applied, union the individual expression together to create valid CQL
           unionExpressions(context, elementDetails.id, this.unionedElements);
         }
       } else { // elementDetails.valuesets.length = 1;
         if (concepts.length > 0) {
-          addGroupedValueSetExpression(this.referencedElements, this.resourceMap, elementDetails, valuesetQueryName, context);
-          addGroupedConceptExpression(this.referencedConceptElements, this.resourceMap, elementDetails, conceptTemplateName, context);
+          addGroupedValueSetExpression(
+            this.referencedElements,
+            this.resourceMap,
+            elementDetails,
+            valuesetQueryName,
+            context
+          );
+          addGroupedConceptExpression(
+            this.referencedConceptElements,
+            this.resourceMap,
+            elementDetails,
+            conceptTemplateName,
+            context
+          );
           // If both value sets and concepts are applied, union the individual expression together to create valid CQL
           unionExpressions(context, elementDetails.id, this.unionedElements);
           context.template = 'GenericStatement';
@@ -471,7 +495,12 @@ class CqlArtifact {
           };
           addConceptForCodes(parameter.codes, medicationStatementValueSets);
           addValueSets(parameter, medicationStatementValueSets, 'valuesets');
-          this.setParamterContexts(medicationStatementValueSets, 'MedicationStatement', 'MedicationStatementsByConcept', context);
+          this.setParamterContexts(
+            medicationStatementValueSets,
+            'MedicationStatement',
+            'MedicationStatementsByConcept',
+            context
+          );
           break;
         }
         case 'medicationOrder_vsac': {
@@ -542,7 +571,12 @@ class CqlArtifact {
           };
           addConceptForCodes(parameter.codes, allergyIntoleranceValueSets);
           addValueSets(parameter, allergyIntoleranceValueSets, 'valuesets');
-          this.setParamterContexts(allergyIntoleranceValueSets, 'AllergyIntolerance', 'AllergyIntolerancesByConcept', context);
+          this.setParamterContexts(
+            allergyIntoleranceValueSets,
+            'AllergyIntolerance',
+            'AllergyIntolerancesByConcept',
+            context
+          );
           break;
         }
         case 'pregnancy': {

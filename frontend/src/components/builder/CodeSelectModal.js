@@ -46,6 +46,7 @@ class CodeSelectModal extends Component {
   }
 
   closeCodeSelectModal = () => {
+    this.handleSearchValueChange({ target: { value: '' } }); // Always start with no search term filtering
     // Reset modal when closing
     this.setState({
       showCodeSelectModal: false,
@@ -153,6 +154,7 @@ class CodeSelectModal extends Component {
               <div className="element-modal__search">
                 <input
                   type="text"
+                  id="code-input"
                   placeholder={ codeInputLabel }
                   aria-label={ codeInputLabel }
                   title={ codeInputLabel }
@@ -173,6 +175,7 @@ class CodeSelectModal extends Component {
                     this.state.displayOtherInput ?
                     <input
                       type="text"
+                      id="other-code-system"
                       placeholder={ otherInputLabel }
                       aria-label={ otherInputLabel }
                       title={ otherInputLabel }
