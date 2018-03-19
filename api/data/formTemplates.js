@@ -24,6 +24,7 @@ module.exports = [
         id: 'AgeRange',
         name: 'Age Range',
         returnType: 'boolean',
+        validator: {type: 'or', fields: ['min_age', 'max_age'], args: null},
         suppressedModifiers: ['BooleanNot', 'BooleanComparison'],
         parameters: [
           { id: 'element_name', type: 'string', name: 'Element Name' },

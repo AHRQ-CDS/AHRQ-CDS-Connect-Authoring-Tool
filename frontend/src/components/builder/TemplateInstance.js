@@ -18,6 +18,8 @@ import ValueComparison from './modifiers/ValueComparison';
 import ValueComparisonObservation from './modifiers/ValueComparisonObservation';
 import WithUnit from './modifiers/WithUnit';
 
+import Validators from '../../utils/validators';
+
 function getInstanceName(instance) {
   return (instance.parameters.find(p => p.id === 'element_name') || {}).value;
 }
@@ -308,9 +310,27 @@ export default class TemplateInstance extends Component {
 
   getPath = () => this.props.getPath(this.props.templateInstance.uniqueId)
 
+  validateElement = () => {
+    // TODO Add in validation system here.
+    if(this.props.templateInstance.validator){
+      let validator = Validators[this.props.templateInstance.validator.type];
+      let fields = this.props.templateInstance.validator.fields;
+      let args = this.props.templateInstance.validator.args;
+      let values = fields.map((f) => this.state[f]);
+      let names = fields.map((f) => this.props.templateInstance.parameters.find(el => el.id == f).name);
+      if(!validator.check(values, args)){
+        return validator.warning(names, args);
+      }
+    }
+    return;
+  }
+
   renderBody() {
+    let validationError = this.validateElement();
+
     return (
       <div className="element__body">
+        {validationError?validationError:null}
         <div>
           {this.props.templateInstance.parameters.map((param, index) =>
             // todo: each parameter type should probably have its own component
