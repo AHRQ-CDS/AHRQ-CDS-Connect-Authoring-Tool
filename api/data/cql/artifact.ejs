@@ -5,7 +5,7 @@ using <%=dataModel.name%> version '<%= dataModel.version %>'
 include <%=includeLibrary.name%> version '<%=includeLibrary.version%>'<%if (includeLibrary.alias) {%> called <%=includeLibrary.alias%> <%}%>
 <%})-%>
 <% codeSystemMap.forEach((resource, key) => {%>
-codesystem "<%=key%>": '<%=resource%>' <%}) -%>
+codesystem "<%=key%>": '<%=resource.id%>' <%}) -%>
 
 <% resourceMap.forEach((resource, key) => {%>
 valueset "<%=resource.name%>": '<%=resource.oid%>'<%});-%>

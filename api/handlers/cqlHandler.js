@@ -21,7 +21,7 @@ const modifierMap = loadTemplates(modifierPath);
 // Each library will be included. Aliases are optional.
 const includeLibraries = [
   { name: 'FHIRHelpers', version: '1.0.2', alias: 'FHIRHelpers' },
-  { name: 'CDS_Connect_Commons_for_FHIRv102', version: '1.1.0', alias: 'C3F' },
+  { name: 'CDS_Connect_Commons_for_FHIRv102', version: '1.2.0', alias: 'C3F' },
   { name: 'CDS_Connect_Conversions', version: '1', alias: 'Convert' }
 ];
 
@@ -114,7 +114,7 @@ function addGroupedValueSetExpression(referencedElements, resourceMap, valuesets
 
   // Add value sets to be grouped onto the list of value sets defined at the top
   valuesets.valuesets.forEach(vs => {
-    const count = getCountForUniqueExpressionName(vs, resourceMap);
+    const count = getCountForUniqueExpressionName(vs, resourceMap, 'name', 'oid');
     if (count > 0) {
       vs.name = `${vs.name}_${count}`;
     }
@@ -203,10 +203,25 @@ class CqlArtifact {
       const values = [];
       elementDetails.concepts.forEach((concept) => {
         concept.codes.forEach((code) => {
-          this.codeSystemMap.set(code.codeSystem.name, code.codeSystem.id);
-          this.codeMap.set(code.name, code);
+          // Add Code Systems
+          const cs = code.codeSystem;
+          const codeSystemCount = getCountForUniqueExpressionName(cs, this.codeSystemMap, 'name', 'id');
+          if (codeSystemCount > 0) {
+            cs.name = `${cs.name}_${codeSystemCount}`;
+          }
+
+          // Add individual codes
+          const codeCount = getCountForUniqueExpressionName(code, this.codeMap, 'name', 'codeSystem');
+          if (codeCount > 0) {
+            code.name = `${code.name}_${codeCount}`;
+          }
         });
-        this.conceptMap.set(concept.name, concept);
+
+        // Add concepts
+        const conceptCount = getCountForUniqueExpressionName(concept, this.conceptMap, 'name', 'codes');
+        if (conceptCount > 0) {
+          concept.name = `${concept.name}_${conceptCount}`;
+        }
         values.push(concept.name);
       });
       context.values = values;
@@ -258,7 +273,7 @@ class CqlArtifact {
           context.template = 'GenericStatement';
         } else {
           context.values = elementDetails.valuesets.map((vs) => {
-            const count = getCountForUniqueExpressionName(vs, this.resourceMap);
+            const count = getCountForUniqueExpressionName(vs, this.resourceMap, 'name', 'oid');
             if (count > 0) {
               return `${vs.name}_${count}`;
             }
@@ -451,36 +466,6 @@ class CqlArtifact {
               medicationText = `C3F.Active${medication.type}(${medicationText})`;
             }
             return medicationText;
-          });
-          if (activeApplied) {
-            element.modifiers.shift(); // remove 'active' modifier because we supply it above
-          }
-          break;
-        }
-        case 'medication_vsac': {
-          const medicationValueSets = {
-            name: _.uniqueId('generic_medication_'),
-            medications: [
-              { name: `${parameter.vsName} VS`, oid: parameter.value }
-            ]
-          };
-          // TODO Look through entire modifier list for `active` instead of just head
-          const activeApplied = (!_.isEmpty(element.modifiers) && _.head(element.modifiers).id === 'ActiveMedication');
-          medicationValueSets.medications.map((medication) => {
-            const count = getCountForUniqueExpressionName(medication, this.resourceMap);
-            let name = medication.name;
-            if (count > 0) {
-              name = `${medication.name}_${count}`;
-            }
-            let medicationStatement = `[MedicationStatement: "${name}"]`;
-            let medicationOrder = `[MedicationOrder: "${name}"]`;
-            if (activeApplied) {
-              context.values.push(`C3F.ActiveMedicationStatement(${medicationStatement})`);
-              context.values.push(`C3F.ActiveMedicationOrder(${medicationOrder})`);
-            } else {
-              context.values.push(medicationStatement);
-              context.values.push(medicationOrder);
-            }
           });
           if (activeApplied) {
             element.modifiers.shift(); // remove 'active' modifier because we supply it above
@@ -775,41 +760,52 @@ function constructOneRecommendationConditional(recommendation, text) {
   return `if ${conditionalText} then `;
 }
 
-function getCountForUniqueExpressionName(valueset, map) {
+/**
+ * Checks a map to see if an identical expression is being added. Adds new expressions with a unique name.
+ *
+ * @param {Object} expression The expression to add to the map, and subsequently the CQL.
+ * @param {Map} map The map to add the expression to.
+ * @param {string} nameKey The key of the expression object to check for a unique expression name.
+ * @param {string} contentKey The key of the expression object that provides the content of an expression, used to
+ * decide if the expression is indeed unique.
+ * @return {number} The number that was appended to the expression if it was not unique.
+ */
+function getCountForUniqueExpressionName(expression, map, nameKey, contentKey) {
   if (map.size > 0) {
     let newOID = true;
     let count = 0;
     let existingOID = 0;
     map.forEach((val, key) => {
       const baseKeyArray = key.split('_');
-      // Check if the last entry is a number, meaning _n was appended to account for nonunique VS names.
+      // Check if the last entry is a number, meaning _n was appended to account for nonunique expression names.
       const lastChar = baseKeyArray[baseKeyArray.length - 1];
-      if (Number.isInteger(parseInt(lastChar))) {
+      if (baseKeyArray.length > 1 && Number.isInteger(parseInt(lastChar))) {
         baseKeyArray.pop();
       }
-      const baseKeyString = baseKeyArray.join('_'); // The original VS name
-      if (baseKeyString === valueset.name) {
-        // If the name and OID of the VS are the same, the same VS is being used. Don't add it to the CQL.
-        if (val.oid === valueset.oid) {
+      const baseKeyString = baseKeyArray.join('_'); // The original expression name
+      if (_.isEqual(baseKeyString, expression[nameKey])) {
+        // If the name and content of the expressions are the same, the same expression is being used.
+        // Don't add it to the CQL.
+        if (_.isEqual(val[contentKey], expression[contentKey])) {
           newOID = false;
           existingOID = count;
         } else {
-          // If the VS name has been used but the OID is unique, increment the count to append to the VS name.
+          // If the expression name has been used but the content is unique, increment the count to append to the name.
           count = count + 1;
         }
       }
     });
     if (newOID) {
-      const cloneVS = _.cloneDeep(valueset);
+      const cloneExpression = _.cloneDeep(expression);
       if (count > 0) {
-        cloneVS.name += `_${count}`;
+        cloneExpression[nameKey] += `_${count}`;
       }
-      map.set(cloneVS.name, cloneVS);
+      map.set(cloneExpression[nameKey], cloneExpression);
       return count;
     }
     return existingOID;
   } else {
-    map.set(valueset.name, valueset);
+    map.set(expression[nameKey], expression);
     return 0;
   }
 }

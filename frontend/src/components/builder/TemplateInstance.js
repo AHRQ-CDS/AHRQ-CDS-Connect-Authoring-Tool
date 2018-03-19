@@ -397,7 +397,8 @@ export default class TemplateInstance extends Component {
         );
       case 'observation_vsac':
       case 'condition_vsac':
-      case 'medication_vsac':
+      case 'medicationStatement_vsac':
+      case 'medicationOrder_vsac':
       case 'procedure_vsac':
       case 'encounter_vsac':
       case 'allergyIntolerance_vsac':

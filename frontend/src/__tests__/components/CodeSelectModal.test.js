@@ -86,8 +86,6 @@ describe('with modal open', () => {
     expect(component.state().showCodeSelectModal).toEqual(false);
   });
 
-  // JULIA TO test: - rerun linting
-
   test('can input a code and code system and apply to an element', () => {
     const code = '123-4';
     const selectButton = internalModal.find('.element-modal__search .element-modal__searchbutton');
