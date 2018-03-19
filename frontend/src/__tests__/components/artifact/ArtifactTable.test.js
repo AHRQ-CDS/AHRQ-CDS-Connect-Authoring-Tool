@@ -22,7 +22,9 @@ test('ArtifactTable renders without crashing', () => {
   const component = shallowRenderComponent(ArtifactTable, {
     match,
     afterAddArtifact: afterAddArtifactMock,
-    artifacts: artifactsMock
+    artifacts: artifactsMock,
+    deleteArtifact: jest.fn(),
+    updateAndSaveArtifact: jest.fn()
   });
 
   expect(component).toBeDefined();
@@ -33,7 +35,9 @@ test('ArtifactTable renders artifacts', () => {
   const component = shallowRenderComponent(ArtifactTable, {
     match,
     afterAddArtifact: afterAddArtifactMock,
-    artifacts: artifactsMock
+    artifacts: artifactsMock,
+    deleteArtifact: jest.fn(),
+    updateAndSaveArtifact: jest.fn()
   });
 
   expect(component.find('tbody tr')).toHaveLength(artifactsMock.length);
@@ -44,7 +48,9 @@ test('ArtifactTable allows editing of artifacts', () => {
   const component = fullRenderComponent(ArtifactTable, {
     match,
     afterAddArtifact: afterAddArtifactMock,
-    artifacts: artifactsMock
+    artifacts: artifactsMock,
+    deleteArtifact: jest.fn(),
+    updateAndSaveArtifact: jest.fn()
   });
 
   const button = component.find('button.edit-artifact-button').first();
@@ -78,7 +84,8 @@ test('ArtifactTable delete opens confirmation modal and deletes from modal', () 
     afterAddArtifact: afterAddArtifactMock,
     artifacts: artifactsMock,
     editArtifact: jest.fn(),
-    deleteArtifact: deleteArtifactMock
+    deleteArtifact: deleteArtifactMock,
+    updateAndSaveArtifact: jest.fn()
   });
 
   const confirmDeleteModal = component.children().findWhere(n => (

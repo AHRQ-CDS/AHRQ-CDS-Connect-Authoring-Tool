@@ -38,7 +38,8 @@ beforeEach(() => {
     createTemplateInstance,
     booleanParameters: [],
     treeName,
-    templates: elementGroups
+    templates: elementGroups,
+    artifact: {}
   });
 });
 

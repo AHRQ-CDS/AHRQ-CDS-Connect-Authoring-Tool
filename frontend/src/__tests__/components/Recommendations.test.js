@@ -20,7 +20,9 @@ beforeEach(() => {
 
   const baseProps = {
     updateRecommendations,
-    setActiveTab: jest.fn()
+    setActiveTab: jest.fn(),
+    templates: [],
+    updateSubpopulations: jest.fn()
   };
 
   component = fullRenderComponent(Recommendations, {

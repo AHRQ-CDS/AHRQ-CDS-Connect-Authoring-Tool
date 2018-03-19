@@ -8,7 +8,8 @@ import Root from '../containers/Root';
 import { shallowRenderComponent } from '../utils/test_helpers';
 
 test('Routes renders correct routes', () => {
-  const component = shallowRenderComponent(Root);
+  const props = { store: { subscribe: jest.fn(), dispatch: jest.fn(), getState: jest.fn() } };
+  const component = shallowRenderComponent(Root, props);
   const pathMap = component.find(Route).reduce((paths, route) => {
     Object.assign(paths, { [route.props().path]: route.props().component });
     return paths;
