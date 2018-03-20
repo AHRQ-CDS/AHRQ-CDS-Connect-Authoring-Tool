@@ -1,0 +1,20 @@
+.element-modal__container .element-modal__search {
+  padding: 1em 2em;
+
+  &-system {
+    margin: 0;
+
+    .Select-input input {
+      border: 0;
+      box-shadow: none;
+    }
+  }
+
+  &-other-system {
+    margin-top: 5px;
+  }
+
+  input {
+    width: inherit;
+  }
+}

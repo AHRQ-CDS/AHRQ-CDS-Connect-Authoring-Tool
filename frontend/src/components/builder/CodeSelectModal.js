@@ -115,7 +115,7 @@ class CodeSelectModal extends Component {
 
   render() {
     const codeInputLabel = 'Enter code';
-    const otherInputLabel = 'Enter code system URI or OID';
+    const otherInputLabel = 'Enter system URI or OID';
     let buttonLabels = {
       openButtonText: 'Choose Code',
       closeButtonText: 'Close'
@@ -135,10 +135,11 @@ class CodeSelectModal extends Component {
     ];
 
     return (
-      <span className="element-select__modal element-modal">
+      <span className="code-select-modal element-select__modal element-modal">
         <button className="primary-button" onClick={this.openCodeSelectModal}>
           <FontAwesome name="medkit" />{' '}{buttonLabels.openButtonText}
         </button>
+
         <Modal
           isOpen={ this.state.showCodeSelectModal }
           onRequestClose={ this.closeCodeSelectModal }
@@ -150,9 +151,11 @@ class CodeSelectModal extends Component {
             <header className="modal__header">
               <span className="modal__heading">Choose Code</span>
             </header>
+
             <main className="modal__body">
-              <div className="element-modal__search">
+              <div className="element-modal__search row">
                 <input
+                  className="element-modal__search-code col-6"
                   type="text"
                   id="code-input"
                   placeholder={ codeInputLabel }
@@ -161,18 +164,24 @@ class CodeSelectModal extends Component {
                   value={ this.state.codeText }
                   onChange={ this.handleSearchValueChange }
                 />
+
                 <Select
-                  className="element-select__element-field"
+                  className="element-modal__search-system col-4"
                   placeholder={'Select code system'}
                   aria-label={'Select code system'}
                   clearable={false}
                   value={this.state.selectedCS}
                   options={codeSystemOptions}
                   onChange={this.onCodeSystemSelected}
-                  />
-                  {/* TODO style this under the select element */}
-                  {
-                    this.state.displayOtherInput ?
+                />
+
+                <button className="primary-button element-modal__search-button col-2" onClick={ this.chooseCode }>
+                  Select
+                </button>
+
+                <div className="col-6"></div>
+                {this.state.displayOtherInput ?
+                  <div className="element-modal__search-other-system col-4">
                     <input
                       type="text"
                       id="other-code-system"
@@ -182,13 +191,13 @@ class CodeSelectModal extends Component {
                       value={ this.state.codeSystemText }
                       onChange={ this.handleOtherCodeSystemChange }
                     />
-                    : null
-                  }
-                  <button className="primary-button element-modal__searchbutton" onClick={ this.chooseCode }>
-                    Select
-                  </button>
+                  </div>
+                  : null
+                }
+                <div className="col-2"></div>
               </div>
             </main>
+
             <footer className="modal__footer">
               <button className="primary-button"
                       onClick={ this.closeCodeSelectModal }

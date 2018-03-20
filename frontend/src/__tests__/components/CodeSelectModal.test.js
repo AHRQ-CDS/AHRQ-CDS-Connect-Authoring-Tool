@@ -88,7 +88,7 @@ describe('with modal open', () => {
 
   test('can input a code and code system and apply to an element', () => {
     const code = '123-4';
-    const selectButton = internalModal.find('.element-modal__search .element-modal__searchbutton');
+    const selectButton = internalModal.find('.element-modal__search .element-modal__search-button');
 
     // Enter code
     setInputValue(codeInput, code);
