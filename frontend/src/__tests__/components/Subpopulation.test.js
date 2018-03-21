@@ -39,7 +39,7 @@ beforeEach(() => {
     parameters: [],
     treeName,
     templates: elementGroups,
-    artifact: {}
+    artifact: {},
     loginVSACUser: jest.fn(),
     setVSACAuthStatus: jest.fn(),
     vsacStatus: '',

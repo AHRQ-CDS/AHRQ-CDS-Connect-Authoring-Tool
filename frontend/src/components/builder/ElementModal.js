@@ -77,9 +77,11 @@ class ElementModal extends Component {
     const selectedTemplate = _.cloneDeep(this.props.template);
     if (selectedTemplate === undefined) return;
 
-    // TODO: When you can select multiple, the following array may need to be created differently in order to update
-    // properly. The structure of the objects should stay the same.
-    const valuesetsToAdd = [{ name: element.name, oid: element.oid }];
+    let valuesetsToAdd = selectedTemplate.parameters[1].valueSets;
+    if (valuesetsToAdd === undefined) {
+      valuesetsToAdd = [];
+    }
+    valuesetsToAdd.push({ name: element.name, oid: element.oid });
 
     // Adding a new element and editing an exisitng element use different functions that take different parameters
     if (this.props.onElementSelected) {
@@ -114,7 +116,7 @@ class ElementModal extends Component {
   closeModal = () => {
     this.handleSearchValueChange({ target: { value: '' } }); // Always start with no search term filtering
     this.props.searchVSACByKeyword('');
-    this.setState({ isOpen: false, selectedElement: null });
+    this.setState({ isOpen: false, selectedElement: null, searchValue: '' });
   }
 
   enterKeyCheck = (func, argument, event) => {
@@ -203,11 +205,69 @@ class ElementModal extends Component {
     return null;
   }
 
+  renderSelectButton = () => {
+    if (this.props.viewOnly) {
+      return null;
+    }
+    if (this.state.selectedElement) {
+      return (
+        <button className="primary-button element-modal__searchbutton" onClick={ this.handleChosenVS }>
+          Select
+        </button>
+      );
+    }
+    return (
+      <button className="primary-button element-modal__searchbutton" onClick={ this.searchVSAC }>
+        Search
+      </button>
+    );
+  }
+
+  renderBackButton = () => {
+    if (this.props.viewOnly) {
+      return null;
+    }
+    if (this.state.selectedElement) {
+      return (
+        <span className="nav-icon"
+          role="button"
+          tabIndex="0"
+          onClick={this.backToSearchResults}
+          onKeyDown={ e => this.enterKeyCheck(this.backToSearchResults, null, e) }>
+          <FontAwesome name="arrow-left" />
+        </span>
+      );
+    }
+    return null;
+  }
+
+  renderButtonToOpenModal = (buttonLabels) => {
+    if (this.props.useIconButton) {
+      return (
+        <span
+          role="button"
+          tabIndex="0"
+          onClick={this.openModal}
+          onKeyDown={ e => this.enterKeyCheck(this.openModal, null, e) }>
+          <FontAwesome name={this.props.iconForButton}/>
+        </span>
+      );
+    }
+    return (
+      <button
+        className="primary-button"
+        onClick={ this.openModal }
+        onKeyDown={ e => this.enterKeyCheck(this.openModal, null, e) }>
+        <FontAwesome name="th-list" />{' '}{buttonLabels.openButtonText}
+      </button>
+    );
+  }
+
   render() {
     const modalInputLabel = 'Enter value set keyword...';
 
     let buttonLabels = {
-      openButtonText: 'Choose Value Sets',
+      openButtonText: 'Add Value Set',
       closeButtonText: 'Close'
     };
     if (this.props.labels) {
@@ -223,12 +283,7 @@ class ElementModal extends Component {
 
     return (
       <span className={ `${this.props.className} element-modal` }>
-        <button
-          className="primary-button"
-          onClick={ this.openModal }
-          onKeyDown={ e => this.enterKeyCheck(this.openModal, null, e) }>
-          <FontAwesome name="th-list" />{' '}{buttonLabels.openButtonText}
-        </button>
+        {this.renderButtonToOpenModal(buttonLabels)}
         <Modal
           isOpen={ this.state.isOpen }
           onRequestClose={ this.closeModal }
@@ -247,14 +302,7 @@ class ElementModal extends Component {
             </header>
             <main className="modal__body">
               <div className="element-modal__search">
-                {this.state.selectedElement ?
-                  <span className="nav-icon"
-                    role="button"
-                    tabIndex="0"
-                    onClick={this.backToSearchResults}
-                    onKeyDown={ e => this.enterKeyCheck(this.backToSearchResults, null, e) }>
-                    <FontAwesome name="arrow-left" />
-                  </span> : null}
+                  {this.renderBackButton()}
                 <input
                   type="text"
                   disabled={this.state.selectedElement}
@@ -264,15 +312,7 @@ class ElementModal extends Component {
                   value={ inputDisplayValue }
                   onChange={ this.handleSearchValueChange }
                   onKeyDown={ e => this.enterKeyCheck(this.searchVSAC, this.state.searchValue, e)}/>
-                  {
-                    this.state.selectedElement ?
-                      <button className="primary-button element-modal__searchbutton" onClick={ this.handleChosenVS }>
-                        Select
-                      </button> :
-                      <button className="primary-button element-modal__searchbutton" onClick={ this.searchVSAC }>
-                        Search
-                      </button>
-                  }
+                {this.renderSelectButton()}
               </div>
               <div className="element-modal__content">
                 { this.renderSearchResultsTable() }

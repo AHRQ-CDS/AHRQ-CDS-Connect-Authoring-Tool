@@ -127,7 +127,7 @@ describe('the select element field', () => {
     expect(component.find('.vsac-authenticate').length).toEqual(1);
     expect(component.find('.vsac-authenticate button').length).toEqual(3);
     expect(component.find('.vsac-authenticate button').at(0).text()).toEqual(' VSAC Authenticated');
-    expect(component.find('.vsac-authenticate button').at(1).text()).toEqual(' Choose Value Sets');
+    expect(component.find('.vsac-authenticate button').at(1).text()).toEqual(' Add Value Set');
 
     // Choosing VSAC auth element with recent timeLastAuthenticated has 1 VSAC control buttons.
     expect(unauthenticatedComponent.state().selectedElement).toEqual(genericElementTypes[6]);

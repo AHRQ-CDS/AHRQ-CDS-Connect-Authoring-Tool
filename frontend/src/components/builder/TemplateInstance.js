@@ -241,6 +241,53 @@ export default class TemplateInstance extends Component {
     this.setAppliedModifiers(modifiers);
   }
 
+  viewValueSetDetails = valueSet => (
+    <ElementModal
+      className="element-select__modal"
+      updateElement={this.updateInstance}
+      searchVSACByKeyword={this.props.searchVSACByKeyword}
+      isSearchingVSAC={this.props.isSearchingVSAC}
+      vsacSearchResults={this.props.vsacSearchResults}
+      vsacSearchCount={this.props.vsacSearchCount}
+      template={this.props.templateInstance}
+      getVSDetails={this.props.getVSDetails}
+      isRetrievingDetails={this.props.isRetrievingDetails}
+      vsacDetailsCodes={this.props.vsacDetailsCodes}
+      selectedElement={valueSet}
+      useIconButton={true}
+      iconForButton={'eye'}
+      viewOnly={true}
+    />
+  )
+
+  deleteValueSet = (valueSetToDelete) => {
+    const templateInstanceClone = _.cloneDeep(this.props.templateInstance);
+    if (templateInstanceClone.parameters[1] && templateInstanceClone.parameters[1].valueSets) {
+      const updatedValueSets = templateInstanceClone.parameters[1].valueSets;
+      const indexOfVSToRemove = updatedValueSets.findIndex(vs =>
+        (vs.name === valueSetToDelete.name && vs.oid === valueSetToDelete.oid));
+      updatedValueSets.splice(indexOfVSToRemove, 1);
+      const arrayToUpdate = [
+        { [templateInstanceClone.parameters[1].id]: updatedValueSets, attributeToEdit: 'valueSets' }
+      ];
+      this.updateInstance(arrayToUpdate);
+    }
+  }
+
+  deleteCode = (codeToDelete) => {
+    const templateInstanceClone = _.cloneDeep(this.props.templateInstance);
+    if (templateInstanceClone.parameters[1] && templateInstanceClone.parameters[1].codes) {
+      const updatedCodes = templateInstanceClone.parameters[1].codes;
+      const indexOfCodeToRemove = updatedCodes.findIndex(code =>
+        (code.code === codeToDelete.code && _.isEqual(code.codeSystem, codeToDelete.codeSystem)));
+      updatedCodes.splice(indexOfCodeToRemove, 1);
+      const arrayToUpdate = [
+        { [templateInstanceClone.parameters[1].id]: updatedCodes, attributeToEdit: 'codes' }
+      ];
+      this.updateInstance(arrayToUpdate);
+    }
+  }
+
   renderModifierSelect = () => (
     <div>
       { (
@@ -281,6 +328,17 @@ export default class TemplateInstance extends Component {
                     Selected Value Set{ vsacParameter.valueSets.length > 1 ? ` ${i + 1}` : ''}:
                   </span>
                   {` ${vs.name} (${vs.oid})`}
+                  {this.viewValueSetDetails(vs)}
+                  <span
+                    role="button"
+                    tabIndex="0"
+                    onClick={() => this.deleteValueSet(vs)}
+                    onKeyPress={(e) => {
+                      e.which = e.which || e.keyCode;
+                      if (e.which === 13) this.deleteValueSet(vs);
+                    }}>
+                    <FontAwesome name='close'/>
+                  </span>
                 </div>
               ))}
           </div>
@@ -302,6 +360,16 @@ export default class TemplateInstance extends Component {
                   <span className="bold">Selected Code{vsacParameter.codes.length > 1 ? ` ${i + 1}` : ''}: </span>
                   {/* Code name will come with validation */}
                   {`${code.codeSystem.name} (${code.code})`}
+                  <span
+                    role="button"
+                    tabIndex="0"
+                    onClick={() => this.deleteCode(code)}
+                    onKeyPress={(e) => {
+                      e.which = e.which || e.keyCode;
+                      if (e.which === 13) this.deleteCode(code);
+                    }}>
+                    <FontAwesome name='close'/>
+                  </span>
                 </div>
               ))}
           </div>
@@ -326,30 +394,6 @@ export default class TemplateInstance extends Component {
       );
     }
 
-    const templateInstance = this.props.templateInstance;
-    let selectedValueSet;
-    if (templateInstance.parameters[1].valueSets) {
-      // TODO: This will need to update when you can select multiple value sets. Also depends on how the UI will work.
-      selectedValueSet = {
-        name: templateInstance.parameters[1].valueSets[0].name,
-        oid: templateInstance.parameters[1].valueSets[0].oid
-      };
-    }
-
-    let selectedCode;
-    if (templateInstance.parameters[1].codes) {
-      selectedCode = templateInstance.parameters[1].codes;
-    }
-
-    const elementModalLabels = {
-      openButtonText: 'View/Edit Value Set',
-      closeButtonText: 'Cancel'
-    };
-    const codeSelectModalLabels = {
-      openButtonText: 'Edit Code',
-      closeButtonText: 'Cancel'
-    };
-
     return (
       <div>
         <button className="disabled-button" disabled={true}>
@@ -366,15 +410,11 @@ export default class TemplateInstance extends Component {
           getVSDetails={this.props.getVSDetails}
           isRetrievingDetails={this.props.isRetrievingDetails}
           vsacDetailsCodes={this.props.vsacDetailsCodes}
-          selectedElement={selectedValueSet}
-          labels={elementModalLabels}
         />
           <CodeSelectModal
             className="element-select__modal"
             updateElement={this.updateInstance}
             template={this.props.templateInstance}
-            selectedCode={selectedCode}
-            labels={codeSelectModalLabels}
           />
       </div>
     );

@@ -83,30 +83,35 @@ class CodeSelectModal extends Component {
   }
 
   chooseCode = () => {
-    const codes = [
-      {
-        code: this.state.codeText, codeSystem: { name: this.state.selectedCS.value, id: this.state.selectedCS.id }
-      }
-    ];
-    if (this.state.selectedCS.value === 'Other') {
-      codes[0].codeSystem.id = this.state.codeSystemText;
-    }
     const selectedTemplate = _.cloneDeep(this.props.template);
     if (selectedTemplate === undefined) return;
+
+    // Push the newly selected code.
+    let codesToAdd = selectedTemplate.parameters[1].codes;
+    if (codesToAdd === undefined) {
+      codesToAdd = [];
+    }
+    const newCode = {
+      code: this.state.codeText, codeSystem: { name: this.state.selectedCS.value, id: this.state.selectedCS.id }
+    };
+    if (this.state.selectedCS.value === 'Other') {
+      newCode.codeSystem.id = this.state.codeSystemText;
+    }
+    codesToAdd.push(newCode);
 
     // Adding a new element and editing an exisitng element use different functions that take different parameters
     if (this.props.onElementSelected) {
       // Set the template's values initially to add it to the workspace.
-      selectedTemplate.parameters[0].value = `${codes[0].codeSystem.name} ${codes[0].code}`; // TODO: Best name for element
-      selectedTemplate.parameters[1].codes = codes;
+      selectedTemplate.parameters[0].value = `${codesToAdd[0].codeSystem.name} ${codesToAdd[0].code}`; // TODO: Best name for element
+      selectedTemplate.parameters[1].codes = codesToAdd;
       selectedTemplate.parameters[1].static = true;
       this.props.onElementSelected(selectedTemplate);
     } else if (this.props.updateElement) {
       // Update an existing element in the workspace
       // Create array of which parameter to update, the new value to set, and the attribute to update (value is default)
       const arrayToUpdate = [
-        { [selectedTemplate.parameters[0].id]: `${codes[0].codeSystem.name} ${codes[0].code}` },
-        { [selectedTemplate.parameters[1].id]: codes, attributeToEdit: 'codes' },
+        { [selectedTemplate.parameters[0].id]: `${codesToAdd[0].codeSystem.name} ${codesToAdd[0].code}` },
+        { [selectedTemplate.parameters[1].id]: codesToAdd, attributeToEdit: 'codes' },
         { [selectedTemplate.parameters[1].id]: true, attributeToEdit: 'static' }
       ];
       this.props.updateElement(arrayToUpdate);
@@ -118,7 +123,7 @@ class CodeSelectModal extends Component {
     const codeInputLabel = 'Enter code';
     const otherInputLabel = 'Enter system URI or OID';
     let buttonLabels = {
-      openButtonText: 'Choose Code',
+      openButtonText: 'Add Code',
       closeButtonText: 'Close'
     };
     if (this.props.labels) {

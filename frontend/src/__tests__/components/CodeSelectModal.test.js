@@ -41,7 +41,7 @@ beforeEach(() => {
 test('renders the component with proper elements', () => {
   expect(component.hasClass('element-modal')).toBeTruthy();
   expect(component.find(Modal)).toHaveLength(1);
-  expect(component.find('button').first().text()).toEqual(' Choose Code');
+  expect(component.find('button').first().text()).toEqual(' Add Code');
 });
 
 test('can set open and close state', () => {
@@ -61,7 +61,7 @@ test('renders the proper children', () => {
   expect(internalModal.find('.element-modal__search div .Select')).toHaveLength(1);
 });
 
-test('can open modal with "Choose Code" button', () => {
+test('can open modal with "Add Code" button', () => {
   expect(component.state().showCodeSelectModal).toEqual(false);
   component.find('button').first().simulate('click');
   expect(component.state().showCodeSelectModal).toEqual(true);
