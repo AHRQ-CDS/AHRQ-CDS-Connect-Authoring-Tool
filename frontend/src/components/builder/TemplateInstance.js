@@ -270,12 +270,19 @@ export default class TemplateInstance extends Component {
 
   renderVSInfo = () => {
     if (this.props.templateInstance.parameters.length > 1) {
-      // All generic VSAC elements save the VS information on this parameter. Only VSAC elements have a vsName property.
+      // All generic VSAC elements save the VS information on this parameter on the valueSets property.
       const vsacParameter = this.props.templateInstance.parameters[1];
-      if (vsacParameter.vsName) {
+      if (vsacParameter.valueSets) {
         return (
           <div className='modifier__return__type'>
-            <span className="bold">Selected Value Set: </span>{`${vsacParameter.vsName} (${vsacParameter.value})`}
+            { vsacParameter.valueSets.map((vs, i) => (
+                <div key={`selected-valueset-${i}`}>
+                  <span className="bold">
+                    Selected Value Set{ vsacParameter.valueSets.length > 1 ? ` ${i + 1}` : ''}:
+                  </span>
+                  {` ${vs.name} (${vs.oid})`}
+                </div>
+              ))}
           </div>
         );
       }
@@ -285,14 +292,18 @@ export default class TemplateInstance extends Component {
 
   renderCodeInfo = () => {
     if (this.props.templateInstance.parameters.length > 1) {
-      // All generic VSAC elements save the VS information on this parameter. Only VSAC elements have a vsName property.
+      // All generic VSAC elements save the VS information on this parameter on the codes property.
       const vsacParameter = this.props.templateInstance.parameters[1];
       if (vsacParameter.codes) {
         return (
           <div className='modifier__return__type'>
-            {/* Code name will come with validation */}
-            <span className="bold">Selected Code: </span>
-            {`${vsacParameter.codes[0].codeSystem.name} (${vsacParameter.codes[0].code})`}
+            { vsacParameter.codes.map((code, i) => (
+                <div key={`selected-code-${i}`}>
+                  <span className="bold">Selected Code{vsacParameter.codes.length > 1 ? ` ${i + 1}` : ''}: </span>
+                  {/* Code name will come with validation */}
+                  {`${code.codeSystem.name} (${code.code})`}
+                </div>
+              ))}
           </div>
         );
       }
@@ -317,10 +328,11 @@ export default class TemplateInstance extends Component {
 
     const templateInstance = this.props.templateInstance;
     let selectedValueSet;
-    if (templateInstance.parameters[1].vsName) {
+    if (templateInstance.parameters[1].valueSets) {
+      // TODO: This will need to update when you can select multiple value sets. Also depends on how the UI will work.
       selectedValueSet = {
-        name: templateInstance.parameters[1].vsName,
-        oid: templateInstance.parameters[1].value
+        name: templateInstance.parameters[1].valueSets[0].name,
+        oid: templateInstance.parameters[1].valueSets[0].oid
       };
     }
 

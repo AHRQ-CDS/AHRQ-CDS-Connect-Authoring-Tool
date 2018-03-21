@@ -224,50 +224,49 @@ class CqlArtifact {
         }
         values.push(concept.name);
       });
-      context.values = values;
-      context.template = conceptTemplateName;
+      // Union multiple codes together.
+      if (values.length > 1) {
+        addGroupedConceptExpression(
+          this.referencedConceptElements, this.resourceMap, elementDetails, conceptTemplateName, context);
+        context.template = 'GenericStatement';
+      } else {
+        context.values = values;
+        context.template = conceptTemplateName;
+      }
     }
     if (elementDetails.valuesets.length > 0) {
       let concepts = [];
       if (context.values.length > 0) {
         concepts = context.values;
       }
+      // Union multiple value sets together.
       if (elementDetails.valuesets.length > 1) {
         addGroupedValueSetExpression(
-          this.referencedElements,
-          this.resourceMap,
-          elementDetails,
-          valuesetQueryName,
-          context
-        );
+          this.referencedElements, this.resourceMap, elementDetails, valuesetQueryName, context);
         context.template = 'GenericStatement';
         if (concepts.length > 0) {
-          addGroupedConceptExpression(
-            this.referencedConceptElements,
-            this.resourceMap,
-            elementDetails,
-            conceptTemplateName,
-            context
-          );
+          // If there is one concept, check to see if it is already a referenced/grouped element.
+          if (concepts.length === 1 && !this.referencedConceptElements.find( el => `"${el.name}"` === concepts[0])) {
+            addGroupedConceptExpression(
+              this.referencedConceptElements,this.resourceMap,elementDetails,conceptTemplateName,context);
+          } else {
+            context.values = context.values.concat(concepts);
+          }
           // If both value sets and concepts are applied, union the individual expression together to create valid CQL
           unionExpressions(context, elementDetails.id, this.unionedElements);
         }
       } else { // elementDetails.valuesets.length = 1;
         if (concepts.length > 0) {
           addGroupedValueSetExpression(
-            this.referencedElements,
-            this.resourceMap,
-            elementDetails,
-            valuesetQueryName,
-            context
-          );
-          addGroupedConceptExpression(
-            this.referencedConceptElements,
-            this.resourceMap,
-            elementDetails,
-            conceptTemplateName,
-            context
-          );
+            this.referencedElements, this.resourceMap, elementDetails, valuesetQueryName, context);
+          // If there is one concept, check to see if it is already a referenced/grouped element.
+          if (concepts.length === 1 && !this.referencedConceptElements.find( el => `"${el.name}"` === concepts[0])) {
+            addGroupedConceptExpression(
+              this.referencedConceptElements, this.resourceMap, elementDetails, conceptTemplateName, context);
+          } else {
+            // If concepts were already unioned, just add the variable to reference.
+            context.values = context.values.concat(concepts);
+          }
           // If both value sets and concepts are applied, union the individual expression together to create valid CQL
           unionExpressions(context, elementDetails.id, this.unionedElements);
           context.template = 'GenericStatement';
@@ -831,11 +830,11 @@ function addConceptForCodes(codes, valueSetObject) {
 }
 
 function addValueSets(parameter, valueSetObject, attribute) {
-  if (parameter && parameter.value) {
-    // TODO For unioning, this needs to loop
-    valueSetObject[attribute] = [
-      { name: `${parameter.vsName} VS`, oid: parameter.value },
-    ];
+  if (parameter && parameter.valueSets) {
+    valueSetObject[attribute] = [];
+    parameter.valueSets.forEach(vs => {
+      valueSetObject[attribute].push({ name: `${vs.name} VS`, oid: vs.oid });
+    });
   }
 }
 

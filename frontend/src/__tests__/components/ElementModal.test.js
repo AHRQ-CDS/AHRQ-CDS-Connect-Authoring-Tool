@@ -122,8 +122,7 @@ describe('with modal open', () => {
     // Set selected values on base template
     const templateWithSelectedValue = { ...component.props().template };
     templateWithSelectedValue.parameters[0].value = element.name;
-    templateWithSelectedValue.parameters[1].value = element.oid;
-    templateWithSelectedValue.parameters[1].vsName = element.name;
+    templateWithSelectedValue.parameters[1].valueSets = [{ name: element.name, oid: element.oid }];
     templateWithSelectedValue.parameters[1].static = true;
 
     // Clicking the select button class the onElementSelected function

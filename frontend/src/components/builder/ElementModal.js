@@ -77,12 +77,15 @@ class ElementModal extends Component {
     const selectedTemplate = _.cloneDeep(this.props.template);
     if (selectedTemplate === undefined) return;
 
+    // TODO: When you can select multiple, the following array may need to be created differently in order to update
+    // properly. The structure of the objects should stay the same.
+    const valuesetsToAdd = [{ name: element.name, oid: element.oid }];
+
     // Adding a new element and editing an exisitng element use different functions that take different parameters
     if (this.props.onElementSelected) {
       // Set the template's values based on value set selection initially to add it to the workspace.
       selectedTemplate.parameters[0].value = element.name;
-      selectedTemplate.parameters[1].value = element.oid;
-      selectedTemplate.parameters[1].vsName = element.name;
+      selectedTemplate.parameters[1].valueSets = valuesetsToAdd;
       selectedTemplate.parameters[1].static = true;
       this.props.onElementSelected(selectedTemplate);
     } else if (this.props.updateElement) {
@@ -90,8 +93,7 @@ class ElementModal extends Component {
       // Create array of which parameter to update, the new value to set, and the attribute to update (value is default)
       const arrayToUpdate = [
         { [selectedTemplate.parameters[0].id]: element.name },
-        { [selectedTemplate.parameters[1].id]: element.oid },
-        { [selectedTemplate.parameters[1].id]: element.name, attributeToEdit: 'vsName' },
+        { [selectedTemplate.parameters[1].id]: valuesetsToAdd, attributeToEdit: 'valueSets' },
         { [selectedTemplate.parameters[1].id]: true, attributeToEdit: 'static' }
       ];
       this.props.updateElement(arrayToUpdate);

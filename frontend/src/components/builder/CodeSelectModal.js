@@ -23,6 +23,7 @@ class CodeSelectModal extends Component {
     const { selectedCode } = this.props;
     if (selectedCode) {
       // Set up the object to be selected in the dropdown
+      // TODO: When you can select multiple codes, this will need to update, depending on how the UI works.
       const selectedCS = {
         value: selectedCode[0].codeSystem.name,
         label: selectedCode[0].codeSystem.name,
