@@ -46,6 +46,7 @@ describe('and validator', () => {
     expect(Validators.and.check([null])).toEqual(false);
     expect(Validators.and.check([undefined])).toEqual(false);
     expect(Validators.and.check([''])).toEqual(false);
+    expect(Validators.and.check([NaN])).toEqual(false);
   });
   it('should provide a good warning message', () => {
     expect(Validators.and.warning(['MyField'])).toEqual('You should provide all of the following: MyField.');
