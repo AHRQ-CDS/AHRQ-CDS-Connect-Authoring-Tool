@@ -1,4 +1,4 @@
-const exists = el => el !== undefined && el !== '' && el !== null
+const exists = el => el !== undefined && el !== '' && el !== null;
 
 export default {
   or: {
