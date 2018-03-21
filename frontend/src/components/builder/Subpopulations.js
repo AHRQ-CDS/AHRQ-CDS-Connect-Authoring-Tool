@@ -17,7 +17,7 @@ export default class Subpopulations extends Component {
     getAllInstances: PropTypes.func.isRequired,
     updateRecsSubpop: PropTypes.func.isRequired,
     checkSubpopulationUsage: PropTypes.func.isRequired,
-    booleanParameters: PropTypes.array.isRequired,
+    parameters: PropTypes.array.isRequired,
     name: PropTypes.string.isRequired
   };
 
@@ -86,7 +86,7 @@ export default class Subpopulations extends Component {
               subpopulationIndex={ i + this.state.numOfSpecialSubpopulations } // System needs to know true index out of all subpopulations
               setSubpopulationName={ this.setSubpopulationName }
               deleteSubpopulation={ this.deleteSubpopulation }
-              booleanParameters={ this.props.booleanParameters }
+              parameters={ this.props.parameters }
               addInstance={ this.props.addInstance }
               editInstance={ this.props.editInstance }
               updateInstanceModifiers={ this.props.updateInstanceModifiers }

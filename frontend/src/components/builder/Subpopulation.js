@@ -17,7 +17,7 @@ class Subpopulation extends Component {
     deleteInstance: PropTypes.func.isRequired,
     getAllInstances: PropTypes.func.isRequired,
     treeName: PropTypes.string.isRequired,
-    booleanParameters: PropTypes.array.isRequired,
+    parameters: PropTypes.array.isRequired,
     templates: PropTypes.array.isRequired
   }
 
@@ -121,7 +121,7 @@ class Subpopulation extends Component {
               deleteInstance={this.deleteInstance}
               getAllInstances={this.getAllInstances}
               updateInstanceModifiers={this.props.updateInstanceModifiers}
-              booleanParameters={this.props.booleanParameters}
+              parameters={this.props.parameters}
               subPopulationIndex={this.props.subpopulationIndex} />
           </div>
           :

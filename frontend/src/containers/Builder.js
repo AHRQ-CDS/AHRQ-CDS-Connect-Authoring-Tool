@@ -227,8 +227,8 @@ export class Builder extends Component {
     this.props.updateArtifact(this.props.artifact, { recommendations });
   }
 
-  updateParameters = (booleanParameters) => {
-    this.props.updateArtifact(this.props.artifact, { booleanParameters });
+  updateParameters = (parameters) => {
+    this.props.updateArtifact(this.props.artifact, { parameters });
   }
 
   updateErrorStatement = (errorStatement) => {
@@ -255,7 +255,7 @@ export class Builder extends Component {
 
   renderConjunctionGroup = (treeName) => {
     const { artifact, templates, resources, valueSets } = this.props;
-    const namedBooleanParameters = _.filter(artifact.booleanParameters, p => (!_.isNull(p.name) && p.name.length));
+    const namedParameters = _.filter(artifact.parameters, p => (!_.isNull(p.name) && p.name.length));
 
     if (artifact && artifact[treeName].childInstances) {
       return (
@@ -273,7 +273,7 @@ export class Builder extends Component {
           deleteInstance={this.deleteInstance}
           getAllInstances={this.getAllInstances}
           updateInstanceModifiers={this.updateInstanceModifiers}
-          booleanParameters={namedBooleanParameters} />
+          parameters={namedParameters} />
       );
     }
 
@@ -322,9 +322,9 @@ export class Builder extends Component {
 
   render() {
     const { artifact, templates } = this.props;
-    let namedBooleanParameters = [];
+    let namedParameters = [];
     if (artifact) {
-      namedBooleanParameters = _.filter(artifact.booleanParameters, p => (!_.isNull(p.name) && p.name.length));
+      namedParameters = _.filter(artifact.parameters, p => (!_.isNull(p.name) && p.name.length));
     }
 
     if (artifact == null) {
@@ -367,7 +367,7 @@ export class Builder extends Component {
                     name={'subpopulations'}
                     artifact={artifact}
                     updateSubpopulations={this.updateSubpopulations}
-                    booleanParameters={namedBooleanParameters}
+                    parameters={namedParameters}
                     addInstance={this.addInstance}
                     editInstance={this.editInstance}
                     updateInstanceModifiers={this.updateInstanceModifiers}
@@ -391,13 +391,13 @@ export class Builder extends Component {
 
                 <TabPanel>
                   <Parameters
-                    booleanParameters={this.props.artifact.booleanParameters}
+                    parameters={this.props.artifact.parameters}
                     updateParameters={this.updateParameters} />
                 </TabPanel>
 
                 <TabPanel>
                   <ErrorStatement
-                    booleanParameters={namedBooleanParameters}
+                    parameters={namedParameters}
                     subpopulations={this.props.artifact.subpopulations}
                     errorStatement={this.props.artifact.errorStatement}
                     updateErrorStatement={this.updateErrorStatement} />

@@ -46,7 +46,7 @@ beforeEach(() => {
     updateRecsSubpop,
     createTemplateInstance,
     checkSubpopulationUsage,
-    booleanParameters: [],
+    parameters: [],
     name: ''
   };
 

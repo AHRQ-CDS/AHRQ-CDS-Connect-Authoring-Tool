@@ -35,7 +35,6 @@ export function updateArtifact(artifactToUpdate, props) {
       ...artifactToUpdate,
       ...props
     };
-
     return dispatch({
       type: types.UPDATE_ARTIFACT,
       artifact
@@ -107,7 +106,7 @@ export function initializeArtifact(andTemplate) {
       },
       newTrees.newSubpopulation
     ],
-    booleanParameters: [],
+    parameters: [],
     errorStatement: { statements: [] },
     uniqueIdCounter: 0
   };

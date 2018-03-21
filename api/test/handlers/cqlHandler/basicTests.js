@@ -9,7 +9,7 @@ const baseArtifact = {
   expTreeExclude: {},
   subpopulations: [],
   recommendations: [],
-  booleanParameters: [],
+  parameters: [],
   errorStatement: {},
   uniqueIdCounter: 9999
 };

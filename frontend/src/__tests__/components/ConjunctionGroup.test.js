@@ -41,7 +41,7 @@ const props = {
   artifact: {
     [treeName]: { id: 'Or' }
   },
-  booleanParameters: [],
+  parameters: [],
   resources: {},
   loadValueSets: jest.fn()
 };

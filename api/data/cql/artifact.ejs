@@ -20,7 +20,7 @@ concept "<%=concept.name%>" : { <%concept.codes.forEach((code, index) => {%>"<%i
   display '<%=concept.display%>'
 <%})-%>
 
-<% booleanParameters.forEach(parameter => { if(parameter.name !== null) {-%>
+<% parameters.forEach(parameter => { if(parameter.name !== null) {-%>
 parameter "<%=parameter.name%>" default <%- parameter.value !== null ? parameter.value : 'null' %>
 <%}});-%>
 
@@ -32,4 +32,3 @@ define "<%=element.name%>":
   return `[${element.type}: "${v.name}"]` }).join(`
   union `);%>
 <%}) -%>
-

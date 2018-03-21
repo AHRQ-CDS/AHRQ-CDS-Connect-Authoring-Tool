@@ -10,7 +10,7 @@ import { shallowRenderComponent } from '../utils/test_helpers';
 test('Parameter renders without crashing', () => {
   const component = shallowRenderComponent(Parameter, {
     updateInstanceOfParameter: jest.fn(),
-    deleteBooleanParam: jest.fn(),
+    deleteParameter: jest.fn(),
     index: '',
     value: '',
     name: ''
@@ -22,7 +22,7 @@ test('Parameter changes input', () => {
   const updateInstanceOfParameterMock = jest.fn();
   const component = shallowRenderComponent(Parameter, {
     updateInstanceOfParameter: updateInstanceOfParameterMock,
-    deleteBooleanParam: jest.fn(),
+    deleteParameter: jest.fn(),
     index: '',
     value: '',
     name: ''
@@ -40,7 +40,7 @@ test('Parameter changes input', () => {
 
 test('Parameters renders without crashing', () => {
   const component = shallowRenderComponent(Parameters, {
-    booleanParameters: [],
+    parameters: [],
     updateParameters: jest.fn()
   });
   expect(component).toBeDefined();
@@ -49,7 +49,7 @@ test('Parameters renders without crashing', () => {
 test('Parameters adds parameter', () => {
   const updateParameterMock = jest.fn();
   const component = shallowRenderComponent(Parameters, {
-    booleanParameters: [],
+    parameters: [],
     updateParameters: updateParameterMock
   });
 

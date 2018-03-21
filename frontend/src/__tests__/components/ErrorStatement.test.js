@@ -7,7 +7,7 @@ let component;
 let componentWithNest;
 beforeEach(() => {
   component = fullRenderComponent(ErrorStatement, {
-    booleanParameters: [],
+    parameters: [],
     subpopulations: [
       { label: 'Recommendations is null', value: '"Recommendation" is null' }
     ],
@@ -26,7 +26,7 @@ beforeEach(() => {
   });
 
   componentWithNest = fullRenderComponent(ErrorStatement, {
-    booleanParameters: [],
+    parameters: [],
     subpopulations: [
       { label: 'Recommendations is null', value: '"Recommendation" is null' }
     ],

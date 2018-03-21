@@ -25,7 +25,7 @@ module.exports = {
       name: 'Smoker'
     },
   ],
-  demogragphics: [
+  demographics: [
     {
       id: 'gender',
       name: 'Gender'
