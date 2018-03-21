@@ -25,7 +25,7 @@ export default [
     inputTypes: ['list_of_observations'],
     returnType: 'list_of_observations',
     values: { unit: undefined },
-    validator: {type: 'require', fields: ['unit'], args: null},
+    validator: { type: 'require', fields: ['unit'], args: null },
     cqlTemplate: 'WithUnit',
     cqlLibraryFunction: 'C3F.WithUnit',
   },
@@ -43,7 +43,7 @@ export default [
     name: 'Value Comparison',
     inputTypes: ['system_quantity'],
     returnType: 'boolean',
-    validator: {type: 'require', fields: ['minValue', 'minOperator'], args: null},
+    validator: { type: 'require', fields: ['minValue', 'minOperator'], args: null },
     values: { minOperator: undefined, minValue: '', maxOperator: undefined, maxValue: '' },
     cqlTemplate: 'ValueComparisonObservation',
     comparisonOperator: null
@@ -189,7 +189,7 @@ export default [
     inputTypes: ['list_of_observations'],
     returnType: 'list_of_observations',
     values: { value: undefined, unit: undefined },
-    validator: {type: 'require', fields: ['value', 'unit'], args: null},
+    validator: { type: 'require', fields: ['value', 'unit'], args: null },
     cqlTemplate: 'LookBackModifier',
     cqlLibraryFunction: 'C3F.ObservationLookBack' },
   {
@@ -199,7 +199,7 @@ export default [
     inputTypes: ['list_of_conditions'],
     returnType: 'list_of_conditions',
     values: { value: undefined, unit: undefined },
-    validator: {type: 'require', fields: ['value', 'unit'], args: null},
+    validator: { type: 'require', fields: ['value', 'unit'], args: null },
     cqlTemplate: 'LookBackModifier',
     cqlLibraryFunction: 'C3F.ConditionLookBack' },
   {
@@ -209,7 +209,7 @@ export default [
     inputTypes: ['list_of_medications'],
     returnType: 'list_of_medications',
     values: { value: undefined, unit: undefined },
-    validator: {type: 'require', fields: ['value', 'unit'], args: null},
+    validator: { type: 'require', fields: ['value', 'unit'], args: null },
     cqlTemplate: 'LookBackModifier',
     cqlLibraryFunction: 'C3F.MedicationLookBack' },
   {
@@ -219,7 +219,7 @@ export default [
     inputTypes: ['list_of_procedures'],
     returnType: 'list_of_procedures',
     values: { value: undefined, unit: undefined },
-    validator: {type: 'require', fields: ['value', 'unit'], args: null},
+    validator: { type: 'require', fields: ['value', 'unit'], args: null },
     cqlTemplate: 'LookBackModifier',
     cqlLibraryFunction: 'C3F.ProcedureLookBack' },
   {
@@ -247,7 +247,7 @@ export default [
     values: { value: undefined },
     cqlTemplate: 'postModifier',
     comparisonOperator: null,
-    validator: {type: 'require', fields: ['value'], args: null},
+    validator: { type: 'require', fields: ['value'], args: null },
 
   },
   {

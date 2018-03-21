@@ -98,9 +98,9 @@ export default class TemplateInstance extends Component {
 
   renderAppliedModifier = (modifier, index) => {
     let validationWarning = null;
-    if(modifier.validator){
-      let validator = Validators[modifier.validator.type];
-      if(!validator.check(modifier.validator.fields.map( v => modifier.values[v] ))){
+    if (modifier.validator) {
+      const validator = Validators[modifier.validator.type];
+      if (!validator.check(modifier.validator.fields.map(v => modifier.values[v]))) {
         validationWarning = validator.warning(modifier.validator.fields);
       }
       console.log(validationWarning);
@@ -321,21 +321,21 @@ export default class TemplateInstance extends Component {
 
   validateElement = () => {
     // TODO Add in validation system here.
-    if(this.props.templateInstance.validator){
-      let validator = Validators[this.props.templateInstance.validator.type];
-      let fields = this.props.templateInstance.validator.fields;
-      let args = this.props.templateInstance.validator.args;
-      let values = fields.map((f) => this.state[f]);
-      let names = fields.map((f) => this.props.templateInstance.parameters.find(el => el.id == f).name);
-      if(!validator.check(values, args)){
+    if (this.props.templateInstance.validator) {
+      const validator = Validators[this.props.templateInstance.validator.type];
+      const fields = this.props.templateInstance.validator.fields;
+      const args = this.props.templateInstance.validator.args;
+      const values = fields.map(f => this.state[f]);
+      const names = fields.map(f => this.props.templateInstance.parameters.find(el => el.id === f).name);
+      if (!validator.check(values, args)) {
         return validator.warning(names, args);
       }
     }
-    return;
+    return null;
   }
 
   renderBody() {
-    let validationError = this.validateElement();
+    const validationError = this.validateElement();
 
     return (
       <div className="element__body">
