@@ -7,6 +7,11 @@ export default {
       check: (values, args=[]) => values.every((el) => el ),
       warning: (fields, args) => `You should provide all of the following: ${fields.join(", ")}.`
   },
+  // Ok, this is more or less the exact same thing as 'and' but the warning is different
+  require: {
+      check: (values, args=[]) => values.every((el) => el ),
+      warning: (fields, args) => `The following fields are required: ${fields.join(", ")}.`
+  },
   regex: {
       check: (values, args=[]) => {
         let regex = RegExp(args[0]);

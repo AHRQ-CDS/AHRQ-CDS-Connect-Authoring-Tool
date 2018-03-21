@@ -37,6 +37,7 @@ module.exports = [
         name: 'Gender',
         returnType: 'boolean',
         cannotHaveModifiers: true,
+        validator: {type: 'require', fields: ['gender'], args: null},
         parameters: [
           { id: 'element_name', type: 'string', name: 'Element Name' },
           { id: 'gender', type: 'valueset', select: 'demographics/gender', name: 'Gender' },

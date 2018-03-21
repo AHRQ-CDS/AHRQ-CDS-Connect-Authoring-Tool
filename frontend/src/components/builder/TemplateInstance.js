@@ -97,12 +97,19 @@ export default class TemplateInstance extends Component {
   }
 
   renderAppliedModifier = (modifier, index) => {
+    let validationWarning = null;
+    if(modifier.validator){
+      let validator = Validators[modifier.validator.type];
+      if(!validator.check(modifier.validator.fields.map( v => modifier.values[v] ))){
+        validationWarning = validator.warning(modifier.validator.fields);
+      }
+      console.log(validationWarning);
+    }
     const modifierForm = ((mod) => {
       // Reset values on modifiers that were not previously set or saved in the database
       if (!mod.values && this.modifierMap[mod.id].values) {
         mod.values = this.modifierMap[mod.id].values;
       }
-
       switch (mod.type || mod.id) {
         case 'ValueComparison':
           return (
@@ -166,6 +173,7 @@ export default class TemplateInstance extends Component {
 
     return (
       <div key={index} className="modifier">
+
         {modifierForm}
         { (index + 1 === this.props.templateInstance.modifiers.length)
           ? <button
@@ -176,6 +184,7 @@ export default class TemplateInstance extends Component {
             </button>
           : null
         }
+        <div className='warning'>{validationWarning}</div>
       </div>
     );
   }
@@ -330,7 +339,7 @@ export default class TemplateInstance extends Component {
 
     return (
       <div className="element__body">
-        {validationError?validationError:null}
+        <div className="warning">{validationError}</div>
         <div>
           {this.props.templateInstance.parameters.map((param, index) =>
             // todo: each parameter type should probably have its own component
