@@ -320,7 +320,6 @@ export default class TemplateInstance extends Component {
   getPath = () => this.props.getPath(this.props.templateInstance.uniqueId)
 
   validateElement = () => {
-    // TODO Add in validation system here.
     if (this.props.templateInstance.validator) {
       const validator = Validators[this.props.templateInstance.validator.type];
       const fields = this.props.templateInstance.validator.fields;

@@ -1,6 +1,4 @@
-const exists = el => {
-  return el !== undefined && el !== '' && el !== null && !Number.isNaN(el);
-}
+const exists = el => el !== undefined && el !== '' && el !== null && !Number.isNaN(el);
 
 export default {
   or: {

@@ -236,6 +236,7 @@ export default [
     inputTypes: ['boolean'],
     returnType: 'boolean',
     values: { value: undefined },
+    validator: { type: 'require', fields: ['value'], args: null },
     cqlTemplate: 'postModifier',
     comparisonOperator: null
   },
