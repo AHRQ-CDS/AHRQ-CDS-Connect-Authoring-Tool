@@ -321,7 +321,7 @@ export default class TemplateInstance extends Component {
       const vsacParameter = this.props.templateInstance.parameters[1];
       if (vsacParameter.valueSets) {
         return (
-          <div className='modifier__return__type'>
+          <div className='modifier__return__type' id="valueset-list">
             { vsacParameter.valueSets.map((vs, i) => (
                 <div key={`selected-valueset-${i}`}>
                   <span className="bold">
@@ -331,6 +331,7 @@ export default class TemplateInstance extends Component {
                   {this.viewValueSetDetails(vs)}
                   <span
                     role="button"
+                    id="delete-valueset"
                     tabIndex="0"
                     onClick={() => this.deleteValueSet(vs)}
                     onKeyPress={(e) => {
@@ -354,7 +355,7 @@ export default class TemplateInstance extends Component {
       const vsacParameter = this.props.templateInstance.parameters[1];
       if (vsacParameter.codes) {
         return (
-          <div className='modifier__return__type'>
+          <div className='modifier__return__type' id='code-list'>
             { vsacParameter.codes.map((code, i) => (
                 <div key={`selected-code-${i}`}>
                   <span className="bold">Selected Code{vsacParameter.codes.length > 1 ? ` ${i + 1}` : ''}: </span>
@@ -362,6 +363,7 @@ export default class TemplateInstance extends Component {
                   {`${code.codeSystem.name} (${code.code})`}
                   <span
                     role="button"
+                    id="delete-code"
                     tabIndex="0"
                     onClick={() => this.deleteCode(code)}
                     onKeyPress={(e) => {
@@ -383,7 +385,7 @@ export default class TemplateInstance extends Component {
     // If last time authenticated was less than 7.5 hours ago, force user to log in again.
     if (this.props.timeLastAuthenticated < new Date() - 27000000) {
       return (
-        <div>
+        <div id="vsac-controls">
           <VSACAuthenticationModal
             loginVSACUser={this.props.loginVSACUser}
             setVSACAuthStatus={this.props.setVSACAuthStatus}
@@ -395,7 +397,7 @@ export default class TemplateInstance extends Component {
     }
 
     return (
-      <div>
+      <div id="vsac-controls">
         <button className="disabled-button" disabled={true}>
           <FontAwesome name="check" /> VSAC Authenticated
         </button>

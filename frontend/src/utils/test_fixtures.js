@@ -286,10 +286,36 @@ const genericElementGroups = [
   }
 ];
 
+const genericInstance = {
+  id: 'GenericObservation_vsac',
+  name: 'Observation',
+  returnType: 'list_of_observations',
+  suppress: true,
+  extends: 'Base',
+  type: 'element',
+  template: 'GenericObservation',
+  suppressedModifiers: ['WithUnit', 'ConvertToMgPerdL'], // checkInclusionInVS is assumed to be suppressed
+  parameters: [
+    { id: 'element_name', name: 'Element Name', type: 'string', value: 'VSAC Observation' },
+    {
+      id: 'observation',
+      type: 'observation_vsac',
+      name: 'Observation',
+      valueSets: [{ name: 'VS', oid: '1.2.3' }, { name: 'VS2', oid: '2.3.4' }],
+      codes: [
+        { code: '123-4', codeSystem: { name: 'TestName', id: 'TestId' } },
+        { code: '456-7', codeSystem: { name: 'TestNameA', id: 'TestIdA' } }
+      ]
+    }
+  ],
+  modifiers: [],
+};
+
 export {
   instanceTree,
   emptyInstanceTree,
   elementGroups,
   genericElementTypes,
-  genericElementGroups
+  genericElementGroups,
+  genericInstance
 };

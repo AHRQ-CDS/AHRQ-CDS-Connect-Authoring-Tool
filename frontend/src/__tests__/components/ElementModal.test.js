@@ -1,4 +1,5 @@
 import Modal from 'react-modal';
+import _ from 'lodash';
 import ElementModal from '../../components/builder/ElementModal';
 import { fullRenderComponent, ReactWrapper } from '../../utils/test_helpers';
 
@@ -81,6 +82,20 @@ test('can open modal with "Add Value Set" button', () => {
   expect(component.state().isOpen).toEqual(true);
 });
 
+test('can open a modal using an icon instead of a button', () => {
+  // Default is to have a button open the modal.
+  expect(component.find('#open-modal-button > span > FontAwesome')).toHaveLength(0);
+  expect(component.find('#open-modal-button > button')).toHaveLength(1);
+
+  // Can set prop to use an icon in a span instead of the button default.
+  component.setProps({ useIconButton: true, iconForButton: 'eye' });
+  // Close and reopen modal to set state correctly.
+  component.instance().closeModal();
+  component.instance().openModal();
+  expect(component.find('#open-modal-button > span > FontAwesome')).toHaveLength(1);
+  expect(component.find('#open-modal-button > button')).toHaveLength(0);
+});
+
 describe('with modal open', () => {
   beforeEach(() => {
     component.instance().openModal();
@@ -120,7 +135,7 @@ describe('with modal open', () => {
     expect(input.node.value).toEqual(`${element.name} (${element.oid})`);
 
     // Set selected values on base template
-    const templateWithSelectedValue = { ...component.props().template };
+    const templateWithSelectedValue = _.cloneDeep(component.props()).template;
     templateWithSelectedValue.parameters[0].value = element.name;
     templateWithSelectedValue.parameters[1].valueSets = [{ name: element.name, oid: element.oid }];
     templateWithSelectedValue.parameters[1].static = true;
@@ -156,6 +171,17 @@ describe('with modal open', () => {
     expect(internalModal.find('.search__table thead').text())
       .toEqual('TypeNameCode SystemStewardCodes'); // Search table headings
     expect(component.state().selectedElement).toEqual(null);
+  });
+
+  test('viewOnly flag does not allow for selecting value set or navigating back to search', () => {
+    // Set new props to test, then close and reopen modal to set state correctly.
+    component.setProps({ viewOnly: true, selectedElement: { name: 'Test VS', oid: '1.2.3' } });
+    component.instance().closeModal();
+    component.instance().openModal();
+
+    expect(component.state().isOpen).toBeTruthy();
+    expect(internalModal.find('.nav-icon')).toHaveLength(0); // No back arrow.
+    expect(internalModal.find('.element-modal__searchbutton')).toHaveLength(0); // No search/select button.
   });
 
   test('resets search term when closing modal', () => {

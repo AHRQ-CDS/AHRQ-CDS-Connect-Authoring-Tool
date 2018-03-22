@@ -283,7 +283,7 @@ class ElementModal extends Component {
 
     return (
       <span className={ `${this.props.className} element-modal` }>
-        {this.renderButtonToOpenModal(buttonLabels)}
+        <span id="open-modal-button">{this.renderButtonToOpenModal(buttonLabels)}</span>
         <Modal
           isOpen={ this.state.isOpen }
           onRequestClose={ this.closeModal }
