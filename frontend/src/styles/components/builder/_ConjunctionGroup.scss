@@ -52,4 +52,11 @@
     &--odd { background-color: darken($gray-lightest, 3%); }
     &--even { background-color: $white; }
   }
+
+  .delete-code-button,
+  .delete-valueset-button,
+  .fa-eye {
+    float: right;
+    margin-left: 10px;
+  }
 }

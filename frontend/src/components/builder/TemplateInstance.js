@@ -321,14 +321,15 @@ export default class TemplateInstance extends Component {
       const vsacParameter = this.props.templateInstance.parameters[1];
       if (vsacParameter.valueSets) {
         return (
-          <div className='modifier__return__type' id="valueset-list">
+          <div className="modifier__return__type" id="valueset-list">
             { vsacParameter.valueSets.map((vs, i) => (
                 <div key={`selected-valueset-${i}`}>
                   <span className="bold">
                     Selected Value Set{ vsacParameter.valueSets.length > 1 ? ` ${i + 1}` : ''}:
                   </span>
+
                   {` ${vs.name} (${vs.oid})`}
-                  {this.viewValueSetDetails(vs)}
+
                   <span
                     role="button"
                     id="delete-valueset"
@@ -338,7 +339,9 @@ export default class TemplateInstance extends Component {
                       e.which = e.which || e.keyCode;
                       if (e.which === 13) this.deleteValueSet(vs);
                     }}>
-                    <FontAwesome name='close'/>
+                    <FontAwesome name="close" className="delete-valueset-button" />
+
+                    {this.viewValueSetDetails(vs)}
                   </span>
                 </div>
               ))}
@@ -355,10 +358,11 @@ export default class TemplateInstance extends Component {
       const vsacParameter = this.props.templateInstance.parameters[1];
       if (vsacParameter.codes) {
         return (
-          <div className='modifier__return__type' id='code-list'>
+          <div className="modifier__return__type" id="code-list">
             { vsacParameter.codes.map((code, i) => (
                 <div key={`selected-code-${i}`}>
                   <span className="bold">Selected Code{vsacParameter.codes.length > 1 ? ` ${i + 1}` : ''}: </span>
+
                   {/* Code name will come with validation */}
                   {`${code.codeSystem.name} (${code.code})`}
                   <span
@@ -370,7 +374,8 @@ export default class TemplateInstance extends Component {
                       e.which = e.which || e.keyCode;
                       if (e.which === 13) this.deleteCode(code);
                     }}>
-                    <FontAwesome name='close'/>
+
+                    <FontAwesome name="close" className="delete-code-button" />
                   </span>
                 </div>
               ))}
