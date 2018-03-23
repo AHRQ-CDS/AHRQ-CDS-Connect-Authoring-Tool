@@ -18,6 +18,8 @@ import ValueComparison from './modifiers/ValueComparison';
 import ValueComparisonObservation from './modifiers/ValueComparisonObservation';
 import WithUnit from './modifiers/WithUnit';
 
+import Validators from '../../utils/validators';
+
 function getInstanceName(instance) {
   return (instance.parameters.find(p => p.id === 'element_name') || {}).value;
 }
@@ -95,12 +97,18 @@ export default class TemplateInstance extends Component {
   }
 
   renderAppliedModifier = (modifier, index) => {
+    let validationWarning = null;
+    if (modifier.validator) {
+      const validator = Validators[modifier.validator.type];
+      if (!validator.check(modifier.validator.fields.map(v => modifier.values[v]))) {
+        validationWarning = validator.warning(modifier.validator.fields);
+      }
+    }
     const modifierForm = ((mod) => {
       // Reset values on modifiers that were not previously set or saved in the database
       if (!mod.values && this.modifierMap[mod.id].values) {
         mod.values = this.modifierMap[mod.id].values;
       }
-
       switch (mod.type || mod.id) {
         case 'ValueComparison':
           return (
@@ -164,6 +172,7 @@ export default class TemplateInstance extends Component {
 
     return (
       <div key={index} className="modifier">
+
         {modifierForm}
         { (index + 1 === this.props.templateInstance.modifiers.length)
           ? <button
@@ -174,6 +183,7 @@ export default class TemplateInstance extends Component {
             </button>
           : null
         }
+        <div className='warning'>{validationWarning}</div>
       </div>
     );
   }
@@ -308,9 +318,26 @@ export default class TemplateInstance extends Component {
 
   getPath = () => this.props.getPath(this.props.templateInstance.uniqueId)
 
+  validateElement = () => {
+    if (this.props.templateInstance.validator) {
+      const validator = Validators[this.props.templateInstance.validator.type];
+      const fields = this.props.templateInstance.validator.fields;
+      const args = this.props.templateInstance.validator.args;
+      const values = fields.map(f => this.state[f]);
+      const names = fields.map(f => this.props.templateInstance.parameters.find(el => el.id === f).name);
+      if (!validator.check(values, args)) {
+        return validator.warning(names, args);
+      }
+    }
+    return null;
+  }
+
   renderBody() {
+    const validationError = this.validateElement();
+
     return (
       <div className="element__body">
+        <div className="warning">{validationError}</div>
         <div>
           {this.props.templateInstance.parameters.map((param, index) =>
             // todo: each parameter type should probably have its own component

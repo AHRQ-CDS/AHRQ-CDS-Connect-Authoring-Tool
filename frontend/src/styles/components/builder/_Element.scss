@@ -52,13 +52,17 @@
 .modifier__list {
   .modifier {
     display: flex;
+    flex-wrap: wrap;
     align-items: center;
-    height: 2.5em;
 
     > div { flex-grow: 1 }
 
     .modifier__deletebutton {
       text-align: right;
+    }
+
+    > .warning {
+        flex-basis: 100%;
     }
   }
 }

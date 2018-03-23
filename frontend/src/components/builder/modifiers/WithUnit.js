@@ -22,7 +22,7 @@ class WithUnit extends Component {
                     onChange={(event) => {
                       this.props.updateAppliedModifier(this.props.index, { unit: event.target.value });
                     }}>
-                    <option defaultValue="">{'-- Select Unit --'}</option>
+                    <option defaultValue="" value="">{'-- Select Unit --'}</option>
                     <option value="mg/dL">{'mg/dL'}</option>
                   </select>
                 </span>
