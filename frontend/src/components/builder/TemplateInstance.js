@@ -103,7 +103,6 @@ export default class TemplateInstance extends Component {
       if (!validator.check(modifier.validator.fields.map(v => modifier.values[v]))) {
         validationWarning = validator.warning(modifier.validator.fields);
       }
-      console.log(validationWarning);
     }
     const modifierForm = ((mod) => {
       // Reset values on modifiers that were not previously set or saved in the database
