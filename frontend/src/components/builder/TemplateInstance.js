@@ -189,6 +189,7 @@ export default class TemplateInstance extends Component {
               e.which = e.which || e.keyCode;
               if (e.which === 13) this.removeLastModifier();
             }}>
+
             <FontAwesome name="close" className="delete-valueset-button" />
           </span>
         }
@@ -336,20 +337,22 @@ export default class TemplateInstance extends Component {
                     Selected Value Set{ vsacParameter.valueSets.length > 1 ? ` ${i + 1}` : ''}:
                   </span>
 
-                  <span className="col-8">{` ${vs.name} (${vs.oid})`}</span>
+                  <span className="col-7">{` ${vs.name} (${vs.oid})`}</span>
 
-                  {this.viewValueSetDetails(vs)}
+                  <span className="col-2 align-right">
+                    {this.viewValueSetDetails(vs)}
 
-                  <span
-                    role="button"
-                    id="delete-valueset"
-                    tabIndex="0"
-                    onClick={() => this.deleteValueSet(vs)}
-                    onKeyPress={(e) => {
-                      e.which = e.which || e.keyCode;
-                      if (e.which === 13) this.deleteValueSet(vs);
-                    }}>
-                    <FontAwesome name="close" className="delete-valueset-button" />
+                    <span
+                      role="button"
+                      id="delete-valueset"
+                      tabIndex="0"
+                      onClick={() => this.deleteValueSet(vs)}
+                      onKeyPress={(e) => {
+                        e.which = e.which || e.keyCode;
+                        if (e.which === 13) this.deleteValueSet(vs);
+                      }}>
+                      <FontAwesome name="close" className="delete-valueset-button" />
+                    </span>
                   </span>
                 </div>
               ))}
@@ -372,19 +375,21 @@ export default class TemplateInstance extends Component {
                   <span className="bold col-3">Selected Code{vsacParameter.codes.length > 1 ? ` ${i + 1}` : ''}: </span>
 
                   {/* Code name will come with validation */}
-                  <span className="col-8">{`${code.codeSystem.name} (${code.code})`}</span>
+                  <span className="col-7">{`${code.codeSystem.name} (${code.code})`}</span>
 
-                  <span
-                    role="button"
-                    id="delete-code"
-                    tabIndex="0"
-                    onClick={() => this.deleteCode(code)}
-                    onKeyPress={(e) => {
-                      e.which = e.which || e.keyCode;
-                      if (e.which === 13) this.deleteCode(code);
-                    }}>
+                  <span className="col-2 align-right">
+                    <span
+                      role="button"
+                      id="delete-code"
+                      tabIndex="0"
+                      onClick={() => this.deleteCode(code)}
+                      onKeyPress={(e) => {
+                        e.which = e.which || e.keyCode;
+                        if (e.which === 13) this.deleteCode(code);
+                      }}>
 
-                    <FontAwesome name="close" className="delete-code-button" />
+                      <FontAwesome name="close" className="delete-code-button" />
+                    </span>
                   </span>
                 </div>
               ))}
@@ -415,6 +420,7 @@ export default class TemplateInstance extends Component {
         <button className="disabled-button" disabled={true}>
           <FontAwesome name="check" /> VSAC Authenticated
         </button>
+
         <ElementModal
           className="element-select__modal"
           updateElement={this.updateInstance}
@@ -427,6 +433,7 @@ export default class TemplateInstance extends Component {
           isRetrievingDetails={this.props.isRetrievingDetails}
           vsacDetailsCodes={this.props.vsacDetailsCodes}
         />
+
           <CodeSelectModal
             className="element-select__modal"
             updateElement={this.updateInstance}
@@ -545,10 +552,9 @@ export default class TemplateInstance extends Component {
 
         <div className='modifier__return__type return-type row'>
           <span className="bold col-3 label">Return Type: </span>
-          <span className="col-8 value">{_.startCase(this.state.returnType)}</span>
+          <span className="col-7 value">{_.startCase(this.state.returnType)}</span>
+          {this.renderModifierSelect()}
         </div>
-
-        {this.renderModifierSelect()}
       </div>
     );
   }
