@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import Select from 'react-select';
 import FontAwesome from 'react-fontawesome';
 import StringParameter from './parameters/StringParameter';
+import ParameterEditor from './ParameterEditor';
 
 class Parameter extends Component {
   updateParameter = (object) => {
@@ -43,28 +44,23 @@ class Parameter extends Component {
               <div className="form__group">
                 <label>
                   Parameter Type:
+                  <Select
+                    aria-label={'Select Parameter Type'}
+                    inputProps={{ title: 'Select Parameter Type' }}
+                    clearable={false}
+                    options={typeOptions}
+                    value={this.props.type}
+                    onChange={ e => this.updateParameter({ name: this.props.name, type: e.value, value: null }) }/>
                 </label>
-                <Select
-                  aria-label={'Select Parameter Type'}
-                  inputProps={{ title: 'Select Parameter Type' }}
-                  clearable={false}
-                  options={typeOptions}
-                  value={this.props.type}
-                  onChange={ e => this.updateParameter({ name: this.props.name, type: e.value, value: null }) }/>
               </div>
 
-              <div className="form__group">
-                <label>
-                  Parameter Value:
-                </label>
-                <Select
-                  aria-label={'Select True or False'}
-                  inputProps={{ title: 'Select True or False' }}
-                  clearable={true}
-                  options={[{ value: 'true', label: 'True' }, { value: 'false', label: 'False' }]}
-                  value={this.props.value}
-                  onChange={ e => this.updateParameter({ name: this.props.name, type: this.props.type, value: (e !== null ? e.value : '') }) }/>
-              </div>
+              <ParameterEditor
+                id={`param-name-${this.props.index}`}
+                name={this.props.name}
+                type={this.props.type != null ? this.props.type : null}
+                value={this.props.value}
+                updateInstance={ e =>
+                  (this.updateParameter({ name: this.props.name, type: this.props.type, value: (e != null ? e.value : null) })) }/>
 
             </div>
           </div>
