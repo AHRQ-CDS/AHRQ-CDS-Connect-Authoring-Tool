@@ -20,30 +20,7 @@ class CodeSelectModal extends Component {
   }
 
   openCodeSelectModal = () => {
-    const { selectedCode } = this.props;
-    if (selectedCode) {
-      // Set up the object to be selected in the dropdown
-      // TODO: When you can select multiple codes, this will need to update, depending on how the UI works.
-      const selectedCS = {
-        value: selectedCode[0].codeSystem.name,
-        label: selectedCode[0].codeSystem.name,
-        id: selectedCode[0].codeSystem.id
-      };
-      let codeSystemText = '';
-      const otherSelected = selectedCode[0].codeSystem.name === 'Other';
-      if (otherSelected) {
-        codeSystemText = selectedCode[0].codeSystem.id;
-      }
-      this.setState({
-        showCodeSelectModal: true,
-        codeText: selectedCode[0].code,
-        codeSystemText,
-        selectedCS,
-        displayOtherInput: otherSelected
-      });
-    } else {
-      this.setState({ showCodeSelectModal: true });
-    }
+    this.setState({ showCodeSelectModal: true });
   }
 
   closeCodeSelectModal = () => {

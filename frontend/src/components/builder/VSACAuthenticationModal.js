@@ -74,7 +74,7 @@ VSACAuthenticationModal.propTypes = {
   loginVSACUser: PropTypes.func.isRequired,
   setVSACAuthStatus: PropTypes.func.isRequired,
   vsacStatus: PropTypes.string,
-  vsacStatusText: PropTypes.string.isRequired
+  vsacStatusText: PropTypes.string
 };
 
 export default VSACAuthenticationModal;

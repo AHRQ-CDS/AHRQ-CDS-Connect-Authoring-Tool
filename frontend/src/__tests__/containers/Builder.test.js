@@ -42,7 +42,17 @@ const props = {
   downloadArtifact: jest.fn(),
   saveArtifact: jest.fn(),
   updateAndSaveArtifact: jest.fn(),
-  downloadedArtifact: { elmErrors: [] }
+  downloadedArtifact: { elmErrors: [] },
+  loginVSACUser: jest.fn(),
+  setVSACAuthStatus: jest.fn(),
+  timeLastAuthenticated: new Date(),
+  searchVSACByKeyword: jest.fn(),
+  isSearchingVSAC: false,
+  vsacSearchResults: [],
+  vsacSearchCount: 0,
+  getVSDetails: jest.fn(),
+  isRetrievingDetails: false,
+  vsacDetailsCodes: []
 };
 
 test('children have correct classes', () => {

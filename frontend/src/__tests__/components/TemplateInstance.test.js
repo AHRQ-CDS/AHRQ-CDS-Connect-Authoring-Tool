@@ -28,7 +28,7 @@ const props = {
   vsacSearchCount: 0,
   getVSDetails: jest.fn(),
   isRetrievingDetails: false,
-  vsacDetailsCodes: jest.fn()
+  vsacDetailsCodes: []
 };
 
 test('creating a new template instance clones the correct instance', () => {
@@ -68,7 +68,7 @@ describe('vsac controls on generic template instances', () => {
     expect(vsacControls.find('VSACAuthenticationModal')).toHaveLength(0);
 
     // Change authenticated time to test unathenticated controls.
-    component.setProps({ timeLastAuthenticated: new Date() - 864000000 });
+    component.setProps({ timeLastAuthenticated: new Date(new Date() - 864000000) });
     expect(vsacControls.find('.disabled-button')).toHaveLength(0);
     expect(vsacControls.find('ElementModal')).toHaveLength(0);
     expect(vsacControls.find('CodeSelectModal')).toHaveLength(0);
