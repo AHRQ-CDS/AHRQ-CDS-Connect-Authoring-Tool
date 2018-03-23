@@ -179,12 +179,18 @@ export default class TemplateInstance extends Component {
 
         {modifierForm}
         { index + 1 === this.props.templateInstance.modifiers.length &&
-          <button
-            onClick={this.removeLastModifier}
+          <span
+            role="button"
             className="modifier__deletebutton secondary-button"
-            aria-label={'remove last expression'}>
-            <FontAwesome name='close'/>
-          </button>
+            aria-label={'remove last expression'}
+            onClick={this.removeLastModifier}
+            tabIndex="0"
+            onKeyPress={(e) => {
+              e.which = e.which || e.keyCode;
+              if (e.which === 13) this.removeLastModifier();
+            }}>
+            <FontAwesome name="close" className="delete-valueset-button" />
+          </span>
         }
         <div className='warning'>{validationWarning}</div>
       </div>
@@ -192,13 +198,13 @@ export default class TemplateInstance extends Component {
   }
 
   renderAppliedModifiers = () => (
-    <div>
+    <div className="applied-modifiers row">
       {
         this.props.templateInstance.modifiers && this.props.templateInstance.modifiers.length > 0 ?
-        <span className="bold">Applied Expressions:</span> :
+        <span className="bold col-3">Applied Expressions:</span> :
         null
       }
-      <div className="modifier__list" aria-label="Expression List">
+      <div className="modifier__list col-9" aria-label="Expression List">
         {(this.props.templateInstance.modifiers || []).map((modifier, index) =>
           this.renderAppliedModifier(modifier, index))}
       </div>
@@ -299,7 +305,9 @@ export default class TemplateInstance extends Component {
               onClick={() => this.setState({ showModifiers: !this.state.showModifiers })}
               className="modifier__addbutton secondary-button"
               aria-label={'add expression'}>
-              Add Expression</button>
+              Add Expression
+            </button>
+
             { (this.state.showModifiers)
               ? this.state.relevantModifiers.map(modifier =>
                   <button key={modifier.id}
@@ -323,12 +331,14 @@ export default class TemplateInstance extends Component {
         return (
           <div className="modifier__return__type" id="valueset-list">
             { vsacParameter.valueSets.map((vs, i) => (
-                <div key={`selected-valueset-${i}`}>
-                  <span className="bold">
+                <div key={`selected-valueset-${i}`} className="row">
+                  <span className="bold col-3">
                     Selected Value Set{ vsacParameter.valueSets.length > 1 ? ` ${i + 1}` : ''}:
                   </span>
 
-                  {` ${vs.name} (${vs.oid})`}
+                  <span className="col-8">{` ${vs.name} (${vs.oid})`}</span>
+
+                  {this.viewValueSetDetails(vs)}
 
                   <span
                     role="button"
@@ -340,8 +350,6 @@ export default class TemplateInstance extends Component {
                       if (e.which === 13) this.deleteValueSet(vs);
                     }}>
                     <FontAwesome name="close" className="delete-valueset-button" />
-
-                    {this.viewValueSetDetails(vs)}
                   </span>
                 </div>
               ))}
@@ -360,11 +368,12 @@ export default class TemplateInstance extends Component {
         return (
           <div className="modifier__return__type" id="code-list">
             { vsacParameter.codes.map((code, i) => (
-                <div key={`selected-code-${i}`}>
-                  <span className="bold">Selected Code{vsacParameter.codes.length > 1 ? ` ${i + 1}` : ''}: </span>
+                <div key={`selected-code-${i}`} className="row">
+                  <span className="bold col-3">Selected Code{vsacParameter.codes.length > 1 ? ` ${i + 1}` : ''}: </span>
 
                   {/* Code name will come with validation */}
-                  {`${code.codeSystem.name} (${code.code})`}
+                  <span className="col-8">{`${code.codeSystem.name} (${code.code})`}</span>
+
                   <span
                     role="button"
                     id="delete-code"
@@ -534,8 +543,9 @@ export default class TemplateInstance extends Component {
 
         {this.renderAppliedModifiers()}
 
-        <div className='modifier__return__type'>
-          <span className="bold">Return Type: </span>{_.startCase(this.state.returnType)}
+        <div className='modifier__return__type return-type row'>
+          <span className="bold col-3 label">Return Type: </span>
+          <span className="col-8 value">{_.startCase(this.state.returnType)}</span>
         </div>
 
         {this.renderModifierSelect()}

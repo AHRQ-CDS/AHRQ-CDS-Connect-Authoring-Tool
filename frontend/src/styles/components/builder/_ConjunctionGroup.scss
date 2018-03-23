@@ -56,7 +56,11 @@
   .delete-code-button,
   .delete-valueset-button,
   .fa-eye {
-    float: right;
     margin-left: 10px;
+    cursor: pointer;
+  }
+
+  .delete-code-button {
+    margin-left: 50px;
   }
 }

@@ -66,7 +66,7 @@
 
     .modifier__deletebutton {
       text-align: right;
-      border: $border-global;
+      margin-right: 12px;
     }
 
     > .warning {
@@ -87,6 +87,14 @@
 .modifier__return__type {
   margin: 1em 0;
   color: $black;
+
+  &.return-type span {
+    padding: 0 22px 0 0;
+
+    &.value {
+      margin-left: 6px;
+    }
+  }
 }
 
 .modifier__comparison__value {
@@ -96,4 +104,8 @@
 .vsac-authentication .blank {
   min-width: 170px;
   display: inline-block;
+}
+
+.bold {
+  text-align: right;
 }
