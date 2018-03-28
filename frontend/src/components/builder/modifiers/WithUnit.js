@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import _ from 'lodash';
+import Def from '../../../utils/autocomplete-lhc-15.1.1/autocomplete-lhc_jQuery.min.js';
 
 /* eslint-disable jsx-a11y/no-onchange */
 class WithUnit extends Component {
@@ -9,10 +10,12 @@ class WithUnit extends Component {
   }
 
   render() {
+    new Def.Autocompleter.Search('ucum', 'https://clin-table-search.lhc.nlm.nih.gov/api/ucum/v3/search', {tableFormat: true, valueCols: [0], colHeaders: ['Code', 'Name']});
     const unitId = _.uniqueId('unit-');
     return (
       <div>
         <div >
+          <input type="text" id="ucum" placeholder="Code or name"/>
           <label htmlFor={unitId}>
             Unit:
             <span className="field">
