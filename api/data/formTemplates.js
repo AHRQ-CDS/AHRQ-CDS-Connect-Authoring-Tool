@@ -67,7 +67,7 @@ module.exports = [
         suppress: true,
         extends: 'Base',
         template: 'GenericObservation',
-        suppressedModifiers: ['WithUnit', 'ConvertToMgPerdL'], // checkInclusionInVS is assumed to be suppressed
+        suppressedModifiers: ['ConvertToMgPerdL'], // checkInclusionInVS is assumed to be suppressed
         parameters: [
           { id: 'observation', type: 'observation_vsac', name: 'Observation' },
         ]

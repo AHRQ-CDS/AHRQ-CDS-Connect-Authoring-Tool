@@ -134,6 +134,7 @@ export default class TemplateInstance extends Component {
               minValue={mod.values.minValue}
               maxOperator={mod.values.maxOperator}
               maxValue={mod.values.maxValue}
+              unit={mod.values.unit}
               updateAppliedModifier={this.updateAppliedModifier}/>
           );
         case 'LookBack':

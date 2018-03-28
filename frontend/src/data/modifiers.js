@@ -44,7 +44,7 @@ export default [
     inputTypes: ['system_quantity'],
     returnType: 'boolean',
     validator: { type: 'require', fields: ['minValue', 'minOperator'], args: null },
-    values: { minOperator: undefined, minValue: '', maxOperator: undefined, maxValue: '' },
+    values: { minOperator: undefined, minValue: '', maxOperator: undefined, maxValue: '', unit: '' },
     cqlTemplate: 'ValueComparisonObservation',
     comparisonOperator: null
   },

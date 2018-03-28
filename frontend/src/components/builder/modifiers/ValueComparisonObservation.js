@@ -13,6 +13,7 @@ class ValueComparisonObservation extends Component {
     const minOperatorId = _.uniqueId('operator-');
     const maxValueId = _.uniqueId('value2-');
     const maxOperatorId = _.uniqueId('operator2-');
+    const unitId = _.uniqueId('unit-');
     return (
       <div>
         <div >
@@ -83,6 +84,23 @@ class ValueComparisonObservation extends Component {
                 this.props.updateAppliedModifier(this.props.index, { maxValue: parseFloat(event.target.value, 10) });
               }}
             />
+          </label>
+
+          <label htmlFor={unitId}>
+            Unit:
+            <span className="field">
+             <span className="control">
+               <span className="select">
+                  <select id={unitId} name="Unit" aria-label="Unit" value={this.props.unit}
+                    onChange={(event) => {
+                      this.props.updateAppliedModifier(this.props.index, { unit: event.target.value });
+                    }}>
+                    <option defaultValue="">{'-- Select Unit --'}</option>
+                    <option value="mg/dL">{'mg/dL'}</option>
+                  </select>
+                </span>
+              </span>
+            </span>
           </label>
 
         </div>

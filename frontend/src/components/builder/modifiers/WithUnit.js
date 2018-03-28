@@ -14,7 +14,7 @@ class WithUnit extends Component {
       <div>
         <div >
           <label htmlFor={unitId}>
-            Value:
+            Unit:
             <span className="field">
              <span className="control">
                <span className="select">
