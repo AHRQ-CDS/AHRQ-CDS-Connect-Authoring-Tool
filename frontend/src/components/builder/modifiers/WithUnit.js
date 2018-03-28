@@ -10,16 +10,18 @@ class WithUnit extends Component {
     this.state = { };
   }
 
+  componentDidMount = () => {
+    new Def.Autocompleter.Search('with-unit-ucum', 'https://clin-table-search.lhc.nlm.nih.gov/api/ucum/v3/search', {tableFormat: true, valueCols: [0], colHeaders: ['Code', 'Name']});
+  }
+
   render() {
-    new Def.Autocompleter.Search('ucum', 'https://clin-table-search.lhc.nlm.nih.gov/api/ucum/v3/search', {tableFormat: true, valueCols: [0], colHeaders: ['Code', 'Name']});
     const unitId = _.uniqueId('unit-');
     return (
       <div>
         <div >
-          <input type="text" id="ucum" placeholder="Code or name"/>
           <label htmlFor={unitId}>
             Unit:
-            <span className="field">
+            {/* <span className="field">
              <span className="control">
                <span className="select">
                   <select id={unitId} name="With Unit" aria-label="With Unit" value={this.props.unit}
@@ -31,9 +33,16 @@ class WithUnit extends Component {
                   </select>
                 </span>
               </span>
-            </span>
+            </span> */}
+            <input
+              type="text"
+              id="with-unit-ucum"
+              placeholder="Enter unit"
+              value={this.props.unit}
+              onChange={(event) => { this.props.updateAppliedModifier(this.props.index, { unit: event.target.value });}}
+              onSelect={(event) => { this.props.updateAppliedModifier(this.props.index, { unit: event.target.value });}}
+            />
           </label>
-
         </div>
       </div>
     );

@@ -1,11 +1,16 @@
 import React, { Component } from 'react';
 import _ from 'lodash';
+const { Def } = window;
 
 /* eslint-disable jsx-a11y/no-onchange */
 class ValueComparisonObservation extends Component {
   constructor(props) {
     super(props);
     this.state = { };
+  }
+
+  componentDidMount = () => {
+    new Def.Autocompleter.Search('ucum-unit', 'https://clin-table-search.lhc.nlm.nih.gov/api/ucum/v3/search', {tableFormat: true, valueCols: [0], colHeaders: ['Code', 'Name']});
   }
 
   render() {
@@ -88,7 +93,7 @@ class ValueComparisonObservation extends Component {
 
           <label htmlFor={unitId}>
             Unit:
-            <span className="field">
+            {/* <span className="field">
              <span className="control">
                <span className="select">
                   <select id={unitId} name="Unit" aria-label="Unit" value={this.props.unit}
@@ -100,7 +105,19 @@ class ValueComparisonObservation extends Component {
                   </select>
                 </span>
               </span>
-            </span>
+            </span> */}
+            <input
+              type="text"
+              id="ucum-unit"
+              placeholder="Enter unit"
+              value={this.props.unit}
+              onChange={(event) => {
+                this.props.updateAppliedModifier(this.props.index, { unit: event.target.value });
+              }}
+              onSelect={(event) => {
+                this.props.updateAppliedModifier(this.props.index, { unit: event.target.value });
+              }}
+            />
           </label>
 
         </div>
