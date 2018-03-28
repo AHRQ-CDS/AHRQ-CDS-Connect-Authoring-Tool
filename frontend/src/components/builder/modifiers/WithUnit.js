@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import _ from 'lodash';
-import Def from '../../../utils/autocomplete-lhc-15.1.1/autocomplete-lhc_jQuery.min.js';
+
+const { Def } = window;
 
 /* eslint-disable jsx-a11y/no-onchange */
 class WithUnit extends Component {
