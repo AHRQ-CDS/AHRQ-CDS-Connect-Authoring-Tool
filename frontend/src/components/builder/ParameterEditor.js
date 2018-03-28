@@ -430,38 +430,341 @@ class TimeEditor extends Component {
 }
 
 class IntervalOfIntegerEditor extends Component {
+  assignValue(evt) {
+    let first_integer = null;
+    let second_integer = null;
+
+    switch (evt.target.name) {
+      case "first_integer":
+        first_integer = _.get(evt, 'target.value', null);
+        if (first_integer != null) { first_integer = parseInt(first_integer, 10); }
+        second_integer = _.get(this, 'props.value.second_integer', null);
+        break;
+      case "second_integer":
+        first_integer = _.get(this, 'props.value.first_integer', null);
+        second_integer = _.get(evt, 'target.value', null);
+        if (second_integer != null) { second_integer = parseInt(second_integer, 10); }
+        break;
+      default:
+        break;
+    }
+
+    return { first_integer: first_integer, second_integer: second_integer };
+  }
+
   render() {
     const { id, name, type, value, updateInstance } = this.props;
     const formId = _.uniqueId('parameter-');
 
-    return null;
+    return (
+      <div className="form__group">
+        <label htmlFor={formId}>
+          <form>
+            <label>First Integer:</label>
+            <input
+              id={id}
+              name="first_integer"
+              type="number"
+              value={ _.get(value, 'first_integer', null) || '' }
+              onChange={ e => {
+                updateInstance({ name: name, type: type, value: this.assignValue(e) })
+              }}
+            />
+            <label>Second Integer:</label>
+            <input
+              id={id}
+              name="second_integer"
+              type="number"
+              value={ _.get(value, 'second_integer', null) || '' }
+              onChange={ e => {
+                updateInstance({ name: name, type: type, value: this.assignValue(e) })
+              }}
+            />
+          </form>
+        </label>
+      </div>
+    );
   }
 }
 
 class IntervalOfDateTimeEditor extends Component {
+  assignValue(evt) {
+    let first_month = null;
+    let first_day = null;
+    let first_year = null;
+    let second_month = null;
+    let second_day = null;
+    let second_year = null;
+
+    switch (evt.target.name) {
+      case "first_month":
+        first_month = _.get(evt, 'target.value', null);
+        first_day = _.get(this, 'props.value.first_day', null);
+        first_year = _.get(this, 'props.value.first_year', null);
+        second_month = _.get(this, 'props.value.second_month', null);
+        second_day = _.get(this, 'props.value.second_day', null);
+        second_year = _.get(this, 'props.value.second_year', null);
+        break;
+      case "first_day":
+        first_month = _.get(this, 'props.value.first_month', null);
+        first_day = _.get(evt, 'target.value', null);
+        first_year = _.get(this, 'props.value.first_year', null);
+        second_month = _.get(this, 'props.value.second_month', null);
+        second_day = _.get(this, 'props.value.second_day', null);
+        second_year = _.get(this, 'props.value.second_year', null);
+        break;
+      case "first_year":
+        first_month = _.get(this, 'props.value.first_month', null);
+        first_day = _.get(this, 'props.value.first_day', null);
+        first_year = _.get(evt, 'target.value', null);
+        second_month = _.get(this, 'props.value.second_month', null);
+        second_day = _.get(this, 'props.value.second_day', null);
+        second_year = _.get(this, 'props.value.second_year', null);
+        break;
+      case "second_month":
+        first_month = _.get(this, 'props.value.first_month', null);
+        first_day = _.get(this, 'props.value.first_day', null);
+        first_year = _.get(this, 'props.value.first_year', null);
+        second_month = _.get(evt, 'target.value', null);
+        second_day = _.get(this, 'props.value.second_day', null);
+        second_year = _.get(this, 'props.value.second_year', null);
+        break;
+      case "second_day":
+        first_month = _.get(this, 'props.value.first_month', null);
+        first_day = _.get(this, 'props.value.first_day', null);
+        first_year = _.get(this, 'props.value.first_year', null);
+        second_month = _.get(this, 'props.value.second_month', null);
+        second_day = _.get(evt, 'target.value', null);
+        second_year = _.get(this, 'props.value.second_year', null);
+        break;
+      case "second_year":
+        first_month = _.get(this, 'props.value.first_month', null);
+        first_day = _.get(this, 'props.value.first_day', null);
+        first_year = _.get(this, 'props.value.first_year', null);
+        second_month = _.get(this, 'props.value.second_month', null);
+        second_day = _.get(this, 'props.value.second_day', null);
+        second_year = _.get(evt, 'target.value', null);
+        break;
+      default:
+        break;
+    }
+
+    return {
+      first_month: first_month,
+      first_day: first_day,
+      first_year: first_year,
+      second_month: second_month,
+      second_day: second_day,
+      second_year: second_year
+    };
+  }
+
   render() {
     const { id, name, type, value, updateInstance } = this.props;
     const formId = _.uniqueId('parameter-');
 
-    return null;
+    return (
+      <div className="form__group">
+        <label htmlFor={formId}>
+          <form>
+            <label>First Month:</label>
+            <input
+              id={id}
+              name="first_month"
+              type="number"
+              value={ _.get(value, 'first_month', null) || '' }
+              onChange={ e => {
+                updateInstance({ name: name, type: type, value: this.assignValue(e) })
+              }}
+            />
+            <label>First Day:</label>
+            <input
+              id={id}
+              name="first_day"
+              type="number"
+              value={ _.get(value, 'first_day', null) || '' }
+              onChange={ e => {
+                updateInstance({ name: name, type: type, value: this.assignValue(e) })
+              }}
+            />
+            <label>First Year:</label>
+            <input
+              id={id}
+              name="first_year"
+              type="number"
+              value={ _.get(value, 'first_year', null) || '' }
+              onChange={ e => {
+                updateInstance({ name: name, type: type, value: this.assignValue(e) })
+              }}
+            />
+            <label>Second Month:</label>
+            <input
+              id={id}
+              name="second_month"
+              type="number"
+              value={ _.get(value, 'second_month', null) || '' }
+              onChange={ e => {
+                updateInstance({ name: name, type: type, value: this.assignValue(e) })
+              }}
+            />
+            <label>Second Day:</label>
+            <input
+              id={id}
+              name="second_day"
+              type="number"
+              value={ _.get(value, 'second_day', null) || '' }
+              onChange={ e => {
+                updateInstance({ name: name, type: type, value: this.assignValue(e) })
+              }}
+            />
+            <label>Second Year:</label>
+            <input
+              id={id}
+              name="second_year"
+              type="number"
+              value={ _.get(value, 'second_year', null) || '' }
+              onChange={ e => {
+                updateInstance({ name: name, type: type, value: this.assignValue(e) })
+              }}
+            />
+          </form>
+        </label>
+      </div>
+    );
   }
 }
 
 class IntervalOfDecimalEditor extends Component {
+  assignValue(evt) {
+    let first_decimal = null;
+    let second_decimal = null;
+
+    switch (evt.target.name) {
+      case "first_decimal":
+        first_decimal = _.get(evt, 'target.value', null);
+        if (first_decimal != null) { first_decimal = parseFloat(first_decimal, 10); }
+        second_decimal = _.get(this, 'props.value.second_decimal', null);
+        break;
+      case "second_decimal":
+        first_decimal = _.get(this, 'props.value.first_decimal', null);
+        second_decimal = _.get(evt, 'target.value', null);
+        if (second_decimal != null) { second_decimal = parseFloat(second_decimal, 10); }
+        break;
+      default:
+        break;
+    }
+
+    return { first_decimal: first_decimal, second_decimal: second_decimal };
+  }
+
   render() {
     const { id, name, type, value, updateInstance } = this.props;
     const formId = _.uniqueId('parameter-');
 
-    return null;
+    return (
+      <div className="form__group">
+        <label htmlFor={formId}>
+          <form>
+            <label>First Decimal:</label>
+            <input
+              id={id}
+              name="first_decimal"
+              type="number"
+              value={ _.get(value, 'first_decimal', null) || '' }
+              onChange={ e => {
+                updateInstance({ name: name, type: type, value: this.assignValue(e) })
+              }}
+            />
+            <label>Second Decimal:</label>
+            <input
+              id={id}
+              name="second_decimal"
+              type="number"
+              value={ _.get(value, 'second_decimal', null) || '' }
+              onChange={ e => {
+                updateInstance({ name: name, type: type, value: this.assignValue(e) })
+              }}
+            />
+          </form>
+        </label>
+      </div>
+    );
   }
 }
 
 class IntervalOfQuantityEditor extends Component {
+  assignValue(evt) {
+    let first_quantity = null;
+    let second_quantity = null;
+    let unit = null;
+
+    switch (evt.target.name) {
+      case "first_quantity":
+        first_quantity = _.get(evt, 'target.value', null);
+        if (first_quantity != null) { first_quantity = parseFloat(first_quantity, 10); }
+        second_quantity = _.get(this, 'props.value.second_quantity', null);
+        unit = _.get(this, 'props.value.unit', null);
+        break;
+      case "second_quantity":
+        first_quantity = _.get(this, 'props.value.first_quantity', null);
+        second_quantity = _.get(evt, 'target.value', null);
+        if (second_quantity != null) { second_quantity = parseFloat(second_quantity, 10); }
+        unit = _.get(this, 'props.value.unit', null);
+        break;
+      case "unit":
+        first_quantity = _.get(this, 'props.value.first_quantity', null);
+        second_quantity = _.get(this, 'props.value.second_quantity', null);
+        unit = _.get(evt, 'target.value', null);
+        break;
+      default:
+        break;
+    }
+
+    return { first_quantity: first_quantity, second_quantity: second_quantity, unit: unit };
+  }
+
   render() {
     const { id, name, type, value, updateInstance } = this.props;
     const formId = _.uniqueId('parameter-');
 
-    return null;
+    return (
+      <div className="form__group">
+        <label htmlFor={formId}>
+          <form>
+            <label>First Quantity:</label>
+            <input
+              id={id}
+              name="first_quantity"
+              type="number"
+              value={ _.get(value, 'first_quantity', null) || '' }
+              onChange={ e => {
+                updateInstance({ name: name, type: type, value: this.assignValue(e) })
+              }}
+            />
+            <label>Second Quantity:</label>
+            <input
+              id={id}
+              name="second_quantity"
+              type="number"
+              value={ _.get(value, 'second_quantity', null) || '' }
+              onChange={ e => {
+                updateInstance({ name: name, type: type, value: this.assignValue(e) })
+              }}
+            />
+            <label>Unit:</label>
+            <input
+              id={id}
+              name="unit"
+              type="text"
+              value={ _.get(value, 'unit', null) || '' }
+              onChange={ e => {
+                updateInstance({ name: name, type: type, value: this.assignValue(e) })
+              }}
+            />
+          </form>
+        </label>
+      </div>
+    );
   }
 }
 
