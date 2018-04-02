@@ -4,7 +4,7 @@ import React, { Component } from 'react';
 export default class CheckExistence extends Component {
   render() {
     return (
-      <div className="check-existance">
+      <div className="check-existence">
         <span className="field">
           <span className="control">
             <span className="select">
