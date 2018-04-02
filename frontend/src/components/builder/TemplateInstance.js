@@ -334,10 +334,13 @@ export default class TemplateInstance extends Component {
 
   renderBody() {
     const validationError = this.validateElement();
+    const returnError = this.state.returnType === 'boolean' ? null
+      : "Element must have return type 'boolean'.  Add expressions(s) to change the return type.";
 
     return (
       <div className="element__body">
         <div className="warning">{validationError}</div>
+        <div className="warning">{returnError}</div>
         <div>
           {this.props.templateInstance.parameters.map((param, index) =>
             // todo: each parameter type should probably have its own component

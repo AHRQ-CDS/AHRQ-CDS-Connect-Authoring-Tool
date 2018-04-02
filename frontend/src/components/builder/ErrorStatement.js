@@ -122,15 +122,39 @@ export default class ErrorStatement extends Component {
     this.props.updateErrorStatement(newErrorStatement);
   }
 
+  renderWarning = (statement) => {
+    let warning = null;
+    // This may seem like a weird way to implement this but this text WILL change,
+    // when it does, it's the compiler's problem.
+    const warningText = <div className="warning">You need an If statement</div>;
+    // If we HAVE a value we just don't care what anything else is.
+    if (statement.condition.value) {
+      return warning;
+    }
+    // Now handle all the reasons you would need an If statement
+    // implemented this way to make it clearer the cases we cover and dont
+    if (statement.thenClause !== '') {
+      warning = warningText;
+    }
+    if (statement.child
+        && statement.child.statements
+        && statement.child.statements.some(val => this.renderWarning(val))
+    ) {
+      warning = warningText;
+    }
+    return warning;
+  }
+
   // Renders if part
-  renderCondition = (statement, parent, index) => (<Select
-      key={`condition-${parent != null ? parent : -1}-${index}`}
-      inputProps={{ id: `condition-${parent != null ? parent : -1}-${index}` }}
-      index={index}
-      value={statement.condition.value}
-      options={this.options()}
-      onChange={ e => this.setStatement(e, parent, index, 'condition')}
-    />)
+  renderCondition = (statement, parent, index) => (
+      <Select
+        key={`condition-${parent != null ? parent : -1}-${index}`}
+        inputProps={{ id: `condition-${parent != null ? parent : -1}-${index}` }}
+        index={index}
+        value={statement.condition.value}
+        options={this.options()}
+        onChange={ e => this.setStatement(e, parent, index, 'condition')}
+      />)
 
   // Renders then part of statement
   renderThen = (statement, parent, index) => (
@@ -175,7 +199,9 @@ export default class ErrorStatement extends Component {
   renderNestingButton = (statement, index) => (
     <div className="field recommendation__action">
       <button
-        className="button primary-button"
+        disabled={!statement.condition.value}
+        aria-disabled={!statement.condition.value}
+        className={`button primary-button ${statement.condition.value ? '' : 'disabled'}`}
         onClick={e => this.handleUseThenClause(index)}>
         {this.props.errorStatement.statements[index].useThenClause ? 'And Also If...' : '(Remove nested statements)'}
       </button>
@@ -183,13 +209,18 @@ export default class ErrorStatement extends Component {
   )
 
   // Renders button to add if else statements
-  renderAddIfButton = parent => (
-    <div className="field recommendation__action">
-      <button
-        className="button primary-button"
-        onClick={e => this.addStatement(parent)}> Or Else If... </button>
-    </div>
-  )
+  renderAddIfButton = (parent) => {
+    const disabled = !this.props.errorStatement.statements.every(s => s.condition.label);
+    return (
+      <div className="field recommendation__action">
+        <button
+          disabled={disabled}
+          aria-disabled={disabled}
+          className="button primary-button"
+          onClick={e => this.addStatement(parent)}> Or Else If... </button>
+      </div>
+    );
+  }
 
   // Renders delete if/then button
   renderDeleteButton = (parent, index) => (
@@ -233,6 +264,12 @@ export default class ErrorStatement extends Component {
           <div className="field-label is-large">
             <label className="label has-text-left">Errors</label>
           </div>
+          <div className='warning'>
+            {this.props.errorStatement.statements.length > 1
+              && !this.props.errorStatement.statements.every(s => s.condition.label) ?
+                'At least one If Clause is missing a selection' : ''
+            }
+          </div>
         </div>
         { this.props.errorStatement && this.props.errorStatement.statements.map((statement, i) => {
           const ifLabel = i ? 'Else if' : 'If';
@@ -240,6 +277,8 @@ export default class ErrorStatement extends Component {
             <div key={i}>
               <div className="field recommendation__block-if">
                 <label className="label" htmlFor={`condition-${i}`}>{ifLabel}</label>
+                {this.renderWarning(statement)}
+
                 <div className="form__group control">
                   {this.renderCondition(statement, null, i)}
                   {this.props.errorStatement.statements.length > 1 && this.renderDeleteButton(null, i)}

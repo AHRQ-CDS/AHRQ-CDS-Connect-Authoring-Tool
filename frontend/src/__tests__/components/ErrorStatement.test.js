@@ -14,7 +14,7 @@ beforeEach(() => {
     errorStatement: {
       statements: [
         {
-          condition: { label: null, value: null },
+          condition: { label: "null", value: "null" },
           thenClause: '',
           child: null,
           useThenClause: true
@@ -57,6 +57,8 @@ test('ErrorStatement renders without Crashing', () => {
 
 test('ErrorStatement adds a nested if when `And Also If` is clicked', () => {
   component.find('button').findWhere(button => button.text() === 'And Also If...').simulate('click');
+
+  console.log(component.find('button').findWhere(button => button.text() === 'And Also If...').debug());
   expect(updateErrorStatementMock.mock.calls[0][0].statements[0].child).not.toBeNull();
   expect(updateErrorStatementMock).toHaveBeenCalled();
 });
