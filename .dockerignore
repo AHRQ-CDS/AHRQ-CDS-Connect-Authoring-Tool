@@ -1,5 +1,6 @@
 **/.git
 **/node_modules
 /api/config/local.*
+/api/config/*.xls
 /frontend/build
 /mock-repo

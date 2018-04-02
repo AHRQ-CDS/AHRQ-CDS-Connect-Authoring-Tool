@@ -3,7 +3,7 @@
 # local config
 /config/local.*
 /config/local-users.*
-/config/ValueSets.xls
+/config/ValueSets*.xls
 
 # dependencies
 /node_modules
