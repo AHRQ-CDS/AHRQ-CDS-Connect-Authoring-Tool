@@ -21,28 +21,31 @@ export default class NumberParameter extends Component {
     return (
       <div className="number-parameter">
         <div className='form__group'>
-          <label htmlFor={id}>
-            <span className="label">{this.props.param.name}:</span>
+          <label htmlFor={id} className="row">
+            <div className="label col-3">{this.props.param.name}:</div>
 
-            <input id={id}
-              type="number"
-              name={this.props.param.id}
-              value={this.props.value || ''} // if .value is undefined, will switch between controlled and uncontrolled input. See https://github.com/twisty/formsy-react-components/issues/66
-              onChange={(event) => {
-                // eslint-disable-next-line max-len
-                const value = (this.props.typeOfNumber === 'integer') ? parseInt(event.target.value, 10) : parseFloat(event.target.value, 10);
-                this.props.updateInstance({ [event.target.name]: value });
-              }}
-            />
-            { ('exclusive' in this.props.param)
-            ? <div className="form__caption">
-                <input id={`${id}-exclusive`}
-                  type='checkbox'
-                  checked={this.state.checked}
-                  onChange={event => this.updateExclusive(event)}/>
-                <label htmlFor={`${id}-exclusive`}>{'Exclusive'}</label>
-              </div>
-            : null }
+            <div className="input col-7">
+              <input
+                id={id}
+                type="number"
+                name={this.props.param.id}
+                value={this.props.value || ''} // if .value is undefined, will switch between controlled and uncontrolled input. See https://github.com/twisty/formsy-react-components/issues/66
+                onChange={(event) => {
+                  // eslint-disable-next-line max-len
+                  const value = (this.props.typeOfNumber === 'integer') ? parseInt(event.target.value, 10) : parseFloat(event.target.value, 10);
+                  this.props.updateInstance({ [event.target.name]: value });
+                }}
+              />
+              { ('exclusive' in this.props.param)
+              ? <div className="form__caption">
+                  <input id={`${id}-exclusive`}
+                    type='checkbox'
+                    checked={this.state.checked}
+                    onChange={event => this.updateExclusive(event)}/>
+                  <label htmlFor={`${id}-exclusive`}>{'Exclusive'}</label>
+                </div>
+              : null }
+            </div>
           </label>
         </div>
       </div>

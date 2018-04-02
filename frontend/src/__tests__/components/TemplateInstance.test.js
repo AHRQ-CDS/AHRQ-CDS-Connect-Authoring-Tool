@@ -84,7 +84,7 @@ describe('vsac controls on generic template instances', () => {
     // View the list of selected value sets
     const firstSelectedValueSet = component.find('#valueset-list > div').at(0);
     expect(firstSelectedValueSet.text())
-      .toEqual(`Selected Value Set 1: ${valueSets[0].name} (${valueSets[0].oid})`);
+      .toEqual(`Value Set 1: ${valueSets[0].name} (${valueSets[0].oid})`);
 
     // The selected value set has an icon to open a view only ElementModal to view details
     const elementModal = firstSelectedValueSet.find('ElementModal');

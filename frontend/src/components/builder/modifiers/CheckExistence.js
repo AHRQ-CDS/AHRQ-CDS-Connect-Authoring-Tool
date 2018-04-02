@@ -1,13 +1,13 @@
 import React, { Component } from 'react';
 
 /* eslint-disable jsx-a11y/no-onchange */
-class CheckExistence extends Component {
+export default class CheckExistence extends Component {
   render() {
     return (
-      <div>
+      <div className="check-existance">
         <span className="field">
-         <span className="control">
-           <span className="select">
+          <span className="control">
+            <span className="select">
               <select name="Check Existence?" aria-label="Check Existence" title="Check Existence"
                 value={this.props.value}
                 onChange={(event) => {
@@ -24,5 +24,3 @@ class CheckExistence extends Component {
     );
   }
 }
-
-export default CheckExistence;

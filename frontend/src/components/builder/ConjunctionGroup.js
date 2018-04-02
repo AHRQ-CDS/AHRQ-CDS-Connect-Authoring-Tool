@@ -275,10 +275,8 @@ export default class ConjunctionGroup extends Component {
 
     return (
       <div className={classname}>
-        <div>
-          {this.renderRoot()}
-          {this.renderChildren()}
-        </div>
+        {this.renderRoot()}
+        {this.renderChildren()}
 
         <div className="conjunction-group__section">
           <ElementSelect

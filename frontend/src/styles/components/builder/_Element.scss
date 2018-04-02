@@ -5,6 +5,25 @@
   border-radius: $border-radius;
   font-weight: $font-weight-bold;
 
+  select {
+    background-color: $white;
+    box-shadow: inset 0 1px 2px 0 rgba(21, 21, 21, 0.1);
+    border: 0.1em solid lightgray;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    padding: 0.4em 0.75em;
+    border-radius: 0.2em;
+    font-size: 1rem;
+
+    label { margin: 0 20px; }
+
+    &.operator {
+      width: 65px;
+      margin-right: 20px;
+    }
+  }
+
   &.element__expanded {
     padding: 0;
 
@@ -64,19 +83,28 @@
 
     > div { flex-grow: 1; }
 
-    .modifier__deletebutton {
-      text-align: right;
-    }
+    &__deletebutton { text-align: right; }
 
     > .warning {
-        flex-basis: 100%;
+      flex-basis: 100%;
+      margin-top: 10px;
     }
+
+    input { margin: 0 10px; }
+
+    #ucum-unit {
+      width: 200px;
+      background-size: 15px;
+    }
+
+    label { margin-bottom: 0; }
   }
 }
 
 .modifier__selection {
   border-top: $border-global;
-  padding-top: 1em;
+  padding: 1em 0;
+  margin-top: 20px;
 
   .modifier__addbutton {
     @extend .primary-button;
@@ -84,30 +112,68 @@
 }
 
 .modifier__return__type {
-  margin: 1em 0;
-  color: $black;
+  .vs-info,
+  .code-info {
+    &__label,
+    &__info {
+      padding: 15px 0;
+    }
 
-  &.return-type span {
-    padding: 0 22px 0 0;
+    &__label { padding-right: 2em; }
 
-    &.value {
-      margin-left: 6px;
+    &__info {
+      border-bottom: 1px solid lighten($gray-light, 15%);
+
+      div { padding: 0; }
     }
   }
 }
 
-.modifier__comparison__value {
-  width: 5em;
+.return-type {
+  padding: 15px 0;
+
+  &__label { padding-right: 2em; }
+
+  &__value { margin-left: -30px; }
+
+  .check { margin-right: 5px; }
 }
+
+.applied-modifiers {
+  &__label { padding: 15px 2em 15px 0; }
+
+  .modifier__list {
+    padding: 0;
+    margin-left: -15px;
+  }
+
+  .modifier {
+    border-bottom: 1px solid lighten($gray-light, 15%);
+    padding: 15px 0;
+
+    .look-back {
+      label {
+        margin: 0;
+
+        input,
+        .field {
+          margin: 0 20px;
+        }
+      }
+    }
+  }
+}
+
+.modifier__button { margin-left: 10px; }
+
+.modifier__comparison__value { width: 5em; }
 
 .vsac-authentication .blank {
   min-width: 170px;
   display: inline-block;
 }
 
-.bold {
-  text-align: right;
-}
+.bold { text-align: right; }
 
 #vsac-controls {
   > span {
@@ -115,6 +181,4 @@
   }
 }
 
-.align-right {
-  text-align: right;
-}
+.align-right { text-align: right; }

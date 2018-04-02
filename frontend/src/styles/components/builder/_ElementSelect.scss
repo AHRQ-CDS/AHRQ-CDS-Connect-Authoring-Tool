@@ -169,5 +169,7 @@
 }
 
 div.vsac-authenticate {
-  margin-left: 180px;
+  > span {
+    margin-left: 20px;
+  }
 }

@@ -94,7 +94,7 @@
 
   /* WebKit gets its native focus styles.
    */
-  @media (-webkit-min-device-pixel-ratio:0) {
+  @media (-webkit-min-device-pixel-ratio: 0) {
     outline-width: 5px;
     outline-style: auto;
     outline-color: -webkit-focus-ring-color;

@@ -6,7 +6,7 @@ import React, { Component } from 'react';
  * key-value pairs that represents that state of the templateInstance,
  * and a function called Validation that validates what is entered
  */
-class StaticParameter extends Component {
+export default class StaticParameter extends Component {
   render() {
     return (
       <div className="static-parameter">
@@ -20,5 +20,3 @@ class StaticParameter extends Component {
     );
   }
 }
-
-export default StaticParameter;

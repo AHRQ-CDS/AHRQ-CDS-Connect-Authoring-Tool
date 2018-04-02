@@ -108,6 +108,7 @@ export default class TemplateInstance extends Component {
         validationWarning = validator.warning(modifier.validator.fields);
       }
     }
+
     const modifierForm = ((mod) => {
       // Reset values on modifiers that were not previously set or saved in the database
       if (!mod.values && this.modifierMap[mod.id].values) {
@@ -177,9 +178,9 @@ export default class TemplateInstance extends Component {
 
     return (
       <div key={index} className="modifier">
-
         {modifierForm}
-        { index + 1 === this.props.templateInstance.modifiers.length &&
+
+        {index + 1 === this.props.templateInstance.modifiers.length &&
           <span
             role="button"
             className="modifier__deletebutton secondary-button"
@@ -194,21 +195,25 @@ export default class TemplateInstance extends Component {
             <FontAwesome name="close" className="delete-valueset-button" />
           </span>
         }
-        <div className='warning'>{validationWarning}</div>
+
+        {validationWarning && <div className="warning">{validationWarning}</div>}
       </div>
     );
   }
 
   renderAppliedModifiers = () => (
-    <div className="applied-modifiers row">
-      {
-        this.props.templateInstance.modifiers && this.props.templateInstance.modifiers.length > 0 ?
-        <span className="bold col-3">Applied Expressions:</span> :
-        null
-      }
-      <div className="modifier__list col-9" aria-label="Expression List">
-        {(this.props.templateInstance.modifiers || []).map((modifier, index) =>
-          this.renderAppliedModifier(modifier, index))}
+    <div className="applied-modifiers">
+      <div className="applied-modifiers__info">
+        <div className="applied-modifiers__info-expressions row">
+          {this.props.templateInstance.modifiers && this.props.templateInstance.modifiers.length > 0 &&
+            <div className="bold col-3 applied-modifiers__label">Expressions:</div>
+          }
+
+          <div className="modifier__list col-9" aria-label="Expression List">
+            {(this.props.templateInstance.modifiers || []).map((modifier, index) =>
+              this.renderAppliedModifier(modifier, index))}
+          </div>
+        </div>
       </div>
     </div>
   )
@@ -297,7 +302,7 @@ export default class TemplateInstance extends Component {
   }
 
   renderModifierSelect = () => (
-    <div>
+    <div className="modifier-select">
       { (
           !this.props.templateInstance.cannotHaveModifiers
           && (this.state.relevantModifiers.length > 0 || this.props.templateInstance.modifiers.length === 0)
@@ -312,11 +317,11 @@ export default class TemplateInstance extends Component {
 
             { (this.state.showModifiers)
               ? this.state.relevantModifiers.map(modifier =>
-                  <button key={modifier.id}
-                    value={modifier.id}
-                    onClick={this.handleModifierSelected} className="modifier__button secondary-button">
-                    {modifier.name}
-                  </button>)
+                <button key={modifier.id}
+                  value={modifier.id}
+                  onClick={this.handleModifierSelected} className="modifier__button secondary-button">
+                  {modifier.name}
+                </button>)
               : null
             }
           </div>
@@ -332,15 +337,16 @@ export default class TemplateInstance extends Component {
       if (vsacParameter.valueSets) {
         return (
           <div className="modifier__return__type" id="valueset-list">
-            { vsacParameter.valueSets.map((vs, i) => (
-                <div key={`selected-valueset-${i}`} className="row">
-                  <span className="bold col-3">
-                    Selected Value Set{ vsacParameter.valueSets.length > 1 ? ` ${i + 1}` : ''}:
-                  </span>
+            {vsacParameter.valueSets.map((vs, i) => (
+              <div key={`selected-valueset-${i}`} className="row vs-info">
+                <div className="bold col-3 vs-info__label">
+                  Value Set{vsacParameter.valueSets.length > 1 ? ` ${i + 1}` : ''}:
+                </div>
 
-                  <span className="col-7">{` ${vs.name} (${vs.oid})`}</span>
+                <div className="col-9 row vs-info__info">
+                  <div className="col-10">{` ${vs.name} (${vs.oid})`}</div>
 
-                  <span className="col-2 align-right">
+                  <div className="col-2 vs-info__buttons align-right">
                     {this.viewValueSetDetails(vs)}
 
                     <span
@@ -354,9 +360,10 @@ export default class TemplateInstance extends Component {
                       }}>
                       <FontAwesome name="close" className="delete-valueset-button" />
                     </span>
-                  </span>
+                  </div>
                 </div>
-              ))}
+              </div>
+            ))}
           </div>
         );
       }
@@ -371,14 +378,17 @@ export default class TemplateInstance extends Component {
       if (vsacParameter.codes) {
         return (
           <div className="modifier__return__type" id="code-list">
-            { vsacParameter.codes.map((code, i) => (
-                <div key={`selected-code-${i}`} className="row">
-                  <span className="bold col-3">Selected Code{vsacParameter.codes.length > 1 ? ` ${i + 1}` : ''}: </span>
+            {vsacParameter.codes.map((code, i) => (
+              <div key={`selected-code-${i}`} className="row code-info">
+                <div className="bold col-3 code-info__label">
+                  Code{vsacParameter.codes.length > 1 ? ` ${i + 1}` : ''}:
+                </div>
 
-                  {/* Code name will come with validation */}
-                  <span className="col-7">{`${code.codeSystem.name} (${code.code})`}</span>
+                {/* Code name will come with validation */}
+                <div className="col-9 row code-info__info">
+                  <div className="col-10">{`${code.codeSystem.name} (${code.code})`}</div>
 
-                  <span className="col-2 align-right">
+                  <div className="col-2 code-info__buttons align-right">
                     <span
                       role="button"
                       id="delete-code"
@@ -391,9 +401,10 @@ export default class TemplateInstance extends Component {
 
                       <FontAwesome name="close" className="delete-code-button" />
                     </span>
-                  </span>
+                  </div>
                 </div>
-              ))}
+              </div>
+            ))}
           </div>
         );
       }
@@ -526,35 +537,43 @@ export default class TemplateInstance extends Component {
 
     return (
       <div className="element__body">
-        <div className="warning">{validationError}</div>
-        <div className="warning">{returnError}</div>
-        <div>
-          {this.props.templateInstance.parameters.map((param, index) => {
-            // todo: each parameter type should probably have its own component
-            if (param.id !== 'element_name') {
-              return this.selectTemplate(param);
-            }
-            return null;
-          })}
-        </div>
+        {validationError && <div className="warning">{validationError}</div>}
+	{returnError && <div className="warning">{returnError}</div>}
+        {this.props.templateInstance.parameters.map((param, index) => {
+          // todo: each parameter type should probably have its own component
+          if (param.id !== 'element_name') {
+            return this.selectTemplate(param);
+          }
+          return null;
+        })}
 
-        {
-          // If the template instance is a VSAC generic element, render VSAC controls
-          this.props.templateInstance.id.includes('_vsac') ?
-          <div>
-            {this.renderVSACOptions()}
+        {this.props.templateInstance.id.includes('_vsac') &&
+          <div className="vsac-info">
             {this.renderVSInfo()}
             {this.renderCodeInfo()}
           </div>
-          : null
         }
 
         {this.renderAppliedModifiers()}
 
-        <div className='modifier__return__type return-type row'>
-          <span className="bold col-3 label">Return Type: </span>
-          <span className="col-7 value">{_.startCase(this.state.returnType)}</span>
+        <div className="modifier__return__type">
+          <div className="return-type row">
+            <div className="bold col-3 return-type__label">Return Type:</div>
+            <div className="col-7 return-type__value">
+              {_.startCase(this.state.returnType) === 'Boolean' && <FontAwesome name="check" className="check" />}
+              {_.startCase(this.state.returnType)}
+            </div>
+          </div>
+        </div>
+
+        <div className="element__buttons">
           {this.renderModifierSelect()}
+
+          {this.props.templateInstance.id.includes('_vsac') &&
+            <div className="vsac-controls">
+              {this.renderVSACOptions()}
+            </div>
+          }
         </div>
       </div>
     );
@@ -608,9 +627,7 @@ export default class TemplateInstance extends Component {
           </div>
         </div>
 
-        <div>
-          {this.state.showElement ? this.renderBody() : null}
-        </div>
+        {this.state.showElement ? this.renderBody() : null}
       </div>
     );
   }
