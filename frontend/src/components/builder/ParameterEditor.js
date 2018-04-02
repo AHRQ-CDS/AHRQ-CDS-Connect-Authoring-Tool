@@ -1,6 +1,12 @@
 import React, { Component } from 'react';
 import Select from 'react-select';
+import DatePicker from 'react-datepicker';
+import TimePicker from 'rc-time-picker';
+import moment from 'moment';
 import _ from 'lodash';
+
+import 'react-datepicker/dist/react-datepicker.css';
+import 'rc-time-picker/assets/index.css';
 
 class ParameterEditor extends Component {
   render() {
@@ -170,31 +176,7 @@ class IntegerEditor extends Component {
 
 class DateTimeEditor extends Component {
   assignValue(evt) {
-    let month = null;
-    let day = null;
-    let year = null;
-
-    switch (evt.target.name) {
-      case "month":
-        month = _.get(evt, 'target.value', null);
-        day = _.get(this, 'props.value.day', null);
-        year = _.get(this, 'props.value.year', null);
-        break;
-      case "day":
-        month = _.get(this, 'props.value.month', null);
-        day = _.get(evt, 'target.value', null);
-        year = _.get(this, 'props.value.year', null);
-        break;
-      case "year":
-        month = _.get(this, 'props.value.month', null);
-        day = _.get(this, 'props.value.day', null);
-        year = _.get(evt, 'target.value', null);
-        break;
-      default:
-        break;
-    }
-
-    return { month: month, day: day, year: year };
+    return evt != null ? evt.format('YYYY-MM-DD') : null;
   }
 
   render() {
@@ -204,38 +186,14 @@ class DateTimeEditor extends Component {
     return (
       <div className="form__group">
         <label htmlFor={formId}>
-          <form>
-            <label>Month:</label>
-            <input
-              id={id}
-              name="month"
-              type="number"
-              value={ _.get(value, 'month', null) || '' }
-              onChange={ e => {
-                updateInstance({ name: name, type: type, value: this.assignValue(e) })
-              }}
-            />
-            <label>Day:</label>
-            <input
-              id={id}
-              name="day"
-              type="number"
-              value={ _.get(value, 'day', null) || '' }
-              onChange={ e => {
-                updateInstance({ name: name, type: type, value: this.assignValue(e) })
-              }}
-            />
-            <label>Year:</label>
-            <input
-              id={id}
-              name="year"
-              type="number"
-              value={ _.get(value, 'year', null) || '' }
-              onChange={ e => {
-                updateInstance({ name: name, type: type, value: this.assignValue(e) })
-              }}
-            />
-          </form>
+          Date: <DatePicker
+            id={id}
+            selected={moment(value, 'YYYY-MM-DD').isValid() ? moment(value, 'YYYY-MM-DD') : null}
+            dateFormat="L"
+            onChange={ e =>
+              {updateInstance({ name: name, type: type, value: this.assignValue(e) })
+            }}
+          />
         </label>
       </div>
     );
@@ -357,31 +315,7 @@ class StringEditor extends Component {
 
 class TimeEditor extends Component {
   assignValue(evt) {
-    let hour = null;
-    let minute = null;
-    let second = null;
-
-    switch (evt.target.name) {
-      case "hour":
-        hour = _.get(evt, 'target.value', null);
-        minute = _.get(this, 'props.value.minute', null);
-        second = _.get(this, 'props.value.second', null);
-        break;
-      case "minute":
-        hour = _.get(this, 'props.value.hour', null);
-        minute = _.get(evt, 'target.value', null);
-        second = _.get(this, 'props.value.second', null);
-        break;
-      case "second":
-        hour = _.get(this, 'props.value.hour', null);
-        minute = _.get(this, 'props.value.minute', null);
-        second = _.get(evt, 'target.value', null);
-        break;
-      default:
-        break;
-    }
-
-    return { hour: hour, minute: minute, second: second };
+    return evt != null ? evt.format('HH:mm:ss') : null;
   }
 
   render() {
@@ -391,38 +325,13 @@ class TimeEditor extends Component {
     return (
       <div className="form__group">
         <label htmlFor={formId}>
-          <form>
-            <label>Hour:</label>
-            <input
-              id={id}
-              name="hour"
-              type="number"
-              value={ _.get(value, 'hour', null) || '' }
-              onChange={ e => {
-                updateInstance({ name: name, type: type, value: this.assignValue(e) })
-              }}
-            />
-            <label>Minute:</label>
-            <input
-              id={id}
-              name="minute"
-              type="number"
-              value={ _.get(value, 'minute', null) || '' }
-              onChange={ e => {
-                updateInstance({ name: name, type: type, value: this.assignValue(e) })
-              }}
-            />
-            <label>Second:</label>
-            <input
-              id={id}
-              name="second"
-              type="number"
-              value={ _.get(value, 'second', null) || '' }
-              onChange={ e => {
-                updateInstance({ name: name, type: type, value: this.assignValue(e) })
-              }}
-            />
-          </form>
+          Time: <TimePicker
+            id={id}
+            defaultValue={moment(value, 'HH:mm:ss').isValid() ? moment(value, 'HH:mm:ss') : null}
+            onChange={ e =>
+              {updateInstance({ name: name, type: type, value: this.assignValue(e) })
+            }}
+          />
         </label>
       </div>
     );
@@ -488,75 +397,24 @@ class IntervalOfIntegerEditor extends Component {
 }
 
 class IntervalOfDateTimeEditor extends Component {
-  assignValue(evt) {
-    let first_month = null;
-    let first_day = null;
-    let first_year = null;
-    let second_month = null;
-    let second_day = null;
-    let second_year = null;
+  assignValue(evt, name) {
+    let first_date = null;
+    let second_date = null;
 
-    switch (evt.target.name) {
-      case "first_month":
-        first_month = _.get(evt, 'target.value', null);
-        first_day = _.get(this, 'props.value.first_day', null);
-        first_year = _.get(this, 'props.value.first_year', null);
-        second_month = _.get(this, 'props.value.second_month', null);
-        second_day = _.get(this, 'props.value.second_day', null);
-        second_year = _.get(this, 'props.value.second_year', null);
+    switch (name) {
+      case "first_date":
+        first_date = evt != null ? evt.format('YYYY-MM-DD') : null;
+        second_date = _.get(this, 'props.value.second_date', null);
         break;
-      case "first_day":
-        first_month = _.get(this, 'props.value.first_month', null);
-        first_day = _.get(evt, 'target.value', null);
-        first_year = _.get(this, 'props.value.first_year', null);
-        second_month = _.get(this, 'props.value.second_month', null);
-        second_day = _.get(this, 'props.value.second_day', null);
-        second_year = _.get(this, 'props.value.second_year', null);
-        break;
-      case "first_year":
-        first_month = _.get(this, 'props.value.first_month', null);
-        first_day = _.get(this, 'props.value.first_day', null);
-        first_year = _.get(evt, 'target.value', null);
-        second_month = _.get(this, 'props.value.second_month', null);
-        second_day = _.get(this, 'props.value.second_day', null);
-        second_year = _.get(this, 'props.value.second_year', null);
-        break;
-      case "second_month":
-        first_month = _.get(this, 'props.value.first_month', null);
-        first_day = _.get(this, 'props.value.first_day', null);
-        first_year = _.get(this, 'props.value.first_year', null);
-        second_month = _.get(evt, 'target.value', null);
-        second_day = _.get(this, 'props.value.second_day', null);
-        second_year = _.get(this, 'props.value.second_year', null);
-        break;
-      case "second_day":
-        first_month = _.get(this, 'props.value.first_month', null);
-        first_day = _.get(this, 'props.value.first_day', null);
-        first_year = _.get(this, 'props.value.first_year', null);
-        second_month = _.get(this, 'props.value.second_month', null);
-        second_day = _.get(evt, 'target.value', null);
-        second_year = _.get(this, 'props.value.second_year', null);
-        break;
-      case "second_year":
-        first_month = _.get(this, 'props.value.first_month', null);
-        first_day = _.get(this, 'props.value.first_day', null);
-        first_year = _.get(this, 'props.value.first_year', null);
-        second_month = _.get(this, 'props.value.second_month', null);
-        second_day = _.get(this, 'props.value.second_day', null);
-        second_year = _.get(evt, 'target.value', null);
+      case "second_date":
+        first_date = _.get(this, 'props.value.first_date', null);
+        second_date = evt != null ? evt.format('YYYY-MM-DD') : null;
         break;
       default:
         break;
     }
 
-    return {
-      first_month: first_month,
-      first_day: first_day,
-      first_year: first_year,
-      second_month: second_month,
-      second_day: second_day,
-      second_year: second_year
-    };
+    return { first_date: first_date, second_date: second_date };
   }
 
   render() {
@@ -566,68 +424,24 @@ class IntervalOfDateTimeEditor extends Component {
     return (
       <div className="form__group">
         <label htmlFor={formId}>
-          <form>
-            <label>First Month:</label>
-            <input
-              id={id}
-              name="first_month"
-              type="number"
-              value={ _.get(value, 'first_month', null) || '' }
-              onChange={ e => {
-                updateInstance({ name: name, type: type, value: this.assignValue(e) })
-              }}
-            />
-            <label>First Day:</label>
-            <input
-              id={id}
-              name="first_day"
-              type="number"
-              value={ _.get(value, 'first_day', null) || '' }
-              onChange={ e => {
-                updateInstance({ name: name, type: type, value: this.assignValue(e) })
-              }}
-            />
-            <label>First Year:</label>
-            <input
-              id={id}
-              name="first_year"
-              type="number"
-              value={ _.get(value, 'first_year', null) || '' }
-              onChange={ e => {
-                updateInstance({ name: name, type: type, value: this.assignValue(e) })
-              }}
-            />
-            <label>Second Month:</label>
-            <input
-              id={id}
-              name="second_month"
-              type="number"
-              value={ _.get(value, 'second_month', null) || '' }
-              onChange={ e => {
-                updateInstance({ name: name, type: type, value: this.assignValue(e) })
-              }}
-            />
-            <label>Second Day:</label>
-            <input
-              id={id}
-              name="second_day"
-              type="number"
-              value={ _.get(value, 'second_day', null) || '' }
-              onChange={ e => {
-                updateInstance({ name: name, type: type, value: this.assignValue(e) })
-              }}
-            />
-            <label>Second Year:</label>
-            <input
-              id={id}
-              name="second_year"
-              type="number"
-              value={ _.get(value, 'second_year', null) || '' }
-              onChange={ e => {
-                updateInstance({ name: name, type: type, value: this.assignValue(e) })
-              }}
-            />
-          </form>
+          <label>First Date:</label>
+          <DatePicker
+            id={id}
+            selected={moment(_.get(value, 'first_date', null), 'YYYY-MM-DD').isValid() ? moment(value.first_date, 'YYYY-MM-DD') : null}
+            dateFormat="L"
+            onChange={ e =>
+              {updateInstance({ name: name, type: type, value: this.assignValue(e, 'first_date') })
+            }}
+          />
+          <label>Second Date:</label>
+          <DatePicker
+            id={id}
+            selected={moment(_.get(value, 'second_date', null), 'YYYY-MM-DD').isValid() ? moment(value.second_date, 'YYYY-MM-DD') : null}
+            dateFormat="L"
+            onChange={ e =>
+              {updateInstance({ name: name, type: type, value: this.assignValue(e, 'second_date') })
+            }}
+          />
         </label>
       </div>
     );
