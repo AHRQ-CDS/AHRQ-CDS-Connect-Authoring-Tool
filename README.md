@@ -54,9 +54,8 @@ docker run --name cat-mongo -d mongo:3.4
 docker run --name cat \
   --link cat-cql2elm:cql2elm \
   --link cat-mongo:mongo \
-  -e "NODE_ENV=development" \
-  -e "REPO_BASE_URL=https://cdsconnect.ahrqdev.org/" \
-  -e "REPO_URL=https://cdsconnect.ahrqdev.org/" \
+  -v /data/vsac:/data/vsac \
+  -e "VALUE_SETS_LOCAL_FILE=/data/vsac/ValueSets.xls" \
   -e "CQL_TO_ELM_URL=http://cql2elm:8080/cql/translator" \
   -e "MONGO_URL=mongodb://mongo/cds_authoring" \
   -e "AUTH_SESSION_SECRET=secret" \
@@ -65,18 +64,40 @@ docker run --name cat \
   -e "AUTH_LDAP_BIND_CREDENTIALS={{password}}" \
   -e "AUTH_LDAP_SEARCH_BASE=ou=passport-ldapauth" \
   -e "AUTH_LDAP_SEARCH_FILTER=(uid={{username}})" \
+  -e "NODE_ENV=development" \
   -p "3001:3001" \
   -p "9000:9000" \
   cdsauthoringtool
 ```
+
+To run the CDS Authoring Tool in a detached process, add a `-d` to the run command (before `cdsauthoringtool`).
+
 Of course you will need to modify some of the values above according to your environment (e.g., LDAP details).
+
+**Value Sets from VSAC**
+
+Note the volume mapping and `VALUE_SETS_LOCAL_FILE` environment variable in the above command.  This is to support VSAC search using a local XLS file.  The first path after `-v` represents the local path to a folder that will contain the _ValueSets.xls_ file.  Ensure that this path exists on the host and/or modify the path to match an existing path.
+
+After starting the `cdsauthoringtool` container as described above, you can automatically create/update the _ValueSets.xls_ file and refresh the database via the following command:
+```bash
+docker exec -w /usr/src/app/api -it cat node ./vsac/vsxls2db.js my_vsac_username my_vsac_password
+```
+
+If successful, you should see a message like:
+```
+Downloading XLS from VSAC using basic auth w/ user 'my_vsac_username'.
+Loaded file: config/ValueSets.xls (updated: Mon Apr 02 2018 16:51:59 GMT-0400 (EDT))
+Inserted 5381 items.
+```
+
+**Proxying the API**
 
 By default, the server on port 9000 will proxy requests on _/authoring/api_ to the local API server using express-http-proxy.  In production environments, a dedicated external proxy server may be desired.  In that case, the external proxy server will be responsible for proxying _/authoring/api_ to port 3001.  To accomodate this, disable the express-http-proxy by adding this addition flag to the last command above:
 ```
   -e "API_PROXY_ACTIVE=false" \
 ```
 
-To run the CDS Authoring Tool in a detached process, add a `-d` to the run command (before `cdsauthoringtool`).
+**Using the Container**
 
 When the container is running, access the app at [http://localhost:9000](http://localhost:9000).
 
