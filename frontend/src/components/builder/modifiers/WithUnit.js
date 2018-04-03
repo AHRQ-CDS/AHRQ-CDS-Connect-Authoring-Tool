@@ -37,7 +37,7 @@ export default class WithUnit extends Component {
             type="text"
             id="with-unit-ucum"
             placeholder="Enter unit"
-            value={this.props.unit}
+            value={this.props.unit || ''}
             onChange={(event) => { this.props.updateAppliedModifier(this.props.index, { unit: event.target.value }); }}
             onSelect={(event) => { this.props.updateAppliedModifier(this.props.index, { unit: event.target.value }); }}
           />

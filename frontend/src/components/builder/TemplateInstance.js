@@ -101,6 +101,11 @@ export default class TemplateInstance extends Component {
   }
 
   renderAppliedModifier = (modifier, index) => {
+    // Reset values on modifiers that were not previously set or saved in the database
+    if (!modifier.values && this.modifierMap[modifier.id].values) {
+      modifier.values = this.modifierMap[modifier.id].values;
+    }
+
     let validationWarning = null;
     if (modifier.validator) {
       const validator = Validators[modifier.validator.type];
@@ -110,10 +115,6 @@ export default class TemplateInstance extends Component {
     }
 
     const modifierForm = ((mod) => {
-      // Reset values on modifiers that were not previously set or saved in the database
-      if (!mod.values && this.modifierMap[mod.id].values) {
-        mod.values = this.modifierMap[mod.id].values;
-      }
       switch (mod.type || mod.id) {
         case 'ValueComparison':
           return (
