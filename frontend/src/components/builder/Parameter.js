@@ -13,6 +13,7 @@ class Parameter extends Component {
     const typeOptions = [
       { value: 'Boolean', label: 'Boolean' },
       { value: 'Code', label: 'Code' },
+      { value: 'Concept', label: 'Concept' },
       { value: 'Integer', label: 'Integer' },
       { value: 'DateTime', label: 'DateTime' },
       { value: 'Decimal', label: 'Decimal' },

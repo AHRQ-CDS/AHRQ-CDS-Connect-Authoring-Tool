@@ -15,6 +15,8 @@ class ParameterEditor extends Component {
         return <BooleanEditor {...this.props} />
       case 'Code':
         return <CodeEditor {...this.props} />
+      case 'Concept':
+        return <ConceptEditor {...this.props} />
       case 'Integer':
         return <IntegerEditor {...this.props} />
       case 'DateTime':
@@ -97,7 +99,91 @@ class CodeEditor extends Component {
         break;
     }
 
-    return { system: system, code: code, display: display };
+    if (system || code || display) {
+      let str = `Code '${code}' from "${system}" display '${display}'`;
+      return { system: system, code: code, display: display, str: str };
+    } else {
+      return null;
+    }
+  }
+
+  render() {
+    const { id, name, type, value, updateInstance } = this.props;
+    const formId = _.uniqueId('parameter-');
+
+    return (
+      <div className="form__group">
+        <label htmlFor={formId}>
+          <form>
+            <label>System:</label>
+            <input
+              id={id}
+              name="system"
+              type="text"
+              value={ _.get(value, 'system', null) || '' }
+              onChange={ e => {
+                updateInstance({ name: name, type: type, value: this.assignValue(e) })
+              }}
+            />
+            <label>Code:</label>
+            <input
+              id={id}
+              name="code"
+              type="text"
+              value={ _.get(value, 'code', null) || '' }
+              onChange={ e => {
+                updateInstance({ name: name, type: type, value: this.assignValue(e) })
+              }}
+            />
+            <label>Display:</label>
+            <input
+              id={id}
+              name="display"
+              type="text"
+              value={ _.get(value, 'display', null) || '' }
+              onChange={ e => {
+                updateInstance({ name: name, type: type, value: this.assignValue(e) })
+              }}
+            />
+          </form>
+        </label>
+      </div>
+    );
+  }
+}
+
+class ConceptEditor extends Component {
+  assignValue(evt) {
+    let system = null;
+    let code = null;
+    let display = null;
+
+    switch (evt.target.name) {
+      case "system":
+        system = _.get(evt, 'target.value', null);
+        code = _.get(this, 'props.value.code', null);
+        display = _.get(this, 'props.value.display', null);
+        break;
+      case "code":
+        system = _.get(this, 'props.value.system', null);
+        code = _.get(evt, 'target.value', null);
+        display = _.get(this, 'props.value.display', null);
+        break;
+      case "display":
+        system = _.get(this, 'props.value.system', null);
+        code = _.get(this, 'props.value.code', null);
+        display = _.get(evt, 'target.value', null);
+        break;
+      default:
+        break;
+    }
+
+    if (system || code || display) {
+      let str = `Concept { Code '${code}' from "${system}" } display '${display}'`;
+      return { system: system, code: code, display: display, str: str };
+    } else {
+      return null;
+    }
   }
 
   render() {
@@ -176,7 +262,9 @@ class IntegerEditor extends Component {
 
 class DateTimeEditor extends Component {
   assignValue(evt) {
-    return evt != null ? evt.format('YYYY-MM-DD') : null;
+    let date = evt != null ? evt.format('YYYY-MM-DD') : null;
+    date = date ? `@${date}` : null;
+    return date;
   }
 
   render() {
@@ -248,7 +336,12 @@ class QuantityEditor extends Component {
         break;
     }
 
-    return { quantity: quantity, unit: unit };
+    if (quantity || unit) {
+      let str = `${quantity} '${unit}'`;
+      return { quantity: quantity, unit: unit, str: str };
+    } else {
+      return null;
+    }
   }
 
   render() {
@@ -288,7 +381,9 @@ class QuantityEditor extends Component {
 
 class StringEditor extends Component {
   assignValue(evt) {
-    return _.get(evt, 'target.value', null);
+    let str = _.get(evt, 'target.value', null);
+    str = str ? `'${str}'` : null;
+    return str;
   }
 
   render() {
@@ -302,7 +397,7 @@ class StringEditor extends Component {
           <input
             id={id}
             type="text"
-            value={value || ''}
+            value={value ? value.replace(/'/g, "") : ''}
             onChange={ e => {
               updateInstance({ name: name, type: type, value: this.assignValue(e) })
             }}
@@ -315,7 +410,9 @@ class StringEditor extends Component {
 
 class TimeEditor extends Component {
   assignValue(evt) {
-    return evt != null ? evt.format('HH:mm:ss') : null;
+    let time = evt != null ? evt.format('HH:mm:ss') : null;
+    time = time ? `@T${time}` : null;
+    return time;
   }
 
   render() {
@@ -358,7 +455,12 @@ class IntervalOfIntegerEditor extends Component {
         break;
     }
 
-    return { first_integer: first_integer, second_integer: second_integer };
+    if (first_integer || second_integer) {
+      let str = `Interval[${first_integer},${second_integer}]`;
+      return { first_integer: first_integer, second_integer: second_integer, str: str };
+    } else {
+      return null;
+    }
   }
 
   render() {
@@ -414,7 +516,12 @@ class IntervalOfDateTimeEditor extends Component {
         break;
     }
 
-    return { first_date: first_date, second_date: second_date };
+    if (first_date || second_date) {
+      let str = `Interval[@${first_date},@${second_date}]`;
+      return { first_date: first_date, second_date: second_date, str: str };
+    } else {
+      return null;
+    }
   }
 
   render() {
@@ -468,7 +575,12 @@ class IntervalOfDecimalEditor extends Component {
         break;
     }
 
-    return { first_decimal: first_decimal, second_decimal: second_decimal };
+    if (first_decimal || second_decimal) {
+      let str = `Interval[${first_decimal},${second_decimal}]`;
+      return { first_decimal: first_decimal, second_decimal: second_decimal, str: str };
+    } else {
+      return null;
+    }
   }
 
   render() {
@@ -534,7 +646,12 @@ class IntervalOfQuantityEditor extends Component {
         break;
     }
 
-    return { first_quantity: first_quantity, second_quantity: second_quantity, unit: unit };
+    if (first_quantity || second_quantity || unit) {
+      let str = `Interval[${first_quantity} '${unit}',${second_quantity} '${unit}']`;
+      return { first_quantity: first_quantity, second_quantity: second_quantity, unit: unit, str: str };
+    } else {
+      return null;
+    }
   }
 
   render() {
