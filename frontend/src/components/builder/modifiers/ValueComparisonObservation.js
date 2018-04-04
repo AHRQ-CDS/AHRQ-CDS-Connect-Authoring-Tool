@@ -1,10 +1,30 @@
 import React, { Component } from 'react';
+import Select from 'react-select';
 import _ from 'lodash';
 
 const { Def } = window;
 
 /* eslint-disable jsx-a11y/no-onchange */
 export default class ValueComparisonObservation extends Component {
+  state = {
+    selectedMinOption: this.props.minOperator,
+    selectedMaxOption: this.props.maxOperator
+  }
+
+  handleChangeMin = (selectedMinOption) => {
+    this.setState({ selectedMinOption });
+    this.props.updateAppliedModifier(this.props.index, { minOperator: selectedMinOption });
+  }
+
+  handleChangeMax = (selectedMaxOption) => {
+    this.setState({ selectedMaxOption });
+    this.props.updateAppliedModifier(this.props.index, { maxOperator: selectedMaxOption });
+  }
+
+  handleChangeUnit = ({ target }) => {
+    this.props.updateAppliedModifier(this.props.index, { unit: target.value });
+  }
+
   componentDidMount = () => {
     new Def.Autocompleter.Search( // eslint-disable-line no-new
       'ucum-unit',
@@ -14,6 +34,9 @@ export default class ValueComparisonObservation extends Component {
   }
 
   render() {
+    const { selectedMinOption, selectedMaxOption } = this.state;
+    const valueMin = selectedMinOption && selectedMinOption.value;
+    const valueMax = selectedMaxOption && selectedMaxOption.value;
     const minValueId = _.uniqueId('value-');
     const minOperatorId = _.uniqueId('operator-');
     const maxValueId = _.uniqueId('value2-');
@@ -22,35 +45,34 @@ export default class ValueComparisonObservation extends Component {
 
     return (
       <div className="value-comparison-observation">
-        <span className="field">
-          <span className="control">
-            <span className="select">
-              <select
-                className="operator"
-                id={minOperatorId}
-                title="Min Operator"
-                aria-label="Min Operator"
-                name="Min Operator"
-                value={this.props.minOperator}
-                defaultValue=""
-                onChange={(event) => {
-                  this.props.updateAppliedModifier(this.props.index, { minOperator: event.target.value });
-                }}>
-                <option value="">{'--'}</option>
-                <option value=">">{'>'}</option>
-                <option value=">=">{'>='}</option>
-                <option value="=">{'='}</option>
-                <option value="!=">{'!='}</option>
-                <option value="<">{'<'}</option>
-                <option value="<=">{'<='}</option>
-              </select>
-            </span>
-          </span>
-        </span>
+        <Select
+          className="operator"
+          name="Min Operator"
+          title="Min Operator"
+          aria-label="Min Operator"
+          id={minOperatorId}
+          value={valueMin}
+          placeholder="minOp"
+          onChange={this.handleChangeMin}
+          options={[
+            { value: '>', label: '>' },
+            { value: '>=', label: '>=' },
+            { value: '=', label: '=' },
+            { value: '!=', label: '!=' },
+            { value: '<', label: '<' },
+            { value: '<=', label: '<=' }
+          ]}
+        />
 
         <label htmlFor={minValueId}>
-          Value:
-          <input id={minValueId} className="modifier__comparison__value" type="number" step="any" name="Min value"
+          <input
+            id={minValueId}
+            placeholder="minValue"
+            className="modifier__comparison__value"
+            type="number"
+            step="any"
+            name="Min value"
+            aria-label="Min Value"
             value={this.props.minValue || ''}
             onChange={(event) => {
               this.props.updateAppliedModifier(this.props.index, { minValue: parseFloat(event.target.value, 10) });
@@ -58,34 +80,34 @@ export default class ValueComparisonObservation extends Component {
           />
         </label>
 
-        <span className="field">
-          <span className="control">
-            <span className="select">
-              <select id={maxOperatorId}
-                className="operator"
-                name="Max Operator"
-                title="Max Operator"
-                aria-label="Max Operator"
-                value={this.props.maxOperator}
-                defaultValue=""
-                onChange={(event) => {
-                  this.props.updateAppliedModifier(this.props.index, { maxOperator: event.target.value });
-                }}>
-                <option value="">{'--'}</option>
-                <option value=">">{'>'}</option>
-                <option value=">=">{'>='}</option>
-                <option value="=">{'='}</option>
-                <option value="!=">{'!='}</option>
-                <option value="<">{'<'}</option>
-                <option value="<=">{'<='}</option>
-              </select>
-            </span>
-          </span>
-        </span>
+        <Select
+          className="operator"
+          name="Max Operator"
+          title="Max Operator"
+          aria-label="Max Operator"
+          id={maxOperatorId}
+          value={valueMax}
+          placeholder="maxOp"
+          onChange={this.handleChangeMax}
+          options={[
+            { value: '>', label: '>' },
+            { value: '>=', label: '>=' },
+            { value: '=', label: '=' },
+            { value: '!=', label: '!=' },
+            { value: '<', label: '<' },
+            { value: '<=', label: '<=' }
+          ]}
+        />
 
         <label htmlFor={maxValueId}>
-          Value:
-          <input id={maxValueId} className="modifier__comparison__value" type="number" step="any" name="Max value"
+          <input
+            placeholder="maxValue"
+            id={maxValueId}
+            className="modifier__comparison__value"
+            type="number"
+            step="any"
+            name="Max value"
+            aria-label="Max Value"
             value={this.props.maxValue || ''}
             onChange={(event) => {
               this.props.updateAppliedModifier(this.props.index, { maxValue: parseFloat(event.target.value, 10) });
@@ -94,20 +116,14 @@ export default class ValueComparisonObservation extends Component {
         </label>
 
         <label htmlFor={unitId}>
-          Unit:
-
           <input
             type="text"
             id="ucum-unit"
             aria-label="Unit"
-            placeholder="Enter unit"
+            placeholder="enter unit"
             value={this.props.unit}
-            onChange={(event) => {
-              this.props.updateAppliedModifier(this.props.index, { unit: event.target.value });
-            }}
-            onSelect={(event) => {
-              this.props.updateAppliedModifier(this.props.index, { unit: event.target.value });
-            }}
+            onChange={this.handleChangeUnit}
+            onSelect={this.handleChangeUnit}
           />
         </label>
       </div>

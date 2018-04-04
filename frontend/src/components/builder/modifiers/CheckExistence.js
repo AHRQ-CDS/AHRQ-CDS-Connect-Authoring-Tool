@@ -1,25 +1,35 @@
 import React, { Component } from 'react';
+import Select from 'react-select';
 
 /* eslint-disable jsx-a11y/no-onchange */
 export default class CheckExistence extends Component {
+  state = {
+    selectedOption: this.props.value,
+  }
+
+  handleChange = (selectedOption) => {
+    this.setState({ selectedOption });
+    this.props.updateAppliedModifier(this.props.index, { value: selectedOption });
+  }
+
   render() {
+    const { selectedOption } = this.state;
+    const value = selectedOption && selectedOption.value;
+
     return (
       <div className="check-existence">
-        <span className="field">
-          <span className="control">
-            <span className="select">
-              <select name="Check Existence?" aria-label="Check Existence" title="Check Existence"
-                value={this.props.value}
-                onChange={(event) => {
-                  this.props.updateAppliedModifier(this.props.index, { value: event.target.value });
-                }}>
-                <option defaultValue="" value="">{'-- Check Existence --'}</option>
-                <option value="is null">{'is null'}</option>
-                <option value="is not null">{'is not null'}</option>
-              </select>
-            </span>
-          </span>
-        </span>
+        <Select
+          name="Check Existence?"
+          aria-label="Check Existence"
+          title="Check Existence"
+          placeholder="check existence value"
+          value={value}
+          onChange={this.handleChange}
+          options={[
+            { value: 'is null', label: 'is null' },
+            { value: 'is not null', label: 'is not null' }
+          ]}
+        />
       </div>
     );
   }
