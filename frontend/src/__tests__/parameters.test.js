@@ -31,7 +31,7 @@ test('Parameter changes input', () => {
   const selectInput = component.find(Select);
   selectInput.simulate('change', { value: '' });
   expect(updateInstanceOfParameterMock).toHaveBeenCalled();
-  expect(updateInstanceOfParameterMock.mock.calls[0][0]).toEqual({ name: '', value: '' });
+  expect(updateInstanceOfParameterMock.mock.calls[0][0]).toEqual({ name: '', type: '', value: null });
 
   component.instance().updateParameter = jest.fn();
   selectInput.simulate('change', { value: '' });
@@ -55,7 +55,7 @@ test('Parameters adds parameter', () => {
 
   component.find('button').simulate('click');
 
-  expect(updateParameterMock).toHaveBeenCalledWith([{ name: null, value: null }]);
+  expect(updateParameterMock).toHaveBeenCalledWith([{ name: null, type: null, value: null }]);
 });
 
 test('NumberParameter renders without crashing', () => {
