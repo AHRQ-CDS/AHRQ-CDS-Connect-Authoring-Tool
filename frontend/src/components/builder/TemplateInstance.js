@@ -178,7 +178,7 @@ export default class TemplateInstance extends Component {
     })(modifier);
 
     return (
-      <div key={index} className="modifier">
+      <div key={index} className={`modifier modifier-${modifier.type || modifier.id}`}>
         {modifierForm}
 
         {index + 1 === this.props.templateInstance.modifiers.length &&

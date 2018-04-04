@@ -132,13 +132,26 @@
     .look-back,
     .value-comparison-observation {
       display: flex;
+      flex-wrap: wrap;
 
       label {
         margin: 0 10px 0 0;
       }
     }
 
-    .value-comparison-observation label input { min-width: 150px; }
+    .value-comparison-observation label input {
+      min-width: inherit;
+      width: calc(80px + 4vw);
+      max-width: 180px;
+    }
+
+    &.modifier-ValueComparisonObservation { position: relative; }
+
+    .modifier__deletebutton {
+      position: absolute;
+      right: 2px;
+      top: 22px;
+    }
   }
 }
 
@@ -165,6 +178,8 @@
   margin-right: 10px;
 
   &.operator > div {
-    min-width: 110px;
+    width: calc(65px + 3vw);
+    min-width: inherit;
+    max-width: 120px;
   }
 }

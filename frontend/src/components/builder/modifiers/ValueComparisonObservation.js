@@ -26,11 +26,13 @@ export default class ValueComparisonObservation extends Component {
   }
 
   componentDidMount = () => {
-    new Def.Autocompleter.Search( // eslint-disable-line no-new
-      'ucum-unit',
-      'https://clin-table-search.lhc.nlm.nih.gov/api/ucum/v3/search',
-      { tableFormat: true, valueCols: [0], colHeaders: ['Code', 'Name'] }
-    );
+    if (Def) {
+      new Def.Autocompleter.Search( // eslint-disable-line no-new
+        'ucum-unit',
+        'https://clin-table-search.lhc.nlm.nih.gov/api/ucum/v3/search',
+        { tableFormat: true, valueCols: [0], colHeaders: ['Code', 'Name'] }
+      );
+    }
   }
 
   render() {
