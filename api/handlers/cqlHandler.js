@@ -105,6 +105,14 @@ class CqlArtifact {
       }
     }
     );
+    this.parameters.forEach((parameter) => {
+      if (parameter.type === "Code" || parameter.type === "Concept") {
+        //TODO Currently uses stub system URI. This should be fixed when Code
+        // and Concept parameters use a better code picker.
+        this.codeSystemMap.set(_.get(parameter, 'value.system', null), 'http://examplecs.org');
+      }
+    }
+    );
   }
 
   parseTree(element) {

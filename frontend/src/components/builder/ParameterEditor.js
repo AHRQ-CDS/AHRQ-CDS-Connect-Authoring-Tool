@@ -8,6 +8,8 @@ import _ from 'lodash';
 import 'react-datepicker/dist/react-datepicker.css';
 import 'rc-time-picker/assets/index.css';
 
+// A component to be used in Parameter.js to provide
+// an editor for a parameter of the given type
 class ParameterEditor extends Component {
   render() {
     switch (this.props.type) {
