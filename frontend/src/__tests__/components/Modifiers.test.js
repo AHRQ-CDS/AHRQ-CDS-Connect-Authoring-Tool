@@ -6,7 +6,7 @@ import ValueComparisonObservation from '../../components/builder/modifiers/Value
 import ValueComparison from '../../components/builder/modifiers/ValueComparison';
 import WithUnit from '../../components/builder/modifiers/WithUnit';
 
-import { shallowRenderComponent } from '../../utils/test_helpers';
+import { shallowRenderComponent, fullRenderComponent } from '../../utils/test_helpers';
 
 test('BooleanComparison renders without crashing', () => {
   const component = shallowRenderComponent(BooleanComparison, {
@@ -19,15 +19,16 @@ test('BooleanComparison renders without crashing', () => {
 
 test('BooleanComparison changes input', () => {
   const updateAppliedModifierMock = jest.fn();
-  const component = shallowRenderComponent(BooleanComparison, {
+  const component = fullRenderComponent(BooleanComparison, {
     updateAppliedModifier: updateAppliedModifierMock,
     index: 80,
     value: ''
   });
 
-  component.find('select').simulate('change', { target: { value: 'is not true' } });
+  component.find('.Select input').simulate('change', { target: { value: 'is not true' } });
+  component.find('.Select input').simulate('keyDown', { keyCode: 9, key: 'Tab' }); // validate the selection
   expect(updateAppliedModifierMock).toHaveBeenCalled();
-  expect(updateAppliedModifierMock).toBeCalledWith(80, { value: 'is not true' });
+  expect(updateAppliedModifierMock).toBeCalledWith(80, { value: { value: 'is not true', label: 'is not true' } });
 });
 
 test('CheckExistence renders without crashing', () => {
@@ -41,15 +42,16 @@ test('CheckExistence renders without crashing', () => {
 
 test('CheckExistence changes input', () => {
   const updateAppliedModifierMock = jest.fn();
-  const component = shallowRenderComponent(CheckExistence, {
+  const component = fullRenderComponent(CheckExistence, {
     updateAppliedModifier: updateAppliedModifierMock,
     index: 7,
     value: ''
   });
 
-  component.find('select').simulate('change', { target: { value: 'is null' } });
+  component.find('.Select input').simulate('change', { target: { value: 'is null' } });
+  component.find('.Select input').simulate('keyDown', { keyCode: 9, key: 'Tab' }); // validate the selection
   expect(updateAppliedModifierMock).toHaveBeenCalled();
-  expect(updateAppliedModifierMock).toBeCalledWith(7, { value: 'is null' });
+  expect(updateAppliedModifierMock).toBeCalledWith(7, { value: { value: 'is null', label: 'is null' } });
 });
 
 test('LabelModifier renders without crashing', () => {
@@ -71,19 +73,20 @@ test('LookBack renders without crashing', () => {
 
 test('LookBack changes input', () => {
   const updateAppliedModifierMock = jest.fn();
-  const component = shallowRenderComponent(LookBack, {
+  const component = fullRenderComponent(LookBack, {
     updateAppliedModifier: updateAppliedModifierMock,
     index: 5,
     value: '',
     unit: 'days'
   });
 
-  component.find('input').simulate('change', { target: { value: 13 } });
+  component.find('input').at(0).simulate('change', { target: { value: 13 } });
   expect(updateAppliedModifierMock).toHaveBeenCalled();
   expect(updateAppliedModifierMock).toBeCalledWith(5, { value: 13 });
 
-  component.find('select').simulate('change', { target: { value: 'years' } });
-  expect(updateAppliedModifierMock).toBeCalledWith(5, { unit: 'years' });
+  component.find('.Select input').simulate('change', { target: { value: 'years' } });
+  component.find('.Select input').simulate('keyDown', { keyCode: 9, key: 'Tab' }); // validate the selection
+  expect(updateAppliedModifierMock).toBeCalledWith(5, { unit: { label: 'Year(s)', value: 'years' } });
 });
 
 test('ValueComparisonObservation renders without crashing', () => {
@@ -100,7 +103,7 @@ test('ValueComparisonObservation renders without crashing', () => {
 
 test('ValueComparisonObservation changes input', () => {
   const updateAppliedModifierMock = jest.fn();
-  const component = shallowRenderComponent(ValueComparisonObservation, {
+  const component = fullRenderComponent(ValueComparisonObservation, {
     updateAppliedModifier: updateAppliedModifierMock,
     index: 303,
     minValue: '',
@@ -110,18 +113,20 @@ test('ValueComparisonObservation changes input', () => {
   });
 
   const minInput = component.find('input[name="Min value"]');
-  const minSelect = component.find('select[name="Min Operator"]');
+  const minSelect = component.find('.Select input [aria-label="Min Operator"]');
   const maxInput = component.find('input[name="Max value"]');
-  const maxSelect = component.find('select[name="Max Operator"]');
+  const maxSelect = component.find('.Select input [aria-label="Max Operator"]');
 
   minInput.simulate('change', { target: { value: 21 } });
   expect(updateAppliedModifierMock).toBeCalledWith(303, { minValue: 21 });
   minSelect.simulate('change', { target: { value: '<' } });
-  expect(updateAppliedModifierMock).toBeCalledWith(303, { minOperator: '<' });
+  minSelect.simulate('keyDown', { keyCode: 9, key: 'Tab' }); // validate the selection
+  expect(updateAppliedModifierMock).toBeCalledWith(303, { minOperator: { label: '<', value: '<' } });
   maxInput.simulate('change', { target: { value: 189 } });
   expect(updateAppliedModifierMock).toBeCalledWith(303, { maxValue: 189 });
   maxSelect.simulate('change', { target: { value: '!=' } });
-  expect(updateAppliedModifierMock).toBeCalledWith(303, { maxOperator: '!=' });
+  maxSelect.simulate('keyDown', { keyCode: 9, key: 'Tab' }); // validate the selection
+  expect(updateAppliedModifierMock).toBeCalledWith(303, { maxOperator: { label: '!=', value: '!=' } });
 });
 
 test('ValueComparison renders without crashing', () => {
