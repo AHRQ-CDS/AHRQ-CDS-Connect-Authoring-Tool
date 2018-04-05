@@ -84,8 +84,9 @@ test('LookBack changes input', () => {
   expect(updateAppliedModifierMock).toHaveBeenCalled();
   expect(updateAppliedModifierMock).toBeCalledWith(5, { value: 13 });
 
-  component.find('.Select input').simulate('change', { target: { value: 'years' } });
-  component.find('.Select input').simulate('keyDown', { keyCode: 9, key: 'Tab' }); // validate the selection
+  const unitSelect = component.find('.Select input [aria-label="Unit Select"]');
+  unitSelect.simulate('change', { target: { value: 'years' } });
+  unitSelect.simulate('keyDown', { keyCode: 9, key: 'Tab' }); // validate the selection
   expect(updateAppliedModifierMock).toBeCalledWith(5, { unit: 'years' });
 });
 
