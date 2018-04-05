@@ -6,19 +6,14 @@ const { Def } = window;
 
 /* eslint-disable jsx-a11y/no-onchange */
 export default class ValueComparisonObservation extends Component {
-  state = {
-    selectedMinOption: this.props.minOperator,
-    selectedMaxOption: this.props.maxOperator
-  }
-
   handleChangeMin = (selectedMinOption) => {
-    this.setState({ selectedMinOption });
-    this.props.updateAppliedModifier(this.props.index, { minOperator: selectedMinOption });
+    const value = selectedMinOption ? selectedMinOption.value : null;
+    this.props.updateAppliedModifier(this.props.index, { minOperator: value });
   }
 
   handleChangeMax = (selectedMaxOption) => {
-    this.setState({ selectedMaxOption });
-    this.props.updateAppliedModifier(this.props.index, { maxOperator: selectedMaxOption });
+    const value = selectedMaxOption ? selectedMaxOption.value : null;
+    this.props.updateAppliedModifier(this.props.index, { maxOperator: value });
   }
 
   handleChangeUnit = ({ target }) => {
@@ -36,9 +31,6 @@ export default class ValueComparisonObservation extends Component {
   }
 
   render() {
-    const { selectedMinOption, selectedMaxOption } = this.state;
-    const valueMin = selectedMinOption && selectedMinOption.value;
-    const valueMax = selectedMaxOption && selectedMaxOption.value;
     const minValueId = _.uniqueId('value-');
     const minOperatorId = _.uniqueId('operator-');
     const maxValueId = _.uniqueId('value2-');
@@ -53,7 +45,7 @@ export default class ValueComparisonObservation extends Component {
           title="Min Operator"
           aria-label="Min Operator"
           id={minOperatorId}
-          value={valueMin}
+          value={this.props.minOperator}
           placeholder="minOp"
           onChange={this.handleChangeMin}
           options={[
@@ -88,7 +80,7 @@ export default class ValueComparisonObservation extends Component {
           title="Max Operator"
           aria-label="Max Operator"
           id={maxOperatorId}
-          value={valueMax}
+          value={this.props.maxOperator}
           placeholder="maxOp"
           onChange={this.handleChangeMax}
           options={[

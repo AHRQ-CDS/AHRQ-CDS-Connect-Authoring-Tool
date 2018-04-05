@@ -3,19 +3,11 @@ import Select from 'react-select';
 
 /* eslint-disable jsx-a11y/no-onchange */
 export default class CheckExistence extends Component {
-  state = {
-    selectedOption: this.props.value,
-  }
-
   handleChange = (selectedOption) => {
-    this.setState({ selectedOption });
-    this.props.updateAppliedModifier(this.props.index, { value: selectedOption });
+    this.props.updateAppliedModifier(this.props.index, { value: selectedOption ? selectedOption.value : null });
   }
 
   render() {
-    const { selectedOption } = this.state;
-    const value = selectedOption && selectedOption.value;
-
     return (
       <div className="check-existence">
         <Select
@@ -23,7 +15,7 @@ export default class CheckExistence extends Component {
           aria-label="Check Existence"
           title="Check Existence"
           placeholder="check existence value"
-          value={value}
+          value={this.props.value}
           onChange={this.handleChange}
           options={[
             { value: 'is null', label: 'is null' },

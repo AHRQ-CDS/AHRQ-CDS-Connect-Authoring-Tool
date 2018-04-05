@@ -4,18 +4,11 @@ import _ from 'lodash';
 
 /* eslint-disable jsx-a11y/no-onchange */
 export default class LookBack extends Component {
-  state = {
-    selectedOption: this.props.unit,
-  }
-
   handleChange = (selectedOption) => {
-    this.setState({ selectedOption });
-    this.props.updateAppliedModifier(this.props.index, { unit: selectedOption });
+    this.props.updateAppliedModifier(this.props.index, { unit: selectedOption ? selectedOption.value : null });
   }
 
   render() {
-    const { selectedOption } = this.state;
-    const value = selectedOption && selectedOption.value;
     const valueId = _.uniqueId('value-');
     const unitId = _.uniqueId('unit-');
 
@@ -39,7 +32,7 @@ export default class LookBack extends Component {
             name="unit"
             aria-label="Unit Select"
             id={unitId}
-            value={value}
+            value={this.props.unit}
             placeholder="select unit"
             onChange={this.handleChange}
             options={[

@@ -28,7 +28,7 @@ test('BooleanComparison changes input', () => {
   component.find('.Select input').simulate('change', { target: { value: 'is not true' } });
   component.find('.Select input').simulate('keyDown', { keyCode: 9, key: 'Tab' }); // validate the selection
   expect(updateAppliedModifierMock).toHaveBeenCalled();
-  expect(updateAppliedModifierMock).toBeCalledWith(80, { value: { value: 'is not true', label: 'is not true' } });
+  expect(updateAppliedModifierMock).toBeCalledWith(80, { value: 'is not true' });
 });
 
 test('CheckExistence renders without crashing', () => {
@@ -51,7 +51,7 @@ test('CheckExistence changes input', () => {
   component.find('.Select input').simulate('change', { target: { value: 'is null' } });
   component.find('.Select input').simulate('keyDown', { keyCode: 9, key: 'Tab' }); // validate the selection
   expect(updateAppliedModifierMock).toHaveBeenCalled();
-  expect(updateAppliedModifierMock).toBeCalledWith(7, { value: { value: 'is null', label: 'is null' } });
+  expect(updateAppliedModifierMock).toBeCalledWith(7, { value: 'is null' });
 });
 
 test('LabelModifier renders without crashing', () => {
@@ -86,7 +86,7 @@ test('LookBack changes input', () => {
 
   component.find('.Select input').simulate('change', { target: { value: 'years' } });
   component.find('.Select input').simulate('keyDown', { keyCode: 9, key: 'Tab' }); // validate the selection
-  expect(updateAppliedModifierMock).toBeCalledWith(5, { unit: { label: 'Year(s)', value: 'years' } });
+  expect(updateAppliedModifierMock).toBeCalledWith(5, { unit: 'years' });
 });
 
 test('ValueComparisonObservation renders without crashing', () => {
@@ -121,12 +121,12 @@ test('ValueComparisonObservation changes input', () => {
   expect(updateAppliedModifierMock).toBeCalledWith(303, { minValue: 21 });
   minSelect.simulate('change', { target: { value: '<' } });
   minSelect.simulate('keyDown', { keyCode: 9, key: 'Tab' }); // validate the selection
-  expect(updateAppliedModifierMock).toBeCalledWith(303, { minOperator: { label: '<', value: '<' } });
+  expect(updateAppliedModifierMock).toBeCalledWith(303, { minOperator: '<' });
   maxInput.simulate('change', { target: { value: 189 } });
   expect(updateAppliedModifierMock).toBeCalledWith(303, { maxValue: 189 });
   maxSelect.simulate('change', { target: { value: '!=' } });
   maxSelect.simulate('keyDown', { keyCode: 9, key: 'Tab' }); // validate the selection
-  expect(updateAppliedModifierMock).toBeCalledWith(303, { maxOperator: { label: '!=', value: '!=' } });
+  expect(updateAppliedModifierMock).toBeCalledWith(303, { maxOperator: '!=' });
 });
 
 test('ValueComparison renders without crashing', () => {

@@ -8,14 +8,10 @@ export default class BooleanComparison extends Component {
   }
 
   handleChange = (selectedOption) => {
-    this.setState({ selectedOption });
-    this.props.updateAppliedModifier(this.props.index, { value: selectedOption });
+    this.props.updateAppliedModifier(this.props.index, { value: selectedOption ? selectedOption.value : null });
   }
 
   render() {
-    const { selectedOption } = this.state;
-    const value = selectedOption && selectedOption.value;
-
     return (
       <div className="boolean-comparison">
         <Select
@@ -23,7 +19,7 @@ export default class BooleanComparison extends Component {
           aria-label="Boolean Comparison"
           title="Boolean Comparison"
           placeholder="boolean"
-          value={value}
+          value={this.props.value}
           onChange={this.handleChange}
           options={[
             { value: 'is true', label: 'is true' },
