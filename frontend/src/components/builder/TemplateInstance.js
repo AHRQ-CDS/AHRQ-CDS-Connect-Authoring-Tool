@@ -179,23 +179,25 @@ export default class TemplateInstance extends Component {
 
     return (
       <div key={index} className={`modifier modifier-${modifier.type || modifier.id}`}>
-        {modifierForm}
+        <div className="modifier__info">
+          {modifierForm}
 
-        {index + 1 === this.props.templateInstance.modifiers.length &&
-          <span
-            role="button"
-            className="modifier__deletebutton secondary-button"
-            aria-label={'remove last expression'}
-            onClick={this.removeLastModifier}
-            tabIndex="0"
-            onKeyPress={(e) => {
-              e.which = e.which || e.keyCode;
-              if (e.which === 13) this.removeLastModifier();
-            }}>
+          {index + 1 === this.props.templateInstance.modifiers.length &&
+            <span
+              role="button"
+              className="modifier__deletebutton secondary-button"
+              aria-label={'remove last expression'}
+              onClick={this.removeLastModifier}
+              tabIndex="0"
+              onKeyPress={(e) => {
+                e.which = e.which || e.keyCode;
+                if (e.which === 13) this.removeLastModifier();
+              }}>
 
-            <FontAwesome name="close" className="delete-valueset-button" />
-          </span>
-        }
+              <FontAwesome name="close" className="delete-valueset-button" />
+            </span>
+          }
+        </div>
 
         {validationWarning && <div className="warning">{validationWarning}</div>}
       </div>
