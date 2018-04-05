@@ -126,6 +126,8 @@
   }
 
   .modifier {
+    display: flex;
+    flex-wrap: nowrap;
     border-bottom: 1px solid lighten($gray-light, 15%);
     padding: 15px 0;
 
@@ -143,14 +145,6 @@
       min-width: inherit;
       width: calc(80px + 4vw);
       max-width: 180px;
-    }
-
-    &.modifier-ValueComparisonObservation { position: relative; }
-
-    .modifier__deletebutton {
-      position: absolute;
-      right: 2px;
-      top: 22px;
     }
   }
 }
