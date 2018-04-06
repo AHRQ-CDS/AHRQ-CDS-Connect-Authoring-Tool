@@ -14,7 +14,7 @@ beforeEach(() => {
     errorStatement: {
       statements: [
         {
-          condition: { label: null, value: null },
+          condition: { label: "null", value: "null" },
           thenClause: '',
           child: null,
           useThenClause: true

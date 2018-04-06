@@ -106,6 +106,10 @@ class Subpopulation extends Component {
 
         { this.state.isExpanded ?
           <div className="subpopulation__logic">
+            {this.props.subpopulation.childInstances.length < 1 ?
+              <div className='warning'>This subpopulation needs at least one condition</div>
+              : null
+            }
             <ConjunctionGroup
               root={true}
               treeName={this.props.treeName}

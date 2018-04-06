@@ -30,6 +30,10 @@ button.transparent-button {
   }
 }
 
+.button[disabled], .button[disabled]:hover, .button[disabled]:focus, .button[disabled]:active {
+  opacity: .45;
+}
+
 button.danger-button {
   @include button($white, darken($red, 10%), darken($red, 10%), darken($red, 10%), none);
 }
