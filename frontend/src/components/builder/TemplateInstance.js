@@ -417,7 +417,7 @@ export default class TemplateInstance extends Component {
 
   renderVSACOptions = () => {
     // If last time authenticated was less than 7.5 hours ago, force user to log in again.
-    if (this.props.timeLastAuthenticated < new Date() - 27000000) {
+    if (this.props.timeLastAuthenticated < new Date() - 27000000 || this.props.vsacFHIRCredentials.username == null) {
       return (
         <div id="vsac-controls">
           <VSACAuthenticationModal
@@ -453,6 +453,7 @@ export default class TemplateInstance extends Component {
             className="element-select__modal"
             updateElement={this.updateInstance}
             template={this.props.templateInstance}
+            vsacFHIRCredentials={this.props.vsacFHIRCredentials}
           />
       </div>
     );

@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import FontAwesome from 'react-fontawesome';
 import Select from 'react-select';
 import _ from 'lodash';
+import axios from 'axios';
 
 import Modal from 'react-modal';
 
@@ -15,7 +16,9 @@ class CodeSelectModal extends Component {
       codeText: '',
       codeSystemText: '',
       selectedCS: null,
-      displayOtherInput: false
+      displayOtherInput: false,
+      codeIsValid: null,
+      codeData: null
     };
   }
 
@@ -31,7 +34,8 @@ class CodeSelectModal extends Component {
       codeText: '',
       codeSystemText: '',
       selectedCS: null,
-      displayOtherInput: false
+      displayOtherInput: false,
+      codeIsValid: null
     });
   }
 
@@ -43,7 +47,7 @@ class CodeSelectModal extends Component {
 
   handleSearchValueChange = (event) => {
     const codeText = event.target.value;
-    this.setState({ codeText });
+    this.setState({ codeText, codeIsValid: null });
   }
 
   handleOtherCodeSystemChange = (event) => {
@@ -53,10 +57,24 @@ class CodeSelectModal extends Component {
 
   onCodeSystemSelected = (selectedCS) => {
     if (selectedCS.value === 'Other') {
-      this.setState({ selectedCS, displayOtherInput: true });
+      this.setState({ selectedCS, codeIsValid: null, displayOtherInput: true });
     } else {
-      this.setState({ selectedCS, displayOtherInput: false });
+      this.setState({ selectedCS, codeIsValid: null, displayOtherInput: false });
     }
+  }
+
+  validateCode = () => {
+    const auth = {
+      username: this.props.vsacFHIRCredentials.username,
+      password: this.props.vsacFHIRCredentials.password
+    };
+    if (!this.state.codeText || !this.state.selectedCS) {
+      this.setState({ codeIsValid: false });
+      return;
+    }
+    axios.get(`/authoring/api/fhir/code?code=${this.state.codeText}&system=${this.state.selectedCS.id}`, { auth })
+      .then(res => this.setState({ codeIsValid: true, codeData: res.data }))
+      .catch(() => this.setState({ codeIsValid: false, codeData: null }));
   }
 
   chooseCode = () => {
@@ -96,6 +114,36 @@ class CodeSelectModal extends Component {
     this.closeCodeSelectModal();
   }
 
+  renderCodeValidation = () => {
+    if (this.state.codeIsValid === true) {
+      return (
+        <span className='modal__footer_status'>
+          <FontAwesome name='check-circle'/> Validation Successful!
+        </span>
+      );
+    } else if (this.state.codeIsValid === false) {
+      return (
+        <span className='modal__footer_status'>
+          <FontAwesome name='exclamation-triangle'/>
+          Validation Error: Unable to validate code and/or code system.
+          Please try again, or select this code without validation.
+        </span>
+      );
+    }
+    return null;
+  }
+
+  renderCodeData = () => {
+    if (this.state.codeIsValid) {
+      return <div className="code-display">
+              <div>{this.state.codeData.code}</div>
+              <div>{this.state.codeData.systemName}</div>
+              <div>{this.state.codeData.display}</div>
+            </div>;
+    }
+    return null;
+  }
+
   render() {
     const codeInputLabel = 'Enter code';
     const otherInputLabel = 'Enter system URI or OID';
@@ -133,6 +181,13 @@ class CodeSelectModal extends Component {
           <div className="element-modal__container">
             <header className="modal__header">
               <span className="modal__heading">Choose Code</span>
+              <button
+                className="element__deletebutton"
+                onClick={ this.closeCodeSelectModal }
+                onKeyDown={ e => this.enterKeyCheck(this.closeCodeSelectModal, null, e) }
+                aria-label={'Close Code Select Modal'}>
+                <FontAwesome name='close'/>
+              </button>
             </header>
 
             <main className="modal__body">
@@ -158,8 +213,8 @@ class CodeSelectModal extends Component {
                   onChange={this.onCodeSystemSelected}
                 />
 
-                <button className="primary-button element-modal__search-button col-2" onClick={ this.chooseCode }>
-                  Select
+                <button className="primary-button element-modal__search-button col-2" onClick={ this.validateCode }>
+                  Validate
                 </button>
 
                 <div className="col-6"></div>
@@ -177,15 +232,16 @@ class CodeSelectModal extends Component {
                   </div>
                   : null
                 }
-                <div className="col-2"></div>
+                <div className="col-2">
+                </div>
               </div>
+              {this.renderCodeData()}
             </main>
 
             <footer className="modal__footer">
-              <button className="primary-button"
-                      onClick={ this.closeCodeSelectModal }
-                      onKeyDown={ e => this.enterKeyCheck(this.closeCodeSelectModal, null, e) }>
-                      {buttonLabels.closeButtonText}
+              {this.renderCodeValidation()}
+              <button className="primary-button element-modal__search-button col-2" onClick={ this.chooseCode }>
+                Select
               </button>
             </footer>
           </div>

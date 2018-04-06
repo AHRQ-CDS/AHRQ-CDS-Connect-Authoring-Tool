@@ -71,6 +71,11 @@
     justify-content: flex-end;
     margin-top: 40px;
   }
+
+  .modal__footer_status {
+    display: block;
+    margin-right: auto;
+  }
 }
 
 body.ReactModal__Body--open {

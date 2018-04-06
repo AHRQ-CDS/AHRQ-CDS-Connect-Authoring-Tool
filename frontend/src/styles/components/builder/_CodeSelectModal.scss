@@ -14,3 +14,12 @@
     margin-top: 5px;
   }
 }
+
+.code-display {
+  display: grid;
+  grid-template-columns: 10% 10% auto;
+  grid-column-gap: 30px;
+  padding-left: 2em;
+  padding-right: 2em;
+  padding-top: .5em;
+}

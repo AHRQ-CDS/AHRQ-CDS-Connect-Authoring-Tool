@@ -28,7 +28,8 @@ const props = {
   vsacSearchCount: 0,
   getVSDetails: jest.fn(),
   isRetrievingDetails: false,
-  vsacDetailsCodes: []
+  vsacDetailsCodes: [],
+  vsacFHIRCredentials: { username: 'name', password: 'pass' }
 };
 
 test('creating a new template instance clones the correct instance', () => {

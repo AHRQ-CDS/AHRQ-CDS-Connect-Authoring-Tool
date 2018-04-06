@@ -304,7 +304,9 @@ export class Builder extends Component {
           vsacSearchCount={this.props.vsacSearchCount}
           getVSDetails={this.props.getVSDetails}
           isRetrievingDetails={isRetrievingDetails}
-          vsacDetailsCodes={vsacDetailsCodes}/>
+          vsacDetailsCodes={vsacDetailsCodes}
+          vsacFHIRCredentials={this.props.vsacFHIRCredentials}
+          />
       );
     }
 
@@ -421,7 +423,8 @@ export class Builder extends Component {
                     vsacSearchCount={this.props.vsacSearchCount}
                     getVSDetails={this.props.getVSDetails}
                     isRetrievingDetails={this.props.isRetrievingDetails}
-                    vsacDetailsCodes={this.props.vsacDetailsCodes} />
+                    vsacDetailsCodes={this.props.vsacDetailsCodes}
+                    vsacFHIRCredentials={this.props.vsacFHIRCredentials}/>
                 </TabPanel>
 
                 <TabPanel>
@@ -529,7 +532,8 @@ function mapStateToProps(state) {
     vsacSearchResults: state.vsac.searchResults,
     vsacSearchCount: state.vsac.searchCount,
     isRetrievingDetails: state.vsac.isRetrievingDetails,
-    vsacDetailsCodes: state.vsac.detailsCodes
+    vsacDetailsCodes: state.vsac.detailsCodes,
+    vsacFHIRCredentials: { username: state.vsac.username, password: state.vsac.password }
   };
 }
 

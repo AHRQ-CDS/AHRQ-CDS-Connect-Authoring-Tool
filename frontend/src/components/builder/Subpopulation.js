@@ -152,7 +152,8 @@ class Subpopulation extends Component {
               vsacSearchCount={this.props.vsacSearchCount}
               getVSDetails={this.props.getVSDetails}
               isRetrievingDetails={this.props.isRetrievingDetails}
-              vsacDetailsCodes={this.props.vsacDetailsCodes} />
+              vsacDetailsCodes={this.props.vsacDetailsCodes}
+              vsacFHIRCredentials={this.props.vsacFHIRCredentials}/>
           </div>
           :
           null

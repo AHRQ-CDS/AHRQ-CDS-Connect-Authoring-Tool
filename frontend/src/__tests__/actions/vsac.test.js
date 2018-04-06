@@ -79,7 +79,7 @@ describe('vsac actions', () => {
 
       const expectedActions = [
         { type: types.VSAC_LOGIN_REQUEST },
-        { type: types.VSAC_LOGIN_SUCCESS, timeLastAuthenticated: date }
+        { type: types.VSAC_LOGIN_SUCCESS, timeLastAuthenticated: date, username: 'myUserName', password: 'myPw' }
       ];
 
       return store.dispatch(actions.loginVSACUser(username, password)).then(() => {

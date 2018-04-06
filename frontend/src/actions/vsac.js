@@ -53,14 +53,16 @@ function requestLogin() {
   };
 }
 
-function loginSuccess() {
+function loginSuccess(username, password) {
   // Round date to nearest second.
   const date = new Date();
   date.setSeconds(date.getSeconds() + (Math.round(date.getMilliseconds() / 1000)));
   date.setMilliseconds(0);
   return {
     type: VSAC_LOGIN_SUCCESS,
-    timeLastAuthenticated: date
+    timeLastAuthenticated: date,
+    username,
+    password,
   };
 }
 
@@ -85,7 +87,7 @@ export function loginVSACUser(username, password) {
     dispatch(requestLogin());
 
     return sendLoginRequest(username, password)
-      .then(() => dispatch(loginSuccess()))
+      .then(() => dispatch(loginSuccess(username, password)))
       .catch(error => dispatch(loginFailure(error)));
   };
 }
@@ -177,4 +179,3 @@ export function getVSDetails(oid) {
       .catch(error => dispatch(detailsFailure(error)));
   };
 }
-

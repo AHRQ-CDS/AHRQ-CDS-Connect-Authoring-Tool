@@ -171,7 +171,7 @@ class ElementSelect extends Component {
 
   renderVSACLogin = () => {
     // If last time authenticated was less than 7.5 hours ago, force user to log in again.
-    if (this.props.timeLastAuthenticated < new Date() - 27000000) {
+    if (this.props.timeLastAuthenticated < new Date() - 27000000 || this.props.vsacFHIRCredentials.username == null) {
       return (
         <div className="vsac-authenticate">
           <VSACAuthenticationModal
@@ -217,6 +217,7 @@ class ElementSelect extends Component {
             className="element-select__modal"
             onElementSelected={this.onSuggestionSelected}
             template={selectedTemplate}
+            vsacFHIRCredentials={this.props.vsacFHIRCredentials}
           />
       </div>
     );

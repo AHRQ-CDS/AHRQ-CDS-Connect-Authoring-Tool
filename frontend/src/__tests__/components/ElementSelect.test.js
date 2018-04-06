@@ -22,7 +22,8 @@ const props = {
   vsacSearchCount: 0,
   getVSDetails: jest.fn(),
   isRetrievingDetails: false,
-  vsacDetailsCodes: []
+  vsacDetailsCodes: [],
+  vsacFHIRCredentials: { username: 'name', password: 'pass' }
 };
 
 beforeEach(() => {

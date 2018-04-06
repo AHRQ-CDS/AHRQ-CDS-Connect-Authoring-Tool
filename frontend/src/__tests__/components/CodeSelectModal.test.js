@@ -28,7 +28,7 @@ beforeEach(() => {
     CodeSelectModal,
     {
       onElementSelected,
-      template: testTemplate
+      template: testTemplate,
     }
   );
 
@@ -82,14 +82,13 @@ describe('with modal open', () => {
   });
 
   test('can close modal with "Close" button', () => {
-    internalModal.find('.modal__footer button').first().simulate('click');
+    internalModal.find('.modal__header button').first().simulate('click');
     expect(component.state().showCodeSelectModal).toEqual(false);
   });
 
   test('can input a code and code system and apply to an element', () => {
     const code = '123-4';
-    const selectButton = internalModal.find('.element-modal__search .element-modal__search-button');
-
+    const selectButton = internalModal.find('button').findWhere(button => button.text() === 'Select');
     // Enter code
     setInputValue(codeInput, code);
     expect(codeInput.node.value).toEqual(code);

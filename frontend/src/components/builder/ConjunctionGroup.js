@@ -225,7 +225,8 @@ export default class ConjunctionGroup extends Component {
               vsacSearchCount={this.props.vsacSearchCount}
               getVSDetails={this.props.getVSDetails}
               isRetrievingDetails={this.props.isRetrievingDetails}
-              vsacDetailsCodes={this.props.vsacDetailsCodes} />
+              vsacDetailsCodes={this.props.vsacDetailsCodes}
+              vsacFHIRCredentials={this.props.vsacFHIRCredentials}/>
 
             {this.renderConjunctionSelect(i)}
           </div>
@@ -263,7 +264,8 @@ export default class ConjunctionGroup extends Component {
           vsacSearchCount={this.props.vsacSearchCount}
           getVSDetails={this.props.getVSDetails}
           isRetrievingDetails={this.props.isRetrievingDetails}
-          vsacDetailsCodes={this.props.vsacDetailsCodes} />
+          vsacDetailsCodes={this.props.vsacDetailsCodes}
+          vsacFHIRCredentials={this.props.vsacFHIRCredentials}/>
 
         {this.renderConjunctionSelect(instance)}
       </div>
@@ -295,6 +297,8 @@ export default class ConjunctionGroup extends Component {
             getVSDetails={this.props.getVSDetails}
             isRetrievingDetails={this.props.isRetrievingDetails}
             vsacDetailsCodes={this.props.vsacDetailsCodes}
+            vsacFHIRCredentials={this.props.vsacFHIRCredentials}
+            validateCode={this.props.validateCode}
           />
         </div>
       </div>
@@ -324,5 +328,6 @@ ConjunctionGroup.propTypes = {
   vsacSearchCount: PropTypes.number.isRequired,
   getVSDetails: PropTypes.func.isRequired,
   isRetrievingDetails: PropTypes.bool.isRequired,
-  vsacDetailsCodes: PropTypes.array.isRequired
+  vsacDetailsCodes: PropTypes.array.isRequired,
+  vsacFHIRCredentials: PropTypes.object
 };

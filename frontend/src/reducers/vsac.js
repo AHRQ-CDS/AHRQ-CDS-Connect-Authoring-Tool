@@ -15,7 +15,9 @@ const defaultState = {
   searchResults: [],
   searchCount: 0,
   isRetrievingDetails: false,
-  detailsCodes: []
+  detailsCodes: [],
+  username: null,
+  password: null
 };
 
 export default function auth(state = defaultState, action) {
@@ -43,7 +45,9 @@ export default function auth(state = defaultState, action) {
         isAuthenticating: false,
         timeLastAuthenticated: action.timeLastAuthenticated,
         authStatus: 'loginSuccess',
-        authStatusText: 'You have been successfully logged in to VSAC.'
+        authStatusText: 'You have been successfully logged in to VSAC.',
+        username: action.username,
+        password: action.password
       };
     case VSAC_LOGIN_FAILURE:
       return {
