@@ -22,6 +22,7 @@ export default class Subpopulations extends Component {
     checkSubpopulationUsage: PropTypes.func.isRequired,
     parameters: PropTypes.array.isRequired,
     name: PropTypes.string.isRequired,
+    conversionFunctions: PropTypes.array,
     loginVSACUser: PropTypes.func.isRequired,
     setVSACAuthStatus: PropTypes.func.isRequired,
     vsacStatus: PropTypes.string,
@@ -112,6 +113,7 @@ export default class Subpopulations extends Component {
               getAllInstances={ this.props.getAllInstances }
               templates={ this.props.templates }
               artifact={this.props.artifact}
+              conversionFunctions={this.props.conversionFunctions}
               loginVSACUser={this.props.loginVSACUser}
               setVSACAuthStatus={this.props.setVSACAuthStatus}
               vsacStatus={this.props.vsacStatus}

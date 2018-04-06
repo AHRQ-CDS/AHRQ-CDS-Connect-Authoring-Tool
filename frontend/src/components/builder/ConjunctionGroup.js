@@ -214,6 +214,7 @@ export default class ConjunctionGroup extends Component {
               updateInstanceModifiers={this.props.updateInstanceModifiers}
               parameters={this.props.parameters}
               getPath={this.getChildsPath}
+              conversionFunctions={this.props.conversionFunctions}
               loginVSACUser={this.props.loginVSACUser}
               setVSACAuthStatus={this.props.setVSACAuthStatus}
               vsacStatus={this.props.vsacStatus}
@@ -253,6 +254,7 @@ export default class ConjunctionGroup extends Component {
           deleteInstance={this.props.deleteInstance}
           subpopulationIndex={this.props.subPopulationIndex}
           renderIndentButtons={this.renderIndentButtons}
+          conversionFunctions={this.props.conversionFunctions}
           loginVSACUser={this.props.loginVSACUser}
           setVSACAuthStatus={this.props.setVSACAuthStatus}
           vsacStatus={this.props.vsacStatus}
@@ -317,6 +319,7 @@ ConjunctionGroup.propTypes = {
   getPath: requiredIf(PropTypes.func, props => !props.root), // path needed for children
   getAllInstances: PropTypes.func.isRequired,
   deleteInstance: PropTypes.func.isRequired,
+  conversionFunctions: PropTypes.array,
   loginVSACUser: PropTypes.func.isRequired,
   setVSACAuthStatus: PropTypes.func.isRequired,
   vsacStatus: PropTypes.string,

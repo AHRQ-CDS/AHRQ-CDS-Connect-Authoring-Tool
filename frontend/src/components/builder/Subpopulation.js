@@ -22,6 +22,7 @@ class Subpopulation extends Component {
     treeName: PropTypes.string.isRequired,
     parameters: PropTypes.array.isRequired,
     templates: PropTypes.array.isRequired,
+    conversionFunctions: PropTypes.array,
     loginVSACUser: PropTypes.func.isRequired,
     setVSACAuthStatus: PropTypes.func.isRequired,
     vsacStatus: PropTypes.string,
@@ -141,6 +142,7 @@ class Subpopulation extends Component {
               updateInstanceModifiers={this.props.updateInstanceModifiers}
               parameters={this.props.parameters}
               subPopulationIndex={this.props.subpopulationIndex}
+              conversionFunctions={this.props.conversionFunctions}
               loginVSACUser={this.props.loginVSACUser}
               setVSACAuthStatus={this.props.setVSACAuthStatus}
               vsacStatus={this.props.vsacStatus}

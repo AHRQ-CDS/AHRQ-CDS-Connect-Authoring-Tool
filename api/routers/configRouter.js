@@ -23,4 +23,8 @@ ConfigRouter.route('/valuesets/:valueset*')
 ConfigRouter.route('/repo/publish')
   .get(config.getRepoPublishConfig);
 
+// Routes for /authoring/api/config/conversions
+ConfigRouter.route('/conversions')
+  .get(config.getConversionFunctions);
+
 module.exports = ConfigRouter;

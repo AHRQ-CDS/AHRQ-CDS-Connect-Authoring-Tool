@@ -18,7 +18,8 @@ const baseState = {
   resources: { resources: {} },
   valueSets: { valueSets: [] },
   templates: { templates: elementGroups },
-  vsac: {}
+  vsac: {},
+  modifiers: {}
 };
 
 const props = {

@@ -18,6 +18,7 @@ import BooleanComparison from './modifiers/BooleanComparison';
 import CheckExistence from './modifiers/CheckExistence';
 import LabelModifier from './modifiers/LabelModifier';
 import LookBack from './modifiers/LookBack';
+import SelectModifier from './modifiers/SelectModifier';
 import ValueComparison from './modifiers/ValueComparison';
 import ValueComparisonObservation from './modifiers/ValueComparisonObservation';
 import WithUnit from './modifiers/WithUnit';
@@ -170,6 +171,16 @@ export default class TemplateInstance extends Component {
               key={index}
               index={index}
               value={mod.values.value}
+              updateAppliedModifier={this.updateAppliedModifier}/>
+          );
+        case 'ConvertObservation':
+          return (
+            <SelectModifier
+              key={index}
+              index={index}
+              value={mod.values.value}
+              name={mod.name}
+              options={this.props.conversionFunctions}
               updateAppliedModifier={this.updateAppliedModifier}/>
           );
         default:

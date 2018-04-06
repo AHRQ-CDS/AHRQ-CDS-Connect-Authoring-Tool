@@ -735,6 +735,9 @@ function applyModifiers(values, modifiers = []) { // default modifiers to []
       if (!(modifier.cqlTemplate in modifierMap)) {
         console.error(`Modifier Template could not be found: ${modifier.cqlTemplate}`);
       }
+      if (!modifier.cqlLibraryFunction) {
+        modifier.cqlLibraryFunction = modifier.values.templateName;
+      }
       const modifierContext = { cqlLibraryFunction: modifier.cqlLibraryFunction, value_name: newValue };
       if (modifier.values) modifierContext.values = modifier.values; // Certain modifiers (such as lookback) require values, so provide them here
       newValue = ejs.render(modifierMap[modifier.cqlTemplate], modifierContext);
@@ -901,7 +904,7 @@ function writeZip(cqlArtifact, writeStream, callback /* (error) */) {
     elmFiles.forEach((e, i) => {
       archive.append(e.content, { name: `${e.name}.json` });
     });
-    const helperPath = `${__dirname}/../data/library_helpers/`;
+    const helperPath = `${__dirname}/../data/library_helpers/CQLFiles`;
     archive.directory(helperPath, '/');
     archive.finalize();
   });
@@ -915,7 +918,7 @@ function convertToElm(artifactJson, callback /* (error, elmFiles) */) {
   }
 
   // Load all the supplementary CQL files, open file streams to them, and convert to ELM
-  const helperPath = `${__dirname}/../data/library_helpers/`;
+  const helperPath = `${__dirname}/../data/library_helpers/CQLFiles`;
   glob(`${helperPath}/*.cql`, (err, files) => {
     if (err) {
       callback(err);

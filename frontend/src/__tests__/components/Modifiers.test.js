@@ -2,6 +2,7 @@ import BooleanComparison from '../../components/builder/modifiers/BooleanCompari
 import CheckExistence from '../../components/builder/modifiers/CheckExistence';
 import LabelModifier from '../../components/builder/modifiers/LabelModifier';
 import LookBack from '../../components/builder/modifiers/LookBack';
+import SelectModifier from '../../components/builder/modifiers/SelectModifier';
 import ValueComparisonObservation from '../../components/builder/modifiers/ValueComparisonObservation';
 import ValueComparison from '../../components/builder/modifiers/ValueComparison';
 import WithUnit from '../../components/builder/modifiers/WithUnit';
@@ -188,4 +189,33 @@ test('WithUnit changes select', () => {
   component.find('#with-unit-ucum').simulate('change', { target: { value: 'mg/dL' } });
   expect(updateAppliedModifierMock).toHaveBeenCalled();
   expect(updateAppliedModifierMock).toBeCalledWith(5, { unit: 'mg/dL' });
+});
+
+test('SelectModifier renders without crashing', () => {
+  const updateAppliedModifierMock = jest.fn();
+  const component = shallowRenderComponent(SelectModifier, {
+    updateAppliedModifier: updateAppliedModifierMock,
+    index: 6,
+    name: '',
+    options: []
+  });
+  expect(component).toBeDefined();
+});
+
+test('SelectModifier changes select', () => {
+  const updateAppliedModifierMock = jest.fn();
+  const component = fullRenderComponent(SelectModifier, {
+    updateAppliedModifier: updateAppliedModifierMock,
+    index: 6,
+    name: '',
+    options: [{ name: 'Convert.to_mg_per_dL', description: 'mmol/L to mg/dL' }],
+    value: ''
+  });
+
+  component.find('.Select input').simulate('change', { target: { value: 'mmol/L to mg/dL' } });
+  component.find('.Select input').simulate('keyDown', { keyCode: 9, key: 'Tab' }); // validate the selection
+  expect(updateAppliedModifierMock).toHaveBeenCalled();
+  expect(updateAppliedModifierMock).toBeCalledWith(6, {
+    value: 'Convert.to_mg_per_dL', templateName: 'Convert.to_mg_per_dL'
+  });
 });

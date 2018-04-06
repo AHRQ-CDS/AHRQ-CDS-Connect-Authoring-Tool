@@ -82,6 +82,16 @@ export default [
     cqlLibraryFunction: 'Convert.to_mg_per_dL'
   },
   {
+    id: 'ConvertObservation',
+    name: 'Convert Units',
+    inputTypes: ['system_quantity'],
+    returnType: 'system_quantity',
+    values: { value: '', templateName: '' },
+    validator: { type: 'require', fields: ['value'], args: null },
+    cqlTemplate: 'BaseModifier',
+    // cqlLibraryFunction is left off because it gets set based on option selected.
+  },
+  {
     id: 'HighestObservationValue',
     name: 'Highest Observation Value',
     inputTypes: ['list_of_observations'],

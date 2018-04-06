@@ -125,6 +125,10 @@ yarn test # runs all api tests
 
 For information on running the CDS Authoring Tool in Docker, see the main [README](../README.md).
 
+### Conversion functions
+
+`CDS_Connect_Conversions` provides a list of available functions to convert units. When updating or adding to these functions, update the file in `data/library_helpers/CQLFiles/CDS_Connect_Conversions.cql` with the functions needed. After, regenerate the ELM file for this CQL file and update it in `data/library_helpers/ELMFiles/CDS_Connect_Conversions.json`. If a function requires a more understandable description to be displayed in the user interface, such as the start and target units for the function, update the list of descriptions in `data/handlers/configHandler.js`.
+
 ## LICENSE
 
 Copyright 2016-2018 Agency for Healthcare Research and Quality
