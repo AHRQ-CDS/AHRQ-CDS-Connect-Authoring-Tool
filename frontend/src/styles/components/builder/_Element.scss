@@ -173,13 +173,3 @@
 }
 
 .align-right { text-align: right; }
-
-.Select {
-  margin-right: 10px;
-
-  &.operator > div {
-    width: calc(65px + 3vw);
-    min-width: inherit;
-    max-width: 120px;
-  }
-}

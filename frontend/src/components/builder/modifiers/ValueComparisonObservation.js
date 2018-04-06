@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import Select from 'react-select';
 import _ from 'lodash';
 
@@ -124,3 +125,13 @@ export default class ValueComparisonObservation extends Component {
     );
   }
 }
+
+ValueComparisonObservation.propTypes = {
+  index: PropTypes.number.isRequired,
+  unit: PropTypes.string.isRequired,
+  minOperator: PropTypes.string.isRequired,
+  minValue: PropTypes.number.isRequired,
+  maxOperator: PropTypes.string,
+  maxValue: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+  updateAppliedModifier: PropTypes.func.isRequired
+};

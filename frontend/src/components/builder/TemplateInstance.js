@@ -13,6 +13,8 @@ import StaticParameter from './parameters/StaticParameter';
 import StringParameter from './parameters/StringParameter';
 import ValueSetParameter from './parameters/ValueSetParameter';
 
+import ValueSetTemplate from './templates/ValueSetTemplate';
+
 import Modifiers from '../../data/modifiers';
 import BooleanComparison from './modifiers/BooleanComparison';
 import CheckExistence from './modifiers/CheckExistence';
@@ -268,39 +270,6 @@ export default class TemplateInstance extends Component {
     this.setAppliedModifiers(modifiers);
   }
 
-  viewValueSetDetails = valueSet => (
-    <ElementModal
-      className="element-select__modal"
-      updateElement={this.updateInstance}
-      searchVSACByKeyword={this.props.searchVSACByKeyword}
-      isSearchingVSAC={this.props.isSearchingVSAC}
-      vsacSearchResults={this.props.vsacSearchResults}
-      vsacSearchCount={this.props.vsacSearchCount}
-      template={this.props.templateInstance}
-      getVSDetails={this.props.getVSDetails}
-      isRetrievingDetails={this.props.isRetrievingDetails}
-      vsacDetailsCodes={this.props.vsacDetailsCodes}
-      selectedElement={valueSet}
-      useIconButton={true}
-      iconForButton={'eye'}
-      viewOnly={true}
-    />
-  )
-
-  deleteValueSet = (valueSetToDelete) => {
-    const templateInstanceClone = _.cloneDeep(this.props.templateInstance);
-    if (templateInstanceClone.parameters[1] && templateInstanceClone.parameters[1].valueSets) {
-      const updatedValueSets = templateInstanceClone.parameters[1].valueSets;
-      const indexOfVSToRemove = updatedValueSets.findIndex(vs =>
-        (vs.name === valueSetToDelete.name && vs.oid === valueSetToDelete.oid));
-      updatedValueSets.splice(indexOfVSToRemove, 1);
-      const arrayToUpdate = [
-        { [templateInstanceClone.parameters[1].id]: updatedValueSets, attributeToEdit: 'valueSets' }
-      ];
-      this.updateInstance(arrayToUpdate);
-    }
-  }
-
   deleteCode = (codeToDelete) => {
     const templateInstanceClone = _.cloneDeep(this.props.templateInstance);
     if (templateInstanceClone.parameters[1] && templateInstanceClone.parameters[1].codes) {
@@ -352,30 +321,20 @@ export default class TemplateInstance extends Component {
         return (
           <div className="modifier__return__type" id="valueset-list">
             {vsacParameter.valueSets.map((vs, i) => (
-              <div key={`selected-valueset-${i}`} className="row vs-info">
-                <div className="bold col-3 vs-info__label">
-                  Value Set{vsacParameter.valueSets.length > 1 ? ` ${i + 1}` : ''}:
-                </div>
-
-                <div className="col-9 row vs-info__info">
-                  <div className="col-10">{` ${vs.name} (${vs.oid})`}</div>
-
-                  <div className="col-2 vs-info__buttons align-right">
-                    {this.viewValueSetDetails(vs)}
-
-                    <span
-                      role="button"
-                      id="delete-valueset"
-                      tabIndex="0"
-                      onClick={() => this.deleteValueSet(vs)}
-                      onKeyPress={(e) => {
-                        e.which = e.which || e.keyCode;
-                        if (e.which === 13) this.deleteValueSet(vs);
-                      }}>
-                      <FontAwesome name="close" className="delete-valueset-button" />
-                    </span>
-                  </div>
-                </div>
+              <div key={`selected-valueset-${i}`}>
+                <ValueSetTemplate
+                  index={i}
+                  vsacParameter={vsacParameter}
+                  valueSet={vs}
+                  updateInstance={this.updateInstance}
+                  searchVSACByKeyword={this.props.searchVSACByKeyword}
+                  isSearchingVSAC={this.props.isSearchingVSAC}
+                  vsacSearchResults={this.props.vsacSearchResults}
+                  vsacSearchCount={this.props.vsacSearchCount}
+                  templateInstance={this.props.templateInstance}
+                  getVSDetails={this.props.getVSDetails}
+                  isRetrievingDetails={this.props.isRetrievingDetails}
+                  vsacDetailsCodes={this.props.vsacDetailsCodes} />
               </div>
             ))}
           </div>

@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import Select from 'react-select';
 import _ from 'lodash';
 
@@ -50,3 +51,11 @@ export default class LookBack extends Component {
     );
   }
 }
+
+LookBack.propTypes = {
+  index: PropTypes.number.isRequired,
+  value: PropTypes.number.isRequired,
+  unit: PropTypes.string.isRequired,
+  updateAppliedModifier: PropTypes.func.isRequired
+};
+

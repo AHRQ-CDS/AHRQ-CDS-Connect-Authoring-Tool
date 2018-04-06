@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import Select from 'react-select';
 
 /* eslint-disable jsx-a11y/no-onchange */
@@ -26,3 +27,9 @@ export default class CheckExistence extends Component {
     );
   }
 }
+
+CheckExistence.propTypes = {
+  index: PropTypes.number.isRequired,
+  value: PropTypes.string.isRequired,
+  updateAppliedModifier: PropTypes.func.isRequired
+};

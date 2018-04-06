@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import _ from 'lodash';
 
 const { Def } = window;
@@ -33,3 +34,9 @@ export default class WithUnit extends Component {
     );
   }
 }
+
+WithUnit.propTypes = {
+  index: PropTypes.number.isRequired,
+  unit: PropTypes.string.isRequired,
+  updateAppliedModifier: PropTypes.func.isRequired
+};

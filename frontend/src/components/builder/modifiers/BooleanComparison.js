@@ -1,12 +1,9 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import Select from 'react-select';
 
 /* eslint-disable jsx-a11y/no-onchange */
 export default class BooleanComparison extends Component {
-  state = {
-    selectedOption: this.props.value,
-  }
-
   handleChange = (selectedOption) => {
     this.props.updateAppliedModifier(this.props.index, { value: selectedOption ? selectedOption.value : null });
   }
@@ -32,3 +29,9 @@ export default class BooleanComparison extends Component {
     );
   }
 }
+
+BooleanComparison.propTypes = {
+  index: PropTypes.number.isRequired,
+  value: PropTypes.string.isRequired,
+  updateAppliedModifier: PropTypes.func.isRequired
+};

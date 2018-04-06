@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import _ from 'lodash';
 
 export default class ValueComparison extends Component {
@@ -49,3 +50,12 @@ export default class ValueComparison extends Component {
     );
   }
 }
+
+ValueComparison.propTypes = {
+  index: PropTypes.number.isRequired,
+  min: PropTypes.number.isRequired,
+  max: PropTypes.number.isRequired,
+  minInclusive: PropTypes.bool.isRequired,
+  maxInclusive: PropTypes.bool.isRequired,
+  updateAppliedModifier: PropTypes.func.isRequired
+};
