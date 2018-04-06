@@ -26,6 +26,14 @@ const config = convict({
       env: 'MONGO_URL',
     }
   },
+  migrations: {
+    active: {
+      doc: 'Indicates if migrations are automatically applied on startup',
+      format: 'Boolean',
+      default: true,
+      env: 'MIGRATIONS_ACTIVE',
+    }
+  },
   repo: {
     url: {
       doc: 'The URL to the CDS Connect repository.',
