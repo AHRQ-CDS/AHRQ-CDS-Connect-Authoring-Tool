@@ -648,7 +648,7 @@ class CqlArtifact {
       context.values.forEach((value, index) => {
         context.values[index] = ejs.render(templateMap[context.template], { element_context: value });
       });
-      const cqlString = applyModifiers(context.values, context.modifiers);
+      const cqlString = applyModifiers(context.values, context.modifiers, this.resourceMap);
       return ejs.render(templateMap.BaseTemplate, { element_name: context.element_name, cqlString });
     }).join('\n');
   }
@@ -706,7 +706,10 @@ class CqlArtifact {
 
   // Produces the cql in string format
   toString() {
-    return `${this.header()}${this.body()}\n${this.population()}\n${this.recommendation()}\n${this.rationale()}\n` +
+    // Create the header after the body because elements in the body can add new value sets and codes to be used.
+    const bodyString = this.body();
+    const headerString = this.header();
+    return `${headerString}${bodyString}\n${this.population()}\n${this.recommendation()}\n${this.rationale()}\n` +
       `${this.errors()}`;
   }
 
@@ -728,17 +731,25 @@ function sanitizeCQLString(cqlString) {
 }
 
 // Both parameters are arrays. All modifiers will be applied to all values, and joined with "\n or".
-function applyModifiers(values, modifiers = []) { // default modifiers to []
+function applyModifiers(values, modifiers = [], resourceMap) { // default modifiers to []
   return values.map((value) => {
     let newValue = value;
     modifiers.forEach((modifier) => {
       if (!(modifier.cqlTemplate in modifierMap)) {
         console.error(`Modifier Template could not be found: ${modifier.cqlTemplate}`);
       }
-      if (!modifier.cqlLibraryFunction) {
+      if (!modifier.cqlLibraryFunction && modifier.values && modifier.values.templateName) {
         modifier.cqlLibraryFunction = modifier.values.templateName;
       }
       const modifierContext = { cqlLibraryFunction: modifier.cqlLibraryFunction, value_name: newValue };
+      // Modifiers that add new value sets, will have a valueSet attribute on values.
+      if (modifier.values && modifier.values.valueSet) {
+        // Add the value set to the resourceMap to be included and referenced
+        const count = getCountForUniqueExpressionName(modifier.values.valueSet, resourceMap, 'name', 'oid');
+        if (count > 0) {
+          modifier.values.valueSet.name = `${modifier.values.valueSet.name}_${count}`;
+        }
+      }
       if (modifier.values) modifierContext.values = modifier.values; // Certain modifiers (such as lookback) require values, so provide them here
       newValue = ejs.render(modifierMap[modifier.cqlTemplate], modifierContext);
     });
