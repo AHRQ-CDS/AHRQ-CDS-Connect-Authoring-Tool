@@ -263,10 +263,35 @@ class IntegerEditor extends Component {
 }
 
 class DateTimeEditor extends Component {
-  assignValue(evt) {
-    let date = evt != null ? evt.format('YYYY-MM-DD') : null;
-    date = date ? `@${date}` : null;
-    return date;
+  assignValue(evt, name) {
+    let date = null;
+    let time = null;
+    let str = null;
+
+    switch (name) {
+      case "date":
+        date = evt != null ? evt.format('YYYY-MM-DD') : null;
+        time = _.get(this, 'props.value.time', null);
+        break;
+      case "time":
+        date = _.get(this, 'props.value.date', null);
+        time = evt != null ? evt.format('HH:mm:ss') : null;
+        break;
+      default:
+        break;
+    }
+
+    if (date || time) {
+      if (time) {
+        str = `@${date}T${time}`;
+      } else {
+        str = `@${date}`;
+      }
+      return { date: date, time: time, str: str };
+    } else {
+      return null;
+    }
+
   }
 
   render() {
@@ -278,10 +303,17 @@ class DateTimeEditor extends Component {
         <label htmlFor={formId}>
           Date: <DatePicker
             id={id}
-            selected={moment(value, 'YYYY-MM-DD').isValid() ? moment(value, 'YYYY-MM-DD') : null}
+            selected={moment(_.get(value, 'date', null), 'YYYY-MM-DD').isValid() ? moment(value.date, 'YYYY-MM-DD') : null}
             dateFormat="L"
             onChange={ e =>
-              {updateInstance({ name: name, type: type, value: this.assignValue(e) })
+              {updateInstance({ name: name, type: type, value: this.assignValue(e, 'date') })
+            }}
+          />
+          Time: <TimePicker
+            id={id}
+            defaultValue={moment(_.get(value, 'time', null), 'HH:mm:ss').isValid() ? moment(value.time, 'HH:mm:ss') : null}
+            onChange={ e =>
+              {updateInstance({ name: name, type: type, value: this.assignValue(e, 'time') })
             }}
           />
         </label>
@@ -503,24 +535,55 @@ class IntervalOfIntegerEditor extends Component {
 class IntervalOfDateTimeEditor extends Component {
   assignValue(evt, name) {
     let first_date = null;
+    let first_time = null;
     let second_date = null;
+    let second_time = null;
+    let str = null;
 
     switch (name) {
       case "first_date":
         first_date = evt != null ? evt.format('YYYY-MM-DD') : null;
+        first_time = _.get(this, 'props.value.first_time', null);
         second_date = _.get(this, 'props.value.second_date', null);
+        second_time = _.get(this, 'props.value.second_time', null);
+        break;
+      case "first_time":
+        first_date = _.get(this, 'props.value.first_date', null);
+        first_time = evt != null ? evt.format('HH:mm:ss') : null;
+        second_date = _.get(this, 'props.value.second_date', null);
+        second_time = _.get(this, 'props.value.second_time', null);
         break;
       case "second_date":
         first_date = _.get(this, 'props.value.first_date', null);
+        first_time = _.get(this, 'props.value.first_time', null);
         second_date = evt != null ? evt.format('YYYY-MM-DD') : null;
+        second_time = _.get(this, 'props.value.second_time', null);
+        break;
+      case "second_time":
+        first_date = _.get(this, 'props.value.first_date', null);
+        first_time = _.get(this, 'props.value.first_time', null);
+        second_date = _.get(this, 'props.value.second_date', null);
+        second_time = evt != null ? evt.format('HH:mm:ss') : null;
         break;
       default:
         break;
     }
 
-    if (first_date || second_date) {
-      let str = `Interval[@${first_date},@${second_date}]`;
-      return { first_date: first_date, second_date: second_date, str: str };
+    if (first_date || second_date || first_time || second_time) {
+      if (first_time) {
+        if (second_time) {
+          str = `Interval[@${first_date}T${first_time},@${second_date}T${second_time}]`;
+        } else {
+          str = `Interval[@${first_date}T${first_time},@${second_date}]`;
+        }
+      } else {
+        if (second_time) {
+          str = `Interval[@${first_date},@${second_date}T${second_time}]`;
+        } else {
+          str = `Interval[@${first_date},@${second_date}]`;
+        }
+      }
+      return { first_date: first_date, first_time: first_time, second_date: second_date, second_time: second_time, str: str };
     } else {
       return null;
     }
@@ -542,6 +605,15 @@ class IntervalOfDateTimeEditor extends Component {
               {updateInstance({ name: name, type: type, value: this.assignValue(e, 'first_date') })
             }}
           />
+          <label>First Time:</label>
+          <TimePicker
+            id={id}
+            defaultValue={moment(_.get(value, 'first_time', null), 'HH:mm:ss').isValid() ? moment(value.first_time, 'HH:mm:ss') : null}
+            onChange={ e =>
+              {updateInstance({ name: name, type: type, value: this.assignValue(e, 'first_time') })
+            }}
+          />
+          <br/>
           <label>Second Date:</label>
           <DatePicker
             id={id}
@@ -549,6 +621,14 @@ class IntervalOfDateTimeEditor extends Component {
             dateFormat="L"
             onChange={ e =>
               {updateInstance({ name: name, type: type, value: this.assignValue(e, 'second_date') })
+            }}
+          />
+          <label>Second Time:</label>
+          <TimePicker
+            id={id}
+            defaultValue={moment(_.get(value, 'second_time', null), 'HH:mm:ss').isValid() ? moment(value.second_time, 'HH:mm:ss') : null}
+            onChange={ e =>
+              {updateInstance({ name: name, type: type, value: this.assignValue(e, 'second_time') })
             }}
           />
         </label>

@@ -21,7 +21,7 @@ concept "<%=concept.name%>" : { <%concept.codes.forEach((code, index) => {%>"<%i
 <%})-%>
 
 <% parameters.forEach(parameter => { if(parameter.name) {-%>
-parameter "<%=parameter.name%>" <%- parameter.value ? 'default ' + (typeof parameter.value === 'object' ? parameter.value.str : parameter.value) : parameter.type %>
+parameter "<%=parameter.name%>" <%- parameter.value || parameter.value === 0 ? 'default ' + (typeof parameter.value === 'object' ? parameter.value.str : parameter.value) : parameter.type %>
 <%}});-%>
 
 context <%=context%>
