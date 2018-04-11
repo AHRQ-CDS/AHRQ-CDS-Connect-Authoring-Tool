@@ -202,27 +202,8 @@ class CqlArtifact {
     if (elementDetails.concepts.length > 0) {
       const values = [];
       elementDetails.concepts.forEach((concept) => {
-        concept.codes.forEach((code) => {
-          // Add Code Systems
-          const cs = code.codeSystem;
-          const codeSystemCount = getCountForUniqueExpressionName(cs, this.codeSystemMap, 'name', 'id');
-          if (codeSystemCount > 0) {
-            cs.name = `${cs.name}_${codeSystemCount}`;
-          }
-
-          // Add individual codes
-          const codeCount = getCountForUniqueExpressionName(code, this.codeMap, 'name', 'codeSystem');
-          if (codeCount > 0) {
-            code.name = `${code.name}_${codeCount}`;
-          }
-        });
-
-        // Add concepts
-        const conceptCount = getCountForUniqueExpressionName(concept, this.conceptMap, 'name', 'codes');
-        if (conceptCount > 0) {
-          concept.name = `${concept.name}_${conceptCount}`;
-        }
-        values.push(concept.name);
+        const conceptAdded = addConcepts(concept, this.codeSystemMap, this.codeMap, this.conceptMap);
+        values.push(conceptAdded.name);
       });
       // Union multiple codes together.
       if (values.length > 1) {
@@ -396,7 +377,7 @@ class CqlArtifact {
             valuesets: [],
             concepts: []
           };
-          addConceptForCodes(parameter.codes, observationValueSets);
+          buildConceptObjectForCodes(parameter.codes, observationValueSets);
           addValueSets(parameter, observationValueSets, 'valuesets');
           this.setParamterContexts(observationValueSets, 'Observation', 'ObservationsByConcept', context);
           break;
@@ -449,7 +430,7 @@ class CqlArtifact {
             valuesets: [],
             concepts: []
           }
-          addConceptForCodes(parameter.codes, conditionValueSets);
+          buildConceptObjectForCodes(parameter.codes, conditionValueSets);
           addValueSets(parameter, conditionValueSets, 'valuesets');
           this.setParamterContexts(conditionValueSets, 'Condition', 'ConditionsByConcept', context);
           break;
@@ -477,7 +458,7 @@ class CqlArtifact {
             valuesets: [],
             concepts: []
           };
-          addConceptForCodes(parameter.codes, medicationStatementValueSets);
+          buildConceptObjectForCodes(parameter.codes, medicationStatementValueSets);
           addValueSets(parameter, medicationStatementValueSets, 'valuesets');
           this.setParamterContexts(
             medicationStatementValueSets,
@@ -493,7 +474,7 @@ class CqlArtifact {
             valuesets: [],
             concepts: []
           };
-          addConceptForCodes(parameter.codes, medicationOrderValueSets);
+          buildConceptObjectForCodes(parameter.codes, medicationOrderValueSets);
           addValueSets(parameter, medicationOrderValueSets, 'valuesets');
           this.setParamterContexts(medicationOrderValueSets, 'MedicationOrder', 'MedicationOrdersByConcept', context);
           break;
@@ -513,7 +494,7 @@ class CqlArtifact {
             valuesets: [],
             concepts: []
           };
-          addConceptForCodes(parameter.codes, procedureValueSets);
+          buildConceptObjectForCodes(parameter.codes, procedureValueSets);
           addValueSets(parameter, procedureValueSets, 'valuesets');
           this.setParamterContexts(procedureValueSets, 'Procedure', 'ProceduresByConcept', context);
           break;
@@ -533,7 +514,7 @@ class CqlArtifact {
             valuesets: [],
             concepts: []
           };
-          addConceptForCodes(parameter.codes, encounterValueSets);
+          buildConceptObjectForCodes(parameter.codes, encounterValueSets);
           addValueSets(parameter, encounterValueSets, 'valuesets');
           this.setParamterContexts(encounterValueSets, 'Encounter', 'EncountersByConcept', context);
           break;
@@ -553,7 +534,7 @@ class CqlArtifact {
             valuesets: [],
             concepts: []
           };
-          addConceptForCodes(parameter.codes, allergyIntoleranceValueSets);
+          buildConceptObjectForCodes(parameter.codes, allergyIntoleranceValueSets);
           addValueSets(parameter, allergyIntoleranceValueSets, 'valuesets');
           this.setParamterContexts(
             allergyIntoleranceValueSets,
@@ -648,7 +629,7 @@ class CqlArtifact {
       context.values.forEach((value, index) => {
         context.values[index] = ejs.render(templateMap[context.template], { element_context: value });
       });
-      const cqlString = applyModifiers(context.values, context.modifiers, this.resourceMap);
+      const cqlString = applyModifiers.call(this, context.values, context.modifiers);
       return ejs.render(templateMap.BaseTemplate, { element_name: context.element_name, cqlString });
     }).join('\n');
   }
@@ -731,7 +712,7 @@ function sanitizeCQLString(cqlString) {
 }
 
 // Both parameters are arrays. All modifiers will be applied to all values, and joined with "\n or".
-function applyModifiers(values, modifiers = [], resourceMap) { // default modifiers to []
+function applyModifiers(values, modifiers = []) { // default modifiers to []
   return values.map((value) => {
     let newValue = value;
     modifiers.forEach((modifier) => {
@@ -745,10 +726,17 @@ function applyModifiers(values, modifiers = [], resourceMap) { // default modifi
       // Modifiers that add new value sets, will have a valueSet attribute on values.
       if (modifier.values && modifier.values.valueSet) {
         // Add the value set to the resourceMap to be included and referenced
-        const count = getCountForUniqueExpressionName(modifier.values.valueSet, resourceMap, 'name', 'oid');
+        const count = getCountForUniqueExpressionName(modifier.values.valueSet, this.resourceMap, 'name', 'oid');
         if (count > 0) {
           modifier.values.valueSet.name = `${modifier.values.valueSet.name}_${count}`;
         }
+      }
+      if (modifier.values && modifier.values.code) {
+        let conceptsObject = { concepts: [] };
+        buildConceptObjectForCodes(modifier.values.code, conceptsObject);
+        conceptsObject.concepts.forEach((concept) => {
+          modifier.values.code = addConcepts(concept, this.codeSystemMap, this.codeMap, this.conceptMap);
+        });
       }
       if (modifier.values) modifierContext.values = modifier.values; // Certain modifiers (such as lookback) require values, so provide them here
       newValue = ejs.render(modifierMap[modifier.cqlTemplate], modifierContext);
@@ -823,7 +811,33 @@ function getCountForUniqueExpressionName(expression, map, nameKey, contentKey) {
   }
 }
 
-function addConceptForCodes(codes, valueSetObject) {
+function addConcepts(concept, codeSystemMap, codeMap, conceptMap) {
+  concept.codes.forEach((code) => {
+
+    // Add Code Systems
+    const cs = code.codeSystem;
+    const codeSystemCount = getCountForUniqueExpressionName(cs, codeSystemMap, 'name', 'id');
+    if (codeSystemCount > 0) {
+      cs.name = `${cs.name}_${codeSystemCount}`;
+    }
+
+    // Add individual codes
+    const codeCount = getCountForUniqueExpressionName(code, codeMap, 'name', 'codeSystem');
+    if (codeCount > 0) {
+      code.name = `${code.name}_${codeCount}`;
+    }
+  });
+
+  // Add concepts
+  const conceptCount = getCountForUniqueExpressionName(concept, conceptMap, 'name', 'codes');
+  if (conceptCount > 0) {
+    concept.name = `${concept.name}_${conceptCount}`;
+  }
+
+  return concept;
+}
+
+function buildConceptObjectForCodes(codes, valueSetObject) {
   if (codes) {
     codes.forEach((code) => {
       const concept = {
