@@ -65,12 +65,12 @@ export default [
     cqlLibraryFunction: 'C3F.ConceptValue'
   },
   {
-    id: 'CheckInclusionInVS',
-    name: 'Exists within Valueset?',
+    id: 'Qualifier',
+    name: 'Qualifier',
     inputTypes: ['system_concept'],
     returnType: 'boolean',
-    values: undefined,
-    cqlTemplate: 'CheckInclusionInVS',
+    values: { qualifier: undefined },
+    cqlTemplate: 'Qualifier',
     cqlLibraryFunction: null
   },
   {

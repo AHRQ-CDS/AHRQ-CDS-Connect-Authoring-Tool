@@ -1,0 +1,11 @@
+.qualifier {
+  display: flex;
+
+  .Select {
+    margin-right: 20px;
+
+    .Select-control {
+      min-width: 300px;
+    }
+  }
+}

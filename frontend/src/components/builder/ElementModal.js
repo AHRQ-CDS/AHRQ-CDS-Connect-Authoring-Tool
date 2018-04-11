@@ -3,35 +3,8 @@ import PropTypes from 'prop-types';
 import Modal from 'react-modal';
 import FontAwesome from 'react-fontawesome';
 import _ from 'lodash';
-// import { sortAlphabeticallyByKey } from '../../utils/sort';
 
-// const getRelevantElements = (category, value) => {
-//   let elements = category.entries;
-//   const inputValue = value.trim().toLowerCase();
-//
-//   if (inputValue.length) {
-//     elements = elements.filter(elem => elem.name.toLowerCase().indexOf(inputValue) >= 0);
-//   } else if (category.name === 'All') {
-//     return elements.sort(sortAlphabeticallyByKey('category', 'name'));
-//   } else {
-//     return elements.sort(sortAlphabeticallyByKey('name'));
-//   }
-//
-//   return elements.sort((a, b) => {
-//     const aLower = a.name.toLowerCase();
-//     const bLower = b.name.toLowerCase();
-//     const queryPosA = aLower.indexOf(inputValue);
-//     const queryPosB = bLower.indexOf(inputValue);
-//
-//     if (queryPosA !== queryPosB) {
-//       return queryPosA - queryPosB;
-//     }
-//
-//     return aLower < bLower ? -1 : 1;
-//   });
-// };
-
-class ElementModal extends Component {
+export default class ElementModal extends Component {
   constructor(props) {
     super(props);
 
@@ -40,20 +13,6 @@ class ElementModal extends Component {
       searchValue: '',
       selectedElement: null
     };
-  }
-
-  static propTypes = {
-    onElementSelected: PropTypes.func,
-    searchVSACByKeyword: PropTypes.func.isRequired,
-    isSearchingVSAC: PropTypes.bool.isRequired,
-    vsacSearchResults: PropTypes.array.isRequired,
-    vsacSearchCount: PropTypes.number.isRequired,
-    template: PropTypes.object,
-    getVSDetails: PropTypes.func.isRequired,
-    isRetrievingDetails: PropTypes.bool.isRequired,
-    vsacDetailsCodes: PropTypes.array.isRequired,
-    selectedElement: PropTypes.shape({ name: PropTypes.string.isRequired, oid: PropTypes.string.isRequired }),
-    labels: PropTypes.object
   }
 
   handleSearchValueChange = (event) => {
@@ -127,7 +86,7 @@ class ElementModal extends Component {
 
   renderList = () => (
     <tbody aria-label="Element List">
-      { this.props.vsacSearchResults.map((elem, i) =>
+      {this.props.vsacSearchResults.map((elem, i) =>
         <tr key={ `${elem.name}-${i}` }
           tabIndex="0"
           aria-label={elem.name}
@@ -301,9 +260,11 @@ class ElementModal extends Component {
                 </span> :
                 null}
             </header>
+
             <main className="modal__body">
               <div className="element-modal__search">
-                  {this.renderBackButton()}
+                {this.renderBackButton()}
+
                 <input
                   type="text"
                   disabled={this.state.selectedElement}
@@ -313,17 +274,21 @@ class ElementModal extends Component {
                   value={ inputDisplayValue }
                   onChange={ this.handleSearchValueChange }
                   onKeyDown={ e => this.enterKeyCheck(this.searchVSAC, this.state.searchValue, e)}/>
+
                 {this.renderSelectButton()}
               </div>
+
               <div className="element-modal__content">
-                { this.renderSearchResultsTable() }
+                {this.renderSearchResultsTable()}
               </div>
             </main>
+
             <footer className="modal__footer">
-              <button className="primary-button"
-                      onClick={ this.closeModal }
-                      onKeyDown={ e => this.enterKeyCheck(this.closeModal, null, e) }>
-                      {buttonLabels.closeButtonText}
+              <button
+                className="primary-button"
+                onClick={ this.closeModal }
+                onKeyDown={ e => this.enterKeyCheck(this.closeModal, null, e) }>
+                {buttonLabels.closeButtonText}
               </button>
             </footer>
           </div>
@@ -333,4 +298,17 @@ class ElementModal extends Component {
   }
 }
 
-export default ElementModal;
+ElementModal.propTypes = {
+  updateElement: PropTypes.func.isRequired,
+  onElementSelected: PropTypes.func,
+  searchVSACByKeyword: PropTypes.func.isRequired,
+  isSearchingVSAC: PropTypes.bool.isRequired,
+  vsacSearchResults: PropTypes.array.isRequired,
+  vsacSearchCount: PropTypes.number.isRequired,
+  template: PropTypes.object,
+  getVSDetails: PropTypes.func.isRequired,
+  isRetrievingDetails: PropTypes.bool.isRequired,
+  vsacDetailsCodes: PropTypes.array.isRequired,
+  selectedElement: PropTypes.shape({ name: PropTypes.string.isRequired, oid: PropTypes.string.isRequired }),
+  labels: PropTypes.object
+};

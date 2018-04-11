@@ -24,6 +24,7 @@ import SelectModifier from './modifiers/SelectModifier';
 import ValueComparison from './modifiers/ValueComparison';
 import ValueComparisonObservation from './modifiers/ValueComparisonObservation';
 import WithUnit from './modifiers/WithUnit';
+import Qualifier from './modifiers/Qualifier';
 
 import Validators from '../../utils/validators';
 
@@ -184,6 +185,28 @@ export default class TemplateInstance extends Component {
               name={mod.name}
               options={this.props.conversionFunctions}
               updateAppliedModifier={this.updateAppliedModifier}/>
+          );
+        case 'Qualifier':
+          return (
+            <Qualifier
+              key={index}
+              index={index}
+              qualifier={mod.values.qualifier}
+              updateAppliedModifier={this.updateAppliedModifier}
+              updateInstance={this.updateInstance}
+              searchVSACByKeyword={this.props.searchVSACByKeyword}
+              isSearchingVSAC={this.props.isSearchingVSAC}
+              vsacSearchResults={this.props.vsacSearchResults}
+              vsacSearchCount={this.props.vsacSearchCount}
+              template={this.props.templateInstance}
+              getVSDetails={this.props.getVSDetails}
+              isRetrievingDetails={this.props.isRetrievingDetails}
+              vsacDetailsCodes={this.props.vsacDetailsCodes}
+              timeLastAuthenticated={this.props.timeLastAuthenticated}
+              loginVSACUser={this.props.loginVSACUser}
+              setVSACAuthStatus={this.props.setVSACAuthStatus}
+              vsacStatus={this.props.vsacStatus}
+              vsacStatusText={this.props.vsacStatusText}/>
           );
         default:
           return (<LabelModifier key={index} name={mod.name} id={mod.id}/>);
@@ -512,7 +535,9 @@ export default class TemplateInstance extends Component {
     return (
       <div className="element__body">
         {validationError && <div className="warning">{validationError}</div>}
-	{returnError && <div className="warning">{returnError}</div>}
+
+        {returnError && <div className="warning">{returnError}</div>}
+
         {this.props.templateInstance.parameters.map((param, index) => {
           // todo: each parameter type should probably have its own component
           if (param.id !== 'element_name') {
@@ -631,5 +656,5 @@ TemplateInstance.propTypes = {
   vsacSearchCount: PropTypes.number.isRequired,
   getVSDetails: PropTypes.func.isRequired,
   isRetrievingDetails: PropTypes.bool.isRequired,
-  vsacDetailsCodes: PropTypes.array.isRequired,
+  vsacDetailsCodes: PropTypes.array.isRequired
 };

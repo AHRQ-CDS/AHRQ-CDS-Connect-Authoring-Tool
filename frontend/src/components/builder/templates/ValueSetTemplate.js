@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import Select from 'react-select';
 import FontAwesome from 'react-fontawesome';
 import _ from 'lodash';
 
@@ -56,19 +55,6 @@ export default class ValueSetTemplate extends Component {
         <div className="col-9 row vs-info__info">
           <div className="col-10">
             {` ${valueSet.name} (${valueSet.oid})`}
-
-            <Select
-              name="Value Codeable Concept"
-              aria-label="Value Codeable Concept"
-              title="Value Codeable Concept"
-              placeholder="no qualifiers"
-              value={this.props.qualifier}
-              onChange={this.handleQualifierChange}
-              options={[
-                { value: 'value is a code from', label: 'value is a code from' },
-                { value: 'value is the code', label: 'value is the code' }
-              ]}
-            />
           </div>
 
           <div className="col-2 vs-info__buttons align-right">
@@ -94,7 +80,6 @@ export default class ValueSetTemplate extends Component {
 
 ValueSetTemplate.propTypes = {
   index: PropTypes.number.isRequired,
-  qualifier: PropTypes.string.isRequired,
   vsacParameter: PropTypes.object.isRequired,
   valueSet: PropTypes.object.isRequired,
   updateInstance: PropTypes.func.isRequired,
