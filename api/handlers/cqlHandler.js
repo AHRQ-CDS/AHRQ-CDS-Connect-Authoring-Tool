@@ -107,10 +107,9 @@ class CqlArtifact {
     );
     this.parameters.forEach((parameter) => {
       if (parameter.type === "Code" || parameter.type === "Concept") {
-        //TODO Currently uses stub system URI. This should be fixed when Code
-        // and Concept parameters use a better code picker.
         let system = _.get(parameter, 'value.system', null);
-        if (system) { this.codeSystemMap.set(system, 'http://examplecs.org'); }
+        let uri = _.get(parameter, 'value.uri', null);
+        if (system && uri) { this.codeSystemMap.set(system, uri); }
       }
     }
     );

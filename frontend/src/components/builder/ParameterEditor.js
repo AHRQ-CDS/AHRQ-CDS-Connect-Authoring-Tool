@@ -78,22 +78,32 @@ class BooleanEditor extends Component {
 class CodeEditor extends Component {
   assignValue(evt) {
     let system = null;
+    let uri = null;
     let code = null;
     let display = null;
 
     switch (evt.target.name) {
       case "system":
         system = _.get(evt, 'target.value', null);
+        uri = _.get(this, 'props.value.uri', null);
+        code = _.get(this, 'props.value.code', null);
+        display = _.get(this, 'props.value.display', null);
+        break;
+      case "uri":
+      system = _.get(this, 'props.value.system', null);
+        uri = _.get(evt, 'target.value', null);
         code = _.get(this, 'props.value.code', null);
         display = _.get(this, 'props.value.display', null);
         break;
       case "code":
         system = _.get(this, 'props.value.system', null);
+        uri = _.get(this, 'props.value.uri', null);
         code = _.get(evt, 'target.value', null);
         display = _.get(this, 'props.value.display', null);
         break;
       case "display":
         system = _.get(this, 'props.value.system', null);
+        uri = _.get(this, 'props.value.uri', null);
         code = _.get(this, 'props.value.code', null);
         display = _.get(evt, 'target.value', null);
         break;
@@ -101,9 +111,9 @@ class CodeEditor extends Component {
         break;
     }
 
-    if (system || code || display) {
+    if (system || uri || code || display) {
       let str = `Code '${code}' from "${system}" display '${display}'`;
-      return { system: system, code: code, display: display, str: str };
+      return { system: system, uri: uri, code: code, display: display, str: str };
     } else {
       return null;
     }
@@ -127,6 +137,18 @@ class CodeEditor extends Component {
                 updateInstance({ name: name, type: type, value: this.assignValue(e) })
               }}
             />
+            <br/>
+            <label>System URI:</label>
+            <input
+              id={id}
+              name="uri"
+              type="text"
+              value={ _.get(value, 'uri', null) || '' }
+              onChange={ e => {
+                updateInstance({ name: name, type: type, value: this.assignValue(e) })
+              }}
+            />
+            <br/>
             <label>Code:</label>
             <input
               id={id}
@@ -137,6 +159,7 @@ class CodeEditor extends Component {
                 updateInstance({ name: name, type: type, value: this.assignValue(e) })
               }}
             />
+            <br/>
             <label>Display:</label>
             <input
               id={id}
@@ -157,22 +180,32 @@ class CodeEditor extends Component {
 class ConceptEditor extends Component {
   assignValue(evt) {
     let system = null;
+    let uri = null;
     let code = null;
     let display = null;
 
     switch (evt.target.name) {
       case "system":
         system = _.get(evt, 'target.value', null);
+        uri = _.get(this, 'props.value.uri', null);
+        code = _.get(this, 'props.value.code', null);
+        display = _.get(this, 'props.value.display', null);
+        break;
+      case "uri":
+      system = _.get(this, 'props.value.system', null);
+        uri = _.get(evt, 'target.value', null);
         code = _.get(this, 'props.value.code', null);
         display = _.get(this, 'props.value.display', null);
         break;
       case "code":
         system = _.get(this, 'props.value.system', null);
+        uri = _.get(this, 'props.value.uri', null);
         code = _.get(evt, 'target.value', null);
         display = _.get(this, 'props.value.display', null);
         break;
       case "display":
         system = _.get(this, 'props.value.system', null);
+        uri = _.get(this, 'props.value.uri', null);
         code = _.get(this, 'props.value.code', null);
         display = _.get(evt, 'target.value', null);
         break;
@@ -180,9 +213,9 @@ class ConceptEditor extends Component {
         break;
     }
 
-    if (system || code || display) {
+    if (system || uri || code || display) {
       let str = `Concept { Code '${code}' from "${system}" } display '${display}'`;
-      return { system: system, code: code, display: display, str: str };
+      return { system: system, uri: uri, code: code, display: display, str: str };
     } else {
       return null;
     }
@@ -206,6 +239,18 @@ class ConceptEditor extends Component {
                 updateInstance({ name: name, type: type, value: this.assignValue(e) })
               }}
             />
+            <br/>
+            <label>System URI:</label>
+            <input
+              id={id}
+              name="uri"
+              type="text"
+              value={ _.get(value, 'uri', null) || '' }
+              onChange={ e => {
+                updateInstance({ name: name, type: type, value: this.assignValue(e) })
+              }}
+            />
+            <br/>
             <label>Code:</label>
             <input
               id={id}
@@ -216,6 +261,7 @@ class ConceptEditor extends Component {
                 updateInstance({ name: name, type: type, value: this.assignValue(e) })
               }}
             />
+            <br/>
             <label>Display:</label>
             <input
               id={id}
