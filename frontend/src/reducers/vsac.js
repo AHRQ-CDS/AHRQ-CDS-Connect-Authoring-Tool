@@ -3,7 +3,7 @@ import {
   VSAC_LOGIN_REQUEST, VSAC_LOGIN_SUCCESS, VSAC_LOGIN_FAILURE,
   SET_VSAC_AUTH_STATUS,
   VSAC_SEARCH_REQUEST, VSAC_SEARCH_SUCCESS, VSAC_SEARCH_FAILURE,
-  VSAC_DETAILS_REQUEST, VSAC_DETAILS_SUCCESS, VSAC_DETAILS_FAILURE
+  VSAC_DETAILS_REQUEST, VSAC_DETAILS_SUCCESS, VSAC_DETAILS_FAILURE, LOGOUT_REQUEST
 } from '../actions/types';
 
 const defaultState = {
@@ -98,6 +98,8 @@ export default function auth(state = defaultState, action) {
         isRetrievingDetails: false,
         detailsCodes: []
       };
+    case LOGOUT_REQUEST:
+      return defaultState;
     default:
       return state;
   }
