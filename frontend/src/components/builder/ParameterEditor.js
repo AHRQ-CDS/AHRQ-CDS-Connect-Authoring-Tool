@@ -236,6 +236,7 @@ class ConceptEditor extends Component {
 class IntegerEditor extends Component {
   assignValue(evt) {
     let value = _.get(evt, 'target.value', null);
+    // read the value as an int, then convert it to a string
     if (value != null) { value = parseInt(value, 10); }
     return value;
   }
@@ -251,7 +252,7 @@ class IntegerEditor extends Component {
           <input
             id={id}
             type="number"
-            value={value || ''}
+            value={(value || value === 0) ? value : ''}
             onChange={ e => {
               updateInstance({ name: name, type: type, value: this.assignValue(e) })
             }}
@@ -340,7 +341,7 @@ class DecimalEditor extends Component {
           <input
             id={id}
             type="number"
-            value={value || ''}
+            value={(value || value === 0) ? value : ''}
             onChange={ e => {
               updateInstance({ name: name, type: type, value: this.assignValue(e) })
             }}
@@ -370,7 +371,7 @@ class QuantityEditor extends Component {
         break;
     }
 
-    if (quantity || unit) {
+    if ((quantity != null) || unit) {
       let str = `${quantity} '${unit}'`;
       return { quantity: quantity, unit: unit, str: str };
     } else {
@@ -391,7 +392,7 @@ class QuantityEditor extends Component {
               id={id}
               name="quantity"
               type="number"
-              value={ _.get(value, 'quantity', null) || '' }
+              value={ (_.get(value, 'quantity', null) || _.get(value, 'quantity', null) === 0) ? _.get(value, 'quantity') : '' }
               onChange={ e => {
                 updateInstance({ name: name, type: type, value: this.assignValue(e) })
               }}
@@ -489,7 +490,7 @@ class IntervalOfIntegerEditor extends Component {
         break;
     }
 
-    if (first_integer || second_integer) {
+    if ((first_integer != null) || (second_integer != null)) {
       let str = `Interval[${first_integer},${second_integer}]`;
       return { first_integer: first_integer, second_integer: second_integer, str: str };
     } else {
@@ -510,7 +511,7 @@ class IntervalOfIntegerEditor extends Component {
               id={id}
               name="first_integer"
               type="number"
-              value={ _.get(value, 'first_integer', null) || '' }
+              value={ (_.get(value, 'first_integer', null) || _.get(value, 'first_integer', null) === 0) ? _.get(value, 'first_integer') : '' }
               onChange={ e => {
                 updateInstance({ name: name, type: type, value: this.assignValue(e) })
               }}
@@ -520,7 +521,7 @@ class IntervalOfIntegerEditor extends Component {
               id={id}
               name="second_integer"
               type="number"
-              value={ _.get(value, 'second_integer', null) || '' }
+              value={ (_.get(value, 'second_integer', null) || _.get(value, 'second_integer', null) === 0) ? _.get(value, 'second_integer') : '' }
               onChange={ e => {
                 updateInstance({ name: name, type: type, value: this.assignValue(e) })
               }}
@@ -657,7 +658,7 @@ class IntervalOfDecimalEditor extends Component {
         break;
     }
 
-    if (first_decimal || second_decimal) {
+    if ((first_decimal != null) || (second_decimal != null)) {
       let str = `Interval[${first_decimal},${second_decimal}]`;
       return { first_decimal: first_decimal, second_decimal: second_decimal, str: str };
     } else {
@@ -678,7 +679,7 @@ class IntervalOfDecimalEditor extends Component {
               id={id}
               name="first_decimal"
               type="number"
-              value={ _.get(value, 'first_decimal', null) || '' }
+              value={ (_.get(value, 'first_decimal', null) || _.get(value, 'first_decimal', null) === 0) ? _.get(value, 'first_decimal') : '' }
               onChange={ e => {
                 updateInstance({ name: name, type: type, value: this.assignValue(e) })
               }}
@@ -688,7 +689,7 @@ class IntervalOfDecimalEditor extends Component {
               id={id}
               name="second_decimal"
               type="number"
-              value={ _.get(value, 'second_decimal', null) || '' }
+              value={ (_.get(value, 'second_decimal', null) || _.get(value, 'second_decimal', null) === 0) ? _.get(value, 'second_decimal') : '' }
               onChange={ e => {
                 updateInstance({ name: name, type: type, value: this.assignValue(e) })
               }}
@@ -728,7 +729,7 @@ class IntervalOfQuantityEditor extends Component {
         break;
     }
 
-    if (first_quantity || second_quantity || unit) {
+    if ((first_quantity != null) || (second_quantity != null) || unit) {
       let str = `Interval[${first_quantity} '${unit}',${second_quantity} '${unit}']`;
       return { first_quantity: first_quantity, second_quantity: second_quantity, unit: unit, str: str };
     } else {
@@ -749,7 +750,7 @@ class IntervalOfQuantityEditor extends Component {
               id={id}
               name="first_quantity"
               type="number"
-              value={ _.get(value, 'first_quantity', null) || '' }
+              value={ (_.get(value, 'first_quantity', null) || _.get(value, 'first_quantity', null) === 0) ? _.get(value, 'first_quantity') : '' }
               onChange={ e => {
                 updateInstance({ name: name, type: type, value: this.assignValue(e) })
               }}
@@ -759,7 +760,7 @@ class IntervalOfQuantityEditor extends Component {
               id={id}
               name="second_quantity"
               type="number"
-              value={ _.get(value, 'second_quantity', null) || '' }
+              value={ (_.get(value, 'second_quantity', null) || _.get(value, 'second_quantity', null) === 0) ? _.get(value, 'second_quantity') : '' }
               onChange={ e => {
                 updateInstance({ name: name, type: type, value: this.assignValue(e) })
               }}
