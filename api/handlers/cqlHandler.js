@@ -109,7 +109,8 @@ class CqlArtifact {
       if (parameter.type === "Code" || parameter.type === "Concept") {
         //TODO Currently uses stub system URI. This should be fixed when Code
         // and Concept parameters use a better code picker.
-        this.codeSystemMap.set(_.get(parameter, 'value.system', null), 'http://examplecs.org');
+        let system = _.get(parameter, 'value.system', null);
+        if (system) { this.codeSystemMap.set(system, 'http://examplecs.org'); }
       }
     }
     );
