@@ -79,6 +79,22 @@ describe.only('vsac reducer', () => {
     expect(reducer(previousState, action)).toEqual(newState);
   });
 
+  it('should reset to default when logging out', () => {
+    const action = { type: types.LOGOUT_REQUEST };
+    const newState = {
+      isAuthenticating: false,
+      timeLastAuthenticated: null,
+      authStatus: null,
+      authStatusText: '',
+      isSearchingVSAC: false,
+      searchResults: [],
+      searchCount: 0,
+      isRetrievingDetails: false,
+      detailsCodes: []
+    };
+    expect(reducer({ authStatus: 'Test status' }, action)).toEqual(newState);
+  });
+
   // ----------------------- SEARCH ---------------------------------------- //
   it('should handle searching for value sets', () => {
     let action = { type: types.VSAC_SEARCH_REQUEST };
