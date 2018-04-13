@@ -371,9 +371,22 @@ class DateTimeEditor extends Component {
 
 class DecimalEditor extends Component {
   assignValue(evt) {
-    let value = _.get(evt, 'target.value', null);
-    if (value != null) { value = parseFloat(value, 10); }
-    return value;
+    let decimal = null;
+    let str = null;
+
+    decimal = _.get(evt, 'target.value', null);
+    if (decimal != null) { decimal = parseFloat(decimal, 10); }
+
+    if (decimal != null) {
+      if (Number.isInteger(decimal)) {
+        str = `${decimal}.0`;
+      } else {
+        str = `${decimal}`;
+      }
+      return { decimal: decimal, str: str };
+    } else {
+      return null;
+    }
   }
 
   render() {
@@ -387,7 +400,7 @@ class DecimalEditor extends Component {
           <input
             id={id}
             type="number"
-            value={(value || value === 0) ? value : ''}
+            value={ (_.get(value, 'decimal', null) || _.get(value, 'decimal', null) === 0) ? _.get(value, 'decimal') : '' }
             onChange={ e => {
               updateInstance({ name: name, type: type, value: this.assignValue(e) })
             }}
@@ -402,6 +415,7 @@ class QuantityEditor extends Component {
   assignValue(evt) {
     let quantity = null;
     let unit = null;
+    let str = null;
 
     switch (evt.target.name) {
       case "quantity":
@@ -418,7 +432,11 @@ class QuantityEditor extends Component {
     }
 
     if ((quantity != null) || unit) {
-      let str = `${quantity} '${unit}'`;
+      if (Number.isInteger(quantity)) {
+        str = `${quantity}.0 '${unit}'`;
+      } else {
+        str = `${quantity} '${unit}'`;
+      }
       return { quantity: quantity, unit: unit, str: str };
     } else {
       return null;
@@ -688,6 +706,7 @@ class IntervalOfDecimalEditor extends Component {
   assignValue(evt) {
     let first_decimal = null;
     let second_decimal = null;
+    let str = null;
 
     switch (evt.target.name) {
       case "first_decimal":
@@ -705,7 +724,19 @@ class IntervalOfDecimalEditor extends Component {
     }
 
     if ((first_decimal != null) || (second_decimal != null)) {
-      let str = `Interval[${first_decimal},${second_decimal}]`;
+      if (Number.isInteger(first_decimal)) {
+        if (Number.isInteger(second_decimal)) {
+          str = `Interval[${first_decimal}.0,${second_decimal}.0]`;
+        } else {
+          str = `Interval[${first_decimal}.0,${second_decimal}]`;
+        }
+      } else {
+        if (Number.isInteger(second_decimal)) {
+          str = `Interval[${first_decimal},${second_decimal}.0]`;
+        } else {
+          str = `Interval[${first_decimal},${second_decimal}]`;
+        }
+      }
       return { first_decimal: first_decimal, second_decimal: second_decimal, str: str };
     } else {
       return null;
@@ -752,6 +783,7 @@ class IntervalOfQuantityEditor extends Component {
     let first_quantity = null;
     let second_quantity = null;
     let unit = null;
+    let str = null;
 
     switch (evt.target.name) {
       case "first_quantity":
@@ -776,7 +808,19 @@ class IntervalOfQuantityEditor extends Component {
     }
 
     if ((first_quantity != null) || (second_quantity != null) || unit) {
-      let str = `Interval[${first_quantity} '${unit}',${second_quantity} '${unit}']`;
+      if (Number.isInteger(first_quantity)) {
+        if (Number.isInteger(second_quantity)) {
+          str = `Interval[${first_quantity}.0 '${unit}',${second_quantity}.0 '${unit}']`;
+        } else {
+          str = `Interval[${first_quantity}.0 '${unit}',${second_quantity} '${unit}']`;
+        }
+      } else {
+        if (Number.isInteger(second_quantity)) {
+          str = `Interval[${first_quantity} '${unit}',${second_quantity}.0 '${unit}']`;
+        } else {
+          str = `Interval[${first_quantity} '${unit}',${second_quantity} '${unit}']`;
+        }
+      }
       return { first_quantity: first_quantity, second_quantity: second_quantity, unit: unit, str: str };
     } else {
       return null;
