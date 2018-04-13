@@ -8,6 +8,25 @@ import CodeSelectModal from '../CodeSelectModal';
 
 /* eslint-disable jsx-a11y/no-onchange */
 export default class Qualifier extends Component {
+  viewValueSetDetails = valueSet => (
+    <ElementModal
+      className="element-select__modal"
+      updateElement={this.props.updateInstance}
+      searchVSACByKeyword={this.props.searchVSACByKeyword}
+      isSearchingVSAC={this.props.isSearchingVSAC}
+      vsacSearchResults={this.props.vsacSearchResults}
+      vsacSearchCount={this.props.vsacSearchCount}
+      template={this.props.template}
+      getVSDetails={this.props.getVSDetails}
+      isRetrievingDetails={this.props.isRetrievingDetails}
+      vsacDetailsCodes={this.props.vsacDetailsCodes}
+      selectedElement={valueSet}
+      useIconButton={true}
+      iconForButton={'eye'}
+      viewOnly={true}
+    />
+  )
+
   handleChange = (selectedOption) => {
     this.props.updateAppliedModifier(this.props.index, {
       qualifier: selectedOption ? selectedOption.value : null,
@@ -31,7 +50,8 @@ export default class Qualifier extends Component {
     const hasSelectedVS = qualifierMod.values.valueSet != null;
     const hasSelectedCode = qualifierMod.values.code != null;
 
-    if (this.props.timeLastAuthenticated < new Date() - 27000000 || this.props.vsacFHIRCredentials.username == null) {
+    if ((this.props.timeLastAuthenticated < new Date() - 27000000 || this.props.vsacFHIRCredentials.username == null)
+         && !hasSelectedCode && !hasSelectedVS) {
       return (
         <div id="vsac-controls">
           <VSACAuthenticationModal
@@ -92,24 +112,45 @@ export default class Qualifier extends Component {
     );
   }
 
+  renderValueSetViewButton() {
+    if (!this.props.template) { return null; }
+
+    const qualifierMod = this.props.template.modifiers.find(mod => mod.id === 'Qualifier');
+    const hasSelectedVS = qualifierMod.values.valueSet != null;
+
+    if (hasSelectedVS) {
+      return (
+        <div className="vs-info__buttons align-right col-2">
+          {this.viewValueSetDetails(qualifierMod.values.valueSet)}
+        </div>
+      );
+    }
+
+    return null;
+  }
+
   render() {
     return (
-      <div className="qualifier">
-        <Select
-          name="Qualifier"
-          aria-label="Qualifier"
-          title="Qualifier"
-          placeholder="choose qualifier"
-          value={this.props.qualifier}
-          onChange={this.handleChange}
-          options={[
-            { value: 'value is a code from', label: 'value is a code from' },
-            { value: 'value is the code', label: 'value is the code' }
-          ]}
-        />
+      <div className="qualifier row">
+        <div className="d-flex flex-wrap col-10">
+          <Select
+            name="Qualifier"
+            aria-label="Qualifier"
+            title="Qualifier"
+            placeholder="choose qualifier"
+            value={this.props.qualifier}
+            onChange={this.handleChange}
+            options={[
+              { value: 'value is a code from', label: 'value is a code from' },
+              { value: 'value is the code', label: 'value is the code' }
+            ]}
+          />
 
-        {this.renderButton()}
-        {this.renderQualifierSelection()}
+          {this.renderButton()}
+          {this.renderQualifierSelection()}
+        </div>
+
+        {this.renderValueSetViewButton()}
       </div>
     );
   }

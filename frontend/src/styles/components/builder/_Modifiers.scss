@@ -1,6 +1,8 @@
 .qualifier {
   display: flex;
   align-items: center;
+  width: 100%;
+  flex-wrap: wrap;
 
   .Select {
     margin-right: 20px;
@@ -8,5 +10,15 @@
     .Select-control {
       min-width: 300px;
     }
+  }
+
+  .selected-qualifier {
+    padding: 5px 0;
+  }
+
+  .vs-info__buttons {
+    padding-right: 10px;
+
+    @include respond-to('1439px') { padding-right: 6px; }
   }
 }

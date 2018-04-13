@@ -138,7 +138,7 @@ export default class ElementModal extends Component {
   renderSearchResultsTable = () => {
     if (this.props.isSearchingVSAC || this.props.isRetrievingDetails) {
       return (
-        <div>Loading...</div>
+        <div className="loading-icon"><FontAwesome name="spinner" spin/></div>
       );
     } else if (this.state.selectedElement) {
       return (
@@ -318,5 +318,8 @@ ElementModal.propTypes = {
   isRetrievingDetails: PropTypes.bool.isRequired,
   vsacDetailsCodes: PropTypes.array.isRequired,
   selectedElement: PropTypes.shape({ name: PropTypes.string.isRequired, oid: PropTypes.string.isRequired }),
-  labels: PropTypes.object
+  labels: PropTypes.object,
+  useIconButton: PropTypes.bool,
+  iconForButton: PropTypes.string,
+  viewOnly: PropTypes.bool
 };

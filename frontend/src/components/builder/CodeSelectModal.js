@@ -138,8 +138,7 @@ class CodeSelectModal extends Component {
     } else if (this.state.codeIsValid === false) {
       return (
         <span className='modal__footer_status'>
-          <FontAwesome name='exclamation-triangle'/>
-          Validation Error: Unable to validate code and/or code system.
+          <FontAwesome name='exclamation-triangle'/> Validation Error: Unable to validate code and/or code system.
           Please try again, or select this code without validation.
         </span>
       );
