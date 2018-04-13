@@ -208,7 +208,8 @@ export default class TemplateInstance extends Component {
               loginVSACUser={this.props.loginVSACUser}
               setVSACAuthStatus={this.props.setVSACAuthStatus}
               vsacStatus={this.props.vsacStatus}
-              vsacStatusText={this.props.vsacStatusText}/>
+              vsacStatusText={this.props.vsacStatusText}
+              vsacFHIRCredentials={this.props.vsacFHIRCredentials}/>
           );
         default:
           return (<LabelModifier key={index} name={mod.name} id={mod.id}/>);

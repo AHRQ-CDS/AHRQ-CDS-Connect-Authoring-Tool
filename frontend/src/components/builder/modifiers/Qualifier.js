@@ -31,7 +31,7 @@ export default class Qualifier extends Component {
     const hasSelectedVS = qualifierMod.values.valueSet != null;
     const hasSelectedCode = qualifierMod.values.code != null;
 
-    if (this.props.timeLastAuthenticated < new Date() - 27000000) {
+    if (this.props.timeLastAuthenticated < new Date() - 27000000 || this.props.vsacFHIRCredentials.username == null) {
       return (
         <div id="vsac-controls">
           <VSACAuthenticationModal
@@ -61,6 +61,7 @@ export default class Qualifier extends Component {
         <CodeSelectModal
           className="element-select__modal"
           updateModifier={this.handleCodeAdded}
+          vsacFHIRCredentials={this.props.vsacFHIRCredentials}
         />
       );
     }
@@ -130,5 +131,6 @@ Qualifier.propTypes = {
   loginVSACUser: PropTypes.func.isRequired,
   setVSACAuthStatus: PropTypes.func.isRequired,
   vsacStatus: PropTypes.string,
-  vsacStatusText: PropTypes.string
+  vsacStatusText: PropTypes.string,
+  vsacFHIRCredentials: PropTypes.object
 };
