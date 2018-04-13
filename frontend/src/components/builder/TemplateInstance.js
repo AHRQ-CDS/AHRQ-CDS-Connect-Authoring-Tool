@@ -113,8 +113,10 @@ export default class TemplateInstance extends Component {
     let validationWarning = null;
     if (modifier.validator) {
       const validator = Validators[modifier.validator.type];
-      if (!validator.check(modifier.validator.fields.map(v => modifier.values[v]))) {
-        validationWarning = validator.warning(modifier.validator.fields);
+      const values = modifier.validator.fields.map(v => modifier.values[v]);
+      const args = modifier.validator.args ? modifier.validator.args.map(v => modifier.values[v]) : [];
+      if (!validator.check(values, args)) {
+        validationWarning = validator.warning(modifier.validator.fields, modifier.validator.args);
       }
     }
 

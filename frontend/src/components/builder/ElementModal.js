@@ -34,6 +34,14 @@ export default class ElementModal extends Component {
   handleChosenVS = () => {
     const element = this.state.selectedElement;
     const selectedTemplate = _.cloneDeep(this.props.template);
+
+    // Updating a modifier is different than selecting the value set for a base element
+    if (this.props.updateModifier) {
+      this.props.updateModifier({ name: element.name, oid: element.oid });
+      this.closeModal();
+      return;
+    }
+
     if (selectedTemplate === undefined) return;
 
     let valuesetsToAdd = selectedTemplate.parameters[1].valueSets;
@@ -299,7 +307,7 @@ export default class ElementModal extends Component {
 }
 
 ElementModal.propTypes = {
-  updateElement: PropTypes.func.isRequired,
+  updateElement: PropTypes.func,
   onElementSelected: PropTypes.func,
   searchVSACByKeyword: PropTypes.func.isRequired,
   isSearchingVSAC: PropTypes.bool.isRequired,

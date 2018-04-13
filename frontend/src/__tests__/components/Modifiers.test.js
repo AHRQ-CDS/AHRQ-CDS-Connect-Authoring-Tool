@@ -3,6 +3,7 @@ import CheckExistence from '../../components/builder/modifiers/CheckExistence';
 import LabelModifier from '../../components/builder/modifiers/LabelModifier';
 import LookBack from '../../components/builder/modifiers/LookBack';
 import SelectModifier from '../../components/builder/modifiers/SelectModifier';
+import Qualifier from '../../components/builder/modifiers/Qualifier';
 import ValueComparisonObservation from '../../components/builder/modifiers/ValueComparisonObservation';
 import ValueComparison from '../../components/builder/modifiers/ValueComparison';
 import WithUnit from '../../components/builder/modifiers/WithUnit';
@@ -218,4 +219,63 @@ test('SelectModifier changes select', () => {
   expect(updateAppliedModifierMock).toBeCalledWith(6, {
     value: 'Convert.to_mg_per_dL', templateName: 'Convert.to_mg_per_dL'
   });
+});
+
+test('Qualifier renders without crashing', () => {
+  const component = shallowRenderComponent(Qualifier, {
+    updateAppliedModifier: jest.fn(),
+    index: '',
+    qualifier: ''
+  });
+  expect(component).toBeDefined();
+});
+
+test('Qualifier selects type of qualifier', () => {
+  const updateAppliedModifierMock = jest.fn();
+  const component = fullRenderComponent(Qualifier, {
+    updateAppliedModifier: updateAppliedModifierMock,
+    index: 5,
+    qualifier: ''
+  });
+
+  component.find('.Select input').simulate('change', { target: { value: 'value is a code from' } });
+  component.find('.Select input').simulate('keyDown', { keyCode: 9, key: 'Tab' }); // validate the selection
+  expect(updateAppliedModifierMock).toHaveBeenCalled();
+  expect(updateAppliedModifierMock).toBeCalledWith(5, {
+    qualifier: 'value is a code from',
+    valueSet: null,
+    code: null
+  });
+});
+
+test('Qualifier allows value set selection', () => {
+  const updateAppliedModifierMock = jest.fn();
+  const component = shallowRenderComponent(Qualifier, {
+    updateAppliedModifier: updateAppliedModifierMock,
+    index: 5,
+    qualifier: 'value is a code from'
+  });
+
+  const valueSet = { name: 'Test', oid: 'test' };
+
+  expect(component.find('ElementModal')).toHaveLength(1);
+  component.instance().handleVSAdded(valueSet);
+  expect(updateAppliedModifierMock).toHaveBeenCalled();
+  expect(updateAppliedModifierMock).toBeCalledWith(5, { valueSet });
+});
+
+test('Qualifier allows code selection', () => {
+  const updateAppliedModifierMock = jest.fn();
+  const component = shallowRenderComponent(Qualifier, {
+    updateAppliedModifier: updateAppliedModifierMock,
+    index: 5,
+    qualifier: 'value is the code'
+  });
+
+  const code = { name: 'Test', oid: 'test' };
+
+  expect(component.find('CodeSelectModal')).toHaveLength(1);
+  component.instance().handleCodeAdded(code);
+  expect(updateAppliedModifierMock).toHaveBeenCalled();
+  expect(updateAppliedModifierMock).toBeCalledWith(5, { code: [code] });
 });

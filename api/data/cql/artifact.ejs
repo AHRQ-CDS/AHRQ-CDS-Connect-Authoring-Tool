@@ -31,19 +31,19 @@ define "<%=element.name%>":
   <%-element.valuesets.map(v => {
   return `[${element.type}: "${v.name}"]` }).join(`
   union `);%>
-<%}) -%>
 
+<%}) -%>
 <% referencedConceptElements.forEach((element) => { -%>
 define "<%=element.name%>":
   <%-element.concepts.map(c => {
   return `C3F.${element.type}("${c.name}")`}).join(`
   union `);%>
-<%}) -%>
 
+<%}) -%>
 <% unionedElements.forEach((element) => {-%>
 define "<%=element.name%>":
   <%-element.expressionList.map(e => {
   return e}).join(`
   union `);%>
-<%}) -%>
 
+<%}) -%>

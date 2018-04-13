@@ -79,6 +79,16 @@ class CodeSelectModal extends Component {
 
   chooseCode = () => {
     const selectedTemplate = _.cloneDeep(this.props.template);
+
+    // Updating a modifier is different than selecting the code for a base element
+    if (this.props.updateModifier) {
+      this.props.updateModifier({
+        code: this.state.codeText, codeSystem: { name: this.state.selectedCS.value, id: this.state.selectedCS.id }
+      });
+      this.closeCodeSelectModal();
+      return;
+    }
+
     if (selectedTemplate === undefined) return;
 
     // Push the newly selected code.
@@ -253,7 +263,7 @@ class CodeSelectModal extends Component {
 
 CodeSelectModal.propTypes = {
   onElementSelected: PropTypes.func,
-  template: PropTypes.object.isRequired,
+  template: PropTypes.object,
   updateElement: PropTypes.func,
   selectedCode: PropTypes.arrayOf(PropTypes.shape({
     code: PropTypes.string.isRequired,

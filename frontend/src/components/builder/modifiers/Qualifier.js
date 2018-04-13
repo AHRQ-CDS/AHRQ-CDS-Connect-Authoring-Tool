@@ -9,8 +9,19 @@ import CodeSelectModal from '../CodeSelectModal';
 /* eslint-disable jsx-a11y/no-onchange */
 export default class Qualifier extends Component {
   handleChange = (selectedOption) => {
-    console.debug('selectedOption: ', selectedOption);
-    this.props.updateAppliedModifier(this.props.index, { qualifier: selectedOption ? selectedOption.value : null });
+    this.props.updateAppliedModifier(this.props.index, {
+      qualifier: selectedOption ? selectedOption.value : null,
+      valueSet: null,
+      code: null
+    });
+  }
+
+  handleVSAdded = (valueSet) => {
+    this.props.updateAppliedModifier(this.props.index, { valueSet });
+  }
+
+  handleCodeAdded = (code) => {
+    this.props.updateAppliedModifier(this.props.index, { code: [code] });
   }
 
   renderButton = () => {
@@ -29,12 +40,11 @@ export default class Qualifier extends Component {
       return (
         <ElementModal
           className="element-select__modal"
-          updateElement={this.props.updateInstance}
+          updateModifier={this.handleVSAdded}
           searchVSACByKeyword={this.props.searchVSACByKeyword}
           isSearchingVSAC={this.props.isSearchingVSAC}
           vsacSearchResults={this.props.vsacSearchResults}
           vsacSearchCount={this.props.vsacSearchCount}
-          template={this.props.templateInstance}
           getVSDetails={this.props.getVSDetails}
           isRetrievingDetails={this.props.isRetrievingDetails}
           vsacDetailsCodes={this.props.vsacDetailsCodes}
@@ -44,8 +54,7 @@ export default class Qualifier extends Component {
       return (
         <CodeSelectModal
           className="element-select__modal"
-          updateElement={this.props.updateInstance}
-          template={this.props.templateInstance}
+          updateModifier={this.handleCodeAdded}
         />
       );
     }

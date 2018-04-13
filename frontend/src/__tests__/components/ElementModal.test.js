@@ -194,4 +194,35 @@ describe('with modal open', () => {
 
     expect(input.node.value).toEqual('');
   });
+
+  test('Modal for modifier call correct update function', () => {
+    // Set up modal to be used on a modifier
+    const modifierModal = fullRenderComponent(
+      ElementModal,
+      {
+        updateModifier: jest.fn(),
+        searchVSACByKeyword,
+        isSearchingVSAC: false,
+        vsacSearchResults: testVsacSearchResults,
+        vsacSearchCount: 0,
+        template: testTemplate,
+        getVSDetails,
+        isRetrievingDetails: false,
+        vsacDetailsCodes: testVsacDetails
+      }
+    );
+    modifierModal.instance().openModal();
+    internalModal = new ReactWrapper(modifierModal.find(Modal).node.portal, true);
+
+    // Choose a value set
+    const vsacSearchResult = modifierModal.props().vsacSearchResults[0];
+    const element = { name: vsacSearchResult.name, oid: vsacSearchResult.oid };
+    internalModal.find('.search__table tbody tr').first().simulate('click');
+
+    // Clicking the select button calls the modifier update function with correct object and closes modal
+    const selectButton = internalModal.find('.element-modal__search button');
+    selectButton.simulate('click');
+    expect(modifierModal.props().updateModifier).toBeCalledWith({ name: element.name, oid: element.oid });
+    expect(modifierModal.state().isOpen).toEqual(false);
+  });
 });

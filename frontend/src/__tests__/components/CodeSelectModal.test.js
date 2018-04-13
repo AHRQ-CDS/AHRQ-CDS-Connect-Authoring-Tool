@@ -146,4 +146,36 @@ describe('with modal open', () => {
     expect(component.state().codeSystemText).toEqual('');
     expect(component.state().selectedCS).toEqual(null);
   });
+
+  test('Modal for modifier calls correct function to update a modifier', () => {
+    // Modal with updateModifier prop
+    const modifierModal = fullRenderComponent(
+      CodeSelectModal,
+      {
+        updateModifier: jest.fn(),
+        template: testTemplate
+      }
+    );
+    internalModal = new ReactWrapper(modifierModal.find(Modal).node.portal, true);
+    modifierModal.instance().openCodeSelectModal();
+
+    codeInput = getCodeInput();
+    codeSystemSelect = getCodeSystemSelect();
+
+    // Enter code
+    const code = '123-4';
+    const selectButton = internalModal.find('.element-modal__search .element-modal__search-button');
+    setInputValue(codeInput, code);
+
+    // Choose first code system from dropdown
+    codeSystemSelect.find('input').simulate('change');
+    const allOptions = codeSystemSelect.find('.Select-option');
+    const firstOption = allOptions.at(0);
+    firstOption.simulate('mouseDown');
+    const codeSystem = { name: modifierModal.state().selectedCS.value, id: modifierModal.state().selectedCS.id };
+
+    selectButton.simulate('click');
+    expect(modifierModal.state().showCodeSelectModal).toEqual(false);
+    expect(modifierModal.props().updateModifier).toBeCalledWith({ code, codeSystem });
+  });
 });

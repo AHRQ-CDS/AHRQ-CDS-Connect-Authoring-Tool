@@ -725,11 +725,13 @@ function applyModifiers(values, modifiers = []) { // default modifiers to []
       const modifierContext = { cqlLibraryFunction: modifier.cqlLibraryFunction, value_name: newValue };
       // Modifiers that add new value sets, will have a valueSet attribute on values.
       if (modifier.values && modifier.values.valueSet) {
+        modifier.values.valueSet.name += ' VS';
         // Add the value set to the resourceMap to be included and referenced
         const count = getCountForUniqueExpressionName(modifier.values.valueSet, this.resourceMap, 'name', 'oid');
         if (count > 0) {
           modifier.values.valueSet.name = `${modifier.values.valueSet.name}_${count}`;
         }
+        modifier.cqlTemplate = 'CheckInclusionInVS';
       }
       if (modifier.values && modifier.values.code) {
         let conceptsObject = { concepts: [] };
@@ -737,6 +739,7 @@ function applyModifiers(values, modifiers = []) { // default modifiers to []
         conceptsObject.concepts.forEach((concept) => {
           modifier.values.code = addConcepts(concept, this.codeSystemMap, this.codeMap, this.conceptMap);
         });
+        modifier.cqlTemplate = 'CheckEquivalenceToCode';
       }
       if (modifier.values) modifierContext.values = modifier.values; // Certain modifiers (such as lookback) require values, so provide them here
       newValue = ejs.render(modifierMap[modifier.cqlTemplate], modifierContext);
