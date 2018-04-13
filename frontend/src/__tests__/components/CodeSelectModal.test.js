@@ -164,7 +164,7 @@ describe('with modal open', () => {
 
     // Enter code
     const code = '123-4';
-    const selectButton = internalModal.find('.element-modal__search .element-modal__search-button');
+    const selectButton = internalModal.find('.modal__footer .element-modal__search-button');
     setInputValue(codeInput, code);
 
     // Choose first code system from dropdown

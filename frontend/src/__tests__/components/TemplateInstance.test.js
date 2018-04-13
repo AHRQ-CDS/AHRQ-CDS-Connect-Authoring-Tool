@@ -111,10 +111,9 @@ describe('vsac controls on generic template instances', () => {
     const arrayToUpdate = [
       { [component.props().templateInstance.parameters[1].id]: [valueSets[1]], attributeToEdit: 'valueSets' }
     ];
-    const deleteSpy = jest.spyOn(component.instance(), 'deleteValueSet');
     const updateSpy = jest.spyOn(component.instance(), 'updateInstance');
+    component.update();
     deleteIcon.simulate('click');
-    expect(deleteSpy).toBeCalledWith(valueSets[0]);
     expect(updateSpy).toBeCalledWith(arrayToUpdate);
   });
 

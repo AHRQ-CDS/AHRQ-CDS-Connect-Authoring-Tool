@@ -64,8 +64,6 @@ class CodeSelectModal extends Component {
   }
 
   validateCode = () => {
-    console.debug('vsacFHIRCredentials: ', this.props.vsacFHIRCredentials);
-
     if (this.props.vsacFHIRCredentials) {
       const auth = {
         username: this.props.vsacFHIRCredentials.username,
