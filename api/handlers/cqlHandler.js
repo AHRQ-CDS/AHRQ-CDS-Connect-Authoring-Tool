@@ -377,7 +377,7 @@ class CqlArtifact {
             valuesets: [],
             concepts: []
           };
-          buildConceptObjectForCodes(parameter.codes, observationValueSets);
+          buildConceptObjectForCodes(parameter.codes, observationValueSets.concepts);
           addValueSets(parameter, observationValueSets, 'valuesets');
           this.setParamterContexts(observationValueSets, 'Observation', 'ObservationsByConcept', context);
           break;
@@ -430,7 +430,7 @@ class CqlArtifact {
             valuesets: [],
             concepts: []
           }
-          buildConceptObjectForCodes(parameter.codes, conditionValueSets);
+          buildConceptObjectForCodes(parameter.codes, conditionValueSets.concepts);
           addValueSets(parameter, conditionValueSets, 'valuesets');
           this.setParamterContexts(conditionValueSets, 'Condition', 'ConditionsByConcept', context);
           break;
@@ -458,7 +458,7 @@ class CqlArtifact {
             valuesets: [],
             concepts: []
           };
-          buildConceptObjectForCodes(parameter.codes, medicationStatementValueSets);
+          buildConceptObjectForCodes(parameter.codes, medicationStatementValueSets.concepts);
           addValueSets(parameter, medicationStatementValueSets, 'valuesets');
           this.setParamterContexts(
             medicationStatementValueSets,
@@ -474,7 +474,7 @@ class CqlArtifact {
             valuesets: [],
             concepts: []
           };
-          buildConceptObjectForCodes(parameter.codes, medicationOrderValueSets);
+          buildConceptObjectForCodes(parameter.codes, medicationOrderValueSets.concepts);
           addValueSets(parameter, medicationOrderValueSets, 'valuesets');
           this.setParamterContexts(medicationOrderValueSets, 'MedicationOrder', 'MedicationOrdersByConcept', context);
           break;
@@ -494,7 +494,7 @@ class CqlArtifact {
             valuesets: [],
             concepts: []
           };
-          buildConceptObjectForCodes(parameter.codes, procedureValueSets);
+          buildConceptObjectForCodes(parameter.codes, procedureValueSets.concepts);
           addValueSets(parameter, procedureValueSets, 'valuesets');
           this.setParamterContexts(procedureValueSets, 'Procedure', 'ProceduresByConcept', context);
           break;
@@ -514,7 +514,7 @@ class CqlArtifact {
             valuesets: [],
             concepts: []
           };
-          buildConceptObjectForCodes(parameter.codes, encounterValueSets);
+          buildConceptObjectForCodes(parameter.codes, encounterValueSets.concepts);
           addValueSets(parameter, encounterValueSets, 'valuesets');
           this.setParamterContexts(encounterValueSets, 'Encounter', 'EncountersByConcept', context);
           break;
@@ -534,7 +534,7 @@ class CqlArtifact {
             valuesets: [],
             concepts: []
           };
-          buildConceptObjectForCodes(parameter.codes, allergyIntoleranceValueSets);
+          buildConceptObjectForCodes(parameter.codes, allergyIntoleranceValueSets.concepts);
           addValueSets(parameter, allergyIntoleranceValueSets, 'valuesets');
           this.setParamterContexts(
             allergyIntoleranceValueSets,
@@ -716,9 +716,6 @@ function applyModifiers(values, modifiers = []) { // default modifiers to []
   return values.map((value) => {
     let newValue = value;
     modifiers.forEach((modifier) => {
-      if (!(modifier.cqlTemplate in modifierMap)) {
-        console.error(`Modifier Template could not be found: ${modifier.cqlTemplate}`);
-      }
       if (!modifier.cqlLibraryFunction && modifier.values && modifier.values.templateName) {
         modifier.cqlLibraryFunction = modifier.values.templateName;
       }
@@ -734,14 +731,17 @@ function applyModifiers(values, modifiers = []) { // default modifiers to []
         modifier.cqlTemplate = 'CheckInclusionInVS';
       }
       if (modifier.values && modifier.values.code) {
-        let conceptsObject = { concepts: [] };
-        buildConceptObjectForCodes(modifier.values.code, conceptsObject);
-        conceptsObject.concepts.forEach((concept) => {
+        let concepts = [];
+        buildConceptObjectForCodes([modifier.values.code], concepts);
+        concepts.forEach((concept) => {
           modifier.values.code = addConcepts(concept, this.codeSystemMap, this.codeMap, this.conceptMap);
         });
         modifier.cqlTemplate = 'CheckEquivalenceToCode';
       }
       if (modifier.values) modifierContext.values = modifier.values; // Certain modifiers (such as lookback) require values, so provide them here
+      if (!(modifier.cqlTemplate in modifierMap)) {
+        console.error(`Modifier Template could not be found: ${modifier.cqlTemplate}`);
+      }
       newValue = ejs.render(modifierMap[modifier.cqlTemplate], modifierContext);
     });
     return newValue;
@@ -840,14 +840,14 @@ function addConcepts(concept, codeSystemMap, codeMap, conceptMap) {
   return concept;
 }
 
-function buildConceptObjectForCodes(codes, valueSetObject) {
+function buildConceptObjectForCodes(codes, listOfConcepts) {
   if (codes) {
     codes.forEach((code) => {
       const concept = {
         name: `${code.codeSystem.name} ${code.code} Concept`,
         codes: [
           {
-            name: `${code.code} Name`,
+            name: `${code.code} Code`,
             code: code.code,
             codeSystem: { name: code.codeSystem.name, id: code.codeSystem.id },
             display: `${code.codeSystem.name} ${code.code} Display`
@@ -855,7 +855,7 @@ function buildConceptObjectForCodes(codes, valueSetObject) {
         ],
         display: `${code.codeSystem.name} ${code.code} Concept Display`
       }
-      valueSetObject.concepts.push(concept);
+      listOfConcepts.push(concept);
     });
   }
 }

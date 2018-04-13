@@ -21,7 +21,7 @@ export default class Qualifier extends Component {
   }
 
   handleCodeAdded = (code) => {
-    this.props.updateAppliedModifier(this.props.index, { code: [code] });
+    this.props.updateAppliedModifier(this.props.index, { code });
   }
 
   renderButton = () => {
@@ -83,7 +83,7 @@ export default class Qualifier extends Component {
       const qualifierValueSet = qualifierMod.values.valueSet;
       selection = `${qualifierValueSet.name} (${qualifierValueSet.oid})`;
     } else if (hasSelectedCode) {
-      const qualifierCode = qualifierMod.values.code[0];
+      const qualifierCode = qualifierMod.values.code;
       selection = `${qualifierCode.codeSystem.name} (${qualifierCode.code})`;
     }
 

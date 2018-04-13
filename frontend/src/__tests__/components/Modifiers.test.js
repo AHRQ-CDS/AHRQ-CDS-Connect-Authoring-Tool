@@ -275,5 +275,5 @@ test('Qualifier allows code selection', () => {
 
   component.instance().handleCodeAdded(code);
   expect(updateAppliedModifierMock).toHaveBeenCalled();
-  expect(updateAppliedModifierMock).toBeCalledWith(5, { code: [code] });
+  expect(updateAppliedModifierMock).toBeCalledWith(5, { code });
 });
