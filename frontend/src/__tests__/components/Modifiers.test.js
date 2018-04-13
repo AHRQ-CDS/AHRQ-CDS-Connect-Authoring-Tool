@@ -258,7 +258,6 @@ test('Qualifier allows value set selection', () => {
 
   const valueSet = { name: 'Test', oid: 'test' };
 
-  expect(component.find('ElementModal')).toHaveLength(1);
   component.instance().handleVSAdded(valueSet);
   expect(updateAppliedModifierMock).toHaveBeenCalled();
   expect(updateAppliedModifierMock).toBeCalledWith(5, { valueSet });
@@ -274,7 +273,6 @@ test('Qualifier allows code selection', () => {
 
   const code = { name: 'Test', oid: 'test' };
 
-  expect(component.find('CodeSelectModal')).toHaveLength(1);
   component.instance().handleCodeAdded(code);
   expect(updateAppliedModifierMock).toHaveBeenCalled();
   expect(updateAppliedModifierMock).toBeCalledWith(5, { code: [code] });

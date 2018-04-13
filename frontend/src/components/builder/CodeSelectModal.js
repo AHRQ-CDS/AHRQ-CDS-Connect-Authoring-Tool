@@ -64,17 +64,21 @@ class CodeSelectModal extends Component {
   }
 
   validateCode = () => {
-    const auth = {
-      username: this.props.vsacFHIRCredentials.username,
-      password: this.props.vsacFHIRCredentials.password
-    };
-    if (!this.state.codeText || !this.state.selectedCS) {
-      this.setState({ codeIsValid: false });
-      return;
+    if (this.props.vsacFHIRCredentials) {
+      const auth = {
+        username: this.props.vsacFHIRCredentials.username,
+        password: this.props.vsacFHIRCredentials.password
+      };
+
+      if (!this.state.codeText || !this.state.selectedCS) {
+        this.setState({ codeIsValid: false });
+        return;
+      }
+
+      axios.get(`/authoring/api/fhir/code?code=${this.state.codeText}&system=${this.state.selectedCS.id}`, { auth })
+        .then(res => this.setState({ codeIsValid: true, codeData: res.data }))
+        .catch(() => this.setState({ codeIsValid: false, codeData: null }));
     }
-    axios.get(`/authoring/api/fhir/code?code=${this.state.codeText}&system=${this.state.selectedCS.id}`, { auth })
-      .then(res => this.setState({ codeIsValid: true, codeData: res.data }))
-      .catch(() => this.setState({ codeIsValid: false, codeData: null }));
   }
 
   chooseCode = () => {

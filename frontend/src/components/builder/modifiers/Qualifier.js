@@ -25,6 +25,8 @@ export default class Qualifier extends Component {
   }
 
   renderButton = () => {
+    if (!this.props.template) { return null; }
+
     const qualifierMod = this.props.template.modifiers.find(mod => mod.id === 'Qualifier');
     const hasSelectedVS = qualifierMod.values.valueSet != null;
     const hasSelectedCode = qualifierMod.values.code != null;
@@ -67,6 +69,8 @@ export default class Qualifier extends Component {
   }
 
   renderQualifierSelection() {
+    if (!this.props.template) { return null; }
+
     const qualifierMod = this.props.template.modifiers.find(mod => mod.id === 'Qualifier');
     const hasSelectedVS = qualifierMod.values.valueSet != null;
     const hasSelectedCode = qualifierMod.values.code != null;
