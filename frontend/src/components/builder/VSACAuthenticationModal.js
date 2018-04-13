@@ -1,3 +1,5 @@
+/* eslint-disable jsx-a11y/no-autofocus */
+
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import FontAwesome from 'react-fontawesome';
@@ -45,6 +47,7 @@ class VSACAuthenticationModal extends Component {
         <button className="primary-button" onClick={this.openVSACLoginModal}>
           <FontAwesome name="key" />{' '}Authenticate VSAC
         </button>
+
         <Modal
           modalTitle="Login to VSAC your account"
           modalId="vsac-login"
@@ -59,8 +62,19 @@ class VSACAuthenticationModal extends Component {
             </div>
 
             <div className="login-modal__form">
-              <input type='text' ref='username' className="form-control col" placeholder='username' />
-              <input type='password' ref='password' className="form-control col" placeholder='password' />
+              <input
+                type='text'
+                autoFocus
+                autoComplete="username"
+                ref='username'
+                className="form-control col"
+                placeholder='username'/>
+              <input
+                type='password'
+                autoComplete="current-password"
+                ref='password'
+                className="form-control col"
+                placeholder='password'/>
               {this.renderedAuthStatusText()}
             </div>
           </div>
