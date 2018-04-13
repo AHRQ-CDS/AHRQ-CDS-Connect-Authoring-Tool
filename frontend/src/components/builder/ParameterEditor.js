@@ -377,7 +377,7 @@ class DecimalEditor extends Component {
     decimal = _.get(evt, 'target.value', null);
     if (decimal != null) { decimal = parseFloat(decimal, 10); }
 
-    if (decimal != null) {
+    if (decimal || decimal === 0) {
       if (Number.isInteger(decimal)) {
         str = `${decimal}.0`;
       } else {
@@ -431,7 +431,7 @@ class QuantityEditor extends Component {
         break;
     }
 
-    if ((quantity != null) || unit) {
+    if ((quantity || quantity === 0) || unit) {
       if (Number.isInteger(quantity)) {
         str = `${quantity}.0 '${unit}'`;
       } else {
@@ -723,7 +723,7 @@ class IntervalOfDecimalEditor extends Component {
         break;
     }
 
-    if ((first_decimal != null) || (second_decimal != null)) {
+    if ((first_decimal || first_decimal === 0) || (second_decimal || second_decimal === 0)) {
       if (Number.isInteger(first_decimal)) {
         if (Number.isInteger(second_decimal)) {
           str = `Interval[${first_decimal}.0,${second_decimal}.0]`;
@@ -807,7 +807,7 @@ class IntervalOfQuantityEditor extends Component {
         break;
     }
 
-    if ((first_quantity != null) || (second_quantity != null) || unit) {
+    if ((first_quantity || first_quantity === 0) || (second_quantity || second_quantity === 0) || unit) {
       if (Number.isInteger(first_quantity)) {
         if (Number.isInteger(second_quantity)) {
           str = `Interval[${first_quantity}.0 '${unit}',${second_quantity}.0 '${unit}']`;
