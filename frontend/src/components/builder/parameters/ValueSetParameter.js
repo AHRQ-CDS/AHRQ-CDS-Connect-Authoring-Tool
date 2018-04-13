@@ -19,7 +19,6 @@ export default class ValueSetParameter extends Component {
             labelKey={'name'}
             className="col-7"
             placeholder={`Select ${this.props.param.name}`}
-            autofocus
             options={this.props.valueSets}
             inputProps={{ id }}
             clearable={true}
