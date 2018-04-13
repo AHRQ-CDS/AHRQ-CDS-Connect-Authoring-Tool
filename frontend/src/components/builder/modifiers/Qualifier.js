@@ -25,6 +25,10 @@ export default class Qualifier extends Component {
   }
 
   renderButton = () => {
+    const qualifierMod = this.props.template.modifiers.find((mod) => mod.id === "Qualifier");
+    const hasSelectedVS = qualifierMod.values.valueSet != null;
+    const hasSelectedCode = qualifierMod.values.code != null;
+
     if (this.props.timeLastAuthenticated < new Date() - 27000000) {
       return (
         <div id="vsac-controls">
@@ -36,7 +40,7 @@ export default class Qualifier extends Component {
           />
         </div>
       );
-    } else if (this.props.qualifier === 'value is a code from') {
+    } else if (this.props.qualifier === 'value is a code from' && !hasSelectedVS) {
       return (
         <ElementModal
           className="element-select__modal"
@@ -50,7 +54,7 @@ export default class Qualifier extends Component {
           vsacDetailsCodes={this.props.vsacDetailsCodes}
         />
       );
-    } else if (this.props.qualifier === 'value is the code') {
+    } else if (this.props.qualifier === 'value is the code' && !hasSelectedCode) {
       return (
         <CodeSelectModal
           className="element-select__modal"
@@ -60,6 +64,29 @@ export default class Qualifier extends Component {
     }
 
     return null;
+  }
+
+  renderQualifierSelection() {
+    const qualifierMod = this.props.template.modifiers.find((mod) => mod.id === "Qualifier");
+    const hasSelectedVS = qualifierMod.values.valueSet != null;
+    const hasSelectedCode = qualifierMod.values.code != null;
+
+    console.debug(qualifierMod);
+
+    if (!qualifierMod) { return null; }
+
+    let selection = '';
+    if (hasSelectedVS) {
+      const qualifierValueSet = qualifierMod.values.valueSet;
+      selection = `${qualifierValueSet.name} (${qualifierValueSet.oid})`;
+    } else if (hasSelectedCode) {
+      const qualifierCode = qualifierMod.values.code[0];
+      selection = `${qualifierCode.codeSystem.name} (${qualifierCode.code})`;
+    }
+
+    return (
+      <div className="selected-qualifier">{selection}</div>
+    );
   }
 
   render() {
@@ -79,6 +106,7 @@ export default class Qualifier extends Component {
         />
 
         {this.renderButton()}
+        {this.renderQualifierSelection()}
       </div>
     );
   }
