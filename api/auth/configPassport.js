@@ -35,6 +35,7 @@ module.exports = (app) => {
   const sess = {
     secret: config.get('auth.session.secret'),
     cookie: {},
+    unset: 'destroy',
     store: new MongoStore({ mongooseConnection: mongoose.connection })
   };
   if (process.env.NODE_ENV === 'production') {

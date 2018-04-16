@@ -27,6 +27,7 @@ function login(req, res, next) {
 
 function logout(req, res) {
   req.logout();
+  req.session = null;
   res.sendStatus(200);
 }
 
