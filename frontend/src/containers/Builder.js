@@ -270,8 +270,8 @@ export class Builder extends Component {
 
   renderConjunctionGroup = (treeName) => {
     const {
-      artifact, templates, resources, valueSets, loginVSACUser,
-      setVSACAuthStatus, vsacStatus, vsacStatusText, timeLastAuthenticated,
+      artifact, templates, resources, valueSets,
+      vsacStatus, vsacStatusText, timeLastAuthenticated,
       isRetrievingDetails, vsacDetailsCodes, conversionFunctions
     } = this.props;
     const namedParameters = _.filter(artifact.parameters, p => (!_.isNull(p.name) && p.name.length));
@@ -296,8 +296,6 @@ export class Builder extends Component {
           conversionFunctions={conversionFunctions}
           loginVSACUser={this.props.loginVSACUser}
           setVSACAuthStatus={this.props.setVSACAuthStatus}
-          loginVSACUser={loginVSACUser}
-          setVSACAuthStatus={setVSACAuthStatus}
           vsacStatus={vsacStatus}
           vsacStatusText={vsacStatusText}
           timeLastAuthenticated={timeLastAuthenticated}
