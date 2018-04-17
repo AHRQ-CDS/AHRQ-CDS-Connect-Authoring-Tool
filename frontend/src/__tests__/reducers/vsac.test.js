@@ -90,7 +90,9 @@ describe.only('vsac reducer', () => {
       searchResults: [],
       searchCount: 0,
       isRetrievingDetails: false,
-      detailsCodes: []
+      detailsCodes: [],
+      username: null,
+      password: null
     };
     expect(reducer({ authStatus: 'Test status' }, action)).toEqual(newState);
   });

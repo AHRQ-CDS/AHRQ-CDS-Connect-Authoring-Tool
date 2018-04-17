@@ -538,13 +538,7 @@ export default class TemplateInstance extends Component {
     return (
       <div className="element__body">
         {validationError && <div className="warning">{validationError}</div>}
-<<<<<<< HEAD
-
         {returnError && <div className="warning">{returnError}</div>}
-
-=======
-        {returnError && <div className="warning">{returnError}</div>}
->>>>>>> add test
         {this.props.templateInstance.parameters.map((param, index) => {
           // todo: each parameter type should probably have its own component
           if (param.id !== 'element_name') {
