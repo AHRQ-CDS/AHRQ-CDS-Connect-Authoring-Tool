@@ -36,7 +36,7 @@ beforeEach(() => {
     deleteInstance,
     getAllInstances,
     createTemplateInstance,
-    booleanParameters: [],
+    parameters: [],
     treeName,
     templates: elementGroups,
     artifact: {}

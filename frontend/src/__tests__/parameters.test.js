@@ -10,7 +10,7 @@ import { shallowRenderComponent } from '../utils/test_helpers';
 test('Parameter renders without crashing', () => {
   const component = shallowRenderComponent(Parameter, {
     updateInstanceOfParameter: jest.fn(),
-    deleteBooleanParam: jest.fn(),
+    deleteParameter: jest.fn(),
     index: '',
     value: '',
     name: ''
@@ -22,7 +22,7 @@ test('Parameter changes input', () => {
   const updateInstanceOfParameterMock = jest.fn();
   const component = shallowRenderComponent(Parameter, {
     updateInstanceOfParameter: updateInstanceOfParameterMock,
-    deleteBooleanParam: jest.fn(),
+    deleteParameter: jest.fn(),
     index: '',
     value: '',
     name: ''
@@ -31,7 +31,7 @@ test('Parameter changes input', () => {
   const selectInput = component.find(Select);
   selectInput.simulate('change', { value: '' });
   expect(updateInstanceOfParameterMock).toHaveBeenCalled();
-  expect(updateInstanceOfParameterMock.mock.calls[0][0]).toEqual({ name: '', value: '' });
+  expect(updateInstanceOfParameterMock.mock.calls[0][0]).toEqual({ name: '', type: '', value: null });
 
   component.instance().updateParameter = jest.fn();
   selectInput.simulate('change', { value: '' });
@@ -40,7 +40,7 @@ test('Parameter changes input', () => {
 
 test('Parameters renders without crashing', () => {
   const component = shallowRenderComponent(Parameters, {
-    booleanParameters: [],
+    parameters: [],
     updateParameters: jest.fn()
   });
   expect(component).toBeDefined();
@@ -49,13 +49,13 @@ test('Parameters renders without crashing', () => {
 test('Parameters adds parameter', () => {
   const updateParameterMock = jest.fn();
   const component = shallowRenderComponent(Parameters, {
-    booleanParameters: [],
+    parameters: [],
     updateParameters: updateParameterMock
   });
 
   component.find('button').simulate('click');
 
-  expect(updateParameterMock).toHaveBeenCalledWith([{ name: null, value: null }]);
+  expect(updateParameterMock).toHaveBeenCalledWith([{ name: null, type: null, value: null }]);
 });
 
 test('NumberParameter renders without crashing', () => {

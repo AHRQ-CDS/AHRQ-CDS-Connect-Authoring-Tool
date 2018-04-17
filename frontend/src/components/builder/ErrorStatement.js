@@ -7,7 +7,7 @@ import _ from 'lodash';
 
 export default class ErrorStatement extends Component {
   static propTypes = {
-    booleanParameters: PropTypes.array.isRequired,
+    parameters: PropTypes.array.isRequired,
     subpopulations: PropTypes.array.isRequired,
     errorStatement: PropTypes.object.isRequired,
     updateErrorStatement: PropTypes.func.isRequired
@@ -24,7 +24,7 @@ export default class ErrorStatement extends Component {
   // Prepopulates dropdown with recommendation is null and then adds bool params
   options = () => {
     const dropdown = [{ label: 'Recommendations is null', value: '"Recommendation" is null' }];
-    const params = this.props.booleanParameters.map(p => ({ label: p.name, value: p.value }));
+    const params = this.props.parameters.map(p => ({ label: p.name, value: p.value }));
     const subpops = this.props.subpopulations.map((s) => {
       if (s.special) {
         return ({ label: s.subpopulationName, value: s.special_subpopulationName });

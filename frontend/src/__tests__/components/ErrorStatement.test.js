@@ -7,14 +7,14 @@ let component;
 let componentWithNest;
 beforeEach(() => {
   component = fullRenderComponent(ErrorStatement, {
-    booleanParameters: [],
+    parameters: [],
     subpopulations: [
       { label: 'Recommendations is null', value: '"Recommendation" is null' }
     ],
     errorStatement: {
       statements: [
         {
-          condition: { label: "null", value: "null" },
+          condition: { label: 'null', value: 'null' },
           thenClause: '',
           child: null,
           useThenClause: true
@@ -26,7 +26,7 @@ beforeEach(() => {
   });
 
   componentWithNest = fullRenderComponent(ErrorStatement, {
-    booleanParameters: [],
+    parameters: [],
     subpopulations: [
       { label: 'Recommendations is null', value: '"Recommendation" is null' }
     ],

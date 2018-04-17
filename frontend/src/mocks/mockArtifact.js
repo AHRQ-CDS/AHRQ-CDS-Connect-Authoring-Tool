@@ -50,7 +50,7 @@ const mockArtifact = {
       uniqueId: 'And-TEST-1',
     }
   ],
-  booleanParameters: [],
+  parameters: [],
   errorStatement: { statements: [] }
 };
 

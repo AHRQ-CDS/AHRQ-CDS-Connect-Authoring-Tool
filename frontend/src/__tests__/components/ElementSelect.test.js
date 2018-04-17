@@ -14,7 +14,7 @@ beforeEach(() => {
     {
       categories: elementGroups,
       onSuggestionSelected: addInstance,
-      booleanParameters: []
+      parameters: []
     }
   );
 

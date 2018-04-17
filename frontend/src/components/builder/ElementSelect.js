@@ -63,7 +63,7 @@ class ElementSelect extends Component {
     let categoriesCopy = _.cloneDeep(this.props.categories);
     categoriesCopy = filterUnsuppressed(categoriesCopy);
 
-    if (this.props.booleanParameters.length) {
+    if (this.props.parameters.length) {
       const paramsIndex = categoriesCopy.findIndex(cat => cat.name === 'Parameters');
       let parametersCategory;
       if (paramsIndex >= 0) {
@@ -71,9 +71,9 @@ class ElementSelect extends Component {
       } else {
         parametersCategory = { icon: 'sign-in', name: 'Parameters', entries: [] };
       }
-      parametersCategory.entries = parametersCategory.entries.concat(this.props.booleanParameters.map(boolParam => ({
-        name: boolParam.name,
-        parameters: [{ value: boolParam.name }],
+      parametersCategory.entries = parametersCategory.entries.concat(this.props.parameters.map(param => ({
+        name: param.name,
+        parameters: [{ value: param.name }],
         template: 'EmptyParameter',
         cannotHaveModifiers: true,
         returnType: 'boolean'

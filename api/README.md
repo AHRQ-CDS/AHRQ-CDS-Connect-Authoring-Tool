@@ -52,6 +52,18 @@ For local development, a `config/local.json` file can also be used to override c
 
 Lastly, most aspects of config can also be overridden via specific environment variables.  See the `config.js` configuration schema for the relevant environment variable names.
 
+### Migrations
+
+As the project evolves over time, the database schema may change in ways that require existing data to be transformed.  This project uses the [mongodb-migrations](https://www.npmjs.com/package/mongodb-migrations) to support database migrations.  Migration scripts are stored in the `migrations` folder.
+
+Migrations are automatically applied on application startup.  This may be disabled via configuration (`migrations.active` in your local config file or the `MIGRATIONS_ACTIVE` environment variable).  Migrations should only be disabled during development.
+
+To run migrations from the commandline, simply execute the following command from the root of the `api` project:
+
+```bash
+./node_modules/.bin/mm
+```
+
 ### Authentication
 
 This project uses [Passport](http://www.passportjs.org/) to authenticate users. By default, the project uses the [LDAP Authentication Strategy](https://github.com/vesse/passport-ldapauth).

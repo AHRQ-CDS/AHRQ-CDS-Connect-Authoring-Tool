@@ -46,10 +46,7 @@ const artifactProps = {
     subpopulations: PropTypes.arrayOf(PropTypes.shape(subpopulationsProps))
   })),
   subpopulations: PropTypes.arrayOf(PropTypes.shape(subpopulationsProps)),
-  booleanParameters: PropTypes.arrayOf(PropTypes.shape({
-    name: PropTypes.string,
-    value: PropTypes.string
-  })),
+  parameters: PropTypes.arrayOf(PropTypes.shape(parametersProps)),
   errorStatement: PropTypes.shape({
     else: PropTypes.string,
     statements: PropTypes.arrayOf(PropTypes.shape({

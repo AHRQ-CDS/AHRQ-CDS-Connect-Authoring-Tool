@@ -202,7 +202,7 @@ export default class ConjunctionGroup extends Component {
               deleteInstance={deleteInstance}
               getAllInstances={this.props.getAllInstances}
               updateInstanceModifiers={this.props.updateInstanceModifiers}
-              booleanParameters={this.props.booleanParameters}
+              parameters={this.props.parameters}
               getPath={this.getChildsPath} />
 
             {this.renderConjunctionSelect(i)}
@@ -247,7 +247,7 @@ export default class ConjunctionGroup extends Component {
         <ElementSelect
           categories={this.props.templates}
           onSuggestionSelected={this.addChild}
-          booleanParameters={this.props.booleanParameters}
+          parameters={this.props.parameters}
         />
       </div>
     );

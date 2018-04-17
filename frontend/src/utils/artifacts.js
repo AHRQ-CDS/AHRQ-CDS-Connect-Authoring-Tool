@@ -54,7 +54,7 @@ export default function isBlankArtifact(artifact) {
     }
   }
   // If it has any parameters, it is NOT blank
-  if (artifact.booleanParameters.length > 0) {
+  if (artifact.parameters.length > 0) {
     return false;
   }
   // If the error statement has an else clause, it is NOT blank

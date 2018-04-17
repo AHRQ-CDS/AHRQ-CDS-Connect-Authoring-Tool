@@ -1,11 +1,14 @@
 // Import Dependencies
+const path = require('path');
 const process = require('process');
 const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
+const mm = require('mongodb-migrations');
 const config = require('./config');
 const configPassport = require('./auth/configPassport');
 const routes = require('./routes');
+const mmConfig = require('./mm-config');
 
 // Turn on/off strict SSL (turn off in dev only, use with caution!)
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = config.get('tlsRejectUnauthorized');
@@ -43,7 +46,24 @@ routes(app);
 
 // Starts Server
 if (!module.parent) { // check if within a test or not.
-  app.listen(port, () => {
-    console.log(`api running on port ${port}`);
-  });
+  if (config.get('migrations.active')) {
+    // Run any necessary migrations before starting the server
+    console.log('Running Migrations');
+    const migrator = new mm.Migrator(mmConfig);
+    migrator.runFromDir(path.resolve(__dirname, 'migrations'), (err, results) => {
+      if (err) {
+        console.err('Migration Error:', err);
+        process.exit(1);
+      }
+      console.log('Migrations Complete');
+      app.listen(port, () => {
+        console.log(`api running on port ${port}`);
+      });
+    });
+  } else {
+    console.log('Skipping Migrations Due to Config');
+    app.listen(port, () => {
+      console.log(`api running on port ${port}`);
+    });
+  }
 }

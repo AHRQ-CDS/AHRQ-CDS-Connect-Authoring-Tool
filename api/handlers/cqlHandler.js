@@ -78,7 +78,7 @@ class CqlArtifact {
     this.includeLibraries = artifact.includeLibraries ? artifact.includeLibraries : includeLibraries;
     this.context = artifact.context ? artifact.context : 'Patient';
     this.inclusions = artifact.expTreeInclude;
-    this.booleanParameters = artifact.booleanParameters;
+    this.parameters = artifact.parameters;
     this.exclusions = artifact.expTreeExclude;
     this.subpopulations = artifact.subpopulations;
     this.recommendations = artifact.recommendations;
@@ -102,6 +102,14 @@ class CqlArtifact {
     this.subpopulations.forEach((subpopulation) => {
       if (!subpopulation.special) { // `Doesn't Meet Inclusion Criteria` and `Meets Exclusion Criteria` are special
         if (subpopulation.childInstances.length) { this.parseTree(subpopulation); }
+      }
+    }
+    );
+    this.parameters.forEach((parameter) => {
+      if (parameter.type === "Code" || parameter.type === "Concept") {
+        let system = _.get(parameter, 'value.system', null);
+        let uri = _.get(parameter, 'value.uri', null);
+        if (system && uri) { this.codeSystemMap.set(system, uri); }
       }
     }
     );
