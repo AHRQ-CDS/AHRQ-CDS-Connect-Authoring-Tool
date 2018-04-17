@@ -40,7 +40,9 @@ class Parameter extends Component {
                 name={'Parameter Name'}
                 value={this.props.name}
                 updateInstance={ e => (
-                  this.updateParameter({ name: e[`param-name-${this.props.index}`], type: this.props.type, value: this.props.value }))} />
+                  this.updateParameter({ name: e[`param-name-${this.props.index}`],
+                    type: this.props.type,
+value: this.props.value }))} />
 
               <div className="form__group">
                 <label>
@@ -51,7 +53,9 @@ class Parameter extends Component {
                     clearable={false}
                     options={typeOptions}
                     value={this.props.type}
-                    onChange={ e => this.updateParameter({ name: this.props.name, type: e.value, value: null }) }/>
+                    onChange={ e => this.updateParameter({ name: this.props.name,
+                      type: e.value,
+                      value: null }) }/>
                 </label>
               </div>
 
@@ -61,7 +65,9 @@ class Parameter extends Component {
                 type={this.props.type != null ? this.props.type : null}
                 value={this.props.value}
                 updateInstance={ e =>
-                  (this.updateParameter({ name: this.props.name, type: this.props.type, value: (e != null ? e.value : null) })) }/>
+                  (this.updateParameter({ name: this.props.name,
+                    type: this.props.type,
+                    value: (e != null ? e.value : null) })) }/>
 
             </div>
           </div>
