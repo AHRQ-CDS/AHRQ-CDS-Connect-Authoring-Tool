@@ -10,7 +10,7 @@ const addInstance = jest.fn();
 const props = {
   categories: genericElementGroups,
   onSuggestionSelected: addInstance,
-  booleanParameters: [],
+  parameters: [],
   loginVSACUser: jest.fn(),
   setVSACAuthStatus: jest.fn(),
   vsacStatus: '',
