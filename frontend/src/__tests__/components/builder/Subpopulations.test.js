@@ -47,7 +47,7 @@ beforeEach(() => {
     createTemplateInstance,
     checkSubpopulationUsage,
     parameters: [],
-    name: '',
+    name: 'subpopulations',
     loginVSACUser: jest.fn(),
     setVSACAuthStatus: jest.fn(),
     vsacStatus: '',
