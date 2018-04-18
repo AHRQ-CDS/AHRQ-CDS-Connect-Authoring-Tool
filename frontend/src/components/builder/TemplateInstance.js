@@ -248,7 +248,7 @@ export default class TemplateInstance extends Component {
       <div className="applied-modifiers__info">
         <div className="applied-modifiers__info-expressions row">
           {this.props.templateInstance.modifiers && this.props.templateInstance.modifiers.length > 0 &&
-            <div className="bold col-3 applied-modifiers__label">Expressions:</div>
+            <div className="col-3 bold align-right applied-modifiers__label">Expressions:</div>
           }
 
           <div className="modifier__list col-9" aria-label="Expression List">
@@ -310,12 +310,11 @@ export default class TemplateInstance extends Component {
     }
   }
 
-  renderModifierSelect = () => (
-    <div className="modifier-select">
-      { (
-          !this.props.templateInstance.cannotHaveModifiers
-          && (this.state.relevantModifiers.length > 0 || this.props.templateInstance.modifiers.length === 0)
-        ) ?
+  renderModifierSelect = () => {
+    if (!this.props.templateInstance.cannotHaveModifiers
+        && (this.state.relevantModifiers.length > 0 || this.props.templateInstance.modifiers.length === 0)) {
+      return (
+        <div className="modifier-select">
           <div className="modifier__selection">
             <button
               onClick={() => this.setState({ showModifiers: !this.state.showModifiers })}
@@ -324,20 +323,21 @@ export default class TemplateInstance extends Component {
               Add Expression
             </button>
 
-            { (this.state.showModifiers)
-              ? this.state.relevantModifiers.map(modifier =>
+            {this.state.showModifiers &&
+              this.state.relevantModifiers.map(modifier =>
                 <button key={modifier.id}
                   value={modifier.id}
                   onClick={this.handleModifierSelected} className="modifier__button secondary-button">
                   {modifier.name}
                 </button>)
-              : null
             }
           </div>
-        : null
-      }
-    </div>
-  )
+        </div>
+      );
+    }
+
+    return null;
+  }
 
   renderVSInfo = () => {
     if (this.props.templateInstance.parameters.length > 1) {
@@ -379,7 +379,7 @@ export default class TemplateInstance extends Component {
           <div className="modifier__return__type" id="code-list">
             {vsacParameter.codes.map((code, i) => (
               <div key={`selected-code-${i}`} className="row code-info">
-                <div className="bold col-3 code-info__label">
+                <div className="col-3 bold align-right code-info__label">
                   Code{vsacParameter.codes.length > 1 ? ` ${i + 1}` : ''}:
                 </div>
 
@@ -533,10 +533,10 @@ export default class TemplateInstance extends Component {
   renderBody() {
     const validationError = this.validateElement();
     const returnError = this.state.returnType === 'boolean' ? null
-      : "Element must have return type 'boolean'.  Add expressions(s) to change the return type.";
+      : "Element must have return type 'boolean'.  Add expression(s) to change the return type.";
 
     return (
-      <div className="element__body">
+      <div className="card-element__body">
         {validationError && <div className="warning">{validationError}</div>}
         {returnError && <div className="warning">{returnError}</div>}
         {this.props.templateInstance.parameters.map((param, index) => {
@@ -558,29 +558,34 @@ export default class TemplateInstance extends Component {
 
         <div className="modifier__return__type">
           <div className="return-type row">
-            <div className="bold col-3 return-type__label">Return Type:</div>
+            <div className="col-3 bold align-right return-type__label">Return Type:</div>
             <div className="col-7 return-type__value">
               {_.startCase(this.state.returnType) === 'Boolean' && <FontAwesome name="check" className="check" />}
               {_.startCase(this.state.returnType)}
             </div>
           </div>
         </div>
+      </div>
+    );
+  }
 
-        <div className="element__buttons">
-          {this.renderModifierSelect()}
+  renderFooter() {
+    return (
+      <div className="card-element__footer">
+        {this.renderModifierSelect()}
 
-          {this.props.templateInstance.id.includes('_vsac') &&
-            <div className="vsac-controls">
-              {this.renderVSACOptions()}
-            </div>
-          }
-        </div>
+        {this.props.templateInstance.id.includes('_vsac') &&
+          <div className="vsac-controls">
+            {this.renderVSACOptions()}
+          </div>
+        }
       </div>
     );
   }
 
   renderHeader = () => {
     const elementNameParameter = this.props.templateInstance.parameters.find(param => param.id === 'element_name');
+
     if (elementNameParameter) {
       if (this.props.templateInstance.type === 'parameter') {
         if (elementNameParameter.value) {
@@ -588,6 +593,7 @@ export default class TemplateInstance extends Component {
         }
         return null;
       }
+
       return (
         <StringParameter
           key={elementNameParameter.id}
@@ -596,19 +602,20 @@ export default class TemplateInstance extends Component {
           name={this.props.templateInstance.name}/>
       );
     }
+
     // Handles the case for old parameters, which did not have an 'element_name' parameter.
     return (<span className="label">{this.props.templateInstance.name}</span>);
   }
 
   render() {
     return (
-      <div className="element element__expanded">
-        <div className="element__header">
-          <span className="element__heading">
+      <div className="card-element element__expanded">
+        <div className="card-element__header">
+          <span className="card-element__heading">
             {this.renderHeader()}
           </span>
 
-          <div className="element__buttonbar">
+          <div className="card-element__buttons">
             {this.props.renderIndentButtons(this.props.templateInstance)}
 
             <button
@@ -628,6 +635,7 @@ export default class TemplateInstance extends Component {
         </div>
 
         {this.state.showElement ? this.renderBody() : null}
+        {this.state.showElement ? this.renderFooter() : null}
       </div>
     );
   }

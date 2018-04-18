@@ -32,7 +32,7 @@ beforeEach(() => {
     { ...props }
   );
 
-  elementField = component.find('.element-select__element-field');
+  elementField = component.find('.element-select');
 
   setInputValue = (input, value) => {
     input.simulate('focus');
@@ -42,8 +42,7 @@ beforeEach(() => {
 });
 
 test('renders the component with proper elements', () => {
-  expect(component.childAt(0).hasClass('form__group')).toBeTruthy();
-  expect(component.childAt(0).hasClass('element-select')).toBeTruthy();
+  expect(component.childAt(0).hasClass('element-select__add-element')).toBeTruthy();
   expect(component.find('.Select')).toHaveLength(1);
   expect(component.find('.is-open')).toHaveLength(0);
 });
@@ -56,7 +55,7 @@ describe('the select element field', () => {
 
   it('starts with a list of all elements', () => {
     elementField.find('input').simulate('change');
-    expect(elementField.hasClass('is-open')).toBeTruthy();
+    expect(elementField.find('.element-select__element-field').hasClass('is-open')).toBeTruthy();
     expect(elementField.find('.element-select__option')).toHaveLength(9);
   });
 

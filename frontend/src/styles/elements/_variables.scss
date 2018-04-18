@@ -15,20 +15,20 @@ $blue-darkest: #071119;
 $blue-link: #004198;
 $light-blue-link: #84b9ff;
 $red: #e31c3d;
-$green: #41C682;
+$green: #41c682;
 $gray-with-opacity: rgba(20, 37, 54, 0.9);
 $white-with-opacity: rgba(255, 255, 255, 0.5);
 
 // ahrq colors
-$ahrq-color-background-light-gradient: -webkit-linear-gradient(top, #d1d1d1 0%, #ffffff 100%);
+$ahrq-color-background-light-gradient: -webkit-linear-gradient(top, #d1d1d1 0%, #fff 100%);
 $ahrq-color-dark-gradient: linear-gradient(#324a64, #1e2f40);
-$ahrq-color-background-light: #E9E9E9;
-$ahrq-color-text: #4D4D4D;
-$ahrq-color-purple: #6D1A7F;
-$ahrq-color-light-blue: #4EDEEB;
-$ahrq-color-orange: #FFAF5A;
-$ahrq-color-green: #4BEF6D;
-$ahrq-color-dark-blue: #6693EE;
+$ahrq-color-background-light: #e9e9e9;
+$ahrq-color-text: #4d4d4d;
+$ahrq-color-purple: #6d1a7f;
+$ahrq-color-light-blue: #4edeeb;
+$ahrq-color-orange: #ffaf5a;
+$ahrq-color-green: #4bef6d;
+$ahrq-color-dark-blue: #6693ee;
 
 // brand colors
 $brand-primary: $blue;
@@ -40,6 +40,7 @@ $border-color: darken($gray-lighter, 10%);
 
 // background colors
 $body-bg: $white;
+$card-bg: $gray-lightest;
 
 // button colors
 $default-button-text-color: $blue;
@@ -70,14 +71,14 @@ $form-validation-error-color: darken($red, 20%);
 // nav colors
 $navbar-bg-color: #1e2f40;
 $navbar-link-color: $white;
-$navbar-link-active-color: #4A5968;
+$navbar-link-active-color: #4a5968;
 
 // footer colors
 $footer-background: #006aaa;
 $footer-background-medium: #0079c1;
 $footer-background-light: #1986c7;
 $footer-background-gradient-1: linear-gradient(to bottom, $footer-background 0%, $footer-background-medium 3%, $footer-background-light 100%);
-$footer-links: #6C1F7E;
+$footer-links: #6c1f7e;
 
 //-------------------------- Borders ----------------------------------------//
 $border-radius: 0.2em;
@@ -101,8 +102,8 @@ $fa-font-path: '/assets/fontawesome';
 
 // ------------------------- BOOTSTRAP VARIABLES --------------------------- //
 $navbar-height: 80px;
-$panel-border-radius: 0px;
-$border-radius-large: 0px;
+$panel-border-radius: 0;
+$border-radius-large: 0;
 $headings-font-weight: 200;
 
 $screen-xs: 480px;

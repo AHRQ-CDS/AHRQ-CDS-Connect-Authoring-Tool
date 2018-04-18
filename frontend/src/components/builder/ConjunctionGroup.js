@@ -49,14 +49,13 @@ export default class ConjunctionGroup extends Component {
   getNestingClassName = () => {
     const level = this.getPath().split('.').filter(pathSection => pathSection === 'childInstances').length;
 
-    if (level === 1) {
-      return 'conjunction-group--top conjunction-group--odd';
+    if (level === 0) {
+      return 'card-group__top';
     } else if (level % 2 === 0) {
-      return 'conjunction-group--even';
+      return 'card-group__even';
     }
 
-    return 'conjunction-group--odd';
-    // return level % 2 === 0 ? 'conjunction-group--even' : 'conjunction-group--odd';
+    return 'card-group__odd';
   }
 
   // ----------------------- CLICK HANDLERS -------------------------------- //
@@ -120,7 +119,7 @@ export default class ConjunctionGroup extends Component {
 
   renderConjunctionSelect = i => (
     <Select
-      className="conjunction-group__conjunction-select"
+      className="card-group__conjunction-select"
       name={ `conjunction-select-${i}` }
       value={ this.props.instance.name }
       valueKey="name"
@@ -140,7 +139,7 @@ export default class ConjunctionGroup extends Component {
       { this.getPath() !== '' ?
         <button
           aria-label="outdent"
-          className='element__hidebutton secondary-button'
+          className='element__hidebutton'
           onClick={() => this.outdentClickHandler(instance)}>
           <FontAwesome name="dedent" />
         </button> :
@@ -149,7 +148,7 @@ export default class ConjunctionGroup extends Component {
 
       <button
         aria-label="indent"
-        className='element__hidebutton secondary-button'
+        className='element__hidebutton'
         onClick={() => this.indentClickHandler(instance)}>
         <FontAwesome name="indent" />
       </button>
@@ -161,8 +160,8 @@ export default class ConjunctionGroup extends Component {
 
     if (!this.props.root) {
       return (
-        <div className="conjunction-group__header">
-          <div className="conjunction-group__header-title">
+        <div className="card-group__header">
+          <div className="card-group__header-title">
             <StringParameter
               id={elementNameParam.id}
               name={elementNameParam.name}
@@ -171,7 +170,7 @@ export default class ConjunctionGroup extends Component {
             />
           </div>
 
-          <div className="conjunction-group__button-bar">
+          <div className="card-group__buttons">
             {this.renderIndentButtons(this.props.instance)}
 
             <button
@@ -197,7 +196,7 @@ export default class ConjunctionGroup extends Component {
       // return null if child instance conjunction is false
       if (instance.conjunction) {
         return (
-          <div key={instance.uniqueId} className="conjunction-group__conjunction-child">
+          <div key={instance.uniqueId} className="card-group">
             <ConjunctionGroup
               root={false}
               treeName={treeName}
@@ -240,7 +239,7 @@ export default class ConjunctionGroup extends Component {
 
   renderTemplate(instance) {
     return (
-      <div key={ instance.uniqueId } className="conjunction-group__conjunction-child">
+      <div key={instance.uniqueId} className="card-group-section">
         <TemplateInstance
           resources={this.props.resources}
           valueSets={this.props.valueSets}
@@ -275,14 +274,14 @@ export default class ConjunctionGroup extends Component {
   }
 
   render() {
-    const classname = `conjunction-group ${this.getNestingClassName()}`;
+    const classname = `card-group ${this.getNestingClassName()}`;
 
     return (
       <div className={classname}>
         {this.renderRoot()}
         {this.renderChildren()}
 
-        <div className="conjunction-group__section">
+        <div className="card-element">
           <ElementSelect
             categories={this.props.templates}
             onSuggestionSelected={this.addChild}

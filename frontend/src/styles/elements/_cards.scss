@@ -1,0 +1,124 @@
+.card-group {
+  &__top {
+    margin-left: 0;
+    border-radius: 0.2em;
+
+    .card-element { background-color: $gray-lightest; }
+  }
+
+  &__even {
+    background-color: $body-bg;
+    border: 0.1em solid $border-color;
+    padding: 1em;
+
+    > .card-group-section > .card-element,
+    > .card-element {
+      background-color: $gray-lightest;
+    }
+  }
+
+  &__odd {
+    background-color: $gray-lightest;
+    border: 0.1em solid $border-color;
+    padding: 1em;
+
+    > .card-group-section > .card-element,
+    > .card-element {
+      background-color: $body-bg;
+    }
+  }
+
+  &__conjunction-select {
+    width: 12em;
+    margin: 20px 0;
+  }
+
+  &-section {
+    width: 100%;
+  }
+
+  .card-element {
+    padding: 0;
+    border: 0.1em solid $border-color;
+    border-radius: 0.2em;
+    font-weight: 500;
+    width: 100%;
+  }
+
+  .card-group__header,
+  .card-element__header {
+    display: flex;
+    flex: 0 0 100%;
+    justify-content: space-between;
+    align-items: center;
+
+    &-heading {
+      flex: 1;
+    }
+  }
+
+  .card-group__header {
+    padding: 0 1em 1em;
+  }
+
+  .card-element__header {
+    border-bottom: 0.1em solid $border-color;
+    padding: 1em 2em;
+  }
+
+  .card-group__buttons,
+  .card-element__buttons {
+    flex: 1;
+    text-align: right;
+    margin-left: auto;
+
+    button {
+      background-color: $body-bg;
+      color: $default-button-text-color;
+      border: 0.1em solid $border-color;
+      border-radius: 0.2em;
+      box-shadow: none;
+      transition: 0.2s ease-in-out;
+      margin-left: 0.5em;
+    }
+  }
+
+  .card-element__body {
+    padding: 1em;
+
+    &-element {
+      display: flex;
+      align-items: center;
+      margin: 10px 0;
+
+      &-label {
+        display: inline-block;
+        min-width: 160px;
+        font-weight: bold;
+        text-align: right;
+        padding-right: 2em;
+        margin-left: -8px;
+      }
+
+      &-data {
+        display: inline-block;
+      }
+    }
+  }
+
+  .card-element__footer {
+    padding: 1em;
+    border-top: $border-global;
+
+    &:empty { display: none; }
+  }
+
+  .card-select {
+    width: 12em;
+    margin: 20px 0;
+    border: 0.1em solid $border-color;
+    border-radius: 0.2em;
+    box-shadow: 1px 1px 1px 0 rgba(21, 21, 21, 0.1);
+    min-width: 200px;
+  }
+}

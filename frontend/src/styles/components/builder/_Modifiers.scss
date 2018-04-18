@@ -17,8 +17,10 @@
   }
 
   .vs-info__buttons {
-    padding-right: 10px;
+    padding-right: 0;
 
-    @include respond-to('1439px') { padding-right: 6px; }
+    #open-modal-button {
+      @include respond-to('1439px') { margin-right: -5px; }
+    }
   }
 }

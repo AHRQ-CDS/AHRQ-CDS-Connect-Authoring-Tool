@@ -55,7 +55,7 @@ const elementOptions = [
   { value: 'procedure', label: 'Procedure', vsacAuthRequired: true, template: 'GenericProcedure_vsac' }
 ];
 
-class ElementSelect extends Component {
+export default class ElementSelect extends Component {
   constructor(props) {
     super(props);
 
@@ -68,27 +68,6 @@ class ElementSelect extends Component {
 
     this.elementInputId = '';
     this.categoryInputId = '';
-  }
-
-  static propTypes = {
-    categories: PropTypes.array.isRequired,
-    onSuggestionSelected: PropTypes.func.isRequired,
-    booleanParameters: PropTypes.arrayOf(PropTypes.shape({
-      name: PropTypes.string,
-      value: PropTypes.string
-    })),
-    loginVSACUser: PropTypes.func.isRequired,
-    setVSACAuthStatus: PropTypes.func.isRequired,
-    vsacStatus: PropTypes.string,
-    vsacStatusText: PropTypes.string,
-    timeLastAuthenticated: PropTypes.instanceOf(Date),
-    searchVSACByKeyword: PropTypes.func.isRequired,
-    isSearchingVSAC: PropTypes.bool.isRequired,
-    vsacSearchResults: PropTypes.array.isRequired,
-    vsacSearchCount: PropTypes.number.isRequired,
-    getVSDetails: PropTypes.func.isRequired,
-    isRetrievingDetails: PropTypes.bool.isRequired,
-    vsacDetailsCodes: PropTypes.array.isRequired
   }
 
   componentWillMount() {
@@ -201,6 +180,7 @@ class ElementSelect extends Component {
         <button className="disabled-button" disabled={true}>
           <FontAwesome name="check" /> VSAC Authenticated
         </button>
+
         <ElementModal
           className="element-select__modal"
           onElementSelected={this.onSuggestionSelected}
@@ -213,12 +193,13 @@ class ElementSelect extends Component {
           isRetrievingDetails={this.props.isRetrievingDetails}
           vsacDetailsCodes={this.props.vsacDetailsCodes}
         />
-          <CodeSelectModal
-            className="element-select__modal"
-            onElementSelected={this.onSuggestionSelected}
-            template={selectedTemplate}
-            vsacFHIRCredentials={this.props.vsacFHIRCredentials}
-          />
+
+        <CodeSelectModal
+          className="element-select__modal"
+          onElementSelected={this.onSuggestionSelected}
+          template={selectedTemplate}
+          vsacFHIRCredentials={this.props.vsacFHIRCredentials}
+        />
       </div>
     );
   }
@@ -247,8 +228,8 @@ class ElementSelect extends Component {
     const value = selectedElement && selectedElement.value;
 
     return (
-      <div>
-        <div className="element-select form__group">
+      <div className="element-select form__group">
+        <div className="element-select__add-element">
           <div className="element-select__label">
             <FontAwesome name="plus" />
             Add element
@@ -266,71 +247,42 @@ class ElementSelect extends Component {
             optionRenderer={optionRenderer}
             menuRenderer={ElementSelectMenuRenderer}
           />
-
-          {
-            selectedElement && !selectedElement.vsacAuthRequired &&
-              <Select
-                className="element-select__element-field"
-                placeholder={`Select ${selectedElement.label} element`}
-                aria-label={`Select ${selectedElement.label} element`}
-                options={noAuthElementOptions}
-                onChange={this.onNoAuthElementSelected}
-                />
-          }
-
-          {/* <ElementModal
-            className="element-select__modal"
-            categories={this.state.categories}
-            selectedCategory={this.state.selectedCategory}
-            setSelectedCategory={this.onSelectedCategoryChange}
-            onElementSelected={this.onSuggestionSelected}
-          /> */}
         </div>
 
         {
-          selectedElement && selectedElement.vsacAuthRequired &&
-            this.renderVSACLogin()
+          selectedElement && !selectedElement.vsacAuthRequired &&
+            <Select
+              className="element-select__element-field"
+              placeholder={`Select ${selectedElement.label} element`}
+              aria-label={`Select ${selectedElement.label} element`}
+              options={noAuthElementOptions}
+              onChange={this.onNoAuthElementSelected}
+              />
         }
+
+        {selectedElement && selectedElement.vsacAuthRequired && this.renderVSACLogin()}
       </div>
     );
-
-    // return (
-    //   <div className="form__group element-select">
-    //     <Select
-    //       className="element-select__element-field"
-    //       name="element-select__element-field"
-    //       value="start"
-    //       valueKey="name"
-    //       placeholder={placeholderText}
-    //       aria-label={placeholderText}
-    //       clearable={false}
-    //       options={this.state.selectedCategory.entries}
-    //       labelKey='name'
-    //       matchProp='label'
-    //       optionRenderer={optionRenderer}
-    //       onChange={this.onSuggestionSelected}
-    //       inputProps={{ id: this.elementInputId, 'aria-label': placeholderText, title: placeholderText }}
-    //     />
-
-    //     <Select
-    //       className="element-select__category-field"
-    //       name="element-select__category-field"
-    //       value={this.state.selectedCategory}
-    //       valueKey='name'
-    //       searchable={false}
-    //       clearable={false}
-    //       options={this.state.categories}
-    //       labelKey='name'
-    //       onChange={this.onSelectedCategoryChange}
-    //       inputProps={{
-    //         id: this.categoryInputId,
-    //         'aria-label': 'Narrow elements by category',
-    //         title: 'Narrow elements by category'
-    //       }}
-    //     />
-    //   </div>
-    // );
   }
 }
 
-export default ElementSelect;
+ElementSelect.propTypes = {
+  categories: PropTypes.array.isRequired,
+  onSuggestionSelected: PropTypes.func.isRequired,
+  booleanParameters: PropTypes.arrayOf(PropTypes.shape({
+    name: PropTypes.string,
+    value: PropTypes.string
+  })),
+  loginVSACUser: PropTypes.func.isRequired,
+  setVSACAuthStatus: PropTypes.func.isRequired,
+  vsacStatus: PropTypes.string,
+  vsacStatusText: PropTypes.string,
+  timeLastAuthenticated: PropTypes.instanceOf(Date),
+  searchVSACByKeyword: PropTypes.func.isRequired,
+  isSearchingVSAC: PropTypes.bool.isRequired,
+  vsacSearchResults: PropTypes.array.isRequired,
+  vsacSearchCount: PropTypes.number.isRequired,
+  getVSDetails: PropTypes.func.isRequired,
+  isRetrievingDetails: PropTypes.bool.isRequired,
+  vsacDetailsCodes: PropTypes.array.isRequired
+};
