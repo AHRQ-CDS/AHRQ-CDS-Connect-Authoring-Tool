@@ -162,6 +162,7 @@ class CqlArtifact {
     this.parameters = artifact.parameters;
     this.exclusions = artifact.expTreeExclude;
     this.subpopulations = artifact.subpopulations;
+    this.subelements = artifact.subelements;
     this.recommendations = artifact.recommendations;
     this.errorStatement = artifact.errorStatement;
     this.initialize();
@@ -188,6 +189,14 @@ class CqlArtifact {
       }
     }
     );
+
+    this.subelements.forEach((subelement) => {
+      if (!subelement.special) { // `Doesn't Meet Inclusion Criteria` and `Meets Exclusion Criteria` are special
+        if (subelement.childInstances.length) { this.parseTree(subelement); }
+      }
+    }
+    );
+
     this.parameters.forEach((parameter) => {
       if (parameter.type === "Code" || parameter.type === "Concept") {
         let system = _.get(parameter, 'value.system', null);
