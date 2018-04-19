@@ -1,6 +1,6 @@
-import ElementSelect from '../../components/builder/ElementSelect';
-import { fullRenderComponent } from '../../utils/test_helpers';
-import { genericElementTypes, genericElementGroups } from '../../utils/test_fixtures';
+import ElementSelect from '../../../components/builder/ElementSelect';
+import { fullRenderComponent } from '../../../utils/test_helpers';
+import { genericElementTypes, genericElementGroups } from '../../../utils/test_fixtures';
 
 let component;
 let elementField;

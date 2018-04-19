@@ -1,0 +1,36 @@
+.error-statement {
+  &__logic {
+    border-left: 2px solid $gray-light;
+    padding-left: 1em;
+  }
+
+  &__block {
+    margin-left: 2em;
+    padding-left: 1em;
+    border-left: 2px solid $gray-light;
+
+    &-if,
+    &-then,
+    &-else {
+      margin: 1em 0;
+    }
+
+    &-then {
+      margin-left: 2em;
+      padding-left: 1em;
+      border-left: 2px solid $gray-light;
+    }
+  }
+
+  &__action {
+    // margin-top: 1em;
+  }
+
+  &__condition {
+    display: flex;
+    align-items: center;
+    margin-bottom: 1em;
+
+    > div { flex: 1; }
+  }
+}

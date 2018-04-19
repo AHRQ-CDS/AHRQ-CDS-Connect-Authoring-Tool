@@ -1,5 +1,5 @@
-import ErrorStatement from '../../components/builder/ErrorStatement';
-import { fullRenderComponent } from '../../utils/test_helpers';
+import ErrorStatement from '../../../components/builder/ErrorStatement';
+import { fullRenderComponent } from '../../../utils/test_helpers';
 
 const updateErrorStatementMock = jest.fn();
 
@@ -63,7 +63,7 @@ test('ErrorStatement adds a nested if when `And Also If` is clicked', () => {
 
 test('ErrorStatement adds an if when `Or Else If...` is clicked', () => {
   updateErrorStatementMock.mockClear();
-  component.find('button').findWhere(button => button.text() === ' Or Else If... ').simulate('click');
+  component.find('button').findWhere(button => button.text() === 'Or Else If...').simulate('click');
   expect(updateErrorStatementMock.mock.calls[0][0].statements).toHaveLength(2);
   expect(updateErrorStatementMock).toHaveBeenCalled();
 });
@@ -87,7 +87,7 @@ test('ErrorStatement can change `Else` (on root element) input', () => {
 
 test('ErrorStatement can delete an if-statement', () => {
   updateErrorStatementMock.mockClear();
-  componentWithNest.find('button').findWhere(button => button.text() === ' Delete If Clause ').at(0).simulate('click');
+  componentWithNest.find('button').findWhere(button => button.text() === 'Delete If Clause').at(0).simulate('click');
   expect(updateErrorStatementMock.mock.calls[0][0].statements).toHaveLength(1);
   expect(updateErrorStatementMock).toHaveBeenCalled();
 });

@@ -1,6 +1,6 @@
 import Modal from 'react-modal';
-import CodeSelectModal from '../../components/builder/CodeSelectModal';
-import { fullRenderComponent, ReactWrapper } from '../../utils/test_helpers';
+import CodeSelectModal from '../../../components/builder/CodeSelectModal';
+import { fullRenderComponent, ReactWrapper } from '../../../utils/test_helpers';
 
 let component;
 let codeInput;

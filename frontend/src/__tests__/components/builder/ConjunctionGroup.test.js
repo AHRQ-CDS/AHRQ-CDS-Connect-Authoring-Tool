@@ -1,9 +1,9 @@
 import _ from 'lodash';
-import ConjunctionGroup from '../../components/builder/ConjunctionGroup';
-import TemplateInstance from '../../components/builder/TemplateInstance';
-import StringParameter from '../../components/builder/parameters/StringParameter';
-import { fullRenderComponent, shallowRenderComponent, createTemplateInstance } from '../../utils/test_helpers';
-import { instanceTree, elementGroups } from '../../utils/test_fixtures';
+import ConjunctionGroup from '../../../components/builder/ConjunctionGroup';
+import TemplateInstance from '../../../components/builder/TemplateInstance';
+import StringParameter from '../../../components/builder/parameters/StringParameter';
+import { fullRenderComponent, shallowRenderComponent, createTemplateInstance } from '../../../utils/test_helpers';
+import { instanceTree, elementGroups } from '../../../utils/test_fixtures';
 
 let rootConjunction;
 let childConjunction;

@@ -109,7 +109,7 @@ export default class Recommendation extends Component {
   renderSubpopulations = () => (
     <div className="recommendation__subpopulations">
       {/* TODO: The following should have options: any/all */}
-      <div className="recommendation__label">If all of the following apply...</div>
+      <div className="card-element__label">If all of the following apply...</div>
 
       <div className="recommendation__subpopulation-pills">
         {this.props.rec.subpopulations.map((subpop, i) => (
@@ -161,7 +161,7 @@ export default class Recommendation extends Component {
           {this.shouldShowSubpopulations() ? this.renderSubpopulations() : null}
 
           <div className="recommendation__title">
-            <div className="recommendation__label">Recommend...</div>
+            <div className="card-element__label">Recommend...</div>
 
             {/* <Select
               className="recommendation__grade"
@@ -192,7 +192,7 @@ export default class Recommendation extends Component {
           </div>
 
           <textarea
-            className="recommendation__text"
+            className="card-element__textarea"
             name="text"
             aria-label="Recommendation"
             title="Recommendation text"
@@ -203,10 +203,10 @@ export default class Recommendation extends Component {
 
           {this.state.showRationale ?
             <div className="recommendation__rationale">
-              <div className="recommendation__label">Rationale...</div>
+              <div className="card-element__label">Rationale...</div>
 
               <textarea
-                className="recommendation__text"
+                className="card-element__textarea"
                 name="rationale"
                 aria-label="Rationale"
                 title="Rationale text"

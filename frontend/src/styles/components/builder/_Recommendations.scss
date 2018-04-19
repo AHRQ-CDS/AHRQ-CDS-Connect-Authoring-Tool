@@ -7,11 +7,6 @@
 .recommendation {
   margin-bottom: 1em;
 
-  &__label {
-    font-size: 1.2em;
-    margin: 0.5em 0;
-  }
-
   &__subpopulation-pill {
     display: flex;
     align-items: center;
@@ -49,13 +44,6 @@
     button {
       border: 0.1em solid $border-color;
     }
-  }
-
-  &__text {
-    width: 100%;
-    min-height: 100px;
-    margin: 0.5em 0;
-    padding: 0.5em;
   }
 
   .card-element {
