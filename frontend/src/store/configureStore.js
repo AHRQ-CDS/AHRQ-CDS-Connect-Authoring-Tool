@@ -6,15 +6,18 @@ import rootReducer from '../reducers';
 import templateMerger from '../middleware/template_merger';
 
 export default function configureStore(initialState) {
-  const middleware = applyMiddleware(
-    promiseMiddleware(),
-    thunkMiddleware,
-    createLogger(),
-    templateMerger
-  );
+  const middleware = [promiseMiddleware(), thunkMiddleware, templateMerger];
+  // disable the redux-logger in a production environment
+  if (process.env.NODE_ENV !== 'production') {
+    middleware.push(createLogger());
+  }
 
   const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose; // eslint-disable-line no-underscore-dangle
-  const store = createStore(rootReducer, initialState, composeEnhancers(middleware));
+  const store = createStore(
+    rootReducer,
+    initialState,
+    composeEnhancers(applyMiddleware(...middleware))
+  );
 
   return store;
 }
