@@ -5,7 +5,7 @@ import FontAwesome from 'react-fontawesome';
 
 import TemplateInstance from './TemplateInstance';
 import ElementSelect from './ElementSelect';
-import StringParameter from './parameters/StringParameter';
+import StringParameter from './parameters/types/StringParameter';
 
 import createTemplateInstance from '../../utils/templates';
 import requiredIf from '../../utils/prop_types';

@@ -8,10 +8,10 @@ import ElementModal from './ElementModal';
 import CodeSelectModal from './CodeSelectModal';
 
 // Try to keep these ordered same as in folder (i.e. alphabetically)
-import NumberParameter from './parameters/NumberParameter';
-import StaticParameter from './parameters/StaticParameter';
-import StringParameter from './parameters/StringParameter';
-import ValueSetParameter from './parameters/ValueSetParameter';
+import NumberParameter from './parameters/types/NumberParameter';
+import StaticParameter from './parameters/types/StaticParameter';
+import StringParameter from './parameters/types/StringParameter';
+import ValueSetParameter from './parameters/types/ValueSetParameter';
 
 import ValueSetTemplate from './templates/ValueSetTemplate';
 

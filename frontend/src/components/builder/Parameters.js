@@ -1,14 +1,10 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import _ from 'lodash';
+
 import Parameter from './Parameter';
 
 export default class Parameters extends Component {
-  static propTypes = {
-    parameters: PropTypes.array.isRequired,
-    updateParameters: PropTypes.func.isRequired
-  };
-
   addParameter = () => {
     const newParameter = { name: null, type: null, value: null };
     const parameters = _.clone(this.props.parameters);
@@ -30,19 +26,18 @@ export default class Parameters extends Component {
 
   render() {
     return (
-      <div>
-          { this.props.parameters.map((parameter, i) => (
-              <Parameter
-                key={`param-${i}`}
-                index={i}
-                name={parameter.name}
-                type={parameter.type}
-                value={parameter.value}
-                updateInstanceOfParameter={this.updateInstanceOfParameter}
-                deleteParameter={this.deleteParameter}
-              />
-            ))
-        }
+      <div className="parameters">
+          {this.props.parameters.map((parameter, i) => (
+            <Parameter
+              key={`param-${i}`}
+              index={i}
+              name={parameter.name}
+              type={parameter.type}
+              value={parameter.value}
+              updateInstanceOfParameter={this.updateInstanceOfParameter}
+              deleteParameter={this.deleteParameter}
+            />
+          ))}
         <button className="button primary-button new-parameter" onClick={this.addParameter}>
           New parameter
         </button>
@@ -50,3 +45,8 @@ export default class Parameters extends Component {
     );
   }
 }
+
+Parameters.propTypes = {
+  parameters: PropTypes.array.isRequired,
+  updateParameters: PropTypes.func.isRequired
+};

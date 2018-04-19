@@ -1,10 +1,11 @@
 import Select from 'react-select';
+
 import Parameter from '../components/builder/Parameter';
 import Parameters from '../components/builder/Parameters';
-import NumberParameter from '../components/builder/parameters/NumberParameter';
-import StaticParameter from '../components/builder/parameters/StaticParameter';
-import StringParameter from '../components/builder/parameters/StringParameter';
-import ValueSetParameter from '../components/builder/parameters/ValueSetParameter';
+import NumberParameter from '../components/builder/parameters/types/NumberParameter';
+import StaticParameter from '../components/builder/parameters/types/StaticParameter';
+import StringParameter from '../components/builder/parameters/types/StringParameter';
+import ValueSetParameter from '../components/builder/parameters/types/ValueSetParameter';
 import { shallowRenderComponent } from '../utils/test_helpers';
 
 test('Parameter renders without crashing', () => {
