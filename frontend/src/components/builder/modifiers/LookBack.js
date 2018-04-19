@@ -54,8 +54,8 @@ export default class LookBack extends Component {
 
 LookBack.propTypes = {
   index: PropTypes.number.isRequired,
-  value: PropTypes.number.isRequired,
-  unit: PropTypes.string.isRequired,
+  value: PropTypes.number,
+  unit: PropTypes.string,
   updateAppliedModifier: PropTypes.func.isRequired
 };
 

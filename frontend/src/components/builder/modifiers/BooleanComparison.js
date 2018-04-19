@@ -32,6 +32,6 @@ export default class BooleanComparison extends Component {
 
 BooleanComparison.propTypes = {
   index: PropTypes.number.isRequired,
-  value: PropTypes.string.isRequired,
+  value: PropTypes.string,
   updateAppliedModifier: PropTypes.func.isRequired
 };

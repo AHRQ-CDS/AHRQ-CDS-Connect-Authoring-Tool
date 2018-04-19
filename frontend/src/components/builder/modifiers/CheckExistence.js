@@ -30,6 +30,6 @@ export default class CheckExistence extends Component {
 
 CheckExistence.propTypes = {
   index: PropTypes.number.isRequired,
-  value: PropTypes.string.isRequired,
+  value: PropTypes.string,
   updateAppliedModifier: PropTypes.func.isRequired
 };
