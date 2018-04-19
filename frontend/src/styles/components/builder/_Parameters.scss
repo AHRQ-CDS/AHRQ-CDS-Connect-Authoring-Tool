@@ -26,6 +26,12 @@
       border-color: $datepicker-bg $datepicker-bg $datepicker-bg $blue;
     }
   }
+
+  #quantity-unit-ucum,
+  #interval-of-quantity-unit-ucum {
+    width: 200px;
+    background-size: 15px;
+  }
 }
 
 // ------------------------- TYPES ----------------------------------------- //

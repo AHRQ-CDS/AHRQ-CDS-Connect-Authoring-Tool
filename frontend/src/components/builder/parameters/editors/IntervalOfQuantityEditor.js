@@ -2,7 +2,17 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import _ from 'lodash';
 
+const { Def } = window;
+
 export default class IntervalOfQuantityEditor extends Component {
+  componentDidMount = () => {
+    new Def.Autocompleter.Search( // eslint-disable-line no-new
+      'interval-of-quantity-unit-ucum',
+      'https://clin-table-search.lhc.nlm.nih.gov/api/ucum/v3/search',
+      { tableFormat: true, valueCols: [0], colHeaders: ['Code', 'Name'] }
+    );
+  }
+
   assignValue(evt) {
     let firstQuantity = null;
     let secondQuantity = null;
@@ -87,11 +97,16 @@ export default class IntervalOfQuantityEditor extends Component {
             />_
 
             <input
-              id={id}
-              name="unit"
               type="text"
-              value={ _.get(value, 'unit', null) || '' }
-              onChange={ (e) => {
+              id="interval-of-quantity-unit-ucum"
+              name="unit"
+              placeholder="enter unit"
+              aria-label="Enter Unit"
+              value={_.get(value, 'unit', null) || ''}
+              onChange={(e) => {
+                updateInstance({ name, type, value: this.assignValue(e) });
+              }}
+              onSelect={(e) => {
                 updateInstance({ name, type, value: this.assignValue(e) });
               }}
             />
