@@ -22,6 +22,7 @@ export default class StringParameter extends Component {
             type="text"
             name={id}
             value={value || ''}
+            aria-label={name}
             onChange={(event) => {
               updateInstance({ [event.target.name]: event.target.value });
             }}

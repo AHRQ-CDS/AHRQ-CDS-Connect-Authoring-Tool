@@ -62,8 +62,7 @@
   }
 
   .card-element__header {
-    border-bottom: 0.1em solid $border-color;
-    padding: 1em 2em;
+    padding: 0.5em 1em;
   }
 
   .card-group__buttons,
@@ -84,6 +83,7 @@
   }
 
   .card-element__body {
+    border-top: 0.1em solid $border-color;
     padding: 1em;
 
     &-element {

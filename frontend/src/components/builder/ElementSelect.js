@@ -162,7 +162,9 @@ export default class ElementSelect extends Component {
         </div>
       );
     }
+
     const { selectedElement } = this.state;
+
     // Get template for selected element
     let selectedTemplate;
     this.props.categories.find((group) => {
@@ -170,10 +172,6 @@ export default class ElementSelect extends Component {
       // If a template is found in the entries of a group, stop searching.
       return selectedTemplate !== undefined;
     });
-
-    if (selectedTemplate === undefined) {
-      console.error('No template found for selected element.');
-    }
 
     return (
       <div className="vsac-authenticate">
@@ -247,10 +245,8 @@ export default class ElementSelect extends Component {
             optionRenderer={optionRenderer}
             menuRenderer={ElementSelectMenuRenderer}
           />
-        </div>
 
-        {
-          selectedElement && !selectedElement.vsacAuthRequired &&
+          {selectedElement && !selectedElement.vsacAuthRequired &&
             <Select
               className="element-select__element-field"
               placeholder={`Select ${selectedElement.label} element`}
@@ -258,7 +254,8 @@ export default class ElementSelect extends Component {
               options={noAuthElementOptions}
               onChange={this.onNoAuthElementSelected}
               />
-        }
+          }
+        </div>
 
         {selectedElement && selectedElement.vsacAuthRequired && this.renderVSACLogin()}
       </div>
