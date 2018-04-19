@@ -626,9 +626,9 @@ export default class UserGuide extends Component {
                   Expressions modify an Element to define or narrow its intent. Many Elements will start as a list, which if
                   left as such, <em>will generate invalid CQL</em>. The user must ensure that the Return Type of every Element
                   returns a "Boolean" value. To achieve this, the user can apply Expressions to narrow or filter the previous
-                  Expression further. For example, one could start with a list of conditions, then apply the "Most Recent"
-                  Expression to find the most recent condition in the list, then apply "Quantity Value" and "Value Comparison"
-                  to achieve a Boolean Return Type (pictured below).
+                  Expression further. For example, one could start with a list of Diabetes Conditions, then apply the "Most
+                  Recent" Expression to find the most recent condition in the list, then apply "Is (Not) Null?" to achieve a
+                  Boolean Return Type (pictured below).
                 </p>
 
                 <p>
@@ -646,15 +646,15 @@ export default class UserGuide extends Component {
 
                 <ol>
                   <li>
-                    The "Expression List" lists all expressions applied to the element so far (in this example "Most Recent",
-                    "Quantity Value", and a comparison).
+                    The "Expression" list shows all expressions applied to the element so far (in this example "Most Recent"
+                    and "Is (Not) Null?").
                   </li>
 
                   <li>
                     The last Expression that has been applied will appear at the bottom of the Expression list, directly above
-                    the "Return Type" label. In this example, the last Expression is a comparison. Note that the comparison
-                    Expression has additional fields that need to be filled in. With comparisons, it is acceptable to fill in
-                    one or both sides of the comparison.
+                    the "Return Type" label. In this example, the last Expression is an "Is (Not) Null?" check. Note that this
+                    Expression has a field that needs to filled in (in this case, the value "is not null" from the dropdown).
+                    Separately, if an Expression is a comparison, is is acceptable to fill in one or both sides of the comparison.
                   </li>
 
                   <li>
@@ -809,7 +809,7 @@ export default class UserGuide extends Component {
                     src={screenshotUrl('Expanded_Subpopulation')}
                   className="img-fluid img-thumbnail rounded mx-auto d-block" />
                 </p>
-                
+
                 <ol>
                   <li>
                     The name of the Subpopulation can be edited when the Subpopulation is expanded using the "Subpopulation
@@ -874,10 +874,8 @@ export default class UserGuide extends Component {
                     src={screenshotUrl('Recommendation_with_Rationale')}
                   className="img-fluid img-thumbnail rounded mx-auto d-block" />
                 </p>
-
-                <ol>
-                  <li>The "Rationale" free text field is used to enter the Rationale for the Recommendation.</li>
-                </ol>
+                
+                <p>The "Rationale" free text field is used to enter the Rationale for the Recommendation.</p>
 
                 <p>
                   Recommendations can be further filtered by Subpopulations to target different Recommendations for different
