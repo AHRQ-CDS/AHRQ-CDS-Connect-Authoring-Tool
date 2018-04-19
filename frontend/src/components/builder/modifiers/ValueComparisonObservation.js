@@ -128,7 +128,7 @@ export default class ValueComparisonObservation extends Component {
 
 ValueComparisonObservation.propTypes = {
   index: PropTypes.number.isRequired,
-  unit: PropTypes.string.isRequired,
+  unit: PropTypes.string,
   minOperator: PropTypes.string,
   minValue: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
   maxOperator: PropTypes.string,
