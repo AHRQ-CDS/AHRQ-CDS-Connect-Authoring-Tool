@@ -49,6 +49,15 @@ export default [
     comparisonOperator: null
   },
   {
+    id: 'CheckInclusionInVS',
+    name: 'Exists within Valueset?',
+    inputTypes: ['system_quantity'],
+    returnType: 'boolean',
+    values: undefined,
+    cqlTemplate: 'CheckInclusionInVS',
+    cqlLibraryFunction: null
+  },
+  {
     id: 'QuantityValue',
     name: 'Quantity Value',
     inputTypes: ['observation'],
@@ -144,6 +153,14 @@ export default [
     cqlLibraryFunction: 'C3F.ProcedureInProgress'
   },
   // medications
+  {
+    id: 'ActiveMedication',
+    name: 'Active',
+    inputTypes: ['list_of_medications'],
+    returnType: 'list_of_medications',
+    cqlTemplate: 'BaseModifier',
+    cqlLibraryFunction: 'C3F.Active'
+  },
   {
     id: 'ActiveMedicationStatement',
     name: 'Active',

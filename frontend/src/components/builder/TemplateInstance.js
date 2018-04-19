@@ -547,7 +547,7 @@ export default class TemplateInstance extends Component {
           return null;
         })}
 
-        {this.props.templateInstance.id.includes('_vsac') &&
+        {this.props.templateInstance.id && this.props.templateInstance.id.includes('_vsac') &&
           <div className="vsac-info">
             {this.renderVSInfo()}
             {this.renderCodeInfo()}
@@ -574,7 +574,7 @@ export default class TemplateInstance extends Component {
       <div className="card-element__footer">
         {this.renderModifierSelect()}
 
-        {this.props.templateInstance.id.includes('_vsac') &&
+        {this.props.templateInstance.id && this.props.templateInstance.id.includes('_vsac') &&
           <div className="vsac-controls">
             {this.renderVSACOptions()}
           </div>

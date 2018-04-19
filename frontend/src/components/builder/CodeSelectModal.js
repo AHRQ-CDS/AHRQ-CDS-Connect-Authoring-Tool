@@ -113,6 +113,9 @@ export default class CodeSelectModal extends Component {
     if (codesToAdd === undefined) {
       codesToAdd = [];
     }
+    if (this.state.selectedCS === null) {
+      return;
+    }
     const newCode = {
       code: this.state.codeText, codeSystem: { name: this.state.selectedCS.value, id: this.state.selectedCS.id }
     };
