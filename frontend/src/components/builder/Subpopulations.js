@@ -95,7 +95,8 @@ export default class Subpopulations extends Component {
               getVSDetails={this.props.getVSDetails}
               isRetrievingDetails={this.props.isRetrievingDetails}
               vsacDetailsCodes={this.props.vsacDetailsCodes}
-              vsacFHIRCredentials={this.props.vsacFHIRCredentials} />
+              vsacFHIRCredentials={this.props.vsacFHIRCredentials}
+              validateReturnType={this.props.validateReturnType}/>
           ))}
 
         <button className="button primary-button new-subpopulation-button" onClick={this.addSubpopulation}>
@@ -134,5 +135,6 @@ Subpopulations.propTypes = {
   vsacSearchCount: PropTypes.number.isRequired,
   getVSDetails: PropTypes.func.isRequired,
   isRetrievingDetails: PropTypes.bool.isRequired,
-  vsacDetailsCodes: PropTypes.array.isRequired
+  vsacDetailsCodes: PropTypes.array.isRequired,
+  validateReturnType: PropTypes.bool
 };

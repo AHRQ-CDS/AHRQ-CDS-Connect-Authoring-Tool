@@ -532,8 +532,13 @@ export default class TemplateInstance extends Component {
 
   renderBody() {
     const validationError = this.validateElement();
+<<<<<<< HEAD
     const returnError = this.state.returnType === 'boolean' ? null
       : "Element must have return type 'boolean'.  Add expression(s) to change the return type.";
+=======
+    const returnError = (!(this.props.validateReturnType !== false) || this.state.returnType === 'boolean') ? null
+      : "Element must have return type 'boolean'.  Add expressions(s) to change the return type.";
+>>>>>>> Remove erroneous warning
 
     return (
       <div className="card-element__body">
@@ -665,5 +670,6 @@ TemplateInstance.propTypes = {
   vsacSearchCount: PropTypes.number.isRequired,
   getVSDetails: PropTypes.func.isRequired,
   isRetrievingDetails: PropTypes.bool.isRequired,
-  vsacDetailsCodes: PropTypes.array.isRequired
+  vsacDetailsCodes: PropTypes.array.isRequired,
+  validateReturnType: PropTypes.bool
 };
