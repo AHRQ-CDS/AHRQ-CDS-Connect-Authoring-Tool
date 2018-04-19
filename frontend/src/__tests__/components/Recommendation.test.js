@@ -74,13 +74,13 @@ test('has correct base class', () => {
 });
 
 test('deletes recommendation', () => {
-  component.find('.recommendation__remove button').simulate('click');
+  component.find('.recommendation__remove').simulate('click');
 
   expect(onRemove).toHaveBeenCalledWith(recUid);
 });
 
 test('displays recommendation text when passed in as prop', () => {
-  expect(componentFilledIn.find('textarea').at(0).node.value).toEqual(recText);
+  expect(componentFilledIn.find('.recommendation__text').at(0).node.value).toEqual(recText);
 });
 
 test('adds rationale', () => {
@@ -91,12 +91,12 @@ test('adds rationale', () => {
 
 test('displays rationale when passed in as prop', () => {
   expect(componentFilledIn.find('.recommendation__rationale')).toHaveLength(1);
-  expect(componentFilledIn.find('.recommendation__rationale textarea').node.value).toEqual(rationaleText);
+  expect(componentFilledIn.find('.recommendation__rationale .recommendation__text').node.value).toEqual(rationaleText);
 });
 
 test('can edit recommendation text', () => {
   const newText = 'This is a test.';
-  const recTextarea = componentFilledIn.find('textarea[name="text"]');
+  const recTextarea = componentFilledIn.find('.recommendation__text[name="text"]');
 
   recTextarea.simulate('change', { target: { name: 'text', value: newText } });
 
@@ -106,7 +106,7 @@ test('can edit recommendation text', () => {
 
 test('can edit rationale text', () => {
   const newText = 'This is a test.';
-  const rationaleTextarea = componentFilledIn.find('.recommendation__rationale textarea');
+  const rationaleTextarea = componentFilledIn.find('.recommendation__rationale .recommendation__text');
 
   rationaleTextarea.simulate('change', { target: { name: 'rationale', value: newText } });
 
