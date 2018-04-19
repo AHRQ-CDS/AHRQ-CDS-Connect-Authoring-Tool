@@ -12,27 +12,32 @@ export default class TimeEditor extends Component {
   }
 
   render() {
-    const { id, name, type, value, updateInstance } = this.props;
+    const { name, type, value, updateInstance } = this.props;
     const formId = _.uniqueId('parameter-');
 
     return (
-      <div className="form__group">
-        <label htmlFor={formId}>
-          Time: <TimePicker
-            id={id}
-            defaultValue={moment(value, 'HH:mm:ss').isValid() ? moment(value, 'HH:mm:ss') : null}
-            onChange={ (e) => {
-              updateInstance({ name, type, value: this.assignValue(e) });
-            }}
-          />
-        </label>
+      <div className="time-editor">
+        <div className="parameter__item row">
+          <div className="col-3 bold align-right">
+            <label htmlFor={formId}>Time:</label>
+          </div>
+
+          <div className="col-9">
+            <TimePicker
+              id={formId}
+              defaultValue={moment(value, 'HH:mm:ss').isValid() ? moment(value, 'HH:mm:ss') : null}
+              onChange={ (e) => {
+                updateInstance({ name, type, value: this.assignValue(e) });
+              }}
+            />
+          </div>
+        </div>
       </div>
     );
   }
 }
 
 TimeEditor.propTypes = {
-  id: PropTypes.string.isRequired,
   name: PropTypes.string,
   type: PropTypes.string.isRequired,
   value: PropTypes.string,

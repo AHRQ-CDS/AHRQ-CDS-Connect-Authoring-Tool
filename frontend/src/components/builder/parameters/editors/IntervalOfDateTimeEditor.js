@@ -64,60 +64,68 @@ export default class IntervalOfDateTimeEditor extends Component {
     const formId = _.uniqueId('parameter-');
 
     return (
-      <div className="form__group">
-        <label htmlFor={formId}>
-          <label htmlFor={formId}>First Date:</label>
-          <DatePicker
-            id={id}
-            selected={
-              moment(_.get(value, 'firstDate', null), 'YYYY-MM-DD').isValid()
-              ? moment(value.firstDate, 'YYYY-MM-DD')
-              : null}
-            dateFormat="L"
-            onChange={ (e) => {
-              updateInstance({ name, type, value: this.assignValue(e, 'firstDate') });
-            }}
-          />
+      <div className="interval-of-date-time-editor">
+        <div className="parameter__item row">
+          <div className="col-3 bold align-right">
+            <label htmlFor={formId}>First Date and Time:</label>
+          </div>
 
-          <label htmlFor={formId}>First Time:</label>
-          <TimePicker
-            id={id}
-            defaultValue={
-              moment(_.get(value, 'firstTime', null), 'HH:mm:ss').isValid()
-              ? moment(value.firstTime, 'HH:mm:ss')
-              : null}
-            onChange={ (e) => {
-              updateInstance({ name, type, value: this.assignValue(e, 'firstTime') });
-            }}
-          />
+          <div className="col-9 d-flex">
+            <DatePicker
+              id={formId}
+              selected={
+                moment(_.get(value, 'firstDate', null), 'YYYY-MM-DD').isValid()
+                ? moment(value.firstDate, 'YYYY-MM-DD')
+                : null}
+              dateFormat="L"
+              onChange={ (e) => {
+                updateInstance({ name, type, value: this.assignValue(e, 'firstDate') });
+              }}
+            />_
 
-          <br/>
+            <TimePicker
+              id={id}
+              defaultValue={
+                moment(_.get(value, 'firstTime', null), 'HH:mm:ss').isValid()
+                ? moment(value.firstTime, 'HH:mm:ss')
+                : null}
+              onChange={ (e) => {
+                updateInstance({ name, type, value: this.assignValue(e, 'firstTime') });
+              }}
+            />
+          </div>
+        </div>
 
-          <label htmlFor={formId}>Second Date:</label>
-          <DatePicker
-            id={id}
-            selected={
-              moment(_.get(value, 'secondDate', null), 'YYYY-MM-DD').isValid()
-              ? moment(value.secondDate, 'YYYY-MM-DD')
-              : null}
-            dateFormat="L"
-            onChange={ (e) => {
-              updateInstance({ name, type, value: this.assignValue(e, 'secondDate') });
-            }}
-          />
+        <div className="parameter__item row">
+          <div className="col-3 bold align-right">
+            <label htmlFor={formId}>Second Date and Time:</label>
+          </div>
 
-          <label htmlFor={formId}>Second Time:</label>
-          <TimePicker
-            id={id}
-            defaultValue={
-              moment(_.get(value, 'secondTime', null), 'HH:mm:ss').isValid()
-              ? moment(value.secondTime, 'HH:mm:ss')
-              : null}
-            onChange={ (e) => {
-              updateInstance({ name, type, value: this.assignValue(e, 'secondTime') });
-            }}
-          />
-        </label>
+          <div className="col-9 d-flex">
+            <DatePicker
+              id={formId}
+              selected={
+                moment(_.get(value, 'secondDate', null), 'YYYY-MM-DD').isValid()
+                ? moment(value.secondDate, 'YYYY-MM-DD')
+                : null}
+              dateFormat="L"
+              onChange={ (e) => {
+                updateInstance({ name, type, value: this.assignValue(e, 'secondDate') });
+              }}
+            />_
+
+            <TimePicker
+              id={id}
+              defaultValue={
+                moment(_.get(value, 'secondTime', null), 'HH:mm:ss').isValid()
+                ? moment(value.secondTime, 'HH:mm:ss')
+                : null}
+              onChange={ (e) => {
+                updateInstance({ name, type, value: this.assignValue(e, 'secondTime') });
+              }}
+            />
+          </div>
+        </div>
       </div>
     );
   }

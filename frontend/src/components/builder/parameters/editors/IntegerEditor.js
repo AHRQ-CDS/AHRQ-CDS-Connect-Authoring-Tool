@@ -11,29 +11,33 @@ export default class IntegerEditor extends Component {
   }
 
   render() {
-    const { id, name, type, value, updateInstance } = this.props;
+    const { name, type, value, updateInstance } = this.props;
     const formId = _.uniqueId('parameter-');
 
     return (
-      <div className="form__group">
-        <label htmlFor={formId}>
-          Integer:
-          <input
-            id={id}
-            type="number"
-            value={(value || value === 0) ? value : ''}
-            onChange={ (e) => {
-              updateInstance({ name, type, value: this.assignValue(e) });
-            }}
-          />
-        </label>
+      <div className="integer-editor">
+        <div className="parameter__item row">
+          <div className="col-3 bold align-right">
+            <label htmlFor={formId}>Integer:</label>
+          </div>
+
+          <div className="col-9">
+            <input
+              id={formId}
+              type="number"
+              value={(value || value === 0) ? value : ''}
+              onChange={ (e) => {
+                updateInstance({ name, type, value: this.assignValue(e) });
+              }}
+            />
+          </div>
+        </div>
       </div>
     );
   }
 }
 
 IntegerEditor.propTypes = {
-  id: PropTypes.string.isRequired,
   name: PropTypes.string,
   type: PropTypes.string.isRequired,
   value: PropTypes.number,

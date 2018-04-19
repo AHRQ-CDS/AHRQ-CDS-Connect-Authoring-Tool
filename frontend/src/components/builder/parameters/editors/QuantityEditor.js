@@ -38,10 +38,13 @@ export default class QuantityEditor extends Component {
     const formId = _.uniqueId('parameter-');
 
     return (
-      <div className="form__group">
-        <label htmlFor={formId}>
-          <form>
+      <div className="quantity-editor">
+        <div className="parameter__item row">
+          <div className="col-3 bold align-right">
             <label htmlFor={formId}>Quantity:</label>
+          </div>
+
+          <div className="col-9">
             <input
               id={id}
               name="quantity"
@@ -55,7 +58,8 @@ export default class QuantityEditor extends Component {
               }}
             />
 
-            <label htmlFor={formId}>Unit:</label>
+            <span>  </span>
+
             <input
               id={id}
               name="unit"
@@ -65,8 +69,8 @@ export default class QuantityEditor extends Component {
                 updateInstance({ name, type, value: this.assignValue(e) });
               }}
             />
-          </form>
-        </label>
+          </div>
+        </div>
       </div>
     );
   }

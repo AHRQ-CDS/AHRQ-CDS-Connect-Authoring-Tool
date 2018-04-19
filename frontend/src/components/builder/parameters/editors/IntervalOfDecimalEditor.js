@@ -45,12 +45,15 @@ export default class IntervalOfDecimalEditor extends Component {
     const formId = _.uniqueId('parameter-');
 
     return (
-      <div className="form__group">
-        <label htmlFor={formId}>
-          <form>
-            <label htmlFor={formId}>First Decimal:</label>
+      <div className="interval-of-decimal-editor">
+        <div className="parameter__item row">
+          <div className="col-3 bold align-right">
+            <label htmlFor={formId}>Decimal Inverval:</label>
+          </div>
+
+          <div className="col-9 d-flex">
             <input
-              id={id}
+              id={formId}
               name="firstDecimal"
               type="number"
               value={
@@ -60,9 +63,8 @@ export default class IntervalOfDecimalEditor extends Component {
               onChange={ (e) => {
                 updateInstance({ name, type, value: this.assignValue(e) });
               }}
-            />
+            />_
 
-            <label htmlFor={formId}>Second Decimal:</label>
             <input
               id={id}
               name="secondDecimal"
@@ -75,8 +77,8 @@ export default class IntervalOfDecimalEditor extends Component {
                 updateInstance({ name, type, value: this.assignValue(e) });
               }}
             />
-          </form>
-        </label>
+          </div>
+        </div>
       </div>
     );
   }

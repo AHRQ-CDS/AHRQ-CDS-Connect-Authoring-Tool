@@ -22,32 +22,36 @@ export default class DecimalEditor extends Component {
   }
 
   render() {
-    const { id, name, type, value, updateInstance } = this.props;
+    const { name, type, value, updateInstance } = this.props;
     const formId = _.uniqueId('parameter-');
 
     return (
-      <div className="form__group">
-        <label htmlFor={formId}>
-          Decimal:
-          <input
-            id={id}
-            type="number"
-            value={
-              (_.get(value, 'decimal', null) || _.get(value, 'decimal', null) === 0)
-              ? _.get(value, 'decimal')
-              : '' }
-            onChange={ (e) => {
-              updateInstance({ name, type, value: this.assignValue(e) });
-            }}
-          />
-        </label>
+      <div className="decimal-editor">
+        <div className="parameter__item row">
+          <div className="col-3 bold align-right">
+            <label htmlFor={formId}>Decimal:</label>
+          </div>
+
+          <div className="col-9">
+            <input
+              id={formId}
+              type="number"
+              value={
+                (_.get(value, 'decimal', null) || _.get(value, 'decimal', null) === 0)
+                ? _.get(value, 'decimal')
+                : '' }
+              onChange={ (e) => {
+                updateInstance({ name, type, value: this.assignValue(e) });
+              }}
+            />
+          </div>
+        </div>
       </div>
     );
   }
 }
 
 DecimalEditor.propTypes = {
-  id: PropTypes.string.isRequired,
   name: PropTypes.string,
   type: PropTypes.string.isRequired,
   value: PropTypes.object,

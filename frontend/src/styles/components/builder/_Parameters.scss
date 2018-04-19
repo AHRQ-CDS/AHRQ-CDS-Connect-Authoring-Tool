@@ -1,24 +1,34 @@
-.parameter__header {
-  background-color: $gray-lightest;
-  border: $border-global;
-  border-radius: $border-radius;
+// ------------------------- EDITORS --------------------------------------- //
 
-  &:not(:last-child) {
+.parameter {
+  &__item {
+    align-items: center;
     margin-bottom: 1em;
   }
 
-  > .form__group {
-    margin: 0;
+  .card-element {
+    margin-bottom: 1em;
+  }
+
+  .react-datepicker__navigation {
+    height: 5px;
+    box-shadow: none;
+
+    &:hover {
+      background-color: $datepicker-bg;
+    }
+
+    &--previous:hover {
+      border-color: $datepicker-bg $blue $datepicker-bg $datepicker-bg;
+    }
+
+    &--next:hover {
+      border-color: $datepicker-bg $datepicker-bg $datepicker-bg $blue;
+    }
   }
 }
 
-.parameter__content {
-  padding: 1em;
-
-  .form__group {
-    margin: 0 0 1em;
-  }
-}
+// ------------------------- TYPES ----------------------------------------- //
 
 .string-parameter,
 .number-parameter,

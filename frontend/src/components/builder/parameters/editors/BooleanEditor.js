@@ -9,19 +9,24 @@ export default class BooleanEditor extends Component {
     const formId = _.uniqueId('parameter-');
 
     return (
-      <div className="form__group">
-        <label htmlFor={formId}>
-          Boolean:
-          <Select
-            id={id}
-            aria-label={'Select True or False'}
-            inputProps={{ title: 'Select True or False' }}
-            clearable={true}
-            options={[{ value: 'true', label: 'True' }, { value: 'false', label: 'False' }]}
-            value={value}
-            onChange={ (e) => { updateInstance({ name, type, value: _.get(e, 'value', null) }); }}
-          />
-        </label>
+      <div className="boolean-editor">
+        <div className="parameter__item row">
+          <div className="col-3 bold align-right">
+            <label htmlFor={formId}>Boolean:</label>
+          </div>
+
+          <div className="col-9">
+            <Select
+              id={id}
+              aria-label={'Select True or False'}
+              inputProps={{ title: 'Select True or False', id: formId }}
+              clearable={true}
+              options={[{ value: 'true', label: 'True' }, { value: 'false', label: 'False' }]}
+              value={value}
+              onChange={ (e) => { updateInstance({ name, type, value: _.get(e, 'value', null) }); }}
+            />
+          </div>
+        </div>
       </div>
     );
   }

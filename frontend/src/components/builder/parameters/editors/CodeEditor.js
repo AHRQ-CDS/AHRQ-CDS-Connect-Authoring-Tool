@@ -57,12 +57,15 @@ export default class CodeEditor extends Component {
     const formId = _.uniqueId('parameter-');
 
     return (
-      <div className="form__group">
-        <label htmlFor={formId}>
-          <form>
+      <div className="code-editor">
+        <div className="parameter__item row">
+          <div className="col-3 bold align-right">
             <label htmlFor={formId}>System:</label>
+          </div>
+
+          <div className="col-9">
             <input
-              id={id}
+              id={formId}
               name="system"
               type="text"
               value={ _.get(value, 'system', null) || '' }
@@ -70,8 +73,15 @@ export default class CodeEditor extends Component {
                 updateInstance({ name, type, value: this.assignValue(e) });
               }}
             />
-            <br/>
+          </div>
+        </div>
+
+        <div className="parameter__item row">
+          <div className="col-3 bold align-right">
             <label htmlFor={formId}>System URI:</label>
+          </div>
+
+          <div className="col-9">
             <input
               id={id}
               name="uri"
@@ -81,8 +91,15 @@ export default class CodeEditor extends Component {
                 updateInstance({ name, type, value: this.assignValue(e) });
               }}
             />
-            <br/>
+          </div>
+        </div>
+
+        <div className="parameter__item row">
+          <div className="col-3 bold align-right">
             <label htmlFor={formId}>Code:</label>
+          </div>
+
+          <div className="col-9">
             <input
               id={id}
               name="code"
@@ -92,8 +109,15 @@ export default class CodeEditor extends Component {
                 updateInstance({ name, type, value: this.assignValue(e) });
               }}
             />
-            <br/>
+          </div>
+        </div>
+
+        <div className="parameter__item row">
+          <div className="col-3 bold align-right">
             <label htmlFor={formId}>Display:</label>
+          </div>
+
+          <div className="col-9">
             <input
               id={id}
               name="display"
@@ -103,8 +127,8 @@ export default class CodeEditor extends Component {
                 updateInstance({ name, type, value: this.assignValue(e) });
               }}
             />
-          </form>
-        </label>
+          </div>
+        </div>
       </div>
     );
   }

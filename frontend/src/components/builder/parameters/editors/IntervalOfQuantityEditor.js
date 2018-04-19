@@ -53,12 +53,15 @@ export default class IntervalOfQuantityEditor extends Component {
     const formId = _.uniqueId('parameter-');
 
     return (
-      <div className="form__group">
-        <label htmlFor={formId}>
-          <form>
-            <label htmlFor={formId}>First Quantity:</label>
+      <div className="interval-of-quantity-editor">
+        <div className="parameter__item row">
+          <div className="col-3 bold align-right">
+            <label htmlFor={formId}>Quantity Inverval:</label>
+          </div>
+
+          <div className="col-9 d-flex">
             <input
-              id={id}
+              id={formId}
               name="firstQuantity"
               type="number"
               value={
@@ -68,9 +71,8 @@ export default class IntervalOfQuantityEditor extends Component {
               onChange={ (e) => {
                 updateInstance({ name, type, value: this.assignValue(e) });
               }}
-            />
+            />_
 
-            <label htmlFor={formId}>Second Quantity:</label>
             <input
               id={id}
               name="secondQuantity"
@@ -82,9 +84,8 @@ export default class IntervalOfQuantityEditor extends Component {
               onChange={ (e) => {
                 updateInstance({ name, type, value: this.assignValue(e) });
               }}
-            />
+            />_
 
-            <label htmlFor={formId}>Unit:</label>
             <input
               id={id}
               name="unit"
@@ -94,8 +95,8 @@ export default class IntervalOfQuantityEditor extends Component {
                 updateInstance({ name, type, value: this.assignValue(e) });
               }}
             />
-          </form>
-        </label>
+          </div>
+        </div>
       </div>
     );
   }

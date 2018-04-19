@@ -41,31 +41,45 @@ export default class DateTimeEditor extends Component {
     const formId = _.uniqueId('parameter-');
 
     return (
-      <div className="form__group">
-        <label htmlFor={formId}>
-          Date: <DatePicker
-            id={id}
-            selected={
-              moment(_.get(value, 'date', null), 'YYYY-MM-DD').isValid()
-              ? moment(value.date, 'YYYY-MM-DD')
-              : null}
-            dateFormat="L"
-            onChange={ (e) => {
-              updateInstance({ name, type, value: this.assignValue(e, 'date') });
-            }}
-          />
+      <div className="date-time-editor">
+        <div className="parameter__item row">
+          <div className="col-3 bold align-right">
+            <label htmlFor={formId}>Date:</label>
+          </div>
 
-          Time: <TimePicker
-            id={id}
-            defaultValue={
-              moment(_.get(value, 'time', null), 'HH:mm:ss').isValid()
-              ? moment(value.time, 'HH:mm:ss')
-              : null}
-            onChange={ (e) => {
-              updateInstance({ name, type, value: this.assignValue(e, 'time') });
-            }}
-          />
-        </label>
+          <div className="col-9">
+            <DatePicker
+              id={id}
+              selected={
+                moment(_.get(value, 'date', null), 'YYYY-MM-DD').isValid()
+                ? moment(value.date, 'YYYY-MM-DD')
+                : null}
+              dateFormat="L"
+              onChange={ (e) => {
+                updateInstance({ name, type, value: this.assignValue(e, 'date') });
+              }}
+            />
+          </div>
+        </div>
+
+        <div className="parameter__item row">
+          <div className="col-3 bold align-right">
+            <label htmlFor={formId}>Time:</label>
+          </div>
+
+          <div className="col-9">
+            <TimePicker
+              id={id}
+              defaultValue={
+                moment(_.get(value, 'time', null), 'HH:mm:ss').isValid()
+                ? moment(value.time, 'HH:mm:ss')
+                : null}
+              onChange={ (e) => {
+                updateInstance({ name, type, value: this.assignValue(e, 'time') });
+              }}
+            />
+          </div>
+        </div>
       </div>
     );
   }

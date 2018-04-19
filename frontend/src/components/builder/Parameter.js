@@ -3,6 +3,9 @@ import PropTypes from 'prop-types';
 import Select from 'react-select';
 import FontAwesome from 'react-fontawesome';
 
+import 'react-datepicker/dist/react-datepicker.css';
+import 'rc-time-picker/assets/index.css';
+
 import StringParameter from './parameters/types/StringParameter';
 import BooleanEditor from './parameters/editors/BooleanEditor';
 import CodeEditor from './parameters/editors/CodeEditor';
@@ -68,6 +71,7 @@ export default class Parameter extends Component {
   }
 
   render() {
+    const { index, name, type, value, deleteParameter } = this.props;
     const typeOptions = [
       { value: 'Boolean', label: 'Boolean' },
       { value: 'Code', label: 'Code' },
@@ -85,48 +89,51 @@ export default class Parameter extends Component {
     ];
 
     return (
-      <div className="parameter__header">
-        <div className="form__group">
-          <div key={'index'}>
-            <div className="parameter__content">
-              <button
-                aria-label="Delete Parameter"
-                className="button pull-right secondary-button"
-                onClick={() => { this.props.deleteParameter(this.props.index); }}>
-                <FontAwesome fixedWidth name='times' />
-              </button>
+      <div className="parameter card-group card-group__top">
+        <div className="card-element">
+          <div className="card-element__header">
+            <StringParameter
+              id={`param-name-${index}`}
+              name={'Parameter Name'}
+              value={name}
+              updateInstance={e => (this.updateParameter({
+                name: e[`param-name-${index}`],
+                type,
+                value
+              }))}
+            />
 
-              <StringParameter
-                id={`param-name-${this.props.index}`}
-                name={'Parameter Name'}
-                value={this.props.name}
-                updateInstance={e => (this.updateParameter({
-                  name: e[`param-name-${this.props.index}`],
-                  type: this.props.type,
-                  value: this.props.value
-                }))}
-              />
+            <button
+              aria-label="Delete Parameter"
+              className="button secondary-button"
+              onClick={() => { deleteParameter(index); }}>
+              <FontAwesome fixedWidth name='times' />
+            </button>
+          </div>
 
-              <div className="form__group">
-                <label>
-                  Parameter Type:
-                  <Select
-                    aria-label={'Select Parameter Type'}
-                    inputProps={{ title: 'Select Parameter Type' }}
-                    clearable={false}
-                    options={typeOptions}
-                    value={this.props.type}
-                    onChange={e => this.updateParameter({
-                      name: this.props.name,
-                      type: e.value,
-                      value: null
-                    })}
-                  />
-                </label>
+          <div className="card-element__body">
+            <div className="parameter__item row">
+              <div className="col-3 bold align-right">
+                <label htmlFor={`parameter-${index}`}>Parameter Type:</label>
               </div>
 
-              {this.renderParameter()}
+              <div className="col-9">
+                <Select
+                  aria-label={'Select Parameter Type'}
+                  inputProps={{ title: 'Select Parameter Type', id: `parameter-${index}` }}
+                  clearable={false}
+                  options={typeOptions}
+                  value={type}
+                  onChange={e => this.updateParameter({
+                    name,
+                    type: e.value,
+                    value: null
+                  })}
+                />
+              </div>
             </div>
+
+            {this.renderParameter()}
           </div>
         </div>
       </div>
