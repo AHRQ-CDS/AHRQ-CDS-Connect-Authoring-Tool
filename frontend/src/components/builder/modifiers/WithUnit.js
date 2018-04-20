@@ -37,6 +37,6 @@ export default class WithUnit extends Component {
 
 WithUnit.propTypes = {
   index: PropTypes.number.isRequired,
-  unit: PropTypes.string.isRequired,
+  unit: PropTypes.string,
   updateAppliedModifier: PropTypes.func.isRequired
 };

@@ -192,7 +192,7 @@ class CqlArtifact {
       if (parameter.type === "Code" || parameter.type === "Concept") {
         let system = _.get(parameter, 'value.system', null);
         let uri = _.get(parameter, 'value.uri', null);
-        if (system && uri) { this.codeSystemMap.set(system, {id: uri}); }
+        if (system && uri) { this.codeSystemMap.set(system, { name: system, id: uri }); }
       }
     }
     );
@@ -329,7 +329,7 @@ class CqlArtifact {
           if ('concepts' in observationValueSets) {
             observationValueSets.concepts.forEach((concept) => {
               concept.codes.forEach((code) => {
-                this.codeSystemMap.set(code.codeSystem.name, code.codeSystem.id);
+                this.codeSystemMap.set(code.codeSystem.name, code.codeSystem);
                 this.codeMap.set(code.name, code);
               });
               this.conceptMap.set(concept.name, concept);
@@ -338,11 +338,13 @@ class CqlArtifact {
             if ('checkInclusionInVS' in observationValueSets) {
               element.modifiers.forEach((modifier, index) => {
                 if (modifier.id === 'CheckInclusionInVS') {
-                  element.modifiers[index].values = observationValueSets.checkInclusionInVS.name;
+                  element.modifiers[index].values = {
+                    valueSet: {
+                      name: observationValueSets.checkInclusionInVS.name,
+                      oid: observationValueSets.checkInclusionInVS.oid }
+                  };
                 }
               });
-              const checkInclInVSName = observationValueSets.checkInclusionInVS.name;
-              this.resourceMap.set(checkInclInVSName, observationValueSets.checkInclusionInVS);
             }
             context.values = [observationValueSets.name];
           } else {
@@ -354,7 +356,8 @@ class CqlArtifact {
             // groups the queries for each valueset into one expression that is then referenced
             if (observationValueSets.observations.length > 1) {
               if (!this.referencedElements.find(concept => concept.name === `${observationValueSets.id}_valuesets`)) {
-                const multipleValueSetExpression = createMultipleValueSetExpression(observationValueSets.id,
+                const multipleValueSetExpression = createMultipleValueSetExpression(
+                  `${observationValueSets.id}_valuesets`,
                   observationValueSets.observations,
                   'Observation');
                 this.referencedElements.push(multipleValueSetExpression);
@@ -365,7 +368,7 @@ class CqlArtifact {
           }
           element.modifiers.forEach((modifier) => {
             if (modifier.id === 'ValueComparisonObservation') { // TODO put a key on modifiers to identify modifiers that require unit
-              modifier.values.unit = observationValueSets.units.code;
+              modifier.values.unit = observationValueSets.units.code.replace(/\'/g, '');
             }
           });
           break;
@@ -394,7 +397,7 @@ class CqlArtifact {
           if ('concepts' in conditionValueSets) {
             conditionValueSets.concepts.forEach((concept) => {
               concept.codes.forEach((code) => {
-                this.codeSystemMap.set(code.codeSystem.name, code.codeSystem.id);
+                this.codeSystemMap.set(code.codeSystem.name, code.codeSystem);
                 this.codeMap.set(code.name, code);
               });
               this.conceptMap.set(concept.name, concept);
@@ -552,7 +555,7 @@ class CqlArtifact {
           if ('concepts' in pregnancyValueSets) {
             pregnancyValueSets.concepts.forEach((concept) => {
               concept.codes.forEach((code) => {
-                this.codeSystemMap.set(code.codeSystem.name, code.codeSystem.id);
+                this.codeSystemMap.set(code.codeSystem.name, code.codeSystem);
                 this.codeMap.set(code.name, code);
               });
               this.conceptMap.set(concept.name, concept);
@@ -572,7 +575,7 @@ class CqlArtifact {
           if ('concepts' in breastfeedingValueSets) {
             breastfeedingValueSets.concepts.forEach((concept) => {
               concept.codes.forEach((code) => {
-                this.codeSystemMap.set(code.codeSystem.name, code.codeSystem.id);
+                this.codeSystemMap.set(code.codeSystem.name, code.codeSystem);
                 this.codeMap.set(code.name, code);
               });
               this.conceptMap.set(concept.name, concept);
@@ -625,6 +628,7 @@ class CqlArtifact {
       if (context.withoutModifiers || context.components) {
         return ejs.render(specificMap[context.template], context);
       }
+      if (context.template === "ObservationByConcept") context.template = "ObservationsByConcept";
       if (!(context.template in templateMap)) console.error(`Template could not be found: ${context.template}`);
       context.values.forEach((value, index) => {
         context.values[index] = ejs.render(templateMap[context.template], { element_context: value });
