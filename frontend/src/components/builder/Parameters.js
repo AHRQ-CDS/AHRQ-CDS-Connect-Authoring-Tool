@@ -27,17 +27,24 @@ export default class Parameters extends Component {
   render() {
     return (
       <div className="parameters">
-          {this.props.parameters.map((parameter, i) => (
-            <Parameter
-              key={`param-${i}`}
-              index={i}
-              name={parameter.name}
-              type={parameter.type}
-              value={parameter.value}
-              updateInstanceOfParameter={this.updateInstanceOfParameter}
-              deleteParameter={this.deleteParameter}
-            />
-          ))}
+        {this.props.parameters.map((parameter, i) => (
+          <Parameter
+            key={`param-${i}`}
+            index={i}
+            name={parameter.name}
+            type={parameter.type}
+            value={parameter.value}
+            updateInstanceOfParameter={this.updateInstanceOfParameter}
+            deleteParameter={this.deleteParameter}
+            timeLastAuthenticated={this.props.timeLastAuthenticated}
+            vsacFHIRCredentials={this.props.vsacFHIRCredentials}
+            loginVSACUser={this.props.loginVSACUser}
+            setVSACAuthStatus={this.props.setVSACAuthStatus}
+            vsacStatus={this.props.vsacStatus}
+            vsacStatusText={this.props.vsacStatusText}
+          />
+        ))}
+
         <button className="button primary-button new-parameter" onClick={this.addParameter}>
           New parameter
         </button>
@@ -48,5 +55,11 @@ export default class Parameters extends Component {
 
 Parameters.propTypes = {
   parameters: PropTypes.array.isRequired,
-  updateParameters: PropTypes.func.isRequired
+  updateParameters: PropTypes.func.isRequired,
+  timeLastAuthenticated: PropTypes.instanceOf(Date),
+  vsacFHIRCredentials: PropTypes.object,
+  loginVSACUser: PropTypes.func.isRequired,
+  setVSACAuthStatus: PropTypes.func.isRequired,
+  vsacStatus: PropTypes.string,
+  vsacStatusText: PropTypes.string
 };

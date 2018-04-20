@@ -61,24 +61,25 @@ export default class IntervalOfDateTimeEditor extends Component {
 
   render() {
     const { id, name, type, value, updateInstance } = this.props;
-    const formId = _.uniqueId('parameter-');
+    const formIdFirst = _.uniqueId('parameter-date-');
+    const formIdSecond = _.uniqueId('parameter-time-');
 
     return (
       <div className="interval-of-date-time-editor">
         <div className="parameter__item row">
           <div className="col-3 bold align-right">
-            <label htmlFor={formId}>First Date and Time:</label>
+            <label htmlFor={formIdFirst}>First Date and Time:</label>
           </div>
 
           <div className="col-9 d-flex">
             <DatePicker
-              id={formId}
+              id={formIdFirst}
               selected={
                 moment(_.get(value, 'firstDate', null), 'YYYY-MM-DD').isValid()
                 ? moment(value.firstDate, 'YYYY-MM-DD')
                 : null}
               dateFormat="L"
-              onChange={ (e) => {
+              onChange={(e) => {
                 updateInstance({ name, type, value: this.assignValue(e, 'firstDate') });
               }}
             />_
@@ -89,7 +90,7 @@ export default class IntervalOfDateTimeEditor extends Component {
                 moment(_.get(value, 'firstTime', null), 'HH:mm:ss').isValid()
                 ? moment(value.firstTime, 'HH:mm:ss')
                 : null}
-              onChange={ (e) => {
+              onChange={(e) => {
                 updateInstance({ name, type, value: this.assignValue(e, 'firstTime') });
               }}
             />
@@ -98,18 +99,18 @@ export default class IntervalOfDateTimeEditor extends Component {
 
         <div className="parameter__item row">
           <div className="col-3 bold align-right">
-            <label htmlFor={formId}>Second Date and Time:</label>
+            <label htmlFor={formIdSecond}>Second Date and Time:</label>
           </div>
 
           <div className="col-9 d-flex">
             <DatePicker
-              id={formId}
+              id={formIdSecond}
               selected={
                 moment(_.get(value, 'secondDate', null), 'YYYY-MM-DD').isValid()
                 ? moment(value.secondDate, 'YYYY-MM-DD')
                 : null}
               dateFormat="L"
-              onChange={ (e) => {
+              onChange={(e) => {
                 updateInstance({ name, type, value: this.assignValue(e, 'secondDate') });
               }}
             />_
@@ -120,7 +121,7 @@ export default class IntervalOfDateTimeEditor extends Component {
                 moment(_.get(value, 'secondTime', null), 'HH:mm:ss').isValid()
                 ? moment(value.secondTime, 'HH:mm:ss')
                 : null}
-              onChange={ (e) => {
+              onChange={(e) => {
                 updateInstance({ name, type, value: this.assignValue(e, 'secondTime') });
               }}
             />

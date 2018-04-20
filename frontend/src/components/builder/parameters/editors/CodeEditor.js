@@ -2,133 +2,127 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import _ from 'lodash';
 
+import CodeSelectModal from '../../CodeSelectModal';
+import VSACAuthenticationModal from '../../VSACAuthenticationModal';
+
 export default class CodeEditor extends Component {
-  assignValue(evt) {
-    let system = null;
-    let uri = null;
-    let code = null;
-    let display = null;
+  constructor(props) {
+    super(props);
 
-    switch (evt.target.name) {
-      case 'system':
-        system = _.get(evt, 'target.value', null);
-        uri = _.get(this, 'props.value.uri', null);
-        code = _.get(this, 'props.value.code', null);
-        display = _.get(this, 'props.value.display', null);
-        break;
-      case 'uri':
-        system = _.get(this, 'props.value.system', null);
-        uri = _.get(evt, 'target.value', null);
-        code = _.get(this, 'props.value.code', null);
-        display = _.get(this, 'props.value.display', null);
-        break;
-      case 'code':
-        system = _.get(this, 'props.value.system', null);
-        uri = _.get(this, 'props.value.uri', null);
-        code = _.get(evt, 'target.value', null);
-        display = _.get(this, 'props.value.display', null);
-        break;
-      case 'display':
-        system = _.get(this, 'props.value.system', null);
-        uri = _.get(this, 'props.value.uri', null);
-        code = _.get(this, 'props.value.code', null);
-        display = _.get(evt, 'target.value', null);
-        break;
-      default:
-        break;
+    const { value } = props;
+
+    this.state = {
+      hasSelectedCode: value,
+      system: value ? value.system : '',
+      uri: value ? value.uri : '',
+      code: value ? value.code : '',
+      display: value ? value.display : '',
+      str: value ? value.str : ''
+    };
+  }
+
+  handleCodeAdded = ({ system, uri, code, display }) => {
+    let str;
+    if (this.props.isConcept) {
+      str = `Concept { Code '${code}' from "${system}" } display '${display}'`;
+    } else {
+      str = `Code '${code}' from "${system}" display '${display}'`;
     }
 
-    if (system || uri || code || display) {
-      let str;
-      if (this.props.isConcept) {
-        str = `Concept { Code '${code}' from "${system}" } display '${display}'`;
-      } else {
-        str = `Code '${code}' from "${system}" display '${display}'`;
-      }
+    this.setState({
+      hasSelectedCode: true,
+      system,
+      uri,
+      code,
+      display,
+      str
+    });
 
-      return { system, uri, code, display, str };
+    this.props.updateInstance({ value: { system, uri, code, display, str } });
+  }
+
+  renderCodePicker() {
+    if ((this.props.timeLastAuthenticated < new Date() - 27000000 || this.props.vsacFHIRCredentials.username == null)
+         && !this.state.hasSelectedCode) {
+      return (
+        <div id="vsac-controls">
+          <VSACAuthenticationModal
+            loginVSACUser={this.props.loginVSACUser}
+            setVSACAuthStatus={this.props.setVSACAuthStatus}
+            vsacStatus={this.props.vsacStatus}
+            vsacStatusText={this.props.vsacStatusText}
+          />
+        </div>
+      );
     }
 
-    return null;
+    return (
+      <CodeSelectModal
+        className="element-select__modal"
+        addToParameter={this.handleCodeAdded}
+        vsacFHIRCredentials={this.props.vsacFHIRCredentials}
+      />
+    );
   }
 
   render() {
-    const { id, name, type, value, updateInstance } = this.props;
     const formId = _.uniqueId('parameter-');
 
     return (
       <div className="code-editor">
-        <div className="parameter__item row">
-          <div className="col-3 bold align-right">
-            <label htmlFor={formId}>System:</label>
-          </div>
+        {this.state.hasSelectedCode ?
+          <div className="code-editor__show">
+            <div className="parameter__item row">
+              <div className="col-3 bold align-right">
+                <label htmlFor={formId}>System:</label>
+              </div>
 
-          <div className="col-9">
-            <input
-              id={formId}
-              name="system"
-              type="text"
-              value={ _.get(value, 'system', null) || '' }
-              onChange={ (e) => {
-                updateInstance({ name, type, value: this.assignValue(e) });
-              }}
-            />
-          </div>
-        </div>
+              <div className="col-9">
+                {this.state.system}
+              </div>
+            </div>
 
-        <div className="parameter__item row">
-          <div className="col-3 bold align-right">
-            <label htmlFor={formId}>System URI:</label>
-          </div>
+            <div className="parameter__item row">
+              <div className="col-3 bold align-right">
+                <label htmlFor={formId}>System URI:</label>
+              </div>
 
-          <div className="col-9">
-            <input
-              id={id}
-              name="uri"
-              type="text"
-              value={ _.get(value, 'uri', null) || '' }
-              onChange={ (e) => {
-                updateInstance({ name, type, value: this.assignValue(e) });
-              }}
-            />
-          </div>
-        </div>
+              <div className="col-9">
+                {this.state.uri}
+              </div>
+            </div>
 
-        <div className="parameter__item row">
-          <div className="col-3 bold align-right">
-            <label htmlFor={formId}>Code:</label>
-          </div>
+            <div className="parameter__item row">
+              <div className="col-3 bold align-right">
+                <label htmlFor={formId}>Code:</label>
+              </div>
 
-          <div className="col-9">
-            <input
-              id={id}
-              name="code"
-              type="text"
-              value={ _.get(value, 'code', null) || '' }
-              onChange={ (e) => {
-                updateInstance({ name, type, value: this.assignValue(e) });
-              }}
-            />
-          </div>
-        </div>
+              <div className="col-9">
+                {this.state.code}
+              </div>
+            </div>
 
-        <div className="parameter__item row">
-          <div className="col-3 bold align-right">
-            <label htmlFor={formId}>Display:</label>
-          </div>
+            <div className="parameter__item row">
+              <div className="col-3 bold align-right">
+                <label htmlFor={formId}>Display:</label>
+              </div>
 
-          <div className="col-9">
-            <input
-              id={id}
-              name="display"
-              type="text"
-              value={ _.get(value, 'display', null) || '' }
-              onChange={ (e) => {
-                updateInstance({ name, type, value: this.assignValue(e) });
-              }}
-            />
+              <div className="col-9">
+                {this.state.display}
+              </div>
+            </div>
           </div>
-        </div>
+        :
+          <div className="parameter__item row">
+            <div className="col-3 bold align-right">
+              Select code:
+            </div>
+
+            <div className="col-9">
+              {this.renderCodePicker()}
+            </div>
+          </div>
+        }
       </div>
     );
   }
@@ -140,5 +134,11 @@ CodeEditor.propTypes = {
   type: PropTypes.string.isRequired,
   value: PropTypes.object,
   isConcept: PropTypes.bool,
-  updateInstance: PropTypes.func.isRequired
+  updateInstance: PropTypes.func.isRequired,
+  timeLastAuthenticated: PropTypes.instanceOf(Date),
+  vsacFHIRCredentials: PropTypes.object,
+  loginVSACUser: PropTypes.func.isRequired,
+  setVSACAuthStatus: PropTypes.func.isRequired,
+  vsacStatus: PropTypes.string,
+  vsacStatusText: PropTypes.string
 };

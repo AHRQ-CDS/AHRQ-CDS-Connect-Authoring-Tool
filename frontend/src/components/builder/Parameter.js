@@ -3,9 +3,6 @@ import PropTypes from 'prop-types';
 import Select from 'react-select';
 import FontAwesome from 'react-fontawesome';
 
-import 'react-datepicker/dist/react-datepicker.css';
-import 'rc-time-picker/assets/index.css';
-
 import StringParameter from './parameters/types/StringParameter';
 import BooleanEditor from './parameters/editors/BooleanEditor';
 import CodeEditor from './parameters/editors/CodeEditor';
@@ -38,13 +35,22 @@ export default class Parameter extends Component {
       })
     };
 
+    const codeEditorProps = {
+      timeLastAuthenticated: this.props.timeLastAuthenticated,
+      vsacFHIRCredentials: this.props.vsacFHIRCredentials,
+      loginVSACUser: this.props.loginVSACUser,
+      setVSACAuthStatus: this.props.setVSACAuthStatus,
+      vsacStatus: this.props.vsacStatus,
+      vsacStatusText: this.props.vsacStatusText
+    };
+
     switch (this.props.type) {
       case 'Boolean':
         return <BooleanEditor {...parameterProps} />;
       case 'Code':
-        return <CodeEditor {...parameterProps} />;
+        return <CodeEditor {...parameterProps} {...codeEditorProps} />;
       case 'Concept':
-        return <CodeEditor {...parameterProps} isConcept={true} />;
+        return <CodeEditor {...parameterProps} {...codeEditorProps} isConcept={true} />;
       case 'Integer':
         return <IntegerEditor {...parameterProps} />;
       case 'DateTime':
@@ -144,7 +150,12 @@ export default class Parameter extends Component {
 Parameter.propTypes = {
   index: PropTypes.number.isRequired,
   name: PropTypes.string,
-  type: PropTypes.string.isRequired,
+  type: PropTypes.string,
   updateInstanceOfParameter: PropTypes.func.isRequired,
-  deleteParameter: PropTypes.func.isRequired
+  deleteParameter: PropTypes.func.isRequired,
+  timeLastAuthenticated: PropTypes.instanceOf(Date),
+  vsacFHIRCredentials: PropTypes.object,
+  setVSACAuthStatus: PropTypes.func.isRequired,
+  vsacStatus: PropTypes.string,
+  vsacStatusText: PropTypes.string
 };
