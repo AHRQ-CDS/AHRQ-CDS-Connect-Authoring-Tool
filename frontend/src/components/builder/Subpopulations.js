@@ -31,7 +31,8 @@ export default class Subpopulations extends Component {
     const newSubpopulation = createTemplateInstance(this.baseTemplate);
     newSubpopulation.name = '';
     newSubpopulation.path = '';
-    newSubpopulation.subpopulationName = `${_.capitalize(pluralize.singular(this.props.name))} ${this.state.subpopulations.length + 1}`;
+    newSubpopulation.subpopulationName =
+      `${_.capitalize(pluralize.singular(this.props.name))} ${this.props.artifact[this.props.name].filter(sp => sp.special).length + 1}`;
     newSubpopulation.expanded = true;
     const newSubpopulations = this.props.artifact[this.props.name].concat([newSubpopulation]);
     this.props.updateSubpopulations(newSubpopulations, this.props.name);
