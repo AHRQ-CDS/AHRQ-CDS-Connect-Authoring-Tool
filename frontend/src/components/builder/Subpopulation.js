@@ -4,44 +4,7 @@ import FontAwesome from 'react-fontawesome';
 
 import ConjunctionGroup from './ConjunctionGroup';
 
-<<<<<<< HEAD
 export default class Subpopulation extends Component {
-=======
-class Subpopulation extends Component {
-  static propTypes = {
-    artifact: PropTypes.object.isRequired,
-    resources: PropTypes.object,
-    valueSets: PropTypes.array,
-    loadValueSets: PropTypes.func.isRequired,
-    subpopulation: PropTypes.object.isRequired,
-    subpopulationIndex: PropTypes.number.isRequired,
-    setSubpopulationName: PropTypes.func.isRequired,
-    deleteSubpopulation: PropTypes.func.isRequired,
-    addInstance: PropTypes.func.isRequired,
-    editInstance: PropTypes.func.isRequired,
-    updateInstanceModifiers: PropTypes.func.isRequired,
-    deleteInstance: PropTypes.func.isRequired,
-    getAllInstances: PropTypes.func.isRequired,
-    treeName: PropTypes.string.isRequired,
-    parameters: PropTypes.array.isRequired,
-    templates: PropTypes.array.isRequired,
-    conversionFunctions: PropTypes.array,
-    loginVSACUser: PropTypes.func.isRequired,
-    setVSACAuthStatus: PropTypes.func.isRequired,
-    vsacStatus: PropTypes.string,
-    vsacStatusText: PropTypes.string,
-    timeLastAuthenticated: PropTypes.instanceOf(Date),
-    searchVSACByKeyword: PropTypes.func.isRequired,
-    isSearchingVSAC: PropTypes.bool.isRequired,
-    vsacSearchResults: PropTypes.array.isRequired,
-    vsacSearchCount: PropTypes.number.isRequired,
-    getVSDetails: PropTypes.func.isRequired,
-    isRetrievingDetails: PropTypes.bool.isRequired,
-    vsacDetailsCodes: PropTypes.array.isRequired,
-    validateReturnType: PropTypes.bool
-  }
-
->>>>>>> Remove erroneous warning
   constructor(props) {
     super(props);
 
@@ -166,55 +129,11 @@ class Subpopulation extends Component {
                 getVSDetails={this.props.getVSDetails}
                 isRetrievingDetails={this.props.isRetrievingDetails}
                 vsacDetailsCodes={this.props.vsacDetailsCodes}
-                vsacFHIRCredentials={this.props.vsacFHIRCredentials}/>
+                vsacFHIRCredentials={this.props.vsacFHIRCredentials}
+                validateReturnType={this.props.validateReturnType}/>
             </div>
           }
         </div>
-<<<<<<< HEAD
-=======
-
-        { this.state.isExpanded ?
-          <div className="subpopulation__logic">
-            {this.props.subpopulation.childInstances.length < 1 ?
-              <div className='warning'>This subpopulation needs at least one condition</div>
-              : null
-            }
-            <ConjunctionGroup
-              root={true}
-              treeName={this.props.treeName}
-              artifact={this.props.artifact}
-              templates={this.props.templates}
-              resources={this.props.resources}
-              valueSets={this.props.valueSets}
-              loadValueSets={this.props.loadValueSets}
-              instance={this.props.subpopulation}
-              addInstance={this.addInstance}
-              editInstance={this.editInstance}
-              deleteInstance={this.deleteInstance}
-              getAllInstances={this.getAllInstances}
-              updateInstanceModifiers={this.props.updateInstanceModifiers}
-              parameters={this.props.parameters}
-              subPopulationIndex={this.props.subpopulationIndex}
-              conversionFunctions={this.props.conversionFunctions}
-              loginVSACUser={this.props.loginVSACUser}
-              setVSACAuthStatus={this.props.setVSACAuthStatus}
-              vsacStatus={this.props.vsacStatus}
-              vsacStatusText={this.props.vsacStatusText}
-              timeLastAuthenticated={this.props.timeLastAuthenticated}
-              searchVSACByKeyword={this.props.searchVSACByKeyword}
-              isSearchingVSAC={this.props.isSearchingVSAC}
-              vsacSearchResults={this.props.vsacSearchResults}
-              vsacSearchCount={this.props.vsacSearchCount}
-              getVSDetails={this.props.getVSDetails}
-              isRetrievingDetails={this.props.isRetrievingDetails}
-              vsacDetailsCodes={this.props.vsacDetailsCodes}
-              vsacFHIRCredentials={this.props.vsacFHIRCredentials}
-              validateReturnType={this.props.validateReturnType}/>
-          </div>
-          :
-          null
-        }
->>>>>>> Remove erroneous warning
       </div>
     );
   }

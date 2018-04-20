@@ -532,13 +532,8 @@ export default class TemplateInstance extends Component {
 
   renderBody() {
     const validationError = this.validateElement();
-<<<<<<< HEAD
-    const returnError = this.state.returnType === 'boolean' ? null
-      : "Element must have return type 'boolean'.  Add expression(s) to change the return type.";
-=======
     const returnError = (!(this.props.validateReturnType !== false) || this.state.returnType === 'boolean') ? null
-      : "Element must have return type 'boolean'.  Add expressions(s) to change the return type.";
->>>>>>> Remove erroneous warning
+      : "Element must have return type 'boolean'.  Add expression(s) to change the return type.";
 
     return (
       <div className="card-element__body">
