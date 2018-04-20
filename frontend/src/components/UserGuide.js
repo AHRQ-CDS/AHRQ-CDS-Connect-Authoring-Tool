@@ -2,9 +2,10 @@
 import React, { Component } from 'react';
 import tocbot from 'tocbot';
 import _ from 'lodash';
+import { onVisitExternalLink } from '../utils/handlers';
 
 function screenshotUrl(name) {
-  return `${process.env.PUBLIC_URL}/assets/images/userguide_screenshots/${name}.png`;
+  return `${process.env.PUBLIC_URL}/assets/images/screenshots/${name}.png`;
 }
 
 export default class UserGuide extends Component {
@@ -58,8 +59,8 @@ export default class UserGuide extends Component {
 
             <p>
               The Clinical Decision Support (CDS) Authoring Tool is a web-based application aimed at simplifying the
-              creation of production-ready CQL code. The project is based on "concept templates" (e.g. gender, HDL
-              Cholesterol, etc.), which allow for additional clinical concepts to be included in the future. Concept
+              creation of production-ready CQL code. The project is based on "templates" (e.g. Condition, Observation,
+              etc.), which can have value sets or codes applied to narrow in on more specific concepts. Expression
               modifiers are included to allow for more flexible definitions (e.g. most recent, value comparisons, etc.).
             </p>
 
@@ -89,7 +90,7 @@ export default class UserGuide extends Component {
                   <img
                     alt="Homepage"
                     src={screenshotUrl('Homepage')}
-                    className="img-fluid img-thumbnail rounded mx-auto d-block" />
+                  className="img-fluid img-thumbnail rounded mx-auto d-block" />
                 </p>
 
                 <ol>
@@ -121,7 +122,7 @@ export default class UserGuide extends Component {
                     <img
                       alt="Unauthenticated Nav Bar"
                       src={screenshotUrl('Unauthenticated_NavBar')}
-                      className="img-fluid img-thumbnail rounded mx-auto d-block" />
+                    className="img-fluid img-thumbnail rounded mx-auto d-block" />
                   </p>
 
                   <ol>
@@ -147,7 +148,7 @@ export default class UserGuide extends Component {
                     <img
                       alt="Authenticated Nav Bar"
                       src={screenshotUrl('Authenticated_NavBar')}
-                      className="img-fluid img-thumbnail rounded mx-auto d-block" />
+                    className="img-fluid img-thumbnail rounded mx-auto d-block" />
                   </p>
 
                   <ol>
@@ -175,7 +176,7 @@ export default class UserGuide extends Component {
                   <img
                     alt="Artifact Page"
                     src={screenshotUrl('Artifact_List')}
-                    className="img-fluid img-thumbnail rounded mx-auto d-block" />
+                  className="img-fluid img-thumbnail rounded mx-auto d-block" />
                 </p>
 
                 <ol>
@@ -209,18 +210,18 @@ export default class UserGuide extends Component {
               </div>
 
               <div className="h3-wrapper">
-                <h3 id="Edit_Artifact_Modal">2.2 Edit Artifact modal</h3>
+                <h3 id="Edit_Artifact_Modal">2.2 Edit Artifact Modal</h3>
 
                 <p>
-                  Upon clicking the "Edit" button, the "Edit modal" will open allowing the user to edit an existing artifact's
-                  name and/or version number.
+                  Upon clicking the "Edit" button, the "Edit Artifact" modal will open allowing the user to edit an existing
+                  artifact's name and/or version number.
                 </p>
 
                 <p>
                   <img
                     alt="Edit Artifact Modal"
                     src={screenshotUrl('Artifact_Modal')}
-                    className="img-fluid img-thumbnail rounded mx-auto d-block" />
+                  className="img-fluid img-thumbnail rounded mx-auto d-block" />
                 </p>
 
                 <ol>
@@ -235,7 +236,7 @@ export default class UserGuide extends Component {
                   </li>
 
                   <li>The "Save" button is used to confirm and save changes made to the artifact and close the modal.</li>
-                  <li>The "Close Edit Modal" button is used to cancel changes made to the artifact and close the modal.</li>
+                  <li>The "Cancel" button is used to cancel changes made to the artifact and close the modal.</li>
                 </ol>
               </div>
             </div>
@@ -252,7 +253,7 @@ export default class UserGuide extends Component {
                   <img
                     alt="Workspace"
                     src={screenshotUrl('Workspace')}
-                    className="img-fluid img-thumbnail rounded mx-auto d-block" />
+                  className="img-fluid img-thumbnail rounded mx-auto d-block" />
                 </p>
 
                 <ol>
@@ -283,7 +284,11 @@ export default class UserGuide extends Component {
 
                   <li>
                     The "Workspace Tabs" divide the workspace into workflow sections for building an artifact. This helps keep
-                    sections of the artifact organized for the user (more on each tab below in sections 3.7-3.12).
+                    sections of the artifact organized for the user (more on each tab below in sections 3.6-3.11).
+                  </li>
+
+                  <li>
+                    The "Element Picker" allows the user to add and edit elements (more in section 3.2 below).
                   </li>
                 </ol>
               </div>
@@ -300,122 +305,308 @@ export default class UserGuide extends Component {
                   <img
                     alt="Element Picker"
                     src={screenshotUrl('Element_Picker')}
-                    className="img-fluid img-thumbnail rounded mx-auto d-block" />
+                  className="img-fluid img-thumbnail rounded mx-auto d-block" />
                 </p>
 
                 <ol>
                   <li>
-                    The "Add Element" search field. Click in this field to open the "Add Element" dropdown (2). Type in this
+                    An element picker. The "Add element" text indicates that by filling out this information, an element
+                    will be added.
+                  </li>
+
+                  <li>
+                    Click in the "Choose element type" dropdown to select a type of element. Type in this
                     field to narrow the results in the dropdown by the term typed.
                   </li>
 
                   <li>
-                    The "Add Element" dropdown shows relevant elements filtered by the category selected (4) and the search
-                    term (1).
+                    Element types without a key icon do not require any authentication to use.
                   </li>
 
                   <li>
-                    Individual elements can be added to the artifact from the dropdown opened by the "Add Element" search
-                    field. The element name is displayed, and if looking in "All" categories, will be followed by the
-                    category type in parenthesis. Clicking on an element will add it to the artifact.
+                    Element types with a key icon require authentication to use the National Library of Medicine's
+                    (NLM) Value Set Authority Center (VSAC) integration. Users may authenticate using their
+                    Unified Medical Language System (UMLS) credentials.  Users who do not have a UMLS account
+                    can <a target="_blank" rel="nofollow noopener noreferrer" onClick={onVisitExternalLink}
+                    href="https://uts.nlm.nih.gov//license.html">sign up</a> <i className="fa fa-external-link"></i> via
+                    NLM.
                   </li>
-
-                  <li>
-                    The "Narrow elements by category" dropdown allows the user to select which category of elements they
-                    wish to filter results by.
-                  </li>
-
-                  <li>Clicking the "Browse" button will launch the "Element Browse" modal.</li>
                 </ol>
-              </div>
 
-              <div className="h3-wrapper">
-                <h3 id="Element_Browse">3.3 Element Browse</h3>
+                <div className="h4-wrapper">
+                  <h4 id="Non_VSAC_Element_Picker">3.2.1 Non-VSAC Element Picker</h4>
 
-                <p>
-                  Similar to the Element Picker, the Element Browse modal enables the user to have a more spacious area to
-                  search, view, and add elements to an artifact.
-                </p>
+                  <p>
+                    If a non-VSAC element type is selected, the element picker will display as below.
+                  </p>
 
-                <p>
-                  <img
-                    alt="Element Browse"
-                    src={screenshotUrl('Element_Browse')}
+                  <p>
+                    <img
+                      alt="Non-VSAC Element Picker"
+                      src={screenshotUrl('Non_VSAC_Element_Picker')}
                     className="img-fluid img-thumbnail rounded mx-auto d-block" />
-                </p>
+                  </p>
 
-                <ol>
-                  <li>
-                    The "Search Elements" field allows a user to type in this field to narrow the results in the element list
-                    (3) by the term typed.
-                  </li>
+                  <ol>
+                    <li>
+                      Based on the element type that was previously selected, this dropdown will include
+                      elements within that type.
+                    </li>
 
-                  <li>
-                    The "Element Categories" list on the left contains all possible categories. Clicking on a category will
-                    filter the results in the element list (3) by the selected category. The selected category is highlighted
-                    with a grey background.
-                  </li>
+                    <li>
+                      One of the types can be selected from this dropdown to finalize picking a non-VSAC
+                      element. Typing into this dropdown also narrows the results in the dropdown by the
+                      term typed.
+                    </li>
+                  </ol>
+                </div>
 
-                  <li>
-                    The "Element List" is the result of the filtering by category and search term within the modal. Click on
-                    an element (name or "+" button) to add it to the artifact and close the modal.
-                  </li>
+                <div className="h4-wrapper">
+                  <h4 id="VSAC_Element_Picker">3.2.2 VSAC Element Picker</h4>
 
-                  <li>Clicking the "Close" button will close the modal without adding any elements to the artifact.</li>
-                </ol>
+                  <p>
+                    If a VSAC element type is selected, the element picker will display as below.
+                  </p>
+
+                  <p>
+                    <img
+                      alt="VSAC Element Picker"
+                      src={screenshotUrl('VSAC_Element_Picker')}
+                    className="img-fluid img-thumbnail rounded mx-auto d-block" />
+                  </p>
+
+                  <p>
+                    An "Authenticate VSAC" button will appear. Clicking this button will open a modal that
+                    prompts the user for a username and password. Note that this username and password will
+                    be those for the UMLS license, not the username and password required for the CDS
+                    Authoring Tool.
+                  </p>
+
+                  <p>
+                    <img
+                      alt="Authenticated VSAC Element Picker"
+                      src={screenshotUrl('VSAC_Element_Picker_Authenticated')}
+                    className="img-fluid img-thumbnail rounded mx-auto d-block" />
+                  </p>
+
+                  <ol>
+                    <li>
+                      The "VSAC Authenticated" label displays to indicate successful authentication.
+                    </li>
+
+                    <li>
+                      The "Add Value Set" button allows the user to add a value set to the element.
+                      A separate picker for a value set will appear after clicking this button.
+                    </li>
+
+                    <li>
+                      The "Add Code" button allows the user to add a code to the element.
+                      A separate picker for a code will appear after clicking this button.
+                    </li>
+                  </ol>
+
+                  <p>
+                    If the user chooses to add a value set, the following modal will appear.
+                  </p>
+
+                  <p>
+                    <img
+                      alt="VSAC Value Set"
+                      src={screenshotUrl('VSAC_Value_Set')}
+                    className="img-fluid img-thumbnail rounded mx-auto d-block" />
+                  </p>
+
+                  <ol>
+                    <li>
+                      This text box prompts the user to enter a search term for a value set that they would like
+                      to add.
+                    </li>
+
+                    <li>
+                      Clicking the "Search" button causes a search through the value sets, by the search term
+                      provided by the user.
+                    </li>
+
+                    <li>
+                      A list of value sets that match the search term will appear after a successful search.
+                    </li>
+
+                    <li>
+                      Each value set that matched the search term will show its type, name, code system, steward,
+                      and the number of codes it contains.
+                    </li>
+
+                    <li>
+                      The number of value sets that matched the search term is displayed in the corner of the modal.
+                    </li>
+
+                    <li>
+                      The "Close" button will cancel adding a value set, and will return to the base element picker.
+                    </li>
+                  </ol>
+
+                  <p>
+                    If the user selects a value set from the list, the following modal appears.
+                  </p>
+
+                  <p>
+                    <img
+                      alt="Selected VSAC Value Set"
+                      src={screenshotUrl('VSAC_Value_Set_Selected')}
+                    className="img-fluid img-thumbnail rounded mx-auto d-block" />
+                  </p>
+
+                  <ol>
+                    <li>
+                      This text box now displays the value set that the user previously selected.
+                    </li>
+
+                    <li>
+                      Clicking the "Select" button adds the value set to the element, and returns to the base
+                      element picker, now with the added value set.
+                    </li>
+
+                    <li>
+                      A list of codes that are within the selected value set.
+                    </li>
+
+                    <li>
+                      Each code within the selected value set will show its code, name, and code system.
+                    </li>
+
+                    <li>
+                      The button with the back arrow will return to the value set picker, allowing the user
+                      to select a different value set than the one that is currently selected.
+                    </li>
+
+                    <li>
+                      The "Close" button will cancel adding a value set, and will return to the base element picker.
+                    </li>
+                  </ol>
+
+                  <p>
+                    If the user instead chooses to add a code, rather than a value set, the following modal will appear.
+                  </p>
+
+                  <p>
+                    <img
+                      alt="VSAC Code"
+                      src={screenshotUrl('VSAC_Code')}
+                    className="img-fluid img-thumbnail rounded mx-auto d-block" />
+                  </p>
+
+                  <ol>
+                    <li>
+                      This text box allows the user to enter a code to validate.
+                    </li>
+
+                    <li>
+                      This dropdown allows the user to select the code system that corresponds to the code that was
+                      previously entered.
+                    </li>
+
+                    <li>
+                      The "Validate" button searches for a match for the selected code and code system.
+                    </li>
+
+                    <li>
+                      If validation of the code and code system was successful, "Validation Successful!" will appear
+                      in the corner of the modal to indicate this success.
+                    </li>
+
+                    <li>
+                      The code that matched the user input will be displayed.
+                    </li>
+
+                    <li>
+                      Clicking the "Select" button adds the code to the element, and returns to the base
+                      element picker, now with the added code.
+                    </li>
+
+                    <li>
+                      The "X" button will cancel adding a code, and will return to the base element picker.
+                    </li>
+                  </ol>
+
+                </div>
               </div>
 
               <div className="h3-wrapper">
-                <h3 id="Elements">3.4 Elements</h3>
+                <h3 id="Elements">3.3 Elements</h3>
 
                 <p>
                   Elements are the main building blocks for an artifact. Each artifact represents different conditions,
                   medications, demographics, etc. Using a combination of elements together in groups (covered below in
-                  Section 3.6 "Logic Elements") helps the user define different populations for the artifact.
+                  Section 3.5 "Logic Elements") helps the user define different populations for the artifact.
                 </p>
 
                 <p>
                   <img
-                    alt="Element"
-                    src={screenshotUrl('Element')}
-                    className="img-fluid img-thumbnail rounded mx-auto d-block" />
+                    alt="VSAC Element"
+                    src={screenshotUrl('VSAC_Element')}
+                  className="img-fluid img-thumbnail rounded mx-auto d-block" />
                 </p>
 
                 <ol>
                   <li>
-                    The name of the type of element appears at the top of the element, in this case the "Diabetes" condition.
-                  </li>
-
-                  <li>The "Outdent" button moves the element out of the current group it belongs to.</li>
-                  <li>The "Indent" button moves the element inside a new group.</li>
-
-                  <li>
-                    The "Hide" element button expands or collapses the current element (helps preserve space and keep
-                    workspace tidy).
-                  </li>
-
-                  <li>Clicking the "Remove" element button will delete the element.</li>
-
-                  <li>
-                    The "Element Name" field provides the name of this specific element, which the user can specify in the
-                    field.
+                    The name of the type of element appears at the top of the element, in this case it is a "Condition".
                   </li>
 
                   <li>
-                    The "Return Type" gives the current return type of this element based on the Expressions (more in section
-                    3.5 Expressions).
+                    The user can specify the name of this element in the text box next to the element type.
                   </li>
 
-                  <li>The "Add Expression" button adds an expression to this element (more in section 3.5 Expressions).</li>
+                  <li>
+                    The "Outdent" button moves the element out of the current group it belongs to.
+                  </li>
+
+                  <li>
+                    The "Indent" button moves the element inside a new group.
+                  </li>
+
+                  <li>
+                    The "Hide" element button expands or collapses the current element (which helps preserve space
+                    and keep the workspace tidy).
+                  </li>
+
+                  <li>
+                    Clicking the "Remove" element button will delete the element.
+                  </li>
+
+                  <li>
+                    A warning appears, asking to add expressions to change the return type (more in Section 3.4
+                    "Expressions").
+                  </li>
+
+                  <li>
+                    In the case of a VSAC element, the value sets and codes added to the element are listed.
+                  </li>
+
+                  <li>
+                    The eye icon next to a value set can be clicked to open a modal listing all codes within the value set.
+                  </li>
+
+                  <li>
+                    The "Remove" button next to a value set or code can be clicked to remove that value set or code from
+                    the element.
+                  </li>
+
+                  <li>
+                    The "Return Type" gives the current return type of this element based on the Expressions (more in
+                    Section 3.4 "Expressions").
+                  </li>
+
+                  <li>The "Add Expression" button adds an expression to this element (more in Section 3.4
+                  "Expressions").</li>
                 </ol>
 
-                <p>Some elements require additional fields to be filled in, or don't support adding Expressions.</p>
+                <p>Non-VSAC elements require additional fields to be filled in, and don't support adding expressions.</p>
 
                 <p>
                   <img
                     alt="Gender Element"
                     src={screenshotUrl('Gender_Element')}
-                    className="img-fluid img-thumbnail rounded mx-auto d-block" />
+                  className="img-fluid img-thumbnail rounded mx-auto d-block" />
                 </p>
 
                 <ol>
@@ -426,7 +617,7 @@ export default class UserGuide extends Component {
                   </li>
 
                   <li>
-                    Some elements do not support "Expressions". These elements will not have an "Add Expression" button. For
+                    Some elements do not support expressions. These elements will not have an "Add Expression" button. For
                     example, "Gender" does not have any expressions that can be applied to it, and automatically returns a
                     Boolean value.
                   </li>
@@ -434,15 +625,17 @@ export default class UserGuide extends Component {
               </div>
 
               <div className="h3-wrapper">
-                <h3 id="Expressions">3.5 Expressions</h3>
+                <h3 id="Expressions">3.4 Expressions</h3>
 
                 <p>
-                  Expressions modify an Element to define or narrow its intent. Many Elements will start as a list, which if
-                  left as such, <em>will generate invalid CQL</em>. The user must ensure that the Return Type of every Element
-                  returns a "Boolean" value. To achieve this, the user can apply Expressions to narrow or filter the previous
-                  Expression further. For example, one could start with a list of conditions, then apply the "Most Recent"
-                  Expression to find the most recent condition in the list, then apply "Quantity Value" and "Value Comparison"
-                  to achieve a Boolean Return Type (pictured below).
+                  Expressions modify an Element to define or narrow its intent. Many Elements will start as a list,
+                  which if left as such, <em>will generate invalid CQL</em> when used in Inclusions, Exclusions, or
+                  Subpopulations. Since elements are used in boolean logic (e.g., and, or), the user must ensure that
+                  the Return Type of every Element returns a "Boolean" value (e.g., true or false). To achieve this,
+                  the user can apply Expressions to narrow or filter the previous Expression further. For example, one
+                  could start with a list of Diabetes Conditions, then apply the "Most Recent" Expression to find the
+                  most recent condition in the list, then apply "Is (Not) Null?" to achieve a Boolean Return Type
+                  (pictured below).
                 </p>
 
                 <p>
@@ -455,20 +648,19 @@ export default class UserGuide extends Component {
                   <img
                     alt="Expressions on an Element"
                     src={screenshotUrl('Expressions_on_Element')}
-                    className="img-fluid img-thumbnail rounded mx-auto d-block" />
+                  className="img-fluid img-thumbnail rounded mx-auto d-block" />
                 </p>
 
                 <ol>
                   <li>
-                    The "Expression List" lists all expressions applied to the element so far (in this example "Most Recent",
-                    "Quantity Value", and a comparison).
+                    The "Expression" list shows all expressions applied to the element so far (in this example "Confirmed"
+                    and "Exists").
                   </li>
 
                   <li>
                     The last Expression that has been applied will appear at the bottom of the Expression list, directly above
-                    the "Return Type" label. In this example, the last Expression is a comparison. Note that the comparison
-                    Expression has additional fields that need to be filled in. With comparisons, it is acceptable to fill in
-                    one or both sides of the comparison.
+                    the "Return Type" label.  In this case, the "Exists" expression is used to determine if the list of
+                    Confirmed Diabetes Conditions has items or is empty.
                   </li>
 
                   <li>
@@ -492,7 +684,7 @@ export default class UserGuide extends Component {
               </div>
 
               <div className="h3-wrapper">
-                <h3 id="Logic_Elements">3.6 Logic Elements</h3>
+                <h3 id="Logic_Elements">3.5 Logic Elements</h3>
 
                 <p>
                   Logic Elements are groups of Elements tied together by a particular conjunction, "And" or "Or". By stringing
@@ -503,15 +695,10 @@ export default class UserGuide extends Component {
                   <img
                     alt="Basic Logic Element"
                     src={screenshotUrl('Basic_Logic_Element')}
-                    className="img-fluid img-thumbnail rounded mx-auto d-block" />
+                  className="img-fluid img-thumbnail rounded mx-auto d-block" />
                 </p>
 
                 <ol>
-                  <li>
-                    The outermost light grey box is the first level ("root", or "main") Logic Element, which houses all other
-                    Elements and ties them together with a conjunction (2).
-                  </li>
-
                   <li>
                     Between every Element inside a Logic Element group, there will be a "Select conjunction type" dropdown
                     denoting the conjunction used to tie them together. The options for conjunctions are "And" or "Or". Note
@@ -538,15 +725,12 @@ export default class UserGuide extends Component {
                   <img
                     alt="Nested Logic Element"
                     src={screenshotUrl('Nested_Logic_Element')}
-                    className="img-fluid img-thumbnail rounded mx-auto d-block" />
+                  className="img-fluid img-thumbnail rounded mx-auto d-block" />
                 </p>
 
                 <ol>
-                  <li>Once again, the outermost Logic Element here is represented as the light grey box.</li>
-
                   <li>
-                    A nested Logic Element is represented by a level of indentation as well as a darker colored grey
-                    background.
+                    A nested Logic Element is represented by a darker colored grey background.
                   </li>
 
                   <li>Nested Logic Elements can be named using the "Group Name" field, similar to Elements.</li>
@@ -564,7 +748,7 @@ export default class UserGuide extends Component {
               </div>
 
               <div className="h3-wrapper">
-                <h3 id="Inclusions">3.7 Inclusions</h3>
+                <h3 id="Inclusions">3.6 Inclusions</h3>
 
                 <p>
                   The Inclusions section uses Elements, Expressions, and Logic Elements to create a target population that is
@@ -575,7 +759,7 @@ export default class UserGuide extends Component {
               </div>
 
               <div className="h3-wrapper">
-                <h3 id="Exclusions">3.8 Exclusions</h3>
+                <h3 id="Exclusions">3.7 Exclusions</h3>
 
                 <p>
                   The Exclusions section uses Elements, Expressions, and Logic Elements to create a target population that is
@@ -586,14 +770,14 @@ export default class UserGuide extends Component {
               </div>
 
               <div className="h3-wrapper">
-                <h3 id="Subpopulations">3.9 Subpopulations</h3>
+                <h3 id="Subpopulations">3.8 Subpopulations</h3>
 
                 <p>
                   The Subpopulations section uses Elements, Expressions, and Logic Elements to create named target
                   populations, which can then be applied to a Recommendation. This helps the user further filter the
                   general population created from the combination of Inclusions and Exclusions. There are two default
                   "Subpopulations" that can be applied to a recommendation, "Doesn't Meet Inclusion Criteria" and "Meets
-                  Exclusion Criteria" (more in section 3.10 Recommendations). Most interactions required to build
+                  Exclusion Criteria" (more in section 3.9 Recommendations). Most interactions required to build
                   Subpopulations are covered in above sections, but Subpopulations has a few differences.
                 </p>
 
@@ -606,12 +790,12 @@ export default class UserGuide extends Component {
                   <img
                     alt="Collapsed Subpopulation"
                     src={screenshotUrl('Collapsed_Subpopulation')}
-                    className="img-fluid img-thumbnail rounded mx-auto d-block" />
+                  className="img-fluid img-thumbnail rounded mx-auto d-block" />
                 </p>
 
                 <ol>
                   <li>
-                    In this example, the Subpopulation "CholesterolLessThan200" is collapsed. Clicking the right facing arrows
+                    In this example, the Subpopulation "AgeBetween18And25" is collapsed. Clicking the right facing arrows
                     will expand the Subpopulation for editing.
                   </li>
 
@@ -629,13 +813,13 @@ export default class UserGuide extends Component {
                   <img
                     alt="Expanded Subpopulation"
                     src={screenshotUrl('Expanded_Subpopulation')}
-                    className="img-fluid img-thumbnail rounded mx-auto d-block" />
+                  className="img-fluid img-thumbnail rounded mx-auto d-block" />
                 </p>
 
                 <ol>
                   <li>
                     The name of the Subpopulation can be edited when the Subpopulation is expanded using the "Subpopulation
-                    Title" field
+                    Title" field.
                   </li>
 
                   <li>Clicking "Done" will save changes to and collapse the Subpopulation.</li>
@@ -648,7 +832,7 @@ export default class UserGuide extends Component {
               </div>
 
               <div className="h3-wrapper">
-                <h3 id="Recommendations">3.10 Recommendations</h3>
+                <h3 id="Recommendations">3.9 Recommendations</h3>
 
                 <p>
                   Recommendations are the resulting notices that should be delivered to the clinician after the CDS
@@ -662,7 +846,7 @@ export default class UserGuide extends Component {
                   <img
                     alt="Blank Recommendation"
                     src={screenshotUrl('Blank_Recommendation')}
-                    className="img-fluid img-thumbnail rounded mx-auto d-block" />
+                  className="img-fluid img-thumbnail rounded mx-auto d-block" />
                 </p>
 
                 <ol>
@@ -694,12 +878,10 @@ export default class UserGuide extends Component {
                   <img
                     alt="Recommendation with Rationale"
                     src={screenshotUrl('Recommendation_with_Rationale')}
-                    className="img-fluid img-thumbnail rounded mx-auto d-block" />
+                  className="img-fluid img-thumbnail rounded mx-auto d-block" />
                 </p>
 
-                <ol>
-                  <li>The "Rationale" free text field is used to enter the Rationale for the Recommendation.</li>
-                </ol>
+                <p>The "Rationale" free text field is used to enter the Rationale for the Recommendation.</p>
 
                 <p>
                   Recommendations can be further filtered by Subpopulations to target different Recommendations for different
@@ -710,7 +892,7 @@ export default class UserGuide extends Component {
                   <img
                     alt="Recommendation with Subpopulations"
                     src={screenshotUrl('Recommendation_with_Subpopulations')}
-                    className="img-fluid img-thumbnail rounded mx-auto d-block" />
+                  className="img-fluid img-thumbnail rounded mx-auto d-block" />
                 </p>
 
                 <ol>
@@ -749,40 +931,56 @@ export default class UserGuide extends Component {
               </div>
 
               <div className="h3-wrapper">
-                <h3 id="Parameters">3.11 Parameters</h3>
+                <h3 id="Parameters">3.10 Parameters</h3>
 
                 <p>
-                  Parameters allow the user to create named, reusable Boolean values. They can be used to change the
-                  logic in an artifact in different implementations of the artifact. The naming of the Parameter should
-                  be readable and communicate its intent within the resulting CQL code. An example of this might be a
-                  Parameter called "GradeCRecommendationEnabled". One user might choose to accept this value as true, while
-                  another may prefer to set the GradeCRecommendation to false and not execute that part of the CQL code.
-                  Parameters are optional additions to the artifact. They can be used in building Inclusions, Exclusions,
-                  and Subpopulations, and can be used in Error Handling.
+                  Parameters allow the user to create named, reusable values that can be supplied by the CDS execution
+                  environment at run-time. Parameters can be defined with or without default values. The naming of the
+                  Parameter should be readable and communicate its intent within the resulting CQL code. An example of
+                  this might be a Parameter called "AllowGradeC" to indicate if grade C recommendation should be
+                  returned or not. It might default to "true", but individual implementations can choose to override it
+                  to "false" if they do not allow or want Grade C recommendations. Parameters are optional additions to
+                  the artifact. They can be used in building Inclusions, Exclusions, and Subpopulations, and can be
+                  used in Error Handling.
                 </p>
 
                 <p>
                   <img
                     alt="Parameters"
                     src={screenshotUrl('Parameters')}
-                    className="img-fluid img-thumbnail rounded mx-auto d-block" />
+                  className="img-fluid img-thumbnail rounded mx-auto d-block" />
                 </p>
 
                 <ol>
-                  <li>Each light grey box is an individual Parameter object.</li>
-                  <li>Parameters should be aptly named using the "Parameter Name" field.</li>
-                  <li>The "Delete Parameter" button deletes a Parameter.</li>
-
                   <li>
-                    Parameters can have a Boolean value ("True" or "False"), selected by the user with the "Select" dropdown.
+                    Each light grey box is an individual Parameter object.
                   </li>
 
-                  <li>The "New parameter" button adds a new Parameter to the list.</li>
+                  <li>
+                    Parameters should be aptly named using the "Parameter Name" field.
+                  </li>
+
+                  <li>
+                    The "Delete Parameter" button deletes a Parameter.
+                  </li>
+
+                  <li>
+                    Parameters should be assigned a type from the "Parameter Type" dropdown.
+                  </li>
+
+                  <li>
+                    Parameters can optionally have a default value, assigned by the user via
+                    the input method for the given selected type.
+                  </li>
+
+                  <li>
+                    The "New parameter" button adds a new Parameter to the list.
+                  </li>
                 </ol>
               </div>
 
               <div className="h3-wrapper">
-                <h3 id="Handle_Errors">3.12 Handle Errors</h3>
+                <h3 id="Handle_Errors">3.11 Handle Errors</h3>
 
                 <p>
                   The "Handle Errors" tab is an area to optionally direct the system how to handle various errors that may
@@ -795,7 +993,7 @@ export default class UserGuide extends Component {
                   <img
                     alt="Errors"
                     src={screenshotUrl('Errors')}
-                    className="img-fluid img-thumbnail rounded mx-auto d-block" />
+                  className="img-fluid img-thumbnail rounded mx-auto d-block" />
                 </p>
 
                 <ol>
@@ -834,7 +1032,7 @@ export default class UserGuide extends Component {
                   <img
                     alt="Errors Conditions Options"
                     src={screenshotUrl('Errors_Condition_Options')}
-                    className="img-fluid img-thumbnail rounded mx-auto d-block" />
+                  className="img-fluid img-thumbnail rounded mx-auto d-block" />
                 </p>
 
                 <ol>
@@ -855,7 +1053,7 @@ export default class UserGuide extends Component {
                     Artifact.
                   </li>
 
-                  <li>The user-defined Subpopulations and Parameters will be displayed after the three default options.</li>
+                  <li>The user-defined Subpopulations and Parameters will be displayed along with the three default options.</li>
                 </ol>
               </div>
             </div>
