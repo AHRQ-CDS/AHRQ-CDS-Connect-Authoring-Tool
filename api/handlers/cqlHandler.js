@@ -192,7 +192,7 @@ class CqlArtifact {
       if (parameter.type === "Code" || parameter.type === "Concept") {
         let system = _.get(parameter, 'value.system', null);
         let uri = _.get(parameter, 'value.uri', null);
-        if (system && uri) { this.codeSystemMap.set(system, {id: uri}); }
+        if (system && uri) { this.codeSystemMap.set(system, { name: system, id: uri }); }
       }
     }
     );
