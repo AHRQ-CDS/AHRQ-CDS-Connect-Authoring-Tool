@@ -6,21 +6,6 @@ import CodeSelectModal from '../../CodeSelectModal';
 import VSACAuthenticationModal from '../../VSACAuthenticationModal';
 
 export default class CodeEditor extends Component {
-  constructor(props) {
-    super(props);
-
-    const { value } = props;
-
-    this.state = {
-      hasSelectedCode: value,
-      system: value ? value.system : '',
-      uri: value ? value.uri : '',
-      code: value ? value.code : '',
-      display: value ? value.display : '',
-      str: value ? value.str : ''
-    };
-  }
-
   handleCodeAdded = ({ system, uri, code, display }) => {
     let str;
     if (this.props.isConcept) {
@@ -29,21 +14,12 @@ export default class CodeEditor extends Component {
       str = `Code '${code}' from "${system}" display '${display}'`;
     }
 
-    this.setState({
-      hasSelectedCode: true,
-      system,
-      uri,
-      code,
-      display,
-      str
-    });
-
     this.props.updateInstance({ value: { system, uri, code, display, str } });
   }
 
   renderCodePicker() {
     if ((this.props.timeLastAuthenticated < new Date() - 27000000 || this.props.vsacFHIRCredentials.username == null)
-         && !this.state.hasSelectedCode) {
+         && this.props.value == null) {
       return (
         <div id="vsac-controls">
           <VSACAuthenticationModal
@@ -70,7 +46,7 @@ export default class CodeEditor extends Component {
 
     return (
       <div className="code-editor">
-        {this.state.hasSelectedCode ?
+        {this.props.value != null ?
           <div className="code-editor__show">
             <div className="parameter__item row">
               <div className="col-3 bold align-right">
@@ -78,7 +54,7 @@ export default class CodeEditor extends Component {
               </div>
 
               <div className="col-9">
-                {this.state.system}
+                {this.props.value.system}
               </div>
             </div>
 
@@ -88,7 +64,7 @@ export default class CodeEditor extends Component {
               </div>
 
               <div className="col-9">
-                {this.state.uri}
+                {this.props.value.uri}
               </div>
             </div>
 
@@ -98,7 +74,7 @@ export default class CodeEditor extends Component {
               </div>
 
               <div className="col-9">
-                {this.state.code}
+                {this.props.value.code}
               </div>
             </div>
 
@@ -108,7 +84,7 @@ export default class CodeEditor extends Component {
               </div>
 
               <div className="col-9">
-                {this.state.display}
+                {this.props.value.display}
               </div>
             </div>
           </div>
