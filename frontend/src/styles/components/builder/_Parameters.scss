@@ -27,11 +27,15 @@
     }
   }
 
+  .dash { margin: 0 5px; }
+
   #quantity-unit-ucum,
   #interval-of-quantity-unit-ucum {
     width: 200px;
     background-size: 15px;
   }
+
+  .rc-time-picker-input { color: initial; }
 }
 
 // ------------------------- TYPES ----------------------------------------- //

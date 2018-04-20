@@ -82,7 +82,9 @@ export default class IntervalOfDateTimeEditor extends Component {
               onChange={(e) => {
                 updateInstance({ name, type, value: this.assignValue(e, 'firstDate') });
               }}
-            />_
+            />
+
+            <span className="dash">_</span>
 
             <TimePicker
               id={id}
@@ -113,7 +115,9 @@ export default class IntervalOfDateTimeEditor extends Component {
               onChange={(e) => {
                 updateInstance({ name, type, value: this.assignValue(e, 'secondDate') });
               }}
-            />_
+            />
+
+            <span className="dash">_</span>
 
             <TimePicker
               id={id}

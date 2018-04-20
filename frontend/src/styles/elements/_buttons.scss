@@ -68,6 +68,7 @@ button.danger-button {
   margin-left: 0.5em;
   box-shadow: none;
   background-color: $white;
+  border-color: $gray-light;
 
   &:hover {
     border-color: $secondary-button-border-hover-color;

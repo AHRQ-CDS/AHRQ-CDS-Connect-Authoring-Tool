@@ -63,7 +63,9 @@ export default class IntervalOfDecimalEditor extends Component {
               onChange={ (e) => {
                 updateInstance({ name, type, value: this.assignValue(e) });
               }}
-            />_
+            />
+
+            <span className="dash">_</span>
 
             <input
               id={id}
