@@ -443,7 +443,13 @@ export class Builder extends Component {
                 <TabPanel>
                   <Parameters
                     parameters={this.props.artifact.parameters}
-                    updateParameters={this.updateParameters} />
+                    updateParameters={this.updateParameters}
+                    timeLastAuthenticated={this.props.timeLastAuthenticated}
+                    vsacFHIRCredentials={this.props.vsacFHIRCredentials}
+                    loginVSACUser={this.props.loginVSACUser}
+                    setVSACAuthStatus={this.props.setVSACAuthStatus}
+                    vsacStatus={this.props.vsacStatus}
+                    vsacStatusText={this.props.vsacStatusText} />
                 </TabPanel>
 
                 <TabPanel>

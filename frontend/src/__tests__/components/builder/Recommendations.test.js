@@ -1,6 +1,6 @@
-import Recommendations from '../../components/builder/Recommendations';
-import Recommendation from '../../components/builder/Recommendation';
-import { fullRenderComponent } from '../../utils/test_helpers';
+import Recommendations from '../../../components/builder/Recommendations';
+import Recommendation from '../../../components/builder/Recommendation';
+import { fullRenderComponent } from '../../../utils/test_helpers';
 
 let component;
 let componentWithRecs;

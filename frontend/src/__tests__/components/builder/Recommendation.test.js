@@ -1,7 +1,7 @@
 import _ from 'lodash';
-import Recommendation from '../../components/builder/Recommendation';
-import { fullRenderComponent } from '../../utils/test_helpers';
-import { elementGroups } from '../../utils/test_fixtures';
+import Recommendation from '../../../components/builder/Recommendation';
+import { fullRenderComponent } from '../../../utils/test_helpers';
+import { elementGroups } from '../../../utils/test_fixtures';
 
 let component;
 let componentFilledIn;
@@ -74,13 +74,13 @@ test('has correct base class', () => {
 });
 
 test('deletes recommendation', () => {
-  component.find('.recommendation__remove button').simulate('click');
+  component.find('.recommendation__remove').simulate('click');
 
   expect(onRemove).toHaveBeenCalledWith(recUid);
 });
 
 test('displays recommendation text when passed in as prop', () => {
-  expect(componentFilledIn.find('textarea').at(0).node.value).toEqual(recText);
+  expect(componentFilledIn.find('.card-element__textarea').at(0).node.value).toEqual(recText);
 });
 
 test('adds rationale', () => {
@@ -91,12 +91,13 @@ test('adds rationale', () => {
 
 test('displays rationale when passed in as prop', () => {
   expect(componentFilledIn.find('.recommendation__rationale')).toHaveLength(1);
-  expect(componentFilledIn.find('.recommendation__rationale textarea').node.value).toEqual(rationaleText);
+  expect(componentFilledIn.find('.recommendation__rationale .card-element__textarea').node.value)
+    .toEqual(rationaleText);
 });
 
 test('can edit recommendation text', () => {
   const newText = 'This is a test.';
-  const recTextarea = componentFilledIn.find('textarea[name="text"]');
+  const recTextarea = componentFilledIn.find('.card-element__textarea[name="text"]');
 
   recTextarea.simulate('change', { target: { name: 'text', value: newText } });
 
@@ -106,7 +107,7 @@ test('can edit recommendation text', () => {
 
 test('can edit rationale text', () => {
   const newText = 'This is a test.';
-  const rationaleTextarea = componentFilledIn.find('.recommendation__rationale textarea');
+  const rationaleTextarea = componentFilledIn.find('.recommendation__rationale .card-element__textarea');
 
   rationaleTextarea.simulate('change', { target: { name: 'rationale', value: newText } });
 

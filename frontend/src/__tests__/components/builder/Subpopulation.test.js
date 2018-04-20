@@ -1,6 +1,6 @@
-import Subpopulation from '../../components/builder/Subpopulation';
-import { fullRenderComponent, createTemplateInstance } from '../../utils/test_helpers';
-import { elementGroups } from '../../utils/test_fixtures';
+import Subpopulation from '../../../components/builder/Subpopulation';
+import { fullRenderComponent, createTemplateInstance } from '../../../utils/test_helpers';
+import { elementGroups } from '../../../utils/test_fixtures';
 
 let component;
 const setSubpopulationName = jest.fn();
@@ -74,7 +74,7 @@ test('can be expanded and collapsed via header', () => {
 });
 
 test('can be expanded and collapsed via button', () => {
-  const subpopHeaderButton = component.find('.subpopulation__header button').at(0);
+  const subpopHeaderButton = component.find('.card-element__header button').at(0);
 
   expect(component.state().isExpanded).toBeTruthy();
   subpopHeaderButton.simulate('click');
@@ -84,7 +84,7 @@ test('can be expanded and collapsed via button', () => {
 });
 
 test('expanded state not changed when focusing on name input', () => {
-  const subpopNameInput = component.find('.subpopulation__header input').at(0);
+  const subpopNameInput = component.find('.card-element__header input').at(0);
 
   expect(component.state().isExpanded).toBeTruthy();
   subpopNameInput.simulate('click');
@@ -92,16 +92,16 @@ test('expanded state not changed when focusing on name input', () => {
 });
 
 test('hides content when collapsed', () => {
-  expect(component.find('.subpopulation__logic')).toHaveLength(1);
+  expect(component.find('.card-element__body')).toHaveLength(1);
 
   component.instance().collapse();
 
   expect(component.state().isExpanded).toBeFalsy();
-  expect(component.find('.subpopulation__logic')).toHaveLength(0);
+  expect(component.find('.card-element__body')).toHaveLength(0);
 });
 
 test('changing name calls prop func', () => {
-  const subpopNameInput = component.find('.subpopulation__header input').at(0);
+  const subpopNameInput = component.find('.card-element__header input').at(0);
 
   subpopNameInput.node.value = 'New name';
   subpopNameInput.simulate('change');
@@ -110,7 +110,7 @@ test('changing name calls prop func', () => {
 });
 
 test('clicking delete calls prop func', () => {
-  const subpopDeleteButton = component.find('.subpopulation__header button').at(1);
+  const subpopDeleteButton = component.find('.card-element__header button').at(1);
 
   subpopDeleteButton.simulate('click');
 

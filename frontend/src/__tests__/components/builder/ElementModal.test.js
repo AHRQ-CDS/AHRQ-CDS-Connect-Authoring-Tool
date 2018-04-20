@@ -1,7 +1,7 @@
 import Modal from 'react-modal';
 import _ from 'lodash';
-import ElementModal from '../../components/builder/ElementModal';
-import { fullRenderComponent, ReactWrapper } from '../../utils/test_helpers';
+import ElementModal from '../../../components/builder/ElementModal';
+import { fullRenderComponent, ReactWrapper } from '../../../utils/test_helpers';
 
 let component;
 let input;

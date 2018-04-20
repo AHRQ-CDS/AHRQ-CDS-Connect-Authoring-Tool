@@ -1,7 +1,7 @@
-import { createTemplateInstance, fullRenderComponent } from '../../utils/test_helpers';
-import { instanceTree, genericInstance } from '../../utils/test_fixtures';
+import { createTemplateInstance, fullRenderComponent } from '../../../utils/test_helpers';
+import { instanceTree, genericInstance } from '../../../utils/test_fixtures';
 
-import TemplateInstance from '../../components/builder/TemplateInstance';
+import TemplateInstance from '../../../components/builder/TemplateInstance';
 
 const originalInstance = instanceTree.childInstances[0];
 const genericTemplateInstance = createTemplateInstance(genericInstance);

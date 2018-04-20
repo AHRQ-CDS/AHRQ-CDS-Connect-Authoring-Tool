@@ -48,7 +48,7 @@ export default class ValueSetTemplate extends Component {
 
     return (
       <div className="row vs-info">
-        <div className="bold col-3 vs-info__label">
+        <div className="col-3 bold align-right vs-info__label">
           Value Set{vsacParameter.valueSets.length > 1 ? ` ${index + 1}` : ''}:
         </div>
 
@@ -57,7 +57,7 @@ export default class ValueSetTemplate extends Component {
             {` ${valueSet.name} (${valueSet.oid})`}
           </div>
 
-          <div className="col-2 vs-info__buttons align-right">
+          <div className="col-2 align-right vs-info__buttons">
             {this.viewValueSetDetails(valueSet)}
 
             <span

@@ -1,0 +1,52 @@
+.recommendations {
+  &__deliver-text {
+    margin-bottom: 1em;
+  }
+}
+
+.recommendation {
+  margin-bottom: 1em;
+
+  &__subpopulation-pill {
+    display: flex;
+    align-items: center;
+    margin: 0.5em 0;
+    padding: 0.5em;
+    background-color: $body-bg;
+    border: $border-global;
+    border-radius: $border-radius;
+
+    button {
+      border: 0.1em solid $border-color;
+      margin-left: auto;
+    }
+  }
+
+  &__add-subpopulation {
+    display: flex;
+    align-items: center;
+    flex: 0 0 100%;
+    margin-bottom: 2em;
+
+    > div { flex: 1; }
+
+    a {
+      margin-left: 1em;
+      cursor: pointer;
+    }
+  }
+
+  &__title {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    button {
+      border: 0.1em solid $border-color;
+    }
+  }
+
+  .card-element {
+    padding: 1em;
+  }
+}

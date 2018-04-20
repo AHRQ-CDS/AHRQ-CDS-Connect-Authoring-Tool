@@ -1,9 +1,9 @@
 import _ from 'lodash';
-import ConjunctionGroup from '../../components/builder/ConjunctionGroup';
-import TemplateInstance from '../../components/builder/TemplateInstance';
-import StringParameter from '../../components/builder/parameters/StringParameter';
-import { fullRenderComponent, shallowRenderComponent, createTemplateInstance } from '../../utils/test_helpers';
-import { instanceTree, elementGroups } from '../../utils/test_fixtures';
+import ConjunctionGroup from '../../../components/builder/ConjunctionGroup';
+import TemplateInstance from '../../../components/builder/TemplateInstance';
+import StringParameter from '../../../components/builder/parameters/types/StringParameter';
+import { fullRenderComponent, shallowRenderComponent, createTemplateInstance } from '../../../utils/test_helpers';
+import { instanceTree, elementGroups } from '../../../utils/test_fixtures';
 
 let rootConjunction;
 let childConjunction;
@@ -72,7 +72,7 @@ afterEach(() => {
 });
 
 test('has correct base class', () => {
-  rootConjunction.hasClass('conjunction-group');
+  rootConjunction.hasClass('card-group');
 });
 
 test('root level returns empty path', () => {
@@ -84,8 +84,8 @@ test('child level returns correct path', () => {
 });
 
 test('applies correct nesting class', () => {
-  expect(rootConjunction.node.getNestingClassName()).toEqual('conjunction-group--even');
-  expect(childConjunction.node.getNestingClassName()).toEqual('conjunction-group--top conjunction-group--odd');
+  expect(rootConjunction.node.getNestingClassName()).toEqual('card-group__top');
+  expect(childConjunction.node.getNestingClassName()).toEqual('card-group__odd');
 });
 
 test('adds children at correct tree position', () => {
@@ -107,14 +107,14 @@ test('adds children at correct tree position', () => {
 });
 
 test('can delete group', () => {
-  childConjunction.find('.conjunction-group__button-bar button').first().simulate('click');
+  childConjunction.find('.card-group__buttons button').first().simulate('click');
 
   expect(deleteInstance).toHaveBeenCalledWith(treeName, childConjunctionPath, []);
 });
 
 test('edits own type', () => {
   const orType = rootConjunction.node.types.find(type => type.id === 'Or');
-  const typeSelect = rootConjunction.find('.conjunction-group__conjunction-select').at(0);
+  const typeSelect = rootConjunction.find('.card-group__conjunction-select').at(0);
   typeSelect.find('.Select-control').at(0).simulate('mouseDown', { button: 0 });
   typeSelect.find('.Select-option').at(1).simulate('mouseDown', { button: 0 }); // Change to 'Or' type
 

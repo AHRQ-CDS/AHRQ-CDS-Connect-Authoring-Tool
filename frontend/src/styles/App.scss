@@ -7,6 +7,8 @@
 @import 'node_modules/tocbot/src/scss/tocbot-core';
 @import 'node_modules/tocbot/src/scss/tocbot-default-theme';
 @import 'node_modules/react-select/dist/react-select';
+@import 'node_modules/react-datepicker/dist/react-datepicker';
+@import 'node_modules/rc-time-picker/assets/index';
 
 /* ------------------------- IMPORT CUSTOM SCSS ---------------------------- */
 // site-wide elements
@@ -21,6 +23,7 @@
 @import 'elements/accessibility';
 @import 'elements/effects';
 @import 'elements/select';
+@import 'elements/cards';
 
 // component-specific
 @import 'components/Header';
@@ -34,10 +37,10 @@
 @import 'components/builder/Element';
 @import 'components/artifact/Artifact';
 @import 'components/builder/CodeSelectModal';
-@import 'components/builder/ConjunctionGroup';
 @import 'components/builder/ElementSelect';
+@import 'components/builder/ErrorStatement';
 @import 'components/builder/Modifiers';
-@import 'components/builder/Recommendation';
+@import 'components/builder/Recommendations';
 @import 'components/builder/Subpopulations';
 @import 'components/builder/Parameters';
 @import 'components/builder/RepoUploadModal';
@@ -52,25 +55,28 @@
 @font-face {
   font-family: 'Code-Pro';
   src: url("./fonts/233341_0_0.eot");
-  src: url("./fonts/233341_0_0.eot?#iefix") format("embedded-opentype"),
-  url("./fonts/233341_0_0.woff") format("woff"),
-  url("./fonts/233341_0_0.ttf") format("truetype");
+  src:
+    url("./fonts/233341_0_0.eot?#iefix") format("embedded-opentype"),
+    url("./fonts/233341_0_0.woff") format("woff"),
+    url("./fonts/233341_0_0.ttf") format("truetype");
 }
 
 @font-face {
   font-family: 'Code-Pro-LC';
   src: url("./fonts/235257_0_0.eot");
-  src: url("./fonts/235257_0_0.eot?#iefix") format("embedded-opentype"),
-  url("./fonts/235257_0_0.woff") format("woff"),
-  url("./fonts/235257_0_0.ttf") format("truetype");
+  src:
+    url("./fonts/235257_0_0.eot?#iefix") format("embedded-opentype"),
+    url("./fonts/235257_0_0.woff") format("woff"),
+    url("./fonts/235257_0_0.ttf") format("truetype");
 }
 
 @font-face {
   font-family: 'CartoGothicStdBook';
   src: url("./fonts/CartoGothicStd-Book-webfont.eot");
-  src: url("./fonts/CartoGothicStd-Book-webfont.eot?#iefix") format("embedded-opentype"),
-  url("./fonts/CartoGothicStd-Book-webfont.woff") format("woff"),
-  url("./fonts/CartoGothicStd-Book-webfont.ttf") format("truetype");
+  src:
+    url("./fonts/CartoGothicStd-Book-webfont.eot?#iefix") format("embedded-opentype"),
+    url("./fonts/CartoGothicStd-Book-webfont.woff") format("woff"),
+    url("./fonts/CartoGothicStd-Book-webfont.ttf") format("truetype");
   font-weight: normal;
   font-style: normal;
 }
@@ -78,9 +84,10 @@
 @font-face {
   font-family: 'CartoGothicStdItalic';
   src: url("./fonts/CartoGothicStd-Italic-webfont.eot");
-  src: url("./fonts/CartoGothicStd-Italic-webfont.eot?#iefix") format("embedded-opentype"),
-  url("./fonts/CartoGothicStd-Italic-webfont.woff") format("woff"),
-  url("./fonts/CartoGothicStd-Italic-webfont.ttf") format("truetype");
+  src:
+    url("./fonts/CartoGothicStd-Italic-webfont.eot?#iefix") format("embedded-opentype"),
+    url("./fonts/CartoGothicStd-Italic-webfont.woff") format("woff"),
+    url("./fonts/CartoGothicStd-Italic-webfont.ttf") format("truetype");
   font-weight: normal;
   font-style: normal;
 }
@@ -88,9 +95,10 @@
 @font-face {
   font-family: 'CartoGothicStdBold';
   src: url("./fonts/CartoGothicStd-Bold-webfont.eot");
-  src: url("./fonts/CartoGothicStd-Bold-webfont.eot?#iefix") format("embedded-opentype"),
-  url("./fonts/CartoGothicStd-Bold-webfont.woff") format("woff"),
-  url("./fonts/CartoGothicStd-Bold-webfont.ttf") format("truetype");
+  src:
+    url("./fonts/CartoGothicStd-Bold-webfont.eot?#iefix") format("embedded-opentype"),
+    url("./fonts/CartoGothicStd-Bold-webfont.woff") format("woff"),
+    url("./fonts/CartoGothicStd-Bold-webfont.ttf") format("truetype");
   font-weight: normal;
   font-style: normal;
 }
@@ -98,9 +106,10 @@
 @font-face {
   font-family: 'CartoGothicStdBoldItalic';
   src: url("./fonts/CartoGothicStd-BoldItalic-webfont.eot");
-  src: url("./fonts/CartoGothicStd-BoldItalic-webfont.eot?#iefix") format("embedded-opentype"),
-  url("./fonts/CartoGothicStd-BoldItalic-webfont.woff") format("woff"),
-  url("./fonts/CartoGothicStd-BoldItalic-webfont.ttf") format("truetype");
+  src:
+    url("./fonts/CartoGothicStd-BoldItalic-webfont.eot?#iefix") format("embedded-opentype"),
+    url("./fonts/CartoGothicStd-BoldItalic-webfont.woff") format("woff"),
+    url("./fonts/CartoGothicStd-BoldItalic-webfont.ttf") format("truetype");
   font-weight: normal;
   font-style: normal;
 }

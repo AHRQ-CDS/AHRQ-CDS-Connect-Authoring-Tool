@@ -1,7 +1,7 @@
 .element-select {
-  display: flex;
-  align-items: center;
-  margin: 20px;
+  margin: 1em;
+
+  &__modal { padding-right: 10px; }
 
   &__label {
     min-width: 160px;
@@ -34,6 +34,12 @@
   &__option-category {
     margin-left: 0.5em;
     color: $gray;
+  }
+
+  &__add-element {
+    display: flex;
+    align-items: center;
+    flex: 0 0 100%;
   }
 }
 
@@ -169,7 +175,9 @@
 }
 
 div.vsac-authenticate {
+  margin: 1em 0;
+
   > span {
-    margin-left: 20px;
+    margin-left: 1em;
   }
 }

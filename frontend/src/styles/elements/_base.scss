@@ -34,6 +34,8 @@ main {
   }
 }
 
+label { margin-bottom: 0; }
+
 .button-style,
 #{$all-buttons},
 #{$all-text-inputs} {
@@ -143,6 +145,7 @@ h6 {
   font-size: 0.8em;
   background-color: lighten($red, 45%);
   padding: 10px;
+  margin: 10px 0;
 }
 
 .error-message {
@@ -156,3 +159,8 @@ h6 {
 .Select .Select-placeholder {
   color: lighten($gray, 15%) !important;
 }
+
+.bold { font-weight: bold; }
+
+.align-right { text-align: right; }
+

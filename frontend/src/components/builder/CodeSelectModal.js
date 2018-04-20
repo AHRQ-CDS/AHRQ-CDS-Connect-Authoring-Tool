@@ -4,10 +4,9 @@ import FontAwesome from 'react-fontawesome';
 import Select from 'react-select';
 import _ from 'lodash';
 import axios from 'axios';
-
 import Modal from 'react-modal';
 
-class CodeSelectModal extends Component {
+export default class CodeSelectModal extends Component {
   constructor(props) {
     super(props);
 
@@ -89,6 +88,20 @@ class CodeSelectModal extends Component {
       this.props.updateModifier({
         code: this.state.codeText, codeSystem: { name: this.state.selectedCS.value, id: this.state.selectedCS.id }
       });
+
+      this.closeCodeSelectModal();
+      return;
+    }
+
+    // If adding to a parameter, add it
+    if (this.props.addToParameter) {
+      this.props.addToParameter({
+        system: this.state.selectedCS.value,
+        uri: this.state.selectedCS.id || this.state.codeSystemText,
+        code: this.state.codeText,
+        display: this.state.codeData ? this.state.codeData.display : ''
+      });
+
       this.closeCodeSelectModal();
       return;
     }
@@ -272,7 +285,7 @@ CodeSelectModal.propTypes = {
     code: PropTypes.string.isRequired,
     codeSystem: PropTypes.shape({ name: PropTypes.string.isRequired, id: PropTypes.string.isRequired })
   })),
-  labels: PropTypes.object
+  labels: PropTypes.object,
+  updateModifier: PropTypes.func,
+  addToParameter: PropTypes.func
 };
-
-export default CodeSelectModal;
