@@ -6,21 +6,6 @@ import Subpopulation from './Subpopulation';
 import createTemplateInstance from '../../utils/templates';
 
 export default class Subpopulations extends Component {
-  static propTypes = {
-    artifact: PropTypes.object.isRequired,
-    updateSubpopulations: PropTypes.func.isRequired,
-    templates: PropTypes.array.isRequired,
-    addInstance: PropTypes.func.isRequired,
-    editInstance: PropTypes.func.isRequired,
-    updateInstanceModifiers: PropTypes.func.isRequired,
-    deleteInstance: PropTypes.func.isRequired,
-    getAllInstances: PropTypes.func.isRequired,
-    updateRecsSubpop: PropTypes.func.isRequired,
-    checkSubpopulationUsage: PropTypes.func.isRequired,
-    parameters: PropTypes.array.isRequired,
-    name: PropTypes.string.isRequired
-  };
-
   constructor(props) {
     super(props);
 
@@ -78,27 +63,76 @@ export default class Subpopulations extends Component {
   render() {
     return (
       <div className="subpopulations">
-        { this.state.subpopulations.map((subpop, i) => (
+        {this.state.subpopulations.map((subpop, i) => (
             <Subpopulation
-              key={ subpop.uniqueId }
-              treeName={ this.props.name }
-              subpopulation={ subpop }
-              subpopulationIndex={ i + this.state.numOfSpecialSubpopulations } // System needs to know true index out of all subpopulations
-              setSubpopulationName={ this.setSubpopulationName }
-              deleteSubpopulation={ this.deleteSubpopulation }
-              parameters={ this.props.parameters }
-              addInstance={ this.props.addInstance }
-              editInstance={ this.props.editInstance }
-              updateInstanceModifiers={ this.props.updateInstanceModifiers }
-              deleteInstance={ this.props.deleteInstance }
-              getAllInstances={ this.props.getAllInstances }
-              templates={ this.props.templates }
-              artifact={this.props.artifact} />
+              key={subpop.uniqueId}
+              treeName={this.props.name}
+              resources={this.props.resources}
+              valueSets={this.props.valueSets}
+              loadValueSets={this.props.loadValueSets}
+              subpopulation={subpop}
+              subpopulationIndex={i + this.state.numOfSpecialSubpopulations} // System needs to know true index out of all subpopulations
+              setSubpopulationName={this.setSubpopulationName}
+              deleteSubpopulation={this.deleteSubpopulation}
+              parameters={this.props.parameters}
+              addInstance={this.props.addInstance}
+              editInstance={this.props.editInstance}
+              updateInstanceModifiers={this.props.updateInstanceModifiers}
+              deleteInstance={this.props.deleteInstance}
+              getAllInstances={this.props.getAllInstances}
+              templates={this.props.templates}
+              artifact={this.props.artifact}
+              conversionFunctions={this.props.conversionFunctions}
+              loginVSACUser={this.props.loginVSACUser}
+              setVSACAuthStatus={this.props.setVSACAuthStatus}
+              vsacStatus={this.props.vsacStatus}
+              vsacStatusText={this.props.vsacStatusText}
+              timeLastAuthenticated={this.props.timeLastAuthenticated}
+              searchVSACByKeyword={this.props.searchVSACByKeyword}
+              isSearchingVSAC={this.props.isSearchingVSAC}
+              vsacSearchResults={this.props.vsacSearchResults}
+              vsacSearchCount={this.props.vsacSearchCount}
+              getVSDetails={this.props.getVSDetails}
+              isRetrievingDetails={this.props.isRetrievingDetails}
+              vsacDetailsCodes={this.props.vsacDetailsCodes}
+              vsacFHIRCredentials={this.props.vsacFHIRCredentials} />
           ))}
-        <button className="button primary-button" onClick={ this.addSubpopulation }>
+
+        <button className="button primary-button new-subpopulation-button" onClick={this.addSubpopulation}>
           New subpopulation
         </button>
       </div>
     );
   }
 }
+
+Subpopulations.propTypes = {
+  artifact: PropTypes.object.isRequired,
+  resources: PropTypes.object,
+  valueSets: PropTypes.array,
+  loadValueSets: PropTypes.func.isRequired,
+  updateSubpopulations: PropTypes.func.isRequired,
+  templates: PropTypes.array.isRequired,
+  addInstance: PropTypes.func.isRequired,
+  editInstance: PropTypes.func.isRequired,
+  updateInstanceModifiers: PropTypes.func.isRequired,
+  deleteInstance: PropTypes.func.isRequired,
+  getAllInstances: PropTypes.func.isRequired,
+  updateRecsSubpop: PropTypes.func.isRequired,
+  checkSubpopulationUsage: PropTypes.func.isRequired,
+  parameters: PropTypes.array.isRequired,
+  name: PropTypes.string.isRequired,
+  conversionFunctions: PropTypes.array,
+  loginVSACUser: PropTypes.func.isRequired,
+  setVSACAuthStatus: PropTypes.func.isRequired,
+  vsacStatus: PropTypes.string,
+  vsacStatusText: PropTypes.string,
+  timeLastAuthenticated: PropTypes.instanceOf(Date),
+  searchVSACByKeyword: PropTypes.func.isRequired,
+  isSearchingVSAC: PropTypes.bool.isRequired,
+  vsacSearchResults: PropTypes.array.isRequired,
+  vsacSearchCount: PropTypes.number.isRequired,
+  getVSDetails: PropTypes.func.isRequired,
+  isRetrievingDetails: PropTypes.bool.isRequired,
+  vsacDetailsCodes: PropTypes.array.isRequired
+};

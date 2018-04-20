@@ -14,6 +14,8 @@ import {
 import loadTemplates from '../actions/templates';
 import loadResources from '../actions/resources';
 import loadValueSets from '../actions/value_sets';
+import { loginVSACUser, setVSACAuthStatus, searchVSACByKeyword, getVSDetails } from '../actions/vsac';
+import loadConversionFunctions from '../actions/modifiers';
 
 import EditArtifactModal from '../components/artifact/EditArtifactModal';
 import ConjunctionGroup from '../components/builder/ConjunctionGroup';
@@ -58,6 +60,7 @@ export class Builder extends Component {
     });
     this.props.loadResources();
     this.props.publishArtifact();
+    this.props.loadConversionFunctions();
   }
 
   componentWillUnmount() {
@@ -114,11 +117,23 @@ export class Builder extends Component {
       target.id = editedParams.id;
       target.name = editedParams.name;
     } else {
-      // function to retrieve relevant parameter
-      const paramIndex = target.parameters.findIndex(param =>
-        Object.prototype.hasOwnProperty.call(editedParams, param.id));
+      // If only one parameter is being updated, it comes in as a single object. Put it into an array of objects.
+      if (!Array.isArray(editedParams)) {
+        editedParams = [editedParams]; // eslint-disable-line no-param-reassign
+      }
+      // Update each parameter attribute that needs updating. Then updated the full tree with changes.
+      editedParams.forEach((editedParam) => {
+        // function to retrieve relevant parameter
+        const paramIndex = target.parameters.findIndex(param =>
+          Object.prototype.hasOwnProperty.call(editedParam, param.id));
 
-      target.parameters[paramIndex].value = editedParams[target.parameters[paramIndex].id];
+        // If an attribute was specified, update that one. Otherwise update the value attribute.
+        if (editedParam.attributeToEdit) {
+          target.parameters[paramIndex][editedParam.attributeToEdit] = editedParam[target.parameters[paramIndex].id];
+        } else {
+          target.parameters[paramIndex].value = editedParam[target.parameters[paramIndex].id];
+        }
+      });
     }
 
     this.setTree(treeName, treeData, tree);
@@ -254,7 +269,11 @@ export class Builder extends Component {
   // ----------------------- RENDER ---------------------------------------- //
 
   renderConjunctionGroup = (treeName) => {
-    const { artifact, templates, resources, valueSets } = this.props;
+    const {
+      artifact, templates, resources, valueSets,
+      vsacStatus, vsacStatusText, timeLastAuthenticated,
+      isRetrievingDetails, vsacDetailsCodes, conversionFunctions
+    } = this.props;
     const namedParameters = _.filter(artifact.parameters, p => (!_.isNull(p.name) && p.name.length));
 
     if (artifact && artifact[treeName].childInstances) {
@@ -273,7 +292,22 @@ export class Builder extends Component {
           deleteInstance={this.deleteInstance}
           getAllInstances={this.getAllInstances}
           updateInstanceModifiers={this.updateInstanceModifiers}
-          parameters={namedParameters} />
+          parameters={namedParameters}
+          conversionFunctions={conversionFunctions}
+          loginVSACUser={this.props.loginVSACUser}
+          setVSACAuthStatus={this.props.setVSACAuthStatus}
+          vsacStatus={vsacStatus}
+          vsacStatusText={vsacStatusText}
+          timeLastAuthenticated={timeLastAuthenticated}
+          searchVSACByKeyword={this.props.searchVSACByKeyword}
+          isSearchingVSAC={this.props.isSearchingVSAC}
+          vsacSearchResults={this.props.vsacSearchResults}
+          vsacSearchCount={this.props.vsacSearchCount}
+          getVSDetails={this.props.getVSDetails}
+          isRetrievingDetails={isRetrievingDetails}
+          vsacDetailsCodes={vsacDetailsCodes}
+          vsacFHIRCredentials={this.props.vsacFHIRCredentials}
+          />
       );
     }
 
@@ -321,7 +355,7 @@ export class Builder extends Component {
   }
 
   render() {
-    const { artifact, templates } = this.props;
+    const { artifact, templates, conversionFunctions } = this.props;
     let namedParameters = [];
     if (artifact) {
       namedParameters = _.filter(artifact.parameters, p => (!_.isNull(p.name) && p.name.length));
@@ -366,6 +400,9 @@ export class Builder extends Component {
                   <Subpopulations
                     name={'subpopulations'}
                     artifact={artifact}
+                    resources={this.props.resources}
+                    valueSets={this.props.valueSets}
+                    loadValueSets={this.props.loadValueSets}
                     updateSubpopulations={this.updateSubpopulations}
                     parameters={namedParameters}
                     addInstance={this.addInstance}
@@ -375,7 +412,21 @@ export class Builder extends Component {
                     getAllInstances={this.getAllInstances}
                     templates={templates}
                     checkSubpopulationUsage={this.checkSubpopulationUsage}
-                    updateRecsSubpop={this.updateRecsSubpop} />
+                    updateRecsSubpop={this.updateRecsSubpop}
+                    conversionFunctions={conversionFunctions}
+                    loginVSACUser={this.props.loginVSACUser}
+                    setVSACAuthStatus={this.props.setVSACAuthStatus}
+                    vsacStatus={this.props.vsacStatus}
+                    vsacStatusText={this.props.vsacStatusText}
+                    timeLastAuthenticated={this.props.timeLastAuthenticated}
+                    searchVSACByKeyword={this.props.searchVSACByKeyword}
+                    isSearchingVSAC={this.props.isSearchingVSAC}
+                    vsacSearchResults={this.props.vsacSearchResults}
+                    vsacSearchCount={this.props.vsacSearchCount}
+                    getVSDetails={this.props.getVSDetails}
+                    isRetrievingDetails={this.props.isRetrievingDetails}
+                    vsacDetailsCodes={this.props.vsacDetailsCodes}
+                    vsacFHIRCredentials={this.props.vsacFHIRCredentials}/>
                 </TabPanel>
 
                 <TabPanel>
@@ -392,7 +443,13 @@ export class Builder extends Component {
                 <TabPanel>
                   <Parameters
                     parameters={this.props.artifact.parameters}
-                    updateParameters={this.updateParameters} />
+                    updateParameters={this.updateParameters}
+                    timeLastAuthenticated={this.props.timeLastAuthenticated}
+                    vsacFHIRCredentials={this.props.vsacFHIRCredentials}
+                    loginVSACUser={this.props.loginVSACUser}
+                    setVSACAuthStatus={this.props.setVSACAuthStatus}
+                    vsacStatus={this.props.vsacStatus}
+                    vsacStatusText={this.props.vsacStatusText} />
                 </TabPanel>
 
                 <TabPanel>
@@ -441,7 +498,8 @@ Builder.propTypes = {
   setStatusMessage: PropTypes.func.isRequired,
   downloadArtifact: PropTypes.func.isRequired,
   saveArtifact: PropTypes.func.isRequired,
-  updateAndSaveArtifact: PropTypes.func.isRequired
+  updateAndSaveArtifact: PropTypes.func.isRequired,
+  conversionFunctions: PropTypes.array
 };
 
 // these props are used for dispatching actions
@@ -458,7 +516,12 @@ function mapDispatchToProps(dispatch) {
     saveArtifact,
     updateAndSaveArtifact,
     publishArtifact,
-    clearArtifactValidationWarnings
+    loginVSACUser,
+    setVSACAuthStatus,
+    searchVSACByKeyword,
+    getVSDetails,
+    clearArtifactValidationWarnings,
+    loadConversionFunctions
   }, dispatch);
 }
 
@@ -471,7 +534,17 @@ function mapStateToProps(state) {
     templates: state.templates.templates,
     resources: state.resources.resources,
     valueSets: state.valueSets.valueSets,
-    publishEnabled: state.artifacts.publishEnabled
+    publishEnabled: state.artifacts.publishEnabled,
+    vsacStatus: state.vsac.authStatus,
+    vsacStatusText: state.vsac.authStatusText,
+    timeLastAuthenticated: state.vsac.timeLastAuthenticated,
+    isSearchingVSAC: state.vsac.isSearchingVSAC,
+    vsacSearchResults: state.vsac.searchResults,
+    vsacSearchCount: state.vsac.searchCount,
+    isRetrievingDetails: state.vsac.isRetrievingDetails,
+    vsacDetailsCodes: state.vsac.detailsCodes,
+    vsacFHIRCredentials: { username: state.vsac.username, password: state.vsac.password },
+    conversionFunctions: state.modifiers.conversionFunctions
   };
 }
 

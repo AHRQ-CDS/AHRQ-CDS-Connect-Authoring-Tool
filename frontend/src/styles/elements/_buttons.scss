@@ -30,8 +30,28 @@ button.transparent-button {
   }
 }
 
-.button[disabled], .button[disabled]:hover, .button[disabled]:focus, .button[disabled]:active {
-  opacity: .45;
+.button[disabled],
+.button[disabled]:hover,
+.button[disabled]:focus,
+.button[disabled]:active {
+  opacity: 0.45;
+}
+
+button.disabled-button {
+  @include button(
+    $disabled-button-text-color,
+    $disabled-button-bg-color,
+    $disabled-button-border-color,
+    $disabled-button-border-hover-color,
+    none
+  );
+
+  &:hover,
+  &:focus,
+  &:active {
+    background-color: $disabled-button-bg-color;
+    color: $disabled-button-text-color;
+  }
 }
 
 button.danger-button {
@@ -40,4 +60,23 @@ button.danger-button {
 
 .small-button {
   font-size: 0.75em;
+}
+
+.element__hidebutton,
+.element__deletebutton,
+.element-modal__searchbutton {
+  margin-left: 0.5em;
+  box-shadow: none;
+  background-color: $white;
+  border-color: $gray-light;
+
+  &:hover {
+    border-color: $secondary-button-border-hover-color;
+  }
+}
+
+.delete-code-button,
+.delete-valueset-button,
+.fa-eye {
+  cursor: pointer;
 }

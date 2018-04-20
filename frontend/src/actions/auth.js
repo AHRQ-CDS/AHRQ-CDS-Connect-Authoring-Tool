@@ -104,7 +104,6 @@ function logoutFailure(error) {
 export function logoutUser() {
   return (dispatch) => {
     dispatch(requestLogout());
-
     return axios.get(`${API_BASE}/auth/logout`)
       .then(() => dispatch(logoutSuccess()))
       .catch(error => dispatch(logoutFailure(error)));

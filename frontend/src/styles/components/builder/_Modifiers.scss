@@ -1,0 +1,26 @@
+.qualifier {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  flex-wrap: wrap;
+
+  .Select {
+    margin-right: 20px;
+
+    .Select-control {
+      min-width: 300px;
+    }
+  }
+
+  .selected-qualifier {
+    padding: 5px 0;
+  }
+
+  .vs-info__buttons {
+    padding-right: 0;
+
+    #open-modal-button {
+      @include respond-to('1439px') { margin-right: -5px; }
+    }
+  }
+}

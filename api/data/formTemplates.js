@@ -67,6 +67,7 @@ module.exports = [
         suppress: true,
         extends: 'Base',
         template: 'GenericObservation',
+        suppressedModifiers: ['ConvertToMgPerdL'], // checkInclusionInVS is assumed to be suppressed
         parameters: [
           { id: 'observation', type: 'observation_vsac', name: 'Observation' },
         ]
@@ -352,14 +353,25 @@ module.exports = [
         ]
       },
       {
-        id: 'GenericMedication_vsac',
-        name: 'Medication',
-        returnType: 'list_of_medications',
+        id: 'GenericMedicationStatement_vsac',
+        name: 'Medication Statement',
+        returnType: 'list_of_medication_statements',
         suppress: true,
         extends: 'Base',
-        template: 'GenericStatement',
+        template: 'GenericMedicationStatement',
         parameters: [
-          { id: 'medication', type: 'medication_vsac', name: 'Medication' }
+          { id: 'medicationStatement', type: 'medicationStatement_vsac', name: 'Medication Statement' }
+        ]
+      },
+      {
+        id: 'GenericMedicationOrder_vsac',
+        name: 'Medication Order',
+        returnType: 'list_of_medication_orders',
+        suppress: true,
+        extends: 'Base',
+        template: 'GenericMedicationOrder',
+        parameters: [
+          { id: 'medicationOrder', type: 'medicationOrder_vsac', name: 'Medication Order' }
         ]
       },
       {

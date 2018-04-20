@@ -2,7 +2,12 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import _ from 'lodash';
 import Select from 'react-select';
+import FontAwesome from 'react-fontawesome';
+
 import ElementModal from './ElementModal';
+import ElementSelectMenuRenderer from './ElementSelectMenuRenderer';
+import VSACAuthenticationModal from './VSACAuthenticationModal';
+import CodeSelectModal from './CodeSelectModal';
 import filterUnsuppressed from '../../utils/filter';
 import { sortAlphabeticallyByKey } from '../../utils/sort';
 
@@ -15,28 +20,54 @@ const getAllElements = categories => _.flatten(categories.map(cat => (
 
 const optionRenderer = option => (
   <div className="element-select__option">
-    <span className="element-select__option-value">{option.name}</span>
-    { option.category && <span className="element-select__option-category">({option.category})</span> }
+    <span className="element-select__option-value">{option.label}</span>
+
+    {option.vsacAuthRequired &&
+      <FontAwesome name="key" className="element-select__option-category" />
+    }
   </div>
 );
 
-class ElementSelect extends Component {
+const elementOptions = [
+  {
+    value: 'allergy_intolerance',
+    label: 'Allergy Intolerance',
+    vsacAuthRequired: true,
+    template: 'GenericAllergyIntolerance_vsac'
+  },
+  { value: 'condition', label: 'Condition', vsacAuthRequired: true, template: 'GenericCondition_vsac' },
+  { value: 'demographics', label: 'Demographics', vsacAuthRequired: false },
+  { value: 'encounter', label: 'Encounter', vsacAuthRequired: true, template: 'GenericEncounter_vsac' },
+  {
+    value: 'medicationStatement',
+    label: 'Medication Statement',
+    vsacAuthRequired: true,
+    template: 'GenericMedicationStatement_vsac'
+  },
+  {
+    value: 'medicationOrder',
+    label: 'Medication Order',
+    vsacAuthRequired: true,
+    template: 'GenericMedicationOrder_vsac'
+  },
+  { value: 'observation', label: 'Observation', vsacAuthRequired: true, template: 'GenericObservation_vsac' },
+  { value: 'booleanParameter', label: 'Parameters', vsacAuthRequired: false },
+  { value: 'procedure', label: 'Procedure', vsacAuthRequired: true, template: 'GenericProcedure_vsac' }
+];
+
+export default class ElementSelect extends Component {
   constructor(props) {
     super(props);
 
     this.internalCategories = this.generateInternalCategories();
 
     this.state = {
-      categories: this.internalCategories.sort(sortAlphabeticallyByKey('name'))
+      categories: this.internalCategories.sort(sortAlphabeticallyByKey('name')),
+      selectedElement: null
     };
 
     this.elementInputId = '';
     this.categoryInputId = '';
-  }
-
-  static propTypes = {
-    categories: PropTypes.array.isRequired,
-    onSuggestionSelected: PropTypes.func.isRequired
   }
 
   componentWillMount() {
@@ -62,24 +93,35 @@ class ElementSelect extends Component {
   generateInternalCategories = () => {
     let categoriesCopy = _.cloneDeep(this.props.categories);
     categoriesCopy = filterUnsuppressed(categoriesCopy);
+    const paramsIndex = categoriesCopy.findIndex(cat => cat.name === 'Parameters');
 
     if (this.props.parameters.length) {
-      const paramsIndex = categoriesCopy.findIndex(cat => cat.name === 'Parameters');
       let parametersCategory;
       if (paramsIndex >= 0) {
         [parametersCategory] = categoriesCopy.splice(paramsIndex, 1);
       } else {
         parametersCategory = { icon: 'sign-in', name: 'Parameters', entries: [] };
       }
-      parametersCategory.entries = parametersCategory.entries.concat(this.props.parameters.map(param => ({
+
+      // Only include boolean parameters. Don't include blank parameters to add to workspace.
+      parametersCategory.entries = this.props.parameters.map(param => ({
+        id: param.name,
         name: param.name,
-        parameters: [{ value: param.name }],
-        template: 'EmptyParameter',
-        cannotHaveModifiers: true,
-        returnType: 'boolean'
-      })));
+        type: 'parameter',
+        returnType: 'boolean',
+        extends: 'Base',
+        parameters: [
+          { id: 'element_name', type: 'string', name: 'Element Name', value: param.name },
+          { id: 'default', type: 'boolean', name: 'Default', value: param.value }
+        ]
+      }));
 
       categoriesCopy.push(parametersCategory);
+    } else if (this.props.parameters.length === 0 && paramsIndex >= 0) {
+      // No parameters have been made. Restrict creating new parameters within the workspace.
+      categoriesCopy[paramsIndex].entries = [];
+    } else {
+      categoriesCopy.push({ icon: 'sign-in', name: 'Parameters', entries: [] });
     }
 
     _.each(categoriesCopy, (cat) => {
@@ -96,6 +138,7 @@ class ElementSelect extends Component {
   }
 
   onSuggestionSelected = (suggestion) => {
+    this.setState({ selectedElement: null });
     const clone = _.cloneDeep(suggestion);
     delete clone.category; // Don't send the category which is only needed for this component
     this.props.onSuggestionSelected(clone);
@@ -105,52 +148,138 @@ class ElementSelect extends Component {
     this.setState({ selectedCategory: category });
   }
 
-  render() {
-    const placeholderText = 'Add element';
+  renderVSACLogin = () => {
+    // If last time authenticated was less than 7.5 hours ago, force user to log in again.
+    if (this.props.timeLastAuthenticated < new Date() - 27000000 || this.props.vsacFHIRCredentials.username == null) {
+      return (
+        <div className="vsac-authenticate">
+          <VSACAuthenticationModal
+            loginVSACUser={this.props.loginVSACUser}
+            setVSACAuthStatus={this.props.setVSACAuthStatus}
+            vsacStatus={this.props.vsacStatus}
+            vsacStatusText={this.props.vsacStatusText}
+          />
+        </div>
+      );
+    }
+
+    const { selectedElement } = this.state;
+
+    // Get template for selected element
+    let selectedTemplate;
+    this.props.categories.find((group) => {
+      selectedTemplate = group.entries.find(entry => entry.id === selectedElement.template);
+      // If a template is found in the entries of a group, stop searching.
+      return selectedTemplate !== undefined;
+    });
 
     return (
-      <div className="form__group element-select">
-        <Select
-          className="element-select__element-field"
-          name="element-select__element-field"
-          value="start"
-          valueKey="name"
-          placeholder={placeholderText}
-          aria-label={placeholderText}
-          clearable={false}
-          options={this.state.selectedCategory.entries}
-          labelKey='name'
-          matchProp='label'
-          optionRenderer={optionRenderer}
-          onChange={this.onSuggestionSelected}
-          inputProps={{ id: this.elementInputId, 'aria-label': placeholderText, title: placeholderText }}
-        />
-        <Select
-          className="element-select__category-field"
-          name="element-select__category-field"
-          value={this.state.selectedCategory}
-          valueKey='name'
-          searchable={false}
-          clearable={false}
-          options={this.state.categories}
-          labelKey='name'
-          onChange={this.onSelectedCategoryChange}
-          inputProps={{
-            id: this.categoryInputId,
-            'aria-label': 'Narrow elements by category',
-            title: 'Narrow elements by category'
-          }}
-        />
+      <div className="vsac-authenticate">
+        <button className="disabled-button" disabled={true}>
+          <FontAwesome name="check" /> VSAC Authenticated
+        </button>
+
         <ElementModal
           className="element-select__modal"
-          categories={this.state.categories}
-          selectedCategory={this.state.selectedCategory}
-          setSelectedCategory={this.onSelectedCategoryChange}
           onElementSelected={this.onSuggestionSelected}
+          searchVSACByKeyword={this.props.searchVSACByKeyword}
+          isSearchingVSAC={this.props.isSearchingVSAC}
+          vsacSearchResults={this.props.vsacSearchResults}
+          vsacSearchCount={this.props.vsacSearchCount}
+          template={selectedTemplate}
+          getVSDetails={this.props.getVSDetails}
+          isRetrievingDetails={this.props.isRetrievingDetails}
+          vsacDetailsCodes={this.props.vsacDetailsCodes}
         />
+
+        <CodeSelectModal
+          className="element-select__modal"
+          onElementSelected={this.onSuggestionSelected}
+          template={selectedTemplate}
+          vsacFHIRCredentials={this.props.vsacFHIRCredentials}
+        />
+      </div>
+    );
+  }
+
+  onNoAuthElementSelected = (element) => {
+    const suggestion = this.state.categories
+      .find(cat => cat.name === element.type)
+      .entries.find(entry => entry.id === element.value);
+
+    this.onSuggestionSelected(suggestion);
+  }
+
+  onElementSelected = (selectedElement) => {
+    this.setState({ selectedElement });
+  }
+
+  render() {
+    const { selectedElement } = this.state;
+    const placeholderText = 'Choose element type';
+    let noAuthElementOptions;
+    if (selectedElement && !selectedElement.vsacAuthRequired) {
+      noAuthElementOptions = this.state.categories
+        .find(cat => cat.name === selectedElement.label)
+        .entries.map(({ id, name }) => ({ value: id, label: name, type: selectedElement.label }));
+    }
+    const value = selectedElement && selectedElement.value;
+
+    return (
+      <div className="element-select form__group">
+        <div className="element-select__add-element">
+          <div className="element-select__label">
+            <FontAwesome name="plus" />
+            Add element
+          </div>
+
+          <Select
+            className="element-select__element-field"
+            name="element-select__element-field"
+            value={value}
+            placeholder={placeholderText}
+            aria-label={placeholderText}
+            clearable={false}
+            options={elementOptions}
+            onChange={this.onElementSelected}
+            optionRenderer={optionRenderer}
+            menuRenderer={ElementSelectMenuRenderer}
+          />
+
+          {selectedElement && !selectedElement.vsacAuthRequired &&
+            <Select
+              className="element-select__element-field"
+              placeholder={`Select ${selectedElement.label} element`}
+              aria-label={`Select ${selectedElement.label} element`}
+              options={noAuthElementOptions}
+              onChange={this.onNoAuthElementSelected}
+              />
+          }
+        </div>
+
+        {selectedElement && selectedElement.vsacAuthRequired && this.renderVSACLogin()}
       </div>
     );
   }
 }
 
-export default ElementSelect;
+ElementSelect.propTypes = {
+  categories: PropTypes.array.isRequired,
+  onSuggestionSelected: PropTypes.func.isRequired,
+  booleanParameters: PropTypes.arrayOf(PropTypes.shape({
+    name: PropTypes.string,
+    value: PropTypes.string
+  })),
+  loginVSACUser: PropTypes.func.isRequired,
+  setVSACAuthStatus: PropTypes.func.isRequired,
+  vsacStatus: PropTypes.string,
+  vsacStatusText: PropTypes.string,
+  timeLastAuthenticated: PropTypes.instanceOf(Date),
+  searchVSACByKeyword: PropTypes.func.isRequired,
+  isSearchingVSAC: PropTypes.bool.isRequired,
+  vsacSearchResults: PropTypes.array.isRequired,
+  vsacSearchCount: PropTypes.number.isRequired,
+  getVSDetails: PropTypes.func.isRequired,
+  isRetrievingDetails: PropTypes.bool.isRequired,
+  vsacDetailsCodes: PropTypes.array.isRequired
+};

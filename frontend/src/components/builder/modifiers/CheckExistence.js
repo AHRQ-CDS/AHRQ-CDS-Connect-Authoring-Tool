@@ -1,28 +1,35 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
+import Select from 'react-select';
 
 /* eslint-disable jsx-a11y/no-onchange */
-class CheckExistence extends Component {
+export default class CheckExistence extends Component {
+  handleChange = (selectedOption) => {
+    this.props.updateAppliedModifier(this.props.index, { value: selectedOption ? selectedOption.value : null });
+  }
+
   render() {
     return (
-      <div>
-        <span className="field">
-         <span className="control">
-           <span className="select">
-              <select name="Check Existence?" aria-label="Check Existence" title="Check Existence"
-                value={this.props.value}
-                onChange={(event) => {
-                  this.props.updateAppliedModifier(this.props.index, { value: event.target.value });
-                }}>
-                <option defaultValue="" value="">{'-- Check Existence --'}</option>
-                <option value="is null">{'is null'}</option>
-                <option value="is not null">{'is not null'}</option>
-              </select>
-            </span>
-          </span>
-        </span>
+      <div className="check-existence">
+        <Select
+          name="Check Existence?"
+          aria-label="Check Existence"
+          title="Check Existence"
+          placeholder="check existence value"
+          value={this.props.value}
+          onChange={this.handleChange}
+          options={[
+            { value: 'is null', label: 'is null' },
+            { value: 'is not null', label: 'is not null' }
+          ]}
+        />
       </div>
     );
   }
 }
 
-export default CheckExistence;
+CheckExistence.propTypes = {
+  index: PropTypes.number.isRequired,
+  value: PropTypes.string,
+  updateAppliedModifier: PropTypes.func.isRequired
+};

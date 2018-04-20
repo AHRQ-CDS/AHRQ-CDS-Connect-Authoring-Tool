@@ -79,19 +79,19 @@ describe('require validator', () => {
   });
 });
 
-describe('ifThen validator', () => {
+describe('ifThenAll validator', () => {
   it('should fail when the first field has a value and not the second one', () => {
-    expect(Validators.ifThen.check(['test', null])).toEqual(false);
+    expect(Validators.ifThenAll.check(['test', null])).toEqual(false);
   });
   it('should fail when the first field has a value and all following', () => {
-    expect(Validators.ifThen.check(['test', 'test2', null])).toEqual(false);
+    expect(Validators.ifThenAll.check(['test', 'test2', null])).toEqual(false);
   });
   it('should pass when all fields have values', () => {
-    expect(Validators.ifThen.check(['test', 'test'])).toEqual(true);
-    expect(Validators.ifThen.check(['test', 'test', 'test'])).toEqual(true);
+    expect(Validators.ifThenAll.check(['test', 'test'])).toEqual(true);
+    expect(Validators.ifThenAll.check(['test', 'test', 'test'])).toEqual(true);
   });
   it('should provide a good warning message', () => {
-    expect(Validators.ifThen.warning(['MyField', 'MyOtherField']))
+    expect(Validators.ifThenAll.warning(['MyField', 'MyOtherField']))
       .toEqual('You must specify MyOtherField if you specify MyField.');
   });
 });
@@ -108,5 +108,21 @@ describe('regex validator', () => {
   });
   it('should provide a good warning message', () => {
     expect(Validators.regex.warning(['MyField'], ['[0-9]+'])).toEqual('MyField must conform to the pattern /[0-9]+/.');
+  });
+});
+
+describe('requiredIfThenOne validator', () => {
+  it('should fail when the field has a value and not the provided arguments', () => {
+    expect(Validators.requiredIfThenOne.check(['test'], [null])).toEqual(false);
+    expect(Validators.requiredIfThenOne.check(['test'], [null, null])).toEqual(false);
+  });
+  it('should pass when the field has a value and one of the arguments has a value', () => {
+    expect(Validators.requiredIfThenOne.check(['test'], ['test2', null])).toEqual(true);
+    expect(Validators.requiredIfThenOne.check(['test'], [null, 'test2'])).toEqual(true);
+    expect(Validators.requiredIfThenOne.check(['test'], ['test', 'test'])).toEqual(true);
+  });
+  it('should provide a good warning message', () => {
+    expect(Validators.requiredIfThenOne.warning(['MyField'], ['MySecondField', 'MyThirdField']))
+      .toEqual('You must specify MyField and one of MySecondField, MyThirdField.');
   });
 });

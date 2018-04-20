@@ -7,10 +7,12 @@ function login(req, res) {
   vsacClient.getTicketGrantingTicket(user, pass)
     .then(t => {
       req.session.ticketGrantingTicket = t;
+      req.session.timeOfTGT = new Date();
       res.sendStatus(200);
     })
     .catch(error => {
       req.session.ticketGrantingTicket = null;
+      req.session.timeOfTGT = null;
       res.sendStatus(error.statusCode);
     });
 }
@@ -46,8 +48,19 @@ function search(req, res) {
   }
 }
 
+function getTimeOfTGT(req, res) {
+  const time = req.session.timeOfTGT;
+  if (time) {
+    res.json(time);
+  } else {
+    // No time of TGT on the session. Must login first.
+    res.sendStatus(401);
+  }
+}
+
 module.exports = {
   login,
   getVSDetailsByOID,
-  search
+  search,
+  getTimeOfTGT
 };

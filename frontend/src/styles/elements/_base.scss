@@ -20,6 +20,7 @@ body {
 body {
   background: $body-bg;
   overflow-x: hidden;
+  color: darken($gray, 10%);
 }
 
 main {
@@ -33,12 +34,19 @@ main {
   }
 }
 
+label { margin-bottom: 0; }
+
 .button-style,
 #{$all-buttons},
 #{$all-text-inputs} {
   font-size: 1rem;
-  padding: 0.4em 0.75em;
+  padding: 0 0.75em;
   border-radius: $border-radius;
+  height: 50px;
+
+  @media (min-width: 600px) and (max-width: 1439px) { height: 36px; }
+
+  @media (max-width: 599px) { height: 36px; }
 }
 
 .button-style,
@@ -134,6 +142,10 @@ h6 {
 
 .warning {
   color: $red;
+  font-size: 0.8em;
+  background-color: lighten($red, 45%);
+  padding: 10px;
+  margin: 10px 0;
 }
 
 .error-message {
@@ -143,3 +155,12 @@ h6 {
   background: $body-bg;
   color: $red;
 }
+
+.Select .Select-placeholder {
+  color: lighten($gray, 15%) !important;
+}
+
+.bold { font-weight: bold; }
+
+.align-right { text-align: right; }
+

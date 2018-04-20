@@ -4,23 +4,7 @@ import FontAwesome from 'react-fontawesome';
 
 import ConjunctionGroup from './ConjunctionGroup';
 
-class Subpopulation extends Component {
-  static propTypes = {
-    artifact: PropTypes.object.isRequired,
-    subpopulation: PropTypes.object.isRequired,
-    subpopulationIndex: PropTypes.number.isRequired,
-    setSubpopulationName: PropTypes.func.isRequired,
-    deleteSubpopulation: PropTypes.func.isRequired,
-    addInstance: PropTypes.func.isRequired,
-    editInstance: PropTypes.func.isRequired,
-    updateInstanceModifiers: PropTypes.func.isRequired,
-    deleteInstance: PropTypes.func.isRequired,
-    getAllInstances: PropTypes.func.isRequired,
-    treeName: PropTypes.string.isRequired,
-    parameters: PropTypes.array.isRequired,
-    templates: PropTypes.array.isRequired
-  }
-
+export default class Subpopulation extends Component {
   constructor(props) {
     super(props);
 
@@ -61,75 +45,127 @@ class Subpopulation extends Component {
 
   render() {
     return (
-      <div className="subpopulation">
-        <div className="subpopulation__header">
-          { this.state.isExpanded ?
-            <div className="subpopulation__title">
-              <FontAwesome fixedWidth name='angle-double-down'
-                id="collapse-icon"
-                tabIndex="0"
-                onClick={ this.state.isExpanded ? this.collapse : this.expand }
-                onKeyPress={ this.onEnterKey }/>
-              <input
-                type="text"
-                className="subpopulation__name-input"
-                title="Subpopulation Title"
-                aria-label="Subpopulation Title"
-                value={ this.props.subpopulation.subpopulationName }
-                onClick={ event => event.stopPropagation() }
-                onChange={ (event) => {
-                  this.props.setSubpopulationName(event.target.value, this.props.subpopulation.uniqueId);
-                }}
-              />
+      <div className="subpopulation card-group card-group__top">
+        <div className="card-element">
+          <div className="card-element__header">
+            {this.state.isExpanded ?
+              <div className="subpopulation__title">
+                <FontAwesome fixedWidth name='angle-double-down'
+                  id="collapse-icon"
+                  tabIndex="0"
+                  onClick={this.state.isExpanded ? this.collapse : this.expand}
+                  onKeyPress={this.onEnterKey}
+                />
+
+                <input
+                  type="text"
+                  className="subpopulation__name-input"
+                  title="Subpopulation Title"
+                  aria-label="Subpopulation Title"
+                  value={this.props.subpopulation.subpopulationName}
+                  onClick={event => event.stopPropagation()}
+                  onChange={(event) => {
+                    this.props.setSubpopulationName(event.target.value, this.props.subpopulation.uniqueId);
+                  }}
+                />
+              </div>
+            :
+              <div className="subpopulation-title">
+                <FontAwesome fixedWidth name='angle-double-right'
+                  id="collapse-icon"
+                  tabIndex="0"
+                  onClick={this.state.isExpanded ? this.collapse : this.expand}
+                  onKeyPress={this.onEnterKey} />
+                <h4>{this.props.subpopulation.subpopulationName}</h4>
+              </div>
+            }
+
+            <div className="card-element__buttons">
+              <button className="secondary-button" onClick={this.state.isExpanded ? this.collapse : this.expand}>
+                {this.state.isExpanded ? 'Done' : 'Edit'}
+              </button>
+
+              <button
+                aria-label="Remove subpopulation"
+                className="secondary-button"
+                onClick={() => this.props.deleteSubpopulation(this.props.subpopulation.uniqueId)}>
+                <FontAwesome fixedWidth name='times' />
+              </button>
             </div>
-          :
-            <div className="subpopulation__title">
-              <FontAwesome fixedWidth name='angle-double-right'
-                id="collapse-icon"
-                tabIndex="0"
-                onClick={ this.state.isExpanded ? this.collapse : this.expand }
-                onKeyPress={ this.onEnterKey }/>
-              <h3>{ this.props.subpopulation.subpopulationName }</h3>
+          </div>
+
+          {this.state.isExpanded &&
+            <div className="card-element__body">
+              {this.props.subpopulation.childInstances.length < 1 &&
+                <div className='warning'>This subpopulation needs at least one condition</div>
+              }
+
+              <ConjunctionGroup
+                root={true}
+                treeName={this.props.treeName}
+                artifact={this.props.artifact}
+                templates={this.props.templates}
+                resources={this.props.resources}
+                valueSets={this.props.valueSets}
+                loadValueSets={this.props.loadValueSets}
+                instance={this.props.subpopulation}
+                addInstance={this.addInstance}
+                editInstance={this.editInstance}
+                deleteInstance={this.deleteInstance}
+                getAllInstances={this.getAllInstances}
+                updateInstanceModifiers={this.props.updateInstanceModifiers}
+                parameters={this.props.parameters}
+                subPopulationIndex={this.props.subpopulationIndex}
+                conversionFunctions={this.props.conversionFunctions}
+                loginVSACUser={this.props.loginVSACUser}
+                setVSACAuthStatus={this.props.setVSACAuthStatus}
+                vsacStatus={this.props.vsacStatus}
+                vsacStatusText={this.props.vsacStatusText}
+                timeLastAuthenticated={this.props.timeLastAuthenticated}
+                searchVSACByKeyword={this.props.searchVSACByKeyword}
+                isSearchingVSAC={this.props.isSearchingVSAC}
+                vsacSearchResults={this.props.vsacSearchResults}
+                vsacSearchCount={this.props.vsacSearchCount}
+                getVSDetails={this.props.getVSDetails}
+                isRetrievingDetails={this.props.isRetrievingDetails}
+                vsacDetailsCodes={this.props.vsacDetailsCodes}
+                vsacFHIRCredentials={this.props.vsacFHIRCredentials}/>
             </div>
           }
-          <div className="button-bar">
-            <button className="secondary-button" onClick={ this.state.isExpanded ? this.collapse : this.expand }>
-              { this.state.isExpanded ? 'Done' : 'Edit' }
-            </button>
-
-            <button aria-label="Remove subpopulation" className="secondary-button"
-                    onClick={ () => this.props.deleteSubpopulation(this.props.subpopulation.uniqueId) }>
-              <FontAwesome fixedWidth name='times'/>
-            </button>
-          </div>
         </div>
-
-        { this.state.isExpanded ?
-          <div className="subpopulation__logic">
-            {this.props.subpopulation.childInstances.length < 1 ?
-              <div className='warning'>This subpopulation needs at least one condition</div>
-              : null
-            }
-            <ConjunctionGroup
-              root={true}
-              treeName={this.props.treeName}
-              artifact={this.props.artifact}
-              templates={this.props.templates}
-              instance={this.props.subpopulation}
-              addInstance={this.addInstance}
-              editInstance={this.editInstance}
-              deleteInstance={this.deleteInstance}
-              getAllInstances={this.getAllInstances}
-              updateInstanceModifiers={this.props.updateInstanceModifiers}
-              parameters={this.props.parameters}
-              subPopulationIndex={this.props.subpopulationIndex} />
-          </div>
-          :
-          null
-        }
       </div>
     );
   }
 }
 
-export default Subpopulation;
+Subpopulation.propTypes = {
+  artifact: PropTypes.object.isRequired,
+  resources: PropTypes.object,
+  valueSets: PropTypes.array,
+  loadValueSets: PropTypes.func.isRequired,
+  subpopulation: PropTypes.object.isRequired,
+  subpopulationIndex: PropTypes.number.isRequired,
+  setSubpopulationName: PropTypes.func.isRequired,
+  deleteSubpopulation: PropTypes.func.isRequired,
+  addInstance: PropTypes.func.isRequired,
+  editInstance: PropTypes.func.isRequired,
+  updateInstanceModifiers: PropTypes.func.isRequired,
+  deleteInstance: PropTypes.func.isRequired,
+  getAllInstances: PropTypes.func.isRequired,
+  treeName: PropTypes.string.isRequired,
+  parameters: PropTypes.array.isRequired,
+  templates: PropTypes.array.isRequired,
+  conversionFunctions: PropTypes.array,
+  loginVSACUser: PropTypes.func.isRequired,
+  setVSACAuthStatus: PropTypes.func.isRequired,
+  vsacStatus: PropTypes.string,
+  vsacStatusText: PropTypes.string,
+  timeLastAuthenticated: PropTypes.instanceOf(Date),
+  searchVSACByKeyword: PropTypes.func.isRequired,
+  isSearchingVSAC: PropTypes.bool.isRequired,
+  vsacSearchResults: PropTypes.array.isRequired,
+  vsacSearchCount: PropTypes.number.isRequired,
+  getVSDetails: PropTypes.func.isRequired,
+  isRetrievingDetails: PropTypes.bool.isRequired,
+  vsacDetailsCodes: PropTypes.array.isRequired
+};

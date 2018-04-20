@@ -3,20 +3,28 @@ import PropTypes from 'prop-types';
 import FontAwesome from 'react-fontawesome';
 import _ from 'lodash';
 
+import VSACAuthenticationModal from './VSACAuthenticationModal';
+import ElementModal from './ElementModal';
+import CodeSelectModal from './CodeSelectModal';
+
 // Try to keep these ordered same as in folder (i.e. alphabetically)
-import NumberParameter from './parameters/NumberParameter';
-import StaticParameter from './parameters/StaticParameter';
-import StringParameter from './parameters/StringParameter';
-import ValueSetParameter from './parameters/ValueSetParameter';
+import NumberParameter from './parameters/types/NumberParameter';
+import StaticParameter from './parameters/types/StaticParameter';
+import StringParameter from './parameters/types/StringParameter';
+import ValueSetParameter from './parameters/types/ValueSetParameter';
+
+import ValueSetTemplate from './templates/ValueSetTemplate';
 
 import Modifiers from '../../data/modifiers';
 import BooleanComparison from './modifiers/BooleanComparison';
 import CheckExistence from './modifiers/CheckExistence';
 import LabelModifier from './modifiers/LabelModifier';
 import LookBack from './modifiers/LookBack';
+import SelectModifier from './modifiers/SelectModifier';
 import ValueComparison from './modifiers/ValueComparison';
 import ValueComparisonObservation from './modifiers/ValueComparisonObservation';
 import WithUnit from './modifiers/WithUnit';
+import Qualifier from './modifiers/Qualifier';
 
 import Validators from '../../utils/validators';
 
@@ -97,18 +105,22 @@ export default class TemplateInstance extends Component {
   }
 
   renderAppliedModifier = (modifier, index) => {
+    // Reset values on modifiers that were not previously set or saved in the database
+    if (!modifier.values && this.modifierMap[modifier.id].values) {
+      modifier.values = this.modifierMap[modifier.id].values;
+    }
+
     let validationWarning = null;
     if (modifier.validator) {
       const validator = Validators[modifier.validator.type];
-      if (!validator.check(modifier.validator.fields.map(v => modifier.values[v]))) {
-        validationWarning = validator.warning(modifier.validator.fields);
+      const values = modifier.validator.fields.map(v => modifier.values[v]);
+      const args = modifier.validator.args ? modifier.validator.args.map(v => modifier.values[v]) : [];
+      if (!validator.check(values, args)) {
+        validationWarning = validator.warning(modifier.validator.fields, modifier.validator.args);
       }
     }
+
     const modifierForm = ((mod) => {
-      // Reset values on modifiers that were not previously set or saved in the database
-      if (!mod.values && this.modifierMap[mod.id].values) {
-        mod.values = this.modifierMap[mod.id].values;
-      }
       switch (mod.type || mod.id) {
         case 'ValueComparison':
           return (
@@ -130,6 +142,7 @@ export default class TemplateInstance extends Component {
               minValue={mod.values.minValue}
               maxOperator={mod.values.maxOperator}
               maxValue={mod.values.maxValue}
+              unit={mod.values.unit}
               updateAppliedModifier={this.updateAppliedModifier}/>
           );
         case 'LookBack':
@@ -165,33 +178,85 @@ export default class TemplateInstance extends Component {
               value={mod.values.value}
               updateAppliedModifier={this.updateAppliedModifier}/>
           );
+        case 'ConvertObservation':
+          return (
+            <SelectModifier
+              key={index}
+              index={index}
+              value={mod.values.value}
+              name={mod.name}
+              options={this.props.conversionFunctions}
+              updateAppliedModifier={this.updateAppliedModifier}/>
+          );
+        case 'Qualifier':
+          return (
+            <Qualifier
+              key={index}
+              index={index}
+              qualifier={mod.values.qualifier}
+              updateAppliedModifier={this.updateAppliedModifier}
+              updateInstance={this.updateInstance}
+              searchVSACByKeyword={this.props.searchVSACByKeyword}
+              isSearchingVSAC={this.props.isSearchingVSAC}
+              vsacSearchResults={this.props.vsacSearchResults}
+              vsacSearchCount={this.props.vsacSearchCount}
+              template={this.props.templateInstance}
+              getVSDetails={this.props.getVSDetails}
+              isRetrievingDetails={this.props.isRetrievingDetails}
+              vsacDetailsCodes={this.props.vsacDetailsCodes}
+              timeLastAuthenticated={this.props.timeLastAuthenticated}
+              loginVSACUser={this.props.loginVSACUser}
+              setVSACAuthStatus={this.props.setVSACAuthStatus}
+              vsacStatus={this.props.vsacStatus}
+              vsacStatusText={this.props.vsacStatusText}
+              vsacFHIRCredentials={this.props.vsacFHIRCredentials}/>
+          );
         default:
           return (<LabelModifier key={index} name={mod.name} id={mod.id}/>);
       }
     })(modifier);
 
     return (
-      <div key={index} className="modifier">
+      <div key={index} className={`modifier modifier-${modifier.type || modifier.id}`}>
+        <div className="modifier__info">
+          {modifierForm}
 
-        {modifierForm}
-        { (index + 1 === this.props.templateInstance.modifiers.length)
-          ? <button
-            onClick={this.removeLastModifier}
-            className="modifier__deletebutton secondary-button"
-            aria-label={'remove last expression'}>
-              <FontAwesome fixedWidth name='close'/>
-            </button>
-          : null
-        }
-        <div className='warning'>{validationWarning}</div>
+          {index + 1 === this.props.templateInstance.modifiers.length &&
+            <span
+              role="button"
+              className="modifier__deletebutton secondary-button"
+              aria-label={'remove last expression'}
+              onClick={this.removeLastModifier}
+              tabIndex="0"
+              onKeyPress={(e) => {
+                e.which = e.which || e.keyCode;
+                if (e.which === 13) this.removeLastModifier();
+              }}>
+
+              <FontAwesome name="close" className="delete-valueset-button" />
+            </span>
+          }
+        </div>
+
+        {validationWarning && <div className="warning">{validationWarning}</div>}
       </div>
     );
   }
 
   renderAppliedModifiers = () => (
-    <div className="modifier__list" aria-label="Expression List">
-      {(this.props.templateInstance.modifiers || []).map((modifier, index) =>
-        this.renderAppliedModifier(modifier, index))}
+    <div className="applied-modifiers">
+      <div className="applied-modifiers__info">
+        <div className="applied-modifiers__info-expressions row">
+          {this.props.templateInstance.modifiers && this.props.templateInstance.modifiers.length > 0 &&
+            <div className="col-3 bold align-right applied-modifiers__label">Expressions:</div>
+          }
+
+          <div className="modifier__list col-9" aria-label="Expression List">
+            {(this.props.templateInstance.modifiers || []).map((modifier, index) =>
+              this.renderAppliedModifier(modifier, index))}
+          </div>
+        </div>
+      </div>
     </div>
   )
 
@@ -231,32 +296,164 @@ export default class TemplateInstance extends Component {
     this.setAppliedModifiers(modifiers);
   }
 
-  renderModifierSelect = () => (
-    <div>
-      { (
-          !this.props.templateInstance.cannotHaveModifiers
-          && (this.state.relevantModifiers.length > 0 || this.props.templateInstance.modifiers.length === 0)
-        ) ?
+  deleteCode = (codeToDelete) => {
+    const templateInstanceClone = _.cloneDeep(this.props.templateInstance);
+    if (templateInstanceClone.parameters[1] && templateInstanceClone.parameters[1].codes) {
+      const updatedCodes = templateInstanceClone.parameters[1].codes;
+      const indexOfCodeToRemove = updatedCodes.findIndex(code =>
+        (code.code === codeToDelete.code && _.isEqual(code.codeSystem, codeToDelete.codeSystem)));
+      updatedCodes.splice(indexOfCodeToRemove, 1);
+      const arrayToUpdate = [
+        { [templateInstanceClone.parameters[1].id]: updatedCodes, attributeToEdit: 'codes' }
+      ];
+      this.updateInstance(arrayToUpdate);
+    }
+  }
+
+  renderModifierSelect = () => {
+    if (!this.props.templateInstance.cannotHaveModifiers
+        && (this.state.relevantModifiers.length > 0 || this.props.templateInstance.modifiers.length === 0)) {
+      return (
+        <div className="modifier-select">
           <div className="modifier__selection">
             <button
               onClick={() => this.setState({ showModifiers: !this.state.showModifiers })}
               className="modifier__addbutton secondary-button"
               aria-label={'add expression'}>
-              Add Expression</button>
-            { (this.state.showModifiers)
-              ? this.state.relevantModifiers.map(modifier =>
-                  <button key={modifier.id}
-                    value={modifier.id}
-                    onClick={this.handleModifierSelected} className="modifier__button secondary-button">
-                    {modifier.name}
-                  </button>)
-              : null
+              Add Expression
+            </button>
+
+            {this.state.showModifiers &&
+              this.state.relevantModifiers.map(modifier =>
+                <button key={modifier.id}
+                  value={modifier.id}
+                  onClick={this.handleModifierSelected} className="modifier__button secondary-button">
+                  {modifier.name}
+                </button>)
             }
           </div>
-        : null
+        </div>
+      );
+    }
+
+    return null;
+  }
+
+  renderVSInfo = () => {
+    if (this.props.templateInstance.parameters.length > 1) {
+      // All generic VSAC elements save the VS information on this parameter on the valueSets property.
+      const vsacParameter = this.props.templateInstance.parameters[1];
+      if (vsacParameter.valueSets) {
+        return (
+          <div className="modifier__return__type" id="valueset-list">
+            {vsacParameter.valueSets.map((vs, i) => (
+              <div key={`selected-valueset-${i}`}>
+                <ValueSetTemplate
+                  index={i}
+                  vsacParameter={vsacParameter}
+                  valueSet={vs}
+                  updateInstance={this.updateInstance}
+                  searchVSACByKeyword={this.props.searchVSACByKeyword}
+                  isSearchingVSAC={this.props.isSearchingVSAC}
+                  vsacSearchResults={this.props.vsacSearchResults}
+                  vsacSearchCount={this.props.vsacSearchCount}
+                  templateInstance={this.props.templateInstance}
+                  getVSDetails={this.props.getVSDetails}
+                  isRetrievingDetails={this.props.isRetrievingDetails}
+                  vsacDetailsCodes={this.props.vsacDetailsCodes} />
+              </div>
+            ))}
+          </div>
+        );
       }
-    </div>
-  )
+    }
+    return null;
+  }
+
+  renderCodeInfo = () => {
+    if (this.props.templateInstance.parameters.length > 1) {
+      // All generic VSAC elements save the VS information on this parameter on the codes property.
+      const vsacParameter = this.props.templateInstance.parameters[1];
+      if (vsacParameter.codes) {
+        return (
+          <div className="modifier__return__type" id="code-list">
+            {vsacParameter.codes.map((code, i) => (
+              <div key={`selected-code-${i}`} className="row code-info">
+                <div className="col-3 bold align-right code-info__label">
+                  Code{vsacParameter.codes.length > 1 ? ` ${i + 1}` : ''}:
+                </div>
+
+                {/* Code name will come with validation */}
+                <div className="col-9 row code-info__info">
+                  <div className="col-10">{`${code.codeSystem.name} (${code.code})`}</div>
+
+                  <div className="col-2 code-info__buttons align-right">
+                    <span
+                      role="button"
+                      id="delete-code"
+                      tabIndex="0"
+                      onClick={() => this.deleteCode(code)}
+                      onKeyPress={(e) => {
+                        e.which = e.which || e.keyCode;
+                        if (e.which === 13) this.deleteCode(code);
+                      }}>
+
+                      <FontAwesome name="close" className="delete-code-button" />
+                    </span>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        );
+      }
+    }
+    return null;
+  }
+
+  renderVSACOptions = () => {
+    // If last time authenticated was less than 7.5 hours ago, force user to log in again.
+    if (this.props.timeLastAuthenticated < new Date() - 27000000 || this.props.vsacFHIRCredentials.username == null) {
+      return (
+        <div id="vsac-controls">
+          <VSACAuthenticationModal
+            loginVSACUser={this.props.loginVSACUser}
+            setVSACAuthStatus={this.props.setVSACAuthStatus}
+            vsacStatus={this.props.vsacStatus}
+            vsacStatusText={this.props.vsacStatusText}
+          />
+        </div>
+      );
+    }
+
+    return (
+      <div id="vsac-controls">
+        <button className="disabled-button" disabled={true}>
+          <FontAwesome name="check" /> VSAC Authenticated
+        </button>
+
+        <ElementModal
+          className="element-select__modal"
+          updateElement={this.updateInstance}
+          searchVSACByKeyword={this.props.searchVSACByKeyword}
+          isSearchingVSAC={this.props.isSearchingVSAC}
+          vsacSearchResults={this.props.vsacSearchResults}
+          vsacSearchCount={this.props.vsacSearchCount}
+          template={this.props.templateInstance}
+          getVSDetails={this.props.getVSDetails}
+          isRetrievingDetails={this.props.isRetrievingDetails}
+          vsacDetailsCodes={this.props.vsacDetailsCodes}
+        />
+
+          <CodeSelectModal
+            className="element-select__modal"
+            updateElement={this.updateInstance}
+            template={this.props.templateInstance}
+            vsacFHIRCredentials={this.props.vsacFHIRCredentials}
+          />
+      </div>
+    );
+  }
 
   selectTemplate = (param) => {
     if (param.static) {
@@ -287,7 +484,8 @@ export default class TemplateInstance extends Component {
         );
       case 'observation_vsac':
       case 'condition_vsac':
-      case 'medication_vsac':
+      case 'medicationStatement_vsac':
+      case 'medicationOrder_vsac':
       case 'procedure_vsac':
       case 'encounter_vsac':
       case 'allergyIntolerance_vsac':
@@ -335,59 +533,109 @@ export default class TemplateInstance extends Component {
   renderBody() {
     const validationError = this.validateElement();
     const returnError = this.state.returnType === 'boolean' ? null
-      : "Element must have return type 'boolean'.  Add expressions(s) to change the return type.";
+      : "Element must have return type 'boolean'.  Add expression(s) to change the return type.";
 
     return (
-      <div className="element__body">
-        <div className="warning">{validationError}</div>
-        <div className="warning">{returnError}</div>
-        <div>
-          {this.props.templateInstance.parameters.map((param, index) =>
-            // todo: each parameter type should probably have its own component
-            this.selectTemplate(param))}
-        </div>
+      <div className="card-element__body">
+        {validationError && <div className="warning">{validationError}</div>}
+        {returnError && <div className="warning">{returnError}</div>}
+        {this.props.templateInstance.parameters.map((param, index) => {
+          // todo: each parameter type should probably have its own component
+          if (param.id !== 'element_name') {
+            return this.selectTemplate(param);
+          }
+          return null;
+        })}
+
+        {this.props.templateInstance.id && this.props.templateInstance.id.includes('_vsac') &&
+          <div className="vsac-info">
+            {this.renderVSInfo()}
+            {this.renderCodeInfo()}
+          </div>
+        }
 
         {this.renderAppliedModifiers()}
 
-        <div className='modifier__return__type'>
-          Return Type: {_.startCase(this.state.returnType)}
+        <div className="modifier__return__type">
+          <div className="return-type row">
+            <div className="col-3 bold align-right return-type__label">Return Type:</div>
+            <div className="col-7 return-type__value">
+              {_.startCase(this.state.returnType) === 'Boolean' && <FontAwesome name="check" className="check" />}
+              {_.startCase(this.state.returnType)}
+            </div>
+          </div>
         </div>
-
-        {this.renderModifierSelect()}
       </div>
     );
   }
 
+  renderFooter() {
+    return (
+      <div className="card-element__footer">
+        {this.renderModifierSelect()}
+
+        {this.props.templateInstance.id && this.props.templateInstance.id.includes('_vsac') &&
+          <div className="vsac-controls">
+            {this.renderVSACOptions()}
+          </div>
+        }
+      </div>
+    );
+  }
+
+  renderHeader = () => {
+    const elementNameParameter = this.props.templateInstance.parameters.find(param => param.id === 'element_name');
+
+    if (elementNameParameter) {
+      if (this.props.templateInstance.type === 'parameter') {
+        if (elementNameParameter.value) {
+          return (<span className="label">{elementNameParameter.value}</span>);
+        }
+        return null;
+      }
+
+      return (
+        <StringParameter
+          key={elementNameParameter.id}
+          {...elementNameParameter}
+          updateInstance={this.updateInstance}
+          name={this.props.templateInstance.name}/>
+      );
+    }
+
+    // Handles the case for old parameters, which did not have an 'element_name' parameter.
+    return (<span className="label">{this.props.templateInstance.name}</span>);
+  }
+
   render() {
     return (
-      <div className="element element__expanded">
-        <div className="element__header">
-          <span className="element__heading">
-            {this.props.templateInstance.name}
+      <div className="card-element element__expanded">
+        <div className="card-element__header">
+          <span className="card-element__heading">
+            {this.renderHeader()}
           </span>
 
-          <div className="element__buttonbar">
+          <div className="card-element__buttons">
             {this.props.renderIndentButtons(this.props.templateInstance)}
 
             <button
               onClick={this.showHideElementBody}
               className="element__hidebutton secondary-button"
               aria-label={`hide ${this.props.templateInstance.name}`}>
-              <FontAwesome fixedWidth name={this.state.showElement ? 'angle-double-down' : 'angle-double-right'}/>
+              <FontAwesome name={this.state.showElement ? 'angle-double-down' : 'angle-double-right'}/>
             </button>
 
             <button
               onClick={() => this.props.deleteInstance(this.props.treeName, this.getPath())}
               className="element__deletebutton secondary-button"
               aria-label={`remove ${this.props.templateInstance.name}`}>
-              <FontAwesome fixedWidth name='close'/>
+              <FontAwesome name='close'/>
             </button>
           </div>
         </div>
 
-        <div>
-          {this.state.showElement ? this.renderBody() : null}
-        </div>
+        {this.state.showElement ? this.renderBody() : null}
+        {this.state.showElement ? this.renderFooter() : null}
       </div>
     );
   }
@@ -403,5 +651,19 @@ TemplateInstance.propTypes = {
   otherInstances: PropTypes.array.isRequired,
   editInstance: PropTypes.func.isRequired,
   updateInstanceModifiers: PropTypes.func.isRequired,
-  deleteInstance: PropTypes.func.isRequired
+  deleteInstance: PropTypes.func.isRequired,
+  subpopulationIndex: PropTypes.number,
+  renderIndentButtons: PropTypes.func.isRequired,
+  loginVSACUser: PropTypes.func.isRequired,
+  setVSACAuthStatus: PropTypes.func.isRequired,
+  vsacStatus: PropTypes.string,
+  vsacStatusText: PropTypes.string,
+  timeLastAuthenticated: PropTypes.instanceOf(Date),
+  searchVSACByKeyword: PropTypes.func.isRequired,
+  isSearchingVSAC: PropTypes.bool.isRequired,
+  vsacSearchResults: PropTypes.array.isRequired,
+  vsacSearchCount: PropTypes.number.isRequired,
+  getVSDetails: PropTypes.func.isRequired,
+  isRetrievingDetails: PropTypes.bool.isRequired,
+  vsacDetailsCodes: PropTypes.array.isRequired
 };

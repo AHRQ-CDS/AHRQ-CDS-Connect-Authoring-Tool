@@ -54,7 +54,7 @@ export default class Login extends Component {
           handleCloseModal={this.closeLoginModal}
           handleSaveModal={this.login}>
 
-          <div className="login-modal">
+          <div className="login-modal modal__content">
             <div className="login-modal__disclaimer">
               This warning banner provides privacy and security notices consistent with applicable federal laws,
               directives, and other federal guidance for accessing this Government system, which includes all

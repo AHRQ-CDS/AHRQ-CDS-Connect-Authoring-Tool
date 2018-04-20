@@ -1,0 +1,26 @@
+.element-modal__container .element-modal__search {
+  padding: 1em 2em;
+
+  &-system {
+    margin: 0;
+
+    .Select-input input {
+      border: 0;
+      box-shadow: none;
+      padding-left: 0;
+    }
+  }
+
+  &-other-system {
+    margin-top: 5px;
+  }
+}
+
+.code-display {
+  display: grid;
+  grid-template-columns: 10% 10% auto;
+  grid-column-gap: 30px;
+  padding-left: 2em;
+  padding-right: 2em;
+  padding-top: .5em;
+}

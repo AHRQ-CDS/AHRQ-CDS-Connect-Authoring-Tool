@@ -1,0 +1,56 @@
+.Select {
+  margin-right: 10px;
+  max-width: 400px;
+
+  &-input {
+    @include respond-to-min('1440px') { height: 46px; }
+
+    input {
+      padding-left: 10px;
+    }
+  }
+
+  &-value-label,
+  &-placeholder {
+    @include respond-to-min('1440px') { line-height: 46px; }
+  }
+
+  &-value,
+  &-label,
+  &-placeholder {
+    // margin-left: 10px !important;
+  }
+
+  &-value,
+  &-input,
+  &-placeholder {
+    padding-left: 15px !important;
+  }
+
+  &-placeholder {
+    color: #aaa;
+  }
+
+  &-option.select-notice {
+    color: #ccc;
+    border-top: 1px solid #eee;
+  }
+
+  &-menu-outer {
+    max-height: 1000px;
+
+    > div > div {
+      padding: 10px 15px !important;
+    }
+  }
+
+  &-menu {
+    max-height: 998px;
+  }
+
+  &.operator > div {
+    width: calc(65px + 3vw);
+    min-width: inherit;
+    max-width: 120px;
+  }
+}

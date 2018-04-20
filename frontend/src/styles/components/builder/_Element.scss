@@ -3,7 +3,6 @@
   background-color: $white;
   border: $border-global;
   border-radius: $border-radius;
-  margin-bottom: 0.5em;
   font-weight: $font-weight-bold;
 
   &.element__expanded {
@@ -12,7 +11,7 @@
     .element__header {
       display: flex;
       border-bottom: $border-global;
-      padding: 0.25em 0.75em;
+      padding: 1em 2em;
       align-items: center;
       justify-content: center;
 
@@ -27,7 +26,7 @@
     }
 
     .element__body {
-      padding: 0.5em 0.75em;
+      padding: 1em 2em;
     }
   }
 
@@ -47,6 +46,10 @@
       margin-left: auto;
     }
   }
+
+  .view-edit-vs {
+    margin-left: 0.5em;
+  }
 }
 
 .modifier__list {
@@ -55,32 +58,110 @@
     flex-wrap: wrap;
     align-items: center;
 
-    > div { flex-grow: 1 }
+    > div { flex-grow: 1; }
 
-    .modifier__deletebutton {
-      text-align: right;
-    }
+    &__deletebutton { text-align: right; }
 
     > .warning {
-        flex-basis: 100%;
+      flex-basis: 100%;
+      margin-top: 10px;
+    }
+
+    #ucum-unit,
+    #with-unit-ucum {
+      width: 200px;
+      background-size: 15px;
     }
   }
 }
 
 .modifier__selection {
-  border-top: $border-global;
-  margin-top: 0.5em;
-  padding-top: 0.5em;
-
   .modifier__addbutton {
+    margin-bottom: 10px;
+
     @extend .primary-button;
   }
 }
 
 .modifier__return__type {
-  color: $gray;
+  .vs-info,
+  .code-info {
+    &__label,
+    &__info {
+      padding: 15px 0;
+    }
+
+    &__label {
+      padding-right: 2em;
+    }
+
+    &__info {
+      border-bottom: 1px solid lighten($gray-light, 15%);
+
+      div { padding: 0; }
+    }
+  }
 }
 
-.modifier__comparison__value {
-  width: 5em;
+.return-type {
+  padding: 15px 0;
+
+  &__label { padding-right: 2em; }
+
+  &__value { margin-left: -30px; }
+
+  .check { margin-right: 5px; }
+}
+
+.applied-modifiers {
+  &__label { padding: 15px 2em 15px 0; }
+
+  .modifier__list {
+    padding: 0;
+    margin-left: -15px;
+  }
+
+  .modifier {
+    border-bottom: 1px solid lighten($gray-light, 15%);
+    padding: 15px 0;
+
+    .modifier__info {
+      display: flex;
+      flex-wrap: nowrap;
+      align-items: center;
+
+      .modifier__deletebutton { flex-grow: 1; }
+    }
+
+    .look-back,
+    .value-comparison-observation {
+      display: flex;
+      flex-wrap: wrap;
+
+      label {
+        margin: 0 10px 0 0;
+      }
+    }
+
+    .value-comparison-observation label input {
+      min-width: inherit;
+      width: calc(80px + 4vw);
+      max-width: 180px;
+    }
+  }
+}
+
+.modifier__button { margin-left: 10px; }
+
+.modifier__comparison__value { width: 6em; }
+
+.vsac-authentication .blank {
+  min-width: 170px;
+  display: inline-block;
+}
+
+#vsac-controls {
+  > span {
+    margin-left: 20px;
+  }
 }

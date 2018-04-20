@@ -17,3 +17,4 @@ yarn-error.log*
 
 # sass outputs
 *.css
+!/public/autocomplete-lhc-15.1.1/autocomplete-lhc_jQueryUI.min.css

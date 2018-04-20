@@ -2,13 +2,19 @@ const Resources = require('../data/resources');
 const Templates = require('../data/formTemplates');
 const ValueSets = require('../data/valueSets');
 const config = require('../config');
+const conversionsELMFile = require('../data/library_helpers/ELMFiles/CDS_Connect_Conversions.json');
+
+// If new functions are added to CDS_Connect_Conversions and a separate description is desired, add a key value
+// pair to the following object with the descripton: function_name : function_description
+const conversionFunctionDescriptions = { 'to_mg_per_dL': 'mmol/L to mg/dL for blood cholesterol' };
 
 module.exports = {
   getResources,
   getTemplates,
   getValueSets,
   getOneValueSet,
-  getRepoPublishConfig
+  getRepoPublishConfig,
+  getConversionFunctions
 };
 
 // Returns all ValueSets saved
@@ -51,4 +57,17 @@ function getOneValueSet(request, result) {
 
 function getRepoPublishConfig(request, result) {
   result.json(config.get('repo.publish'));
+}
+
+function getConversionFunctions(request, result) {
+  const definedExpressions = conversionsELMFile.library.statements.def;
+  const convertFunctions = definedExpressions.map(def => {
+    // If a description is not defined above, just use the function name
+    let description = def.name;
+    if (conversionFunctionDescriptions[def.name] !== undefined) {
+      description = conversionFunctionDescriptions[def.name];
+    }
+    return { name: `Convert.${def.name}`, description };
+  });
+  result.json(convertFunctions);
 }

@@ -1,1 +1,1 @@
-<%-value_name%> in "<%-values%>"
+<%-value_name%> in "<%-values.valueSet.name%>"

@@ -21,11 +21,19 @@ export default {
     },
     warning: (fields, args) => `${fields.join(', ')} must conform to the pattern ${RegExp(args[0])}.`
   },
-  ifThen: {
+  ifThenAll: {
     check: (values, args = []) => {
       if (exists(values[0])) { return values.every(exists); }
       return true;
     },
     warning: (fields, args) => `You must specify ${fields.slice(1).join(', ')} if you specify ${fields[0]}.`
+  },
+  requiredIfThenOne: {
+    check: (values, args = []) => {
+      const requiredFields = args.length === 0 ? values : args;
+      if (exists(values[0])) { return requiredFields.some(exists); }
+      return false;
+    },
+    warning: (fields, args = []) => `You must specify ${fields[0]} and one of ${args.join(', ')}.`
   }
 };

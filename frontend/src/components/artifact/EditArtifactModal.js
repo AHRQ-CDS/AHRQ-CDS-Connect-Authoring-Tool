@@ -46,7 +46,7 @@ export default class EditArtifactModal extends Component {
         handleCloseModal={closeModal}
         handleSaveModal={() => saveModal(this.state)}>
 
-        <div className="artifact-table__modal">
+        <div className="artifact-table__modal modal__content">
           <div className="artifact-form__edit">
             <div className="artifact-form__inputs d-flex justify-content-start">
               <div className='form__group p-2'>

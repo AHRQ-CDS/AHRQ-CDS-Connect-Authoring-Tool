@@ -5,7 +5,7 @@ import FontAwesome from 'react-fontawesome';
 
 import TemplateInstance from './TemplateInstance';
 import ElementSelect from './ElementSelect';
-import StringParameter from './parameters/StringParameter';
+import StringParameter from './parameters/types/StringParameter';
 
 import createTemplateInstance from '../../utils/templates';
 import requiredIf from '../../utils/prop_types';
@@ -48,7 +48,14 @@ export default class ConjunctionGroup extends Component {
   // returns class name for odd conjunction groups determined from length of child instances
   getNestingClassName = () => {
     const level = this.getPath().split('.').filter(pathSection => pathSection === 'childInstances').length;
-    return level % 2 === 0 ? '' : 'conjunction-group--odd';
+
+    if (level === 0) {
+      return 'card-group__top';
+    } else if (level % 2 === 0) {
+      return 'card-group__even';
+    }
+
+    return 'card-group__odd';
   }
 
   // ----------------------- CLICK HANDLERS -------------------------------- //
@@ -112,7 +119,7 @@ export default class ConjunctionGroup extends Component {
 
   renderConjunctionSelect = i => (
     <Select
-      className="conjunction-group__conjunction-select"
+      className="card-group__conjunction-select"
       name={ `conjunction-select-${i}` }
       value={ this.props.instance.name }
       valueKey="name"
@@ -132,15 +139,16 @@ export default class ConjunctionGroup extends Component {
       { this.getPath() !== '' ?
         <button
           aria-label="outdent"
-          className='element__hidebutton secondary-button'
+          className='element__hidebutton'
           onClick={() => this.outdentClickHandler(instance)}>
           <FontAwesome name="dedent" />
         </button> :
         null
       }
+
       <button
         aria-label="indent"
-        className='element__hidebutton secondary-button'
+        className='element__hidebutton'
         onClick={() => this.indentClickHandler(instance)}>
         <FontAwesome name="indent" />
       </button>
@@ -152,8 +160,8 @@ export default class ConjunctionGroup extends Component {
 
     if (!this.props.root) {
       return (
-        <div className="conjunction-group__header">
-          <div className="conjunction-group__header-title">
+        <div className="card-group__header">
+          <div className="card-group__header-title">
             <StringParameter
               id={elementNameParam.id}
               name={elementNameParam.name}
@@ -162,13 +170,14 @@ export default class ConjunctionGroup extends Component {
             />
           </div>
 
-          <div className="conjunction-group__button-bar">
+          <div className="card-group__buttons">
             {this.renderIndentButtons(this.props.instance)}
 
             <button
+              className="element__deletebutton"
               onClick={() => this.props.deleteInstance(this.props.treeName, this.getPath())}
               aria-label={`remove ${this.props.instance.name}`}>
-              <FontAwesome fixedWidth name='close'/>
+              <FontAwesome name='close'/>
             </button>
           </div>
         </div>
@@ -187,7 +196,7 @@ export default class ConjunctionGroup extends Component {
       // return null if child instance conjunction is false
       if (instance.conjunction) {
         return (
-          <div key={instance.uniqueId} className="conjunction-group__conjunction-child">
+          <div key={instance.uniqueId} className="card-group">
             <ConjunctionGroup
               root={false}
               treeName={treeName}
@@ -203,7 +212,21 @@ export default class ConjunctionGroup extends Component {
               getAllInstances={this.props.getAllInstances}
               updateInstanceModifiers={this.props.updateInstanceModifiers}
               parameters={this.props.parameters}
-              getPath={this.getChildsPath} />
+              getPath={this.getChildsPath}
+              conversionFunctions={this.props.conversionFunctions}
+              loginVSACUser={this.props.loginVSACUser}
+              setVSACAuthStatus={this.props.setVSACAuthStatus}
+              vsacStatus={this.props.vsacStatus}
+              vsacStatusText={this.props.vsacStatusText}
+              timeLastAuthenticated={this.props.timeLastAuthenticated}
+              searchVSACByKeyword={this.props.searchVSACByKeyword}
+              isSearchingVSAC={this.props.isSearchingVSAC}
+              vsacSearchResults={this.props.vsacSearchResults}
+              vsacSearchCount={this.props.vsacSearchCount}
+              getVSDetails={this.props.getVSDetails}
+              isRetrievingDetails={this.props.isRetrievingDetails}
+              vsacDetailsCodes={this.props.vsacDetailsCodes}
+              vsacFHIRCredentials={this.props.vsacFHIRCredentials}/>
 
             {this.renderConjunctionSelect(i)}
           </div>
@@ -216,7 +239,7 @@ export default class ConjunctionGroup extends Component {
 
   renderTemplate(instance) {
     return (
-      <div key={ instance.uniqueId } className="conjunction-group__conjunction-child">
+      <div key={instance.uniqueId} className="card-group-section">
         <TemplateInstance
           resources={this.props.resources}
           valueSets={this.props.valueSets}
@@ -229,7 +252,21 @@ export default class ConjunctionGroup extends Component {
           updateInstanceModifiers={this.props.updateInstanceModifiers}
           deleteInstance={this.props.deleteInstance}
           subpopulationIndex={this.props.subPopulationIndex}
-          renderIndentButtons={this.renderIndentButtons} />
+          renderIndentButtons={this.renderIndentButtons}
+          conversionFunctions={this.props.conversionFunctions}
+          loginVSACUser={this.props.loginVSACUser}
+          setVSACAuthStatus={this.props.setVSACAuthStatus}
+          vsacStatus={this.props.vsacStatus}
+          vsacStatusText={this.props.vsacStatusText}
+          timeLastAuthenticated={this.props.timeLastAuthenticated}
+          searchVSACByKeyword={this.props.searchVSACByKeyword}
+          isSearchingVSAC={this.props.isSearchingVSAC}
+          vsacSearchResults={this.props.vsacSearchResults}
+          vsacSearchCount={this.props.vsacSearchCount}
+          getVSDetails={this.props.getVSDetails}
+          isRetrievingDetails={this.props.isRetrievingDetails}
+          vsacDetailsCodes={this.props.vsacDetailsCodes}
+          vsacFHIRCredentials={this.props.vsacFHIRCredentials}/>
 
         {this.renderConjunctionSelect(instance)}
       </div>
@@ -237,18 +274,34 @@ export default class ConjunctionGroup extends Component {
   }
 
   render() {
-    const conjunctionGroupClassName = `conjunction-group ${this.getNestingClassName()}`;
+    const classname = `card-group ${this.getNestingClassName()}`;
 
     return (
-      <div className={conjunctionGroupClassName}>
+      <div className={classname}>
         {this.renderRoot()}
         {this.renderChildren()}
 
-        <ElementSelect
-          categories={this.props.templates}
-          onSuggestionSelected={this.addChild}
-          parameters={this.props.parameters}
-        />
+        <div className="card-element">
+          <ElementSelect
+            categories={this.props.templates}
+            onSuggestionSelected={this.addChild}
+            parameters={this.props.parameters}
+            loginVSACUser={this.props.loginVSACUser}
+            setVSACAuthStatus={this.props.setVSACAuthStatus}
+            vsacStatus={this.props.vsacStatus}
+            vsacStatusText={this.props.vsacStatusText}
+            timeLastAuthenticated={this.props.timeLastAuthenticated}
+            searchVSACByKeyword={this.props.searchVSACByKeyword}
+            isSearchingVSAC={this.props.isSearchingVSAC}
+            vsacSearchResults={this.props.vsacSearchResults}
+            vsacSearchCount={this.props.vsacSearchCount}
+            getVSDetails={this.props.getVSDetails}
+            isRetrievingDetails={this.props.isRetrievingDetails}
+            vsacDetailsCodes={this.props.vsacDetailsCodes}
+            vsacFHIRCredentials={this.props.vsacFHIRCredentials}
+            validateCode={this.props.validateCode}
+          />
+        </div>
       </div>
     );
   }
@@ -261,7 +314,22 @@ ConjunctionGroup.propTypes = {
   templates: PropTypes.array,
   resources: PropTypes.object,
   valueSets: PropTypes.array,
+  loadValueSets: PropTypes.func.isRequired,
   getPath: requiredIf(PropTypes.func, props => !props.root), // path needed for children
   getAllInstances: PropTypes.func.isRequired,
-  deleteInstance: PropTypes.func.isRequired
+  deleteInstance: PropTypes.func.isRequired,
+  conversionFunctions: PropTypes.array,
+  loginVSACUser: PropTypes.func.isRequired,
+  setVSACAuthStatus: PropTypes.func.isRequired,
+  vsacStatus: PropTypes.string,
+  vsacStatusText: PropTypes.string,
+  timeLastAuthenticated: PropTypes.instanceOf(Date),
+  searchVSACByKeyword: PropTypes.func.isRequired,
+  isSearchingVSAC: PropTypes.bool.isRequired,
+  vsacSearchResults: PropTypes.array.isRequired,
+  vsacSearchCount: PropTypes.number.isRequired,
+  getVSDetails: PropTypes.func.isRequired,
+  isRetrievingDetails: PropTypes.bool.isRequired,
+  vsacDetailsCodes: PropTypes.array.isRequired,
+  vsacFHIRCredentials: PropTypes.object
 };
