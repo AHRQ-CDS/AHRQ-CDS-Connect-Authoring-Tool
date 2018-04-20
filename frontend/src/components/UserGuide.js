@@ -337,7 +337,7 @@ export default class UserGuide extends Component {
 
                   <p>
                     <img
-                      alt="Non_VSAC_Element_Picker"
+                      alt="Non-VSAC Element Picker"
                       src={screenshotUrl('Non_VSAC_Element_Picker')}
                     className="img-fluid img-thumbnail rounded mx-auto d-block" />
                   </p>
@@ -365,7 +365,7 @@ export default class UserGuide extends Component {
 
                   <p>
                     <img
-                      alt="VSAC_Element_Picker"
+                      alt="VSAC Element Picker"
                       src={screenshotUrl('VSAC_Element_Picker')}
                     className="img-fluid img-thumbnail rounded mx-auto d-block" />
                   </p>
@@ -379,7 +379,7 @@ export default class UserGuide extends Component {
 
                   <p>
                     <img
-                      alt="VSAC_Element_Picker_Authenticated"
+                      alt="Authenticated VSAC Element Picker"
                       src={screenshotUrl('VSAC_Element_Picker_Authenticated')}
                     className="img-fluid img-thumbnail rounded mx-auto d-block" />
                   </p>
@@ -406,7 +406,7 @@ export default class UserGuide extends Component {
 
                   <p>
                     <img
-                      alt="VSAC_Value_Set"
+                      alt="VSAC Value Set"
                       src={screenshotUrl('VSAC_Value_Set')}
                     className="img-fluid img-thumbnail rounded mx-auto d-block" />
                   </p>
@@ -446,7 +446,7 @@ export default class UserGuide extends Component {
 
                   <p>
                     <img
-                      alt="VSAC_Value_Set_Selected"
+                      alt="Selected VSAC Value Set"
                       src={screenshotUrl('VSAC_Value_Set_Selected')}
                     className="img-fluid img-thumbnail rounded mx-auto d-block" />
                   </p>
@@ -485,7 +485,7 @@ export default class UserGuide extends Component {
 
                   <p>
                     <img
-                      alt="VSAC_Code"
+                      alt="VSAC Code"
                       src={screenshotUrl('VSAC_Code')}
                     className="img-fluid img-thumbnail rounded mx-auto d-block" />
                   </p>
@@ -537,7 +537,7 @@ export default class UserGuide extends Component {
 
                 <p>
                   <img
-                    alt="VSAC_Element"
+                    alt="VSAC Element"
                     src={screenshotUrl('VSAC_Element')}
                   className="img-fluid img-thumbnail rounded mx-auto d-block" />
                 </p>
@@ -599,7 +599,7 @@ export default class UserGuide extends Component {
 
                 <p>
                   <img
-                    alt="Gender_Element"
+                    alt="Gender Element"
                     src={screenshotUrl('Gender_Element')}
                   className="img-fluid img-thumbnail rounded mx-auto d-block" />
                 </p>
@@ -687,7 +687,7 @@ export default class UserGuide extends Component {
 
                 <p>
                   <img
-                    alt="Basic_Logic_Element"
+                    alt="Basic Logic Element"
                     src={screenshotUrl('Basic_Logic_Element')}
                   className="img-fluid img-thumbnail rounded mx-auto d-block" />
                 </p>
@@ -717,7 +717,7 @@ export default class UserGuide extends Component {
 
                 <p>
                   <img
-                    alt="Nested_Logic_Element"
+                    alt="Nested Logic Element"
                     src={screenshotUrl('Nested_Logic_Element')}
                   className="img-fluid img-thumbnail rounded mx-auto d-block" />
                 </p>
@@ -874,7 +874,7 @@ export default class UserGuide extends Component {
                     src={screenshotUrl('Recommendation_with_Rationale')}
                   className="img-fluid img-thumbnail rounded mx-auto d-block" />
                 </p>
-                
+
                 <p>The "Rationale" free text field is used to enter the Rationale for the Recommendation.</p>
 
                 <p>
@@ -928,7 +928,7 @@ export default class UserGuide extends Component {
                 <h3 id="Parameters">3.10 Parameters</h3>
 
                 <p>
-                  Parameters allow the user to create named, reusable Boolean values. They can be used to change the
+                  Parameters allow the user to create named, reusable values. They can be used to change the
                   logic in an artifact in different implementations of the artifact. The naming of the Parameter should
                   be readable and communicate its intent within the resulting CQL code. An example of this might be a
                   Parameter called "GradeCRecommendationEnabled". One user might choose to accept this value as true, while
@@ -945,15 +945,30 @@ export default class UserGuide extends Component {
                 </p>
 
                 <ol>
-                  <li>Each light grey box is an individual Parameter object.</li>
-                  <li>Parameters should be aptly named using the "Parameter Name" field.</li>
-                  <li>The "Delete Parameter" button deletes a Parameter.</li>
-
                   <li>
-                    Parameters can have a Boolean value ("True" or "False"), selected by the user with the "Select" dropdown.
+                    Each light grey box is an individual Parameter object.
                   </li>
 
-                  <li>The "New parameter" button adds a new Parameter to the list.</li>
+                  <li>
+                    Parameters should be aptly named using the "Parameter Name" field.
+                  </li>
+
+                  <li>
+                    The "Delete Parameter" button deletes a Parameter.
+                  </li>
+
+                  <li>
+                    Parameters should be assigned a type from the "Parameter Type" dropdown.
+                  </li>
+
+                  <li>
+                    Parameters can optionally have a value, assigned by the user via
+                    the input method for the given selected type.
+                  </li>
+
+                  <li>
+                    The "New parameter" button adds a new Parameter to the list.
+                  </li>
                 </ol>
               </div>
 
@@ -971,7 +986,7 @@ export default class UserGuide extends Component {
                   <img
                     alt="Errors"
                     src={screenshotUrl('Errors')}
-                    className="img-fluid img-thumbnail rounded mx-auto d-block" />
+                  className="img-fluid img-thumbnail rounded mx-auto d-block" />
                 </p>
 
                 <ol>
@@ -1010,7 +1025,7 @@ export default class UserGuide extends Component {
                   <img
                     alt="Errors Conditions Options"
                     src={screenshotUrl('Errors_Condition_Options')}
-                    className="img-fluid img-thumbnail rounded mx-auto d-block" />
+                  className="img-fluid img-thumbnail rounded mx-auto d-block" />
                 </p>
 
                 <ol>
@@ -1031,7 +1046,7 @@ export default class UserGuide extends Component {
                     Artifact.
                   </li>
 
-                  <li>The user-defined Subpopulations and Parameters will be displayed after the three default options.</li>
+                  <li>The user-defined Subpopulations and Parameters will be displayed along with the three default options.</li>
                 </ol>
               </div>
             </div>
