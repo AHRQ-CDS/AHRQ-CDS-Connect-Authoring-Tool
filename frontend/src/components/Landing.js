@@ -43,24 +43,19 @@ export default () => (
       </p>
 
       <p>
-        The CDS Authoring Tool is currently under development and released as an alpha capability. Although the
-        development team strives to release bug-free code, alpha software typically exhibits minor bugs and other
+        The CDS Authoring Tool is currently under development and released as a beta capability. Although the
+        development team strives to release bug-free code, beta software typically exhibits minor bugs and other
         limitations that would not be expected in production level software. Users should be aware of the following
         known limitations in this release of the authoring tool:
       </p>
       <ul>
-        <li>a limited set of data elements, primarily focused on the cholesterol domain</li>
         <li>a limited set of logical capabilities, primarily focused on inclusion/exclusion logic</li>
         <li>support for only rule-based CDS, providing string-based recommendation statements</li>
-        <li>pre-selected value sets with no ability to change them</li>
-        <li>no automated integration with the CDS Connect repository</li>
       </ul>
       <p>
-        Given these limitations, the current version of the CDS Authoring Tool serves more as a proof-of-concept,
-        showing the promise of what CDS development might look like.  Future versions will address these limitations,
-        allowing more general CDS development across a variety of domains.  The CDS Connect team appreciates your <a
-        href="https://cds.ahrq.gov/contact-us" onClick={onVisitExternalForm}>feedback</a> and participation to help
-        shape the CDS Authoring Tool as it moves forward.
+        The CDS Connect team appreciates your <a href="https://cds.ahrq.gov/contact-us"
+        onClick={onVisitExternalForm}>feedback</a> and participation to help shape the CDS Authoring Tool as it moves
+        forward.
       </p>
     </div>
   </div>

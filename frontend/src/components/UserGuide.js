@@ -2,6 +2,7 @@
 import React, { Component } from 'react';
 import tocbot from 'tocbot';
 import _ from 'lodash';
+import { onVisitExternalLink } from '../utils/handlers';
 
 function screenshotUrl(name) {
   return `${process.env.PUBLIC_URL}/assets/images/screenshots/${name}.png`;
@@ -58,8 +59,8 @@ export default class UserGuide extends Component {
 
             <p>
               The Clinical Decision Support (CDS) Authoring Tool is a web-based application aimed at simplifying the
-              creation of production-ready CQL code. The project is based on "concept templates" (e.g. gender, HDL
-              Cholesterol, etc.), which allow for additional clinical concepts to be included in the future. Concept
+              creation of production-ready CQL code. The project is based on "templates" (e.g. Condition, Observation,
+              etc.), which can have value sets or codes applied to narrow in on more specific concepts. Expression
               modifiers are included to allow for more flexible definitions (e.g. most recent, value comparisons, etc.).
             </p>
 
@@ -323,8 +324,12 @@ export default class UserGuide extends Component {
                   </li>
 
                   <li>
-                    Element types with a key icon require VSAC authentication to use. A user with a UMLS license
-                    may perform VSAC authentication using the credentials requested through this license.
+                    Element types with a key icon require authentication to use the National Library of Medicine's
+                    (NLM) Value Set Authority Center (VSAC) integration. Users may authenticate using their
+                    Unified Medical Language System (UMLS) credentials.  Users who do not have a UMLS account
+                    can <a target="_blank" rel="nofollow noopener noreferrer" onClick={onVisitExternalLink}
+                    href="https://uts.nlm.nih.gov//license.html">sign up</a> <i className="fa fa-external-link"></i> via
+                    NLM.
                   </li>
                 </ol>
 
@@ -386,7 +391,7 @@ export default class UserGuide extends Component {
 
                   <ol>
                     <li>
-                      This "VSAC Authenticated" displays to indicate successful authentication.
+                      The "VSAC Authenticated" label displays to indicate successful authentication.
                     </li>
 
                     <li>
@@ -623,12 +628,14 @@ export default class UserGuide extends Component {
                 <h3 id="Expressions">3.4 Expressions</h3>
 
                 <p>
-                  Expressions modify an Element to define or narrow its intent. Many Elements will start as a list, which if
-                  left as such, <em>will generate invalid CQL</em>. The user must ensure that the Return Type of every Element
-                  returns a "Boolean" value. To achieve this, the user can apply Expressions to narrow or filter the previous
-                  Expression further. For example, one could start with a list of Diabetes Conditions, then apply the "Most
-                  Recent" Expression to find the most recent condition in the list, then apply "Is (Not) Null?" to achieve a
-                  Boolean Return Type (pictured below).
+                  Expressions modify an Element to define or narrow its intent. Many Elements will start as a list,
+                  which if left as such, <em>will generate invalid CQL</em> when used in Inclusions, Exclusions, or
+                  Subpopulations. Since elements are used in boolean logic (e.g., and, or), the user must ensure that
+                  the Return Type of every Element returns a "Boolean" value (e.g., true or false). To achieve this,
+                  the user can apply Expressions to narrow or filter the previous Expression further. For example, one
+                  could start with a list of Diabetes Conditions, then apply the "Most Recent" Expression to find the
+                  most recent condition in the list, then apply "Is (Not) Null?" to achieve a Boolean Return Type
+                  (pictured below).
                 </p>
 
                 <p>
@@ -646,15 +653,14 @@ export default class UserGuide extends Component {
 
                 <ol>
                   <li>
-                    The "Expression" list shows all expressions applied to the element so far (in this example "Most Recent"
-                    and "Is (Not) Null?").
+                    The "Expression" list shows all expressions applied to the element so far (in this example "Confirmed"
+                    and "Exists").
                   </li>
 
                   <li>
                     The last Expression that has been applied will appear at the bottom of the Expression list, directly above
-                    the "Return Type" label. In this example, the last Expression is an "Is (Not) Null?" check. Note that this
-                    Expression has a field that needs to filled in (in this case, the value "is not null" from the dropdown).
-                    Separately, if an Expression is a comparison, is is acceptable to fill in one or both sides of the comparison.
+                    the "Return Type" label.  In this case, the "Exists" expression is used to determine if the list of
+                    Confirmed Diabetes Conditions has items or is empty.
                   </li>
 
                   <li>
@@ -928,13 +934,14 @@ export default class UserGuide extends Component {
                 <h3 id="Parameters">3.10 Parameters</h3>
 
                 <p>
-                  Parameters allow the user to create named, reusable values. They can be used to change the
-                  logic in an artifact in different implementations of the artifact. The naming of the Parameter should
-                  be readable and communicate its intent within the resulting CQL code. An example of this might be a
-                  Parameter called "GradeCRecommendationEnabled". One user might choose to accept this value as true, while
-                  another may prefer to set the GradeCRecommendation to false and not execute that part of the CQL code.
-                  Parameters are optional additions to the artifact. They can be used in building Inclusions, Exclusions,
-                  and Subpopulations, and can be used in Error Handling.
+                  Parameters allow the user to create named, reusable values that can be supplied by the CDS execution
+                  environment at run-time. Parameters can be defined with or without default values. The naming of the
+                  Parameter should be readable and communicate its intent within the resulting CQL code. An example of
+                  this might be a Parameter called "AllowGradeC" to indicate if grade C recommendation should be
+                  returned or not. It might default to "true", but individual implementations can choose to override it
+                  to "false" if they do not allow or want Grade C recommendations. Parameters are optional additions to
+                  the artifact. They can be used in building Inclusions, Exclusions, and Subpopulations, and can be
+                  used in Error Handling.
                 </p>
 
                 <p>
@@ -962,7 +969,7 @@ export default class UserGuide extends Component {
                   </li>
 
                   <li>
-                    Parameters can optionally have a value, assigned by the user via
+                    Parameters can optionally have a default value, assigned by the user via
                     the input method for the given selected type.
                   </li>
 
