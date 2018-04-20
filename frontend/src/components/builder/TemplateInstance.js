@@ -560,7 +560,7 @@ export default class TemplateInstance extends Component {
           <div className="return-type row">
             <div className="col-3 bold align-right return-type__label">Return Type:</div>
             <div className="col-7 return-type__value">
-              {_.startCase(this.state.returnType) === 'Boolean' && <FontAwesome name="check" className="check" />}
+              { (this.props.validateReturnType === false || _.startCase(this.state.returnType) === 'Boolean') && <FontAwesome name="check" className="check" />}
               {_.startCase(this.state.returnType)}
             </div>
           </div>
