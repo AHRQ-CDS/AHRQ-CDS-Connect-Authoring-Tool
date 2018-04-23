@@ -24,6 +24,7 @@ const mockArtifact = {
     parameters: []
   },
   recommendations: [],
+  subelements: [],
   subpopulations: [
     {
       uniqueId: 'default-subpopulation-1',
