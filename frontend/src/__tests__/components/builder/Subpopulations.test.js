@@ -96,7 +96,7 @@ test('can add subpopulations', () => {
   expect(updateSubpopulations).toHaveBeenCalledTimes(1);
   expect(newSubpopulations).toHaveLength(2);
   expect(newSubpop.id).toEqual('And');
-  expect(newSubpop.subpopulationName).toEqual('Subpopulation 2');
+  expect(newSubpop.subpopulationName).toEqual('Subpopulation 1');
   expect(newSubpop.expanded).toBeTruthy();
 });
 

@@ -16,6 +16,7 @@ export default class Subpopulations extends Component {
 
     this.state = {
       subpopulations: this.props.artifact[this.props.name].filter(sp => !sp.special), // Don't want to allow user interaction with the two default subpopulations added by the system
+      subelements: this.props.artifact[this.props.name].filter(sp => !sp.special),
       numOfSpecialSubpopulations: this.props.artifact[this.props.name].filter(sp => sp.special).length
     };
   }
@@ -23,6 +24,7 @@ export default class Subpopulations extends Component {
   componentWillReceiveProps(nextProps) {
     this.setState({
       subpopulations: nextProps.artifact[this.props.name].filter(sp => !sp.special),
+      subelements: nextProps.artifact[this.props.name],
       numOfSpecialSubpopulations: nextProps.artifact[this.props.name].filter(sp => sp.special).length
     });
   }
@@ -32,7 +34,7 @@ export default class Subpopulations extends Component {
     newSubpopulation.name = '';
     newSubpopulation.path = '';
     // eslint-disable-next-line
-    newSubpopulation.subpopulationName = `${_.capitalize(pluralize.singular(this.props.name))} ${this.props.artifact[this.props.name].filter(sp => sp.special).length + 1}`;
+    newSubpopulation.subpopulationName = `${_.capitalize(pluralize.singular(this.props.name))} ${this.state[this.props.name].length+1}`;
     newSubpopulation.expanded = true;
     const newSubpopulations = this.props.artifact[this.props.name].concat([newSubpopulation]);
     this.props.updateSubpopulations(newSubpopulations, this.props.name);
