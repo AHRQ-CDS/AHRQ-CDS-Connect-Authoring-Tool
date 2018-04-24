@@ -377,7 +377,7 @@ class CqlArtifact {
           }
           element.modifiers.forEach((modifier) => {
             if (modifier.id === 'ValueComparisonObservation') { // TODO put a key on modifiers to identify modifiers that require unit
-              modifier.values.unit = observationValueSets.units.code.replace(/\'/g, '');
+              modifier.values.unit = observationValueSets.units.code.replace(/'/g, '');
             }
           });
           break;
@@ -672,7 +672,9 @@ class CqlArtifact {
   rationale() {
     let rationaleText = this.recommendations.map((recommendation) => {
       const conditional = constructOneRecommendationConditional(recommendation);
-      return conditional + (_.isEmpty(recommendation.rationale) ? 'null' : `'${sanitizeCQLString(recommendation.rationale)}'`);
+      return conditional + (_.isEmpty(recommendation.rationale)
+        ? 'null'
+        : `'${sanitizeCQLString(recommendation.rationale)}'`);
     });
     rationaleText = _.isEmpty(rationaleText) ? 'null' : rationaleText.join('\n  else ').concat('\n  else null');
     return ejs.render(templateMap.BaseTemplate, { element_name: 'Rationale', cqlString: rationaleText });
