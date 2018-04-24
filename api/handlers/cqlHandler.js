@@ -663,7 +663,7 @@ class CqlArtifact {
   recommendation() {
     let text = this.recommendations.map((recommendation) => {
       const conditional = constructOneRecommendationConditional(recommendation);
-      return `${conditional}'${recommendation.text}'`;
+      return `${conditional}'${sanitizeCQLString(recommendation.text)}'`;
     });
     text = _.isEmpty(text) ? 'null' : text.join('\n  else ').concat('\n  else null');
     return ejs.render(templateMap.BaseTemplate, { element_name: 'Recommendation', cqlString: text });
@@ -672,7 +672,7 @@ class CqlArtifact {
   rationale() {
     let rationaleText = this.recommendations.map((recommendation) => {
       const conditional = constructOneRecommendationConditional(recommendation);
-      return conditional + (_.isEmpty(recommendation.rationale) ? 'null' : `'${recommendation.rationale}'`);
+      return conditional + (_.isEmpty(recommendation.rationale) ? 'null' : `'${sanitizeCQLString(recommendation.rationale)}'`);
     });
     rationaleText = _.isEmpty(rationaleText) ? 'null' : rationaleText.join('\n  else ').concat('\n  else null');
     return ejs.render(templateMap.BaseTemplate, { element_name: 'Rationale', cqlString: rationaleText });
