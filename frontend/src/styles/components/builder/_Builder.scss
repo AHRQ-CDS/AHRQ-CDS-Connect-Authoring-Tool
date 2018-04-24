@@ -55,6 +55,7 @@
 
   .react-tabs {
     [role=tablist] {
+      display: flex;
       margin: 0 -9999rem;
       padding: 0 9999rem;
       background: $blue-darkest;
