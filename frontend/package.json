@@ -24,6 +24,7 @@
     "moment": "^2.22.0",
     "moxios": "^0.4.0",
     "node-sass-chokidar": "^0.0.3",
+    "pluralize": "^7.0.0",
     "promise": "^8.0.1",
     "prop-types": "^15.6.0",
     "rc-time-picker": "^3.3.1",

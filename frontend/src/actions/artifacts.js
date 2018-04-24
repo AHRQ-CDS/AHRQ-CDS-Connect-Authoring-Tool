@@ -106,6 +106,7 @@ export function initializeArtifact(andTemplate) {
       },
       newTrees.newSubpopulation
     ],
+    subelements: [],
     parameters: [],
     errorStatement: { statements: [] },
     uniqueIdCounter: 0

@@ -55,6 +55,7 @@
 
   .react-tabs {
     [role=tablist] {
+      display: flex;
       margin: 0 -9999rem;
       padding: 0 9999rem;
       background: $blue-darkest;
@@ -63,6 +64,7 @@
 
     [role=tab] {
       display: inline-block;
+      font-size: 0.98em;
       list-style: none;
       padding: 0.75em 1em;
       cursor: pointer;

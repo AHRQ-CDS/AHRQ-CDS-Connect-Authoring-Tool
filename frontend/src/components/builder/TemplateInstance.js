@@ -532,7 +532,7 @@ export default class TemplateInstance extends Component {
 
   renderBody() {
     const validationError = this.validateElement();
-    const returnError = this.state.returnType === 'boolean' ? null
+    const returnError = (!(this.props.validateReturnType !== false) || this.state.returnType === 'boolean') ? null
       : "Element must have return type 'boolean'.  Add expression(s) to change the return type.";
 
     return (
@@ -560,7 +560,9 @@ export default class TemplateInstance extends Component {
           <div className="return-type row">
             <div className="col-3 bold align-right return-type__label">Return Type:</div>
             <div className="col-7 return-type__value">
-              {_.startCase(this.state.returnType) === 'Boolean' && <FontAwesome name="check" className="check" />}
+              { (this.props.validateReturnType === false
+                || _.startCase(this.state.returnType) === 'Boolean')
+                && <FontAwesome name="check" className="check" />}
               {_.startCase(this.state.returnType)}
             </div>
           </div>
@@ -665,5 +667,6 @@ TemplateInstance.propTypes = {
   vsacSearchCount: PropTypes.number.isRequired,
   getVSDetails: PropTypes.func.isRequired,
   isRetrievingDetails: PropTypes.bool.isRequired,
-  vsacDetailsCodes: PropTypes.array.isRequired
+  vsacDetailsCodes: PropTypes.array.isRequired,
+  validateReturnType: PropTypes.bool
 };

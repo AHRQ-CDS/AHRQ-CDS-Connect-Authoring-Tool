@@ -234,8 +234,8 @@ export class Builder extends Component {
     this.setState({ recommendations: recs });
   }
 
-  updateSubpopulations = (subpopulations) => {
-    this.props.updateArtifact(this.props.artifact, { subpopulations });
+  updateSubpopulations = (subpopulations, target = 'subpopulations') => {
+    this.props.updateArtifact(this.props.artifact, { [target]: subpopulations });
   }
 
   updateRecommendations = (recommendations) => {
@@ -382,6 +382,7 @@ export class Builder extends Component {
                 <Tab>Inclusions</Tab>
                 <Tab>Exclusions</Tab>
                 <Tab>Subpopulations</Tab>
+                <Tab>Subelements</Tab>
                 <Tab>Recommendations</Tab>
                 <Tab>Parameters</Tab>
                 <Tab>Handle Errors</Tab>
@@ -427,6 +428,40 @@ export class Builder extends Component {
                     isRetrievingDetails={this.props.isRetrievingDetails}
                     vsacDetailsCodes={this.props.vsacDetailsCodes}
                     vsacFHIRCredentials={this.props.vsacFHIRCredentials}/>
+                </TabPanel>
+
+                <TabPanel>
+                  <Subpopulations
+                    name={'subelements'}
+                    artifact={artifact}
+                    resources={this.props.resources}
+                    valueSets={this.props.valueSets}
+                    loadValueSets={this.props.loadValueSets}
+                    updateSubpopulations={this.updateSubpopulations}
+                    parameters={namedParameters}
+                    addInstance={this.addInstance}
+                    editInstance={this.editInstance}
+                    updateInstanceModifiers={this.updateInstanceModifiers}
+                    deleteInstance={this.deleteInstance}
+                    getAllInstances={this.getAllInstances}
+                    templates={templates}
+                    checkSubpopulationUsage={this.checkSubpopulationUsage}
+                    updateRecsSubpop={this.updateRecsSubpop}
+                    conversionFunctions={conversionFunctions}
+                    loginVSACUser={this.props.loginVSACUser}
+                    setVSACAuthStatus={this.props.setVSACAuthStatus}
+                    vsacStatus={this.props.vsacStatus}
+                    vsacStatusText={this.props.vsacStatusText}
+                    timeLastAuthenticated={this.props.timeLastAuthenticated}
+                    searchVSACByKeyword={this.props.searchVSACByKeyword}
+                    isSearchingVSAC={this.props.isSearchingVSAC}
+                    vsacSearchResults={this.props.vsacSearchResults}
+                    vsacSearchCount={this.props.vsacSearchCount}
+                    getVSDetails={this.props.getVSDetails}
+                    isRetrievingDetails={this.props.isRetrievingDetails}
+                    vsacDetailsCodes={this.props.vsacDetailsCodes}
+                    vsacFHIRCredentials={this.props.vsacFHIRCredentials}
+                    validateReturnType={false}/>
                 </TabPanel>
 
                 <TabPanel>

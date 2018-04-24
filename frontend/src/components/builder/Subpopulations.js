@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import _ from 'lodash';
+import pluralize from 'pluralize';
 
 import Subpopulation from './Subpopulation';
 import createTemplateInstance from '../../utils/templates';
@@ -14,15 +15,17 @@ export default class Subpopulations extends Component {
     this.baseTemplate = (andTemplate);
 
     this.state = {
-      subpopulations: this.props.artifact.subpopulations.filter(sp => !sp.special), // Don't want to allow user interaction with the two default subpopulations added by the system
-      numOfSpecialSubpopulations: this.props.artifact.subpopulations.filter(sp => sp.special).length
+      subpopulations: this.props.artifact[this.props.name].filter(sp => !sp.special), // Don't want to allow user interaction with the two default subpopulations added by the system
+      subelements: this.props.artifact[this.props.name].filter(sp => !sp.special),
+      numOfSpecialSubpopulations: this.props.artifact[this.props.name].filter(sp => sp.special).length
     };
   }
 
   componentWillReceiveProps(nextProps) {
     this.setState({
-      subpopulations: nextProps.artifact.subpopulations.filter(sp => !sp.special),
-      numOfSpecialSubpopulations: nextProps.artifact.subpopulations.filter(sp => sp.special).length
+      subpopulations: nextProps.artifact[this.props.name].filter(sp => !sp.special),
+      subelements: nextProps.artifact[this.props.name],
+      numOfSpecialSubpopulations: nextProps.artifact[this.props.name].filter(sp => sp.special).length
     });
   }
 
@@ -30,11 +33,11 @@ export default class Subpopulations extends Component {
     const newSubpopulation = createTemplateInstance(this.baseTemplate);
     newSubpopulation.name = '';
     newSubpopulation.path = '';
-    newSubpopulation.subpopulationName = `Subpopulation ${this.state.subpopulations.length + 1}`;
+    // eslint-disable-next-line
+    newSubpopulation.subpopulationName = `${_.capitalize(pluralize.singular(this.props.name))} ${this.state[this.props.name].length+1}`;
     newSubpopulation.expanded = true;
-    const newSubpopulations = this.props.artifact.subpopulations.concat([newSubpopulation]);
-
-    this.props.updateSubpopulations(newSubpopulations);
+    const newSubpopulations = this.props.artifact[this.props.name].concat([newSubpopulation]);
+    this.props.updateSubpopulations(newSubpopulations, this.props.name);
   }
 
   deleteSubpopulation = (uniqueId) => {
@@ -43,20 +46,20 @@ export default class Subpopulations extends Component {
       // eslint-disable-next-line no-alert
       alert('Subpopulation in use');
     } else {
-      const newSubpopulations = _.cloneDeep(this.props.artifact.subpopulations);
-      const subpopulationIndex = this.props.artifact.subpopulations.findIndex(sp => sp.uniqueId === uniqueId);
+      const newSubpopulations = _.cloneDeep(this.props.artifact[this.props.name]);
+      const subpopulationIndex = this.props.artifact[this.props.name].findIndex(sp => sp.uniqueId === uniqueId);
       newSubpopulations.splice(subpopulationIndex, 1);
 
-      this.props.updateSubpopulations(newSubpopulations);
+      this.props.updateSubpopulations(newSubpopulations, this.props.name);
     }
   }
 
   setSubpopulationName = (name, uniqueId) => {
-    const newSubpopulations = _.cloneDeep(this.props.artifact.subpopulations);
-    const subpopulationIndex = this.props.artifact.subpopulations.findIndex(sp => sp.uniqueId === uniqueId);
+    const newSubpopulations = _.cloneDeep(this.props.artifact[this.props.name]);
+    const subpopulationIndex = this.props.artifact[this.props.name].findIndex(sp => sp.uniqueId === uniqueId);
     newSubpopulations[subpopulationIndex].subpopulationName = name;
 
-    this.props.updateSubpopulations(newSubpopulations);
+    this.props.updateSubpopulations(newSubpopulations, this.props.name);
     this.props.updateRecsSubpop(name, uniqueId);
   }
 
@@ -95,11 +98,12 @@ export default class Subpopulations extends Component {
               getVSDetails={this.props.getVSDetails}
               isRetrievingDetails={this.props.isRetrievingDetails}
               vsacDetailsCodes={this.props.vsacDetailsCodes}
-              vsacFHIRCredentials={this.props.vsacFHIRCredentials} />
+              vsacFHIRCredentials={this.props.vsacFHIRCredentials}
+              validateReturnType={this.props.validateReturnType}/>
           ))}
 
         <button className="button primary-button new-subpopulation-button" onClick={this.addSubpopulation}>
-          New subpopulation
+            New {pluralize.singular(this.props.name)}
         </button>
       </div>
     );
@@ -134,5 +138,6 @@ Subpopulations.propTypes = {
   vsacSearchCount: PropTypes.number.isRequired,
   getVSDetails: PropTypes.func.isRequired,
   isRetrievingDetails: PropTypes.bool.isRequired,
-  vsacDetailsCodes: PropTypes.array.isRequired
+  vsacDetailsCodes: PropTypes.array.isRequired,
+  validateReturnType: PropTypes.bool
 };
