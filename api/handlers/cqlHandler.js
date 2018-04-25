@@ -198,9 +198,12 @@ class CqlArtifact {
     );
 
     this.parameters.forEach((parameter) => {
+      if (parameter.value && parameter.value.unit) {
+        parameter.value.unit = parameter.value.unit.replace(/'/g, '\\\'');
+      }
       if (parameter.type === "Code" || parameter.type === "Concept") {
-        let system = _.get(parameter, 'value.system', null);
-        let uri = _.get(parameter, 'value.uri', null);
+        let system = _.get(parameter, 'value.system', null).replace(/'/g, '\\\'');
+        let uri = _.get(parameter, 'value.uri', null).replace(/'/g, '\\\'');
         if (system && uri) { this.codeSystemMap.set(system, { name: system, id: uri }); }
       }
     }
@@ -753,7 +756,10 @@ function applyModifiers(values, modifiers = []) { // default modifiers to []
         });
         modifier.cqlTemplate = 'CheckEquivalenceToCode';
       }
-      if (modifier.values) modifierContext.values = modifier.values; // Certain modifiers (such as lookback) require values, so provide them here
+      if (modifier.values) {
+        if (modifier.values.unit) modifier.values.unit = modifier.values.unit.replace(/'/g, '\\\'');
+        modifierContext.values = modifier.values; // Certain modifiers (such as lookback) require values, so provide them here
+      }
       if (!(modifier.cqlTemplate in modifierMap)) {
         console.error(`Modifier Template could not be found: ${modifier.cqlTemplate}`);
       }
@@ -858,6 +864,8 @@ function addConcepts(concept, codeSystemMap, codeMap, conceptMap) {
 function buildConceptObjectForCodes(codes, listOfConcepts) {
   if (codes) {
     codes.forEach((code) => {
+      code.code = code.code.replace(/'/g, '\\\'');
+      code.codeSystem.id = code.codeSystem.id.replace(/'/g, '\\\'');
       const concept = {
         name: `${code.codeSystem.name} ${code.code} Concept`,
         codes: [

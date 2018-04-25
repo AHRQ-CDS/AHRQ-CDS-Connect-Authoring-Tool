@@ -86,7 +86,8 @@ export default class CodeSelectModal extends Component {
     // Updating a modifier is different than selecting the code for a base element
     if (this.props.updateModifier) {
       this.props.updateModifier({
-        code: this.state.codeText, codeSystem: { name: this.state.selectedCS.value, id: this.state.selectedCS.id }
+        code: this.state.codeText,
+        codeSystem: { name: this.state.selectedCS.value, id: this.state.selectedCS.id || this.state.codeSystemText }
       });
 
       this.closeCodeSelectModal();

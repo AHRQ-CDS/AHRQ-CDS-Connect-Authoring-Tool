@@ -42,16 +42,17 @@ export default class IntervalOfQuantityEditor extends Component {
     }
 
     if ((firstQuantity || firstQuantity === 0) || (secondQuantity || secondQuantity === 0) || unit) {
+      const escapedQuoteUnit = unit ? unit.replace(/'/g, '\\\'') : unit;
       if (Number.isInteger(firstQuantity)) {
         if (Number.isInteger(secondQuantity)) {
-          str = `Interval[${firstQuantity}.0 '${unit}',${secondQuantity}.0 '${unit}']`;
+          str = `Interval[${firstQuantity}.0 '${escapedQuoteUnit}',${secondQuantity}.0 '${escapedQuoteUnit}']`;
         } else {
-          str = `Interval[${firstQuantity}.0 '${unit}',${secondQuantity} '${unit}']`;
+          str = `Interval[${firstQuantity}.0 '${escapedQuoteUnit}',${secondQuantity} '${escapedQuoteUnit}']`;
         }
       } else if (Number.isInteger(secondQuantity)) {
-        str = `Interval[${firstQuantity} '${unit}',${secondQuantity}.0 '${unit}']`;
+        str = `Interval[${firstQuantity} '${escapedQuoteUnit}',${secondQuantity}.0 '${escapedQuoteUnit}']`;
       } else {
-        str = `Interval[${firstQuantity} '${unit}',${secondQuantity} '${unit}']`;
+        str = `Interval[${firstQuantity} '${escapedQuoteUnit}',${secondQuantity} '${escapedQuoteUnit}']`;
       }
       return { firstQuantity, secondQuantity, unit, str };
     }

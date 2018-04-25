@@ -33,10 +33,11 @@ export default class QuantityEditor extends Component {
     }
 
     if ((quantity || quantity === 0) || unit) {
+      const escapedQuoteUnit = unit ? unit.replace(/'/g, '\\\'') : unit;
       if (Number.isInteger(quantity)) {
-        str = `${quantity}.0 '${unit}'`;
+        str = `${quantity}.0 '${escapedQuoteUnit}'`;
       } else {
-        str = `${quantity} '${unit}'`;
+        str = `${quantity} '${escapedQuoteUnit}'`;
       }
       return { quantity, unit, str };
     }
