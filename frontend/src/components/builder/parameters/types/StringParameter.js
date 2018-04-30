@@ -23,6 +23,11 @@ export default class StringParameter extends Component {
             name={id}
             value={value || ''}
             aria-label={name}
+            onKeyPress={(event) => {
+              if (event.which === 34) { // Quotation mark (")
+                event.preventDefault();
+              }
+            }}
             onChange={(event) => {
               updateInstance({ [event.target.name]: event.target.value });
             }}

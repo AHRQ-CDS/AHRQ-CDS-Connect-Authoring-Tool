@@ -9,9 +9,9 @@ export default class CodeEditor extends Component {
   handleCodeAdded = ({ system, uri, code, display }) => {
     let str;
     if (this.props.isConcept) {
-      str = `Concept { Code '${code}' from "${system}" } display '${display}'`;
+      str = `Concept { Code '${code.replace(/'/g, '\\\'')}' from "${system}" } display '${display}'`;
     } else {
-      str = `Code '${code}' from "${system}" display '${display}'`;
+      str = `Code '${code.replace(/'/g, '\\\'')}' from "${system}" display '${display}'`;
     }
 
     this.props.updateInstance({ value: { system, uri, code, display, str } });

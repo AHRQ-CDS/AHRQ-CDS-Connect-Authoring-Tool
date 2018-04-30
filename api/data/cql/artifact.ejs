@@ -5,19 +5,19 @@ using <%=dataModel.name%> version '<%= dataModel.version %>'
 include <%=includeLibrary.name%> version '<%=includeLibrary.version%>'<%if (includeLibrary.alias) {%> called <%=includeLibrary.alias%> <%}%>
 <%})-%>
 <% codeSystemMap.forEach((resource, key) => {%>
-codesystem "<%=key%>": '<%=resource.id%>' <%}) -%>
+codesystem "<%=key%>": '<%-resource.id%>' <%}) -%>
 
 <% resourceMap.forEach((resource, key) => {%>
 valueset "<%=resource.name%>": '<%=resource.oid%>'<%});-%>
 
 <% codeMap.forEach((code) => { %>
-code "<%=code.name%>": '<%=code.code%>' from "<%=code.codeSystem.name%>"
-  display '<%=code.display%>'
+code "<%-code.name%>": '<%-code.code%>' from "<%-code.codeSystem.name%>"
+  display '<%-code.display%>'
 <%})-%>
 
 <% conceptMap.forEach((concept) => {%>
-concept "<%=concept.name%>" : { <%concept.codes.forEach((code, index) => {%>"<%if (index > 0) {%>, <%}%><%=code.name%>"<%})%>}
-  display '<%=concept.display%>'
+concept "<%-concept.name%>" : { <%concept.codes.forEach((code, index) => {%>"<%if (index > 0) {%>, <%}%><%-code.name%>"<%})%>}
+  display '<%-concept.display%>'
 <%})-%>
 
 <% parameters.forEach(parameter => { if(parameter.name) {-%>

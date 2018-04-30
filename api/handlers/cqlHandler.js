@@ -198,9 +198,12 @@ class CqlArtifact {
     );
 
     this.parameters.forEach((parameter) => {
+      if (parameter.value && parameter.value.unit) {
+        parameter.value.unit = parameter.value.unit.replace(/'/g, '\\\'');
+      }
       if (parameter.type === "Code" || parameter.type === "Concept") {
-        let system = _.get(parameter, 'value.system', null);
-        let uri = _.get(parameter, 'value.uri', null);
+        let system = _.get(parameter, 'value.system', null).replace(/'/g, '\\\'');
+        let uri = _.get(parameter, 'value.uri', null).replace(/'/g, '\\\'');
         if (system && uri) { this.codeSystemMap.set(system, { name: system, id: uri }); }
       }
     }
@@ -377,7 +380,7 @@ class CqlArtifact {
           }
           element.modifiers.forEach((modifier) => {
             if (modifier.id === 'ValueComparisonObservation') { // TODO put a key on modifiers to identify modifiers that require unit
-              modifier.values.unit = observationValueSets.units.code.replace(/\'/g, '');
+              modifier.values.unit = observationValueSets.units.code.replace(/'/g, '');
             }
           });
           break;
@@ -663,7 +666,7 @@ class CqlArtifact {
   recommendation() {
     let text = this.recommendations.map((recommendation) => {
       const conditional = constructOneRecommendationConditional(recommendation);
-      return `${conditional}'${recommendation.text}'`;
+      return `${conditional}'${sanitizeCQLString(recommendation.text)}'`;
     });
     text = _.isEmpty(text) ? 'null' : text.join('\n  else ').concat('\n  else null');
     return ejs.render(templateMap.BaseTemplate, { element_name: 'Recommendation', cqlString: text });
@@ -672,7 +675,9 @@ class CqlArtifact {
   rationale() {
     let rationaleText = this.recommendations.map((recommendation) => {
       const conditional = constructOneRecommendationConditional(recommendation);
-      return conditional + (_.isEmpty(recommendation.rationale) ? 'null' : `'${recommendation.rationale}'`);
+      return conditional + (_.isEmpty(recommendation.rationale)
+        ? 'null'
+        : `'${sanitizeCQLString(recommendation.rationale)}'`);
     });
     rationaleText = _.isEmpty(rationaleText) ? 'null' : rationaleText.join('\n  else ').concat('\n  else null');
     return ejs.render(templateMap.BaseTemplate, { element_name: 'Rationale', cqlString: rationaleText });
@@ -751,7 +756,10 @@ function applyModifiers(values, modifiers = []) { // default modifiers to []
         });
         modifier.cqlTemplate = 'CheckEquivalenceToCode';
       }
-      if (modifier.values) modifierContext.values = modifier.values; // Certain modifiers (such as lookback) require values, so provide them here
+      if (modifier.values) {
+        if (modifier.values.unit) modifier.values.unit = modifier.values.unit.replace(/'/g, '\\\'');
+        modifierContext.values = modifier.values; // Certain modifiers (such as lookback) require values, so provide them here
+      }
       if (!(modifier.cqlTemplate in modifierMap)) {
         console.error(`Modifier Template could not be found: ${modifier.cqlTemplate}`);
       }
@@ -856,6 +864,8 @@ function addConcepts(concept, codeSystemMap, codeMap, conceptMap) {
 function buildConceptObjectForCodes(codes, listOfConcepts) {
   if (codes) {
     codes.forEach((code) => {
+      code.code = code.code.replace(/'/g, '\\\'');
+      code.codeSystem.id = code.codeSystem.id.replace(/'/g, '\\\'');
       const concept = {
         name: `${code.codeSystem.name} ${code.code} Concept`,
         codes: [
