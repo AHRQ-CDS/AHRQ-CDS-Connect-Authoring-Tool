@@ -13,14 +13,20 @@
 
   &-other-system {
     margin-top: 5px;
+    max-width: 316px;
   }
 }
 
 .code-display {
-  display: grid;
-  grid-template-columns: 10% 10% auto;
-  grid-column-gap: 30px;
-  padding-left: 2em;
-  padding-right: 2em;
-  padding-top: .5em;
+  display: flex;
+  margin: 2em;
+
+  &__code,
+  &__system-name {
+    flex: 1;
+  }
+
+  &__display {
+    flex: 5;
+  }
 }

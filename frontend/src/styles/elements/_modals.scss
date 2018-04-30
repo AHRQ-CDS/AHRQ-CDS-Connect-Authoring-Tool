@@ -1,6 +1,7 @@
 .element-modal.modal-style {
   border-radius: $border-radius;
   box-shadow: $box-shadow;
+  width: 100%;
   max-width: 1000px;
   margin: 20px auto;
   position: absolute;
@@ -73,8 +74,7 @@
   }
 
   .modal__footer_status {
-    display: block;
-    margin-right: auto;
+    flex-grow: 1;
   }
 }
 
@@ -83,6 +83,8 @@ body.ReactModal__Body--open {
 
   #root {
     filter: blur(10px);
+
+    @include ie10plus { opacity: 0.1; }
   }
 }
 
