@@ -710,7 +710,7 @@ class CqlArtifact {
     const headerString = this.header();
     let fullString = `${headerString}${bodyString}\n${this.population()}\n${this.recommendation()}\n` +
       `${this.rationale()}${this.errors()}`;
-    fullString = fullString.replace(/\x0A/g, '\x0D\x0A'); // Make all line endings CRLF
+    fullString = fullString.replace(/\r\n|\r|\n/g, '\r\n'); // Make all line endings CRLF
     return fullString;
   }
 
@@ -955,7 +955,7 @@ function writeZip(cqlArtifact, writeStream, callback /* (error) */) {
     archive.pipe(writeStream);
     archive.append(artifactJson.text, { name: `${artifactJson.filename}.cql` });
     elmFiles.forEach((e, i) => {
-      archive.append(e.content.replace(/\x0A/g, '\x0D\x0A'), { name: `${e.name}.json` });
+      archive.append(e.content.replace(/\r\n|\r|\n/g, '\r\n'), { name: `${e.name}.json` });
     });
     const helperPath = `${__dirname}/../data/library_helpers/CQLFiles`;
     archive.directory(helperPath, '/');
