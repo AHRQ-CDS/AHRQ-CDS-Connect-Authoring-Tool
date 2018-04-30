@@ -12,6 +12,7 @@ import 'core-js/fn/array/includes';
 import 'core-js/fn/function/bind';
 import 'core-js/fn/number/is-nan';
 import 'core-js/fn/string/includes';
+import 'core-js/fn/set';
 
 import configureStore from './store/configureStore';
 import Root from './containers/Root';

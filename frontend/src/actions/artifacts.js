@@ -279,7 +279,7 @@ function sendDownloadArtifactRequest(artifact) {
 
   return new Promise((resolve, reject) => {
     axios.post(`${API_BASE}/cql`, artifact, { responseType: 'blob' })
-      .then((result) => { FileSaver.saveAs(result.data, fileName); resolve(result.data); })
+      .then((result) => { FileSaver.saveAs(result.data, `${fileName}.zip`); resolve(result.data); })
       .catch(error => reject(error));
   });
 }
