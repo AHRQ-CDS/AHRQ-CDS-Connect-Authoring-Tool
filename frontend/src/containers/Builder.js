@@ -382,7 +382,7 @@ export class Builder extends Component {
                 <Tab>Inclusions</Tab>
                 <Tab>Exclusions</Tab>
                 <Tab>Subpopulations</Tab>
-                <Tab>Subelements</Tab>
+                {/* <Tab>Subelements</Tab> */}
                 <Tab>Recommendations</Tab>
                 <Tab>Parameters</Tab>
                 <Tab>Handle Errors</Tab>
@@ -430,7 +430,7 @@ export class Builder extends Component {
                     vsacFHIRCredentials={this.props.vsacFHIRCredentials}/>
                 </TabPanel>
 
-                <TabPanel>
+                {/* <TabPanel>
                   <Subpopulations
                     name={'subelements'}
                     artifact={artifact}
@@ -462,7 +462,7 @@ export class Builder extends Component {
                     vsacDetailsCodes={this.props.vsacDetailsCodes}
                     vsacFHIRCredentials={this.props.vsacFHIRCredentials}
                     validateReturnType={false}/>
-                </TabPanel>
+                </TabPanel> */}
 
                 <TabPanel>
                   <Recommendations
