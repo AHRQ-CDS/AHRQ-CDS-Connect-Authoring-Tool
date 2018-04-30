@@ -29,10 +29,33 @@ function getValueSet(oid, username, password) {
       oid: response.id,
       version: response.meta.versionId,
       displayName: response.name,
-      codes: response.expansion.contains
+      codes: response.expansion.contains.map((c) => {
+        return {
+          code: c.code,
+          codeSystemName: c.system,
+          codeSystemVersion: c.version,
+          displayName: c.display
+        }
+      })
     }
   });
 }
+
+//
+//
+// "E10.10"
+// codeSystem
+// :
+// "2.16.840.1.113883.6.90"
+// codeSystemName
+// :
+// "ICD10CM"
+// codeSystemVersion
+// :
+// "2018"
+// displayName
+// :
+// "Type 1 diabetes mellitus with ketoacidosis without coma"
 
 function searchForValueSets(search, username, password) {
   // TODO: Consider filtering to only published (not draft) value sets, but NLM doesn't support that
@@ -52,7 +75,8 @@ function searchForValueSets(search, username, password) {
       return {
         name: v.resource.name,
         steward: v.resource.publisher,
-        oid: v.resource.id
+        oid: v.resource.id,
+        codeSystem: []
       }
     });
     return {
@@ -87,7 +111,6 @@ function getCode(code, system, username, password) {
     };
   })
 }
-
 
 module.exports = {
   getValueSet,

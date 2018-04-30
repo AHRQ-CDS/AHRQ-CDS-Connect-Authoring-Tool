@@ -44,11 +44,11 @@ describe('vsac/FHIRClient', () =>{
         displayName: 'foo',
         codes: [
           {
-            "system": "http://hl7.org/fhir/sid/icd-9-cm",
-             "version": "2013",
-             "code": "250.00",
-             "display": "Diabetes mellitus without mention of complication, type II or unspecified type, not stated "
-               + "as uncontrolled"
+            "code": "250.00",
+            "codeSystemName": "http://hl7.org/fhir/sid/icd-9-cm",
+            "codeSystemVersion": "2013",
+            "displayName": "Diabetes mellitus without mention of complication, type II or unspecified type, not stated as uncontrolled"
+
           }
         ]
       });
@@ -104,6 +104,7 @@ describe('vsac/FHIRClient', () =>{
       const result = client.searchForValueSets('Diabetes', username, password);
       const expResults = FHIRMocks.Search.entry.map((v) => {
         return {
+          codeSystem: [],
           name: v.resource.name,
           steward: v.resource.publisher,
           oid: v.resource.id

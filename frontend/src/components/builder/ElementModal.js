@@ -23,11 +23,19 @@ export default class ElementModal extends Component {
   }
 
   searchVSAC = () => {
-    this.props.searchVSACByKeyword(this.state.searchValue);
+    this.props.searchVSACByKeyword(
+      this.state.searchValue,
+      this.props.vsacFHIRCredentials.username,
+      this.props.vsacFHIRCredentials.password
+    );
   }
 
   handleElementSelected = (selectedElement) => {
-    this.props.getVSDetails(selectedElement.oid);
+    this.props.getVSDetails(
+      selectedElement.oid,
+      this.props.vsacFHIRCredentials.username,
+      this.props.vsacFHIRCredentials.password
+    );
     this.setState({ selectedElement: { name: selectedElement.name, oid: selectedElement.oid } });
   }
 
