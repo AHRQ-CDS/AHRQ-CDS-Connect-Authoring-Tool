@@ -13,6 +13,16 @@ const VSAC_FHIR_ENDPOINT = 'https://cts.nlm.nih.gov/fhir';
 * @param {string} password the VSAC user's password
 * @returns {Promise<object>} an object containing the FHIR response for the OID
 */
+
+const codeLookups = {
+  'http://snomed.info/sct': 'SNOMED',
+  'http://hl7.org/fhir/sid/icd-9-cm': 'ICD-9',
+  'http://hl7.org/fhir/sid/icd-10': 'ICD-10',
+  'http://ncimeta.nci.nih.gov': 'NCI',
+  'http://loinc.org': 'LOINC',
+  'http://www.nlm.nih.gov/research/umls/rxnorm': 'RXNORM'
+}
+
 function getValueSet(oid, username, password) {
   const options = {
     method: 'GET',
@@ -32,7 +42,7 @@ function getValueSet(oid, username, password) {
       codes: response.expansion.contains.map((c) => {
         return {
           code: c.code,
-          codeSystemName: c.system,
+          codeSystemName: codeLookups[c.system]||'Other',
           codeSystemVersion: c.version,
           displayName: c.display
         }
@@ -41,21 +51,6 @@ function getValueSet(oid, username, password) {
   });
 }
 
-//
-//
-// "E10.10"
-// codeSystem
-// :
-// "2.16.840.1.113883.6.90"
-// codeSystemName
-// :
-// "ICD10CM"
-// codeSystemVersion
-// :
-// "2018"
-// displayName
-// :
-// "Type 1 diabetes mellitus with ketoacidosis without coma"
 
 function searchForValueSets(search, username, password) {
   // TODO: Consider filtering to only published (not draft) value sets, but NLM doesn't support that
@@ -87,6 +82,8 @@ function searchForValueSets(search, username, password) {
     }
   });
 }
+
+
 
 function getCode(code, system, username, password) {
   const options = {

@@ -45,7 +45,7 @@ describe('vsac/FHIRClient', () =>{
         codes: [
           {
             "code": "250.00",
-            "codeSystemName": "http://hl7.org/fhir/sid/icd-9-cm",
+            "codeSystemName": "ICD-9",
             "codeSystemVersion": "2013",
             "displayName": "Diabetes mellitus without mention of complication, type II or unspecified type, not stated as uncontrolled"
 
