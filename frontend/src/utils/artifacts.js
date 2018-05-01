@@ -76,6 +76,10 @@ export default function isBlankArtifact(artifact) {
       return false;
     }
   }
+  // If it has any patients, it is NOT blank
+  if (artifact.patients.length > 0) {
+    return false;
+  }
   // If we safely made it here, it is BLANK!
   return true;
 }

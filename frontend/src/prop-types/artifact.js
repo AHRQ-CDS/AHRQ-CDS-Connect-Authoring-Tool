@@ -58,7 +58,8 @@ const artifactProps = {
         value: PropTypes.string
       })
     }))
-  })
+  }),
+  patients: PropTypes.arrayOf(PropTypes.object)
 };
 
 export default PropTypes.shape(artifactProps);

@@ -23,6 +23,7 @@ import ConjunctionGroup from '../components/builder/ConjunctionGroup';
 import Subpopulations from '../components/builder/Subpopulations';
 import ErrorStatement from '../components/builder/ErrorStatement';
 import Parameters from '../components/builder/Parameters';
+import PatientUpload from '../components/builder/PatientUpload';
 import Recommendations from '../components/builder/Recommendations';
 import RepoUploadModal from '../components/builder/RepoUploadModal';
 import ELMErrorModal from '../components/builder/ELMErrorModal';
@@ -249,6 +250,10 @@ export class Builder extends Component {
     this.props.updateArtifact(this.props.artifact, { errorStatement });
   }
 
+  updatePatients = (patients) => {
+    this.props.updateArtifact(this.props.artifact, { patients });
+  }
+
   checkSubpopulationUsage = (uniqueId) => {
     for (let i = 0; i < this.props.artifact.recommendations.length; i++) {
       const subpops = this.props.artifact.recommendations[i].subpopulations;
@@ -390,6 +395,7 @@ export class Builder extends Component {
                 <Tab>Recommendations</Tab>
                 <Tab>Parameters</Tab>
                 <Tab>Handle Errors</Tab>
+                <Tab>Patient Upload</Tab>
               </TabList>
 
               <div className="tab-panel-container">
@@ -513,6 +519,12 @@ export class Builder extends Component {
                     subpopulations={this.props.artifact.subpopulations}
                     errorStatement={this.props.artifact.errorStatement}
                     updateErrorStatement={this.updateErrorStatement} />
+                </TabPanel>
+
+                <TabPanel>
+                  <PatientUpload
+                    patients={this.props.artifact.patients}
+                    updatePatients={this.updatePatients} />
                 </TabPanel>
               </div>
             </Tabs>
