@@ -98,7 +98,7 @@ export default class Header extends Component {
 
             <div className="header__cdsbanner-auth col-xs-12 col-md-7">
               <a href="https://cds.ahrq.gov" className="cds-home-link">
-                <FontAwesome name="link" /> CDS Home
+                <FontAwesome name="link" />CDS Home
               </a>
 
               {this.renderedAuth()}

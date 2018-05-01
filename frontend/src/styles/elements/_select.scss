@@ -1,3 +1,7 @@
+.element-modal__search .Select {
+  max-width: 316px;
+}
+
 .Select {
   margin-right: 10px;
   max-width: 400px;
@@ -13,12 +17,6 @@
   &-value-label,
   &-placeholder {
     @include respond-to-min('1440px') { line-height: 46px; }
-  }
-
-  &-value,
-  &-label,
-  &-placeholder {
-    // margin-left: 10px !important;
   }
 
   &-value,

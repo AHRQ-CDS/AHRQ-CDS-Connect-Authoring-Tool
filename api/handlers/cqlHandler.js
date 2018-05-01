@@ -708,8 +708,10 @@ class CqlArtifact {
     // Create the header after the body because elements in the body can add new value sets and codes to be used.
     const bodyString = this.body();
     const headerString = this.header();
-    return `${headerString}${bodyString}\n${this.population()}\n${this.recommendation()}\n${this.rationale()}\n` +
-      `${this.errors()}`;
+    let fullString = `${headerString}${bodyString}\n${this.population()}\n${this.recommendation()}\n` +
+      `${this.rationale()}${this.errors()}`;
+    fullString = fullString.replace(/\r\n|\r|\n/g, '\r\n'); // Make all line endings CRLF
+    return fullString;
   }
 
   // Return a cql file as a json object
@@ -953,7 +955,7 @@ function writeZip(cqlArtifact, writeStream, callback /* (error) */) {
     archive.pipe(writeStream);
     archive.append(artifactJson.text, { name: `${artifactJson.filename}.cql` });
     elmFiles.forEach((e, i) => {
-      archive.append(e.content, { name: `${e.name}.json` });
+      archive.append(e.content.replace(/\r\n|\r|\n/g, '\r\n'), { name: `${e.name}.json` });
     });
     const helperPath = `${__dirname}/../data/library_helpers/CQLFiles`;
     archive.directory(helperPath, '/');

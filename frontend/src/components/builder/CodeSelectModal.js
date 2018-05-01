@@ -165,12 +165,15 @@ export default class CodeSelectModal extends Component {
 
   renderCodeData = () => {
     if (this.state.codeIsValid) {
-      return <div className="code-display">
-              <div>{this.state.codeData.code}</div>
-              <div>{this.state.codeData.systemName}</div>
-              <div>{this.state.codeData.display}</div>
-            </div>;
+      return (
+        <div className="code-display">
+          <div className="code-display__code">{this.state.codeData.code}</div>
+          <div className="code-display__system-name">{this.state.codeData.systemName}</div>
+          <div className="code-display__display">{this.state.codeData.display}</div>
+        </div>
+      );
     }
+
     return null;
   }
 
@@ -202,8 +205,8 @@ export default class CodeSelectModal extends Component {
         </button>
 
         <Modal
-          isOpen={ this.state.showCodeSelectModal }
-          onRequestClose={ this.closeCodeSelectModal }
+          isOpen={this.state.showCodeSelectModal}
+          onRequestClose={this.closeCodeSelectModal}
           shouldCloseOnOverlayClick={ true }
           contentLabel="Choose code"
           className="modal-style modal-style__light modal-style--full-height element-modal"
@@ -213,8 +216,8 @@ export default class CodeSelectModal extends Component {
               <span className="modal__heading">Choose Code</span>
               <button
                 className="element__deletebutton"
-                onClick={ this.closeCodeSelectModal }
-                onKeyDown={ e => this.enterKeyCheck(this.closeCodeSelectModal, null, e) }
+                onClick={this.closeCodeSelectModal}
+                onKeyDown={e => this.enterKeyCheck(this.closeCodeSelectModal, null, e)}
                 aria-label={'Close Code Select Modal'}>
                 <FontAwesome name='close'/>
               </button>
@@ -226,11 +229,11 @@ export default class CodeSelectModal extends Component {
                   className="element-modal__search-code col-6"
                   type="text"
                   id="code-input"
-                  placeholder={ codeInputLabel }
-                  aria-label={ codeInputLabel }
-                  title={ codeInputLabel }
-                  value={ this.state.codeText }
-                  onChange={ this.handleSearchValueChange }
+                  placeholder={codeInputLabel}
+                  aria-label={codeInputLabel}
+                  title={codeInputLabel}
+                  value={this.state.codeText}
+                  onChange={this.handleSearchValueChange}
                 />
 
                 <Select
@@ -243,34 +246,37 @@ export default class CodeSelectModal extends Component {
                   onChange={this.onCodeSystemSelected}
                 />
 
-                <button className="primary-button element-modal__search-button col-2" onClick={ this.validateCode }>
+                <button className="primary-button element-modal__search-button col-2" onClick={this.validateCode}>
                   Validate
                 </button>
 
                 <div className="col-6"></div>
+
                 {this.state.displayOtherInput ?
                   <div className="element-modal__search-other-system col-4">
                     <input
                       type="text"
                       id="other-code-system"
-                      placeholder={ otherInputLabel }
-                      aria-label={ otherInputLabel }
-                      title={ otherInputLabel }
-                      value={ this.state.codeSystemText }
-                      onChange={ this.handleOtherCodeSystemChange }
+                      placeholder={otherInputLabel}
+                      aria-label={otherInputLabel}
+                      title={otherInputLabel}
+                      value={this.state.codeSystemText}
+                      onChange={this.handleOtherCodeSystemChange}
                     />
                   </div>
                   : null
                 }
-                <div className="col-2">
-                </div>
+
+                <div className="col-2"></div>
               </div>
+
               {this.renderCodeData()}
             </main>
 
             <footer className="modal__footer">
               {this.renderCodeValidation()}
-              <button className="primary-button element-modal__search-button col-2" onClick={ this.chooseCode }>
+
+              <button className="primary-button element-modal__search-button" onClick={this.chooseCode}>
                 Select
               </button>
             </footer>

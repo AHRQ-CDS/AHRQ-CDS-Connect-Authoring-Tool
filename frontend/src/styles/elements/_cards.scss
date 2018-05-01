@@ -1,4 +1,6 @@
 .card-group {
+  width: 100%;
+
   &__top {
     margin-left: 0;
     border-radius: 0.2em;
@@ -74,7 +76,7 @@
   }
 
   .card-group__header {
-    padding: 0 1em 1em;
+    padding: 0 0 1em 1em;
   }
 
   .card-element__header {
@@ -96,6 +98,10 @@
       transition: 0.2s ease-in-out;
       margin-left: 0.5em;
     }
+  }
+
+  .card-group__buttons {
+    padding-right: 1em;
   }
 
   .card-element__body {

@@ -1,3 +1,9 @@
+@mixin ie10plus {
+  @media screen and (-ms-high-contrast: active), (-ms-high-contrast: none) {
+    @content
+  }
+}
+
 @mixin fullBleed($background) {
   margin: 0 -9999rem;
   padding: 0.25rem 9999rem;
