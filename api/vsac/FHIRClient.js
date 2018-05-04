@@ -70,12 +70,14 @@ function searchForValueSets(search, username, password) {
 
   return rpn(options).then((res) => {
     const response = JSON.parse(res);
-    const results = response.entry.map((v, i) => {
+
+    const results = (response.entry||[]).map((v, i) => {
       return {
         name: v.resource.name,
         steward: v.resource.publisher,
         oid: v.resource.id,
-        codeSystem: []
+        codeSystem: [],
+        codeCount: (v.resource.expansion||{}).total||0
       }
     });
     return {

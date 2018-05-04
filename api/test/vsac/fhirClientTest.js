@@ -109,7 +109,8 @@ describe('vsac/FHIRClient', () =>{
           codeSystem: [],
           name: v.resource.name,
           steward: v.resource.publisher,
-          oid: v.resource.id
+          oid: v.resource.id,
+          codeCount: 0
         }
       })
       return expect(result).to.eventually.eql({_total: 67, count: 50, page: 1, results: expResults});

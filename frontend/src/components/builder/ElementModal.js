@@ -108,21 +108,7 @@ export default class ElementModal extends Component {
           aria-label={elem.name}
           onClick={() => this.handleElementSelected(elem)}
           onKeyDown={ e => this.enterKeyCheck(this.handleElementSelected, elem, e) }>
-            <td data-th="Type" title={elem.type}>
-              { elem.type === 'Grouping' ?
-                <FontAwesome name="puzzle-piece" /> :
-                <FontAwesome name="sitemap" />
-              }
-            </td>
             <td data-th="Name">{ elem.name }</td>
-            <td data-th="Code System">
-                { elem.codeSystem.map((cs, j) => {
-                  if (j < elem.codeSystem.length - 1) {
-                    return `${cs}, `;
-                  }
-                  return cs;
-                })}
-            </td>
             <td data-th="Steward">{ elem.steward }</td>
             <td data-th="Codes">{ elem.codeCount }</td>
         </tr>)
@@ -166,9 +152,7 @@ export default class ElementModal extends Component {
         <table className="search__table selectable icons">
           <thead>
             <tr>
-              <th>Type</th>
               <th>Name</th>
-              <th>Code System</th>
               <th>Steward</th>
               <th>Codes</th>
             </tr>
