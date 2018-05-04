@@ -15,12 +15,16 @@ const VSAC_FHIR_ENDPOINT = 'https://cts.nlm.nih.gov/fhir';
 */
 
 const codeLookups = {
-  'http://snomed.info/sct': 'SNOMED',
-  'http://hl7.org/fhir/sid/icd-9-cm': 'ICD-9',
-  'http://hl7.org/fhir/sid/icd-10': 'ICD-10',
+  'http://snomed.info/sct': 'SNOMEDCT',
+  'http://hl7.org/fhir/sid/icd-9-cm': 'ICD9CM',
+  'http://hl7.org/fhir/sid/icd-10': 'ICD10',
+  'http://hl7.org/fhir/sid/icd-10-cm': 'ICD10CM',
   'http://ncimeta.nci.nih.gov': 'NCI',
   'http://loinc.org': 'LOINC',
-  'http://www.nlm.nih.gov/research/umls/rxnorm': 'RXNORM'
+  'http://www.nlm.nih.gov/research/umls/rxnorm': 'RXNORM',
+  'http://unitsofmeasure.org': 'UCUM',
+  'http://www.ama-assn.org/go/cpt': 'CPT',
+  'http://hl7.org/fhir/sid/cvx': 'CVX'
 }
 
 function getValueSet(oid, username, password) {
@@ -42,7 +46,7 @@ function getValueSet(oid, username, password) {
       codes: response.expansion.contains.map((c) => {
         return {
           code: c.code,
-          codeSystemName: codeLookups[c.system]||'Other',
+          codeSystemName: codeLookups[c.system]||c.system,
           codeSystemVersion: c.version,
           displayName: c.display
         }

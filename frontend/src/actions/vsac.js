@@ -123,15 +123,6 @@ function searchFailure(error) {
   };
 }
 
-// Left in place should we ever decide to swap back to not using FHIR API.
-// function searchVSAC(keyword) {
-//   return new Promise((resolve, reject) => {
-//     axios.get(`${API_BASE}/vsac/search?keyword=${keyword}`)
-//       .then(result => resolve(result.data))
-//       .catch(error => reject(error));
-//   });
-// }
-
 export function searchVSACFHIR(keyword, username, password) {
   const auth = {
     username,
@@ -139,7 +130,7 @@ export function searchVSACFHIR(keyword, username, password) {
   };
 
   return new Promise((resolve, reject) => {
-    axios.get(`/authoring/api/fhir/search?keyword=${keyword}`, { auth })
+    axios.get(`${API_BASE}/fhir/search?keyword=${keyword}`, { auth })
       .then(result => resolve(result.data))
       .catch(error => reject(error));
   });
@@ -184,20 +175,11 @@ function getVSDetailsByOIDFHIR(oid, username, password) {
   };
 
   return new Promise((resolve, reject) => {
-    axios.get(`/authoring/api/fhir/vs/${oid}`, { auth })
+    axios.get(`${API_BASE}/fhir/vs/${oid}`, { auth })
       .then(result => resolve(result.data))
       .catch(error => reject(error));
   });
 }
-
-// Left in place should we ever decide to swap back to not using FHIR API.
-// function getVSDetailsByOID(oid) {
-//   return new Promise((resolve, reject) => {
-//     axios.get(`${API_BASE}/vsac/vs/${oid}`)
-//       .then(result => resolve(result.data))
-//       .catch(error => reject(error));
-//   });
-// }
 
 export function getVSDetails(oid, username, password) {
   return (dispatch) => {

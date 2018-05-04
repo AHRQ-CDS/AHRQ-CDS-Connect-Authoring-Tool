@@ -45,9 +45,11 @@ describe('vsac/FHIRClient', () =>{
         codes: [
           {
             "code": "250.00",
-            "codeSystemName": "ICD-9",
+            "codeSystemName": "ICD9CM",
             "codeSystemVersion": "2013",
-            "displayName": "Diabetes mellitus without mention of complication, type II or unspecified type, not stated as uncontrolled"
+            "displayName":
+              "Diabetes mellitus without mention of complication, type II or unspecified type, "
+               + "not stated as uncontrolled"
 
           }
         ]
