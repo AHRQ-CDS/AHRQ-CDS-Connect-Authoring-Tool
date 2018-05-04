@@ -180,6 +180,23 @@ class CqlArtifact {
     this.contexts = [];
     this.conjunctions = [];
     this.conjunction_main = [];
+    this.names = new Map();
+
+    this.parameters.forEach((parameter) => {
+      const count = getCountForUniqueExpressionName(parameter, this.names, 'name', 'name', false);
+      if (count > 0) {
+        parameter.name = `${parameter.name}_${count}`;
+      }
+      if (parameter.value && parameter.value.unit) {
+        parameter.value.unit = parameter.value.unit.replace(/'/g, '\\\'');
+      }
+      if (parameter.type === "Code" || parameter.type === "Concept") {
+        let system = _.get(parameter, 'value.system', null).replace(/'/g, '\\\'');
+        let uri = _.get(parameter, 'value.uri', null).replace(/'/g, '\\\'');
+        if (system && uri) { this.codeSystemMap.set(system, { name: system, id: uri }); }
+      }
+    }
+    );
 
     if (this.inclusions.childInstances.length) { this.parseTree(this.inclusions); }
     if (this.exclusions.childInstances.length) { this.parseTree(this.exclusions); }
@@ -193,18 +210,6 @@ class CqlArtifact {
     this.subelements.forEach((subelement) => {
       if (!subelement.special) { // `Doesn't Meet Inclusion Criteria` and `Meets Exclusion Criteria` are special
         if (subelement.childInstances.length) { this.parseTree(subelement); }
-      }
-    }
-    );
-
-    this.parameters.forEach((parameter) => {
-      if (parameter.value && parameter.value.unit) {
-        parameter.value.unit = parameter.value.unit.replace(/'/g, '\\\'');
-      }
-      if (parameter.type === "Code" || parameter.type === "Concept") {
-        let system = _.get(parameter, 'value.system', null).replace(/'/g, '\\\'');
-        let uri = _.get(parameter, 'value.uri', null).replace(/'/g, '\\\'');
-        if (system && uri) { this.codeSystemMap.set(system, { name: system, id: uri }); }
       }
     }
     );
@@ -277,8 +282,8 @@ class CqlArtifact {
   }
 
   parseTree(element) {
-    this.parseConjunction(element);
-    const children = element.childInstances;
+    let updatedElement = this.parseConjunction(element);
+    const children = updatedElement.childInstances;
     children.forEach((child) => {
       if ('childInstances' in child) {
         this.parseTree(child);
@@ -301,10 +306,21 @@ class CqlArtifact {
     const name = element.parameters[0].value;
     conjunction.element_name = (name || element.subpopulationName || element.uniqueId);
     element.childInstances.forEach((child) => {
-      // TODO: Could a child of a conjuction ever be a subpopulation?
-      conjunction.components.push({ name: child.parameters[0].value || child.uniqueId });
+      // TODO: Could a child of a conjunction ever be a subpopulation?
+      let childName = child.parameters[0].value || child.uniqueId;
+      if (child.type !== 'parameter') { // Parameters are updated separately
+        const childCount = getCountForUniqueExpressionName(child.parameters[0], this.names, 'value', 'value', false);
+        if (childCount > 0) {
+          childName = `${childName}_${childCount}`;
+          if (child.parameters[0].value) {
+            child.parameters[0].value = childName;
+          }
+        }
+      }
+      conjunction.components.push({ name: childName });
     });
     this.conjunction_main.push(conjunction);
+    return element;
   }
 
   parseParameter(element) {
@@ -797,7 +813,7 @@ function constructOneRecommendationConditional(recommendation, text) {
  * decide if the expression is indeed unique.
  * @return {number} The number that was appended to the expression if it was not unique.
  */
-function getCountForUniqueExpressionName(expression, map, nameKey, contentKey) {
+function getCountForUniqueExpressionName(expression, map, nameKey, contentKey, checkContent = true) {
   if (map.size > 0) {
     let newOID = true;
     let count = 0;
@@ -813,7 +829,7 @@ function getCountForUniqueExpressionName(expression, map, nameKey, contentKey) {
       if (_.isEqual(baseKeyString, expression[nameKey])) {
         // If the name and content of the expressions are the same, the same expression is being used.
         // Don't add it to the CQL.
-        if (_.isEqual(val[contentKey], expression[contentKey])) {
+        if (checkContent && _.isEqual(val[contentKey], expression[contentKey])) {
           newOID = false;
           existingOID = count;
         } else {

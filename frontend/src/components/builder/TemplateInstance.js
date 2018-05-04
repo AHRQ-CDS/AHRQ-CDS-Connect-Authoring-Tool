@@ -599,11 +599,14 @@ export default class TemplateInstance extends Component {
       }
 
       return (
-        <StringParameter
-          key={elementNameParameter.id}
-          {...elementNameParameter}
-          updateInstance={this.updateInstance}
-          name={this.props.templateInstance.name}/>
+        <div>
+          <StringParameter
+            key={elementNameParameter.id}
+            {...elementNameParameter}
+            updateInstance={this.updateInstance}
+            name={this.props.templateInstance.name}/>
+          {elementNameParameter.duplicate && <div className="warning">Warning: Name already in use. Choose another name.</div>}
+        </div>
       );
     }
 

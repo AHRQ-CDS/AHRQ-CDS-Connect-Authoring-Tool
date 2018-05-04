@@ -108,6 +108,7 @@ export default class Parameter extends Component {
                 value
               }))}
             />
+            {this.props.duplicateName && <div className="warning">Warning: Name already in use. Choose another name.</div>}
 
             <button
               aria-label="Delete Parameter"

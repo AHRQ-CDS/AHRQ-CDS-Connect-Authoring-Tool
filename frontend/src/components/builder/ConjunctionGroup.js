@@ -168,6 +168,7 @@ export default class ConjunctionGroup extends Component {
               value={elementNameParam.value}
               updateInstance={this.handleNameChange}
             />
+            {elementNameParam.duplicate && <div className="warning">Warning: Name already in use. Choose another name.</div>}
           </div>
 
           <div className="card-group__buttons">

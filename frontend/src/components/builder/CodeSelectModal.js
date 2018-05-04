@@ -128,10 +128,14 @@ export default class CodeSelectModal extends Component {
     }
     codesToAdd.push(newCode);
 
+    let nameParameter = selectedTemplate.parameters[0];
+    let lastCodeIndex = codesToAdd.length - 1;
     // Adding a new element and editing an exisitng element use different functions that take different parameters
     if (this.props.onElementSelected) {
       // Set the template's values initially to add it to the workspace.
-      selectedTemplate.parameters[0].value = `${codesToAdd[0].codeSystem.name} ${codesToAdd[0].code}`; // TODO: Best name for element
+      if (nameParameter.value === undefined || nameParameter.value === '') {
+        selectedTemplate.parameters[0].value = `${codesToAdd[lastCodeIndex].codeSystem.name} ${codesToAdd[lastCodeIndex].code}`; // TODO: Best name for element
+      }
       selectedTemplate.parameters[1].codes = codesToAdd;
       selectedTemplate.parameters[1].static = true;
       this.props.onElementSelected(selectedTemplate);
@@ -139,10 +143,14 @@ export default class CodeSelectModal extends Component {
       // Update an existing element in the workspace
       // Create array of which parameter to update, the new value to set, and the attribute to update (value is default)
       const arrayToUpdate = [
-        { [selectedTemplate.parameters[0].id]: `${codesToAdd[0].codeSystem.name} ${codesToAdd[0].code}` },
         { [selectedTemplate.parameters[1].id]: codesToAdd, attributeToEdit: 'codes' },
         { [selectedTemplate.parameters[1].id]: true, attributeToEdit: 'static' }
       ];
+      if (nameParameter.value === undefined || nameParameter.value === '') {
+        arrayToUpdate.push(
+          { [selectedTemplate.parameters[0].id]: `${codesToAdd[lastCodeIndex].codeSystem.name} ${codesToAdd[lastCodeIndex].code}` }
+        );
+      }
       this.props.updateElement(arrayToUpdate);
     }
     this.closeCodeSelectModal();

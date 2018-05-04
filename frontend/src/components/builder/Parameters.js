@@ -34,6 +34,7 @@ export default class Parameters extends Component {
             name={parameter.name}
             type={parameter.type}
             value={parameter.value}
+            duplicateName={parameter.duplicate}
             updateInstanceOfParameter={this.updateInstanceOfParameter}
             deleteParameter={this.deleteParameter}
             timeLastAuthenticated={this.props.timeLastAuthenticated}
