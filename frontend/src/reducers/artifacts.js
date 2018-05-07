@@ -5,6 +5,7 @@ import * as types from '../actions/types';
 const defaultState = {
   artifacts: [],
   artifact: null,
+  names: [],
   statusMessage: null,
   loadArtifacts: { isLoading: false, loadStatus: null },
   loadArtifact: { isLoading: false, loadStatus: null },
@@ -29,7 +30,8 @@ export default function auth(state = defaultState, action) {
     case types.UPDATE_ARTIFACT:
       return {
         ...state,
-        artifact: action.artifact
+        artifact: action.artifact,
+        names: action.names
       };
     case types.INITIALIZE_ARTIFACT:
       return {
@@ -62,6 +64,7 @@ export default function auth(state = defaultState, action) {
       return {
         ...state,
         artifact: action.artifact,
+        names: action.names,
         loadArtifact: { isLoading: false, loadStatus: 'success' }
       };
     case types.LOAD_ARTIFACT_FAILURE:

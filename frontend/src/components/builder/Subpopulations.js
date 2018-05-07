@@ -86,6 +86,7 @@ export default class Subpopulations extends Component {
               templates={this.props.templates}
               artifact={this.props.artifact}
               conversionFunctions={this.props.conversionFunctions}
+              instanceNames={this.props.instanceNames}
               loginVSACUser={this.props.loginVSACUser}
               setVSACAuthStatus={this.props.setVSACAuthStatus}
               vsacStatus={this.props.vsacStatus}

@@ -32,14 +32,13 @@ export function setStatusMessage(statusType) {
 
 
 function parseTree(element, names) {
-  let updatedElement = parseConjunction(element, names);
+  parseConjunction(element, names);
   const children = element.childInstances;
   children.forEach((child) => {
     if ('childInstances' in child) {
       parseTree(child, names);
     }
   });
-  return updatedElement;
 }
 
 function parseConjunction(element, names) {
@@ -51,47 +50,34 @@ function parseConjunction(element, names) {
       if (index === -1) {
         names.push({ name: child.parameters[0].value, id: child.uniqueId});
       }
-      const duplicate = isDuplicate(child.uniqueId, child.parameters[0].value, names);
-      child.parameters[0].duplicate = duplicate;
     }
   });
-  return element;
-}
-
-function isDuplicate(id, value, names) {
-  let indexInNames = names.findIndex((name) => name.id === id);
-  let duplicateNameIndex = names.findIndex((name) => name.id !== id && name.name === value);
-  // Names that come after the first instance of it will be considered duplicate. However, fixing either will resolve it.
-  if (duplicateNameIndex !== -1 && indexInNames > duplicateNameIndex) {
-    return true;
-  }
-  return false;
 }
 
 function parseForDuplicateNames(artifact) {
   let names = [];
   if (artifact.expTreeInclude.childInstances.length) {
-    artifact.expTreeInclude = parseTree(artifact.expTreeInclude, names);
+    parseTree(artifact.expTreeInclude, names);
   }
   if (artifact.expTreeExclude.childInstances.length) {
-    artifact.expTreeExclude = parseTree(artifact.expTreeExclude, names);
+    parseTree(artifact.expTreeExclude, names);
   }
   artifact.subpopulations.forEach((subpopulation) => {
+    names.push({ name: subpopulation.subpopulationName, id: subpopulation.uniqueId });
     if (!subpopulation.special) { // `Doesn't Meet Inclusion Criteria` and `Meets Exclusion Criteria` are special
       if (subpopulation.childInstances.length) { parseTree(subpopulation, names); }
     }
   });
   artifact.subelements.forEach((subelement) => {
+    names.push({ name: subelement.subpopulationName, id: subelement.uniqueId });
     if (!subelement.special) { // `Doesn't Meet Inclusion Criteria` and `Meets Exclusion Criteria` are special
       if (subelement.childInstances.length) { parseTree(subelement, names); }
     }
   });
   artifact.parameters.forEach((parameter, i) => {
-    names.push({ name: parameter.name, id: `parameter-${i}`});
-    const duplicate = isDuplicate(`parameter-${i}`, parameter.name, names);
-    parameter.duplicate = duplicate;
+    names.push({ name: parameter.name, id: parameter.uniqueId});
   });
-  return artifact;
+  return names;
 }
 
 export function updateArtifact(artifactToUpdate, props) {
@@ -100,10 +86,11 @@ export function updateArtifact(artifactToUpdate, props) {
       ...artifactToUpdate,
       ...props
     };
-    artifact = parseForDuplicateNames(artifact);
+    let names = parseForDuplicateNames(artifact);
     return dispatch({
       type: types.UPDATE_ARTIFACT,
-      artifact
+      artifact,
+      names
     });
   };
 }
@@ -235,9 +222,11 @@ function requestArtifact(id) {
 }
 
 function loadArtifactSuccess(artifact) {
+  let names =  parseForDuplicateNames(artifact);
   return {
     type: types.LOAD_ARTIFACT_SUCCESS,
-    artifact
+    artifact,
+    names
   };
 }
 

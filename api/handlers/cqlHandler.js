@@ -201,6 +201,12 @@ class CqlArtifact {
     if (this.inclusions.childInstances.length) { this.parseTree(this.inclusions); }
     if (this.exclusions.childInstances.length) { this.parseTree(this.exclusions); }
     this.subpopulations.forEach((subpopulation) => {
+      const count = getCountForUniqueExpressionName(subpopulation, this.names, 'subpopulationName', 'subpopulationName', false);
+      if (count > 0) {
+        // Update subpopulation's name and the other references to it
+        subpopulation.subpopulationName = `${subpopulation.subpopulationName}_${count}`;
+        this.checkOtherUses(subpopulation.subpopulationName, subpopulation.uniqueId);
+      }
       if (!subpopulation.special) { // `Doesn't Meet Inclusion Criteria` and `Meets Exclusion Criteria` are special
         if (subpopulation.childInstances.length) { this.parseTree(subpopulation); }
       }
@@ -208,11 +214,37 @@ class CqlArtifact {
     );
 
     this.subelements.forEach((subelement) => {
+      const count = getCountForUniqueExpressionName(subelement, this.names, 'subpopulationName', 'subpopulationName', false);
+      if (count > 0) {
+        subelement.subpopulationName = `${subelement.subpopulationName}_${count}`;
+      }
       if (!subelement.special) { // `Doesn't Meet Inclusion Criteria` and `Meets Exclusion Criteria` are special
         if (subelement.childInstances.length) { this.parseTree(subelement); }
       }
     }
     );
+  }
+
+  checkOtherUses(name, id) {
+    this.recommendations.forEach(recommendation => {
+      recommendation.subpopulations.forEach(subpop => {
+        if (subpop.uniqueId === id) {
+          subpop.subpopulationName = name;
+        }
+      });
+    });
+    this.errorStatement.statements.forEach(errorStatement => {
+      if (errorStatement.condition.uniqueId === id) {
+        errorStatement.condition.value = `"${name}"`;
+      }
+      if (errorStatement.child) {
+        errorStatement.child.statements.forEach(childStatement => {
+          if (childStatement.condition.uniqueId === id) {
+            childStatement.condition.value = `"${name}"`;
+          }
+        })
+      }
+    });
   }
 
   setParamterContexts(elementDetails, valuesetQueryName, conceptTemplateName, context) {

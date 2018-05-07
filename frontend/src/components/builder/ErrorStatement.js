@@ -17,15 +17,16 @@ export default class ErrorStatement extends Component {
   // Prepopulates dropdown with recommendation is null and then adds bool params
   options = () => {
     const dropdown = [{ label: 'Recommendations is null', value: '"Recommendation" is null' }];
-    const params = this.props.parameters.map(p => ({ label: p.name, value: p.value }));
+    const params = this.props.parameters.map(p => ({ label: p.name, value: p.value, uniqueId: p.uniqueId }));
     const subpops = this.props.subpopulations.map((s) => {
       if (s.special) {
-        return ({ label: s.subpopulationName, value: s.special_subpopulationName });
+        return ({ label: s.subpopulationName, value: s.special_subpopulationName, uniqueId: s.uniqueId });
       }
 
       return ({
         label: s.subpopulationName,
-        value: s.subpopulationName ? `"${s.subpopulationName}"` : `"${s.uniqueId}"`
+        value: s.subpopulationName ? `"${s.subpopulationName}"` : `"${s.uniqueId}"`,
+        uniqueId: s.uniqueId
       });
     });
 
