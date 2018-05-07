@@ -102,7 +102,9 @@ export default class ElementModal extends Component {
 
   renderList = () => (
     <tbody aria-label="Element List">
-      {this.props.vsacSearchResults.map((elem, i) =>
+      {this.props.vsacSearchResults
+        .sort((a, b) => b.codeCount - a.codeCount)
+        .map((elem, i) =>
         <tr key={ `${elem.name}-${i}` }
           tabIndex="0"
           aria-label={elem.name}

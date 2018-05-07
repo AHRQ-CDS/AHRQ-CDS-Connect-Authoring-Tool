@@ -57,8 +57,6 @@ function getValueSet(oid, username, password) {
 
 
 function searchForValueSets(search, username, password) {
-  // TODO: Consider filtering to only published (not draft) value sets, but NLM doesn't support that
-  // via search params yet, so we'd need to do the filter client-side.
   const options = {
     method: 'GET',
     url: `${VSAC_FHIR_ENDPOINT}/ValueSet?name:contains=${search}`,
