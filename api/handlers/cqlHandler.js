@@ -879,7 +879,7 @@ function buildConceptObjectForCodes(codes, listOfConcepts) {
             display: code.display === '' ? `${code.codeSystem.name} ${code.code} Display` : code.display
           }
         ],
-        display: `${code.codeSystem.name} ${code.code} Concept Display`
+        display: code.display === '' ? `${code.codeSystem.name} ${code.code} Concept Display` : `${code.display} Concept Display`
       }
       listOfConcepts.push(concept);
     });
