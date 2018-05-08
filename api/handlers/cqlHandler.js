@@ -867,6 +867,7 @@ function buildConceptObjectForCodes(codes, listOfConcepts) {
   if (codes) {
     codes.forEach((code) => {
       code.code = code.code.replace(/'/g, '\\\'');
+      code.display = code.display.replace(/'/g, '\\\'');
       code.codeSystem.id = code.codeSystem.id.replace(/'/g, '\\\'');
       const concept = {
         name: `${code.codeSystem.name} ${code.code} Concept`,
@@ -875,7 +876,7 @@ function buildConceptObjectForCodes(codes, listOfConcepts) {
             name: `${code.code} Code`,
             code: code.code,
             codeSystem: { name: code.codeSystem.name, id: code.codeSystem.id },
-            display: `${code.codeSystem.name} ${code.code} Display`
+            display: code.display === '' ? `${code.codeSystem.name} ${code.code} Display` : code.display
           }
         ],
         display: `${code.codeSystem.name} ${code.code} Concept Display`
