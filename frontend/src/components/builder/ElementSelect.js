@@ -190,6 +190,8 @@ export default class ElementSelect extends Component {
           getVSDetails={this.props.getVSDetails}
           isRetrievingDetails={this.props.isRetrievingDetails}
           vsacDetailsCodes={this.props.vsacDetailsCodes}
+          vsacFHIRCredentials={this.props.vsacFHIRCredentials}
+
         />
 
         <CodeSelectModal

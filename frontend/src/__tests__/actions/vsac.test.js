@@ -133,7 +133,7 @@ describe('vsac actions', () => {
       const results = [{ a: 1 }, { b: 2 }];
 
       moxios.stubs.track({
-        url: `/authoring/api/vsac/search?keyword=${keyword}`,
+        url: `/authoring/api/fhir/search?keyword=${keyword}`,
         method: 'GET',
         response: { status: 200, response: { keyword, count, results } }
       });
@@ -153,7 +153,7 @@ describe('vsac actions', () => {
       const keyword = 'key';
 
       moxios.stubs.track({
-        url: `/authoring/api/vsac/search?keyword=${keyword}`,
+        url: `/authoring/api/fhir/search?keyword=${keyword}`,
         method: 'GET',
         response: { status: 401, statusText: 'Unauthorized' }
       });
@@ -180,7 +180,7 @@ describe('vsac actions', () => {
       const codes = [{ code: '123-4' }, { code: '987-6' }];
 
       moxios.stubs.track({
-        url: `/authoring/api/vsac/vs/${oid}`,
+        url: `/authoring/api/fhir/vs/${oid}`,
         method: 'GET',
         response: { status: 200, response: { oid, codes } }
       });
@@ -200,7 +200,7 @@ describe('vsac actions', () => {
       const oid = '1.2.3';
 
       moxios.stubs.track({
-        url: `/authoring/api/vsac/vs/${oid}`,
+        url: `/authoring/api/fhir/vs/${oid}`,
         method: 'GET',
         response: { status: 404, statusText: 'Not Found' }
       });

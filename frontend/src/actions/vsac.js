@@ -123,19 +123,25 @@ function searchFailure(error) {
   };
 }
 
-function searchVSAC(keyword) {
+export function searchVSACFHIR(keyword, username, password) {
+  const auth = {
+    username,
+    password
+  };
+
   return new Promise((resolve, reject) => {
-    axios.get(`${API_BASE}/vsac/search?keyword=${keyword}`)
+    axios.get(`${API_BASE}/fhir/search?keyword=${keyword}`, { auth })
       .then(result => resolve(result.data))
       .catch(error => reject(error));
   });
 }
 
-export function searchVSACByKeyword(keyword) {
+
+export function searchVSACByKeyword(keyword, username, password) {
   return (dispatch) => {
     dispatch(requestSearch());
 
-    return searchVSAC(keyword)
+    return searchVSACFHIR(keyword, username, password)
       .then(data => dispatch(searchSuccess(data)))
       .catch(error => dispatch(searchFailure(error)));
   };
@@ -162,19 +168,24 @@ function detailsFailure(error) {
   };
 }
 
-function getVSDetailsByOID(oid) {
+function getVSDetailsByOIDFHIR(oid, username, password) {
+  const auth = {
+    username,
+    password
+  };
+
   return new Promise((resolve, reject) => {
-    axios.get(`${API_BASE}/vsac/vs/${oid}`)
+    axios.get(`${API_BASE}/fhir/vs/${oid}`, { auth })
       .then(result => resolve(result.data))
       .catch(error => reject(error));
   });
 }
 
-export function getVSDetails(oid) {
+export function getVSDetails(oid, username, password) {
   return (dispatch) => {
     dispatch(requestDetails());
 
-    return getVSDetailsByOID(oid)
+    return getVSDetailsByOIDFHIR(oid, username, password)
       .then(data => dispatch(detailsSuccess(data)))
       .catch(error => dispatch(detailsFailure(error)));
   };

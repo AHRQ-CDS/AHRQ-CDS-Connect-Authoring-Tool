@@ -443,6 +443,7 @@ export default class TemplateInstance extends Component {
           getVSDetails={this.props.getVSDetails}
           isRetrievingDetails={this.props.isRetrievingDetails}
           vsacDetailsCodes={this.props.vsacDetailsCodes}
+          vsacFHIRCredentials={this.props.vsacFHIRCredentials}
         />
 
           <CodeSelectModal

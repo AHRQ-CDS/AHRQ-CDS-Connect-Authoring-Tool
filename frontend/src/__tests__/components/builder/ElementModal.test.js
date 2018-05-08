@@ -45,7 +45,8 @@ beforeEach(() => {
       template: testTemplate,
       getVSDetails,
       isRetrievingDetails: false,
-      vsacDetailsCodes: testVsacDetails
+      vsacDetailsCodes: testVsacDetails,
+      vsacFHIRCredentials: { username: '', password: '' }
     }
   );
 
@@ -124,7 +125,7 @@ describe('with modal open', () => {
 
     // Clicking an individual VS gets the details and displays them in the table and input field.
     expect(component.state().selectedElement).toEqual(element);
-    expect(component.props().getVSDetails).toBeCalledWith(component.state().selectedElement.oid);
+    expect(component.props().getVSDetails).toBeCalledWith(component.state().selectedElement.oid, '', '');
     expect(internalModal.find('.search__table')).toHaveLength(1);
     expect(internalModal.find('.search__table thead th')).toHaveLength(3);
 
@@ -167,9 +168,9 @@ describe('with modal open', () => {
 
     // Clicking the arrow button changes to search table and resets selectedElement.
     internalModal.find('.nav-icon').simulate('click');
-    expect(internalModal.find('.search__table thead th')).toHaveLength(5);
+    expect(internalModal.find('.search__table thead th')).toHaveLength(3);
     expect(internalModal.find('.search__table thead').text())
-      .toEqual('TypeNameCode SystemStewardCodes'); // Search table headings
+      .toEqual('NameStewardCodes'); // Search table headings
     expect(component.state().selectedElement).toEqual(null);
   });
 
@@ -208,7 +209,8 @@ describe('with modal open', () => {
         template: testTemplate,
         getVSDetails,
         isRetrievingDetails: false,
-        vsacDetailsCodes: testVsacDetails
+        vsacDetailsCodes: testVsacDetails,
+        vsacFHIRCredentials: { username: '', password: '' }
       }
     );
     modifierModal.instance().openModal();
