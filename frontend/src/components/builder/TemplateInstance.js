@@ -385,7 +385,8 @@ export default class TemplateInstance extends Component {
 
                 {/* Code name will come with validation */}
                 <div className="col-9 row code-info__info">
-                  <div className="col-10">{`${code.codeSystem.name} (${code.code})`}</div>
+                  <div className="col-10">{`${code.codeSystem.name} (${code.code})
+                   ${code.display === '' ? '' : ` - ${code.display}`}`}</div>
 
                   <div className="col-2 code-info__buttons align-right">
                     <span

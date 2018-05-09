@@ -86,6 +86,7 @@ export default class CodeSelectModal extends Component {
     // Updating a modifier is different than selecting the code for a base element
     if (this.props.updateModifier) {
       this.props.updateModifier({
+        display: this.state.codeData ? this.state.codeData.display : '',
         code: this.state.codeText,
         codeSystem: { name: this.state.selectedCS.value, id: this.state.selectedCS.id || this.state.codeSystemText }
       });
@@ -118,7 +119,9 @@ export default class CodeSelectModal extends Component {
       return;
     }
     const newCode = {
-      code: this.state.codeText, codeSystem: { name: this.state.selectedCS.value, id: this.state.selectedCS.id }
+      code: this.state.codeText,
+      codeSystem: { name: this.state.selectedCS.value, id: this.state.selectedCS.id },
+      display: this.state.codeData ? this.state.codeData.display : ''
     };
     if (this.state.selectedCS.value === 'Other') {
       newCode.codeSystem.id = this.state.codeSystemText;

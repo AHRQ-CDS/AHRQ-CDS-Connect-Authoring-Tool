@@ -173,9 +173,9 @@ describe('with modal open', () => {
     const firstOption = allOptions.at(0);
     firstOption.simulate('mouseDown');
     const codeSystem = { name: modifierModal.state().selectedCS.value, id: modifierModal.state().selectedCS.id };
-
+    const display = '';
     selectButton.simulate('click');
     expect(modifierModal.state().showCodeSelectModal).toEqual(false);
-    expect(modifierModal.props().updateModifier).toBeCalledWith({ code, codeSystem });
+    expect(modifierModal.props().updateModifier).toBeCalledWith({ code, codeSystem, display });
   });
 });
