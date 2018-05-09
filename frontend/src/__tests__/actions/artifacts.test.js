@@ -32,13 +32,19 @@ describe('artifact actions', () => {
   // ----------------------- UPDATE ARTIFACT ------------------------------- //
   describe('update artifact', () => {
     it('should create an action to update an artifact', () => {
-      const artifactToUpdate = { id: 1 };
+      const artifactToUpdate = mockArtifact;
       const props = { id: 2 };
-      const artifact = { id: 2 };
+      const artifact = { ...mockArtifact, id: 2 };
+      const names = [ // Names used in mockArtifact
+        { name: 'Doesn\'t Meet Inclusion Criteria', id: 'default-subpopulation-1' },
+        { name: 'Meets Exclusion Criteria', id: 'default-subpopulation-2' },
+        { name: 'Subpopulation 1', id: 'And-TEST-1' }
+      ];
 
       const expectedAction = {
         type: types.UPDATE_ARTIFACT,
-        artifact
+        artifact,
+        names
       };
 
       actions.updateArtifact(artifactToUpdate, props)((response) => {
@@ -91,9 +97,15 @@ describe('artifact actions', () => {
     it('creates LOAD_ARTIFACT_SUCCESS after successfully loading an artifact', () => {
       const id = '1';
       const store = mockStore({ artifacts: [] });
+      const names = [ // Names used in mockArtifact
+        { name: 'Doesn\'t Meet Inclusion Criteria', id: 'default-subpopulation-1' },
+        { name: 'Meets Exclusion Criteria', id: 'default-subpopulation-2' },
+        { name: 'Subpopulation 1', id: 'And-TEST-1' }
+      ];
+
       const expectedActions = [
         { type: types.ARTIFACT_REQUEST, id },
-        { type: types.LOAD_ARTIFACT_SUCCESS, artifact: mockArtifact },
+        { type: types.LOAD_ARTIFACT_SUCCESS, artifact: mockArtifact, names },
         { type: types.SET_STATUS_MESSAGE, message: null }
       ];
 

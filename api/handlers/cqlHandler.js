@@ -183,7 +183,7 @@ class CqlArtifact {
     this.names = new Map();
 
     this.parameters.forEach((parameter) => {
-      const count = getCountForUniqueExpressionName(parameter, this.names, 'name', 'name', false);
+      const count = getCountForUniqueExpressionName(parameter, this.names, 'name', '', false);
       if (count > 0) {
         parameter.name = `${parameter.name}_${count}`;
       }
@@ -201,7 +201,7 @@ class CqlArtifact {
     if (this.inclusions.childInstances.length) { this.parseTree(this.inclusions); }
     if (this.exclusions.childInstances.length) { this.parseTree(this.exclusions); }
     this.subpopulations.forEach((subpopulation) => {
-      const count = getCountForUniqueExpressionName(subpopulation, this.names, 'subpopulationName', 'subpopulationName', false);
+      const count = getCountForUniqueExpressionName(subpopulation, this.names, 'subpopulationName', '', false);
       if (count > 0) {
         // Update subpopulation's name and the other references to it
         subpopulation.subpopulationName = `${subpopulation.subpopulationName}_${count}`;
@@ -214,7 +214,7 @@ class CqlArtifact {
     );
 
     this.subelements.forEach((subelement) => {
-      const count = getCountForUniqueExpressionName(subelement, this.names, 'subpopulationName', 'subpopulationName', false);
+      const count = getCountForUniqueExpressionName(subelement, this.names, 'subpopulationName', '', false);
       if (count > 0) {
         subelement.subpopulationName = `${subelement.subpopulationName}_${count}`;
       }
@@ -341,7 +341,7 @@ class CqlArtifact {
       // TODO: Could a child of a conjunction ever be a subpopulation?
       let childName = child.parameters[0].value || child.uniqueId;
       if (child.type !== 'parameter') { // Parameters are updated separately
-        const childCount = getCountForUniqueExpressionName(child.parameters[0], this.names, 'value', 'value', false);
+        const childCount = getCountForUniqueExpressionName(child.parameters[0], this.names, 'value', '', false);
         if (childCount > 0) {
           childName = `${childName}_${childCount}`;
           if (child.parameters[0].value) {

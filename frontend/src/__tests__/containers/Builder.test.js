@@ -85,7 +85,8 @@ test('renders a single level tree for Inclusions and Exclusions', () => {
         expTreeInclude: instanceTree,
         expTreeExclude: differentTree
       },
-      downloadArtifact: {}
+      downloadArtifact: {},
+      names: []
     }
   }));
 
@@ -118,9 +119,13 @@ test('adds instance', () => {
     artifacts: {
       artifact: {
         expTreeInclude: emptyInstanceTree,
-        expTreeExclude: emptyInstanceTree
+        expTreeExclude: emptyInstanceTree,
+        subpopulations: [],
+        subelements: [],
+        parameters: []
       },
-      downloadArtifact: {}
+      downloadArtifact: {},
+      names: []
     }
   });
   const component = shallowRenderContainer(Builder, props, store);
@@ -152,9 +157,13 @@ test('adds instance at correct tree position', () => {
     artifacts: {
       artifact: {
         expTreeInclude: { ...emptyInstanceTree, childInstances: [conjunctionInstance] },
-        expTreeExclude: emptyInstanceTree
+        expTreeExclude: emptyInstanceTree,
+        subpopulations: [],
+        subelements: [],
+        parameters: []
       },
-      downloadArtifact: {}
+      downloadArtifact: {},
+      names: []
     }
   });
   const component = shallowRenderContainer(Builder, props, store);
@@ -178,7 +187,10 @@ test('edits a template instance', () => {
     artifacts: {
       artifact: {
         expTreeInclude: instanceTree,
-        expTreeExclude: instanceTree
+        expTreeExclude: instanceTree,
+        subpopulations: [],
+        subelements: [],
+        parameters: []
       },
       downloadArtifact: {}
     }
@@ -200,7 +212,10 @@ test('edits a conjunction instance', () => {
     artifacts: {
       artifact: {
         expTreeInclude: instanceTree,
-        expTreeExclude: instanceTree
+        expTreeExclude: instanceTree,
+        subpopulations: [],
+        subelements: [],
+        parameters: []
       },
       downloadArtifact: {}
     }
@@ -227,7 +242,10 @@ test('updates an instance\'s modifiers', () => {
     artifacts: {
       artifact: {
         expTreeInclude: instanceTree,
-        expTreeExclude: instanceTree
+        expTreeExclude: instanceTree,
+        subpopulations: [],
+        subelements: [],
+        parameters: []
       },
       downloadArtifact: {}
     }
@@ -263,9 +281,13 @@ test('deletes instance at correct tree position', () => {
     artifacts: {
       artifact: {
         expTreeInclude: instanceTree,
-        expTreeExclude: instanceTree
+        expTreeExclude: instanceTree,
+        subpopulations: [],
+        subelements: [],
+        parameters: []
       },
-      downloadArtifact: {}
+      downloadArtifact: {},
+      names: []
     }
   });
   const component = shallowRenderContainer(Builder, props, store);

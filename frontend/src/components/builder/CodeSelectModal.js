@@ -128,13 +128,14 @@ export default class CodeSelectModal extends Component {
     }
     codesToAdd.push(newCode);
 
-    let nameParameter = selectedTemplate.parameters[0];
-    let lastCodeIndex = codesToAdd.length - 1;
+    const nameParameter = selectedTemplate.parameters[0];
+    const lastCodeIndex = codesToAdd.length - 1;
     // Adding a new element and editing an exisitng element use different functions that take different parameters
     if (this.props.onElementSelected) {
       // Set the template's values initially to add it to the workspace.
       if (nameParameter.value === undefined || nameParameter.value === '') {
-        selectedTemplate.parameters[0].value = `${codesToAdd[lastCodeIndex].codeSystem.name} ${codesToAdd[lastCodeIndex].code}`; // TODO: Best name for element
+        selectedTemplate.parameters[0].value =
+          `${codesToAdd[lastCodeIndex].codeSystem.name} ${codesToAdd[lastCodeIndex].code}`; // TODO: Best name for element
       }
       selectedTemplate.parameters[1].codes = codesToAdd;
       selectedTemplate.parameters[1].static = true;
@@ -147,9 +148,10 @@ export default class CodeSelectModal extends Component {
         { [selectedTemplate.parameters[1].id]: true, attributeToEdit: 'static' }
       ];
       if (nameParameter.value === undefined || nameParameter.value === '') {
-        arrayToUpdate.push(
-          { [selectedTemplate.parameters[0].id]: `${codesToAdd[lastCodeIndex].codeSystem.name} ${codesToAdd[lastCodeIndex].code}` }
-        );
+        arrayToUpdate.push({
+          [selectedTemplate.parameters[0].id]:
+            `${codesToAdd[lastCodeIndex].codeSystem.name} ${codesToAdd[lastCodeIndex].code}`
+        });
       }
       this.props.updateElement(arrayToUpdate);
     }

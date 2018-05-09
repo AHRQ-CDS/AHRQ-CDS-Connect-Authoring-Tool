@@ -57,7 +57,7 @@ export default class ElementModal extends Component {
       valuesetsToAdd = [];
     }
     valuesetsToAdd.push({ name: element.name, oid: element.oid });
-    let nameParameter = selectedTemplate.parameters[0];
+    const nameParameter = selectedTemplate.parameters[0];
 
     // Adding a new element and editing an exisitng element use different functions that take different parameters
     if (this.props.onElementSelected) {

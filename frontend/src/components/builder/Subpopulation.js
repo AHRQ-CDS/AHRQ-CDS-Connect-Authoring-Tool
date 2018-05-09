@@ -44,7 +44,8 @@ export default class Subpopulation extends Component {
   }
 
   render() {
-    const duplicateNameIndex = this.props.instanceNames.findIndex(name => name.id !== this.props.subpopulation.uniqueId && name.name === this.props.subpopulation.subpopulationName);
+    const duplicateNameIndex = this.props.instanceNames.findIndex(name =>
+      name.id !== this.props.subpopulation.uniqueId && name.name === this.props.subpopulation.subpopulationName);
     return (
       <div className="subpopulation card-group card-group__top">
         <div className="card-element">
@@ -69,7 +70,8 @@ export default class Subpopulation extends Component {
                     this.props.setSubpopulationName(event.target.value, this.props.subpopulation.uniqueId);
                   }}
                 />
-                {duplicateNameIndex !== -1 && <div className='warning'>Warning: Name already in use. Choose another name.</div>}
+                {duplicateNameIndex !== -1
+                  && <div className='warning'>Warning: Name already in use. Choose another name.</div>}
               </div>
             :
               <div className="subpopulation-title">

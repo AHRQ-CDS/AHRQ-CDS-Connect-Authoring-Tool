@@ -43,6 +43,7 @@ const props = {
   },
   parameters: [],
   resources: {},
+  instanceNames: [],
   loadValueSets: jest.fn(),
   loginVSACUser: jest.fn(),
   setVSACAuthStatus: jest.fn(),

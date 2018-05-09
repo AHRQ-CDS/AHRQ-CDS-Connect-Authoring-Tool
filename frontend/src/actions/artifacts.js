@@ -29,8 +29,6 @@ export function setStatusMessage(statusType) {
 
 // ------------------------- UPDATE ARTIFACT ------------------------------- //
 
-
-
 function parseTree(element, names) {
   parseConjunction(element, names);
   const children = element.childInstances;
@@ -43,19 +41,18 @@ function parseTree(element, names) {
 
 function parseConjunction(element, names) {
   element.childInstances.forEach((child) => {
-    // Don't include parameters used in junctions since they are just refernces.
+    // Don't include parameters used in conjunctions since they are just refernces.
     if (child.type !== 'parameter') {
-      let index = names.findIndex((name) => name.id === child.uniqueId);
-      // Element not in list. Add duplicate flag once added to list.
+      const index = names.findIndex(name => name.id === child.uniqueId);
       if (index === -1) {
-        names.push({ name: child.parameters[0].value, id: child.uniqueId});
+        names.push({ name: child.parameters[0].value, id: child.uniqueId });
       }
     }
   });
 }
 
 function parseForDuplicateNames(artifact) {
-  let names = [];
+  const names = [];
   if (artifact.expTreeInclude.childInstances.length) {
     parseTree(artifact.expTreeInclude, names);
   }
@@ -75,18 +72,18 @@ function parseForDuplicateNames(artifact) {
     }
   });
   artifact.parameters.forEach((parameter, i) => {
-    names.push({ name: parameter.name, id: parameter.uniqueId});
+    names.push({ name: parameter.name, id: parameter.uniqueId });
   });
   return names;
 }
 
 export function updateArtifact(artifactToUpdate, props) {
   return (dispatch) => {
-    let artifact = {
+    const artifact = {
       ...artifactToUpdate,
       ...props
     };
-    let names = parseForDuplicateNames(artifact);
+    const names = parseForDuplicateNames(artifact);
     return dispatch({
       type: types.UPDATE_ARTIFACT,
       artifact,
@@ -222,7 +219,7 @@ function requestArtifact(id) {
 }
 
 function loadArtifactSuccess(artifact) {
-  let names =  parseForDuplicateNames(artifact);
+  const names = parseForDuplicateNames(artifact);
   return {
     type: types.LOAD_ARTIFACT_SUCCESS,
     artifact,

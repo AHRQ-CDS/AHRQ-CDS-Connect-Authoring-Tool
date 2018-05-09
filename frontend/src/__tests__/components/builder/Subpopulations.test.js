@@ -48,6 +48,7 @@ beforeEach(() => {
     checkSubpopulationUsage,
     parameters: [],
     name: 'subpopulations',
+    instanceNames: [],
     loginVSACUser: jest.fn(),
     setVSACAuthStatus: jest.fn(),
     vsacStatus: '',

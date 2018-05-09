@@ -607,7 +607,8 @@ export default class TemplateInstance extends Component {
             {...elementNameParameter}
             updateInstance={this.updateInstance}
             name={this.props.templateInstance.name}/>
-          {duplicateNameIndex !== -1 && <div className="warning">Warning: Name already in use. Choose another name.</div>}
+          {duplicateNameIndex !== -1
+            && <div className="warning">Warning: Name already in use. Choose another name.</div>}
         </div>
       );
     }
