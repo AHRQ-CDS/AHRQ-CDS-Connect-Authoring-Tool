@@ -191,8 +191,8 @@ class CqlArtifact {
         parameter.value.unit = parameter.value.unit.replace(/'/g, '\\\'');
       }
       if (parameter.type === "Code" || parameter.type === "Concept") {
-        let system = _.get(parameter, 'value.system', null).replace(/'/g, '\\\'');
-        let uri = _.get(parameter, 'value.uri', null).replace(/'/g, '\\\'');
+        let system = _.get(parameter, 'value.system', '').replace(/'/g, '\\\'');
+        let uri = _.get(parameter, 'value.uri', '').replace(/'/g, '\\\'');
         if (system && uri) { this.codeSystemMap.set(system, { name: system, id: uri }); }
       }
     }
@@ -927,8 +927,8 @@ function buildConceptObjectForCodes(codes, listOfConcepts) {
             display: code.display === '' ? `${code.codeSystem.name} ${code.code} Display` : code.display
           }
         ],
-        display: code.display === '' ? 
-          `${code.codeSystem.name} ${code.code} Concept Display` 
+        display: code.display === '' ?
+          `${code.codeSystem.name} ${code.code} Concept Display`
           : `${code.display} Concept Display`
       }
       listOfConcepts.push(concept);
