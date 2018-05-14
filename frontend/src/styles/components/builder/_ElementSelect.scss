@@ -172,6 +172,8 @@
       margin-right: 0.5em;
     }
   }
+
+
 }
 
 div.vsac-authenticate {
@@ -180,4 +182,9 @@ div.vsac-authenticate {
   > span {
     margin-left: 1em;
   }
+}
+
+.disabled {
+  cursor:auto;
+  opacity: .45;
 }
