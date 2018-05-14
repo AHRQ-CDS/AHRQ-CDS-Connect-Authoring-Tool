@@ -294,6 +294,7 @@ export class Builder extends Component {
           updateInstanceModifiers={this.updateInstanceModifiers}
           parameters={namedParameters}
           conversionFunctions={conversionFunctions}
+          instanceNames={this.props.names}
           loginVSACUser={this.props.loginVSACUser}
           setVSACAuthStatus={this.props.setVSACAuthStatus}
           vsacStatus={vsacStatus}
@@ -415,6 +416,7 @@ export class Builder extends Component {
                     checkSubpopulationUsage={this.checkSubpopulationUsage}
                     updateRecsSubpop={this.updateRecsSubpop}
                     conversionFunctions={conversionFunctions}
+                    instanceNames={this.props.names}
                     loginVSACUser={this.props.loginVSACUser}
                     setVSACAuthStatus={this.props.setVSACAuthStatus}
                     vsacStatus={this.props.vsacStatus}
@@ -448,6 +450,7 @@ export class Builder extends Component {
                     checkSubpopulationUsage={this.checkSubpopulationUsage}
                     updateRecsSubpop={this.updateRecsSubpop}
                     conversionFunctions={conversionFunctions}
+                    instanceNames={this.props.names}
                     loginVSACUser={this.props.loginVSACUser}
                     setVSACAuthStatus={this.props.setVSACAuthStatus}
                     vsacStatus={this.props.vsacStatus}
@@ -479,6 +482,7 @@ export class Builder extends Component {
                   <Parameters
                     parameters={this.props.artifact.parameters}
                     updateParameters={this.updateParameters}
+                    instanceNames={this.props.names}
                     timeLastAuthenticated={this.props.timeLastAuthenticated}
                     vsacFHIRCredentials={this.props.vsacFHIRCredentials}
                     loginVSACUser={this.props.loginVSACUser}
@@ -570,6 +574,7 @@ function mapStateToProps(state) {
     resources: state.resources.resources,
     valueSets: state.valueSets.valueSets,
     publishEnabled: state.artifacts.publishEnabled,
+    names: state.artifacts.names,
     vsacStatus: state.vsac.authStatus,
     vsacStatusText: state.vsac.authStatusText,
     timeLastAuthenticated: state.vsac.timeLastAuthenticated,

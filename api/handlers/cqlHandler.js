@@ -180,10 +180,33 @@ class CqlArtifact {
     this.contexts = [];
     this.conjunctions = [];
     this.conjunction_main = [];
+    this.names = new Map();
+
+    this.parameters.forEach((parameter) => {
+      const count = getCountForUniqueExpressionName(parameter, this.names, 'name', '', false);
+      if (count > 0) {
+        parameter.name = `${parameter.name}_${count}`;
+      }
+      if (parameter.value && parameter.value.unit) {
+        parameter.value.unit = parameter.value.unit.replace(/'/g, '\\\'');
+      }
+      if (parameter.type === "Code" || parameter.type === "Concept") {
+        let system = _.get(parameter, 'value.system', '').replace(/'/g, '\\\'');
+        let uri = _.get(parameter, 'value.uri', '').replace(/'/g, '\\\'');
+        if (system && uri) { this.codeSystemMap.set(system, { name: system, id: uri }); }
+      }
+    }
+    );
 
     if (this.inclusions.childInstances.length) { this.parseTree(this.inclusions); }
     if (this.exclusions.childInstances.length) { this.parseTree(this.exclusions); }
     this.subpopulations.forEach((subpopulation) => {
+      const count = getCountForUniqueExpressionName(subpopulation, this.names, 'subpopulationName', '', false);
+      if (count > 0) {
+        // Update subpopulation's name and the other references to it
+        subpopulation.subpopulationName = `${subpopulation.subpopulationName}_${count}`;
+        this.checkOtherUses(subpopulation.subpopulationName, subpopulation.uniqueId);
+      }
       if (!subpopulation.special) { // `Doesn't Meet Inclusion Criteria` and `Meets Exclusion Criteria` are special
         if (subpopulation.childInstances.length) { this.parseTree(subpopulation); }
       }
@@ -191,23 +214,37 @@ class CqlArtifact {
     );
 
     this.subelements.forEach((subelement) => {
+      const count = getCountForUniqueExpressionName(subelement, this.names, 'subpopulationName', '', false);
+      if (count > 0) {
+        subelement.subpopulationName = `${subelement.subpopulationName}_${count}`;
+      }
       if (!subelement.special) { // `Doesn't Meet Inclusion Criteria` and `Meets Exclusion Criteria` are special
         if (subelement.childInstances.length) { this.parseTree(subelement); }
       }
     }
     );
+  }
 
-    this.parameters.forEach((parameter) => {
-      if (parameter.value && parameter.value.unit) {
-        parameter.value.unit = parameter.value.unit.replace(/'/g, '\\\'');
+  checkOtherUses(name, id) {
+    this.recommendations.forEach(recommendation => {
+      recommendation.subpopulations.forEach(subpop => {
+        if (subpop.uniqueId === id) {
+          subpop.subpopulationName = name;
+        }
+      });
+    });
+    this.errorStatement.statements.forEach(errorStatement => {
+      if (errorStatement.condition.uniqueId === id) {
+        errorStatement.condition.value = `"${name}"`;
       }
-      if (parameter.type === "Code" || parameter.type === "Concept") {
-        let system = _.get(parameter, 'value.system', null).replace(/'/g, '\\\'');
-        let uri = _.get(parameter, 'value.uri', null).replace(/'/g, '\\\'');
-        if (system && uri) { this.codeSystemMap.set(system, { name: system, id: uri }); }
+      if (errorStatement.child) {
+        errorStatement.child.statements.forEach(childStatement => {
+          if (childStatement.condition.uniqueId === id) {
+            childStatement.condition.value = `"${name}"`;
+          }
+        })
       }
-    }
-    );
+    });
   }
 
   setParamterContexts(elementDetails, valuesetQueryName, conceptTemplateName, context) {
@@ -277,8 +314,8 @@ class CqlArtifact {
   }
 
   parseTree(element) {
-    this.parseConjunction(element);
-    const children = element.childInstances;
+    let updatedElement = this.parseConjunction(element);
+    const children = updatedElement.childInstances;
     children.forEach((child) => {
       if ('childInstances' in child) {
         this.parseTree(child);
@@ -301,10 +338,21 @@ class CqlArtifact {
     const name = element.parameters[0].value;
     conjunction.element_name = (name || element.subpopulationName || element.uniqueId);
     element.childInstances.forEach((child) => {
-      // TODO: Could a child of a conjuction ever be a subpopulation?
-      conjunction.components.push({ name: child.parameters[0].value || child.uniqueId });
+      // TODO: Could a child of a conjunction ever be a subpopulation?
+      let childName = child.parameters[0].value || child.uniqueId;
+      if (child.type !== 'parameter') { // Parameters are updated separately
+        const childCount = getCountForUniqueExpressionName(child.parameters[0], this.names, 'value', '', false);
+        if (childCount > 0) {
+          childName = `${childName}_${childCount}`;
+          if (child.parameters[0].value) {
+            child.parameters[0].value = childName;
+          }
+        }
+      }
+      conjunction.components.push({ name: childName });
     });
     this.conjunction_main.push(conjunction);
+    return element;
   }
 
   parseParameter(element) {
@@ -797,7 +845,7 @@ function constructOneRecommendationConditional(recommendation, text) {
  * decide if the expression is indeed unique.
  * @return {number} The number that was appended to the expression if it was not unique.
  */
-function getCountForUniqueExpressionName(expression, map, nameKey, contentKey) {
+function getCountForUniqueExpressionName(expression, map, nameKey, contentKey, checkContent = true) {
   if (map.size > 0) {
     let newOID = true;
     let count = 0;
@@ -813,7 +861,7 @@ function getCountForUniqueExpressionName(expression, map, nameKey, contentKey) {
       if (_.isEqual(baseKeyString, expression[nameKey])) {
         // If the name and content of the expressions are the same, the same expression is being used.
         // Don't add it to the CQL.
-        if (_.isEqual(val[contentKey], expression[contentKey])) {
+        if (checkContent && _.isEqual(val[contentKey], expression[contentKey])) {
           newOID = false;
           existingOID = count;
         } else {
@@ -879,8 +927,8 @@ function buildConceptObjectForCodes(codes, listOfConcepts) {
             display: code.display === '' ? `${code.codeSystem.name} ${code.code} Display` : code.display
           }
         ],
-        display: code.display === '' ? 
-          `${code.codeSystem.name} ${code.code} Concept Display` 
+        display: code.display === '' ?
+          `${code.codeSystem.name} ${code.code} Concept Display`
           : `${code.display} Concept Display`
       }
       listOfConcepts.push(concept);

@@ -6,7 +6,7 @@ import Parameter from './Parameter';
 
 export default class Parameters extends Component {
   addParameter = () => {
-    const newParameter = { name: null, type: null, value: null };
+    const newParameter = { name: null, type: null, value: null, uniqueId: _.uniqueId('parameter-') };
     const parameters = _.clone(this.props.parameters);
     parameters.push(newParameter);
     this.props.updateParameters(parameters);
@@ -32,8 +32,10 @@ export default class Parameters extends Component {
             key={`param-${i}`}
             index={i}
             name={parameter.name}
+            id={parameter.uniqueId}
             type={parameter.type}
             value={parameter.value}
+            instanceNames={this.props.instanceNames}
             updateInstanceOfParameter={this.updateInstanceOfParameter}
             deleteParameter={this.deleteParameter}
             timeLastAuthenticated={this.props.timeLastAuthenticated}

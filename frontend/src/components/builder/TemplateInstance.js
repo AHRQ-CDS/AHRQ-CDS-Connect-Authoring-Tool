@@ -589,6 +589,8 @@ export default class TemplateInstance extends Component {
 
   renderHeader = () => {
     const elementNameParameter = this.props.templateInstance.parameters.find(param => param.id === 'element_name');
+    const duplicateNameIndex = this.props.instanceNames.findIndex(name =>
+      name.id !== this.props.templateInstance.uniqueId && name.name === elementNameParameter.value);
 
     if (elementNameParameter) {
       if (this.props.templateInstance.type === 'parameter') {
@@ -599,11 +601,15 @@ export default class TemplateInstance extends Component {
       }
 
       return (
-        <StringParameter
-          key={elementNameParameter.id}
-          {...elementNameParameter}
-          updateInstance={this.updateInstance}
-          name={this.props.templateInstance.name}/>
+        <div>
+          <StringParameter
+            key={elementNameParameter.id}
+            {...elementNameParameter}
+            updateInstance={this.updateInstance}
+            name={this.props.templateInstance.name}/>
+          {duplicateNameIndex !== -1
+            && <div className="warning">Warning: Name already in use. Choose another name.</div>}
+        </div>
       );
     }
 

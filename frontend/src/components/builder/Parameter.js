@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import Select from 'react-select';
 import FontAwesome from 'react-fontawesome';
+import _ from 'lodash';
 
 import StringParameter from './parameters/types/StringParameter';
 import BooleanEditor from './parameters/editors/BooleanEditor';
@@ -18,6 +19,18 @@ import IntervalOfDecimalEditor from './parameters/editors/IntervalOfDecimalEdito
 import IntervalOfQuantityEditor from './parameters/editors/IntervalOfQuantityEditor';
 
 export default class Parameter extends Component {
+  componentDidMount = () => {
+    const { id, type, name, value } = this.props;
+    if (_.isUndefined(id)) {
+      this.updateParameter({
+        name,
+        uniqueId: _.uniqueId('parameter-'),
+        type,
+        value
+      });
+    }
+  }
+
   updateParameter = (object) => {
     this.props.updateInstanceOfParameter(object, this.props.index);
   }
@@ -30,6 +43,7 @@ export default class Parameter extends Component {
       value: this.props.value,
       updateInstance: e => this.updateParameter({
         name: this.props.name,
+        uniqueId: this.props.id,
         type: this.props.type,
         value: (e != null ? e.value : null)
       })
@@ -77,7 +91,7 @@ export default class Parameter extends Component {
   }
 
   render() {
-    const { index, name, type, value, deleteParameter } = this.props;
+    const { index, name, id, type, value, deleteParameter } = this.props;
     const typeOptions = [
       { value: 'Boolean', label: 'Boolean' },
       { value: 'Code', label: 'Code' },
@@ -94,6 +108,8 @@ export default class Parameter extends Component {
       { value: 'Interval<Quantity>', label: 'Interval<Quantity>' }
     ];
 
+    const duplicateNameIndex = this.props.instanceNames.findIndex(n => n.id !== id && n.name === name);
+
     return (
       <div className="parameter card-group card-group__top">
         <div className="card-element">
@@ -104,10 +120,13 @@ export default class Parameter extends Component {
               value={name}
               updateInstance={e => (this.updateParameter({
                 name: e[`param-name-${index}`],
+                uniqueId: this.props.id,
                 type,
                 value
               }))}
             />
+            {duplicateNameIndex !== -1
+              && <div className="warning">Warning: Name already in use. Choose another name.</div>}
 
             <button
               aria-label="Delete Parameter"

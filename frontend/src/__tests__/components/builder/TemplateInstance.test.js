@@ -19,6 +19,7 @@ const props = {
   updateInstanceModifiers: jest.fn(),
   deleteInstance: jest.fn(),
   renderIndentButtons: jest.fn(),
+  instanceNames: [],
   loginVSACUser: jest.fn(),
   setVSACAuthStatus: jest.fn(),
   timeLastAuthenticated: new Date(),

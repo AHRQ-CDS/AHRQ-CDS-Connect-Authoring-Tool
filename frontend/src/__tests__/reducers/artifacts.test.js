@@ -13,6 +13,7 @@ describe.only('artifacts reducer', () => {
       artifacts: [],
       artifact: null,
       statusMessage: null,
+      names: [],
       loadArtifacts: { isLoading: false, loadStatus: null },
       loadArtifact: { isLoading: false, loadStatus: null },
       addArtifact: { isAdding: false, addStatus: null },

@@ -29,15 +29,65 @@ export function setStatusMessage(statusType) {
 
 // ------------------------- UPDATE ARTIFACT ------------------------------- //
 
+function parseTree(element, names) {
+  parseConjunction(element, names);
+  const children = element.childInstances;
+  children.forEach((child) => {
+    if ('childInstances' in child) {
+      parseTree(child, names);
+    }
+  });
+}
+
+function parseConjunction(element, names) {
+  element.childInstances.forEach((child) => {
+    // Don't include parameters used in conjunctions since they are just refernces.
+    if (child.type !== 'parameter') {
+      const index = names.findIndex(name => name.id === child.uniqueId);
+      if (index === -1) {
+        names.push({ name: child.parameters[0].value, id: child.uniqueId });
+      }
+    }
+  });
+}
+
+function parseForDuplicateNames(artifact) {
+  const names = [];
+  if (artifact.expTreeInclude.childInstances.length) {
+    parseTree(artifact.expTreeInclude, names);
+  }
+  if (artifact.expTreeExclude.childInstances.length) {
+    parseTree(artifact.expTreeExclude, names);
+  }
+  artifact.subpopulations.forEach((subpopulation) => {
+    names.push({ name: subpopulation.subpopulationName, id: subpopulation.uniqueId });
+    if (!subpopulation.special) { // `Doesn't Meet Inclusion Criteria` and `Meets Exclusion Criteria` are special
+      if (subpopulation.childInstances.length) { parseTree(subpopulation, names); }
+    }
+  });
+  artifact.subelements.forEach((subelement) => {
+    names.push({ name: subelement.subpopulationName, id: subelement.uniqueId });
+    if (!subelement.special) { // `Doesn't Meet Inclusion Criteria` and `Meets Exclusion Criteria` are special
+      if (subelement.childInstances.length) { parseTree(subelement, names); }
+    }
+  });
+  artifact.parameters.forEach((parameter, i) => {
+    names.push({ name: parameter.name, id: parameter.uniqueId });
+  });
+  return names;
+}
+
 export function updateArtifact(artifactToUpdate, props) {
   return (dispatch) => {
     const artifact = {
       ...artifactToUpdate,
       ...props
     };
+    const names = parseForDuplicateNames(artifact);
     return dispatch({
       type: types.UPDATE_ARTIFACT,
-      artifact
+      artifact,
+      names
     });
   };
 }
@@ -169,9 +219,11 @@ function requestArtifact(id) {
 }
 
 function loadArtifactSuccess(artifact) {
+  const names = parseForDuplicateNames(artifact);
   return {
     type: types.LOAD_ARTIFACT_SUCCESS,
-    artifact
+    artifact,
+    names
   };
 }
 

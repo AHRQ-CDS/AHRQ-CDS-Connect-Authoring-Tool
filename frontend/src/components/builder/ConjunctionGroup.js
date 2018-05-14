@@ -157,6 +157,8 @@ export default class ConjunctionGroup extends Component {
 
   renderRoot() {
     const elementNameParam = this.props.instance.parameters.find(param => param.id === 'element_name');
+    const duplicateNameIndex = this.props.instanceNames.findIndex(name =>
+      name.id !== this.props.instance.uniqueId && name.name === elementNameParam.value);
 
     if (!this.props.root) {
       return (
@@ -168,6 +170,8 @@ export default class ConjunctionGroup extends Component {
               value={elementNameParam.value}
               updateInstance={this.handleNameChange}
             />
+            {duplicateNameIndex !== -1
+              && <div className="warning">Warning: Name already in use. Choose another name.</div>}
           </div>
 
           <div className="card-group__buttons">
@@ -214,6 +218,7 @@ export default class ConjunctionGroup extends Component {
               parameters={this.props.parameters}
               getPath={this.getChildsPath}
               conversionFunctions={this.props.conversionFunctions}
+              instanceNames={this.props.instanceNames}
               loginVSACUser={this.props.loginVSACUser}
               setVSACAuthStatus={this.props.setVSACAuthStatus}
               vsacStatus={this.props.vsacStatus}
@@ -255,6 +260,7 @@ export default class ConjunctionGroup extends Component {
           subpopulationIndex={this.props.subPopulationIndex}
           renderIndentButtons={this.renderIndentButtons}
           conversionFunctions={this.props.conversionFunctions}
+          instanceNames={this.props.instanceNames}
           loginVSACUser={this.props.loginVSACUser}
           setVSACAuthStatus={this.props.setVSACAuthStatus}
           vsacStatus={this.props.vsacStatus}

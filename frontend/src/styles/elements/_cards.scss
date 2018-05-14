@@ -64,7 +64,7 @@
     display: flex;
     flex: 0 0 100%;
     justify-content: space-between;
-    align-items: center;
+    align-items: flex-start;
 
     &-heading {
       flex: 1;
@@ -88,6 +88,7 @@
     flex: 1;
     text-align: right;
     margin-left: auto;
+    margin-top: 10px;
 
     button {
       background-color: $body-bg;

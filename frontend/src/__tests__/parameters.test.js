@@ -13,6 +13,7 @@ test('Parameter renders without crashing', () => {
     updateInstanceOfParameter: jest.fn(),
     deleteParameter: jest.fn(),
     index: '',
+    instanceNames: [],
     value: '',
     name: ''
   });
@@ -25,6 +26,7 @@ test('Parameter changes input', () => {
     updateInstanceOfParameter: updateInstanceOfParameterMock,
     deleteParameter: jest.fn(),
     index: '',
+    instanceNames: [],
     value: '',
     name: ''
   });
@@ -56,7 +58,7 @@ test('Parameters adds parameter', () => {
 
   component.find('button').simulate('click');
 
-  expect(updateParameterMock).toHaveBeenCalledWith([{ name: null, type: null, value: null }]);
+  expect(updateParameterMock).toHaveBeenCalledWith([{ name: null, type: null, value: null, uniqueId: 'parameter-1' }]);
 });
 
 test('NumberParameter renders without crashing', () => {

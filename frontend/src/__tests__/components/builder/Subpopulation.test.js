@@ -40,6 +40,7 @@ beforeEach(() => {
     treeName,
     templates: elementGroups,
     artifact: {},
+    instanceNames: [],
     loginVSACUser: jest.fn(),
     setVSACAuthStatus: jest.fn(),
     vsacStatus: '',

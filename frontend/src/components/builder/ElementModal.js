@@ -57,11 +57,15 @@ export default class ElementModal extends Component {
       valuesetsToAdd = [];
     }
     valuesetsToAdd.push({ name: element.name, oid: element.oid });
+    const nameParameter = selectedTemplate.parameters[0];
 
     // Adding a new element and editing an exisitng element use different functions that take different parameters
     if (this.props.onElementSelected) {
       // Set the template's values based on value set selection initially to add it to the workspace.
-      selectedTemplate.parameters[0].value = element.name;
+      if (!nameParameter.value) {
+        // Only set name of element if there isn't one already.
+        selectedTemplate.parameters[0].value = element.name;
+      }
       selectedTemplate.parameters[1].valueSets = valuesetsToAdd;
       selectedTemplate.parameters[1].static = true;
       this.props.onElementSelected(selectedTemplate);
@@ -69,10 +73,13 @@ export default class ElementModal extends Component {
       // Update an existing element in the workspace
       // Create array of which parameter to update, the new value to set, and the attribute to update (value is default)
       const arrayToUpdate = [
-        { [selectedTemplate.parameters[0].id]: element.name },
         { [selectedTemplate.parameters[1].id]: valuesetsToAdd, attributeToEdit: 'valueSets' },
         { [selectedTemplate.parameters[1].id]: true, attributeToEdit: 'static' }
       ];
+      if (!nameParameter.value) {
+        // Only set name of element if there isn't one already.
+        arrayToUpdate.push({ [selectedTemplate.parameters[0].id]: element.name });
+      }
       this.props.updateElement(arrayToUpdate);
     }
     this.closeModal();
