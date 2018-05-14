@@ -360,7 +360,8 @@ export default class TemplateInstance extends Component {
                   templateInstance={this.props.templateInstance}
                   getVSDetails={this.props.getVSDetails}
                   isRetrievingDetails={this.props.isRetrievingDetails}
-                  vsacDetailsCodes={this.props.vsacDetailsCodes} />
+                  vsacDetailsCodes={this.props.vsacDetailsCodes}
+                  vsacFHIRCredentials={this.props.vsacFHIRCredentials} />
               </div>
             ))}
           </div>
@@ -505,7 +506,7 @@ export default class TemplateInstance extends Component {
             valueset={this.props.resources}
             valueSets={this.props.valueSets}
             loadValueSets={this.props.loadValueSets}
-            updateInstance={this.updateInstance} />
+            updateInstance={this.updateInstance}/>
         );
       default:
         return undefined;

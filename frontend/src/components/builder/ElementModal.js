@@ -92,7 +92,13 @@ export default class ElementModal extends Component {
   openModal = () => {
     const { selectedElement } = this.props;
     this.setState({ isOpen: true, selectedElement });
-    if (selectedElement) this.props.getVSDetails(selectedElement.oid);
+    if (selectedElement) {
+      this.props.getVSDetails(
+        selectedElement.oid,
+        this.props.vsacFHIRCredentials.username,
+        this.props.vsacFHIRCredentials.password
+      );
+    }
   }
 
   closeModal = () => {
