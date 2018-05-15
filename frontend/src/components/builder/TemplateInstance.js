@@ -138,6 +138,7 @@ export default class TemplateInstance extends Component {
             <ValueComparisonObservation
               key={index}
               index={index}
+              uniqueId={`${this.props.templateInstance.uniqueId}-comparison-${index}`}
               minOperator={mod.values.minOperator}
               minValue={mod.values.minValue}
               maxOperator={mod.values.maxOperator}
@@ -159,6 +160,7 @@ export default class TemplateInstance extends Component {
             <WithUnit
               key={index}
               index={index}
+              uniqueId={`${this.props.templateInstance.uniqueId}-unit-${index}`}
               unit={mod.values.unit}
               updateAppliedModifier={this.updateAppliedModifier}/>
           );

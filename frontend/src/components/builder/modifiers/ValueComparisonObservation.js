@@ -24,7 +24,7 @@ export default class ValueComparisonObservation extends Component {
   componentDidMount = () => {
     if (Def) {
       new Def.Autocompleter.Search( // eslint-disable-line no-new
-        'ucum-unit',
+        this.props.uniqueId,
         'https://clin-table-search.lhc.nlm.nih.gov/api/ucum/v3/search',
         { tableFormat: true, valueCols: [0], colHeaders: ['Code', 'Name'] }
       );
@@ -113,7 +113,8 @@ export default class ValueComparisonObservation extends Component {
         <label htmlFor={unitId}>
           <input
             type="text"
-            id="ucum-unit"
+            id={this.props.uniqueId}
+            className="ucum-unit"
             aria-label="Unit"
             placeholder="enter unit"
             value={this.props.unit}
@@ -128,6 +129,7 @@ export default class ValueComparisonObservation extends Component {
 
 ValueComparisonObservation.propTypes = {
   index: PropTypes.number.isRequired,
+  uniqueId: PropTypes.string.isRequired,
   unit: PropTypes.string,
   minOperator: PropTypes.string,
   minValue: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),

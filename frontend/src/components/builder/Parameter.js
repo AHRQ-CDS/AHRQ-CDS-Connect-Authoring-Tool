@@ -151,6 +151,7 @@ export default class Parameter extends Component {
                   value={type}
                   onChange={e => this.updateParameter({
                     name,
+                    uniqueId: this.props.id,
                     type: e.value,
                     value: null
                   })}

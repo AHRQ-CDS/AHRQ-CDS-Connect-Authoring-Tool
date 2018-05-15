@@ -7,7 +7,7 @@ const { Def } = window;
 export default class IntervalOfQuantityEditor extends Component {
   componentDidMount = () => {
     new Def.Autocompleter.Search( // eslint-disable-line no-new
-      'interval-of-quantity-unit-ucum',
+      `${this.props.id}-unit-ucum`,
       'https://clin-table-search.lhc.nlm.nih.gov/api/ucum/v3/search',
       { tableFormat: true, valueCols: [0], colHeaders: ['Code', 'Name'] }
     );
@@ -103,7 +103,8 @@ export default class IntervalOfQuantityEditor extends Component {
 
             <input
               type="text"
-              id="interval-of-quantity-unit-ucum"
+              className="interval-of-quantity-unit-ucum"
+              id={`${this.props.id}-unit-ucum`}
               name="unit"
               placeholder="enter unit"
               aria-label="Enter Unit"
