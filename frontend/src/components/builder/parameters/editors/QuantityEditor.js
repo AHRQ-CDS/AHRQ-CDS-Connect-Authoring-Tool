@@ -7,7 +7,7 @@ const { Def } = window;
 export default class QuantityEditor extends Component {
   componentDidMount = () => {
     new Def.Autocompleter.Search( // eslint-disable-line no-new
-      'quantity-unit-ucum',
+      `${this.props.id}-unit-ucum`,
       'https://clin-table-search.lhc.nlm.nih.gov/api/ucum/v3/search',
       { tableFormat: true, valueCols: [0], colHeaders: ['Code', 'Name'] }
     );
@@ -73,7 +73,8 @@ export default class QuantityEditor extends Component {
 
             <input
               type="text"
-              id="quantity-unit-ucum"
+              id={`${this.props.id}-unit-ucum`}
+              className="quantity-unit-ucum"
               name="unit"
               placeholder="enter unit"
               aria-label="Enter Unit"

@@ -8,7 +8,7 @@ const { Def } = window;
 export default class WithUnit extends Component {
   componentDidMount = () => {
     new Def.Autocompleter.Search( // eslint-disable-line no-new
-      'with-unit-ucum',
+      this.props.uniqueId,
       'https://clin-table-search.lhc.nlm.nih.gov/api/ucum/v3/search',
       { tableFormat: true, valueCols: [0], colHeaders: ['Code', 'Name'] }
     );
@@ -22,7 +22,8 @@ export default class WithUnit extends Component {
         <label htmlFor={unitId}>
           <input
             type="text"
-            id="with-unit-ucum"
+            id={this.props.uniqueId}
+            className="with-unit-ucum"
             placeholder="enter unit"
             aria-label="With Unit"
             value={this.props.unit || ''}
@@ -37,6 +38,7 @@ export default class WithUnit extends Component {
 
 WithUnit.propTypes = {
   index: PropTypes.number.isRequired,
+  uniqueId: PropTypes.string.isRequired,
   unit: PropTypes.string,
   updateAppliedModifier: PropTypes.func.isRequired
 };
