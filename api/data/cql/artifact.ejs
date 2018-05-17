@@ -36,7 +36,7 @@ define "<%=element.name%>":
 <% referencedConceptElements.forEach((element) => { -%>
 define "<%=element.name%>":
   <%-element.concepts.map(c => {
-  return `C3F.${element.type}("${c.name}")`}).join(`
+  return `[${element.type}: "${c.name}"]` }).join(`
   union `);%>
 
 <%}) -%>
