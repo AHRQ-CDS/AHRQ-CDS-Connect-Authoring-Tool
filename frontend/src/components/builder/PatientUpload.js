@@ -3,6 +3,8 @@ import _ from 'lodash';
 import PropTypes from 'prop-types';
 import Dropzone from 'react-dropzone';
 
+import Patient from './Patient';
+
 export default class PatientUpload extends Component {
   addPatient = (newPatient) => {
     const patients = _.clone(this.props.patients);
@@ -24,19 +26,15 @@ export default class PatientUpload extends Component {
     return (
       <div className="patient-upload">
         <Dropzone onDrop={this.addPatient.bind(this)} accept="application/json" multiple={false}>
-          <p>Drop a patient .json file here, or click here to browse and select a patient .json file.</p>
+          <p>Select a .json file that is a valid FHIR DSTU2 Bundle containing a Patient and its associated resources.</p>
         </Dropzone>
         <aside>
           {this.props.patients.map((bundle, i) => (
-            <div key={`patient-${i}`}>
-              <label>
-                {_.chain(bundle).get('entry').find({"resource": {"resourceType": "Patient"}}).get('resource.name[0].given[0]').value()}
-                {_.chain(bundle).get('entry').find({"resource": {"resourceType": "Patient"}}).get('resource.name[0].family[0]').value()}
-                <button className="button primary-button new-patient" onClick={() => { this.deletePatient(i); }}>
-                  Delete Patient
-                </button>
-              </label>
-            </div>
+            <Patient
+              index={i}
+              bundle={bundle}
+              deletePatient={this.deletePatient}
+            />
           ))}
         </aside>
 
