@@ -171,6 +171,7 @@ Parameter.propTypes = {
   index: PropTypes.number.isRequired,
   name: PropTypes.string,
   type: PropTypes.string,
+  id: PropTypes.string,
   updateInstanceOfParameter: PropTypes.func.isRequired,
   deleteParameter: PropTypes.func.isRequired,
   timeLastAuthenticated: PropTypes.instanceOf(Date),

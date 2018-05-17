@@ -187,7 +187,7 @@ test('WithUnit changes select', () => {
     unit: ''
   });
 
-  component.find('#with-unit-ucum').simulate('change', { target: { value: 'mg/dL' } });
+  component.find('.with-unit-ucum').simulate('change', { target: { value: 'mg/dL' } });
   expect(updateAppliedModifierMock).toHaveBeenCalled();
   expect(updateAppliedModifierMock).toBeCalledWith(5, { unit: 'mg/dL' });
 });
