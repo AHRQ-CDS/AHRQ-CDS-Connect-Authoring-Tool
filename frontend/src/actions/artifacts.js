@@ -42,7 +42,8 @@ function parseTree(element, names) {
 function parseConjunction(element, names) {
   element.childInstances.forEach((child) => {
     // Don't include parameters used in conjunctions since they are just refernces.
-    if (child.type !== 'parameter') {
+    // type = 'parameter'supports modern parameter references, template = 'EmptyParameter'for old parameter references.
+    if (!(child.type === 'parameter' || child.template === 'EmptyParameter')) {
       const index = names.findIndex(name => name.id === child.uniqueId);
       if (index === -1) {
         names.push({ name: child.parameters[0].value, id: child.uniqueId });

@@ -339,7 +339,7 @@ class CqlArtifact {
     element.childInstances.forEach((child) => {
       // TODO: Could a child of a conjunction ever be a subpopulation?
       let childName = child.parameters[0].value || child.uniqueId;
-      if (child.type !== 'parameter') { // Parameters are updated separately
+      if (!(child.type === 'parameter' || child.template === 'EmptyParameter')) { // Parameters are updated separately
         const childCount = getCountForUniqueExpressionName(child.parameters[0], this.names, 'value', '', false);
         if (childCount > 0) {
           childName = `${childName}_${childCount}`;
