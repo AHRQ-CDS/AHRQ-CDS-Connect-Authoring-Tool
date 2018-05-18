@@ -54,6 +54,11 @@
     }
   }
 
+  .modal__body{
+    height: 100%;
+    overflow-y: auto;
+  }
+
   .modal__content {
     padding: 2em;
   }
