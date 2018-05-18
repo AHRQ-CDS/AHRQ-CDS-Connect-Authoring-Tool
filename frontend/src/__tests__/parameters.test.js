@@ -28,13 +28,15 @@ test('Parameter changes input', () => {
     index: '',
     instanceNames: [],
     value: '',
-    name: ''
+    name: '',
+    id: 'test-id'
   });
 
   const selectInput = component.find(Select);
   selectInput.simulate('change', { value: '' });
   expect(updateInstanceOfParameterMock).toHaveBeenCalled();
-  expect(updateInstanceOfParameterMock.mock.calls[0][0]).toEqual({ name: '', type: '', value: null });
+  expect(updateInstanceOfParameterMock.mock.calls[0][0])
+    .toEqual({ name: '', type: '', value: null, uniqueId: 'test-id' });
 
   component.instance().updateParameter = jest.fn();
   selectInput.simulate('change', { value: '' });

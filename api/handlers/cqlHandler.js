@@ -247,7 +247,7 @@ class CqlArtifact {
     });
   }
 
-  setParamterContexts(elementDetails, valuesetQueryName, conceptTemplateName, context) {
+  setParamterContexts(elementDetails, valuesetQueryName, context) {
     if (elementDetails.concepts.length > 0) {
       const values = [];
       elementDetails.concepts.forEach((concept) => {
@@ -257,11 +257,10 @@ class CqlArtifact {
       // Union multiple codes together.
       if (values.length > 1) {
         addGroupedConceptExpression(
-          this.referencedConceptElements, this.resourceMap, elementDetails, conceptTemplateName, context);
+          this.referencedConceptElements, this.resourceMap, elementDetails, valuesetQueryName, context);
         context.template = 'GenericStatement';
       } else {
         context.values = values;
-        context.template = conceptTemplateName;
       }
     }
     if (elementDetails.valuesets.length > 0) {
@@ -278,7 +277,7 @@ class CqlArtifact {
           // If there is one concept, check to see if it is already a referenced/grouped element.
           if (concepts.length === 1 && !this.referencedConceptElements.find( el => `"${el.name}"` === concepts[0])) {
             addGroupedConceptExpression(
-              this.referencedConceptElements,this.resourceMap,elementDetails,conceptTemplateName,context);
+              this.referencedConceptElements, this.resourceMap,elementDetails, valuesetQueryName, context);
           } else {
             context.values = context.values.concat(concepts);
           }
@@ -292,7 +291,7 @@ class CqlArtifact {
           // If there is one concept, check to see if it is already a referenced/grouped element.
           if (concepts.length === 1 && !this.referencedConceptElements.find( el => `"${el.name}"` === concepts[0])) {
             addGroupedConceptExpression(
-              this.referencedConceptElements, this.resourceMap, elementDetails, conceptTemplateName, context);
+              this.referencedConceptElements, this.resourceMap, elementDetails, valuesetQueryName, context);
           } else {
             // If concepts were already unioned, just add the variable to reference.
             context.values = context.values.concat(concepts);
@@ -442,7 +441,7 @@ class CqlArtifact {
           };
           buildConceptObjectForCodes(parameter.codes, observationValueSets.concepts);
           addValueSets(parameter, observationValueSets, 'valuesets');
-          this.setParamterContexts(observationValueSets, 'Observation', 'ObservationsByConcept', context);
+          this.setParamterContexts(observationValueSets, 'Observation', context);
           break;
         }
         case 'number': {
@@ -495,7 +494,7 @@ class CqlArtifact {
           }
           buildConceptObjectForCodes(parameter.codes, conditionValueSets.concepts);
           addValueSets(parameter, conditionValueSets, 'valuesets');
-          this.setParamterContexts(conditionValueSets, 'Condition', 'ConditionsByConcept', context);
+          this.setParamterContexts(conditionValueSets, 'Condition', context);
           break;
         }
         case 'medication': {
@@ -523,12 +522,7 @@ class CqlArtifact {
           };
           buildConceptObjectForCodes(parameter.codes, medicationStatementValueSets.concepts);
           addValueSets(parameter, medicationStatementValueSets, 'valuesets');
-          this.setParamterContexts(
-            medicationStatementValueSets,
-            'MedicationStatement',
-            'MedicationStatementsByConcept',
-            context
-          );
+          this.setParamterContexts(medicationStatementValueSets, 'MedicationStatement', context);
           break;
         }
         case 'medicationOrder_vsac': {
@@ -539,7 +533,7 @@ class CqlArtifact {
           };
           buildConceptObjectForCodes(parameter.codes, medicationOrderValueSets.concepts);
           addValueSets(parameter, medicationOrderValueSets, 'valuesets');
-          this.setParamterContexts(medicationOrderValueSets, 'MedicationOrder', 'MedicationOrdersByConcept', context);
+          this.setParamterContexts(medicationOrderValueSets, 'MedicationOrder', context);
           break;
         }
         case 'procedure': {
@@ -559,7 +553,7 @@ class CqlArtifact {
           };
           buildConceptObjectForCodes(parameter.codes, procedureValueSets.concepts);
           addValueSets(parameter, procedureValueSets, 'valuesets');
-          this.setParamterContexts(procedureValueSets, 'Procedure', 'ProceduresByConcept', context);
+          this.setParamterContexts(procedureValueSets, 'Procedure', context);
           break;
         }
         case 'encounter': {
@@ -579,7 +573,7 @@ class CqlArtifact {
           };
           buildConceptObjectForCodes(parameter.codes, encounterValueSets.concepts);
           addValueSets(parameter, encounterValueSets, 'valuesets');
-          this.setParamterContexts(encounterValueSets, 'Encounter', 'EncountersByConcept', context);
+          this.setParamterContexts(encounterValueSets, 'Encounter', context);
           break;
         }
         case 'allergyIntolerance' : {
@@ -599,12 +593,7 @@ class CqlArtifact {
           };
           buildConceptObjectForCodes(parameter.codes, allergyIntoleranceValueSets.concepts);
           addValueSets(parameter, allergyIntoleranceValueSets, 'valuesets');
-          this.setParamterContexts(
-            allergyIntoleranceValueSets,
-            'AllergyIntolerance',
-            'AllergyIntolerancesByConcept',
-            context
-          );
+          this.setParamterContexts(allergyIntoleranceValueSets, 'AllergyIntolerance', context);
           break;
         }
         case 'pregnancy': {
