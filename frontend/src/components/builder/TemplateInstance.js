@@ -44,7 +44,6 @@ export default class TemplateInstance extends Component {
         this.modifersByInputType[inputType] = (this.modifersByInputType[inputType] || []).concat(modifier);
       });
     });
-
     this.state = {
       showElement: true,
       relevantModifiers: (this.modifersByInputType[this.props.templateInstance.returnType] || []),
@@ -314,7 +313,7 @@ export default class TemplateInstance extends Component {
 
   renderModifierSelect = () => {
     if (!this.props.templateInstance.cannotHaveModifiers
-        && (this.state.relevantModifiers.length > 0 || this.props.templateInstance.modifiers.length === 0)) {
+        && (this.state.relevantModifiers.length > 0 || (this.props.templateInstance.modifiers || []).length === 0)) {
       return (
         <div className="modifier-select">
           <div className="modifier__selection">

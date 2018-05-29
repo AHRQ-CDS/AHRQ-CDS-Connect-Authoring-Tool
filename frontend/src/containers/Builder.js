@@ -104,7 +104,6 @@ export class Builder extends Component {
     const index = currentIndex !== undefined ? currentIndex : target.length;
     target.splice(index, 0, instance); // Insert instance at specific instance - only used for indenting now
     localTree = tree;
-
     this.setTree(treeName, treeData, tree);
   }
 
