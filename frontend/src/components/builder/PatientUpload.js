@@ -37,7 +37,6 @@ export default class PatientUpload extends Component {
             />
           ))}
         </aside>
-
       </div>
     );
   }

@@ -17,7 +17,10 @@ module.exports = (app) => {
   // Routing for Artifacts
   app.use('/authoring/api/artifacts', artifactRouter);
 
-  // Routing for ValueSets, Templates
+  // Routing for Patients
+  app.use('/authoring/api/patients', patientRouter);
+
+  // Routing for Resources, ValueSets, Templates
   app.use('/authoring/api/config', configRouter);
 
   // Routing for cql files

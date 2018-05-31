@@ -12,7 +12,6 @@ const ArtifactSchema = new Schema({
   subelements: Array,
   parameters: Array,
   errorStatement: Object,
-  patients: Array,
   uniqueIdCounter: Number,
   user: String
 }, {
