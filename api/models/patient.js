@@ -10,4 +10,4 @@ const PatientSchema = new Schema({
   timestamps: true // adds created_at, updated_at
 });
 
-module.exports = mongoose.model('Artifact', ArtifactSchema);
+module.exports = mongoose.model('Patient', PatientSchema);

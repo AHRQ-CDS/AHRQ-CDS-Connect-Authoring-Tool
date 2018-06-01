@@ -15,11 +15,11 @@ export default class Patient extends Component {
   }
 
   openModal() {
-    this.setState({modalIsOpen: true});
+    this.setState({ modalIsOpen: true });
   }
 
   closeModal() {
-    this.setState({modalIsOpen: false});
+    this.setState({ modalIsOpen: false });
   }
 
   render() {
@@ -53,18 +53,18 @@ export default class Patient extends Component {
 
         {!_.chain(bundle)
           .get('entry')
-          .find({"resource": {"resourceType": "Patient"}})
+          .find({ resource: { resourceType: 'Patient' } })
           .value()
           && <div className="warning">Warning: No valid FHIR DSTU2 Patient in Bundle.</div>}
         <label>
           {_.chain(bundle)
             .get('entry')
-            .find({"resource": {"resourceType": "Patient"}})
+            .find({ resource: { resourceType: 'Patient' } })
             .get('resource.name[0].given[0]')
             .value()}
           {_.chain(bundle)
             .get('entry')
-            .find({"resource": {"resourceType": "Patient"}})
+            .find({ resource: { resourceType: 'Patient' } })
             .get('resource.name[0].family[0]')
             .value()}
         </label>

@@ -23,7 +23,7 @@ import ConjunctionGroup from '../components/builder/ConjunctionGroup';
 import Subpopulations from '../components/builder/Subpopulations';
 import ErrorStatement from '../components/builder/ErrorStatement';
 import Parameters from '../components/builder/Parameters';
-import PatientUpload from '../components/builder/PatientUpload';
+import PatientRun from '../components/builder/PatientRun';
 import Recommendations from '../components/builder/Recommendations';
 import RepoUploadModal from '../components/builder/RepoUploadModal';
 import ELMErrorModal from '../components/builder/ELMErrorModal';
@@ -395,7 +395,7 @@ export class Builder extends Component {
                 <Tab>Recommendations</Tab>
                 <Tab>Parameters</Tab>
                 <Tab>Handle Errors</Tab>
-                <Tab>Patient Upload</Tab>
+                <Tab>Patient Run</Tab>
               </TabList>
 
               <div className="tab-panel-container">
@@ -522,7 +522,7 @@ export class Builder extends Component {
                 </TabPanel>
 
                 <TabPanel>
-                  <PatientUpload
+                  <PatientRun
                     patients={this.props.artifact.patients}
                     updatePatients={this.updatePatients} />
                 </TabPanel>

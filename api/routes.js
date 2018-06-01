@@ -1,4 +1,5 @@
 const artifactRouter = require('./routers/artifactRouter.js');
+const patientRouter = require('./routers/patientRouter.js');
 const configRouter = require('./routers/configRouter.js');
 const cqlRouter = require('./routers/cqlRouter');
 const expressionRouter = require('./routers/expressionRouter');

@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import Modal from 'react-modal';
 import { Link } from 'react-router-dom';
 
 import renderDate from '../../utils/dates';
@@ -70,7 +71,7 @@ export default class PatientTable extends Component {
 
       <td data-th="">
         <button className="danger-button"
-          onClick={() => this.openConfirmDeleteModal(artifact)}>
+          onClick={() => this.openConfirmDeleteModal(patient)}>
           Delete
         </button>
       </td>

@@ -18,7 +18,7 @@ class Patient extends Component {
 
     if (patients && patients.length > 0) {
       return (
-        <ArtifactTable
+        <PatientTable
           patients={patients}
           deletePatient={this.props.deletePatient} />
       );
@@ -31,8 +31,6 @@ class Patient extends Component {
     return (
       <div className="artifact" id="maincontent">
         <div className="artifact-wrapper">
-          <NewArtifactForm formType="new" addArtifact={this.props.addPatient} />
-
           {this.renderPatientsTable()}
         </div>
       </div>

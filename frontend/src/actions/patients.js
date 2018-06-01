@@ -112,9 +112,7 @@ function addPatientFailure(error) {
 }
 
 function sendAddPatientRequest(patient) {
-  return (dispatch) => {
-    return dispatch(savePatient(patient));
-  }
+  return dispatch => dispatch(savePatient(patient));
 }
 
 export function addPatient(patient) {
