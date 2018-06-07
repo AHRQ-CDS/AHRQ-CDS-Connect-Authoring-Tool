@@ -6,7 +6,7 @@ import { bindActionCreators } from 'redux';
 import { loadPatients, addPatient, deletePatient } from '../actions/patients';
 import patientProps from '../prop-types/patient';
 
-import PatientTable from '../components/artifact/PatientTable';
+import PatientTable from '../components/patient/PatientTable';
 
 class Patient extends Component {
   componentWillMount() {

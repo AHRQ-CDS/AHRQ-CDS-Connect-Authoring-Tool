@@ -4,7 +4,6 @@ module.exports = {
   allGet,
   singleGet,
   singlePost,
-  singlePut,
   singleDelete
 };
 
@@ -44,24 +43,6 @@ function singlePost(req, res) {
       (error, response) => {
         if (error) res.status(500).send(error);
         else res.status(201).json(response);
-      });
-  } else {
-    res.sendStatus(401);
-  }
-}
-
-// Update a single patient
-function singlePut(req, res) {
-  if (req.user) {
-    const id = req.body._id;
-    const patient = req.body;
-    Patient.update(
-      { user: req.user.uid, _id: id },
-      { $set: patient },
-      (error, response) => {
-        if (error) res.status(500).send(error);
-        else if (response.n === 0) res.sendStatus(404);
-        else res.sendStatus(200);
       });
   } else {
     res.sendStatus(401);

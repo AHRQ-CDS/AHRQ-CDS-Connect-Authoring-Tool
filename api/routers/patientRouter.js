@@ -6,8 +6,7 @@ const PatientRouter = express.Router();
 // Routes for /authoring/api/patients
 PatientRouter.route('/')
   .get(patient.allGet)
-  .post(patient.singlePost)
-  .put(patient.singlePut);
+  .post(patient.singlePost);
 
 // Routes for /authoring/api/patients/:patient
 PatientRouter.route('/:patient')

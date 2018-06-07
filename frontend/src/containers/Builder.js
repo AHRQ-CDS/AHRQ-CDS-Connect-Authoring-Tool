@@ -250,10 +250,6 @@ export class Builder extends Component {
     this.props.updateArtifact(this.props.artifact, { errorStatement });
   }
 
-  updatePatients = (patients) => {
-    this.props.updateArtifact(this.props.artifact, { patients });
-  }
-
   checkSubpopulationUsage = (uniqueId) => {
     for (let i = 0; i < this.props.artifact.recommendations.length; i++) {
       const subpops = this.props.artifact.recommendations[i].subpopulations;
@@ -523,8 +519,7 @@ export class Builder extends Component {
 
                 <TabPanel>
                   <PatientRun
-                    patients={this.props.artifact.patients}
-                    updatePatients={this.updatePatients} />
+                    patients={this.props.patients} />
                 </TabPanel>
               </div>
             </Tabs>
@@ -600,6 +595,7 @@ function mapDispatchToProps(dispatch) {
 function mapStateToProps(state) {
   return {
     artifact: state.artifacts.artifact,
+    patients: state.patients,
     downloadedArtifact: state.artifacts.downloadArtifact,
     statusMessage: state.artifacts.statusMessage,
     templates: state.templates.templates,
