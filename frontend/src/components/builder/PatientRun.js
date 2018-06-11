@@ -2,9 +2,9 @@ import React, { Component } from 'react';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
 import Dropzone from 'react-dropzone';
-import Cql from 'cql-execution';
-import CqlFhir from 'cql-exec-fhir';
-import CqlVsac from 'cql-exec-vsac';
+// import Cql from 'cql-execution';
+// import CqlFhir from 'cql-exec-fhir';
+// import CqlVsac from 'cql-exec-vsac';
 
 import Patient from './Patient';
 

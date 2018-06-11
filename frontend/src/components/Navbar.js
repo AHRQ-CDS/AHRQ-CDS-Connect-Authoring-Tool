@@ -12,6 +12,7 @@ export default class Navbar extends Component {
           <ul>
             <li><NavLink exact to="/">Home</NavLink></li>
             <li><NavLink to="/artifacts">Artifacts</NavLink></li>
+            <li><NavLink to="/patients">Patients</NavLink></li>
             <li><NavLink to="/build">Workspace</NavLink></li>
             <li><NavLink to="/userguide">Documentation</NavLink></li>
             <li><a href="https://cds.ahrq.gov/contact-us" onClick={onVisitExternalForm}>Feedback</a></li>
