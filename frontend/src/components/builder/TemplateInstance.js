@@ -449,12 +449,17 @@ export default class TemplateInstance extends Component {
           vsacFHIRCredentials={this.props.vsacFHIRCredentials}
         />
 
-          <CodeSelectModal
-            className="element-select__modal"
-            updateElement={this.updateInstance}
-            template={this.props.templateInstance}
-            vsacFHIRCredentials={this.props.vsacFHIRCredentials}
-          />
+        <CodeSelectModal
+          className="element-select__modal"
+          updateElement={this.updateInstance}
+          template={this.props.templateInstance}
+          vsacFHIRCredentials={this.props.vsacFHIRCredentials}
+          isValidatingCode={this.props.isValidatingCode}
+          isValidCode={this.props.isValidCode}
+          codeData={this.props.codeData}
+          validateCode={this.props.validateCode}
+          resetCodeValidation={this.props.resetCodeValidation}
+        />
       </div>
     );
   }
@@ -678,5 +683,10 @@ TemplateInstance.propTypes = {
   getVSDetails: PropTypes.func.isRequired,
   isRetrievingDetails: PropTypes.bool.isRequired,
   vsacDetailsCodes: PropTypes.array.isRequired,
-  validateReturnType: PropTypes.bool
+  validateReturnType: PropTypes.bool,
+  isValidatingCode: PropTypes.bool.isRequired,
+  isValidCode: PropTypes.bool,
+  codeData: PropTypes.object,
+  validateCode: PropTypes.func.isRequired,
+  resetCodeValidation: PropTypes.func.isRequired
 };

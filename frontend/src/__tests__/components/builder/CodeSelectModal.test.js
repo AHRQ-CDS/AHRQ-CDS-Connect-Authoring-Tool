@@ -10,6 +10,7 @@ let getCodeSystemSelect;
 let setInputValue;
 let internalModal;
 const onElementSelected = jest.fn();
+const resetCodeValidation = jest.fn();
 
 const testTemplate = {
   id: 'GenericObservation',
@@ -28,6 +29,7 @@ beforeEach(() => {
     CodeSelectModal,
     {
       onElementSelected,
+      resetCodeValidation,
       template: testTemplate,
     }
   );
@@ -152,6 +154,7 @@ describe('with modal open', () => {
     const modifierModal = fullRenderComponent(
       CodeSelectModal,
       {
+        resetCodeValidation,
         updateModifier: jest.fn(),
         template: testTemplate
       }

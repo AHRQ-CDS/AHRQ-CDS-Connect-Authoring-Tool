@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import FontAwesome from 'react-fontawesome';
 import Select from 'react-select';
 import _ from 'lodash';
-import axios from 'axios';
 import Modal from 'react-modal';
 
 export default class CodeSelectModal extends Component {
@@ -15,9 +14,7 @@ export default class CodeSelectModal extends Component {
       codeText: '',
       codeSystemText: '',
       selectedCS: null,
-      displayOtherInput: false,
-      codeIsValid: null,
-      codeData: null
+      displayOtherInput: false
     };
   }
 
@@ -33,9 +30,10 @@ export default class CodeSelectModal extends Component {
       codeText: '',
       codeSystemText: '',
       selectedCS: null,
-      displayOtherInput: false,
-      codeIsValid: null
+      displayOtherInput: false
     });
+
+    this.props.resetCodeValidation();
   }
 
   enterKeyCheck = (func, argument, event) => {
@@ -46,7 +44,7 @@ export default class CodeSelectModal extends Component {
 
   handleSearchValueChange = (event) => {
     const codeText = event.target.value;
-    this.setState({ codeText, codeIsValid: null });
+    this.setState({ codeText });
   }
 
   handleOtherCodeSystemChange = (event) => {
@@ -56,27 +54,18 @@ export default class CodeSelectModal extends Component {
 
   onCodeSystemSelected = (selectedCS) => {
     if (selectedCS.value === 'Other') {
-      this.setState({ selectedCS, codeIsValid: null, displayOtherInput: true });
+      this.setState({ selectedCS, displayOtherInput: true });
     } else {
-      this.setState({ selectedCS, codeIsValid: null, displayOtherInput: false });
+      this.setState({ selectedCS, displayOtherInput: false });
     }
   }
 
   validateCode = () => {
     if (this.props.vsacFHIRCredentials) {
-      const auth = {
-        username: this.props.vsacFHIRCredentials.username,
-        password: this.props.vsacFHIRCredentials.password
-      };
+      const username = this.props.vsacFHIRCredentials.username;
+      const password = this.props.vsacFHIRCredentials.password;
 
-      if (!this.state.codeText || !this.state.selectedCS) {
-        this.setState({ codeIsValid: false });
-        return;
-      }
-
-      axios.get(`/authoring/api/fhir/code?code=${this.state.codeText}&system=${this.state.selectedCS.id}`, { auth })
-        .then(res => this.setState({ codeIsValid: true, codeData: res.data }))
-        .catch(() => this.setState({ codeIsValid: false, codeData: null }));
+      this.props.validateCode(this.state.codeText, this.state.selectedCS.id, username, password);
     }
   }
 
@@ -86,7 +75,7 @@ export default class CodeSelectModal extends Component {
     // Updating a modifier is different than selecting the code for a base element
     if (this.props.updateModifier) {
       this.props.updateModifier({
-        display: this.state.codeData ? this.state.codeData.display : '',
+        display: this.props.codeData ? this.props.codeData.display : '',
         code: this.state.codeText,
         codeSystem: { name: this.state.selectedCS.value, id: this.state.selectedCS.id || this.state.codeSystemText }
       });
@@ -101,7 +90,7 @@ export default class CodeSelectModal extends Component {
         system: this.state.selectedCS.value,
         uri: this.state.selectedCS.id || this.state.codeSystemText,
         code: this.state.codeText,
-        display: this.state.codeData ? this.state.codeData.display : ''
+        display: this.props.codeData ? this.props.codeData.display : ''
       });
 
       this.closeCodeSelectModal();
@@ -121,7 +110,7 @@ export default class CodeSelectModal extends Component {
     const newCode = {
       code: this.state.codeText,
       codeSystem: { name: this.state.selectedCS.value, id: this.state.selectedCS.id },
-      display: this.state.codeData ? this.state.codeData.display : ''
+      display: this.props.codeData ? this.props.codeData.display : ''
     };
     if (this.state.selectedCS.value === 'Other') {
       newCode.codeSystem.id = this.state.codeSystemText;
@@ -159,13 +148,13 @@ export default class CodeSelectModal extends Component {
   }
 
   renderCodeValidation = () => {
-    if (this.state.codeIsValid === true) {
+    if (this.props.isValidCode === true) {
       return (
         <span className='modal__footer_status'>
           <FontAwesome name='check-circle'/> Validation Successful!
         </span>
       );
-    } else if (this.state.codeIsValid === false) {
+    } else if (this.props.isValidCode === false) {
       return (
         <span className='modal__footer_status'>
           <FontAwesome name='exclamation-triangle'/> Validation Error: Unable to validate code and/or code system.
@@ -177,12 +166,14 @@ export default class CodeSelectModal extends Component {
   }
 
   renderCodeData = () => {
-    if (this.state.codeIsValid) {
+    if (this.props.isValidatingCode) {
+      return <div className="loading-icon"><FontAwesome name="spinner" spin/></div>;
+    } else if (this.props.isValidCode) {
       return (
         <div className="code-display">
-          <div className="code-display__code">{this.state.codeData.code}</div>
-          <div className="code-display__system-name">{this.state.codeData.systemName}</div>
-          <div className="code-display__display">{this.state.codeData.display}</div>
+          <div className="code-display__code">{this.props.codeData.code}</div>
+          <div className="code-display__system-name">{this.props.codeData.systemName}</div>
+          <div className="code-display__display">{this.props.codeData.display}</div>
         </div>
       );
     }
@@ -265,7 +256,7 @@ export default class CodeSelectModal extends Component {
 
                 <div className="col-6"></div>
 
-                {this.state.displayOtherInput ?
+                {this.state.displayOtherInput &&
                   <div className="element-modal__search-other-system col-4">
                     <input
                       type="text"
@@ -277,7 +268,6 @@ export default class CodeSelectModal extends Component {
                       onChange={this.handleOtherCodeSystemChange}
                     />
                   </div>
-                  : null
                 }
 
                 <div className="col-2"></div>
@@ -310,5 +300,10 @@ CodeSelectModal.propTypes = {
   })),
   labels: PropTypes.object,
   updateModifier: PropTypes.func,
-  addToParameter: PropTypes.func
+  addToParameter: PropTypes.func,
+  isValidatingCode: PropTypes.bool.isRequired,
+  isValidCode: PropTypes.bool,
+  codeData: PropTypes.object,
+  validateCode: PropTypes.func.isRequired,
+  resetCodeValidation: PropTypes.func.isRequired
 };

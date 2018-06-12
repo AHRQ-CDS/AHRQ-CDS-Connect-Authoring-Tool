@@ -3,7 +3,8 @@ import {
   VSAC_LOGIN_REQUEST, VSAC_LOGIN_SUCCESS, VSAC_LOGIN_FAILURE,
   SET_VSAC_AUTH_STATUS,
   VSAC_SEARCH_REQUEST, VSAC_SEARCH_SUCCESS, VSAC_SEARCH_FAILURE,
-  VSAC_DETAILS_REQUEST, VSAC_DETAILS_SUCCESS, VSAC_DETAILS_FAILURE, LOGOUT_REQUEST
+  VSAC_DETAILS_REQUEST, VSAC_DETAILS_SUCCESS, VSAC_DETAILS_FAILURE, LOGOUT_REQUEST,
+  VALIDATE_CODE_REQUEST, VALIDATE_CODE_SUCCESS, VALIDATE_CODE_FAILURE, VALIDATE_CODE_RESET
 } from '../actions/types';
 
 const defaultState = {
@@ -15,6 +16,9 @@ const defaultState = {
   searchResults: [],
   searchCount: 0,
   isRetrievingDetails: false,
+  isValidatingCode: false,
+  isValidCode: null,
+  codeData: null,
   detailsCodes: [],
   username: null,
   password: null
@@ -97,6 +101,32 @@ export default function auth(state = defaultState, action) {
         ...state,
         isRetrievingDetails: false,
         detailsCodes: []
+      };
+    case VALIDATE_CODE_REQUEST:
+      return {
+        ...state,
+        isValidatingCode: true
+      };
+    case VALIDATE_CODE_SUCCESS:
+      return {
+        ...state,
+        isValidatingCode: false,
+        isValidCode: true,
+        codeData: action.codeData
+      };
+    case VALIDATE_CODE_FAILURE:
+      return {
+        ...state,
+        isValidatingCode: false,
+        isValidCode: false,
+        codeData: null
+      };
+    case VALIDATE_CODE_RESET:
+      return {
+        ...state,
+        isValidatingCode: false,
+        isValidCode: null,
+        codeData: null
       };
     case LOGOUT_REQUEST:
       return defaultState;

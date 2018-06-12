@@ -232,7 +232,12 @@ export default class ConjunctionGroup extends Component {
               isRetrievingDetails={this.props.isRetrievingDetails}
               vsacDetailsCodes={this.props.vsacDetailsCodes}
               vsacFHIRCredentials={this.props.vsacFHIRCredentials}
-              validateReturnType={this.props.validateReturnType}/>
+              validateReturnType={this.props.validateReturnType}
+              isValidatingCode={this.props.isValidatingCode}
+              isValidCode={this.props.isValidCode}
+              codeData={this.props.codeData}
+              validateCode={this.props.validateCode}
+              resetCodeValidation={this.props.resetCodeValidation} />
 
             {this.renderConjunctionSelect(i)}
           </div>
@@ -274,7 +279,12 @@ export default class ConjunctionGroup extends Component {
           isRetrievingDetails={this.props.isRetrievingDetails}
           vsacDetailsCodes={this.props.vsacDetailsCodes}
           vsacFHIRCredentials={this.props.vsacFHIRCredentials}
-          validateReturnType={this.props.validateReturnType}/>
+          validateReturnType={this.props.validateReturnType}
+          isValidatingCode={this.props.isValidatingCode}
+          isValidCode={this.props.isValidCode}
+          codeData={this.props.codeData}
+          validateCode={this.props.validateCode}
+          resetCodeValidation={this.props.resetCodeValidation} />
 
         {this.renderConjunctionSelect(instance)}
       </div>
@@ -307,7 +317,6 @@ export default class ConjunctionGroup extends Component {
             isRetrievingDetails={this.props.isRetrievingDetails}
             vsacDetailsCodes={this.props.vsacDetailsCodes}
             vsacFHIRCredentials={this.props.vsacFHIRCredentials}
-            validateCode={this.props.validateCode}
           />
         </div>
       </div>
@@ -340,5 +349,10 @@ ConjunctionGroup.propTypes = {
   isRetrievingDetails: PropTypes.bool.isRequired,
   vsacDetailsCodes: PropTypes.array.isRequired,
   vsacFHIRCredentials: PropTypes.object,
-  validateReturnType: PropTypes.bool
+  validateReturnType: PropTypes.bool,
+  isValidatingCode: PropTypes.bool.isRequired,
+  isValidCode: PropTypes.bool,
+  resetCodeValidation: PropTypes.func.isRequired,
+  codeData: PropTypes.object,
+  validateCode: PropTypes.func.isRequired
 };
