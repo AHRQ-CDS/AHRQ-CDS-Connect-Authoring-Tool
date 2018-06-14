@@ -28,18 +28,7 @@ export default class PatientRun extends Component {
   render() {
     return (
       <div className="patient-run">
-        <Dropzone onDrop={this.addPatient.bind(this)} accept="application/json" multiple={false}>
-          <p>Select a .json file that is a valid FHIR DSTU2 Bundle containing a Patient and its associated resources.</p>
-        </Dropzone>
-        <aside>
-          {this.props.patients.map((bundle, i) => (
-            <Patient
-              index={i}
-              bundle={bundle}
-              deletePatient={this.deletePatient}
-            />
-          ))}
-        </aside>
+        TODO
       </div>
     );
   }

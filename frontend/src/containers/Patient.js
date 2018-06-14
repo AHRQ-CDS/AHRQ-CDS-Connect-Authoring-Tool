@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
+import Dropzone from 'react-dropzone';
 
 import { loadPatients, addPatient, deletePatient } from '../actions/patients';
 import patientProps from '../prop-types/patient';
@@ -11,6 +12,14 @@ import PatientTable from '../components/patient/PatientTable';
 class Patient extends Component {
   componentWillMount() {
     this.props.loadPatients();
+  }
+
+  addPatient = (patient) => {
+    const reader = new FileReader();
+    reader.onload = function (e) {
+      this.props.addPatient(JSON.parse(e.target.result));
+    }.bind(this);
+    reader.readAsText(patient[0]);
   }
 
   renderPatientsTable() {
@@ -30,6 +39,9 @@ class Patient extends Component {
   render() {
     return (
       <div className="artifact" id="maincontent">
+        <Dropzone onDrop={this.addPatient.bind(this)} accept="application/json" multiple={false}>
+          <p>Select a .json file that is a valid FHIR DSTU2 Bundle containing a Patient and its associated resources.</p>
+        </Dropzone>
         <div className="artifact-wrapper">
           {this.renderPatientsTable()}
         </div>

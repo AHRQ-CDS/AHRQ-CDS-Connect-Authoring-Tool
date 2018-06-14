@@ -23,7 +23,7 @@ const Root = (props) => {
           <PrivateRoute path='/build/:id' component={BuilderContainer} />
           <PrivateRoute path='/build' component={BuilderContainer} />
           <PrivateRoute path='/artifacts' component={Artifact} />
-          <PrivateRoute path='/patient' component={Patient} />
+          <PrivateRoute path='/patients' component={Patient} />
           <Route path='/userguide' component={UserGuide} />
           <Route component={NoMatch} />
         </Switch>

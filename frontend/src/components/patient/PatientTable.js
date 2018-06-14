@@ -1,11 +1,12 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import Modal from 'react-modal';
-import { Link } from 'react-router-dom';
+import _ from 'lodash';
 
 import renderDate from '../../utils/dates';
 import { sortMostRecent } from '../../utils/sort';
 import patientProps from '../../prop-types/patient';
+
+import Modal from '../elements/Modal';
 
 export default class PatientTable extends Component {
   constructor(props) {
@@ -62,9 +63,18 @@ export default class PatientTable extends Component {
   renderTableRow = patient => (
     <tr key={patient._id}>
       <td className="artifacts__tablecell-wide" data-th="Patient Name">
-        <Link to={`build/${patient._id}`}>
-          {patient.name}
-        </Link>
+        <div>
+          {_.chain(patient)
+              .get('patient.entry')
+              .find({ resource: { resourceType: 'Patient' } })
+              .get('resource.name[0].given[0]')
+              .value() || 'given_placeholder'}
+            {_.chain(patient)
+              .get('patient.entry')
+              .find({ resource: { resourceType: 'Patient' } })
+              .get('resource.name[0].family[0]')
+              .value() || 'family_placeholder'}
+        </div>
       </td>
 
       <td data-th="Updated">{renderDate(patient.updatedAt)}</td>
@@ -105,5 +115,5 @@ export default class PatientTable extends Component {
 
 PatientTable.propTypes = {
   patients: PropTypes.arrayOf(patientProps),
-  deleteArtifact: PropTypes.func.isRequired
+  deletePatient: PropTypes.func.isRequired
 };

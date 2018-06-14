@@ -1,6 +1,5 @@
 import axios from 'axios';
 import Promise from 'promise';
-import _ from 'lodash';
 
 import * as types from './types';
 
@@ -149,13 +148,9 @@ function savePatientFailure(error) {
 }
 
 function sendSavePatientRequest(patient) {
-  if (patient._id == null) {
-    const patientWithoutId = _.omit(patient, ['_id']);
-    return axios.post(`${API_BASE}/patients`, patientWithoutId)
-      .then(result => result.data);
-  }
-
-  return axios.put(`${API_BASE}/patients`, patient).then(() => patient);
+  console.info(patient);
+  return axios.post(`${API_BASE}/patients`, { patient: patient })
+    .then(result => result.data);
 }
 
 export function savePatient(patient) {
