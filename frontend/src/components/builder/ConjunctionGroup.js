@@ -317,6 +317,11 @@ export default class ConjunctionGroup extends Component {
             isRetrievingDetails={this.props.isRetrievingDetails}
             vsacDetailsCodes={this.props.vsacDetailsCodes}
             vsacFHIRCredentials={this.props.vsacFHIRCredentials}
+            isValidatingCode={this.props.isValidatingCode}
+            isValidCode={this.props.isValidCode}
+            codeData={this.props.codeData}
+            validateCode={this.props.validateCode}
+            resetCodeValidation={this.props.resetCodeValidation}
           />
         </div>
       </div>

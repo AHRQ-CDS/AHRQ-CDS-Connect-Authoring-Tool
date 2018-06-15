@@ -35,8 +35,14 @@ export default class CodeEditor extends Component {
     return (
       <CodeSelectModal
         className="element-select__modal"
-        addToParameter={this.handleCodeAdded}
+        template={this.props.templateInstance}
         vsacFHIRCredentials={this.props.vsacFHIRCredentials}
+        isValidatingCode={this.props.isValidatingCode}
+        isValidCode={this.props.isValidCode}
+        codeData={this.props.codeData}
+        validateCode={this.props.validateCode}
+        resetCodeValidation={this.props.resetCodeValidation}
+        addToParameter={this.handleCodeAdded}
       />
     );
   }
@@ -116,5 +122,10 @@ CodeEditor.propTypes = {
   loginVSACUser: PropTypes.func.isRequired,
   setVSACAuthStatus: PropTypes.func.isRequired,
   vsacStatus: PropTypes.string,
-  vsacStatusText: PropTypes.string
+  vsacStatusText: PropTypes.string,
+  isValidatingCode: PropTypes.bool.isRequired,
+  isValidCode: PropTypes.bool,
+  codeData: PropTypes.object,
+  validateCode: PropTypes.func.isRequired,
+  resetCodeValidation: PropTypes.func.isRequired
 };

@@ -71,6 +71,7 @@ export default class CodeSelectModal extends Component {
 
   chooseCode = () => {
     const selectedTemplate = _.cloneDeep(this.props.template);
+    if (selectedTemplate === undefined) return;
 
     // Updating a modifier is different than selecting the code for a base element
     if (this.props.updateModifier) {
@@ -97,29 +98,23 @@ export default class CodeSelectModal extends Component {
       return;
     }
 
-    if (selectedTemplate === undefined) return;
-
-    // Push the newly selected code.
+    // Push the newly selected code
     let codesToAdd = selectedTemplate.parameters[1].codes;
-    if (codesToAdd === undefined) {
-      codesToAdd = [];
-    }
-    if (this.state.selectedCS === null) {
-      return;
-    }
+    if (codesToAdd === undefined) codesToAdd = [];
+    if (this.state.selectedCS === null) return;
+
     const newCode = {
       code: this.state.codeText,
       codeSystem: { name: this.state.selectedCS.value, id: this.state.selectedCS.id },
       display: this.props.codeData ? this.props.codeData.display : ''
     };
-    if (this.state.selectedCS.value === 'Other') {
-      newCode.codeSystem.id = this.state.codeSystemText;
-    }
+    if (this.state.selectedCS.value === 'Other') newCode.codeSystem.id = this.state.codeSystemText;
     codesToAdd.push(newCode);
 
     const nameParameter = selectedTemplate.parameters[0];
     const lastCodeIndex = codesToAdd.length - 1;
-    // Adding a new element and editing an exisitng element use different functions that take different parameters
+
+    // Adding a new element and editing an existing element use different functions that take different parameters
     if (this.props.onElementSelected) {
       // Set the template's values initially to add it to the workspace.
       if (nameParameter.value === undefined || nameParameter.value === '') {

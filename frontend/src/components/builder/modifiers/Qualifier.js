@@ -80,8 +80,14 @@ export default class Qualifier extends Component {
       return (
         <CodeSelectModal
           className="element-select__modal"
-          updateModifier={this.handleCodeAdded}
+          template={this.props.templateInstance}
           vsacFHIRCredentials={this.props.vsacFHIRCredentials}
+          isValidatingCode={this.props.isValidatingCode}
+          isValidCode={this.props.isValidCode}
+          codeData={this.props.codeData}
+          validateCode={this.props.validateCode}
+          resetCodeValidation={this.props.resetCodeValidation}
+          updateModifier={this.handleCodeAdded}
         />
       );
     }
@@ -173,5 +179,10 @@ Qualifier.propTypes = {
   setVSACAuthStatus: PropTypes.func.isRequired,
   vsacStatus: PropTypes.string,
   vsacStatusText: PropTypes.string,
-  vsacFHIRCredentials: PropTypes.object
+  vsacFHIRCredentials: PropTypes.object,
+  isValidatingCode: PropTypes.bool.isRequired,
+  isValidCode: PropTypes.bool,
+  codeData: PropTypes.object,
+  validateCode: PropTypes.func.isRequired,
+  resetCodeValidation: PropTypes.func.isRequired
 };

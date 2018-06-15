@@ -199,6 +199,11 @@ export default class ElementSelect extends Component {
           onElementSelected={this.onSuggestionSelected}
           template={selectedTemplate}
           vsacFHIRCredentials={this.props.vsacFHIRCredentials}
+          isValidatingCode={this.props.isValidatingCode}
+          isValidCode={this.props.isValidCode}
+          codeData={this.props.codeData}
+          validateCode={this.props.validateCode}
+          resetCodeValidation={this.props.resetCodeValidation}
         />
       </div>
     );
@@ -283,5 +288,10 @@ ElementSelect.propTypes = {
   vsacSearchCount: PropTypes.number.isRequired,
   getVSDetails: PropTypes.func.isRequired,
   isRetrievingDetails: PropTypes.bool.isRequired,
-  vsacDetailsCodes: PropTypes.array.isRequired
+  vsacDetailsCodes: PropTypes.array.isRequired,
+  isValidatingCode: PropTypes.bool.isRequired,
+  isValidCode: PropTypes.bool,
+  codeData: PropTypes.object,
+  validateCode: PropTypes.func.isRequired,
+  resetCodeValidation: PropTypes.func.isRequired
 };

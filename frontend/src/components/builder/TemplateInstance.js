@@ -210,7 +210,12 @@ export default class TemplateInstance extends Component {
               setVSACAuthStatus={this.props.setVSACAuthStatus}
               vsacStatus={this.props.vsacStatus}
               vsacStatusText={this.props.vsacStatusText}
-              vsacFHIRCredentials={this.props.vsacFHIRCredentials}/>
+              vsacFHIRCredentials={this.props.vsacFHIRCredentials}
+              isValidatingCode={this.props.isValidatingCode}
+              isValidCode={this.props.isValidCode}
+              codeData={this.props.codeData}
+              validateCode={this.props.validateCode}
+              resetCodeValidation={this.props.resetCodeValidation} />
           );
         default:
           return (<LabelModifier key={index} name={mod.name} id={mod.id}/>);
@@ -659,7 +664,7 @@ export default class TemplateInstance extends Component {
 }
 
 TemplateInstance.propTypes = {
-  resources: PropTypes.object.isRequired,
+  resources: PropTypes.object,
   valueSets: PropTypes.array,
   loadValueSets: PropTypes.func.isRequired,
   getPath: PropTypes.func.isRequired,
