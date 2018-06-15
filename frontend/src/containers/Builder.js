@@ -7,15 +7,17 @@ import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import FontAwesome from 'react-fontawesome';
 import _ from 'lodash';
 
+import loadTemplates from '../actions/templates';
+import loadResources from '../actions/resources';
+import loadValueSets from '../actions/value_sets';
+import loadConversionFunctions from '../actions/modifiers';
 import {
   setStatusMessage, downloadArtifact, saveArtifact, loadArtifact, updateArtifact, initializeArtifact,
   updateAndSaveArtifact, publishArtifact, clearArtifactValidationWarnings
 } from '../actions/artifacts';
-import loadTemplates from '../actions/templates';
-import loadResources from '../actions/resources';
-import loadValueSets from '../actions/value_sets';
-import { loginVSACUser, setVSACAuthStatus, searchVSACByKeyword, getVSDetails } from '../actions/vsac';
-import loadConversionFunctions from '../actions/modifiers';
+import {
+  loginVSACUser, setVSACAuthStatus, searchVSACByKeyword, getVSDetails, validateCode, resetCodeValidation
+} from '../actions/vsac';
 
 import EditArtifactModal from '../components/artifact/EditArtifactModal';
 import ConjunctionGroup from '../components/builder/ConjunctionGroup';
@@ -271,7 +273,8 @@ export class Builder extends Component {
     const {
       artifact, templates, resources, valueSets,
       vsacStatus, vsacStatusText, timeLastAuthenticated,
-      isRetrievingDetails, vsacDetailsCodes, conversionFunctions
+      isRetrievingDetails, vsacDetailsCodes, conversionFunctions,
+      isValidatingCode, isValidCode, codeData
     } = this.props;
     const namedParameters = _.filter(artifact.parameters, p => (!_.isNull(p.name) && p.name.length));
 
@@ -307,7 +310,11 @@ export class Builder extends Component {
           isRetrievingDetails={isRetrievingDetails}
           vsacDetailsCodes={vsacDetailsCodes}
           vsacFHIRCredentials={this.props.vsacFHIRCredentials}
-          />
+          isValidatingCode={isValidatingCode}
+          isValidCode={isValidCode}
+          codeData={codeData}
+          validateCode={this.props.validateCode}
+          resetCodeValidation={this.props.resetCodeValidation} />
       );
     }
 
@@ -428,7 +435,12 @@ export class Builder extends Component {
                     getVSDetails={this.props.getVSDetails}
                     isRetrievingDetails={this.props.isRetrievingDetails}
                     vsacDetailsCodes={this.props.vsacDetailsCodes}
-                    vsacFHIRCredentials={this.props.vsacFHIRCredentials}/>
+                    vsacFHIRCredentials={this.props.vsacFHIRCredentials}
+                    isValidatingCode={this.props.isValidatingCode}
+                    isValidCode={this.props.isValidCode}
+                    codeData={this.props.codeData}
+                    validateCode={this.props.validateCode}
+                    resetCodeValidation={this.props.resetCodeValidation} />
                 </TabPanel>
 
                 {/* <TabPanel>
@@ -463,7 +475,12 @@ export class Builder extends Component {
                     isRetrievingDetails={this.props.isRetrievingDetails}
                     vsacDetailsCodes={this.props.vsacDetailsCodes}
                     vsacFHIRCredentials={this.props.vsacFHIRCredentials}
-                    validateReturnType={false}/>
+                    validateReturnType={false}
+                    isValidatingCode={this.props.isValidatingCode}
+                    isValidCode={this.props.isValidCode}
+                    codeData={this.props.codeData}
+                    validateCode={this.props.validateCode}
+                    resetCodeValidation={this.props.resetCodeValidation} />
                 </TabPanel> */}
 
                 <TabPanel>
@@ -487,7 +504,12 @@ export class Builder extends Component {
                     loginVSACUser={this.props.loginVSACUser}
                     setVSACAuthStatus={this.props.setVSACAuthStatus}
                     vsacStatus={this.props.vsacStatus}
-                    vsacStatusText={this.props.vsacStatusText} />
+                    vsacStatusText={this.props.vsacStatusText}
+                    isValidatingCode={this.props.isValidatingCode}
+                    isValidCode={this.props.isValidCode}
+                    codeData={this.props.codeData}
+                    validateCode={this.props.validateCode}
+                    resetCodeValidation={this.props.resetCodeValidation} />
                 </TabPanel>
 
                 <TabPanel>
@@ -537,7 +559,12 @@ Builder.propTypes = {
   downloadArtifact: PropTypes.func.isRequired,
   saveArtifact: PropTypes.func.isRequired,
   updateAndSaveArtifact: PropTypes.func.isRequired,
-  conversionFunctions: PropTypes.array
+  conversionFunctions: PropTypes.array,
+  validateCode: PropTypes.func.isRequired,
+  resetCodeValidation: PropTypes.func.isRequired,
+  isValidatingCode: PropTypes.bool.isRequired,
+  isValidCode: PropTypes.bool,
+  codeData: PropTypes.object
 };
 
 // these props are used for dispatching actions
@@ -558,6 +585,8 @@ function mapDispatchToProps(dispatch) {
     setVSACAuthStatus,
     searchVSACByKeyword,
     getVSDetails,
+    validateCode,
+    resetCodeValidation,
     clearArtifactValidationWarnings,
     loadConversionFunctions
   }, dispatch);
@@ -581,6 +610,9 @@ function mapStateToProps(state) {
     vsacSearchResults: state.vsac.searchResults,
     vsacSearchCount: state.vsac.searchCount,
     isRetrievingDetails: state.vsac.isRetrievingDetails,
+    isValidatingCode: state.vsac.isValidatingCode,
+    isValidCode: state.vsac.isValidCode,
+    codeData: state.vsac.codeData,
     vsacDetailsCodes: state.vsac.detailsCodes,
     vsacFHIRCredentials: { username: state.vsac.username, password: state.vsac.password },
     conversionFunctions: state.modifiers.conversionFunctions

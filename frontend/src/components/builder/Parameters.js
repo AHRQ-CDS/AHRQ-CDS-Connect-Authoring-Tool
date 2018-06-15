@@ -44,6 +44,11 @@ export default class Parameters extends Component {
             setVSACAuthStatus={this.props.setVSACAuthStatus}
             vsacStatus={this.props.vsacStatus}
             vsacStatusText={this.props.vsacStatusText}
+            isValidatingCode={this.props.isValidatingCode}
+            isValidCode={this.props.isValidCode}
+            codeData={this.props.codeData}
+            validateCode={this.props.validateCode}
+            resetCodeValidation={this.props.resetCodeValidation}
           />
         ))}
 

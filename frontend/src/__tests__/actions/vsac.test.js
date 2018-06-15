@@ -215,4 +215,53 @@ describe('vsac actions', () => {
       });
     });
   });
+
+  // ----------------------- VALIDATION ------------------------------------ //
+  describe('get vsac validation', () => {
+    beforeEach(() => { moxios.install(); });
+    afterEach(() => { moxios.uninstall(); });
+
+    it('dispatches a VALIDATE_CODE_SUCCESS action upon a successful attempt to validate a code', () => {
+      const store = mockStore({});
+      const codeText = '1.2.3';
+      const selectedId = 'icd-9';
+      const codeData = {};
+
+      moxios.stubs.track({
+        url: `/authoring/api/fhir/code?code=${codeText}&system=${selectedId}`,
+        method: 'GET',
+        response: { status: 200, response: codeData }
+      });
+
+      const expectedActions = [
+        { type: types.VALIDATE_CODE_REQUEST },
+        { type: types.VALIDATE_CODE_SUCCESS, codeData }
+      ];
+
+      return store.dispatch(actions.validateCode(codeText, selectedId)).then(() => {
+        expect(store.getActions()).toEqual(expectedActions);
+      });
+    });
+
+    it('dispatches a VALIDATE_CODE_FAILURE action upon an unsuccessful attempt to validate a code', () => {
+      const store = mockStore({});
+      const codeText = '1.2.3';
+      const selectedId = 'icd-9';
+
+      moxios.stubs.track({
+        url: `/authoring/api/fhir/code?code=${codeText}&system=${selectedId}`,
+        method: 'GET',
+        response: { status: 404, statusText: 'Not Found' }
+      });
+
+      const expectedActions = [
+        { type: types.VALIDATE_CODE_REQUEST },
+        { type: types.VALIDATE_CODE_FAILURE }
+      ];
+
+      return store.dispatch(actions.validateCode(codeText, selectedId)).then(() => {
+        expect(store.getActions()).toEqual(expectedActions);
+      });
+    });
+  });
 });

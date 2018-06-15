@@ -55,7 +55,12 @@ export default class Parameter extends Component {
       loginVSACUser: this.props.loginVSACUser,
       setVSACAuthStatus: this.props.setVSACAuthStatus,
       vsacStatus: this.props.vsacStatus,
-      vsacStatusText: this.props.vsacStatusText
+      vsacStatusText: this.props.vsacStatusText,
+      isValidatingCode: this.props.isValidatingCode,
+      isValidCode: this.props.isValidCode,
+      codeData: this.props.codeData,
+      validateCode: this.props.validateCode,
+      resetCodeValidation: this.props.resetCodeValidation
     };
 
     switch (this.props.type) {
@@ -178,5 +183,10 @@ Parameter.propTypes = {
   vsacFHIRCredentials: PropTypes.object,
   setVSACAuthStatus: PropTypes.func.isRequired,
   vsacStatus: PropTypes.string,
-  vsacStatusText: PropTypes.string
+  vsacStatusText: PropTypes.string,
+  isValidatingCode: PropTypes.bool.isRequired,
+  isValidCode: PropTypes.bool,
+  codeData: PropTypes.object,
+  validateCode: PropTypes.func.isRequired,
+  resetCodeValidation: PropTypes.func.isRequired
 };

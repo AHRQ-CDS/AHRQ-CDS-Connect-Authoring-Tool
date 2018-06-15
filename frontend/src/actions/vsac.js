@@ -6,7 +6,8 @@ import {
   VSAC_LOGIN_REQUEST, VSAC_LOGIN_SUCCESS, VSAC_LOGIN_FAILURE,
   SET_VSAC_AUTH_STATUS,
   VSAC_SEARCH_REQUEST, VSAC_SEARCH_SUCCESS, VSAC_SEARCH_FAILURE,
-  VSAC_DETAILS_REQUEST, VSAC_DETAILS_SUCCESS, VSAC_DETAILS_FAILURE
+  VSAC_DETAILS_REQUEST, VSAC_DETAILS_SUCCESS, VSAC_DETAILS_FAILURE,
+  VALIDATE_CODE_REQUEST, VALIDATE_CODE_SUCCESS, VALIDATE_CODE_FAILURE, VALIDATE_CODE_RESET
 } from './types';
 
 const API_BASE = process.env.REACT_APP_API_URL;
@@ -188,5 +189,55 @@ export function getVSDetails(oid, username, password) {
     return getVSDetailsByOIDFHIR(oid, username, password)
       .then(data => dispatch(detailsSuccess(data)))
       .catch(error => dispatch(detailsFailure(error)));
+  };
+}
+
+// ------------------------- VALIDATE VSAC CODE ---------------------------- //
+
+function requestValidateCode() {
+  return {
+    type: VALIDATE_CODE_REQUEST
+  };
+}
+
+function validateCodeSuccess(codeData) {
+  return {
+    type: VALIDATE_CODE_SUCCESS,
+    codeData
+  };
+}
+
+function validateCodeFailure(error) {
+  return {
+    type: VALIDATE_CODE_FAILURE
+  };
+}
+
+function getValidateCode(codeText, selectedId, username, password) {
+  const auth = {
+    username,
+    password
+  };
+
+  return new Promise((resolve, reject) => {
+    axios.get(`${API_BASE}/fhir/code?code=${codeText}&system=${selectedId}`, { auth })
+      .then(result => resolve(result.data))
+      .catch(error => reject(error));
+  });
+}
+
+export function validateCode(codeText, selectedId, username, password) {
+  return (dispatch) => {
+    dispatch(requestValidateCode());
+
+    return getValidateCode(codeText, selectedId, username, password)
+      .then(data => dispatch(validateCodeSuccess(data)))
+      .catch(error => dispatch(validateCodeFailure(error)));
+  };
+}
+
+export function resetCodeValidation() {
+  return {
+    type: VALIDATE_CODE_RESET
   };
 }

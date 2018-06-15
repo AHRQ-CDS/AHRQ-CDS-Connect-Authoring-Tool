@@ -210,7 +210,12 @@ export default class TemplateInstance extends Component {
               setVSACAuthStatus={this.props.setVSACAuthStatus}
               vsacStatus={this.props.vsacStatus}
               vsacStatusText={this.props.vsacStatusText}
-              vsacFHIRCredentials={this.props.vsacFHIRCredentials}/>
+              vsacFHIRCredentials={this.props.vsacFHIRCredentials}
+              isValidatingCode={this.props.isValidatingCode}
+              isValidCode={this.props.isValidCode}
+              codeData={this.props.codeData}
+              validateCode={this.props.validateCode}
+              resetCodeValidation={this.props.resetCodeValidation} />
           );
         default:
           return (<LabelModifier key={index} name={mod.name} id={mod.id}/>);
@@ -449,12 +454,17 @@ export default class TemplateInstance extends Component {
           vsacFHIRCredentials={this.props.vsacFHIRCredentials}
         />
 
-          <CodeSelectModal
-            className="element-select__modal"
-            updateElement={this.updateInstance}
-            template={this.props.templateInstance}
-            vsacFHIRCredentials={this.props.vsacFHIRCredentials}
-          />
+        <CodeSelectModal
+          className="element-select__modal"
+          updateElement={this.updateInstance}
+          template={this.props.templateInstance}
+          vsacFHIRCredentials={this.props.vsacFHIRCredentials}
+          isValidatingCode={this.props.isValidatingCode}
+          isValidCode={this.props.isValidCode}
+          codeData={this.props.codeData}
+          validateCode={this.props.validateCode}
+          resetCodeValidation={this.props.resetCodeValidation}
+        />
       </div>
     );
   }
@@ -654,7 +664,7 @@ export default class TemplateInstance extends Component {
 }
 
 TemplateInstance.propTypes = {
-  resources: PropTypes.object.isRequired,
+  resources: PropTypes.object,
   valueSets: PropTypes.array,
   loadValueSets: PropTypes.func.isRequired,
   getPath: PropTypes.func.isRequired,
@@ -678,5 +688,10 @@ TemplateInstance.propTypes = {
   getVSDetails: PropTypes.func.isRequired,
   isRetrievingDetails: PropTypes.bool.isRequired,
   vsacDetailsCodes: PropTypes.array.isRequired,
-  validateReturnType: PropTypes.bool
+  validateReturnType: PropTypes.bool,
+  isValidatingCode: PropTypes.bool.isRequired,
+  isValidCode: PropTypes.bool,
+  codeData: PropTypes.object,
+  validateCode: PropTypes.func.isRequired,
+  resetCodeValidation: PropTypes.func.isRequired
 };

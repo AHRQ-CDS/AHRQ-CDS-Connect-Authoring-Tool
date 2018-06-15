@@ -14,7 +14,10 @@ describe.only('vsac reducer', () => {
       isRetrievingDetails: false,
       detailsCodes: [],
       username: null,
-      password: null
+      password: null,
+      codeData: null,
+      isValidCode: null,
+      isValidatingCode: false
     });
   });
 
@@ -92,7 +95,10 @@ describe.only('vsac reducer', () => {
       isRetrievingDetails: false,
       detailsCodes: [],
       username: null,
-      password: null
+      password: null,
+      codeData: null,
+      isValidCode: null,
+      isValidatingCode: false
     };
     expect(reducer({ authStatus: 'Test status' }, action)).toEqual(newState);
   });
@@ -146,6 +152,41 @@ describe.only('vsac reducer', () => {
     newState = {
       isRetrievingDetails: false,
       detailsCodes: []
+    };
+    expect(reducer(previousState, action)).toEqual(newState);
+  });
+
+  // ----------------------- VALIDATION ------------------------------------ //
+  it('should handle validating a code correctly', () => {
+    let action = { type: types.VALIDATE_CODE_REQUEST };
+    let newState = { isValidatingCode: true };
+    expect(reducer([], action)).toEqual(newState);
+
+    const previousState = { isValidatingCode: false };
+    expect(reducer(previousState, action)).toEqual(newState);
+
+    const codeData = {};
+    action = { type: types.VALIDATE_CODE_SUCCESS, codeData };
+    newState = {
+      isValidatingCode: false,
+      isValidCode: true,
+      codeData
+    };
+    expect(reducer(previousState, action)).toEqual(newState);
+
+    action = { type: types.VALIDATE_CODE_FAILURE };
+    newState = {
+      isValidatingCode: false,
+      isValidCode: false,
+      codeData: null
+    };
+    expect(reducer(previousState, action)).toEqual(newState);
+
+    action = { type: types.VALIDATE_CODE_RESET };
+    newState = {
+      isValidatingCode: false,
+      isValidCode: null,
+      codeData: null
     };
     expect(reducer(previousState, action)).toEqual(newState);
   });
