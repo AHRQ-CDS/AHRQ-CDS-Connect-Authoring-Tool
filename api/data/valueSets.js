@@ -35,7 +35,7 @@ module.exports = {
           oid: '2.16.840.1.113883.3.526.3.1032',
         }
       ],
-      units: { values: ["'mm[Hg]'", "'mmHg'", "'mm Hg'"], code: "'mm[Hg]'" }
+      units: { values: ["'mm[Hg]'", "'mmHg'", "'mm Hg'"], code: "'mm[Hg]'" } //JULIA can we stil do this with multiple?
     },
     ldl_test: {
       // [See value set in VSAC](https://vsac.nlm.nih.gov/valueset/2.16.840.1.113883.3.464.1003.198.11.1029/expansion)

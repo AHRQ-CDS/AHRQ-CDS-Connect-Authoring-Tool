@@ -382,7 +382,7 @@ class CqlArtifact {
     element.parameters.forEach((parameter) => {
       switch (parameter.type) {
         case 'observation': {
-          const observationValueSets = ValueSets.observations[parameter.value];
+          const observationValueSets = ValueSets.observations[parameter.value]; //JULIA
           context[parameter.id] = observationValueSets;
           // For observations that have codes associated with them instead of valuesets
           if ('concepts' in observationValueSets) {
@@ -677,7 +677,7 @@ class CqlArtifact {
       if (context.withoutModifiers || context.components) {
         return ejs.render(specificMap[context.template], context);
       }
-      if (context.template === "ObservationByConcept") context.template = "ObservationsByConcept";
+      if (context.template === "ObservationByConcept") context.template = "ObservationsByConcept"; //JULIA can you take this out now?
       if (!(context.template in templateMap)) console.error(`Template could not be found: ${context.template}`);
       context.values.forEach((value, index) => {
         context.values[index] = ejs.render(templateMap[context.template], { element_context: value });
