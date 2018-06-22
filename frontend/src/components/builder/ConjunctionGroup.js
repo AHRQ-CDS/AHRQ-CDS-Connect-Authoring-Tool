@@ -219,6 +219,7 @@ export default class ConjunctionGroup extends Component {
               getPath={this.getChildsPath}
               conversionFunctions={this.props.conversionFunctions}
               instanceNames={this.props.instanceNames}
+              subPopulationIndex={this.props.subPopulationIndex}
               loginVSACUser={this.props.loginVSACUser}
               setVSACAuthStatus={this.props.setVSACAuthStatus}
               vsacStatus={this.props.vsacStatus}
