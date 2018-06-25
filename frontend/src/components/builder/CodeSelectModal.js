@@ -65,7 +65,14 @@ export default class CodeSelectModal extends Component {
       const username = this.props.vsacFHIRCredentials.username;
       const password = this.props.vsacFHIRCredentials.password;
 
-      this.props.validateCode(this.state.codeText, this.state.selectedCS.id, username, password);
+      let selectedCodeSystemId;
+      if (!this.state.selectedCS) {
+        selectedCodeSystemId = '';
+      } else {
+        selectedCodeSystemId = this.state.selectedCS.id;
+      }
+
+      this.props.validateCode(this.state.codeText, selectedCodeSystemId, username, password);
     }
   }
 

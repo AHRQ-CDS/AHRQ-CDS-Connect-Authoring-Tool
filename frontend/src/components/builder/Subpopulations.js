@@ -100,7 +100,12 @@ export default class Subpopulations extends Component {
               isRetrievingDetails={this.props.isRetrievingDetails}
               vsacDetailsCodes={this.props.vsacDetailsCodes}
               vsacFHIRCredentials={this.props.vsacFHIRCredentials}
-              validateReturnType={this.props.validateReturnType}/>
+              validateReturnType={this.props.validateReturnType}
+              isValidatingCode={this.props.isValidatingCode}
+              isValidCode={this.props.isValidCode}
+              codeData={this.props.codeData}
+              validateCode={this.props.validateCode}
+              resetCodeValidation={this.props.resetCodeValidation}/>
           ))}
 
         <button className="button primary-button new-subpopulation-button" onClick={this.addSubpopulation}>
