@@ -8216,9 +8216,9 @@ ua-parser-js@^0.7.9:
   version "0.7.17"
   resolved "https://registry.yarnpkg.com/ua-parser-js/-/ua-parser-js-0.7.17.tgz#e9ec5f9498b9ec910e7ae3ac626a805c4d09ecac"
 
-ucum@0.0.7:
+ucum@0.0.7, ucum@cmoesel/ucum.js#es5-friendly:
   version "0.0.7"
-  resolved "https://registry.yarnpkg.com/ucum/-/ucum-0.0.7.tgz#cd07efe5599a17ef7fb327778bf838e832dfd1a4"
+  resolved "https://codeload.github.com/cmoesel/ucum.js/tar.gz/40f10d8f7913a49b5f4cf73588251db25c562d40"
 
 uglify-js@3.2.x, uglify-js@^3.0.13:
   version "3.2.0"

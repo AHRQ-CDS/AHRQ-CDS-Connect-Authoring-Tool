@@ -96,5 +96,8 @@
     "lint-css": "stylelint 'src/styles/**/*.scss'",
     "lint": "eslint .",
     "lint-fix": "eslint --fix .; exit 0"
+  },
+  "resolutions": {
+    "ucum": "cmoesel/ucum.js#es5-friendly"
   }
 }

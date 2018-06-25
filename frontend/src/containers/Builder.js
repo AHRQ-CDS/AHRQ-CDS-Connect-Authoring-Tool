@@ -23,7 +23,6 @@ import ConjunctionGroup from '../components/builder/ConjunctionGroup';
 import Subpopulations from '../components/builder/Subpopulations';
 import ErrorStatement from '../components/builder/ErrorStatement';
 import Parameters from '../components/builder/Parameters';
-// import PatientRun from '../components/builder/PatientRun';
 import Recommendations from '../components/builder/Recommendations';
 import RepoUploadModal from '../components/builder/RepoUploadModal';
 import ELMErrorModal from '../components/builder/ELMErrorModal';
@@ -391,7 +390,6 @@ export class Builder extends Component {
                 <Tab>Recommendations</Tab>
                 <Tab>Parameters</Tab>
                 <Tab>Handle Errors</Tab>
-                {/* <Tab>Patient Run</Tab> */}
               </TabList>
 
               <div className="tab-panel-container">
@@ -517,10 +515,6 @@ export class Builder extends Component {
                     updateErrorStatement={this.updateErrorStatement} />
                 </TabPanel>
 
-                {/* <TabPanel>
-                  <PatientRun
-                    patients={this.props.patients} />
-                </TabPanel> */}
               </div>
             </Tabs>
           </section>
@@ -595,7 +589,6 @@ function mapDispatchToProps(dispatch) {
 function mapStateToProps(state) {
   return {
     artifact: state.artifacts.artifact,
-    patients: state.patients,
     downloadedArtifact: state.artifacts.downloadArtifact,
     statusMessage: state.artifacts.statusMessage,
     templates: state.templates.templates,

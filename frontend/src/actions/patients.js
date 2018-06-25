@@ -149,7 +149,7 @@ function savePatientFailure(error) {
 
 function sendSavePatientRequest(patient) {
   console.info(patient);
-  return axios.post(`${API_BASE}/patients`, { patient: patient })
+  return axios.post(`${API_BASE}/patients`, { patient })
     .then(result => result.data);
 }
 

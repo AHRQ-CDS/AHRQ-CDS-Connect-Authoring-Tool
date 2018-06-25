@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import FontAwesome from 'react-fontawesome';
+import Inspector from 'react-inspector';
 import _ from 'lodash';
 
 import renderDate from '../../utils/dates';
@@ -14,7 +16,9 @@ export default class PatientTable extends Component {
 
     this.state = {
       patientToDelete: null,
-      showConfirmDeleteModal: false
+      showConfirmDeleteModal: false,
+      patientToView: null,
+      showViewDetailsModal: false
     };
   }
 
@@ -31,6 +35,20 @@ export default class PatientTable extends Component {
   handleDeletePatient = () => {
     this.props.deletePatient(this.state.patientToDelete);
     this.closeConfirmDeleteModal();
+  }
+
+  // ----------------------- VIEW DETAILS MODAL -------------------------- //
+
+  openViewDetailsModal = (patient) => {
+    this.setState({ showViewDetailsModal: true, patientToView: patient });
+  }
+
+  closeViewDetailsModal = () => {
+    this.setState({ showViewDetailsModal: false, patientToView: null });
+  }
+
+  handleViewDetails = () => {
+    this.closeViewDetailsModal();
   }
 
   // ----------------------- RENDER ---------------------------------------- //
@@ -52,8 +70,39 @@ export default class PatientTable extends Component {
           <div className="artifact-info">
             <span>Name: </span>
             <span>
-              {this.state.patientToDelete !== null ? this.state.patientToDelete.name : 'name_placeholder'}
+              {_.chain(this.state.patientToDelete)
+                  .get('patient.entry')
+                  .find({ resource: { resourceType: 'Patient' } })
+                  .get('resource.name[0].given[0]')
+                  .value() || 'given_placeholder'}
+              {" "}
+              {_.chain(this.state.patientToDelete)
+                .get('patient.entry')
+                .find({ resource: { resourceType: 'Patient' } })
+                .get('resource.name[0].family[0]')
+                .value() || 'family_placeholder'}
             </span>
+          </div>
+        </div>
+      </Modal>
+    );
+  }
+
+  renderViewDetailsModal() {
+    return (
+      <Modal
+        modalTitle="View Patient Details"
+        modalId="view-details-modal"
+        modalTheme="light"
+        handleShowModal={this.state.showViewDetailsModal}
+        handleCloseModal={this.closeViewDetailsModal}
+        handleSaveModal={this.handleViewDetails}>
+
+        <div className="artifact-table__modal modal__content">
+          <h5>Viewing Patient:</h5>
+
+          <div className="artifact-info">
+            <Inspector data={this.state.patientToView} expandLevel="2"/>
           </div>
         </div>
       </Modal>
@@ -69,18 +118,40 @@ export default class PatientTable extends Component {
               .find({ resource: { resourceType: 'Patient' } })
               .get('resource.name[0].given[0]')
               .value() || 'given_placeholder'}
-            {_.chain(patient)
-              .get('patient.entry')
-              .find({ resource: { resourceType: 'Patient' } })
-              .get('resource.name[0].family[0]')
-              .value() || 'family_placeholder'}
+          {" "}
+          {_.chain(patient)
+            .get('patient.entry')
+            .find({ resource: { resourceType: 'Patient' } })
+            .get('resource.name[0].family[0]')
+            .value() || 'family_placeholder'}
         </div>
       </td>
 
       <td data-th="Updated">{renderDate(patient.updatedAt)}</td>
 
       <td data-th="">
-        <button className="danger-button"
+        <button aria-label="View"
+          className="button primary-button"
+          onClick={() => this.openViewDetailsModal(patient)}>
+          <FontAwesome name='eye'/>
+        </button>
+
+        <button aria-label="Test"
+          disabled={true}
+          className="button primary-button"
+          onClick={() => {return false;}}>
+          <FontAwesome name='play'/>
+        </button>
+
+        <button aria-label="Report"
+          disabled={true}
+          className="button primary-button"
+          onClick={() => {return false;}}>
+          <FontAwesome name='book'/>
+        </button>
+
+        <button
+          className="button danger-button"
           onClick={() => this.openConfirmDeleteModal(patient)}>
           Delete
         </button>
@@ -108,6 +179,7 @@ export default class PatientTable extends Component {
         </table>
 
         {this.renderConfirmDeleteModal()}
+        {this.renderViewDetailsModal()}
       </div>
     );
   }

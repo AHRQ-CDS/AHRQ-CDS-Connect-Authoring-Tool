@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import FontAwesome from 'react-fontawesome';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import Dropzone from 'react-dropzone';
@@ -40,7 +41,7 @@ class Patient extends Component {
     return (
       <div className="artifact" id="maincontent">
         <Dropzone onDrop={this.addPatient.bind(this)} accept="application/json" multiple={false}>
-          <p>Select a .json file that is a valid FHIR DSTU2 Bundle containing a Patient and its associated resources.</p>
+          <FontAwesome name='cloud-upload' size="5x"/>
         </Dropzone>
         <div className="artifact-wrapper">
           {this.renderPatientsTable()}

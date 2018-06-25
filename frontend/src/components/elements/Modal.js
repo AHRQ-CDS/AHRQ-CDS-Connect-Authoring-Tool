@@ -68,8 +68,8 @@ export default class Modal extends Component {
           </div>
 
           <footer className="modal__footer">
-            <button type="button" className="secondary-button" onClick={handleCloseModal}>Cancel</button>
-            <button type="submit" className="primary-button">{modalSubmitButtonText}</button>
+            {modalSubmitButtonText && <button type="button" className="secondary-button" onClick={handleCloseModal}>Cancel</button>}
+            {modalSubmitButtonText && <button type="submit" className="primary-button">{modalSubmitButtonText}</button>}
           </footer>
         </form>
       </ReactModal>
@@ -80,7 +80,7 @@ export default class Modal extends Component {
 Modal.propTypes = {
   modalTitle: PropTypes.string.isRequired,
   modalId: PropTypes.string.isRequired,
-  modalSubmitButtonText: PropTypes.string.isRequired,
+  modalSubmitButtonText: PropTypes.string,
   modalTheme: PropTypes.string,
   handleShowModal: PropTypes.bool.isRequired,
   handleCloseModal: PropTypes.func.isRequired,
