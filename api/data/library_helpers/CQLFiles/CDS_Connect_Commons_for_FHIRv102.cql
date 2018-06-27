@@ -310,6 +310,34 @@ define function ActiveOrCompletedMedicationOrder(MedList List<MedicationOrder>):
     where M.status.value = 'active'
       or M.status.value = 'completed'
 
+/**
+* Medication Orders that are issued in the specified "look back" period.
+* TODO: Rename to LookBack once the execution engine supports overloaded functions.
+* @param MedList - a list of Medications
+* @param LookBack - the lookback period for when the medication was prescribed
+* @returns {List<MedicationOrder>} a list of Medications prescribed in the look back period, or null if null
+* was passed in
+*/
+define function MedicationOrderLookBack(MedList List<MedicationOrder>, LookBack System.Quantity):
+MedList M
+  let LookBackInterval: Interval[Now() - LookBack, Now()]
+  where M.dateWritten.value in LookBackInterval
+    or M.dateEnded.value in LookBackInterval
+
+/**
+* Medication Statements that are issued in the specified "look back" period.
+* TODO: Rename to LookBack once the execution engine supports overloaded functions.
+* @param MedList - a list of Medications
+* @param LookBack - the lookback period for when the medication was prescribed
+* @returns {List<MedicationStatement>} a list of Medications prescribed in the look back period, or null if null
+* was passed in
+*/
+define function MedicationStatementLookBack(MedList List<MedicationStatement>, LookBack System.Quantity):
+MedList M
+  let LookBackInterval: Interval[Now() - LookBack, Now()]
+  where M.effectiveDateTime.value in LookBackInterval
+    or NullSafeToInterval(M.effectivePeriod) overlaps LookBackInterval
+
 // -------------------------------------------------- ENCOUNTERS ------------------------------------------------------
 
 /**

@@ -203,7 +203,7 @@ export default [
     returnType: 'condition',
     cqlTemplate: 'BaseModifier',
     cqlLibraryFunction: 'C3F.MostRecent' },
-  { // TODO: not valid
+  { // TODO: not valid //JULIA Should be able to take this out now.
     id: 'MostRecentMedication',
     name: 'Most Recent',
     inputTypes: ['list_of_medications'],
@@ -238,15 +238,24 @@ export default [
     validator: { type: 'require', fields: ['value', 'unit'], args: null },
     cqlTemplate: 'LookBackModifier',
     cqlLibraryFunction: 'C3F.ConditionLookBack' },
-  { // TODO: not valid
-    id: 'LookBackMedication',
+  {
+    id: 'LookBackMedicationOrder',
     type: 'LookBack',
     name: 'Look Back',
-    inputTypes: ['list_of_medications'],
-    returnType: 'list_of_medications',
+    inputTypes: ['list_of_medication_orders'],
+    returnType: 'list_of_medication_orders',
     values: { value: undefined, unit: undefined },
     cqlTemplate: 'LookBackModifier',
-    cqlLibraryFunction: 'C3F.MedicationLookBack' },
+    cqlLibraryFunction: 'C3F.MedicationOrderLookBack' },
+  {
+    id: 'LookBackMedicationStatement',
+    type: 'LookBack',
+    name: 'Look Back',
+    inputTypes: ['list_of_medication_statements'],
+    returnType: 'list_of_medication_statements',
+    values: { value: undefined, unit: undefined },
+    cqlTemplate: 'LookBackModifier',
+    cqlLibraryFunction: 'C3F.MedicationStatementLookBack' },
   {
     id: 'LookBackProcedure',
     type: 'LookBack',

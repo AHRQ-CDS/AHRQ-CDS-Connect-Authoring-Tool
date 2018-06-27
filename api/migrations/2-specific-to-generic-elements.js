@@ -8,6 +8,23 @@ const ValueSets = require('../data/valueSets');
 
 module.exports.id = "specific-to-generic-elements";
 
+function updateCheckExistenceModifier(modifier) {
+  let medicationIndex = modifier.inputTypes.indexOf('medication');
+  modifier.inputTypes.splice(medicationIndex, 1, 'medication_order', 'medication_statement');
+  let medicationListIndex = modifier.inputTypes.indexOf('list_of_medications');
+  modifier.inputTypes.splice(medicationListIndex, 1, 'list_of_medication_orders', 'list_of_medication_statements');
+  modifier.inputTypes.push('system_concept');
+  return modifier;
+}
+
+function updateBooleanExistsModifier(modifier) {
+  let medicationListIndex = modifier.inputTypes.indexOf('list_of_medications');
+  modifier.inputTypes.splice(medicationListIndex, 1, 'list_of_medication_orders', 'list_of_medication_statements');
+  return modifier;
+}
+
+// Returns an array of elements to be added to the artifact. The original element being manipulated is the first entry
+//in the array. Any additional elements needed will follow.
 function transformElement(element) {
   let childInstance = element;
   // Updates for observations
@@ -24,7 +41,8 @@ function transformElement(element) {
   
     // Update modifiers
     if (!childInstance.modifiers) { childInstance.modifiers = []; }
-    childInstance.modifiers.forEach((modifier, i) => {
+    childInstance.modifiers.forEach((modifierParam, i) => {
+      let modifier = modifierParam;
       let observationValueSets = ValueSets.observations[parameter.value];
       // TODO Should this be a switch statement?
       if (modifier.id === 'ValueComparisonObservation') {
@@ -72,17 +90,10 @@ function transformElement(element) {
         delete modifier.cqlLibraryFunction;
       }
       if (modifier.id === 'CheckExistence') {
-        let medicationIndex = modifier.inputTypes.indexOf('medication');
-        modifier.inputTypes.splice(medicationIndex, 1, 'medication_order', 'medication_statement');
-        let medicationListIndex = modifier.inputTypes.indexOf('list_of_medications');
-        modifier.inputTypes.splice(
-          medicationListIndex, 1, 'list_of_medication_orders', 'list_of_medication_statements');
-        modifier.inputTypes.push('system_concept');
+        modifier = updateCheckExistenceModifier(modifier); //TODO confirm this still works as expected
       }
       if (modifier.id === 'BooleanExists') {
-        let medicationListIndex = modifier.inputTypes.indexOf('list_of_medications');
-        modifier.inputTypes.splice(
-          medicationListIndex, 1, 'list_of_medication_orders', 'list_of_medication_statements');
+        modifier = updateBooleanExistsModifier(modifier);
       }
     });
   
@@ -105,13 +116,15 @@ function transformElement(element) {
         parameter.codes = codes;
       }
       // TODO TODO handle the concepts case as well.
-      // TODO other things to consider: checkInclusionInVS, units, anything else in that ValueSets file and the observation case in cqlhandler
+      // TODO other things to consider: checkInclusionInVS, units, anything else in that ValueSets file and the
+      //observation case in cqlhandler
       delete parameter.value;
     }
   
     // Update template and suppress values
     childInstance.template = 'GenericObservation';
     childInstance.suppress = true;
+    childInstance.name = 'Observation'; //TODO did not test this
   
     // Remove the unneeded flag
     if (childInstance.checkInclusionInVS) {
@@ -120,19 +133,133 @@ function transformElement(element) {
   
     // Change extention to Base
     childInstance.extends = 'Base';
+
+    return [ childInstance ];
+  } else if (childInstance.extends === 'GenericMedication') { // TODO Can the cases be consolidated at all?
+    // Copy is for adding a parallel MedicationStatement. Original will become a MedicationOrder.
+    const childInstanceForStatement = JSON.parse(JSON.stringify(childInstance));
+    childInstanceForStatement.uniqueId = `${childInstance.uniqueId}-a`;
+
+    let parameter = {};
+    let parameterForStatement = {};
+    if (childInstance.parameters && childInstance.parameters[0]) {
+      childInstance.parameters[0].value = `${childInstance.parameters[0].value} Order`;
+      childInstanceForStatement.parameters[0].value = `${childInstanceForStatement.parameters[0].value} Statement`;
+    }
+    if (childInstance.parameters && childInstance.parameters[1]) {
+      parameter = childInstance.parameters[1];
+      parameterForStatement = childInstanceForStatement.parameters[1];
+    }
+
+    // Update modifiers
+    if (!childInstance.modifiers) { childInstance.modifiers = []; }
+    let modifierIndexesToRemove = [];
+    childInstance.modifiers.forEach((modifierParam, i) => {
+      let modifier = modifierParam; // TODO This was to fix ESLint error. Better way?
+      console.log(modifier.id)
+      let modifierForStatement = childInstanceForStatement.modifiers[i];
+      if (modifier.id === 'ActiveMedication') {
+        modifier.id = 'ActiveMedicationOrder';
+        modifierForStatement.id = 'ActiveMedicationStatement';
+
+        modifier.inputTypes = [ 'list_of_medication_orders' ];
+        modifierForStatement.inputTypes = [ 'list_of_medication_statements' ];
+
+        modifier.returnType = 'list_of_medication_orders';
+        modifierForStatement.returnType = 'list_of_medication_statements';
+
+        modifier.cqlLibraryFunction = 'C3F.ActiveMedicationOrder';
+        modifierForStatement.cqlLibraryFunction = 'C3F.ActiveMedicationStatement';
+      }
+      if (modifier.id === 'CheckExistence') {
+        modifier = updateCheckExistenceModifier(modifier);
+        modifierForStatement = updateCheckExistenceModifier(modifierForStatement);
+      }
+      if (modifier.id === 'BooleanExists') {
+        modifier = updateBooleanExistsModifier(modifier);
+        modifierForStatement = updateBooleanExistsModifier(modifierForStatement);
+      }
+      if (modifier.id === 'LookBackMedication') {
+        modifier.id = 'LookBackMedicationOrder';
+        modifierForStatement.id = 'LookBackMedicationStatement';
+
+        modifier.inputTypes = [ 'list_of_medication_orders' ];  
+        modifierForStatement.inputTypes = [ 'list_of_medication_statements' ];  
+
+        modifier.returnType = 'list_of_medication_orders';
+        modifierForStatement.returnType = 'list_of_medication_statements';
+
+        modifier.cqlLibraryFunction = 'C3F.MedicationOrderLookBack';
+        modifierForStatement.cqlLibraryFunction = 'C3F.MedicationStatementLookBack';
+      }
+      if (modifier.id === 'MostRecentMedication') {
+        console.log("HERE")
+        modifierIndexesToRemove.push(i);
+      }
+    });
+    // console.log("childInstance.modifiers")
+    // console.log(childInstance.modifiers)
+    // childInstance.modifiers = childInstance.modifiers.splice(modifierIndexesToRemove[0], 1);
+    // childInstanceForStatement.modifiers = childInstanceForStatement.modifiers.splice(modifierIndexesToRemove[0], 1);
+    childInstance.modifiers.splice(modifierIndexesToRemove[0], 1);
+    // console.log("childInstance.modifiers")
+    // console.log(childInstance.modifiers)
+    childInstanceForStatement.modifiers.splice(modifierIndexesToRemove[0], 1);
+
+    if (parameter.type === 'medication') {
+      parameter.type = 'medicationOrder_vsac';
+      parameterForStatement.type = 'medicationStatement_vsac';
+
+      // TODO double check that this is right
+      parameter.name = 'Medication Order';
+      parameterForStatement.name = 'Medication Statement';
+
+      let medicationValueSets = ValueSets.medications[parameter.value];
+      parameter.valueSets = medicationValueSets.medications ? medicationValueSets.medications : [];
+      parameterForStatement.valueSets = medicationValueSets.medications ? medicationValueSets.medications : [];
+      
+      delete parameter.value;
+    }
+
+    // Update template, returnType, name, and suppress values
+    childInstance.template = 'GenericMedicationOrder';
+    childInstanceForStatement.template = 'GenericMedicationStatement';
+    childInstance.suppress = true;
+    childInstanceForStatement.suppress = true;
+    childInstance.returnType = 'list_of_medication_orders';
+    childInstanceForStatement.returnType = 'list_of_medication_statements';
+    childInstance.name = 'Medication Order';
+    childInstanceForStatement.name = 'Medication Statement';
+
+    // Change extention to Base
+    childInstance.extends = 'Base';
+    childInstanceForStatement.extends = 'Base';
+    
+    console.dir(childInstance, {depth: null})
+    console.dir(childInstanceForStatement, {depth: null})
+    
+    return [ childInstance, childInstanceForStatement ];
   }
+  return [ childInstance ];
 }
 
 function parseTree(element) {
   const children = element.childInstances ? element.childInstances : [];
-  children.forEach((child) => {
+  let newChildrenToAdd = [];
+  children.forEach((child, i) => {
     if ('childInstances' in child) {
       parseTree(child);
     } else if (child.type === 'element') {
       // Transform the elements and modifiers as necessary
-      transformElement(child);
+      let transformedElements = transformElement(child);
+      if (transformedElements.length > 1) { //TODO more generic way to do this?
+        // Medications were split, so add in an additional child to handle MedicationOrder and MedicationStatement
+        // children.splice(i, 1, transformedElements[0], transformedElements[1]);
+        newChildrenToAdd = newChildrenToAdd.concat(transformedElements.slice(1));
+      }
     }
-  })
+  });
+  element.childInstances = children.concat(newChildrenToAdd);
 }
 
 module.exports.up = function (done) {
@@ -149,6 +276,7 @@ module.exports.up = function (done) {
   coll.find().forEach((artifact) => {
     const p = new Promise((resolve, reject) => {
       console.log(artifact.name)
+      if (artifact._id.toString() === '5b2ce2d683a3210faa340cdc') {
       let subelements = artifact.subelements;
       if (!subelements) {
         artifact.subelements = [];
@@ -168,15 +296,16 @@ module.exports.up = function (done) {
       console.dir(artifact, {depth: null})
       // Update only the old artifact
       // console.log(artifact._id)
-      // console.log(artifact._id.toString() === '5b02c8f4493c160f858588d5')
-      // if (artifact._id.toString() === '5b17efdebec7e5254a90dc5c') {
+      // console.log(artifact._id.toString() === '5b2ce2d683a3210faa340cdc')
+      // if (artifact._id.toString() === '5b2ce2d683a3210faa340cdc') {
       //   console.log("updating")
-      //   artifact.expTreeInclude.childInstances = inclusionChildInstances;
+      //   // artifact.expTreeInclude.childInstances = [];
       //   console.dir(artifact, {depth: null})
       //   coll.updateOne(
       //     { _id: artifact._id },
-      //     { '$set': artifact }, // TODO figure out how to conditinally update element - only really want to update subelements if they've changed. Right now it just resets them
+      //     { '$set': artifact },
       //     (err, result) => {
+      //       console.log("HERE")
       //       if (err) {
       //         console.log("ERROR")
       //         this.log(`${artifact._id}: error:`, err);
@@ -189,12 +318,15 @@ module.exports.up = function (done) {
       //     }
       //   );
       // } else {
-      //   done();
+      //   console.log("ELSE")
+      //   // done();
       // }
       // update the document, adding the new parameters and removing the old booleanParameters
+      // TODO figure out how to conditinally update element - only really want to update subelements if they've
+      // changed. Right now it just resets them
       // coll.updateOne(
       //   { _id: artifact._id },
-      //   { '$set': { subelements } }, // TODO figure out how to conditinally update element - only really want to update subelements if they've changed. Right now it just resets them
+      //   { '$set': { subelements } },
       //   (err, result) => {
       //     if (err) {
       //       this.log(`${artifact._id}: error:`, err);
@@ -205,6 +337,7 @@ module.exports.up = function (done) {
       //     }
       //   }
       // );
+      }
       done();
     });
     promises.push(p);
