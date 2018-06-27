@@ -98,7 +98,7 @@ function transformElement(element) {
     });
   
     // Update parameters
-    if (parameter.type === 'observation') { // TODO is there any case where this isn't true?
+    if (parameter.type === 'observation') {
       parameter.type = 'observation_vsac';
       let observationValueSets = ValueSets.observations[parameter.value];
       parameter.valueSets = observationValueSets.observations ? observationValueSets.observations : [];
@@ -125,6 +125,7 @@ function transformElement(element) {
     childInstance.template = 'GenericObservation';
     childInstance.suppress = true;
     childInstance.name = 'Observation'; //TODO did not test this
+    childInstance.id = 'GenericObservation_vsac';
   
     // Remove the unneeded flag
     if (childInstance.checkInclusionInVS) {
@@ -222,12 +223,169 @@ function transformElement(element) {
     childInstanceForStatement.returnType = 'list_of_medication_statements';
     childInstance.name = 'Medication Order';
     childInstanceForStatement.name = 'Medication Statement';
+    childInstance.id = 'GenericMedicationOrder_vsac';
+    childInstanceForStatement.id = 'GenericMedicationStatement_vsac';
 
     // Change extention to Base
     childInstance.extends = 'Base';
     childInstanceForStatement.extends = 'Base';
 
     return [ childInstance, childInstanceForStatement ];
+  } else if (childInstance.extends === 'GenericAllergyIntolerance') {
+    let parameter = {};
+    if (childInstance.parameters && childInstance.parameters[1]) {
+      parameter = childInstance.parameters[1];
+    }
+
+    // Update modifiers
+    if (!childInstance.modifiers) { childInstance.modifiers = []; }
+    childInstance.modifiers.forEach((modifierParam, i) => {
+      let modifier = modifierParam;
+      if (modifier.id === 'CheckExistence') {
+        modifier = updateCheckExistenceModifier(modifier);
+      }
+      if (modifier.id === 'BooleanExists') {
+        modifier = updateBooleanExistsModifier(modifier);
+      }
+    });
+
+    // Update parameters
+    if (parameter.type === 'allergyIntolerance') {
+      parameter.type = 'allergyIntolerance_vsac';
+      let allergyIntoleranceValueSets = ValueSets.allergyIntolerances[parameter.value];
+      parameter.valueSets = allergyIntoleranceValueSets.allergyIntolerances
+        ? allergyIntoleranceValueSets.allergyIntolerances : [];
+      delete parameter.value;
+    }
+
+    // Update template and suppress values
+    childInstance.template = 'GenericAllergyIntolerance';
+    childInstance.suppress = true;
+    childInstance.name = 'Allergy Intolerance';
+    childInstance.id = 'GenericAllergyIntolerance_vsac';
+
+    // Change extention to Base
+    childInstance.extends = 'Base';
+    return [childInstance];
+  } else if (childInstance.extends === 'GenericCondition') {
+    // TODO Suppressed modifiers?
+    let parameter = {};
+    if (childInstance.parameters && childInstance.parameters[1]) {
+      parameter = childInstance.parameters[1];
+    }
+
+    // Update modifiers
+    if (!childInstance.modifiers) { childInstance.modifiers = []; }
+    childInstance.modifiers.forEach((modifierParam, i) => {
+      let modifier = modifierParam;
+      if (modifier.id === 'CheckExistence') {
+        modifier = updateCheckExistenceModifier(modifier);
+      }
+      if (modifier.id === 'BooleanExists') {
+        modifier = updateBooleanExistsModifier(modifier);
+      }
+    });
+
+    // Update parameters
+    if (parameter.type === 'condition') {
+      parameter.type = 'condition_vsac';
+      let conditionValueSets = ValueSets.conditions[parameter.value];
+      parameter.valueSets = conditionValueSets.conditions ? conditionValueSets.conditions : [];
+
+      if (conditionValueSets.concepts) {
+        let codes = [];
+        conditionValueSets.concepts.forEach(concept => concept.codes.forEach(code =>
+          codes.push({
+            code: code.code,
+            codeSystem: code.codeSystem,
+            display: code.display
+          })
+        ));
+        parameter.codes = codes;
+      }
+
+      delete parameter.value;
+    }
+
+    // Update template and suppress values
+    childInstance.template = 'GenericCondition';
+    childInstance.suppress = true;
+    childInstance.name = 'Condition';
+    childInstance.id = 'GenericCondition_vsac'; // TODO is there any benefit to keeping the old id?
+
+    // Change extention to Base
+    childInstance.extends = 'Base';
+    return [childInstance];
+  } else if (childInstance.extends === 'GenericEncounter') {
+    let parameter = {};
+    if (childInstance.parameters && childInstance.parameters[1]) {
+      parameter = childInstance.parameters[1];
+    }
+
+    // Update modifiers
+    if (!childInstance.modifiers) { childInstance.modifiers = []; }
+    childInstance.modifiers.forEach((modifierParam, i) => {
+      let modifier = modifierParam;
+      if (modifier.id === 'CheckExistence') {
+        modifier = updateCheckExistenceModifier(modifier);
+      }
+      if (modifier.id === 'BooleanExists') {
+        modifier = updateBooleanExistsModifier(modifier);
+      }
+    });
+
+    // Update parameters
+    if (parameter.type === 'encounter') {
+      parameter.type = 'encounter_vsac';
+      let encounterValueSets = ValueSets.encounters[parameter.value];
+      parameter.valueSets = encounterValueSets.encounters ? encounterValueSets.encounters : [];
+      delete parameter.value;
+    }
+
+    // Update template and suppress values
+    childInstance.template = 'GenericEncounter';
+    childInstance.suppress = true;
+    childInstance.name = 'Encounter';
+    childInstance.id = 'GenericEncounter_vsac';
+
+    // Change extention to Base
+    childInstance.extends = 'Base';
+    return [childInstance];
+  } else if (childInstance.extends === 'GenericProcedure') {
+    let parameter = {};
+    if (childInstance.parameters && childInstance.parameters[1]) {
+      parameter = childInstance.parameters[1];
+    }
+
+    // Update modifiers
+    if (!childInstance.modifiers) { childInstance.modifiers = []; }
+    childInstance.modifiers.forEach((modifierParam, i) => {
+      let modifier = modifierParam;
+      if (modifier.id === 'CheckExistence') {
+        modifier = updateCheckExistenceModifier(modifier);
+      }
+      if (modifier.id === 'BooleanExists') {
+        modifier = updateBooleanExistsModifier(modifier);
+      }
+    });
+
+    // Update parameters
+    if (parameter.type === 'procedure') {
+      parameter.type = 'procedure_vsac';
+      let procedureValueSets = ValueSets.procedures[parameter.value];
+      parameter.valueSets = procedureValueSets.procedures ? procedureValueSets.procedures : [];
+      delete parameter.value;
+    }
+
+    // Update template and suppress values
+    childInstance.template = 'GenericProcedure';
+    childInstance.suppress = true;
+    childInstance.name = 'Procedure';
+    childInstance.id = 'GenericProcedure_vsac';
+
+    // Change extention to Base
+    childInstance.extends = 'Base';
+    return [childInstance];
   }
   return [ childInstance ];
 }
