@@ -23,8 +23,8 @@ function updateBooleanExistsModifier(modifier) {
   return modifier;
 }
 
-// Returns an array of elements to be added to the artifact. The original element being manipulated is the first entry
-//in the array. Any additional elements needed will follow.
+// Returns an array of elements to be added to the artifact.
+// The original element being manipulated is the first entry in the array. Any additional elements needed will follow.
 function transformElement(element) {
   let childInstance = element;
   // Updates for observations
@@ -156,7 +156,6 @@ function transformElement(element) {
     let modifierIndexesToRemove = [];
     childInstance.modifiers.forEach((modifierParam, i) => {
       let modifier = modifierParam; // TODO This was to fix ESLint error. Better way?
-      console.log(modifier.id)
       let modifierForStatement = childInstanceForStatement.modifiers[i];
       if (modifier.id === 'ActiveMedication') {
         modifier.id = 'ActiveMedicationOrder';
@@ -193,24 +192,17 @@ function transformElement(element) {
         modifierForStatement.cqlLibraryFunction = 'C3F.MedicationStatementLookBack';
       }
       if (modifier.id === 'MostRecentMedication') {
-        console.log("HERE")
         modifierIndexesToRemove.push(i);
       }
     });
-    // console.log("childInstance.modifiers")
-    // console.log(childInstance.modifiers)
-    // childInstance.modifiers = childInstance.modifiers.splice(modifierIndexesToRemove[0], 1);
-    // childInstanceForStatement.modifiers = childInstanceForStatement.modifiers.splice(modifierIndexesToRemove[0], 1);
+    // Due to the fact that only one artifact has only one element with this modifier, hardcoded [0] is okay.
     childInstance.modifiers.splice(modifierIndexesToRemove[0], 1);
-    // console.log("childInstance.modifiers")
-    // console.log(childInstance.modifiers)
     childInstanceForStatement.modifiers.splice(modifierIndexesToRemove[0], 1);
 
     if (parameter.type === 'medication') {
       parameter.type = 'medicationOrder_vsac';
       parameterForStatement.type = 'medicationStatement_vsac';
 
-      // TODO double check that this is right
       parameter.name = 'Medication Order';
       parameterForStatement.name = 'Medication Statement';
 
@@ -234,10 +226,7 @@ function transformElement(element) {
     // Change extention to Base
     childInstance.extends = 'Base';
     childInstanceForStatement.extends = 'Base';
-    
-    console.dir(childInstance, {depth: null})
-    console.dir(childInstanceForStatement, {depth: null})
-    
+
     return [ childInstance, childInstanceForStatement ];
   }
   return [ childInstance ];
@@ -250,11 +239,11 @@ function parseTree(element) {
     if ('childInstances' in child) {
       parseTree(child);
     } else if (child.type === 'element') {
-      // Transform the elements and modifiers as necessary
+      // Transform the elements and modifiers as necessary.
+      // Original element will be the first entry in the array returned. Any additional elements to be added follow.
       let transformedElements = transformElement(child);
-      if (transformedElements.length > 1) { //TODO more generic way to do this?
-        // Medications were split, so add in an additional child to handle MedicationOrder and MedicationStatement
-        // children.splice(i, 1, transformedElements[0], transformedElements[1]);
+      if (transformedElements.length > 1) {
+        // Ex: Medications were split, so add in an additional child to handle MedicationOrder and MedicationStatement
         newChildrenToAdd = newChildrenToAdd.concat(transformedElements.slice(1));
       }
     }

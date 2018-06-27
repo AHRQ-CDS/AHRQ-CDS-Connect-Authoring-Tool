@@ -203,13 +203,6 @@ export default [
     returnType: 'condition',
     cqlTemplate: 'BaseModifier',
     cqlLibraryFunction: 'C3F.MostRecent' },
-  { // TODO: not valid //JULIA Should be able to take this out now.
-    id: 'MostRecentMedication',
-    name: 'Most Recent',
-    inputTypes: ['list_of_medications'],
-    returnType: 'medication',
-    cqlTemplate: 'BaseModifier',
-    cqlLibraryFunction: 'C3F.MostRecent' },
   {
     id: 'MostRecentProcedure',
     name: 'Most Recent',
