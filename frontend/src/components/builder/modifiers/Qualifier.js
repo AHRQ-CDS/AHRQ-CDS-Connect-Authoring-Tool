@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import Select from 'react-select';
+import FontAwesome from 'react-fontawesome';
+import { UncontrolledTooltip } from 'reactstrap';
 
 import VSACAuthenticationModal from '../VSACAuthenticationModal';
 import ElementModal from '../ElementModal';
@@ -8,24 +10,42 @@ import CodeSelectModal from '../CodeSelectModal';
 
 /* eslint-disable jsx-a11y/no-onchange */
 export default class Qualifier extends Component {
-  viewValueSetDetails = valueSet => (
-    <ElementModal
-      className="element-select__modal"
-      updateElement={this.props.updateInstance}
-      searchVSACByKeyword={this.props.searchVSACByKeyword}
-      isSearchingVSAC={this.props.isSearchingVSAC}
-      vsacSearchResults={this.props.vsacSearchResults}
-      vsacSearchCount={this.props.vsacSearchCount}
-      template={this.props.template}
-      getVSDetails={this.props.getVSDetails}
-      isRetrievingDetails={this.props.isRetrievingDetails}
-      vsacDetailsCodes={this.props.vsacDetailsCodes}
-      selectedElement={valueSet}
-      useIconButton={true}
-      iconForButton={'eye'}
-      viewOnly={true}
-    />
-  )
+  viewValueSetDetails = (valueSet) => {
+    if (!this.props.vsacFHIRCredentials.password) {
+      return (
+        <span className='element-select__modal element-modal disabled'>
+          <span>
+            <span
+              id={`LoginTooltip-${this.props.template.uniqueId}-qualifier`}>
+              <FontAwesome name="eye" />
+            </span>
+            <UncontrolledTooltip target={`LoginTooltip-${this.props.template.uniqueId}-qualifier`} placement="left">
+              Authenticate VSAC to view details
+            </UncontrolledTooltip>
+          </span>
+        </span>
+      );
+    }
+    return (
+      <ElementModal
+        className="element-select__modal"
+        updateElement={this.props.updateInstance}
+        searchVSACByKeyword={this.props.searchVSACByKeyword}
+        isSearchingVSAC={this.props.isSearchingVSAC}
+        vsacSearchResults={this.props.vsacSearchResults}
+        vsacSearchCount={this.props.vsacSearchCount}
+        template={this.props.template}
+        getVSDetails={this.props.getVSDetails}
+        isRetrievingDetails={this.props.isRetrievingDetails}
+        vsacDetailsCodes={this.props.vsacDetailsCodes}
+        vsacFHIRCredentials={this.props.vsacFHIRCredentials}
+        selectedElement={valueSet}
+        useIconButton={true}
+        iconForButton={'eye'}
+        viewOnly={true}
+      />
+    );
+  }
 
   handleChange = (selectedOption) => {
     this.props.updateAppliedModifier(this.props.index, {
@@ -74,13 +94,14 @@ export default class Qualifier extends Component {
           getVSDetails={this.props.getVSDetails}
           isRetrievingDetails={this.props.isRetrievingDetails}
           vsacDetailsCodes={this.props.vsacDetailsCodes}
+          vsacFHIRCredentials={this.props.vsacFHIRCredentials}
         />
       );
     } else if (this.props.qualifier === 'value is the code' && !hasSelectedCode) {
       return (
         <CodeSelectModal
           className="element-select__modal"
-          template={this.props.templateInstance}
+          template={this.props.template}
           vsacFHIRCredentials={this.props.vsacFHIRCredentials}
           isValidatingCode={this.props.isValidatingCode}
           isValidCode={this.props.isValidCode}
