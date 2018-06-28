@@ -5,6 +5,7 @@
  */
 'use strict';
 const ValueSets = require('../data/valueSets');
+const pregnancyObjects = require('./utils/pregnancy-objects');
 
 module.exports.id = "specific-to-generic-elements";
 
@@ -192,6 +193,7 @@ function transformElement(element) {
         modifier.cqlLibraryFunction = 'C3F.MedicationOrderLookBack';
         modifierForStatement.cqlLibraryFunction = 'C3F.MedicationStatementLookBack';
       }
+      // MostRecentMedication is not valid any more.
       if (modifier.id === 'MostRecentMedication') {
         modifierIndexesToRemove.push(i);
       }
@@ -386,16 +388,31 @@ function transformElement(element) {
     // Change extention to Base
     childInstance.extends = 'Base';
     return [childInstance];
+  } else if (childInstance.id === 'Pregnancydx') {
+    // Special cases for Pregnancy objects. No breastfeeding was used so not handling that case.
+    let notModifierApplied = childInstance.modifiers.find(modifier => modifier.id === 'BooleanNot');
+    if (notModifierApplied) {
+      return [ pregnancyObjects.notPregnant ];
+    } else {
+      return [ pregnancyObjects.pregnant ];
+    }
+  } else if (childInstance.id === 'Pregnancydx_CMS347v1') {
+    let notModifierApplied = childInstance.modifiers.find(modifier => modifier.id === 'BooleanNot');
+    if (notModifierApplied) {
+      return [ pregnancyObjects.notPregnantCMS347v1 ];
+    } else {
+      return [ pregnancyObjects.pregnantCMS347v1 ];
+    }
   }
   return [ childInstance ];
 }
 
 function parseTree(element) {
-  const children = element.childInstances ? element.childInstances : [];
+  let children = element.childInstances ? element.childInstances : [];
   let newChildrenToAdd = [];
-  children.forEach((child, i) => {
+  children = children.map((child, i) => {
     if ('childInstances' in child) {
-      parseTree(child);
+      return parseTree(child);
     } else if (child.type === 'element') {
       // Transform the elements and modifiers as necessary.
       // Original element will be the first entry in the array returned. Any additional elements to be added follow.
@@ -404,9 +421,11 @@ function parseTree(element) {
         // Ex: Medications were split, so add in an additional child to handle MedicationOrder and MedicationStatement
         newChildrenToAdd = newChildrenToAdd.concat(transformedElements.slice(1));
       }
+      return transformedElements[0];
     }
   });
   element.childInstances = children.concat(newChildrenToAdd);
+  return element;
 }
 
 module.exports.up = function (done) {
@@ -423,7 +442,7 @@ module.exports.up = function (done) {
   coll.find().forEach((artifact) => {
     const p = new Promise((resolve, reject) => {
       console.log(artifact.name)
-      if (artifact._id.toString() === '5b2ce2d683a3210faa340cdc') {
+      if (artifact._id.toString() === '5b3543d8d4c35d2268feb1cc') {
       let subelements = artifact.subelements;
       if (!subelements) {
         artifact.subelements = [];
@@ -440,6 +459,7 @@ module.exports.up = function (done) {
         }
       });
       // TODO Shouldn't need subelements since thats not in master/prod yet
+      console.log("ARTIFACT:")
       console.dir(artifact, {depth: null})
       // Update only the old artifact
       // console.log(artifact._id)
