@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import Select from 'react-select';
 import FontAwesome from 'react-fontawesome';
 import Inspector from 'react-inspector';
 import _ from 'lodash';
@@ -21,6 +22,7 @@ export default class PatientTable extends Component {
       patientToView: null,
       showViewDetailsModal: false,
       patientToExecute: null,
+      artifactToExecute: null,
       showExecuteCQLModal: false,
       testReport: null
     };
@@ -62,7 +64,11 @@ export default class PatientTable extends Component {
     }
   
     closeExecuteCQLModal = () => {
-      this.setState({ showExecuteCQLModal: false, patientToExecute: null });
+      this.setState({ showExecuteCQLModal: false, patientToExecute: null, artifactToExecute: null });
+    }
+
+    selectArtifactForCQLModal = (artifact) => {
+      this.setState({ artifactToExecute: artifact });
     }
   
     handleExecuteCQL = () => {
@@ -128,11 +134,14 @@ export default class PatientTable extends Component {
   }
 
   renderExecuteCQLModal() {
+    const artifactOptions = _.map(this.props.artifacts, a => {return {value: a, label: a.name}});
+
     return (
       <Modal
         modalTitle="Execute CQL"
         modalId="execute-cql-modal"
         modalTheme="light"
+        modalSubmitButtonText="Execute CQL"
         handleShowModal={this.state.showExecuteCQLModal}
         handleCloseModal={this.closeExecuteCQLModal}
         handleSaveModal={this.handleExecuteCQL}>
@@ -156,6 +165,17 @@ export default class PatientTable extends Component {
                 .value() || 'family_placeholder'}
             </span>
           </div>
+
+          <br/>
+
+          <Select
+            aria-label={'Select Artifact'}
+            inputProps={{ title: 'Select Artifact' }}
+            clearable={false}
+            options={artifactOptions}
+            value={this.state.artifactToExecute}
+            onChange={this.selectArtifactForCQLModal}
+          />
         </div>
       </Modal>
     );
@@ -225,7 +245,7 @@ export default class PatientTable extends Component {
   );
 
   render() {
-    const { patients, artifacts } = this.props;
+    const patients = this.props.patients;
 
     return (
       <div className="patient-table">
