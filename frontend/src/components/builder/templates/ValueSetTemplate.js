@@ -14,11 +14,11 @@ export default class ValueSetTemplate extends Component {
         <span className='element-select__modal element-modal disabled'>
           <span>
           <span
-              id="LoginTooltip">
+              id={`LoginTooltip-${this.props.templateInstance.uniqueId}`}>
               <FontAwesome name="eye"/>
             </span>
-            <UncontrolledTooltip target="LoginTooltip" placement="left">
-              Authenticate VSAC to view details
+          <UncontrolledTooltip target={`LoginTooltip-${this.props.templateInstance.uniqueId}`} placement="left">
+            Authenticate VSAC to view details
             </UncontrolledTooltip>
           </span>
         </span>
