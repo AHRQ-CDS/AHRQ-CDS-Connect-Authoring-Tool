@@ -7,6 +7,7 @@ import _ from 'lodash';
 import renderDate from '../../utils/dates';
 import { sortMostRecent } from '../../utils/sort';
 import patientProps from '../../prop-types/patient';
+import artifactProps from '../../prop-types/artifact';
 
 import Modal from '../elements/Modal';
 
@@ -18,7 +19,10 @@ export default class PatientTable extends Component {
       patientToDelete: null,
       showConfirmDeleteModal: false,
       patientToView: null,
-      showViewDetailsModal: false
+      showViewDetailsModal: false,
+      patientToExecute: null,
+      showExecuteCQLModal: false,
+      testReport: null
     };
   }
 
@@ -51,6 +55,20 @@ export default class PatientTable extends Component {
     this.closeViewDetailsModal();
   }
 
+    // ----------------------- EXECUTE CQL MODAL -------------------------- //
+
+    openExecuteCQLModal = (patient) => {
+      this.setState({ showExecuteCQLModal: true, patientToExecute: patient });
+    }
+  
+    closeExecuteCQLModal = () => {
+      this.setState({ showExecuteCQLModal: false, patientToExecute: null });
+    }
+  
+    handleExecuteCQL = () => {
+      this.closeExecuteCQLModal();
+    }
+
   // ----------------------- RENDER ---------------------------------------- //
 
   renderConfirmDeleteModal() {
@@ -64,10 +82,10 @@ export default class PatientTable extends Component {
         handleCloseModal={this.closeConfirmDeleteModal}
         handleSaveModal={this.handleDeletePatient}>
 
-        <div className="delete-artifact-confirmation-modal modal__content">
+        <div className="delete-patient-confirmation-modal modal__content">
           <h5>Are you sure you want to permanently delete the following Patient?</h5>
 
-          <div className="artifact-info">
+          <div className="patient-info">
             <span>Name: </span>
             <span>
               {_.chain(this.state.patientToDelete)
@@ -98,11 +116,45 @@ export default class PatientTable extends Component {
         handleCloseModal={this.closeViewDetailsModal}
         handleSaveModal={this.handleViewDetails}>
 
-        <div className="artifact-table__modal modal__content">
+        <div className="patient-table__modal modal__content">
           <h5>Viewing Patient:</h5>
 
-          <div className="artifact-info">
+          <div className="patient-info">
             <Inspector data={this.state.patientToView} expandLevel="2"/>
+          </div>
+        </div>
+      </Modal>
+    );
+  }
+
+  renderExecuteCQLModal() {
+    return (
+      <Modal
+        modalTitle="Execute CQL"
+        modalId="execute-cql-modal"
+        modalTheme="light"
+        handleShowModal={this.state.showExecuteCQLModal}
+        handleCloseModal={this.closeExecuteCQLModal}
+        handleSaveModal={this.handleExecuteCQL}>
+
+        <div className="patient-table__modal modal__content">
+          <h5>Executing on Patient:</h5>
+
+          <div className="patient-info">
+            <span>Name: </span>
+            <span>
+              {_.chain(this.state.patientToExecute)
+                  .get('patient.entry')
+                  .find({ resource: { resourceType: 'Patient' } })
+                  .get('resource.name[0].given[0]')
+                  .value() || 'given_placeholder'}
+              {" "}
+              {_.chain(this.state.patientToExecute)
+                .get('patient.entry')
+                .find({ resource: { resourceType: 'Patient' } })
+                .get('resource.name[0].family[0]')
+                .value() || 'family_placeholder'}
+            </span>
           </div>
         </div>
       </Modal>
@@ -111,7 +163,7 @@ export default class PatientTable extends Component {
 
   renderTableRow = patient => (
     <tr key={patient._id}>
-      <td className="artifacts__tablecell-wide" data-th="Patient Name">
+      <td className="patients__tablecell-wide" data-th="Name">
         <div>
           {_.chain(patient)
               .get('patient.entry')
@@ -127,6 +179,26 @@ export default class PatientTable extends Component {
         </div>
       </td>
 
+      <td className="patients__tablecell-wide" data-th="Gender">
+        <div>
+          {_.chain(patient)
+              .get('patient.entry')
+              .find({ resource: { resourceType: 'Patient' } })
+              .get('resource.gender')
+              .value() || 'gender_placeholder'}
+        </div>
+      </td>
+
+      <td className="patients__tablecell-wide" data-th="Birth Date">
+        <div>
+          {_.chain(patient)
+              .get('patient.entry')
+              .find({ resource: { resourceType: 'Patient' } })
+              .get('resource.birthDate')
+              .value() || 'birthdate_placeholder'}
+        </div>
+      </td>
+
       <td data-th="Updated">{renderDate(patient.updatedAt)}</td>
 
       <td data-th="">
@@ -136,18 +208,11 @@ export default class PatientTable extends Component {
           <FontAwesome name='eye'/>
         </button>
 
-        <button aria-label="Test"
-          disabled={true}
-          className="button primary-button"
-          onClick={() => {return false;}}>
-          <FontAwesome name='play'/>
-        </button>
-
-        <button aria-label="Report"
-          disabled={true}
-          className="button primary-button"
-          onClick={() => {return false;}}>
-          <FontAwesome name='book'/>
+        <button aria-label="Execute CQL"
+          disabled={this.props.vsacFHIRCredentials.username == null}
+          className={`button primary-button ${this.props.vsacFHIRCredentials.username != null ? '' : 'disabled-button'}`}
+          onClick={() => this.openExecuteCQLModal(patient)}>
+          Execute CQL
         </button>
 
         <button
@@ -160,14 +225,16 @@ export default class PatientTable extends Component {
   );
 
   render() {
-    const { patients } = this.props;
+    const { patients, artifacts } = this.props;
 
     return (
-      <div className="artifact-table">
-        <table className="artifacts__table">
+      <div className="patient-table">
+        <table className="patients__table">
           <thead>
             <tr>
-              <th scope="col" className="artifacts__tablecell-wide">Patient Name</th>
+              <th scope="col" className="patients__tablecell-wide">Name</th>
+              <th scope="col" className="patients__tablecell-wide">Gender</th>
+              <th scope="col" className="patients__tablecell-wide">Birth Date</th>
               <th scope="col">Last Updated</th>
               <td></td>
             </tr>
@@ -180,12 +247,20 @@ export default class PatientTable extends Component {
 
         {this.renderConfirmDeleteModal()}
         {this.renderViewDetailsModal()}
+        {this.renderExecuteCQLModal()}
       </div>
     );
   }
 }
 
 PatientTable.propTypes = {
-  patients: PropTypes.arrayOf(patientProps),
-  deletePatient: PropTypes.func.isRequired
+  patients: PropTypes.arrayOf(patientProps).isRequired,
+  artifacts: PropTypes.arrayOf(artifactProps).isRequired,
+  deletePatient: PropTypes.func.isRequired,
+  timeLastAuthenticated: PropTypes.instanceOf(Date),
+  vsacFHIRCredentials: PropTypes.object,
+  loginVSACUser: PropTypes.func.isRequired,
+  setVSACAuthStatus: PropTypes.func.isRequired,
+  vsacStatus: PropTypes.string,
+  vsacStatusText: PropTypes.string
 };
