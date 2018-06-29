@@ -6,7 +6,7 @@ import { bindActionCreators } from 'redux';
 import Dropzone from 'react-dropzone';
 
 import { loadPatients, addPatient, deletePatient } from '../actions/patients';
-import { loadArtifacts } from '../actions/artifacts';
+import { loadArtifacts, executeCQLArtifact } from '../actions/artifacts';
 import { loginVSACUser, setVSACAuthStatus } from '../actions/vsac';
 
 import patientProps from '../prop-types/patient';
@@ -23,21 +23,79 @@ class Patient extends Component {
 
   addPatient = (patient) => {
     const reader = new FileReader();
+    // eslint-disable-next-line func-names
     reader.onload = function (e) {
       this.props.addPatient(JSON.parse(e.target.result));
     }.bind(this);
     reader.readAsText(patient[0]);
   }
 
-  renderPatientsTable() {
-    const { patients, artifacts } = this.props;
+  // TODO support results for more than one patient
+  renderResultsTable() {
+    const results = this.props.results;
+    if (results) {
+      const patientResults = results.patientResults[Object.keys(results.patientResults)[0]];
+      return (
+        <div className="patient-table">
+          <table className="patients__table">
+            <tbody>
+              <tr>
+                <th scope="col" className="patients__tablecell-wide">MeetsInclusionCriteria</th>
+                <td>{
+                  patientResults.MeetsInclusionCriteria != null
+                  ? patientResults.MeetsInclusionCriteria.toString()
+                  : 'No Value'}
+                </td>
+              </tr>
+              <tr>
+                <th scope="col" className="patients__tablecell-wide">MeetsExclusionCriteria</th>
+                <td>{
+                  patientResults.MeetsExclusionCriteria != null
+                  ? patientResults.MeetsExclusionCriteria.toString()
+                  : 'No Value'}
+                </td>
+              </tr>
+              <tr>
+                <th scope="col" className="patients__tablecell-wide">Recommendation</th>
+                <td>{
+                  patientResults.Recommendation != null
+                  ? patientResults.Recommendation.toString()
+                  : 'No Value'}
+                </td>
+              </tr>
+              <tr>
+                <th scope="col" className="patients__tablecell-wide">Rationale</th>
+                <td>{
+                  patientResults.Rationale != null
+                  ? patientResults.Rationale.toString()
+                  : 'No Value'}
+                </td>
+              </tr>
+              <tr>
+                <th scope="col" className="patients__tablecell-wide">Errors</th>
+                <td>{
+                  patientResults.Errors != null
+                  ? patientResults.Errors.toString()
+                  : 'No Value'}
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      );
+    }
 
-    if (patients && patients.length > 0) {
+    return <div>No results to show.</div>;
+  }
+
+  renderPatientsTable() {
+    if (this.props.patients && this.props.patients.length > 0) {
       return (
         <PatientTable
-          patients={patients}
-          artifacts={artifacts}
+          patients={this.props.patients}
+          artifacts={this.props.artifacts}
           deletePatient={this.props.deletePatient}
+          executeCQLArtifact={this.props.executeCQLArtifact}
           timeLastAuthenticated={this.props.timeLastAuthenticated}
           vsacFHIRCredentials={this.props.vsacFHIRCredentials}
           loginVSACUser={this.props.loginVSACUser}
@@ -77,12 +135,17 @@ class Patient extends Component {
   render() {
     return (
       <div className="patient" id="maincontent">
-        <Dropzone  className="patient-dropzone" onDrop={this.addPatient.bind(this)} accept="application/json" multiple={false}>
+        <Dropzone
+          className="patient-dropzone"
+          onDrop={this.addPatient.bind(this)}
+          accept="application/json" multiple={false}
+          >
           <FontAwesome name='cloud-upload' size="5x"/>
-          <p>Drop a valid JSON FHIR DSTU2 Bundle containing a Patient here.</p>
+          <p>Drop a valid JSON FHIR DSTU2 bundle containing a patient here, or click to browse.</p>
         </Dropzone>
         <div className="patient-wrapper">
           {this.renderVSACLogin()}
+          {this.renderResultsTable()}
           {this.renderPatientsTable()}
         </div>
       </div>
@@ -93,10 +156,12 @@ class Patient extends Component {
 Patient.propTypes = {
   patients: PropTypes.arrayOf(patientProps).isRequired,
   artifacts: PropTypes.arrayOf(artifactProps).isRequired,
+  results: PropTypes.object,
   loadPatients: PropTypes.func.isRequired,
   addPatient: PropTypes.func.isRequired,
   deletePatient: PropTypes.func.isRequired,
   loadArtifacts: PropTypes.func.isRequired,
+  executeCQLArtifact: PropTypes.func.isRequired,
   timeLastAuthenticated: PropTypes.instanceOf(Date),
   vsacFHIRCredentials: PropTypes.object,
   loginVSACUser: PropTypes.func.isRequired,
@@ -112,6 +177,7 @@ function mapDispatchToProps(dispatch) {
     addPatient,
     deletePatient,
     loadArtifacts,
+    executeCQLArtifact,
     loginVSACUser,
     setVSACAuthStatus
   }, dispatch);
@@ -122,6 +188,7 @@ function mapStateToProps(state) {
   return {
     patients: state.patients.patients,
     artifacts: state.artifacts.artifacts,
+    results: state.artifacts.executeArtifact.results,
     vsacStatus: state.vsac.authStatus,
     vsacStatusText: state.vsac.authStatusText,
     timeLastAuthenticated: state.vsac.timeLastAuthenticated,

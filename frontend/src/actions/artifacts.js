@@ -4,6 +4,10 @@ import moment from 'moment';
 import FileSaver from 'file-saver';
 import _ from 'lodash';
 
+import cql from 'cql-execution';
+import cqlfhir from 'cql-exec-fhir';
+import cqlvsac from 'cql-exec-vsac';
+
 import changeToCase from '../utils/strings';
 import createTemplateInstance from '../utils/templates';
 import loadTemplates from './templates';
@@ -306,6 +310,12 @@ function requestDownloadArtifact() {
   };
 }
 
+function requestValidateArtifact() {
+  return {
+    type: types.VALIDATE_ARTIFACT_REQUEST
+  };
+}
+
 function downloadArtifactSuccess() {
   return {
     type: types.DOWNLOAD_ARTIFACT_SUCCESS,
@@ -322,6 +332,14 @@ function validateArtifactSuccess(data) {
 function downloadArtifactFailure(error) {
   return {
     type: types.DOWNLOAD_ARTIFACT_FAILURE,
+    status: error.response ? error.response.status : '',
+    statusText: error.response ? error.response.statusText : ''
+  };
+}
+
+function validateArtifactFailure(error) {
+  return {
+    type: types.VALIDATE_ARTIFACT_FAILURE,
     status: error.response ? error.response.status : '',
     statusText: error.response ? error.response.statusText : ''
   };
@@ -358,6 +376,84 @@ export function downloadArtifact(artifact) {
           .then(res => dispatch(validateArtifactSuccess(res.data)));
       })
       .catch(error => dispatch(downloadArtifactFailure(error)));
+  };
+}
+
+export function validateArtifact(artifact) {
+  return (dispatch) => {
+    dispatch(requestValidateArtifact());
+
+    return sendValidateArtifactRequest(artifact)
+      .then(res => dispatch(validateArtifactSuccess(res.data)))
+      .catch(error => dispatch(validateArtifactFailure(error)));
+  };
+}
+
+// ------------------------- EXECUTE ARTIFACT ----------------------------- //
+
+function requestExecuteArtifact() {
+  return {
+    type: types.EXECUTE_ARTIFACT_REQUEST
+  };
+}
+
+function executeArtifactSuccess(data) {
+  return {
+    type: types.EXECUTE_ARTIFACT_SUCCESS,
+    data
+  };
+}
+
+function executeArtifactFailure(error) {
+  return {
+    type: types.EXECUTE_ARTIFACT_FAILURE,
+  };
+}
+
+function performExecuteArtifact(elmFiles, artifactName, patient, vsacCredentials) {
+  // Set up the library
+  const elmFile = JSON.parse(_.find(elmFiles, f => f.name === artifactName).content);
+  const libraries = _.filter(elmFiles, f => f.name !== artifactName).map(f => JSON.parse(f.content));
+  const library = new cql.Library(elmFile, new cql.Repository(libraries));
+
+  // Create the patient source
+  const patientSource = cqlfhir.PatientSource.FHIRv102();
+
+  // Load the patient source with the patient
+  patientSource.loadBundles([patient]);
+
+  // Extract the value sets from the ELM
+  let valueSets = [];
+  if (elmFile.library && elmFile.library.valueSets && elmFile.library.valueSets.def) {
+    valueSets = elmFile.library.valueSets.def;
+  }
+
+  // TODO the code service should be stored, so value sets
+  // don't need to be downloaded on every execution
+
+  // Set up the code service
+  const codeService = new cqlvsac.CodeService();
+
+  // Ensure value sets, downloading any missing value sets
+  return codeService.ensureValueSets(valueSets, vsacCredentials.username, vsacCredentials.password)
+    .then(() => {
+      // Value sets are loaded, so execute!
+      const executor = new cql.Executor(library, codeService);
+      const results = executor.exec(patientSource);
+      return results;
+    });
+}
+
+export function executeCQLArtifact(artifact, patient, vsacCredentials) {
+  return (dispatch) => {
+    dispatch(requestExecuteArtifact());
+
+    return sendValidateArtifactRequest(artifact)
+      .then(res => dispatch(validateArtifactSuccess(res.data)))
+      .catch(error => dispatch(validateArtifactFailure(error)))
+      .then(res => performExecuteArtifact(res.data.elmFiles, artifact.name, patient, vsacCredentials)
+        .then(r => dispatch(executeArtifactSuccess(r)))
+        .catch(error => dispatch(executeArtifactFailure(error))));
   };
 }
 

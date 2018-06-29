@@ -803,7 +803,7 @@ function validateELM(cqlArtifact, writeStream, callback) {
         }
       }
     });
-    writeStream.json({elmErrors});
+    writeStream.json({elmFiles, elmErrors});
   });
 }
 

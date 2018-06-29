@@ -14,7 +14,15 @@ const defaultState = {
   deleteArtifact: { isDeleting: false, deleteStatus: null },
   saveArtifact: { isSaving: false, saveStatus: null },
   publishArtifact: { isPublishing: false, publishStatus: null },
-  downloadArtifact: { isDownloading: false, downloadStatus: null, elmErrors: [] },
+  downloadArtifact: {
+    isDownloading: false,
+    downloadStatus: null,
+    isValidating: false,
+    validateStatus: null,
+    elmFiles: [],
+    elmErrors: []
+  },
+  executeArtifact: { isExecuting: false, executeStatus: null, results: null },
   publishEnabled: false
 };
 
@@ -93,19 +101,6 @@ export default function auth(state = defaultState, action) {
         statusMessage: null,
         downloadArtifact: { isDownloading: true, downloadStatus: null, elmErrors: [] }
       };
-    case types.VALIDATE_ARTIFACT_SUCCESS:
-      return {
-        ...state,
-        statusMessage: null,
-        downloadArtifact: { isDownloading: false, downloadStatus: null, elmErrors: action.data.elmErrors }
-      };
-    case types.CLEAR_ARTIFACT_VALIDATION_WARNINGS:
-      return {
-        ...state,
-        statusMessage: null,
-        downloadArtifact: { isDownloading: false, downloadStatus: null, elmErrors: [] }
-      };
-
     case types.DOWNLOAD_ARTIFACT_SUCCESS:
       return {
         ...state,
@@ -117,6 +112,46 @@ export default function auth(state = defaultState, action) {
         ...state,
         statusMessage: `Download failed. ${action.statusText}.`,
         downloadArtifact: { isDownloading: false, downloadStatus: 'failure', elmErrors: [] }
+      };
+    case types.VALIDATE_ARTIFACT_REQUEST:
+      return {
+        ...state,
+        downloadArtifact: { isValidating: true, validateStatus: null, elmFiles: [], elmErrors: [] }
+      };
+    case types.VALIDATE_ARTIFACT_SUCCESS:
+      return {
+        ...state,
+        downloadArtifact: {
+          isValidating: false,
+          validateStatus: 'success',
+          elmFiles: action.data.elmFiles,
+          elmErrors: action.data.elmErrors
+        }
+      };
+    case types.VALIDATE_ARTIFACT_FAILURE:
+      return {
+        ...state,
+        downloadArtifact: { isValidating: false, validateStatus: 'failure', elmFiles: [], elmErrors: [] }
+      };
+    case types.EXECUTE_ARTIFACT_REQUEST:
+      return {
+        ...state,
+        executeArtifact: { isExecuting: true, executeStatus: null, results: null }
+      };
+    case types.EXECUTE_ARTIFACT_SUCCESS:
+      return {
+        ...state,
+        executeArtifact: { isExecuting: false, executeStatus: 'success', results: action.data }
+      };
+    case types.EXECUTE_ARTIFACT_FAILURE:
+      return {
+        ...state,
+        executeArtifact: { isExecuting: false, executeStatus: 'failure', results: null }
+      };
+    case types.CLEAR_ARTIFACT_VALIDATION_WARNINGS:
+      return {
+        ...state,
+        downloadArtifact: { isDownloading: false, downloadStatus: null, elmFiles: [], elmErrors: [] }
       };
     case types.PUBLISH_ARTIFACT_REQUEST:
       return {

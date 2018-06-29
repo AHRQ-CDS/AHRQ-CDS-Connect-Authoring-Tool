@@ -57,23 +57,30 @@ export default class PatientTable extends Component {
     this.closeViewDetailsModal();
   }
 
-    // ----------------------- EXECUTE CQL MODAL -------------------------- //
+  // ----------------------- EXECUTE CQL MODAL -------------------------- //
 
-    openExecuteCQLModal = (patient) => {
-      this.setState({ showExecuteCQLModal: true, patientToExecute: patient });
-    }
-  
-    closeExecuteCQLModal = () => {
-      this.setState({ showExecuteCQLModal: false, patientToExecute: null, artifactToExecute: null });
-    }
+  openExecuteCQLModal = (patient) => {
+    this.setState({ showExecuteCQLModal: true, patientToExecute: patient });
+  }
 
-    selectArtifactForCQLModal = (artifact) => {
-      this.setState({ artifactToExecute: artifact });
-    }
-  
-    handleExecuteCQL = () => {
-      this.closeExecuteCQLModal();
-    }
+  closeExecuteCQLModal = () => {
+    this.setState({ showExecuteCQLModal: false, patientToExecute: null, artifactToExecute: null });
+  }
+
+  selectArtifactForCQLModal = (artifact) => {
+    this.setState({ artifactToExecute: artifact });
+  }
+
+  handleExecuteCQL = () => {
+    this.executeCQL(this.state.artifactToExecute.value, this.state.patientToExecute);
+    this.closeExecuteCQLModal();
+  }
+
+  // ----------------------- PERFORM CQL EXECUTION -------------------------- //
+
+  executeCQL = (artifact, patient) => {
+    this.props.executeCQLArtifact(artifact, patient.patient, this.props.vsacFHIRCredentials);
+  }
 
   // ----------------------- RENDER ---------------------------------------- //
 
@@ -99,7 +106,7 @@ export default class PatientTable extends Component {
                   .find({ resource: { resourceType: 'Patient' } })
                   .get('resource.name[0].given[0]')
                   .value() || 'given_placeholder'}
-              {" "}
+              {' '}
               {_.chain(this.state.patientToDelete)
                 .get('patient.entry')
                 .find({ resource: { resourceType: 'Patient' } })
@@ -126,7 +133,7 @@ export default class PatientTable extends Component {
           <h5>Viewing Patient:</h5>
 
           <div className="patient-info">
-            <Inspector data={this.state.patientToView} expandLevel="2"/>
+            <Inspector data={this.state.patientToView}/>
           </div>
         </div>
       </Modal>
@@ -134,7 +141,7 @@ export default class PatientTable extends Component {
   }
 
   renderExecuteCQLModal() {
-    const artifactOptions = _.map(this.props.artifacts, a => {return {value: a, label: a.name}});
+    const artifactOptions = _.map(this.props.artifacts, a => ({ value: a, label: a.name }));
 
     return (
       <Modal
@@ -157,7 +164,7 @@ export default class PatientTable extends Component {
                   .find({ resource: { resourceType: 'Patient' } })
                   .get('resource.name[0].given[0]')
                   .value() || 'given_placeholder'}
-              {" "}
+              {' '}
               {_.chain(this.state.patientToExecute)
                 .get('patient.entry')
                 .find({ resource: { resourceType: 'Patient' } })
@@ -190,7 +197,7 @@ export default class PatientTable extends Component {
               .find({ resource: { resourceType: 'Patient' } })
               .get('resource.name[0].given[0]')
               .value() || 'given_placeholder'}
-          {" "}
+          {' '}
           {_.chain(patient)
             .get('patient.entry')
             .find({ resource: { resourceType: 'Patient' } })
@@ -230,7 +237,9 @@ export default class PatientTable extends Component {
 
         <button aria-label="Execute CQL"
           disabled={this.props.vsacFHIRCredentials.username == null}
-          className={`button primary-button ${this.props.vsacFHIRCredentials.username != null ? '' : 'disabled-button'}`}
+          className={`button primary-button ${
+            this.props.vsacFHIRCredentials.username != null ? '' : 'disabled-button'
+          }`}
           onClick={() => this.openExecuteCQLModal(patient)}>
           Execute CQL
         </button>
@@ -277,6 +286,7 @@ PatientTable.propTypes = {
   patients: PropTypes.arrayOf(patientProps).isRequired,
   artifacts: PropTypes.arrayOf(artifactProps).isRequired,
   deletePatient: PropTypes.func.isRequired,
+  executeCQLArtifact: PropTypes.func.isRequired,
   timeLastAuthenticated: PropTypes.instanceOf(Date),
   vsacFHIRCredentials: PropTypes.object,
   loginVSACUser: PropTypes.func.isRequired,
