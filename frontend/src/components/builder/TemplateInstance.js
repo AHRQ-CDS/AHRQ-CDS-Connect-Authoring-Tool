@@ -27,6 +27,7 @@ import WithUnit from './modifiers/WithUnit';
 import Qualifier from './modifiers/Qualifier';
 
 import Validators from '../../utils/validators';
+import { convertToExpression } from '../../utils/artifacts';
 
 function getInstanceName(instance) {
   return (instance.parameters.find(p => p.id === 'element_name') || {}).value;
@@ -44,6 +45,7 @@ export default class TemplateInstance extends Component {
         this.modifersByInputType[inputType] = (this.modifersByInputType[inputType] || []).concat(modifier);
       });
     });
+
     this.state = {
       showElement: true,
       relevantModifiers: (this.modifersByInputType[this.props.templateInstance.returnType] || []),
@@ -101,6 +103,10 @@ export default class TemplateInstance extends Component {
   updateInstance = (newState) => {
     this.setState(newState);
     this.props.editInstance(this.props.treeName, newState, this.getPath(), false);
+  }
+
+  hasModifiers() {
+    return this.props.templateInstance.modifiers.length !== 0;
   }
 
   renderAppliedModifier = (modifier, index) => {
@@ -543,7 +549,28 @@ export default class TemplateInstance extends Component {
     return null;
   }
 
+  renderExpression = (expressions) => {
+    if (!expressions) { return null; }
+
+    return (
+      <div className="expression-logic">
+        {expressions.map((expression) => {
+          if (expression.isExpression) {
+            return <span className="expression-item expression-tag">{expression.expressionText}</span>;
+          }
+
+          return <span className="expression-item expression-text">{expression.expressionText}</span>;
+        })}
+      </div>
+    );
+  }
+
   renderBody() {
+    let expressions;
+    if (this.hasModifiers()) {
+      expressions = convertToExpression(this.props.templateInstance.modifiers);
+    }
+
     const validationError = this.validateElement();
     const returnError = (!(this.props.validateReturnType !== false) || this.state.returnType === 'boolean') ? null
       : "Element must have return type 'boolean'.  Add expression(s) to change the return type.";
@@ -552,6 +579,8 @@ export default class TemplateInstance extends Component {
       <div className="card-element__body">
         {validationError && <div className="warning">{validationError}</div>}
         {returnError && <div className="warning">{returnError}</div>}
+        {expressions && <div className="expression">{this.renderExpression(expressions)}</div>}
+
         {this.props.templateInstance.parameters.map((param, index) => {
           // todo: each parameter type should probably have its own component
           if (param.id !== 'element_name') {

@@ -5,7 +5,7 @@
  * @param {Object} artifact - the artifact to check for blankness
  * @return {boolean} true if the artifact has no meaningful data, false otherwise
  */
-export default function isBlankArtifact(artifact) {
+export function isBlankArtifact(artifact) {
   // If it has an ID, it is pre-existing and considered non-blank
   if (artifact._id) {
     return false;
@@ -78,4 +78,20 @@ export default function isBlankArtifact(artifact) {
   }
   // If we safely made it here, it is BLANK!
   return true;
+}
+
+export function convertToExpression(expressionsArray) {
+  // TODO
+  return [
+    { expressionText: 'There exists a', isExpression: false },
+    { expressionText: 'most recent', isExpression: true },
+    { expressionText: 'verified', isExpression: true },
+    { expressionText: 'observation', isExpression: false },
+    { expressionText: 'within the last 6 years', isExpression: true },
+    { expressionText: 'with code from', isExpression: false },
+    { expressionText: 'Value Set A', isExpression: true },
+    { expressionText: 'that is', isExpression: false },
+    { expressionText: 'greater than 130 mg/dL', isExpression: true },
+    { expressionText: '.', isExpression: false }
+  ];
 }
