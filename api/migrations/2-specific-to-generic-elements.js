@@ -91,7 +91,7 @@ function transformElement(element) {
         delete modifier.cqlLibraryFunction;
       }
       if (modifier.id === 'CheckExistence') {
-        modifier = updateCheckExistenceModifier(modifier); //TODO confirm this still works as expected
+        modifier = updateCheckExistenceModifier(modifier);
       }
       if (modifier.id === 'BooleanExists') {
         modifier = updateBooleanExistsModifier(modifier);
@@ -105,7 +105,6 @@ function transformElement(element) {
       parameter.valueSets = observationValueSets.observations ? observationValueSets.observations : [];
       if (observationValueSets.concepts) {
         // Add concepts on as well
-        // TODO TODO Double check that this works with multiple codes (pregnancy, breastfeeding)
         let codes = [];
         observationValueSets.concepts.forEach(concept => concept.codes.forEach(code =>
             codes.push({
@@ -116,7 +115,6 @@ function transformElement(element) {
         ));
         parameter.codes = codes;
       }
-      // TODO TODO handle the concepts case as well.
       // TODO other things to consider: checkInclusionInVS, units, anything else in that ValueSets file and the
       //observation case in cqlhandler
       delete parameter.value;
@@ -125,7 +123,7 @@ function transformElement(element) {
     // Update template and suppress values
     childInstance.template = 'GenericObservation';
     childInstance.suppress = true;
-    childInstance.name = 'Observation'; //TODO did not test this
+    childInstance.name = 'Observation';
     childInstance.id = 'GenericObservation_vsac';
   
     // Remove the unneeded flag
@@ -270,7 +268,6 @@ function transformElement(element) {
     childInstance.extends = 'Base';
     return [childInstance];
   } else if (childInstance.extends === 'GenericCondition') {
-    // TODO Suppressed modifiers?
     let parameter = {};
     if (childInstance.parameters && childInstance.parameters[1]) {
       parameter = childInstance.parameters[1];
@@ -313,7 +310,7 @@ function transformElement(element) {
     childInstance.template = 'GenericCondition';
     childInstance.suppress = true;
     childInstance.name = 'Condition';
-    childInstance.id = 'GenericCondition_vsac'; // TODO is there any benefit to keeping the old id?
+    childInstance.id = 'GenericCondition_vsac';
 
     // Change extention to Base
     childInstance.extends = 'Base';
@@ -422,6 +419,9 @@ function parseTree(element) {
         newChildrenToAdd = newChildrenToAdd.concat(transformedElements.slice(1));
       }
       return transformedElements[0];
+    } else {
+      // A few elements (Age Range, Gender, And, Or) don't have type = element. But they don't require transformation.
+      return child;
     }
   });
   element.childInstances = children.concat(newChildrenToAdd);
@@ -442,7 +442,7 @@ module.exports.up = function (done) {
   coll.find().forEach((artifact) => {
     const p = new Promise((resolve, reject) => {
       console.log(artifact.name)
-      if (artifact._id.toString() === '5b3543d8d4c35d2268feb1cc') {
+      // if (artifact._id.toString() === '5b3e66bf8ff70520c45cbc95') {
       let subelements = artifact.subelements;
       if (!subelements) {
         artifact.subelements = [];
@@ -459,31 +459,31 @@ module.exports.up = function (done) {
         }
       });
       // TODO Shouldn't need subelements since thats not in master/prod yet
-      console.log("ARTIFACT:")
-      console.dir(artifact, {depth: null})
+      // console.log("ARTIFACT:")
+      // console.dir(artifact, {depth: null})
       // Update only the old artifact
       // console.log(artifact._id)
       // console.log(artifact._id.toString() === '5b2ce2d683a3210faa340cdc')
-      // if (artifact._id.toString() === '5b2ce2d683a3210faa340cdc') {
+      // if (artifact._id.toString() === '5b17efdebec7e5254a90dc5c') {
       //   console.log("updating")
       //   // artifact.expTreeInclude.childInstances = [];
       //   console.dir(artifact, {depth: null})
-      //   coll.updateOne(
-      //     { _id: artifact._id },
-      //     { '$set': artifact },
-      //     (err, result) => {
-      //       console.log("HERE")
-      //       if (err) {
-      //         console.log("ERROR")
-      //         this.log(`${artifact._id}: error:`, err);
-      //         reject(err);
-      //       } else {
-      //         console.log("SUCCESS")
-      //         this.log(`${artifact._id} (${artifact.name}): added { subelements: [] } to artifact`);
-      //         resolve(result);
-      //       }
-      //     }
-      //   );
+      coll.updateOne(
+        { _id: artifact._id },
+        { '$set': artifact },
+        (err, result) => {
+          console.log("HERE")
+          if (err) {
+            console.log("ERROR")
+            this.log(`${artifact._id}: error:`, err);
+            reject(err);
+          } else {
+            console.log("SUCCESS")
+            this.log(`${artifact._id} (${artifact.name}): added { subelements: [] } to artifact`);
+            resolve(result);
+          }
+        }
+      );
       // } else {
       //   console.log("ELSE")
       //   // done();
@@ -504,8 +504,7 @@ module.exports.up = function (done) {
       //     }
       //   }
       // );
-      }
-      done();
+      // }
     });
     promises.push(p);
   }, (err) => {
