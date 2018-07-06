@@ -9,6 +9,8 @@ const pregnancyObjects = require('./utils/pregnancy-objects');
 
 module.exports.id = "specific-to-generic-elements";
 
+// Modifier transformation functions
+
 function updateCheckExistenceModifier(modifier) {
   let medicationIndex = modifier.inputTypes.indexOf('medication');
   modifier.inputTypes.splice(medicationIndex, 1, 'medication_order', 'medication_statement');
@@ -24,412 +26,445 @@ function updateBooleanExistsModifier(modifier) {
   return modifier;
 }
 
+// ChildInstance transformation functions
+
+function transformObservation(childInstance) {
+  // Update suppressedModifiers
+  if (childInstance.suppressedModifiers) {
+    childInstance.suppressedModifiers = ['ConvertToMgPerdL'];
+  }
+
+  let parameter = {};
+  if (childInstance.parameters && childInstance.parameters[1]) {
+    parameter = childInstance.parameters[1];
+  }
+
+  // Update modifiers
+  if (!childInstance.modifiers) { childInstance.modifiers = []; }
+  childInstance.modifiers.forEach((modifierParam, i) => {
+    let modifier = modifierParam;
+    let observationValueSets = ValueSets.observations[parameter.value];
+    switch (modifier.id) {
+      case 'ValueComparisonObservation': {
+        if (parameter.value) {
+          modifier.values.unit = observationValueSets.units.code.replace(/'/g, '');
+          if (modifier.validator) modifier.validator.fields.push('unit');
+        }
+        break;
+      }
+      case 'ConceptValue': {
+        modifier.returnType = 'system_concept';
+        break;
+      }
+      case 'CheckInclusionInVS': {
+        let updatedModier = {
+          cqlLibraryFunction: null,
+          cqlTemplate: null,
+          values: {
+            code: null,
+            valueSet: observationValueSets.checkInclusionInVS,
+            qualifier: "value is a code from"
+          },
+          validator: {
+            type: "requiredIfThenOne",
+            fields: ["qualifier"],
+            args: ["valueSet", "code"]
+          },
+          returnType: "boolean",
+          inputTypes: ["system_concept"],
+          name: "Qualifier",
+          id: "Qualifier"
+        }
+        childInstance.modifiers.splice(i, 1, updatedModier);
+        break;
+      }
+      case 'ConvertToMgPerdL': {
+        modifier.id = 'ConvertObservation';
+        modifier.name = 'Convert Units';
+        modifier.values = {
+          value: "Convert.to_mg_per_dL",
+          templateName: "Convert.to_mg_per_dL"
+        };
+        modifier.validator = {
+          type: "require",
+          fields: ["value"],
+          args: null
+        };
+        delete modifier.cqlLibraryFunction;
+        break;
+      }
+      case 'CheckExistence': {
+        modifier = updateCheckExistenceModifier(modifier);
+        break;
+      }
+      case 'BooleanExists': {
+        modifier = updateBooleanExistsModifier(modifier);
+        break;
+      }
+    }
+  });
+
+  // Update parameters
+  if (parameter.type === 'observation') {
+    parameter.type = 'observation_vsac';
+    let observationValueSets = ValueSets.observations[parameter.value];
+    parameter.valueSets = observationValueSets.observations ? observationValueSets.observations : [];
+    if (observationValueSets.concepts) {
+      // Add concepts on as well
+      let codes = [];
+      observationValueSets.concepts.forEach(concept => concept.codes.forEach(code =>
+        codes.push({
+          code: code.code,
+          codeSystem: code.codeSystem,
+          display: code.display
+        })
+      ));
+      parameter.codes = codes;
+    }
+    delete parameter.value;
+  }
+
+  // Update template and suppress values
+  childInstance.template = 'GenericObservation';
+  childInstance.suppress = true;
+  childInstance.name = 'Observation';
+  childInstance.id = 'GenericObservation_vsac';
+
+  // Remove the unneeded flag
+  if (childInstance.checkInclusionInVS) {
+    delete childInstance.checkInclusionInVS;
+  }
+
+  // Change extention to Base
+  childInstance.extends = 'Base';
+
+  return [ childInstance ];
+}
+
+function transformMedication(childInstance) {
+  // Copy is for adding a parallel MedicationStatement. Original will become a MedicationOrder.
+  const childInstanceForStatement = JSON.parse(JSON.stringify(childInstance));
+  childInstanceForStatement.uniqueId = `${childInstance.uniqueId}-a`;
+
+  let parameter = {};
+  let parameterForStatement = {};
+  if (childInstance.parameters && childInstance.parameters[0]) {
+    childInstance.parameters[0].value = `${childInstance.parameters[0].value} Order`;
+    childInstanceForStatement.parameters[0].value = `${childInstanceForStatement.parameters[0].value} Statement`;
+  }
+  if (childInstance.parameters && childInstance.parameters[1]) {
+    parameter = childInstance.parameters[1];
+    parameterForStatement = childInstanceForStatement.parameters[1];
+  }
+
+  // Update modifiers
+  if (!childInstance.modifiers) { childInstance.modifiers = []; }
+  let modifierIndexesToRemove = [];
+  childInstance.modifiers.forEach((modifierParam, i) => {
+    let modifier = modifierParam;
+    let modifierForStatement = childInstanceForStatement.modifiers[i];
+    switch (modifier.id) {
+      case 'ActiveMedication': {
+        modifier.id = 'ActiveMedicationOrder';
+        modifierForStatement.id = 'ActiveMedicationStatement';
+
+        modifier.inputTypes = ['list_of_medication_orders'];
+        modifierForStatement.inputTypes = ['list_of_medication_statements'];
+
+        modifier.returnType = 'list_of_medication_orders';
+        modifierForStatement.returnType = 'list_of_medication_statements';
+
+        modifier.cqlLibraryFunction = 'C3F.ActiveMedicationOrder';
+        modifierForStatement.cqlLibraryFunction = 'C3F.ActiveMedicationStatement';
+
+        break;
+      }
+      case 'CheckExistence': {
+        modifier = updateCheckExistenceModifier(modifier);
+        modifierForStatement = updateCheckExistenceModifier(modifierForStatement);
+        break;
+      }
+      case 'BooleanExists': {
+        modifier = updateBooleanExistsModifier(modifier);
+        modifierForStatement = updateBooleanExistsModifier(modifierForStatement);
+        break;
+      }
+      case 'LookBackMedication': {
+        modifier.id = 'LookBackMedicationOrder';
+        modifierForStatement.id = 'LookBackMedicationStatement';
+
+        modifier.inputTypes = ['list_of_medication_orders'];
+        modifierForStatement.inputTypes = ['list_of_medication_statements'];
+
+        modifier.returnType = 'list_of_medication_orders';
+        modifierForStatement.returnType = 'list_of_medication_statements';
+
+        modifier.cqlLibraryFunction = 'C3F.MedicationOrderLookBack';
+        modifierForStatement.cqlLibraryFunction = 'C3F.MedicationStatementLookBack';
+
+        break;
+      }
+      case 'MostRecentMedication': {
+        // MostRecentMedication is not valid any more.
+        modifierIndexesToRemove.push(i);
+        break;
+      }
+    }
+  });
+  // Due to the fact that only one artifact has only one element with this modifier, hardcoded [0] is okay.
+  childInstance.modifiers.splice(modifierIndexesToRemove[0], 1);
+  childInstanceForStatement.modifiers.splice(modifierIndexesToRemove[0], 1);
+
+  if (parameter.type === 'medication') {
+    parameter.type = 'medicationOrder_vsac';
+    parameterForStatement.type = 'medicationStatement_vsac';
+
+    parameter.name = 'Medication Order';
+    parameterForStatement.name = 'Medication Statement';
+
+    let medicationValueSets = ValueSets.medications[parameter.value];
+    parameter.valueSets = medicationValueSets.medications ? medicationValueSets.medications : [];
+    parameterForStatement.valueSets = medicationValueSets.medications ? medicationValueSets.medications : [];
+
+    delete parameter.value;
+  }
+
+  // Update template, returnType, name, and suppress values
+  childInstance.template = 'GenericMedicationOrder';
+  childInstanceForStatement.template = 'GenericMedicationStatement';
+  childInstance.suppress = true;
+  childInstanceForStatement.suppress = true;
+  childInstance.returnType = 'list_of_medication_orders';
+  childInstanceForStatement.returnType = 'list_of_medication_statements';
+  childInstance.name = 'Medication Order';
+  childInstanceForStatement.name = 'Medication Statement';
+  childInstance.id = 'GenericMedicationOrder_vsac';
+  childInstanceForStatement.id = 'GenericMedicationStatement_vsac';
+
+  // Change extention to Base
+  childInstance.extends = 'Base';
+  childInstanceForStatement.extends = 'Base';
+
+  return [childInstance, childInstanceForStatement];
+}
+
+function transformAllergyIntolerance(childInstance) {
+  let parameter = {};
+  if (childInstance.parameters && childInstance.parameters[1]) {
+    parameter = childInstance.parameters[1];
+  }
+
+  // Update modifiers
+  if (!childInstance.modifiers) { childInstance.modifiers = []; }
+  childInstance.modifiers.forEach((modifierParam, i) => {
+    let modifier = modifierParam;
+    switch (modifier.id) {
+      case 'CheckExistence': {
+        modifier = updateCheckExistenceModifier(modifier);
+        break;
+      }
+      case 'BooleanExists': {
+        modifier = updateBooleanExistsModifier(modifier);
+        break;
+      }
+    }
+  });
+
+  // Update parameters
+  if (parameter.type === 'allergyIntolerance') {
+    parameter.type = 'allergyIntolerance_vsac';
+    let allergyIntoleranceValueSets = ValueSets.allergyIntolerances[parameter.value];
+    parameter.valueSets = allergyIntoleranceValueSets.allergyIntolerances
+      ? allergyIntoleranceValueSets.allergyIntolerances : [];
+    delete parameter.value;
+  }
+
+  // Update template and suppress values
+  childInstance.template = 'GenericAllergyIntolerance';
+  childInstance.suppress = true;
+  childInstance.name = 'Allergy Intolerance';
+  childInstance.id = 'GenericAllergyIntolerance_vsac';
+
+  // Change extention to Base
+  childInstance.extends = 'Base';
+  return [childInstance];
+}
+
+function transformCondition(childInstance) {
+  let parameter = {};
+  if (childInstance.parameters && childInstance.parameters[1]) {
+    parameter = childInstance.parameters[1];
+  }
+
+  // Update modifiers
+  if (!childInstance.modifiers) { childInstance.modifiers = []; }
+  childInstance.modifiers.forEach((modifierParam, i) => {
+    let modifier = modifierParam;
+    switch (modifier.id) {
+      case 'CheckExistence': {
+        modifier = updateCheckExistenceModifier(modifier);
+        break;
+      }
+      case 'BooleanExists': {
+        modifier = updateBooleanExistsModifier(modifier);
+        break;
+      }
+    }
+  });
+
+  // Update parameters
+  if (parameter.type === 'condition') {
+    parameter.type = 'condition_vsac';
+    let conditionValueSets = ValueSets.conditions[parameter.value];
+    parameter.valueSets = conditionValueSets.conditions ? conditionValueSets.conditions : [];
+
+    if (conditionValueSets.concepts) {
+      let codes = [];
+      conditionValueSets.concepts.forEach(concept => concept.codes.forEach(code =>
+        codes.push({
+          code: code.code,
+          codeSystem: code.codeSystem,
+          display: code.display
+        })
+      ));
+      parameter.codes = codes;
+    }
+
+    delete parameter.value;
+  }
+
+  // Update template and suppress values
+  childInstance.template = 'GenericCondition';
+  childInstance.suppress = true;
+  childInstance.name = 'Condition';
+  childInstance.id = 'GenericCondition_vsac';
+
+  // Change extention to Base
+  childInstance.extends = 'Base';
+  return [childInstance];
+}
+
+function transformEncounter(childInstance) {
+  let parameter = {};
+  if (childInstance.parameters && childInstance.parameters[1]) {
+    parameter = childInstance.parameters[1];
+  }
+
+  // Update modifiers
+  if (!childInstance.modifiers) { childInstance.modifiers = []; }
+  childInstance.modifiers.forEach((modifierParam, i) => {
+    let modifier = modifierParam;
+    switch (modifier.id) {
+      case 'CheckExistence': {
+        modifier = updateCheckExistenceModifier(modifier);
+        break;
+      }
+      case 'BooleanExists': {
+        modifier = updateBooleanExistsModifier(modifier);
+        break;
+      }
+    }
+  });
+
+  // Update parameters
+  if (parameter.type === 'encounter') {
+    parameter.type = 'encounter_vsac';
+    let encounterValueSets = ValueSets.encounters[parameter.value];
+    parameter.valueSets = encounterValueSets.encounters ? encounterValueSets.encounters : [];
+    delete parameter.value;
+  }
+
+  // Update template and suppress values
+  childInstance.template = 'GenericEncounter';
+  childInstance.suppress = true;
+  childInstance.name = 'Encounter';
+  childInstance.id = 'GenericEncounter_vsac';
+
+  // Change extention to Base
+  childInstance.extends = 'Base';
+  return [childInstance];
+}
+
+function transformProcedure(childInstance) {
+  let parameter = {};
+  if (childInstance.parameters && childInstance.parameters[1]) {
+    parameter = childInstance.parameters[1];
+  }
+
+  // Update modifiers
+  if (!childInstance.modifiers) { childInstance.modifiers = []; }
+  childInstance.modifiers.forEach((modifierParam, i) => {
+    let modifier = modifierParam;
+    switch (modifier.id) {
+      case 'CheckExistence': {
+        modifier = updateCheckExistenceModifier(modifier);
+        break;
+      }
+      case 'BooleanExists': {
+        modifier = updateBooleanExistsModifier(modifier);
+        break;
+      }
+    }
+  });
+
+  // Update parameters
+  if (parameter.type === 'procedure') {
+    parameter.type = 'procedure_vsac';
+    let procedureValueSets = ValueSets.procedures[parameter.value];
+    parameter.valueSets = procedureValueSets.procedures ? procedureValueSets.procedures : [];
+    delete parameter.value;
+  }
+
+  // Update template and suppress values
+  childInstance.template = 'GenericProcedure';
+  childInstance.suppress = true;
+  childInstance.name = 'Procedure';
+  childInstance.id = 'GenericProcedure_vsac';
+
+  // Change extention to Base
+  childInstance.extends = 'Base';
+  return [childInstance];
+}
+
+function transformPregnancydx(childInstance) {
+  let notModifierApplied = childInstance.modifiers.find(modifier => modifier.id === 'BooleanNot');
+  if (notModifierApplied) {
+    return [pregnancyObjects.notPregnant];
+  } else {
+    return [pregnancyObjects.pregnant];
+  }
+}
+
+function transformPregnancydxCMS(childInstance) {
+  let notModifierApplied = childInstance.modifiers.find(modifier => modifier.id === 'BooleanNot');
+  if (notModifierApplied) {
+    return [pregnancyObjects.notPregnantCMS347v1];
+  } else {
+    return [pregnancyObjects.pregnantCMS347v1];
+  }
+}
+
 // Returns an array of elements to be added to the artifact.
 // The original element being manipulated is the first entry in the array. Any additional elements needed will follow.
 function transformElement(element) {
   let childInstance = element;
-  // Updates for observations
   if (childInstance.extends === 'GenericObservation') {
-    // Update suppressedModifiers
-    if (childInstance.suppressedModifiers) {
-      childInstance.suppressedModifiers = [ 'ConvertToMgPerdL' ];
-    }
-  
-    let parameter = {};
-    if (childInstance.parameters && childInstance.parameters[1]) {
-      parameter = childInstance.parameters[1];
-    }
-  
-    // Update modifiers
-    if (!childInstance.modifiers) { childInstance.modifiers = []; }
-    childInstance.modifiers.forEach((modifierParam, i) => {
-      let modifier = modifierParam;
-      let observationValueSets = ValueSets.observations[parameter.value];
-      switch (modifier.id) {
-        case 'ValueComparisonObservation': {
-          if (parameter.value) {
-            modifier.values.unit = observationValueSets.units.code.replace(/'/g, '');
-            if (modifier.validator) modifier.validator.fields.push('unit');
-          }
-          break;
-        }
-        case 'ConceptValue': {
-          modifier.returnType = 'system_concept';  
-          break;
-        }
-        case 'CheckInclusionInVS': {
-          let updatedModier = {
-            cqlLibraryFunction: null,
-            cqlTemplate: null,
-            values: {
-              code: null,
-              valueSet: observationValueSets.checkInclusionInVS,
-              qualifier: "value is a code from"
-            },
-            validator: {
-              type: "requiredIfThenOne",
-              fields: ["qualifier"],
-              args: ["valueSet", "code"]
-            },
-            returnType: "boolean",
-            inputTypes: ["system_concept"],
-            name: "Qualifier",
-            id: "Qualifier"
-          }
-          childInstance.modifiers.splice(i, 1, updatedModier);
-          break;
-        }
-        case 'ConvertToMgPerdL': {
-          modifier.id = 'ConvertObservation';
-          modifier.name = 'Convert Units';
-          modifier.values = {
-            value: "Convert.to_mg_per_dL",
-            templateName: "Convert.to_mg_per_dL"
-          };
-          modifier.validator = {
-            type: "require",
-            fields: ["value"],
-            args: null
-          };
-          delete modifier.cqlLibraryFunction;
-          break;
-        }
-        case 'CheckExistence': {
-          modifier = updateCheckExistenceModifier(modifier);
-          break;
-        }
-        case 'BooleanExists': {
-          modifier = updateBooleanExistsModifier(modifier);
-          break;
-        }
-      }
-    });
-  
-    // Update parameters
-    if (parameter.type === 'observation') {
-      parameter.type = 'observation_vsac';
-      let observationValueSets = ValueSets.observations[parameter.value];
-      parameter.valueSets = observationValueSets.observations ? observationValueSets.observations : [];
-      if (observationValueSets.concepts) {
-        // Add concepts on as well
-        let codes = [];
-        observationValueSets.concepts.forEach(concept => concept.codes.forEach(code =>
-            codes.push({
-              code: code.code,
-              codeSystem: code.codeSystem,
-              display: code.display
-            })
-        ));
-        parameter.codes = codes;
-      }
-      delete parameter.value;
-    }
-  
-    // Update template and suppress values
-    childInstance.template = 'GenericObservation';
-    childInstance.suppress = true;
-    childInstance.name = 'Observation';
-    childInstance.id = 'GenericObservation_vsac';
-  
-    // Remove the unneeded flag
-    if (childInstance.checkInclusionInVS) {
-      delete childInstance.checkInclusionInVS;
-    }
-  
-    // Change extention to Base
-    childInstance.extends = 'Base';
-
-    return [ childInstance ];
+    return transformObservation(childInstance);
   } else if (childInstance.extends === 'GenericMedication') { // TODO Can the cases be consolidated at all?
-    // Copy is for adding a parallel MedicationStatement. Original will become a MedicationOrder.
-    const childInstanceForStatement = JSON.parse(JSON.stringify(childInstance));
-    childInstanceForStatement.uniqueId = `${childInstance.uniqueId}-a`;
-
-    let parameter = {};
-    let parameterForStatement = {};
-    if (childInstance.parameters && childInstance.parameters[0]) {
-      childInstance.parameters[0].value = `${childInstance.parameters[0].value} Order`;
-      childInstanceForStatement.parameters[0].value = `${childInstanceForStatement.parameters[0].value} Statement`;
-    }
-    if (childInstance.parameters && childInstance.parameters[1]) {
-      parameter = childInstance.parameters[1];
-      parameterForStatement = childInstanceForStatement.parameters[1];
-    }
-
-    // Update modifiers
-    if (!childInstance.modifiers) { childInstance.modifiers = []; }
-    let modifierIndexesToRemove = [];
-    childInstance.modifiers.forEach((modifierParam, i) => {
-      let modifier = modifierParam;
-      let modifierForStatement = childInstanceForStatement.modifiers[i];
-      switch (modifier.id) {
-        case 'ActiveMedication': {
-          modifier.id = 'ActiveMedicationOrder';
-          modifierForStatement.id = 'ActiveMedicationStatement';
-
-          modifier.inputTypes = ['list_of_medication_orders'];
-          modifierForStatement.inputTypes = ['list_of_medication_statements'];
-
-          modifier.returnType = 'list_of_medication_orders';
-          modifierForStatement.returnType = 'list_of_medication_statements';
-
-          modifier.cqlLibraryFunction = 'C3F.ActiveMedicationOrder';
-          modifierForStatement.cqlLibraryFunction = 'C3F.ActiveMedicationStatement';
-
-          break;
-        }
-        case 'CheckExistence': {
-          modifier = updateCheckExistenceModifier(modifier);
-          modifierForStatement = updateCheckExistenceModifier(modifierForStatement);
-          break;
-        }
-        case 'BooleanExists': {
-          modifier = updateBooleanExistsModifier(modifier);
-          modifierForStatement = updateBooleanExistsModifier(modifierForStatement);
-          break;
-        }
-        case 'LookBackMedication': {
-          modifier.id = 'LookBackMedicationOrder';
-          modifierForStatement.id = 'LookBackMedicationStatement';
-
-          modifier.inputTypes = ['list_of_medication_orders'];
-          modifierForStatement.inputTypes = ['list_of_medication_statements'];
-
-          modifier.returnType = 'list_of_medication_orders';
-          modifierForStatement.returnType = 'list_of_medication_statements';
-
-          modifier.cqlLibraryFunction = 'C3F.MedicationOrderLookBack';
-          modifierForStatement.cqlLibraryFunction = 'C3F.MedicationStatementLookBack';
-
-          break;
-        }
-        case 'MostRecentMedication': {
-          // MostRecentMedication is not valid any more.
-          modifierIndexesToRemove.push(i);
-          break;
-        }
-      }
-    });
-    // Due to the fact that only one artifact has only one element with this modifier, hardcoded [0] is okay.
-    childInstance.modifiers.splice(modifierIndexesToRemove[0], 1);
-    childInstanceForStatement.modifiers.splice(modifierIndexesToRemove[0], 1);
-
-    if (parameter.type === 'medication') {
-      parameter.type = 'medicationOrder_vsac';
-      parameterForStatement.type = 'medicationStatement_vsac';
-
-      parameter.name = 'Medication Order';
-      parameterForStatement.name = 'Medication Statement';
-
-      let medicationValueSets = ValueSets.medications[parameter.value];
-      parameter.valueSets = medicationValueSets.medications ? medicationValueSets.medications : [];
-      parameterForStatement.valueSets = medicationValueSets.medications ? medicationValueSets.medications : [];
-      
-      delete parameter.value;
-    }
-
-    // Update template, returnType, name, and suppress values
-    childInstance.template = 'GenericMedicationOrder';
-    childInstanceForStatement.template = 'GenericMedicationStatement';
-    childInstance.suppress = true;
-    childInstanceForStatement.suppress = true;
-    childInstance.returnType = 'list_of_medication_orders';
-    childInstanceForStatement.returnType = 'list_of_medication_statements';
-    childInstance.name = 'Medication Order';
-    childInstanceForStatement.name = 'Medication Statement';
-    childInstance.id = 'GenericMedicationOrder_vsac';
-    childInstanceForStatement.id = 'GenericMedicationStatement_vsac';
-
-    // Change extention to Base
-    childInstance.extends = 'Base';
-    childInstanceForStatement.extends = 'Base';
-
-    return [ childInstance, childInstanceForStatement ];
+    return transformMedication(childInstance);
   } else if (childInstance.extends === 'GenericAllergyIntolerance') {
-    let parameter = {};
-    if (childInstance.parameters && childInstance.parameters[1]) {
-      parameter = childInstance.parameters[1];
-    }
-
-    // Update modifiers
-    if (!childInstance.modifiers) { childInstance.modifiers = []; }
-    childInstance.modifiers.forEach((modifierParam, i) => {
-      let modifier = modifierParam;
-      switch (modifier.id) {
-        case 'CheckExistence': {
-          modifier = updateCheckExistenceModifier(modifier);
-          break;
-        }
-        case 'BooleanExists': {
-          modifier = updateBooleanExistsModifier(modifier);
-          break;
-        }
-      }
-    });
-
-    // Update parameters
-    if (parameter.type === 'allergyIntolerance') {
-      parameter.type = 'allergyIntolerance_vsac';
-      let allergyIntoleranceValueSets = ValueSets.allergyIntolerances[parameter.value];
-      parameter.valueSets = allergyIntoleranceValueSets.allergyIntolerances
-        ? allergyIntoleranceValueSets.allergyIntolerances : [];
-      delete parameter.value;
-    }
-
-    // Update template and suppress values
-    childInstance.template = 'GenericAllergyIntolerance';
-    childInstance.suppress = true;
-    childInstance.name = 'Allergy Intolerance';
-    childInstance.id = 'GenericAllergyIntolerance_vsac';
-
-    // Change extention to Base
-    childInstance.extends = 'Base';
-    return [childInstance];
+    return transformAllergyIntolerance(childInstance);
   } else if (childInstance.extends === 'GenericCondition') {
-    let parameter = {};
-    if (childInstance.parameters && childInstance.parameters[1]) {
-      parameter = childInstance.parameters[1];
-    }
-
-    // Update modifiers
-    if (!childInstance.modifiers) { childInstance.modifiers = []; }
-    childInstance.modifiers.forEach((modifierParam, i) => {
-      let modifier = modifierParam;
-      switch (modifier.id) {
-        case 'CheckExistence': {
-          modifier = updateCheckExistenceModifier(modifier);
-          break;
-        }
-        case 'BooleanExists': {
-          modifier = updateBooleanExistsModifier(modifier);
-          break;
-        }
-      }
-    });
-
-    // Update parameters
-    if (parameter.type === 'condition') {
-      parameter.type = 'condition_vsac';
-      let conditionValueSets = ValueSets.conditions[parameter.value];
-      parameter.valueSets = conditionValueSets.conditions ? conditionValueSets.conditions : [];
-
-      if (conditionValueSets.concepts) {
-        let codes = [];
-        conditionValueSets.concepts.forEach(concept => concept.codes.forEach(code =>
-          codes.push({
-            code: code.code,
-            codeSystem: code.codeSystem,
-            display: code.display
-          })
-        ));
-        parameter.codes = codes;
-      }
-
-      delete parameter.value;
-    }
-
-    // Update template and suppress values
-    childInstance.template = 'GenericCondition';
-    childInstance.suppress = true;
-    childInstance.name = 'Condition';
-    childInstance.id = 'GenericCondition_vsac';
-
-    // Change extention to Base
-    childInstance.extends = 'Base';
-    return [childInstance];
+    return transformCondition(childInstance);
   } else if (childInstance.extends === 'GenericEncounter') {
-    let parameter = {};
-    if (childInstance.parameters && childInstance.parameters[1]) {
-      parameter = childInstance.parameters[1];
-    }
-
-    // Update modifiers
-    if (!childInstance.modifiers) { childInstance.modifiers = []; }
-    childInstance.modifiers.forEach((modifierParam, i) => {
-      let modifier = modifierParam;
-      switch (modifier.id) {
-        case 'CheckExistence': {
-          modifier = updateCheckExistenceModifier(modifier);
-          break;
-        }
-        case 'BooleanExists': {
-          modifier = updateBooleanExistsModifier(modifier);
-          break;
-        }
-      }
-    });
-
-    // Update parameters
-    if (parameter.type === 'encounter') {
-      parameter.type = 'encounter_vsac';
-      let encounterValueSets = ValueSets.encounters[parameter.value];
-      parameter.valueSets = encounterValueSets.encounters ? encounterValueSets.encounters : [];
-      delete parameter.value;
-    }
-
-    // Update template and suppress values
-    childInstance.template = 'GenericEncounter';
-    childInstance.suppress = true;
-    childInstance.name = 'Encounter';
-    childInstance.id = 'GenericEncounter_vsac';
-
-    // Change extention to Base
-    childInstance.extends = 'Base';
-    return [childInstance];
+    return transformEncounter(childInstance);
   } else if (childInstance.extends === 'GenericProcedure') {
-    let parameter = {};
-    if (childInstance.parameters && childInstance.parameters[1]) {
-      parameter = childInstance.parameters[1];
-    }
-
-    // Update modifiers
-    if (!childInstance.modifiers) { childInstance.modifiers = []; }
-    childInstance.modifiers.forEach((modifierParam, i) => {
-      let modifier = modifierParam;
-      switch (modifier.id) {
-        case 'CheckExistence': {
-          modifier = updateCheckExistenceModifier(modifier);
-          break;
-        }
-        case 'BooleanExists': {
-          modifier = updateBooleanExistsModifier(modifier);
-          break;
-        }
-      }
-    });
-
-    // Update parameters
-    if (parameter.type === 'procedure') {
-      parameter.type = 'procedure_vsac';
-      let procedureValueSets = ValueSets.procedures[parameter.value];
-      parameter.valueSets = procedureValueSets.procedures ? procedureValueSets.procedures : [];
-      delete parameter.value;
-    }
-
-    // Update template and suppress values
-    childInstance.template = 'GenericProcedure';
-    childInstance.suppress = true;
-    childInstance.name = 'Procedure';
-    childInstance.id = 'GenericProcedure_vsac';
-
-    // Change extention to Base
-    childInstance.extends = 'Base';
-    return [childInstance];
+    return transformProcedure(childInstance);
   } else if (childInstance.id === 'Pregnancydx') {
     // Special cases for Pregnancy objects. No breastfeeding was used so not handling that case.
-    let notModifierApplied = childInstance.modifiers.find(modifier => modifier.id === 'BooleanNot');
-    if (notModifierApplied) {
-      return [ pregnancyObjects.notPregnant ];
-    } else {
-      return [ pregnancyObjects.pregnant ];
-    }
+    return transformPregnancydx(childInstance);
   } else if (childInstance.id === 'Pregnancydx_CMS347v1') {
-    let notModifierApplied = childInstance.modifiers.find(modifier => modifier.id === 'BooleanNot');
-    if (notModifierApplied) {
-      return [ pregnancyObjects.notPregnantCMS347v1 ];
-    } else {
-      return [ pregnancyObjects.pregnantCMS347v1 ];
-    }
+    return transformPregnancydxCMS(childInstance);
   }
   return [ childInstance ];
 }
