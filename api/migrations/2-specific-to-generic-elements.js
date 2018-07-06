@@ -45,56 +45,63 @@ function transformElement(element) {
     childInstance.modifiers.forEach((modifierParam, i) => {
       let modifier = modifierParam;
       let observationValueSets = ValueSets.observations[parameter.value];
-      // TODO Should this be a switch statement?
-      if (modifier.id === 'ValueComparisonObservation') {
-        if (parameter.value) {
-          modifier.values.unit = observationValueSets.units.code.replace(/'/g, '');
-          if (modifier.validator) modifier.validator.fields.push('unit');
+      switch (modifier.id) {
+        case 'ValueComparisonObservation': {
+          if (parameter.value) {
+            modifier.values.unit = observationValueSets.units.code.replace(/'/g, '');
+            if (modifier.validator) modifier.validator.fields.push('unit');
+          }
+          break;
         }
-      }
-      if (modifier.id === 'ConceptValue') {
-        modifier.returnType = 'system_concept';
-      }
-      if (modifier.id === 'CheckInclusionInVS') {
-        let updatedModier = {
-          cqlLibraryFunction: null,
-          cqlTemplate: null,
-          values: {
-            code: null,
-            valueSet: observationValueSets.checkInclusionInVS,
-            qualifier: "value is a code from"
-          },
-          validator: {
-            type: "requiredIfThenOne",
-            fields: [ "qualifier" ],
-            args: [ "valueSet", "code" ]
-          },
-          returnType: "boolean",
-          inputTypes: [ "system_concept" ],
-          name: "Qualifier",
-          id: "Qualifier"
+        case 'ConceptValue': {
+          modifier.returnType = 'system_concept';  
+          break;
         }
-        childInstance.modifiers.splice(i, 1, updatedModier);
-      }
-      if (modifier.id === 'ConvertToMgPerdL') {
-        modifier.id = 'ConvertObservation';
-        modifier.name = 'Convert Units';
-        modifier.values = {
-          value : "Convert.to_mg_per_dL",
-          templateName : "Convert.to_mg_per_dL"
-        };
-        modifier.validator = {
-          type : "require",
-          fields : [ "value" ],
-          args : null
-        };
-        delete modifier.cqlLibraryFunction;
-      }
-      if (modifier.id === 'CheckExistence') {
-        modifier = updateCheckExistenceModifier(modifier);
-      }
-      if (modifier.id === 'BooleanExists') {
-        modifier = updateBooleanExistsModifier(modifier);
+        case 'CheckInclusionInVS': {
+          let updatedModier = {
+            cqlLibraryFunction: null,
+            cqlTemplate: null,
+            values: {
+              code: null,
+              valueSet: observationValueSets.checkInclusionInVS,
+              qualifier: "value is a code from"
+            },
+            validator: {
+              type: "requiredIfThenOne",
+              fields: ["qualifier"],
+              args: ["valueSet", "code"]
+            },
+            returnType: "boolean",
+            inputTypes: ["system_concept"],
+            name: "Qualifier",
+            id: "Qualifier"
+          }
+          childInstance.modifiers.splice(i, 1, updatedModier);
+          break;
+        }
+        case 'ConvertToMgPerdL': {
+          modifier.id = 'ConvertObservation';
+          modifier.name = 'Convert Units';
+          modifier.values = {
+            value: "Convert.to_mg_per_dL",
+            templateName: "Convert.to_mg_per_dL"
+          };
+          modifier.validator = {
+            type: "require",
+            fields: ["value"],
+            args: null
+          };
+          delete modifier.cqlLibraryFunction;
+          break;
+        }
+        case 'CheckExistence': {
+          modifier = updateCheckExistenceModifier(modifier);
+          break;
+        }
+        case 'BooleanExists': {
+          modifier = updateBooleanExistsModifier(modifier);
+          break;
+        }
       }
     });
   
@@ -115,8 +122,6 @@ function transformElement(element) {
         ));
         parameter.codes = codes;
       }
-      // TODO other things to consider: checkInclusionInVS, units, anything else in that ValueSets file and the
-      //observation case in cqlhandler
       delete parameter.value;
     }
   
@@ -155,45 +160,54 @@ function transformElement(element) {
     if (!childInstance.modifiers) { childInstance.modifiers = []; }
     let modifierIndexesToRemove = [];
     childInstance.modifiers.forEach((modifierParam, i) => {
-      let modifier = modifierParam; // TODO This was to fix ESLint error. Better way?
+      let modifier = modifierParam;
       let modifierForStatement = childInstanceForStatement.modifiers[i];
-      if (modifier.id === 'ActiveMedication') {
-        modifier.id = 'ActiveMedicationOrder';
-        modifierForStatement.id = 'ActiveMedicationStatement';
+      switch (modifier.id) {
+        case 'ActiveMedication': {
+          modifier.id = 'ActiveMedicationOrder';
+          modifierForStatement.id = 'ActiveMedicationStatement';
 
-        modifier.inputTypes = [ 'list_of_medication_orders' ];
-        modifierForStatement.inputTypes = [ 'list_of_medication_statements' ];
+          modifier.inputTypes = ['list_of_medication_orders'];
+          modifierForStatement.inputTypes = ['list_of_medication_statements'];
 
-        modifier.returnType = 'list_of_medication_orders';
-        modifierForStatement.returnType = 'list_of_medication_statements';
+          modifier.returnType = 'list_of_medication_orders';
+          modifierForStatement.returnType = 'list_of_medication_statements';
 
-        modifier.cqlLibraryFunction = 'C3F.ActiveMedicationOrder';
-        modifierForStatement.cqlLibraryFunction = 'C3F.ActiveMedicationStatement';
-      }
-      if (modifier.id === 'CheckExistence') {
-        modifier = updateCheckExistenceModifier(modifier);
-        modifierForStatement = updateCheckExistenceModifier(modifierForStatement);
-      }
-      if (modifier.id === 'BooleanExists') {
-        modifier = updateBooleanExistsModifier(modifier);
-        modifierForStatement = updateBooleanExistsModifier(modifierForStatement);
-      }
-      if (modifier.id === 'LookBackMedication') {
-        modifier.id = 'LookBackMedicationOrder';
-        modifierForStatement.id = 'LookBackMedicationStatement';
+          modifier.cqlLibraryFunction = 'C3F.ActiveMedicationOrder';
+          modifierForStatement.cqlLibraryFunction = 'C3F.ActiveMedicationStatement';
 
-        modifier.inputTypes = [ 'list_of_medication_orders' ];  
-        modifierForStatement.inputTypes = [ 'list_of_medication_statements' ];  
+          break;
+        }
+        case 'CheckExistence': {
+          modifier = updateCheckExistenceModifier(modifier);
+          modifierForStatement = updateCheckExistenceModifier(modifierForStatement);
+          break;
+        }
+        case 'BooleanExists': {
+          modifier = updateBooleanExistsModifier(modifier);
+          modifierForStatement = updateBooleanExistsModifier(modifierForStatement);
+          break;
+        }
+        case 'LookBackMedication': {
+          modifier.id = 'LookBackMedicationOrder';
+          modifierForStatement.id = 'LookBackMedicationStatement';
 
-        modifier.returnType = 'list_of_medication_orders';
-        modifierForStatement.returnType = 'list_of_medication_statements';
+          modifier.inputTypes = ['list_of_medication_orders'];
+          modifierForStatement.inputTypes = ['list_of_medication_statements'];
 
-        modifier.cqlLibraryFunction = 'C3F.MedicationOrderLookBack';
-        modifierForStatement.cqlLibraryFunction = 'C3F.MedicationStatementLookBack';
-      }
-      // MostRecentMedication is not valid any more.
-      if (modifier.id === 'MostRecentMedication') {
-        modifierIndexesToRemove.push(i);
+          modifier.returnType = 'list_of_medication_orders';
+          modifierForStatement.returnType = 'list_of_medication_statements';
+
+          modifier.cqlLibraryFunction = 'C3F.MedicationOrderLookBack';
+          modifierForStatement.cqlLibraryFunction = 'C3F.MedicationStatementLookBack';
+
+          break;
+        }
+        case 'MostRecentMedication': {
+          // MostRecentMedication is not valid any more.
+          modifierIndexesToRemove.push(i);
+          break;
+        }
       }
     });
     // Due to the fact that only one artifact has only one element with this modifier, hardcoded [0] is okay.
@@ -241,11 +255,15 @@ function transformElement(element) {
     if (!childInstance.modifiers) { childInstance.modifiers = []; }
     childInstance.modifiers.forEach((modifierParam, i) => {
       let modifier = modifierParam;
-      if (modifier.id === 'CheckExistence') {
-        modifier = updateCheckExistenceModifier(modifier);
-      }
-      if (modifier.id === 'BooleanExists') {
-        modifier = updateBooleanExistsModifier(modifier);
+      switch (modifier.id) {
+        case 'CheckExistence': {
+          modifier = updateCheckExistenceModifier(modifier);
+          break;
+        }
+        case 'BooleanExists': {
+          modifier = updateBooleanExistsModifier(modifier);
+          break;
+        }
       }
     });
 
@@ -277,11 +295,15 @@ function transformElement(element) {
     if (!childInstance.modifiers) { childInstance.modifiers = []; }
     childInstance.modifiers.forEach((modifierParam, i) => {
       let modifier = modifierParam;
-      if (modifier.id === 'CheckExistence') {
-        modifier = updateCheckExistenceModifier(modifier);
-      }
-      if (modifier.id === 'BooleanExists') {
-        modifier = updateBooleanExistsModifier(modifier);
+      switch (modifier.id) {
+        case 'CheckExistence': {
+          modifier = updateCheckExistenceModifier(modifier);
+          break;
+        }
+        case 'BooleanExists': {
+          modifier = updateBooleanExistsModifier(modifier);
+          break;
+        }
       }
     });
 
@@ -325,11 +347,15 @@ function transformElement(element) {
     if (!childInstance.modifiers) { childInstance.modifiers = []; }
     childInstance.modifiers.forEach((modifierParam, i) => {
       let modifier = modifierParam;
-      if (modifier.id === 'CheckExistence') {
-        modifier = updateCheckExistenceModifier(modifier);
-      }
-      if (modifier.id === 'BooleanExists') {
-        modifier = updateBooleanExistsModifier(modifier);
+      switch (modifier.id) {
+        case 'CheckExistence': {
+          modifier = updateCheckExistenceModifier(modifier);
+          break;
+        }
+        case 'BooleanExists': {
+          modifier = updateBooleanExistsModifier(modifier);
+          break;
+        }
       }
     });
 
@@ -360,11 +386,15 @@ function transformElement(element) {
     if (!childInstance.modifiers) { childInstance.modifiers = []; }
     childInstance.modifiers.forEach((modifierParam, i) => {
       let modifier = modifierParam;
-      if (modifier.id === 'CheckExistence') {
-        modifier = updateCheckExistenceModifier(modifier);
-      }
-      if (modifier.id === 'BooleanExists') {
-        modifier = updateBooleanExistsModifier(modifier);
+      switch (modifier.id) {
+        case 'CheckExistence': {
+          modifier = updateCheckExistenceModifier(modifier);
+          break;
+        }
+        case 'BooleanExists': {
+          modifier = updateBooleanExistsModifier(modifier);
+          break;
+        }
       }
     });
 
@@ -458,53 +488,24 @@ module.exports.up = function (done) {
           parseTree(subpopulation);
         }
       });
-      // TODO Shouldn't need subelements since thats not in master/prod yet
+      // Subelements are not in master/prod yet.
       // console.log("ARTIFACT:")
       // console.dir(artifact, {depth: null})
-      // Update only the old artifact
-      // console.log(artifact._id)
-      // console.log(artifact._id.toString() === '5b2ce2d683a3210faa340cdc')
-      // if (artifact._id.toString() === '5b17efdebec7e5254a90dc5c') {
-      //   console.log("updating")
-      //   // artifact.expTreeInclude.childInstances = [];
-      //   console.dir(artifact, {depth: null})
+      // TODO figure out how to only update artifacts if they've changed.
+      // Update the artifact with all the changes made.
       coll.updateOne(
         { _id: artifact._id },
         { '$set': artifact },
         (err, result) => {
-          console.log("HERE")
           if (err) {
-            console.log("ERROR")
             this.log(`${artifact._id}: error:`, err);
             reject(err);
           } else {
-            console.log("SUCCESS")
-            this.log(`${artifact._id} (${artifact.name}): added { subelements: [] } to artifact`);
+            this.log(`${artifact._id} (${artifact.name}): successfully updated.`);
             resolve(result);
           }
         }
       );
-      // } else {
-      //   console.log("ELSE")
-      //   // done();
-      // }
-      // update the document, adding the new parameters and removing the old booleanParameters
-      // TODO figure out how to conditinally update element - only really want to update subelements if they've
-      // changed. Right now it just resets them
-      // coll.updateOne(
-      //   { _id: artifact._id },
-      //   { '$set': { subelements } },
-      //   (err, result) => {
-      //     if (err) {
-      //       this.log(`${artifact._id}: error:`, err);
-      //       reject(err);
-      //     } else {
-      //       this.log(`${artifact._id} (${artifact.name}): added { subelements: [] } to artifact`);
-      //       resolve(result);
-      //     }
-      //   }
-      // );
-      // }
     });
     promises.push(p);
   }, (err) => {
