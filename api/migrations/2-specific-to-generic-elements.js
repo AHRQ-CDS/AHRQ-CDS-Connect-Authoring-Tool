@@ -4,6 +4,7 @@
  * - renames 'booleanParameters' to 'parameters'
  */
 'use strict';
+const _ = require('lodash');
 const ValueSets = require('../data/valueSets');
 const pregnancyObjects = require('./utils/pregnancy-objects');
 
@@ -138,7 +139,7 @@ function transformObservation(childInstance) {
   // Change extention to Base
   childInstance.extends = 'Base';
 
-  return [ childInstance ];
+  return childInstance;
 }
 
 function transformMedication(childInstance) {
@@ -148,7 +149,9 @@ function transformMedication(childInstance) {
 
   let parameter = {};
   let parameterForStatement = {};
+  let containingOrName = 'Medication';
   if (childInstance.parameters && childInstance.parameters[0]) {
+    containingOrName = childInstance.parameters[0].value;
     childInstance.parameters[0].value = `${childInstance.parameters[0].value} Order`;
     childInstanceForStatement.parameters[0].value = `${childInstanceForStatement.parameters[0].value} Statement`;
   }
@@ -223,8 +226,12 @@ function transformMedication(childInstance) {
     parameterForStatement.name = 'Medication Statement';
 
     let medicationValueSets = ValueSets.medications[parameter.value];
-    parameter.valueSets = medicationValueSets.medications ? medicationValueSets.medications : [];
-    parameterForStatement.valueSets = medicationValueSets.medications ? medicationValueSets.medications : [];
+    if (!medicationValueSets.medications) {
+      medicationValueSets.medications = [];
+    }
+    // Filter out Orders and Statements from the list in valueSets.js
+    parameter.valueSets = medicationValueSets.medications.filter(med => med.type === 'MedicationOrder');
+    parameterForStatement.valueSets = medicationValueSets.medications.filter(med => med.type === 'MedicationStatement');
 
     delete parameter.value;
   }
@@ -245,7 +252,24 @@ function transformMedication(childInstance) {
   childInstance.extends = 'Base';
   childInstanceForStatement.extends = 'Base';
 
-  return [childInstance, childInstanceForStatement];
+  let containingOr = {
+    id: 'Or',
+    name: 'Or',
+    conjunction: true,
+    returnType: 'boolean',
+    parameters: [
+      {
+        id: 'element_name',
+        type: 'string',
+        name: 'Group Name',
+        value: containingOrName
+      }
+    ],
+    "uniqueId": _.uniqueId('Or'),
+    "childInstances": [ childInstance, childInstanceForStatement ]
+  }
+
+  return containingOr;
 }
 
 function transformAllergyIntolerance(childInstance) {
@@ -287,7 +311,7 @@ function transformAllergyIntolerance(childInstance) {
 
   // Change extention to Base
   childInstance.extends = 'Base';
-  return [childInstance];
+  return childInstance;
 }
 
 function transformCondition(childInstance) {
@@ -341,7 +365,7 @@ function transformCondition(childInstance) {
 
   // Change extention to Base
   childInstance.extends = 'Base';
-  return [childInstance];
+  return childInstance;
 }
 
 function transformEncounter(childInstance) {
@@ -382,7 +406,7 @@ function transformEncounter(childInstance) {
 
   // Change extention to Base
   childInstance.extends = 'Base';
-  return [childInstance];
+  return childInstance;
 }
 
 function transformProcedure(childInstance) {
@@ -423,29 +447,28 @@ function transformProcedure(childInstance) {
 
   // Change extention to Base
   childInstance.extends = 'Base';
-  return [childInstance];
+  return childInstance;
 }
 
 function transformPregnancydx(childInstance) {
   let notModifierApplied = childInstance.modifiers.find(modifier => modifier.id === 'BooleanNot');
   if (notModifierApplied) {
-    return [pregnancyObjects.notPregnant];
+    return pregnancyObjects.notPregnant;
   } else {
-    return [pregnancyObjects.pregnant];
+    return pregnancyObjects.pregnant;
   }
 }
 
 function transformPregnancydxCMS(childInstance) {
   let notModifierApplied = childInstance.modifiers.find(modifier => modifier.id === 'BooleanNot');
   if (notModifierApplied) {
-    return [pregnancyObjects.notPregnantCMS347v1];
+    return pregnancyObjects.notPregnantCMS347v1;
   } else {
-    return [pregnancyObjects.pregnantCMS347v1];
+    return pregnancyObjects.pregnantCMS347v1;
   }
 }
 
-// Returns an array of elements to be added to the artifact.
-// The original element being manipulated is the first entry in the array. Any additional elements needed will follow.
+// Returns the element after transformation.
 function transformElement(element) {
   let childInstance = element;
   if (childInstance.extends === 'GenericObservation') {
@@ -466,7 +489,7 @@ function transformElement(element) {
   } else if (childInstance.id === 'Pregnancydx_CMS347v1') {
     return transformPregnancydxCMS(childInstance);
   }
-  return [ childInstance ];
+  return childInstance;
 }
 
 function parseTree(element) {
@@ -477,13 +500,8 @@ function parseTree(element) {
       return parseTree(child);
     } else if (child.type === 'element') {
       // Transform the elements and modifiers as necessary.
-      // Original element will be the first entry in the array returned. Any additional elements to be added follow.
-      let transformedElements = transformElement(child);
-      if (transformedElements.length > 1) {
-        // Ex: Medications were split, so add in an additional child to handle MedicationOrder and MedicationStatement
-        newChildrenToAdd = newChildrenToAdd.concat(transformedElements.slice(1));
-      }
-      return transformedElements[0];
+      let transformedElement = transformElement(child);
+      return transformedElement;
     } else {
       // A few elements (Age Range, Gender, And, Or) don't have type = element. But they don't require transformation.
       return child;
@@ -506,8 +524,6 @@ module.exports.up = function (done) {
   // coll.find({ 'expTreeInclude': { $exists: true} }).forEach((artifact) => {
   coll.find().forEach((artifact) => {
     const p = new Promise((resolve, reject) => {
-      console.log(artifact.name)
-      // if (artifact._id.toString() === '5b3e66bf8ff70520c45cbc95') {
       let subelements = artifact.subelements;
       if (!subelements) {
         artifact.subelements = [];
