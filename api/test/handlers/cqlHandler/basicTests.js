@@ -311,18 +311,18 @@ describe('Subpopulation tests', () => {
       parameters: [{ id: 'element_name', type: 'string', name: 'Group Name' }],
       uniqueId: 'And-5',
       childInstances: [{
-        id: 'Breastfeeding',
-        name: 'Breastfeeding',
-        template: 'Breastfeeding',
-        returnType: 'boolean',
+        id: 'GenericObservation_vsac',
+        name: 'Observation',
+        template: 'GenericObservation',
+        returnType: 'list_of_observations',
         extends: 'Base',
-        suppressedModifiers: ['BooleanComparison', 'WithUnit', 'CheckExistence'],
+        suppressedModifiers: ['ConvertToMgPerdL'],
         parameters: [
-          { id: 'element_name', value: 'IsBreastfeeding', type: 'string', name: 'Element Name' },
-          { id: 'observation', type: 'breastfeeding', static: true, value: 'breastfeeding' }
+          { id: 'element_name', value: 'My Observation', type: 'string', name: 'Element Name' },
+          { id: 'observation', type: 'observation_vsac', static: true, value: 'Observation' }
         ],
         type: 'element',
-        uniqueId: 'Breastfeeding-6',
+        uniqueId: 'observation-6',
         modifiers: []
       }],
       path: '',
@@ -440,6 +440,6 @@ describe('Subpopulation tests', () => {
     // "HasDiabetes"
 
     expect(converted).to.match(/.*^\s*define "Subpopulation 1":\s+"HasDiabetes"\s+/m);
-    expect(converted).to.match(/.*^\s*define "Subpopulation 2":\s+"IsBreastfeeding"\s+/m);
+    expect(converted).to.match(/.*^\s*define "Subpopulation 2":\s+"My Observation"\s+/m);
   });
 });
