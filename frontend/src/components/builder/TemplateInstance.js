@@ -514,7 +514,6 @@ export default class TemplateInstance extends Component {
           <ValueSetParameter
             key={param.id}
             param={param}
-            valueset={this.props.resources}
             valueSets={this.props.valueSets}
             loadValueSets={this.props.loadValueSets}
             updateInstance={this.updateInstance}/>
@@ -664,7 +663,6 @@ export default class TemplateInstance extends Component {
 }
 
 TemplateInstance.propTypes = {
-  resources: PropTypes.object,
   valueSets: PropTypes.array,
   loadValueSets: PropTypes.func.isRequired,
   getPath: PropTypes.func.isRequired,

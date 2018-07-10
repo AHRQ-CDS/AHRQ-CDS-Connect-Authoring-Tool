@@ -34,7 +34,6 @@ export default class ValueSetParameter extends Component {
 
 ValueSetParameter.propTypes = {
   param: PropTypes.object,
-  valueset: PropTypes.object,
   valueSets: PropTypes.array,
   loadValueSets: PropTypes.func.isRequired,
   updateInstance: PropTypes.func.isRequired

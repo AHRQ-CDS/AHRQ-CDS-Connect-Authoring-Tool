@@ -479,7 +479,7 @@ function transformElement(element) {
   let childInstance = element;
   if (childInstance.extends === 'GenericObservation') {
     return transformObservation(childInstance);
-  } else if (childInstance.extends === 'GenericMedication') { // TODO Can the cases be consolidated at all?
+  } else if (childInstance.extends === 'GenericMedication') {
     return transformMedication(childInstance);
   } else if (childInstance.extends === 'GenericAllergyIntolerance') {
     return transformAllergyIntolerance(childInstance);
@@ -527,7 +527,6 @@ module.exports.up = function (done) {
   // Since db operations are asynchronous, use promises to ensure all updates happen before we call done().
   // The promises array collects all the promises which must be resolved before we're done.
   const promises = [];
-  // coll.find({ 'expTreeInclude': { $exists: true} }).forEach((artifact) => {
   coll.find().forEach((artifact) => {
     const p = new Promise((resolve, reject) => {
       let subelements = artifact.subelements;
@@ -546,9 +545,7 @@ module.exports.up = function (done) {
         }
       });
       // Subelements are not in master/prod yet.
-      // console.log("ARTIFACT:")
-      // console.dir(artifact, {depth: null})
-      // TODO figure out how to only update artifacts if they've changed.
+
       // Update the artifact with all the changes made.
       coll.updateOne(
         { _id: artifact._id },

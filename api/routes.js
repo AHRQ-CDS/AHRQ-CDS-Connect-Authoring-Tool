@@ -17,7 +17,7 @@ module.exports = (app) => {
   // Routing for Artifacts
   app.use('/authoring/api/artifacts', artifactRouter);
 
-  // Routing for Resources, ValueSets, Templates
+  // Routing for ValueSets, Templates
   app.use('/authoring/api/config', configRouter);
 
   // Routing for cql files

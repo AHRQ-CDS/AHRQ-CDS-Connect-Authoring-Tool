@@ -1,4 +1,3 @@
-const Resources = require('../data/resources');
 const Templates = require('../data/formTemplates');
 const ValueSets = require('../data/valueSets');
 const config = require('../config');
@@ -9,18 +8,12 @@ const conversionsELMFile = require('../data/library_helpers/ELMFiles/CDS_Connect
 const conversionFunctionDescriptions = { 'to_mg_per_dL': 'mmol/L to mg/dL for blood cholesterol' };
 
 module.exports = {
-  getResources,
   getTemplates,
   getValueSets,
   getOneValueSet,
   getRepoPublishConfig,
   getConversionFunctions
 };
-
-// Returns all ValueSets saved
-function getResources(request, result) {
-  result.json(Resources);
-}
 
 // Returns all ValueSets saved
 function getTemplates(request, result) {

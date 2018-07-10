@@ -193,7 +193,7 @@ export default class ConjunctionGroup extends Component {
 
   renderChildren() {
     const {
-      artifact, treeName, templates, resources, valueSets, addInstance, editInstance, deleteInstance
+      artifact, treeName, templates, valueSets, addInstance, editInstance, deleteInstance
     } = this.props;
 
     return this.props.instance.childInstances.map((instance, i) => {
@@ -206,7 +206,6 @@ export default class ConjunctionGroup extends Component {
               treeName={treeName}
               artifact={artifact}
               templates={templates}
-              resources={resources}
               valueSets={valueSets}
               loadValueSets={this.props.loadValueSets}
               instance={instance}
@@ -253,7 +252,6 @@ export default class ConjunctionGroup extends Component {
     return (
       <div key={instance.uniqueId} className="card-group-section">
         <TemplateInstance
-          resources={this.props.resources}
           valueSets={this.props.valueSets}
           loadValueSets={this.props.loadValueSets}
           getPath={this.getChildsPath}
@@ -335,7 +333,6 @@ ConjunctionGroup.propTypes = {
   treeName: PropTypes.string.isRequired,
   artifact: PropTypes.object,
   templates: PropTypes.array,
-  resources: PropTypes.object,
   valueSets: PropTypes.array,
   loadValueSets: PropTypes.func.isRequired,
   getPath: requiredIf(PropTypes.func, props => !props.root), // path needed for children

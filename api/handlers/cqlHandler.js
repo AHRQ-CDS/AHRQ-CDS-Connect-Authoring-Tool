@@ -668,6 +668,7 @@ function getCountForUniqueExpressionName(expression, map, nameKey, contentKey, c
     let count = 0;
     let existingOID = 0;
     map.forEach((val, key) => {
+      if (!key) return;
       const baseKeyArray = key.split('_');
       // Check if the last entry is a number, meaning _n was appended to account for nonunique expression names.
       const lastChar = baseKeyArray[baseKeyArray.length - 1];
