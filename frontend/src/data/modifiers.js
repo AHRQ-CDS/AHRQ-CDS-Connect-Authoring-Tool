@@ -75,14 +75,6 @@ export default [
     cqlLibraryFunction: null
   },
   {
-    id: 'ConvertToMgPerdL',
-    name: 'Convert to mg/dL from mmol/L',
-    inputTypes: ['system_quantity'],
-    returnType: 'system_quantity',
-    cqlTemplate: 'BaseModifier',
-    cqlLibraryFunction: 'Convert.to_mg_per_dL'
-  },
-  {
     id: 'ConvertObservation',
     name: 'Convert Units',
     inputTypes: ['system_quantity'],
@@ -179,19 +171,12 @@ export default [
     cqlLibraryFunction: 'C3F.MostRecent'
   },
   {
-    id: 'MostRecentCondition',
-    name: 'Most Recent',
-    inputTypes: ['list_of_conditions'],
-    returnType: 'condition',
-    cqlTemplate: 'BaseModifier',
-    cqlLibraryFunction: 'C3F.MostRecent' },
-  {
     id: 'MostRecentProcedure',
     name: 'Most Recent',
     inputTypes: ['list_of_procedures'],
     returnType: 'procedure',
     cqlTemplate: 'BaseModifier',
-    cqlLibraryFunction: 'C3F.MostRecent' },
+    cqlLibraryFunction: 'C3F.MostRecentProcedure' },
   // Look Back
   {
     id: 'LookBackObservation',

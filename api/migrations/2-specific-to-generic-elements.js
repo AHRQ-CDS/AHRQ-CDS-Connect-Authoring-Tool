@@ -214,9 +214,11 @@ function transformMedication(childInstance) {
       }
     }
   });
-  // Due to the fact that only one artifact has only one element with this modifier, hardcoded [0] is okay.
-  childInstance.modifiers.splice(modifierIndexesToRemove[0], 1);
-  childInstanceForStatement.modifiers.splice(modifierIndexesToRemove[0], 1);
+  if (modifierIndexesToRemove.length > 0) {
+    // Due to the fact that only one artifact has only one element with this modifier, hardcoded [0] is okay.
+    childInstance.modifiers.splice(modifierIndexesToRemove[0], 1);
+    childInstanceForStatement.modifiers.splice(modifierIndexesToRemove[0], 1);
+  }
 
   if (parameter.type === 'medication') {
     parameter.type = 'medicationOrder_vsac';
@@ -426,6 +428,10 @@ function transformProcedure(childInstance) {
       }
       case 'BooleanExists': {
         modifier = updateBooleanExistsModifier(modifier);
+        break;
+      }
+      case 'MostRecentProcedure': {
+        modifier.cqlLibraryFunction = 'C3F.MostRecentProcedure';
         break;
       }
     }

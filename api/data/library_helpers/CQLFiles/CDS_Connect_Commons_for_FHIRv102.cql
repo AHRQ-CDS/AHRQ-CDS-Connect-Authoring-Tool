@@ -246,6 +246,16 @@ define function ProcedureLookBack(ProcList List<Procedure>, LookBack System.Quan
     where P.performedDateTime.value in LookBackInterval
       or NullSafeToInterval(P.performedPeriod) overlaps LookBackInterval
 
+/**
+ * The most recent procedure.  For each Procedure, this algorithm will use the Coalesce function, which returns the
+ * first non-null result from these fields: performedDateTime, performedPeriod.end, performedPeriod.start.
+ * The found date will be used to compare Procedures and determine the most recent one.
+ * @param ProcList - a list of Procedures
+ * @returns {Procedure} the most recent Procedure from the list, or null if null was passed in
+ */
+define function MostRecentProcedure(ProcList List<Procedure>):
+  Last(ProcList P sort by Coalesce(performedDateTime.value, performedPeriod."end".value, performedPeriod."start".value))
+
 // -------------------------------------------------- MEDICATIONS ------------------------------------------------------
 
 /**
