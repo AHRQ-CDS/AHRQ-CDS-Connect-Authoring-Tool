@@ -35,6 +35,12 @@
   td:last-of-type {
     text-align: right;
   }
+
+  .vsac-authenticate {
+    display: flex;
+    justify-content: flex-end;
+    margin: 0;
+  }
 }
 
 .patients__tablecell-wide {

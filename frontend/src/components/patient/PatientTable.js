@@ -11,6 +11,7 @@ import patientProps from '../../prop-types/patient';
 import artifactProps from '../../prop-types/artifact';
 
 import Modal from '../elements/Modal';
+import VSACAuthenticationModal from '../builder/VSACAuthenticationModal';
 
 export default class PatientTable extends Component {
   constructor(props) {
@@ -253,6 +254,30 @@ export default class PatientTable extends Component {
     </tr>
   );
 
+  renderVSACLogin = () => {
+    // If last time authenticated was less than 7.5 hours ago, force user to log in again.
+    if (this.props.timeLastAuthenticated < new Date() - 27000000 || this.props.vsacFHIRCredentials.username == null) {
+      return (
+        <div className="vsac-authenticate">
+          <VSACAuthenticationModal
+            loginVSACUser={this.props.loginVSACUser}
+            setVSACAuthStatus={this.props.setVSACAuthStatus}
+            vsacStatus={this.props.vsacStatus}
+            vsacStatusText={this.props.vsacStatusText}
+          />
+        </div>
+      );
+    }
+
+    return (
+      <div className="vsac-authenticate">
+        <button className="disabled-button" disabled={true}>
+          <FontAwesome name="check" /> VSAC Authenticated
+        </button>
+      </div>
+    );
+  }
+
   render() {
     const patients = this.props.patients;
 
@@ -265,7 +290,7 @@ export default class PatientTable extends Component {
               <th scope="col" className="patients__tablecell-wide">Gender</th>
               <th scope="col" className="patients__tablecell-wide">Birth Date</th>
               <th scope="col">Last Updated</th>
-              <td></td>
+              <th>{this.renderVSACLogin()}</th>
             </tr>
           </thead>
 

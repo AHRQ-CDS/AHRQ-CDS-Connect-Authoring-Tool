@@ -13,7 +13,6 @@ import patientProps from '../prop-types/patient';
 import artifactProps from '../prop-types/artifact';
 
 import PatientTable from '../components/patient/PatientTable';
-import VSACAuthenticationModal from '../components/builder/VSACAuthenticationModal';
 
 class Patient extends Component {
   componentWillMount() {
@@ -108,30 +107,6 @@ class Patient extends Component {
     return <div>No patients to show.</div>;
   }
 
-  renderVSACLogin = () => {
-    // If last time authenticated was less than 7.5 hours ago, force user to log in again.
-    if (this.props.timeLastAuthenticated < new Date() - 27000000 || this.props.vsacFHIRCredentials.username == null) {
-      return (
-        <div className="vsac-authenticate">
-          <VSACAuthenticationModal
-            loginVSACUser={this.props.loginVSACUser}
-            setVSACAuthStatus={this.props.setVSACAuthStatus}
-            vsacStatus={this.props.vsacStatus}
-            vsacStatusText={this.props.vsacStatusText}
-          />
-        </div>
-      );
-    }
-
-    return (
-      <div className="vsac-authenticate">
-        <button className="disabled-button" disabled={true}>
-          <FontAwesome name="check" /> VSAC Authenticated
-        </button>
-      </div>
-    );
-  }
-
   render() {
     return (
       <div className="patient" id="maincontent">
@@ -143,8 +118,8 @@ class Patient extends Component {
           <FontAwesome name='cloud-upload' size="5x"/>
           <p>Drop a valid JSON FHIR DSTU2 bundle containing a patient here, or click to browse.</p>
         </Dropzone>
+
         <div className="patient-wrapper">
-          {this.renderVSACLogin()}
           {this.renderResultsTable()}
           {this.renderPatientsTable()}
         </div>
@@ -157,6 +132,7 @@ Patient.propTypes = {
   patients: PropTypes.arrayOf(patientProps).isRequired,
   artifacts: PropTypes.arrayOf(artifactProps).isRequired,
   results: PropTypes.object,
+  isExecuting: PropTypes.bool.isRequired,
   loadPatients: PropTypes.func.isRequired,
   addPatient: PropTypes.func.isRequired,
   deletePatient: PropTypes.func.isRequired,
@@ -189,6 +165,7 @@ function mapStateToProps(state) {
     patients: state.patients.patients,
     artifacts: state.artifacts.artifacts,
     results: state.artifacts.executeArtifact.results,
+    isExecuting: state.artifacts.executeArtifact.isExecuting,
     vsacStatus: state.vsac.authStatus,
     vsacStatusText: state.vsac.authStatusText,
     timeLastAuthenticated: state.vsac.timeLastAuthenticated,
