@@ -4,7 +4,7 @@ import FontAwesome from 'react-fontawesome';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import Dropzone from 'react-dropzone';
-import { Jumbotron } from 'reactstrap';
+import { Jumbotron, Breadcrumb } from 'reactstrap';
 
 import { loadPatients, addPatient, deletePatient } from '../actions/patients';
 import { loadArtifacts, executeCQLArtifact } from '../actions/artifacts';
@@ -40,7 +40,7 @@ class Patient extends Component {
 
   // TODO support results for more than one patient
   renderResultsTable = () => {
-    const { results, artifactExecuted, patientExecuted } = this.props;
+    const { results, artifactExecuted, patientExecuted, isExecuting } = this.props;
 
     if (results) {
       const patientResults = results.patientResults[Object.keys(results.patientResults)[0]];
@@ -107,9 +107,13 @@ class Patient extends Component {
           </table>
         </Jumbotron>
       );
+    } else if (isExecuting) {
+      return <div className="execution-loading"><FontAwesome name="spinner" spin size="4x" /></div>;
+    } else if (this.props.vsacFHIRCredentials.username == null) {
+      return <Breadcrumb className="execution-message">Log in to VSAC to execute CQL for a patient below.</Breadcrumb>;
     }
 
-    return <div>No results to show.</div>;
+    return <Breadcrumb className="execution-message">Execute CQL for a patient below.</Breadcrumb>;
   }
 
   renderPatientsTable() {

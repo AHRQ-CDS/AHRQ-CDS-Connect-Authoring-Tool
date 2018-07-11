@@ -12,6 +12,17 @@
       padding: 0.4em 0.75em !important;
     }
   }
+
+  .execution-message {
+    margin: 2em 0;
+    text-align: center;
+    font-style: italic;
+  }
+
+  .execution-loading {
+    text-align: center;
+    margin: 40px 0;
+  }
 }
 
 .patient-table {
