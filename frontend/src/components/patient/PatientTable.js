@@ -264,7 +264,7 @@ export default class PatientTable extends Component {
             setVSACAuthStatus={this.props.setVSACAuthStatus}
             vsacStatus={this.props.vsacStatus}
             vsacStatusText={this.props.vsacStatusText}
-          />
+            vsacIsAuthenticating={this.props.vsacIsAuthenticating} />
         </div>
       );
     }
@@ -317,5 +317,6 @@ PatientTable.propTypes = {
   loginVSACUser: PropTypes.func.isRequired,
   setVSACAuthStatus: PropTypes.func.isRequired,
   vsacStatus: PropTypes.string,
-  vsacStatusText: PropTypes.string
+  vsacStatusText: PropTypes.string,
+  vsacIsAuthenticating: PropTypes.bool.isRequired
 };

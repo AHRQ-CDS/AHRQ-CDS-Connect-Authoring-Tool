@@ -129,7 +129,8 @@ class Patient extends Component {
           loginVSACUser={this.props.loginVSACUser}
           setVSACAuthStatus={this.props.setVSACAuthStatus}
           vsacStatus={this.props.vsacStatus}
-          vsacStatusText={this.props.vsacStatusText} />
+          vsacStatusText={this.props.vsacStatusText}
+          vsacIsAuthenticating={this.props.vsacIsAuthenticating} />
       );
     }
 
@@ -174,7 +175,8 @@ Patient.propTypes = {
   loginVSACUser: PropTypes.func.isRequired,
   setVSACAuthStatus: PropTypes.func.isRequired,
   vsacStatus: PropTypes.string,
-  vsacStatusText: PropTypes.string
+  vsacStatusText: PropTypes.string,
+  vsacIsAuthenticating: PropTypes.bool.isRequired
 };
 
 // these props are used for dispatching actions
@@ -201,6 +203,7 @@ function mapStateToProps(state) {
     patientExecuted: state.artifacts.executeArtifact.patientExecuted,
     vsacStatus: state.vsac.authStatus,
     vsacStatusText: state.vsac.authStatusText,
+    vsacIsAuthenticating: state.vsac.isAuthenticating,
     timeLastAuthenticated: state.vsac.timeLastAuthenticated,
     vsacFHIRCredentials: { username: state.vsac.username, password: state.vsac.password }
   };
