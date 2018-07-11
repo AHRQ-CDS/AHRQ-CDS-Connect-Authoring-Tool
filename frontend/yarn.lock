@@ -1943,8 +1943,9 @@ cql-exec-fhir@^1.0.0:
   dependencies:
     xml2js "~0.4.17"
 
-cql-exec-vsac@../../cql-exec-vsac:
+cql-exec-vsac@cqframework/cql-exec-vsac#disable-caching:
   version "1.0.1"
+  resolved "https://codeload.github.com/cqframework/cql-exec-vsac/tar.gz/63efb79822fc459459397676ecc63e5cb3c6df22"
   dependencies:
     debug "^2.6.4"
     mkdirp "^0.5.1"
