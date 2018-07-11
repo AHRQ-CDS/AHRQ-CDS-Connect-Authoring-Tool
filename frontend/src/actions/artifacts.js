@@ -414,8 +414,12 @@ function executeArtifactFailure(error) {
 
 function performExecuteArtifact(elmFiles, artifactName, patient, vsacCredentials) {
   // Set up the library
-  const elmFile = JSON.parse(_.find(elmFiles, f => f.name === artifactName).content);
-  const libraries = _.filter(elmFiles, f => f.name !== artifactName).map(f => JSON.parse(f.content));
+  const elmFile = JSON.parse(_.find(elmFiles, f =>
+    f.name.replace(/[\s-]/g, '') === artifactName.replace(/[\s-]/g, '')
+  ).content);
+  const libraries = _.filter(elmFiles, f =>
+    f.name.replace(/[\s-]/g, '') !== artifactName.replace(/[\s-]/g, '')
+  ).map(f => JSON.parse(f.content));
   const library = new cql.Library(elmFile, new cql.Repository(libraries));
 
   // Create the patient source
@@ -450,12 +454,19 @@ export function executeCQLArtifact(artifact, patient, vsacCredentials) {
   return (dispatch) => {
     dispatch(requestExecuteArtifact());
 
-    return sendValidateArtifactRequest(artifact)
-      .then(res => dispatch(validateArtifactSuccess(res.data)))
-      .catch(error => dispatch(validateArtifactFailure(error)))
-      .then(res => performExecuteArtifact(res.data.elmFiles, artifact.name, patient, vsacCredentials)
-        .then(r => dispatch(executeArtifactSuccess(r, artifact, patient)))
-        .catch(error => dispatch(executeArtifactFailure(error))));
+    return new Promise((resolve, reject) => {
+      sendValidateArtifactRequest(artifact)
+        .then(res => {
+          dispatch(validateArtifactSuccess(res.data));
+          resolve(res);
+        })
+        .catch(error => {
+          dispatch(validateArtifactFailure(error));
+          reject();
+        });
+    }).then((res) => performExecuteArtifact(res.data.elmFiles, artifact.name, patient, vsacCredentials))
+        .then(res => dispatch(executeArtifactSuccess(res)))
+        .catch(error => dispatch(executeArtifactFailure(error)));
   };
 }
 

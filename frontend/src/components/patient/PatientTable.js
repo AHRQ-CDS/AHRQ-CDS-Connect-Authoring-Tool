@@ -149,7 +149,7 @@ export default class PatientTable extends Component {
         modalTitle="Execute CQL"
         modalId="execute-cql-modal"
         modalTheme="light"
-        modalSubmitButtonText="Execute CQL"
+        modalSubmitButtonText={this.state.artifactToExecute == null ? "" : "Execute CQL"}
         handleShowModal={this.state.showExecuteCQLModal}
         handleCloseModal={this.closeExecuteCQLModal}
         handleSaveModal={this.handleExecuteCQL}>
