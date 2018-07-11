@@ -29,7 +29,13 @@ describe.only('artifacts reducer', () => {
         elmFiles: [],
         elmErrors: []
       },
-      executeArtifact: { isExecuting: false, executeStatus: null, results: null },
+      executeArtifact: {
+        isExecuting: false,
+        executeStatus: null,
+        results: null,
+        artifactExecuted: null,
+        patientExecuted: null
+      },
       publishEnabled: false
     });
   });

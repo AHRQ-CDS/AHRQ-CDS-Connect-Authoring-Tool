@@ -4,6 +4,7 @@ import FontAwesome from 'react-fontawesome';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import Dropzone from 'react-dropzone';
+import { Jumbotron } from 'reactstrap';
 
 import { loadPatients, addPatient, deletePatient } from '../actions/patients';
 import { loadArtifacts, executeCQLArtifact } from '../actions/artifacts';
@@ -29,20 +30,44 @@ class Patient extends Component {
     reader.readAsText(patient[0]);
   }
 
+  renderBoolean = (bool) => {
+    if (bool) {
+      return <FontAwesome name="check" className="boolean-check" />;
+    }
+
+    return <FontAwesome name="close" className="boolean-x" />;
+  }
+
   // TODO support results for more than one patient
-  renderResultsTable() {
-    const results = this.props.results;
+  renderResultsTable = () => {
+    const { results, artifactExecuted, patientExecuted } = this.props;
+
     if (results) {
       const patientResults = results.patientResults[Object.keys(results.patientResults)[0]];
+      const patientNameGiven = patientExecuted.entry[0].resource.name[0].given[0];
+      const patientNameFamily = patientExecuted.entry[0].resource.name[0].family[0];
+
       return (
-        <div className="patient-table">
+        <Jumbotron className="patient-table">
+          <div className="patient-table__title">CQL Execution Results</div>
+
+          <div className="patient-table__meta">
+            <div className="patient-table__meta-patient">
+              <span className="meta-label">Patient:</span> {patientNameGiven} {patientNameFamily}
+            </div>
+
+            <div className="patient-table__meta-artifact">
+              <span className="meta-label">Artifact:</span> {artifactExecuted.name}
+            </div>
+          </div>
+
           <table className="patients__table">
             <tbody>
               <tr>
                 <th scope="col" className="patients__tablecell-wide">MeetsInclusionCriteria</th>
                 <td>{
                   patientResults.MeetsInclusionCriteria != null
-                  ? patientResults.MeetsInclusionCriteria.toString()
+                  ? this.renderBoolean(patientResults.MeetsInclusionCriteria.toString())
                   : 'No Value'}
                 </td>
               </tr>
@@ -50,7 +75,7 @@ class Patient extends Component {
                 <th scope="col" className="patients__tablecell-wide">MeetsExclusionCriteria</th>
                 <td>{
                   patientResults.MeetsExclusionCriteria != null
-                  ? patientResults.MeetsExclusionCriteria.toString()
+                  ? this.renderBoolean(patientResults.MeetsExclusionCriteria.toString())
                   : 'No Value'}
                 </td>
               </tr>
@@ -80,7 +105,7 @@ class Patient extends Component {
               </tr>
             </tbody>
           </table>
-        </div>
+        </Jumbotron>
       );
     }
 
@@ -133,6 +158,8 @@ Patient.propTypes = {
   artifacts: PropTypes.arrayOf(artifactProps).isRequired,
   results: PropTypes.object,
   isExecuting: PropTypes.bool.isRequired,
+  artifactExecuted: artifactProps,
+  patientExecuted: patientProps,
   loadPatients: PropTypes.func.isRequired,
   addPatient: PropTypes.func.isRequired,
   deletePatient: PropTypes.func.isRequired,
@@ -166,6 +193,8 @@ function mapStateToProps(state) {
     artifacts: state.artifacts.artifacts,
     results: state.artifacts.executeArtifact.results,
     isExecuting: state.artifacts.executeArtifact.isExecuting,
+    artifactExecuted: state.artifacts.executeArtifact.artifactExecuted,
+    patientExecuted: state.artifacts.executeArtifact.patientExecuted,
     vsacStatus: state.vsac.authStatus,
     vsacStatusText: state.vsac.authStatusText,
     timeLastAuthenticated: state.vsac.timeLastAuthenticated,

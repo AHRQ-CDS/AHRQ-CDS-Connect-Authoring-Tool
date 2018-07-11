@@ -397,10 +397,12 @@ function requestExecuteArtifact() {
   };
 }
 
-function executeArtifactSuccess(data) {
+function executeArtifactSuccess(data, artifact, patient) {
   return {
     type: types.EXECUTE_ARTIFACT_SUCCESS,
-    data
+    data,
+    artifact,
+    patient
   };
 }
 
@@ -452,7 +454,7 @@ export function executeCQLArtifact(artifact, patient, vsacCredentials) {
       .then(res => dispatch(validateArtifactSuccess(res.data)))
       .catch(error => dispatch(validateArtifactFailure(error)))
       .then(res => performExecuteArtifact(res.data.elmFiles, artifact.name, patient, vsacCredentials)
-        .then(r => dispatch(executeArtifactSuccess(r)))
+        .then(r => dispatch(executeArtifactSuccess(r, artifact, patient)))
         .catch(error => dispatch(executeArtifactFailure(error))));
   };
 }

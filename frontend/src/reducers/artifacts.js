@@ -22,7 +22,13 @@ const defaultState = {
     elmFiles: [],
     elmErrors: []
   },
-  executeArtifact: { isExecuting: false, executeStatus: null, results: null },
+  executeArtifact: {
+    isExecuting: false,
+    executeStatus: null,
+    results: null,
+    artifactExecuted: null,
+    patientExecuted: null
+  },
   publishEnabled: false
 };
 
@@ -136,17 +142,29 @@ export default function auth(state = defaultState, action) {
     case types.EXECUTE_ARTIFACT_REQUEST:
       return {
         ...state,
-        executeArtifact: { isExecuting: true, executeStatus: null, results: null }
+        executeArtifact: {
+          isExecuting: true,
+          executeStatus: null,
+          results: null,
+          artifactExecuted: null,
+          patientExecuted: null
+        }
       };
     case types.EXECUTE_ARTIFACT_SUCCESS:
       return {
         ...state,
-        executeArtifact: { isExecuting: false, executeStatus: 'success', results: action.data }
+        executeArtifact: {
+          isExecuting: false,
+          executeStatus: 'success',
+          results: action.data,
+          artifactExecuted: action.artifact,
+          patientExecuted: action.patient
+        }
       };
     case types.EXECUTE_ARTIFACT_FAILURE:
       return {
         ...state,
-        executeArtifact: { isExecuting: false, executeStatus: 'failure', results: null }
+        executeArtifact: { isExecuting: false, executeStatus: 'failure' }
       };
     case types.CLEAR_ARTIFACT_VALIDATION_WARNINGS:
       return {
