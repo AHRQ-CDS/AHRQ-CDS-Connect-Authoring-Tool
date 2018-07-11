@@ -1943,9 +1943,8 @@ cql-exec-fhir@^1.0.0:
   dependencies:
     xml2js "~0.4.17"
 
-cql-exec-vsac@^1.0.0:
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/cql-exec-vsac/-/cql-exec-vsac-1.0.0.tgz#252f7dd5abac0736610c6753944ec2c82bb1ce10"
+cql-exec-vsac@../../cql-exec-vsac:
+  version "1.0.1"
   dependencies:
     debug "^2.6.4"
     mkdirp "^0.5.1"

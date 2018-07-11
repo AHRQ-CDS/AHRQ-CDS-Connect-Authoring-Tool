@@ -11,7 +11,7 @@
     "classnames": "^2.2.5",
     "core-js": "^2.5.1",
     "cql-exec-fhir": "^1.0.0",
-    "cql-exec-vsac": "^1.0.0",
+    "cql-exec-vsac": "../../cql-exec-vsac",
     "cql-execution": "^1.2.1",
     "dotenv": "2.0.0",
     "enzyme": "^2.8.0",

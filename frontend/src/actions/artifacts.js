@@ -435,7 +435,7 @@ function performExecuteArtifact(elmFiles, artifactName, patient, vsacCredentials
   const codeService = new cqlvsac.CodeService();
 
   // Ensure value sets, downloading any missing value sets
-  return codeService.ensureValueSets(valueSets, vsacCredentials.username, vsacCredentials.password)
+  return codeService.ensureValueSets(valueSets, vsacCredentials.username, vsacCredentials.password, false)
     .then(() => {
       // Value sets are loaded, so execute!
       const executor = new cql.Executor(library, codeService);
