@@ -67,7 +67,7 @@ class Patient extends Component {
                 <th scope="col" className="patients__tablecell-wide">MeetsInclusionCriteria</th>
                 <td>{
                   patientResults.MeetsInclusionCriteria != null
-                  ? this.renderBoolean(patientResults.MeetsInclusionCriteria.toString())
+                  ? this.renderBoolean(patientResults.MeetsInclusionCriteria)
                   : 'No Value'}
                 </td>
               </tr>
@@ -75,7 +75,7 @@ class Patient extends Component {
                 <th scope="col" className="patients__tablecell-wide">MeetsExclusionCriteria</th>
                 <td>{
                   patientResults.MeetsExclusionCriteria != null
-                  ? this.renderBoolean(patientResults.MeetsExclusionCriteria.toString())
+                  ? this.renderBoolean(patientResults.MeetsExclusionCriteria)
                   : 'No Value'}
                 </td>
               </tr>
