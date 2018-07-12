@@ -1,5 +1,5 @@
 const artifactRouter = require('./routers/artifactRouter.js');
-const patientRouter = require('./routers/patientRouter.js');
+const testingRouter = require('./routers/testingRouter.js');
 const configRouter = require('./routers/configRouter.js');
 const cqlRouter = require('./routers/cqlRouter');
 const expressionRouter = require('./routers/expressionRouter');
@@ -18,8 +18,8 @@ module.exports = (app) => {
   // Routing for Artifacts
   app.use('/authoring/api/artifacts', artifactRouter);
 
-  // Routing for Patients
-  app.use('/authoring/api/patients', patientRouter);
+  // Routing for Testing
+  app.use('/authoring/api/testing', testingRouter);
 
   // Routing for Resources, ValueSets, Templates
   app.use('/authoring/api/config', configRouter);

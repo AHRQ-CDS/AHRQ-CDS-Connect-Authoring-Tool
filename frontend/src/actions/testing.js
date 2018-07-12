@@ -30,7 +30,7 @@ function loadPatientsFailure(error) {
 
 function sendPatientsRequest() {
   return new Promise((resolve, reject) => {
-    axios.get(`${API_BASE}/patients`)
+    axios.get(`${API_BASE}/testing`)
       .then(result => resolve(result.data))
       .catch(error => reject(error));
   });
@@ -72,7 +72,7 @@ function loadPatientFailure(error) {
 
 function sendPatientRequest(id) {
   return new Promise((resolve, reject) => {
-    axios.get(`${API_BASE}/patients/${id}`)
+    axios.get(`${API_BASE}/testing/${id}`)
       .then(result => resolve(result.data[0]))
       .catch(error => reject(error));
   });
@@ -149,7 +149,7 @@ function savePatientFailure(error) {
 
 function sendSavePatientRequest(patient) {
   console.info(patient);
-  return axios.post(`${API_BASE}/patients`, { patient })
+  return axios.post(`${API_BASE}/testing`, { patient })
     .then(result => result.data);
 }
 
@@ -189,7 +189,7 @@ function deletePatientFailure(error) {
 
 function sendDeletePatientRequest(patient) {
   return new Promise((resolve, reject) => {
-    axios.delete(`${API_BASE}/patients/${patient._id}`)
+    axios.delete(`${API_BASE}/testing/${patient._id}`)
       .then(result => resolve(result.data))
       .catch(error => reject(error));
   });

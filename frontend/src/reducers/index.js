@@ -4,7 +4,7 @@ import { routerReducer } from 'react-router-redux';
 import authReducer from './auth';
 import errorsReducer from './errors';
 import artifactsReducer from './artifacts';
-import patientsReducer from './patients';
+import testingReducer from './testing';
 import templatesReducer from './templates';
 import valueSetsReducer from './value_sets';
 import vsacReducer from './vsac';
@@ -15,7 +15,7 @@ const rootReducer = combineReducers({
   auth: authReducer,
   errors: errorsReducer,
   artifacts: artifactsReducer,
-  patients: patientsReducer,
+  testing: testingReducer,
   templates: templatesReducer,
   valueSets: valueSetsReducer,
   vsac: vsacReducer,

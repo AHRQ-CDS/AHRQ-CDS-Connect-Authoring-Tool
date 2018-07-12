@@ -6,14 +6,14 @@ import { bindActionCreators } from 'redux';
 import Dropzone from 'react-dropzone';
 import { Jumbotron, Breadcrumb } from 'reactstrap';
 
-import { loadPatients, addPatient, deletePatient } from '../actions/patients';
+import { loadPatients, addPatient, deletePatient } from '../actions/testing';
 import { loadArtifacts, executeCQLArtifact } from '../actions/artifacts';
 import { loginVSACUser, setVSACAuthStatus } from '../actions/vsac';
 
 import patientProps from '../prop-types/patient';
 import artifactProps from '../prop-types/artifact';
 
-import PatientTable from '../components/patient/PatientTable';
+import PatientTable from '../components/testing/PatientTable';
 
 class Patient extends Component {
   componentWillMount() {
@@ -198,7 +198,7 @@ function mapDispatchToProps(dispatch) {
 // these props come from the application's state when it is started
 function mapStateToProps(state) {
   return {
-    patients: state.patients.patients,
+    patients: state.testing.patients,
     artifacts: state.artifacts.artifacts,
     results: state.artifacts.executeArtifact.results,
     isExecuting: state.artifacts.executeArtifact.isExecuting,
