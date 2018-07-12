@@ -155,6 +155,7 @@ export default class UserGuide extends Component {
                     <li>Clicking "Home" returns user to Homepage.</li>
                     <li>Clicking "Artifacts" navigates to the Artifacts page.</li>
                     <li>Clicking "Workspace" navigates to the Workspace page with a new, blank artifact.</li>
+                    <li>Clicking "Testing" navigates to the Testing page.</li>
                     <li>Clicking "Documentation" opens the CDS Authoring Tool User Guide.</li>
 
                     <li>
@@ -1054,6 +1055,165 @@ export default class UserGuide extends Component {
                   </li>
 
                   <li>The user-defined Subpopulations and Parameters will be displayed along with the three default options.</li>
+                </ol>
+              </div>
+            </div>
+
+            <div className="h2-wrapper">
+              <h2 id="Testing_Artifacts">4. Testing Artifacts</h2>
+
+              <div className="h3-wrapper">
+                <h3 id="Testing_Page">4.1 Testing Page</h3>
+
+                <p>
+                  The Testing tab is the main location to test that Artifacts are behaving as expected when their CQL is executed
+                  against a Patient.
+                </p>
+
+                <p>
+                  <img
+                    alt="Testing Artifacts"
+                    src={screenshotUrl('Testing_Artifacts')}
+                  className="img-fluid img-thumbnail rounded mx-auto d-block" />
+                </p>
+
+                <ol>
+                  <li>
+                    The upload area allows the user to upload Patients that can be used for testing CQL made from Artifacts.
+                    Note that the Patients must be contained in FHIR DSTU2 Bundles, in JSON format. To easily generate synthetic
+                    patients in this format, see <a target="_blank" rel="nofollow noopener noreferrer"
+                    onClick={onVisitExternalLink} href="https://github.com/synthetichealth/synthea">Synthea </a>
+                    <i className="fa fa-external-link"></i>.
+                  </li>
+
+                  <li>
+                    A banner indicating that the user must log in to VSAC to execute CQL on a Patient.
+                  </li>
+
+                  <li>
+                    A button that opens a modal, allowing the user to authenticate to VSAC.
+                  </li>
+
+                  <li>
+                    A table that displays some information about any Patients associated to the user that are already in the
+                    database.
+                  </li>
+
+                  <li>
+                    A "View" button that displays for a Patient, which opens a modal to view the JSON FHIR DSTU2 Bundle in detail.
+                  </li>
+
+                  <li>
+                    A disabled "Execute CQL" button that will only be enabled once the user has authenticated with VSAC.
+                  </li>
+
+                  <li>
+                    A "Delete" button that will open a modal allowing the user to delete the Patient from the database.
+                  </li>
+                </ol>
+
+                <p>
+                  After the user successfully authenticates with VSAC, CQL execution is possible.
+                </p>
+
+                <p>
+                  <img
+                    alt="Testing Authenticated"
+                    src={screenshotUrl('Testing_Authenticated')}
+                  className="img-fluid img-thumbnail rounded mx-auto d-block" />
+                </p>
+
+                <ol>
+                  <li>
+                    The banner has now changed to indicate that CQL execution on a Patient is possible.
+                  </li>
+
+                  <li>
+                    The button for VSAC authentication now indicates that the authentication is complete.
+                  </li>
+
+                  <li>
+                    The "Execute CQL" button for each Patient is now enabled. Clicking on this button opens the Execute CQL Modal.
+                  </li>
+                </ol>
+              </div>
+
+              <div className="h3-wrapper">
+                <h3 id="Execute_CQL_Modal">4.2 Execute CQL Modal</h3>
+
+                <p>
+                  The Execute CQL Modal allows the user to choose an Artifact whose CQL should be run against the selected
+                  Patient.
+                </p>
+     
+                <p>
+                  <img
+                    alt="Execute CQL Modal"
+                    src={screenshotUrl('Execute_CQL_Modal')}
+                  className="img-fluid img-thumbnail rounded mx-auto d-block" />
+                </p>
+
+                <ol>
+                  <li>
+                    The name of the Patient that was chosen for CQL execution.
+                  </li>
+
+                  <li>
+                    A dropdown that displays all the user's Artifacts, allowing the user to choose which Artifact should be used
+                    for CQL execution.
+                  </li>
+
+                  <li>
+                    The "Execute CQL" button which runs the selected Artifact's CQL against the selected Patient for testing.
+                  </li>
+                </ol>
+              </div>
+
+              <div className="h3-wrapper">
+                <h3 id="CQL_Execution_Results">4.3 CQL Execution Results</h3>
+
+                <p>
+                  After CQL execution is finished, the results of the CQL execution are displayed.
+                </p>
+
+                <p>
+                  <img
+                    alt="CQL Execution Results"
+                    src={screenshotUrl('CQL_Execution_Results')}
+                  className="img-fluid img-thumbnail rounded mx-auto d-block" />
+                </p>
+
+                <ol>
+                  <li>
+                    The name of the Patient that was used for testing.
+                  </li>
+
+                  <li>
+                    The name of the Artifact whose CQL was tested.
+                  </li>
+
+                  <li>
+                    An indication of whether the Patient met the Artifact's inclusion criteria. In this case, the Patient did meet
+                    the inclusion criteria.
+                  </li>
+
+                    <li>
+                    An indication of whether the Patient met the Artifact's exclusion criteria. In this case, the Patient did not
+                    meet the exclusion criteria.
+                  </li>
+
+                  <li>
+                    The Recommendation from the Artifact, given the result of the CQL execution.
+                  </li>
+
+                  <li>
+                    The Rationale for the Recommendation from the Artifact.
+                  </li>
+
+
+                  <li>
+                    Any Errors that occurred during the CQL Execution. In this case, there were no errors.
+                  </li>
                 </ol>
               </div>
             </div>
