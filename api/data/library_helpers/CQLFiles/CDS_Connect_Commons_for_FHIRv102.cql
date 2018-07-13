@@ -1,4 +1,4 @@
-library CDS_Connect_Commons_for_FHIRv102 version '1.2.0'
+library CDS_Connect_Commons_for_FHIRv102 version '1.3.0'
 
 using FHIR version '1.0.2'
 
