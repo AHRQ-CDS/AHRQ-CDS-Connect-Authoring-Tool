@@ -202,7 +202,7 @@ function mapStateToProps(state) {
     artifacts: state.artifacts.artifacts,
     results: state.artifacts.executeArtifact.results,
     isExecuting: state.artifacts.executeArtifact.isExecuting,
-    isAdding: state.patients.addPatient.isAdding,
+    isAdding: state.testing.addPatient.isAdding,
     artifactExecuted: state.artifacts.executeArtifact.artifactExecuted,
     patientExecuted: state.artifacts.executeArtifact.patientExecuted,
     vsacStatus: state.vsac.authStatus,

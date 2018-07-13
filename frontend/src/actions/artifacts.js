@@ -465,7 +465,7 @@ export function executeCQLArtifact(artifact, patient, vsacCredentials) {
           reject();
         });
     }).then((res) => performExecuteArtifact(res.data.elmFiles, artifact.name, patient, vsacCredentials))
-        .then(res => dispatch(executeArtifactSuccess(res)))
+        .then(r => dispatch(executeArtifactSuccess(r, artifact, patient)))
         .catch(error => dispatch(executeArtifactFailure(error)));
   };
 }
