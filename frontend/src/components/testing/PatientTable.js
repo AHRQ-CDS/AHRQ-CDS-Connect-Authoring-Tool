@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import Select from 'react-select';
 import FontAwesome from 'react-fontawesome';
-import Inspector from 'react-inspector';
 import _ from 'lodash';
 
 import renderDate from '../../utils/dates';
@@ -13,6 +12,7 @@ import artifactProps from '../../prop-types/artifact';
 import Modal from '../elements/Modal';
 import VSACAuthenticationModal from '../builder/VSACAuthenticationModal';
 import CodeService from '../../utils/code_service/CodeService';
+import PatientView from './PatientView';
 
 export default class PatientTable extends Component {
   constructor(props) {
@@ -134,10 +134,8 @@ export default class PatientTable extends Component {
         handleSaveModal={this.handleViewDetails}>
 
         <div className="patient-table__modal modal__content">
-          <h5>Viewing Patient:</h5>
-
           <div className="patient-info">
-            <Inspector data={this.state.patientToView}/>
+            <PatientView patient={this.state.patientToView} />
           </div>
         </div>
       </Modal>

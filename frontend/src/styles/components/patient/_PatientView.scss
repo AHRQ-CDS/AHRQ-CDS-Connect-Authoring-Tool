@@ -1,0 +1,19 @@
+.patient-view {
+  &__header {
+    display: flex;
+
+    .header-title {
+      color: $blue-light;
+      text-transform: uppercase;
+      margin-right: 5px;
+      font-size: 0.9em;
+      font-weight: bold;
+    }
+
+    .header-divider {
+      width: 100%;
+      border-bottom: 1px solid $blue-light;
+      margin-bottom: 10px;
+    }
+  }
+}
