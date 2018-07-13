@@ -1,7 +1,8 @@
 /**
- * Migrates artifacts that have a booleanParameters field, applying the following changes:
- * - adds { type: 'Boolean' } to each parameter
- * - renames 'booleanParameters' to 'parameters'
+ * Migrates artifacts from the specific element format to the generic element format.
+ * - Specific elements are the elements that the AT created before integration with VSAC.
+ * - This migration supports adding the value sets and codes to each element in the same format as new VSAC elements.
+ * - The migration also supports updating necessary modifiers on those elements.
  */
 'use strict';
 const _ = require('lodash');
