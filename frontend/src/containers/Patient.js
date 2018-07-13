@@ -31,10 +31,7 @@ class Patient extends Component {
   }
 
   renderBoolean = (bool) => {
-    if (bool) {
-      return <FontAwesome name="check" className="boolean-check" />;
-    }
-
+    if (bool) return <FontAwesome name="check" className="boolean-check" />;
     return <FontAwesome name="close" className="boolean-x" />;
   }
 
@@ -137,15 +134,20 @@ class Patient extends Component {
     return <div>No patients to show.</div>;
   }
 
+  renderDropzoneIcon = () => {
+    if (this.props.isAdding) return <FontAwesome name="spinner" size="5x" spin />;
+    return <FontAwesome name="cloud-upload" size="5x" />;
+  }
+
   render() {
     return (
       <div className="patient" id="maincontent">
         <Dropzone
           className="patient-dropzone"
           onDrop={this.addPatient.bind(this)}
-          accept="application/json" multiple={false}
-          >
-          <FontAwesome name='cloud-upload' size="5x"/>
+          accept="application/json" multiple={false}>
+          {this.renderDropzoneIcon()}
+
           <p>Drop a valid JSON FHIR DSTU2 bundle containing a patient here, or click to browse.</p>
         </Dropzone>
 
@@ -163,6 +165,7 @@ Patient.propTypes = {
   artifacts: PropTypes.arrayOf(artifactProps).isRequired,
   results: PropTypes.object,
   isExecuting: PropTypes.bool.isRequired,
+  isAdding: PropTypes.bool.isRequired,
   artifactExecuted: artifactProps,
   patientExecuted: patientProps,
   loadPatients: PropTypes.func.isRequired,
@@ -199,6 +202,7 @@ function mapStateToProps(state) {
     artifacts: state.artifacts.artifacts,
     results: state.artifacts.executeArtifact.results,
     isExecuting: state.artifacts.executeArtifact.isExecuting,
+    isAdding: state.patients.addPatient.isAdding,
     artifactExecuted: state.artifacts.executeArtifact.artifactExecuted,
     patientExecuted: state.artifacts.executeArtifact.patientExecuted,
     vsacStatus: state.vsac.authStatus,
