@@ -8,6 +8,7 @@
 const _ = require('lodash');
 const ValueSets = require('../data/valueSets');
 const pregnancyObjects = require('./utils/pregnancy-objects');
+const breastfeedingObjects = require('./utils/breastfeeding-objects');
 
 module.exports.id = "specific-to-generic-elements";
 
@@ -460,18 +461,84 @@ function transformProcedure(childInstance) {
 function transformPregnancydx(childInstance) {
   let notModifierApplied = childInstance.modifiers.find(modifier => modifier.id === 'BooleanNot');
   if (notModifierApplied) {
-    return pregnancyObjects.notPregnant;
+    const notPregnant = pregnancyObjects.notPregnant;
+    if (childInstance.parameters[0].value) {
+      notPregnant.parameters[0].value = childInstance.parameters[0].value;
+      notPregnant.childInstances[0].parameters[0].value = `${childInstance.parameters[0].value} Condition`;
+      notPregnant.childInstances[1].parameters[0].value = `${childInstance.parameters[0].value} Observation`;
+    }
+    return notPregnant;
   } else {
-    return pregnancyObjects.pregnant;
+    const pregnant = pregnancyObjects.pregnant;
+    if (childInstance.parameters[0].value) {
+      pregnant.parameters[0].value = childInstance.parameters[0].value;
+      pregnant.childInstances[0].parameters[0].value = `${childInstance.parameters[0].value} Condition`;
+      pregnant.childInstances[1].parameters[0].value = `${childInstance.parameters[0].value} Observation`;
+    }
+    return pregnant;
   }
 }
 
 function transformPregnancydxCMS(childInstance) {
   let notModifierApplied = childInstance.modifiers.find(modifier => modifier.id === 'BooleanNot');
   if (notModifierApplied) {
-    return pregnancyObjects.notPregnantCMS347v1;
+    const notPregnantCMS = pregnancyObjects.notPregnantCMS347v1;
+    if (childInstance.parameters[0].value) {
+      notPregnantCMS.parameters[0].value = childInstance.parameters[0].value;
+      notPregnantCMS.childInstances[0].parameters[0].value = `${childInstance.parameters[0].value} Condition`;
+      notPregnantCMS.childInstances[1].parameters[0].value = `${childInstance.parameters[0].value} Observation`;
+    }
+    return notPregnantCMS;
   } else {
-    return pregnancyObjects.pregnantCMS347v1;
+    const pregnantCMS = pregnancyObjects.pregnantCMS347v1;
+    if (childInstance.parameters[0].value) {
+      pregnantCMS.parameters[0].value = childInstance.parameters[0].value;
+      pregnantCMS.childInstances[0].parameters[0].value = `${childInstance.parameters[0].value} Condition`;
+      pregnantCMS.childInstances[1].parameters[0].value = `${childInstance.parameters[0].value} Observation`;
+    }
+    return pregnantCMS;
+  }
+}
+
+function transformBreastfeeding(childInstance) {
+  let notModifierApplied = childInstance.modifiers.find(modifier => modifier.id === 'BooleanNot');
+  if (notModifierApplied) {
+    const notBreastfeeding = breastfeedingObjects.notBreastfeeding;
+    if (childInstance.parameters[0].value) {
+      notBreastfeeding.parameters[0].value = childInstance.parameters[0].value;
+      notBreastfeeding.childInstances[0].parameters[0].value = `${childInstance.parameters[0].value} Condition`;
+      notBreastfeeding.childInstances[1].parameters[0].value = `${childInstance.parameters[0].value} Observation`;
+    }
+    return notBreastfeeding;
+  } else {
+    const breastfeeding = breastfeedingObjects.breastfeeding;
+    if (childInstance.parameters[0].value) {
+      breastfeeding.parameters[0].value = childInstance.parameters[0].value;
+      breastfeeding.childInstances[0].parameters[0].value = `${childInstance.parameters[0].value} Condition`;
+      breastfeeding.childInstances[1].parameters[0].value = `${childInstance.parameters[0].value} Observation`;
+    }
+    return breastfeeding;
+  }
+}
+
+function transformBreastfeedingCMS(childInstance) {
+  let notModifierApplied = childInstance.modifiers.find(modifier => modifier.id === 'BooleanNot');
+  if (notModifierApplied) {
+    const notBreastfeedingCMS = breastfeedingObjects.notBreastfeedingCMS347v1;
+    if (childInstance.parameters[0].value) {
+      notBreastfeedingCMS.parameters[0].value = childInstance.parameters[0].value;
+      notBreastfeedingCMS.childInstances[0].parameters[0].value = `${childInstance.parameters[0].value} Condition`;
+      notBreastfeedingCMS.childInstances[1].parameters[0].value = `${childInstance.parameters[0].value} Observation`;
+    }
+    return notBreastfeedingCMS;
+  } else {
+    const breastfeedingCMS = breastfeedingObjects.breastfeedingCMS347v1;
+    if (childInstance.parameters[0].value) {
+      breastfeedingCMS.parameters[0].value = childInstance.parameters[0].value;
+      breastfeedingCMS.childInstances[0].parameters[0].value = `${childInstance.parameters[0].value} Condition`;
+      breastfeedingCMS.childInstances[1].parameters[0].value = `${childInstance.parameters[0].value} Observation`;
+    }
+    return breastfeedingCMS;
   }
 }
 
@@ -491,10 +558,15 @@ function transformElement(element) {
   } else if (childInstance.extends === 'GenericProcedure') {
     return transformProcedure(childInstance);
   } else if (childInstance.id === 'Pregnancydx') {
-    // Special cases for Pregnancy objects. No breastfeeding was used so not handling that case.
+    // Special cases for Pregnancy objects.
     return transformPregnancydx(childInstance);
   } else if (childInstance.id === 'Pregnancydx_CMS347v1') {
     return transformPregnancydxCMS(childInstance);
+  } else if (childInstance.id === 'Breastfeeding') {
+    // Special cases for Breastfeeding objects.
+    return transformBreastfeeding(childInstance);
+  } else if (childInstance.id === 'Breastfeeding_CMS347v1') {
+    return transformBreastfeedingCMS(childInstance);
   }
   return childInstance;
 }
