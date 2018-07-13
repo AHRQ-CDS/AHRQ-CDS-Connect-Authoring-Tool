@@ -212,6 +212,7 @@ function transformMedication(childInstance) {
       case 'MostRecentMedication': {
         // MostRecentMedication is not valid any more.
         modifierIndexesToRemove.push(i);
+        console.log('Warning: A "MostRecentMedication" expression is being removed as it is not valid.')
         break;
       }
     }
@@ -596,7 +597,6 @@ module.exports.up = function (done) {
   // NOTE: We can't use the special $[] operator since we're not yet on Mongo 3.6.
   // Instead, we need to iterate the documents and fields using forEach.
 
-  console.log("In new migration")
   // Since db operations are asynchronous, use promises to ensure all updates happen before we call done().
   // The promises array collects all the promises which must be resolved before we're done.
   const promises = [];
