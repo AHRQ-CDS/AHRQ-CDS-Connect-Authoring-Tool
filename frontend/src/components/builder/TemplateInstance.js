@@ -106,7 +106,7 @@ export default class TemplateInstance extends Component {
   }
 
   hasModifiers() {
-    return this.props.templateInstance.modifiers.length !== 0;
+    return this.props.templateInstance.modifiers && this.props.templateInstance.modifiers.length !== 0;
   }
 
   renderAppliedModifier = (modifier, index) => {
@@ -568,7 +568,8 @@ export default class TemplateInstance extends Component {
   renderBody() {
     let expressions;
     if (this.hasModifiers()) {
-      expressions = convertToExpression(this.props.templateInstance.modifiers);
+      const { templateInstance } = this.props;
+      expressions = convertToExpression(templateInstance.modifiers, templateInstance.name, templateInstance.id);
     }
 
     const validationError = this.validateElement();

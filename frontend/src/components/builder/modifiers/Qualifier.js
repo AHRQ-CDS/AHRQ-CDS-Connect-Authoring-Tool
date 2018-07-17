@@ -131,7 +131,8 @@ export default class Qualifier extends Component {
       selection = `${qualifierValueSet.name} (${qualifierValueSet.oid})`;
     } else if (hasSelectedCode) {
       const qualifierCode = qualifierMod.values.code;
-      selection = `${qualifierCode.codeSystem.name} (${qualifierCode.code})`;
+      selection = `${qualifierCode.codeSystem.name} (${qualifierCode.code})
+        ${qualifierCode.display === '' ? '' : ` - ${qualifierCode.display}`}`;
     }
 
     return (

@@ -1,3 +1,6 @@
+import _ from 'lodash';
+import Validators from './validators';
+
 /**
  * Determines if the artifact is blank (meaning there is no meaningful user-entered information).
  * This is used to determine if an artifact should be auto-saved.
@@ -80,18 +83,245 @@ export function isBlankArtifact(artifact) {
   return true;
 }
 
-export function convertToExpression(expressionsArray) {
-  // TODO
-  return [
-    { expressionText: 'There exists a', isExpression: false },
-    { expressionText: 'most recent', isExpression: true },
-    { expressionText: 'verified', isExpression: true },
-    { expressionText: 'observation', isExpression: false },
-    { expressionText: 'within the last 6 years', isExpression: true },
-    { expressionText: 'with code from', isExpression: false },
-    { expressionText: 'Value Set A', isExpression: true },
-    { expressionText: 'that is', isExpression: false },
-    { expressionText: 'greater than 130 mg/dL', isExpression: true },
-    { expressionText: '.', isExpression: false }
-  ];
+function getOperation(operator) {
+  switch (operator) {
+    case '<': return 'less than';
+    case '<=': return 'less than or equal to';
+    case '=': return 'equal to';
+    case '!=': return 'not equal to';
+    case '>': return 'greater than';
+    case '>=': return 'greater than or equal to';
+    default: return '';
+  }
+}
+
+// Checks if a given word starts with a vowel. If it does, return 'an'. Otherwise return 'a'.
+function getArticle(word) {
+  const vowels = ['a', 'e', 'i', 'o', 'u', 'A', 'E', 'I', 'O', 'U'];
+  // If the first letter is in vowels array, the word starts with a vowel.
+  if (vowels.findIndex(vowel => vowel === word.charAt(0)) !== -1) {
+    return 'an';
+  }
+  return 'a';
+}
+
+function getExpressionSentenceValue(modifier) {
+  const expressionSentenceValues = {
+    VerifiedObservation: { modifierText: 'verified', leadingText: '', trailingText: '', type: 'list' },
+    WithUnit: {
+      modifierText: 'with unit', leadingText: '', trailingText: '', type: 'post'
+    },
+    ValueComparisonObservation: {
+      modifierText: 'greater than a number', leadingText: 'that is', trailingText: '', type: 'post'
+    },
+    QuantityValue: { modifierText: 'quantity value', leadingText: '', trailingText: '', type: 'value' },
+    ConceptValue: { modifierText: 'concept value', leadingText: '', trailingText: '', type: 'value' },
+    Qualifier: { modifierText: 'with a code', leadingText: '', trailingText: '', type: 'post' },
+    ConvertObservation: { modifierText: 'convert', leadingText: 'with', trailingText: '', type: 'post' },
+    HighestObservationValue: { modifierText: 'highest', leadingText: '', trailingText: '', type: 'descriptor' },
+    ConfirmedCondition: { modifierText: 'confirmed', leadingText: '', trailingText: '', type: 'list' },
+    ActiveOrRecurring: { modifierText: 'active or recurring', leadingText: '', trailingText: '', type: 'list' },
+    ActiveConiditon: { modifierText: 'active', leadingText: '', trailingText: '', type: 'list' },
+    CompletedProcedure: { modifierText: 'completed', leadingText: '', trailingText: '', type: 'list' },
+    InProgressProcedure: { modifierText: 'in progress', leadingText: '', trailingText: '', type: 'list' },
+    ActiveMedicationStatement: { modifierText: 'active', leadingText: '', trailingText: '', type: 'list' },
+    ActiveMedicationOrder: { modifierText: 'active', leadingText: '', trailingText: '', type: 'list' },
+    ActiveOrConfirmedAllergyIntolerance: {
+      modifierText: 'active or confirmed', leadingText: '', trailingText: '', type: 'list'
+    },
+    MostRecentObservation: { modifierText: 'most recent', leadingText: '', trailingText: '', type: 'descriptor' },
+    MostRecentProcedure: { modifierText: 'most recent', leadingText: '', trailingText: '', type: 'descriptor' },
+    LookBackObservation: { modifierText: 'look back', leadingText: 'which occurred', trailingText: '', type: 'post' },
+    LookBackCondition: { modifierText: 'look back', leadingText: 'which occurred', trailingText: '', type: 'post' },
+    LookBackMedicationOrder: {
+      modifierText: 'look back', leadingText: 'which occurred', trailingText: '', type: 'post'
+    },
+    LookBackMedicationStatement: {
+      modifierText: 'look back', leadingText: 'which occurred', trailingText: '', type: 'post'
+    },
+    LookBackProcedure: { modifierText: 'look back', leadingText: 'which occurred', trailingText: '', type: 'post' },
+    BooleanExists: { modifierText: 'exists', leadingText: 'There', trailingText: '', type: 'BooleanExists' },
+    BooleanComparison: { modifierText: 'is true', leadingText: 'which', trailingText: '', type: 'post' },
+    CheckExistence: { modifierText: 'is null', leadingText: 'which', trailingText: '', type: 'post' },
+    BooleanNot: { modifierText: 'not', leadingText: '', trailingText: '' }, // TODO where does this one fit?
+    InProgress: { modifierText: 'in progress', leadingText: '', trailingText: '', type: 'list' }
+  };
+
+  // Don't display the expression if it is not filled out completely.
+  if (modifier.validator) {
+    const validator = Validators[modifier.validator.type];
+    const values = modifier.validator.fields.map(v => modifier.values && modifier.values[v]);
+    const args = modifier.validator.args ? modifier.validator.args.map(v => modifier.values[v]) : [];
+    if (!validator.check(values, args)) {
+      return {};
+    }
+  }
+
+  if (expressionSentenceValues[modifier.id]) {
+    switch (modifier.id) {
+      case 'WithUnit': {
+        expressionSentenceValues[modifier.id].modifierText = `with unit ${modifier.values.unit}`;
+        break;
+      }
+      case 'ValueComparisonObservation': {
+        const minOperatorWord = getOperation(modifier.values.minOperator);
+        const maxOperatorWord = getOperation(modifier.values.maxOperator);
+        expressionSentenceValues[modifier.id].modifierText =
+          `${minOperatorWord} ${modifier.values.minValue} ${modifier.values.unit}`;
+        if (maxOperatorWord) {
+          expressionSentenceValues[modifier.id].modifierText +=
+            ` and ${maxOperatorWord} ${modifier.values.maxValue} ${modifier.values.unit}`;
+        }
+        break;
+      }
+      case 'Qualifier': {
+        const qualifierText = modifier.values.qualifier ? modifier.values.qualifier : '';
+        let valueSetText = modifier.values.valueSet ? modifier.values.valueSet.name : '';
+        if (!valueSetText) {
+          if (modifier.values.code) {
+            if (modifier.values.code.display) {
+              valueSetText = modifier.values.code.display;
+            } else {
+              valueSetText = modifier.values.code.code;
+            }
+          }
+        }
+        expressionSentenceValues[modifier.id].modifierText = `whose ${qualifierText} ${valueSetText}`;
+        break;
+      }
+      case 'ConvertObservation': {
+        const conversionDescription = modifier.values.description ? modifier.values.description : modifier.values.value;
+        expressionSentenceValues[modifier.id].modifierText = `units converted from ${conversionDescription}`;
+        break;
+      }
+      case 'LookBackObservation':
+      case 'LookBackCondition':
+      case 'LookBackMedicationOrder':
+      case 'LookBackMedicationStatement':
+      case 'LookBackProcedure': {
+        expressionSentenceValues[modifier.id].modifierText =
+          `within the last ${modifier.values.value} ${modifier.values.unit}`;
+        break;
+      }
+      case 'BooleanComparison': {
+        expressionSentenceValues[modifier.id].modifierText = modifier.values.value;
+        break;
+      }
+      case 'CheckExistence': {
+        expressionSentenceValues[modifier.id].modifierText = modifier.values.value;
+        break;
+      }
+      default: break;
+    }
+    return expressionSentenceValues[modifier.id];
+  }
+  // If the modifier is not listed in the object, return just the name of the modifier to be placed at the end.
+  return { modifierText: modifier.name, leadingText: '', trailingText: '', type: 'post' };
+}
+
+function addExpressionText(expressionArray, expression) {
+  // Add any texted needed ahead of the modifier
+  if (expression.leadingText) {
+    expressionArray.push({ expressionText: expression.leadingText, isExpression: false });
+  }
+  // Add the modifier text
+  expressionArray.push({ expressionText: expression.modifierText, isExpression: true });
+  // Add any text needed after the modifier
+  if (expression.trailingText) {
+    expressionArray.push({ expressionText: expression.trailingText, isExpression: false });
+  }
+  return expressionArray;
+}
+
+function orderExpressionSentenceArray(expressionArray, type) {
+  let remainingExpressionArray = expressionArray;
+  let orderedExpressionArray = [];
+
+  // Start sentence with "There exists a..." OR "A..."
+  // TODO Can you switch to moving "exists" to after "an observation which exists" -> so you can do "not an observation which is exists"
+  remainingExpressionArray = remainingExpressionArray.filter((expression) => {
+    if (expression.type === 'BooleanExists') {
+      orderedExpressionArray.push({ expressionText: expression.leadingText, isExpression: false });
+      orderedExpressionArray.push({ expressionText: expression.modifierText, isExpression: true });
+      // orderedExpressionArray.push({ expressionText: getArticle(type), isExpression: false });
+      orderedExpressionArray.push({ expressionText: 'a', isExpression: false });
+      return false; // False filters out the exist modifier since it has been added.
+    }
+    return true; // Modifier not used.
+  });
+
+  if (orderedExpressionArray.length === 0) { // TODO Determine a/an
+    // orderedExpressionArray.push({ expressionText: _.capitalize(getArticle(type)), isExpression: false });
+    orderedExpressionArray.push({ expressionText: _.capitalize('a'), isExpression: false });
+  }
+
+  // Add on descriptors (highest, most recent, etc)
+  remainingExpressionArray = remainingExpressionArray.filter((expression) => {
+    if (expression.type === 'descriptor') {
+      orderedExpressionArray = addExpressionText(orderedExpressionArray, expression);
+      return false; // Filter out the modifier that has been applied.
+    }
+    return true;
+  });
+
+  // Group lists at the beginning of orderedExpressionArray. Filter them off the list of remaining expressions.
+  remainingExpressionArray = remainingExpressionArray.filter((expression) => {
+    if (expression.type === 'list') {
+      orderedExpressionArray = addExpressionText(orderedExpressionArray, expression);
+      return false;
+    }
+    return true;
+  });
+
+  orderedExpressionArray.push({ expressionText: type, isExpression: false });
+
+  // Add Concept/Quantity value
+  remainingExpressionArray = remainingExpressionArray.filter((expression) => {
+    if (expression.type === 'value') {
+      orderedExpressionArray = addExpressionText(orderedExpressionArray, expression);
+      return false;
+    }
+    return true;
+  });
+
+  // Add any remaining expressions at the end.
+  remainingExpressionArray.forEach((expression) => {
+    orderedExpressionArray = addExpressionText(orderedExpressionArray, expression);
+  });
+
+  // Period to end sentence.
+  orderedExpressionArray.push({ expressionText: '.', isExpression: false });
+
+  return orderedExpressionArray;
+}
+
+export function convertToExpression(expressionsArray, type, id) {
+  const expressionSentenceArray = expressionsArray.reduce((accumulator, currentExpression) => {
+    if (getExpressionSentenceValue(currentExpression)) {
+      const expressionSentenceValue = getExpressionSentenceValue(currentExpression);
+      if (!_.isEqual(expressionSentenceValue, {})) {
+        accumulator.push(expressionSentenceValue);
+      }
+    }
+    return accumulator;
+  }, []);
+
+  // Get an order for the expressions that will make sense in a sentence
+  const orderedExpressionSentenceArray = orderExpressionSentenceArray(expressionSentenceArray, type);
+
+  return orderedExpressionSentenceArray;
+
+  // // TODO
+  // return [
+  //   { expressionText: 'There exists a', isExpression: false },
+  //   { expressionText: 'most recent', isExpression: true },
+  //   { expressionText: 'verified', isExpression: true },
+  //   { expressionText: 'observation', isExpression: false },
+  //   { expressionText: 'within the last 6 years', isExpression: true },
+  //   { expressionText: 'with code from', isExpression: false },
+  //   { expressionText: 'Value Set A', isExpression: true },
+  //   { expressionText: 'that is', isExpression: false },
+  //   { expressionText: 'greater than 130 mg/dL', isExpression: true },
+  //   { expressionText: '.', isExpression: false }
+  // ];
 }
