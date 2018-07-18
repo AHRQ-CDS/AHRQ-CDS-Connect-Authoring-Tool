@@ -554,12 +554,12 @@ export default class TemplateInstance extends Component {
 
     return (
       <div className="expression-logic">
-        {expressions.map((expression) => {
+        {expressions.map((expression, i) => {
           if (expression.isExpression) {
-            return <span className="expression-item expression-tag">{expression.expressionText}</span>;
+            return <span className="expression-item expression-tag" key={i}>{expression.expressionText}</span>;
           }
 
-          return <span className="expression-item expression-text">{expression.expressionText}</span>;
+          return <span className="expression-item expression-text" key={i}>{expression.expressionText}</span>;
         })}
       </div>
     );

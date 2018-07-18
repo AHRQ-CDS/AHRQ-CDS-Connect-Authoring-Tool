@@ -217,7 +217,7 @@ test('SelectModifier changes select', () => {
   component.find('.Select input').simulate('keyDown', { keyCode: 9, key: 'Tab' }); // validate the selection
   expect(updateAppliedModifierMock).toHaveBeenCalled();
   expect(updateAppliedModifierMock).toBeCalledWith(6, {
-    value: 'Convert.to_mg_per_dL', templateName: 'Convert.to_mg_per_dL'
+    value: 'Convert.to_mg_per_dL', templateName: 'Convert.to_mg_per_dL', description: 'mmol/L to mg/dL'
   });
 });
 
