@@ -107,44 +107,44 @@ function getArticle(word) {
 
 function getExpressionSentenceValue(modifier) {
   const expressionSentenceValues = {
-    VerifiedObservation: { modifierText: 'verified', leadingText: '', trailingText: '', type: 'list' },
+    VerifiedObservation: { modifierText: 'verified', leadingText: '', type: 'list' },
     WithUnit: {
-      modifierText: 'with unit', leadingText: '', trailingText: '', type: 'post'
+      modifierText: 'with unit', leadingText: '', type: 'post-list'
     },
     ValueComparisonObservation: {
-      modifierText: 'greater than a number', leadingText: 'that is', trailingText: '', type: 'post'
+      modifierText: 'greater than a number', leadingText: 'that is', type: 'post'
     },
-    QuantityValue: { modifierText: 'quantity value', leadingText: '', trailingText: '', type: 'value' },
-    ConceptValue: { modifierText: 'concept value', leadingText: '', trailingText: '', type: 'value' },
-    Qualifier: { modifierText: 'with a code', leadingText: '', trailingText: '', type: 'post' },
-    ConvertObservation: { modifierText: 'convert', leadingText: 'with', trailingText: '', type: 'post' },
-    HighestObservationValue: { modifierText: 'highest', leadingText: '', trailingText: '', type: 'descriptor' },
-    ConfirmedCondition: { modifierText: 'confirmed', leadingText: '', trailingText: '', type: 'list' },
-    ActiveOrRecurring: { modifierText: 'active or recurring', leadingText: '', trailingText: '', type: 'list' },
-    ActiveConiditon: { modifierText: 'active', leadingText: '', trailingText: '', type: 'list' },
-    CompletedProcedure: { modifierText: 'completed', leadingText: '', trailingText: '', type: 'list' },
-    InProgressProcedure: { modifierText: 'in progress', leadingText: '', trailingText: '', type: 'list' },
-    ActiveMedicationStatement: { modifierText: 'active', leadingText: '', trailingText: '', type: 'list' },
-    ActiveMedicationOrder: { modifierText: 'active', leadingText: '', trailingText: '', type: 'list' },
+    // QuantityValue: { modifierText: 'quantity value', leadingText: '', type: 'value' }, // Not diplayed in phrase
+    // ConceptValue: { modifierText: 'concept value', leadingText: '', type: 'value' }, // Not diplayed in phrase
+    Qualifier: { modifierText: 'with a code', leadingText: '', type: 'post' },
+    ConvertObservation: { modifierText: 'convert', leadingText: 'with', type: 'post' },
+    HighestObservationValue: { modifierText: 'highest', leadingText: '', type: 'descriptor' },
+    ConfirmedCondition: { modifierText: 'confirmed', leadingText: '', type: 'list' },
+    ActiveOrRecurring: { modifierText: 'active or recurring', leadingText: '', type: 'list' },
+    ActiveConiditon: { modifierText: 'active', leadingText: '', type: 'list' },
+    CompletedProcedure: { modifierText: 'completed', leadingText: '', type: 'list' },
+    InProgressProcedure: { modifierText: 'in progress', leadingText: '', type: 'list' },
+    ActiveMedicationStatement: { modifierText: 'active', leadingText: '', type: 'list' },
+    ActiveMedicationOrder: { modifierText: 'active', leadingText: '', type: 'list' },
     ActiveOrConfirmedAllergyIntolerance: {
-      modifierText: 'active or confirmed', leadingText: '', trailingText: '', type: 'list'
+      modifierText: 'active or confirmed', leadingText: '', type: 'list'
     },
-    MostRecentObservation: { modifierText: 'most recent', leadingText: '', trailingText: '', type: 'descriptor' },
-    MostRecentProcedure: { modifierText: 'most recent', leadingText: '', trailingText: '', type: 'descriptor' },
-    LookBackObservation: { modifierText: 'look back', leadingText: 'which occurred', trailingText: '', type: 'post' },
-    LookBackCondition: { modifierText: 'look back', leadingText: 'which occurred', trailingText: '', type: 'post' },
+    MostRecentObservation: { modifierText: 'most recent', leadingText: '', type: 'descriptor' },
+    MostRecentProcedure: { modifierText: 'most recent', leadingText: '', type: 'descriptor' },
+    LookBackObservation: { modifierText: 'look back', leadingText: 'which occurred', type: 'post' },
+    LookBackCondition: { modifierText: 'look back', leadingText: 'which occurred', type: 'post' },
     LookBackMedicationOrder: {
-      modifierText: 'look back', leadingText: 'which occurred', trailingText: '', type: 'post'
+      modifierText: 'look back', leadingText: 'which occurred', type: 'post'
     },
     LookBackMedicationStatement: {
-      modifierText: 'look back', leadingText: 'which occurred', trailingText: '', type: 'post'
+      modifierText: 'look back', leadingText: 'which occurred', type: 'post'
     },
-    LookBackProcedure: { modifierText: 'look back', leadingText: 'which occurred', trailingText: '', type: 'post' },
-    BooleanExists: { modifierText: 'exists', leadingText: 'There', trailingText: '', type: 'BooleanExists' },
-    BooleanComparison: { modifierText: 'is true', leadingText: 'which', trailingText: '', type: 'post' },
-    CheckExistence: { modifierText: 'is null', leadingText: 'which', trailingText: '', type: 'post' },
-    BooleanNot: { modifierText: 'not', leadingText: '', trailingText: '' }, // TODO where does this one fit?
-    InProgress: { modifierText: 'in progress', leadingText: '', trailingText: '', type: 'list' }
+    LookBackProcedure: { modifierText: 'look back', leadingText: 'which occurred', type: 'post' },
+    BooleanExists: { modifierText: 'exists', leadingText: 'that', type: 'BooleanExists' },
+    BooleanComparison: { modifierText: 'is true', leadingText: 'which', type: 'post' },
+    CheckExistence: { modifierText: 'is null', leadingText: 'which', type: 'post' },
+    BooleanNot: { modifierText: 'not', leadingText: '', type: 'not' },
+    InProgress: { modifierText: 'in progress', leadingText: '', type: 'list' }
   };
 
   // Don't display the expression if it is not filled out completely.
@@ -216,7 +216,7 @@ function getExpressionSentenceValue(modifier) {
     return expressionSentenceValues[modifier.id];
   }
   // If the modifier is not listed in the object, return just the name of the modifier to be placed at the end.
-  return { modifierText: modifier.name, leadingText: '', trailingText: '', type: 'post' };
+  return { modifierText: modifier.name, leadingText: '', type: 'post' };
 }
 
 function addExpressionText(expressionArray, expression) {
@@ -226,34 +226,21 @@ function addExpressionText(expressionArray, expression) {
   }
   // Add the modifier text
   expressionArray.push({ expressionText: expression.modifierText, isExpression: true });
-  // Add any text needed after the modifier
-  if (expression.trailingText) {
-    expressionArray.push({ expressionText: expression.trailingText, isExpression: false });
-  }
   return expressionArray;
 }
 
+// Build the array for expression phrases by pushing each type of expression in a set order.
 function orderExpressionSentenceArray(expressionArray, type) {
   let remainingExpressionArray = expressionArray;
   let orderedExpressionArray = [];
 
-  // Start sentence with "There exists a..." OR "A..."
-  // TODO Can you switch to moving "exists" to after "an observation which exists" -> so you can do "not an observation which is exists"
   remainingExpressionArray = remainingExpressionArray.filter((expression) => {
-    if (expression.type === 'BooleanExists') {
-      orderedExpressionArray.push({ expressionText: expression.leadingText, isExpression: false });
-      orderedExpressionArray.push({ expressionText: expression.modifierText, isExpression: true });
-      // orderedExpressionArray.push({ expressionText: getArticle(type), isExpression: false });
-      orderedExpressionArray.push({ expressionText: 'a', isExpression: false });
-      return false; // False filters out the exist modifier since it has been added.
+    if (expression.type === 'not') {
+      orderedExpressionArray.push({ expressionText: _.capitalize(expression.modifierText), isExpression: true });
+      return false;
     }
-    return true; // Modifier not used.
+    return true;
   });
-
-  if (orderedExpressionArray.length === 0) { // TODO Determine a/an
-    // orderedExpressionArray.push({ expressionText: _.capitalize(getArticle(type)), isExpression: false });
-    orderedExpressionArray.push({ expressionText: _.capitalize('a'), isExpression: false });
-  }
 
   // Add on descriptors (highest, most recent, etc)
   remainingExpressionArray = remainingExpressionArray.filter((expression) => {
@@ -273,24 +260,68 @@ function orderExpressionSentenceArray(expressionArray, type) {
     return true;
   });
 
+  // Add the type of element (Observations, etc)
   orderedExpressionArray.push({ expressionText: type, isExpression: false });
 
-  // Add Concept/Quantity value
+  // Add post-list types (with unit)
   remainingExpressionArray = remainingExpressionArray.filter((expression) => {
-    if (expression.type === 'value') {
+    if (expression.type === 'post-list') {
       orderedExpressionArray = addExpressionText(orderedExpressionArray, expression);
       return false;
     }
     return true;
   });
 
+  // Add exists
+  remainingExpressionArray = remainingExpressionArray.filter((expression) => {
+    if (expression.type === 'BooleanExists') {
+      orderedExpressionArray.push({ expressionText: expression.leadingText, isExpression: false });
+      orderedExpressionArray.push({ expressionText: expression.modifierText, isExpression: true });
+      return false; // False filters out the exist modifier since it has been added.
+    }
+    return true; // Modifier not used.
+  });
+
+  // // Add Concept/Quantity value
+  // remainingExpressionArray = remainingExpressionArray.filter((expression) => {
+  //   if (expression.type === 'value') {
+  //     orderedExpressionArray = addExpressionText(orderedExpressionArray, expression);
+  //     return false;
+  //   }
+  //   return true;
+  // });
+
   // Add any remaining expressions at the end.
   remainingExpressionArray.forEach((expression) => {
     orderedExpressionArray = addExpressionText(orderedExpressionArray, expression);
   });
 
+  // Insert "and" at the end of the list of 'post' expressions.
+  if (remainingExpressionArray.length > 0) {
+    let indexOfStartOfLastExpression = orderedExpressionArray.length - 1;
+    while (orderedExpressionArray[indexOfStartOfLastExpression].isExpression) {
+      indexOfStartOfLastExpression -= 1;
+    }
+    orderedExpressionArray.splice(indexOfStartOfLastExpression, 0, { expressionText: 'and', isExpression: false });
+  }
+
   // Period to end sentence.
   orderedExpressionArray.push({ expressionText: '.', isExpression: false });
+
+  // Update the article (a/an) that was added based on the first word in the phrase.
+  // If 'not' is applied, the article will follow. Otherwise, it starts the phrase.
+  if (expressionArray.findIndex(expression => expression.type === 'not') !== -1) {
+    const indexOfArticle = 1;
+    const wordToFollow = orderedExpressionArray[indexOfArticle].expressionText;
+    const article = getArticle(wordToFollow);
+    orderedExpressionArray.splice(indexOfArticle, 0, { expressionText: article, isExpression: false });
+  } else {
+    const indexOfArticle = 0;
+    const wordToFollow = orderedExpressionArray[indexOfArticle].expressionText;
+    const article = getArticle(wordToFollow);
+    orderedExpressionArray.splice(indexOfArticle, 0, { expressionText: _.capitalize(article), isExpression: false });
+  }
+
 
   return orderedExpressionArray;
 }
