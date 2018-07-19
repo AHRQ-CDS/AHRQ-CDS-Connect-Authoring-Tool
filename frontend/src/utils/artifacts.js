@@ -112,10 +112,10 @@ function getExpressionSentenceValue(modifier) {
       modifierText: 'with unit', leadingText: '', type: 'post-list'
     },
     ValueComparisonObservation: {
-      modifierText: 'greater than a number', leadingText: 'that is', type: 'post'
+      modifierText: 'greater than a number', leadingText: 'whose value is', type: 'post'
     },
-    // QuantityValue: { modifierText: 'quantity value', leadingText: '', type: 'value' }, // Not diplayed in phrase
-    // ConceptValue: { modifierText: 'concept value', leadingText: '', type: 'value' }, // Not diplayed in phrase
+    QuantityValue: { modifierText: 'quantity value', leadingText: '', type: 'value' }, // Will not be diplayed in phrase
+    ConceptValue: { modifierText: 'concept value', leadingText: '', type: 'value' }, // Will not be diplayed in phrase
     Qualifier: { modifierText: 'with a code', leadingText: '', type: 'post' },
     ConvertObservation: { modifierText: 'convert', leadingText: 'with', type: 'post' },
     HighestObservationValue: { modifierText: 'highest', leadingText: '', type: 'descriptor' },
@@ -186,7 +186,8 @@ function getExpressionSentenceValue(modifier) {
             }
           }
         }
-        expressionSentenceValues[modifier.id].modifierText = `whose ${qualifierText} ${valueSetText}`;
+        expressionSentenceValues[modifier.id].leadingText = `whose ${qualifierText}`;
+        expressionSentenceValues[modifier.id].modifierText = `${valueSetText}`;
         break;
       }
       case 'ConvertObservation': {
@@ -282,31 +283,18 @@ function orderExpressionSentenceArray(expressionArray, type) {
     return true; // Modifier not used.
   });
 
-  // // Add Concept/Quantity value
-  // remainingExpressionArray = remainingExpressionArray.filter((expression) => {
-  //   if (expression.type === 'value') {
-  //     orderedExpressionArray = addExpressionText(orderedExpressionArray, expression);
-  //     return false;
-  //   }
-  //   return true;
-  // });
+  // Filter out Concept/Quantity value without adding to the phrase.
+  remainingExpressionArray = remainingExpressionArray.filter((expression) => {
+    if (expression.type === 'value') {
+      return false;
+    }
+    return true;
+  });
 
   // Add any remaining expressions at the end.
   remainingExpressionArray.forEach((expression) => {
     orderedExpressionArray = addExpressionText(orderedExpressionArray, expression);
   });
-
-  // Insert "and" at the end of the list of 'post' expressions.
-  if (remainingExpressionArray.length > 0) {
-    let indexOfStartOfLastExpression = orderedExpressionArray.length - 1;
-    while (orderedExpressionArray[indexOfStartOfLastExpression].isExpression) {
-      indexOfStartOfLastExpression -= 1;
-    }
-    orderedExpressionArray.splice(indexOfStartOfLastExpression, 0, { expressionText: 'and', isExpression: false });
-  }
-
-  // Period to end sentence.
-  orderedExpressionArray.push({ expressionText: '.', isExpression: false });
 
   // Update the article (a/an) that was added based on the first word in the phrase.
   // If 'not' is applied, the article will follow. Otherwise, it starts the phrase.
