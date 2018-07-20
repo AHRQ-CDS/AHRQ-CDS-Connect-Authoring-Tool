@@ -49,15 +49,6 @@ export default [
     comparisonOperator: null
   },
   {
-    id: 'CheckInclusionInVS',
-    name: 'Exists within Valueset?',
-    inputTypes: ['system_quantity'],
-    returnType: 'boolean',
-    values: undefined,
-    cqlTemplate: 'CheckInclusionInVS',
-    cqlLibraryFunction: null
-  },
-  {
     id: 'QuantityValue',
     name: 'Quantity Value',
     inputTypes: ['observation'],
@@ -82,14 +73,6 @@ export default [
     values: { qualifier: undefined, valueSet: null, code: null },
     cqlTemplate: null,
     cqlLibraryFunction: null
-  },
-  {
-    id: 'ConvertToMgPerdL',
-    name: 'Convert to mg/dL from mmol/L',
-    inputTypes: ['system_quantity'],
-    returnType: 'system_quantity',
-    cqlTemplate: 'BaseModifier',
-    cqlLibraryFunction: 'Convert.to_mg_per_dL'
   },
   {
     id: 'ConvertObservation',
@@ -152,15 +135,6 @@ export default [
     cqlTemplate: 'BaseModifier',
     cqlLibraryFunction: 'C3F.ProcedureInProgress'
   },
-  // medications
-  {
-    id: 'ActiveMedication',
-    name: 'Active',
-    inputTypes: ['list_of_medications'],
-    returnType: 'list_of_medications',
-    cqlTemplate: 'BaseModifier',
-    cqlLibraryFunction: 'C3F.Active'
-  },
   {
     id: 'ActiveMedicationStatement',
     name: 'Active',
@@ -197,26 +171,12 @@ export default [
     cqlLibraryFunction: 'C3F.MostRecent'
   },
   {
-    id: 'MostRecentCondition',
-    name: 'Most Recent',
-    inputTypes: ['list_of_conditions'],
-    returnType: 'condition',
-    cqlTemplate: 'BaseModifier',
-    cqlLibraryFunction: 'C3F.MostRecent' },
-  { // TODO: not valid
-    id: 'MostRecentMedication',
-    name: 'Most Recent',
-    inputTypes: ['list_of_medications'],
-    returnType: 'medication',
-    cqlTemplate: 'BaseModifier',
-    cqlLibraryFunction: 'C3F.MostRecent' },
-  {
     id: 'MostRecentProcedure',
     name: 'Most Recent',
     inputTypes: ['list_of_procedures'],
     returnType: 'procedure',
     cqlTemplate: 'BaseModifier',
-    cqlLibraryFunction: 'C3F.MostRecent' },
+    cqlLibraryFunction: 'C3F.MostRecentProcedure' },
   // Look Back
   {
     id: 'LookBackObservation',
@@ -238,15 +198,24 @@ export default [
     validator: { type: 'require', fields: ['value', 'unit'], args: null },
     cqlTemplate: 'LookBackModifier',
     cqlLibraryFunction: 'C3F.ConditionLookBack' },
-  { // TODO: not valid
-    id: 'LookBackMedication',
+  {
+    id: 'LookBackMedicationOrder',
     type: 'LookBack',
     name: 'Look Back',
-    inputTypes: ['list_of_medications'],
-    returnType: 'list_of_medications',
+    inputTypes: ['list_of_medication_orders'],
+    returnType: 'list_of_medication_orders',
     values: { value: undefined, unit: undefined },
     cqlTemplate: 'LookBackModifier',
-    cqlLibraryFunction: 'C3F.MedicationLookBack' },
+    cqlLibraryFunction: 'C3F.MedicationOrderLookBack' },
+  {
+    id: 'LookBackMedicationStatement',
+    type: 'LookBack',
+    name: 'Look Back',
+    inputTypes: ['list_of_medication_statements'],
+    returnType: 'list_of_medication_statements',
+    values: { value: undefined, unit: undefined },
+    cqlTemplate: 'LookBackModifier',
+    cqlLibraryFunction: 'C3F.MedicationStatementLookBack' },
   {
     id: 'LookBackProcedure',
     type: 'LookBack',

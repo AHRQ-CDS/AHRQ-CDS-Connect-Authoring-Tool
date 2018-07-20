@@ -15,7 +15,6 @@ const cholesterolTemplate = observations.entries.find(e => e.id === 'TotalCholes
 
 const baseState = {
   artifacts: { artifact: {}, downloadArtifact: { elmErrors: [] } },
-  resources: { resources: {} },
   valueSets: { valueSets: [] },
   templates: { templates: elementGroups },
   vsac: {},
@@ -32,9 +31,7 @@ const props = {
   },
   statusMessage: '',
   templates: [],
-  resources: {},
   loadTemplates: jest.fn(),
-  loadResources: jest.fn(),
   loadValueSets: jest.fn(),
   loadArtifact: jest.fn(),
   initializeArtifact: jest.fn(),

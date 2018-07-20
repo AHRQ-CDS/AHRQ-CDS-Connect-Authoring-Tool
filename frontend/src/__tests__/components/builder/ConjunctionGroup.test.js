@@ -42,7 +42,6 @@ const props = {
     [treeName]: { id: 'Or' }
   },
   parameters: [],
-  resources: {},
   instanceNames: [],
   loadValueSets: jest.fn(),
   loginVSACUser: jest.fn(),

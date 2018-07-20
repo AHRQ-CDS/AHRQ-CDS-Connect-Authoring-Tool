@@ -1,4 +1,4 @@
-library CDS_Connect_Commons_for_FHIRv102 version '1.2.0'
+library CDS_Connect_Commons_for_FHIRv102 version '1.3.0'
 
 using FHIR version '1.0.2'
 
@@ -246,6 +246,16 @@ define function ProcedureLookBack(ProcList List<Procedure>, LookBack System.Quan
     where P.performedDateTime.value in LookBackInterval
       or NullSafeToInterval(P.performedPeriod) overlaps LookBackInterval
 
+/**
+ * The most recent procedure.  For each Procedure, this algorithm will use the Coalesce function, which returns the
+ * first non-null result from these fields: performedDateTime, performedPeriod.end, performedPeriod.start.
+ * The found date will be used to compare Procedures and determine the most recent one.
+ * @param ProcList - a list of Procedures
+ * @returns {Procedure} the most recent Procedure from the list, or null if null was passed in
+ */
+define function MostRecentProcedure(ProcList List<Procedure>):
+  Last(ProcList P sort by Coalesce(performedDateTime.value, performedPeriod."end".value, performedPeriod."start".value))
+
 // -------------------------------------------------- MEDICATIONS ------------------------------------------------------
 
 /**
@@ -309,6 +319,34 @@ define function ActiveOrCompletedMedicationOrder(MedList List<MedicationOrder>):
   MedList M
     where M.status.value = 'active'
       or M.status.value = 'completed'
+
+/**
+* Medication Orders that are issued in the specified "look back" period.
+* TODO: Rename to LookBack once the execution engine supports overloaded functions.
+* @param MedList - a list of Medications
+* @param LookBack - the lookback period for when the medication was prescribed
+* @returns {List<MedicationOrder>} a list of Medications prescribed in the look back period, or null if null
+* was passed in
+*/
+define function MedicationOrderLookBack(MedList List<MedicationOrder>, LookBack System.Quantity):
+MedList M
+  let LookBackInterval: Interval[Now() - LookBack, Now()]
+  where M.dateWritten.value in LookBackInterval
+    or M.dateEnded.value in LookBackInterval
+
+/**
+* Medication Statements that are issued in the specified "look back" period.
+* TODO: Rename to LookBack once the execution engine supports overloaded functions.
+* @param MedList - a list of Medications
+* @param LookBack - the lookback period for when the medication was prescribed
+* @returns {List<MedicationStatement>} a list of Medications prescribed in the look back period, or null if null
+* was passed in
+*/
+define function MedicationStatementLookBack(MedList List<MedicationStatement>, LookBack System.Quantity):
+MedList M
+  let LookBackInterval: Interval[Now() - LookBack, Now()]
+  where M.effectiveDateTime.value in LookBackInterval
+    or NullSafeToInterval(M.effectivePeriod) overlaps LookBackInterval
 
 // -------------------------------------------------- ENCOUNTERS ------------------------------------------------------
 

@@ -8,7 +8,6 @@ const genericTemplateInstance = createTemplateInstance(genericInstance);
 let component;
 
 const props = {
-  resources: {},
   valueSets: [],
   loadValueSets: jest.fn(),
   getPath: jest.fn(),

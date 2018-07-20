@@ -8,7 +8,6 @@ import FontAwesome from 'react-fontawesome';
 import _ from 'lodash';
 
 import loadTemplates from '../actions/templates';
-import loadResources from '../actions/resources';
 import loadValueSets from '../actions/value_sets';
 import loadConversionFunctions from '../actions/modifiers';
 import {
@@ -60,7 +59,6 @@ export class Builder extends Component {
         this.props.initializeArtifact(andTemplate);
       }
     });
-    this.props.loadResources();
     this.props.publishArtifact();
     this.props.loadConversionFunctions();
   }
@@ -271,7 +269,7 @@ export class Builder extends Component {
 
   renderConjunctionGroup = (treeName) => {
     const {
-      artifact, templates, resources, valueSets,
+      artifact, templates, valueSets,
       vsacStatus, vsacStatusText, timeLastAuthenticated,
       isRetrievingDetails, vsacDetailsCodes, conversionFunctions,
       isValidatingCode, isValidCode, codeData
@@ -285,7 +283,6 @@ export class Builder extends Component {
           treeName={treeName}
           artifact={artifact}
           templates={templates}
-          resources={resources}
           valueSets={valueSets}
           loadValueSets={this.props.loadValueSets}
           instance={artifact[treeName]}
@@ -408,7 +405,6 @@ export class Builder extends Component {
                   <Subpopulations
                     name={'subpopulations'}
                     artifact={artifact}
-                    resources={this.props.resources}
                     valueSets={this.props.valueSets}
                     loadValueSets={this.props.loadValueSets}
                     updateSubpopulations={this.updateSubpopulations}
@@ -447,7 +443,6 @@ export class Builder extends Component {
                   <Subpopulations
                     name={'subelements'}
                     artifact={artifact}
-                    resources={this.props.resources}
                     valueSets={this.props.valueSets}
                     loadValueSets={this.props.loadValueSets}
                     updateSubpopulations={this.updateSubpopulations}
@@ -548,9 +543,7 @@ Builder.propTypes = {
   artifact: artifactProps,
   statusMessage: PropTypes.string,
   templates: PropTypes.array,
-  resources: PropTypes.object,
   loadTemplates: PropTypes.func.isRequired,
-  loadResources: PropTypes.func.isRequired,
   loadValueSets: PropTypes.func.isRequired,
   loadArtifact: PropTypes.func.isRequired,
   initializeArtifact: PropTypes.func.isRequired,
@@ -571,7 +564,6 @@ Builder.propTypes = {
 function mapDispatchToProps(dispatch) {
   return bindActionCreators({
     loadTemplates,
-    loadResources,
     loadValueSets,
     loadArtifact,
     initializeArtifact,
@@ -599,7 +591,6 @@ function mapStateToProps(state) {
     downloadedArtifact: state.artifacts.downloadArtifact,
     statusMessage: state.artifacts.statusMessage,
     templates: state.templates.templates,
-    resources: state.resources.resources,
     valueSets: state.valueSets.valueSets,
     publishEnabled: state.artifacts.publishEnabled,
     names: state.artifacts.names,

@@ -70,7 +70,6 @@ export default class Subpopulations extends Component {
             <Subpopulation
               key={subpop.uniqueId}
               treeName={this.props.name}
-              resources={this.props.resources}
               valueSets={this.props.valueSets}
               loadValueSets={this.props.loadValueSets}
               subpopulation={subpop}
@@ -118,7 +117,6 @@ export default class Subpopulations extends Component {
 
 Subpopulations.propTypes = {
   artifact: PropTypes.object.isRequired,
-  resources: PropTypes.object,
   valueSets: PropTypes.array,
   loadValueSets: PropTypes.func.isRequired,
   updateSubpopulations: PropTypes.func.isRequired,

@@ -5,7 +5,6 @@ import authReducer from './auth';
 import errorsReducer from './errors';
 import artifactsReducer from './artifacts';
 import templatesReducer from './templates';
-import resourcesReducer from './resources';
 import valueSetsReducer from './value_sets';
 import vsacReducer from './vsac';
 import modifiersReducer from './modifiers';
@@ -16,7 +15,6 @@ const rootReducer = combineReducers({
   errors: errorsReducer,
   artifacts: artifactsReducer,
   templates: templatesReducer,
-  resources: resourcesReducer,
   valueSets: valueSetsReducer,
   vsac: vsacReducer,
   modifiers: modifiersReducer
