@@ -106,6 +106,7 @@ function getArticle(word) {
 }
 
 function getExpressionSentenceValue(modifier) {
+  // TODO Eventually move the object for each expression onto modifier.js objects. This will likely require a migration.
   const expressionSentenceValues = {
     VerifiedObservation: { modifierText: 'verified', leadingText: '', type: 'list' },
     WithUnit: {
@@ -158,6 +159,7 @@ function getExpressionSentenceValue(modifier) {
   }
 
   if (expressionSentenceValues[modifier.id]) {
+    // Apply any user provided values needed
     switch (modifier.id) {
       case 'WithUnit': {
         expressionSentenceValues[modifier.id].modifierText = `with unit ${modifier.values.unit}`;
@@ -217,7 +219,56 @@ function getExpressionSentenceValue(modifier) {
     return expressionSentenceValues[modifier.id];
   }
   // If the modifier is not listed in the object, return just the name of the modifier to be placed at the end.
-  return { modifierText: modifier.name, leadingText: '', type: 'post' };
+  return { modifierText: _.lowerCase(modifier.name), leadingText: '', type: 'post' };
+}
+
+function addVSandCodeText(expressionArray, valueSets, codes) {
+  let otherValueSetsOrCodes = '...';
+  let needToAddToTooltipVS = false;
+  valueSets.forEach((vs, i) => {
+    if (needToAddToTooltipVS) {
+      if (i === valueSets.length - 1 && codes.length === 0) {
+        // If at the end of the value sets array and there are no codes to add, add 'or' to the text.
+        otherValueSetsOrCodes += ` or ${vs.name},`;
+      } else {
+        otherValueSetsOrCodes += ` ${vs.name},`;
+      }
+    }
+    needToAddToTooltipVS = true;
+  });
+
+  let needToAddToTooltipCodes = needToAddToTooltipVS; // If there are value sets added already, all codes go on tooltip
+  codes.forEach((code, i) => {
+    const display = code.display ? code.display : `${code.code} (${code.codeSystem.name})`;
+    if (needToAddToTooltipCodes) {
+      if (i === codes.length - 1) {
+        // If at the end of the codes array, add 'or' to the text
+        otherValueSetsOrCodes += ` or ${display},`;
+      } else {
+        otherValueSetsOrCodes += ` ${display},`;
+      }
+    }
+    needToAddToTooltipCodes = true;
+  });
+
+  if (needToAddToTooltipVS || needToAddToTooltipCodes) { // If there are any value sets or codes to add
+    expressionArray.push({ expressionText: 'with code from ', isExpression: false });
+    let expressionText;
+    if (needToAddToTooltipVS) {
+      expressionText = valueSets[0].name;
+    } else {
+      expressionText = codes[0].display ? codes[0].display : `${codes[0].code} (${codes[0].codeSystem.name})`;
+    }
+    if (otherValueSetsOrCodes !== '...') { // If there is more than one value set/code, add text for tooltip.
+      otherValueSetsOrCodes = otherValueSetsOrCodes.slice(0, -1); // Take off trailing comma
+      expressionArray.push({
+        expressionText: `${expressionText}...`, isExpression: true, tooltipText: otherValueSetsOrCodes
+      });
+    } else {
+      expressionArray.push({ expressionText, isExpression: true });
+    }
+  }
+  return expressionArray;
 }
 
 function addExpressionText(expressionArray, expression) {
@@ -231,7 +282,7 @@ function addExpressionText(expressionArray, expression) {
 }
 
 // Build the array for expression phrases by pushing each type of expression in a set order.
-function orderExpressionSentenceArray(expressionArray, type) {
+function orderExpressionSentenceArray(expressionArray, type, valueSets, codes) {
   let remainingExpressionArray = expressionArray;
   let orderedExpressionArray = [];
 
@@ -263,6 +314,9 @@ function orderExpressionSentenceArray(expressionArray, type) {
 
   // Add the type of element (Observations, etc)
   orderedExpressionArray.push({ expressionText: type, isExpression: false });
+
+  // Add value sets and codes. If there is more than one value set/code, add the rest to a tooltip.
+  orderedExpressionArray = addVSandCodeText(orderedExpressionArray, valueSets, codes);
 
   // Add post-list types (with unit)
   remainingExpressionArray = remainingExpressionArray.filter((expression) => {
@@ -314,7 +368,7 @@ function orderExpressionSentenceArray(expressionArray, type) {
   return orderedExpressionArray;
 }
 
-export function convertToExpression(expressionsArray, type, id) {
+export function convertToExpression(expressionsArray, type, valueSets, codes) {
   const expressionSentenceArray = expressionsArray.reduce((accumulator, currentExpression) => {
     if (getExpressionSentenceValue(currentExpression)) {
       const expressionSentenceValue = getExpressionSentenceValue(currentExpression);
@@ -326,7 +380,7 @@ export function convertToExpression(expressionsArray, type, id) {
   }, []);
 
   // Get an order for the expressions that will make sense in a sentence
-  const orderedExpressionSentenceArray = orderExpressionSentenceArray(expressionSentenceArray, type);
+  const orderedExpressionSentenceArray = orderExpressionSentenceArray(expressionSentenceArray, type, valueSets, codes);
 
   return orderedExpressionSentenceArray;
 

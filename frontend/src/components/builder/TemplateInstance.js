@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import FontAwesome from 'react-fontawesome';
+import { UncontrolledTooltip } from 'reactstrap';
 import _ from 'lodash';
 
 import VSACAuthenticationModal from './VSACAuthenticationModal';
@@ -549,14 +550,24 @@ export default class TemplateInstance extends Component {
     return null;
   }
 
-  renderExpression = (expressions) => {
+  renderExpression = (expressions, id) => {
     if (!expressions) { return null; }
 
     return (
       <div className="expression-logic">
         {expressions.map((expression, i) => {
           if (expression.isExpression) {
-            return <span className="expression-item expression-tag" key={i}>{expression.expressionText}</span>;
+            return (
+              <span key={i}>
+                <span id={`expression-${id}-${i}`} className="expression-item expression-tag">
+                  {expression.expressionText}
+                </span>
+                { expression.tooltipText &&
+                  <UncontrolledTooltip target={`expression-${id}-${i}`} placement='top'>
+                    {expression.tooltipText}
+                  </UncontrolledTooltip> }
+              </span>
+            );
           }
 
           return <span className="expression-item expression-text" key={i}>{expression.expressionText}</span>;
@@ -569,7 +580,15 @@ export default class TemplateInstance extends Component {
     let expressions;
     if (this.hasModifiers()) {
       const { templateInstance } = this.props;
-      expressions = convertToExpression(templateInstance.modifiers, templateInstance.name, templateInstance.id);
+      let valueSets = [];
+      if (templateInstance.parameters[1] && templateInstance.parameters[1].valueSets) {
+        valueSets = templateInstance.parameters[1].valueSets;
+      }
+      let codes = [];
+      if (templateInstance.parameters[1] && templateInstance.parameters[1].codes) {
+        codes = templateInstance.parameters[1].codes;
+      }
+      expressions = convertToExpression(templateInstance.modifiers, templateInstance.name, valueSets, codes);
     }
 
     const validationError = this.validateElement();
@@ -580,7 +599,8 @@ export default class TemplateInstance extends Component {
       <div className="card-element__body">
         {validationError && <div className="warning">{validationError}</div>}
         {returnError && <div className="warning">{returnError}</div>}
-        {expressions && <div className="expression">{this.renderExpression(expressions)}</div>}
+        {expressions &&
+          <div className="expression">{this.renderExpression(expressions, this.props.templateInstance.uniqueId)}</div>}
 
         {this.props.templateInstance.parameters.map((param, index) => {
           // todo: each parameter type should probably have its own component
