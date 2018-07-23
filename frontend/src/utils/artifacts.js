@@ -252,7 +252,7 @@ function addVSandCodeText(expressionArray, valueSets, codes) {
   });
 
   if (needToAddToTooltipVS || needToAddToTooltipCodes) { // If there are any value sets or codes to add
-    expressionArray.push({ expressionText: 'with code from ', isExpression: false });
+    expressionArray.push({ expressionText: 'with code from', isExpression: false });
     let expressionText;
     if (needToAddToTooltipVS) {
       expressionText = valueSets[0].name;
