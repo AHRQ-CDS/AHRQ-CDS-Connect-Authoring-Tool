@@ -194,7 +194,16 @@ define function ConditionLookBack(CondList List<Condition>, LookBack System.Quan
     where C.onsetDateTime.value in LookBackInterval
       or NullSafeToInterval(C.onsetPeriod) overlaps LookBackInterval
       or C.dateRecorded in LookBackInterval 
-      // TODO Confirm these are the correct fields to use
+
+/**
+ * The most recent condition.  For each Condition, this algorithm will use the Coalesce function, which uses the
+ * first non-null result from these fields: onsetDateTime, onsetPeriod.end, onsetPeriod.start, dateRecorded.
+ * The found date will be used to compare Conditions and determine the most recent one.
+ * @param CondList - a list of Conditions
+ * @returns {Condition} the most recent Condition from the list, or null if null was passed in
+ */
+define function MostRecentCondition(CondList List<Condition>):
+  Last(CondList C sort by Coalesce(onsetDateTime.value, onsetPeriod."end".value, onsetPeriod."start".value, dateRecorded.value))
 
  // -------------------------------------------------- PROCEDURES ------------------------------------------------------
 

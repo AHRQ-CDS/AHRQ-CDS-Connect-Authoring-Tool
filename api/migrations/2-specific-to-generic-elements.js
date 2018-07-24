@@ -330,6 +330,10 @@ function transformCondition(childInstance) {
   childInstance.modifiers.forEach((modifierParam, i) => {
     let modifier = modifierParam;
     switch (modifier.id) {
+      case 'MostRecentCondition': {
+        modifier.cqlLibraryFunction = 'C3F.MostRecentCondition';
+        break;
+      }
       case 'CheckExistence': {
         modifier = updateCheckExistenceModifier(modifier);
         break;
@@ -543,6 +547,17 @@ function transformBreastfeedingCMS(childInstance) {
   }
 }
 
+function transformOldModifiers(childInstance) {
+  childInstance.modifiers.forEach((modifier) => {
+    if (modifier.id === 'MostRecentProcedure') {
+      modifier.cqlLibraryFunction = 'C3F.MostRecentProcedure';
+    } else if (modifier.id === 'MostRecentCondition') {
+      modifier.cqlLibraryFunction = 'C3F.MostRecentCondition';
+    }
+  });
+  return childInstance;
+}
+
 // Returns the element after transformation.
 function transformElement(element) {
   let childInstance = element;
@@ -569,7 +584,7 @@ function transformElement(element) {
   } else if (childInstance.id === 'Breastfeeding_CMS347v1') {
     return transformBreastfeedingCMS(childInstance);
   }
-  return childInstance;
+  return transformOldModifiers(childInstance);
 }
 
 function parseTree(element) {

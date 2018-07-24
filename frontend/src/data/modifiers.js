@@ -171,6 +171,13 @@ export default [
     cqlLibraryFunction: 'C3F.MostRecent'
   },
   {
+    id: 'MostRecentCondition',
+    name: 'Most Recent',
+    inputTypes: ['list_of_conditions'],
+    returnType: 'condition',
+    cqlTemplate: 'BaseModifier',
+    cqlLibraryFunction: 'C3F.MostRecentCondition' },
+  {
     id: 'MostRecentProcedure',
     name: 'Most Recent',
     inputTypes: ['list_of_procedures'],
