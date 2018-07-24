@@ -46,6 +46,7 @@ function getValueSet(oid, username, password) {
       codes: response.expansion.contains.map((c) => {
         return {
           code: c.code,
+          codeSystemURI: c.system,
           codeSystemName: codeLookups[c.system]||c.system,
           codeSystemVersion: c.version,
           displayName: c.display

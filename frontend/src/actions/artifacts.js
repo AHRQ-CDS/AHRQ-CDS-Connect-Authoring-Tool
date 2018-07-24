@@ -6,8 +6,8 @@ import _ from 'lodash';
 
 import cql from 'cql-execution';
 import cqlfhir from 'cql-exec-fhir';
-import cqlvsac from 'cql-exec-vsac';
 
+import CodeService from '../utils/code_service/CodeService';
 import changeToCase from '../utils/strings';
 import createTemplateInstance from '../utils/templates';
 import loadTemplates from './templates';
@@ -438,10 +438,10 @@ function performExecuteArtifact(elmFiles, artifactName, patient, vsacCredentials
   // don't need to be downloaded on every execution
 
   // Set up the code service
-  const codeService = new cqlvsac.CodeService();
-
+  const codeService = new CodeService();
+  
   // Ensure value sets, downloading any missing value sets
-  return codeService.ensureValueSets(valueSets, vsacCredentials.username, vsacCredentials.password, false)
+  return codeService.ensureValueSets(valueSets, vsacCredentials.username, vsacCredentials.password)
     .then(() => {
       // Value sets are loaded, so execute!
       const executor = new cql.Executor(library, codeService);
