@@ -383,18 +383,4 @@ export function convertToExpression(expressionsArray, type, valueSets, codes) {
   const orderedExpressionSentenceArray = orderExpressionSentenceArray(expressionSentenceArray, type, valueSets, codes);
 
   return orderedExpressionSentenceArray;
-
-  // // TODO
-  // return [
-  //   { expressionText: 'There exists a', isExpression: false },
-  //   { expressionText: 'most recent', isExpression: true },
-  //   { expressionText: 'verified', isExpression: true },
-  //   { expressionText: 'observation', isExpression: false },
-  //   { expressionText: 'within the last 6 years', isExpression: true },
-  //   { expressionText: 'with code from', isExpression: false },
-  //   { expressionText: 'Value Set A', isExpression: true },
-  //   { expressionText: 'that is', isExpression: false },
-  //   { expressionText: 'greater than 130 mg/dL', isExpression: true },
-  //   { expressionText: '.', isExpression: false }
-  // ];
 }
