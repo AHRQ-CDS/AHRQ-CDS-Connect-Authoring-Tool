@@ -42,8 +42,8 @@ test('Simple modifiers Active, Confirmed, Exists builds expected phrase', () => 
     { expressionText: 'An', isExpression: false },
     { expressionText: 'active', isExpression: true },
     { expressionText: 'confirmed', isExpression: true },
-    { expressionText: 'Condition', isExpression: false },
-    { expressionText: 'with code from', isExpression: false },
+    { expressionText: 'condition', isExpression: false },
+    { expressionText: 'with a code from', isExpression: false },
     { expressionText: 'Diabetes', isExpression: true },
     { expressionText: 'that', isExpression: false },
     { expressionText: 'exists', isExpression: true },
@@ -112,8 +112,8 @@ test('More complicated modifiers, including Qualifier, builds expected phrase', 
     { expressionText: 'A', isExpression: false },
     { expressionText: 'most recent', isExpression: true },
     { expressionText: 'verified', isExpression: true },
-    { expressionText: 'Observation', isExpression: false },
-    { expressionText: 'with code from', isExpression: false },
+    { expressionText: 'observation', isExpression: false },
+    { expressionText: 'with a code from', isExpression: false },
     { expressionText: 'LDL', isExpression: true },
     { expressionText: 'which occurred', isExpression: false },
     { expressionText: 'within the last 14 years', isExpression: true },
@@ -196,8 +196,8 @@ test('More complicated modifiers, including Value Comparison, builds correct phr
     { expressionText: 'A', isExpression: false },
     { expressionText: 'most recent', isExpression: true },
     { expressionText: 'verified', isExpression: true },
-    { expressionText: 'Observation', isExpression: false },
-    { expressionText: 'with code from', isExpression: false },
+    { expressionText: 'observation', isExpression: false },
+    { expressionText: 'with a code from', isExpression: false },
     { expressionText: 'LDL', isExpression: true },
     { expressionText: 'with unit mg/dL', isExpression: true },
     { expressionText: 'with', isExpression: false },
@@ -259,8 +259,8 @@ test('More complicated expression, with Highest, Not, and Is Null, builds correc
     { expressionText: 'a', isExpression: false },
     { expressionText: 'highest', isExpression: true },
     { expressionText: 'verified', isExpression: true },
-    { expressionText: 'Observation', isExpression: false },
-    { expressionText: 'with code from', isExpression: false },
+    { expressionText: 'observation', isExpression: false },
+    { expressionText: 'with a code from', isExpression: false },
     { expressionText: 'test code', isExpression: true },
     { expressionText: 'which', isExpression: false },
     { expressionText: 'is null', isExpression: true }
@@ -349,8 +349,8 @@ test('Only validated modifiers are added the the phrase', () => {
     { expressionText: 'Not', isExpression: true },
     { expressionText: 'a', isExpression: false },
     { expressionText: 'most recent', isExpression: true },
-    { expressionText: 'Observation', isExpression: false },
-    { expressionText: 'with code from', isExpression: false },
+    { expressionText: 'observation', isExpression: false },
+    { expressionText: 'with a code from', isExpression: false },
     { expressionText: 'LDL', isExpression: true }
   ];
 
@@ -381,9 +381,9 @@ test('All value sets and codes are added to phrase, but only one displayed, rest
 
   const expectedOutput = [
     { expressionText: 'An', isExpression: false },
-    { expressionText: 'Observation', isExpression: false },
-    { expressionText: 'with code from', isExpression: false },
-    { expressionText: 'LDL...', isExpression: true, tooltipText: '... HDL, Test code, or 432-1 (CS2)' },
+    { expressionText: 'observation', isExpression: false },
+    { expressionText: 'with a code from', isExpression: false },
+    { expressionText: 'LDL, HDL, Test code...', isExpression: true, tooltipText: '... or 432-1 (CS2)' },
     { expressionText: 'that', isExpression: false },
     { expressionText: 'exists', isExpression: true }
   ];

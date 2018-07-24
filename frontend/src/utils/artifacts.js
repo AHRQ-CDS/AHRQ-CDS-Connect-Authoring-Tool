@@ -223,46 +223,43 @@ function getExpressionSentenceValue(modifier) {
 }
 
 function addVSandCodeText(expressionArray, valueSets, codes) {
-  let otherValueSetsOrCodes = '...';
-  let needToAddToTooltipVS = false;
-  valueSets.forEach((vs, i) => {
-    if (needToAddToTooltipVS) {
-      if (i === valueSets.length - 1 && codes.length === 0) {
-        // If at the end of the value sets array and there are no codes to add, add 'or' to the text.
-        otherValueSetsOrCodes += ` or ${vs.name},`;
+  let numberOfValues = 0;
+  let expressionText = '';
+  let tooltipText = '';
+
+  const valueSetValues = valueSets.map(vs => vs.name);
+  const codeValues = codes.map((code) => {
+    return code.display ? code.display : `${code.code} (${code.codeSystem.name})`;
+  });
+  const allValues = valueSetValues.concat(codeValues); // A list of all value sets and codes to be added.
+
+  allValues.forEach((name, i) => {
+    if (numberOfValues > 2) { // Anything after the first three values gets added to the tooltip.
+      if (i === allValues.length - 1) { // Add 'or' before the last value listed.
+        tooltipText += ' or';
+      }
+      tooltipText += ` ${name},`;
+    } else { // Any value within the first three values gets added to the phrase text.
+      if (i === allValues.length - 1 && i !== 0) { // Add 'or' before the last value listed, as long as it is not the only one.
+        expressionText += ' or';
+      }
+      if (i === 0 && allValues.length === 2) { // If there are only two values to add, don't add a comma after the first one.
+        expressionText += ` ${name}`;
       } else {
-        otherValueSetsOrCodes += ` ${vs.name},`;
+        expressionText += ` ${name},`;
       }
     }
-    needToAddToTooltipVS = true;
+    numberOfValues += 1;
   });
 
-  let needToAddToTooltipCodes = needToAddToTooltipVS; // If there are value sets added already, all codes go on tooltip
-  codes.forEach((code, i) => {
-    const display = code.display ? code.display : `${code.code} (${code.codeSystem.name})`;
-    if (needToAddToTooltipCodes) {
-      if (i === codes.length - 1) {
-        // If at the end of the codes array, add 'or' to the text
-        otherValueSetsOrCodes += ` or ${display},`;
-      } else {
-        otherValueSetsOrCodes += ` ${display},`;
-      }
-    }
-    needToAddToTooltipCodes = true;
-  });
-
-  if (needToAddToTooltipVS || needToAddToTooltipCodes) { // If there are any value sets or codes to add
-    expressionArray.push({ expressionText: 'with code from', isExpression: false });
-    let expressionText;
-    if (needToAddToTooltipVS) {
-      expressionText = valueSets[0].name;
-    } else {
-      expressionText = codes[0].display ? codes[0].display : `${codes[0].code} (${codes[0].codeSystem.name})`;
-    }
-    if (otherValueSetsOrCodes !== '...') { // If there is more than one value set/code, add text for tooltip.
-      otherValueSetsOrCodes = otherValueSetsOrCodes.slice(0, -1); // Take off trailing comma
+  if (allValues.length > 0) { // Some value sets or codes to add
+    expressionArray.push({ expressionText: 'with a code from', isExpression: false });
+    expressionText = expressionText.slice(0, -1); // Remove trailing comma
+    expressionText = expressionText.slice(1); // Remove leading space
+    if (tooltipText) {
+      tooltipText = tooltipText.slice(0, -1); // Remove trailing comma
       expressionArray.push({
-        expressionText: `${expressionText}...`, isExpression: true, tooltipText: otherValueSetsOrCodes
+        expressionText: `${expressionText}...`, isExpression: true, tooltipText: `...${tooltipText}`
       });
     } else {
       expressionArray.push({ expressionText, isExpression: true });
@@ -313,7 +310,7 @@ function orderExpressionSentenceArray(expressionArray, type, valueSets, codes) {
   });
 
   // Add the type of element (Observations, etc)
-  orderedExpressionArray.push({ expressionText: type, isExpression: false });
+  orderedExpressionArray.push({ expressionText: _.lowerCase(type), isExpression: false });
 
   // Add value sets and codes. If there is more than one value set/code, add the rest to a tooltip.
   orderedExpressionArray = addVSandCodeText(orderedExpressionArray, valueSets, codes);
