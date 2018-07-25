@@ -358,7 +358,7 @@ test('Only validated modifiers are added the the phrase', () => {
 });
 
 // Multiple value sets and codes (with and without a display) are added correctly to phrase and tooltip text
-test('All value sets and codes are added to phrase, but only one displayed, rest put in tooltip text', () => {
+test('All value sets and codes are added to phrase, but only first three are displayed, rest in tooltip text', () => {
   const modifiers = [
     {
       id: 'BooleanExists',
@@ -383,7 +383,14 @@ test('All value sets and codes are added to phrase, but only one displayed, rest
     { expressionText: 'An', isExpression: false },
     { expressionText: 'observation', isExpression: false },
     { expressionText: 'with a code from', isExpression: false },
-    { expressionText: 'LDL, HDL, Test code...', isExpression: true, tooltipText: '... or 432-1 (CS2)' },
+    { expressionText: 'LDL', isExpression: true },
+    { expressionText: ',', isExpression: false },
+    { expressionText: 'HDL', isExpression: true },
+    { expressionText: ',', isExpression: false },
+    { expressionText: 'Test code', isExpression: true },
+    { expressionText: ',', isExpression: false },
+    { expressionText: 'or', isExpression: false },
+    { expressionText: '...', isExpression: true, tooltipText: '... or 432-1 (CS2)' },
     { expressionText: 'that', isExpression: false },
     { expressionText: 'exists', isExpression: true }
   ];

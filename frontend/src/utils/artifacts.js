@@ -223,48 +223,43 @@ function getExpressionSentenceValue(modifier) {
 }
 
 function addVSandCodeText(expressionArray, valueSets, codes) {
-  let numberOfValues = 0;
-  let expressionText = '';
   let tooltipText = '';
 
   const valueSetValues = valueSets.map(vs => vs.name);
-  const codeValues = codes.map((code) => {
-    return code.display ? code.display : `${code.code} (${code.codeSystem.name})`;
-  });
+  const codeValues = codes.map(code => (code.display ? code.display : `${code.code} (${code.codeSystem.name})`));
   const allValues = valueSetValues.concat(codeValues); // A list of all value sets and codes to be added.
 
+  if (allValues.length > 0) {
+    expressionArray.push({ expressionText: 'with a code from', isExpression: false });
+  }
+
   allValues.forEach((name, i) => {
-    if (numberOfValues > 2) { // Anything after the first three values gets added to the tooltip.
+    if (i > 2) { // Anything after the first three values gets added to the tooltip.
       if (i === allValues.length - 1) { // Add 'or' before the last value listed.
         tooltipText += ' or';
       }
       tooltipText += ` ${name},`;
-    } else { // Any value within the first three values gets added to the phrase text.
+    } else { // Any value within the first three values gets added to the phrase text individually.
       if (i === allValues.length - 1 && i !== 0) { // Add 'or' before the last value listed, as long as it is not the only one.
-        expressionText += ' or';
+        expressionArray.push({ expressionText: 'or', isExpression: false });
       }
-      if (i === 0 && allValues.length === 2) { // If there are only two values to add, don't add a comma after the first one.
-        expressionText += ` ${name}`;
+      if ((i === 0 && allValues.length === 2) || i === allValues.length - 1) { // If there are only two values to add OR you are at the end of the list, don't add a comma after the name.
+        expressionArray.push({ expressionText: `${name}`, isExpression: true });
       } else {
-        expressionText += ` ${name},`;
+        expressionArray.push({ expressionText: `${name}`, isExpression: true });
+        expressionArray.push({ expressionText: ',', isExpression: false });
       }
     }
-    numberOfValues += 1;
   });
 
-  if (allValues.length > 0) { // Some value sets or codes to add
-    expressionArray.push({ expressionText: 'with a code from', isExpression: false });
-    expressionText = expressionText.slice(0, -1); // Remove trailing comma
-    expressionText = expressionText.slice(1); // Remove leading space
-    if (tooltipText) {
-      tooltipText = tooltipText.slice(0, -1); // Remove trailing comma
-      expressionArray.push({
-        expressionText: `${expressionText}...`, isExpression: true, tooltipText: `...${tooltipText}`
-      });
-    } else {
-      expressionArray.push({ expressionText, isExpression: true });
-    }
+  if (tooltipText) {
+    expressionArray.push({ expressionText: 'or', isExpression: false });
+    tooltipText = tooltipText.slice(0, -1); // Remove trailing comma
+    expressionArray.push({
+      expressionText: '...', isExpression: true, tooltipText: `...${tooltipText}`
+    });
   }
+
   return expressionArray;
 }
 
