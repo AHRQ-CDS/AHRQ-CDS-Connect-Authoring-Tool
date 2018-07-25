@@ -16,6 +16,7 @@ export default class ConjunctionGroup extends Component {
 
     const operationTemplates = this.props.templates.find(cat => cat.name === 'Operations').entries;
     this.types = operationTemplates.filter(template => template.conjunction);
+    this.allTypes = this.props.templates.reduce((prev, curr) => [...prev, ...curr.entries], []);
   }
 
   handleTypeChange = (type) => {
@@ -214,6 +215,7 @@ export default class ConjunctionGroup extends Component {
               getAllInstances={this.props.getAllInstances}
               updateInstanceModifiers={this.props.updateInstanceModifiers}
               parameters={this.props.parameters}
+              subelements={this.props.subelements}
               getPath={this.getChildsPath}
               conversionFunctions={this.props.conversionFunctions}
               instanceNames={this.props.instanceNames}
@@ -302,6 +304,7 @@ export default class ConjunctionGroup extends Component {
             categories={this.props.templates}
             onSuggestionSelected={this.addChild}
             parameters={this.props.parameters}
+            subelements={this.props.subelements}
             loginVSACUser={this.props.loginVSACUser}
             setVSACAuthStatus={this.props.setVSACAuthStatus}
             vsacStatus={this.props.vsacStatus}

@@ -218,7 +218,7 @@ class CqlArtifact {
         subelement.subpopulationName = `${subelement.subpopulationName}_${count}`;
       }
       if (!subelement.special) { // `Doesn't Meet Inclusion Criteria` and `Meets Exclusion Criteria` are special
-        if (subelement.childInstances.length) { this.parseTree(subelement); }
+        if (subelement) { this.parseTree(subelement); }
       }
     }
     );
@@ -313,7 +313,7 @@ class CqlArtifact {
 
   parseTree(element) {
     let updatedElement = this.parseConjunction(element);
-    const children = updatedElement.childInstances;
+    const children = updatedElement.childInstances || [];
     children.forEach((child) => {
       if ('childInstances' in child) {
         this.parseTree(child);
@@ -335,10 +335,10 @@ class CqlArtifact {
     ));
     const name = element.parameters[0].value;
     conjunction.element_name = (name || element.subpopulationName || element.uniqueId);
-    element.childInstances.forEach((child) => {
+    (element.childInstances || []).forEach((child) => {
       // TODO: Could a child of a conjunction ever be a subpopulation?
-      let childName = child.parameters[0].value || child.uniqueId;
-      if (!(child.type === 'parameter' || child.template === 'EmptyParameter')) { // Parameters are updated separately
+      let childName = (child.parameters[0]||{}).value || child.uniqueId;
+      if (!(child.type === 'parameter' || child.template === 'EmptyParameter' || child.type === 'subelement')) { // Parameters are updated separately
         const childCount = getCountForUniqueExpressionName(child.parameters[0], this.names, 'value', '', false);
         if (childCount > 0) {
           childName = `${childName}_${childCount}`;
@@ -502,12 +502,14 @@ class CqlArtifact {
   body() {
     let expressions = this.contexts.concat(this.conjunctions);
     expressions = expressions.concat(this.conjunction_main);
+    expressions = [...expressions, ...this.subelements];
+    // debugger
     return expressions.map((context) => {
-      if (context.withoutModifiers || context.components) {
+      if ((context.withoutModifiers || context.components) && specificMap[context.template]) {
         return ejs.render(specificMap[context.template], context);
       }
       if (!(context.template in templateMap)) console.error(`Template could not be found: ${context.template}`);
-      context.values.forEach((value, index) => {
+      (context.values || []).forEach((value, index) => {
         context.values[index] = ejs.render(templateMap[context.template], { element_context: value });
       });
       const cqlString = applyModifiers.call(this, context.values, context.modifiers);
@@ -597,7 +599,7 @@ function sanitizeCQLString(cqlString) {
 }
 
 // Both parameters are arrays. All modifiers will be applied to all values, and joined with "\n or".
-function applyModifiers(values, modifiers = []) { // default modifiers to []
+function applyModifiers(values = [] , modifiers = []) { // default modifiers to []
   return values.map((value) => {
     let newValue = value;
     modifiers.forEach((modifier) => {

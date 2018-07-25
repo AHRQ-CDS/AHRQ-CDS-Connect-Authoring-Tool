@@ -206,5 +206,22 @@ module.exports = [
         ]
       },
     ]
+  },
+  {
+    id: 10,
+    icon: 'sign-in',
+    name: 'Sub Element',
+    entries: [
+      {
+        id: 'Boolean',
+        name: 'Boolean',
+        type: 'reference',
+        returnType: 'boolean',
+        extends: 'Base',
+        parameters: [
+          { id: 'default', type: 'boolean', value: 'true', name: 'Default' }
+        ],
+      },
+    ]
   }
 ];

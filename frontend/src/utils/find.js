@@ -42,7 +42,7 @@ export function findValueAtPath(object, path) {
 
     return findValueAtPath({}, path);
   }
-
+  
   // Probably at the root
   if (object[path[0]] === undefined || object[path[0]].length === 0) {
     return object;

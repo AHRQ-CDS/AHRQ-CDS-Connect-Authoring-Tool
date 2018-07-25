@@ -98,12 +98,18 @@ export default class Subpopulation extends Component {
             </div>
           </div>
 
-          {this.state.isExpanded &&
-            <div className="card-element__body">
-              {this.props.subpopulation.childInstances.length < 1 &&
+          {this.state.isExpanded && this.renderContents()}
+        </div>
+      </div>
+    );
+  }
+
+  renderContents() {
+    return (
+      <div className="card-element__body">
+              {this.props.subpopulation.childInstances && this.props.subpopulation.childInstances.length < 1 &&
                 <div className='warning'>This subpopulation needs at least one condition</div>
               }
-
               <ConjunctionGroup
                 root={true}
                 treeName={this.props.treeName}
@@ -118,6 +124,7 @@ export default class Subpopulation extends Component {
                 getAllInstances={this.getAllInstances}
                 updateInstanceModifiers={this.props.updateInstanceModifiers}
                 parameters={this.props.parameters}
+                subelements={this.props.subelements}
                 subPopulationIndex={this.props.subpopulationIndex}
                 conversionFunctions={this.props.conversionFunctions}
                 instanceNames={this.props.instanceNames}
@@ -141,9 +148,6 @@ export default class Subpopulation extends Component {
                 validateCode={this.props.validateCode}
                 resetCodeValidation={this.props.resetCodeValidation}/>
             </div>
-          }
-        </div>
-      </div>
     );
   }
 }

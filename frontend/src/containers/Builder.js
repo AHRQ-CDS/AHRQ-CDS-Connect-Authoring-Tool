@@ -26,6 +26,7 @@ import Parameters from '../components/builder/Parameters';
 import Recommendations from '../components/builder/Recommendations';
 import RepoUploadModal from '../components/builder/RepoUploadModal';
 import ELMErrorModal from '../components/builder/ELMErrorModal';
+import Subelements from '../components/builder/Subelements';
 
 import isBlankArtifact from '../utils/artifacts/isBlankArtifact';
 import { findValueAtPath } from '../utils/find';
@@ -89,7 +90,7 @@ export class Builder extends Component {
       treeInstance = this.findTree(treeName, uid).tree; // eslint-disable-line no-param-reassign
     }
 
-    return _.flatten(treeInstance.childInstances.map((instance) => {
+    return _.flatten((treeInstance.childInstances || []).map((instance) => {
       if (instance.childInstances) {
         return _.flatten([instance, this.getAllInstances(treeName, instance)]);
       }
@@ -105,6 +106,13 @@ export class Builder extends Component {
     target.splice(index, 0, instance); // Insert instance at specific instance - only used for indenting now
     localTree = tree;
     this.setTree(treeName, treeData, tree);
+  }
+
+  addSubelement = (instance, uid = null, incomingTree) => {
+    const treeData = this.findTree('subelements', uid);
+    const tree = incomingTree || treeData.tree;
+    tree.push(instance);
+    this.setTree('subelements', treeData, tree);
   }
 
   editInstance = (treeName, editedParams, path, editingConjunctionType = false, uid = null) => {
@@ -275,7 +283,6 @@ export class Builder extends Component {
       isValidatingCode, isValidCode, codeData
     } = this.props;
     const namedParameters = _.filter(artifact.parameters, p => (!_.isNull(p.name) && p.name.length));
-
     if (artifact && artifact[treeName].childInstances) {
       return (
         <ConjunctionGroup
@@ -292,6 +299,7 @@ export class Builder extends Component {
           getAllInstances={this.getAllInstances}
           updateInstanceModifiers={this.updateInstanceModifiers}
           parameters={namedParameters}
+          subelements={artifact.subelements}
           conversionFunctions={conversionFunctions}
           instanceNames={this.props.names}
           loginVSACUser={this.props.loginVSACUser}
@@ -374,7 +382,7 @@ export class Builder extends Component {
         </div>
       );
     }
-
+      
     return (
       <div className="builder" id="maincontent">
         <div className="builder-wrapper">
@@ -386,7 +394,7 @@ export class Builder extends Component {
                 <Tab>Inclusions</Tab>
                 <Tab>Exclusions</Tab>
                 <Tab>Subpopulations</Tab>
-                {/* <Tab>Subelements</Tab> */}
+                <Tab>Subelements</Tab>
                 <Tab>Recommendations</Tab>
                 <Tab>Parameters</Tab>
                 <Tab>Handle Errors</Tab>
@@ -409,6 +417,7 @@ export class Builder extends Component {
                     loadValueSets={this.props.loadValueSets}
                     updateSubpopulations={this.updateSubpopulations}
                     parameters={namedParameters}
+                    subelements={artifact.subelements}
                     addInstance={this.addInstance}
                     editInstance={this.editInstance}
                     updateInstanceModifiers={this.updateInstanceModifiers}
@@ -439,24 +448,25 @@ export class Builder extends Component {
                     resetCodeValidation={this.props.resetCodeValidation} />
                 </TabPanel>
 
-                {/* <TabPanel>
-                  <Subpopulations
-                    name={'subelements'}
-                    artifact={artifact}
-                    valueSets={this.props.valueSets}
+                <TabPanel>
+                  <Subelements
+                    treeName='subelements'
+                    instance={artifact}
+                    addSubelement={this.addSubelement}
                     loadValueSets={this.props.loadValueSets}
-                    updateSubpopulations={this.updateSubpopulations}
-                    parameters={namedParameters}
-                    addInstance={this.addInstance}
                     editInstance={this.editInstance}
                     updateInstanceModifiers={this.updateInstanceModifiers}
                     deleteInstance={this.deleteInstance}
                     getAllInstances={this.getAllInstances}
                     templates={templates}
+                    resources={this.props.resources}
+                    valueSets={this.props.valueSets}
                     checkSubpopulationUsage={this.checkSubpopulationUsage}
                     updateRecsSubpop={this.updateRecsSubpop}
                     conversionFunctions={conversionFunctions}
                     instanceNames={this.props.names}
+                    parameters={namedParameters}
+                    subelements={artifact.subelements}
                     loginVSACUser={this.props.loginVSACUser}
                     setVSACAuthStatus={this.props.setVSACAuthStatus}
                     vsacStatus={this.props.vsacStatus}
@@ -470,13 +480,9 @@ export class Builder extends Component {
                     isRetrievingDetails={this.props.isRetrievingDetails}
                     vsacDetailsCodes={this.props.vsacDetailsCodes}
                     vsacFHIRCredentials={this.props.vsacFHIRCredentials}
-                    validateReturnType={false}
-                    isValidatingCode={this.props.isValidatingCode}
-                    isValidCode={this.props.isValidCode}
-                    codeData={this.props.codeData}
                     validateCode={this.props.validateCode}
-                    resetCodeValidation={this.props.resetCodeValidation} />
-                </TabPanel> */}
+                     />
+                </TabPanel>
 
                 <TabPanel>
                   <Recommendations

@@ -52,6 +52,7 @@ const elementOptions = [
   },
   { value: 'observation', label: 'Observation', vsacAuthRequired: true, template: 'GenericObservation_vsac' },
   { value: 'booleanParameter', label: 'Parameters', vsacAuthRequired: false },
+  { value: 'subElement', label: 'Sub Element', vsacAuthRequired: false },
   { value: 'procedure', label: 'Procedure', vsacAuthRequired: true, template: 'GenericProcedure_vsac' }
 ];
 
@@ -94,7 +95,22 @@ export default class ElementSelect extends Component {
     let categoriesCopy = _.cloneDeep(this.props.categories);
     categoriesCopy = filterUnsuppressed(categoriesCopy);
     const paramsIndex = categoriesCopy.findIndex(cat => cat.name === 'Parameters');
+    const subElementsIndex = categoriesCopy.findIndex(cat => cat.name === 'Sub Element');
 
+    
+    if (this.props.subelements && this.props.subelements.length && categoriesCopy[subElementsIndex]) {
+      // debugger
+      categoriesCopy[subElementsIndex].entries = this.props.subelements.map(e => ({
+        id: e.subpopulationName,
+        name: e.parameters[0].value,
+        type: 'subelement',
+        returnType: e.returnType,
+        parameters: [
+          // { id: 'element_name', type: 'string', name: 'Element Name', value: e.name },
+          // { id: 'default', type: 'String', name: 'Default', value: e.value }
+        ]
+      }));
+    }
     if (this.props.parameters.length) {
       let parametersCategory;
       if (paramsIndex >= 0) {
