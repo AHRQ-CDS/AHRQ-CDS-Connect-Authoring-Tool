@@ -7,7 +7,6 @@ import _ from 'lodash';
 import cql from 'cql-execution';
 import cqlfhir from 'cql-exec-fhir';
 
-import CodeService from '../utils/code_service/CodeService';
 import changeToCase from '../utils/strings';
 import createTemplateInstance from '../utils/templates';
 import loadTemplates from './templates';
@@ -412,13 +411,13 @@ function executeArtifactFailure(error) {
   };
 }
 
-function performExecuteArtifact(elmFiles, artifactName, patient, vsacCredentials) {
+function performExecuteArtifact(elmFiles, artifactName, patient, vsacCredentials, codeService) {
   // Set up the library
   const elmFile = JSON.parse(_.find(elmFiles, f =>
-    f.name.replace(/[\s-]/g, '') === artifactName.replace(/[\s-]/g, '')
+    f.name.replace(/[\s-\\/]/g, '') === artifactName.replace(/[\s-\\/]/g, '')
   ).content);
   const libraries = _.filter(elmFiles, f =>
-    f.name.replace(/[\s-]/g, '') !== artifactName.replace(/[\s-]/g, '')
+    f.name.replace(/[\s-\\/]/g, '') !== artifactName.replace(/[\s-\\/]/g, '')
   ).map(f => JSON.parse(f.content));
   const library = new cql.Library(elmFile, new cql.Repository(libraries));
 
@@ -434,12 +433,6 @@ function performExecuteArtifact(elmFiles, artifactName, patient, vsacCredentials
     valueSets = elmFile.library.valueSets.def;
   }
 
-  // TODO the code service should be stored, so value sets
-  // don't need to be downloaded on every execution
-
-  // Set up the code service
-  const codeService = new CodeService();
-  
   // Ensure value sets, downloading any missing value sets
   return codeService.ensureValueSets(valueSets, vsacCredentials.username, vsacCredentials.password)
     .then(() => {
@@ -450,7 +443,7 @@ function performExecuteArtifact(elmFiles, artifactName, patient, vsacCredentials
     });
 }
 
-export function executeCQLArtifact(artifact, patient, vsacCredentials) {
+export function executeCQLArtifact(artifact, patient, vsacCredentials, codeService) {
   return (dispatch) => {
     dispatch(requestExecuteArtifact());
 
@@ -464,7 +457,8 @@ export function executeCQLArtifact(artifact, patient, vsacCredentials) {
           dispatch(validateArtifactFailure(error));
           reject();
         });
-    }).then((res) => performExecuteArtifact(res.data.elmFiles, artifact.name, patient, vsacCredentials))
+    }).then((res) => performExecuteArtifact(
+      res.data.elmFiles, artifact.name, patient, vsacCredentials, codeService))
         .then(r => dispatch(executeArtifactSuccess(r, artifact, patient)))
         .catch(error => dispatch(executeArtifactFailure(error)));
   };

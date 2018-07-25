@@ -12,6 +12,7 @@ import artifactProps from '../../prop-types/artifact';
 
 import Modal from '../elements/Modal';
 import VSACAuthenticationModal from '../builder/VSACAuthenticationModal';
+import CodeService from '../../utils/code_service/CodeService';
 
 export default class PatientTable extends Component {
   constructor(props) {
@@ -25,7 +26,8 @@ export default class PatientTable extends Component {
       patientToExecute: null,
       artifactToExecute: null,
       showExecuteCQLModal: false,
-      testReport: null
+      testReport: null,
+      codeService: new CodeService()
     };
   }
 
@@ -80,7 +82,8 @@ export default class PatientTable extends Component {
   // ----------------------- PERFORM CQL EXECUTION -------------------------- //
 
   executeCQL = (artifact, patient) => {
-    this.props.executeCQLArtifact(artifact, patient.patient, this.props.vsacFHIRCredentials);
+    this.props.executeCQLArtifact(
+      artifact, patient.patient, this.props.vsacFHIRCredentials, this.state.codeService);
   }
 
   // ----------------------- RENDER ---------------------------------------- //
