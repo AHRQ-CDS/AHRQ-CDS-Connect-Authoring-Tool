@@ -1145,7 +1145,7 @@ export default class UserGuide extends Component {
                   The Execute CQL Modal allows the user to choose an Artifact whose CQL should be run against the selected
                   Patient.
                 </p>
-     
+
                 <p>
                   <img
                     alt="Execute CQL Modal"

@@ -21,26 +21,28 @@ class CodeService {
    * @returns {Promise.<undefined,Error>} A promise that returns nothing when
    *   resolved and returns an error when rejected.
    */
-  ensureValueSets(valueSetList = [], umlsUserName = env['UMLS_USER_NAME'], umlsPassword = env['UMLS_PASSWORD']) {
+  ensureValueSets(valueSetList = [], umlsUserName = env.UMLS_USER_NAME, umlsPassword = env.UMLS_PASSWORD) {
     // First, filter out the value sets we already have
-    const filteredVSList = valueSetList.filter(vs => {
+    const filteredVSList = valueSetList.filter((vs) => {
       const result = this.findValueSet(vs.id, vs.version);
       return typeof result === 'undefined';
     });
     // Now download from VSAC if necessary
     if (filteredVSList.length === 0) {
       return Promise.resolve();
-    } else if ( typeof umlsUserName === 'undefined' || umlsUserName == null ||typeof umlsPassword === 'undefined' || umlsPassword == null) {
+    } else if (typeof umlsUserName === 'undefined'
+      || umlsUserName == null
+      || typeof umlsPassword === 'undefined'
+      || umlsPassword == null) {
       return Promise.reject('Failed to download value sets since UMLS_USER_NAME and/or UMLS_PASSWORD is not set.');
-    } else {
-      return downloadFromVSAC(umlsUserName, umlsPassword, filteredVSList, this.valueSets);
     }
+    return downloadFromVSAC(umlsUserName, umlsPassword, filteredVSList, this.valueSets);
   }
 
   findValueSetsByOid(oid) {
     const result = [];
     const vs = this.valueSets[oid];
-    for (let version in vs) {
+    for (const version in vs) {
       result.push(vs[version]);
     }
     return result;
@@ -51,23 +53,18 @@ class CodeService {
       const vsObj = this.valueSets[oid];
       if (typeof vsObj !== 'undefined') {
         return vsObj[version];
-      } else {
-        return;
       }
-    }
-    else {
+    } else {
       const results = this.findValueSetsByOid(oid);
       if (results.length === 0) {
-        return;
-      }
-      else {
-        return results.reduce(function(a, b) {
+
+      } else {
+        return results.reduce((a, b) => {
           if (a.version > b.version) {
             return a;
           }
-          else {
-            return b;
-          }
+
+          return b;
         });
       }
     }

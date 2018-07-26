@@ -82,8 +82,7 @@ export default class PatientTable extends Component {
   // ----------------------- PERFORM CQL EXECUTION -------------------------- //
 
   executeCQL = (artifact, patient) => {
-    this.props.executeCQLArtifact(
-      artifact, patient.patient, this.props.vsacFHIRCredentials, this.state.codeService);
+    this.props.executeCQLArtifact(artifact, patient.patient, this.props.vsacFHIRCredentials, this.state.codeService);
   }
 
   // ----------------------- RENDER ---------------------------------------- //
@@ -150,7 +149,7 @@ export default class PatientTable extends Component {
         modalTitle="Execute CQL"
         modalId="execute-cql-modal"
         modalTheme="light"
-        modalSubmitButtonText={this.state.artifactToExecute == null ? "" : "Execute CQL"}
+        modalSubmitButtonText={this.state.artifactToExecute == null ? '' : 'Execute CQL'}
         handleShowModal={this.state.showExecuteCQLModal}
         handleCloseModal={this.closeExecuteCQLModal}
         handleSaveModal={this.handleExecuteCQL}>
