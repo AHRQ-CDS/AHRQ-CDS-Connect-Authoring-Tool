@@ -19,7 +19,7 @@ function downloadFromVSAC(username, password, input, vsDB = {}) {
       getVSDetailsByOIDFHIR(oid, username, password, vsDB)
         .catch(err => new Error(`Error downloading valueset: ${oid}`)));
     return Promise.all(promises)
-      .then((results) => {
+      .then((results) => { // eslint-disable-line consistent-return
         const errors = results.filter(r => r instanceof Error);
         if (errors.length > 0) {
           return Promise.reject(errors);

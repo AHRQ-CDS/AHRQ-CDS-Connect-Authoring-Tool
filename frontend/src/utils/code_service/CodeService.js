@@ -34,7 +34,7 @@ class CodeService {
       || umlsUserName == null
       || typeof umlsPassword === 'undefined'
       || umlsPassword == null) {
-      return Promise.reject('Failed to download value sets since UMLS_USER_NAME and/or UMLS_PASSWORD is not set.');
+      return Error('Failed to download value sets since UMLS_USER_NAME and/or UMLS_PASSWORD is not set.');
     }
     return downloadFromVSAC(umlsUserName, umlsPassword, filteredVSList, this.valueSets);
   }
@@ -42,6 +42,7 @@ class CodeService {
   findValueSetsByOid(oid) {
     const result = [];
     const vs = this.valueSets[oid];
+    // eslint-disable-next-line no-restricted-syntax, guard-for-in
     for (const version in vs) {
       result.push(vs[version]);
     }
@@ -56,18 +57,16 @@ class CodeService {
       }
     } else {
       const results = this.findValueSetsByOid(oid);
-      if (results.length === 0) {
-
-      } else {
+      if (results.length !== 0) {
         return results.reduce((a, b) => {
           if (a.version > b.version) {
             return a;
           }
-
           return b;
         });
       }
     }
+    return undefined;
   }
 }
 
