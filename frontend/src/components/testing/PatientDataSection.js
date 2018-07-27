@@ -27,20 +27,20 @@ export default class PatientDataSection extends Component {
   }
 
   renderTable = (type, data) => {
-    const keys = Object.keys(data[0]);
+    const isOther = this.props.title === 'Other';
 
     return (
       <Table className="patient-data-section__table">
         <thead>
-          <tr>
-            {keys.map((key, i) => <th key={i}>{key}</th>)}
-          </tr>
+          {isOther && data.length > 0 && <tr><th>Resource type</th></tr>}
+          {!isOther && <tr>{Object.keys(data[0]).map((key, index) => <th key={index}>{key}</th>)}</tr>}
         </thead>
 
         <tbody>
-          {data.map((element, i) =>
-            <tr key={i}>
-              {keys.map((key, j) => <td key={j}>{element[key]}</td>)}
+          {isOther && data.map((resource, index) => <tr key={index}><td>{resource}</td></tr>)}
+          {!isOther && data.map((element, index) =>
+            <tr key={index}>
+              {Object.keys(data[0]).map((key, indx) => <td key={indx}>{element[key]}</td>)}
             </tr>)
           }
         </tbody>
@@ -50,6 +50,8 @@ export default class PatientDataSection extends Component {
 
   render() {
     const { title, data } = this.props;
+
+    if (data.length === 0) return null;
 
     return (
       <div className="patient-data-section">
