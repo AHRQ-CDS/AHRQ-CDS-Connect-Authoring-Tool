@@ -218,7 +218,7 @@ function transformMedication(childInstance) {
     }
   });
   if (modifierIndexesToRemove.length > 0) {
-    // Due to the fact that only one artifact has only one element with this modifier, hardcoded [0] is okay.
+    // MostRecentMedication is the only modifier to be removed and only one can be on any element, so [0] is okay.
     childInstance.modifiers.splice(modifierIndexesToRemove[0], 1);
     childInstanceForStatement.modifiers.splice(modifierIndexesToRemove[0], 1);
   }
