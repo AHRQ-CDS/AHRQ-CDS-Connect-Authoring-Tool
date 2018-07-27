@@ -732,6 +732,7 @@ function addConcepts(concept, codeSystemMap, codeMap, conceptMap) {
 function buildConceptObjectForCodes(codes, listOfConcepts) {
   if (codes) {
     codes.forEach((code) => {
+      if (!code.display) code.display = '';
       code.code = code.code.replace(/'/g, '\\\'');
       code.display = code.display.replace(/'/g, '\\\'');
       code.codeSystem.id = code.codeSystem.id.replace(/'/g, '\\\'');
