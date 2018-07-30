@@ -417,3 +417,46 @@ test('Elements that have a return type of a list indicates plurality in the phra
 
   expect(expressionPhrase).toEqual(expectedOutput);
 });
+
+describe('Demographics elements support special case phrases', () => {
+  test('Age Range supports min and max age', () => {
+    const modifiers = [];
+    const name = 'Age Range';
+    const ages = [
+      { id: 'min_age', name: 'Minimum Age', type: 'number', typeOfNumber: 'integer', value: 18 },
+      { id: 'max_age', name: 'Maximum Age', type: 'number', typeOfNumber: 'integer', value: 70 }
+    ];
+
+    const expressionPhrase = convertToExpression(modifiers, name, [], [], 'boolean', ages);
+
+    const expectedOutput = [
+      { expressionText: 'A patient whose age is', isExpression: false },
+      { expressionText: 'between', isExpression: false },
+      { expressionText: '18 years', isExpression: true },
+      { expressionText: 'and', isExpression: false },
+      { expressionText: '70 years', isExpression: true }
+    ];
+
+    expect(expressionPhrase).toEqual(expectedOutput);
+  });
+  test('Gender supports gender selection', () => {
+    const modifiers = [];
+    const name = 'Gender';
+    const gender = [{
+      id: 'gender',
+      name: 'Gender',
+      select: 'demographics/gender',
+      type: 'valueset',
+      value: { id: 'male', name: 'Male', value: 'male' }
+    }];
+
+    const expressionPhrase = convertToExpression(modifiers, name, [], [], 'boolean', gender);
+
+    const expectedOutput = [
+      { expressionText: 'A patient whose gender is', isExpression: false },
+      { expressionText: 'Male', isExpression: true }
+    ];
+
+    expect(expressionPhrase).toEqual(expectedOutput);
+  });
+});

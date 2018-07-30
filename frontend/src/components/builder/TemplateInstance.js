@@ -582,8 +582,17 @@ export default class TemplateInstance extends Component {
     if (templateInstance.parameters[1] && templateInstance.parameters[1].codes) {
       codes = templateInstance.parameters[1].codes;
     }
-    const expressions =
-      convertToExpression(templateInstance.modifiers, templateInstance.name, valueSets, codes, this.state.returnType);
+    const otherParameters = templateInstance.parameters.filter(param =>
+      param.type === 'number' || param.type === 'valueset');
+
+    const expressions = convertToExpression(
+      templateInstance.modifiers,
+      templateInstance.name,
+      valueSets,
+      codes,
+      this.state.returnType,
+      otherParameters
+    );
 
     const validationError = this.validateElement();
     const returnError = (!(this.props.validateReturnType !== false) || this.state.returnType === 'boolean') ? null
