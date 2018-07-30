@@ -274,7 +274,7 @@ function addExpressionText(expressionArray, expression) {
 }
 
 // Build the array for expression phrases by pushing each type of expression in a set order.
-function orderExpressionSentenceArray(expressionArray, type, valueSets, codes) {
+function orderExpressionSentenceArray(expressionArray, type, valueSets, codes, returnType) {
   let remainingExpressionArray = expressionArray;
   let orderedExpressionArray = [];
 
@@ -305,7 +305,11 @@ function orderExpressionSentenceArray(expressionArray, type, valueSets, codes) {
   });
 
   // Add the type of element (Observations, etc)
-  orderedExpressionArray.push({ expressionText: _.lowerCase(type), isExpression: false });
+  let typeToAdd = _.lowerCase(type);
+  if (returnType.includes('list_of_')) {
+    typeToAdd = `${typeToAdd}s`;
+  }
+  orderedExpressionArray.push({ expressionText: typeToAdd, isExpression: false });
 
   // Add value sets and codes. If there is more than one value set/code, add the rest to a tooltip.
   orderedExpressionArray = addVSandCodeText(orderedExpressionArray, valueSets, codes);
@@ -346,21 +350,26 @@ function orderExpressionSentenceArray(expressionArray, type, valueSets, codes) {
   // If 'not' is applied, the article will follow. Otherwise, it starts the phrase.
   if (expressionArray.findIndex(expression => expression.type === 'not') !== -1) {
     const indexOfArticle = 1;
+    if (returnType.includes('list_of_')) {
+      orderedExpressionArray.splice(indexOfArticle, 0, { expressionText: 'list of', isExpression: false });
+    }
     const wordToFollow = orderedExpressionArray[indexOfArticle].expressionText;
     const article = getArticle(wordToFollow);
     orderedExpressionArray.splice(indexOfArticle, 0, { expressionText: article, isExpression: false });
   } else {
     const indexOfArticle = 0;
+    if (returnType.includes('list_of_')) {
+      orderedExpressionArray.splice(indexOfArticle, 0, { expressionText: 'list of', isExpression: false });
+    }
     const wordToFollow = orderedExpressionArray[indexOfArticle].expressionText;
     const article = getArticle(wordToFollow);
     orderedExpressionArray.splice(indexOfArticle, 0, { expressionText: _.capitalize(article), isExpression: false });
   }
 
-
   return orderedExpressionArray;
 }
 
-export function convertToExpression(expressionsArray, type, valueSets, codes) {
+export function convertToExpression(expressionsArray = [], type, valueSets, codes, returnType) {
   const expressionSentenceArray = expressionsArray.reduce((accumulator, currentExpression) => {
     if (getExpressionSentenceValue(currentExpression)) {
       const expressionSentenceValue = getExpressionSentenceValue(currentExpression);
@@ -372,7 +381,8 @@ export function convertToExpression(expressionsArray, type, valueSets, codes) {
   }, []);
 
   // Get an order for the expressions that will make sense in a sentence
-  const orderedExpressionSentenceArray = orderExpressionSentenceArray(expressionSentenceArray, type, valueSets, codes);
+  const orderedExpressionSentenceArray =
+    orderExpressionSentenceArray(expressionSentenceArray, type, valueSets, codes, returnType);
 
   return orderedExpressionSentenceArray;
 }

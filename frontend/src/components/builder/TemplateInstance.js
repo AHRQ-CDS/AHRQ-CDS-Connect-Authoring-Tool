@@ -106,10 +106,6 @@ export default class TemplateInstance extends Component {
     this.props.editInstance(this.props.treeName, newState, this.getPath(), false);
   }
 
-  hasModifiers() {
-    return this.props.templateInstance.modifiers && this.props.templateInstance.modifiers.length !== 0;
-  }
-
   renderAppliedModifier = (modifier, index) => {
     // Reset values on modifiers that were not previously set or saved in the database
     if (!modifier.values && this.modifierMap[modifier.id].values) {
@@ -577,19 +573,17 @@ export default class TemplateInstance extends Component {
   }
 
   renderBody() {
-    let expressions;
-    if (this.hasModifiers()) {
-      const { templateInstance } = this.props;
-      let valueSets = [];
-      if (templateInstance.parameters[1] && templateInstance.parameters[1].valueSets) {
-        valueSets = templateInstance.parameters[1].valueSets;
-      }
-      let codes = [];
-      if (templateInstance.parameters[1] && templateInstance.parameters[1].codes) {
-        codes = templateInstance.parameters[1].codes;
-      }
-      expressions = convertToExpression(templateInstance.modifiers, templateInstance.name, valueSets, codes);
+    const { templateInstance } = this.props;
+    let valueSets = [];
+    if (templateInstance.parameters[1] && templateInstance.parameters[1].valueSets) {
+      valueSets = templateInstance.parameters[1].valueSets;
     }
+    let codes = [];
+    if (templateInstance.parameters[1] && templateInstance.parameters[1].codes) {
+      codes = templateInstance.parameters[1].codes;
+    }
+    const expressions =
+      convertToExpression(templateInstance.modifiers, templateInstance.name, valueSets, codes, this.state.returnType);
 
     const validationError = this.validateElement();
     const returnError = (!(this.props.validateReturnType !== false) || this.state.returnType === 'boolean') ? null

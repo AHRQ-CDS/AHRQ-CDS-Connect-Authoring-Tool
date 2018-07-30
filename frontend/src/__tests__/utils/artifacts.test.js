@@ -36,7 +36,7 @@ test('Simple modifiers Active, Confirmed, Exists builds expected phrase', () => 
   const name = 'Condition';
   const valueSets = [{ name: 'Diabetes', oid: '1.2.3' }];
   const codes = [];
-  const expressionPhrase = convertToExpression(modifiers, name, valueSets, codes);
+  const expressionPhrase = convertToExpression(modifiers, name, valueSets, codes, 'boolean');
 
   const expectedOutput = [
     { expressionText: 'An', isExpression: false },
@@ -106,7 +106,7 @@ test('More complicated modifiers, including Qualifier, builds expected phrase', 
   const valueSets = [{ name: 'LDL', oid: '1.2.3' }];
   const codes = [];
 
-  const expressionPhrase = convertToExpression(modifiers, name, valueSets, codes);
+  const expressionPhrase = convertToExpression(modifiers, name, valueSets, codes, 'boolean');
 
   const expectedOutput = [
     { expressionText: 'A', isExpression: false },
@@ -190,7 +190,7 @@ test('More complicated modifiers, including Value Comparison, builds correct phr
   const valueSets = [{ name: 'LDL', oid: '1.2.3' }];
   const codes = [];
 
-  const expressionPhrase = convertToExpression(modifiers, name, valueSets, codes);
+  const expressionPhrase = convertToExpression(modifiers, name, valueSets, codes, 'boolean');
 
   const expectedOutput = [
     { expressionText: 'A', isExpression: false },
@@ -252,7 +252,7 @@ test('More complicated expression, with Highest, Not, and Is Null, builds correc
   const valueSets = [];
   const codes = [{ code: '123-4', codeSystem: { name: 'CodeSystemName', id: '123' }, display: 'test code' }];
 
-  const expressionPhrase = convertToExpression(modifiers, name, valueSets, codes);
+  const expressionPhrase = convertToExpression(modifiers, name, valueSets, codes, 'boolean');
 
   const expectedOutput = [
     { expressionText: 'Not', isExpression: true },
@@ -342,7 +342,7 @@ test('Only validated modifiers are added the the phrase', () => {
   const valueSets = [{ name: 'LDL', oid: '1.2.3' }];
   const codes = [];
 
-  const expressionPhrase = convertToExpression(modifiers, name, valueSets, codes);
+  const expressionPhrase = convertToExpression(modifiers, name, valueSets, codes, 'boolean');
 
   // Only modifiers that are validated are added
   const expectedOutput = [
@@ -377,7 +377,7 @@ test('All value sets and codes are added to phrase, but only first three are dis
     { code: '432-1', codeSystem: { name: 'CS2', id: '321' } },
   ];
 
-  const expressionPhrase = convertToExpression(modifiers, name, valueSets, codes);
+  const expressionPhrase = convertToExpression(modifiers, name, valueSets, codes, 'boolean');
 
   const expectedOutput = [
     { expressionText: 'An', isExpression: false },
@@ -393,6 +393,26 @@ test('All value sets and codes are added to phrase, but only first three are dis
     { expressionText: '...', isExpression: true, tooltipText: '... or 432-1 (CS2)' },
     { expressionText: 'that', isExpression: false },
     { expressionText: 'exists', isExpression: true }
+  ];
+
+  expect(expressionPhrase).toEqual(expectedOutput);
+});
+
+test('Elements that have a return type of a list indicates plurality in the phrase', () => {
+  const modifiers = [];
+
+  const name = 'Observation';
+  const valueSets = [{ name: 'LDL', oid: '1.2.3' }];
+  const codes = [];
+
+  const expressionPhrase = convertToExpression(modifiers, name, valueSets, codes, 'list_of_observations');
+
+  const expectedOutput = [
+    { expressionText: 'A', isExpression: false },
+    { expressionText: 'list of', isExpression: false },
+    { expressionText: 'observations', isExpression: false },
+    { expressionText: 'with a code from', isExpression: false },
+    { expressionText: 'LDL', isExpression: true }
   ];
 
   expect(expressionPhrase).toEqual(expectedOutput);
