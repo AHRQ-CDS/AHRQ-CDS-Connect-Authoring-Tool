@@ -1,4 +1,4 @@
-import { createTemplateInstance, fullRenderComponent } from '../../../utils/test_helpers';
+import { createTemplateInstance, fullRenderComponentOnBody } from '../../../utils/test_helpers';
 import { instanceTree, genericInstance } from '../../../utils/test_fixtures';
 
 import TemplateInstance from '../../../components/builder/TemplateInstance';
@@ -55,7 +55,9 @@ test('creating a new template instance adds a unique ID', () => {
 
 describe('vsac controls on generic template instances', () => {
   beforeEach(() => {
-    component = fullRenderComponent(
+    // User fullRenderComponentOnBody to specify mounting the component to document.body.
+    // This allows the Tooltip to grab its target correctly.
+    component = fullRenderComponentOnBody(
       TemplateInstance,
       { ...props }
     );

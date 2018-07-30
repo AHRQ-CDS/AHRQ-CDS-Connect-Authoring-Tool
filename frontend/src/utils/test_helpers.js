@@ -19,6 +19,20 @@ function fullRenderComponent(ComponentClass, props = {}) {
   );
 }
 
+/**
+ * Render a component with props, mocking the router context
+ */
+function fullRenderComponentOnBody(ComponentClass, props = {}) {
+  const context = createRouterContext();
+  ComponentClass.contextTypes = { // eslint-disable-line no-param-reassign
+    router: PropTypes.object
+  };
+  return mount(
+    <ComponentClass id="root" {...props} />,
+    { context, attachTo: document.body }
+  );
+}
+
 function shallowRenderComponent(ComponentClass, props = {}) {
   const context = createRouterContext();
   return shallow(
@@ -75,6 +89,7 @@ function createTemplateInstance(template, children = undefined) {
 
 export {
   fullRenderComponent,
+  fullRenderComponentOnBody,
   fullRenderContainer,
   shallowRenderComponent,
   shallowRenderContainer,
