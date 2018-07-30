@@ -141,7 +141,7 @@ class Patient extends Component {
 
   render() {
     return (
-      <div className="patient" id="maincontent">
+      <div className="testing" id="maincontent">
         <Dropzone
           className="patient-dropzone"
           onDrop={this.addPatient.bind(this)}
@@ -151,7 +151,7 @@ class Patient extends Component {
           <p>Drop a valid JSON FHIR DSTU2 bundle containing a patient here, or click to browse.</p>
         </Dropzone>
 
-        <div className="patient-wrapper">
+        <div className="testing-wrapper">
           {this.renderResultsTable()}
           {this.renderPatientsTable()}
         </div>

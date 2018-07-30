@@ -14,12 +14,12 @@ export default class PatientDataSection extends Component {
     this.setState({ collapse: !this.state.collapse });
   }
 
-  renderHeader = (title) => {
+  renderHeader = (title, data) => {
     const chevronIcon = this.state.collapse ? 'chevron-down' : 'chevron-right';
 
     return (
-      <div className="patient-data-section__header">
-        <div className="header-title">{title}</div>
+      <div className="patient-data-section__header" onClick={this.toggle}>
+        <div className="header-title">{title} ({data.length})</div>
         <div className="header-divider"></div>
         <Button onClick={this.toggle} className="header-button"><FontAwesome name={chevronIcon} /></Button>
       </div>
@@ -55,7 +55,7 @@ export default class PatientDataSection extends Component {
 
     return (
       <div className="patient-data-section">
-        {this.renderHeader(title)}
+        {this.renderHeader(title, data)}
 
         <Collapse isOpen={this.state.collapse}>
           {data && this.renderTable(title, data)}

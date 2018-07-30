@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 import Inspector from 'react-inspector';
+import moment from 'moment';
+import FontAwesome from 'react-fontawesome';
 
 import getProperty from '../../utils/getProperty';
 import patientProps from '../../prop-types/patient';
@@ -119,50 +121,51 @@ export default class PatientView extends Component {
     const { patient } = this.props;
     const patientInfo = patient.patient.entry[0].resource;
     const patientName = patientInfo.name[0];
+    const patientAge = moment().diff(patientInfo.birthDate, 'years');
 
-    let resources = [];
-    patient.patient.entry.forEach((entry) => {
-      const resource = entry.resource.resourceType;
-      if (resources.indexOf(resource) === -1) {
-        resources.push(resource);
-        console.debug('resource', entry.resource);
-      }
-    });
+    // let resources = [];
+    // patient.patient.entry.forEach((entry) => {
+    //   const resource = entry.resource.resourceType;
+    //   if (resources.indexOf(resource) === -1) {
+    //     resources.push(resource);
+    //     console.debug('resource', entry.resource);
+    //   }
+    // });
 
-    console.debug('resources: ', resources);
+    // console.debug('resources: ', resources);
 
     return (
       <div className="patient-view">
-        <div className="patient-view__patient-data">
-          <div className="patient-data-row">
-            <div className="patient-data-label">Patient name:</div>
-            <div className="patient-data-text">{`${patientName.given[0]} ${patientName.family[0]}`}</div>
-          </div>
+        <div className="patient-view__patient">
+          <div className="patient-icon"><FontAwesome name="user-circle" /></div>
 
-          <div className="patient-data-row">
-            <div className="patient-data-label">Patient gender:</div>
-            <div className="patient-data-text">{patientInfo.gender}</div>
-          </div>
+          <div className="patient-data">
+            <div className="patient-data-name">
+              {`${patientName.given[0]} ${patientName.family[0]}`}
+            </div>
 
-          <div className="patient-data-row">
-            <div className="patient-data-label">Patient DOB:</div>
-            <div className="patient-data-text">{patientInfo.birthDate}</div>
+            <div className="patient-data-details">
+              <div className="patient-data-details-gender">{patientInfo.gender}</div>
+              <div className="patient-data-details-age">{patientAge} yrs</div>
+            </div>
           </div>
         </div>
 
-        <PatientDataSection title="Organizations" data={this.extractData('Organization')} />
-        <PatientDataSection title="Conditions" data={this.extractData('Condition')} />
-        <PatientDataSection title="Allergies" data={this.extractData('AllergyIntolerance')} />
-        <PatientDataSection title="Medications" data={this.extractData('MedicationOrder')} />
-        <PatientDataSection title="Careplans" data={this.extractData('CarePlan')} />
-        <PatientDataSection title="Encounters" data={this.extractData('Encounter')} />
-        <PatientDataSection title="Observations" data={this.extractData('Observation')} />
-        <PatientDataSection title="Immunizations" data={this.extractData('Immunization')} />
-        <PatientDataSection title="Procedures" data={this.extractData('Procedure')} />
-        <PatientDataSection title="Imaging" data={this.extractData('ImagingStudy')} />
-        <PatientDataSection title="Diagnostics" data={this.extractData('DiagnosticReport')} />
-        <PatientDataSection title="Claims" data={this.extractData('Claim')} />
-        <PatientDataSection title="Other" data={this.extractOtherResource()} />
+        <div className="patient-view__resources">
+          <PatientDataSection title="Organizations" data={this.extractData('Organization')} />
+          <PatientDataSection title="Conditions" data={this.extractData('Condition')} />
+          <PatientDataSection title="Allergies" data={this.extractData('AllergyIntolerance')} />
+          <PatientDataSection title="Medications" data={this.extractData('MedicationOrder')} />
+          <PatientDataSection title="Careplans" data={this.extractData('CarePlan')} />
+          <PatientDataSection title="Encounters" data={this.extractData('Encounter')} />
+          <PatientDataSection title="Observations" data={this.extractData('Observation')} />
+          <PatientDataSection title="Immunizations" data={this.extractData('Immunization')} />
+          <PatientDataSection title="Procedures" data={this.extractData('Procedure')} />
+          <PatientDataSection title="Imaging" data={this.extractData('ImagingStudy')} />
+          <PatientDataSection title="Diagnostics" data={this.extractData('DiagnosticReport')} />
+          <PatientDataSection title="Claims" data={this.extractData('Claim')} />
+          <PatientDataSection title="Other" data={this.extractOtherResource()} />
+        </div>
 
         <hr/>
         <Inspector data={this.props.patient}/>
