@@ -430,7 +430,7 @@ describe('Demographics elements support special case phrases', () => {
     const expressionPhrase = convertToExpression(modifiers, name, [], [], 'boolean', ages);
 
     const expectedOutput = [
-      { expressionText: 'A patient whose age is', isExpression: false },
+      { expressionText: 'The patient\'s age is', isExpression: false },
       { expressionText: 'between', isExpression: false },
       { expressionText: '18 years', isExpression: true },
       { expressionText: 'and', isExpression: false },
@@ -453,7 +453,7 @@ describe('Demographics elements support special case phrases', () => {
     const expressionPhrase = convertToExpression(modifiers, name, [], [], 'boolean', gender);
 
     const expectedOutput = [
-      { expressionText: 'A patient whose gender is', isExpression: false },
+      { expressionText: 'The patient\'s gender is', isExpression: false },
       { expressionText: 'Male', isExpression: true }
     ];
 

@@ -275,7 +275,7 @@ function addExpressionText(expressionArray, expression) {
 
 function getOrderedExpressionSentenceArrayForAgeRange(expressionArray, ageParameters) {
   let orderedExpressionArray = [];
-  orderedExpressionArray.push({ expressionText: 'A patient whose age is', isExpression: false });
+  orderedExpressionArray.push({ expressionText: 'The patient\'s age is', isExpression: false });
 
   if (ageParameters[0].value && ageParameters[1].value) { // The minimum age and the maximum age are both added
     orderedExpressionArray.push({ expressionText: 'between', isExpression: false });
@@ -298,8 +298,10 @@ function getOrderedExpressionSentenceArrayForAgeRange(expressionArray, ageParame
 
 function getOrderedExpressionSentenceArrayForGender(genderParameter) {
   const orderedExpressionArray = [];
-  orderedExpressionArray.push({ expressionText: 'A patient whose gender is', isExpression: false });
-  orderedExpressionArray.push({ expressionText: genderParameter[0].value.name, isExpression: true });
+  orderedExpressionArray.push({ expressionText: 'The patient\'s gender is', isExpression: false });
+  if (genderParameter[0].value) {
+    orderedExpressionArray.push({ expressionText: genderParameter[0].value.name, isExpression: true });
+  }
   return orderedExpressionArray;
 }
 
