@@ -218,7 +218,7 @@ class CqlArtifact {
         subelement.subpopulationName = `${subelement.subpopulationName}_${count}`;
       }
       if (!subelement.special) { // `Doesn't Meet Inclusion Criteria` and `Meets Exclusion Criteria` are special
-        if (subelement) { this.parseTree(subelement); }
+        if (subelement) { this.parseElement(subelement); }
       }
     }
     );
@@ -502,8 +502,6 @@ class CqlArtifact {
   body() {
     let expressions = this.contexts.concat(this.conjunctions);
     expressions = expressions.concat(this.conjunction_main);
-    expressions = [...expressions, ...this.subelements];
-    // debugger
     return expressions.map((context) => {
       if ((context.withoutModifiers || context.components) && specificMap[context.template]) {
         return ejs.render(specificMap[context.template], context);
