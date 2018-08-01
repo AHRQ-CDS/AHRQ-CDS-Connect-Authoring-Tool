@@ -481,7 +481,8 @@ export class Builder extends Component {
                     vsacDetailsCodes={this.props.vsacDetailsCodes}
                     vsacFHIRCredentials={this.props.vsacFHIRCredentials}
                     validateCode={this.props.validateCode}
-                     />
+                    validateReturnType={false}/>
+
                 </TabPanel>
 
                 <TabPanel>
