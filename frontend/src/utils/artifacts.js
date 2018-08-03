@@ -305,18 +305,42 @@ function getOrderedExpressionSentenceArrayForGender(genderParameter) {
   return orderedExpressionArray;
 }
 
+function getOrderedExpressionSentenceArrayForParameters(expressionArray, returnType) {
+  let orderedExpressionArray = [];
+  let remainingExpressionArray = expressionArray;
+  orderedExpressionArray.push({
+    expressionText: `The value of the ${_.lowerCase(returnType)} parameter is`,
+    isExpression: false
+  });
+  remainingExpressionArray = remainingExpressionArray.filter((expression) => {
+    if (expression.type === 'not') {
+      orderedExpressionArray = addExpressionText(orderedExpressionArray, expression);
+      return false;
+    }
+    return true;
+  });
+  orderedExpressionArray.push({ expressionText: 'met', isExpression: false });
+  remainingExpressionArray.forEach((expression) => {
+    orderedExpressionArray = addExpressionText(orderedExpressionArray, expression);
+  });
+  return orderedExpressionArray;
+}
+
 // Build the array for expression phrases by pushing each type of expression in a set order.
 function orderExpressionSentenceArray(expressionArray, type, valueSets, codes, returnType, otherParameters) {
   let remainingExpressionArray = expressionArray;
   let orderedExpressionArray = [];
 
-  // Specific cases for Age Range and Gender elements since they do not follow the same pattern as VSAC elements.
+  // Specific cases for Age Range, Gender, and Parameters since they do not follow the same pattern as VSAC elements.
   if (type === 'Age Range') {
     return getOrderedExpressionSentenceArrayForAgeRange(expressionArray, otherParameters);
   }
   if (type === 'Gender') {
     // No modifiers can be applied to Gender elements.
     return getOrderedExpressionSentenceArrayForGender(otherParameters);
+  }
+  if (type === 'parameter') {
+    return getOrderedExpressionSentenceArrayForParameters(expressionArray, returnType);
   }
 
   remainingExpressionArray = remainingExpressionArray.filter((expression) => {

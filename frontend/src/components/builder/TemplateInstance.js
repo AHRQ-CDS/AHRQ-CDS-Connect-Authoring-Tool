@@ -574,6 +574,7 @@ export default class TemplateInstance extends Component {
 
   renderBody() {
     const { templateInstance } = this.props;
+    const type = templateInstance.type === 'parameter' ? templateInstance.type : templateInstance.name;
     let valueSets = [];
     if (templateInstance.parameters[1] && templateInstance.parameters[1].valueSets) {
       valueSets = templateInstance.parameters[1].valueSets;
@@ -587,7 +588,7 @@ export default class TemplateInstance extends Component {
 
     const expressions = convertToExpression(
       templateInstance.modifiers,
-      templateInstance.name,
+      type,
       valueSets,
       codes,
       this.state.returnType,
