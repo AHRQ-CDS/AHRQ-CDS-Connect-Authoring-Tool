@@ -722,13 +722,25 @@ export default class TemplateInstance extends Component {
         return null;
       }
 
+      const referenceParameter = this.props.templateInstance.parameters.find(param => param.type === 'reference');
+      let referenceName;
+      if (referenceParameter) {
+        const elementToReference = this.props.instanceNames.find(name => name.id === referenceParameter.value);
+        if (elementToReference) {
+          referenceName = elementToReference.name;
+        }
+      }
+
       return (
         <div className="card-element__heading">
           <StringParameter
             key={elementNameParameter.id}
             {...elementNameParameter}
             updateInstance={this.updateInstance}
-            name={templateInstance.name} />
+            name={templateInstance.name}
+            uniqueId={templateInstance.uniqueId}
+            info={referenceName}
+            />
           {this.hasDuplicateName() &&
             <div className="warning">Warning: Name already in use. Choose another name.</div>
           }

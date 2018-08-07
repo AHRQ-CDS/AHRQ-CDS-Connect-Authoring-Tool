@@ -98,13 +98,12 @@ export default class ElementSelect extends Component {
     const subElementsIndex = categoriesCopy.findIndex(cat => cat.name === 'Sub Element');
 
     if (this.props.subelements && this.props.subelements.length && categoriesCopy[subElementsIndex]) {
-      // debugger
       categoriesCopy[subElementsIndex].entries = this.props.subelements.map((e) => {
         const returnType = _.isEmpty(e.modifiers) ? e.returnType : _.last(e.modifiers).returnType;
         // TODO Changing this after deployment will require a migration. Will need to really consider this.
         return ({
           id: e.id,
-          name: `Subelement ${e.parameters[0].value}`, // TODO need this to be the name to show it in the header of an element, but need to update the options shown in element select dropdown
+          name: 'Subelement',
           type: 'subelement',
           template: 'GenericStatement',
           returnType,
@@ -248,7 +247,11 @@ export default class ElementSelect extends Component {
     if (selectedElement && !selectedElement.vsacAuthRequired) {
       noAuthElementOptions = this.state.categories
         .find(cat => cat.name === selectedElement.label)
-        .entries.map(({ id, name }) => ({ value: id, label: name, type: selectedElement.label }));
+        .entries.map(({ id, name, type, parameters }) => {
+          // Subelements display the parameter element_name entered by user, not the generic 'Subelement' element name.
+          const label = type === 'subelement' ? parameters[0].value : name;
+          return ({ value: id, label, type: selectedElement.label });
+        });
     }
     const value = selectedElement && selectedElement.value;
 

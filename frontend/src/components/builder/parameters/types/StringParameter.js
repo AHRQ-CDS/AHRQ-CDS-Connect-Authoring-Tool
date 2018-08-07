@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import _ from 'lodash';
+import FontAwesome from 'react-fontawesome';
+import { UncontrolledTooltip } from 'reactstrap';
 
 /**
  * props are from a templateInstance parameters object,
@@ -8,14 +10,28 @@ import _ from 'lodash';
  * key-value pairs that represents that state of the templateInstance
  */
 export default class StringParameter extends Component {
+  renderInfoIcon = () => (
+    <span className="icon">
+      <span id={`reference-info-${this.props.uniqueId}`}>
+        <FontAwesome name='info-circle' />
+      </span>
+      <UncontrolledTooltip target={`reference-info-${this.props.uniqueId}`} placement='top'>
+        {this.props.info}
+      </UncontrolledTooltip>
+    </span>
+  );
+
   render() {
-    const { id, name, value, updateInstance } = this.props;
+    const { id, name, value, updateInstance, info } = this.props;
     const formId = _.uniqueId('parameter-');
 
     return (
       <div className="string-parameter form__group">
         <label htmlFor={formId}>
-          <span className="label">{name}:</span>
+          <span className="label">
+            {name}
+            {(info || info === '') && this.renderInfoIcon()}:
+            </span>
 
           <input
             id={formId}
