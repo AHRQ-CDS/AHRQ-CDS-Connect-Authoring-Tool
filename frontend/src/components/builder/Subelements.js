@@ -24,7 +24,6 @@ export default class Subelements extends Component {
     return <div className="card-element__body">
       {this.props.instance.subelements.map((s, i) =>
           <TemplateInstance
-            resources={this.props.resources}
             valueSets={this.props.valueSets}
             loadValueSets={this.props.loadValueSets}
             getPath={this.getChildsPath}
@@ -51,7 +50,12 @@ export default class Subelements extends Component {
             isRetrievingDetails={this.props.isRetrievingDetails}
             vsacDetailsCodes={this.props.vsacDetailsCodes}
             vsacFHIRCredentials={this.props.vsacFHIRCredentials}
-            validateReturnType={this.props.validateReturnType} />
+            validateReturnType={this.props.validateReturnType}
+            isValidatingCode={this.props.isValidatingCode}
+            isValidCode={this.props.isValidCode}
+            codeData={this.props.codeData}
+            validateCode={this.props.validateCode}
+            resetCodeValidation={this.props.resetCodeValidation} />
       )}
 
       <ElementSelect
@@ -71,7 +75,11 @@ export default class Subelements extends Component {
         isRetrievingDetails={this.props.isRetrievingDetails}
         vsacDetailsCodes={this.props.vsacDetailsCodes}
         vsacFHIRCredentials={this.props.vsacFHIRCredentials}
+        isValidatingCode={this.props.isValidatingCode}
+        isValidCode={this.props.isValidCode}
+        codeData={this.props.codeData}
         validateCode={this.props.validateCode}
+        resetCodeValidation={this.props.resetCodeValidation}
       />
     </div>;
   }
