@@ -197,6 +197,15 @@ class CqlArtifact {
     }
     );
 
+    this.subelements.forEach((subelement) => {
+      const count = getCountForUniqueExpressionName(subelement.parameters[0], this.names, 'value', '', false);
+      if (count > 0) {
+        subelement.parameters[0].value = `${subelement.parameters[0]}_${count}`;
+      }
+      this.parseElement(subelement);
+    }
+    );
+
     if (this.inclusions.childInstances.length) { this.parseTree(this.inclusions); }
     if (this.exclusions.childInstances.length) { this.parseTree(this.exclusions); }
     this.subpopulations.forEach((subpopulation) => {
@@ -208,17 +217,6 @@ class CqlArtifact {
       }
       if (!subpopulation.special) { // `Doesn't Meet Inclusion Criteria` and `Meets Exclusion Criteria` are special
         if (subpopulation.childInstances.length) { this.parseTree(subpopulation); }
-      }
-    }
-    );
-
-    this.subelements.forEach((subelement) => {
-      const count = getCountForUniqueExpressionName(subelement, this.names, 'subpopulationName', '', false);
-      if (count > 0) {
-        subelement.subpopulationName = `${subelement.subpopulationName}_${count}`;
-      }
-      if (!subelement.special) { // `Doesn't Meet Inclusion Criteria` and `Meets Exclusion Criteria` are special
-        if (subelement) { this.parseElement(subelement); }
       }
     }
     );
@@ -338,7 +336,7 @@ class CqlArtifact {
     (element.childInstances || []).forEach((child) => {
       // TODO: Could a child of a conjunction ever be a subpopulation?
       let childName = (child.parameters[0]||{}).value || child.uniqueId;
-      if (!(child.type === 'parameter' || child.template === 'EmptyParameter' || child.type === 'subelement')) { // Parameters are updated separately
+      if (!(child.type === 'parameter' || child.template === 'EmptyParameter')) { // Parameters are updated separately
         const childCount = getCountForUniqueExpressionName(child.parameters[0], this.names, 'value', '', false);
         if (childCount > 0) {
           childName = `${childName}_${childCount}`;
@@ -463,6 +461,13 @@ class CqlArtifact {
           buildConceptObjectForCodes(parameter.codes, allergyIntoleranceValueSets.concepts);
           addValueSets(parameter, allergyIntoleranceValueSets, 'valuesets');
           this.setParamterContexts(allergyIntoleranceValueSets, 'AllergyIntolerance', context);
+          break;
+        }
+        case 'reference': {
+          // Need to pull the element name from the reference to support renaming the elements while being used.
+          const referencedElement = this.subelements.find(e => e.uniqueId === parameter.value)
+          const referencedElementName = referencedElement.parameters[0].value || referencedElement.uniqueId;
+          context.values = [ `"${referencedElementName}"` ];
           break;
         }
         default: {

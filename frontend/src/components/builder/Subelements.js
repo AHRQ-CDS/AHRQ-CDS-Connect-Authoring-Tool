@@ -24,6 +24,7 @@ export default class Subelements extends Component {
     return <div className="card-element__body">
       {this.props.instance.subelements.map((s, i) =>
           <TemplateInstance
+            key={i}
             valueSets={this.props.valueSets}
             loadValueSets={this.props.loadValueSets}
             getPath={this.getChildsPath}

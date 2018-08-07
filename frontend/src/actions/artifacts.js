@@ -46,11 +46,12 @@ function parseConjunction(element, names) {
   element.childInstances.forEach((child) => {
     // Don't include parameters used in conjunctions since they are just refernces.
     // type = 'parameter'supports modern parameter references, template = 'EmptyParameter'for old parameter references.
-    if (!(child.type === 'parameter' || child.template === 'EmptyParameter' || child.type ===
- 'subelement')) {
+    if (!(child.type === 'parameter' || child.template === 'EmptyParameter')) {
       const index = names.findIndex(name => name.id === child.uniqueId);
       if (index === -1) {
-        names.push({ name: child.parameters[0].value, id: child.uniqueId });
+        let name = child.parameters[0].value;
+        if (name === undefined) name = '';
+        names.push({ name, id: child.uniqueId });
       }
     }
     if (child.type === 'parameter' && child.returnType !== _.lowerCase(child.returnType)) {
@@ -74,9 +75,8 @@ function parseForDuplicateNames(artifact) {
     }
   });
   artifact.subelements.forEach((subelement) => {
-    names.push({ name: subelement.subpopulationName, id: subelement.uniqueId });
-    if (!subelement.special) { // `Doesn't Meet Inclusion Criteria` and `Meets Exclusion Criteria` are special
-      if (subelement.childInstances && subelement.childInstances.length) { parseTree(subelement, names); }
+    if (subelement.parameters && subelement.parameters[0]) {
+      names.push({ name: subelement.parameters[0].value, id: subelement.uniqueId });
     }
   });
   artifact.parameters.forEach((parameter, i) => {

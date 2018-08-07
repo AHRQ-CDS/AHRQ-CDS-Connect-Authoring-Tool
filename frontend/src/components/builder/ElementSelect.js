@@ -97,19 +97,23 @@ export default class ElementSelect extends Component {
     const paramsIndex = categoriesCopy.findIndex(cat => cat.name === 'Parameters');
     const subElementsIndex = categoriesCopy.findIndex(cat => cat.name === 'Sub Element');
 
-    
     if (this.props.subelements && this.props.subelements.length && categoriesCopy[subElementsIndex]) {
       // debugger
-      categoriesCopy[subElementsIndex].entries = this.props.subelements.map(e => ({
-        id: e.subpopulationName,
-        name: e.parameters[0].value,
-        type: 'subelement',
-        returnType: e.returnType,
-        parameters: [
-          // { id: 'element_name', type: 'string', name: 'Element Name', value: e.name },
-          // { id: 'default', type: 'String', name: 'Default', value: e.value }
-        ]
-      }));
+      categoriesCopy[subElementsIndex].entries = this.props.subelements.map((e) => {
+        const returnType = _.isEmpty(e.modifiers) ? e.returnType : _.last(e.modifiers).returnType;
+        // TODO Changing this after deployment will require a migration. Will need to really consider this.
+        return ({
+          id: e.id,
+          name: `Subelement ${e.parameters[0].value}`, // TODO need this to be the name to show it in the header of an element, but need to update the options shown in element select dropdown
+          type: 'subelement',
+          template: 'GenericStatement',
+          returnType,
+          parameters: [
+            { id: 'element_name', type: 'string', name: 'Element Name', value: e.parameters[0].value },
+            { id: 'subelementReference', type: 'reference', name: 'reference', value: e.uniqueId, static: true }
+          ]
+        });
+      });
     }
     if (this.props.parameters.length) {
       let parametersCategory;

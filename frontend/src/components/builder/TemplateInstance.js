@@ -360,8 +360,10 @@ export default class TemplateInstance extends Component {
   hasDuplicateName = () => {
     const { templateInstance, instanceNames } = this.props;
     const elementNameParameter = templateInstance.parameters.find(param => param.id === 'element_name');
+    // Treat undefined as empty string so unnamed elements display duplicate correctly.
+    const nameValue = elementNameParameter.value === undefined ? '' : elementNameParameter.value;
     const duplicateNameIndex = instanceNames.findIndex(name =>
-      name.id !== templateInstance.uniqueId && name.name === elementNameParameter.value);
+      name.id !== templateInstance.uniqueId && name.name === nameValue);
     return duplicateNameIndex !== -1;
   }
 
