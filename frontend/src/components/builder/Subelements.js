@@ -19,8 +19,9 @@ export default class Subelements extends Component {
     return `${childIndex}`;
   }
   render() {
-    return <div className="card-element__body">
+    return <div className="card-group card-group__top">
       {this.props.instance.subelements.map((s, i) =>
+        <div className="card-group-section">
           <TemplateInstance
             key={i}
             valueSets={this.props.valueSets}
@@ -54,31 +55,34 @@ export default class Subelements extends Component {
             isValidCode={this.props.isValidCode}
             codeData={this.props.codeData}
             validateCode={this.props.validateCode}
-            resetCodeValidation={this.props.resetCodeValidation} />)}
+            resetCodeValidation={this.props.resetCodeValidation} />
+        </div>)}
 
-      <ElementSelect
-        categories={this.props.templates}
-        onSuggestionSelected={this.addChild}
-        parameters={this.props.parameters}
-        loginVSACUser={this.props.loginVSACUser}
-        setVSACAuthStatus={this.props.setVSACAuthStatus}
-        vsacStatus={this.props.vsacStatus}
-        vsacStatusText={this.props.vsacStatusText}
-        timeLastAuthenticated={this.props.timeLastAuthenticated}
-        searchVSACByKeyword={this.props.searchVSACByKeyword}
-        isSearchingVSAC={this.props.isSearchingVSAC}
-        vsacSearchResults={this.props.vsacSearchResults}
-        vsacSearchCount={this.props.vsacSearchCount}
-        getVSDetails={this.props.getVSDetails}
-        isRetrievingDetails={this.props.isRetrievingDetails}
-        vsacDetailsCodes={this.props.vsacDetailsCodes}
-        vsacFHIRCredentials={this.props.vsacFHIRCredentials}
-        isValidatingCode={this.props.isValidatingCode}
-        isValidCode={this.props.isValidCode}
-        codeData={this.props.codeData}
-        validateCode={this.props.validateCode}
-        resetCodeValidation={this.props.resetCodeValidation}
-      />
+      <div className="card-element">
+        <ElementSelect
+          categories={this.props.templates}
+          onSuggestionSelected={this.addChild}
+          parameters={this.props.parameters}
+          loginVSACUser={this.props.loginVSACUser}
+          setVSACAuthStatus={this.props.setVSACAuthStatus}
+          vsacStatus={this.props.vsacStatus}
+          vsacStatusText={this.props.vsacStatusText}
+          timeLastAuthenticated={this.props.timeLastAuthenticated}
+          searchVSACByKeyword={this.props.searchVSACByKeyword}
+          isSearchingVSAC={this.props.isSearchingVSAC}
+          vsacSearchResults={this.props.vsacSearchResults}
+          vsacSearchCount={this.props.vsacSearchCount}
+          getVSDetails={this.props.getVSDetails}
+          isRetrievingDetails={this.props.isRetrievingDetails}
+          vsacDetailsCodes={this.props.vsacDetailsCodes}
+          vsacFHIRCredentials={this.props.vsacFHIRCredentials}
+          isValidatingCode={this.props.isValidatingCode}
+          isValidCode={this.props.isValidCode}
+          codeData={this.props.codeData}
+          validateCode={this.props.validateCode}
+          resetCodeValidation={this.props.resetCodeValidation}
+        />
+      </div>
     </div>;
   }
 }
