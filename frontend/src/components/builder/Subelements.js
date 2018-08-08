@@ -11,9 +11,7 @@ export default class Subelements extends Component {
     this.props.addSubelement(instance);
   }
 
-  getPath = () => {
-    return 'subelements';
-  }
+  getPath = () => 'subelements'
 
   getChildsPath = (id) => {
     const artifactTree = this.props.instance;
@@ -56,8 +54,7 @@ export default class Subelements extends Component {
             isValidCode={this.props.isValidCode}
             codeData={this.props.codeData}
             validateCode={this.props.validateCode}
-            resetCodeValidation={this.props.resetCodeValidation} />
-      )}
+            resetCodeValidation={this.props.resetCodeValidation} />)}
 
       <ElementSelect
         categories={this.props.templates}

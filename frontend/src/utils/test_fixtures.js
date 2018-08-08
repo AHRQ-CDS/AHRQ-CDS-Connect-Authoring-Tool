@@ -223,7 +223,8 @@ const genericElementTypes = [
   },
   { value: 'observation', label: 'Observation', vsacAuthRequired: true, template: 'GenericObservation_vsac' },
   { value: 'booleanParameter', label: 'Parameters', vsacAuthRequired: false },
-  { value: 'procedure', label: 'Procedure', vsacAuthRequired: true, template: 'GenericProcedure_vsac' }
+  { value: 'procedure', label: 'Procedure', vsacAuthRequired: true, template: 'GenericProcedure_vsac' },
+  { value: 'subElement', label: 'Subelements', vsacAuthRequired: false }
 ];
 
 const genericElementGroups = [

@@ -382,7 +382,7 @@ export class Builder extends Component {
         </div>
       );
     }
-      
+
     return (
       <div className="builder" id="maincontent">
         <div className="builder-wrapper">

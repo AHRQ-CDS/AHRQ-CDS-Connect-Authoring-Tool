@@ -56,7 +56,7 @@ describe('the select element field', () => {
   it('starts with a list of all elements', () => {
     elementField.find('input').simulate('change');
     expect(elementField.find('.element-select__element-field').hasClass('is-open')).toBeTruthy();
-    expect(elementField.find('.element-select__option')).toHaveLength(9);
+    expect(elementField.find('.element-select__option')).toHaveLength(10);
   });
 
   it('options display correct values and have key icon if VSAC auth required', () => {

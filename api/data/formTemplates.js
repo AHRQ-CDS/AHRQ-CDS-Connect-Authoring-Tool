@@ -210,7 +210,7 @@ module.exports = [
   {
     id: 10,
     icon: 'sign-in',
-    name: 'Sub Element',
+    name: 'Subelements',
     entries: [
       {
         id: 'Boolean',

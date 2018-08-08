@@ -29,8 +29,8 @@ export default class Subpopulations extends Component {
     });
   }
 
-  addSubpopulation = ({ baseTemplate }) => {
-    const newSubpopulation = createTemplateInstance(baseTemplate);
+  addSubpopulation = () => {
+    const newSubpopulation = createTemplateInstance(this.baseTemplate);
     newSubpopulation.name = '';
     newSubpopulation.path = '';
     // eslint-disable-next-line
