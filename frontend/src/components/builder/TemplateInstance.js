@@ -112,6 +112,20 @@ export default class TemplateInstance extends Component {
     this.props.editInstance(this.props.treeName, newState, this.getPath(), false);
   }
 
+  deleteInstance = () => {
+    if (this.props.subelementsInUse) {
+      const subelementIndex = this.props.subelementsInUse.findIndex(id => id === this.props.templateInstance.uniqueId);
+      // If the subelementIndex is not -1, it was in the subelementInUse array and is referenced somewhere else.
+      if (subelementIndex !== -1) {
+        alert('This subelement is referenced somewhere else. To delete this element, remove all references to it.');
+      } else {
+        this.props.deleteInstance(this.props.treeName, this.getPath());
+      }
+    } else {
+      this.props.deleteInstance(this.props.treeName, this.getPath());
+    }
+  }
+
   renderAppliedModifier = (modifier, index) => {
     // Reset values on modifiers that were not previously set or saved in the database
     if (!modifier.values && this.modifierMap[modifier.id].values) {
@@ -370,6 +384,12 @@ export default class TemplateInstance extends Component {
   renderModifierSelect = () => {
     if (!this.props.templateInstance.cannotHaveModifiers
       && (this.state.relevantModifiers.length > 0 || (this.props.templateInstance.modifiers || []).length === 0)) {
+      // Template instances are assumed not to be subelements in use. If it is a subelement, check whether it is in use or not.
+      let subelementIsInUse = false;
+      if (this.props.subelementsInUse) {
+        const subelementIndex = this.props.subelementsInUse.findIndex(id => id === this.props.templateInstance.uniqueId);
+        subelementIsInUse = subelementIndex !== -1;
+      }
       return (
         <div className="modifier-select">
           <div className="modifier__selection">
@@ -381,13 +401,24 @@ export default class TemplateInstance extends Component {
               Add Expression
             </button>
 
-            {this.state.showModifiers &&
+            {this.state.showModifiers && !subelementIsInUse &&
               this.state.relevantModifiers.map(modifier =>
                 <button key={modifier.id}
                   value={modifier.id}
                   onClick={this.handleModifierSelected} className="modifier__button secondary-button">
                   {modifier.name}
                 </button>)
+            }
+
+            {this.state.showModifiers && subelementIsInUse &&
+              this.state.relevantModifiers
+                .filter(modifier => modifier.returnType === this.state.returnType)
+                .map(modifier =>
+                  <button key={modifier.id}
+                    value={modifier.id}
+                    onClick={this.handleModifierSelected} className="modifier__button secondary-button">
+                    {modifier.name}
+                  </button>)
             }
           </div>
         </div>
@@ -785,7 +816,7 @@ export default class TemplateInstance extends Component {
             </button>
 
             <button
-              onClick={() => deleteInstance(this.props.treeName, this.getPath())}
+              onClick={this.deleteInstance}
               className="element__deletebutton transparent-button"
               aria-label={`remove ${templateInstance.name}`}>
               <FontAwesome name="close" />

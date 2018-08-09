@@ -21,9 +21,8 @@ export default class Subelements extends Component {
   render() {
     return <div className="card-group card-group__top">
       {this.props.instance.subelements.map((s, i) =>
-        <div className="card-group-section">
+        <div className="card-group-section" key={i}>
           <TemplateInstance
-            key={i}
             valueSets={this.props.valueSets}
             loadValueSets={this.props.loadValueSets}
             getPath={this.getChildsPath}
@@ -55,7 +54,8 @@ export default class Subelements extends Component {
             isValidCode={this.props.isValidCode}
             codeData={this.props.codeData}
             validateCode={this.props.validateCode}
-            resetCodeValidation={this.props.resetCodeValidation} />
+            resetCodeValidation={this.props.resetCodeValidation}
+            subelementsInUse={this.props.subelementsInUse} />
         </div>)}
 
       <div className="card-element">
@@ -86,3 +86,5 @@ export default class Subelements extends Component {
     </div>;
   }
 }
+
+// TODO Add PropTypes!

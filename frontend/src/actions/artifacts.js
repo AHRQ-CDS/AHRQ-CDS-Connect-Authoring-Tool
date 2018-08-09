@@ -32,26 +32,36 @@ export function setStatusMessage(statusType) {
 
 // ------------------------- UPDATE ARTIFACT ------------------------------- //
 
-function parseTree(element, names) {
-  parseConjunction(element, names);
+function parseTree(element, names, subelementsInUse) {
+  parseConjunction(element, names, subelementsInUse); // TODO Maybe separate out a parseconjunction for name and parse for subelement?
   const children = element.childInstances;
   children.forEach((child) => {
     if ('childInstances' in child) {
-      parseTree(child, names);
+      parseTree(child, names, subelementsInUse);
     }
   });
 }
 
-function parseConjunction(element, names) {
+function parseConjunction(element, names, subelementsInUse) {
   element.childInstances.forEach((child) => {
     // Don't include parameters used in conjunctions since they are just refernces.
     // type = 'parameter'supports modern parameter references, template = 'EmptyParameter'for old parameter references.
     if (!(child.type === 'parameter' || child.template === 'EmptyParameter')) {
+      // Add name of child to array
       const index = names.findIndex(name => name.id === child.uniqueId);
       if (index === -1) {
         let name = child.parameters[0].value;
         if (name === undefined) name = '';
         names.push({ name, id: child.uniqueId });
+      }
+
+      // Add uniqueId of subelements that are currently used
+      const referenceParameter = child.parameters.find(param => param.type === 'reference');
+      if (referenceParameter) {
+        const subelementAlreadyInUse = subelementsInUse.findIndex(id => id === referenceParameter.value);
+        if (subelementAlreadyInUse === -1) {
+          subelementsInUse.push(referenceParameter.value);
+        }
       }
     }
     if (child.type === 'parameter' && child.returnType !== _.lowerCase(child.returnType)) {
@@ -60,18 +70,19 @@ function parseConjunction(element, names) {
   });
 }
 
-function parseForDuplicateNames(artifact) {
+function parseForDuplicateNamesAndUsedSubelements(artifact) {
   const names = [];
+  const subelementsInUse = [];
   if (artifact.expTreeInclude.childInstances.length) {
-    parseTree(artifact.expTreeInclude, names);
+    parseTree(artifact.expTreeInclude, names, subelementsInUse);
   }
   if (artifact.expTreeExclude.childInstances.length) {
-    parseTree(artifact.expTreeExclude, names);
+    parseTree(artifact.expTreeExclude, names, subelementsInUse);
   }
   artifact.subpopulations.forEach((subpopulation) => {
     names.push({ name: subpopulation.subpopulationName, id: subpopulation.uniqueId });
     if (!subpopulation.special) { // `Doesn't Meet Inclusion Criteria` and `Meets Exclusion Criteria` are special
-      if (subpopulation.childInstances.length) { parseTree(subpopulation, names); }
+      if (subpopulation.childInstances.length) { parseTree(subpopulation, names, subelementsInUse); }
     }
   });
   artifact.subelements.forEach((subelement) => {
@@ -82,7 +93,7 @@ function parseForDuplicateNames(artifact) {
   artifact.parameters.forEach((parameter, i) => {
     names.push({ name: parameter.name, id: parameter.uniqueId });
   });
-  return names;
+  return { names, subelementsInUse };
 }
 
 export function updateArtifact(artifactToUpdate, props) {
@@ -91,11 +102,12 @@ export function updateArtifact(artifactToUpdate, props) {
       ...artifactToUpdate,
       ...props
     };
-    const names = parseForDuplicateNames(artifact);
+    const { names, subelementsInUse } = parseForDuplicateNamesAndUsedSubelements(artifact);
     return dispatch({
       type: types.UPDATE_ARTIFACT,
       artifact,
-      names
+      names,
+      subelementsInUse // TODO Is there a way to put an "isEditable" flag on the subelement?
     });
   };
 }
@@ -227,11 +239,12 @@ function requestArtifact(id) {
 }
 
 function loadArtifactSuccess(artifact) {
-  const names = parseForDuplicateNames(artifact);
+  const { names, subelementsInUse } = parseForDuplicateNamesAndUsedSubelements(artifact);
   return {
     type: types.LOAD_ARTIFACT_SUCCESS,
     artifact,
-    names
+    names,
+    subelementsInUse
   };
 }
 

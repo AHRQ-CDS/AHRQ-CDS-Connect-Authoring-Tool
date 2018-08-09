@@ -461,7 +461,7 @@ export class Builder extends Component {
                     templates={templates}
                     resources={this.props.resources}
                     valueSets={this.props.valueSets}
-                    checkSubpopulationUsage={this.checkSubpopulationUsage}
+                    subelementsInUse={this.props.subelementsInUse}
                     updateRecsSubpop={this.updateRecsSubpop}
                     conversionFunctions={conversionFunctions}
                     instanceNames={this.props.names}
@@ -606,6 +606,7 @@ function mapStateToProps(state) {
     valueSets: state.valueSets.valueSets,
     publishEnabled: state.artifacts.publishEnabled,
     names: state.artifacts.names,
+    subelementsInUse: state.artifacts.subelementsInUse,
     vsacStatus: state.vsac.authStatus,
     vsacStatusText: state.vsac.authStatusText,
     timeLastAuthenticated: state.vsac.timeLastAuthenticated,
