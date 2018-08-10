@@ -26,23 +26,24 @@ class Patient extends Component {
     const reader = new FileReader();
     // eslint-disable-next-line func-names
     reader.onload = function (e) {
-      let patientData = JSON.parse(e.target.result);
-      if ((_.get(patientData, 'resourceType') === "Bundle")
+      const patientData = JSON.parse(e.target.result);
+      if ((_.get(patientData, 'resourceType') === 'Bundle')
         && (_.chain(patientData)
-              .get('entry')
-              .find({ resource: { resourceType: 'Patient' } })
-              .get('resource')
-              .value()))
-      {
+          .get('entry')
+          .find({ resource: { resourceType: 'Patient' } })
+          .get('resource')
+          .value())) {
         this.props.addPatient(patientData);
       } else {
-        alert("Invalid file type. Only valid FHIR DSTU2 JSON Bundles are accepted.");
+        // eslint-disable-next-line no-alert
+        alert('Invalid file type. Only valid FHIR DSTU2 JSON Bundles are accepted.');
       }
     }.bind(this);
     try {
       reader.readAsText(patient[0]);
-    } catch(error) {
-      alert("Invalid file type. Only valid FHIR DSTU2 JSON Bundles are accepted.");
+    } catch (error) {
+      // eslint-disable-next-line no-alert
+      alert('Invalid file type. Only valid FHIR DSTU2 JSON Bundles are accepted.');
     }
   }
 
