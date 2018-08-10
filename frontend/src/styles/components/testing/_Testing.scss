@@ -1,4 +1,4 @@
-.patient {
+.testing {
   &-wrapper { @include componentWidth; }
 
   padding: $global-padding;
@@ -22,6 +22,18 @@
   .execution-loading {
     text-align: center;
     margin: 40px 0;
+  }
+
+  .patient-dropzone {
+    margin: auto;
+    width: 50%;
+    padding-top: 2em;
+    padding-bottom: 2em;
+    text-align: center;
+    border-width: 0.25em;
+    border-color: $gray;
+    border-style: dashed;
+    border-radius: 1em;
   }
 }
 
@@ -93,16 +105,4 @@
 .patient-info {
   font-size: 0.9em;
   color: $gray;
-}
-
-.patient-dropzone {
-  margin: auto;
-  width: 50%;
-  padding-top: 2em;
-  padding-bottom: 2em;
-  text-align: center;
-  border-width: 0.25em;
-  border-color: $gray;
-  border-style: dashed;
-  border-radius: 1em;
 }

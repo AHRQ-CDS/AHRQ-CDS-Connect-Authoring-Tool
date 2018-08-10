@@ -2,6 +2,17 @@
   &__header {
     display: flex;
     align-items: center;
+    cursor: pointer;
+    padding-left: 15px;
+    width: 100%;
+    margin: 5px 0;
+
+    &:hover,
+    &:focus {
+      background-color: $gray-blue;
+      border-radius: 5px;
+      outline: none;
+    }
 
     .header-title {
       color: $blue-light;
@@ -9,11 +20,12 @@
       margin-right: 10px;
       font-size: 0.9em;
       font-weight: bold;
+      white-space: nowrap;
     }
 
     .header-divider {
       width: 100%;
-      border-bottom: 1px solid $blue-light;
+      border-bottom: 2px solid $blue-light;
     }
 
     .header-button {
