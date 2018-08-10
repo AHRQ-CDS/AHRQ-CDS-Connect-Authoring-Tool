@@ -59,7 +59,6 @@ export default class PatientDataSection extends Component {
 
   render() {
     const { title, data } = this.props;
-
     if (data.length === 0) return null;
 
     return (
