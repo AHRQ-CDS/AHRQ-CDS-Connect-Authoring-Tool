@@ -1,6 +1,5 @@
 import PatientDataSection from '../../../components/testing/PatientDataSection';
 import { shallowRenderComponent, fullRenderComponent } from '../../../utils/test_helpers';
-// import mockPatient from '../../../mocks/mockPatient';
 
 let component;
 let fullComponent;
