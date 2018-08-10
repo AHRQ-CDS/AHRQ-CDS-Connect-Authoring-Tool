@@ -10,7 +10,9 @@ export default class PatientDataSection extends Component {
     this.state = { collapse: false };
   }
 
-  toggle = () => {
+  toggle = (event) => {
+    event.preventDefault();
+
     this.setState({ collapse: !this.state.collapse });
   }
 
@@ -18,7 +20,12 @@ export default class PatientDataSection extends Component {
     const chevronIcon = this.state.collapse ? 'chevron-down' : 'chevron-right';
 
     return (
-      <div className="patient-data-section__header" onClick={this.toggle}>
+      <div
+        className="patient-data-section__header"
+        onClick={event => this.toggle(event)}
+        onKeyPress={event => this.toggle(event)}
+        role="button"
+        tabIndex={0}>
         <div className="header-title">{title} ({data.length})</div>
         <div className="header-divider"></div>
         <Button onClick={this.toggle} className="header-button"><FontAwesome name={chevronIcon} /></Button>
@@ -37,7 +44,9 @@ export default class PatientDataSection extends Component {
         </thead>
 
         <tbody>
-          {isOther && data.map((resource, index) => <tr key={index}><td>{resource}</td></tr>)}
+          {isOther && data.map((resource, index) => <tr key={index}>
+            <td>{resource.resource} ({resource.count})
+          </td></tr>)}
           {!isOther && data.map((element, index) =>
             <tr key={index}>
               {Object.keys(data[0]).map((key, indx) => <td key={indx}>{element[key]}</td>)}

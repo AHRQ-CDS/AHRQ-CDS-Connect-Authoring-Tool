@@ -4,10 +4,14 @@
     align-items: center;
     cursor: pointer;
     padding-left: 15px;
+    width: 100%;
+    margin: 5px 0;
 
-    &:hover {
+    &:hover,
+    &:focus {
       background-color: $gray-blue;
       border-radius: 5px;
+      outline: none;
     }
 
     .header-title {

@@ -102,15 +102,20 @@ export default class PatientView extends Component {
     return data;
   }
 
-  extractOtherResource = () => {
+  extractOtherResources = () => {
     const { patient } = this.props;
     const displayedResources = Object.keys(RESOURCE_KEYS);
 
-    let otherResourceTypes = [];
+    const otherResourceTypes = [];
     patient.patient.entry.forEach((entry) => {
       const resource = entry.resource.resourceType;
-      if (displayedResources.indexOf(resource) === -1 && resource !== 'Patient') {
-        otherResourceTypes.push(resource);
+      if (displayedResources.indexOf(resource) === -1 && resource !== 'Patient') { // other resource
+        const foundResource = otherResourceTypes.find(r => r.resource === resource);
+        if (foundResource) { // already have resource
+          foundResource.count += 1;
+        } else {
+          otherResourceTypes.push({ resource, count: 1 });
+        }
       }
     });
 
@@ -122,17 +127,6 @@ export default class PatientView extends Component {
     const patientInfo = patient.patient.entry[0].resource;
     const patientName = patientInfo.name[0];
     const patientAge = moment().diff(patientInfo.birthDate, 'years');
-
-    // let resources = [];
-    // patient.patient.entry.forEach((entry) => {
-    //   const resource = entry.resource.resourceType;
-    //   if (resources.indexOf(resource) === -1) {
-    //     resources.push(resource);
-    //     console.debug('resource', entry.resource);
-    //   }
-    // });
-
-    // console.debug('resources: ', resources);
 
     return (
       <div className="patient-view">
@@ -164,7 +158,7 @@ export default class PatientView extends Component {
           <PatientDataSection title="Imaging" data={this.extractData('ImagingStudy')} />
           <PatientDataSection title="Diagnostics" data={this.extractData('DiagnosticReport')} />
           <PatientDataSection title="Claims" data={this.extractData('Claim')} />
-          <PatientDataSection title="Other" data={this.extractOtherResource()} />
+          <PatientDataSection title="Other" data={this.extractOtherResources()} />
         </div>
 
         <hr/>
