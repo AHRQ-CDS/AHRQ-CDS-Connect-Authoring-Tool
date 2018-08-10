@@ -81,6 +81,7 @@ export default class Subelements extends Component {
           codeData={this.props.codeData}
           validateCode={this.props.validateCode}
           resetCodeValidation={this.props.resetCodeValidation}
+          inSubelements={true}
         />
       </div>
     </div>;

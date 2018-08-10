@@ -243,6 +243,12 @@ export default class ElementSelect extends Component {
   render() {
     const { selectedElement } = this.state;
     const placeholderText = 'Choose element type';
+    const elementOptionsToDisplay = elementOptions.filter((e) => {
+      if (this.props.inSubelements) {
+        return e.value !== 'subElement';
+      }
+      return true;
+    });
     let noAuthElementOptions;
     if (selectedElement && !selectedElement.vsacAuthRequired) {
       noAuthElementOptions = this.state.categories
@@ -270,7 +276,7 @@ export default class ElementSelect extends Component {
             placeholder={placeholderText}
             aria-label={placeholderText}
             clearable={false}
-            options={elementOptions}
+            options={elementOptionsToDisplay}
             onChange={this.onElementSelected}
             optionRenderer={optionRenderer}
             menuRenderer={ElementSelectMenuRenderer}
