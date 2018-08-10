@@ -5,6 +5,7 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import Dropzone from 'react-dropzone';
 import { Jumbotron, Breadcrumb } from 'reactstrap';
+import _ from 'lodash';
 
 import { loadPatients, addPatient, deletePatient } from '../actions/testing';
 import { loadArtifacts, executeCQLArtifact } from '../actions/artifacts';
@@ -25,9 +26,24 @@ class Patient extends Component {
     const reader = new FileReader();
     // eslint-disable-next-line func-names
     reader.onload = function (e) {
-      this.props.addPatient(JSON.parse(e.target.result));
+      let patientData = JSON.parse(e.target.result);
+      if ((_.get(patientData, 'resourceType') === "Bundle")
+        && (_.chain(patientData)
+              .get('entry')
+              .find({ resource: { resourceType: 'Patient' } })
+              .get('resource')
+              .value()))
+      {
+        this.props.addPatient(patientData);
+      } else {
+        alert("Invalid file type. Only valid FHIR DSTU2 JSON Bundles are accepted.");
+      }
     }.bind(this);
-    reader.readAsText(patient[0]);
+    try {
+      reader.readAsText(patient[0]);
+    } catch(error) {
+      alert("Invalid file type. Only valid FHIR DSTU2 JSON Bundles are accepted.");
+    }
   }
 
   renderBoolean = (bool) => {

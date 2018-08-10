@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import Inspector from 'react-inspector';
 import moment from 'moment';
 import FontAwesome from 'react-fontawesome';
+import _ from 'lodash';
 
 import getProperty from '../../utils/getProperty';
 import patientProps from '../../prop-types/patient';
@@ -124,7 +125,11 @@ export default class PatientView extends Component {
 
   render() {
     const { patient } = this.props;
-    const patientInfo = patient.patient.entry[0].resource;
+    const patientInfo = _.chain(patient)
+      .get('patient.entry')
+      .find({ resource: { resourceType: 'Patient' } })
+      .get('resource')
+      .value();
     const patientName = patientInfo.name[0];
     const patientAge = moment().diff(patientInfo.birthDate, 'years');
 
