@@ -17,7 +17,7 @@ import artifactProps from '../prop-types/artifact';
 import PatientTable from '../components/testing/PatientTable';
 import ELMErrorModal from '../components/builder/ELMErrorModal';
 
-class Patient extends Component {
+class Testing extends Component {
   constructor(props) {
     super(props);
 
@@ -231,7 +231,7 @@ class Patient extends Component {
   }
 }
 
-Patient.propTypes = {
+Testing.propTypes = {
   patients: PropTypes.arrayOf(patientProps).isRequired,
   artifacts: PropTypes.arrayOf(artifactProps).isRequired,
   results: PropTypes.object,
@@ -287,4 +287,4 @@ function mapStateToProps(state) {
   };
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(Patient);
+export default connect(mapStateToProps, mapDispatchToProps)(Testing);
