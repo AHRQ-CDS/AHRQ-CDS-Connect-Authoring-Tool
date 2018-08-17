@@ -28,7 +28,7 @@ import WithUnit from './modifiers/WithUnit';
 import Qualifier from './modifiers/Qualifier';
 
 import Validators from '../../utils/validators';
-import { convertToExpression } from '../../utils/artifacts';
+import convertToExpression from '../../utils/artifacts/convertToExpression';
 
 function getInstanceName(instance) {
   return (instance.parameters.find(p => p.id === 'element_name') || {}).value;
@@ -573,16 +573,20 @@ export default class TemplateInstance extends Component {
   }
 
   renderBody() {
-    const { templateInstance } = this.props;
+    const { templateInstance, validateReturnType } = this.props;
+    const { returnType } = this.state;
     const type = templateInstance.type === 'parameter' ? templateInstance.type : templateInstance.name;
+
     let valueSets = [];
     if (templateInstance.parameters[1] && templateInstance.parameters[1].valueSets) {
       valueSets = templateInstance.parameters[1].valueSets;
     }
+
     let codes = [];
     if (templateInstance.parameters[1] && templateInstance.parameters[1].codes) {
       codes = templateInstance.parameters[1].codes;
     }
+
     const otherParameters = templateInstance.parameters.filter(param =>
       param.type === 'number' || param.type === 'valueset');
 
@@ -591,12 +595,12 @@ export default class TemplateInstance extends Component {
       type,
       valueSets,
       codes,
-      this.state.returnType,
+      returnType,
       otherParameters
     );
 
     const validationError = this.validateElement();
-    const returnError = (!(this.props.validateReturnType !== false) || this.state.returnType === 'boolean') ? null
+    const returnError = (!(validateReturnType !== false) || returnType === 'boolean') ? null
       : "Element must have return type 'boolean'.  Add expression(s) to change the return type.";
 
     return (
@@ -604,9 +608,9 @@ export default class TemplateInstance extends Component {
         {validationError && <div className="warning">{validationError}</div>}
         {returnError && <div className="warning">{returnError}</div>}
         {expressions &&
-          <div className="expression">{this.renderExpression(expressions, this.props.templateInstance.uniqueId)}</div>}
+          <div className="expression">{this.renderExpression(expressions, templateInstance.uniqueId)}</div>}
 
-        {this.props.templateInstance.parameters.map((param, index) => {
+        {templateInstance.parameters.map((param, index) => {
           // todo: each parameter type should probably have its own component
           if (param.id !== 'element_name') {
             return this.selectTemplate(param);
@@ -614,7 +618,7 @@ export default class TemplateInstance extends Component {
           return null;
         })}
 
-        {this.props.templateInstance.id && this.props.templateInstance.id.includes('_vsac') &&
+        {templateInstance.id && templateInstance.id.includes('_vsac') &&
           <div className="vsac-info">
             {this.renderVSInfo()}
             {this.renderCodeInfo()}
@@ -627,10 +631,10 @@ export default class TemplateInstance extends Component {
           <div className="return-type row">
             <div className="col-3 bold align-right return-type__label">Return Type:</div>
             <div className="col-7 return-type__value">
-              { (this.props.validateReturnType === false
-                || _.startCase(this.state.returnType) === 'Boolean')
+              { (validateReturnType === false
+                || _.startCase(returnType) === 'Boolean')
                 && <FontAwesome name="check" className="check" />}
-              {_.startCase(this.state.returnType)}
+              {_.startCase(returnType)}
             </div>
           </div>
         </div>
@@ -639,11 +643,13 @@ export default class TemplateInstance extends Component {
   }
 
   renderFooter() {
+    const { templateInstance } = this.props;
+
     return (
       <div className="card-element__footer">
         {this.renderModifierSelect()}
 
-        {this.props.templateInstance.id && this.props.templateInstance.id.includes('_vsac') &&
+        {templateInstance.id && templateInstance.id.includes('_vsac') &&
           <div className="vsac-controls">
             {this.renderVSACOptions()}
           </div>
@@ -653,17 +659,18 @@ export default class TemplateInstance extends Component {
   }
 
   renderHeader = () => {
-    const elementNameParameter = this.props.templateInstance.parameters.find(param => param.id === 'element_name');
+    const { templateInstance, instanceNames } = this.props;
+    const elementNameParameter = templateInstance.parameters.find(param => param.id === 'element_name');
 
     if (elementNameParameter) {
-      if (this.props.templateInstance.type === 'parameter') {
+      if (templateInstance.type === 'parameter') {
         if (elementNameParameter.value) {
-          return (<span className="label">{elementNameParameter.value}</span>);
+          return <span className="label">{elementNameParameter.value}</span>;
         }
         return null;
       }
-      const duplicateNameIndex = this.props.instanceNames.findIndex(name =>
-        name.id !== this.props.templateInstance.uniqueId && name.name === elementNameParameter.value);
+      const duplicateNameIndex = instanceNames.findIndex(name =>
+        name.id !== templateInstance.uniqueId && name.name === elementNameParameter.value);
 
       return (
         <div>
@@ -671,7 +678,7 @@ export default class TemplateInstance extends Component {
             key={elementNameParameter.id}
             {...elementNameParameter}
             updateInstance={this.updateInstance}
-            name={this.props.templateInstance.name}/>
+            name={templateInstance.name} />
           {duplicateNameIndex !== -1
             && <div className="warning">Warning: Name already in use. Choose another name.</div>}
         </div>
@@ -679,10 +686,13 @@ export default class TemplateInstance extends Component {
     }
 
     // Handles the case for old parameters, which did not have an 'element_name' parameter.
-    return (<span className="label">{this.props.templateInstance.name}</span>);
+    return <span className="label">{templateInstance.name}</span>;
   }
 
   render() {
+    const { templateInstance, renderIndentButtons, deleteInstance } = this.props;
+    const { showElement } = this.state;
+
     return (
       <div className="card-element element__expanded">
         <div className="card-element__header">
@@ -691,26 +701,26 @@ export default class TemplateInstance extends Component {
           </span>
 
           <div className="card-element__buttons">
-            {this.props.renderIndentButtons(this.props.templateInstance)}
+            {renderIndentButtons(templateInstance)}
 
             <button
               onClick={this.showHideElementBody}
               className="element__hidebutton secondary-button"
-              aria-label={`hide ${this.props.templateInstance.name}`}>
-              <FontAwesome name={this.state.showElement ? 'angle-double-down' : 'angle-double-right'}/>
+              aria-label={`hide ${templateInstance.name}`}>
+              <FontAwesome name={showElement ? 'angle-double-down' : 'angle-double-right'}/>
             </button>
 
             <button
-              onClick={() => this.props.deleteInstance(this.props.treeName, this.getPath())}
+              onClick={() => deleteInstance(this.props.treeName, this.getPath())}
               className="element__deletebutton secondary-button"
-              aria-label={`remove ${this.props.templateInstance.name}`}>
+              aria-label={`remove ${templateInstance.name}`}>
               <FontAwesome name='close'/>
             </button>
           </div>
         </div>
 
-        {this.state.showElement ? this.renderBody() : null}
-        {this.state.showElement ? this.renderFooter() : null}
+        {showElement ? this.renderBody() : null}
+        {showElement ? this.renderFooter() : null}
       </div>
     );
   }

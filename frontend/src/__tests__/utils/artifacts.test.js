@@ -1,4 +1,4 @@
-import { convertToExpression } from '../../utils/artifacts';
+import convertToExpression from '../../utils/artifacts/convertToExpression';
 
 const elementLists = ['list_of_observations', 'list_of_conditions', 'list_of_medication_statements',
   'list_of_medication_orders', 'list_of_procedures', 'list_of_allergy_intolerances', 'list_of_encounters'];
@@ -39,14 +39,15 @@ test('Simple modifiers Active, Confirmed, Exists builds expected phrase', () => 
   const expressionPhrase = convertToExpression(modifiers, name, valueSets, codes, 'boolean');
 
   const expectedOutput = [
-    { expressionText: 'An', isExpression: false },
+    { expressionText: 'There', isExpression: false },
+    { expressionText: 'exists', isExpression: true },
+    { expressionText: 'an', isExpression: false },
     { expressionText: 'active', isExpression: true },
     { expressionText: 'confirmed', isExpression: true },
     { expressionText: 'condition', isExpression: false },
     { expressionText: 'with a code from', isExpression: false },
     { expressionText: 'Diabetes', isExpression: true },
-    { expressionText: 'that', isExpression: false },
-    { expressionText: 'exists', isExpression: true },
+    { expressionText: '.', isExpression: false }
   ];
 
   expect(expressionPhrase).toEqual(expectedOutput);
@@ -109,7 +110,8 @@ test('More complicated modifiers, including Qualifier, builds expected phrase', 
   const expressionPhrase = convertToExpression(modifiers, name, valueSets, codes, 'boolean');
 
   const expectedOutput = [
-    { expressionText: 'A', isExpression: false },
+    { expressionText: 'There exists', isExpression: false },
+    { expressionText: 'a', isExpression: false },
     { expressionText: 'most recent', isExpression: true },
     { expressionText: 'verified', isExpression: true },
     { expressionText: 'observation', isExpression: false },
@@ -118,7 +120,8 @@ test('More complicated modifiers, including Qualifier, builds expected phrase', 
     { expressionText: 'which occurred', isExpression: false },
     { expressionText: 'within the last 14 years', isExpression: true },
     { expressionText: 'whose value is a code from', isExpression: false },
-    { expressionText: 'Smoker', isExpression: true }
+    { expressionText: 'Smoker', isExpression: true },
+    { expressionText: '.', isExpression: false }
   ];
 
   expect(expressionPhrase).toEqual(expectedOutput);
@@ -193,17 +196,20 @@ test('More complicated modifiers, including Value Comparison, builds correct phr
   const expressionPhrase = convertToExpression(modifiers, name, valueSets, codes, 'boolean');
 
   const expectedOutput = [
-    { expressionText: 'A', isExpression: false },
+    { expressionText: 'There exists', isExpression: false },
+    { expressionText: 'a', isExpression: false },
     { expressionText: 'most recent', isExpression: true },
     { expressionText: 'verified', isExpression: true },
     { expressionText: 'observation', isExpression: false },
     { expressionText: 'with a code from', isExpression: false },
     { expressionText: 'LDL', isExpression: true },
-    { expressionText: 'with unit mg/dL', isExpression: true },
+    { expressionText: 'with unit', isExpression: false },
+    { expressionText: 'mg/dL', isExpression: true },
     { expressionText: 'with', isExpression: false },
     { expressionText: 'units converted from mmol/L to mg/dL for blood cholesterol', isExpression: true },
     { expressionText: 'whose value is', isExpression: false },
     { expressionText: 'greater than or equal to 120 mg/dL and less than 300 mg/dL', isExpression: true },
+    { expressionText: '.', isExpression: false }
   ];
 
   expect(expressionPhrase).toEqual(expectedOutput);
@@ -255,15 +261,17 @@ test('More complicated expression, with Highest, Not, and Is Null, builds correc
   const expressionPhrase = convertToExpression(modifiers, name, valueSets, codes, 'boolean');
 
   const expectedOutput = [
-    { expressionText: 'Not', isExpression: true },
-    { expressionText: 'a', isExpression: false },
+    { expressionText: 'It is', isExpression: false },
+    { expressionText: 'not', isExpression: true },
+    { expressionText: 'the case that', isExpression: false },
+    { expressionText: 'the', isExpression: false },
     { expressionText: 'highest', isExpression: true },
     { expressionText: 'verified', isExpression: true },
     { expressionText: 'observation', isExpression: false },
     { expressionText: 'with a code from', isExpression: false },
     { expressionText: 'test code', isExpression: true },
-    { expressionText: 'which', isExpression: false },
-    { expressionText: 'is null', isExpression: true }
+    { expressionText: 'is null', isExpression: true },
+    { expressionText: '.', isExpression: false }
   ];
 
   expect(expressionPhrase).toEqual(expectedOutput);
@@ -346,12 +354,13 @@ test('Only validated modifiers are added the the phrase', () => {
 
   // Only modifiers that are validated are added
   const expectedOutput = [
-    { expressionText: 'Not', isExpression: true },
+    { expressionText: 'There exists', isExpression: false },
     { expressionText: 'a', isExpression: false },
     { expressionText: 'most recent', isExpression: true },
     { expressionText: 'observation', isExpression: false },
     { expressionText: 'with a code from', isExpression: false },
-    { expressionText: 'LDL', isExpression: true }
+    { expressionText: 'LDL', isExpression: true },
+    { expressionText: '.', isExpression: false }
   ];
 
   expect(expressionPhrase).toEqual(expectedOutput);
@@ -380,7 +389,9 @@ test('All value sets and codes are added to phrase, but only first three are dis
   const expressionPhrase = convertToExpression(modifiers, name, valueSets, codes, 'boolean');
 
   const expectedOutput = [
-    { expressionText: 'An', isExpression: false },
+    { expressionText: 'There', isExpression: false },
+    { expressionText: 'exists', isExpression: true },
+    { expressionText: 'an', isExpression: false },
     { expressionText: 'observation', isExpression: false },
     { expressionText: 'with a code from', isExpression: false },
     { expressionText: 'LDL', isExpression: true },
@@ -390,9 +401,8 @@ test('All value sets and codes are added to phrase, but only first three are dis
     { expressionText: 'Test code', isExpression: true },
     { expressionText: ',', isExpression: false },
     { expressionText: 'or', isExpression: false },
-    { expressionText: '...', isExpression: true, tooltipText: '... or 432-1 (CS2)' },
-    { expressionText: 'that', isExpression: false },
-    { expressionText: 'exists', isExpression: true }
+    { expressionText: '...', isExpression: true, tooltipText: '...or 432-1 (CS2)' },
+    { expressionText: '.', isExpression: false }
   ];
 
   expect(expressionPhrase).toEqual(expectedOutput);
@@ -408,11 +418,10 @@ test('Elements that have a return type of a list indicates plurality in the phra
   const expressionPhrase = convertToExpression(modifiers, name, valueSets, codes, 'list_of_observations');
 
   const expectedOutput = [
-    { expressionText: 'A', isExpression: false },
-    { expressionText: 'list of', isExpression: false },
-    { expressionText: 'observations', isExpression: false },
+    { expressionText: 'Observations', isExpression: false },
     { expressionText: 'with a code from', isExpression: false },
-    { expressionText: 'LDL', isExpression: true }
+    { expressionText: 'LDL', isExpression: true },
+    { expressionText: '.', isExpression: false }
   ];
 
   expect(expressionPhrase).toEqual(expectedOutput);
@@ -434,7 +443,8 @@ describe('Demographics elements support special case phrases', () => {
       { expressionText: 'between', isExpression: false },
       { expressionText: '18 years', isExpression: true },
       { expressionText: 'and', isExpression: false },
-      { expressionText: '70 years', isExpression: true }
+      { expressionText: '70 years', isExpression: true },
+      { expressionText: '.', isExpression: false }
     ];
 
     expect(expressionPhrase).toEqual(expectedOutput);
@@ -454,7 +464,8 @@ describe('Demographics elements support special case phrases', () => {
 
     const expectedOutput = [
       { expressionText: 'The patient\'s gender is', isExpression: false },
-      { expressionText: 'Male', isExpression: true }
+      { expressionText: 'Male', isExpression: true },
+      { expressionText: '.', isExpression: false }
     ];
 
     expect(expressionPhrase).toEqual(expectedOutput);

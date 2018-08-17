@@ -1,87 +1,5 @@
 import _ from 'lodash';
-import Validators from './validators';
-
-/**
- * Determines if the artifact is blank (meaning there is no meaningful user-entered information).
- * This is used to determine if an artifact should be auto-saved.
- * WARNING: This function may be fragile to changes.  This should be revisited when Redux is used.
- * @param {Object} artifact - the artifact to check for blankness
- * @return {boolean} true if the artifact has no meaningful data, false otherwise
- */
-export function isBlankArtifact(artifact) {
-  // If it has an ID, it is pre-existing and considered non-blank
-  if (artifact._id) {
-    return false;
-  }
-  // If it has a non-default name or version, it is NOT blank
-  if (artifact.name !== 'Untitled Artifact' || artifact.version !== '1') {
-    return false;
-  }
-  // If the counter is above 4, the user must have entered something somewhere.
-  // This is probably the fastest detection of many changes, but is not complete.
-  if (artifact.uniqueIdCounter > 4) {
-    return false;
-  }
-  // If it has any inclusion elements, it is NOT blank
-  if (artifact.expTreeInclude.childInstances && artifact.expTreeInclude.childInstances.length > 0) {
-    return false;
-  }
-  // If it has any exclusion elements, it is NOT blank
-  if (artifact.expTreeInclude.childInstances && artifact.expTreeExclude.childInstances.length > 0) {
-    return false;
-  }
-  // If it has more than one recommendation, it is NOT blank
-  if (artifact.recommendations.length > 1) {
-    return false;
-  }
-  // If it has only one recommendation, check if it is a blank recommendation
-  if (artifact.recommendations.length === 1) {
-    const r = artifact.recommendations[0];
-    if (r.grade !== 'A' || r.text !== '' || r.rationale !== '' || r.subpopulations.length > 1) {
-      return false;
-    }
-  }
-  // If it has more than three subpopulations, it is not blank
-  if (artifact.subpopulations.length > 3) {
-    return false;
-  }
-  // If it has exactly three populations, check if the third is a blank population
-  // (The first two populations are always hard-coded and un-editable)
-  if (artifact.subpopulations.length === 3) {
-    const subpop = artifact.subpopulations[2];
-    if (subpop.subpopulationName !== 'Subpopulation 1') {
-      return false;
-    }
-    if (subpop.childInstances.length > 0) {
-      return false;
-    }
-  }
-  // If it has any parameters, it is NOT blank
-  if (artifact.parameters.length > 0) {
-    return false;
-  }
-  // If the error statement has an else clause, it is NOT blank
-  if (artifact.errorStatement.elseClause) {
-    return false;
-  }
-  // If it has more than one error statement (else if), it is NOT blank
-  if (artifact.errorStatement.statements.length > 1) {
-    return false;
-  }
-  // If it has exactly one error statement, check if it is blank
-  if (artifact.errorStatement.statements.length === 1) {
-    const st = artifact.errorStatement.statements[0];
-    if (st.child !== null || st.thenClause !== '') {
-      return false;
-    }
-    const c = st.condition;
-    if (c.label !== null || c.value !== null) {
-      return false;
-    }
-  }
-  // If we safely made it here, it is BLANK!
-  return true;
-}
+import Validators from '../validators';
 
 function getOperation(operator) {
   switch (operator) {
@@ -109,12 +27,8 @@ function getExpressionSentenceValue(modifier) {
   // TODO Eventually move the object for each expression onto modifier.js objects. This will likely require a migration.
   const expressionSentenceValues = {
     VerifiedObservation: { modifierText: 'verified', leadingText: '', type: 'list' },
-    WithUnit: {
-      modifierText: 'with unit', leadingText: '', type: 'post-list'
-    },
-    ValueComparisonObservation: {
-      modifierText: 'greater than a number', leadingText: 'whose value is', type: 'post'
-    },
+    WithUnit: { modifierText: '', leadingText: 'with unit', type: 'post-list' },
+    ValueComparisonObservation: { modifierText: 'greater than a number', leadingText: 'whose value is', type: 'post' },
     QuantityValue: { modifierText: 'quantity value', leadingText: '', type: 'value' }, // Will not be diplayed in phrase
     ConceptValue: { modifierText: 'concept value', leadingText: '', type: 'value' }, // Will not be diplayed in phrase
     Qualifier: { modifierText: 'with a code', leadingText: '', type: 'post' },
@@ -127,24 +41,18 @@ function getExpressionSentenceValue(modifier) {
     InProgressProcedure: { modifierText: 'in progress', leadingText: '', type: 'list' },
     ActiveMedicationStatement: { modifierText: 'active', leadingText: '', type: 'list' },
     ActiveMedicationOrder: { modifierText: 'active', leadingText: '', type: 'list' },
-    ActiveOrConfirmedAllergyIntolerance: {
-      modifierText: 'active or confirmed', leadingText: '', type: 'list'
-    },
+    ActiveOrConfirmedAllergyIntolerance: { modifierText: 'active or confirmed', leadingText: '', type: 'list' },
     MostRecentObservation: { modifierText: 'most recent', leadingText: '', type: 'descriptor' },
     MostRecentProcedure: { modifierText: 'most recent', leadingText: '', type: 'descriptor' },
     LookBackObservation: { modifierText: 'look back', leadingText: 'which occurred', type: 'post' },
     LookBackCondition: { modifierText: 'look back', leadingText: 'which occurred', type: 'post' },
-    LookBackMedicationOrder: {
-      modifierText: 'look back', leadingText: 'which occurred', type: 'post'
-    },
-    LookBackMedicationStatement: {
-      modifierText: 'look back', leadingText: 'which occurred', type: 'post'
-    },
+    LookBackMedicationOrder: { modifierText: 'look back', leadingText: 'which occurred', type: 'post' },
+    LookBackMedicationStatement: { modifierText: 'look back', leadingText: 'which occurred', type: 'post' },
     LookBackProcedure: { modifierText: 'look back', leadingText: 'which occurred', type: 'post' },
     BooleanExists: { modifierText: 'exists', leadingText: 'that', type: 'BooleanExists' },
     BooleanComparison: { modifierText: 'is true', leadingText: 'which', type: 'post' },
-    CheckExistence: { modifierText: 'is null', leadingText: 'which', type: 'post' },
-    BooleanNot: { modifierText: 'not', leadingText: '', type: 'not' },
+    CheckExistence: { modifierText: 'is null', leadingText: '', type: 'post' },
+    BooleanNot: { modifierText: 'not', leadingText: 'There does', type: 'not' },
     InProgress: { modifierText: 'in progress', leadingText: '', type: 'list' }
   };
 
@@ -162,7 +70,7 @@ function getExpressionSentenceValue(modifier) {
     // Apply any user provided values needed
     switch (modifier.id) {
       case 'WithUnit': {
-        expressionSentenceValues[modifier.id].modifierText = `with unit ${modifier.values.unit}`;
+        expressionSentenceValues[modifier.id].modifierText = `${modifier.values.unit}`;
         break;
       }
       case 'ValueComparisonObservation': {
@@ -218,35 +126,37 @@ function getExpressionSentenceValue(modifier) {
     }
     return expressionSentenceValues[modifier.id];
   }
+
   // If the modifier is not listed in the object, return just the name of the modifier to be placed at the end.
   return { modifierText: _.lowerCase(modifier.name), leadingText: '', type: 'post' };
 }
 
 function addVSandCodeText(expressionArray, valueSets, codes) {
+  // If there is more than one value set/code, add the rest to a tooltip.
   let tooltipText = '';
-
   const valueSetValues = valueSets.map(vs => vs.name);
   const codeValues = codes.map(code => (code.display ? code.display : `${code.code} (${code.codeSystem.name})`));
-  const allValues = valueSetValues.concat(codeValues); // A list of all value sets and codes to be added.
+  const allValues = valueSetValues.concat(codeValues);
 
   if (allValues.length > 0) {
     expressionArray.push({ expressionText: 'with a code from', isExpression: false });
   }
 
   allValues.forEach((name, i) => {
-    if (i > 2) { // Anything after the first three values gets added to the tooltip.
-      if (i === allValues.length - 1) { // Add 'or' before the last value listed.
-        tooltipText += ' or';
+    if (i > 2) { // Anything after the first three values gets added to the tooltip
+      if (i === allValues.length - 1) { // Add 'or' before the last value listed
+        tooltipText += 'or';
       }
       tooltipText += ` ${name},`;
-    } else { // Any value within the first three values gets added to the phrase text individually.
-      if (i === allValues.length - 1 && i !== 0) { // Add 'or' before the last value listed, as long as it is not the only one.
+    } else { // Any value within the first three values gets added to the phrase text individually
+      if (i === allValues.length - 1 && i !== 0) { // Add 'or' before the last value listed, as long as it is not the only one
         expressionArray.push({ expressionText: 'or', isExpression: false });
       }
-      if ((i === 0 && allValues.length === 2) || i === allValues.length - 1) { // If there are only two values to add OR you are at the end of the list, don't add a comma after the name.
-        expressionArray.push({ expressionText: `${name}`, isExpression: true });
+      // If there are only two values to add OR you are at the end of the list, don't add a comma after the name
+      if ((i === 0 && allValues.length === 2) || i === allValues.length - 1) {
+        expressionArray.push({ expressionText: name, isExpression: true });
       } else {
-        expressionArray.push({ expressionText: `${name}`, isExpression: true });
+        expressionArray.push({ expressionText: name, isExpression: true });
         expressionArray.push({ expressionText: ',', isExpression: false });
       }
     }
@@ -255,16 +165,14 @@ function addVSandCodeText(expressionArray, valueSets, codes) {
   if (tooltipText) {
     expressionArray.push({ expressionText: 'or', isExpression: false });
     tooltipText = tooltipText.slice(0, -1); // Remove trailing comma
-    expressionArray.push({
-      expressionText: '...', isExpression: true, tooltipText: `...${tooltipText}`
-    });
+    expressionArray.push({ expressionText: '...', isExpression: true, tooltipText: `...${tooltipText}` });
   }
 
   return expressionArray;
 }
 
 function addExpressionText(expressionArray, expression) {
-  // Add any texted needed ahead of the modifier
+  // Add any text needed ahead of the modifier
   if (expression.leadingText) {
     expressionArray.push({ expressionText: expression.leadingText, isExpression: false });
   }
@@ -293,6 +201,7 @@ function getOrderedExpressionSentenceArrayForAgeRange(expressionArray, ageParame
   expressionArray.forEach((expression) => {
     orderedExpressionArray = addExpressionText(orderedExpressionArray, expression);
   });
+  orderedExpressionArray.push({ expressionText: '.', isExpression: false });
   return orderedExpressionArray;
 }
 
@@ -302,6 +211,7 @@ function getOrderedExpressionSentenceArrayForGender(genderParameter) {
   if (genderParameter[0].value) {
     orderedExpressionArray.push({ expressionText: genderParameter[0].value.name, isExpression: true });
   }
+  orderedExpressionArray.push({ expressionText: '.', isExpression: false });
   return orderedExpressionArray;
 }
 
@@ -323,124 +233,152 @@ function getOrderedExpressionSentenceArrayForParameters(expressionArray, returnT
   remainingExpressionArray.forEach((expression) => {
     orderedExpressionArray = addExpressionText(orderedExpressionArray, expression);
   });
+  orderedExpressionArray.push({ expressionText: '.', isExpression: false });
   return orderedExpressionArray;
 }
 
 // Build the array for expression phrases by pushing each type of expression in a set order.
 function orderExpressionSentenceArray(expressionArray, type, valueSets, codes, returnType, otherParameters) {
-  let remainingExpressionArray = expressionArray;
-  let orderedExpressionArray = [];
-
   // Specific cases for Age Range, Gender, and Parameters since they do not follow the same pattern as VSAC elements.
   if (type === 'Age Range') {
     return getOrderedExpressionSentenceArrayForAgeRange(expressionArray, otherParameters);
   }
   if (type === 'Gender') {
-    // No modifiers can be applied to Gender elements.
+    // No modifiers can be applied to gender elements
     return getOrderedExpressionSentenceArrayForGender(otherParameters);
   }
   if (type === 'parameter') {
     return getOrderedExpressionSentenceArrayForParameters(expressionArray, returnType);
   }
 
-  remainingExpressionArray = remainingExpressionArray.filter((expression) => {
-    if (expression.type === 'not') {
-      orderedExpressionArray.push({ expressionText: _.capitalize(expression.modifierText), isExpression: true });
-      return false;
-    }
-    return true;
+  let orderedExpressionArray = [];
+  const returnsPlural = returnType.includes('list_of_');
+  const returnsBoolean = returnType === 'boolean';
+  const notExpression = expressionArray.find(expression => expression.type === 'not');
+  const existsExpression = expressionArray.find(expression => expression.type === 'BooleanExists');
+  const descriptorExpression = expressionArray.find(expression => expression.type === 'descriptor');
+  const listExpressions = expressionArray.filter(expression => expression.type === 'list');
+  const postListExpressions = expressionArray.find(expression => expression.type === 'post-list');
+  const checkExistenceExpression = expressionArray.find((expression) => {
+    const nulls = ['is null', 'is not null'];
+    return nulls.indexOf(expression.modifierText) !== -1;
   });
-
-  // Add on descriptors (highest, most recent, etc)
-  remainingExpressionArray = remainingExpressionArray.filter((expression) => {
-    if (expression.type === 'descriptor') {
-      orderedExpressionArray = addExpressionText(orderedExpressionArray, expression);
-      return false; // Filter out the modifier that has been applied.
-    }
-    return true;
+  const otherExpressions = expressionArray.filter((expression) => {
+    const knownTypes = ['not', 'BooleanExists', 'descriptor', 'list', 'post-list', 'value'];
+    return knownTypes.indexOf(expression.type) === -1;
   });
+  let hasStarted = false;
 
-  // Group lists at the beginning of orderedExpressionArray. Filter them off the list of remaining expressions.
-  remainingExpressionArray = remainingExpressionArray.filter((expression) => {
-    if (expression.type === 'list') {
-      orderedExpressionArray = addExpressionText(orderedExpressionArray, expression);
-      return false;
+  // Handle not and exists
+  if (existsExpression) {
+    if (notExpression) {
+      orderedExpressionArray.push({ expressionText: 'There does', isExpression: false });
+      orderedExpressionArray.push({ expressionText: 'not', isExpression: true });
+      orderedExpressionArray.push({ expressionText: 'exist', isExpression: true });
+      hasStarted = true;
+      if (checkExistenceExpression) {
+        orderedExpressionArray.push({ expressionText: 'a case where', isExpression: false });
+      }
+    } else {
+      orderedExpressionArray.push({ expressionText: 'There', isExpression: false });
+      orderedExpressionArray.push({ expressionText: 'exists', isExpression: true });
+      hasStarted = true;
     }
-    return true;
-  });
-
-  // Add the type of element (Observations, etc)
-  let typeToAdd = _.lowerCase(type);
-  if (returnType.includes('list_of_')) {
-    typeToAdd = `${typeToAdd}s`;
+  } else if (!returnsPlural && returnsBoolean && !checkExistenceExpression) {
+    orderedExpressionArray.push({ expressionText: 'There exists', isExpression: false });
+    hasStarted = true;
+  } else if (notExpression) {
+    if (checkExistenceExpression) {
+      orderedExpressionArray.push({ expressionText: 'It is', isExpression: false });
+      orderedExpressionArray.push({ expressionText: 'not', isExpression: true });
+      orderedExpressionArray.push({ expressionText: 'the case that', isExpression: false });
+      hasStarted = true;
+    }
   }
-  orderedExpressionArray.push({ expressionText: typeToAdd, isExpression: false });
 
-  // Add value sets and codes. If there is more than one value set/code, add the rest to a tooltip.
+  // Handle descriptors (ex. highest, most recent)
+  if (descriptorExpression) {
+    const descriptorText = descriptorExpression.modifierText;
+    const descriptorArticle = descriptorText === 'highest' ? 'the' : getArticle(descriptorText);
+    if (hasStarted) {
+      orderedExpressionArray.push({ expressionText: descriptorArticle, isExpression: false });
+      orderedExpressionArray.push({ expressionText: descriptorText, isExpression: true });
+    } else {
+      orderedExpressionArray.push({ expressionText: _.capitalize(descriptorArticle), isExpression: false });
+      orderedExpressionArray.push({ expressionText: descriptorText, isExpression: true });
+      hasStarted = true;
+    }
+  }
+
+  // Handle lists (ex. verified, active, confirmed)
+  if (listExpressions.length > 0) {
+    listExpressions.forEach((listExpression, index) => {
+      const listText = listExpression.modifierText;
+      const listArticle = getArticle(listText);
+      if (hasStarted) {
+        if (!descriptorExpression && index === 0) {
+          orderedExpressionArray.push({ expressionText: listArticle, isExpression: false });
+        }
+        orderedExpressionArray.push({ expressionText: listText, isExpression: true });
+      } else {
+        orderedExpressionArray.push({ expressionText: _.capitalize(listText), isExpression: true });
+        hasStarted = true;
+      }
+    });
+  }
+
+  // Handle element types (ex. observation, procedure)
+  const elementText = _.lowerCase(type);
+  const elementArticle = getArticle(elementText);
+  if (hasStarted) {
+    if (returnsPlural) {
+      orderedExpressionArray.push({ expressionText: `${elementText}s`, isExpression: false });
+    } else if (descriptorExpression || listExpressions.length > 0) {
+      orderedExpressionArray.push({ expressionText: elementText, isExpression: false });
+    } else {
+      orderedExpressionArray.push({ expressionText: elementArticle, isExpression: false });
+      orderedExpressionArray.push({ expressionText: elementText, isExpression: false });
+    }
+  } else if (returnsPlural) {
+    orderedExpressionArray.push({ expressionText: `${_.capitalize(elementText)}s`, isExpression: false });
+    hasStarted = true;
+  } else {
+    orderedExpressionArray.push({ expressionText: _.capitalize(elementArticle), isExpression: false });
+    orderedExpressionArray.push({ expressionText: elementText, isExpression: false });
+    hasStarted = true;
+  }
+
+  // Handle value sets and codes
   orderedExpressionArray = addVSandCodeText(orderedExpressionArray, valueSets, codes);
 
-  // Add post-list types (with unit)
-  remainingExpressionArray = remainingExpressionArray.filter((expression) => {
-    if (expression.type === 'post-list') {
-      orderedExpressionArray = addExpressionText(orderedExpressionArray, expression);
-      return false;
-    }
-    return true;
-  });
+  // Handle post-lists (with unit)
+  if (postListExpressions) {
+    orderedExpressionArray = addExpressionText(orderedExpressionArray, postListExpressions);
+  }
 
-  // Add exists
-  remainingExpressionArray = remainingExpressionArray.filter((expression) => {
-    if (expression.type === 'BooleanExists') {
-      orderedExpressionArray.push({ expressionText: expression.leadingText, isExpression: false });
-      orderedExpressionArray.push({ expressionText: expression.modifierText, isExpression: true });
-      return false; // False filters out the exist modifier since it has been added.
-    }
-    return true; // Modifier not used.
-  });
-
-  // Filter out Concept/Quantity value without adding to the phrase.
-  remainingExpressionArray = remainingExpressionArray.filter((expression) => {
-    if (expression.type === 'value') {
-      return false;
-    }
-    return true;
-  });
-
-  // Add any remaining expressions at the end.
-  remainingExpressionArray.forEach((expression) => {
+  // Handle any remaining expressions at the end, except concept/quantity value
+  otherExpressions.forEach((expression) => {
     orderedExpressionArray = addExpressionText(orderedExpressionArray, expression);
   });
 
-  // Update the article (a/an) that was added based on the first word in the phrase.
-  // If 'not' is applied, the article will follow. Otherwise, it starts the phrase.
-  if (expressionArray.findIndex(expression => expression.type === 'not') !== -1) {
-    const indexOfArticle = 1;
-    if (returnType.includes('list_of_')) {
-      orderedExpressionArray.splice(indexOfArticle, 0, { expressionText: 'list of', isExpression: false });
-    }
-    const wordToFollow = orderedExpressionArray[indexOfArticle].expressionText;
-    const article = getArticle(wordToFollow);
-    orderedExpressionArray.splice(indexOfArticle, 0, { expressionText: article, isExpression: false });
-  } else {
-    const indexOfArticle = 0;
-    if (returnType.includes('list_of_')) {
-      orderedExpressionArray.splice(indexOfArticle, 0, { expressionText: 'list of', isExpression: false });
-    }
-    const wordToFollow = orderedExpressionArray[indexOfArticle].expressionText;
-    const article = getArticle(wordToFollow);
-    orderedExpressionArray.splice(indexOfArticle, 0, { expressionText: _.capitalize(article), isExpression: false });
-  }
+  // Add period to the end
+  orderedExpressionArray.push({ expressionText: '.', isExpression: false });
 
   return orderedExpressionArray;
 }
 
-export function convertToExpression(expressionsArray = [], type, valueSets, codes, returnType, otherParameters = []) {
+export default function convertToExpression(
+  expressionsArray = [],
+  type,
+  valueSets,
+  codes,
+  returnType,
+  otherParameters = []
+) {
   const expressionSentenceArray = expressionsArray.reduce((accumulator, currentExpression) => {
-    if (getExpressionSentenceValue(currentExpression)) {
-      const expressionSentenceValue = getExpressionSentenceValue(currentExpression);
-      if (!_.isEqual(expressionSentenceValue, {})) {
-        accumulator.push(expressionSentenceValue);
-      }
+    const expressionSentenceValue = getExpressionSentenceValue(currentExpression);
+    if (getExpressionSentenceValue(currentExpression) && !_.isEqual(expressionSentenceValue, {})) {
+      accumulator.push(expressionSentenceValue);
     }
     return accumulator;
   }, []);
