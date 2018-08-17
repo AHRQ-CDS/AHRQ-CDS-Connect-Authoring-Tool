@@ -58,8 +58,13 @@ class Patient extends Component {
 
     if (results) {
       const patientResults = results.patientResults[Object.keys(results.patientResults)[0]];
-      const patientNameGiven = patientExecuted.entry[0].resource.name[0].given[0];
-      const patientNameFamily = patientExecuted.entry[0].resource.name[0].family[0];
+      const patientResource = _.chain(patientExecuted)
+      .get('entry')
+      .find({ resource: { resourceType: 'Patient' } })
+      .get('resource')
+      .value();
+      const patientNameGiven = patientResource.name[0].given[0];
+      const patientNameFamily = patientResource.name[0].family[0];
 
       return (
         <Jumbotron className="patient-table">
