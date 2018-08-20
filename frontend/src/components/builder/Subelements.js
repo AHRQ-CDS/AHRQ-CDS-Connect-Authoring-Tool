@@ -21,7 +21,7 @@ export default class Subelements extends Component {
   render() {
     return <div className="card-group card-group__top">
       {this.props.instance.subelements.map((s, i) =>
-        <div className="card-group-section" key={i}>
+        <div className="card-group-section subpopulation" key={i}>
           <TemplateInstance
             valueSets={this.props.valueSets}
             loadValueSets={this.props.loadValueSets}
