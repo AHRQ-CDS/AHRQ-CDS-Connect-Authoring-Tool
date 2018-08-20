@@ -27,7 +27,8 @@ const defaultState = {
     executeStatus: null,
     results: null,
     artifactExecuted: null,
-    patientExecuted: null
+    patientExecuted: null,
+    errorMessage: null
   },
   publishEnabled: false
 };
@@ -158,13 +159,18 @@ export default function auth(state = defaultState, action) {
           executeStatus: 'success',
           results: action.data,
           artifactExecuted: action.artifact,
-          patientExecuted: action.patient
+          patientExecuted: action.patient,
+          errorMessage: null
         }
       };
     case types.EXECUTE_ARTIFACT_FAILURE:
       return {
         ...state,
-        executeArtifact: { isExecuting: false, executeStatus: 'failure' }
+        executeArtifact: {
+          isExecuting: false,
+          executeStatus: 'failure',
+          errorMessage: `Execute failed. ${action.statusText}.`
+        }
       };
     case types.CLEAR_ARTIFACT_VALIDATION_WARNINGS:
       return {

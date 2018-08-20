@@ -8,18 +8,32 @@ import { Jumbotron, Breadcrumb } from 'reactstrap';
 import _ from 'lodash';
 
 import { loadPatients, addPatient, deletePatient } from '../actions/testing';
-import { loadArtifacts, executeCQLArtifact } from '../actions/artifacts';
+import { loadArtifacts, clearArtifactValidationWarnings, executeCQLArtifact } from '../actions/artifacts';
 import { loginVSACUser, setVSACAuthStatus } from '../actions/vsac';
 
 import patientProps from '../prop-types/patient';
 import artifactProps from '../prop-types/artifact';
 
 import PatientTable from '../components/testing/PatientTable';
+import ELMErrorModal from '../components/builder/ELMErrorModal';
 
 class Patient extends Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      showELMErrorModal: false,
+      uploadError: false
+    };
+  }
+
   componentWillMount() {
     this.props.loadPatients();
     this.props.loadArtifacts();
+  }
+
+  componentWillReceiveProps(newProps) {
+    this.setState({ showELMErrorModal: newProps.downloadedArtifact.elmErrors.length > 0 });
   }
 
   addPatient = (patient) => {
@@ -34,17 +48,25 @@ class Patient extends Component {
           .get('resource')
           .value())) {
         this.props.addPatient(patientData);
+        this.setState({ uploadError: false });
       } else {
-        // eslint-disable-next-line no-alert
-        alert('Invalid file type. Only valid FHIR DSTU2 JSON Bundles are accepted.');
+        this.setState({ uploadError: true });
       }
     }.bind(this);
     try {
       reader.readAsText(patient[0]);
     } catch (error) {
-      // eslint-disable-next-line no-alert
-      alert('Invalid file type. Only valid FHIR DSTU2 JSON Bundles are accepted.');
+      this.setState({ uploadError: true });
     }
+  }
+
+  showELMErrorModal = () => {
+    this.setState({ showELMErrorModal: true });
+  }
+
+  closeELMErrorModal = () => {
+    this.setState({ showELMErrorModal: false });
+    this.props.clearArtifactValidationWarnings();
   }
 
   renderBoolean = (bool) => {
@@ -59,10 +81,10 @@ class Patient extends Component {
     if (results) {
       const patientResults = results.patientResults[Object.keys(results.patientResults)[0]];
       const patientResource = _.chain(patientExecuted)
-      .get('entry')
-      .find({ resource: { resourceType: 'Patient' } })
-      .get('resource')
-      .value();
+        .get('entry')
+        .find({ resource: { resourceType: 'Patient' } })
+        .get('resource')
+        .value();
       const patientNameGiven = patientResource.name[0].given[0];
       const patientNameFamily = patientResource.name[0].family[0];
 
@@ -132,7 +154,11 @@ class Patient extends Component {
       return <Breadcrumb className="execution-message">Log in to VSAC to execute CQL for a patient below.</Breadcrumb>;
     }
 
-    return <Breadcrumb className="execution-message">Execute CQL for a patient below.</Breadcrumb>;
+    return <Breadcrumb className="execution-message">
+      {this.props.errorMessage
+        && <div className="warning">{this.props.errorMessage}</div>}
+      Execute CQL for a patient below.
+    </Breadcrumb>;
   }
 
   renderPatientsTable() {
@@ -170,6 +196,9 @@ class Patient extends Component {
           accept="application/json" multiple={false}>
           {this.renderDropzoneIcon()}
 
+          {this.state.uploadError
+              && <div className="warning">Invalid file type. Only valid FHIR DSTU2 JSON Bundles are accepted.</div>}
+
           <p>Drop a valid JSON FHIR DSTU2 bundle containing a patient here, or click to browse.</p>
         </Dropzone>
 
@@ -177,6 +206,12 @@ class Patient extends Component {
           {this.renderResultsTable()}
           {this.renderPatientsTable()}
         </div>
+
+        <ELMErrorModal
+          isOpen={this.state.showELMErrorModal}
+          closeModal={this.closeELMErrorModal}
+          errors={this.props.downloadedArtifact.elmErrors}
+          isForTesting={true}/>
       </div>
     );
   }
@@ -211,6 +246,7 @@ function mapDispatchToProps(dispatch) {
     addPatient,
     deletePatient,
     loadArtifacts,
+    clearArtifactValidationWarnings,
     executeCQLArtifact,
     loginVSACUser,
     setVSACAuthStatus
@@ -222,7 +258,9 @@ function mapStateToProps(state) {
   return {
     patients: state.testing.patients,
     artifacts: state.artifacts.artifacts,
+    downloadedArtifact: state.artifacts.downloadArtifact,
     results: state.artifacts.executeArtifact.results,
+    errorMessage: state.artifacts.executeArtifact.errorMessage,
     isExecuting: state.artifacts.executeArtifact.isExecuting,
     isAdding: state.testing.addPatient.isAdding,
     artifactExecuted: state.artifacts.executeArtifact.artifactExecuted,

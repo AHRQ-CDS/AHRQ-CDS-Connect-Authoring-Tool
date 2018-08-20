@@ -408,6 +408,8 @@ function executeArtifactSuccess(data, artifact, patient) {
 function executeArtifactFailure(error) {
   return {
     type: types.EXECUTE_ARTIFACT_FAILURE,
+    status: error.response ? error.response.status : '',
+    statusText: error.response ? error.response.statusText : ''
   };
 }
 
@@ -453,6 +455,7 @@ export function executeCQLArtifact(artifact, patient, vsacCredentials, codeServi
         })
         .catch((error) => {
           dispatch(validateArtifactFailure(error));
+          dispatch(executeArtifactFailure(error));
           reject();
         });
     }).then(res => performExecuteArtifact(res.data.elmFiles, artifact.name, patient, vsacCredentials, codeService))

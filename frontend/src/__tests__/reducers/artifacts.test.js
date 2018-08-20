@@ -34,7 +34,8 @@ describe.only('artifacts reducer', () => {
         executeStatus: null,
         results: null,
         artifactExecuted: null,
-        patientExecuted: null
+        patientExecuted: null,
+        errorMessage: null
       },
       publishEnabled: false
     });
