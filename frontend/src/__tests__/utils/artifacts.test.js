@@ -46,8 +46,7 @@ test('Simple modifiers Active, Confirmed, Exists builds expected phrase', () => 
     { expressionText: 'confirmed', isExpression: true },
     { expressionText: 'condition', isExpression: false },
     { expressionText: 'with a code from', isExpression: false },
-    { expressionText: 'Diabetes', isExpression: true },
-    { expressionText: '.', isExpression: false }
+    { expressionText: 'Diabetes', isExpression: true }
   ];
 
   expect(expressionPhrase).toEqual(expectedOutput);
@@ -120,8 +119,7 @@ test('More complicated modifiers, including Qualifier, builds expected phrase', 
     { expressionText: 'which occurred', isExpression: false },
     { expressionText: 'within the last 14 years', isExpression: true },
     { expressionText: 'whose value is a code from', isExpression: false },
-    { expressionText: 'Smoker', isExpression: true },
-    { expressionText: '.', isExpression: false }
+    { expressionText: 'Smoker', isExpression: true }
   ];
 
   expect(expressionPhrase).toEqual(expectedOutput);
@@ -208,8 +206,7 @@ test('More complicated modifiers, including Value Comparison, builds correct phr
     { expressionText: 'with', isExpression: false },
     { expressionText: 'units converted from mmol/L to mg/dL for blood cholesterol', isExpression: true },
     { expressionText: 'whose value is', isExpression: false },
-    { expressionText: 'greater than or equal to 120 mg/dL and less than 300 mg/dL', isExpression: true },
-    { expressionText: '.', isExpression: false }
+    { expressionText: 'greater than or equal to 120 mg/dL and less than 300 mg/dL', isExpression: true }
   ];
 
   expect(expressionPhrase).toEqual(expectedOutput);
@@ -270,8 +267,7 @@ test('More complicated expression, with Highest, Not, and Is Null, builds correc
     { expressionText: 'observation', isExpression: false },
     { expressionText: 'with a code from', isExpression: false },
     { expressionText: 'test code', isExpression: true },
-    { expressionText: 'is null', isExpression: true },
-    { expressionText: '.', isExpression: false }
+    { expressionText: 'is null', isExpression: true }
   ];
 
   expect(expressionPhrase).toEqual(expectedOutput);
@@ -359,8 +355,7 @@ test('Only validated modifiers are added the the phrase', () => {
     { expressionText: 'most recent', isExpression: true },
     { expressionText: 'observation', isExpression: false },
     { expressionText: 'with a code from', isExpression: false },
-    { expressionText: 'LDL', isExpression: true },
-    { expressionText: '.', isExpression: false }
+    { expressionText: 'LDL', isExpression: true }
   ];
 
   expect(expressionPhrase).toEqual(expectedOutput);
@@ -401,8 +396,7 @@ test('All value sets and codes are added to phrase, but only first three are dis
     { expressionText: 'Test code', isExpression: true },
     { expressionText: ',', isExpression: false },
     { expressionText: 'or', isExpression: false },
-    { expressionText: '...', isExpression: true, tooltipText: '...or 432-1 (CS2)' },
-    { expressionText: '.', isExpression: false }
+    { expressionText: '...', isExpression: true, tooltipText: '...or 432-1 (CS2)' }
   ];
 
   expect(expressionPhrase).toEqual(expectedOutput);
@@ -420,8 +414,7 @@ test('Elements that have a return type of a list indicates plurality in the phra
   const expectedOutput = [
     { expressionText: 'Observations', isExpression: false },
     { expressionText: 'with a code from', isExpression: false },
-    { expressionText: 'LDL', isExpression: true },
-    { expressionText: '.', isExpression: false }
+    { expressionText: 'LDL', isExpression: true }
   ];
 
   expect(expressionPhrase).toEqual(expectedOutput);
@@ -443,8 +436,7 @@ describe('Demographics elements support special case phrases', () => {
       { expressionText: 'between', isExpression: false },
       { expressionText: '18 years', isExpression: true },
       { expressionText: 'and', isExpression: false },
-      { expressionText: '70 years', isExpression: true },
-      { expressionText: '.', isExpression: false }
+      { expressionText: '70 years', isExpression: true }
     ];
 
     expect(expressionPhrase).toEqual(expectedOutput);
@@ -464,8 +456,7 @@ describe('Demographics elements support special case phrases', () => {
 
     const expectedOutput = [
       { expressionText: 'The patient\'s gender is', isExpression: false },
-      { expressionText: 'Male', isExpression: true },
-      { expressionText: '.', isExpression: false }
+      { expressionText: 'Male', isExpression: true }
     ];
 
     expect(expressionPhrase).toEqual(expectedOutput);

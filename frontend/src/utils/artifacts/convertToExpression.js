@@ -202,7 +202,7 @@ function getOrderedExpressionSentenceArrayForAgeRange(expressionArray, ageParame
   expressionArray.forEach((expression) => {
     orderedExpressionArray = addExpressionText(orderedExpressionArray, expression);
   });
-  orderedExpressionArray.push({ expressionText: '.', isExpression: false });
+
   return orderedExpressionArray;
 }
 
@@ -212,7 +212,7 @@ function getOrderedExpressionSentenceArrayForGender(genderParameter) {
   if (genderParameter[0].value) {
     orderedExpressionArray.push({ expressionText: genderParameter[0].value.name, isExpression: true });
   }
-  orderedExpressionArray.push({ expressionText: '.', isExpression: false });
+
   return orderedExpressionArray;
 }
 
@@ -223,6 +223,7 @@ function getOrderedExpressionSentenceArrayForParameters(expressionArray, returnT
     expressionText: `The value of the ${_.lowerCase(returnType)} parameter is`,
     isExpression: false
   });
+
   remainingExpressionArray = remainingExpressionArray.filter((expression) => {
     if (expression.type === 'not') {
       orderedExpressionArray = addExpressionText(orderedExpressionArray, expression);
@@ -230,11 +231,12 @@ function getOrderedExpressionSentenceArrayForParameters(expressionArray, returnT
     }
     return true;
   });
+
   orderedExpressionArray.push({ expressionText: 'met', isExpression: false });
   remainingExpressionArray.forEach((expression) => {
     orderedExpressionArray = addExpressionText(orderedExpressionArray, expression);
   });
-  orderedExpressionArray.push({ expressionText: '.', isExpression: false });
+
   return orderedExpressionArray;
 }
 
@@ -361,9 +363,6 @@ function orderExpressionSentenceArray(expressionArray, type, valueSets, codes, r
   otherExpressions.forEach((expression) => {
     orderedExpressionArray = addExpressionText(orderedExpressionArray, expression);
   });
-
-  // Add period to the end
-  orderedExpressionArray.push({ expressionText: '.', isExpression: false });
 
   return orderedExpressionArray;
 }
