@@ -44,6 +44,7 @@ function getExpressionSentenceValue(modifier) {
     ActiveOrConfirmedAllergyIntolerance: { modifierText: 'active or confirmed', leadingText: '', type: 'list' },
     MostRecentObservation: { modifierText: 'most recent', leadingText: '', type: 'descriptor' },
     MostRecentProcedure: { modifierText: 'most recent', leadingText: '', type: 'descriptor' },
+    MostRecentCondition: { modifierText: 'most recent', leadingText: '', type: 'descriptor' },
     LookBackObservation: { modifierText: 'look back', leadingText: 'which occurred', type: 'post' },
     LookBackCondition: { modifierText: 'look back', leadingText: 'which occurred', type: 'post' },
     LookBackMedicationOrder: { modifierText: 'look back', leadingText: 'which occurred', type: 'post' },
@@ -92,7 +93,7 @@ function getExpressionSentenceValue(modifier) {
             if (modifier.values.code.display) {
               valueSetText = modifier.values.code.display;
             } else {
-              valueSetText = modifier.values.code.code;
+              valueSetText = `${modifier.values.code.code} (${modifier.values.code.codeSystem.name})`;
             }
           }
         }
@@ -377,7 +378,7 @@ export default function convertToExpression(
 ) {
   const expressionSentenceArray = expressionsArray.reduce((accumulator, currentExpression) => {
     const expressionSentenceValue = getExpressionSentenceValue(currentExpression);
-    if (getExpressionSentenceValue(currentExpression) && !_.isEqual(expressionSentenceValue, {})) {
+    if (expressionSentenceValue && !_.isEqual(expressionSentenceValue, {})) {
       accumulator.push(expressionSentenceValue);
     }
     return accumulator;

@@ -49,8 +49,10 @@ export default class TemplateInstance extends Component {
 
     this.state = {
       showElement: true,
-      relevantModifiers: (this.modifersByInputType[this.props.templateInstance.returnType] || []),
-      showModifiers: false
+      relevantModifiers: (this.modifersByInputType[props.templateInstance.returnType] || []),
+      showModifiers: false,
+      otherInstances: this.getOtherInstances(props),
+      returnType: props.templateInstance.returnType
     };
   }
 
@@ -58,11 +60,6 @@ export default class TemplateInstance extends Component {
     this.props.templateInstance.parameters.forEach((param) => {
       this.setState({ [param.id]: param.value });
     });
-
-    const otherInstances = this.getOtherInstances(this.props);
-    this.setState({ otherInstances });
-
-    this.setState({ returnType: this.props.templateInstance.returnType });
   }
 
   componentDidMount() {
@@ -71,16 +68,15 @@ export default class TemplateInstance extends Component {
 
   componentWillReceiveProps(nextProps) {
     const otherInstances = this.getOtherInstances(nextProps);
-    let returnType;
-    if (!(_.isEmpty(nextProps.templateInstance.modifiers))) {
-      returnType = _.last(nextProps.templateInstance.modifiers).returnType;
-    } else {
-      returnType = this.props.templateInstance.returnType;
+    this.setState({ otherInstances });
+
+    if (this.props.templateInstance.modifiers !== nextProps.templateInstance.modifiers) {
+      let returnType = nextProps.templateInstance.returnType;
+      if (!(_.isEmpty(nextProps.templateInstance.modifiers))) {
+        returnType = this.getReturnType(nextProps.templateInstance.modifiers);
+      }
+      this.setState({ returnType });
     }
-    this.setState({
-      otherInstances,
-      returnType
-    });
   }
 
   // Props will either be this.props or nextProps coming from componentWillReceiveProps
@@ -112,15 +108,7 @@ export default class TemplateInstance extends Component {
       modifier.values = this.modifierMap[modifier.id].values;
     }
 
-    let validationWarning = null;
-    if (modifier.validator) {
-      const validator = Validators[modifier.validator.type];
-      const values = modifier.validator.fields.map(v => modifier.values[v]);
-      const args = modifier.validator.args ? modifier.validator.args.map(v => modifier.values[v]) : [];
-      if (!validator.check(values, args)) {
-        validationWarning = validator.warning(modifier.validator.fields, modifier.validator.args);
-      }
-    }
+    const validationWarning = this.validateModifier(modifier);
 
     const modifierForm = ((mod) => {
       switch (mod.type || mod.id) {
@@ -267,11 +255,40 @@ export default class TemplateInstance extends Component {
         </div>
       </div>
     </div>
-  )
+  );
+
+  validateModifier = (modifier) => {
+    let validationWarning = null;
+
+    if (modifier.validator) {
+      const validator = Validators[modifier.validator.type];
+      const values = modifier.validator.fields.map(v => modifier.values[v]);
+      const args = modifier.validator.args ? modifier.validator.args.map(v => modifier.values[v]) : [];
+      if (!validator.check(values, args)) {
+        validationWarning = validator.warning(modifier.validator.fields, modifier.validator.args);
+      }
+    }
+    return validationWarning;
+  }
+
+  // Gets the returnType of the last valid modifier
+  getReturnType = (modifiers) => {
+    let returnType = this.props.templateInstance.returnType;
+    if (modifiers.length === 0) return returnType;
+
+    for (let index = modifiers.length - 1; index >= 0; index--) {
+      const modifier = modifiers[index];
+      if (this.validateModifier(modifier) === null) {
+        returnType = modifier.returnType;
+        break;
+      }
+    }
+
+    return returnType;
+  }
 
   setAppliedModifiers = (modifiers) => {
-    const returnType = _.isEmpty(modifiers) ? this.props.templateInstance.returnType : _.last(modifiers).returnType;
-    this.setState({ returnType }, this.filterRelevantModifiers);
+    this.setState({ returnType: this.getReturnType(modifiers) }, this.filterRelevantModifiers);
     this.props.updateInstanceModifiers(this.props.treeName, modifiers, this.getPath(), this.props.subpopulationIndex);
   }
 
@@ -631,9 +648,8 @@ export default class TemplateInstance extends Component {
           <div className="return-type row">
             <div className="col-3 bold align-right return-type__label">Return Type:</div>
             <div className="col-7 return-type__value">
-              { (validateReturnType === false
-                || _.startCase(returnType) === 'Boolean')
-                && <FontAwesome name="check" className="check" />}
+              { (validateReturnType === false || _.startCase(returnType) === 'Boolean') &&
+                <FontAwesome name="check" className="check" />}
               {_.startCase(returnType)}
             </div>
           </div>
