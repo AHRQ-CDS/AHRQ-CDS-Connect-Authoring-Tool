@@ -12,6 +12,9 @@ test('Testing renders without crashing', () => {
   const state = {
     artifacts: {
       artifacts: [],
+      downloadArtifact: {
+        elmErrors: []
+      },
       executeArtifact: {
         results: null,
         isExecuting: false
@@ -36,6 +39,9 @@ test('Testing shows form and no table when there is no data', () => {
   const state = {
     artifacts: {
       artifacts: [],
+      downloadArtifact: {
+        elmErrors: []
+      },
       executeArtifact: {
         results: null,
         isExecuting: false
@@ -61,6 +67,9 @@ test('Testing shows a table when there is data', () => {
   const state = {
     artifacts: {
       artifacts: [],
+      downloadArtifact: {
+        elmErrors: []
+      },
       executeArtifact: {
         results: null,
         isExecuting: false

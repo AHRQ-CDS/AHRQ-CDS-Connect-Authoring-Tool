@@ -46,68 +46,94 @@ test('PatientTable renders patients', () => {
   expect(component.find('tbody tr')).toHaveLength(patientsMock.length);
 });
 
-// test('PatientTable allows editing of patients', () => {
-//   const component = shallowRenderComponent(PatientTable, {
-//     patients: patientsMock,
-//     artifacts: artifactsMock,
-//     deletePatient: jest.fn(),
-//     executeCQLArtifact: jest.fn(),
-//     vsacFHIRCredentials: {username: 'user', password: 'pw'},
-//     loginVSACUser: jest.fn(),
-//     setVSACAuthStatus: jest.fn(),
-//     vsacIsAuthenticating: false
-//   });
+test('PatientTable delete opens confirmation modal and deletes from modal', () => {
+  const deletePatientMock = jest.fn();
+  const component = fullRenderComponent(PatientTable, {
+    patients: patientsMock,
+    artifacts: artifactsMock,
+    deletePatient: deletePatientMock,
+    executeCQLArtifact: jest.fn(),
+    vsacFHIRCredentials: {username: 'user', password: 'pw'},
+    loginVSACUser: jest.fn(),
+    setVSACAuthStatus: jest.fn(),
+    vsacIsAuthenticating: false
+  });
 
-//   const button = component.find('button.edit-patient-button').first();
-//   const editModal = component.children().findWhere(n => n.node.props && n.node.props.id === 'edit-modal');
+  const confirmDeleteModal = component.children().findWhere(n => (
+    n.node.props && n.node.props.id === 'confirm-delete-modal'
+  ));
+  const button = component.find('button.danger-button').first();
 
-//   expect(component.state('showEditPatientModal')).toEqual(false);
-//   expect(component.state('patientEditing')).toEqual(null);
-//   expect(editModal.prop('isOpen')).toEqual(false);
-//   button.simulate('click');
-//   component.update();
-//   expect(component.state('showEditPatientModal')).toEqual(true);
-//   expect(component.state('patientEditing')).not.toEqual(null);
-//   expect(editModal.prop('isOpen')).toEqual(true);
+  expect(confirmDeleteModal.prop('isOpen')).toEqual(false);
+  expect(component.state('showConfirmDeleteModal')).toEqual(false);
+  expect(component.state('patientToDelete')).toEqual(null);
+  button.simulate('click');
+  expect(confirmDeleteModal.prop('isOpen')).toEqual(true);
+  expect(component.state('showConfirmDeleteModal')).toEqual(true);
+  expect(component.state('patientToDelete')).not.toEqual(null);
 
-//   // this allows you to continue using the enzyme wrapper API
-//   const modalContent = new ReactWrapper(editModal.node.portal, true);
+  const modalContent = new ReactWrapper(confirmDeleteModal.node.portal, true);
+  expect(modalContent.text()).toContain('Delete Patient Confirmation');
 
-//   expect(modalContent.text()).toContain('Edit Patient');
-//   modalContent.find('.modal__deletebutton').simulate('click');
-//   component.update();
-//   expect(component.state('showEditPatientModal')).toEqual(false);
-//   // expect(component.state('patientEditing')).toEqual(null);
-// });
+  modalContent.find('form').simulate('submit');
+  expect(deletePatientMock).toHaveBeenCalled();
+});
 
-// test('PatientTable delete opens confirmation modal and deletes from modal', () => {
-//   const component = shallowRenderComponent(PatientTable, {
-//     patients: patientsMock,
-//     artifacts: artifactsMock,
-//     deletePatient: jest.fn(),
-//     executeCQLArtifact: jest.fn(),
-//     vsacFHIRCredentials: {username: 'user', password: 'pw'},
-//     loginVSACUser: jest.fn(),
-//     setVSACAuthStatus: jest.fn(),
-//     vsacIsAuthenticating: false
-//   });
+test('PatientTable view opens details modal', () => {
+  const component = fullRenderComponent(PatientTable, {
+    patients: patientsMock,
+    artifacts: artifactsMock,
+    deletePatient: jest.fn(),
+    executeCQLArtifact: jest.fn(),
+    vsacFHIRCredentials: {username: 'user', password: 'pw'},
+    loginVSACUser: jest.fn(),
+    setVSACAuthStatus: jest.fn(),
+    vsacIsAuthenticating: false
+  });
 
-//   const confirmDeleteModal = component.children().findWhere(n => (
-//     n.node.props && n.node.props.id === 'confirm-delete-modal'
-//   ));
-//   const button = component.find('button.danger-button').first();
+  const viewDetailsModal = component.children().findWhere(n => (
+    n.node.props && n.node.props.id === 'view-details-modal'
+  ));
+  const button = component.find('button.details-button').first();
 
-//   expect(confirmDeleteModal.prop('isOpen')).toEqual(false);
-//   expect(component.state('showConfirmDeleteModal')).toEqual(false);
-//   expect(component.state('patientToDelete')).toEqual(null);
-//   button.simulate('click');
-//   expect(confirmDeleteModal.prop('isOpen')).toEqual(true);
-//   expect(component.state('showConfirmDeleteModal')).toEqual(true);
-//   expect(component.state('patientToDelete')).not.toEqual(null);
+  expect(viewDetailsModal.prop('isOpen')).toEqual(false);
+  expect(component.state('showViewDetailsModal')).toEqual(false);
+  expect(component.state('patientToView')).toEqual(null);
+  button.simulate('click');
+  expect(viewDetailsModal.prop('isOpen')).toEqual(true);
+  expect(component.state('showViewDetailsModal')).toEqual(true);
+  expect(component.state('patientToView')).not.toEqual(null);
 
-//   const modalContent = new ReactWrapper(confirmDeleteModal.node.portal, true);
-//   expect(modalContent.text()).toContain('Delete Patient Confirmation');
+  const modalContent = new ReactWrapper(viewDetailsModal.node.portal, true);
+  expect(modalContent.text()).toContain('View Patient Details');
+});
 
-//   modalContent.find('form').simulate('submit');
-//   expect(deletePatientMock).toHaveBeenCalled();
-// });
+test('PatientTable execute opens confirmation modal and executes from modal', () => {
+  const executeCQLMock = jest.fn();
+  const component = fullRenderComponent(PatientTable, {
+    patients: patientsMock,
+    artifacts: artifactsMock,
+    deletePatient: jest.fn(),
+    executeCQLArtifact: executeCQLMock,
+    vsacFHIRCredentials: {username: 'user', password: 'pw'},
+    loginVSACUser: jest.fn(),
+    setVSACAuthStatus: jest.fn(),
+    vsacIsAuthenticating: false
+  });
+
+  const executeCQLModal = component.children().findWhere(n => (
+    n.node.props && n.node.props.id === 'execute-cql-modal'
+  ));
+  const button = component.find('button.execute-button').first();
+
+  expect(executeCQLModal.prop('isOpen')).toEqual(false);
+  expect(component.state('showExecuteCQLModal')).toEqual(false);
+  expect(component.state('patientToExecute')).toEqual(null);
+  button.simulate('click');
+  expect(executeCQLModal.prop('isOpen')).toEqual(true);
+  expect(component.state('showExecuteCQLModal')).toEqual(true);
+  expect(component.state('patientToExecute')).not.toEqual(null);
+
+  const modalContent = new ReactWrapper(executeCQLModal.node.portal, true);
+  expect(modalContent.text()).toContain('Execute CQL');
+});
