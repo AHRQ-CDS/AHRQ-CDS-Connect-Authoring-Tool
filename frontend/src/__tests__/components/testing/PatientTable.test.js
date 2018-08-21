@@ -1,3 +1,5 @@
+import Select from 'react-select';
+
 import PatientTable from '../../../components/testing/PatientTable';
 import mockPatient from '../../../mocks/mockPatient';
 import { shallowRenderComponent, fullRenderComponent, ReactWrapper } from '../../../utils/test_helpers';
@@ -136,4 +138,7 @@ test('PatientTable execute opens confirmation modal and executes from modal', ()
 
   const modalContent = new ReactWrapper(executeCQLModal.node.portal, true);
   expect(modalContent.text()).toContain('Execute CQL');
+
+  modalContent.find('Select').simulate('change', { target: { value: artifactsMock[0] } });
+  expect(component.state(`artifactToExecute`)).not.toEqual(null);
 });
