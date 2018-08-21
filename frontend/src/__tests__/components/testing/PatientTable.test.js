@@ -139,6 +139,11 @@ test('PatientTable execute opens confirmation modal and executes from modal', ()
   const modalContent = new ReactWrapper(executeCQLModal.node.portal, true);
   expect(modalContent.text()).toContain('Execute CQL');
 
-  modalContent.find('Select').simulate('change', { target: { value: artifactsMock[0] } });
-  expect(component.state(`artifactToExecute`)).not.toEqual(null);
+  expect(component.state(`artifactToExecute`)).toEqual(null);
+  const selectInput = modalContent.find(Select);
+  selectInput.props().onChange(artifactsMock[0]);
+  expect(component.state(`artifactToExecute`)).toEqual(artifactsMock[0]);
+
+  modalContent.find('form').simulate('submit');
+  expect(executeCQLMock).toHaveBeenCalled();
 });
