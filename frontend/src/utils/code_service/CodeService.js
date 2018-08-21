@@ -1,7 +1,4 @@
-import proc from 'process';
 import downloadFromVSAC from './download-vsac';
-
-const env = proc.env;
 
 /**
  * Constructs a code service with functions for downloading codes from the National Library of Medicine's
@@ -21,7 +18,11 @@ class CodeService {
    * @returns {Promise.<undefined,Error>} A promise that returns nothing when
    *   resolved and returns an error when rejected.
    */
-  ensureValueSets(valueSetList = [], umlsUserName = env.UMLS_USER_NAME, umlsPassword = env.UMLS_PASSWORD) {
+  ensureValueSets(
+    valueSetList = [],
+    umlsUserName = process.env.UMLS_USER_NAME,
+    umlsPassword = process.env.UMLS_PASSWORD
+  ) {
     // First, filter out the value sets we already have
     const filteredVSList = valueSetList.filter((vs) => {
       const result = this.findValueSet(vs.id, vs.version);
