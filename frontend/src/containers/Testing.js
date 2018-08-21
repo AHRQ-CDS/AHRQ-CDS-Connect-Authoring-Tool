@@ -41,14 +41,20 @@ class Patient extends Component {
     // eslint-disable-next-line func-names
     reader.onload = function (e) {
       const patientData = JSON.parse(e.target.result);
-      if ((_.get(patientData, 'resourceType') === 'Bundle')
-        && (_.chain(patientData)
-          .get('entry')
-          .find({ resource: { resourceType: 'Patient' } })
-          .get('resource')
-          .value())) {
-        this.props.addPatient(patientData);
-        this.setState({ uploadError: false });
+      const patientDataResourceType = _.get(patientData, 'resourceType');
+      const patientResource = _.chain(patientData)
+        .get('entry')
+        .find({ resource: { resourceType: 'Patient' } })
+        .get('resource')
+        .value();
+      const patientResourceFamilyName = _.get(patientResource, 'name[0].family');
+
+      // Check for FHIR DSTU2 Bundle containing FHIR Patient
+      if ((patientDataResourceType === 'Bundle') // Check for FHIR Bundle
+        && (patientResource) // Check for existence of FHIR Patient
+        && (typeof patientResourceFamilyName !== 'string')) { // Check for FHIR DSTU2
+          this.props.addPatient(patientData);
+          this.setState({ uploadError: false });
       } else {
         this.setState({ uploadError: true });
       }
@@ -85,8 +91,8 @@ class Patient extends Component {
         .find({ resource: { resourceType: 'Patient' } })
         .get('resource')
         .value();
-      const patientNameGiven = patientResource.name[0].given[0];
-      const patientNameFamily = patientResource.name[0].family[0];
+      const patientNameGiven = _.get(patientResource, 'name[0].given[0]', 'given_placeholder');
+      const patientNameFamily = _.get(patientResource, 'name[0].family[0]', 'family_placeholder');
 
       return (
         <Jumbotron className="patient-table">
