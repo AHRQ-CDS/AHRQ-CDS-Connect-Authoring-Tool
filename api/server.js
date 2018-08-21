@@ -23,8 +23,8 @@ const port = process.env.API_PORT || 3001;
 mongoose.connect(config.get('mongo.url'));
 
 // Configure API to use BodyParser and handle json data
-app.use(bodyParser.urlencoded({ extended: true }));
-app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
+app.use(bodyParser.json({limit: '50mb'}));
 
 // Configure passport authentication
 configPassport(app);

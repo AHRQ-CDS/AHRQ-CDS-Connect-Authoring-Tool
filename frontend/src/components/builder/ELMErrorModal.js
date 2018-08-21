@@ -6,7 +6,8 @@ class ELMErrorModal extends Component {
   static propTypes = {
     isOpen: PropTypes.bool.isRequired,
     closeModal: PropTypes.func.isRequired,
-    errors: PropTypes.array.isRequired
+    errors: PropTypes.array.isRequired,
+    isForTesting: PropTypes.bool
   }
 
   enterKeyCheck = (func, argument, event) => {
@@ -29,10 +30,16 @@ class ELMErrorModal extends Component {
           overlayClassName='modal-overlay modal-overlay__dark'>
           <div className="element-modal__container">
             <header className="modal__header">
-              <span className="modal__heading">About your download...</span>
+              <span className="modal__heading">
+              {this.props.isForTesting
+                ? 'About your testing...'
+                : 'About your download...'}
+              </span>
             </header>
             <main className="modal__body">
-              We detected some errors in the ELM files you just downloaded:
+              {this.props.isForTesting
+                ? 'We detected some errors in the ELM files you just used for testing:'
+                : 'We detected some errors in the ELM files you just downloaded:'}
               <ul>
                 {uniqueErrors.map((e, i) => <li key={i}> {e} </li>)}
               </ul>

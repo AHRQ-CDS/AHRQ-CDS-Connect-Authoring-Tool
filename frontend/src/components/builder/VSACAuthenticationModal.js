@@ -41,12 +41,26 @@ class VSACAuthenticationModal extends Component {
     );
   }
 
+  renderButton = () => {
+    if (this.props.vsacIsAuthenticating) {
+      return (
+        <button className="disabled-button" disabled={true}>
+          <FontAwesome name="spinner" size="2x" spin />
+        </button>
+      );
+    }
+
+    return (
+      <button className="primary-button" onClick={this.openVSACLoginModal}>
+        <FontAwesome name="key" />{' '}Authenticate VSAC
+      </button>
+    );
+  }
+
   render() {
     return (
       <div className="vsac-authentication-modal">
-        <button className="primary-button" onClick={this.openVSACLoginModal}>
-          <FontAwesome name="key" />{' '}Authenticate VSAC
-        </button>
+        {this.renderButton()}
 
         <Modal
           modalTitle="Login to VSAC your account"
@@ -88,7 +102,8 @@ VSACAuthenticationModal.propTypes = {
   loginVSACUser: PropTypes.func.isRequired,
   setVSACAuthStatus: PropTypes.func.isRequired,
   vsacStatus: PropTypes.string,
-  vsacStatusText: PropTypes.string
+  vsacStatusText: PropTypes.string,
+  vsacIsAuthenticating: PropTypes.bool
 };
 
 export default VSACAuthenticationModal;

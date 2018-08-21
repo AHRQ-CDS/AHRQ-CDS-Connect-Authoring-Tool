@@ -55,7 +55,6 @@
     flex: 1;
     padding: 0;
     border-bottom: $border-global;
-    overflow: hidden;
   }
 
   .modal__footer {
@@ -96,7 +95,7 @@
     &.icons {
       th:first-of-type,
       th:last-of-type,
-      
+
       tr td:last-of-type {
         text-align: center;
       }

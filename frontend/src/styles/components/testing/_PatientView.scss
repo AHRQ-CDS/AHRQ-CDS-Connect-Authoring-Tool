@@ -1,0 +1,32 @@
+.patient-view {
+  &__patient {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+    background-color: $gray-blue;
+    border-radius: 5px;
+    padding: 20px;
+
+    .patient-icon {
+      font-size: 3em;
+      margin: 0 40px 0 20px;
+
+    }
+
+    .patient-data {
+      &-name {
+        font-size: 2em;
+      }
+
+      &-details {
+        display: flex;
+
+        &-gender,
+        &-age {
+          margin-right: 40px;
+          color: darken($gray-light, 20%);
+        }
+      }
+    }
+  }
+}

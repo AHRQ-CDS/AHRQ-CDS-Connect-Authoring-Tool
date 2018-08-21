@@ -514,6 +514,7 @@ export class Builder extends Component {
                     errorStatement={this.props.artifact.errorStatement}
                     updateErrorStatement={this.updateErrorStatement} />
                 </TabPanel>
+
               </div>
             </Tabs>
           </section>

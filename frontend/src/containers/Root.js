@@ -8,6 +8,7 @@ import App from './App';
 import Landing from '../components/Landing';
 import BuilderContainer from '../containers/Builder';
 import Artifact from '../containers/Artifact';
+import Testing from '../containers/Testing';
 import UserGuide from '../components/UserGuide';
 import NoMatch from '../components/NotFoundPage';
 
@@ -22,6 +23,7 @@ const Root = (props) => {
           <PrivateRoute path='/build/:id' component={BuilderContainer} />
           <PrivateRoute path='/build' component={BuilderContainer} />
           <PrivateRoute path='/artifacts' component={Artifact} />
+          <PrivateRoute path='/testing' component={Testing} />
           <Route path='/userguide' component={UserGuide} />
           <Route component={NoMatch} />
         </Switch>
