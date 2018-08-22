@@ -135,7 +135,7 @@ export default class Parameter extends Component {
 
             <button
               aria-label="Delete Parameter"
-              className="button secondary-button"
+              className="button secondary-button danger-button"
               onClick={() => { deleteParameter(index); }}>
               <FontAwesome fixedWidth name='times' />
             </button>
