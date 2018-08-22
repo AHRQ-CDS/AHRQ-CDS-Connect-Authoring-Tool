@@ -336,16 +336,28 @@ export default class TemplateInstance extends Component {
     }
   }
 
+  allModifiersValid = () => {
+    const modifiers = this.props.templateInstance.modifiers;
+    if (!modifiers) return true;
+
+    let allModifiersValid = true;
+    modifiers.forEach((modifier) => {
+      if (this.validateModifier(modifier) !== null) allModifiersValid = false;
+    });
+    return allModifiersValid;
+  }
+
   renderModifierSelect = () => {
     if (!this.props.templateInstance.cannotHaveModifiers
-        && (this.state.relevantModifiers.length > 0 || (this.props.templateInstance.modifiers || []).length === 0)) {
+      && (this.state.relevantModifiers.length > 0 || (this.props.templateInstance.modifiers || []).length === 0)) {
       return (
         <div className="modifier-select">
           <div className="modifier__selection">
             <button
               onClick={() => this.setState({ showModifiers: !this.state.showModifiers })}
               className="modifier__addbutton secondary-button"
-              aria-label={'add expression'}>
+              aria-label={'add expression'}
+              disabled={!this.allModifiersValid()}>
               Add Expression
             </button>
 
