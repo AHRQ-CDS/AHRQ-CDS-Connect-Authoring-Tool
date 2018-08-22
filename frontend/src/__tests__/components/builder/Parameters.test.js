@@ -7,7 +7,7 @@ let componentWithParams;
 let instanceNames;
 let updateParameters;
 let existingParam;
-let existingParamUid = 'parameter-100';
+const existingParamUid = 'parameter-100';
 let baseProps;
 
 beforeEach(() => {
@@ -62,7 +62,7 @@ test('updates a parameter', () => {
 });
 
 test('deletes a parameter', () => {
-    componentWithParams.instance().deleteParameter(0);
+  componentWithParams.instance().deleteParameter(0);
 
   expect(updateParameters).toHaveBeenCalledWith([]);
 });

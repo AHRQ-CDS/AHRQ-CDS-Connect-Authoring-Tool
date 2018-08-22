@@ -24,7 +24,7 @@ test('PatientTable renders without crashing', () => {
     artifacts: artifactsMock,
     deletePatient: jest.fn(),
     executeCQLArtifact: jest.fn(),
-    vsacFHIRCredentials: {username: 'user', password: 'pw'},
+    vsacFHIRCredentials: { username: 'user', password: 'pw' },
     loginVSACUser: jest.fn(),
     setVSACAuthStatus: jest.fn(),
     vsacIsAuthenticating: false
@@ -39,7 +39,7 @@ test('PatientTable renders patients', () => {
     artifacts: artifactsMock,
     deletePatient: jest.fn(),
     executeCQLArtifact: jest.fn(),
-    vsacFHIRCredentials: {username: 'user', password: 'pw'},
+    vsacFHIRCredentials: { username: 'user', password: 'pw' },
     loginVSACUser: jest.fn(),
     setVSACAuthStatus: jest.fn(),
     vsacIsAuthenticating: false
@@ -55,7 +55,7 @@ test('PatientTable delete opens confirmation modal and deletes from modal', () =
     artifacts: artifactsMock,
     deletePatient: deletePatientMock,
     executeCQLArtifact: jest.fn(),
-    vsacFHIRCredentials: {username: 'user', password: 'pw'},
+    vsacFHIRCredentials: { username: 'user', password: 'pw' },
     loginVSACUser: jest.fn(),
     setVSACAuthStatus: jest.fn(),
     vsacIsAuthenticating: false
@@ -87,7 +87,7 @@ test('PatientTable view opens details modal', () => {
     artifacts: artifactsMock,
     deletePatient: jest.fn(),
     executeCQLArtifact: jest.fn(),
-    vsacFHIRCredentials: {username: 'user', password: 'pw'},
+    vsacFHIRCredentials: { username: 'user', password: 'pw' },
     loginVSACUser: jest.fn(),
     setVSACAuthStatus: jest.fn(),
     vsacIsAuthenticating: false
@@ -117,7 +117,7 @@ test('PatientTable execute opens confirmation modal and executes from modal', ()
     artifacts: artifactsMock,
     deletePatient: jest.fn(),
     executeCQLArtifact: executeCQLMock,
-    vsacFHIRCredentials: {username: 'user', password: 'pw'},
+    vsacFHIRCredentials: { username: 'user', password: 'pw' },
     loginVSACUser: jest.fn(),
     setVSACAuthStatus: jest.fn(),
     vsacIsAuthenticating: false
@@ -139,10 +139,10 @@ test('PatientTable execute opens confirmation modal and executes from modal', ()
   const modalContent = new ReactWrapper(executeCQLModal.node.portal, true);
   expect(modalContent.text()).toContain('Execute CQL');
 
-  expect(component.state(`artifactToExecute`)).toEqual(null);
+  expect(component.state('artifactToExecute')).toEqual(null);
   const selectInput = modalContent.find(Select);
   selectInput.props().onChange(artifactsMock[0]);
-  expect(component.state(`artifactToExecute`)).toEqual(artifactsMock[0]);
+  expect(component.state('artifactToExecute')).toEqual(artifactsMock[0]);
 
   modalContent.find('form').simulate('submit');
   expect(executeCQLMock).toHaveBeenCalled();
