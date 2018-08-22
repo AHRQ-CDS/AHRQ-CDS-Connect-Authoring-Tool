@@ -21,3 +21,8 @@
     padding: 5px 3px;
   }
 }
+
+.card-group__odd > .card-group-section > .card-element > .card-element__body > .expression,
+.card-group__odd > .card-element > .card-element__body > .expression {
+  background-color: $gray-lightest;
+}

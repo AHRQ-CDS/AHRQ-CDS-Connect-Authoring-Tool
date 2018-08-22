@@ -273,55 +273,8 @@ test('More complicated expression, with Highest, Not, and Is Null, builds correc
   expect(expressionPhrase).toEqual(expectedOutput);
 });
 
-test('Only validated modifiers are added the the phrase', () => {
+test('Only validated modifiers are added to the phrase', () => {
   const modifiers = [
-    {
-      id: 'WithUnit',
-      name: 'With Unit',
-      inputTypes: ['list_of_observations'],
-      returnType: 'list_of_observations',
-      values: { unit: undefined }, // Not filled in by user means it will not be validated successfully
-      validator: { type: 'require', fields: ['unit'], args: null },
-      cqlTemplate: 'WithUnit',
-      cqlLibraryFunction: 'C3F.WithUnit',
-    },
-    {
-      id: 'LookBackObservation',
-      type: 'LookBack',
-      name: 'Look Back',
-      inputTypes: ['list_of_observations'],
-      returnType: 'list_of_observations',
-      values: { value: undefined, unit: undefined }, // Not filled in by user means it will not be validated successfully
-      validator: { type: 'require', fields: ['value', 'unit'], args: null },
-      cqlTemplate: 'LookBackModifier',
-      cqlLibraryFunction: 'C3F.ObservationLookBack'
-    },
-    {
-      id: 'MostRecentObservation',
-      name: 'Most Recent',
-      inputTypes: ['list_of_observations'],
-      returnType: 'observation',
-      cqlTemplate: 'BaseModifier',
-      cqlLibraryFunction: 'C3F.MostRecent'
-    },
-    {
-      id: 'QuantityValue',
-      name: 'Quantity Value',
-      inputTypes: ['observation'],
-      returnType: 'system_quantity',
-      cqlTemplate: 'BaseModifier',
-      cqlLibraryFunction: 'C3F.QuantityValue'
-    },
-    {
-      id: 'ValueComparisonObservation',
-      name: 'Value Comparison',
-      inputTypes: ['system_quantity'],
-      returnType: 'boolean',
-      validator: { type: 'require', fields: ['minValue', 'minOperator', 'unit'], args: null },
-      values: { minOperator: undefined, minValue: '', maxOperator: undefined, maxValue: '', unit: '' }, // Not filled in
-      cqlTemplate: 'ValueComparisonObservation',
-      comparisonOperator: null
-    },
     {
       id: 'CheckExistence',
       name: 'Is (Not) Null?',
@@ -330,15 +283,7 @@ test('Only validated modifiers are added the the phrase', () => {
       values: { value: undefined }, // Not filled in
       cqlTemplate: 'postModifier',
       comparisonOperator: null,
-      validator: { type: 'require', fields: ['value'], args: null },
-    },
-    {
-      id: 'BooleanNot',
-      name: 'Not',
-      inputTypes: ['boolean'],
-      returnType: 'boolean',
-      cqlTemplate: 'BaseModifier',
-      cqlLibraryFunction: 'not'
+      validator: { type: 'require', fields: ['value'], args: null }
     }
   ];
 
@@ -346,14 +291,11 @@ test('Only validated modifiers are added the the phrase', () => {
   const valueSets = [{ name: 'LDL', oid: '1.2.3' }];
   const codes = [];
 
-  const expressionPhrase = convertToExpression(modifiers, name, valueSets, codes, 'boolean');
+  const expressionPhrase = convertToExpression(modifiers, name, valueSets, codes, 'list_of_observations');
 
   // Only modifiers that are validated are added
   const expectedOutput = [
-    { expressionText: 'There exists', isExpression: false },
-    { expressionText: 'a', isExpression: false },
-    { expressionText: 'most recent', isExpression: true },
-    { expressionText: 'observation', isExpression: false },
+    { expressionText: 'Observations', isExpression: false },
     { expressionText: 'with a code from', isExpression: false },
     { expressionText: 'LDL', isExpression: true }
   ];
