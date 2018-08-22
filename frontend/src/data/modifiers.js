@@ -3,6 +3,7 @@
 // NOTE -- Any cqlTemplates/cqlLibraryFunctions that are `null` are currently in development
 // Any id's that are the same as cqlTemplates are pure coincidence. The id matches within
 // src/components/builder/modifiers while the cqlTemplate matches the cqlTemplate in app/data/cql/modifiers
+// NOTE -- Any modifier that requires text for an expression phrase will need to be added to the list in artifact.js
 
 const elementLists = ['list_of_observations', 'list_of_conditions', 'list_of_medication_statements',
   'list_of_medication_orders', 'list_of_procedures', 'list_of_allergy_intolerances', 'list_of_encounters'];

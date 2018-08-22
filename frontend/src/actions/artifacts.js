@@ -52,6 +52,9 @@ function parseConjunction(element, names) {
         names.push({ name: child.parameters[0].value, id: child.uniqueId });
       }
     }
+    if (child.type === 'parameter' && child.returnType !== _.lowerCase(child.returnType)) {
+      child.returnType = _.lowerCase(child.returnType);
+    }
   });
 }
 

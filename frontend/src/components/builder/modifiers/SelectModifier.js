@@ -5,7 +5,8 @@ import _ from 'lodash';
 class SelectModifier extends Component {
   handleChange = (selectedOption) => {
     const value = selectedOption ? selectedOption.value : '';
-    this.props.updateAppliedModifier(this.props.index, { value, templateName: value });
+    const description = selectedOption ? selectedOption.label : '';
+    this.props.updateAppliedModifier(this.props.index, { value, templateName: value, description });
   }
 
   render() {

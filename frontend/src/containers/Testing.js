@@ -53,8 +53,8 @@ class Patient extends Component {
       if ((patientDataResourceType === 'Bundle') // Check for FHIR Bundle
         && (patientResource) // Check for existence of FHIR Patient
         && (typeof patientResourceFamilyName !== 'string')) { // Check for FHIR DSTU2
-          this.props.addPatient(patientData);
-          this.setState({ uploadError: false });
+        this.props.addPatient(patientData);
+        this.setState({ uploadError: false });
       } else {
         this.setState({ uploadError: true });
       }

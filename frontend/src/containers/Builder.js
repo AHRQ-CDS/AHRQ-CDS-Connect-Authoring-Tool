@@ -27,7 +27,7 @@ import Recommendations from '../components/builder/Recommendations';
 import RepoUploadModal from '../components/builder/RepoUploadModal';
 import ELMErrorModal from '../components/builder/ELMErrorModal';
 
-import isBlankArtifact from '../utils/artifacts';
+import isBlankArtifact from '../utils/artifacts/isBlankArtifact';
 import { findValueAtPath } from '../utils/find';
 
 import artifactProps from '../prop-types/artifact';
