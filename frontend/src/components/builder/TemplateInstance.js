@@ -110,7 +110,8 @@ export default class TemplateInstance extends Component {
   isSubelementUsed = () => {
     let subelementIsInUse = false;
     if (this.props.subelementsInUse) {
-      const subelementIndex = this.props.subelementsInUse.findIndex(subel => subel.id === this.props.templateInstance.uniqueId);
+      const subelementIndex = this.props.subelementsInUse.findIndex(subel =>
+        subel.id === this.props.templateInstance.uniqueId);
       // If the subelementIndex is not -1, it was in the subelementInUse array and is referenced somewhere else.
       subelementIsInUse = subelementIndex !== -1;
     }
@@ -366,13 +367,12 @@ export default class TemplateInstance extends Component {
         nextReturnType = this.props.templateInstance.modifiers[length - 2].returnType;
       }
 
-      // If a subelement is being used elsewhere, but the next return type is the same as the current, modifier can be removed.
+      // If a subelement is being used, but the next return type is the same as the current, modifier can be removed.
       return nextReturnType === this.state.returnType;
     }
 
     // If not a subelement being used elsewhere, modifiers can be removed.
     return true;
-
   }
 
   deleteCode = (codeToDelete) => {
@@ -413,7 +413,6 @@ export default class TemplateInstance extends Component {
   renderModifierSelect = () => {
     if (!this.props.templateInstance.cannotHaveModifiers
       && (this.state.relevantModifiers.length > 0 || (this.props.templateInstance.modifiers || []).length === 0)) {
-
       const subelementIsInUse = this.isSubelementUsed();
 
       return (

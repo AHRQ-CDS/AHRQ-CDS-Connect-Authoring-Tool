@@ -1,8 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import _ from 'lodash';
-import FontAwesome from 'react-fontawesome';
-import { UncontrolledTooltip } from 'reactstrap';
 
 /**
  * props are from a templateInstance parameters object,
@@ -11,7 +9,7 @@ import { UncontrolledTooltip } from 'reactstrap';
  */
 export default class StringParameter extends Component {
   render() {
-    const { id, name, value, updateInstance, info } = this.props;
+    const { id, name, value, updateInstance } = this.props;
     const formId = _.uniqueId('parameter-');
 
     return (

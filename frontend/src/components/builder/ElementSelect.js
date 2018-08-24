@@ -109,7 +109,13 @@ export default class ElementSelect extends Component {
           returnType,
           parameters: [
             { id: 'element_name', type: 'string', name: 'Element Name', value: e.parameters[0].value },
-            { id: 'subelementReference', type: 'reference', name: 'reference', value: { id: e.uniqueId, type: e.name }, static: true }
+            {
+              id: 'subelementReference',
+              type: 'reference',
+              name: 'reference',
+              value: { id: e.uniqueId, type: e.name },
+              static: true
+            }
           ]
         });
       });
