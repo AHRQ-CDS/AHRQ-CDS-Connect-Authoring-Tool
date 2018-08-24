@@ -103,11 +103,16 @@ export function updateArtifact(artifactToUpdate, props) {
       ...props
     };
     const { names, subelementsInUse } = parseForDuplicateNamesAndUsedSubelements(artifact);
+
+    // Add flag on subelement to mark if each subelement is used or not.
+    artifact.subelements.forEach((currSubelement) => {
+      currSubelement.inUse = subelementsInUse.findIndex(usedSubel => usedSubel.id === currSubelement.uniqueId) !== -1;
+    });
+
     return dispatch({
       type: types.UPDATE_ARTIFACT,
       artifact,
-      names,
-      subelementsInUse // TODO Is there a way to put an "isEditable" flag on the subelement?
+      names
     });
   };
 }
@@ -239,12 +244,11 @@ function requestArtifact(id) {
 }
 
 function loadArtifactSuccess(artifact) {
-  const { names, subelementsInUse } = parseForDuplicateNamesAndUsedSubelements(artifact);
+  const { names } = parseForDuplicateNamesAndUsedSubelements(artifact);
   return {
     type: types.LOAD_ARTIFACT_SUCCESS,
     artifact,
-    names,
-    subelementsInUse
+    names
   };
 }
 

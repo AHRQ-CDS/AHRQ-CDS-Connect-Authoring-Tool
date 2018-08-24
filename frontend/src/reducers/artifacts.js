@@ -6,7 +6,6 @@ const defaultState = {
   artifacts: [],
   artifact: null,
   names: [],
-  subelementsInUse: [],
   statusMessage: null,
   loadArtifacts: { isLoading: false, loadStatus: null },
   loadArtifact: { isLoading: false, loadStatus: null },
@@ -47,8 +46,7 @@ export default function auth(state = defaultState, action) {
       return {
         ...state,
         artifact: action.artifact,
-        names: action.names,
-        subelementsInUse: action.subelementsInUse
+        names: action.names
       };
     case types.INITIALIZE_ARTIFACT:
       return {
@@ -82,7 +80,6 @@ export default function auth(state = defaultState, action) {
         ...state,
         artifact: action.artifact,
         names: action.names,
-        subelementsInUse: action.subelementsInUse,
         loadArtifact: { isLoading: false, loadStatus: 'success' }
       };
     case types.LOAD_ARTIFACT_FAILURE:

@@ -55,8 +55,7 @@ export default class Subelements extends Component {
             isValidCode={this.props.isValidCode}
             codeData={this.props.codeData}
             validateCode={this.props.validateCode}
-            resetCodeValidation={this.props.resetCodeValidation}
-            subelementsInUse={this.props.subelementsInUse} />
+            resetCodeValidation={this.props.resetCodeValidation} />
         </div>)}
 
       <div className="card-element">
@@ -99,7 +98,6 @@ Subelements.propTypes = {
   deleteInstance: PropTypes.func.isRequired,
   templates: PropTypes.array.isRequired,
   valueSets: PropTypes.array,
-  subelementsInUse: PropTypes.array.isRequired,
   conversionFunctions: PropTypes.array,
   instanceNames: PropTypes.array.isRequired,
   parameters: PropTypes.array.isRequired,

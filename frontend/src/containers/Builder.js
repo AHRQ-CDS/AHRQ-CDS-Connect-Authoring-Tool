@@ -459,7 +459,6 @@ export class Builder extends Component {
                     deleteInstance={this.deleteInstance}
                     templates={templates}
                     valueSets={this.props.valueSets}
-                    subelementsInUse={this.props.subelementsInUse}
                     conversionFunctions={conversionFunctions}
                     instanceNames={this.props.names}
                     parameters={namedParameters}
@@ -566,7 +565,6 @@ Builder.propTypes = {
   isValidatingCode: PropTypes.bool.isRequired,
   isValidCode: PropTypes.bool,
   codeData: PropTypes.object,
-  subelementsInUse: PropTypes.array.isRequired,
   instanceNames: PropTypes.array.isRequired,
 };
 
@@ -604,7 +602,6 @@ function mapStateToProps(state) {
     valueSets: state.valueSets.valueSets,
     publishEnabled: state.artifacts.publishEnabled,
     names: state.artifacts.names,
-    subelementsInUse: state.artifacts.subelementsInUse,
     vsacStatus: state.vsac.authStatus,
     vsacStatusText: state.vsac.authStatusText,
     timeLastAuthenticated: state.vsac.timeLastAuthenticated,

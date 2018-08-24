@@ -107,17 +107,7 @@ export default class TemplateInstance extends Component {
     this.props.templateInstance.uniqueId !== instance.uniqueId
   )
 
-  isSubelementUsed = () => {
-    let subelementIsInUse = false;
-    if (this.props.subelementsInUse) {
-      const subelementIndex = this.props.subelementsInUse.findIndex(subel =>
-        subel.id === this.props.templateInstance.uniqueId);
-      // If the subelementIndex is not -1, it was in the subelementInUse array and is referenced somewhere else.
-      subelementIsInUse = subelementIndex !== -1;
-    }
-
-    return subelementIsInUse;
-  }
+  isSubelementUsed = () => (this.props.templateInstance.inUse ? this.props.templateInstance.inUse : false);
 
   updateInstance = (newState) => {
     this.setState(newState);
@@ -918,5 +908,4 @@ TemplateInstance.propTypes = {
   codeData: PropTypes.object,
   validateCode: PropTypes.func.isRequired,
   resetCodeValidation: PropTypes.func.isRequired,
-  subelementsInUse: PropTypes.array,
 };

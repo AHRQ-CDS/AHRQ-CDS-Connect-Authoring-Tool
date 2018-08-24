@@ -13,7 +13,6 @@ describe.only('artifacts reducer', () => {
       artifacts: [],
       artifact: null,
       names: [],
-      subelementsInUse: [],
       statusMessage: null,
       loadArtifacts: { isLoading: false, loadStatus: null },
       loadArtifact: { isLoading: false, loadStatus: null },
@@ -54,11 +53,11 @@ describe.only('artifacts reducer', () => {
 
   // ----------------------- UPDATE ARTIFACT ------------------------------- //
   it('should handle updating an artifact', () => {
-    const action = { type: types.UPDATE_ARTIFACT, artifact: 'Test artifact', subelementsInUse: [], names: [] };
-    const newState = { artifact: 'Test artifact', subelementsInUse: [], names: [] };
+    const action = { type: types.UPDATE_ARTIFACT, artifact: 'Test artifact' };
+    const newState = { artifact: 'Test artifact' };
     expect(reducer([], action)).toEqual(newState);
 
-    const previousState = { artifact: 'Old artifact', subelementsInUse: ['something'], names: ['something else'] };
+    const previousState = { artifact: 'Old artifact' };
     expect(reducer(previousState, action)).toEqual(newState);
   });
 
@@ -99,13 +98,8 @@ describe.only('artifacts reducer', () => {
     const previousState = { loadArtifact: { isLoading: false, loadStatus: 'loaded' } };
     expect(reducer(previousState, action)).toEqual(newState);
 
-    action = { type: types.LOAD_ARTIFACT_SUCCESS, artifact: 'Test artifact', names: ['a'], subelementsInUse: ['a'] };
-    newState = {
-      artifact: 'Test artifact',
-      loadArtifact: { isLoading: false, loadStatus: 'success' },
-      names: ['a'],
-      subelementsInUse: ['a']
-    };
+    action = { type: types.LOAD_ARTIFACT_SUCCESS, artifact: 'Test artifact' };
+    newState = { artifact: 'Test artifact', loadArtifact: { isLoading: false, loadStatus: 'success' } };
     expect(reducer(previousState, action)).toEqual(newState);
 
     action = { type: types.LOAD_ARTIFACT_FAILURE, status: 'Test status', statusText: 'Test status message' };
