@@ -17,6 +17,7 @@ class Logout extends Component {
   }
 
   handleLogoutClick = () => {
+    this.props.clearExecuteResults();
     this.props.onLogoutClick();
     this.props.history.push('/');
   }
@@ -39,7 +40,8 @@ class Logout extends Component {
 
 Logout.propTypes = {
   authUser: PropTypes.string.isRequired,
-  onLogoutClick: PropTypes.func.isRequired
+  onLogoutClick: PropTypes.func.isRequired,
+  clearExecuteResults: PropTypes.func.isRequired
 };
 
 const LogoutWithRouter = withRouter(Logout);

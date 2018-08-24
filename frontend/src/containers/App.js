@@ -6,6 +6,7 @@ import { bindActionCreators } from 'redux';
 import { loginUser, logoutUser, setAuthStatus, getCurrentUser } from '../actions/auth';
 import { checkVSACAuthentication } from '../actions/vsac';
 import setErrorMessage from '../actions/errors';
+import { clearExecuteResults } from '../actions/artifacts';
 
 import Header from '../components/Header';
 import Navbar from '../components/Navbar';
@@ -51,6 +52,7 @@ class App extends Component {
           authStatusText={authStatusText}
           loginUser={this.props.loginUser}
           logoutUser={this.props.logoutUser}
+          clearExecuteResults={this.props.clearExecuteResults}
           setAuthStatus={this.props.setAuthStatus} />
 
         <Navbar isAuthenticated={isAuthenticated} />
@@ -72,7 +74,8 @@ App.propTypes = {
   getCurrentUser: PropTypes.func.isRequired,
   loginUser: PropTypes.func.isRequired,
   logoutUser: PropTypes.func.isRequired,
-  setAuthStatus: PropTypes.func.isRequired
+  setAuthStatus: PropTypes.func.isRequired,
+  clearExecuteResults: PropTypes.func.isRequired
 };
 
 // these props are used for dispatching actions
@@ -83,6 +86,7 @@ function mapDispatchToProps(dispatch) {
     loginUser,
     logoutUser,
     setAuthStatus,
+    clearExecuteResults,
     setErrorMessage
   }, dispatch);
 }
