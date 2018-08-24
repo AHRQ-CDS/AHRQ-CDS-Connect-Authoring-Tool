@@ -165,6 +165,7 @@ Subpopulation.propTypes = {
   updateInstanceModifiers: PropTypes.func.isRequired,
   deleteInstance: PropTypes.func.isRequired,
   getAllInstances: PropTypes.func.isRequired,
+  instanceNames: PropTypes.array.isRequired,
   treeName: PropTypes.string.isRequired,
   parameters: PropTypes.array.isRequired,
   templates: PropTypes.array.isRequired,

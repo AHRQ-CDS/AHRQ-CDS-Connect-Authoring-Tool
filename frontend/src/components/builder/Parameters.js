@@ -63,6 +63,7 @@ export default class Parameters extends Component {
 Parameters.propTypes = {
   parameters: PropTypes.array.isRequired,
   updateParameters: PropTypes.func.isRequired,
+  instanceNames: PropTypes.array.isRequired,
   timeLastAuthenticated: PropTypes.instanceOf(Date),
   vsacFHIRCredentials: PropTypes.object,
   loginVSACUser: PropTypes.func.isRequired,

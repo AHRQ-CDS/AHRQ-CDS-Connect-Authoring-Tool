@@ -127,6 +127,7 @@ export default class TemplateInstance extends Component {
   deleteInstance = () => {
     const subelementIsInUse = this.isSubelementUsed();
     if (subelementIsInUse) {
+      // eslint-disable-next-line no-alert
       alert('This subelement is referenced somewhere else. To delete this element, remove all references to it.');
     } else {
       this.props.deleteInstance(this.props.treeName, this.getPath());
@@ -896,6 +897,7 @@ TemplateInstance.propTypes = {
   editInstance: PropTypes.func.isRequired,
   updateInstanceModifiers: PropTypes.func.isRequired,
   deleteInstance: PropTypes.func.isRequired,
+  instanceNames: PropTypes.array.isRequired,
   subpopulationIndex: PropTypes.number,
   renderIndentButtons: PropTypes.func.isRequired,
   loginVSACUser: PropTypes.func.isRequired,
@@ -915,5 +917,6 @@ TemplateInstance.propTypes = {
   isValidCode: PropTypes.bool,
   codeData: PropTypes.object,
   validateCode: PropTypes.func.isRequired,
-  resetCodeValidation: PropTypes.func.isRequired
+  resetCodeValidation: PropTypes.func.isRequired,
+  subelementsInUse: PropTypes.array,
 };

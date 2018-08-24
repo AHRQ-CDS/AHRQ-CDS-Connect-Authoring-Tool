@@ -179,6 +179,7 @@ Parameter.propTypes = {
   id: PropTypes.string,
   updateInstanceOfParameter: PropTypes.func.isRequired,
   deleteParameter: PropTypes.func.isRequired,
+  instanceNames: PropTypes.array.isRequired,
   timeLastAuthenticated: PropTypes.instanceOf(Date),
   vsacFHIRCredentials: PropTypes.object,
   setVSACAuthStatus: PropTypes.func.isRequired,

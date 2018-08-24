@@ -341,6 +341,7 @@ ConjunctionGroup.propTypes = {
   getPath: requiredIf(PropTypes.func, props => !props.root), // path needed for children
   getAllInstances: PropTypes.func.isRequired,
   deleteInstance: PropTypes.func.isRequired,
+  instanceNames: PropTypes.array.isRequired,
   conversionFunctions: PropTypes.array,
   loginVSACUser: PropTypes.func.isRequired,
   setVSACAuthStatus: PropTypes.func.isRequired,

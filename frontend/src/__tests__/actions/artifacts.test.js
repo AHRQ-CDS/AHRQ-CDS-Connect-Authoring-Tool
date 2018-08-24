@@ -45,6 +45,7 @@ describe('artifact actions', () => {
       const expectedAction = {
         type: types.UPDATE_ARTIFACT,
         artifact,
+        subelementsInUse: [],
         names
       };
 
@@ -106,7 +107,7 @@ describe('artifact actions', () => {
 
       const expectedActions = [
         { type: types.ARTIFACT_REQUEST, id },
-        { type: types.LOAD_ARTIFACT_SUCCESS, artifact: mockArtifact, names },
+        { type: types.LOAD_ARTIFACT_SUCCESS, artifact: mockArtifact, names, subelementsInUse: [] },
         { type: types.SET_STATUS_MESSAGE, message: null }
       ];
 

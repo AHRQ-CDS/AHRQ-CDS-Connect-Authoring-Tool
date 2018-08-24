@@ -328,5 +328,6 @@ ElementSelect.propTypes = {
   isValidCode: PropTypes.bool,
   codeData: PropTypes.object,
   validateCode: PropTypes.func.isRequired,
-  resetCodeValidation: PropTypes.func.isRequired
+  resetCodeValidation: PropTypes.func.isRequired,
+  inSubelements: PropTypes.bool.isRequired,
 };

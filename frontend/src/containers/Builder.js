@@ -457,16 +457,12 @@ export class Builder extends Component {
                     editInstance={this.editInstance}
                     updateInstanceModifiers={this.updateInstanceModifiers}
                     deleteInstance={this.deleteInstance}
-                    getAllInstances={this.getAllInstances}
                     templates={templates}
-                    resources={this.props.resources}
                     valueSets={this.props.valueSets}
                     subelementsInUse={this.props.subelementsInUse}
-                    updateRecsSubpop={this.updateRecsSubpop}
                     conversionFunctions={conversionFunctions}
                     instanceNames={this.props.names}
                     parameters={namedParameters}
-                    subelements={artifact.subelements}
                     loginVSACUser={this.props.loginVSACUser}
                     setVSACAuthStatus={this.props.setVSACAuthStatus}
                     vsacStatus={this.props.vsacStatus}
@@ -569,7 +565,9 @@ Builder.propTypes = {
   resetCodeValidation: PropTypes.func.isRequired,
   isValidatingCode: PropTypes.bool.isRequired,
   isValidCode: PropTypes.bool,
-  codeData: PropTypes.object
+  codeData: PropTypes.object,
+  subelementsInUse: PropTypes.array.isRequired,
+  instanceNames: PropTypes.array.isRequired,
 };
 
 // these props are used for dispatching actions

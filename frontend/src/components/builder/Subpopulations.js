@@ -127,6 +127,7 @@ Subpopulations.propTypes = {
   updateInstanceModifiers: PropTypes.func.isRequired,
   deleteInstance: PropTypes.func.isRequired,
   getAllInstances: PropTypes.func.isRequired,
+  instanceNames: PropTypes.array.isRequired,
   updateRecsSubpop: PropTypes.func.isRequired,
   checkSubpopulationUsage: PropTypes.func.isRequired,
   parameters: PropTypes.array.isRequired,

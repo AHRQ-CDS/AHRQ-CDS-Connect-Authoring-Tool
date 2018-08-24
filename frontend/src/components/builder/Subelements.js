@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import ElementSelect from './ElementSelect';
 import TemplateInstance from './TemplateInstance';
 
@@ -88,4 +89,37 @@ export default class Subelements extends Component {
   }
 }
 
-// TODO Add PropTypes!
+Subelements.propTypes = {
+  treeName: PropTypes.string.isRequired,
+  instance: PropTypes.object.isRequired,
+  addSubelement: PropTypes.func.isRequired,
+  loadValueSets: PropTypes.func.isRequired,
+  editInstance: PropTypes.func.isRequired,
+  updateInstanceModifiers: PropTypes.func.isRequired,
+  deleteInstance: PropTypes.func.isRequired,
+  templates: PropTypes.array.isRequired,
+  valueSets: PropTypes.array,
+  subelementsInUse: PropTypes.array.isRequired,
+  conversionFunctions: PropTypes.array,
+  instanceNames: PropTypes.array.isRequired,
+  parameters: PropTypes.array.isRequired,
+  loginVSACUser: PropTypes.func.isRequired,
+  setVSACAuthStatus: PropTypes.func.isRequired,
+  vsacStatus: PropTypes.string,
+  vsacStatusText: PropTypes.string,
+  timeLastAuthenticated: PropTypes.instanceOf(Date),
+  searchVSACByKeyword: PropTypes.func.isRequired,
+  isSearchingVSAC: PropTypes.bool.isRequired,
+  vsacSearchResults: PropTypes.array.isRequired,
+  vsacSearchCount: PropTypes.number.isRequired,
+  getVSDetails: PropTypes.func.isRequired,
+  isRetrievingDetails: PropTypes.bool.isRequired,
+  vsacDetailsCodes: PropTypes.array.isRequired,
+  vsacFHIRCredentials: PropTypes.object.isRequired,
+  isValidatingCode: PropTypes.bool.isRequired,
+  isValidCode: PropTypes.bool,
+  codeData: PropTypes.object,
+  validateCode: PropTypes.func.isRequired,
+  resetCodeValidation: PropTypes.func.isRequired,
+  validateReturnType: PropTypes.bool.isRequired
+};
