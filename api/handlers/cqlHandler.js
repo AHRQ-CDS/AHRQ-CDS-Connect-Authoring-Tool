@@ -465,7 +465,7 @@ class CqlArtifact {
         }
         case 'reference': {
           // Need to pull the element name from the reference to support renaming the elements while being used.
-          const referencedElement = this.subelements.find(e => e.uniqueId === parameter.value)
+          const referencedElement = this.subelements.find(e => e.uniqueId === parameter.value.id)
           const referencedElementName = referencedElement.parameters[0].value || referencedElement.uniqueId;
           context.values = [ `"${referencedElementName}"` ];
           break;

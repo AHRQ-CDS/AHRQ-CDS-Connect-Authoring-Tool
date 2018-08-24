@@ -102,14 +102,14 @@ export default class ElementSelect extends Component {
         const returnType = _.isEmpty(e.modifiers) ? e.returnType : _.last(e.modifiers).returnType;
         // TODO Changing this after deployment will require a migration. Will need to really consider this.
         return ({
-          id: e.id,
+          id: _.uniqueId(e.id),
           name: 'Subelement',
           type: 'subelement',
           template: 'GenericStatement',
           returnType,
           parameters: [
             { id: 'element_name', type: 'string', name: 'Element Name', value: e.parameters[0].value },
-            { id: 'subelementReference', type: 'reference', name: 'reference', value: e.uniqueId, static: true }
+            { id: 'subelementReference', type: 'reference', name: 'reference', value: { id: e.uniqueId, type: e.name }, static: true }
           ]
         });
       });

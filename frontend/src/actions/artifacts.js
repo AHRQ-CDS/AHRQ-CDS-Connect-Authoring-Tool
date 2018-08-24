@@ -58,7 +58,7 @@ function parseConjunction(element, names, subelementsInUse) {
       // Add uniqueId of subelements that are currently used
       const referenceParameter = child.parameters.find(param => param.type === 'reference');
       if (referenceParameter) {
-        const subelementAlreadyInUse = subelementsInUse.findIndex(id => id === referenceParameter.value);
+        const subelementAlreadyInUse = subelementsInUse.findIndex(id => id === referenceParameter.value.id);
         if (subelementAlreadyInUse === -1) {
           subelementsInUse.push(referenceParameter.value);
         }

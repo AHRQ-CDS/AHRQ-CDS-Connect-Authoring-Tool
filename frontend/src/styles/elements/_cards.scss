@@ -58,6 +58,10 @@
       padding: 0.5em;
     }
 
+    &.subelement {
+      background-color: $gray-lighter;
+    }
+
     &__header {
       display: flex;
       align-items: center;

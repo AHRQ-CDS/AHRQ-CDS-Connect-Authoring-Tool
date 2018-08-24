@@ -10,17 +10,6 @@ import { UncontrolledTooltip } from 'reactstrap';
  * key-value pairs that represents that state of the templateInstance
  */
 export default class StringParameter extends Component {
-  renderInfoIcon = () => (
-    <span className="icon">
-      <span id={`reference-info-${this.props.uniqueId}`}>
-        <FontAwesome name='info-circle' />
-      </span>
-      <UncontrolledTooltip target={`reference-info-${this.props.uniqueId}`} placement='top'>
-        {this.props.info}
-      </UncontrolledTooltip>
-    </span>
-  );
-
   render() {
     const { id, name, value, updateInstance, info } = this.props;
     const formId = _.uniqueId('parameter-');
@@ -28,10 +17,7 @@ export default class StringParameter extends Component {
     return (
       <div className="string-parameter form__group">
         <label htmlFor={formId}>
-          <span className="label">
-            {name}
-            {(info || info === '') && this.renderInfoIcon()}:
-            </span>
+          <span className="label">{name}:</span>
 
           <input
             id={formId}

@@ -107,20 +107,26 @@ export default class TemplateInstance extends Component {
     this.props.templateInstance.uniqueId !== instance.uniqueId
   )
 
+  isSubelementUsed = () => {
+    let subelementIsInUse = false;
+    if (this.props.subelementsInUse) {
+      const subelementIndex = this.props.subelementsInUse.findIndex(subel => subel.id === this.props.templateInstance.uniqueId);
+      // If the subelementIndex is not -1, it was in the subelementInUse array and is referenced somewhere else.
+      subelementIsInUse = subelementIndex !== -1;
+    }
+
+    return subelementIsInUse;
+  }
+
   updateInstance = (newState) => {
     this.setState(newState);
     this.props.editInstance(this.props.treeName, newState, this.getPath(), false);
   }
 
   deleteInstance = () => {
-    if (this.props.subelementsInUse) {
-      const subelementIndex = this.props.subelementsInUse.findIndex(id => id === this.props.templateInstance.uniqueId);
-      // If the subelementIndex is not -1, it was in the subelementInUse array and is referenced somewhere else.
-      if (subelementIndex !== -1) {
-        alert('This subelement is referenced somewhere else. To delete this element, remove all references to it.');
-      } else {
-        this.props.deleteInstance(this.props.treeName, this.getPath());
-      }
+    const subelementIsInUse = this.isSubelementUsed();
+    if (subelementIsInUse) {
+      alert('This subelement is referenced somewhere else. To delete this element, remove all references to it.');
     } else {
       this.props.deleteInstance(this.props.treeName, this.getPath());
     }
@@ -237,6 +243,8 @@ export default class TemplateInstance extends Component {
       }
     })(modifier);
 
+    const canModifierBeRemoved = this.canModifierBeRemoved();
+
     return (
       <div key={index} className={`modifier modifier-${modifier.type || modifier.id}`}>
         <div className="modifier__info">
@@ -245,7 +253,7 @@ export default class TemplateInstance extends Component {
           {index + 1 === this.props.templateInstance.modifiers.length &&
             <span
               role="button"
-              className="modifier__deletebutton secondary-button"
+              className={`modifier__deletebutton secondary-button ${canModifierBeRemoved ? '' : 'disabled'}`}
               aria-label={'remove last expression'}
               onClick={this.removeLastModifier}
               tabIndex="0"
@@ -346,6 +354,27 @@ export default class TemplateInstance extends Component {
     this.setAppliedModifiers(modifiers);
   }
 
+  canModifierBeRemoved = () => {
+    const subelementIsInUse = this.isSubelementUsed();
+
+    if (subelementIsInUse) {
+      // If a subelement is in use, need to make sure the modifiers removed don't change the return type.
+      const length = this.props.templateInstance.modifiers.length;
+      let nextReturnType = this.props.templateInstance.returnType; // Defaults to the element's return type.
+      if (length > 1) {
+        // If there is another modifier applied after the last one is removed, use that modifier type.
+        nextReturnType = this.props.templateInstance.modifiers[length - 2].returnType;
+      }
+
+      // If a subelement is being used elsewhere, but the next return type is the same as the current, modifier can be removed.
+      return nextReturnType === this.state.returnType;
+    }
+
+    // If not a subelement being used elsewhere, modifiers can be removed.
+    return true;
+
+  }
+
   deleteCode = (codeToDelete) => {
     const templateInstanceClone = _.cloneDeep(this.props.templateInstance);
     if (templateInstanceClone.parameters[1] && templateInstanceClone.parameters[1].codes) {
@@ -384,12 +413,9 @@ export default class TemplateInstance extends Component {
   renderModifierSelect = () => {
     if (!this.props.templateInstance.cannotHaveModifiers
       && (this.state.relevantModifiers.length > 0 || (this.props.templateInstance.modifiers || []).length === 0)) {
-      // Template instances are assumed not to be subelements in use. If it is a subelement, check whether it is in use or not.
-      let subelementIsInUse = false;
-      if (this.props.subelementsInUse) {
-        const subelementIndex = this.props.subelementsInUse.findIndex(id => id === this.props.templateInstance.uniqueId);
-        subelementIsInUse = subelementIndex !== -1;
-      }
+
+      const subelementIsInUse = this.isSubelementUsed();
+
       return (
         <div className="modifier-select">
           <div className="modifier__selection">
@@ -401,18 +427,9 @@ export default class TemplateInstance extends Component {
               Add Expression
             </button>
 
-            {this.state.showModifiers && !subelementIsInUse &&
-              this.state.relevantModifiers.map(modifier =>
-                <button key={modifier.id}
-                  value={modifier.id}
-                  onClick={this.handleModifierSelected} className="modifier__button secondary-button">
-                  {modifier.name}
-                </button>)
-            }
-
-            {this.state.showModifiers && subelementIsInUse &&
+            {this.state.showModifiers &&
               this.state.relevantModifiers
-                .filter(modifier => modifier.returnType === this.state.returnType)
+                .filter(modifier => !subelementIsInUse || modifier.returnType === this.state.returnType)
                 .map(modifier =>
                   <button key={modifier.id}
                     value={modifier.id}
@@ -426,6 +443,25 @@ export default class TemplateInstance extends Component {
     }
 
     return null;
+  }
+
+  renderSubelementInfo = (referenceParameter) => {
+    let referenceName;
+    if (referenceParameter) {
+      const elementToReference = this.props.instanceNames.find(name => name.id === referenceParameter.value.id);
+      if (elementToReference) {
+        referenceName = elementToReference.name;
+      }
+    }
+
+    return (
+      <div className="modifier__return__type" id="code-list">
+        <div className="row code-info">
+          <div className="col-3 bold align-right code-info__label">Subelement:</div>
+          <div className="col-9 row code-info__info">{referenceName}</div>
+        </div>
+      </div>
+    );
   }
 
   renderVSInfo = () => {
@@ -688,6 +724,8 @@ export default class TemplateInstance extends Component {
     const returnError = (!(validateReturnType !== false) || returnType === 'boolean') ? null
       : "Element must have return type 'boolean'. Add expression(s) to change the return type.";
 
+    const referenceParameter = this.props.templateInstance.parameters.find(param => param.type === 'reference');
+
     return (
       <div className="card-element__body">
         {validationError && <div className="warning">{validationError}</div>}
@@ -707,6 +745,11 @@ export default class TemplateInstance extends Component {
           <div className="vsac-info">
             {this.renderVSInfo()}
             {this.renderCodeInfo()}
+          </div>
+        }
+        { referenceParameter &&
+          <div className="vsac-info">
+            {this.renderSubelementInfo(referenceParameter)}
           </div>
         }
 
@@ -753,13 +796,11 @@ export default class TemplateInstance extends Component {
         return null;
       }
 
-      const referenceParameter = this.props.templateInstance.parameters.find(param => param.type === 'reference');
-      let referenceName;
+      const referenceParameter = templateInstance.parameters.find(param => param.type === 'reference');
+      let elementType = templateInstance.name;
       if (referenceParameter) {
-        const elementToReference = this.props.instanceNames.find(name => name.id === referenceParameter.value);
-        if (elementToReference) {
-          referenceName = elementToReference.name;
-        }
+        // Element type to display in header will be the reference type for Subelements.
+        elementType = referenceParameter.value ? referenceParameter.value.type : 'Subelement';
       }
 
       return (
@@ -768,9 +809,8 @@ export default class TemplateInstance extends Component {
             key={elementNameParameter.id}
             {...elementNameParameter}
             updateInstance={this.updateInstance}
-            name={templateInstance.name}
+            name={elementType}
             uniqueId={templateInstance.uniqueId}
-            info={referenceName}
             />
           {this.hasDuplicateName() &&
             <div className="warning">Warning: Name already in use. Choose another name.</div>
@@ -790,6 +830,8 @@ export default class TemplateInstance extends Component {
     const headerClass = classNames('card-element__header', { collapsed: !showElement });
     const headerTopClass = classNames('card-element__header-top', { collapsed: !showElement });
 
+    const referenceParameter = templateInstance.parameters.find(param => param.type === 'reference');
+    const className = referenceParameter ? 'subelement' : ''; // TODO After rebase: add this class name back to top level. (headerClass?)
     return (
       <div className={headerClass}>
         <div className={headerTopClass}>
@@ -804,7 +846,6 @@ export default class TemplateInstance extends Component {
               </div>
             }
           </div>
-
           <div className="card-element__buttons">
             {showElement && renderIndentButtons(templateInstance)}
 
