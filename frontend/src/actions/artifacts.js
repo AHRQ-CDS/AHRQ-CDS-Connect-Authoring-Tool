@@ -467,12 +467,6 @@ export function executeCQLArtifact(artifact, patient, vsacCredentials, codeServi
   };
 }
 
-export function clearExecuteResults() {
-  return {
-    type: types.CLEAR_EXECUTE_RESULTS
-  };
-}
-
 // ------------------------- PUBLISH ARTIFACT ---------------------- //
 
 function requestPublishArtifact() {

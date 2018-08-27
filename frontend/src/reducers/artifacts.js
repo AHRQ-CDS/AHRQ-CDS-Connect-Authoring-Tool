@@ -172,17 +172,6 @@ export default function auth(state = defaultState, action) {
           errorMessage: `Execute failed. ${action.statusText}.`
         }
       };
-    case types.CLEAR_EXECUTE_RESULTS:
-      return {
-        ...state,
-        executeArtifact: {
-          isExecuting: false,
-          executeStatus: null,
-          results: null,
-          artifactExecuted: null,
-          patientExecuted: null
-        }
-      };
     case types.CLEAR_ARTIFACT_VALIDATION_WARNINGS:
       return {
         ...state,

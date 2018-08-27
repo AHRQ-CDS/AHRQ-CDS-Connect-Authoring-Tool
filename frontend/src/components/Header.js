@@ -8,14 +8,7 @@ import Logout from './auth/Logout';
 export default class Header extends Component {
   renderedAuth() {
     const {
-      isAuthenticated,
-      authUser,
-      authStatus,
-      authStatusText,
-      loginUser,
-      logoutUser,
-      clearExecuteResults,
-      setAuthStatus
+      isAuthenticated, authUser, authStatus, authStatusText, loginUser, logoutUser, setAuthStatus
     } = this.props;
 
     if (isAuthenticated) {
@@ -24,8 +17,7 @@ export default class Header extends Component {
           onLogoutClick={logoutUser}
           authUser={authUser}
           authStatus={authStatus}
-          authStatusText={authStatusText}
-          clearExecuteResults = {clearExecuteResults} />
+          authStatusText={authStatusText} />
       );
     }
 
@@ -125,6 +117,5 @@ Header.propTypes = {
   authStatusText: PropTypes.string,
   loginUser: PropTypes.func.isRequired,
   logoutUser: PropTypes.func.isRequired,
-  clearExecuteResults: PropTypes.func.isRequired,
   setAuthStatus: PropTypes.func.isRequired
 };
