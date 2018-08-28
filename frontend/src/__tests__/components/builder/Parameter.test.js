@@ -118,7 +118,7 @@ test('renders Code editor without crashing', () => {
   component = shallowRenderComponent(CodeEditor, {
     id: 'test-id',
     type: 'Code',
-    vsacFHIRCredentials: { username: 'username', password: 'password' },
+    vsacFHIRCredentials,
     updateInstance: jest.fn()
   });
   expect(component).toBeDefined();
