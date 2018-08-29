@@ -202,12 +202,18 @@ class Patient extends Component {
           accept="application/json" multiple={false}>
           {this.renderDropzoneIcon()}
 
-          {this.state.uploadError
-              && <div className="warning">Invalid file type. Only valid FHIR DSTU2 JSON Bundles are accepted.</div>}
+          {this.state.uploadError &&
+            <div className="warning">Invalid file type. Only valid FHIR DSTU2 JSON Bundles are accepted.</div>
+          }
 
-          <p>Drop a valid JSON FHIR DSTU2 bundle containing a synthetic patient here, or click to browse.</p>
-          <p>Do not upload any Personally Identifiable Information (PII) or Protected Health
-            Information (PHI) to this server. Upload synthetic data only.</p>
+          <p className="patient-dropzone__instructions">
+            Drop a valid JSON FHIR DSTU2 bundle containing a synthetic patient here, or click to browse.
+          </p>
+
+          <p className="patient-dropzone__warning">
+            Do not upload any Personally Identifiable Information (PII) or Protected Health Information (PHI) to this
+            server. Upload synthetic data only.
+          </p>
         </Dropzone>
 
         <div className="testing-wrapper">

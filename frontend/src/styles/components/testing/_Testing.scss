@@ -34,6 +34,13 @@
     border-color: $gray;
     border-style: dashed;
     border-radius: 1em;
+
+    &__warning {
+      font-size: 0.9em;
+      color: $brand-danger;
+      font-style: italic;
+      margin: 0 60px;
+    }
   }
 }
 

@@ -1,6 +1,7 @@
 import { combineReducers } from 'redux';
 import { routerReducer } from 'react-router-redux';
 
+import * as types from '../actions/types';
 import authReducer from './auth';
 import errorsReducer from './errors';
 import artifactsReducer from './artifacts';
@@ -10,7 +11,7 @@ import valueSetsReducer from './value_sets';
 import vsacReducer from './vsac';
 import modifiersReducer from './modifiers';
 
-const rootReducer = combineReducers({
+const appReducer = combineReducers({
   routing: routerReducer,
   auth: authReducer,
   errors: errorsReducer,
@@ -21,5 +22,14 @@ const rootReducer = combineReducers({
   vsac: vsacReducer,
   modifiers: modifiersReducer
 });
+
+const rootReducer = (state, action) => {
+  let newState = state;
+  if (action.type === types.LOGOUT_SUCCESS) {
+    newState = undefined;
+  }
+
+  return appReducer(newState, action);
+};
 
 export default rootReducer;

@@ -1066,8 +1066,8 @@ export default class UserGuide extends Component {
                 <h3 id="Testing_Page">4.1 Testing Page</h3>
 
                 <p>
-                  The Testing tab is the main location to test that Artifacts are behaving as expected when their CQL is executed
-                  against a Patient.
+                  The Testing tab is the main location to test that artifacts are behaving as expected when their CQL is executed
+                  against a patient.
                 </p>
 
                 <p>
@@ -1079,15 +1079,15 @@ export default class UserGuide extends Component {
 
                 <ol>
                   <li>
-                    The upload area allows the user to upload Patients that can be used for testing CQL made from Artifacts.
-                    Note that the Patients must be contained in FHIR DSTU2 Bundles, in JSON format. To easily generate synthetic
-                    patients in this format, see <a target="_blank" rel="nofollow noopener noreferrer"
+                    The upload area allows the user to upload synthetic patients that can be used for testing CQL made from
+                    artifacts. Note that the synthetic patients must be contained in FHIR DSTU2 Bundles, in JSON format. To
+                    easily generate synthetic patients in this format, see <a target="_blank" rel="nofollow noopener noreferrer"
                     onClick={onVisitExternalLink} href="https://github.com/synthetichealth/synthea">Synthea </a>
                     <i className="fa fa-external-link"></i>.
                   </li>
 
                   <li>
-                    A banner indicating that the user must log in to VSAC to execute CQL on a Patient.
+                    A banner indicating that the user must log in to VSAC to execute CQL on a patient.
                   </li>
 
                   <li>
@@ -1095,12 +1095,12 @@ export default class UserGuide extends Component {
                   </li>
 
                   <li>
-                    A table that displays some information about any Patients associated to the user that are already in the
+                    A table that displays some information about any patients associated to the user that are already in the
                     database.
                   </li>
 
                   <li>
-                    A "View" button that displays for a Patient, which opens a modal to view the JSON FHIR DSTU2 Bundle in detail.
+                    A "View" button that displays for a patient, which opens a modal to view the JSON FHIR DSTU2 Bundle in detail.
                   </li>
 
                   <li>
@@ -1108,7 +1108,7 @@ export default class UserGuide extends Component {
                   </li>
 
                   <li>
-                    A "Delete" button that will open a modal allowing the user to delete the Patient from the database.
+                    A "Delete" button that will open a modal allowing the user to delete the patient from the database.
                   </li>
                 </ol>
 
@@ -1125,7 +1125,7 @@ export default class UserGuide extends Component {
 
                 <ol>
                   <li>
-                    The banner has now changed to indicate that CQL execution on a Patient is possible.
+                    The banner has now changed to indicate that CQL execution on a patient is possible.
                   </li>
 
                   <li>
@@ -1133,7 +1133,7 @@ export default class UserGuide extends Component {
                   </li>
 
                   <li>
-                    The "Execute CQL" button for each Patient is now enabled. Clicking on this button opens the Execute CQL Modal.
+                    The "Execute CQL" button for each patient is now enabled. Clicking on this button opens the Execute CQL Modal.
                   </li>
                 </ol>
               </div>
@@ -1142,8 +1142,8 @@ export default class UserGuide extends Component {
                 <h3 id="Execute_CQL_Modal">4.2 Execute CQL Modal</h3>
 
                 <p>
-                  The Execute CQL Modal allows the user to choose an Artifact whose CQL should be run against the selected
-                  Patient.
+                  The Execute CQL Modal allows the user to choose an artifact whose CQL should be run against the selected
+                  patient.
                 </p>
 
                 <p>
@@ -1155,16 +1155,16 @@ export default class UserGuide extends Component {
 
                 <ol>
                   <li>
-                    The name of the Patient that was chosen for CQL execution.
+                    The name of the patient that was chosen for CQL execution.
                   </li>
 
                   <li>
-                    A dropdown that displays all the user's Artifacts, allowing the user to choose which Artifact should be used
+                    A dropdown that displays all the user's artifacts, allowing the user to choose which artifact should be used
                     for CQL execution.
                   </li>
 
                   <li>
-                    The "Execute CQL" button which runs the selected Artifact's CQL against the selected Patient for testing.
+                    The "Execute CQL" button which runs the selected artifact's CQL against the selected patient for testing.
                   </li>
                 </ol>
               </div>
@@ -1185,29 +1185,29 @@ export default class UserGuide extends Component {
 
                 <ol>
                   <li>
-                    The name of the Patient that was used for testing.
+                    The name of the patient that was used for testing.
                   </li>
 
                   <li>
-                    The name of the Artifact whose CQL was tested.
+                    The name of the artifact whose CQL was tested.
                   </li>
 
                   <li>
-                    An indication of whether the Patient met the Artifact's inclusion criteria. In this case, the Patient did meet
+                    An indication of whether the patient met the Artifact's inclusion criteria. In this case, the patient did meet
                     the inclusion criteria.
                   </li>
 
                     <li>
-                    An indication of whether the Patient met the Artifact's exclusion criteria. In this case, the Patient did not
+                    An indication of whether the patient met the Artifact's exclusion criteria. In this case, the patient did not
                     meet the exclusion criteria.
                   </li>
 
                   <li>
-                    The Recommendation from the Artifact, given the result of the CQL execution.
+                    The Recommendation from the artifact, given the result of the CQL execution.
                   </li>
 
                   <li>
-                    The Rationale for the Recommendation from the Artifact.
+                    The Rationale for the Recommendation from the artifact.
                   </li>
 
 
