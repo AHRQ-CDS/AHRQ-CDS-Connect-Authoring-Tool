@@ -107,7 +107,7 @@ export default class TemplateInstance extends Component {
     this.props.templateInstance.uniqueId !== instance.uniqueId
   )
 
-  isSubelementUsed = () => (this.props.templateInstance.inUse ? this.props.templateInstance.inUse : false);
+  isSubelementUsed = () => (this.props.templateInstance.usedBy ? this.props.templateInstance.usedBy.length !== 0 : false);
 
   updateInstance = (newState) => {
     this.setState(newState);

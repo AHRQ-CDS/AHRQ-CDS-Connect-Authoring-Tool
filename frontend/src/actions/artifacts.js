@@ -58,9 +58,13 @@ function parseConjunction(element, names, subelementsInUse) {
       // Add uniqueId of subelements that are currently used
       const referenceParameter = child.parameters.find(param => param.type === 'reference');
       if (referenceParameter) {
-        const subelementAlreadyInUse = subelementsInUse.findIndex(id => id === referenceParameter.value.id);
-        if (subelementAlreadyInUse === -1) {
-          subelementsInUse.push(referenceParameter.value);
+        const subelementAlreadyInUse = subelementsInUse.find(s => s.subelementId === referenceParameter.value.id);
+        if (subelementAlreadyInUse === undefined) {
+          // Add the subelement id and begin the list of other instances using the subelement
+          subelementsInUse.push({ subelementId: referenceParameter.value.id, usedBy: [child.uniqueId] });
+        } else {
+          // If the subelement is already used elsewhere, just add to the list of instances using it
+          subelementAlreadyInUse.usedBy.push(child.uniqueId);
         }
       }
     }
@@ -105,8 +109,9 @@ export function updateArtifact(artifactToUpdate, props) {
     const { names, subelementsInUse } = parseForDuplicateNamesAndUsedSubelements(artifact);
 
     // Add flag on subelement to mark if each subelement is used or not.
-    artifact.subelements.forEach((currSubelement) => {
-      currSubelement.inUse = subelementsInUse.findIndex(usedSubel => usedSubel.id === currSubelement.uniqueId) !== -1;
+    artifact.subelements.forEach((subelement) => {
+      const subelementInUse = subelementsInUse.find(usedSubel => usedSubel.subelementId === subelement.uniqueId);
+      subelement.usedBy = subelementInUse ? subelementInUse.usedBy : [];
     });
 
     return dispatch({
