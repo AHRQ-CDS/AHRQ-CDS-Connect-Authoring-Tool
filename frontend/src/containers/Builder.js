@@ -65,9 +65,9 @@ export class Builder extends Component {
   }
 
   componentWillUnmount() {
-    const { artifact } = this.props;
+    const { artifact, isLoggingOut } = this.props;
 
-    if (!isBlankArtifact(artifact)) {
+    if (!isBlankArtifact(artifact) && !isLoggingOut) {
       this.handleSaveArtifact(artifact);
     }
   }
@@ -614,7 +614,8 @@ function mapStateToProps(state) {
     codeData: state.vsac.codeData,
     vsacDetailsCodes: state.vsac.detailsCodes,
     vsacFHIRCredentials: { username: state.vsac.username, password: state.vsac.password },
-    conversionFunctions: state.modifiers.conversionFunctions
+    conversionFunctions: state.modifiers.conversionFunctions,
+    isLoggingOut: state.auth.isLoggingOut
   };
 }
 

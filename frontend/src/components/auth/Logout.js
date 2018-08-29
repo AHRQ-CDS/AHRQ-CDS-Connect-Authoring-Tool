@@ -18,7 +18,7 @@ class Logout extends Component {
 
   handleLogoutClick = () => {
     this.props.onLogoutClick();
-    this.props.history.push('/');
+    window.setTimeout(() => this.props.history.push('/'), 10);
   }
 
   render() {
