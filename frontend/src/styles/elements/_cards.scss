@@ -59,7 +59,7 @@
     }
 
     &.subelement {
-      background-color: $gray-lighter;
+      background-color: lighten($blue-light, 35%);
     }
 
     &__header {

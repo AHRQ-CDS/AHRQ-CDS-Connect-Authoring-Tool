@@ -246,7 +246,7 @@ function getOrderedExpressionSentenceArrayForParameters(expressionArray, returnT
 }
 
 // Build the array for expression phrases by pushing each type of expression in a set order.
-function orderExpressionSentenceArray(expressionArray, type, valueSets, codes, returnType, otherParameters) {
+function orderExpressionSentenceArray(expressionArray, type, valueSets, codes, returnType, otherParameters, name) {
   // Specific cases for Age Range, Gender, and Parameters since they do not follow the same pattern as VSAC elements.
   if (type === 'Age Range') {
     return getOrderedExpressionSentenceArrayForAgeRange(expressionArray, otherParameters);
@@ -336,26 +336,37 @@ function orderExpressionSentenceArray(expressionArray, type, valueSets, codes, r
   }
 
   // Handle element types (ex. observation, procedure)
+  // Subelements additionally display the original subelement name as an expression
   const elementText = _.lowerCase(type);
-  const elementArticle = getArticle(elementText);
+  const subelementName = type === 'Subelement' ? name : '';
+  const elementArticle = subelementName ? getArticle(subelementName) : getArticle(elementText);
   if (hasStarted) {
     if (returnsPlural) {
+      if (subelementName) orderedExpressionArray.push({ expressionText: subelementName, isExpression: true });
       orderedExpressionArray.push({ expressionText: `${elementText}s`, isExpression: false, isType: true });
     } else if (descriptorExpression || listExpressions.length > 0) {
+      if (subelementName) orderedExpressionArray.push({ expressionText: subelementName, isExpression: true });
       orderedExpressionArray.push({ expressionText: elementText, isExpression: false, isType: true });
     } else {
       orderedExpressionArray.push({ expressionText: elementArticle, isExpression: false });
+      if (subelementName) orderedExpressionArray.push({ expressionText: subelementName, isExpression: true });
       orderedExpressionArray.push({ expressionText: elementText, isExpression: false, isType: true });
     }
   } else if (returnsPlural) {
-    orderedExpressionArray.push({
-      expressionText: `${_.capitalize(elementText)}s`,
-      isExpression: false,
-      isType: true
-    });
+    if (subelementName) {
+      orderedExpressionArray.push({ expressionText: subelementName, isExpression: true });
+      orderedExpressionArray.push({ expressionText: `${elementText}s`, isExpression: false , isType: true });
+    } else {
+      orderedExpressionArray.push({
+        expressionText: `${_.capitalize(elementText)}s`,
+        isExpression: false,
+        isType: true
+      });
+    }
     hasStarted = true;
   } else {
     orderedExpressionArray.push({ expressionText: _.capitalize(elementArticle), isExpression: false });
+    if (subelementName) orderedExpressionArray.push({ expressionText: subelementName, isExpression: true });
     orderedExpressionArray.push({ expressionText: elementText, isExpression: false, isType: true });
     hasStarted = true;
   }
@@ -382,7 +393,8 @@ export default function convertToExpression(
   valueSets,
   codes,
   returnType,
-  otherParameters = []
+  otherParameters = [],
+  name = ''
 ) {
   const expressionSentenceArray = expressionsArray.reduce((accumulator, currentExpression) => {
     const expressionSentenceValue = getExpressionSentenceValue(currentExpression);
@@ -394,7 +406,7 @@ export default function convertToExpression(
 
   // Get an order for the expressions that will make sense in a sentence
   const orderedExpressionSentenceArray =
-    orderExpressionSentenceArray(expressionSentenceArray, type, valueSets, codes, returnType, otherParameters);
+    orderExpressionSentenceArray(expressionSentenceArray, type, valueSets, codes, returnType, otherParameters, name);
 
   return orderedExpressionSentenceArray;
 }

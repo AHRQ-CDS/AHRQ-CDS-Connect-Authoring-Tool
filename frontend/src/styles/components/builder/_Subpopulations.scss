@@ -9,7 +9,7 @@
     background-color: $body-bg;
 
     &.subelement {
-      background-color: $gray-lighter;
+      background-color: lighten($blue-light, 35%);
     }
   }
 

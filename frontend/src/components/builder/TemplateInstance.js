@@ -107,7 +107,8 @@ export default class TemplateInstance extends Component {
     this.props.templateInstance.uniqueId !== instance.uniqueId
   )
 
-  isSubelementUsed = () => (this.props.templateInstance.usedBy ? this.props.templateInstance.usedBy.length !== 0 : false);
+  isSubelementUsed = () => (
+    this.props.templateInstance.usedBy ? this.props.templateInstance.usedBy.length !== 0 : false);
 
   updateInstance = (newState) => {
     this.setState(newState);
@@ -667,13 +668,22 @@ export default class TemplateInstance extends Component {
       codes = templateInstance.parameters[1].codes;
     }
 
+    const referenceParameter = this.props.templateInstance.parameters.find(param => param.type === 'reference');
+    let name = '';
+    if (referenceParameter) {
+      const instanceNameOfOriginalSubelement = this.props.instanceNames.find(instanceName =>
+        instanceName.id === referenceParameter.value.id);
+      name = instanceNameOfOriginalSubelement.name;
+    }
+
     const expressions = convertToExpression(
       templateInstance.modifiers,
       type,
       valueSets,
       codes,
       returnType,
-      templateInstance.parameters.filter(param => param.type === 'number' || param.type === 'valueset')
+      templateInstance.parameters.filter(param => param.type === 'number' || param.type === 'valueset'),
+      name
     );
 
     if (!expressions) { return null; }
@@ -710,11 +720,10 @@ export default class TemplateInstance extends Component {
   renderBody() {
     const { templateInstance, validateReturnType } = this.props;
     const { returnType } = this.state;
+    const referenceParameter = templateInstance.parameters.find(param => param.type === 'reference');
     const validationError = this.validateElement();
     const returnError = (!(validateReturnType !== false) || returnType === 'boolean') ? null
       : "Element must have return type 'boolean'. Add expression(s) to change the return type.";
-
-    const referenceParameter = this.props.templateInstance.parameters.find(param => param.type === 'reference');
 
     return (
       <div className="card-element__body">
@@ -766,7 +775,8 @@ export default class TemplateInstance extends Component {
       <div className="card-element__footer">
         {this.renderModifierSelect()}
 
-        {templateInstance.id && templateInstance.id.includes('_vsac') &&
+        {/* Subelement usages will have _vsac included in the id, but should not support additional VS and codes */}
+        {templateInstance.id && templateInstance.id.includes('_vsac') && templateInstance.type !== 'subelement' &&
           <div className="vsac-controls">
             {this.renderVSACOptions()}
           </div>

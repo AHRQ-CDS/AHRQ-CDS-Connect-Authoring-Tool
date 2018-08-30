@@ -565,7 +565,7 @@ Builder.propTypes = {
   isValidatingCode: PropTypes.bool.isRequired,
   isValidCode: PropTypes.bool,
   codeData: PropTypes.object,
-  instanceNames: PropTypes.array.isRequired,
+  names: PropTypes.array.isRequired,
 };
 
 // these props are used for dispatching actions
