@@ -246,16 +246,22 @@ export default class TemplateInstance extends Component {
           {index + 1 === this.props.templateInstance.modifiers.length &&
             <span
               role="button"
+              id={`modifier-delete-${this.props.templateInstance.uniqueId}`}
               className={`modifier__deletebutton secondary-button ${canModifierBeRemoved ? '' : 'disabled'}`}
               aria-label={'remove last expression'}
-              onClick={this.removeLastModifier}
+              onClick={() => this.removeLastModifier(canModifierBeRemoved)}
               tabIndex="0"
               onKeyPress={(e) => {
                 e.which = e.which || e.keyCode;
-                if (e.which === 13) this.removeLastModifier();
+                if (e.which === 13) this.removeLastModifier(canModifierBeRemoved);
               }}>
 
               <FontAwesome name="close" className="delete-valueset-button" />
+              { !canModifierBeRemoved &&
+                <UncontrolledTooltip
+                  target={`modifier-delete-${this.props.templateInstance.uniqueId}`} placement="left">
+                  Cannot remove modifier because return type cannot change while in use.
+                </UncontrolledTooltip> }
             </span>
           }
         </div>
@@ -336,7 +342,8 @@ export default class TemplateInstance extends Component {
     this.setAppliedModifiers(modifiers);
   }
 
-  removeLastModifier = () => {
+  removeLastModifier = (canRemove) => {
+    if (!canRemove) return;
     const modifiers = _.initial(this.props.templateInstance.modifiers);
     this.setAppliedModifiers(modifiers);
   }
