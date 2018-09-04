@@ -57,83 +57,94 @@
       margin: 0.5em 0;
       padding: 0.5em;
     }
-  }
 
-  .card-group__header,
-  .card-element__header {
-    display: flex;
-    flex: 0 0 100%;
-    justify-content: space-between;
-    align-items: flex-start;
+    &__header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0.5em 2em;
 
-    &-heading {
-      flex: 1;
+      &-top {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        width: 100%;
+
+        &.collapsed {
+          margin-top: 10px;
+        }
+      }
+
+      &.collapsed {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      &-expression {
+        margin-bottom: 20px;
+      }
     }
 
-    button {
-      border: 0.1em solid $border-color;
+    &__heading .heading-name {
+      display: flex;
+      align-items: center;
+      font-weight: bold;
+
+      .warning {
+        margin-left: 10px;
+        font-weight: normal;
+      }
+    }
+
+    &__buttons button {
+      margin-left: 0.5em;
+    }
+
+    &__body {
+      border-top: 0.1em solid $border-color;
+      padding: 1em;
+
+      &-element {
+        display: flex;
+        align-items: center;
+        margin: 10px 0;
+
+        &-label {
+          display: inline-block;
+          font-weight: bold;
+          text-align: right;
+          padding-right: 2em;
+          margin-left: 5px;
+        }
+
+        &-data {
+          display: inline-block;
+        }
+      }
+    }
+
+    &__footer {
+      padding: 1em;
+      border-top: $border-global;
+
+      &:empty { display: none; }
     }
   }
 
   .card-group__header {
+    display: flex;
+    flex: 0 0 100%;
+    justify-content: space-between;
+    align-items: center;
     padding: 0 0 1em 1em;
-  }
 
-  .card-element__header {
-    padding: 0.5em 1em;
-  }
-
-  .card-group__buttons,
-  .card-element__buttons {
-    flex: 1;
-    text-align: right;
-    margin-left: auto;
-    margin-top: 10px;
-
-    button {
-      background-color: $body-bg;
-      color: $default-button-text-color;
-      border: 0.1em solid $border-color;
-      border-radius: 0.2em;
-      box-shadow: none;
-      transition: 0.2s ease-in-out;
-      margin-left: 0.5em;
+    &-heading {
+      flex: 1;
     }
   }
 
   .card-group__buttons {
     padding-right: 1em;
-  }
-
-  .card-element__body {
-    border-top: 0.1em solid $border-color;
-    padding: 1em;
-
-    &-element {
-      display: flex;
-      align-items: center;
-      margin: 10px 0;
-
-      &-label {
-        display: inline-block;
-        min-width: 160px;
-        font-weight: bold;
-        text-align: right;
-        padding-right: 2em;
-        margin-left: -8px;
-      }
-
-      &-data {
-        display: inline-block;
-      }
-    }
-  }
-
-  .card-element__footer {
-    padding: 1em;
-    border-top: $border-global;
-
-    &:empty { display: none; }
   }
 
   .card-select {

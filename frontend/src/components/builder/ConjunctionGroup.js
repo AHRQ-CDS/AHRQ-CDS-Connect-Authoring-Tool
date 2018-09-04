@@ -136,19 +136,18 @@ export default class ConjunctionGroup extends Component {
   renderIndentButtons = instance => (
     // Indenting is always possible, outdent only possible when not at root already
     <span className="indent-outdent-container">
-      { this.getPath() !== '' ?
+      {this.getPath() !== '' &&
         <button
           aria-label="outdent"
-          className='element__hidebutton'
+          className="element__hidebutton transparent-button"
           onClick={() => this.outdentClickHandler(instance)}>
           <FontAwesome name="dedent" />
-        </button> :
-        null
+        </button>
       }
 
       <button
         aria-label="indent"
-        className='element__hidebutton'
+        className="element__hidebutton transparent-button"
         onClick={() => this.indentClickHandler(instance)}>
         <FontAwesome name="indent" />
       </button>
@@ -178,7 +177,7 @@ export default class ConjunctionGroup extends Component {
             {this.renderIndentButtons(this.props.instance)}
 
             <button
-              className="element__deletebutton"
+              className="element__deletebutton transparent-button"
               onClick={() => this.props.deleteInstance(this.props.treeName, this.getPath())}
               aria-label={`remove ${this.props.instance.name}`}>
               <FontAwesome name='close'/>

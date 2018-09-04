@@ -221,7 +221,7 @@ export default class CodeSelectModal extends Component {
             <header className="modal__header">
               <span className="modal__heading">Choose Code</span>
               <button
-                className="element__deletebutton"
+                className="element__deletebutton transparent-button"
                 onClick={this.closeCodeSelectModal}
                 onKeyDown={e => this.enterKeyCheck(this.closeCodeSelectModal, null, e)}
                 aria-label={'Close Code Select Modal'}>

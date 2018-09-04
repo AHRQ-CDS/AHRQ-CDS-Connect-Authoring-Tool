@@ -44,7 +44,7 @@ test('Simple modifiers Active, Confirmed, Exists builds expected phrase', () => 
     { expressionText: 'an', isExpression: false },
     { expressionText: 'active', isExpression: true },
     { expressionText: 'confirmed', isExpression: true },
-    { expressionText: 'condition', isExpression: false },
+    { expressionText: 'condition', isExpression: false, isType: true },
     { expressionText: 'with a code from', isExpression: false },
     { expressionText: 'Diabetes', isExpression: true }
   ];
@@ -113,7 +113,7 @@ test('More complicated modifiers, including Qualifier, builds expected phrase', 
     { expressionText: 'a', isExpression: false },
     { expressionText: 'most recent', isExpression: true },
     { expressionText: 'verified', isExpression: true },
-    { expressionText: 'observation', isExpression: false },
+    { expressionText: 'observation', isExpression: false, isType: true },
     { expressionText: 'with a code from', isExpression: false },
     { expressionText: 'LDL', isExpression: true },
     { expressionText: 'which occurred', isExpression: false },
@@ -198,7 +198,7 @@ test('More complicated modifiers, including Value Comparison, builds correct phr
     { expressionText: 'a', isExpression: false },
     { expressionText: 'most recent', isExpression: true },
     { expressionText: 'verified', isExpression: true },
-    { expressionText: 'observation', isExpression: false },
+    { expressionText: 'observation', isExpression: false, isType: true },
     { expressionText: 'with a code from', isExpression: false },
     { expressionText: 'LDL', isExpression: true },
     { expressionText: 'with unit', isExpression: false },
@@ -264,7 +264,7 @@ test('More complicated expression, with Highest, Not, and Is Null, builds correc
     { expressionText: 'the', isExpression: false },
     { expressionText: 'highest', isExpression: true },
     { expressionText: 'verified', isExpression: true },
-    { expressionText: 'observation', isExpression: false },
+    { expressionText: 'observation', isExpression: false, isType: true },
     { expressionText: 'with a code from', isExpression: false },
     { expressionText: 'test code', isExpression: true },
     { expressionText: 'is null', isExpression: true }
@@ -295,7 +295,7 @@ test('Only validated modifiers are added to the phrase', () => {
 
   // Only modifiers that are validated are added
   const expectedOutput = [
-    { expressionText: 'Observations', isExpression: false },
+    { expressionText: 'Observations', isExpression: false, isType: true },
     { expressionText: 'with a code from', isExpression: false },
     { expressionText: 'LDL', isExpression: true }
   ];
@@ -329,7 +329,7 @@ test('All value sets and codes are added to phrase, but only first three are dis
     { expressionText: 'There', isExpression: false },
     { expressionText: 'exists', isExpression: true },
     { expressionText: 'an', isExpression: false },
-    { expressionText: 'observation', isExpression: false },
+    { expressionText: 'observation', isExpression: false, isType: true },
     { expressionText: 'with a code from', isExpression: false },
     { expressionText: 'LDL', isExpression: true },
     { expressionText: ',', isExpression: false },
@@ -354,7 +354,7 @@ test('Elements that have a return type of a list indicates plurality in the phra
   const expressionPhrase = convertToExpression(modifiers, name, valueSets, codes, 'list_of_observations');
 
   const expectedOutput = [
-    { expressionText: 'Observations', isExpression: false },
+    { expressionText: 'Observations', isExpression: false, isType: true },
     { expressionText: 'with a code from', isExpression: false },
     { expressionText: 'LDL', isExpression: true }
   ];
@@ -374,7 +374,9 @@ describe('Demographics elements support special case phrases', () => {
     const expressionPhrase = convertToExpression(modifiers, name, [], [], 'boolean', ages);
 
     const expectedOutput = [
-      { expressionText: 'The patient\'s age is', isExpression: false },
+      { expressionText: 'The patient\'s', isExpression: false },
+      { expressionText: 'age', isExpression: false, isType: true },
+      { expressionText: 'is', isExpression: false },
       { expressionText: 'between', isExpression: false },
       { expressionText: '18 years', isExpression: true },
       { expressionText: 'and', isExpression: false },
@@ -397,7 +399,9 @@ describe('Demographics elements support special case phrases', () => {
     const expressionPhrase = convertToExpression(modifiers, name, [], [], 'boolean', gender);
 
     const expectedOutput = [
-      { expressionText: 'The patient\'s gender is', isExpression: false },
+      { expressionText: 'The patient\'s', isExpression: false },
+      { expressionText: 'gender', isExpression: false, isType: true },
+      { expressionText: 'is', isExpression: false },
       { expressionText: 'Male', isExpression: true }
     ];
 

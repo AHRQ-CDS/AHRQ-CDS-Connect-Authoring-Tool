@@ -40,13 +40,9 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-
-    button {
-      border: 0.1em solid $border-color;
-    }
   }
 
   .card-element {
-    padding: 1em;
+    padding: 1em 2em;
   }
 }

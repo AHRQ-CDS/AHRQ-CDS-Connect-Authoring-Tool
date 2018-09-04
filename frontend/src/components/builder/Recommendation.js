@@ -117,7 +117,7 @@ export default class Recommendation extends Component {
             {subpop.subpopulationName}
 
             <button
-              className="secondary-button"
+              className="transparent-button"
               aria-label={`Remove ${subpop.subpopulationName}`}
               onClick={() => this.removeSubpopulation(i)}>
               <FontAwesome fixedWidth name='times'/>
@@ -184,7 +184,7 @@ export default class Recommendation extends Component {
             </button> */}
 
             <button
-              className="recommendation__remove secondary-button"
+              className="recommendation__remove transparent-button"
               aria-label="remove recommendation"
               onClick={() => this.props.onRemove(this.props.rec.uid)}>
               <FontAwesome fixedWidth name='times' />

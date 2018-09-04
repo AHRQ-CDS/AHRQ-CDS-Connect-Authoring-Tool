@@ -145,3 +145,18 @@ describe('vsac controls on generic template instances', () => {
     expect(updateSpy).toBeCalledWith(arrayToUpdate);
   });
 });
+
+test('renders a collapsed element correctly', () => {
+  component = fullRenderComponentOnBody(TemplateInstance, { ...props });
+
+  expect(component.find('.card-element__body')).toHaveLength(1);
+  expect(component.find('.card-element__footer')).toHaveLength(1);
+
+  const collapseButton = component.find('.element__hidebutton');
+  collapseButton.simulate('click');
+
+  expect(component.find('.card-element__body')).toHaveLength(0);
+  expect(component.find('.card-element__footer')).toHaveLength(0);
+  expect(component.find('.card-element__header-expression')).toHaveLength(1);
+  expect(component.find('.card-element__heading .warning')).toHaveLength(1);
+});
