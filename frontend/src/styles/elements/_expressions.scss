@@ -36,4 +36,8 @@
 .card-group__odd > .card-element > .card-element__body > .expression,
 .subpopulation .expression {
   background-color: $gray-lightest;
+
+  &.expression-collapsed {
+    background-color: $white;
+  }
 }
