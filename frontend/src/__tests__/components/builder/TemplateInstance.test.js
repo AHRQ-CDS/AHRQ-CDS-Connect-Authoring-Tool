@@ -1,10 +1,14 @@
 import { createTemplateInstance, fullRenderComponentOnBody } from '../../../utils/test_helpers';
-import { instanceTree, genericInstance } from '../../../utils/test_fixtures';
+import { instanceTree, genericInstance, genericSubelementInstance,
+  genericSubelementInstanceWithModifiers, genericSubelementUseInstance } from '../../../utils/test_fixtures';
 
 import TemplateInstance from '../../../components/builder/TemplateInstance';
 
 const originalInstance = instanceTree.childInstances[0];
 const genericTemplateInstance = createTemplateInstance(genericInstance);
+const genericSubelementUseTemplateInstance = createTemplateInstance(genericSubelementUseInstance);
+const genericSubelementTemplateInstance = createTemplateInstance(genericSubelementInstance);
+const genericSubelementTemplateInstanceWithModifers = createTemplateInstance(genericSubelementInstanceWithModifiers);
 let component;
 
 const props = {
@@ -159,4 +163,131 @@ test('renders a collapsed element correctly', () => {
   expect(component.find('.card-element__footer')).toHaveLength(0);
   expect(component.find('.card-element__header-expression')).toHaveLength(1);
   expect(component.find('.card-element__heading .warning')).toHaveLength(1);
+});
+
+describe('Subelement instances', () => {
+  beforeEach(() => {
+    const subelementProps = { ...props };
+    subelementProps.templateInstance = genericSubelementTemplateInstance;
+    component = fullRenderComponentOnBody(TemplateInstance, { ...subelementProps });
+  });
+
+  test('cannot be deleted if in use in the artifact', () => {
+    window.alert = jest.fn();
+    const alertMessage =
+      'This subelement is referenced somewhere else. To delete this element, remove all references to it.';
+    // Used by one element
+    expect(component.props().templateInstance.usedBy).toHaveLength(1);
+
+    // Clicking delete button calls the TI's delete function, but not the function passed on props to actually delete it
+    // Instead, window alert is called
+    const deleteSpy = jest.spyOn(component.instance(), 'deleteInstance');
+    const propsDeleteSpy = jest.spyOn(component.props(), 'deleteInstance');
+    component.update();
+    const deleteButton = component.find('.element__deletebutton');
+    deleteButton.simulate('click');
+    expect(deleteSpy).toBeCalled();
+    expect(propsDeleteSpy).not.toBeCalled();
+    expect(window.alert).toBeCalledWith(alertMessage);
+  });
+
+  test('can be deleted if not in use in the artifact', () => {
+    window.alert = jest.fn();
+    // Remove the usage
+    const updatedTemplateInstance = genericSubelementInstance;
+    updatedTemplateInstance.usedBy = [];
+    component.setProps({ templateInstance: updatedTemplateInstance });
+    // Used by no elements
+    expect(component.props().templateInstance.usedBy).toHaveLength(0);
+
+    const deleteSpy = jest.spyOn(component.instance(), 'deleteInstance');
+    const propsDeleteSpy = jest.spyOn(component.props(), 'deleteInstance');
+    component.update();
+    const deleteButton = component.find('.element__deletebutton');
+
+    // Can delete instance once no longer used. Calls props deleteInstance to fully delete and no alert created
+    deleteButton.simulate('click');
+    expect(deleteSpy).toBeCalled();
+    expect(propsDeleteSpy).toBeCalled();
+    expect(window.alert).not.toBeCalled();
+  });
+
+  test('cannot add modifiers that change the return type if in use in the artifact', () => {
+    // Initially used by another element
+    expect(component.props().templateInstance.usedBy).toHaveLength(1);
+
+    // Only modifiers that maintain return type are shown
+    const addExpressionButton = component.find('.modifier__addbutton');
+    addExpressionButton.simulate('click');
+    let modifierOptions = component.find('button .modifier__button .secondary-button');
+    expect(modifierOptions).toHaveLength(3);
+
+    // Remove the usage
+    const updatedTemplateInstance = genericSubelementInstance;
+    updatedTemplateInstance.usedBy = [];
+    component.setProps({ templateInstance: updatedTemplateInstance });
+
+    // When no other uses present, all modifiers available again.
+    modifierOptions = component.find('button .modifier__button .secondary-button');
+    expect(modifierOptions).toHaveLength(7);
+  });
+
+  test('cannot remove modifiers that change the return type if in use in the artifact', () => {
+    // Use templateInstance with modifiers
+    const updatedTemplateInstance = genericSubelementTemplateInstanceWithModifers;
+    component.setProps({ templateInstance: updatedTemplateInstance });
+
+    const removeLastModifierSpy = jest.spyOn(component.instance(), 'removeLastModifier');
+    const setAppliedModifiersSpy = jest.spyOn(component.instance(), 'setAppliedModifiers');
+    component.update();
+
+    // Initially used by another element
+    expect(component.props().templateInstance.usedBy).toHaveLength(1);
+
+    // Initially 3 modifiers applied
+    expect(component.props().templateInstance.modifiers).toHaveLength(3);
+
+    // First modifier to delete on hardcoded subelement does not change return type. Can be removed.
+    let modifierDeleteButton = component.find('.modifier__deletebutton');
+    expect(modifierDeleteButton).toHaveLength(1);
+    expect(modifierDeleteButton.hasClass('disabled')).not.toBeTruthy();
+    modifierDeleteButton.simulate('click');
+    expect(removeLastModifierSpy).toHaveBeenLastCalledWith(true);
+    let currentAppliedModifiers = component.props().templateInstance.modifiers.slice(0, -1); // All but last modifier
+    expect(setAppliedModifiersSpy).toHaveBeenLastCalledWith(currentAppliedModifiers);
+
+    // Update modifiers on the template instance to simulate removing the last modifier
+    updatedTemplateInstance.modifiers = currentAppliedModifiers;
+    component.setProps({ templateInstance: updatedTemplateInstance });
+
+    // Now only 2 modifiers applied. Last modifier will change return type. Cannot be removed.
+    expect(component.props().templateInstance.modifiers).toHaveLength(2);
+    modifierDeleteButton = component.find('.modifier__deletebutton');
+    expect(modifierDeleteButton).toHaveLength(1);
+    expect(modifierDeleteButton.hasClass('disabled')).toBeTruthy();
+    modifierDeleteButton.simulate('click');
+    expect(removeLastModifierSpy).toHaveBeenLastCalledWith(false);
+    currentAppliedModifiers = component.props().templateInstance.modifiers; // All previous modifiers
+    expect(setAppliedModifiersSpy).toHaveBeenLastCalledWith(currentAppliedModifiers);
+  });
+});
+
+describe('Subelement uses', () => {
+  beforeEach(() => {
+    // Set templateInstance for subelement use and set instanceNames to include the original subelement name.
+    const subelementProps = { ...props };
+    subelementProps.templateInstance = genericSubelementUseTemplateInstance;
+    subelementProps.instanceNames = [{ id: 'originalSubelementId', name: 'My Subelement' }];
+    component = fullRenderComponentOnBody(TemplateInstance, { ...subelementProps });
+  });
+
+  test('have correct color background', () => {
+    expect(component.hasClass('subelement')).toBeTruthy();
+  });
+
+  test('visualize origianl subelement information', () => {
+    const subelementList = component.find('#subelement-list');
+    expect(subelementList).toHaveLength(1);
+    expect(subelementList.text()).toEqual('Subelement:My Subelement');
+  });
 });

@@ -508,7 +508,7 @@ class CqlArtifact {
     let expressions = this.contexts.concat(this.conjunctions);
     expressions = expressions.concat(this.conjunction_main);
     return expressions.map((context) => {
-      if ((context.withoutModifiers || context.components) && specificMap[context.template]) {
+      if (context.withoutModifiers || context.components) {
         return ejs.render(specificMap[context.template], context);
       }
       if (!(context.template in templateMap)) console.error(`Template could not be found: ${context.template}`);

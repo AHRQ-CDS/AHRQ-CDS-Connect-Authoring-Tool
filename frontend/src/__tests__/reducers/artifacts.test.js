@@ -90,7 +90,7 @@ describe.only('artifacts reducer', () => {
   });
 
   // ----------------------- LOAD ARTIFACT -------------------------------- //
-  it.only('should handle loading an artifact', () => {
+  it('should handle loading an artifact', () => {
     let action = { type: types.ARTIFACT_REQUEST, id: '1' };
     let newState = { loadArtifact: { isLoading: true, loadStatus: null } };
     expect(reducer([], action)).toEqual(newState);

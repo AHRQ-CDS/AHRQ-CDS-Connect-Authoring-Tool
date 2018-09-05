@@ -1,4 +1,6 @@
 /* eslint-disable object-curly-newline */
+const elementLists = ['list_of_observations', 'list_of_conditions', 'list_of_medication_statements',
+  'list_of_medication_orders', 'list_of_procedures', 'list_of_allergy_intolerances', 'list_of_encounters'];
 
 /**
  * Example TemplateInstances
@@ -312,11 +314,109 @@ const genericInstance = {
   modifiers: [],
 };
 
+const genericSubelementInstance = {
+  id: 'GenericObservation_vsac',
+  name: 'Observation',
+  returnType: 'list_of_observations',
+  suppress: true,
+  extends: 'Base',
+  type: 'element',
+  template: 'GenericObservation',
+  usedBy: ['testId1'],
+  suppressedModifiers: ['ConvertToMgPerdL'], // checkInclusionInVS is assumed to be suppressed
+  parameters: [
+    { id: 'element_name', name: 'Element Name', type: 'string', value: 'VSAC Observation' },
+    {
+      id: 'observation',
+      type: 'observation_vsac',
+      name: 'Observation',
+      valueSets: [{ name: 'VS', oid: '1.2.3' }, { name: 'VS2', oid: '2.3.4' }],
+      codes: [
+        { code: '123-4', codeSystem: { name: 'TestName', id: 'TestId' } },
+        { code: '456-7', codeSystem: { name: 'TestNameA', id: 'TestIdA' } }
+      ]
+    }
+  ],
+  modifiers: [],
+};
+
+const genericSubelementInstanceWithModifiers = {
+  id: 'GenericObservation_vsac',
+  name: 'Observation',
+  returnType: 'list_of_observations',
+  suppress: true,
+  extends: 'Base',
+  type: 'element',
+  template: 'GenericObservation',
+  usedBy: ['testId1'],
+  suppressedModifiers: ['ConvertToMgPerdL'], // checkInclusionInVS is assumed to be suppressed
+  parameters: [
+    { id: 'element_name', name: 'Element Name', type: 'string', value: 'VSAC Observation' },
+    {
+      id: 'observation',
+      type: 'observation_vsac',
+      name: 'Observation',
+      valueSets: [{ name: 'VS', oid: '1.2.3' }, { name: 'VS2', oid: '2.3.4' }],
+      codes: [
+        { code: '123-4', codeSystem: { name: 'TestName', id: 'TestId' } },
+        { code: '456-7', codeSystem: { name: 'TestNameA', id: 'TestIdA' } }
+      ]
+    }
+  ],
+  modifiers: [
+    {
+      id: 'VerifiedObservation',
+      name: 'Verified',
+      inputTypes: ['list_of_observations'],
+      returnType: 'list_of_observations',
+      cqlTemplate: 'BaseModifier',
+      cqlLibraryFunction: 'C3F.Verified'
+    },
+    {
+      id: 'BooleanExists',
+      name: 'Exists',
+      inputTypes: elementLists,
+      returnType: 'boolean',
+      cqlTemplate: 'BaseModifier',
+      cqlLibraryFunction: 'exists'
+    },
+    {
+      id: 'BooleanNot',
+      name: 'Not',
+      inputTypes: ['boolean'],
+      returnType: 'boolean',
+      cqlTemplate: 'BaseModifier',
+      cqlLibraryFunction: 'not'
+    }
+  ],
+};
+
+const genericSubelementUseInstance = {
+  id: 'GenericObservation_vsac',
+  name: 'Subelement',
+  returnType: 'list_of_observations',
+  type: 'subelement',
+  template: 'GenericStatement',
+  parameters: [
+    { id: 'element_name', name: 'Element Name', type: 'string', value: 'Subelement Observation' },
+    {
+      id: 'subelementReference',
+      type: 'reference',
+      name: 'reference',
+      value: { id: 'originalSubelementId', type: 'Observation' }
+    }
+  ],
+  modifiers: [],
+};
+
 export {
   instanceTree,
   emptyInstanceTree,
   elementGroups,
   genericElementTypes,
   genericElementGroups,
-  genericInstance
+  genericInstance,
+  genericSubelementInstance,
+  genericSubelementInstanceWithModifiers,
+  genericSubelementUseInstance
 };

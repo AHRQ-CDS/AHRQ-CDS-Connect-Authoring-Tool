@@ -453,7 +453,7 @@ export default class TemplateInstance extends Component {
     }
 
     return (
-      <div className="modifier__return__type" id="code-list">
+      <div className="modifier__return__type" id="subelement-list">
         <div className="row code-info">
           <div className="col-3 bold align-right code-info__label">Subelement:</div>
           <div className="col-9 row code-info__info">{referenceName}</div>
@@ -680,7 +680,7 @@ export default class TemplateInstance extends Component {
     if (referenceParameter) {
       const instanceNameOfOriginalSubelement = this.props.instanceNames.find(instanceName =>
         instanceName.id === referenceParameter.value.id);
-      name = instanceNameOfOriginalSubelement.name;
+      if (instanceNameOfOriginalSubelement) name = instanceNameOfOriginalSubelement.name;
     }
 
     const expressions = convertToExpression(
@@ -836,9 +836,7 @@ export default class TemplateInstance extends Component {
     const elementNameParameter = templateInstance.parameters.find(param => param.id === 'element_name');
     const headerClass = classNames('card-element__header', { collapsed: !showElement });
     const headerTopClass = classNames('card-element__header-top', { collapsed: !showElement });
-
-    const referenceParameter = templateInstance.parameters.find(param => param.type === 'reference');
-    const className = referenceParameter ? 'subelement' : ''; // TODO After rebase: add this class name back to top level. (headerClass?)
+    const className = templateInstance.type === 'subelement' ? 'subelement' : ''; // TODO After rebase: add this class name back to top level. (headerClass?)
     return (
       <div className={headerClass}>
         <div className={headerTopClass}>
