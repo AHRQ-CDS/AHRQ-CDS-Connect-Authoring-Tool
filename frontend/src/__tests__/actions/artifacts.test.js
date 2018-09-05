@@ -8,8 +8,7 @@ import FileSaver from 'file-saver';
 import * as actions from '../../actions/artifacts';
 import * as types from '../../actions/types';
 import mockArtifact from '../../mocks/mockArtifact';
-import mockPatient from '../../mocks/mockPatient';
-import mockTemplates from '../../mocks/mockTemplates'
+import mockTemplates from '../../mocks/mockTemplates';
 
 const middlewares = [thunk];
 const mockStore = configureMockStore(middlewares);
