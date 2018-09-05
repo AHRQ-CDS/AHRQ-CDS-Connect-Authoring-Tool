@@ -435,6 +435,10 @@ export default class TemplateInstance extends Component {
                     {modifier.name}
                   </button>)
             }
+            {this.state.showModifiers && subelementIsInUse &&
+              <span className="notification">
+                <FontAwesome name="exclamation-circle"/> Limited expressions displayed because return type cannot change while in use.
+              </span>}
           </div>
         </div>
       );
@@ -804,6 +808,7 @@ export default class TemplateInstance extends Component {
       }
 
       const referenceParameter = templateInstance.parameters.find(param => param.type === 'reference');
+
       let elementType = templateInstance.name;
       if (referenceParameter) {
         // Element type to display in header will be the reference type for Subelements.
@@ -820,7 +825,7 @@ export default class TemplateInstance extends Component {
             uniqueId={templateInstance.uniqueId}
             />
           {this.hasDuplicateName() &&
-            <div className="warning">Warning: Name already in use. Choose another name.</div>
+            <div className="warning">{warningText}</div>
           }
         </div>
       );

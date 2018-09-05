@@ -148,6 +148,14 @@ h6 {
   margin: 10px 0;
 }
 
+.notification {
+  color: $blue;
+  font-size: 0.8em;
+  background-color: lighten($blue-light, 35%);
+  padding: 10px;
+  float: right;
+}
+
 .error-message {
   width: 60%;
   margin-right: auto;

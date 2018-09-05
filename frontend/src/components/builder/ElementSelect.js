@@ -100,7 +100,6 @@ export default class ElementSelect extends Component {
     if (this.props.subelements && this.props.subelements.length && categoriesCopy[subElementsIndex]) {
       categoriesCopy[subElementsIndex].entries = this.props.subelements.map((e) => {
         const returnType = _.isEmpty(e.modifiers) ? e.returnType : _.last(e.modifiers).returnType;
-        // TODO Changing this after deployment will require a migration. Will need to really consider this.
         return ({
           id: _.uniqueId(e.id),
           name: 'Subelement',

@@ -33,7 +33,7 @@ export function setStatusMessage(statusType) {
 // ------------------------- UPDATE ARTIFACT ------------------------------- //
 
 function parseTree(element, names, subelementsInUse) {
-  parseConjunction(element, names, subelementsInUse); // TODO Maybe separate out a parseconjunction for name and parse for subelement?
+  parseConjunction(element, names, subelementsInUse);
   const children = element.childInstances;
   children.forEach((child) => {
     if ('childInstances' in child) {
