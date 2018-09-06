@@ -194,6 +194,64 @@ describe.only('artifacts reducer', () => {
     expect(reducer(previousState, action)).toEqual(newState);
   });
 
+  // ----------------------- EXECUTE ARTIFACT ---------------------------- //
+  it('should handle executing an artifact', () => {
+    let action = { type: types.EXECUTE_ARTIFACT_REQUEST };
+    let newState = {
+      executeArtifact: {
+        isExecuting: true,
+        executeStatus: null,
+        results: null,
+        artifactExecuted: null,
+        patientExecuted: null
+      }
+    };
+    expect(reducer([], action)).toEqual(newState);
+
+    const previousState = {
+      executeArtifact: {
+        isExecuting: false,
+        executeStatus: 'test',
+        results: {},
+        artifactExecuted: 'Test artifact',
+        patientExecuted: 'Test patient'
+      }
+    };
+    expect(reducer(previousState, action)).toEqual(newState);
+
+    action = {
+      type: types.EXECUTE_ARTIFACT_SUCCESS,
+      data: 'Test data',
+      artifact: 'Test artifact',
+      patient: 'Test patient'
+    };
+
+    newState = {
+      executeArtifact: {
+        isExecuting: false,
+        executeStatus: 'success',
+        results: action.data,
+        artifactExecuted: action.artifact,
+        patientExecuted: action.patient,
+        errorMessage: null
+      }
+    };
+    expect(reducer(previousState, action)).toEqual(newState);
+
+    action = {
+      type: types.EXECUTE_ARTIFACT_FAILURE,
+      statusText: 'Test status message'
+    };
+    newState = {
+      executeArtifact: {
+        isExecuting: false,
+        executeStatus: 'failure',
+        errorMessage: `Execute failed. ${action.statusText}.`
+      }
+    };
+    expect(reducer(previousState, action)).toEqual(newState);
+  });
+
   // ----------------------- PUBLISH ARTIFACT ------------------------------ //
   it('should handle publishing an artifact', () => {
     let action = { type: types.PUBLISH_ARTIFACT_REQUEST };

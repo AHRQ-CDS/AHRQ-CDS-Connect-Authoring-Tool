@@ -231,14 +231,14 @@ export default class PatientTable extends Component {
 
       <td data-th="">
         <button aria-label="View"
-          className="button primary-button"
+          className="button primary-button details-button"
           onClick={() => this.openViewDetailsModal(patient)}>
           <FontAwesome name='eye'/>
         </button>
 
         <button aria-label="Execute CQL"
           disabled={this.props.vsacFHIRCredentials.username == null}
-          className={`button primary-button ${
+          className={`button primary-button execute-button ${
             this.props.vsacFHIRCredentials.username != null ? '' : 'disabled-button'
           }`}
           onClick={() => this.openExecuteCQLModal(patient)}>

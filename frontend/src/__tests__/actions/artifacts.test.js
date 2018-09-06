@@ -3,6 +3,7 @@ import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 import moxios from 'moxios';
 import moment from 'moment';
+import FileSaver from 'file-saver';
 
 import * as actions from '../../actions/artifacts';
 import * as types from '../../actions/types';
@@ -163,6 +164,7 @@ describe('artifact actions', () => {
 
     it('creates DOWNLOAD_ARTIFACT_SUCCESS after successfully downloading an artifact', () => {
       moxios.stubs.track({ url: '/authoring/api/cql', method: 'POST', response: { status: 200, response: [] } });
+      FileSaver.saveAs = jest.fn();
 
       const store = mockStore({ artifacts: [mockArtifact] });
       const expectedActions = [
@@ -170,10 +172,8 @@ describe('artifact actions', () => {
         { type: types.DOWNLOAD_ARTIFACT_SUCCESS }
       ];
 
-      moxios.wait(() => {
-        store.dispatch(actions.downloadArtifact(mockArtifact)).then(() => {
-          expect(store.getActions()).toEqual(expectedActions);
-        });
+      return store.dispatch(actions.downloadArtifact(mockArtifact)).then(() => {
+        expect(store.getActions()).toEqual(expectedActions);
       });
     });
   });
