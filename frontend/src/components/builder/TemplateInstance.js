@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import FontAwesome from 'react-fontawesome';
 import { UncontrolledTooltip } from 'reactstrap';
+import classNames from 'classnames';
 import _ from 'lodash';
 
 import VSACAuthenticationModal from './VSACAuthenticationModal';
@@ -77,6 +78,15 @@ export default class TemplateInstance extends Component {
       }
       this.setState({ returnType });
     }
+  }
+
+  hasWarnings = () => {
+    const hasValidationError = this.validateElement() !== null;
+    const hasReturnError = this.state.returnType !== 'boolean';
+    const hasModifierWarnings = !this.allModifiersValid();
+    const hasNameWarning = this.hasDuplicateName();
+
+    return hasValidationError || hasReturnError || hasModifierWarnings || hasNameWarning;
   }
 
   // Props will either be this.props or nextProps coming from componentWillReceiveProps
@@ -347,6 +357,14 @@ export default class TemplateInstance extends Component {
     return allModifiersValid;
   }
 
+  hasDuplicateName = () => {
+    const { templateInstance, instanceNames } = this.props;
+    const elementNameParameter = templateInstance.parameters.find(param => param.id === 'element_name');
+    const duplicateNameIndex = instanceNames.findIndex(name =>
+      name.id !== templateInstance.uniqueId && name.name === elementNameParameter.value);
+    return duplicateNameIndex !== -1;
+  }
+
   renderModifierSelect = () => {
     if (!this.props.templateInstance.cannotHaveModifiers
       && (this.state.relevantModifiers.length > 0 || (this.props.templateInstance.modifiers || []).length === 0)) {
@@ -575,34 +593,8 @@ export default class TemplateInstance extends Component {
     return null;
   }
 
-  renderExpression = (expressions, id) => {
-    if (!expressions) { return null; }
-
-    return (
-      <div className="expression-logic">
-        {expressions.map((expression, i) => {
-          if (expression.isExpression) {
-            return (
-              <span key={i}>
-                <span id={`expression-${id}-${i}`} className="expression-item expression-tag">
-                  {expression.expressionText}
-                </span>
-                { expression.tooltipText &&
-                  <UncontrolledTooltip target={`expression-${id}-${i}`} placement='top'>
-                    {expression.tooltipText}
-                  </UncontrolledTooltip> }
-              </span>
-            );
-          }
-
-          return <span className="expression-item expression-text" key={i}>{expression.expressionText}</span>;
-        })}
-      </div>
-    );
-  }
-
-  renderBody() {
-    const { templateInstance, validateReturnType } = this.props;
+  renderExpression = () => {
+    const { templateInstance } = this.props;
     const { returnType } = this.state;
     const type = templateInstance.type === 'parameter' ? templateInstance.type : templateInstance.name;
 
@@ -616,31 +608,62 @@ export default class TemplateInstance extends Component {
       codes = templateInstance.parameters[1].codes;
     }
 
-    const otherParameters = templateInstance.parameters.filter(param =>
-      param.type === 'number' || param.type === 'valueset');
-
     const expressions = convertToExpression(
       templateInstance.modifiers,
       type,
       valueSets,
       codes,
       returnType,
-      otherParameters
+      templateInstance.parameters.filter(param => param.type === 'number' || param.type === 'valueset')
     );
 
+    if (!expressions) { return null; }
+
+    return (
+      <div className="expression-logic">
+        {expressions.map((expression, i) => {
+          const expressionTextClass = classNames(
+            'expression-item expression-text',
+            { 'expression-type': expression.isType }
+          );
+
+          if (expression.isExpression) {
+            return (
+              <span key={i}>
+                <span id={`expression-${templateInstance.id}-${i}`} className="expression-item expression-tag">
+                  {expression.expressionText}
+                </span>
+
+                {expression.tooltipText &&
+                  <UncontrolledTooltip target={`expression-${templateInstance.id}-${i}`} placement='top'>
+                    {expression.tooltipText}
+                  </UncontrolledTooltip> }
+              </span>
+            );
+          }
+
+          return <span className={expressionTextClass} key={i}>{expression.expressionText}</span>;
+        })}
+      </div>
+    );
+  }
+
+  renderBody() {
+    const { templateInstance, validateReturnType } = this.props;
+    const { returnType } = this.state;
     const validationError = this.validateElement();
     const returnError = (!(validateReturnType !== false) || returnType === 'boolean') ? null
-      : "Element must have return type 'boolean'.  Add expression(s) to change the return type.";
+      : "Element must have return type 'boolean'. Add expression(s) to change the return type.";
 
     return (
       <div className="card-element__body">
         {validationError && <div className="warning">{validationError}</div>}
         {returnError && <div className="warning">{returnError}</div>}
-        {expressions &&
-          <div className="expression">{this.renderExpression(expressions, templateInstance.uniqueId)}</div>}
+
+        <div className="expression">{this.renderExpression()}</div>
 
         {templateInstance.parameters.map((param, index) => {
-          // todo: each parameter type should probably have its own component
+          // TODO: each parameter type should probably have its own component
           if (param.id !== 'element_name') {
             return this.selectTemplate(param);
           }
@@ -686,9 +709,8 @@ export default class TemplateInstance extends Component {
     );
   }
 
-  renderHeader = () => {
-    const { templateInstance, instanceNames } = this.props;
-    const elementNameParameter = templateInstance.parameters.find(param => param.id === 'element_name');
+  renderHeading = (elementNameParameter) => {
+    const { templateInstance } = this.props;
 
     if (elementNameParameter) {
       if (templateInstance.type === 'parameter') {
@@ -697,18 +719,17 @@ export default class TemplateInstance extends Component {
         }
         return null;
       }
-      const duplicateNameIndex = instanceNames.findIndex(name =>
-        name.id !== templateInstance.uniqueId && name.name === elementNameParameter.value);
 
       return (
-        <div>
+        <div className="card-element__heading">
           <StringParameter
             key={elementNameParameter.id}
             {...elementNameParameter}
             updateInstance={this.updateInstance}
             name={templateInstance.name} />
-          {duplicateNameIndex !== -1
-            && <div className="warning">Warning: Name already in use. Choose another name.</div>}
+          {this.hasDuplicateName() &&
+            <div className="warning">Warning: Name already in use. Choose another name.</div>
+          }
         </div>
       );
     }
@@ -717,38 +738,64 @@ export default class TemplateInstance extends Component {
     return <span className="label">{templateInstance.name}</span>;
   }
 
-  render() {
+  renderHeader = () => {
     const { templateInstance, renderIndentButtons, deleteInstance } = this.props;
     const { showElement } = this.state;
+    const elementNameParameter = templateInstance.parameters.find(param => param.id === 'element_name');
+    const headerClass = classNames('card-element__header', { collapsed: !showElement });
+    const headerTopClass = classNames('card-element__header-top', { collapsed: !showElement });
 
     return (
-      <div className="card-element element__expanded">
-        <div className="card-element__header">
-          <span className="card-element__heading">
-            {this.renderHeader()}
-          </span>
+      <div className={headerClass}>
+        <div className={headerTopClass}>
+          <div className="card-element__heading">
+            {showElement ?
+              this.renderHeading(elementNameParameter)
+            :
+              <div className="heading-name">
+                {elementNameParameter.value}: {this.hasWarnings() &&
+                  <div className="warning"><FontAwesome name="exclamation-circle" /> Has warnings</div>
+                }
+              </div>
+            }
+          </div>
 
           <div className="card-element__buttons">
-            {renderIndentButtons(templateInstance)}
+            {showElement && renderIndentButtons(templateInstance)}
 
             <button
               onClick={this.showHideElementBody}
-              className="element__hidebutton secondary-button"
+              className="element__hidebutton transparent-button"
               aria-label={`hide ${templateInstance.name}`}>
-              <FontAwesome name={showElement ? 'angle-double-down' : 'angle-double-right'}/>
+              <FontAwesome name={showElement ? 'angle-double-down' : 'angle-double-right'} />
             </button>
 
             <button
               onClick={() => deleteInstance(this.props.treeName, this.getPath())}
-              className="element__deletebutton secondary-button"
+              className="element__deletebutton transparent-button"
               aria-label={`remove ${templateInstance.name}`}>
-              <FontAwesome name='close'/>
+              <FontAwesome name="close" />
             </button>
           </div>
         </div>
 
-        {showElement ? this.renderBody() : null}
-        {showElement ? this.renderFooter() : null}
+        {!showElement &&
+          <div className="card-element__header-expression">
+            <div className="expression expression-collapsed">{this.renderExpression()}</div>
+          </div>
+        }
+      </div>
+    );
+  }
+
+  render() {
+    const { showElement } = this.state;
+
+    return (
+      <div className="card-element element__expanded">
+        {this.renderHeader()}
+        {showElement && this.renderBody()}
+        {showElement && this.renderFooter()}
       </div>
     );
   }

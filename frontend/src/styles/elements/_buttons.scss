@@ -19,14 +19,21 @@ button.secondary-button {
 }
 
 button.transparent-button {
-  @include button($default-button-text-color, transparent, transparent, transparent, none);
+  @include button(
+    $default-button-text-color,
+    transparent,
+    transparent,
+    transparent,
+    none);
 
   &:hover,
   &:focus,
   &:active {
-    background-color: transparent;
+    background-color: $white;
+    border: 1px solid $gray-lighter;
     text-decoration: underline;
     color: $default-button-text-color;
+    outline: none;
   }
 }
 
@@ -62,7 +69,6 @@ button.danger-button {
   font-size: 0.75em;
 }
 
-.element__hidebutton,
 .element__deletebutton,
 .element-modal__searchbutton {
   margin-left: 0.5em;

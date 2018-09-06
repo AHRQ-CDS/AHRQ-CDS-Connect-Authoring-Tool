@@ -184,7 +184,9 @@ function addExpressionText(expressionArray, expression) {
 
 function getOrderedExpressionSentenceArrayForAgeRange(expressionArray, ageParameters) {
   let orderedExpressionArray = [];
-  orderedExpressionArray.push({ expressionText: 'The patient\'s age is', isExpression: false });
+  orderedExpressionArray.push({ expressionText: 'The patient\'s', isExpression: false });
+  orderedExpressionArray.push({ expressionText: 'age', isExpression: false, isType: true });
+  orderedExpressionArray.push({ expressionText: 'is', isExpression: false });
 
   if (ageParameters[0].value && ageParameters[1].value) { // The minimum age and the maximum age are both added
     orderedExpressionArray.push({ expressionText: 'between', isExpression: false });
@@ -208,7 +210,10 @@ function getOrderedExpressionSentenceArrayForAgeRange(expressionArray, ageParame
 
 function getOrderedExpressionSentenceArrayForGender(genderParameter) {
   const orderedExpressionArray = [];
-  orderedExpressionArray.push({ expressionText: 'The patient\'s gender is', isExpression: false });
+  orderedExpressionArray.push({ expressionText: 'The patient\'s', isExpression: false });
+  orderedExpressionArray.push({ expressionText: 'gender', isExpression: false, isType: true });
+  orderedExpressionArray.push({ expressionText: 'is', isExpression: false });
+
   if (genderParameter[0].value) {
     orderedExpressionArray.push({ expressionText: genderParameter[0].value.name, isExpression: true });
   }
@@ -219,10 +224,10 @@ function getOrderedExpressionSentenceArrayForGender(genderParameter) {
 function getOrderedExpressionSentenceArrayForParameters(expressionArray, returnType) {
   let orderedExpressionArray = [];
   let remainingExpressionArray = expressionArray;
-  orderedExpressionArray.push({
-    expressionText: `The value of the ${_.lowerCase(returnType)} parameter is`,
-    isExpression: false
-  });
+  orderedExpressionArray.push({ expressionText: 'The value of the', isExpression: false });
+  orderedExpressionArray.push({ expressionText: `${_.lowerCase(returnType)}`, isExpression: true });
+  orderedExpressionArray.push({ expressionText: 'parameter', isExpression: false, isType: true });
+  orderedExpressionArray.push({ expressionText: 'is', isExpression: false });
 
   remainingExpressionArray = remainingExpressionArray.filter((expression) => {
     if (expression.type === 'not') {
@@ -335,19 +340,23 @@ function orderExpressionSentenceArray(expressionArray, type, valueSets, codes, r
   const elementArticle = getArticle(elementText);
   if (hasStarted) {
     if (returnsPlural) {
-      orderedExpressionArray.push({ expressionText: `${elementText}s`, isExpression: false });
+      orderedExpressionArray.push({ expressionText: `${elementText}s`, isExpression: false, isType: true });
     } else if (descriptorExpression || listExpressions.length > 0) {
-      orderedExpressionArray.push({ expressionText: elementText, isExpression: false });
+      orderedExpressionArray.push({ expressionText: elementText, isExpression: false, isType: true });
     } else {
       orderedExpressionArray.push({ expressionText: elementArticle, isExpression: false });
-      orderedExpressionArray.push({ expressionText: elementText, isExpression: false });
+      orderedExpressionArray.push({ expressionText: elementText, isExpression: false, isType: true });
     }
   } else if (returnsPlural) {
-    orderedExpressionArray.push({ expressionText: `${_.capitalize(elementText)}s`, isExpression: false });
+    orderedExpressionArray.push({
+      expressionText: `${_.capitalize(elementText)}s`,
+      isExpression: false,
+      isType: true
+    });
     hasStarted = true;
   } else {
     orderedExpressionArray.push({ expressionText: _.capitalize(elementArticle), isExpression: false });
-    orderedExpressionArray.push({ expressionText: elementText, isExpression: false });
+    orderedExpressionArray.push({ expressionText: elementText, isExpression: false, isType: true });
     hasStarted = true;
   }
 

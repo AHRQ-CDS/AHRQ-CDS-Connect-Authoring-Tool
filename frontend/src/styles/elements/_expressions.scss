@@ -7,7 +7,7 @@
   }
 
   &-tag {
-    margin: 5px 10px;
+    margin: 2px 5px;
     padding: 4px 10px;
     background-color: $blue-light;
     color: $white;
@@ -20,10 +20,24 @@
     margin: 5px 0;
     padding: 5px 3px;
   }
+
+  &-type {
+    font-weight: bold;
+  }
+
+  &.expression-collapsed {
+    background-color: inherit;
+    padding: 0 20px;
+    border-left: 4px solid $gray-lighter;
+  }
 }
 
 .card-group__odd > .card-group-section > .card-element > .card-element__body > .expression,
 .card-group__odd > .card-element > .card-element__body > .expression,
 .subpopulation .expression {
   background-color: $gray-lightest;
+
+  &.expression-collapsed {
+    background-color: $white;
+  }
 }
