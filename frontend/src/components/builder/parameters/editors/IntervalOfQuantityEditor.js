@@ -67,7 +67,7 @@ export default class IntervalOfQuantityEditor extends Component {
       <div className="interval-of-quantity-editor">
         <div className="parameter__item row">
           <div className="col-3 bold align-right">
-            <label htmlFor={formId}>Quantity Inverval:</label>
+            <label htmlFor={formId}>Default Value:</label>
           </div>
 
           <div className="col-9 d-flex">

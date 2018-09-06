@@ -18,7 +18,7 @@ export default class IntegerEditor extends Component {
       <div className="integer-editor">
         <div className="parameter__item row">
           <div className="col-3 bold align-right">
-            <label htmlFor={formId}>Integer:</label>
+            <label htmlFor={formId}>Default Value:</label>
           </div>
 
           <div className="col-9">

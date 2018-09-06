@@ -12,7 +12,7 @@ export default class BooleanEditor extends Component {
       <div className="boolean-editor">
         <div className="parameter__item row">
           <div className="col-3 bold align-right">
-            <label htmlFor={formId}>Boolean:</label>
+            <label htmlFor={formId}>Default Value:</label>
           </div>
 
           <div className="col-9">

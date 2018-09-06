@@ -44,10 +44,10 @@ export default class DateTimeEditor extends Component {
       <div className="date-time-editor">
         <div className="parameter__item row">
           <div className="col-3 bold align-right">
-            <label htmlFor={formId}>Date:</label>
+            <label htmlFor={formId}>Default Value:</label>
           </div>
 
-          <div className="col-9">
+          <div className="col-9 d-flex">
             <DatePicker
               id={id}
               selected={
@@ -59,15 +59,9 @@ export default class DateTimeEditor extends Component {
                 updateInstance({ name, type, value: this.assignValue(e, 'date') });
               }}
             />
-          </div>
-        </div>
 
-        <div className="parameter__item row">
-          <div className="col-3 bold align-right">
-            <label htmlFor={formId}>Time:</label>
-          </div>
+            <span className="dash">_</span>
 
-          <div className="col-9">
             <TimePicker
               id={id}
               defaultValue={

@@ -68,7 +68,7 @@ export default class IntervalOfDateTimeEditor extends Component {
       <div className="interval-of-date-time-editor">
         <div className="parameter__item row">
           <div className="col-3 bold align-right">
-            <label htmlFor={formIdFirst}>First Date and Time:</label>
+            <label htmlFor={formIdFirst}>Default Value:</label>
           </div>
 
           <div className="col-9 d-flex">
@@ -101,7 +101,7 @@ export default class IntervalOfDateTimeEditor extends Component {
 
         <div className="parameter__item row">
           <div className="col-3 bold align-right">
-            <label htmlFor={formIdSecond}>Second Date and Time:</label>
+            <label htmlFor={formIdSecond}></label>
           </div>
 
           <div className="col-9 d-flex">

@@ -97,7 +97,7 @@ export default class CodeEditor extends Component {
         :
           <div className="parameter__item row">
             <div className="col-3 bold align-right">
-              Select code:
+              Default Value:
             </div>
 
             <div className="col-9">

@@ -17,7 +17,7 @@ export default class StringEditor extends Component {
       <div className="string-editor">
         <div className="parameter__item row">
           <div className="col-3 bold align-right">
-            <label htmlFor={formId}>String:</label>
+            <label htmlFor={formId}>Default Value:</label>
           </div>
 
           <div className="col-9">
