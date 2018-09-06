@@ -58,7 +58,7 @@ test('has correct base class', () => {
 
 test('deletes parameter', () => {
   component = shallowRenderComponent(Parameter, baseProps);
-  component.find('button.danger-button').simulate('click');
+  component.find('button.delete-button').simulate('click');
   expect(deleteParameter).toHaveBeenCalledWith(index);
 });
 
