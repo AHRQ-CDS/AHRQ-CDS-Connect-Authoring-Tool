@@ -84,8 +84,9 @@ export default class TemplateInstance extends Component {
     const hasValidationError = this.validateElement() !== null;
     const hasReturnError = this.state.returnType !== 'boolean';
     const hasModifierWarnings = !this.allModifiersValid();
+    const hasNameWarning = this.hasDuplicateName();
 
-    return hasValidationError || hasReturnError || hasModifierWarnings;
+    return hasValidationError || hasReturnError || hasModifierWarnings || hasNameWarning;
   }
 
   // Props will either be this.props or nextProps coming from componentWillReceiveProps
@@ -354,6 +355,14 @@ export default class TemplateInstance extends Component {
       if (this.validateModifier(modifier) !== null) allModifiersValid = false;
     });
     return allModifiersValid;
+  }
+
+  hasDuplicateName = () => {
+    const { templateInstance, instanceNames } = this.props;
+    const elementNameParameter = templateInstance.parameters.find(param => param.id === 'element_name');
+    const duplicateNameIndex = instanceNames.findIndex(name =>
+      name.id !== templateInstance.uniqueId && name.name === elementNameParameter.value);
+    return duplicateNameIndex !== -1;
   }
 
   renderModifierSelect = () => {
@@ -701,7 +710,7 @@ export default class TemplateInstance extends Component {
   }
 
   renderHeading = (elementNameParameter) => {
-    const { templateInstance, instanceNames } = this.props;
+    const { templateInstance } = this.props;
 
     if (elementNameParameter) {
       if (templateInstance.type === 'parameter') {
@@ -711,9 +720,6 @@ export default class TemplateInstance extends Component {
         return null;
       }
 
-      const duplicateNameIndex = instanceNames.findIndex(name =>
-        name.id !== templateInstance.uniqueId && name.name === elementNameParameter.value);
-
       return (
         <div className="card-element__heading">
           <StringParameter
@@ -721,7 +727,7 @@ export default class TemplateInstance extends Component {
             {...elementNameParameter}
             updateInstance={this.updateInstance}
             name={templateInstance.name} />
-          {duplicateNameIndex !== -1 &&
+          {this.hasDuplicateName() &&
             <div className="warning">Warning: Name already in use. Choose another name.</div>
           }
         </div>
