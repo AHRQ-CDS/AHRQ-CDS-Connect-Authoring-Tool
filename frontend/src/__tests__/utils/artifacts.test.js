@@ -385,7 +385,7 @@ test('Subelement phrase includes the name of the original subelement instance an
     { expressionText: 'exists', isExpression: true },
     { expressionText: 'an', isExpression: false },
     { expressionText: 'Original Subelement', isExpression: true },
-    { expressionText: 'subelement', isExpression: false },
+    { expressionText: 'subelement', isExpression: false, isType: true },
   ];
 
   expect(expressionPhrase).toEqual(expectedOutput);

@@ -836,7 +836,7 @@ export default class TemplateInstance extends Component {
   }
 
   renderHeader = () => {
-    const { templateInstance, renderIndentButtons, deleteInstance } = this.props;
+    const { templateInstance, renderIndentButtons } = this.props;
     const { showElement } = this.state;
     const elementNameParameter = templateInstance.parameters.find(param => param.id === 'element_name');
     const headerClass = classNames('card-element__header', { collapsed: !showElement });

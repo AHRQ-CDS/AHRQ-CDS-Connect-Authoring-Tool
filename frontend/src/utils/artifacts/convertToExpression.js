@@ -355,7 +355,7 @@ function orderExpressionSentenceArray(expressionArray, type, valueSets, codes, r
   } else if (returnsPlural) {
     if (subelementName) {
       orderedExpressionArray.push({ expressionText: subelementName, isExpression: true });
-      orderedExpressionArray.push({ expressionText: `${elementText}s`, isExpression: false , isType: true });
+      orderedExpressionArray.push({ expressionText: `${elementText}s`, isExpression: false, isType: true });
     } else {
       orderedExpressionArray.push({
         expressionText: `${_.capitalize(elementText)}s`,
