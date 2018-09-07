@@ -432,12 +432,14 @@ export default class TemplateInstance extends Component {
                     {modifier.name}
                   </button>)
             }
-            {this.state.showModifiers && subelementIsInUse &&
-              <span className="notification">
-                <FontAwesome name="exclamation-circle"/>
-                Limited expressions displayed because return type cannot change while in use.
-              </span>}
           </div>
+
+          {this.state.showModifiers && subelementIsInUse &&
+            <div className="notification">
+              <FontAwesome name="exclamation-circle" />
+              Limited expressions displayed because return type cannot change while in use.
+            </div>
+          }
         </div>
       );
     }

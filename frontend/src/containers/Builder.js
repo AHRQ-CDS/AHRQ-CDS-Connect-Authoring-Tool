@@ -481,7 +481,6 @@ export class Builder extends Component {
                     validateCode={this.props.validateCode}
                     resetCodeValidation={this.props.resetCodeValidation}
                     validateReturnType={false}/>
-
                 </TabPanel>
 
                 <TabPanel>
