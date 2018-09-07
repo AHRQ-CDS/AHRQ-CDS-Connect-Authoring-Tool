@@ -117,10 +117,7 @@ export default class TemplateInstance extends Component {
 
   deleteInstance = () => {
     const subelementIsInUse = this.isSubelementUsed();
-    if (subelementIsInUse) {
-      // eslint-disable-next-line no-alert
-      alert('This subelement is referenced somewhere else. To delete this element, remove all references to it.');
-    } else {
+    if (!subelementIsInUse) {
       this.props.deleteInstance(this.props.treeName, this.getPath());
     }
   }
@@ -437,7 +434,8 @@ export default class TemplateInstance extends Component {
             }
             {this.state.showModifiers && subelementIsInUse &&
               <span className="notification">
-                <FontAwesome name="exclamation-circle"/> Limited expressions displayed because return type cannot change while in use.
+                <FontAwesome name="exclamation-circle"/>
+                Limited expressions displayed because return type cannot change while in use.
               </span>}
           </div>
         </div>
@@ -825,7 +823,7 @@ export default class TemplateInstance extends Component {
             uniqueId={templateInstance.uniqueId}
             />
           {this.hasDuplicateName() &&
-            <div className="warning">{warningText}</div>
+            <div className="warning">Warning: Name already in use. Choose another name.</div>
           }
         </div>
       );
@@ -842,6 +840,9 @@ export default class TemplateInstance extends Component {
     const headerClass = classNames('card-element__header', { collapsed: !showElement });
     const headerTopClass = classNames('card-element__header-top', { collapsed: !showElement });
     const className = templateInstance.type === 'subelement' ? 'subelement' : ''; // TODO After rebase: add this class name back to top level. (headerClass?)
+
+    const subelementUsed = this.isSubelementUsed();
+    const disabledClass = subelementUsed ? 'disabled' : '';
     return (
       <div className={headerClass}>
         <div className={headerTopClass}>
@@ -867,11 +868,17 @@ export default class TemplateInstance extends Component {
             </button>
 
             <button
+              id={`deletebutton-${templateInstance.uniqueId}`}
               onClick={this.deleteInstance}
-              className="element__deletebutton transparent-button"
+              className={`element__deletebutton transparent-button ${disabledClass}`}
               aria-label={`remove ${templateInstance.name}`}>
               <FontAwesome name="close" />
             </button>
+            { subelementUsed &&
+              <UncontrolledTooltip
+                target={`deletebutton-${templateInstance.uniqueId}`} placement="left">
+                  This subelement is referenced somewhere else. To delete this element, remove all references to it.
+              </UncontrolledTooltip> }
           </div>
         </div>
 

@@ -173,26 +173,22 @@ describe('Subelement instances', () => {
   });
 
   test('cannot be deleted if in use in the artifact', () => {
-    window.alert = jest.fn();
-    const alertMessage =
-      'This subelement is referenced somewhere else. To delete this element, remove all references to it.';
     // Used by one element
     expect(component.props().templateInstance.usedBy).toHaveLength(1);
 
-    // Clicking delete button calls the TI's delete function, but not the function passed on props to actually delete it
-    // Instead, window alert is called
     const deleteSpy = jest.spyOn(component.instance(), 'deleteInstance');
     const propsDeleteSpy = jest.spyOn(component.props(), 'deleteInstance');
     component.update();
     const deleteButton = component.find('.element__deletebutton');
+
+    // Clicking delete button calls the TI's delete function, but not the function passed on props to actually delete it
     deleteButton.simulate('click');
     expect(deleteSpy).toBeCalled();
     expect(propsDeleteSpy).not.toBeCalled();
-    expect(window.alert).toBeCalledWith(alertMessage);
+    expect(deleteButton.hasClass('disabled')).toBeTruthy();
   });
 
   test('can be deleted if not in use in the artifact', () => {
-    window.alert = jest.fn();
     // Remove the usage
     const updatedTemplateInstance = genericSubelementInstance;
     updatedTemplateInstance.usedBy = [];
@@ -209,7 +205,7 @@ describe('Subelement instances', () => {
     deleteButton.simulate('click');
     expect(deleteSpy).toBeCalled();
     expect(propsDeleteSpy).toBeCalled();
-    expect(window.alert).not.toBeCalled();
+    expect(deleteButton.hasClass('disabled')).toBeFalsy();
   });
 
   test('cannot add modifiers that change the return type if in use in the artifact', () => {
@@ -277,7 +273,10 @@ describe('Subelement uses', () => {
     // Set templateInstance for subelement use and set instanceNames to include the original subelement name.
     const subelementProps = { ...props };
     subelementProps.templateInstance = genericSubelementUseTemplateInstance;
-    subelementProps.instanceNames = [{ id: 'originalSubelementId', name: 'My Subelement' }];
+    subelementProps.instanceNames = [
+      { id: 'originalSubelementId', name: 'My Subelement' },
+      { id: genericSubelementUseTemplateInstance.uniqueId, name: 'Subelement Observation' }
+    ];
     component = fullRenderComponentOnBody(TemplateInstance, { ...subelementProps });
   });
 
