@@ -841,7 +841,6 @@ export default class TemplateInstance extends Component {
     const elementNameParameter = templateInstance.parameters.find(param => param.id === 'element_name');
     const headerClass = classNames('card-element__header', { collapsed: !showElement });
     const headerTopClass = classNames('card-element__header-top', { collapsed: !showElement });
-    const className = templateInstance.type === 'subelement' ? 'subelement' : ''; // TODO After rebase: add this class name back to top level. (headerClass?)
 
     const subelementUsed = this.isSubelementUsed();
     const disabledClass = subelementUsed ? 'disabled' : '';
@@ -895,9 +894,11 @@ export default class TemplateInstance extends Component {
 
   render() {
     const { showElement } = this.state;
+    const { templateInstance } = this.props;
+    const subelementClass = templateInstance.type === 'subelement' ? 'subelement' : '';
 
     return (
-      <div className="card-element element__expanded">
+      <div className={`card-element element__expanded ${subelementClass}`}>
         {this.renderHeader()}
         {showElement && this.renderBody()}
         {showElement && this.renderFooter()}
