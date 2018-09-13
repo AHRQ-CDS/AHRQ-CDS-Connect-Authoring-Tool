@@ -23,6 +23,7 @@ const props = {
   deleteInstance: jest.fn(),
   renderIndentButtons: jest.fn(),
   instanceNames: [],
+  subelements: [],
   loginVSACUser: jest.fn(),
   setVSACAuthStatus: jest.fn(),
   timeLastAuthenticated: new Date(),
@@ -277,6 +278,9 @@ describe('Subelement uses', () => {
       { id: 'originalSubelementId', name: 'My Subelement' },
       { id: genericSubelementUseTemplateInstance.uniqueId, name: 'Subelement Observation' }
     ];
+    const originalSubelement = genericSubelementTemplateInstance;
+    originalSubelement.uniqueId = 'originalSubelementId';
+    subelementProps.subelements = [originalSubelement];
     component = fullRenderComponentOnBody(TemplateInstance, { ...subelementProps });
   });
 
@@ -284,9 +288,9 @@ describe('Subelement uses', () => {
     expect(component.hasClass('subelement')).toBeTruthy();
   });
 
-  test('visualize origianl subelement information', () => {
+  test('visualize original subelement information', () => {
     const subelementList = component.find('#subelement-list');
     expect(subelementList).toHaveLength(1);
-    expect(subelementList.text()).toEqual('Subelement:My Subelement');
+    expect(subelementList.text()).toEqual('Base Element:My Subelement');
   });
 });

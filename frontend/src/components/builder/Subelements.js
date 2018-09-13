@@ -37,6 +37,7 @@ export default class Subelements extends Component {
             renderIndentButtons={() => {}}
             conversionFunctions={this.props.conversionFunctions}
             instanceNames={this.props.instanceNames}
+            subelements={this.props.subelements}
             loginVSACUser={this.props.loginVSACUser}
             setVSACAuthStatus={this.props.setVSACAuthStatus}
             vsacStatus={this.props.vsacStatus}

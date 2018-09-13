@@ -108,7 +108,7 @@ export function updateArtifact(artifactToUpdate, props) {
     };
     const { names, subelementsInUse } = parseForDuplicateNamesAndUsedSubelements(artifact);
 
-    // Add flag on subelement to mark if each subelement is used or not.
+    // Add uniqueId to list on subelement to mark where it is used.
     artifact.subelements.forEach((subelement) => {
       const subelementInUse = subelementsInUse.find(usedSubel => usedSubel.subelementId === subelement.uniqueId);
       subelement.usedBy = subelementInUse ? subelementInUse.usedBy : [];

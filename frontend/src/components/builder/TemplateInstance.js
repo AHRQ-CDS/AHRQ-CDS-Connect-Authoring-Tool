@@ -459,7 +459,7 @@ export default class TemplateInstance extends Component {
     return (
       <div className="modifier__return__type" id="subelement-list">
         <div className="row code-info">
-          <div className="col-3 bold align-right code-info__label">Subelement:</div>
+          <div className="col-3 bold align-right code-info__label">Base Element:</div>
           <div className="col-9 row code-info__info">{referenceName}</div>
         </div>
       </div>
@@ -665,36 +665,47 @@ export default class TemplateInstance extends Component {
   }
 
   renderExpression = () => {
-    const { templateInstance } = this.props;
+    const { templateInstance, subelements } = this.props;
     const { returnType } = this.state;
-    const type = templateInstance.type === 'parameter' ? templateInstance.type : templateInstance.name;
+
+    let phraseTemplateInstance = templateInstance;
+    if (templateInstance.type === 'subelement') {
+      const referenceParameter = templateInstance.parameters.find(param => param.type === 'reference');
+      if (referenceParameter) {
+        const subelementReferenced = subelements.find(subelement =>
+          subelement.uniqueId === referenceParameter.value.id);
+        phraseTemplateInstance = subelementReferenced;
+      }
+    }
+
+    let modifiers = phraseTemplateInstance.modifiers;
+    if (templateInstance.type === 'subelement') {
+      const subelementModifiers = templateInstance.modifiers || [];
+      modifiers = modifiers.concat(subelementModifiers);
+    }
+    const type = phraseTemplateInstance.type === 'parameter' ?
+      phraseTemplateInstance.type : phraseTemplateInstance.name;
 
     let valueSets = [];
-    if (templateInstance.parameters[1] && templateInstance.parameters[1].valueSets) {
-      valueSets = templateInstance.parameters[1].valueSets;
+    if (phraseTemplateInstance.parameters[1] && phraseTemplateInstance.parameters[1].valueSets) {
+      valueSets = phraseTemplateInstance.parameters[1].valueSets;
     }
 
     let codes = [];
-    if (templateInstance.parameters[1] && templateInstance.parameters[1].codes) {
-      codes = templateInstance.parameters[1].codes;
+    if (phraseTemplateInstance.parameters[1] && phraseTemplateInstance.parameters[1].codes) {
+      codes = phraseTemplateInstance.parameters[1].codes;
     }
 
-    const referenceParameter = this.props.templateInstance.parameters.find(param => param.type === 'reference');
-    let name = '';
-    if (referenceParameter) {
-      const instanceNameOfOriginalSubelement = this.props.instanceNames.find(instanceName =>
-        instanceName.id === referenceParameter.value.id);
-      if (instanceNameOfOriginalSubelement) name = instanceNameOfOriginalSubelement.name;
-    }
+    const otherParameters = phraseTemplateInstance.parameters.filter(param =>
+      param.type === 'number' || param.type === 'valueset');
 
     const expressions = convertToExpression(
-      templateInstance.modifiers,
+      modifiers,
       type,
       valueSets,
       codes,
       returnType,
-      templateInstance.parameters.filter(param => param.type === 'number' || param.type === 'valueset'),
-      name
+      otherParameters
     );
 
     if (!expressions) { return null; }

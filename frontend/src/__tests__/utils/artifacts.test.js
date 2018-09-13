@@ -362,35 +362,6 @@ test('Elements that have a return type of a list indicates plurality in the phra
   expect(expressionPhrase).toEqual(expectedOutput);
 });
 
-test('Subelement phrase includes the name of the original subelement instance and new modifiers', () => {
-  const modifiers = [
-    {
-      id: 'BooleanExists',
-      name: 'Exists',
-      inputTypes: elementLists,
-      returnType: 'boolean',
-      cqlTemplate: 'BaseModifier',
-      cqlLibraryFunction: 'exists'
-    }
-  ];
-
-  const name = 'Subelement';
-  const valueSets = [];
-  const codes = [];
-
-  const expressionPhrase = convertToExpression(modifiers, name, valueSets, codes, 'boolean', [], 'Original Subelement');
-
-  const expectedOutput = [
-    { expressionText: 'There', isExpression: false },
-    { expressionText: 'exists', isExpression: true },
-    { expressionText: 'an', isExpression: false },
-    { expressionText: 'Original Subelement', isExpression: true },
-    { expressionText: 'subelement', isExpression: false, isType: true },
-  ];
-
-  expect(expressionPhrase).toEqual(expectedOutput);
-});
-
 describe('Demographics elements support special case phrases', () => {
   test('Age Range supports min and max age', () => {
     const modifiers = [];

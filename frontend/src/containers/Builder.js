@@ -394,7 +394,7 @@ export class Builder extends Component {
                 <Tab>Inclusions</Tab>
                 <Tab>Exclusions</Tab>
                 <Tab>Subpopulations</Tab>
-                <Tab>Subelements</Tab>
+                <Tab>Base Elements</Tab>
                 <Tab>Recommendations</Tab>
                 <Tab>Parameters</Tab>
                 <Tab>Handle Errors</Tab>
@@ -461,6 +461,7 @@ export class Builder extends Component {
                     valueSets={this.props.valueSets}
                     conversionFunctions={conversionFunctions}
                     instanceNames={this.props.names}
+                    subelements={artifact.subelements}
                     parameters={namedParameters}
                     loginVSACUser={this.props.loginVSACUser}
                     setVSACAuthStatus={this.props.setVSACAuthStatus}
