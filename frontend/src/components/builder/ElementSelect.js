@@ -53,7 +53,7 @@ const elementOptions = [
   { value: 'observation', label: 'Observation', vsacAuthRequired: true, template: 'GenericObservation_vsac' },
   { value: 'booleanParameter', label: 'Parameters', vsacAuthRequired: false },
   { value: 'procedure', label: 'Procedure', vsacAuthRequired: true, template: 'GenericProcedure_vsac' },
-  { value: 'subElement', label: 'Subelements', vsacAuthRequired: false }
+  { value: 'baseElement', label: 'Base Elements', vsacAuthRequired: false }
 ];
 
 export default class ElementSelect extends Component {
@@ -95,21 +95,21 @@ export default class ElementSelect extends Component {
     let categoriesCopy = _.cloneDeep(this.props.categories);
     categoriesCopy = filterUnsuppressed(categoriesCopy);
     const paramsIndex = categoriesCopy.findIndex(cat => cat.name === 'Parameters');
-    const subElementsIndex = categoriesCopy.findIndex(cat => cat.name === 'Subelements');
+    const baseElementsIndex = categoriesCopy.findIndex(cat => cat.name === 'Base Elements');
 
-    if (this.props.subelements && this.props.subelements.length && categoriesCopy[subElementsIndex]) {
-      categoriesCopy[subElementsIndex].entries = this.props.subelements.map((e) => {
+    if (this.props.subelements && this.props.subelements.length && categoriesCopy[baseElementsIndex]) {
+      categoriesCopy[baseElementsIndex].entries = this.props.subelements.map((e) => {
         const returnType = _.isEmpty(e.modifiers) ? e.returnType : _.last(e.modifiers).returnType;
         return ({
           id: _.uniqueId(e.id),
-          name: 'Subelement',
-          type: 'subelement',
+          name: 'Base Element',
+          type: 'baseElement',
           template: 'GenericStatement',
           returnType,
           parameters: [
             { id: 'element_name', type: 'string', name: 'Element Name', value: e.parameters[0].value },
             {
-              id: 'subelementReference',
+              id: 'baseElementReference',
               type: 'reference',
               name: 'reference',
               value: { id: e.uniqueId, type: e.name },
@@ -250,7 +250,7 @@ export default class ElementSelect extends Component {
     const placeholderText = 'Choose element type';
     const elementOptionsToDisplay = elementOptions.filter((e) => {
       if (this.props.inSubelements) {
-        return e.value !== 'subElement';
+        return e.value !== 'baseElement';
       }
       return true;
     });
@@ -259,8 +259,8 @@ export default class ElementSelect extends Component {
       noAuthElementOptions = this.state.categories
         .find(cat => cat.name === selectedElement.label)
         .entries.map(({ id, name, type, parameters }) => {
-          // Subelements display the parameter element_name entered by user, not the generic 'Subelement' element name.
-          const label = type === 'subelement' ? parameters[0].value : name;
+          // Base elements display the parameter element_name entered by user, not the generic 'Base Element'.
+          const label = type === 'baseElement' ? parameters[0].value : name;
           return ({ value: id, label, type: selectedElement.label });
         });
     }

@@ -107,7 +107,7 @@ export default class TemplateInstance extends Component {
     this.props.templateInstance.uniqueId !== instance.uniqueId
   )
 
-  isSubelementUsed = () => (
+  isBaseElementUsed = () => (
     this.props.templateInstance.usedBy ? this.props.templateInstance.usedBy.length !== 0 : false);
 
   updateInstance = (newState) => {
@@ -116,8 +116,8 @@ export default class TemplateInstance extends Component {
   }
 
   deleteInstance = () => {
-    const subelementIsInUse = this.isSubelementUsed();
-    if (!subelementIsInUse) {
+    const baseElementIsInUse = this.isBaseElementUsed();
+    if (!baseElementIsInUse) {
       this.props.deleteInstance(this.props.treeName, this.getPath());
     }
   }
@@ -352,10 +352,10 @@ export default class TemplateInstance extends Component {
   }
 
   canModifierBeRemoved = () => {
-    const subelementIsInUse = this.isSubelementUsed();
+    const baseElementIsInUse = this.isBaseElementUsed();
 
-    if (subelementIsInUse) {
-      // If a subelement is in use, need to make sure the modifiers removed don't change the return type.
+    if (baseElementIsInUse) {
+      // If a base element is in use, need to make sure the modifiers removed don't change the return type.
       const length = this.props.templateInstance.modifiers.length;
       let nextReturnType = this.props.templateInstance.returnType; // Defaults to the element's return type.
       if (length > 1) {
@@ -363,11 +363,11 @@ export default class TemplateInstance extends Component {
         nextReturnType = this.props.templateInstance.modifiers[length - 2].returnType;
       }
 
-      // If a subelement is being used, but the next return type is the same as the current, modifier can be removed.
+      // If a base element is being used, but the next return type is the same as the current, modifier can be removed.
       return nextReturnType === this.state.returnType;
     }
 
-    // If not a subelement being used elsewhere, modifiers can be removed.
+    // If not a base element being used elsewhere, modifiers can be removed.
     return true;
   }
 
@@ -409,7 +409,7 @@ export default class TemplateInstance extends Component {
   renderModifierSelect = () => {
     if (!this.props.templateInstance.cannotHaveModifiers
       && (this.state.relevantModifiers.length > 0 || (this.props.templateInstance.modifiers || []).length === 0)) {
-      const subelementIsInUse = this.isSubelementUsed();
+      const baseElementIsInUse = this.isBaseElementUsed();
 
       return (
         <div className="modifier-select">
@@ -424,7 +424,7 @@ export default class TemplateInstance extends Component {
 
             {this.state.showModifiers &&
               this.state.relevantModifiers
-                .filter(modifier => !subelementIsInUse || modifier.returnType === this.state.returnType)
+                .filter(modifier => !baseElementIsInUse || modifier.returnType === this.state.returnType)
                 .map(modifier =>
                   <button key={modifier.id}
                     value={modifier.id}
@@ -434,7 +434,7 @@ export default class TemplateInstance extends Component {
             }
           </div>
 
-          {this.state.showModifiers && subelementIsInUse &&
+          {this.state.showModifiers && baseElementIsInUse &&
             <div className="notification">
               <FontAwesome name="exclamation-circle" />
               Limited expressions displayed because return type cannot change while in use.
@@ -447,7 +447,7 @@ export default class TemplateInstance extends Component {
     return null;
   }
 
-  renderSubelementInfo = (referenceParameter) => {
+  renderBaseElementInfo = (referenceParameter) => {
     let referenceName;
     if (referenceParameter) {
       const elementToReference = this.props.instanceNames.find(name => name.id === referenceParameter.value.id);
@@ -669,19 +669,19 @@ export default class TemplateInstance extends Component {
     const { returnType } = this.state;
 
     let phraseTemplateInstance = templateInstance;
-    if (templateInstance.type === 'subelement') {
+    if (templateInstance.type === 'baseElement') {
       const referenceParameter = templateInstance.parameters.find(param => param.type === 'reference');
       if (referenceParameter) {
-        const subelementReferenced = subelements.find(subelement =>
-          subelement.uniqueId === referenceParameter.value.id);
-        phraseTemplateInstance = subelementReferenced;
+        const baseElementReferenced = subelements.find(element =>
+          element.uniqueId === referenceParameter.value.id);
+        phraseTemplateInstance = baseElementReferenced;
       }
     }
 
     let modifiers = phraseTemplateInstance.modifiers;
-    if (templateInstance.type === 'subelement') {
-      const subelementModifiers = templateInstance.modifiers || [];
-      modifiers = modifiers.concat(subelementModifiers);
+    if (templateInstance.type === 'baseElement') {
+      const baseElementModifiers = templateInstance.modifiers || [];
+      modifiers = modifiers.concat(baseElementModifiers);
     }
     const type = phraseTemplateInstance.type === 'parameter' ?
       phraseTemplateInstance.type : phraseTemplateInstance.name;
@@ -770,7 +770,7 @@ export default class TemplateInstance extends Component {
         }
         { referenceParameter &&
           <div className="vsac-info">
-            {this.renderSubelementInfo(referenceParameter)}
+            {this.renderBaseElementInfo(referenceParameter)}
           </div>
         }
 
@@ -797,8 +797,8 @@ export default class TemplateInstance extends Component {
       <div className="card-element__footer">
         {this.renderModifierSelect()}
 
-        {/* Subelement usages will have _vsac included in the id, but should not support additional VS and codes */}
-        {templateInstance.id && templateInstance.id.includes('_vsac') && templateInstance.type !== 'subelement' &&
+        {/* Base element uses will have _vsac included in the id, but should not support additional VS and codes */}
+        {templateInstance.id && templateInstance.id.includes('_vsac') && templateInstance.type !== 'baseElement' &&
           <div className="vsac-controls">
             {this.renderVSACOptions()}
           </div>
@@ -822,8 +822,8 @@ export default class TemplateInstance extends Component {
 
       let elementType = templateInstance.name;
       if (referenceParameter) {
-        // Element type to display in header will be the reference type for Subelements.
-        elementType = referenceParameter.value ? referenceParameter.value.type : 'Subelement';
+        // Element type to display in header will be the reference type for Base Elements.
+        elementType = referenceParameter.value ? referenceParameter.value.type : 'Base Element';
       }
 
       return (
@@ -853,8 +853,8 @@ export default class TemplateInstance extends Component {
     const headerClass = classNames('card-element__header', { collapsed: !showElement });
     const headerTopClass = classNames('card-element__header-top', { collapsed: !showElement });
 
-    const subelementUsed = this.isSubelementUsed();
-    const disabledClass = subelementUsed ? 'disabled' : '';
+    const baseElementUsed = this.isBaseElementUsed();
+    const disabledClass = baseElementUsed ? 'disabled' : '';
     return (
       <div className={headerClass}>
         <div className={headerTopClass}>
@@ -886,10 +886,10 @@ export default class TemplateInstance extends Component {
               aria-label={`remove ${templateInstance.name}`}>
               <FontAwesome name="close" />
             </button>
-            { subelementUsed &&
+            { baseElementUsed &&
               <UncontrolledTooltip
                 target={`deletebutton-${templateInstance.uniqueId}`} placement="left">
-                  This subelement is referenced somewhere else. To delete this element, remove all references to it.
+                  This base element is referenced somewhere else. To delete this element, remove all references to it.
               </UncontrolledTooltip> }
           </div>
         </div>
@@ -906,10 +906,10 @@ export default class TemplateInstance extends Component {
   render() {
     const { showElement } = this.state;
     const { templateInstance } = this.props;
-    const subelementClass = templateInstance.type === 'subelement' ? 'subelement' : '';
+    const baseElementClass = templateInstance.type === 'baseElement' ? 'subelement' : '';
 
     return (
-      <div className={`card-element element__expanded ${subelementClass}`}>
+      <div className={`card-element element__expanded ${baseElementClass}`}>
         {this.renderHeader()}
         {showElement && this.renderBody()}
         {showElement && this.renderFooter()}
