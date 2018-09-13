@@ -92,6 +92,7 @@ export default class ElementModal extends Component {
   openModal = () => {
     const { selectedElement } = this.props;
     this.setState({ isOpen: true, selectedElement });
+
     if (selectedElement) {
       this.props.getVSDetails(
         selectedElement.oid,
@@ -113,6 +114,13 @@ export default class ElementModal extends Component {
     if (argument) { func(argument); } else { func(); }
   }
 
+  renderName = (name, oid) => (
+    <div>
+      <div>{name}</div>
+      <div className="result-oid">{oid}</div>
+    </div>
+  );
+
   renderList = () => (
     <tbody aria-label="Element List">
       {this.props.vsacSearchResults
@@ -122,10 +130,10 @@ export default class ElementModal extends Component {
           tabIndex="0"
           aria-label={elem.name}
           onClick={() => this.handleElementSelected(elem)}
-          onKeyDown={ e => this.enterKeyCheck(this.handleElementSelected, elem, e) }>
-            <td data-th="Name">{ elem.name }</td>
-            <td data-th="Steward">{ elem.steward }</td>
-            <td data-th="Codes">{ elem.codeCount }</td>
+          onKeyDown={e => this.enterKeyCheck(this.handleElementSelected, elem, e)}>
+            <td data-th="Name">{this.renderName(elem.name, elem.oid)}</td>
+            <td data-th="Steward">{elem.steward}</td>
+            <td data-th="Codes">{elem.codeCount}</td>
         </tr>)
       }
     </tbody>
@@ -133,7 +141,7 @@ export default class ElementModal extends Component {
 
   renderDetailsList = () => (
     <tbody aria-label="Value Set Details List">
-      { this.props.vsacDetailsCodes.map((code, i) =>
+      {this.props.vsacDetailsCodes.map((code, i) =>
         <tr key={`${code.code}-${i}`}
           aria-label={code.displayName}>
           <td data-th="Code">{code.code}</td>
@@ -159,7 +167,8 @@ export default class ElementModal extends Component {
               <th>Code System</th>
             </tr>
           </thead>
-          { this.renderDetailsList() }
+
+          {this.renderDetailsList()}
         </table>
       );
     } else if (this.props.vsacSearchResults && this.props.vsacSearchResults.length > 0) {
@@ -167,22 +176,23 @@ export default class ElementModal extends Component {
         <table className="search__table selectable icons">
           <thead>
             <tr>
-              <th>Name</th>
+              <th>Name/OID</th>
               <th>Steward</th>
               <th>Codes</th>
             </tr>
           </thead>
-          { this.renderList() }
+
+          {this.renderList()}
         </table>
       );
     }
+
     return null;
   }
 
   renderSelectButton = () => {
-    if (this.props.viewOnly) {
-      return null;
-    }
+    if (this.props.viewOnly) return null;
+
     if (this.state.selectedElement) {
       return (
         <button className="primary-button element-modal__searchbutton" onClick={ this.handleChosenVS }>
@@ -190,6 +200,7 @@ export default class ElementModal extends Component {
         </button>
       );
     }
+
     return (
       <button className="primary-button element-modal__searchbutton" onClick={ this.searchVSAC }>
         Search
@@ -198,20 +209,20 @@ export default class ElementModal extends Component {
   }
 
   renderBackButton = () => {
-    if (this.props.viewOnly) {
-      return null;
-    }
+    if (this.props.viewOnly) return null;
+
     if (this.state.selectedElement) {
       return (
         <span className="nav-icon"
           role="button"
           tabIndex="0"
           onClick={this.backToSearchResults}
-          onKeyDown={ e => this.enterKeyCheck(this.backToSearchResults, null, e) }>
+          onKeyDown={e => this.enterKeyCheck(this.backToSearchResults, null, e)}>
           <FontAwesome name="arrow-left" />
         </span>
       );
     }
+
     return null;
   }
 
@@ -222,16 +233,17 @@ export default class ElementModal extends Component {
           role="button"
           tabIndex="0"
           onClick={this.openModal}
-          onKeyDown={ e => this.enterKeyCheck(this.openModal, null, e) }>
+          onKeyDown={e => this.enterKeyCheck(this.openModal, null, e)}>
           <FontAwesome name={this.props.iconForButton}/>
         </span>
       );
     }
+
     return (
       <button
         className="primary-button"
-        onClick={ this.openModal }
-        onKeyDown={ e => this.enterKeyCheck(this.openModal, null, e) }>
+        onClick={this.openModal}
+        onKeyDown={e => this.enterKeyCheck(this.openModal, null, e)}>
         <FontAwesome name="th-list" />{' '}{buttonLabels.openButtonText}
       </button>
     );
@@ -244,6 +256,7 @@ export default class ElementModal extends Component {
       openButtonText: 'Add Value Set',
       closeButtonText: 'Close'
     };
+
     if (this.props.labels) {
       buttonLabels = this.props.labels;
     }

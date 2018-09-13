@@ -170,7 +170,7 @@ describe('with modal open', () => {
     internalModal.find('.nav-icon').simulate('click');
     expect(internalModal.find('.search__table thead th')).toHaveLength(3);
     expect(internalModal.find('.search__table thead').text())
-      .toEqual('NameStewardCodes'); // Search table headings
+      .toEqual('Name/OIDStewardCodes'); // Search table headings
     expect(component.state().selectedElement).toEqual(null);
   });
 
