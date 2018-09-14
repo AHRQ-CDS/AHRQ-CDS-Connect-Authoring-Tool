@@ -26,7 +26,7 @@ import Parameters from '../components/builder/Parameters';
 import Recommendations from '../components/builder/Recommendations';
 import RepoUploadModal from '../components/builder/RepoUploadModal';
 import ELMErrorModal from '../components/builder/ELMErrorModal';
-import BaseElements from '../components/builder/Subelements';
+import BaseElements from '../components/builder/BaseElements';
 
 import isBlankArtifact from '../utils/artifacts/isBlankArtifact';
 import { findValueAtPath } from '../utils/find';

@@ -285,11 +285,11 @@ describe('Base Element uses', () => {
   });
 
   test('have correct color background', () => {
-    expect(component.hasClass('subelement')).toBeTruthy();
+    expect(component.hasClass('base-element')).toBeTruthy();
   });
 
   test('visualize original base element information', () => {
-    const baseElementList = component.find('#subelement-list');
+    const baseElementList = component.find('#base-element-list');
     expect(baseElementList).toHaveLength(1);
     expect(baseElementList.text()).toEqual('Base Element:My Base Element');
   });

@@ -1,4 +1,4 @@
-import BaseElements from '../../../components/builder/Subelements';
+import BaseElements from '../../../components/builder/BaseElements';
 import TemplateInstance from '../../../components/builder/TemplateInstance';
 import ConjunctionGroup from '../../../components/builder/ConjunctionGroup';
 import { shallowRenderComponent } from '../../../utils/test_helpers';
