@@ -12,16 +12,16 @@ export default class BaseElements extends Component {
     this.props.addBaseElement(instance);
   }
 
-  getPath = () => 'subelements'
+  getPath = () => 'baseElements'
 
   getChildsPath = (id) => {
     const artifactTree = this.props.instance;
-    const childIndex = artifactTree.subelements.findIndex(instance => instance.uniqueId === id);
+    const childIndex = artifactTree.baseElements.findIndex(instance => instance.uniqueId === id);
     return `${childIndex}`;
   }
   render() {
     return <div className="card-group card-group__top">
-      {this.props.instance.subelements.map((s, i) =>
+      {this.props.instance.baseElements.map((s, i) =>
         <div className="card-group-section subpopulation" key={i}>
           <TemplateInstance
             valueSets={this.props.valueSets}

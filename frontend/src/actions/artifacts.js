@@ -89,7 +89,7 @@ function parseForDuplicateNamesAndUsedBaseElements(artifact) {
       if (subpopulation.childInstances.length) { parseTree(subpopulation, names, baseElementsInUse); }
     }
   });
-  artifact.subelements.forEach((baseElement) => {
+  artifact.baseElements.forEach((baseElement) => {
     if (baseElement.parameters && baseElement.parameters[0]) {
       names.push({ name: baseElement.parameters[0].value, id: baseElement.uniqueId });
     }
@@ -109,7 +109,7 @@ export function updateArtifact(artifactToUpdate, props) {
     const { names, baseElementsInUse } = parseForDuplicateNamesAndUsedBaseElements(artifact);
 
     // Add uniqueId to list on base element to mark where it is used.
-    artifact.subelements.forEach((element) => {
+    artifact.baseElements.forEach((element) => {
       const elementInUse = baseElementsInUse.find(usedBaseEl => usedBaseEl.baseElementId === element.uniqueId);
       element.usedBy = elementInUse ? elementInUse.usedBy : [];
     });
@@ -186,7 +186,7 @@ export function initializeArtifact(andTemplate) {
       },
       newTrees.newSubpopulation
     ],
-    subelements: [],
+    baseElements: [],
     parameters: [],
     errorStatement: { statements: [] },
     uniqueIdCounter: 0

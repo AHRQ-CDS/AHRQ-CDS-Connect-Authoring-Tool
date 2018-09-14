@@ -109,10 +109,10 @@ export class Builder extends Component {
   }
 
   addBaseElement = (instance, uid = null, incomingTree) => {
-    const treeData = this.findTree('subelements', uid);
+    const treeData = this.findTree('baseElements', uid);
     const tree = incomingTree || treeData.tree;
     tree.push(instance);
-    this.setTree('subelements', treeData, tree);
+    this.setTree('baseElements', treeData, tree);
   }
 
   editInstance = (treeName, editedParams, path, editingConjunctionType = false, uid = null) => {
@@ -299,7 +299,7 @@ export class Builder extends Component {
           getAllInstances={this.getAllInstances}
           updateInstanceModifiers={this.updateInstanceModifiers}
           parameters={namedParameters}
-          baseElements={artifact.subelements}
+          baseElements={artifact.baseElements}
           conversionFunctions={conversionFunctions}
           instanceNames={this.props.names}
           loginVSACUser={this.props.loginVSACUser}
@@ -417,7 +417,7 @@ export class Builder extends Component {
                     loadValueSets={this.props.loadValueSets}
                     updateSubpopulations={this.updateSubpopulations}
                     parameters={namedParameters}
-                    baseElements={artifact.subelements}
+                    baseElements={artifact.baseElements}
                     addInstance={this.addInstance}
                     editInstance={this.editInstance}
                     updateInstanceModifiers={this.updateInstanceModifiers}
@@ -450,7 +450,7 @@ export class Builder extends Component {
 
                 <TabPanel>
                   <BaseElements
-                    treeName='subelements'
+                    treeName='baseElements'
                     instance={artifact}
                     addBaseElement={this.addBaseElement}
                     loadValueSets={this.props.loadValueSets}
@@ -461,7 +461,7 @@ export class Builder extends Component {
                     valueSets={this.props.valueSets}
                     conversionFunctions={conversionFunctions}
                     instanceNames={this.props.names}
-                    baseElements={artifact.subelements}
+                    baseElements={artifact.baseElements}
                     parameters={namedParameters}
                     loginVSACUser={this.props.loginVSACUser}
                     setVSACAuthStatus={this.props.setVSACAuthStatus}

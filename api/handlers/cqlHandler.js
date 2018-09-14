@@ -161,7 +161,7 @@ class CqlArtifact {
     this.parameters = artifact.parameters;
     this.exclusions = artifact.expTreeExclude;
     this.subpopulations = artifact.subpopulations;
-    this.subelements = artifact.subelements;
+    this.baseElements = artifact.baseElements;
     this.recommendations = artifact.recommendations;
     this.errorStatement = artifact.errorStatement;
     this.initialize();
@@ -197,12 +197,12 @@ class CqlArtifact {
     }
     );
 
-    this.subelements.forEach((subelement) => {
-      const count = getCountForUniqueExpressionName(subelement.parameters[0], this.names, 'value', '', false);
+    this.baseElements.forEach((baseElement) => {
+      const count = getCountForUniqueExpressionName(baseElement.parameters[0], this.names, 'value', '', false);
       if (count > 0) {
-        subelement.parameters[0].value = `${subelement.parameters[0]}_${count}`;
+        baseElement.parameters[0].value = `${baseElement.parameters[0]}_${count}`;
       }
-      this.parseElement(subelement);
+      this.parseElement(baseElement);
     }
     );
 
@@ -465,7 +465,7 @@ class CqlArtifact {
         }
         case 'reference': {
           // Need to pull the element name from the reference to support renaming the elements while being used.
-          const referencedElement = this.subelements.find(e => e.uniqueId === parameter.value.id)
+          const referencedElement = this.baseElements.find(e => e.uniqueId === parameter.value.id)
           const referencedElementName = referencedElement.parameters[0].value || referencedElement.uniqueId;
           context.values = [ `"${referencedElementName}"` ];
           break;
