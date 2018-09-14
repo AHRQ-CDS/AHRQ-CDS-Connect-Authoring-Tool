@@ -1,18 +1,18 @@
-import Subelements from '../../../components/builder/Subelements';
+import BaseElements from '../../../components/builder/Subelements';
 import TemplateInstance from '../../../components/builder/TemplateInstance';
 import ConjunctionGroup from '../../../components/builder/ConjunctionGroup';
 import { shallowRenderComponent } from '../../../utils/test_helpers';
-import { genericSubelementInstance } from '../../../utils/test_fixtures';
+import { genericBaseElementInstance } from '../../../utils/test_fixtures';
 
 let component;
 
 beforeEach(() => {
-  component = shallowRenderComponent(Subelements, {
-    treeName: 'subelements',
+  component = shallowRenderComponent(BaseElements, {
+    treeName: 'baseElements',
     loadValueSets: jest.fn(),
     templates: [],
-    instance: { subelements: [genericSubelementInstance, genericSubelementInstance] },
-    addSubelement: jest.fn(),
+    instance: { baseElements: [genericBaseElementInstance, genericBaseElementInstance] },
+    addBaseElement: jest.fn(),
     editInstance: jest.fn(),
     updateInstanceModifiers: jest.fn(),
     deleteInstance: jest.fn(),
@@ -36,7 +36,7 @@ beforeEach(() => {
   });
 });
 
-test('Subelements renders separate template instances', () => {
+test('Base Elements renders separate template instances', () => {
   expect(component.find(TemplateInstance)).toHaveLength(2);
   expect(component.find(ConjunctionGroup)).toHaveLength(0);
 });

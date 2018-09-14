@@ -1,14 +1,14 @@
 import { createTemplateInstance, fullRenderComponentOnBody } from '../../../utils/test_helpers';
-import { instanceTree, genericInstance, genericSubelementInstance,
-  genericSubelementInstanceWithModifiers, genericSubelementUseInstance } from '../../../utils/test_fixtures';
+import { instanceTree, genericInstance, genericBaseElementInstance,
+  genericBaseElementInstanceWithModifiers, genericBaseElementUseInstance } from '../../../utils/test_fixtures';
 
 import TemplateInstance from '../../../components/builder/TemplateInstance';
 
 const originalInstance = instanceTree.childInstances[0];
 const genericTemplateInstance = createTemplateInstance(genericInstance);
-const genericSubelementUseTemplateInstance = createTemplateInstance(genericSubelementUseInstance);
-const genericSubelementTemplateInstance = createTemplateInstance(genericSubelementInstance);
-const genericSubelementTemplateInstanceWithModifers = createTemplateInstance(genericSubelementInstanceWithModifiers);
+const genericBaseElementUseTemplateInstance = createTemplateInstance(genericBaseElementUseInstance);
+const genericBaseElementTemplateInstance = createTemplateInstance(genericBaseElementInstance);
+const genericBaseElementTemplateInstanceWithModifers = createTemplateInstance(genericBaseElementInstanceWithModifiers);
 let component;
 
 const props = {
@@ -23,7 +23,7 @@ const props = {
   deleteInstance: jest.fn(),
   renderIndentButtons: jest.fn(),
   instanceNames: [],
-  subelements: [],
+  baseElements: [],
   loginVSACUser: jest.fn(),
   setVSACAuthStatus: jest.fn(),
   timeLastAuthenticated: new Date(),
@@ -166,11 +166,11 @@ test('renders a collapsed element correctly', () => {
   expect(component.find('.card-element__heading .warning')).toHaveLength(1);
 });
 
-describe('Subelement instances', () => {
+describe('Base Element instances', () => {
   beforeEach(() => {
-    const subelementProps = { ...props };
-    subelementProps.templateInstance = genericSubelementTemplateInstance;
-    component = fullRenderComponentOnBody(TemplateInstance, { ...subelementProps });
+    const baseElementProps = { ...props };
+    baseElementProps.templateInstance = genericBaseElementTemplateInstance;
+    component = fullRenderComponentOnBody(TemplateInstance, { ...baseElementProps });
   });
 
   test('cannot be deleted if in use in the artifact', () => {
@@ -191,7 +191,7 @@ describe('Subelement instances', () => {
 
   test('can be deleted if not in use in the artifact', () => {
     // Remove the usage
-    const updatedTemplateInstance = genericSubelementInstance;
+    const updatedTemplateInstance = genericBaseElementInstance;
     updatedTemplateInstance.usedBy = [];
     component.setProps({ templateInstance: updatedTemplateInstance });
     // Used by no elements
@@ -220,7 +220,7 @@ describe('Subelement instances', () => {
     expect(modifierOptions).toHaveLength(3);
 
     // Remove the usage
-    const updatedTemplateInstance = genericSubelementInstance;
+    const updatedTemplateInstance = genericBaseElementInstance;
     updatedTemplateInstance.usedBy = [];
     component.setProps({ templateInstance: updatedTemplateInstance });
 
@@ -231,7 +231,7 @@ describe('Subelement instances', () => {
 
   test('cannot remove modifiers that change the return type if in use in the artifact', () => {
     // Use templateInstance with modifiers
-    const updatedTemplateInstance = genericSubelementTemplateInstanceWithModifers;
+    const updatedTemplateInstance = genericBaseElementTemplateInstanceWithModifers;
     component.setProps({ templateInstance: updatedTemplateInstance });
 
     const removeLastModifierSpy = jest.spyOn(component.instance(), 'removeLastModifier');
@@ -244,7 +244,7 @@ describe('Subelement instances', () => {
     // Initially 3 modifiers applied
     expect(component.props().templateInstance.modifiers).toHaveLength(3);
 
-    // First modifier to delete on hardcoded subelement does not change return type. Can be removed.
+    // First modifier to delete on hardcoded base element does not change return type. Can be removed.
     let modifierDeleteButton = component.find('.modifier__deletebutton');
     expect(modifierDeleteButton).toHaveLength(1);
     expect(modifierDeleteButton.hasClass('disabled')).not.toBeTruthy();
@@ -269,28 +269,28 @@ describe('Subelement instances', () => {
   });
 });
 
-describe('Subelement uses', () => {
+describe('Base Element uses', () => {
   beforeEach(() => {
-    // Set templateInstance for subelement use and set instanceNames to include the original subelement name.
-    const subelementProps = { ...props };
-    subelementProps.templateInstance = genericSubelementUseTemplateInstance;
-    subelementProps.instanceNames = [
-      { id: 'originalSubelementId', name: 'My Subelement' },
-      { id: genericSubelementUseTemplateInstance.uniqueId, name: 'Subelement Observation' }
+    // Set templateInstance for base element use and set instanceNames to include the original base element name.
+    const baseElementProps = { ...props };
+    baseElementProps.templateInstance = genericBaseElementUseTemplateInstance;
+    baseElementProps.instanceNames = [
+      { id: 'originalBaseElementId', name: 'My Base Element' },
+      { id: genericBaseElementUseTemplateInstance.uniqueId, name: 'Base Element Observation' }
     ];
-    const originalSubelement = genericSubelementTemplateInstance;
-    originalSubelement.uniqueId = 'originalSubelementId';
-    subelementProps.subelements = [originalSubelement];
-    component = fullRenderComponentOnBody(TemplateInstance, { ...subelementProps });
+    const originalBaseElement = genericBaseElementTemplateInstance;
+    originalBaseElement.uniqueId = 'originalBaseElementId';
+    baseElementProps.baseElements = [originalBaseElement];
+    component = fullRenderComponentOnBody(TemplateInstance, { ...baseElementProps });
   });
 
   test('have correct color background', () => {
     expect(component.hasClass('subelement')).toBeTruthy();
   });
 
-  test('visualize original subelement information', () => {
-    const subelementList = component.find('#subelement-list');
-    expect(subelementList).toHaveLength(1);
-    expect(subelementList.text()).toEqual('Base Element:My Subelement');
+  test('visualize original base element information', () => {
+    const baseElementList = component.find('#subelement-list');
+    expect(baseElementList).toHaveLength(1);
+    expect(baseElementList.text()).toEqual('Base Element:My Base Element');
   });
 });

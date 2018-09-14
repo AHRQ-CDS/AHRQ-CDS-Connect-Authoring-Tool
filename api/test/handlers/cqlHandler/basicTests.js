@@ -8,7 +8,7 @@ const baseArtifact = {
   expTreeInclude: {},
   expTreeExclude: {},
   subpopulations: [],
-  subelements: [],
+  baseElements: [],
   recommendations: [],
   parameters: [],
   errorStatement: {},

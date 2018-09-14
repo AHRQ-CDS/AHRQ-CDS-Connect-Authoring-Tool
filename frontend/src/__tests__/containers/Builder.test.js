@@ -118,7 +118,7 @@ test('adds instance', () => {
         expTreeInclude: emptyInstanceTree,
         expTreeExclude: emptyInstanceTree,
         subpopulations: [],
-        subelements: [],
+        baseElements: [],
         parameters: []
       },
       downloadArtifact: {},
@@ -156,7 +156,7 @@ test('adds instance at correct tree position', () => {
         expTreeInclude: { ...emptyInstanceTree, childInstances: [conjunctionInstance] },
         expTreeExclude: emptyInstanceTree,
         subpopulations: [],
-        subelements: [],
+        baseElements: [],
         parameters: []
       },
       downloadArtifact: {},
@@ -186,7 +186,7 @@ test('edits a template instance', () => {
         expTreeInclude: instanceTree,
         expTreeExclude: instanceTree,
         subpopulations: [],
-        subelements: [],
+        baseElements: [],
         parameters: []
       },
       downloadArtifact: {}
@@ -211,7 +211,7 @@ test('edits a conjunction instance', () => {
         expTreeInclude: instanceTree,
         expTreeExclude: instanceTree,
         subpopulations: [],
-        subelements: [],
+        baseElements: [],
         parameters: []
       },
       downloadArtifact: {}
@@ -241,7 +241,7 @@ test('updates an instance\'s modifiers', () => {
         expTreeInclude: instanceTree,
         expTreeExclude: instanceTree,
         subpopulations: [],
-        subelements: [],
+        baseElements: [],
         parameters: []
       },
       downloadArtifact: {}
@@ -280,7 +280,7 @@ test('deletes instance at correct tree position', () => {
         expTreeInclude: instanceTree,
         expTreeExclude: instanceTree,
         subpopulations: [],
-        subelements: [],
+        baseElements: [],
         parameters: []
       },
       downloadArtifact: {},

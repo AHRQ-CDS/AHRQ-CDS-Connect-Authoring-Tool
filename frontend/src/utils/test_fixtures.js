@@ -226,7 +226,7 @@ const genericElementTypes = [
   { value: 'observation', label: 'Observation', vsacAuthRequired: true, template: 'GenericObservation_vsac' },
   { value: 'booleanParameter', label: 'Parameters', vsacAuthRequired: false },
   { value: 'procedure', label: 'Procedure', vsacAuthRequired: true, template: 'GenericProcedure_vsac' },
-  { value: 'subElement', label: 'Subelements', vsacAuthRequired: false }
+  { value: 'baseElements', label: 'Base Elements', vsacAuthRequired: false }
 ];
 
 const genericElementGroups = [
@@ -314,7 +314,7 @@ const genericInstance = {
   modifiers: [],
 };
 
-const genericSubelementInstance = {
+const genericBaseElementInstance = {
   id: 'GenericObservation_vsac',
   name: 'Observation',
   returnType: 'list_of_observations',
@@ -340,7 +340,7 @@ const genericSubelementInstance = {
   modifiers: [],
 };
 
-const genericSubelementInstanceWithModifiers = {
+const genericBaseElementInstanceWithModifiers = {
   id: 'GenericObservation_vsac',
   name: 'Observation',
   returnType: 'list_of_observations',
@@ -391,19 +391,19 @@ const genericSubelementInstanceWithModifiers = {
   ],
 };
 
-const genericSubelementUseInstance = {
+const genericBaseElementUseInstance = {
   id: 'GenericObservation_vsac',
-  name: 'Subelement',
+  name: 'BaseElement',
   returnType: 'list_of_observations',
-  type: 'subelement',
+  type: 'baseElement',
   template: 'GenericStatement',
   parameters: [
-    { id: 'element_name', name: 'Element Name', type: 'string', value: 'Subelement Observation' },
+    { id: 'element_name', name: 'Element Name', type: 'string', value: 'Base Element Observation' },
     {
-      id: 'subelementReference',
+      id: 'baseElementReference',
       type: 'reference',
       name: 'reference',
-      value: { id: 'originalSubelementId', type: 'Observation' }
+      value: { id: 'originalBaseElementId', type: 'Observation' }
     }
   ],
   modifiers: [],
@@ -416,7 +416,7 @@ export {
   genericElementTypes,
   genericElementGroups,
   genericInstance,
-  genericSubelementInstance,
-  genericSubelementInstanceWithModifiers,
-  genericSubelementUseInstance
+  genericBaseElementInstance,
+  genericBaseElementInstanceWithModifiers,
+  genericBaseElementUseInstance
 };
