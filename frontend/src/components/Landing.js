@@ -43,10 +43,8 @@ export default () => (
       </p>
 
       <p>
-        The CDS Authoring Tool is currently under development and released as a beta capability. Although the
-        development team strives to release bug-free code, beta software typically exhibits minor bugs and other
-        limitations that would not be expected in production level software. Users should be aware of the following
-        known limitations in this release of the authoring tool:
+        The CDS Authoring Tool is currently under development. Users should be aware of the following known limitations
+        in current releases of the authoring tool:
       </p>
       <ul>
         <li>a limited set of logical capabilities, primarily focused on inclusion/exclusion logic</li>
