@@ -6,10 +6,10 @@ import TemplateInstance from './TemplateInstance';
 import createTemplateInstance from '../../utils/templates';
 
 
-export default class Subelements extends Component {
+export default class BaseElements extends Component {
   addChild = (template) => {
     const instance = createTemplateInstance(template);
-    this.props.addSubelement(instance);
+    this.props.addBaseElement(instance);
   }
 
   getPath = () => 'subelements'
@@ -37,7 +37,7 @@ export default class Subelements extends Component {
             renderIndentButtons={() => {}}
             conversionFunctions={this.props.conversionFunctions}
             instanceNames={this.props.instanceNames}
-            subelements={this.props.subelements}
+            baseElements={this.props.baseElements}
             loginVSACUser={this.props.loginVSACUser}
             setVSACAuthStatus={this.props.setVSACAuthStatus}
             vsacStatus={this.props.vsacStatus}
@@ -82,17 +82,17 @@ export default class Subelements extends Component {
           codeData={this.props.codeData}
           validateCode={this.props.validateCode}
           resetCodeValidation={this.props.resetCodeValidation}
-          inSubelements={true}
+          inBaseElements={true}
         />
       </div>
     </div>;
   }
 }
 
-Subelements.propTypes = {
+BaseElements.propTypes = {
   treeName: PropTypes.string.isRequired,
   instance: PropTypes.object.isRequired,
-  addSubelement: PropTypes.func.isRequired,
+  addBaseElement: PropTypes.func.isRequired,
   loadValueSets: PropTypes.func.isRequired,
   editInstance: PropTypes.func.isRequired,
   updateInstanceModifiers: PropTypes.func.isRequired,

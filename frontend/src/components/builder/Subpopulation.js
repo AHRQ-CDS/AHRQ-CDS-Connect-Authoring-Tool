@@ -124,7 +124,7 @@ export default class Subpopulation extends Component {
                 getAllInstances={this.getAllInstances}
                 updateInstanceModifiers={this.props.updateInstanceModifiers}
                 parameters={this.props.parameters}
-                subelements={this.props.subelements}
+                baseElements={this.props.baseElements}
                 subPopulationIndex={this.props.subpopulationIndex}
                 conversionFunctions={this.props.conversionFunctions}
                 instanceNames={this.props.instanceNames}

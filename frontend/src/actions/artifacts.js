@@ -32,17 +32,17 @@ export function setStatusMessage(statusType) {
 
 // ------------------------- UPDATE ARTIFACT ------------------------------- //
 
-function parseTree(element, names, subelementsInUse) {
-  parseConjunction(element, names, subelementsInUse);
+function parseTree(element, names, baseElementsInUse) {
+  parseConjunction(element, names, baseElementsInUse);
   const children = element.childInstances;
   children.forEach((child) => {
     if ('childInstances' in child) {
-      parseTree(child, names, subelementsInUse);
+      parseTree(child, names, baseElementsInUse);
     }
   });
 }
 
-function parseConjunction(element, names, subelementsInUse) {
+function parseConjunction(element, names, baseElementsInUse) {
   element.childInstances.forEach((child) => {
     // Don't include parameters used in conjunctions since they are just refernces.
     // type = 'parameter'supports modern parameter references, template = 'EmptyParameter'for old parameter references.
@@ -55,16 +55,16 @@ function parseConjunction(element, names, subelementsInUse) {
         names.push({ name, id: child.uniqueId });
       }
 
-      // Add uniqueId of subelements that are currently used
+      // Add uniqueId of base elements that are currently used
       const referenceParameter = child.parameters.find(param => param.type === 'reference');
       if (referenceParameter) {
-        const subelementAlreadyInUse = subelementsInUse.find(s => s.subelementId === referenceParameter.value.id);
-        if (subelementAlreadyInUse === undefined) {
-          // Add the subelement id and begin the list of other instances using the subelement
-          subelementsInUse.push({ subelementId: referenceParameter.value.id, usedBy: [child.uniqueId] });
+        const baseElementAlreadyInUse = baseElementsInUse.find(s => s.baseElementId === referenceParameter.value.id);
+        if (baseElementAlreadyInUse === undefined) {
+          // Add the base element id and begin the list of other instances using the base element
+          baseElementsInUse.push({ baseElementId: referenceParameter.value.id, usedBy: [child.uniqueId] });
         } else {
-          // If the subelement is already used elsewhere, just add to the list of instances using it
-          subelementAlreadyInUse.usedBy.push(child.uniqueId);
+          // If the base element is already used elsewhere, just add to the list of instances using it
+          baseElementAlreadyInUse.usedBy.push(child.uniqueId);
         }
       }
     }
@@ -74,30 +74,30 @@ function parseConjunction(element, names, subelementsInUse) {
   });
 }
 
-function parseForDuplicateNamesAndUsedSubelements(artifact) {
+function parseForDuplicateNamesAndUsedBaseElements(artifact) {
   const names = [];
-  const subelementsInUse = [];
+  const baseElementsInUse = [];
   if (artifact.expTreeInclude.childInstances.length) {
-    parseTree(artifact.expTreeInclude, names, subelementsInUse);
+    parseTree(artifact.expTreeInclude, names, baseElementsInUse);
   }
   if (artifact.expTreeExclude.childInstances.length) {
-    parseTree(artifact.expTreeExclude, names, subelementsInUse);
+    parseTree(artifact.expTreeExclude, names, baseElementsInUse);
   }
   artifact.subpopulations.forEach((subpopulation) => {
     names.push({ name: subpopulation.subpopulationName, id: subpopulation.uniqueId });
     if (!subpopulation.special) { // `Doesn't Meet Inclusion Criteria` and `Meets Exclusion Criteria` are special
-      if (subpopulation.childInstances.length) { parseTree(subpopulation, names, subelementsInUse); }
+      if (subpopulation.childInstances.length) { parseTree(subpopulation, names, baseElementsInUse); }
     }
   });
-  artifact.subelements.forEach((subelement) => {
-    if (subelement.parameters && subelement.parameters[0]) {
-      names.push({ name: subelement.parameters[0].value, id: subelement.uniqueId });
+  artifact.subelements.forEach((baseElement) => {
+    if (baseElement.parameters && baseElement.parameters[0]) {
+      names.push({ name: baseElement.parameters[0].value, id: baseElement.uniqueId });
     }
   });
   artifact.parameters.forEach((parameter, i) => {
     names.push({ name: parameter.name, id: parameter.uniqueId });
   });
-  return { names, subelementsInUse };
+  return { names, baseElementsInUse };
 }
 
 export function updateArtifact(artifactToUpdate, props) {
@@ -106,12 +106,12 @@ export function updateArtifact(artifactToUpdate, props) {
       ...artifactToUpdate,
       ...props
     };
-    const { names, subelementsInUse } = parseForDuplicateNamesAndUsedSubelements(artifact);
+    const { names, baseElementsInUse } = parseForDuplicateNamesAndUsedBaseElements(artifact);
 
-    // Add uniqueId to list on subelement to mark where it is used.
-    artifact.subelements.forEach((subelement) => {
-      const subelementInUse = subelementsInUse.find(usedSubel => usedSubel.subelementId === subelement.uniqueId);
-      subelement.usedBy = subelementInUse ? subelementInUse.usedBy : [];
+    // Add uniqueId to list on base element to mark where it is used.
+    artifact.subelements.forEach((element) => {
+      const elementInUse = baseElementsInUse.find(usedBaseEl => usedBaseEl.baseElementId === element.uniqueId);
+      element.usedBy = elementInUse ? elementInUse.usedBy : [];
     });
 
     return dispatch({
@@ -249,7 +249,7 @@ function requestArtifact(id) {
 }
 
 function loadArtifactSuccess(artifact) {
-  const { names } = parseForDuplicateNamesAndUsedSubelements(artifact);
+  const { names } = parseForDuplicateNamesAndUsedBaseElements(artifact);
   return {
     type: types.LOAD_ARTIFACT_SUCCESS,
     artifact,

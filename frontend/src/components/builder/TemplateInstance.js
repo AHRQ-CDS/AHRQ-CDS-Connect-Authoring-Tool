@@ -665,14 +665,14 @@ export default class TemplateInstance extends Component {
   }
 
   renderExpression = () => {
-    const { templateInstance, subelements } = this.props;
+    const { templateInstance, baseElements } = this.props;
     const { returnType } = this.state;
 
     let phraseTemplateInstance = templateInstance;
     if (templateInstance.type === 'baseElement') {
       const referenceParameter = templateInstance.parameters.find(param => param.type === 'reference');
       if (referenceParameter) {
-        const baseElementReferenced = subelements.find(element =>
+        const baseElementReferenced = baseElements.find(element =>
           element.uniqueId === referenceParameter.value.id);
         phraseTemplateInstance = baseElementReferenced;
       }

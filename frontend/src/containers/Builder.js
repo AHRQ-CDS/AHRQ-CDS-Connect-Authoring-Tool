@@ -26,7 +26,7 @@ import Parameters from '../components/builder/Parameters';
 import Recommendations from '../components/builder/Recommendations';
 import RepoUploadModal from '../components/builder/RepoUploadModal';
 import ELMErrorModal from '../components/builder/ELMErrorModal';
-import Subelements from '../components/builder/Subelements';
+import BaseElements from '../components/builder/Subelements';
 
 import isBlankArtifact from '../utils/artifacts/isBlankArtifact';
 import { findValueAtPath } from '../utils/find';
@@ -108,7 +108,7 @@ export class Builder extends Component {
     this.setTree(treeName, treeData, tree);
   }
 
-  addSubelement = (instance, uid = null, incomingTree) => {
+  addBaseElement = (instance, uid = null, incomingTree) => {
     const treeData = this.findTree('subelements', uid);
     const tree = incomingTree || treeData.tree;
     tree.push(instance);
@@ -299,7 +299,7 @@ export class Builder extends Component {
           getAllInstances={this.getAllInstances}
           updateInstanceModifiers={this.updateInstanceModifiers}
           parameters={namedParameters}
-          subelements={artifact.subelements}
+          baseElements={artifact.subelements}
           conversionFunctions={conversionFunctions}
           instanceNames={this.props.names}
           loginVSACUser={this.props.loginVSACUser}
@@ -417,7 +417,7 @@ export class Builder extends Component {
                     loadValueSets={this.props.loadValueSets}
                     updateSubpopulations={this.updateSubpopulations}
                     parameters={namedParameters}
-                    subelements={artifact.subelements}
+                    baseElements={artifact.subelements}
                     addInstance={this.addInstance}
                     editInstance={this.editInstance}
                     updateInstanceModifiers={this.updateInstanceModifiers}
@@ -449,10 +449,10 @@ export class Builder extends Component {
                 </TabPanel>
 
                 <TabPanel>
-                  <Subelements
+                  <BaseElements
                     treeName='subelements'
                     instance={artifact}
-                    addSubelement={this.addSubelement}
+                    addBaseElement={this.addBaseElement}
                     loadValueSets={this.props.loadValueSets}
                     editInstance={this.editInstance}
                     updateInstanceModifiers={this.updateInstanceModifiers}
@@ -461,7 +461,7 @@ export class Builder extends Component {
                     valueSets={this.props.valueSets}
                     conversionFunctions={conversionFunctions}
                     instanceNames={this.props.names}
-                    subelements={artifact.subelements}
+                    baseElements={artifact.subelements}
                     parameters={namedParameters}
                     loginVSACUser={this.props.loginVSACUser}
                     setVSACAuthStatus={this.props.setVSACAuthStatus}

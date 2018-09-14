@@ -97,8 +97,8 @@ export default class ElementSelect extends Component {
     const paramsIndex = categoriesCopy.findIndex(cat => cat.name === 'Parameters');
     const baseElementsIndex = categoriesCopy.findIndex(cat => cat.name === 'Base Elements');
 
-    if (this.props.subelements && this.props.subelements.length && categoriesCopy[baseElementsIndex]) {
-      categoriesCopy[baseElementsIndex].entries = this.props.subelements.map((e) => {
+    if (this.props.baseElements && this.props.baseElements.length && categoriesCopy[baseElementsIndex]) {
+      categoriesCopy[baseElementsIndex].entries = this.props.baseElements.map((e) => {
         const returnType = _.isEmpty(e.modifiers) ? e.returnType : _.last(e.modifiers).returnType;
         return ({
           id: _.uniqueId(e.id),
@@ -249,7 +249,7 @@ export default class ElementSelect extends Component {
     const { selectedElement } = this.state;
     const placeholderText = 'Choose element type';
     const elementOptionsToDisplay = elementOptions.filter((e) => {
-      if (this.props.inSubelements) {
+      if (this.props.inBaseElements) {
         return e.value !== 'baseElement';
       }
       return true;
@@ -328,5 +328,5 @@ ElementSelect.propTypes = {
   codeData: PropTypes.object,
   validateCode: PropTypes.func.isRequired,
   resetCodeValidation: PropTypes.func.isRequired,
-  inSubelements: PropTypes.bool.isRequired,
+  inBaseElements: PropTypes.bool.isRequired,
 };

@@ -215,7 +215,7 @@ export default class ConjunctionGroup extends Component {
               getAllInstances={this.props.getAllInstances}
               updateInstanceModifiers={this.props.updateInstanceModifiers}
               parameters={this.props.parameters}
-              subelements={this.props.subelements}
+              baseElements={this.props.baseElements}
               getPath={this.getChildsPath}
               conversionFunctions={this.props.conversionFunctions}
               instanceNames={this.props.instanceNames}
@@ -266,7 +266,7 @@ export default class ConjunctionGroup extends Component {
           renderIndentButtons={this.renderIndentButtons}
           conversionFunctions={this.props.conversionFunctions}
           instanceNames={this.props.instanceNames}
-          subelements={this.props.subelements}
+          baseElements={this.props.baseElements}
           loginVSACUser={this.props.loginVSACUser}
           setVSACAuthStatus={this.props.setVSACAuthStatus}
           vsacStatus={this.props.vsacStatus}
@@ -305,7 +305,7 @@ export default class ConjunctionGroup extends Component {
             categories={this.props.templates}
             onSuggestionSelected={this.addChild}
             parameters={this.props.parameters}
-            subelements={this.props.subelements}
+            baseElements={this.props.baseElements}
             loginVSACUser={this.props.loginVSACUser}
             setVSACAuthStatus={this.props.setVSACAuthStatus}
             vsacStatus={this.props.vsacStatus}
@@ -324,7 +324,7 @@ export default class ConjunctionGroup extends Component {
             codeData={this.props.codeData}
             validateCode={this.props.validateCode}
             resetCodeValidation={this.props.resetCodeValidation}
-            inSubelements={false}
+            inBaseElements={false}
           />
         </div>
       </div>
