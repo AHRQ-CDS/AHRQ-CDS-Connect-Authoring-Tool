@@ -35,6 +35,7 @@ const elementOptions = [
     vsacAuthRequired: true,
     template: 'GenericAllergyIntolerance_vsac'
   },
+  { value: 'baseElement', label: 'Base Elements', vsacAuthRequired: false },
   { value: 'condition', label: 'Condition', vsacAuthRequired: true, template: 'GenericCondition_vsac' },
   { value: 'demographics', label: 'Demographics', vsacAuthRequired: false },
   { value: 'encounter', label: 'Encounter', vsacAuthRequired: true, template: 'GenericEncounter_vsac' },
@@ -52,8 +53,7 @@ const elementOptions = [
   },
   { value: 'observation', label: 'Observation', vsacAuthRequired: true, template: 'GenericObservation_vsac' },
   { value: 'booleanParameter', label: 'Parameters', vsacAuthRequired: false },
-  { value: 'procedure', label: 'Procedure', vsacAuthRequired: true, template: 'GenericProcedure_vsac' },
-  { value: 'baseElement', label: 'Base Elements', vsacAuthRequired: false }
+  { value: 'procedure', label: 'Procedure', vsacAuthRequired: true, template: 'GenericProcedure_vsac' }
 ];
 
 export default class ElementSelect extends Component {

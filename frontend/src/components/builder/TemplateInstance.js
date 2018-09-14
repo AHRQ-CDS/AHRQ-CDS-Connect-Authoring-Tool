@@ -82,7 +82,7 @@ export default class TemplateInstance extends Component {
 
   hasWarnings = () => {
     const hasValidationError = this.validateElement() !== null;
-    const hasReturnError = this.state.returnType !== 'boolean';
+    const hasReturnError = this.state.returnType !== 'boolean' && this.props.validateReturnType !== false;
     const hasModifierWarnings = !this.allModifiersValid();
     const hasNameWarning = this.hasDuplicateName();
 

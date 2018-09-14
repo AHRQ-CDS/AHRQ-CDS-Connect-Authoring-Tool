@@ -22,7 +22,7 @@ export default class BaseElements extends Component {
   render() {
     return <div className="card-group card-group__top">
       {this.props.instance.baseElements.map((s, i) =>
-        <div className="card-group-section subpopulation" key={i}>
+        <div className="card-group-section subpopulation base-element" key={i}>
           <TemplateInstance
             valueSets={this.props.valueSets}
             loadValueSets={this.props.loadValueSets}
