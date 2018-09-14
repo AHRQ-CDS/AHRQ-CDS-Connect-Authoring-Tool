@@ -69,39 +69,25 @@
     width: 100%;
     margin: 1em 0;
 
-    th {
-      padding-bottom: 0.5em;
-    }
-
+    th,
     td {
-      padding: 0.25em;
+      padding: 0.5em;
     }
 
-    tr:first-of-type td {
-      padding-top: 0.5em;
+    .result-oid {
+      font-size: 0.8em;
+      color: darken($gray-light, 5%);
     }
 
     &.selectable {
       tbody tr {
+        cursor: pointer;
+
         &:hover,
         &:focus,
         &:active {
-          background-color: $blue;
-          color: $white;
+          background-color: $gray-blue;
         }
-      }
-    }
-
-    &.icons {
-      th:first-of-type,
-      th:last-of-type,
-
-      tr td:last-of-type {
-        text-align: center;
-      }
-
-      tr td:first-of-type {
-        padding-right: 2em;
       }
     }
   }
@@ -116,7 +102,7 @@
     display: flex;
     flex: 1;
     overflow: auto;
-    padding: 2em;
+    padding: 0 2em;
   }
 
   &__sidebar {
@@ -171,8 +157,6 @@
       margin-right: 0.5em;
     }
   }
-
-
 }
 
 div.vsac-authenticate {
