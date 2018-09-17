@@ -104,7 +104,7 @@ export default class CodeSelectModal extends Component {
 
     const selectedTemplate = _.cloneDeep(this.props.template);
     if (selectedTemplate === undefined) return;
-    
+
     // Push the newly selected code
     let codesToAdd = selectedTemplate.parameters[1].codes;
     if (codesToAdd === undefined) codesToAdd = [];
