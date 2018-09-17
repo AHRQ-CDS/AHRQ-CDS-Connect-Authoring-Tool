@@ -77,9 +77,6 @@ export default class CodeSelectModal extends Component {
   }
 
   chooseCode = () => {
-    const selectedTemplate = _.cloneDeep(this.props.template);
-    if (selectedTemplate === undefined) return;
-
     // Updating a modifier is different than selecting the code for a base element
     if (this.props.updateModifier) {
       this.props.updateModifier({
@@ -105,6 +102,9 @@ export default class CodeSelectModal extends Component {
       return;
     }
 
+    const selectedTemplate = _.cloneDeep(this.props.template);
+    if (selectedTemplate === undefined) return;
+    
     // Push the newly selected code
     let codesToAdd = selectedTemplate.parameters[1].codes;
     if (codesToAdd === undefined) codesToAdd = [];
