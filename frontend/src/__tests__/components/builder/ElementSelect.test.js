@@ -87,7 +87,7 @@ describe('the select element field', () => {
     firstResult.simulate('mouseDown');
 
     // Choosing no VSAC auth element renders second select box.
-    expect(component.state().selectedElement).toEqual(genericElementTypes[2]);
+    expect(component.state().selectedElement).toEqual(genericElementTypes[3]);
     expect(component.state().selectedElement.vsacAuthRequired).toBe(false);
     expect(component.find('.element-select__element-field').length).toEqual(2);
 
@@ -121,7 +121,7 @@ describe('the select element field', () => {
     unauthObsResult.simulate('mouseDown');
 
     // Choosing VSAC auth element with recent timeLastAuthenticated has 2 VSAC control buttons.
-    expect(component.state().selectedElement).toEqual(genericElementTypes[6]);
+    expect(component.state().selectedElement).toEqual(genericElementTypes[7]);
     expect(component.state().selectedElement.vsacAuthRequired).toEqual(true);
     expect(component.find('.element-select__element-field').length).toEqual(1);
     expect(component.find('.vsac-authenticate').length).toEqual(1);
@@ -130,7 +130,7 @@ describe('the select element field', () => {
     expect(component.find('.vsac-authenticate button').at(1).text()).toEqual(' Add Value Set');
 
     // Choosing VSAC auth element with recent timeLastAuthenticated has 1 VSAC control buttons.
-    expect(unauthenticatedComponent.state().selectedElement).toEqual(genericElementTypes[6]);
+    expect(unauthenticatedComponent.state().selectedElement).toEqual(genericElementTypes[7]);
     expect(unauthenticatedComponent.state().selectedElement.vsacAuthRequired).toEqual(true);
     expect(unauthenticatedComponent.find('.element-select__element-field').length).toEqual(1);
     expect(unauthenticatedComponent.find('.vsac-authenticate').length).toEqual(1);
