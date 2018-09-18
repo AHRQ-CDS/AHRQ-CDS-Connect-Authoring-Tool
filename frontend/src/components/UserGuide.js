@@ -285,7 +285,7 @@ export default class UserGuide extends Component {
 
                   <li>
                     The "Workspace Tabs" divide the workspace into workflow sections for building an artifact. This helps keep
-                    sections of the artifact organized for the user (more on each tab below in sections 3.6-3.11).
+                    sections of the artifact organized for the user (more on each tab below in sections 3.6-3.12).
                   </li>
 
                   <li>
@@ -833,7 +833,93 @@ export default class UserGuide extends Component {
               </div>
 
               <div className="h3-wrapper">
-                <h3 id="Recommendations">3.9 Recommendations</h3>
+                <h3 id="BaseElements">3.9 Base Elements</h3>
+
+                <p>
+                  Base Elements can be used to create individual elements, which do not need to be contained within a
+                  Conjunction Group. Elements created in this tab can be added to the Inclusions, Exclusions, and
+                  Subpopulations Tabs.
+                </p>
+
+                <p>
+                  <img
+                    alt="Base Element"
+                    src={screenshotUrl('Base_Element')}
+                    className="img-fluid img-thumbnail rounded mx-auto d-block" />
+                </p>
+                <ol>
+                  <li>
+                    A base element. Individual base elements work similarly to Elements added to Inclusions, Exclusions,
+                    and Subpopulations. Value Sets and Codes can be added to VSAC Elements, and Expressions can be added.
+                  </li>
+                  <li>
+                    No "Select conjunction type" dropdown is present between Base Elements. This is because each element is
+                    separate from the others on the tab. They are not part of a Logic Element.
+                  </li>
+                  <li>
+                    The Element Picker (Section 3.2) used to add additional Base Elements.
+                  </li>
+                </ol>
+
+                <p>
+                  Base Elements can be used within the Inclusions, Exclusions, and Subpopulations tabs. They can be added
+                  using the "Base Elements" option in the Element Picker.
+                </p>
+
+                <p>
+                  <img
+                    alt="Base Element in Inclusions"
+                    src={screenshotUrl('Base_Element_in_Use')}
+                    className="img-fluid img-thumbnail rounded mx-auto d-block" />
+                </p>
+                <ol>
+                  <li>
+                    The background color of Base Element uses differs from other Elements used to easily differentiate it.
+                  </li>
+                  <li>
+                    The full expression phrase of the original Base Element is visible. Additional Expressions
+                    that are added will become part of the phrase.
+                  </li>
+                  <li>
+                    The Base Element use specifies the original Base Element name to easily identify its origin.
+                  </li>
+                  <li>
+                    Expressions can be added to Base Element uses the same as any other Element. Expressions that can be
+                    added to the return type of the Base Element will be available. Additional expressions are available
+                    in the same way as all other Elements.
+                  </li>
+                </ol>
+
+                <p>
+                  Once a Base Element is used within Inclusions, Exclusions, or Subpopulations, the original Base Element
+                  cannot be deleted and it's return type cannot change.
+                </p>
+                <p>
+                  <img
+                    alt="Base Element Can't Change"
+                    src={screenshotUrl('Base_Element_Cant_Change')}
+                    className="img-fluid img-thumbnail rounded mx-auto d-block" />
+                </p>
+                <ol>
+                  <li>
+                    The Base Element cannot be deleted while it is in use.
+                  </li>
+                  <li>
+                    Applied expressions cannot be removed if doing so would change the Base Element's return type. In order
+                    to remove the expression, first delete all uses of the Base Element in the artifact.
+                  </li>
+                  <li>
+                    Expressions can be added to the Base Element while it is used, as long as the return type of the
+                    Base Element does not change. Expressions that would change the return type are not available in the
+                    list. In order to add expressions that would change the return type, first remove all uses of the
+                    Base Element in the artifact.
+                  </li>
+                </ol>
+
+              </div>
+
+              <div className="h3-wrapper">
+                <h3 id="Recommendations">3.10 Recommendations</h3>
 
                 <p>
                   Recommendations are the resulting notices that should be delivered to the clinician after the CDS
@@ -932,7 +1018,7 @@ export default class UserGuide extends Component {
               </div>
 
               <div className="h3-wrapper">
-                <h3 id="Parameters">3.10 Parameters</h3>
+                <h3 id="Parameters">3.11 Parameters</h3>
 
                 <p>
                   Parameters allow the user to create named, reusable values that can be supplied by the CDS execution
@@ -981,7 +1067,7 @@ export default class UserGuide extends Component {
               </div>
 
               <div className="h3-wrapper">
-                <h3 id="Handle_Errors">3.11 Handle Errors</h3>
+                <h3 id="Handle_Errors">3.12 Handle Errors</h3>
 
                 <p>
                   The "Handle Errors" tab is an area to optionally direct the system how to handle various errors that may
