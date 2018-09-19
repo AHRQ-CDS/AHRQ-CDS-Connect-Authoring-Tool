@@ -433,7 +433,7 @@ export default class UserGuide extends Component {
                     </li>
 
                     <li>
-                      Each value set that matched the search term will show its type, name, code system, steward,
+                      Each value set that matched the search term will show its name, OID, steward,
                       and the number of codes it contains.
                     </li>
 
