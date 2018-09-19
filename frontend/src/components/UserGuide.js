@@ -634,8 +634,8 @@ export default class UserGuide extends Component {
                   Subpopulations. Since elements are used in boolean logic (e.g., and, or), the user must ensure that
                   the Return Type of every Element returns a "Boolean" value (e.g., true or false). To achieve this,
                   the user can apply Expressions to narrow or filter the previous Expression further. For example, one
-                  could start with a list of Diabetes Conditions, then apply the "Most Recent" Expression to find the
-                  most recent condition in the list, then apply "Is (Not) Null?" to achieve a Boolean Return Type
+                  could start with a list of Diabetes Conditions, then apply the "Confirmed" Expression to find the
+                  conditions with a Confirmed status, then apply "Exists" to achieve a Boolean Return Type
                   (pictured below).
                 </p>
 
@@ -643,6 +643,13 @@ export default class UserGuide extends Component {
                   Expressions chain onto one another in succession. The Return Type from the first Expression applied will
                   narrow the types of Expressions that can be applied as the second, and so on. The CDS Authoring Tool
                   performs this filtering for the user automatically.
+                </p>
+
+                <p>
+                  Expressions are also visually represented as a single phrase on each element. The phrase compiles all
+                  Expressions applied to an element into a single phrase. Value Sets, Codes, and any additional fields
+                  on an element are also included. The Expression Phrase serves as a way to quickly describe the value
+                  of the Element. As any of the values change, the phrase updates automatically.
                 </p>
 
                 <p>
@@ -669,6 +676,10 @@ export default class UserGuide extends Component {
                     of the Expression item. Because of the nature of the Expression chaining, only the last Expression can be
                     deleted. If the user wishes to delete an Expression higher up in the list, they must first delete all the
                     ones below it.
+                  </li>
+
+                  <li>
+                    The Expression Phrase for the element. It includes the Expressions and Value Sets added to the element.
                   </li>
 
                   <li>The "Return Type" of the Element will always be listed at the end of the Expressions list.</li>
