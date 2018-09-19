@@ -34,7 +34,7 @@
 
 .card-group__odd > .card-group-section > .card-element > .card-element__body > .expression,
 .card-group__odd > .card-element > .card-element__body > .expression,
-.subpopulation .expression {
+.subpopulation:not(.base-element) .expression {
   background-color: $gray-lightest;
 
   &.expression-collapsed {

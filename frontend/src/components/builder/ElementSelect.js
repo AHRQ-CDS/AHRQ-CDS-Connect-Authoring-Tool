@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import _ from 'lodash';
 import Select from 'react-select';
 import FontAwesome from 'react-fontawesome';
+import pluralize from 'pluralize';
 
 import ElementModal from './ElementModal';
 import ElementSelectMenuRenderer from './ElementSelectMenuRenderer';
@@ -35,6 +36,7 @@ const elementOptions = [
     vsacAuthRequired: true,
     template: 'GenericAllergyIntolerance_vsac'
   },
+  { value: 'baseElement', label: 'Base Elements', vsacAuthRequired: false },
   { value: 'condition', label: 'Condition', vsacAuthRequired: true, template: 'GenericCondition_vsac' },
   { value: 'demographics', label: 'Demographics', vsacAuthRequired: false },
   { value: 'encounter', label: 'Encounter', vsacAuthRequired: true, template: 'GenericEncounter_vsac' },
@@ -94,7 +96,30 @@ export default class ElementSelect extends Component {
     let categoriesCopy = _.cloneDeep(this.props.categories);
     categoriesCopy = filterUnsuppressed(categoriesCopy);
     const paramsIndex = categoriesCopy.findIndex(cat => cat.name === 'Parameters');
+    const baseElementsIndex = categoriesCopy.findIndex(cat => cat.name === 'Base Elements');
 
+    if (this.props.baseElements && this.props.baseElements.length && categoriesCopy[baseElementsIndex]) {
+      categoriesCopy[baseElementsIndex].entries = this.props.baseElements.map((e) => {
+        const returnType = _.isEmpty(e.modifiers) ? e.returnType : _.last(e.modifiers).returnType;
+        return ({
+          id: _.uniqueId(e.id),
+          name: 'Base Element',
+          type: 'baseElement',
+          template: 'GenericStatement',
+          returnType,
+          parameters: [
+            { id: 'element_name', type: 'string', name: 'Element Name', value: e.parameters[0].value },
+            {
+              id: 'baseElementReference',
+              type: 'reference',
+              name: 'reference',
+              value: { id: e.uniqueId, type: e.name },
+              static: true
+            }
+          ]
+        });
+      });
+    }
     if (this.props.parameters.length) {
       let parametersCategory;
       if (paramsIndex >= 0) {
@@ -224,13 +249,32 @@ export default class ElementSelect extends Component {
   render() {
     const { selectedElement } = this.state;
     const placeholderText = 'Choose element type';
+    const elementOptionsToDisplay = elementOptions.filter((e) => {
+      if (this.props.inBaseElements) {
+        return e.value !== 'baseElement';
+      }
+      return true;
+    });
     let noAuthElementOptions;
     if (selectedElement && !selectedElement.vsacAuthRequired) {
       noAuthElementOptions = this.state.categories
         .find(cat => cat.name === selectedElement.label)
-        .entries.map(({ id, name }) => ({ value: id, label: name, type: selectedElement.label }));
+        .entries.map(({ id, name, type, parameters }) => {
+          // Base elements display the parameter element_name entered by user, not the generic 'Base Element'.
+          const label = type === 'baseElement' ? parameters[0].value : name;
+          return ({ value: id, label, type: selectedElement.label });
+        });
     }
     const value = selectedElement && selectedElement.value;
+
+    let noAuthPlaceholder = '';
+    if (selectedElement) {
+      if (selectedElement.value === 'baseElement') {
+        noAuthPlaceholder = `Select ${pluralize.singular(selectedElement.label)}`;
+      } else {
+        noAuthPlaceholder = `Select ${selectedElement.label} element`;
+      }
+    }
 
     return (
       <div className="element-select form__group">
@@ -247,7 +291,7 @@ export default class ElementSelect extends Component {
             placeholder={placeholderText}
             aria-label={placeholderText}
             clearable={false}
-            options={elementOptions}
+            options={elementOptionsToDisplay}
             onChange={this.onElementSelected}
             optionRenderer={optionRenderer}
             menuRenderer={ElementSelectMenuRenderer}
@@ -256,8 +300,8 @@ export default class ElementSelect extends Component {
           {selectedElement && !selectedElement.vsacAuthRequired &&
             <Select
               className="element-select__element-field"
-              placeholder={`Select ${selectedElement.label} element`}
-              aria-label={`Select ${selectedElement.label} element`}
+              placeholder={noAuthPlaceholder}
+              aria-label={noAuthPlaceholder}
               options={noAuthElementOptions}
               onChange={this.onNoAuthElementSelected}
               />
@@ -293,5 +337,6 @@ ElementSelect.propTypes = {
   isValidCode: PropTypes.bool,
   codeData: PropTypes.object,
   validateCode: PropTypes.func.isRequired,
-  resetCodeValidation: PropTypes.func.isRequired
+  resetCodeValidation: PropTypes.func.isRequired,
+  inBaseElements: PropTypes.bool.isRequired,
 };

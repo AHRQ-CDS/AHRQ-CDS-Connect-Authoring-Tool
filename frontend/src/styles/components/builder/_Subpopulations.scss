@@ -7,6 +7,10 @@
 
   .card-element__body:last-child .card-element {
     background-color: $body-bg;
+
+    &.base-element {
+      background-color: lighten($blue-light, 35%);
+    }
   }
 
   .subpopulation-title {

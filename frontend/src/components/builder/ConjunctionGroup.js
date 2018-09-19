@@ -16,6 +16,7 @@ export default class ConjunctionGroup extends Component {
 
     const operationTemplates = this.props.templates.find(cat => cat.name === 'Operations').entries;
     this.types = operationTemplates.filter(template => template.conjunction);
+    this.allTypes = this.props.templates.reduce((prev, curr) => [...prev, ...curr.entries], []);
   }
 
   handleTypeChange = (type) => {
@@ -214,6 +215,7 @@ export default class ConjunctionGroup extends Component {
               getAllInstances={this.props.getAllInstances}
               updateInstanceModifiers={this.props.updateInstanceModifiers}
               parameters={this.props.parameters}
+              baseElements={this.props.baseElements}
               getPath={this.getChildsPath}
               conversionFunctions={this.props.conversionFunctions}
               instanceNames={this.props.instanceNames}
@@ -264,6 +266,7 @@ export default class ConjunctionGroup extends Component {
           renderIndentButtons={this.renderIndentButtons}
           conversionFunctions={this.props.conversionFunctions}
           instanceNames={this.props.instanceNames}
+          baseElements={this.props.baseElements}
           loginVSACUser={this.props.loginVSACUser}
           setVSACAuthStatus={this.props.setVSACAuthStatus}
           vsacStatus={this.props.vsacStatus}
@@ -302,6 +305,7 @@ export default class ConjunctionGroup extends Component {
             categories={this.props.templates}
             onSuggestionSelected={this.addChild}
             parameters={this.props.parameters}
+            baseElements={this.props.baseElements}
             loginVSACUser={this.props.loginVSACUser}
             setVSACAuthStatus={this.props.setVSACAuthStatus}
             vsacStatus={this.props.vsacStatus}
@@ -320,6 +324,7 @@ export default class ConjunctionGroup extends Component {
             codeData={this.props.codeData}
             validateCode={this.props.validateCode}
             resetCodeValidation={this.props.resetCodeValidation}
+            inBaseElements={false}
           />
         </div>
       </div>
@@ -337,6 +342,7 @@ ConjunctionGroup.propTypes = {
   getPath: requiredIf(PropTypes.func, props => !props.root), // path needed for children
   getAllInstances: PropTypes.func.isRequired,
   deleteInstance: PropTypes.func.isRequired,
+  instanceNames: PropTypes.array.isRequired,
   conversionFunctions: PropTypes.array,
   loginVSACUser: PropTypes.func.isRequired,
   setVSACAuthStatus: PropTypes.func.isRequired,

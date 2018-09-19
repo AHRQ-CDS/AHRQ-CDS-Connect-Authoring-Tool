@@ -206,5 +206,11 @@ module.exports = [
         ]
       },
     ]
+  },
+  {
+    id: 10,
+    icon: 'sign-in',
+    name: 'Base Elements',
+    entries: []
   }
 ];

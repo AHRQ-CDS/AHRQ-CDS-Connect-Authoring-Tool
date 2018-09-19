@@ -58,6 +58,10 @@
       padding: 0.5em;
     }
 
+    &.base-element {
+      background-color: lighten($blue-light, 35%);
+    }
+
     &__header {
       display: flex;
       align-items: center;

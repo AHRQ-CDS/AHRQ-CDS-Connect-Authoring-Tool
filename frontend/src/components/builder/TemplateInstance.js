@@ -82,7 +82,7 @@ export default class TemplateInstance extends Component {
 
   hasWarnings = () => {
     const hasValidationError = this.validateElement() !== null;
-    const hasReturnError = this.state.returnType !== 'boolean';
+    const hasReturnError = this.state.returnType !== 'boolean' && this.props.validateReturnType !== false;
     const hasModifierWarnings = !this.allModifiersValid();
     const hasNameWarning = this.hasDuplicateName();
 
@@ -107,9 +107,19 @@ export default class TemplateInstance extends Component {
     this.props.templateInstance.uniqueId !== instance.uniqueId
   )
 
+  isBaseElementUsed = () => (
+    this.props.templateInstance.usedBy ? this.props.templateInstance.usedBy.length !== 0 : false);
+
   updateInstance = (newState) => {
     this.setState(newState);
     this.props.editInstance(this.props.treeName, newState, this.getPath(), false);
+  }
+
+  deleteInstance = () => {
+    const baseElementIsInUse = this.isBaseElementUsed();
+    if (!baseElementIsInUse) {
+      this.props.deleteInstance(this.props.treeName, this.getPath());
+    }
   }
 
   renderAppliedModifier = (modifier, index) => {
@@ -223,6 +233,8 @@ export default class TemplateInstance extends Component {
       }
     })(modifier);
 
+    const canModifierBeRemoved = this.canModifierBeRemoved();
+
     return (
       <div key={index} className={`modifier modifier-${modifier.type || modifier.id}`}>
         <div className="modifier__info">
@@ -231,16 +243,22 @@ export default class TemplateInstance extends Component {
           {index + 1 === this.props.templateInstance.modifiers.length &&
             <span
               role="button"
-              className="modifier__deletebutton secondary-button"
+              id={`modifier-delete-${this.props.templateInstance.uniqueId}`}
+              className={`modifier__deletebutton secondary-button ${canModifierBeRemoved ? '' : 'disabled'}`}
               aria-label={'remove last expression'}
-              onClick={this.removeLastModifier}
+              onClick={() => this.removeLastModifier(canModifierBeRemoved)}
               tabIndex="0"
               onKeyPress={(e) => {
                 e.which = e.which || e.keyCode;
-                if (e.which === 13) this.removeLastModifier();
+                if (e.which === 13) this.removeLastModifier(canModifierBeRemoved);
               }}>
 
               <FontAwesome name="close" className="delete-valueset-button" />
+              { !canModifierBeRemoved &&
+                <UncontrolledTooltip
+                  target={`modifier-delete-${this.props.templateInstance.uniqueId}`} placement="left">
+                  Cannot remove modifier because return type cannot change while in use.
+                </UncontrolledTooltip> }
             </span>
           }
         </div>
@@ -321,7 +339,8 @@ export default class TemplateInstance extends Component {
     this.setAppliedModifiers(modifiers);
   }
 
-  removeLastModifier = () => {
+  removeLastModifier = (canRemove) => {
+    if (!canRemove) return;
     const modifiers = _.initial(this.props.templateInstance.modifiers);
     this.setAppliedModifiers(modifiers);
   }
@@ -330,6 +349,26 @@ export default class TemplateInstance extends Component {
     const modifiers = this.props.templateInstance.modifiers;
     _.assign(modifiers[index].values, value);
     this.setAppliedModifiers(modifiers);
+  }
+
+  canModifierBeRemoved = () => {
+    const baseElementIsInUse = this.isBaseElementUsed();
+
+    if (baseElementIsInUse) {
+      // If a base element is in use, need to make sure the modifiers removed don't change the return type.
+      const length = this.props.templateInstance.modifiers.length;
+      let nextReturnType = this.props.templateInstance.returnType; // Defaults to the element's return type.
+      if (length > 1) {
+        // If there is another modifier applied after the last one is removed, use that modifier type.
+        nextReturnType = this.props.templateInstance.modifiers[length - 2].returnType;
+      }
+
+      // If a base element is being used, but the next return type is the same as the current, modifier can be removed.
+      return nextReturnType === this.state.returnType;
+    }
+
+    // If not a base element being used elsewhere, modifiers can be removed.
+    return true;
   }
 
   deleteCode = (codeToDelete) => {
@@ -360,14 +399,18 @@ export default class TemplateInstance extends Component {
   hasDuplicateName = () => {
     const { templateInstance, instanceNames } = this.props;
     const elementNameParameter = templateInstance.parameters.find(param => param.id === 'element_name');
+    // Treat undefined as empty string so unnamed elements display duplicate correctly.
+    const nameValue = elementNameParameter.value === undefined ? '' : elementNameParameter.value;
     const duplicateNameIndex = instanceNames.findIndex(name =>
-      name.id !== templateInstance.uniqueId && name.name === elementNameParameter.value);
+      name.id !== templateInstance.uniqueId && name.name === nameValue);
     return duplicateNameIndex !== -1;
   }
 
   renderModifierSelect = () => {
     if (!this.props.templateInstance.cannotHaveModifiers
       && (this.state.relevantModifiers.length > 0 || (this.props.templateInstance.modifiers || []).length === 0)) {
+      const baseElementIsInUse = this.isBaseElementUsed();
+
       return (
         <div className="modifier-select">
           <div className="modifier__selection">
@@ -380,19 +423,47 @@ export default class TemplateInstance extends Component {
             </button>
 
             {this.state.showModifiers &&
-              this.state.relevantModifiers.map(modifier =>
-                <button key={modifier.id}
-                  value={modifier.id}
-                  onClick={this.handleModifierSelected} className="modifier__button secondary-button">
-                  {modifier.name}
-                </button>)
+              this.state.relevantModifiers
+                .filter(modifier => !baseElementIsInUse || modifier.returnType === this.state.returnType)
+                .map(modifier =>
+                  <button key={modifier.id}
+                    value={modifier.id}
+                    onClick={this.handleModifierSelected} className="modifier__button secondary-button">
+                    {modifier.name}
+                  </button>)
             }
           </div>
+
+          {this.state.showModifiers && baseElementIsInUse &&
+            <div className="notification">
+              <FontAwesome name="exclamation-circle" />
+              Limited expressions displayed because return type cannot change while in use.
+            </div>
+          }
         </div>
       );
     }
 
     return null;
+  }
+
+  renderBaseElementInfo = (referenceParameter) => {
+    let referenceName;
+    if (referenceParameter) {
+      const elementToReference = this.props.instanceNames.find(name => name.id === referenceParameter.value.id);
+      if (elementToReference) {
+        referenceName = elementToReference.name;
+      }
+    }
+
+    return (
+      <div className="modifier__return__type" id="base-element-list">
+        <div className="row code-info">
+          <div className="col-3 bold align-right code-info__label">Base Element:</div>
+          <div className="col-9 row code-info__info">{referenceName}</div>
+        </div>
+      </div>
+    );
   }
 
   renderVSInfo = () => {
@@ -594,27 +665,47 @@ export default class TemplateInstance extends Component {
   }
 
   renderExpression = () => {
-    const { templateInstance } = this.props;
+    const { templateInstance, baseElements } = this.props;
     const { returnType } = this.state;
-    const type = templateInstance.type === 'parameter' ? templateInstance.type : templateInstance.name;
+
+    let phraseTemplateInstance = templateInstance;
+    if (templateInstance.type === 'baseElement') {
+      const referenceParameter = templateInstance.parameters.find(param => param.type === 'reference');
+      if (referenceParameter) {
+        const baseElementReferenced = baseElements.find(element =>
+          element.uniqueId === referenceParameter.value.id);
+        phraseTemplateInstance = baseElementReferenced;
+      }
+    }
+
+    let modifiers = phraseTemplateInstance.modifiers;
+    if (templateInstance.type === 'baseElement') {
+      const baseElementModifiers = templateInstance.modifiers || [];
+      modifiers = modifiers.concat(baseElementModifiers);
+    }
+    const type = phraseTemplateInstance.type === 'parameter' ?
+      phraseTemplateInstance.type : phraseTemplateInstance.name;
 
     let valueSets = [];
-    if (templateInstance.parameters[1] && templateInstance.parameters[1].valueSets) {
-      valueSets = templateInstance.parameters[1].valueSets;
+    if (phraseTemplateInstance.parameters[1] && phraseTemplateInstance.parameters[1].valueSets) {
+      valueSets = phraseTemplateInstance.parameters[1].valueSets;
     }
 
     let codes = [];
-    if (templateInstance.parameters[1] && templateInstance.parameters[1].codes) {
-      codes = templateInstance.parameters[1].codes;
+    if (phraseTemplateInstance.parameters[1] && phraseTemplateInstance.parameters[1].codes) {
+      codes = phraseTemplateInstance.parameters[1].codes;
     }
 
+    const otherParameters = phraseTemplateInstance.parameters.filter(param =>
+      param.type === 'number' || param.type === 'valueset');
+
     const expressions = convertToExpression(
-      templateInstance.modifiers,
+      modifiers,
       type,
       valueSets,
       codes,
       returnType,
-      templateInstance.parameters.filter(param => param.type === 'number' || param.type === 'valueset')
+      otherParameters
     );
 
     if (!expressions) { return null; }
@@ -651,6 +742,7 @@ export default class TemplateInstance extends Component {
   renderBody() {
     const { templateInstance, validateReturnType } = this.props;
     const { returnType } = this.state;
+    const referenceParameter = templateInstance.parameters.find(param => param.type === 'reference');
     const validationError = this.validateElement();
     const returnError = (!(validateReturnType !== false) || returnType === 'boolean') ? null
       : "Element must have return type 'boolean'. Add expression(s) to change the return type.";
@@ -674,6 +766,11 @@ export default class TemplateInstance extends Component {
           <div className="vsac-info">
             {this.renderVSInfo()}
             {this.renderCodeInfo()}
+          </div>
+        }
+        { referenceParameter &&
+          <div className="vsac-info">
+            {this.renderBaseElementInfo(referenceParameter)}
           </div>
         }
 
@@ -700,7 +797,8 @@ export default class TemplateInstance extends Component {
       <div className="card-element__footer">
         {this.renderModifierSelect()}
 
-        {templateInstance.id && templateInstance.id.includes('_vsac') &&
+        {/* Base element uses will have _vsac included in the id, but should not support additional VS and codes */}
+        {templateInstance.id && templateInstance.id.includes('_vsac') && templateInstance.type !== 'baseElement' &&
           <div className="vsac-controls">
             {this.renderVSACOptions()}
           </div>
@@ -720,13 +818,23 @@ export default class TemplateInstance extends Component {
         return null;
       }
 
+      const referenceParameter = templateInstance.parameters.find(param => param.type === 'reference');
+
+      let elementType = templateInstance.name;
+      if (referenceParameter) {
+        // Element type to display in header will be the reference type for Base Elements.
+        elementType = referenceParameter.value ? referenceParameter.value.type : 'Base Element';
+      }
+
       return (
         <div className="card-element__heading">
           <StringParameter
             key={elementNameParameter.id}
             {...elementNameParameter}
             updateInstance={this.updateInstance}
-            name={templateInstance.name} />
+            name={elementType}
+            uniqueId={templateInstance.uniqueId}
+            />
           {this.hasDuplicateName() &&
             <div className="warning">Warning: Name already in use. Choose another name.</div>
           }
@@ -739,12 +847,14 @@ export default class TemplateInstance extends Component {
   }
 
   renderHeader = () => {
-    const { templateInstance, renderIndentButtons, deleteInstance } = this.props;
+    const { templateInstance, renderIndentButtons } = this.props;
     const { showElement } = this.state;
     const elementNameParameter = templateInstance.parameters.find(param => param.id === 'element_name');
     const headerClass = classNames('card-element__header', { collapsed: !showElement });
     const headerTopClass = classNames('card-element__header-top', { collapsed: !showElement });
 
+    const baseElementUsed = this.isBaseElementUsed();
+    const disabledClass = baseElementUsed ? 'disabled' : '';
     return (
       <div className={headerClass}>
         <div className={headerTopClass}>
@@ -759,7 +869,6 @@ export default class TemplateInstance extends Component {
               </div>
             }
           </div>
-
           <div className="card-element__buttons">
             {showElement && renderIndentButtons(templateInstance)}
 
@@ -771,11 +880,17 @@ export default class TemplateInstance extends Component {
             </button>
 
             <button
-              onClick={() => deleteInstance(this.props.treeName, this.getPath())}
-              className="element__deletebutton transparent-button"
+              id={`deletebutton-${templateInstance.uniqueId}`}
+              onClick={this.deleteInstance}
+              className={`element__deletebutton transparent-button ${disabledClass}`}
               aria-label={`remove ${templateInstance.name}`}>
               <FontAwesome name="close" />
             </button>
+            { baseElementUsed &&
+              <UncontrolledTooltip
+                target={`deletebutton-${templateInstance.uniqueId}`} placement="left">
+                  This base element is referenced somewhere else. To delete this element, remove all references to it.
+              </UncontrolledTooltip> }
           </div>
         </div>
 
@@ -790,9 +905,11 @@ export default class TemplateInstance extends Component {
 
   render() {
     const { showElement } = this.state;
+    const { templateInstance } = this.props;
+    const baseElementClass = templateInstance.type === 'baseElement' ? 'base-element' : '';
 
     return (
-      <div className="card-element element__expanded">
+      <div className={`card-element element__expanded ${baseElementClass}`}>
         {this.renderHeader()}
         {showElement && this.renderBody()}
         {showElement && this.renderFooter()}
@@ -811,6 +928,7 @@ TemplateInstance.propTypes = {
   editInstance: PropTypes.func.isRequired,
   updateInstanceModifiers: PropTypes.func.isRequired,
   deleteInstance: PropTypes.func.isRequired,
+  instanceNames: PropTypes.array.isRequired,
   subpopulationIndex: PropTypes.number,
   renderIndentButtons: PropTypes.func.isRequired,
   loginVSACUser: PropTypes.func.isRequired,
@@ -830,5 +948,5 @@ TemplateInstance.propTypes = {
   isValidCode: PropTypes.bool,
   codeData: PropTypes.object,
   validateCode: PropTypes.func.isRequired,
-  resetCodeValidation: PropTypes.func.isRequired
+  resetCodeValidation: PropTypes.func.isRequired,
 };

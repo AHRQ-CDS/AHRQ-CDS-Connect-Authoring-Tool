@@ -161,7 +161,7 @@ class CqlArtifact {
     this.parameters = artifact.parameters;
     this.exclusions = artifact.expTreeExclude;
     this.subpopulations = artifact.subpopulations;
-    this.subelements = artifact.subelements;
+    this.baseElements = artifact.baseElements;
     this.recommendations = artifact.recommendations;
     this.errorStatement = artifact.errorStatement;
     this.initialize();
@@ -197,6 +197,15 @@ class CqlArtifact {
     }
     );
 
+    this.baseElements.forEach((baseElement) => {
+      const count = getCountForUniqueExpressionName(baseElement.parameters[0], this.names, 'value', '', false);
+      if (count > 0) {
+        baseElement.parameters[0].value = `${baseElement.parameters[0]}_${count}`;
+      }
+      this.parseElement(baseElement);
+    }
+    );
+
     if (this.inclusions.childInstances.length) { this.parseTree(this.inclusions); }
     if (this.exclusions.childInstances.length) { this.parseTree(this.exclusions); }
     this.subpopulations.forEach((subpopulation) => {
@@ -208,17 +217,6 @@ class CqlArtifact {
       }
       if (!subpopulation.special) { // `Doesn't Meet Inclusion Criteria` and `Meets Exclusion Criteria` are special
         if (subpopulation.childInstances.length) { this.parseTree(subpopulation); }
-      }
-    }
-    );
-
-    this.subelements.forEach((subelement) => {
-      const count = getCountForUniqueExpressionName(subelement, this.names, 'subpopulationName', '', false);
-      if (count > 0) {
-        subelement.subpopulationName = `${subelement.subpopulationName}_${count}`;
-      }
-      if (!subelement.special) { // `Doesn't Meet Inclusion Criteria` and `Meets Exclusion Criteria` are special
-        if (subelement.childInstances.length) { this.parseTree(subelement); }
       }
     }
     );
@@ -313,7 +311,7 @@ class CqlArtifact {
 
   parseTree(element) {
     let updatedElement = this.parseConjunction(element);
-    const children = updatedElement.childInstances;
+    const children = updatedElement.childInstances || [];
     children.forEach((child) => {
       if ('childInstances' in child) {
         this.parseTree(child);
@@ -335,9 +333,9 @@ class CqlArtifact {
     ));
     const name = element.parameters[0].value;
     conjunction.element_name = (name || element.subpopulationName || element.uniqueId);
-    element.childInstances.forEach((child) => {
+    (element.childInstances || []).forEach((child) => {
       // TODO: Could a child of a conjunction ever be a subpopulation?
-      let childName = child.parameters[0].value || child.uniqueId;
+      let childName = (child.parameters[0]||{}).value || child.uniqueId;
       if (!(child.type === 'parameter' || child.template === 'EmptyParameter')) { // Parameters are updated separately
         const childCount = getCountForUniqueExpressionName(child.parameters[0], this.names, 'value', '', false);
         if (childCount > 0) {
@@ -465,6 +463,13 @@ class CqlArtifact {
           this.setParamterContexts(allergyIntoleranceValueSets, 'AllergyIntolerance', context);
           break;
         }
+        case 'reference': {
+          // Need to pull the element name from the reference to support renaming the elements while being used.
+          const referencedElement = this.baseElements.find(e => e.uniqueId === parameter.value.id)
+          const referencedElementName = referencedElement.parameters[0].value || referencedElement.uniqueId;
+          context.values = [ `"${referencedElementName}"` ];
+          break;
+        }
         default: {
           context.values = context.values || [];
           context[parameter.id] = parameter.value;
@@ -507,7 +512,7 @@ class CqlArtifact {
         return ejs.render(specificMap[context.template], context);
       }
       if (!(context.template in templateMap)) console.error(`Template could not be found: ${context.template}`);
-      context.values.forEach((value, index) => {
+      (context.values || []).forEach((value, index) => {
         context.values[index] = ejs.render(templateMap[context.template], { element_context: value });
       });
       const cqlString = applyModifiers.call(this, context.values, context.modifiers);
@@ -597,7 +602,7 @@ function sanitizeCQLString(cqlString) {
 }
 
 // Both parameters are arrays. All modifiers will be applied to all values, and joined with "\n or".
-function applyModifiers(values, modifiers = []) { // default modifiers to []
+function applyModifiers(values = [] , modifiers = []) { // default modifiers to []
   return values.map((value) => {
     let newValue = value;
     modifiers.forEach((modifier) => {

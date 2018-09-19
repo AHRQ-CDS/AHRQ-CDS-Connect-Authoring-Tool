@@ -16,7 +16,7 @@ export default class Subpopulations extends Component {
 
     this.state = {
       subpopulations: this.props.artifact[this.props.name].filter(sp => !sp.special), // Don't want to allow user interaction with the two default subpopulations added by the system
-      subelements: this.props.artifact[this.props.name].filter(sp => !sp.special),
+      baseElements: this.props.artifact[this.props.name].filter(sp => !sp.special),
       numOfSpecialSubpopulations: this.props.artifact[this.props.name].filter(sp => sp.special).length
     };
   }
@@ -24,7 +24,7 @@ export default class Subpopulations extends Component {
   componentWillReceiveProps(nextProps) {
     this.setState({
       subpopulations: nextProps.artifact[this.props.name].filter(sp => !sp.special),
-      subelements: nextProps.artifact[this.props.name],
+      baseElements: nextProps.artifact[this.props.name],
       numOfSpecialSubpopulations: nextProps.artifact[this.props.name].filter(sp => sp.special).length
     });
   }
@@ -77,6 +77,7 @@ export default class Subpopulations extends Component {
               setSubpopulationName={this.setSubpopulationName}
               deleteSubpopulation={this.deleteSubpopulation}
               parameters={this.props.parameters}
+              baseElements={this.props.baseElements}
               addInstance={this.props.addInstance}
               editInstance={this.props.editInstance}
               updateInstanceModifiers={this.props.updateInstanceModifiers}
@@ -126,6 +127,7 @@ Subpopulations.propTypes = {
   updateInstanceModifiers: PropTypes.func.isRequired,
   deleteInstance: PropTypes.func.isRequired,
   getAllInstances: PropTypes.func.isRequired,
+  instanceNames: PropTypes.array.isRequired,
   updateRecsSubpop: PropTypes.func.isRequired,
   checkSubpopulationUsage: PropTypes.func.isRequired,
   parameters: PropTypes.array.isRequired,

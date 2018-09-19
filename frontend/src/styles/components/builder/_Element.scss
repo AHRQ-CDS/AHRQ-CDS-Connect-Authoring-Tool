@@ -129,8 +129,7 @@
       display: flex;
       flex-wrap: nowrap;
       align-items: center;
-
-      .modifier__deletebutton { flex-grow: 1; }
+      justify-content: space-between;
     }
 
     .look-back,
