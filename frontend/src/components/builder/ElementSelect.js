@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import _ from 'lodash';
 import Select from 'react-select';
 import FontAwesome from 'react-fontawesome';
+import pluralize from 'pluralize';
 
 import ElementModal from './ElementModal';
 import ElementSelectMenuRenderer from './ElementSelectMenuRenderer';
@@ -266,6 +267,15 @@ export default class ElementSelect extends Component {
     }
     const value = selectedElement && selectedElement.value;
 
+    let noAuthPlaceholder = '';
+    if (selectedElement) {
+      if (selectedElement.value === 'baseElement') {
+        noAuthPlaceholder = `Select ${pluralize.singular(selectedElement.label)}`;
+      } else {
+        noAuthPlaceholder = `Select ${selectedElement.label} element`;
+      }
+    }
+
     return (
       <div className="element-select form__group">
         <div className="element-select__add-element">
@@ -290,8 +300,8 @@ export default class ElementSelect extends Component {
           {selectedElement && !selectedElement.vsacAuthRequired &&
             <Select
               className="element-select__element-field"
-              placeholder={`Select ${selectedElement.label} element`}
-              aria-label={`Select ${selectedElement.label} element`}
+              placeholder={noAuthPlaceholder}
+              aria-label={noAuthPlaceholder}
               options={noAuthElementOptions}
               onChange={this.onNoAuthElementSelected}
               />
