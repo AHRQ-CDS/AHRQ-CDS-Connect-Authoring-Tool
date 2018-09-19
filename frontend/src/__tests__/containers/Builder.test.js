@@ -17,6 +17,7 @@ const baseState = {
   artifacts: { artifact: {}, downloadArtifact: { elmErrors: [] } },
   valueSets: { valueSets: [] },
   templates: { templates: elementGroups },
+  auth: { isLoggingOut: false },
   vsac: {},
   modifiers: {}
 };
@@ -50,7 +51,7 @@ const props = {
   vsacSearchCount: 0,
   getVSDetails: jest.fn(),
   isRetrievingDetails: false,
-  vsacDetailsCodes: []
+  vsacDetailsCodes: [],
 };
 
 test('children have correct classes', () => {

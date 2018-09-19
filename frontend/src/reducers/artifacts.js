@@ -30,6 +30,7 @@ const defaultState = {
     patientExecuted: null,
     errorMessage: null
   },
+  artifactSaved: true,
   publishEnabled: false
 };
 
@@ -46,7 +47,8 @@ export default function auth(state = defaultState, action) {
       return {
         ...state,
         artifact: action.artifact,
-        names: action.names
+        names: action.names,
+        artifactSaved: false
       };
     case types.INITIALIZE_ARTIFACT:
       return {
@@ -204,6 +206,7 @@ export default function auth(state = defaultState, action) {
       return {
         ...state,
         statusMessage: null,
+        artifactSaved: false,
         saveArtifact: { isSaving: true, saveStatus: null }
       };
     case types.SAVE_ARTIFACT_SUCCESS:
@@ -211,6 +214,7 @@ export default function auth(state = defaultState, action) {
         ...state,
         artifact: action.artifact,
         statusMessage: `Last saved ${time}.`,
+        artifactSaved: true,
         saveArtifact: { isSaving: false, saveStatus: 'success' }
       };
     case types.SAVE_ARTIFACT_FAILURE:

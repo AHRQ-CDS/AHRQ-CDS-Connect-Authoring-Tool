@@ -37,6 +37,7 @@ describe.only('artifacts reducer', () => {
         patientExecuted: null,
         errorMessage: null
       },
+      artifactSaved: true,
       publishEnabled: false
     });
   });
@@ -54,7 +55,7 @@ describe.only('artifacts reducer', () => {
   // ----------------------- UPDATE ARTIFACT ------------------------------- //
   it('should handle updating an artifact', () => {
     const action = { type: types.UPDATE_ARTIFACT, artifact: 'Test artifact' };
-    const newState = { artifact: 'Test artifact' };
+    const newState = { artifact: 'Test artifact', artifactSaved: false };
     expect(reducer([], action)).toEqual(newState);
 
     const previousState = { artifact: 'Old artifact' };
@@ -283,7 +284,11 @@ describe.only('artifacts reducer', () => {
   // ----------------------- SAVE ARTIFACT --------------------------------- //
   it('should handle saving an artifact', () => {
     let action = { type: types.SAVE_ARTIFACT_REQUEST };
-    let newState = { statusMessage: null, saveArtifact: { isSaving: true, saveStatus: null } };
+    let newState = {
+      statusMessage: null,
+      saveArtifact: { isSaving: true, saveStatus: null },
+      artifactSaved: false
+    };
     expect(reducer([], action)).toEqual(newState);
 
     const previousState = { statusMessage: 'Test', saveArtifact: { isSaving: false, saveStatus: 'Test' } };
@@ -293,7 +298,8 @@ describe.only('artifacts reducer', () => {
     newState = {
       artifact: 'Test artifact',
       statusMessage: `Last saved ${time()}.`,
-      saveArtifact: { isSaving: false, saveStatus: 'success' }
+      saveArtifact: { isSaving: false, saveStatus: 'success' },
+      artifactSaved: true
     };
     expect(reducer(previousState, action)).toEqual(newState);
 

@@ -5,7 +5,8 @@ import { shallowRenderContainer } from '../../utils/test_helpers';
 test('App renders without crashing', () => {
   const state = {
     auth: { isAuthenticated: false, username: '' },
-    errors: { errorMessage: '' }
+    errors: { errorMessage: '' },
+    artifacts: { artifactSaved: true }
   };
   const component = shallowRenderContainer(App, {}, createMockStore(state));
   expect(component).toBeDefined();

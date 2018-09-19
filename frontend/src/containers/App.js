@@ -37,7 +37,7 @@ class App extends Component {
 
   render() {
     const {
-      children, isAuthenticated, authUser, authStatus, authStatusText
+      children, isAuthenticated, authUser, authStatus, authStatusText, artifactSaved
     } = this.props;
 
     return (
@@ -49,6 +49,7 @@ class App extends Component {
           authUser={authUser}
           authStatus={authStatus}
           authStatusText={authStatusText}
+          artifactSaved={artifactSaved}
           loginUser={this.props.loginUser}
           logoutUser={this.props.logoutUser}
           setAuthStatus={this.props.setAuthStatus} />
@@ -69,6 +70,7 @@ App.propTypes = {
   authUser: PropTypes.string,
   authStatus: PropTypes.string,
   authStatusText: PropTypes.string,
+  artifactSaved: PropTypes.bool.isRequired,
   getCurrentUser: PropTypes.func.isRequired,
   loginUser: PropTypes.func.isRequired,
   logoutUser: PropTypes.func.isRequired,
@@ -94,7 +96,8 @@ function mapStateToProps(state) {
     authUser: state.auth.username,
     authStatus: state.auth.authStatus,
     authStatusText: state.auth.authStatusText,
-    errorMessage: state.errors.errorMessage
+    errorMessage: state.errors.errorMessage,
+    artifactSaved: state.artifacts.artifactSaved
   };
 }
 

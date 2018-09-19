@@ -6,6 +6,7 @@ describe.only('auth reducer', () => {
     expect(reducer(undefined, {})).toEqual({
       isAuthenticating: false,
       isAuthenticated: false,
+      isLoggingOut: false,
       username: null,
       authStatus: null,
       authStatusText: ''
@@ -58,7 +59,7 @@ describe.only('auth reducer', () => {
   // ------------------------- LOGOUT ---------------------------------------- //
   it('should handle logging the user out', () => {
     let action = { type: types.LOGOUT_REQUEST };
-    let newState = { isAuthenticating: false, authStatus: null };
+    let newState = { isAuthenticating: false, authStatus: null, isLoggingOut: true };
     expect(reducer([], action)).toEqual(newState);
 
     const previousState = { isAuthenticating: false, authStatus: 'Test auth status' };
@@ -68,6 +69,7 @@ describe.only('auth reducer', () => {
     newState = {
       isAuthenticating: false,
       isAuthenticated: false,
+      isLoggingOut: false,
       username: null,
       authStatus: 'logoutSuccess',
       authStatusText: 'You have been successfully logged out.'
@@ -78,6 +80,7 @@ describe.only('auth reducer', () => {
     newState = {
       isAuthenticating: false,
       isAuthenticated: false,
+      isLoggingOut: false,
       authStatus: 'logoutFailure',
       authStatusText: 'Authentication Error: Test status Test status text, please try again.'
     };

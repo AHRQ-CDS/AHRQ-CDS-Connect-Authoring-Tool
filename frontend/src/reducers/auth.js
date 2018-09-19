@@ -3,6 +3,7 @@ import * as types from '../actions/types';
 const defaultState = {
   isAuthenticating: false,
   isAuthenticated: false,
+  isLoggingOut: false,
   username: null,
   authStatus: null,
   authStatusText: ''
@@ -51,6 +52,7 @@ export default function auth(state = defaultState, action) {
       return {
         ...state,
         isAuthenticating: false,
+        isLoggingOut: true,
         authStatus: null
       };
     case types.LOGOUT_SUCCESS:
@@ -58,6 +60,7 @@ export default function auth(state = defaultState, action) {
         ...state,
         isAuthenticating: false,
         isAuthenticated: false,
+        isLoggingOut: false,
         username: null,
         authStatus: 'logoutSuccess',
         authStatusText: 'You have been successfully logged out.'
@@ -67,6 +70,7 @@ export default function auth(state = defaultState, action) {
         ...state,
         isAuthenticating: false,
         isAuthenticated: false,
+        isLoggingOut: false,
         authStatus: 'logoutFailure',
         authStatusText: `Authentication Error: ${action.status} ${action.statusText}, please try again.`
       };
