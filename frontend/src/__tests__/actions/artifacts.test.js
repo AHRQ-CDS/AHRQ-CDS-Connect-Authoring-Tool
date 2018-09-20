@@ -191,7 +191,6 @@ describe('artifact actions', () => {
       // https://github.com/facebook/jest/issues/936
       it('creates EXECUTE_ARTIFACT_FAILURE after unsuccessfully executing an artifact', () => {
         moxios.stubs.track({ url: '/authoring/api/cql/validate', method: 'POST', response: { status: 200, response: {} } });
-        actions.performExecuteArtifact = jest.fn();
   
         const store = mockStore({ artifacts: [mockArtifact], patients: [mockPatient] });
         const expectedActions = [
