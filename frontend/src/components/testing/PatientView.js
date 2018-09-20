@@ -12,76 +12,76 @@ import PatientDataSection from './PatientDataSection';
 const RESOURCE_KEYS = {
   Organization: {
     Name: 'name',
-    Type: 'type.coding.firstObject.display',
+    Type: 'CodeableConcept:type',
     'Street address': 'address.firstObject.line.firstObject',
     City: 'address.firstObject.city',
     State: 'address.firstObject.state',
     'Zip code': 'address.firstObject.postalCode',
-    Phone: 'telecom.firstObject.value'
+    Contact: 'telecom.firstObject.value'
   },
   Condition: {
-    Condition: 'code.text',
+    Condition: 'CodeableConcept:code',
     'Date recorded': 'dateRecorded',
-    'Date onset': 'onsetDateTime',
-    'Date abated': 'abatementDateTime',
+    Onset: 'onset[x]',
+    Abatement: 'abatement[x]',
     Status: 'clinicalStatus'
   },
   AllergyIntolerance: {
-    Substance: 'substance.text',
+    Substance: 'CodeableConcept:substance',
     Category: 'category',
     Criticality: 'criticality',
-    'Date onset': 'onset',
+    Onset: 'onset',
     Status: 'status'
   },
   MedicationOrder: {
-    Medication: 'medicationCodeableConcept.text',
+    Medication: 'medication[x]',
     'Date written': 'dateWritten',
     Status: 'status'
   },
   CarePlan: {
-    Category: 'category.firstObject.text',
-    'First item': 'activity.firstObject.detail.code.text',
-    'First item status': 'activity.firstObject.detail.status'
+    'First category': 'CodeableConcept:category.firstObject',
+    'First activity': 'CodeableConcept:activity.firstObject.detail.code',
+    'First activity status': 'activity.firstObject.detail.status'
   },
   Encounter: {
-    Type: 'type.firstObject.text',
+    'First Type': 'CodeableConcept:type.firstObject',
     'Start date': 'period.start',
     'End date': 'period.end',
     Status: 'status'
   },
   Observation: {
-    Category: 'category.text',
-    Type: 'code.text',
-    Value: 'valueQuantity.value',
-    Unit: 'valueQuantity.unit',
-    Date: 'effectiveDateTime'
+    Category: 'CodeableConcept:category',
+    Type: 'CodeableConcept:code',
+    Value: 'value[x]',
+    Effective: 'effective[x]',
+    Issued: 'issued'
   },
   Immunization: {
-    Vaccine: 'vaccineCode.text',
+    Vaccine: 'CodeableConcept:vaccineCode',
     Date: 'date',
     Status: 'status'
   },
   Procedure: {
-    Procedure: 'code.text',
-    'Date performed': 'performedDateTime',
+    Procedure: 'CodeableConcept:code',
+    Performed: 'performed[x]',
     Status: 'status'
   },
   ImagingStudy: {
     'First item': 'series.firstObject.instance.firstObject.title',
-    'First item modality': 'series.firstObject.modality.display',
+    'First item modality': 'Coding:series.firstObject.modality',
     'First item date': 'series.firstObject.started'
   },
   DiagnosticReport: {
-    Type: 'code.text',
-    Category: 'category.coding.firstObject.code',
-    Date: 'effectiveDateTime',
-    Result: 'result.firstObject.display',
+    Type: 'CodeableConcept:code',
+    Category: 'CodeableConcept:category',
+    Effective: 'effective[x]',
+    'First Result': 'Coding:result.firstObject',
     Status: 'status'
   },
   Claim: {
     'Claim type': 'type',
-    'First item type': 'item.firstObject.type.display',
-    'Firt item service': 'item.firstObject.service.display',
+    'First item type': 'Coding:item.firstObject.type',
+    'First item service': 'Coding:item.firstObject.service',
     Status: 'use'
   },
 };
