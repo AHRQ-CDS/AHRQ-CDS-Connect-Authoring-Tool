@@ -1,7 +1,7 @@
 import * as types from '../../actions/types';
 import reducer from '../../reducers/vsac';
 
-describe.only('vsac reducer', () => {
+describe('vsac reducer', () => {
   it('should return the initial state', () => {
     expect(reducer(undefined, {})).toEqual({
       isAuthenticating: false,

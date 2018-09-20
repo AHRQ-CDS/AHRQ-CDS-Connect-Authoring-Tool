@@ -1,7 +1,7 @@
 import * as types from '../../actions/types';
 import reducer from '../../reducers/modifiers';
 
-describe.only('modifiers reducer', () => {
+describe('modifiers reducer', () => {
   it('should return the initial state', () => {
     expect(reducer(undefined, {})).toEqual({
       conversionFunctions: [],

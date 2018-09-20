@@ -8,6 +8,7 @@ import FileSaver from 'file-saver';
 import * as actions from '../../actions/artifacts';
 import * as types from '../../actions/types';
 import mockArtifact from '../../mocks/mockArtifact';
+import mockPatient from '../../mocks/mockPatient';
 import mockTemplates from '../../mocks/mockTemplates';
 
 const middlewares = [thunk];
@@ -177,6 +178,33 @@ describe('artifact actions', () => {
       });
     });
   });
+
+    // ----------------------- EXECUTE ARTIFACT ------------------------------ //
+    describe('execute artifact', () => {
+      beforeEach(() => { moxios.install(); });
+      afterEach(() => { moxios.uninstall(); });
+  
+      // We are testing for EXECUTE_ARTIFACT_FAILURE because testing instead for EXECUTE_ARTIFACT_SUCCESS
+      // cannot be easily done without mocking the entire CQL execution process. Because we are unable to
+      // mock a specific function called within the action we're testing (in our case, performExecuteArtifact
+      // within executeCQLArtifact), this would require significant effort. Details at link below.
+      // https://github.com/facebook/jest/issues/936
+      it('creates EXECUTE_ARTIFACT_FAILURE after unsuccessfully executing an artifact', () => {
+        moxios.stubs.track({ url: '/authoring/api/cql/validate', method: 'POST', response: { status: 200, response: {} } });
+        actions.performExecuteArtifact = jest.fn();
+  
+        const store = mockStore({ artifacts: [mockArtifact], patients: [mockPatient] });
+        const expectedActions = [
+          { type: types.EXECUTE_ARTIFACT_REQUEST },
+          { type: types.VALIDATE_ARTIFACT_SUCCESS, data: {} },
+          { type: types.EXECUTE_ARTIFACT_FAILURE, status: "", statusText: "" }
+        ];
+  
+        return store.dispatch(actions.executeCQLArtifact(mockArtifact, mockPatient)).then(() => {
+          expect(store.getActions()).toEqual(expectedActions);
+        });
+      });
+    });
 
   // ----------------------- PUBLISH ARTIFACT ------------------------------ //
   describe('publish artifact', () => {

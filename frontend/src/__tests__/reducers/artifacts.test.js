@@ -7,7 +7,7 @@ import reducer from '../../reducers/artifacts';
 // between when the code was run (to get actual) and when the assertion is made (expected).
 function time() { return moment().format('dddd, MMMM Do YYYY, h:mm:ss a'); }
 
-describe.only('artifacts reducer', () => {
+describe('artifacts reducer', () => {
   it('should return the initial state', () => {
     expect(reducer(undefined, {})).toEqual({
       artifacts: [],

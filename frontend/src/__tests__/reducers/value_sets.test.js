@@ -1,7 +1,7 @@
 import * as types from '../../actions/types';
 import reducer from '../../reducers/value_sets';
 
-describe.only('value sets reducer', () => {
+describe('value sets reducer', () => {
   it('should return the initial state', () => {
     expect(reducer(undefined, {})).toEqual({
       valueSets: null,
