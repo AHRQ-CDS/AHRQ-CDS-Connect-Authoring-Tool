@@ -1,7 +1,7 @@
 import * as types from '../../actions/types';
 import reducer from '../../reducers/templates';
 
-describe.only('templates reducer', () => {
+describe('templates reducer', () => {
   it('should return the initial state', () => {
     expect(reducer(undefined, {})).toEqual({
       templates: null,

@@ -8,7 +8,12 @@ import FileSaver from 'file-saver';
 import * as actions from '../../actions/artifacts';
 import * as types from '../../actions/types';
 import mockArtifact from '../../mocks/mockArtifact';
+import mockPatient from '../../mocks/mockPatient';
 import mockTemplates from '../../mocks/mockTemplates';
+import mockElmFiles from '../../mocks/mockElmFiles.json';
+import mockTestResults from '../../mocks/mockTestResults.json';
+
+import CodeService from '../../utils/code_service/CodeService';
 
 const middlewares = [thunk];
 const mockStore = configureMockStore(middlewares);
@@ -174,6 +179,47 @@ describe('artifact actions', () => {
 
       return store.dispatch(actions.downloadArtifact(mockArtifact)).then(() => {
         expect(store.getActions()).toEqual(expectedActions);
+      });
+    });
+  });
+
+  // ----------------------- EXECUTE ARTIFACT ------------------------------ //
+  describe('execute artifact', () => {
+    beforeEach(() => { moxios.install(); });
+    afterEach(() => { moxios.uninstall(); });
+
+    it('creates EXECUTE_ARTIFACT_SUCCESS after successfully executing an artifact', () => {
+      moxios.stubs.track({
+        url: '/authoring/api/cql/validate',
+        method: 'POST',
+        response: { status: 200, response: { elmFiles: mockElmFiles.elmFiles } }
+      });
+
+      const store = mockStore({ artifacts: [mockArtifact], patients: [mockPatient] });
+      const expectedActions = [
+        { type: types.EXECUTE_ARTIFACT_REQUEST },
+        { type: types.VALIDATE_ARTIFACT_SUCCESS, data: { elmFiles: mockElmFiles.elmFiles } },
+        {
+          type: types.EXECUTE_ARTIFACT_SUCCESS,
+          artifact: mockArtifact,
+          patient: mockPatient.patient,
+          data: mockTestResults.data
+        }
+      ];
+
+      // If for some reason the mockElmFiles or the mockPatient ever need to be changed,
+      // the mockTestResults will need to be changed to match them
+      return store.dispatch(actions.executeCQLArtifact(
+        mockArtifact,
+        mockPatient.patient,
+        { username: 'u', password: 'p' },
+        new CodeService()
+      )).then(() => {
+        expect(_.initial(store.getActions())).toEqual(_.initial(expectedActions));
+        expect(_.last(store.getActions()).type).toEqual(_.last(expectedActions).type);
+        expect(_.last(store.getActions()).artifact).toEqual(_.last(expectedActions).artifact);
+        expect(_.last(store.getActions()).patient).toEqual(_.last(expectedActions).patient);
+        expect(JSON.parse(JSON.stringify(_.last(store.getActions()).data))).toEqual(_.last(expectedActions).data);
       });
     });
   });

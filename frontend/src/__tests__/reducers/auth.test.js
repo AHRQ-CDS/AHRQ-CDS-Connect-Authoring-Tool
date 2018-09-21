@@ -1,7 +1,7 @@
 import * as types from '../../actions/types';
 import reducer from '../../reducers/auth';
 
-describe.only('auth reducer', () => {
+describe('auth reducer', () => {
   it('should return the initial state', () => {
     expect(reducer(undefined, {})).toEqual({
       isAuthenticating: false,
