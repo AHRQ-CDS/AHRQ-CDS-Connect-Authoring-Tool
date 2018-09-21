@@ -513,11 +513,12 @@ class CqlArtifact {
       }
       if (!(context.template in templateMap)) console.error(`Template could not be found: ${context.template}`);
       if (_.isEqual(context.values, [])) {
-        context.values = [''];
+        context.values[0] = ejs.render(templateMap[context.template], { element_context: '' });
+      } else {
+        (context.values || []).forEach((value, index) => {
+          context.values[index] = ejs.render(templateMap[context.template], { element_context: value });
+        });
       }
-      (context.values || []).forEach((value, index) => {
-        context.values[index] = ejs.render(templateMap[context.template], { element_context: value });
-      });
       const cqlString = applyModifiers.call(this, context.values, context.modifiers);
       return ejs.render(templateMap.BaseTemplate, { element_name: context.element_name, cqlString });
     }).join('\n');
