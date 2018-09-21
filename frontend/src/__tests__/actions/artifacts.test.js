@@ -10,8 +10,8 @@ import * as types from '../../actions/types';
 import mockArtifact from '../../mocks/mockArtifact';
 import mockPatient from '../../mocks/mockPatient';
 import mockTemplates from '../../mocks/mockTemplates';
-import mockElmFiles from '../../mocks/mockElmFiles';
-import mockTestResults from '../../mocks/mockTestResults';
+import mockElmFiles from '../../mocks/mockElmFiles.json';
+import mockTestResults from '../../mocks/mockTestResults.json';
 
 import CodeService from '../../utils/code_service/CodeService';
 
