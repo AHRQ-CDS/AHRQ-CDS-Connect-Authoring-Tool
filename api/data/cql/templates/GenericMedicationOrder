@@ -1,1 +1,1 @@
-[MedicationOrder: "<%-element_context%>"]
+[MedicationOrder<% if (element_context) { %>: "<%-element_context%>"<% }%>]
