@@ -1,1 +1,1 @@
-[Observation: "<%-element_context%>"]
+[Observation<% if (element_context) { %>: "<%-element_context%>"<% }%>]

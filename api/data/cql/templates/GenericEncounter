@@ -1,1 +1,1 @@
-[Encounter: "<%-element_context%>"]
+[Encounter<% if (element_context) { %>: "<%-element_context%>"<% }%>]

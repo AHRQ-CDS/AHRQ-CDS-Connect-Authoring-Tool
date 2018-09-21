@@ -1,1 +1,1 @@
-[Procedure: "<%-element_context%>"]
+[Procedure<% if (element_context) { %>: "<%-element_context%>"<% }%>]

@@ -1,1 +1,1 @@
-[Condition: "<%-element_context%>"]
+[Condition<% if (element_context) { %>: "<%-element_context%>"<% }%>]

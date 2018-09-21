@@ -512,6 +512,9 @@ class CqlArtifact {
         return ejs.render(specificMap[context.template], context);
       }
       if (!(context.template in templateMap)) console.error(`Template could not be found: ${context.template}`);
+      if (_.isEqual(context.values, [])) {
+        context.values = [''];
+      }
       (context.values || []).forEach((value, index) => {
         context.values[index] = ejs.render(templateMap[context.template], { element_context: value });
       });

@@ -1,1 +1,1 @@
-[MedicationStatement: "<%-element_context%>"]
+[MedicationStatement<% if (element_context) { %>: "<%-element_context%>"<% }%>]
