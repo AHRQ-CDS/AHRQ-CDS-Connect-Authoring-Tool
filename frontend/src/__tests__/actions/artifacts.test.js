@@ -9,8 +9,9 @@ import * as actions from '../../actions/artifacts';
 import * as types from '../../actions/types';
 import mockArtifact from '../../mocks/mockArtifact';
 import mockPatient from '../../mocks/mockPatient';
-import mockElmFiles from '../../mocks/mockElmFiles';
 import mockTemplates from '../../mocks/mockTemplates';
+import mockElmFiles from '../../mocks/mockElmFiles';
+import mockTestResults from '../../mocks/mockTestResults';
 
 import CodeService from '../../utils/code_service/CodeService';
 
@@ -182,26 +183,46 @@ describe('artifact actions', () => {
     });
   });
 
-    // ----------------------- EXECUTE ARTIFACT ------------------------------ //
-    describe('execute artifact', () => {
-      beforeEach(() => { moxios.install(); });
-      afterEach(() => { moxios.uninstall(); });
-  
-      it('creates EXECUTE_ARTIFACT_SUCCESS after successfully executing an artifact', () => {
-        moxios.stubs.track({ url: '/authoring/api/cql/validate', method: 'POST', response: { status: 200, response: { elmFiles: mockElmFiles.elmFiles } } });
+  // ----------------------- EXECUTE ARTIFACT ------------------------------ //
+  describe('execute artifact', () => {
+    beforeEach(() => { moxios.install(); });
+    afterEach(() => { moxios.uninstall(); });
 
-        const store = mockStore({ artifacts: [mockArtifact], patients: [mockPatient] });
-        const expectedActions = [
-          { type: types.EXECUTE_ARTIFACT_REQUEST },
-          { type: types.VALIDATE_ARTIFACT_SUCCESS, data: { elmFiles: mockElmFiles.elmFiles } },
-          { type: types.EXECUTE_ARTIFACT_SUCCESS }
-        ];
-        
-        return store.dispatch(actions.executeCQLArtifact(mockArtifact, mockPatient.patient, { username: 'u', password: 'p' }, new CodeService())).then(() => {
-          expect(store.getActions()).toEqual(expectedActions);
-        });
+    it('creates EXECUTE_ARTIFACT_SUCCESS after successfully executing an artifact', () => {
+      moxios.stubs.track({
+        url: '/authoring/api/cql/validate',
+        method: 'POST',
+        response: { status: 200, response: { elmFiles: mockElmFiles.elmFiles } }
+      });
+
+      const store = mockStore({ artifacts: [mockArtifact], patients: [mockPatient] });
+      const expectedActions = [
+        { type: types.EXECUTE_ARTIFACT_REQUEST },
+        { type: types.VALIDATE_ARTIFACT_SUCCESS, data: { elmFiles: mockElmFiles.elmFiles } },
+        {
+          type: types.EXECUTE_ARTIFACT_SUCCESS,
+          artifact: mockArtifact,
+          patient: mockPatient.patient,
+          data: mockTestResults.data
+        }
+      ];
+
+      // If for some reason the mockElmFiles or the mockPatient ever need to be changed,
+      // the mockTestResults will need to be changed to match them
+      return store.dispatch(actions.executeCQLArtifact(
+        mockArtifact,
+        mockPatient.patient,
+        { username: 'u', password: 'p' },
+        new CodeService()
+      )).then(() => {
+        expect(_.initial(store.getActions())).toEqual(_.initial(expectedActions));
+        expect(_.last(store.getActions()).type).toEqual(_.last(expectedActions).type);
+        expect(_.last(store.getActions()).artifact).toEqual(_.last(expectedActions).artifact);
+        expect(_.last(store.getActions()).patient).toEqual(_.last(expectedActions).patient);
+        expect(JSON.parse(JSON.stringify(_.last(store.getActions()).data))).toEqual(_.last(expectedActions).data);
       });
     });
+  });
 
   // ----------------------- PUBLISH ARTIFACT ------------------------------ //
   describe('publish artifact', () => {
