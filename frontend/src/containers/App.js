@@ -7,6 +7,7 @@ import { loginUser, logoutUser, setAuthStatus, getCurrentUser } from '../actions
 import { checkVSACAuthentication } from '../actions/vsac';
 import setErrorMessage from '../actions/errors';
 
+import Analytics from '../components/Analytics';
 import Header from '../components/Header';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
@@ -43,6 +44,10 @@ class App extends Component {
     return (
       <div className="app">
         <a className="skiplink" href="#maincontent">Skip to main content</a>
+
+        <Analytics
+          gtmKey={process.env.REACT_APP_GTM_KEY}
+          dapURL={process.env.REACT_APP_DAP_URL} />
 
         <Header
           isAuthenticated={isAuthenticated}
