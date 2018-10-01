@@ -41,7 +41,12 @@ yarn remove <thing> # remove a package.
 
 ### Configuration
 
-This project has very few configuration needs.  Currently, only two data points are configurable: the backend API URL and the CDS Connect repo URL.  The default values can be found in the `.env` file and overridden via environment variables.  Note that during a production build, the values in `.env` will be hard-coded into the resulting HTML and JS.
+This project has very few configuration needs.  Currently, four data points are configurable:
+* `REACT_APP_API_URL`: the URL for the backend API (defaults to `/authoring/api`)
+* `REACT_APP_REPO_URL`: the URL for the CDS Connect Repository to enable upload (blank by default, indicating no repository integration)
+* `REACT_APP_DAP_URL`: the URL for the DAP analytics endpoint (blank by default, indicating no analytics)
+* `REACT_APP_GTM_KEY`: the Google Tag Manager key for analytics (blank by default, indicating no analytics)
+The default values can be found in the `.env` file and overridden via environment variables.  Note that during a production build, the current values in the environment and/or `.env` will be hard-coded into the resulting HTML and JS.
 
 ### Run
 
