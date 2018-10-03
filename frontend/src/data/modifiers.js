@@ -6,7 +6,7 @@
 // NOTE -- Any modifier that requires text for an expression phrase will need to be added to the list in artifact.js
 
 const elementLists = ['list_of_observations', 'list_of_conditions', 'list_of_medication_statements',
-  'list_of_medication_orders', 'list_of_procedures', 'list_of_allergy_intolerances', 'list_of_encounters'];
+  'list_of_medication_orders', 'list_of_procedures', 'list_of_allergy_intolerances', 'list_of_encounters', 'list_of_any'];
 const everyElement = elementLists.concat(['boolean', 'system_quantity', 'system_concept', 'observation', 'condition',
   'medication_statement', 'medication_order', 'procedure']);
 

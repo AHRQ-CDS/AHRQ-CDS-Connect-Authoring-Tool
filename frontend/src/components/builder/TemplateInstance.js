@@ -80,9 +80,14 @@ export default class TemplateInstance extends Component {
     }
   }
 
+  isReturnTypeValid = (currentReturnType) =>{
+    const validReturnType = this.props.returnTypes || ['boolean'];
+    return validReturnType.includes(currentReturnType);
+  }
+
   hasWarnings = () => {
     const hasValidationError = this.validateElement() !== null;
-    const hasReturnError = this.state.returnType !== 'boolean' && this.props.validateReturnType !== false;
+    const hasReturnError = !this.isReturnTypeValid(this.state.returnType) && this.props.validateReturnType !== false;
     const hasModifierWarnings = !this.allModifiersValid();
     const hasNameWarning = this.hasDuplicateName();
 
@@ -116,6 +121,7 @@ export default class TemplateInstance extends Component {
   }
 
   deleteInstance = () => {
+    console.log('delete instance')
     const baseElementIsInUse = this.isBaseElementUsed();
     if (!baseElementIsInUse) {
       this.props.deleteInstance(this.props.treeName, this.getPath());
@@ -682,21 +688,29 @@ export default class TemplateInstance extends Component {
     return null;
   }
 
-  renderExpression = () => {
-    const { templateInstance, baseElements } = this.props;
-    const { returnType } = this.state;
+  getExpressionPhrase = (templateInstance) => {
+    const { baseElements } = this.props;
+    let returnType = templateInstance.returnType;
+    if (!(_.isEmpty(templateInstance.modifiers))) {
+      returnType = this.getReturnType(templateInstance.modifiers);
+    }
 
     let phraseTemplateInstance = templateInstance;
+    let phraseTemplateInstanceIsListGroup = false;
     if (templateInstance.type === 'baseElement') {
       const referenceParameter = templateInstance.parameters.find(param => param.type === 'reference');
       if (referenceParameter) {
         const baseElementReferenced = baseElements.find(element =>
           element.uniqueId === referenceParameter.value.id);
         phraseTemplateInstance = baseElementReferenced;
+        if (phraseTemplateInstance.conjunction) {
+          phraseTemplateInstanceIsListGroup = true;
+        }
       }
     }
 
-    let modifiers = phraseTemplateInstance.modifiers;
+    let modifiers = phraseTemplateInstance.modifiers || [];
+    const elementNamesInPhrase = [];
     if (templateInstance.type === 'baseElement') {
       const baseElementModifiers = templateInstance.modifiers || [];
       modifiers = modifiers.concat(baseElementModifiers);
@@ -717,14 +731,32 @@ export default class TemplateInstance extends Component {
     const otherParameters = phraseTemplateInstance.parameters.filter(param =>
       param.type === 'number' || param.type === 'valueset');
 
+    if (phraseTemplateInstanceIsListGroup) {
+      phraseTemplateInstance.childInstances.forEach((child) => {
+        // TODO NOTE if we disable indenting, this can only go one level deep
+        const secondPhraseExpressions = this.getExpressionPhrase(child);
+        const phraseArrayAsSentence = secondPhraseExpressions.reduce((acc, currentValue) =>
+          `${acc} ${currentValue.expressionText}`, '');
+        elementNamesInPhrase.push({ name: child.parameters[0].value, tooltipText: phraseArrayAsSentence });
+      });
+    }
+
     const expressions = convertToExpression(
       modifiers,
       type,
       valueSets,
       codes,
       returnType,
-      otherParameters
+      otherParameters,
+      elementNamesInPhrase
     );
+
+    return expressions;
+  }
+
+  renderExpression = () => {
+    const { templateInstance } = this.props;
+    const expressions = this.getExpressionPhrase(templateInstance);
 
     if (!expressions) { return null; }
 
@@ -762,8 +794,20 @@ export default class TemplateInstance extends Component {
     const { returnType } = this.state;
     const referenceParameter = templateInstance.parameters.find(param => param.type === 'reference');
     const validationError = this.validateElement();
-    const returnError = (!(validateReturnType !== false) || returnType === 'boolean') ? null
-      : "Element must have return type 'boolean'. Add expression(s) to change the return type.";
+    let validReturnTypeForSentence = this.props.returnTypes || ['boolean']; // TODO update warning text?
+    let isAllLists = true;
+    validReturnTypeForSentence.forEach((type) => {
+      if (!type.includes('list_')) {
+        isAllLists = false;
+      }
+    });
+    if (validReturnTypeForSentence.length === 1) {
+      validReturnTypeForSentence = validReturnTypeForSentence[0];
+    } else if (isAllLists) {
+      validReturnTypeForSentence = 'list';
+    }
+    const returnError = (!(validateReturnType !== false) || this.isReturnTypeValid(returnType)) ? null : `Element must
+      have return type '${_.startCase(validReturnTypeForSentence)}'. Add expression(s) to change the return type.`;
 
     return (
       <div className="card-element__body">
@@ -798,7 +842,7 @@ export default class TemplateInstance extends Component {
           <div className="return-type row">
             <div className="col-3 bold align-right return-type__label">Return Type:</div>
             <div className="col-7 return-type__value">
-              { (validateReturnType === false || _.startCase(returnType) === 'Boolean') &&
+              { (validateReturnType === false || _.startCase(returnType) === _.startCase(validateReturnType)) &&
                 <FontAwesome name="check" className="check" />}
               {_.startCase(returnType)}
             </div>
@@ -841,7 +885,11 @@ export default class TemplateInstance extends Component {
       let elementType = templateInstance.name;
       if (referenceParameter) {
         // Element type to display in header will be the reference type for Base Elements.
-        elementType = referenceParameter.value ? referenceParameter.value.type : 'Base Element';
+        // TODO is there a way to fix the referenceParmater's type when changing the type of the list?
+        const baseElementReferenced = this.props.baseElements.find(element =>
+          element.uniqueId === referenceParameter.value.id);
+        elementType = baseElementReferenced.name;
+        // elementType = referenceParameter.value ? referenceParameter.value.type : 'Base Element';
       }
 
       return (

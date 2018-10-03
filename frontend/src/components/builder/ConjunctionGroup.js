@@ -16,6 +16,7 @@ export default class ConjunctionGroup extends Component {
 
     const operationTemplates = this.props.templates.find(cat => cat.name === 'Operations').entries;
     this.types = operationTemplates.filter(template => template.conjunction);
+    this.setOperations = this.props.templates.find(cat => cat.name === 'Set Operations').entries;
     this.allTypes = this.props.templates.reduce((prev, curr) => [...prev, ...curr.entries], []);
   }
 
@@ -29,7 +30,11 @@ export default class ConjunctionGroup extends Component {
 
   addChild = (template) => {
     const instance = createTemplateInstance(template);
-    this.props.addInstance(this.props.treeName, instance, this.getPath());
+    if (this.props.instance.usedBy) { // It's a base element
+      this.props.addInstance(this.props.treeName, instance, this.getPath(), null, undefined, null, true);
+    } else {
+      this.props.addInstance(this.props.treeName, instance, this.getPath());
+    }
   }
 
   // if root component, returns root artifact path, otherwise calls child's getPath function with artifact id
@@ -128,7 +133,7 @@ export default class ConjunctionGroup extends Component {
       placeholder="Select one"
       searchable={ false }
       clearable={ false }
-      options={ this.types }
+      options={ this.props.options === 'setOperations' ? this.setOperations : this.types }
       onChange={ this.handleTypeChange }
       inputProps={{ 'aria-label': 'Select conjunction type', title: 'Select conjunction type' }}
     />
@@ -235,6 +240,7 @@ export default class ConjunctionGroup extends Component {
               vsacDetailsCodes={this.props.vsacDetailsCodes}
               vsacFHIRCredentials={this.props.vsacFHIRCredentials}
               validateReturnType={this.props.validateReturnType}
+              returnType={this.props.returnType}
               isValidatingCode={this.props.isValidatingCode}
               isValidCode={this.props.isValidCode}
               codeData={this.props.codeData}
@@ -283,6 +289,7 @@ export default class ConjunctionGroup extends Component {
           vsacDetailsCodes={this.props.vsacDetailsCodes}
           vsacFHIRCredentials={this.props.vsacFHIRCredentials}
           validateReturnType={this.props.validateReturnType}
+          returnTypes={this.props.returnTypes}
           isValidatingCode={this.props.isValidatingCode}
           isValidCode={this.props.isValidCode}
           codeData={this.props.codeData}

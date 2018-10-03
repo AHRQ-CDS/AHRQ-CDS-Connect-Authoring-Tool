@@ -213,5 +213,30 @@ module.exports = [
     icon: 'sign-in',
     name: 'Base Elements',
     entries: []
+  },
+  {
+    id: 11,
+    icon: 'gear',
+    name: 'Set Operations',
+    entries: [
+      {
+        id: 'Intersect',
+        name: 'Intersect',
+        conjunction: true,
+        returnType: 'list_of_any',
+        parameters: [
+          { id: 'element_name', type: 'string', name: 'Group Name' }
+        ]
+      },
+      {
+        id: 'Union',
+        name: 'Union',
+        conjunction: true,
+        returnType: 'list_of_any',
+        parameters: [
+          { id: 'element_name', type: 'string', name: 'Group Name' }
+        ]
+      },
+    ]
   }
 ];

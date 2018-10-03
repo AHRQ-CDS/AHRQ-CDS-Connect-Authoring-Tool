@@ -7,6 +7,7 @@ import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import FontAwesome from 'react-fontawesome';
 import _ from 'lodash';
 
+import Validators from '../utils/validators';
 import loadTemplates from '../actions/templates';
 import loadValueSets from '../actions/value_sets';
 import loadConversionFunctions from '../actions/modifiers';
@@ -108,12 +109,61 @@ export class Builder extends Component {
     }));
   }
 
-  addInstance = (treeName, instance, parentPath, uid = null, currentIndex, incomingTree) => {
+  validateModifier = (modifier) => {
+    let validationWarning = null;
+
+    if (modifier.validator) {
+      const validator = Validators[modifier.validator.type];
+      const values = modifier.validator.fields.map(v => modifier.values[v]);
+      const args = modifier.validator.args ? modifier.validator.args.map(v => modifier.values[v]) : [];
+      if (!validator.check(values, args)) {
+        validationWarning = validator.warning(modifier.validator.fields, modifier.validator.args);
+      }
+    }
+    return validationWarning;
+  }
+
+  // Gets the returnType of the last valid modifier
+  getReturnType = (elementReturnType, modifiers) => {
+    let returnType = elementReturnType;
+    if (modifiers.length === 0) return returnType;
+
+    for (let index = modifiers.length - 1; index >= 0; index--) {
+      const modifier = modifiers[index];
+      if (this.validateModifier(modifier) === null) {
+        returnType = modifier.returnType;
+        break;
+      }
+    }
+
+    return returnType;
+  }
+
+  addInstance = (treeName, instance, parentPath, uid = null, currentIndex, incomingTree, updateReturnType = false) => {
     const treeData = this.findTree(treeName, uid);
     const tree = incomingTree || treeData.tree;
     const target = findValueAtPath(tree, parentPath).childInstances;
     const index = currentIndex !== undefined ? currentIndex : target.length;
     target.splice(index, 0, instance); // Insert instance at specific instance - only used for indenting now
+
+    if (updateReturnType) {
+      let currentReturnType = tree.returnType;
+      if (tree.childInstances.length === 1) {
+        currentReturnType = tree.childInstances[0].returnType;
+        if (!(_.isEmpty(tree.childInstances[0].modifiers))) {
+          currentReturnType = this.getReturnType(tree.returnType, tree.childInstances[0].modifiers);
+        }
+      }
+      let newReturnType = instance.returnType;
+      if (!(_.isEmpty(instance.modifiers))) {
+        newReturnType = this.getReturnType(instance.returnType, instance.modifiers);
+      }
+      if (newReturnType !== currentReturnType) {
+        tree.returnType = 'list_of_any';
+      } else {
+        tree.returnType = currentReturnType;
+      }
+    }
     localTree = tree;
     this.setTree(treeName, treeData, tree);
   }
@@ -133,6 +183,11 @@ export class Builder extends Component {
     if (editingConjunctionType) {
       target.id = editedParams.id;
       target.name = editedParams.name;
+      if (target.usedBy) {
+        target.usedBy.forEach((uniqueId) => {
+          // TODO wanted to add in to update reference.value.type, but not sure how
+        });
+      }
     } else {
       // If only one parameter is being updated, it comes in as a single object. Put it into an array of objects.
       if (!Array.isArray(editedParams)) {
@@ -156,12 +211,42 @@ export class Builder extends Component {
     this.setTree(treeName, treeData, tree);
   }
 
-  deleteInstance = (treeName, path, elementsToAdd, uid = null) => {
+  deleteInstance = (treeName, path, elementsToAdd, uid = null, updateReturnType = false) => {
     const treeData = this.findTree(treeName, uid);
     const tree = treeData.tree;
     const index = path.slice(-1);
     const target = findValueAtPath(tree, path.slice(0, path.length - 2));
     target.splice(index, 1); // remove item at index position
+
+    if (updateReturnType) {
+      let currentReturnType = tree.returnType;
+      if (tree.childInstances.length > 0) {
+        currentReturnType = tree.childInstances[0].returnType;
+        if (!(_.isEmpty(tree.childInstances[0].modifiers))) {
+          currentReturnType = this.getReturnType(tree.returnType, tree.childInstances[0].modifiers);
+        }
+        let identicalReturnType = true;
+        for (let i = 0; i < tree.childInstances.length; i++) {
+          const child = tree.childInstances[i];
+          // Base Elements will only be one deep
+          let returnType = child.returnType;
+          if (!(_.isEmpty(child.modifiers))) {
+            returnType = this.getReturnType(child.returnType, child.modifiers);
+          }
+          if (currentReturnType !== returnType) {
+            identicalReturnType = false;
+            break;
+          }
+        }
+        if (!identicalReturnType) {
+          tree.returnType = 'list_of_any';
+        } else {
+          tree.returnType = currentReturnType;
+        }
+      } else {
+        tree.returnType = 'list_of_any';
+      }
+    }
 
     this.setTree(treeName, treeData, tree);
     localTree = tree;
@@ -175,11 +260,37 @@ export class Builder extends Component {
   }
 
   // subpop_index is an optional parameter, for determing which tree within subpop we are referring to
-  updateInstanceModifiers = (treeName, modifiers, path, subpopIndex) => {
+  updateInstanceModifiers = (treeName, modifiers, path, subpopIndex, updateReturnType = false) => {
     const tree = _.cloneDeep(this.props.artifact[treeName]);
     const valuePath = _.isNumber(subpopIndex) ? tree[subpopIndex] : tree;
     const target = findValueAtPath(valuePath, path);
     target.modifiers = modifiers;
+
+    if (updateReturnType) {
+      let currentReturnType = valuePath.returnType;
+      if (!(_.isEmpty(valuePath.childInstances[0].modifiers))) {
+        currentReturnType = this.getReturnType(valuePath.returnType, valuePath.childInstances[0].modifiers);
+      }
+
+      let identicalReturnType = true;
+      for (let i = 0; i < valuePath.childInstances.length; i++) {
+        const child = valuePath.childInstances[i];
+        // Base Elements will only be one deep
+        let returnType = child.returnType;
+        if (!(_.isEmpty(child.modifiers))) {
+          returnType = this.getReturnType(child.returnType, child.modifiers);
+        }
+        if (currentReturnType !== returnType) {
+          identicalReturnType = false;
+          break;
+        }
+      }
+      if (!identicalReturnType) {
+        valuePath.returnType = 'list_of_any';
+      } else {
+        valuePath.returnType = currentReturnType;
+      }
+    }
 
     this.props.updateArtifact(this.props.artifact, { [treeName]: tree });
   }
@@ -466,9 +577,12 @@ export class Builder extends Component {
                     instance={artifact}
                     addBaseElement={this.addBaseElement}
                     loadValueSets={this.props.loadValueSets}
+                    getAllInstances={this.getAllInstances}
+                    addInstance={this.addInstance}
                     editInstance={this.editInstance}
                     updateInstanceModifiers={this.updateInstanceModifiers}
                     deleteInstance={this.deleteInstance}
+                    updateSubpopulations={this.updateSubpopulations}
                     templates={templates}
                     valueSets={this.props.valueSets}
                     conversionFunctions={conversionFunctions}
