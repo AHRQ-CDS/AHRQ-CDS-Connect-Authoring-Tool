@@ -220,6 +220,7 @@ export default class ConjunctionGroup extends Component {
               conversionFunctions={this.props.conversionFunctions}
               instanceNames={this.props.instanceNames}
               subPopulationIndex={this.props.subPopulationIndex}
+              scrollToBaseElement={this.props.scrollToBaseElement}
               loginVSACUser={this.props.loginVSACUser}
               setVSACAuthStatus={this.props.setVSACAuthStatus}
               vsacStatus={this.props.vsacStatus}
@@ -267,6 +268,7 @@ export default class ConjunctionGroup extends Component {
           conversionFunctions={this.props.conversionFunctions}
           instanceNames={this.props.instanceNames}
           baseElements={this.props.baseElements}
+          scrollToBaseElement={this.props.scrollToBaseElement}
           loginVSACUser={this.props.loginVSACUser}
           setVSACAuthStatus={this.props.setVSACAuthStatus}
           vsacStatus={this.props.vsacStatus}
@@ -344,6 +346,7 @@ ConjunctionGroup.propTypes = {
   deleteInstance: PropTypes.func.isRequired,
   instanceNames: PropTypes.array.isRequired,
   conversionFunctions: PropTypes.array,
+  scrollToBaseElement: PropTypes.func,
   loginVSACUser: PropTypes.func.isRequired,
   setVSACAuthStatus: PropTypes.func.isRequired,
   vsacStatus: PropTypes.string,

@@ -82,6 +82,13 @@ export class Builder extends Component {
     this.setState({ activeTabIndex });
   }
 
+  scrollToBaseElement = (elementId) => {
+    const baseElementTabIndex = 3;
+    this.setState({ activeTabIndex: baseElementTabIndex }, () => {
+      document.getElementById(elementId).scrollIntoView();
+    });
+  }
+
   // ----------------------- INSTANCES ------------------------------------- //
 
   getAllInstances = (treeName, treeInstance = null, uid = null) => {
@@ -302,6 +309,7 @@ export class Builder extends Component {
           baseElements={artifact.baseElements}
           conversionFunctions={conversionFunctions}
           instanceNames={this.props.names}
+          scrollToBaseElement={this.scrollToBaseElement}
           loginVSACUser={this.props.loginVSACUser}
           setVSACAuthStatus={this.props.setVSACAuthStatus}
           vsacStatus={vsacStatus}
@@ -428,6 +436,7 @@ export class Builder extends Component {
                     updateRecsSubpop={this.updateRecsSubpop}
                     conversionFunctions={conversionFunctions}
                     instanceNames={this.props.names}
+                    scrollToBaseElement={this.scrollToBaseElement}
                     loginVSACUser={this.props.loginVSACUser}
                     setVSACAuthStatus={this.props.setVSACAuthStatus}
                     vsacStatus={this.props.vsacStatus}
