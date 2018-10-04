@@ -893,6 +893,11 @@ export default class UserGuide extends Component {
                   </li>
                   <li>
                     The Base Element use specifies the original Base Element name to easily identify its origin.
+                    <ol type='a'>
+                      <li>
+                        Clicking the link icon next to the original Base Element name switches to the Base Elements tab
+                        and scrolls down to that Base Element's definition.</li>
+                    </ol>
                   </li>
                   <li>
                     Expressions can be added to Base Element uses the same as any other Element. Expressions that can be
