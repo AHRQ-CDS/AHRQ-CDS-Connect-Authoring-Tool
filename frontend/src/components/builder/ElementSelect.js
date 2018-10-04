@@ -258,6 +258,7 @@ export default class ElementSelect extends Component {
     });
     let noAuthElementOptions;
     if (selectedElement && !selectedElement.vsacAuthRequired) {
+      // TODO element name is one character off here --- why???
       noAuthElementOptions = this.state.categories
         .find(cat => cat.name === selectedElement.label)
         .entries.map(({ id, name, type, parameters }) => {

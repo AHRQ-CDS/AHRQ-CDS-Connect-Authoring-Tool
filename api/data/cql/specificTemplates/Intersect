@@ -1,0 +1,3 @@
+define "<%-element_name%>":
+  <%-components.map(c => `"${c.name}"`).join(`
+  intersect `)%>

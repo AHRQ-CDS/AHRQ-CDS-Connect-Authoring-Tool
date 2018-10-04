@@ -936,7 +936,8 @@ export default class TemplateInstance extends Component {
             }
           </div>
           <div className="card-element__buttons">
-            {showElement && renderIndentButtons(templateInstance)}
+            {/* TODO is there a way to extend conjunction group specifically for union? */}
+            {showElement && !this.props.inBaseElements && renderIndentButtons(templateInstance)}
 
             <button
               onClick={this.showHideElementBody}

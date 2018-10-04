@@ -37,6 +37,9 @@ export default class BaseElements extends Component {
   addChild = (template) => {
     const instance = createTemplateInstance(template);
     instance.path = '';
+    if (instance.conjunction) {
+      instance.parameters[0].value = `Base Element List ${this.props.instance.baseElements.length}`;
+    }
     this.props.addBaseElement(instance);
   }
 
@@ -126,6 +129,7 @@ export default class BaseElements extends Component {
           validateReturnType={true}
           returnTypes={listTypes}
           options={'setOperations'}
+          inBaseElements={true}
         />
       </div>
     );
@@ -133,9 +137,6 @@ export default class BaseElements extends Component {
 
   renderSet = (s, i) => {
     let name = s.parameters[0].value;
-    if (name === undefined) {
-      name = 'Base Element List'; // TODO better default with a number like subpop
-    }
     const duplicateNameIndex = this.props.instanceNames.findIndex(name =>
       name.id !== s.uniqueId && name.name === s.parameters[0].value);
     return (
