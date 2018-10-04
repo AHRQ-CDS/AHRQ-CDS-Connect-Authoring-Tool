@@ -461,21 +461,23 @@ export default class TemplateInstance extends Component {
         <div className="row code-info">
           <div className="col-3 bold align-right code-info__label">Base Element:</div>
           <div className="col-9 row code-info__info">
-            {referenceName}
-            <span
-              role="button"
-              id={`definition-${this.props.templateInstance.uniqueId}`}
-              className={'element__linkbutton'}
-              aria-label={'see base element definition'}
-              onClick={() => this.props.scrollToBaseElement(referenceParameter.value.id) }
-              tabIndex="0"
-              onKeyPress={(e) => {
-                e.which = e.which || e.keyCode;
-                if (e.which === 13) this.props.scrollToBaseElement(referenceParameter.value.id);
-              }}>
+            <div className="col-10">{referenceName}</div>
+            <div className="col-2 align-right">
+              <span
+                role="button"
+                id={`definition-${this.props.templateInstance.uniqueId}`}
+                className={'element__linkbutton'}
+                aria-label={'see base element definition'}
+                onClick={() => this.props.scrollToBaseElement(referenceParameter.value.id) }
+                tabIndex="0"
+                onKeyPress={(e) => {
+                  e.which = e.which || e.keyCode;
+                  if (e.which === 13) this.props.scrollToBaseElement(referenceParameter.value.id);
+                }}>
 
-              <FontAwesome name="link" className="delete-valueset-button" />
-            </span>
+                <FontAwesome name="link" className="delete-valueset-button" />
+              </span>
+            </div>
           </div>
         </div>
       </div>

@@ -85,7 +85,10 @@ export class Builder extends Component {
   scrollToBaseElement = (elementId) => {
     const baseElementTabIndex = 3;
     this.setState({ activeTabIndex: baseElementTabIndex }, () => {
-      document.getElementById(elementId).scrollIntoView();
+      const elementToScrollTo = document.getElementById(elementId);
+      if (elementToScrollTo) {
+        elementToScrollTo.scrollIntoView();
+      }
     });
   }
 
