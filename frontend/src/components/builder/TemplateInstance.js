@@ -460,7 +460,25 @@ export default class TemplateInstance extends Component {
       <div className="modifier__return__type" id="base-element-list">
         <div className="row code-info">
           <div className="col-3 bold align-right code-info__label">Base Element:</div>
-          <div className="col-9 row code-info__info">{referenceName}</div>
+          <div className="col-9 row code-info__info">
+            <div className="col-10">{referenceName}</div>
+            <div className="col-2 align-right">
+              <span
+                role="button"
+                id={`definition-${this.props.templateInstance.uniqueId}`}
+                className={'element__linkbutton'}
+                aria-label={'see base element definition'}
+                onClick={() => this.props.scrollToBaseElement(referenceParameter.value.id) }
+                tabIndex="0"
+                onKeyPress={(e) => {
+                  e.which = e.which || e.keyCode;
+                  if (e.which === 13) this.props.scrollToBaseElement(referenceParameter.value.id);
+                }}>
+
+                <FontAwesome name="link" className="delete-valueset-button" />
+              </span>
+            </div>
+          </div>
         </div>
       </div>
     );
@@ -909,7 +927,7 @@ export default class TemplateInstance extends Component {
     const baseElementClass = templateInstance.type === 'baseElement' ? 'base-element' : '';
 
     return (
-      <div className={`card-element element__expanded ${baseElementClass}`}>
+      <div className={`card-element element__expanded ${baseElementClass}`} id={templateInstance.uniqueId}>
         {this.renderHeader()}
         {showElement && this.renderBody()}
         {showElement && this.renderFooter()}

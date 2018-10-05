@@ -24,6 +24,7 @@ const props = {
   renderIndentButtons: jest.fn(),
   instanceNames: [],
   baseElements: [],
+  scrollToBaseElement: jest.fn(),
   loginVSACUser: jest.fn(),
   setVSACAuthStatus: jest.fn(),
   timeLastAuthenticated: new Date(),
@@ -292,5 +293,13 @@ describe('Base Element uses', () => {
     const baseElementList = component.find('#base-element-list');
     expect(baseElementList).toHaveLength(1);
     expect(baseElementList.text()).toEqual('Base Element:My Base Element');
+  });
+
+  test('can navigate to original definition', () => {
+    const linkButton = component.find('.element__linkbutton');
+    expect(linkButton).toHaveLength(1);
+
+    linkButton.simulate('click');
+    expect(component.props().scrollToBaseElement).toBeCalledWith('originalBaseElementId');
   });
 });
