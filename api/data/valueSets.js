@@ -131,6 +131,48 @@ module.exports = {
           value: "'unknown'",
         },
       ]
+    },
+    units_of_time: {
+      id: 'units_of_time',
+      name: 'Units of Time',
+      oid: '2.16.840.1.113883.4.642.3.70',
+      expansion: [
+        {
+          id: 's',
+          name: 'Second',
+          value: "'second'",
+        },
+        {
+          id: 'min',
+          name: 'Minute',
+          value: "'minute'",
+        },
+        {
+          id: 'h',
+          name: 'Hour',
+          value: "'hour'",
+        },
+        {
+          id: 'd',
+          name: 'Day',
+          value: "'day'",
+        },
+        {
+          id: 'wk',
+          name: 'Week',
+          value: "'week'",
+        },
+        {
+          id: 'mo',
+          name: 'Month',
+          value: "'month'",
+        },
+        {
+          id: 'a',
+          name: 'Year',
+          value: "'year'",
+        },
+      ]
     }
   },
   conditions: {
