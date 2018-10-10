@@ -18,6 +18,9 @@ function getArticle(word) {
   const vowels = ['a', 'e', 'i', 'o', 'u', 'A', 'E', 'I', 'O', 'U'];
   // If the first letter is in vowels array, the word starts with a vowel.
   if (vowels.findIndex(vowel => vowel === word.charAt(0)) !== -1) {
+    if (word.toLowerCase().startsWith('union')) {
+      return 'a';
+    }
     return 'an';
   }
   return 'a';
@@ -367,13 +370,13 @@ function orderExpressionSentenceArray(expressionArray, type, valueSets, codes, r
 
   // Handle element types (ex. observation, procedure)
   let elementText = _.lowerCase(type);
-  if (type === 'Intersects' || type === 'Union') {
-    elementText = `${elementText} of`;
+  if (type === 'Intersect') {
+    elementText = 'intersection';
   }
   const elementArticle = getArticle(elementText);
   if (hasStarted) {
     if (returnsPlural) {
-      if (type !== 'Intersects' && type !== 'Union') elementText = `${elementText}s`;
+      if (type !== 'Intersect' && type !== 'Union') elementText = `${elementText}s`;
       orderedExpressionArray.push({ expressionText: elementText, isExpression: false, isType: true });
     } else if (descriptorExpression || listExpressions.length > 0) {
       orderedExpressionArray.push({ expressionText: elementText, isExpression: false, isType: true });
@@ -382,7 +385,7 @@ function orderExpressionSentenceArray(expressionArray, type, valueSets, codes, r
       orderedExpressionArray.push({ expressionText: elementText, isExpression: false, isType: true });
     }
   } else if (returnsPlural) {
-    if (type !== 'Intersects' && type !== 'Union') {
+    if (type !== 'Intersect' && type !== 'Union') {
       elementText = `${_.capitalize(elementText)}s`;
     } else {
       elementText = `${_.capitalize(elementText)}`;
@@ -397,6 +400,9 @@ function orderExpressionSentenceArray(expressionArray, type, valueSets, codes, r
     orderedExpressionArray.push({ expressionText: _.capitalize(elementArticle), isExpression: false });
     orderedExpressionArray.push({ expressionText: elementText, isExpression: false, isType: true });
     hasStarted = true;
+  }
+  if (type === 'Intersect' || type === 'Union') {
+    orderedExpressionArray.push({ expressionText: 'of', isExpression: false });
   }
 
   // Handle value sets and codes
