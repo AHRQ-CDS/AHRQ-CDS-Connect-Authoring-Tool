@@ -217,7 +217,7 @@ module.exports = [
   {
     id: 11,
     icon: 'gear',
-    name: 'Set Operations',
+    name: 'List Operations',
     entries: [
       {
         id: 'Intersect',

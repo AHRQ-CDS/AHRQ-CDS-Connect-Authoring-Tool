@@ -55,7 +55,7 @@ const elementOptions = [
   { value: 'observation', label: 'Observation', vsacAuthRequired: true, template: 'GenericObservation_vsac' },
   { value: 'booleanParameter', label: 'Parameters', vsacAuthRequired: false },
   { value: 'procedure', label: 'Procedure', vsacAuthRequired: true, template: 'GenericProcedure_vsac' },
-  { value: 'setOperations', label: 'Set Operations', vsacAuthRequired: false }
+  { value: 'listOperations', label: 'List Operations', vsacAuthRequired: false }
 ];
 
 export default class ElementSelect extends Component {
@@ -254,7 +254,7 @@ export default class ElementSelect extends Component {
       if (this.props.inBaseElements) {
         return e.value !== 'baseElement';
       }
-      return e.value !== 'setOperations';
+      return e.value !== 'listOperations';
     });
     let noAuthElementOptions;
     if (selectedElement && !selectedElement.vsacAuthRequired) {

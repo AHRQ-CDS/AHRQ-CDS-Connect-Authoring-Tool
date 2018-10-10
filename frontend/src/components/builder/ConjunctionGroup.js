@@ -16,7 +16,7 @@ export default class ConjunctionGroup extends Component {
 
     const operationTemplates = this.props.templates.find(cat => cat.name === 'Operations').entries;
     this.types = operationTemplates.filter(template => template.conjunction);
-    this.setOperations = this.props.templates.find(cat => cat.name === 'Set Operations').entries;
+    this.listOperations = this.props.templates.find(cat => cat.name === 'List Operations').entries;
     this.allTypes = this.props.templates.reduce((prev, curr) => [...prev, ...curr.entries], []);
   }
 
@@ -133,7 +133,7 @@ export default class ConjunctionGroup extends Component {
       placeholder="Select one"
       searchable={ false }
       clearable={ false }
-      options={ this.props.options === 'setOperations' ? this.setOperations : this.types }
+      options={ this.props.options === 'listOperations' ? this.listOperations : this.types }
       onChange={ this.handleTypeChange }
       inputProps={{ 'aria-label': 'Select conjunction type', title: 'Select conjunction type' }}
     />

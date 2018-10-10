@@ -80,7 +80,7 @@ export default class TemplateInstance extends Component {
     }
   }
 
-  isReturnTypeValid = (currentReturnType) =>{
+  isReturnTypeValid = (currentReturnType) => {
     const validReturnType = this.props.returnTypes || ['boolean'];
     return validReturnType.includes(currentReturnType);
   }
@@ -121,7 +121,6 @@ export default class TemplateInstance extends Component {
   }
 
   deleteInstance = () => {
-    console.log('delete instance')
     const baseElementIsInUse = this.isBaseElementUsed();
     if (!baseElementIsInUse) {
       this.props.deleteInstance(this.props.treeName, this.getPath());

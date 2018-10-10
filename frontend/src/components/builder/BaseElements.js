@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import FontAwesome from 'react-fontawesome';
 import _ from 'lodash';
+import { UncontrolledTooltip } from 'reactstrap';
 import ElementSelect from './ElementSelect';
 import TemplateInstance from './TemplateInstance';
 import ConjunctionGroup from './ConjunctionGroup';
@@ -38,7 +39,7 @@ export default class BaseElements extends Component {
     const instance = createTemplateInstance(template);
     instance.path = '';
     if (instance.conjunction) {
-      instance.parameters[0].value = `Base Element List ${this.props.instance.baseElements.length}`;
+      instance.parameters[0].value = `Base Element List ${this.props.instance.baseElements.length + 1}`;
     }
     this.props.addBaseElement(instance);
   }
@@ -59,7 +60,8 @@ export default class BaseElements extends Component {
     this.props.updateInstanceModifiers(t, modifiers, path, index, true);
   }
 
-  updateBaseElementSet = (name, uniqueId) => {
+  // TODO update variable names
+  updateBaseElementList = (name, uniqueId) => {
     const newSubpopulations = _.cloneDeep(this.props.instance.baseElements);
     const subpopulationIndex = this.props.instance.baseElements.findIndex(baseElement => baseElement.uniqueId === uniqueId);
     newSubpopulations[subpopulationIndex].parameters[0].value = name;
@@ -67,13 +69,18 @@ export default class BaseElements extends Component {
     this.props.updateSubpopulations(newSubpopulations, 'baseElements');
   }
 
+  isBaseElementListUsed = (element) => {
+    return element.usedBy ? element.usedBy.length !== 0 : false;
+  }
+
   deleteBaseElementList = (uniqueId) => {
-    // TODO update to protect from deleting lists that are used elsewhere
     const newSubpopulations = _.cloneDeep(this.props.instance.baseElements);
     const subpopulationIndex = this.props.instance.baseElements.findIndex(baseElement => baseElement.uniqueId === uniqueId);
-    newSubpopulations.splice(subpopulationIndex, 1);
-
-    this.props.updateSubpopulations(newSubpopulations, 'baseElements');
+    const baseElementListIsInUse = this.isBaseElementListUsed(newSubpopulations[subpopulationIndex]);
+    if (!baseElementListIsInUse) {
+      newSubpopulations.splice(subpopulationIndex, 1);
+      this.props.updateSubpopulations(newSubpopulations, 'baseElements');
+    }
   }
 
   getPath = () => 'baseElements'
@@ -84,7 +91,7 @@ export default class BaseElements extends Component {
     return `${childIndex}`;
   }
 
-  renderSetOperationConjunction = (s, i) => {
+  renderListOperationConjunction = (s, i) => {
     const listTypes = ['list_of_observations', 'list_of_conditions', 'list_of_medication_statements',
       'list_of_medication_orders', 'list_of_procedures', 'list_of_allergy_intolerances', 'list_of_encounters'];
     return (
@@ -128,17 +135,19 @@ export default class BaseElements extends Component {
           resetCodeValidation={this.props.resetCodeValidation}
           validateReturnType={true}
           returnTypes={listTypes}
-          options={'setOperations'}
+          options={'listOperations'}
           inBaseElements={true}
         />
       </div>
     );
   }
 
-  renderSet = (s, i) => {
+  renderList = (s, i) => {
     let name = s.parameters[0].value;
     const duplicateNameIndex = this.props.instanceNames.findIndex(name =>
       name.id !== s.uniqueId && name.name === s.parameters[0].value);
+    const baseElementListUsed = this.isBaseElementListUsed(s);
+    const disabledClass = baseElementListUsed ? 'disabled' : '';
     return (
       <div className="subpopulation card-group card-group__top">
         <div className="card-element">
@@ -160,7 +169,7 @@ export default class BaseElements extends Component {
                   value={name}
                   onClick={event => event.stopPropagation()}
                   onChange={(event) => {
-                    this.updateBaseElementSet(event.target.value, s.uniqueId);
+                    this.updateBaseElementList(event.target.value, s.uniqueId);
                   }}
                 />
                 {duplicateNameIndex !== -1
@@ -185,14 +194,20 @@ export default class BaseElements extends Component {
 
               <button
                 aria-label="Remove subpopulation"
-                className="secondary-button"
+                className={`secondary-button ${disabledClass}`}
+                id={`deletebutton-${s.uniqueId}`}
                 onClick={() => this.deleteBaseElementList(s.uniqueId)}>
                 <FontAwesome fixedWidth name='times' />
               </button>
+              {baseElementListUsed &&
+                <UncontrolledTooltip
+                  target={`deletebutton-${s.uniqueId}`} placement="left">
+                  This base element is referenced somewhere else. To delete this element, remove all references to it.
+              </UncontrolledTooltip>}
             </div>
           </div>
 
-          {this.state.isExpanded && this.renderSetOperationConjunction(s, i)}
+          {this.state.isExpanded && this.renderListOperationConjunction(s, i)}
         </div>
       </div>
     );
@@ -201,7 +216,7 @@ export default class BaseElements extends Component {
     return <div>
       {this.props.instance.baseElements.map((s, i) => {
         if (s.conjunction) {
-          return <div className="subpopulations" key={i}>{this.renderSet(s, i)}</div>;
+          return <div className="subpopulations" key={i}>{this.renderList(s, i)}</div>;
         }
         return (
           <div className="card-group card-group__top" key={i}>
