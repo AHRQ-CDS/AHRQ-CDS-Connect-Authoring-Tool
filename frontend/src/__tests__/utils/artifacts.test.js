@@ -377,7 +377,7 @@ describe('Demographics elements support special case phrases', () => {
         value: {
           id: 'a',
           name: 'years',
-          value: "AgeInYears()",
+          value: 'AgeInYears()'
         }
       },
     ];

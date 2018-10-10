@@ -40,6 +40,17 @@ const instanceTree = {
           typeOfNumber: 'integer',
           name: 'Maximum Age',
           value: 45
+        },
+        {
+          id: 'unit_of_time',
+          type: 'valueset',
+          select: 'demographics/units_of_time',
+          name: 'Unit of Time',
+          value: {
+            id: 'a',
+            name: 'years',
+            value: 'AgeInYears()'
+          }
         }
       ],
       modifiers: [],
