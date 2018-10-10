@@ -8,4 +8,5 @@ define "__ageRange_for_<%-element_name%>":
 <% } else { -%>
 define "<%-element_name%>":
 <% } -%>
-  <%if (min_age !== null && min_age >=0) {%>AgeInYears()>=<%=min_age%><%}%><%if (min_age !== null && max_age !== null && min_age >=0 && max_age >= 0) {%> and <%}%><%if (max_age !== null && max_age >=0) {%>AgeInYears()<=<%=max_age%><%}%>
+  <%if (min_age !== null && min_age >=0) {%><% if(unit_of_time) { %><%-unit_of_time.value%><% } else { %>AgeInYears()<% } %> >= <%=min_age%> <%}%><%if (min_age !== null && max_age !== null && min_age >=0 && max_age >= 0){%>and<%}%><%if (max_age !== null && max_age >=0) {%> <% if(unit_of_time) { %><%-unit_of_time.value%><% } else { %>AgeInYears()<% } %> <= <%=max_age%> <%}%>
+  

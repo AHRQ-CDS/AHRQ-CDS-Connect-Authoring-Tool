@@ -140,37 +140,37 @@ module.exports = {
         {
           id: 's',
           name: 'Second',
-          value: "'second'",
+          value: "AgeInSeconds()",
         },
         {
           id: 'min',
           name: 'Minute',
-          value: "'minute'",
+          value: "AgeInMinutes()",
         },
         {
           id: 'h',
           name: 'Hour',
-          value: "'hour'",
+          value: "AgeInHours()",
         },
         {
           id: 'd',
           name: 'Day',
-          value: "'day'",
+          value: "AgeInDays()",
         },
         {
           id: 'wk',
           name: 'Week',
-          value: "'week'",
+          value: "AgeInWeeks()",
         },
         {
           id: 'mo',
           name: 'Month',
-          value: "'month'",
+          value: "AgeInMonths()",
         },
         {
           id: 'a',
           name: 'Year',
-          value: "'year'",
+          value: "AgeInYears()",
         },
       ]
     }
