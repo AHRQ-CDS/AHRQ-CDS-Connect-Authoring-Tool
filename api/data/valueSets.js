@@ -139,37 +139,37 @@ module.exports = {
       expansion: [
         {
           id: 's',
-          name: 'Second',
+          name: 'seconds',
           value: "AgeInSeconds()",
         },
         {
           id: 'min',
-          name: 'Minute',
+          name: 'minutes',
           value: "AgeInMinutes()",
         },
         {
           id: 'h',
-          name: 'Hour',
+          name: 'hours',
           value: "AgeInHours()",
         },
         {
           id: 'd',
-          name: 'Day',
+          name: 'days',
           value: "AgeInDays()",
         },
         {
           id: 'wk',
-          name: 'Week',
+          name: 'weeks',
           value: "AgeInWeeks()",
         },
         {
           id: 'mo',
-          name: 'Month',
+          name: 'months',
           value: "AgeInMonths()",
         },
         {
           id: 'a',
-          name: 'Year',
+          name: 'years',
           value: "AgeInYears()",
         },
       ]

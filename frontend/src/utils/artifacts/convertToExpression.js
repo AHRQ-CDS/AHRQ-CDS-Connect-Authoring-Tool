@@ -190,15 +190,27 @@ function getOrderedExpressionSentenceArrayForAgeRange(expressionArray, ageParame
 
   if (ageParameters[0].value && ageParameters[1].value) { // The minimum age and the maximum age are both added
     orderedExpressionArray.push({ expressionText: 'between', isExpression: false });
-    orderedExpressionArray.push({ expressionText: `${ageParameters[0].value} years`, isExpression: true });
+    orderedExpressionArray.push({
+      expressionText: `${ageParameters[0].value} ${ageParameters[2].value ? ageParameters[2].value.name : ''}`,
+      isExpression: true
+    });
     orderedExpressionArray.push({ expressionText: 'and', isExpression: false });
-    orderedExpressionArray.push({ expressionText: `${ageParameters[1].value} years`, isExpression: true });
+    orderedExpressionArray.push({
+      expressionText: `${ageParameters[1].value} ${ageParameters[2].value ? ageParameters[2].value.name : ''}`,
+      isExpression: true
+    });
   } else if (ageParameters[0].value) { // Only a minimum age is added
     orderedExpressionArray.push({ expressionText: 'at least', isExpression: false });
-    orderedExpressionArray.push({ expressionText: `${ageParameters[0].value} years`, isExpression: true });
+    orderedExpressionArray.push({
+      expressionText: `${ageParameters[0].value} ${ageParameters[2].value ? ageParameters[2].value.name : ''}`,
+      isExpression: true
+    });
   } else if (ageParameters[1].value) { // Only a maximum age is added
     orderedExpressionArray.push({ expressionText: 'at most', isExpression: false });
-    orderedExpressionArray.push({ expressionText: `${ageParameters[1].value} years`, isExpression: true });
+    orderedExpressionArray.push({
+      expressionText: `${ageParameters[1].value} ${ageParameters[2].value ? ageParameters[2].value.name : ''}`,
+      isExpression: true
+    });
   }
 
   expressionArray.forEach((expression) => {
