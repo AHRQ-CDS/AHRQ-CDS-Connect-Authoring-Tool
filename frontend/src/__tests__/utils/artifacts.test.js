@@ -368,7 +368,18 @@ describe('Demographics elements support special case phrases', () => {
     const name = 'Age Range';
     const ages = [
       { id: 'min_age', name: 'Minimum Age', type: 'number', typeOfNumber: 'integer', value: 18 },
-      { id: 'max_age', name: 'Maximum Age', type: 'number', typeOfNumber: 'integer', value: 70 }
+      { id: 'max_age', name: 'Maximum Age', type: 'number', typeOfNumber: 'integer', value: 70 },
+      {
+        id: 'unit_of_time',
+        name: 'Unit of Time',
+        type: 'valueset',
+        select: 'demographics/units_of_time',
+        value: {
+          id: 'a',
+          name: 'years',
+          value: "AgeInYears()",
+        }
+      },
     ];
 
     const expressionPhrase = convertToExpression(modifiers, name, [], [], 'boolean', ages);
