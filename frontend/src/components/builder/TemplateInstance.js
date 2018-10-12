@@ -311,7 +311,7 @@ export default class TemplateInstance extends Component {
 
     for (let index = modifiers.length - 1; index >= 0; index--) {
       const modifier = modifiers[index];
-      if (this.validateModifier(modifier) === null) {
+      if (modifier.value && this.validateModifier(modifier) === null) {
         returnType = modifier.returnType;
         break;
       }

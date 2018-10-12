@@ -2,6 +2,7 @@
 
 # misc
 .DS_Store
+.vscode
 
 # artifacts stored by mock-server
 /mock-repo/artifacts

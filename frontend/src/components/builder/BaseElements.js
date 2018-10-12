@@ -60,13 +60,12 @@ export default class BaseElements extends Component {
     this.props.updateInstanceModifiers(t, modifiers, path, index, true);
   }
 
-  // TODO update variable names
   updateBaseElementList = (name, uniqueId) => {
-    const newSubpopulations = _.cloneDeep(this.props.instance.baseElements);
-    const subpopulationIndex = this.props.instance.baseElements.findIndex(baseElement => baseElement.uniqueId === uniqueId);
-    newSubpopulations[subpopulationIndex].parameters[0].value = name;
+    const newBaseElementLists = _.cloneDeep(this.props.instance.baseElements);
+    const baseElementIndex = this.props.instance.baseElements.findIndex(baseElement => baseElement.uniqueId === uniqueId);
+    newBaseElementLists[baseElementIndex].parameters[0].value = name;
 
-    this.props.updateSubpopulations(newSubpopulations, 'baseElements');
+    this.props.updateBaseElementLists(newBaseElementLists, 'baseElements');
   }
 
   isBaseElementListUsed = (element) => {
@@ -74,12 +73,12 @@ export default class BaseElements extends Component {
   }
 
   deleteBaseElementList = (uniqueId) => {
-    const newSubpopulations = _.cloneDeep(this.props.instance.baseElements);
-    const subpopulationIndex = this.props.instance.baseElements.findIndex(baseElement => baseElement.uniqueId === uniqueId);
-    const baseElementListIsInUse = this.isBaseElementListUsed(newSubpopulations[subpopulationIndex]);
+    const newBaseElementLists = _.cloneDeep(this.props.instance.baseElements);
+    const baseElementIndex = this.props.instance.baseElements.findIndex(baseElement => baseElement.uniqueId === uniqueId);
+    const baseElementListIsInUse = this.isBaseElementListUsed(newBaseElementLists[baseElementIndex]);
     if (!baseElementListIsInUse) {
-      newSubpopulations.splice(subpopulationIndex, 1);
-      this.props.updateSubpopulations(newSubpopulations, 'baseElements');
+      newBaseElementLists.splice(baseElementIndex, 1);
+      this.props.updateBaseElementLists(newBaseElementLists, 'baseElements');
     }
   }
 
@@ -112,10 +111,8 @@ export default class BaseElements extends Component {
           updateInstanceModifiers={(t, modifiers, path) => this.updateInstanceModifiers(t, modifiers, path, i)}
           parameters={this.props.parameters}
           baseElements={this.props.baseElements}
-          getPath={this.getChildsPath} // TODO Need these??
           conversionFunctions={this.props.conversionFunctions}
           instanceNames={this.props.instanceNames}
-          subPopulationIndex={this.props.subPopulationIndex} // TODO Need these??
           loginVSACUser={this.props.loginVSACUser}
           setVSACAuthStatus={this.props.setVSACAuthStatus}
           vsacStatus={this.props.vsacStatus}
@@ -195,7 +192,7 @@ export default class BaseElements extends Component {
               </button>
 
               <button
-                aria-label="Remove subpopulation"
+                aria-label="Remove base element list"
                 className={`secondary-button ${disabledClass}`}
                 id={`deletebutton-${s.uniqueId}`}
                 onClick={() => this.deleteBaseElementList(s.uniqueId)}>
@@ -233,7 +230,6 @@ export default class BaseElements extends Component {
                 editInstance={this.props.editInstance}
                 updateInstanceModifiers={this.props.updateInstanceModifiers}
                 deleteInstance={this.props.deleteInstance}
-                subpopulationIndex={this.props.subPopulationIndex}
                 renderIndentButtons={() => {}}
                 conversionFunctions={this.props.conversionFunctions}
                 instanceNames={this.props.instanceNames}

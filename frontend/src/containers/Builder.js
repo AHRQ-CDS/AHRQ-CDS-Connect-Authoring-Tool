@@ -37,6 +37,10 @@ import artifactProps from '../prop-types/artifact';
 // TODO: This is needed because the tree on this.state is not updated in time. Figure out a better way to handle this
 let localTree;
 
+// TODO this list exists in a lot of places now!
+const elementLists = ['list_of_observations', 'list_of_conditions', 'list_of_medication_statements',
+  'list_of_medication_orders', 'list_of_procedures', 'list_of_allergy_intolerances', 'list_of_encounters', 'list_of_any'];
+
 export class Builder extends Component {
   constructor(props) {
     super(props);
@@ -130,7 +134,7 @@ export class Builder extends Component {
 
     for (let index = modifiers.length - 1; index >= 0; index--) {
       const modifier = modifiers[index];
-      if (this.validateModifier(modifier) === null) {
+      if (modifier.value && this.validateModifier(modifier) === null) {
         returnType = modifier.returnType;
         break;
       }
@@ -158,7 +162,11 @@ export class Builder extends Component {
       if (!(_.isEmpty(instance.modifiers))) {
         newReturnType = this.getReturnType(instance.returnType, instance.modifiers);
       }
-      if (newReturnType !== currentReturnType) {
+      const isSingularElement = elementLists.find(listType => listType.includes(currentReturnType));
+      if (isSingularElement) currentReturnType = isSingularElement;
+      // TODO - remaining bug - have 'observation', the add a 'list of obs', the return type should be 'list of obs', but it ends up as 'list of any'
+      // TODO is it possible to move this to the conjunction level??
+      if (newReturnType !== currentReturnType || !isSingularElement) {
         tree.returnType = 'list_of_any';
       } else {
         tree.returnType = currentReturnType;
@@ -238,7 +246,10 @@ export class Builder extends Component {
             break;
           }
         }
-        if (!identicalReturnType) {
+        const isSingularElement = elementLists.find(listType => listType.includes(currentReturnType));
+        if (isSingularElement) currentReturnType = isSingularElement;
+
+        if (!identicalReturnType || !isSingularElement) {
           tree.returnType = 'list_of_any';
         } else {
           tree.returnType = currentReturnType;
@@ -285,7 +296,11 @@ export class Builder extends Component {
           break;
         }
       }
-      if (!identicalReturnType) {
+
+      const isSingularElement = elementLists.find(listType => listType.includes(currentReturnType));
+      if (isSingularElement) currentReturnType = isSingularElement;
+      // TODO Confirm that a non-list type singular element gets a type of list_of_any (ex. Bool => list_of_any, system_quantity => list_of_any)
+      if (!identicalReturnType || !isSingularElement) {
         valuePath.returnType = 'list_of_any';
       } else {
         valuePath.returnType = currentReturnType;
@@ -582,7 +597,7 @@ export class Builder extends Component {
                     editInstance={this.editInstance}
                     updateInstanceModifiers={this.updateInstanceModifiers}
                     deleteInstance={this.deleteInstance}
-                    updateSubpopulations={this.updateSubpopulations}
+                    updateBaseElementLists={this.updateSubpopulations}
                     templates={templates}
                     valueSets={this.props.valueSets}
                     conversionFunctions={conversionFunctions}
