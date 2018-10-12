@@ -34,6 +34,10 @@
   &__option-category {
     margin-left: 0.5em;
     color: $gray;
+
+    &.is-disabled {
+      color: #ccc;
+    }
   }
 
   &__add-element {

@@ -36,6 +36,10 @@
     border-top: 1px solid #eee;
   }
 
+  &-option.is-disabled {
+    color: #ccc;
+  }
+
   &-menu-outer {
     max-height: 1000px;
 

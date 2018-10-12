@@ -24,7 +24,10 @@ const optionRenderer = option => (
     <span className="element-select__option-value">{option.label}</span>
 
     {option.vsacAuthRequired &&
-      <FontAwesome name="key" className="element-select__option-category" />
+      <FontAwesome name="key" className={`element-select__option-category ${option.disabled ? 'is-disabled' : ''}`} />
+    }
+    { option.disabled &&
+      <FontAwesome name="ban" className={'element-select__option-category is-disabled'} />
     }
   </div>
 );
@@ -250,7 +253,8 @@ export default class ElementSelect extends Component {
   render() {
     const { selectedElement } = this.state;
     const placeholderText = 'Choose element type';
-    const elementOptionsToDisplay = elementOptions.filter((e) => {
+    const elementOptionsToDisplay = _.cloneDeep(elementOptions).filter((e) => {
+      e.disabled = this.props.disableElement || false;
       if (this.props.inBaseElements) {
         return e.value !== 'baseElement';
       }

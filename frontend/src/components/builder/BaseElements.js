@@ -92,6 +92,7 @@ export default class BaseElements extends Component {
   }
 
   renderListOperationConjunction = (s, i) => {
+    const baseElementListUsed = this.isBaseElementListUsed(s);
     const listTypes = ['list_of_observations', 'list_of_conditions', 'list_of_medication_statements',
       'list_of_medication_orders', 'list_of_procedures', 'list_of_allergy_intolerances', 'list_of_encounters'];
     return (
@@ -137,6 +138,7 @@ export default class BaseElements extends Component {
           returnTypes={listTypes}
           options={'listOperations'}
           inBaseElements={true}
+          disableElement={baseElementListUsed}
         />
       </div>
     );
@@ -202,7 +204,7 @@ export default class BaseElements extends Component {
               {baseElementListUsed &&
                 <UncontrolledTooltip
                   target={`deletebutton-${s.uniqueId}`} placement="left">
-                  This base element is referenced somewhere else. To delete this element, remove all references to it.
+                  To delete this Base Element List, remove all references to it.
               </UncontrolledTooltip>}
             </div>
           </div>

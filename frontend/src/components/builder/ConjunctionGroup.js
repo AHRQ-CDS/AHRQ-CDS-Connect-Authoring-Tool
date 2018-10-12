@@ -295,6 +295,7 @@ export default class ConjunctionGroup extends Component {
           codeData={this.props.codeData}
           validateCode={this.props.validateCode}
           resetCodeValidation={this.props.resetCodeValidation}
+          disableElement={this.props.disableElement}
           inBaseElements={this.props.inBaseElements} />
 
         {this.renderConjunctionSelect(instance)}
@@ -335,6 +336,7 @@ export default class ConjunctionGroup extends Component {
             validateCode={this.props.validateCode}
             resetCodeValidation={this.props.resetCodeValidation}
             inBaseElements={false}
+            disableElement={this.props.disableElement}
           />
         </div>
       </div>
