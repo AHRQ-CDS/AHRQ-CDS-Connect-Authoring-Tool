@@ -14,7 +14,6 @@
  * }
  */
 'use strict';
-const _ = require('lodash');
 
 module.exports.id = "agerange-to-agerangewithunit";
 
