@@ -24,12 +24,13 @@ module.exports = [
         id: 'AgeRange',
         name: 'Age Range',
         returnType: 'boolean',
-        validator: {type: 'or', fields: ['min_age', 'max_age'], args: null},
+        validator: {type: 'requiredIfThenOne', fields: ['unit_of_time'], args: ['min_age', 'max_age']},
         suppressedModifiers: ['BooleanNot', 'BooleanComparison'],
         parameters: [
           { id: 'element_name', type: 'string', name: 'Element Name' },
           { id: 'min_age', type: 'number', typeOfNumber: 'integer', name: 'Minimum Age' },
           { id: 'max_age', type: 'number', typeOfNumber: 'integer', name: 'Maximum Age' },
+          { id: 'unit_of_time', type: 'valueset', select: 'demographics/units_of_time', name: 'Unit of Time' },
         ],
       },
       {
