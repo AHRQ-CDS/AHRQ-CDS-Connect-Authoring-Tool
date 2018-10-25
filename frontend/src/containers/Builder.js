@@ -7,7 +7,6 @@ import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import FontAwesome from 'react-fontawesome';
 import _ from 'lodash';
 
-import Validators from '../utils/validators';
 import loadTemplates from '../actions/templates';
 import loadValueSets from '../actions/value_sets';
 import loadConversionFunctions from '../actions/modifiers';
@@ -36,10 +35,6 @@ import artifactProps from '../prop-types/artifact';
 
 // TODO: This is needed because the tree on this.state is not updated in time. Figure out a better way to handle this
 let localTree;
-
-// TODO this list exists in a lot of places now!
-const elementLists = ['list_of_observations', 'list_of_conditions', 'list_of_medication_statements',
-  'list_of_medication_orders', 'list_of_procedures', 'list_of_allergy_intolerances', 'list_of_encounters', 'list_of_any'];
 
 export class Builder extends Component {
   constructor(props) {
@@ -113,65 +108,17 @@ export class Builder extends Component {
     }));
   }
 
-  validateModifier = (modifier) => {
-    let validationWarning = null;
-
-    if (modifier.validator) {
-      const validator = Validators[modifier.validator.type];
-      const values = modifier.validator.fields.map(v => modifier.values[v]);
-      const args = modifier.validator.args ? modifier.validator.args.map(v => modifier.values[v]) : [];
-      if (!validator.check(values, args)) {
-        validationWarning = validator.warning(modifier.validator.fields, modifier.validator.args);
-      }
-    }
-    return validationWarning;
-  }
-
-  // Gets the returnType of the last valid modifier
-  getReturnType = (elementReturnType, modifiers) => {
-    let returnType = elementReturnType;
-    if (modifiers.length === 0) return returnType;
-
-    for (let index = modifiers.length - 1; index >= 0; index--) {
-      const modifier = modifiers[index];
-      if (modifier.value && this.validateModifier(modifier) === null) {
-        returnType = modifier.returnType;
-        break;
-      }
-    }
-
-    return returnType;
-  }
-
-  addInstance = (treeName, instance, parentPath, uid = null, currentIndex, incomingTree, updateReturnType = false) => {
+  addInstance = (treeName, instance, parentPath, uid = null, currentIndex, incomingTree, updatedReturnType = null) => {
     const treeData = this.findTree(treeName, uid);
     const tree = incomingTree || treeData.tree;
     const target = findValueAtPath(tree, parentPath).childInstances;
     const index = currentIndex !== undefined ? currentIndex : target.length;
     target.splice(index, 0, instance); // Insert instance at specific instance - only used for indenting now
 
-    if (updateReturnType) {
-      let currentReturnType = tree.returnType;
-      if (tree.childInstances.length === 1) {
-        currentReturnType = tree.childInstances[0].returnType;
-        if (!(_.isEmpty(tree.childInstances[0].modifiers))) {
-          currentReturnType = this.getReturnType(tree.returnType, tree.childInstances[0].modifiers);
-        }
-      }
-      let newReturnType = instance.returnType;
-      if (!(_.isEmpty(instance.modifiers))) {
-        newReturnType = this.getReturnType(instance.returnType, instance.modifiers);
-      }
-      const isSingularElement = elementLists.find(listType => listType.includes(currentReturnType));
-      if (isSingularElement) currentReturnType = isSingularElement;
-      // TODO - remaining bug - have 'observation', the add a 'list of obs', the return type should be 'list of obs', but it ends up as 'list of any'
-      // TODO is it possible to move this to the conjunction level??
-      if (newReturnType !== currentReturnType || !isSingularElement) {
-        tree.returnType = 'list_of_any';
-      } else {
-        tree.returnType = currentReturnType;
-      }
+    if (updatedReturnType) {
+      tree.returnType = updatedReturnType;
     }
+
     localTree = tree;
     this.setTree(treeName, treeData, tree);
   }
@@ -219,44 +166,15 @@ export class Builder extends Component {
     this.setTree(treeName, treeData, tree);
   }
 
-  deleteInstance = (treeName, path, elementsToAdd, uid = null, updateReturnType = false) => {
+  deleteInstance = (treeName, path, elementsToAdd, uid = null, updatedReturnType = null) => {
     const treeData = this.findTree(treeName, uid);
     const tree = treeData.tree;
     const index = path.slice(-1);
     const target = findValueAtPath(tree, path.slice(0, path.length - 2));
     target.splice(index, 1); // remove item at index position
 
-    if (updateReturnType) {
-      let currentReturnType = tree.returnType;
-      if (tree.childInstances.length > 0) {
-        currentReturnType = tree.childInstances[0].returnType;
-        if (!(_.isEmpty(tree.childInstances[0].modifiers))) {
-          currentReturnType = this.getReturnType(tree.returnType, tree.childInstances[0].modifiers);
-        }
-        let identicalReturnType = true;
-        for (let i = 0; i < tree.childInstances.length; i++) {
-          const child = tree.childInstances[i];
-          // Base Elements will only be one deep
-          let returnType = child.returnType;
-          if (!(_.isEmpty(child.modifiers))) {
-            returnType = this.getReturnType(child.returnType, child.modifiers);
-          }
-          if (currentReturnType !== returnType) {
-            identicalReturnType = false;
-            break;
-          }
-        }
-        const isSingularElement = elementLists.find(listType => listType.includes(currentReturnType));
-        if (isSingularElement) currentReturnType = isSingularElement;
-
-        if (!identicalReturnType || !isSingularElement) {
-          tree.returnType = 'list_of_any';
-        } else {
-          tree.returnType = currentReturnType;
-        }
-      } else {
-        tree.returnType = 'list_of_any';
-      }
+    if (updatedReturnType) {
+      tree.returnType = updatedReturnType;
     }
 
     this.setTree(treeName, treeData, tree);
@@ -271,40 +189,14 @@ export class Builder extends Component {
   }
 
   // subpop_index is an optional parameter, for determing which tree within subpop we are referring to
-  updateInstanceModifiers = (treeName, modifiers, path, subpopIndex, updateReturnType = false) => {
+  updateInstanceModifiers = (treeName, modifiers, path, subpopIndex, updatedReturnType = null) => {
     const tree = _.cloneDeep(this.props.artifact[treeName]);
     const valuePath = _.isNumber(subpopIndex) ? tree[subpopIndex] : tree;
     const target = findValueAtPath(valuePath, path);
     target.modifiers = modifiers;
 
-    if (updateReturnType) {
-      let currentReturnType = valuePath.returnType;
-      if (!(_.isEmpty(valuePath.childInstances[0].modifiers))) {
-        currentReturnType = this.getReturnType(valuePath.returnType, valuePath.childInstances[0].modifiers);
-      }
-
-      let identicalReturnType = true;
-      for (let i = 0; i < valuePath.childInstances.length; i++) {
-        const child = valuePath.childInstances[i];
-        // Base Elements will only be one deep
-        let returnType = child.returnType;
-        if (!(_.isEmpty(child.modifiers))) {
-          returnType = this.getReturnType(child.returnType, child.modifiers);
-        }
-        if (currentReturnType !== returnType) {
-          identicalReturnType = false;
-          break;
-        }
-      }
-
-      const isSingularElement = elementLists.find(listType => listType.includes(currentReturnType));
-      if (isSingularElement) currentReturnType = isSingularElement;
-      // TODO Confirm that a non-list type singular element gets a type of list_of_any (ex. Bool => list_of_any, system_quantity => list_of_any)
-      if (!identicalReturnType || !isSingularElement) {
-        valuePath.returnType = 'list_of_any';
-      } else {
-        valuePath.returnType = currentReturnType;
-      }
+    if (updatedReturnType) {
+      valuePath.returnType = updatedReturnType;
     }
 
     this.props.updateArtifact(this.props.artifact, { [treeName]: tree });

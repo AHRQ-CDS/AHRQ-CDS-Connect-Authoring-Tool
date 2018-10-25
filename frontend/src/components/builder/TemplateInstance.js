@@ -295,7 +295,7 @@ export default class TemplateInstance extends Component {
 
     if (modifier.validator) {
       const validator = Validators[modifier.validator.type];
-      const values = modifier.validator.fields.map(v => modifier.values[v]);
+      const values = modifier.validator.fields.map(v => modifier.values && modifier.values[v]);
       const args = modifier.validator.args ? modifier.validator.args.map(v => modifier.values[v]) : [];
       if (!validator.check(values, args)) {
         validationWarning = validator.warning(modifier.validator.fields, modifier.validator.args);
@@ -311,7 +311,7 @@ export default class TemplateInstance extends Component {
 
     for (let index = modifiers.length - 1; index >= 0; index--) {
       const modifier = modifiers[index];
-      if (modifier.value && this.validateModifier(modifier) === null) {
+      if (this.validateModifier(modifier) === null) {
         returnType = modifier.returnType;
         break;
       }
@@ -732,7 +732,7 @@ export default class TemplateInstance extends Component {
 
     if (phraseTemplateInstanceIsListGroup) {
       phraseTemplateInstance.childInstances.forEach((child) => {
-        // TODO NOTE if we disable indenting, this can only go one level deep
+        // TODO TODO if we disable indenting, this can only go one level deep
         const secondPhraseExpressions = this.getExpressionPhrase(child);
         const phraseArrayAsSentence = secondPhraseExpressions.reduce((acc, currentValue) =>
           `${acc} ${currentValue.expressionText}`, '');
@@ -841,7 +841,7 @@ export default class TemplateInstance extends Component {
           <div className="return-type row">
             <div className="col-3 bold align-right return-type__label">Return Type:</div>
             <div className="col-7 return-type__value">
-              { (validateReturnType === false || _.startCase(returnType) === _.startCase(validateReturnType)) &&
+              {(validateReturnType === false || this.isReturnTypeValid(returnType)) &&
                 <FontAwesome name="check" className="check" />}
               {_.startCase(returnType)}
             </div>
@@ -936,7 +936,6 @@ export default class TemplateInstance extends Component {
             }
           </div>
           <div className="card-element__buttons">
-            {/* TODO is there a way to extend conjunction group specifically for union? */}
             {showElement && !this.props.inBaseElements && renderIndentButtons(templateInstance)}
 
             <button

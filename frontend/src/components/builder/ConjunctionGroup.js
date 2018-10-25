@@ -30,11 +30,7 @@ export default class ConjunctionGroup extends Component {
 
   addChild = (template) => {
     const instance = createTemplateInstance(template);
-    if (this.props.instance.usedBy) { // It's a base element
-      this.props.addInstance(this.props.treeName, instance, this.getPath(), null, undefined, null, true);
-    } else {
-      this.props.addInstance(this.props.treeName, instance, this.getPath());
-    }
+    this.props.addInstance(this.props.treeName, instance, this.getPath());
   }
 
   // if root component, returns root artifact path, otherwise calls child's getPath function with artifact id
