@@ -7,7 +7,6 @@ import { UncontrolledTooltip } from 'reactstrap';
 import Validators from '../../utils/validators';
 import ConjunctionGroup from './ConjunctionGroup';
 
-// TODO this list exists in a lot of places now!
 const listTypes = [
   'list_of_observations',
   'list_of_conditions',
@@ -16,6 +15,9 @@ const listTypes = [
   'list_of_procedures',
   'list_of_allergy_intolerances',
   'list_of_encounters',
+  'list_of_booleans',
+  'list_of_system_quantitys',
+  'list_of_system_concepts',
   'list_of_any'
 ];
 
@@ -27,6 +29,9 @@ const singularTypes = [
   'procedure',
   'allergy_intolerance',
   'encounter',
+  'boolean',
+  'system_quantity',
+  'system_concept'
 ];
 
 export default class ListGroup extends Component {
@@ -142,9 +147,6 @@ export default class ListGroup extends Component {
     return currentReturnType;
   }
 
-  // TODO Confirm that a non-list type singular element gets a type of list_of_any (ex. Bool => list_of_any, system_quantity => list_of_any)
-  // TODO Confirm if we want a warning displayed if not a list type is in the list (ex. boolean, etc)
-
   addInstance = (name, template, path, baseElement) => {
     const baseElementList = _.cloneDeep(baseElement);
     const currentReturnType = baseElementList.returnType;
@@ -229,8 +231,7 @@ export default class ListGroup extends Component {
           codeData={this.props.codeData}
           validateCode={this.props.validateCode}
           resetCodeValidation={this.props.resetCodeValidation}
-          validateReturnType={true}
-          returnTypes={listTypes.concat(singularTypes)}
+          validateReturnType={false}
           options={'listOperations'}
           inBaseElements={true}
           disableElement={baseElementListUsed}
@@ -240,9 +241,9 @@ export default class ListGroup extends Component {
   }
 
   renderList = (s, i) => {
-    let name = s.parameters[0].value;
-    const duplicateNameIndex = this.props.instanceNames.findIndex(name =>
-      name.id !== s.uniqueId && name.name === s.parameters[0].value);
+    const name = s.parameters[0].value;
+    const duplicateNameIndex = this.props.instanceNames.findIndex(n =>
+      n.id !== s.uniqueId && n.name === s.parameters[0].value);
     const baseElementListUsed = this.isBaseElementListUsed(s);
     const disabledClass = baseElementListUsed ? 'disabled' : '';
     return (
@@ -271,6 +272,10 @@ export default class ListGroup extends Component {
               {duplicateNameIndex !== -1
                 && <div className='warning'>Warning: Name already in use. Choose another name.</div>}
                 <span>{s.returnType}</span>
+                {s.returnType === 'list_of_any' && s.name === 'Intersect' && s.childInstances.length > 0
+                  && <div className='warning'>
+                    Warning: Intersecting different types will always result in an empty list
+                  </div>}
             </div>
             :
             <div className="subpopulation-title">

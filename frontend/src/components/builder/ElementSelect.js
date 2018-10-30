@@ -43,6 +43,7 @@ const elementOptions = [
   { value: 'condition', label: 'Condition', vsacAuthRequired: true, template: 'GenericCondition_vsac' },
   { value: 'demographics', label: 'Demographics', vsacAuthRequired: false },
   { value: 'encounter', label: 'Encounter', vsacAuthRequired: true, template: 'GenericEncounter_vsac' },
+  { value: 'listOperations', label: 'List Operations', vsacAuthRequired: false },
   {
     value: 'medicationStatement',
     label: 'Medication Statement',
@@ -57,8 +58,7 @@ const elementOptions = [
   },
   { value: 'observation', label: 'Observation', vsacAuthRequired: true, template: 'GenericObservation_vsac' },
   { value: 'booleanParameter', label: 'Parameters', vsacAuthRequired: false },
-  { value: 'procedure', label: 'Procedure', vsacAuthRequired: true, template: 'GenericProcedure_vsac' },
-  { value: 'listOperations', label: 'List Operations', vsacAuthRequired: false }
+  { value: 'procedure', label: 'Procedure', vsacAuthRequired: true, template: 'GenericProcedure_vsac' }
 ];
 
 export default class ElementSelect extends Component {
@@ -268,8 +268,14 @@ export default class ElementSelect extends Component {
         .entries.map(({ id, name, type, parameters }) => {
           // Base elements display the parameter element_name entered by user, not the generic 'Base Element'.
           const label = type === 'baseElement' ? parameters[0].value : name;
-          return ({ value: id, label, type: selectedElement.label });
+          const uniqueId = type === 'baseElement' ? parameters[1].value.id : '';
+          return ({ value: id, label, type: selectedElement.label, uniqueId });
         });
+      if (selectedElement.value === 'baseElement') {
+        noAuthElementOptions = noAuthElementOptions.filter((element) => {
+          return element.uniqueId !== this.props.elementUniqueId;
+        });
+      }
     }
     const value = selectedElement && selectedElement.value;
 
@@ -345,4 +351,5 @@ ElementSelect.propTypes = {
   validateCode: PropTypes.func.isRequired,
   resetCodeValidation: PropTypes.func.isRequired,
   inBaseElements: PropTypes.bool.isRequired,
+  elementUniqueId: PropTypes.string,
 };

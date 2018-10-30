@@ -333,6 +333,7 @@ export default class ConjunctionGroup extends Component {
             resetCodeValidation={this.props.resetCodeValidation}
             inBaseElements={false}
             disableElement={this.props.disableElement}
+            elementUniqueId={this.props.instance.uniqueId}
           />
         </div>
       </div>
