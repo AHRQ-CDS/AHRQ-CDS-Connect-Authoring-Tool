@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import _ from 'lodash';
 import FontAwesome from 'react-fontawesome';
+import pluralize from 'pluralize';
 import { UncontrolledTooltip } from 'reactstrap';
 
 import Validators from '../../utils/validators';
@@ -16,7 +17,7 @@ const listTypes = [
   'list_of_allergy_intolerances',
   'list_of_encounters',
   'list_of_booleans',
-  'list_of_system_quantitys',
+  'list_of_system_quantities',
   'list_of_system_concepts',
   'list_of_any'
 ];
@@ -112,7 +113,7 @@ export default class ListGroup extends Component {
   promoteReturnTypeToList = (returnType) => {
     const isSingularElement = singularTypes.find(type => type === returnType);
     if (isSingularElement) {
-      return `list_of_${returnType}s`;
+      return `list_of_${pluralize.plural(returnType)}`;
     }
     return returnType;
   }

@@ -80,14 +80,9 @@ export default class TemplateInstance extends Component {
     }
   }
 
-  isReturnTypeValid = (currentReturnType) => {
-    const validReturnType = this.props.returnTypes || ['boolean'];
-    return validReturnType.includes(currentReturnType);
-  }
-
   hasWarnings = () => {
     const hasValidationError = this.validateElement() !== null;
-    const hasReturnError = !this.isReturnTypeValid(this.state.returnType) && this.props.validateReturnType !== false;
+    const hasReturnError = this.state.returnType !== 'boolean' && this.props.validateReturnType !== false;
     const hasModifierWarnings = !this.allModifiersValid();
     const hasNameWarning = this.hasDuplicateName();
 
@@ -794,20 +789,8 @@ export default class TemplateInstance extends Component {
     const { returnType } = this.state;
     const referenceParameter = templateInstance.parameters.find(param => param.type === 'reference');
     const validationError = this.validateElement();
-    let validReturnTypeForSentence = this.props.returnTypes || ['boolean']; // TODO update warning text?
-    let isAllLists = true;
-    validReturnTypeForSentence.forEach((type) => {
-      if (!type.includes('list_')) {
-        isAllLists = false;
-      }
-    });
-    if (validReturnTypeForSentence.length === 1) {
-      validReturnTypeForSentence = validReturnTypeForSentence[0];
-    } else if (isAllLists) {
-      validReturnTypeForSentence = 'list';
-    }
-    const returnError = (!(validateReturnType !== false) || this.isReturnTypeValid(returnType)) ? null : `Element must
-      have return type '${_.startCase(validReturnTypeForSentence)}'. Add expression(s) to change the return type.`;
+    const returnError = (!(validateReturnType !== false) || returnType === 'boolean') ? null
+      : "Element must have return type 'boolean'. Add expression(s) to change the return type.";
 
     return (
       <div className="card-element__body">
@@ -842,7 +825,7 @@ export default class TemplateInstance extends Component {
           <div className="return-type row">
             <div className="col-3 bold align-right return-type__label">Return Type:</div>
             <div className="col-7 return-type__value">
-              {(validateReturnType === false || this.isReturnTypeValid(returnType)) &&
+              { (validateReturnType === false || _.startCase(returnType) === 'Boolean') &&
                 <FontAwesome name="check" className="check" />}
               {_.startCase(returnType)}
             </div>
