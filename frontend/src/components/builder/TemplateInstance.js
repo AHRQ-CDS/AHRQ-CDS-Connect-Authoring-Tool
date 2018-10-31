@@ -728,7 +728,6 @@ export default class TemplateInstance extends Component {
     if (phraseTemplateInstanceIsListGroup) {
       phraseTemplateInstance.childInstances.forEach((child) => {
         // Base Element Lists are the only thing that use this. Children only go one level deep.
-        // TODO This will be an issue if we need to do And/Or and that can be nested.
         const secondPhraseExpressions = this.getExpressionPhrase(child);
         const phraseArrayAsSentence = secondPhraseExpressions.reduce((acc, currentValue) =>
           `${acc} ${currentValue.expressionText}`, '');

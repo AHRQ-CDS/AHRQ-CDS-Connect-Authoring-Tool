@@ -16,7 +16,8 @@ export default class ConjunctionGroup extends Component {
 
     const operationTemplates = this.props.templates.find(cat => cat.name === 'Operations').entries;
     this.types = operationTemplates.filter(template => template.conjunction);
-    this.listOperations = this.props.templates.find(cat => cat.name === 'List Operations').entries;
+    const listOperationTemplates = this.props.templates.find(cat => cat.name === 'List Operations') || [];
+    this.listOperations = listOperationTemplates.entries;
     this.allTypes = this.props.templates.reduce((prev, curr) => [...prev, ...curr.entries], []);
   }
 

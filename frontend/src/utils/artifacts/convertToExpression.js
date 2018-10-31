@@ -181,9 +181,17 @@ function addElementNames(expressionArray, elementNames) {
       expressionArray.push({ expressionText: 'and', isExpression: false });
     }
     if ((i === 0 && elementNames.length === 2) || i === elementNames.length - 1) {
-      expressionArray.push({ expressionText: nameObject.name, isExpression: true, tooltipText: nameObject.tooltipText });
+      expressionArray.push({
+        expressionText: nameObject.name,
+        isExpression: true,
+        tooltipText: nameObject.tooltipText
+      });
     } else {
-      expressionArray.push({ expressionText: nameObject.name, isExpression: true, tooltipText: nameObject.tooltipText });
+      expressionArray.push({
+        expressionText: nameObject.name,
+        isExpression: true,
+        tooltipText: nameObject.tooltipText
+      });
       expressionArray.push({ expressionText: ',', isExpression: false });
     }
   });
@@ -279,7 +287,15 @@ function getOrderedExpressionSentenceArrayForParameters(expressionArray, returnT
 }
 
 // Build the array for expression phrases by pushing each type of expression in a set order.
-function orderExpressionSentenceArray(expressionArray, type, valueSets, codes, returnType, otherParameters, elementNames) {
+function orderExpressionSentenceArray(
+  expressionArray,
+  type,
+  valueSets,
+  codes,
+  returnType,
+  otherParameters,
+  elementNames
+) {
   // Specific cases for Age Range, Gender, and Parameters since they do not follow the same pattern as VSAC elements.
   if (type === 'Age Range') {
     return getOrderedExpressionSentenceArrayForAgeRange(expressionArray, otherParameters);
@@ -440,8 +456,15 @@ export default function convertToExpression(
   }, []);
 
   // Get an order for the expressions that will make sense in a sentence
-  const orderedExpressionSentenceArray =
-    orderExpressionSentenceArray(expressionSentenceArray, type, valueSets, codes, returnType, otherParameters, elementNames);
+  const orderedExpressionSentenceArray = orderExpressionSentenceArray(
+    expressionSentenceArray,
+    type,
+    valueSets,
+    codes,
+    returnType,
+    otherParameters,
+    elementNames
+  );
 
   return orderedExpressionSentenceArray;
 }

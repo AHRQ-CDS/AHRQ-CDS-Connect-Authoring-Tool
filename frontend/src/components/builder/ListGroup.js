@@ -187,9 +187,7 @@ export default class ListGroup extends Component {
     this.props.updateInstanceModifiers(t, modifiers, path, index, currentReturnType);
   }
 
-  isBaseElementListUsed = (element) => {
-    return element.usedBy ? element.usedBy.length !== 0 : false;
-  }
+  isBaseElementListUsed = element => (element.usedBy ? element.usedBy.length !== 0 : false);
 
   renderListGroup = (s, i) => {
     const { instance, index } = this.props;

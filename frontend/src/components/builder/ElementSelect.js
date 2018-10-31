@@ -271,9 +271,7 @@ export default class ElementSelect extends Component {
           return ({ value: id, label, type: selectedElement.label, uniqueId });
         });
       if (selectedElement.value === 'baseElement') {
-        noAuthElementOptions = noAuthElementOptions.filter((element) => {
-          return element.uniqueId !== this.props.elementUniqueId;
-        });
+        noAuthElementOptions = noAuthElementOptions.filter(element => element.uniqueId !== this.props.elementUniqueId);
       }
     }
     const value = selectedElement && selectedElement.value;
