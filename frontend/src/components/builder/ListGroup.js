@@ -154,11 +154,11 @@ export default class ListGroup extends Component {
     let newReturnType;
     if (baseElement.childInstances.length === 0) {
       // New return type will just be whatever the new element's type is.
-      newReturnType = template.returnType;
+      newReturnType = this.promoteReturnTypeToList(template.returnType);
     } else {
-      // Need to check if incoming type with change the current return type.
-      const incomingReturnType = this.getReturnType(template.returnType, template.modifiers);
-      // Will never be a singular type when first adding
+      // Need to check if incoming type will change the current return type.
+      let incomingReturnType = this.getReturnType(template.returnType, template.modifiers);
+      incomingReturnType = this.promoteReturnTypeToList(incomingReturnType);
       newReturnType = this.checkReturnTypeCompatibility(currentReturnType, incomingReturnType);
     }
     this.props.addInstance(name, template, path, baseElement.uniqueId, undefined, null, newReturnType);
@@ -272,7 +272,7 @@ export default class ListGroup extends Component {
               />
               {duplicateNameIndex !== -1
                 && <div className='warning'>Warning: Name already in use. Choose another name.</div>}
-                <span>{s.returnType}</span>
+                <span>{_.startCase(s.returnType)}</span>
                 {s.returnType === 'list_of_any' && s.name === 'Intersect' && s.childInstances.length > 0
                   && <div className='warning'>
                     Warning: Intersecting different types will always result in an empty list

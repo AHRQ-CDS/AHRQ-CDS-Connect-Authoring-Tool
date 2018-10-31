@@ -65,7 +65,7 @@ export default class ElementSelect extends Component {
   constructor(props) {
     super(props);
 
-    this.internalCategories = this.generateInternalCategories();
+    this.internalCategories = this.generateInternalCategories(props);
 
     this.state = {
       categories: this.internalCategories.sort(sortAlphabeticallyByKey('name')),
@@ -83,9 +83,9 @@ export default class ElementSelect extends Component {
   }
 
   // Needed to correctly update this.props.categories after parameters were merged in Builder
-  componentWillReceiveProps() {
+  componentWillReceiveProps(nextProps) {
     // Updates the categories and their entries to have correct parameters
-    this.internalCategories = this.generateInternalCategories();
+    this.internalCategories = this.generateInternalCategories(nextProps);
     this.setState({
       categories: this.internalCategories.sort(sortAlphabeticallyByKey('name'))
     });
@@ -96,14 +96,14 @@ export default class ElementSelect extends Component {
     this.onSelectedCategoryChange(updatedCategory);
   }
 
-  generateInternalCategories = () => {
-    let categoriesCopy = _.cloneDeep(this.props.categories);
+  generateInternalCategories = (props) => {
+    let categoriesCopy = _.cloneDeep(props.categories);
     categoriesCopy = filterUnsuppressed(categoriesCopy);
     const paramsIndex = categoriesCopy.findIndex(cat => cat.name === 'Parameters');
     const baseElementsIndex = categoriesCopy.findIndex(cat => cat.name === 'Base Elements');
 
-    if (this.props.baseElements && this.props.baseElements.length && categoriesCopy[baseElementsIndex]) {
-      categoriesCopy[baseElementsIndex].entries = this.props.baseElements.map((e) => {
+    if (props.baseElements && props.baseElements.length && categoriesCopy[baseElementsIndex]) {
+      categoriesCopy[baseElementsIndex].entries = props.baseElements.map((e) => {
         const returnType = _.isEmpty(e.modifiers) ? e.returnType : _.last(e.modifiers).returnType;
         return ({
           id: _.uniqueId(e.id),
@@ -124,7 +124,7 @@ export default class ElementSelect extends Component {
         });
       });
     }
-    if (this.props.parameters.length) {
+    if (props.parameters.length) {
       let parametersCategory;
       if (paramsIndex >= 0) {
         [parametersCategory] = categoriesCopy.splice(paramsIndex, 1);
@@ -133,7 +133,7 @@ export default class ElementSelect extends Component {
       }
 
       // Only include boolean parameters. Don't include blank parameters to add to workspace.
-      parametersCategory.entries = this.props.parameters.map(param => ({
+      parametersCategory.entries = props.parameters.map(param => ({
         id: param.name,
         name: param.name,
         type: 'parameter',
@@ -146,7 +146,7 @@ export default class ElementSelect extends Component {
       }));
 
       categoriesCopy.push(parametersCategory);
-    } else if (this.props.parameters.length === 0 && paramsIndex >= 0) {
+    } else if (props.parameters.length === 0 && paramsIndex >= 0) {
       // No parameters have been made. Restrict creating new parameters within the workspace.
       categoriesCopy[paramsIndex].entries = [];
     } else {
@@ -262,7 +262,6 @@ export default class ElementSelect extends Component {
     });
     let noAuthElementOptions;
     if (selectedElement && !selectedElement.vsacAuthRequired) {
-      // TODO element name is one character off here --- why???
       noAuthElementOptions = this.state.categories
         .find(cat => cat.name === selectedElement.label)
         .entries.map(({ id, name, type, parameters }) => {
