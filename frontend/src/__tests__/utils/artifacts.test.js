@@ -419,3 +419,49 @@ describe('Demographics elements support special case phrases', () => {
     expect(expressionPhrase).toEqual(expectedOutput);
   });
 });
+
+test('Base Element Lists create a phrase with individual element\'s phrases in a tooltip', () => {
+  const modifiers = [
+    {
+      id: 'BooleanExists',
+      name: 'Exists',
+      inputTypes: elementLists,
+      returnType: 'boolean',
+      cqlTemplate: 'BaseModifier',
+      cqlLibraryFunction: 'exists'
+    }
+  ];
+
+  const name = 'Union';
+  const valueSets = [];
+  const codes = [];
+  const returnType = 'boolean';
+  const otherParameters = [];
+  const elementNamesInPhrase = [
+    { name: 'Test Name', tooltipText: 'Phrase for Test Name' },
+    { name: 'Other', tooltipText: 'Another phrase' }
+  ];
+
+  const expressionPhrase = convertToExpression(
+    modifiers,
+    name,
+    valueSets,
+    codes,
+    returnType,
+    otherParameters,
+    elementNamesInPhrase
+  );
+
+  const expectedOutput = [
+    { expressionText: 'There', isExpression: false },
+    { expressionText: 'exists', isExpression: true },
+    { expressionText: 'a', isExpression: false },
+    { expressionText: 'union', isExpression: false, isType: true },
+    { expressionText: 'of', isExpression: false },
+    { expressionText: 'Test Name', isExpression: true, tooltipText: 'Phrase for Test Name' },
+    { expressionText: 'and', isExpression: false },
+    { expressionText: 'Other', isExpression: true, tooltipText: 'Another phrase' }
+  ];
+
+  expect(expressionPhrase).toEqual(expectedOutput);
+});

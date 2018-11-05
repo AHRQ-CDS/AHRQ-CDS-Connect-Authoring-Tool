@@ -1,15 +1,17 @@
 import { createTemplateInstance, fullRenderComponentOnBody } from '../../../utils/test_helpers';
-import { instanceTree, genericInstance, genericBaseElementInstance,
+import { instanceTree, genericInstance, genericInstanceWithModifiers, genericBaseElementInstance,
   genericBaseElementInstanceWithModifiers, genericBaseElementUseInstance } from '../../../utils/test_fixtures';
 
 import TemplateInstance from '../../../components/builder/TemplateInstance';
 
 const originalInstance = instanceTree.childInstances[0];
 const genericTemplateInstance = createTemplateInstance(genericInstance);
+const genericTemplateInstanceWithModifiers = createTemplateInstance(genericInstanceWithModifiers);
 const genericBaseElementUseTemplateInstance = createTemplateInstance(genericBaseElementUseInstance);
 const genericBaseElementTemplateInstance = createTemplateInstance(genericBaseElementInstance);
 const genericBaseElementTemplateInstanceWithModifers = createTemplateInstance(genericBaseElementInstanceWithModifiers);
 let component;
+let listComponent;
 
 const props = {
   valueSets: [],
@@ -301,5 +303,47 @@ describe('Base Element uses', () => {
 
     linkButton.simulate('click');
     expect(component.props().scrollToBaseElement).toBeCalledWith('originalBaseElementId');
+  });
+});
+
+describe('Base Element List instance\'s have child instances inside which', () => {
+  beforeEach(() => {
+    const baseElementProps = { ...props, renderIndentButtons: jest.fn(), deleteInstance: jest.fn() };
+    baseElementProps.templateInstance = genericTemplateInstanceWithModifiers;
+    baseElementProps.inBaseElements = true; // Used to determine indent/outdent
+    baseElementProps.disableElement = true; // Used to determine modifier changes and ability to delete. Changing to False should break last 3 tests.
+    listComponent = fullRenderComponentOnBody(TemplateInstance, { ...baseElementProps });
+  });
+
+  test('cannot be indented/outdented ever', () => {
+    expect(listComponent.props().renderIndentButtons).not.toBeCalled();
+  });
+
+  // Similar test above also tests actually clicking the remove button
+  test('cannot remove modifiers that change return type when in use', () => {
+    // First modifier can be removed
+    let canModifierBeRemoved = listComponent.instance().canModifierBeRemoved();
+    expect(canModifierBeRemoved).toBeTruthy();
+
+    // Second modifier cannot be removed
+    listComponent.props().templateInstance.modifiers.pop();
+    listComponent.update();
+    canModifierBeRemoved = listComponent.instance().canModifierBeRemoved();
+    expect(canModifierBeRemoved).toBeFalsy();
+  });
+
+  // Similar test above shows that correct modifiers are displayed when button clicked
+  // The same logic is used to determine notification display and modifiers available
+  test('cannot add modifiers that change return type when in use', () => {
+    const addExpressionButton = listComponent.find('.modifier__addbutton');
+    addExpressionButton.simulate('click');
+    expect(listComponent.find('.notification')).toHaveLength(1);
+  });
+
+  // Similar test above tests the logic of clicking delete button
+  test('cannot be deleted when list in use', () => {
+    const deleteSpy = jest.spyOn(listComponent.props(), 'deleteInstance');
+    listComponent.instance().deleteInstance();
+    expect(deleteSpy).not.toBeCalled();
   });
 });

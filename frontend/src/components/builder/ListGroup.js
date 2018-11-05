@@ -180,6 +180,7 @@ export default class ListGroup extends Component {
 
   updateInstanceModifiers = (t, modifiers, path, index) => {
     const baseElementList = _.cloneDeep(this.props.baseElements[index]);
+    if (!baseElementList) return;
 
     // Temporarily apply the modifiers that will be updated. Base Element Lists can only be one child deep.
     baseElementList.childInstances[path.slice(-1)].modifiers = modifiers;
