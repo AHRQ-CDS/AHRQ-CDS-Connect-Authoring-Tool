@@ -349,4 +349,5 @@ ElementSelect.propTypes = {
   resetCodeValidation: PropTypes.func.isRequired,
   inBaseElements: PropTypes.bool.isRequired,
   elementUniqueId: PropTypes.string,
+  disableElement: PropTypes.bool,
 };

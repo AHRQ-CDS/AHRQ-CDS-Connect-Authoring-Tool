@@ -1001,4 +1001,6 @@ TemplateInstance.propTypes = {
   codeData: PropTypes.object,
   validateCode: PropTypes.func.isRequired,
   resetCodeValidation: PropTypes.func.isRequired,
+  disableElement: PropTypes.bool,
+  inBaseElements: PropTypes.bool,
 };

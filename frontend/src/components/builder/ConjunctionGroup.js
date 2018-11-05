@@ -237,7 +237,6 @@ export default class ConjunctionGroup extends Component {
               vsacDetailsCodes={this.props.vsacDetailsCodes}
               vsacFHIRCredentials={this.props.vsacFHIRCredentials}
               validateReturnType={this.props.validateReturnType}
-              returnType={this.props.returnType}
               isValidatingCode={this.props.isValidatingCode}
               isValidCode={this.props.isValidCode}
               codeData={this.props.codeData}
@@ -286,7 +285,6 @@ export default class ConjunctionGroup extends Component {
           vsacDetailsCodes={this.props.vsacDetailsCodes}
           vsacFHIRCredentials={this.props.vsacFHIRCredentials}
           validateReturnType={this.props.validateReturnType}
-          returnTypes={this.props.returnTypes}
           isValidatingCode={this.props.isValidatingCode}
           isValidCode={this.props.isValidCode}
           codeData={this.props.codeData}
