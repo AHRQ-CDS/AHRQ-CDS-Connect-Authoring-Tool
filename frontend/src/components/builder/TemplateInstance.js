@@ -867,11 +867,9 @@ export default class TemplateInstance extends Component {
       let elementType = templateInstance.name;
       if (referenceParameter) {
         // Element type to display in header will be the reference type for Base Elements.
-        // TODO is there a way to fix the referenceParmater's type when changing the type of the list?
         const baseElementReferenced = this.props.baseElements.find(element =>
           element.uniqueId === referenceParameter.value.id);
         elementType = baseElementReferenced.name;
-        // elementType = referenceParameter.value ? referenceParameter.value.type : 'Base Element';
       }
 
       return (

@@ -932,6 +932,72 @@ export default class UserGuide extends Component {
                   </li>
                 </ol>
 
+                <p>
+                  Base Elements can also be a list of elements. Similar to Logic Elements, Lists combine multiple
+                  elements into one group, which can be combined with a Union or an Intersection. Lists can be added to
+                  Base Elements by choosing "List Operations" from the Element Picker.
+                </p>
+                <p>
+                  <p>
+                    <img
+                      alt="Base Element in Inclusions"
+                      src={screenshotUrl('List_Group')}
+                      className="img-fluid img-thumbnail rounded mx-auto d-block" />
+                  </p>
+                </p>
+
+                <ol>
+                  <li>
+                    The name of the overall List Group.
+                  </li>
+                  <li>
+                    The return type of the overall List Group. This will update automatically as additional elements are
+                    added to the list.
+                  </li>
+                  <li>
+                    An element in the List Group. Elements can be added to the group using the Element Picker, similarly
+                    to how Logic Groups work. Expressions can be added to each element.
+                  </li>
+                  <li>
+                    Between every element in a List Group, there is a logic type dropdown. The options are "Union" or "Intersect".
+                    The dropdown can be changed at any point while building the List Group. Note that within any particular
+                    List Group, only one option can be chosen, similar to conjunction types in Logic Groups.
+                  </li>
+                </ol>
+
+                <p>
+                  Like individual Base Elements, List Groups can be used within Inclusions, Exclusions, or Subpopulations.
+                  They are added using the Base Elements option in the Element Picker. Once a Base Element List Group is used,
+                  some functionality of the origianl List is disabled.
+                </p>
+
+                <p>
+                  <img
+                    alt="Base Element in Inclusions"
+                    src={screenshotUrl('List_Group_in_Use')}
+                    className="img-fluid img-thumbnail rounded mx-auto d-block" />
+                </p>
+                <ol>
+                  <li>
+                    The List Group cannot be deleted while it is in use.
+                  </li>
+                  <li>
+                    Elements within the List Group cannot be deleted while the list is in use.
+                  </li>
+                  <li>
+                    Applied expressions on elements within the List Group cannot be removed if doing so would change the
+                    element's return type.
+                  </li>
+                  <li>
+                    Expressions can be added to elements while the List Group is used, as long as the return type of the
+                    element does not change. Expressions that would change the return type are not available.
+                  </li>
+                  <li>
+                    New elements cannot be added to the List Group while it is in use.
+                  </li>
+                </ol>
+
+
               </div>
 
               <div className="h3-wrapper">

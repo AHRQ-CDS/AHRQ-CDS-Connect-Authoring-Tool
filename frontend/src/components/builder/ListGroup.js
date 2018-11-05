@@ -195,6 +195,15 @@ export default class ListGroup extends Component {
     const baseElementListUsed = this.isBaseElementListUsed(s);
     return (
       <div className="card-element__body">
+        <div>
+          <div className="return-type row">
+            <div className="col-3 bold align-right return-type__label">Return Type:</div>
+            <div className="col-7 return-type__value">
+              <FontAwesome name="check" className="check" />
+              {_.startCase(s.returnType)}
+            </div>
+          </div>
+        </div>
         <ConjunctionGroup
           root={true}
           treeName={this.props.treeName}
@@ -271,7 +280,6 @@ export default class ListGroup extends Component {
               />
               {duplicateNameIndex !== -1
                 && <div className='warning'>Warning: Name already in use. Choose another name.</div>}
-                <span>{_.startCase(s.returnType)}</span>
                 {s.returnType === 'list_of_any' && s.name === 'Intersect' && s.childInstances.length > 0
                   && <div className='warning'>
                     Warning: Intersecting different types will always result in an empty list

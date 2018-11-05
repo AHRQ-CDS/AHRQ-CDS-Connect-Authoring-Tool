@@ -138,11 +138,6 @@ export class Builder extends Component {
     if (editingConjunctionType) {
       target.id = editedParams.id;
       target.name = editedParams.name;
-      if (target.usedBy) {
-        target.usedBy.forEach((uniqueId) => {
-          // TODO wanted to add in to update reference.value.type, but not sure how
-        });
-      }
     } else {
       // If only one parameter is being updated, it comes in as a single object. Put it into an array of objects.
       if (!Array.isArray(editedParams)) {
