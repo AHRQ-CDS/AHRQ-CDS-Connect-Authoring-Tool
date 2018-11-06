@@ -101,7 +101,7 @@ define function MostRecent(ObsList List<Observation>):
  * @returns {System.Quantity} the Observation's value as a quantity, or null if there is no quantity value
  */
 define function QuantityValue(Obs Observation):
-  NullSafeToQuantity(Obs.valueQuantity)
+  NullSafeToQuantity(Obs.value as FHIR.Quantity)
 
 /**
  * Extracts the CodeableConcept value from an Observation, returning it as a CQL Concept
@@ -109,7 +109,7 @@ define function QuantityValue(Obs Observation):
  * @returns {System.Concept} the Observation's value as a concept, or null if there is no CodeabeConcept value
  */
 define function ConceptValue(Obs Observation):
-  NullSafeToConcept(Obs.valueCodeableConcept)
+  NullSafeToConcept(Obs.value as FHIR.CodeableConcept)
 
 /**
  * Finds the first non-null meaningful date that can be associated with this Observation.  This will look through the
@@ -128,7 +128,7 @@ define function FindDate(Obs Observation):
  * @returns {System.Quantity} the quantity with the highest value from the list, or null if null was passed in
  */
 define function HighestObservation(ObsList List<Observation>):
-  Max(ObsList O return NullSafeToQuantity(O.valueQuantity))
+  Max(ObsList O return NullSafeToQuantity(O.value as FHIR.Quantity))
 
 
 // -------------------------------------------------- CONDITIONS -------------------------------------------------------

@@ -19,8 +19,8 @@ const templateMap = loadTemplates(templatePath);
 const modifierMap = loadTemplates(modifierPath);
 // Each library will be included. Aliases are optional.
 const includeLibraries = [
-  { name: 'FHIRHelpers', version: '1.0.2', alias: 'FHIRHelpers' },
-  { name: 'CDS_Connect_Commons_for_FHIRv102', version: '1.3.0', alias: 'C3F' },
+  { name: 'FHIRHelpers-3.0.0', version: '3.0.0', alias: 'FHIRHelpers' },
+  { name: 'CDS_Connect_Commons_for_FHIRv300', version: '3.0.0', alias: 'C3F' },
   { name: 'CDS_Connect_Conversions', version: '1', alias: 'Convert' }
 ];
 
@@ -181,7 +181,7 @@ class CqlArtifact {
   constructor(artifact) {
     this.name = slug(artifact.name ? artifact.name : 'untitled');
     this.version = artifact.version ? artifact.version : 1;
-    this.dataModel = artifact.dataModel ? artifact.dataModel : { name: 'FHIR', version: '1.0.2' };
+    this.dataModel = artifact.dataModel ? artifact.dataModel : { name: 'FHIR', version: '3.0.0' };
     this.includeLibraries = artifact.includeLibraries ? artifact.includeLibraries : includeLibraries;
     this.context = artifact.context ? artifact.context : 'Patient';
     this.inclusions = artifact.expTreeInclude;
