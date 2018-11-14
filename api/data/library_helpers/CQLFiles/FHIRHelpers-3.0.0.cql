@@ -1,4 +1,4 @@
-library FHIRHelpers version '3.0.0'
+library FHIRHelpers_for_FHIRv300 version '3.0.0'
 
 using FHIR version '3.0.0'
 

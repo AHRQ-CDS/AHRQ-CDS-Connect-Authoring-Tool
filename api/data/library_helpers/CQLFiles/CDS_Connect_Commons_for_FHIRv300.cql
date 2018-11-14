@@ -3,7 +3,7 @@ library CDS_Connect_Commons_for_FHIRv300 version '1.0.0'
 using FHIR version '3.0.0'
 
 // Include the FHIRHelpers library for simplifying interacton w/ the FHIR data model
-include FHIRHelpers version '3.0.0' called FHIRHelpers
+include FHIRHelpers_for_FHIRv300 version '3.0.0' called FHIRHelpers
 
 // -------------------------------------------------- GENERAL ---------------------------------------------------------
 
