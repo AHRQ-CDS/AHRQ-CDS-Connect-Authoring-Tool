@@ -67,7 +67,8 @@ define function Verified(ObsList List<Observation>):
  * @returns {List<Observation>} a list of Observations with the required unit, or null if null was passed in
  */
 define function WithUnit(ObsList List<Observation>, Unit String):
-  ObsList O where O.valueQuantity.unit.value = Unit or O.valueQuantity.code.value = Unit
+  ObsList O
+    where (O.value as FHIR.Quantity).unit.value = Unit or (O.value as FHIR.Quantity).code.value = Unit
 
 /**
  * Observations with an effective or issued date in the specified "look back" period.  For example, LDL-C Tests in the
@@ -80,8 +81,8 @@ define function WithUnit(ObsList List<Observation>, Unit String):
 define function ObservationLookBack(ObsList List<Observation>, LookBack System.Quantity):
   ObsList O
     let LookBackInterval: Interval[Now() - LookBack, Now()]
-    where O.effectiveDateTime.value in LookBackInterval
-      or NullSafeToInterval(O.effectivePeriod) overlaps LookBackInterval
+    where (O.effective as FHIR.dateTime).value in LookBackInterval
+      or NullSafeToInterval(O.effective as FHIR.Period) overlaps LookBackInterval
       or O.issued in LookBackInterval
 
 /**
@@ -93,7 +94,7 @@ define function ObservationLookBack(ObsList List<Observation>, LookBack System.Q
  * @returns {Observation} the most recent Observation from the list, or null if null was passed in
  */
 define function MostRecent(ObsList List<Observation>):
-  Last(ObsList O sort by Coalesce(effectiveDateTime.value, effectivePeriod."end".value, effectivePeriod."start".value, issued.value))
+  Last(ObsList O sort by Coalesce((effective as FHIR.dateTime).value, (effective as FHIR.Period)."end".value, (effective as FHIR.Period)."start".value, issued.value))
 
 /**
  * Extracts the quantity value from an Observation, returning it as a CQL Quantity
@@ -118,7 +119,7 @@ define function ConceptValue(Obs Observation):
  * @returns {System.DateTime} the first non-null meaningful date, or null if non is found
  */
 define function FindDate(Obs Observation):
-  Coalesce(Obs.effectiveDateTime.value, Obs.effectivePeriod."end".value, Obs.effectivePeriod."start".value, Obs.issued.value)
+  Coalesce((Obs.effective as FHIR.dateTime).value, (Obs.effective as FHIR.Period)."end".value, (Obs.effective as FHIR.Period)."start".value, Obs.issued.value)
 
 // TODO: Confirm that this works as expected
 /**
@@ -162,12 +163,12 @@ define function Confirmed(CondList List<Condition>):
 define function ActiveCondition(CondList List<Condition>):
   CondList C
     where C.clinicalStatus.value = 'active'
-      and C.abatementDateTime is null
-      and C.abatementAge is null
-      and C.abatementBoolean.value is not true
-      and C.abatementPeriod is null
-      and C.abatementRange is null
-      and C.abatementString is null
+      and (C.abatement as FHIR.dateTime) is null
+      and (C.abatement as FHIR.Age) is null
+      and (C.abatement as FHIR.boolean).value is not true
+      and (C.abatement as FHIR.Period) is null
+      and (C.abatement as FHIR.Range) is null
+      and (C.abatement as FHIR.string) is null
 
 /**
  * Conditions that are active or recurring. In FHIR STU3, this is reflected by clinicalStatus: 'active' or 'relapse'.
@@ -191,9 +192,9 @@ define function ActiveOrRecurring(CondList List<Condition>):
 define function ConditionLookBack(CondList List<Condition>, LookBack System.Quantity):
   CondList C
     let LookBackInterval: Interval[Now() - LookBack, Now()]
-    where C.onsetDateTime.value in LookBackInterval
-      or NullSafeToInterval(C.onsetPeriod) overlaps LookBackInterval
-      or C.dateRecorded in LookBackInterval 
+    where (C.onset as FHIR.dateTime).value in LookBackInterval
+      or NullSafeToInterval(C.onset as FHIR.Period) overlaps LookBackInterval
+      or C.assertedDate in LookBackInterval 
 
 /**
  * The most recent condition.  For each Condition, this algorithm will use the Coalesce function, which uses the
@@ -203,7 +204,7 @@ define function ConditionLookBack(CondList List<Condition>, LookBack System.Quan
  * @returns {Condition} the most recent Condition from the list, or null if null was passed in
  */
 define function MostRecentCondition(CondList List<Condition>):
-  Last(CondList C sort by Coalesce(onsetDateTime.value, onsetPeriod."end".value, onsetPeriod."start".value, assertedDate.value))
+  Last(CondList C sort by Coalesce((onset as FHIR.dateTime).value, (onset as FHIR.Period)."end".value, (onset as FHIR.Period)."start".value, assertedDate.value))
 
  // -------------------------------------------------- PROCEDURES ------------------------------------------------------
 
@@ -252,8 +253,8 @@ define function ProcedureInProgress(ProcList List<Procedure>):
 define function ProcedureLookBack(ProcList List<Procedure>, LookBack System.Quantity):
   ProcList P
     let LookBackInterval: Interval[Now() - LookBack, Now()]
-    where P.performedDateTime.value in LookBackInterval
-      or NullSafeToInterval(P.performedPeriod) overlaps LookBackInterval
+    where (P.performed as FHIR.dateTime).value in LookBackInterval
+      or NullSafeToInterval(P.performed as FHIR.Period) overlaps LookBackInterval
 
 /**
  * The most recent procedure.  For each Procedure, this algorithm will use the Coalesce function, which returns the
@@ -263,7 +264,7 @@ define function ProcedureLookBack(ProcList List<Procedure>, LookBack System.Quan
  * @returns {Procedure} the most recent Procedure from the list, or null if null was passed in
  */
 define function MostRecentProcedure(ProcList List<Procedure>):
-  Last(ProcList P sort by Coalesce(performedDateTime.value, performedPeriod."end".value, performedPeriod."start".value))
+  Last(ProcList P sort by Coalesce((performed as FHIR.dateTime).value, (performed as FHIR.Period)."end".value, (performed as FHIR.Period)."start".value))
 
 // -------------------------------------------------- MEDICATIONS ------------------------------------------------------
 
@@ -274,7 +275,7 @@ define function MostRecentProcedure(ProcList List<Procedure>):
  * @returns {List<MedicationStatement>} a list of MedicationStatement matching the concept, or null if null was passed in
  */
 define function MedicationStatementsByConcept(Koncept System.Concept):
-  [MedicationStatement] M where NullSafeToConcept(M.medicationCodeableConcept) ~ Koncept
+  [MedicationStatement] M where NullSafeToConcept(M.medication as FHIR.CodeableConcept) ~ Koncept
 
 /**
  * Filters MedicationRequests by a concept rather than by a ValueSet.  In CQL 1.3, this will be built into the retrieve,
@@ -283,7 +284,7 @@ define function MedicationStatementsByConcept(Koncept System.Concept):
  * @returns {List<MedicationRequest>} a list of MedicationRequests matching the concept, or null if null was passed in
  */
 define function MedicationRequestsByConcept(Koncept System.Concept):
-  [MedicationRequest] M where NullSafeToConcept(M.medicationCodeableConcept) ~ Koncept
+  [MedicationRequest] M where NullSafeToConcept(M.medication as FHIR.CodeableConcept) ~ Koncept
 
 /**
  * Medications that are active, according to a statement, but not necessarily verified via a prescription.  For example,
@@ -296,14 +297,14 @@ define function MedicationRequestsByConcept(Koncept System.Concept):
  */
 define function ActiveMedicationStatement(MedList List<MedicationStatement>):
   MedList M
-    let EffectivePeriod: NullSafeToInterval(M.effectivePeriod)
+    let EffectivePeriod: NullSafeToInterval(M.effective as FHIR.Period)
     where M.status.value = 'active'
-      and M.taken.value is true
+      and M.taken.value = 'y'
       and (end of EffectivePeriod is null or end of EffectivePeriod after Now())
 
 /**
 * Medications that are active, according to a prescription.  In FHIR STU3, this is reflected by MedicationRequest
-* with status 'active' and no dateEnded.  There is currently an open question in the FHIR chat to determine if this
+* with status 'active'.  There is currently an open question in the FHIR chat to determine if this
 * is the right approach.
 * TODO: Revisit based on outcome of FHIR chat.
 * TODO: Rename to Active once the execution engine supports overloaded functions.
@@ -313,9 +314,7 @@ define function ActiveMedicationStatement(MedList List<MedicationStatement>):
 * @returns {List<MedicationRequest>} a list of active medication requests, or null if null was passed in
 */
 define function ActiveMedicationRequest(MedList List<MedicationRequest>):
-  MedList M
-    where M.status.value = 'active'
-      and M.period.end.value is null
+  MedList M where M.status.value = 'active'
       
 /**
 * Medications that are active or completed, according to a prescription.  In FHIR STU3, this is reflected by MedicationRequest
@@ -340,8 +339,9 @@ define function ActiveOrCompletedMedicationRequest(MedList List<MedicationReques
 define function MedicationRequestLookBack(MedList List<MedicationRequest>, LookBack System.Quantity):
 MedList M
   let LookBackInterval: Interval[Now() - LookBack, Now()]
-  where M.recorded.value in LookBackInterval
-    or M.period.end.value in LookBackInterval
+  where M.authoredOn.value in LookBackInterval
+    // TODO: Find suitable replacement for dateEnded in STU3
+    //or M.dateEnded.value in LookBackInterval
 
 /**
 * Medication Statements that are issued in the specified "look back" period.
@@ -354,8 +354,8 @@ MedList M
 define function MedicationStatementLookBack(MedList List<MedicationStatement>, LookBack System.Quantity):
 MedList M
   let LookBackInterval: Interval[Now() - LookBack, Now()]
-  where M.effectiveDateTime.value in LookBackInterval
-    or NullSafeToInterval(M.effectivePeriod) overlaps LookBackInterval
+  where (M.effective as FHIR.dateTime).value in LookBackInterval
+    or NullSafeToInterval(M.effective as FHIR.Period) overlaps LookBackInterval
 
 // -------------------------------------------------- ENCOUNTERS ------------------------------------------------------
 
