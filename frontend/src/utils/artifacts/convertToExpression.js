@@ -18,6 +18,9 @@ function getArticle(word) {
   const vowels = ['a', 'e', 'i', 'o', 'u', 'A', 'E', 'I', 'O', 'U'];
   // If the first letter is in vowels array, the word starts with a vowel.
   if (vowels.findIndex(vowel => vowel === word.charAt(0)) !== -1) {
+    if (word.toLowerCase().startsWith('union')) {
+      return 'a';
+    }
     return 'an';
   }
   return 'a';
@@ -172,6 +175,30 @@ function addVSandCodeText(expressionArray, valueSets, codes) {
   return expressionArray;
 }
 
+function addElementNames(expressionArray, elementNames) {
+  elementNames.forEach((nameObject, i) => {
+    if (i === elementNames.length - 1 && i !== 0) {
+      expressionArray.push({ expressionText: 'and', isExpression: false });
+    }
+    if ((i === 0 && elementNames.length === 2) || i === elementNames.length - 1) {
+      expressionArray.push({
+        expressionText: nameObject.name,
+        isExpression: true,
+        tooltipText: nameObject.tooltipText
+      });
+    } else {
+      expressionArray.push({
+        expressionText: nameObject.name,
+        isExpression: true,
+        tooltipText: nameObject.tooltipText
+      });
+      expressionArray.push({ expressionText: ',', isExpression: false });
+    }
+  });
+
+  return expressionArray;
+}
+
 function addExpressionText(expressionArray, expression) {
   // Add any text needed ahead of the modifier
   if (expression.leadingText) {
@@ -260,7 +287,15 @@ function getOrderedExpressionSentenceArrayForParameters(expressionArray, returnT
 }
 
 // Build the array for expression phrases by pushing each type of expression in a set order.
-function orderExpressionSentenceArray(expressionArray, type, valueSets, codes, returnType, otherParameters) {
+function orderExpressionSentenceArray(
+  expressionArray,
+  type,
+  valueSets,
+  codes,
+  returnType,
+  otherParameters,
+  elementNames
+) {
   // Specific cases for Age Range, Gender, and Parameters since they do not follow the same pattern as VSAC elements.
   if (type === 'Age Range') {
     return getOrderedExpressionSentenceArrayForAgeRange(expressionArray, otherParameters);
@@ -350,11 +385,15 @@ function orderExpressionSentenceArray(expressionArray, type, valueSets, codes, r
   }
 
   // Handle element types (ex. observation, procedure)
-  const elementText = _.lowerCase(type);
+  let elementText = _.lowerCase(type);
+  if (type === 'Intersect') {
+    elementText = 'intersection';
+  }
   const elementArticle = getArticle(elementText);
   if (hasStarted) {
     if (returnsPlural) {
-      orderedExpressionArray.push({ expressionText: `${elementText}s`, isExpression: false, isType: true });
+      if (type !== 'Intersect' && type !== 'Union') elementText = `${elementText}s`;
+      orderedExpressionArray.push({ expressionText: elementText, isExpression: false, isType: true });
     } else if (descriptorExpression || listExpressions.length > 0) {
       orderedExpressionArray.push({ expressionText: elementText, isExpression: false, isType: true });
     } else {
@@ -362,8 +401,13 @@ function orderExpressionSentenceArray(expressionArray, type, valueSets, codes, r
       orderedExpressionArray.push({ expressionText: elementText, isExpression: false, isType: true });
     }
   } else if (returnsPlural) {
+    if (type !== 'Intersect' && type !== 'Union') {
+      elementText = `${_.capitalize(elementText)}s`;
+    } else {
+      elementText = `${_.capitalize(elementText)}`;
+    }
     orderedExpressionArray.push({
-      expressionText: `${_.capitalize(elementText)}s`,
+      expressionText: elementText,
       isExpression: false,
       isType: true
     });
@@ -373,9 +417,13 @@ function orderExpressionSentenceArray(expressionArray, type, valueSets, codes, r
     orderedExpressionArray.push({ expressionText: elementText, isExpression: false, isType: true });
     hasStarted = true;
   }
+  if (type === 'Intersect' || type === 'Union') {
+    orderedExpressionArray.push({ expressionText: 'of', isExpression: false });
+  }
 
   // Handle value sets and codes
   orderedExpressionArray = addVSandCodeText(orderedExpressionArray, valueSets, codes);
+  orderedExpressionArray = addElementNames(orderedExpressionArray, elementNames);
 
   // Handle post-lists (with unit)
   if (postListExpressions) {
@@ -396,7 +444,8 @@ export default function convertToExpression(
   valueSets,
   codes,
   returnType,
-  otherParameters = []
+  otherParameters = [],
+  elementNames = []
 ) {
   const expressionSentenceArray = expressionsArray.reduce((accumulator, currentExpression) => {
     const expressionSentenceValue = getExpressionSentenceValue(currentExpression);
@@ -407,8 +456,15 @@ export default function convertToExpression(
   }, []);
 
   // Get an order for the expressions that will make sense in a sentence
-  const orderedExpressionSentenceArray =
-    orderExpressionSentenceArray(expressionSentenceArray, type, valueSets, codes, returnType, otherParameters);
+  const orderedExpressionSentenceArray = orderExpressionSentenceArray(
+    expressionSentenceArray,
+    type,
+    valueSets,
+    codes,
+    returnType,
+    otherParameters,
+    elementNames
+  );
 
   return orderedExpressionSentenceArray;
 }

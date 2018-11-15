@@ -108,12 +108,17 @@ export class Builder extends Component {
     }));
   }
 
-  addInstance = (treeName, instance, parentPath, uid = null, currentIndex, incomingTree) => {
+  addInstance = (treeName, instance, parentPath, uid = null, currentIndex, incomingTree, updatedReturnType = null) => {
     const treeData = this.findTree(treeName, uid);
     const tree = incomingTree || treeData.tree;
     const target = findValueAtPath(tree, parentPath).childInstances;
     const index = currentIndex !== undefined ? currentIndex : target.length;
     target.splice(index, 0, instance); // Insert instance at specific instance - only used for indenting now
+
+    if (updatedReturnType) {
+      tree.returnType = updatedReturnType;
+    }
+
     localTree = tree;
     this.setTree(treeName, treeData, tree);
   }
@@ -156,12 +161,16 @@ export class Builder extends Component {
     this.setTree(treeName, treeData, tree);
   }
 
-  deleteInstance = (treeName, path, elementsToAdd, uid = null) => {
+  deleteInstance = (treeName, path, elementsToAdd, uid = null, updatedReturnType = null) => {
     const treeData = this.findTree(treeName, uid);
     const tree = treeData.tree;
     const index = path.slice(-1);
     const target = findValueAtPath(tree, path.slice(0, path.length - 2));
     target.splice(index, 1); // remove item at index position
+
+    if (updatedReturnType) {
+      tree.returnType = updatedReturnType;
+    }
 
     this.setTree(treeName, treeData, tree);
     localTree = tree;
@@ -175,11 +184,15 @@ export class Builder extends Component {
   }
 
   // subpop_index is an optional parameter, for determing which tree within subpop we are referring to
-  updateInstanceModifiers = (treeName, modifiers, path, subpopIndex) => {
+  updateInstanceModifiers = (treeName, modifiers, path, subpopIndex, updatedReturnType = null) => {
     const tree = _.cloneDeep(this.props.artifact[treeName]);
     const valuePath = _.isNumber(subpopIndex) ? tree[subpopIndex] : tree;
     const target = findValueAtPath(valuePath, path);
     target.modifiers = modifiers;
+
+    if (updatedReturnType) {
+      valuePath.returnType = updatedReturnType;
+    }
 
     this.props.updateArtifact(this.props.artifact, { [treeName]: tree });
   }
@@ -466,9 +479,12 @@ export class Builder extends Component {
                     instance={artifact}
                     addBaseElement={this.addBaseElement}
                     loadValueSets={this.props.loadValueSets}
+                    getAllInstances={this.getAllInstances}
+                    addInstance={this.addInstance}
                     editInstance={this.editInstance}
                     updateInstanceModifiers={this.updateInstanceModifiers}
                     deleteInstance={this.deleteInstance}
+                    updateBaseElementLists={this.updateSubpopulations}
                     templates={templates}
                     valueSets={this.props.valueSets}
                     conversionFunctions={conversionFunctions}

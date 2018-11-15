@@ -59,6 +59,8 @@ const ElementSelectMenuRenderer = ({
 
       <div className="Select-option select-notice is-disabled">
         <FontAwesome name="key" /> VSAC authentication required
+        { options.find(option => option.disabled) ?
+          <div><FontAwesome name="ban" /> Cannot add element when Base Element List in use</div> : null }
       </div>
     </div>
   );

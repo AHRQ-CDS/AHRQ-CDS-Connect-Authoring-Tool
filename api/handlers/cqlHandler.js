@@ -202,7 +202,11 @@ class CqlArtifact {
       if (count > 0) {
         baseElement.parameters[0].value = `${baseElement.parameters[0]}_${count}`;
       }
-      this.parseElement(baseElement);
+      if (baseElement.childInstances && baseElement.childInstances.length) {
+        this.parseTree(baseElement);
+      } else {
+        this.parseElement(baseElement);
+      }
     }
     );
 

@@ -116,7 +116,7 @@ export default class TemplateInstance extends Component {
   }
 
   deleteInstance = () => {
-    const baseElementIsInUse = this.isBaseElementUsed();
+    const baseElementIsInUse = this.isBaseElementUsed() || this.props.disableElement;
     if (!baseElementIsInUse) {
       this.props.deleteInstance(this.props.treeName, this.getPath());
     }
@@ -290,7 +290,7 @@ export default class TemplateInstance extends Component {
 
     if (modifier.validator) {
       const validator = Validators[modifier.validator.type];
-      const values = modifier.validator.fields.map(v => modifier.values[v]);
+      const values = modifier.validator.fields.map(v => modifier.values && modifier.values[v]);
       const args = modifier.validator.args ? modifier.validator.args.map(v => modifier.values[v]) : [];
       if (!validator.check(values, args)) {
         validationWarning = validator.warning(modifier.validator.fields, modifier.validator.args);
@@ -352,7 +352,7 @@ export default class TemplateInstance extends Component {
   }
 
   canModifierBeRemoved = () => {
-    const baseElementIsInUse = this.isBaseElementUsed();
+    const baseElementIsInUse = this.isBaseElementUsed() || this.props.disableElement;
 
     if (baseElementIsInUse) {
       // If a base element is in use, need to make sure the modifiers removed don't change the return type.
@@ -409,7 +409,7 @@ export default class TemplateInstance extends Component {
   renderModifierSelect = () => {
     if (!this.props.templateInstance.cannotHaveModifiers
       && (this.state.relevantModifiers.length > 0 || (this.props.templateInstance.modifiers || []).length === 0)) {
-      const baseElementIsInUse = this.isBaseElementUsed();
+      const baseElementIsInUse = this.isBaseElementUsed() || this.props.disableElement;
 
       return (
         <div className="modifier-select">
@@ -682,21 +682,29 @@ export default class TemplateInstance extends Component {
     return null;
   }
 
-  renderExpression = () => {
-    const { templateInstance, baseElements } = this.props;
-    const { returnType } = this.state;
+  getExpressionPhrase = (templateInstance) => {
+    const { baseElements } = this.props;
+    let returnType = templateInstance.returnType;
+    if (!(_.isEmpty(templateInstance.modifiers))) {
+      returnType = this.getReturnType(templateInstance.modifiers);
+    }
 
     let phraseTemplateInstance = templateInstance;
+    let phraseTemplateInstanceIsListGroup = false;
     if (templateInstance.type === 'baseElement') {
       const referenceParameter = templateInstance.parameters.find(param => param.type === 'reference');
       if (referenceParameter) {
         const baseElementReferenced = baseElements.find(element =>
           element.uniqueId === referenceParameter.value.id);
         phraseTemplateInstance = baseElementReferenced;
+        if (phraseTemplateInstance.conjunction) {
+          phraseTemplateInstanceIsListGroup = true;
+        }
       }
     }
 
-    let modifiers = phraseTemplateInstance.modifiers;
+    let modifiers = phraseTemplateInstance.modifiers || [];
+    const elementNamesInPhrase = [];
     if (templateInstance.type === 'baseElement') {
       const baseElementModifiers = templateInstance.modifiers || [];
       modifiers = modifiers.concat(baseElementModifiers);
@@ -717,14 +725,32 @@ export default class TemplateInstance extends Component {
     const otherParameters = phraseTemplateInstance.parameters.filter(param =>
       param.type === 'number' || param.type === 'valueset');
 
+    if (phraseTemplateInstanceIsListGroup) {
+      phraseTemplateInstance.childInstances.forEach((child) => {
+        // Base Element Lists are the only thing that use this. Children only go one level deep.
+        const secondPhraseExpressions = this.getExpressionPhrase(child);
+        const phraseArrayAsSentence = secondPhraseExpressions.reduce((acc, currentValue) =>
+          `${acc} ${currentValue.expressionText}`, '');
+        elementNamesInPhrase.push({ name: child.parameters[0].value, tooltipText: phraseArrayAsSentence });
+      });
+    }
+
     const expressions = convertToExpression(
       modifiers,
       type,
       valueSets,
       codes,
       returnType,
-      otherParameters
+      otherParameters,
+      elementNamesInPhrase
     );
+
+    return expressions;
+  }
+
+  renderExpression = () => {
+    const { templateInstance } = this.props;
+    const expressions = this.getExpressionPhrase(templateInstance);
 
     if (!expressions) { return null; }
 
@@ -841,7 +867,9 @@ export default class TemplateInstance extends Component {
       let elementType = templateInstance.name;
       if (referenceParameter) {
         // Element type to display in header will be the reference type for Base Elements.
-        elementType = referenceParameter.value ? referenceParameter.value.type : 'Base Element';
+        const baseElementReferenced = this.props.baseElements.find(element =>
+          element.uniqueId === referenceParameter.value.id);
+        elementType = baseElementReferenced.name;
       }
 
       return (
@@ -872,7 +900,8 @@ export default class TemplateInstance extends Component {
     const headerTopClass = classNames('card-element__header-top', { collapsed: !showElement });
 
     const baseElementUsed = this.isBaseElementUsed();
-    const disabledClass = baseElementUsed ? 'disabled' : '';
+    const baseElementInUsedList = this.props.disableElement;
+    const disabledClass = (baseElementUsed || baseElementInUsedList) ? 'disabled' : '';
     return (
       <div className={headerClass}>
         <div className={headerTopClass}>
@@ -888,7 +917,7 @@ export default class TemplateInstance extends Component {
             }
           </div>
           <div className="card-element__buttons">
-            {showElement && renderIndentButtons(templateInstance)}
+            {showElement && !this.props.inBaseElements && renderIndentButtons(templateInstance)}
 
             <button
               onClick={this.showHideElementBody}
@@ -907,7 +936,12 @@ export default class TemplateInstance extends Component {
             { baseElementUsed &&
               <UncontrolledTooltip
                 target={`deletebutton-${templateInstance.uniqueId}`} placement="left">
-                  This base element is referenced somewhere else. To delete this element, remove all references to it.
+                  To delete this Base Element, remove all references to it.
+              </UncontrolledTooltip> }
+            { baseElementInUsedList &&
+              <UncontrolledTooltip
+                target={`deletebutton-${templateInstance.uniqueId}`} placement="left">
+                To delete this element, remove all references to the Base Element List.
               </UncontrolledTooltip> }
           </div>
         </div>
@@ -967,4 +1001,6 @@ TemplateInstance.propTypes = {
   codeData: PropTypes.object,
   validateCode: PropTypes.func.isRequired,
   resetCodeValidation: PropTypes.func.isRequired,
+  disableElement: PropTypes.bool,
+  inBaseElements: PropTypes.bool,
 };

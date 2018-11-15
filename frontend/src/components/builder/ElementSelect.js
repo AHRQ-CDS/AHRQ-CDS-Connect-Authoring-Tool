@@ -24,7 +24,10 @@ const optionRenderer = option => (
     <span className="element-select__option-value">{option.label}</span>
 
     {option.vsacAuthRequired &&
-      <FontAwesome name="key" className="element-select__option-category" />
+      <FontAwesome name="key" className={`element-select__option-category ${option.disabled ? 'is-disabled' : ''}`} />
+    }
+    { option.disabled &&
+      <FontAwesome name="ban" className={'element-select__option-category is-disabled'} />
     }
   </div>
 );
@@ -40,6 +43,7 @@ const elementOptions = [
   { value: 'condition', label: 'Condition', vsacAuthRequired: true, template: 'GenericCondition_vsac' },
   { value: 'demographics', label: 'Demographics', vsacAuthRequired: false },
   { value: 'encounter', label: 'Encounter', vsacAuthRequired: true, template: 'GenericEncounter_vsac' },
+  { value: 'listOperations', label: 'List Operations', vsacAuthRequired: false },
   {
     value: 'medicationStatement',
     label: 'Medication Statement',
@@ -61,7 +65,7 @@ export default class ElementSelect extends Component {
   constructor(props) {
     super(props);
 
-    this.internalCategories = this.generateInternalCategories();
+    this.internalCategories = this.generateInternalCategories(props);
 
     this.state = {
       categories: this.internalCategories.sort(sortAlphabeticallyByKey('name')),
@@ -79,9 +83,9 @@ export default class ElementSelect extends Component {
   }
 
   // Needed to correctly update this.props.categories after parameters were merged in Builder
-  componentWillReceiveProps() {
+  componentWillReceiveProps(nextProps) {
     // Updates the categories and their entries to have correct parameters
-    this.internalCategories = this.generateInternalCategories();
+    this.internalCategories = this.generateInternalCategories(nextProps);
     this.setState({
       categories: this.internalCategories.sort(sortAlphabeticallyByKey('name'))
     });
@@ -92,14 +96,14 @@ export default class ElementSelect extends Component {
     this.onSelectedCategoryChange(updatedCategory);
   }
 
-  generateInternalCategories = () => {
-    let categoriesCopy = _.cloneDeep(this.props.categories);
+  generateInternalCategories = (props) => {
+    let categoriesCopy = _.cloneDeep(props.categories);
     categoriesCopy = filterUnsuppressed(categoriesCopy);
     const paramsIndex = categoriesCopy.findIndex(cat => cat.name === 'Parameters');
     const baseElementsIndex = categoriesCopy.findIndex(cat => cat.name === 'Base Elements');
 
-    if (this.props.baseElements && this.props.baseElements.length && categoriesCopy[baseElementsIndex]) {
-      categoriesCopy[baseElementsIndex].entries = this.props.baseElements.map((e) => {
+    if (props.baseElements && props.baseElements.length && categoriesCopy[baseElementsIndex]) {
+      categoriesCopy[baseElementsIndex].entries = props.baseElements.map((e) => {
         const returnType = _.isEmpty(e.modifiers) ? e.returnType : _.last(e.modifiers).returnType;
         return ({
           id: _.uniqueId(e.id),
@@ -120,7 +124,7 @@ export default class ElementSelect extends Component {
         });
       });
     }
-    if (this.props.parameters.length) {
+    if (props.parameters.length) {
       let parametersCategory;
       if (paramsIndex >= 0) {
         [parametersCategory] = categoriesCopy.splice(paramsIndex, 1);
@@ -129,7 +133,7 @@ export default class ElementSelect extends Component {
       }
 
       // Only include boolean parameters. Don't include blank parameters to add to workspace.
-      parametersCategory.entries = this.props.parameters.map(param => ({
+      parametersCategory.entries = props.parameters.map(param => ({
         id: param.name,
         name: param.name,
         type: 'parameter',
@@ -142,7 +146,7 @@ export default class ElementSelect extends Component {
       }));
 
       categoriesCopy.push(parametersCategory);
-    } else if (this.props.parameters.length === 0 && paramsIndex >= 0) {
+    } else if (props.parameters.length === 0 && paramsIndex >= 0) {
       // No parameters have been made. Restrict creating new parameters within the workspace.
       categoriesCopy[paramsIndex].entries = [];
     } else {
@@ -249,11 +253,12 @@ export default class ElementSelect extends Component {
   render() {
     const { selectedElement } = this.state;
     const placeholderText = 'Choose element type';
-    const elementOptionsToDisplay = elementOptions.filter((e) => {
+    const elementOptionsToDisplay = _.cloneDeep(elementOptions).filter((e) => {
+      e.disabled = this.props.disableElement || false;
       if (this.props.inBaseElements) {
         return e.value !== 'baseElement';
       }
-      return true;
+      return e.value !== 'listOperations';
     });
     let noAuthElementOptions;
     if (selectedElement && !selectedElement.vsacAuthRequired) {
@@ -262,8 +267,12 @@ export default class ElementSelect extends Component {
         .entries.map(({ id, name, type, parameters }) => {
           // Base elements display the parameter element_name entered by user, not the generic 'Base Element'.
           const label = type === 'baseElement' ? parameters[0].value : name;
-          return ({ value: id, label, type: selectedElement.label });
+          const uniqueId = type === 'baseElement' ? parameters[1].value.id : '';
+          return ({ value: id, label, type: selectedElement.label, uniqueId });
         });
+      if (selectedElement.value === 'baseElement') {
+        noAuthElementOptions = noAuthElementOptions.filter(element => element.uniqueId !== this.props.elementUniqueId);
+      }
     }
     const value = selectedElement && selectedElement.value;
 
@@ -339,4 +348,6 @@ ElementSelect.propTypes = {
   validateCode: PropTypes.func.isRequired,
   resetCodeValidation: PropTypes.func.isRequired,
   inBaseElements: PropTypes.bool.isRequired,
+  elementUniqueId: PropTypes.string,
+  disableElement: PropTypes.bool,
 };

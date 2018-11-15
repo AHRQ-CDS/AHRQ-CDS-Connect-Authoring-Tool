@@ -209,6 +209,31 @@ const elementGroups = [
         ]
       }
     ]
+  },
+  {
+    id: 3,
+    icon: 'gear',
+    name: 'List Operations',
+    entries: [
+      {
+        id: 'Intersect',
+        name: 'Intersect',
+        conjunction: true,
+        returnType: 'list_of_any',
+        parameters: [
+          { id: 'element_name', type: 'string', name: 'Group Name' }
+        ]
+      },
+      {
+        id: 'Union',
+        name: 'Union',
+        conjunction: true,
+        returnType: 'list_of_any',
+        parameters: [
+          { id: 'element_name', type: 'string', name: 'Group Name' }
+        ]
+      },
+    ]
   }
 ];
 
@@ -325,6 +350,56 @@ const genericInstance = {
   modifiers: [],
 };
 
+const genericInstanceWithModifiers = {
+  id: 'GenericObservation_vsac',
+  name: 'Observation',
+  returnType: 'list_of_observations',
+  suppress: true,
+  extends: 'Base',
+  type: 'element',
+  template: 'GenericObservation',
+  suppressedModifiers: ['WithUnit', 'ConvertToMgPerdL'], // checkInclusionInVS is assumed to be suppressed
+  parameters: [
+    { id: 'element_name', name: 'Element Name', type: 'string', value: 'VSAC Observation' },
+    {
+      id: 'observation',
+      type: 'observation_vsac',
+      name: 'Observation',
+      valueSets: [{ name: 'VS', oid: '1.2.3' }, { name: 'VS2', oid: '2.3.4' }],
+      codes: [
+        { code: '123-4', codeSystem: { name: 'TestName', id: 'TestId' } },
+        { code: '456-7', codeSystem: { name: 'TestNameA', id: 'TestIdA' } }
+      ]
+    }
+  ],
+  modifiers: [
+    {
+      id: 'VerifiedObservation',
+      name: 'Verified',
+      inputTypes: ['list_of_observations'],
+      returnType: 'list_of_observations',
+      cqlTemplate: 'BaseModifier',
+      cqlLibraryFunction: 'C3F.Verified'
+    },
+    {
+      id: 'BooleanExists',
+      name: 'Exists',
+      inputTypes: elementLists,
+      returnType: 'boolean',
+      cqlTemplate: 'BaseModifier',
+      cqlLibraryFunction: 'exists'
+    },
+    {
+      id: 'BooleanNot',
+      name: 'Not',
+      inputTypes: ['boolean'],
+      returnType: 'boolean',
+      cqlTemplate: 'BaseModifier',
+      cqlLibraryFunction: 'not'
+    }
+  ],
+};
+
 const genericBaseElementInstance = {
   id: 'GenericObservation_vsac',
   name: 'Observation',
@@ -402,6 +477,20 @@ const genericBaseElementInstanceWithModifiers = {
   ],
 };
 
+const genericBaseElementListInstance = {
+  id: 'Union',
+  name: 'Union',
+  conjunction: true,
+  returnType: 'list_of_observations',
+  path: '',
+  uniqueId: 'Union-1',
+  usedBy: ['testId1'],
+  parameters: [
+    { id: 'element_name', type: 'string', name: 'Group Name', value: 'UnionListName' }
+  ],
+  childInstances: [genericInstance]
+};
+
 const genericBaseElementUseInstance = {
   id: 'GenericObservation_vsac',
   name: 'BaseElement',
@@ -427,7 +516,9 @@ export {
   genericElementTypes,
   genericElementGroups,
   genericInstance,
+  genericInstanceWithModifiers,
   genericBaseElementInstance,
   genericBaseElementInstanceWithModifiers,
+  genericBaseElementListInstance,
   genericBaseElementUseInstance
 };

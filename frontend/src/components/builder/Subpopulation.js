@@ -108,7 +108,7 @@ export default class Subpopulation extends Component {
     return (
       <div className="card-element__body">
               {this.props.subpopulation.childInstances && this.props.subpopulation.childInstances.length < 1 &&
-                <div className='warning'>This subpopulation needs at least one condition</div>
+                <div className='warning'>This subpopulation needs at least one element</div>
               }
               <ConjunctionGroup
                 root={true}

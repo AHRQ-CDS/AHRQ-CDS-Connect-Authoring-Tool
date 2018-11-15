@@ -16,6 +16,8 @@ export default class ConjunctionGroup extends Component {
 
     const operationTemplates = this.props.templates.find(cat => cat.name === 'Operations').entries;
     this.types = operationTemplates.filter(template => template.conjunction);
+    const listOperationTemplates = this.props.templates.find(cat => cat.name === 'List Operations') || [];
+    this.listOperations = listOperationTemplates.entries;
     this.allTypes = this.props.templates.reduce((prev, curr) => [...prev, ...curr.entries], []);
   }
 
@@ -128,7 +130,7 @@ export default class ConjunctionGroup extends Component {
       placeholder="Select one"
       searchable={ false }
       clearable={ false }
-      options={ this.types }
+      options={ this.props.options === 'listOperations' ? this.listOperations : this.types }
       onChange={ this.handleTypeChange }
       inputProps={{ 'aria-label': 'Select conjunction type', title: 'Select conjunction type' }}
     />
@@ -287,7 +289,9 @@ export default class ConjunctionGroup extends Component {
           isValidCode={this.props.isValidCode}
           codeData={this.props.codeData}
           validateCode={this.props.validateCode}
-          resetCodeValidation={this.props.resetCodeValidation} />
+          resetCodeValidation={this.props.resetCodeValidation}
+          disableElement={this.props.disableElement}
+          inBaseElements={this.props.inBaseElements} />
 
         {this.renderConjunctionSelect(instance)}
       </div>
@@ -327,6 +331,8 @@ export default class ConjunctionGroup extends Component {
             validateCode={this.props.validateCode}
             resetCodeValidation={this.props.resetCodeValidation}
             inBaseElements={false}
+            disableElement={this.props.disableElement}
+            elementUniqueId={this.props.instance.uniqueId}
           />
         </div>
       </div>

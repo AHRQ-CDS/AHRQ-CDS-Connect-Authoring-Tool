@@ -93,6 +93,9 @@ function parseForDuplicateNamesAndUsedBaseElements(artifact) {
     if (baseElement.parameters && baseElement.parameters[0]) {
       names.push({ name: baseElement.parameters[0].value, id: baseElement.uniqueId });
     }
+    if (baseElement.childInstances && baseElement.childInstances.length) {
+      parseTree(baseElement, names, baseElementsInUse);
+    }
   });
   artifact.parameters.forEach((parameter, i) => {
     names.push({ name: parameter.name, id: parameter.uniqueId });
