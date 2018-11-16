@@ -32,8 +32,8 @@ function getExpressionSentenceValue(modifier) {
     VerifiedObservation: { modifierText: 'verified', leadingText: '', type: 'list' },
     WithUnit: { modifierText: '', leadingText: 'with unit', type: 'post-list' },
     ValueComparisonObservation: { modifierText: 'greater than a number', leadingText: 'whose value is', type: 'post' },
-    QuantityValue: { modifierText: 'quantity value', leadingText: '', type: 'value' }, // Will not be diplayed in phrase
-    ConceptValue: { modifierText: 'concept value', leadingText: '', type: 'value' }, // Will not be diplayed in phrase
+    QuantityValue: { modifierText: 'quantity value', leadingText: '', type: 'value' }, // Will not be displayed in phrase
+    ConceptValue: { modifierText: 'concept value', leadingText: '', type: 'value' }, // Will not be displayed in phrase
     Qualifier: { modifierText: 'with a code', leadingText: '', type: 'post' },
     ConvertObservation: { modifierText: 'convert', leadingText: 'with', type: 'post' },
     HighestObservationValue: { modifierText: 'highest', leadingText: '', type: 'descriptor' },
@@ -423,7 +423,7 @@ function orderExpressionSentenceArray(
     orderedExpressionArray.push({ expressionText: 'of', isExpression: false });
   }
 
-  // Handle value sets and codes
+  // Handle value sets and codes and other element names
   orderedExpressionArray = addVSandCodeText(orderedExpressionArray, valueSets, codes);
   orderedExpressionArray = addElementNames(orderedExpressionArray, elementNames);
 

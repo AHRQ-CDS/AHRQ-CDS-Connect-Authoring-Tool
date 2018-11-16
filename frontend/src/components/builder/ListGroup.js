@@ -4,6 +4,7 @@ import _ from 'lodash';
 import FontAwesome from 'react-fontawesome';
 import pluralize from 'pluralize';
 import { UncontrolledTooltip } from 'reactstrap';
+import { findValueAtPath } from '../../utils/find';
 
 import Validators from '../../utils/validators';
 import ConjunctionGroup from './ConjunctionGroup';
@@ -127,6 +128,13 @@ export default class ListGroup extends Component {
     return 'list_of_any';
   }
 
+  checkAndOrReturnTypeCompatibility = (currentReturnType, incomingReturnType, isOnlyElement) => {
+    if ((currentReturnType === incomingReturnType && _.lowerCase(currentReturnType) === 'boolean') || isOnlyElement) {
+      return currentReturnType;
+    }
+    return 'invalid';
+  }
+
   getReturnTypeOfFullList = (baseElementList) => {
     let currentReturnType;
     // Set the initial type to the first child's type to start. If no children, default is 'list_of_any'.
@@ -142,6 +150,30 @@ export default class ListGroup extends Component {
     baseElementList.childInstances.forEach((child) => { // Base Element Lists can only go one child deep
       const incomingReturnType = this.getReturnType(child.returnType, child.modifiers);
       newReturnType = this.checkReturnTypeCompatibility(currentReturnType, incomingReturnType);
+      currentReturnType = newReturnType;
+    });
+
+    return currentReturnType;
+  }
+
+  getAndOrReturnTypeOfFullList = (baseElementList) => {
+    let currentReturnType;
+    // Set the initial type to the first child's type to start. If no children, default is 'list_of_any'.
+    if (baseElementList.childInstances.length > 0) {
+      const firstChild = baseElementList.childInstances[0];
+      currentReturnType = this.getReturnType(firstChild.returnType, firstChild.modifiers);
+    } else {
+      currentReturnType = 'none';
+    }
+
+    let newReturnType;
+    // Base Element And/Or Conjunctions can go multiple children deep so need recursion to check the type
+    baseElementList.childInstances.forEach((child) => {
+      let incomingReturnType = this.getReturnType(child.returnType, child.modifiers);
+      if (child.childInstances) {
+        incomingReturnType = this.getAndOrReturnTypeOfFullList(child);
+      }
+      newReturnType = this.checkAndOrReturnTypeCompatibility(currentReturnType, incomingReturnType, baseElementList.childInstances.length === 1);
       currentReturnType = newReturnType;
     });
 
@@ -164,6 +196,22 @@ export default class ListGroup extends Component {
     this.props.addInstance(name, template, path, baseElement.uniqueId, undefined, null, newReturnType);
   }
 
+  // TODO can you condense these functions into the one? Or are there too many differences?
+  addAndOrInstance = (name, template, path, baseElement) => {
+    const baseElementList = _.cloneDeep(baseElement);
+    const currentReturnType = baseElementList.returnType;
+    let newReturnType;
+    if (baseElement.childInstances.length === 0) {
+      // New return type will just be whatever the new element's type is.
+      newReturnType = template.returnType;
+    } else {
+      // Need to check if incoming type will change the current return type.
+      const incomingReturnType = this.getReturnType(template.returnType, template.modifiers);
+      newReturnType = this.checkAndOrReturnTypeCompatibility(currentReturnType, incomingReturnType, baseElementList.childInstances.length === 1);
+    }
+    this.props.addInstance(name, template, path, baseElement.uniqueId, undefined, null, newReturnType);
+  }
+
   editInstance = (treeName, params, path, editingConjunction, baseElement) => {
     this.props.editInstance(treeName, params, path, editingConjunction, baseElement.uniqueId);
   }
@@ -178,6 +226,18 @@ export default class ListGroup extends Component {
     this.props.deleteInstance(treeName, path, toAdd, baseElement.uniqueId, currentReturnType);
   }
 
+  deleteAndOrInstance = (treeName, path, toAdd, baseElement) => {
+    // Temporarily remove the element that will be deleted to correctly calculate return type.
+    const indexToRemove = path.slice(-1);
+    const baseElementList = _.cloneDeep(baseElement);
+    const target = findValueAtPath(baseElementList, path.slice(0, path.length - 2));
+    target.splice(indexToRemove, 1);
+    // TODO what should Boolean AND None be?
+
+    const currentReturnType = this.getAndOrReturnTypeOfFullList(baseElementList);
+    this.props.deleteInstance(treeName, path, toAdd, baseElement.uniqueId, currentReturnType);
+  }
+
   updateInstanceModifiers = (t, modifiers, path, index) => {
     const baseElementList = _.cloneDeep(this.props.baseElements[index]);
     if (!baseElementList) return;
@@ -188,11 +248,84 @@ export default class ListGroup extends Component {
     this.props.updateInstanceModifiers(t, modifiers, path, index, currentReturnType);
   }
 
+  updateAndOrInstanceModifiers = (t, modifiers, path, index) => {
+    const baseElementList = _.cloneDeep(this.props.baseElements[index]);
+    if (!baseElementList) return;
+
+    // Temporarily apply the modifiers that will be updated. Base Element Lists can only be one child deep.
+    const target = findValueAtPath(baseElementList, path);
+    target.modifiers = modifiers;
+    const currentReturnType = this.getAndOrReturnTypeOfFullList(baseElementList);
+    this.props.updateInstanceModifiers(t, modifiers, path, index, currentReturnType);
+  }
+
   isBaseElementListUsed = element => (element.usedBy ? element.usedBy.length !== 0 : false);
 
-  renderListGroup = (s, i) => {
+  renderAndOrConjunction = (s, baseElementListUsed) => {
+    const { instance, index } = this.props;
+    return (
+      <div className="card-element__body">
+        <div>
+          <div className="return-type row">
+            <div className="col-3 bold align-right return-type__label">Return Type:</div>
+            <div className="col-7 return-type__value">
+              {(_.startCase(s.returnType) === 'Boolean' || s.childInstances.length === 1)
+                && <FontAwesome name="check" className="check" />}
+              {_.startCase(s.returnType)}
+            </div>
+          </div>
+        </div>
+        <ConjunctionGroup
+          root={true}
+          treeName={this.props.treeName}
+          artifact={this.props.artifact}
+          templates={this.props.templates}
+          valueSets={this.props.valueSets}
+          loadValueSets={this.props.loadValueSets}
+          instance={this.props.instance}
+          addInstance={(name, template, path) => this.addAndOrInstance(name, template, path, instance)}
+          editInstance={(treeName, params, path, editingConjunction) =>
+            this.editInstance(treeName, params, path, editingConjunction, instance)}
+          deleteInstance={(treeName, path, toAdd) => this.deleteAndOrInstance(treeName, path, toAdd, instance)}
+          getAllInstances={this.props.getAllInstances}
+          updateInstanceModifiers={(t, modifiers, path) => this.updateAndOrInstanceModifiers(t, modifiers, path, index)}
+          parameters={this.props.parameters}
+          baseElements={this.props.baseElements}
+          conversionFunctions={this.props.conversionFunctions}
+          instanceNames={this.props.instanceNames}
+          loginVSACUser={this.props.loginVSACUser}
+          setVSACAuthStatus={this.props.setVSACAuthStatus}
+          vsacStatus={this.props.vsacStatus}
+          vsacStatusText={this.props.vsacStatusText}
+          timeLastAuthenticated={this.props.timeLastAuthenticated}
+          searchVSACByKeyword={this.props.searchVSACByKeyword}
+          isSearchingVSAC={this.props.isSearchingVSAC}
+          vsacSearchResults={this.props.vsacSearchResults}
+          vsacSearchCount={this.props.vsacSearchCount}
+          getVSDetails={this.props.getVSDetails}
+          isRetrievingDetails={this.props.isRetrievingDetails}
+          vsacDetailsCodes={this.props.vsacDetailsCodes}
+          vsacFHIRCredentials={this.props.vsacFHIRCredentials}
+          isValidatingCode={this.props.isValidatingCode}
+          isValidCode={this.props.isValidCode}
+          codeData={this.props.codeData}
+          validateCode={this.props.validateCode}
+          resetCodeValidation={this.props.resetCodeValidation}
+          validateReturnType={true}
+          inBaseElements={false}
+          disableElement={baseElementListUsed}
+        />
+      </div>
+    );
+  }
+
+  renderListGroup = (s) => {
     const { instance, index } = this.props;
     const baseElementListUsed = this.isBaseElementListUsed(s);
+    const intersectAndUnion = s.id === 'Union' || s.id === 'Intersect';
+    if (!intersectAndUnion) {
+      return this.renderAndOrConjunction(s, baseElementListUsed);
+    }
     return (
       <div className="card-element__body">
         <div>
