@@ -1,3 +1,6 @@
 define "<%-element_name%>":
   <%-components.map(c => `"${c.name}"`).join(`
-  intersect `)%>
+  intersect `)%><%
+  if (components.length === 0) {
+    %>null<%
+  }%>
