@@ -127,16 +127,6 @@ const config = convict({
       }
     }
   },
-  valueSets: {
-    localFile: {
-      doc: 'The path to an Excel-formatted file exported from VSAC.  This should be exported from the results of ' +
-        'searching over all value sets in the VSAC search interface.  This is a stop-gap solution until VSAC ' +
-        'supports a search API.',
-      format: 'String',
-      default: 'config/ValueSets.xls',
-      env: 'VALUE_SETS_LOCAL_FILE',
-    }
-  },
   tlsRejectUnauthorized: {
     doc: 'Indicates if TLS should reject unauthorized certifates.  Never disable in production!',
     format: ['0', '1'],

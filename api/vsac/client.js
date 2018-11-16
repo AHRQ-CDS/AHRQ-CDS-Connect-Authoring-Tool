@@ -3,7 +3,6 @@
  * https://www.nlm.nih.gov/vsac/support/usingvsac/vsacsvsapiv2.html
  */
 const rpn = require('request-promise-native');
-const { parseVsacDetails} = require('./parseVsac');
 
 const VSAC_ENDPOINT = 'https://vsac.nlm.nih.gov/vsac';
 
@@ -40,26 +39,7 @@ function getServiceTicket(ticketGrantingTicket) {
   return rpn(options);
 }
 
-/**
- * Gets the details of a value set based on an OID. A service ticket is required to make this API call.
- *
- * @param {string} oid the OID of the value set to retrieve
- * @param {string} serviceTicket the service ticket to be used when making the API call
- * @return {Promise<string>} the JSON that contains all value set details
- */
-function getVSDetailsByOID(oid, serviceTicket) {
-  const options = {
-    method: 'GET',
-    uri: `${VSAC_ENDPOINT}/svs/RetrieveValueSet`,
-    qs: { id: oid, ticket: serviceTicket }
-  };
-  return rpn(options).then(details => {
-    return parseVsacDetails(details);
-  });
-}
-
 module.exports = {
   getTicketGrantingTicket,
-  getServiceTicket,
-  getVSDetailsByOID
+  getServiceTicket
 };

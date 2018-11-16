@@ -1,0 +1,17 @@
+// This is a minimal configuration that should be used for local development / testing only.
+// To use it, copy it to a file called local.json (in the same folder). Then copy
+// example-local-users.json to local-users.json (also in the same folder).This will override
+// any environment-based files and defaults.
+{
+  "cqlToElm": {
+    "active": false
+  },
+  "auth": {
+    "ldap": {
+      "active": false
+    },
+    "local": {
+      "active": true
+    }
+  }
+}

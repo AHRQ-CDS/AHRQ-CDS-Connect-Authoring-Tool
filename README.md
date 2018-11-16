@@ -18,21 +18,68 @@ This project uses the MERN stack: Mongo, Express, React, and NodeJS.  The projec
 
 For specific development details of each component, including configuration, see their respective README files.
 
-### Run (Development)
+## Run (Development Quick Start)
 
-To allow for simple development, a _Procfile_ is provided which will launch the _api_ and _frontend_ projects in development mode.  To use the Procfile, you must install [node-foreman](https://www.npmjs.com/package/foreman) _(prerequisites: [Node.js LTS](https://nodejs.org/) and [Yarn](https://yarnpkg.com/))_.
+### Prerequisites
+
+First, ensure you have [Node.js LTS](https://nodejs.org/), [Yarn](https://yarnpkg.com/), and MongoDB[https://www.mongodb.com/download-center/community] installed.  The CDS Authoring Tool is tested using MongoDB 3.4.x, but later versions are expected to work.
+
+### Install Node Foreman
+
+To allow for simple development, a _Procfile_ is provided which will launch the _api_ and _frontend_ projects in development mode.  To use the Procfile, you must install [node-foreman](https://www.npmjs.com/package/foreman).
 
 ```bash
 yarn add global foreman
 ```
 
-Once node-foreman is installed, you can run the Procfile via:
+### Install Dependencies
+
+Each of the subprojects (_api_ and _frontend_) must have the dependencies installed via _yarn_.  This can be done as follows:
+
+```bash
+cd api
+yarn
+```
+
+After the yarn api dependency install successfully runs, install the frontend dependencies:
+
+```bash
+cd ../frontend
+yarn
+```
+
+After the yarn frontend dependency install runs, go back to the root folder:
+
+```bash
+cd ..
+```
+
+### Configure Authentication
+
+The CDS Authoring Tool requires authentication.  Currently LDAP authentication and local file authentication are supported.  For local development, the simplest approach is to use local user authentication.  To enable it, copy the minimal-example and example-local-users configuration files to `local.json` and `local-users.json`.
+
+_NOTE: The following example uses `cp`.  If you are on Windows, use `copy` instead._
+
+```bash
+cp api/config/minimal-example.json api/config/local.json
+cp api/config/example-local-users.json api/config/local-users.json
+```
+
+This will enable the following two users:
+* User: `demo`, Password: `password`
+* User: `demo2`, Password: `password2`
+
+Of course, these default users and passwords should _never_ be enabled on a public-facing system.
+
+### Run Node Foreman
+
+Run the Node Foreman Procfile via:
 
 ```bash
 nf start
 ```
 
-NOTE: Please ensure MongoDB is running before starting the CDS Authoring Tool.
+NOTE: Ensure MongoDB is running before starting the CDS Authoring Tool.
 
 ## Docker
 
@@ -54,8 +101,6 @@ docker run --name cat-mongo -d mongo:3.4
 docker run --name cat \
   --link cat-cql2elm:cql2elm \
   --link cat-mongo:mongo \
-  -v /data/vsac:/data/vsac \
-  -e "VALUE_SETS_LOCAL_FILE=/data/vsac/ValueSets.xls" \
   -e "CQL_TO_ELM_URL=http://cql2elm:8080/cql/translator" \
   -e "MONGO_URL=mongodb://mongo/cds_authoring" \
   -e "AUTH_SESSION_SECRET=secret" \
@@ -73,22 +118,6 @@ docker run --name cat \
 To run the CDS Authoring Tool in a detached process, add a `-d` to the run command (before `cdsauthoringtool`).
 
 Of course you will need to modify some of the values above according to your environment (e.g., LDAP details).
-
-**Value Sets from VSAC**
-
-Note the volume mapping and `VALUE_SETS_LOCAL_FILE` environment variable in the above command.  This is to support VSAC search using a local XLS file.  The first path after `-v` represents the local path to a folder that will contain the _ValueSets.xls_ file.  Ensure that this path exists on the host and/or modify the path to match an existing path.
-
-After starting the `cdsauthoringtool` container as described above, you can automatically create/update the _ValueSets.xls_ file and refresh the database via the following command:
-```bash
-docker exec -w /usr/src/app/api -it cat node ./vsac/vsxls2db.js my_vsac_username my_vsac_password
-```
-
-If successful, you should see a message like:
-```
-Downloading XLS from VSAC using basic auth w/ user 'my_vsac_username'.
-Loaded file: config/ValueSets.xls (updated: Mon Apr 02 2018 16:51:59 GMT-0400 (EDT))
-Inserted 5381 items.
-```
 
 **Proxying the API**
 
