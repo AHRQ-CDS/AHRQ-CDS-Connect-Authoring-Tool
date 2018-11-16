@@ -54,6 +54,23 @@ After the yarn frontend dependency install runs, go back to the root folder:
 cd ..
 ```
 
+### Configure Authentication
+
+The CDS Authoring Tool requires authentication.  Currently LDAP authentication and local file authentication are supported.  For local development, the simplest approach is to use local user authentication.  To enable it, copy the minimal-example and example-local-users configuration files to `local.json` and `local-users.json`.
+
+_NOTE: The following example uses `cp`.  If you are on Windows, use `copy` instead._
+
+```bash
+cp api/config/minimal-example.json api/config/local.json
+cp api/config/example-local-users.json api/config/local-users.json
+```
+
+This will enable the following two users:
+* User: `demo`, Password: `password`
+* User: `demo2`, Password: `password2`
+
+Of course, these default users and passwords should _never_ be enabled on a public-facing system.
+
 ### Run Node Foreman
 
 Run the Node Foreman Procfile via:
