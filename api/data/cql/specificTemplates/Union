@@ -1,3 +1,6 @@
 define "<%-element_name%>":
   <%-components.map(c => `"${c.name}"`).join(`
-  union `)%>
+  union `)%><%
+  if (components.length === 0) {
+    %>null<%
+  }%>
