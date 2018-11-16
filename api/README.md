@@ -70,28 +70,6 @@ This project uses [Passport](http://www.passportjs.org/) to authenticate users. 
 
 For development purposes, the [Local Authentication Strategy](https://github.com/jaredhanson/passport-local) can be enabled via configuration. In order to do so, a `config/local-users.json` file must be created. For an example of the structure of this file, see `config/example-local-users.json`.
 
-### VSAC
-
-Currently, the VSAC API does not support searching by keyword.  As a stop-gap measure, we've added support for importing a spreadsheet of value set "summaries" into the MongoDB database.  When the database is loaded, our vsac/search endpoint will search against it.  Note that since VSAC data requires a VSAC account, the search API will still check to ensure you have a VSAC ticket in your session.
-
-Downloading the _ValueSets.xls_ file and loading it into the database can now be done via a simple Node.js script:
-```bash
-node vsac/vsxls2db.js my_vsac_username my_vsac_password
-```
-
-If successful, you should see a message like:
-```
-Downloading XLS from VSAC using basic auth w/ user 'my_vsac_username'.
-Loaded file: config/ValueSets.xls (updated: Mon Apr 02 2018 16:51:59 GMT-0400 (EDT))
-Inserted 5381 items.
-```
-
-The following are sample HTTP GET queries to confirm it is working:
-- http://localhost:3001/authoring/api/vsac/search?keyword=Diabetes
-- http://localhost:3001/authoring/api/vsac/search?oid=2.16.840.1.113883.3.464.1003.103.12.1012
-
-_NOTE: The above queries will only work if you've first established a valid VSAC session via the API._
-
 ### Run
 
 `yarn start` will run the api server:
