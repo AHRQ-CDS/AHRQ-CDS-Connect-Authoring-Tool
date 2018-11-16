@@ -18,21 +18,51 @@ This project uses the MERN stack: Mongo, Express, React, and NodeJS.  The projec
 
 For specific development details of each component, including configuration, see their respective README files.
 
-### Run (Development)
+## Run (Development Quick Start)
 
-To allow for simple development, a _Procfile_ is provided which will launch the _api_ and _frontend_ projects in development mode.  To use the Procfile, you must install [node-foreman](https://www.npmjs.com/package/foreman) _(prerequisites: [Node.js LTS](https://nodejs.org/) and [Yarn](https://yarnpkg.com/))_.
+### Prerequisites
+
+First, ensure you have [Node.js LTS](https://nodejs.org/), [Yarn](https://yarnpkg.com/), and MongoDB[https://www.mongodb.com/download-center/community] installed.  The CDS Authoring Tool is tested using MongoDB 3.4.x, but later versions are expected to work.
+
+### Install Node Foreman
+
+To allow for simple development, a _Procfile_ is provided which will launch the _api_ and _frontend_ projects in development mode.  To use the Procfile, you must install [node-foreman](https://www.npmjs.com/package/foreman).
 
 ```bash
 yarn add global foreman
 ```
 
-Once node-foreman is installed, you can run the Procfile via:
+### Install Dependencies
+
+Each of the subprojects (_api_ and _frontend_) must have the dependencies installed via _yarn_.  This can be done as follows:
+
+```bash
+cd api
+yarn
+```
+
+After the yarn api dependency install successfully runs, install the frontend dependencies:
+
+```bash
+cd ../frontend
+yarn
+```
+
+After the yarn frontend dependency install runs, go back to the root folder:
+
+```bash
+cd ..
+```
+
+### Run Node Foreman
+
+Run the Node Foreman Procfile via:
 
 ```bash
 nf start
 ```
 
-NOTE: Please ensure MongoDB is running before starting the CDS Authoring Tool.
+NOTE: Ensure MongoDB is running before starting the CDS Authoring Tool.
 
 ## Docker
 
