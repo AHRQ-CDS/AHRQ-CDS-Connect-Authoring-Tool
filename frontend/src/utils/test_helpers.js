@@ -27,9 +27,12 @@ function fullRenderComponentOnBody(ComponentClass, props = {}) {
   ComponentClass.contextTypes = { // eslint-disable-line no-param-reassign
     router: PropTypes.object
   };
+  const rootElement = document.createElement('div');
+  rootElement.setAttribute('id', 'tooltip');
+  document.body.appendChild(rootElement);
   return mount(
     <ComponentClass id="root" {...props} />,
-    { context, attachTo: document.body }
+    { context, attachTo: rootElement }
   );
 }
 
