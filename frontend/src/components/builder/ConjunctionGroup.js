@@ -134,6 +134,13 @@ export default class ConjunctionGroup extends Component {
 
   // ----------------------- RENDERS --------------------------------------- //
 
+  renderDisabledTooltip = id => (
+    <UncontrolledTooltip
+      target={id} placement="left">
+      To delete this element, remove all references to the Base Element List.
+    </UncontrolledTooltip>
+  );
+
   renderConjunctionSelect = i => (
     <Select
       className="card-group__conjunction-select"
@@ -162,11 +169,7 @@ export default class ConjunctionGroup extends Component {
             onClick={() => this.outdentClickHandler(instance)}>
             <FontAwesome name="dedent" />
           </button>
-          { this.props.disableElement &&
-            <UncontrolledTooltip
-              target={`outdentbutton-${instance.uniqueId}`} placement="left">
-              To delete this element, remove all references to the Base Element List.
-            </UncontrolledTooltip> }
+        {this.props.disableElement && this.renderDisabledTooltip(`outdentbutton-${instance.uniqueId}`) }
         </span>
       }
 
@@ -177,11 +180,7 @@ export default class ConjunctionGroup extends Component {
         onClick={() => this.indentClickHandler(instance)}>
         <FontAwesome name="indent" />
       </button>
-      { this.props.disableElement &&
-        <UncontrolledTooltip
-          target={`indentbutton-${instance.uniqueId}`} placement="left">
-          To delete this element, remove all references to the Base Element List.
-        </UncontrolledTooltip> }
+      { this.props.disableElement && this.renderDisabledTooltip(`indentbutton-${instance.uniqueId}`) }
     </span>
   )
 
@@ -215,11 +214,7 @@ export default class ConjunctionGroup extends Component {
               aria-label={`remove ${this.props.instance.name}`}>
               <FontAwesome name='close'/>
             </button>
-            { disableElement &&
-              <UncontrolledTooltip
-                target={`deletebutton-${this.props.instance.uniqueId}`} placement="left">
-                To delete this element, remove all references to the Base Element List.
-              </UncontrolledTooltip> }
+            { disableElement && this.renderDisabledTooltip(`deletebutton-${this.props.instance.uniqueId}`) }
           </div>
         </div>
       );

@@ -733,13 +733,23 @@ export default class TemplateInstance extends Component {
 
     if (phraseTemplateInstanceIsListGroup) {
       phraseTemplateInstance.childInstances.forEach((child) => {
-        // Base Element Lists are the only thing that use this. Children only go one level deep.
-        const secondPhraseExpressions = this.getExpressionPhrase(child);
+        let secondPhraseExpressions = [];
+        if (child.childInstances && phraseTemplateInstance.usedBy) {
+          // Groups expression phrases list the names of the elements within the group. They only go one level deep.
+          const childNames = child.childInstances.map(c => ({ name: c.parameters[0].value }));
+          secondPhraseExpressions = convertToExpression([], child.name, [], [], child.returnType, [], childNames);
+        } else {
+          // Individual elements give the full expression phrase in the tooltip
+          secondPhraseExpressions = this.getExpressionPhrase(child);
+        }
         const phraseArrayAsSentence = secondPhraseExpressions.reduce((acc, currentValue) =>
-          `${acc} ${currentValue.expressionText}`, '');
+          `${acc}${currentValue.expressionText === ',' ? '' : ' '}${currentValue.isName ? '"' : ''}${currentValue.expressionText}${currentValue.isName ? '"' : ''}`, '');
         elementNamesInPhrase.push({ name: child.parameters[0].value, tooltipText: phraseArrayAsSentence });
       });
     }
+
+    const isBaseElementAndOr = phraseTemplateInstanceIsListGroup &&
+      (phraseTemplateInstance.name === 'And' || phraseTemplateInstance.name === 'Or');
 
     const expressions = convertToExpression(
       modifiers,
@@ -748,7 +758,8 @@ export default class TemplateInstance extends Component {
       codes,
       returnType,
       otherParameters,
-      elementNamesInPhrase
+      elementNamesInPhrase,
+      isBaseElementAndOr
     );
 
     return expressions;
