@@ -169,7 +169,7 @@ export default class ConjunctionGroup extends Component {
             onClick={() => this.outdentClickHandler(instance)}>
             <FontAwesome name="dedent" />
           </button>
-        {this.props.disableElement && this.renderDisabledTooltip(`outdentbutton-${instance.uniqueId}`) }
+          {this.props.disableElement && this.renderDisabledTooltip(`outdentbutton-${instance.uniqueId}`) }
         </span>
       }
 

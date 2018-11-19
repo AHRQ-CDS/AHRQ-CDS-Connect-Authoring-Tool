@@ -743,7 +743,8 @@ export default class TemplateInstance extends Component {
           secondPhraseExpressions = this.getExpressionPhrase(child);
         }
         const phraseArrayAsSentence = secondPhraseExpressions.reduce((acc, currentValue) =>
-          `${acc}${currentValue.expressionText === ',' ? '' : ' '}${currentValue.isName ? '"' : ''}${currentValue.expressionText}${currentValue.isName ? '"' : ''}`, '');
+          `${acc}${currentValue.expressionText === ',' ? '' : ' '}
+          ${currentValue.isName ? '"' : ''}${currentValue.expressionText}${currentValue.isName ? '"' : ''}`, '');
         elementNamesInPhrase.push({ name: child.parameters[0].value, tooltipText: phraseArrayAsSentence });
       });
     }

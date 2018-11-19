@@ -173,7 +173,8 @@ export default class ListGroup extends Component {
       if (child.childInstances) {
         incomingReturnType = this.getAndOrReturnTypeOfFullList(child);
       }
-      newReturnType = this.checkAndOrReturnTypeCompatibility(currentReturnType, incomingReturnType, baseElementList.childInstances.length === 1);
+      const isOnlyElement = baseElementList.childInstances.length === 1;
+      newReturnType = this.checkAndOrReturnTypeCompatibility(currentReturnType, incomingReturnType, isOnlyElement);
       currentReturnType = newReturnType;
     });
 
@@ -207,7 +208,8 @@ export default class ListGroup extends Component {
     } else {
       // Need to check if incoming type will change the current return type.
       const incomingReturnType = this.getReturnType(template.returnType, template.modifiers);
-      newReturnType = this.checkAndOrReturnTypeCompatibility(currentReturnType, incomingReturnType, baseElementList.childInstances.length === 1);
+      const isOnlyElement = baseElementList.childInstances.length === 1;
+      newReturnType = this.checkAndOrReturnTypeCompatibility(currentReturnType, incomingReturnType, isOnlyElement);
     }
     this.props.addInstance(name, template, path, baseElement.uniqueId, undefined, null, newReturnType);
   }
