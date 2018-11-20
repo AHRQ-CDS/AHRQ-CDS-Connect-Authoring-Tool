@@ -104,11 +104,14 @@ export default class ElementSelect extends Component {
     const listOperationsIndex = categoriesCopy.findIndex(cat => cat.name === 'List Operations');
     const operationsIndex = categoriesCopy.findIndex(cat => cat.name === 'Operations');
 
-    const operationEntries = categoriesCopy[operationsIndex].entries.map((entry) => {
-      entry.returnType = 'None';
-      return entry;
-    });
-    categoriesCopy[listOperationsIndex].entries = categoriesCopy[listOperationsIndex].entries.concat(operationEntries);
+    if (operationsIndex >= 0 && listOperationsIndex >= 0) {
+      const operationEntries = categoriesCopy[operationsIndex].entries.map((entry) => {
+        entry.returnType = 'None';
+        return entry;
+      });
+      categoriesCopy[listOperationsIndex].entries =
+        categoriesCopy[listOperationsIndex].entries.concat(operationEntries);
+    }
 
     if (props.baseElements && props.baseElements.length && categoriesCopy[baseElementsIndex]) {
       categoriesCopy[baseElementsIndex].entries = props.baseElements.map((e) => {

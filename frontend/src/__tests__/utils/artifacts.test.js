@@ -458,9 +458,9 @@ test('Base Element Lists create a phrase with individual element\'s phrases in a
     { expressionText: 'a', isExpression: false },
     { expressionText: 'union', isExpression: false, isType: true },
     { expressionText: 'of', isExpression: false },
-    { expressionText: 'Test Name', isExpression: true, tooltipText: 'Phrase for Test Name' },
+    { expressionText: 'Test Name', isExpression: true, tooltipText: 'Phrase for Test Name', isName: true },
     { expressionText: 'and', isExpression: false },
-    { expressionText: 'Other', isExpression: true, tooltipText: 'Another phrase' }
+    { expressionText: 'Other', isExpression: true, tooltipText: 'Another phrase', isName: true }
   ];
 
   expect(expressionPhrase).toEqual(expectedOutput);
