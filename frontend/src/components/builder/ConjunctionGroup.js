@@ -210,7 +210,7 @@ export default class ConjunctionGroup extends Component {
             <button
               className={`element__deletebutton transparent-button ${disableElement ? 'disabled' : ''}`}
               id={`deletebutton-${this.props.instance.uniqueId}`}
-              onClick={() => this.deleteInstance()}
+              onClick={this.deleteInstance}
               aria-label={`remove ${this.props.instance.name}`}>
               <FontAwesome name='close'/>
             </button>

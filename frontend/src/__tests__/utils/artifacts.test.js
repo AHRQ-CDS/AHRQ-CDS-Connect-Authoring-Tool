@@ -465,3 +465,43 @@ test('Base Element Lists create a phrase with individual element\'s phrases in a
 
   expect(expressionPhrase).toEqual(expectedOutput);
 });
+
+test('Conjunction Groups create a phrase with the group\'s children 1 level deep and its type', () => {
+  const modifiers = [];
+
+  const name = 'Or';
+  const valueSets = [];
+  const codes = [];
+  const returnType = 'boolean';
+  const otherParameters = [];
+  const elementNamesInPhrase = [
+    { name: 'Child 1' },
+    { name: 'Child 2' },
+    { name: 'Group Child' }
+  ];
+
+  const expressionPhrase = convertToExpression(
+    modifiers,
+    name,
+    valueSets,
+    codes,
+    returnType,
+    otherParameters,
+    elementNamesInPhrase
+  );
+
+  const expectedOutput = [
+    { expressionText: 'There exists', isExpression: false },
+    { expressionText: 'a', isExpression: false },
+    { expressionText: 'group', isExpression: false, isType: true },
+    { expressionText: 'that satisfies', isExpression: false },
+    { expressionText: 'Child 1', isExpression: true, isName: true },
+    { expressionText: ',', isExpression: false },
+    { expressionText: 'Child 2', isExpression: true, isName: true },
+    { expressionText: ',', isExpression: false },
+    { expressionText: 'or', isExpression: false, isType: true },
+    { expressionText: 'Group Child', isExpression: true, isName: true },
+  ];
+
+  expect(expressionPhrase).toEqual(expectedOutput);
+});

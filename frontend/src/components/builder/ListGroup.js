@@ -129,8 +129,12 @@ export default class ListGroup extends Component {
   }
 
   checkAndOrReturnTypeCompatibility = (currentReturnType, incomingReturnType, isOnlyElement) => {
+    const booleanAndNull = (_.lowerCase(incomingReturnType) === 'none' && _.lowerCase(currentReturnType) === 'boolean')
+      || (_.lowerCase(incomingReturnType) === 'boolean' && _.lowerCase(currentReturnType) === 'none');
     if ((currentReturnType === incomingReturnType && _.lowerCase(currentReturnType) === 'boolean') || isOnlyElement) {
       return currentReturnType;
+    } else if (booleanAndNull) {
+      return 'boolean';
     }
     return 'invalid';
   }

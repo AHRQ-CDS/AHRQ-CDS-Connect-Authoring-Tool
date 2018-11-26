@@ -2,7 +2,8 @@ import _ from 'lodash';
 import ConjunctionGroup from '../../../components/builder/ConjunctionGroup';
 import TemplateInstance from '../../../components/builder/TemplateInstance';
 import StringParameter from '../../../components/builder/parameters/types/StringParameter';
-import { fullRenderComponent, shallowRenderComponent, createTemplateInstance } from '../../../utils/test_helpers';
+import { fullRenderComponent, shallowRenderComponent, createTemplateInstance, fullRenderComponentOnBody }
+  from '../../../utils/test_helpers';
 import { instanceTree, elementGroups } from '../../../utils/test_fixtures';
 
 let rootConjunction;
@@ -10,6 +11,8 @@ let childConjunction;
 let shallowConjunction;
 let deeperConjunction;
 let childConjunctionPath;
+let disabledConjunction;
+let disabledChildConjunction;
 
 const operations = elementGroups.find(g => g.name === 'Operations');
 const orTemplate = operations.entries.find(e => e.id === 'Or');
@@ -206,5 +209,42 @@ describe('for deeper nested conjunction groups', () => {
       .simulate('click');
 
     expect(deleteInstance).toHaveBeenCalled();
+  });
+});
+
+describe('conjunctions that are in base elements in use', () => {
+  beforeEach(() => {
+    const disableElementProps = _.cloneDeep(props);
+    disableElementProps.disableElement = true;
+    disabledConjunction = fullRenderComponentOnBody(ConjunctionGroup, disableElementProps);
+    disabledChildConjunction = disabledConjunction.find(ConjunctionGroup).at(1);
+  });
+
+  test('cannot delete main or nested conjunctions', () => {
+    expect(disabledConjunction.props().disableElement).toBeTruthy();
+
+    const deleteSpy = jest.spyOn(disabledConjunction.instance(), 'deleteInstance');
+    const propsDeleteSpy = jest.spyOn(disabledChildConjunction.props(), 'deleteInstance');
+    disabledConjunction.update();
+    const deleteButton = disabledConjunction.find('.card-group__buttons .element__deletebutton');
+
+    // Deleting calls the CG's delete function, but not the function passed on props to actually delete it
+    disabledConjunction.instance().deleteInstance();
+    expect(deleteSpy).toBeCalled();
+    expect(propsDeleteSpy).not.toBeCalled();
+    expect(deleteButton.hasClass('disabled')).toBeTruthy();
+
+    deleteSpy.mockClear();
+    propsDeleteSpy.mockClear();
+  });
+
+  test('cannot indent or outdent nested conjunctions', () => {
+    const indentButton = disabledChildConjunction.find('button[aria-label="indent"]');
+    const outdentButton = disabledChildConjunction.find('button[aria-label="outdent"]');
+
+    indentButton.simulate('click');
+    expect(deleteInstance).not.toBeCalled();
+    outdentButton.simulate('click');
+    expect(deleteInstance).not.toBeCalled();
   });
 });
