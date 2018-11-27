@@ -131,6 +131,7 @@ export default class ListGroup extends Component {
   checkAndOrReturnTypeCompatibility = (currentReturnType, incomingReturnType, isOnlyElement) => {
     const booleanAndNull = (_.lowerCase(incomingReturnType) === 'none' && _.lowerCase(currentReturnType) === 'boolean')
       || (_.lowerCase(incomingReturnType) === 'boolean' && _.lowerCase(currentReturnType) === 'none');
+
     if ((currentReturnType === incomingReturnType && _.lowerCase(currentReturnType) === 'boolean') || isOnlyElement) {
       return currentReturnType;
     } else if (booleanAndNull) {
@@ -185,35 +186,27 @@ export default class ListGroup extends Component {
     return currentReturnType;
   }
 
-  addInstance = (name, template, path, baseElement) => {
+  addInstance = (name, template, path, baseElement, isAndOrElement) => {
     const baseElementList = _.cloneDeep(baseElement);
     const currentReturnType = baseElementList.returnType;
     let newReturnType;
     if (baseElement.childInstances.length === 0) {
       // New return type will just be whatever the new element's type is.
-      newReturnType = this.promoteReturnTypeToList(template.returnType);
+      if (isAndOrElement) {
+        newReturnType = template.returnType;
+      } else {
+        newReturnType = this.promoteReturnTypeToList(template.returnType);
+      }
     } else {
       // Need to check if incoming type will change the current return type.
       let incomingReturnType = this.getReturnType(template.returnType, template.modifiers);
-      incomingReturnType = this.promoteReturnTypeToList(incomingReturnType);
-      newReturnType = this.checkReturnTypeCompatibility(currentReturnType, incomingReturnType);
-    }
-    this.props.addInstance(name, template, path, baseElement.uniqueId, undefined, null, newReturnType);
-  }
-
-  // TODO can you condense these functions into the one? Or are there too many differences?
-  addAndOrInstance = (name, template, path, baseElement) => {
-    const baseElementList = _.cloneDeep(baseElement);
-    const currentReturnType = baseElementList.returnType;
-    let newReturnType;
-    if (baseElement.childInstances.length === 0) {
-      // New return type will just be whatever the new element's type is.
-      newReturnType = template.returnType;
-    } else {
-      // Need to check if incoming type will change the current return type.
-      const incomingReturnType = this.getReturnType(template.returnType, template.modifiers);
-      const isOnlyElement = baseElementList.childInstances.length === 1;
-      newReturnType = this.checkAndOrReturnTypeCompatibility(currentReturnType, incomingReturnType, isOnlyElement);
+      if (isAndOrElement) {
+        const isOnlyElement = baseElementList.childInstances.length === 1;
+        newReturnType = this.checkAndOrReturnTypeCompatibility(currentReturnType, incomingReturnType, isOnlyElement);
+      } else {
+        incomingReturnType = this.promoteReturnTypeToList(incomingReturnType);
+        newReturnType = this.checkReturnTypeCompatibility(currentReturnType, incomingReturnType);
+      }
     }
     this.props.addInstance(name, template, path, baseElement.uniqueId, undefined, null, newReturnType);
   }
@@ -222,123 +215,54 @@ export default class ListGroup extends Component {
     this.props.editInstance(treeName, params, path, editingConjunction, baseElement.uniqueId);
   }
 
-  deleteInstance = (treeName, path, toAdd, baseElement) => {
-    // Temporarily remove the element that will be deleted to correctly calculate return type.
-    const indexToRemove = path.slice(-1);
-    const baseElementList = _.cloneDeep(baseElement);
-    baseElementList.childInstances.splice(indexToRemove, 1);
-
-    const currentReturnType = this.getReturnTypeOfFullList(baseElementList);
-    this.props.deleteInstance(treeName, path, toAdd, baseElement.uniqueId, currentReturnType);
-  }
-
-  deleteAndOrInstance = (treeName, path, toAdd, baseElement) => {
+  deleteInstance = (treeName, path, toAdd, baseElement, isAndOrElement) => {
     // Temporarily remove the element that will be deleted to correctly calculate return type.
     const indexToRemove = path.slice(-1);
     const baseElementList = _.cloneDeep(baseElement);
     const target = findValueAtPath(baseElementList, path.slice(0, path.length - 2));
     target.splice(indexToRemove, 1);
-    // TODO what should Boolean AND None be?
 
-    const currentReturnType = this.getAndOrReturnTypeOfFullList(baseElementList);
+    let currentReturnType;
+    if (isAndOrElement) {
+      currentReturnType = this.getAndOrReturnTypeOfFullList(baseElementList);
+    } else {
+      currentReturnType = this.getReturnTypeOfFullList(baseElementList);
+    }
     this.props.deleteInstance(treeName, path, toAdd, baseElement.uniqueId, currentReturnType);
   }
 
-  updateInstanceModifiers = (t, modifiers, path, index) => {
-    const baseElementList = _.cloneDeep(this.props.baseElements[index]);
-    if (!baseElementList) return;
-
-    // Temporarily apply the modifiers that will be updated. Base Element Lists can only be one child deep.
-    baseElementList.childInstances[path.slice(-1)].modifiers = modifiers;
-    const currentReturnType = this.getReturnTypeOfFullList(baseElementList);
-    this.props.updateInstanceModifiers(t, modifiers, path, index, currentReturnType);
-  }
-
-  updateAndOrInstanceModifiers = (t, modifiers, path, index) => {
+  updateInstanceModifiers = (t, modifiers, path, index, isAndOrElement) => {
     const baseElementList = _.cloneDeep(this.props.baseElements[index]);
     if (!baseElementList) return;
 
     // Temporarily apply the modifiers that will be updated. Base Element Lists can only be one child deep.
     const target = findValueAtPath(baseElementList, path);
     target.modifiers = modifiers;
-    const currentReturnType = this.getAndOrReturnTypeOfFullList(baseElementList);
+
+    let currentReturnType;
+    if (isAndOrElement) {
+      currentReturnType = this.getAndOrReturnTypeOfFullList(baseElementList);
+    } else {
+      currentReturnType = this.getReturnTypeOfFullList(baseElementList);
+    }
     this.props.updateInstanceModifiers(t, modifiers, path, index, currentReturnType);
   }
 
   isBaseElementListUsed = element => (element.usedBy ? element.usedBy.length !== 0 : false);
 
-  renderAndOrConjunction = (s, baseElementListUsed) => {
-    const { instance, index } = this.props;
-    return (
-      <div className="card-element__body">
-        <div>
-          <div className="return-type row">
-            <div className="col-3 bold align-right return-type__label">Return Type:</div>
-            <div className="col-7 return-type__value">
-              {(_.startCase(s.returnType) === 'Boolean' || s.childInstances.length === 1)
-                && <FontAwesome name="check" className="check" />}
-              {_.startCase(s.returnType)}
-            </div>
-          </div>
-        </div>
-        <ConjunctionGroup
-          root={true}
-          treeName={this.props.treeName}
-          artifact={this.props.artifact}
-          templates={this.props.templates}
-          valueSets={this.props.valueSets}
-          loadValueSets={this.props.loadValueSets}
-          instance={this.props.instance}
-          addInstance={(name, template, path) => this.addAndOrInstance(name, template, path, instance)}
-          editInstance={(treeName, params, path, editingConjunction) =>
-            this.editInstance(treeName, params, path, editingConjunction, instance)}
-          deleteInstance={(treeName, path, toAdd) => this.deleteAndOrInstance(treeName, path, toAdd, instance)}
-          getAllInstances={this.props.getAllInstances}
-          updateInstanceModifiers={(t, modifiers, path) => this.updateAndOrInstanceModifiers(t, modifiers, path, index)}
-          parameters={this.props.parameters}
-          baseElements={this.props.baseElements}
-          conversionFunctions={this.props.conversionFunctions}
-          instanceNames={this.props.instanceNames}
-          loginVSACUser={this.props.loginVSACUser}
-          setVSACAuthStatus={this.props.setVSACAuthStatus}
-          vsacStatus={this.props.vsacStatus}
-          vsacStatusText={this.props.vsacStatusText}
-          timeLastAuthenticated={this.props.timeLastAuthenticated}
-          searchVSACByKeyword={this.props.searchVSACByKeyword}
-          isSearchingVSAC={this.props.isSearchingVSAC}
-          vsacSearchResults={this.props.vsacSearchResults}
-          vsacSearchCount={this.props.vsacSearchCount}
-          getVSDetails={this.props.getVSDetails}
-          isRetrievingDetails={this.props.isRetrievingDetails}
-          vsacDetailsCodes={this.props.vsacDetailsCodes}
-          vsacFHIRCredentials={this.props.vsacFHIRCredentials}
-          isValidatingCode={this.props.isValidatingCode}
-          isValidCode={this.props.isValidCode}
-          codeData={this.props.codeData}
-          validateCode={this.props.validateCode}
-          resetCodeValidation={this.props.resetCodeValidation}
-          validateReturnType={true}
-          inBaseElements={false}
-          disableElement={baseElementListUsed}
-        />
-      </div>
-    );
-  }
-
   renderListGroup = (s) => {
     const { instance, index } = this.props;
     const baseElementListUsed = this.isBaseElementListUsed(s);
-    const intersectAndUnion = s.id === 'Union' || s.id === 'Intersect';
-    if (!intersectAndUnion) {
-      return this.renderAndOrConjunction(s, baseElementListUsed);
-    }
+    const isAndOrElement = s.id === 'And' || s.id === 'Or';
     return (
       <div className="card-element__body">
         <div>
           <div className="return-type row">
             <div className="col-3 bold align-right return-type__label">Return Type:</div>
             <div className="col-7 return-type__value">
-              <FontAwesome name="check" className="check" />
+              {isAndOrElement && (_.startCase(s.returnType) === 'Boolean' || s.childInstances.length === 1)
+                && <FontAwesome name="check" className="check" />}
+              {!isAndOrElement && <FontAwesome name="check" className="check" />}
               {_.startCase(s.returnType)}
             </div>
           </div>
@@ -351,12 +275,14 @@ export default class ListGroup extends Component {
           valueSets={this.props.valueSets}
           loadValueSets={this.props.loadValueSets}
           instance={this.props.instance}
-          addInstance={(name, template, path) => this.addInstance(name, template, path, instance)}
+          addInstance={(name, template, path) => this.addInstance(name, template, path, instance, isAndOrElement)}
           editInstance={(treeName, params, path, editingConjunction) =>
             this.editInstance(treeName, params, path, editingConjunction, instance)}
-          deleteInstance={(treeName, path, toAdd) => this.deleteInstance(treeName, path, toAdd, instance)}
+          deleteInstance={(treeName, path, toAdd) =>
+            this.deleteInstance(treeName, path, toAdd, instance, isAndOrElement)}
           getAllInstances={this.props.getAllInstances}
-          updateInstanceModifiers={(t, modifiers, path) => this.updateInstanceModifiers(t, modifiers, path, index)}
+          updateInstanceModifiers={(t, modifiers, path) =>
+            this.updateInstanceModifiers(t, modifiers, path, index, isAndOrElement)}
           parameters={this.props.parameters}
           baseElements={this.props.baseElements}
           conversionFunctions={this.props.conversionFunctions}
@@ -379,9 +305,9 @@ export default class ListGroup extends Component {
           codeData={this.props.codeData}
           validateCode={this.props.validateCode}
           resetCodeValidation={this.props.resetCodeValidation}
-          validateReturnType={false}
-          options={'listOperations'}
-          inBaseElements={true}
+          validateReturnType={isAndOrElement}
+          options={isAndOrElement ? '' : 'listOperations'}
+          inBaseElements={!isAndOrElement}
           disableElement={baseElementListUsed}
         />
       </div>
