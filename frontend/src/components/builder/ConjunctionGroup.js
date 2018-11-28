@@ -323,7 +323,7 @@ export default class ConjunctionGroup extends Component {
           validateCode={this.props.validateCode}
           resetCodeValidation={this.props.resetCodeValidation}
           disableElement={this.props.disableElement}
-          inBaseElements={this.props.inBaseElements} />
+          disableIndent={this.props.disableIndent} />
 
         {this.renderConjunctionSelect(instance)}
       </div>

@@ -935,7 +935,7 @@ export default class TemplateInstance extends Component {
             }
           </div>
           <div className="card-element__buttons">
-            {showElement && !this.props.inBaseElements && renderIndentButtons(templateInstance)}
+            {showElement && !this.props.disableIndent && renderIndentButtons(templateInstance)}
 
             <button
               onClick={this.showHideElementBody}
@@ -1020,5 +1020,5 @@ TemplateInstance.propTypes = {
   validateCode: PropTypes.func.isRequired,
   resetCodeValidation: PropTypes.func.isRequired,
   disableElement: PropTypes.bool,
-  inBaseElements: PropTypes.bool,
+  disableIndent: PropTypes.bool,
 };

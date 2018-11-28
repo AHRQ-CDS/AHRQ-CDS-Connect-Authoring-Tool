@@ -307,7 +307,7 @@ export default class ListGroup extends Component {
           resetCodeValidation={this.props.resetCodeValidation}
           validateReturnType={isAndOrElement}
           options={isAndOrElement ? '' : 'listOperations'}
-          inBaseElements={!isAndOrElement}
+          disableIndent={!isAndOrElement}
           disableElement={baseElementListUsed}
         />
       </div>
