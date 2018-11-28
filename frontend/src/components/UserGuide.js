@@ -935,12 +935,12 @@ export default class UserGuide extends Component {
                 <p>
                   Base Elements can also be a list of elements. Similar to Logic Elements, Lists combine multiple
                   elements into one group, which can be combined with a Union or an Intersection. Lists can be added to
-                  Base Elements by choosing "List Operations" from the Element Picker.
+                  Base Elements by choosing "List Operations" from the Element Picker and choosing "Intersect" or "Union".
                 </p>
                 <p>
                   <p>
                     <img
-                      alt="Base Element in Inclusions"
+                      alt="Base Element List Group"
                       src={screenshotUrl('List_Group')}
                       className="img-fluid img-thumbnail rounded mx-auto d-block" />
                   </p>
@@ -968,12 +968,12 @@ export default class UserGuide extends Component {
                 <p>
                   Like individual Base Elements, List Groups can be used within Inclusions, Exclusions, or Subpopulations.
                   They are added using the Base Elements option in the Element Picker. Once a Base Element List Group is used,
-                  some functionality of the origianl List is disabled.
+                  some functionality of the original List is disabled.
                 </p>
 
                 <p>
                   <img
-                    alt="Base Element in Inclusions"
+                    alt="Base Element List Group in Inclusions"
                     src={screenshotUrl('List_Group_in_Use')}
                     className="img-fluid img-thumbnail rounded mx-auto d-block" />
                 </p>
@@ -997,6 +997,42 @@ export default class UserGuide extends Component {
                   </li>
                 </ol>
 
+                <p>
+                  Base Elements can also be a Logic Element. Base Element Logic Elements work the same as Logic Elements
+                  in other tabs; they combine multiple elements into one group using an And or an Or. For more information
+                  about Logic Elements, see Section 3.5. Logic Elements in this tab also work very similarly to List Groups
+                  in this tab. They can be added to Base Elements by choosing "List Operations" and choosing "And" or "Or".
+                </p>
+
+                <p>
+                  <img
+                    alt="Base Element Logic Element"
+                    src={screenshotUrl('Base_Element_Logic_Element')}
+                    className="img-fluid img-thumbnail rounded mx-auto d-block" />
+                </p>
+                <ol>
+                  <li>
+                    The name of the overall Logic Element.
+                  </li>
+                  <li>
+                    The return type of the overall Logic Element. This will update automatically as additional elements
+                    are added to the group. The return type can only be Boolean when there are multiple elements in the group.
+                  </li>
+                  <li>
+                    An element in the Logic Element. Expressions can be added to each element. Elements can be nested,
+                    similar to Logic Elements in other tabs.
+                  </li>
+                  <li>
+                    The logic type dropdown for Logic Elements. The options are "And" or "Or", and the choice can be changed
+                    at any point while building the Logic Element.
+                  </li>
+                </ol>
+
+                <p>
+                  Like Base Element List Groups, Base Element Logic Groups can be used within Inclusions, Exclusions, or
+                  Subpopulations. Once a Base Element List Group is used, the same functionality is disabled as List Groups.
+                  Additionally, Logic Elements cannot indent or outdent any elements contained within it when it is in use.
+                </p>
 
               </div>
 
