@@ -133,7 +133,7 @@ export default class ListGroup extends Component {
       || (_.lowerCase(incomingReturnType) === 'boolean' && _.lowerCase(currentReturnType) === 'none');
 
     if ((currentReturnType === incomingReturnType && _.lowerCase(currentReturnType) === 'boolean') || isOnlyElement) {
-      return currentReturnType;
+      return incomingReturnType;
     } else if (booleanAndNull) {
       return 'boolean';
     }
