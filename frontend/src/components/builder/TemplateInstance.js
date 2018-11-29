@@ -398,6 +398,12 @@ export default class TemplateInstance extends Component {
 
   hasDuplicateName = () => {
     const { templateInstance, instanceNames } = this.props;
+
+    // Parameters cannot be renamed if they are in use, so don't need to worry if they are a duplicate here.
+    if (templateInstance.type === 'parameter') {
+      return false;
+    }
+
     const elementNameParameter = templateInstance.parameters.find(param => param.id === 'element_name');
     // Treat undefined as empty string so unnamed elements display duplicate correctly.
     const nameValue = elementNameParameter.value === undefined ? '' : elementNameParameter.value;
