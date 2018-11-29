@@ -105,12 +105,12 @@ export default class ArtifactTable extends Component {
         <button aria-label="Edit"
           className="primary-button edit-artifact-button"
           onClick={() => this.openEditArtifactModal(artifact)}>
-          <FontAwesome name='pencil' />
+          <FontAwesome name='pencil' /> Edit Info
         </button>
 
         <button className="danger-button"
           onClick={() => this.openConfirmDeleteModal(artifact)}>
-          Delete
+          <FontAwesome name='times' /> Delete
         </button>
       </td>
     </tr>
