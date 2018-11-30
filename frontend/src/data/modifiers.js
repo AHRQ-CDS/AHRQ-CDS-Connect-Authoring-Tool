@@ -279,5 +279,21 @@ export default [
     returnType: 'list_of_encounters',
     cqlTemplate: 'BaseModifier',
     cqlLibraryFunction: 'C3F.InProgress'
+  },
+  {
+    id: 'AllTrue',
+    name: 'All True',
+    inputTypes: ['list_of_booleans'],
+    returnType: 'boolean',
+    cqlTemplate: 'BaseModifier',
+    cqlLibraryFunction: 'AllTrue'
+  },
+  {
+    id: 'AnyTrue',
+    name: 'Any True',
+    inputTypes: ['list_of_booleans'],
+    returnType: 'boolean',
+    cqlTemplate: 'BaseModifier',
+    cqlLibraryFunction: 'AnyTrue'
   }
 ];

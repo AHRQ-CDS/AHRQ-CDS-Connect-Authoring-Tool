@@ -57,7 +57,9 @@ function getExpressionSentenceValue(modifier) {
     BooleanComparison: { modifierText: 'is true', leadingText: 'which', type: 'post' },
     CheckExistence: { modifierText: 'is null', leadingText: '', type: 'post' },
     BooleanNot: { modifierText: 'not', leadingText: 'There does', type: 'not' },
-    InProgress: { modifierText: 'in progress', leadingText: '', type: 'list' }
+    InProgress: { modifierText: 'in progress', leadingText: '', type: 'list' },
+    AllTrue: { modifierText: 'all elements true', leadingText: 'with', type: 'post' },
+    AnyTrue: { modifierText: 'any element true', leadingText: 'with', type: 'post' }
   };
 
   // Don't display the expression if it is not filled out completely.
