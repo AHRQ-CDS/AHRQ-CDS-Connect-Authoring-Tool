@@ -34,8 +34,6 @@ const defaultState = {
   publishEnabled: false
 };
 
-const time = moment().format('dddd, MMMM Do YYYY, h:mm:ss a');
-
 export default function auth(state = defaultState, action) {
   switch (action.type) {
     case types.SET_STATUS_MESSAGE:
@@ -110,12 +108,14 @@ export default function auth(state = defaultState, action) {
         statusMessage: null,
         downloadArtifact: { isDownloading: true, downloadStatus: null, elmErrors: [] }
       };
-    case types.DOWNLOAD_ARTIFACT_SUCCESS:
+    case types.DOWNLOAD_ARTIFACT_SUCCESS: {
+      const time = moment().format('dddd, MMMM Do YYYY, h:mm:ss a');
       return {
         ...state,
         statusMessage: `Downloaded ${time}.`,
         downloadArtifact: { isDownloading: false, downloadStatus: 'success', elmErrors: [] }
       };
+    }
     case types.DOWNLOAD_ARTIFACT_FAILURE:
       return {
         ...state,
@@ -185,12 +185,14 @@ export default function auth(state = defaultState, action) {
         statusMessage: null,
         publishArtifact: { isPublishing: true, publishStatus: null }
       };
-    case types.PUBLISH_ARTIFACT_SUCCESS:
+    case types.PUBLISH_ARTIFACT_SUCCESS: {
+      const time = moment().format('dddd, MMMM Do YYYY, h:mm:ss a');
       return {
         ...state,
         statusMessage: `Published ${time}.`,
         publishArtifact: { isPublishing: false, publishStatus: 'success' }
       };
+    }
     case types.PUBLISH_ARTIFACT_FAILURE:
       return {
         ...state,
@@ -209,7 +211,8 @@ export default function auth(state = defaultState, action) {
         artifactSaved: false,
         saveArtifact: { isSaving: true, saveStatus: null }
       };
-    case types.SAVE_ARTIFACT_SUCCESS:
+    case types.SAVE_ARTIFACT_SUCCESS: {
+      const time = moment().format('dddd, MMMM Do YYYY, h:mm:ss a');
       return {
         ...state,
         artifact: action.artifact,
@@ -217,6 +220,7 @@ export default function auth(state = defaultState, action) {
         artifactSaved: true,
         saveArtifact: { isSaving: false, saveStatus: 'success' }
       };
+    }
     case types.SAVE_ARTIFACT_FAILURE:
       return {
         ...state,
@@ -229,12 +233,14 @@ export default function auth(state = defaultState, action) {
         statusMessage: null,
         deleteArtifact: { isDeleting: true, deleteStatus: null }
       };
-    case types.DELETE_ARTIFACT_SUCCESS:
+    case types.DELETE_ARTIFACT_SUCCESS: {
+      const time = moment().format('dddd, MMMM Do YYYY, h:mm:ss a');
       return {
         ...state,
         statusMessage: `Deleted ${time}.`,
         deleteArtifact: { isDeleting: false, deleteStatus: 'success' }
       };
+    }
     case types.DELETE_ARTIFACT_FAILURE:
       return {
         ...state,

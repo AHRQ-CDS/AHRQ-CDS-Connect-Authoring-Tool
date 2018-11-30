@@ -230,9 +230,9 @@ export default class CodeSelectModal extends Component {
             </header>
 
             <main className="modal__body">
-              <div className="element-modal__search row">
+              <div className="element-modal__search">
                 <input
-                  className="element-modal__search-code col-6"
+                  className="element-modal__search-code"
                   type="text"
                   id="code-input"
                   placeholder={codeInputLabel}
@@ -242,37 +242,35 @@ export default class CodeSelectModal extends Component {
                   onChange={this.handleSearchValueChange}
                 />
 
-                <Select
-                  className="element-modal__search-system col-4"
-                  placeholder={'Select code system'}
-                  aria-label={'Select code system'}
-                  clearable={false}
-                  value={this.state.selectedCS}
-                  options={codeSystemOptions}
-                  onChange={this.onCodeSystemSelected}
-                />
+                <div>
+                  <Select
+                    className="element-modal__search-system"
+                    placeholder={'Select code system'}
+                    aria-label={'Select code system'}
+                    clearable={false}
+                    value={this.state.selectedCS}
+                    options={codeSystemOptions}
+                    onChange={this.onCodeSystemSelected}
+                  />
 
-                <button className="primary-button element-modal__search-button col-2" onClick={this.validateCode}>
+                  {this.state.displayOtherInput &&
+                    <div className="element-modal__search-other-system">
+                      <input
+                        type="text"
+                        id="other-code-system"
+                        placeholder={otherInputLabel}
+                        aria-label={otherInputLabel}
+                        title={otherInputLabel}
+                        value={this.state.codeSystemText}
+                        onChange={this.handleOtherCodeSystemChange}
+                      />
+                    </div>
+                  }
+                </div>
+
+                <button className="primary-button element-modal__search-button" onClick={this.validateCode}>
                   Validate
                 </button>
-
-                <div className="col-6"></div>
-
-                {this.state.displayOtherInput &&
-                  <div className="element-modal__search-other-system col-4">
-                    <input
-                      type="text"
-                      id="other-code-system"
-                      placeholder={otherInputLabel}
-                      aria-label={otherInputLabel}
-                      title={otherInputLabel}
-                      value={this.state.codeSystemText}
-                      onChange={this.handleOtherCodeSystemChange}
-                    />
-                  </div>
-                }
-
-                <div className="col-2"></div>
               </div>
 
               {this.renderCodeData()}
@@ -280,6 +278,8 @@ export default class CodeSelectModal extends Component {
 
             <footer className="modal__footer">
               {this.renderCodeValidation()}
+
+              <button className="secondary-button" onClick={this.closeCodeSelectModal}>Cancel</button>
 
               <button className="primary-button element-modal__search-button" onClick={this.chooseCode}>
                 Select

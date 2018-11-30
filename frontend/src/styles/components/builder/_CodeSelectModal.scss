@@ -1,9 +1,15 @@
 .element-modal__container .element-modal__search {
   padding: 1em 2em;
   margin: 0;
+  display: flex;
+  justify-content: space-between;
+
+  input { margin-right: 10px; }
+  button { margin-left: 10px; }
 
   &-system {
-    margin: 0;
+    margin: 0 2px 0 0;
+    width: calc(120px + 10vw);
 
     .Select-input input {
       border: 0;
@@ -14,7 +20,7 @@
 
   &-other-system {
     margin-top: 5px;
-    max-width: 316px;
+    width: calc(120px + 10vw);
   }
 }
 
