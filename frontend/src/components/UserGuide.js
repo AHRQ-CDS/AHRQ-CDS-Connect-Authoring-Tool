@@ -845,194 +845,203 @@ export default class UserGuide extends Component {
 
               <div className="h3-wrapper">
                 <h3 id="BaseElements">3.9 Base Elements</h3>
+                <div className="h4-wrapper">
+                  <h4 id="Single_Base_Elements">3.9.1 Single Base Elements</h4>
 
-                <p>
-                  Base Elements can be used to create individual elements, which do not need to be contained within a
-                  Conjunction Group. Elements created in this tab can be added to the Inclusions, Exclusions, and
-                  Subpopulations Tabs.
-                </p>
+                  <p>
+                    Base Elements can be used to create individual elements, which do not need to be contained within a
+                    Conjunction Group. Elements created in this tab can be added to the Inclusions, Exclusions, and
+                    Subpopulations Tabs.
+                  </p>
 
-                <p>
-                  <img
-                    alt="Base Element"
-                    src={screenshotUrl('Base_Element')}
-                    className="img-fluid img-thumbnail rounded mx-auto d-block" />
-                </p>
-                <ol>
-                  <li>
-                    A base element. Individual base elements work similarly to Elements added to Inclusions, Exclusions,
-                    and Subpopulations. Value Sets and Codes can be added to VSAC Elements, and Expressions can be added.
-                  </li>
-                  <li>
-                    No "Select conjunction type" dropdown is present between Base Elements. This is because each element is
-                    separate from the others on the tab. They are not part of a Logic Element.
-                  </li>
-                  <li>
-                    The Element Picker (Section 3.2) used to add additional Base Elements.
-                  </li>
-                </ol>
-
-                <p>
-                  Base Elements can be used within the Inclusions, Exclusions, and Subpopulations tabs. They can be added
-                  using the "Base Elements" option in the Element Picker.
-                </p>
-
-                <p>
-                  <img
-                    alt="Base Element in Inclusions"
-                    src={screenshotUrl('Base_Element_in_Use')}
-                    className="img-fluid img-thumbnail rounded mx-auto d-block" />
-                </p>
-                <ol>
-                  <li>
-                    The background color of Base Element uses differs from other Elements used to easily differentiate it.
-                  </li>
-                  <li>
-                    The full expression phrase of the original Base Element is visible. Additional Expressions
-                    that are added will become part of the phrase.
-                  </li>
-                  <li>
-                    The Base Element use specifies the original Base Element name to easily identify its origin.
-                    <ol type='a'>
-                      <li>
-                        Clicking the link icon next to the original Base Element name switches to the Base Elements tab
-                        and scrolls down to that Base Element's definition.</li>
-                    </ol>
-                  </li>
-                  <li>
-                    Expressions can be added to Base Element uses the same as any other Element. Expressions that can be
-                    added to the return type of the Base Element will be available. Additional expressions are available
-                    in the same way as all other Elements.
-                  </li>
-                </ol>
-
-                <p>
-                  Once a Base Element is used within Inclusions, Exclusions, or Subpopulations, the original Base Element
-                  cannot be deleted and it's return type cannot change.
-                </p>
-                <p>
-                  <img
-                    alt="Base Element Can't Change"
-                    src={screenshotUrl('Base_Element_Cant_Change')}
-                    className="img-fluid img-thumbnail rounded mx-auto d-block" />
-                </p>
-                <ol>
-                  <li>
-                    The Base Element cannot be deleted while it is in use.
-                  </li>
-                  <li>
-                    Applied expressions cannot be removed if doing so would change the Base Element's return type. In order
-                    to remove the expression, first delete all uses of the Base Element in the artifact.
-                  </li>
-                  <li>
-                    Expressions can be added to the Base Element while it is used, as long as the return type of the
-                    Base Element does not change. Expressions that would change the return type are not available in the
-                    list. In order to add expressions that would change the return type, first remove all uses of the
-                    Base Element in the artifact.
-                  </li>
-                </ol>
-
-                <p>
-                  Base Elements can also be a list of elements. Similar to Logic Elements, Lists combine multiple
-                  elements into one group, which can be combined with a Union or an Intersection. Lists can be added to
-                  Base Elements by choosing "List Operations" from the Element Picker and choosing "Intersect" or "Union".
-                </p>
-                <p>
                   <p>
                     <img
-                      alt="Base Element List Group"
-                      src={screenshotUrl('List_Group')}
+                      alt="Base Element"
+                      src={screenshotUrl('Base_Element')}
                       className="img-fluid img-thumbnail rounded mx-auto d-block" />
                   </p>
-                </p>
+                  <ol>
+                    <li>
+                      A base element. Individual base elements work similarly to Elements added to Inclusions, Exclusions,
+                      and Subpopulations. Value Sets and Codes can be added to VSAC Elements, and Expressions can be added.
+                    </li>
+                    <li>
+                      No "Select conjunction type" dropdown is present between Base Elements. This is because each element is
+                      separate from the others on the tab. They are not part of a Logic Element.
+                    </li>
+                    <li>
+                      The Element Picker (Section 3.2) used to add additional Base Elements.
+                    </li>
+                  </ol>
 
-                <ol>
-                  <li>
-                    The name of the overall List Group.
-                  </li>
-                  <li>
-                    The return type of the overall List Group. This will update automatically as additional elements are
-                    added to the list.
-                  </li>
-                  <li>
-                    An element in the List Group. Elements can be added to the group using the Element Picker, similarly
-                    to how Logic Groups work. Expressions can be added to each element.
-                  </li>
-                  <li>
-                    Between every element in a List Group, there is a logic type dropdown. The options are "Union" or "Intersect".
-                    The dropdown can be changed at any point while building the List Group. Note that within any particular
-                    List Group, only one option can be chosen, similar to conjunction types in Logic Groups.
-                  </li>
-                </ol>
+                  <p>
+                    Base Elements can be used within the Inclusions, Exclusions, and Subpopulations tabs. They can be added
+                    using the "Base Elements" option in the Element Picker.
+                  </p>
 
-                <p>
-                  Like individual Base Elements, List Groups can be used within Inclusions, Exclusions, or Subpopulations.
-                  They are added using the Base Elements option in the Element Picker. Once a Base Element List Group is used,
-                  some functionality of the original List is disabled.
-                </p>
+                  <p>
+                    <img
+                      alt="Base Element in Inclusions"
+                      src={screenshotUrl('Base_Element_in_Use')}
+                      className="img-fluid img-thumbnail rounded mx-auto d-block" />
+                  </p>
+                  <ol>
+                    <li>
+                      The background color of Base Element uses differs from other Elements used to easily differentiate it.
+                    </li>
+                    <li>
+                      The full expression phrase of the original Base Element is visible. Additional Expressions
+                      that are added will become part of the phrase.
+                    </li>
+                    <li>
+                      The Base Element use specifies the original Base Element name to easily identify its origin.
+                      <ol type='a'>
+                        <li>
+                          Clicking the link icon next to the original Base Element name switches to the Base Elements tab
+                          and scrolls down to that Base Element's definition.</li>
+                      </ol>
+                    </li>
+                    <li>
+                      Expressions can be added to Base Element uses the same as any other Element. Expressions that can be
+                      added to the return type of the Base Element will be available. Additional expressions are available
+                      in the same way as all other Elements.
+                    </li>
+                  </ol>
 
-                <p>
-                  <img
-                    alt="Base Element List Group in Inclusions"
-                    src={screenshotUrl('List_Group_in_Use')}
-                    className="img-fluid img-thumbnail rounded mx-auto d-block" />
-                </p>
-                <ol>
-                  <li>
-                    The List Group cannot be deleted while it is in use.
-                  </li>
-                  <li>
-                    Elements within the List Group cannot be deleted while the list is in use.
-                  </li>
-                  <li>
-                    Applied expressions on elements within the List Group cannot be removed if doing so would change the
-                    element's return type.
-                  </li>
-                  <li>
-                    Expressions can be added to elements while the List Group is used, as long as the return type of the
-                    element does not change. Expressions that would change the return type are not available.
-                  </li>
-                  <li>
-                    New elements cannot be added to the List Group while it is in use.
-                  </li>
-                </ol>
+                  <p>
+                    Once a Base Element is used within Inclusions, Exclusions, or Subpopulations, the original Base Element
+                    cannot be deleted and it's return type cannot change.
+                  </p>
+                  <p>
+                    <img
+                      alt="Base Element Can't Change"
+                      src={screenshotUrl('Base_Element_Cant_Change')}
+                      className="img-fluid img-thumbnail rounded mx-auto d-block" />
+                  </p>
+                  <ol>
+                    <li>
+                      The Base Element cannot be deleted while it is in use.
+                    </li>
+                    <li>
+                      Applied expressions cannot be removed if doing so would change the Base Element's return type. In order
+                      to remove the expression, first delete all uses of the Base Element in the artifact.
+                    </li>
+                    <li>
+                      Expressions can be added to the Base Element while it is used, as long as the return type of the
+                      Base Element does not change. Expressions that would change the return type are not available in the
+                      list. In order to add expressions that would change the return type, first remove all uses of the
+                      Base Element in the artifact.
+                    </li>
+                  </ol>
+                </div>
 
-                <p>
-                  Base Elements can also be a Logic Element. Base Element Logic Elements work the same as Logic Elements
-                  in other tabs; they combine multiple elements into one group using an And or an Or. For more information
-                  about Logic Elements, see Section 3.5. Logic Elements in this tab also work very similarly to List Groups
-                  in this tab. They can be added to Base Elements by choosing "List Operations" and choosing "And" or "Or".
-                </p>
+                <div className="h4-wrapper">
+                  <h4 id="Base_Element_List_Groups">3.9.2 Base Element List Groups</h4>
+                  <p>
+                    Base Elements can also be a list of elements. Similar to Logic Elements, Lists combine multiple
+                    elements into one group, which can be combined with a Union or an Intersection. Lists can be added to
+                    Base Elements by choosing "List Operations" from the Element Picker and choosing "Intersect" or "Union".
+                  </p>
+                  <p>
+                    <p>
+                      <img
+                        alt="Base Element List Group"
+                        src={screenshotUrl('List_Group')}
+                        className="img-fluid img-thumbnail rounded mx-auto d-block" />
+                    </p>
+                  </p>
 
-                <p>
-                  <img
-                    alt="Base Element Logic Element"
-                    src={screenshotUrl('Base_Element_Logic_Element')}
-                    className="img-fluid img-thumbnail rounded mx-auto d-block" />
-                </p>
-                <ol>
-                  <li>
-                    The name of the overall Logic Element.
-                  </li>
-                  <li>
-                    The return type of the overall Logic Element. This will update automatically as additional elements
-                    are added to the group. The return type can only be Boolean when there are multiple elements in the group.
-                  </li>
-                  <li>
-                    An element in the Logic Element. Expressions can be added to each element. Elements can be nested,
-                    similar to Logic Elements in other tabs.
-                  </li>
-                  <li>
-                    The logic type dropdown for Logic Elements. The options are "And" or "Or", and the choice can be changed
-                    at any point while building the Logic Element.
-                  </li>
-                </ol>
+                  <ol>
+                    <li>
+                      The name of the overall List Group.
+                    </li>
+                    <li>
+                      The return type of the overall List Group. This will update automatically as additional elements are
+                      added to the list.
+                    </li>
+                    <li>
+                      An element in the List Group. Elements can be added to the group using the Element Picker, similarly
+                      to how Logic Groups work. Expressions can be added to each element.
+                    </li>
+                    <li>
+                      Between every element in a List Group, there is a logic type dropdown. The options are "Union" or
+                      "Intersect". The dropdown can be changed at any point while building the List Group. Note that within
+                      any particular List Group, only one option can be chosen, similar to conjunction types in Logic Groups.
+                    </li>
+                  </ol>
 
-                <p>
-                  Like Base Element List Groups, Base Element Logic Groups can be used within Inclusions, Exclusions, or
-                  Subpopulations. Once a Base Element List Group is used, the same functionality is disabled as List Groups.
-                  Additionally, Logic Elements cannot indent or outdent any elements contained within it when it is in use.
-                </p>
+                  <p>
+                    Like individual Base Elements, List Groups can be used within Inclusions, Exclusions, or Subpopulations.
+                    They are added using the Base Elements option in the Element Picker. Once a Base Element List Group is used,
+                    some functionality of the original List is disabled.
+                  </p>
+
+                  <p>
+                    <img
+                      alt="Base Element List Group in Inclusions"
+                      src={screenshotUrl('List_Group_in_Use')}
+                      className="img-fluid img-thumbnail rounded mx-auto d-block" />
+                  </p>
+                  <ol>
+                    <li>
+                      The List Group cannot be deleted while it is in use.
+                    </li>
+                    <li>
+                      Elements within the List Group cannot be deleted while the list is in use.
+                    </li>
+                    <li>
+                      Applied expressions on elements within the List Group cannot be removed if doing so would change the
+                      element's return type.
+                    </li>
+                    <li>
+                      Expressions can be added to elements while the List Group is used, as long as the return type of the
+                      element does not change. Expressions that would change the return type are not available.
+                    </li>
+                    <li>
+                      New elements cannot be added to the List Group while it is in use.
+                    </li>
+                  </ol>
+                </div>
+
+                <div className="h4-wrapper">
+                  <h4 id="Base_Element_Logic_Elements">3.9.3 Base Element Logic Elements</h4>
+                  <p>
+                    Base Elements can also be a Logic Element. Base Element Logic Elements work the same as Logic Elements
+                    in other tabs; they combine multiple elements into one group using an And or an Or. For more information
+                    about Logic Elements, see Section 3.5. Logic Elements in this tab also work very similarly to List Groups
+                    in this tab. They can be added to Base Elements by choosing "List Operations" and choosing "And" or "Or".
+                  </p>
+
+                  <p>
+                    <img
+                      alt="Base Element Logic Element"
+                      src={screenshotUrl('Base_Element_Logic_Element')}
+                      className="img-fluid img-thumbnail rounded mx-auto d-block" />
+                  </p>
+                  <ol>
+                    <li>
+                      The name of the overall Logic Element.
+                    </li>
+                    <li>
+                      The return type of the overall Logic Element. This will update automatically as additional elements
+                      are added to the group. The return type can only be Boolean when there are multiple elements in the group.
+                    </li>
+                    <li>
+                      An element in the Logic Element. Expressions can be added to each element. Elements can be nested,
+                      similar to Logic Elements in other tabs.
+                    </li>
+                    <li>
+                      The logic type dropdown for Logic Elements. The options are "And" or "Or", and the choice can be changed
+                      at any point while building the Logic Element.
+                    </li>
+                  </ol>
+
+                  <p>
+                    Like Base Element List Groups, Base Element Logic Groups can be used within Inclusions, Exclusions, or
+                    Subpopulations. Once a Base Element List Group is used, the same functionality is disabled as List Groups.
+                    Additionally, Logic Elements cannot indent or outdent any elements contained within it when it is in use.
+                  </p>
+                </div>
 
               </div>
 

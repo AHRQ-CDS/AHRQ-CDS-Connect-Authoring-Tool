@@ -137,7 +137,7 @@ export default class ConjunctionGroup extends Component {
   renderDisabledTooltip = id => (
     <UncontrolledTooltip
       target={id} placement="left">
-      To delete this element, remove all references to the Base Element List.
+      To edit or delete this element, remove all references to the Base Element List.
     </UncontrolledTooltip>
   );
 
