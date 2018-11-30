@@ -355,7 +355,13 @@ function orderExpressionSentenceArray(
       hasStarted = true;
     }
   } else if (!returnsPlural && returnsBoolean && !checkExistenceExpression) {
-    orderedExpressionArray.push({ expressionText: 'There exists', isExpression: false });
+    if (notExpression) {
+      orderedExpressionArray.push({ expressionText: 'There does', isExpression: false });
+      orderedExpressionArray.push({ expressionText: 'not', isExpression: true });
+      orderedExpressionArray.push({ expressionText: 'exist', isExpression: false });
+    } else {
+      orderedExpressionArray.push({ expressionText: 'There exists', isExpression: false });
+    }
     hasStarted = true;
   } else if (notExpression) {
     if (checkExistenceExpression) {
