@@ -310,7 +310,7 @@ describe('Base Element List instance\'s have child instances inside which', () =
   beforeEach(() => {
     const baseElementProps = { ...props, renderIndentButtons: jest.fn(), deleteInstance: jest.fn() };
     baseElementProps.templateInstance = genericTemplateInstanceWithModifiers;
-    baseElementProps.inBaseElements = true; // Used to determine indent/outdent
+    baseElementProps.disableIndent = true; // Used to determine indent/outdent
     baseElementProps.disableElement = true; // Used to determine modifier changes and ability to delete. Changing to False should break last 3 tests.
     listComponent = fullRenderComponentOnBody(TemplateInstance, { ...baseElementProps });
   });

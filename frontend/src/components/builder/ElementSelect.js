@@ -101,6 +101,17 @@ export default class ElementSelect extends Component {
     categoriesCopy = filterUnsuppressed(categoriesCopy);
     const paramsIndex = categoriesCopy.findIndex(cat => cat.name === 'Parameters');
     const baseElementsIndex = categoriesCopy.findIndex(cat => cat.name === 'Base Elements');
+    const listOperationsIndex = categoriesCopy.findIndex(cat => cat.name === 'List Operations');
+    const operationsIndex = categoriesCopy.findIndex(cat => cat.name === 'Operations');
+
+    if (operationsIndex >= 0 && listOperationsIndex >= 0) {
+      const operationEntries = categoriesCopy[operationsIndex].entries.map((entry) => {
+        entry.returnType = 'None';
+        return entry;
+      });
+      categoriesCopy[listOperationsIndex].entries =
+        categoriesCopy[listOperationsIndex].entries.concat(operationEntries);
+    }
 
     if (props.baseElements && props.baseElements.length && categoriesCopy[baseElementsIndex]) {
       categoriesCopy[baseElementsIndex].entries = props.baseElements.map((e) => {

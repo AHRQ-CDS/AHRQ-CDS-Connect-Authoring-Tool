@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import Select from 'react-select';
 import FontAwesome from 'react-fontawesome';
+import { UncontrolledTooltip } from 'reactstrap';
 
 import TemplateInstance from './TemplateInstance';
 import ElementSelect from './ElementSelect';
@@ -64,7 +65,10 @@ export default class ConjunctionGroup extends Component {
   // ----------------------- CLICK HANDLERS -------------------------------- //
 
   indentClickHandler = (instance) => {
-    const { treeName, artifact, templates } = this.props;
+    const { treeName, artifact, templates, disableElement } = this.props;
+    if (disableElement) {
+      return;
+    }
     const operationTemplates = templates.find(template => template.name === 'Operations').entries;
     const conjunctionTemplates = operationTemplates.filter(template => template.conjunction);
 
@@ -95,6 +99,10 @@ export default class ConjunctionGroup extends Component {
   }
 
   outdentClickHandler = (instance) => {
+    const { disableElement } = this.props;
+    if (disableElement) {
+      return;
+    }
     if (instance.conjunction) {
       // Outdenting a conjunction group. Removes the conjunction, readds each child to the conjunction's parent
       const toAdd = [];
@@ -118,7 +126,20 @@ export default class ConjunctionGroup extends Component {
     }
   }
 
+  deleteInstance = () => {
+    if (!this.props.disableElement) {
+      this.props.deleteInstance(this.props.treeName, this.getPath());
+    }
+  }
+
   // ----------------------- RENDERS --------------------------------------- //
+
+  renderDisabledTooltip = id => (
+    <UncontrolledTooltip
+      target={id} placement="left">
+      To edit or delete this element, remove all references to the Base Element List.
+    </UncontrolledTooltip>
+  );
 
   renderConjunctionSelect = i => (
     <Select
@@ -140,20 +161,26 @@ export default class ConjunctionGroup extends Component {
     // Indenting is always possible, outdent only possible when not at root already
     <span className="indent-outdent-container">
       {this.getPath() !== '' &&
-        <button
-          aria-label="outdent"
-          className="element__hidebutton transparent-button"
-          onClick={() => this.outdentClickHandler(instance)}>
-          <FontAwesome name="dedent" />
-        </button>
+        <span>
+          <button
+            aria-label="outdent"
+            className={`element__hidebutton transparent-button ${this.props.disableElement ? 'disabled' : ''}`}
+            id={`outdentbutton-${instance.uniqueId}`}
+            onClick={() => this.outdentClickHandler(instance)}>
+            <FontAwesome name="dedent" />
+          </button>
+          {this.props.disableElement && this.renderDisabledTooltip(`outdentbutton-${instance.uniqueId}`) }
+        </span>
       }
 
       <button
         aria-label="indent"
-        className="element__hidebutton transparent-button"
+        className={`element__hidebutton transparent-button ${this.props.disableElement ? 'disabled' : ''}`}
+        id={`indentbutton-${instance.uniqueId}`}
         onClick={() => this.indentClickHandler(instance)}>
         <FontAwesome name="indent" />
       </button>
+      { this.props.disableElement && this.renderDisabledTooltip(`indentbutton-${instance.uniqueId}`) }
     </span>
   )
 
@@ -163,6 +190,7 @@ export default class ConjunctionGroup extends Component {
       name.id !== this.props.instance.uniqueId && name.name === elementNameParam.value);
 
     if (!this.props.root) {
+      const { disableElement } = this.props;
       return (
         <div className="card-group__header">
           <div className="card-group__header-title">
@@ -180,11 +208,13 @@ export default class ConjunctionGroup extends Component {
             {this.renderIndentButtons(this.props.instance)}
 
             <button
-              className="element__deletebutton transparent-button"
-              onClick={() => this.props.deleteInstance(this.props.treeName, this.getPath())}
+              className={`element__deletebutton transparent-button ${disableElement ? 'disabled' : ''}`}
+              id={`deletebutton-${this.props.instance.uniqueId}`}
+              onClick={this.deleteInstance}
               aria-label={`remove ${this.props.instance.name}`}>
               <FontAwesome name='close'/>
             </button>
+            { disableElement && this.renderDisabledTooltip(`deletebutton-${this.props.instance.uniqueId}`) }
           </div>
         </div>
       );
@@ -241,7 +271,9 @@ export default class ConjunctionGroup extends Component {
               isValidCode={this.props.isValidCode}
               codeData={this.props.codeData}
               validateCode={this.props.validateCode}
-              resetCodeValidation={this.props.resetCodeValidation} />
+              resetCodeValidation={this.props.resetCodeValidation}
+              disableElement={this.props.disableElement}
+            />
 
             {this.renderConjunctionSelect(i)}
           </div>
@@ -291,7 +323,7 @@ export default class ConjunctionGroup extends Component {
           validateCode={this.props.validateCode}
           resetCodeValidation={this.props.resetCodeValidation}
           disableElement={this.props.disableElement}
-          inBaseElements={this.props.inBaseElements} />
+          disableIndent={this.props.disableIndent} />
 
         {this.renderConjunctionSelect(instance)}
       </div>

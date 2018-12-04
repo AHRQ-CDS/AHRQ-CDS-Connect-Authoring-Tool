@@ -72,7 +72,7 @@ test('List Groups can be deleted when not in use', () => {
   expect(updateFunc).toBeCalled();
 });
 
-test('Return Types are correctly updated', () => {
+test('Return Types of Union and Intersect are correctly updated', () => {
   component = shallowRenderComponent(ListGroup, { ...props });
   const checkReturnTypeCompatibility = component.instance().checkReturnTypeCompatibility;
 
@@ -90,4 +90,30 @@ test('Return Types are correctly updated', () => {
 
   const boolean = checkReturnTypeCompatibility('list_of_booleans', 'boolean');
   expect(boolean).toEqual('list_of_booleans');
+});
+
+test('Return Types of And and Or are correctly updated', () => {
+  component = shallowRenderComponent(ListGroup, { ...props });
+  const checkReturnTypeCompatibility = component.instance().checkAndOrReturnTypeCompatibility;
+
+  const boolAndBool = checkReturnTypeCompatibility('boolean', 'boolean');
+  expect(boolAndBool).toEqual('boolean');
+
+  const observations = checkReturnTypeCompatibility('list_of_observations', 'observation');
+  expect(observations).toEqual('invalid');
+
+  const conditions = checkReturnTypeCompatibility('list_of_conditions', 'list_of_conditions');
+  expect(conditions).toEqual('invalid');
+
+  const conditionsAndBool = checkReturnTypeCompatibility('list_of_conditions', 'boolean');
+  expect(conditionsAndBool).toEqual('invalid');
+
+  const boolAndNone = checkReturnTypeCompatibility('boolean', 'none');
+  expect(boolAndNone).toEqual('boolean');
+
+  const noneAndBool = checkReturnTypeCompatibility('none', 'boolean');
+  expect(noneAndBool).toEqual('boolean');
+
+  const boolAndInvalid = checkReturnTypeCompatibility('boolean', 'invalid');
+  expect(boolAndInvalid).toEqual('invalid');
 });

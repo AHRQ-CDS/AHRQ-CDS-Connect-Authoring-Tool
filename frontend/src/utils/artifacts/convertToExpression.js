@@ -32,8 +32,8 @@ function getExpressionSentenceValue(modifier) {
     VerifiedObservation: { modifierText: 'verified', leadingText: '', type: 'list' },
     WithUnit: { modifierText: '', leadingText: 'with unit', type: 'post-list' },
     ValueComparisonObservation: { modifierText: 'greater than a number', leadingText: 'whose value is', type: 'post' },
-    QuantityValue: { modifierText: 'quantity value', leadingText: '', type: 'value' }, // Will not be diplayed in phrase
-    ConceptValue: { modifierText: 'concept value', leadingText: '', type: 'value' }, // Will not be diplayed in phrase
+    QuantityValue: { modifierText: 'quantity value', leadingText: '', type: 'value' }, // Will not be displayed in phrase
+    ConceptValue: { modifierText: 'concept value', leadingText: '', type: 'value' }, // Will not be displayed in phrase
     Qualifier: { modifierText: 'with a code', leadingText: '', type: 'post' },
     ConvertObservation: { modifierText: 'convert', leadingText: 'with', type: 'post' },
     HighestObservationValue: { modifierText: 'highest', leadingText: '', type: 'descriptor' },
@@ -177,21 +177,31 @@ function addVSandCodeText(expressionArray, valueSets, codes) {
   return expressionArray;
 }
 
-function addElementNames(expressionArray, elementNames) {
+function addElementNames(expressionArray, elementNames, type) {
+  if (type === 'And' || type === 'Or') {
+    expressionArray.push({ expressionText: 'that satisfies', isExpression: false });
+  }
+
   elementNames.forEach((nameObject, i) => {
     if (i === elementNames.length - 1 && i !== 0) {
-      expressionArray.push({ expressionText: 'and', isExpression: false });
+      if (type === 'And' || type === 'Or') {
+        expressionArray.push({ expressionText: _.lowerCase(type), isExpression: false, isType: true });
+      } else {
+        expressionArray.push({ expressionText: 'and', isExpression: false });
+      }
     }
     if ((i === 0 && elementNames.length === 2) || i === elementNames.length - 1) {
       expressionArray.push({
         expressionText: nameObject.name,
         isExpression: true,
+        isName: true,
         tooltipText: nameObject.tooltipText
       });
     } else {
       expressionArray.push({
         expressionText: nameObject.name,
         isExpression: true,
+        isName: true,
         tooltipText: nameObject.tooltipText
       });
       expressionArray.push({ expressionText: ',', isExpression: false });
@@ -296,7 +306,8 @@ function orderExpressionSentenceArray(
   codes,
   returnType,
   otherParameters,
-  elementNames
+  elementNames,
+  isBaseElementAndOr
 ) {
   // Specific cases for Age Range, Gender, and Parameters since they do not follow the same pattern as VSAC elements.
   if (type === 'Age Range') {
@@ -344,7 +355,13 @@ function orderExpressionSentenceArray(
       hasStarted = true;
     }
   } else if (!returnsPlural && returnsBoolean && !checkExistenceExpression) {
-    orderedExpressionArray.push({ expressionText: 'There exists', isExpression: false });
+    if (notExpression) {
+      orderedExpressionArray.push({ expressionText: 'There does', isExpression: false });
+      orderedExpressionArray.push({ expressionText: 'not', isExpression: true });
+      orderedExpressionArray.push({ expressionText: 'exist', isExpression: false });
+    } else {
+      orderedExpressionArray.push({ expressionText: 'There exists', isExpression: false });
+    }
     hasStarted = true;
   } else if (notExpression) {
     if (checkExistenceExpression) {
@@ -390,6 +407,12 @@ function orderExpressionSentenceArray(
   let elementText = _.lowerCase(type);
   if (type === 'Intersect') {
     elementText = 'intersection';
+  } else if (type === 'And' || type === 'Or') {
+    if (isBaseElementAndOr) {
+      elementText = 'base element';
+    } else {
+      elementText = 'group';
+    }
   }
   const elementArticle = getArticle(elementText);
   if (hasStarted) {
@@ -423,9 +446,9 @@ function orderExpressionSentenceArray(
     orderedExpressionArray.push({ expressionText: 'of', isExpression: false });
   }
 
-  // Handle value sets and codes
+  // Handle value sets and codes and other element names
   orderedExpressionArray = addVSandCodeText(orderedExpressionArray, valueSets, codes);
-  orderedExpressionArray = addElementNames(orderedExpressionArray, elementNames);
+  orderedExpressionArray = addElementNames(orderedExpressionArray, elementNames, type);
 
   // Handle post-lists (with unit)
   if (postListExpressions) {
@@ -447,7 +470,8 @@ export default function convertToExpression(
   codes,
   returnType,
   otherParameters = [],
-  elementNames = []
+  elementNames = [],
+  isBaseElementAndOr = false
 ) {
   const expressionSentenceArray = expressionsArray.reduce((accumulator, currentExpression) => {
     const expressionSentenceValue = getExpressionSentenceValue(currentExpression);
@@ -465,7 +489,8 @@ export default function convertToExpression(
     codes,
     returnType,
     otherParameters,
-    elementNames
+    elementNames,
+    isBaseElementAndOr
   );
 
   return orderedExpressionSentenceArray;

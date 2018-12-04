@@ -3,4 +3,7 @@ define "<%-element_name%>":<%if(assumeInPopulation){%>
     null
   else<%}%>
   <%-components.map(c => `"${c.name}"`).join(`
-  and `)%>
+  and `)%><%
+  if (components.length === 0) {
+    %>null<%
+  }%>
