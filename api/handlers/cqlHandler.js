@@ -149,6 +149,33 @@ function addGroupedConceptExpression(referencedConceptElements, resourceMap, val
   referencedConceptElements.push(multipleConceptExpression);
 }
 
+function isBaseElementUseChanged(element, baseElements) {
+  const referenceParameter = element.parameters.find(param => param.type === 'reference');
+  if (!referenceParameter) {
+    // This case should never happen because an element of type base element will never NOT have a reference parameter
+    return true;
+  }
+
+  const nameParameter = element.parameters.find(param => param.id === 'element_name');
+
+  const originalBaseElement = baseElements.find(baseEl => referenceParameter.value.id === baseEl.uniqueId);
+  if (!originalBaseElement) {
+    // This case should never happen because you can't delete base elements while in use.
+    return true;
+  }
+
+  if (nameParameter.value !== originalBaseElement.parameters[0].value) {
+    // If the name of the use of the base element and the original base element are different, it's been changed.
+    return true;
+  }
+  if (element.modifiers.length > 0) {
+    // If there are modifiers applied to the use of the base element, it's been changed.
+    return true;
+  }
+
+  return false;
+}
+
 // Class to handle all cql generation
 class CqlArtifact {
   constructor(artifact) {
@@ -340,7 +367,11 @@ class CqlArtifact {
     (element.childInstances || []).forEach((child) => {
       // TODO: Could a child of a conjunction ever be a subpopulation?
       let childName = (child.parameters[0]||{}).value || child.uniqueId;
-      if (!(child.type === 'parameter' || child.template === 'EmptyParameter')) { // Parameters are updated separately
+      let isBaseElementUseAndUnchanged = false;
+      if (child.type === 'baseElement') {
+        isBaseElementUseAndUnchanged = !isBaseElementUseChanged(child, this.baseElements);
+      }
+      if (!(child.type === 'parameter' || child.template === 'EmptyParameter' || isBaseElementUseAndUnchanged)) { // Parameters are updated separately
         const childCount = getCountForUniqueExpressionName(child.parameters[0], this.names, 'value', '', false);
         if (childCount > 0) {
           childName = `${childName}_${childCount}`;
@@ -484,7 +515,10 @@ class CqlArtifact {
 
     context.modifiers = element.modifiers;
     context.element_name = (context.element_name || element.uniqueId);
-    this.contexts.push(context);
+    // If it is an unchanged base element, don't add to context
+    if (!(element.type === 'baseElement' && !isBaseElementUseChanged(element, this.baseElements))) {
+      this.contexts.push(context);
+    }
   }
 
   /* Modifiers Explanation:
