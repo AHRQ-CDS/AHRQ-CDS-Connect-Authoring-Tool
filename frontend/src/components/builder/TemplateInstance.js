@@ -85,8 +85,9 @@ export default class TemplateInstance extends Component {
     const hasReturnError = this.state.returnType !== 'boolean' && this.props.validateReturnType !== false;
     const hasModifierWarnings = !this.allModifiersValid();
     const hasNameWarning = this.hasDuplicateName();
+    const hasBaseElementChangeWarning = this.doesBaseElementNeedWarning();
 
-    return hasValidationError || hasReturnError || hasModifierWarnings || hasNameWarning;
+    return hasValidationError || hasReturnError || hasModifierWarnings || hasNameWarning || hasBaseElementChangeWarning;
   }
 
   // Props will either be this.props or nextProps coming from componentWillReceiveProps
@@ -397,7 +398,7 @@ export default class TemplateInstance extends Component {
   }
 
   hasDuplicateName = () => {
-    const { templateInstance, instanceNames } = this.props;
+    const { templateInstance, instanceNames, baseElements } = this.props;
 
     // Parameters cannot be renamed if they are in use, so don't need to worry if they are a duplicate here.
     if (templateInstance.type === 'parameter') {
@@ -407,9 +408,41 @@ export default class TemplateInstance extends Component {
     const elementNameParameter = templateInstance.parameters.find(param => param.id === 'element_name');
     // Treat undefined as empty string so unnamed elements display duplicate correctly.
     const nameValue = elementNameParameter.value === undefined ? '' : elementNameParameter.value;
-    const duplicateNameIndex = instanceNames.findIndex(name =>
-      name.id !== templateInstance.uniqueId && name.name === nameValue);
+    const duplicateNameIndex = instanceNames.findIndex((name) => {
+      const isDuplicate = name.id !== templateInstance.uniqueId && name.name === nameValue;
+      // If base element use, don't include a duplicate from the original base element.
+      if (isDuplicate && templateInstance.type === 'baseElement') {
+        const referenceParameter = templateInstance.parameters.find(param => param.type === 'reference');
+        const originalBaseElement = baseElements.find(baseEl => referenceParameter.value.id === baseEl.uniqueId);
+        return name.id !== originalBaseElement.uniqueId;
+      }
+      return isDuplicate;
+    });
     return duplicateNameIndex !== -1;
+  }
+
+  doesBaseElementNeedWarning = () => {
+    const { templateInstance, baseElements } = this.props;
+
+    const elementNameParameter = templateInstance.parameters.find(param => param.id === 'element_name');
+
+    if (templateInstance.type === 'baseElement') {
+      const referenceParameter = templateInstance.parameters.find(param => param.type === 'reference');
+      const originalBaseElement = baseElements.find(baseEl => referenceParameter.value.id === baseEl.uniqueId);
+      // If some modifiers applied AND the name is the same as original, it should be changed. Need a warning.
+      if (templateInstance.modifiers && templateInstance.modifiers.length > 0 &&
+        elementNameParameter.value === originalBaseElement.parameters[0].value) {
+        return true;
+      }
+      return false;
+    }
+
+    const isBaseElement = templateInstance.usedBy;
+    if (isBaseElement) {
+      // TODO will need the full tree here to determine this.
+    }
+
+    return false;
   }
 
   renderModifierSelect = () => {
@@ -890,6 +923,9 @@ export default class TemplateInstance extends Component {
         elementType = baseElementReferenced.name;
       }
 
+      const hasDuplicateName = this.hasDuplicateName();
+      const doesBaseElementNeedWarning = this.doesBaseElementNeedWarning();
+
       return (
         <div className="card-element__heading">
           <StringParameter
@@ -899,9 +935,11 @@ export default class TemplateInstance extends Component {
             name={elementType}
             uniqueId={templateInstance.uniqueId}
             />
-          {this.hasDuplicateName() &&
+          {hasDuplicateName && !doesBaseElementNeedWarning &&
             <div className="warning">Warning: Name already in use. Choose another name.</div>
           }
+          {doesBaseElementNeedWarning &&
+            <div className="warning">Warning: Base Element and it's use are different. Choose another name.</div>}
         </div>
       );
     }
