@@ -376,7 +376,8 @@ function validateArtifactFailure(error) {
   };
 }
 
-function sendDownloadArtifactRequest(artifact) {
+function sendDownloadArtifactRequest(artifact, dataModel) {
+  artifact.dataModel = dataModel;
   const fileName = changeToCase(`${artifact.name}-v${artifact.version}-cql`, 'snakeCase');
 
   return new Promise((resolve, reject) => {
@@ -396,11 +397,11 @@ function sendValidateArtifactRequest(artifact) {
   return axios.post(`${API_BASE}/cql/validate`, artifact);
 }
 
-export function downloadArtifact(artifact) {
+export function downloadArtifact(artifact, dataModel) {
   return (dispatch) => {
     dispatch(requestDownloadArtifact());
 
-    return sendDownloadArtifactRequest(artifact)
+    return sendDownloadArtifactRequest(artifact, dataModel)
       .then(() => {
         dispatch(downloadArtifactSuccess());
         sendValidateArtifactRequest(artifact)

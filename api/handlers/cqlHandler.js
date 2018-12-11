@@ -18,11 +18,21 @@ const specificMap = loadTemplates(specificPath);
 const templateMap = loadTemplates(templatePath);
 const modifierMap = loadTemplates(modifierPath);
 // Each library will be included. Aliases are optional.
-const includeLibraries = [
+const includeLibrariesDstu2 = [
+  { name: 'FHIRHelpers_for_FHIRv102', version: '1.0.2', alias: 'FHIRHelpers' },
+  { name: 'CDS_Connect_Commons_for_FHIRv102', version: '1.3.0', alias: 'C3F' },
+  { name: 'CDS_Connect_Conversions', version: '1', alias: 'Convert' }
+];
+
+const includeLibrariesStu3 = [
   { name: 'FHIRHelpers_for_FHIRv300', version: '3.0.0', alias: 'FHIRHelpers' },
   { name: 'CDS_Connect_Commons_for_FHIRv300', version: '1.0.0', alias: 'C3F' },
   { name: 'CDS_Connect_Conversions', version: '1', alias: 'Convert' }
 ];
+
+// A flag to hold the FHIR version, so that it can be used
+// in functions external to the artifact.
+let fhirTarget;
 
 module.exports = {
   objToCql,
@@ -178,11 +188,11 @@ function isBaseElementUseChanged(element, baseElements) {
 
 // Class to handle all cql generation
 class CqlArtifact {
-  constructor(artifact) {
+  constructor(artifact) {    
     this.name = slug(artifact.name ? artifact.name : 'untitled');
     this.version = artifact.version ? artifact.version : 1;
-    this.dataModel = artifact.dataModel ? artifact.dataModel : { name: 'FHIR', version: '3.0.0' };
-    this.includeLibraries = artifact.includeLibraries ? artifact.includeLibraries : includeLibraries;
+    this.dataModel = artifact.dataModel;
+    this.includeLibraries = (artifact.dataModel.version === '3.0.0') ? includeLibrariesStu3 : includeLibrariesDstu2;
     this.context = artifact.context ? artifact.context : 'Patient';
     this.inclusions = artifact.expTreeInclude;
     this.parameters = artifact.parameters;
@@ -191,6 +201,9 @@ class CqlArtifact {
     this.baseElements = artifact.baseElements;
     this.recommendations = artifact.recommendations;
     this.errorStatement = artifact.errorStatement;
+
+    fhirTarget = artifact.dataModel;
+
     this.initialize();
   }
 
@@ -880,7 +893,12 @@ function writeZip(cqlArtifact, writeStream, callback /* (error) */) {
     elmFiles.forEach((e, i) => {
       archive.append(e.content.replace(/\r\n|\r|\n/g, '\r\n'), { name: `${e.name}.json` });
     });
-    const helperPath = `${__dirname}/../data/library_helpers/CQLFiles`;
+    let helperPath;
+    if (fhirTarget.version === '3.0.0') {
+      helperPath = `${__dirname}/../data/library_helpers/CQLFiles/STU3`;
+    } else {
+      helperPath = `${__dirname}/../data/library_helpers/CQLFiles/DSTU2`;
+    }
     archive.directory(helperPath, '/');
     archive.finalize();
   });
@@ -894,7 +912,12 @@ function convertToElm(artifactJson, callback /* (error, elmFiles) */) {
   }
 
   // Load all the supplementary CQL files, open file streams to them, and convert to ELM
-  const helperPath = `${__dirname}/../data/library_helpers/CQLFiles`;
+  let helperPath;
+  if (fhirTarget.version === '3.0.0') {
+    helperPath = `${__dirname}/../data/library_helpers/CQLFiles/STU3`;
+  } else {
+    helperPath = `${__dirname}/../data/library_helpers/CQLFiles/DSTU2`;
+  }
   glob(`${helperPath}/*.cql`, (err, files) => {
     if (err) {
       callback(err);

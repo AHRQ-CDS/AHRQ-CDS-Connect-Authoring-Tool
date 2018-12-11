@@ -56,7 +56,7 @@ class Logout extends Component {
 
     return (
       <div className="logout">
-        <Dropdown isOpen={this.state.showMenu} toggle={this.toggleMenu} className="logout__authname">
+        <Dropdown isOpen={this.state.showMenu} toggle={this.toggleMenu} className="primary-button">
           <DropdownToggle caret>{authUser}</DropdownToggle>
           <DropdownMenu>
             <DropdownItem onClick={artifactSaved ? this.handleLogoutClick : this.openConfirmLogoutModal}>
