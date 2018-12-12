@@ -39,6 +39,7 @@ export default class BaseElements extends Component {
         editInstance={this.props.editInstance}
         deleteInstance={this.props.deleteInstance}
         getAllInstances={this.props.getAllInstances}
+        getAllInstancesInAllTrees={this.props.getAllInstancesInAllTrees}
         updateInstanceModifiers={this.props.updateInstanceModifiers}
         updateBaseElementLists={this.props.updateBaseElementLists}
         parameters={this.props.parameters}
@@ -68,6 +69,7 @@ export default class BaseElements extends Component {
   );
 
   render() {
+    const allInstancesInAllTrees = this.props.getAllInstancesInAllTrees();
     return <div>
       {this.props.instance.baseElements.map((s, i) => {
         if (s.conjunction) {
@@ -83,6 +85,7 @@ export default class BaseElements extends Component {
                 treeName={this.props.treeName}
                 templateInstance={s}
                 otherInstances={[]}
+                allInstancesInAllTrees={allInstancesInAllTrees}
                 editInstance={this.props.editInstance}
                 updateInstanceModifiers={this.props.updateInstanceModifiers}
                 deleteInstance={this.props.deleteInstance}
@@ -152,6 +155,7 @@ BaseElements.propTypes = {
   addBaseElement: PropTypes.func.isRequired,
   loadValueSets: PropTypes.func.isRequired,
   getAllInstances: PropTypes.func.isRequired,
+  getAllInstancesInAllTrees: PropTypes.func.isRequired,
   addInstance: PropTypes.func.isRequired,
   editInstance: PropTypes.func.isRequired,
   updateInstanceModifiers: PropTypes.func.isRequired,

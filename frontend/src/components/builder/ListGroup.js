@@ -45,6 +45,8 @@ export default class ListGroup extends Component {
     };
   }
 
+  getAllInstances = treeName => this.props.getAllInstances(treeName, null, this.props.instance.uniqueId);
+
   collapse = () => {
     this.setState({ isExpanded: false });
   }
@@ -280,7 +282,8 @@ export default class ListGroup extends Component {
             this.editInstance(treeName, params, path, editingConjunction, instance)}
           deleteInstance={(treeName, path, toAdd) =>
             this.deleteInstance(treeName, path, toAdd, instance, isAndOrElement)}
-          getAllInstances={this.props.getAllInstances}
+          getAllInstances={this.getAllInstances}
+          getAllInstancesInAllTrees={this.props.getAllInstancesInAllTrees}
           updateInstanceModifiers={(t, modifiers, path) =>
             this.updateInstanceModifiers(t, modifiers, path, index, isAndOrElement)}
           parameters={this.props.parameters}
@@ -408,6 +411,7 @@ ListGroup.propTypes = {
   editInstance: PropTypes.func.isRequired,
   deleteInstance: PropTypes.func.isRequired,
   getAllInstances: PropTypes.func.isRequired,
+  getAllInstancesInAllTrees: PropTypes.func.isRequired,
   updateInstanceModifiers: PropTypes.func.isRequired,
   updateBaseElementLists: PropTypes.func.isRequired,
   parameters: PropTypes.array.isRequired,

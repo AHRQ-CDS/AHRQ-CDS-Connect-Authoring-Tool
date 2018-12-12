@@ -245,6 +245,7 @@ export default class ConjunctionGroup extends Component {
               editInstance={editInstance}
               deleteInstance={deleteInstance}
               getAllInstances={this.props.getAllInstances}
+              getAllInstancesInAllTrees={this.props.getAllInstancesInAllTrees}
               updateInstanceModifiers={this.props.updateInstanceModifiers}
               parameters={this.props.parameters}
               baseElements={this.props.baseElements}
@@ -285,6 +286,7 @@ export default class ConjunctionGroup extends Component {
   }
 
   renderTemplate(instance) {
+    const allInstancesInAllTrees = this.props.getAllInstancesInAllTrees();
     return (
       <div key={instance.uniqueId} className="card-group-section">
         <TemplateInstance
@@ -294,6 +296,7 @@ export default class ConjunctionGroup extends Component {
           treeName={this.props.treeName}
           templateInstance={instance}
           otherInstances={this.props.getAllInstances(this.props.treeName)}
+          allInstancesInAllTrees={allInstancesInAllTrees}
           editInstance={this.props.editInstance}
           updateInstanceModifiers={this.props.updateInstanceModifiers}
           deleteInstance={this.props.deleteInstance}
@@ -381,6 +384,7 @@ ConjunctionGroup.propTypes = {
   loadValueSets: PropTypes.func.isRequired,
   getPath: requiredIf(PropTypes.func, props => !props.root), // path needed for children
   getAllInstances: PropTypes.func.isRequired,
+  getAllInstancesInAllTrees: PropTypes.func.isRequired,
   deleteInstance: PropTypes.func.isRequired,
   instanceNames: PropTypes.array.isRequired,
   conversionFunctions: PropTypes.array,

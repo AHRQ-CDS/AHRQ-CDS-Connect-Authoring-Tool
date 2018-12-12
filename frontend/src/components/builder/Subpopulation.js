@@ -122,6 +122,7 @@ export default class Subpopulation extends Component {
                 editInstance={this.editInstance}
                 deleteInstance={this.deleteInstance}
                 getAllInstances={this.getAllInstances}
+                getAllInstancesInAllTrees={this.props.getAllInstancesInAllTrees}
                 updateInstanceModifiers={this.props.updateInstanceModifiers}
                 parameters={this.props.parameters}
                 baseElements={this.props.baseElements}
@@ -166,6 +167,7 @@ Subpopulation.propTypes = {
   updateInstanceModifiers: PropTypes.func.isRequired,
   deleteInstance: PropTypes.func.isRequired,
   getAllInstances: PropTypes.func.isRequired,
+  getAllInstancesInAllTrees: PropTypes.func.isRequired,
   instanceNames: PropTypes.array.isRequired,
   treeName: PropTypes.string.isRequired,
   parameters: PropTypes.array.isRequired,

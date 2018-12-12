@@ -398,7 +398,7 @@ export default class TemplateInstance extends Component {
   }
 
   hasDuplicateName = () => {
-    const { templateInstance, instanceNames, baseElements } = this.props;
+    const { templateInstance, instanceNames, baseElements, allInstancesInAllTrees } = this.props;
 
     // Parameters cannot be renamed if they are in use, so don't need to worry if they are a duplicate here.
     if (templateInstance.type === 'parameter') {
@@ -414,7 +414,23 @@ export default class TemplateInstance extends Component {
       if (isDuplicate && templateInstance.type === 'baseElement') {
         const referenceParameter = templateInstance.parameters.find(param => param.type === 'reference');
         const originalBaseElement = baseElements.find(baseEl => referenceParameter.value.id === baseEl.uniqueId);
+        // If the duplicate is another of the uses, don't consider duplicate unless that use has changed.
+        const anotherUseId = originalBaseElement.usedBy.find(id => id === name.id);
+        const anotherUse = allInstancesInAllTrees.find(instance => instance.uniqueId === anotherUseId);
+        if (anotherUse) {
+          const anotherUseModified = anotherUse.modifiers && anotherUse.modifiers.length > 0;
+          return anotherUseModified;
+        }
         return name.id !== originalBaseElement.uniqueId;
+      } else if (isDuplicate && templateInstance.usedBy) {
+        // If the duplicate is one of the uses, don't consider name duplicate unless use has changed.
+        const useId = templateInstance.usedBy.find(i => i === name.id);
+        if (useId) {
+          const useInstance = allInstancesInAllTrees.find(instance => instance.uniqueId === useId);
+          const isUseModified = useInstance.modifiers && useInstance.modifiers.length > 0;
+          return isUseModified;
+        }
+        return isDuplicate;
       }
       return isDuplicate;
     });
@@ -422,7 +438,7 @@ export default class TemplateInstance extends Component {
   }
 
   doesBaseElementNeedWarning = () => {
-    const { templateInstance, baseElements } = this.props;
+    const { templateInstance, baseElements, allInstancesInAllTrees } = this.props;
 
     const elementNameParameter = templateInstance.parameters.find(param => param.id === 'element_name');
 
@@ -439,7 +455,15 @@ export default class TemplateInstance extends Component {
 
     const isBaseElement = templateInstance.usedBy;
     if (isBaseElement) {
-      // TODO will need the full tree here to determine this.
+      let anyUseHasChanged = false;
+      templateInstance.usedBy.forEach((usageId) => {
+        const use = allInstancesInAllTrees.find(i => i.uniqueId === usageId);
+        if (use.modifiers && use.modifiers.length > 0 &&
+          templateInstance.parameters[0].value === use.parameters[0].value) {
+          anyUseHasChanged = true;
+        }
+      });
+      return anyUseHasChanged;
     }
 
     return false;
@@ -1033,6 +1057,7 @@ TemplateInstance.propTypes = {
   treeName: PropTypes.string.isRequired,
   templateInstance: PropTypes.object.isRequired,
   otherInstances: PropTypes.array.isRequired,
+  allInstancesInAllTrees: PropTypes.array.isRequired,
   editInstance: PropTypes.func.isRequired,
   updateInstanceModifiers: PropTypes.func.isRequired,
   deleteInstance: PropTypes.func.isRequired,
