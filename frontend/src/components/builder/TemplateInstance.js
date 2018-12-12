@@ -437,9 +437,8 @@ export default class TemplateInstance extends Component {
     return duplicateNameIndex !== -1;
   }
 
-  doesBaseElementNeedWarning = () => {
-    const { templateInstance, baseElements, allInstancesInAllTrees } = this.props;
-
+  doesBaseElementUseNeedWarning = () => {
+    const { templateInstance, baseElements } = this.props;
     const elementNameParameter = templateInstance.parameters.find(param => param.id === 'element_name');
 
     if (templateInstance.type === 'baseElement') {
@@ -452,6 +451,12 @@ export default class TemplateInstance extends Component {
       }
       return false;
     }
+
+    return false;
+  }
+
+  doesBaseElementInstanceNeedWarning = () => {
+    const { templateInstance, allInstancesInAllTrees } = this.props;
 
     const isBaseElement = templateInstance.usedBy;
     if (isBaseElement) {
@@ -948,7 +953,8 @@ export default class TemplateInstance extends Component {
       }
 
       const hasDuplicateName = this.hasDuplicateName();
-      const doesBaseElementNeedWarning = this.doesBaseElementNeedWarning();
+      const doesBaseElementUseNeedWarning = this.doesBaseElementUseNeedWarning();
+      const doesBaseElementInstanceNeedWarning = this.doesBaseElementInstanceNeedWarning();
 
       return (
         <div className="card-element__heading">
@@ -959,11 +965,17 @@ export default class TemplateInstance extends Component {
             name={elementType}
             uniqueId={templateInstance.uniqueId}
             />
-          {hasDuplicateName && !doesBaseElementNeedWarning &&
+          {hasDuplicateName && !doesBaseElementUseNeedWarning && !doesBaseElementInstanceNeedWarning &&
             <div className="warning">Warning: Name already in use. Choose another name.</div>
           }
-          {doesBaseElementNeedWarning &&
-            <div className="warning">Warning: Base Element and it's use are different. Choose another name.</div>}
+          {doesBaseElementUseNeedWarning &&
+            <div className="warning">Warning: This use of the Base Element has changed. Choose another name.</div>
+          }
+          {doesBaseElementInstanceNeedWarning &&
+            <div className="warning">
+              Warning: One or more uses of this Base Element have changed. Choose another name.
+            </div>
+          }
         </div>
       );
     }
