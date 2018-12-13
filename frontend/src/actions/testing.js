@@ -110,15 +110,15 @@ function addPatientFailure(error) {
   };
 }
 
-function sendAddPatientRequest(patient) {
-  return dispatch => dispatch(savePatient(patient));
+function sendAddPatientRequest(patient, fhirVersion) {
+  return dispatch => dispatch(savePatient(patient, fhirVersion));
 }
 
-export function addPatient(patient) {
+export function addPatient(patient, fhirVersion) {
   return (dispatch) => {
     dispatch(requestAddPatient());
 
-    return dispatch(sendAddPatientRequest(patient))
+    return dispatch(sendAddPatientRequest(patient, fhirVersion))
       .then(data => dispatch(addPatientSuccess()))
       .catch(error => dispatch(addPatientFailure(error)));
   };
@@ -147,17 +147,16 @@ function savePatientFailure(error) {
   };
 }
 
-function sendSavePatientRequest(patient) {
-  console.info(patient);
-  return axios.post(`${API_BASE}/testing`, { patient })
+function sendSavePatientRequest(patient, fhirVersion) {
+  return axios.post(`${API_BASE}/testing`, { patient, fhirVersion })
     .then(result => result.data);
 }
 
-export function savePatient(patient) {
+export function savePatient(patient, fhirVersion) {
   return (dispatch) => {
     dispatch(requestSavePatient());
 
-    return sendSavePatientRequest(patient)
+    return sendSavePatientRequest(patient, fhirVersion)
       .then(data => dispatch(savePatientSuccess(data)))
       .catch(error => dispatch(savePatientFailure(error)))
       .then(() => dispatch(loadPatients()));

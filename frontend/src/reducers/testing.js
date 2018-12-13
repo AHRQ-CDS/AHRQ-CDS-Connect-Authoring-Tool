@@ -3,6 +3,7 @@ import * as types from '../actions/types';
 const defaultState = {
   patients: [],
   patient: null,
+  fhirVersion: null,
   loadPatients: { isLoading: false, loadStatus: null },
   loadPatient: { isLoading: false, loadStatus: null },
   addPatient: { isAdding: false, addStatus: null },
@@ -68,6 +69,7 @@ export default function auth(state = defaultState, action) {
       return {
         ...state,
         patient: action.patient,
+        fhirVersion: action.fhirVersion,
         savePatient: { isSaving: false, saveStatus: 'success' }
       };
     case types.SAVE_PATIENT_FAILURE:
