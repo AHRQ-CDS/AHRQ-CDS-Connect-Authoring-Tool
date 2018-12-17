@@ -14,7 +14,7 @@ export default () => (
             Connect</strong> project.
           </div>
 
-          <button className="primary-button"><Link to="/build">GET STARTED</Link></button>
+          <button className="primary-button"><Link to="/artifacts">GET STARTED</Link></button>
         </div>
       </div>
 
@@ -34,29 +34,13 @@ export default () => (
           </div>
         </div>
 
-        <div className="home-content__repository home-card">
-          <img
-            className="home-card__image"
-            src={`${process.env.PUBLIC_URL}/assets/images/home-repository.png`}
-            alt="repository" />
-
-          <div className="home-card__title">Repository</div>
-
-          <div className="home-card__text">
-            CDS Connect provides a repository of CDS artifacts and a prototype infrastructure for sharing
-            CDS across different health care settings and technologies. The CDS Authoring Tool, along with the
-            <a href="https://cds.ahrq.gov/cdsconnect"> CDS Connect Repository</a>, is designed to promote the creation and
-            use of CDS in everyday clinical settings, connecting high-quality CDS to the U.S. healthcare community.
-          </div>
-        </div>
-
         <div className="home-content__interface home-card">
           <img
             className="home-card__image"
             src={`${process.env.PUBLIC_URL}/assets/images/home-interface.png`}
             alt="interface" />
 
-          <div className="home-card__title">Interface</div>
+          <div className="home-card__title">Create</div>
 
           <div className="home-card__text">
             The CDS Authoring Tool provides an interface for creating CDS logic using simple forms and exporting it as
@@ -79,6 +63,22 @@ export default () => (
           </div>
         </div>
 
+        <div className="home-content__repository home-card">
+          <img
+            className="home-card__image"
+            src={`${process.env.PUBLIC_URL}/assets/images/home-repository.png`}
+            alt="repository" />
+
+          <div className="home-card__title">Share</div>
+
+          <div className="home-card__text">
+            CDS Connect provides a repository of CDS artifacts and a prototype infrastructure for sharing
+            CDS across different health care settings and technologies. The CDS Authoring Tool, along with the
+            <a href="https://cds.ahrq.gov/cdsconnect"> CDS Connect Repository</a>, is designed to promote the creation and
+            use of CDS in everyday clinical settings, connecting high-quality CDS to the U.S. healthcare community.
+          </div>
+        </div>
+
         <div className="home-content__contribute home-card">
           <img
             className="home-card__image"
@@ -96,7 +96,7 @@ export default () => (
               rel="nofollow noopener noreferrer"
               onClick={onVisitExternalLink}
               href="https://github.com/ahrq-cds/ahrq-cds-connect-authoring-tool">
-              {' '}https://github.com/ahrq-cds/ahrq-cds-connect-authoring-tool
+              {' '}https://github.com/ahrq-cds/ahrq-cds-connect-authoring-tool{' '}
             </a>
 
             <i className="fa fa-external-link"></i>.
