@@ -119,7 +119,7 @@ export class Builder extends Component {
 
     // If the tree has no child instances, it is a single element. Only occurs for individual base elements.
     if (!treeInstance.childInstances) {
-      return [ treeInstance ];
+      return [treeInstance];
     }
 
     return _.flatten((treeInstance.childInstances || []).map((instance) => {

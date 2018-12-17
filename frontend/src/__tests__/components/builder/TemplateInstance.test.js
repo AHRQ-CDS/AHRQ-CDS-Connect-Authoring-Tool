@@ -20,6 +20,7 @@ const props = {
   treeName: '',
   templateInstance: genericTemplateInstance,
   otherInstances: [],
+  allInstancesInAllTrees: [],
   editInstance: jest.fn(),
   updateInstanceModifiers: jest.fn(),
   deleteInstance: jest.fn(),

@@ -85,9 +85,15 @@ export default class TemplateInstance extends Component {
     const hasReturnError = this.state.returnType !== 'boolean' && this.props.validateReturnType !== false;
     const hasModifierWarnings = !this.allModifiersValid();
     const hasNameWarning = this.hasDuplicateName();
-    const hasBaseElementChangeWarning = this.doesBaseElementNeedWarning();
+    const hasBaseElementUseChangeWarning = this.doesBaseElementUseNeedWarning();
+    const hasBaseElementInstanceChangeWarning = this.doesBaseElementInstanceNeedWarning();
 
-    return hasValidationError || hasReturnError || hasModifierWarnings || hasNameWarning || hasBaseElementChangeWarning;
+    return hasValidationError ||
+      hasReturnError ||
+      hasModifierWarnings ||
+      hasNameWarning ||
+      hasBaseElementUseChangeWarning ||
+      hasBaseElementInstanceChangeWarning;
   }
 
   // Props will either be this.props or nextProps coming from componentWillReceiveProps
@@ -463,7 +469,7 @@ export default class TemplateInstance extends Component {
       let anyUseHasChanged = false;
       templateInstance.usedBy.forEach((usageId) => {
         const use = allInstancesInAllTrees.find(i => i.uniqueId === usageId);
-        if (use.modifiers && use.modifiers.length > 0 &&
+        if (use && use.modifiers && use.modifiers.length > 0 &&
           templateInstance.parameters[0].value === use.parameters[0].value) {
           anyUseHasChanged = true;
         }
