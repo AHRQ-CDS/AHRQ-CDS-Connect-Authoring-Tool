@@ -494,7 +494,7 @@ const genericBaseElementListInstance = {
 const genericBaseElementUseInstance = {
   id: 'GenericObservation_vsac',
   name: 'BaseElement',
-  returnType: 'list_of_observations',
+  returnType: 'boolean',
   type: 'baseElement',
   template: 'GenericStatement',
   parameters: [
