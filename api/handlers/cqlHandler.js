@@ -371,7 +371,8 @@ class CqlArtifact {
       if (child.type === 'baseElement') {
         isBaseElementUseAndUnchanged = !isBaseElementUseChanged(child, this.baseElements);
       }
-      if (!(child.type === 'parameter' || child.template === 'EmptyParameter' || isBaseElementUseAndUnchanged)) { // Parameters are updated separately
+      // Parameters are updated separately and unchanged base element uses do not unique names
+      if (!(child.type === 'parameter' || child.template === 'EmptyParameter' || isBaseElementUseAndUnchanged)) {
         const childCount = getCountForUniqueExpressionName(child.parameters[0], this.names, 'value', '', false);
         if (childCount > 0) {
           childName = `${childName}_${childCount}`;
