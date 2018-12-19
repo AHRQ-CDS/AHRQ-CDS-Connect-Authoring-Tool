@@ -5,7 +5,7 @@ import { Route, Switch } from 'react-router-dom';
 
 import PrivateRoute from './PrivateRoute';
 import App from './App';
-import Landing from '../components/Landing';
+import Landing from '../containers/Landing';
 import BuilderContainer from '../containers/Builder';
 import Artifact from '../containers/Artifact';
 import Testing from '../containers/Testing';
