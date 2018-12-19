@@ -8,19 +8,16 @@ import { onVisitExternalLink, onVisitExternalForm } from '../utils/handlers';
 class Landing extends Component {
   renderedButton = () => {
     if (this.props.isAuthenticated) {
-      return <button className="primary-button"><Link to="/artifacts">GET STARTED</Link></button>;
+      return <Link to="/artifacts" className="primary-button-link">GET STARTED</Link>;
     }
 
     return (
-      <button className="primary-button">
-        <a
-          target="_blank"
-          rel="nofollow noopener noreferrer"
-          onClick={onVisitExternalLink}
-          href="https://cds.ahrq.gov/form/cds-authoring-tool-sign-up">
-          SIGN UP
-        </a>
-      </button>
+      <a
+        className="primary-button-link"
+        onClick={onVisitExternalForm}
+        href="https://cds.ahrq.gov/form/cds-authoring-tool-sign-up">
+        SIGN UP
+      </a>
     );
   }
 

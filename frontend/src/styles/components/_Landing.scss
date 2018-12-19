@@ -3,6 +3,24 @@
 
   &-wrapper { @include componentWidth; }
 
+  .primary-button-link {
+    display: block;
+    margin: 20px auto 0;
+    text-align: center;
+    border-radius: 5px;
+    border: 1px solid $white;
+    background-color: $blue;
+    text-decoration: none;
+    width: 300px;
+    padding: 10px;
+    color: $white;
+
+    &:hover {
+      background-color: $white;
+      color: $blue;
+    }
+  }
+
   .home-banner {
     background: url('~/assets/images/cds-connect-background.jpg') no-repeat center center fixed;
     background-size: cover;
