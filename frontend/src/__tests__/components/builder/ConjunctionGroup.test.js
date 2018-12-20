@@ -40,6 +40,7 @@ const props = {
   updateInstanceModifiers: jest.fn(),
   deleteInstance,
   getAllInstances,
+  getAllInstancesInAllTrees: jest.fn(),
   templates: elementGroups,
   artifact: {
     [treeName]: { id: 'Or' }

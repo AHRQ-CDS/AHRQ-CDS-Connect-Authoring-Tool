@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import { createTemplateInstance, fullRenderComponentOnBody } from '../../../utils/test_helpers';
 import { instanceTree, genericInstance, genericInstanceWithModifiers, genericBaseElementInstance,
   genericBaseElementInstanceWithModifiers, genericBaseElementUseInstance } from '../../../utils/test_fixtures';
@@ -20,6 +21,7 @@ const props = {
   treeName: '',
   templateInstance: genericTemplateInstance,
   otherInstances: [],
+  allInstancesInAllTrees: [],
   editInstance: jest.fn(),
   updateInstanceModifiers: jest.fn(),
   deleteInstance: jest.fn(),
@@ -345,5 +347,188 @@ describe('Base Element List instance\'s have child instances inside which', () =
     const deleteSpy = jest.spyOn(listComponent.props(), 'deleteInstance');
     listComponent.instance().deleteInstance();
     expect(deleteSpy).not.toBeCalled();
+  });
+});
+
+describe('Base Element warnings', () => {
+  test('unmodified uses have no warnings', () => {
+    // Set up an unmodified base element use
+    const baseElementProps = { ...props };
+    baseElementProps.templateInstance = _.cloneDeep(genericBaseElementUseTemplateInstance);
+    baseElementProps.instanceNames = [
+      { id: 'originalBaseElementId', name: 'Base Element Observation' },
+      { id: genericBaseElementUseTemplateInstance.uniqueId, name: 'Base Element Observation' }
+    ];
+    const originalBaseElement = genericBaseElementTemplateInstance;
+    originalBaseElement.uniqueId = 'originalBaseElementId';
+    originalBaseElement.parameters[0].value = 'Base Element Observation';
+    baseElementProps.baseElements = [originalBaseElement];
+    component = fullRenderComponentOnBody(TemplateInstance, { ...baseElementProps });
+
+    // No warnings on unmodified use
+    const warningDiv = component.find('.warning');
+    expect(warningDiv).toHaveLength(0);
+  });
+
+  test('modified uses to have a warning', () => {
+    // Set up a modified base element use
+    const baseElementProps = { ...props };
+    baseElementProps.templateInstance = _.cloneDeep(genericBaseElementUseTemplateInstance);
+    baseElementProps.instanceNames = [
+      { id: 'originalBaseElementId', name: 'Base Element Observation' },
+      { id: genericBaseElementUseTemplateInstance.uniqueId, name: 'Base Element Observation' }
+    ];
+    const originalBaseElement = genericBaseElementTemplateInstance;
+    originalBaseElement.uniqueId = 'originalBaseElementId';
+    originalBaseElement.parameters[0].value = 'Base Element Observation';
+    baseElementProps.baseElements = [originalBaseElement];
+    baseElementProps.templateInstance.modifiers = [
+      {
+        id: 'BooleanExists',
+        name: 'Exists',
+        inputTypes: ['list_of_observations'],
+        returnType: 'boolean',
+        cqlTemplate: 'BaseModifier',
+        cqlLibraryFunction: 'exists'
+      }
+    ];
+    component = fullRenderComponentOnBody(TemplateInstance, { ...baseElementProps });
+
+    const warningDiv = component.find('.warning');
+    expect(warningDiv).toHaveLength(1);
+    expect(warningDiv.text()).toEqual('Warning: This use of the Base Element has changed. Choose another name.');
+  });
+
+  test('instance with no modified uses to have no warning', () => {
+    // Set up an instance and use that is not modified
+    const baseElementProps = { ...props };
+    baseElementProps.instanceNames = [
+      { id: 'originalBaseElementId', name: 'Base Element Observation' },
+      { id: genericBaseElementUseTemplateInstance.uniqueId, name: 'Base Element Observation' }
+    ];
+    baseElementProps.templateInstance = genericBaseElementTemplateInstance;
+    baseElementProps.templateInstance.modifiers = [
+      {
+        id: 'BooleanExists',
+        name: 'Exists',
+        inputTypes: ['list_of_observations'],
+        returnType: 'boolean',
+        cqlTemplate: 'BaseModifier',
+        cqlLibraryFunction: 'exists'
+      }
+    ];
+    baseElementProps.templateInstance.usedBy = [genericBaseElementUseTemplateInstance.uniqueId];
+    baseElementProps.allInstancesInAllTrees = [
+      genericBaseElementTemplateInstance,
+      genericBaseElementUseTemplateInstance
+    ];
+    component = fullRenderComponentOnBody(TemplateInstance, { ...baseElementProps });
+
+    const warningDiv = component.find('.warning');
+    expect(warningDiv).toHaveLength(0);
+  });
+
+  test('instances with modified use to have a warning', () => {
+    // Set up an instance and use that is modified
+    const baseElementProps = { ...props };
+    const modifiedUse = _.cloneDeep(genericBaseElementUseTemplateInstance);
+    modifiedUse.modifiers = [
+      {
+        id: 'BooleanNot',
+        name: 'Not',
+        inputTypes: ['boolean'],
+        returnType: 'boolean',
+        cqlTemplate: 'BaseModifier',
+        cqlLibraryFunction: 'not'
+      }
+    ];
+    baseElementProps.instanceNames = [
+      { id: 'originalBaseElementId', name: 'Base Element Observation' },
+      { id: modifiedUse.uniqueId, name: 'Base Element Observation' }
+    ];
+    baseElementProps.templateInstance = genericBaseElementTemplateInstance;
+    baseElementProps.templateInstance.modifiers = [
+      {
+        id: 'BooleanExists',
+        name: 'Exists',
+        inputTypes: ['list_of_observations'],
+        returnType: 'boolean',
+        cqlTemplate: 'BaseModifier',
+        cqlLibraryFunction: 'exists'
+      }
+    ];
+
+    baseElementProps.templateInstance.usedBy = [modifiedUse.uniqueId];
+    baseElementProps.allInstancesInAllTrees = [genericBaseElementTemplateInstance, modifiedUse];
+    component = fullRenderComponentOnBody(TemplateInstance, { ...baseElementProps });
+
+    const warningDiv = component.find('.warning');
+    expect(warningDiv).toHaveLength(1);
+    expect(warningDiv.text())
+      .toEqual('Warning: One or more uses of this Base Element have changed. Choose another name.');
+  });
+
+  test('unmodified use with a different element with duplicate name (not a use) has duplicate name warning', () => {
+    // Set up an unmodified base element use and another template instance with same name
+    const baseElementProps = { ...props };
+    const unmodifiedUse = _.cloneDeep(genericBaseElementUseTemplateInstance);
+    baseElementProps.templateInstance = unmodifiedUse;
+
+    const tempInstanceWithSameName = _.cloneDeep(genericTemplateInstance);
+    tempInstanceWithSameName.parameters[0].value = baseElementProps.templateInstance.parameters[0].value;
+
+    baseElementProps.instanceNames = [
+      { id: 'originalBaseElementId', name: 'Base Element Observation' },
+      { id: unmodifiedUse.uniqueId, name: unmodifiedUse.parameters[0].value },
+      { id: tempInstanceWithSameName.uniqueId, name: tempInstanceWithSameName.parameters[0].value }
+    ];
+    const originalBaseElement = genericBaseElementTemplateInstance;
+    originalBaseElement.uniqueId = 'originalBaseElementId';
+    originalBaseElement.parameters[0].value = 'Base Element Observation';
+    baseElementProps.baseElements = [originalBaseElement];
+
+    baseElementProps.allInstancesInAllTrees = [
+      originalBaseElement,
+      unmodifiedUse,
+      tempInstanceWithSameName
+    ];
+    component = fullRenderComponentOnBody(TemplateInstance, { ...baseElementProps });
+
+    const warningDiv = component.find('.warning');
+    expect(warningDiv).toHaveLength(1);
+    expect(warningDiv.text()).toEqual('Warning: Name already in use. Choose another name.');
+  });
+
+  test('unmodified use with another use with same name gives no duplicate name warning', () => {
+    // Set up two unmodified uses
+    const baseElementProps = { ...props };
+    const unmodifiedUse = _.cloneDeep(genericBaseElementUseTemplateInstance);
+    baseElementProps.templateInstance = unmodifiedUse;
+
+    const secondUse = _.cloneDeep(genericBaseElementUseTemplateInstance);
+
+    baseElementProps.instanceNames = [
+      { id: 'originalBaseElementId', name: 'Base Element Observation' },
+      { id: unmodifiedUse.uniqueId, name: unmodifiedUse.parameters[0].value },
+      { id: secondUse.uniqueId, name: secondUse.parameters[0].value }
+    ];
+    const originalBaseElement = genericBaseElementTemplateInstance;
+    originalBaseElement.uniqueId = 'originalBaseElementId';
+    originalBaseElement.parameters[0].value = 'Base Element Observation';
+    originalBaseElement.usedBy = [
+      unmodifiedUse.uniqueId,
+      secondUse.uniqueId
+    ];
+    baseElementProps.baseElements = [originalBaseElement];
+
+    baseElementProps.allInstancesInAllTrees = [
+      originalBaseElement,
+      unmodifiedUse,
+      secondUse
+    ];
+    component = fullRenderComponentOnBody(TemplateInstance, { ...baseElementProps });
+
+    const warningDiv = component.find('.warning');
+    expect(warningDiv).toHaveLength(0);
   });
 });

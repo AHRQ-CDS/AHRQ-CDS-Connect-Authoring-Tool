@@ -81,7 +81,9 @@ test('renders a single level tree for Inclusions and Exclusions', () => {
     artifacts: {
       artifact: {
         expTreeInclude: instanceTree,
-        expTreeExclude: differentTree
+        expTreeExclude: differentTree,
+        subpopulations: [],
+        baseElements: []
       },
       downloadArtifact: {},
       names: []

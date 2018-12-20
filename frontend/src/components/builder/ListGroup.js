@@ -5,6 +5,7 @@ import FontAwesome from 'react-fontawesome';
 import pluralize from 'pluralize';
 import { UncontrolledTooltip } from 'reactstrap';
 import { findValueAtPath } from '../../utils/find';
+import { doesBaseElementInstanceNeedWarning, hasDuplicateName } from '../../utils/warnings';
 
 import Validators from '../../utils/validators';
 import ConjunctionGroup from './ConjunctionGroup';
@@ -44,6 +45,8 @@ export default class ListGroup extends Component {
       isExpanded: true
     };
   }
+
+  getAllInstances = treeName => this.props.getAllInstances(treeName, null, this.props.instance.uniqueId);
 
   collapse = () => {
     this.setState({ isExpanded: false });
@@ -280,7 +283,8 @@ export default class ListGroup extends Component {
             this.editInstance(treeName, params, path, editingConjunction, instance)}
           deleteInstance={(treeName, path, toAdd) =>
             this.deleteInstance(treeName, path, toAdd, instance, isAndOrElement)}
-          getAllInstances={this.props.getAllInstances}
+          getAllInstances={this.getAllInstances}
+          getAllInstancesInAllTrees={this.props.getAllInstancesInAllTrees}
           updateInstanceModifiers={(t, modifiers, path) =>
             this.updateInstanceModifiers(t, modifiers, path, index, isAndOrElement)}
           parameters={this.props.parameters}
@@ -316,8 +320,10 @@ export default class ListGroup extends Component {
 
   renderList = (s, i) => {
     const name = s.parameters[0].value;
-    const duplicateNameIndex = this.props.instanceNames.findIndex(n =>
-      n.id !== s.uniqueId && n.name === s.parameters[0].value);
+    const allInstancesInAllTrees = this.props.getAllInstancesInAllTrees();
+    const { instanceNames, baseElements } = this.props;
+    const needsDuplicateNameWarning = hasDuplicateName(s, instanceNames, baseElements, allInstancesInAllTrees);
+    const needsBaseElementWarning = doesBaseElementInstanceNeedWarning(s, allInstancesInAllTrees);
     const baseElementListUsed = this.isBaseElementListUsed(s);
     const disabledClass = baseElementListUsed ? 'disabled' : '';
     return (
@@ -343,12 +349,16 @@ export default class ListGroup extends Component {
                   this.updateBaseElementList(event.target.value, s.uniqueId);
                 }}
               />
-              {duplicateNameIndex !== -1
+              {needsDuplicateNameWarning && !needsBaseElementWarning
                 && <div className='warning'>Warning: Name already in use. Choose another name.</div>}
-                {s.returnType === 'list_of_any' && s.name === 'Intersect' && s.childInstances.length > 0
-                  && <div className='warning'>
-                    Warning: Intersecting different types will always result in an empty list
-                  </div>}
+              {needsBaseElementWarning &&
+                <div className="warning">
+                  Warning: One or more uses of this Base Element have changed. Choose another name.
+                </div>}
+              {s.returnType === 'list_of_any' && s.name === 'Intersect' && s.childInstances.length > 0
+                && <div className='warning'>
+                  Warning: Intersecting different types will always result in an empty list
+                </div>}
             </div>
             :
             <div className="subpopulation-title">
@@ -408,6 +418,7 @@ ListGroup.propTypes = {
   editInstance: PropTypes.func.isRequired,
   deleteInstance: PropTypes.func.isRequired,
   getAllInstances: PropTypes.func.isRequired,
+  getAllInstancesInAllTrees: PropTypes.func.isRequired,
   updateInstanceModifiers: PropTypes.func.isRequired,
   updateBaseElementLists: PropTypes.func.isRequired,
   parameters: PropTypes.array.isRequired,

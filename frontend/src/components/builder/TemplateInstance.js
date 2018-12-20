@@ -30,6 +30,8 @@ import Qualifier from './modifiers/Qualifier';
 
 import Validators from '../../utils/validators';
 import convertToExpression from '../../utils/artifacts/convertToExpression';
+import { hasDuplicateName, doesBaseElementUseNeedWarning, doesBaseElementInstanceNeedWarning }
+  from '../../utils/warnings';
 
 function getInstanceName(instance) {
   return (instance.parameters.find(p => p.id === 'element_name') || {}).value;
@@ -81,12 +83,22 @@ export default class TemplateInstance extends Component {
   }
 
   hasWarnings = () => {
+    const { templateInstance, instanceNames, baseElements, allInstancesInAllTrees } = this.props;
+
     const hasValidationError = this.validateElement() !== null;
     const hasReturnError = this.state.returnType !== 'boolean' && this.props.validateReturnType !== false;
     const hasModifierWarnings = !this.allModifiersValid();
-    const hasNameWarning = this.hasDuplicateName();
+    const hasNameWarning = hasDuplicateName(templateInstance, instanceNames, baseElements, allInstancesInAllTrees);
+    const hasBaseElementUseChangeWarning = doesBaseElementUseNeedWarning(templateInstance, baseElements);
+    const hasBaseElementInstanceChangeWarning =
+      doesBaseElementInstanceNeedWarning(templateInstance, allInstancesInAllTrees);
 
-    return hasValidationError || hasReturnError || hasModifierWarnings || hasNameWarning;
+    return hasValidationError ||
+      hasReturnError ||
+      hasModifierWarnings ||
+      hasNameWarning ||
+      hasBaseElementUseChangeWarning ||
+      hasBaseElementInstanceChangeWarning;
   }
 
   // Props will either be this.props or nextProps coming from componentWillReceiveProps
@@ -394,22 +406,6 @@ export default class TemplateInstance extends Component {
       if (this.validateModifier(modifier) !== null) allModifiersValid = false;
     });
     return allModifiersValid;
-  }
-
-  hasDuplicateName = () => {
-    const { templateInstance, instanceNames } = this.props;
-
-    // Parameters cannot be renamed if they are in use, so don't need to worry if they are a duplicate here.
-    if (templateInstance.type === 'parameter') {
-      return false;
-    }
-
-    const elementNameParameter = templateInstance.parameters.find(param => param.id === 'element_name');
-    // Treat undefined as empty string so unnamed elements display duplicate correctly.
-    const nameValue = elementNameParameter.value === undefined ? '' : elementNameParameter.value;
-    const duplicateNameIndex = instanceNames.findIndex(name =>
-      name.id !== templateInstance.uniqueId && name.name === nameValue);
-    return duplicateNameIndex !== -1;
   }
 
   renderModifierSelect = () => {
@@ -870,7 +866,7 @@ export default class TemplateInstance extends Component {
   }
 
   renderHeading = (elementNameParameter) => {
-    const { templateInstance } = this.props;
+    const { templateInstance, instanceNames, baseElements, allInstancesInAllTrees } = this.props;
 
     if (elementNameParameter) {
       if (templateInstance.type === 'parameter') {
@@ -890,6 +886,12 @@ export default class TemplateInstance extends Component {
         elementType = baseElementReferenced.name;
       }
 
+      const doesHaveDuplicateName =
+        hasDuplicateName(templateInstance, instanceNames, baseElements, allInstancesInAllTrees);
+      const doesHaveBaseElementUseWarning = doesBaseElementUseNeedWarning(templateInstance, baseElements);
+      const doesHaveBaseElementInstanceWarning =
+        doesBaseElementInstanceNeedWarning(templateInstance, allInstancesInAllTrees);
+
       return (
         <div className="card-element__heading">
           <StringParameter
@@ -899,8 +901,16 @@ export default class TemplateInstance extends Component {
             name={elementType}
             uniqueId={templateInstance.uniqueId}
             />
-          {this.hasDuplicateName() &&
+          {doesHaveDuplicateName && !doesHaveBaseElementUseWarning && !doesHaveBaseElementInstanceWarning &&
             <div className="warning">Warning: Name already in use. Choose another name.</div>
+          }
+          {doesHaveBaseElementUseWarning &&
+            <div className="warning">Warning: This use of the Base Element has changed. Choose another name.</div>
+          }
+          {doesHaveBaseElementInstanceWarning &&
+            <div className="warning">
+              Warning: One or more uses of this Base Element have changed. Choose another name.
+            </div>
           }
         </div>
       );
@@ -995,6 +1005,7 @@ TemplateInstance.propTypes = {
   treeName: PropTypes.string.isRequired,
   templateInstance: PropTypes.object.isRequired,
   otherInstances: PropTypes.array.isRequired,
+  allInstancesInAllTrees: PropTypes.array.isRequired,
   editInstance: PropTypes.func.isRequired,
   updateInstanceModifiers: PropTypes.func.isRequired,
   deleteInstance: PropTypes.func.isRequired,

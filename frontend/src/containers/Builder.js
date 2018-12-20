@@ -94,10 +94,32 @@ export class Builder extends Component {
 
   // ----------------------- INSTANCES ------------------------------------- //
 
+  getAllInstancesInAllTrees = () => {
+    const { artifact } = this.props;
+    let allInstancesInAllTrees = this.getAllInstances('expTreeInclude');
+    allInstancesInAllTrees = allInstancesInAllTrees.concat(this.getAllInstances('expTreeExclude'));
+    artifact.subpopulations.forEach((s) => {
+      if (!s.special) {
+        allInstancesInAllTrees =
+          allInstancesInAllTrees.concat(this.getAllInstances('subpopulations', null, s.uniqueId));
+      }
+    });
+    artifact.baseElements.forEach((baseElement) => {
+      allInstancesInAllTrees =
+        allInstancesInAllTrees.concat(this.getAllInstances('baseElements', null, baseElement.uniqueId));
+    });
+    return allInstancesInAllTrees;
+  }
+
   getAllInstances = (treeName, treeInstance = null, uid = null) => {
     // if treeInstance is null, find and assign tree (only used recursively)
     if (treeInstance == null) {
       treeInstance = this.findTree(treeName, uid).tree; // eslint-disable-line no-param-reassign
+    }
+
+    // If the tree has no child instances, it is a single element. Only occurs for individual base elements.
+    if (!treeInstance.childInstances) {
+      return [treeInstance];
     }
 
     return _.flatten((treeInstance.childInstances || []).map((instance) => {
@@ -320,6 +342,7 @@ export class Builder extends Component {
           editInstance={this.editInstance}
           deleteInstance={this.deleteInstance}
           getAllInstances={this.getAllInstances}
+          getAllInstancesInAllTrees={this.getAllInstancesInAllTrees}
           updateInstanceModifiers={this.updateInstanceModifiers}
           parameters={namedParameters}
           baseElements={artifact.baseElements}
@@ -447,6 +470,7 @@ export class Builder extends Component {
                     updateInstanceModifiers={this.updateInstanceModifiers}
                     deleteInstance={this.deleteInstance}
                     getAllInstances={this.getAllInstances}
+                    getAllInstancesInAllTrees={this.getAllInstancesInAllTrees}
                     templates={templates}
                     checkSubpopulationUsage={this.checkSubpopulationUsage}
                     updateRecsSubpop={this.updateRecsSubpop}
@@ -480,6 +504,7 @@ export class Builder extends Component {
                     addBaseElement={this.addBaseElement}
                     loadValueSets={this.props.loadValueSets}
                     getAllInstances={this.getAllInstances}
+                    getAllInstancesInAllTrees={this.getAllInstancesInAllTrees}
                     addInstance={this.addInstance}
                     editInstance={this.editInstance}
                     updateInstanceModifiers={this.updateInstanceModifiers}
