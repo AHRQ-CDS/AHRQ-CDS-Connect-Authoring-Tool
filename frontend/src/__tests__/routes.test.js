@@ -1,6 +1,6 @@
 import { Route } from 'react-router-dom';
 import PrivateRoute from '../containers/PrivateRoute';
-import Landing from '../components/Landing';
+import Landing from '../containers/Landing';
 import BuilderContainer from '../containers/Builder';
 import Artifact from '../containers/Artifact';
 import NoMatch from '../components/NotFoundPage';
