@@ -313,6 +313,7 @@ export default class ListGroup extends Component {
           options={isAndOrElement ? '' : 'listOperations'}
           disableIndent={!isAndOrElement}
           disableElement={baseElementListUsed}
+          elementUniqueId={s.uniqueId}
         />
       </div>
     );
