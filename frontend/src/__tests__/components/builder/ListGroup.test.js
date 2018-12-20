@@ -1,8 +1,11 @@
+import _ from 'lodash';
 import ListGroup from '../../../components/builder/ListGroup';
 import { shallowRenderComponent, createTemplateInstance } from '../../../utils/test_helpers';
-import { elementGroups, genericBaseElementListInstance } from '../../../utils/test_fixtures';
+import { elementGroups, genericBaseElementUseInstance, genericBaseElementListInstance }
+  from '../../../utils/test_fixtures';
 
 const genericBaseElementListTemplateInstance = createTemplateInstance(genericBaseElementListInstance);
+const genericBaseElementUseTemplateInstance = createTemplateInstance(genericBaseElementUseInstance);
 
 let component;
 
@@ -20,6 +23,7 @@ const props = {
   index: 0,
   addBaseElement: jest.fn(),
   getAllInstances,
+  getAllInstancesInAllTrees: jest.fn(() => []),
   editInstance: jest.fn(),
   updateInstanceModifiers: jest.fn(),
   updateBaseElementLists,
@@ -58,7 +62,7 @@ test('List Groups cannot be deleted when in use', () => {
 });
 
 test('List Groups can be deleted when not in use', () => {
-  const noUseProps = { ...props };
+  const noUseProps = _.cloneDeep(props);
   noUseProps.instance.usedBy = [];
 
   component = shallowRenderComponent(ListGroup, { ...noUseProps });
@@ -116,4 +120,46 @@ test('Return Types of And and Or are correctly updated', () => {
 
   const boolAndInvalid = checkReturnTypeCompatibility('boolean', 'invalid');
   expect(boolAndInvalid).toEqual('invalid');
+});
+
+test('No warnings on base element lists when in use and unmodified', () => {
+  const inUseProps = _.cloneDeep(props);
+  inUseProps.instanceNames = [
+    { id: 'testId1', name: 'UnionListName' },
+    { id: inUseProps.instance.uniqueId, name: inUseProps.instance.parameters[0].value }
+  ];
+  component = shallowRenderComponent(ListGroup, { ...inUseProps });
+  const warningDiv = component.find('.warning');
+  expect(warningDiv).toHaveLength(0);
+});
+
+test('Base Element specific warning on base element list when in use and modified', () => {
+  const baseElementListProps = _.cloneDeep(props);
+  const modifiedUse = _.cloneDeep(genericBaseElementUseTemplateInstance);
+  modifiedUse.modifiers = [
+    {
+      id: 'BooleanNot',
+      name: 'Not',
+      inputTypes: ['boolean'],
+      returnType: 'boolean',
+      cqlTemplate: 'BaseModifier',
+      cqlLibraryFunction: 'not'
+    }
+  ];
+  modifiedUse.parameters[0].value = 'UnionListName';
+  modifiedUse.uniqueId = 'testId1';
+  baseElementListProps.instanceNames = [
+    { id: baseElementListProps.instance.uniqueId, name: 'UnionListName' },
+    { id: modifiedUse.uniqueId, name: 'UnionListName' }
+  ];
+  baseElementListProps.getAllInstancesInAllTrees = jest.fn(() => [
+    genericBaseElementListTemplateInstance,
+    modifiedUse
+  ]);
+
+  component = shallowRenderComponent(ListGroup, { ...baseElementListProps });
+  const warningDiv = component.find('.warning');
+  expect(warningDiv).toHaveLength(1);
+  expect(warningDiv.text())
+    .toEqual('Warning: One or more uses of this Base Element have changed. Choose another name.');
 });
