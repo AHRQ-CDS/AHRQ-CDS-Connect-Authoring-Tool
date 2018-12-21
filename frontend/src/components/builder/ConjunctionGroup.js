@@ -408,5 +408,9 @@ ConjunctionGroup.propTypes = {
   isValidCode: PropTypes.bool,
   resetCodeValidation: PropTypes.func.isRequired,
   codeData: PropTypes.object,
-  validateCode: PropTypes.func.isRequired
+  validateCode: PropTypes.func.isRequired,
+  options: PropTypes.string,
+  disableIndent: PropTypes.bool,
+  disableElement: PropTypes.bool,
+  elementUniqueId: PropTypes.string
 };
