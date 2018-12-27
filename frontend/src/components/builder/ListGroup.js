@@ -253,20 +253,21 @@ export default class ListGroup extends Component {
 
   isBaseElementListUsed = element => (element.usedBy ? element.usedBy.length !== 0 : false);
 
-  renderListGroup = (s) => {
+  renderListGroup = () => {
     const { instance, index } = this.props;
-    const baseElementListUsed = this.isBaseElementListUsed(s);
-    const isAndOrElement = s.id === 'And' || s.id === 'Or';
+    const baseElementListUsed = this.isBaseElementListUsed(instance);
+    const isAndOrElement = instance.id === 'And' || instance.id === 'Or';
     return (
       <div className="card-element__body">
         <div>
           <div className="return-type row">
             <div className="col-3 bold align-right return-type__label">Return Type:</div>
             <div className="col-7 return-type__value">
-              {isAndOrElement && (_.startCase(s.returnType) === 'Boolean' || s.childInstances.length === 1)
+              {isAndOrElement
+                && (_.startCase(instance.returnType) === 'Boolean' || instance.childInstances.length === 1)
                 && <FontAwesome name="check" className="check" />}
               {!isAndOrElement && <FontAwesome name="check" className="check" />}
-              {_.startCase(s.returnType)}
+              {_.startCase(instance.returnType)}
             </div>
           </div>
         </div>
@@ -313,18 +314,20 @@ export default class ListGroup extends Component {
           options={isAndOrElement ? '' : 'listOperations'}
           disableIndent={!isAndOrElement}
           disableElement={baseElementListUsed}
+          elementUniqueId={instance.uniqueId}
         />
       </div>
     );
   }
 
-  renderList = (s, i) => {
-    const name = s.parameters[0].value;
+  renderList = () => {
+    const { instance } = this.props;
+    const name = instance.parameters[0].value;
     const allInstancesInAllTrees = this.props.getAllInstancesInAllTrees();
     const { instanceNames, baseElements } = this.props;
-    const needsDuplicateNameWarning = hasDuplicateName(s, instanceNames, baseElements, allInstancesInAllTrees);
-    const needsBaseElementWarning = doesBaseElementInstanceNeedWarning(s, allInstancesInAllTrees);
-    const baseElementListUsed = this.isBaseElementListUsed(s);
+    const needsDuplicateNameWarning = hasDuplicateName(instance, instanceNames, baseElements, allInstancesInAllTrees);
+    const needsBaseElementWarning = doesBaseElementInstanceNeedWarning(instance, allInstancesInAllTrees);
+    const baseElementListUsed = this.isBaseElementListUsed(instance);
     const disabledClass = baseElementListUsed ? 'disabled' : '';
     return (
       <div className="card-element">
@@ -346,7 +349,7 @@ export default class ListGroup extends Component {
                 value={name}
                 onClick={event => event.stopPropagation()}
                 onChange={(event) => {
-                  this.updateBaseElementList(event.target.value, s.uniqueId);
+                  this.updateBaseElementList(event.target.value, instance.uniqueId);
                 }}
               />
               {needsDuplicateNameWarning && !needsBaseElementWarning
@@ -355,7 +358,9 @@ export default class ListGroup extends Component {
                 <div className="warning">
                   Warning: One or more uses of this Base Element have changed. Choose another name.
                 </div>}
-              {s.returnType === 'list_of_any' && s.name === 'Intersect' && s.childInstances.length > 0
+              {instance.returnType === 'list_of_any'
+                && instance.name === 'Intersect'
+                && instance.childInstances.length > 0
                 && <div className='warning'>
                   Warning: Intersecting different types will always result in an empty list
                 </div>}
@@ -368,7 +373,7 @@ export default class ListGroup extends Component {
                 onClick={this.state.isExpanded ? this.collapse : this.expand}
                 onKeyPress={this.onEnterKey}
               />
-              <h4>{s.parameters[0].value}</h4>
+              <h4>{instance.parameters[0].value}</h4>
             </div>
           }
 
@@ -380,19 +385,19 @@ export default class ListGroup extends Component {
             <button
               aria-label="Remove base element list"
               className={`secondary-button ${disabledClass}`}
-              id={`deletebutton-${s.uniqueId}`}
-              onClick={() => this.deleteBaseElementList(s.uniqueId)}>
+              id={`deletebutton-${instance.uniqueId}`}
+              onClick={() => this.deleteBaseElementList(instance.uniqueId)}>
               <FontAwesome fixedWidth name='times' />
             </button>
             {baseElementListUsed &&
               <UncontrolledTooltip
-                target={`deletebutton-${s.uniqueId}`} placement="left">
+                target={`deletebutton-${instance.uniqueId}`} placement="left">
                 To delete this Base Element List, remove all references to it.
             </UncontrolledTooltip>}
           </div>
         </div>
 
-        {this.state.isExpanded && this.renderListGroup(s, i)}
+        {this.state.isExpanded && this.renderListGroup()}
       </div>
     );
   }
