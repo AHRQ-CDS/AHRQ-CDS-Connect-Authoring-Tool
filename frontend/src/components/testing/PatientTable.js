@@ -82,7 +82,8 @@ export default class PatientTable extends Component {
   // ----------------------- PERFORM CQL EXECUTION -------------------------- //
 
   executeCQL = (artifact, patient) => {
-    this.props.executeCQLArtifact(artifact, patient.patient, this.props.vsacFHIRCredentials, this.state.codeService);
+    const dataModel = (patient.fhirVersion === 'STU3') ? { name: 'FHIR', version: '3.0.0' } : { name: 'FHIR', version: '1.0.2' }
+    this.props.executeCQLArtifact(artifact, patient.patient, this.props.vsacFHIRCredentials, this.state.codeService, dataModel);
   }
 
   // ----------------------- RENDER ---------------------------------------- //

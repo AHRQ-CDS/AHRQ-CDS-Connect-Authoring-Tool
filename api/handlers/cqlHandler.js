@@ -188,7 +188,7 @@ function isBaseElementUseChanged(element, baseElements) {
 
 // Class to handle all cql generation
 class CqlArtifact {
-  constructor(artifact) {    
+  constructor(artifact) {
     this.name = slug(artifact.name ? artifact.name : 'untitled');
     this.version = artifact.version ? artifact.version : 1;
     this.dataModel = artifact.dataModel;
