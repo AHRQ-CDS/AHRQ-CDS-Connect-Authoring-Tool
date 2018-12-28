@@ -308,6 +308,66 @@ describe('Base Element uses', () => {
   });
 });
 
+describe('Base Element Uses of Use', () => {
+  test('use root base element for type and phrase', () => {
+    // Set templateInstance for base element use and set instanceNames to include the original base element name.
+    const baseElementProps = { ...props };
+    const useElement = _.cloneDeep(genericBaseElementUseTemplateInstance);
+    useElement.modifiers = [
+      {
+        id: 'VerifiedObservation',
+        name: 'Verified',
+        inputTypes: ['list_of_observations'],
+        returnType: 'list_of_observations',
+        cqlTemplate: 'BaseModifier',
+        cqlLibraryFunction: 'C3F.Verified'
+      }
+    ];
+    useElement.parameters[0].value = 'B';
+    baseElementProps.instanceNames = [
+      { id: 'originalBaseElementId', name: 'A' },
+      { id: 'useOfUseId', name: 'C' },
+      { id: useElement.uniqueId, name: 'B' }
+    ];
+    const originalBaseElement = _.cloneDeep(genericBaseElementTemplateInstance);
+    originalBaseElement.uniqueId = 'originalBaseElementId';
+    originalBaseElement.parameters[0].value = 'A';
+    originalBaseElement.usedBy = [useElement.uniqueId];
+
+    const useOfUseElement = _.cloneDeep(genericBaseElementUseTemplateInstance);
+    useOfUseElement.uniqueId = 'useOfUseId';
+    useOfUseElement.parameters[0].value = 'C';
+    useOfUseElement.parameters[1].value = { id: useElement.uniqueId, type: 'Base Element' };
+    useOfUseElement.modifiers = [
+      {
+        id: 'BooleanExists',
+        name: 'Exists',
+        inputTypes: ['list_of_observations'],
+        returnType: 'boolean',
+        cqlTemplate: 'BaseModifier',
+        cqlLibraryFunction: 'exists'
+      }
+    ];
+    useElement.usedBy = [useOfUseElement.uniqueId];
+    baseElementProps.baseElements = [originalBaseElement, useElement, useOfUseElement];
+    baseElementProps.templateInstance = useOfUseElement;
+    component = fullRenderComponentOnBody(TemplateInstance, { ...baseElementProps });
+
+    const baseElementList = component.find('#base-element-list');
+    expect(baseElementList.text()).toEqual('Base Element:B'); // The base element the use came directly from
+
+    const baseElementHeaderType = component.find('.card-element__heading .label');
+    expect(baseElementHeaderType.text()).toEqual('Observation:'); // The topmost base element's type
+
+    const expressionsApplied = component.find('.applied-modifiers__info-expressions .modifier__list');
+    expect(expressionsApplied.text()).toEqual('Exists'); // Only the current elements expressions are listed
+
+    const expressionPhrase = component.find('.expression-logic');
+    expect(expressionPhrase.text())
+      .toEqual('Thereexistsaverifiedobservationwith a code fromVS,VS2,123-4 (TestName),or...'); // All expressions and VS included in the phrase
+  });
+});
+
 describe('Base Element List instance\'s have child instances inside which', () => {
   beforeEach(() => {
     const baseElementProps = { ...props, renderIndentButtons: jest.fn(), deleteInstance: jest.fn() };
@@ -397,6 +457,33 @@ describe('Base Element warnings', () => {
     const warningDiv = component.find('.warning');
     expect(warningDiv).toHaveLength(1);
     expect(warningDiv.text()).toEqual('Warning: This use of the Base Element has changed. Choose another name.');
+  });
+
+  test('unmodified uses of uses have no warnings', () => {
+    // Set up an unmodified base element use that is also in use
+    const baseElementProps = { ...props };
+    baseElementProps.templateInstance = _.cloneDeep(genericBaseElementUseTemplateInstance);
+    baseElementProps.instanceNames = [
+      { id: 'originalBaseElementId', name: 'Base Element Observation' },
+      { id: 'useOfUseId', name: 'Base Element Observation' },
+      { id: genericBaseElementUseTemplateInstance.uniqueId, name: 'Base Element Observation' }
+    ];
+    baseElementProps.templateInstance.usedBy = ['useOfUseId'];
+
+    const originalBaseElement = genericBaseElementTemplateInstance;
+    originalBaseElement.uniqueId = 'originalBaseElementId';
+    originalBaseElement.parameters[0].value = 'Base Element Observation';
+    const useOfUseElement = genericBaseElementUseTemplateInstance;
+    useOfUseElement.uniqueId = 'useOfUseId';
+    useOfUseElement.parameters[0].value = 'Base Element Observation';
+
+    baseElementProps.baseElements = [originalBaseElement, baseElementProps.templateInstance, useOfUseElement];
+    baseElementProps.allInstancesInAllTrees = [originalBaseElement, baseElementProps.templateInstance, useOfUseElement];
+    component = fullRenderComponentOnBody(TemplateInstance, { ...baseElementProps });
+
+    // No warnings on unmodified use
+    const warningDiv = component.find('.warning');
+    expect(warningDiv).toHaveLength(0);
   });
 
   test('instance with no modified uses to have no warning', () => {
