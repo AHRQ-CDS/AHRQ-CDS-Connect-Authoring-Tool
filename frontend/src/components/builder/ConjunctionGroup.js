@@ -389,7 +389,7 @@ ConjunctionGroup.propTypes = {
   deleteInstance: PropTypes.func.isRequired,
   instanceNames: PropTypes.array.isRequired,
   conversionFunctions: PropTypes.array,
-  scrollToBaseElement: PropTypes.func,
+  scrollToBaseElement: PropTypes.func.isRequired,
   loginVSACUser: PropTypes.func.isRequired,
   setVSACAuthStatus: PropTypes.func.isRequired,
   vsacStatus: PropTypes.string,

@@ -37,6 +37,30 @@ function getInstanceName(instance) {
   return (instance.parameters.find(p => p.id === 'element_name') || {}).value;
 }
 
+function getOriginalBaseElement(templateInstance, baseElements) {
+  const referenceParameter = templateInstance.parameters.find(param => param.type === 'reference');
+  if (referenceParameter) {
+    // Element type to display in header will be the reference type for Base Elements.
+    const baseElementReferenced = baseElements.find(element =>
+      element.uniqueId === referenceParameter.value.id);
+    return getOriginalBaseElement(baseElementReferenced, baseElements);
+  }
+  return templateInstance;
+}
+
+function getAllModifiersOnBaseElementUse(templateInstance, baseElements, modifiers = []) {
+  let currentModifiers = modifiers;
+  const referenceParameter = templateInstance.parameters.find(param => param.type === 'reference');
+  if (referenceParameter) {
+    // Element type to display in header will be the reference type for Base Elements.
+    const baseElementReferenced = baseElements.find(element =>
+      element.uniqueId === referenceParameter.value.id);
+    currentModifiers = _.cloneDeep(baseElementReferenced.modifiers).concat(currentModifiers);
+    return getAllModifiersOnBaseElementUse(baseElementReferenced, baseElements, currentModifiers);
+  }
+  return currentModifiers;
+}
+
 export default class TemplateInstance extends Component {
   constructor(props) {
     super(props);
@@ -696,9 +720,11 @@ export default class TemplateInstance extends Component {
     if (templateInstance.type === 'baseElement') {
       const referenceParameter = templateInstance.parameters.find(param => param.type === 'reference');
       if (referenceParameter) {
-        const baseElementReferenced = baseElements.find(element =>
-          element.uniqueId === referenceParameter.value.id);
-        phraseTemplateInstance = baseElementReferenced;
+        // Use the original base element as a base, but include all modifiers from derivative uses.
+        const originalBaseElement = _.cloneDeep(getOriginalBaseElement(templateInstance, baseElements));
+        const modifiers = getAllModifiersOnBaseElementUse(templateInstance, baseElements, []);
+        originalBaseElement.modifiers = modifiers;
+        phraseTemplateInstance = originalBaseElement;
         if (phraseTemplateInstance.conjunction) {
           phraseTemplateInstanceIsListGroup = true;
         }
@@ -881,9 +907,8 @@ export default class TemplateInstance extends Component {
       let elementType = templateInstance.name;
       if (referenceParameter) {
         // Element type to display in header will be the reference type for Base Elements.
-        const baseElementReferenced = this.props.baseElements.find(element =>
-          element.uniqueId === referenceParameter.value.id);
-        elementType = baseElementReferenced.name;
+        const originalBaseElement = getOriginalBaseElement(templateInstance, baseElements);
+        elementType = originalBaseElement.name;
       }
 
       const doesHaveDuplicateName =
@@ -1032,4 +1057,5 @@ TemplateInstance.propTypes = {
   resetCodeValidation: PropTypes.func.isRequired,
   disableElement: PropTypes.bool,
   disableIndent: PropTypes.bool,
+  scrollToBaseElement: PropTypes.func.isRequired,
 };

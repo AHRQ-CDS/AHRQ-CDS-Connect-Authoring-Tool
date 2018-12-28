@@ -33,7 +33,7 @@ export function setStatusMessage(statusType) {
 // ------------------------- UPDATE ARTIFACT ------------------------------- //
 
 function parseTree(element, names, baseElementsInUse) {
-  parseConjunction(element, names, baseElementsInUse);
+  parseConjunction(element.childInstances, names, baseElementsInUse);
   const children = element.childInstances;
   children.forEach((child) => {
     if ('childInstances' in child) {
@@ -42,8 +42,8 @@ function parseTree(element, names, baseElementsInUse) {
   });
 }
 
-function parseConjunction(element, names, baseElementsInUse) {
-  element.childInstances.forEach((child) => {
+function parseConjunction(childInstances, names, baseElementsInUse) {
+  childInstances.forEach((child) => {
     // Don't include parameters used in conjunctions since they are just refernces.
     // type = 'parameter'supports modern parameter references, template = 'EmptyParameter'for old parameter references.
     if (!(child.type === 'parameter' || child.template === 'EmptyParameter')) {
@@ -95,6 +95,9 @@ function parseForDuplicateNamesAndUsedBaseElements(artifact) {
     }
     if (baseElement.childInstances && baseElement.childInstances.length) {
       parseTree(baseElement, names, baseElementsInUse);
+    } else {
+      // Parse single base element directly for it's uses
+      parseConjunction([baseElement], names, baseElementsInUse);
     }
   });
   artifact.parameters.forEach((parameter, i) => {
