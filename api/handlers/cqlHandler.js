@@ -225,10 +225,15 @@ class CqlArtifact {
     );
 
     this.baseElements.forEach((baseElement) => {
-      const count = getCountForUniqueExpressionName(baseElement.parameters[0], this.names, 'value', '', false);
-      if (count > 0) {
-        baseElement.parameters[0].value = `${baseElement.parameters[0]}_${count}`;
+      let isBaseElementUseAndUnchanged = false;
+      if (baseElement.type === 'baseElement') {
+        isBaseElementUseAndUnchanged = !isBaseElementUseChanged(baseElement, this.baseElements);
       }
+      const count = getCountForUniqueExpressionName(baseElement.parameters[0], this.names, 'value', '', false);
+      if (!isBaseElementUseAndUnchanged && count > 0) {
+        baseElement.parameters[0].value = `${baseElement.parameters[0].value}_${count}`;
+      }
+
       if (baseElement.childInstances) {
         this.parseTree(baseElement);
       } else {
