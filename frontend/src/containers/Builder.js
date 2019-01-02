@@ -395,7 +395,7 @@ export class Builder extends Component {
 
         <div className="builder__buttonbar">
           <div className="builder__buttonbar-menu" aria-label="Workspace Menu">
-            <Dropdown isOpen={this.state.showMenu} toggle={this.toggleMenu} className="primary-button">
+            <Dropdown isOpen={this.state.showMenu} toggle={this.toggleMenu} className="dropdown-button">
               <DropdownToggle caret><FontAwesome name="download" className="icon" />Download CQL</DropdownToggle>
               <DropdownMenu>
                 <DropdownItem onClick={() => this.props.downloadArtifact(artifact, { name: 'FHIR', version: '1.0.2' })}>

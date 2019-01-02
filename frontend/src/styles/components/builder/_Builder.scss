@@ -33,8 +33,9 @@
 
   &__buttonbar {
     &-menu {
+      display: flex;
+      justify-content: flex-end;
       margin-bottom: 5px;
-      text-align: right;
     }
 
     [role=status] {
@@ -44,12 +45,8 @@
       text-align: right;
     }
 
-    button {
-      margin: 0 0 0 20px;
-
-      .icon {
-        padding-right: 10px;
-      }
+    .icon {
+      padding-right: 10px;
     }
   }
 
