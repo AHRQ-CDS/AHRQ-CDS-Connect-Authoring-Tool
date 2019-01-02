@@ -51,7 +51,8 @@ function idToObj(req, res, next) {
         req.body = artifact;
         next();
       }
-    });
+    }
+  );
 }
 
 function loadTemplates(pathToTemplates) {
@@ -234,8 +235,7 @@ class CqlArtifact {
         let uri = _.get(parameter, 'value.uri', '').replace(/'/g, '\\\'');
         if (system && uri) { this.codeSystemMap.set(system, { name: system, id: uri }); }
       }
-    }
-    );
+    });
 
     this.baseElements.forEach((baseElement) => {
       let isBaseElementUseAndUnchanged = false;
@@ -252,8 +252,7 @@ class CqlArtifact {
       } else {
         this.parseElement(baseElement);
       }
-    }
-    );
+    });
 
     if (this.inclusions.childInstances.length) { this.parseTree(this.inclusions); }
     if (this.exclusions.childInstances.length) { this.parseTree(this.exclusions); }
@@ -267,8 +266,7 @@ class CqlArtifact {
       if (!subpopulation.special) { // `Doesn't Meet Inclusion Criteria` and `Meets Exclusion Criteria` are special
         if (subpopulation.childInstances.length) { this.parseTree(subpopulation); }
       }
-    }
-    );
+    });
   }
 
   checkOtherUses(name, id) {

@@ -127,7 +127,7 @@ class Testing extends Component {
         .get('resource')
         .value();
       const patientNameGiven = _.get(patientResource, 'name[0].given[0]', 'given_placeholder');
-      const patientNameFamily = _.get(patientResource, 'name[0].family[0]', 'family_placeholder');
+      const patientNameFamily = _.get(patientResource, 'name[0].family', 'family_placeholder');
 
       return (
         <Jumbotron className="patient-table">

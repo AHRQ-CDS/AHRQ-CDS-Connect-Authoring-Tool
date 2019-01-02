@@ -140,7 +140,7 @@ export default class PatientView extends Component {
 
           <div className="patient-data">
             <div className="patient-data-name">
-              {`${patientName.given[0]} ${patientName.family[0]}`}
+              {`${patientName.given[0]} ${patientName.family}`}
             </div>
 
             <div className="patient-data-details">

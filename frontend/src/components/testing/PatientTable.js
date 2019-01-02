@@ -82,8 +82,17 @@ export default class PatientTable extends Component {
   // ----------------------- PERFORM CQL EXECUTION -------------------------- //
 
   executeCQL = (artifact, patient) => {
-    const dataModel = (patient.fhirVersion === 'STU3') ? { name: 'FHIR', version: '3.0.0' } : { name: 'FHIR', version: '1.0.2' }
-    this.props.executeCQLArtifact(artifact, patient.patient, this.props.vsacFHIRCredentials, this.state.codeService, dataModel);
+    const dataModel = (patient.fhirVersion === 'STU3')
+      ? { name: 'FHIR', version: '3.0.0' }
+      : { name: 'FHIR', version: '1.0.2' };
+
+    this.props.executeCQLArtifact(
+      artifact,
+      patient.patient,
+      this.props.vsacFHIRCredentials,
+      this.state.codeService,
+      dataModel
+    );
   }
 
   // ----------------------- RENDER ---------------------------------------- //
@@ -114,7 +123,7 @@ export default class PatientTable extends Component {
               {_.chain(this.state.patientToDelete)
                 .get('patient.entry')
                 .find({ resource: { resourceType: 'Patient' } })
-                .get('resource.name[0].family[0]')
+                .get('resource.name[0].family')
                 .value() || 'family_placeholder'}
             </span>
           </div>
@@ -170,7 +179,7 @@ export default class PatientTable extends Component {
               {_.chain(this.state.patientToExecute)
                 .get('patient.entry')
                 .find({ resource: { resourceType: 'Patient' } })
-                .get('resource.name[0].family[0]')
+                .get('resource.name[0].family')
                 .value() || 'family_placeholder'}
             </span>
           </div>
@@ -203,7 +212,7 @@ export default class PatientTable extends Component {
           {_.chain(patient)
             .get('patient.entry')
             .find({ resource: { resourceType: 'Patient' } })
-            .get('resource.name[0].family[0]')
+            .get('resource.name[0].family')
             .value() || 'family_placeholder'}
         </div>
       </td>

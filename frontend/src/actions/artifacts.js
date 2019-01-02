@@ -455,8 +455,10 @@ function performExecuteArtifact(elmFiles, artifactName, patient, vsacCredentials
   const library = new cql.Library(elmFile, new cql.Repository(libraries));
 
   // Create the patient source
-  const patientSource = (dataModel.version === '3.0.0') ? cqlfhir.PatientSource.FHIRv300() : cqlfhir.PatientSource.FHIRv102();
-  
+  const patientSource = (dataModel.version === '3.0.0')
+    ? cqlfhir.PatientSource.FHIRv300()
+    : cqlfhir.PatientSource.FHIRv102();
+
   // Load the patient source with the patient
   patientSource.loadBundles([patient]);
 
@@ -493,7 +495,14 @@ export function executeCQLArtifact(artifact, patient, vsacCredentials, codeServi
           dispatch(executeArtifactFailure(error));
           reject();
         });
-    }).then(res => performExecuteArtifact(res.data.elmFiles, artifact.name, patient, vsacCredentials, codeService, dataModel))
+    }).then(res => performExecuteArtifact(
+      res.data.elmFiles,
+      artifact.name,
+      patient,
+      vsacCredentials,
+      codeService,
+      dataModel
+    ))
       .then(r => dispatch(executeArtifactSuccess(r, artifact, patient)))
       .catch(error => dispatch(executeArtifactFailure(error)));
   };
