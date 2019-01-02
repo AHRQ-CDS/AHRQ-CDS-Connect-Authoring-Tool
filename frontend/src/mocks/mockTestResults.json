@@ -39,6 +39,25 @@
               "country": {
                 "value": "US"
               },
+              "extension": [
+                {
+                  "extension": [
+                    {
+                      "url": "latitude",
+                      "valueDecimal": {
+                        "value": -71.807783
+                      }
+                    },
+                    {
+                      "url": "longitude",
+                      "valueDecimal": {
+                        "value": 42.269478
+                      }
+                    }
+                  ],
+                  "url": "http://hl7.org/fhir/StructureDefinition/geolocation"
+                }
+              ],
               "line": [
                 {
                   "value": "114 Fahey Station Apt 9"
@@ -77,8 +96,93 @@
               }
             }
           ],
+          "extension": [
+            {
+              "url": "http://hl7.org/fhir/StructureDefinition/us-core-race",
+              "valueCodeableConcept": {
+                "coding": [
+                  {
+                    "code": {
+                      "value": "2028-9"
+                    },
+                    "display": {
+                      "value": "Asian"
+                    },
+                    "system": {
+                      "value": "http://hl7.org/fhir/v3/Race"
+                    }
+                  }
+                ],
+                "text": {
+                  "value": "Asian"
+                }
+              }
+            },
+            {
+              "url": "http://hl7.org/fhir/StructureDefinition/us-core-ethnicity",
+              "valueCodeableConcept": {
+                "coding": [
+                  {
+                    "code": {
+                      "value": "2186-5"
+                    },
+                    "display": {
+                      "value": "Not Hispanic or Latino"
+                    },
+                    "system": {
+                      "value": "http://hl7.org/fhir/v3/Ethnicity"
+                    }
+                  }
+                ],
+                "text": {
+                  "value": "Not Hispanic or Latino"
+                }
+              }
+            },
+            {
+              "url": "http://hl7.org/fhir/StructureDefinition/patient-mothersMaidenName",
+              "valueString": {
+                "value": "Lavonne167 Lockman863"
+              }
+            },
+            {
+              "url": "http://hl7.org/fhir/us/core/StructureDefinition/us-core-birthsex",
+              "valueCode": {
+                "value": "F"
+              }
+            },
+            {
+              "url": "http://hl7.org/fhir/StructureDefinition/birthPlace",
+              "valueAddress": {
+                "city": {
+                  "value": "Newton"
+                },
+                "country": {
+                  "value": "US"
+                },
+                "state": {
+                  "value": "Massachusetts"
+                }
+              }
+            },
+            {
+              "url": "http://synthetichealth.github.io/synthea/disability-adjusted-life-years",
+              "valueDecimal": {
+                "value": 0.01509327630927441
+              }
+            },
+            {
+              "url": "http://synthetichealth.github.io/synthea/quality-adjusted-life-years",
+              "valueDecimal": {
+              "value": 31.984906723690724
+              }
+            }
+          ],
           "gender": {
             "value": "female"
+          },
+          "id": {
+            "value": "505bcdd9-5cc3-4ef3-8eea-6d479b1d4dc9"
           },
           "identifier": [
             {
@@ -199,7 +303,12 @@
                 "value": "555-605-1169"
               }
             }
-          ]
+          ],
+          "text": {
+            "status": {
+              "value": "generated"
+            }
+          }
         },
         "Rationale": null,
         "Recommendation": "Do adult things"
