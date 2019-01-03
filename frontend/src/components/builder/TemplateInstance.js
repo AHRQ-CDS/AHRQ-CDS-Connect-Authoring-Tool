@@ -55,7 +55,7 @@ function getAllModifiersOnBaseElementUse(templateInstance, baseElements, modifie
     // Element type to display in header will be the reference type for Base Elements.
     const baseElementReferenced = baseElements.find(element =>
       element.uniqueId === referenceParameter.value.id);
-    currentModifiers = _.cloneDeep(baseElementReferenced.modifiers).concat(currentModifiers);
+    currentModifiers = _.cloneDeep(baseElementReferenced.modifiers || []).concat(currentModifiers);
     return getAllModifiersOnBaseElementUse(baseElementReferenced, baseElements, currentModifiers);
   }
   return currentModifiers;
