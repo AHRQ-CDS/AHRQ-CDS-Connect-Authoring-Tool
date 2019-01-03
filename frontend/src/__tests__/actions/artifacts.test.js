@@ -214,7 +214,7 @@ describe('artifact actions', () => {
         mockPatient.patient,
         { username: 'u', password: 'p' },
         new CodeService(),
-        { name: 'FHIR', version: '3.0.0' }
+        { name: 'FHIR', version: '1.0.2' }
       )).then(() => {
         expect(_.initial(store.getActions())).toEqual(_.initial(expectedActions));
         expect(_.last(store.getActions()).type).toEqual(_.last(expectedActions).type);

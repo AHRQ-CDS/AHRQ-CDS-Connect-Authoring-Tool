@@ -340,8 +340,7 @@ define function MedicationRequestLookBack(MedList List<MedicationRequest>, LookB
 MedList M
   let LookBackInterval: Interval[Now() - LookBack, Now()]
   where M.authoredOn.value in LookBackInterval
-    // TODO: Find suitable replacement for dateEnded in STU3
-    //or M.dateEnded.value in LookBackInterval
+  // DSTU2 also checked the dateEnded property of MedicationOrder, but this doesn't exist for MedicationRequest
 
 /**
 * Medication Statements that are issued in the specified "look back" period.
