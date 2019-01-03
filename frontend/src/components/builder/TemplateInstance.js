@@ -1014,7 +1014,7 @@ export default class TemplateInstance extends Component {
     const baseElementClass = templateInstance.type === 'baseElement' ? 'base-element' : '';
 
     return (
-      <div className={`card-element element__expanded ${baseElementClass}`} id={templateInstance.uniqueId}>
+      <div className={`card-element element__expanded ${baseElementClass}`}>
         {this.renderHeader()}
         {showElement && this.renderBody()}
         {showElement && this.renderFooter()}

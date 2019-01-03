@@ -74,10 +74,16 @@ export default class BaseElements extends Component {
     return <div>
       {this.props.instance.baseElements.map((s, i) => {
         if (s.conjunction) {
-          return <div className="subpopulations" key={i}>{this.renderListOperationConjunction(s, i)}</div>;
+          return (
+            <div className="subpopulations"
+              key={i}
+              id={s.uniqueId}>
+              {this.renderListOperationConjunction(s, i)}
+            </div>
+          );
         }
         return (
-          <div className="card-group card-group__top" key={i}>
+          <div className="card-group card-group__top" key={i} id={s.uniqueId}>
             <div className="card-group-section subpopulation base-element">
               <TemplateInstance
                 valueSets={this.props.valueSets}
