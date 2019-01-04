@@ -41,7 +41,7 @@ export default class NewArtifactForm extends Component {
               value={version} onChange={this.handleInputChange} />
           </div>
 
-          <button type="submit" className="primary-button ml-auto p-2">New Artifact</button>
+          <button type="submit" className="primary-button ml-auto p-2">Create</button>
         </div>
       </form>
     );
