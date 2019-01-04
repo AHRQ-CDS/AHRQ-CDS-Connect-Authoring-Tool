@@ -54,6 +54,15 @@ export function hasDuplicateName(templateInstance, instanceNames, baseElements, 
         const anotherUseModified = anotherUse.modifiers && anotherUse.modifiers.length > 0;
         return anotherUseModified;
       }
+      // If it is a base element that is used in the Base Elements tab, it can also be used by others. Check those uses.
+      if (templateInstance.usedBy) {
+        const usesUseId = templateInstance.usedBy.find(id => id === name.id);
+        const usesUse = allInstancesInAllTrees.find(instance => instance.uniqueId === usesUseId);
+        if (usesUse) {
+          const usesUseModified = usesUse.modifiers && usesUse.modifiers.length > 0;
+          return usesUseModified;
+        }
+      }
       return name.id !== originalBaseElement.uniqueId;
     } else if (isDuplicate && templateInstance.usedBy) {
       // If the duplicate is one of the uses, don't consider name duplicate unless use has changed.

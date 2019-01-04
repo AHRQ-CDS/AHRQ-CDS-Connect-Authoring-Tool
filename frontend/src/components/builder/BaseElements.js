@@ -46,6 +46,7 @@ export default class BaseElements extends Component {
         baseElements={this.props.baseElements}
         conversionFunctions={this.props.conversionFunctions}
         instanceNames={this.props.instanceNames}
+        scrollToBaseElement={this.props.scrollToBaseElement}
         loginVSACUser={this.props.loginVSACUser}
         setVSACAuthStatus={this.props.setVSACAuthStatus}
         vsacStatus={this.props.vsacStatus}
@@ -73,10 +74,16 @@ export default class BaseElements extends Component {
     return <div>
       {this.props.instance.baseElements.map((s, i) => {
         if (s.conjunction) {
-          return <div className="subpopulations" key={i}>{this.renderListOperationConjunction(s, i)}</div>;
+          return (
+            <div className="subpopulations"
+              key={i}
+              id={s.uniqueId}>
+              {this.renderListOperationConjunction(s, i)}
+            </div>
+          );
         }
         return (
-          <div className="card-group card-group__top" key={i}>
+          <div className="card-group card-group__top" key={i} id={s.uniqueId}>
             <div className="card-group-section subpopulation base-element">
               <TemplateInstance
                 valueSets={this.props.valueSets}
@@ -93,6 +100,7 @@ export default class BaseElements extends Component {
                 conversionFunctions={this.props.conversionFunctions}
                 instanceNames={this.props.instanceNames}
                 baseElements={this.props.baseElements}
+                scrollToBaseElement={this.props.scrollToBaseElement}
                 loginVSACUser={this.props.loginVSACUser}
                 setVSACAuthStatus={this.props.setVSACAuthStatus}
                 vsacStatus={this.props.vsacStatus}
@@ -123,6 +131,7 @@ export default class BaseElements extends Component {
             categories={this.props.templates}
             onSuggestionSelected={this.addChild}
             parameters={this.props.parameters}
+            baseElements={this.props.baseElements}
             loginVSACUser={this.props.loginVSACUser}
             setVSACAuthStatus={this.props.setVSACAuthStatus}
             vsacStatus={this.props.vsacStatus}
@@ -184,5 +193,6 @@ BaseElements.propTypes = {
   codeData: PropTypes.object,
   validateCode: PropTypes.func.isRequired,
   resetCodeValidation: PropTypes.func.isRequired,
-  validateReturnType: PropTypes.bool.isRequired
+  validateReturnType: PropTypes.bool.isRequired,
+  scrollToBaseElement: PropTypes.func.isRequired,
 };

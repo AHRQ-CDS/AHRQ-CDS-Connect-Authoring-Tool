@@ -516,6 +516,7 @@ export class Builder extends Component {
                     instanceNames={this.props.names}
                     baseElements={artifact.baseElements}
                     parameters={namedParameters}
+                    scrollToBaseElement={this.scrollToBaseElement}
                     loginVSACUser={this.props.loginVSACUser}
                     setVSACAuthStatus={this.props.setVSACAuthStatus}
                     vsacStatus={this.props.vsacStatus}

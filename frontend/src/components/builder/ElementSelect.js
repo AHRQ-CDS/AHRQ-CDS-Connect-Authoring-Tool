@@ -266,10 +266,10 @@ export default class ElementSelect extends Component {
     const placeholderText = 'Choose element type';
     const elementOptionsToDisplay = _.cloneDeep(elementOptions).filter((e) => {
       e.disabled = this.props.disableElement || false;
-      if (this.props.inBaseElements) {
-        return e.value !== 'baseElement';
+      if (!this.props.inBaseElements) {
+        return e.value !== 'listOperations';
       }
-      return e.value !== 'listOperations';
+      return true;
     });
     let noAuthElementOptions;
     if (selectedElement && !selectedElement.vsacAuthRequired) {
@@ -358,6 +358,7 @@ ElementSelect.propTypes = {
   codeData: PropTypes.object,
   validateCode: PropTypes.func.isRequired,
   resetCodeValidation: PropTypes.func.isRequired,
+  baseElements: PropTypes.array.isRequired,
   inBaseElements: PropTypes.bool.isRequired,
   elementUniqueId: PropTypes.string,
   disableElement: PropTypes.bool,
