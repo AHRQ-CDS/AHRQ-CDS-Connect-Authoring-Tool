@@ -217,16 +217,6 @@ export default class PatientTable extends Component {
         </div>
       </td>
 
-      <td className="patients__tablecell-wide" data-th="Gender">
-        <div>
-          {_.chain(patient)
-              .get('patient.entry')
-              .find({ resource: { resourceType: 'Patient' } })
-              .get('resource.gender')
-              .value() || 'gender_placeholder'}
-        </div>
-      </td>
-
       <td className="patients__tablecell-wide" data-th="Birth Date">
         <div>
           {_.chain(patient)
@@ -237,7 +227,25 @@ export default class PatientTable extends Component {
         </div>
       </td>
 
-      <td data-th="Updated">{renderDate(patient.updatedAt)}</td>
+      <td className="patients__tablecell-short" data-th="Gender">
+        <div>
+          {_.chain(patient)
+              .get('patient.entry')
+              .find({ resource: { resourceType: 'Patient' } })
+              .get('resource.gender')
+              .value() || 'gender_placeholder'}
+        </div>
+      </td>
+
+      <td className="patients__tablecell-short" data-th="FHIR Version">
+        <div>
+          {_.get(patient, 'fhirVersion', 'version_placeholder')}
+        </div>
+      </td>
+
+      <td className="patients__tablecell-wide" data-th="Updated">
+        {renderDate(patient.updatedAt)}
+      </td>
 
       <td data-th="">
         <button aria-label="View"
@@ -297,9 +305,10 @@ export default class PatientTable extends Component {
           <thead>
             <tr>
               <th scope="col" className="patients__tablecell-wide">Name</th>
-              <th scope="col" className="patients__tablecell-wide">Gender</th>
               <th scope="col" className="patients__tablecell-wide">Birth Date</th>
-              <th scope="col">Last Updated</th>
+              <th scope="col" className="patients__tablecell-short">Gender</th>
+              <th scope="col" className="patients__tablecell-short">Version</th>
+              <th scope="col" className="patients__tablecell-wide">Last Updated</th>
               <th>{this.renderVSACLogin()}</th>
             </tr>
           </thead>
