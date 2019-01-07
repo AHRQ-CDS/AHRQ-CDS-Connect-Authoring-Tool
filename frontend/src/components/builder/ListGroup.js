@@ -272,7 +272,7 @@ export default class ListGroup extends Component {
             </div>
           </div>
         </div>
-        <div className="expression">
+        <div className="expression expression__group">
           <ExpressionPhrase
             instance={instance}
             baseElements={baseElements}

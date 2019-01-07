@@ -36,9 +36,9 @@
   }
 }
 
-.card-group__odd > .card-group-section > .card-element > .card-element__body > .expression,
-.card-group__odd > .card-element > .card-element__body > .expression,
-.subpopulation:not(.base-element) .expression {
+.card-group__odd > .card-group-section > .card-element > .card-element__body > .expression:not(.expression__group),
+.card-group__odd > .card-element > .card-element__body > .expression:not(.expression__group),
+.subpopulation:not(.base-element) .expression:not(.expression__group) {
   background-color: $gray-lightest;
 
   &.expression-collapsed {
@@ -48,7 +48,7 @@
 
 .card-group__even > .card-group__top > .expression__group,
 .card-group__even > .card-group__top > .expression__group,
-.subpopulation:not(.base-element) .expression__group {
+.subpopulation:not(.base-element) > .card-group__even > .expression__group {
   background-color: $gray-lightest;
 
   &.expression-collapsed {
