@@ -9,6 +9,7 @@ import { doesBaseElementInstanceNeedWarning, hasDuplicateName } from '../../util
 
 import Validators from '../../utils/validators';
 import ConjunctionGroup from './ConjunctionGroup';
+import ExpressionPhrase from './modifiers/ExpressionPhrase';
 
 const listTypes = [
   'list_of_observations',
@@ -254,7 +255,7 @@ export default class ListGroup extends Component {
   isBaseElementListUsed = element => (element.usedBy ? element.usedBy.length !== 0 : false);
 
   renderListGroup = () => {
-    const { instance, index } = this.props;
+    const { instance, index, baseElements } = this.props;
     const baseElementListUsed = this.isBaseElementListUsed(instance);
     const isAndOrElement = instance.id === 'And' || instance.id === 'Or';
     return (
@@ -270,6 +271,12 @@ export default class ListGroup extends Component {
               {_.startCase(instance.returnType)}
             </div>
           </div>
+        </div>
+        <div className="expression">
+          <ExpressionPhrase
+            instance={instance}
+            baseElements={baseElements}
+          />
         </div>
         <ConjunctionGroup
           root={true}

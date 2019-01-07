@@ -7,6 +7,7 @@ import { UncontrolledTooltip } from 'reactstrap';
 import TemplateInstance from './TemplateInstance';
 import ElementSelect from './ElementSelect';
 import StringParameter from './parameters/types/StringParameter';
+import ExpressionPhrase from './modifiers/ExpressionPhrase';
 
 import createTemplateInstance from '../../utils/templates';
 import requiredIf from '../../utils/prop_types';
@@ -202,6 +203,12 @@ export default class ConjunctionGroup extends Component {
             />
             {duplicateNameIndex !== -1
               && <div className="warning">Warning: Name already in use. Choose another name.</div>}
+            <div className="expression">
+              <ExpressionPhrase
+                instance={this.props.instance}
+                baseElements={this.props.baseElements}
+              />
+            </div>
           </div>
 
           <div className="card-group__buttons">
