@@ -193,35 +193,37 @@ export default class ConjunctionGroup extends Component {
     if (!this.props.root) {
       const { disableElement } = this.props;
       return (
-        <div className="card-group__header">
-          <div className="card-group__header-title">
-            <StringParameter
-              id={elementNameParam.id}
-              name={elementNameParam.name}
-              value={elementNameParam.value}
-              updateInstance={this.handleNameChange}
-            />
-            {duplicateNameIndex !== -1
-              && <div className="warning">Warning: Name already in use. Choose another name.</div>}
-            <div className="expression">
-              <ExpressionPhrase
-                instance={this.props.instance}
-                baseElements={this.props.baseElements}
+        <div className="card-group__top">
+          <div className="card-group__header">
+            <div className="card-group__header-title">
+              <StringParameter
+                id={elementNameParam.id}
+                name={elementNameParam.name}
+                value={elementNameParam.value}
+                updateInstance={this.handleNameChange}
               />
+              {duplicateNameIndex !== -1
+                && <div className="warning">Warning: Name already in use. Choose another name.</div>}
+            </div>
+
+            <div className="card-group__buttons">
+              {this.renderIndentButtons(this.props.instance)}
+
+              <button
+                className={`element__deletebutton transparent-button ${disableElement ? 'disabled' : ''}`}
+                id={`deletebutton-${this.props.instance.uniqueId}`}
+                onClick={this.deleteInstance}
+                aria-label={`remove ${this.props.instance.name}`}>
+                <FontAwesome name='close'/>
+              </button>
+              { disableElement && this.renderDisabledTooltip(`deletebutton-${this.props.instance.uniqueId}`) }
             </div>
           </div>
-
-          <div className="card-group__buttons">
-            {this.renderIndentButtons(this.props.instance)}
-
-            <button
-              className={`element__deletebutton transparent-button ${disableElement ? 'disabled' : ''}`}
-              id={`deletebutton-${this.props.instance.uniqueId}`}
-              onClick={this.deleteInstance}
-              aria-label={`remove ${this.props.instance.name}`}>
-              <FontAwesome name='close'/>
-            </button>
-            { disableElement && this.renderDisabledTooltip(`deletebutton-${this.props.instance.uniqueId}`) }
+          <div className="expression expression__group">
+            <ExpressionPhrase
+              instance={this.props.instance}
+              baseElements={this.props.baseElements}
+            />
           </div>
         </div>
       );

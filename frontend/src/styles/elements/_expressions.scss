@@ -30,11 +30,25 @@
     padding: 0 20px;
     border-left: 4px solid $gray-lighter;
   }
+
+  &__group {
+    margin-bottom: 10px;
+  }
 }
 
 .card-group__odd > .card-group-section > .card-element > .card-element__body > .expression,
 .card-group__odd > .card-element > .card-element__body > .expression,
 .subpopulation:not(.base-element) .expression {
+  background-color: $gray-lightest;
+
+  &.expression-collapsed {
+    background-color: $white;
+  }
+}
+
+.card-group__even > .card-group__top > .expression__group,
+.card-group__even > .card-group__top > .expression__group,
+.subpopulation:not(.base-element) .expression__group {
   background-color: $gray-lightest;
 
   &.expression-collapsed {
