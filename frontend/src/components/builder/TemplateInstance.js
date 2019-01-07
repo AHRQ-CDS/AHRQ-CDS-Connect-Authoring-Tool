@@ -763,6 +763,7 @@ export default class TemplateInstance extends Component {
     const baseElementUsed = this.isBaseElementUsed();
     const baseElementInUsedList = this.props.disableElement;
     const disabledClass = (baseElementUsed || baseElementInUsedList) ? 'disabled' : '';
+    console.log(elementNameParameter.value)
     return (
       <div className={headerClass}>
         <div className={headerTopClass}>
@@ -775,6 +776,11 @@ export default class TemplateInstance extends Component {
                   <div className="warning"><FontAwesome name="exclamation-circle" /> Has warnings</div>
                 }
               </div>
+            }
+            {showElement ? 
+              this.renderHeading({id: "comment_field", name: "Comment Field", type: "string"})
+            :
+              <div></div>
             }
           </div>
           <div className="card-element__buttons">
