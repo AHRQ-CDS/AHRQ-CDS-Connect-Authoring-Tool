@@ -291,7 +291,7 @@ class CqlArtifact {
     });
   }
 
-  setParamterContexts(elementDetails, valuesetQueryName, context) {
+  setParameterContexts(elementDetails, valuesetQueryName, context) {
     if (elementDetails.concepts.length > 0) {
       const values = [];
       elementDetails.concepts.forEach((concept) => {
@@ -439,7 +439,7 @@ class CqlArtifact {
           };
           buildConceptObjectForCodes(parameter.codes, observationValueSets.concepts);
           addValueSets(parameter, observationValueSets, 'valuesets');
-          this.setParamterContexts(observationValueSets, 'Observation', context);
+          this.setParameterContexts(observationValueSets, 'Observation', context);
           break;
         }
         case 'number': {
@@ -457,7 +457,7 @@ class CqlArtifact {
           }
           buildConceptObjectForCodes(parameter.codes, conditionValueSets.concepts);
           addValueSets(parameter, conditionValueSets, 'valuesets');
-          this.setParamterContexts(conditionValueSets, 'Condition', context);
+          this.setParameterContexts(conditionValueSets, 'Condition', context);
           break;
         }
         case 'medicationStatement_vsac': {
@@ -468,7 +468,7 @@ class CqlArtifact {
           };
           buildConceptObjectForCodes(parameter.codes, medicationStatementValueSets.concepts);
           addValueSets(parameter, medicationStatementValueSets, 'valuesets');
-          this.setParamterContexts(medicationStatementValueSets, 'MedicationStatement', context);
+          this.setParameterContexts(medicationStatementValueSets, 'MedicationStatement', context);
           break;
         }
         case 'medicationOrder_vsac': {
@@ -479,7 +479,7 @@ class CqlArtifact {
           };
           buildConceptObjectForCodes(parameter.codes, medicationOrderValueSets.concepts);
           addValueSets(parameter, medicationOrderValueSets, 'valuesets');
-          this.setParamterContexts(medicationOrderValueSets, 'MedicationOrder', context);
+          this.setParameterContexts(medicationOrderValueSets, 'MedicationOrder', context);
           break;
         }
         case 'procedure_vsac': {
@@ -490,7 +490,7 @@ class CqlArtifact {
           };
           buildConceptObjectForCodes(parameter.codes, procedureValueSets.concepts);
           addValueSets(parameter, procedureValueSets, 'valuesets');
-          this.setParamterContexts(procedureValueSets, 'Procedure', context);
+          this.setParameterContexts(procedureValueSets, 'Procedure', context);
           break;
         }
         case 'encounter_vsac': {
@@ -501,7 +501,7 @@ class CqlArtifact {
           };
           buildConceptObjectForCodes(parameter.codes, encounterValueSets.concepts);
           addValueSets(parameter, encounterValueSets, 'valuesets');
-          this.setParamterContexts(encounterValueSets, 'Encounter', context);
+          this.setParameterContexts(encounterValueSets, 'Encounter', context);
           break;
         }
         case 'allergyIntolerance_vsac' : {
@@ -512,7 +512,7 @@ class CqlArtifact {
           };
           buildConceptObjectForCodes(parameter.codes, allergyIntoleranceValueSets.concepts);
           addValueSets(parameter, allergyIntoleranceValueSets, 'valuesets');
-          this.setParamterContexts(allergyIntoleranceValueSets, 'AllergyIntolerance', context);
+          this.setParameterContexts(allergyIntoleranceValueSets, 'AllergyIntolerance', context);
           break;
         }
         case 'reference': {
@@ -563,6 +563,10 @@ class CqlArtifact {
     let expressions = this.contexts.concat(this.conjunctions);
     expressions = expressions.concat(this.conjunction_main);
     return expressions.map((context) => {
+      if (fhirTarget.version === '3.0.0') {
+        if (context.template === 'GenericMedicationOrder') context.template = 'GenericMedicationRequest';
+        if (context.template === 'MedicationOrdersByConcept') context.template = 'MedicationRequestsByConcept';
+      }
       if (context.withoutModifiers || context.components) {
         return ejs.render(specificMap[context.template], context);
       }
