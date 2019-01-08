@@ -163,6 +163,10 @@ test('can outdent a child group', () => {
   expect(deleteInstance).toHaveBeenCalledWith(treeName, childConjunctionPath, []);
 });
 
+test('has an expression phrase', () => {
+  expect(childConjunction.find('.expression__group')).toBeDefined();
+});
+
 describe('for deeper nested conjunction groups', () => {
   beforeEach(() => {
     const ageInstance = createTemplateInstance(elementGroups[0].entries[0]);
@@ -172,7 +176,7 @@ describe('for deeper nested conjunction groups', () => {
     deeperTree.childInstances = [deeperOr];
     const deeperProps = _.cloneDeep(props);
     deeperProps.instance = deeperTree;
-    deeperConjunction = fullRenderComponent(ConjunctionGroup, deeperProps);
+    deeperConjunction = fullRenderComponentOnBody(ConjunctionGroup, deeperProps);
     childConjunction = deeperConjunction.find(ConjunctionGroup).at(1);
   });
 
