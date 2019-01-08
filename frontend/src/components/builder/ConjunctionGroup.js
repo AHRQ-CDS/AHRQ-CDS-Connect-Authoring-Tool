@@ -21,6 +21,10 @@ export default class ConjunctionGroup extends Component {
     const listOperationTemplates = this.props.templates.find(cat => cat.name === 'List Operations') || [];
     this.listOperations = listOperationTemplates.entries;
     this.allTypes = this.props.templates.reduce((prev, curr) => [...prev, ...curr.entries], []);
+
+    this.state = {
+      showGroup: true
+    };
   }
 
   handleTypeChange = (type) => {
@@ -133,6 +137,10 @@ export default class ConjunctionGroup extends Component {
     }
   }
 
+  showHideGroupBody = () => {
+    this.setState({ showGroup: !this.state.showGroup });
+  }
+
   // ----------------------- RENDERS --------------------------------------- //
 
   renderDisabledTooltip = id => (
@@ -186,6 +194,8 @@ export default class ConjunctionGroup extends Component {
   )
 
   renderRoot() {
+    const { showGroup } = this.state;
+    const collapsedClass = showGroup ? '' : 'expression-collapsed';
     const elementNameParam = this.props.instance.parameters.find(param => param.id === 'element_name');
     const duplicateNameIndex = this.props.instanceNames.findIndex(name =>
       name.id !== this.props.instance.uniqueId && name.name === elementNameParam.value);
@@ -196,18 +206,35 @@ export default class ConjunctionGroup extends Component {
         <div className="card-group__top">
           <div className="card-group__header">
             <div className="card-group__header-title">
-              <StringParameter
-                id={elementNameParam.id}
-                name={elementNameParam.name}
-                value={elementNameParam.value}
-                updateInstance={this.handleNameChange}
-              />
-              {duplicateNameIndex !== -1
-                && <div className="warning">Warning: Name already in use. Choose another name.</div>}
+              {showGroup ?
+                <div>
+                  <StringParameter
+                    id={elementNameParam.id}
+                    name={elementNameParam.name}
+                    value={elementNameParam.value}
+                    updateInstance={this.handleNameChange}
+                  />
+                  {duplicateNameIndex !== -1
+                    && <div className="warning">Warning: Name already in use. Choose another name.</div>}
+                </div>
+              :
+                <div className="group-heading-name">
+                  {elementNameParam.value}:
+                  {duplicateNameIndex !== -1
+                    && <div className="warning"><FontAwesome name="exclamation-circle" /> Has warnings</div>}
+                </div>
+              }
             </div>
 
             <div className="card-group__buttons">
-              {this.renderIndentButtons(this.props.instance)}
+              {showGroup && this.renderIndentButtons(this.props.instance)}
+
+              <button
+                onClick={this.showHideGroupBody}
+                className="element__hidebutton transparent-button"
+                aria-label={`hide ${elementNameParam.name}`}>
+                <FontAwesome name={showGroup ? 'angle-double-down' : 'angle-double-right'} />
+              </button>
 
               <button
                 className={`element__deletebutton transparent-button ${disableElement ? 'disabled' : ''}`}
@@ -219,7 +246,7 @@ export default class ConjunctionGroup extends Component {
               { disableElement && this.renderDisabledTooltip(`deletebutton-${this.props.instance.uniqueId}`) }
             </div>
           </div>
-          <div className="expression expression__group">
+          <div className={`expression expression__group ${collapsedClass}`}>
             <ExpressionPhrase
               instance={this.props.instance}
               baseElements={this.props.baseElements}
@@ -344,42 +371,45 @@ export default class ConjunctionGroup extends Component {
   }
 
   render() {
+    const { showGroup } = this.state;
     const classname = `card-group ${this.getNestingClassName()}`;
 
     return (
       <div className={classname}>
         {this.renderRoot()}
-        {this.renderChildren()}
+        {showGroup && this.renderChildren()}
 
-        <div className="card-element">
-          <ElementSelect
-            categories={this.props.templates}
-            onSuggestionSelected={this.addChild}
-            parameters={this.props.parameters}
-            baseElements={this.props.baseElements}
-            loginVSACUser={this.props.loginVSACUser}
-            setVSACAuthStatus={this.props.setVSACAuthStatus}
-            vsacStatus={this.props.vsacStatus}
-            vsacStatusText={this.props.vsacStatusText}
-            timeLastAuthenticated={this.props.timeLastAuthenticated}
-            searchVSACByKeyword={this.props.searchVSACByKeyword}
-            isSearchingVSAC={this.props.isSearchingVSAC}
-            vsacSearchResults={this.props.vsacSearchResults}
-            vsacSearchCount={this.props.vsacSearchCount}
-            getVSDetails={this.props.getVSDetails}
-            isRetrievingDetails={this.props.isRetrievingDetails}
-            vsacDetailsCodes={this.props.vsacDetailsCodes}
-            vsacFHIRCredentials={this.props.vsacFHIRCredentials}
-            isValidatingCode={this.props.isValidatingCode}
-            isValidCode={this.props.isValidCode}
-            codeData={this.props.codeData}
-            validateCode={this.props.validateCode}
-            resetCodeValidation={this.props.resetCodeValidation}
-            inBaseElements={false}
-            disableElement={this.props.disableElement}
-            elementUniqueId={this.props.elementUniqueId}
-          />
-        </div>
+        {showGroup &&
+          <div className="card-element">
+            <ElementSelect
+              categories={this.props.templates}
+              onSuggestionSelected={this.addChild}
+              parameters={this.props.parameters}
+              baseElements={this.props.baseElements}
+              loginVSACUser={this.props.loginVSACUser}
+              setVSACAuthStatus={this.props.setVSACAuthStatus}
+              vsacStatus={this.props.vsacStatus}
+              vsacStatusText={this.props.vsacStatusText}
+              timeLastAuthenticated={this.props.timeLastAuthenticated}
+              searchVSACByKeyword={this.props.searchVSACByKeyword}
+              isSearchingVSAC={this.props.isSearchingVSAC}
+              vsacSearchResults={this.props.vsacSearchResults}
+              vsacSearchCount={this.props.vsacSearchCount}
+              getVSDetails={this.props.getVSDetails}
+              isRetrievingDetails={this.props.isRetrievingDetails}
+              vsacDetailsCodes={this.props.vsacDetailsCodes}
+              vsacFHIRCredentials={this.props.vsacFHIRCredentials}
+              isValidatingCode={this.props.isValidatingCode}
+              isValidCode={this.props.isValidCode}
+              codeData={this.props.codeData}
+              validateCode={this.props.validateCode}
+              resetCodeValidation={this.props.resetCodeValidation}
+              inBaseElements={false}
+              disableElement={this.props.disableElement}
+              elementUniqueId={this.props.elementUniqueId}
+            />
+          </div>
+        }
       </div>
     );
   }

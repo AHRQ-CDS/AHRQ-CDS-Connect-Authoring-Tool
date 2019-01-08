@@ -159,9 +159,20 @@
     box-shadow: 1px 1px 1px 0 rgba(21, 21, 21, 0.1);
     min-width: 200px;
   }
-}
 
-.card-group__top {
-  justify-content: space-between;
-  width: 100%;
+  &__top {
+    justify-content: space-between;
+    width: 100%;
+  }
+
+  .group-heading-name {
+    display: flex;
+    align-items: center;
+    font-weight: bold;
+
+    .warning {
+      margin-left: 10px;
+      font-weight: normal;
+    }
+  }
 }

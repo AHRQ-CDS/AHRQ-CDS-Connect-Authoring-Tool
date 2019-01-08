@@ -261,6 +261,12 @@ export default class ListGroup extends Component {
     return (
       <div className="card-element__body">
         <div>
+          <div className="expression expression__group">
+            <ExpressionPhrase
+              instance={instance}
+              baseElements={baseElements}
+            />
+          </div>
           <div className="return-type row">
             <div className="col-3 bold align-right return-type__label">Return Type:</div>
             <div className="col-7 return-type__value">
@@ -271,12 +277,6 @@ export default class ListGroup extends Component {
               {_.startCase(instance.returnType)}
             </div>
           </div>
-        </div>
-        <div className="expression expression__group">
-          <ExpressionPhrase
-            instance={instance}
-            baseElements={baseElements}
-          />
         </div>
         <ConjunctionGroup
           root={true}
