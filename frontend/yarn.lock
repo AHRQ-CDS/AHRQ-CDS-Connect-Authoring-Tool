@@ -1937,9 +1937,9 @@ cosmiconfig@^2.1.0, cosmiconfig@^2.1.1:
     parse-json "^2.2.0"
     require-from-string "^1.1.0"
 
-cql-exec-fhir@^1.1.0:
-  version "1.1.0"
-  resolved "https://registry.yarnpkg.com/cql-exec-fhir/-/cql-exec-fhir-1.1.0.tgz#ce14385583d12b5c38fe785e545aa13be1522704"
+cql-exec-fhir@^1.1.1:
+  version "1.1.1"
+  resolved "https://registry.yarnpkg.com/cql-exec-fhir/-/cql-exec-fhir-1.1.1.tgz#60674bb38d3b8030c368096e6a2c0b1ca6421822"
   dependencies:
     xml2js "~0.4.19"
 
