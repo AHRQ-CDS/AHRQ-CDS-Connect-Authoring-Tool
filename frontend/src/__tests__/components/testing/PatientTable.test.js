@@ -1,7 +1,8 @@
 import Select from 'react-select';
 
 import PatientTable from '../../../components/testing/PatientTable';
-import mockPatient from '../../../mocks/mockPatient';
+import mockPatientDstu2 from '../../../mocks/mockPatientDstu2';
+import mockPatientStu3 from '../../../mocks/mockPatientStu3';
 import { shallowRenderComponent, fullRenderComponent, ReactWrapper } from '../../../utils/test_helpers';
 
 const artifactsMock = [{
@@ -16,7 +17,7 @@ const artifactsMock = [{
   updatedAt: '2012-11-15T21:26:17Z'
 }];
 
-const patientsMock = [mockPatient];
+const patientsMock = [mockPatientDstu2, mockPatientStu3];
 
 test('PatientTable renders without crashing', () => {
   const component = shallowRenderComponent(PatientTable, {

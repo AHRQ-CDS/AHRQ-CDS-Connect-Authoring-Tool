@@ -1,4 +1,4 @@
-const mockPatient = {
+const mockPatientDstu2 = {
   _id: '5b6ca87ef7877d270599a644',
   updatedAt: '2018-08-09T20:47:58.235Z',
   createdAt: '2018-08-09T20:47:58.235Z',
@@ -26927,8 +26927,9 @@ const mockPatient = {
       }
     ]
   },
+  fhirVersion: 'DSTU2',
   user: 'nebrown',
   __v: 0
 };
 
-export default mockPatient;
+export default mockPatientDstu2;

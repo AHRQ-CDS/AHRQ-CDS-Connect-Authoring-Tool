@@ -8,10 +8,13 @@ import FileSaver from 'file-saver';
 import * as actions from '../../actions/artifacts';
 import * as types from '../../actions/types';
 import mockArtifact from '../../mocks/mockArtifact';
-import mockPatient from '../../mocks/mockPatient';
 import mockTemplates from '../../mocks/mockTemplates';
-import mockElmFiles from '../../mocks/mockElmFiles.json';
-import mockTestResults from '../../mocks/mockTestResults.json';
+import mockPatientDstu2 from '../../mocks/mockPatientDstu2';
+import mockPatientStu3 from '../../mocks/mockPatientStu3';
+import mockElmFilesDstu2 from '../../mocks/mockElmFilesDstu2.json';
+import mockElmFilesStu3 from '../../mocks/mockElmFilesStu3.json';
+import mockTestResultsDstu2 from '../../mocks/mockTestResultsDstu2.json';
+import mockTestResultsStu3 from '../../mocks/mockTestResultsStu3.json';
 
 import CodeService from '../../utils/code_service/CodeService';
 
@@ -188,33 +191,69 @@ describe('artifact actions', () => {
     beforeEach(() => { moxios.install(); });
     afterEach(() => { moxios.uninstall(); });
 
-    it('creates EXECUTE_ARTIFACT_SUCCESS after successfully executing an artifact', () => {
+    it('creates EXECUTE_ARTIFACT_SUCCESS after successfully executing an artifact for DSTU2', () => {
       moxios.stubs.track({
         url: '/authoring/api/cql/validate',
         method: 'POST',
-        response: { status: 200, response: { elmFiles: mockElmFiles.elmFiles } }
+        response: { status: 200, response: { elmFiles: mockElmFilesDstu2.elmFiles } }
       });
 
-      const store = mockStore({ artifacts: [mockArtifact], patients: [mockPatient] });
+      const store = mockStore({ artifacts: [mockArtifact], patients: [mockPatientDstu2] });
       const expectedActions = [
         { type: types.EXECUTE_ARTIFACT_REQUEST },
-        { type: types.VALIDATE_ARTIFACT_SUCCESS, data: { elmFiles: mockElmFiles.elmFiles } },
+        { type: types.VALIDATE_ARTIFACT_SUCCESS, data: { elmFiles: mockElmFilesDstu2.elmFiles } },
         {
           type: types.EXECUTE_ARTIFACT_SUCCESS,
           artifact: mockArtifact,
-          patient: mockPatient.patient,
-          data: mockTestResults.data
+          patient: mockPatientDstu2.patient,
+          data: mockTestResultsDstu2.data
         }
       ];
 
-      // If for some reason the mockElmFiles or the mockPatient ever need to be changed,
-      // the mockTestResults will need to be changed to match them
+      // If for some reason the mock ELM files or the mock patients ever need to be changed,
+      // the mock test results will need to be changed to match them
       return store.dispatch(actions.executeCQLArtifact(
         mockArtifact,
-        mockPatient.patient,
+        mockPatientDstu2.patient,
         { username: 'u', password: 'p' },
         new CodeService(),
         { name: 'FHIR', version: '1.0.2' }
+      )).then(() => {
+        expect(_.initial(store.getActions())).toEqual(_.initial(expectedActions));
+        expect(_.last(store.getActions()).type).toEqual(_.last(expectedActions).type);
+        expect(_.last(store.getActions()).artifact).toEqual(_.last(expectedActions).artifact);
+        expect(_.last(store.getActions()).patient).toEqual(_.last(expectedActions).patient);
+        expect(JSON.parse(JSON.stringify(_.last(store.getActions()).data))).toEqual(_.last(expectedActions).data);
+      });
+    });
+
+    it('creates EXECUTE_ARTIFACT_SUCCESS after successfully executing an artifact for STU3', () => {
+      moxios.stubs.track({
+        url: '/authoring/api/cql/validate',
+        method: 'POST',
+        response: { status: 200, response: { elmFiles: mockElmFilesStu3.elmFiles } }
+      });
+
+      const store = mockStore({ artifacts: [mockArtifact], patients: [mockPatientStu3] });
+      const expectedActions = [
+        { type: types.EXECUTE_ARTIFACT_REQUEST },
+        { type: types.VALIDATE_ARTIFACT_SUCCESS, data: { elmFiles: mockElmFilesStu3.elmFiles } },
+        {
+          type: types.EXECUTE_ARTIFACT_SUCCESS,
+          artifact: mockArtifact,
+          patient: mockPatientStu3.patient,
+          data: mockTestResultsStu3.data
+        }
+      ];
+
+      // If for some reason the mock ELM files or the mock patients ever need to be changed,
+      // the mock test results will need to be changed to match them
+      return store.dispatch(actions.executeCQLArtifact(
+        mockArtifact,
+        mockPatientStu3.patient,
+        { username: 'u', password: 'p' },
+        new CodeService(),
+        { name: 'FHIR', version: '3.0.0' }
       )).then(() => {
         expect(_.initial(store.getActions())).toEqual(_.initial(expectedActions));
         expect(_.last(store.getActions()).type).toEqual(_.last(expectedActions).type);
