@@ -229,12 +229,12 @@ export default class ConjunctionGroup extends Component {
             <div className="card-group__buttons">
               {showGroup && this.renderIndentButtons(this.props.instance)}
 
-              <button
+              {/* <button
                 onClick={this.showHideGroupBody}
                 className="element__hidebutton transparent-button"
                 aria-label={`hide ${elementNameParam.name}`}>
                 <FontAwesome name={showGroup ? 'angle-double-down' : 'angle-double-right'} />
-              </button>
+              </button> */}
 
               <button
                 className={`element__deletebutton transparent-button ${disableElement ? 'disabled' : ''}`}
