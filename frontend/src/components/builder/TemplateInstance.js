@@ -634,6 +634,7 @@ export default class TemplateInstance extends Component {
     const validationError = validateElement(this.props.templateInstance, this.state);
     const returnError = (!(validateReturnType !== false) || returnType === 'boolean') ? null
       : "Element must have return type 'boolean'. Add expression(s) to change the return type.";
+    console.log(templateInstance);
 
     return (
       <div className="card-element__body">
@@ -734,6 +735,12 @@ export default class TemplateInstance extends Component {
             name={elementType}
             uniqueId={templateInstance.uniqueId}
             />
+          {/* <StringParameter
+            id="comment"
+            updateInstance={this.updateInstance}
+            name="Comment"
+            uniqueId={templateInstance.uniqueId}
+            /> */}
           {doesHaveDuplicateName && !doesHaveBaseElementUseWarning && !doesHaveBaseElementInstanceWarning &&
             <div className="warning">Warning: Name already in use. Choose another name.</div>
           }
@@ -763,7 +770,7 @@ export default class TemplateInstance extends Component {
     const baseElementUsed = this.isBaseElementUsed();
     const baseElementInUsedList = this.props.disableElement;
     const disabledClass = (baseElementUsed || baseElementInUsedList) ? 'disabled' : '';
-    console.log(elementNameParameter.value)
+
     return (
       <div className={headerClass}>
         <div className={headerTopClass}>
@@ -776,11 +783,6 @@ export default class TemplateInstance extends Component {
                   <div className="warning"><FontAwesome name="exclamation-circle" /> Has warnings</div>
                 }
               </div>
-            }
-            {showElement ? 
-              this.renderHeading({id: "comment_field", name: "Comment Field", type: "string"})
-            :
-              <div></div>
             }
           </div>
           <div className="card-element__buttons">
