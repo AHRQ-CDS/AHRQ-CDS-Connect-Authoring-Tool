@@ -3,7 +3,7 @@ library CDS_Connect_Commons_for_FHIRv300 version '1.0.0'
 using FHIR version '3.0.0'
 
 // Include the FHIRHelpers library for simplifying interacton w/ the FHIR data model
-include FHIRHelpers_for_FHIRv300 version '3.0.0' called FHIRHelpers
+include FHIRHelpers version '3.0.0' called FHIRHelpers
 
 // -------------------------------------------------- GENERAL ---------------------------------------------------------
 
@@ -53,7 +53,7 @@ define function ObservationsByConcept(Koncept System.Concept):
 /**
  * Observations that are complete and verified. In FHIR STU3, there are two statuses that indicate this state: 'final',
  * 'corrected', and 'amended'.
- * @see http://hl7.org/fhir/valueset-observation-status.html
+ * @see http://hl7.org/fhir/STU3/valueset-observation-status.html
  * @param ObsList - a list of Observations
  * @returns {List<Observation>} a list of verified Observations, or null if null was passed in
  */
@@ -145,7 +145,7 @@ define function ConditionsByConcept(Koncept System.Concept):
 
 /**
  * Conditions that are confirmed. In FHIR STU3, this is reflected by verificationStatus: 'confirmed'.
- * @see http://hl7.org/fhir/valueset-condition-ver-status.html
+ * @see http://hl7.org/fhir/STU3/valueset-condition-ver-status.html
  * @param CondList - a list of Conditions
  * @returns {List<Condition>} a list of confirmed Conditions, or null if null was passed in
  */
@@ -156,25 +156,23 @@ define function Confirmed(CondList List<Condition>):
  * Conditions that are active. In FHIR STU3, this is reflected by clinicalStatus: 'active' and the absence of any
  * abatement information (i.e., if it abated, it is no longer active).
  * TODO: Rename to Active once the execution engine supports overloaded functions.
- * @see http://hl7.org/fhir/valueset-condition-clinical.html
+ * @see http://hl7.org/fhir/STU3/valueset-condition-clinical.html
  * @param CondList - a list of Conditions
  * @returns {List<Condition>} a list of active Conditions, or null if null was passed in
  */
 define function ActiveCondition(CondList List<Condition>):
   CondList C
     where C.clinicalStatus.value = 'active'
-      and (C.abatement as FHIR.dateTime) is null
-      and (C.abatement as FHIR.Age) is null
-      and (C.abatement as FHIR.boolean).value is not true
-      and (C.abatement as FHIR.Period) is null
-      and (C.abatement as FHIR.Range) is null
-      and (C.abatement as FHIR.string) is null
+      and (
+        C.abatement is null
+        or (C.abatement as FHIR.boolean).value is not true
+      )
 
 /**
  * Conditions that are active or recurring. In FHIR STU3, this is reflected by clinicalStatus: 'active' or 'relapse'.
  * We do not check for null abatement information because it may have dates from when the now recurring condition
  * initially went into remission.
- * @see http://hl7.org/fhir/valueset-condition-clinical.html
+ * @see http://hl7.org/fhir/STU3/valueset-condition-clinical.html
  * @param CondList - a list of Conditions
  * @returns {List<Condition>} a list of active or recurring Conditions, or null if null was passed in
  */
@@ -220,7 +218,7 @@ define function MostRecentCondition(CondList List<Condition>):
 /**
  * Procedures that are completed. In FHIR STU3, this is reflected by status: 'completed'.  In addition, the
  * notDone flag must be checked to ensure it is not 'true'.
- * @see https://www.hl7.org/fhir/valueset-event-status.html
+ * @see https://www.hl7.org/fhir/STU3/valueset-event-status.html
  * @param ProcList - a list of Procedures
  * @returns {List<Procedure>} a list of completed Procedures, or null if null was passed in
  */
@@ -232,7 +230,7 @@ define function Completed(ProcList List<Procedure>):
 /**
  * Procedures that are in progress. In FHIR STU3, this is reflected by status: 'in-progress'.  In addition, the
  * notDone flag must be checked to ensure it is not 'true'.
- * @see https://www.hl7.org/fhir/valueset-event-status.html
+ * @see https://www.hl7.org/fhir/STU3/valueset-event-status.html
  * @param ProcList - a list of Procedures
  * @returns {List<Procedure>} a list of completed Procedures, or null if null was passed in
  */
@@ -291,7 +289,7 @@ define function MedicationRequestsByConcept(Koncept System.Concept):
  * medications that a patient has self-reported to be taking.  In FHIR STU3, this is reflected by MedicationStatement
  * with status 'active', no flag indicating it wasn't taken, and no end date or an end date in the future.
  * TODO: Rename to Active once the execution engine supports overloaded functions.
- * @see http://hl7.org/fhir/valueset-medication-statement-status.html
+ * @see http://hl7.org/fhir/STU3/valueset-medication-statement-status.html
  * @param MedList - a list of MedicationStatements
  * @returns {List<MedicationStatement>} a list of active medication statements, or null if null was passed in
  */
@@ -309,7 +307,7 @@ define function ActiveMedicationStatement(MedList List<MedicationStatement>):
 * TODO: Revisit based on outcome of FHIR chat.
 * TODO: Rename to Active once the execution engine supports overloaded functions.
 * @see https://chat.fhir.org/#narrow/stream/implementers/topic/Meaning.20of.20.22active.22.20and.20.22completed.22.20in.20MedicationRequest
-* @see https://www.hl7.org/fhir/valueset-medication-request-status.html
+* @see https://www.hl7.org/fhir/STU3/valueset-medication-request-status.html
 * @param MedList - a list of MedicationRequests
 * @returns {List<MedicationRequest>} a list of active medication requests, or null if null was passed in
 */
@@ -319,7 +317,7 @@ define function ActiveMedicationRequest(MedList List<MedicationRequest>):
 /**
 * Medications that are active or completed, according to a prescription.  In FHIR STU3, this is reflected by MedicationRequest
 * with status 'active' or 'completed'
-* @see https://www.hl7.org/fhir/valueset-medication-request-status.html
+* @see https://www.hl7.org/fhir/STU3/valueset-medication-request-status.html
 * @param MedList - a list of MedicationRequests
 * @returns {List<MedicationRequest>} a list of active medication requests, or null if null was passed in
 */
@@ -369,7 +367,7 @@ define function EncountersByConcept(Koncept System.Concept):
 
 /**
  * Encounters that are in progress. In FHIR STU3, this is reflected by status: 'in-progress'.
- * @see http://hl7.org/fhir/valueset-encounter-status.html
+ * @see http://hl7.org/fhir/STU3/valueset-encounter-status.html
  * @param EncList - a list of Encounters
  * @returns {List<Encounter>} a list of in progress encounters, or null if null was passed in
  */
@@ -389,10 +387,10 @@ define function AllergyIntolerancesByConcept(Koncept System.Concept):
   [AllergyIntolerance] A where NullSafeToConcept(A.code) ~ Koncept
 
 /**
-* AllergyIntolerances that are active or confirmed.  In FHIR DSTU2, this is reflected by AllergyIntolerance
+* AllergyIntolerances that are active or confirmed.  In FHIR STU3, this is reflected by AllergyIntolerance
 * with clinicalStatus 'active' or verificationStatus 'confirmed'
-* @see https://www.hl7.org/fhir/valueset-allergy-clinical-status.html
-* @see https://www.hl7.org/fhir/valueset-allergy-verification-status.html
+* @see https://www.hl7.org/fhir/STU3/valueset-allergy-clinical-status.html
+* @see https://www.hl7.org/fhir/STU3/valueset-allergy-verification-status.html
 * @param AllergyIntolList - a list of AllergyIntolerances
 * @returns {List<AllergyIntolerance>} a list of active or confirmed allergy intolerances, or null if null was passed in
 */
