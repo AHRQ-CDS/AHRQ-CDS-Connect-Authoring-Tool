@@ -164,7 +164,7 @@ test('can outdent a child group', () => {
 });
 
 test('has an expression phrase', () => {
-  expect(childConjunction.find('.expression__group')).toBeDefined();
+  expect(childConjunction.find('.expression__group')).toHaveLength(1);
 });
 
 describe('for deeper nested conjunction groups', () => {
