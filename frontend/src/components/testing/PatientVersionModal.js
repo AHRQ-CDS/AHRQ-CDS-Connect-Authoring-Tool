@@ -18,8 +18,8 @@ class PatientVersionModal extends Component {
           isOpen={this.props.isOpen}
           onRequestClose={this.props.closeModal}
           shouldCloseOnOverlayClick={ true }
-          contentLabel="ELM Download Warnings"
-          className="modal-style modal-style__light modal-style--full-height element-modal"
+          contentLabel="Patient Version Select"
+          className="modal-style modal-style__light modal__content element-modal"
           overlayClassName='modal-overlay modal-overlay__dark'>
           <div className="element-modal__container">
             <header className="modal__header">
@@ -28,8 +28,10 @@ class PatientVersionModal extends Component {
               </span>
             </header>
             <main className="modal__body">
-              FHIR version could not be automatically detected. Please select the FHIR
-              version of this patient from the options below.
+              <div className="element-modal modal__content">
+                FHIR version could not be automatically detected. Please select the FHIR
+                version of this patient from the options below.
+              </div>
             </main>
             <footer className="modal__footer">
               <button className="primary-button"
