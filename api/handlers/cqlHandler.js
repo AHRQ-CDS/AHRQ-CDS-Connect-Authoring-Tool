@@ -669,6 +669,10 @@ function applyModifiers(values = [] , modifiers = []) { // default modifiers to 
   return values.map((value) => {
     let newValue = value;
     modifiers.forEach((modifier) => {
+      if (fhirTarget.version === '3.0.0') {
+        if (modifier.id === 'ActiveMedicationOrder') modifier.cqlLibraryFunction = 'C3F.ActiveMedicationRequest';
+        if (modifier.id === 'LookBackMedicationOrder') modifier.cqlLibraryFunction = 'C3F.MedicationRequestLookBack';
+      }
       if (!modifier.cqlLibraryFunction && modifier.values && modifier.values.templateName) {
         modifier.cqlLibraryFunction = modifier.values.templateName;
       }
