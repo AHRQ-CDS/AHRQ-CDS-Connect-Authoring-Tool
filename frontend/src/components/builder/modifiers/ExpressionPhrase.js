@@ -70,8 +70,11 @@ export default class ExpressionPhrase extends Component {
       const baseElementModifiers = instance.modifiers || [];
       modifiers = modifiers.concat(baseElementModifiers);
     }
-    const type = phraseTemplateInstance.type === 'parameter' ?
+    let type = phraseTemplateInstance.type === 'parameter' ?
       phraseTemplateInstance.type : phraseTemplateInstance.name;
+    if (phraseTemplateInstance.subpopulationName) {
+      type = 'subpopulation';
+    }
 
     let valueSets = [];
     if (phraseTemplateInstance.parameters[1] && phraseTemplateInstance.parameters[1].valueSets) {

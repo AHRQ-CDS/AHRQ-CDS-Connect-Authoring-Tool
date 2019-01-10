@@ -178,7 +178,7 @@ function addVSandCodeText(expressionArray, valueSets, codes) {
 }
 
 function addElementNames(expressionArray, elementNames, type) {
-  if (type === 'And' || type === 'Or') {
+  if (type === 'And' || type === 'Or' || type === 'subpopulation') {
     expressionArray.push({ expressionText: 'that satisfies', isExpression: false });
   }
 
