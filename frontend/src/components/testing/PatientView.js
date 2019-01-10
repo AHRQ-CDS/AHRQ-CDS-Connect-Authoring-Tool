@@ -38,6 +38,11 @@ const RESOURCE_KEYS = {
     'Date written': 'dateWritten',
     Status: 'status'
   },
+  MedicationRequest: {
+    Medication: 'medication[x]',
+    'Date written': 'authoredOn',
+    Status: 'status'
+  },
   CarePlan: {
     'First category': 'CodeableConcept:category.firstObject',
     'First activity': 'CodeableConcept:activity.firstObject.detail.code',
@@ -87,8 +92,16 @@ const RESOURCE_KEYS = {
 };
 
 export default class PatientView extends Component {
-  extractData = (resourceType) => {
+  extractData = (resourceName) => {
     const { patient } = this.props;
+
+    let resourceType;
+    if (resourceName === 'MedicationOrder' && patient.fhirVersion === 'STU3') {
+      resourceType = 'MedicationRequest';
+    } else {
+      resourceType = resourceName;
+    }
+
     const resources = patient.patient.entry.filter(entry => entry.resource.resourceType === resourceType);
 
     const data = [];
@@ -140,7 +153,7 @@ export default class PatientView extends Component {
 
           <div className="patient-data">
             <div className="patient-data-name">
-              {`${patientName.given[0]} ${patientName.family[0]}`}
+              {`${patientName.given[0]} ${patientName.family}`}
             </div>
 
             <div className="patient-data-details">

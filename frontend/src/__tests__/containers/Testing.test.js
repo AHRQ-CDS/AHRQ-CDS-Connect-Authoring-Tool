@@ -1,7 +1,8 @@
 import { createMockStore } from 'redux-test-utils';
 import Testing from '../../containers/Testing';
 import PatientTable from '../../components/testing/PatientTable';
-import mockPatient from '../../mocks/mockPatient';
+import mockPatientDstu2 from '../../mocks/mockPatientDstu2';
+import mockPatientStu3 from '../../mocks/mockPatientStu3';
 import { shallowRenderContainer } from '../../utils/test_helpers';
 
 const match = {
@@ -76,7 +77,7 @@ test('Testing shows a table when there is data', () => {
       }
     },
     testing: {
-      patients: [mockPatient],
+      patients: [mockPatientDstu2, mockPatientStu3],
       addPatient: {
         isAdding: false
       }

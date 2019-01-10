@@ -15,6 +15,7 @@ import patientProps from '../prop-types/patient';
 import artifactProps from '../prop-types/artifact';
 
 import PatientTable from '../components/testing/PatientTable';
+import PatientVersionModal from '../components/testing/PatientVersionModal';
 import ELMErrorModal from '../components/builder/ELMErrorModal';
 
 class Testing extends Component {
@@ -22,6 +23,9 @@ class Testing extends Component {
     super(props);
 
     this.state = {
+      showPatientVersionModal: false,
+      patientData: null,
+      patientVersion: null,
       showELMErrorModal: false,
       uploadError: false
     };
@@ -38,32 +42,47 @@ class Testing extends Component {
 
   addPatient = (patient) => {
     const reader = new FileReader();
-    // eslint-disable-next-line func-names
-    reader.onload = function (e) {
-      const patientData = JSON.parse(e.target.result);
-      const patientDataResourceType = _.get(patientData, 'resourceType');
-      const patientResource = _.chain(patientData)
+    reader.onload = (e) => {
+      this.setState({ patientData: JSON.parse(e.target.result) });
+      const patientDataResourceType = _.get(this.state.patientData, 'resourceType');
+      const patientResource = _.chain(this.state.patientData)
         .get('entry')
         .find({ resource: { resourceType: 'Patient' } })
         .get('resource')
         .value();
       const patientResourceFamilyName = _.get(patientResource, 'name[0].family');
 
-      // Check for FHIR DSTU2 Bundle containing FHIR Patient
-      if ((patientDataResourceType === 'Bundle') // Check for FHIR Bundle
-        && (patientResource) // Check for existence of FHIR Patient
-        && (typeof patientResourceFamilyName !== 'string')) { // Check for FHIR DSTU2
-        this.props.addPatient(patientData);
-        this.setState({ uploadError: false });
-      } else {
+      // Check for FHIR Bundle containing FHIR Patient
+      if ((patientDataResourceType === 'Bundle') && (patientResource)) { // Check for FHIR Patient in Bundle
+        if (patientResourceFamilyName && (typeof patientResourceFamilyName !== 'string')) { // Is DSTU2
+          this.setState({ patientVersion: 'DSTU2' });
+          this.props.addPatient(this.state.patientData, this.state.patientVersion);
+          this.setState({ uploadError: false });
+        } else if (patientResourceFamilyName) { // Is STU3
+          this.setState({ patientVersion: 'STU3' });
+          this.props.addPatient(this.state.patientData, this.state.patientVersion);
+          this.setState({ uploadError: false });
+        } else { // Could not detect version
+          this.showPatientVersionModal();
+        }
+      } else { // No patient could be found
         this.setState({ uploadError: true });
       }
-    }.bind(this);
+    };
+
     try {
       reader.readAsText(patient[0]);
     } catch (error) {
       this.setState({ uploadError: true });
     }
+  }
+
+  showPatientVersionModal = () => {
+    this.setState({ showPatientVersionModal: true });
+  }
+
+  closePatientVersionModal = () => {
+    this.setState({ showPatientVersionModal: false });
   }
 
   showELMErrorModal = () => {
@@ -73,6 +92,22 @@ class Testing extends Component {
   closeELMErrorModal = () => {
     this.setState({ showELMErrorModal: false });
     this.props.clearArtifactValidationWarnings();
+  }
+
+  selectStu3 = (patientData) => {
+    Promise.resolve(this.setState({ patientVersion: 'STU3' }))
+      .then(() => {
+        this.props.addPatient(patientData, this.state.patientVersion);
+        this.closePatientVersionModal();
+      });
+  }
+
+  selectDstu2 = (patientData) => {
+    Promise.resolve(this.setState({ patientVersion: 'DSTU2' }))
+      .then(() => {
+        this.props.addPatient(patientData, this.state.patientVersion);
+        this.closePatientVersionModal();
+      });
   }
 
   renderBoolean = (bool) => {
@@ -92,7 +127,7 @@ class Testing extends Component {
         .get('resource')
         .value();
       const patientNameGiven = _.get(patientResource, 'name[0].given[0]', 'given_placeholder');
-      const patientNameFamily = _.get(patientResource, 'name[0].family[0]', 'family_placeholder');
+      const patientNameFamily = _.get(patientResource, 'name[0].family', 'family_placeholder');
 
       return (
         <Jumbotron className="patient-table">
@@ -203,11 +238,11 @@ class Testing extends Component {
           {this.renderDropzoneIcon()}
 
           {this.state.uploadError &&
-            <div className="warning">Invalid file type. Only valid FHIR DSTU2 JSON Bundles are accepted.</div>
+            <div className="warning">Invalid file type. Only valid JSON FHIR STU3 or DSTU2 Bundles are accepted.</div>
           }
 
           <p className="patient-dropzone__instructions">
-            Drop a valid JSON FHIR DSTU2 bundle containing a synthetic patient here, or click to browse.
+            Drop a valid JSON FHIR STU3 or DSTU2 bundle containing a synthetic patient here, or click to browse.
           </p>
 
           <p className="patient-dropzone__warning">
@@ -226,6 +261,13 @@ class Testing extends Component {
           closeModal={this.closeELMErrorModal}
           errors={this.props.downloadedArtifact.elmErrors}
           isForTesting={true}/>
+
+        <PatientVersionModal
+          isOpen={this.state.showPatientVersionModal}
+          closeModal={this.closePatientVersionModal}
+          patientData={this.state.patientData}
+          selectStu3={this.selectStu3}
+          selectDstu2={this.selectDstu2}/>
       </div>
     );
   }

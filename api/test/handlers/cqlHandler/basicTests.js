@@ -5,6 +5,7 @@ const _ = require('lodash');
 const baseArtifact = {
   name: 'a test',
   version: null,
+  dataModel: { name: 'FHIR', version: '1.0.2' },
   expTreeInclude: {},
   expTreeExclude: {},
   subpopulations: [],

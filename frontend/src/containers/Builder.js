@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import { Dropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import withGracefulUnmount from 'react-graceful-unmount';
@@ -44,6 +45,7 @@ export class Builder extends Component {
       showEditArtifactModal: false,
       showPublishModal: false,
       showELMErrorModal: false,
+      showMenu: false,
       activeTabIndex: 0,
       uniqueIdCounter: 0
     };
@@ -318,6 +320,10 @@ export class Builder extends Component {
     this.setState({ showPublishModal: !this.state.showPublishModal });
   }
 
+  toggleMenu = () => {
+    this.setState({ showMenu: !this.state.showMenu });
+  }
+
   // ----------------------- RENDER ---------------------------------------- //
 
   renderConjunctionGroup = (treeName) => {
@@ -389,9 +395,17 @@ export class Builder extends Component {
 
         <div className="builder__buttonbar">
           <div className="builder__buttonbar-menu" aria-label="Workspace Menu">
-            <button onClick={() => this.props.downloadArtifact(artifact)} className="secondary-button">
-              <FontAwesome name="download" className="icon" />Download CQL
-            </button>
+            <Dropdown isOpen={this.state.showMenu} toggle={this.toggleMenu} className="dropdown-button">
+              <DropdownToggle caret><FontAwesome name="download" className="icon" />Download CQL</DropdownToggle>
+              <DropdownMenu>
+                <DropdownItem onClick={() => this.props.downloadArtifact(artifact, { name: 'FHIR', version: '1.0.2' })}>
+                  FHIR DSTU2
+                </DropdownItem>
+                <DropdownItem onClick={() => this.props.downloadArtifact(artifact, { name: 'FHIR', version: '3.0.0' })}>
+                  FHIR STU3
+                </DropdownItem>
+              </DropdownMenu>
+            </Dropdown>
 
             <button onClick={() => this.handleSaveArtifact(artifact)} className="secondary-button">
               <FontAwesome name="save" className="icon" />Save

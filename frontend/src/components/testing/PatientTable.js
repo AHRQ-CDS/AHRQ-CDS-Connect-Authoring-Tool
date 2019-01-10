@@ -82,7 +82,17 @@ export default class PatientTable extends Component {
   // ----------------------- PERFORM CQL EXECUTION -------------------------- //
 
   executeCQL = (artifact, patient) => {
-    this.props.executeCQLArtifact(artifact, patient.patient, this.props.vsacFHIRCredentials, this.state.codeService);
+    const dataModel = (patient.fhirVersion === 'STU3')
+      ? { name: 'FHIR', version: '3.0.0' }
+      : { name: 'FHIR', version: '1.0.2' };
+
+    this.props.executeCQLArtifact(
+      artifact,
+      patient.patient,
+      this.props.vsacFHIRCredentials,
+      this.state.codeService,
+      dataModel
+    );
   }
 
   // ----------------------- RENDER ---------------------------------------- //
@@ -113,7 +123,7 @@ export default class PatientTable extends Component {
               {_.chain(this.state.patientToDelete)
                 .get('patient.entry')
                 .find({ resource: { resourceType: 'Patient' } })
-                .get('resource.name[0].family[0]')
+                .get('resource.name[0].family')
                 .value() || 'family_placeholder'}
             </span>
           </div>
@@ -169,7 +179,7 @@ export default class PatientTable extends Component {
               {_.chain(this.state.patientToExecute)
                 .get('patient.entry')
                 .find({ resource: { resourceType: 'Patient' } })
-                .get('resource.name[0].family[0]')
+                .get('resource.name[0].family')
                 .value() || 'family_placeholder'}
             </span>
           </div>
@@ -202,18 +212,8 @@ export default class PatientTable extends Component {
           {_.chain(patient)
             .get('patient.entry')
             .find({ resource: { resourceType: 'Patient' } })
-            .get('resource.name[0].family[0]')
+            .get('resource.name[0].family')
             .value() || 'family_placeholder'}
-        </div>
-      </td>
-
-      <td className="patients__tablecell-wide" data-th="Gender">
-        <div>
-          {_.chain(patient)
-              .get('patient.entry')
-              .find({ resource: { resourceType: 'Patient' } })
-              .get('resource.gender')
-              .value() || 'gender_placeholder'}
         </div>
       </td>
 
@@ -227,7 +227,25 @@ export default class PatientTable extends Component {
         </div>
       </td>
 
-      <td data-th="Updated">{renderDate(patient.updatedAt)}</td>
+      <td className="patients__tablecell-short" data-th="Gender">
+        <div>
+          {_.chain(patient)
+              .get('patient.entry')
+              .find({ resource: { resourceType: 'Patient' } })
+              .get('resource.gender')
+              .value() || 'gender_placeholder'}
+        </div>
+      </td>
+
+      <td className="patients__tablecell-short" data-th="FHIR Version">
+        <div>
+          {_.get(patient, 'fhirVersion', 'version_placeholder')}
+        </div>
+      </td>
+
+      <td className="patients__tablecell-wide" data-th="Updated">
+        {renderDate(patient.updatedAt)}
+      </td>
 
       <td data-th="">
         <button aria-label="View"
@@ -287,9 +305,10 @@ export default class PatientTable extends Component {
           <thead>
             <tr>
               <th scope="col" className="patients__tablecell-wide">Name</th>
-              <th scope="col" className="patients__tablecell-wide">Gender</th>
               <th scope="col" className="patients__tablecell-wide">Birth Date</th>
-              <th scope="col">Last Updated</th>
+              <th scope="col" className="patients__tablecell-short">Gender</th>
+              <th scope="col" className="patients__tablecell-short">Version</th>
+              <th scope="col" className="patients__tablecell-wide">Last Updated</th>
               <th>{this.renderVSACLogin()}</th>
             </tr>
           </thead>

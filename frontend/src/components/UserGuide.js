@@ -273,10 +273,10 @@ export default class UserGuide extends Component {
 
                     <ol type='a'>
                       <li>
-                        Clicking "Download CQL" will generate the CQL files for the current artifact and will download the
-                        result onto their computer inside a zip file. The zip file will contain a folder with the artifact's
-                        CQL code, as well as any necessary dependencies. It will also contain the corresponding ELM files for
-                        all CQL files.
+                        Clicking "Download CQL" will allow the user to choose FHIR STU3 or DSTU2, then will generate the CQL
+                        files for the current artifact and will download the result onto their computer inside a zip file.
+                        The zip file will contain a folder with the artifact's CQL code, as well as any necessary dependencies.
+                        It will also contain the corresponding ELM files for all CQL files.
                       </li>
 
                       <li>Clicking "Save" will save all changes made to the artifact.</li>
@@ -1293,9 +1293,10 @@ export default class UserGuide extends Component {
                 <ol>
                   <li>
                     The upload area allows the user to upload synthetic patients that can be used for testing CQL made from
-                    artifacts. Note that the synthetic patients must be contained in FHIR DSTU2 Bundles, in JSON format. To
-                    easily generate synthetic patients in this format, see <a target="_blank" rel="nofollow noopener noreferrer"
-                    onClick={onVisitExternalLink} href="https://github.com/synthetichealth/synthea">Synthea </a>
+                    artifacts. Note that the synthetic patients must be contained in a FHIR STU3 or DSTU2 Bundle, in JSON format.
+                    To easily generate synthetic patients in this format, see <a target="_blank"
+                    rel="nofollow noopener noreferrer" onClick={onVisitExternalLink}
+                    href="https://github.com/synthetichealth/synthea">Synthea </a>
                     <i className="fa fa-external-link"></i>.
                   </li>
 
@@ -1313,7 +1314,7 @@ export default class UserGuide extends Component {
                   </li>
 
                   <li>
-                    A "View" button that displays for a patient, which opens a modal to view the JSON FHIR DSTU2 Bundle in detail.
+                    A "View" button that displays for a patient, which opens a modal to view the JSON FHIR Bundle in detail.
                   </li>
 
                   <li>
@@ -1378,6 +1379,7 @@ export default class UserGuide extends Component {
 
                   <li>
                     The "Execute CQL" button which runs the selected artifact's CQL against the selected patient for testing.
+                    The artifact CQL that is used for testing automatically matches the patient's FHIR version.
                   </li>
                 </ol>
               </div>

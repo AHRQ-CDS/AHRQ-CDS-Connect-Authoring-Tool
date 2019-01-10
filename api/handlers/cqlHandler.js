@@ -18,11 +18,21 @@ const specificMap = loadTemplates(specificPath);
 const templateMap = loadTemplates(templatePath);
 const modifierMap = loadTemplates(modifierPath);
 // Each library will be included. Aliases are optional.
-const includeLibraries = [
+const includeLibrariesDstu2 = [
   { name: 'FHIRHelpers', version: '1.0.2', alias: 'FHIRHelpers' },
   { name: 'CDS_Connect_Commons_for_FHIRv102', version: '1.3.0', alias: 'C3F' },
   { name: 'CDS_Connect_Conversions', version: '1', alias: 'Convert' }
 ];
+
+const includeLibrariesStu3 = [
+  { name: 'FHIRHelpers', version: '3.0.0', alias: 'FHIRHelpers' },
+  { name: 'CDS_Connect_Commons_for_FHIRv300', version: '1.0.0', alias: 'C3F' },
+  { name: 'CDS_Connect_Conversions', version: '1', alias: 'Convert' }
+];
+
+// A flag to hold the FHIR version, so that it can be used
+// in functions external to the artifact.
+let fhirTarget;
 
 module.exports = {
   objToCql,
@@ -41,7 +51,8 @@ function idToObj(req, res, next) {
         req.body = artifact;
         next();
       }
-    });
+    }
+  );
 }
 
 function loadTemplates(pathToTemplates) {
@@ -181,8 +192,8 @@ class CqlArtifact {
   constructor(artifact) {
     this.name = slug(artifact.name ? artifact.name : 'untitled');
     this.version = artifact.version ? artifact.version : 1;
-    this.dataModel = artifact.dataModel ? artifact.dataModel : { name: 'FHIR', version: '1.0.2' };
-    this.includeLibraries = artifact.includeLibraries ? artifact.includeLibraries : includeLibraries;
+    this.dataModel = artifact.dataModel;
+    this.includeLibraries = (artifact.dataModel.version === '3.0.0') ? includeLibrariesStu3 : includeLibrariesDstu2;
     this.context = artifact.context ? artifact.context : 'Patient';
     this.inclusions = artifact.expTreeInclude;
     this.parameters = artifact.parameters;
@@ -191,6 +202,9 @@ class CqlArtifact {
     this.baseElements = artifact.baseElements;
     this.recommendations = artifact.recommendations;
     this.errorStatement = artifact.errorStatement;
+
+    fhirTarget = artifact.dataModel;
+
     this.initialize();
   }
 
@@ -221,8 +235,7 @@ class CqlArtifact {
         let uri = _.get(parameter, 'value.uri', '').replace(/'/g, '\\\'');
         if (system && uri) { this.codeSystemMap.set(system, { name: system, id: uri }); }
       }
-    }
-    );
+    });
 
     this.baseElements.forEach((baseElement) => {
       let isBaseElementUseAndUnchanged = false;
@@ -239,8 +252,7 @@ class CqlArtifact {
       } else {
         this.parseElement(baseElement);
       }
-    }
-    );
+    });
 
     if (this.inclusions.childInstances.length) { this.parseTree(this.inclusions); }
     if (this.exclusions.childInstances.length) { this.parseTree(this.exclusions); }
@@ -254,8 +266,7 @@ class CqlArtifact {
       if (!subpopulation.special) { // `Doesn't Meet Inclusion Criteria` and `Meets Exclusion Criteria` are special
         if (subpopulation.childInstances.length) { this.parseTree(subpopulation); }
       }
-    }
-    );
+    });
   }
 
   checkOtherUses(name, id) {
@@ -280,7 +291,7 @@ class CqlArtifact {
     });
   }
 
-  setParamterContexts(elementDetails, valuesetQueryName, context) {
+  setParameterContexts(elementDetails, valuesetQueryName, context) {
     if (elementDetails.concepts.length > 0) {
       const values = [];
       elementDetails.concepts.forEach((concept) => {
@@ -428,7 +439,7 @@ class CqlArtifact {
           };
           buildConceptObjectForCodes(parameter.codes, observationValueSets.concepts);
           addValueSets(parameter, observationValueSets, 'valuesets');
-          this.setParamterContexts(observationValueSets, 'Observation', context);
+          this.setParameterContexts(observationValueSets, 'Observation', context);
           break;
         }
         case 'number': {
@@ -446,7 +457,7 @@ class CqlArtifact {
           }
           buildConceptObjectForCodes(parameter.codes, conditionValueSets.concepts);
           addValueSets(parameter, conditionValueSets, 'valuesets');
-          this.setParamterContexts(conditionValueSets, 'Condition', context);
+          this.setParameterContexts(conditionValueSets, 'Condition', context);
           break;
         }
         case 'medicationStatement_vsac': {
@@ -457,7 +468,7 @@ class CqlArtifact {
           };
           buildConceptObjectForCodes(parameter.codes, medicationStatementValueSets.concepts);
           addValueSets(parameter, medicationStatementValueSets, 'valuesets');
-          this.setParamterContexts(medicationStatementValueSets, 'MedicationStatement', context);
+          this.setParameterContexts(medicationStatementValueSets, 'MedicationStatement', context);
           break;
         }
         case 'medicationOrder_vsac': {
@@ -468,7 +479,7 @@ class CqlArtifact {
           };
           buildConceptObjectForCodes(parameter.codes, medicationOrderValueSets.concepts);
           addValueSets(parameter, medicationOrderValueSets, 'valuesets');
-          this.setParamterContexts(medicationOrderValueSets, 'MedicationOrder', context);
+          this.setParameterContexts(medicationOrderValueSets, 'MedicationOrder', context);
           break;
         }
         case 'procedure_vsac': {
@@ -479,7 +490,7 @@ class CqlArtifact {
           };
           buildConceptObjectForCodes(parameter.codes, procedureValueSets.concepts);
           addValueSets(parameter, procedureValueSets, 'valuesets');
-          this.setParamterContexts(procedureValueSets, 'Procedure', context);
+          this.setParameterContexts(procedureValueSets, 'Procedure', context);
           break;
         }
         case 'encounter_vsac': {
@@ -490,7 +501,7 @@ class CqlArtifact {
           };
           buildConceptObjectForCodes(parameter.codes, encounterValueSets.concepts);
           addValueSets(parameter, encounterValueSets, 'valuesets');
-          this.setParamterContexts(encounterValueSets, 'Encounter', context);
+          this.setParameterContexts(encounterValueSets, 'Encounter', context);
           break;
         }
         case 'allergyIntolerance_vsac' : {
@@ -501,7 +512,7 @@ class CqlArtifact {
           };
           buildConceptObjectForCodes(parameter.codes, allergyIntoleranceValueSets.concepts);
           addValueSets(parameter, allergyIntoleranceValueSets, 'valuesets');
-          this.setParamterContexts(allergyIntoleranceValueSets, 'AllergyIntolerance', context);
+          this.setParameterContexts(allergyIntoleranceValueSets, 'AllergyIntolerance', context);
           break;
         }
         case 'reference': {
@@ -552,6 +563,10 @@ class CqlArtifact {
     let expressions = this.contexts.concat(this.conjunctions);
     expressions = expressions.concat(this.conjunction_main);
     return expressions.map((context) => {
+      if (fhirTarget.version === '3.0.0') {
+        if (context.template === 'GenericMedicationOrder') context.template = 'GenericMedicationRequest';
+        if (context.template === 'MedicationOrdersByConcept') context.template = 'MedicationRequestsByConcept';
+      }
       if (context.withoutModifiers || context.components) {
         return ejs.render(specificMap[context.template], context);
       }
@@ -654,6 +669,10 @@ function applyModifiers(values = [] , modifiers = []) { // default modifiers to 
   return values.map((value) => {
     let newValue = value;
     modifiers.forEach((modifier) => {
+      if (fhirTarget.version === '3.0.0') {
+        if (modifier.id === 'ActiveMedicationOrder') modifier.cqlLibraryFunction = 'C3F.ActiveMedicationRequest';
+        if (modifier.id === 'LookBackMedicationOrder') modifier.cqlLibraryFunction = 'C3F.MedicationRequestLookBack';
+      }
       if (!modifier.cqlLibraryFunction && modifier.values && modifier.values.templateName) {
         modifier.cqlLibraryFunction = modifier.values.templateName;
       }
@@ -880,7 +899,12 @@ function writeZip(cqlArtifact, writeStream, callback /* (error) */) {
     elmFiles.forEach((e, i) => {
       archive.append(e.content.replace(/\r\n|\r|\n/g, '\r\n'), { name: `${e.name}.json` });
     });
-    const helperPath = `${__dirname}/../data/library_helpers/CQLFiles`;
+    let helperPath;
+    if (fhirTarget.version === '3.0.0') {
+      helperPath = `${__dirname}/../data/library_helpers/CQLFiles/STU3`;
+    } else {
+      helperPath = `${__dirname}/../data/library_helpers/CQLFiles/DSTU2`;
+    }
     archive.directory(helperPath, '/');
     archive.finalize();
   });
@@ -894,7 +918,12 @@ function convertToElm(artifactJson, callback /* (error, elmFiles) */) {
   }
 
   // Load all the supplementary CQL files, open file streams to them, and convert to ELM
-  const helperPath = `${__dirname}/../data/library_helpers/CQLFiles`;
+  let helperPath;
+  if (fhirTarget.version === '3.0.0') {
+    helperPath = `${__dirname}/../data/library_helpers/CQLFiles/STU3`;
+  } else {
+    helperPath = `${__dirname}/../data/library_helpers/CQLFiles/DSTU2`;
+  }
   glob(`${helperPath}/*.cql`, (err, files) => {
     if (err) {
       callback(err);
