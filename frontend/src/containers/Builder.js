@@ -413,7 +413,7 @@ export class Builder extends Component {
 
             { publishEnabled ?
               <button
-                on Click={() => { this.handleSaveArtifact(artifact); this.togglePublishModal(); }}
+                onClick={() => { this.handleSaveArtifact(artifact); this.togglePublishModal(); }}
                 className="secondary-button">
                 <FontAwesome name="align-right" className="icon" />Publish
               </button>
