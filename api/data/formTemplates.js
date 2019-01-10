@@ -11,6 +11,7 @@ module.exports = [
         type: 'element',
         parameters: [
           { id: 'element_name', type: 'string', name: 'Element Name' },
+          { id: 'comment', type: 'string', name: 'Comment' }
         ],
       }
     ]
@@ -28,7 +29,7 @@ module.exports = [
         suppressedModifiers: ['BooleanNot', 'BooleanComparison'],
         parameters: [
           { id: 'element_name', type: 'string', name: 'Element Name' },
-          { id: 'comment', type: 'string', name: 'Comment'},
+          { id: 'comment', type: 'string', name: 'Comment' },
           { id: 'min_age', type: 'number', typeOfNumber: 'integer', name: 'Minimum Age' },
           { id: 'max_age', type: 'number', typeOfNumber: 'integer', name: 'Maximum Age' },
           { id: 'unit_of_time', type: 'valueset', select: 'demographics/units_of_time', name: 'Unit of Time' },
@@ -42,7 +43,7 @@ module.exports = [
         validator: {type: 'require', fields: ['gender'], args: null},
         parameters: [
           { id: 'element_name', type: 'string', name: 'Element Name' },
-          { id: 'comment', type: 'string', name: 'Comment'},
+          { id: 'comment', type: 'string', name: 'Comment' },
           { id: 'gender', type: 'valueset', select: 'demographics/gender', name: 'Gender' },
         ],
       },
@@ -62,7 +63,7 @@ module.exports = [
         template: 'GenericObservation',
         suppressedModifiers: ['ConvertToMgPerdL'], // checkInclusionInVS is assumed to be suppressed
         parameters: [
-          { id: 'observation', type: 'observation_vsac', name: 'Observation' },
+          { id: 'observation', type: 'observation_vsac', name: 'Observation' }
         ]
       },
     ]
@@ -78,7 +79,8 @@ module.exports = [
         conjunction: true,
         returnType: 'boolean',
         parameters: [
-          { id: 'element_name', type: 'string', name: 'Group Name' }
+          { id: 'element_name', type: 'string', name: 'Group Name' },
+          { id: 'comment', type: 'string', name: 'Comment' }
         ]
       },
       {
@@ -87,7 +89,8 @@ module.exports = [
         conjunction: true,
         returnType: 'boolean',
         parameters: [
-          { id: 'element_name', type: 'string', name: 'Group Name' }
+          { id: 'element_name', type: 'string', name: 'Group Name' },
+          { id: 'comment', type: 'string', name: 'Comment' }
         ]
       },
     ]
@@ -227,7 +230,8 @@ module.exports = [
         conjunction: true,
         returnType: 'list_of_any',
         parameters: [
-          { id: 'element_name', type: 'string', name: 'Group Name' }
+          { id: 'element_name', type: 'string', name: 'Group Name' },
+          { id: 'comment', type: 'string', name: 'Comment' }
         ]
       },
       {
@@ -236,7 +240,8 @@ module.exports = [
         conjunction: true,
         returnType: 'list_of_any',
         parameters: [
-          { id: 'element_name', type: 'string', name: 'Group Name' }
+          { id: 'element_name', type: 'string', name: 'Group Name' },
+          { id: 'comment', type: 'string', name: 'Comment' }
         ]
       },
     ]
