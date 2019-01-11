@@ -479,7 +479,11 @@ class CqlArtifact {
           };
           buildConceptObjectForCodes(parameter.codes, medicationOrderValueSets.concepts);
           addValueSets(parameter, medicationOrderValueSets, 'valuesets');
-          this.setParameterContexts(medicationOrderValueSets, 'MedicationOrder', context);
+          if (fhirTarget.version === '3.0.0') {
+            this.setParameterContexts(medicationOrderValueSets, 'MedicationRequest', context);
+          } else {
+            this.setParameterContexts(medicationOrderValueSets, 'MedicationOrder', context);
+          }
           break;
         }
         case 'procedure_vsac': {
