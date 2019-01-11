@@ -2,6 +2,16 @@
   max-width: 316px;
 }
 
+.element-select__add-element {
+  .Select-menu-outer > div > div {
+    padding: 10px 0 !important;
+
+    span:first-child {
+      padding-left: 10px;
+    }
+  }
+}
+
 .Select {
   margin-right: 10px;
   max-width: 400px;
