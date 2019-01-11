@@ -1,2 +1,4 @@
+// <%-comment%>
+
 define "<%-element_name%>":
   <%-cqlString%>

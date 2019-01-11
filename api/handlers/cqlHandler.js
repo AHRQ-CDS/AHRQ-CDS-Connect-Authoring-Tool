@@ -536,6 +536,7 @@ class CqlArtifact {
 
     context.modifiers = element.modifiers;
     context.element_name = (context.element_name || element.uniqueId);
+    context.comment = element.comment;
     // If it is an unchanged base element, don't add to context
     if (!(element.type === 'baseElement' && !isBaseElementUseChanged(element, this.baseElements))) {
       this.contexts.push(context);
@@ -583,7 +584,7 @@ class CqlArtifact {
         });
       }
       const cqlString = applyModifiers.call(this, context.values, context.modifiers);
-      return ejs.render(templateMap.BaseTemplate, { element_name: context.element_name, cqlString });
+      return ejs.render(templateMap.BaseTemplate, { comment: context.comment, element_name: context.element_name, cqlString });
     }).join('\n');
   }
   header() {
