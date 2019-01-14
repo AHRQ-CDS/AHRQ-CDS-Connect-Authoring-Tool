@@ -324,6 +324,7 @@ export default class ElementSelect extends Component {
               aria-label={noAuthPlaceholder}
               options={noAuthElementOptions}
               onChange={this.onNoAuthElementSelected}
+              optionRenderer={optionRenderer}
               />
           }
         </div>
