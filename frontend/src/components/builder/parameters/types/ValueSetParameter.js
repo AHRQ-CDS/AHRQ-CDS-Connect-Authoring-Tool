@@ -4,8 +4,12 @@ import Select from 'react-select';
 import _ from 'lodash';
 
 export default class ValueSetParameter extends Component {
-  componentWillMount() {
+  onFocus = () => {
     this.props.loadValueSets(this.props.param.select);
+  }
+
+  onBlur = () => {
+    this.props.loadValueSets('');
   }
 
   render() {
@@ -25,6 +29,8 @@ export default class ValueSetParameter extends Component {
             name={this.props.param.id}
             value={this.props.param.value}
             onChange={(value) => { this.props.updateInstance({ [this.props.param.id]: value }); }}
+            onFocus={this.onFocus}
+            onBlur={this.onBlur}
             searchable={true} />
         </label>
       </div>
