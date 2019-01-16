@@ -1,4 +1,6 @@
+<% if (comment) { %>
 // <%-comment%>
+<% } %>
 
 define "<%-element_name%>":
   <%-cqlString%>

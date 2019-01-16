@@ -536,7 +536,6 @@ class CqlArtifact {
 
     context.modifiers = element.modifiers;
     context.element_name = (context.element_name || element.uniqueId);
-    context.comment = element.comment;
     // If it is an unchanged base element, don't add to context
     if (!(element.type === 'baseElement' && !isBaseElementUseChanged(element, this.baseElements))) {
       this.contexts.push(context);
