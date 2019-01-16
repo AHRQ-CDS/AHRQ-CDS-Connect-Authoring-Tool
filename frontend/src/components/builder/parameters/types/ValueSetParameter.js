@@ -8,10 +8,6 @@ export default class ValueSetParameter extends Component {
     this.props.loadValueSets(this.props.param.select);
   }
 
-  onBlur = () => {
-    this.props.loadValueSets('');
-  }
-
   render() {
     const id = _.uniqueId('parameter-');
     return (
@@ -30,7 +26,6 @@ export default class ValueSetParameter extends Component {
             value={this.props.param.value}
             onChange={(value) => { this.props.updateInstance({ [this.props.param.id]: value }); }}
             onFocus={this.onFocus}
-            onBlur={this.onBlur}
             searchable={true} />
         </label>
       </div>
