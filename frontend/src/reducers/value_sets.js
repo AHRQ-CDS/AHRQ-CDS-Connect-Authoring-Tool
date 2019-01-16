@@ -10,6 +10,7 @@ export default function valueSets(state = defaultState, action) {
     case types.VALUE_SETS_REQUEST:
       return {
         ...state,
+        valueSets: [],
         loadValueSets: { isLoadingValueSets: true, loadValueSetsStatus: null }
       };
     case types.LOAD_VALUE_SETS_SUCCESS:
