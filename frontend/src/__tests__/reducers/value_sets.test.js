@@ -11,7 +11,7 @@ describe('value sets reducer', () => {
 
   it('should handle getting value sets', () => {
     let action = { type: types.VALUE_SETS_REQUEST };
-    let newState = { loadValueSets: { isLoadingValueSets: true, loadValueSetsStatus: null } };
+    let newState = { loadValueSets: { isLoadingValueSets: true, loadValueSetsStatus: null }, valueSets: [] };
     expect(reducer([], action)).toEqual(newState);
 
     const previousState = { loadValueSets: { isLoadingValueSets: false, loadValueSetsStatus: 'Test' } };
