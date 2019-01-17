@@ -58,7 +58,7 @@ test('PatientView header renders STU3 correctly', () => {
   expect(component.find('.patient-view__patient')).toHaveLength(1);
   expect(component.find('.patient-data-name').text()).toEqual('Arnulfo253 McClure239');
   expect(component.find('.patient-data-details-gender').text()).toEqual('male');
-  expect(component.find('.patient-data-details-age').text()).toEqual('32 yrs');
+  expect(component.find('.patient-data-details-age').text()).toEqual('33 yrs');
 });
 
 test('PatientView renders the STU3 resources', () => {
