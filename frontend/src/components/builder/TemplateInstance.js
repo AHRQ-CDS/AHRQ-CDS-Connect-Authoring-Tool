@@ -634,7 +634,6 @@ export default class TemplateInstance extends Component {
     const validationError = validateElement(this.props.templateInstance, this.state);
     const returnError = (!(validateReturnType !== false) || returnType === 'boolean') ? null
       : "Element must have return type 'boolean'. Add expression(s) to change the return type.";
-    console.log(templateInstance);
 
     return (
       <div className="card-element__body">
@@ -735,12 +734,6 @@ export default class TemplateInstance extends Component {
             name={elementType}
             uniqueId={templateInstance.uniqueId}
             />
-          {/* <StringParameter
-            id="comment"
-            updateInstance={this.updateInstance}
-            name="Comment"
-            uniqueId={templateInstance.uniqueId}
-            /> */}
           {doesHaveDuplicateName && !doesHaveBaseElementUseWarning && !doesHaveBaseElementInstanceWarning &&
             <div className="warning">Warning: Name already in use. Choose another name.</div>
           }
