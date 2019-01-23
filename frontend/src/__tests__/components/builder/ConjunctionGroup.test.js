@@ -164,7 +164,12 @@ test('can outdent a child group', () => {
 });
 
 test('has an expression phrase', () => {
-  expect(childConjunction.find('.expression__group')).toHaveLength(1);
+  const childGroupProps = _.cloneDeep(props);
+  const childGroupInstanceTree = _.cloneDeep(instanceTree);
+  childGroupInstanceTree.childInstances.push(_.cloneDeep(instanceTree));
+  childGroupProps.instance = childGroupInstanceTree;
+  const childGroupConjunction = fullRenderComponentOnBody(ConjunctionGroup, childGroupProps);
+  expect(childGroupConjunction.find('.expression__group')).toHaveLength(1);
 });
 
 describe('for deeper nested conjunction groups', () => {

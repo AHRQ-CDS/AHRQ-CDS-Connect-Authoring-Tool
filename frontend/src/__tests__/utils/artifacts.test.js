@@ -491,10 +491,6 @@ test('Conjunction Groups create a phrase with the group\'s children 1 level deep
   );
 
   const expectedOutput = [
-    { expressionText: 'There exists', isExpression: false },
-    { expressionText: 'a', isExpression: false },
-    { expressionText: 'group', isExpression: false, isType: true },
-    { expressionText: 'that satisfies', isExpression: false },
     { expressionText: 'Child 1', isExpression: true, isName: true },
     { expressionText: ',', isExpression: false },
     { expressionText: 'Child 2', isExpression: true, isName: true },
