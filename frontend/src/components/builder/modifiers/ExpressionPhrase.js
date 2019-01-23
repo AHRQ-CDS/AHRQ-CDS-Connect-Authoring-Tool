@@ -127,8 +127,9 @@ export default class ExpressionPhrase extends Component {
   render() {
     const { instance } = this.props;
     const expressions = this.getExpressionPhrase(instance);
+    const hasElements = expressions.some(expression => expression.isExpression);
 
-    if (!expressions || expressions.length === 0) { return null; }
+    if (!expressions || !hasElements) { return null; }
 
     return (
       <div className={this.props.class}>
