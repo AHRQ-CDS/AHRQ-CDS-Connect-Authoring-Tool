@@ -111,12 +111,11 @@ export default class Subpopulation extends Component {
               {this.props.subpopulation.childInstances && this.props.subpopulation.childInstances.length < 1 &&
                 <div className='warning'>This subpopulation needs at least one element</div>
               }
-              <div className="expression expression__group">
-                <ExpressionPhrase
-                  instance={this.props.subpopulation}
-                  baseElements={this.props.baseElements}
-                />
-              </div>
+              <ExpressionPhrase
+                class="expression expression__group"
+                instance={this.props.subpopulation}
+                baseElements={this.props.baseElements}
+              />
               <ConjunctionGroup
                 root={true}
                 treeName={this.props.treeName}

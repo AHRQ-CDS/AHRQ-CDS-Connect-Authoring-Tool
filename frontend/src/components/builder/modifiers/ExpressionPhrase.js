@@ -72,8 +72,8 @@ export default class ExpressionPhrase extends Component {
     }
     let type = phraseTemplateInstance.type === 'parameter' ?
       phraseTemplateInstance.type : phraseTemplateInstance.name;
-    if (phraseTemplateInstance.subpopulationName) {
-      type = 'subpopulation';
+    if (phraseTemplateInstance.subpopulationName && type === '') { // Subpopulation type not selected yet
+      type = phraseTemplateInstance.id;
     }
 
     let valueSets = [];
@@ -128,33 +128,35 @@ export default class ExpressionPhrase extends Component {
     const { instance } = this.props;
     const expressions = this.getExpressionPhrase(instance);
 
-    if (!expressions) { return null; }
+    if (!expressions || expressions.length === 0) { return null; }
 
     return (
-      <div className="expression-logic">
-        {expressions.map((expression, i) => {
-          const expressionTextClass = classNames(
-            'expression-item expression-text',
-            { 'expression-type': expression.isType }
-          );
-
-          if (expression.isExpression) {
-            return (
-              <span key={i}>
-                <span id={`expression-${instance.uniqueId}-${i}`} className="expression-item expression-tag">
-                  {expression.expressionText}
-                </span>
-
-                {expression.tooltipText &&
-                  <UncontrolledTooltip target={`expression-${instance.uniqueId}-${i}`} placement='top'>
-                    {expression.tooltipText}
-                  </UncontrolledTooltip>}
-              </span>
+      <div className={this.props.class}>
+        <div className="expression-logic">
+          {expressions.map((expression, i) => {
+            const expressionTextClass = classNames(
+              'expression-item expression-text',
+              { 'expression-type': expression.isType }
             );
-          }
 
-          return <span className={expressionTextClass} key={i}>{expression.expressionText}</span>;
-        })}
+            if (expression.isExpression) {
+              return (
+                <span key={i}>
+                  <span id={`expression-${instance.uniqueId}-${i}`} className="expression-item expression-tag">
+                    {expression.expressionText}
+                  </span>
+
+                  {expression.tooltipText &&
+                    <UncontrolledTooltip target={`expression-${instance.uniqueId}-${i}`} placement='top'>
+                      {expression.tooltipText}
+                    </UncontrolledTooltip>}
+                </span>
+              );
+            }
+
+            return <span className={expressionTextClass} key={i}>{expression.expressionText}</span>;
+          })}
+        </div>
       </div>
     );
   }
@@ -162,5 +164,6 @@ export default class ExpressionPhrase extends Component {
 
 ExpressionPhrase.propTypes = {
   baseElements: PropTypes.array.isRequired,
+  class: PropTypes.string.isRequired,
   instance: PropTypes.object.isRequired,
 };

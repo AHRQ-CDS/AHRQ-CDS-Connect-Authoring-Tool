@@ -698,12 +698,11 @@ export default class TemplateInstance extends Component {
         {validationError && <div className="warning">{validationError}</div>}
         {returnError && <div className="warning">{returnError}</div>}
 
-        <div className="expression">
-          <ExpressionPhrase
-            instance={templateInstance}
-            baseElements={this.props.baseElements}
-          />
-        </div>
+        <ExpressionPhrase
+          class="expression"
+          instance={templateInstance}
+          baseElements={this.props.baseElements}
+        />
 
         {templateInstance.parameters.map((param, index) => {
           // TODO: each parameter type should probably have its own component
@@ -868,12 +867,11 @@ export default class TemplateInstance extends Component {
 
         {!showElement &&
           <div className="card-element__header-expression">
-            <div className="expression expression-collapsed">
-              <ExpressionPhrase
-                instance={templateInstance}
-                baseElements={this.props.baseElements}
-              />
-            </div>
+            <ExpressionPhrase
+              class="expression expression-collapsed"
+              instance={templateInstance}
+              baseElements={this.props.baseElements}
+            />
           </div>
         }
       </div>

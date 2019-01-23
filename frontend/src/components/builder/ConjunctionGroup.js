@@ -246,12 +246,11 @@ export default class ConjunctionGroup extends Component {
               { disableElement && this.renderDisabledTooltip(`deletebutton-${this.props.instance.uniqueId}`) }
             </div>
           </div>
-          <div className={`expression expression__group ${collapsedClass}`}>
-            <ExpressionPhrase
-              instance={this.props.instance}
-              baseElements={this.props.baseElements}
-            />
-          </div>
+          <ExpressionPhrase
+            class={`expression expression__group ${collapsedClass}`}
+            instance={this.props.instance}
+            baseElements={this.props.baseElements}
+          />
         </div>
       );
     }
