@@ -147,6 +147,12 @@ const config = convict({
       env: 'FORESEE_ACTIVE',
     }
   },
+  valueSetService: {
+    doc: 'Value Set Service Endpoint URL',
+    format: 'String',
+    default: 'https://vsac.nlm.nih.gov/vsac',
+    env: 'VSAC_ENDPOINT',
+  },
 });
 
 // Load environment dependent configuration
