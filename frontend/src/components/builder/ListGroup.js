@@ -9,6 +9,7 @@ import { doesBaseElementInstanceNeedWarning, hasDuplicateName } from '../../util
 
 import Validators from '../../utils/validators';
 import ConjunctionGroup from './ConjunctionGroup';
+import ExpressionPhrase from './modifiers/ExpressionPhrase';
 
 const listTypes = [
   'list_of_observations',
@@ -254,12 +255,17 @@ export default class ListGroup extends Component {
   isBaseElementListUsed = element => (element.usedBy ? element.usedBy.length !== 0 : false);
 
   renderListGroup = () => {
-    const { instance, index } = this.props;
+    const { instance, index, baseElements } = this.props;
     const baseElementListUsed = this.isBaseElementListUsed(instance);
     const isAndOrElement = instance.id === 'And' || instance.id === 'Or';
     return (
       <div className="card-element__body">
         <div>
+          <ExpressionPhrase
+            class="expression expression__group"
+            instance={instance}
+            baseElements={baseElements}
+          />
           <div className="return-type row">
             <div className="col-3 bold align-right return-type__label">Return Type:</div>
             <div className="col-7 return-type__value">

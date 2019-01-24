@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import FontAwesome from 'react-fontawesome';
 
 import ConjunctionGroup from './ConjunctionGroup';
+import ExpressionPhrase from './modifiers/ExpressionPhrase';
 
 export default class Subpopulation extends Component {
   constructor(props) {
@@ -110,6 +111,11 @@ export default class Subpopulation extends Component {
               {this.props.subpopulation.childInstances && this.props.subpopulation.childInstances.length < 1 &&
                 <div className='warning'>This subpopulation needs at least one element</div>
               }
+              <ExpressionPhrase
+                class="expression expression__group"
+                instance={this.props.subpopulation}
+                baseElements={this.props.baseElements}
+              />
               <ConjunctionGroup
                 root={true}
                 treeName={this.props.treeName}

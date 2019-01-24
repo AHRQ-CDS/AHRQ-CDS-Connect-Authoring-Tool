@@ -177,8 +177,8 @@ function addVSandCodeText(expressionArray, valueSets, codes) {
   return expressionArray;
 }
 
-function addElementNames(expressionArray, elementNames, type) {
-  if (type === 'And' || type === 'Or') {
+function addElementNames(expressionArray, elementNames, type, isBaseElementAndOr) {
+  if ((type === 'And' || type === 'Or') && isBaseElementAndOr) {
     expressionArray.push({ expressionText: 'that satisfies', isExpression: false });
   }
 
@@ -321,6 +321,11 @@ function orderExpressionSentenceArray(
     return getOrderedExpressionSentenceArrayForParameters(expressionArray, returnType);
   }
 
+  if ((type === 'And' || type === 'Or') && !isBaseElementAndOr) {
+    const andOrExpressionArray = [];
+    return addElementNames(andOrExpressionArray, elementNames, type, isBaseElementAndOr);
+  }
+
   let orderedExpressionArray = [];
   const returnsPlural = returnType.includes('list_of_');
   const returnsBoolean = returnType === 'boolean';
@@ -448,7 +453,7 @@ function orderExpressionSentenceArray(
 
   // Handle value sets and codes and other element names
   orderedExpressionArray = addVSandCodeText(orderedExpressionArray, valueSets, codes);
-  orderedExpressionArray = addElementNames(orderedExpressionArray, elementNames, type);
+  orderedExpressionArray = addElementNames(orderedExpressionArray, elementNames, type, isBaseElementAndOr);
 
   // Handle post-lists (with unit)
   if (postListExpressions) {

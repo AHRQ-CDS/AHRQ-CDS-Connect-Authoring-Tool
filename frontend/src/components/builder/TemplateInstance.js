@@ -20,6 +20,7 @@ import ValueSetTemplate from './templates/ValueSetTemplate';
 import Modifiers from '../../data/modifiers';
 import BooleanComparison from './modifiers/BooleanComparison';
 import CheckExistence from './modifiers/CheckExistence';
+import ExpressionPhrase from './modifiers/ExpressionPhrase';
 import LabelModifier from './modifiers/LabelModifier';
 import LookBack from './modifiers/LookBack';
 import SelectModifier from './modifiers/SelectModifier';
@@ -29,36 +30,12 @@ import WithUnit from './modifiers/WithUnit';
 import Qualifier from './modifiers/Qualifier';
 
 import Validators from '../../utils/validators';
-import convertToExpression from '../../utils/artifacts/convertToExpression';
 import { hasDuplicateName, doesBaseElementUseNeedWarning, doesBaseElementInstanceNeedWarning }
   from '../../utils/warnings';
+import { getOriginalBaseElement } from '../../utils/baseElements';
 
 function getInstanceName(instance) {
   return (instance.parameters.find(p => p.id === 'element_name') || {}).value;
-}
-
-function getOriginalBaseElement(templateInstance, baseElements) {
-  const referenceParameter = templateInstance.parameters.find(param => param.type === 'reference');
-  if (referenceParameter) {
-    // Element type to display in header will be the reference type for Base Elements.
-    const baseElementReferenced = baseElements.find(element =>
-      element.uniqueId === referenceParameter.value.id);
-    return getOriginalBaseElement(baseElementReferenced, baseElements);
-  }
-  return templateInstance;
-}
-
-function getAllModifiersOnBaseElementUse(templateInstance, baseElements, modifiers = []) {
-  let currentModifiers = modifiers;
-  const referenceParameter = templateInstance.parameters.find(param => param.type === 'reference');
-  if (referenceParameter) {
-    // Element type to display in header will be the reference type for Base Elements.
-    const baseElementReferenced = baseElements.find(element =>
-      element.uniqueId === referenceParameter.value.id);
-    currentModifiers = _.cloneDeep(baseElementReferenced.modifiers || []).concat(currentModifiers);
-    return getAllModifiersOnBaseElementUse(baseElementReferenced, baseElements, currentModifiers);
-  }
-  return currentModifiers;
 }
 
 export default class TemplateInstance extends Component {
@@ -708,121 +685,6 @@ export default class TemplateInstance extends Component {
     return null;
   }
 
-  getExpressionPhrase = (templateInstance) => {
-    const { baseElements } = this.props;
-    let returnType = templateInstance.returnType;
-    if (!(_.isEmpty(templateInstance.modifiers))) {
-      returnType = this.getReturnType(templateInstance.modifiers);
-    }
-
-    let phraseTemplateInstance = templateInstance;
-    let phraseTemplateInstanceIsListGroup = false;
-    if (templateInstance.type === 'baseElement') {
-      const referenceParameter = templateInstance.parameters.find(param => param.type === 'reference');
-      if (referenceParameter) {
-        // Use the original base element as a base, but include all modifiers from derivative uses.
-        const originalBaseElement = _.cloneDeep(getOriginalBaseElement(templateInstance, baseElements));
-        const modifiers = getAllModifiersOnBaseElementUse(templateInstance, baseElements, []);
-        originalBaseElement.modifiers = modifiers;
-        phraseTemplateInstance = originalBaseElement;
-        if (phraseTemplateInstance.conjunction) {
-          phraseTemplateInstanceIsListGroup = true;
-        }
-      }
-    }
-
-    let modifiers = phraseTemplateInstance.modifiers || [];
-    const elementNamesInPhrase = [];
-    if (templateInstance.type === 'baseElement') {
-      const baseElementModifiers = templateInstance.modifiers || [];
-      modifiers = modifiers.concat(baseElementModifiers);
-    }
-    const type = phraseTemplateInstance.type === 'parameter' ?
-      phraseTemplateInstance.type : phraseTemplateInstance.name;
-
-    let valueSets = [];
-    if (phraseTemplateInstance.parameters[1] && phraseTemplateInstance.parameters[1].valueSets) {
-      valueSets = phraseTemplateInstance.parameters[1].valueSets;
-    }
-
-    let codes = [];
-    if (phraseTemplateInstance.parameters[1] && phraseTemplateInstance.parameters[1].codes) {
-      codes = phraseTemplateInstance.parameters[1].codes;
-    }
-
-    const otherParameters = phraseTemplateInstance.parameters.filter(param =>
-      param.type === 'number' || param.type === 'valueset');
-
-    if (phraseTemplateInstanceIsListGroup) {
-      phraseTemplateInstance.childInstances.forEach((child) => {
-        let secondPhraseExpressions = [];
-        if (child.childInstances && phraseTemplateInstance.usedBy) {
-          // Groups expression phrases list the names of the elements within the group. They only go one level deep.
-          const childNames = child.childInstances.map(c => ({ name: c.parameters[0].value }));
-          secondPhraseExpressions = convertToExpression([], child.name, [], [], child.returnType, [], childNames);
-        } else {
-          // Individual elements give the full expression phrase in the tooltip
-          secondPhraseExpressions = this.getExpressionPhrase(child);
-        }
-        const phraseArrayAsSentence = secondPhraseExpressions.reduce((acc, currentValue) =>
-          `${acc}${currentValue.expressionText === ',' ? '' : ' '}
-          ${currentValue.isName ? '"' : ''}${currentValue.expressionText}${currentValue.isName ? '"' : ''}`, '');
-        elementNamesInPhrase.push({ name: child.parameters[0].value, tooltipText: phraseArrayAsSentence });
-      });
-    }
-
-    const isBaseElementAndOr = phraseTemplateInstanceIsListGroup &&
-      (phraseTemplateInstance.name === 'And' || phraseTemplateInstance.name === 'Or');
-
-    const expressions = convertToExpression(
-      modifiers,
-      type,
-      valueSets,
-      codes,
-      returnType,
-      otherParameters,
-      elementNamesInPhrase,
-      isBaseElementAndOr
-    );
-
-    return expressions;
-  }
-
-  renderExpression = () => {
-    const { templateInstance } = this.props;
-    const expressions = this.getExpressionPhrase(templateInstance);
-
-    if (!expressions) { return null; }
-
-    return (
-      <div className="expression-logic">
-        {expressions.map((expression, i) => {
-          const expressionTextClass = classNames(
-            'expression-item expression-text',
-            { 'expression-type': expression.isType }
-          );
-
-          if (expression.isExpression) {
-            return (
-              <span key={i}>
-                <span id={`expression-${templateInstance.id}-${i}`} className="expression-item expression-tag">
-                  {expression.expressionText}
-                </span>
-
-                {expression.tooltipText &&
-                  <UncontrolledTooltip target={`expression-${templateInstance.id}-${i}`} placement='top'>
-                    {expression.tooltipText}
-                  </UncontrolledTooltip> }
-              </span>
-            );
-          }
-
-          return <span className={expressionTextClass} key={i}>{expression.expressionText}</span>;
-        })}
-      </div>
-    );
-  }
-
   renderBody() {
     const { templateInstance, validateReturnType } = this.props;
     const { returnType } = this.state;
@@ -836,7 +698,11 @@ export default class TemplateInstance extends Component {
         {validationError && <div className="warning">{validationError}</div>}
         {returnError && <div className="warning">{returnError}</div>}
 
-        <div className="expression">{this.renderExpression()}</div>
+        <ExpressionPhrase
+          class="expression"
+          instance={templateInstance}
+          baseElements={this.props.baseElements}
+        />
 
         {templateInstance.parameters.map((param, index) => {
           // TODO: each parameter type should probably have its own component
@@ -1001,7 +867,11 @@ export default class TemplateInstance extends Component {
 
         {!showElement &&
           <div className="card-element__header-expression">
-            <div className="expression expression-collapsed">{this.renderExpression()}</div>
+            <ExpressionPhrase
+              class="expression expression-collapsed"
+              instance={templateInstance}
+              baseElements={this.props.baseElements}
+            />
           </div>
         }
       </div>

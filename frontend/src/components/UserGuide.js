@@ -942,13 +942,12 @@ export default class UserGuide extends Component {
                     elements into one group, which can be combined with a Union or an Intersection. Lists can be added to
                     Base Elements by choosing "List Operations" from the Element Picker and choosing "Intersect" or "Union".
                   </p>
+
                   <p>
-                    <p>
-                      <img
-                        alt="Base Element List Group"
-                        src={screenshotUrl('List_Group')}
-                        className="img-fluid img-thumbnail rounded mx-auto d-block" />
-                    </p>
+                    <img
+                      alt="Base Element List Group"
+                      src={screenshotUrl('List_Group')}
+                      className="img-fluid img-thumbnail rounded mx-auto d-block" />
                   </p>
 
                   <ol>
