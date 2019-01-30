@@ -128,7 +128,7 @@ export default class ElementSelect extends Component {
               id: 'baseElementReference',
               type: 'reference',
               name: 'reference',
-              value: { id: e.uniqueId, type: e.name },
+              value: { id: e.uniqueId, type: e.name, comment: e.parameters[1].value },
               static: true
             }
           ]
