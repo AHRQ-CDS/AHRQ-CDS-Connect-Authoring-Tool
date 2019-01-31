@@ -61,12 +61,6 @@
     border-bottom: $border-global;
     overflow-y: scroll;
     min-height: 250px;
-
-    .Select {
-      position: absolute;
-      width: 400px;
-      max-width: 400px;
-    }
   }
 
   .modal__footer {
