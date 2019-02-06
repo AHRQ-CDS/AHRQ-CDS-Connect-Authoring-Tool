@@ -25,7 +25,7 @@ test('PatientView header renders DSTU2 correctly', () => {
   expect(component.find('.patient-view__patient')).toHaveLength(1);
   expect(component.find('.patient-data-name').text()).toEqual('Robin67 Baumbach677');
   expect(component.find('.patient-data-details-gender').text()).toEqual('female');
-  expect(component.find('.patient-data-details-age').text()).toEqual('33 yrs');
+  expect(component.find('.patient-data-details-age').text()).toEqual('34 yrs');
 });
 
 test('PatientView renders the DSTU2 resources', () => {
