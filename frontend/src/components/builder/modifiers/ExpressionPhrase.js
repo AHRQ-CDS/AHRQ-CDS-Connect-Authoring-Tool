@@ -6,45 +6,15 @@ import classNames from 'classnames';
 import { UncontrolledTooltip } from 'reactstrap';
 
 import convertToExpression from '../../../utils/artifacts/convertToExpression';
-import Validators from '../../../utils/validators';
 import { getOriginalBaseElement, getAllModifiersOnBaseElementUse } from '../../../utils/baseElements';
+import { getReturnType } from '../../../utils/instances';
 
 export default class ExpressionPhrase extends Component {
-  validateModifier = (modifier) => {
-    let validationWarning = null;
-
-    if (modifier.validator) {
-      const validator = Validators[modifier.validator.type];
-      const values = modifier.validator.fields.map(v => modifier.values && modifier.values[v]);
-      const args = modifier.validator.args ? modifier.validator.args.map(v => modifier.values[v]) : [];
-      if (!validator.check(values, args)) {
-        validationWarning = validator.warning(modifier.validator.fields, modifier.validator.args);
-      }
-    }
-    return validationWarning;
-  }
-
-  // Gets the returnType of the last valid modifier
-  getReturnType = (modifiers) => {
-    let returnType = this.props.instance.returnType;
-    if (modifiers.length === 0) return returnType;
-
-    for (let index = modifiers.length - 1; index >= 0; index--) {
-      const modifier = modifiers[index];
-      if (this.validateModifier(modifier) === null) {
-        returnType = modifier.returnType;
-        break;
-      }
-    }
-
-    return returnType;
-  }
-
   getExpressionPhrase = (instance) => {
     const { baseElements } = this.props;
     let returnType = instance.returnType;
     if (!(_.isEmpty(instance.modifiers))) {
-      returnType = this.getReturnType(instance.modifiers);
+      returnType = getReturnType(instance.returnType, instance.modifiers);
     }
 
     let phraseTemplateInstance = instance;

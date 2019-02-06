@@ -29,10 +29,10 @@ import ValueComparisonObservation from './modifiers/ValueComparisonObservation';
 import WithUnit from './modifiers/WithUnit';
 import Qualifier from './modifiers/Qualifier';
 
-import Validators from '../../utils/validators';
-import { hasDuplicateName, doesBaseElementUseNeedWarning, doesBaseElementInstanceNeedWarning }
-  from '../../utils/warnings';
+import { hasDuplicateName, doesBaseElementUseNeedWarning, doesBaseElementInstanceNeedWarning,
+  validateElement, hasReturnTypeError } from '../../utils/warnings';
 import { getOriginalBaseElement } from '../../utils/baseElements';
+import { getReturnType, validateModifier, allModifiersValid } from '../../utils/instances';
 
 function getInstanceName(instance) {
   return (instance.parameters.find(p => p.id === 'element_name') || {}).value;
@@ -77,29 +77,36 @@ export default class TemplateInstance extends Component {
     if (this.props.templateInstance.modifiers !== nextProps.templateInstance.modifiers) {
       let returnType = nextProps.templateInstance.returnType;
       if (!(_.isEmpty(nextProps.templateInstance.modifiers))) {
-        returnType = this.getReturnType(nextProps.templateInstance.modifiers);
+        returnType = getReturnType(nextProps.templateInstance.returnType, nextProps.templateInstance.modifiers);
       }
       this.setState({ returnType });
     }
   }
 
   hasWarnings = () => {
-    const { templateInstance, instanceNames, baseElements, allInstancesInAllTrees } = this.props;
+    const { templateInstance, instanceNames, baseElements, allInstancesInAllTrees, validateReturnType } = this.props;
 
-    const hasValidationError = this.validateElement() !== null;
-    const hasReturnError = this.state.returnType !== 'boolean' && this.props.validateReturnType !== false;
-    const hasModifierWarnings = !this.allModifiersValid();
+    const hasValidationError = validateElement(templateInstance, this.state) !== null;
+    const hasReturnError = hasReturnTypeError(
+      templateInstance.returnType,
+      templateInstance.modifiers,
+      'boolean',
+      validateReturnType
+    );
+    const hasModifierWarnings = !allModifiersValid(templateInstance.modifiers);
     const hasNameWarning = hasDuplicateName(templateInstance, instanceNames, baseElements, allInstancesInAllTrees);
     const hasBaseElementUseChangeWarning = doesBaseElementUseNeedWarning(templateInstance, baseElements);
     const hasBaseElementInstanceChangeWarning =
       doesBaseElementInstanceNeedWarning(templateInstance, allInstancesInAllTrees);
 
-    return hasValidationError ||
+    const hasSomeWarning = hasValidationError ||
       hasReturnError ||
       hasModifierWarnings ||
       hasNameWarning ||
       hasBaseElementUseChangeWarning ||
       hasBaseElementInstanceChangeWarning;
+
+    return hasSomeWarning;
   }
 
   // Props will either be this.props or nextProps coming from componentWillReceiveProps
@@ -141,7 +148,7 @@ export default class TemplateInstance extends Component {
       modifier.values = this.modifierMap[modifier.id].values;
     }
 
-    const validationWarning = this.validateModifier(modifier);
+    const validationWarning = validateModifier(modifier);
 
     const modifierForm = ((mod) => {
       switch (mod.type || mod.id) {
@@ -298,38 +305,10 @@ export default class TemplateInstance extends Component {
     </div>
   );
 
-  validateModifier = (modifier) => {
-    let validationWarning = null;
-
-    if (modifier.validator) {
-      const validator = Validators[modifier.validator.type];
-      const values = modifier.validator.fields.map(v => modifier.values && modifier.values[v]);
-      const args = modifier.validator.args ? modifier.validator.args.map(v => modifier.values[v]) : [];
-      if (!validator.check(values, args)) {
-        validationWarning = validator.warning(modifier.validator.fields, modifier.validator.args);
-      }
-    }
-    return validationWarning;
-  }
-
-  // Gets the returnType of the last valid modifier
-  getReturnType = (modifiers) => {
-    let returnType = this.props.templateInstance.returnType;
-    if (modifiers.length === 0) return returnType;
-
-    for (let index = modifiers.length - 1; index >= 0; index--) {
-      const modifier = modifiers[index];
-      if (this.validateModifier(modifier) === null) {
-        returnType = modifier.returnType;
-        break;
-      }
-    }
-
-    return returnType;
-  }
-
   setAppliedModifiers = (modifiers) => {
-    this.setState({ returnType: this.getReturnType(modifiers) }, this.filterRelevantModifiers);
+    this.setState({
+      returnType: getReturnType(this.props.templateInstance.returnType, modifiers)
+    }, this.filterRelevantModifiers);
     this.props.updateInstanceModifiers(this.props.treeName, modifiers, this.getPath(), this.props.subpopulationIndex);
   }
 
@@ -398,17 +377,6 @@ export default class TemplateInstance extends Component {
     }
   }
 
-  allModifiersValid = () => {
-    const modifiers = this.props.templateInstance.modifiers;
-    if (!modifiers) return true;
-
-    let allModifiersValid = true;
-    modifiers.forEach((modifier) => {
-      if (this.validateModifier(modifier) !== null) allModifiersValid = false;
-    });
-    return allModifiersValid;
-  }
-
   renderModifierSelect = () => {
     if (!this.props.templateInstance.cannotHaveModifiers
       && (this.state.relevantModifiers.length > 0 || (this.props.templateInstance.modifiers || []).length === 0)) {
@@ -421,7 +389,7 @@ export default class TemplateInstance extends Component {
               onClick={() => this.setState({ showModifiers: !this.state.showModifiers })}
               className="modifier__addbutton secondary-button"
               aria-label={'add expression'}
-              disabled={!this.allModifiersValid()}>
+              disabled={!allModifiersValid(this.props.templateInstance.modifiers)}>
               Add Expression
             </button>
 
@@ -671,25 +639,11 @@ export default class TemplateInstance extends Component {
 
   getPath = () => this.props.getPath(this.props.templateInstance.uniqueId)
 
-  validateElement = () => {
-    if (this.props.templateInstance.validator) {
-      const validator = Validators[this.props.templateInstance.validator.type];
-      const fields = this.props.templateInstance.validator.fields;
-      const args = this.props.templateInstance.validator.args;
-      const values = fields.map(f => this.state[f]);
-      const names = fields.map(f => this.props.templateInstance.parameters.find(el => el.id === f).name);
-      if (!validator.check(values, args)) {
-        return validator.warning(names, args);
-      }
-    }
-    return null;
-  }
-
   renderBody() {
     const { templateInstance, validateReturnType } = this.props;
     const { returnType } = this.state;
     const referenceParameter = templateInstance.parameters.find(param => param.type === 'reference');
-    const validationError = this.validateElement();
+    const validationError = validateElement(this.props.templateInstance, this.state);
     const returnError = (!(validateReturnType !== false) || returnType === 'boolean') ? null
       : "Element must have return type 'boolean'. Add expression(s) to change the return type.";
 

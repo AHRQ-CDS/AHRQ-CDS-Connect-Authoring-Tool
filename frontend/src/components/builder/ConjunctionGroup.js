@@ -10,7 +10,10 @@ import StringParameter from './parameters/types/StringParameter';
 import ExpressionPhrase from './modifiers/ExpressionPhrase';
 
 import createTemplateInstance from '../../utils/templates';
+import { hasDuplicateName, doesBaseElementUseNeedWarning, doesBaseElementInstanceNeedWarning, validateElement,
+  hasReturnTypeError } from '../../utils/warnings';
 import requiredIf from '../../utils/prop_types';
+import { allModifiersValid } from '../../utils/instances';
 
 export default class ConjunctionGroup extends Component {
   constructor(props) {
@@ -137,6 +140,57 @@ export default class ConjunctionGroup extends Component {
     }
   }
 
+  conjunctionHasDuplicateName = (child) => {
+    const elementNameParam = child.parameters.find(param => param.id === 'element_name');
+    const duplicateNameIndex = this.props.instanceNames.findIndex(name =>
+      name.id !== child.uniqueId && name.name === elementNameParam.value);
+    return duplicateNameIndex !== -1;
+  }
+
+  // Nested warning is needed if a group has a duplicate name
+  // and if there is any type of warning on any child, including other groups.
+  hasNestedWarnings = (childInstances) => {
+    let hasNestedWarning = false;
+    childInstances.forEach((child) => {
+      if (!this.state.showGroup) {
+        let warning = false;
+        if (child.conjunction) {
+          warning = this.hasNestedWarnings(child.childInstances);
+          if (!warning) {
+            warning = this.conjunctionHasDuplicateName(child);
+          }
+        } else {
+          const { instanceNames, baseElements, getAllInstancesInAllTrees } = this.props;
+          const allInstancesInAllTrees = getAllInstancesInAllTrees();
+
+          const params = {};
+          child.parameters.forEach((param) => {
+            params[param.id] = param.value;
+          });
+
+          const hasValidateElementWarning = validateElement(child, params);
+          const hasReturnTypeWarning =
+            hasReturnTypeError(child.returnType, child.modifiers, 'boolean', this.props.validateReturnType);
+          const hasModifierWarning = !allModifiersValid(child.modifiers);
+          const hasDuplicateNameWarning = hasDuplicateName(child, instanceNames, baseElements, allInstancesInAllTrees);
+          const hasBaseElementUseWarning = doesBaseElementUseNeedWarning(child, baseElements);
+          const hasBaseElementInstanceWarning = doesBaseElementInstanceNeedWarning(child, allInstancesInAllTrees);
+
+          warning = hasValidateElementWarning
+            || hasReturnTypeWarning
+            || hasModifierWarning
+            || hasDuplicateNameWarning
+            || hasBaseElementUseWarning
+            || hasBaseElementInstanceWarning;
+        }
+        if (warning) {
+          hasNestedWarning = true;
+        }
+      }
+    });
+    return hasNestedWarning;
+  }
+
   showHideGroupBody = () => {
     this.setState({ showGroup: !this.state.showGroup });
   }
@@ -197,8 +251,7 @@ export default class ConjunctionGroup extends Component {
     const { showGroup } = this.state;
     const collapsedClass = showGroup ? '' : 'expression-collapsed';
     const elementNameParam = this.props.instance.parameters.find(param => param.id === 'element_name');
-    const duplicateNameIndex = this.props.instanceNames.findIndex(name =>
-      name.id !== this.props.instance.uniqueId && name.name === elementNameParam.value);
+    const conjunctionHasDuplicateName = this.conjunctionHasDuplicateName(this.props.instance);
 
     if (!this.props.root) {
       const { disableElement } = this.props;
@@ -214,13 +267,13 @@ export default class ConjunctionGroup extends Component {
                     value={elementNameParam.value}
                     updateInstance={this.handleNameChange}
                   />
-                  {duplicateNameIndex !== -1
+                  {conjunctionHasDuplicateName
                     && <div className="warning">Warning: Name already in use. Choose another name.</div>}
                 </div>
               :
                 <div className="group-heading-name">
                   {elementNameParam.value}:
-                  {duplicateNameIndex !== -1
+                  {(conjunctionHasDuplicateName || this.hasNestedWarnings(this.props.instance.childInstances))
                     && <div className="warning"><FontAwesome name="exclamation-circle" /> Has warnings</div>}
                 </div>
               }
@@ -229,12 +282,12 @@ export default class ConjunctionGroup extends Component {
             <div className="card-group__buttons">
               {showGroup && this.renderIndentButtons(this.props.instance)}
 
-              {/* <button
+              <button
                 onClick={this.showHideGroupBody}
                 className="element__hidebutton transparent-button"
                 aria-label={`hide ${elementNameParam.name}`}>
                 <FontAwesome name={showGroup ? 'angle-double-down' : 'angle-double-right'} />
-              </button> */}
+              </button>
 
               <button
                 className={`element__deletebutton transparent-button ${disableElement ? 'disabled' : ''}`}

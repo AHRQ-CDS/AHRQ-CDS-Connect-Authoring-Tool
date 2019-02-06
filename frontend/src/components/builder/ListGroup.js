@@ -6,8 +6,8 @@ import pluralize from 'pluralize';
 import { UncontrolledTooltip } from 'reactstrap';
 import { findValueAtPath } from '../../utils/find';
 import { doesBaseElementInstanceNeedWarning, hasDuplicateName } from '../../utils/warnings';
+import { getReturnType } from '../../utils/instances';
 
-import Validators from '../../utils/validators';
 import ConjunctionGroup from './ConjunctionGroup';
 import ExpressionPhrase from './modifiers/ExpressionPhrase';
 
@@ -65,36 +65,6 @@ export default class ListGroup extends Component {
     }
   }
 
-  validateModifier = (modifier) => {
-    let validationWarning = null;
-
-    if (modifier.validator) {
-      const validator = Validators[modifier.validator.type];
-      const values = modifier.validator.fields.map(v => modifier.values[v]);
-      const args = modifier.validator.args ? modifier.validator.args.map(v => modifier.values[v]) : [];
-      if (!validator.check(values, args)) {
-        validationWarning = validator.warning(modifier.validator.fields, modifier.validator.args);
-      }
-    }
-    return validationWarning;
-  }
-
-  // Gets the returnType of the last valid modifier
-  getReturnType = (elementReturnType, modifiers = []) => {
-    let returnType = elementReturnType;
-    if (modifiers.length === 0) return returnType;
-
-    for (let index = modifiers.length - 1; index >= 0; index--) {
-      const modifier = modifiers[index];
-      if (this.validateModifier(modifier) === null) {
-        returnType = modifier.returnType;
-        break;
-      }
-    }
-
-    return returnType;
-  }
-
   updateBaseElementList = (name, uniqueId) => {
     const newBaseElementLists = _.cloneDeep(this.props.artifact.baseElements);
     const baseElementIndex = this.props.artifact.baseElements.findIndex(baseElement =>
@@ -149,7 +119,7 @@ export default class ListGroup extends Component {
     // Set the initial type to the first child's type to start. If no children, default is 'list_of_any'.
     if (baseElementList.childInstances.length > 0) {
       const firstChild = baseElementList.childInstances[0];
-      currentReturnType = this.getReturnType(firstChild.returnType, firstChild.modifiers);
+      currentReturnType = getReturnType(firstChild.returnType, firstChild.modifiers);
       currentReturnType = this.promoteReturnTypeToList(currentReturnType);
     } else {
       currentReturnType = 'list_of_any';
@@ -157,7 +127,7 @@ export default class ListGroup extends Component {
 
     let newReturnType;
     baseElementList.childInstances.forEach((child) => { // Base Element Lists can only go one child deep
-      const incomingReturnType = this.getReturnType(child.returnType, child.modifiers);
+      const incomingReturnType = getReturnType(child.returnType, child.modifiers);
       newReturnType = this.checkReturnTypeCompatibility(currentReturnType, incomingReturnType);
       currentReturnType = newReturnType;
     });
@@ -170,7 +140,7 @@ export default class ListGroup extends Component {
     // Set the initial type to the first child's type to start. If no children, default is 'list_of_any'.
     if (baseElementList.childInstances.length > 0) {
       const firstChild = baseElementList.childInstances[0];
-      currentReturnType = this.getReturnType(firstChild.returnType, firstChild.modifiers);
+      currentReturnType = getReturnType(firstChild.returnType, firstChild.modifiers);
     } else {
       currentReturnType = 'none';
     }
@@ -178,7 +148,7 @@ export default class ListGroup extends Component {
     let newReturnType;
     // Base Element And/Or Conjunctions can go multiple children deep so need recursion to check the type
     baseElementList.childInstances.forEach((child) => {
-      let incomingReturnType = this.getReturnType(child.returnType, child.modifiers);
+      let incomingReturnType = getReturnType(child.returnType, child.modifiers);
       if (child.childInstances) {
         incomingReturnType = this.getAndOrReturnTypeOfFullList(child);
       }
@@ -203,7 +173,7 @@ export default class ListGroup extends Component {
       }
     } else {
       // Need to check if incoming type will change the current return type.
-      let incomingReturnType = this.getReturnType(template.returnType, template.modifiers);
+      let incomingReturnType = getReturnType(template.returnType, template.modifiers);
       if (isAndOrElement) {
         const isOnlyElement = baseElementList.childInstances.length === 1;
         newReturnType = this.checkAndOrReturnTypeCompatibility(currentReturnType, incomingReturnType, isOnlyElement);

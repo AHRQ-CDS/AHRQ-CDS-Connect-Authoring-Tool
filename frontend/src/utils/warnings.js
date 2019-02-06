@@ -1,3 +1,6 @@
+import Validators from './validators';
+import { getReturnType } from './instances';
+
 export function doesBaseElementInstanceNeedWarning(instance, allInstancesInAllTrees) {
   const isBaseElement = instance.usedBy;
   if (isBaseElement) {
@@ -77,4 +80,23 @@ export function hasDuplicateName(templateInstance, instanceNames, baseElements, 
     return isDuplicate;
   });
   return duplicateNameIndex !== -1;
+}
+
+export function validateElement(instance, params) {
+  if (instance.validator) {
+    const validator = Validators[instance.validator.type];
+    const fields = instance.validator.fields;
+    const args = instance.validator.args;
+    const values = fields.map(f => params[f]);
+    const names = fields.map(f => instance.parameters.find(el => el.id === f).name);
+    if (!validator.check(values, args)) {
+      return validator.warning(names, args);
+    }
+  }
+  return null;
+}
+
+export function hasReturnTypeError(startingReturnType, modifiers, validReturnType, validateReturnType) {
+  const currentReturnType = getReturnType(startingReturnType, modifiers);
+  return currentReturnType !== validReturnType && validateReturnType !== false;
 }
