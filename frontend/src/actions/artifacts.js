@@ -68,8 +68,8 @@ function parseConjunction(childInstances, names, baseElementsInUse) {
         }
       }
     }
-    if (child.type === 'parameter' && child.returnType !== _.lowerCase(child.returnType)) {
-      child.returnType = _.lowerCase(child.returnType);
+    if (child.type === 'parameter' && child.returnType !== _.toLower(child.returnType)) {
+      child.returnType = _.toLower(child.returnType);
     }
   });
 }

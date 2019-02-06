@@ -151,7 +151,7 @@ export default class ElementSelect extends Component {
         id: param.name,
         name: param.name,
         type: 'parameter',
-        returnType: _.lowerCase(param.type),
+        returnType: _.toLower(param.type),
         extends: 'Base',
         parameters: [
           { id: 'element_name', type: 'string', name: 'Element Name', value: param.name },

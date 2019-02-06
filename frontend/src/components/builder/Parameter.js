@@ -63,31 +63,31 @@ export default class Parameter extends Component {
     };
 
     switch (this.props.type) {
-      case 'Boolean':
+      case 'boolean':
         return <BooleanEditor {...parameterProps} />;
-      case 'Code':
+      case 'system_code':
         return <CodeEditor {...parameterProps} {...codeEditorProps} />;
-      case 'Concept':
+      case 'system_concept':
         return <CodeEditor {...parameterProps} {...codeEditorProps} isConcept={true} />;
-      case 'Integer':
+      case 'integer':
         return <IntegerEditor {...parameterProps} />;
-      case 'DateTime':
+      case 'datetime':
         return <DateTimeEditor {...parameterProps} />;
-      case 'Decimal':
+      case 'decimal':
         return <DecimalEditor {...parameterProps} />;
-      case 'Quantity':
+      case 'system_quantity':
         return <QuantityEditor {...parameterProps} />;
-      case 'String':
+      case 'string':
         return <StringEditor {...parameterProps} />;
-      case 'Time':
+      case 'time':
         return <TimeEditor {...parameterProps} />;
-      case 'Interval<Integer>':
+      case 'interval_of_integer':
         return <IntervalOfIntegerEditor {...parameterProps} />;
-      case 'Interval<DateTime>':
+      case 'interval_of_datetime':
         return <IntervalOfDateTimeEditor {...parameterProps} />;
-      case 'Interval<Decimal>':
+      case 'interval_of_decimal':
         return <IntervalOfDecimalEditor {...parameterProps} />;
-      case 'Interval<Quantity>':
+      case 'interval_of_quantity':
         return <IntervalOfQuantityEditor {...parameterProps} />;
       default:
         return null;
@@ -97,19 +97,19 @@ export default class Parameter extends Component {
   render() {
     const { index, name, id, type, value, deleteParameter } = this.props;
     const typeOptions = [
-      { value: 'Boolean', label: 'Boolean' },
-      { value: 'Code', label: 'Code' },
-      { value: 'Concept', label: 'Concept' },
-      { value: 'Integer', label: 'Integer' },
-      { value: 'DateTime', label: 'DateTime' },
-      { value: 'Decimal', label: 'Decimal' },
-      { value: 'Quantity', label: 'Quantity' },
-      { value: 'String', label: 'String' },
-      { value: 'Time', label: 'Time' },
-      { value: 'Interval<Integer>', label: 'Interval<Integer>' },
-      { value: 'Interval<DateTime>', label: 'Interval<DateTime>' },
-      { value: 'Interval<Decimal>', label: 'Interval<Decimal>' },
-      { value: 'Interval<Quantity>', label: 'Interval<Quantity>' }
+      { value: 'boolean', label: 'Boolean' },
+      { value: 'system_code', label: 'Code' },
+      { value: 'system_concept', label: 'Concept' },
+      { value: 'integer', label: 'Integer' },
+      { value: 'datetime', label: 'DateTime' },
+      { value: 'decimal', label: 'Decimal' },
+      { value: 'system_quantity', label: 'Quantity' },
+      { value: 'string', label: 'String' },
+      { value: 'time', label: 'Time' },
+      { value: 'interval_of_integer', label: 'Interval<Integer>' },
+      { value: 'interval_of_datetime', label: 'Interval<DateTime>' },
+      { value: 'interval_of_decimal', label: 'Interval<Decimal>' },
+      { value: 'interval_of_quantity', label: 'Interval<Quantity>' }
     ];
 
     const duplicateNameIndex = this.props.instanceNames.findIndex(n => n.id !== id && n.name === name);

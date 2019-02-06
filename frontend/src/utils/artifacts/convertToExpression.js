@@ -56,7 +56,7 @@ function getExpressionSentenceValue(modifier) {
     BooleanExists: { modifierText: 'exists', leadingText: 'that', type: 'BooleanExists' },
     BooleanComparison: { modifierText: 'is true', leadingText: 'which', type: 'post' },
     CheckExistence: { modifierText: 'is null', leadingText: '', type: 'post' },
-    BooleanNot: { modifierText: 'not', leadingText: 'There does', type: 'not' },
+    BooleanNot: { modifierText: 'not', leadingText: '', type: 'not' },
     InProgress: { modifierText: 'in progress', leadingText: '', type: 'list' },
     AllTrue: { modifierText: 'all elements true', leadingText: 'with', type: 'post' },
     AnyTrue: { modifierText: 'any element true', leadingText: 'with', type: 'post' }
@@ -274,12 +274,11 @@ function getOrderedExpressionSentenceArrayForGender(genderParameter) {
   return orderedExpressionArray;
 }
 
-function getOrderedExpressionSentenceArrayForParameters(expressionArray, returnType) {
+function getOrderedExpressionSentenceArrayForParameters(expressionArray) {
   let orderedExpressionArray = [];
   let remainingExpressionArray = expressionArray;
   orderedExpressionArray.push({ expressionText: 'The value of the', isExpression: false });
-  orderedExpressionArray.push({ expressionText: `${_.lowerCase(returnType)}`, isExpression: true });
-  orderedExpressionArray.push({ expressionText: 'parameter', isExpression: false, isType: true });
+  orderedExpressionArray.push({ expressionText: 'parameter', isExpression: true, isType: true });
   orderedExpressionArray.push({ expressionText: 'is', isExpression: false });
 
   remainingExpressionArray = remainingExpressionArray.filter((expression) => {
@@ -318,7 +317,7 @@ function orderExpressionSentenceArray(
     return getOrderedExpressionSentenceArrayForGender(otherParameters);
   }
   if (type === 'parameter') {
-    return getOrderedExpressionSentenceArrayForParameters(expressionArray, returnType);
+    return getOrderedExpressionSentenceArrayForParameters(expressionArray);
   }
 
   if ((type === 'And' || type === 'Or') && !isBaseElementAndOr) {
