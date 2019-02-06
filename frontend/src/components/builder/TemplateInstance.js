@@ -722,16 +722,11 @@ export default class TemplateInstance extends Component {
     const { templateInstance, instanceNames, baseElements, allInstancesInAllTrees } = this.props;
 
     if (elementNameParameter) {
-      if (templateInstance.type === 'parameter') {
-        if (elementNameParameter.value) {
-          return <span className="label">{elementNameParameter.value}</span>;
-        }
-        return null;
-      }
+      let elementType = (templateInstance.type === 'parameter') ? 'Parameter' : templateInstance.name;
+
 
       const referenceParameter = templateInstance.parameters.find(param => param.type === 'reference');
 
-      let elementType = templateInstance.name;
       if (referenceParameter) {
         // Element type to display in header will be the reference type for Base Elements.
         const originalBaseElement = getOriginalBaseElement(templateInstance, baseElements);

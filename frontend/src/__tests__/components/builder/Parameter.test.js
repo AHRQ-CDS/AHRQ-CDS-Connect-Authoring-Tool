@@ -75,18 +75,18 @@ test('changes parameter type when edited', () => {
 test('displays Boolean editor', () => {
   component = shallowRenderComponent(Parameter, {
     name: 'testParam',
-    type: 'Boolean',
+    type: 'boolean',
     ...baseProps
   });
   expect(component.find(StringParameter).props().value).toEqual('testParam');
-  expect(component.find(Select).first().props().value).toEqual('Boolean');
+  expect(component.find(Select).first().props().value).toEqual('boolean');
   expect(component.find(BooleanEditor)).toHaveLength(1);
 });
 
 test('renders Boolean editor without crashing', () => {
   component = shallowRenderComponent(BooleanEditor, {
     id: 'test-id',
-    type: 'Boolean',
+    type: 'boolean',
     updateInstance: jest.fn()
   });
   expect(component).toBeDefined();
@@ -95,29 +95,29 @@ test('renders Boolean editor without crashing', () => {
 test('displays Code editor', () => {
   component = shallowRenderComponent(Parameter, {
     name: 'testParam',
-    type: 'Code',
+    type: 'system_code',
     ...baseProps
   });
   expect(component.find(StringParameter).props().value).toEqual('testParam');
-  expect(component.find(Select).first().props().value).toEqual('Code');
+  expect(component.find(Select).first().props().value).toEqual('system_code');
   expect(component.find(CodeEditor)).toHaveLength(1);
 });
 
 test('displays Concept editor', () => {
   component = shallowRenderComponent(Parameter, {
     name: 'testParam',
-    type: 'Concept',
+    type: 'system_concept',
     ...baseProps
   });
   expect(component.find(StringParameter).props().value).toEqual('testParam');
-  expect(component.find(Select).first().props().value).toEqual('Concept');
+  expect(component.find(Select).first().props().value).toEqual('system_concept');
   expect(component.find(CodeEditor)).toHaveLength(1);
 });
 
 test('renders Code editor without crashing', () => {
   component = shallowRenderComponent(CodeEditor, {
     id: 'test-id',
-    type: 'Code',
+    type: 'system_code',
     vsacFHIRCredentials,
     updateInstance: jest.fn()
   });
@@ -127,18 +127,18 @@ test('renders Code editor without crashing', () => {
 test('displays Integer editor', () => {
   component = shallowRenderComponent(Parameter, {
     name: 'testParam',
-    type: 'Integer',
+    type: 'integer',
     ...baseProps
   });
   expect(component.find(StringParameter).props().value).toEqual('testParam');
-  expect(component.find(Select).first().props().value).toEqual('Integer');
+  expect(component.find(Select).first().props().value).toEqual('integer');
   expect(component.find(IntegerEditor)).toHaveLength(1);
 });
 
 test('renders Integer editor without crashing', () => {
   component = shallowRenderComponent(IntegerEditor, {
     id: 'test-id',
-    type: 'Integer',
+    type: 'integer',
     updateInstance: jest.fn()
   });
   expect(component).toBeDefined();
@@ -147,18 +147,18 @@ test('renders Integer editor without crashing', () => {
 test('displays DateTime editor', () => {
   component = shallowRenderComponent(Parameter, {
     name: 'testParam',
-    type: 'DateTime',
+    type: 'datetime',
     ...baseProps
   });
   expect(component.find(StringParameter).props().value).toEqual('testParam');
-  expect(component.find(Select).first().props().value).toEqual('DateTime');
+  expect(component.find(Select).first().props().value).toEqual('datetime');
   expect(component.find(DateTimeEditor)).toHaveLength(1);
 });
 
 test('renders DateTime editor without crashing', () => {
   component = shallowRenderComponent(DateTimeEditor, {
     id: 'test-id',
-    type: 'DateTime',
+    type: 'datetime',
     updateInstance: jest.fn()
   });
   expect(component).toBeDefined();
@@ -167,18 +167,18 @@ test('renders DateTime editor without crashing', () => {
 test('displays Decimal editor', () => {
   component = shallowRenderComponent(Parameter, {
     name: 'testParam',
-    type: 'Decimal',
+    type: 'decimal',
     ...baseProps
   });
   expect(component.find(StringParameter).props().value).toEqual('testParam');
-  expect(component.find(Select).first().props().value).toEqual('Decimal');
+  expect(component.find(Select).first().props().value).toEqual('decimal');
   expect(component.find(DecimalEditor)).toHaveLength(1);
 });
 
 test('renders Decimal editor without crashing', () => {
   component = shallowRenderComponent(DecimalEditor, {
     id: 'test-id',
-    type: 'Decimal',
+    type: 'decimal',
     updateInstance: jest.fn()
   });
   expect(component).toBeDefined();
@@ -187,18 +187,18 @@ test('renders Decimal editor without crashing', () => {
 test('displays Quantity editor', () => {
   component = shallowRenderComponent(Parameter, {
     name: 'testParam',
-    type: 'Quantity',
+    type: 'system_quantity',
     ...baseProps
   });
   expect(component.find(StringParameter).props().value).toEqual('testParam');
-  expect(component.find(Select).first().props().value).toEqual('Quantity');
+  expect(component.find(Select).first().props().value).toEqual('system_quantity');
   expect(component.find(QuantityEditor)).toHaveLength(1);
 });
 
 test('renders Quantity editor without crashing', () => {
   component = shallowRenderComponent(QuantityEditor, {
     id: 'test-id',
-    type: 'Quantity',
+    type: 'system_quantity',
     updateInstance: jest.fn()
   });
   expect(component).toBeDefined();
@@ -207,18 +207,18 @@ test('renders Quantity editor without crashing', () => {
 test('displays String editor', () => {
   component = shallowRenderComponent(Parameter, {
     name: 'testParam',
-    type: 'String',
+    type: 'string',
     ...baseProps
   });
   expect(component.find(StringParameter).props().value).toEqual('testParam');
-  expect(component.find(Select).first().props().value).toEqual('String');
+  expect(component.find(Select).first().props().value).toEqual('string');
   expect(component.find(StringEditor)).toHaveLength(1);
 });
 
 test('renders String editor without crashing', () => {
   component = shallowRenderComponent(StringEditor, {
     id: 'test-id',
-    type: 'String',
+    type: 'string',
     updateInstance: jest.fn()
   });
   expect(component).toBeDefined();
@@ -227,18 +227,18 @@ test('renders String editor without crashing', () => {
 test('displays Time editor', () => {
   component = shallowRenderComponent(Parameter, {
     name: 'testParam',
-    type: 'Time',
+    type: 'time',
     ...baseProps
   });
   expect(component.find(StringParameter).props().value).toEqual('testParam');
-  expect(component.find(Select).first().props().value).toEqual('Time');
+  expect(component.find(Select).first().props().value).toEqual('time');
   expect(component.find(TimeEditor)).toHaveLength(1);
 });
 
 test('renders Time editor without crashing', () => {
   component = shallowRenderComponent(TimeEditor, {
     id: 'test-id',
-    type: 'Time',
+    type: 'time',
     updateInstance: jest.fn()
   });
   expect(component).toBeDefined();
@@ -247,18 +247,18 @@ test('renders Time editor without crashing', () => {
 test('displays Interval<Integer> editor', () => {
   component = shallowRenderComponent(Parameter, {
     name: 'testParam',
-    type: 'Interval<Integer>',
+    type: 'interval_of_integer',
     ...baseProps
   });
   expect(component.find(StringParameter).props().value).toEqual('testParam');
-  expect(component.find(Select).first().props().value).toEqual('Interval<Integer>');
+  expect(component.find(Select).first().props().value).toEqual('interval_of_integer');
   expect(component.find(IntervalOfIntegerEditor)).toHaveLength(1);
 });
 
 test('renders Interval<Integer> editor without crashing', () => {
   component = shallowRenderComponent(IntervalOfIntegerEditor, {
     id: 'test-id',
-    type: 'Interval<Integer>',
+    type: 'interval_of_integer',
     updateInstance: jest.fn()
   });
   expect(component).toBeDefined();
@@ -267,18 +267,18 @@ test('renders Interval<Integer> editor without crashing', () => {
 test('displays Interval<DateTime> editor', () => {
   component = shallowRenderComponent(Parameter, {
     name: 'testParam',
-    type: 'Interval<DateTime>',
+    type: 'interval_of_datetime',
     ...baseProps
   });
   expect(component.find(StringParameter).props().value).toEqual('testParam');
-  expect(component.find(Select).first().props().value).toEqual('Interval<DateTime>');
+  expect(component.find(Select).first().props().value).toEqual('interval_of_datetime');
   expect(component.find(IntervalOfDateTimeEditor)).toHaveLength(1);
 });
 
 test('renders Interval<DateTime> editor without crashing', () => {
   component = shallowRenderComponent(IntervalOfDateTimeEditor, {
     id: 'test-id',
-    type: 'Interval<DateTime>',
+    type: 'interval_of_datetime',
     updateInstance: jest.fn()
   });
   expect(component).toBeDefined();
@@ -287,18 +287,18 @@ test('renders Interval<DateTime> editor without crashing', () => {
 test('displays Interval<Decimal> editor', () => {
   component = shallowRenderComponent(Parameter, {
     name: 'testParam',
-    type: 'Interval<Decimal>',
+    type: 'interval_of_decimal',
     ...baseProps
   });
   expect(component.find(StringParameter).props().value).toEqual('testParam');
-  expect(component.find(Select).first().props().value).toEqual('Interval<Decimal>');
+  expect(component.find(Select).first().props().value).toEqual('interval_of_decimal');
   expect(component.find(IntervalOfDecimalEditor)).toHaveLength(1);
 });
 
 test('renders Interval<Decimal> editor without crashing', () => {
   component = shallowRenderComponent(IntervalOfDecimalEditor, {
     id: 'test-id',
-    type: 'Interval<Decimal>',
+    type: 'interval_of_decimal',
     updateInstance: jest.fn()
   });
   expect(component).toBeDefined();
@@ -307,18 +307,18 @@ test('renders Interval<Decimal> editor without crashing', () => {
 test('displays Interval<Quantity> editor', () => {
   component = shallowRenderComponent(Parameter, {
     name: 'testParam',
-    type: 'Interval<Quantity>',
+    type: 'interval_of_quantity',
     ...baseProps
   });
   expect(component.find(StringParameter).props().value).toEqual('testParam');
-  expect(component.find(Select).first().props().value).toEqual('Interval<Quantity>');
+  expect(component.find(Select).first().props().value).toEqual('interval_of_quantity');
   expect(component.find(IntervalOfQuantityEditor)).toHaveLength(1);
 });
 
 test('renders Interval<Quantity> editor without crashing', () => {
   component = shallowRenderComponent(IntervalOfQuantityEditor, {
     id: 'test-id',
-    type: 'Interval<Quantity>',
+    type: 'interval_of_quantity',
     updateInstance: jest.fn()
   });
   expect(component).toBeDefined();
