@@ -141,21 +141,19 @@ export function updateAndSaveArtifact(artifactToUpdate, props) {
 
 // ------------------------- INITIALIZE ARTIFACT --------------------------- //
 
-function initializeTrees(template) {
-  const newSubpopulation = createTemplateInstance(template);
+function initializeTrees(andTemplate, orTemplate) {
+  const newSubpopulation = createTemplateInstance(andTemplate);
   newSubpopulation.name = '';
   newSubpopulation.path = '';
   newSubpopulation.subpopulationName = 'Subpopulation 1';
   newSubpopulation.expanded = true;
 
-  const newExpTreeInclude = createTemplateInstance(template);
-  newExpTreeInclude.name = '';
+  const newExpTreeInclude = createTemplateInstance(andTemplate);
   newExpTreeInclude.path = '';
   const newExpTreeIncludeNameParam = newExpTreeInclude.parameters.find(param => param.id === 'element_name');
   if (newExpTreeIncludeNameParam) newExpTreeIncludeNameParam.value = 'MeetsInclusionCriteria';
 
-  const newExpTreeExclude = createTemplateInstance(template);
-  newExpTreeExclude.name = '';
+  const newExpTreeExclude = createTemplateInstance(orTemplate);
   newExpTreeExclude.path = '';
   const newExpTreeExcludeNameParam = newExpTreeExclude.parameters.find(param => param.id === 'element_name');
   if (newExpTreeExcludeNameParam) newExpTreeExcludeNameParam.value = 'MeetsExclusionCriteria';
@@ -167,8 +165,8 @@ function initializeTrees(template) {
   };
 }
 
-export function initializeArtifact(andTemplate) {
-  const newTrees = initializeTrees(andTemplate);
+export function initializeArtifact(andTemplate, orTemplate) {
+  const newTrees = initializeTrees(andTemplate, orTemplate);
 
   const artifact = {
     _id: null,
@@ -317,8 +315,9 @@ function sendAddArtifactRequest(artifactProps) {
     .then((result) => {
       const operations = result.templates.find(template => template.name === 'Operations');
       const andTemplate = operations.entries.find(entry => entry.name === 'And');
+      const orTemplate = operations.entries.find(entry => entry.name === 'Or');
 
-      return dispatch(initializeArtifact(andTemplate));
+      return dispatch(initializeArtifact(andTemplate, orTemplate));
     })
     .then(() => dispatch(updateAndSaveArtifact(getState().artifacts.artifact, artifactProps)));
 }

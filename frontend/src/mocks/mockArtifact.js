@@ -6,7 +6,7 @@ const mockArtifact = {
   expTreeInclude: {
     id: 'And',
     uniqueId: 'And-TEST-1',
-    name: '',
+    name: 'And',
     conjunction: true,
     returnType: 'boolean',
     path: '',
@@ -14,9 +14,9 @@ const mockArtifact = {
     parameters: []
   },
   expTreeExclude: {
-    id: 'And',
-    uniqueId: 'And-TEST-1',
-    name: '',
+    id: 'Or',
+    uniqueId: 'Or-TEST-1',
+    name: 'Or',
     conjunction: true,
     returnType: 'boolean',
     path: '',
