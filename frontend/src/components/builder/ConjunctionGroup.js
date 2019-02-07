@@ -10,10 +10,8 @@ import StringParameter from './parameters/types/StringParameter';
 import ExpressionPhrase from './modifiers/ExpressionPhrase';
 
 import createTemplateInstance from '../../utils/templates';
-import { hasDuplicateName, doesBaseElementUseNeedWarning, doesBaseElementInstanceNeedWarning, validateElement,
-  hasReturnTypeError } from '../../utils/warnings';
+import { hasGroupNestedWarning } from '../../utils/warnings';
 import requiredIf from '../../utils/prop_types';
-import { allModifiersValid } from '../../utils/instances';
 
 export default class ConjunctionGroup extends Component {
   constructor(props) {
@@ -147,47 +145,11 @@ export default class ConjunctionGroup extends Component {
     return duplicateNameIndex !== -1;
   }
 
-  // Nested warning is needed if a group has a duplicate name
-  // and if there is any type of warning on any child, including other groups.
   hasNestedWarnings = (childInstances) => {
-    let hasNestedWarning = false;
-    childInstances.forEach((child) => {
-      if (!this.state.showGroup) {
-        let warning = false;
-        if (child.conjunction) {
-          warning = this.hasNestedWarnings(child.childInstances);
-          if (!warning) {
-            warning = this.conjunctionHasDuplicateName(child);
-          }
-        } else {
-          const { instanceNames, baseElements, getAllInstancesInAllTrees } = this.props;
-          const allInstancesInAllTrees = getAllInstancesInAllTrees();
-
-          const params = {};
-          child.parameters.forEach((param) => {
-            params[param.id] = param.value;
-          });
-
-          const hasValidateElementWarning = validateElement(child, params);
-          const hasReturnTypeWarning =
-            hasReturnTypeError(child.returnType, child.modifiers, 'boolean', this.props.validateReturnType);
-          const hasModifierWarning = !allModifiersValid(child.modifiers);
-          const hasDuplicateNameWarning = hasDuplicateName(child, instanceNames, baseElements, allInstancesInAllTrees);
-          const hasBaseElementUseWarning = doesBaseElementUseNeedWarning(child, baseElements);
-          const hasBaseElementInstanceWarning = doesBaseElementInstanceNeedWarning(child, allInstancesInAllTrees);
-
-          warning = hasValidateElementWarning
-            || hasReturnTypeWarning
-            || hasModifierWarning
-            || hasDuplicateNameWarning
-            || hasBaseElementUseWarning
-            || hasBaseElementInstanceWarning;
-        }
-        if (warning) {
-          hasNestedWarning = true;
-        }
-      }
-    });
+    const { instanceNames, baseElements, getAllInstancesInAllTrees, validateReturnType } = this.props;
+    const allInstancesInAllTrees = getAllInstancesInAllTrees();
+    const hasNestedWarning =
+      hasGroupNestedWarning(childInstances, instanceNames, baseElements, allInstancesInAllTrees, validateReturnType);
     return hasNestedWarning;
   }
 

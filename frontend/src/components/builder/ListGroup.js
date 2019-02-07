@@ -5,7 +5,7 @@ import FontAwesome from 'react-fontawesome';
 import pluralize from 'pluralize';
 import { UncontrolledTooltip } from 'reactstrap';
 import { findValueAtPath } from '../../utils/find';
-import { doesBaseElementInstanceNeedWarning, hasDuplicateName } from '../../utils/warnings';
+import { doesBaseElementInstanceNeedWarning, hasDuplicateName, hasGroupNestedWarning } from '../../utils/warnings';
 import { getReturnType } from '../../utils/instances';
 
 import ConjunctionGroup from './ConjunctionGroup';
@@ -224,6 +224,14 @@ export default class ListGroup extends Component {
 
   isBaseElementListUsed = element => (element.usedBy ? element.usedBy.length !== 0 : false);
 
+  hasNestedWarnings = (childInstances) => {
+    const { instanceNames, baseElements, getAllInstancesInAllTrees, validateReturnType } = this.props;
+    const allInstancesInAllTrees = getAllInstancesInAllTrees();
+    const hasNestedWarning =
+      hasGroupNestedWarning(childInstances, instanceNames, baseElements, allInstancesInAllTrees, validateReturnType);
+    return hasNestedWarning;
+  }
+
   renderListGroup = () => {
     const { instance, index, baseElements } = this.props;
     const baseElementListUsed = this.isBaseElementListUsed(instance);
@@ -351,6 +359,8 @@ export default class ListGroup extends Component {
                 onKeyPress={this.onEnterKey}
               />
               <h4>{instance.parameters[0].value}</h4>
+              {(needsDuplicateNameWarning || this.hasNestedWarnings(instance.childInstances))
+                && <div className="warning"><FontAwesome name="exclamation-circle" /> Has warnings</div>}
             </div>
           }
 
