@@ -8,6 +8,13 @@ const mockTemplates = [
         conjunction: true,
         returnType: 'boolean',
         parameters: []
+      },
+      {
+        id: 'Or',
+        name: 'Or',
+        conjunction: true,
+        returnType: 'boolean',
+        parameters: []
       }
     ]
   }

@@ -59,7 +59,8 @@ export class Builder extends Component {
       } else {
         const operations = result.templates.find(template => template.name === 'Operations');
         const andTemplate = operations.entries.find(entry => entry.name === 'And');
-        this.props.initializeArtifact(andTemplate);
+        const orTemplate = operations.entries.find(entry => entry.name === 'Or');
+        this.props.initializeArtifact(andTemplate, orTemplate);
       }
     });
     this.props.publishArtifact();

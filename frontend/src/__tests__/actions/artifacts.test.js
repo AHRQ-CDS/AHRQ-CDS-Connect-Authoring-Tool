@@ -66,12 +66,13 @@ describe('artifact actions', () => {
   describe('initialize artifact', () => {
     it('should create an action to initialize an artifact', () => {
       const andTemplate = { id: 'And', name: 'And', conjunction: true, returnType: 'boolean', parameters: [] };
+      const orTemplate = { id: 'Or', name: 'Or', conjunction: true, returnType: 'boolean', parameters: [] };
       const expectedAction = {
         type: types.INITIALIZE_ARTIFACT,
         artifact: mockArtifact
       };
 
-      expect(actions.initializeArtifact(andTemplate)).toEqual(expectedAction);
+      expect(actions.initializeArtifact(andTemplate, orTemplate)).toEqual(expectedAction);
     });
   });
 
