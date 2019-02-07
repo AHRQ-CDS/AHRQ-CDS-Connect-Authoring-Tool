@@ -164,6 +164,37 @@ export default [
     cqlTemplate: 'BaseModifier',
     cqlLibraryFunction: 'C3F.ActiveOrConfirmedAllergyIntolerance'
   },
+  // strings
+  {
+    id: 'EqualsString',
+    name: 'Equals',
+    inputTypes: ['string'],
+    returnType: 'boolean',
+    validator: { type: 'require', fields: ['value'], args: [] },
+    values: { value: undefined },
+    cqlTemplate: 'Equals',
+    cqlLibraryFunction: '='
+  },
+  {
+    id: 'EndsWithString',
+    name: 'Ends With',
+    inputTypes: ['string'],
+    returnType: 'boolean',
+    validator: { type: 'require', fields: ['value'], args: [] },
+    values: { value: undefined },
+    cqlTemplate: 'ValueComparison',
+    cqlLibraryFunction: 'EndsWith'
+  },
+  {
+    id: 'StartsWithString',
+    name: 'Starts With',
+    inputTypes: ['string'],
+    returnType: 'boolean',
+    validator: { type: 'require', fields: ['value'], args: [] },
+    values: { value: undefined },
+    cqlTemplate: 'ValueComparison',
+    cqlLibraryFunction: 'StartsWith'
+  },
   // ALL
   // Most Recent
   {

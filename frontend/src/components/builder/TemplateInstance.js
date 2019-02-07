@@ -25,6 +25,7 @@ import ExpressionPhrase from './modifiers/ExpressionPhrase';
 import LabelModifier from './modifiers/LabelModifier';
 import LookBack from './modifiers/LookBack';
 import SelectModifier from './modifiers/SelectModifier';
+import StringModifier from './modifiers/StringModifier';
 import ValueComparison from './modifiers/ValueComparison';
 import ValueComparisonObservation from './modifiers/ValueComparisonObservation';
 import WithUnit from './modifiers/WithUnit';
@@ -237,6 +238,16 @@ export default class TemplateInstance extends Component {
               codeData={this.props.codeData}
               validateCode={this.props.validateCode}
               resetCodeValidation={this.props.resetCodeValidation} />
+          );
+        case 'EqualsString':
+        case 'EndsWithString':
+        case 'StartsWithString':
+          return (
+            <StringModifier
+              key={index}
+              index={index}
+              value={mod.values.value}
+              updateAppliedModifier={this.updateAppliedModifier}/>
           );
         default:
           return (<LabelModifier key={index} name={mod.name} id={mod.id}/>);
