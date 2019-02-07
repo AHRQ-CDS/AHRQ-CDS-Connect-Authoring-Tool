@@ -44,28 +44,24 @@ function parseTree(element, names, baseElementsInUse) {
 
 function parseConjunction(childInstances, names, baseElementsInUse) {
   childInstances.forEach((child) => {
-    // Don't include parameters used in conjunctions since they are just refernces.
-    // type = 'parameter'supports modern parameter references, template = 'EmptyParameter'for old parameter references.
-    if (!(child.type === 'parameter' || child.template === 'EmptyParameter')) {
-      // Add name of child to array
-      const index = names.findIndex(name => name.id === child.uniqueId);
-      if (index === -1) {
-        let name = child.parameters[0].value;
-        if (name === undefined) name = '';
-        names.push({ name, id: child.uniqueId });
-      }
+    // Add name of child to array
+    const index = names.findIndex(name => name.id === child.uniqueId);
+    if (index === -1) {
+      let name = child.parameters[0].value;
+      if (name === undefined) name = '';
+      names.push({ name, id: child.uniqueId });
+    }
 
-      // Add uniqueId of base elements that are currently used
-      const referenceParameter = child.parameters.find(param => param.type === 'reference');
-      if (referenceParameter) {
-        const baseElementAlreadyInUse = baseElementsInUse.find(s => s.baseElementId === referenceParameter.value.id);
-        if (baseElementAlreadyInUse === undefined) {
-          // Add the base element id and begin the list of other instances using the base element
-          baseElementsInUse.push({ baseElementId: referenceParameter.value.id, usedBy: [child.uniqueId] });
-        } else {
-          // If the base element is already used elsewhere, just add to the list of instances using it
-          baseElementAlreadyInUse.usedBy.push(child.uniqueId);
-        }
+    // Add uniqueId of base elements that are currently used
+    const referenceParameter = child.parameters.find(param => param.type === 'reference');
+    if (referenceParameter) {
+      const baseElementAlreadyInUse = baseElementsInUse.find(s => s.baseElementId === referenceParameter.value.id);
+      if (baseElementAlreadyInUse === undefined) {
+        // Add the base element id and begin the list of other instances using the base element
+        baseElementsInUse.push({ baseElementId: referenceParameter.value.id, usedBy: [child.uniqueId] });
+      } else {
+        // If the base element is already used elsewhere, just add to the list of instances using it
+        baseElementAlreadyInUse.usedBy.push(child.uniqueId);
       }
     }
     if (child.type === 'parameter' && child.returnType !== _.toLower(child.returnType)) {
