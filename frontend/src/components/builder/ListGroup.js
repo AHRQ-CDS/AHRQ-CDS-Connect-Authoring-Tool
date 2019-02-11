@@ -225,10 +225,11 @@ export default class ListGroup extends Component {
   isBaseElementListUsed = element => (element.usedBy ? element.usedBy.length !== 0 : false);
 
   hasNestedWarnings = (childInstances) => {
-    const { instanceNames, baseElements, getAllInstancesInAllTrees, validateReturnType } = this.props;
+    const { instanceNames, baseElements, getAllInstancesInAllTrees, instance } = this.props;
+    const isAndOrElement = instance.id === 'And' || instance.id === 'Or';
     const allInstancesInAllTrees = getAllInstancesInAllTrees();
     const hasNestedWarning =
-      hasGroupNestedWarning(childInstances, instanceNames, baseElements, allInstancesInAllTrees, validateReturnType);
+      hasGroupNestedWarning(childInstances, instanceNames, baseElements, allInstancesInAllTrees, isAndOrElement);
     return hasNestedWarning;
   }
 
@@ -359,7 +360,7 @@ export default class ListGroup extends Component {
                 onKeyPress={this.onEnterKey}
               />
               <h4>{instance.parameters[0].value}</h4>
-              {(needsDuplicateNameWarning || this.hasNestedWarnings(instance.childInstances))
+              {(needsDuplicateNameWarning || needsBaseElementWarning || this.hasNestedWarnings(instance.childInstances))
                 && <div className="warning"><FontAwesome name="exclamation-circle" /> Has warnings</div>}
             </div>
           }
