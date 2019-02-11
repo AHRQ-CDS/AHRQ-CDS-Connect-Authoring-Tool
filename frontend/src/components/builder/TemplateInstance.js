@@ -30,7 +30,7 @@ import WithUnit from './modifiers/WithUnit';
 import Qualifier from './modifiers/Qualifier';
 
 import { hasDuplicateName, doesBaseElementUseNeedWarning, doesBaseElementInstanceNeedWarning,
-  validateElement, hasReturnTypeError } from '../../utils/warnings';
+  validateElement, hasGroupNestedWarning } from '../../utils/warnings';
 import { getOriginalBaseElement } from '../../utils/baseElements';
 import { getReturnType, validateModifier, allModifiersValid } from '../../utils/instances';
 
@@ -86,25 +86,14 @@ export default class TemplateInstance extends Component {
   hasWarnings = () => {
     const { templateInstance, instanceNames, baseElements, allInstancesInAllTrees, validateReturnType } = this.props;
 
-    const hasValidationError = validateElement(templateInstance, this.state) !== null;
-    const hasReturnError = hasReturnTypeError(
-      templateInstance.returnType,
-      templateInstance.modifiers,
-      'boolean',
+    // Use function for group warnings with a list of just this element to check for all types of warnings.
+    const hasSomeWarning = hasGroupNestedWarning(
+      [templateInstance],
+      instanceNames,
+      baseElements,
+      allInstancesInAllTrees,
       validateReturnType
     );
-    const hasModifierWarnings = !allModifiersValid(templateInstance.modifiers);
-    const hasNameWarning = hasDuplicateName(templateInstance, instanceNames, baseElements, allInstancesInAllTrees);
-    const hasBaseElementUseChangeWarning = doesBaseElementUseNeedWarning(templateInstance, baseElements);
-    const hasBaseElementInstanceChangeWarning =
-      doesBaseElementInstanceNeedWarning(templateInstance, allInstancesInAllTrees);
-
-    const hasSomeWarning = hasValidationError ||
-      hasReturnError ||
-      hasModifierWarnings ||
-      hasNameWarning ||
-      hasBaseElementUseChangeWarning ||
-      hasBaseElementInstanceChangeWarning;
 
     return hasSomeWarning;
   }
