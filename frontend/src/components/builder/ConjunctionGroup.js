@@ -140,8 +140,9 @@ export default class ConjunctionGroup extends Component {
 
   conjunctionHasDuplicateName = (child) => {
     const elementNameParam = child.parameters.find(param => param.id === 'element_name');
+    const nameValue = elementNameParam.value === undefined ? '' : elementNameParam.value;
     const duplicateNameIndex = this.props.instanceNames.findIndex(name =>
-      name.id !== child.uniqueId && name.name === elementNameParam.value);
+      name.id !== child.uniqueId && name.name === nameValue);
     return duplicateNameIndex !== -1;
   }
 
