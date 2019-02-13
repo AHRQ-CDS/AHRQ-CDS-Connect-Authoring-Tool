@@ -31,7 +31,6 @@ const props = {
   scrollToBaseElement: jest.fn(),
   loginVSACUser: jest.fn(),
   setVSACAuthStatus: jest.fn(),
-  timeLastAuthenticated: new Date(),
   searchVSACByKeyword: jest.fn(),
   isSearchingVSAC: false,
   vsacSearchResults: [],
@@ -81,7 +80,7 @@ describe('vsac controls on generic template instances', () => {
     expect(vsacControls.find('VSACAuthenticationModal')).toHaveLength(0);
 
     // Change authenticated time to test unathenticated controls.
-    component.setProps({ timeLastAuthenticated: new Date(new Date() - 864000000) });
+    component.setProps({ vsacFHIRCredentials: { username: null, password: null } });
     expect(vsacControls.find('.disabled-button')).toHaveLength(0);
     expect(vsacControls.find('ElementModal')).toHaveLength(0);
     expect(vsacControls.find('CodeSelectModal')).toHaveLength(0);

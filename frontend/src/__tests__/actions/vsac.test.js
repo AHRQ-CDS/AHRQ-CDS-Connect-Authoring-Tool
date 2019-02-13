@@ -9,54 +9,6 @@ const middlewares = [thunk];
 const mockStore = configureMockStore(middlewares);
 
 describe('vsac actions', () => {
-  // ----------------------- AUTHENTICATION--------------------------------- //
-  describe('check VSAC authentication', () => {
-    beforeEach(() => { moxios.install(); });
-    afterEach(() => { moxios.uninstall(); });
-
-    it('sends a GET request to check authentication', () => {
-      const store = mockStore({});
-      const date = (new Date()).toISOString();
-
-      moxios.stubs.track({
-        url: '/authoring/api/vsac/checkAuthentication',
-        method: 'GET',
-        response: { status: 200, response: date }
-      });
-
-      const expectedActions = [
-        { type: types.VSAC_AUTHENTICATION_REQUEST },
-        {
-          type: types.VSAC_AUTHENTICATION_RECEIVED,
-          timeLastAuthenticated: new Date(date)
-        }
-      ];
-
-      return store.dispatch(actions.checkVSACAuthentication()).then(() => {
-        expect(store.getActions()).toEqual(expectedActions);
-      });
-    });
-
-    it('sends a VSAC_AUTHENTICATION_RECEIVED action with a null date if the request fails', () => {
-      const store = mockStore({});
-
-      moxios.stubs.track({
-        url: /\/authoring\/api\/vsac\/checkAuthentication.*/,
-        method: 'GET',
-        response: { status: 401, response: {} }
-      });
-
-      const expectedActions = [
-        { type: types.VSAC_AUTHENTICATION_REQUEST },
-        { type: types.VSAC_AUTHENTICATION_RECEIVED, timeLastAuthenticated: new Date(null) }
-      ];
-
-      return store.dispatch(actions.checkVSACAuthentication()).then(() => {
-        expect(store.getActions()).toEqual(expectedActions);
-      });
-    });
-  });
-
   // ----------------------- LOGIN ----------------------------------------- //
   describe('logging in', () => {
     beforeEach(() => { moxios.install(); });
@@ -68,18 +20,14 @@ describe('vsac actions', () => {
       const password = 'myPw';
 
       moxios.stubs.track({
-        url: '/authoring/api/vsac/login',
+        url: '/authoring/api/fhir/login',
         method: 'POST',
         response: { status: 200, response: {} }
       });
 
-      const date = new Date();
-      date.setSeconds(date.getSeconds() + (Math.round(date.getMilliseconds() / 1000)));
-      date.setMilliseconds(0);
-
       const expectedActions = [
         { type: types.VSAC_LOGIN_REQUEST },
-        { type: types.VSAC_LOGIN_SUCCESS, timeLastAuthenticated: date, username: 'myUserName', password: 'myPw' }
+        { type: types.VSAC_LOGIN_SUCCESS, username: 'myUserName', password: 'myPw' }
       ];
 
       return store.dispatch(actions.loginVSACUser(username, password)).then(() => {
@@ -93,7 +41,7 @@ describe('vsac actions', () => {
       const password = 'myPw';
 
       moxios.stubs.track({
-        url: '/authoring/api/vsac/login',
+        url: '/authoring/api/fhir/login',
         method: 'POST',
         response: { status: 401, statusText: 'Unauthorized' }
       });

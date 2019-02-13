@@ -17,7 +17,6 @@ const props = {
   setVSACAuthStatus: jest.fn(),
   vsacStatus: '',
   vsacStatusText: '',
-  timeLastAuthenticated: new Date(),
   searchVSACByKeyword: jest.fn(),
   isSearchingVSAC: false,
   vsacSearchResults: [],
@@ -108,8 +107,8 @@ describe('the select element field', () => {
     expect(component.state().selectedElement).toBeNull();
   });
 
-  it('selects a generic type with VSAC auth controls based on timeLastAuthenticated', () => {
-    props.timeLastAuthenticated = new Date() - 30000000;
+  it('selects a generic type with VSAC auth controls based on if a username has been set', () => {
+    props.vsacFHIRCredentials = { username: null };
     const unauthenticatedComponent = fullRenderComponent(
       ElementSelect,
       { ...props }
@@ -124,7 +123,7 @@ describe('the select element field', () => {
     obsResult.simulate('mouseDown');
     unauthObsResult.simulate('mouseDown');
 
-    // Choosing VSAC auth element with recent timeLastAuthenticated has 2 VSAC control buttons.
+    // Choosing VSAC auth element with username stored has 2 VSAC control buttons.
     const genericObservationOption = genericElementTypes[7];
     genericObservationOption.disabled = false;
     expect(component.state().selectedElement).toEqual(genericObservationOption);
@@ -135,7 +134,7 @@ describe('the select element field', () => {
     expect(component.find('.vsac-authenticate button').at(0).text()).toEqual(' VSAC Authenticated');
     expect(component.find('.vsac-authenticate button').at(1).text()).toEqual(' Add Value Set');
 
-    // Choosing VSAC auth element with recent timeLastAuthenticated has 1 VSAC control buttons.
+    // Choosing VSAC auth element with no username stored has 1 VSAC control buttons.
     expect(unauthenticatedComponent.state().selectedElement).toEqual(genericObservationOption);
     expect(unauthenticatedComponent.state().selectedElement.vsacAuthRequired).toEqual(true);
     expect(unauthenticatedComponent.find('.element-select__element-field').length).toEqual(1);

@@ -44,7 +44,6 @@ const props = {
   downloadedArtifact: { elmErrors: [] },
   loginVSACUser: jest.fn(),
   setVSACAuthStatus: jest.fn(),
-  timeLastAuthenticated: new Date(),
   searchVSACByKeyword: jest.fn(),
   isSearchingVSAC: false,
   vsacSearchResults: [],
