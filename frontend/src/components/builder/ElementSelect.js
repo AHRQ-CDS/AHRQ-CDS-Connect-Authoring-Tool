@@ -189,8 +189,7 @@ export default class ElementSelect extends Component {
   }
 
   renderVSACLogin = () => {
-    // If last time authenticated was less than 7.5 hours ago, force user to log in again.
-    if (this.props.timeLastAuthenticated < new Date() - 27000000 || this.props.vsacFHIRCredentials.username == null) {
+    if (this.props.vsacFHIRCredentials.username == null) {
       return (
         <div className="vsac-authenticate">
           <VSACAuthenticationModal
@@ -346,7 +345,6 @@ ElementSelect.propTypes = {
   setVSACAuthStatus: PropTypes.func.isRequired,
   vsacStatus: PropTypes.string,
   vsacStatusText: PropTypes.string,
-  timeLastAuthenticated: PropTypes.instanceOf(Date),
   searchVSACByKeyword: PropTypes.func.isRequired,
   isSearchingVSAC: PropTypes.bool.isRequired,
   vsacSearchResults: PropTypes.array.isRequired,

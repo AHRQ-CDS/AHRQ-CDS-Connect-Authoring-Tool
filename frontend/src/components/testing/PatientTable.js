@@ -274,7 +274,7 @@ export default class PatientTable extends Component {
 
   renderVSACLogin = () => {
     // If last time authenticated was less than 7.5 hours ago, force user to log in again.
-    if (this.props.timeLastAuthenticated < new Date() - 27000000 || this.props.vsacFHIRCredentials.username == null) {
+    if (this.props.vsacFHIRCredentials.username == null) {
       return (
         <div className="vsac-authenticate">
           <VSACAuthenticationModal
@@ -331,7 +331,6 @@ PatientTable.propTypes = {
   artifacts: PropTypes.arrayOf(artifactProps).isRequired,
   deletePatient: PropTypes.func.isRequired,
   executeCQLArtifact: PropTypes.func.isRequired,
-  timeLastAuthenticated: PropTypes.instanceOf(Date),
   vsacFHIRCredentials: PropTypes.object,
   loginVSACUser: PropTypes.func.isRequired,
   setVSACAuthStatus: PropTypes.func.isRequired,
