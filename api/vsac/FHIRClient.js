@@ -114,8 +114,23 @@ function getCode(code, system, username, password) {
   })
 }
 
+function getOneValueSet(username, password) {
+  const options = {
+    method: 'GET',
+    url: `${VSAC_FHIR_ENDPOINT}/ValueSet?_count=1&_format=json`,
+    headers: {
+      'Accept': 'application/json',
+      'Authorization': `Basic ${new Buffer(`${username}:${password}`).toString('base64')}`
+    }
+  };
+  return rpn(options).then(() => {
+    return;
+  });
+}
+
 module.exports = {
   getValueSet,
   searchForValueSets,
-  getCode
+  getCode,
+  getOneValueSet
 }

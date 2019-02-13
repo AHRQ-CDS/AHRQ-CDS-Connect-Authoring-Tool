@@ -77,7 +77,12 @@ function loginFailure(error) {
 
 function sendLoginRequest(username, password) {
   return new Promise((resolve, reject) => {
-    axios.post(`${API_BASE}/vsac/login`, { username, password })
+    const auth = {
+      username,
+      password
+    };
+
+    axios.post(`${API_BASE}/fhir/login`, {}, { auth })
       .then(() => resolve())
       .catch(error => reject(error));
   });

@@ -1,6 +1,20 @@
 const FHIRClient = require('../vsac/FHIRClient');
 var auth = require('basic-auth')
 
+function login(req, res) {
+  const user = auth(req);
+  if (user == null) {
+    return res.sendStatus(401);
+  }
+  // For basic auth, try to get one value set with username/password. Success means correct credentials.
+  FHIRClient.getOneValueSet(user.name, user.pass)
+    .then(() => {
+      res.sendStatus(200);
+    })
+    .catch((error) => {
+      res.sendStatus(error.statusCode);
+    });
+}
 
 function getValueSet(req, res) {
   const user = auth(req);
@@ -47,6 +61,7 @@ function getCode(req, res) {
 }
 
 module.exports = {
+  login,
   getValueSet,
   searchForValueSets,
   getCode

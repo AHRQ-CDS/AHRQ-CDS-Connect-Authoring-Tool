@@ -3,6 +3,9 @@ const fhir = require('../handlers/fhirHandler');
 
 const FHIRRouter = express.Router();
 
+FHIRRouter.route('/login')
+  .post(fhir.login);
+
 FHIRRouter.route('/search')
   .get(fhir.searchForValueSets);
 
