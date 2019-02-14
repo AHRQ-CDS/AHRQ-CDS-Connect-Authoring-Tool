@@ -123,8 +123,8 @@ function getOneValueSet(username, password) {
       'Authorization': `Basic ${new Buffer(`${username}:${password}`).toString('base64')}`
     }
   };
-  return rpn(options).then(() => {
-    return;
+  return rpn(options).then((res) => {
+    return res;
   });
 }
 

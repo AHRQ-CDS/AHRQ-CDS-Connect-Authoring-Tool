@@ -117,4 +117,26 @@ describe('vsac/FHIRClient', () =>{
       return expect(result).to.eventually.eql({_total: 67, count: 50, page: 1, results: expResults});
     })
   });
+
+  describe('#getOneValueSet', () => {
+    it('should get a list of one valueset with good credentials', () => {
+      const [username, password] = ['test-user', 'test-pass'];
+      nock('https://cts.nlm.nih.gov')
+        .get('/fhir/ValueSet?_count=1&_format=json')
+        .reply(200, '');
+      const result = client.getOneValueSet(username, password);
+      // No data manipulation happens in this function. The request should succeed and return the result.
+      return expect(result).to.eventually.be.fulfilled;
+    });
+
+    it('should handle bad authentication and send 401 back', () => {
+      const [username, password] = ['test-user', 'test-wrong-pass'];
+      nock('https://cts.nlm.nih.gov')
+        .get('/fhir/ValueSet?_count=1&_format=json')
+        .reply(401, '');
+      const result = client.getOneValueSet(username, password);
+      // No data manipulation happens in this function. The request should success and return the result.
+      return expect(result).to.be.rejectedWith(/401/);
+    });
+  });
 });
