@@ -1,3 +1,6 @@
+import Validators from './validators';
+import { getReturnType, allModifiersValid } from './instances';
+
 export function doesBaseElementInstanceNeedWarning(instance, allInstancesInAllTrees) {
   const isBaseElement = instance.usedBy;
   if (isBaseElement) {
@@ -77,4 +80,74 @@ export function hasDuplicateName(templateInstance, instanceNames, baseElements, 
     return isDuplicate;
   });
   return duplicateNameIndex !== -1;
+}
+
+export function validateElement(instance, params) {
+  if (instance.validator) {
+    const validator = Validators[instance.validator.type];
+    const fields = instance.validator.fields;
+    const args = instance.validator.args;
+    const values = fields.map(f => params[f]);
+    const names = fields.map(f => instance.parameters.find(el => el.id === f).name);
+    if (!validator.check(values, args)) {
+      return validator.warning(names, args);
+    }
+  }
+  return null;
+}
+
+export function hasReturnTypeError(startingReturnType, modifiers, validReturnType, validateReturnType) {
+  const currentReturnType = getReturnType(startingReturnType, modifiers);
+  return currentReturnType !== validReturnType && validateReturnType !== false;
+}
+
+// Nested warning is needed if a group has a duplicate name
+// and if there is any type of warning on any child, including other groups.
+export function hasGroupNestedWarning(
+  childInstances,
+  instanceNames,
+  baseElements,
+  allInstancesInAllTrees,
+  validateReturnType
+) {
+  let hasNestedWarning = false;
+  childInstances.forEach((child) => {
+    let warning = false;
+    if (child.conjunction) {
+      warning = hasGroupNestedWarning(
+        child.childInstances,
+        instanceNames,
+        baseElements,
+        allInstancesInAllTrees,
+        validateReturnType
+      );
+      if (!warning) {
+        warning = hasDuplicateName(child, instanceNames, baseElements, allInstancesInAllTrees);
+      }
+    } else {
+      const params = {};
+      child.parameters.forEach((param) => {
+        params[param.id] = param.value;
+      });
+
+      const hasValidateElementWarning = validateElement(child, params) !== null;
+      const hasReturnTypeWarning =
+        hasReturnTypeError(child.returnType, child.modifiers, 'boolean', validateReturnType);
+      const hasModifierWarning = !allModifiersValid(child.modifiers);
+      const hasDuplicateNameWarning = hasDuplicateName(child, instanceNames, baseElements, allInstancesInAllTrees);
+      const hasBaseElementUseWarning = doesBaseElementUseNeedWarning(child, baseElements);
+      const hasBaseElementInstanceWarning = doesBaseElementInstanceNeedWarning(child, allInstancesInAllTrees);
+
+      warning = hasValidateElementWarning
+        || hasReturnTypeWarning
+        || hasModifierWarning
+        || hasDuplicateNameWarning
+        || hasBaseElementUseWarning
+        || hasBaseElementInstanceWarning;
+    }
+    if (warning) {
+      hasNestedWarning = true;
+    }
+  });
+  return hasNestedWarning;
 }

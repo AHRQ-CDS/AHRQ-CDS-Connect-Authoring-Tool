@@ -5,6 +5,8 @@ import FontAwesome from 'react-fontawesome';
 import ConjunctionGroup from './ConjunctionGroup';
 import ExpressionPhrase from './modifiers/ExpressionPhrase';
 
+import { hasGroupNestedWarning } from '../../utils/warnings';
+
 export default class Subpopulation extends Component {
   constructor(props) {
     super(props);
@@ -42,6 +44,17 @@ export default class Subpopulation extends Component {
       if (this.state.isExpanded) this.collapse();
       else this.expand();
     }
+  }
+
+  subpopulationHasOneChildWarning = () =>
+    this.props.subpopulation.childInstances && this.props.subpopulation.childInstances.length < 1;
+
+  hasNestedWarnings = (childInstances) => {
+    const { instanceNames, baseElements, getAllInstancesInAllTrees, validateReturnType } = this.props;
+    const allInstancesInAllTrees = getAllInstancesInAllTrees();
+    const hasNestedWarning =
+      hasGroupNestedWarning(childInstances, instanceNames, baseElements, allInstancesInAllTrees, validateReturnType);
+    return hasNestedWarning;
   }
 
   render() {
@@ -82,6 +95,10 @@ export default class Subpopulation extends Component {
                   onClick={this.state.isExpanded ? this.collapse : this.expand}
                   onKeyPress={this.onEnterKey} />
                 <h4>{this.props.subpopulation.subpopulationName}</h4>
+                {(duplicateNameIndex !== -1
+                  || this.subpopulationHasOneChildWarning()
+                  || this.hasNestedWarnings(this.props.subpopulation.childInstances))
+                  && <div className="warning"><FontAwesome name="exclamation-circle" /> Has warnings</div>}
               </div>
             }
 
@@ -108,7 +125,7 @@ export default class Subpopulation extends Component {
   renderContents() {
     return (
       <div className="card-element__body">
-              {this.props.subpopulation.childInstances && this.props.subpopulation.childInstances.length < 1 &&
+              {this.subpopulationHasOneChildWarning() &&
                 <div className='warning'>This subpopulation needs at least one element</div>
               }
               <ExpressionPhrase
