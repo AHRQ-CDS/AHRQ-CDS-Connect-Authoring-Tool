@@ -690,7 +690,7 @@ export default class TemplateInstance extends Component {
             {this.renderCodeInfo()}
           </div>
         }
-        { referenceParameter &&
+        { (referenceParameter && referenceParameter.id === 'baseElementReference') &&
           <div className="vsac-info">
             {this.renderBaseElementInfo(referenceParameter)}
           </div>
@@ -738,7 +738,7 @@ export default class TemplateInstance extends Component {
 
       const referenceParameter = templateInstance.parameters.find(param => param.type === 'reference');
 
-      if (referenceParameter) {
+      if (referenceParameter && (referenceParameter.id === 'baseElementReference')) {
         // Element type to display in header will be the reference type for Base Elements.
         const originalBaseElement = getOriginalBaseElement(templateInstance, baseElements);
         elementType = originalBaseElement.name;

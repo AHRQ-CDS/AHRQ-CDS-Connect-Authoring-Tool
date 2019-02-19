@@ -155,7 +155,14 @@ export default class ElementSelect extends Component {
         extends: 'Base',
         parameters: [
           { id: 'element_name', type: 'string', name: 'Element Name', value: param.name },
-          { id: 'default', type: 'boolean', name: 'Default', value: param.value }
+          { id: 'default', type: 'boolean', name: 'Default', value: param.value },
+          {
+            id: 'parameterReference',
+            type: 'reference',
+            name: 'reference',
+            value: { id: param.uniqueId },
+            static: true
+          }
         ]
       }));
 
