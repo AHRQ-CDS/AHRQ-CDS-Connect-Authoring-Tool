@@ -12,7 +12,12 @@ function login(req, res) {
       res.sendStatus(200);
     })
     .catch((error) => {
-      res.sendStatus(error.statusCode);
+      // If credentials are correct but VS is not found, can still be considered logged in.
+      if (error.statusCode === 404) {
+        res.sendStatus(200);
+      } else {
+        res.sendStatus(error.statusCode);
+      }
     });
 }
 
