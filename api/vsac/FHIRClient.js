@@ -115,9 +115,10 @@ function getCode(code, system, username, password) {
 }
 
 function getOneValueSet(username, password) {
+  const oneCodeVSOID = '2.16.840.1.113762.1.4.1034.65';
   const options = {
     method: 'GET',
-    url: `${VSAC_FHIR_ENDPOINT}/ValueSet?_count=1&_format=json`,
+    url: `${VSAC_FHIR_ENDPOINT}/ValueSet/${oneCodeVSOID}`,
     headers: {
       'Accept': 'application/json',
       'Authorization': `Basic ${new Buffer(`${username}:${password}`).toString('base64')}`

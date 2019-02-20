@@ -20,10 +20,6 @@ function requestLogin() {
 }
 
 function loginSuccess(username, password) {
-  // Round date to nearest second.
-  const date = new Date();
-  date.setSeconds(date.getSeconds() + (Math.round(date.getMilliseconds() / 1000)));
-  date.setMilliseconds(0);
   return {
     type: VSAC_LOGIN_SUCCESS,
     username,
