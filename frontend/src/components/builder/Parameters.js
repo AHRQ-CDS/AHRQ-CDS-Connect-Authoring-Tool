@@ -24,6 +24,9 @@ export default class Parameters extends Component {
     this.props.updateParameters(parameters);
   }
 
+  isParameterUsed = (index) => (
+    this.props.parameters[index].usedBy ? this.props.parameters[index].usedBy.length !== 0 : false);
+
   render() {
     return (
       <div className="parameters">
@@ -35,6 +38,7 @@ export default class Parameters extends Component {
             id={parameter.uniqueId}
             type={parameter.type}
             value={parameter.value}
+            usedBy={parameter.usedBy}
             instanceNames={this.props.instanceNames}
             updateInstanceOfParameter={this.updateInstanceOfParameter}
             deleteParameter={this.deleteParameter}

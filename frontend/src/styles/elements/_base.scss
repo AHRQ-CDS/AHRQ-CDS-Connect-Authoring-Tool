@@ -146,7 +146,11 @@ h6 {
   font-size: 0.8em;
   background-color: lighten($red, 45%);
   padding: 10px;
+<<<<<<< HEAD
   margin-bottom: 10px;
+=======
+  margin: 10px;
+>>>>>>> Guard deletion and illegal update of parameter when in use
 }
 
 .notification {
@@ -154,6 +158,7 @@ h6 {
   font-size: 0.8em;
   background-color: lighten($blue-light, 35%);
   padding: 10px;
+  margin: 10px;
 
   span.fa {
     margin-right: 5px;

@@ -19,11 +19,12 @@ export default class StringParameter extends Component {
             <div className="label">{name}:</div>
 
             <input
-              className="input"
               id={formId}
               type="text"
               name={id}
               value={value || ''}
+              disabled={this.props.disabled}
+              className={this.props.disabled ? 'input disabled' : 'input'}
               aria-label={name}
               onKeyPress={(event) => {
                 if (event.which === 34) { // Quotation mark (")
@@ -45,5 +46,6 @@ StringParameter.propTypes = {
   id: PropTypes.string.isRequired,
   name: PropTypes.string.isRequired,
   value: PropTypes.string,
+  disabled: PropTypes.bool,
   updateInstance: PropTypes.func.isRequired
 };

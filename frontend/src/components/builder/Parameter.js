@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import Select from 'react-select';
 import FontAwesome from 'react-fontawesome';
+import { UncontrolledTooltip } from 'reactstrap';
 import _ from 'lodash';
 
 import StringParameter from './parameters/types/StringParameter';
@@ -33,6 +34,13 @@ export default class Parameter extends Component {
 
   updateParameter = (object) => {
     this.props.updateInstanceOfParameter(object, this.props.index);
+  }
+
+  deleteParameter = (index) => {
+    const parameterUsed = this.props.usedBy ? this.props.usedBy.length !== 0 : false;
+    if (!parameterUsed) {
+      this.props.deleteParameter(index);
+    }
   }
 
   renderParameter() {
@@ -95,7 +103,7 @@ export default class Parameter extends Component {
   }
 
   render() {
-    const { index, name, id, type, value, deleteParameter } = this.props;
+    const { index, name, id, type, value } = this.props;
     const typeOptions = [
       { value: 'boolean', label: 'Boolean' },
       { value: 'system_code', label: 'Code' },
@@ -113,6 +121,8 @@ export default class Parameter extends Component {
     ];
 
     const duplicateNameIndex = this.props.instanceNames.findIndex(n => n.id !== id && n.name === name);
+    const parameterUsed = this.props.usedBy ? this.props.usedBy.length !== 0 : false;
+    const disabledClass = parameterUsed ? 'disabled' : '';
 
     return (
       <div className="parameter card-group card-group__top">
@@ -122,6 +132,7 @@ export default class Parameter extends Component {
               id={`param-name-${index}`}
               name={'Parameter Name'}
               value={name}
+              disabled={parameterUsed}
               updateInstance={e => (this.updateParameter({
                 name: e[`param-name-${index}`],
                 uniqueId: this.props.id,
@@ -129,16 +140,29 @@ export default class Parameter extends Component {
                 value
               }))}
             />
-            {duplicateNameIndex !== -1
-              && <div className="warning">Warning: Name already in use. Choose another name.</div>}
 
             <button
-              aria-label="Delete Parameter"
-              className="button transparent-button delete-button"
-              onClick={() => { deleteParameter(index); }}>
-              <FontAwesome fixedWidth name='times' />
+              id={`deletebutton-${this.props.id}`}
+              onClick={() => { this.deleteParameter(index); }}
+              className={`button transparent-button delete-button ${disabledClass}`}
+              aria-label="Delete Parameter">
+              <FontAwesome fixedWidth name='close' />
             </button>
+            {parameterUsed &&
+              <UncontrolledTooltip
+                target={`deletebutton-${this.props.id}`} placement="left">
+                  To delete this parameter, remove all references to it.
+              </UncontrolledTooltip> }
           </div>
+
+          {duplicateNameIndex !== -1
+              && <div className="warning">Warning: Name already in use. Choose another name.</div>}
+
+          {parameterUsed
+            && <div className="notification">
+                  <FontAwesome name="exclamation-circle" />
+                  Parameter name and type can't be changed while it is being referenced.
+                </div>}
 
           <div className="card-element__body">
             <div className="parameter__item row">
@@ -153,6 +177,7 @@ export default class Parameter extends Component {
                   clearable={false}
                   options={typeOptions}
                   value={type}
+                  disabled={parameterUsed}
                   onChange={e => this.updateParameter({
                     name,
                     uniqueId: this.props.id,
@@ -176,6 +201,7 @@ Parameter.propTypes = {
   name: PropTypes.string,
   type: PropTypes.string,
   id: PropTypes.string,
+  usedBy: PropTypes.array,
   updateInstanceOfParameter: PropTypes.func.isRequired,
   deleteParameter: PropTypes.func.isRequired,
   instanceNames: PropTypes.array.isRequired,
