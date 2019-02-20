@@ -24,9 +24,6 @@ export default class Parameters extends Component {
     this.props.updateParameters(parameters);
   }
 
-  isParameterUsed = (index) => (
-    this.props.parameters[index].usedBy ? this.props.parameters[index].usedBy.length !== 0 : false);
-
   render() {
     return (
       <div className="parameters">
