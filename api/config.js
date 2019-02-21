@@ -147,11 +147,11 @@ const config = convict({
       env: 'FORESEE_ACTIVE',
     }
   },
-  valueSetService: {
-    doc: 'Value Set Service Endpoint URL',
+  terminologyService: {
+    doc: 'Terminology Service Endpoint URL',
     format: 'String',
     default: 'https://cts.nlm.nih.gov/fhir',
-    env: 'VSAC_ENDPOINT',
+    env: 'TERMINOLOGY_ENDPOINT',
   },
 });
 

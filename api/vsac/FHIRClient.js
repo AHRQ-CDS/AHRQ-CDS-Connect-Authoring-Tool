@@ -3,7 +3,7 @@ const _ = require('lodash');
 const config = require('../config');
 
 
-const VSAC_FHIR_ENDPOINT = config.get('valueSetService');
+const VSAC_FHIR_ENDPOINT = config.get('terminologyService');
 
 
 /**
