@@ -1,8 +1,9 @@
 const rpn = require('request-promise-native');
 const _ = require('lodash');
+const config = require('../config');
 
 
-const VSAC_FHIR_ENDPOINT = 'https://cts.nlm.nih.gov/fhir';
+const VSAC_FHIR_ENDPOINT = config.get('valueSetService');
 
 
 /**

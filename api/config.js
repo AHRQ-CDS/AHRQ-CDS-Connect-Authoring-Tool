@@ -150,7 +150,7 @@ const config = convict({
   valueSetService: {
     doc: 'Value Set Service Endpoint URL',
     format: 'String',
-    default: 'https://vsac.nlm.nih.gov/vsac',
+    default: 'https://cts.nlm.nih.gov/fhir',
     env: 'VSAC_ENDPOINT',
   },
 });
