@@ -122,7 +122,7 @@ describe('vsac/FHIRClient', () =>{
     it('should get a list of one valueset with good credentials', () => {
       const [username, password] = ['test-user', 'test-pass'];
       nock('https://cts.nlm.nih.gov')
-        .get('/fhir/ValueSet?_count=1&_format=json')
+        .get('/fhir/ValueSet/2.16.840.1.113762.1.4.1034.65')
         .reply(200, '');
       const result = client.getOneValueSet(username, password);
       // No data manipulation happens in this function. The request should succeed and return the result.
@@ -132,7 +132,7 @@ describe('vsac/FHIRClient', () =>{
     it('should handle bad authentication and send 401 back', () => {
       const [username, password] = ['test-user', 'test-wrong-pass'];
       nock('https://cts.nlm.nih.gov')
-        .get('/fhir/ValueSet?_count=1&_format=json')
+        .get('/fhir/ValueSet/2.16.840.1.113762.1.4.1034.65')
         .reply(401, '');
       const result = client.getOneValueSet(username, password);
       // No data manipulation happens in this function. The request should success and return the result.
