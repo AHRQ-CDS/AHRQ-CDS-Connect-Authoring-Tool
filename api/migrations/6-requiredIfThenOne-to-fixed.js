@@ -11,7 +11,7 @@
  */
 'use strict';
 
-module.exports.id = "agerange-to-agerangevalidatorfixed";
+module.exports.id = "requiredIfThenOne-to-fixed";
 
 function parseTree(element) {
   let children = element.childInstances ? element.childInstances : [];
@@ -32,18 +32,20 @@ function parseElement(element) {
     element.validator.args = [];
   }
 
-  element.modifiers.forEach((modifier) => {
-    if (modifier.name === 'Qualifier') {
-      modifier.validator.fields = ['qualifier', 'valueSet', 'code'];
-      modifier.validator.args = [];
-    }
-  });
+  if (element.modifiers) {
+    element.modifiers.forEach((modifier) => {
+      if (modifier.name === 'Qualifier') {
+        modifier.validator.fields = ['qualifier', 'valueSet', 'code'];
+        modifier.validator.args = [];
+      }
+    });
+  }
 
   return element;
 }
 
 module.exports.up = function (done) {
-  this.log('Migrating: agerange-to-agerangevalidatorfixed');
+  this.log('Migrating: requiredIfThenOne-to-fixed');
   var coll = this.db.collection('artifacts');
   // NOTE: We can't use the special $[] operator since we're not yet on Mongo 3.6.
   // Instead, we need to iterate the documents and fields using forEach.
