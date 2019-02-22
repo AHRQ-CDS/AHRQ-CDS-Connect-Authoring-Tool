@@ -1,12 +1,12 @@
 /**
  * Migrates artifacts that have requiredIfThenOne validators, applying the following changes:
- * - changes validator for age range to {
- *  type: 'requiredIfThenOne',
+ * - changes validator fields and args for age range to {
  *  fields: ['unit_of_time', 'min_age', 'max_age'],
+ *  args: []
  * }
- * - changes validator for qualifier to {
- *  type: 'requiredIfThenOne',
+ * - changes validator fields and args for qualifier to {
  *  fields: ['qualifier', 'valueSet', 'code'],
+ *  args: []
  * }
  */
 'use strict';
@@ -28,22 +28,14 @@ function parseTree(element) {
 
 function parseElement(element) {
   if (element.name === 'Age Range') {
-    const validator = {
-      type: 'requiredIfThenOne',
-      fields: ['unit_of_time', 'min_age', 'max_age']
-    };
-
-    element.validator = validator;
+    element.validator.fields = ['unit_of_time', 'min_age', 'max_age'];
+    element.validator.args = [];
   }
 
   element.modifiers.forEach((modifier) => {
     if (modifier.name === 'Qualifier') {
-      const validator = {
-        type: 'requiredIfThenOne',
-        fields: ['qualifier', 'valueSet', 'code']
-      };
-
-      modifier.validator = validator;
+      modifier.validator.fields = ['qualifier', 'valueSet', 'code'];
+      modifier.validator.args = [];
     }
   });
 
