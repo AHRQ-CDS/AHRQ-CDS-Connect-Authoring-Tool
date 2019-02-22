@@ -225,7 +225,6 @@ export default class TemplateInstance extends Component {
               getVSDetails={this.props.getVSDetails}
               isRetrievingDetails={this.props.isRetrievingDetails}
               vsacDetailsCodes={this.props.vsacDetailsCodes}
-              timeLastAuthenticated={this.props.timeLastAuthenticated}
               loginVSACUser={this.props.loginVSACUser}
               setVSACAuthStatus={this.props.setVSACAuthStatus}
               vsacStatus={this.props.vsacStatus}
@@ -520,7 +519,7 @@ export default class TemplateInstance extends Component {
 
   renderVSACOptions = () => {
     // If last time authenticated was less than 7.5 hours ago, force user to log in again.
-    if (this.props.timeLastAuthenticated < new Date() - 27000000 || this.props.vsacFHIRCredentials.username == null) {
+    if (this.props.vsacFHIRCredentials.username == null) {
       return (
         <div id="vsac-controls">
           <VSACAuthenticationModal
@@ -854,7 +853,6 @@ TemplateInstance.propTypes = {
   setVSACAuthStatus: PropTypes.func.isRequired,
   vsacStatus: PropTypes.string,
   vsacStatusText: PropTypes.string,
-  timeLastAuthenticated: PropTypes.instanceOf(Date),
   searchVSACByKeyword: PropTypes.func.isRequired,
   isSearchingVSAC: PropTypes.bool.isRequired,
   vsacSearchResults: PropTypes.array.isRequired,

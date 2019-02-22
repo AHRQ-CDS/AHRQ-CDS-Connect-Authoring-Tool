@@ -210,7 +210,6 @@ class Testing extends Component {
           artifacts={this.props.artifacts}
           deletePatient={this.props.deletePatient}
           executeCQLArtifact={this.props.executeCQLArtifact}
-          timeLastAuthenticated={this.props.timeLastAuthenticated}
           vsacFHIRCredentials={this.props.vsacFHIRCredentials}
           loginVSACUser={this.props.loginVSACUser}
           setVSACAuthStatus={this.props.setVSACAuthStatus}
@@ -286,7 +285,6 @@ Testing.propTypes = {
   deletePatient: PropTypes.func.isRequired,
   loadArtifacts: PropTypes.func.isRequired,
   executeCQLArtifact: PropTypes.func.isRequired,
-  timeLastAuthenticated: PropTypes.instanceOf(Date),
   vsacFHIRCredentials: PropTypes.object,
   loginVSACUser: PropTypes.func.isRequired,
   setVSACAuthStatus: PropTypes.func.isRequired,
@@ -324,7 +322,6 @@ function mapStateToProps(state) {
     vsacStatus: state.vsac.authStatus,
     vsacStatusText: state.vsac.authStatusText,
     vsacIsAuthenticating: state.vsac.isAuthenticating,
-    timeLastAuthenticated: state.vsac.timeLastAuthenticated,
     vsacFHIRCredentials: { username: state.vsac.username, password: state.vsac.password }
   };
 }

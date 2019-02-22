@@ -70,8 +70,7 @@ export default class Qualifier extends Component {
     const hasSelectedVS = qualifierMod.values.valueSet != null;
     const hasSelectedCode = qualifierMod.values.code != null;
 
-    if ((this.props.timeLastAuthenticated < new Date() - 27000000 || this.props.vsacFHIRCredentials.username == null)
-         && !hasSelectedCode && !hasSelectedVS) {
+    if (this.props.vsacFHIRCredentials.username == null && !hasSelectedCode && !hasSelectedVS) {
       return (
         <div id="vsac-controls">
           <VSACAuthenticationModal

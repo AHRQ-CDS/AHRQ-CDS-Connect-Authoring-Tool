@@ -1,8 +1,9 @@
 const rpn = require('request-promise-native');
 const _ = require('lodash');
+const config = require('../config');
 
 
-const VSAC_FHIR_ENDPOINT = 'https://cts.nlm.nih.gov/fhir';
+const VSAC_FHIR_ENDPOINT = config.get('terminologyService');
 
 
 /**
@@ -114,8 +115,42 @@ function getCode(code, system, username, password) {
   })
 }
 
+function getOneValueSet(username, password) {
+  const oneCodeVSOID = '2.16.840.1.113762.1.4.1034.65';
+  const options = {
+    method: 'GET',
+    url: `${VSAC_FHIR_ENDPOINT}/ValueSet/${oneCodeVSOID}`,
+    headers: {
+      'Accept': 'application/json',
+      'Authorization': `Basic ${new Buffer(`${username}:${password}`).toString('base64')}`
+    }
+  };
+  return rpn(options).then((res) => {
+    return res;
+  });
+}
+
+function getAuthType() {
+  const options = {
+    method: 'GET',
+    url: `${VSAC_FHIR_ENDPOINT}/metadata?_format=json`
+  };
+  return rpn(options).then((res) => {
+    const restArray = _.get(JSON.parse(res), 'rest', []);
+    const securityEntry = _.find(restArray, 'security');
+    const securityService = _.get(securityEntry, 'security.service', []);
+    const securityCodeableConceptEntry = _.find(securityService, 'coding');
+    const coding = _.get(securityCodeableConceptEntry, 'coding', []);
+    const codeEntry = _.find(coding, 'code');
+    const type = _.get(codeEntry, 'code', 'Unknown');
+    return type;
+  });
+}
+
 module.exports = {
   getValueSet,
   searchForValueSets,
-  getCode
+  getCode,
+  getOneValueSet,
+  getAuthType
 }

@@ -330,7 +330,7 @@ export class Builder extends Component {
   renderConjunctionGroup = (treeName) => {
     const {
       artifact, templates, valueSets,
-      vsacStatus, vsacStatusText, timeLastAuthenticated,
+      vsacStatus, vsacStatusText,
       isRetrievingDetails, vsacDetailsCodes, conversionFunctions,
       isValidatingCode, isValidCode, codeData
     } = this.props;
@@ -360,7 +360,6 @@ export class Builder extends Component {
           setVSACAuthStatus={this.props.setVSACAuthStatus}
           vsacStatus={vsacStatus}
           vsacStatusText={vsacStatusText}
-          timeLastAuthenticated={timeLastAuthenticated}
           searchVSACByKeyword={this.props.searchVSACByKeyword}
           isSearchingVSAC={this.props.isSearchingVSAC}
           vsacSearchResults={this.props.vsacSearchResults}
@@ -496,7 +495,6 @@ export class Builder extends Component {
                     setVSACAuthStatus={this.props.setVSACAuthStatus}
                     vsacStatus={this.props.vsacStatus}
                     vsacStatusText={this.props.vsacStatusText}
-                    timeLastAuthenticated={this.props.timeLastAuthenticated}
                     searchVSACByKeyword={this.props.searchVSACByKeyword}
                     isSearchingVSAC={this.props.isSearchingVSAC}
                     vsacSearchResults={this.props.vsacSearchResults}
@@ -536,7 +534,6 @@ export class Builder extends Component {
                     setVSACAuthStatus={this.props.setVSACAuthStatus}
                     vsacStatus={this.props.vsacStatus}
                     vsacStatusText={this.props.vsacStatusText}
-                    timeLastAuthenticated={this.props.timeLastAuthenticated}
                     searchVSACByKeyword={this.props.searchVSACByKeyword}
                     isSearchingVSAC={this.props.isSearchingVSAC}
                     vsacSearchResults={this.props.vsacSearchResults}
@@ -569,7 +566,6 @@ export class Builder extends Component {
                     parameters={this.props.artifact.parameters}
                     updateParameters={this.updateParameters}
                     instanceNames={this.props.names}
-                    timeLastAuthenticated={this.props.timeLastAuthenticated}
                     vsacFHIRCredentials={this.props.vsacFHIRCredentials}
                     loginVSACUser={this.props.loginVSACUser}
                     setVSACAuthStatus={this.props.setVSACAuthStatus}
@@ -673,7 +669,6 @@ function mapStateToProps(state) {
     names: state.artifacts.names,
     vsacStatus: state.vsac.authStatus,
     vsacStatusText: state.vsac.authStatusText,
-    timeLastAuthenticated: state.vsac.timeLastAuthenticated,
     isSearchingVSAC: state.vsac.isSearchingVSAC,
     vsacSearchResults: state.vsac.searchResults,
     vsacSearchCount: state.vsac.searchCount,

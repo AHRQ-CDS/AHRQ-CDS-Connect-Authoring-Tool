@@ -50,7 +50,6 @@ export default class Parameter extends Component {
     };
 
     const codeEditorProps = {
-      timeLastAuthenticated: this.props.timeLastAuthenticated,
       vsacFHIRCredentials: this.props.vsacFHIRCredentials,
       loginVSACUser: this.props.loginVSACUser,
       setVSACAuthStatus: this.props.setVSACAuthStatus,
@@ -180,7 +179,6 @@ Parameter.propTypes = {
   updateInstanceOfParameter: PropTypes.func.isRequired,
   deleteParameter: PropTypes.func.isRequired,
   instanceNames: PropTypes.array.isRequired,
-  timeLastAuthenticated: PropTypes.instanceOf(Date),
   vsacFHIRCredentials: PropTypes.object,
   setVSACAuthStatus: PropTypes.func.isRequired,
   vsacStatus: PropTypes.string,

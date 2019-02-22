@@ -18,8 +18,7 @@ export default class CodeEditor extends Component {
   }
 
   renderCodePicker() {
-    if ((this.props.timeLastAuthenticated < new Date() - 27000000 || this.props.vsacFHIRCredentials.username == null)
-         && this.props.value == null) {
+    if (this.props.vsacFHIRCredentials.username == null && this.props.value == null) {
       return (
         <div id="vsac-controls">
           <VSACAuthenticationModal
@@ -117,7 +116,6 @@ CodeEditor.propTypes = {
   value: PropTypes.object,
   isConcept: PropTypes.bool,
   updateInstance: PropTypes.func.isRequired,
-  timeLastAuthenticated: PropTypes.instanceOf(Date),
   vsacFHIRCredentials: PropTypes.object,
   loginVSACUser: PropTypes.func.isRequired,
   setVSACAuthStatus: PropTypes.func.isRequired,

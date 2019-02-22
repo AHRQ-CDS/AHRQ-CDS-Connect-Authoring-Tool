@@ -51,7 +51,6 @@ export default class BaseElements extends Component {
         setVSACAuthStatus={this.props.setVSACAuthStatus}
         vsacStatus={this.props.vsacStatus}
         vsacStatusText={this.props.vsacStatusText}
-        timeLastAuthenticated={this.props.timeLastAuthenticated}
         searchVSACByKeyword={this.props.searchVSACByKeyword}
         isSearchingVSAC={this.props.isSearchingVSAC}
         vsacSearchResults={this.props.vsacSearchResults}
@@ -105,7 +104,6 @@ export default class BaseElements extends Component {
                 setVSACAuthStatus={this.props.setVSACAuthStatus}
                 vsacStatus={this.props.vsacStatus}
                 vsacStatusText={this.props.vsacStatusText}
-                timeLastAuthenticated={this.props.timeLastAuthenticated}
                 searchVSACByKeyword={this.props.searchVSACByKeyword}
                 isSearchingVSAC={this.props.isSearchingVSAC}
                 vsacSearchResults={this.props.vsacSearchResults}
@@ -136,7 +134,6 @@ export default class BaseElements extends Component {
             setVSACAuthStatus={this.props.setVSACAuthStatus}
             vsacStatus={this.props.vsacStatus}
             vsacStatusText={this.props.vsacStatusText}
-            timeLastAuthenticated={this.props.timeLastAuthenticated}
             searchVSACByKeyword={this.props.searchVSACByKeyword}
             isSearchingVSAC={this.props.isSearchingVSAC}
             vsacSearchResults={this.props.vsacSearchResults}
@@ -179,7 +176,6 @@ BaseElements.propTypes = {
   setVSACAuthStatus: PropTypes.func.isRequired,
   vsacStatus: PropTypes.string,
   vsacStatusText: PropTypes.string,
-  timeLastAuthenticated: PropTypes.instanceOf(Date),
   searchVSACByKeyword: PropTypes.func.isRequired,
   isSearchingVSAC: PropTypes.bool.isRequired,
   vsacSearchResults: PropTypes.array.isRequired,

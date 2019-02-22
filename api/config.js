@@ -147,6 +147,12 @@ const config = convict({
       env: 'FORESEE_ACTIVE',
     }
   },
+  terminologyService: {
+    doc: 'Terminology Service Endpoint URL',
+    format: 'String',
+    default: 'https://cts.nlm.nih.gov/fhir',
+    env: 'TERMINOLOGY_ENDPOINT',
+  },
 });
 
 // Load environment dependent configuration

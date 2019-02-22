@@ -33,7 +33,6 @@ const props = {
   baseElements: [],
   loginVSACUser: jest.fn(),
   setVSACAuthStatus: jest.fn(),
-  timeLastAuthenticated: new Date(),
   searchVSACByKeyword: jest.fn(),
   isSearchingVSAC: false,
   vsacSearchResults: [],

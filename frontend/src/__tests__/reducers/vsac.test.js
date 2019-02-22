@@ -5,7 +5,6 @@ describe('vsac reducer', () => {
   it('should return the initial state', () => {
     expect(reducer(undefined, {})).toEqual({
       isAuthenticating: false,
-      timeLastAuthenticated: null,
       authStatus: null,
       authStatusText: '',
       isSearchingVSAC: false,
@@ -21,26 +20,6 @@ describe('vsac reducer', () => {
     });
   });
 
-  // ----------------------- AUTHENTICATION -------------------------------- //
-  it('should check if a user is authenticated', () => {
-    let action = { type: types.VSAC_AUTHENTICATION_REQUEST };
-    let newState = { isAuthenticating: true };
-    expect(reducer([], action)).toEqual(newState);
-
-    const previousState = { isAuthenticating: false };
-    expect(reducer(previousState, action)).toEqual(newState);
-
-    const date = new Date();
-    date.setSeconds(date.getSeconds() + (Math.round(date.getMilliseconds() / 1000)));
-    date.setMilliseconds(0);
-    action = { type: types.VSAC_AUTHENTICATION_RECEIVED, timeLastAuthenticated: date };
-    newState = {
-      isAuthenticating: false,
-      timeLastAuthenticated: date
-    };
-    expect(reducer(previousState, action)).toEqual(newState);
-  });
-
   // ----------------------- LOGIN ----------------------------------------- //
   it('should handle logging the user in to vsac', () => {
     let action = { type: types.VSAC_LOGIN_REQUEST };
@@ -50,13 +29,9 @@ describe('vsac reducer', () => {
     const previousState = { isAuthenticating: false, authStatus: 'Test status' };
     expect(reducer(previousState, action)).toEqual(newState);
 
-    const date = new Date();
-    date.setSeconds(date.getSeconds() + (Math.round(date.getMilliseconds() / 1000)));
-    date.setMilliseconds(0);
-    action = { type: types.VSAC_LOGIN_SUCCESS, timeLastAuthenticated: date };
+    action = { type: types.VSAC_LOGIN_SUCCESS };
     newState = {
       isAuthenticating: false,
-      timeLastAuthenticated: date,
       authStatus: 'loginSuccess',
       authStatusText: 'You have been successfully logged in to VSAC.'
     };
@@ -65,7 +40,6 @@ describe('vsac reducer', () => {
     action = { type: types.VSAC_LOGIN_FAILURE, status: '401', statusText: 'Unauthorized' };
     newState = {
       isAuthenticating: false,
-      timeLastAuthenticated: null,
       authStatus: 'loginFailure',
       authStatusText: 'Authentication Error: 401 Unauthorized, please try again.'
     };
@@ -86,7 +60,6 @@ describe('vsac reducer', () => {
     const action = { type: types.LOGOUT_REQUEST };
     const newState = {
       isAuthenticating: false,
-      timeLastAuthenticated: null,
       authStatus: null,
       authStatusText: '',
       isSearchingVSAC: false,

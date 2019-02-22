@@ -4,7 +4,6 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 
 import { loginUser, logoutUser, setAuthStatus, getCurrentUser } from '../actions/auth';
-import { checkVSACAuthentication } from '../actions/vsac';
 import setErrorMessage from '../actions/errors';
 
 import Analytics from '../components/Analytics';
@@ -15,7 +14,6 @@ import Footer from '../components/Footer';
 class App extends Component {
   componentWillMount() {
     this.props.getCurrentUser();
-    this.props.checkVSACAuthentication();
   }
 
   handleDismissClick = (e) => {
@@ -86,7 +84,6 @@ App.propTypes = {
 function mapDispatchToProps(dispatch) {
   return bindActionCreators({
     getCurrentUser,
-    checkVSACAuthentication,
     loginUser,
     logoutUser,
     setAuthStatus,
