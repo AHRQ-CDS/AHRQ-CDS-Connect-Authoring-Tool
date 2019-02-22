@@ -71,7 +71,7 @@ export default [
     name: 'Qualifier',
     inputTypes: ['system_concept'],
     returnType: 'boolean',
-    validator: { type: 'requiredIfThenOne', fields: ['qualifier'], args: ['valueSet', 'code'] },
+    validator: { type: 'requiredIfThenOne', fields: ['qualifier', 'valueSet', 'code'] },
     values: { qualifier: undefined, valueSet: null, code: null },
     cqlTemplate: null,
     cqlLibraryFunction: null

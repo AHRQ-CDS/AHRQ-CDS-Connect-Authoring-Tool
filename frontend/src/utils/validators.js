@@ -30,10 +30,9 @@ export default {
   },
   requiredIfThenOne: {
     check: (values, args = []) => {
-      const requiredFields = args.length === 0 ? values : args;
-      if (exists(values[0])) { return requiredFields.some(exists); }
+      if (exists(values[0]) && values.length > 0) { return values.slice(1).some(exists); }
       return false;
     },
-    warning: (fields, args = []) => `You must specify ${fields[0]} and one of ${args.join(', ')}.`
+    warning: (fields, args = []) => `You must specify ${fields[0]} and one of ${fields.slice(1).join(', ')}.`
   }
 };

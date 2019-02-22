@@ -95,7 +95,7 @@ test('More complicated modifiers, including Qualifier, builds expected phrase', 
       name: 'Qualifier',
       inputTypes: ['system_concept'],
       returnType: 'boolean',
-      validator: { type: 'requiredIfThenOne', fields: ['qualifier'], args: ['valueSet', 'code'] },
+      validator: { type: 'requiredIfThenOne', fields: ['qualifier', 'valueSet', 'code'] },
       values: { qualifier: 'value is a code from', valueSet: { name: 'Smoker', oid: '1.2.3' }, code: null },
       cqlTemplate: null,
       cqlLibraryFunction: null

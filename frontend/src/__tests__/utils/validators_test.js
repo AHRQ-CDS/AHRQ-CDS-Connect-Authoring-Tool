@@ -112,17 +112,18 @@ describe('regex validator', () => {
 });
 
 describe('requiredIfThenOne validator', () => {
-  it('should fail when the field has a value and not the provided arguments', () => {
-    expect(Validators.requiredIfThenOne.check(['test'], [null])).toEqual(false);
-    expect(Validators.requiredIfThenOne.check(['test'], [null, null])).toEqual(false);
+  it('should fail when the field only has first value', () => {
+    expect(Validators.requiredIfThenOne.check(['test'])).toEqual(false);
+    expect(Validators.requiredIfThenOne.check(['test', null])).toEqual(false);
+    expect(Validators.requiredIfThenOne.check(['test', null, null])).toEqual(false);
   });
   it('should pass when the field has a value and one of the arguments has a value', () => {
-    expect(Validators.requiredIfThenOne.check(['test'], ['test2', null])).toEqual(true);
-    expect(Validators.requiredIfThenOne.check(['test'], [null, 'test2'])).toEqual(true);
-    expect(Validators.requiredIfThenOne.check(['test'], ['test', 'test'])).toEqual(true);
+    expect(Validators.requiredIfThenOne.check(['test', 'test2', null])).toEqual(true);
+    expect(Validators.requiredIfThenOne.check(['test', null, 'test2'])).toEqual(true);
+    expect(Validators.requiredIfThenOne.check(['test', 'test', 'test'])).toEqual(true);
   });
   it('should provide a good warning message', () => {
-    expect(Validators.requiredIfThenOne.warning(['MyField'], ['MySecondField', 'MyThirdField']))
+    expect(Validators.requiredIfThenOne.warning(['MyField', 'MySecondField', 'MyThirdField']))
       .toEqual('You must specify MyField and one of MySecondField, MyThirdField.');
   });
 });
