@@ -1,6 +1,5 @@
 <% if (comment) { %>
 // <%-comment%>
-<% } %>
-
+<% } -%>
 define "<%-element_name%>": 
   Patient.gender.value = <% if(gender) { %><%- gender.value %><% } else { %>null<% } %>
