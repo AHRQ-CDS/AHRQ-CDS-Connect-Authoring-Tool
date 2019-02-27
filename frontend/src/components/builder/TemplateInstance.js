@@ -13,6 +13,7 @@ import CodeSelectModal from './CodeSelectModal';
 import NumberParameter from './parameters/types/NumberParameter';
 import StaticParameter from './parameters/types/StaticParameter';
 import StringParameter from './parameters/types/StringParameter';
+import TextAreaParameter from './parameters/types/TextAreaParameter';
 import ValueSetParameter from './parameters/types/ValueSetParameter';
 
 import ValueSetTemplate from './templates/ValueSetTemplate';
@@ -596,6 +597,13 @@ export default class TemplateInstance extends Component {
       case 'string':
         return (
           <StringParameter
+            key={param.id}
+            {...param}
+            updateInstance={this.updateInstance} />
+        );
+      case 'textarea':
+        return (
+          <TextAreaParameter
             key={param.id}
             {...param}
             updateInstance={this.updateInstance} />

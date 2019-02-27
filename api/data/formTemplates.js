@@ -11,7 +11,7 @@ module.exports = [
         type: 'element',
         parameters: [
           { id: 'element_name', type: 'string', name: 'Element Name' },
-          { id: 'comment', type: 'string', name: 'Comment' }
+          { id: 'comment', type: 'textarea', name: 'Comment' }
         ],
       }
     ]
@@ -29,7 +29,7 @@ module.exports = [
         suppressedModifiers: ['BooleanNot', 'BooleanComparison'],
         parameters: [
           { id: 'element_name', type: 'string', name: 'Element Name' },
-          { id: 'comment', type: 'string', name: 'Comment' },
+          { id: 'comment', type: 'textarea', name: 'Comment' },
           { id: 'min_age', type: 'number', typeOfNumber: 'integer', name: 'Minimum Age' },
           { id: 'max_age', type: 'number', typeOfNumber: 'integer', name: 'Maximum Age' },
           { id: 'unit_of_time', type: 'valueset', select: 'demographics/units_of_time', name: 'Unit of Time' },
@@ -43,7 +43,7 @@ module.exports = [
         validator: {type: 'require', fields: ['gender'], args: null},
         parameters: [
           { id: 'element_name', type: 'string', name: 'Element Name' },
-          { id: 'comment', type: 'string', name: 'Comment' },
+          { id: 'comment', type: 'textarea', name: 'Comment' },
           { id: 'gender', type: 'valueset', select: 'demographics/gender', name: 'Gender' },
         ],
       },
@@ -80,7 +80,7 @@ module.exports = [
         returnType: 'boolean',
         parameters: [
           { id: 'element_name', type: 'string', name: 'Group Name' },
-          { id: 'comment', type: 'string', name: 'Comment' }
+          { id: 'comment', type: 'textarea', name: 'Comment' }
         ]
       },
       {
@@ -90,7 +90,7 @@ module.exports = [
         returnType: 'boolean',
         parameters: [
           { id: 'element_name', type: 'string', name: 'Group Name' },
-          { id: 'comment', type: 'string', name: 'Comment' }
+          { id: 'comment', type: 'textarea', name: 'Comment' }
         ]
       },
     ]
@@ -231,7 +231,7 @@ module.exports = [
         returnType: 'list_of_any',
         parameters: [
           { id: 'element_name', type: 'string', name: 'Group Name' },
-          { id: 'comment', type: 'string', name: 'Comment' }
+          { id: 'comment', type: 'textarea', name: 'Comment' }
         ]
       },
       {
@@ -241,7 +241,7 @@ module.exports = [
         returnType: 'list_of_any',
         parameters: [
           { id: 'element_name', type: 'string', name: 'Group Name' },
-          { id: 'comment', type: 'string', name: 'Comment' }
+          { id: 'comment', type: 'textarea', name: 'Comment' }
         ]
       },
     ]

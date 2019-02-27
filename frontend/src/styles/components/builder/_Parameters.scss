@@ -42,6 +42,7 @@
 
 .string-parameter,
 .number-parameter,
+.textarea-parameter,
 .value-set-parameter {
   margin: 10px 0;
 
@@ -75,6 +76,10 @@
 
   .icon {
     padding: 10px;
+  }
+
+  textarea {
+    width: 100%;
   }
 }
 
