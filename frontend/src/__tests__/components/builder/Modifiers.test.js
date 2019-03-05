@@ -3,6 +3,7 @@ import CheckExistence from '../../../components/builder/modifiers/CheckExistence
 import LabelModifier from '../../../components/builder/modifiers/LabelModifier';
 import LookBack from '../../../components/builder/modifiers/LookBack';
 import SelectModifier from '../../../components/builder/modifiers/SelectModifier';
+import StringModifier from '../../../components/builder/modifiers/StringModifier';
 import Qualifier from '../../../components/builder/modifiers/Qualifier';
 import ValueComparisonObservation from '../../../components/builder/modifiers/ValueComparisonObservation';
 import ValueComparison from '../../../components/builder/modifiers/ValueComparison';
@@ -219,6 +220,32 @@ test('SelectModifier changes select', () => {
   expect(updateAppliedModifierMock).toBeCalledWith(6, {
     value: 'Convert.to_mg_per_dL', templateName: 'Convert.to_mg_per_dL', description: 'mmol/L to mg/dL'
   });
+});
+
+test('StringModifier renders without crashing', () => {
+  const updateAppliedModifierMock = jest.fn();
+  const component = shallowRenderComponent(StringModifier, {
+    updateAppliedModifier: updateAppliedModifierMock,
+    index: 6,
+    name: '',
+    value: ''
+  });
+  expect(component).toBeDefined();
+});
+
+test('StringModifier changes input', () => {
+  const updateAppliedModifierMock = jest.fn();
+  const component = fullRenderComponent(StringModifier, {
+    updateAppliedModifier: updateAppliedModifierMock,
+    index: 303,
+    name: '',
+    value: ''
+  });
+
+  const input = component.find('input');
+
+  input.simulate('change', { target: { value: 'test' } });
+  expect(updateAppliedModifierMock).toBeCalledWith(303, { value: 'test' });
 });
 
 test('Qualifier renders without crashing', () => {
