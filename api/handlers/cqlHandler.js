@@ -168,6 +168,7 @@ function isBaseElementUseChanged(element, baseElements) {
   }
 
   const nameParameter = element.parameters.find(param => param.id === 'element_name');
+  const commentParameter = element.parameters.find(param => param.id === 'comment');
 
   const originalBaseElement = baseElements.find(baseEl => referenceParameter.value.id === baseEl.uniqueId);
   if (!originalBaseElement) {
@@ -181,6 +182,12 @@ function isBaseElementUseChanged(element, baseElements) {
   }
   if (element.modifiers.length > 0) {
     // If there are modifiers applied to the use of the base element, it's been changed.
+    return true;
+  }
+
+  const originalCommentParameter = originalBaseElement.parameters.find(param => param.id === 'comment');
+  if (commentParameter.value !== originalCommentParameter.value) {
+    // If the comment on the use of the base element and the original element are different, it's been changed.
     return true;
   }
 

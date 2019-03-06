@@ -409,12 +409,10 @@ export default class TemplateInstance extends Component {
 
   renderBaseElementInfo = (referenceParameter) => {
     let referenceName;
-    let referenceComment;
     if (referenceParameter) {
       const elementToReference = this.props.instanceNames.find(name => name.id === referenceParameter.value.id);
       if (elementToReference) {
         referenceName = elementToReference.name;
-        referenceComment = referenceParameter.value.comment;
       }
     }
 
@@ -440,10 +438,6 @@ export default class TemplateInstance extends Component {
                 <FontAwesome name="link" className="delete-valueset-button" />
               </span>
             </div>
-          </div>
-          <div className="col-3 bold align-right code-info__label">Comment:</div>
-          <div className="col-9 row code-info__info">
-            <div className="col-10">{referenceComment}</div>
           </div>
         </div>
       </div>
@@ -758,14 +752,6 @@ export default class TemplateInstance extends Component {
             <div className="warning">
               Warning: One or more uses of this Base Element have changed. Choose another name.
             </div>
-          }
-          {referenceParameter &&
-            <StringParameter
-              key={referenceParameter.id}
-              updateInstance={this.updateInstance}
-              name='Comment'
-              uniqueId={templateInstance.uniqueId}
-            />
           }
         </div>
       );

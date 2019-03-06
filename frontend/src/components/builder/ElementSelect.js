@@ -128,9 +128,10 @@ export default class ElementSelect extends Component {
               id: 'baseElementReference',
               type: 'reference',
               name: 'reference',
-              value: { id: e.uniqueId, type: e.name, comment: e.parameters[1].value },
+              value: { id: e.uniqueId, type: e.name },
               static: true
-            }
+            },
+            { id: 'comment', type: 'textarea', name: 'Comment', value: e.parameters[2].value }
           ]
         });
       });
