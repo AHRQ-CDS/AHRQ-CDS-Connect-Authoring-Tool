@@ -14,10 +14,11 @@ export default class TextAreaParameter extends Component {
 
     return (
       <div className="textarea-parameter form__group">
-        <label htmlFor={formId}>
-          <span className="label">{name}:</span>
+        <label htmlFor={formId} className="row">
+          <span className="label col-3">{name}:</span>
 
           <textarea
+            className="col-7"
             id={formId}
             name={id}
             value={value || ''}
