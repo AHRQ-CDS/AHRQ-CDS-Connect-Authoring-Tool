@@ -26,7 +26,8 @@ import LabelModifier from './modifiers/LabelModifier';
 import LookBack from './modifiers/LookBack';
 import SelectModifier from './modifiers/SelectModifier';
 import StringModifier from './modifiers/StringModifier';
-import ValueComparison from './modifiers/ValueComparison';
+import NumberModifier from './modifiers/NumberModifier';
+import QuantityModifier from './modifiers/QuantityModifier';
 import ValueComparisonNumber from './modifiers/ValueComparisonNumber';
 import ValueComparisonObservation from './modifiers/ValueComparisonObservation';
 import WithUnit from './modifiers/WithUnit';
@@ -36,6 +37,7 @@ import { hasDuplicateName, doesBaseElementUseNeedWarning, doesBaseElementInstanc
   validateElement, hasGroupNestedWarning } from '../../utils/warnings';
 import { getOriginalBaseElement } from '../../utils/baseElements';
 import { getReturnType, validateModifier, allModifiersValid } from '../../utils/instances';
+import DateTimeModifier from './modifiers/DateTimeModifier';
 
 function getInstanceName(instance) {
   return (instance.parameters.find(p => p.id === 'element_name') || {}).value;
@@ -144,17 +146,6 @@ export default class TemplateInstance extends Component {
 
     const modifierForm = ((mod) => {
       switch (mod.type || mod.id) {
-        case 'ValueComparison':
-          return (
-            <ValueComparison
-              key={index}
-              index={index}
-              min={mod.values.min}
-              minInclusive={mod.values.minInclusive}
-              max={mod.values.max}
-              maxInclusive={mod.values.maxInclusive}
-              updateAppliedModifier={this.updateAppliedModifier}/>
-          );
         case 'ValueComparisonNumber':
           return (
             <ValueComparisonNumber
@@ -251,6 +242,42 @@ export default class TemplateInstance extends Component {
               codeData={this.props.codeData}
               validateCode={this.props.validateCode}
               resetCodeValidation={this.props.resetCodeValidation} />
+          );
+        case 'ContainsQuantity':
+        case 'BeforeQuantity':
+        case 'AfterQuantity':
+          return (
+            <QuantityModifier
+              key={index}
+              index={index}
+              uniqueId={`${this.props.templateInstance.uniqueId}-quantity-${index}`}
+              value={mod.values.value}
+              unit={mod.values.unit}
+              updateAppliedModifier={this.updateAppliedModifier}/>
+          );
+        case 'ContainsInteger':
+        case 'BeforeInteger':
+        case 'AfterInteger':
+        case 'ContainsDecimal':
+        case 'BeforeDecimal':
+        case 'AfterDecimal':
+          return (
+            <NumberModifier
+              key={index}
+              index={index}
+              value={mod.values.value}
+              updateAppliedModifier={this.updateAppliedModifier}/>
+          );
+        case 'ContainsDateTime':
+        case 'BeforeDateTime':
+        case 'AfterDateTime':
+          return (
+            <DateTimeModifier
+              key={index}
+              index={index}
+              date={mod.values.date}
+              time={mod.values.time}
+              updateAppliedModifier={this.updateAppliedModifier}/>
           );
         case 'EqualsString':
         case 'EndsWithString':

@@ -173,7 +173,7 @@ export default [
     returnType: 'boolean',
     validator: { type: 'require', fields: ['value'], args: [] },
     values: { value: undefined },
-    cqlTemplate: 'Equals',
+    cqlTemplate: 'CenterModifierString',
     cqlLibraryFunction: '='
   },
   {
@@ -195,6 +195,127 @@ export default [
     values: { value: undefined },
     cqlTemplate: 'ValueComparison',
     cqlLibraryFunction: 'StartsWith'
+  },
+  //intervals
+  {
+    id: 'ContainsInteger',
+    name: 'Contains',
+    inputTypes: ['interval_of_integer'],
+    returnType: 'boolean',
+    validator: { type: 'require', fields: ['value'], args: [] },
+    values: { value: undefined },
+    cqlTemplate: 'CenterModifier',
+    cqlLibraryFunction: 'contains'
+  },
+  {
+    id: 'ContainsDateTime',
+    name: 'Contains',
+    inputTypes: ['interval_of_datetime'],
+    returnType: 'boolean',
+    validator: { type: 'require', fields: ['date'], args: [] },
+    values: { date: undefined, time: undefined },
+    cqlTemplate: 'CenterModifierDateTime',
+    cqlLibraryFunction: 'contains'
+  },
+  {
+    id: 'ContainsDecimal',
+    name: 'Contains',
+    inputTypes: ['interval_of_decimal'],
+    returnType: 'boolean',
+    validator: { type: 'require', fields: ['value'], args: [] },
+    values: { value: undefined },
+    cqlTemplate: 'CenterModifier',
+    cqlLibraryFunction: 'contains'
+  },
+  {
+    id: 'ContainsQuantity',
+    name: 'Contains',
+    inputTypes: ['interval_of_quantity'],
+    returnType: 'boolean',
+    validator: { type: 'require', fields: ['value', 'unit'], args: [] },
+    values: { value: undefined, unit: undefined },
+    cqlTemplate: 'CenterModifierQuantity',
+    cqlLibraryFunction: 'contains'
+  },
+  {
+    id: 'BeforeInteger',
+    name: 'Before',
+    inputTypes: ['interval_of_integer'],
+    returnType: 'boolean',
+    validator: { type: 'require', fields: ['value'], args: [] },
+    values: { value: undefined },
+    cqlTemplate: 'CenterModifier',
+    cqlLibraryFunction: 'before'
+  },
+  {
+    id: 'BeforeDateTime',
+    name: 'Before',
+    inputTypes: ['interval_of_datetime'],
+    returnType: 'boolean',
+    validator: { type: 'require', fields: ['date'], args: [] },
+    values: { date: undefined, time: undefined },
+    cqlTemplate: 'CenterModifierDateTime',
+    cqlLibraryFunction: 'before'
+  },
+  {
+    id: 'BeforeDecimal',
+    name: 'Before',
+    inputTypes: ['interval_of_decimal'],
+    returnType: 'boolean',
+    validator: { type: 'require', fields: ['value'], args: [] },
+    values: { value: undefined },
+    cqlTemplate: 'CenterModifier',
+    cqlLibraryFunction: 'before'
+  },
+  {
+    id: 'BeforeQuantity',
+    name: 'Before',
+    inputTypes: ['interval_of_quantity'],
+    returnType: 'boolean',
+    validator: { type: 'require', fields: ['value', 'unit'], args: [] },
+    values: { value: undefined, unit: undefined },
+    cqlTemplate: 'CenterModifierQuantity',
+    cqlLibraryFunction: 'before'
+  },
+  {
+    id: 'AfterInteger',
+    name: 'After',
+    inputTypes: ['interval_of_integer'],
+    returnType: 'boolean',
+    validator: { type: 'require', fields: ['value'], args: [] },
+    values: { value: undefined },
+    cqlTemplate: 'CenterModifier',
+    cqlLibraryFunction: 'after'
+  },
+  {
+    id: 'AfterDateTime',
+    name: 'After',
+    inputTypes: ['interval_of_datetime'],
+    returnType: 'boolean',
+    validator: { type: 'require', fields: ['date'], args: [] },
+    values: { date: undefined, time: undefined },
+    cqlTemplate: 'CenterModifierDateTime',
+    cqlLibraryFunction: 'after'
+  },
+  {
+    id: 'AfterDecimal',
+    name: 'After',
+    inputTypes: ['interval_of_decimal'],
+    returnType: 'boolean',
+    validator: { type: 'require', fields: ['value'], args: [] },
+    values: { value: undefined },
+    cqlTemplate: 'CenterModifier',
+    cqlLibraryFunction: 'after'
+  },
+  {
+    id: 'AfterQuantity',
+    name: 'After',
+    inputTypes: ['interval_of_quantity'],
+    returnType: 'boolean',
+    validator: { type: 'require', fields: ['value', 'unit'], args: [] },
+    values: { value: undefined, unit: undefined },
+    cqlTemplate: 'CenterModifierQuantity',
+    cqlLibraryFunction: 'after'
   },
   // ALL
   // Most Recent

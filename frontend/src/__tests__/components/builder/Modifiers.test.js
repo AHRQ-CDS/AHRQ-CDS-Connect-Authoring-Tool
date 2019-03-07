@@ -4,10 +4,10 @@ import LabelModifier from '../../../components/builder/modifiers/LabelModifier';
 import LookBack from '../../../components/builder/modifiers/LookBack';
 import SelectModifier from '../../../components/builder/modifiers/SelectModifier';
 import StringModifier from '../../../components/builder/modifiers/StringModifier';
+import NumberModifier from '../../../components/builder/modifiers/NumberModifier';
 import Qualifier from '../../../components/builder/modifiers/Qualifier';
 import ValueComparisonObservation from '../../../components/builder/modifiers/ValueComparisonObservation';
 import ValueComparisonNumber from '../../../components/builder/modifiers/ValueComparisonNumber';
-import ValueComparison from '../../../components/builder/modifiers/ValueComparison';
 import WithUnit from '../../../components/builder/modifiers/WithUnit';
 
 import { shallowRenderComponent, fullRenderComponent } from '../../../utils/test_helpers';
@@ -174,44 +174,6 @@ test('ValueComparisonNumber changes input', () => {
   expect(updateAppliedModifierMock).toBeCalledWith(303, { maxOperator: '!=' });
 });
 
-test('ValueComparison renders without crashing', () => {
-  const component = shallowRenderComponent(ValueComparison, {
-    updateAppliedModifier: jest.fn(),
-    index: '',
-    min: '',
-    minInclusive: '',
-    max: '',
-    maxInclusive: ''
-  });
-  expect(component).toBeDefined();
-});
-
-test('ValueComparison changes input', () => {
-  const updateAppliedModifierMock = jest.fn();
-  const component = shallowRenderComponent(ValueComparison, {
-    updateAppliedModifier: updateAppliedModifierMock,
-    index: 271,
-    min: '',
-    minInclusive: '',
-    max: '',
-    maxInclusive: ''
-  });
-
-  const minInput = component.find('input[name="min"]');
-  const minCheckbox = component.find('input[name="minInclusive"]');
-  const maxInput = component.find('input[name="max"]');
-  const maxCheckbox = component.find('input[name="maxInclusive"]');
-
-  minInput.simulate('change', { target: { value: 3 } });
-  expect(updateAppliedModifierMock).toBeCalledWith(271, { min: 3 });
-  minCheckbox.simulate('change', { target: { checked: false } });
-  expect(updateAppliedModifierMock).toBeCalledWith(271, { minInclusive: false });
-  maxInput.simulate('change', { target: { value: 89 } });
-  expect(updateAppliedModifierMock).toBeCalledWith(271, { max: 89 });
-  maxCheckbox.simulate('change', { target: { checked: true } });
-  expect(updateAppliedModifierMock).toBeCalledWith(271, { maxInclusive: true });
-});
-
 test('WithUnit renders without crashing', () => {
   const component = shallowRenderComponent(WithUnit, {
     updateAppliedModifier: jest.fn(),
@@ -287,6 +249,32 @@ test('StringModifier changes input', () => {
 
   input.simulate('change', { target: { value: 'test' } });
   expect(updateAppliedModifierMock).toBeCalledWith(6, { value: 'test' });
+});
+
+test('NumberModifier renders without crashing', () => {
+  const updateAppliedModifierMock = jest.fn();
+  const component = shallowRenderComponent(NumberModifier, {
+    updateAppliedModifier: updateAppliedModifierMock,
+    index: 6,
+    name: '',
+    value: ''
+  });
+  expect(component).toBeDefined();
+});
+
+test('NumberModifier changes input', () => {
+  const updateAppliedModifierMock = jest.fn();
+  const component = fullRenderComponent(NumberModifier, {
+    updateAppliedModifier: updateAppliedModifierMock,
+    index: 6,
+    name: '',
+    value: ''
+  });
+
+  const input = component.find('input');
+
+  input.simulate('change', { target: { value: '3' } });
+  expect(updateAppliedModifierMock).toBeCalledWith(6, { value: '3' });
 });
 
 test('Qualifier renders without crashing', () => {
