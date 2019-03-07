@@ -6,6 +6,7 @@ import SelectModifier from '../../../components/builder/modifiers/SelectModifier
 import StringModifier from '../../../components/builder/modifiers/StringModifier';
 import Qualifier from '../../../components/builder/modifiers/Qualifier';
 import ValueComparisonObservation from '../../../components/builder/modifiers/ValueComparisonObservation';
+import ValueComparisonNumber from '../../../components/builder/modifiers/ValueComparisonNumber';
 import ValueComparison from '../../../components/builder/modifiers/ValueComparison';
 import WithUnit from '../../../components/builder/modifiers/WithUnit';
 
@@ -108,6 +109,46 @@ test('ValueComparisonObservation renders without crashing', () => {
 test('ValueComparisonObservation changes input', () => {
   const updateAppliedModifierMock = jest.fn();
   const component = fullRenderComponent(ValueComparisonObservation, {
+    updateAppliedModifier: updateAppliedModifierMock,
+    index: 303,
+    minValue: '',
+    minOperator: '',
+    maxValue: '',
+    maxOperator: ''
+  });
+
+  const minInput = component.find('input[name="Min value"]');
+  const minSelect = component.find('.Select input [aria-label="Min Operator"]');
+  const maxInput = component.find('input[name="Max value"]');
+  const maxSelect = component.find('.Select input [aria-label="Max Operator"]');
+
+  minInput.simulate('change', { target: { value: 21 } });
+  expect(updateAppliedModifierMock).toBeCalledWith(303, { minValue: 21 });
+  minSelect.simulate('change', { target: { value: '<' } });
+  minSelect.simulate('keyDown', { keyCode: 9, key: 'Tab' }); // validate the selection
+  expect(updateAppliedModifierMock).toBeCalledWith(303, { minOperator: '<' });
+  maxInput.simulate('change', { target: { value: 189 } });
+  expect(updateAppliedModifierMock).toBeCalledWith(303, { maxValue: 189 });
+  maxSelect.simulate('change', { target: { value: '!=' } });
+  maxSelect.simulate('keyDown', { keyCode: 9, key: 'Tab' }); // validate the selection
+  expect(updateAppliedModifierMock).toBeCalledWith(303, { maxOperator: '!=' });
+});
+
+test('ValueComparisonNumber renders without crashing', () => {
+  const component = shallowRenderComponent(ValueComparisonNumber, {
+    updateAppliedModifier: jest.fn(),
+    index: '',
+    minValue: '',
+    minOperator: '',
+    maxValue: '',
+    maxOperator: ''
+  });
+  expect(component).toBeDefined();
+});
+
+test('ValueComparisonNumber changes input', () => {
+  const updateAppliedModifierMock = jest.fn();
+  const component = fullRenderComponent(ValueComparisonNumber, {
     updateAppliedModifier: updateAppliedModifierMock,
     index: 303,
     minValue: '',
@@ -237,7 +278,7 @@ test('StringModifier changes input', () => {
   const updateAppliedModifierMock = jest.fn();
   const component = fullRenderComponent(StringModifier, {
     updateAppliedModifier: updateAppliedModifierMock,
-    index: 303,
+    index: 6,
     name: '',
     value: ''
   });
@@ -245,7 +286,7 @@ test('StringModifier changes input', () => {
   const input = component.find('input');
 
   input.simulate('change', { target: { value: 'test' } });
-  expect(updateAppliedModifierMock).toBeCalledWith(303, { value: 'test' });
+  expect(updateAppliedModifierMock).toBeCalledWith(6, { value: 'test' });
 });
 
 test('Qualifier renders without crashing', () => {

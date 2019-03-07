@@ -33,15 +33,16 @@ export default [
     cqlTemplate: 'WithUnit',
     cqlLibraryFunction: 'C3F.WithUnit',
   },
-  // {
-  //   id: 'ValueComparison',
-  //   name: 'Value Comparison',
-  //   inputTypes: ['list_of_observations'],
-  //   returnType: 'list_of_observations',
-  //   values: {min: undefined, max: undefined, minInclusive: undefined, maxInclusive: undefined},
-  //   cqlTemplate: null,
-  //   cqlLibraryFunction: null
-  // },
+  {
+    id: 'ValueComparisonNumber',
+    name: 'Value Comparison',
+    inputTypes: ['integer', 'decimal'],
+    returnType: 'boolean',
+    validator: { type: 'require', fields: ['minValue', 'minOperator'], args: null },
+    values: { minOperator: undefined, minValue: '', maxOperator: undefined, maxValue: '', unit: '' },
+    cqlTemplate: 'ValueComparisonNumber',
+    comparisonOperator: null
+  },
   {
     id: 'ValueComparisonObservation',
     name: 'Value Comparison',
@@ -71,7 +72,7 @@ export default [
   {
     id: 'Qualifier',
     name: 'Qualifier',
-    inputTypes: ['system_concept'],
+    inputTypes: ['system_concept', 'system_code'],
     returnType: 'boolean',
     validator: { type: 'requiredIfThenOne', fields: ['qualifier', 'valueSet', 'code'] },
     values: { qualifier: undefined, valueSet: null, code: null },

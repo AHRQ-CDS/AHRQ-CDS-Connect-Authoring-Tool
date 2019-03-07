@@ -27,6 +27,7 @@ import LookBack from './modifiers/LookBack';
 import SelectModifier from './modifiers/SelectModifier';
 import StringModifier from './modifiers/StringModifier';
 import ValueComparison from './modifiers/ValueComparison';
+import ValueComparisonNumber from './modifiers/ValueComparisonNumber';
 import ValueComparisonObservation from './modifiers/ValueComparisonObservation';
 import WithUnit from './modifiers/WithUnit';
 import Qualifier from './modifiers/Qualifier';
@@ -152,6 +153,18 @@ export default class TemplateInstance extends Component {
               minInclusive={mod.values.minInclusive}
               max={mod.values.max}
               maxInclusive={mod.values.maxInclusive}
+              updateAppliedModifier={this.updateAppliedModifier}/>
+          );
+        case 'ValueComparisonNumber':
+          return (
+            <ValueComparisonNumber
+              key={index}
+              index={index}
+              uniqueId={`${this.props.templateInstance.uniqueId}-comparison-${index}`}
+              minOperator={mod.values.minOperator}
+              minValue={mod.values.minValue}
+              maxOperator={mod.values.maxOperator}
+              maxValue={mod.values.maxValue}
               updateAppliedModifier={this.updateAppliedModifier}/>
           );
         case 'ValueComparisonObservation':
