@@ -12,17 +12,20 @@ export default class DateTimeModifier extends Component {
     let time = this.props.time;
 
     switch (name) {
-      case 'date':
+      case 'date': {
+        console.log(evt);
         const dateMoment = evt != null ? evt.format('YYYY-MM-DD') : null;
         date = dateMoment ? `@${dateMoment}` : null;
         break;
-      case 'time':
+      }
+      case 'time': {
         const timeMoment = evt != null ? evt.format('HH:mm:ss') : null;
         time = timeMoment ? `T${timeMoment}` : null;
         break;
+      }
+      default: {
         break;
-      default:
-        break;
+      }
     }
 
     this.props.updateAppliedModifier(this.props.index, { date, time });
@@ -42,7 +45,7 @@ export default class DateTimeModifier extends Component {
                 : null}
               dateFormat="L"
               onChange={ (e) => {
-                this.assignValue(e, 'date')
+                this.assignValue(e, 'date');
               }}
             />
 
@@ -55,7 +58,7 @@ export default class DateTimeModifier extends Component {
                 ? moment(this.props.time, 'HH:mm:ss')
                 : null}
               onChange={ (e) => {
-                this.assignValue(e, 'time')
+                this.assignValue(e, 'time');
               }}
             />
           </div>

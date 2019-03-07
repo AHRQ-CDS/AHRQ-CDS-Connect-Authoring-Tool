@@ -5,12 +5,20 @@ import LookBack from '../../../components/builder/modifiers/LookBack';
 import SelectModifier from '../../../components/builder/modifiers/SelectModifier';
 import StringModifier from '../../../components/builder/modifiers/StringModifier';
 import NumberModifier from '../../../components/builder/modifiers/NumberModifier';
+import QuantityModifier from '../../../components/builder/modifiers/QuantityModifier';
+import DateTimeModifier from '../../../components/builder/modifiers/DateTimeModifier';
+import DateTimePrecisionModifier from '../../../components/builder/modifiers/DateTimePrecisionModifier';
+import TimePrecisionModifier from '../../../components/builder/modifiers/TimePrecisionModifier';
 import Qualifier from '../../../components/builder/modifiers/Qualifier';
 import ValueComparisonObservation from '../../../components/builder/modifiers/ValueComparisonObservation';
 import ValueComparisonNumber from '../../../components/builder/modifiers/ValueComparisonNumber';
 import WithUnit from '../../../components/builder/modifiers/WithUnit';
 
 import { shallowRenderComponent, fullRenderComponent } from '../../../utils/test_helpers';
+
+import DatePicker from 'react-datepicker';
+import TimePicker from 'rc-time-picker';
+import moment from 'moment';
 
 test('BooleanComparison renders without crashing', () => {
   const component = shallowRenderComponent(BooleanComparison, {
@@ -230,7 +238,6 @@ test('StringModifier renders without crashing', () => {
   const component = shallowRenderComponent(StringModifier, {
     updateAppliedModifier: updateAppliedModifierMock,
     index: 6,
-    name: '',
     value: ''
   });
   expect(component).toBeDefined();
@@ -241,7 +248,6 @@ test('StringModifier changes input', () => {
   const component = fullRenderComponent(StringModifier, {
     updateAppliedModifier: updateAppliedModifierMock,
     index: 6,
-    name: '',
     value: ''
   });
 
@@ -256,7 +262,6 @@ test('NumberModifier renders without crashing', () => {
   const component = shallowRenderComponent(NumberModifier, {
     updateAppliedModifier: updateAppliedModifierMock,
     index: 6,
-    name: '',
     value: ''
   });
   expect(component).toBeDefined();
@@ -267,7 +272,6 @@ test('NumberModifier changes input', () => {
   const component = fullRenderComponent(NumberModifier, {
     updateAppliedModifier: updateAppliedModifierMock,
     index: 6,
-    name: '',
     value: ''
   });
 
@@ -275,6 +279,127 @@ test('NumberModifier changes input', () => {
 
   input.simulate('change', { target: { value: '3' } });
   expect(updateAppliedModifierMock).toBeCalledWith(6, { value: '3' });
+});
+
+test('QuantityModifier renders without crashing', () => {
+  const updateAppliedModifierMock = jest.fn();
+  const component = shallowRenderComponent(QuantityModifier, {
+    updateAppliedModifier: updateAppliedModifierMock,
+    index: 6,
+    value: '',
+    unit: ''
+  });
+  expect(component).toBeDefined();
+});
+
+test('QuantityModifier changes input', () => {
+  const updateAppliedModifierMock = jest.fn();
+  const component = shallowRenderComponent(QuantityModifier, {
+    updateAppliedModifier: updateAppliedModifierMock,
+    index: 6,
+    value: '',
+    unit: ''
+  });
+
+  const valueInput = component.find('.quantity-modifier-value');
+  const unitInput = component.find('.quantity-modifier-unit');
+
+  valueInput.simulate('change', { target: { value: '3' } });
+  expect(updateAppliedModifierMock).toBeCalledWith(6, { value: '3' });
+  unitInput.simulate('change', { target: { value: 'mg/dL' } });
+  expect(updateAppliedModifierMock).lastCalledWith(6, { unit: 'mg/dL' });
+});
+
+test('DateTimeModifier renders without crashing', () => {
+  const updateAppliedModifierMock = jest.fn();
+  const component = shallowRenderComponent(DateTimeModifier, {
+    updateAppliedModifier: updateAppliedModifierMock,
+    index: 6,
+    date: '',
+    time: ''
+  });
+  expect(component).toBeDefined();
+});
+
+test('DateTimeModifier changes input', () => {
+  const updateAppliedModifierMock = jest.fn();
+  const component = shallowRenderComponent(DateTimeModifier, {
+    updateAppliedModifier: updateAppliedModifierMock,
+    index: 6,
+    date: '',
+    time: ''
+  });
+
+  const datePicker = component.find(DatePicker);
+  const timePicker = component.find(TimePicker);
+
+  datePicker.simulate('change', moment('2000-03-02'));
+  expect(updateAppliedModifierMock).toBeCalledWith(6, { date: '@2000-03-02', time: '' });
+  timePicker.simulate('change', moment('2000-03-02 12:00:01'));
+  expect(updateAppliedModifierMock).lastCalledWith(6, { date: '', time:  'T12:00:01' });
+});
+
+test('DateTimePrecisionModifier renders without crashing', () => {
+  const updateAppliedModifierMock = jest.fn();
+  const component = shallowRenderComponent(DateTimePrecisionModifier, {
+    updateAppliedModifier: updateAppliedModifierMock,
+    index: 6,
+    date: '',
+    time: '',
+    precision: ''
+  });
+  expect(component).toBeDefined();
+});
+
+test('DateTimePrecisionModifier changes input', () => {
+  const updateAppliedModifierMock = jest.fn();
+  const component = shallowRenderComponent(DateTimePrecisionModifier, {
+    updateAppliedModifier: updateAppliedModifierMock,
+    index: 6,
+    date: '',
+    time: '',
+    precision: ''
+  });
+
+  const datePicker = component.find(DatePicker);
+  const timePicker = component.find(TimePicker);
+  const select = component.find('Select');
+
+  datePicker.simulate('change', moment('2000-03-02'));
+  expect(updateAppliedModifierMock).toBeCalledWith(6, { date: '@2000-03-02', time: '', precision: '' });
+  timePicker.simulate('change', moment('2000-03-02 12:00:01'));
+  expect(updateAppliedModifierMock).lastCalledWith(6, { date: '', time:  'T12:00:01', precision: '' });
+  select.simulate('change', { value: 'year', label: 'year' });
+  expect(updateAppliedModifierMock).lastCalledWith(6, { date: '', time:  '', precision: 'year' });
+});
+
+test('TimePrecisionModifier renders without crashing', () => {
+  const updateAppliedModifierMock = jest.fn();
+  const component = shallowRenderComponent(TimePrecisionModifier, {
+    updateAppliedModifier: updateAppliedModifierMock,
+    index: 6,
+    time: '',
+    precision: ''
+  });
+  expect(component).toBeDefined();
+});
+
+test('TimePrecisionModifier changes input', () => {
+  const updateAppliedModifierMock = jest.fn();
+  const component = shallowRenderComponent(TimePrecisionModifier, {
+    updateAppliedModifier: updateAppliedModifierMock,
+    index: 6,
+    time: '',
+    precision: ''
+  });
+
+  const timePicker = component.find(TimePicker);
+  const select = component.find('Select');
+
+  timePicker.simulate('change', moment('2000-03-02 12:00:01'));
+  expect(updateAppliedModifierMock).lastCalledWith(6, { time:  '@T12:00:01', precision: '' });
+  select.simulate('change', { value: 'year', label: 'year' });
+  expect(updateAppliedModifierMock).lastCalledWith(6, { time:  '', precision: 'year' });
 });
 
 test('Qualifier renders without crashing', () => {

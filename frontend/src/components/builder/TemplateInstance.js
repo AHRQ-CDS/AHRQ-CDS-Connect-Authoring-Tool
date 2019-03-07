@@ -245,7 +245,7 @@ export default class TemplateInstance extends Component {
               validateCode={this.props.validateCode}
               resetCodeValidation={this.props.resetCodeValidation} />
           );
-        case "BeforeDateTimePrecise":
+        case 'BeforeDateTimePrecise':
         case 'AfterDateTimePrecise':
           return (
             <DateTimePrecisionModifier
@@ -256,7 +256,7 @@ export default class TemplateInstance extends Component {
               precision={mod.values.precision}
               updateAppliedModifier={this.updateAppliedModifier}/>
           );
-        case "BeforeTimePrecise":
+        case 'BeforeTimePrecise':
         case 'AfterTimePrecise':
           return (
             <TimePrecisionModifier

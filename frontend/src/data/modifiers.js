@@ -196,7 +196,7 @@ export default [
     cqlTemplate: 'ValueComparison',
     cqlLibraryFunction: 'StartsWith'
   },
-  //times
+  // times
   {
     id: 'BeforeTimePrecise',
     name: 'Before',
@@ -217,7 +217,7 @@ export default [
     cqlTemplate: 'CenterModifierTimePrecise',
     cqlLibraryFunction: 'after'
   },
-  //datetimes
+  // datetimes
   {
     id: 'BeforeDateTimePrecise',
     name: 'Before',
@@ -238,7 +238,7 @@ export default [
     cqlTemplate: 'CenterModifierDateTimePrecise',
     cqlLibraryFunction: 'after'
   },
-  //intervals
+  // intervals
   {
     id: 'ContainsInteger',
     name: 'Contains',

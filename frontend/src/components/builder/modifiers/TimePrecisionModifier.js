@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import Select from 'react-select';
 import moment from 'moment';
-import DatePicker from 'react-datepicker';
 import TimePicker from 'rc-time-picker';
 import _ from 'lodash';
 
@@ -13,14 +12,18 @@ export default class TimePrecisionModifier extends Component {
     let precision = this.props.precision;
 
     switch (name) {
-      case 'time':
+      case 'time': {
         const timeMoment = evt != null ? evt.format('HH:mm:ss') : null;
         time = timeMoment ? `@T${timeMoment}` : null;
         break;
-      case 'precision':
+      }
+      case 'precision': {
         precision = evt.value;
-      default:
         break;
+      }
+      default: {
+        break;
+      }
     }
 
     this.props.updateAppliedModifier(this.props.index, { time, precision });
@@ -46,7 +49,7 @@ export default class TimePrecisionModifier extends Component {
                 ? moment(this.props.time, 'HH:mm:ss')
                 : null}
               onChange={ (e) => {
-                this.assignValue(e, 'time')
+                this.assignValue(e, 'time');
               }}
             />
 
@@ -57,7 +60,7 @@ export default class TimePrecisionModifier extends Component {
                 id={precId}
                 value={this.props.precision}
                 onChange={ (e) => {
-                  this.assignValue(e, 'precision')
+                  this.assignValue(e, 'precision');
                 }}
                 options={options}
               />

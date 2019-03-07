@@ -14,18 +14,23 @@ export default class DateTimePrecisionModifier extends Component {
     let precision = this.props.precision;
 
     switch (name) {
-      case 'date':
+      case 'date': {
         const dateMoment = evt != null ? evt.format('YYYY-MM-DD') : null;
         date = dateMoment ? `@${dateMoment}` : null;
         break;
-      case 'time':
+      }
+      case 'time': {
         const timeMoment = evt != null ? evt.format('HH:mm:ss') : null;
         time = timeMoment ? `T${timeMoment}` : null;
         break;
-      case 'precision':
+      }
+      case 'precision': {
         precision = evt.value;
-      default:
         break;
+      }
+      default: {
+        break;
+      }
     }
 
     this.props.updateAppliedModifier(this.props.index, { date, time, precision });
@@ -56,7 +61,7 @@ export default class DateTimePrecisionModifier extends Component {
                 : null}
               dateFormat="L"
               onChange={ (e) => {
-                this.assignValue(e, 'date')
+                this.assignValue(e, 'date');
               }}
             />
 
@@ -69,7 +74,7 @@ export default class DateTimePrecisionModifier extends Component {
                 ? moment(this.props.time, 'HH:mm:ss')
                 : null}
               onChange={ (e) => {
-                this.assignValue(e, 'time')
+                this.assignValue(e, 'time');
               }}
             />
 
@@ -80,7 +85,7 @@ export default class DateTimePrecisionModifier extends Component {
                 id={precId}
                 value={this.props.precision}
                 onChange={ (e) => {
-                  this.assignValue(e, 'precision')
+                  this.assignValue(e, 'precision');
                 }}
                 options={options}
               />

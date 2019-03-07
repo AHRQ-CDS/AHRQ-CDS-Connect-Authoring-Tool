@@ -23,6 +23,7 @@ export default class QuantityModifier extends Component {
         <label htmlFor={valueId}>
           <input
             type="number"
+            className="quantity-modifier-value"
             placeholder="enter value"
             aria-label="Quantity Modifier Value"
             value={this.props.value || ''}
@@ -35,7 +36,7 @@ export default class QuantityModifier extends Component {
           <input
             type="text"
             id={this.props.uniqueId}
-            className="quantity-modifier-ucum"
+            className="quantity-modifier-unit"
             placeholder="enter unit"
             aria-label="Quantity Modifier Unit"
             value={this.props.unit || ''}
