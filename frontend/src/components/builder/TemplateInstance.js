@@ -28,6 +28,9 @@ import SelectModifier from './modifiers/SelectModifier';
 import StringModifier from './modifiers/StringModifier';
 import NumberModifier from './modifiers/NumberModifier';
 import QuantityModifier from './modifiers/QuantityModifier';
+import DateTimeModifier from './modifiers/DateTimeModifier';
+import DateTimePrecisionModifier from './modifiers/DateTimePrecisionModifier';
+import TimePrecisionModifier from './modifiers/TimePrecisionModifier';
 import ValueComparisonNumber from './modifiers/ValueComparisonNumber';
 import ValueComparisonObservation from './modifiers/ValueComparisonObservation';
 import WithUnit from './modifiers/WithUnit';
@@ -37,7 +40,6 @@ import { hasDuplicateName, doesBaseElementUseNeedWarning, doesBaseElementInstanc
   validateElement, hasGroupNestedWarning } from '../../utils/warnings';
 import { getOriginalBaseElement } from '../../utils/baseElements';
 import { getReturnType, validateModifier, allModifiersValid } from '../../utils/instances';
-import DateTimeModifier from './modifiers/DateTimeModifier';
 
 function getInstanceName(instance) {
   return (instance.parameters.find(p => p.id === 'element_name') || {}).value;
@@ -242,6 +244,27 @@ export default class TemplateInstance extends Component {
               codeData={this.props.codeData}
               validateCode={this.props.validateCode}
               resetCodeValidation={this.props.resetCodeValidation} />
+          );
+        case "BeforeDateTimePrecise":
+        case 'AfterDateTimePrecise':
+          return (
+            <DateTimePrecisionModifier
+              key={index}
+              index={index}
+              date={mod.values.date}
+              time={mod.values.time}
+              precision={mod.values.precision}
+              updateAppliedModifier={this.updateAppliedModifier}/>
+          );
+        case "BeforeTimePrecise":
+        case 'AfterTimePrecise':
+          return (
+            <TimePrecisionModifier
+              key={index}
+              index={index}
+              time={mod.values.time}
+              precision={mod.values.precision}
+              updateAppliedModifier={this.updateAppliedModifier}/>
           );
         case 'ContainsQuantity':
         case 'BeforeQuantity':

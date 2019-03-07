@@ -196,6 +196,48 @@ export default [
     cqlTemplate: 'ValueComparison',
     cqlLibraryFunction: 'StartsWith'
   },
+  //times
+  {
+    id: 'BeforeTimePrecise',
+    name: 'Before',
+    inputTypes: ['time'],
+    returnType: 'boolean',
+    validator: { type: 'require', fields: ['time', 'precision'], args: [] },
+    values: { time: undefined, precision: undefined },
+    cqlTemplate: 'CenterModifierTimePrecise',
+    cqlLibraryFunction: 'before'
+  },
+  {
+    id: 'AfterTimePrecise',
+    name: 'After',
+    inputTypes: ['time'],
+    returnType: 'boolean',
+    validator: { type: 'require', fields: ['time', 'precision'], args: [] },
+    values: { time: undefined, precision: undefined },
+    cqlTemplate: 'CenterModifierTimePrecise',
+    cqlLibraryFunction: 'after'
+  },
+  //datetimes
+  {
+    id: 'BeforeDateTimePrecise',
+    name: 'Before',
+    inputTypes: ['datetime'],
+    returnType: 'boolean',
+    validator: { type: 'require', fields: ['date', 'precision'], args: [] },
+    values: { date: undefined, time: undefined, precision: undefined },
+    cqlTemplate: 'CenterModifierDateTimePrecise',
+    cqlLibraryFunction: 'before'
+  },
+  {
+    id: 'AfterDateTimePrecise',
+    name: 'After',
+    inputTypes: ['datetime'],
+    returnType: 'boolean',
+    validator: { type: 'require', fields: ['date', 'precision'], args: [] },
+    values: { date: undefined, time: undefined, precision: undefined },
+    cqlTemplate: 'CenterModifierDateTimePrecise',
+    cqlLibraryFunction: 'after'
+  },
   //intervals
   {
     id: 'ContainsInteger',
