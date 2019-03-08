@@ -15,7 +15,7 @@ export default class TextAreaParameter extends Component {
 
     this.textarea = null;
     this.baseScrollHeight = 0;
-    this.state = { minRows: 5, rows: 5 };
+    this.state = { minRows: 1, rows: 1 };
   }
 
   componentDidMount() {
