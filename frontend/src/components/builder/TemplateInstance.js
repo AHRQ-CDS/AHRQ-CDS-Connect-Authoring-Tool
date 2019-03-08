@@ -642,6 +642,7 @@ export default class TemplateInstance extends Component {
     const validationError = validateElement(this.props.templateInstance, this.state);
     const returnError = (!(validateReturnType !== false) || returnType === 'boolean') ? null
       : "Element must have return type 'boolean'. Add expression(s) to change the return type.";
+    const commentParameter = templateInstance.parameters.find(param => param.id === 'comment');
 
     return (
       <div className="card-element__body">
@@ -654,9 +655,16 @@ export default class TemplateInstance extends Component {
           baseElements={this.props.baseElements}
         />
 
+        {commentParameter &&
+          <TextAreaParameter
+            key={commentParameter.id}
+            {...commentParameter}
+            updateInstance={this.updateInstance} />
+        }
+
         {templateInstance.parameters.map((param, index) => {
           // TODO: each parameter type should probably have its own component
-          if (param.id !== 'element_name') {
+          if (param.id !== 'element_name' && param.id !== 'comment') {
             return this.selectTemplate(param);
           }
           return null;
