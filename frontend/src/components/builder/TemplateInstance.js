@@ -418,11 +418,11 @@ export default class TemplateInstance extends Component {
 
     return (
       <div className="modifier__return__type" id="base-element-list">
-        <div className="row code-info">
-          <div className="col-3 bold align-right code-info__label">Base Element:</div>
-          <div className="col-9 row code-info__info">
-            <div className="col-10">{referenceName}</div>
-            <div className="col-2 align-right">
+        <div className="code-info">
+          <div className="bold align-right code-info__label">Base Element:</div>
+          <div className="code-info__info">
+            <div className="code-info__text">{referenceName}</div>
+            <div className="code-info__buttons align-right">
               <span
                 role="button"
                 id={`definition-${this.props.templateInstance.uniqueId}`}
