@@ -68,25 +68,26 @@
       justify-content: space-between;
       padding: 0.5em 1em;
 
+      .string-parameter {
+        .label {
+          flex: 1;
+          text-align: left;
+          padding-right: 1em;
+          white-space: nowrap;
+        }
+
+        .input {
+          flex: 6;
+          padding: 0 0.75em;
+        }
+      }
+
       &-top {
         display: flex;
         width: 100%;
 
         .card-element__heading {
           flex: 4;
-
-          .string-parameter {
-            .label {
-              flex: 1;
-              text-align: left;
-              padding-right: 1em;
-            }
-
-            .input {
-              flex: 6;
-              padding: 0 0.75em;
-            }
-          }
         }
 
         .card-element__buttons {

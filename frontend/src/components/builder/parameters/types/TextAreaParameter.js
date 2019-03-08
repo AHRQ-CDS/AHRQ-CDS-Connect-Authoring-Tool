@@ -20,6 +20,7 @@ export default class TextAreaParameter extends Component {
 
             <div className="input">
               <textarea
+                className="auto-expand"
                 id={formId}
                 name={id}
                 value={value || ''}
@@ -27,6 +28,8 @@ export default class TextAreaParameter extends Component {
                 onChange={(event) => {
                   updateInstance({ [event.target.name]: event.target.value });
                 }}
+                rows="1"
+                data-min-rows="1"
               />
             </div>
           </label>
