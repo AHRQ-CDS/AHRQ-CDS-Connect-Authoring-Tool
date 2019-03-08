@@ -94,6 +94,7 @@
           flex: 1;
           text-align: right;
           margin-top: 10px;
+          white-space: nowrap;
         }
 
         &.collapsed {
@@ -159,18 +160,23 @@
 
   .card-group__header {
     display: flex;
-    flex: 0 0 100%;
-    justify-content: space-between;
-    align-items: center;
-    padding: 0 0 1em 1em;
+    margin: -10px 0 10px;
+  }
 
-    &-heading {
-      flex: 1;
+  .card-group__header-title {
+    flex: 4;
+
+    .label {
+      text-align: left;
+      padding-right: 1em;
     }
   }
 
   .card-group__buttons {
-    padding-right: 1em;
+    flex: 1;
+    text-align: right;
+    margin-top: 10px;
+    white-space: nowrap;
   }
 
   .card-select {
