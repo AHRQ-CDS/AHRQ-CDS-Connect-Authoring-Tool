@@ -4,7 +4,6 @@ import FontAwesome from 'react-fontawesome';
 import _ from 'lodash';
 import { UncontrolledTooltip } from 'reactstrap';
 
-
 import ElementModal from '../ElementModal';
 
 export default class ValueSetTemplate extends Component {
@@ -67,17 +66,17 @@ export default class ValueSetTemplate extends Component {
     const { vsacParameter, valueSet, index } = this.props;
 
     return (
-      <div className="row vs-info">
-        <div className="col-3 bold align-right vs-info__label">
+      <div className="vs-info">
+        <div className="bold align-right vs-info__label">
           Value Set{vsacParameter.valueSets.length > 1 ? ` ${index + 1}` : ''}:
         </div>
 
-        <div className="col-9 row vs-info__info">
-          <div className="col-10">
+        <div className="vs-info__info">
+          <div className="vs-info__text">
             {` ${valueSet.name} (${valueSet.oid})`}
           </div>
 
-          <div className="col-2 align-right vs-info__buttons">
+          <div className="align-right vs-info__buttons">
             {this.viewValueSetDetails(valueSet)}
 
             <span

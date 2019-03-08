@@ -11,23 +11,26 @@ export default class ValueSetParameter extends Component {
   render() {
     const id = _.uniqueId('parameter-');
     return (
-      <div className="value-set-parameter form__group">
-        <label htmlFor={id} className="row">
-          <span className="label col-3">{this.props.param.name}:</span>
+      <div className="value-set-parameter">
+        <div className="form__group">
+          <label htmlFor={id}>
+            <div className="label">{this.props.param.name}:</div>
 
-          <Select
-            labelKey={'name'}
-            className="col-7"
-            placeholder={`Select ${this.props.param.name}`}
-            options={this.props.valueSets}
-            inputProps={{ id }}
-            clearable={true}
-            name={this.props.param.id}
-            value={this.props.param.value}
-            onChange={(value) => { this.props.updateInstance({ [this.props.param.id]: value }); }}
-            onFocus={this.onFocus}
-            searchable={true} />
-        </label>
+            <div className="input">
+              <Select
+                labelKey={'name'}
+                placeholder={`Select ${this.props.param.name}`}
+                options={this.props.valueSets}
+                inputProps={{ id }}
+                clearable={true}
+                name={this.props.param.id}
+                value={this.props.param.value}
+                onChange={(value) => { this.props.updateInstance({ [this.props.param.id]: value }); }}
+                onFocus={this.onFocus}
+                searchable={true} />
+              </div>
+          </label>
+        </div>
       </div>
     );
   }

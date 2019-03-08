@@ -280,12 +280,12 @@ export default class TemplateInstance extends Component {
   renderAppliedModifiers = () => (
     <div className="applied-modifiers">
       <div className="applied-modifiers__info">
-        <div className="applied-modifiers__info-expressions row">
+        <div className="applied-modifiers__info-expressions">
           {this.props.templateInstance.modifiers && this.props.templateInstance.modifiers.length > 0 &&
-            <div className="col-3 bold align-right applied-modifiers__label">Expressions:</div>
+            <div className="bold align-right applied-modifiers__label">Expressions:</div>
           }
 
-          <div className="modifier__list col-9" aria-label="Expression List">
+          <div className="modifier__list" aria-label="Expression List">
             {(this.props.templateInstance.modifiers || []).map((modifier, index) =>
               this.renderAppliedModifier(modifier, index))}
           </div>
@@ -677,9 +677,9 @@ export default class TemplateInstance extends Component {
         {this.renderAppliedModifiers()}
 
         <div className="modifier__return__type">
-          <div className="return-type row">
-            <div className="col-3 bold align-right return-type__label">Return Type:</div>
-            <div className="col-7 return-type__value">
+          <div className="return-type">
+            <div className="bold align-right return-type__label">Return Type:</div>
+            <div className="return-type__value">
               { (validateReturnType === false || _.startCase(returnType) === 'Boolean') &&
                 <FontAwesome name="check" className="check" />}
               {_.startCase(returnType)}

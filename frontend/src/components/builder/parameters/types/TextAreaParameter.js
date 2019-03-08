@@ -13,21 +13,24 @@ export default class TextAreaParameter extends Component {
     const formId = _.uniqueId('parameter-');
 
     return (
-      <div className="textarea-parameter form__group">
-        <label htmlFor={formId} className="row">
-          <span className="label col-3">{name}:</span>
+      <div className="textarea-parameter">
+        <div className="form__group">
+          <label htmlFor={formId}>
+            <div className="label">{name}:</div>
 
-          <textarea
-            className="col-7"
-            id={formId}
-            name={id}
-            value={value || ''}
-            aria-label={name}
-            onChange={(event) => {
-              updateInstance({ [event.target.name]: event.target.value });
-            }}
-          />
-        </label>
+            <div className="input">
+              <textarea
+                id={formId}
+                name={id}
+                value={value || ''}
+                aria-label={name}
+                onChange={(event) => {
+                  updateInstance({ [event.target.name]: event.target.value });
+                }}
+              />
+            </div>
+          </label>
+        </div>
       </div>
     );
   }
