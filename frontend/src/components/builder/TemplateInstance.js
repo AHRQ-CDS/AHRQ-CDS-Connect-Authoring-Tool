@@ -484,17 +484,17 @@ export default class TemplateInstance extends Component {
         return (
           <div className="modifier__return__type" id="code-list">
             {vsacParameter.codes.map((code, i) => (
-              <div key={`selected-code-${i}`} className="row code-info">
-                <div className="col-3 bold align-right code-info__label">
+              <div key={`selected-code-${i}`} className="code-info">
+                <div className="bold align-right code-info__label">
                   Code{vsacParameter.codes.length > 1 ? ` ${i + 1}` : ''}:
                 </div>
 
                 {/* Code name will come with validation */}
-                <div className="col-9 row code-info__info">
-                  <div className="col-10">{`${code.codeSystem.name} (${code.code})
+                <div className="code-info__info">
+                  <div className="code-info__text">{`${code.codeSystem.name} (${code.code})
                    ${code.display === '' ? '' : ` - ${code.display}`}`}</div>
 
-                  <div className="col-2 code-info__buttons align-right">
+                  <div className="code-info__buttons align-right">
                     <span
                       role="button"
                       id="delete-code"
@@ -741,7 +741,7 @@ export default class TemplateInstance extends Component {
             updateInstance={this.updateInstance}
             name={elementType}
             uniqueId={templateInstance.uniqueId}
-            />
+          />
           {doesHaveDuplicateName && !doesHaveBaseElementUseWarning && !doesHaveBaseElementInstanceWarning &&
             <div className="warning">Warning: Name already in use. Choose another name.</div>
           }
