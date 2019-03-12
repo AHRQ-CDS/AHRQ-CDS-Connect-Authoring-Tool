@@ -1,6 +1,5 @@
 <% if (checkExistence) {-%> 
-<% if (comment) { %>
-<%
+<% if (comment) {
 const commentArray = comment.split(/\n\r|\r\n|\r|\n/g);
 // Render each line in the comment
 commentArray.forEach(c => {
@@ -27,8 +26,7 @@ define "<%-element_name%>":
 <% if (checkExistence) {-%>
 define "__ageRange_for_<%-element_name%>":
 <% } else { -%>
-<% if (comment) { %>
-<%
+<% if (comment) {
 const commentArray = comment.split(/\n\r|\r\n|\r|\n/g);
 // Render each line in the comment
 commentArray.forEach(c => {

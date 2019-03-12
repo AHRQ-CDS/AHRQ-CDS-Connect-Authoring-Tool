@@ -1,5 +1,4 @@
-<% if (locals.comment) { %>
-<%
+<% if (locals.comment) {
 const commentArray = comment.split(/\n\r|\r\n|\r|\n/g);
 // Render each line in the comment
 commentArray.forEach(c => {
