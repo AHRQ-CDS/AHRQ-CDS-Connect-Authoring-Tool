@@ -22,7 +22,7 @@ export default class TextAreaParameter extends Component {
     const { textarea } = this;
     const savedValue = textarea.value;
 
-    textarea.value = "";
+    textarea.value = '';
     this.baseScrollHeight = textarea.scrollHeight;
     textarea.value = savedValue;
 
@@ -62,7 +62,7 @@ export default class TextAreaParameter extends Component {
             <div className="input">
               <textarea
                 rows={rows}
-                ref={ref => (this.textarea = ref)}
+                ref={(ref) => { this.textarea = ref; }}
                 id={formId}
                 name={id}
                 value={value || ''}

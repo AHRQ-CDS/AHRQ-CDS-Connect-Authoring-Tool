@@ -7,13 +7,15 @@ export function doesBaseElementInstanceNeedWarning(instance, allInstancesInAllTr
     let anyUseHasChanged = false;
     instance.usedBy.forEach((usageId) => {
       const use = allInstancesInAllTrees.find(i => i.uniqueId === usageId);
-      const useCommentParameter = use.parameters.find(param => param.id === 'comment');
-      const useCommentValue = useCommentParameter ? useCommentParameter.value : '';
-      const instanceCommentParameter = instance.parameters.find(param => param.id === 'comment');
-      const instanceCommentValue = instanceCommentParameter ? instanceCommentParameter.value : '';
-      if (use && ((use.modifiers && use.modifiers.length > 0) || (instanceCommentValue !== useCommentValue)) &&
-        instance.parameters[0].value === use.parameters[0].value) {
-        anyUseHasChanged = true;
+      if (use) {
+        const useCommentParameter = use.parameters.find(param => param.id === 'comment');
+        const useCommentValue = useCommentParameter ? useCommentParameter.value : '';
+        const instanceCommentParameter = instance.parameters.find(param => param.id === 'comment');
+        const instanceCommentValue = instanceCommentParameter ? instanceCommentParameter.value : '';
+        if (((use.modifiers && use.modifiers.length > 0) || (instanceCommentValue !== useCommentValue)) &&
+          instance.parameters[0].value === use.parameters[0].value) {
+          anyUseHasChanged = true;
+        }
       }
     });
     return anyUseHasChanged;
