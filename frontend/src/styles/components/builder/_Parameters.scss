@@ -71,7 +71,6 @@
 
   .input {
     flex: 4;
-    padding: 0;
   }
 
   .icon {
@@ -85,7 +84,7 @@
   textarea {
     width: 100%;
     max-width: 100%;
-    padding: 10px;
+    padding: 10px 0.75em;
     height: auto;
   }
 }
