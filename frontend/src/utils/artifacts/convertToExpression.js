@@ -31,6 +31,7 @@ function getExpressionSentenceValue(modifier) {
   const expressionSentenceValues = {
     VerifiedObservation: { modifierText: 'verified', leadingText: '', type: 'list' },
     WithUnit: { modifierText: '', leadingText: 'with unit', type: 'post-list' },
+    ValueComparisonNumber: { modifierText: 'greater than a number', leadingText: 'whose value is', type: 'post' },
     ValueComparisonObservation: { modifierText: 'greater than a number', leadingText: 'whose value is', type: 'post' },
     QuantityValue: { modifierText: 'quantity value', leadingText: '', type: 'value' }, // Will not be displayed in phrase
     ConceptValue: { modifierText: 'concept value', leadingText: '', type: 'value' }, // Will not be displayed in phrase
@@ -45,6 +46,25 @@ function getExpressionSentenceValue(modifier) {
     ActiveMedicationStatement: { modifierText: 'active', leadingText: '', type: 'list' },
     ActiveMedicationOrder: { modifierText: 'active', leadingText: '', type: 'list' },
     ActiveOrConfirmedAllergyIntolerance: { modifierText: 'active or confirmed', leadingText: '', type: 'list' },
+    EqualsString: { modifierText: 'equals', leadingText: '', type: 'post' },
+    EndsWithString: { modifierText: 'ends with', leadingText: '', type: 'post' },
+    StartsWithString: { modifierText: 'starts with', leadingText: '', type: 'post' },
+    BeforeTimePrecise: { modifierText: 'before', leadingText: '', type: 'post' },
+    AfterTimePrecise: { modifierText: 'after', leadingText: '', type: 'post' },
+    BeforeDateTimePrecise: { modifierText: 'before', leadingText: '', type: 'post' },
+    AfterDateTimePrecise: { modifierText: 'after', leadingText: '', type: 'post' },
+    ContainsInteger: { modifierText: 'contains', leadingText: '', type: 'post' },
+    ContainsDateTime: { modifierText: 'contains', leadingText: '', type: 'post' },
+    ContainsDecimal: { modifierText: 'contains', leadingText: '', type: 'post' },
+    ContainsQuantity: { modifierText: 'contains', leadingText: '', type: 'post' },
+    BeforeInteger: { modifierText: 'before', leadingText: '', type: 'post' },
+    BeforeDateTime: { modifierText: 'before', leadingText: '', type: 'post' },
+    BeforeDecimal: { modifierText: 'before', leadingText: '', type: 'post' },
+    BeforeQuantity: { modifierText: 'before', leadingText: '', type: 'post' },
+    AfterInteger: { modifierText: 'after', leadingText: '', type: 'post' },
+    AfterDateTime: { modifierText: 'after', leadingText: '', type: 'post' },
+    AfterDecimal: { modifierText: 'after', leadingText: '', type: 'post' },
+    AfterQuantity: { modifierText: 'after', leadingText: '', type: 'post' },
     MostRecentObservation: { modifierText: 'most recent', leadingText: '', type: 'descriptor' },
     MostRecentProcedure: { modifierText: 'most recent', leadingText: '', type: 'descriptor' },
     MostRecentCondition: { modifierText: 'most recent', leadingText: '', type: 'descriptor' },
@@ -79,6 +99,17 @@ function getExpressionSentenceValue(modifier) {
         expressionSentenceValues[modifier.id].modifierText = `${modifier.values.unit}`;
         break;
       }
+      case 'ValueComparisonNumber': {
+        const minOperatorWord = getOperation(modifier.values.minOperator);
+        const maxOperatorWord = getOperation(modifier.values.maxOperator);
+        expressionSentenceValues[modifier.id].modifierText =
+          `${minOperatorWord} ${modifier.values.minValue}`;
+        if (maxOperatorWord) {
+          expressionSentenceValues[modifier.id].modifierText +=
+            ` and ${maxOperatorWord} ${modifier.values.maxValue}`;
+        }
+        break;
+      }
       case 'ValueComparisonObservation': {
         const minOperatorWord = getOperation(modifier.values.minOperator);
         const maxOperatorWord = getOperation(modifier.values.maxOperator);
@@ -109,6 +140,65 @@ function getExpressionSentenceValue(modifier) {
       case 'ConvertObservation': {
         const conversionDescription = modifier.values.description ? modifier.values.description : modifier.values.value;
         expressionSentenceValues[modifier.id].modifierText = `units converted from ${conversionDescription}`;
+        break;
+      }
+      case 'EqualsString':
+      case 'EndsWithString':
+      case 'StartsWithString': {
+        expressionSentenceValues[modifier.id].leadingText = `whose value`;
+        expressionSentenceValues[modifier.id].modifierText = `${_.lowerCase(modifier.name)} "${modifier.values.value}"`;
+        break;
+      }
+      case 'BeforeTimePrecise':
+      case 'AfterTimePrecise': {
+        expressionSentenceValues[modifier.id].leadingText = `whose value is`;
+        expressionSentenceValues[modifier.id].modifierText =
+          `${_.lowerCase(modifier.name)} the ${modifier.values.precision} of ${modifier.values.time.split('T')[1]}`;
+        break;
+      }
+      case 'BeforeDateTimePrecise':
+      case 'AfterDateTimePrecise': {
+        expressionSentenceValues[modifier.id].leadingText = `whose value is`;
+        expressionSentenceValues[modifier.id].modifierText =
+          `${_.lowerCase(modifier.name)} the ${modifier.values.precision} of ${modifier.values.date.split('@')[1]}`;
+        if (modifier.values.time) {
+          expressionSentenceValues[modifier.id].modifierText +=
+            ` at ${modifier.values.time.split('T')[1]}`;
+        }
+        break;
+      }
+      case 'ContainsInteger':
+      case 'BeforeInteger':
+      case 'AfterInteger':
+      case 'ContainsDecimal':
+      case 'BeforeDecimal':
+      case 'AfterDecimal': {
+        expressionSentenceValues[modifier.id].leadingText =
+          (modifier.name === 'Contains') ? `whose value` : 'whose value is';
+          expressionSentenceValues[modifier.id].modifierText =
+            `${_.lowerCase(modifier.name)} ${modifier.values.value}`
+        break;
+      }
+      case 'ContainsDateTime':
+      case 'BeforeDateTime':
+      case 'AfterDateTime': {
+        expressionSentenceValues[modifier.id].leadingText =
+          (modifier.name === 'Contains') ? `whose value` : 'whose value is';
+        expressionSentenceValues[modifier.id].modifierText =
+          `${_.lowerCase(modifier.name)} ${modifier.values.date.split('@')[1]}`;
+        if (modifier.values.time) {
+          expressionSentenceValues[modifier.id].modifierText +=
+            ` at ${modifier.values.time.split('T')[1]}`;
+        }
+        break;
+      }
+      case 'ContainsQuantity':
+      case 'BeforeQuantity':
+      case 'AfterQuantity': {
+        expressionSentenceValues[modifier.id].leadingText =
+        (modifier.name === 'Contains') ? `whose value` : 'whose value is';
+        expressionSentenceValues[modifier.id].modifierText =
+          `${_.lowerCase(modifier.name)} ${modifier.values.value} '${modifier.values.unit}'`
         break;
       }
       case 'LookBackObservation':
@@ -274,29 +364,6 @@ function getOrderedExpressionSentenceArrayForGender(genderParameter) {
   return orderedExpressionArray;
 }
 
-function getOrderedExpressionSentenceArrayForParameters(expressionArray) {
-  let orderedExpressionArray = [];
-  let remainingExpressionArray = expressionArray;
-  orderedExpressionArray.push({ expressionText: 'The value of the', isExpression: false });
-  orderedExpressionArray.push({ expressionText: 'parameter', isExpression: true, isType: true });
-  orderedExpressionArray.push({ expressionText: 'is', isExpression: false });
-
-  remainingExpressionArray = remainingExpressionArray.filter((expression) => {
-    if (expression.type === 'not') {
-      orderedExpressionArray = addExpressionText(orderedExpressionArray, expression);
-      return false;
-    }
-    return true;
-  });
-
-  orderedExpressionArray.push({ expressionText: 'met', isExpression: false });
-  remainingExpressionArray.forEach((expression) => {
-    orderedExpressionArray = addExpressionText(orderedExpressionArray, expression);
-  });
-
-  return orderedExpressionArray;
-}
-
 // Build the array for expression phrases by pushing each type of expression in a set order.
 function orderExpressionSentenceArray(
   expressionArray,
@@ -315,9 +382,6 @@ function orderExpressionSentenceArray(
   if (type === 'Gender') {
     // No modifiers can be applied to gender elements
     return getOrderedExpressionSentenceArrayForGender(otherParameters);
-  }
-  if (type === 'parameter') {
-    return getOrderedExpressionSentenceArrayForParameters(expressionArray);
   }
 
   if ((type === 'And' || type === 'Or') && !isBaseElementAndOr) {

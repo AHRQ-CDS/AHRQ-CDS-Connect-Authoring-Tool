@@ -323,7 +323,7 @@ test('DateTimeModifier renders without crashing', () => {
 
 test('DateTimeModifier changes input', () => {
   const updateAppliedModifierMock = jest.fn();
-  const component = shallowRenderComponent(DateTimeModifier, {
+  const component = fullRenderComponent(DateTimeModifier, {
     updateAppliedModifier: updateAppliedModifierMock,
     index: 6,
     date: '',
@@ -353,7 +353,7 @@ test('DateTimePrecisionModifier renders without crashing', () => {
 
 test('DateTimePrecisionModifier changes input', () => {
   const updateAppliedModifierMock = jest.fn();
-  const component = shallowRenderComponent(DateTimePrecisionModifier, {
+  const component = fullRenderComponent(DateTimePrecisionModifier, {
     updateAppliedModifier: updateAppliedModifierMock,
     index: 6,
     date: '',
@@ -386,7 +386,7 @@ test('TimePrecisionModifier renders without crashing', () => {
 
 test('TimePrecisionModifier changes input', () => {
   const updateAppliedModifierMock = jest.fn();
-  const component = shallowRenderComponent(TimePrecisionModifier, {
+  const component = fullRenderComponent(TimePrecisionModifier, {
     updateAppliedModifier: updateAppliedModifierMock,
     index: 6,
     time: '',
