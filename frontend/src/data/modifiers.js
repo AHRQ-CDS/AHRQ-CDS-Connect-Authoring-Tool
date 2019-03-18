@@ -205,7 +205,7 @@ export default [
     validator: { type: 'require', fields: ['time', 'precision'], args: [] },
     values: { time: undefined, precision: undefined },
     cqlTemplate: 'CenterModifierTimePrecise',
-    cqlLibraryFunction: 'before'  
+    cqlLibraryFunction: 'before'
   },
   {
     id: 'AfterTimePrecise',

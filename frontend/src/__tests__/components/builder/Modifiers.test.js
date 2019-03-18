@@ -1,3 +1,7 @@
+import DatePicker from 'react-datepicker';
+import TimePicker from 'rc-time-picker';
+import moment from 'moment';
+
 import BooleanComparison from '../../../components/builder/modifiers/BooleanComparison';
 import CheckExistence from '../../../components/builder/modifiers/CheckExistence';
 import LabelModifier from '../../../components/builder/modifiers/LabelModifier';
@@ -15,10 +19,6 @@ import ValueComparisonNumber from '../../../components/builder/modifiers/ValueCo
 import WithUnit from '../../../components/builder/modifiers/WithUnit';
 
 import { shallowRenderComponent, fullRenderComponent } from '../../../utils/test_helpers';
-
-import DatePicker from 'react-datepicker';
-import TimePicker from 'rc-time-picker';
-import moment from 'moment';
 
 test('BooleanComparison renders without crashing', () => {
   const component = shallowRenderComponent(BooleanComparison, {
@@ -323,7 +323,7 @@ test('DateTimeModifier renders without crashing', () => {
 
 test('DateTimeModifier changes input', () => {
   const updateAppliedModifierMock = jest.fn();
-  const component = fullRenderComponent(DateTimeModifier, {
+  const component = shallowRenderComponent(DateTimeModifier, {
     updateAppliedModifier: updateAppliedModifierMock,
     index: 6,
     date: '',
@@ -336,7 +336,7 @@ test('DateTimeModifier changes input', () => {
   datePicker.simulate('change', moment('2000-03-02'));
   expect(updateAppliedModifierMock).toBeCalledWith(6, { date: '@2000-03-02', time: '' });
   timePicker.simulate('change', moment('2000-03-02 12:00:01'));
-  expect(updateAppliedModifierMock).lastCalledWith(6, { date: '', time:  'T12:00:01' });
+  expect(updateAppliedModifierMock).lastCalledWith(6, { date: '', time: 'T12:00:01' });
 });
 
 test('DateTimePrecisionModifier renders without crashing', () => {
@@ -353,7 +353,7 @@ test('DateTimePrecisionModifier renders without crashing', () => {
 
 test('DateTimePrecisionModifier changes input', () => {
   const updateAppliedModifierMock = jest.fn();
-  const component = fullRenderComponent(DateTimePrecisionModifier, {
+  const component = shallowRenderComponent(DateTimePrecisionModifier, {
     updateAppliedModifier: updateAppliedModifierMock,
     index: 6,
     date: '',
@@ -368,9 +368,9 @@ test('DateTimePrecisionModifier changes input', () => {
   datePicker.simulate('change', moment('2000-03-02'));
   expect(updateAppliedModifierMock).toBeCalledWith(6, { date: '@2000-03-02', time: '', precision: '' });
   timePicker.simulate('change', moment('2000-03-02 12:00:01'));
-  expect(updateAppliedModifierMock).lastCalledWith(6, { date: '', time:  'T12:00:01', precision: '' });
+  expect(updateAppliedModifierMock).lastCalledWith(6, { date: '', time: 'T12:00:01', precision: '' });
   select.simulate('change', { value: 'year', label: 'year' });
-  expect(updateAppliedModifierMock).lastCalledWith(6, { date: '', time:  '', precision: 'year' });
+  expect(updateAppliedModifierMock).lastCalledWith(6, { date: '', time: '', precision: 'year' });
 });
 
 test('TimePrecisionModifier renders without crashing', () => {
@@ -386,7 +386,7 @@ test('TimePrecisionModifier renders without crashing', () => {
 
 test('TimePrecisionModifier changes input', () => {
   const updateAppliedModifierMock = jest.fn();
-  const component = fullRenderComponent(TimePrecisionModifier, {
+  const component = shallowRenderComponent(TimePrecisionModifier, {
     updateAppliedModifier: updateAppliedModifierMock,
     index: 6,
     time: '',
@@ -397,9 +397,9 @@ test('TimePrecisionModifier changes input', () => {
   const select = component.find('Select');
 
   timePicker.simulate('change', moment('2000-03-02 12:00:01'));
-  expect(updateAppliedModifierMock).lastCalledWith(6, { time:  '@T12:00:01', precision: '' });
+  expect(updateAppliedModifierMock).lastCalledWith(6, { time: '@T12:00:01', precision: '' });
   select.simulate('change', { value: 'year', label: 'year' });
-  expect(updateAppliedModifierMock).lastCalledWith(6, { time:  '', precision: 'year' });
+  expect(updateAppliedModifierMock).lastCalledWith(6, { time: '', precision: 'year' });
 });
 
 test('Qualifier renders without crashing', () => {

@@ -25,7 +25,7 @@ export default class DateTimePrecisionModifier extends Component {
         break;
       }
       case 'precision': {
-        precision = evt.value;
+        precision = evt ? evt.value : null;
         break;
       }
       default: {

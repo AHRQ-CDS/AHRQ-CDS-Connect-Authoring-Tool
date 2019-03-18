@@ -8,6 +8,7 @@ import _ from 'lodash';
 /* eslint-disable jsx-a11y/no-onchange */
 export default class TimePrecisionModifier extends Component {
   assignValue(evt, name) {
+    console.log(evt);
     let time = this.props.time;
     let precision = this.props.precision;
 
@@ -18,7 +19,7 @@ export default class TimePrecisionModifier extends Component {
         break;
       }
       case 'precision': {
-        precision = evt.value;
+        precision = evt ? evt.value : null;
         break;
       }
       default: {

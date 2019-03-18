@@ -145,20 +145,20 @@ function getExpressionSentenceValue(modifier) {
       case 'EqualsString':
       case 'EndsWithString':
       case 'StartsWithString': {
-        expressionSentenceValues[modifier.id].leadingText = `whose value`;
+        expressionSentenceValues[modifier.id].leadingText = 'whose value';
         expressionSentenceValues[modifier.id].modifierText = `${_.lowerCase(modifier.name)} "${modifier.values.value}"`;
         break;
       }
       case 'BeforeTimePrecise':
       case 'AfterTimePrecise': {
-        expressionSentenceValues[modifier.id].leadingText = `whose value is`;
+        expressionSentenceValues[modifier.id].leadingText = 'whose value is';
         expressionSentenceValues[modifier.id].modifierText =
           `${_.lowerCase(modifier.name)} the ${modifier.values.precision} of ${modifier.values.time.split('T')[1]}`;
         break;
       }
       case 'BeforeDateTimePrecise':
       case 'AfterDateTimePrecise': {
-        expressionSentenceValues[modifier.id].leadingText = `whose value is`;
+        expressionSentenceValues[modifier.id].leadingText = 'whose value is';
         expressionSentenceValues[modifier.id].modifierText =
           `${_.lowerCase(modifier.name)} the ${modifier.values.precision} of ${modifier.values.date.split('@')[1]}`;
         if (modifier.values.time) {
@@ -174,16 +174,16 @@ function getExpressionSentenceValue(modifier) {
       case 'BeforeDecimal':
       case 'AfterDecimal': {
         expressionSentenceValues[modifier.id].leadingText =
-          (modifier.name === 'Contains') ? `whose value` : 'whose value is';
-          expressionSentenceValues[modifier.id].modifierText =
-            `${_.lowerCase(modifier.name)} ${modifier.values.value}`
+          (modifier.name === 'Contains') ? 'whose value' : 'whose value is';
+        expressionSentenceValues[modifier.id].modifierText =
+            `${_.lowerCase(modifier.name)} ${modifier.values.value}`;
         break;
       }
       case 'ContainsDateTime':
       case 'BeforeDateTime':
       case 'AfterDateTime': {
         expressionSentenceValues[modifier.id].leadingText =
-          (modifier.name === 'Contains') ? `whose value` : 'whose value is';
+          (modifier.name === 'Contains') ? 'whose value' : 'whose value is';
         expressionSentenceValues[modifier.id].modifierText =
           `${_.lowerCase(modifier.name)} ${modifier.values.date.split('@')[1]}`;
         if (modifier.values.time) {
@@ -196,9 +196,9 @@ function getExpressionSentenceValue(modifier) {
       case 'BeforeQuantity':
       case 'AfterQuantity': {
         expressionSentenceValues[modifier.id].leadingText =
-        (modifier.name === 'Contains') ? `whose value` : 'whose value is';
+        (modifier.name === 'Contains') ? 'whose value' : 'whose value is';
         expressionSentenceValues[modifier.id].modifierText =
-          `${_.lowerCase(modifier.name)} ${modifier.values.value} '${modifier.values.unit}'`
+          `${_.lowerCase(modifier.name)} ${modifier.values.value} '${modifier.values.unit}'`;
         break;
       }
       case 'LookBackObservation':
