@@ -285,7 +285,7 @@ export default class UserGuide extends Component {
 
                   <li>
                     The "Workspace Tabs" divide the workspace into workflow sections for building an artifact. This helps keep
-                    sections of the artifact organized for the user (more on each tab below in sections 3.6-3.12).
+                    sections of the artifact organized for the user (more on each tab below in sections 3.7-3.13).
                   </li>
 
                   <li>
@@ -538,7 +538,7 @@ export default class UserGuide extends Component {
                 <p>
                   Elements are the main building blocks for an artifact. Each artifact represents different conditions,
                   medications, demographics, etc. Using a combination of elements together in groups (covered below in
-                  Section 3.5 "Logic Elements") helps the user define different populations for the artifact.
+                  Section 3.6 "Logic Elements") helps the user define different populations for the artifact.
                 </p>
 
                 <p>
@@ -580,7 +580,7 @@ export default class UserGuide extends Component {
                   </li>
 
                   <li>
-                    A text box used to add a comment to the element. See the Comments section below for more details.
+                    A text box used to add a comment to the element. See the "Comments" section below for more details.
                   </li>
 
                   <li>
@@ -700,7 +700,48 @@ export default class UserGuide extends Component {
               </div>
 
               <div className="h3-wrapper">
-                <h3 id="Logic_Elements">3.5 Logic Elements</h3>
+                <h3 id="Comments">3.5 Comments</h3>
+                <p>
+                  <p>
+                    Comments can be added to any element in the Workspace and are a good way to provide additional information
+                    about an element. Recommended uses of comments include:
+                    <ul>
+                      <li>
+                        Providing a rationale for why the element is created or indicating a decision that was made when
+                        creating the element and why that decision was made
+                      </li>
+                      <li>
+                        Providing a simple summary of complex logic that is encapsulated in the element, or just further
+                        explaining the element built
+                      </li>
+                      <li>
+                        Indicating a source from which the element's logic is derived and providing any necessary references
+                      </li>
+                      <li>
+                        Indicating a section of logic that implementers may want to modify based on specific site needs
+                      </li>
+                    </ul>
+                    All comments are added to the generated CQL above the element's definition. However, they are not
+                    executed as part of the artifact and just serve as an annotation to the element.
+                </p>
+                </p>
+
+                <p>
+                  <img
+                    alt="Expressions on an Element"
+                    src={screenshotUrl('Comment_on_Element')}
+                    className="img-fluid img-thumbnail rounded mx-auto d-block" />
+                </p>
+
+                <ol>
+                  <li>
+                    The text box for a comment. The comment can be multiple lines and can be as long as desired.
+                  </li>
+                </ol>
+              </div>
+
+              <div className="h3-wrapper">
+                <h3 id="Logic_Elements">3.6 Logic Elements</h3>
 
                 <p>
                   Logic Elements are groups of Elements tied together by a particular conjunction, "And" or "Or". By stringing
@@ -764,7 +805,7 @@ export default class UserGuide extends Component {
               </div>
 
               <div className="h3-wrapper">
-                <h3 id="Inclusions">3.6 Inclusions</h3>
+                <h3 id="Inclusions">3.7 Inclusions</h3>
 
                 <p>
                   The Inclusions section uses Elements, Expressions, and Logic Elements to create a target population that is
@@ -775,7 +816,7 @@ export default class UserGuide extends Component {
               </div>
 
               <div className="h3-wrapper">
-                <h3 id="Exclusions">3.7 Exclusions</h3>
+                <h3 id="Exclusions">3.8 Exclusions</h3>
 
                 <p>
                   The Exclusions section uses Elements, Expressions, and Logic Elements to create a target population that is
@@ -786,14 +827,14 @@ export default class UserGuide extends Component {
               </div>
 
               <div className="h3-wrapper">
-                <h3 id="Subpopulations">3.8 Subpopulations</h3>
+                <h3 id="Subpopulations">3.9 Subpopulations</h3>
 
                 <p>
                   The Subpopulations section uses Elements, Expressions, and Logic Elements to create named target
                   populations, which can then be applied to a Recommendation. This helps the user further filter the
                   general population created from the combination of Inclusions and Exclusions. There are two default
                   "Subpopulations" that can be applied to a recommendation, "Doesn't Meet Inclusion Criteria" and "Meets
-                  Exclusion Criteria" (more in section 3.9 Recommendations). Most interactions required to build
+                  Exclusion Criteria" (more in section 3.11 Recommendations). Most interactions required to build
                   Subpopulations are covered in above sections, but Subpopulations has a few differences.
                 </p>
 
@@ -848,9 +889,9 @@ export default class UserGuide extends Component {
               </div>
 
               <div className="h3-wrapper">
-                <h3 id="BaseElements">3.9 Base Elements</h3>
+                <h3 id="BaseElements">3.10 Base Elements</h3>
                 <div className="h4-wrapper">
-                  <h4 id="Single_Base_Elements">3.9.1 Single Base Elements</h4>
+                  <h4 id="Single_Base_Elements">3.10.1 Single Base Elements</h4>
 
                   <p>
                     Base Elements can be used to create individual elements, which do not need to be contained within a
@@ -940,7 +981,7 @@ export default class UserGuide extends Component {
                 </div>
 
                 <div className="h4-wrapper">
-                  <h4 id="Base_Element_List_Groups">3.9.2 Base Element List Groups</h4>
+                  <h4 id="Base_Element_List_Groups">3.10.2 Base Element List Groups</h4>
                   <p>
                     Base Elements can also be a list of elements. Similar to Logic Elements, Lists combine multiple
                     elements into one group, which can be combined with a Union or an Intersection. Lists can be added to
@@ -1007,11 +1048,11 @@ export default class UserGuide extends Component {
                 </div>
 
                 <div className="h4-wrapper">
-                  <h4 id="Base_Element_Logic_Elements">3.9.3 Base Element Logic Elements</h4>
+                  <h4 id="Base_Element_Logic_Elements">3.10.3 Base Element Logic Elements</h4>
                   <p>
                     Base Elements can also be a Logic Element. Base Element Logic Elements work the same as Logic Elements
                     in other tabs; they combine multiple elements into one group using an And or an Or. For more information
-                    about Logic Elements, see Section 3.5. Logic Elements in this tab also work very similarly to List Groups
+                    about Logic Elements, see Section 3.6. Logic Elements in this tab also work very similarly to List Groups
                     in this tab. They can be added to Base Elements by choosing "List Operations" and choosing "And" or "Or".
                   </p>
 
@@ -1049,7 +1090,7 @@ export default class UserGuide extends Component {
               </div>
 
               <div className="h3-wrapper">
-                <h3 id="Recommendations">3.10 Recommendations</h3>
+                <h3 id="Recommendations">3.11 Recommendations</h3>
 
                 <p>
                   Recommendations are the resulting notices that should be delivered to the clinician after the CDS
@@ -1148,7 +1189,7 @@ export default class UserGuide extends Component {
               </div>
 
               <div className="h3-wrapper">
-                <h3 id="Parameters">3.11 Parameters</h3>
+                <h3 id="Parameters">3.12 Parameters</h3>
 
                 <p>
                   Parameters allow the user to create named, reusable values that can be supplied by the CDS execution
@@ -1197,7 +1238,7 @@ export default class UserGuide extends Component {
               </div>
 
               <div className="h3-wrapper">
-                <h3 id="Handle_Errors">3.12 Handle Errors</h3>
+                <h3 id="Handle_Errors">3.13 Handle Errors</h3>
 
                 <p>
                   The "Handle Errors" tab is an area to optionally direct the system how to handle various errors that may
