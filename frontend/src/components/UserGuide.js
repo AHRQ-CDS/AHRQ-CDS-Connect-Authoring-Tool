@@ -580,6 +580,10 @@ export default class UserGuide extends Component {
                   </li>
 
                   <li>
+                    A text box used to add a comment to the element. See the Comments section below for more details.
+                  </li>
+
+                  <li>
                     In the case of a VSAC element, the value sets and codes added to the element are listed.
                   </li>
 
