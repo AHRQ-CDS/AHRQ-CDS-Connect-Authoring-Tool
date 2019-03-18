@@ -590,7 +590,10 @@ class CqlArtifact {
         });
       }
       const cqlString = applyModifiers.call(this, context.values, context.modifiers);
-      return ejs.render(templateMap.BaseTemplate, { comment: context.comment, element_name: context.element_name, cqlString });
+      return ejs.render(
+        templateMap.BaseTemplate,
+        { comment: context.comment, element_name: context.element_name, cqlString }
+      );
     }).join('\n');
   }
   header() {

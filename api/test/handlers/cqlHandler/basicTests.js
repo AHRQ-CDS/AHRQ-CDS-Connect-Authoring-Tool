@@ -28,6 +28,11 @@ describe('Basic CQL Handler Tests', () => {
       type: 'string',
       name: 'Group Name',
       value: 'MeetsInclusionCriteria'
+    },
+    {
+      id: 'comment',
+      name: 'Comment',
+      type: 'textarea',
     }],
     uniqueId: 'And-1',
     childInstances: [{
@@ -46,6 +51,11 @@ describe('Basic CQL Handler Tests', () => {
           value: 'has_ascvd',
           type: 'condition',
           name: 'Condition'
+        },
+        {
+          id: 'comment',
+          name: 'Comment',
+          type: 'textarea',
         }
       ],
       returnType: 'list_of_conditions',
@@ -65,6 +75,11 @@ describe('Basic CQL Handler Tests', () => {
       type: 'string',
       name: 'Group Name',
       value: 'MeetsExclusionCriteria'
+    },
+    {
+      id: 'comment',
+      name: 'Comment',
+      type: 'textarea',
     }],
     uniqueId: 'And-2',
     childInstances: [{
@@ -84,6 +99,11 @@ describe('Basic CQL Handler Tests', () => {
           value: 'total_cholesterol',
           type: 'observation',
           name: 'Observation'
+        },
+        {
+          id: 'comment',
+          name: 'Comment',
+          type: 'textarea',
         }
       ],
       returnType: 'list_of_observations',
@@ -110,7 +130,10 @@ describe('Basic CQL Handler Tests', () => {
       name: '',
       conjunction: true,
       returnType: 'boolean',
-      parameters: [{ id: 'element_name', type: 'string', name: 'Group Name' }],
+      parameters: [
+        { id: 'element_name', type: 'string', name: 'Group Name' },
+        { id: 'comment', name: 'Comment', type: 'textarea' }
+      ],
       uniqueId: 'And-0',
       childInstances: [{
         id: 'AgeRange',
@@ -146,6 +169,11 @@ describe('Basic CQL Handler Tests', () => {
               name: 'years',
               value: "AgeInYears()"
             }
+          },
+          {
+            id: 'comment',
+            name: 'Comment',
+            type: 'textarea',
           }
         ],
         uniqueId: 'AgeRange-5',
@@ -184,7 +212,10 @@ describe('Subpopulation tests', () => {
     name: '',
     conjunction: true,
     returnType: 'boolean',
-    parameters: [{ id: 'element_name', type: 'string', name: 'Group Name', value: 'MeetsInclusionCriteria' }],
+    parameters: [
+      { id: 'element_name', type: 'string', name: 'Group Name', value: 'MeetsInclusionCriteria' },
+      { id: 'comment', name: 'Comment', type: 'textarea' }
+    ],
     uniqueId: 'And-1',
     childInstances: [{
       id: 'StatinAllergen',
@@ -202,6 +233,11 @@ describe('Subpopulation tests', () => {
           value: 'statin_allergen',
           type: 'allergyIntolerance',
           name: 'Allergy Intolerance'
+        },
+        {
+          id: 'comment',
+          name: 'Comment',
+          type: 'textarea',
         }
       ],
       returnType: 'list_of_allergy_intolerances',
@@ -223,7 +259,10 @@ describe('Subpopulation tests', () => {
     name: '',
     conjunction: true,
     returnType: 'boolean',
-    parameters: [{ id: 'element_name', type: 'string', name: 'Group Name', value: 'MeetsExclusionCriteria' }],
+    parameters: [
+      { id: 'element_name', type: 'string', name: 'Group Name', value: 'MeetsExclusionCriteria' },
+      { id: 'comment', name: 'Comment', type: 'textarea' }
+    ],
     uniqueId: 'And-2',
     childInstances: [],
     path: ''
@@ -290,7 +329,10 @@ describe('Subpopulation tests', () => {
       name: '',
       conjunction: true,
       returnType: 'boolean',
-      parameters: [{ id: 'element_name', type: 'string', name: 'Group Name' }],
+      parameters: [
+        { id: 'element_name', type: 'string', name: 'Group Name' },
+        { id: 'comment', name: 'Comment', type: 'textarea' }
+      ],
       uniqueId: 'And-0',
       childInstances: [{
         id: 'Diabetes',
@@ -298,7 +340,8 @@ describe('Subpopulation tests', () => {
         extends: 'GenericCondition',
         parameters: [
           { id: 'element_name', value: 'HasDiabetes', type: 'string', name: 'Element Name' },
-          { id: 'condition', static: true, value: 'diabetes', type: 'condition', name: 'Condition' }
+          { id: 'condition', static: true, value: 'diabetes', type: 'condition', name: 'Condition' },
+          { id: 'comment', name: 'Comment', type: 'textarea' }
         ],
         returnType: 'list_of_conditions',
         type: 'element',
@@ -320,7 +363,10 @@ describe('Subpopulation tests', () => {
       name: '',
       conjunction: true,
       returnType: 'boolean',
-      parameters: [{ id: 'element_name', type: 'string', name: 'Group Name' }],
+      parameters: [
+        { id: 'element_name', type: 'string', name: 'Group Name' },
+        { id: 'comment', name: 'Comment', type: 'textarea' }
+      ],
       uniqueId: 'And-5',
       childInstances: [{
         id: 'GenericObservation_vsac',
@@ -331,7 +377,8 @@ describe('Subpopulation tests', () => {
         suppressedModifiers: ['ConvertToMgPerdL'],
         parameters: [
           { id: 'element_name', value: 'My Observation', type: 'string', name: 'Element Name' },
-          { id: 'observation', type: 'observation_vsac', static: true, value: 'Observation' }
+          { id: 'observation', type: 'observation_vsac', static: true, value: 'Observation' },
+          { id: 'comment', name: 'Comment', type: 'textarea' }
         ],
         type: 'element',
         uniqueId: 'observation-6',
