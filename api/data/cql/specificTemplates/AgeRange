@@ -1,21 +1,7 @@
 <% if (checkExistence) {-%> 
 <% if (comment) {
-const commentArray = comment.split(/\n\r|\r\n|\r|\n/g);
 // Render each line in the comment
-commentArray.forEach(c => {
-  // Break up long lines around the 100 character mark
-  while (c.length > 100) {
-    let splitIndex = 100;
-    let secondPart = c.substring(splitIndex);
-    // Don't split a line in the middle of a word
-    while (!secondPart.startsWith(' ')) {
-      splitIndex += 1;
-      secondPart = c.substring(splitIndex);
-    }
-    const firstPart = c.substring(0, splitIndex);
-    c = c.substring(splitIndex + 1); // Get rid of the space on the new line
-  %>// <%-firstPart%>
-<% }
+comment.forEach(c => {
 %>// <%-c%>
 <%});
 } -%>
@@ -27,22 +13,8 @@ define "<%-element_name%>":
 define "__ageRange_for_<%-element_name%>":
 <% } else { -%>
 <% if (comment) {
-const commentArray = comment.split(/\n\r|\r\n|\r|\n/g);
 // Render each line in the comment
-commentArray.forEach(c => {
-  // Break up long lines around the 100 character mark
-  while (c.length > 100) {
-    let splitIndex = 100;
-    let secondPart = c.substring(splitIndex);
-    // Don't split a line in the middle of a word
-    while (!secondPart.startsWith(' ')) {
-      splitIndex += 1;
-      secondPart = c.substring(splitIndex);
-    }
-    const firstPart = c.substring(0, splitIndex);
-    c = c.substring(splitIndex + 1); // Get rid of the space on the new line
-  %>// <%-firstPart%>
-<% }
+comment.forEach(c => {
 %>// <%-c%>
 <%});
 } -%>

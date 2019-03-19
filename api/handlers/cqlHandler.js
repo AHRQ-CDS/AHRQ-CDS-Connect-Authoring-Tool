@@ -194,6 +194,34 @@ function isBaseElementUseChanged(element, baseElements) {
   return false;
 }
 
+function createCommentArray(comment) {
+  if (!comment) {
+    return;
+  }
+
+  const finalCommentArray = [];
+  const commentArray = comment.split(/\n\r|\r\n|\r|\n/g);
+  // Render each line in the comment
+  commentArray.forEach(c => {
+    let currentCommentString = c;
+    // Break up long lines around the 100 character mark
+    while (currentCommentString.length > 100) {
+      let splitIndex = 100;
+      let secondPart = currentCommentString.substring(splitIndex);
+      // Don't split a line in the middle of a word
+      while (!secondPart.startsWith(' ')) {
+        splitIndex += 1;
+        secondPart = currentCommentString.substring(splitIndex);
+      }
+      const firstPart = currentCommentString.substring(0, splitIndex);
+      currentCommentString = currentCommentString.substring(splitIndex + 1); // Get rid of the space on the new line
+      finalCommentArray.push(firstPart);
+    }
+    finalCommentArray.push(currentCommentString);
+  });
+  return finalCommentArray;
+}
+
 // Class to handle all cql generation
 class CqlArtifact {
   constructor(artifact) {
@@ -531,6 +559,15 @@ class CqlArtifact {
           const referencedElement = this.baseElements.find(e => e.uniqueId === parameter.value.id)
           const referencedElementName = referencedElement.parameters[0].value || referencedElement.uniqueId;
           context.values = [ `"${referencedElementName}"` ];
+          break;
+        }
+        case 'textarea': {
+          if (parameter.id === 'comment') {
+            context[parameter.id] = createCommentArray(parameter.value);
+          } else {
+            context.values = context.values || [];
+            context[parameter.id] = parameter.value;
+          }
           break;
         }
         default: {
