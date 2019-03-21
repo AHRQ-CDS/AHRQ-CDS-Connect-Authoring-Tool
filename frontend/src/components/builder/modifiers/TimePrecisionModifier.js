@@ -43,30 +43,30 @@ export default class TimePrecisionModifier extends Component {
 
     return (
       <div className="col-9 d-flex">
-            <TimePicker
-              id={timeId}
-              defaultValue={
-                moment(this.props.time, 'HH:mm:ss').isValid()
-                ? moment(this.props.time, 'HH:mm:ss')
-                : null}
-              onChange={ (e) => {
-                this.assignValue(e, 'time');
-              }}
-            />
+        <TimePicker
+          id={timeId}
+          defaultValue={
+            moment(this.props.time, 'HH:mm:ss').isValid()
+            ? moment(this.props.time, 'HH:mm:ss')
+            : null}
+          onChange={ (e) => {
+            this.assignValue(e, 'time');
+          }}
+        />
 
-            <label htmlFor={precId}>
-              <Select
-                name={'Precision'}
-                aria-label={'Precision'}
-                id={precId}
-                value={this.props.precision}
-                onChange={ (e) => {
-                  this.assignValue(e, 'precision');
-                }}
-                options={options}
-              />
-            </label>
-          </div>
+        <label htmlFor={precId}>
+          <Select
+            name={'Precision'}
+            aria-label={'Precision'}
+            id={precId}
+            value={this.props.precision}
+            onChange={ (e) => {
+              this.assignValue(e, 'precision');
+            }}
+            options={options}
+          />
+        </label>
+      </div>
     );
   }
 }

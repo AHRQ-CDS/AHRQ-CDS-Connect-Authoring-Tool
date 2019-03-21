@@ -37,31 +37,31 @@ export default class DateTimeModifier extends Component {
 
     return (
       <div className="col-9 d-flex">
-            <DatePicker
-              id={dateId}
-              selected={
-                moment(this.props.date, 'YYYY-MM-DD').isValid()
-                ? moment(this.props.date, 'YYYY-MM-DD')
-                : null}
-              dateFormat="L"
-              onChange={ (e) => {
-                this.assignValue(e, 'date');
-              }}
-            />
+        <DatePicker
+          id={dateId}
+          selected={
+            moment(this.props.date, 'YYYY-MM-DD').isValid()
+            ? moment(this.props.date, 'YYYY-MM-DD')
+            : null}
+          dateFormat="L"
+          onChange={ (e) => {
+            this.assignValue(e, 'date');
+          }}
+        />
 
-            <span className="dash">_</span>
+        <span className="dash">_</span>
 
-            <TimePicker
-              id={timeId}
-              defaultValue={
-                moment(this.props.time, 'HH:mm:ss').isValid()
-                ? moment(this.props.time, 'HH:mm:ss')
-                : null}
-              onChange={ (e) => {
-                this.assignValue(e, 'time');
-              }}
-            />
-          </div>
+        <TimePicker
+          id={timeId}
+          defaultValue={
+            moment(this.props.time, 'HH:mm:ss').isValid()
+            ? moment(this.props.time, 'HH:mm:ss')
+            : null}
+          onChange={ (e) => {
+            this.assignValue(e, 'time');
+          }}
+        />
+      </div>
     );
   }
 }
