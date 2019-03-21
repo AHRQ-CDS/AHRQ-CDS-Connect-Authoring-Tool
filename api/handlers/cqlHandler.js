@@ -209,15 +209,17 @@ function createCommentArray(comment) {
       let splitIndex = 100;
       let secondPart = currentCommentString.substring(splitIndex);
       // Don't split a line in the middle of a word
-      while (!secondPart.startsWith(' ')) {
+      while (!secondPart.startsWith(' ') && splitIndex < currentCommentString.length) {
         splitIndex += 1;
         secondPart = currentCommentString.substring(splitIndex);
       }
       const firstPart = currentCommentString.substring(0, splitIndex);
-      currentCommentString = currentCommentString.substring(splitIndex + 1); // Get rid of the space on the new line
+      // Get rid of the space on the new line. If splitIndex + 1 > currentCommentString.length, returns ''
+      currentCommentString = currentCommentString.substring(splitIndex + 1);
       finalCommentArray.push(firstPart);
     }
-    finalCommentArray.push(currentCommentString);
+    // Only push currentCommentString if it has content
+    if (currentCommentString) finalCommentArray.push(currentCommentString);
   });
   return finalCommentArray;
 }
