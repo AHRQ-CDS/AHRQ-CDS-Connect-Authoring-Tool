@@ -1,6 +1,8 @@
 /**
  * Migrates artifacts that have a parameters field, applying the following changes:
  * - changes type of each parameter based on mapping
+ * - changes returnType of each parameter use based on mapping
+ * - adds usedBy prop to parameter storing array of uniqueId of its references
  */
 'use strict';
 
@@ -38,6 +40,8 @@ const parameterReturnTypeMap = {
   'interval quantity': 'interval_of_quantity'
 };
 
+let parameterUsedByMap = {};
+
 function parseTree(element) {
   let children = element.childInstances ? element.childInstances : [];
   children = children.map((child, i) => {
@@ -52,8 +56,15 @@ function parseTree(element) {
 }
 
 function parseElement(element) {
-  if (element.type === 'Parameter' && element.returnType) {
-    element.returnType = parameterReturnTypeMap[element.returnType];
+  if (element.type === 'Parameter') {
+    if (element.returnType) {
+      element.returnType = parameterReturnTypeMap[element.returnType];
+    }
+
+    if (!parameterUsedByMap[element.id]) {
+      parameterUsedByMap[element.id] = [];
+    }
+    parameterUsedByMap[element.id].push(element.uniqueId);
   }
 
   return element;
@@ -70,8 +81,6 @@ module.exports.up = function (done) {
   const promises = [];
   coll.find().forEach((artifact) => {
     const p = new Promise((resolve, reject) => {
-      artifact.parameters.forEach(p => p.type = parameterTypeMap[p.type]);
-
       if (artifact.expTreeInclude && artifact.expTreeInclude.childInstances.length) {
         parseTree(artifact.expTreeInclude);
       }
@@ -88,6 +97,15 @@ module.exports.up = function (done) {
           parseTree(baseElement);
         } else {
           parseElement(baseElement);
+        }
+      });
+
+      artifact.parameters.forEach(p => {
+        p.type = parameterTypeMap[p.type];
+
+        p.usedBy = [];
+        if (parameterUsedByMap[p.name]) {
+          p.usedBy = parameterUsedByMap[p.name];
         }
       });
 
