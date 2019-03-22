@@ -40,23 +40,21 @@ const parameterReturnTypeMap = {
   'interval quantity': 'interval_of_quantity'
 };
 
-let parameterUsedByMap = {};
-
-function parseTree(element) {
+function parseTree(element, parameterUsedByMap) {
   let children = element.childInstances ? element.childInstances : [];
   children = children.map((child, i) => {
     if ('childInstances' in child) {
-      return parseTree(child);
+      return parseTree(child, parameterUsedByMap);
     } else {
-      return parseElement(child); 
+      return parseElement(child, parameterUsedByMap); 
     }
   });
   element.childInstances = children;
   return element;
 }
 
-function parseElement(element) {
-  if (element.type === 'Parameter') {
+function parseElement(element, parameterUsedByMap) {
+  if (element.type === 'parameter') {
     if (element.returnType) {
       element.returnType = parameterReturnTypeMap[element.returnType];
     }
@@ -80,33 +78,31 @@ module.exports.up = function (done) {
   // The promises array collects all the promises which must be resolved before we're done.
   const promises = [];
   coll.find().forEach((artifact) => {
+    let parameterUsedByMap = {};
+
     const p = new Promise((resolve, reject) => {
       if (artifact.expTreeInclude && artifact.expTreeInclude.childInstances.length) {
-        parseTree(artifact.expTreeInclude);
+        parseTree(artifact.expTreeInclude, parameterUsedByMap);
       }
       if (artifact.expTreeExclude && artifact.expTreeExclude.childInstances.length) {
-        parseTree(artifact.expTreeExclude);
+        parseTree(artifact.expTreeExclude, parameterUsedByMap);
       }
       artifact.subpopulations.forEach((subpopulation) => {
         if (!subpopulation.special && subpopulation.childInstances && subpopulation.childInstances.length) {
-          parseTree(subpopulation);
+          parseTree(subpopulation, parameterUsedByMap);
         }
       });
       artifact.baseElements.forEach((baseElement) => {
         if (baseElement.childInstances && baseElement.childInstances.length) {
-          parseTree(baseElement);
+          parseTree(baseElement, parameterUsedByMap);
         } else {
-          parseElement(baseElement);
+          parseElement(baseElement, parameterUsedByMap);
         }
       });
 
       artifact.parameters.forEach(p => {
         p.type = parameterTypeMap[p.type];
-
-        p.usedBy = [];
-        if (parameterUsedByMap[p.name]) {
-          p.usedBy = parameterUsedByMap[p.name];
-        }
+        p.usedBy = parameterUsedByMap[p.name] ? parameterUsedByMap[p.name] : [];
       });
 
       // Update the artifact with all the changes made.

@@ -132,7 +132,9 @@ export function updateArtifact(artifactToUpdate, props) {
     // Add uniqueId to list on parameter to mark where it is used.
     artifact.parameters.forEach((parameter) => {
       const parameterInUse = parametersInUse.find(usedParameter => usedParameter.parameterId === parameter.uniqueId);
+      console.log(parameter.usedBy);
       parameter.usedBy = parameterInUse ? parameterInUse.usedBy : [];
+      console.log(parameter.usedBy);
     });
 
     return dispatch({
