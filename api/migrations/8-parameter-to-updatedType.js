@@ -3,6 +3,7 @@
  * - changes type of each parameter based on mapping
  * - changes returnType of each parameter use based on mapping
  * - adds usedBy prop to parameter storing array of uniqueId of its references
+ * - adds parameterReference parameter to elements using parameters
  */
 'use strict';
 
@@ -40,24 +41,36 @@ const parameterReturnTypeMap = {
   'interval quantity': 'interval_of_quantity'
 };
 
-function parseTree(element, parameterUsedByMap) {
+function parseTree(element, parameterUsedByMap, parameters) {
   let children = element.childInstances ? element.childInstances : [];
   children = children.map((child, i) => {
     if ('childInstances' in child) {
-      return parseTree(child, parameterUsedByMap);
+      return parseTree(child, parameterUsedByMap, parameters);
     } else {
-      return parseElement(child, parameterUsedByMap); 
+      return parseElement(child, parameterUsedByMap, parameters); 
     }
   });
   element.childInstances = children;
   return element;
 }
 
-function parseElement(element, parameterUsedByMap) {
+function parseElement(element, parameterUsedByMap, parameters) {
   if (element.type === 'parameter') {
     if (element.returnType) {
       element.returnType = parameterReturnTypeMap[element.returnType];
     }
+
+    element.parameters.push({
+      id: "parameterReference",
+      name: "reference",
+      static: true,
+      type: "reference",
+      value: {
+        id: parameters.find(p => p.name === element.id)
+        ? parameters.find(p => p.name === element.id).uniqueId
+        : ''
+      }
+    });
 
     if (!parameterUsedByMap[element.id]) {
       parameterUsedByMap[element.id] = [];
@@ -82,21 +95,21 @@ module.exports.up = function (done) {
 
     const p = new Promise((resolve, reject) => {
       if (artifact.expTreeInclude && artifact.expTreeInclude.childInstances.length) {
-        parseTree(artifact.expTreeInclude, parameterUsedByMap);
+        parseTree(artifact.expTreeInclude, parameterUsedByMap, artifact.parameters);
       }
       if (artifact.expTreeExclude && artifact.expTreeExclude.childInstances.length) {
-        parseTree(artifact.expTreeExclude, parameterUsedByMap);
+        parseTree(artifact.expTreeExclude, parameterUsedByMap, artifact.parameters);
       }
       artifact.subpopulations.forEach((subpopulation) => {
         if (!subpopulation.special && subpopulation.childInstances && subpopulation.childInstances.length) {
-          parseTree(subpopulation, parameterUsedByMap);
+          parseTree(subpopulation, parameterUsedByMap, artifact.parameters);
         }
       });
       artifact.baseElements.forEach((baseElement) => {
         if (baseElement.childInstances && baseElement.childInstances.length) {
-          parseTree(baseElement, parameterUsedByMap);
+          parseTree(baseElement, parameterUsedByMap, artifact.parameters);
         } else {
-          parseElement(baseElement, parameterUsedByMap);
+          parseElement(baseElement, parameterUsedByMap, artifact.parameters);
         }
       });
 
