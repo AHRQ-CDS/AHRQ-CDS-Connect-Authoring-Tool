@@ -702,28 +702,28 @@ export default class UserGuide extends Component {
               <div className="h3-wrapper">
                 <h3 id="Comments">3.5 Comments</h3>
                 <p>
-                  <p>
-                    Comments can be added to any element in the Workspace and are a good way to provide additional information
-                    about an element. Recommended uses of comments include:
-                    <ul>
-                      <li>
-                        Providing a rationale for why the element is created or indicating a decision that was made when
-                        creating the element and why that decision was made
-                      </li>
-                      <li>
-                        Providing a simple summary of complex logic that is encapsulated in the element, or just further
-                        explaining the element built
-                      </li>
-                      <li>
-                        Indicating a source from which the element's logic is derived and providing any necessary references
-                      </li>
-                      <li>
-                        Indicating a section of logic that implementers may want to modify based on specific site needs
-                      </li>
-                    </ul>
-                    All comments are added to the generated CQL above the element's definition. However, they are not
-                    executed as part of the artifact and just serve as an annotation to the element.
+                  Comments can be added to any element in the Workspace and are a good way to provide additional information
+                  about an element. Recommended uses of comments include:
                 </p>
+                <ul>
+                  <li>
+                    Providing a rationale for why the element is created or indicating a decision that was made when
+                    creating the element and why that decision was made
+                  </li>
+                  <li>
+                    Providing a simple summary of complex logic that is encapsulated in the element, or just further
+                    explaining the element built
+                  </li>
+                  <li>
+                    Indicating a source from which the element's logic is derived and providing any necessary references
+                  </li>
+                  <li>
+                    Indicating a section of logic that implementers may want to modify based on specific site needs
+                  </li>
+                </ul>
+                <p>
+                  All comments are added to the generated CQL above the element's definition. However, they are not
+                  executed as part of the artifact and just serve as an annotation to the element.
                 </p>
 
                 <p>
