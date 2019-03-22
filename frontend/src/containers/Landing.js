@@ -2,10 +2,32 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
+import FontAwesome from 'react-fontawesome';
 
 import { onVisitExternalLink, onVisitExternalForm } from '../utils/handlers';
+import whatsNew from '../data/whatsNew';
 
 class Landing extends Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      whatsNewOpen: false,
+      whatsNewIndex: 0,
+    };
+  }
+
+  toggleWhatsNew = () => {
+    this.setState({ whatsNewOpen: !this.state.whatsNewOpen });
+  }
+
+  toggleWhatsNewButton = (i) => {
+    this.setState({
+      whatsNewOpen: true,
+      whatsNewIndex: i
+    });
+  }
+
   renderedButton = () => {
     if (this.props.isAuthenticated) {
       return <Link to="/artifacts" className="primary-button-link">GET STARTED</Link>;
@@ -18,6 +40,58 @@ class Landing extends Component {
         href="https://cds.ahrq.gov/form/cds-authoring-tool-sign-up">
         SIGN UP
       </a>
+    );
+  }
+
+  renderedWhatsNew = () => {
+    const { whatsNewOpen, whatsNewIndex } = this.state;
+
+    return (
+      <div className="whats-new">
+        <div
+          role="button"
+          tabIndex="0"
+          className="header"
+          onClick={() => this.toggleWhatsNew()}
+          onKeyDown={() => null}>
+          What's New
+          {whatsNewOpen ? <FontAwesome name="chevron-down" /> : <FontAwesome name="chevron-right" />}
+        </div>
+
+        <div className="new-buttons">
+          {whatsNew.map((feature, i) =>
+            <div className={`new-button-group feature-${i}`} key={i}>
+              <button className="new-button" onClick={() => this.toggleWhatsNewButton(i)} key={i}>
+                {feature.name}
+              </button>
+              <div className={`triangle ${whatsNewIndex === i && whatsNewOpen ? 'active' : ''}`}></div>
+            </div>)
+          }
+        </div>
+
+        {whatsNewOpen &&
+          <div className="new-display">
+            <div className="display-image">
+              <img src={whatsNew[whatsNewIndex].image} alt={whatsNew[whatsNewIndex].name} />
+            </div>
+
+            <div className="display-description">
+              <div className="name">{whatsNew[whatsNewIndex].name}</div>
+
+              <div className="description">
+                {whatsNew[whatsNewIndex].description}
+
+                <a
+                  className={`link feature-${whatsNewIndex}`}
+                  href={whatsNew[whatsNewIndex].link}
+                >
+                  {whatsNew[whatsNewIndex].linkText}
+                </a>
+              </div>
+            </div>
+          </div>
+        }
+      </div>
     );
   }
 
@@ -37,6 +111,10 @@ class Landing extends Component {
               {this.renderedButton()}
             </div>
           </div>
+
+          {this.renderedWhatsNew()}
+
+          <div className="header">About the CDS Authoring Tool</div>
 
           <div className="home-content">
             <div className="home-content__transform home-card">

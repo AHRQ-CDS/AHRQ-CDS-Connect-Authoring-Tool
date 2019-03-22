@@ -59,6 +59,153 @@
     }
   }
 
+  .header {
+    display: flex;
+    align-items: center;
+    color: $white;
+    height: 60px;
+    font-size: 1.3em;
+
+    @include fullBleed($gray-dark);
+  }
+
+  .whats-new {
+    margin-bottom: 40px;
+
+    .header {
+      @include fullBleed($home-red);
+
+      display: flex;
+      justify-content: space-between;
+      cursor: pointer;
+
+      &:focus { outline: none; }
+    }
+
+    .new-buttons {
+      display: flex;
+      align-items: center;
+      margin-top: 2px;
+
+      .new-button-group {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        width: 25%;
+
+        &.feature-0 {
+          button { background-color: $home-green; }
+          .triangle.active { border-color: $home-green transparent transparent; }
+        }
+
+        &.feature-1 {
+          button { background-color: $home-yellow; }
+          .triangle.active { border-color: $home-yellow transparent transparent; }
+        }
+
+        &.feature-2 {
+          button { background-color: $home-red; }
+          .triangle.active { border-color: $home-red transparent transparent; }
+        }
+
+        &.feature-3 {
+          button { background-color: $home-gray; }
+          .triangle.active { border-color: $home-gray transparent transparent; }
+        }
+
+        button.new-button {
+          display: flex;
+          align-items: center;
+          justify-content: space-around;
+          margin-right: calc(5px + 1vw);
+          width: 95%;
+          height: 60px;
+          color: $white;
+          cursor: pointer;
+          border-radius: 0;
+          box-shadow: none;
+          font-weight: 600;
+          border: 0;
+
+          &:focus { outline: none; }
+
+          &:hover {
+            font-size: 1.05em;
+            transition: 0.2s ease-in-out;
+          }
+        }
+
+        .triangle {
+          width: 0;
+          height: 0;
+          border-color: transparent;
+          border-style: solid;
+          border-width: 10px;
+          margin-left: -10px;
+        }
+      }
+    }
+
+    .new-display {
+      display: flex;
+      align-items: center;
+      margin: 20px 0 60px;
+
+      @include respond-to('handheld') {
+        flex-direction: column;
+
+        div.display-image {
+          margin-bottom: 10px;
+          margin-right: 10px;
+        }
+      }
+
+      .display-image {
+        flex: 1;
+        margin-right: calc(10px + 3vw);
+
+        img {
+          width: 100%;
+          border: 1px solid $gray-light;
+        }
+      }
+
+      .display-description {
+        flex: 1;
+
+        .name {
+          margin-bottom: 10px;
+          font-weight: bold;
+        }
+
+        .link {
+          display: flex;
+          align-items: center;
+          justify-content: space-around;
+          margin-top: 20px;
+          width: 40%;
+          min-width: 120px;
+          height: 60px;
+          color: $white;
+          background-color: $home-green;
+          font-weight: 600;
+          cursor: pointer;
+          text-decoration: none;
+
+          &.feature-0 { background-color: $home-green; }
+          &.feature-1 { background-color: $home-yellow; }
+          &.feature-2 { background-color: $home-red; }
+          &.feature-3 { background-color: $home-gray; }
+
+          &:hover {
+            border: 2px solid $blue;
+            transition: 0.2s ease-in-out;
+          }
+        }
+      }
+    }
+  }
+
   .home-content {
     display: flex;
     justify-content: space-between;
