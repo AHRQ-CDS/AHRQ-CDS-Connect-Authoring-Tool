@@ -71,9 +71,11 @@ class Landing extends Component {
 
         {whatsNewOpen &&
           <div className="new-display">
-            <div className="display-image">
-              <img src={whatsNew[whatsNewIndex].image} alt={whatsNew[whatsNewIndex].name} />
-            </div>
+            {whatsNew[whatsNewIndex].image !== '' &&
+              <div className="display-image">
+                <img src={whatsNew[whatsNewIndex].image} alt={whatsNew[whatsNewIndex].name} />
+              </div>
+            }
 
             <div className="display-description">
               <div className="name">{whatsNew[whatsNewIndex].name}</div>
@@ -81,12 +83,14 @@ class Landing extends Component {
               <div className="description">
                 {whatsNew[whatsNewIndex].description}
 
-                <a
-                  className={`link feature-${whatsNewIndex}`}
-                  href={whatsNew[whatsNewIndex].link}
-                >
-                  {whatsNew[whatsNewIndex].linkText}
-                </a>
+                {whatsNew[whatsNewIndex].link !== '' &&
+                  <a
+                    className={`link feature-${whatsNewIndex}`}
+                    href={whatsNew[whatsNewIndex].link}
+                  >
+                    {whatsNew[whatsNewIndex].linkText}
+                  </a>
+                }
               </div>
             </div>
           </div>
