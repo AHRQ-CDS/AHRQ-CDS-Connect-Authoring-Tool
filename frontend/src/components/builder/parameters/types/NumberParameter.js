@@ -21,10 +21,10 @@ export default class NumberParameter extends Component {
     return (
       <div className="number-parameter">
         <div className='form__group'>
-          <label htmlFor={id} className="row">
-            <div className="label col-3">{this.props.param.name}:</div>
+          <label htmlFor={id}>
+            <div className="label">{this.props.param.name}:</div>
 
-            <div className="input col-7">
+            <div className="input">
               <input
                 id={id}
                 type="number"

@@ -42,6 +42,7 @@
 
 .string-parameter,
 .number-parameter,
+.textarea-parameter,
 .value-set-parameter {
   margin: 10px 0;
 
@@ -51,30 +52,40 @@
   }
 
   .label {
-    display: inline-block;
+    flex: 1;
     font-weight: bold;
     text-align: right;
     padding-right: 2em;
-    margin-left: 5px;
+    white-space: nowrap;
   }
 
   .Select {
-    margin-left: -12px;
     min-width: 245px;
     padding: 0;
   }
 
   input {
+    margin: 0;
     min-width: 300px;
-    margin-left: -12px;
   }
 
   .input {
-    padding: 0;
+    flex: 4;
   }
 
   .icon {
     padding: 10px;
+  }
+}
+
+.textarea-parameter {
+  margin-bottom: -5px;
+
+  textarea {
+    width: 100%;
+    max-width: 100%;
+    padding: 10px 0.75em;
+    height: auto;
   }
 }
 

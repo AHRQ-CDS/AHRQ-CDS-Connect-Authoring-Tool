@@ -168,6 +168,7 @@ function isBaseElementUseChanged(element, baseElements) {
   }
 
   const nameParameter = element.parameters.find(param => param.id === 'element_name');
+  const commentParameter = element.parameters.find(param => param.id === 'comment');
 
   const originalBaseElement = baseElements.find(baseEl => referenceParameter.value.id === baseEl.uniqueId);
   if (!originalBaseElement) {
@@ -184,7 +185,43 @@ function isBaseElementUseChanged(element, baseElements) {
     return true;
   }
 
+  const originalCommentParameter = originalBaseElement.parameters.find(param => param.id === 'comment');
+  if (commentParameter.value !== originalCommentParameter.value) {
+    // If the comment on the use of the base element and the original element are different, it's been changed.
+    return true;
+  }
+
   return false;
+}
+
+function createCommentArray(comment) {
+  if (!comment) {
+    return;
+  }
+
+  const finalCommentArray = [];
+  const commentArray = comment.split(/\n\r|\r\n|\r|\n/g);
+  // Render each line in the comment
+  commentArray.forEach(c => {
+    let currentCommentString = c;
+    // Break up long lines around the 100 character mark
+    while (currentCommentString.length > 100) {
+      let splitIndex = 100;
+      let secondPart = currentCommentString.substring(splitIndex);
+      // Don't split a line in the middle of a word
+      while (!secondPart.startsWith(' ') && splitIndex < currentCommentString.length) {
+        splitIndex += 1;
+        secondPart = currentCommentString.substring(splitIndex);
+      }
+      const firstPart = currentCommentString.substring(0, splitIndex);
+      // Get rid of the space on the new line. If splitIndex + 1 > currentCommentString.length, returns ''
+      currentCommentString = currentCommentString.substring(splitIndex + 1);
+      finalCommentArray.push(firstPart);
+    }
+    // Only push currentCommentString if it has content
+    if (currentCommentString) finalCommentArray.push(currentCommentString);
+  });
+  return finalCommentArray;
 }
 
 // Class to handle all cql generation
@@ -526,6 +563,15 @@ class CqlArtifact {
           context.values = [ `"${referencedElementName}"` ];
           break;
         }
+        case 'textarea': {
+          if (parameter.id === 'comment') {
+            context[parameter.id] = createCommentArray(parameter.value);
+          } else {
+            context.values = context.values || [];
+            context[parameter.id] = parameter.value;
+          }
+          break;
+        }
         default: {
           context.values = context.values || [];
           context[parameter.id] = parameter.value;
@@ -583,7 +629,10 @@ class CqlArtifact {
         });
       }
       const cqlString = applyModifiers.call(this, context.values, context.modifiers);
-      return ejs.render(templateMap.BaseTemplate, { element_name: context.element_name, cqlString });
+      return ejs.render(
+        templateMap.BaseTemplate,
+        { comment: context.comment, element_name: context.element_name, cqlString }
+      );
     }).join('\n');
   }
   header() {

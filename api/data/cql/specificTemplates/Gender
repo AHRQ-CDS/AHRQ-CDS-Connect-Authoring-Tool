@@ -1,2 +1,8 @@
+<% if (comment) {
+// Render each line in the comment
+comment.forEach(c => {
+%>// <%-c%>
+<%});
+} -%>
 define "<%-element_name%>": 
   Patient.gender.value = <% if(gender) { %><%- gender.value %><% } else { %>null<% } %>

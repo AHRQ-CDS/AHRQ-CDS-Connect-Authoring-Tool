@@ -7,9 +7,15 @@ export function doesBaseElementInstanceNeedWarning(instance, allInstancesInAllTr
     let anyUseHasChanged = false;
     instance.usedBy.forEach((usageId) => {
       const use = allInstancesInAllTrees.find(i => i.uniqueId === usageId);
-      if (use && use.modifiers && use.modifiers.length > 0 &&
-        instance.parameters[0].value === use.parameters[0].value) {
-        anyUseHasChanged = true;
+      if (use) {
+        const useCommentParameter = use.parameters.find(param => param.id === 'comment');
+        const useCommentValue = useCommentParameter ? useCommentParameter.value : '';
+        const instanceCommentParameter = instance.parameters.find(param => param.id === 'comment');
+        const instanceCommentValue = instanceCommentParameter ? instanceCommentParameter.value : '';
+        if (((use.modifiers && use.modifiers.length > 0) || (instanceCommentValue !== useCommentValue)) &&
+          instance.parameters[0].value === use.parameters[0].value) {
+          anyUseHasChanged = true;
+        }
       }
     });
     return anyUseHasChanged;
@@ -20,12 +26,16 @@ export function doesBaseElementInstanceNeedWarning(instance, allInstancesInAllTr
 
 export function doesBaseElementUseNeedWarning(instance, baseElements) {
   const elementNameParameter = instance.parameters.find(param => param.id === 'element_name');
+  const instanceCommentParameter = instance.parameters.find(param => param.id === 'comment');
+  const instanceCommentValue = instanceCommentParameter ? instanceCommentParameter.value : '';
 
   if (instance.type === 'baseElement') {
     const referenceParameter = instance.parameters.find(param => param.type === 'reference');
     const originalBaseElement = baseElements.find(baseEl => referenceParameter.value.id === baseEl.uniqueId);
+    const originalCommentParameter = originalBaseElement.parameters.find(param => param.id === 'comment');
+    const originalCommentValue = originalCommentParameter ? originalCommentParameter.value : '';
     // If some modifiers applied AND the name is the same as original, it should be changed. Need a warning.
-    if (instance.modifiers && instance.modifiers.length > 0 &&
+    if (((instance.modifiers && instance.modifiers.length > 0) || (instanceCommentValue !== originalCommentValue)) &&
       elementNameParameter.value === originalBaseElement.parameters[0].value) {
       return true;
     }

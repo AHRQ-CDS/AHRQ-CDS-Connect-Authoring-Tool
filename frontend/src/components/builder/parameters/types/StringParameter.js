@@ -13,26 +13,29 @@ export default class StringParameter extends Component {
     const formId = _.uniqueId('parameter-');
 
     return (
-      <div className="string-parameter form__group">
-        <label htmlFor={formId}>
-          <span className="label">{name}:</span>
+      <div className="string-parameter">
+        <div className="form__group">
+          <label htmlFor={formId}>
+            <div className="label">{name}:</div>
 
-          <input
-            id={formId}
-            type="text"
-            name={id}
-            value={value || ''}
-            aria-label={name}
-            onKeyPress={(event) => {
-              if (event.which === 34) { // Quotation mark (")
-                event.preventDefault();
-              }
-            }}
-            onChange={(event) => {
-              updateInstance({ [event.target.name]: event.target.value });
-            }}
-          />
-        </label>
+            <input
+              className="input"
+              id={formId}
+              type="text"
+              name={id}
+              value={value || ''}
+              aria-label={name}
+              onKeyPress={(event) => {
+                if (event.which === 34) { // Quotation mark (")
+                  event.preventDefault();
+                }
+              }}
+              onChange={(event) => {
+                updateInstance({ [event.target.name]: event.target.value });
+              }}
+            />
+          </label>
+        </div>
       </div>
     );
   }

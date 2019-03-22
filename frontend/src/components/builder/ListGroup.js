@@ -245,9 +245,10 @@ export default class ListGroup extends Component {
             instance={instance}
             baseElements={baseElements}
           />
-          <div className="return-type row">
-            <div className="col-3 bold align-right return-type__label">Return Type:</div>
-            <div className="col-7 return-type__value">
+
+          <div className="return-type">
+            <div className="bold align-right return-type__label">Return Type:</div>
+            <div className="return-type__value">
               {isAndOrElement
                 && (_.startCase(instance.returnType) === 'Boolean' || instance.childInstances.length === 1)
                 && <FontAwesome name="check" className="check" />}
@@ -256,6 +257,7 @@ export default class ListGroup extends Component {
             </div>
           </div>
         </div>
+
         <ConjunctionGroup
           root={true}
           treeName={this.props.treeName}

@@ -116,6 +116,8 @@ export default class ElementSelect extends Component {
     if (props.baseElements && props.baseElements.length && categoriesCopy[baseElementsIndex]) {
       categoriesCopy[baseElementsIndex].entries = props.baseElements.map((e) => {
         const returnType = _.isEmpty(e.modifiers) ? e.returnType : _.last(e.modifiers).returnType;
+        const commentParam = e.parameters.find(param => param.id === 'comment');
+        const commentDefaultValue = commentParam ? commentParam.value : '';
         return ({
           id: _.uniqueId(e.id),
           name: 'Base Element',
@@ -130,7 +132,8 @@ export default class ElementSelect extends Component {
               name: 'reference',
               value: { id: e.uniqueId, type: e.name },
               static: true
-            }
+            },
+            { id: 'comment', type: 'textarea', name: 'Comment', value: commentDefaultValue }
           ]
         });
       });

@@ -13,6 +13,7 @@ import CodeSelectModal from './CodeSelectModal';
 import NumberParameter from './parameters/types/NumberParameter';
 import StaticParameter from './parameters/types/StaticParameter';
 import StringParameter from './parameters/types/StringParameter';
+import TextAreaParameter from './parameters/types/TextAreaParameter';
 import ValueSetParameter from './parameters/types/ValueSetParameter';
 
 import ValueSetTemplate from './templates/ValueSetTemplate';
@@ -279,12 +280,12 @@ export default class TemplateInstance extends Component {
   renderAppliedModifiers = () => (
     <div className="applied-modifiers">
       <div className="applied-modifiers__info">
-        <div className="applied-modifiers__info-expressions row">
+        <div className="applied-modifiers__info-expressions">
           {this.props.templateInstance.modifiers && this.props.templateInstance.modifiers.length > 0 &&
-            <div className="col-3 bold align-right applied-modifiers__label">Expressions:</div>
+            <div className="bold align-right applied-modifiers__label">Expressions:</div>
           }
 
-          <div className="modifier__list col-9" aria-label="Expression List">
+          <div className="modifier__list" aria-label="Expression List">
             {(this.props.templateInstance.modifiers || []).map((modifier, index) =>
               this.renderAppliedModifier(modifier, index))}
           </div>
@@ -417,11 +418,11 @@ export default class TemplateInstance extends Component {
 
     return (
       <div className="modifier__return__type" id="base-element-list">
-        <div className="row code-info">
-          <div className="col-3 bold align-right code-info__label">Base Element:</div>
-          <div className="col-9 row code-info__info">
-            <div className="col-10">{referenceName}</div>
-            <div className="col-2 align-right">
+        <div className="code-info">
+          <div className="bold align-right code-info__label">Base Element:</div>
+          <div className="code-info__info">
+            <div className="code-info__text">{referenceName}</div>
+            <div className="code-info__buttons align-right">
               <span
                 role="button"
                 id={`definition-${this.props.templateInstance.uniqueId}`}
@@ -483,17 +484,17 @@ export default class TemplateInstance extends Component {
         return (
           <div className="modifier__return__type" id="code-list">
             {vsacParameter.codes.map((code, i) => (
-              <div key={`selected-code-${i}`} className="row code-info">
-                <div className="col-3 bold align-right code-info__label">
+              <div key={`selected-code-${i}`} className="code-info">
+                <div className="bold align-right code-info__label">
                   Code{vsacParameter.codes.length > 1 ? ` ${i + 1}` : ''}:
                 </div>
 
                 {/* Code name will come with validation */}
-                <div className="col-9 row code-info__info">
-                  <div className="col-10">{`${code.codeSystem.name} (${code.code})
+                <div className="code-info__info">
+                  <div className="code-info__text">{`${code.codeSystem.name} (${code.code})
                    ${code.display === '' ? '' : ` - ${code.display}`}`}</div>
 
-                  <div className="col-2 code-info__buttons align-right">
+                  <div className="code-info__buttons align-right">
                     <span
                       role="button"
                       id="delete-code"
@@ -594,6 +595,13 @@ export default class TemplateInstance extends Component {
             {...param}
             updateInstance={this.updateInstance} />
         );
+      case 'textarea':
+        return (
+          <TextAreaParameter
+            key={param.id}
+            {...param}
+            updateInstance={this.updateInstance} />
+        );
       case 'observation_vsac':
       case 'condition_vsac':
       case 'medicationStatement_vsac':
@@ -634,6 +642,7 @@ export default class TemplateInstance extends Component {
     const validationError = validateElement(this.props.templateInstance, this.state);
     const returnError = (!(validateReturnType !== false) || returnType === 'boolean') ? null
       : "Element must have return type 'boolean'. Add expression(s) to change the return type.";
+    const commentParameter = templateInstance.parameters.find(param => param.id === 'comment');
 
     return (
       <div className="card-element__body">
@@ -646,9 +655,16 @@ export default class TemplateInstance extends Component {
           baseElements={this.props.baseElements}
         />
 
+        {commentParameter &&
+          <TextAreaParameter
+            key={commentParameter.id}
+            {...commentParameter}
+            updateInstance={this.updateInstance} />
+        }
+
         {templateInstance.parameters.map((param, index) => {
           // TODO: each parameter type should probably have its own component
-          if (param.id !== 'element_name') {
+          if (param.id !== 'element_name' && param.id !== 'comment') {
             return this.selectTemplate(param);
           }
           return null;
@@ -669,9 +685,9 @@ export default class TemplateInstance extends Component {
         {this.renderAppliedModifiers()}
 
         <div className="modifier__return__type">
-          <div className="return-type row">
-            <div className="col-3 bold align-right return-type__label">Return Type:</div>
-            <div className="col-7 return-type__value">
+          <div className="return-type">
+            <div className="bold align-right return-type__label">Return Type:</div>
+            <div className="return-type__value">
               { (validateReturnType === false || _.startCase(returnType) === 'Boolean') &&
                 <FontAwesome name="check" className="check" />}
               {_.startCase(returnType)}
@@ -733,7 +749,7 @@ export default class TemplateInstance extends Component {
             updateInstance={this.updateInstance}
             name={elementType}
             uniqueId={templateInstance.uniqueId}
-            />
+          />
           {doesHaveDuplicateName && !doesHaveBaseElementUseWarning && !doesHaveBaseElementInstanceWarning &&
             <div className="warning">Warning: Name already in use. Choose another name.</div>
           }
@@ -763,6 +779,7 @@ export default class TemplateInstance extends Component {
     const baseElementUsed = this.isBaseElementUsed();
     const baseElementInUsedList = this.props.disableElement;
     const disabledClass = (baseElementUsed || baseElementInUsedList) ? 'disabled' : '';
+
     return (
       <div className={headerClass}>
         <div className={headerTopClass}>

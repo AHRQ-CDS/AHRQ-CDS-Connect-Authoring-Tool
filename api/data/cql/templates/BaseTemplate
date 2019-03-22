@@ -1,2 +1,8 @@
+<% if (locals.comment) {
+// Render each line in the comment
+locals.comment.forEach(c => {
+%>// <%-c%>
+<%});
+} -%>
 define "<%-element_name%>":
   <%-cqlString%>

@@ -141,11 +141,12 @@ h6 {
 }
 
 .warning {
+  display: inline-block;
   color: $red;
   font-size: 0.8em;
   background-color: lighten($red, 45%);
   padding: 10px;
-  margin: 10px 0;
+  margin-bottom: 10px;
 }
 
 .notification {
