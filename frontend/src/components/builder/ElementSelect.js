@@ -152,7 +152,7 @@ export default class ElementSelect extends Component {
         name: param.name,
         type: 'parameter',
         returnType: _.toLower(param.type),
-        extends: 'Base',
+        template: 'GenericStatement',
         parameters: [
           { id: 'element_name', type: 'string', name: 'Element Name', value: param.name },
           { id: 'default', type: 'boolean', name: 'Default', value: param.value },
