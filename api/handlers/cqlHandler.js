@@ -579,9 +579,14 @@ class CqlArtifact {
         }
         case 'reference': {
           // Need to pull the element name from the reference to support renaming the elements while being used.
-          const referencedElement = this.baseElements.find(e => e.uniqueId === parameter.value.id)
-          const referencedElementName = referencedElement.parameters[0].value || referencedElement.uniqueId;
-          context.values = [ `"${referencedElementName}"` ];
+          let referenced;
+          if (parameter.id === 'parameterReference') {
+            referenced = this.parameters.find(e => e.uniqueId === parameter.value.id);
+          } else if (parameter.id === 'baseElementReference') {
+            referenced = this.baseElements.find(e => e.uniqueId === parameter.value.id);
+          }
+          const referencedName = referenced.parameters[0].value || referenced.uniqueId;
+          context.values = [ `"${referencedName}"` ];
           break;
         }
         case 'textarea': {
