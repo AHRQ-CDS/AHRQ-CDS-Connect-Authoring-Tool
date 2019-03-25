@@ -305,6 +305,8 @@ class CqlArtifact {
 
       if (baseElement.childInstances) {
         this.parseTree(baseElement);
+      } else if (baseElement.type === 'parameter') {
+        this.parseParameter(baseElement);
       } else {
         this.parseElement(baseElement);
       }

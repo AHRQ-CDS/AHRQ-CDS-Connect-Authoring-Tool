@@ -72,6 +72,9 @@ function parseElement(element, parameterUsedByMap, parameters) {
       }
     });
 
+    element.extends = undefined;
+    element.template = 'GenericStatement';
+
     if (!parameterUsedByMap[element.id]) {
       parameterUsedByMap[element.id] = [];
     }
