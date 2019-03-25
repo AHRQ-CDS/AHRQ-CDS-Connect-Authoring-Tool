@@ -99,8 +99,6 @@ export default class IntervalOfQuantityEditor extends Component {
               }}
             />
 
-            <span className="dash">_</span>
-
             <input
               type="text"
               className="interval-of-quantity-unit-ucum"

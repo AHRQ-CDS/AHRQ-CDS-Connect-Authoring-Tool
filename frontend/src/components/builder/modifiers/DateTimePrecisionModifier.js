@@ -47,8 +47,7 @@ export default class DateTimePrecisionModifier extends Component {
       { value: 'day', label: 'day' },
       { value: 'hour', label: 'hour' },
       { value: 'minute', label: 'minute' },
-      { value: 'second', label: 'second' },
-      { value: 'millisecond', label: 'millisecond' }
+      { value: 'second', label: 'second' }
     ];
 
     return (
@@ -65,7 +64,7 @@ export default class DateTimePrecisionModifier extends Component {
           }}
         />
 
-        <span className="dash">_</span>
+        <span>  </span>
 
         <TimePicker
           id={timeId}

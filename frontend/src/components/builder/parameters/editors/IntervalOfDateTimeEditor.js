@@ -84,7 +84,7 @@ export default class IntervalOfDateTimeEditor extends Component {
               }}
             />
 
-            <span className="dash">_</span>
+            <span>  </span>
 
             <TimePicker
               id={id}
@@ -117,7 +117,7 @@ export default class IntervalOfDateTimeEditor extends Component {
               }}
             />
 
-            <span className="dash">_</span>
+            <span>  </span>
 
             <TimePicker
               id={id}

@@ -37,8 +37,7 @@ export default class TimePrecisionModifier extends Component {
     const options = [
       { value: 'hour', label: 'hour' },
       { value: 'minute', label: 'minute' },
-      { value: 'second', label: 'second' },
-      { value: 'millisecond', label: 'millisecond' }
+      { value: 'second', label: 'second' }
     ];
 
     return (

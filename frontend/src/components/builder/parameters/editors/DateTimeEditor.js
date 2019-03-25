@@ -60,7 +60,7 @@ export default class DateTimeEditor extends Component {
               }}
             />
 
-            <span className="dash">_</span>
+            <span>  </span>
 
             <TimePicker
               id={id}

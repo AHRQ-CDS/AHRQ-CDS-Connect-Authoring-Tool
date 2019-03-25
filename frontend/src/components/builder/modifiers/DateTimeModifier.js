@@ -49,7 +49,7 @@ export default class DateTimeModifier extends Component {
           }}
         />
 
-        <span className="dash">_</span>
+        <span>  </span>
 
         <TimePicker
           id={timeId}
