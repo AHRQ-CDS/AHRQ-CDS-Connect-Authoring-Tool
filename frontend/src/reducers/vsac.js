@@ -18,6 +18,7 @@ const defaultState = {
   isValidCode: null,
   codeData: null,
   detailsCodes: [],
+  detailsCodesErrorMessage: '',
   username: null,
   password: null
 };
@@ -79,13 +80,15 @@ export default function auth(state = defaultState, action) {
       return {
         ...state,
         isRetrievingDetails: false,
-        detailsCodes: action.codes
+        detailsCodes: action.codes,
+        detailsCodesErrorMessage: ''
       };
     case VSAC_DETAILS_FAILURE:
       return {
         ...state,
         isRetrievingDetails: false,
-        detailsCodes: []
+        detailsCodes: [],
+        detailsCodesErrorMessage: action.detailsCodesErrorMessage
       };
     case VALIDATE_CODE_REQUEST:
       return {

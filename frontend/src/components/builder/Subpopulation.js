@@ -164,6 +164,7 @@ export default class Subpopulation extends Component {
                 getVSDetails={this.props.getVSDetails}
                 isRetrievingDetails={this.props.isRetrievingDetails}
                 vsacDetailsCodes={this.props.vsacDetailsCodes}
+                vsacDetailsCodesError={this.props.vsacDetailsCodesError}
                 vsacFHIRCredentials={this.props.vsacFHIRCredentials}
                 validateReturnType={this.props.validateReturnType}
                 isValidatingCode={this.props.isValidatingCode}
@@ -206,5 +207,6 @@ Subpopulation.propTypes = {
   vsacSearchCount: PropTypes.number.isRequired,
   getVSDetails: PropTypes.func.isRequired,
   isRetrievingDetails: PropTypes.bool.isRequired,
-  vsacDetailsCodes: PropTypes.array.isRequired
+  vsacDetailsCodes: PropTypes.array.isRequired,
+  vsacDetailsCodesError: PropTypes.string.isRequired,
 };

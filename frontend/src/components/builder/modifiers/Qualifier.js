@@ -38,6 +38,7 @@ export default class Qualifier extends Component {
         getVSDetails={this.props.getVSDetails}
         isRetrievingDetails={this.props.isRetrievingDetails}
         vsacDetailsCodes={this.props.vsacDetailsCodes}
+        vsacDetailsCodesError={this.props.vsacDetailsCodesError}
         vsacFHIRCredentials={this.props.vsacFHIRCredentials}
         selectedElement={valueSet}
         useIconButton={true}
@@ -93,6 +94,7 @@ export default class Qualifier extends Component {
           getVSDetails={this.props.getVSDetails}
           isRetrievingDetails={this.props.isRetrievingDetails}
           vsacDetailsCodes={this.props.vsacDetailsCodes}
+          vsacDetailsCodesError={this.props.vsacDetailsCodesError}
           vsacFHIRCredentials={this.props.vsacFHIRCredentials}
         />
       );
@@ -196,6 +198,7 @@ Qualifier.propTypes = {
   getVSDetails: PropTypes.func.isRequired,
   isRetrievingDetails: PropTypes.bool.isRequired,
   vsacDetailsCodes: PropTypes.array.isRequired,
+  vsacDetailsCodesError: PropTypes.string.isRequired,
   loginVSACUser: PropTypes.func.isRequired,
   setVSACAuthStatus: PropTypes.func.isRequired,
   vsacStatus: PropTypes.string,

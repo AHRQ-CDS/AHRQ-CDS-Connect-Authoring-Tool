@@ -331,7 +331,7 @@ export class Builder extends Component {
     const {
       artifact, templates, valueSets,
       vsacStatus, vsacStatusText,
-      isRetrievingDetails, vsacDetailsCodes, conversionFunctions,
+      isRetrievingDetails, vsacDetailsCodes, vsacDetailsCodesError, conversionFunctions,
       isValidatingCode, isValidCode, codeData
     } = this.props;
     const namedParameters = _.filter(artifact.parameters, p => (!_.isNull(p.name) && p.name.length));
@@ -367,6 +367,7 @@ export class Builder extends Component {
           getVSDetails={this.props.getVSDetails}
           isRetrievingDetails={isRetrievingDetails}
           vsacDetailsCodes={vsacDetailsCodes}
+          vsacDetailsCodesError={vsacDetailsCodesError}
           vsacFHIRCredentials={this.props.vsacFHIRCredentials}
           isValidatingCode={isValidatingCode}
           isValidCode={isValidCode}
@@ -502,6 +503,7 @@ export class Builder extends Component {
                     getVSDetails={this.props.getVSDetails}
                     isRetrievingDetails={this.props.isRetrievingDetails}
                     vsacDetailsCodes={this.props.vsacDetailsCodes}
+                    vsacDetailsCodesError={this.props.vsacDetailsCodesError}
                     vsacFHIRCredentials={this.props.vsacFHIRCredentials}
                     isValidatingCode={this.props.isValidatingCode}
                     isValidCode={this.props.isValidCode}
@@ -541,6 +543,7 @@ export class Builder extends Component {
                     getVSDetails={this.props.getVSDetails}
                     isRetrievingDetails={this.props.isRetrievingDetails}
                     vsacDetailsCodes={this.props.vsacDetailsCodes}
+                    vsacDetailsCodesError={this.props.vsacDetailsCodesError}
                     vsacFHIRCredentials={this.props.vsacFHIRCredentials}
                     isValidatingCode={this.props.isValidatingCode}
                     isValidCode={this.props.isValidCode}
@@ -677,6 +680,7 @@ function mapStateToProps(state) {
     isValidCode: state.vsac.isValidCode,
     codeData: state.vsac.codeData,
     vsacDetailsCodes: state.vsac.detailsCodes,
+    vsacDetailsCodesError: state.vsac.detailsCodesErrorMessage,
     vsacFHIRCredentials: { username: state.vsac.username, password: state.vsac.password },
     conversionFunctions: state.modifiers.conversionFunctions,
     isLoggingOut: state.auth.isLoggingOut

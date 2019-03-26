@@ -129,8 +129,14 @@ function detailsSuccess(data) {
 }
 
 function detailsFailure(error) {
+  let errorMessage = '';
+  if (error.response.status === 404) {
+    errorMessage = 'Unable to retrieve codes for this value set. This is a known issue with intensional value sets that'
+      + ' will be resolved in an upcoming release.';
+  }
   return {
-    type: VSAC_DETAILS_FAILURE
+    type: VSAC_DETAILS_FAILURE,
+    detailsCodesErrorMessage: errorMessage
   };
 }
 

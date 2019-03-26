@@ -152,12 +152,22 @@ export default class ElementModal extends Component {
     </tbody>
   );
 
+  renderErrorMessage = () => (
+    <div className="modal__content">
+      {this.props.vsacDetailsCodesError}
+    </div>
+  );
+
   renderSearchResultsTable = () => {
     if (this.props.isSearchingVSAC || this.props.isRetrievingDetails) {
       return (
         <div className="loading-icon"><FontAwesome name="spinner" spin/></div>
       );
     } else if (this.state.selectedElement) {
+      if (this.props.vsacDetailsCodesError) {
+        return this.renderErrorMessage();
+      }
+
       return (
         <table className="search__table">
           <thead>
@@ -337,6 +347,7 @@ ElementModal.propTypes = {
   getVSDetails: PropTypes.func.isRequired,
   isRetrievingDetails: PropTypes.bool.isRequired,
   vsacDetailsCodes: PropTypes.array.isRequired,
+  vsacDetailsCodesError: PropTypes.string.isRequired,
   selectedElement: PropTypes.shape({ name: PropTypes.string.isRequired, oid: PropTypes.string.isRequired }),
   labels: PropTypes.object,
   useIconButton: PropTypes.bool,
