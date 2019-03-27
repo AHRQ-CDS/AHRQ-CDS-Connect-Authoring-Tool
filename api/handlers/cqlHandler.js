@@ -732,7 +732,7 @@ function applyModifiers(values = [] , modifiers = []) { // default modifiers to 
       const modifierContext = { cqlLibraryFunction: modifier.cqlLibraryFunction, value_name: newValue };
       // Modifiers that add new value sets, will have a valueSet attribute on values.
       if (modifier.values && modifier.values.valueSet) {
-        modifier.values.valueSet.name += ' VS';
+        modifier.values.valueSet.name = `${modifier.values.valueSet.name.replace(/"/g, '\\"')} VS`;
         // Add the value set to the resourceMap to be included and referenced
         const count = getCountForUniqueExpressionName(modifier.values.valueSet, this.resourceMap, 'name', 'oid');
         if (count > 0) {
@@ -858,7 +858,7 @@ function buildConceptObjectForCodes(codes, listOfConcepts) {
   if (codes) {
     codes.forEach((code) => {
       if (!code.display) code.display = '';
-      code.code = code.code.replace(/'/g, '\\\'');
+      code.code = code.code.replace(/'/g, '\\\'').replace(/"/g, '\\"');
       code.display = code.display.replace(/'/g, '\\\'');
       code.codeSystem.id = code.codeSystem.id.replace(/'/g, '\\\'');
       const concept = {
@@ -884,7 +884,7 @@ function addValueSets(parameter, valueSetObject, attribute) {
   if (parameter && parameter.valueSets) {
     valueSetObject[attribute] = [];
     parameter.valueSets.forEach(vs => {
-      valueSetObject[attribute].push({ name: `${vs.name} VS`, oid: vs.oid });
+      valueSetObject[attribute].push({ name: `${vs.name.replace(/"/g, '\\"')} VS`, oid: vs.oid });
     });
   }
 }
