@@ -464,14 +464,26 @@ export class Builder extends Component {
 
               <div className="tab-panel-container">
                 <TabPanel>
+                  <div className="workspace-blurb">
+                    Use Elements, Expressions, and Logic Elements to create a target population that is qualified to
+                    receive a Recommendation from the Artifact.
+                  </div>
                   {this.renderConjunctionGroup('expTreeInclude')}
                 </TabPanel>
 
                 <TabPanel>
+                  <div className="workspace-blurb">
+                    Use Elements, Expressions, and Logic Elements to create a target population that is generally
+                    excluded from receiving a Recommendation from the Artifact.
+                  </div>
                   {this.renderConjunctionGroup('expTreeExclude')}
                 </TabPanel>
 
                 <TabPanel>
+                  <div className="workspace-blurb">
+                    Use Elements, Expressions, and Logic Elements to create named target populations, which can then be
+                    applied to a Recommendation.
+                  </div>
                   <Subpopulations
                     name={'subpopulations'}
                     artifact={artifact}
@@ -513,6 +525,10 @@ export class Builder extends Component {
                 </TabPanel>
 
                 <TabPanel>
+                  <div className="workspace-blurb">
+                    Create individual elements, which do not need to be contained within a Conjunction Group, and can
+                    be added to the Inclusions, Exclusions, and Subpopulations.
+                  </div>
                   <BaseElements
                     treeName='baseElements'
                     instance={artifact}
@@ -554,6 +570,10 @@ export class Builder extends Component {
                 </TabPanel>
 
                 <TabPanel>
+                  <div className="workspace-blurb">
+                    Create resulting notices that should be delivered to the clinician after the CDS Artifact is
+                    executed.
+                  </div>
                   <Recommendations
                     artifact={artifact}
                     templates={templates}
@@ -565,6 +585,9 @@ export class Builder extends Component {
                 </TabPanel>
 
                 <TabPanel>
+                  <div className="workspace-blurb">
+                    Create named, reusable values that can be supplied by the CDS execution environment at run-time.
+                  </div>
                   <Parameters
                     parameters={this.props.artifact.parameters}
                     updateParameters={this.updateParameters}
@@ -582,6 +605,10 @@ export class Builder extends Component {
                 </TabPanel>
 
                 <TabPanel>
+                  <div className="workspace-blurb">
+                    Direct the system how to handle various errors that may be encountered when running the
+                    CDS Artifact.
+                  </div>
                   <ErrorStatement
                     parameters={namedParameters}
                     subpopulations={this.props.artifact.subpopulations}
@@ -605,6 +632,7 @@ export class Builder extends Component {
           showModal={this.state.showEditArtifactModal}
           closeModal={this.closeEditArtifactModal}
           saveModal={this.handleSaveArtifact} />
+
         <ELMErrorModal
           isOpen={this.state.showELMErrorModal}
           closeModal={this.closeELMErrorModal}
