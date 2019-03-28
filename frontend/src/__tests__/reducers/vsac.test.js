@@ -12,6 +12,7 @@ describe('vsac reducer', () => {
       searchCount: 0,
       isRetrievingDetails: false,
       detailsCodes: [],
+      detailsCodesErrorMessage: '',
       username: null,
       password: null,
       codeData: null,
@@ -67,6 +68,7 @@ describe('vsac reducer', () => {
       searchCount: 0,
       isRetrievingDetails: false,
       detailsCodes: [],
+      detailsCodesErrorMessage: '',
       username: null,
       password: null,
       codeData: null,
@@ -117,14 +119,18 @@ describe('vsac reducer', () => {
     action = { type: types.VSAC_DETAILS_SUCCESS, codes };
     newState = {
       isRetrievingDetails: false,
-      detailsCodes: codes
+      detailsCodes: codes,
+      detailsCodesErrorMessage: ''
     };
     expect(reducer(previousState, action)).toEqual(newState);
 
-    action = { type: types.VSAC_DETAILS_FAILURE };
+    const detailsCodesErrorMessage = 'Unable to retrieve codes for this value set. This is a known issue with'
+      + ' intensional value sets that will be resolved in an upcoming release.';
+    action = { type: types.VSAC_DETAILS_FAILURE, detailsCodesErrorMessage };
     newState = {
       isRetrievingDetails: false,
-      detailsCodes: []
+      detailsCodes: [],
+      detailsCodesErrorMessage
     };
     expect(reducer(previousState, action)).toEqual(newState);
   });

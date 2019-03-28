@@ -226,6 +226,7 @@ export default class TemplateInstance extends Component {
               getVSDetails={this.props.getVSDetails}
               isRetrievingDetails={this.props.isRetrievingDetails}
               vsacDetailsCodes={this.props.vsacDetailsCodes}
+              vsacDetailsCodesError={this.props.vsacDetailsCodesError}
               loginVSACUser={this.props.loginVSACUser}
               setVSACAuthStatus={this.props.setVSACAuthStatus}
               vsacStatus={this.props.vsacStatus}
@@ -466,6 +467,7 @@ export default class TemplateInstance extends Component {
                   getVSDetails={this.props.getVSDetails}
                   isRetrievingDetails={this.props.isRetrievingDetails}
                   vsacDetailsCodes={this.props.vsacDetailsCodes}
+                  vsacDetailsCodesError={this.props.vsacDetailsCodesError}
                   vsacFHIRCredentials={this.props.vsacFHIRCredentials} />
               </div>
             ))}
@@ -550,6 +552,7 @@ export default class TemplateInstance extends Component {
           getVSDetails={this.props.getVSDetails}
           isRetrievingDetails={this.props.isRetrievingDetails}
           vsacDetailsCodes={this.props.vsacDetailsCodes}
+          vsacDetailsCodesError={this.props.vsacDetailsCodesError}
           vsacFHIRCredentials={this.props.vsacFHIRCredentials}
         />
 
@@ -877,6 +880,7 @@ TemplateInstance.propTypes = {
   getVSDetails: PropTypes.func.isRequired,
   isRetrievingDetails: PropTypes.bool.isRequired,
   vsacDetailsCodes: PropTypes.array.isRequired,
+  vsacDetailsCodesError: PropTypes.string.isRequired,
   validateReturnType: PropTypes.bool,
   isValidatingCode: PropTypes.bool.isRequired,
   isValidCode: PropTypes.bool,

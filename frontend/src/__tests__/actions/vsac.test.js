@@ -153,9 +153,12 @@ describe('vsac actions', () => {
         response: { status: 404, statusText: 'Not Found' }
       });
 
+      const detailsCodesErrorMessage = 'Unable to retrieve codes for this value set. This is a known issue with'
+        + ' intensional value sets that will be resolved in an upcoming release.';
+
       const expectedActions = [
         { type: types.VSAC_DETAILS_REQUEST },
-        { type: types.VSAC_DETAILS_FAILURE }
+        { type: types.VSAC_DETAILS_FAILURE, detailsCodesErrorMessage }
       ];
 
       return store.dispatch(actions.getVSDetails(oid)).then(() => {

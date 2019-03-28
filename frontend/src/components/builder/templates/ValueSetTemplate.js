@@ -35,6 +35,7 @@ export default class ValueSetTemplate extends Component {
         getVSDetails={this.props.getVSDetails}
         isRetrievingDetails={this.props.isRetrievingDetails}
         vsacDetailsCodes={this.props.vsacDetailsCodes}
+        vsacDetailsCodesError={this.props.vsacDetailsCodesError}
         selectedElement={this.props.valueSet}
         useIconButton={true}
         iconForButton={'eye'}
@@ -109,5 +110,6 @@ ValueSetTemplate.propTypes = {
   templateInstance: PropTypes.object.isRequired,
   getVSDetails: PropTypes.func.isRequired,
   isRetrievingDetails: PropTypes.bool.isRequired,
-  vsacDetailsCodes: PropTypes.array.isRequired
+  vsacDetailsCodes: PropTypes.array.isRequired,
+  vsacDetailsCodesError: PropTypes.string.isRequired,
 };
