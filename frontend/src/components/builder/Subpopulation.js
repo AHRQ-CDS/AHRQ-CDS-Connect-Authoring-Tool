@@ -103,13 +103,9 @@ export default class Subpopulation extends Component {
             }
 
             <div className="card-element__buttons">
-              <button className="secondary-button" onClick={this.state.isExpanded ? this.collapse : this.expand}>
-                {this.state.isExpanded ? 'Done' : 'Edit'}
-              </button>
-
               <button
                 aria-label="Remove subpopulation"
-                className="secondary-button"
+                className="element__deletebutton transparent-button"
                 onClick={() => this.props.deleteSubpopulation(this.props.subpopulation.uniqueId)}>
                 <FontAwesome fixedWidth name='times' />
               </button>
