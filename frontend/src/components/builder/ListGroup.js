@@ -322,13 +322,6 @@ export default class ListGroup extends Component {
         <div className="card-element__header">
           {this.state.isExpanded ?
             <div className="subpopulation__title">
-              <FontAwesome fixedWidth name='angle-double-down'
-                id="collapse-icon"
-                tabIndex="0"
-                onClick={this.state.isExpanded ? this.collapse : this.expand}
-                onKeyPress={this.onEnterKey}
-              />
-
               <input
                 type="text"
                 className="subpopulation__name-input"
@@ -355,12 +348,6 @@ export default class ListGroup extends Component {
             </div>
             :
             <div className="subpopulation-title">
-              <FontAwesome fixedWidth name='angle-double-right'
-                id="collapse-icon"
-                tabIndex="0"
-                onClick={this.state.isExpanded ? this.collapse : this.expand}
-                onKeyPress={this.onEnterKey}
-              />
               <h4>{instance.parameters[0].value}</h4>
               {(needsDuplicateNameWarning || needsBaseElementWarning || this.hasNestedWarnings(instance.childInstances))
                 && <div className="warning"><FontAwesome name="exclamation-circle" /> Has warnings</div>}
@@ -368,16 +355,18 @@ export default class ListGroup extends Component {
           }
 
           <div className="card-element__buttons">
-            <button className="secondary-button" onClick={this.state.isExpanded ? this.collapse : this.expand}>
-              {this.state.isExpanded ? 'Done' : 'Edit'}
+            <button
+              onClick={this.state.isExpanded ? this.collapse : this.expand}
+              className="element__hidebutton transparent-button"
+              aria-label={`hide ${name}`}>
+              <FontAwesome name={this.state.isExpanded ? 'angle-double-down' : 'angle-double-right'} />
             </button>
-
             <button
               aria-label="Remove base element list"
-              className={`secondary-button ${disabledClass}`}
+              className={`element__deletebutton transparent-button ${disabledClass}`}
               id={`deletebutton-${instance.uniqueId}`}
               onClick={() => this.deleteBaseElementList(instance.uniqueId)}>
-              <FontAwesome fixedWidth name='times' />
+              <FontAwesome name="close" />
             </button>
             {baseElementListUsed &&
               <UncontrolledTooltip
