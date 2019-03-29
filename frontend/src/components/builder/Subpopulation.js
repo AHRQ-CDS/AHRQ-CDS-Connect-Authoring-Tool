@@ -66,13 +66,6 @@ export default class Subpopulation extends Component {
           <div className="card-element__header">
             {this.state.isExpanded ?
               <div className="subpopulation__title">
-                <FontAwesome fixedWidth name='angle-double-down'
-                  id="collapse-icon"
-                  tabIndex="0"
-                  onClick={this.state.isExpanded ? this.collapse : this.expand}
-                  onKeyPress={this.onEnterKey}
-                />
-
                 <input
                   type="text"
                   className="subpopulation__name-input"
@@ -89,11 +82,6 @@ export default class Subpopulation extends Component {
               </div>
             :
               <div className="subpopulation-title">
-                <FontAwesome fixedWidth name='angle-double-right'
-                  id="collapse-icon"
-                  tabIndex="0"
-                  onClick={this.state.isExpanded ? this.collapse : this.expand}
-                  onKeyPress={this.onEnterKey} />
                 <h4>{this.props.subpopulation.subpopulationName}</h4>
                 {(duplicateNameIndex !== -1
                   || this.subpopulationHasOneChildWarning()
@@ -103,15 +91,17 @@ export default class Subpopulation extends Component {
             }
 
             <div className="card-element__buttons">
-              <button className="secondary-button" onClick={this.state.isExpanded ? this.collapse : this.expand}>
-                {this.state.isExpanded ? 'Done' : 'Edit'}
+              <button
+                onClick={this.state.isExpanded ? this.collapse : this.expand}
+                className="element__hidebutton transparent-button"
+                aria-label={`hide ${this.props.subpopulation.subpopulationName}`}>
+                <FontAwesome name={this.state.isExpanded ? 'angle-double-down' : 'angle-double-right'} />
               </button>
-
               <button
                 aria-label="Remove subpopulation"
-                className="secondary-button"
+                className="element__deletebutton transparent-button"
                 onClick={() => this.props.deleteSubpopulation(this.props.subpopulation.uniqueId)}>
-                <FontAwesome fixedWidth name='times' />
+                <FontAwesome name="close" />
               </button>
             </div>
           </div>
