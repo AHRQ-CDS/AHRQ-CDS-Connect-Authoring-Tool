@@ -465,24 +465,28 @@ export class Builder extends Component {
               <div className="tab-panel-container">
                 <TabPanel>
                   <div className="workspace-blurb">
-                    Use Elements, Expressions, and Logic Elements to create a target population that is qualified to
-                    receive a Recommendation from the Artifact.
+                    Specify criteria to identify a target population that should receive a recommendation from this
+                    artifact. Examples might include an age range, gender, presence of a certain condition, or lab
+                    results within a specific range.
                   </div>
                   {this.renderConjunctionGroup('expTreeInclude')}
                 </TabPanel>
 
                 <TabPanel>
                   <div className="workspace-blurb">
-                    Use Elements, Expressions, and Logic Elements to create a target population that is generally
-                    excluded from receiving a Recommendation from the Artifact.
+                    Specify criteria to identify patients that should be excluded from the target population and,
+                    therefore, from receiving a recommendation from this artifact. Examples might include pregnancy
+                    status, out of bound lab results, or evidence that the recommended therapy is already being used
+                    by the patient.
                   </div>
                   {this.renderConjunctionGroup('expTreeExclude')}
                 </TabPanel>
 
                 <TabPanel>
                   <div className="workspace-blurb">
-                    Use Elements, Expressions, and Logic Elements to create named target populations, which can then be
-                    applied to a Recommendation.
+                    Specify criteria that further segments the target population into subpopulations that should
+                    receive more specific recommendations. An example might be splitting the population by risk score
+                    so that higher risk patients receive a stronger recommendation than lower risk patients.
                   </div>
                   <Subpopulations
                     name={'subpopulations'}
@@ -526,8 +530,9 @@ export class Builder extends Component {
 
                 <TabPanel>
                   <div className="workspace-blurb">
-                    Create individual elements, which do not need to be contained within a Conjunction Group, and can
-                    be added to the Inclusions, Exclusions, and Subpopulations.
+                    Specify individual elements that can be re-used in the Inclusions, Exclusions, and Subpopulations,
+                    or should standalone as independent expressions in the resulting artifact. An example might be a lab
+                    result value that is referenced multiple times throughout the artifact.
                   </div>
                   <BaseElements
                     treeName='baseElements'
@@ -571,8 +576,9 @@ export class Builder extends Component {
 
                 <TabPanel>
                   <div className="workspace-blurb">
-                    Create resulting notices that should be delivered to the clinician after the CDS Artifact is
-                    executed.
+                    Specify the text-based recommendations that should be delivered to the clinician when a patient
+                    meets the eligible criteria as defined in the artifact. Examples might include recommendations to
+                    order a medication, perform a test, or provide the patient educational materials.
                   </div>
                   <Recommendations
                     artifact={artifact}
@@ -586,7 +592,9 @@ export class Builder extends Component {
 
                 <TabPanel>
                   <div className="workspace-blurb">
-                    Create named, reusable values that can be supplied by the CDS execution environment at run-time.
+                    Specify named parameters that allow individual implementers to control pre-determined aspects of the
+                    artifact in their own environment. Examples might include the option to allow lower grade evidence,
+                    thresholds at which recommendations should be provided, or customized age ranges.
                   </div>
                   <Parameters
                     parameters={this.props.artifact.parameters}
@@ -606,8 +614,9 @@ export class Builder extends Component {
 
                 <TabPanel>
                   <div className="workspace-blurb">
-                    Direct the system how to handle various errors that may be encountered when running the
-                    CDS Artifact.
+                    Specify error messages that should be delivered under certain exceptional circumstances when the CDS
+                    artifact is executed. An example might be to deliver an error message if the patient would normally
+                    receive the recommendation but has been excluded.
                   </div>
                   <ErrorStatement
                     parameters={namedParameters}
