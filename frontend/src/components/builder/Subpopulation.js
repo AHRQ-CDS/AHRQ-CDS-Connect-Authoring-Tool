@@ -93,6 +93,7 @@ export default class Subpopulation extends Component {
             <div className="card-element__buttons">
               <button
                 onClick={this.state.isExpanded ? this.collapse : this.expand}
+                id="collapse-icon"
                 className="element__hidebutton transparent-button"
                 aria-label={`hide ${this.props.subpopulation.subpopulationName}`}>
                 <FontAwesome name={this.state.isExpanded ? 'angle-double-down' : 'angle-double-right'} />
