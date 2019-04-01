@@ -464,14 +464,30 @@ export class Builder extends Component {
 
               <div className="tab-panel-container">
                 <TabPanel>
+                  <div className="workspace-blurb">
+                    Specify criteria to identify a target population that should receive a recommendation from this
+                    artifact. Examples might include an age range, gender, presence of a certain condition, or lab
+                    results within a specific range.
+                  </div>
                   {this.renderConjunctionGroup('expTreeInclude')}
                 </TabPanel>
 
                 <TabPanel>
+                  <div className="workspace-blurb">
+                    Specify criteria to identify patients that should be excluded from the target population and,
+                    therefore, from receiving a recommendation from this artifact. Examples might include pregnancy
+                    status, out of bound lab results, or evidence that the recommended therapy is already being used
+                    by the patient.
+                  </div>
                   {this.renderConjunctionGroup('expTreeExclude')}
                 </TabPanel>
 
                 <TabPanel>
+                  <div className="workspace-blurb">
+                    Specify criteria that further segments the target population into subpopulations that should
+                    receive more specific recommendations. An example might be splitting the population by risk score
+                    so that higher risk patients receive a stronger recommendation than lower risk patients.
+                  </div>
                   <Subpopulations
                     name={'subpopulations'}
                     artifact={artifact}
@@ -513,6 +529,11 @@ export class Builder extends Component {
                 </TabPanel>
 
                 <TabPanel>
+                  <div className="workspace-blurb">
+                    Specify individual elements that can be re-used in the Inclusions, Exclusions, and Subpopulations,
+                    or should standalone as independent expressions in the resulting artifact. An example might be a lab
+                    result value that is referenced multiple times throughout the artifact.
+                  </div>
                   <BaseElements
                     treeName='baseElements'
                     instance={artifact}
@@ -554,6 +575,11 @@ export class Builder extends Component {
                 </TabPanel>
 
                 <TabPanel>
+                  <div className="workspace-blurb">
+                    Specify the text-based recommendations that should be delivered to the clinician when a patient
+                    meets the eligible criteria as defined in the artifact. Examples might include recommendations to
+                    order a medication, perform a test, or provide the patient educational materials.
+                  </div>
                   <Recommendations
                     artifact={artifact}
                     templates={templates}
@@ -565,6 +591,11 @@ export class Builder extends Component {
                 </TabPanel>
 
                 <TabPanel>
+                  <div className="workspace-blurb">
+                    Specify named parameters that allow individual implementers to control pre-determined aspects of the
+                    artifact in their own environment. Examples might include the option to allow lower grade evidence,
+                    thresholds at which recommendations should be provided, or customized age ranges.
+                  </div>
                   <Parameters
                     parameters={this.props.artifact.parameters}
                     updateParameters={this.updateParameters}
@@ -582,6 +613,11 @@ export class Builder extends Component {
                 </TabPanel>
 
                 <TabPanel>
+                  <div className="workspace-blurb">
+                    Specify error messages that should be delivered under certain exceptional circumstances when the CDS
+                    artifact is executed. An example might be to deliver an error message if the patient would normally
+                    receive the recommendation but has been excluded.
+                  </div>
                   <ErrorStatement
                     parameters={namedParameters}
                     subpopulations={this.props.artifact.subpopulations}
@@ -605,6 +641,7 @@ export class Builder extends Component {
           showModal={this.state.showEditArtifactModal}
           closeModal={this.closeEditArtifactModal}
           saveModal={this.handleSaveArtifact} />
+
         <ELMErrorModal
           isOpen={this.state.showELMErrorModal}
           closeModal={this.closeELMErrorModal}
