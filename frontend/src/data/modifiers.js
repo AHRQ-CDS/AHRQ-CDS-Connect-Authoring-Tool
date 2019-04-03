@@ -202,7 +202,7 @@ export default [
     name: 'Before',
     inputTypes: ['time'],
     returnType: 'boolean',
-    validator: { type: 'require', fields: ['time', 'precision'], args: [] },
+    validator: { type: 'require', fields: ['time'], args: [] },
     values: { time: undefined, precision: undefined },
     cqlTemplate: 'CenterModifierTimePrecise',
     cqlLibraryFunction: 'before'
@@ -212,7 +212,7 @@ export default [
     name: 'After',
     inputTypes: ['time'],
     returnType: 'boolean',
-    validator: { type: 'require', fields: ['time', 'precision'], args: [] },
+    validator: { type: 'require', fields: ['time'], args: [] },
     values: { time: undefined, precision: undefined },
     cqlTemplate: 'CenterModifierTimePrecise',
     cqlLibraryFunction: 'after'
@@ -223,7 +223,7 @@ export default [
     name: 'Before',
     inputTypes: ['datetime'],
     returnType: 'boolean',
-    validator: { type: 'require', fields: ['date', 'precision'], args: [] },
+    validator: { type: 'require', fields: ['date'], args: [] },
     values: { date: undefined, time: undefined, precision: undefined },
     cqlTemplate: 'CenterModifierDateTimePrecise',
     cqlLibraryFunction: 'before'
@@ -233,7 +233,7 @@ export default [
     name: 'After',
     inputTypes: ['datetime'],
     returnType: 'boolean',
-    validator: { type: 'require', fields: ['date', 'precision'], args: [] },
+    validator: { type: 'require', fields: ['date'], args: [] },
     values: { date: undefined, time: undefined, precision: undefined },
     cqlTemplate: 'CenterModifierDateTimePrecise',
     cqlLibraryFunction: 'after'

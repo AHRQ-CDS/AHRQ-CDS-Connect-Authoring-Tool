@@ -153,14 +153,25 @@ function getExpressionSentenceValue(modifier) {
       case 'AfterTimePrecise': {
         expressionSentenceValues[modifier.id].leadingText = 'whose value is';
         expressionSentenceValues[modifier.id].modifierText =
-          `${_.lowerCase(modifier.name)} the ${modifier.values.precision} of ${modifier.values.time.split('T')[1]}`;
+          `${_.lowerCase(modifier.name)}`;
+        if (modifier.values.precision) {
+          expressionSentenceValues[modifier.id].modifierText +=
+            ` the ${modifier.values.precision} of`;
+        }
+        expressionSentenceValues[modifier.id].modifierText +=
+          ` ${modifier.values.time.split('T')[1]}`;
         break;
       }
       case 'BeforeDateTimePrecise':
       case 'AfterDateTimePrecise': {
         expressionSentenceValues[modifier.id].leadingText = 'whose value is';
-        expressionSentenceValues[modifier.id].modifierText =
-          `${_.lowerCase(modifier.name)} the ${modifier.values.precision} of ${modifier.values.date.split('@')[1]}`;
+        expressionSentenceValues[modifier.id].modifierText = `${_.lowerCase(modifier.name)}`;
+        if (modifier.values.precision) {
+          expressionSentenceValues[modifier.id].modifierText +=
+            ` the ${modifier.values.precision} of`;
+        }
+        expressionSentenceValues[modifier.id].modifierText +=
+          ` ${modifier.values.date.split('@')[1]}`;
         if (modifier.values.time) {
           expressionSentenceValues[modifier.id].modifierText +=
             ` at ${modifier.values.time.split('T')[1]}`;

@@ -1,1 +1,1 @@
-<%-value_name%> <%-cqlLibraryFunction%> <%-values.precision%> of <%-values.date%><%-values.time%>
+<%-value_name%> <%-cqlLibraryFunction%> <% if (values.precision) { %><%-values.precision%> of <% } %><%-values.date%><%-values.time%>
