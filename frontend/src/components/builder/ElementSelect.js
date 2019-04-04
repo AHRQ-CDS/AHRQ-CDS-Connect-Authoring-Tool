@@ -9,6 +9,7 @@ import ElementModal from './ElementModal';
 import ElementSelectMenuRenderer from './ElementSelectMenuRenderer';
 import VSACAuthenticationModal from './VSACAuthenticationModal';
 import CodeSelectModal from './CodeSelectModal';
+import changeToCase from '../../utils/strings';
 import filterUnsuppressed from '../../utils/filter';
 import { sortAlphabeticallyByKey } from '../../utils/sort';
 
@@ -147,9 +148,8 @@ export default class ElementSelect extends Component {
         parametersCategory = { icon: 'sign-in', name: 'Parameters', entries: [] };
       }
 
-      // Only include boolean parameters. Don't include blank parameters to add to workspace.
       parametersCategory.entries = props.parameters.map(param => ({
-        id: param.name,
+        id: changeToCase(param.name, 'paramCase'),
         name: param.name,
         type: 'parameter',
         returnType: _.toLower(param.type),
