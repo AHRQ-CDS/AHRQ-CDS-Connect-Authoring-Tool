@@ -118,6 +118,7 @@ export default class ElementSelect extends Component {
         const returnType = _.isEmpty(e.modifiers) ? e.returnType : _.last(e.modifiers).returnType;
         const commentParam = e.parameters.find(param => param.id === 'comment');
         const commentDefaultValue = commentParam ? commentParam.value : '';
+        const type = e.type === 'parameter' ? e.type : e.name;
         return ({
           id: _.uniqueId(e.id),
           name: 'Base Element',
@@ -130,7 +131,7 @@ export default class ElementSelect extends Component {
               id: 'baseElementReference',
               type: 'reference',
               name: 'reference',
-              value: { id: e.uniqueId, type: e.name },
+              value: { id: e.uniqueId, type },
               static: true
             },
             { id: 'comment', type: 'textarea', name: 'Comment', value: commentDefaultValue }

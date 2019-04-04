@@ -804,7 +804,7 @@ export default class TemplateInstance extends Component {
       if (referenceParameter && (referenceParameter.id === 'baseElementReference')) {
         // Element type to display in header will be the reference type for Base Elements.
         const originalBaseElement = getOriginalBaseElement(templateInstance, baseElements);
-        elementType = originalBaseElement.name;
+        elementType = (originalBaseElement.type === 'parameter') ? 'Parameter' : originalBaseElement.name;
       }
 
       const doesHaveDuplicateName =
@@ -959,4 +959,5 @@ TemplateInstance.propTypes = {
   disableElement: PropTypes.bool,
   disableIndent: PropTypes.bool,
   scrollToBaseElement: PropTypes.func.isRequired,
+  baseElements: PropTypes.array.isRequired
 };
