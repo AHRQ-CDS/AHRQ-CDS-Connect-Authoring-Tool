@@ -28,7 +28,7 @@ const props = {
   renderIndentButtons: jest.fn(),
   instanceNames: [],
   baseElements: [],
-  scrollToBaseElement: jest.fn(),
+  scrollToElement: jest.fn(),
   loginVSACUser: jest.fn(),
   setVSACAuthStatus: jest.fn(),
   searchVSACByKeyword: jest.fn(),
@@ -303,7 +303,7 @@ describe('Base Element uses', () => {
     expect(linkButton).toHaveLength(1);
 
     linkButton.simulate('click');
-    expect(component.props().scrollToBaseElement).toBeCalledWith('originalBaseElementId');
+    expect(component.props().scrollToElement).toBeCalledWith('originalBaseElementId', 'baseElementReference');
   });
 });
 

@@ -482,7 +482,7 @@ export default class TemplateInstance extends Component {
     return null;
   }
 
-  renderBaseElementInfo = (referenceParameter) => {
+  renderBaseElementOrParameterInfo = (referenceParameter) => {
     let referenceName;
     if (referenceParameter) {
       const elementToReference = this.props.instanceNames.find(name => name.id === referenceParameter.value.id);
@@ -491,10 +491,17 @@ export default class TemplateInstance extends Component {
       }
     }
 
+    let label = 'Element:';
+    if (referenceParameter.id === 'baseElementReference') {
+      label = 'Base Element:';
+    } else if (referenceParameter.id === 'parameterReference') {
+      label = 'Parameter:';
+    }
+
     return (
       <div className="modifier__return__type" id="base-element-list">
         <div className="code-info">
-          <div className="bold align-right code-info__label">Base Element:</div>
+          <div className="bold align-right code-info__label">{label}</div>
           <div className="code-info__info">
             <div className="code-info__text">{referenceName}</div>
             <div className="code-info__buttons align-right">
@@ -502,12 +509,12 @@ export default class TemplateInstance extends Component {
                 role="button"
                 id={`definition-${this.props.templateInstance.uniqueId}`}
                 className={'element__linkbutton'}
-                aria-label={'see base element definition'}
-                onClick={() => this.props.scrollToBaseElement(referenceParameter.value.id) }
+                aria-label={'see element definition'}
+                onClick={() => this.props.scrollToElement(referenceParameter.value.id, referenceParameter.id) }
                 tabIndex="0"
                 onKeyPress={(e) => {
                   e.which = e.which || e.keyCode;
-                  if (e.which === 13) this.props.scrollToBaseElement(referenceParameter.value.id);
+                  if (e.which === 13) this.props.scrollToElement(referenceParameter.value.id, referenceParameter.id);
                 }}>
 
                 <FontAwesome name="link" className="delete-valueset-button" />
@@ -753,9 +760,9 @@ export default class TemplateInstance extends Component {
             {this.renderCodeInfo()}
           </div>
         }
-        { (referenceParameter && referenceParameter.id === 'baseElementReference') &&
+        { (referenceParameter) &&
           <div className="vsac-info">
-            {this.renderBaseElementInfo(referenceParameter)}
+            {this.renderBaseElementOrParameterInfo(referenceParameter)}
           </div>
         }
 
@@ -958,6 +965,6 @@ TemplateInstance.propTypes = {
   resetCodeValidation: PropTypes.func.isRequired,
   disableElement: PropTypes.bool,
   disableIndent: PropTypes.bool,
-  scrollToBaseElement: PropTypes.func.isRequired,
+  scrollToElement: PropTypes.func.isRequired,
   baseElements: PropTypes.array.isRequired
 };

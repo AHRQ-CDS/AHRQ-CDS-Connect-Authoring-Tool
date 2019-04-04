@@ -362,6 +362,13 @@ test('increments the uniqueId counter', () => {
 test('switches to base elements tab and scrolls', () => {
   const component = shallowRenderComponent(BuilderComponent, props, {});
 
-  component.instance().scrollToBaseElement('id');
+  component.instance().scrollToElement('id', 'baseElementReference');
   expect(component.state().activeTabIndex).toEqual(3); // Changes tab to Base Elements
+});
+
+test('switches to parameters tab and scrolls', () => {
+  const component = shallowRenderComponent(BuilderComponent, props, {});
+
+  component.instance().scrollToElement('id', 'parameterReference');
+  expect(component.state().activeTabIndex).toEqual(5); // Changes tab to Parameters
 });

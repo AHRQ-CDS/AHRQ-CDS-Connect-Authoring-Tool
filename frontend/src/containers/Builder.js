@@ -85,9 +85,16 @@ export class Builder extends Component {
     this.setState({ activeTabIndex });
   }
 
-  scrollToBaseElement = (elementId) => {
+  scrollToElement = (elementId, referenceType) => {
     const baseElementTabIndex = 3;
-    this.setState({ activeTabIndex: baseElementTabIndex }, () => {
+    const parameterTabIndex = 5;
+    let activeTabIndex = 0;
+    if (referenceType === 'baseElementReference') {
+      activeTabIndex = baseElementTabIndex;
+    } else if (referenceType === 'parameterReference') {
+      activeTabIndex = parameterTabIndex;
+    }
+    this.setState({ activeTabIndex }, () => {
       const elementToScrollTo = document.getElementById(elementId);
       if (elementToScrollTo) {
         elementToScrollTo.scrollIntoView();
@@ -355,7 +362,7 @@ export class Builder extends Component {
           baseElements={artifact.baseElements}
           conversionFunctions={conversionFunctions}
           instanceNames={this.props.names}
-          scrollToBaseElement={this.scrollToBaseElement}
+          scrollToElement={this.scrollToElement}
           loginVSACUser={this.props.loginVSACUser}
           setVSACAuthStatus={this.props.setVSACAuthStatus}
           vsacStatus={vsacStatus}
@@ -507,7 +514,7 @@ export class Builder extends Component {
                     updateRecsSubpop={this.updateRecsSubpop}
                     conversionFunctions={conversionFunctions}
                     instanceNames={this.props.names}
-                    scrollToBaseElement={this.scrollToBaseElement}
+                    scrollToElement={this.scrollToElement}
                     loginVSACUser={this.props.loginVSACUser}
                     setVSACAuthStatus={this.props.setVSACAuthStatus}
                     vsacStatus={this.props.vsacStatus}
@@ -552,7 +559,7 @@ export class Builder extends Component {
                     instanceNames={this.props.names}
                     baseElements={artifact.baseElements}
                     parameters={namedParameters}
-                    scrollToBaseElement={this.scrollToBaseElement}
+                    scrollToElement={this.scrollToElement}
                     loginVSACUser={this.props.loginVSACUser}
                     setVSACAuthStatus={this.props.setVSACAuthStatus}
                     vsacStatus={this.props.vsacStatus}
