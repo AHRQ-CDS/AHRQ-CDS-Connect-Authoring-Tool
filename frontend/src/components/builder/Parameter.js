@@ -178,12 +178,16 @@ export default class Parameter extends Component {
                   options={typeOptions}
                   value={type}
                   disabled={parameterUsed}
-                  onChange={e => this.updateParameter({
-                    name,
-                    uniqueId: this.props.id,
-                    type: e.value,
-                    value: null
-                  })}
+                  onChange={(e) => {
+                    if (e) { // in case of keystroke delete, where e is null/undefined
+                      this.updateParameter({
+                        name,
+                        uniqueId: this.props.id,
+                        type: e.value,
+                        value: null
+                      });
+                    }
+                  }}
                 />
               </div>
             </div>
