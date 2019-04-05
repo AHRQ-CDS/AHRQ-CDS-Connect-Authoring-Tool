@@ -251,6 +251,7 @@ export default class TemplateInstance extends Component {
             <DateTimePrecisionModifier
               key={index}
               index={index}
+              name={mod.name}
               date={mod.values.date}
               time={mod.values.time}
               precision={mod.values.precision}
@@ -262,6 +263,7 @@ export default class TemplateInstance extends Component {
             <TimePrecisionModifier
               key={index}
               index={index}
+              name={mod.name}
               time={mod.values.time}
               precision={mod.values.precision}
               updateAppliedModifier={this.updateAppliedModifier}/>
@@ -273,6 +275,7 @@ export default class TemplateInstance extends Component {
             <QuantityModifier
               key={index}
               index={index}
+              name={mod.name}
               uniqueId={`${this.props.templateInstance.uniqueId}-quantity-${index}`}
               value={mod.values.value}
               unit={mod.values.unit}
@@ -288,6 +291,7 @@ export default class TemplateInstance extends Component {
             <NumberModifier
               key={index}
               index={index}
+              name={mod.name}
               value={mod.values.value}
               updateAppliedModifier={this.updateAppliedModifier}/>
           );
@@ -298,6 +302,7 @@ export default class TemplateInstance extends Component {
             <DateTimeModifier
               key={index}
               index={index}
+              name={mod.name}
               date={mod.values.date}
               time={mod.values.time}
               updateAppliedModifier={this.updateAppliedModifier}/>
@@ -309,6 +314,7 @@ export default class TemplateInstance extends Component {
             <StringModifier
               key={index}
               index={index}
+              name={mod.name}
               value={mod.values.value}
               updateAppliedModifier={this.updateAppliedModifier}/>
           );

@@ -51,7 +51,14 @@ export default class DateTimePrecisionModifier extends Component {
     ];
 
     return (
+      /* eslint-disable jsx-a11y/label-has-for */
       <div className="col-9 d-flex">
+        <label>
+          {`${this.props.name}: `}
+        </label>
+
+        <span>  </span>
+
         <DatePicker
           id={dateId}
           selected={
@@ -96,6 +103,7 @@ export default class DateTimePrecisionModifier extends Component {
 
 DateTimePrecisionModifier.propTypes = {
   index: PropTypes.number.isRequired,
+  name: PropTypes.string.isRequired,
   date: PropTypes.string,
   time: PropTypes.string,
   precision: PropTypes.string,

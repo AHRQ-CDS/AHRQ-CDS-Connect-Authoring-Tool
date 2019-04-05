@@ -19,7 +19,14 @@ export default class QuantityModifier extends Component {
     const unitId = _.uniqueId('unit-');
 
     return (
+      /* eslint-disable jsx-a11y/label-has-for */
       <div className="quantity-modifier">
+        <label>
+          {`${this.props.name}: `}
+        </label>
+
+        <span>  </span>
+
         <label htmlFor={valueId}>
           <input
             type="number"
@@ -52,6 +59,7 @@ export default class QuantityModifier extends Component {
 QuantityModifier.propTypes = {
   index: PropTypes.number.isRequired,
   uniqueId: PropTypes.string.isRequired,
+  name: PropTypes.string.isRequired,
   value: PropTypes.string,
   unit: PropTypes.string,
   updateAppliedModifier: PropTypes.func.isRequired

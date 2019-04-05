@@ -36,7 +36,14 @@ export default class DateTimeModifier extends Component {
     const timeId = _.uniqueId('time-');
 
     return (
+      /* eslint-disable jsx-a11y/label-has-for */
       <div className="col-9 d-flex">
+        <label>
+          {`${this.props.name}: `}
+        </label>
+
+        <span>  </span>
+
         <DatePicker
           id={dateId}
           selected={
@@ -68,6 +75,7 @@ export default class DateTimeModifier extends Component {
 
 DateTimeModifier.propTypes = {
   index: PropTypes.number.isRequired,
+  name: PropTypes.string.isRequired,
   date: PropTypes.string,
   time: PropTypes.string,
   updateAppliedModifier: PropTypes.func.isRequired

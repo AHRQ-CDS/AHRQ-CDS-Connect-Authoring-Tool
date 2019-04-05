@@ -8,7 +8,14 @@ export default class StringModifier extends Component {
     const valueId = _.uniqueId('value-');
 
     return (
+      /* eslint-disable jsx-a11y/label-has-for */
       <div className="string-modifier">
+        <label>
+          {`${this.props.name}: `}
+        </label>
+
+        <span>  </span>
+
         <label htmlFor={valueId}>
           <input
             type="text"
@@ -26,6 +33,7 @@ export default class StringModifier extends Component {
 
 StringModifier.propTypes = {
   index: PropTypes.number.isRequired,
+  name: PropTypes.string.isRequired,
   value: PropTypes.string,
   updateAppliedModifier: PropTypes.func.isRequired
 };

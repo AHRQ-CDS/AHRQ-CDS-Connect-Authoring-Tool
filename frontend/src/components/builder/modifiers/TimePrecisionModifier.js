@@ -41,7 +41,14 @@ export default class TimePrecisionModifier extends Component {
     ];
 
     return (
+      /* eslint-disable jsx-a11y/label-has-for */
       <div className="col-9 d-flex">
+        <label>
+          {`${this.props.name}: `}
+        </label>
+
+        <span>  </span>
+
         <TimePicker
           id={timeId}
           defaultValue={
@@ -72,6 +79,7 @@ export default class TimePrecisionModifier extends Component {
 
 TimePrecisionModifier.propTypes = {
   index: PropTypes.number.isRequired,
+  name: PropTypes.string.isRequired,
   time: PropTypes.string,
   precision: PropTypes.string,
   updateAppliedModifier: PropTypes.func.isRequired
