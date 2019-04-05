@@ -31,8 +31,8 @@ function getExpressionSentenceValue(modifier) {
   const expressionSentenceValues = {
     VerifiedObservation: { modifierText: 'verified', leadingText: '', type: 'list' },
     WithUnit: { modifierText: '', leadingText: 'with unit', type: 'post-list' },
-    ValueComparisonNumber: { modifierText: 'greater than a number', leadingText: 'whose value is', type: 'post' },
-    ValueComparisonObservation: { modifierText: 'greater than a number', leadingText: 'whose value is', type: 'post' },
+    ValueComparisonNumber: { modifierText: 'greater than a number', leadingText: 'whose value', type: 'post' },
+    ValueComparisonObservation: { modifierText: 'greater than a number', leadingText: 'whose value', type: 'post' },
     QuantityValue: { modifierText: 'quantity value', leadingText: '', type: 'value' }, // Will not be displayed in phrase
     ConceptValue: { modifierText: 'concept value', leadingText: '', type: 'value' }, // Will not be displayed in phrase
     Qualifier: { modifierText: 'with a code', leadingText: '', type: 'post' },
@@ -103,10 +103,10 @@ function getExpressionSentenceValue(modifier) {
         const minOperatorWord = getOperation(modifier.values.minOperator);
         const maxOperatorWord = getOperation(modifier.values.maxOperator);
         expressionSentenceValues[modifier.id].modifierText =
-          `${minOperatorWord} ${modifier.values.minValue}`;
+          `is ${minOperatorWord} ${modifier.values.minValue}`;
         if (maxOperatorWord) {
           expressionSentenceValues[modifier.id].modifierText +=
-            ` and ${maxOperatorWord} ${modifier.values.maxValue}`;
+            ` and is ${maxOperatorWord} ${modifier.values.maxValue}`;
         }
         break;
       }
@@ -114,10 +114,10 @@ function getExpressionSentenceValue(modifier) {
         const minOperatorWord = getOperation(modifier.values.minOperator);
         const maxOperatorWord = getOperation(modifier.values.maxOperator);
         expressionSentenceValues[modifier.id].modifierText =
-          `${minOperatorWord} ${modifier.values.minValue} ${modifier.values.unit}`;
+          `is ${minOperatorWord} ${modifier.values.minValue} ${modifier.values.unit}`;
         if (maxOperatorWord) {
           expressionSentenceValues[modifier.id].modifierText +=
-            ` and ${maxOperatorWord} ${modifier.values.maxValue} ${modifier.values.unit}`;
+            ` and is ${maxOperatorWord} ${modifier.values.maxValue} ${modifier.values.unit}`;
         }
         break;
       }
@@ -434,14 +434,16 @@ function orderExpressionSentenceArray(
   } else if (!returnsPlural && returnsBoolean && !checkExistenceExpression) {
     if (notExpression && (type === 'parameter')) {
       orderedExpressionArray.push({ expressionText: 'Not', isExpression: true });
+      hasStarted = true;
     } else if (notExpression && (type !== 'parameter')) {
       orderedExpressionArray.push({ expressionText: 'There does', isExpression: false });
       orderedExpressionArray.push({ expressionText: 'not', isExpression: true });
       orderedExpressionArray.push({ expressionText: 'exist', isExpression: false });
+      hasStarted = true;
     } else if (type !== 'parameter') {
       orderedExpressionArray.push({ expressionText: 'There exists', isExpression: false });
+      hasStarted = true;
     }
-    hasStarted = true;
   } else if (notExpression) {
     if (checkExistenceExpression) {
       orderedExpressionArray.push({ expressionText: 'It is', isExpression: false });
