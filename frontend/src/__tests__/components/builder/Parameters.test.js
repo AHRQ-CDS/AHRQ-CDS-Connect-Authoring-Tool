@@ -48,7 +48,7 @@ test('can add a new parameter with button', () => {
   component.find('button').at(0).simulate('click');
 
   expect(updateParameters).toHaveBeenLastCalledWith([
-    expect.objectContaining({ name: null, type: null, value: null })
+    expect.objectContaining({ name: null, type: 'boolean', value: null })
   ]);
 });
 
