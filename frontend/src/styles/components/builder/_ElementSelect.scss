@@ -59,8 +59,12 @@
     flex: 1;
     padding: 0;
     border-bottom: $border-global;
-    overflow-y: scroll;
     min-height: 250px;
+
+    .Select-menu-outer {
+      overflow-y: scroll;
+      max-height: 350px;
+    }
   }
 
   .modal__footer {
