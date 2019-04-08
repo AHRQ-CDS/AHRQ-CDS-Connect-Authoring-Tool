@@ -200,6 +200,16 @@ export default class ElementModal extends Component {
     return null;
   }
 
+  renderSearchButton = () => {
+    if (this.props.viewOnly || this.state.selectedElement) return null;
+
+    return (
+      <button className="primary-button element-modal__searchbutton" onClick={this.searchVSAC}>
+        Search
+      </button>
+    );
+  }
+
   renderSelectButton = () => {
     if (this.props.viewOnly) return null;
 
@@ -212,8 +222,8 @@ export default class ElementModal extends Component {
     }
 
     return (
-      <button className="primary-button element-modal__searchbutton" onClick={ this.searchVSAC }>
-        Search
+      <button disabled className="primary-button element-modal__searchbutton" onClick={this.handleChosenVS}>
+        Select
       </button>
     );
   }
@@ -264,7 +274,7 @@ export default class ElementModal extends Component {
 
     let buttonLabels = {
       openButtonText: 'Add Value Set',
-      closeButtonText: 'Close'
+      closeButtonText: 'Cancel'
     };
 
     if (this.props.labels) {
@@ -297,6 +307,13 @@ export default class ElementModal extends Component {
                   {' '}{this.state.selectedElement ? 1 : this.props.vsacSearchCount}
                 </span> :
                 null}
+              <button
+                className="element__deletebutton transparent-button"
+                onClick={this.closeModal}
+                onKeyDown={e => this.enterKeyCheck(this.closeModal, null, e)}
+                aria-label={'Close Value Set Select Modal'}>
+                <FontAwesome name='close' />
+              </button>
             </header>
 
             <main className="modal__body">
@@ -313,7 +330,7 @@ export default class ElementModal extends Component {
                   onChange={ this.handleSearchValueChange }
                   onKeyDown={ e => this.enterKeyCheck(this.searchVSAC, this.state.searchValue, e)}/>
 
-                {this.renderSelectButton()}
+                {this.renderSearchButton()}
               </div>
 
               <div className="element-modal__content">
@@ -323,11 +340,12 @@ export default class ElementModal extends Component {
 
             <footer className="modal__footer">
               <button
-                className="primary-button"
+                className="secondary-button"
                 onClick={ this.closeModal }
                 onKeyDown={ e => this.enterKeyCheck(this.closeModal, null, e) }>
                 {buttonLabels.closeButtonText}
               </button>
+              {this.renderSelectButton()}
             </footer>
           </div>
         </Modal>
