@@ -142,7 +142,7 @@ describe('with modal open', () => {
     templateWithSelectedValue.parameters[1].static = true;
 
     // Clicking the select button class the onElementSelected function
-    const selectButton = internalModal.find('.element-modal__search button');
+    const selectButton = internalModal.find('.modal__footer .element-modal__searchbutton');
     selectButton.simulate('click');
     expect(component.props().onElementSelected).toBeCalledWith(templateWithSelectedValue);
   });
@@ -222,7 +222,7 @@ describe('with modal open', () => {
     internalModal.find('.search__table tbody tr').first().simulate('click');
 
     // Clicking the select button calls the modifier update function with correct object and closes modal
-    const selectButton = internalModal.find('.element-modal__search button');
+    const selectButton = internalModal.find('.modal__footer .element-modal__searchbutton');
     selectButton.simulate('click');
     expect(modifierModal.props().updateModifier).toBeCalledWith({ name: element.name, oid: element.oid });
     expect(modifierModal.state().isOpen).toEqual(false);
