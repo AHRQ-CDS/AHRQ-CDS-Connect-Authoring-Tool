@@ -213,16 +213,11 @@ export default class ElementModal extends Component {
   renderSelectButton = () => {
     if (this.props.viewOnly) return null;
 
-    if (this.state.selectedElement) {
-      return (
-        <button className="primary-button element-modal__searchbutton" onClick={ this.handleChosenVS }>
-          Select
-        </button>
-      );
-    }
-
     return (
-      <button disabled className="primary-button element-modal__searchbutton" onClick={this.handleChosenVS}>
+      <button
+        disabled={!this.state.selectedElement}
+        className="primary-button element-modal__searchbutton"
+        onClick={this.handleChosenVS}>
         Select
       </button>
     );

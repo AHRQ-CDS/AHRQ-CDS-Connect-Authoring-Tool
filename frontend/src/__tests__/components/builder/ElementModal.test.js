@@ -112,7 +112,7 @@ describe('with modal open', () => {
     };
   });
 
-  test('can close modal with "Close" button', () => {
+  test('can close modal with "Cancel" button', () => {
     internalModal.find('.modal__footer button').first().simulate('click');
     expect(component.state().isOpen).toEqual(false);
   });
@@ -120,6 +120,12 @@ describe('with modal open', () => {
   test('can select a valueset', () => {
     const vsacSearchResult = component.props().vsacSearchResults[0];
     const element = { name: vsacSearchResult.name, oid: vsacSearchResult.oid };
+
+    // Clicking the select button before choosing a value set does nothing
+    const selectButton = internalModal.find('.modal__footer .element-modal__searchbutton');
+    selectButton.simulate('click');
+    expect(component.props().onElementSelected).not.toBeCalled();
+
     // Click on a VS returned by the search.
     internalModal.find('.search__table tbody tr').first().simulate('click');
 
@@ -142,7 +148,6 @@ describe('with modal open', () => {
     templateWithSelectedValue.parameters[1].static = true;
 
     // Clicking the select button class the onElementSelected function
-    const selectButton = internalModal.find('.modal__footer .element-modal__searchbutton');
     selectButton.simulate('click');
     expect(component.props().onElementSelected).toBeCalledWith(templateWithSelectedValue);
   });
