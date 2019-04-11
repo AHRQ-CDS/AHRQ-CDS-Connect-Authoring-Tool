@@ -326,13 +326,15 @@ export default class ListGroup extends Component {
       <div className="card-element">
         <div className={headerClass}>
           <div className={headerTopClass}>
-            {this.state.isExpanded ?
+            {isExpanded ?
               <div className="card-element__heading">
                 <StringParameter
                   id={'base_element_name'}
                   name={'Group'}
                   uniqueId={instance.uniqueId}
-                  updateInstance={(value) => { this.updateBaseElementList(value.base_element_name, instance.uniqueId); }}
+                  updateInstance={(value) => {
+                    this.updateBaseElementList(value.base_element_name, instance.uniqueId);
+                  }}
                   value={name}
                 />
                 {needsDuplicateNameWarning && !needsBaseElementWarning
@@ -349,19 +351,23 @@ export default class ListGroup extends Component {
                   </div>}
               </div>
               :
-              <div className="subpopulation-title">
-                <h4>{instance.parameters[0].value}</h4>
-                {(needsDuplicateNameWarning || needsBaseElementWarning || this.hasNestedWarnings(instance.childInstances))
-                  && <div className="warning"><FontAwesome name="exclamation-circle" /> Has warnings</div>}
+              <div className="card-element__heading">
+                <div className="heading-name">
+                  {instance.parameters[0].value}
+                  {(needsDuplicateNameWarning
+                    || needsBaseElementWarning
+                    || this.hasNestedWarnings(instance.childInstances))
+                    && <div className="warning"><FontAwesome name="exclamation-circle" /> Has warnings</div>}
+                </div>
               </div>
             }
 
             <div className="card-element__buttons">
               <button
-                onClick={this.state.isExpanded ? this.collapse : this.expand}
+                onClick={isExpanded ? this.collapse : this.expand}
                 className="element__hidebutton transparent-button"
                 aria-label={`hide ${name}`}>
-                <FontAwesome name={this.state.isExpanded ? 'angle-double-down' : 'angle-double-right'} />
+                <FontAwesome name={isExpanded ? 'angle-double-down' : 'angle-double-right'} />
               </button>
               <button
                 aria-label="Remove base element list"
@@ -377,9 +383,16 @@ export default class ListGroup extends Component {
               </UncontrolledTooltip>}
             </div>
           </div>
+          {!isExpanded ?
+            <ExpressionPhrase
+              class="expression expression__group expression-collapsed"
+              instance={instance}
+              baseElements={baseElements}
+            />
+            : null}
         </div>
 
-        {this.state.isExpanded && this.renderListGroup()}
+        {isExpanded && this.renderListGroup()}
       </div>
     );
   }
