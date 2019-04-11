@@ -87,7 +87,7 @@ export default class Subpopulation extends Component {
               :
                 <div className="card-element__heading">
                   <div className="heading-name">
-                    {this.props.subpopulation.subpopulationName}
+                    {this.props.subpopulation.subpopulationName}:
                     {(duplicateNameIndex !== -1
                       || this.subpopulationHasOneChildWarning()
                       || this.hasNestedWarnings(this.props.subpopulation.childInstances))

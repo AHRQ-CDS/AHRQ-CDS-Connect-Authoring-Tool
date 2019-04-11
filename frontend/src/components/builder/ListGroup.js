@@ -353,7 +353,7 @@ export default class ListGroup extends Component {
               :
               <div className="card-element__heading">
                 <div className="heading-name">
-                  {instance.parameters[0].value}
+                  {instance.parameters[0].value}:
                   {(needsDuplicateNameWarning
                     || needsBaseElementWarning
                     || this.hasNestedWarnings(instance.childInstances))
