@@ -1,11 +1,15 @@
 /**
  * Migrates artifacts that have a parameters field, applying the following changes:
- * - changes type of each parameter based on mapping
+ * - changes type of each parameter based on mapping, or adds type 'boolean' if no type
  * - changes returnType of each parameter use based on mapping
  * - adds usedBy prop to parameter storing array of uniqueId of its references
  * - adds parameterReference parameter to elements using parameters
+ * - changes case of parameter use id to paramCase
+ * - changes value.type of base elements to 'parameter' if they use a parameter
  */
 'use strict';
+
+const changeCase = require('change-case');
 
 module.exports.id = "parameter-to-updatedType";
 
@@ -41,21 +45,23 @@ const parameterReturnTypeMap = {
   'interval quantity': 'interval_of_quantity'
 };
 
-function parseTree(element, parameterUsedByMap, parameters) {
+function parseTree(element, parameterUsedByMap, parameters, baseElements) {
   let children = element.childInstances ? element.childInstances : [];
   children = children.map((child, i) => {
     if ('childInstances' in child) {
-      return parseTree(child, parameterUsedByMap, parameters);
+      return parseTree(child, parameterUsedByMap, parameters, baseElements);
     } else {
-      return parseElement(child, parameterUsedByMap, parameters); 
+      return parseElement(child, parameterUsedByMap, parameters, baseElements); 
     }
   });
   element.childInstances = children;
   return element;
 }
 
-function parseElement(element, parameterUsedByMap, parameters) {
+function parseElement(element, parameterUsedByMap, parameters, baseElements) {
   if (element.type === 'parameter') {
+    element.id = changeCase['paramCase'](element.name);
+
     if (element.returnType) {
       element.returnType = parameterReturnTypeMap[element.returnType];
     }
@@ -81,7 +87,30 @@ function parseElement(element, parameterUsedByMap, parameters) {
     parameterUsedByMap[element.id].push(element.uniqueId);
   }
 
+  if (element.type === 'baseElement') {
+    const originalBaseElement = getOriginalBaseElement(element, baseElements);
+
+    if (originalBaseElement.type === 'parameter') {
+      if (element.parameters.find(e => e.id === 'baseElementReference')) {
+        element.parameters.find(e => e.id === 'baseElementReference').value.type = 'parameter';
+      }
+    }
+  }
+
   return element;
+}
+
+function getOriginalBaseElement(instance, baseElements) {
+  const referenceParameter = instance.parameters.find(param => param.type === 'reference');
+  if (referenceParameter) {
+    if (referenceParameter.id === 'parameterReference') {
+      return instance;
+    }
+    const baseElementReferenced = baseElements.find(element =>
+      element.uniqueId === referenceParameter.value.id);
+    return getOriginalBaseElement(baseElementReferenced, baseElements);
+  }
+  return instance;
 }
 
 module.exports.up = function (done) {
@@ -98,26 +127,26 @@ module.exports.up = function (done) {
 
     const p = new Promise((resolve, reject) => {
       if (artifact.expTreeInclude && artifact.expTreeInclude.childInstances.length) {
-        parseTree(artifact.expTreeInclude, parameterUsedByMap, artifact.parameters);
+        parseTree(artifact.expTreeInclude, parameterUsedByMap, artifact.parameters, artifact.baseElements);
       }
       if (artifact.expTreeExclude && artifact.expTreeExclude.childInstances.length) {
-        parseTree(artifact.expTreeExclude, parameterUsedByMap, artifact.parameters);
+        parseTree(artifact.expTreeExclude, parameterUsedByMap, artifact.parameters, artifact.baseElements);
       }
       artifact.subpopulations.forEach((subpopulation) => {
         if (!subpopulation.special && subpopulation.childInstances && subpopulation.childInstances.length) {
-          parseTree(subpopulation, parameterUsedByMap, artifact.parameters);
+          parseTree(subpopulation, parameterUsedByMap, artifact.parameters, artifact.baseElements);
         }
       });
       artifact.baseElements.forEach((baseElement) => {
         if (baseElement.childInstances && baseElement.childInstances.length) {
-          parseTree(baseElement, parameterUsedByMap, artifact.parameters);
+          parseTree(baseElement, parameterUsedByMap, artifact.parameters, artifact.baseElements);
         } else {
-          parseElement(baseElement, parameterUsedByMap, artifact.parameters);
+          parseElement(baseElement, parameterUsedByMap, artifact.parameters, artifact.baseElements);
         }
       });
 
       artifact.parameters.forEach(p => {
-        p.type = parameterTypeMap[p.type];
+        p.type = parameterTypeMap[p.type] || 'boolean';
         p.usedBy = parameterUsedByMap[p.name] ? parameterUsedByMap[p.name] : [];
       });
 
