@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import _ from 'lodash';
 import FontAwesome from 'react-fontawesome';
 import pluralize from 'pluralize';
+import classNames from 'classnames';
 import { UncontrolledTooltip } from 'reactstrap';
 import { findValueAtPath } from '../../utils/find';
 import { doesBaseElementInstanceNeedWarning, hasDuplicateName, hasGroupNestedWarning } from '../../utils/warnings';
@@ -10,6 +11,7 @@ import { getReturnType } from '../../utils/instances';
 
 import ConjunctionGroup from './ConjunctionGroup';
 import ExpressionPhrase from './modifiers/ExpressionPhrase';
+import StringParameter from './parameters/types/StringParameter';
 
 const listTypes = [
   'list_of_observations',
@@ -310,6 +312,7 @@ export default class ListGroup extends Component {
 
   renderList = () => {
     const { instance } = this.props;
+    const { isExpanded } = this.state;
     const name = instance.parameters[0].value;
     const allInstancesInAllTrees = this.props.getAllInstancesInAllTrees();
     const { instanceNames, baseElements } = this.props;
@@ -317,62 +320,62 @@ export default class ListGroup extends Component {
     const needsBaseElementWarning = doesBaseElementInstanceNeedWarning(instance, allInstancesInAllTrees);
     const baseElementListUsed = this.isBaseElementListUsed(instance);
     const disabledClass = baseElementListUsed ? 'disabled' : '';
+    const headerClass = classNames('card-element__header', { collapsed: !isExpanded });
+    const headerTopClass = classNames('card-element__header-top', { collapsed: !isExpanded });
     return (
       <div className="card-element">
-        <div className="card-element__header">
-          {this.state.isExpanded ?
-            <div className="subpopulation__title">
-              <input
-                type="text"
-                className="subpopulation__name-input"
-                title="Base Element List Title"
-                aria-label="Base Element List Title"
-                value={name}
-                onClick={event => event.stopPropagation()}
-                onChange={(event) => {
-                  this.updateBaseElementList(event.target.value, instance.uniqueId);
-                }}
-              />
-              {needsDuplicateNameWarning && !needsBaseElementWarning
-                && <div className='warning'>Warning: Name already in use. Choose another name.</div>}
-              {needsBaseElementWarning &&
-                <div className="warning">
-                  Warning: One or more uses of this Base Element have changed. Choose another name.
-                </div>}
-              {instance.returnType === 'list_of_any'
-                && instance.name === 'Intersect'
-                && instance.childInstances.length > 0
-                && <div className='warning'>
-                  Warning: Intersecting different types will always result in an empty list
-                </div>}
-            </div>
-            :
-            <div className="subpopulation-title">
-              <h4>{instance.parameters[0].value}</h4>
-              {(needsDuplicateNameWarning || needsBaseElementWarning || this.hasNestedWarnings(instance.childInstances))
-                && <div className="warning"><FontAwesome name="exclamation-circle" /> Has warnings</div>}
-            </div>
-          }
+        <div className={headerClass}>
+          <div className={headerTopClass}>
+            {this.state.isExpanded ?
+              <div className="card-element__heading">
+                <StringParameter
+                  id={'base_element_name'}
+                  name={'Group'}
+                  uniqueId={instance.uniqueId}
+                  updateInstance={(value) => { this.updateBaseElementList(value.base_element_name, instance.uniqueId); }}
+                  value={name}
+                />
+                {needsDuplicateNameWarning && !needsBaseElementWarning
+                  && <div className='warning'>Warning: Name already in use. Choose another name.</div>}
+                {needsBaseElementWarning &&
+                  <div className="warning">
+                    Warning: One or more uses of this Base Element have changed. Choose another name.
+                  </div>}
+                {instance.returnType === 'list_of_any'
+                  && instance.name === 'Intersect'
+                  && instance.childInstances.length > 0
+                  && <div className='warning'>
+                    Warning: Intersecting different types will always result in an empty list
+                  </div>}
+              </div>
+              :
+              <div className="subpopulation-title">
+                <h4>{instance.parameters[0].value}</h4>
+                {(needsDuplicateNameWarning || needsBaseElementWarning || this.hasNestedWarnings(instance.childInstances))
+                  && <div className="warning"><FontAwesome name="exclamation-circle" /> Has warnings</div>}
+              </div>
+            }
 
-          <div className="card-element__buttons">
-            <button
-              onClick={this.state.isExpanded ? this.collapse : this.expand}
-              className="element__hidebutton transparent-button"
-              aria-label={`hide ${name}`}>
-              <FontAwesome name={this.state.isExpanded ? 'angle-double-down' : 'angle-double-right'} />
-            </button>
-            <button
-              aria-label="Remove base element list"
-              className={`element__deletebutton transparent-button ${disabledClass}`}
-              id={`deletebutton-${instance.uniqueId}`}
-              onClick={() => this.deleteBaseElementList(instance.uniqueId)}>
-              <FontAwesome name="close" />
-            </button>
-            {baseElementListUsed &&
-              <UncontrolledTooltip
-                target={`deletebutton-${instance.uniqueId}`} placement="left">
-                To delete this Base Element List, remove all references to it.
-            </UncontrolledTooltip>}
+            <div className="card-element__buttons">
+              <button
+                onClick={this.state.isExpanded ? this.collapse : this.expand}
+                className="element__hidebutton transparent-button"
+                aria-label={`hide ${name}`}>
+                <FontAwesome name={this.state.isExpanded ? 'angle-double-down' : 'angle-double-right'} />
+              </button>
+              <button
+                aria-label="Remove base element list"
+                className={`element__deletebutton transparent-button ${disabledClass}`}
+                id={`deletebutton-${instance.uniqueId}`}
+                onClick={() => this.deleteBaseElementList(instance.uniqueId)}>
+                <FontAwesome name="close" />
+              </button>
+              {baseElementListUsed &&
+                <UncontrolledTooltip
+                  target={`deletebutton-${instance.uniqueId}`} placement="left">
+                  To delete this Base Element List, remove all references to it.
+              </UncontrolledTooltip>}
+            </div>
           </div>
         </div>
 
