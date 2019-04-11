@@ -1,5 +1,6 @@
 .card-group {
   width: 100%;
+  border-radius: 0.2em;
 
   &__top {
     margin-left: 0;
@@ -160,7 +161,6 @@
 
   .card-group__header {
     display: flex;
-    margin: -10px 0 10px;
   }
 
   .card-group__header-title {
