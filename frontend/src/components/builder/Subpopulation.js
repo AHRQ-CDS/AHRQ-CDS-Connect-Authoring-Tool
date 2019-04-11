@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import FontAwesome from 'react-fontawesome';
+import classNames from 'classnames';
 
 import ConjunctionGroup from './ConjunctionGroup';
 import ExpressionPhrase from './modifiers/ExpressionPhrase';
@@ -59,14 +60,17 @@ export default class Subpopulation extends Component {
   }
 
   render() {
+    const { isExpanded } = this.state;
+    const headerClass = classNames('card-element__header', { collapsed: !isExpanded });
+    const headerTopClass = classNames('card-element__header-top', { collapsed: !isExpanded });
     const duplicateNameIndex = this.props.instanceNames.findIndex(name =>
       name.id !== this.props.subpopulation.uniqueId && name.name === this.props.subpopulation.subpopulationName);
     return (
       <div className="subpopulation card-group card-group__top">
         <div className="card-element">
-          <div className="card-element__header">
-            <div className="card-element__header-top">
-              {this.state.isExpanded ?
+          <div className={headerClass}>
+            <div className={headerTopClass}>
+              {isExpanded ?
                 <div className="card-element__heading">
                   <StringParameter
                     id={'subpopulation_title'}
@@ -81,22 +85,24 @@ export default class Subpopulation extends Component {
                     && <div className='warning'>Warning: Name already in use. Choose another name.</div>}
                 </div>
               :
-                <div className="subpopulation-title">
-                  <h4>{this.props.subpopulation.subpopulationName}</h4>
-                  {(duplicateNameIndex !== -1
-                    || this.subpopulationHasOneChildWarning()
-                    || this.hasNestedWarnings(this.props.subpopulation.childInstances))
-                    && <div className="warning"><FontAwesome name="exclamation-circle" /> Has warnings</div>}
+                <div className="card-element__heading">
+                  <div className="heading-name">
+                    {this.props.subpopulation.subpopulationName}
+                    {(duplicateNameIndex !== -1
+                      || this.subpopulationHasOneChildWarning()
+                      || this.hasNestedWarnings(this.props.subpopulation.childInstances))
+                      && <div className="warning"><FontAwesome name="exclamation-circle" /> Has warnings</div>}
+                  </div>
                 </div>
               }
 
               <div className="card-element__buttons">
                 <button
-                  onClick={this.state.isExpanded ? this.collapse : this.expand}
+                  onClick={isExpanded ? this.collapse : this.expand}
                   id="collapse-icon"
                   className="element__hidebutton transparent-button"
                   aria-label={`hide ${this.props.subpopulation.subpopulationName}`}>
-                  <FontAwesome name={this.state.isExpanded ? 'angle-double-down' : 'angle-double-right'} />
+                  <FontAwesome name={isExpanded ? 'angle-double-down' : 'angle-double-right'} />
                 </button>
                 <button
                   aria-label="Remove subpopulation"
@@ -106,9 +112,16 @@ export default class Subpopulation extends Component {
                 </button>
               </div>
             </div>
+            {!isExpanded ?
+              <ExpressionPhrase
+                class="expression expression__group expression-collapsed"
+                instance={this.props.subpopulation}
+                baseElements={this.props.baseElements}
+              />
+              : null}
           </div>
 
-          {this.state.isExpanded && this.renderContents()}
+          {isExpanded && this.renderContents()}
         </div>
       </div>
     );
