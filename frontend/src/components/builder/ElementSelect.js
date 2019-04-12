@@ -148,24 +148,28 @@ export default class ElementSelect extends Component {
         parametersCategory = { icon: 'sign-in', name: 'Parameters', entries: [] };
       }
 
-      parametersCategory.entries = props.parameters.map(param => ({
-        id: changeToCase(param.name, 'paramCase'),
-        name: param.name,
-        type: 'parameter',
-        returnType: _.toLower(param.type),
-        template: 'GenericStatement',
-        parameters: [
-          { id: 'element_name', type: 'string', name: 'Element Name', value: param.name },
-          { id: 'default', type: 'boolean', name: 'Default', value: param.value },
-          {
-            id: 'parameterReference',
-            type: 'reference',
-            name: 'reference',
-            value: { id: param.uniqueId },
-            static: true
-          }
-        ]
-      }));
+      parametersCategory.entries = props.parameters.map((param) => {
+        const commentDefaultValue = param.comment || '';
+        return ({
+          id: changeToCase(param.name, 'paramCase'),
+          name: param.name,
+          type: 'parameter',
+          returnType: _.toLower(param.type),
+          template: 'GenericStatement',
+          parameters: [
+            { id: 'element_name', type: 'string', name: 'Element Name', value: param.name },
+            { id: 'default', type: 'boolean', name: 'Default', value: param.value },
+            {
+              id: 'parameterReference',
+              type: 'reference',
+              name: 'reference',
+              value: { id: param.uniqueId },
+              static: true
+            },
+            { id: 'comment', type: 'textarea', name: 'Comment', value: commentDefaultValue }
+          ]
+        });
+      });
 
       categoriesCopy.push(parametersCategory);
     } else if (props.parameters.length === 0 && paramsIndex >= 0) {

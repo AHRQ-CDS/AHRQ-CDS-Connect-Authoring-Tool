@@ -274,6 +274,10 @@ class CqlArtifact {
         if (system && uri) { this.codeSystemMap.set(system, { name: system, id: uri }); }
       }
 
+      if (parameter.comment) {
+        parameter.comment = createCommentArray(parameter.comment);
+      }
+
       const parameterTypeMap = {
         boolean: 'Boolean',
         system_code: 'Code',
@@ -463,7 +467,11 @@ class CqlArtifact {
   parseParameter(element) {
     const context = {};
     element.parameters.forEach((parameter) => {
-      context[parameter.id] = parameter.value;
+      if (parameter.id === 'comment') {
+        context[parameter.id] = createCommentArray(parameter.value);
+      } else {
+        context[parameter.id] = parameter.value;
+      }
     });
     context.template = 'GenericStatement';
     context.values = [`"${element.name}"`];

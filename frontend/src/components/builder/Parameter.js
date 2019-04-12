@@ -18,15 +18,17 @@ import IntervalOfIntegerEditor from './parameters/editors/IntervalOfIntegerEdito
 import IntervalOfDateTimeEditor from './parameters/editors/IntervalOfDateTimeEditor';
 import IntervalOfDecimalEditor from './parameters/editors/IntervalOfDecimalEditor';
 import IntervalOfQuantityEditor from './parameters/editors/IntervalOfQuantityEditor';
+import TextAreaParameter from './parameters/types/TextAreaParameter';
 
 export default class Parameter extends Component {
   componentDidMount = () => {
-    const { id, type, name, value } = this.props;
+    const { id, type, name, value, comment } = this.props;
     if (_.isUndefined(id)) {
       this.updateParameter({
         name,
         uniqueId: _.uniqueId('parameter-'),
         type,
+        comment,
         value
       });
     }
@@ -53,6 +55,7 @@ export default class Parameter extends Component {
         name: this.props.name,
         uniqueId: this.props.id,
         type: this.props.type,
+        comment: this.props.comment,
         value: (e != null ? e.value : null)
       })
     };
@@ -103,7 +106,7 @@ export default class Parameter extends Component {
   }
 
   render() {
-    const { index, name, id, type, value } = this.props;
+    const { index, name, id, type, value, comment } = this.props;
     const typeOptions = [
       { value: 'boolean', label: 'Boolean' },
       { value: 'system_code', label: 'Code' },
@@ -137,6 +140,7 @@ export default class Parameter extends Component {
                 name: e[`param-name-${index}`],
                 uniqueId: this.props.id,
                 type,
+                comment,
                 value
               }))}
             />
@@ -165,6 +169,22 @@ export default class Parameter extends Component {
                 </div>}
 
           <div className="card-element__body">
+            <div className="parameter__item">
+              <TextAreaParameter
+                key={this.props.id}
+                id={this.props.id}
+                name={'Comment'}
+                value={this.props.comment}
+                updateInstance={e => this.updateParameter({
+                  name,
+                  uniqueId: this.props.id,
+                  type,
+                  comment: e[this.props.id],
+                  value
+                })}
+                />
+            </div>
+
             <div className="parameter__item row">
               <div className="col-3 bold align-right">
                 <label htmlFor={`parameter-${index}`}>Parameter Type:</label>
@@ -184,6 +204,7 @@ export default class Parameter extends Component {
                         name,
                         uniqueId: this.props.id,
                         type: e.value,
+                        comment,
                         value: null
                       });
                     }
