@@ -22,8 +22,18 @@ export default class NumberModifier extends Component {
             placeholder="enter value"
             aria-label="Number Modifier"
             value={this.props.value || ''}
-            onChange={(event) => { this.props.updateAppliedModifier(this.props.index, { value: event.target.value }); }}
-            onSelect={(event) => { this.props.updateAppliedModifier(this.props.index, { value: event.target.value }); }}
+            onChange={(event) => {
+              this.props.updateAppliedModifier(
+                this.props.index,
+                { value: parseFloat(event.target.value, 10) ? parseFloat(event.target.value, 10).toString() : null }
+              );
+            }}
+            onSelect={(event) => {
+              this.props.updateAppliedModifier(
+                this.props.index,
+                { value: parseFloat(event.target.value, 10) ? parseFloat(event.target.value, 10).toString() : null }
+              );
+            }}
           />
         </label>
       </div>
