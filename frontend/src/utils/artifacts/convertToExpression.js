@@ -133,8 +133,7 @@ function getExpressionSentenceValue(modifier) {
             }
           }
         }
-        expressionSentenceValues[modifier.id].leadingText = `whose ${qualifierText}`;
-        expressionSentenceValues[modifier.id].modifierText = `${valueSetText}`;
+        expressionSentenceValues[modifier.id].modifierText = `whose ${qualifierText} ${valueSetText}`;
         break;
       }
       case 'ConvertObservation': {
