@@ -37,8 +37,8 @@ export default class DateTimeModifier extends Component {
 
     return (
       /* eslint-disable jsx-a11y/label-has-for */
-      <div className="col-9 d-flex">
-        <label>
+      <div className="col-9 d-flex modifier-vert-aligned">
+        <label className="modifier-label">
           {`${this.props.name}: `}
         </label>
 
