@@ -125,7 +125,7 @@ export default class Parameter extends Component {
     const disabledClass = parameterUsed ? 'disabled' : '';
 
     return (
-      <div className="parameter card-group card-group__top">
+      <div className="parameter card-group card-group__top" id={this.props.id}>
         <div className="card-element">
           <div className="card-element__header">
             <StringParameter
