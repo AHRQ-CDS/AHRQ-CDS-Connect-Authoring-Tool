@@ -409,10 +409,10 @@ function orderExpressionSentenceArray(
     const nulls = ['is null', 'is not null'];
     return nulls.indexOf(expression.modifierText) !== -1;
   });
-  const otherExpressions = expressionArray.filter((expression) => {
+  const otherExpressions = _.uniqWith(expressionArray.filter((expression) => {
     const knownTypes = ['not', 'BooleanExists', 'descriptor', 'list', 'post-list', 'value'];
     return knownTypes.indexOf(expression.type) === -1;
-  });
+  }), _.isEqual);
   let hasStarted = false;
 
   // Handle not and exists
