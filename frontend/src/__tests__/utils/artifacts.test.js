@@ -118,8 +118,7 @@ test('More complicated modifiers, including Qualifier, builds expected phrase', 
     { expressionText: 'LDL', isExpression: true },
     { expressionText: 'which occurred', isExpression: false },
     { expressionText: 'within the last 14 years', isExpression: true },
-    { expressionText: 'whose value is a code from', isExpression: false },
-    { expressionText: 'Smoker', isExpression: true }
+    { expressionText: 'whose value is a code from Smoker', isExpression: true }
   ];
 
   expect(expressionPhrase).toEqual(expectedOutput);
