@@ -72,8 +72,8 @@ function parseElement(element, parameterUsedByMap, parameters, baseElements) {
       static: true,
       type: "reference",
       value: {
-        id: parameters.find(p => p.name === element.id)
-        ? parameters.find(p => p.name === element.id).uniqueId
+        id: parameters.find(p => changeCase['paramCase'](p.name) === element.id)
+        ? parameters.find(p => changeCase['paramCase'](p.name) === element.id).uniqueId
         : ''
       }
     });
@@ -149,7 +149,10 @@ module.exports.up = function (done) {
 
       artifact.parameters.forEach(p => {
         p.type = parameterTypeMap[p.type] || 'boolean';
-        p.usedBy = parameterUsedByMap[p.name] ? parameterUsedByMap[p.name] : [];
+        p.usedBy = parameterUsedByMap[changeCase['paramCase'](p.name)]
+        ? parameterUsedByMap[changeCase['paramCase'](p.name)]
+        : [];
+        
         if (!p.comment) p.comment = null;
       });
 
