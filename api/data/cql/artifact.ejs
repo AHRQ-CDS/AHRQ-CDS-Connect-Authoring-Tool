@@ -20,7 +20,13 @@ concept "<%-concept.name%>" : { <%concept.codes.forEach((code, index) => {%>"<%i
   display '<%-concept.display%>'
 <%})-%>
 
-<% parameters.forEach(parameter => { if(parameter.name) {-%>
+<% parameters.forEach(parameter => { if(parameter.name) {
+  if (parameter.comment) {
+  // Render each line in the comment
+  parameter.comment.forEach(c => {
+  %>// <%-c%>
+<%});
+  }-%>
 parameter "<%-parameter.name%>" <%- parameter.value || parameter.value === 0 ? 'default ' + (typeof parameter.value === 'object' ? parameter.value.str : parameter.value) : parameter.type %>
 <%}});-%>
 

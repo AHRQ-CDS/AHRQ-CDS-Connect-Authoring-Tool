@@ -78,6 +78,8 @@ function parseElement(element, parameterUsedByMap, parameters, baseElements) {
       }
     });
 
+    element.parameters.push({ id: 'comment', type: 'textarea', name: 'Comment', value: '' });
+
     element.extends = undefined;
     element.template = 'GenericStatement';
 
@@ -148,6 +150,7 @@ module.exports.up = function (done) {
       artifact.parameters.forEach(p => {
         p.type = parameterTypeMap[p.type] || 'boolean';
         p.usedBy = parameterUsedByMap[p.name] ? parameterUsedByMap[p.name] : [];
+        if (!p.comment) p.comment = null;
       });
 
       // Update the artifact with all the changes made.
