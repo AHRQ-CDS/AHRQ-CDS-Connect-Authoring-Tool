@@ -13,7 +13,6 @@ export default class DateTimeModifier extends Component {
 
     switch (name) {
       case 'date': {
-        console.log(evt);
         const dateMoment = evt != null ? evt.format('YYYY-MM-DD') : null;
         date = dateMoment ? `@${dateMoment}` : null;
         break;
