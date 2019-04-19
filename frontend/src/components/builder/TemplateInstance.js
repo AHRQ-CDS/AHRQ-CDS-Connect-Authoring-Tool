@@ -25,7 +25,13 @@ import ExpressionPhrase from './modifiers/ExpressionPhrase';
 import LabelModifier from './modifiers/LabelModifier';
 import LookBack from './modifiers/LookBack';
 import SelectModifier from './modifiers/SelectModifier';
-import ValueComparison from './modifiers/ValueComparison';
+import StringModifier from './modifiers/StringModifier';
+import NumberModifier from './modifiers/NumberModifier';
+import QuantityModifier from './modifiers/QuantityModifier';
+import DateTimeModifier from './modifiers/DateTimeModifier';
+import DateTimePrecisionModifier from './modifiers/DateTimePrecisionModifier';
+import TimePrecisionModifier from './modifiers/TimePrecisionModifier';
+import ValueComparisonNumber from './modifiers/ValueComparisonNumber';
 import ValueComparisonObservation from './modifiers/ValueComparisonObservation';
 import WithUnit from './modifiers/WithUnit';
 import Qualifier from './modifiers/Qualifier';
@@ -142,15 +148,16 @@ export default class TemplateInstance extends Component {
 
     const modifierForm = ((mod) => {
       switch (mod.type || mod.id) {
-        case 'ValueComparison':
+        case 'ValueComparisonNumber':
           return (
-            <ValueComparison
+            <ValueComparisonNumber
               key={index}
               index={index}
-              min={mod.values.min}
-              minInclusive={mod.values.minInclusive}
-              max={mod.values.max}
-              maxInclusive={mod.values.maxInclusive}
+              uniqueId={`${this.props.templateInstance.uniqueId}-comparison-${index}`}
+              minOperator={mod.values.minOperator}
+              minValue={mod.values.minValue}
+              maxOperator={mod.values.maxOperator}
+              maxValue={mod.values.maxValue}
               updateAppliedModifier={this.updateAppliedModifier}/>
           );
         case 'ValueComparisonObservation':
@@ -237,6 +244,79 @@ export default class TemplateInstance extends Component {
               codeData={this.props.codeData}
               validateCode={this.props.validateCode}
               resetCodeValidation={this.props.resetCodeValidation} />
+          );
+        case 'BeforeDateTimePrecise':
+        case 'AfterDateTimePrecise':
+          return (
+            <DateTimePrecisionModifier
+              key={index}
+              index={index}
+              name={mod.name}
+              date={mod.values.date}
+              time={mod.values.time}
+              precision={mod.values.precision}
+              updateAppliedModifier={this.updateAppliedModifier}/>
+          );
+        case 'BeforeTimePrecise':
+        case 'AfterTimePrecise':
+          return (
+            <TimePrecisionModifier
+              key={index}
+              index={index}
+              name={mod.name}
+              time={mod.values.time}
+              precision={mod.values.precision}
+              updateAppliedModifier={this.updateAppliedModifier}/>
+          );
+        case 'ContainsQuantity':
+        case 'BeforeQuantity':
+        case 'AfterQuantity':
+          return (
+            <QuantityModifier
+              key={index}
+              index={index}
+              name={mod.name}
+              uniqueId={`${this.props.templateInstance.uniqueId}-quantity-${index}`}
+              value={mod.values.value}
+              unit={mod.values.unit}
+              updateAppliedModifier={this.updateAppliedModifier}/>
+          );
+        case 'ContainsInteger':
+        case 'BeforeInteger':
+        case 'AfterInteger':
+        case 'ContainsDecimal':
+        case 'BeforeDecimal':
+        case 'AfterDecimal':
+          return (
+            <NumberModifier
+              key={index}
+              index={index}
+              name={mod.name}
+              value={mod.values.value}
+              updateAppliedModifier={this.updateAppliedModifier}/>
+          );
+        case 'ContainsDateTime':
+        case 'BeforeDateTime':
+        case 'AfterDateTime':
+          return (
+            <DateTimeModifier
+              key={index}
+              index={index}
+              name={mod.name}
+              date={mod.values.date}
+              time={mod.values.time}
+              updateAppliedModifier={this.updateAppliedModifier}/>
+          );
+        case 'EqualsString':
+        case 'EndsWithString':
+        case 'StartsWithString':
+          return (
+            <StringModifier
+              key={index}
+              index={index}
+              name={mod.name}
+              value={mod.values.value}
+              updateAppliedModifier={this.updateAppliedModifier}/>
           );
         default:
           return (<LabelModifier key={index} name={mod.name} id={mod.id}/>);
@@ -408,7 +488,7 @@ export default class TemplateInstance extends Component {
     return null;
   }
 
-  renderBaseElementInfo = (referenceParameter) => {
+  renderBaseElementOrParameterInfo = (referenceParameter) => {
     let referenceName;
     if (referenceParameter) {
       const elementToReference = this.props.instanceNames.find(name => name.id === referenceParameter.value.id);
@@ -417,10 +497,17 @@ export default class TemplateInstance extends Component {
       }
     }
 
+    let label = 'Element:';
+    if (referenceParameter.id === 'baseElementReference') {
+      label = 'Base Element:';
+    } else if (referenceParameter.id === 'parameterReference') {
+      label = 'Parameter:';
+    }
+
     return (
       <div className="modifier__return__type" id="base-element-list">
         <div className="code-info">
-          <div className="bold align-right code-info__label">Base Element:</div>
+          <div className="bold align-right code-info__label">{label}</div>
           <div className="code-info__info">
             <div className="code-info__text">{referenceName}</div>
             <div className="code-info__buttons align-right">
@@ -428,12 +515,12 @@ export default class TemplateInstance extends Component {
                 role="button"
                 id={`definition-${this.props.templateInstance.uniqueId}`}
                 className={'element__linkbutton'}
-                aria-label={'see base element definition'}
-                onClick={() => this.props.scrollToBaseElement(referenceParameter.value.id) }
+                aria-label={'see element definition'}
+                onClick={() => this.props.scrollToElement(referenceParameter.value.id, referenceParameter.id) }
                 tabIndex="0"
                 onKeyPress={(e) => {
                   e.which = e.which || e.keyCode;
-                  if (e.which === 13) this.props.scrollToBaseElement(referenceParameter.value.id);
+                  if (e.which === 13) this.props.scrollToElement(referenceParameter.value.id, referenceParameter.id);
                 }}>
 
                 <FontAwesome name="link" className="delete-valueset-button" />
@@ -679,9 +766,9 @@ export default class TemplateInstance extends Component {
             {this.renderCodeInfo()}
           </div>
         }
-        { referenceParameter &&
+        { (referenceParameter) &&
           <div className="vsac-info">
-            {this.renderBaseElementInfo(referenceParameter)}
+            {this.renderBaseElementOrParameterInfo(referenceParameter)}
           </div>
         }
 
@@ -722,20 +809,15 @@ export default class TemplateInstance extends Component {
     const { templateInstance, instanceNames, baseElements, allInstancesInAllTrees } = this.props;
 
     if (elementNameParameter) {
-      if (templateInstance.type === 'parameter') {
-        if (elementNameParameter.value) {
-          return <span className="label">{elementNameParameter.value}</span>;
-        }
-        return null;
-      }
+      let elementType = (templateInstance.type === 'parameter') ? 'Parameter' : templateInstance.name;
+
 
       const referenceParameter = templateInstance.parameters.find(param => param.type === 'reference');
 
-      let elementType = templateInstance.name;
-      if (referenceParameter) {
+      if (referenceParameter && (referenceParameter.id === 'baseElementReference')) {
         // Element type to display in header will be the reference type for Base Elements.
         const originalBaseElement = getOriginalBaseElement(templateInstance, baseElements);
-        elementType = originalBaseElement.name;
+        elementType = (originalBaseElement.type === 'parameter') ? 'Parameter' : originalBaseElement.name;
       }
 
       const doesHaveDuplicateName =
@@ -889,5 +971,6 @@ TemplateInstance.propTypes = {
   resetCodeValidation: PropTypes.func.isRequired,
   disableElement: PropTypes.bool,
   disableIndent: PropTypes.bool,
-  scrollToBaseElement: PropTypes.func.isRequired,
+  scrollToElement: PropTypes.func.isRequired,
+  baseElements: PropTypes.array.isRequired
 };

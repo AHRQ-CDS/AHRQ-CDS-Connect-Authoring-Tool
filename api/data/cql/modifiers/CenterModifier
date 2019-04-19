@@ -1,0 +1,2 @@
+<%# For any modifiers that apply in between the two values -%>
+<%-value_name%> <%-cqlLibraryFunction%> <%-values.value%>

@@ -80,6 +80,8 @@ export default class ExpressionPhrase extends Component {
     const isBaseElementAndOr = phraseTemplateInstanceIsConjunction && instance.type === 'baseElement' &&
       (phraseTemplateInstance.name === 'And' || phraseTemplateInstance.name === 'Or');
 
+    const parameterName = (type === 'parameter') ? phraseTemplateInstance.name : null;
+
     const expressions = convertToExpression(
       modifiers,
       type,
@@ -88,7 +90,8 @@ export default class ExpressionPhrase extends Component {
       returnType,
       otherParameters,
       elementNamesInPhrase,
-      isBaseElementAndOr
+      isBaseElementAndOr,
+      parameterName
     );
 
     return expressions;

@@ -281,7 +281,7 @@ export default class ListGroup extends Component {
           baseElements={this.props.baseElements}
           conversionFunctions={this.props.conversionFunctions}
           instanceNames={this.props.instanceNames}
-          scrollToBaseElement={this.props.scrollToBaseElement}
+          scrollToElement={this.props.scrollToElement}
           loginVSACUser={this.props.loginVSACUser}
           setVSACAuthStatus={this.props.setVSACAuthStatus}
           vsacStatus={this.props.vsacStatus}
@@ -443,5 +443,5 @@ ListGroup.propTypes = {
   codeData: PropTypes.object,
   validateCode: PropTypes.func.isRequired,
   resetCodeValidation: PropTypes.func.isRequired,
-  scrollToBaseElement: PropTypes.func.isRequired,
+  scrollToElement: PropTypes.func.isRequired,
 };

@@ -60,7 +60,9 @@ test('Parameters adds parameter', () => {
 
   component.find('button').simulate('click');
 
-  expect(updateParameterMock).toHaveBeenCalledWith([{ name: null, type: null, value: null, uniqueId: 'parameter-1' }]);
+  expect(updateParameterMock).toHaveBeenCalledWith([
+    { name: null, type: 'boolean', value: null, uniqueId: 'parameter-1', comment: null }
+  ]);
 });
 
 test('NumberParameter renders without crashing', () => {

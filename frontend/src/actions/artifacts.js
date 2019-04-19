@@ -32,32 +32,30 @@ export function setStatusMessage(statusType) {
 
 // ------------------------- UPDATE ARTIFACT ------------------------------- //
 
-function parseTree(element, names, baseElementsInUse) {
-  parseConjunction(element.childInstances, names, baseElementsInUse);
+function parseTree(element, names, baseElementsInUse, parametersInUse) {
+  parseConjunction(element.childInstances, names, baseElementsInUse, parametersInUse);
   const children = element.childInstances;
   children.forEach((child) => {
     if ('childInstances' in child) {
-      parseTree(child, names, baseElementsInUse);
+      parseTree(child, names, baseElementsInUse, parametersInUse);
     }
   });
 }
 
-function parseConjunction(childInstances, names, baseElementsInUse) {
+function parseConjunction(childInstances, names, baseElementsInUse, parametersInUse) {
   childInstances.forEach((child) => {
-    // Don't include parameters used in conjunctions since they are just refernces.
-    // type = 'parameter'supports modern parameter references, template = 'EmptyParameter'for old parameter references.
-    if (!(child.type === 'parameter' || child.template === 'EmptyParameter')) {
-      // Add name of child to array
-      const index = names.findIndex(name => name.id === child.uniqueId);
-      if (index === -1) {
-        let name = child.parameters[0].value;
-        if (name === undefined) name = '';
-        names.push({ name, id: child.uniqueId });
-      }
+    // Add name of child to array
+    const index = names.findIndex(name => name.id === child.uniqueId);
+    if (index === -1) {
+      let name = child.parameters[0].value;
+      if (name === undefined) name = '';
+      names.push({ name, id: child.uniqueId });
+    }
 
-      // Add uniqueId of base elements that are currently used
-      const referenceParameter = child.parameters.find(param => param.type === 'reference');
-      if (referenceParameter) {
+    // Add uniqueId of base elements and parameters that are currently used
+    const referenceParameter = child.parameters.find(param => param.type === 'reference');
+    if (referenceParameter) {
+      if (referenceParameter.id === 'baseElementReference') {
         const baseElementAlreadyInUse = baseElementsInUse.find(s => s.baseElementId === referenceParameter.value.id);
         if (baseElementAlreadyInUse === undefined) {
           // Add the base element id and begin the list of other instances using the base element
@@ -66,27 +64,38 @@ function parseConjunction(childInstances, names, baseElementsInUse) {
           // If the base element is already used elsewhere, just add to the list of instances using it
           baseElementAlreadyInUse.usedBy.push(child.uniqueId);
         }
+      } else if (referenceParameter.id === 'parameterReference') {
+        const parameterAlreadyInUse = parametersInUse.find(p => p.parameterId === referenceParameter.value.id);
+        if (parameterAlreadyInUse === undefined) {
+          // Add the parameter id and begin the list of other instances using the base element
+          parametersInUse.push({ parameterId: referenceParameter.value.id, usedBy: [child.uniqueId] });
+        } else {
+          // If the parameter is already used elsewhere, just add to the list of instances using it
+          parameterAlreadyInUse.usedBy.push(child.uniqueId);
+        }
       }
     }
-    if (child.type === 'parameter' && child.returnType !== _.lowerCase(child.returnType)) {
-      child.returnType = _.lowerCase(child.returnType);
+
+    if (child.type === 'parameter' && child.returnType !== _.toLower(child.returnType)) {
+      child.returnType = _.toLower(child.returnType);
     }
   });
 }
 
-function parseForDuplicateNamesAndUsedBaseElements(artifact) {
+function parseForDuplicateNamesAndUsed(artifact) {
   const names = [];
   const baseElementsInUse = [];
+  const parametersInUse = [];
   if (artifact.expTreeInclude.childInstances.length) {
-    parseTree(artifact.expTreeInclude, names, baseElementsInUse);
+    parseTree(artifact.expTreeInclude, names, baseElementsInUse, parametersInUse);
   }
   if (artifact.expTreeExclude.childInstances.length) {
-    parseTree(artifact.expTreeExclude, names, baseElementsInUse);
+    parseTree(artifact.expTreeExclude, names, baseElementsInUse, parametersInUse);
   }
   artifact.subpopulations.forEach((subpopulation) => {
     names.push({ name: subpopulation.subpopulationName, id: subpopulation.uniqueId });
     if (!subpopulation.special) { // `Doesn't Meet Inclusion Criteria` and `Meets Exclusion Criteria` are special
-      if (subpopulation.childInstances.length) { parseTree(subpopulation, names, baseElementsInUse); }
+      if (subpopulation.childInstances.length) { parseTree(subpopulation, names, baseElementsInUse, parametersInUse); }
     }
   });
   artifact.baseElements.forEach((baseElement) => {
@@ -94,16 +103,16 @@ function parseForDuplicateNamesAndUsedBaseElements(artifact) {
       names.push({ name: baseElement.parameters[0].value, id: baseElement.uniqueId });
     }
     if (baseElement.childInstances && baseElement.childInstances.length) {
-      parseTree(baseElement, names, baseElementsInUse);
+      parseTree(baseElement, names, baseElementsInUse, parametersInUse);
     } else {
       // Parse single base element directly for it's uses
-      parseConjunction([baseElement], names, baseElementsInUse);
+      parseConjunction([baseElement], names, baseElementsInUse, parametersInUse);
     }
   });
-  artifact.parameters.forEach((parameter, i) => {
+  artifact.parameters.forEach((parameter) => {
     names.push({ name: parameter.name, id: parameter.uniqueId });
   });
-  return { names, baseElementsInUse };
+  return { names, baseElementsInUse, parametersInUse };
 }
 
 export function updateArtifact(artifactToUpdate, props) {
@@ -112,12 +121,18 @@ export function updateArtifact(artifactToUpdate, props) {
       ...artifactToUpdate,
       ...props
     };
-    const { names, baseElementsInUse } = parseForDuplicateNamesAndUsedBaseElements(artifact);
+    const { names, baseElementsInUse, parametersInUse } = parseForDuplicateNamesAndUsed(artifact);
 
     // Add uniqueId to list on base element to mark where it is used.
     artifact.baseElements.forEach((element) => {
       const elementInUse = baseElementsInUse.find(usedBaseEl => usedBaseEl.baseElementId === element.uniqueId);
       element.usedBy = elementInUse ? elementInUse.usedBy : [];
+    });
+
+    // Add uniqueId to list on parameter to mark where it is used.
+    artifact.parameters.forEach((parameter) => {
+      const parameterInUse = parametersInUse.find(usedParameter => usedParameter.parameterId === parameter.uniqueId);
+      parameter.usedBy = parameterInUse ? parameterInUse.usedBy : [];
     });
 
     return dispatch({
@@ -253,7 +268,7 @@ function requestArtifact(id) {
 }
 
 function loadArtifactSuccess(artifact) {
-  const { names } = parseForDuplicateNamesAndUsedBaseElements(artifact);
+  const { names } = parseForDuplicateNamesAndUsed(artifact);
   return {
     type: types.LOAD_ARTIFACT_SUCCESS,
     artifact,

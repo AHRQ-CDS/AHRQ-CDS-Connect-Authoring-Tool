@@ -118,8 +118,7 @@ test('More complicated modifiers, including Qualifier, builds expected phrase', 
     { expressionText: 'LDL', isExpression: true },
     { expressionText: 'which occurred', isExpression: false },
     { expressionText: 'within the last 14 years', isExpression: true },
-    { expressionText: 'whose value is a code from', isExpression: false },
-    { expressionText: 'Smoker', isExpression: true }
+    { expressionText: 'whose value is a code from Smoker', isExpression: true }
   ];
 
   expect(expressionPhrase).toEqual(expectedOutput);
@@ -205,8 +204,8 @@ test('More complicated modifiers, including Value Comparison, builds correct phr
     { expressionText: 'mg/dL', isExpression: true },
     { expressionText: 'with', isExpression: false },
     { expressionText: 'units converted from mmol/L to mg/dL for blood cholesterol', isExpression: true },
-    { expressionText: 'whose value is', isExpression: false },
-    { expressionText: 'greater than or equal to 120 mg/dL and less than 300 mg/dL', isExpression: true }
+    { expressionText: 'whose value', isExpression: false },
+    { expressionText: 'is greater than or equal to 120 mg/dL and is less than 300 mg/dL', isExpression: true }
   ];
 
   expect(expressionPhrase).toEqual(expectedOutput);
@@ -497,6 +496,92 @@ test('Conjunction Groups create a phrase with the group\'s children 1 level deep
     { expressionText: ',', isExpression: false },
     { expressionText: 'or', isExpression: false, isType: true },
     { expressionText: 'Group Child', isExpression: true, isName: true },
+  ];
+
+  expect(expressionPhrase).toEqual(expectedOutput);
+});
+
+test('Parameters with BooleanNot create a phrase with the parameter name', () => {
+  const modifiers = [
+    {
+      id: 'BooleanNot',
+      name: 'Not',
+      inputTypes: ['boolean'],
+      returnType: 'boolean',
+      cqlTemplate: 'BaseModifier',
+      cqlLibraryFunction: 'not'
+    }
+  ];
+
+  const name = 'parameter';
+  const valueSets = [];
+  const codes = [];
+  const returnType = 'boolean';
+  const otherParameters = [];
+  const elementNamesInPhrase = [];
+  const parameterName = 'Original Param';
+
+  const expressionPhrase = convertToExpression(
+    modifiers,
+    name,
+    valueSets,
+    codes,
+    returnType,
+    otherParameters,
+    elementNamesInPhrase,
+    false,
+    parameterName
+  );
+
+  const expectedOutput = [
+    { expressionText: 'Not', isExpression: true },
+    { expressionText: 'the', isExpression: false },
+    { expressionText: 'parameter', isExpression: false, isType: true },
+    { expressionText: 'Original Param', isExpression: true },
+  ];
+
+  expect(expressionPhrase).toEqual(expectedOutput);
+});
+
+test('Quantity parameters with Value Comparison create a phrase with the parameter name and comparison', () => {
+  const modifiers = [
+    {
+      id: 'ValueComparisonObservation',
+      name: 'Value Comparison',
+      inputTypes: ['system_quantity'],
+      returnType: 'boolean',
+      validator: { type: 'require', fields: ['minValue', 'minOperator', 'unit'], args: null },
+      values: { minOperator: '>=', minValue: '120', maxOperator: '<', maxValue: '300', unit: 'mg/dL' },
+      cqlTemplate: 'ValueComparisonObservation',
+      comparisonOperator: null
+    }
+  ];
+
+  const name = 'parameter';
+  const valueSets = [];
+  const codes = [];
+  const returnType = 'boolean';
+  const otherParameters = [];
+  const elementNamesInPhrase = [];
+  const parameterName = 'Original Param';
+
+  const expressionPhrase = convertToExpression(
+    modifiers,
+    name,
+    valueSets,
+    codes,
+    returnType,
+    otherParameters,
+    elementNamesInPhrase,
+    false,
+    parameterName
+  );
+
+  const expectedOutput = [
+    { expressionText: 'The', isExpression: false },
+    { expressionText: 'parameter', isExpression: false, isType: true },
+    { expressionText: 'Original Param', isExpression: true },
+    { expressionText: 'is greater than or equal to 120 mg/dL and is less than 300 mg/dL', isExpression: true }
   ];
 
   expect(expressionPhrase).toEqual(expectedOutput);

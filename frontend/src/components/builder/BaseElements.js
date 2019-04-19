@@ -46,7 +46,7 @@ export default class BaseElements extends Component {
         baseElements={this.props.baseElements}
         conversionFunctions={this.props.conversionFunctions}
         instanceNames={this.props.instanceNames}
-        scrollToBaseElement={this.props.scrollToBaseElement}
+        scrollToElement={this.props.scrollToElement}
         loginVSACUser={this.props.loginVSACUser}
         setVSACAuthStatus={this.props.setVSACAuthStatus}
         vsacStatus={this.props.vsacStatus}
@@ -100,7 +100,7 @@ export default class BaseElements extends Component {
                 conversionFunctions={this.props.conversionFunctions}
                 instanceNames={this.props.instanceNames}
                 baseElements={this.props.baseElements}
-                scrollToBaseElement={this.props.scrollToBaseElement}
+                scrollToElement={this.props.scrollToElement}
                 loginVSACUser={this.props.loginVSACUser}
                 setVSACAuthStatus={this.props.setVSACAuthStatus}
                 vsacStatus={this.props.vsacStatus}
@@ -194,5 +194,5 @@ BaseElements.propTypes = {
   validateCode: PropTypes.func.isRequired,
   resetCodeValidation: PropTypes.func.isRequired,
   validateReturnType: PropTypes.bool.isRequired,
-  scrollToBaseElement: PropTypes.func.isRequired,
+  scrollToElement: PropTypes.func.isRequired,
 };

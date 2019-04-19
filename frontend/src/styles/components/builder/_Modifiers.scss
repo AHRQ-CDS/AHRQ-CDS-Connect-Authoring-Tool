@@ -25,6 +25,15 @@
   }
 }
 
+.modifier-vert-aligned {
+  display: flex;
+  align-items: center;
+}
+
+.modifier-label {
+  padding-right: 5px;
+}
+
 .modifier-select {
   display: flex;
   flex-direction: column;

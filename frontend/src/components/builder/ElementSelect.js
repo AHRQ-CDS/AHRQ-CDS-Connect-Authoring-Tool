@@ -9,6 +9,7 @@ import ElementModal from './ElementModal';
 import ElementSelectMenuRenderer from './ElementSelectMenuRenderer';
 import VSACAuthenticationModal from './VSACAuthenticationModal';
 import CodeSelectModal from './CodeSelectModal';
+import changeToCase from '../../utils/strings';
 import filterUnsuppressed from '../../utils/filter';
 import { sortAlphabeticallyByKey } from '../../utils/sort';
 
@@ -118,6 +119,7 @@ export default class ElementSelect extends Component {
         const returnType = _.isEmpty(e.modifiers) ? e.returnType : _.last(e.modifiers).returnType;
         const commentParam = e.parameters.find(param => param.id === 'comment');
         const commentDefaultValue = commentParam ? commentParam.value : '';
+        const type = e.type === 'parameter' ? e.type : e.name;
         return ({
           id: _.uniqueId(e.id),
           name: 'Base Element',
@@ -130,7 +132,7 @@ export default class ElementSelect extends Component {
               id: 'baseElementReference',
               type: 'reference',
               name: 'reference',
-              value: { id: e.uniqueId, type: e.name },
+              value: { id: e.uniqueId, type },
               static: true
             },
             { id: 'comment', type: 'textarea', name: 'Comment', value: commentDefaultValue }
@@ -146,18 +148,28 @@ export default class ElementSelect extends Component {
         parametersCategory = { icon: 'sign-in', name: 'Parameters', entries: [] };
       }
 
-      // Only include boolean parameters. Don't include blank parameters to add to workspace.
-      parametersCategory.entries = props.parameters.map(param => ({
-        id: param.name,
-        name: param.name,
-        type: 'parameter',
-        returnType: _.lowerCase(param.type),
-        extends: 'Base',
-        parameters: [
-          { id: 'element_name', type: 'string', name: 'Element Name', value: param.name },
-          { id: 'default', type: 'boolean', name: 'Default', value: param.value }
-        ]
-      }));
+      parametersCategory.entries = props.parameters.map((param) => {
+        const commentDefaultValue = param.comment || '';
+        return ({
+          id: changeToCase(param.name, 'paramCase'),
+          name: param.name,
+          type: 'parameter',
+          returnType: _.toLower(param.type),
+          template: 'GenericStatement',
+          parameters: [
+            { id: 'element_name', type: 'string', name: 'Element Name', value: param.name },
+            { id: 'default', type: 'boolean', name: 'Default', value: param.value },
+            {
+              id: 'parameterReference',
+              type: 'reference',
+              name: 'reference',
+              value: { id: param.uniqueId },
+              static: true
+            },
+            { id: 'comment', type: 'textarea', name: 'Comment', value: commentDefaultValue }
+          ]
+        });
+      });
 
       categoriesCopy.push(parametersCategory);
     } else if (props.parameters.length === 0 && paramsIndex >= 0) {

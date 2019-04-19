@@ -267,11 +267,34 @@ class CqlArtifact {
       if (parameter.value && parameter.value.unit) {
         parameter.value.unit = parameter.value.unit.replace(/'/g, '\\\'');
       }
-      if (parameter.type === "Code" || parameter.type === "Concept") {
+      
+      if (parameter.type === "system_code" || parameter.type === "system_concept") {
         let system = _.get(parameter, 'value.system', '').replace(/'/g, '\\\'');
         let uri = _.get(parameter, 'value.uri', '').replace(/'/g, '\\\'');
         if (system && uri) { this.codeSystemMap.set(system, { name: system, id: uri }); }
       }
+
+      if (parameter.comment) {
+        parameter.comment = createCommentArray(parameter.comment);
+      }
+
+      const parameterTypeMap = {
+        boolean: 'Boolean',
+        system_code: 'Code',
+        system_concept: 'Concept',
+        integer: 'Integer',
+        datetime: 'DateTime',
+        decimal: 'Decimal',
+        system_quantity: 'Quantity',
+        string: 'String',
+        time: 'Time',
+        interval_of_integer: 'Interval<Integer>',
+        interval_of_datetime: 'Interval<DateTime>',
+        interval_of_decimal: 'Interval<Decimal>',
+        interval_of_quantity: 'Interval<Quantity>'
+      }
+
+      parameter.type = parameterTypeMap[parameter.type];
     });
 
     this.baseElements.forEach((baseElement) => {
@@ -286,6 +309,8 @@ class CqlArtifact {
 
       if (baseElement.childInstances) {
         this.parseTree(baseElement);
+      } else if (baseElement.type === 'parameter') {
+        this.parseParameter(baseElement);
       } else {
         this.parseElement(baseElement);
       }
@@ -424,8 +449,7 @@ class CqlArtifact {
       if (child.type === 'baseElement') {
         isBaseElementUseAndUnchanged = !isBaseElementUseChanged(child, this.baseElements);
       }
-      // Parameters are updated separately and unchanged base element uses do not unique names
-      if (!(child.type === 'parameter' || child.template === 'EmptyParameter' || isBaseElementUseAndUnchanged)) {
+      if (!isBaseElementUseAndUnchanged) {
         const childCount = getCountForUniqueExpressionName(child.parameters[0], this.names, 'value', '', false);
         if (childCount > 0) {
           childName = `${childName}_${childCount}`;
@@ -441,11 +465,18 @@ class CqlArtifact {
   }
 
   parseParameter(element) {
-    const paramContext = {};
+    const context = {};
     element.parameters.forEach((parameter) => {
-      paramContext[parameter.id] = parameter.value;
+      if (parameter.id === 'comment') {
+        context[parameter.id] = createCommentArray(parameter.value);
+      } else {
+        context[parameter.id] = parameter.value;
+      }
     });
-    this.paramContexts.push(paramContext);
+    context.template = 'GenericStatement';
+    context.values = [`"${element.name}"`];
+    context.modifiers = element.modifiers;
+    this.contexts.push(context);
   }
 
   // Generate context and resources for a single element
@@ -558,9 +589,15 @@ class CqlArtifact {
         }
         case 'reference': {
           // Need to pull the element name from the reference to support renaming the elements while being used.
-          const referencedElement = this.baseElements.find(e => e.uniqueId === parameter.value.id)
-          const referencedElementName = referencedElement.parameters[0].value || referencedElement.uniqueId;
-          context.values = [ `"${referencedElementName}"` ];
+          if (parameter.id === 'parameterReference') {
+            const referencedParameter = this.parameters.find(p => p.uniqueId === parameter.value.id);
+            const referencedParameterName = referencedParameter.name || referencedParameter.uniqueId;
+            context.values = [ `"${referencedParameterName}"` ];
+          } else if (parameter.id === 'baseElementReference') {
+            const referencedElement = this.baseElements.find(e => e.uniqueId === parameter.value.id);
+            const referencedElementName = referencedElement.parameters[0].value || referencedElement.uniqueId;
+            context.values = [ `"${referencedElementName}"` ];
+          }
           break;
         }
         case 'textarea': {

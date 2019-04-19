@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import Select from 'react-select';
 import FontAwesome from 'react-fontawesome';
+import { UncontrolledTooltip } from 'reactstrap';
 import _ from 'lodash';
 
 import StringParameter from './parameters/types/StringParameter';
@@ -17,15 +18,17 @@ import IntervalOfIntegerEditor from './parameters/editors/IntervalOfIntegerEdito
 import IntervalOfDateTimeEditor from './parameters/editors/IntervalOfDateTimeEditor';
 import IntervalOfDecimalEditor from './parameters/editors/IntervalOfDecimalEditor';
 import IntervalOfQuantityEditor from './parameters/editors/IntervalOfQuantityEditor';
+import TextAreaParameter from './parameters/types/TextAreaParameter';
 
 export default class Parameter extends Component {
   componentDidMount = () => {
-    const { id, type, name, value } = this.props;
+    const { id, type, name, value, comment } = this.props;
     if (_.isUndefined(id)) {
       this.updateParameter({
         name,
         uniqueId: _.uniqueId('parameter-'),
         type,
+        comment,
         value
       });
     }
@@ -33,6 +36,13 @@ export default class Parameter extends Component {
 
   updateParameter = (object) => {
     this.props.updateInstanceOfParameter(object, this.props.index);
+  }
+
+  deleteParameter = (index) => {
+    const parameterUsed = this.props.usedBy ? this.props.usedBy.length !== 0 : false;
+    if (!parameterUsed) {
+      this.props.deleteParameter(index);
+    }
   }
 
   renderParameter() {
@@ -45,6 +55,7 @@ export default class Parameter extends Component {
         name: this.props.name,
         uniqueId: this.props.id,
         type: this.props.type,
+        comment: this.props.comment,
         value: (e != null ? e.value : null)
       })
     };
@@ -63,31 +74,31 @@ export default class Parameter extends Component {
     };
 
     switch (this.props.type) {
-      case 'Boolean':
+      case 'boolean':
         return <BooleanEditor {...parameterProps} />;
-      case 'Code':
+      case 'system_code':
         return <CodeEditor {...parameterProps} {...codeEditorProps} />;
-      case 'Concept':
+      case 'system_concept':
         return <CodeEditor {...parameterProps} {...codeEditorProps} isConcept={true} />;
-      case 'Integer':
+      case 'integer':
         return <IntegerEditor {...parameterProps} />;
-      case 'DateTime':
+      case 'datetime':
         return <DateTimeEditor {...parameterProps} />;
-      case 'Decimal':
+      case 'decimal':
         return <DecimalEditor {...parameterProps} />;
-      case 'Quantity':
+      case 'system_quantity':
         return <QuantityEditor {...parameterProps} />;
-      case 'String':
+      case 'string':
         return <StringEditor {...parameterProps} />;
-      case 'Time':
+      case 'time':
         return <TimeEditor {...parameterProps} />;
-      case 'Interval<Integer>':
+      case 'interval_of_integer':
         return <IntervalOfIntegerEditor {...parameterProps} />;
-      case 'Interval<DateTime>':
+      case 'interval_of_datetime':
         return <IntervalOfDateTimeEditor {...parameterProps} />;
-      case 'Interval<Decimal>':
+      case 'interval_of_decimal':
         return <IntervalOfDecimalEditor {...parameterProps} />;
-      case 'Interval<Quantity>':
+      case 'interval_of_quantity':
         return <IntervalOfQuantityEditor {...parameterProps} />;
       default:
         return null;
@@ -95,52 +106,85 @@ export default class Parameter extends Component {
   }
 
   render() {
-    const { index, name, id, type, value, deleteParameter } = this.props;
+    const { index, name, id, type, value, comment } = this.props;
     const typeOptions = [
-      { value: 'Boolean', label: 'Boolean' },
-      { value: 'Code', label: 'Code' },
-      { value: 'Concept', label: 'Concept' },
-      { value: 'Integer', label: 'Integer' },
-      { value: 'DateTime', label: 'DateTime' },
-      { value: 'Decimal', label: 'Decimal' },
-      { value: 'Quantity', label: 'Quantity' },
-      { value: 'String', label: 'String' },
-      { value: 'Time', label: 'Time' },
-      { value: 'Interval<Integer>', label: 'Interval<Integer>' },
-      { value: 'Interval<DateTime>', label: 'Interval<DateTime>' },
-      { value: 'Interval<Decimal>', label: 'Interval<Decimal>' },
-      { value: 'Interval<Quantity>', label: 'Interval<Quantity>' }
+      { value: 'boolean', label: 'Boolean' },
+      { value: 'system_code', label: 'Code' },
+      { value: 'system_concept', label: 'Concept' },
+      { value: 'integer', label: 'Integer' },
+      { value: 'datetime', label: 'DateTime' },
+      { value: 'decimal', label: 'Decimal' },
+      { value: 'system_quantity', label: 'Quantity' },
+      { value: 'string', label: 'String' },
+      { value: 'time', label: 'Time' },
+      { value: 'interval_of_integer', label: 'Interval<Integer>' },
+      { value: 'interval_of_datetime', label: 'Interval<DateTime>' },
+      { value: 'interval_of_decimal', label: 'Interval<Decimal>' },
+      { value: 'interval_of_quantity', label: 'Interval<Quantity>' }
     ];
 
     const duplicateNameIndex = this.props.instanceNames.findIndex(n => n.id !== id && n.name === name);
+    const parameterUsed = this.props.usedBy ? this.props.usedBy.length !== 0 : false;
+    const disabledClass = parameterUsed ? 'disabled' : '';
 
     return (
-      <div className="parameter card-group card-group__top">
+      <div className="parameter card-group card-group__top" id={this.props.id}>
         <div className="card-element">
           <div className="card-element__header">
             <StringParameter
               id={`param-name-${index}`}
               name={'Parameter Name'}
               value={name}
+              disabled={parameterUsed}
               updateInstance={e => (this.updateParameter({
                 name: e[`param-name-${index}`],
                 uniqueId: this.props.id,
                 type,
+                comment,
                 value
               }))}
             />
-            {duplicateNameIndex !== -1
-              && <div className="warning">Warning: Name already in use. Choose another name.</div>}
 
             <button
-              aria-label="Delete Parameter"
-              className="button transparent-button delete-button"
-              onClick={() => { deleteParameter(index); }}>
-              <FontAwesome fixedWidth name='times' />
+              id={`deletebutton-${this.props.id}`}
+              onClick={() => { this.deleteParameter(index); }}
+              className={`button transparent-button delete-button ${disabledClass}`}
+              aria-label="Delete Parameter">
+              <FontAwesome fixedWidth name='close' />
             </button>
+            {parameterUsed &&
+              <UncontrolledTooltip
+                target={`deletebutton-${this.props.id}`} placement="left">
+                  To delete this parameter, remove all references to it.
+              </UncontrolledTooltip> }
           </div>
 
+          {duplicateNameIndex !== -1
+              && <div className="warning">Warning: Name already in use. Choose another name.</div>}
+
+          {parameterUsed
+            && <div className="notification">
+                  <FontAwesome name="exclamation-circle" />
+                  Parameter name and type can't be changed while it is being referenced.
+                </div>}
+
           <div className="card-element__body">
+            <div className="parameter__item">
+              <TextAreaParameter
+                key={this.props.id}
+                id={this.props.id}
+                name={'Comment'}
+                value={this.props.comment}
+                updateInstance={e => this.updateParameter({
+                  name,
+                  uniqueId: this.props.id,
+                  type,
+                  comment: e[this.props.id],
+                  value
+                })}
+                />
+            </div>
+
             <div className="parameter__item row">
               <div className="col-3 bold align-right">
                 <label htmlFor={`parameter-${index}`}>Parameter Type:</label>
@@ -153,12 +197,18 @@ export default class Parameter extends Component {
                   clearable={false}
                   options={typeOptions}
                   value={type}
-                  onChange={e => this.updateParameter({
-                    name,
-                    uniqueId: this.props.id,
-                    type: e.value,
-                    value: null
-                  })}
+                  disabled={parameterUsed}
+                  onChange={(e) => {
+                    if (e) { // in case of keystroke delete, where e is null/undefined
+                      this.updateParameter({
+                        name,
+                        uniqueId: this.props.id,
+                        type: e.value,
+                        comment,
+                        value: null
+                      });
+                    }
+                  }}
                 />
               </div>
             </div>
@@ -176,6 +226,7 @@ Parameter.propTypes = {
   name: PropTypes.string,
   type: PropTypes.string,
   id: PropTypes.string,
+  usedBy: PropTypes.array,
   updateInstanceOfParameter: PropTypes.func.isRequired,
   deleteParameter: PropTypes.func.isRequired,
   instanceNames: PropTypes.array.isRequired,

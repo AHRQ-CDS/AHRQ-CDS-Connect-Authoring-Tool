@@ -88,7 +88,7 @@ export default class Subpopulations extends Component {
               artifact={this.props.artifact}
               conversionFunctions={this.props.conversionFunctions}
               instanceNames={this.props.instanceNames}
-              scrollToBaseElement={this.props.scrollToBaseElement}
+              scrollToElement={this.props.scrollToElement}
               loginVSACUser={this.props.loginVSACUser}
               setVSACAuthStatus={this.props.setVSACAuthStatus}
               vsacStatus={this.props.vsacStatus}
@@ -136,7 +136,7 @@ Subpopulations.propTypes = {
   parameters: PropTypes.array.isRequired,
   name: PropTypes.string.isRequired,
   conversionFunctions: PropTypes.array,
-  scrollToBaseElement: PropTypes.func,
+  scrollToElement: PropTypes.func,
   loginVSACUser: PropTypes.func.isRequired,
   setVSACAuthStatus: PropTypes.func.isRequired,
   vsacStatus: PropTypes.string,

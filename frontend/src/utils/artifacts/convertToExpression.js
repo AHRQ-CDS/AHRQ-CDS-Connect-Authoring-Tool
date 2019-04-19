@@ -31,7 +31,8 @@ function getExpressionSentenceValue(modifier) {
   const expressionSentenceValues = {
     VerifiedObservation: { modifierText: 'verified', leadingText: '', type: 'list' },
     WithUnit: { modifierText: '', leadingText: 'with unit', type: 'post-list' },
-    ValueComparisonObservation: { modifierText: 'greater than a number', leadingText: 'whose value is', type: 'post' },
+    ValueComparisonNumber: { modifierText: 'greater than a number', leadingText: 'whose value', type: 'post' },
+    ValueComparisonObservation: { modifierText: 'greater than a number', leadingText: 'whose value', type: 'post' },
     QuantityValue: { modifierText: 'quantity value', leadingText: '', type: 'value' }, // Will not be displayed in phrase
     ConceptValue: { modifierText: 'concept value', leadingText: '', type: 'value' }, // Will not be displayed in phrase
     Qualifier: { modifierText: 'with a code', leadingText: '', type: 'post' },
@@ -45,6 +46,25 @@ function getExpressionSentenceValue(modifier) {
     ActiveMedicationStatement: { modifierText: 'active', leadingText: '', type: 'list' },
     ActiveMedicationOrder: { modifierText: 'active', leadingText: '', type: 'list' },
     ActiveOrConfirmedAllergyIntolerance: { modifierText: 'active or confirmed', leadingText: '', type: 'list' },
+    EqualsString: { modifierText: 'equals', leadingText: '', type: 'post' },
+    EndsWithString: { modifierText: 'ends with', leadingText: '', type: 'post' },
+    StartsWithString: { modifierText: 'starts with', leadingText: '', type: 'post' },
+    BeforeTimePrecise: { modifierText: 'is before', leadingText: '', type: 'post' },
+    AfterTimePrecise: { modifierText: 'is after', leadingText: '', type: 'post' },
+    BeforeDateTimePrecise: { modifierText: 'is before', leadingText: '', type: 'post' },
+    AfterDateTimePrecise: { modifierText: 'is after', leadingText: '', type: 'post' },
+    ContainsInteger: { modifierText: 'contains', leadingText: '', type: 'post' },
+    ContainsDateTime: { modifierText: 'contains', leadingText: '', type: 'post' },
+    ContainsDecimal: { modifierText: 'contains', leadingText: '', type: 'post' },
+    ContainsQuantity: { modifierText: 'contains', leadingText: '', type: 'post' },
+    BeforeInteger: { modifierText: 'is before', leadingText: '', type: 'post' },
+    BeforeDateTime: { modifierText: 'is before', leadingText: '', type: 'post' },
+    BeforeDecimal: { modifierText: 'is before', leadingText: '', type: 'post' },
+    BeforeQuantity: { modifierText: 'is before', leadingText: '', type: 'post' },
+    AfterInteger: { modifierText: 'is after', leadingText: '', type: 'post' },
+    AfterDateTime: { modifierText: 'is after', leadingText: '', type: 'post' },
+    AfterDecimal: { modifierText: 'is after', leadingText: '', type: 'post' },
+    AfterQuantity: { modifierText: 'is after', leadingText: '', type: 'post' },
     MostRecentObservation: { modifierText: 'most recent', leadingText: '', type: 'descriptor' },
     MostRecentProcedure: { modifierText: 'most recent', leadingText: '', type: 'descriptor' },
     MostRecentCondition: { modifierText: 'most recent', leadingText: '', type: 'descriptor' },
@@ -56,7 +76,7 @@ function getExpressionSentenceValue(modifier) {
     BooleanExists: { modifierText: 'exists', leadingText: 'that', type: 'BooleanExists' },
     BooleanComparison: { modifierText: 'is true', leadingText: 'which', type: 'post' },
     CheckExistence: { modifierText: 'is null', leadingText: '', type: 'post' },
-    BooleanNot: { modifierText: 'not', leadingText: 'There does', type: 'not' },
+    BooleanNot: { modifierText: 'not', leadingText: '', type: 'not' },
     InProgress: { modifierText: 'in progress', leadingText: '', type: 'list' },
     AllTrue: { modifierText: 'all elements true', leadingText: 'with', type: 'post' },
     AnyTrue: { modifierText: 'any element true', leadingText: 'with', type: 'post' }
@@ -79,14 +99,25 @@ function getExpressionSentenceValue(modifier) {
         expressionSentenceValues[modifier.id].modifierText = `${modifier.values.unit}`;
         break;
       }
+      case 'ValueComparisonNumber': {
+        const minOperatorWord = getOperation(modifier.values.minOperator);
+        const maxOperatorWord = getOperation(modifier.values.maxOperator);
+        expressionSentenceValues[modifier.id].modifierText =
+          `is ${minOperatorWord} ${modifier.values.minValue}`;
+        if (maxOperatorWord) {
+          expressionSentenceValues[modifier.id].modifierText +=
+            ` and is ${maxOperatorWord} ${modifier.values.maxValue}`;
+        }
+        break;
+      }
       case 'ValueComparisonObservation': {
         const minOperatorWord = getOperation(modifier.values.minOperator);
         const maxOperatorWord = getOperation(modifier.values.maxOperator);
         expressionSentenceValues[modifier.id].modifierText =
-          `${minOperatorWord} ${modifier.values.minValue} ${modifier.values.unit}`;
+          `is ${minOperatorWord} ${modifier.values.minValue} ${modifier.values.unit}`;
         if (maxOperatorWord) {
           expressionSentenceValues[modifier.id].modifierText +=
-            ` and ${maxOperatorWord} ${modifier.values.maxValue} ${modifier.values.unit}`;
+            ` and is ${maxOperatorWord} ${modifier.values.maxValue} ${modifier.values.unit}`;
         }
         break;
       }
@@ -102,13 +133,79 @@ function getExpressionSentenceValue(modifier) {
             }
           }
         }
-        expressionSentenceValues[modifier.id].leadingText = `whose ${qualifierText}`;
-        expressionSentenceValues[modifier.id].modifierText = `${valueSetText}`;
+        expressionSentenceValues[modifier.id].modifierText = `whose ${qualifierText} ${valueSetText}`;
         break;
       }
       case 'ConvertObservation': {
         const conversionDescription = modifier.values.description ? modifier.values.description : modifier.values.value;
         expressionSentenceValues[modifier.id].modifierText = `units converted from ${conversionDescription}`;
+        break;
+      }
+      case 'EqualsString':
+      case 'EndsWithString':
+      case 'StartsWithString': {
+        expressionSentenceValues[modifier.id].leadingText = 'whose value';
+        expressionSentenceValues[modifier.id].modifierText = `${_.lowerCase(modifier.name)} "${modifier.values.value}"`;
+        break;
+      }
+      case 'BeforeTimePrecise':
+      case 'AfterTimePrecise': {
+        expressionSentenceValues[modifier.id].leadingText = 'whose value is';
+        if (modifier.values.precision) {
+          expressionSentenceValues[modifier.id].modifierText +=
+            ` the ${modifier.values.precision} of`;
+        }
+        expressionSentenceValues[modifier.id].modifierText +=
+          ` ${modifier.values.time.split('T')[1]}`;
+        break;
+      }
+      case 'BeforeDateTimePrecise':
+      case 'AfterDateTimePrecise': {
+        expressionSentenceValues[modifier.id].leadingText = 'whose value is';
+        if (modifier.values.precision) {
+          expressionSentenceValues[modifier.id].modifierText +=
+            ` the ${modifier.values.precision} of`;
+        }
+        expressionSentenceValues[modifier.id].modifierText +=
+          ` ${modifier.values.date.split('@')[1]}`;
+        if (modifier.values.time) {
+          expressionSentenceValues[modifier.id].modifierText +=
+            ` at ${modifier.values.time.split('T')[1]}`;
+        }
+        break;
+      }
+      case 'ContainsInteger':
+      case 'BeforeInteger':
+      case 'AfterInteger':
+      case 'ContainsDecimal':
+      case 'BeforeDecimal':
+      case 'AfterDecimal': {
+        expressionSentenceValues[modifier.id].leadingText =
+          (modifier.name === 'Contains') ? 'whose value' : 'whose value is';
+        expressionSentenceValues[modifier.id].modifierText +=
+            ` ${modifier.values.value}`;
+        break;
+      }
+      case 'ContainsDateTime':
+      case 'BeforeDateTime':
+      case 'AfterDateTime': {
+        expressionSentenceValues[modifier.id].leadingText =
+          (modifier.name === 'Contains') ? 'whose value' : 'whose value is';
+        expressionSentenceValues[modifier.id].modifierText +=
+          ` ${modifier.values.date.split('@')[1]}`;
+        if (modifier.values.time) {
+          expressionSentenceValues[modifier.id].modifierText +=
+            ` at ${modifier.values.time.split('T')[1]}`;
+        }
+        break;
+      }
+      case 'ContainsQuantity':
+      case 'BeforeQuantity':
+      case 'AfterQuantity': {
+        expressionSentenceValues[modifier.id].leadingText =
+        (modifier.name === 'Contains') ? 'whose value' : 'whose value is';
+        expressionSentenceValues[modifier.id].modifierText +=
+          ` ${modifier.values.value} '${modifier.values.unit}'`;
         break;
       }
       case 'LookBackObservation':
@@ -211,9 +308,9 @@ function addElementNames(expressionArray, elementNames, type, isBaseElementAndOr
   return expressionArray;
 }
 
-function addExpressionText(expressionArray, expression) {
+function addExpressionText(expressionArray, expression, type = null) {
   // Add any text needed ahead of the modifier
-  if (expression.leadingText) {
+  if (expression.leadingText && (type !== 'parameter')) {
     expressionArray.push({ expressionText: expression.leadingText, isExpression: false });
   }
   // Add the modifier text
@@ -274,30 +371,6 @@ function getOrderedExpressionSentenceArrayForGender(genderParameter) {
   return orderedExpressionArray;
 }
 
-function getOrderedExpressionSentenceArrayForParameters(expressionArray, returnType) {
-  let orderedExpressionArray = [];
-  let remainingExpressionArray = expressionArray;
-  orderedExpressionArray.push({ expressionText: 'The value of the', isExpression: false });
-  orderedExpressionArray.push({ expressionText: `${_.lowerCase(returnType)}`, isExpression: true });
-  orderedExpressionArray.push({ expressionText: 'parameter', isExpression: false, isType: true });
-  orderedExpressionArray.push({ expressionText: 'is', isExpression: false });
-
-  remainingExpressionArray = remainingExpressionArray.filter((expression) => {
-    if (expression.type === 'not') {
-      orderedExpressionArray = addExpressionText(orderedExpressionArray, expression);
-      return false;
-    }
-    return true;
-  });
-
-  orderedExpressionArray.push({ expressionText: 'met', isExpression: false });
-  remainingExpressionArray.forEach((expression) => {
-    orderedExpressionArray = addExpressionText(orderedExpressionArray, expression);
-  });
-
-  return orderedExpressionArray;
-}
-
 // Build the array for expression phrases by pushing each type of expression in a set order.
 function orderExpressionSentenceArray(
   expressionArray,
@@ -307,7 +380,8 @@ function orderExpressionSentenceArray(
   returnType,
   otherParameters,
   elementNames,
-  isBaseElementAndOr
+  isBaseElementAndOr,
+  parameterName
 ) {
   // Specific cases for Age Range, Gender, and Parameters since they do not follow the same pattern as VSAC elements.
   if (type === 'Age Range') {
@@ -316,9 +390,6 @@ function orderExpressionSentenceArray(
   if (type === 'Gender') {
     // No modifiers can be applied to gender elements
     return getOrderedExpressionSentenceArrayForGender(otherParameters);
-  }
-  if (type === 'parameter') {
-    return getOrderedExpressionSentenceArrayForParameters(expressionArray, returnType);
   }
 
   if ((type === 'And' || type === 'Or') && !isBaseElementAndOr) {
@@ -338,10 +409,10 @@ function orderExpressionSentenceArray(
     const nulls = ['is null', 'is not null'];
     return nulls.indexOf(expression.modifierText) !== -1;
   });
-  const otherExpressions = expressionArray.filter((expression) => {
+  const otherExpressions = _.uniqWith(expressionArray.filter((expression) => {
     const knownTypes = ['not', 'BooleanExists', 'descriptor', 'list', 'post-list', 'value'];
     return knownTypes.indexOf(expression.type) === -1;
-  });
+  }), _.isEqual);
   let hasStarted = false;
 
   // Handle not and exists
@@ -360,14 +431,18 @@ function orderExpressionSentenceArray(
       hasStarted = true;
     }
   } else if (!returnsPlural && returnsBoolean && !checkExistenceExpression) {
-    if (notExpression) {
+    if (notExpression && (type === 'parameter')) {
+      orderedExpressionArray.push({ expressionText: 'Not', isExpression: true });
+      hasStarted = true;
+    } else if (notExpression && (type !== 'parameter')) {
       orderedExpressionArray.push({ expressionText: 'There does', isExpression: false });
       orderedExpressionArray.push({ expressionText: 'not', isExpression: true });
       orderedExpressionArray.push({ expressionText: 'exist', isExpression: false });
-    } else {
+      hasStarted = true;
+    } else if (type !== 'parameter') {
       orderedExpressionArray.push({ expressionText: 'There exists', isExpression: false });
+      hasStarted = true;
     }
-    hasStarted = true;
   } else if (notExpression) {
     if (checkExistenceExpression) {
       orderedExpressionArray.push({ expressionText: 'It is', isExpression: false });
@@ -419,7 +494,7 @@ function orderExpressionSentenceArray(
       elementText = 'group';
     }
   }
-  const elementArticle = getArticle(elementText);
+  const elementArticle = (type !== 'parameter') ? getArticle(elementText) : 'the';
   if (hasStarted) {
     if (returnsPlural) {
       if (type !== 'Intersect' && type !== 'Union') elementText = `${elementText}s`;
@@ -450,6 +525,9 @@ function orderExpressionSentenceArray(
   if (type === 'Intersect' || type === 'Union') {
     orderedExpressionArray.push({ expressionText: 'of', isExpression: false });
   }
+  if (type === 'parameter') {
+    orderedExpressionArray.push({ expressionText: parameterName, isExpression: true });
+  }
 
   // Handle value sets and codes and other element names
   orderedExpressionArray = addVSandCodeText(orderedExpressionArray, valueSets, codes);
@@ -457,12 +535,12 @@ function orderExpressionSentenceArray(
 
   // Handle post-lists (with unit)
   if (postListExpressions) {
-    orderedExpressionArray = addExpressionText(orderedExpressionArray, postListExpressions);
+    orderedExpressionArray = addExpressionText(orderedExpressionArray, postListExpressions, type);
   }
 
   // Handle any remaining expressions at the end, except concept/quantity value
   otherExpressions.forEach((expression) => {
-    orderedExpressionArray = addExpressionText(orderedExpressionArray, expression);
+    orderedExpressionArray = addExpressionText(orderedExpressionArray, expression, type);
   });
 
   return orderedExpressionArray;
@@ -476,7 +554,8 @@ export default function convertToExpression(
   returnType,
   otherParameters = [],
   elementNames = [],
-  isBaseElementAndOr = false
+  isBaseElementAndOr = false,
+  parameterName = null
 ) {
   const expressionSentenceArray = expressionsArray.reduce((accumulator, currentExpression) => {
     const expressionSentenceValue = getExpressionSentenceValue(currentExpression);
@@ -495,7 +574,8 @@ export default function convertToExpression(
     returnType,
     otherParameters,
     elementNames,
-    isBaseElementAndOr
+    isBaseElementAndOr,
+    parameterName
   );
 
   return orderedExpressionSentenceArray;
