@@ -1,6 +1,6 @@
 import Parameters from '../../../components/builder/Parameters';
 import Parameter from '../../../components/builder/Parameter';
-import { fullRenderComponent } from '../../../utils/test_helpers';
+import { shallowRenderComponent } from '../../../utils/test_helpers';
 
 let component;
 let componentWithParams;
@@ -17,7 +17,8 @@ beforeEach(() => {
     id: existingParamUid,
     name: 'boolParam',
     type: 'Boolean',
-    value: true
+    value: true,
+    comment: null
   };
 
   baseProps = {
@@ -25,12 +26,12 @@ beforeEach(() => {
     instanceNames
   };
 
-  component = fullRenderComponent(Parameters, {
+  component = shallowRenderComponent(Parameters, {
     parameters: [],
     ...baseProps
   });
 
-  componentWithParams = fullRenderComponent(Parameters, {
+  componentWithParams = shallowRenderComponent(Parameters, {
     parameters: [existingParam],
     ...baseProps
   });
