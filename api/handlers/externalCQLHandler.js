@@ -6,46 +6,6 @@ module.exports = {
   singlePost,
 };
 
-const testCQLFileContent =
-`library "CQL-Upload" version '1'
-
-using FHIR version '1.0.2'
-
-include FHIRHelpers version '1.0.2' called FHIRHelpers 
-
-include CDS_Connect_Commons_for_FHIRv102 version '1.3.0' called C3F 
-
-include CDS_Connect_Conversions version '1' called Convert 
-
-
-valueset "LDL-c VS": '2.16.840.1.113883.3.117.1.7.1.215'
-
-
-
-context Patient
-
-define "Age":
-  AgeInMonths() >= 14
-
-define "LDL-c":
-  exists([Observation: "LDL-c VS"])
-
-define "MeetsInclusionCriteria":
-  "Age"
-  and "LDL-c"
-
-define "InPopulation":
-   "MeetsInclusionCriteria" 
-
-define "Recommendation":
-  null
-
-define "Rationale":
-  null
-define "Errors":
-  null
-`;
-
 // Get all libraries for a given artifact
 function allGet(req, res) {
   if (req.user) {
@@ -68,13 +28,12 @@ function singlePost(req, res) {
      * 2. Check for duplicate/disallowed artifacts (name and version are same as an existing) and prevent upload
      * 
      * Request needs to send: file name, file content, current artifact id.
-     * req.body = { cqlFile: '...' };
-     * const cqlFile = req.body.cqlFile;
      */
 
-    const cqlFileText = testCQLFileContent;
-    const cqlFileName = 'My Uploaded File';
-    const linkedArtifactId = '13234';
+    // const cqlFileText = testCQLFileContent;
+    const cqlFileText = req.body.cqlFileText;
+    const cqlFileName = req.body.cqlFileName;
+    const linkedArtifactId = req.body.artifactId;
 
     const cqlJson = {
       filename: cqlFileName,
