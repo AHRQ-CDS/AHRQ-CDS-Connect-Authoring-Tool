@@ -5,7 +5,7 @@ const ExternalCQLRouter = express.Router();
 
 // Routes for /authoring/api/externalCQL
 ExternalCQLRouter.route('/')
-  // .get(externalCQL.allGet)
+  .get(externalCQL.allGet)
   .post(externalCQL.singlePost);
 
 // Routes for /authoring/api/testing/:externalCQL

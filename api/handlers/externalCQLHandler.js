@@ -2,6 +2,7 @@ const CQLLibrary = require('../models/cqlLibrary');
 const convertToELM = require('../handlers/cqlHandler').convertToElm;
 
 module.exports = {
+  allGet,
   singlePost,
 };
 
@@ -44,6 +45,19 @@ define "Rationale":
 define "Errors":
   null
 `;
+
+// Get all libraries for a given artifact
+function allGet(req, res) {
+  if (req.user) {
+    // eslint-disable-next-line array-callback-return
+    CQLLibrary.find({ user: req.user.uid, linkedArtifactId: req.body.artifactId }, (error, libraries) => {
+      if (error) res.status(500).send(error);
+      else res.json(libraries);
+    });
+  } else {
+    res.sendStatus(401);
+  }
+}
 
 // Post a single external CQL library
 function singlePost(req, res) {
