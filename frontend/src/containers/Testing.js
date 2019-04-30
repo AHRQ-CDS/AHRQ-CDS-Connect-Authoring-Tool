@@ -235,43 +235,45 @@ class Testing extends Component {
   render() {
     return (
       <div className="testing" id="maincontent">
-        <Dropzone
-          className="patient-dropzone"
-          onDrop={this.addPatient.bind(this)}
-          accept="application/json" multiple={false}>
-          {this.renderDropzoneIcon()}
-
-          {this.state.uploadError &&
-            <div className="warning">Invalid file type. Only valid JSON FHIR STU3 or DSTU2 Bundles are accepted.</div>
-          }
-
-          <p className="patient-dropzone__instructions">
-            Drop a valid JSON FHIR STU3 or DSTU2 bundle containing a synthetic patient here, or click to browse.
-          </p>
-
-          <p className="patient-dropzone__warning">
-            Do not upload any Personally Identifiable Information (PII) or Protected Health Information (PHI) to this
-            server. Upload synthetic data only.
-          </p>
-        </Dropzone>
-
         <div className="testing-wrapper">
-          {this.renderResultsTable()}
-          {this.renderPatientsTable()}
+          <Dropzone
+            className="dropzone"
+            onDrop={this.addPatient.bind(this)}
+            accept="application/json" multiple={false}>
+            {this.renderDropzoneIcon()}
+
+            {this.state.uploadError &&
+              <div className="warning">Invalid file type. Only valid JSON FHIR STU3 or DSTU2 Bundles are accepted.</div>
+            }
+
+            <p className="dropzone__instructions">
+              Drop a valid JSON FHIR STU3 or DSTU2 bundle containing a synthetic patient here, or click to browse.
+            </p>
+
+            <p className="dropzone__warning">
+              Do not upload any Personally Identifiable Information (PII) or Protected Health Information (PHI) to this
+              server. Upload synthetic data only.
+            </p>
+          </Dropzone>
+
+          <div className="testing-wrapper">
+            {this.renderResultsTable()}
+            {this.renderPatientsTable()}
+          </div>
+
+          <ELMErrorModal
+            isOpen={this.state.showELMErrorModal}
+            closeModal={this.closeELMErrorModal}
+            errors={this.props.downloadedArtifact.elmErrors}
+            isForTesting={true}/>
+
+          <PatientVersionModal
+            isOpen={this.state.showPatientVersionModal}
+            closeModal={this.closePatientVersionModal}
+            patientData={this.state.patientData}
+            selectStu3={this.selectStu3}
+            selectDstu2={this.selectDstu2}/>
         </div>
-
-        <ELMErrorModal
-          isOpen={this.state.showELMErrorModal}
-          closeModal={this.closeELMErrorModal}
-          errors={this.props.downloadedArtifact.elmErrors}
-          isForTesting={true}/>
-
-        <PatientVersionModal
-          isOpen={this.state.showPatientVersionModal}
-          closeModal={this.closePatientVersionModal}
-          patientData={this.state.patientData}
-          selectStu3={this.selectStu3}
-          selectDstu2={this.selectDstu2}/>
       </div>
     );
   }

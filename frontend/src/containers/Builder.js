@@ -18,11 +18,13 @@ import {
 import {
   loginVSACUser, setVSACAuthStatus, searchVSACByKeyword, getVSDetails, validateCode, resetCodeValidation
 } from '../actions/vsac';
+import { deleteExternalCqlLibrary, addExternalLibrary } from '../actions/external_cql';
 
 import EditArtifactModal from '../components/artifact/EditArtifactModal';
 import ConjunctionGroup from '../components/builder/ConjunctionGroup';
 import Subpopulations from '../components/builder/Subpopulations';
 import ErrorStatement from '../components/builder/ErrorStatement';
+import ExternalCQL from '../components/builder/ExternalCQL';
 import Parameters from '../components/builder/Parameters';
 import Recommendations from '../components/builder/Recommendations';
 import RepoUploadModal from '../components/builder/RepoUploadModal';
@@ -472,6 +474,7 @@ export class Builder extends Component {
                 <Tab>Recommendations</Tab>
                 <Tab>Parameters</Tab>
                 <Tab>Handle Errors</Tab>
+                <Tab>External CQL</Tab>
               </TabList>
 
               <div className="tab-panel-container">
@@ -638,6 +641,17 @@ export class Builder extends Component {
                     updateErrorStatement={this.updateErrorStatement} />
                 </TabPanel>
 
+                <TabPanel>
+                  <div className="workspace-blurb">
+                    Reference external CQL libraries that can be used in Inclusions, Exclusions, and Subpopulations.
+                  </div>
+                  <ExternalCQL
+                    externalCqlList={this.props.externalCqlList}
+                    externalCqlLibrary={this.props.externalCqlLibrary}
+                    externalCqlFhirVersion={this.props.externalCqlFhirVersion}
+                    deleteExternalCqlLibrary={this.props.deleteExternalCqlLibrary}
+                    addExternalLibrary={addExternalLibrary} />
+                </TabPanel>
               </div>
             </Tabs>
           </section>
@@ -684,6 +698,12 @@ Builder.propTypes = {
   isValidCode: PropTypes.bool,
   codeData: PropTypes.object,
   names: PropTypes.array.isRequired,
+  externalCqlList: PropTypes.array,
+  externalCqlLibrary: PropTypes.object,
+  externalCqlFhirVersion: PropTypes.string,
+  isAddingExternalCqlLibrary: PropTypes.bool.isRequired,
+  deleteExternalCqlLibrary: PropTypes.func.isRequired,
+  addExternalLibrary: PropTypes.func.isRequired
 };
 
 // these props are used for dispatching actions
@@ -706,7 +726,9 @@ function mapDispatchToProps(dispatch) {
     validateCode,
     resetCodeValidation,
     clearArtifactValidationWarnings,
-    loadConversionFunctions
+    loadConversionFunctions,
+    deleteExternalCqlLibrary,
+    addExternalLibrary
   }, dispatch);
 }
 
@@ -733,7 +755,11 @@ function mapStateToProps(state) {
     vsacDetailsCodesError: state.vsac.detailsCodesErrorMessage,
     vsacFHIRCredentials: { username: state.vsac.username, password: state.vsac.password },
     conversionFunctions: state.modifiers.conversionFunctions,
-    isLoggingOut: state.auth.isLoggingOut
+    isLoggingOut: state.auth.isLoggingOut,
+    externalCqlList: state.externalCQL.externalCqlList,
+    externalCqlLibrary: state.externalCQL.externalCqlLibrary,
+    externalCqlFhirVersion: state.externalCQL.fhirVersion,
+    isAddingExternalCqlLibrary: state.externalCQL.addExternalCqlLibrary.isAdding
   };
 }
 

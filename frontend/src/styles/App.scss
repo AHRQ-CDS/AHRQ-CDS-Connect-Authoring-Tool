@@ -12,20 +12,22 @@
 
 /* ------------------------- IMPORT CUSTOM SCSS ---------------------------- */
 // site-wide elements
-@import 'elements/dropdowns';
-@import 'elements/mixins';
-@import 'elements/typography';
+@import 'elements/mixins'; // keep first in list
+@import 'elements/accessibility';
 @import 'elements/base';
+@import 'elements/buttons';
+@import 'elements/cards';
+@import 'elements/dropdowns';
+@import 'elements/dropzone';
+@import 'elements/effects';
+@import 'elements/expressions';
 @import 'elements/flex';
 @import 'elements/forms';
 @import 'elements/inputs';
-@import 'elements/buttons';
+@import 'elements/mixins';
 @import 'elements/modals';
-@import 'elements/accessibility';
-@import 'elements/effects';
 @import 'elements/select';
-@import 'elements/cards';
-@import 'elements/expressions';
+@import 'elements/typography';
 
 // component-specific
 @import 'components/artifact/Artifact';
