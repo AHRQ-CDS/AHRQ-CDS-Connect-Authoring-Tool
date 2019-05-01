@@ -194,6 +194,39 @@ function isBaseElementUseChanged(element, baseElements) {
   return false;
 }
 
+function isParameterUseChanged(element, parameters) {
+  const referenceParameter = element.parameters.find(param => param.type === 'reference');
+  if (!referenceParameter) {
+    // This case should never happen because an element of type parameter will never NOT have a reference parameter
+    return true;
+  }
+
+  const nameParameter = element.parameters.find(param => param.id === 'element_name');
+  const commentParameter = element.parameters.find(param => param.id === 'comment');
+
+  const originalParameter = parameters.find(param => referenceParameter.value.id === param.uniqueId);
+  if (!originalParameter) {
+    // This case should never happen because you can't delete parameters while in use.
+    return true;
+  }
+
+  if (nameParameter.value !== originalParameter.name) {
+    // If the name of the use of the parameter and the original parameter are different, it's been changed.
+    return true;
+  }
+  if (element.modifiers.length > 0) {
+    // If there are modifiers applied to the use of the parameter, it's been changed.
+    return true;
+  }
+
+  if (!_.isEqual(createCommentArray(commentParameter.value), originalParameter.comment)) {
+    // If the comment on the use of the parameter and the original parameter are different, it's been changed.
+    return true;
+  }
+
+  return false;
+}
+
 function createCommentArray(comment) {
   if (!comment) {
     return;
@@ -299,11 +332,15 @@ class CqlArtifact {
 
     this.baseElements.forEach((baseElement) => {
       let isBaseElementUseAndUnchanged = false;
+      let isParameterUseAndUnchanged = false;
       if (baseElement.type === 'baseElement') {
         isBaseElementUseAndUnchanged = !isBaseElementUseChanged(baseElement, this.baseElements);
       }
+      if (baseElement.type === 'parameter') {
+        isParameterUseAndUnchanged = !isParameterUseChanged(baseElement, this.parameters);
+      }
       const count = getCountForUniqueExpressionName(baseElement.parameters[0], this.names, 'value', '', false);
-      if (!isBaseElementUseAndUnchanged && count > 0) {
+      if ((!(isBaseElementUseAndUnchanged || isParameterUseAndUnchanged)) && count > 0) {
         baseElement.parameters[0].value = `${baseElement.parameters[0].value}_${count}`;
       }
 
@@ -446,10 +483,14 @@ class CqlArtifact {
       // TODO: Could a child of a conjunction ever be a subpopulation?
       let childName = (child.parameters[0]||{}).value || child.uniqueId;
       let isBaseElementUseAndUnchanged = false;
+      let isParameterUseAndUnchanged = false;
       if (child.type === 'baseElement') {
         isBaseElementUseAndUnchanged = !isBaseElementUseChanged(child, this.baseElements);
       }
-      if (!isBaseElementUseAndUnchanged) {
+      if (child.type === 'parameter') {
+        isParameterUseAndUnchanged = !isParameterUseChanged(child, this.parameters);
+      }
+      if (!(isBaseElementUseAndUnchanged || isParameterUseAndUnchanged)) {
         const childCount = getCountForUniqueExpressionName(child.parameters[0], this.names, 'value', '', false);
         if (childCount > 0) {
           childName = `${childName}_${childCount}`;
@@ -476,7 +517,9 @@ class CqlArtifact {
     context.template = 'GenericStatement';
     context.values = [`"${element.name}"`];
     context.modifiers = element.modifiers;
-    this.contexts.push(context);
+    if (isParameterUseChanged(element, this.parameters)) {
+      this.contexts.push(context);
+    }
   }
 
   // Generate context and resources for a single element
@@ -619,8 +662,9 @@ class CqlArtifact {
 
     context.modifiers = element.modifiers;
     context.element_name = (context.element_name || element.uniqueId);
-    // If it is an unchanged base element, don't add to context
-    if (!(element.type === 'baseElement' && !isBaseElementUseChanged(element, this.baseElements))) {
+    // If it is an unchanged base element or parameter, don't add to context
+    if (!(element.type === 'baseElement' && !isBaseElementUseChanged(element, this.baseElements))
+    && !(element.type === 'parameter' && !isParameterUseChanged(element, this.parameters))) {
       this.contexts.push(context);
     }
   }
