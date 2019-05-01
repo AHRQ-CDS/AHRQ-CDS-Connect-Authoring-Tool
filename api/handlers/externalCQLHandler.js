@@ -10,7 +10,7 @@ module.exports = {
 function allGet(req, res) {
   if (req.user) {
     // eslint-disable-next-line array-callback-return
-    CQLLibrary.find({ user: req.user.uid, linkedArtifactId: req.body.artifactId }, (error, libraries) => {
+    CQLLibrary.find({ user: req.user.uid, linkedArtifactId: req.params.artifactId }, (error, libraries) => {
       if (error) res.status(500).send(error);
       else res.json(libraries);
     });
