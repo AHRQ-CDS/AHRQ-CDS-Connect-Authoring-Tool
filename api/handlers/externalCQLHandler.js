@@ -1,3 +1,4 @@
+const _ = require('lodash');
 const CQLLibrary = require('../models/cqlLibrary');
 const convertToELM = require('../handlers/cqlHandler').convertToElm;
 
@@ -54,16 +55,19 @@ function singlePost(req, res) {
         // ELM will return any helper libraries in order to not get errors - but we don't need to save those files here.
         const fileName = file.name;
         if (fileName === cqlFileName) {
-          // TODO: improve null checks
           const { library } = parsedContent;
-          elmResults.name = library.identifier.id;
-          elmResults.version = library.identifier.version;
-          elmResults.fhirVersion = library.usings.def[1].version;
+          elmResults.name = library.identifier.id || '';
+          elmResults.version = library.identifier.version || '';
+
+          // Find FHIR version used by library
+          const elmDefs = _.get(library, 'usings.def', []);
+          const fhirDef = _.find(elmDefs, { localIdentifier: 'FHIR' });
+          elmResults.fhirVersion = _.get(fhirDef, 'version', '');
 
           const details = {};
           details.cqlFileText = cqlFileText;
           details.fileName = cqlFileName;
-          details.definitions = library.statements.def;
+          details.definitions = _.get(library, 'statements.def', []);
           // TODO: Should definitions filter out things like Patient retrieve, meets inclusion criteria, etc?
 
           elmResults.details = details;
