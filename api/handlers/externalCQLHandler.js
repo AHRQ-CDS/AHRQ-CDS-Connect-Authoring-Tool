@@ -31,9 +31,7 @@ function singlePost(req, res) {
      */
 
     // const cqlFileText = testCQLFileContent;
-    const cqlFileText = req.body.cqlFileText;
-    const cqlFileName = req.body.cqlFileName;
-    const linkedArtifactId = req.body.artifactId;
+    const { cqlFileName, cqlFileText, artifactId } = req.body.library;
 
     const cqlJson = {
       filename: cqlFileName,
@@ -42,7 +40,7 @@ function singlePost(req, res) {
     };
 
     let elmResults = {
-      linkedArtifactId,
+      linkedArtifactId: artifactId,
       user: req.user.uid
     };
 

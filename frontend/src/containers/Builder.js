@@ -651,7 +651,7 @@ export class Builder extends Component {
                     externalCqlLibrary={this.props.externalCqlLibrary}
                     externalCqlFhirVersion={this.props.externalCqlFhirVersion}
                     deleteExternalCqlLibrary={this.props.deleteExternalCqlLibrary}
-                    addExternalLibrary={addExternalLibrary} />
+                    addExternalLibrary={this.props.addExternalLibrary} />
                 </TabPanel>
               </div>
             </Tabs>
