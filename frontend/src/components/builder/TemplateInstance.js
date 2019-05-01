@@ -37,7 +37,7 @@ import WithUnit from './modifiers/WithUnit';
 import Qualifier from './modifiers/Qualifier';
 
 import { hasDuplicateName, doesBaseElementUseNeedWarning, doesBaseElementInstanceNeedWarning,
-  validateElement, hasGroupNestedWarning } from '../../utils/warnings';
+  doesParameterUseNeedWarning, validateElement, hasGroupNestedWarning } from '../../utils/warnings';
 import { getOriginalBaseElement } from '../../utils/baseElements';
 import { getReturnType, validateModifier, allModifiersValid } from '../../utils/instances';
 
@@ -91,13 +91,21 @@ export default class TemplateInstance extends Component {
   }
 
   hasWarnings = () => {
-    const { templateInstance, instanceNames, baseElements, allInstancesInAllTrees, validateReturnType } = this.props;
+    const {
+      templateInstance,
+      instanceNames,
+      baseElements,
+      parameters,
+      allInstancesInAllTrees,
+      validateReturnType
+    } = this.props;
 
     // Use function for group warnings with a list of just this element to check for all types of warnings.
     const hasSomeWarning = hasGroupNestedWarning(
       [templateInstance],
       instanceNames,
       baseElements,
+      parameters,
       allInstancesInAllTrees,
       validateReturnType
     );
@@ -806,7 +814,7 @@ export default class TemplateInstance extends Component {
   }
 
   renderHeading = (elementNameParameter) => {
-    const { templateInstance, instanceNames, baseElements, allInstancesInAllTrees } = this.props;
+    const { templateInstance, instanceNames, baseElements, parameters, allInstancesInAllTrees } = this.props;
 
     if (elementNameParameter) {
       let elementType = (templateInstance.type === 'parameter') ? 'Parameter' : templateInstance.name;
@@ -821,10 +829,11 @@ export default class TemplateInstance extends Component {
       }
 
       const doesHaveDuplicateName =
-        hasDuplicateName(templateInstance, instanceNames, baseElements, allInstancesInAllTrees);
+        hasDuplicateName(templateInstance, instanceNames, baseElements, parameters, allInstancesInAllTrees);
       const doesHaveBaseElementUseWarning = doesBaseElementUseNeedWarning(templateInstance, baseElements);
       const doesHaveBaseElementInstanceWarning =
         doesBaseElementInstanceNeedWarning(templateInstance, allInstancesInAllTrees);
+      const doesHaveParameterUseWarning = doesParameterUseNeedWarning(templateInstance, parameters);
 
       return (
         <div className="card-element__heading">
@@ -835,7 +844,10 @@ export default class TemplateInstance extends Component {
             name={elementType}
             uniqueId={templateInstance.uniqueId}
           />
-          {doesHaveDuplicateName && !doesHaveBaseElementUseWarning && !doesHaveBaseElementInstanceWarning &&
+          {doesHaveDuplicateName &&
+          !doesHaveBaseElementUseWarning &&
+          !doesHaveBaseElementInstanceWarning &&
+          !doesHaveParameterUseWarning &&
             <div className="warning">Warning: Name already in use. Choose another name.</div>
           }
           {doesHaveBaseElementUseWarning &&
@@ -845,6 +857,9 @@ export default class TemplateInstance extends Component {
             <div className="warning">
               Warning: One or more uses of this Base Element have changed. Choose another name.
             </div>
+          }
+          {doesHaveParameterUseWarning &&
+            <div className="warning">Warning: This use of the Parameter has changed. Choose another name.</div>
           }
         </div>
       );
@@ -972,5 +987,6 @@ TemplateInstance.propTypes = {
   disableElement: PropTypes.bool,
   disableIndent: PropTypes.bool,
   scrollToElement: PropTypes.func.isRequired,
-  baseElements: PropTypes.array.isRequired
+  baseElements: PropTypes.array.isRequired,
+  parameters: PropTypes.array.isRequired
 };

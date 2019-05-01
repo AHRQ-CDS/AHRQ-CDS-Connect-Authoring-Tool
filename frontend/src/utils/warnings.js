@@ -45,7 +45,48 @@ export function doesBaseElementUseNeedWarning(instance, baseElements) {
   return false;
 }
 
-export function hasDuplicateName(templateInstance, instanceNames, baseElements, allInstancesInAllTrees) {
+export function doesParameterUseNeedWarning(instance, parameters) {
+  const elementNameParameter = instance.parameters.find(param => param.id === 'element_name');
+  const instanceCommentParameter = instance.parameters.find(param => param.id === 'comment');
+  const instanceCommentValue = instanceCommentParameter ? instanceCommentParameter.value : '';
+
+  if (instance.type === 'parameter') {
+    const referenceParameter = instance.parameters.find(param => param.type === 'reference');
+    const originalParameter = parameters.find(param => referenceParameter.value.id === param.uniqueId);
+    const originalCommentValue = originalParameter.comment ? originalParameter.comment : '';
+    // If some modifiers applied AND the name is the same as original, it should be changed. Need a warning.
+    if (((instance.modifiers && instance.modifiers.length > 0) || (instanceCommentValue !== originalCommentValue)) &&
+      elementNameParameter.value === originalParameter.name) {
+      return true;
+    }
+    return false;
+  }
+
+  return false;
+}
+
+export function doesParameterNeedWarning(name, usedBy, comment, allInstancesInAllTrees) {
+  if (usedBy && usedBy.length > 0) {
+    let anyUseHasChanged = false;
+    usedBy.forEach((usageId) => {
+      const use = allInstancesInAllTrees.find(i => i.uniqueId === usageId);
+      if (use) {
+        const useCommentParameter = use.parameters.find(param => param.id === 'comment');
+        const useCommentValue = useCommentParameter ? useCommentParameter.value : '';
+        const instanceCommentValue = comment || '';
+        if (((use.modifiers && use.modifiers.length > 0) || (instanceCommentValue !== useCommentValue)) &&
+          name === use.parameters[0].value) {
+          anyUseHasChanged = true;
+        }
+      }
+    });
+    return anyUseHasChanged;
+  }
+
+  return false;
+}
+
+export function hasDuplicateName(templateInstance, instanceNames, baseElements, parameters, allInstancesInAllTrees) {
   const elementNameParameter = templateInstance.parameters.find(param => param.id === 'element_name');
   // Treat undefined as empty string so unnamed elements display duplicate correctly.
   const nameValue = elementNameParameter.value === undefined ? '' : elementNameParameter.value;
@@ -72,6 +113,11 @@ export function hasDuplicateName(templateInstance, instanceNames, baseElements, 
         }
       }
       return name.id !== originalBaseElement.uniqueId;
+    } else if (isDuplicate && templateInstance.type === 'parameter') {
+      // If parameter use, don't include a duplicate from the original parameter.
+      const referenceParameter = templateInstance.parameters.find(param => param.type === 'reference');
+      const originalParameter = parameters.find(param => referenceParameter.value.id === param.uniqueId);
+      return name.id !== originalParameter.uniqueId;
     } else if (isDuplicate && templateInstance.usedBy) {
       // If the duplicate is one of the uses, don't consider name duplicate unless use has changed.
       const useId = templateInstance.usedBy.find(i => i === name.id);
@@ -81,6 +127,23 @@ export function hasDuplicateName(templateInstance, instanceNames, baseElements, 
         return isUseModified;
       }
       return isDuplicate;
+    }
+    return isDuplicate;
+  });
+  return duplicateNameIndex !== -1;
+}
+
+export function parameterHasDuplicateName(parameterName, id, usedBy, instanceNames, allInstancesInAllTrees) {
+  const duplicateNameIndex = instanceNames.findIndex((name) => {
+    const isDuplicate = name.id !== id && name.name === parameterName;
+    if (isDuplicate && usedBy && usedBy.length > 0) {
+      // If the duplicate is one of the uses, don't consider name duplicate unless use has changed.
+      const useId = usedBy.find(i => i === name.id);
+      if (useId) {
+        const useInstance = allInstancesInAllTrees.find(instance => instance.uniqueId === useId);
+        const isUseModified = useInstance && useInstance.modifiers && useInstance.modifiers.length > 0;
+        return isUseModified;
+      }
     }
     return isDuplicate;
   });
@@ -112,6 +175,7 @@ export function hasGroupNestedWarning(
   childInstances,
   instanceNames,
   baseElements,
+  parameters,
   allInstancesInAllTrees,
   validateReturnType
 ) {
@@ -123,11 +187,12 @@ export function hasGroupNestedWarning(
         child.childInstances,
         instanceNames,
         baseElements,
+        parameters,
         allInstancesInAllTrees,
         validateReturnType
       );
       if (!warning) {
-        warning = hasDuplicateName(child, instanceNames, baseElements, allInstancesInAllTrees);
+        warning = hasDuplicateName(child, instanceNames, baseElements, parameters, allInstancesInAllTrees);
       }
     } else {
       const params = {};
@@ -139,16 +204,19 @@ export function hasGroupNestedWarning(
       const hasReturnTypeWarning =
         hasReturnTypeError(child.returnType, child.modifiers, 'boolean', validateReturnType);
       const hasModifierWarning = !allModifiersValid(child.modifiers);
-      const hasDuplicateNameWarning = hasDuplicateName(child, instanceNames, baseElements, allInstancesInAllTrees);
+      const hasDuplicateNameWarning =
+        hasDuplicateName(child, instanceNames, baseElements, parameters, allInstancesInAllTrees);
       const hasBaseElementUseWarning = doesBaseElementUseNeedWarning(child, baseElements);
       const hasBaseElementInstanceWarning = doesBaseElementInstanceNeedWarning(child, allInstancesInAllTrees);
+      const hasParameterUseWarning = doesParameterUseNeedWarning(child, parameters);
 
       warning = hasValidateElementWarning
         || hasReturnTypeWarning
         || hasModifierWarning
         || hasDuplicateNameWarning
         || hasBaseElementUseWarning
-        || hasBaseElementInstanceWarning;
+        || hasBaseElementInstanceWarning
+        || hasParameterUseWarning;
     }
     if (warning) {
       hasNestedWarning = true;

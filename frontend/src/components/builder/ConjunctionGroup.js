@@ -356,6 +356,7 @@ export default class ConjunctionGroup extends Component {
           renderIndentButtons={this.renderIndentButtons}
           conversionFunctions={this.props.conversionFunctions}
           instanceNames={this.props.instanceNames}
+          parameters={this.props.parameters}
           baseElements={this.props.baseElements}
           scrollToElement={this.props.scrollToElement}
           loginVSACUser={this.props.loginVSACUser}

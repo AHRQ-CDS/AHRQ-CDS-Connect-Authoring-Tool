@@ -20,6 +20,8 @@ import IntervalOfDecimalEditor from './parameters/editors/IntervalOfDecimalEdito
 import IntervalOfQuantityEditor from './parameters/editors/IntervalOfQuantityEditor';
 import TextAreaParameter from './parameters/types/TextAreaParameter';
 
+import { doesParameterNeedWarning, parameterHasDuplicateName } from '../../utils/warnings';
+
 export default class Parameter extends Component {
   componentDidMount = () => {
     const { id, type, name, value, comment } = this.props;
@@ -123,9 +125,21 @@ export default class Parameter extends Component {
       { value: 'interval_of_quantity', label: 'Interval<Quantity>' }
     ];
 
-    const duplicateNameIndex = this.props.instanceNames.findIndex(n => n.id !== id && n.name === name);
+    const doesHaveDuplicateName = parameterHasDuplicateName(
+      name,
+      id,
+      this.props.usedBy,
+      this.props.instanceNames,
+      this.props.getAllInstancesInAllTrees()
+    );
     const parameterUsed = this.props.usedBy ? this.props.usedBy.length !== 0 : false;
     const disabledClass = parameterUsed ? 'disabled' : '';
+    const doesHaveParameterWarning = doesParameterNeedWarning(
+      this.props.name,
+      this.props.usedBy,
+      this.props.comment,
+      this.props.getAllInstancesInAllTrees()
+    );
 
     return (
       <div className="parameter card-group card-group__top" id={this.props.id}>
@@ -159,14 +173,21 @@ export default class Parameter extends Component {
               </UncontrolledTooltip> }
           </div>
 
-          {duplicateNameIndex !== -1
-              && <div className="warning">Warning: Name already in use. Choose another name.</div>}
+          {doesHaveDuplicateName
+            && !doesHaveParameterWarning
+            && <div className="warning">Warning: Name already in use. Choose another name.</div>}
 
           {parameterUsed
             && <div className="notification">
                   <FontAwesome name="exclamation-circle" />
                   Parameter name and type can't be changed while it is being referenced.
                 </div>}
+
+          {doesHaveParameterWarning
+            && <div className="warning">
+                  Warning: One or more uses of this Parameter have changed. Choose another name.
+                </div>
+          }
 
           <div className="card-element__body">
             <div className="parameter__item">
@@ -238,5 +259,6 @@ Parameter.propTypes = {
   isValidCode: PropTypes.bool,
   codeData: PropTypes.object,
   validateCode: PropTypes.func.isRequired,
-  resetCodeValidation: PropTypes.func.isRequired
+  resetCodeValidation: PropTypes.func.isRequired,
+  getAllInstancesInAllTrees: PropTypes.func.isRequired
 };

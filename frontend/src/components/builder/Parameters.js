@@ -30,6 +30,29 @@ export default class Parameters extends Component {
     this.props.updateParameters(parameters);
   }
 
+  doesBaseElementInstanceNeedWarning = (instance, allInstancesInAllTrees) => {
+    const isBaseElement = instance.usedBy;
+    if (isBaseElement) {
+      let anyUseHasChanged = false;
+      instance.usedBy.forEach((usageId) => {
+        const use = allInstancesInAllTrees.find(i => i.uniqueId === usageId);
+        if (use) {
+          const useCommentParameter = use.parameters.find(param => param.id === 'comment');
+          const useCommentValue = useCommentParameter ? useCommentParameter.value : '';
+          const instanceCommentParameter = instance.parameters.find(param => param.id === 'comment');
+          const instanceCommentValue = instanceCommentParameter ? instanceCommentParameter.value : '';
+          if (((use.modifiers && use.modifiers.length > 0) || (instanceCommentValue !== useCommentValue)) &&
+            instance.parameters[0].value === use.parameters[0].value) {
+            anyUseHasChanged = true;
+          }
+        }
+      });
+      return anyUseHasChanged;
+    }
+
+    return false;
+  }
+
   render() {
     return (
       <div className="parameters">
@@ -56,6 +79,7 @@ export default class Parameters extends Component {
             codeData={this.props.codeData}
             validateCode={this.props.validateCode}
             resetCodeValidation={this.props.resetCodeValidation}
+            getAllInstancesInAllTrees={this.props.getAllInstancesInAllTrees}
           />
         ))}
 
@@ -75,5 +99,6 @@ Parameters.propTypes = {
   loginVSACUser: PropTypes.func.isRequired,
   setVSACAuthStatus: PropTypes.func.isRequired,
   vsacStatus: PropTypes.string,
-  vsacStatusText: PropTypes.string
+  vsacStatusText: PropTypes.string,
+  getAllInstancesInAllTrees: PropTypes.func.isRequired
 };
