@@ -646,6 +646,7 @@ export class Builder extends Component {
                     Reference external CQL libraries that can be used in Inclusions, Exclusions, and Subpopulations.
                   </div>
                   <ExternalCQL
+                    artifact={this.props.artifact}
                     externalCqlList={this.props.externalCqlList}
                     externalCqlLibrary={this.props.externalCqlLibrary}
                     externalCqlFhirVersion={this.props.externalCqlFhirVersion}

@@ -109,15 +109,15 @@ function addExternalCqlLibraryFailure(error) {
   };
 }
 
-function sendAddExternalCqlLibraryRequest(library, fhirVersion) {
-  return dispatch => dispatch(saveExternalCqlLibrary(library, fhirVersion));
+function sendAddExternalCqlLibraryRequest(library) {
+  return dispatch => dispatch(saveExternalCqlLibrary(library));
 }
 
-export function addExternalLibrary(library, fhirVersion) {
+export function addExternalLibrary(library) {
   return (dispatch) => {
     dispatch(requestAddExternalCqlLibrary());
 
-    return dispatch(sendAddExternalCqlLibraryRequest(library, fhirVersion))
+    return dispatch(sendAddExternalCqlLibraryRequest(library))
       .then(data => dispatch(addExternalCqlLibrarySuccess()))
       .catch(error => dispatch(addExternalCqlLibraryFailure(error)));
   };
@@ -146,16 +146,16 @@ function saveExternalCqlLibraryFailure(error) {
   };
 }
 
-function sendSaveExternalCqlLibraryRequest(library, fhirVersion) {
-  return axios.post(`${API_BASE}/externalCQL`, { library, fhirVersion })
+function sendSaveExternalCqlLibraryRequest(library) {
+  return axios.post(`${API_BASE}/externalCQL`, { library })
     .then(result => result.data);
 }
 
-export function saveExternalCqlLibrary(library, fhirVersion) {
+export function saveExternalCqlLibrary(library) {
   return (dispatch) => {
     dispatch(requestSaveExternalCqlLibrary());
 
-    return sendSaveExternalCqlLibraryRequest(library, fhirVersion)
+    return sendSaveExternalCqlLibraryRequest(library)
       .catch(error => dispatch(saveExternalCqlLibraryFailure(error)))
       .then(data => dispatch(saveExternalCqlLibrarySuccess(data)))
       .then(() => dispatch(loadExternalCqlList()));

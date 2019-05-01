@@ -3,6 +3,8 @@ import PropTypes from 'prop-types';
 import FontAwesome from 'react-fontawesome';
 import Dropzone from 'react-dropzone';
 
+import artifactProps from '../../prop-types/artifact';
+
 import ExternalCqlTable from './ExternalCqlTable';
 
 export default class ExternalCQL extends Component {
@@ -18,10 +20,13 @@ export default class ExternalCQL extends Component {
   addExternalCQL = externalCqlLibrary => {
     const reader = new FileReader();
     reader.onload = (e) => {
-      console.debug(JSON.parse(e.target.result));
-      // this.setState({ externalCqlLibraryData: JSON.parse(e.target.result) });
-      // const libraryVersion = _.get(this.state.externalCqlLibraryData, 'libraryVersion');
-      // this.props.addExternalLibrary(this.state.externalCqlLibraryData, this.state.libraryVersion);
+      const library = {
+        cqlFileName: externalCqlLibrary[0].name,
+        cqlFileText: e.target.result,
+        artifactId: this.props.artifact._id
+      };
+
+      this.props.addExternalLibrary(library);
     };
 
     try {
@@ -29,6 +34,8 @@ export default class ExternalCQL extends Component {
     } catch (error) {
       this.setState({ uploadError: true });
     }
+
+    console.debug('result: ', this.state.externalCqlLibraryData);
   }
 
   renderDropzoneIcon = () => {
@@ -53,8 +60,8 @@ export default class ExternalCQL extends Component {
       <div className="external-cql" id="maincontent">
         <Dropzone
           className="dropzone"
-          onDrop={() => this.addExternalCQL}
-          accept="application/json"
+          onDrop={this.addExternalCQL.bind(this)}
+          accept=".cql,text/plain"
           multiple={false}>
           {this.renderDropzoneIcon()}
           {this.state.uploadError && <div className="warning">Invalid file type.</div>}
@@ -73,6 +80,7 @@ export default class ExternalCQL extends Component {
 }
 
 ExternalCQL.propTypes = {
+  artifact: artifactProps,
   externalCqlList: PropTypes.array,
   externalCqlLibrary: PropTypes.object,
   externalCqlFhirVersion: PropTypes.string,
