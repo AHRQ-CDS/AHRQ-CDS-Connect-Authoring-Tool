@@ -315,8 +315,9 @@ export default class ListGroup extends Component {
     const { isExpanded } = this.state;
     const name = instance.parameters[0].value;
     const allInstancesInAllTrees = this.props.getAllInstancesInAllTrees();
-    const { instanceNames, baseElements } = this.props;
-    const needsDuplicateNameWarning = hasDuplicateName(instance, instanceNames, baseElements, allInstancesInAllTrees);
+    const { instanceNames, baseElements, parameters } = this.props;
+    const needsDuplicateNameWarning
+      = hasDuplicateName(instance, instanceNames, baseElements, parameters, allInstancesInAllTrees);
     const needsBaseElementWarning = doesBaseElementInstanceNeedWarning(instance, allInstancesInAllTrees);
     const baseElementListUsed = this.isBaseElementListUsed(instance);
     const disabledClass = baseElementListUsed ? 'disabled' : '';

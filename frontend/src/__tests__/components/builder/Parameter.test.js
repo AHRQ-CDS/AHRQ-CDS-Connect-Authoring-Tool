@@ -26,6 +26,7 @@ let setVsacAuthStatus;
 let isValidatingCode;
 let validateCode;
 let resetCodeValidation;
+let getAllInstancesInAllTrees;
 let baseProps;
 
 beforeEach(() => {
@@ -37,6 +38,7 @@ beforeEach(() => {
   setVsacAuthStatus = jest.fn();
   isValidatingCode = false;
   resetCodeValidation = jest.fn();
+  getAllInstancesInAllTrees = jest.fn();
 
   baseProps = {
     index,
@@ -47,7 +49,8 @@ beforeEach(() => {
     setVsacAuthStatus,
     isValidatingCode,
     validateCode,
-    resetCodeValidation
+    resetCodeValidation,
+    getAllInstancesInAllTrees
   };
 });
 
