@@ -117,6 +117,13 @@ export function hasDuplicateName(templateInstance, instanceNames, baseElements, 
       // If parameter use, don't include a duplicate from the original parameter.
       const referenceParameter = templateInstance.parameters.find(param => param.type === 'reference');
       const originalParameter = parameters.find(param => referenceParameter.value.id === param.uniqueId);
+      // If the duplicate is another of the uses, don't consider duplicate unless that use has changed.
+      const anotherUseId = originalParameter.usedBy ? originalParameter.usedBy.find(id => id === name.id) : null;
+      const anotherUse = allInstancesInAllTrees.find(instance => instance.uniqueId === anotherUseId);
+      if (anotherUse) {
+        const anotherUseModified = anotherUse.modifiers && anotherUse.modifiers.length > 0;
+        return anotherUseModified;
+      }
       return name.id !== originalParameter.uniqueId;
     } else if (isDuplicate && templateInstance.usedBy) {
       // If the duplicate is one of the uses, don't consider name duplicate unless use has changed.

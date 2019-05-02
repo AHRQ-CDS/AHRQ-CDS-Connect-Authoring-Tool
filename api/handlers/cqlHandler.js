@@ -219,7 +219,7 @@ function isParameterUseChanged(element, parameters) {
     return true;
   }
 
-  if (!_.isEqual(createCommentArray(commentParameter.value) || '', originalParameter.comment || '')) {
+  if (!_.isEqual(createCommentArray(commentParameter.value) || [], originalParameter.comment || [])) {
     // If the comment on the use of the parameter and the original parameter are different, it's been changed.
     return true;
   }
