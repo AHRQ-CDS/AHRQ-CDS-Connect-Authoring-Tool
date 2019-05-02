@@ -20,16 +20,16 @@ import {
 } from '../actions/vsac';
 import { loadExternalCqlList, addExternalLibrary, deleteExternalCqlLibrary } from '../actions/external_cql';
 
-import EditArtifactModal from '../components/artifact/EditArtifactModal';
+import BaseElements from '../components/builder/BaseElements';
 import ConjunctionGroup from '../components/builder/ConjunctionGroup';
-import Subpopulations from '../components/builder/Subpopulations';
+import EditArtifactModal from '../components/artifact/EditArtifactModal';
+import ELMErrorModal from '../components/builder/ELMErrorModal';
 import ErrorStatement from '../components/builder/ErrorStatement';
 import ExternalCQL from '../components/builder/ExternalCQL';
 import Parameters from '../components/builder/Parameters';
 import Recommendations from '../components/builder/Recommendations';
 import RepoUploadModal from '../components/builder/RepoUploadModal';
-import ELMErrorModal from '../components/builder/ELMErrorModal';
-import BaseElements from '../components/builder/BaseElements';
+import Subpopulations from '../components/builder/Subpopulations';
 
 import isBlankArtifact from '../utils/artifacts/isBlankArtifact';
 import { findValueAtPath } from '../utils/find';
