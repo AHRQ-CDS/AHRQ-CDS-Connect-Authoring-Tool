@@ -1,6 +1,6 @@
 const _ = require('lodash');
 const CQLLibrary = require('../models/cqlLibrary');
-const convertToELM = require('../handlers/cqlHandler').convertToElm;
+const convertToElm = require('../handlers/cqlHandler').convertToElm;
 
 module.exports = {
   allGet,
@@ -41,16 +41,17 @@ function singlePost(req, res) {
       type: 'text/plain'
     };
 
-    let elmResults = {
-      linkedArtifactId: artifactId,
-      user: req.user.uid
-    };
-
-    convertToELM(cqlJson, (err, elmFiles) => {
+    convertToElm(cqlJson, (err, elmFiles) => {
       if (err) {
         res.status(500).send(err);
         return;
       }
+
+      let elmResults = {
+        linkedArtifactId: artifactId,
+        user: req.user.uid
+      };
+
       elmFiles.forEach((file, i) => {
         const parsedContent = JSON.parse(file.content);
         // ELM will return any helper libraries in order to not get errors - but we don't need to save those files here.
