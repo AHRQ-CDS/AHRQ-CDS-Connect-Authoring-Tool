@@ -5,6 +5,7 @@ const convertToELM = require('../handlers/cqlHandler').convertToElm;
 module.exports = {
   allGet,
   singlePost,
+  singleDelete
 };
 
 // Get all libraries for a given artifact
@@ -83,6 +84,20 @@ function singlePost(req, res) {
         });
     });
 
+  } else {
+    res.sendStatus(401);
+  }
+}
+
+// Delete a single external CQL library
+function singleDelete(req, res) {
+  if (req.user) {
+    const { id } = req.params;
+    CQLLibrary.remove({ user: req.user.uid, _id: id }, (error, response) => {
+      if (error) res.status(500).send(error);
+      else if (response.result.n === 0) res.sendStatus(404);
+      else res.sendStatus(200);
+    });
   } else {
     res.sendStatus(401);
   }

@@ -13,7 +13,8 @@ ExternalCQLRouter.route('/:artifactId')
 
 // Routes for /authoring/api/externalCQL/:externalCQL
 // ExternalCQLRouter.route('/:artifactId&:id')
+ExternalCQLRouter.route('/:id')
 //   .get(externalCQL.singleGet)
-//   .delete(externalCQL.singleDelete);
+  .delete(externalCQL.singleDelete);
 
 module.exports = ExternalCQLRouter;
