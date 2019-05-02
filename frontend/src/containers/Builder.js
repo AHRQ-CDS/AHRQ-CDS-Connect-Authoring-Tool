@@ -18,7 +18,7 @@ import {
 import {
   loginVSACUser, setVSACAuthStatus, searchVSACByKeyword, getVSDetails, validateCode, resetCodeValidation
 } from '../actions/vsac';
-import { deleteExternalCqlLibrary, addExternalLibrary } from '../actions/external_cql';
+import { loadExternalCqlList, addExternalLibrary, deleteExternalCqlLibrary } from '../actions/external_cql';
 
 import EditArtifactModal from '../components/artifact/EditArtifactModal';
 import ConjunctionGroup from '../components/builder/ConjunctionGroup';
@@ -650,8 +650,10 @@ export class Builder extends Component {
                     externalCqlList={this.props.externalCqlList}
                     externalCqlLibrary={this.props.externalCqlLibrary}
                     externalCqlFhirVersion={this.props.externalCqlFhirVersion}
+                    isAddingExternalCqlLibrary={this.props.isAddingExternalCqlLibrary}
                     deleteExternalCqlLibrary={this.props.deleteExternalCqlLibrary}
-                    addExternalLibrary={this.props.addExternalLibrary} />
+                    addExternalLibrary={this.props.addExternalLibrary}
+                    loadExternalCqlList={this.props.loadExternalCqlList} />
                 </TabPanel>
               </div>
             </Tabs>
@@ -704,7 +706,8 @@ Builder.propTypes = {
   externalCqlFhirVersion: PropTypes.string,
   isAddingExternalCqlLibrary: PropTypes.bool.isRequired,
   deleteExternalCqlLibrary: PropTypes.func.isRequired,
-  addExternalLibrary: PropTypes.func.isRequired
+  addExternalLibrary: PropTypes.func.isRequired,
+  loadExternalCqlList: PropTypes.func.isRequired
 };
 
 // these props are used for dispatching actions
@@ -729,7 +732,8 @@ function mapDispatchToProps(dispatch) {
     clearArtifactValidationWarnings,
     loadConversionFunctions,
     deleteExternalCqlLibrary,
-    addExternalLibrary
+    addExternalLibrary,
+    loadExternalCqlList
   }, dispatch);
 }
 

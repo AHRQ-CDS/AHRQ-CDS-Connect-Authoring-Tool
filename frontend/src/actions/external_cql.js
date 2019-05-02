@@ -136,10 +136,9 @@ function requestDeleteExternalCqlLibrary() {
   };
 }
 
-function deleteExternalCqlLibrarySuccess(library) {
+function deleteExternalCqlLibrarySuccess() {
   return {
-    type: types.DELETE_EXTERNAL_CQL_LIBRARY_SUCCESS,
-    library
+    type: types.DELETE_EXTERNAL_CQL_LIBRARY_SUCCESS
   };
 }
 
@@ -151,21 +150,21 @@ function deleteExternalCqlLibraryFailure(error) {
   };
 }
 
-function sendDeleteExternalCqlLibraryRequest(library) {
+function sendDeleteExternalCqlLibraryRequest(libraryId) {
   return new Promise((resolve, reject) => {
-    axios.delete(`${API_BASE}/externalCQL/${library._id}`)
+    axios.delete(`${API_BASE}/externalCQL/${libraryId}`)
       .then(result => resolve(result.data))
       .catch(error => reject(error));
   });
 }
 
-export function deleteExternalCqlLibrary(library) {
+export function deleteExternalCqlLibrary(libraryId, artifactId) {
   return (dispatch) => {
     dispatch(requestDeleteExternalCqlLibrary());
 
-    return sendDeleteExternalCqlLibraryRequest(library)
+    return sendDeleteExternalCqlLibraryRequest(libraryId)
       .catch(error => dispatch(deleteExternalCqlLibraryFailure(error)))
-      .then(data => dispatch(deleteExternalCqlLibrarySuccess(library)))
-      .then(() => dispatch(loadExternalCqlList()));
+      .then(data => dispatch(deleteExternalCqlLibrarySuccess()))
+      .then(() => dispatch(loadExternalCqlList(artifactId)));
   };
 }

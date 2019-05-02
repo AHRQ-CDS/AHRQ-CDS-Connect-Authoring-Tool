@@ -5,6 +5,7 @@ import FontAwesome from 'react-fontawesome';
 import Modal from '../elements/Modal';
 
 import { sortMostRecent } from '../../utils/sort';
+import renderDate from '../../utils/dates';
 
 export default class ExternalCqlTable extends Component {
   constructor(props) {
@@ -16,6 +17,11 @@ export default class ExternalCqlTable extends Component {
       showConfirmDeleteModal: false,
       externalCqlLibraryToView: null
     };
+  }
+
+  getFhirVersion = version => {
+    if (version === '1.0.2') return '1.0.2 (DSTU2)';
+    if (version === '1.0.3') return '1.0.3 (STU3)';
   }
 
   // ----------------------- VIEW DETAILS MODAL ---------------------------- //
@@ -43,7 +49,9 @@ export default class ExternalCqlTable extends Component {
   }
 
   handleDeleteExternalCqlLibrary = () => {
-    this.props.deleteExternalCqlLibrary(this.state.externalCqlLibraryToDelete);
+    const { artifactId, deleteExternalCqlLibrary } = this.props;
+    const { externalCqlLibraryToDelete } = this.state;
+    deleteExternalCqlLibrary(externalCqlLibraryToDelete._id, artifactId);
     this.closeConfirmDeleteModal();
   }
 
@@ -52,27 +60,19 @@ export default class ExternalCqlTable extends Component {
   renderTableRow = externalCqlLibrary => (
     <tr key={externalCqlLibrary._id}>
       <td className="external-cql-table__tablecell-wide" data-th="Library">
-        <div>
-          Library Name
-        </div>
+        <div>{externalCqlLibrary.name}</div>
       </td>
 
-      <td className="external-cql-table__tablecell-short" data-th="Date Added">
-        <div>
-          Date Added
-        </div>
+      <td className="external-cql-table__tablecell-short" data-th="Added">
+        <div>{renderDate(externalCqlLibrary.createdAt)}</div>
       </td>
 
-      <td className="external-cql-table__tablecell-short" data-th="Version">
-        <div>
-          Version
-        </div>
+      <td className="external-cql-table__tablecell-short center" data-th="Version">
+        <div>{externalCqlLibrary.version}</div>
       </td>
 
       <td className="external-cql-table__tablecell-short" data-th="FHIR Version">
-        <div>
-          FHIR Version
-        </div>
+        <div>{this.getFhirVersion(externalCqlLibrary.fhirVersion)}</div>
       </td>
 
       <td data-th="">
@@ -111,6 +111,8 @@ export default class ExternalCqlTable extends Component {
   }
 
   renderConfirmDeleteModal() {
+    const { externalCqlLibraryToDelete } = this.state;
+
     return (
       <Modal
         modalTitle="Delete External CQL Library Confirmation"
@@ -126,9 +128,7 @@ export default class ExternalCqlTable extends Component {
 
           <div className="external-cql-library-info">
             <span>Library: </span>
-            <span>
-              Library
-            </span>
+            <span>{externalCqlLibraryToDelete && externalCqlLibraryToDelete.name}</span>
           </div>
         </div>
       </Modal>
@@ -137,7 +137,6 @@ export default class ExternalCqlTable extends Component {
 
   render() {
     const { externalCqlList } = this.props;
-    console.debug('externalCqlList', externalCqlList);
 
     return (
       <div className="external-cql-table">
@@ -146,14 +145,14 @@ export default class ExternalCqlTable extends Component {
             <tr>
               <th scope="col" className="external-cql-table__tablecell-wide">Library</th>
               <th scope="col" className="external-cql-table__tablecell-short">Date Added</th>
-              <th scope="col" className="external-cql-table__tablecell-short">Version</th>
+              <th scope="col" className="external-cql-table__tablecell-short center">Version</th>
               <th scope="col" className="external-cql-table__tablecell-short">FHIR Version</th>
               <th></th>
             </tr>
           </thead>
 
           <tbody>
-            {externalCqlList.sort(sortMostRecent).map(this.renderTableRow)}
+            {externalCqlList.sort(sortMostRecent).map(externalCqlLibrary => this.renderTableRow(externalCqlLibrary))}
           </tbody>
         </table>
 
@@ -165,6 +164,7 @@ export default class ExternalCqlTable extends Component {
 }
 
 ExternalCqlTable.propTypes = {
+  artifactId: PropTypes.string,
   externalCqlList: PropTypes.array,
   deleteExternalCqlLibrary: PropTypes.func.isRequired
 };

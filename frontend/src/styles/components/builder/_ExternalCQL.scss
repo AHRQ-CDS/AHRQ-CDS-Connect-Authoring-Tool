@@ -1,0 +1,5 @@
+.external-cql {
+  padding: $global-padding;
+
+  &-wrapper { @include componentWidth; }
+}

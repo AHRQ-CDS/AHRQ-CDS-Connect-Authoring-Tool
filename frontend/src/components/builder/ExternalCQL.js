@@ -14,7 +14,12 @@ export default class ExternalCQL extends Component {
     this.state = { uploadError: false };
   }
 
-  addExternalCQL = externalCqlLibrary => {
+  componentWillMount() {
+    const { artifact, loadExternalCqlList } = this.props;
+    loadExternalCqlList(artifact._id);
+  }
+
+  handleAddExternalCQL = externalCqlLibrary => {
     const { artifact } = this.props;
     const reader = new FileReader();
     reader.onload = e => {
@@ -35,15 +40,17 @@ export default class ExternalCQL extends Component {
   }
 
   renderDropzoneIcon = () => {
-    if (this.props.isAddingExternalCqlLibrary) return <FontAwesome name="spinner" size="5x" spin />;
+    const { isAddingExternalCqlLibrary } = this.props;
+    if (isAddingExternalCqlLibrary) return <FontAwesome name="spinner" size="5x" spin />;
     return <FontAwesome name="cloud-upload" size="5x" />;
   }
 
   renderExternalCqlTable() {
-    const { externalCqlList, deleteExternalCqlLibrary } = this.props;
+    const { artifact, externalCqlList, deleteExternalCqlLibrary } = this.props;
     if (externalCqlList && externalCqlList.length > 0) {
       return (
         <ExternalCqlTable
+          artifactId={artifact._id}
           externalCqlList={externalCqlList}
           deleteExternalCqlLibrary={deleteExternalCqlLibrary} />
       );
@@ -53,23 +60,27 @@ export default class ExternalCQL extends Component {
   }
 
   render() {
+    const { isAddingExternalCqlLibrary } = this.props;
+
     return (
       <div className="external-cql" id="maincontent">
-        <Dropzone
-          className="dropzone"
-          onDrop={this.addExternalCQL.bind(this)}
-          accept=".cql,text/plain"
-          multiple={false}>
-          {this.renderDropzoneIcon()}
-          {this.state.uploadError && <div className="warning">Invalid file type.</div>}
+        <div className="external-cql-wrapper">
+          <Dropzone
+            className="dropzone"
+            onDrop={this.handleAddExternalCQL.bind(this)}
+            accept=".cql,text/plain"
+            multiple={false}>
+            {this.renderDropzoneIcon()}
+            {this.state.uploadError && <div className="warning">Invalid file type.</div>}
 
-          <div className="dropzone__instructions">
-            Drop a valid external CQL library or zip file here, or click to browse.
+            <div className="dropzone__instructions">
+              Drop a valid external CQL library or zip file here, or click to browse.
+            </div>
+          </Dropzone>
+
+          <div className="external-cql__display">
+            {this.renderExternalCqlTable()}
           </div>
-        </Dropzone>
-
-        <div className="external-cql__display">
-          {this.renderExternalCqlTable()}
         </div>
       </div>
     );
@@ -83,5 +94,6 @@ ExternalCQL.propTypes = {
   externalCqlFhirVersion: PropTypes.string,
   isAddingExternalCqlLibrary: PropTypes.bool,
   deleteExternalCqlLibrary: PropTypes.func.isRequired,
-  addExternalLibrary: PropTypes.func.isRequired
+  addExternalLibrary: PropTypes.func.isRequired,
+  loadExternalCqlList: PropTypes.func.isRequired
 };
