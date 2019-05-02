@@ -137,6 +137,7 @@ export default class ExternalCqlTable extends Component {
 
   render() {
     const { externalCqlList } = this.props;
+    console.debug('externalCqlList', externalCqlList);
 
     return (
       <div className="external-cql-table">

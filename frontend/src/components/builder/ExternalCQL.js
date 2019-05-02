@@ -11,19 +11,17 @@ export default class ExternalCQL extends Component {
   constructor(props) {
     super(props);
 
-    this.state = {
-      uploadError: false,
-      externalCqlLibraryData: null
-    };
+    this.state = { uploadError: false };
   }
 
   addExternalCQL = externalCqlLibrary => {
+    const { artifact } = this.props;
     const reader = new FileReader();
-    reader.onload = (e) => {
+    reader.onload = e => {
       const library = {
         cqlFileName: externalCqlLibrary[0].name,
         cqlFileText: e.target.result,
-        artifactId: this.props.artifact._id
+        artifactId: artifact._id
       };
 
       this.props.addExternalLibrary(library);
@@ -34,8 +32,6 @@ export default class ExternalCQL extends Component {
     } catch (error) {
       this.setState({ uploadError: true });
     }
-
-    console.debug('result: ', this.state.externalCqlLibraryData);
   }
 
   renderDropzoneIcon = () => {
@@ -44,11 +40,12 @@ export default class ExternalCQL extends Component {
   }
 
   renderExternalCqlTable() {
-    if (this.props.externalCqlList && this.props.externalCqlList.length > 0) {
+    const { externalCqlList, deleteExternalCqlLibrary } = this.props;
+    if (externalCqlList && externalCqlList.length > 0) {
       return (
         <ExternalCqlTable
-          externalCqlList={this.props.externalCqlList}
-          deleteExternalCqlLibrary={this.props.deleteExternalCqlLibrary} />
+          externalCqlList={externalCqlList}
+          deleteExternalCqlLibrary={deleteExternalCqlLibrary} />
       );
     }
 

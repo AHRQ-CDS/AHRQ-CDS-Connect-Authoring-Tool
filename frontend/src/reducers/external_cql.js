@@ -60,23 +60,6 @@ export default function externalCQL(state = defaultState, action) {
         ...state,
         addExternalCqlLibrary: { isAdding: false, addStatus: 'failure' }
       };
-    case types.SAVE_EXTERNAL_CQL_LIBRARY_REQUEST:
-      return {
-        ...state,
-        saveExternalCqlLibrary: { isSaving: true, saveStatus: null }
-      };
-    case types.SAVE_EXTERNAL_CQL_LIBRARY_SUCCESS:
-      return {
-        ...state,
-        library: action.library,
-        fhirVersion: action.fhirVersion,
-        saveExternalCqlLibrary: { isSaving: false, saveStatus: 'success' }
-      };
-    case types.SAVE_EXTERNAL_CQL_LIBRARY_FAILURE:
-      return {
-        ...state,
-        saveExternalCqlLibrary: { isSaving: false, saveStatus: 'failure' }
-      };
     case types.DELETE_EXTERNAL_CQL_LIBRARY_REQUEST:
       return {
         ...state,

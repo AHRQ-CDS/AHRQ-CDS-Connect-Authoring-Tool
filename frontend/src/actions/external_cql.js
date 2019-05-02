@@ -28,19 +28,19 @@ function loadExternalCqlListFailure(error) {
   };
 }
 
-function sendExternalCqlListRequest() {
+function sendExternalCqlListRequest(artifactId) {
   return new Promise((resolve, reject) => {
-    axios.get(`${API_BASE}/externalCQL`)
+    axios.get(`${API_BASE}/externalCQL/${artifactId}`)
       .then(result => resolve(result.data))
       .catch(error => reject(error));
   });
 }
 
-export function loadExternalCqlList() {
+export function loadExternalCqlList(artifactId) {
   return (dispatch) => {
     dispatch(requestExternalCqlList());
 
-    return sendExternalCqlListRequest()
+    return sendExternalCqlListRequest(artifactId)
       .catch(error => dispatch(loadExternalCqlListFailure(error)))
       .then(data => dispatch(loadExternalCqlListSuccess(data)));
   };
@@ -110,55 +110,21 @@ function addExternalCqlLibraryFailure(error) {
 }
 
 function sendAddExternalCqlLibraryRequest(library) {
-  return dispatch => dispatch(saveExternalCqlLibrary(library));
+  return new Promise((resolve, reject) => {
+    axios.post(`${API_BASE}/externalCQL`, { library })
+      .then(result => resolve(result.data))
+      .catch(error => reject(error));
+  });
 }
 
 export function addExternalLibrary(library) {
   return (dispatch) => {
     dispatch(requestAddExternalCqlLibrary());
 
-    return dispatch(sendAddExternalCqlLibraryRequest(library))
+    return sendAddExternalCqlLibraryRequest(library)
       .then(data => dispatch(addExternalCqlLibrarySuccess()))
-      .catch(error => dispatch(addExternalCqlLibraryFailure(error)));
-  };
-}
-
-// ------------------------- SAVE EXTERNAL CQL LIBRARY --------------------- //
-
-function requestSaveExternalCqlLibrary() {
-  return {
-    type: types.SAVE_EXTERNAL_CQL_LIBRARY_REQUEST
-  };
-}
-
-function saveExternalCqlLibrarySuccess(library) {
-  return {
-    type: types.SAVE_EXTERNAL_CQL_LIBRARY_SUCCESS,
-    library
-  };
-}
-
-function saveExternalCqlLibraryFailure(error) {
-  return {
-    type: types.SAVE_EXTERNAL_CQL_LIBRARY_FAILURE,
-    status: error.response ? error.response.status : '',
-    statusText: error.response ? error.response.statusText : ''
-  };
-}
-
-function sendSaveExternalCqlLibraryRequest(library) {
-  return axios.post(`${API_BASE}/externalCQL`, { library })
-    .then(result => result.data);
-}
-
-export function saveExternalCqlLibrary(library) {
-  return (dispatch) => {
-    dispatch(requestSaveExternalCqlLibrary());
-
-    return sendSaveExternalCqlLibraryRequest(library)
-      .catch(error => dispatch(saveExternalCqlLibraryFailure(error)))
-      .then(data => dispatch(saveExternalCqlLibrarySuccess(data)))
-      .then(() => dispatch(loadExternalCqlList()));
+      .catch(error => dispatch(addExternalCqlLibraryFailure(error)))
+      .then(() => dispatch(loadExternalCqlList(library.artifactId)));
   };
 }
 
