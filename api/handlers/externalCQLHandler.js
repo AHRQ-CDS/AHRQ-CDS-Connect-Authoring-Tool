@@ -76,13 +76,23 @@ function singlePost(req, res) {
         }
       });
 
-      CQLLibrary.create(elmResults,
-        (error, response) => {
-          if (error) {
-            res.status(500).send(error);
+      CQLLibrary.find({ user: req.user.uid, linkedArtifactId: elmResults.linkedArtifactId }, (error, libraries) => {
+        if (error) res.status(500).send(error);
+        else {
+          const dupLibrary = libraries.find(lib => lib.name === elmResults.name && lib.version === elmResults.version);
+          if (!dupLibrary) {
+            CQLLibrary.create(elmResults,
+              (error, response) => {
+                if (error) {
+                  res.status(500).send(error);
+                }
+                else res.status(201).json(response);
+              });
+          } else {
+            res.status(409).send('Library with identical name and version already exists.');
           }
-          else res.status(201).json(response);
-        });
+        }
+      });
     });
 
   } else {
