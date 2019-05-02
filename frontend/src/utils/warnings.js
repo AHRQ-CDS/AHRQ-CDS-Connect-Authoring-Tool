@@ -48,12 +48,14 @@ export function doesBaseElementUseNeedWarning(instance, baseElements) {
 export function doesParameterUseNeedWarning(instance, parameters) {
   const elementNameParameter = instance.parameters.find(param => param.id === 'element_name');
   const instanceCommentParameter = instance.parameters.find(param => param.id === 'comment');
-  const instanceCommentValue = instanceCommentParameter ? instanceCommentParameter.value : '';
+  const instanceCommentValue
+    = (instanceCommentParameter && instanceCommentParameter.value) ? instanceCommentParameter.value : '';
 
   if (instance.type === 'parameter') {
     const referenceParameter = instance.parameters.find(param => param.type === 'reference');
     const originalParameter = parameters.find(param => referenceParameter.value.id === param.uniqueId);
-    const originalCommentValue = originalParameter.comment ? originalParameter.comment : '';
+    const originalCommentValue
+      = (originalParameter && originalParameter.comment) ? originalParameter.comment : '';
     // If some modifiers applied AND the name is the same as original, it should be changed. Need a warning.
     if (((instance.modifiers && instance.modifiers.length > 0) || (instanceCommentValue !== originalCommentValue)) &&
       elementNameParameter.value === originalParameter.name) {
