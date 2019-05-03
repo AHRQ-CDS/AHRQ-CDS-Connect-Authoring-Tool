@@ -24,15 +24,6 @@ function allGet(req, res) {
 // Post a single external CQL library
 function singlePost(req, res) {
   if (req.user) {
-    /**
-     *  TODO at the start:
-     * 1. check if it's a zip file and unzip.
-     * 2. Check for duplicate/disallowed artifacts (name and version are same as an existing) and prevent upload
-     * 
-     * Request needs to send: file name, file content, current artifact id.
-     */
-
-    // const cqlFileText = testCQLFileContent;
     const { cqlFileName, cqlFileText, artifactId } = req.body.library;
 
     const cqlJson = {
@@ -69,8 +60,8 @@ function singlePost(req, res) {
           const details = {};
           details.cqlFileText = cqlFileText;
           details.fileName = cqlFileName;
-          details.definitions = _.get(library, 'statements.def', []);
-          // TODO: Should definitions filter out things like Patient retrieve, meets inclusion criteria, etc?
+          details.definitions = _.get(library, 'statements.def', [])
+            .filter(def => (def.name !== 'Patient' && def.accessLevel === 'Public'));
 
           elmResults.details = details;
         }
