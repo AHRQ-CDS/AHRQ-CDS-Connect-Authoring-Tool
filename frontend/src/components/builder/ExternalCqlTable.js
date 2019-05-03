@@ -19,9 +19,10 @@ export default class ExternalCqlTable extends Component {
     };
   }
 
-  getFhirVersion = version => {
+  getFhirVersion = (version) => {
     if (version === '1.0.2') return '1.0.2 (DSTU2)';
-    if (version === '1.0.3') return '1.0.3 (STU3)';
+    if (version.startsWith('3.0.')) return `${version} (STU3)`;
+    return version;
   }
 
   // ----------------------- VIEW DETAILS MODAL ---------------------------- //
