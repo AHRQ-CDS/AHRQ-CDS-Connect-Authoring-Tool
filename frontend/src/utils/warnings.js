@@ -74,7 +74,8 @@ export function doesParameterNeedWarning(name, usedBy, comment, allInstancesInAl
       const use = allInstancesInAllTrees.find(i => i.uniqueId === usageId);
       if (use) {
         const useCommentParameter = use.parameters.find(param => param.id === 'comment');
-        const useCommentValue = useCommentParameter ? useCommentParameter.value : '';
+        const useCommentValue
+          = (useCommentParameter && useCommentParameter.value) ? useCommentParameter.value : '';
         const instanceCommentValue = comment || '';
         if (((use.modifiers && use.modifiers.length > 0) || (instanceCommentValue !== useCommentValue)) &&
           name === use.parameters[0].value) {
