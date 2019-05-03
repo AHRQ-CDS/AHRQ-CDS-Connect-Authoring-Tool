@@ -616,7 +616,8 @@ export class Builder extends Component {
                     isValidCode={this.props.isValidCode}
                     codeData={this.props.codeData}
                     validateCode={this.props.validateCode}
-                    resetCodeValidation={this.props.resetCodeValidation} />
+                    resetCodeValidation={this.props.resetCodeValidation}
+                    getAllInstancesInAllTrees={this.getAllInstancesInAllTrees} />
                 </TabPanel>
 
                 <TabPanel>

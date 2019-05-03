@@ -15,7 +15,7 @@ test('warning for nested return type warning', () => {
   const artifactWithReturnTypeError = _.cloneDeep(mockArtifact);
   artifactWithReturnTypeError.expTreeInclude.childInstances = nestedReturnTypeErrorGroup;
   const treeWithWarnings = artifactWithReturnTypeError.expTreeInclude;
-  const warningStatus = hasGroupNestedWarning(treeWithWarnings.childInstances, [], [], [], true);
+  const warningStatus = hasGroupNestedWarning(treeWithWarnings.childInstances, [], [], [], [], true);
   expect(warningStatus).toBe(true);
 });
 
@@ -23,7 +23,7 @@ test('warning for nested modifier validation warning', () => {
   const artifactWithModifierValidationError = _.cloneDeep(mockArtifact);
   artifactWithModifierValidationError.expTreeInclude.childInstances = nestedModifierValidationErrorGroup;
   const treeWithWarnings = artifactWithModifierValidationError.expTreeInclude;
-  const warningStatus = hasGroupNestedWarning(treeWithWarnings.childInstances, [], [], [], true);
+  const warningStatus = hasGroupNestedWarning(treeWithWarnings.childInstances, [], [], [], [], true);
   expect(warningStatus).toBe(true);
 });
 
@@ -31,7 +31,7 @@ test('warning for nested validate element warning', () => {
   const artifactWithElementValidationError = _.cloneDeep(mockArtifact);
   artifactWithElementValidationError.expTreeInclude.childInstances = nestedElementValidationErrorGroup;
   const treeWithWarnings = artifactWithElementValidationError.expTreeInclude;
-  const warningStatus = hasGroupNestedWarning(treeWithWarnings.childInstances, [], [], [], true);
+  const warningStatus = hasGroupNestedWarning(treeWithWarnings.childInstances, [], [], [], [], true);
   expect(warningStatus).toBe(true);
 });
 
@@ -43,7 +43,7 @@ test('warning for nested duplicate name warning', () => {
     { name: 'Gender1', id: 'Gender-223' },
     { name: 'Gender1', id: 'Gender-233' }
   ];
-  const warningStatus = hasGroupNestedWarning(treeWithWarnings.childInstances, instanceNames, [], [], true);
+  const warningStatus = hasGroupNestedWarning(treeWithWarnings.childInstances, instanceNames, [], [], [], true);
   expect(warningStatus).toBe(true);
 });
 
@@ -55,7 +55,7 @@ test('warning for group duplicate name warning', () => {
     { name: 'Group1a', uniqueId: 'Or-8257' },
     { name: 'Group1a', uniqueId: 'Or-10373' }
   ];
-  const warningStatus = hasGroupNestedWarning(treeWithWarnings.childInstances, instanceNames, [], [], true);
+  const warningStatus = hasGroupNestedWarning(treeWithWarnings.childInstances, instanceNames, [], [], [], true);
   expect(warningStatus).toBe(true);
 });
 
@@ -86,7 +86,7 @@ test('warning for nested base element instance warning', () => {
       id: 'Gender'
     }
   ];
-  const warningStatus = hasGroupNestedWarning(treeWithWarnings.childInstances, [], baseElements, [], true);
+  const warningStatus = hasGroupNestedWarning(treeWithWarnings.childInstances, [], baseElements, [], [], true);
   expect(warningStatus).toBe(true);
 });
 
@@ -95,6 +95,6 @@ test('no warning on base element lists (union/intersect) that dont validate type
   artifactWithoutValidatingBE.baseElements = nonValidatingBaseElementList;
   const treeWithWarnings = artifactWithoutValidatingBE.baseElements[0];
   const isAndOrElement = treeWithWarnings.id === 'And' || treeWithWarnings.id === 'Or';
-  const warningStatus = hasGroupNestedWarning(treeWithWarnings.childInstances, [], [], [], isAndOrElement);
+  const warningStatus = hasGroupNestedWarning(treeWithWarnings.childInstances, [], [], [], [], isAndOrElement);
   expect(warningStatus).toBe(false);
 });

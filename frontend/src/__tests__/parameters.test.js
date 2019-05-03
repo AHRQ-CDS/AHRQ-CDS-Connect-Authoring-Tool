@@ -10,6 +10,7 @@ import { shallowRenderComponent } from '../utils/test_helpers';
 
 test('Parameter renders without crashing', () => {
   const component = shallowRenderComponent(Parameter, {
+    getAllInstancesInAllTrees: jest.fn(),
     updateInstanceOfParameter: jest.fn(),
     deleteParameter: jest.fn(),
     index: '',
@@ -23,6 +24,7 @@ test('Parameter renders without crashing', () => {
 test('Parameter changes input', () => {
   const updateInstanceOfParameterMock = jest.fn();
   const component = shallowRenderComponent(Parameter, {
+    getAllInstancesInAllTrees: jest.fn(),
     updateInstanceOfParameter: updateInstanceOfParameterMock,
     deleteParameter: jest.fn(),
     index: '',

@@ -8,6 +8,7 @@ let instanceNames;
 let updateParameters;
 let existingParam;
 const existingParamUid = 'parameter-100';
+let getAllInstancesInAllTrees;
 let baseProps;
 
 beforeEach(() => {
@@ -20,10 +21,12 @@ beforeEach(() => {
     value: true,
     comment: null
   };
+  getAllInstancesInAllTrees = jest.fn();
 
   baseProps = {
     updateParameters,
-    instanceNames
+    instanceNames,
+    getAllInstancesInAllTrees
   };
 
   component = shallowRenderComponent(Parameters, {
