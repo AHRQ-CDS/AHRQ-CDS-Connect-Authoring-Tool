@@ -60,8 +60,6 @@ export default class ExternalCQL extends Component {
   }
 
   render() {
-    const { isAddingExternalCqlLibrary } = this.props;
-
     return (
       <div className="external-cql" id="maincontent">
         <div className="external-cql-wrapper">
