@@ -926,10 +926,14 @@ function addConcepts(concept, codeSystemMap, codeMap, conceptMap) {
     }
   });
 
-  // Add concepts
-  const conceptCount = getCountForUniqueExpressionName(concept, conceptMap, 'name', 'codes');
-  if (conceptCount > 0) {
-    concept.name = `${concept.name}_${conceptCount}`;
+  if (concept.codes.length !== 1) { // Only add concepts if more than one code in concept
+    // Add concepts
+    const conceptCount = getCountForUniqueExpressionName(concept, conceptMap, 'name', 'codes');
+    if (conceptCount > 0) {
+      concept.name = `${concept.name}_${conceptCount}`;
+    }
+  } else { // Make sure name referenced in later definitions is the code name, if only one code
+    concept.name = concept.codes[0].name;
   }
 
   return concept;
