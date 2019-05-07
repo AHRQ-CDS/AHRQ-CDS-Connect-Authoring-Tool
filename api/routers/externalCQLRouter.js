@@ -11,10 +11,11 @@ ExternalCQLRouter.route('/')
 ExternalCQLRouter.route('/:artifactId')
   .get(externalCQL.allGet); // Get all external CQL libraries for a given artifact
 
+ExternalCQLRouter.route('/details/:id')
+  .get(externalCQL.singleGet);
+
 // Routes for /authoring/api/externalCQL/:externalCQL
-// ExternalCQLRouter.route('/:artifactId&:id')
 ExternalCQLRouter.route('/:id')
-//   .get(externalCQL.singleGet)
   .delete(externalCQL.singleDelete);
 
 module.exports = ExternalCQLRouter;

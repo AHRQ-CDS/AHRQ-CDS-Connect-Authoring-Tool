@@ -2,8 +2,11 @@ const _ = require('lodash');
 const CQLLibrary = require('../models/cqlLibrary');
 const convertToElm = require('../handlers/cqlHandler').convertToElm;
 
+const filterDefinition = def => (def.name !== 'Patient' && def.accessLevel === 'Public');
+
 module.exports = {
   allGet,
+  singleGet,
   singlePost,
   singleDelete
 };
@@ -15,6 +18,20 @@ function allGet(req, res) {
     CQLLibrary.find({ user: req.user.uid, linkedArtifactId: req.params.artifactId }, (error, libraries) => {
       if (error) res.status(500).send(error);
       else res.json(libraries);
+    });
+  } else {
+    res.sendStatus(401);
+  }
+}
+
+// Get a single external CQL library
+function singleGet(req, res) {
+  if (req.user) {
+    const { id } = req.params;
+    CQLLibrary.find({ user: req.user.uid, _id: id }, (error, library) => {
+      if (error) res.status(500).send(error);
+      else if (library.length === 0) res.sendStatus(404);
+      else res.json(library);
     });
   } else {
     res.sendStatus(401);
@@ -64,9 +81,9 @@ function singlePost(req, res) {
           const details = {};
           details.cqlFileText = cqlFileText;
           details.fileName = cqlFileName;
-          details.definitions = _.get(library, 'statements.def', [])
-            .filter(def => (def.name !== 'Patient' && def.accessLevel === 'Public'));
-
+          const elmDefinitions = _.concat(_.get(library, 'parameters.def', []), _.get(library, 'statements.def', []))
+            .filter(filterDefinition);
+          details.definitions = elmDefinitions;
           elmResults.details = details;
         }
       });
