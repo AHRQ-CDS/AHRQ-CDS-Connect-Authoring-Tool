@@ -32,13 +32,22 @@ export default class ExternalCQL extends Component {
 
     const reader = new FileReader();
     reader.onload = (e) => {
-      const library = {
-        cqlFileName: externalCqlLibrary[0].name,
-        cqlFileText: e.target.result,
-        artifactId: artifact._id
-      };
+      const cqlFileName = externalCqlLibrary[0].name;
+      const cqlFileType = externalCqlLibrary[0].type;
 
-      this.props.addExternalLibrary(library);
+      if (cqlFileType !== 'application/zip'
+      || (cqlFileType === 'application/zip' && cqlFileName.endsWith('.zip'))) {
+        const library = {
+          cqlFileName,
+          cqlFileText: e.target.result,
+          artifactId: artifact._id
+        };
+
+        this.props.addExternalLibrary(library);
+        this.setState({ uploadError: false });
+      } else {
+        this.setState({ uploadError: true });
+      }
     };
 
     try {
@@ -97,7 +106,7 @@ export default class ExternalCQL extends Component {
           <Dropzone
             className="dropzone"
             onDrop={this.handleAddExternalCQL.bind(this)}
-            accept=".cql,text/plain"
+            accept=".cql,application/zip,text/plain"
             multiple={false}>
             {this.renderDropzoneIcon()}
 
