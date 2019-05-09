@@ -1072,7 +1072,7 @@ function convertToElm(artifactJson, callback /* (error, elmFiles) */) {
     const fileStreams = files.map(f => fs.createReadStream(f));
 
     // NOTE: the request isn't posted until the next event loop, so we can modify it after calling request.post
-    const cqlReq = request.post(config.get('cqlToElm.url'), (err2, resp, body) => {
+    const cqlReq = request.post(`${config.get('cqlToElm.url')}?result-types=true`, (err2, resp, body) => {
       if (err2) {
         callback(err2);
         return;

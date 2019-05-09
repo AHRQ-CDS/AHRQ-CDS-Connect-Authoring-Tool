@@ -2,6 +2,15 @@ const _ = require('lodash');
 const CQLLibrary = require('../models/cqlLibrary');
 const convertToElm = require('../handlers/cqlHandler').convertToElm;
 
+function mapReturnTypes(definitions) {
+  const mappedDefinitions = definitions;
+  mappedDefinitions.map(definition => {
+    let elmReturnType;
+    definition.calculatedReturnType = elmReturnType || 'unknown';
+  });
+  return mappedDefinitions;
+}
+
 const filterDefinition = def => (def.name !== 'Patient' && def.accessLevel === 'Public');
 
 module.exports = {
@@ -83,7 +92,7 @@ function singlePost(req, res) {
           details.fileName = cqlFileName;
           const elmDefinitions = _.concat(_.get(library, 'parameters.def', []), _.get(library, 'statements.def', []))
             .filter(filterDefinition);
-          details.definitions = elmDefinitions;
+          details.definitions = mapReturnTypes(elmDefinitions);
           elmResults.details = details;
         }
       });
