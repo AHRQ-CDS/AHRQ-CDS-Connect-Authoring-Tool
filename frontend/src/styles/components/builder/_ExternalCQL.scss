@@ -2,4 +2,8 @@
   padding: $global-padding;
 
   &-wrapper { @include componentWidth; }
+
+  &__display {
+    margin-top: 40px;
+  }
 }

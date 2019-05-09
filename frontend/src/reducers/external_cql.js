@@ -3,9 +3,11 @@ import * as types from '../actions/types';
 const defaultState = {
   externalCqlList: [],
   externalCqlLibrary: null,
+  externalCqlLibraryDetails: null,
   fhirVersion: null,
   loadExternalCqlList: { isLoading: false, loadStatus: null },
   loadExternalCqlLibrary: { isLoading: false, loadStatus: null },
+  loadExternalCqlLibraryDetails: { isLoading: false, loadStatus: null },
   addExternalCqlLibrary: { isAdding: false, addStatus: null },
   saveExternalCqlLibrary: { isSaving: false, saveStatus: null },
   deleteExternalCqlLibrary: { isDeleting: false, deleteStatus: null },
@@ -45,6 +47,22 @@ export default function externalCQL(state = defaultState, action) {
       return {
         ...state,
         loadExternalCqlLibrary: { isLoading: false, loadStatus: 'failure' }
+      };
+    case types.EXTERNAL_CQL_LIBRARY_DETAILS_REQUEST:
+      return {
+        ...state,
+        loadExternalCqlLibraryDetails: { isLoading: true, loadStatus: null }
+      };
+    case types.LOAD_EXTERNAL_CQL_LIBRARY_DETAILS_SUCCESS:
+      return {
+        ...state,
+        externalCqlLibraryDetails: action.externalCqlLibraryDetails[0],
+        loadExternalCqlLibraryDetails: { isLoading: false, loadStatus: 'success' }
+      };
+    case types.LOAD_EXTERNAL_CQL_LIBRARY_DETAILS_FAILURE:
+      return {
+        ...state,
+        loadExternalCqlLibraryDetails: { isLoading: false, loadStatus: 'failure' }
       };
     case types.ADD_EXTERNAL_CQL_LIBRARY_REQUEST:
       return {

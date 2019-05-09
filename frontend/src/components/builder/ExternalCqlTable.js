@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import FontAwesome from 'react-fontawesome';
 
 import Modal from '../elements/Modal';
+import ExternalCqlDetails from './ExternalCqlDetails';
 
 import { sortMostRecent } from '../../utils/sort';
 import renderDate from '../../utils/dates';
@@ -92,25 +93,6 @@ export default class ExternalCqlTable extends Component {
     </tr>
   );
 
-  renderViewDetailsModal() {
-    return (
-      <Modal
-        modalTitle="View External CQL Details"
-        modalId="view-details-modal"
-        modalTheme="light"
-        handleShowModal={this.state.showViewDetailsModal}
-        handleCloseModal={this.closeViewDetailsModal}
-        handleSaveModal={this.handleViewDetails}>
-
-        <div className="external-cql-table__modal modal__content">
-          <div className="external-cql-info">
-            External CQL Info
-          </div>
-        </div>
-      </Modal>
-    );
-  }
-
   renderConfirmDeleteModal() {
     const { externalCqlLibraryToDelete } = this.state;
 
@@ -137,7 +119,10 @@ export default class ExternalCqlTable extends Component {
   }
 
   render() {
-    const { externalCqlList } = this.props;
+    const {
+      externalCqlList, externalCqlLibraryDetails, loadExternalCqlLibraryDetails, isLoadingExternalCqlDetails
+    } = this.props;
+    const { showViewDetailsModal, externalCqlLibraryToView } = this.state;
 
     return (
       <div className="external-cql-table">
@@ -157,7 +142,16 @@ export default class ExternalCqlTable extends Component {
           </tbody>
         </table>
 
-        {this.renderViewDetailsModal()}
+        {showViewDetailsModal &&
+          <ExternalCqlDetails
+            openModal={showViewDetailsModal}
+            closeModal={this.closeViewDetailsModal}
+            externalCqlLibrary={externalCqlLibraryToView}
+            externalCqlLibraryDetails={externalCqlLibraryDetails}
+            loadExternalCqlLibraryDetails={loadExternalCqlLibraryDetails}
+            isLoadingExternalCqlDetails={isLoadingExternalCqlDetails} />
+        }
+
         {this.renderConfirmDeleteModal()}
       </div>
     );
@@ -167,5 +161,8 @@ export default class ExternalCqlTable extends Component {
 ExternalCqlTable.propTypes = {
   artifactId: PropTypes.string,
   externalCqlList: PropTypes.array,
-  deleteExternalCqlLibrary: PropTypes.func.isRequired
+  externalCqlLibraryDetails: PropTypes.object,
+  deleteExternalCqlLibrary: PropTypes.func.isRequired,
+  loadExternalCqlLibraryDetails: PropTypes.func.isRequired,
+  isLoadingExternalCqlDetails: PropTypes.bool.isRequired
 };

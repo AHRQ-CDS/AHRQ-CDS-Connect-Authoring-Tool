@@ -19,7 +19,8 @@ import {
   loginVSACUser, setVSACAuthStatus, searchVSACByKeyword, getVSDetails, validateCode, resetCodeValidation
 } from '../actions/vsac';
 import {
-  loadExternalCqlList, addExternalLibrary, deleteExternalCqlLibrary, clearExternalCqlValidationWarnings
+  loadExternalCqlList, loadExternalCqlLibraryDetails, addExternalLibrary, deleteExternalCqlLibrary,
+  clearExternalCqlValidationWarnings
 } from '../actions/external_cql';
 
 import BaseElements from '../components/builder/BaseElements';
@@ -651,13 +652,16 @@ export class Builder extends Component {
                     artifact={this.props.artifact}
                     externalCqlList={this.props.externalCqlList}
                     externalCqlLibrary={this.props.externalCqlLibrary}
+                    externalCqlLibraryDetails={this.props.externalCqlLibraryDetails}
                     externalCqlFhirVersion={this.props.externalCqlFhirVersion}
                     externalCqlErrors={this.props.externalCqlErrors}
                     isAddingExternalCqlLibrary={this.props.isAddingExternalCqlLibrary}
                     deleteExternalCqlLibrary={this.props.deleteExternalCqlLibrary}
                     addExternalLibrary={this.props.addExternalLibrary}
                     loadExternalCqlList={this.props.loadExternalCqlList}
-                    clearExternalCqlValidationWarnings={this.props.clearExternalCqlValidationWarnings} />
+                    clearExternalCqlValidationWarnings={this.props.clearExternalCqlValidationWarnings}
+                    loadExternalCqlLibraryDetails={this.props.loadExternalCqlLibraryDetails}
+                    isLoadingExternalCqlDetails={this.props.isLoadingExternalCqlDetails} />
                 </TabPanel>
               </div>
             </Tabs>
@@ -707,12 +711,15 @@ Builder.propTypes = {
   names: PropTypes.array.isRequired,
   externalCqlList: PropTypes.array,
   externalCqlLibrary: PropTypes.object,
+  externalCqlLibraryDetails: PropTypes.object,
   externalCqlFhirVersion: PropTypes.string,
   externalCqlErrors: PropTypes.array,
   isAddingExternalCqlLibrary: PropTypes.bool.isRequired,
   deleteExternalCqlLibrary: PropTypes.func.isRequired,
   addExternalLibrary: PropTypes.func.isRequired,
-  loadExternalCqlList: PropTypes.func.isRequired
+  loadExternalCqlList: PropTypes.func.isRequired,
+  loadExternalCqlLibraryDetails: PropTypes.func.isRequired,
+  isLoadingExternalCqlDetails: PropTypes.bool.isRequired
 };
 
 // these props are used for dispatching actions
@@ -739,7 +746,8 @@ function mapDispatchToProps(dispatch) {
     deleteExternalCqlLibrary,
     addExternalLibrary,
     loadExternalCqlList,
-    clearExternalCqlValidationWarnings
+    clearExternalCqlValidationWarnings,
+    loadExternalCqlLibraryDetails
   }, dispatch);
 }
 
@@ -769,9 +777,11 @@ function mapStateToProps(state) {
     isLoggingOut: state.auth.isLoggingOut,
     externalCqlList: state.externalCQL.externalCqlList,
     externalCqlLibrary: state.externalCQL.externalCqlLibrary,
+    externalCqlLibraryDetails: state.externalCQL.externalCqlLibraryDetails,
     externalCqlFhirVersion: state.externalCQL.fhirVersion,
     externalCqlErrors: state.externalCQL.externalCqlErrors,
-    isAddingExternalCqlLibrary: state.externalCQL.addExternalCqlLibrary.isAdding
+    isAddingExternalCqlLibrary: state.externalCQL.addExternalCqlLibrary.isAdding,
+    isLoadingExternalCqlDetails: state.externalCQL.loadExternalCqlLibraryDetails.isLoading
   };
 }
 

@@ -87,6 +87,47 @@ export function loadExternalCqlLibrary(id) {
   };
 }
 
+// ------------------------- LOAD EXTERNAL CQL LIBRARY DETAILS ------------- //
+
+function requestExternalCqlLibraryDetails() {
+  return {
+    type: types.EXTERNAL_CQL_LIBRARY_DETAILS_REQUEST
+  };
+}
+
+function loadExternalCqlLibraryDetailsSuccess(externalCqlLibraryDetails) {
+  return {
+    type: types.LOAD_EXTERNAL_CQL_LIBRARY_DETAILS_SUCCESS,
+    externalCqlLibraryDetails
+  };
+}
+
+function loadExternalCqlLibraryDetailsFailure(error) {
+  return {
+    type: types.LOAD_EXTERNAL_CQL_LIBRARY_DETAILS_FAILURE,
+    status: error.response.status,
+    statusText: error.response.statusText
+  };
+}
+
+function sendExternalCqlLibraryDetailsRequest(libraryId) {
+  return new Promise((resolve, reject) => {
+    axios.get(`${API_BASE}/externalCQL/details/${libraryId}`)
+      .then(result => resolve(result.data))
+      .catch(error => reject(error));
+  });
+}
+
+export function loadExternalCqlLibraryDetails(libraryId) {
+  return (dispatch) => {
+    dispatch(requestExternalCqlLibraryDetails());
+
+    return sendExternalCqlLibraryDetailsRequest(libraryId)
+      .catch(error => dispatch(loadExternalCqlLibraryDetailsFailure(error)))
+      .then(data => dispatch(loadExternalCqlLibraryDetailsSuccess(data)));
+  };
+}
+
 // ------------------------- ADD EXTERNAL CQL LIBRARY ---------------------- //
 
 function requestAddExternalCqlLibrary() {

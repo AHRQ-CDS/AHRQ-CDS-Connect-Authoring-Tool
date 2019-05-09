@@ -62,13 +62,23 @@ export default class ExternalCQL extends Component {
   }
 
   renderExternalCqlTable() {
-    const { artifact, externalCqlList, deleteExternalCqlLibrary } = this.props;
+    const {
+      artifact,
+      externalCqlList,
+      deleteExternalCqlLibrary,
+      externalCqlLibraryDetails,
+      loadExternalCqlLibraryDetails,
+      isLoadingExternalCqlDetails
+    } = this.props;
     if (externalCqlList && externalCqlList.length > 0) {
       return (
         <ExternalCqlTable
           artifactId={artifact._id}
           externalCqlList={externalCqlList}
-          deleteExternalCqlLibrary={deleteExternalCqlLibrary} />
+          externalCqlLibraryDetails={externalCqlLibraryDetails}
+          deleteExternalCqlLibrary={deleteExternalCqlLibrary}
+          loadExternalCqlLibraryDetails={loadExternalCqlLibraryDetails}
+          isLoadingExternalCqlDetails={isLoadingExternalCqlDetails} />
       );
     }
 
@@ -111,11 +121,14 @@ ExternalCQL.propTypes = {
   artifact: artifactProps,
   externalCqlList: PropTypes.array,
   externalCqlLibrary: PropTypes.object,
+  externalCqlLibraryDetails: PropTypes.object,
   externalCqlFhirVersion: PropTypes.string,
   externalCqlErrors: PropTypes.array,
   isAddingExternalCqlLibrary: PropTypes.bool,
   deleteExternalCqlLibrary: PropTypes.func.isRequired,
   addExternalLibrary: PropTypes.func.isRequired,
   loadExternalCqlList: PropTypes.func.isRequired,
-  clearExternalCqlValidationWarnings: PropTypes.func.isRequired
+  clearExternalCqlValidationWarnings: PropTypes.func.isRequired,
+  loadExternalCqlLibraryDetails: PropTypes.func.isRequired,
+  isLoadingExternalCqlDetails: PropTypes.bool.isRequired
 };

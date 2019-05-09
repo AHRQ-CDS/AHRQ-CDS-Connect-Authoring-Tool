@@ -38,8 +38,7 @@ export default class Modal extends Component {
 
   render() {
     const {
-      handleShowModal, handleCloseModal, modalTitle, modalId,
-      modalSubmitButtonText, children
+      handleShowModal, handleCloseModal, modalTitle, modalId, hasSecondaryButton, modalSubmitButtonText, children
     } = this.props;
 
     return (
@@ -68,7 +67,7 @@ export default class Modal extends Component {
           </div>
 
           <footer className="modal__footer">
-            {modalSubmitButtonText
+            {hasSecondaryButton
               && <button type="button" className="secondary-button" onClick={handleCloseModal}>Cancel</button>}
             {modalSubmitButtonText
               && <button type="submit" className="primary-button">{modalSubmitButtonText}</button>}
@@ -84,8 +83,13 @@ Modal.propTypes = {
   modalId: PropTypes.string.isRequired,
   modalSubmitButtonText: PropTypes.string,
   modalTheme: PropTypes.string,
+  hasSecondaryButton: PropTypes.bool,
   handleShowModal: PropTypes.bool.isRequired,
   handleCloseModal: PropTypes.func.isRequired,
   handleSaveModal: PropTypes.func.isRequired,
   children: PropTypes.element.isRequired
+};
+
+Modal.defaultTypes = {
+  hasSecondaryButton: true
 };
