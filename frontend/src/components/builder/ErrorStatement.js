@@ -1,5 +1,3 @@
-/* eslint-disable jsx-a11y/label-has-for */
-
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import Select from 'react-select';
@@ -154,11 +152,12 @@ export default class ErrorStatement extends Component {
   // Renders then part of statement
   renderThen = (statement, parent, index) => (
     <div className="error-statement__block-then">
-      <label className="label">Then</label>
+      <label className="label" htmlFor={'thenClause'}>Then</label>
       <div className="control">
         <textarea
           className="card-element__textarea"
           name="text"
+          id="thenClause"
           title="ThenClause"
           aria-label="ThenClause"
           placeholder='Describe your error'

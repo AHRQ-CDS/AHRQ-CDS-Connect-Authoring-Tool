@@ -143,7 +143,13 @@ export default class PatientView extends Component {
       .find({ resource: { resourceType: 'Patient' } })
       .get('resource')
       .value();
-    const patientName = patientInfo.name[0];
+
+    if (!patientInfo) {
+      return null;
+    }
+
+    const patientName =
+      patientInfo.name ? patientInfo.name[0] : { given: ['given_placeholder'], family: 'family_placeholder' };
     const patientAge = moment().diff(patientInfo.birthDate, 'years');
 
     return (

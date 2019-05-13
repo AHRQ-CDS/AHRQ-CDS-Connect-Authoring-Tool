@@ -100,9 +100,7 @@ export default class IntervalOfDateTimeEditor extends Component {
         </div>
 
         <div className="parameter__item row">
-          <div className="col-3 bold align-right">
-            <label htmlFor={formIdSecond}></label>
-          </div>
+          <div className="col-3 bold align-right"></div>
 
           <div className="col-9 d-flex">
             <DatePicker
