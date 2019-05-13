@@ -105,7 +105,7 @@ function addExternalCqlLibraryFailure(error) {
   return {
     type: types.ADD_EXTERNAL_CQL_LIBRARY_FAILURE,
     status: error.response ? error.response.status : '',
-    statusText: error.response ? error.response.statusText : ''
+    statusText: error.response ? error.response.data : ''
   };
 }
 
