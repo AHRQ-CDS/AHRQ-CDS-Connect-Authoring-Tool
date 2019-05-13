@@ -19,5 +19,10 @@
     "jsx-a11y/href-no-hash": 0,
     "jsx-a11y/label-has-for": ["error", { "required": { "some": ["nesting", "id"] } }],
     "object-curly-newline": ["error", { "minProperties": 8, "consistent": true }]
+  },
+  "settings": {
+    "react": {
+      "version": "detect"
+    }
   }
 }
