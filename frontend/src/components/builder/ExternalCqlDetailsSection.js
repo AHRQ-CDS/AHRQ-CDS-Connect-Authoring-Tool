@@ -52,7 +52,11 @@ export default class ExternalCqlDetailsSection extends Component {
               </td>
 
               <td className="details-table__tablecell" data-th="Return Type">
-                <div>{_.startCase(definition.calculatedReturnType)}</div>
+                <div>
+                  {definition.displayReturnType
+                    ? definition.displayReturnType
+                    : _.startCase(definition.calculatedReturnType)}
+                </div>
               </td>
             </tr>
           )}

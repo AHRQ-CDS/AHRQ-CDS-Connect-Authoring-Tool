@@ -8,11 +8,11 @@
 const elementLists = ['list_of_observations', 'list_of_conditions', 'list_of_medication_statements',
   'list_of_medication_orders', 'list_of_procedures', 'list_of_allergy_intolerances', 'list_of_encounters',
   'list_of_any', 'list_of_booleans', 'list_of_system_quantities', 'list_of_system_concepts', 'list_of_system_codes',
-  'list_of_integers', 'list_of_datetimes', 'list_of_strings', 'list_of_decimals', 'list_of_times', 'list_of_other'];
+  'list_of_integers', 'list_of_datetimes', 'list_of_strings', 'list_of_decimals', 'list_of_times', 'list_of_others'];
 const everyElement = elementLists.concat(['boolean', 'system_quantity', 'system_concept', 'system_code',
   'observation', 'condition', 'medication_statement', 'medication_order', 'procedure', 'allergy_intolerance',
   'encounter', 'integer', 'datetime', 'decimal', 'string', 'time', 'interval_of_integer',
-  'interval_of_datetime', 'interval_of_decimal', 'interval_of_quantity', 'null', 'any', 'other']);
+  'interval_of_datetime', 'interval_of_decimal', 'interval_of_quantity', 'any', 'other']);
 
 export default [
   // observations

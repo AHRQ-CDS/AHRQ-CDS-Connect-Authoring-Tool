@@ -52,19 +52,24 @@ const intervalReturnTypeMap = {
 const getTypeFromELMString = (string) => string.substring(string.indexOf('}') + 1);
 
 const areChoicesKnownTypes = (choices) => {
-  let allKnown = true;
+  let allChoicesKnown = true;
+  const typesOfChoices = [];
   choices.forEach((choice) => {
     if (choice.type === 'NamedTypeSpecifier') {
       const returnTypeOfChoice = getTypeFromELMString(choice.name);
-      if (!singularReturnTypeMap[returnTypeOfChoice]) {
-        allKnown = false;
+      const convertedReturnType = singularReturnTypeMap[returnTypeOfChoice];
+      if (!convertedReturnType) {
+        allChoicesKnown = false;
       }
+      const typeToDisplay = convertedReturnType ? convertedReturnType : returnTypeOfChoice;
+      typesOfChoices.push(_.startCase(typeToDisplay));
     } else {
       // Default to marking as unknown.
-      allKnown = false;
+      allChoicesKnown = false;
+      typesOfChoices.push('Unknown');
     }
   });
-  return allKnown;
+  return { allChoicesKnown, typesOfChoices };
 }
 
 function mapReturnTypes(definitions) {
@@ -87,23 +92,33 @@ function mapReturnTypes(definitions) {
         case 'IntervalTypeSpecifier': {
           elmReturnType = getTypeFromELMString(typeSpecifier.pointType.name);
           const convertedReturnType = intervalReturnTypeMap[elmReturnType];
-          if (!convertedReturnType) elmDisplay = `Interval of Others (Interval<${elmReturnType}>)`;
+          if (!convertedReturnType) elmDisplay = `Interval of Others (${elmReturnType})`;
           elmReturnType = convertedReturnType ? convertedReturnType : 'interval_of_other';
           break;
         }
         case 'ListTypeSpecifier': {
           if (typeSpecifier.elementType.type === 'ChoiceTypeSpecifier') {
-            const allChoicesKnown = areChoicesKnownTypes(typeSpecifier.elementType.choice);
-            elmReturnType = allChoicesKnown ? 'list_of_any' : 'list_of_other';
-            if (!allChoicesKnown) elmDisplay = 'List of Others';
+            const { allChoicesKnown, typesOfChoices } = areChoicesKnownTypes(typeSpecifier.elementType.choice);
+            elmReturnType = allChoicesKnown ? 'list_of_any' : 'list_of_others';
+            if (!allChoicesKnown) elmDisplay = `List of Others (${typesOfChoices.join(', ')})`;
+            else elmDisplay = `List of Any (${typesOfChoices.join(', ')})`;
           } else if (typeSpecifier.elementType.type === 'TupleTypeSpecifier') {
-            elmReturnType = 'list_of_other';
-            elmDisplay = 'List of Others (Tuples)';
-          } else {
+            elmReturnType = 'list_of_others';
+            elmDisplay = 'List of Others (Tuple)';
+          } else if (typeSpecifier.elementType.type === 'NamedTypeSpecifier') {
             elmReturnType = getTypeFromELMString(typeSpecifier.elementType.name);
             const calculatedReturnType = listReturnTypeMap[elmReturnType];
-            if (!calculatedReturnType) elmDisplay = `List of Others (List<${elmReturnType}>)`;
-            elmReturnType = listReturnTypeMap[elmReturnType] ? listReturnTypeMap[elmReturnType] : 'list_of_other';
+            if (!calculatedReturnType) elmDisplay = `List of Others (${elmReturnType})`;
+            elmReturnType = listReturnTypeMap[elmReturnType] ? listReturnTypeMap[elmReturnType] : 'list_of_others';
+          } else if (typeSpecifier.elementType.type === 'ListTypeSpecifier') {
+            elmReturnType = 'list_of_others';
+            elmDisplay = 'List of Lists';
+          } else if (typeSpecifier.elementType.type === 'IntervalTypeSpecifier') {
+            elmReturnType = 'list_of_others';
+            elmDisplay = 'List of Intervals';
+          } else {
+            elmReturnType = 'list_of_others';
+            elmDisplay = 'List of Others (unknown)';
           }
           break;
         }
@@ -113,9 +128,9 @@ function mapReturnTypes(definitions) {
           break;
         }
         case 'ChoiceTypeSpecifier': {
-          const allChoicesKnown = areChoicesKnownTypes(typeSpecifier.choice);
+          const { allChoicesKnown, typesOfChoices } = areChoicesKnownTypes(typeSpecifier.choice);
           elmReturnType = allChoicesKnown ? 'any' : 'other';
-          if (!allChoicesKnown) elmDisplay = 'Other (Choice)';
+          if (!allChoicesKnown) elmDisplay = `Other (Choice of ${typesOfChoices.join(', ')})`;
           break;
         }
         default: {
@@ -124,8 +139,6 @@ function mapReturnTypes(definitions) {
           break;
         }
       }
-    } else if (definition.expression && definition.expression.type === 'Null') {
-      elmReturnType = 'null';
     } else {
       elmReturnType = 'other';
       elmDisplay = 'Other (unknown)';
