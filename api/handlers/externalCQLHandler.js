@@ -229,14 +229,21 @@ function singlePost(req, res) {
           const details = {};
           details.cqlFileText = cqlFileText;
           details.fileName = cqlFileName;
-          let elmDefinitions = _.concat(_.get(library, 'parameters.def', []), _.get(library, 'statements.def', []))
-            .filter(filterDefinition);
+          let elmParameters = _.get(library, 'parameters.def', []).filter(filterDefinition);
+          let elmDefinitions = _.get(library, 'statements.def', []).filter(filterDefinition);
           const allowedAttributes =
             ['accessLevel', 'name', 'type', 'context', 'resultTypeName', 'resultTypeSpecifier', 'operand'];
+          elmParameters = elmParameters.map(def => {
+            return _.pick(def, allowedAttributes);
+          });
           elmDefinitions = elmDefinitions.map(def => {
             return _.pick(def, allowedAttributes);
           });
-          details.definitions = mapReturnTypes(elmDefinitions);
+          const defineStatements = elmDefinitions.filter(def => def.type !== 'FunctionDef');
+          const functionStatements = elmDefinitions.filter(def => def.type === 'FunctionDef');
+          details.parameters = mapReturnTypes(elmParameters);
+          details.definitions = mapReturnTypes(defineStatements);
+          details.functions = mapReturnTypes(functionStatements);
           elmResults.details = details;
         }
       });

@@ -41,6 +41,8 @@ export default class ExternalCqlDetails extends Component {
     const { openModal, closeModal, externalCqlLibraryDetails, isLoadingExternalCqlDetails } = this.props;
 
     if (isLoadingExternalCqlDetails || externalCqlLibraryDetails === null) return <div>Loading...</div>;
+    const parameters = externalCqlLibraryDetails.details.parameters;
+    const functions = externalCqlLibraryDetails.details.functions;
     const definitions = externalCqlLibraryDetails.details.definitions;
 
     return (
@@ -76,6 +78,8 @@ export default class ExternalCqlDetails extends Component {
           </div>
 
           <div className="library-details">
+            <ExternalCqlDetailsSection title="Parameters" definitions={parameters} />
+            <ExternalCqlDetailsSection title="Functions" definitions={functions} />
             <ExternalCqlDetailsSection title="Define" definitions={definitions} />
           </div>
         </div>
