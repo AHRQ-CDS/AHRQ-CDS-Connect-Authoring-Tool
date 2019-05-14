@@ -27,7 +27,7 @@ export default class ExternalCqlTable extends Component {
 
   // ----------------------- VIEW DETAILS MODAL ---------------------------- //
 
-  openViewDetailsModal = externalCqlLibrary => {
+  openViewDetailsModal = (externalCqlLibrary) => {
     this.setState({ showViewDetailsModal: true, externalCqlLibraryToView: externalCqlLibrary });
   }
 
@@ -41,7 +41,7 @@ export default class ExternalCqlTable extends Component {
 
   // ----------------------- DELETE MODAL ---------------------------------- //
 
-  openConfirmDeleteModal = externalCqlLibrary => {
+  openConfirmDeleteModal = (externalCqlLibrary) => {
     this.setState({ showConfirmDeleteModal: true, externalCqlLibraryToDelete: externalCqlLibrary });
   }
 
