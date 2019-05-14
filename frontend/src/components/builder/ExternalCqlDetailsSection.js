@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import _ from 'lodash';
 import { Table, Collapse, Button } from 'reactstrap';
 import FontAwesome from 'react-fontawesome';
 
@@ -44,14 +45,14 @@ export default class ExternalCqlDetailsSection extends Component {
         </thead>
 
         <tbody>
-          {definitions.map(definition =>
-            <tr key={definition.localId}>
+          {definitions.map((definition, i) =>
+            <tr key={i}>
               <td className="details-table__tablecell" data-th="Name">
                 <div>{definition.name}</div>
               </td>
 
               <td className="details-table__tablecell" data-th="Return Type">
-                <div>{definition.calculatedReturnType}</div>
+                <div>{_.startCase(definition.calculatedReturnType)}</div>
               </td>
             </tr>
           )}
