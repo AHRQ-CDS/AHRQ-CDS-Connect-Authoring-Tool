@@ -8,7 +8,8 @@ const defaultState = {
   loadExternalCqlLibrary: { isLoading: false, loadStatus: null },
   addExternalCqlLibrary: { isAdding: false, addStatus: null },
   saveExternalCqlLibrary: { isSaving: false, saveStatus: null },
-  deleteExternalCqlLibrary: { isDeleting: false, deleteStatus: null }
+  deleteExternalCqlLibrary: { isDeleting: false, deleteStatus: null },
+  externalCqlErrors: []
 };
 
 export default function externalCQL(state = defaultState, action) {
@@ -58,7 +59,13 @@ export default function externalCQL(state = defaultState, action) {
     case types.ADD_EXTERNAL_CQL_LIBRARY_FAILURE:
       return {
         ...state,
-        addExternalCqlLibrary: { isAdding: false, addStatus: 'failure' }
+        addExternalCqlLibrary: { isAdding: false, addStatus: 'failure' },
+        externalCqlErrors: action.data
+      };
+    case types.CLEAR_EXTERNAL_CQL_VALIDATION_WARNINGS:
+      return {
+        ...state,
+        externalCqlErrors: []
       };
     case types.DELETE_EXTERNAL_CQL_LIBRARY_REQUEST:
       return {

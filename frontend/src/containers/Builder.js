@@ -18,7 +18,9 @@ import {
 import {
   loginVSACUser, setVSACAuthStatus, searchVSACByKeyword, getVSDetails, validateCode, resetCodeValidation
 } from '../actions/vsac';
-import { loadExternalCqlList, addExternalLibrary, deleteExternalCqlLibrary } from '../actions/external_cql';
+import {
+  loadExternalCqlList, addExternalLibrary, deleteExternalCqlLibrary, clearExternalCqlValidationWarnings
+} from '../actions/external_cql';
 
 import BaseElements from '../components/builder/BaseElements';
 import ConjunctionGroup from '../components/builder/ConjunctionGroup';
@@ -650,10 +652,12 @@ export class Builder extends Component {
                     externalCqlList={this.props.externalCqlList}
                     externalCqlLibrary={this.props.externalCqlLibrary}
                     externalCqlFhirVersion={this.props.externalCqlFhirVersion}
+                    externalCqlErrors={this.props.externalCqlErrors}
                     isAddingExternalCqlLibrary={this.props.isAddingExternalCqlLibrary}
                     deleteExternalCqlLibrary={this.props.deleteExternalCqlLibrary}
                     addExternalLibrary={this.props.addExternalLibrary}
-                    loadExternalCqlList={this.props.loadExternalCqlList} />
+                    loadExternalCqlList={this.props.loadExternalCqlList}
+                    clearExternalCqlValidationWarnings={this.props.clearExternalCqlValidationWarnings} />
                 </TabPanel>
               </div>
             </Tabs>
@@ -704,6 +708,7 @@ Builder.propTypes = {
   externalCqlList: PropTypes.array,
   externalCqlLibrary: PropTypes.object,
   externalCqlFhirVersion: PropTypes.string,
+  externalCqlErrors: PropTypes.array,
   isAddingExternalCqlLibrary: PropTypes.bool.isRequired,
   deleteExternalCqlLibrary: PropTypes.func.isRequired,
   addExternalLibrary: PropTypes.func.isRequired,
@@ -733,7 +738,8 @@ function mapDispatchToProps(dispatch) {
     loadConversionFunctions,
     deleteExternalCqlLibrary,
     addExternalLibrary,
-    loadExternalCqlList
+    loadExternalCqlList,
+    clearExternalCqlValidationWarnings
   }, dispatch);
 }
 
@@ -764,6 +770,7 @@ function mapStateToProps(state) {
     externalCqlList: state.externalCQL.externalCqlList,
     externalCqlLibrary: state.externalCQL.externalCqlLibrary,
     externalCqlFhirVersion: state.externalCQL.fhirVersion,
+    externalCqlErrors: state.externalCQL.externalCqlErrors,
     isAddingExternalCqlLibrary: state.externalCQL.addExternalCqlLibrary.isAdding
   };
 }

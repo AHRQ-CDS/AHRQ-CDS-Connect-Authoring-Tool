@@ -105,7 +105,7 @@ function addExternalCqlLibraryFailure(error) {
   return {
     type: types.ADD_EXTERNAL_CQL_LIBRARY_FAILURE,
     status: error.response ? error.response.status : '',
-    statusText: error.response ? error.response.data : ''
+    data: error.response ? error.response.data : ''
   };
 }
 
@@ -125,6 +125,12 @@ export function addExternalLibrary(library) {
       .then(data => dispatch(addExternalCqlLibrarySuccess()))
       .catch(error => dispatch(addExternalCqlLibraryFailure(error)))
       .then(() => dispatch(loadExternalCqlList(library.artifactId)));
+  };
+}
+
+export function clearExternalCqlValidationWarnings() {
+  return {
+    type: types.CLEAR_EXTERNAL_CQL_VALIDATION_WARNINGS
   };
 }
 

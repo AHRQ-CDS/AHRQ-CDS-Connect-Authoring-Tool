@@ -264,8 +264,7 @@ class Testing extends Component {
           <ELMErrorModal
             isOpen={this.state.showELMErrorModal}
             closeModal={this.closeELMErrorModal}
-            errors={this.props.downloadedArtifact.elmErrors}
-            isForTesting={true}/>
+            errors={this.props.downloadedArtifact.elmErrors}/>
 
           <PatientVersionModal
             isOpen={this.state.showPatientVersionModal}

@@ -42,7 +42,7 @@ function singlePost(req, res) {
         linkedArtifactId: artifactId,
         user: req.user.uid
       };
-      let hasELMError = false;
+      let elmErrors = [];
 
       elmFiles.forEach((file, i) => {
         const parsedContent = JSON.parse(file.content);
@@ -50,7 +50,7 @@ function singlePost(req, res) {
         const fileName = file.name;
         if (fileName === cqlFileName) {
           const annotations = _.get(parsedContent, 'library.annotation', [])
-          hasELMError = annotations.findIndex(a => a.errorSeverity === 'error') !== -1;
+          elmErrors = annotations.filter(a => a.errorSeverity === 'error');
 
           const { library } = parsedContent;
           elmResults.name = library.identifier.id || '';
@@ -71,8 +71,8 @@ function singlePost(req, res) {
         }
       });
 
-      if (hasELMError) {
-        res.status(400).send('CQL file contains ELM errors and was not saved.');
+      if (elmErrors.length > 0) {
+        res.status(400).send(elmErrors);
         return;
       }
 

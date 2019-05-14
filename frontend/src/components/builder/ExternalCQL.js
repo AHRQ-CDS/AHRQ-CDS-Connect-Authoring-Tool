@@ -6,12 +6,13 @@ import Dropzone from 'react-dropzone';
 import artifactProps from '../../prop-types/artifact';
 
 import ExternalCqlTable from './ExternalCqlTable';
+import ELMErrorModal from './ELMErrorModal';
 
 export default class ExternalCQL extends Component {
   constructor(props) {
     super(props);
 
-    this.state = { uploadError: false };
+    this.state = { uploadError: false, showELMErrorModal: false };
   }
 
   componentWillMount() {
@@ -19,10 +20,16 @@ export default class ExternalCQL extends Component {
     loadExternalCqlList(artifact._id);
   }
 
-  handleAddExternalCQL = externalCqlLibrary => {
+  componentWillReceiveProps(newProps) {
+    const showELMErrorModal =
+      newProps.externalCqlErrors ? newProps.externalCqlErrors.length > 0 : false;
+    this.setState({ showELMErrorModal });
+  }
+
+  handleAddExternalCQL = (externalCqlLibrary) => {
     const { artifact } = this.props;
     const reader = new FileReader();
-    reader.onload = e => {
+    reader.onload = (e) => {
       const library = {
         cqlFileName: externalCqlLibrary[0].name,
         cqlFileText: e.target.result,
@@ -37,6 +44,15 @@ export default class ExternalCQL extends Component {
     } catch (error) {
       this.setState({ uploadError: true });
     }
+  }
+
+  showELMErrorModal = () => {
+    this.setState({ showELMErrorModal: true });
+  }
+
+  closeELMErrorModal = () => {
+    this.setState({ showELMErrorModal: false });
+    this.props.clearExternalCqlValidationWarnings();
   }
 
   renderDropzoneIcon = () => {
@@ -80,6 +96,12 @@ export default class ExternalCQL extends Component {
             {this.renderExternalCqlTable()}
           </div>
         </div>
+
+        <ELMErrorModal
+            isOpen={this.state.showELMErrorModal}
+            closeModal={this.closeELMErrorModal}
+            errors={this.props.externalCqlErrors}/>
+
       </div>
     );
   }
@@ -90,8 +112,10 @@ ExternalCQL.propTypes = {
   externalCqlList: PropTypes.array,
   externalCqlLibrary: PropTypes.object,
   externalCqlFhirVersion: PropTypes.string,
+  externalCqlErrors: PropTypes.array,
   isAddingExternalCqlLibrary: PropTypes.bool,
   deleteExternalCqlLibrary: PropTypes.func.isRequired,
   addExternalLibrary: PropTypes.func.isRequired,
-  loadExternalCqlList: PropTypes.func.isRequired
+  loadExternalCqlList: PropTypes.func.isRequired,
+  clearExternalCqlValidationWarnings: PropTypes.func.isRequired
 };
