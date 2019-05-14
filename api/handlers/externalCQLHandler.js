@@ -2,11 +2,137 @@ const _ = require('lodash');
 const CQLLibrary = require('../models/cqlLibrary');
 const convertToElm = require('../handlers/cqlHandler').convertToElm;
 
+const singularReturnTypeMap = {
+  'Boolean': 'boolean',
+  'Code': 'system_code',
+  'Concept': 'system_concept',
+  'Integer': 'integer',
+  'DateTime': 'datetime',
+  'Decimal': 'decimal',
+  'Quantity': 'system_quantity',
+  'String': 'string',
+  'Time': 'time',
+  'Observation': 'observation',
+  'Condition': 'condition',
+  'MedicationStatement': 'medication_statement',
+  'MedicationOrder': 'medication_order',
+  'Procedure': 'procedure',
+  'AllergyIntolerance': 'allergy_intolerance',
+  'Encounter': 'encounter',
+  'Any': 'any'
+};
+
+const listReturnTypeMap = {
+  'Observation': 'list_of_observations',
+  'Condition': 'list_of_conditions',
+  'MedicationStatement': 'list_of_medication_statements',
+  'MedicationOrder': 'list_of_medication_orders',
+  'Procedure': 'list_of_procedures',
+  'AllergyIntolerance': 'list_of_allergy_intolerances',
+  'Encounter': 'list_of_encounters',
+  'Any': 'list_of_any',
+  'Boolean': 'list_of_booleans',
+  'Code': 'list_of_system_codes',
+  'Concept': 'list_of_system_concepts',
+  'Integer': 'list_of_integers',
+  'DateTime': 'list_of_datetimes',
+  'Decimal': 'list_of_decimals',
+  'Quantity': 'list_of_system_quantities',
+  'String': 'list_of_strings',
+  'Time': 'list_of_times',
+}
+
+const intervalReturnTypeMap = {
+  'Integer': 'interval_of_integer',
+  'DateTime': 'interval_of_datetime',
+  'Decimal': 'interval_of_decimal',
+  'Quantity': 'interval_of_quantity'
+}
+
+const getTypeFromELMString = (string) => string.substring(string.indexOf('}') + 1);
+
+const areChoicesKnownTypes = (choices) => {
+  let allKnown = true;
+  choices.forEach((choice) => {
+    if (choice.type === 'NamedTypeSpecifier') {
+      const returnTypeOfChoice = getTypeFromELMString(choice.name);
+      if (!singularReturnTypeMap[returnTypeOfChoice]) {
+        allKnown = false;
+      }
+    } else {
+      // Default to marking as unknown.
+      allKnown = false;
+    }
+  });
+  return allKnown;
+}
+
 function mapReturnTypes(definitions) {
   const mappedDefinitions = definitions;
   mappedDefinitions.map(definition => {
-    let elmReturnType;
-    definition.calculatedReturnType = elmReturnType || 'unknown';
+    let elmReturnType, elmDisplay;
+
+    if (definition.resultTypeName) {
+      elmReturnType = getTypeFromELMString(definition.resultTypeName);
+      const convertedReturnType = singularReturnTypeMap[elmReturnType];
+      if (!convertedReturnType) elmDisplay = `Other (${elmReturnType})`;
+      elmReturnType = convertedReturnType ? convertedReturnType : 'other';
+    } else if (definition.resultTypeSpecifier) {
+      const typeSpecifier = definition.resultTypeSpecifier;
+      switch (typeSpecifier.type) {
+        case 'NamedTypeSpecifier': {
+          elmReturnType = getTypeFromELMString(typeSpecifier.name);
+          break;
+        }
+        case 'IntervalTypeSpecifier': {
+          elmReturnType = getTypeFromELMString(typeSpecifier.pointType.name);
+          const convertedReturnType = intervalReturnTypeMap[elmReturnType];
+          if (!convertedReturnType) elmDisplay = `Interval of Others (Interval<${elmReturnType}>)`;
+          elmReturnType = convertedReturnType ? convertedReturnType : 'interval_of_other';
+          break;
+        }
+        case 'ListTypeSpecifier': {
+          if (typeSpecifier.elementType.type === 'ChoiceTypeSpecifier') {
+            const allChoicesKnown = areChoicesKnownTypes(typeSpecifier.elementType.choice);
+            elmReturnType = allChoicesKnown ? 'list_of_any' : 'list_of_other';
+            if (!allChoicesKnown) elmDisplay = 'List of Others';
+          } else if (typeSpecifier.elementType.type === 'TupleTypeSpecifier') {
+            elmReturnType = 'list_of_other';
+            elmDisplay = 'List of Others (Tuples)';
+          } else {
+            elmReturnType = getTypeFromELMString(typeSpecifier.elementType.name);
+            const calculatedReturnType = listReturnTypeMap[elmReturnType];
+            if (!calculatedReturnType) elmDisplay = `List of Others (List<${elmReturnType}>)`;
+            elmReturnType = listReturnTypeMap[elmReturnType] ? listReturnTypeMap[elmReturnType] : 'list_of_other';
+          }
+          break;
+        }
+        case 'TupleTypeSpecifier': {
+          elmReturnType = 'other';
+          elmDisplay = 'Other (Tuple)';
+          break;
+        }
+        case 'ChoiceTypeSpecifier': {
+          const allChoicesKnown = areChoicesKnownTypes(typeSpecifier.choice);
+          elmReturnType = allChoicesKnown ? 'any' : 'other';
+          if (!allChoicesKnown) elmDisplay = 'Other (Choice)';
+          break;
+        }
+        default: {
+          elmReturnType = 'other';
+          elmDisplay = 'Other (unknown)';
+          break;
+        }
+      }
+    } else if (definition.expression && definition.expression.type === 'Null') {
+      elmReturnType = 'null';
+    } else {
+      elmReturnType = 'other';
+      elmDisplay = 'Other (unknown)';
+    }
+
+    definition.calculatedReturnType = elmReturnType || 'other';
+    definition.displayReturnType = elmDisplay;
   });
   return mappedDefinitions;
 }
@@ -90,8 +216,13 @@ function singlePost(req, res) {
           const details = {};
           details.cqlFileText = cqlFileText;
           details.fileName = cqlFileName;
-          const elmDefinitions = _.concat(_.get(library, 'parameters.def', []), _.get(library, 'statements.def', []))
+          let elmDefinitions = _.concat(_.get(library, 'parameters.def', []), _.get(library, 'statements.def', []))
             .filter(filterDefinition);
+          const allowedAttributes =
+            ['accessLevel', 'name', 'type', 'context', 'resultTypeName', 'resultTypeSpecifier', 'operand'];
+          elmDefinitions = elmDefinitions.map(def => {
+            return _.pick(def, allowedAttributes);
+          });
           details.definitions = mapReturnTypes(elmDefinitions);
           elmResults.details = details;
         }
