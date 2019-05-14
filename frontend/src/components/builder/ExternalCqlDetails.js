@@ -1,9 +1,12 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import FontAwesome from 'react-fontawesome';
+import { Button } from 'reactstrap';
 
 import Modal from '../elements/Modal';
 import renderDate from '../../utils/dates';
+
+import ExternalCqlDetailsSection from './ExternalCqlDetailsSection';
 
 export default class ExternalCqlDetails extends Component {
   componentDidMount() {
@@ -17,10 +20,28 @@ export default class ExternalCqlDetails extends Component {
     return version;
   }
 
+  renderHeader = (title, data) => {
+    const chevronIcon = this.state.collapse ? 'chevron-down' : 'chevron-right';
+
+    return (
+      <div
+        className="external-cql-details__header"
+        onClick={event => this.toggle(event)}
+        onKeyPress={event => this.toggle(event)}
+        role="button"
+        tabIndex={0}>
+        <div className="header-title">{title} ({data.length})</div>
+        <div className="header-divider"></div>
+        <Button onClick={this.toggle} className="header-button"><FontAwesome name={chevronIcon} /></Button>
+      </div>
+    );
+  }
+
   render() {
     const { openModal, closeModal, externalCqlLibraryDetails, isLoadingExternalCqlDetails } = this.props;
 
     if (isLoadingExternalCqlDetails || externalCqlLibraryDetails === null) return <div>Loading...</div>;
+    const definitions = externalCqlLibraryDetails.details.definitions;
 
     return (
       <Modal
@@ -52,6 +73,10 @@ export default class ExternalCqlDetails extends Component {
               <div className="item-label">FHIR Version</div>
               <div className="item-value">{this.getFhirVersion(externalCqlLibraryDetails.fhirVersion)}</div>
             </div>
+          </div>
+
+          <div className="library-details">
+            <ExternalCqlDetailsSection title="Define" definitions={definitions} />
           </div>
         </div>
       </Modal>
