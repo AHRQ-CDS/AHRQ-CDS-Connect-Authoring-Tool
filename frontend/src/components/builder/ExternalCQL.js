@@ -28,6 +28,8 @@ export default class ExternalCQL extends Component {
 
   handleAddExternalCQL = (externalCqlLibrary) => {
     const { artifact } = this.props;
+    this.setState({ uploadError: false });
+
     const reader = new FileReader();
     reader.onload = (e) => {
       const library = {
@@ -86,6 +88,9 @@ export default class ExternalCQL extends Component {
   }
 
   render() {
+    const { addExternalCqlLibraryError } = this.props;
+    const { uploadError } = this.state;
+
     return (
       <div className="external-cql" id="maincontent">
         <div className="external-cql-wrapper">
@@ -95,7 +100,16 @@ export default class ExternalCQL extends Component {
             accept=".cql,text/plain"
             multiple={false}>
             {this.renderDropzoneIcon()}
-            {this.state.uploadError && <div className="warning">Invalid file type.</div>}
+
+            {uploadError &&
+              <div className="warning"><FontAwesome name="exclamation-circle" /> Invalid file type.</div>
+            }
+
+            {addExternalCqlLibraryError !== null &&
+              <div className="warning">
+                <FontAwesome name="exclamation-circle" /> This library has already been uploaded.
+              </div>
+            }
 
             <div className="dropzone__instructions">
               Drop a valid external CQL library or zip file here, or click to browse.
@@ -125,6 +139,7 @@ ExternalCQL.propTypes = {
   externalCqlFhirVersion: PropTypes.string,
   externalCqlErrors: PropTypes.array,
   isAddingExternalCqlLibrary: PropTypes.bool,
+  addExternalCqlLibraryError: PropTypes.bool.isRequired,
   deleteExternalCqlLibrary: PropTypes.func.isRequired,
   addExternalLibrary: PropTypes.func.isRequired,
   loadExternalCqlList: PropTypes.func.isRequired,

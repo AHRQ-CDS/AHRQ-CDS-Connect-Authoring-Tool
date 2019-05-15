@@ -8,7 +8,7 @@ const defaultState = {
   loadExternalCqlList: { isLoading: false, loadStatus: null },
   loadExternalCqlLibrary: { isLoading: false, loadStatus: null },
   loadExternalCqlLibraryDetails: { isLoading: false, loadStatus: null },
-  addExternalCqlLibrary: { isAdding: false, addStatus: null },
+  addExternalCqlLibrary: { isAdding: false, addStatus: null, error: null },
   saveExternalCqlLibrary: { isSaving: false, saveStatus: null },
   deleteExternalCqlLibrary: { isDeleting: false, deleteStatus: null },
   externalCqlErrors: []
@@ -67,17 +67,17 @@ export default function externalCQL(state = defaultState, action) {
     case types.ADD_EXTERNAL_CQL_LIBRARY_REQUEST:
       return {
         ...state,
-        addExternalCqlLibrary: { isAdding: true, addStatus: null }
+        addExternalCqlLibrary: { isAdding: true, addStatus: null, error: null }
       };
     case types.ADD_EXTERNAL_CQL_LIBRARY_SUCCESS:
       return {
         ...state,
-        addExternalCqlLibrary: { isAdding: false, addStatus: 'success' }
+        addExternalCqlLibrary: { isAdding: false, addStatus: 'success', error: null }
       };
     case types.ADD_EXTERNAL_CQL_LIBRARY_FAILURE:
       return {
         ...state,
-        addExternalCqlLibrary: { isAdding: false, addStatus: 'failure' },
+        addExternalCqlLibrary: { isAdding: false, addStatus: 'failure', error: action.status },
         externalCqlErrors: action.data
       };
     case types.CLEAR_EXTERNAL_CQL_VALIDATION_WARNINGS:
