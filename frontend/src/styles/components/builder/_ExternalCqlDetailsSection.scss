@@ -5,7 +5,6 @@
     display: flex;
     align-items: center;
     cursor: pointer;
-    padding-left: 15px;
     width: 100%;
     margin: 5px 0;
 
@@ -42,9 +41,9 @@
   }
 
   &__table {
-    margin: 0 15px;
-    width: 95%;
-    max-width: 95%;
+    margin: 0 40px;
+    width: 90%;
+    max-width: 90%;
 
     tr th {
       border-top: 0;
@@ -58,6 +57,7 @@
     td {
       font-size: 0.8em;
       padding: 5px 15px;
+      width: 50%;
     }
   }
 }
