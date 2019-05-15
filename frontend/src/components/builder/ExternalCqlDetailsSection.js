@@ -34,8 +34,7 @@ export default class ExternalCqlDetailsSection extends Component {
     );
   }
 
-  renderTable = (type, definitions) => {
-    return (
+  renderTable = (type, definitions) => (
       <Table className="external-cql-details-section__table">
         <thead>
           <tr>
@@ -58,12 +57,10 @@ export default class ExternalCqlDetailsSection extends Component {
                     : _.startCase(definition.calculatedReturnType)}
                 </div>
               </td>
-            </tr>
-          )}
+            </tr>)}
         </tbody>
       </Table>
-    );
-  }
+  )
 
   render() {
     const { title, definitions } = this.props;
