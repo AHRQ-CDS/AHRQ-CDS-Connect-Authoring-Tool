@@ -16,6 +16,7 @@ const singularReturnTypeMap = {
   'Condition': 'condition',
   'MedicationStatement': 'medication_statement',
   'MedicationOrder': 'medication_order',
+  'MedicationRequest': 'medication_order',
   'Procedure': 'procedure',
   'AllergyIntolerance': 'allergy_intolerance',
   'Encounter': 'encounter',
@@ -27,6 +28,7 @@ const listReturnTypeMap = {
   'Condition': 'list_of_conditions',
   'MedicationStatement': 'list_of_medication_statements',
   'MedicationOrder': 'list_of_medication_orders',
+  'MedicationRequest': 'list_of_medication_orders',
   'Procedure': 'list_of_procedures',
   'AllergyIntolerance': 'list_of_allergy_intolerances',
   'Encounter': 'list_of_encounters',
@@ -61,7 +63,8 @@ const areChoicesKnownTypes = (choices) => {
       if (!convertedReturnType) {
         allChoicesKnown = false;
       }
-      const typeToDisplay = convertedReturnType ? convertedReturnType : returnTypeOfChoice;
+      let typeToDisplay = convertedReturnType ? convertedReturnType : returnTypeOfChoice;
+      if (returnTypeOfChoice === 'MedicationRequest') typeToDisplay = 'Medication Request';
       typesOfChoices.push(_.startCase(typeToDisplay));
     } else {
       // Default to marking as unknown.
@@ -81,6 +84,7 @@ function mapReturnTypes(definitions) {
       elmReturnType = getTypeFromELMString(definition.resultTypeName);
       const convertedReturnType = singularReturnTypeMap[elmReturnType];
       if (!convertedReturnType) elmDisplay = `Other (${elmReturnType})`;
+      if (elmReturnType === 'MedicationRequest') elmDisplay = 'Medication Request';
       elmReturnType = convertedReturnType ? convertedReturnType : 'other';
     } else if (definition.resultTypeSpecifier) {
       const typeSpecifier = definition.resultTypeSpecifier;
@@ -109,6 +113,7 @@ function mapReturnTypes(definitions) {
             elmReturnType = getTypeFromELMString(typeSpecifier.elementType.name);
             const calculatedReturnType = listReturnTypeMap[elmReturnType];
             if (!calculatedReturnType) elmDisplay = `List of Others (${elmReturnType})`;
+            if (elmReturnType === 'MedicationRequest') elmDisplay = 'List of Medication Requests';
             elmReturnType = listReturnTypeMap[elmReturnType] ? listReturnTypeMap[elmReturnType] : 'list_of_others';
           } else if (typeSpecifier.elementType.type === 'ListTypeSpecifier') {
             elmReturnType = 'list_of_others';
