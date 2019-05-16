@@ -88,7 +88,7 @@ export default class ExternalCQL extends Component {
   }
 
   render() {
-    const { addExternalCqlLibraryError } = this.props;
+    const { addExternalCqlLibraryError, addExternalCqlLibraryErrorMessage } = this.props;
     const { uploadError } = this.state;
 
     return (
@@ -107,7 +107,7 @@ export default class ExternalCQL extends Component {
 
             {addExternalCqlLibraryError !== null &&
               <div className="warning">
-                <FontAwesome name="exclamation-circle" /> This library has already been uploaded.
+                <FontAwesome name="exclamation-circle" /> {addExternalCqlLibraryErrorMessage || 'An error occurred.'}
               </div>
             }
 
@@ -139,7 +139,7 @@ ExternalCQL.propTypes = {
   externalCqlFhirVersion: PropTypes.string,
   externalCqlErrors: PropTypes.array,
   isAddingExternalCqlLibrary: PropTypes.bool,
-  addExternalCqlLibraryError: PropTypes.bool.isRequired,
+  addExternalCqlLibraryError: PropTypes.number,
   deleteExternalCqlLibrary: PropTypes.func.isRequired,
   addExternalLibrary: PropTypes.func.isRequired,
   loadExternalCqlList: PropTypes.func.isRequired,

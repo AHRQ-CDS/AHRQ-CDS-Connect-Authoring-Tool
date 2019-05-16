@@ -662,7 +662,8 @@ export class Builder extends Component {
                     clearExternalCqlValidationWarnings={this.props.clearExternalCqlValidationWarnings}
                     loadExternalCqlLibraryDetails={this.props.loadExternalCqlLibraryDetails}
                     isLoadingExternalCqlDetails={this.props.isLoadingExternalCqlDetails}
-                    addExternalCqlLibraryError={this.props.addExternalCqlLibraryError} />
+                    addExternalCqlLibraryError={this.props.addExternalCqlLibraryError}
+                    addExternalCqlLibraryErrorMessage={this.props.addExternalCqlLibraryErrorMessage} />
                 </TabPanel>
               </div>
             </Tabs>
@@ -721,7 +722,8 @@ Builder.propTypes = {
   loadExternalCqlList: PropTypes.func.isRequired,
   loadExternalCqlLibraryDetails: PropTypes.func.isRequired,
   isLoadingExternalCqlDetails: PropTypes.bool.isRequired,
-  addExternalCqlLibraryError: PropTypes.bool.isRequired
+  addExternalCqlLibraryError: PropTypes.number,
+  addExternalCqlLibraryErrorMessage: PropTypes.string
 };
 
 // these props are used for dispatching actions
@@ -784,7 +786,8 @@ function mapStateToProps(state) {
     externalCqlErrors: state.externalCQL.externalCqlErrors,
     isAddingExternalCqlLibrary: state.externalCQL.addExternalCqlLibrary.isAdding,
     isLoadingExternalCqlDetails: state.externalCQL.loadExternalCqlLibraryDetails.isLoading,
-    addExternalCqlLibraryError: state.externalCQL.addExternalCqlLibrary.error
+    addExternalCqlLibraryError: state.externalCQL.addExternalCqlLibrary.error,
+    addExternalCqlLibraryErrorMessage: state.externalCQL.addExternalCqlLibrary.message
   };
 }
 

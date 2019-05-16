@@ -1,5 +1,6 @@
 import axios from 'axios';
 import Promise from 'promise';
+import _ from 'lodash';
 
 import * as types from './types';
 
@@ -144,7 +145,7 @@ function addExternalCqlLibrarySuccess() {
 
 function addExternalCqlLibraryFailure(error) {
   const statusText = (error.response && (typeof error.response.data === 'string')) ? error.response.data : '';
-  const data = (error.response && (typeof error.response.data !== 'string')) ? error.response.data : [];
+  const data = (error.response && _.isArray(error.response.data)) ? error.response.data : [];
   return {
     type: types.ADD_EXTERNAL_CQL_LIBRARY_FAILURE,
     status: error.response ? error.response.status : '',
