@@ -91,6 +91,10 @@ function mapReturnTypes(definitions) {
       switch (typeSpecifier.type) {
         case 'NamedTypeSpecifier': {
           elmReturnType = getTypeFromELMString(typeSpecifier.name);
+          const convertedReturnType = singularReturnTypeMap[elmReturnType];
+          if (!convertedReturnType) elmDisplay = `Other (${elmReturnType})`;
+          if (elmReturnType === 'MedicationRequest') elmDisplay = 'Medication Request';
+          elmReturnType = convertedReturnType ? convertedReturnType : 'other';
           break;
         }
         case 'IntervalTypeSpecifier': {
@@ -111,10 +115,10 @@ function mapReturnTypes(definitions) {
             elmDisplay = 'List of Others (Tuple)';
           } else if (typeSpecifier.elementType.type === 'NamedTypeSpecifier') {
             elmReturnType = getTypeFromELMString(typeSpecifier.elementType.name);
-            const calculatedReturnType = listReturnTypeMap[elmReturnType];
-            if (!calculatedReturnType) elmDisplay = `List of Others (${elmReturnType})`;
+            const convertedReturnType = listReturnTypeMap[elmReturnType];
+            if (!convertedReturnType) elmDisplay = `List of Others (${elmReturnType})`;
             if (elmReturnType === 'MedicationRequest') elmDisplay = 'List of Medication Requests';
-            elmReturnType = listReturnTypeMap[elmReturnType] ? listReturnTypeMap[elmReturnType] : 'list_of_others';
+            elmReturnType = convertedReturnType ? convertedReturnType : 'list_of_others';
           } else if (typeSpecifier.elementType.type === 'ListTypeSpecifier') {
             elmReturnType = 'list_of_others';
             elmDisplay = 'List of Lists';
