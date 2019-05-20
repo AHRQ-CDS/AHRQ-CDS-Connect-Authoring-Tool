@@ -19,6 +19,7 @@ const baseState = {
   templates: { templates: elementGroups },
   auth: { isLoggingOut: false },
   vsac: {},
+  externalCQL: { addExternalCqlLibrary: {}, loadExternalCqlLibraryDetails: {} },
   modifiers: {}
 };
 
