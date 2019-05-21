@@ -453,10 +453,15 @@ function executeArtifactSuccess(data, artifact, patient) {
 }
 
 function executeArtifactFailure(error) {
+  let errorMessage;
+  if (error.response && error.response.status === 404) {
+    errorMessage = 'Unable to retrieve codes for a value set in this artifact. This is a known issue with'
+    + ' intensional value sets that will be resolved in an upcoming release';
+  }
   return {
     type: types.EXECUTE_ARTIFACT_FAILURE,
     status: error.response ? error.response.status : '',
-    statusText: error.response ? error.response.statusText : ''
+    statusText: errorMessage || (error.response ? error.response.statusText : '')
   };
 }
 
