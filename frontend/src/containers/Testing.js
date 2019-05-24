@@ -198,7 +198,7 @@ class Testing extends Component {
     return <Breadcrumb className="execution-message">
       {this.props.errorMessage
         && <div className="warning">{this.props.errorMessage}</div>}
-      Execute CQL for a patient below.
+      <div>Execute CQL for a patient below.</div>
     </Breadcrumb>;
   }
 
