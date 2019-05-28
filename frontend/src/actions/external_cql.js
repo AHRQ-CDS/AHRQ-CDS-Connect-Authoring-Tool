@@ -42,8 +42,8 @@ export function loadExternalCqlList(artifactId) {
     dispatch(requestExternalCqlList());
 
     return sendExternalCqlListRequest(artifactId)
-      .catch(error => dispatch(loadExternalCqlListFailure(error)))
-      .then(data => dispatch(loadExternalCqlListSuccess(data)));
+      .then(data => dispatch(loadExternalCqlListSuccess(data)))
+      .catch(error => dispatch(loadExternalCqlListFailure(error)));
   };
 }
 
@@ -124,8 +124,8 @@ export function loadExternalCqlLibraryDetails(libraryId) {
     dispatch(requestExternalCqlLibraryDetails());
 
     return sendExternalCqlLibraryDetailsRequest(libraryId)
-      .catch(error => dispatch(loadExternalCqlLibraryDetailsFailure(error)))
-      .then(data => dispatch(loadExternalCqlLibraryDetailsSuccess(data)));
+      .then(data => dispatch(loadExternalCqlLibraryDetailsSuccess(data)))
+      .catch(error => dispatch(loadExternalCqlLibraryDetailsFailure(error)));
   };
 }
 
@@ -214,8 +214,8 @@ export function deleteExternalCqlLibrary(libraryId, artifactId) {
     dispatch(requestDeleteExternalCqlLibrary());
 
     return sendDeleteExternalCqlLibraryRequest(libraryId)
-      .catch(error => dispatch(deleteExternalCqlLibraryFailure(error)))
       .then(data => dispatch(deleteExternalCqlLibrarySuccess()))
+      .catch(error => dispatch(deleteExternalCqlLibraryFailure(error)))
       .then(() => dispatch(loadExternalCqlList(artifactId)));
   };
 }
