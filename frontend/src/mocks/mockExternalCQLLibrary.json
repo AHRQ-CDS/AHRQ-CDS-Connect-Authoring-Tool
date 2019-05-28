@@ -1,0 +1,68 @@
+{
+  "_id": "5ced91b4c7777ed3c3424b80",
+  "updatedAt": "2019-05-28T19:53:24.519Z",
+  "createdAt": "2019-05-28T19:53:24.519Z",
+  "linkedArtifactId": "5cbde14be540f0353267efb7",
+  "user": "demo",
+  "name": "CQL-Upload",
+  "version": "1.0.0",
+  "fhirVersion": "1.0.2",
+  "details": {
+    "cqlFileText": "library \"CQL-Upload\" version '1.0.0'\r\n\r\nusing FHIR version '1.0.2'\r\n\r\ninclude FHIRHelpers version '1.0.2' called FHIRHelpers \r\n\r\ninclude CDS_Connect_Commons_for_FHIRv102 version '1.3.0' called C3F \r\n\r\ninclude CDS_Connect_Conversions version '1' called Convert \r\n\r\n\r\nvalueset \"LDL-c VS\": '2.16.840.1.113883.3.117.1.7.1.215'\r\n\r\n\r\n\r\ncontext Patient\r\n\r\ndefine \"Age\":\r\n  AgeInMonths() >= 14\r\n\r\ndefine \"LDL-c\":\r\n  exists([Observation: \"LDL-c VS\"])\r\n\r\ndefine \"MeetsInclusionCriteria\":\r\n  \"Age\"\r\n  and \"LDL-c\"\r\n\r\ndefine \"InPopulation\":\r\n   \"MeetsInclusionCriteria\" \r\n\r\ndefine \"Recommendation\":\r\n  null\r\n\r\ndefine \"Rationale\":\r\n  null\r\ndefine \"Errors\":\r\n  null\r\n",
+    "fileName": "CQL-Upload.cql",
+    "parameters": [],
+    "definitions": [
+      {
+        "accessLevel": "Public",
+        "name": "Age",
+        "context": "Patient",
+        "resultTypeName": "{urn:hl7-org:elm-types:r1}Boolean",
+        "calculatedReturnType": "boolean"
+      },
+      {
+        "accessLevel": "Public",
+        "name": "LDL-c",
+        "context": "Patient",
+        "resultTypeName": "{urn:hl7-org:elm-types:r1}Boolean",
+        "calculatedReturnType": "boolean"
+      },
+      {
+        "accessLevel": "Public",
+        "name": "MeetsInclusionCriteria",
+        "context": "Patient",
+        "resultTypeName": "{urn:hl7-org:elm-types:r1}Boolean",
+        "calculatedReturnType": "boolean"
+      },
+      {
+        "accessLevel": "Public",
+        "name": "InPopulation",
+        "context": "Patient",
+        "resultTypeName": "{urn:hl7-org:elm-types:r1}Boolean",
+        "calculatedReturnType": "boolean"
+      },
+      {
+        "accessLevel": "Public",
+        "name": "Recommendation",
+        "context": "Patient",
+        "resultTypeName": "{urn:hl7-org:elm-types:r1}Any",
+        "calculatedReturnType": "any"
+      },
+      {
+        "accessLevel": "Public",
+        "name": "Rationale",
+        "context": "Patient",
+        "resultTypeName": "{urn:hl7-org:elm-types:r1}Any",
+        "calculatedReturnType": "any"
+      },
+      {
+        "accessLevel": "Public",
+        "name": "Errors",
+        "context": "Patient",
+        "resultTypeName": "{urn:hl7-org:elm-types:r1}Any",
+        "calculatedReturnType": "any"
+      }
+    ],
+    "functions": []
+  },
+  "__v": 0
+}
