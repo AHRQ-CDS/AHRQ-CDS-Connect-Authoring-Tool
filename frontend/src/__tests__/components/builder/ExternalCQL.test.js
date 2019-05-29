@@ -11,7 +11,7 @@ test('ExternalCQL renders without crashing', () => {
   expect(component).toBeDefined();
 });
 
-test('Testing shows form and no table when there is no data', () => {
+test('ExternalCQL shows form and no table when there is no data', () => {
   const props = {
     artifact: {},
     loadExternalCqlList: jest.fn(),
@@ -22,7 +22,7 @@ test('Testing shows form and no table when there is no data', () => {
   expect(component.find(ExternalCQLTable)).toHaveLength(0);
 });
 
-test('Testing shows a table when there is data', () => {
+test('ExternalCQL shows a table when there is data', () => {
   const props = {
     artifact: {},
     loadExternalCqlList: jest.fn(),
