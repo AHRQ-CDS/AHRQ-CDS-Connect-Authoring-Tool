@@ -40,6 +40,9 @@
     "nock": "^9.1.4",
     "nodemon": "^1.12.1"
   },
+  "resolutions": {
+    "axios": "^0.19.0"
+  },
   "scripts": {
     "start": "node ./server.js",
     "start-dev": "nodemon",
