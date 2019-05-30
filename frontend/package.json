@@ -5,7 +5,7 @@
   "homepage": "https://cds.ahrq.gov/authoring",
   "license": "Apache-2.0",
   "dependencies": {
-    "axios": "^0.15.3",
+    "axios": "^0.19.0",
     "bootstrap": "^4.0.0-beta",
     "change-case": "^3.0.1",
     "classnames": "^2.2.5",

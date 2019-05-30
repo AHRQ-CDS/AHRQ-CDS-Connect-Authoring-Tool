@@ -130,27 +130,9 @@ function getOneValueSet(username, password) {
   });
 }
 
-function getAuthType() {
-  const options = {
-    method: 'GET',
-    url: `${VSAC_FHIR_ENDPOINT}/metadata?_format=json`
-  };
-  return rpn(options).then((res) => {
-    const restArray = _.get(JSON.parse(res), 'rest', []);
-    const securityEntry = _.find(restArray, 'security');
-    const securityService = _.get(securityEntry, 'security.service', []);
-    const securityCodeableConceptEntry = _.find(securityService, 'coding');
-    const coding = _.get(securityCodeableConceptEntry, 'coding', []);
-    const codeEntry = _.find(coding, 'code');
-    const type = _.get(codeEntry, 'code', 'Unknown');
-    return type;
-  });
-}
-
 module.exports = {
   getValueSet,
   searchForValueSets,
   getCode,
-  getOneValueSet,
-  getAuthType
+  getOneValueSet
 }

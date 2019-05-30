@@ -7,40 +7,17 @@ function login(req, res) {
     return res.sendStatus(401);
   }
 
-  FHIRClient.getAuthType()
-    .then((type) => {
-      switch (type) {
-        case 'Basic': {
-          // For basic auth, try to get one value set with username/password. Success means correct credentials.
-          FHIRClient.getOneValueSet(user.name, user.pass)
-            .then(() => {
-              res.sendStatus(200);
-            })
-            .catch((error) => {
-              // If credentials are correct but VS is not found, can still be considered logged in.
-              if (error.statusCode === 404) {
-                res.sendStatus(200);
-              } else {
-                res.sendStatus(error.statusCode);
-              }
-            });
-          break;
-        }
-        case 'SMART-on-FHIR': {
-          // No implementation yet - return Unauthorized
-          res.sendStatus(401);
-          break;
-        }
-        default:
-          res.sendStatus(401);
-          break;
-      }
+  // Since NLM uses basic auth, try to get one value set with username/password. Success means correct credentials.
+  FHIRClient.getOneValueSet(user.name, user.pass)
+    .then(() => {
+      res.sendStatus(200);
     })
     .catch((error) => {
-      if (error.statusCode) {
-        res.sendStatus(error.statusCode);
+      // If credentials are correct but VS is not found, can still be considered logged in.
+      if (error.statusCode === 404) {
+        res.sendStatus(200);
       } else {
-        res.status(500).send(error);
+        res.sendStatus(error.statusCode);
       }
     });
 }
