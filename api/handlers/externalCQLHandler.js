@@ -1,4 +1,5 @@
 const _ = require('lodash');
+const unzipper = require('unzipper');
 const CQLLibrary = require('../models/cqlLibrary');
 const convertToElm = require('../handlers/cqlHandler').convertToElm;
 
@@ -200,9 +201,17 @@ function singlePost(req, res) {
   if (req.user) {
     const { cqlFileName, cqlFileText, artifactId } = req.body.library;
 
+    const decodedBuffer = Buffer.from(cqlFileText, 'base64');
+    // unzipper.Open.buffer(decodedBuffer)
+    //   .then((directory) => {
+    //     console.log('Success');
+    //     console.log(directory);
+    //   })
+    //   .catch(err => { console.log('Im an error!!'); console.log(err); });
+
     const cqlJson = {
       filename: cqlFileName,
-      text: cqlFileText,
+      text: decodedBuffer,
       type: 'text/plain'
     };
 

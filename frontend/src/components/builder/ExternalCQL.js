@@ -35,11 +35,12 @@ export default class ExternalCQL extends Component {
       const cqlFileName = externalCqlLibrary[0].name;
       const cqlFileType = externalCqlLibrary[0].type;
 
+      const fileContentToSend = e.target.result.slice(e.target.result.indexOf(',') + 1);
       if (cqlFileType !== 'application/zip'
       || (cqlFileType === 'application/zip' && cqlFileName.endsWith('.zip'))) {
         const library = {
           cqlFileName,
-          cqlFileText: e.target.result,
+          cqlFileText: fileContentToSend,
           artifactId: artifact._id
         };
 
@@ -51,7 +52,7 @@ export default class ExternalCQL extends Component {
     };
 
     try {
-      reader.readAsText(externalCqlLibrary[0]);
+      reader.readAsDataURL(externalCqlLibrary[0]);
     } catch (error) {
       this.setState({ uploadError: true });
     }
