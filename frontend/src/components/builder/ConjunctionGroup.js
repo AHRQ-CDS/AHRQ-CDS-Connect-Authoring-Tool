@@ -147,10 +147,16 @@ export default class ConjunctionGroup extends Component {
   }
 
   hasNestedWarnings = (childInstances) => {
-    const { instanceNames, baseElements, getAllInstancesInAllTrees, validateReturnType } = this.props;
+    const { instanceNames, baseElements, parameters, getAllInstancesInAllTrees, validateReturnType } = this.props;
     const allInstancesInAllTrees = getAllInstancesInAllTrees();
-    const hasNestedWarning =
-      hasGroupNestedWarning(childInstances, instanceNames, baseElements, allInstancesInAllTrees, validateReturnType);
+    const hasNestedWarning = hasGroupNestedWarning(
+      childInstances,
+      instanceNames,
+      baseElements,
+      parameters,
+      allInstancesInAllTrees,
+      validateReturnType
+    );
     return hasNestedWarning;
   }
 

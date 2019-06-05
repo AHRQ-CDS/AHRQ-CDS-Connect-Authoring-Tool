@@ -227,11 +227,17 @@ export default class ListGroup extends Component {
   isBaseElementListUsed = element => (element.usedBy ? element.usedBy.length !== 0 : false);
 
   hasNestedWarnings = (childInstances) => {
-    const { instanceNames, baseElements, getAllInstancesInAllTrees, instance } = this.props;
+    const { instanceNames, baseElements, parameters, getAllInstancesInAllTrees, instance } = this.props;
     const isAndOrElement = instance.id === 'And' || instance.id === 'Or';
     const allInstancesInAllTrees = getAllInstancesInAllTrees();
-    const hasNestedWarning =
-      hasGroupNestedWarning(childInstances, instanceNames, baseElements, allInstancesInAllTrees, isAndOrElement);
+    const hasNestedWarning = hasGroupNestedWarning(
+      childInstances,
+      instanceNames,
+      baseElements,
+      parameters,
+      allInstancesInAllTrees,
+      isAndOrElement
+    );
     return hasNestedWarning;
   }
 
