@@ -37,7 +37,7 @@ let fhirTarget = '1.0.2';
 module.exports = {
   objToCql,
   objToELM,
-  convertToElm,
+  makeCQLtoELMRequest,
   idToObj,
   writeZip,
   buildCQL
@@ -998,7 +998,7 @@ function objToELM(req, res) {
 
 function validateELM(cqlArtifact, writeStream, callback) {
   const artifactJSON = cqlArtifact instanceof CqlArtifact ? cqlArtifact.toJson() : cqlArtifact;
-  convertToElm(artifactJSON, (err, elmFiles) => {
+  convertToElm([artifactJSON], (err, elmFiles) => {
     if(err) {
       callback(err);
       return;
@@ -1024,7 +1024,7 @@ function writeZip(cqlArtifact, writeStream, callback /* (error) */) {
   // TODO: Consider separating EJS rendering from toJSON() or toString() methods.
   const artifactJson = cqlArtifact.toJson();
   // We must first convert to ELM before packaging up
-  convertToElm(artifactJson, (err, elmFiles) => {
+  convertToElm([artifactJson], (err, elmFiles) => {
     if (err) {
       callback(err);
       return;
@@ -1049,7 +1049,7 @@ function writeZip(cqlArtifact, writeStream, callback /* (error) */) {
   });
 }
 
-function convertToElm(artifactJson, callback /* (error, elmFiles) */) {
+function convertToElm(artifacts, callback /* (error, elmFiles) */) {
   // If CQL-to-ELM is disabled, this function should basically be a no-op
   if (!config.get('cqlToElm.active')) {
     callback(null, []);
@@ -1070,30 +1070,39 @@ function convertToElm(artifactJson, callback /* (error, elmFiles) */) {
     }
 
     const fileStreams = files.map(f => fs.createReadStream(f));
+    makeCQLtoELMRequest(artifacts, fileStreams, callback);
+  });
+}
 
-    const requestEndpoint = `${config.get('cqlToElm.url')}?result-types=true&signatures=All`;
-    // NOTE: the request isn't posted until the next event loop, so we can modify it after calling request.post
-    const cqlReq = request.post(requestEndpoint, (err2, resp, body) => {
-      if (err2) {
-        callback(err2);
-        return;
-      }
-      const contentType = resp.headers['Content-Type'] || resp.headers['content-type'];
-      if (contentType === 'text/html') {
-        console.log(body);
-      }
-      // The body is multi-part containing an ELM file in each part, so we need to split it
-      splitELM(body, contentType, callback);
+function makeCQLtoELMRequest(files, fileStreams, callback) {
+  const requestEndpoint = `${config.get('cqlToElm.url')}?result-types=true&signatures=All`;
+  // NOTE: the request isn't posted until the next event loop, so we can modify it after calling request.post
+  const cqlReq = request.post(requestEndpoint, (err2, resp, body) => {
+    if (err2) {
+      callback(err2);
+      return;
+    }
+    const contentType = resp.headers['Content-Type'] || resp.headers['content-type'];
+    if (contentType === 'text/html') {
+      console.log(body);
+    }
+    // The body is multi-part containing an ELM file in each part, so we need to split it
+    splitELM(body, contentType, callback);
+  });
+  const form = cqlReq.form();
+  if (files) {
+    files.forEach(file => {
+      form.append(file.filename, file.text, {
+        filename: file.filename,
+        contentType: file.type
+      });
     });
-    const form = cqlReq.form();
-    form.append(artifactJson.filename, artifactJson.text, {
-      filename: artifactJson.filename,
-      contentType: artifactJson.type
-    });
+  }
+  if (fileStreams) {
     fileStreams.forEach((f) => {
       form.append(path.basename(f.path, '.cql'), f);
     });
-  });
+  }
 }
 
 function splitELM(body, contentType, callback /* (error, elmFiles) */) {

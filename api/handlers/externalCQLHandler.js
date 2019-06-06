@@ -1,7 +1,7 @@
 const _ = require('lodash');
 const unzipper = require('unzipper');
 const CQLLibrary = require('../models/cqlLibrary');
-const convertToElm = require('../handlers/cqlHandler').convertToElm;
+const makeCQLtoELMRequest = require('../handlers/cqlHandler').makeCQLtoELMRequest;
 
 const singularReturnTypeMap = {
   'Boolean': 'boolean',
@@ -201,11 +201,19 @@ function singlePost(req, res) {
   if (req.user) {
     const { cqlFileName, cqlFileText, artifactId } = req.body.library;
 
-    const decodedBuffer = Buffer.from(cqlFileText, 'base64');
+    const decodedBuffer = Buffer.from(cqlFileText, 'base64').toString();
     // unzipper.Open.buffer(decodedBuffer)
-    //   .then((directory) => {
-    //     console.log('Success');
-    //     console.log(directory);
+    //   .then(async (directory) => {
+    //     const files = await Promise.all(directory.files.filter(file => file.path.endsWith('.cql')).map(async (file) => {
+    //       const buffer = await file.buffer();
+    //       return Promise.resolve( { filename: file.path, type: 'text/plain', text: buffer.toString() });
+    //     }));
+    //     makeCQLtoELMRequest(files, [], (err, elmFiles) => {
+    //       console.log(err);
+    //       elmFiles.forEach(file => {
+    //         console.log(file.content);
+    //       })
+    //     });
     //   })
     //   .catch(err => { console.log('Im an error!!'); console.log(err); });
 
@@ -215,7 +223,7 @@ function singlePost(req, res) {
       type: 'text/plain'
     };
 
-    convertToElm(cqlJson, (err, elmFiles) => {
+    makeCQLtoELMRequest([cqlJson], [], (err, elmFiles) => {
       if (err) {
         res.status(500).send(err);
         return;
