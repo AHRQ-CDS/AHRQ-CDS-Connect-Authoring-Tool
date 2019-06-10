@@ -107,6 +107,7 @@
   },
   "resolutions": {
     "js-yaml": "~3.13.1",
+    "querystringify": "~>2.0.0",
     "tar": "^4.4.2",
     "ucum": "cmoesel/ucum.js#es5-friendly",
     "webpack-dev-server": "^2.11.5"
