@@ -60,14 +60,14 @@ export default class IntervalOfQuantityEditor extends Component {
   }
 
   render() {
-    const { id, name, type, value, updateInstance } = this.props;
+    const { id, name, type, label, value, updateInstance } = this.props;
     const formId = _.uniqueId('parameter-');
 
     return (
       <div className="interval-of-quantity-editor">
         <div className="parameter__item row">
           <div className="col-3 bold align-right">
-            <label htmlFor={formId}>Default Value:</label>
+            <label htmlFor={formId}>{label}</label>
           </div>
 
           <div className="col-9 d-flex">
@@ -80,7 +80,7 @@ export default class IntervalOfQuantityEditor extends Component {
                 ? _.get(value, 'firstQuantity')
                 : '' }
               onChange={ (e) => {
-                updateInstance({ name, type, value: this.assignValue(e) });
+                updateInstance({ name, type, label, value: this.assignValue(e) });
               }}
             />
 
@@ -95,7 +95,7 @@ export default class IntervalOfQuantityEditor extends Component {
                 ? _.get(value, 'secondQuantity')
                 : '' }
               onChange={ (e) => {
-                updateInstance({ name, type, value: this.assignValue(e) });
+                updateInstance({ name, type, label, value: this.assignValue(e) });
               }}
             />
 
@@ -108,10 +108,10 @@ export default class IntervalOfQuantityEditor extends Component {
               aria-label="Enter Unit"
               value={_.get(value, 'unit', null) || ''}
               onChange={(e) => {
-                updateInstance({ name, type, value: this.assignValue(e) });
+                updateInstance({ name, type, label, value: this.assignValue(e) });
               }}
               onSelect={(e) => {
-                updateInstance({ name, type, value: this.assignValue(e) });
+                updateInstance({ name, type, label, value: this.assignValue(e) });
               }}
             />
           </div>
@@ -125,6 +125,7 @@ IntervalOfQuantityEditor.propTypes = {
   id: PropTypes.string.isRequired,
   name: PropTypes.string,
   type: PropTypes.string.isRequired,
+  label: PropTypes.string.isRequired,
   value: PropTypes.object,
   updateInstance: PropTypes.func.isRequired
 };

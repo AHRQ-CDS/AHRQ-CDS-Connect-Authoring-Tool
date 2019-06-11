@@ -465,13 +465,16 @@ function executeArtifactFailure(error) {
   };
 }
 
-function performExecuteArtifact(elmFiles, artifactName, patient, vsacCredentials, codeService, dataModel) {
+function performExecuteArtifact(elmFiles, artifactName, params, patient, vsacCredentials, codeService, dataModel) {
   // Set up the library
   const elmFile = JSON.parse(_.find(elmFiles, f =>
     f.name.replace(/[\s-\\/]/g, '') === artifactName.replace(/[\s-\\/]/g, '')).content);
   const libraries = _.filter(elmFiles, f =>
     f.name.replace(/[\s-\\/]/g, '') !== artifactName.replace(/[\s-\\/]/g, '')).map(f => JSON.parse(f.content));
   const library = new cql.Library(elmFile, new cql.Repository(libraries));
+
+  // Set up the parameters
+  const cqlExecParams = convertParameters(params);
 
   // Create the patient source
   const patientSource = (dataModel.version === '3.0.0')
@@ -491,13 +494,88 @@ function performExecuteArtifact(elmFiles, artifactName, patient, vsacCredentials
   return codeService.ensureValueSets(valueSets, vsacCredentials.username, vsacCredentials.password)
     .then(() => {
       // Value sets are loaded, so execute!
-      const executor = new cql.Executor(library, codeService);
+      const executor = new cql.Executor(library, codeService, cqlExecParams);
       const results = executor.exec(patientSource);
       return results;
     });
 }
 
-export function executeCQLArtifact(artifact, patient, vsacCredentials, codeService, dataModel) {
+function convertParameters(params = []) {
+  // console.log('Convert Params', params);
+  const paramsObj = {};
+  params.forEach((p) => {
+    // Handle the null case first so we don't have to guard against it later
+    if (p.value == null) {
+      paramsObj[p.name] = null;
+      return;
+    }
+    switch (p.type) {
+      case 'boolean':
+        paramsObj[p.name] = p.value === 'true';
+        break;
+      case 'datetime':
+        paramsObj[p.name] = cql.DateTime.parse(p.value.str.slice(1));
+        break;
+      case 'decimal':
+        paramsObj[p.name] = p.value.decimal;
+        break;
+      case 'integer':
+        paramsObj[p.name] = p.value;
+        break;
+      case 'interval_of_datetime': {
+        let d1 = null;
+        let d2 = null;
+        if (p.value.firstDate) {
+          const str = p.value.firstTime ? `${p.value.firstDate}T${p.value.firstTime}` : p.value.firstDate;
+          d1 = cql.DateTime.parse(str);
+        }
+        if (p.value.secondDate) {
+          const str = p.value.secondTime ? `${p.value.secondDate}T${p.value.secondTime}` : p.value.secondDate;
+          d2 = cql.DateTime.parse(str);
+        }
+        paramsObj[p.name] = new cql.Interval(d1, d2);
+        break;
+      }
+      case 'interval_of_decimal':
+        paramsObj[p.name] = new cql.Interval(p.value.firstDecimal, p.value.secondDecimal);
+        break;
+      case 'interval_of_integer':
+        paramsObj[p.name] = new cql.Interval(p.value.firstInteger, p.value.secondInteger);
+        break;
+      case 'interval_of_quantity': {
+        const q1 = p.value.firstQuantity != null ? new cql.Quantity({
+          value: p.value.firstQuantity,
+          unit: p.value.unit
+        }) : null;
+        const q2 = p.value.secondQuantity != null ? new cql.Quantity({
+          value: p.value.secondQuantity,
+          unit: p.value.unit
+        }) : null;
+        paramsObj[p.name] = new cql.Interval(q1, q2);
+        break;
+      }
+      case 'string':
+        // Remove the leading and trailing single-quotes
+        paramsObj[p.name] = p.value.replace(/^'(.*)'$/, '$1');
+        break;
+      case 'system_quantity':
+        paramsObj[p.name] = new cql.Quantity({
+          value: p.value.quantity,
+          unit: p.value.unit
+        });
+        break;
+      case 'time':
+        // CQL exec doesn't expose a Time class, so we must construct a DT and then get the Time
+        paramsObj[p.name] = cql.DateTime.parse(`@0000-01-01${p.value.slice(1)}`).getTime();
+        break;
+      default: // do nothing
+    }
+  });
+  // console.log('Converted Params', paramsObj);
+  return paramsObj;
+}
+
+export function executeCQLArtifact(artifact, params, patient, vsacCredentials, codeService, dataModel) {
   artifact.dataModel = dataModel;
 
   return (dispatch) => {
@@ -517,6 +595,7 @@ export function executeCQLArtifact(artifact, patient, vsacCredentials, codeServi
     }).then(res => performExecuteArtifact(
       res.data.elmFiles,
       artifact.name,
+      params,
       patient,
       vsacCredentials,
       codeService,

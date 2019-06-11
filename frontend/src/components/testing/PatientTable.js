@@ -13,6 +13,7 @@ import Modal from '../elements/Modal';
 import VSACAuthenticationModal from '../builder/VSACAuthenticationModal';
 import CodeService from '../../utils/code_service/CodeService';
 import PatientView from './PatientView';
+import TestingParameters from './TestingParameters';
 
 export default class PatientTable extends Component {
   constructor(props) {
@@ -25,6 +26,7 @@ export default class PatientTable extends Component {
       showViewDetailsModal: false,
       patientToExecute: null,
       artifactToExecute: null,
+      paramsToExecute: [],
       showExecuteCQLModal: false,
       testReport: null,
       codeService: new CodeService()
@@ -67,27 +69,47 @@ export default class PatientTable extends Component {
   }
 
   closeExecuteCQLModal = () => {
-    this.setState({ showExecuteCQLModal: false, patientToExecute: null, artifactToExecute: null });
+    this.setState({
+      showExecuteCQLModal: false,
+      patientToExecute: null,
+      artifactToExecute: null,
+      paramsToExecute: []
+    });
   }
 
   selectArtifactForCQLModal = (artifact) => {
-    this.setState({ artifactToExecute: artifact });
+    let params = [];
+    if (artifact.value && artifact.value.parameters) {
+      params = artifact.value.parameters.map(p => ({
+        name: p.name,
+        type: p.type,
+        value: _.clone(p.value)
+      }));
+    }
+    this.setState({ artifactToExecute: artifact, paramsToExecute: params });
   }
 
   handleExecuteCQL = () => {
-    this.executeCQL(this.state.artifactToExecute.value, this.state.patientToExecute);
+    this.executeCQL(this.state.artifactToExecute.value, this.state.paramsToExecute, this.state.patientToExecute);
     this.closeExecuteCQLModal();
+  }
+
+  // ----------------------- HANDLE PARAMETERS -------------------------- //
+
+  updateParameters = (params) => {
+    this.setState({ paramsToExecute: params });
   }
 
   // ----------------------- PERFORM CQL EXECUTION -------------------------- //
 
-  executeCQL = (artifact, patient) => {
+  executeCQL = (artifact, params, patient) => {
     const dataModel = (patient.fhirVersion === 'STU3')
       ? { name: 'FHIR', version: '3.0.0' }
       : { name: 'FHIR', version: '1.0.2' };
 
     this.props.executeCQLArtifact(
       artifact,
+      params,
       patient.patient,
       this.props.vsacFHIRCredentials,
       this.state.codeService,
@@ -193,6 +215,21 @@ export default class PatientTable extends Component {
             options={artifactOptions}
             value={this.state.artifactToExecute}
             onChange={this.selectArtifactForCQLModal}
+          />
+
+          <TestingParameters
+            parameters={this.state.paramsToExecute}
+            updateParameters={this.updateParameters}
+            // vsacFHIRCredentials={this.props.vsacFHIRCredentials}
+            // loginVSACUser={this.props.loginVSACUser}
+            // setVSACAuthStatus={this.props.setVSACAuthStatus}
+            // vsacStatus={this.props.vsacStatus}
+            // vsacStatusText={this.props.vsacStatusText}
+            // isValidatingCode={this.props.isValidatingCode}
+            // isValidCode={this.props.isValidCode}
+            // codeData={this.props.codeData}
+            // validateCode={this.props.validateCode}
+            // resetCodeValidation={this.props.resetCodeValidation}
           />
         </div>
       </Modal>

@@ -41,14 +41,14 @@ export default class IntervalOfDecimalEditor extends Component {
   }
 
   render() {
-    const { id, name, type, value, updateInstance } = this.props;
+    const { id, name, type, label, value, updateInstance } = this.props;
     const formId = _.uniqueId('parameter-');
 
     return (
       <div className="interval-of-decimal-editor">
         <div className="parameter__item row">
           <div className="col-3 bold align-right">
-            <label htmlFor={formId}>Default Value:</label>
+            <label htmlFor={formId}>{label}</label>
           </div>
 
           <div className="col-9 d-flex">
@@ -61,7 +61,7 @@ export default class IntervalOfDecimalEditor extends Component {
                 ? _.get(value, 'firstDecimal')
                 : '' }
               onChange={ (e) => {
-                updateInstance({ name, type, value: this.assignValue(e) });
+                updateInstance({ name, type, label, value: this.assignValue(e) });
               }}
             />
 
@@ -76,7 +76,7 @@ export default class IntervalOfDecimalEditor extends Component {
                 ? _.get(value, 'secondDecimal')
                 : '' }
               onChange={ (e) => {
-                updateInstance({ name, type, value: this.assignValue(e) });
+                updateInstance({ name, type, label, value: this.assignValue(e) });
               }}
             />
           </div>
@@ -90,6 +90,7 @@ IntervalOfDecimalEditor.propTypes = {
   id: PropTypes.string.isRequired,
   name: PropTypes.string,
   type: PropTypes.string.isRequired,
+  label: PropTypes.string.isRequired,
   value: PropTypes.object,
   updateInstance: PropTypes.func.isRequired
 };

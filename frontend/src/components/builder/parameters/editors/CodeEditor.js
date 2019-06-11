@@ -96,7 +96,7 @@ export default class CodeEditor extends Component {
         :
           <div className="parameter__item row">
             <div className="col-3 bold align-right">
-              Default Value:
+              {this.props.label}
             </div>
 
             <div className="col-9">
@@ -113,6 +113,7 @@ CodeEditor.propTypes = {
   id: PropTypes.string.isRequired,
   name: PropTypes.string,
   type: PropTypes.string.isRequired,
+  label: PropTypes.string.isRequired,
   value: PropTypes.object,
   isConcept: PropTypes.bool,
   updateInstance: PropTypes.func.isRequired,

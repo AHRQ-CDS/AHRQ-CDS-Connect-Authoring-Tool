@@ -215,6 +215,7 @@ describe('artifact actions', () => {
       // the mock test results will need to be changed to match them
       return store.dispatch(actions.executeCQLArtifact(
         mockArtifact,
+        [], // params
         mockPatientDstu2.patient,
         { username: 'u', password: 'p' },
         new CodeService(),
@@ -251,6 +252,7 @@ describe('artifact actions', () => {
       // the mock test results will need to be changed to match them
       return store.dispatch(actions.executeCQLArtifact(
         mockArtifact,
+        [], // params
         mockPatientStu3.patient,
         { username: 'u', password: 'p' },
         new CodeService(),

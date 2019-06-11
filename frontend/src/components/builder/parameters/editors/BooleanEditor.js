@@ -5,14 +5,14 @@ import _ from 'lodash';
 
 export default class BooleanEditor extends Component {
   render() {
-    const { id, name, type, value, updateInstance } = this.props;
+    const { id, name, type, label, value, updateInstance } = this.props;
     const formId = _.uniqueId('parameter-');
 
     return (
       <div className="boolean-editor">
         <div className="parameter__item row">
           <div className="col-3 bold align-right">
-            <label htmlFor={formId}>Default Value:</label>
+            <label htmlFor={formId}>{label}</label>
           </div>
 
           <div className="col-9">
@@ -23,7 +23,7 @@ export default class BooleanEditor extends Component {
               clearable={true}
               options={[{ value: 'true', label: 'True' }, { value: 'false', label: 'False' }]}
               value={value}
-              onChange={ (e) => { updateInstance({ name, type, value: _.get(e, 'value', null) }); }}
+              onChange={ (e) => { updateInstance({ name, type, label, value: _.get(e, 'value', null) }); }}
             />
           </div>
         </div>
@@ -35,6 +35,7 @@ export default class BooleanEditor extends Component {
 BooleanEditor.propTypes = {
   id: PropTypes.string.isRequired,
   name: PropTypes.string,
+  label: PropTypes.string.isRequired,
   type: PropTypes.string.isRequired,
   value: PropTypes.string,
   updateInstance: PropTypes.func.isRequired
