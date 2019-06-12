@@ -6,7 +6,6 @@ import ListGroup from './ListGroup';
 
 import createTemplateInstance from '../../utils/templates';
 
-
 export default class BaseElements extends Component {
   addChild = (template) => {
     const instance = createTemplateInstance(template);
@@ -17,7 +16,7 @@ export default class BaseElements extends Component {
     this.props.addBaseElement(instance);
   }
 
-  getPath = () => 'baseElements'
+  getPath = () => 'baseElements';
 
   getChildsPath = (id) => {
     const artifactTree = this.props.instance;
@@ -28,43 +27,43 @@ export default class BaseElements extends Component {
   renderListOperationConjunction = (s, i) => (
     <div>
       <ListGroup
-        treeName={this.props.treeName}
-        artifact={this.props.instance}
-        templates={this.props.templates}
-        valueSets={this.props.valueSets}
-        loadValueSets={this.props.loadValueSets}
-        instance={s}
-        index={i}
         addInstance={this.props.addInstance}
-        editInstance={this.props.editInstance}
+        artifact={this.props.instance}
+        baseElements={this.props.baseElements}
+        codeData={this.props.codeData}
+        conversionFunctions={this.props.conversionFunctions}
         deleteInstance={this.props.deleteInstance}
+        editInstance={this.props.editInstance}
         getAllInstances={this.props.getAllInstances}
         getAllInstancesInAllTrees={this.props.getAllInstancesInAllTrees}
-        updateInstanceModifiers={this.props.updateInstanceModifiers}
-        updateBaseElementLists={this.props.updateBaseElementLists}
-        parameters={this.props.parameters}
-        baseElements={this.props.baseElements}
-        conversionFunctions={this.props.conversionFunctions}
-        instanceNames={this.props.instanceNames}
-        scrollToElement={this.props.scrollToElement}
-        loginVSACUser={this.props.loginVSACUser}
-        setVSACAuthStatus={this.props.setVSACAuthStatus}
-        vsacStatus={this.props.vsacStatus}
-        vsacStatusText={this.props.vsacStatusText}
-        searchVSACByKeyword={this.props.searchVSACByKeyword}
-        isSearchingVSAC={this.props.isSearchingVSAC}
-        vsacSearchResults={this.props.vsacSearchResults}
-        vsacSearchCount={this.props.vsacSearchCount}
         getVSDetails={this.props.getVSDetails}
+        index={i}
+        instance={s}
+        instanceNames={this.props.instanceNames}
         isRetrievingDetails={this.props.isRetrievingDetails}
+        isSearchingVSAC={this.props.isSearchingVSAC}
+        isValidatingCode={this.props.isValidatingCode}
+        isValidCode={this.props.isValidCode}
+        loadValueSets={this.props.loadValueSets}
+        loginVSACUser={this.props.loginVSACUser}
+        parameters={this.props.parameters}
+        resetCodeValidation={this.props.resetCodeValidation}
+        scrollToElement={this.props.scrollToElement}
+        searchVSACByKeyword={this.props.searchVSACByKeyword}
+        setVSACAuthStatus={this.props.setVSACAuthStatus}
+        templates={this.props.templates}
+        treeName={this.props.treeName}
+        updateBaseElementLists={this.props.updateBaseElementLists}
+        updateInstanceModifiers={this.props.updateInstanceModifiers}
+        validateCode={this.props.validateCode}
+        valueSets={this.props.valueSets}
         vsacDetailsCodes={this.props.vsacDetailsCodes}
         vsacDetailsCodesError={this.props.vsacDetailsCodesError}
         vsacFHIRCredentials={this.props.vsacFHIRCredentials}
-        isValidatingCode={this.props.isValidatingCode}
-        isValidCode={this.props.isValidCode}
-        codeData={this.props.codeData}
-        validateCode={this.props.validateCode}
-        resetCodeValidation={this.props.resetCodeValidation}
+        vsacSearchCount={this.props.vsacSearchCount}
+        vsacSearchResults={this.props.vsacSearchResults}
+        vsacStatus={this.props.vsacStatus}
+        vsacStatusText={this.props.vsacStatusText}
       />
     </div>
   );
@@ -82,76 +81,78 @@ export default class BaseElements extends Component {
             </div>
           );
         }
+
         return (
           <div className="card-group card-group__top" key={i} id={s.uniqueId}>
             <div className="card-group-section subpopulation base-element">
               <TemplateInstance
-                valueSets={this.props.valueSets}
-                loadValueSets={this.props.loadValueSets}
-                getPath={this.getChildsPath}
-                treeName={this.props.treeName}
-                templateInstance={s}
-                otherInstances={[]}
                 allInstancesInAllTrees={allInstancesInAllTrees}
-                editInstance={this.props.editInstance}
-                updateInstanceModifiers={this.props.updateInstanceModifiers}
-                deleteInstance={this.props.deleteInstance}
-                renderIndentButtons={() => {}}
-                conversionFunctions={this.props.conversionFunctions}
-                instanceNames={this.props.instanceNames}
-                parameters={this.props.parameters}
                 baseElements={this.props.baseElements}
-                scrollToElement={this.props.scrollToElement}
-                loginVSACUser={this.props.loginVSACUser}
-                setVSACAuthStatus={this.props.setVSACAuthStatus}
-                vsacStatus={this.props.vsacStatus}
-                vsacStatusText={this.props.vsacStatusText}
-                searchVSACByKeyword={this.props.searchVSACByKeyword}
-                isSearchingVSAC={this.props.isSearchingVSAC}
-                vsacSearchResults={this.props.vsacSearchResults}
-                vsacSearchCount={this.props.vsacSearchCount}
+                codeData={this.props.codeData}
+                conversionFunctions={this.props.conversionFunctions}
+                deleteInstance={this.props.deleteInstance}
+                editInstance={this.props.editInstance}
+                getPath={this.getChildsPath}
                 getVSDetails={this.props.getVSDetails}
+                instanceNames={this.props.instanceNames}
                 isRetrievingDetails={this.props.isRetrievingDetails}
+                isSearchingVSAC={this.props.isSearchingVSAC}
+                isValidatingCode={this.props.isValidatingCode}
+                isValidCode={this.props.isValidCode}
+                loadValueSets={this.props.loadValueSets}
+                loginVSACUser={this.props.loginVSACUser}
+                otherInstances={[]}
+                parameters={this.props.parameters}
+                renderIndentButtons={() => {}}
+                resetCodeValidation={this.props.resetCodeValidation}
+                scrollToElement={this.props.scrollToElement}
+                searchVSACByKeyword={this.props.searchVSACByKeyword}
+                setVSACAuthStatus={this.props.setVSACAuthStatus}
+                templateInstance={s}
+                treeName={this.props.treeName}
+                updateInstanceModifiers={this.props.updateInstanceModifiers}
+                validateCode={this.props.validateCode}
+                validateReturnType={this.props.validateReturnType}
+                valueSets={this.props.valueSets}
                 vsacDetailsCodes={this.props.vsacDetailsCodes}
                 vsacDetailsCodesError={this.props.vsacDetailsCodesError}
                 vsacFHIRCredentials={this.props.vsacFHIRCredentials}
-                validateReturnType={this.props.validateReturnType}
-                isValidatingCode={this.props.isValidatingCode}
-                isValidCode={this.props.isValidCode}
-                codeData={this.props.codeData}
-                validateCode={this.props.validateCode}
-                resetCodeValidation={this.props.resetCodeValidation} />
-              </div>
+                vsacSearchCount={this.props.vsacSearchCount}
+                vsacSearchResults={this.props.vsacSearchResults}
+                vsacStatus={this.props.vsacStatus}
+                vsacStatusText={this.props.vsacStatusText}
+              />
             </div>
+          </div>
         );
       })}
 
       <div className="card-group card-group__top">
         <div className="card-element">
           <ElementSelect
+            baseElements={this.props.baseElements}
             categories={this.props.templates}
+            codeData={this.props.codeData}
+            getVSDetails={this.props.getVSDetails}
+            inBaseElements={true}
+            isRetrievingDetails={this.props.isRetrievingDetails}
+            isSearchingVSAC={this.props.isSearchingVSAC}
+            isValidatingCode={this.props.isValidatingCode}
+            isValidCode={this.props.isValidCode}
+            loginVSACUser={this.props.loginVSACUser}
             onSuggestionSelected={this.addChild}
             parameters={this.props.parameters}
-            baseElements={this.props.baseElements}
-            loginVSACUser={this.props.loginVSACUser}
-            setVSACAuthStatus={this.props.setVSACAuthStatus}
-            vsacStatus={this.props.vsacStatus}
-            vsacStatusText={this.props.vsacStatusText}
+            resetCodeValidation={this.props.resetCodeValidation}
             searchVSACByKeyword={this.props.searchVSACByKeyword}
-            isSearchingVSAC={this.props.isSearchingVSAC}
-            vsacSearchResults={this.props.vsacSearchResults}
-            vsacSearchCount={this.props.vsacSearchCount}
-            getVSDetails={this.props.getVSDetails}
-            isRetrievingDetails={this.props.isRetrievingDetails}
+            setVSACAuthStatus={this.props.setVSACAuthStatus}
+            validateCode={this.props.validateCode}
             vsacDetailsCodes={this.props.vsacDetailsCodes}
             vsacDetailsCodesError={this.props.vsacDetailsCodesError}
             vsacFHIRCredentials={this.props.vsacFHIRCredentials}
-            isValidatingCode={this.props.isValidatingCode}
-            isValidCode={this.props.isValidCode}
-            codeData={this.props.codeData}
-            validateCode={this.props.validateCode}
-            resetCodeValidation={this.props.resetCodeValidation}
-            inBaseElements={true}
+            vsacSearchCount={this.props.vsacSearchCount}
+            vsacSearchResults={this.props.vsacSearchResults}
+            vsacStatus={this.props.vsacStatus}
+            vsacStatusText={this.props.vsacStatusText}
           />
         </div>
       </div>
@@ -160,40 +161,40 @@ export default class BaseElements extends Component {
 }
 
 BaseElements.propTypes = {
-  treeName: PropTypes.string.isRequired,
-  instance: PropTypes.object.isRequired,
   addBaseElement: PropTypes.func.isRequired,
-  loadValueSets: PropTypes.func.isRequired,
+  addInstance: PropTypes.func.isRequired,
+  codeData: PropTypes.object,
+  conversionFunctions: PropTypes.array,
+  deleteInstance: PropTypes.func.isRequired,
+  editInstance: PropTypes.func.isRequired,
   getAllInstances: PropTypes.func.isRequired,
   getAllInstancesInAllTrees: PropTypes.func.isRequired,
-  addInstance: PropTypes.func.isRequired,
-  editInstance: PropTypes.func.isRequired,
-  updateInstanceModifiers: PropTypes.func.isRequired,
-  updateBaseElementLists: PropTypes.func.isRequired,
-  deleteInstance: PropTypes.func.isRequired,
-  templates: PropTypes.array.isRequired,
-  valueSets: PropTypes.array,
-  conversionFunctions: PropTypes.array,
-  instanceNames: PropTypes.array.isRequired,
-  parameters: PropTypes.array.isRequired,
-  loginVSACUser: PropTypes.func.isRequired,
-  setVSACAuthStatus: PropTypes.func.isRequired,
-  vsacStatus: PropTypes.string,
-  vsacStatusText: PropTypes.string,
-  searchVSACByKeyword: PropTypes.func.isRequired,
-  isSearchingVSAC: PropTypes.bool.isRequired,
-  vsacSearchResults: PropTypes.array.isRequired,
-  vsacSearchCount: PropTypes.number.isRequired,
   getVSDetails: PropTypes.func.isRequired,
+  instance: PropTypes.object.isRequired,
+  instanceNames: PropTypes.array.isRequired,
   isRetrievingDetails: PropTypes.bool.isRequired,
+  isSearchingVSAC: PropTypes.bool.isRequired,
+  isValidatingCode: PropTypes.bool.isRequired,
+  isValidCode: PropTypes.bool,
+  loadValueSets: PropTypes.func.isRequired,
+  loginVSACUser: PropTypes.func.isRequired,
+  parameters: PropTypes.array.isRequired,
+  resetCodeValidation: PropTypes.func.isRequired,
+  scrollToElement: PropTypes.func.isRequired,
+  searchVSACByKeyword: PropTypes.func.isRequired,
+  setVSACAuthStatus: PropTypes.func.isRequired,
+  templates: PropTypes.array.isRequired,
+  treeName: PropTypes.string.isRequired,
+  updateBaseElementLists: PropTypes.func.isRequired,
+  updateInstanceModifiers: PropTypes.func.isRequired,
+  validateCode: PropTypes.func.isRequired,
+  validateReturnType: PropTypes.bool.isRequired,
+  valueSets: PropTypes.array,
   vsacDetailsCodes: PropTypes.array.isRequired,
   vsacDetailsCodesError: PropTypes.string.isRequired,
   vsacFHIRCredentials: PropTypes.object.isRequired,
-  isValidatingCode: PropTypes.bool.isRequired,
-  isValidCode: PropTypes.bool,
-  codeData: PropTypes.object,
-  validateCode: PropTypes.func.isRequired,
-  resetCodeValidation: PropTypes.func.isRequired,
-  validateReturnType: PropTypes.bool.isRequired,
-  scrollToElement: PropTypes.func.isRequired,
+  vsacSearchCount: PropTypes.number.isRequired,
+  vsacSearchResults: PropTypes.array.isRequired,
+  vsacStatus: PropTypes.string,
+  vsacStatusText: PropTypes.string,
 };

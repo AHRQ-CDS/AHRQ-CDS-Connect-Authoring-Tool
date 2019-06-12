@@ -505,30 +505,50 @@ export default class TemplateInstance extends Component {
       }
     }
 
-    let label = 'Element:';
-    if (referenceParameter.id === 'baseElementReference') {
-      label = 'Base Element:';
-    } else if (referenceParameter.id === 'parameterReference') {
-      label = 'Parameter:';
+    const scrollElementId = referenceParameter.value.id;
+    const scrollReferenceType = referenceParameter.id;
+
+    let baseUseTab;
+    if (referenceParameter.id === 'baseElementUse') {
+      const { allInstancesInAllTrees } = this.props;
+      baseUseTab = allInstancesInAllTrees.filter(instance => instance.uniqueId === referenceParameter.value.id)[0].tab;
     }
 
+    let tabIndex;
+    if (baseUseTab === 'expTreeInclude') tabIndex = 0;
+    if (baseUseTab === 'expTreeExclude') tabIndex = 1;
+    if (baseUseTab === 'subpopulations') tabIndex = 2;
+
+    let label = 'Element:';
+    if (referenceParameter.id === 'baseElementReference') label = 'Base Element:';
+    if (referenceParameter.id === 'parameterReference') label = 'Parameter:';
+    if (referenceParameter.id === 'baseElementUse') label = 'Element Use:';
+
+    let tabLabel = '';
+    if (baseUseTab === 'expTreeInclude') tabLabel = 'Inclusions';
+    if (baseUseTab === 'expTreeExclude') tabLabel = 'Exclusions';
+    if (baseUseTab === 'subpopulations') tabLabel = 'Subpopulations';
+
     return (
-      <div className="modifier__return__type" id="base-element-list">
+      <div className="modifier__return__type" id="base-element-list" key={referenceParameter.value.id}>
         <div className="code-info">
           <div className="bold align-right code-info__label">{label}</div>
           <div className="code-info__info">
-            <div className="code-info__text">{referenceName}</div>
+            <div className="code-info__text">
+              <span>{referenceName}</span>
+              {referenceParameter.id === 'baseElementUse' && <span> &#8594; {tabLabel}</span>}
+              </div>
             <div className="code-info__buttons align-right">
               <span
                 role="button"
                 id={`definition-${this.props.templateInstance.uniqueId}`}
                 className={'element__linkbutton'}
                 aria-label={'see element definition'}
-                onClick={() => this.props.scrollToElement(referenceParameter.value.id, referenceParameter.id) }
+                onClick={() => this.props.scrollToElement(scrollElementId, scrollReferenceType, tabIndex) }
                 tabIndex="0"
                 onKeyPress={(e) => {
                   e.which = e.which || e.keyCode;
-                  if (e.which === 13) this.props.scrollToElement(referenceParameter.value.id, referenceParameter.id);
+                  if (e.which === 13) this.props.scrollToElement(scrollElementId, scrollReferenceType, tabIndex);
                 }}>
 
                 <FontAwesome name="link" className="delete-valueset-button" />
@@ -733,6 +753,15 @@ export default class TemplateInstance extends Component {
 
   getPath = () => this.props.getPath(this.props.templateInstance.uniqueId)
 
+  hasBaseElementLinks = () => {
+    const { templateInstance } = this.props;
+    const thisBaseElement = this.props.baseElements.filter(baseElement => baseElement.id === templateInstance.id);
+    if (thisBaseElement.length === 0) return false;
+    const thisBaseElementUsedBy = thisBaseElement[0].usedBy;
+    if (thisBaseElementUsedBy.length === 0) return false;
+    return true;
+  }
+
   renderBody() {
     const { templateInstance, validateReturnType } = this.props;
     const { returnType } = this.state;
@@ -774,9 +803,21 @@ export default class TemplateInstance extends Component {
             {this.renderCodeInfo()}
           </div>
         }
-        { (referenceParameter) &&
+
+        {referenceParameter &&
           <div className="vsac-info">
             {this.renderBaseElementOrParameterInfo(referenceParameter)}
+          </div>
+        }
+
+        {this.hasBaseElementLinks() &&
+          <div className="base-element-links">
+            {this.props.baseElements.filter(baseElement => baseElement.id === templateInstance.id)[0]
+              .usedBy.map((link) => {
+                const reference = { id: 'baseElementUse', value: { id: link } };
+                return this.renderBaseElementOrParameterInfo(reference);
+              })
+            }
           </div>
         }
 

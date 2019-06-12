@@ -346,7 +346,7 @@ export default class ConjunctionGroup extends Component {
   renderTemplate(instance) {
     const allInstancesInAllTrees = this.props.getAllInstancesInAllTrees();
     return (
-      <div key={instance.uniqueId} className="card-group-section">
+      <div key={instance.uniqueId} className="card-group-section" id={instance.uniqueId}>
         <TemplateInstance
           valueSets={this.props.valueSets}
           loadValueSets={this.props.loadValueSets}
