@@ -162,6 +162,12 @@ function mapReturnTypes(definitions) {
 
 const filterDefinition = def => (def.name !== 'Patient' && def.accessLevel === 'Public');
 
+const filterCQLFiles = file => {
+  const filePathArray = file.path.split('/');
+  const fileName = filePathArray[filePathArray.length - 1];
+  return file.type === 'File' && file.path.endsWith('.cql') && !fileName.startsWith('.');
+};
+
 module.exports = {
   allGet,
   singleGet,
@@ -196,104 +202,134 @@ function singleGet(req, res) {
   }
 }
 
+function parseELMFiles(elmFiles, artifactId, userId, cqlFileContent, cqlFileName) {
+  const elmResultsToSave = [];
+  let elmErrors = [];
+  elmFiles.forEach((file) => {
+    let elmResults = {
+      linkedArtifactId: artifactId,
+      user: userId
+    };
+    const parsedContent = JSON.parse(file.content);
+    const annotations = _.get(parsedContent, 'library.annotation', []);
+    elmErrors = elmErrors.concat(annotations.filter(a => a.errorSeverity === 'error'));
+
+    const { library } = parsedContent;
+    elmResults.name = library.identifier.id || '';
+    elmResults.version = library.identifier.version || '';
+
+    // Find FHIR version used by library
+    const elmDefs = _.get(library, 'usings.def', []);
+    const fhirDef = _.find(elmDefs, { localIdentifier: 'FHIR' });
+    elmResults.fhirVersion = _.get(fhirDef, 'version', '');
+
+    const details = {};
+    details.cqlFileText = cqlFileContent;
+    details.fileName = cqlFileName;
+    let elmParameters = _.get(library, 'parameters.def', []).filter(filterDefinition);
+    let elmDefinitions = _.get(library, 'statements.def', []).filter(filterDefinition);
+    const allowedAttributes =
+      ['accessLevel', 'name', 'type', 'context', 'resultTypeName', 'resultTypeSpecifier', 'operand'];
+    elmParameters = elmParameters.map(def => {
+      return _.pick(def, allowedAttributes);
+    });
+    elmDefinitions = elmDefinitions.map(def => {
+      return _.pick(def, allowedAttributes);
+    });
+    const defineStatements = elmDefinitions.filter(def => def.type !== 'FunctionDef');
+    const functionStatements = elmDefinitions.filter(def => def.type === 'FunctionDef');
+    details.parameters = mapReturnTypes(elmParameters);
+    details.definitions = mapReturnTypes(defineStatements);
+    details.functions = mapReturnTypes(functionStatements);
+    elmResults.details = details;
+    elmResultsToSave.push(elmResults);
+  });
+  return { elmErrors, elmResultsToSave };
+}
+
 // Post a single external CQL library
 function singlePost(req, res) {
   if (req.user) {
-    const { cqlFileName, cqlFileText, artifactId } = req.body.library;
+    const { cqlFileName, cqlFileContent, fileType, artifactId } = req.body.library;
 
-    const decodedBuffer = Buffer.from(cqlFileText, 'base64').toString();
-    // unzipper.Open.buffer(decodedBuffer)
-    //   .then(async (directory) => {
-    //     const files = await Promise.all(directory.files.filter(file => file.path.endsWith('.cql')).map(async (file) => {
-    //       const buffer = await file.buffer();
-    //       return Promise.resolve( { filename: file.path, type: 'text/plain', text: buffer.toString() });
-    //     }));
-    //     makeCQLtoELMRequest(files, [], (err, elmFiles) => {
-    //       console.log(err);
-    //       elmFiles.forEach(file => {
-    //         console.log(file.content);
-    //       })
-    //     });
-    //   })
-    //   .catch(err => { console.log('Im an error!!'); console.log(err); });
+    const decodedBuffer = Buffer.from(cqlFileContent, 'base64');
 
-    const cqlJson = {
-      filename: cqlFileName,
-      text: decodedBuffer,
-      type: 'text/plain'
-    };
-
-    makeCQLtoELMRequest([cqlJson], [], (err, elmFiles) => {
-      if (err) {
-        res.status(500).send(err);
-        return;
-      }
-
-      let elmResults = {
-        linkedArtifactId: artifactId,
-        user: req.user.uid
-      };
-      let elmErrors = [];
-
-      elmFiles.forEach((file, i) => {
-        const parsedContent = JSON.parse(file.content);
-        // ELM will return any helper libraries in order to not get errors - but we don't need to save those files here.
-        const fileName = file.name;
-        if (fileName === cqlFileName) {
-          const annotations = _.get(parsedContent, 'library.annotation', [])
-          elmErrors = annotations.filter(a => a.errorSeverity === 'error');
-
-          const { library } = parsedContent;
-          elmResults.name = library.identifier.id || '';
-          elmResults.version = library.identifier.version || '';
-
-          // Find FHIR version used by library
-          const elmDefs = _.get(library, 'usings.def', []);
-          const fhirDef = _.find(elmDefs, { localIdentifier: 'FHIR' });
-          elmResults.fhirVersion = _.get(fhirDef, 'version', '');
-
-          const details = {};
-          details.cqlFileText = cqlFileText;
-          details.fileName = cqlFileName;
-          let elmParameters = _.get(library, 'parameters.def', []).filter(filterDefinition);
-          let elmDefinitions = _.get(library, 'statements.def', []).filter(filterDefinition);
-          const allowedAttributes =
-            ['accessLevel', 'name', 'type', 'context', 'resultTypeName', 'resultTypeSpecifier', 'operand'];
-          elmParameters = elmParameters.map(def => {
-            return _.pick(def, allowedAttributes);
-          });
-          elmDefinitions = elmDefinitions.map(def => {
-            return _.pick(def, allowedAttributes);
-          });
-          const defineStatements = elmDefinitions.filter(def => def.type !== 'FunctionDef');
-          const functionStatements = elmDefinitions.filter(def => def.type === 'FunctionDef');
-          details.parameters = mapReturnTypes(elmParameters);
-          details.definitions = mapReturnTypes(defineStatements);
-          details.functions = mapReturnTypes(functionStatements);
-          elmResults.details = details;
-        }
-      });
-
-      CQLLibrary.find({ user: req.user.uid, linkedArtifactId: elmResults.linkedArtifactId }, (error, libraries) => {
-        if (error) res.status(500).send(error);
-        else {
-          const dupLibrary = libraries.find(lib => lib.name === elmResults.name && lib.version === elmResults.version);
-          if (!dupLibrary) {
-            if (elmErrors.length > 0) {
-              res.status(400).send(elmErrors);
-            } else {
-              CQLLibrary.create(elmResults, (error, response) => {
-                if (error) res.status(500).send(error);
-                else res.status(201).json(response);
-              });
+    if (fileType === 'application/zip') {
+      unzipper.Open.buffer(decodedBuffer)
+        .then(async (directory) => {
+          const files = await Promise.all(directory.files.filter(filterCQLFiles).map(async (file) => {
+            const buffer = await file.buffer();
+            return Promise.resolve( { filename: file.path, type: 'text/plain', text: buffer.toString() });
+          }));
+          makeCQLtoELMRequest(files, [], (err, elmFiles) => {
+            if (err) {
+              res.status(500).send(err);
+              return;
             }
-          } else {
-            res.status(409).send('Library with identical name and version already exists.');
-          }
-        }
-      });
-    });
 
+            const { elmErrors, elmResultsToSave } = parseELMFiles(elmFiles, artifactId, req.user.uid, cqlFileContent, cqlFileName);
+
+            CQLLibrary.find({ user: req.user.uid, linkedArtifactId: artifactId }, (error, libraries) => {
+              if (error) res.status(500).send(error);
+              else {
+                const nonDuplicateLibraries = _.differenceWith(elmResultsToSave, libraries, (lib, elm) => lib.name === elm.name && lib.version === elm.version);
+                const duplicateLibraries = _.difference(elmResultsToSave, nonDuplicateLibraries);
+
+                // If any file has an error, upload nothing.
+                if (elmErrors.length > 0) {
+                  res.status(400).send(elmErrors);
+                } else {
+                  CQLLibrary.insertMany(nonDuplicateLibraries, (error, response) => {
+                    if (error) res.status(500).send(error);
+                    else if (duplicateLibraries.length > 0) {
+                      const librariesNotUploaded = duplicateLibraries.map(lib => `library ${lib.name} version ${lib.version}`).join(', ');
+                      res.status(409).send(`The following was not uploaded because a library with identical name and version already exists: ${librariesNotUploaded}`);
+                    }
+                    else res.status(201).json(response);
+                  });
+                }
+              }
+            });
+          });
+        })
+        .catch(err => res.status(500).send(err));
+    } else {
+      const cqlJson = {
+        filename: cqlFileName,
+        text: decodedBuffer.toString(),
+        type: 'text/plain'
+      };
+
+      makeCQLtoELMRequest([cqlJson], [], (err, elmFiles) => {
+        if (err) {
+          res.status(500).send(err);
+          return;
+        }
+
+        const { elmErrors, elmResultsToSave } = parseELMFiles(elmFiles, artifactId, req.user.uid, cqlFileContent, cqlFileName);
+
+        CQLLibrary.find({ user: req.user.uid, linkedArtifactId: artifactId }, (error, libraries) => {
+          if (error) res.status(500).send(error);
+          else {
+            const elmResult = elmResultsToSave[0]; // This is the single file upload case, so elmResultsToSave will only ever have one item.
+            const dupLibrary = libraries.find(lib => lib.name === elmResult.name && lib.version === elmResult.version);
+
+            if (!dupLibrary) {
+              if (elmErrors.length > 0) {
+                res.status(400).send(elmErrors);
+              } else {
+                CQLLibrary.insertMany(elmResult, (error, response) => {
+                  if (error) res.status(500).send(error);
+                  else res.status(201).json(response);
+                });
+              }
+            } else {
+              res.status(409).send('Library with identical name and version already exists.');
+            }
+          }
+        });
+      });
+    }
   } else {
     res.sendStatus(401);
   }

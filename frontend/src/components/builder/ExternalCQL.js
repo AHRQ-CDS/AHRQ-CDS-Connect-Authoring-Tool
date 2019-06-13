@@ -40,7 +40,8 @@ export default class ExternalCQL extends Component {
       || (cqlFileType === 'application/zip' && cqlFileName.endsWith('.zip'))) {
         const library = {
           cqlFileName,
-          cqlFileText: fileContentToSend,
+          cqlFileContent: fileContentToSend,
+          fileType: cqlFileType,
           artifactId: artifact._id
         };
 
