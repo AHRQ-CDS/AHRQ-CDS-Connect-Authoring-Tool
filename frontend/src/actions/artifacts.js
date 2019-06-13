@@ -558,6 +558,12 @@ function convertParameters(params = []) {
         // Remove the leading and trailing single-quotes
         paramsObj[p.name] = p.value.replace(/^'(.*)'$/, '$1');
         break;
+      case 'system_code':
+        paramsObj[p.name] = new cql.Code(p.value.code, p.value.uri);
+        break;
+      // case 'system_concept':
+      //   paramsObj[p.name] = new cql.Code(p.value.code, p.value.uri);
+      //   break;
       case 'system_quantity':
         paramsObj[p.name] = new cql.Quantity({
           value: p.value.quantity,

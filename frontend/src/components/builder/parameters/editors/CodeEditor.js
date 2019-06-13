@@ -17,8 +17,8 @@ export default class CodeEditor extends Component {
     this.props.updateInstance({ value: { system, uri, code, display, str } });
   }
 
-  renderCodePicker() {
-    if (this.props.vsacFHIRCredentials.username == null && this.props.value == null) {
+  renderCodePicker(openButtonText) {
+    if (this.props.vsacFHIRCredentials.username == null) {
       return (
         <div id="vsac-controls">
           <VSACAuthenticationModal
@@ -42,6 +42,10 @@ export default class CodeEditor extends Component {
         validateCode={this.props.validateCode}
         resetCodeValidation={this.props.resetCodeValidation}
         addToParameter={this.handleCodeAdded}
+        labels={{
+          openButtonText,
+          closeButtonText: 'Close'
+        }}
       />
     );
   }
@@ -92,6 +96,15 @@ export default class CodeEditor extends Component {
                 {this.props.value.display}
               </div>
             </div>
+
+            <div className="parameter__item row">
+              <div className="col-3 bold align-right">
+                {/* intentionally blank */}
+              </div>
+              <div className="col-9">
+                {this.renderCodePicker('Change Code')}
+              </div>
+            </div>
           </div>
         :
           <div className="parameter__item row">
@@ -100,7 +113,7 @@ export default class CodeEditor extends Component {
             </div>
 
             <div className="col-9">
-              {this.renderCodePicker()}
+              {this.renderCodePicker('Add Code')}
             </div>
           </div>
         }

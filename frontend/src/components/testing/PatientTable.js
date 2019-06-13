@@ -220,16 +220,16 @@ export default class PatientTable extends Component {
           <TestingParameters
             parameters={this.state.paramsToExecute}
             updateParameters={this.updateParameters}
-            // vsacFHIRCredentials={this.props.vsacFHIRCredentials}
-            // loginVSACUser={this.props.loginVSACUser}
-            // setVSACAuthStatus={this.props.setVSACAuthStatus}
-            // vsacStatus={this.props.vsacStatus}
-            // vsacStatusText={this.props.vsacStatusText}
-            // isValidatingCode={this.props.isValidatingCode}
-            // isValidCode={this.props.isValidCode}
-            // codeData={this.props.codeData}
-            // validateCode={this.props.validateCode}
-            // resetCodeValidation={this.props.resetCodeValidation}
+            vsacFHIRCredentials={this.props.vsacFHIRCredentials}
+            loginVSACUser={this.props.loginVSACUser}
+            setVSACAuthStatus={this.props.setVSACAuthStatus}
+            vsacStatus={this.props.vsacStatus}
+            vsacStatusText={this.props.vsacStatusText}
+            isValidatingCode={this.props.isValidatingCode}
+            isValidCode={this.props.isValidCode}
+            codeData={this.props.codeData}
+            validateCode={this.props.validateCode}
+            resetCodeValidation={this.props.resetCodeValidation}
           />
         </div>
       </Modal>
@@ -373,5 +373,10 @@ PatientTable.propTypes = {
   setVSACAuthStatus: PropTypes.func.isRequired,
   vsacStatus: PropTypes.string,
   vsacStatusText: PropTypes.string,
+  isValidatingCode: PropTypes.bool.isRequired,
+  isValidCode: PropTypes.bool,
+  codeData: PropTypes.object,
+  validateCode: PropTypes.func.isRequired,
+  resetCodeValidation: PropTypes.func.isRequired,
   vsacIsAuthenticating: PropTypes.bool.isRequired
 };

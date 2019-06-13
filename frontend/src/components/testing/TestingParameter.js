@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
 import BooleanEditor from '../builder/parameters/editors/BooleanEditor';
-// import CodeEditor from '../builder/parameters/editors/CodeEditor';
+import CodeEditor from '../builder/parameters/editors/CodeEditor';
 import IntegerEditor from '../builder/parameters/editors/IntegerEditor';
 import DateTimeEditor from '../builder/parameters/editors/DateTimeEditor';
 import DecimalEditor from '../builder/parameters/editors/DecimalEditor';
@@ -29,24 +29,24 @@ export default class TestingParameter extends Component {
       updateInstance: this.updateParameter
     };
 
-    // const codeEditorProps = {
-    //   vsacFHIRCredentials: this.props.vsacFHIRCredentials,
-    //   loginVSACUser: this.props.loginVSACUser,
-    //   setVSACAuthStatus: this.props.setVSACAuthStatus,
-    //   vsacStatus: this.props.vsacStatus,
-    //   vsacStatusText: this.props.vsacStatusText,
-    //   isValidatingCode: this.props.isValidatingCode,
-    //   isValidCode: this.props.isValidCode,
-    //   codeData: this.props.codeData,
-    //   validateCode: this.props.validateCode,
-    //   resetCodeValidation: this.props.resetCodeValidation
-    // };
+    const codeEditorProps = {
+      vsacFHIRCredentials: this.props.vsacFHIRCredentials,
+      loginVSACUser: this.props.loginVSACUser,
+      setVSACAuthStatus: this.props.setVSACAuthStatus,
+      vsacStatus: this.props.vsacStatus,
+      vsacStatusText: this.props.vsacStatusText,
+      isValidatingCode: this.props.isValidatingCode,
+      isValidCode: this.props.isValidCode,
+      codeData: this.props.codeData,
+      validateCode: this.props.validateCode,
+      resetCodeValidation: this.props.resetCodeValidation
+    };
 
     switch (this.props.type) {
       case 'boolean':
         return <BooleanEditor {...parameterProps} />;
-      // case 'system_code':
-      //   return <CodeEditor {...parameterProps} {...codeEditorProps} />;
+      case 'system_code':
+        return <CodeEditor {...parameterProps} {...codeEditorProps} />;
       // case 'system_concept':
       //   return <CodeEditor {...parameterProps} {...codeEditorProps} isConcept={true} />;
       case 'integer':
@@ -95,13 +95,14 @@ TestingParameter.propTypes = {
   name: PropTypes.string,
   type: PropTypes.string,
   updateInstanceOfParameter: PropTypes.func.isRequired,
-  // vsacFHIRCredentials: PropTypes.object,
-  // setVSACAuthStatus: PropTypes.func.isRequired,
-  // vsacStatus: PropTypes.string,
-  // vsacStatusText: PropTypes.string,
-  // isValidatingCode: PropTypes.bool.isRequired,
-  // isValidCode: PropTypes.bool,
-  // codeData: PropTypes.object,
-  // validateCode: PropTypes.func.isRequired,
-  // resetCodeValidation: PropTypes.func.isRequired
+  vsacFHIRCredentials: PropTypes.object,
+  loginVSACUser: PropTypes.func.isRequired,
+  setVSACAuthStatus: PropTypes.func.isRequired,
+  vsacStatus: PropTypes.string,
+  vsacStatusText: PropTypes.string,
+  isValidatingCode: PropTypes.bool.isRequired,
+  isValidCode: PropTypes.bool,
+  codeData: PropTypes.object,
+  validateCode: PropTypes.func.isRequired,
+  resetCodeValidation: PropTypes.func.isRequired
 };

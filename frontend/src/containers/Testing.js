@@ -9,7 +9,7 @@ import _ from 'lodash';
 
 import { loadPatients, addPatient, deletePatient } from '../actions/testing';
 import { loadArtifacts, clearArtifactValidationWarnings, executeCQLArtifact } from '../actions/artifacts';
-import { loginVSACUser, setVSACAuthStatus } from '../actions/vsac';
+import { loginVSACUser, setVSACAuthStatus, validateCode, resetCodeValidation } from '../actions/vsac';
 
 import patientProps from '../prop-types/patient';
 import artifactProps from '../prop-types/artifact';
@@ -215,7 +215,12 @@ class Testing extends Component {
           setVSACAuthStatus={this.props.setVSACAuthStatus}
           vsacStatus={this.props.vsacStatus}
           vsacStatusText={this.props.vsacStatusText}
-          vsacIsAuthenticating={this.props.vsacIsAuthenticating} />
+          vsacIsAuthenticating={this.props.vsacIsAuthenticating}
+          isValidatingCode={this.props.isValidatingCode}
+          isValidCode={this.props.isValidCode}
+          codeData={this.props.codeData}
+          validateCode={this.props.validateCode}
+          resetCodeValidation={this.props.resetCodeValidation} />
       );
     }
 
@@ -290,6 +295,11 @@ Testing.propTypes = {
   setVSACAuthStatus: PropTypes.func.isRequired,
   vsacStatus: PropTypes.string,
   vsacStatusText: PropTypes.string,
+  validateCode: PropTypes.func.isRequired,
+  resetCodeValidation: PropTypes.func.isRequired,
+  isValidatingCode: PropTypes.bool.isRequired,
+  isValidCode: PropTypes.bool,
+  codeData: PropTypes.object,
   vsacIsAuthenticating: PropTypes.bool.isRequired
 };
 
@@ -303,7 +313,9 @@ function mapDispatchToProps(dispatch) {
     clearArtifactValidationWarnings,
     executeCQLArtifact,
     loginVSACUser,
-    setVSACAuthStatus
+    setVSACAuthStatus,
+    validateCode,
+    resetCodeValidation
   }, dispatch);
 }
 
@@ -322,7 +334,10 @@ function mapStateToProps(state) {
     vsacStatus: state.vsac.authStatus,
     vsacStatusText: state.vsac.authStatusText,
     vsacIsAuthenticating: state.vsac.isAuthenticating,
-    vsacFHIRCredentials: { username: state.vsac.username, password: state.vsac.password }
+    vsacFHIRCredentials: { username: state.vsac.username, password: state.vsac.password },
+    isValidatingCode: state.vsac.isValidatingCode,
+    isValidCode: state.vsac.isValidCode,
+    codeData: state.vsac.codeData,
   };
 }
 
