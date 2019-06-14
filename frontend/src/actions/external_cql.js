@@ -137,9 +137,11 @@ function requestAddExternalCqlLibrary() {
   };
 }
 
-function addExternalCqlLibrarySuccess() {
+function addExternalCqlLibrarySuccess(data) {
+  const message = typeof data === 'string' ? data : '';
   return {
-    type: types.ADD_EXTERNAL_CQL_LIBRARY_SUCCESS
+    type: types.ADD_EXTERNAL_CQL_LIBRARY_SUCCESS,
+    message
   };
 }
 
@@ -167,7 +169,7 @@ export function addExternalLibrary(library) {
     dispatch(requestAddExternalCqlLibrary());
 
     return sendAddExternalCqlLibraryRequest(library)
-      .then(data => dispatch(addExternalCqlLibrarySuccess()))
+      .then(data => dispatch(addExternalCqlLibrarySuccess(data)))
       .catch(error => dispatch(addExternalCqlLibraryFailure(error)))
       .then(() => dispatch(loadExternalCqlList(library.artifactId)));
   };

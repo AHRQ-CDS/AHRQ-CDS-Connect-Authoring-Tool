@@ -3,6 +3,15 @@ const unzipper = require('unzipper');
 const CQLLibrary = require('../models/cqlLibrary');
 const makeCQLtoELMRequest = require('../handlers/cqlHandler').makeCQLtoELMRequest;
 
+const authoringToolExports = [
+  { name: 'FHIRHelpers', version: '1.0.2' },
+  { name: 'CDS_Connect_Commons_for_FHIRv102', version: '1.3.0' },
+  { name: 'CDS_Connect_Conversions', version: '1' },
+  { name: 'FHIRHelpers', version: '3.0.0' },
+  { name: 'CDS_Connect_Commons_for_FHIRv300', version: '1.0.0' },
+  { name: 'CDS_Connect_Conversions', version: '1' }
+];
+
 const singularReturnTypeMap = {
   'Boolean': 'boolean',
   'Code': 'system_code',
@@ -272,20 +281,32 @@ function singlePost(req, res) {
             CQLLibrary.find({ user: req.user.uid, linkedArtifactId: artifactId }, (error, libraries) => {
               if (error) res.status(500).send(error);
               else {
-                const nonDuplicateLibraries = _.differenceWith(elmResultsToSave, libraries, (lib, elm) => lib.name === elm.name && lib.version === elm.version);
-                const duplicateLibraries = _.difference(elmResultsToSave, nonDuplicateLibraries);
+                const nonAuthoringToolExportLibraries = _.differenceWith(elmResultsToSave, authoringToolExports, (elm, exp) => elm.name === exp.name && elm.version === exp.version);
+                const authoringToolExportLibraries = _.difference(elmResultsToSave, nonAuthoringToolExportLibraries);
+                const nonDuplicateLibraries = _.differenceWith(nonAuthoringToolExportLibraries, libraries, (lib, elm) => lib.name === elm.name && lib.version === elm.version);
+                const duplicateLibraries = _.difference(nonAuthoringToolExportLibraries, nonDuplicateLibraries);
 
+                const exportLibrariesNotUploaded = authoringToolExportLibraries.map(lib => `library ${lib.name} version ${lib.version}`).join(', ');
+                const exportLibrariesNotUploadedMessage = `The following was not uploaded because the library is included by default: ${exportLibrariesNotUploaded}.`;
                 // If any file has an error, upload nothing.
                 if (elmErrors.length > 0) {
                   res.status(400).send(elmErrors);
                 } else {
                   CQLLibrary.insertMany(nonDuplicateLibraries, (error, response) => {
-                    if (error) res.status(500).send(error);
-                    else if (duplicateLibraries.length > 0) {
+                    if (error) {
+                      res.status(500).send(error);
+                    } else if (duplicateLibraries.length > 0) {
+                      // NOTE: Really, we should re-run cql-to-elm with the existing version of the duplicate files to confirm they work with the non-duplicate libraries.
                       const librariesNotUploaded = duplicateLibraries.map(lib => `library ${lib.name} version ${lib.version}`).join(', ');
-                      res.status(409).send(`The following was not uploaded because a library with identical name and version already exists: ${librariesNotUploaded}`);
+                      let message = `The following was not uploaded because a library with identical name and version already exists: ${librariesNotUploaded}.`;
+                      if (exportLibrariesNotUploaded.length > 0) {
+                        message = message.concat(` ${exportLibrariesNotUploadedMessage}`);
+                      }
+                      res.status(409).send(message);
+                    } else {
+                      if (exportLibrariesNotUploaded.length > 0) res.status(201).send(exportLibrariesNotUploadedMessage);
+                      else res.status(201).json(response);
                     }
-                    else res.status(201).json(response);
                   });
                 }
               }

@@ -121,6 +121,11 @@ export default class ExternalCQL extends Component {
                 <FontAwesome name="exclamation-circle" /> {addExternalCqlLibraryErrorMessage || 'An error occurred.'}
               </div>
             }
+            {addExternalCqlLibraryError === null && addExternalCqlLibraryErrorMessage &&
+              <div className="notification">
+                <FontAwesome name="exclamation-circle" /> {addExternalCqlLibraryErrorMessage}
+              </div>
+            }
 
             <div className="dropzone__instructions">
               Drop a valid external CQL library or zip file here, or click to browse.

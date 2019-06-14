@@ -72,7 +72,7 @@ export default function externalCQL(state = defaultState, action) {
     case types.ADD_EXTERNAL_CQL_LIBRARY_SUCCESS:
       return {
         ...state,
-        addExternalCqlLibrary: { isAdding: false, addStatus: 'success', error: null, message: '' }
+        addExternalCqlLibrary: { isAdding: false, addStatus: 'success', error: null, message: action.message }
       };
     case types.ADD_EXTERNAL_CQL_LIBRARY_FAILURE:
       return {
