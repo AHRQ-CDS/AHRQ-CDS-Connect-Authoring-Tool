@@ -347,17 +347,15 @@ function singlePost(req, res) {
             const elmResult = elmResultsToSave[0]; // This is the single file upload case, so elmResultsToSave will only ever have one item.
             const dupLibrary = libraries.find(lib => lib.name === elmResult.name && lib.version === elmResult.version);
 
-            if (!dupLibrary) {
-              if (elmErrors.length > 0) {
-                res.status(400).send(elmErrors);
-              } else {
-                CQLLibrary.insertMany(elmResult, (error, response) => {
-                  if (error) res.status(500).send(error);
-                  else res.status(201).json(response);
-                });
-              }
-            } else {
+            if (elmErrors.length > 0) {
+              res.status(400).send(elmErrors);
+            } else if (dupLibrary) {
               res.status(200).send('Library with identical name and version already exists.');
+            } else {
+              CQLLibrary.insertMany(elmResult, (error, response) => {
+                if (error) res.status(500).send(error);
+                else res.status(201).json(response);
+              });
             }
           }
         });
