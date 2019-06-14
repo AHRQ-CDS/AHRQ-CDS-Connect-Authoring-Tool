@@ -211,7 +211,7 @@ function singleGet(req, res) {
   }
 }
 
-function parseELMFiles(elmFiles, artifactId, userId, cqlFileContent, cqlFileName) {
+function parseELMFiles(elmFiles, artifactId, userId, files) {
   const elmResultsToSave = [];
   let elmErrors = [];
   elmFiles.forEach((file) => {
@@ -227,14 +227,22 @@ function parseELMFiles(elmFiles, artifactId, userId, cqlFileContent, cqlFileName
     elmResults.name = library.identifier.id || '';
     elmResults.version = library.identifier.version || '';
 
+    const currentLibraryAndVersion = `library ${elmResults.name} version '${elmResults.version}'`;
+    const currentLibraryAndVersionWithQuote = `library "${elmResults.name}" version '${elmResults.version}'`;
+    const libraryAndVersionRegex = new RegExp(/(library) (([A-Z]\w+)|"(.*)") (version) '(.*)'/i);
+    const fileForELMResult = files.find(file => {
+      const matchedLibraryLine = libraryAndVersionRegex.exec(file.text)[0];
+      return matchedLibraryLine === currentLibraryAndVersion || matchedLibraryLine === currentLibraryAndVersionWithQuote;
+    });
+
     // Find FHIR version used by library
     const elmDefs = _.get(library, 'usings.def', []);
     const fhirDef = _.find(elmDefs, { localIdentifier: 'FHIR' });
     elmResults.fhirVersion = _.get(fhirDef, 'version', '');
 
     const details = {};
-    details.cqlFileText = cqlFileContent;
-    details.fileName = cqlFileName;
+    details.cqlFileText = fileForELMResult ? fileForELMResult.text : '';
+    details.fileName = fileForELMResult ? fileForELMResult.filename : '';
     let elmParameters = _.get(library, 'parameters.def', []).filter(filterDefinition);
     let elmDefinitions = _.get(library, 'statements.def', []).filter(filterDefinition);
     const allowedAttributes =
@@ -268,7 +276,9 @@ function singlePost(req, res) {
         .then(async (directory) => {
           const files = await Promise.all(directory.files.filter(filterCQLFiles).map(async (file) => {
             const buffer = await file.buffer();
-            return Promise.resolve( { filename: file.path, type: 'text/plain', text: buffer.toString() });
+            const filePathArray = file.path.split('/');
+            const fileName = filePathArray[filePathArray.length - 1];
+            return Promise.resolve( { filename: fileName, type: 'text/plain', text: buffer.toString() });
           }));
           makeCQLtoELMRequest(files, [], (err, elmFiles) => {
             if (err) {
@@ -276,7 +286,7 @@ function singlePost(req, res) {
               return;
             }
 
-            const { elmErrors, elmResultsToSave } = parseELMFiles(elmFiles, artifactId, req.user.uid, cqlFileContent, cqlFileName);
+            const { elmErrors, elmResultsToSave } = parseELMFiles(elmFiles, artifactId, req.user.uid, files);
 
             CQLLibrary.find({ user: req.user.uid, linkedArtifactId: artifactId }, (error, libraries) => {
               if (error) res.status(500).send(error);
@@ -302,7 +312,7 @@ function singlePost(req, res) {
                       if (exportLibrariesNotUploaded.length > 0) {
                         message = message.concat(` ${exportLibrariesNotUploadedMessage}`);
                       }
-                      res.status(409).send(message);
+                      res.status(201).send(message);
                     } else {
                       if (exportLibrariesNotUploaded.length > 0) res.status(201).send(exportLibrariesNotUploadedMessage);
                       else res.status(201).json(response);
@@ -321,13 +331,15 @@ function singlePost(req, res) {
         type: 'text/plain'
       };
 
-      makeCQLtoELMRequest([cqlJson], [], (err, elmFiles) => {
+      const files = [cqlJson];
+
+      makeCQLtoELMRequest(files, [], (err, elmFiles) => {
         if (err) {
           res.status(500).send(err);
           return;
         }
 
-        const { elmErrors, elmResultsToSave } = parseELMFiles(elmFiles, artifactId, req.user.uid, cqlFileContent, cqlFileName);
+        const { elmErrors, elmResultsToSave } = parseELMFiles(elmFiles, artifactId, req.user.uid, files);
 
         CQLLibrary.find({ user: req.user.uid, linkedArtifactId: artifactId }, (error, libraries) => {
           if (error) res.status(500).send(error);
@@ -345,7 +357,7 @@ function singlePost(req, res) {
                 });
               }
             } else {
-              res.status(409).send('Library with identical name and version already exists.');
+              res.status(200).send('Library with identical name and version already exists.');
             }
           }
         });
