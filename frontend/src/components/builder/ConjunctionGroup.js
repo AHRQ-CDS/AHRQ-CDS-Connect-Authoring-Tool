@@ -58,7 +58,6 @@ export default class ConjunctionGroup extends Component {
   // returns class name for odd conjunction groups determined from length of child instances
   getNestingClassName = () => {
     const level = this.getPath().split('.').filter(pathSection => pathSection === 'childInstances').length;
-
     if (level === 0) {
       return 'card-group__top';
     } else if (level % 2 === 0) {
@@ -438,40 +437,40 @@ export default class ConjunctionGroup extends Component {
 }
 
 ConjunctionGroup.propTypes = {
-  root: PropTypes.bool.isRequired,
-  treeName: PropTypes.string.isRequired,
   artifact: PropTypes.object,
-  templates: PropTypes.array,
-  valueSets: PropTypes.array,
-  loadValueSets: PropTypes.func.isRequired,
-  getPath: requiredIf(PropTypes.func, props => !props.root), // path needed for children
+  codeData: PropTypes.object,
+  conversionFunctions: PropTypes.array,
+  deleteInstance: PropTypes.func.isRequired,
+  disableElement: PropTypes.bool,
+  disableIndent: PropTypes.bool,
+  elementUniqueId: PropTypes.string,
   getAllInstances: PropTypes.func.isRequired,
   getAllInstancesInAllTrees: PropTypes.func.isRequired,
-  deleteInstance: PropTypes.func.isRequired,
-  instanceNames: PropTypes.array.isRequired,
-  conversionFunctions: PropTypes.array,
-  scrollToElement: PropTypes.func.isRequired,
-  loginVSACUser: PropTypes.func.isRequired,
-  setVSACAuthStatus: PropTypes.func.isRequired,
-  vsacStatus: PropTypes.string,
-  vsacStatusText: PropTypes.string,
-  searchVSACByKeyword: PropTypes.func.isRequired,
-  isSearchingVSAC: PropTypes.bool.isRequired,
-  vsacSearchResults: PropTypes.array.isRequired,
-  vsacSearchCount: PropTypes.number.isRequired,
+  getPath: requiredIf(PropTypes.func, props => !props.root), // path needed for children
   getVSDetails: PropTypes.func.isRequired,
+  instanceNames: PropTypes.array.isRequired,
   isRetrievingDetails: PropTypes.bool.isRequired,
+  isSearchingVSAC: PropTypes.bool.isRequired,
+  isValidatingCode: PropTypes.bool.isRequired,
+  isValidCode: PropTypes.bool,
+  loadValueSets: PropTypes.func.isRequired,
+  loginVSACUser: PropTypes.func.isRequired,
+  options: PropTypes.string,
+  resetCodeValidation: PropTypes.func.isRequired,
+  root: PropTypes.bool.isRequired,
+  scrollToElement: PropTypes.func.isRequired,
+  searchVSACByKeyword: PropTypes.func.isRequired,
+  setVSACAuthStatus: PropTypes.func.isRequired,
+  templates: PropTypes.array,
+  treeName: PropTypes.string.isRequired,
+  validateCode: PropTypes.func.isRequired,
+  validateReturnType: PropTypes.bool,
+  valueSets: PropTypes.array,
   vsacDetailsCodes: PropTypes.array.isRequired,
   vsacDetailsCodesError: PropTypes.string.isRequired,
   vsacFHIRCredentials: PropTypes.object,
-  validateReturnType: PropTypes.bool,
-  isValidatingCode: PropTypes.bool.isRequired,
-  isValidCode: PropTypes.bool,
-  resetCodeValidation: PropTypes.func.isRequired,
-  codeData: PropTypes.object,
-  validateCode: PropTypes.func.isRequired,
-  options: PropTypes.string,
-  disableIndent: PropTypes.bool,
-  disableElement: PropTypes.bool,
-  elementUniqueId: PropTypes.string
+  vsacSearchCount: PropTypes.number.isRequired,
+  vsacSearchResults: PropTypes.array.isRequired,
+  vsacStatus: PropTypes.string,
+  vsacStatusText: PropTypes.string,
 };

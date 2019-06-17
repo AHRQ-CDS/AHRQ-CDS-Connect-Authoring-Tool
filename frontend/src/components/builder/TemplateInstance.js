@@ -511,7 +511,8 @@ export default class TemplateInstance extends Component {
     let baseUseTab;
     if (referenceParameter.id === 'baseElementUse') {
       const { allInstancesInAllTrees } = this.props;
-      baseUseTab = allInstancesInAllTrees.filter(instance => instance.uniqueId === referenceParameter.value.id)[0].tab;
+      const element = allInstancesInAllTrees.filter(instance => instance.uniqueId === referenceParameter.value.id)[0];
+      baseUseTab = element ? element.tab : null;
     }
 
     let tabIndex;
@@ -994,40 +995,40 @@ export default class TemplateInstance extends Component {
 }
 
 TemplateInstance.propTypes = {
-  valueSets: PropTypes.array,
-  loadValueSets: PropTypes.func.isRequired,
-  getPath: PropTypes.func.isRequired,
-  treeName: PropTypes.string.isRequired,
-  templateInstance: PropTypes.object.isRequired,
-  otherInstances: PropTypes.array.isRequired,
   allInstancesInAllTrees: PropTypes.array.isRequired,
-  editInstance: PropTypes.func.isRequired,
-  updateInstanceModifiers: PropTypes.func.isRequired,
-  deleteInstance: PropTypes.func.isRequired,
-  instanceNames: PropTypes.array.isRequired,
-  subpopulationIndex: PropTypes.number,
-  renderIndentButtons: PropTypes.func.isRequired,
-  loginVSACUser: PropTypes.func.isRequired,
-  setVSACAuthStatus: PropTypes.func.isRequired,
-  vsacStatus: PropTypes.string,
-  vsacStatusText: PropTypes.string,
-  searchVSACByKeyword: PropTypes.func.isRequired,
-  isSearchingVSAC: PropTypes.bool.isRequired,
-  vsacSearchResults: PropTypes.array.isRequired,
-  vsacSearchCount: PropTypes.number.isRequired,
-  getVSDetails: PropTypes.func.isRequired,
-  isRetrievingDetails: PropTypes.bool.isRequired,
-  vsacDetailsCodes: PropTypes.array.isRequired,
-  vsacDetailsCodesError: PropTypes.string.isRequired,
-  validateReturnType: PropTypes.bool,
-  isValidatingCode: PropTypes.bool.isRequired,
-  isValidCode: PropTypes.bool,
+  baseElements: PropTypes.array.isRequired,
   codeData: PropTypes.object,
-  validateCode: PropTypes.func.isRequired,
-  resetCodeValidation: PropTypes.func.isRequired,
+  deleteInstance: PropTypes.func.isRequired,
   disableElement: PropTypes.bool,
   disableIndent: PropTypes.bool,
+  editInstance: PropTypes.func.isRequired,
+  getPath: PropTypes.func.isRequired,
+  getVSDetails: PropTypes.func.isRequired,
+  instanceNames: PropTypes.array.isRequired,
+  isRetrievingDetails: PropTypes.bool.isRequired,
+  isSearchingVSAC: PropTypes.bool.isRequired,
+  isValidatingCode: PropTypes.bool,
+  isValidCode: PropTypes.bool,
+  loadValueSets: PropTypes.func.isRequired,
+  loginVSACUser: PropTypes.func.isRequired,
+  otherInstances: PropTypes.array.isRequired,
+  parameters: PropTypes.array,
+  renderIndentButtons: PropTypes.func.isRequired,
+  resetCodeValidation: PropTypes.func,
   scrollToElement: PropTypes.func.isRequired,
-  baseElements: PropTypes.array.isRequired,
-  parameters: PropTypes.array.isRequired
+  searchVSACByKeyword: PropTypes.func.isRequired,
+  setVSACAuthStatus: PropTypes.func.isRequired,
+  subpopulationIndex: PropTypes.number,
+  templateInstance: PropTypes.object.isRequired,
+  treeName: PropTypes.string.isRequired,
+  updateInstanceModifiers: PropTypes.func.isRequired,
+  validateCode: PropTypes.func,
+  validateReturnType: PropTypes.bool,
+  valueSets: PropTypes.array,
+  vsacDetailsCodes: PropTypes.array.isRequired,
+  vsacDetailsCodesError: PropTypes.string,
+  vsacSearchCount: PropTypes.number.isRequired,
+  vsacSearchResults: PropTypes.array.isRequired,
+  vsacStatus: PropTypes.string,
+  vsacStatusText: PropTypes.string,
 };

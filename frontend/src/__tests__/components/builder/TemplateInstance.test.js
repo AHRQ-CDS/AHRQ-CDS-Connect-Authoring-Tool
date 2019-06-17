@@ -308,7 +308,7 @@ describe('Base Element uses', () => {
 });
 
 describe('Base Element Uses of Use', () => {
-  test('use root base element for type and phrase', () => {
+  test.only('use root base element for type and phrase', () => {
     // Set templateInstance for base element use and set instanceNames to include the original base element name.
     const baseElementProps = { ...props };
     const useElement = _.cloneDeep(genericBaseElementUseTemplateInstance);
@@ -353,7 +353,8 @@ describe('Base Element Uses of Use', () => {
     component = fullRenderComponentOnBody(TemplateInstance, { ...baseElementProps });
 
     const baseElementList = component.find('#base-element-list');
-    expect(baseElementList.text()).toEqual('Base Element:B'); // The base element the use came directly from
+    console.log('baseElementList.at(0)', baseElementList.at(0));
+    expect(baseElementList.at(0).text()).toEqual('Base Element:B'); // The base element the use came directly from
 
     const baseElementHeaderType = component.find('.card-element__heading .label');
     expect(baseElementHeaderType.text()).toEqual('Observation:'); // The topmost base element's type

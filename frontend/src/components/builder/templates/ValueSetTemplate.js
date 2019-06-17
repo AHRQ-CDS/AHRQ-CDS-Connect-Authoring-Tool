@@ -99,17 +99,17 @@ export default class ValueSetTemplate extends Component {
 }
 
 ValueSetTemplate.propTypes = {
-  index: PropTypes.number.isRequired,
-  vsacParameter: PropTypes.object.isRequired,
-  valueSet: PropTypes.object.isRequired,
-  updateInstance: PropTypes.func.isRequired,
-  searchVSACByKeyword: PropTypes.func.isRequired,
-  isSearchingVSAC: PropTypes.bool.isRequired,
-  vsacSearchResults: PropTypes.array.isRequired,
-  vsacSearchCount: PropTypes.number.isRequired,
-  templateInstance: PropTypes.object.isRequired,
   getVSDetails: PropTypes.func.isRequired,
+  index: PropTypes.number.isRequired,
   isRetrievingDetails: PropTypes.bool.isRequired,
+  isSearchingVSAC: PropTypes.bool.isRequired,
+  searchVSACByKeyword: PropTypes.func.isRequired,
+  templateInstance: PropTypes.object.isRequired,
+  updateInstance: PropTypes.func.isRequired,
+  valueSet: PropTypes.object.isRequired,
   vsacDetailsCodes: PropTypes.array.isRequired,
-  vsacDetailsCodesError: PropTypes.string.isRequired,
+  vsacDetailsCodesError: PropTypes.string,
+  vsacParameter: PropTypes.object.isRequired,
+  vsacSearchCount: PropTypes.number.isRequired,
+  vsacSearchResults: PropTypes.array.isRequired,
 };
