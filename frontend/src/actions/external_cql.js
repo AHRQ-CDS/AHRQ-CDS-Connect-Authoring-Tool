@@ -6,6 +6,22 @@ import * as types from './types';
 
 const API_BASE = process.env.REACT_APP_API_URL;
 
+function calculateParentsOfAllLibraries(libraries) {
+  const parentsOfLibraries = {};
+  libraries.forEach((lib) => {
+    if (_.isUndefined(parentsOfLibraries[`${lib.name}-${lib.version}`])) {
+      parentsOfLibraries[`${lib.name}-${lib.version}`] = [];
+    }
+    lib.details.dependencies.forEach((dep) => {
+      if (_.isUndefined(parentsOfLibraries[`${dep.path}-${dep.version}`])) {
+        parentsOfLibraries[`${dep.path}-${dep.version}`] = [];
+      }
+      parentsOfLibraries[`${dep.path}-${dep.version}`].push(`${lib.name}-${lib.version}`);
+    });
+  });
+  return parentsOfLibraries;
+}
+
 // ------------------------- LOAD EXTERNAL CQL LIST ------------------------ //
 
 function requestExternalCqlList() {
@@ -15,9 +31,11 @@ function requestExternalCqlList() {
 }
 
 function loadExternalCqlListSuccess(externalCqlList) {
+  const parentsOfLibraries = calculateParentsOfAllLibraries(externalCqlList);
   return {
     type: types.LOAD_EXTERNAL_CQL_LIST_SUCCESS,
-    externalCqlList
+    externalCqlList,
+    parentsOfLibraries,
   };
 }
 

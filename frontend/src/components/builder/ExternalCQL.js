@@ -78,6 +78,7 @@ export default class ExternalCQL extends Component {
     const {
       artifact,
       externalCqlList,
+      externalCQLLibraryParents,
       deleteExternalCqlLibrary,
       externalCqlLibraryDetails,
       loadExternalCqlLibraryDetails,
@@ -88,6 +89,7 @@ export default class ExternalCQL extends Component {
         <ExternalCqlTable
           artifactId={artifact._id}
           externalCqlList={externalCqlList}
+          externalCQLLibraryParents={externalCQLLibraryParents}
           externalCqlLibraryDetails={externalCqlLibraryDetails}
           deleteExternalCqlLibrary={deleteExternalCqlLibrary}
           loadExternalCqlLibraryDetails={loadExternalCqlLibraryDetails}

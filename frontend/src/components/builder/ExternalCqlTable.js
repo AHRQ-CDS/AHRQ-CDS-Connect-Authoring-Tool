@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import FontAwesome from 'react-fontawesome';
+import { UncontrolledTooltip } from 'reactstrap';
 
 import Modal from '../elements/Modal';
 import ExternalCqlDetails from './ExternalCqlDetails';
@@ -59,39 +60,49 @@ export default class ExternalCqlTable extends Component {
 
   // ----------------------- RENDER ---------------------------------------- //
 
-  renderTableRow = externalCqlLibrary => (
-    <tr key={externalCqlLibrary._id}>
-      <td className="external-cql-table__tablecell-wide" data-th="Library">
-        <div>{externalCqlLibrary.name}</div>
-      </td>
+  renderTableRow = (externalCqlLibrary) => {
+    const currentLibraryParents =
+      this.props.externalCQLLibraryParents[`${externalCqlLibrary.name}-${externalCqlLibrary.version}`];
+    const disableDelete = currentLibraryParents.length > 0;
+    const disabledClass = disableDelete ? 'disabled' : '';
+    return (
+      <tr key={externalCqlLibrary._id}>
+        <td className="external-cql-table__tablecell-wide" data-th="Library">
+          <div>{externalCqlLibrary.name}</div>
+        </td>
 
-      <td className="external-cql-table__tablecell-short" data-th="Added">
-        <div>{renderDate(externalCqlLibrary.createdAt)}</div>
-      </td>
+        <td className="external-cql-table__tablecell-short" data-th="Added">
+          <div>{renderDate(externalCqlLibrary.createdAt)}</div>
+        </td>
 
-      <td className="external-cql-table__tablecell-short center" data-th="Version">
-        <div>{externalCqlLibrary.version}</div>
-      </td>
+        <td className="external-cql-table__tablecell-short center" data-th="Version">
+          <div>{externalCqlLibrary.version}</div>
+        </td>
 
-      <td className="external-cql-table__tablecell-short" data-th="FHIR Version">
-        <div>{this.getFhirVersion(externalCqlLibrary.fhirVersion)}</div>
-      </td>
+        <td className="external-cql-table__tablecell-short" data-th="FHIR Version">
+          <div>{this.getFhirVersion(externalCqlLibrary.fhirVersion)}</div>
+        </td>
 
-      <td data-th="">
-        <button aria-label="View"
-          className="button primary-button details-button"
-          onClick={() => this.openViewDetailsModal(externalCqlLibrary)}>
-          <FontAwesome name='eye'/>
-        </button>
+        <td data-th="">
+          <button aria-label="View"
+            className="button primary-button details-button"
+            onClick={() => this.openViewDetailsModal(externalCqlLibrary)}>
+            <FontAwesome name='eye'/>
+          </button>
 
-        <button
-          className="button danger-button"
-          onClick={() => this.openConfirmDeleteModal(externalCqlLibrary)}>
-          Delete
-        </button>
-      </td>
-    </tr>
-  );
+          <button
+            className={`button danger-button ${disabledClass}`}
+            id={`DeleteLibraryTooltip-${externalCqlLibrary._id}`}
+            onClick={() => { if (!disableDelete) this.openConfirmDeleteModal(externalCqlLibrary); }}>
+            Delete
+          </button>
+          <UncontrolledTooltip target={`DeleteLibraryTooltip-${externalCqlLibrary._id}`} placement="left">
+            To delete this library, first remove all libraries that depend on it.
+          </UncontrolledTooltip>
+        </td>
+      </tr>
+    );
+  };
 
   renderConfirmDeleteModal() {
     const { externalCqlLibraryToDelete } = this.state;

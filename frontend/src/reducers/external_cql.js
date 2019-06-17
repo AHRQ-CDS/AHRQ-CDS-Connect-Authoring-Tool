@@ -11,7 +11,8 @@ const defaultState = {
   addExternalCqlLibrary: { isAdding: false, addStatus: null, error: null, message: '' },
   saveExternalCqlLibrary: { isSaving: false, saveStatus: null },
   deleteExternalCqlLibrary: { isDeleting: false, deleteStatus: null },
-  externalCqlErrors: []
+  externalCqlErrors: [],
+  externalCQLLibraryParents: {}
 };
 
 export default function externalCQL(state = defaultState, action) {
@@ -25,6 +26,7 @@ export default function externalCQL(state = defaultState, action) {
       return {
         ...state,
         externalCqlList: action.externalCqlList,
+        externalCQLLibraryParents: action.parentsOfLibraries,
         loadExternalCqlList: { isLoading: false, loadStatus: 'success' }
       };
     case types.LOAD_EXTERNAL_CQL_LIST_FAILURE:

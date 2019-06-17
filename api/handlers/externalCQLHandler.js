@@ -258,6 +258,8 @@ function parseELMFiles(elmFiles, artifactId, userId, files) {
     details.parameters = mapReturnTypes(elmParameters);
     details.definitions = mapReturnTypes(defineStatements);
     details.functions = mapReturnTypes(functionStatements);
+    const fileDependencies = _.get(library, 'includes.def', []);
+    details.dependencies = fileDependencies;
     elmResults.details = details;
     elmResultsToSave.push(elmResults);
   });

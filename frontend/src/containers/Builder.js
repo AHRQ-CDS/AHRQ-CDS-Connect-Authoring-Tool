@@ -652,6 +652,7 @@ export class Builder extends Component {
                     artifact={this.props.artifact}
                     externalCqlList={this.props.externalCqlList}
                     externalCqlLibrary={this.props.externalCqlLibrary}
+                    externalCQLLibraryParents={this.props.externalCQLLibraryParents}
                     externalCqlLibraryDetails={this.props.externalCqlLibraryDetails}
                     externalCqlFhirVersion={this.props.externalCqlFhirVersion}
                     externalCqlErrors={this.props.externalCqlErrors}
@@ -712,6 +713,7 @@ Builder.propTypes = {
   codeData: PropTypes.object,
   names: PropTypes.array.isRequired,
   externalCqlList: PropTypes.array,
+  externalCQLLibraryParents: PropTypes.object,
   externalCqlLibrary: PropTypes.object,
   externalCqlLibraryDetails: PropTypes.object,
   externalCqlFhirVersion: PropTypes.string,
@@ -781,6 +783,7 @@ function mapStateToProps(state) {
     isLoggingOut: state.auth.isLoggingOut,
     externalCqlList: state.externalCQL.externalCqlList,
     externalCqlLibrary: state.externalCQL.externalCqlLibrary,
+    externalCQLLibraryParents: state.externalCQL.externalCQLLibraryParents,
     externalCqlLibraryDetails: state.externalCQL.externalCqlLibraryDetails,
     externalCqlFhirVersion: state.externalCQL.fhirVersion,
     externalCqlErrors: state.externalCQL.externalCqlErrors,
