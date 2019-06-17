@@ -46,6 +46,7 @@ const props = {
   loadValueSets: jest.fn(),
   loginVSACUser: jest.fn(),
   parameters: [],
+  baseElements: [],
   root: true,
   searchVSACByKeyword: jest.fn(),
   setVSACAuthStatus: jest.fn(),
