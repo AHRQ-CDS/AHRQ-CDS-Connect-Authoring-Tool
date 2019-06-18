@@ -171,6 +171,8 @@ function mapReturnTypes(definitions) {
 
 const filterDefinition = def => (def.name !== 'Patient' && def.accessLevel === 'Public');
 
+const compareNameAndVersion = (a, b) => a.name === b.name && a.version === b.version;
+
 const filterCQLFiles = file => {
   const filePathArray = file.path.split('/');
   const fileName = filePathArray[filePathArray.length - 1];
@@ -232,7 +234,9 @@ function parseELMFiles(elmFiles, artifactId, userId, files) {
     const libraryAndVersionRegex = new RegExp(/(library) (([A-Z]\w+)|"(.*)") (version) '(.*)'/i);
     const fileForELMResult = files.find(file => {
       const matchedLibraryLine = libraryAndVersionRegex.exec(file.text)[0];
-      return matchedLibraryLine === currentLibraryAndVersion || matchedLibraryLine === currentLibraryAndVersionWithQuote;
+      const isMatch =
+        matchedLibraryLine === currentLibraryAndVersion || matchedLibraryLine === currentLibraryAndVersionWithQuote;
+      return isMatch;
     });
 
     // Find FHIR version used by library
@@ -293,13 +297,17 @@ function singlePost(req, res) {
             CQLLibrary.find({ user: req.user.uid, linkedArtifactId: artifactId }, (error, libraries) => {
               if (error) res.status(500).send(error);
               else {
-                const nonAuthoringToolExportLibraries = _.differenceWith(elmResultsToSave, authoringToolExports, (elm, exp) => elm.name === exp.name && elm.version === exp.version);
+                const nonAuthoringToolExportLibraries =
+                  _.differenceWith(elmResultsToSave, authoringToolExports, compareNameAndVersion);
                 const authoringToolExportLibraries = _.difference(elmResultsToSave, nonAuthoringToolExportLibraries);
-                const nonDuplicateLibraries = _.differenceWith(nonAuthoringToolExportLibraries, libraries, (lib, elm) => lib.name === elm.name && lib.version === elm.version);
+                const nonDuplicateLibraries =
+                  _.differenceWith(nonAuthoringToolExportLibraries, libraries, compareNameAndVersion);
                 const duplicateLibraries = _.difference(nonAuthoringToolExportLibraries, nonDuplicateLibraries);
 
-                const exportLibrariesNotUploaded = authoringToolExportLibraries.map(lib => `library ${lib.name} version ${lib.version}`).join(', ');
-                const exportLibrariesNotUploadedMessage = `The following was not uploaded because the library is included by default: ${exportLibrariesNotUploaded}.`;
+                const exportLibrariesNotUploaded =
+                  authoringToolExportLibraries.map(lib => `library ${lib.name} version ${lib.version}`).join(', ');
+                const exportLibrariesNotUploadedMessage = `The following was not uploaded because the library is \
+                  included by default: ${exportLibrariesNotUploaded}.`;
                 // If any file has an error, upload nothing.
                 if (elmErrors.length > 0) {
                   res.status(400).send(elmErrors);
@@ -308,16 +316,22 @@ function singlePost(req, res) {
                     if (error) {
                       res.status(500).send(error);
                     } else if (duplicateLibraries.length > 0) {
-                      // NOTE: Really, we should re-run cql-to-elm with the existing version of the duplicate files to confirm they work with the non-duplicate libraries.
-                      const librariesNotUploaded = duplicateLibraries.map(lib => `library ${lib.name} version ${lib.version}`).join(', ');
-                      let message = `The following was not uploaded because a library with identical name and version already exists: ${librariesNotUploaded}.`;
+                      // NOTE: Really, we should re-run cql-to-elm with the existing version of the duplicate files to
+                      // confirm they work with the non-duplicate libraries.
+                      const librariesNotUploaded =
+                        duplicateLibraries.map(lib => `library ${lib.name} version ${lib.version}`).join(', ');
+                      let message = `The following was not uploaded because a library with identical name and version \
+                        already exists: ${librariesNotUploaded}.`;
                       if (exportLibrariesNotUploaded.length > 0) {
                         message = message.concat(` ${exportLibrariesNotUploadedMessage}`);
                       }
                       res.status(201).send(message);
                     } else {
-                      if (exportLibrariesNotUploaded.length > 0) res.status(201).send(exportLibrariesNotUploadedMessage);
-                      else res.status(201).json(response);
+                      if (exportLibrariesNotUploaded.length > 0) {
+                        res.status(201).send(exportLibrariesNotUploadedMessage);
+                      } else {
+                        res.status(201).json(response);
+                      }
                     }
                   });
                 }
