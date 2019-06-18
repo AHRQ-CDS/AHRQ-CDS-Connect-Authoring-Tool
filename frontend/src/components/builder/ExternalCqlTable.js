@@ -176,6 +176,7 @@ ExternalCqlTable.propTypes = {
   artifactId: PropTypes.string,
   externalCqlList: PropTypes.array,
   externalCqlLibraryDetails: PropTypes.object,
+  externalCQLLibraryParents: PropTypes.object.isRequired,
   deleteExternalCqlLibrary: PropTypes.func.isRequired,
   loadExternalCqlLibraryDetails: PropTypes.func.isRequired,
   isLoadingExternalCqlDetails: PropTypes.bool.isRequired

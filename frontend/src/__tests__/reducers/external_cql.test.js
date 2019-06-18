@@ -87,12 +87,11 @@ describe('external_cql reducer', () => {
     };
     expect(reducer(previousState, action)).toEqual(newState);
 
-    // Duplicate library causes an add failure
+    // Duplicate library doesn't add but returns as a success
     const dupLibraryText = 'Library with identical name and version already exists.';
-    action = { type: types.ADD_EXTERNAL_CQL_LIBRARY_FAILURE, status: 409, statusText: dupLibraryText, data: [] };
+    action = { type: types.ADD_EXTERNAL_CQL_LIBRARY_SUCCESS, message: dupLibraryText };
     newState = {
-      addExternalCqlLibrary: { isAdding: false, addStatus: 'failure', error: 409, message: dupLibraryText },
-      externalCqlErrors: []
+      addExternalCqlLibrary: { isAdding: false, addStatus: 'success', error: null, message: dupLibraryText }
     };
     expect(reducer(previousState, action)).toEqual(newState);
 

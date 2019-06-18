@@ -156,6 +156,7 @@ ExternalCQL.propTypes = {
   externalCqlLibraryDetails: PropTypes.object,
   externalCqlFhirVersion: PropTypes.string,
   externalCqlErrors: PropTypes.array,
+  externalCQLLibraryParents: PropTypes.object.isRequired,
   isAddingExternalCqlLibrary: PropTypes.bool,
   addExternalCqlLibraryError: PropTypes.number,
   deleteExternalCqlLibrary: PropTypes.func.isRequired,

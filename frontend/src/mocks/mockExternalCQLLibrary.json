@@ -11,6 +11,13 @@
     "cqlFileText": "library \"CQL-Upload\" version '1.0.0'\r\n\r\nusing FHIR version '1.0.2'\r\n\r\ninclude FHIRHelpers version '1.0.2' called FHIRHelpers \r\n\r\ninclude CDS_Connect_Commons_for_FHIRv102 version '1.3.0' called C3F \r\n\r\ninclude CDS_Connect_Conversions version '1' called Convert \r\n\r\n\r\nvalueset \"LDL-c VS\": '2.16.840.1.113883.3.117.1.7.1.215'\r\n\r\n\r\n\r\ncontext Patient\r\n\r\ndefine \"Age\":\r\n  AgeInMonths() >= 14\r\n\r\ndefine \"LDL-c\":\r\n  exists([Observation: \"LDL-c VS\"])\r\n\r\ndefine \"MeetsInclusionCriteria\":\r\n  \"Age\"\r\n  and \"LDL-c\"\r\n\r\ndefine \"InPopulation\":\r\n   \"MeetsInclusionCriteria\" \r\n\r\ndefine \"Recommendation\":\r\n  null\r\n\r\ndefine \"Rationale\":\r\n  null\r\ndefine \"Errors\":\r\n  null\r\n",
     "fileName": "CQL-Upload.cql",
     "parameters": [],
+    "dependencies": [
+      {
+        "version": "2",
+        "path": "CDS_Connect_Conversions_New",
+        "localIdentifier": "Convert"
+      }
+    ],
     "definitions": [
       {
         "accessLevel": "Public",

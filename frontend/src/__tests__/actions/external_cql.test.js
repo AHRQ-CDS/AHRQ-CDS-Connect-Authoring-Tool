@@ -61,6 +61,85 @@ describe('external cql actions', () => {
         expect(store.getActions()).toEqual(expectedActions);
       });
     });
+
+    it('correctly calculates library parents after fetching list', () => {
+      const store = mockStore({});
+      const artifactId = 'abc132';
+
+      // A list of libraries that has dependencies - used to check the parent library object is built correctly
+      const externalCqlList = [
+        {
+          name: 'My Artifact',
+          version: '1',
+          details: {
+            dependencies: [
+              {
+                version: '2',
+                path: 'CDS_Connect_Conversions_New',
+                localIdentifier: 'Convert'
+              },
+              {
+                version: '2.0.0',
+                path: 'CDS_Connect_Commons_New',
+                localIdentifier: 'C3F'
+              },
+              {
+                version: '2.0.1',
+                path: 'FHIRHelpers_New',
+                localIdentifier: 'FHIRHelpers'
+              }
+            ]
+          }
+        },
+        {
+          name: 'CDS_Connect_Conversions_New',
+          version: '2',
+          details: { dependencies: [] }
+        },
+        {
+          name: 'CDS_Connect_Commons_New',
+          version: '2.0.0',
+          details: {
+            dependencies: [
+              {
+                version: '2.0.1',
+                path: 'FHIRHelpers_New',
+                localIdentifier: 'FHIRHelpers'
+              }
+            ]
+          }
+        },
+        {
+          name: 'FHIRHelpers_New',
+          version: '2.0.1',
+          details: { dependencies: [] }
+        }
+      ];
+
+      // Expected parent relationships based on dependencies defined above
+      const expectedParentsOfLibraries = {
+        'my-artifact-1': [],
+        'cds-connect-conversions-new-2': ['my-artifact-1'],
+        'cds-connect-commons-new-2.0.0': ['my-artifact-1'],
+        'fhir-helpers-new-2.0.1': ['my-artifact-1', 'cds-connect-commons-new-2.0.0']
+      };
+
+      moxios.stubs.track({
+        url: `/authoring/api/externalCQL/${artifactId}`,
+        method: 'GET',
+        response: { status: 200, response: externalCqlList }
+      });
+
+      const expectedActions = [
+        { type: types.EXTERNAL_CQL_LIST_REQUEST },
+        { type: types.LOAD_EXTERNAL_CQL_LIST_SUCCESS, externalCqlList, parentsOfLibraries: expectedParentsOfLibraries }
+      ];
+
+      // Confirm the parentsOfLibraries object is created correctly when the list is successfully loaded
+      return store.dispatch(actions.loadExternalCqlList(artifactId)).then(() => {
+        expect(store.getActions()).toEqual(expectedActions);
+      });
+    });
   });
 
   // ------------------------- LOAD EXTERNAL CQL LIBRARY DETAILS ------------- //
@@ -189,7 +268,7 @@ describe('external cql actions', () => {
       });
     });
 
-    it('dispatches a ADD_EXTERNAL_CQL_LIBRARY_FAILURE action upon an unsuccessful add due to duplicate library', () => {
+    it('dispatches a ADD_EXTERNAL_CQL_LIBRARY_SUCCESS action upon an unsuccessful add due to duplicate library', () => {
       const store = mockStore({});
       const badLibrary = { artifactId: 'id123' };
       const dupLibraryText = 'Library with identical name and version already exists.';
@@ -205,7 +284,7 @@ describe('external cql actions', () => {
       moxios.stubs.track({
         url: '/authoring/api/externalCQL',
         method: 'POST',
-        response: { status: 409, statusText: 'Conflict', response: dupLibraryText }
+        response: { status: 200, statusText: 'OK', response: dupLibraryText }
       });
 
       moxios.stubs.track({
@@ -216,7 +295,7 @@ describe('external cql actions', () => {
 
       const expectedActions = [
         { type: types.ADD_EXTERNAL_CQL_LIBRARY_REQUEST },
-        { type: types.ADD_EXTERNAL_CQL_LIBRARY_FAILURE, status: 409, statusText: dupLibraryText, data: [] },
+        { type: types.ADD_EXTERNAL_CQL_LIBRARY_SUCCESS, message: dupLibraryText },
         { type: types.EXTERNAL_CQL_LIST_REQUEST },
         { type: types.LOAD_EXTERNAL_CQL_LIST_SUCCESS, externalCqlList, parentsOfLibraries }
       ];

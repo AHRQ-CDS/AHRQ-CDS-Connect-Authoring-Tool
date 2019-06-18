@@ -713,7 +713,7 @@ Builder.propTypes = {
   codeData: PropTypes.object,
   names: PropTypes.array.isRequired,
   externalCqlList: PropTypes.array,
-  externalCQLLibraryParents: PropTypes.object,
+  externalCQLLibraryParents: PropTypes.object.isRequired,
   externalCqlLibrary: PropTypes.object,
   externalCqlLibraryDetails: PropTypes.object,
   externalCqlFhirVersion: PropTypes.string,
