@@ -2,6 +2,8 @@ import axios from 'axios';
 import Promise from 'promise';
 import _ from 'lodash';
 
+import changeToCase from '../utils/strings';
+
 import * as types from './types';
 
 const API_BASE = process.env.REACT_APP_API_URL;
@@ -9,14 +11,18 @@ const API_BASE = process.env.REACT_APP_API_URL;
 function calculateParentsOfAllLibraries(libraries) {
   const parentsOfLibraries = {};
   libraries.forEach((lib) => {
-    if (_.isUndefined(parentsOfLibraries[`${lib.name}-${lib.version}`])) {
-      parentsOfLibraries[`${lib.name}-${lib.version}`] = [];
+    const libName = changeToCase(lib.name, 'paramCase');
+    const libVersion = lib.version;
+    if (_.isUndefined(parentsOfLibraries[`${libName}-${libVersion}`])) {
+      parentsOfLibraries[`${libName}-${libVersion}`] = [];
     }
     lib.details.dependencies.forEach((dep) => {
-      if (_.isUndefined(parentsOfLibraries[`${dep.path}-${dep.version}`])) {
-        parentsOfLibraries[`${dep.path}-${dep.version}`] = [];
+      const depName = changeToCase(dep.path, 'paramCase');
+      const depVersion = dep.version;
+      if (_.isUndefined(parentsOfLibraries[`${depName}-${depVersion}`])) {
+        parentsOfLibraries[`${depName}-${depVersion}`] = [];
       }
-      parentsOfLibraries[`${dep.path}-${dep.version}`].push(`${lib.name}-${lib.version}`);
+      parentsOfLibraries[`${depName}-${depVersion}`].push(`${libName}-${libVersion}`);
     });
   });
   return parentsOfLibraries;

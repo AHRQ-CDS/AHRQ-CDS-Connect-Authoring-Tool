@@ -14,7 +14,8 @@ describe('external_cql reducer', () => {
       addExternalCqlLibrary: { isAdding: false, addStatus: null, error: null, message: '' },
       saveExternalCqlLibrary: { isSaving: false, saveStatus: null },
       deleteExternalCqlLibrary: { isDeleting: false, deleteStatus: null },
-      externalCqlErrors: []
+      externalCqlErrors: [],
+      externalCQLLibraryParents: {}
     });
   });
 
@@ -73,8 +74,8 @@ describe('external_cql reducer', () => {
     };
     expect(reducer(previousState, action)).toEqual(newState);
 
-    action = { type: types.ADD_EXTERNAL_CQL_LIBRARY_SUCCESS };
-    newState = { addExternalCqlLibrary: { isAdding: false, addStatus: 'success', error: null, message: '' } };
+    action = { type: types.ADD_EXTERNAL_CQL_LIBRARY_SUCCESS, message: 'A message' };
+    newState = { addExternalCqlLibrary: { isAdding: false, addStatus: 'success', error: null, message: 'A message' } };
     expect(reducer(previousState, action)).toEqual(newState);
 
     // CQL to ELM errors cause an add failure and pass an array of data to display

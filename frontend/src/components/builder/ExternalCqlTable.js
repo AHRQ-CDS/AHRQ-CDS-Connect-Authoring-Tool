@@ -8,6 +8,7 @@ import ExternalCqlDetails from './ExternalCqlDetails';
 
 import { sortMostRecent } from '../../utils/sort';
 import renderDate from '../../utils/dates';
+import changeToCase from '../../utils/strings';
 
 export default class ExternalCqlTable extends Component {
   constructor(props) {
@@ -61,8 +62,10 @@ export default class ExternalCqlTable extends Component {
   // ----------------------- RENDER ---------------------------------------- //
 
   renderTableRow = (externalCqlLibrary) => {
+    const libName = changeToCase(externalCqlLibrary.name, 'paramCase');
+    const libVersion = externalCqlLibrary.version;
     const currentLibraryParents =
-      this.props.externalCQLLibraryParents[`${externalCqlLibrary.name}-${externalCqlLibrary.version}`];
+      this.props.externalCQLLibraryParents[`${libName}-${libVersion}`] || [];
     const disableDelete = currentLibraryParents.length > 0;
     const disabledClass = disableDelete ? 'disabled' : '';
     return (

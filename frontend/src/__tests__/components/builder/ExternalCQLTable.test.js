@@ -1,6 +1,6 @@
 import ExternalCQLTable from '../../../components/builder/ExternalCqlTable';
 import mockExternalLib from '../../../mocks/mockExternalCQLLibrary.json';
-import { shallowRenderComponent, fullRenderComponent, ReactWrapper } from '../../../utils/test_helpers';
+import { shallowRenderComponent, ReactWrapper, fullRenderComponentOnBody } from '../../../utils/test_helpers';
 
 const externalLibrariesMock = [mockExternalLib];
 
@@ -18,7 +18,8 @@ test('ExternalCQLTable renders external libraries', () => {
   const component = shallowRenderComponent(ExternalCQLTable, {
     artifact: {},
     loadExternalCqlList: jest.fn(),
-    externalCqlList: externalLibrariesMock
+    externalCqlList: externalLibrariesMock,
+    externalCQLLibraryParents: {}
   });
 
   expect(component.find('tbody tr')).toHaveLength(externalLibrariesMock.length);
@@ -26,10 +27,11 @@ test('ExternalCQLTable renders external libraries', () => {
 
 test('ExternalCQLTable delete opens confirmation modal and deletes from modal', () => {
   const deleteExternalCqlLibraryMock = jest.fn();
-  const component = fullRenderComponent(ExternalCQLTable, {
+  const component = fullRenderComponentOnBody(ExternalCQLTable, {
     artifact: {},
     loadExternalCqlList: jest.fn(),
     externalCqlList: externalLibrariesMock,
+    externalCQLLibraryParents: {},
     deleteExternalCqlLibrary: deleteExternalCqlLibraryMock
   });
 
@@ -55,10 +57,11 @@ test('ExternalCQLTable delete opens confirmation modal and deletes from modal', 
 });
 
 test('ExternalCQLTable view opens details modal', () => {
-  const component = fullRenderComponent(ExternalCQLTable, {
+  const component = fullRenderComponentOnBody(ExternalCQLTable, {
     artifact: {},
     loadExternalCqlList: jest.fn(),
     externalCqlList: externalLibrariesMock,
+    externalCQLLibraryParents: {},
     deleteExternalCqlLibrary: jest.fn(),
     loadExternalCqlLibraryDetails: jest.fn(),
     externalCqlLibraryDetails: mockExternalLib
