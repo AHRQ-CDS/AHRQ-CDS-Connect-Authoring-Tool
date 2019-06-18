@@ -174,7 +174,27 @@ describe('Base Element instances', () => {
   beforeEach(() => {
     const baseElementProps = { ...props };
     baseElementProps.templateInstance = genericBaseElementTemplateInstance;
+    baseElementProps.templateInstance.uniqueId = 'originalBaseElementId';
+    baseElementProps.templateInstance.usedBy = ['baseElementUseId'];
+    baseElementProps.baseElements = [baseElementProps.templateInstance];
+
+    const baseElementUseProps = { ...props };
+    baseElementUseProps.templateInstance = genericBaseElementUseTemplateInstance;
+    baseElementUseProps.templateInstance.uniqueId = 'baseElementUseId';
+    baseElementUseProps.templateInstance.tab = 'expTreeInclude';
+    baseElementUseProps.baseElements = [baseElementProps.templateInstance];
+
+    baseElementProps.allInstancesInAllTrees = [baseElementProps.templateInstance, baseElementUseProps.templateInstance];
+
     component = fullRenderComponentOnBody(TemplateInstance, { ...baseElementProps });
+  });
+
+  test('can navigate to its uses', () => {
+    const linkButton = component.find('.element__linkbutton');
+    expect(linkButton).toHaveLength(1);
+
+    linkButton.simulate('click');
+    expect(component.props().scrollToElement).toBeCalledWith('baseElementUseId', 'baseElementUse', 0);
   });
 
   test('cannot be deleted if in use in the artifact', () => {
@@ -293,22 +313,23 @@ describe('Base Element uses', () => {
   });
 
   test('visualize original base element information', () => {
-    const baseElementList = component.find('#base-element-list');
+    const baseElementList = component.find('#base-element-list').at(0);
     expect(baseElementList).toHaveLength(1);
     expect(baseElementList.text()).toEqual('Base Element:My Base Element');
   });
 
   test('can navigate to original definition', () => {
-    const linkButton = component.find('.element__linkbutton');
+    const linkButton = component.find('.element__linkbutton').at(0);
     expect(linkButton).toHaveLength(1);
 
     linkButton.simulate('click');
-    expect(component.props().scrollToElement).toBeCalledWith('originalBaseElementId', 'baseElementReference');
+    expect(component.props().scrollToElement)
+      .toBeCalledWith('originalBaseElementId', 'baseElementReference', undefined);
   });
 });
 
 describe('Base Element Uses of Use', () => {
-  test.only('use root base element for type and phrase', () => {
+  test('use root base element for type and phrase', () => {
     // Set templateInstance for base element use and set instanceNames to include the original base element name.
     const baseElementProps = { ...props };
     const useElement = _.cloneDeep(genericBaseElementUseTemplateInstance);
@@ -353,7 +374,6 @@ describe('Base Element Uses of Use', () => {
     component = fullRenderComponentOnBody(TemplateInstance, { ...baseElementProps });
 
     const baseElementList = component.find('#base-element-list');
-    console.log('baseElementList.at(0)', baseElementList.at(0));
     expect(baseElementList.at(0).text()).toEqual('Base Element:B'); // The base element the use came directly from
 
     const baseElementHeaderType = component.find('.card-element__heading .label');

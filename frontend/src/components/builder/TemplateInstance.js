@@ -504,7 +504,6 @@ export default class TemplateInstance extends Component {
         referenceName = elementToReference.name;
       }
     }
-
     const scrollElementId = referenceParameter.value.id;
     const scrollReferenceType = referenceParameter.id;
 
