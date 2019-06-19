@@ -99,9 +99,11 @@ export default class ExternalCqlTable extends Component {
             onClick={() => { if (!disableDelete) this.openConfirmDeleteModal(externalCqlLibrary); }}>
             Delete
           </button>
-          <UncontrolledTooltip target={`DeleteLibraryTooltip-${externalCqlLibrary._id}`} placement="left">
-            To delete this library, first remove all libraries that depend on it.
-          </UncontrolledTooltip>
+          {disableDelete &&
+            <UncontrolledTooltip target={`DeleteLibraryTooltip-${externalCqlLibrary._id}`} placement="left">
+              To delete this library, first remove all libraries that depend on it.
+            </UncontrolledTooltip>
+          }
         </td>
       </tr>
     );
