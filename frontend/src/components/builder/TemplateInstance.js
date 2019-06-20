@@ -518,6 +518,7 @@ export default class TemplateInstance extends Component {
     if (baseUseTab === 'expTreeInclude') tabIndex = 0;
     if (baseUseTab === 'expTreeExclude') tabIndex = 1;
     if (baseUseTab === 'subpopulations') tabIndex = 2;
+    if (baseUseTab === 'baseElements') tabIndex = 3;
 
     let label = 'Element:';
     if (referenceParameter.id === 'baseElementReference') label = 'Base Element:';
@@ -528,6 +529,7 @@ export default class TemplateInstance extends Component {
     if (baseUseTab === 'expTreeInclude') tabLabel = 'Inclusions';
     if (baseUseTab === 'expTreeExclude') tabLabel = 'Exclusions';
     if (baseUseTab === 'subpopulations') tabLabel = 'Subpopulations';
+    if (baseUseTab === 'baseElements') tabLabel = 'Base Element';
 
     return (
       <div className="modifier__return__type" id="base-element-list" key={referenceParameter.value.id}>
