@@ -44,6 +44,7 @@ const elementOptions = [
   { value: 'condition', label: 'Condition', vsacAuthRequired: true, template: 'GenericCondition_vsac' },
   { value: 'demographics', label: 'Demographics', vsacAuthRequired: false },
   { value: 'encounter', label: 'Encounter', vsacAuthRequired: true, template: 'GenericEncounter_vsac' },
+  { value: 'externalCqlElement', label: 'External CQL', vsacAuthRequired: false },
   { value: 'listOperations', label: 'List Operations', vsacAuthRequired: false },
   {
     value: 'medicationStatement',
@@ -70,7 +71,8 @@ export default class ElementSelect extends Component {
 
     this.state = {
       categories: this.internalCategories.sort(sortAlphabeticallyByKey('name')),
-      selectedElement: null
+      selectedElement: null,
+      selectedExternalLibrary: null
     };
 
     this.elementInputId = '';
@@ -78,6 +80,8 @@ export default class ElementSelect extends Component {
   }
 
   componentWillMount() {
+    const { artifactId, loadExternalCqlList } = this.props;
+    loadExternalCqlList(artifactId);
     this.setState({ selectedCategory: this.state.categories.find(g => g.name === 'All') });
     this.elementInputId = _.uniqueId('element-select__element-input-');
     this.categoryInputId = _.uniqueId('element-select__category-input-');
@@ -104,6 +108,7 @@ export default class ElementSelect extends Component {
     const baseElementsIndex = categoriesCopy.findIndex(cat => cat.name === 'Base Elements');
     const listOperationsIndex = categoriesCopy.findIndex(cat => cat.name === 'List Operations');
     const operationsIndex = categoriesCopy.findIndex(cat => cat.name === 'Operations');
+    const externalCqlIndex = categoriesCopy.findIndex(cat => cat.name === 'External CQL');
 
     if (operationsIndex >= 0 && listOperationsIndex >= 0) {
       const operationEntries = categoriesCopy[operationsIndex].entries.map((entry) => {
@@ -140,10 +145,11 @@ export default class ElementSelect extends Component {
         });
       });
     }
+
     if (props.parameters.length) {
       let parametersCategory;
       if (paramsIndex >= 0) {
-        [parametersCategory] = categoriesCopy.splice(paramsIndex, 1);
+        parametersCategory = categoriesCopy[paramsIndex];
       } else {
         parametersCategory = { icon: 'sign-in', name: 'Parameters', entries: [] };
       }
@@ -170,13 +176,21 @@ export default class ElementSelect extends Component {
           ]
         });
       });
-
-      categoriesCopy.push(parametersCategory);
     } else if (props.parameters.length === 0 && paramsIndex >= 0) {
       // No parameters have been made. Restrict creating new parameters within the workspace.
       categoriesCopy[paramsIndex].entries = [];
     } else {
       categoriesCopy.push({ icon: 'sign-in', name: 'Parameters', entries: [] });
+    }
+
+    if (props.externalCqlList.length && categoriesCopy[externalCqlIndex]) {
+      categoriesCopy[externalCqlIndex].entries = props.externalCqlList.map(e =>
+        ({
+          id: e.name,
+          name: e.name,
+          type: 'externalCqlElement',
+          definitions: e.details.definitions
+        }));
     }
 
     _.each(categoriesCopy, (cat) => {
@@ -269,7 +283,12 @@ export default class ElementSelect extends Component {
       .find(cat => cat.name === element.type)
       .entries.find(entry => entry.id === element.value);
 
-    this.onSuggestionSelected(suggestion);
+    if (!suggestion.type === 'externalCqlElement') {
+      this.onSuggestionSelected(suggestion);
+    } else {
+      console.log(suggestion);
+      this.setState({ selectedExternalLibrary: suggestion });
+    }
   }
 
   onElementSelected = (selectedElement) => {
@@ -301,7 +320,7 @@ export default class ElementSelect extends Component {
       }
     }
     const value = selectedElement && selectedElement.value;
-
+    console.log(noAuthElementOptions);
     let noAuthPlaceholder = '';
     if (selectedElement) {
       if (selectedElement.value === 'baseElement') {
@@ -344,6 +363,17 @@ export default class ElementSelect extends Component {
           }
         </div>
 
+          {selectedElement && !selectedElement.vsacAuthRequired && this.state.selectedExternalLibrary &&
+            <Select
+              className="element-select__element-field"
+              placeholder={noAuthPlaceholder}
+              aria-label={noAuthPlaceholder}
+              options={noAuthElementOptions}
+              onChange={this.onNoAuthElementSelected}
+              optionRenderer={optionRenderer}
+              />
+          }
+
         {selectedElement && selectedElement.vsacAuthRequired && this.renderVSACLogin()}
       </div>
     );
@@ -351,6 +381,7 @@ export default class ElementSelect extends Component {
 }
 
 ElementSelect.propTypes = {
+  artifactId: PropTypes.string.isRequired,
   categories: PropTypes.array.isRequired,
   onSuggestionSelected: PropTypes.func.isRequired,
   booleanParameters: PropTypes.arrayOf(PropTypes.shape({
@@ -378,4 +409,6 @@ ElementSelect.propTypes = {
   inBaseElements: PropTypes.bool.isRequired,
   elementUniqueId: PropTypes.string,
   disableElement: PropTypes.bool,
+  externalCqlList: PropTypes.array.isRequired,
+  loadExternalCqlList: PropTypes.func.isRequired
 };

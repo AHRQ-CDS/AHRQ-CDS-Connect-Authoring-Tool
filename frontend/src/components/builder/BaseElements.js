@@ -130,15 +130,18 @@ export default class BaseElements extends Component {
       <div className="card-group card-group__top">
         <div className="card-element">
           <ElementSelect
+            artifactId={this.props.instance._id}
             baseElements={this.props.baseElements}
             categories={this.props.templates}
             codeData={this.props.codeData}
+            externalCqlList={this.props.externalCqlList}
             getVSDetails={this.props.getVSDetails}
             inBaseElements={true}
             isRetrievingDetails={this.props.isRetrievingDetails}
             isSearchingVSAC={this.props.isSearchingVSAC}
             isValidatingCode={this.props.isValidatingCode}
             isValidCode={this.props.isValidCode}
+            loadExternalCqlList={this.props.loadExternalCqlList}
             loginVSACUser={this.props.loginVSACUser}
             onSuggestionSelected={this.addChild}
             parameters={this.props.parameters}
@@ -167,6 +170,7 @@ BaseElements.propTypes = {
   conversionFunctions: PropTypes.array,
   deleteInstance: PropTypes.func.isRequired,
   editInstance: PropTypes.func.isRequired,
+  externalCqlList: PropTypes.array.isRequired,
   getAllInstances: PropTypes.func.isRequired,
   getAllInstancesInAllTrees: PropTypes.func.isRequired,
   getVSDetails: PropTypes.func.isRequired,
@@ -176,6 +180,7 @@ BaseElements.propTypes = {
   isSearchingVSAC: PropTypes.bool.isRequired,
   isValidatingCode: PropTypes.bool.isRequired,
   isValidCode: PropTypes.bool,
+  loadExternalCqlList: PropTypes.func.isRequired,
   loadValueSets: PropTypes.func.isRequired,
   loginVSACUser: PropTypes.func.isRequired,
   parameters: PropTypes.array.isRequired,
@@ -196,5 +201,5 @@ BaseElements.propTypes = {
   vsacSearchCount: PropTypes.number.isRequired,
   vsacSearchResults: PropTypes.array.isRequired,
   vsacStatus: PropTypes.string,
-  vsacStatusText: PropTypes.string,
+  vsacStatusText: PropTypes.string
 };

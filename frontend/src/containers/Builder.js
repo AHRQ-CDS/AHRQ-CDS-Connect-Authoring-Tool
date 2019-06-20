@@ -370,6 +370,8 @@ export class Builder extends Component {
           updateInstanceModifiers={this.updateInstanceModifiers}
           parameters={namedParameters}
           baseElements={artifact.baseElements}
+          externalCqlList={this.props.externalCqlList}
+          loadExternalCqlList={this.props.loadExternalCqlList}
           conversionFunctions={conversionFunctions}
           instanceNames={this.props.names}
           scrollToElement={this.scrollToElement}
@@ -570,6 +572,8 @@ export class Builder extends Component {
                     instanceNames={this.props.names}
                     baseElements={artifact.baseElements}
                     parameters={namedParameters}
+                    externalCqlList={this.props.externalCqlList}
+                    loadExternalCqlList={this.props.loadExternalCqlList}
                     scrollToElement={this.scrollToElement}
                     loginVSACUser={this.props.loginVSACUser}
                     setVSACAuthStatus={this.props.setVSACAuthStatus}
