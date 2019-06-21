@@ -94,7 +94,7 @@ export class Builder extends Component {
     if (referenceType === 'parameterReference') activeTabIndex = parameterTabIndex;
     if (referenceType === 'baseElementUse') activeTabIndex = tabIndex;
 
-    if (!activeTabIndex) return;
+    if (activeTabIndex == null) return;
 
     this.setState({ activeTabIndex }, () => {
       const elementToScrollTo = document.getElementById(elementId);
