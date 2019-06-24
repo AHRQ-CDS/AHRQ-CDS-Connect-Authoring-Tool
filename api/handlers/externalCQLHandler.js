@@ -169,6 +169,17 @@ function mapReturnTypes(definitions) {
   return mappedDefinitions;
 }
 
+function checkMatch(elmResults, files) {
+  const libraryAndVersionRegex = /library\s+(([A-Z][A-Za-z0-9_]*)|"(.+)")\s+version\s+'(.+)'/m;
+  const fileForELMResult = files.find(file => {
+    const matches = libraryAndVersionRegex.exec(file.text);
+    const isMatch =
+      matches && (matches[2] === elmResults.name || matches[3] === elmResults.name) && matches[4] === elmResults.version
+    return isMatch;
+  });
+  return fileForELMResult;
+}
+
 const filterDefinition = def => (def.name !== 'Patient' && def.accessLevel === 'Public');
 
 const compareNameAndVersion = (a, b) => a.name === b.name && a.version === b.version;
@@ -229,15 +240,7 @@ function parseELMFiles(elmFiles, artifactId, userId, files) {
     elmResults.name = library.identifier.id || '';
     elmResults.version = library.identifier.version || '';
 
-    const currentLibraryAndVersion = `library ${elmResults.name} version '${elmResults.version}'`;
-    const currentLibraryAndVersionWithQuote = `library "${elmResults.name}" version '${elmResults.version}'`;
-    const libraryAndVersionRegex = new RegExp(/(library) (([A-Z]\w+)|"(.*)") (version) '(.*)'/i);
-    const fileForELMResult = files.find(file => {
-      const matchedLibraryLine = libraryAndVersionRegex.exec(file.text)[0];
-      const isMatch =
-        matchedLibraryLine === currentLibraryAndVersion || matchedLibraryLine === currentLibraryAndVersionWithQuote;
-      return isMatch;
-    });
+    const fileForELMResult = checkMatch(elmResults, files);
 
     // Find FHIR version used by library
     const elmDefs = _.get(library, 'usings.def', []);
