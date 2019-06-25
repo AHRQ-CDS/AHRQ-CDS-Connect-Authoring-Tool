@@ -307,6 +307,9 @@ function singlePost(req, res) {
                   _.differenceWith(nonAuthoringToolExportLibraries, libraries, compareNameAndVersion);
                 const duplicateLibraries = _.difference(nonAuthoringToolExportLibraries, nonDuplicateLibraries);
 
+                const fhirVersion = libraries.length > 0 ? libraries[0].fhirVersion : null; // null means no FHIR version locked yet
+                const fhirVersionsMatch = fhirVersion ? fhirVersion === elmResultsToSave[0].fhirVersion : true; // If no FHIR version locked, any version can be uploaded
+
                 const exportLibrariesNotUploaded =
                   authoringToolExportLibraries.map(lib => `library ${lib.name} version ${lib.version}`).join(', ');
                 const exportLibrariesNotUploadedMessage = `The following was not uploaded because the library is \
@@ -314,6 +317,10 @@ function singlePost(req, res) {
                 // If any file has an error, upload nothing.
                 if (elmErrors.length > 0) {
                   res.status(400).send(elmErrors);
+                } else if (!fhirVersionsMatch) {
+                  const message = 'A library using a different version of FHIR is uploaded. Only one FHIR version can \
+                    be supported at a time.';
+                  res.status(400).send(message);
                 } else {
                   CQLLibrary.insertMany(nonDuplicateLibraries, (error, response) => {
                     if (error) {
@@ -365,11 +372,17 @@ function singlePost(req, res) {
           else {
             const elmResult = elmResultsToSave[0]; // This is the single file upload case, so elmResultsToSave will only ever have one item.
             const dupLibrary = libraries.find(lib => lib.name === elmResult.name && lib.version === elmResult.version);
+            const fhirVersion = libraries.length > 0 ? libraries[0].fhirVersion : null; // null means no FHIR version locked yet
+            const fhirVersionsMatch = fhirVersion ? fhirVersion === elmResult.fhirVersion : true; // If no FHIR version locked, any version can be uploaded
 
             if (elmErrors.length > 0) {
               res.status(400).send(elmErrors);
             } else if (dupLibrary) {
               res.status(200).send('Library with identical name and version already exists.');
+            } else if (!fhirVersionsMatch) {
+              const message = 'A library using a different version of FHIR is uploaded. Only one FHIR version can be \
+                supported at a time.';
+              res.status(400).send(message);
             } else {
               CQLLibrary.insertMany(elmResult, (error, response) => {
                 if (error) res.status(500).send(error);
