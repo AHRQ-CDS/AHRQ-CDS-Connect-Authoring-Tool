@@ -758,10 +758,7 @@ export default class TemplateInstance extends Component {
 
   hasBaseElementLinks = () => {
     const { baseElements, templateInstance } = this.props;
-    console.debug('***baseElements', baseElements);
-    console.debug('templateInstance', templateInstance);
     const thisBaseElement = baseElements.find(baseElement => baseElement.uniqueId === templateInstance.uniqueId);
-    console.debug('thisBaseElement', thisBaseElement);
     if (!thisBaseElement) return false;
     const thisBaseElementUsedBy = thisBaseElement.usedBy;
     if (thisBaseElementUsedBy.length === 0) return false;
