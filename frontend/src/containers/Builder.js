@@ -85,20 +85,20 @@ export class Builder extends Component {
     this.setState({ activeTabIndex });
   }
 
-  scrollToElement = (elementId, referenceType) => {
+  scrollToElement = (elementId, referenceType, tabIndex = null) => {
     const baseElementTabIndex = 3;
     const parameterTabIndex = 5;
+
     let activeTabIndex = 0;
-    if (referenceType === 'baseElementReference') {
-      activeTabIndex = baseElementTabIndex;
-    } else if (referenceType === 'parameterReference') {
-      activeTabIndex = parameterTabIndex;
-    }
+    if (referenceType === 'baseElementReference') activeTabIndex = baseElementTabIndex;
+    if (referenceType === 'parameterReference') activeTabIndex = parameterTabIndex;
+    if (referenceType === 'baseElementUse') activeTabIndex = tabIndex;
+
+    if (activeTabIndex == null) return;
+
     this.setState({ activeTabIndex }, () => {
       const elementToScrollTo = document.getElementById(elementId);
-      if (elementToScrollTo) {
-        elementToScrollTo.scrollIntoView();
-      }
+      if (elementToScrollTo) elementToScrollTo.scrollIntoView();
     });
   }
 
@@ -118,6 +118,7 @@ export class Builder extends Component {
       allInstancesInAllTrees =
         allInstancesInAllTrees.concat(this.getAllInstances('baseElements', null, baseElement.uniqueId));
     });
+
     return allInstancesInAllTrees;
   }
 
@@ -129,15 +130,19 @@ export class Builder extends Component {
 
     // If the tree has no child instances, it is a single element. Only occurs for individual base elements.
     if (!treeInstance.childInstances) {
+      treeInstance.tab = treeName;
       return [treeInstance];
     }
 
-    return _.flatten((treeInstance.childInstances || []).map((instance) => {
+    const result = _.flatten((treeInstance.childInstances || []).map((instance) => {
       if (instance.childInstances) {
         return _.flatten([instance, this.getAllInstances(treeName, instance)]);
       }
+      instance.tab = treeName;
       return instance;
     }));
+
+    return result;
   }
 
   addInstance = (treeName, instance, parentPath, uid = null, currentIndex, incomingTree, updatedReturnType = null) => {

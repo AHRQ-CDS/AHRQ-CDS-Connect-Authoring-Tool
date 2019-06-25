@@ -504,31 +504,54 @@ export default class TemplateInstance extends Component {
         referenceName = elementToReference.name;
       }
     }
+    const scrollElementId = referenceParameter.value.id;
+    const scrollReferenceType = referenceParameter.id;
 
-    let label = 'Element:';
-    if (referenceParameter.id === 'baseElementReference') {
-      label = 'Base Element:';
-    } else if (referenceParameter.id === 'parameterReference') {
-      label = 'Parameter:';
+    let baseUseTab;
+    if (referenceParameter.id === 'baseElementUse') {
+      const { allInstancesInAllTrees } = this.props;
+      const element = allInstancesInAllTrees.filter(instance => instance.uniqueId === referenceParameter.value.id)[0];
+      baseUseTab = element ? element.tab : null;
     }
 
+    let tabIndex;
+    if (baseUseTab === 'expTreeInclude') tabIndex = 0;
+    if (baseUseTab === 'expTreeExclude') tabIndex = 1;
+    if (baseUseTab === 'subpopulations') tabIndex = 2;
+    if (baseUseTab === 'baseElements') tabIndex = 3;
+
+    let label = 'Element:';
+    if (referenceParameter.id === 'baseElementReference') label = 'Base Element:';
+    if (referenceParameter.id === 'parameterReference') label = 'Parameter:';
+    if (referenceParameter.id === 'baseElementUse') label = 'Element Use:';
+
+    let tabLabel = '';
+    if (baseUseTab === 'expTreeInclude') tabLabel = 'Inclusions';
+    if (baseUseTab === 'expTreeExclude') tabLabel = 'Exclusions';
+    if (baseUseTab === 'subpopulations') tabLabel = 'Subpopulations';
+    if (baseUseTab === 'baseElements') tabLabel = 'Base Element';
+
     return (
-      <div className="modifier__return__type" id="base-element-list">
+      <div className="modifier__return__type" id="base-element-list" key={referenceParameter.value.id}>
         <div className="code-info">
           <div className="bold align-right code-info__label">{label}</div>
           <div className="code-info__info">
-            <div className="code-info__text">{referenceName}</div>
+            <div className="code-info__text">
+              <span>{referenceName}</span>
+              {referenceParameter.id === 'baseElementUse' && <span> &#8594; {tabLabel}</span>}
+            </div>
+
             <div className="code-info__buttons align-right">
               <span
                 role="button"
                 id={`definition-${this.props.templateInstance.uniqueId}`}
                 className={'element__linkbutton'}
                 aria-label={'see element definition'}
-                onClick={() => this.props.scrollToElement(referenceParameter.value.id, referenceParameter.id) }
+                onClick={() => this.props.scrollToElement(scrollElementId, scrollReferenceType, tabIndex)}
                 tabIndex="0"
                 onKeyPress={(e) => {
                   e.which = e.which || e.keyCode;
-                  if (e.which === 13) this.props.scrollToElement(referenceParameter.value.id, referenceParameter.id);
+                  if (e.which === 13) this.props.scrollToElement(scrollElementId, scrollReferenceType, tabIndex);
                 }}>
 
                 <FontAwesome name="link" className="delete-valueset-button" />
@@ -733,6 +756,15 @@ export default class TemplateInstance extends Component {
 
   getPath = () => this.props.getPath(this.props.templateInstance.uniqueId)
 
+  hasBaseElementLinks = () => {
+    const { baseElements, templateInstance } = this.props;
+    const thisBaseElement = baseElements.find(baseElement => baseElement.uniqueId === templateInstance.uniqueId);
+    if (!thisBaseElement) return false;
+    const thisBaseElementUsedBy = thisBaseElement.usedBy;
+    if (!thisBaseElementUsedBy || thisBaseElementUsedBy.length === 0) return false;
+    return true;
+  }
+
   renderBody() {
     const { templateInstance, validateReturnType } = this.props;
     const { returnType } = this.state;
@@ -774,9 +806,21 @@ export default class TemplateInstance extends Component {
             {this.renderCodeInfo()}
           </div>
         }
-        { (referenceParameter) &&
+
+        {referenceParameter &&
           <div className="vsac-info">
             {this.renderBaseElementOrParameterInfo(referenceParameter)}
+          </div>
+        }
+
+        {this.hasBaseElementLinks() &&
+          <div className="base-element-links">
+            {this.props.baseElements.find(baseElement => baseElement.uniqueId === templateInstance.uniqueId)
+              .usedBy.map((link) => {
+                const reference = { id: 'baseElementUse', value: { id: link } };
+                return this.renderBaseElementOrParameterInfo(reference);
+              })
+            }
           </div>
         }
 
@@ -953,40 +997,40 @@ export default class TemplateInstance extends Component {
 }
 
 TemplateInstance.propTypes = {
-  valueSets: PropTypes.array,
-  loadValueSets: PropTypes.func.isRequired,
-  getPath: PropTypes.func.isRequired,
-  treeName: PropTypes.string.isRequired,
-  templateInstance: PropTypes.object.isRequired,
-  otherInstances: PropTypes.array.isRequired,
   allInstancesInAllTrees: PropTypes.array.isRequired,
-  editInstance: PropTypes.func.isRequired,
-  updateInstanceModifiers: PropTypes.func.isRequired,
-  deleteInstance: PropTypes.func.isRequired,
-  instanceNames: PropTypes.array.isRequired,
-  subpopulationIndex: PropTypes.number,
-  renderIndentButtons: PropTypes.func.isRequired,
-  loginVSACUser: PropTypes.func.isRequired,
-  setVSACAuthStatus: PropTypes.func.isRequired,
-  vsacStatus: PropTypes.string,
-  vsacStatusText: PropTypes.string,
-  searchVSACByKeyword: PropTypes.func.isRequired,
-  isSearchingVSAC: PropTypes.bool.isRequired,
-  vsacSearchResults: PropTypes.array.isRequired,
-  vsacSearchCount: PropTypes.number.isRequired,
-  getVSDetails: PropTypes.func.isRequired,
-  isRetrievingDetails: PropTypes.bool.isRequired,
-  vsacDetailsCodes: PropTypes.array.isRequired,
-  vsacDetailsCodesError: PropTypes.string.isRequired,
-  validateReturnType: PropTypes.bool,
-  isValidatingCode: PropTypes.bool.isRequired,
-  isValidCode: PropTypes.bool,
+  baseElements: PropTypes.array.isRequired,
   codeData: PropTypes.object,
-  validateCode: PropTypes.func.isRequired,
-  resetCodeValidation: PropTypes.func.isRequired,
+  deleteInstance: PropTypes.func.isRequired,
   disableElement: PropTypes.bool,
   disableIndent: PropTypes.bool,
+  editInstance: PropTypes.func.isRequired,
+  getPath: PropTypes.func.isRequired,
+  getVSDetails: PropTypes.func.isRequired,
+  instanceNames: PropTypes.array.isRequired,
+  isRetrievingDetails: PropTypes.bool.isRequired,
+  isSearchingVSAC: PropTypes.bool.isRequired,
+  isValidatingCode: PropTypes.bool,
+  isValidCode: PropTypes.bool,
+  loadValueSets: PropTypes.func.isRequired,
+  loginVSACUser: PropTypes.func.isRequired,
+  otherInstances: PropTypes.array.isRequired,
+  parameters: PropTypes.array,
+  renderIndentButtons: PropTypes.func.isRequired,
+  resetCodeValidation: PropTypes.func,
   scrollToElement: PropTypes.func.isRequired,
-  baseElements: PropTypes.array.isRequired,
-  parameters: PropTypes.array.isRequired
+  searchVSACByKeyword: PropTypes.func.isRequired,
+  setVSACAuthStatus: PropTypes.func.isRequired,
+  subpopulationIndex: PropTypes.number,
+  templateInstance: PropTypes.object.isRequired,
+  treeName: PropTypes.string.isRequired,
+  updateInstanceModifiers: PropTypes.func.isRequired,
+  validateCode: PropTypes.func,
+  validateReturnType: PropTypes.bool,
+  valueSets: PropTypes.array,
+  vsacDetailsCodes: PropTypes.array.isRequired,
+  vsacDetailsCodesError: PropTypes.string,
+  vsacSearchCount: PropTypes.number.isRequired,
+  vsacSearchResults: PropTypes.array.isRequired,
+  vsacStatus: PropTypes.string,
+  vsacStatusText: PropTypes.string,
 };

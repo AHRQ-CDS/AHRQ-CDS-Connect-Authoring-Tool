@@ -350,20 +350,20 @@ export default class ElementModal extends Component {
 }
 
 ElementModal.propTypes = {
-  updateElement: PropTypes.func,
+  getVSDetails: PropTypes.func.isRequired,
+  iconForButton: PropTypes.string,
+  isRetrievingDetails: PropTypes.bool.isRequired,
+  isSearchingVSAC: PropTypes.bool.isRequired,
+  labels: PropTypes.object,
   onElementSelected: PropTypes.func,
   searchVSACByKeyword: PropTypes.func.isRequired,
-  isSearchingVSAC: PropTypes.bool.isRequired,
-  vsacSearchResults: PropTypes.array.isRequired,
-  vsacSearchCount: PropTypes.number.isRequired,
-  template: PropTypes.object,
-  getVSDetails: PropTypes.func.isRequired,
-  isRetrievingDetails: PropTypes.bool.isRequired,
-  vsacDetailsCodes: PropTypes.array.isRequired,
-  vsacDetailsCodesError: PropTypes.string.isRequired,
   selectedElement: PropTypes.shape({ name: PropTypes.string.isRequired, oid: PropTypes.string.isRequired }),
-  labels: PropTypes.object,
+  template: PropTypes.object,
+  updateElement: PropTypes.func,
   useIconButton: PropTypes.bool,
-  iconForButton: PropTypes.string,
-  viewOnly: PropTypes.bool
+  viewOnly: PropTypes.bool,
+  vsacDetailsCodes: PropTypes.array.isRequired,
+  vsacDetailsCodesError: PropTypes.string,
+  vsacSearchCount: PropTypes.number.isRequired,
+  vsacSearchResults: PropTypes.array.isRequired,
 };

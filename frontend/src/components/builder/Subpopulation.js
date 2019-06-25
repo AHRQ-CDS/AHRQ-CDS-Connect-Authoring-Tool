@@ -66,11 +66,12 @@ export default class Subpopulation extends Component {
   }
 
   render() {
+    const { subpopulation, instanceNames } = this.props;
     const { isExpanded } = this.state;
     const headerClass = classNames('card-element__header', { collapsed: !isExpanded });
     const headerTopClass = classNames('card-element__header-top', { collapsed: !isExpanded });
-    const duplicateNameIndex = this.props.instanceNames.findIndex(name =>
-      name.id !== this.props.subpopulation.uniqueId && name.name === this.props.subpopulation.subpopulationName);
+    const duplicateNameIndex = instanceNames.findIndex(name =>
+      name.id !== subpopulation.uniqueId && name.name === subpopulation.subpopulationName);
     return (
       <div className="subpopulation card-group card-group__top">
         <div className="card-element">

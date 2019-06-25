@@ -303,9 +303,9 @@ CodeSelectModal.propTypes = {
   labels: PropTypes.object,
   updateModifier: PropTypes.func,
   addToParameter: PropTypes.func,
-  isValidatingCode: PropTypes.bool.isRequired,
+  isValidatingCode: PropTypes.bool,
   isValidCode: PropTypes.bool,
   codeData: PropTypes.object,
-  validateCode: PropTypes.func.isRequired,
-  resetCodeValidation: PropTypes.func.isRequired
+  validateCode: PropTypes.func,
+  resetCodeValidation: PropTypes.func
 };

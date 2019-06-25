@@ -32,33 +32,32 @@ const deleteInstance = jest.fn();
 const treeName = 'MeetsInclusionCriteria';
 
 const props = {
-  root: true,
-  treeName,
-  instance: instanceTree,
   addInstance,
-  editInstance,
-  updateInstanceModifiers: jest.fn(),
+  artifact: { [treeName]: { id: 'Or' } },
   deleteInstance,
+  editInstance,
   getAllInstances,
   getAllInstancesInAllTrees: jest.fn(),
-  templates: elementGroups,
-  artifact: {
-    [treeName]: { id: 'Or' }
-  },
-  parameters: [],
+  getVSDetails: jest.fn(),
+  instance: instanceTree,
   instanceNames: [],
+  isRetrievingDetails: false,
+  isSearchingVSAC: false,
   loadValueSets: jest.fn(),
   loginVSACUser: jest.fn(),
+  parameters: [],
+  baseElements: [],
+  root: true,
+  searchVSACByKeyword: jest.fn(),
   setVSACAuthStatus: jest.fn(),
+  templates: elementGroups,
+  treeName,
+  updateInstanceModifiers: jest.fn(),
+  vsacDetailsCodes: [],
+  vsacSearchCount: 0,
+  vsacSearchResults: [],
   vsacStatus: '',
   vsacStatusText: '',
-  searchVSACByKeyword: jest.fn(),
-  isSearchingVSAC: false,
-  vsacSearchResults: [],
-  vsacSearchCount: 0,
-  getVSDetails: jest.fn(),
-  isRetrievingDetails: false,
-  vsacDetailsCodes: []
 };
 
 beforeEach(() => {
