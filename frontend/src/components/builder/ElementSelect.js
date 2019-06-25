@@ -27,8 +27,11 @@ const optionRenderer = option => (
     {option.vsacAuthRequired &&
       <FontAwesome name="key" className={`element-select__option-category ${option.disabled ? 'is-disabled' : ''}`} />
     }
-    { option.disabled &&
+    {option.disabled &&
       <FontAwesome name="ban" className={'element-select__option-category is-disabled'} />
+    }
+    {option.returnType &&
+      <span className="element-select__option-value">{` (${option.returnType})`}</span>
     }
   </div>
 );
@@ -72,7 +75,8 @@ export default class ElementSelect extends Component {
     this.state = {
       categories: this.internalCategories.sort(sortAlphabeticallyByKey('name')),
       selectedElement: null,
-      selectedExternalLibrary: null
+      selectedExternalLibrary: null,
+      selectedExternalDefinition: null
     };
 
     this.elementInputId = '';
@@ -189,7 +193,7 @@ export default class ElementSelect extends Component {
           id: e.name,
           name: e.name,
           type: 'externalCqlElement',
-          definitions: e.details.definitions
+          definitions: e.details.definitions.concat(e.details.parameters)
         }));
     }
 
@@ -278,25 +282,28 @@ export default class ElementSelect extends Component {
     );
   }
 
+  onExternalDefinitionSelected = (selectedExternalDefinition) => {
+    this.setState({ selectedExternalDefinition });
+  }
+
   onNoAuthElementSelected = (element) => {
     const suggestion = this.state.categories
       .find(cat => cat.name === element.type)
       .entries.find(entry => entry.id === element.value);
 
-    if (!suggestion.type === 'externalCqlElement') {
-      this.onSuggestionSelected(suggestion);
+    if (suggestion.type === 'externalCqlElement') {
+      this.setState({ selectedExternalLibrary: suggestion, selectedExternalDefinition: null });
     } else {
-      console.log(suggestion);
-      this.setState({ selectedExternalLibrary: suggestion });
+      this.onSuggestionSelected(suggestion);
     }
   }
 
   onElementSelected = (selectedElement) => {
-    this.setState({ selectedElement });
+    this.setState({ selectedElement, selectedExternalLibrary: null, selectedExternalDefinition: null });
   }
 
   render() {
-    const { selectedElement } = this.state;
+    const { selectedElement, selectedExternalLibrary, selectedExternalDefinition } = this.state;
     const placeholderText = 'Choose element type';
     const elementOptionsToDisplay = _.cloneDeep(elementOptions).filter((e) => {
       e.disabled = this.props.disableElement || false;
@@ -319,8 +326,7 @@ export default class ElementSelect extends Component {
         noAuthElementOptions = noAuthElementOptions.filter(element => element.uniqueId !== this.props.elementUniqueId);
       }
     }
-    const value = selectedElement && selectedElement.value;
-    console.log(noAuthElementOptions);
+    const selectedElementValue = selectedElement && selectedElement.value;
     let noAuthPlaceholder = '';
     if (selectedElement) {
       if (selectedElement.value === 'baseElement') {
@@ -329,6 +335,19 @@ export default class ElementSelect extends Component {
         noAuthPlaceholder = `Select ${selectedElement.label} element`;
       }
     }
+    const externalLibraryPlaceholder = 'Choose definition or parameter';
+    const selectedExternalLibraryName = selectedExternalLibrary && selectedExternalLibrary.name;
+    let selectedExternalLibraryOptions;
+    if (selectedExternalLibrary) {
+      selectedExternalLibraryOptions = selectedExternalLibrary.definitions.map((definition) => {
+        const name = definition.name;
+        const returnType = definition.displayReturnType
+          ? definition.displayReturnType
+          : _.startCase(definition.calculatedReturnType);
+        return ({ value: name, label: name, type: 'externalCqlElement', uniqueId: '', returnType });
+      });
+    }
+    const selectedExternalDefinitionValue = selectedExternalDefinition && selectedExternalDefinition.value;
 
     return (
       <div className="element-select form__group">
@@ -341,7 +360,7 @@ export default class ElementSelect extends Component {
           <Select
             className="element-select__element-field"
             name="element-select__element-field"
-            value={value}
+            value={selectedElementValue}
             placeholder={placeholderText}
             aria-label={placeholderText}
             clearable={false}
@@ -354,8 +373,10 @@ export default class ElementSelect extends Component {
           {selectedElement && !selectedElement.vsacAuthRequired &&
             <Select
               className="element-select__element-field"
+              value={selectedExternalLibraryName}
               placeholder={noAuthPlaceholder}
               aria-label={noAuthPlaceholder}
+              clearable={false}
               options={noAuthElementOptions}
               onChange={this.onNoAuthElementSelected}
               optionRenderer={optionRenderer}
@@ -363,13 +384,14 @@ export default class ElementSelect extends Component {
           }
         </div>
 
-          {selectedElement && !selectedElement.vsacAuthRequired && this.state.selectedExternalLibrary &&
+          {selectedElement && !selectedElement.vsacAuthRequired && selectedExternalLibrary &&
             <Select
               className="element-select__element-field"
-              placeholder={noAuthPlaceholder}
-              aria-label={noAuthPlaceholder}
-              options={noAuthElementOptions}
-              onChange={this.onNoAuthElementSelected}
+              value={selectedExternalDefinitionValue}
+              placeholder={externalLibraryPlaceholder}
+              aria-label={externalLibraryPlaceholder}
+              options={selectedExternalLibraryOptions}
+              onChange={this.onExternalDefinitionSelected}
               optionRenderer={optionRenderer}
               />
           }
