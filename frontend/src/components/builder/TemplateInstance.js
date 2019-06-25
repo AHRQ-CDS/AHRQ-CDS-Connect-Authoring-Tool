@@ -761,7 +761,7 @@ export default class TemplateInstance extends Component {
     const thisBaseElement = baseElements.find(baseElement => baseElement.uniqueId === templateInstance.uniqueId);
     if (!thisBaseElement) return false;
     const thisBaseElementUsedBy = thisBaseElement.usedBy;
-    if (thisBaseElementUsedBy.length === 0) return false;
+    if (!thisBaseElementUsedBy || thisBaseElementUsedBy.length === 0) return false;
     return true;
   }
 
@@ -815,7 +815,7 @@ export default class TemplateInstance extends Component {
 
         {this.hasBaseElementLinks() &&
           <div className="base-element-links">
-            {this.props.baseElements.find(baseElement => baseElement.id === templateInstance.id)
+            {this.props.baseElements.find(baseElement => baseElement.uniqueId === templateInstance.uniqueId)
               .usedBy.map((link) => {
                 const reference = { id: 'baseElementUse', value: { id: link } };
                 return this.renderBaseElementOrParameterInfo(reference);
