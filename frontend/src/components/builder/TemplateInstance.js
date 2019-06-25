@@ -539,14 +539,15 @@ export default class TemplateInstance extends Component {
             <div className="code-info__text">
               <span>{referenceName}</span>
               {referenceParameter.id === 'baseElementUse' && <span> &#8594; {tabLabel}</span>}
-              </div>
+            </div>
+
             <div className="code-info__buttons align-right">
               <span
                 role="button"
                 id={`definition-${this.props.templateInstance.uniqueId}`}
                 className={'element__linkbutton'}
                 aria-label={'see element definition'}
-                onClick={() => this.props.scrollToElement(scrollElementId, scrollReferenceType, tabIndex) }
+                onClick={() => this.props.scrollToElement(scrollElementId, scrollReferenceType, tabIndex)}
                 tabIndex="0"
                 onKeyPress={(e) => {
                   e.which = e.which || e.keyCode;
@@ -756,10 +757,13 @@ export default class TemplateInstance extends Component {
   getPath = () => this.props.getPath(this.props.templateInstance.uniqueId)
 
   hasBaseElementLinks = () => {
-    const { templateInstance } = this.props;
-    const thisBaseElement = this.props.baseElements.filter(baseElement => baseElement.id === templateInstance.id);
-    if (thisBaseElement.length === 0) return false;
-    const thisBaseElementUsedBy = thisBaseElement[0].usedBy;
+    const { baseElements, templateInstance } = this.props;
+    console.debug('***baseElements', baseElements);
+    console.debug('templateInstance', templateInstance);
+    const thisBaseElement = baseElements.find(baseElement => baseElement.uniqueId === templateInstance.uniqueId);
+    console.debug('thisBaseElement', thisBaseElement);
+    if (!thisBaseElement) return false;
+    const thisBaseElementUsedBy = thisBaseElement.usedBy;
     if (thisBaseElementUsedBy.length === 0) return false;
     return true;
   }
@@ -814,7 +818,7 @@ export default class TemplateInstance extends Component {
 
         {this.hasBaseElementLinks() &&
           <div className="base-element-links">
-            {this.props.baseElements.filter(baseElement => baseElement.id === templateInstance.id)[0]
+            {this.props.baseElements.find(baseElement => baseElement.id === templateInstance.id)
               .usedBy.map((link) => {
                 const reference = { id: 'baseElementUse', value: { id: link } };
                 return this.renderBaseElementOrParameterInfo(reference);
