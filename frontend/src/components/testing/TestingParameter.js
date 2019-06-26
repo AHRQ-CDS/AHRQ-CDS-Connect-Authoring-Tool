@@ -47,8 +47,8 @@ export default class TestingParameter extends Component {
         return <BooleanEditor {...parameterProps} />;
       case 'system_code':
         return <CodeEditor {...parameterProps} {...codeEditorProps} />;
-      // case 'system_concept':
-      //   return <CodeEditor {...parameterProps} {...codeEditorProps} isConcept={true} />;
+      case 'system_concept':
+        return <CodeEditor {...parameterProps} {...codeEditorProps} isConcept={true} />;
       case 'integer':
         return <IntegerEditor {...parameterProps} />;
       case 'datetime':
