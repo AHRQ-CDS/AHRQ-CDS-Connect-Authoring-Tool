@@ -46,9 +46,11 @@ export default class TestingParameter extends Component {
       case 'boolean':
         return <BooleanEditor {...parameterProps} />;
       case 'system_code':
-        return <CodeEditor {...parameterProps} {...codeEditorProps} />;
+        // TODO: Re-enable editing once modal issue is fixed
+        return <CodeEditor {...parameterProps} {...codeEditorProps} disableEditing={true} />;
       case 'system_concept':
-        return <CodeEditor {...parameterProps} {...codeEditorProps} isConcept={true} />;
+        // TODO: Re-enable editing once modal issue is fixed
+        return <CodeEditor {...parameterProps} {...codeEditorProps} isConcept={true} disableEditing={true} />;
       case 'integer':
         return <IntegerEditor {...parameterProps} />;
       case 'datetime':

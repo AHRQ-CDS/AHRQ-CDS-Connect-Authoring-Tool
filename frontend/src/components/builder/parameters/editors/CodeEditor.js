@@ -102,7 +102,11 @@ export default class CodeEditor extends Component {
                 {/* intentionally blank */}
               </div>
               <div className="col-9">
-                {this.renderCodePicker('Change Code')}
+                {this.props.disableEditing ?
+                  <span>Changing {this.props.isConcept ? 'concept' : 'code'} value is currently not supported</span>
+                  :
+                  this.renderCodePicker('Change Code')
+                }
               </div>
             </div>
           </div>
@@ -129,6 +133,7 @@ CodeEditor.propTypes = {
   label: PropTypes.string.isRequired,
   value: PropTypes.object,
   isConcept: PropTypes.bool,
+  disableEditing: PropTypes.bool,
   updateInstance: PropTypes.func.isRequired,
   vsacFHIRCredentials: PropTypes.object,
   loginVSACUser: PropTypes.func.isRequired,
