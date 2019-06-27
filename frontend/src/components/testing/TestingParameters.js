@@ -15,6 +15,7 @@ export default class TestingParameters extends Component {
   render() {
     return (
       <div className="parameters">
+        {this.props.parameters.length > 0 ? <br /> : '' }
         {this.props.parameters.map((parameter, i) => (
           <TestingParameter
             key={`param-${i}`}
