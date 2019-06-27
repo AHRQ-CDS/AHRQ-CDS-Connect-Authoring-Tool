@@ -501,7 +501,6 @@ function performExecuteArtifact(elmFiles, artifactName, params, patient, vsacCre
 }
 
 function convertParameters(params = []) {
-  // console.log('Convert Params', params);
   const paramsObj = {};
   params.forEach((p) => {
     // Handle the null case first so we don't have to guard against it later
@@ -577,7 +576,6 @@ function convertParameters(params = []) {
       default: // do nothing
     }
   });
-  // console.log('Converted Params', paramsObj);
   return paramsObj;
 }
 
