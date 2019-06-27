@@ -9,7 +9,17 @@ const artifactsMock = [{
   _id: 'blah',
   name: 'My CDS Patient',
   version: 'Alpha',
-  updatedAt: '2012-10-15T21:26:17Z'
+  updatedAt: '2012-10-15T21:26:17Z',
+  value: {
+    parameters: [{
+      value: 'true',
+      comment: null,
+      type: 'boolean',
+      uniqueId: 'parameter-72',
+      name: 'BoolParam',
+      usedBy: []
+    }]
+  }
 }, {
   _id: 'blah2',
   name: 'My Second CDS Patient',
@@ -28,7 +38,10 @@ test('PatientTable renders without crashing', () => {
     vsacFHIRCredentials: { username: 'user', password: 'pw' },
     loginVSACUser: jest.fn(),
     setVSACAuthStatus: jest.fn(),
-    vsacIsAuthenticating: false
+    vsacIsAuthenticating: false,
+    isValidatingCode: false,
+    validateCode: jest.fn(),
+    resetCodeValidation: jest.fn()
   });
 
   expect(component).toBeDefined();
@@ -43,7 +56,10 @@ test('PatientTable renders patients', () => {
     vsacFHIRCredentials: { username: 'user', password: 'pw' },
     loginVSACUser: jest.fn(),
     setVSACAuthStatus: jest.fn(),
-    vsacIsAuthenticating: false
+    vsacIsAuthenticating: false,
+    isValidatingCode: false,
+    validateCode: jest.fn(),
+    resetCodeValidation: jest.fn()
   });
 
   expect(component.find('tbody tr')).toHaveLength(patientsMock.length);
@@ -59,7 +75,10 @@ test('PatientTable delete opens confirmation modal and deletes from modal', () =
     vsacFHIRCredentials: { username: 'user', password: 'pw' },
     loginVSACUser: jest.fn(),
     setVSACAuthStatus: jest.fn(),
-    vsacIsAuthenticating: false
+    vsacIsAuthenticating: false,
+    isValidatingCode: false,
+    validateCode: jest.fn(),
+    resetCodeValidation: jest.fn()
   });
 
   const confirmDeleteModal = component.children().findWhere(n => (
@@ -91,7 +110,10 @@ test('PatientTable view opens details modal', () => {
     vsacFHIRCredentials: { username: 'user', password: 'pw' },
     loginVSACUser: jest.fn(),
     setVSACAuthStatus: jest.fn(),
-    vsacIsAuthenticating: false
+    vsacIsAuthenticating: false,
+    isValidatingCode: false,
+    validateCode: jest.fn(),
+    resetCodeValidation: jest.fn()
   });
 
   const viewDetailsModal = component.children().findWhere(n => (
@@ -121,7 +143,10 @@ test('PatientTable execute opens confirmation modal and executes from modal', ()
     vsacFHIRCredentials: { username: 'user', password: 'pw' },
     loginVSACUser: jest.fn(),
     setVSACAuthStatus: jest.fn(),
-    vsacIsAuthenticating: false
+    vsacIsAuthenticating: false,
+    isValidatingCode: false,
+    validateCode: jest.fn(),
+    resetCodeValidation: jest.fn()
   });
 
   const executeCQLModal = component.children().findWhere(n => (
@@ -141,9 +166,15 @@ test('PatientTable execute opens confirmation modal and executes from modal', ()
   expect(modalContent.text()).toContain('Execute CQL');
 
   expect(component.state('artifactToExecute')).toEqual(null);
+  expect(component.state('paramsToExecute')).toEqual([]);
   const selectInput = modalContent.find(Select);
   selectInput.props().onChange(artifactsMock[0]);
   expect(component.state('artifactToExecute')).toEqual(artifactsMock[0]);
+  expect(component.state('paramsToExecute')).toEqual([{ name: 'BoolParam', type: 'boolean', value: 'true' }]);
+  // Simulate changing the parameter value
+  const paramSelectInput = modalContent.find('.boolean-editor').find(Select);
+  paramSelectInput.props().onChange({ label: 'False', value: 'false' });
+  expect(component.state('paramsToExecute')).toEqual([{ name: 'BoolParam', type: 'boolean', value: 'false' }]);
 
   modalContent.find('form').simulate('submit');
   expect(executeCQLMock).toHaveBeenCalled();

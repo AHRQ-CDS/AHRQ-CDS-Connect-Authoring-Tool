@@ -7,7 +7,8 @@ import TestingParameter from './TestingParameter';
 export default class TestingParameters extends Component {
   updateInstanceOfParameter = (parameter, index) => {
     const parameters = _.clone(this.props.parameters);
-    parameters[index] = parameter;
+    parameters[index] = _.clone(parameter);
+    delete parameters[index].label;
     this.props.updateParameters(parameters);
   }
 
