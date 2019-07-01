@@ -113,11 +113,19 @@ export default class CodeEditor extends Component {
         :
           <div className="parameter__item row">
             <div className="col-3 bold align-right">
-              {this.props.label}
+              {this.props.disableEditing ?
+                ''
+                :
+                this.props.label
+              }
             </div>
 
             <div className="col-9">
-              {this.renderCodePicker('Add Code')}
+              {this.props.disableEditing ?
+                <span>Setting {this.props.isConcept ? 'concept' : 'code'} value is currently not supported</span>
+                :
+                this.renderCodePicker('Add Code')
+              }
             </div>
           </div>
         }
