@@ -30,8 +30,8 @@ const optionRenderer = option => (
     {option.disabled &&
       <FontAwesome name="ban" className={'element-select__option-category is-disabled'} />
     }
-    {option.returnType &&
-      <span className="element-select__option-value">{` (${option.returnType})`}</span>
+    {option.displayReturnType &&
+      <span className="element-select__option-value">{` (${option.displayReturnType})`}</span>
     }
   </div>
 );
@@ -284,6 +284,27 @@ export default class ElementSelect extends Component {
 
   onExternalDefinitionSelected = (selectedExternalDefinition) => {
     this.setState({ selectedExternalDefinition });
+
+    const suggestion = {
+      id: selectedExternalDefinition.uniqueId,
+      name: 'External CQL Element',
+      type: selectedExternalDefinition.type,
+      template: 'GenericStatement',
+      returnType: selectedExternalDefinition.returnType,
+      parameters: [
+        { id: 'element_name', type: 'string', name: 'Element Name', value: selectedExternalDefinition.value },
+        {
+          id: 'externalCqlReference',
+          type: 'reference',
+          name: 'reference',
+          value: { id: `${selectedExternalDefinition.value} from ${this.state.selectedExternalLibrary.name}` },
+          static: true
+        },
+        { id: 'comment', type: 'textarea', name: 'Comment', value: '' }
+      ]
+    };
+
+    this.onSuggestionSelected(suggestion);
   }
 
   onNoAuthElementSelected = (element) => {
@@ -341,10 +362,18 @@ export default class ElementSelect extends Component {
     if (selectedExternalLibrary) {
       selectedExternalLibraryOptions = selectedExternalLibrary.definitions.map((definition) => {
         const name = definition.name;
-        const returnType = definition.displayReturnType
+        const returnType = definition.calculatedReturnType;
+        const displayReturnType = definition.displayReturnType
           ? definition.displayReturnType
           : _.startCase(definition.calculatedReturnType);
-        return ({ value: name, label: name, type: 'externalCqlElement', uniqueId: '', returnType });
+        return ({
+          value: name,
+          label: name,
+          type: 'externalCqlElement',
+          uniqueId: _.uniqueId(),
+          returnType,
+          displayReturnType
+        });
       });
     }
     const selectedExternalDefinitionValue = selectedExternalDefinition && selectedExternalDefinition.value;
