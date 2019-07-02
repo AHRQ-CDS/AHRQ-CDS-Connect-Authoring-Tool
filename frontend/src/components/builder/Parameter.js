@@ -52,6 +52,7 @@ export default class Parameter extends Component {
       id: `param-name-${this.props.index}`,
       name: this.props.name,
       type: this.props.type != null ? this.props.type : null,
+      label: 'Default Value:',
       value: this.props.value,
       updateInstance: e => this.updateParameter({
         name: this.props.name,

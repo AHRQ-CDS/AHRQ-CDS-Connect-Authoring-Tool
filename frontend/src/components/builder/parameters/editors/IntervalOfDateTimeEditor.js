@@ -60,7 +60,7 @@ export default class IntervalOfDateTimeEditor extends Component {
   }
 
   render() {
-    const { id, name, type, value, updateInstance } = this.props;
+    const { id, name, type, label, value, updateInstance } = this.props;
     const formIdFirst = _.uniqueId('parameter-date-');
     const formIdSecond = _.uniqueId('parameter-time-');
 
@@ -68,7 +68,7 @@ export default class IntervalOfDateTimeEditor extends Component {
       <div className="interval-of-date-time-editor">
         <div className="parameter__item row">
           <div className="col-3 bold align-right">
-            <label htmlFor={formIdFirst}>Default Value:</label>
+            <label htmlFor={formIdFirst}>{label}</label>
           </div>
 
           <div className="col-9 d-flex">
@@ -80,7 +80,7 @@ export default class IntervalOfDateTimeEditor extends Component {
                 : null}
               dateFormat="L"
               onChange={(e) => {
-                updateInstance({ name, type, value: this.assignValue(e, 'firstDate') });
+                updateInstance({ name, type, label, value: this.assignValue(e, 'firstDate') });
               }}
             />
 
@@ -93,7 +93,7 @@ export default class IntervalOfDateTimeEditor extends Component {
                 ? moment(value.firstTime, 'HH:mm:ss')
                 : null}
               onChange={(e) => {
-                updateInstance({ name, type, value: this.assignValue(e, 'firstTime') });
+                updateInstance({ name, type, label, value: this.assignValue(e, 'firstTime') });
               }}
             />
           </div>
@@ -111,7 +111,7 @@ export default class IntervalOfDateTimeEditor extends Component {
                 : null}
               dateFormat="L"
               onChange={(e) => {
-                updateInstance({ name, type, value: this.assignValue(e, 'secondDate') });
+                updateInstance({ name, type, label, value: this.assignValue(e, 'secondDate') });
               }}
             />
 
@@ -124,7 +124,7 @@ export default class IntervalOfDateTimeEditor extends Component {
                 ? moment(value.secondTime, 'HH:mm:ss')
                 : null}
               onChange={(e) => {
-                updateInstance({ name, type, value: this.assignValue(e, 'secondTime') });
+                updateInstance({ name, type, label, value: this.assignValue(e, 'secondTime') });
               }}
             />
           </div>
@@ -138,6 +138,7 @@ IntervalOfDateTimeEditor.propTypes = {
   id: PropTypes.string.isRequired,
   name: PropTypes.string,
   type: PropTypes.string.isRequired,
+  label: PropTypes.string.isRequired,
   value: PropTypes.object,
   updateInstance: PropTypes.func.isRequired
 };

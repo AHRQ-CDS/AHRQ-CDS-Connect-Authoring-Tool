@@ -12,7 +12,7 @@
     "core-js": "^2.5.1",
     "cql-exec-fhir": "^1.1.1",
     "cql-exec-vsac": "cqframework/cql-exec-vsac#disable-caching",
-    "cql-execution": "^1.3.2",
+    "cql-execution": "^1.3.4",
     "debug": "^3.1.0",
     "dotenv": "2.0.0",
     "enzyme": "^2.8.0",

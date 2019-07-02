@@ -10,14 +10,14 @@ export default class StringEditor extends Component {
   }
 
   render() {
-    const { name, type, value, updateInstance } = this.props;
+    const { name, type, label, value, updateInstance } = this.props;
     const formId = _.uniqueId('parameter-');
 
     return (
       <div className="string-editor">
         <div className="parameter__item row">
           <div className="col-3 bold align-right">
-            <label htmlFor={formId}>Default Value:</label>
+            <label htmlFor={formId}>{label}</label>
           </div>
 
           <div className="col-9">
@@ -26,7 +26,7 @@ export default class StringEditor extends Component {
               type="text"
               value={value ? value.replace(/'/g, '') : ''}
               onChange={ (e) => {
-                updateInstance({ name, type, value: this.assignValue(e) });
+                updateInstance({ name, type, label, value: this.assignValue(e) });
               }}
             />
           </div>
@@ -39,6 +39,7 @@ export default class StringEditor extends Component {
 StringEditor.propTypes = {
   name: PropTypes.string,
   type: PropTypes.string.isRequired,
+  label: PropTypes.string.isRequired,
   value: PropTypes.string,
   updateInstance: PropTypes.func.isRequired
 };

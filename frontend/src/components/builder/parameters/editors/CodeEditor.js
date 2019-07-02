@@ -17,8 +17,8 @@ export default class CodeEditor extends Component {
     this.props.updateInstance({ value: { system, uri, code, display, str } });
   }
 
-  renderCodePicker() {
-    if (this.props.vsacFHIRCredentials.username == null && this.props.value == null) {
+  renderCodePicker(openButtonText) {
+    if (this.props.vsacFHIRCredentials.username == null) {
       return (
         <div id="vsac-controls">
           <VSACAuthenticationModal
@@ -42,6 +42,10 @@ export default class CodeEditor extends Component {
         validateCode={this.props.validateCode}
         resetCodeValidation={this.props.resetCodeValidation}
         addToParameter={this.handleCodeAdded}
+        labels={{
+          openButtonText,
+          closeButtonText: 'Close'
+        }}
       />
     );
   }
@@ -92,15 +96,36 @@ export default class CodeEditor extends Component {
                 {this.props.value.display}
               </div>
             </div>
+
+            <div className="parameter__item row">
+              <div className="col-3 bold align-right">
+                {/* intentionally blank */}
+              </div>
+              <div className="col-9">
+                {this.props.disableEditing ?
+                  <span>Changing {this.props.isConcept ? 'concept' : 'code'} value is currently not supported</span>
+                  :
+                  this.renderCodePicker('Change Code')
+                }
+              </div>
+            </div>
           </div>
         :
           <div className="parameter__item row">
             <div className="col-3 bold align-right">
-              Default Value:
+              {this.props.disableEditing ?
+                ''
+                :
+                this.props.label
+              }
             </div>
 
             <div className="col-9">
-              {this.renderCodePicker()}
+              {this.props.disableEditing ?
+                <span>Setting {this.props.isConcept ? 'concept' : 'code'} value is currently not supported</span>
+                :
+                this.renderCodePicker('Add Code')
+              }
             </div>
           </div>
         }
@@ -113,8 +138,10 @@ CodeEditor.propTypes = {
   id: PropTypes.string.isRequired,
   name: PropTypes.string,
   type: PropTypes.string.isRequired,
+  label: PropTypes.string.isRequired,
   value: PropTypes.object,
   isConcept: PropTypes.bool,
+  disableEditing: PropTypes.bool,
   updateInstance: PropTypes.func.isRequired,
   vsacFHIRCredentials: PropTypes.object,
   loginVSACUser: PropTypes.func.isRequired,

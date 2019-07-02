@@ -37,14 +37,14 @@ export default class DateTimeEditor extends Component {
   }
 
   render() {
-    const { id, name, type, value, updateInstance } = this.props;
+    const { id, name, type, label, value, updateInstance } = this.props;
     const formId = _.uniqueId('parameter-');
 
     return (
       <div className="date-time-editor">
         <div className="parameter__item row">
           <div className="col-3 bold align-right">
-            <label htmlFor={formId}>Default Value:</label>
+            <label htmlFor={formId}>{label}</label>
           </div>
 
           <div className="col-9 d-flex">
@@ -56,7 +56,7 @@ export default class DateTimeEditor extends Component {
                 : null}
               dateFormat="L"
               onChange={ (e) => {
-                updateInstance({ name, type, value: this.assignValue(e, 'date') });
+                updateInstance({ name, type, label, value: this.assignValue(e, 'date') });
               }}
             />
 
@@ -69,7 +69,7 @@ export default class DateTimeEditor extends Component {
                 ? moment(value.time, 'HH:mm:ss')
                 : null}
               onChange={ (e) => {
-                updateInstance({ name, type, value: this.assignValue(e, 'time') });
+                updateInstance({ name, type, label, value: this.assignValue(e, 'time') });
               }}
             />
           </div>
@@ -83,6 +83,7 @@ DateTimeEditor.propTypes = {
   id: PropTypes.string.isRequired,
   name: PropTypes.string,
   type: PropTypes.string.isRequired,
+  label: PropTypes.string.isRequired,
   value: PropTypes.object,
   updateInstance: PropTypes.func.isRequired
 };
