@@ -3,6 +3,8 @@ const unzipper = require('unzipper');
 const CQLLibrary = require('../models/cqlLibrary');
 const makeCQLtoELMRequest = require('../handlers/cqlHandler').makeCQLtoELMRequest;
 
+const supportedFHIRVersions = ['1.0.2', '3.0.0'];
+
 const authoringToolExports = [
   { name: 'FHIRHelpers', version: '1.0.2' },
   { name: 'CDS_Connect_Commons_for_FHIRv102', version: '1.3.0' },
@@ -309,6 +311,8 @@ function singlePost(req, res) {
 
                 const fhirVersion = libraries.length > 0 ? libraries[0].fhirVersion : null; // null means no FHIR version locked yet
                 const fhirVersionsMatch = fhirVersion ? fhirVersion === elmResultsToSave[0].fhirVersion : true; // If no FHIR version locked, any version can be uploaded
+                const unsupportedFHIRVersion =
+                  supportedFHIRVersions.findIndex(v => v === elmResultsToSave[0].fhirVersion) === -1;
 
                 const exportLibrariesNotUploaded =
                   authoringToolExportLibraries.map(lib => `library ${lib.name} version ${lib.version}`).join(', ');
@@ -321,6 +325,8 @@ function singlePost(req, res) {
                   const message = 'A library using a different version of FHIR is uploaded. Only one FHIR version can \
                     be supported at a time.';
                   res.status(400).send(message);
+                } else if (unsupportedFHIRVersion) {
+                  res.status(400).send('Unsupported FHIR version.');
                 } else {
                   CQLLibrary.insertMany(nonDuplicateLibraries, (error, response) => {
                     if (error) {
@@ -374,6 +380,8 @@ function singlePost(req, res) {
             const dupLibrary = libraries.find(lib => lib.name === elmResult.name && lib.version === elmResult.version);
             const fhirVersion = libraries.length > 0 ? libraries[0].fhirVersion : null; // null means no FHIR version locked yet
             const fhirVersionsMatch = fhirVersion ? fhirVersion === elmResult.fhirVersion : true; // If no FHIR version locked, any version can be uploaded
+            const unsupportedFHIRVersion =
+              supportedFHIRVersions.findIndex(v => v === elmResult.fhirVersion) === -1;
 
             if (elmErrors.length > 0) {
               res.status(400).send(elmErrors);
@@ -383,6 +391,8 @@ function singlePost(req, res) {
               const message = 'A library using a different version of FHIR is uploaded. Only one FHIR version can be \
                 supported at a time.';
               res.status(400).send(message);
+            } else if (unsupportedFHIRVersion) {
+              res.status(400).send('Unsupported FHIR version.');
             } else {
               CQLLibrary.insertMany(elmResult, (error, response) => {
                 if (error) res.status(500).send(error);
