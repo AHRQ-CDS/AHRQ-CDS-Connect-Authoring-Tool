@@ -1,7 +1,7 @@
 const Templates = require('../data/formTemplates');
 const ValueSets = require('../data/valueSets');
 const config = require('../config');
-const conversionsELMFile = require('../data/library_helpers/ELMFiles/CDS_Connect_Conversions.json');
+const conversionsELMFile = require('../data/library_helpers/ELMFiles/CDS_Connect_Conversions-v1.json');
 
 // If new functions are added to CDS_Connect_Conversions and a separate description is desired, add a key value
 // pair to the following object with the descripton: function_name : function_description

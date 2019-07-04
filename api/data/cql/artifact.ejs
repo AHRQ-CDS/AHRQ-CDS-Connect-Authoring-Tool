@@ -2,8 +2,8 @@ library "<%=name%>" version '<%=version%>'
 
 using <%=dataModel.name%> version '<%= dataModel.version %>'
 <% includeLibraries.map(includeLibrary => {%>
-include <%=includeLibrary.name%> version '<%=includeLibrary.version%>'<%if (includeLibrary.alias) {%> called <%=includeLibrary.alias%> <%}%>
-<%})-%>
+include "<%=includeLibrary.name%>" version '<%=includeLibrary.version%>'<%if (includeLibrary.alias) {%> called <%=includeLibrary.alias%> <%}
+})-%>
 <% codeSystemMap.forEach((resource, key) => {%>
 codesystem "<%=key%>": '<%-resource.id%>' <%}) -%>
 
