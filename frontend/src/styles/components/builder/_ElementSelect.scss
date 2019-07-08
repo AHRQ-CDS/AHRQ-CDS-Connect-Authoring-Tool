@@ -26,6 +26,22 @@
     }
   }
 
+  &__external-cql-field {
+    margin-top: 10px;
+    min-width: stretch;
+
+    &.Select {
+      margin-left: 10px;
+    }
+
+    .Select-input input {
+      border: 0;
+      box-shadow: none;
+      padding: 0;
+      margin: 0;
+    }
+  }
+
   &__category-field {
     flex: 0 0 10em;
     margin-left: 0.5em;

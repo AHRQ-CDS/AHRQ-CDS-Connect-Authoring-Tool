@@ -415,7 +415,7 @@ export default class ElementSelect extends Component {
 
           {selectedElement && !selectedElement.vsacAuthRequired && selectedExternalLibrary &&
             <Select
-              className="element-select__element-field"
+              className="element-select__external-cql-field"
               value={selectedExternalDefinitionValue}
               placeholder={externalLibraryPlaceholder}
               aria-label={externalLibraryPlaceholder}
