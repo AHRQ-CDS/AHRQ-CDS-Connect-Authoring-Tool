@@ -342,6 +342,15 @@ export class Builder extends Component {
     this.setState({ showMenu: !this.state.showMenu });
   }
 
+  getCurrentFHIRVersion = () => {
+    const { externalCqlList } = this.props;
+    let currentFHIRVersion = ''; // Empty string means no FHIR version set yet;
+    externalCqlList.forEach((lib) => {
+      if (lib.fhirVersion) currentFHIRVersion = lib.fhirVersion;
+    });
+    return currentFHIRVersion;
+  }
+
   // ----------------------- RENDER ---------------------------------------- //
 
   renderConjunctionGroup = (treeName) => {
@@ -400,12 +409,12 @@ export class Builder extends Component {
   }
 
   renderHeader() {
-    const { statusMessage, artifact, publishEnabled, externalCqlList } = this.props;
+    const { statusMessage, artifact, publishEnabled } = this.props;
     const artifactName = artifact ? artifact.name : null;
     let disableDSTU2 = false;
     let disableSTU3 = false;
 
-    const currentExternalCQLFHIRVersion = externalCqlList.length > 0 ? externalCqlList[0].fhirVersion : '';
+    const currentExternalCQLFHIRVersion = this.getCurrentFHIRVersion();
     if (currentExternalCQLFHIRVersion === '1.0.2') disableSTU3 = true;
     if (currentExternalCQLFHIRVersion === '3.0.0') disableDSTU2 = true;
 
@@ -424,10 +433,14 @@ export class Builder extends Component {
             <Dropdown isOpen={this.state.showMenu} toggle={this.toggleMenu} className="dropdown-button">
               <DropdownToggle caret><FontAwesome name="download" className="icon" />Download CQL</DropdownToggle>
               <DropdownMenu>
-                <DropdownItem disabled={disableDSTU2} onClick={() => this.props.downloadArtifact(artifact, { name: 'FHIR', version: '1.0.2' })}>
+                <DropdownItem
+                  disabled={disableDSTU2}
+                  onClick={() => this.props.downloadArtifact(artifact, { name: 'FHIR', version: '1.0.2' })}>
                   FHIR DSTU2
                 </DropdownItem>
-                <DropdownItem disabled={disableSTU3} onClick={() => this.props.downloadArtifact(artifact, { name: 'FHIR', version: '3.0.0' })}>
+                <DropdownItem
+                  disabled={disableSTU3}
+                  onClick={() => this.props.downloadArtifact(artifact, { name: 'FHIR', version: '3.0.0' })}>
                   FHIR STU3
                 </DropdownItem>
               </DropdownMenu>

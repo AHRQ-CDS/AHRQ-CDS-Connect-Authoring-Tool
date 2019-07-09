@@ -19,7 +19,7 @@ const baseState = {
   templates: { templates: elementGroups },
   auth: { isLoggingOut: false },
   vsac: {},
-  externalCQL: { addExternalCqlLibrary: {}, loadExternalCqlLibraryDetails: {} },
+  externalCQL: { addExternalCqlLibrary: {}, loadExternalCqlLibraryDetails: {}, externalCqlList: [] },
   modifiers: {}
 };
 
@@ -52,6 +52,7 @@ const props = {
   getVSDetails: jest.fn(),
   isRetrievingDetails: false,
   vsacDetailsCodes: [],
+  externalCqlList: [],
 };
 
 test('children have correct classes', () => {
