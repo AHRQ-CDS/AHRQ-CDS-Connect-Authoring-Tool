@@ -34,6 +34,7 @@ export default class BaseElements extends Component {
         conversionFunctions={this.props.conversionFunctions}
         deleteInstance={this.props.deleteInstance}
         editInstance={this.props.editInstance}
+        externalCqlList={this.props.externalCqlList}
         getAllInstances={this.props.getAllInstances}
         getAllInstancesInAllTrees={this.props.getAllInstancesInAllTrees}
         getVSDetails={this.props.getVSDetails}
@@ -44,6 +45,7 @@ export default class BaseElements extends Component {
         isSearchingVSAC={this.props.isSearchingVSAC}
         isValidatingCode={this.props.isValidatingCode}
         isValidCode={this.props.isValidCode}
+        loadExternalCqlList={this.props.loadExternalCqlList}
         loadValueSets={this.props.loadValueSets}
         loginVSACUser={this.props.loginVSACUser}
         parameters={this.props.parameters}

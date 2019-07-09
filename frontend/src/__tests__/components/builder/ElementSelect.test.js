@@ -24,7 +24,9 @@ const props = {
   getVSDetails: jest.fn(),
   isRetrievingDetails: false,
   vsacDetailsCodes: [],
-  vsacFHIRCredentials: { username: 'name', password: 'pass' }
+  vsacFHIRCredentials: { username: 'name', password: 'pass' },
+  externalCqlList: [],
+  loadExternalCqlList: jest.fn()
 };
 
 beforeEach(() => {
@@ -57,7 +59,7 @@ describe('the select element field', () => {
   it('starts with a list of all elements', () => {
     elementField.find('input').simulate('change');
     expect(elementField.find('.element-select__element-field').hasClass('is-open')).toBeTruthy();
-    expect(elementField.find('.element-select__option')).toHaveLength(10);
+    expect(elementField.find('.element-select__option')).toHaveLength(11);
   });
 
   it('options display correct values and have key icon if VSAC auth required', () => {
@@ -124,7 +126,7 @@ describe('the select element field', () => {
     unauthObsResult.simulate('mouseDown');
 
     // Choosing VSAC auth element with username stored has 2 VSAC control buttons.
-    const genericObservationOption = genericElementTypes[7];
+    const genericObservationOption = genericElementTypes[8];
     genericObservationOption.disabled = false;
     expect(component.state().selectedElement).toEqual(genericObservationOption);
     expect(component.state().selectedElement.vsacAuthRequired).toEqual(true);

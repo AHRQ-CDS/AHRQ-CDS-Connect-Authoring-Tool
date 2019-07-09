@@ -59,7 +59,9 @@ beforeEach(() => {
     vsacSearchCount: 0,
     getVSDetails: jest.fn(),
     isRetrievingDetails: false,
-    vsacDetailsCodes: []
+    vsacDetailsCodes: [],
+    externalCqlList: [],
+    loadExternalCqlList: jest.fn()
   };
 
   component = fullRenderComponent(Subpopulations, {

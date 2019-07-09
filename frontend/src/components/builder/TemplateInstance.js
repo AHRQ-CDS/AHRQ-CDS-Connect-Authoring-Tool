@@ -825,7 +825,7 @@ export default class TemplateInstance extends Component {
             {this.props.baseElements.find(baseElement => baseElement.uniqueId === templateInstance.uniqueId)
               .usedBy.map((link) => {
                 const reference = { id: 'baseElementUse', value: { id: link } };
-                return this.renderBaseElementOrParameterInfo(reference);
+                return this.renderReferenceInfo(reference);
               })
             }
           </div>

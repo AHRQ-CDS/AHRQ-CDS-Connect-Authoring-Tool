@@ -516,6 +516,8 @@ export class Builder extends Component {
                     updateSubpopulations={this.updateSubpopulations}
                     parameters={namedParameters}
                     baseElements={artifact.baseElements}
+                    externalCqlList={this.props.externalCqlList}
+                    loadExternalCqlList={this.props.loadExternalCqlList}
                     addInstance={this.addInstance}
                     editInstance={this.editInstance}
                     updateInstanceModifiers={this.updateInstanceModifiers}

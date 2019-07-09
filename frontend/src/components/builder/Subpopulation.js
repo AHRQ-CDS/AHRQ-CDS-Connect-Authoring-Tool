@@ -161,6 +161,8 @@ export default class Subpopulation extends Component {
                 updateInstanceModifiers={this.props.updateInstanceModifiers}
                 parameters={this.props.parameters}
                 baseElements={this.props.baseElements}
+                externalCqlList={this.props.externalCqlList}
+                loadExternalCqlList={this.props.loadExternalCqlList}
                 subPopulationIndex={this.props.subpopulationIndex}
                 conversionFunctions={this.props.conversionFunctions}
                 instanceNames={this.props.instanceNames}
@@ -206,6 +208,8 @@ Subpopulation.propTypes = {
   instanceNames: PropTypes.array.isRequired,
   treeName: PropTypes.string.isRequired,
   parameters: PropTypes.array.isRequired,
+  externalCqlList: PropTypes.array.isRequired,
+  loadExternalCqlList: PropTypes.func.isRequired,
   templates: PropTypes.array.isRequired,
   conversionFunctions: PropTypes.array,
   scrollToElement: PropTypes.func,

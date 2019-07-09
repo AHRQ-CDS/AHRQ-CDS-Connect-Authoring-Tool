@@ -78,6 +78,8 @@ export default class Subpopulations extends Component {
               deleteSubpopulation={this.deleteSubpopulation}
               parameters={this.props.parameters}
               baseElements={this.props.baseElements}
+              externalCqlList={this.props.externalCqlList}
+              loadExternalCqlList={this.props.loadExternalCqlList}
               addInstance={this.props.addInstance}
               editInstance={this.props.editInstance}
               updateInstanceModifiers={this.props.updateInstanceModifiers}
@@ -134,6 +136,8 @@ Subpopulations.propTypes = {
   updateRecsSubpop: PropTypes.func.isRequired,
   checkSubpopulationUsage: PropTypes.func.isRequired,
   parameters: PropTypes.array.isRequired,
+  externalCqlList: PropTypes.array.isRequired,
+  loadExternalCqlList: PropTypes.func.isRequired,
   name: PropTypes.string.isRequired,
   conversionFunctions: PropTypes.array,
   scrollToElement: PropTypes.func,
