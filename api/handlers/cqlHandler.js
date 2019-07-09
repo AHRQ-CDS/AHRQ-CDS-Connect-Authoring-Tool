@@ -33,7 +33,7 @@ const includeLibrariesStu3 = [
 
 // A flag to hold the FHIR version, so that it can be used
 // in functions external to the artifact.
-let fhirTarget = '1.0.2';
+let fhirTarget;
 
 module.exports = {
   objToCql,
@@ -266,7 +266,7 @@ class CqlArtifact {
     this.version = artifact.version ? artifact.version : 1;
     this.dataModel = artifact.dataModel;
     this.includeLibraries = (artifact.dataModel.version === '3.0.0') ? includeLibrariesStu3 : includeLibrariesDstu2;
-    this.includeLibraries = this.includeLibraries.concat(artifact.externalLibs);
+    this.includeLibraries = this.includeLibraries.concat(artifact.externalLibs || []);
     this.context = artifact.context ? artifact.context : 'Patient';
     this.inclusions = artifact.expTreeInclude;
     this.parameters = artifact.parameters;
@@ -1045,7 +1045,7 @@ function objToELM(req, res) {
 
 
 function validateELM(cqlArtifact, externalLibs, writeStream, callback) {
-  const artifactJSON = cqlArtifact instanceof CqlArtifact ? cqlArtifact.toJson() : cqlArtifact;
+  const artifactJSON = cqlArtifact.toJson();
   const artifacts = [artifactJSON, ...externalLibs];
   convertToElm(artifacts, (err, elmFiles) => {
     if(err) {
