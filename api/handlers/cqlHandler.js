@@ -644,7 +644,7 @@ class CqlArtifact {
             const referencedElementName = referencedElement.parameters[0].value || referencedElement.uniqueId;
             context.values = [ `"${referencedElementName}"` ];
           } else if (parameter.id === 'externalCqlReference') {
-            // context.values = [ `"${parameter.library}"."${parameter.element}"` ]; // TODO frontend needs to support this
+            context.values = [ `"${parameter.value.library}"."${parameter.value.element}"` ];
           }
           break;
         }
