@@ -13,7 +13,8 @@ test('ExternalCQLTable renders without crashing', () => {
     externalCqlList: [],
     externalCQLLibraryParents: {},
     loadExternalCqlLibraryDetails: jest.fn(),
-    deleteExternalCqlLibrary: jest.fn()
+    deleteExternalCqlLibrary: jest.fn(),
+    librariesInUse: []
   });
 
   expect(component).toBeDefined();
@@ -27,7 +28,8 @@ test('ExternalCQLTable renders external libraries', () => {
     externalCqlList: externalLibrariesMock,
     externalCQLLibraryParents: {},
     loadExternalCqlLibraryDetails: jest.fn(),
-    deleteExternalCqlLibrary: jest.fn()
+    deleteExternalCqlLibrary: jest.fn(),
+    librariesInUse: []
   });
 
   expect(component.find('tbody tr')).toHaveLength(externalLibrariesMock.length);
@@ -42,7 +44,8 @@ test('ExternalCQLTable delete opens confirmation modal and deletes from modal', 
     externalCqlList: externalLibrariesMock,
     externalCQLLibraryParents: {},
     loadExternalCqlLibraryDetails: jest.fn(),
-    deleteExternalCqlLibrary: deleteExternalCqlLibraryMock
+    deleteExternalCqlLibrary: deleteExternalCqlLibraryMock,
+    librariesInUse: []
   });
 
   const confirmDeleteModal = component.children().findWhere(n => (
@@ -75,7 +78,8 @@ test('ExternalCQLTable view opens details modal', () => {
     externalCQLLibraryParents: {},
     deleteExternalCqlLibrary: jest.fn(),
     loadExternalCqlLibraryDetails: jest.fn(),
-    externalCqlLibraryDetails: mockExternalLib
+    externalCqlLibraryDetails: mockExternalLib,
+    librariesInUse: []
   });
 
   const button = component.find('button.details-button').first();
@@ -110,7 +114,8 @@ test('ExternalCQLTable doesn\'t allow delete on libraries that are depended on b
     externalCQLLibraryParents: libParents,
     deleteExternalCqlLibrary: deleteExternalCqlLibraryMock,
     loadExternalCqlLibraryDetails: jest.fn(),
-    externalCqlLibraryDetails: mockExternalLib
+    externalCqlLibraryDetails: mockExternalLib,
+    librariesInUse: []
   });
 
   const confirmDeleteModal = component.children().findWhere(n => (

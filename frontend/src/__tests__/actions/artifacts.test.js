@@ -49,11 +49,13 @@ describe('artifact actions', () => {
         { name: 'Meets Exclusion Criteria', id: 'default-subpopulation-2' },
         { name: 'Subpopulation 1', id: 'And-TEST-1' }
       ];
+      const librariesInUse = [];
 
       const expectedAction = {
         type: types.UPDATE_ARTIFACT,
         artifact,
-        names
+        names,
+        librariesInUse
       };
 
       actions.updateArtifact(artifactToUpdate, props)((response) => {
@@ -112,10 +114,11 @@ describe('artifact actions', () => {
         { name: 'Meets Exclusion Criteria', id: 'default-subpopulation-2' },
         { name: 'Subpopulation 1', id: 'And-TEST-1' }
       ];
+      const librariesInUse = [];
 
       const expectedActions = [
         { type: types.ARTIFACT_REQUEST, id },
-        { type: types.LOAD_ARTIFACT_SUCCESS, artifact: mockArtifact, names },
+        { type: types.LOAD_ARTIFACT_SUCCESS, artifact: mockArtifact, names, librariesInUse },
         { type: types.SET_STATUS_MESSAGE, message: null }
       ];
 

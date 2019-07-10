@@ -82,7 +82,8 @@ export default class ExternalCQL extends Component {
       deleteExternalCqlLibrary,
       externalCqlLibraryDetails,
       loadExternalCqlLibraryDetails,
-      isLoadingExternalCqlDetails
+      isLoadingExternalCqlDetails,
+      librariesInUse
     } = this.props;
     if (externalCqlList && externalCqlList.length > 0) {
       return (
@@ -93,7 +94,8 @@ export default class ExternalCQL extends Component {
           externalCqlLibraryDetails={externalCqlLibraryDetails}
           deleteExternalCqlLibrary={deleteExternalCqlLibrary}
           loadExternalCqlLibraryDetails={loadExternalCqlLibraryDetails}
-          isLoadingExternalCqlDetails={isLoadingExternalCqlDetails} />
+          isLoadingExternalCqlDetails={isLoadingExternalCqlDetails}
+          librariesInUse={librariesInUse} />
       );
     }
 
@@ -164,5 +166,6 @@ ExternalCQL.propTypes = {
   loadExternalCqlList: PropTypes.func.isRequired,
   clearExternalCqlValidationWarnings: PropTypes.func.isRequired,
   loadExternalCqlLibraryDetails: PropTypes.func.isRequired,
-  isLoadingExternalCqlDetails: PropTypes.bool.isRequired
+  isLoadingExternalCqlDetails: PropTypes.bool.isRequired,
+  librariesInUse: PropTypes.array.isRequired
 };

@@ -62,11 +62,15 @@ export default class ExternalCqlTable extends Component {
   // ----------------------- RENDER ---------------------------------------- //
 
   renderTableRow = (externalCqlLibrary) => {
+    const { librariesInUse } = this.props;
+
     const libName = changeToCase(externalCqlLibrary.name, 'paramCase');
     const libVersion = externalCqlLibrary.version;
     const currentLibraryParents =
       this.props.externalCQLLibraryParents[`${libName}-${libVersion}`] || [];
-    const disableDelete = currentLibraryParents.length > 0;
+    const disableForDependency = currentLibraryParents.length > 0;
+    const disableForUse = librariesInUse.includes(externalCqlLibrary.name);
+    const disableDelete = disableForDependency || disableForUse;
     const disabledClass = disableDelete ? 'disabled' : '';
     return (
       <tr key={externalCqlLibrary._id}>
@@ -99,7 +103,12 @@ export default class ExternalCqlTable extends Component {
             onClick={() => { if (!disableDelete) this.openConfirmDeleteModal(externalCqlLibrary); }}>
             Delete
           </button>
-          {disableDelete &&
+          {disableForUse &&
+            <UncontrolledTooltip target={`DeleteLibraryTooltip-${externalCqlLibrary._id}`} placement="left">
+              To delete this library, first remove all references to it.
+            </UncontrolledTooltip>
+          }
+          {!disableForUse && disableForDependency &&
             <UncontrolledTooltip target={`DeleteLibraryTooltip-${externalCqlLibrary._id}`} placement="left">
               To delete this library, first remove all libraries that depend on it.
             </UncontrolledTooltip>
@@ -181,5 +190,6 @@ ExternalCqlTable.propTypes = {
   externalCQLLibraryParents: PropTypes.object.isRequired,
   deleteExternalCqlLibrary: PropTypes.func.isRequired,
   loadExternalCqlLibraryDetails: PropTypes.func.isRequired,
-  isLoadingExternalCqlDetails: PropTypes.bool.isRequired
+  isLoadingExternalCqlDetails: PropTypes.bool.isRequired,
+  librariesInUse: PropTypes.array.isRequired
 };

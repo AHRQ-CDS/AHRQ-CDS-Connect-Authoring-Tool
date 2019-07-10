@@ -31,7 +31,8 @@ const defaultState = {
     errorMessage: null
   },
   artifactSaved: true,
-  publishEnabled: false
+  publishEnabled: false,
+  librariesInUse: []
 };
 
 export default function auth(state = defaultState, action) {
@@ -46,7 +47,8 @@ export default function auth(state = defaultState, action) {
         ...state,
         artifact: action.artifact,
         names: action.names,
-        artifactSaved: false
+        artifactSaved: false,
+        librariesInUse: action.librariesInUse
       };
     case types.INITIALIZE_ARTIFACT:
       return {
@@ -80,6 +82,7 @@ export default function auth(state = defaultState, action) {
         ...state,
         artifact: action.artifact,
         names: action.names,
+        librariesInUse: action.librariesInUse,
         loadArtifact: { isLoading: false, loadStatus: 'success' }
       };
     case types.LOAD_ARTIFACT_FAILURE:

@@ -670,7 +670,8 @@ export class Builder extends Component {
                     loadExternalCqlLibraryDetails={this.props.loadExternalCqlLibraryDetails}
                     isLoadingExternalCqlDetails={this.props.isLoadingExternalCqlDetails}
                     addExternalCqlLibraryError={this.props.addExternalCqlLibraryError}
-                    addExternalCqlLibraryErrorMessage={this.props.addExternalCqlLibraryErrorMessage} />
+                    addExternalCqlLibraryErrorMessage={this.props.addExternalCqlLibraryErrorMessage}
+                    librariesInUse={this.props.librariesInUse} />
                 </TabPanel>
               </div>
             </Tabs>
@@ -718,6 +719,7 @@ Builder.propTypes = {
   isValidCode: PropTypes.bool,
   codeData: PropTypes.object,
   names: PropTypes.array.isRequired,
+  librariesInUse: PropTypes.array.isRequired,
   externalCqlList: PropTypes.array,
   externalCQLLibraryParents: PropTypes.object.isRequired,
   externalCqlLibrary: PropTypes.object,
@@ -773,6 +775,7 @@ function mapStateToProps(state) {
     valueSets: state.valueSets.valueSets,
     publishEnabled: state.artifacts.publishEnabled,
     names: state.artifacts.names,
+    librariesInUse: state.artifacts.librariesInUse,
     vsacStatus: state.vsac.authStatus,
     vsacStatusText: state.vsac.authStatusText,
     isSearchingVSAC: state.vsac.isSearchingVSAC,

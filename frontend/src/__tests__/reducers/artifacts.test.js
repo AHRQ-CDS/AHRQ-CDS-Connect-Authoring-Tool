@@ -38,7 +38,8 @@ describe('artifacts reducer', () => {
         errorMessage: null
       },
       artifactSaved: true,
-      publishEnabled: false
+      publishEnabled: false,
+      librariesInUse: []
     });
   });
 

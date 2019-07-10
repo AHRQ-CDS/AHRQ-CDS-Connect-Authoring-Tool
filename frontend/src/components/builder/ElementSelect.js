@@ -297,7 +297,11 @@ export default class ElementSelect extends Component {
           id: 'externalCqlReference',
           type: 'reference',
           name: 'reference',
-          value: { id: `${selectedExternalDefinition.value} from ${this.state.selectedExternalLibrary.name}` },
+          value: {
+            id: `${selectedExternalDefinition.value} from ${this.state.selectedExternalLibrary.name}`,
+            element: selectedExternalDefinition.value,
+            library: this.state.selectedExternalLibrary.name
+          },
           static: true
         },
         { id: 'comment', type: 'textarea', name: 'Comment', value: '' }
