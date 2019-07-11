@@ -53,7 +53,8 @@ function publish(req, res) {
 //       let paragraphUuid = null //responseBody._embedded[`${config.get('repo.url')}/rest/relation/node/artifact/field_artifact_representation`][0].uuid[0].value;
 //       request.get(`${config.get('repo.url')}/rest/session/token`, function(err, response, body){
 //           // TODO: convertToElm has been updated and the call to it here needs to be updated accordingly.
-//           // The first argument should now be an array that includes the current artifact and any external libraries it uses
+//           // The first argument should now be an array that includes the current artifact
+//           // and any external libraries it uses
 //           convertToElm(req, res, {paragraph: paragraphUuid, csrf: body});
 //       })
 //
