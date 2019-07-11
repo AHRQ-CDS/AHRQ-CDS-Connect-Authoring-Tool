@@ -285,7 +285,7 @@ export default class UserGuide extends Component {
 
                   <li>
                     The "Workspace Tabs" divide the workspace into workflow sections for building an artifact. This helps keep
-                    sections of the artifact organized for the user (more on each tab below in sections 3.7-3.13).
+                    sections of the artifact organized for the user (more on each tab below in sections 3.7-3.14).
                   </li>
 
                   <li>
@@ -1314,6 +1314,71 @@ export default class UserGuide extends Component {
                   <li>The user-defined Subpopulations and Parameters will be displayed along with the three default options.</li>
                 </ol>
               </div>
+
+              <div className="h3-wrapper">
+                <h3 id="External_CQL">3.14 External CQL</h3>
+
+                <p>
+                  The "External CQL" tab is an area to upload CQL files into the CDS Authoring Tool in order to add external
+                  functionality into an artifact. This is useful in the case that a CQL file has a definition or parameter
+                  that an artifact being created in the Authoring Tool could utilize.
+                </p>
+
+                <p>
+                  <img
+                    alt="External CQL"
+                    src={screenshotUrl('External_CQL')}
+                  className="img-fluid img-thumbnail rounded mx-auto d-block" />
+                </p>
+
+                <ol>
+                  <li>
+                    The upload area to add external CQL files into an artifact. These files can be uploaded individually, or
+                    in zip files containing multiple CQL files.
+                  </li>
+
+                  <li>
+                    The table displaying the external CQL files that have been uploaded for the artifact, and some relevant
+                    details about these files.
+                  </li>
+
+                  <li>
+                    A "View" button for an external CQL file, which displays a modal containing information about the contents
+                    of this file.
+                  </li>
+
+                  <li>
+                    A "Delete" button for an external CQL file, which removes this file from the artifact. This button will be
+                    disabled for a file if it is being used in another tab of the artifact, or if the file is a dependency of
+                    another uploaded external CQL file.
+                  </li>
+                </ol>
+
+                <p>
+                  Once an external CQL file has been uploaded, any of its definitions or parameters can be used within
+                  Inclusions, Exclusions, or Subpopulations, or Base Elements. This is done by selecting the "External CQL"
+                  option in the Element Picker.
+                </p>
+
+                <p>
+                  <img
+                    alt="External CQL Element"
+                    src={screenshotUrl('External_CQL_Element')}
+                  className="img-fluid img-thumbnail rounded mx-auto d-block" />
+                </p>
+
+                <ol>
+                  <li>
+                    The name of the definition or parameter being used in this external CQL element, as well as the name of the
+                    external CQL file that contains it.
+                  </li>
+
+                  <li>
+                    As with all other elements, expressions can be added to external CQL elements so they can be used as needed
+                    in the artifact being built.
+                  </li>
+                </ol>
+              </div>
             </div>
 
             <div className="h2-wrapper">
@@ -1419,6 +1484,11 @@ export default class UserGuide extends Component {
                   <li>
                     A dropdown that displays all the user's artifacts, allowing the user to choose which artifact should be used
                     for CQL execution.
+                  </li>
+
+                  <li>
+                    A section listing all of the artifact's parameters and their default values, allowing the user to change
+                    these parameter values for testing purposes.
                   </li>
 
                   <li>
