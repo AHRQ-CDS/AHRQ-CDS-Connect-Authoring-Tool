@@ -493,6 +493,8 @@ function orderExpressionSentenceArray(
     } else {
       elementText = 'group';
     }
+  } else if (type === 'externalCqlElement') {
+    elementText = 'external CQL element';
   }
   const elementArticle = (!(type === 'parameter' || type === 'externalCqlElement')) ? getArticle(elementText) : 'the';
   if (hasStarted) {

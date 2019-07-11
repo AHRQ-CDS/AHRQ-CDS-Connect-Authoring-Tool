@@ -30,10 +30,15 @@
 
   &__tablecell-short {
     width: 11em;
+    white-space: nowrap; 
 
     &.center {
       text-align: center;
     }
+  }
+
+  &__tablecell-button {
+    white-space: nowrap; 
   }
 
   .external-cql-library-info {

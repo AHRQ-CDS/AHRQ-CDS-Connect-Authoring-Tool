@@ -90,7 +90,7 @@ export default class ExternalCqlTable extends Component {
           <div>{this.getFhirVersion(externalCqlLibrary.fhirVersion)}</div>
         </td>
 
-        <td data-th="">
+        <td className="external-cql-table__tablecell-button" data-th="">
           <button aria-label="View"
             className="button primary-button details-button"
             onClick={() => this.openViewDetailsModal(externalCqlLibrary)}>
