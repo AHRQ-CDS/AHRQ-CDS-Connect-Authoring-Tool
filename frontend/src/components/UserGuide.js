@@ -1356,7 +1356,7 @@ export default class UserGuide extends Component {
 
                 <p>
                   Once an external CQL file has been uploaded, any of its definitions or parameters can be used within
-                  Inclusions, Exclusions, or Subpopulations, or Base Elements. This is done by selecting the "External CQL"
+                  Inclusions, Exclusions, Subpopulations, or Base Elements. This is done by selecting the "External CQL"
                   option in the Element Picker.
                 </p>
 
