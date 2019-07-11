@@ -105,6 +105,7 @@ export default class ExternalCQL extends Component {
   render() {
     const { addExternalCqlLibraryError, addExternalCqlLibraryErrorMessage } = this.props;
     const { uploadError } = this.state;
+    const isDropzoneDisabled = this.props.artifact._id === null;
 
     return (
       <div className="external-cql" id="maincontent">
@@ -113,6 +114,8 @@ export default class ExternalCQL extends Component {
             className="dropzone"
             onDrop={this.handleAddExternalCQL.bind(this)}
             accept=".cql,application/zip,text/plain"
+            disabled={isDropzoneDisabled}
+            disabledClassName='disabled'
             multiple={false}>
             {this.renderDropzoneIcon()}
 
@@ -128,6 +131,11 @@ export default class ExternalCQL extends Component {
             {addExternalCqlLibraryError === null && addExternalCqlLibraryErrorMessage &&
               <div className="notification">
                 <FontAwesome name="exclamation-circle" /> {addExternalCqlLibraryErrorMessage}
+              </div>
+            }
+            {isDropzoneDisabled &&
+              <div className="warning">
+                <FontAwesome name="exclamation-circle" /> Artifact must be saved before uploading libraries.
               </div>
             }
 

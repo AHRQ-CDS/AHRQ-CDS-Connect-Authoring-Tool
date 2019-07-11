@@ -29,15 +29,20 @@ describe('external_cql reducer', () => {
     expect(reducer(previousState, action)).toEqual(newState);
 
     const externalCqlList = [{ name: 'My Artifact' }];
-    action = { type: types.LOAD_EXTERNAL_CQL_LIST_SUCCESS, externalCqlList };
+    action = { type: types.LOAD_EXTERNAL_CQL_LIST_SUCCESS, externalCqlList, parentsOfLibraries: {} };
     newState = {
       externalCqlList,
+      externalCQLLibraryParents: {},
       loadExternalCqlList: { isLoading: false, loadStatus: 'success' }
     };
     expect(reducer(previousState, action)).toEqual(newState);
 
     action = { type: types.LOAD_EXTERNAL_CQL_LIST_FAILURE };
-    newState = { loadExternalCqlList: { isLoading: false, loadStatus: 'failure' } };
+    newState = {
+      loadExternalCqlList: { isLoading: false, loadStatus: 'failure' },
+      externalCqlList: [],
+      externalCQLLibraryParents: {}
+    };
     expect(reducer(previousState, action)).toEqual(newState);
   });
 

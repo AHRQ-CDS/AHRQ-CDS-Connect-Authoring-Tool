@@ -32,7 +32,9 @@ export default function externalCQL(state = defaultState, action) {
     case types.LOAD_EXTERNAL_CQL_LIST_FAILURE:
       return {
         ...state,
-        loadExternalCqlList: { isLoading: false, loadStatus: 'failure' }
+        loadExternalCqlList: { isLoading: false, loadStatus: 'failure' },
+        externalCqlList: [],
+        externalCQLLibraryParents: {}
       };
     case types.EXTERNAL_CQL_LIBRARY_REQUEST:
       return {

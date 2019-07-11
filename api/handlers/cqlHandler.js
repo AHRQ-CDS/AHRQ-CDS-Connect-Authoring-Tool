@@ -988,7 +988,7 @@ function objToCql(req, res) {
   const externalLibs = [];
 
   // Add all external libraries
-  CQLLibrary.find({ user: user, linkedArtifactId: artifactId }, (error, libraries) => {
+  CQLLibrary.find({ user: user, linkedArtifactId: { $ne: null, $eq: artifactId } }, (error, libraries) => {
     if (error) res.status(500).send({ error: error.message });
     else {
       libraries.forEach(lib => {
@@ -1020,7 +1020,7 @@ function objToELM(req, res) {
   const externalLibs = [];
 
   // Add all external libraries
-  CQLLibrary.find({ user: user, linkedArtifactId: artifactId }, (error, libraries) => {
+  CQLLibrary.find({ user: user, linkedArtifactId: { $ne: null, $eq: artifactId } }, (error, libraries) => {
     if (error) res.status(500).send({ error: error.message });
     else {
       libraries.forEach(lib => {

@@ -103,6 +103,10 @@ export default class ElementSelect extends Component {
     const updatedCategory = this.state.categories.find(g =>
       g.name === this.state.selectedCategory.name);
     this.onSelectedCategoryChange(updatedCategory);
+
+    if (nextProps.artifactId !== this.props.artifactId) {
+      this.props.loadExternalCqlList(nextProps.artifactId);
+    }
   }
 
   generateInternalCategories = (props) => {
@@ -436,7 +440,7 @@ export default class ElementSelect extends Component {
 }
 
 ElementSelect.propTypes = {
-  artifactId: PropTypes.string.isRequired,
+  artifactId: PropTypes.string,
   categories: PropTypes.array.isRequired,
   onSuggestionSelected: PropTypes.func.isRequired,
   booleanParameters: PropTypes.arrayOf(PropTypes.shape({
