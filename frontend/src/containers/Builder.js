@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { Dropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
+import { Dropdown, DropdownToggle, DropdownMenu, DropdownItem, UncontrolledTooltip } from 'reactstrap';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import withGracefulUnmount from 'react-graceful-unmount';
@@ -351,6 +351,11 @@ export class Builder extends Component {
     return currentFHIRVersion;
   }
 
+  downloadOptionSelected = (disabled, version) => {
+    const { artifact } = this.props;
+    if (!disabled) this.props.downloadArtifact(artifact, { name: 'FHIR', version });
+  }
+
   // ----------------------- RENDER ---------------------------------------- //
 
   renderConjunctionGroup = (treeName) => {
@@ -434,15 +439,27 @@ export class Builder extends Component {
               <DropdownToggle caret><FontAwesome name="download" className="icon" />Download CQL</DropdownToggle>
               <DropdownMenu>
                 <DropdownItem
-                  disabled={disableDSTU2}
-                  onClick={() => this.props.downloadArtifact(artifact, { name: 'FHIR', version: '1.0.2' })}>
+                  id='dstu2DownloadOption'
+                  className={disableDSTU2 ? 'disabled-dropdown' : ''}
+                  onClick={() => this.downloadOptionSelected(disableDSTU2, '1.0.2')}>
                   FHIR DSTU2
                 </DropdownItem>
                 <DropdownItem
-                  disabled={disableSTU3}
-                  onClick={() => this.props.downloadArtifact(artifact, { name: 'FHIR', version: '3.0.0' })}>
+                  id='stu3DownloadOption'
+                  className={disableSTU3 ? 'disabled-dropdown' : ''}
+                  onClick={() => this.downloadOptionSelected(disableSTU3, '3.0.0')}>
                   FHIR STU3
                 </DropdownItem>
+                {disableDSTU2 &&
+                  <UncontrolledTooltip target='dstu2DownloadOption' placement="left">
+                    Downloading this FHIR version is disabled based on uploaded external library versions.
+                  </UncontrolledTooltip>
+                }
+                {disableSTU3 &&
+                  <UncontrolledTooltip target='stu3DownloadOption' placement="left">
+                    Downloading this FHIR version is disabled based on uploaded external library versions.
+                  </UncontrolledTooltip>
+                }
               </DropdownMenu>
             </Dropdown>
 
