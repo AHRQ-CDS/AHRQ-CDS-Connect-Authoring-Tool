@@ -96,7 +96,7 @@ docker build -t cdsauthoringtool .
 
 For the authoring tool to run in a docker container, MongoDB and CQL-to-ELM docker containers must be linked.  The following commands run the necessary containers, with the required links and exposed ports:
 ```bash
-docker run --name cat-cql2elm -d cqframework/cql-translation-service:v1.2.16
+docker run --name cat-cql2elm -d cqframework/cql-translation-service:v1.3.15
 docker run --name cat-mongo -d mongo:3.4
 docker run --name cat \
   --link cat-cql2elm:cql2elm \

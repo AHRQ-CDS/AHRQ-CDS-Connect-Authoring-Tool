@@ -15,4 +15,4 @@ services:
   cat-mongo:
     image: mongo:3.4
   cat-cql2elm:
-    image: cqframework/cql-translation-service:v1.2.16
+    image: cqframework/cql-translation-service:v1.3.15
