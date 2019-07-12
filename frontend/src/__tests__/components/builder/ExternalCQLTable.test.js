@@ -44,6 +44,7 @@ test('ExternalCQLTable delete opens confirmation modal and deletes from modal', 
     externalCqlList: externalLibrariesMock,
     externalCQLLibraryParents: {},
     loadExternalCqlLibraryDetails: jest.fn(),
+    clearAddLibraryErrorsAndMessages: jest.fn(),
     deleteExternalCqlLibrary: deleteExternalCqlLibraryMock,
     librariesInUse: []
   });
@@ -78,6 +79,7 @@ test('ExternalCQLTable view opens details modal', () => {
     externalCQLLibraryParents: {},
     deleteExternalCqlLibrary: jest.fn(),
     loadExternalCqlLibraryDetails: jest.fn(),
+    clearAddLibraryErrorsAndMessages: jest.fn(),
     externalCqlLibraryDetails: mockExternalLib,
     librariesInUse: []
   });
@@ -114,6 +116,7 @@ test('ExternalCQLTable doesn\'t allow delete on libraries that are depended on b
     externalCQLLibraryParents: libParents,
     deleteExternalCqlLibrary: deleteExternalCqlLibraryMock,
     loadExternalCqlLibraryDetails: jest.fn(),
+    clearAddLibraryErrorsAndMessages: jest.fn(),
     externalCqlLibraryDetails: mockExternalLib,
     librariesInUse: []
   });

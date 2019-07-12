@@ -119,6 +119,15 @@ describe('external_cql reducer', () => {
     expect(reducer(previousState, action)).toEqual(newState);
   });
 
+  it('should clear external CQL add library errors and messages', () => {
+    const action = { type: types.CLEAR_ADD_EXTERNAL_LIBRARY_ERROR_AND_MESSAGES };
+    const newState = { addExternalCqlLibrary: { isAdding: false, addStatus: null, error: null, message: '' } };
+
+    const previousState =
+      { addExternalCqlLibrary: { isAdding: false, addStatus: null, error: 'some error', message: 'a message' } };
+    expect(reducer(previousState, action)).toEqual(newState);
+  });
+
   // ------------------------- DELETE EXTERNAL CQL LIBRARY ------------------- //
   it('should handle deleting external lib', () => {
     let action = { type: types.DELETE_EXTERNAL_CQL_LIBRARY_REQUEST };
