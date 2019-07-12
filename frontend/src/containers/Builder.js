@@ -20,7 +20,7 @@ import {
 } from '../actions/vsac';
 import {
   loadExternalCqlList, loadExternalCqlLibraryDetails, addExternalLibrary, deleteExternalCqlLibrary,
-  clearExternalCqlValidationWarnings
+  clearExternalCqlValidationWarnings, clearAddLibraryErrorsAndMessages
 } from '../actions/external_cql';
 
 import BaseElements from '../components/builder/BaseElements';
@@ -703,6 +703,7 @@ export class Builder extends Component {
                     addExternalLibrary={this.props.addExternalLibrary}
                     loadExternalCqlList={this.props.loadExternalCqlList}
                     clearExternalCqlValidationWarnings={this.props.clearExternalCqlValidationWarnings}
+                    clearAddLibraryErrorsAndMessages={this.props.clearAddLibraryErrorsAndMessages}
                     loadExternalCqlLibraryDetails={this.props.loadExternalCqlLibraryDetails}
                     isLoadingExternalCqlDetails={this.props.isLoadingExternalCqlDetails}
                     addExternalCqlLibraryError={this.props.addExternalCqlLibraryError}
@@ -797,6 +798,7 @@ function mapDispatchToProps(dispatch) {
     addExternalLibrary,
     loadExternalCqlList,
     clearExternalCqlValidationWarnings,
+    clearAddLibraryErrorsAndMessages,
     loadExternalCqlLibraryDetails
   }, dispatch);
 }

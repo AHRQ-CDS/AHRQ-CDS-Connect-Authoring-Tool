@@ -94,6 +94,11 @@ export default function externalCQL(state = defaultState, action) {
         ...state,
         externalCqlErrors: []
       };
+    case types.CLEAR_ADD_EXTERNAL_LIBRARY_ERROR_AND_MESSAGES:
+      return {
+        ...state,
+        addExternalCqlLibrary: { ...state.addExternalCqlLibrary, error: null, message: '' },
+      };
     case types.DELETE_EXTERNAL_CQL_LIBRARY_REQUEST:
       return {
         ...state,

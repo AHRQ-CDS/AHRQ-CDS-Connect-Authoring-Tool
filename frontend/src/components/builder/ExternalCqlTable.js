@@ -31,6 +31,8 @@ export default class ExternalCqlTable extends Component {
   // ----------------------- VIEW DETAILS MODAL ---------------------------- //
 
   openViewDetailsModal = (externalCqlLibrary) => {
+    const { clearAddLibraryErrorsAndMessages } = this.props;
+    clearAddLibraryErrorsAndMessages();
     this.setState({ showViewDetailsModal: true, externalCqlLibraryToView: externalCqlLibrary });
   }
 
@@ -45,6 +47,8 @@ export default class ExternalCqlTable extends Component {
   // ----------------------- DELETE MODAL ---------------------------------- //
 
   openConfirmDeleteModal = (externalCqlLibrary) => {
+    const { clearAddLibraryErrorsAndMessages } = this.props;
+    clearAddLibraryErrorsAndMessages();
     this.setState({ showConfirmDeleteModal: true, externalCqlLibraryToDelete: externalCqlLibrary });
   }
 

@@ -205,6 +205,12 @@ export function clearExternalCqlValidationWarnings() {
   };
 }
 
+export function clearAddLibraryErrorsAndMessages() {
+  return {
+    type: types.CLEAR_ADD_EXTERNAL_LIBRARY_ERROR_AND_MESSAGES
+  };
+}
+
 // ------------------------- DELETE EXTERNAL CQL LIBRARY ------------------- //
 
 function requestDeleteExternalCqlLibrary() {

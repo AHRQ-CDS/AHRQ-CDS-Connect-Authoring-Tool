@@ -26,6 +26,11 @@ export default class ExternalCQL extends Component {
     this.setState({ showELMErrorModal });
   }
 
+  componentWillUnmount() {
+    const { clearAddLibraryErrorsAndMessages } = this.props;
+    clearAddLibraryErrorsAndMessages();
+  }
+
   handleAddExternalCQL = (externalCqlLibrary) => {
     const { artifact } = this.props;
     this.setState({ uploadError: false });
@@ -83,6 +88,7 @@ export default class ExternalCQL extends Component {
       externalCqlLibraryDetails,
       loadExternalCqlLibraryDetails,
       isLoadingExternalCqlDetails,
+      clearAddLibraryErrorsAndMessages,
       librariesInUse
     } = this.props;
     if (externalCqlList && externalCqlList.length > 0) {
@@ -95,6 +101,7 @@ export default class ExternalCQL extends Component {
           deleteExternalCqlLibrary={deleteExternalCqlLibrary}
           loadExternalCqlLibraryDetails={loadExternalCqlLibraryDetails}
           isLoadingExternalCqlDetails={isLoadingExternalCqlDetails}
+          clearAddLibraryErrorsAndMessages={clearAddLibraryErrorsAndMessages}
           librariesInUse={librariesInUse} />
       );
     }
