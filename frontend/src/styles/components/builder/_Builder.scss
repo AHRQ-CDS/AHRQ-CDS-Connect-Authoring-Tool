@@ -105,3 +105,12 @@
     font-style: italic;
   }
 }
+
+.light-tooltip > .tooltip-inner {
+  background: $white;
+  color: $black;
+}
+
+.light-tooltip > .arrow::before {
+  border-left-color: $white;
+}

@@ -451,13 +451,13 @@ export class Builder extends Component {
                   FHIR STU3
                 </DropdownItem>
                 {disableDSTU2 &&
-                  <UncontrolledTooltip target='dstu2DownloadOption' placement="left">
-                    Downloading this FHIR version is disabled based on uploaded external library versions.
+                  <UncontrolledTooltip className='light-tooltip' target='dstu2DownloadOption' placement="left">
+                    Downloading this FHIR version is disabled based on external library versions.
                   </UncontrolledTooltip>
                 }
                 {disableSTU3 &&
-                  <UncontrolledTooltip target='stu3DownloadOption' placement="left">
-                    Downloading this FHIR version is disabled based on uploaded external library versions.
+                  <UncontrolledTooltip className='light-tooltip' target='stu3DownloadOption' placement="left">
+                    Downloading this FHIR version is disabled based on external library versions.
                   </UncontrolledTooltip>
                 }
               </DropdownMenu>
