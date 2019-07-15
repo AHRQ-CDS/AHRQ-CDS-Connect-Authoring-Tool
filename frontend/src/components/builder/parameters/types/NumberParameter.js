@@ -32,7 +32,7 @@ export default class NumberParameter extends Component {
                 value={this.props.value || ''} // if .value is undefined, will switch between controlled and uncontrolled input. See https://github.com/twisty/formsy-react-components/issues/66
                 onChange={(event) => {
                   // eslint-disable-next-line max-len
-                  const value = (this.props.typeOfNumber === 'integer') ? parseInt(event.target.value, 10) : parseFloat(event.target.value, 10);
+                  const value = (this.props.typeOfNumber === 'integer') ? parseInt(event.target.value, 10) : parseFloat(event.target.value);
                   this.props.updateInstance({ [event.target.name]: value });
                 }}
               />

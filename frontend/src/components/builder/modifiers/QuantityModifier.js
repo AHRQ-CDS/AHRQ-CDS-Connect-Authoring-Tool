@@ -37,13 +37,13 @@ export default class QuantityModifier extends Component {
             onChange={(event) => {
               this.props.updateAppliedModifier(
                 this.props.index,
-                { value: parseFloat(event.target.value, 10) ? parseFloat(event.target.value, 10).toString() : null }
+                { value: parseFloat(event.target.value) ? parseFloat(event.target.value).toString() : null }
               );
             }}
             onSelect={(event) => {
               this.props.updateAppliedModifier(
                 this.props.index,
-                { value: parseFloat(event.target.value, 10) ? parseFloat(event.target.value, 10).toString() : null }
+                { value: parseFloat(event.target.value) ? parseFloat(event.target.value).toString() : null }
               );
             }}
           />
