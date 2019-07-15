@@ -8,7 +8,7 @@ export default class DecimalEditor extends Component {
     let str = null;
 
     decimal = _.get(evt, 'target.value', null);
-    if (decimal != null) { decimal = parseFloat(decimal, 10); }
+    if (decimal != null) { decimal = parseFloat(decimal); }
 
     if (decimal || decimal === 0) {
       if (Number.isInteger(decimal)) {

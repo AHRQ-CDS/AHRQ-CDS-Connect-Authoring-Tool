@@ -16,6 +16,7 @@ export default class ValueComparisonNumber extends Component {
   }
 
   render() {
+    const { minValue, maxValue } = this.props;
     const minValueId = _.uniqueId('value-');
     const minOperatorId = _.uniqueId('operator-');
     const maxValueId = _.uniqueId('value2-');
@@ -51,9 +52,9 @@ export default class ValueComparisonNumber extends Component {
             step="any"
             name="Min value"
             aria-label="Min Value"
-            value={this.props.minValue || ''}
+            value={(minValue || minValue === 0) ? minValue : ''}
             onChange={(event) => {
-              this.props.updateAppliedModifier(this.props.index, { minValue: parseFloat(event.target.value, 10) });
+              this.props.updateAppliedModifier(this.props.index, { minValue: parseFloat(event.target.value) });
             }}
           />
         </label>
@@ -86,9 +87,9 @@ export default class ValueComparisonNumber extends Component {
             step="any"
             name="Max value"
             aria-label="Max Value"
-            value={this.props.maxValue || ''}
+            value={(maxValue || maxValue === 0) ? maxValue : ''}
             onChange={(event) => {
-              this.props.updateAppliedModifier(this.props.index, { maxValue: parseFloat(event.target.value, 10) });
+              this.props.updateAppliedModifier(this.props.index, { maxValue: parseFloat(event.target.value) });
             }}
           />
         </label>
