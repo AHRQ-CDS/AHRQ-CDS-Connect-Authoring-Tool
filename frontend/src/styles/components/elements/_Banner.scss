@@ -1,0 +1,13 @@
+.banner {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  .message {
+    text-align: left;
+  }
+
+  .close-icon {
+    cursor: pointer;
+  }
+}
