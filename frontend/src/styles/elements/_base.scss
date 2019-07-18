@@ -147,6 +147,10 @@ h6 {
   background-color: lighten($red, 45%);
   padding: 10px;
   margin: 10px;
+
+  span.fa {
+    margin-right: 5px;
+  }
 }
 
 .notification {

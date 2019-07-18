@@ -32,8 +32,13 @@ export default class ExternalCQL extends Component {
       nextProps.externalCqlErrors ? nextProps.externalCqlErrors.length > 0 : false;
     this.setState({ showELMErrorModal });
 
-    if (nextProps.addExternalCqlLibraryError !== this.props.addExternalCqlLibraryError ||
-      nextProps.addExternalCqlLibraryErrorMessage !== this.props.addExternalCqlLibraryErrorMessage) {
+    if (nextProps.addExternalCqlLibraryError !== this.props.addExternalCqlLibraryError) {
+      this.setState({ showLibraryErrorBanner: nextProps.addExternalCqlLibraryError != null });
+      this.setState({ showLibraryNotificationBanner:
+          nextProps.addExternalCqlLibraryError === null && nextProps.addExternalCqlLibraryErrorMessage !== '' });
+    }
+
+    if (nextProps.addExternalCqlLibraryErrorMessage !== this.props.addExternalCqlLibraryErrorMessage) {
       this.setState({ showLibraryNotificationBanner:
         nextProps.addExternalCqlLibraryError === null && nextProps.addExternalCqlLibraryErrorMessage !== '' });
     }
