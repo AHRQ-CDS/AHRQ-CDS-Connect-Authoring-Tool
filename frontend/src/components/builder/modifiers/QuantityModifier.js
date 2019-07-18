@@ -15,6 +15,7 @@ export default class QuantityModifier extends Component {
   }
 
   render() {
+    const { value } = this.props;
     const valueId = _.uniqueId('value-');
     const unitId = _.uniqueId('unit-');
 
@@ -33,17 +34,17 @@ export default class QuantityModifier extends Component {
             className="quantity-modifier-value"
             placeholder="enter value"
             aria-label="Quantity Modifier Value"
-            value={this.props.value || ''}
+            value={(value || value === 0) ? value : ''}
             onChange={(event) => {
               this.props.updateAppliedModifier(
                 this.props.index,
-                { value: parseFloat(event.target.value) ? parseFloat(event.target.value).toString() : null }
+                { value: _.isNaN(parseFloat(event.target.value)) ? null : parseFloat(event.target.value) }
               );
             }}
             onSelect={(event) => {
               this.props.updateAppliedModifier(
                 this.props.index,
-                { value: parseFloat(event.target.value) ? parseFloat(event.target.value).toString() : null }
+                { value: _.isNaN(parseFloat(event.target.value)) ? null : parseFloat(event.target.value) }
               );
             }}
           />
@@ -70,7 +71,7 @@ QuantityModifier.propTypes = {
   index: PropTypes.number.isRequired,
   uniqueId: PropTypes.string.isRequired,
   name: PropTypes.string.isRequired,
-  value: PropTypes.string,
+  value: PropTypes.number,
   unit: PropTypes.string,
   updateAppliedModifier: PropTypes.func.isRequired
 };
