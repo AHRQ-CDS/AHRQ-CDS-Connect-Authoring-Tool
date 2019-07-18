@@ -1,2 +1,2 @@
-<% if (values.minOperator && parseFloat(values.minValue)) { %><%-value_name%> <%-values.minOperator%> <%-values.minValue%><% } %><% if ((values.minOperator && parseFloat(values.minValue)) && (values.maxOperator && parseFloat(values.maxValue))) { %>
-  and <% } %><% if (values.maxOperator && parseFloat(values.maxValue)) { %><%-value_name%> <%-values.maxOperator%> <%-values.maxValue%><% } %>
+<% if (values.minOperator && (parseFloat(values.minValue) || parseFloat(values.minValue) === 0)) { %><%-value_name%> <%-values.minOperator%> <%-values.minValue%><% } %><% if ((values.minOperator && (parseFloat(values.minValue) || parseFloat(values.minValue) === 0)) && (values.maxOperator && (parseFloat(values.maxValue) || parseFloat(values.maxValue) === 0))) { %>
+  and <% } %><% if (values.maxOperator && (parseFloat(values.maxValue) || parseFloat(values.maxValue) === 0)) { %><%-value_name%> <%-values.maxOperator%> <%-values.maxValue%><% } %>
