@@ -11,13 +11,13 @@ export default class IntervalOfDecimalEditor extends Component {
     switch (evt.target.name) {
       case 'firstDecimal':
         firstDecimal = _.get(evt, 'target.value', null);
-        if (firstDecimal != null) { firstDecimal = parseFloat(firstDecimal, 10); }
+        if (firstDecimal != null) { firstDecimal = parseFloat(firstDecimal); }
         secondDecimal = _.get(this, 'props.value.secondDecimal', null);
         break;
       case 'secondDecimal':
         firstDecimal = _.get(this, 'props.value.firstDecimal', null);
         secondDecimal = _.get(evt, 'target.value', null);
-        if (secondDecimal != null) { secondDecimal = parseFloat(secondDecimal, 10); }
+        if (secondDecimal != null) { secondDecimal = parseFloat(secondDecimal); }
         break;
       default:
         break;

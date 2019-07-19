@@ -277,8 +277,8 @@ test('NumberModifier changes input', () => {
 
   const input = component.find('input');
 
-  input.simulate('change', { target: { value: '3' } });
-  expect(updateAppliedModifierMock).toBeCalledWith(6, { value: '3' });
+  input.simulate('change', { target: { value: 3 } });
+  expect(updateAppliedModifierMock).toBeCalledWith(6, { value: 3 });
 });
 
 test('QuantityModifier renders without crashing', () => {
@@ -304,8 +304,8 @@ test('QuantityModifier changes input', () => {
   const valueInput = component.find('.quantity-modifier-value');
   const unitInput = component.find('.quantity-modifier-unit');
 
-  valueInput.simulate('change', { target: { value: '3' } });
-  expect(updateAppliedModifierMock).toBeCalledWith(6, { value: '3' });
+  valueInput.simulate('change', { target: { value: 3 } });
+  expect(updateAppliedModifierMock).toBeCalledWith(6, { value: 3 });
   unitInput.simulate('change', { target: { value: 'mg/dL' } });
   expect(updateAppliedModifierMock).lastCalledWith(6, { unit: 'mg/dL' });
 });

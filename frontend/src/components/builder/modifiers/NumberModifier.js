@@ -5,6 +5,7 @@ import _ from 'lodash';
 /* eslint-disable jsx-a11y/no-onchange */
 export default class NumberModifier extends Component {
   render() {
+    const { value } = this.props;
     const valueId = _.uniqueId('value-');
 
     return (
@@ -21,17 +22,17 @@ export default class NumberModifier extends Component {
             type="number"
             placeholder="enter value"
             aria-label="Number Modifier"
-            value={this.props.value || ''}
+            value={(value || value === 0) ? value : ''}
             onChange={(event) => {
               this.props.updateAppliedModifier(
                 this.props.index,
-                { value: parseFloat(event.target.value, 10) ? parseFloat(event.target.value, 10).toString() : null }
+                { value: _.isNaN(parseFloat(event.target.value)) ? null : parseFloat(event.target.value) }
               );
             }}
             onSelect={(event) => {
               this.props.updateAppliedModifier(
                 this.props.index,
-                { value: parseFloat(event.target.value, 10) ? parseFloat(event.target.value, 10).toString() : null }
+                { value: _.isNaN(parseFloat(event.target.value)) ? null : parseFloat(event.target.value) }
               );
             }}
           />
@@ -44,6 +45,6 @@ export default class NumberModifier extends Component {
 NumberModifier.propTypes = {
   index: PropTypes.number.isRequired,
   name: PropTypes.string.isRequired,
-  value: PropTypes.string,
+  value: PropTypes.number,
   updateAppliedModifier: PropTypes.func.isRequired
 };

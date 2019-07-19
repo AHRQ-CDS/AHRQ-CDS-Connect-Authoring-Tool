@@ -16,6 +16,7 @@ export default class NumberParameter extends Component {
   }
 
   render() {
+    const { value } = this.props;
     const id = _.uniqueId('parameter-');
 
     return (
@@ -29,11 +30,11 @@ export default class NumberParameter extends Component {
                 id={id}
                 type="number"
                 name={this.props.param.id}
-                value={this.props.value || ''} // if .value is undefined, will switch between controlled and uncontrolled input. See https://github.com/twisty/formsy-react-components/issues/66
+                value={(value || value === 0) ? value : ''} // if .value is undefined, will switch between controlled and uncontrolled input. See https://github.com/twisty/formsy-react-components/issues/66
                 onChange={(event) => {
                   // eslint-disable-next-line max-len
-                  const value = (this.props.typeOfNumber === 'integer') ? parseInt(event.target.value, 10) : parseFloat(event.target.value, 10);
-                  this.props.updateInstance({ [event.target.name]: value });
+                  const newValue = (this.props.typeOfNumber === 'integer') ? parseInt(event.target.value, 10) : parseFloat(event.target.value);
+                  this.props.updateInstance({ [event.target.name]: newValue });
                 }}
               />
               { ('exclusive' in this.props.param)

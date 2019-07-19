@@ -21,7 +21,7 @@ export default class QuantityEditor extends Component {
     switch (evt.target.name) {
       case 'quantity':
         quantity = _.get(evt, 'target.value', null);
-        if (quantity != null) { quantity = parseFloat(quantity, 10); }
+        if (quantity != null) { quantity = parseFloat(quantity); }
         unit = _.get(this, 'props.value.unit', null);
         break;
       case 'unit':

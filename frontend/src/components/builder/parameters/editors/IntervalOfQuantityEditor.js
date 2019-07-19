@@ -22,14 +22,14 @@ export default class IntervalOfQuantityEditor extends Component {
     switch (evt.target.name) {
       case 'firstQuantity':
         firstQuantity = _.get(evt, 'target.value', null);
-        if (firstQuantity != null) { firstQuantity = parseFloat(firstQuantity, 10); }
+        if (firstQuantity != null) { firstQuantity = parseFloat(firstQuantity); }
         secondQuantity = _.get(this, 'props.value.secondQuantity', null);
         unit = _.get(this, 'props.value.unit', null);
         break;
       case 'secondQuantity':
         firstQuantity = _.get(this, 'props.value.firstQuantity', null);
         secondQuantity = _.get(evt, 'target.value', null);
-        if (secondQuantity != null) { secondQuantity = parseFloat(secondQuantity, 10); }
+        if (secondQuantity != null) { secondQuantity = parseFloat(secondQuantity); }
         unit = _.get(this, 'props.value.unit', null);
         break;
       case 'unit':
