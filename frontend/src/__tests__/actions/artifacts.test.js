@@ -219,7 +219,7 @@ describe('artifact actions', () => {
       return store.dispatch(actions.executeCQLArtifact(
         mockArtifact,
         [], // params
-        mockPatientDstu2.patient,
+        [mockPatientDstu2.patient],
         { username: 'u', password: 'p' },
         new CodeService(),
         { name: 'FHIR', version: '1.0.2' }
@@ -256,7 +256,7 @@ describe('artifact actions', () => {
       return store.dispatch(actions.executeCQLArtifact(
         mockArtifact,
         [], // params
-        mockPatientStu3.patient,
+        [mockPatientStu3.patient],
         { username: 'u', password: 'p' },
         new CodeService(),
         { name: 'FHIR', version: '3.0.0' }

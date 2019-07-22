@@ -152,8 +152,6 @@ export default class PatientTable extends Component {
       .filter(patient => patient.fhirVersion === patients[0].fhirVersion)
       .map(patient => patient.patient);
 
-    console.log(patientsInfo);
-
     this.props.executeCQLArtifact(
       artifact,
       params,
@@ -441,7 +439,7 @@ export default class PatientTable extends Component {
       <div className="patient-table">
         <button aria-label="Multiple Execute CQL"
           disabled={this.props.vsacFHIRCredentials.username == null}
-          className={`button primary-button execute-button ${
+          className={`button primary-button ${
             this.props.vsacFHIRCredentials.username != null ? '' : 'disabled-button'
           }`}
           onClick={() => this.openMultipleExecuteCQLModal()}>
