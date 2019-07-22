@@ -28,6 +28,7 @@ export default class PatientTable extends Component {
       artifactToExecute: null,
       paramsToExecute: [],
       showExecuteCQLModal: false,
+      showMultipleExecuteCQLModal: false,
       testReport: null,
       codeService: new CodeService()
     };
@@ -62,16 +63,28 @@ export default class PatientTable extends Component {
     this.closeViewDetailsModal();
   }
 
-  // ----------------------- EXECUTE CQL MODAL -------------------------- //
+  // ----------------------- EXECUTE CQL MODALS -------------------------- //
 
   openExecuteCQLModal = (patient) => {
     this.setState({ showExecuteCQLModal: true, patientToExecute: patient });
+  }
+
+  openMultipleExecuteCQLModal = () => {
+    this.setState({ showMultipleExecuteCQLModal: true });
   }
 
   closeExecuteCQLModal = () => {
     this.setState({
       showExecuteCQLModal: false,
       patientToExecute: null,
+      artifactToExecute: null,
+      paramsToExecute: []
+    });
+  }
+
+  closeMultipleExecuteCQLModal = () => {
+    this.setState({
+      showMultipleExecuteCQLModal: false,
       artifactToExecute: null,
       paramsToExecute: []
     });
@@ -98,6 +111,11 @@ export default class PatientTable extends Component {
     this.closeExecuteCQLModal();
   }
 
+  handleMultipleExecuteCQL = () => {
+    this.multipleExecuteCQL(this.state.artifactToExecute.value, this.state.paramsToExecute);
+    this.closeMultipleExecuteCQLModal();
+  }
+
   // ----------------------- HANDLE PARAMETERS -------------------------- //
 
   updateParameters = (params) => {
@@ -111,10 +129,35 @@ export default class PatientTable extends Component {
       ? { name: 'FHIR', version: '3.0.0' }
       : { name: 'FHIR', version: '1.0.2' };
 
+    const patientInfo = patient.patient;
+
     this.props.executeCQLArtifact(
       artifact,
       params,
-      patient.patient,
+      [patientInfo],
+      this.props.vsacFHIRCredentials,
+      this.state.codeService,
+      dataModel
+    );
+  }
+
+  multipleExecuteCQL = (artifact, params) => {
+    const { patients } = this.props;
+
+    const dataModel = (patients[0].fhirVersion === 'STU3')
+      ? { name: 'FHIR', version: '3.0.0' }
+      : { name: 'FHIR', version: '1.0.2' };
+
+    const patientsInfo = patients
+      .filter(patient => patient.fhirVersion === patients[0].fhirVersion)
+      .map(patient => patient.patient);
+
+    console.log(patientsInfo);
+
+    this.props.executeCQLArtifact(
+      artifact,
+      params,
+      patientsInfo,
       this.props.vsacFHIRCredentials,
       this.state.codeService,
       dataModel
@@ -252,6 +295,48 @@ export default class PatientTable extends Component {
     );
   }
 
+  renderMultipleExecuteCQLModal() {
+    const artifactOptions = _.map(this.props.artifacts, a => ({ value: a, label: a.name }));
+
+    return (
+      <Modal
+        modalTitle="Multiple Execute CQL"
+        modalId="multiple-execute-cql-modal"
+        modalTheme="light"
+        modalSubmitButtonText={this.state.artifactToExecute == null ? '' : 'Execute CQL'}
+        handleShowModal={this.state.showMultipleExecuteCQLModal}
+        handleCloseModal={this.closeMultipleExecuteCQLModal}
+        handleSaveModal={this.handleMultipleExecuteCQL}>
+
+        <div className="patient-table__modal modal__content">
+          <Select
+            aria-label={'Select Artifact'}
+            inputProps={{ title: 'Select Artifact' }}
+            clearable={false}
+            options={artifactOptions}
+            value={this.state.artifactToExecute}
+            onChange={this.selectArtifactForCQLModal}
+          />
+
+          <TestingParameters
+            parameters={this.state.paramsToExecute}
+            updateParameters={this.updateParameters}
+            vsacFHIRCredentials={this.props.vsacFHIRCredentials}
+            loginVSACUser={this.props.loginVSACUser}
+            setVSACAuthStatus={this.props.setVSACAuthStatus}
+            vsacStatus={this.props.vsacStatus}
+            vsacStatusText={this.props.vsacStatusText}
+            isValidatingCode={this.props.isValidatingCode}
+            isValidCode={this.props.isValidCode}
+            codeData={this.props.codeData}
+            validateCode={this.props.validateCode}
+            resetCodeValidation={this.props.resetCodeValidation}
+          />
+        </div>
+      </Modal>
+    );
+  }
+
   renderTableRow = patient => (
     <tr key={patient._id}>
       <td className="patients__tablecell-wide" data-th="Name">
@@ -354,6 +439,15 @@ export default class PatientTable extends Component {
 
     return (
       <div className="patient-table">
+        <button aria-label="Multiple Execute CQL"
+          disabled={this.props.vsacFHIRCredentials.username == null}
+          className={`button primary-button execute-button ${
+            this.props.vsacFHIRCredentials.username != null ? '' : 'disabled-button'
+          }`}
+          onClick={() => this.openMultipleExecuteCQLModal()}>
+          Multiple Execute CQL
+        </button>
+
         <table className="patients__table">
           <thead>
             <tr>
@@ -374,6 +468,7 @@ export default class PatientTable extends Component {
         {this.renderConfirmDeleteModal()}
         {this.renderViewDetailsModal()}
         {this.renderExecuteCQLModal()}
+        {this.renderMultipleExecuteCQLModal()}
       </div>
     );
   }

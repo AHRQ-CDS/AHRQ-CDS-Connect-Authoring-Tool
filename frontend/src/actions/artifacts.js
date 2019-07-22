@@ -478,7 +478,7 @@ function executeArtifactFailure(error) {
   };
 }
 
-function performExecuteArtifact(elmFiles, artifactName, params, patient, vsacCredentials, codeService, dataModel) {
+function performExecuteArtifact(elmFiles, artifactName, params, patients, vsacCredentials, codeService, dataModel) {
   // Set up the library
   const elmFile = JSON.parse(_.find(elmFiles, f =>
     f.name.replace(/[\s-\\/]/g, '') === artifactName.replace(/[\s-\\/]/g, '')).content);
@@ -495,7 +495,7 @@ function performExecuteArtifact(elmFiles, artifactName, params, patient, vsacCre
     : cqlfhir.PatientSource.FHIRv102();
 
   // Load the patient source with the patient
-  patientSource.loadBundles([patient]);
+  patientSource.loadBundles(patients);
 
   // Extract the value sets from the ELM
   let valueSets = [];
@@ -592,7 +592,7 @@ function convertParameters(params = []) {
   return paramsObj;
 }
 
-export function executeCQLArtifact(artifact, params, patient, vsacCredentials, codeService, dataModel) {
+export function executeCQLArtifact(artifact, params, patients, vsacCredentials, codeService, dataModel) {
   artifact.dataModel = dataModel;
   const artifactName = `${slug(artifact.name ? artifact.name : 'untitled')}-v${artifact.version}`;
 
@@ -614,12 +614,12 @@ export function executeCQLArtifact(artifact, params, patient, vsacCredentials, c
       res.data.elmFiles,
       artifactName,
       params,
-      patient,
+      patients,
       vsacCredentials,
       codeService,
       dataModel
     ))
-      .then(r => dispatch(executeArtifactSuccess(r, artifact, patient)))
+      .then(r => dispatch(executeArtifactSuccess(r, artifact, patients[0])))
       .catch(error => dispatch(executeArtifactFailure(error)));
   };
 }
