@@ -1,6 +1,7 @@
 const _ = require('lodash');
 const unzipper = require('unzipper');
 const CQLLibrary = require('../models/cqlLibrary');
+const Artifact = require('../models/artifact');
 const makeCQLtoELMRequest = require('../handlers/cqlHandler').makeCQLtoELMRequest;
 
 const supportedFHIRVersions = ['1.0.2', '3.0.0'];
@@ -192,6 +193,14 @@ const filterCQLFiles = file => {
   return file.type === 'File' && file.path.endsWith('.cql') && !fileName.startsWith('.');
 };
 
+function getCurrentFHIRVersion(libraries) {
+  let currentFHIRVersion = ''; // Empty string means no FHIR version set yet;
+  libraries.forEach((lib) => {
+    if (lib.fhirVersion) currentFHIRVersion = lib.fhirVersion;
+  });
+  return currentFHIRVersion;
+}
+
 module.exports = {
   allGet,
   singleGet,
@@ -309,10 +318,14 @@ function singlePost(req, res) {
                   _.differenceWith(nonAuthoringToolExportLibraries, libraries, compareNameAndVersion);
                 const duplicateLibraries = _.difference(nonAuthoringToolExportLibraries, nonDuplicateLibraries);
 
-                const fhirVersion = libraries.length > 0 ? libraries[0].fhirVersion : null; // null means no FHIR version locked yet
-                const fhirVersionsMatch = fhirVersion ? fhirVersion === elmResultsToSave[0].fhirVersion : true; // If no FHIR version locked, any version can be uploaded
-                const unsupportedFHIRVersion =
-                  supportedFHIRVersions.findIndex(v => v === elmResultsToSave[0].fhirVersion) === -1;
+                const newLibFHIRVersion = getCurrentFHIRVersion(elmResultsToSave);
+                const fhirVersion = getCurrentFHIRVersion(libraries);
+
+                // If no FHIR version locked, any version can be uploaded. If no FHIR version on any libraries being added, they can be added
+                const fhirVersionsMatch = (fhirVersion && newLibFHIRVersion) ? fhirVersion === newLibFHIRVersion : true;
+                // If new libraries have no FHIR version or it matches a supported FHIR version, we support it
+                const supportedFHIRVersion = newLibFHIRVersion === '' ||
+                  supportedFHIRVersions.findIndex(v => v === newLibFHIRVersion) !== -1;
 
                 const exportLibrariesNotUploaded =
                   authoringToolExportLibraries.map(lib => `library ${lib.name} version ${lib.version}`).join(', ');
@@ -325,7 +338,7 @@ function singlePost(req, res) {
                   const message = 'A library using a different version of FHIR is uploaded. Only one FHIR version can \
                     be supported at a time.';
                   res.status(400).send(message);
-                } else if (unsupportedFHIRVersion) {
+                } else if (!supportedFHIRVersion) {
                   res.status(400).send('Unsupported FHIR version.');
                 } else {
                   CQLLibrary.insertMany(nonDuplicateLibraries, (error, response) => {
@@ -341,12 +354,39 @@ function singlePost(req, res) {
                       if (exportLibrariesNotUploaded.length > 0) {
                         message = message.concat(` ${exportLibrariesNotUploadedMessage}`);
                       }
-                      res.status(201).send(message);
+                      if (newLibFHIRVersion) {
+                        Artifact.update({ user: req.user.uid, _id: artifactId }, { fhirVersion: newLibFHIRVersion },
+                          (error, response) => {
+                            if (error) res.status(500).send(error);
+                            else if (response.n === 0) res.sendStatus(404);
+                            else res.status(201).send(message);
+                          });
+                      } else {
+                        res.status(201).send(message);
+                      }
                     } else {
                       if (exportLibrariesNotUploaded.length > 0) {
-                        res.status(201).send(exportLibrariesNotUploadedMessage);
+                        if (newLibFHIRVersion) {
+                          Artifact.update({ user: req.user.uid, _id: artifactId }, { fhirVersion: newLibFHIRVersion },
+                            (error, response) => {
+                              if (error) res.status(500).send(error);
+                              else if (response.n === 0) res.sendStatus(404);
+                              else res.status(201).send(exportLibrariesNotUploadedMessage);
+                            });
+                        } else {
+                          res.status(201).send(exportLibrariesNotUploadedMessage);
+                        }
                       } else {
-                        res.status(201).json(response);
+                        if (newLibFHIRVersion) {
+                          Artifact.update({ user: req.user.uid, _id: artifactId }, { fhirVersion: newLibFHIRVersion },
+                            (error, response) => {
+                              if (error) res.status(500).send(error);
+                              else if (response.n === 0) res.sendStatus(404);
+                              else res.status(201).json(response);
+                            });
+                        } else {
+                          res.status(201).json(response);
+                        }
                       }
                     }
                   });
@@ -378,10 +418,15 @@ function singlePost(req, res) {
           else {
             const elmResult = elmResultsToSave[0]; // This is the single file upload case, so elmResultsToSave will only ever have one item.
             const dupLibrary = libraries.find(lib => lib.name === elmResult.name && lib.version === elmResult.version);
-            const fhirVersion = libraries.length > 0 ? libraries[0].fhirVersion : null; // null means no FHIR version locked yet
-            const fhirVersionsMatch = fhirVersion ? fhirVersion === elmResult.fhirVersion : true; // If no FHIR version locked, any version can be uploaded
-            const unsupportedFHIRVersion =
-              supportedFHIRVersions.findIndex(v => v === elmResult.fhirVersion) === -1;
+            const newLibFHIRVersion = elmResult.fhirVersion;
+            const fhirVersion = getCurrentFHIRVersion(libraries);
+
+            // If no FHIR version locked, any version can be uploaded. If no FHIR version used by the library, it can be uploaded
+            const fhirVersionsMatch = (fhirVersion && newLibFHIRVersion) ? fhirVersion === newLibFHIRVersion : true;
+            // If new library has no FHIR version or it matches a supported FHIR version, we support it
+            const supportedFHIRVersion = newLibFHIRVersion === '' ||
+              supportedFHIRVersions.findIndex(v => v === newLibFHIRVersion) !== -1;
+
 
             if (elmErrors.length > 0) {
               res.status(400).send(elmErrors);
@@ -391,12 +436,25 @@ function singlePost(req, res) {
               const message = 'A library using a different version of FHIR is uploaded. Only one FHIR version can be \
                 supported at a time.';
               res.status(400).send(message);
-            } else if (unsupportedFHIRVersion) {
+            } else if (!supportedFHIRVersion) {
               res.status(400).send('Unsupported FHIR version.');
             } else {
               CQLLibrary.insertMany(elmResult, (error, response) => {
                 if (error) res.status(500).send(error);
-                else res.status(201).json(response);
+                else {
+                  // If the new library has a FHIR version, it can only be added if it either first sets a FHIR version
+                  // or it matches so update the artifact to that FHIR version
+                  if (newLibFHIRVersion) {
+                    Artifact.update({ user: req.user.uid, _id: artifactId }, { fhirVersion: newLibFHIRVersion },
+                      (error, response) => {
+                        if (error) res.status(500).send(error);
+                        else if (response.n === 0) res.sendStatus(404);
+                        else res.status(201).json(response);
+                      });
+                  } else {
+                    res.status(201).json(response);
+                  }
+                }
               });
             }
           }
@@ -412,10 +470,25 @@ function singlePost(req, res) {
 function singleDelete(req, res) {
   if (req.user) {
     const { id } = req.params;
-    CQLLibrary.remove({ user: req.user.uid, _id: id }, (error, response) => {
+    CQLLibrary.findOneAndRemove({ user: req.user.uid, _id: id }, (error, response) => {
       if (error) res.status(500).send(error);
-      else if (response.result.n === 0) res.sendStatus(404);
-      else res.sendStatus(200);
+      else if (response === null) res.sendStatus(404);
+      else {
+        const linkedArtifactId = response.linkedArtifactId;
+        CQLLibrary.find({ user: req.user.uid, linkedArtifactId }, (error, libraries) => {
+          if (error) res.status(500).send(error);
+          else {
+            const currentFHIRVersion = getCurrentFHIRVersion(libraries);
+            Artifact.update({ user: req.user.uid, _id: linkedArtifactId }, { fhirVersion: currentFHIRVersion },
+              (error, response) => {
+                if (error) res.status(500).send(error);
+                else if (response.n === 0) res.sendStatus(404);
+                else res.status(200);
+              });
+          }
+        });
+        res.sendStatus(200);
+      }
     });
   } else {
     res.sendStatus(401);

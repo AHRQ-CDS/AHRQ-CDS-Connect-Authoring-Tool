@@ -5,6 +5,7 @@ const Schema = mongoose.Schema;
 const ArtifactSchema = new Schema({
   name: String,
   version: String,
+  fhirVersion: String,
   expTreeInclude: Object,
   expTreeExclude: Object,
   recommendations: Array,

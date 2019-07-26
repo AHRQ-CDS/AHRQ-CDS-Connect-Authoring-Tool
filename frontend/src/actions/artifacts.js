@@ -198,6 +198,7 @@ export function initializeArtifact(andTemplate, orTemplate) {
     _id: null,
     name: 'Untitled Artifact',
     version: '1',
+    fhirVersion: '',
     expTreeInclude: newTrees.newExpTreeInclude,
     expTreeExclude: newTrees.newExpTreeExclude,
     recommendations: [],
