@@ -321,7 +321,8 @@ function singlePost(req, res) {
                 const newLibFHIRVersion = getCurrentFHIRVersion(elmResultsToSave);
                 const fhirVersion = getCurrentFHIRVersion(libraries);
 
-                // If no FHIR version locked, any version can be uploaded. If no FHIR version on any libraries being added, they can be added
+                // If no FHIR version locked, any version can be uploaded.
+                // If no FHIR version on any libraries being added, they can be added
                 const fhirVersionsMatch = (fhirVersion && newLibFHIRVersion) ? fhirVersion === newLibFHIRVersion : true;
                 // If new libraries have no FHIR version or it matches a supported FHIR version, we support it
                 const supportedFHIRVersion = newLibFHIRVersion === '' ||
@@ -421,7 +422,8 @@ function singlePost(req, res) {
             const newLibFHIRVersion = elmResult.fhirVersion;
             const fhirVersion = getCurrentFHIRVersion(libraries);
 
-            // If no FHIR version locked, any version can be uploaded. If no FHIR version used by the library, it can be uploaded
+            // If no FHIR version locked, any version can be uploaded.
+            // If no FHIR version used by the library, it can be uploaded
             const fhirVersionsMatch = (fhirVersion && newLibFHIRVersion) ? fhirVersion === newLibFHIRVersion : true;
             // If new library has no FHIR version or it matches a supported FHIR version, we support it
             const supportedFHIRVersion = newLibFHIRVersion === '' ||
