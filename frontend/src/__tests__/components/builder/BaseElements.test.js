@@ -39,7 +39,9 @@ beforeEach(() => {
     isValidatingCode: false,
     validateCode: jest.fn(),
     resetCodeValidation: jest.fn(),
-    validateReturnType: false
+    validateReturnType: false,
+    externalCqlList: [],
+    loadExternalCqlList: jest.fn()
   });
 
   listBaseElementComponent = fullRenderComponentOnBody(BaseElements, {
@@ -69,7 +71,9 @@ beforeEach(() => {
     isValidatingCode: false,
     validateCode: jest.fn(),
     resetCodeValidation: jest.fn(),
-    validateReturnType: false
+    validateReturnType: false,
+    externalCqlList: [],
+    loadExternalCqlList: jest.fn()
   });
 });
 

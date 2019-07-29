@@ -245,5 +245,11 @@ module.exports = [
         ]
       },
     ]
-  }
+  },
+  {
+    id: 12,
+    icon: 'sign-in',
+    name: 'External CQL',
+    entries: []
+  },
 ];

@@ -61,6 +61,23 @@ button.disabled-button {
   }
 }
 
+button.disabled-dropdown {
+  @include button(
+    $disabled-button-text-color,
+    rgba(0,0,0,0),
+    rgba(0,0,0,0),
+    $disabled-button-border-hover-color,
+    none
+  );
+
+  &:hover,
+  &:focus,
+  &:active {
+    background-color: $disabled-button-bg-color !important;
+    color: $disabled-button-text-color !important;
+  }
+}
+
 button.danger-button {
   @include button($white, darken($red, 10%), darken($red, 10%), darken($red, 10%), none);
 }

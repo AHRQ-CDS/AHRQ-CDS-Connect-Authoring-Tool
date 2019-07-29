@@ -1,4 +1,5 @@
 const Artifact = require('../models/artifact');
+const CQLLibrary = require('../models/cqlLibrary');
 
 module.exports = {
   allGet,
@@ -75,7 +76,12 @@ function singleDelete(req, res) {
     Artifact.remove({ user: req.user.uid, _id: id }, (error, response) => {
       if (error) res.status(500).send(error);
       else if (response.result.n === 0) res.sendStatus(404);
-      else res.sendStatus(200);
+      else {
+        CQLLibrary.remove({ user: req.user.uid, linkedArtifactId: id }, (error, response) => {
+          if (error) res.status(500).send(error);
+          else res.sendStatus(200);
+        });
+      }
     });
   } else {
     res.sendStatus(401);

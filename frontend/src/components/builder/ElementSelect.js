@@ -27,8 +27,11 @@ const optionRenderer = option => (
     {option.vsacAuthRequired &&
       <FontAwesome name="key" className={`element-select__option-category ${option.disabled ? 'is-disabled' : ''}`} />
     }
-    { option.disabled &&
+    {option.disabled &&
       <FontAwesome name="ban" className={'element-select__option-category is-disabled'} />
+    }
+    {option.displayReturnType &&
+      <span className="element-select__option-value">{` (${option.displayReturnType})`}</span>
     }
   </div>
 );
@@ -44,6 +47,7 @@ const elementOptions = [
   { value: 'condition', label: 'Condition', vsacAuthRequired: true, template: 'GenericCondition_vsac' },
   { value: 'demographics', label: 'Demographics', vsacAuthRequired: false },
   { value: 'encounter', label: 'Encounter', vsacAuthRequired: true, template: 'GenericEncounter_vsac' },
+  { value: 'externalCqlElement', label: 'External CQL', vsacAuthRequired: false },
   { value: 'listOperations', label: 'List Operations', vsacAuthRequired: false },
   {
     value: 'medicationStatement',
@@ -70,7 +74,9 @@ export default class ElementSelect extends Component {
 
     this.state = {
       categories: this.internalCategories.sort(sortAlphabeticallyByKey('name')),
-      selectedElement: null
+      selectedElement: null,
+      selectedExternalLibrary: null,
+      selectedExternalDefinition: null
     };
 
     this.elementInputId = '';
@@ -78,6 +84,8 @@ export default class ElementSelect extends Component {
   }
 
   componentWillMount() {
+    const { artifactId, loadExternalCqlList } = this.props;
+    loadExternalCqlList(artifactId);
     this.setState({ selectedCategory: this.state.categories.find(g => g.name === 'All') });
     this.elementInputId = _.uniqueId('element-select__element-input-');
     this.categoryInputId = _.uniqueId('element-select__category-input-');
@@ -95,6 +103,10 @@ export default class ElementSelect extends Component {
     const updatedCategory = this.state.categories.find(g =>
       g.name === this.state.selectedCategory.name);
     this.onSelectedCategoryChange(updatedCategory);
+
+    if (nextProps.artifactId !== this.props.artifactId) {
+      this.props.loadExternalCqlList(nextProps.artifactId);
+    }
   }
 
   generateInternalCategories = (props) => {
@@ -104,6 +116,7 @@ export default class ElementSelect extends Component {
     const baseElementsIndex = categoriesCopy.findIndex(cat => cat.name === 'Base Elements');
     const listOperationsIndex = categoriesCopy.findIndex(cat => cat.name === 'List Operations');
     const operationsIndex = categoriesCopy.findIndex(cat => cat.name === 'Operations');
+    const externalCqlIndex = categoriesCopy.findIndex(cat => cat.name === 'External CQL');
 
     if (operationsIndex >= 0 && listOperationsIndex >= 0) {
       const operationEntries = categoriesCopy[operationsIndex].entries.map((entry) => {
@@ -140,10 +153,11 @@ export default class ElementSelect extends Component {
         });
       });
     }
+
     if (props.parameters.length) {
       let parametersCategory;
       if (paramsIndex >= 0) {
-        [parametersCategory] = categoriesCopy.splice(paramsIndex, 1);
+        parametersCategory = categoriesCopy[paramsIndex];
       } else {
         parametersCategory = { icon: 'sign-in', name: 'Parameters', entries: [] };
       }
@@ -170,13 +184,21 @@ export default class ElementSelect extends Component {
           ]
         });
       });
-
-      categoriesCopy.push(parametersCategory);
     } else if (props.parameters.length === 0 && paramsIndex >= 0) {
       // No parameters have been made. Restrict creating new parameters within the workspace.
       categoriesCopy[paramsIndex].entries = [];
     } else {
       categoriesCopy.push({ icon: 'sign-in', name: 'Parameters', entries: [] });
+    }
+
+    if (props.externalCqlList.length && categoriesCopy[externalCqlIndex]) {
+      categoriesCopy[externalCqlIndex].entries = props.externalCqlList.map(e =>
+        ({
+          id: e.name,
+          name: e.name,
+          type: 'externalCqlElement',
+          definitions: e.details.definitions.concat(e.details.parameters)
+        }));
     }
 
     _.each(categoriesCopy, (cat) => {
@@ -264,20 +286,53 @@ export default class ElementSelect extends Component {
     );
   }
 
+  onExternalDefinitionSelected = (selectedExternalDefinition) => {
+    this.setState({ selectedExternalDefinition });
+
+    const suggestion = {
+      id: selectedExternalDefinition.uniqueId,
+      name: 'External CQL Element',
+      type: selectedExternalDefinition.type,
+      template: 'GenericStatement',
+      returnType: selectedExternalDefinition.returnType,
+      parameters: [
+        { id: 'element_name', type: 'string', name: 'Element Name', value: selectedExternalDefinition.value },
+        {
+          id: 'externalCqlReference',
+          type: 'reference',
+          name: 'reference',
+          value: {
+            id: `${selectedExternalDefinition.value} from ${this.state.selectedExternalLibrary.name}`,
+            element: selectedExternalDefinition.value,
+            library: this.state.selectedExternalLibrary.name
+          },
+          static: true
+        },
+        { id: 'comment', type: 'textarea', name: 'Comment', value: '' }
+      ]
+    };
+
+    this.onSuggestionSelected(suggestion);
+  }
+
   onNoAuthElementSelected = (element) => {
     const suggestion = this.state.categories
       .find(cat => cat.name === element.type)
       .entries.find(entry => entry.id === element.value);
 
-    this.onSuggestionSelected(suggestion);
+    if (suggestion.type === 'externalCqlElement') {
+      this.setState({ selectedExternalLibrary: suggestion, selectedExternalDefinition: null });
+    } else {
+      this.onSuggestionSelected(suggestion);
+    }
   }
 
   onElementSelected = (selectedElement) => {
-    this.setState({ selectedElement });
+    this.setState({ selectedElement, selectedExternalLibrary: null, selectedExternalDefinition: null });
   }
 
   render() {
-    const { selectedElement } = this.state;
+    const { selectedElement, selectedExternalLibrary, selectedExternalDefinition } = this.state;
     const placeholderText = 'Choose element type';
     const elementOptionsToDisplay = _.cloneDeep(elementOptions).filter((e) => {
       e.disabled = this.props.disableElement || false;
@@ -300,8 +355,7 @@ export default class ElementSelect extends Component {
         noAuthElementOptions = noAuthElementOptions.filter(element => element.uniqueId !== this.props.elementUniqueId);
       }
     }
-    const value = selectedElement && selectedElement.value;
-
+    const selectedElementValue = selectedElement && selectedElement.value;
     let noAuthPlaceholder = '';
     if (selectedElement) {
       if (selectedElement.value === 'baseElement') {
@@ -310,6 +364,27 @@ export default class ElementSelect extends Component {
         noAuthPlaceholder = `Select ${selectedElement.label} element`;
       }
     }
+    const externalLibraryPlaceholder = 'Choose definition or parameter';
+    const selectedExternalLibraryName = selectedExternalLibrary && selectedExternalLibrary.name;
+    let selectedExternalLibraryOptions;
+    if (selectedExternalLibrary) {
+      selectedExternalLibraryOptions = selectedExternalLibrary.definitions.map((definition) => {
+        const name = definition.name;
+        const returnType = definition.calculatedReturnType;
+        const displayReturnType = definition.displayReturnType
+          ? definition.displayReturnType
+          : _.startCase(definition.calculatedReturnType);
+        return ({
+          value: name,
+          label: name,
+          type: 'externalCqlElement',
+          uniqueId: _.uniqueId(),
+          returnType,
+          displayReturnType
+        });
+      });
+    }
+    const selectedExternalDefinitionValue = selectedExternalDefinition && selectedExternalDefinition.value;
 
     return (
       <div className="element-select form__group">
@@ -322,7 +397,7 @@ export default class ElementSelect extends Component {
           <Select
             className="element-select__element-field"
             name="element-select__element-field"
-            value={value}
+            value={selectedElementValue}
             placeholder={placeholderText}
             aria-label={placeholderText}
             clearable={false}
@@ -335,14 +410,28 @@ export default class ElementSelect extends Component {
           {selectedElement && !selectedElement.vsacAuthRequired &&
             <Select
               className="element-select__element-field"
+              value={selectedExternalLibraryName}
               placeholder={noAuthPlaceholder}
               aria-label={noAuthPlaceholder}
+              clearable={false}
               options={noAuthElementOptions}
               onChange={this.onNoAuthElementSelected}
               optionRenderer={optionRenderer}
               />
           }
         </div>
+
+          {selectedElement && !selectedElement.vsacAuthRequired && selectedExternalLibrary &&
+            <Select
+              className="element-select__external-cql-field"
+              value={selectedExternalDefinitionValue}
+              placeholder={externalLibraryPlaceholder}
+              aria-label={externalLibraryPlaceholder}
+              options={selectedExternalLibraryOptions}
+              onChange={this.onExternalDefinitionSelected}
+              optionRenderer={optionRenderer}
+              />
+          }
 
         {selectedElement && selectedElement.vsacAuthRequired && this.renderVSACLogin()}
       </div>
@@ -351,6 +440,7 @@ export default class ElementSelect extends Component {
 }
 
 ElementSelect.propTypes = {
+  artifactId: PropTypes.string,
   categories: PropTypes.array.isRequired,
   onSuggestionSelected: PropTypes.func.isRequired,
   booleanParameters: PropTypes.arrayOf(PropTypes.shape({
@@ -378,4 +468,6 @@ ElementSelect.propTypes = {
   inBaseElements: PropTypes.bool.isRequired,
   elementUniqueId: PropTypes.string,
   disableElement: PropTypes.bool,
+  externalCqlList: PropTypes.array.isRequired,
+  loadExternalCqlList: PropTypes.func.isRequired
 };

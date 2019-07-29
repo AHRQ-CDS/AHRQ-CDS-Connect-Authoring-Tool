@@ -10,6 +10,7 @@ import templatesReducer from './templates';
 import valueSetsReducer from './value_sets';
 import vsacReducer from './vsac';
 import modifiersReducer from './modifiers';
+import externalCqlReducer from './external_cql';
 
 const appReducer = combineReducers({
   routing: routerReducer,
@@ -20,7 +21,8 @@ const appReducer = combineReducers({
   templates: templatesReducer,
   valueSets: valueSetsReducer,
   vsac: vsacReducer,
-  modifiers: modifiersReducer
+  modifiers: modifiersReducer,
+  externalCQL: externalCqlReducer
 });
 
 const rootReducer = (state, action) => {

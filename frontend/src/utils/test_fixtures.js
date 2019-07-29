@@ -248,6 +248,7 @@ const genericElementTypes = [
   { value: 'condition', label: 'Condition', vsacAuthRequired: true, template: 'GenericCondition_vsac' },
   { value: 'demographics', label: 'Demographics', vsacAuthRequired: false },
   { value: 'encounter', label: 'Encounter', vsacAuthRequired: true, template: 'GenericEncounter_vsac' },
+  { value: 'externalCqlElement', label: 'External CQL', vsacAuthRequired: false },
   {
     value: 'medicationStatement',
     label: 'Medication Statement',

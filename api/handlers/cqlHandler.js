@@ -1,5 +1,6 @@
 const config = require('../config');
 const Artifact = require('../models/artifact');
+const CQLLibrary = require('../models/cqlLibrary');
 const _ = require('lodash');
 const slug = require('slug');
 const ejs = require('ejs');
@@ -37,6 +38,7 @@ let fhirTarget;
 module.exports = {
   objToCql,
   objToELM,
+  makeCQLtoELMRequest,
   idToObj,
   writeZip,
   buildCQL
@@ -264,6 +266,7 @@ class CqlArtifact {
     this.version = artifact.version ? artifact.version : 1;
     this.dataModel = artifact.dataModel;
     this.includeLibraries = (artifact.dataModel.version === '3.0.0') ? includeLibrariesStu3 : includeLibrariesDstu2;
+    this.includeLibraries = this.includeLibraries.concat(artifact.externalLibs || []);
     this.context = artifact.context ? artifact.context : 'Patient';
     this.inclusions = artifact.expTreeInclude;
     this.parameters = artifact.parameters;
@@ -640,6 +643,8 @@ class CqlArtifact {
             const referencedElement = this.baseElements.find(e => e.uniqueId === parameter.value.id);
             const referencedElementName = referencedElement.parameters[0].value || referencedElement.uniqueId;
             context.values = [ `"${referencedElementName}"` ];
+          } else if (parameter.id === 'externalCqlReference') {
+            context.values = [ `"${parameter.value.library}"."${parameter.value.element}"` ];
           }
           break;
         }
@@ -786,7 +791,7 @@ class CqlArtifact {
     return {
       name: this.name,
       version: this.version,
-      filename: this.name,
+      filename: `${this.name}-v${this.version}`,
       text: this.toString(),
       type: 'text/plain'
     };
@@ -976,28 +981,73 @@ function addValueSets(parameter, valueSetObject, attribute) {
 
 // Creates the cql file from an artifact object
 function objToCql(req, res) {
-  const artifact = new CqlArtifact(req.body);
-  res.attachment('archive-name.zip');
-  writeZip(artifact, res, (err) => {
-    if (err) {
-      res.status(500).send({ error: err.message });
+  const user = req.user.uid;
+  const artifactId = req.body._id;
+  const artifactFromRequest = req.body;
+  artifactFromRequest.externalLibs = [];
+  const externalLibs = [];
+
+  // Add all external libraries
+  CQLLibrary.find({ user: user, linkedArtifactId: { $ne: null, $eq: artifactId } }, (error, libraries) => {
+    if (error) res.status(500).send({ error: error.message });
+    else {
+      libraries.forEach(lib => {
+        artifactFromRequest.externalLibs.push({ name: lib.name, version: lib.version, alias: '' });
+        const libJson = {
+          filename: `${lib.name}-v${lib.version}`,
+          version: lib.version,
+          text: lib.details.cqlFileText,
+          type: 'text/plain'
+        };
+        externalLibs.push(libJson);
+      });
+      const artifact = new CqlArtifact(artifactFromRequest);
+      res.attachment('archive-name.zip');
+      writeZip(artifact, externalLibs, res, (err) => {
+        if (err) {
+          res.status(500).send({ error: err.message });
+        }
+      });
     }
   });
 }
 
 function objToELM(req, res) {
-  const artifact = new CqlArtifact(req.body);
-  validateELM(artifact, res, (err) => {
-    if(err) {
-      res.status(500).send({error: err.message});
+  const user = req.user.uid;
+  const artifactId = req.body._id;
+  const artifactFromRequest = req.body;
+  artifactFromRequest.externalLibs = [];
+  const externalLibs = [];
+
+  // Add all external libraries
+  CQLLibrary.find({ user: user, linkedArtifactId: { $ne: null, $eq: artifactId } }, (error, libraries) => {
+    if (error) res.status(500).send({ error: error.message });
+    else {
+      libraries.forEach(lib => {
+        artifactFromRequest.externalLibs.push({ name: lib.name, version: lib.version, alias: '' });
+        const libJson = {
+          filename: `${lib.name}-v${lib.version}`,
+          version: lib.version,
+          text: lib.details.cqlFileText,
+          type: 'text/plain'
+        };
+        externalLibs.push(libJson);
+      });
+      const artifact = new CqlArtifact(artifactFromRequest);
+      validateELM(artifact, externalLibs, res, (err) => {
+        if (err) {
+          res.status(500).send({ error: err.message });
+        }
+      });
     }
-  })
+  });
 }
 
 
-function validateELM(cqlArtifact, writeStream, callback) {
+function validateELM(cqlArtifact, externalLibs, writeStream, callback) {
   const artifactJSON = cqlArtifact.toJson();
-  convertToElm(artifactJSON, (err, elmFiles) => {
+  const artifacts = [artifactJSON, ...externalLibs];
+  convertToElm(artifacts, (err, elmFiles) => {
     if(err) {
       callback(err);
       return;
@@ -1018,12 +1068,13 @@ function validateELM(cqlArtifact, writeStream, callback) {
 }
 
 
-function writeZip(cqlArtifact, writeStream, callback /* (error) */) {
+function writeZip(cqlArtifact, externalLibs, writeStream, callback /* (error) */) {
   // Artifact JSON is generated first and passed in to avoid incorrect EJS rendering.
   // TODO: Consider separating EJS rendering from toJSON() or toString() methods.
   const artifactJson = cqlArtifact.toJson();
+  const artifacts = [artifactJson, ...externalLibs];
   // We must first convert to ELM before packaging up
-  convertToElm(artifactJson, (err, elmFiles) => {
+  convertToElm(artifacts, (err, elmFiles) => {
     if (err) {
       callback(err);
       return;
@@ -1033,6 +1084,9 @@ function writeZip(cqlArtifact, writeStream, callback /* (error) */) {
       .on('error', callback);
     writeStream.on('close', callback);
     archive.pipe(writeStream);
+    externalLibs.forEach(artifact => {
+      archive.append(artifact.text, { name: `${artifact.filename}.cql` });
+    });
     archive.append(artifactJson.text, { name: `${artifactJson.filename}.cql` });
     elmFiles.forEach((e, i) => {
       archive.append(e.content.replace(/\r\n|\r|\n/g, '\r\n'), { name: `${e.name}.json` });
@@ -1048,7 +1102,7 @@ function writeZip(cqlArtifact, writeStream, callback /* (error) */) {
   });
 }
 
-function convertToElm(artifactJson, callback /* (error, elmFiles) */) {
+function convertToElm(artifacts, callback /* (error, elmFiles) */) {
   // If CQL-to-ELM is disabled, this function should basically be a no-op
   if (!config.get('cqlToElm.active')) {
     callback(null, []);
@@ -1069,29 +1123,39 @@ function convertToElm(artifactJson, callback /* (error, elmFiles) */) {
     }
 
     const fileStreams = files.map(f => fs.createReadStream(f));
+    makeCQLtoELMRequest(artifacts, fileStreams, callback);
+  });
+}
 
-    // NOTE: the request isn't posted until the next event loop, so we can modify it after calling request.post
-    const cqlReq = request.post(config.get('cqlToElm.url'), (err2, resp, body) => {
-      if (err2) {
-        callback(err2);
-        return;
-      }
-      const contentType = resp.headers['Content-Type'] || resp.headers['content-type'];
-      if (contentType === 'text/html') {
-        console.log(body);
-      }
-      // The body is multi-part containing an ELM file in each part, so we need to split it
-      splitELM(body, contentType, callback);
+function makeCQLtoELMRequest(files, fileStreams, callback) {
+  const requestEndpoint = `${config.get('cqlToElm.url')}?result-types=true&signatures=All`;
+  // NOTE: the request isn't posted until the next event loop, so we can modify it after calling request.post
+  const cqlReq = request.post(requestEndpoint, (err2, resp, body) => {
+    if (err2) {
+      callback(err2);
+      return;
+    }
+    const contentType = resp.headers['Content-Type'] || resp.headers['content-type'];
+    if (contentType === 'text/html') {
+      console.log(body);
+    }
+    // The body is multi-part containing an ELM file in each part, so we need to split it
+    splitELM(body, contentType, callback);
+  });
+  const form = cqlReq.form();
+  if (files) {
+    files.forEach(file => {
+      form.append(file.filename, file.text, {
+        filename: file.filename,
+        contentType: file.type
+      });
     });
-    const form = cqlReq.form();
-    form.append(artifactJson.filename, artifactJson.text, {
-      filename: artifactJson.filename,
-      contentType: artifactJson.type
-    });
+  }
+  if (fileStreams) {
     fileStreams.forEach((f) => {
       form.append(path.basename(f.path, '.cql'), f);
     });
-  });
+  }
 }
 
 function splitELM(body, contentType, callback /* (error, elmFiles) */) {

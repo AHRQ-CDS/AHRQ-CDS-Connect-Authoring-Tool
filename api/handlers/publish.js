@@ -19,7 +19,9 @@ function publish(req, res) {
   const artifact = cqlHandler.buildCQL(req.body.data);
   const fd = tmp.fileSync({ postfix: '.zip' });
   const output = fs.createWriteStream(fd.name);
-  cqlHandler.writeZip(artifact, output, (err) => {
+  // TODO: cqlHandler.writeZip has been updated and the call to it here needs to be updated accordingly.
+  // A second argument should be an array of any external libraries that the artifact uses.
+  cqlHandler.writeZip(artifact, [], output, (err) => {
     if (err) {
       res.status(500).send({ error: err.message });
       return;
@@ -50,6 +52,9 @@ function publish(req, res) {
 // eslint-disable-next-line max-len
 //       let paragraphUuid = null //responseBody._embedded[`${config.get('repo.url')}/rest/relation/node/artifact/field_artifact_representation`][0].uuid[0].value;
 //       request.get(`${config.get('repo.url')}/rest/session/token`, function(err, response, body){
+//           // TODO: convertToElm has been updated and the call to it here needs to be updated accordingly.
+//           // The first argument should now be an array that includes the current artifact
+//           // and any external libraries it uses
 //           convertToElm(req, res, {paragraph: paragraphUuid, csrf: body});
 //       })
 //

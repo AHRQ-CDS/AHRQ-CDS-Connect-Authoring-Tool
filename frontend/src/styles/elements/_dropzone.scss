@@ -1,0 +1,17 @@
+.dropzone {
+  margin: auto;
+  padding: 2em 1em;
+  text-align: center;
+  border-width: 0.25em;
+  border-color: $gray;
+  border-style: dashed;
+  border-radius: 1em;
+  cursor: pointer;
+
+  &__warning {
+    font-size: 0.9em;
+    color: $brand-danger;
+    font-style: italic;
+    margin: 0 60px;
+  }
+}

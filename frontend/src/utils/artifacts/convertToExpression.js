@@ -310,7 +310,7 @@ function addElementNames(expressionArray, elementNames, type, isBaseElementAndOr
 
 function addExpressionText(expressionArray, expression, type = null) {
   // Add any text needed ahead of the modifier
-  if (expression.leadingText && (type !== 'parameter')) {
+  if (expression.leadingText && !(type === 'parameter' || type === 'externalCqlElement')) {
     expressionArray.push({ expressionText: expression.leadingText, isExpression: false });
   }
   // Add the modifier text
@@ -431,15 +431,15 @@ function orderExpressionSentenceArray(
       hasStarted = true;
     }
   } else if (!returnsPlural && returnsBoolean && !checkExistenceExpression) {
-    if (notExpression && (type === 'parameter')) {
+    if (notExpression && (type === 'parameter' || type === 'externalCqlElement')) {
       orderedExpressionArray.push({ expressionText: 'Not', isExpression: true });
       hasStarted = true;
-    } else if (notExpression && (type !== 'parameter')) {
+    } else if (notExpression && !(type === 'parameter' || type === 'externalCqlElement')) {
       orderedExpressionArray.push({ expressionText: 'There does', isExpression: false });
       orderedExpressionArray.push({ expressionText: 'not', isExpression: true });
       orderedExpressionArray.push({ expressionText: 'exist', isExpression: false });
       hasStarted = true;
-    } else if (type !== 'parameter') {
+    } else if (!(type === 'parameter' || type === 'externalCqlElement')) {
       orderedExpressionArray.push({ expressionText: 'There exists', isExpression: false });
       hasStarted = true;
     }
@@ -493,8 +493,10 @@ function orderExpressionSentenceArray(
     } else {
       elementText = 'group';
     }
+  } else if (type === 'externalCqlElement') {
+    elementText = 'external CQL element';
   }
-  const elementArticle = (type !== 'parameter') ? getArticle(elementText) : 'the';
+  const elementArticle = (!(type === 'parameter' || type === 'externalCqlElement')) ? getArticle(elementText) : 'the';
   if (hasStarted) {
     if (returnsPlural) {
       if (type !== 'Intersect' && type !== 'Union') elementText = `${elementText}s`;
@@ -525,7 +527,7 @@ function orderExpressionSentenceArray(
   if (type === 'Intersect' || type === 'Union') {
     orderedExpressionArray.push({ expressionText: 'of', isExpression: false });
   }
-  if (type === 'parameter') {
+  if (type === 'parameter' || type === 'externalCqlElement') {
     orderedExpressionArray.push({ expressionText: parameterName, isExpression: true });
   }
 

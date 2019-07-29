@@ -305,6 +305,8 @@ export default class ConjunctionGroup extends Component {
               updateInstanceModifiers={this.props.updateInstanceModifiers}
               parameters={this.props.parameters}
               baseElements={this.props.baseElements}
+              externalCqlList={this.props.externalCqlList}
+              loadExternalCqlList={this.props.loadExternalCqlList}
               getPath={this.getChildsPath}
               conversionFunctions={this.props.conversionFunctions}
               instanceNames={this.props.instanceNames}
@@ -403,10 +405,13 @@ export default class ConjunctionGroup extends Component {
         {showGroup &&
           <div className="card-element">
             <ElementSelect
+              artifactId={this.props.artifact._id}
               categories={this.props.templates}
               onSuggestionSelected={this.addChild}
               parameters={this.props.parameters}
               baseElements={this.props.baseElements}
+              externalCqlList={this.props.externalCqlList}
+              loadExternalCqlList={this.props.loadExternalCqlList}
               loginVSACUser={this.props.loginVSACUser}
               setVSACAuthStatus={this.props.setVSACAuthStatus}
               vsacStatus={this.props.vsacStatus}
@@ -444,6 +449,7 @@ ConjunctionGroup.propTypes = {
   disableElement: PropTypes.bool,
   disableIndent: PropTypes.bool,
   elementUniqueId: PropTypes.string,
+  externalCqlList: PropTypes.array.isRequired,
   getAllInstances: PropTypes.func.isRequired,
   getAllInstancesInAllTrees: PropTypes.func.isRequired,
   getPath: requiredIf(PropTypes.func, props => !props.root), // path needed for children
@@ -453,6 +459,7 @@ ConjunctionGroup.propTypes = {
   isSearchingVSAC: PropTypes.bool.isRequired,
   isValidatingCode: PropTypes.bool.isRequired,
   isValidCode: PropTypes.bool,
+  loadExternalCqlList: PropTypes.func.isRequired,
   loadValueSets: PropTypes.func.isRequired,
   loginVSACUser: PropTypes.func.isRequired,
   options: PropTypes.string,
@@ -472,5 +479,5 @@ ConjunctionGroup.propTypes = {
   vsacSearchCount: PropTypes.number.isRequired,
   vsacSearchResults: PropTypes.array.isRequired,
   vsacStatus: PropTypes.string,
-  vsacStatusText: PropTypes.string,
+  vsacStatusText: PropTypes.string
 };

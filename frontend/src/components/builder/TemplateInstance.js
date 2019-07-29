@@ -496,12 +496,16 @@ export default class TemplateInstance extends Component {
     return null;
   }
 
-  renderBaseElementOrParameterInfo = (referenceParameter) => {
+  renderReferenceInfo = (referenceParameter) => {
     let referenceName;
     if (referenceParameter) {
-      const elementToReference = this.props.instanceNames.find(name => name.id === referenceParameter.value.id);
-      if (elementToReference) {
-        referenceName = elementToReference.name;
+      if (referenceParameter.id === 'externalCqlReference') {
+        referenceName = referenceParameter.value.id;
+      } else {
+        const elementToReference = this.props.instanceNames.find(name => name.id === referenceParameter.value.id);
+        if (elementToReference) {
+          referenceName = elementToReference.name;
+        }
       }
     }
     const scrollElementId = referenceParameter.value.id;
@@ -523,6 +527,7 @@ export default class TemplateInstance extends Component {
     let label = 'Element:';
     if (referenceParameter.id === 'baseElementReference') label = 'Base Element:';
     if (referenceParameter.id === 'parameterReference') label = 'Parameter:';
+    if (referenceParameter.id === 'externalCqlReference') label = 'External CQL Element:';
     if (referenceParameter.id === 'baseElementUse') label = 'Element Use:';
 
     let tabLabel = '';
@@ -530,6 +535,7 @@ export default class TemplateInstance extends Component {
     if (baseUseTab === 'expTreeExclude') tabLabel = 'Exclusions';
     if (baseUseTab === 'subpopulations') tabLabel = 'Subpopulations';
     if (baseUseTab === 'baseElements') tabLabel = 'Base Element';
+
 
     return (
       <div className="modifier__return__type" id="base-element-list" key={referenceParameter.value.id}>
@@ -541,6 +547,7 @@ export default class TemplateInstance extends Component {
               {referenceParameter.id === 'baseElementUse' && <span> &#8594; {tabLabel}</span>}
             </div>
 
+            {(referenceParameter.id !== 'externalCqlReference') &&
             <div className="code-info__buttons align-right">
               <span
                 role="button"
@@ -556,7 +563,7 @@ export default class TemplateInstance extends Component {
 
                 <FontAwesome name="link" className="delete-valueset-button" />
               </span>
-            </div>
+            </div>}
           </div>
         </div>
       </div>
@@ -809,7 +816,7 @@ export default class TemplateInstance extends Component {
 
         {referenceParameter &&
           <div className="vsac-info">
-            {this.renderBaseElementOrParameterInfo(referenceParameter)}
+            {this.renderReferenceInfo(referenceParameter)}
           </div>
         }
 
@@ -818,7 +825,7 @@ export default class TemplateInstance extends Component {
             {this.props.baseElements.find(baseElement => baseElement.uniqueId === templateInstance.uniqueId)
               .usedBy.map((link) => {
                 const reference = { id: 'baseElementUse', value: { id: link } };
-                return this.renderBaseElementOrParameterInfo(reference);
+                return this.renderReferenceInfo(reference);
               })
             }
           </div>

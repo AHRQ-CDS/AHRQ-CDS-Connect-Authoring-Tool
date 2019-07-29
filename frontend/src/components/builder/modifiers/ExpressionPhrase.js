@@ -40,7 +40,7 @@ export default class ExpressionPhrase extends Component {
       const baseElementModifiers = instance.modifiers || [];
       modifiers = modifiers.concat(baseElementModifiers);
     }
-    let type = phraseTemplateInstance.type === 'parameter' ?
+    let type = (phraseTemplateInstance.type === 'parameter' || phraseTemplateInstance.type === 'externalCqlElement') ?
       phraseTemplateInstance.type : phraseTemplateInstance.name;
     if (phraseTemplateInstance.subpopulationName && type === '') { // Subpopulation type not selected yet
       type = phraseTemplateInstance.id;
@@ -80,7 +80,13 @@ export default class ExpressionPhrase extends Component {
     const isBaseElementAndOr = phraseTemplateInstanceIsConjunction && instance.type === 'baseElement' &&
       (phraseTemplateInstance.name === 'And' || phraseTemplateInstance.name === 'Or');
 
-    const parameterName = (type === 'parameter') ? phraseTemplateInstance.name : null;
+    let parameterName = null;
+    if (type === 'parameter') {
+      parameterName = phraseTemplateInstance.name;
+    } else if (type === 'externalCqlElement') {
+      parameterName =
+        phraseTemplateInstance.parameters.find(param => param.id === 'externalCqlReference').value.element;
+    }
 
     const expressions = convertToExpression(
       modifiers,

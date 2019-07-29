@@ -1,0 +1,63 @@
+.external-cql-details-section {
+  margin-top: 20px;
+
+  &__header {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    width: 100%;
+    margin: 5px 0;
+
+    &:hover,
+    &:focus {
+      background-color: $gray-blue;
+      border-radius: 5px;
+      outline: none;
+    }
+
+    .header-title {
+      color: $blue-light;
+      text-transform: uppercase;
+      margin-right: 10px;
+      font-size: 0.9em;
+      font-weight: bold;
+      white-space: nowrap;
+    }
+
+    .header-divider {
+      width: 100%;
+      border-bottom: 2px solid $blue-light;
+    }
+
+    .header-button {
+      background-color: transparent;
+      border: 0;
+      box-shadow: none;
+
+      span {
+        color: $blue-light;
+      }
+    }
+  }
+
+  &__table {
+    margin: 0 40px;
+    width: 90%;
+    max-width: 90%;
+
+    tr th {
+      border-top: 0;
+      padding-top: 0;
+    }
+
+    tbody tr:hover {
+      background-color: $gray-lightest;
+    }
+
+    td {
+      font-size: 0.8em;
+      padding: 5px 15px;
+      width: 50%;
+    }
+  }
+}

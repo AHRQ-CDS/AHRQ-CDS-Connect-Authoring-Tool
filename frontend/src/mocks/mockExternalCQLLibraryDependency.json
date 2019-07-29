@@ -1,0 +1,38 @@
+{
+  "_id": "5d03f1f4d77f2dae6e5c755b",
+  "updatedAt": "2019-05-27T19:53:24.519Z",
+  "createdAt": "2019-05-27T19:53:24.519Z",
+  "__v": 0,
+  "linkedArtifactId": "5cbde14be540f0353267efb7",
+  "user": "demo",
+  "name": "CDS_Connect_Conversions_New",
+  "version": "2",
+  "fhirVersion": "",
+  "details": {
+    "dependencies": [],
+    "functions": [
+      {
+        "calculatedReturnType": "system_quantity",
+        "operand": [
+          {
+            "operandTypeSpecifier": {
+              "type": "NamedTypeSpecifier",
+              "name": "{urn:hl7-org:elm-types:r1}Quantity",
+              "resultTypeName": "{urn:hl7-org:elm-types:r1}Quantity"
+            },
+            "name": "Q"
+          }
+        ],
+        "resultTypeName": "{urn:hl7-org:elm-types:r1}Quantity",
+        "context": "Patient",
+        "type": "FunctionDef",
+        "name": "to_mg_per_dL",
+        "accessLevel": "Public"
+      }
+    ],
+    "definitions": [],
+    "parameters": [],
+    "fileName": "CDS_Connect_Conversions.cql",
+    "cqlFileText": "/**\r\n * This library supports conversions from one unit to another.  Conversions are added as needed by artifacts in\r\n * development.  Since case is important for some units, rather than use our normal PascalCasing, we use underscore\r\n * to separate words and maintain casing.  For example, to convert to \"mg/dL\", rather than call the function\r\n * `ToMgPerDL`, we call it `to_mg_per_dL`, in order to maintain casing.\r\n */\r\nlibrary CDS_Connect_Conversions_New version '2'\r\n\r\n/**\r\n * Converts mmol/L to mg/dL, or if already md/dL, leaves it as is.  If an unrecognized unit is used, null is returned.\r\n * @param Q - a Quantity\r\n * @returns {Quantity} a Quantity using mg/dL units or null if null was passed in or unit couldn't be converted\r\n */\r\ndefine function to_mg_per_dL (Q Quantity):\r\n  case\r\n    when Q.unit = 'mg/dL' then Q\r\n    when Q.unit = 'mmol/L' then Quantity{value: Q.value * 38.66976, unit: 'mg/dL'}\r\n    else null\r\n  end\r\n"
+  }
+}

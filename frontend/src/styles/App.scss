@@ -12,20 +12,22 @@
 
 /* ------------------------- IMPORT CUSTOM SCSS ---------------------------- */
 // site-wide elements
-@import 'elements/dropdowns';
-@import 'elements/mixins';
-@import 'elements/typography';
+@import 'elements/mixins'; // keep first in list
+@import 'elements/accessibility';
 @import 'elements/base';
+@import 'elements/buttons';
+@import 'elements/cards';
+@import 'elements/dropdowns';
+@import 'elements/dropzone';
+@import 'elements/effects';
+@import 'elements/expressions';
 @import 'elements/flex';
 @import 'elements/forms';
 @import 'elements/inputs';
-@import 'elements/buttons';
+@import 'elements/mixins';
 @import 'elements/modals';
-@import 'elements/accessibility';
-@import 'elements/effects';
 @import 'elements/select';
-@import 'elements/cards';
-@import 'elements/expressions';
+@import 'elements/typography';
 
 // component-specific
 @import 'components/artifact/Artifact';
@@ -36,11 +38,16 @@
 @import 'components/builder/Element';
 @import 'components/builder/ElementSelect';
 @import 'components/builder/ErrorStatement';
+@import 'components/builder/ExternalCQL';
+@import 'components/builder/ExternalCqlDetails';
+@import 'components/builder/ExternalCqlDetailsSection';
+@import 'components/builder/ExternalCqlTable';
 @import 'components/builder/Modifiers';
 @import 'components/builder/Parameters';
 @import 'components/builder/Recommendations';
 @import 'components/builder/RepoUploadModal';
 @import 'components/builder/Subpopulations';
+@import 'components/elements/Banner';
 @import 'components/Footer';
 @import 'components/Header';
 @import 'components/Landing';

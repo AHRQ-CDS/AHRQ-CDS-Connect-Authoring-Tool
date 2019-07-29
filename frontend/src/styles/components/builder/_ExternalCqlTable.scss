@@ -1,0 +1,47 @@
+.external-cql-table {
+  margin-top: 40px;
+
+  &__table {
+    @include responsive-table;
+
+    width: 100%;
+    margin: 1em 0;
+
+    th {
+      padding-bottom: 0.5em;
+    }
+
+    td {
+      padding: 0.25em;
+    }
+
+    tr:first-of-type td {
+      padding-top: 0.5em;
+    }
+
+    td:last-of-type {
+      text-align: right;
+    }
+  }
+
+  &__tablecell-wide {
+    width: 15em;
+  }
+
+  &__tablecell-short {
+    width: 11em;
+
+    &.center {
+      text-align: center;
+    }
+  }
+
+  &__tablecell-button {
+    white-space: nowrap; 
+  }
+
+  .external-cql-library-info {
+    font-size: 0.9em;
+    color: $gray;
+  }
+}
