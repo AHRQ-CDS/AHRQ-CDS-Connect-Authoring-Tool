@@ -174,7 +174,13 @@ export default class PatientTable extends Component {
   }
 
   renderExecuteCQLModal() {
-    const artifactOptions = _.map(this.props.artifacts, a => ({ value: a, label: a.name }));
+    const fhirVersionMap = { '1.0.2': 'DSTU2', '3.0.0': 'STU3' };
+    const validArtifactsToExecute = this.props.artifacts.filter((a) => {
+      const noFHIRVersion = a.fhirVersion === '';
+      const sameFHIRVersion = fhirVersionMap[a.fhirVersion] === _.get(this.state.patientToExecute, 'fhirVersion', '');
+      return noFHIRVersion || sameFHIRVersion;
+    });
+    const artifactOptions = _.map(validArtifactsToExecute, a => ({ value: a, label: a.name }));
 
     return (
       <Modal
@@ -205,9 +211,16 @@ export default class PatientTable extends Component {
                 .value() || 'family_placeholder'}
             </span>
           </div>
+          <div className="patient-info">
+            <span>Version: </span>
+            <span>
+              {_.get(this.state.patientToExecute, 'fhirVersion', 'version_placeholder')}
+            </span>
+          </div>
 
           <br/>
 
+          <div className="select-label">FHIR Compatible Artifacts:</div>
           <Select
             aria-label={'Select Artifact'}
             inputProps={{ title: 'Select Artifact' }}

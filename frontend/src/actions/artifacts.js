@@ -2,6 +2,7 @@ import axios from 'axios';
 import Promise from 'promise';
 import moment from 'moment';
 import FileSaver from 'file-saver';
+import slug from 'slug';
 import _ from 'lodash';
 
 import cql from 'cql-execution';
@@ -197,6 +198,7 @@ export function initializeArtifact(andTemplate, orTemplate) {
     _id: null,
     name: 'Untitled Artifact',
     version: '1',
+    fhirVersion: '',
     expTreeInclude: newTrees.newExpTreeInclude,
     expTreeExclude: newTrees.newExpTreeExclude,
     recommendations: [],
@@ -592,6 +594,7 @@ function convertParameters(params = []) {
 
 export function executeCQLArtifact(artifact, params, patient, vsacCredentials, codeService, dataModel) {
   artifact.dataModel = dataModel;
+  const artifactName = `${slug(artifact.name ? artifact.name : 'untitled')}-v${artifact.version}`;
 
   return (dispatch) => {
     dispatch(requestExecuteArtifact());
@@ -609,7 +612,7 @@ export function executeCQLArtifact(artifact, params, patient, vsacCredentials, c
         });
     }).then(res => performExecuteArtifact(
       res.data.elmFiles,
-      artifact.name,
+      artifactName,
       params,
       patient,
       vsacCredentials,

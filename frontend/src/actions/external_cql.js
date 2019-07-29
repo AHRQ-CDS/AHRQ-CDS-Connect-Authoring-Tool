@@ -5,6 +5,7 @@ import _ from 'lodash';
 import changeToCase from '../utils/strings';
 
 import * as types from './types';
+import { loadArtifact } from './artifacts';
 
 const API_BASE = process.env.REACT_APP_API_URL;
 
@@ -195,7 +196,8 @@ export function addExternalLibrary(library) {
     return sendAddExternalCqlLibraryRequest(library)
       .then(data => dispatch(addExternalCqlLibrarySuccess(data)))
       .catch(error => dispatch(addExternalCqlLibraryFailure(error)))
-      .then(() => dispatch(loadExternalCqlList(library.artifactId)));
+      .then(() => dispatch(loadExternalCqlList(library.artifactId)))
+      .then(() => dispatch(loadArtifact(library.artifactId)));
   };
 }
 
@@ -248,6 +250,7 @@ export function deleteExternalCqlLibrary(libraryId, artifactId) {
     return sendDeleteExternalCqlLibraryRequest(libraryId)
       .then(data => dispatch(deleteExternalCqlLibrarySuccess()))
       .catch(error => dispatch(deleteExternalCqlLibraryFailure(error)))
-      .then(() => dispatch(loadExternalCqlList(artifactId)));
+      .then(() => dispatch(loadExternalCqlList(artifactId)))
+      .then(() => dispatch(loadArtifact(artifactId)));
   };
 }

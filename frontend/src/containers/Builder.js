@@ -342,15 +342,6 @@ export class Builder extends Component {
     this.setState({ showMenu: !this.state.showMenu });
   }
 
-  getCurrentFHIRVersion = () => {
-    const { externalCqlList } = this.props;
-    let currentFHIRVersion = ''; // Empty string means no FHIR version set yet;
-    externalCqlList.forEach((lib) => {
-      if (lib.fhirVersion) currentFHIRVersion = lib.fhirVersion;
-    });
-    return currentFHIRVersion;
-  }
-
   downloadOptionSelected = (disabled, version) => {
     const { artifact } = this.props;
     if (!disabled) this.props.downloadArtifact(artifact, { name: 'FHIR', version });
@@ -419,9 +410,9 @@ export class Builder extends Component {
     let disableDSTU2 = false;
     let disableSTU3 = false;
 
-    const currentExternalCQLFHIRVersion = this.getCurrentFHIRVersion();
-    if (currentExternalCQLFHIRVersion === '1.0.2') disableSTU3 = true;
-    if (currentExternalCQLFHIRVersion === '3.0.0') disableDSTU2 = true;
+    const artifactFHIRVersion = artifact.fhirVersion;
+    if (artifactFHIRVersion === '1.0.2') disableSTU3 = true;
+    if (artifactFHIRVersion === '3.0.0') disableDSTU2 = true;
 
     return (
       <header className="builder__header" aria-label="Workspace Header">
