@@ -434,6 +434,14 @@ export default [
     cqlTemplate: 'LookBackModifier',
     cqlLibraryFunction: 'C3F.ProcedureLookBack' },
   {
+    id: 'Count',
+    name: 'Count',
+    inputTypes: elementLists,
+    returnType: 'integer',
+    cqlTemplate: 'BaseModifier',
+    cqlLibraryFunction: 'Count'
+  },
+  {
     id: 'BooleanExists',
     name: 'Exists',
     inputTypes: elementLists,

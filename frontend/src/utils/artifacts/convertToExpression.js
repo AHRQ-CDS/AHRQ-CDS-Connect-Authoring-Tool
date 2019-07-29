@@ -73,6 +73,7 @@ function getExpressionSentenceValue(modifier) {
     LookBackMedicationOrder: { modifierText: 'look back', leadingText: 'which occurred', type: 'post' },
     LookBackMedicationStatement: { modifierText: 'look back', leadingText: 'which occurred', type: 'post' },
     LookBackProcedure: { modifierText: 'look back', leadingText: 'which occurred', type: 'post' },
+    Count: { modifierText: 'count', leadingText: 'with a', type: 'post-list' },
     BooleanExists: { modifierText: 'exists', leadingText: 'that', type: 'BooleanExists' },
     BooleanComparison: { modifierText: 'is true', leadingText: 'which', type: 'post' },
     CheckExistence: { modifierText: 'is null', leadingText: '', type: 'post' },
