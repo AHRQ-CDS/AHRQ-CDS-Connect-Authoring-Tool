@@ -250,7 +250,7 @@ describe('Base Element instances', () => {
 
     // When no other uses present, all modifiers available again.
     modifierOptions = component.find('button .modifier__button .secondary-button');
-    expect(modifierOptions).toHaveLength(7);
+    expect(modifierOptions).toHaveLength(8);
   });
 
   test('cannot remove modifiers that change the return type if in use in the artifact', () => {
