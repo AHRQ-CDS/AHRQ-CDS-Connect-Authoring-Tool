@@ -73,7 +73,7 @@ function getExpressionSentenceValue(modifier) {
     LookBackMedicationOrder: { modifierText: 'look back', leadingText: 'which occurred', type: 'post' },
     LookBackMedicationStatement: { modifierText: 'look back', leadingText: 'which occurred', type: 'post' },
     LookBackProcedure: { modifierText: 'look back', leadingText: 'which occurred', type: 'post' },
-    Count: { modifierText: 'count', leadingText: 'with a', type: 'post-list' },
+    Count: { modifierText: 'count', leadingText: 'with a', type: 'Count' },
     BooleanExists: { modifierText: 'exists', leadingText: 'that', type: 'BooleanExists' },
     BooleanComparison: { modifierText: 'is true', leadingText: 'which', type: 'post' },
     CheckExistence: { modifierText: 'is null', leadingText: '', type: 'post' },
@@ -228,11 +228,22 @@ function getExpressionSentenceValue(modifier) {
       }
       default: break;
     }
-    return expressionSentenceValues[modifier.id];
+    const expressionSentenceValue = Object.assign({ ...expressionSentenceValues[modifier.id] }, { id: modifier.id });
+    return expressionSentenceValue;
   }
 
   // If the modifier is not listed in the object, return just the name of the modifier to be placed at the end.
-  return { modifierText: _.lowerCase(modifier.name), leadingText: '', type: 'post' };
+  return { modifierText: _.lowerCase(modifier.name), leadingText: '', type: 'post', id: modifier.id };
+}
+
+// Some expressions need specific leading text for the Count expression since it changes the subject of the expression
+function updateExpressionsForCountExpression(expressionArray) {
+  return expressionArray.map((expression) => {
+    if (expression.id === 'ValueComparisonNumber') {
+      expression.leadingText = '';
+    }
+    return expression;
+  });
 }
 
 function addVSandCodeText(expressionArray, valueSets, codes) {
@@ -399,8 +410,7 @@ function orderExpressionSentenceArray(
   }
 
   let orderedExpressionArray = [];
-  const returnsPlural = returnType.includes('list_of_');
-  const returnsBoolean = returnType === 'boolean';
+  const countExpression = expressionArray.find(expression => expression.type === 'Count');
   const notExpression = expressionArray.find(expression => expression.type === 'not');
   const existsExpression = expressionArray.find(expression => expression.type === 'BooleanExists');
   const descriptorExpression = expressionArray.find(expression => expression.type === 'descriptor');
@@ -410,11 +420,19 @@ function orderExpressionSentenceArray(
     const nulls = ['is null', 'is not null'];
     return nulls.indexOf(expression.modifierText) !== -1;
   });
-  const otherExpressions = _.uniqWith(expressionArray.filter((expression) => {
-    const knownTypes = ['not', 'BooleanExists', 'descriptor', 'list', 'post-list', 'value'];
+  let otherExpressions = _.uniqWith(expressionArray.filter((expression) => {
+    const knownTypes = ['not', 'BooleanExists', 'descriptor', 'list', 'post-list', 'value', 'Count'];
     return knownTypes.indexOf(expression.type) === -1;
   }), _.isEqual);
   let hasStarted = false;
+
+  // Count modifier will always refer to a group of elements, so always treat it as plural
+  const returnsPlural = returnType.includes('list_of_') || countExpression;
+  const returnsBoolean = returnType === 'boolean';
+
+  if (countExpression) {
+    otherExpressions = updateExpressionsForCountExpression(otherExpressions);
+  }
 
   // Handle not and exists
   if (existsExpression) {
@@ -444,13 +462,24 @@ function orderExpressionSentenceArray(
       orderedExpressionArray.push({ expressionText: 'There exists', isExpression: false });
       hasStarted = true;
     }
-  } else if (notExpression) {
+  } else if (notExpression && !countExpression) {
     if (checkExistenceExpression) {
       orderedExpressionArray.push({ expressionText: 'It is', isExpression: false });
       orderedExpressionArray.push({ expressionText: 'not', isExpression: true });
       orderedExpressionArray.push({ expressionText: 'the case that', isExpression: false });
       hasStarted = true;
     }
+  } else if (countExpression) {
+    const article = notExpression ? 'the' : 'The';
+    if (notExpression) {
+      orderedExpressionArray.push({ expressionText: 'It is', isExpression: false });
+      orderedExpressionArray.push({ expressionText: 'not', isExpression: true });
+      orderedExpressionArray.push({ expressionText: 'the case that', isExpression: false });
+    }
+    orderedExpressionArray.push({ expressionText: article, isExpression: false });
+    orderedExpressionArray.push({ expressionText: 'count', isExpression: true });
+    orderedExpressionArray.push({ expressionText: 'of', isExpression: false });
+    hasStarted = true;
   }
 
   // Handle descriptors (ex. highest, most recent)
@@ -473,7 +502,7 @@ function orderExpressionSentenceArray(
       const listText = listExpression.modifierText;
       const listArticle = getArticle(listText);
       if (hasStarted) {
-        if (!descriptorExpression && index === 0) {
+        if (!descriptorExpression && index === 0 && !countExpression) {
           orderedExpressionArray.push({ expressionText: listArticle, isExpression: false });
         }
         orderedExpressionArray.push({ expressionText: listText, isExpression: true });
