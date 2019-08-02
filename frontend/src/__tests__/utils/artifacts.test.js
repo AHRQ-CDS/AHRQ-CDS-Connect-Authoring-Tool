@@ -586,3 +586,45 @@ test('Quantity parameters with Value Comparison create a phrase with the paramet
 
   expect(expressionPhrase).toEqual(expectedOutput);
 });
+
+test('Count expression builds phrase that uses the count as the subject of the phrase', () => {
+  const modifiers = [
+    {
+      id: 'Count',
+      name: 'Count',
+      inputTypes: elementLists,
+      returnType: 'integer',
+      cqlTemplate: 'BaseModifier',
+      cqlLibraryFunction: 'Count'
+    },
+    {
+      id: 'ValueComparisonNumber',
+      name: 'Value Comparison',
+      inputTypes: ['integer', 'decimal'],
+      returnType: 'boolean',
+      validator: { type: 'require', fields: ['minValue', 'minOperator'], args: null },
+      values: { minOperator: '>', minValue: '10', maxOperator: undefined, maxValue: '', unit: '' },
+      cqlTemplate: 'ValueComparisonNumber',
+      comparisonOperator: null
+    }
+  ];
+
+  const name = 'Observation';
+  const valueSets = [{ name: 'LDL', oid: '1.2.3' }];
+  const codes = [];
+  const returnType = 'boolean';
+
+  const expressionPhrase = convertToExpression(modifiers, name, valueSets, codes, returnType);
+
+  const expectedOutput = [
+    { expressionText: 'The', isExpression: false },
+    { expressionText: 'count', isExpression: true },
+    { expressionText: 'of', isExpression: false },
+    { expressionText: 'observations', isExpression: false, isType: true },
+    { expressionText: 'with a code from', isExpression: false },
+    { expressionText: 'LDL', isExpression: true },
+    { expressionText: 'is greater than 10', isExpression: true }
+  ];
+
+  expect(expressionPhrase).toEqual(expectedOutput);
+});
