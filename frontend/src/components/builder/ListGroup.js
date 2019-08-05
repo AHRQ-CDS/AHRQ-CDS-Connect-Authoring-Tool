@@ -71,7 +71,7 @@ export default class ListGroup extends Component {
     const newBaseElementLists = _.cloneDeep(this.props.artifact.baseElements);
     const baseElementIndex = this.props.artifact.baseElements.findIndex(baseElement =>
       baseElement.uniqueId === uniqueId);
-    newBaseElementLists[baseElementIndex].parameters[0].value = name;
+    newBaseElementLists[baseElementIndex].fields[0].value = name;
 
     this.props.updateBaseElementLists(newBaseElementLists, 'baseElements');
   }
@@ -187,8 +187,8 @@ export default class ListGroup extends Component {
     this.props.addInstance(name, template, path, baseElement.uniqueId, undefined, null, newReturnType);
   }
 
-  editInstance = (treeName, params, path, editingConjunction, baseElement) => {
-    this.props.editInstance(treeName, params, path, editingConjunction, baseElement.uniqueId);
+  editInstance = (treeName, fields, path, editingConjunction, baseElement) => {
+    this.props.editInstance(treeName, fields, path, editingConjunction, baseElement.uniqueId);
   }
 
   deleteInstance = (treeName, path, toAdd, baseElement, isAndOrElement) => {
@@ -275,8 +275,8 @@ export default class ListGroup extends Component {
           loadValueSets={this.props.loadValueSets}
           instance={this.props.instance}
           addInstance={(name, template, path) => this.addInstance(name, template, path, instance, isAndOrElement)}
-          editInstance={(treeName, params, path, editingConjunction) =>
-            this.editInstance(treeName, params, path, editingConjunction, instance)}
+          editInstance={(treeName, fields, path, editingConjunction) =>
+            this.editInstance(treeName, fields, path, editingConjunction, instance)}
           deleteInstance={(treeName, path, toAdd) =>
             this.deleteInstance(treeName, path, toAdd, instance, isAndOrElement)}
           getAllInstances={this.getAllInstances}
@@ -321,7 +321,7 @@ export default class ListGroup extends Component {
   renderList = () => {
     const { instance } = this.props;
     const { isExpanded } = this.state;
-    const name = instance.parameters[0].value;
+    const name = instance.fields[0].value;
     const allInstancesInAllTrees = this.props.getAllInstancesInAllTrees();
     const { instanceNames, baseElements, parameters } = this.props;
     const needsDuplicateNameWarning
@@ -362,7 +362,7 @@ export default class ListGroup extends Component {
               :
               <div className="card-element__heading">
                 <div className="heading-name">
-                  {instance.parameters[0].value}:
+                  {instance.fields[0].value}:
                   {(needsDuplicateNameWarning
                     || needsBaseElementWarning
                     || this.hasNestedWarnings(instance.childInstances))

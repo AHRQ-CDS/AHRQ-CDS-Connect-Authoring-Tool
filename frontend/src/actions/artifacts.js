@@ -48,37 +48,37 @@ function parseConjunction(childInstances, names, baseElementsInUse, parametersIn
     // Add name of child to array
     const index = names.findIndex(name => name.id === child.uniqueId);
     if (index === -1) {
-      let name = child.parameters[0].value;
+      let name = child.fields[0].value;
       if (name === undefined) name = '';
       names.push({ name, id: child.uniqueId });
     }
 
     // Add uniqueId of base elements and parameters that are currently used
-    const referenceParameter = child.parameters.find(param => param.type === 'reference');
-    if (referenceParameter) {
-      if (referenceParameter.id === 'baseElementReference') {
-        const baseElementAlreadyInUse = baseElementsInUse.find(s => s.baseElementId === referenceParameter.value.id);
+    const referenceField = child.fields.find(field => field.type === 'reference');
+    if (referenceField) {
+      if (referenceField.id === 'baseElementReference') {
+        const baseElementAlreadyInUse = baseElementsInUse.find(s => s.baseElementId === referenceField.value.id);
         if (baseElementAlreadyInUse === undefined) {
           // Add the base element id and begin the list of other instances using the base element
-          baseElementsInUse.push({ baseElementId: referenceParameter.value.id, usedBy: [child.uniqueId] });
+          baseElementsInUse.push({ baseElementId: referenceField.value.id, usedBy: [child.uniqueId] });
         } else {
           // If the base element is already used elsewhere, just add to the list of instances using it
           baseElementAlreadyInUse.usedBy.push(child.uniqueId);
         }
-      } else if (referenceParameter.id === 'parameterReference') {
-        const parameterAlreadyInUse = parametersInUse.find(p => p.parameterId === referenceParameter.value.id);
+      } else if (referenceField.id === 'parameterReference') {
+        const parameterAlreadyInUse = parametersInUse.find(p => p.parameterId === referenceField.value.id);
         if (parameterAlreadyInUse === undefined) {
           // Add the parameter id and begin the list of other instances using the parameter
-          parametersInUse.push({ parameterId: referenceParameter.value.id, usedBy: [child.uniqueId] });
+          parametersInUse.push({ parameterId: referenceField.value.id, usedBy: [child.uniqueId] });
         } else {
           // If the parameter is already used elsewhere, just add to the list of instances using it
           parameterAlreadyInUse.usedBy.push(child.uniqueId);
         }
-      } else if (referenceParameter.id === 'externalCqlReference') {
-        const libraryAlreadyInUse = librariesInUse.find(l => l === referenceParameter.value.library);
+      } else if (referenceField.id === 'externalCqlReference') {
+        const libraryAlreadyInUse = librariesInUse.find(l => l === referenceField.value.library);
         if (libraryAlreadyInUse === undefined) {
           // Add the library name
-          librariesInUse.push(referenceParameter.value.library);
+          librariesInUse.push(referenceField.value.library);
         }
       }
     }
@@ -109,8 +109,8 @@ function parseForDuplicateNamesAndUsed(artifact) {
     }
   });
   artifact.baseElements.forEach((baseElement) => {
-    if (baseElement.parameters && baseElement.parameters[0]) {
-      names.push({ name: baseElement.parameters[0].value, id: baseElement.uniqueId });
+    if (baseElement.fields && baseElement.fields[0]) {
+      names.push({ name: baseElement.fields[0].value, id: baseElement.uniqueId });
     }
     if (baseElement.childInstances && baseElement.childInstances.length) {
       parseTree(baseElement, names, baseElementsInUse, parametersInUse, librariesInUse);
@@ -176,13 +176,13 @@ function initializeTrees(andTemplate, orTemplate) {
 
   const newExpTreeInclude = createTemplateInstance(andTemplate);
   newExpTreeInclude.path = '';
-  const newExpTreeIncludeNameParam = newExpTreeInclude.parameters.find(param => param.id === 'element_name');
-  if (newExpTreeIncludeNameParam) newExpTreeIncludeNameParam.value = 'MeetsInclusionCriteria';
+  const newExpTreeIncludeNameField = newExpTreeInclude.fields.find(field => field.id === 'element_name');
+  if (newExpTreeIncludeNameField) newExpTreeIncludeNameField.value = 'MeetsInclusionCriteria';
 
   const newExpTreeExclude = createTemplateInstance(orTemplate);
   newExpTreeExclude.path = '';
-  const newExpTreeExcludeNameParam = newExpTreeExclude.parameters.find(param => param.id === 'element_name');
-  if (newExpTreeExcludeNameParam) newExpTreeExcludeNameParam.value = 'MeetsExclusionCriteria';
+  const newExpTreeExcludeNameField = newExpTreeExclude.fields.find(field => field.id === 'element_name');
+  if (newExpTreeExcludeNameField) newExpTreeExcludeNameField.value = 'MeetsExclusionCriteria';
 
   return {
     newSubpopulation,

@@ -138,8 +138,8 @@ export default class ConjunctionGroup extends Component {
   }
 
   conjunctionHasDuplicateName = (child) => {
-    const elementNameParam = child.parameters.find(param => param.id === 'element_name');
-    const nameValue = elementNameParam.value === undefined ? '' : elementNameParam.value;
+    const elementNameField = child.fields.find(field => field.id === 'element_name');
+    const nameValue = elementNameField.value === undefined ? '' : elementNameField.value;
     const duplicateNameIndex = this.props.instanceNames.findIndex(name =>
       name.id !== child.uniqueId && name.name === nameValue);
     return duplicateNameIndex !== -1;
@@ -218,7 +218,7 @@ export default class ConjunctionGroup extends Component {
   renderRoot() {
     const { showGroup } = this.state;
     const collapsedClass = showGroup ? '' : 'expression-collapsed';
-    const elementNameParam = this.props.instance.parameters.find(param => param.id === 'element_name');
+    const elementNameField = this.props.instance.fields.find(field => field.id === 'element_name');
     const conjunctionHasDuplicateName = this.conjunctionHasDuplicateName(this.props.instance);
 
     if (!this.props.root) {
@@ -230,9 +230,9 @@ export default class ConjunctionGroup extends Component {
               {showGroup ?
                 <div>
                   <StringParameter
-                    id={elementNameParam.id}
-                    name={elementNameParam.name}
-                    value={elementNameParam.value}
+                    id={elementNameField.id}
+                    name={elementNameField.name}
+                    value={elementNameField.value}
                     updateInstance={this.handleNameChange}
                   />
                   {conjunctionHasDuplicateName
@@ -240,7 +240,7 @@ export default class ConjunctionGroup extends Component {
                 </div>
               :
                 <div className="group-heading-name">
-                  {elementNameParam.value}:
+                  {elementNameField.value}:
                   {(conjunctionHasDuplicateName || this.hasNestedWarnings(this.props.instance.childInstances))
                     && <div className="warning"><FontAwesome name="exclamation-circle" /> Has warnings</div>}
                 </div>
@@ -253,7 +253,7 @@ export default class ConjunctionGroup extends Component {
               <button
                 onClick={this.showHideGroupBody}
                 className="element__hidebutton transparent-button"
-                aria-label={`hide ${elementNameParam.name}`}>
+                aria-label={`hide ${elementNameField.name}`}>
                 <FontAwesome name={showGroup ? 'angle-double-down' : 'angle-double-right'} />
               </button>
 

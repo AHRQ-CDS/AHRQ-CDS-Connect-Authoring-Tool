@@ -32,8 +32,8 @@ export default class Subpopulation extends Component {
 
   getAllInstances = treeName => this.props.getAllInstances(treeName, null, this.props.subpopulation.uniqueId)
 
-  editInstance = (treeName, params, path, editingConjunction) => {
-    this.props.editInstance(treeName, params, path, editingConjunction, this.props.subpopulation.uniqueId);
+  editInstance = (treeName, fields, path, editingConjunction) => {
+    this.props.editInstance(treeName, fields, path, editingConjunction, this.props.subpopulation.uniqueId);
   }
 
   deleteInstance = (treeName, path, toAdd) => {

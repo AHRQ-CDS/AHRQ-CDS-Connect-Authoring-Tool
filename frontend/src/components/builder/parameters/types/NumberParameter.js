@@ -7,29 +7,29 @@ import _ from 'lodash';
 export default class NumberParameter extends Component {
   constructor(props) {
     super(props);
-    this.state = { checked: this.props.param.exclusive };
+    this.state = { checked: this.props.field.exclusive };
   }
 
   updateExclusive = (event) => {
-    this.props.param.exclusive = event.target.checked;
+    this.props.field.exclusive = event.target.checked;
     this.setState({ checked: event.target.checked });
   }
 
   render() {
-    const { value } = this.props;
+    const { value, field } = this.props;
     const id = _.uniqueId('parameter-');
 
     return (
       <div className="number-parameter">
         <div className='form__group'>
           <label htmlFor={id}>
-            <div className="label">{this.props.param.name}:</div>
+            <div className="label">{field.name}:</div>
 
             <div className="input">
               <input
                 id={id}
                 type="number"
-                name={this.props.param.id}
+                name={field.id}
                 value={(value || value === 0) ? value : ''} // if .value is undefined, will switch between controlled and uncontrolled input. See https://github.com/twisty/formsy-react-components/issues/66
                 onChange={(event) => {
                   // eslint-disable-next-line max-len
@@ -37,7 +37,7 @@ export default class NumberParameter extends Component {
                   this.props.updateInstance({ [event.target.name]: newValue });
                 }}
               />
-              { ('exclusive' in this.props.param)
+              { ('exclusive' in field)
               ? <div className="form__caption">
                   <input id={`${id}-exclusive`}
                     type='checkbox'

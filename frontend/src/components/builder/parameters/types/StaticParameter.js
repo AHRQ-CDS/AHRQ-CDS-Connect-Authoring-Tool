@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 
 /**
  * props are from a templateInstance parameters object,
@@ -6,17 +6,11 @@ import React, { Component } from 'react';
  * key-value pairs that represents that state of the templateInstance,
  * and a function called Validation that validates what is entered
  */
-export default class StaticParameter extends Component {
-  render() {
-    return (
-      <div className="static-parameter">
-        <input
-          type="hidden"
-          aria-hidden="true"
-          name={this.props.id}
-          defaultValue={this.props.value}
-        />
-      </div>
-    );
-  }
-}
+export default props => (
+  <div className="static-parameter">
+    <input
+      type="hidden"
+      aria-hidden="true"
+    />
+  </div>
+);

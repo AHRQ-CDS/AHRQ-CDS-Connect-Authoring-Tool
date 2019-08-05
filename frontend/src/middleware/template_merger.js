@@ -43,12 +43,12 @@ function mergeInParentTemplate(entry, entryMap) {
    */
   _.merge(entry, _.merge(_.omit(_.cloneDeep(parent), ['suppress']), entry));
 
-  // merge parameters
-  entry.parameters.forEach((parameter) => {
-    const matchingParameter = _.find(parent.parameters, { id: parameter.id });
-    _.merge(parameter, matchingParameter);
+  // merge fields
+  entry.fields.forEach((field) => {
+    const matchingField = _.find(parent.fields, { id: field.id });
+    _.merge(field, matchingField);
   });
 
-  const missing = _.differenceBy(parent.parameters, entry.parameters, 'id');
-  entry.parameters = missing.concat(entry.parameters); // eslint-disable-line no-param-reassign
+  const missing = _.differenceBy(parent.fields, entry.fields, 'id');
+  entry.fields = missing.concat(entry.fields); // eslint-disable-line no-param-reassign
 }

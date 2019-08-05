@@ -11,7 +11,7 @@ export default class BaseElements extends Component {
     const instance = createTemplateInstance(template);
     instance.path = '';
     if (instance.conjunction) {
-      instance.parameters[0].value = `Base Element ${this.props.instance.baseElements.length + 1}`;
+      instance.fields[0].value = `Base Element ${this.props.instance.baseElements.length + 1}`;
     }
     this.props.addBaseElement(instance);
   }

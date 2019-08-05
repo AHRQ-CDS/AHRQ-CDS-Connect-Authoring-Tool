@@ -47,13 +47,13 @@ export default class ValueSetTemplate extends Component {
 
   deleteValueSet = (valueSetToDelete) => {
     const templateInstanceClone = _.cloneDeep(this.props.templateInstance);
-    if (templateInstanceClone.parameters[1] && templateInstanceClone.parameters[1].valueSets) {
-      const updatedValueSets = templateInstanceClone.parameters[1].valueSets;
+    if (templateInstanceClone.fields[1] && templateInstanceClone.fields[1].valueSets) {
+      const updatedValueSets = templateInstanceClone.fields[1].valueSets;
       const indexOfVSToRemove = updatedValueSets.findIndex(vs =>
         (vs.name === valueSetToDelete.name && vs.oid === valueSetToDelete.oid));
       updatedValueSets.splice(indexOfVSToRemove, 1);
       const arrayToUpdate = [
-        { [templateInstanceClone.parameters[1].id]: updatedValueSets, attributeToEdit: 'valueSets' }
+        { [templateInstanceClone.fields[1].id]: updatedValueSets, attributeToEdit: 'valueSets' }
       ];
       this.props.updateInstance(arrayToUpdate);
     }
@@ -64,12 +64,12 @@ export default class ValueSetTemplate extends Component {
   }
 
   render() {
-    const { vsacParameter, valueSet, index } = this.props;
+    const { vsacField, valueSet, index } = this.props;
 
     return (
       <div className="vs-info">
         <div className="bold align-right vs-info__label">
-          Value Set{vsacParameter.valueSets.length > 1 ? ` ${index + 1}` : ''}:
+          Value Set{vsacField.valueSets.length > 1 ? ` ${index + 1}` : ''}:
         </div>
 
         <div className="vs-info__info">
@@ -109,7 +109,7 @@ ValueSetTemplate.propTypes = {
   valueSet: PropTypes.object.isRequired,
   vsacDetailsCodes: PropTypes.array.isRequired,
   vsacDetailsCodesError: PropTypes.string,
-  vsacParameter: PropTypes.object.isRequired,
+  vsacField: PropTypes.object.isRequired,
   vsacSearchCount: PropTypes.number.isRequired,
   vsacSearchResults: PropTypes.array.isRequired,
 };

@@ -172,30 +172,30 @@ export class Builder extends Component {
     this.setTree('baseElements', treeData, tree);
   }
 
-  editInstance = (treeName, editedParams, path, editingConjunctionType = false, uid = null) => {
+  editInstance = (treeName, editedFields, path, editingConjunctionType = false, uid = null) => {
     const treeData = this.findTree(treeName, uid);
     const tree = treeData.tree;
     const target = findValueAtPath(tree, path);
 
     if (editingConjunctionType) {
-      target.id = editedParams.id;
-      target.name = editedParams.name;
+      target.id = editedFields.id;
+      target.name = editedFields.name;
     } else {
-      // If only one parameter is being updated, it comes in as a single object. Put it into an array of objects.
-      if (!Array.isArray(editedParams)) {
-        editedParams = [editedParams]; // eslint-disable-line no-param-reassign
+      // If only one field is being updated, it comes in as a single object. Put it into an array of objects.
+      if (!Array.isArray(editedFields)) {
+        editedFields = [editedFields]; // eslint-disable-line no-param-reassign
       }
-      // Update each parameter attribute that needs updating. Then updated the full tree with changes.
-      editedParams.forEach((editedParam) => {
-        // function to retrieve relevant parameter
-        const paramIndex = target.parameters.findIndex(param =>
-          Object.prototype.hasOwnProperty.call(editedParam, param.id));
+      // Update each field attribute that needs updating. Then updated the full tree with changes.
+      editedFields.forEach((editedField) => {
+        // function to retrieve relevant field
+        const fieldIndex = target.fields.findIndex(field =>
+          Object.prototype.hasOwnProperty.call(editedField, field.id));
 
         // If an attribute was specified, update that one. Otherwise update the value attribute.
-        if (editedParam.attributeToEdit) {
-          target.parameters[paramIndex][editedParam.attributeToEdit] = editedParam[target.parameters[paramIndex].id];
+        if (editedField.attributeToEdit) {
+          target.fields[fieldIndex][editedField.attributeToEdit] = editedField[target.fields[fieldIndex].id];
         } else {
-          target.parameters[paramIndex].value = editedParam[target.parameters[paramIndex].id];
+          target.fields[fieldIndex].value = editedField[target.fields[fieldIndex].id];
         }
       });
     }
@@ -225,7 +225,7 @@ export class Builder extends Component {
     }
   }
 
-  // subpop_index is an optional parameter, for determing which tree within subpop we are referring to
+  // subpop_index is an optional parameter, for determining which tree within subpop we are referring to
   updateInstanceModifiers = (treeName, modifiers, path, subpopIndex, updatedReturnType = null) => {
     const tree = _.cloneDeep(this.props.artifact[treeName]);
     const valuePath = _.isNumber(subpopIndex) ? tree[subpopIndex] : tree;

@@ -330,35 +330,35 @@ function addExpressionText(expressionArray, expression, type = null) {
   return expressionArray;
 }
 
-function getOrderedExpressionSentenceArrayForAgeRange(expressionArray, ageParameters) {
+function getOrderedExpressionSentenceArrayForAgeRange(expressionArray, ageFields) {
   let orderedExpressionArray = [];
   orderedExpressionArray.push({ expressionText: 'The patient\'s', isExpression: false });
   orderedExpressionArray.push({ expressionText: 'age', isExpression: false, isType: true });
   orderedExpressionArray.push({ expressionText: 'is', isExpression: false });
 
-  const ageUnitString = `${(ageParameters[2] && ageParameters[2].value) ? ageParameters[2].value.name : ''}`;
+  const ageUnitString = `${(ageFields[2] && ageFields[2].value) ? ageFields[2].value.name : ''}`;
 
-  if (ageParameters[0].value && ageParameters[1].value) { // The minimum age and the maximum age are both added
+  if (ageFields[0].value && ageFields[1].value) { // The minimum age and the maximum age are both added
     orderedExpressionArray.push({ expressionText: 'between', isExpression: false });
     orderedExpressionArray.push({
-      expressionText: `${ageParameters[0].value} ${ageUnitString}`,
+      expressionText: `${ageFields[0].value} ${ageUnitString}`,
       isExpression: true
     });
     orderedExpressionArray.push({ expressionText: 'and', isExpression: false });
     orderedExpressionArray.push({
-      expressionText: `${ageParameters[1].value} ${ageUnitString}`,
+      expressionText: `${ageFields[1].value} ${ageUnitString}`,
       isExpression: true
     });
-  } else if (ageParameters[0].value) { // Only a minimum age is added
+  } else if (ageFields[0].value) { // Only a minimum age is added
     orderedExpressionArray.push({ expressionText: 'at least', isExpression: false });
     orderedExpressionArray.push({
-      expressionText: `${ageParameters[0].value} ${ageUnitString}`,
+      expressionText: `${ageFields[0].value} ${ageUnitString}`,
       isExpression: true
     });
-  } else if (ageParameters[1].value) { // Only a maximum age is added
+  } else if (ageFields[1].value) { // Only a maximum age is added
     orderedExpressionArray.push({ expressionText: 'at most', isExpression: false });
     orderedExpressionArray.push({
-      expressionText: `${ageParameters[1].value} ${ageUnitString}`,
+      expressionText: `${ageFields[1].value} ${ageUnitString}`,
       isExpression: true
     });
   }
@@ -370,14 +370,14 @@ function getOrderedExpressionSentenceArrayForAgeRange(expressionArray, ageParame
   return orderedExpressionArray;
 }
 
-function getOrderedExpressionSentenceArrayForGender(genderParameter) {
+function getOrderedExpressionSentenceArrayForGender(genderFields) {
   const orderedExpressionArray = [];
   orderedExpressionArray.push({ expressionText: 'The patient\'s', isExpression: false });
   orderedExpressionArray.push({ expressionText: 'gender', isExpression: false, isType: true });
   orderedExpressionArray.push({ expressionText: 'is', isExpression: false });
 
-  if (genderParameter[0].value) {
-    orderedExpressionArray.push({ expressionText: genderParameter[0].value.name, isExpression: true });
+  if (genderFields[0].value) {
+    orderedExpressionArray.push({ expressionText: genderFields[0].value.name, isExpression: true });
   }
 
   return orderedExpressionArray;
@@ -390,18 +390,18 @@ function orderExpressionSentenceArray(
   valueSets,
   codes,
   returnType,
-  otherParameters,
+  otherFields,
   elementNames,
   isBaseElementAndOr,
-  parameterName
+  referenceElementName
 ) {
   // Specific cases for Age Range, Gender, and Parameters since they do not follow the same pattern as VSAC elements.
   if (type === 'Age Range') {
-    return getOrderedExpressionSentenceArrayForAgeRange(expressionArray, otherParameters);
+    return getOrderedExpressionSentenceArrayForAgeRange(expressionArray, otherFields);
   }
   if (type === 'Gender') {
     // No modifiers can be applied to gender elements
-    return getOrderedExpressionSentenceArrayForGender(otherParameters);
+    return getOrderedExpressionSentenceArrayForGender(otherFields);
   }
 
   if ((type === 'And' || type === 'Or') && !isBaseElementAndOr) {
@@ -558,7 +558,7 @@ function orderExpressionSentenceArray(
     orderedExpressionArray.push({ expressionText: 'of', isExpression: false });
   }
   if (type === 'parameter' || type === 'externalCqlElement') {
-    orderedExpressionArray.push({ expressionText: parameterName, isExpression: true });
+    orderedExpressionArray.push({ expressionText: referenceElementName, isExpression: true });
   }
 
   // Handle value sets and codes and other element names
@@ -584,10 +584,10 @@ export default function convertToExpression(
   valueSets,
   codes,
   returnType,
-  otherParameters = [],
+  otherFields = [],
   elementNames = [],
   isBaseElementAndOr = false,
-  parameterName = null
+  referenceElementName = null
 ) {
   const expressionSentenceArray = expressionsArray.reduce((accumulator, currentExpression) => {
     const expressionSentenceValue = getExpressionSentenceValue(currentExpression);
@@ -604,10 +604,10 @@ export default function convertToExpression(
     valueSets,
     codes,
     returnType,
-    otherParameters,
+    otherFields,
     elementNames,
     isBaseElementAndOr,
-    parameterName
+    referenceElementName
   );
 
   return orderedExpressionSentenceArray;

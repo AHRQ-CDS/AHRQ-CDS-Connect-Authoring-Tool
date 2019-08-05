@@ -91,7 +91,7 @@ export default class ElementSelect extends Component {
     this.categoryInputId = _.uniqueId('element-select__category-input-');
   }
 
-  // Needed to correctly update this.props.categories after parameters were merged in Builder
+  // Needed to correctly update this.props.categories after fields were merged in Builder
   componentWillReceiveProps(nextProps) {
     // Updates the categories and their entries to have correct parameters
     this.internalCategories = this.generateInternalCategories(nextProps);
@@ -130,8 +130,8 @@ export default class ElementSelect extends Component {
     if (props.baseElements && props.baseElements.length && categoriesCopy[baseElementsIndex]) {
       categoriesCopy[baseElementsIndex].entries = props.baseElements.map((e) => {
         const returnType = _.isEmpty(e.modifiers) ? e.returnType : _.last(e.modifiers).returnType;
-        const commentParam = e.parameters.find(param => param.id === 'comment');
-        const commentDefaultValue = commentParam ? commentParam.value : '';
+        const commentField = e.fields.find(field => field.id === 'comment');
+        const commentDefaultValue = commentField ? commentField.value : '';
         const type = e.type === 'parameter' ? e.type : e.name;
         return ({
           id: _.uniqueId(e.id),
@@ -139,8 +139,8 @@ export default class ElementSelect extends Component {
           type: 'baseElement',
           template: 'GenericStatement',
           returnType,
-          parameters: [
-            { id: 'element_name', type: 'string', name: 'Element Name', value: e.parameters[0].value },
+          fields: [
+            { id: 'element_name', type: 'string', name: 'Element Name', value: e.fields[0].value },
             {
               id: 'baseElementReference',
               type: 'reference',
@@ -170,7 +170,7 @@ export default class ElementSelect extends Component {
           type: 'parameter',
           returnType: _.toLower(param.type),
           template: 'GenericStatement',
-          parameters: [
+          fields: [
             { id: 'element_name', type: 'string', name: 'Element Name', value: param.name },
             { id: 'default', type: 'boolean', name: 'Default', value: param.value },
             {
@@ -295,7 +295,7 @@ export default class ElementSelect extends Component {
       type: selectedExternalDefinition.type,
       template: 'GenericStatement',
       returnType: selectedExternalDefinition.returnType,
-      parameters: [
+      fields: [
         { id: 'element_name', type: 'string', name: 'Element Name', value: selectedExternalDefinition.value },
         {
           id: 'externalCqlReference',
@@ -345,10 +345,10 @@ export default class ElementSelect extends Component {
     if (selectedElement && !selectedElement.vsacAuthRequired) {
       noAuthElementOptions = this.state.categories
         .find(cat => cat.name === selectedElement.label)
-        .entries.map(({ id, name, type, parameters }) => {
-          // Base elements display the parameter element_name entered by user, not the generic 'Base Element'.
-          const label = type === 'baseElement' ? parameters[0].value : name;
-          const uniqueId = type === 'baseElement' ? parameters[1].value.id : '';
+        .entries.map(({ id, name, type, fields }) => {
+          // Base elements display the field element_name entered by user, not the generic 'Base Element'.
+          const label = type === 'baseElement' ? fields[0].value : name;
+          const uniqueId = type === 'baseElement' ? fields[1].value.id : '';
           return ({ value: id, label, type: selectedElement.label, uniqueId });
         });
       if (selectedElement.value === 'baseElement') {
@@ -443,10 +443,6 @@ ElementSelect.propTypes = {
   artifactId: PropTypes.string,
   categories: PropTypes.array.isRequired,
   onSuggestionSelected: PropTypes.func.isRequired,
-  booleanParameters: PropTypes.arrayOf(PropTypes.shape({
-    name: PropTypes.string,
-    value: PropTypes.string
-  })),
   loginVSACUser: PropTypes.func.isRequired,
   setVSACAuthStatus: PropTypes.func.isRequired,
   vsacStatus: PropTypes.string,

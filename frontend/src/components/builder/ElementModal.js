@@ -52,33 +52,33 @@ export default class ElementModal extends Component {
 
     if (selectedTemplate === undefined) return;
 
-    let valuesetsToAdd = selectedTemplate.parameters[1].valueSets;
+    let valuesetsToAdd = selectedTemplate.fields[1].valueSets;
     if (valuesetsToAdd === undefined) {
       valuesetsToAdd = [];
     }
     valuesetsToAdd.push({ name: element.name, oid: element.oid });
-    const nameParameter = selectedTemplate.parameters[0];
+    const nameField = selectedTemplate.fields[0];
 
-    // Adding a new element and editing an exisitng element use different functions that take different parameters
+    // Adding a new element and editing an existing element use different functions that take different parameters
     if (this.props.onElementSelected) {
       // Set the template's values based on value set selection initially to add it to the workspace.
-      if (!nameParameter.value) {
+      if (!nameField.value) {
         // Only set name of element if there isn't one already.
-        selectedTemplate.parameters[0].value = element.name;
+        selectedTemplate.fields[0].value = element.name;
       }
-      selectedTemplate.parameters[1].valueSets = valuesetsToAdd;
-      selectedTemplate.parameters[1].static = true;
+      selectedTemplate.fields[1].valueSets = valuesetsToAdd;
+      selectedTemplate.fields[1].static = true;
       this.props.onElementSelected(selectedTemplate);
     } else if (this.props.updateElement) {
       // Update an existing element in the workspace
-      // Create array of which parameter to update, the new value to set, and the attribute to update (value is default)
+      // Create array of which field to update, the new value to set, and the attribute to update (value is default)
       const arrayToUpdate = [
-        { [selectedTemplate.parameters[1].id]: valuesetsToAdd, attributeToEdit: 'valueSets' },
-        { [selectedTemplate.parameters[1].id]: true, attributeToEdit: 'static' }
+        { [selectedTemplate.fields[1].id]: valuesetsToAdd, attributeToEdit: 'valueSets' },
+        { [selectedTemplate.fields[1].id]: true, attributeToEdit: 'static' }
       ];
-      if (!nameParameter.value) {
+      if (!nameField.value) {
         // Only set name of element if there isn't one already.
-        arrayToUpdate.push({ [selectedTemplate.parameters[0].id]: element.name });
+        arrayToUpdate.push({ [selectedTemplate.fields[0].id]: element.name });
       }
       this.props.updateElement(arrayToUpdate);
     }

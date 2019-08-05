@@ -42,7 +42,7 @@ import { getOriginalBaseElement } from '../../utils/baseElements';
 import { getReturnType, validateModifier, allModifiersValid } from '../../utils/instances';
 
 function getInstanceName(instance) {
-  return (instance.parameters.find(p => p.id === 'element_name') || {}).value;
+  return (instance.fields.find(f => f.id === 'element_name') || {}).value;
 }
 
 export default class TemplateInstance extends Component {
@@ -68,8 +68,8 @@ export default class TemplateInstance extends Component {
   }
 
   componentWillMount() {
-    this.props.templateInstance.parameters.forEach((param) => {
-      this.setState({ [param.id]: param.value });
+    this.props.templateInstance.fields.forEach((field) => {
+      this.setState({ [field.id]: field.value });
     });
   }
 
@@ -443,13 +443,13 @@ export default class TemplateInstance extends Component {
 
   deleteCode = (codeToDelete) => {
     const templateInstanceClone = _.cloneDeep(this.props.templateInstance);
-    if (templateInstanceClone.parameters[1] && templateInstanceClone.parameters[1].codes) {
-      const updatedCodes = templateInstanceClone.parameters[1].codes;
+    if (templateInstanceClone.fields[1] && templateInstanceClone.fields[1].codes) {
+      const updatedCodes = templateInstanceClone.fields[1].codes;
       const indexOfCodeToRemove = updatedCodes.findIndex(code =>
         (code.code === codeToDelete.code && _.isEqual(code.codeSystem, codeToDelete.codeSystem)));
       updatedCodes.splice(indexOfCodeToRemove, 1);
       const arrayToUpdate = [
-        { [templateInstanceClone.parameters[1].id]: updatedCodes, attributeToEdit: 'codes' }
+        { [templateInstanceClone.fields[1].id]: updatedCodes, attributeToEdit: 'codes' }
       ];
       this.updateInstance(arrayToUpdate);
     }
@@ -496,25 +496,25 @@ export default class TemplateInstance extends Component {
     return null;
   }
 
-  renderReferenceInfo = (referenceParameter) => {
+  renderReferenceInfo = (referenceField) => {
     let referenceName;
-    if (referenceParameter) {
-      if (referenceParameter.id === 'externalCqlReference') {
-        referenceName = referenceParameter.value.id;
+    if (referenceField) {
+      if (referenceField.id === 'externalCqlReference') {
+        referenceName = referenceField.value.id;
       } else {
-        const elementToReference = this.props.instanceNames.find(name => name.id === referenceParameter.value.id);
+        const elementToReference = this.props.instanceNames.find(name => name.id === referenceField.value.id);
         if (elementToReference) {
           referenceName = elementToReference.name;
         }
       }
     }
-    const scrollElementId = referenceParameter.value.id;
-    const scrollReferenceType = referenceParameter.id;
+    const scrollElementId = referenceField.value.id;
+    const scrollReferenceType = referenceField.id;
 
     let baseUseTab;
-    if (referenceParameter.id === 'baseElementUse') {
+    if (referenceField.id === 'baseElementUse') {
       const { allInstancesInAllTrees } = this.props;
-      const element = allInstancesInAllTrees.filter(instance => instance.uniqueId === referenceParameter.value.id)[0];
+      const element = allInstancesInAllTrees.filter(instance => instance.uniqueId === referenceField.value.id)[0];
       baseUseTab = element ? element.tab : null;
     }
 
@@ -525,10 +525,10 @@ export default class TemplateInstance extends Component {
     if (baseUseTab === 'baseElements') tabIndex = 3;
 
     let label = 'Element:';
-    if (referenceParameter.id === 'baseElementReference') label = 'Base Element:';
-    if (referenceParameter.id === 'parameterReference') label = 'Parameter:';
-    if (referenceParameter.id === 'externalCqlReference') label = 'External CQL Element:';
-    if (referenceParameter.id === 'baseElementUse') label = 'Element Use:';
+    if (referenceField.id === 'baseElementReference') label = 'Base Element:';
+    if (referenceField.id === 'parameterReference') label = 'Parameter:';
+    if (referenceField.id === 'externalCqlReference') label = 'External CQL Element:';
+    if (referenceField.id === 'baseElementUse') label = 'Element Use:';
 
     let tabLabel = '';
     if (baseUseTab === 'expTreeInclude') tabLabel = 'Inclusions';
@@ -538,16 +538,16 @@ export default class TemplateInstance extends Component {
 
 
     return (
-      <div className="modifier__return__type" id="base-element-list" key={referenceParameter.value.id}>
+      <div className="modifier__return__type" id="base-element-list" key={referenceField.value.id}>
         <div className="code-info">
           <div className="bold align-right code-info__label">{label}</div>
           <div className="code-info__info">
             <div className="code-info__text">
               <span>{referenceName}</span>
-              {referenceParameter.id === 'baseElementUse' && <span> &#8594; {tabLabel}</span>}
+              {referenceField.id === 'baseElementUse' && <span> &#8594; {tabLabel}</span>}
             </div>
 
-            {(referenceParameter.id !== 'externalCqlReference') &&
+            {(referenceField.id !== 'externalCqlReference') &&
             <div className="code-info__buttons align-right">
               <span
                 role="button"
@@ -571,17 +571,17 @@ export default class TemplateInstance extends Component {
   }
 
   renderVSInfo = () => {
-    if (this.props.templateInstance.parameters.length > 1) {
-      // All generic VSAC elements save the VS information on this parameter on the valueSets property.
-      const vsacParameter = this.props.templateInstance.parameters[1];
-      if (vsacParameter.valueSets) {
+    if (this.props.templateInstance.fields.length > 1) {
+      // All generic VSAC elements save the VS information on this field on the valueSets property.
+      const vsacField = this.props.templateInstance.fields[1];
+      if (vsacField.valueSets) {
         return (
           <div className="modifier__return__type" id="valueset-list">
-            {vsacParameter.valueSets.map((vs, i) => (
+            {vsacField.valueSets.map((vs, i) => (
               <div key={`selected-valueset-${i}`}>
                 <ValueSetTemplate
                   index={i}
-                  vsacParameter={vsacParameter}
+                  vsacField={vsacField}
                   valueSet={vs}
                   updateInstance={this.updateInstance}
                   searchVSACByKeyword={this.props.searchVSACByKeyword}
@@ -604,16 +604,16 @@ export default class TemplateInstance extends Component {
   }
 
   renderCodeInfo = () => {
-    if (this.props.templateInstance.parameters.length > 1) {
-      // All generic VSAC elements save the VS information on this parameter on the codes property.
-      const vsacParameter = this.props.templateInstance.parameters[1];
-      if (vsacParameter.codes) {
+    if (this.props.templateInstance.fields.length > 1) {
+      // All generic VSAC elements save the VS information on this field on the codes property.
+      const vsacField = this.props.templateInstance.fields[1];
+      if (vsacField.codes) {
         return (
           <div className="modifier__return__type" id="code-list">
-            {vsacParameter.codes.map((code, i) => (
+            {vsacField.codes.map((code, i) => (
               <div key={`selected-code-${i}`} className="code-info">
                 <div className="bold align-right code-info__label">
-                  Code{vsacParameter.codes.length > 1 ? ` ${i + 1}` : ''}:
+                  Code{vsacField.codes.length > 1 ? ` ${i + 1}` : ''}:
                 </div>
 
                 {/* Code name will come with validation */}
@@ -696,38 +696,37 @@ export default class TemplateInstance extends Component {
     );
   }
 
-  selectTemplate = (param) => {
-    if (param.static) {
+  selectTemplate = (field) => {
+    if (field.static) {
       return (
         <StaticParameter
-          key={param.id}
-          param={param}
+          key={field.id}
           updateInstance={this.updateInstance} />
       );
     }
 
-    switch (param.type) {
+    switch (field.type) {
       case 'number':
         return (
           <NumberParameter
-            key={param.id}
-            param={param}
-            value={this.state[param.id]}
-            typeOfNumber={param.typeOfNumber}
+            key={field.id}
+            field={field}
+            value={this.state[field.id]}
+            typeOfNumber={field.typeOfNumber}
             updateInstance={this.updateInstance} />
         );
       case 'string':
         return (
           <StringParameter
-            key={param.id}
-            {...param}
+            key={field.id}
+            {...field}
             updateInstance={this.updateInstance} />
         );
       case 'textarea':
         return (
           <TextAreaParameter
-            key={param.id}
-            {...param}
+            key={field.id}
+            {...field}
             updateInstance={this.updateInstance} />
         );
       case 'observation_vsac':
@@ -739,15 +738,15 @@ export default class TemplateInstance extends Component {
       case 'allergyIntolerance_vsac':
         return (
           <StringParameter
-            key={param.id}
-            {...param}
+            key={field.id}
+            {...field}
             updateInstance={this.updateInstance} />
         );
       case 'valueset':
         return (
           <ValueSetParameter
-            key={param.id}
-            param={param}
+            key={field.id}
+            field={field}
             valueSets={this.props.valueSets}
             loadValueSets={this.props.loadValueSets}
             updateInstance={this.updateInstance}/>
@@ -775,11 +774,11 @@ export default class TemplateInstance extends Component {
   renderBody() {
     const { templateInstance, validateReturnType } = this.props;
     const { returnType } = this.state;
-    const referenceParameter = templateInstance.parameters.find(param => param.type === 'reference');
+    const referenceField = templateInstance.fields.find(field => field.type === 'reference');
     const validationError = validateElement(this.props.templateInstance, this.state);
     const returnError = (!(validateReturnType !== false) || returnType === 'boolean') ? null
       : "Element must have return type 'boolean'. Add expression(s) to change the return type.";
-    const commentParameter = templateInstance.parameters.find(param => param.id === 'comment');
+    const commentField = templateInstance.fields.find(field => field.id === 'comment');
 
     return (
       <div className="card-element__body">
@@ -792,17 +791,16 @@ export default class TemplateInstance extends Component {
           baseElements={this.props.baseElements}
         />
 
-        {commentParameter &&
+        {commentField &&
           <TextAreaParameter
-            key={commentParameter.id}
-            {...commentParameter}
+            key={commentField.id}
+            {...commentField}
             updateInstance={this.updateInstance} />
         }
 
-        {templateInstance.parameters.map((param, index) => {
-          // TODO: each parameter type should probably have its own component
-          if (param.id !== 'element_name' && param.id !== 'comment') {
-            return this.selectTemplate(param);
+        {templateInstance.fields.map((field, index) => {
+          if (field.id !== 'element_name' && field.id !== 'comment') {
+            return this.selectTemplate(field);
           }
           return null;
         })}
@@ -814,9 +812,9 @@ export default class TemplateInstance extends Component {
           </div>
         }
 
-        {referenceParameter &&
+        {referenceField &&
           <div className="vsac-info">
-            {this.renderReferenceInfo(referenceParameter)}
+            {this.renderReferenceInfo(referenceField)}
           </div>
         }
 
@@ -864,16 +862,16 @@ export default class TemplateInstance extends Component {
     );
   }
 
-  renderHeading = (elementNameParameter) => {
+  renderHeading = (elementNameField) => {
     const { templateInstance, instanceNames, baseElements, parameters, allInstancesInAllTrees } = this.props;
 
-    if (elementNameParameter) {
+    if (elementNameField) {
       let elementType = (templateInstance.type === 'parameter') ? 'Parameter' : templateInstance.name;
 
 
-      const referenceParameter = templateInstance.parameters.find(param => param.type === 'reference');
+      const referenceField = templateInstance.fields.find(field => field.type === 'reference');
 
-      if (referenceParameter && (referenceParameter.id === 'baseElementReference')) {
+      if (referenceField && (referenceField.id === 'baseElementReference')) {
         // Element type to display in header will be the reference type for Base Elements.
         const originalBaseElement = getOriginalBaseElement(templateInstance, baseElements);
         elementType = (originalBaseElement.type === 'parameter') ? 'Parameter' : originalBaseElement.name;
@@ -889,8 +887,8 @@ export default class TemplateInstance extends Component {
       return (
         <div className="card-element__heading">
           <StringParameter
-            key={elementNameParameter.id}
-            {...elementNameParameter}
+            key={elementNameField.id}
+            {...elementNameField}
             updateInstance={this.updateInstance}
             name={elementType}
             uniqueId={templateInstance.uniqueId}
@@ -916,14 +914,14 @@ export default class TemplateInstance extends Component {
       );
     }
 
-    // Handles the case for old parameters, which did not have an 'element_name' parameter.
+    // Handles the case for old parameters, which did not have an 'element_name' field.
     return <span className="label">{templateInstance.name}</span>;
   }
 
   renderHeader = () => {
     const { templateInstance, renderIndentButtons } = this.props;
     const { showElement } = this.state;
-    const elementNameParameter = templateInstance.parameters.find(param => param.id === 'element_name');
+    const elementNameField = templateInstance.fields.find(field => field.id === 'element_name');
     const headerClass = classNames('card-element__header', { collapsed: !showElement });
     const headerTopClass = classNames('card-element__header-top', { collapsed: !showElement });
 
@@ -936,10 +934,10 @@ export default class TemplateInstance extends Component {
         <div className={headerTopClass}>
           <div className="card-element__heading">
             {showElement ?
-              this.renderHeading(elementNameParameter)
+              this.renderHeading(elementNameField)
             :
               <div className="heading-name">
-                {elementNameParameter.value}: {this.hasWarnings() &&
+                {elementNameField.value}: {this.hasWarnings() &&
                   <div className="warning"><FontAwesome name="exclamation-circle" /> Has warnings</div>
                 }
               </div>
