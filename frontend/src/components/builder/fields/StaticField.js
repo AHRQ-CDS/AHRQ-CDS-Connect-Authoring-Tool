@@ -7,7 +7,7 @@ import React from 'react';
  * and a function called Validation that validates what is entered
  */
 export default props => (
-  <div className="static-parameter">
+  <div className="static-field">
     <input
       type="hidden"
       aria-hidden="true"

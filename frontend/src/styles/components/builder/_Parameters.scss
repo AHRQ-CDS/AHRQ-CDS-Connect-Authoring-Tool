@@ -40,10 +40,10 @@
 
 // ------------------------- TYPES ----------------------------------------- //
 
-.string-parameter,
-.number-parameter,
-.textarea-parameter,
-.value-set-parameter {
+.string-field,
+.number-field,
+.textarea-field,
+.value-set-field {
   margin: 10px 0;
 
   label {
@@ -78,7 +78,7 @@
   }
 }
 
-.textarea-parameter {
+.textarea-field {
   margin-bottom: -5px;
 
   textarea {
@@ -89,6 +89,6 @@
   }
 }
 
-.value-set-parameter .Select {
+.value-set-field .Select {
   display: inline-block;
 }

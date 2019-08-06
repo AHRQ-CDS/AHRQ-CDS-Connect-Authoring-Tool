@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import _ from 'lodash';
 
 // this.props are from a templateInstance field object,
@@ -17,10 +18,10 @@ export default class NumberField extends Component {
 
   render() {
     const { value, field } = this.props;
-    const id = _.uniqueId('parameter-');
+    const id = _.uniqueId('field-');
 
     return (
-      <div className="number-parameter">
+      <div className="number-field">
         <div className='form__group'>
           <label htmlFor={id}>
             <div className="label">{field.name}:</div>
@@ -53,3 +54,10 @@ export default class NumberField extends Component {
     );
   }
 }
+
+NumberField.propTypes = {
+  field: PropTypes.object.isRequired,
+  value: PropTypes.number,
+  typeOfNumber: PropTypes.string.isRequired,
+  updateInstance: PropTypes.func.isRequired
+};

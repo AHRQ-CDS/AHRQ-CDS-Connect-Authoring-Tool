@@ -10,10 +10,10 @@ import _ from 'lodash';
 export default class StringField extends Component {
   render() {
     const { id, name, value, updateInstance } = this.props;
-    const formId = _.uniqueId('parameter-');
+    const formId = _.uniqueId('field-');
 
     return (
-      <div className="string-parameter">
+      <div className="string-field">
         <div className="form__group">
           <label htmlFor={formId}>
             <div className="label">{name}:</div>

@@ -51,10 +51,10 @@ export default class TextAreaField extends Component {
   render() {
     const { id, name, value, updateInstance } = this.props;
     const { rows } = this.state;
-    const formId = _.uniqueId('parameter-');
+    const formId = _.uniqueId('field-');
 
     return (
-      <div className="textarea-parameter">
+      <div className="textarea-field">
         <div className="form__group">
           <label htmlFor={formId}>
             <div className="label">{name}:</div>
