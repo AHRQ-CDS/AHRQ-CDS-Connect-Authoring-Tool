@@ -163,22 +163,22 @@ function addGroupedConceptExpression(referencedConceptElements, resourceMap, val
 }
 
 function isBaseElementUseChanged(element, baseElements) {
-  const referenceParameter = element.parameters.find(param => param.type === 'reference');
-  if (!referenceParameter) {
-    // This case should never happen because an element of type base element will never NOT have a reference parameter
+  const referenceField = element.fields.find(field => field.type === 'reference');
+  if (!referenceField) {
+    // This case should never happen because an element of type base element will never NOT have a reference field
     return true;
   }
 
-  const nameParameter = element.parameters.find(param => param.id === 'element_name');
-  const commentParameter = element.parameters.find(param => param.id === 'comment');
+  const nameField = element.fields.find(field => field.id === 'element_name');
+  const commentField = element.fields.find(field => field.id === 'comment');
 
-  const originalBaseElement = baseElements.find(baseEl => referenceParameter.value.id === baseEl.uniqueId);
+  const originalBaseElement = baseElements.find(baseEl => referenceField.value.id === baseEl.uniqueId);
   if (!originalBaseElement) {
     // This case should never happen because you can't delete base elements while in use.
     return true;
   }
 
-  if (nameParameter.value !== originalBaseElement.parameters[0].value) {
+  if (nameField.value !== originalBaseElement.fields[0].value) {
     // If the name of the use of the base element and the original base element are different, it's been changed.
     return true;
   }
@@ -187,8 +187,8 @@ function isBaseElementUseChanged(element, baseElements) {
     return true;
   }
 
-  const originalCommentParameter = originalBaseElement.parameters.find(param => param.id === 'comment');
-  if (commentParameter.value !== originalCommentParameter.value) {
+  const originalCommentField = originalBaseElement.fields.find(field => field.id === 'comment');
+  if (commentField.value !== originalCommentField.value) {
     // If the comment on the use of the base element and the original element are different, it's been changed.
     return true;
   }
@@ -197,22 +197,22 @@ function isBaseElementUseChanged(element, baseElements) {
 }
 
 function isParameterUseChanged(element, parameters) {
-  const referenceParameter = element.parameters.find(param => param.type === 'reference');
-  if (!referenceParameter) {
-    // This case should never happen because an element of type parameter will never NOT have a reference parameter
+  const referenceField = element.fields.find(field => field.type === 'reference');
+  if (!referenceField) {
+    // This case should never happen because an element of type parameter will never NOT have a reference field
     return true;
   }
 
-  const nameParameter = element.parameters.find(param => param.id === 'element_name');
-  const commentParameter = element.parameters.find(param => param.id === 'comment');
+  const nameField = element.fields.find(field => field.id === 'element_name');
+  const commentField = element.fields.find(field => field.id === 'comment');
 
-  const originalParameter = parameters.find(param => referenceParameter.value.id === param.uniqueId);
+  const originalParameter = parameters.find(param => referenceField.value.id === param.uniqueId);
   if (!originalParameter) {
     // This case should never happen because you can't delete parameters while in use.
     return true;
   }
 
-  if (nameParameter.value !== originalParameter.name) {
+  if (nameField.value !== originalParameter.name) {
     // If the name of the use of the parameter and the original parameter are different, it's been changed.
     return true;
   }
@@ -221,7 +221,7 @@ function isParameterUseChanged(element, parameters) {
     return true;
   }
 
-  if (!_.isEqual(createCommentArray(commentParameter.value) || [], originalParameter.comment || [])) {
+  if (!_.isEqual(createCommentArray(commentField.value) || [], originalParameter.comment || [])) {
     // If the comment on the use of the parameter and the original parameter are different, it's been changed.
     return true;
   }
@@ -286,7 +286,6 @@ class CqlArtifact {
     this.codeSystemMap = new Map();
     this.codeMap = new Map();
     this.conceptMap = new Map();
-    this.paramContexts = [];
     this.referencedElements = [];
     this.referencedConceptElements = [];
     this.unionedElements = [];
@@ -342,9 +341,9 @@ class CqlArtifact {
       if (baseElement.type === 'parameter') {
         isParameterUseAndUnchanged = !isParameterUseChanged(baseElement, this.parameters);
       }
-      const count = getCountForUniqueExpressionName(baseElement.parameters[0], this.names, 'value', '', false);
+      const count = getCountForUniqueExpressionName(baseElement.fields[0], this.names, 'value', '', false);
       if ((!(isBaseElementUseAndUnchanged || isParameterUseAndUnchanged)) && count > 0) {
-        baseElement.parameters[0].value = `${baseElement.parameters[0].value}_${count}`;
+        baseElement.fields[0].value = `${baseElement.fields[0].value}_${count}`;
       }
 
       if (baseElement.childInstances) {
@@ -393,7 +392,7 @@ class CqlArtifact {
     });
   }
 
-  setParameterContexts(elementDetails, valuesetQueryName, context) {
+  setFieldContexts(elementDetails, valuesetQueryName, context) {
     if (elementDetails.concepts.length > 0) {
       const values = [];
       elementDetails.concepts.forEach((concept) => {
@@ -480,11 +479,11 @@ class CqlArtifact {
         subpopref.subpopulationName === element.subpopulationName
       ))
     ));
-    const name = element.parameters[0].value;
+    const name = element.fields[0].value;
     conjunction.element_name = (name || element.subpopulationName || element.uniqueId);
     (element.childInstances || []).forEach((child) => {
       // TODO: Could a child of a conjunction ever be a subpopulation?
-      let childName = (child.parameters[0]||{}).value || child.uniqueId;
+      let childName = (child.fields[0]||{}).value || child.uniqueId;
       let isBaseElementUseAndUnchanged = false;
       let isParameterUseAndUnchanged = false;
       if (child.type === 'baseElement') {
@@ -494,11 +493,11 @@ class CqlArtifact {
         isParameterUseAndUnchanged = !isParameterUseChanged(child, this.parameters);
       }
       if (!(isBaseElementUseAndUnchanged || isParameterUseAndUnchanged)) {
-        const childCount = getCountForUniqueExpressionName(child.parameters[0], this.names, 'value', '', false);
+        const childCount = getCountForUniqueExpressionName(child.fields[0], this.names, 'value', '', false);
         if (childCount > 0) {
           childName = `${childName}_${childCount}`;
-          if (child.parameters[0].value) {
-            child.parameters[0].value = childName;
+          if (child.fields[0].value) {
+            child.fields[0].value = childName;
           }
         }
       }
@@ -510,11 +509,11 @@ class CqlArtifact {
 
   parseParameter(element) {
     const context = {};
-    element.parameters.forEach((parameter) => {
-      if (parameter.id === 'comment') {
-        context[parameter.id] = createCommentArray(parameter.value);
+    element.fields.forEach((field) => {
+      if (field.id === 'comment') {
+        context[field.id] = createCommentArray(field.value);
       } else {
-        context[parameter.id] = parameter.value;
+        context[field.id] = field.value;
       }
     });
     context.template = 'GenericStatement';
@@ -542,8 +541,8 @@ class CqlArtifact {
         context.checkExistenceValue = checkExistenceModifier.values.value;
       }
     }
-    element.parameters.forEach((parameter) => {
-      switch (parameter.type) {
+    element.fields.forEach((field) => {
+      switch (field.type) {
         case 'observation_vsac': {
           // All information in observations array will be provided by the selections made on the frontend.
           const observationValueSets = {
@@ -551,15 +550,15 @@ class CqlArtifact {
             valuesets: [],
             concepts: []
           };
-          buildConceptObjectForCodes(parameter.codes, observationValueSets.concepts);
-          addValueSets(parameter, observationValueSets, 'valuesets');
-          this.setParameterContexts(observationValueSets, 'Observation', context);
+          buildConceptObjectForCodes(field.codes, observationValueSets.concepts);
+          addValueSets(field, observationValueSets, 'valuesets');
+          this.setFieldContexts(observationValueSets, 'Observation', context);
           break;
         }
         case 'number': {
-          context[parameter.id] = parameter.value;
-          if ('exclusive' in parameter) {
-            context[`${parameter.id}_exclusive`] = parameter.exclusive;
+          context[field.id] = field.value;
+          if ('exclusive' in field) {
+            context[`${field.id}_exclusive`] = field.exclusive;
           }
           break;
         }
@@ -569,9 +568,9 @@ class CqlArtifact {
             valuesets: [],
             concepts: []
           }
-          buildConceptObjectForCodes(parameter.codes, conditionValueSets.concepts);
-          addValueSets(parameter, conditionValueSets, 'valuesets');
-          this.setParameterContexts(conditionValueSets, 'Condition', context);
+          buildConceptObjectForCodes(field.codes, conditionValueSets.concepts);
+          addValueSets(field, conditionValueSets, 'valuesets');
+          this.setFieldContexts(conditionValueSets, 'Condition', context);
           break;
         }
         case 'medicationStatement_vsac': {
@@ -580,9 +579,9 @@ class CqlArtifact {
             valuesets: [],
             concepts: []
           };
-          buildConceptObjectForCodes(parameter.codes, medicationStatementValueSets.concepts);
-          addValueSets(parameter, medicationStatementValueSets, 'valuesets');
-          this.setParameterContexts(medicationStatementValueSets, 'MedicationStatement', context);
+          buildConceptObjectForCodes(field.codes, medicationStatementValueSets.concepts);
+          addValueSets(field, medicationStatementValueSets, 'valuesets');
+          this.setFieldContexts(medicationStatementValueSets, 'MedicationStatement', context);
           break;
         }
         case 'medicationOrder_vsac': {
@@ -591,12 +590,12 @@ class CqlArtifact {
             valuesets: [],
             concepts: []
           };
-          buildConceptObjectForCodes(parameter.codes, medicationOrderValueSets.concepts);
-          addValueSets(parameter, medicationOrderValueSets, 'valuesets');
+          buildConceptObjectForCodes(field.codes, medicationOrderValueSets.concepts);
+          addValueSets(field, medicationOrderValueSets, 'valuesets');
           if (fhirTarget.version === '3.0.0') {
-            this.setParameterContexts(medicationOrderValueSets, 'MedicationRequest', context);
+            this.setFieldContexts(medicationOrderValueSets, 'MedicationRequest', context);
           } else {
-            this.setParameterContexts(medicationOrderValueSets, 'MedicationOrder', context);
+            this.setFieldContexts(medicationOrderValueSets, 'MedicationOrder', context);
           }
           break;
         }
@@ -606,9 +605,9 @@ class CqlArtifact {
             valuesets: [],
             concepts: []
           };
-          buildConceptObjectForCodes(parameter.codes, procedureValueSets.concepts);
-          addValueSets(parameter, procedureValueSets, 'valuesets');
-          this.setParameterContexts(procedureValueSets, 'Procedure', context);
+          buildConceptObjectForCodes(field.codes, procedureValueSets.concepts);
+          addValueSets(field, procedureValueSets, 'valuesets');
+          this.setFieldContexts(procedureValueSets, 'Procedure', context);
           break;
         }
         case 'encounter_vsac': {
@@ -617,9 +616,9 @@ class CqlArtifact {
             valuesets: [],
             concepts: []
           };
-          buildConceptObjectForCodes(parameter.codes, encounterValueSets.concepts);
-          addValueSets(parameter, encounterValueSets, 'valuesets');
-          this.setParameterContexts(encounterValueSets, 'Encounter', context);
+          buildConceptObjectForCodes(field.codes, encounterValueSets.concepts);
+          addValueSets(field, encounterValueSets, 'valuesets');
+          this.setFieldContexts(encounterValueSets, 'Encounter', context);
           break;
         }
         case 'allergyIntolerance_vsac' : {
@@ -628,38 +627,38 @@ class CqlArtifact {
             valuesets: [],
             concepts: []
           };
-          buildConceptObjectForCodes(parameter.codes, allergyIntoleranceValueSets.concepts);
-          addValueSets(parameter, allergyIntoleranceValueSets, 'valuesets');
-          this.setParameterContexts(allergyIntoleranceValueSets, 'AllergyIntolerance', context);
+          buildConceptObjectForCodes(field.codes, allergyIntoleranceValueSets.concepts);
+          addValueSets(field, allergyIntoleranceValueSets, 'valuesets');
+          this.setFieldContexts(allergyIntoleranceValueSets, 'AllergyIntolerance', context);
           break;
         }
         case 'reference': {
           // Need to pull the element name from the reference to support renaming the elements while being used.
-          if (parameter.id === 'parameterReference') {
-            const referencedParameter = this.parameters.find(p => p.uniqueId === parameter.value.id);
+          if (field.id === 'parameterReference') {
+            const referencedParameter = this.parameters.find(p => p.uniqueId === field.value.id);
             const referencedParameterName = referencedParameter.name || referencedParameter.uniqueId;
             context.values = [ `"${referencedParameterName}"` ];
-          } else if (parameter.id === 'baseElementReference') {
-            const referencedElement = this.baseElements.find(e => e.uniqueId === parameter.value.id);
-            const referencedElementName = referencedElement.parameters[0].value || referencedElement.uniqueId;
+          } else if (field.id === 'baseElementReference') {
+            const referencedElement = this.baseElements.find(e => e.uniqueId === field.value.id);
+            const referencedElementName = referencedElement.fields[0].value || referencedElement.uniqueId;
             context.values = [ `"${referencedElementName}"` ];
-          } else if (parameter.id === 'externalCqlReference') {
-            context.values = [ `"${parameter.value.library}"."${parameter.value.element}"` ];
+          } else if (field.id === 'externalCqlReference') {
+            context.values = [`"${field.value.library}"."${field.value.element}"` ];
           }
           break;
         }
         case 'textarea': {
-          if (parameter.id === 'comment') {
-            context[parameter.id] = createCommentArray(parameter.value);
+          if (field.id === 'comment') {
+            context[field.id] = createCommentArray(field.value);
           } else {
             context.values = context.values || [];
-            context[parameter.id] = parameter.value;
+            context[field.id] = field.value;
           }
           break;
         }
         default: {
           context.values = context.values || [];
-          context[parameter.id] = parameter.value;
+          context[field.id] = field.value;
           break;
         }
       }
@@ -725,7 +724,7 @@ class CqlArtifact {
     return ejs.render(fs.readFileSync(artifactPath, 'utf-8'), this);
   }
   population() {
-    const getTreeName = tree => tree.parameters.find(p => p.id === 'element_name').value || tree.uniqueId;
+    const getTreeName = tree => tree.fields.find(f => f.id === 'element_name').value || tree.uniqueId;
 
     const treeNames = {
       inclusions: this.inclusions.childInstances.length ? getTreeName(this.inclusions) : '',
@@ -970,10 +969,10 @@ function buildConceptObjectForCodes(codes, listOfConcepts) {
   }
 }
 
-function addValueSets(parameter, valueSetObject, attribute) {
-  if (parameter && parameter.valueSets) {
+function addValueSets(field, valueSetObject, attribute) {
+  if (field && field.valueSets) {
     valueSetObject[attribute] = [];
-    parameter.valueSets.forEach(vs => {
+    field.valueSets.forEach(vs => {
       valueSetObject[attribute].push({ name: `${vs.name.replace(/"/g, '\\"')} VS`, oid: vs.oid });
     });
   }
