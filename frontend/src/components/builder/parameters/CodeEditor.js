@@ -2,8 +2,8 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import _ from 'lodash';
 
-import CodeSelectModal from '../../CodeSelectModal';
-import VSACAuthenticationModal from '../../VSACAuthenticationModal';
+import CodeSelectModal from '../CodeSelectModal';
+import VSACAuthenticationModal from '../VSACAuthenticationModal';
 
 export default class CodeEditor extends Component {
   handleCodeAdded = ({ system, uri, code, display }) => {

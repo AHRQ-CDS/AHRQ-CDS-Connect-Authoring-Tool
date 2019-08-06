@@ -10,11 +10,11 @@ import ElementModal from './ElementModal';
 import CodeSelectModal from './CodeSelectModal';
 
 // Try to keep these ordered same as in folder (i.e. alphabetically)
-import NumberParameter from './parameters/types/NumberParameter';
-import StaticParameter from './parameters/types/StaticParameter';
-import StringParameter from './parameters/types/StringParameter';
-import TextAreaParameter from './parameters/types/TextAreaParameter';
-import ValueSetParameter from './parameters/types/ValueSetParameter';
+import NumberField from './fields/NumberField';
+import StaticField from './fields/StaticField';
+import StringField from './fields/StringField';
+import TextAreaField from './fields/TextAreaField';
+import ValueSetField from './fields/ValueSetField';
 
 import ValueSetTemplate from './templates/ValueSetTemplate';
 
@@ -699,7 +699,7 @@ export default class TemplateInstance extends Component {
   selectTemplate = (field) => {
     if (field.static) {
       return (
-        <StaticParameter
+        <StaticField
           key={field.id}
           updateInstance={this.updateInstance} />
       );
@@ -708,7 +708,7 @@ export default class TemplateInstance extends Component {
     switch (field.type) {
       case 'number':
         return (
-          <NumberParameter
+          <NumberField
             key={field.id}
             field={field}
             value={this.state[field.id]}
@@ -717,14 +717,14 @@ export default class TemplateInstance extends Component {
         );
       case 'string':
         return (
-          <StringParameter
+          <StringField
             key={field.id}
             {...field}
             updateInstance={this.updateInstance} />
         );
       case 'textarea':
         return (
-          <TextAreaParameter
+          <TextAreaField
             key={field.id}
             {...field}
             updateInstance={this.updateInstance} />
@@ -737,14 +737,14 @@ export default class TemplateInstance extends Component {
       case 'encounter_vsac':
       case 'allergyIntolerance_vsac':
         return (
-          <StringParameter
+          <StringField
             key={field.id}
             {...field}
             updateInstance={this.updateInstance} />
         );
       case 'valueset':
         return (
-          <ValueSetParameter
+          <ValueSetField
             key={field.id}
             field={field}
             valueSets={this.props.valueSets}
@@ -792,7 +792,7 @@ export default class TemplateInstance extends Component {
         />
 
         {commentField &&
-          <TextAreaParameter
+          <TextAreaField
             key={commentField.id}
             {...commentField}
             updateInstance={this.updateInstance} />
@@ -886,7 +886,7 @@ export default class TemplateInstance extends Component {
 
       return (
         <div className="card-element__heading">
-          <StringParameter
+          <StringField
             key={elementNameField.id}
             {...elementNameField}
             updateInstance={this.updateInstance}

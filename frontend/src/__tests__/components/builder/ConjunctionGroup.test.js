@@ -1,7 +1,7 @@
 import _ from 'lodash';
 import ConjunctionGroup from '../../../components/builder/ConjunctionGroup';
 import TemplateInstance from '../../../components/builder/TemplateInstance';
-import StringParameter from '../../../components/builder/parameters/types/StringParameter';
+import StringField from '../../../components/builder/fields/StringField';
 import { fullRenderComponent, shallowRenderComponent, createTemplateInstance, fullRenderComponentOnBody }
   from '../../../utils/test_helpers';
 import { instanceTree, elementGroups } from '../../../utils/test_fixtures';
@@ -128,7 +128,7 @@ test('edits own type', () => {
 
 test('edits own name', () => {
   const newName = 'new name';
-  const nameParamater = childConjunction.find(StringParameter);
+  const nameParamater = childConjunction.find(StringField);
 
   nameParamater.find('input').simulate('change', { target: { name: 'element_name', value: newName } });
 

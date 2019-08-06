@@ -1,19 +1,19 @@
 import Select from 'react-select';
 
 import Parameter from '../../../components/builder/Parameter';
-import BooleanEditor from '../../../components/builder/parameters/editors/BooleanEditor';
-import CodeEditor from '../../../components/builder/parameters/editors/CodeEditor';
-import DateTimeEditor from '../../../components/builder/parameters/editors/DateTimeEditor';
-import DecimalEditor from '../../../components/builder/parameters/editors/DecimalEditor';
-import IntegerEditor from '../../../components/builder/parameters/editors/IntegerEditor';
-import QuantityEditor from '../../../components/builder/parameters/editors/QuantityEditor';
-import StringEditor from '../../../components/builder/parameters/editors/StringEditor';
-import TimeEditor from '../../../components/builder/parameters/editors/TimeEditor';
-import IntervalOfIntegerEditor from '../../../components/builder/parameters/editors/IntervalOfIntegerEditor';
-import IntervalOfDateTimeEditor from '../../../components/builder/parameters/editors/IntervalOfDateTimeEditor';
-import IntervalOfDecimalEditor from '../../../components/builder/parameters/editors/IntervalOfDecimalEditor';
-import IntervalOfQuantityEditor from '../../../components/builder/parameters/editors/IntervalOfQuantityEditor';
-import StringParameter from '../../../components/builder/parameters/types/StringParameter';
+import BooleanEditor from '../../../components/builder/parameters/BooleanEditor';
+import CodeEditor from '../../../components/builder/parameters/CodeEditor';
+import DateTimeEditor from '../../../components/builder/parameters/DateTimeEditor';
+import DecimalEditor from '../../../components/builder/parameters/DecimalEditor';
+import IntegerEditor from '../../../components/builder/parameters/IntegerEditor';
+import QuantityEditor from '../../../components/builder/parameters/QuantityEditor';
+import StringEditor from '../../../components/builder/parameters/StringEditor';
+import TimeEditor from '../../../components/builder/parameters/TimeEditor';
+import IntervalOfIntegerEditor from '../../../components/builder/parameters/IntervalOfIntegerEditor';
+import IntervalOfDateTimeEditor from '../../../components/builder/parameters/IntervalOfDateTimeEditor';
+import IntervalOfDecimalEditor from '../../../components/builder/parameters/IntervalOfDecimalEditor';
+import IntervalOfQuantityEditor from '../../../components/builder/parameters/IntervalOfQuantityEditor';
+import StringField from '../../../components/builder/fields/StringField';
 import { shallowRenderComponent } from '../../../utils/test_helpers';
 
 let component;
@@ -81,7 +81,7 @@ test('displays Boolean editor', () => {
     type: 'boolean',
     ...baseProps
   });
-  expect(component.find(StringParameter).props().value).toEqual('testParam');
+  expect(component.find(StringField).props().value).toEqual('testParam');
   expect(component.find(Select).first().props().value).toEqual('boolean');
   expect(component.find(BooleanEditor)).toHaveLength(1);
 });
@@ -101,7 +101,7 @@ test('displays Code editor', () => {
     type: 'system_code',
     ...baseProps
   });
-  expect(component.find(StringParameter).props().value).toEqual('testParam');
+  expect(component.find(StringField).props().value).toEqual('testParam');
   expect(component.find(Select).first().props().value).toEqual('system_code');
   expect(component.find(CodeEditor)).toHaveLength(1);
 });
@@ -112,7 +112,7 @@ test('displays Concept editor', () => {
     type: 'system_concept',
     ...baseProps
   });
-  expect(component.find(StringParameter).props().value).toEqual('testParam');
+  expect(component.find(StringField).props().value).toEqual('testParam');
   expect(component.find(Select).first().props().value).toEqual('system_concept');
   expect(component.find(CodeEditor)).toHaveLength(1);
 });
@@ -133,7 +133,7 @@ test('displays Integer editor', () => {
     type: 'integer',
     ...baseProps
   });
-  expect(component.find(StringParameter).props().value).toEqual('testParam');
+  expect(component.find(StringField).props().value).toEqual('testParam');
   expect(component.find(Select).first().props().value).toEqual('integer');
   expect(component.find(IntegerEditor)).toHaveLength(1);
 });
@@ -153,7 +153,7 @@ test('displays DateTime editor', () => {
     type: 'datetime',
     ...baseProps
   });
-  expect(component.find(StringParameter).props().value).toEqual('testParam');
+  expect(component.find(StringField).props().value).toEqual('testParam');
   expect(component.find(Select).first().props().value).toEqual('datetime');
   expect(component.find(DateTimeEditor)).toHaveLength(1);
 });
@@ -173,7 +173,7 @@ test('displays Decimal editor', () => {
     type: 'decimal',
     ...baseProps
   });
-  expect(component.find(StringParameter).props().value).toEqual('testParam');
+  expect(component.find(StringField).props().value).toEqual('testParam');
   expect(component.find(Select).first().props().value).toEqual('decimal');
   expect(component.find(DecimalEditor)).toHaveLength(1);
 });
@@ -193,7 +193,7 @@ test('displays Quantity editor', () => {
     type: 'system_quantity',
     ...baseProps
   });
-  expect(component.find(StringParameter).props().value).toEqual('testParam');
+  expect(component.find(StringField).props().value).toEqual('testParam');
   expect(component.find(Select).first().props().value).toEqual('system_quantity');
   expect(component.find(QuantityEditor)).toHaveLength(1);
 });
@@ -213,7 +213,7 @@ test('displays String editor', () => {
     type: 'string',
     ...baseProps
   });
-  expect(component.find(StringParameter).props().value).toEqual('testParam');
+  expect(component.find(StringField).props().value).toEqual('testParam');
   expect(component.find(Select).first().props().value).toEqual('string');
   expect(component.find(StringEditor)).toHaveLength(1);
 });
@@ -233,7 +233,7 @@ test('displays Time editor', () => {
     type: 'time',
     ...baseProps
   });
-  expect(component.find(StringParameter).props().value).toEqual('testParam');
+  expect(component.find(StringField).props().value).toEqual('testParam');
   expect(component.find(Select).first().props().value).toEqual('time');
   expect(component.find(TimeEditor)).toHaveLength(1);
 });
@@ -253,7 +253,7 @@ test('displays Interval<Integer> editor', () => {
     type: 'interval_of_integer',
     ...baseProps
   });
-  expect(component.find(StringParameter).props().value).toEqual('testParam');
+  expect(component.find(StringField).props().value).toEqual('testParam');
   expect(component.find(Select).first().props().value).toEqual('interval_of_integer');
   expect(component.find(IntervalOfIntegerEditor)).toHaveLength(1);
 });
@@ -273,7 +273,7 @@ test('displays Interval<DateTime> editor', () => {
     type: 'interval_of_datetime',
     ...baseProps
   });
-  expect(component.find(StringParameter).props().value).toEqual('testParam');
+  expect(component.find(StringField).props().value).toEqual('testParam');
   expect(component.find(Select).first().props().value).toEqual('interval_of_datetime');
   expect(component.find(IntervalOfDateTimeEditor)).toHaveLength(1);
 });
@@ -293,7 +293,7 @@ test('displays Interval<Decimal> editor', () => {
     type: 'interval_of_decimal',
     ...baseProps
   });
-  expect(component.find(StringParameter).props().value).toEqual('testParam');
+  expect(component.find(StringField).props().value).toEqual('testParam');
   expect(component.find(Select).first().props().value).toEqual('interval_of_decimal');
   expect(component.find(IntervalOfDecimalEditor)).toHaveLength(1);
 });
@@ -313,7 +313,7 @@ test('displays Interval<Quantity> editor', () => {
     type: 'interval_of_quantity',
     ...baseProps
   });
-  expect(component.find(StringParameter).props().value).toEqual('testParam');
+  expect(component.find(StringField).props().value).toEqual('testParam');
   expect(component.find(Select).first().props().value).toEqual('interval_of_quantity');
   expect(component.find(IntervalOfQuantityEditor)).toHaveLength(1);
 });

@@ -2,10 +2,10 @@ import Select from 'react-select';
 
 import Parameter from '../components/builder/Parameter';
 import Parameters from '../components/builder/Parameters';
-import NumberParameter from '../components/builder/parameters/types/NumberParameter';
-import StaticParameter from '../components/builder/parameters/types/StaticParameter';
-import StringParameter from '../components/builder/parameters/types/StringParameter';
-import ValueSetParameter from '../components/builder/parameters/types/ValueSetParameter';
+import NumberField from '../components/builder/fields/NumberField';
+import StaticField from '../components/builder/fields/StaticField';
+import StringField from '../components/builder/fields/StringField';
+import ValueSetField from '../components/builder/fields/ValueSetField';
 import { shallowRenderComponent } from '../utils/test_helpers';
 
 test('Parameter renders without crashing', () => {
@@ -67,8 +67,8 @@ test('Parameters adds parameter', () => {
   ]);
 });
 
-test('NumberParameter renders without crashing', () => {
-  const component = shallowRenderComponent(NumberParameter, {
+test('NumberField renders without crashing', () => {
+  const component = shallowRenderComponent(NumberField, {
     value: '',
     typeOfNumber: 'integer',
     updateInstance: jest.fn(),
@@ -81,10 +81,10 @@ test('NumberParameter renders without crashing', () => {
   expect(component).toBeDefined();
 });
 
-test('NumberParameter changes input with type integer', () => {
+test('NumberField changes input with type integer', () => {
   const updateInstanceMock = jest.fn();
 
-  const component = shallowRenderComponent(NumberParameter, {
+  const component = shallowRenderComponent(NumberField, {
     value: '',
     typeOfNumber: 'integer',
     updateInstance: updateInstanceMock,
@@ -112,10 +112,10 @@ test('NumberParameter changes input with type integer', () => {
   expect(component.instance().updateExclusive).toHaveBeenCalled();
 });
 
-test('NumberParameter changes input with type not integer', () => {
+test('NumberField changes input with type not integer', () => {
   const updateInstanceMock = jest.fn();
 
-  const component = shallowRenderComponent(NumberParameter, {
+  const component = shallowRenderComponent(NumberField, {
     value: '',
     typeOfNumber: 'float',
     updateInstance: updateInstanceMock,
@@ -143,18 +143,18 @@ test('NumberParameter changes input with type not integer', () => {
   expect(component.instance().updateExclusive).toHaveBeenCalled();
 });
 
-test('StaticParameter renders without crashing', () => {
-  const component = shallowRenderComponent(StaticParameter);
+test('StaticField renders without crashing', () => {
+  const component = shallowRenderComponent(StaticField);
   expect(component).toBeDefined();
 });
 
-test('StringParameter renders without crashing', () => {
-  const component = shallowRenderComponent(StringParameter, { updateInstance: jest.fn(), name: '' });
+test('StringField renders without crashing', () => {
+  const component = shallowRenderComponent(StringField, { updateInstance: jest.fn(), name: '' });
   expect(component).toBeDefined();
 });
 
-test('ValueSetParameter renders without crashing', () => {
-  const component = shallowRenderComponent(ValueSetParameter, {
+test('ValueSetField renders without crashing', () => {
+  const component = shallowRenderComponent(ValueSetField, {
     loadValueSets: jest.fn(),
     updateInstance: jest.fn(),
     param: {
@@ -166,10 +166,10 @@ test('ValueSetParameter renders without crashing', () => {
   expect(component).toBeDefined();
 });
 
-test('ValueSetParameter changes input', () => {
+test('ValueSetField changes input', () => {
   const updateInstanceMock = jest.fn();
 
-  const component = shallowRenderComponent(ValueSetParameter, {
+  const component = shallowRenderComponent(ValueSetField, {
     loadValueSets: jest.fn(),
     updateInstance: updateInstanceMock,
     param: {

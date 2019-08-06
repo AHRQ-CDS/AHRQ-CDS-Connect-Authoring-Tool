@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import Select from 'react-select';
 import _ from 'lodash';
 
-export default class ValueSetParameter extends Component {
+export default class ValueSetField extends Component {
   onFocus = () => {
     this.props.loadValueSets(this.props.field.select);
   }
@@ -36,7 +36,7 @@ export default class ValueSetParameter extends Component {
   }
 }
 
-ValueSetParameter.propTypes = {
+ValueSetField.propTypes = {
   field: PropTypes.object,
   valueSets: PropTypes.array,
   loadValueSets: PropTypes.func.isRequired,

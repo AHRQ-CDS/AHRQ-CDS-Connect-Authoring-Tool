@@ -5,20 +5,20 @@ import FontAwesome from 'react-fontawesome';
 import { UncontrolledTooltip } from 'reactstrap';
 import _ from 'lodash';
 
-import StringParameter from './parameters/types/StringParameter';
-import BooleanEditor from './parameters/editors/BooleanEditor';
-import CodeEditor from './parameters/editors/CodeEditor';
-import IntegerEditor from './parameters/editors/IntegerEditor';
-import DateTimeEditor from './parameters/editors/DateTimeEditor';
-import DecimalEditor from './parameters/editors/DecimalEditor';
-import QuantityEditor from './parameters/editors/QuantityEditor';
-import StringEditor from './parameters/editors/StringEditor';
-import TimeEditor from './parameters/editors/TimeEditor';
-import IntervalOfIntegerEditor from './parameters/editors/IntervalOfIntegerEditor';
-import IntervalOfDateTimeEditor from './parameters/editors/IntervalOfDateTimeEditor';
-import IntervalOfDecimalEditor from './parameters/editors/IntervalOfDecimalEditor';
-import IntervalOfQuantityEditor from './parameters/editors/IntervalOfQuantityEditor';
-import TextAreaParameter from './parameters/types/TextAreaParameter';
+import StringField from './fields/StringField';
+import BooleanEditor from './parameters/BooleanEditor';
+import CodeEditor from './parameters/CodeEditor';
+import IntegerEditor from './parameters/IntegerEditor';
+import DateTimeEditor from './parameters/DateTimeEditor';
+import DecimalEditor from './parameters/DecimalEditor';
+import QuantityEditor from './parameters/QuantityEditor';
+import StringEditor from './parameters/StringEditor';
+import TimeEditor from './parameters/TimeEditor';
+import IntervalOfIntegerEditor from './parameters/IntervalOfIntegerEditor';
+import IntervalOfDateTimeEditor from './parameters/IntervalOfDateTimeEditor';
+import IntervalOfDecimalEditor from './parameters/IntervalOfDecimalEditor';
+import IntervalOfQuantityEditor from './parameters/IntervalOfQuantityEditor';
+import TextAreaField from './fields/TextAreaField';
 
 import { doesParameterNeedWarning, parameterHasDuplicateName } from '../../utils/warnings';
 
@@ -146,7 +146,7 @@ export default class Parameter extends Component {
       <div className="parameter card-group card-group__top" id={this.props.id}>
         <div className="card-element">
           <div className="card-element__header">
-            <StringParameter
+            <StringField
               id={`param-name-${index}`}
               name={'Parameter Name'}
               value={name}
@@ -192,7 +192,7 @@ export default class Parameter extends Component {
 
           <div className="card-element__body">
             <div className="parameter__item">
-              <TextAreaParameter
+              <TextAreaField
                 key={this.props.id}
                 id={this.props.id}
                 name={'Comment'}

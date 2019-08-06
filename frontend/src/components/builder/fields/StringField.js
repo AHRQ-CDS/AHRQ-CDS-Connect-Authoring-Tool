@@ -7,7 +7,7 @@ import _ from 'lodash';
  * and a function called UpdateInstance that takes an object with
  * key-value pairs that represents that state of the templateInstance
  */
-export default class StringParameter extends Component {
+export default class StringField extends Component {
   render() {
     const { id, name, value, updateInstance } = this.props;
     const formId = _.uniqueId('parameter-');
@@ -42,7 +42,7 @@ export default class StringParameter extends Component {
   }
 }
 
-StringParameter.propTypes = {
+StringField.propTypes = {
   id: PropTypes.string.isRequired,
   name: PropTypes.string.isRequired,
   value: PropTypes.string,

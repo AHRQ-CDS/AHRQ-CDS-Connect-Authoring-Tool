@@ -11,7 +11,7 @@ import { getReturnType } from '../../utils/instances';
 
 import ConjunctionGroup from './ConjunctionGroup';
 import ExpressionPhrase from './modifiers/ExpressionPhrase';
-import StringParameter from './parameters/types/StringParameter';
+import StringField from './fields/StringField';
 
 const listTypes = [
   'list_of_observations',
@@ -337,7 +337,7 @@ export default class ListGroup extends Component {
           <div className={headerTopClass}>
             {isExpanded ?
               <div className="card-element__heading">
-                <StringParameter
+                <StringField
                   id={'base_element_name'}
                   name={'Group'}
                   uniqueId={instance.uniqueId}

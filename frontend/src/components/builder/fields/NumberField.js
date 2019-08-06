@@ -4,7 +4,7 @@ import _ from 'lodash';
 // this.props are from a templateInstance parameters object,
 // and a function called UpdateInstance that takes an object with
 // key-value pairs that represents that state of the templateInstance
-export default class NumberParameter extends Component {
+export default class NumberField extends Component {
   constructor(props) {
     super(props);
     this.state = { checked: this.props.field.exclusive };

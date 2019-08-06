@@ -1,18 +1,18 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
-import BooleanEditor from '../builder/parameters/editors/BooleanEditor';
-import CodeEditor from '../builder/parameters/editors/CodeEditor';
-import IntegerEditor from '../builder/parameters/editors/IntegerEditor';
-import DateTimeEditor from '../builder/parameters/editors/DateTimeEditor';
-import DecimalEditor from '../builder/parameters/editors/DecimalEditor';
-import QuantityEditor from '../builder/parameters/editors/QuantityEditor';
-import StringEditor from '../builder/parameters/editors/StringEditor';
-import TimeEditor from '../builder/parameters/editors/TimeEditor';
-import IntervalOfIntegerEditor from '../builder/parameters/editors/IntervalOfIntegerEditor';
-import IntervalOfDateTimeEditor from '../builder/parameters/editors/IntervalOfDateTimeEditor';
-import IntervalOfDecimalEditor from '../builder/parameters/editors/IntervalOfDecimalEditor';
-import IntervalOfQuantityEditor from '../builder/parameters/editors/IntervalOfQuantityEditor';
+import BooleanEditor from '../builder/parameters/BooleanEditor';
+import CodeEditor from '../builder/parameters/CodeEditor';
+import IntegerEditor from '../builder/parameters/IntegerEditor';
+import DateTimeEditor from '../builder/parameters/DateTimeEditor';
+import DecimalEditor from '../builder/parameters/DecimalEditor';
+import QuantityEditor from '../builder/parameters/QuantityEditor';
+import StringEditor from '../builder/parameters/StringEditor';
+import TimeEditor from '../builder/parameters/TimeEditor';
+import IntervalOfIntegerEditor from '../builder/parameters/IntervalOfIntegerEditor';
+import IntervalOfDateTimeEditor from '../builder/parameters/IntervalOfDateTimeEditor';
+import IntervalOfDecimalEditor from '../builder/parameters/IntervalOfDecimalEditor';
+import IntervalOfQuantityEditor from '../builder/parameters/IntervalOfQuantityEditor';
 
 export default class TestingParameter extends Component {
   updateParameter = (object) => {

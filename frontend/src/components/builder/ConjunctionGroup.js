@@ -6,7 +6,7 @@ import { UncontrolledTooltip } from 'reactstrap';
 
 import TemplateInstance from './TemplateInstance';
 import ElementSelect from './ElementSelect';
-import StringParameter from './parameters/types/StringParameter';
+import StringField from './fields/StringField';
 import ExpressionPhrase from './modifiers/ExpressionPhrase';
 
 import createTemplateInstance from '../../utils/templates';
@@ -229,7 +229,7 @@ export default class ConjunctionGroup extends Component {
             <div className="card-group__header-title">
               {showGroup ?
                 <div>
-                  <StringParameter
+                  <StringField
                     id={elementNameField.id}
                     name={elementNameField.name}
                     value={elementNameField.value}

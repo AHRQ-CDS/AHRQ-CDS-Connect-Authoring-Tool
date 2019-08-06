@@ -9,7 +9,7 @@ import _ from 'lodash';
  */
 const LINE_HEIGHT = 30;
 
-export default class TextAreaParameter extends Component {
+export default class TextAreaField extends Component {
   constructor(props) {
     super(props);
 
@@ -79,7 +79,7 @@ export default class TextAreaParameter extends Component {
   }
 }
 
-TextAreaParameter.propTypes = {
+TextAreaField.propTypes = {
   id: PropTypes.string.isRequired,
   name: PropTypes.string.isRequired,
   value: PropTypes.string,
