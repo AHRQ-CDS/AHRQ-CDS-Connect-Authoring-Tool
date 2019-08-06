@@ -6,7 +6,7 @@ export const nestedReturnTypeErrorGroup = [
         name: 'Or',
         conjunction: true,
         returnType: 'boolean',
-        parameters: [
+        fields: [
           {
             id: 'element_name',
             type: 'string',
@@ -20,7 +20,7 @@ export const nestedReturnTypeErrorGroup = [
             modifiers: [],
             uniqueId: 'GenericObservation_vsac-5116',
             type: 'element',
-            parameters: [
+            fields: [
               {
                 value: 'LDL Code',
                 name: 'Element Name',
@@ -54,7 +54,7 @@ export const nestedReturnTypeErrorGroup = [
       }
     ],
     uniqueId: 'Or-6121',
-    parameters: [
+    fields: [
       {
         value: 'Group 1',
         name: 'Group Name',
@@ -75,7 +75,7 @@ export const nestedModifierValidationErrorGroup = [
     name: 'Or',
     conjunction: true,
     returnType: 'boolean',
-    parameters: [
+    fields: [
       {
         id: 'element_name',
         type: 'string',
@@ -97,7 +97,7 @@ export const nestedModifierValidationErrorGroup = [
             suppressedModifiers: [
               'ConvertToMgPerdL'
             ],
-            parameters: [
+            fields: [
               {
                 id: 'element_name',
                 type: 'string',
@@ -182,7 +182,7 @@ export const nestedModifierValidationErrorGroup = [
           }
         ],
         uniqueId: 'Or-219',
-        parameters: [
+        fields: [
           {
             value: 'Group 1a',
             name: 'Group Name',
@@ -207,7 +207,7 @@ export const nestedElementValidationErrorGroup = [
         name: 'Or',
         conjunction: true,
         returnType: 'boolean',
-        parameters: [
+        fields: [
           {
             id: 'element_name',
             type: 'string',
@@ -229,7 +229,7 @@ export const nestedElementValidationErrorGroup = [
               ],
               args: null
             },
-            parameters: [
+            fields: [
               {
                 id: 'element_name',
                 type: 'string',
@@ -250,7 +250,7 @@ export const nestedElementValidationErrorGroup = [
       }
     ],
     uniqueId: 'Or-6121',
-    parameters: [
+    fields: [
       {
         value: 'Group 1',
         name: 'Group Name',
@@ -273,7 +273,7 @@ export const nestedDuplicateElementNamesGroups = [
         name: 'Or',
         conjunction: true,
         returnType: 'boolean',
-        parameters: [
+        fields: [
           {
             id: 'element_name',
             type: 'string',
@@ -295,7 +295,7 @@ export const nestedDuplicateElementNamesGroups = [
               ],
               args: null
             },
-            parameters: [
+            fields: [
               {
                 id: 'element_name',
                 type: 'string',
@@ -329,7 +329,7 @@ export const nestedDuplicateElementNamesGroups = [
               ],
               args: null
             },
-            parameters: [
+            fields: [
               {
                 id: 'element_name',
                 type: 'string',
@@ -355,7 +355,7 @@ export const nestedDuplicateElementNamesGroups = [
       }
     ],
     uniqueId: 'Or-6121',
-    parameters: [
+    fields: [
       {
         value: 'Group 1',
         name: 'Group Name',
@@ -376,7 +376,7 @@ export const nestedDuplicateGroupNamesGroups = [
     name: 'Or',
     conjunction: true,
     returnType: 'boolean',
-    parameters: [
+    fields: [
       {
         id: 'element_name',
         type: 'string',
@@ -391,7 +391,7 @@ export const nestedDuplicateGroupNamesGroups = [
         name: 'Or',
         conjunction: true,
         returnType: 'boolean',
-        parameters: [
+        fields: [
           {
             id: 'element_name',
             type: 'string',
@@ -413,7 +413,7 @@ export const nestedDuplicateGroupNamesGroups = [
               ],
               args: null
             },
-            parameters: [
+            fields: [
               {
                 id: 'element_name',
                 type: 'string',
@@ -442,7 +442,7 @@ export const nestedDuplicateGroupNamesGroups = [
         name: 'Or',
         conjunction: true,
         returnType: 'boolean',
-        parameters: [
+        fields: [
           {
             id: 'element_name',
             type: 'string',
@@ -464,7 +464,7 @@ export const nestedDuplicateGroupNamesGroups = [
               ],
               args: null
             },
-            parameters: [
+            fields: [
               {
                 id: 'element_name',
                 type: 'string',
@@ -511,7 +511,7 @@ export const nestedBaseElementUseGroups = [
               }
             ],
             uniqueId: 'Gender610-3616',
-            parameters: [
+            fields: [
               {
                 value: 'Gender1',
                 name: 'Element Name',
@@ -537,7 +537,7 @@ export const nestedBaseElementUseGroups = [
           }
         ],
         uniqueId: 'Or-4626',
-        parameters: [
+        fields: [
           {
             value: 'Group1a',
             name: 'Group Name',
@@ -552,7 +552,7 @@ export const nestedBaseElementUseGroups = [
       }
     ],
     uniqueId: 'Or-7216',
-    parameters: [
+    fields: [
       {
         value: 'Group1',
         name: 'Group Name',
@@ -573,7 +573,7 @@ export const nonValidatingBaseElementList = [
     name: 'Union',
     conjunction: true,
     returnType: 'list_of_any',
-    parameters: [
+    fields: [
       {
         id: 'element_name',
         type: 'string',
@@ -587,7 +587,7 @@ export const nonValidatingBaseElementList = [
         modifiers: [],
         uniqueId: 'GenericObservation_vsac-250',
         type: 'element',
-        parameters: [
+        fields: [
           {
             value: 'LDL Code',
             name: 'Element Name',
@@ -621,7 +621,7 @@ export const nonValidatingBaseElementList = [
         modifiers: [],
         uniqueId: 'GenericCondition_vsac-386',
         type: 'element',
-        parameters: [
+        fields: [
           {
             value: 'Diabetes',
             name: 'Element Name',

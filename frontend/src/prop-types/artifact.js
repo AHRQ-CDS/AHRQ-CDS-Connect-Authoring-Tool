@@ -1,9 +1,18 @@
 import PropTypes from 'prop-types';
 
-const parametersProps = {
+const fieldsProps = {
   id: PropTypes.string,
   name: PropTypes.string,
   type: PropTypes.string,
+  value: PropTypes.oneOfType([PropTypes.string, PropTypes.number, PropTypes.object])
+};
+
+const parametersProps = {
+  comment: PropTypes.string,
+  name: PropTypes.string,
+  type: PropTypes.string,
+  uniqueId: PropTypes.string,
+  usedBy: PropTypes.array,
   value: PropTypes.oneOfType([PropTypes.string, PropTypes.number, PropTypes.object])
 };
 
@@ -13,12 +22,12 @@ const expTreeProps = {
   conjunction: PropTypes.bool,
   path: PropTypes.string,
   returnType: PropTypes.string,
-  parameters: PropTypes.arrayOf(PropTypes.shape(parametersProps)),
+  fields: PropTypes.arrayOf(PropTypes.shape(fieldsProps)),
   childInstances: PropTypes.arrayOf(PropTypes.shape({
     id: PropTypes.string,
     name: PropTypes.string,
     returnType: PropTypes.string,
-    parameters: PropTypes.arrayOf(PropTypes.shape(parametersProps))
+    fields: PropTypes.arrayOf(PropTypes.shape(fieldsProps))
   }))
 };
 

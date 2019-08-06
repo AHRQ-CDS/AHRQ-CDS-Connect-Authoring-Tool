@@ -84,7 +84,8 @@ export default class ExpressionPhrase extends Component {
     if (type === 'parameter') {
       referenceElementName = phraseTemplateInstance.name;
     } else if (type === 'externalCqlElement') {
-      referenceElementName = phraseTemplateInstance.fields.find(field => field.id === 'externalCqlReference').value.element;
+      referenceElementName =
+        phraseTemplateInstance.fields.find(field => field.id === 'externalCqlReference').value.element;
     }
 
     const expressions = convertToExpression(

@@ -72,7 +72,7 @@ test('NumberField renders without crashing', () => {
     value: '',
     typeOfNumber: 'integer',
     updateInstance: jest.fn(),
-    param: {
+    field: {
       exclusive: false,
       name: '',
       id: '',
@@ -88,7 +88,7 @@ test('NumberField changes input with type integer', () => {
     value: '',
     typeOfNumber: 'integer',
     updateInstance: updateInstanceMock,
-    param: {
+    field: {
       exclusive: false,
       name: '',
       id: '',
@@ -119,7 +119,7 @@ test('NumberField changes input with type not integer', () => {
     value: '',
     typeOfNumber: 'float',
     updateInstance: updateInstanceMock,
-    param: {
+    field: {
       exclusive: false,
       name: '',
       id: '',
@@ -157,7 +157,7 @@ test('ValueSetField renders without crashing', () => {
   const component = shallowRenderComponent(ValueSetField, {
     loadValueSets: jest.fn(),
     updateInstance: jest.fn(),
-    param: {
+    field: {
       id: '',
       value: '',
       select: ''
@@ -172,7 +172,7 @@ test('ValueSetField changes input', () => {
   const component = shallowRenderComponent(ValueSetField, {
     loadValueSets: jest.fn(),
     updateInstance: updateInstanceMock,
-    param: {
+    field: {
       id: '',
       value: '',
       select: ''

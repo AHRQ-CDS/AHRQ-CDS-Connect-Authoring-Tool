@@ -12,7 +12,7 @@ const instanceTree = {
   returnType: 'boolean',
   path: '',
   uniqueId: 'And-1',
-  parameters: [
+  fields: [
     { id: 'element_name', type: 'string', name: 'Group Name', value: 'MeetsInclusionCriteria' }
   ],
   childInstances: [
@@ -20,7 +20,7 @@ const instanceTree = {
       id: 'AgeRange',
       name: 'Age Range',
       returnType: 'boolean',
-      parameters: [
+      fields: [
         {
           id: 'element_name',
           type: 'string',
@@ -63,7 +63,7 @@ const instanceTree = {
       extends: 'GenericObservation',
       type: 'element',
       returnType: 'list_of_observations',
-      parameters: [
+      fields: [
         {
           id: 'element_name',
           name: 'Element Name',
@@ -92,7 +92,7 @@ const emptyInstanceTree = {
   returnType: 'boolean',
   path: '',
   uniqueId: 'And-1',
-  parameters: [
+  fields: [
     { id: 'element_name', type: 'string', name: 'Group Name', value: 'MeetsInclusionCriteria' }
   ],
   childInstances: []
@@ -109,7 +109,7 @@ const elementGroups = [
         name: 'Age Range',
         returnType: 'boolean',
         suppressedModifiers: ['BooleanNot', 'BooleanComparison'],
-        parameters: [
+        fields: [
           { id: 'element_name', type: 'string', name: 'Element Name' },
           { id: 'min_age', type: 'number', typeOfNumber: 'integer', name: 'Minimum Age' },
           { id: 'max_age', type: 'number', typeOfNumber: 'integer', name: 'Maximum Age' },
@@ -120,7 +120,7 @@ const elementGroups = [
         name: 'Gender',
         returnType: 'boolean',
         cannotHaveModifiers: true,
-        parameters: [
+        fields: [
           { id: 'element_name', type: 'string', name: 'Element Name' },
           { id: 'gender', type: 'valueset', select: 'demographics/gender', name: 'Gender' },
         ],
@@ -138,7 +138,7 @@ const elementGroups = [
         extends: 'GenericObservation',
         returnType: 'list_of_observations',
         suppressedModifiers: ['ConceptValue'],
-        parameters: [
+        fields: [
           { id: 'element_name', value: 'TotalCholesterol' },
           { id: 'observation', static: true, value: 'total_cholesterol' },
         ]
@@ -149,7 +149,7 @@ const elementGroups = [
         extends: 'GenericObservation',
         returnType: 'list_of_observations',
         suppressedModifiers: ['ConceptValue'],
-        parameters: [
+        fields: [
           { id: 'element_name', value: 'HDLCholesterol' },
           { id: 'observation', static: true, value: 'hdl_cholesterol' },
         ]
@@ -160,7 +160,7 @@ const elementGroups = [
         extends: 'GenericObservation',
         returnType: 'list_of_observations',
         suppressedModifiers: ['ConceptValue'],
-        parameters: [
+        fields: [
           { id: 'element_name', value: 'LDL_Test' },
           { id: 'observation', static: true, value: 'ldl_test' },
         ]
@@ -169,7 +169,7 @@ const elementGroups = [
         id: 'Base',
         name: 'Base Template',
         type: 'element',
-        parameters: [{ id: 'element_name', type: 'string', name: 'Element Name' }]
+        fields: [{ id: 'element_name', type: 'string', name: 'Element Name' }]
       },
       {
         id: 'GenericObservation',
@@ -177,7 +177,7 @@ const elementGroups = [
         returnType: 'list_of_observations',
         suppress: true,
         extends: 'Base',
-        parameters: [
+        fields: [
           { id: 'element_name', type: 'string' },
           { id: 'observation', type: 'observation', name: 'Observation' }
         ],
@@ -195,7 +195,7 @@ const elementGroups = [
         name: 'And',
         conjunction: true,
         returnType: 'boolean',
-        parameters: [
+        fields: [
           { id: 'element_name', type: 'string', name: 'Group Name' }
         ]
       },
@@ -204,7 +204,7 @@ const elementGroups = [
         name: 'Or',
         conjunction: true,
         returnType: 'boolean',
-        parameters: [
+        fields: [
           { id: 'element_name', type: 'string', name: 'Group Name' }
         ]
       }
@@ -220,7 +220,7 @@ const elementGroups = [
         name: 'Intersect',
         conjunction: true,
         returnType: 'list_of_any',
-        parameters: [
+        fields: [
           { id: 'element_name', type: 'string', name: 'Group Name' }
         ]
       },
@@ -229,7 +229,7 @@ const elementGroups = [
         name: 'Union',
         conjunction: true,
         returnType: 'list_of_any',
-        parameters: [
+        fields: [
           { id: 'element_name', type: 'string', name: 'Group Name' }
         ]
       },
@@ -277,7 +277,7 @@ const genericElementGroups = [
         name: 'Age Range',
         returnType: 'boolean',
         suppressedModifiers: ['BooleanNot', 'BooleanComparison'],
-        parameters: [
+        fields: [
           { id: 'element_name', type: 'string', name: 'Element Name' },
           { id: 'min_age', type: 'number', typeOfNumber: 'integer', name: 'Minimum Age' },
           { id: 'max_age', type: 'number', typeOfNumber: 'integer', name: 'Maximum Age' },
@@ -288,7 +288,7 @@ const genericElementGroups = [
         name: 'Gender',
         returnType: 'boolean',
         cannotHaveModifiers: true,
-        parameters: [
+        fields: [
           { id: 'element_name', type: 'string', name: 'Element Name' },
           { id: 'gender', type: 'valueset', select: 'demographics/gender', name: 'Gender' },
         ],
@@ -306,7 +306,7 @@ const genericElementGroups = [
         returnType: 'list_of_observations',
         suppress: true,
         extends: 'Base',
-        parameters: [
+        fields: [
           { id: 'observation', type: 'observation', name: 'Observation' },
         ],
       },
@@ -318,7 +318,7 @@ const genericElementGroups = [
         extends: 'Base',
         template: 'GenericObservation',
         suppressedModifiers: ['WithUnit', 'ConvertToMgPerdL'], // checkInclusionInVS is assumed to be suppressed
-        parameters: [
+        fields: [
           { id: 'observation', type: 'observation_vsac', name: 'Observation' },
         ]
       }
@@ -335,7 +335,7 @@ const genericInstance = {
   type: 'element',
   template: 'GenericObservation',
   suppressedModifiers: ['WithUnit', 'ConvertToMgPerdL'], // checkInclusionInVS is assumed to be suppressed
-  parameters: [
+  fields: [
     { id: 'element_name', name: 'Element Name', type: 'string', value: 'VSAC Observation' },
     {
       id: 'observation',
@@ -360,7 +360,7 @@ const genericInstanceWithModifiers = {
   type: 'element',
   template: 'GenericObservation',
   suppressedModifiers: ['WithUnit', 'ConvertToMgPerdL'], // checkInclusionInVS is assumed to be suppressed
-  parameters: [
+  fields: [
     { id: 'element_name', name: 'Element Name', type: 'string', value: 'VSAC Observation' },
     {
       id: 'observation',
@@ -411,7 +411,7 @@ const genericBaseElementInstance = {
   template: 'GenericObservation',
   usedBy: ['testId1'],
   suppressedModifiers: ['ConvertToMgPerdL'], // checkInclusionInVS is assumed to be suppressed
-  parameters: [
+  fields: [
     { id: 'element_name', name: 'Element Name', type: 'string', value: 'VSAC Observation' },
     {
       id: 'observation',
@@ -437,7 +437,7 @@ const genericBaseElementInstanceWithModifiers = {
   template: 'GenericObservation',
   usedBy: ['testId1'],
   suppressedModifiers: ['ConvertToMgPerdL'], // checkInclusionInVS is assumed to be suppressed
-  parameters: [
+  fields: [
     { id: 'element_name', name: 'Element Name', type: 'string', value: 'VSAC Observation' },
     {
       id: 'observation',
@@ -486,7 +486,7 @@ const genericBaseElementListInstance = {
   path: '',
   uniqueId: 'Union-1',
   usedBy: ['testId1'],
-  parameters: [
+  fields: [
     { id: 'element_name', type: 'string', name: 'Group Name', value: 'UnionListName' }
   ],
   childInstances: [genericInstance]
@@ -498,7 +498,7 @@ const genericBaseElementUseInstance = {
   returnType: 'boolean',
   type: 'baseElement',
   template: 'GenericStatement',
-  parameters: [
+  fields: [
     { id: 'element_name', name: 'Element Name', type: 'string', value: 'Base Element Observation' },
     {
       id: 'baseElementReference',

@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import _ from 'lodash';
 
 /**
- * props are from a templateInstance parameters object,
+ * props are from a templateInstance field object,
  * and a function called UpdateInstance that takes an object with
  * key-value pairs that represents that state of the templateInstance
  */

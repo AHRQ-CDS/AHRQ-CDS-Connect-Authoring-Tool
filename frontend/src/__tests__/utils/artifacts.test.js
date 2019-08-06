@@ -435,7 +435,7 @@ test('Base Element Lists create a phrase with individual element\'s phrases in a
   const valueSets = [];
   const codes = [];
   const returnType = 'boolean';
-  const otherParameters = [];
+  const otherFields = [];
   const elementNamesInPhrase = [
     { name: 'Test Name', tooltipText: 'Phrase for Test Name' },
     { name: 'Other', tooltipText: 'Another phrase' }
@@ -447,7 +447,7 @@ test('Base Element Lists create a phrase with individual element\'s phrases in a
     valueSets,
     codes,
     returnType,
-    otherParameters,
+    otherFields,
     elementNamesInPhrase
   );
 
@@ -472,7 +472,7 @@ test('Conjunction Groups create a phrase with the group\'s children 1 level deep
   const valueSets = [];
   const codes = [];
   const returnType = 'boolean';
-  const otherParameters = [];
+  const otherFields = [];
   const elementNamesInPhrase = [
     { name: 'Child 1' },
     { name: 'Child 2' },
@@ -485,7 +485,7 @@ test('Conjunction Groups create a phrase with the group\'s children 1 level deep
     valueSets,
     codes,
     returnType,
-    otherParameters,
+    otherFields,
     elementNamesInPhrase
   );
 
@@ -517,7 +517,7 @@ test('Parameters with BooleanNot create a phrase with the parameter name', () =>
   const valueSets = [];
   const codes = [];
   const returnType = 'boolean';
-  const otherParameters = [];
+  const otherFields = [];
   const elementNamesInPhrase = [];
   const parameterName = 'Original Param';
 
@@ -527,7 +527,7 @@ test('Parameters with BooleanNot create a phrase with the parameter name', () =>
     valueSets,
     codes,
     returnType,
-    otherParameters,
+    otherFields,
     elementNamesInPhrase,
     false,
     parameterName
@@ -561,7 +561,7 @@ test('Quantity parameters with Value Comparison create a phrase with the paramet
   const valueSets = [];
   const codes = [];
   const returnType = 'boolean';
-  const otherParameters = [];
+  const otherFields = [];
   const elementNamesInPhrase = [];
   const parameterName = 'Original Param';
 
@@ -571,7 +571,7 @@ test('Quantity parameters with Value Comparison create a phrase with the paramet
     valueSets,
     codes,
     returnType,
-    otherParameters,
+    otherFields,
     elementNamesInPhrase,
     false,
     parameterName

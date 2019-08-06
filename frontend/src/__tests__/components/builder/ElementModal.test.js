@@ -27,7 +27,7 @@ const testTemplate = {
   returnType: 'list_of_observations',
   suppress: true,
   extends: 'Base',
-  parameters: [
+  fields: [
     { id: 'element_name', type: 'string', name: 'Element Name' },
     { id: 'observation', type: 'observation', name: 'Observation' }
   ],
@@ -143,9 +143,9 @@ describe('with modal open', () => {
 
     // Set selected values on base template
     const templateWithSelectedValue = _.cloneDeep(component.props()).template;
-    templateWithSelectedValue.parameters[0].value = element.name;
-    templateWithSelectedValue.parameters[1].valueSets = [{ name: element.name, oid: element.oid }];
-    templateWithSelectedValue.parameters[1].static = true;
+    templateWithSelectedValue.fields[0].value = element.name;
+    templateWithSelectedValue.fields[1].valueSets = [{ name: element.name, oid: element.oid }];
+    templateWithSelectedValue.fields[1].static = true;
 
     // Clicking the select button class the onElementSelected function
     selectButton.simulate('click');

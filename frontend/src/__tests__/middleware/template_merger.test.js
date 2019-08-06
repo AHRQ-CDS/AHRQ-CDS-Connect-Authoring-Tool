@@ -8,7 +8,7 @@ test('Merges template entries', () => {
     const extendedEntry = template.entries.find(entry => entry.id === 'GenericObservation');
 
     expect(extendedEntry.type).toEqual('element');
-    expect(extendedEntry.parameters[0].name).toEqual('Element Name');
+    expect(extendedEntry.fields[0].name).toEqual('Element Name');
   });
 
   tester({ type: LOAD_TEMPLATES_SUCCESS, templates: elementGroups });

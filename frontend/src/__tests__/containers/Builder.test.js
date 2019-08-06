@@ -27,7 +27,6 @@ const props = {
   artifact: {
     expTreeInclude: { childInstances: [] },
     expTreeExclude: { childInstances: [] },
-    booleanParameters: [],
     subpopulations: [],
 
   },
@@ -203,7 +202,7 @@ test('edits a template instance', () => {
 
   store.getActions()[0]((action) => {
     expect(action.type).toEqual(types.UPDATE_ARTIFACT);
-    expect(action.artifact.expTreeInclude.childInstances[0].parameters[0].value).toEqual(name);
+    expect(action.artifact.expTreeInclude.childInstances[0].fields[0].value).toEqual(name);
   });
 });
 

@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import _ from 'lodash';
 
-// this.props are from a templateInstance parameters object,
+// this.props are from a templateInstance field object,
 // and a function called UpdateInstance that takes an object with
 // key-value pairs that represents that state of the templateInstance
 export default class NumberField extends Component {
