@@ -154,13 +154,22 @@ class Landing extends Component {
                   href="https://cql.hl7.org/">
                   {' '}Health Level Seven (HL7) Clinical Quality Language (CQL) 1.2{' '}
                 </a>
-                <i className="fa fa-external-link"></i> artifacts using the
+                <i className="fa fa-external-link"></i> artifacts using the HL7 Fast Healthcare
+                Interoperability Resources (FHIR)
                 <a
                   target="_blank"
                   rel="nofollow noopener noreferrer"
                   onClick={onVisitExternalLink}
                   href="http://hl7.org/fhir/DSTU2/index.html">
-                  {' '}HL7 Fast Healthcare Interoperability Resources (FHIR) DSTU 2{' '}
+                  {' '}DSTU 2{' '}
+                </a>
+                <i className="fa fa-external-link"></i> or
+                <a
+                  target="_blank"
+                  rel="nofollow noopener noreferrer"
+                  onClick={onVisitExternalLink}
+                  href="http://hl7.org/fhir/STU3/index.html">
+                  {' '}STU 3{' '}
                 </a>
                 <i className="fa fa-external-link"></i> data model.
               </div>
