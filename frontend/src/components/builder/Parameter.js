@@ -6,6 +6,7 @@ import { UncontrolledTooltip } from 'reactstrap';
 import _ from 'lodash';
 
 import StringField from './fields/StringField';
+import TextAreaField from './fields/TextAreaField';
 import BooleanEditor from './parameters/BooleanEditor';
 import CodeEditor from './parameters/CodeEditor';
 import IntegerEditor from './parameters/IntegerEditor';
@@ -18,7 +19,6 @@ import IntervalOfIntegerEditor from './parameters/IntervalOfIntegerEditor';
 import IntervalOfDateTimeEditor from './parameters/IntervalOfDateTimeEditor';
 import IntervalOfDecimalEditor from './parameters/IntervalOfDecimalEditor';
 import IntervalOfQuantityEditor from './parameters/IntervalOfQuantityEditor';
-import TextAreaField from './fields/TextAreaField';
 
 import { doesParameterNeedWarning, parameterHasDuplicateName } from '../../utils/warnings';
 

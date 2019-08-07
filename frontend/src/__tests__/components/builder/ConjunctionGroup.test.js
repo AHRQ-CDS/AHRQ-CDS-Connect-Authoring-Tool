@@ -128,9 +128,9 @@ test('edits own type', () => {
 
 test('edits own name', () => {
   const newName = 'new name';
-  const nameParamater = childConjunction.find(StringField);
+  const nameField = childConjunction.find(StringField);
 
-  nameParamater.find('input').simulate('change', { target: { name: 'element_name', value: newName } });
+  nameField.find('input').simulate('change', { target: { name: 'element_name', value: newName } });
 
   expect(editInstance).lastCalledWith(
     rootConjunction.props().treeName,

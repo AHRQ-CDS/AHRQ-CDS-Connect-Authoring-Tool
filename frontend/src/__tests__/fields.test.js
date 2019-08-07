@@ -1,71 +1,10 @@
 import Select from 'react-select';
 
-import Parameter from '../components/builder/Parameter';
-import Parameters from '../components/builder/Parameters';
 import NumberField from '../components/builder/fields/NumberField';
 import StaticField from '../components/builder/fields/StaticField';
 import StringField from '../components/builder/fields/StringField';
 import ValueSetField from '../components/builder/fields/ValueSetField';
 import { shallowRenderComponent } from '../utils/test_helpers';
-
-test('Parameter renders without crashing', () => {
-  const component = shallowRenderComponent(Parameter, {
-    getAllInstancesInAllTrees: jest.fn(),
-    updateInstanceOfParameter: jest.fn(),
-    deleteParameter: jest.fn(),
-    index: '',
-    instanceNames: [],
-    value: '',
-    name: ''
-  });
-  expect(component).toBeDefined();
-});
-
-test('Parameter changes input', () => {
-  const updateInstanceOfParameterMock = jest.fn();
-  const component = shallowRenderComponent(Parameter, {
-    getAllInstancesInAllTrees: jest.fn(),
-    updateInstanceOfParameter: updateInstanceOfParameterMock,
-    deleteParameter: jest.fn(),
-    index: '',
-    instanceNames: [],
-    value: '',
-    name: '',
-    id: 'test-id'
-  });
-
-  const selectInput = component.find(Select);
-  selectInput.simulate('change', { value: '' });
-  expect(updateInstanceOfParameterMock).toHaveBeenCalled();
-  expect(updateInstanceOfParameterMock.mock.calls[0][0])
-    .toEqual({ name: '', type: '', value: null, uniqueId: 'test-id' });
-
-  component.instance().updateParameter = jest.fn();
-  selectInput.simulate('change', { value: '' });
-  expect(component.instance().updateParameter).toHaveBeenCalled();
-});
-
-test('Parameters renders without crashing', () => {
-  const component = shallowRenderComponent(Parameters, {
-    parameters: [],
-    updateParameters: jest.fn()
-  });
-  expect(component).toBeDefined();
-});
-
-test('Parameters adds parameter', () => {
-  const updateParameterMock = jest.fn();
-  const component = shallowRenderComponent(Parameters, {
-    parameters: [],
-    updateParameters: updateParameterMock
-  });
-
-  component.find('button').simulate('click');
-
-  expect(updateParameterMock).toHaveBeenCalledWith([
-    { name: null, type: 'boolean', value: null, uniqueId: 'parameter-1', comment: null }
-  ]);
-});
 
 test('NumberField renders without crashing', () => {
   const component = shallowRenderComponent(NumberField, {

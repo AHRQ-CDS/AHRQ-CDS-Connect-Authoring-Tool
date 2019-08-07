@@ -93,7 +93,7 @@ export default class ElementSelect extends Component {
 
   // Needed to correctly update this.props.categories after fields were merged in Builder
   componentWillReceiveProps(nextProps) {
-    // Updates the categories and their entries to have correct parameters
+    // Updates the categories and their entries to have correct fields
     this.internalCategories = this.generateInternalCategories(nextProps);
     this.setState({
       categories: this.internalCategories.sort(sortAlphabeticallyByKey('name'))

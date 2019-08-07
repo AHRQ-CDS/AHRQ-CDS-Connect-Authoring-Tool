@@ -54,6 +54,28 @@ beforeEach(() => {
   };
 });
 
+test('Parameter renders without crashing', () => {
+  component = shallowRenderComponent(Parameter, baseProps);
+  expect(component).toBeDefined();
+});
+
+test('Parameter changes input', () => {
+  const updateInstanceOfParameterMock = jest.fn();
+  const specificProps = { updateInstanceOfParameter: updateInstanceOfParameterMock, id: 'test-id', name: '' };
+  const componentProps = Object.assign({ ...baseProps }, { ...specificProps });
+  component = shallowRenderComponent(Parameter, componentProps);
+
+  const selectInput = component.find(Select);
+  selectInput.simulate('change', { value: '' });
+  expect(updateInstanceOfParameterMock).toHaveBeenCalled();
+  expect(updateInstanceOfParameterMock.mock.calls[0][0])
+    .toEqual({ name: '', type: '', value: null, uniqueId: 'test-id' });
+
+  component.instance().updateParameter = jest.fn();
+  selectInput.simulate('change', { value: '' });
+  expect(component.instance().updateParameter).toHaveBeenCalled();
+});
+
 test('has correct base class', () => {
   component = shallowRenderComponent(Parameter, baseProps);
   expect(component.hasClass('parameter'));
