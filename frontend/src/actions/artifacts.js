@@ -456,12 +456,12 @@ function requestExecuteArtifact() {
   };
 }
 
-function executeArtifactSuccess(data, artifact, patient) {
+function executeArtifactSuccess(data, artifact, patients) {
   return {
     type: types.EXECUTE_ARTIFACT_SUCCESS,
     data,
     artifact,
-    patient
+    patients
   };
 }
 
@@ -619,7 +619,7 @@ export function executeCQLArtifact(artifact, params, patients, vsacCredentials, 
       codeService,
       dataModel
     ))
-      .then(r => dispatch(executeArtifactSuccess(r, artifact, patients[0])))
+      .then(r => dispatch(executeArtifactSuccess(r, artifact, patients)))
       .catch(error => dispatch(executeArtifactFailure(error)));
   };
 }

@@ -27,7 +27,7 @@ const defaultState = {
     executeStatus: null,
     results: null,
     artifactExecuted: null,
-    patientExecuted: null,
+    patientsExecuted: null,
     errorMessage: null
   },
   artifactSaved: true,
@@ -153,7 +153,7 @@ export default function auth(state = defaultState, action) {
           executeStatus: null,
           results: null,
           artifactExecuted: null,
-          patientExecuted: null
+          patientsExecuted: null
         }
       };
     case types.EXECUTE_ARTIFACT_SUCCESS:
@@ -164,7 +164,7 @@ export default function auth(state = defaultState, action) {
           executeStatus: 'success',
           results: action.data,
           artifactExecuted: action.artifact,
-          patientExecuted: action.patient,
+          patientsExecuted: action.patients,
           errorMessage: null
         }
       };

@@ -16,6 +16,7 @@ import artifactProps from '../prop-types/artifact';
 
 import PatientTable from '../components/testing/PatientTable';
 import PatientVersionModal from '../components/testing/PatientVersionModal';
+import ResultsDataSection from '../components/testing/ResultsDataSection';
 import ELMErrorModal from '../components/builder/ELMErrorModal';
 
 class Testing extends Component {
@@ -110,83 +111,40 @@ class Testing extends Component {
       });
   }
 
-  renderBoolean = (bool) => {
-    if (bool) return <FontAwesome name="check" className="boolean-check" />;
-    return <FontAwesome name="close" className="boolean-x" />;
-  }
-
-  // TODO support results for more than one patient
-  renderResultsTable = () => {
-    const { results, artifactExecuted, patientExecuted, isExecuting } = this.props;
+  renderResults = () => {
+    const { results, artifactExecuted, patientsExecuted, isExecuting } = this.props;
 
     if (results) {
-      const patientResults = results.patientResults[Object.keys(results.patientResults)[0]];
-      const patientResource = _.chain(patientExecuted)
-        .get('entry')
-        .find({ resource: { resourceType: 'Patient' } })
-        .get('resource')
-        .value();
-      const patientNameGiven = _.get(patientResource, 'name[0].given[0]', 'given_placeholder');
-      const patientNameFamily = _.get(patientResource, 'name[0].family', 'family_placeholder');
+      const resultsArray = Object.values(results.patientResults);
+      const resultsCount = resultsArray.length;
+      const resultsIncludedCount = resultsArray.filter(r => r.MeetsInclusionCriteria).length;
+      const resultsExcludedCount = resultsArray.filter(r => r.MeetsExclusionCriteria).length;
 
       return (
         <Jumbotron className="patient-table">
           <div className="patient-table__title">CQL Execution Results</div>
 
           <div className="patient-table__meta">
-            <div className="patient-table__meta-patient">
-              <span className="meta-label">Patient:</span> {patientNameGiven} {patientNameFamily}
-            </div>
-
             <div className="patient-table__meta-artifact">
               <span className="meta-label">Artifact:</span> {artifactExecuted.name}
             </div>
           </div>
 
-          <table className="patients__table">
-            <tbody>
-              <tr>
-                <th scope="col" className="patients__tablecell-wide">MeetsInclusionCriteria</th>
-                <td>{
-                  patientResults.MeetsInclusionCriteria != null
-                  ? this.renderBoolean(patientResults.MeetsInclusionCriteria)
-                  : 'No Value'}
-                </td>
-              </tr>
-              <tr>
-                <th scope="col" className="patients__tablecell-wide">MeetsExclusionCriteria</th>
-                <td>{
-                  patientResults.MeetsExclusionCriteria != null
-                  ? this.renderBoolean(patientResults.MeetsExclusionCriteria)
-                  : 'No Value'}
-                </td>
-              </tr>
-              <tr>
-                <th scope="col" className="patients__tablecell-wide">Recommendation</th>
-                <td>{
-                  patientResults.Recommendation != null
-                  ? patientResults.Recommendation.toString()
-                  : 'No Value'}
-                </td>
-              </tr>
-              <tr>
-                <th scope="col" className="patients__tablecell-wide">Rationale</th>
-                <td>{
-                  patientResults.Rationale != null
-                  ? patientResults.Rationale.toString()
-                  : 'No Value'}
-                </td>
-              </tr>
-              <tr>
-                <th scope="col" className="patients__tablecell-wide">Errors</th>
-                <td>{
-                  patientResults.Errors != null
-                  ? patientResults.Errors.toString()
-                  : 'No Value'}
-                </td>
-              </tr>
-            </tbody>
-          </table>
+          <div className="patient-table__meta">
+            <div className="patient-table__meta-inclusion">
+              <span className="meta-label">Meets Inclusion Criteria:</span> {resultsIncludedCount} of {resultsCount}
+            </div>
+          </div>
+
+          <div className="patient-table__meta">
+            <div className="patient-table__meta-exclusion">
+            <span className="meta-label">Meets Exclusion Criteria:</span> {resultsExcludedCount} of {resultsCount}
+            </div>
+          </div>
+
+          <div className="patients__table">
+            {patientsExecuted.map(p => this.renderResultsDataSection(p))}
+          </div>
         </Jumbotron>
       );
     } else if (isExecuting) {
@@ -200,6 +158,28 @@ class Testing extends Component {
         && <div className="warning">{this.props.errorMessage}</div>}
       <div>Execute CQL for a patient below.</div>
     </Breadcrumb>;
+  }
+
+  renderResultsDataSection = (patientExecuted) => {
+    const { results } = this.props;
+
+    const patientResource = _.chain(patientExecuted)
+      .get('entry')
+      .find({ resource: { resourceType: 'Patient' } })
+      .get('resource')
+      .value();
+    const patientId = patientResource.id;
+    const patientNameGiven = _.get(patientResource, 'name[0].given[0]', 'given_placeholder');
+    const patientNameFamily = _.get(patientResource, 'name[0].family', 'family_placeholder');
+
+    const patientResults = results.patientResults[patientId];
+
+    return (
+      <ResultsDataSection
+        key={patientId}
+        title={`${patientNameGiven} ${patientNameFamily}`}
+        results={patientResults} />
+    );
   }
 
   renderPatientsTable() {
@@ -257,7 +237,7 @@ class Testing extends Component {
           </Dropzone>
 
           <div className="testing-wrapper">
-            {this.renderResultsTable()}
+            {this.renderResults()}
             {this.renderPatientsTable()}
           </div>
 
@@ -285,7 +265,7 @@ Testing.propTypes = {
   isExecuting: PropTypes.bool.isRequired,
   isAdding: PropTypes.bool.isRequired,
   artifactExecuted: artifactProps,
-  patientExecuted: patientProps,
+  patientsExecuted: PropTypes.arrayOf(patientProps),
   loadPatients: PropTypes.func.isRequired,
   addPatient: PropTypes.func.isRequired,
   deletePatient: PropTypes.func.isRequired,
@@ -331,7 +311,7 @@ function mapStateToProps(state) {
     isExecuting: state.artifacts.executeArtifact.isExecuting,
     isAdding: state.testing.addPatient.isAdding,
     artifactExecuted: state.artifacts.executeArtifact.artifactExecuted,
-    patientExecuted: state.artifacts.executeArtifact.patientExecuted,
+    patientsExecuted: state.artifacts.executeArtifact.patientsExecuted,
     vsacStatus: state.vsac.authStatus,
     vsacStatusText: state.vsac.authStatusText,
     vsacIsAuthenticating: state.vsac.isAuthenticating,

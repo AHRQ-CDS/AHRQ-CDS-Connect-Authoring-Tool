@@ -5,7 +5,7 @@ import FontAwesome from 'react-fontawesome';
 import _ from 'lodash';
 
 import renderDate from '../../utils/dates';
-import { sortMostRecent } from '../../utils/sort';
+import { sortAlphabeticallyByKey } from '../../utils/sort';
 import patientProps from '../../prop-types/patient';
 import artifactProps from '../../prop-types/artifact';
 
@@ -298,7 +298,7 @@ export default class PatientTable extends Component {
 
     return (
       <Modal
-        modalTitle="Multiple Execute CQL"
+        modalTitle="Execute CQL on Selected Patients"
         modalId="multiple-execute-cql-modal"
         modalTheme="light"
         modalSubmitButtonText={this.state.artifactToExecute == null ? '' : 'Execute CQL'}
@@ -437,13 +437,13 @@ export default class PatientTable extends Component {
 
     return (
       <div className="patient-table">
-        <button aria-label="Multiple Execute CQL"
+        <button aria-label="Execute CQL on Selected Patients"
           disabled={this.props.vsacFHIRCredentials.username == null}
           className={`button primary-button ${
             this.props.vsacFHIRCredentials.username != null ? '' : 'disabled-button'
           }`}
           onClick={() => this.openMultipleExecuteCQLModal()}>
-          Multiple Execute CQL
+          Execute CQL on Selected Patients
         </button>
 
         <table className="patients__table">
@@ -459,7 +459,7 @@ export default class PatientTable extends Component {
           </thead>
 
           <tbody>
-            {patients.sort(sortMostRecent).map(this.renderTableRow)}
+            {patients.sort(sortAlphabeticallyByKey).map(this.renderTableRow)}
           </tbody>
         </table>
 
