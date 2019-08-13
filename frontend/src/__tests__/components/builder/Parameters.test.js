@@ -40,6 +40,10 @@ beforeEach(() => {
   });
 });
 
+test('Parameters renders without crashing', () => {
+  expect(component).toBeDefined();
+});
+
 test('has correct base class', () => {
   component.hasClass('parameters');
 });

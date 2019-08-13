@@ -20,8 +20,8 @@ export default class ExpressionPhrase extends Component {
     let phraseTemplateInstance = instance;
     let phraseTemplateInstanceIsConjunction = false;
     if (instance.type === 'baseElement') {
-      const referenceParameter = instance.parameters.find(param => param.type === 'reference');
-      if (referenceParameter) {
+      const referenceField = instance.fields.find(field => field.type === 'reference');
+      if (referenceField) {
         // Use the original base element as a base, but include all modifiers from derivative uses.
         const originalBaseElement = _.cloneDeep(getOriginalBaseElement(instance, baseElements));
         const modifiers = getAllModifiersOnBaseElementUse(instance, baseElements, []);
@@ -47,24 +47,24 @@ export default class ExpressionPhrase extends Component {
     }
 
     let valueSets = [];
-    if (phraseTemplateInstance.parameters[1] && phraseTemplateInstance.parameters[1].valueSets) {
-      valueSets = phraseTemplateInstance.parameters[1].valueSets;
+    if (phraseTemplateInstance.fields[1] && phraseTemplateInstance.fields[1].valueSets) {
+      valueSets = phraseTemplateInstance.fields[1].valueSets;
     }
 
     let codes = [];
-    if (phraseTemplateInstance.parameters[1] && phraseTemplateInstance.parameters[1].codes) {
-      codes = phraseTemplateInstance.parameters[1].codes;
+    if (phraseTemplateInstance.fields[1] && phraseTemplateInstance.fields[1].codes) {
+      codes = phraseTemplateInstance.fields[1].codes;
     }
 
-    const otherParameters = phraseTemplateInstance.parameters.filter(param =>
-      param.type === 'number' || param.type === 'valueset');
+    const otherFields = phraseTemplateInstance.fields.filter(field =>
+      field.type === 'number' || field.type === 'valueset');
 
     if (phraseTemplateInstanceIsConjunction) {
       phraseTemplateInstance.childInstances.forEach((child) => {
         let secondPhraseExpressions = [];
         if (child.childInstances && phraseTemplateInstance.usedBy) {
           // Groups expression phrases list the names of the elements within the group. They only go one level deep.
-          const childNames = child.childInstances.map(c => ({ name: c.parameters[0].value }));
+          const childNames = child.childInstances.map(c => ({ name: c.fields[0].value }));
           secondPhraseExpressions = convertToExpression([], child.name, [], [], child.returnType, [], childNames);
         } else {
           // Individual elements give the full expression phrase in the tooltip
@@ -73,19 +73,19 @@ export default class ExpressionPhrase extends Component {
         const phraseArrayAsSentence = secondPhraseExpressions.reduce((acc, currentValue) =>
           `${acc}${currentValue.expressionText === ',' ? '' : ' '}
           ${currentValue.isName ? '"' : ''}${currentValue.expressionText}${currentValue.isName ? '"' : ''}`, '');
-        elementNamesInPhrase.push({ name: child.parameters[0].value, tooltipText: phraseArrayAsSentence });
+        elementNamesInPhrase.push({ name: child.fields[0].value, tooltipText: phraseArrayAsSentence });
       });
     }
 
     const isBaseElementAndOr = phraseTemplateInstanceIsConjunction && instance.type === 'baseElement' &&
       (phraseTemplateInstance.name === 'And' || phraseTemplateInstance.name === 'Or');
 
-    let parameterName = null;
+    let referenceElementName = null;
     if (type === 'parameter') {
-      parameterName = phraseTemplateInstance.name;
+      referenceElementName = phraseTemplateInstance.name;
     } else if (type === 'externalCqlElement') {
-      parameterName =
-        phraseTemplateInstance.parameters.find(param => param.id === 'externalCqlReference').value.element;
+      referenceElementName =
+        phraseTemplateInstance.fields.find(field => field.id === 'externalCqlReference').value.element;
     }
 
     const expressions = convertToExpression(
@@ -94,10 +94,10 @@ export default class ExpressionPhrase extends Component {
       valueSets,
       codes,
       returnType,
-      otherParameters,
+      otherFields,
       elementNamesInPhrase,
       isBaseElementAndOr,
-      parameterName
+      referenceElementName
     );
 
     return expressions;

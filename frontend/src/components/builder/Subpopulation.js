@@ -7,7 +7,7 @@ import ConjunctionGroup from './ConjunctionGroup';
 import ExpressionPhrase from './modifiers/ExpressionPhrase';
 
 import { hasGroupNestedWarning } from '../../utils/warnings';
-import StringParameter from './parameters/types/StringParameter';
+import StringField from './fields/StringField';
 
 export default class Subpopulation extends Component {
   constructor(props) {
@@ -32,8 +32,8 @@ export default class Subpopulation extends Component {
 
   getAllInstances = treeName => this.props.getAllInstances(treeName, null, this.props.subpopulation.uniqueId)
 
-  editInstance = (treeName, params, path, editingConjunction) => {
-    this.props.editInstance(treeName, params, path, editingConjunction, this.props.subpopulation.uniqueId);
+  editInstance = (treeName, fields, path, editingConjunction) => {
+    this.props.editInstance(treeName, fields, path, editingConjunction, this.props.subpopulation.uniqueId);
   }
 
   deleteInstance = (treeName, path, toAdd) => {
@@ -79,7 +79,7 @@ export default class Subpopulation extends Component {
             <div className={headerTopClass}>
               {isExpanded ?
                 <div className="card-element__heading">
-                  <StringParameter
+                  <StringField
                     id={'subpopulation_title'}
                     name={'Subpopulation'}
                     uniqueId={this.props.subpopulation.uniqueId}

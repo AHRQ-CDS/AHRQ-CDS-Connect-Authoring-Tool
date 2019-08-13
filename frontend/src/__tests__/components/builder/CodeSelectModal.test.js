@@ -18,7 +18,7 @@ const testTemplate = {
   returnType: 'list_of_observations',
   suppress: true,
   extends: 'Base',
-  parameters: [
+  fields: [
     { id: 'element_name', type: 'string', name: 'Element Name' },
     { id: 'observation', type: 'observation', name: 'Observation' }
   ],

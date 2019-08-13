@@ -7,14 +7,14 @@ const mockTemplates = [
         name: 'And',
         conjunction: true,
         returnType: 'boolean',
-        parameters: []
+        fields: []
       },
       {
         id: 'Or',
         name: 'Or',
         conjunction: true,
         returnType: 'boolean',
-        parameters: []
+        fields: []
       }
     ]
   }

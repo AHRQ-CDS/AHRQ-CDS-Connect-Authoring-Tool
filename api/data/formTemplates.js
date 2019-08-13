@@ -9,7 +9,7 @@ module.exports = [
         id: 'Base',
         name: 'Base Template',
         type: 'element',
-        parameters: [
+        fields: [
           { id: 'element_name', type: 'string', name: 'Element Name' },
           { id: 'comment', type: 'textarea', name: 'Comment' }
         ],
@@ -27,7 +27,7 @@ module.exports = [
         returnType: 'boolean',
         validator: {type: 'requiredIfThenOne', fields: ['unit_of_time', 'min_age', 'max_age']},
         suppressedModifiers: ['BooleanNot', 'BooleanComparison'],
-        parameters: [
+        fields: [
           { id: 'element_name', type: 'string', name: 'Element Name' },
           { id: 'comment', type: 'textarea', name: 'Comment' },
           { id: 'min_age', type: 'number', typeOfNumber: 'integer', name: 'Minimum Age' },
@@ -41,7 +41,7 @@ module.exports = [
         returnType: 'boolean',
         cannotHaveModifiers: true,
         validator: {type: 'require', fields: ['gender'], args: null},
-        parameters: [
+        fields: [
           { id: 'element_name', type: 'string', name: 'Element Name' },
           { id: 'comment', type: 'textarea', name: 'Comment' },
           { id: 'gender', type: 'valueset', select: 'demographics/gender', name: 'Gender' },
@@ -62,7 +62,7 @@ module.exports = [
         extends: 'Base',
         template: 'GenericObservation',
         suppressedModifiers: ['ConvertToMgPerdL'], // checkInclusionInVS is assumed to be suppressed
-        parameters: [
+        fields: [
           { id: 'observation', type: 'observation_vsac', name: 'Observation' }
         ]
       },
@@ -78,7 +78,7 @@ module.exports = [
         name: 'And',
         conjunction: true,
         returnType: 'boolean',
-        parameters: [
+        fields: [
           { id: 'element_name', type: 'string', name: 'Group Name' },
           { id: 'comment', type: 'textarea', name: 'Comment' }
         ]
@@ -88,7 +88,7 @@ module.exports = [
         name: 'Or',
         conjunction: true,
         returnType: 'boolean',
-        parameters: [
+        fields: [
           { id: 'element_name', type: 'string', name: 'Group Name' },
           { id: 'comment', type: 'textarea', name: 'Comment' }
         ]
@@ -107,7 +107,7 @@ module.exports = [
         suppress: true,
         extends: 'Base',
         template: 'GenericCondition',
-        parameters: [
+        fields: [
           { id: 'condition', type: 'condition_vsac', name: 'Condition' }
         ]
       },
@@ -125,7 +125,7 @@ module.exports = [
         suppress: true,
         extends: 'Base',
         template: 'GenericMedicationStatement',
-        parameters: [
+        fields: [
           { id: 'medicationStatement', type: 'medicationStatement_vsac', name: 'Medication Statement' }
         ]
       },
@@ -136,7 +136,7 @@ module.exports = [
         suppress: true,
         extends: 'Base',
         template: 'GenericMedicationOrder',
-        parameters: [
+        fields: [
           { id: 'medicationOrder', type: 'medicationOrder_vsac', name: 'Medication Order' }
         ]
       },
@@ -154,7 +154,7 @@ module.exports = [
         suppress: true,
         extends: 'Base',
         template: 'GenericProcedure',
-        parameters: [
+        fields: [
           { id: 'procedure', type: 'procedure_vsac', name: 'Procedure' }
         ]
       },
@@ -171,7 +171,7 @@ module.exports = [
         type: 'parameter',
         returnType: 'boolean',
         extends: 'Base',
-        parameters: [
+        fields: [
           { id: 'default', type: 'boolean', value: 'true', name: 'Default' }
         ],
       },
@@ -189,7 +189,7 @@ module.exports = [
         suppress: true,
         extends: 'Base',
         template: 'GenericEncounter',
-        parameters: [
+        fields: [
           { id: 'encounter', type: 'encounter_vsac', name: 'Encounter' }
         ]
       },
@@ -207,7 +207,7 @@ module.exports = [
         suppress: true,
         extends: 'Base',
         template: 'GenericAllergyIntolerance',
-        parameters: [
+        fields: [
           { id: 'allergyIntolerance', type: 'allergyIntolerance_vsac', name: 'Allergy Intolerance' }
         ]
       },
@@ -229,7 +229,7 @@ module.exports = [
         name: 'Intersect',
         conjunction: true,
         returnType: 'list_of_any',
-        parameters: [
+        fields: [
           { id: 'element_name', type: 'string', name: 'Group Name' },
           { id: 'comment', type: 'textarea', name: 'Comment' }
         ]
@@ -239,7 +239,7 @@ module.exports = [
         name: 'Union',
         conjunction: true,
         returnType: 'list_of_any',
-        parameters: [
+        fields: [
           { id: 'element_name', type: 'string', name: 'Group Name' },
           { id: 'comment', type: 'textarea', name: 'Comment' }
         ]

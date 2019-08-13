@@ -67,8 +67,8 @@ describe('artifact actions', () => {
   // ----------------------- INITIALIZE ARTIFACT --------------------------- //
   describe('initialize artifact', () => {
     it('should create an action to initialize an artifact', () => {
-      const andTemplate = { id: 'And', name: 'And', conjunction: true, returnType: 'boolean', parameters: [] };
-      const orTemplate = { id: 'Or', name: 'Or', conjunction: true, returnType: 'boolean', parameters: [] };
+      const andTemplate = { id: 'And', name: 'And', conjunction: true, returnType: 'boolean', fields: [] };
+      const orTemplate = { id: 'Or', name: 'Or', conjunction: true, returnType: 'boolean', fields: [] };
       const expectedAction = {
         type: types.INITIALIZE_ARTIFACT,
         artifact: mockArtifact

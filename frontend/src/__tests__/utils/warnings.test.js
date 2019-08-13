@@ -69,7 +69,7 @@ test('warning for nested base element instance warning', () => {
       usedBy: ['Gender610-3616'],
       path: '',
       uniqueId: 'Gender-2564',
-      parameters: [
+      fields: [
         { value: 'Gender1', name: 'Element Name', type: 'string', id: 'element_name' },
         {
           value: { value: "'male'", name: 'Male', id: 'male' },

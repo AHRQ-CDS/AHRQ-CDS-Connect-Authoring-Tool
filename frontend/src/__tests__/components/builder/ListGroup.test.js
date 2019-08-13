@@ -125,7 +125,7 @@ test('No warnings on base element lists when in use and unmodified', () => {
   const inUseProps = _.cloneDeep(props);
   inUseProps.instanceNames = [
     { id: 'testId1', name: 'UnionListName' },
-    { id: inUseProps.instance.uniqueId, name: inUseProps.instance.parameters[0].value }
+    { id: inUseProps.instance.uniqueId, name: inUseProps.instance.fields[0].value }
   ];
   component = shallowRenderComponent(ListGroup, { ...inUseProps });
   const warningDiv = component.find('.warning');
@@ -145,7 +145,7 @@ test('Base Element specific warning on base element list when in use and modifie
       cqlLibraryFunction: 'not'
     }
   ];
-  modifiedUse.parameters[0].value = 'UnionListName';
+  modifiedUse.fields[0].value = 'UnionListName';
   modifiedUse.uniqueId = 'testId1';
   baseElementListProps.instanceNames = [
     { id: baseElementListProps.instance.uniqueId, name: 'UnionListName' },

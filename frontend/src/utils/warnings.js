@@ -8,12 +8,12 @@ export function doesBaseElementInstanceNeedWarning(instance, allInstancesInAllTr
     instance.usedBy.forEach((usageId) => {
       const use = allInstancesInAllTrees.find(i => i.uniqueId === usageId);
       if (use) {
-        const useCommentParameter = use.parameters.find(param => param.id === 'comment');
-        const useCommentValue = useCommentParameter ? useCommentParameter.value : '';
-        const instanceCommentParameter = instance.parameters.find(param => param.id === 'comment');
-        const instanceCommentValue = instanceCommentParameter ? instanceCommentParameter.value : '';
+        const useCommentField = use.fields.find(field => field.id === 'comment');
+        const useCommentValue = useCommentField ? useCommentField.value : '';
+        const instanceCommentField = instance.fields.find(field => field.id === 'comment');
+        const instanceCommentValue = instanceCommentField ? instanceCommentField.value : '';
         if (((use.modifiers && use.modifiers.length > 0) || (instanceCommentValue !== useCommentValue)) &&
-          instance.parameters[0].value === use.parameters[0].value) {
+          instance.fields[0].value === use.fields[0].value) {
           anyUseHasChanged = true;
         }
       }
@@ -25,18 +25,18 @@ export function doesBaseElementInstanceNeedWarning(instance, allInstancesInAllTr
 }
 
 export function doesBaseElementUseNeedWarning(instance, baseElements) {
-  const elementNameParameter = instance.parameters.find(param => param.id === 'element_name');
-  const instanceCommentParameter = instance.parameters.find(param => param.id === 'comment');
-  const instanceCommentValue = instanceCommentParameter ? instanceCommentParameter.value : '';
+  const elementNameField = instance.fields.find(field => field.id === 'element_name');
+  const instanceCommentField = instance.fields.find(field => field.id === 'comment');
+  const instanceCommentValue = instanceCommentField ? instanceCommentField.value : '';
 
   if (instance.type === 'baseElement') {
-    const referenceParameter = instance.parameters.find(param => param.type === 'reference');
-    const originalBaseElement = baseElements.find(baseEl => referenceParameter.value.id === baseEl.uniqueId);
-    const originalCommentParameter = originalBaseElement.parameters.find(param => param.id === 'comment');
-    const originalCommentValue = originalCommentParameter ? originalCommentParameter.value : '';
+    const referenceField = instance.fields.find(field => field.type === 'reference');
+    const originalBaseElement = baseElements.find(baseEl => referenceField.value.id === baseEl.uniqueId);
+    const originalCommentField = originalBaseElement.fields.find(field => field.id === 'comment');
+    const originalCommentValue = originalCommentField ? originalCommentField.value : '';
     // If some modifiers applied AND the name is the same as original, it should be changed. Need a warning.
     if (((instance.modifiers && instance.modifiers.length > 0) || (instanceCommentValue !== originalCommentValue)) &&
-      elementNameParameter.value === originalBaseElement.parameters[0].value) {
+      elementNameField.value === originalBaseElement.fields[0].value) {
       return true;
     }
     return false;
@@ -46,19 +46,19 @@ export function doesBaseElementUseNeedWarning(instance, baseElements) {
 }
 
 export function doesParameterUseNeedWarning(instance, parameters) {
-  const elementNameParameter = instance.parameters.find(param => param.id === 'element_name');
-  const instanceCommentParameter = instance.parameters.find(param => param.id === 'comment');
+  const elementNameField = instance.fields.find(field => field.id === 'element_name');
+  const instanceCommentField = instance.fields.find(field => field.id === 'comment');
   const instanceCommentValue
-    = (instanceCommentParameter && instanceCommentParameter.value) ? instanceCommentParameter.value : '';
+    = (instanceCommentField && instanceCommentField.value) ? instanceCommentField.value : '';
 
   if (instance.type === 'parameter') {
-    const referenceParameter = instance.parameters.find(param => param.type === 'reference');
-    const originalParameter = parameters.find(param => referenceParameter.value.id === param.uniqueId);
+    const referenceField = instance.fields.find(field => field.type === 'reference');
+    const originalParameter = parameters.find(param => referenceField.value.id === param.uniqueId);
     const originalCommentValue
       = (originalParameter && originalParameter.comment) ? originalParameter.comment : '';
     // If some modifiers applied AND the name is the same as original, it should be changed. Need a warning.
     if (((instance.modifiers && instance.modifiers.length > 0) || (instanceCommentValue !== originalCommentValue)) &&
-      elementNameParameter.value === originalParameter.name) {
+      elementNameField.value === originalParameter.name) {
       return true;
     }
     return false;
@@ -73,12 +73,12 @@ export function doesParameterNeedWarning(name, usedBy, comment, allInstancesInAl
     usedBy.forEach((usageId) => {
       const use = allInstancesInAllTrees.find(i => i.uniqueId === usageId);
       if (use) {
-        const useCommentParameter = use.parameters.find(param => param.id === 'comment');
+        const useCommentField = use.fields.find(field => field.id === 'comment');
         const useCommentValue
-          = (useCommentParameter && useCommentParameter.value) ? useCommentParameter.value : '';
+          = (useCommentField && useCommentField.value) ? useCommentField.value : '';
         const instanceCommentValue = comment || '';
         if (((use.modifiers && use.modifiers.length > 0) || (instanceCommentValue !== useCommentValue)) &&
-          name === use.parameters[0].value) {
+          name === use.fields[0].value) {
           anyUseHasChanged = true;
         }
       }
@@ -90,15 +90,15 @@ export function doesParameterNeedWarning(name, usedBy, comment, allInstancesInAl
 }
 
 export function hasDuplicateName(templateInstance, instanceNames, baseElements, parameters, allInstancesInAllTrees) {
-  const elementNameParameter = templateInstance.parameters.find(param => param.id === 'element_name');
+  const elementNameField = templateInstance.fields.find(field => field.id === 'element_name');
   // Treat undefined as empty string so unnamed elements display duplicate correctly.
-  const nameValue = elementNameParameter.value === undefined ? '' : elementNameParameter.value;
+  const nameValue = elementNameField.value === undefined ? '' : elementNameField.value;
   const duplicateNameIndex = instanceNames.findIndex((name) => {
     const isDuplicate = name.id !== templateInstance.uniqueId && name.name === nameValue;
     // If base element use, don't include a duplicate from the original base element.
     if (isDuplicate && templateInstance.type === 'baseElement') {
-      const referenceParameter = templateInstance.parameters.find(param => param.type === 'reference');
-      const originalBaseElement = baseElements.find(baseEl => referenceParameter.value.id === baseEl.uniqueId);
+      const referenceField = templateInstance.fields.find(field => field.type === 'reference');
+      const originalBaseElement = baseElements.find(baseEl => referenceField.value.id === baseEl.uniqueId);
       // If the duplicate is another of the uses, don't consider duplicate unless that use has changed.
       const anotherUseId = originalBaseElement.usedBy.find(id => id === name.id);
       const anotherUse = allInstancesInAllTrees.find(instance => instance.uniqueId === anotherUseId);
@@ -118,8 +118,8 @@ export function hasDuplicateName(templateInstance, instanceNames, baseElements, 
       return name.id !== originalBaseElement.uniqueId;
     } else if (isDuplicate && templateInstance.type === 'parameter') {
       // If parameter use, don't include a duplicate from the original parameter.
-      const referenceParameter = templateInstance.parameters.find(param => param.type === 'reference');
-      const originalParameter = parameters.find(param => referenceParameter.value.id === param.uniqueId);
+      const referenceField = templateInstance.fields.find(field => field.type === 'reference');
+      const originalParameter = parameters.find(param => referenceField.value.id === param.uniqueId);
       // If the duplicate is another of the uses, don't consider duplicate unless that use has changed.
       const anotherUseId = originalParameter.usedBy ? originalParameter.usedBy.find(id => id === name.id) : null;
       const anotherUse = allInstancesInAllTrees.find(instance => instance.uniqueId === anotherUseId);
@@ -160,13 +160,13 @@ export function parameterHasDuplicateName(parameterName, id, usedBy, instanceNam
   return duplicateNameIndex !== -1;
 }
 
-export function validateElement(instance, params) {
+export function validateElement(instance, templateInstanceFields) {
   if (instance.validator) {
     const validator = Validators[instance.validator.type];
-    const fields = instance.validator.fields;
+    const validatorFields = instance.validator.fields;
     const args = instance.validator.args;
-    const values = fields.map(f => params[f]);
-    const names = fields.map(f => instance.parameters.find(el => el.id === f).name);
+    const values = validatorFields.map(f => templateInstanceFields[f]);
+    const names = validatorFields.map(f => instance.fields.find(el => el.id === f).name);
     if (!validator.check(values, args)) {
       return validator.warning(names, args);
     }
@@ -205,12 +205,12 @@ export function hasGroupNestedWarning(
         warning = hasDuplicateName(child, instanceNames, baseElements, parameters, allInstancesInAllTrees);
       }
     } else {
-      const params = {};
-      child.parameters.forEach((param) => {
-        params[param.id] = param.value;
+      const fields = {};
+      child.fields.forEach((field) => {
+        fields[field.id] = field.value;
       });
 
-      const hasValidateElementWarning = validateElement(child, params) !== null;
+      const hasValidateElementWarning = validateElement(child, fields) !== null;
       const hasReturnTypeWarning =
         hasReturnTypeError(child.returnType, child.modifiers, 'boolean', validateReturnType);
       const hasModifierWarning = !allModifiersValid(child.modifiers);

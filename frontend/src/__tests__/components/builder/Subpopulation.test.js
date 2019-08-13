@@ -20,7 +20,7 @@ beforeEach(() => {
       name: '',
       conjunction: true,
       returnType: 'boolean',
-      parameters: [{ id: 'element_name', type: 'string', name: 'Group Name' }],
+      fields: [{ id: 'element_name', type: 'string', name: 'Group Name' }],
       uniqueId: userSubpopUniqueId,
       childInstances: [],
       path: '',

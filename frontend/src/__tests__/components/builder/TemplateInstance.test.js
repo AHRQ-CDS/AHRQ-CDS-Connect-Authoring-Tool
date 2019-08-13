@@ -88,7 +88,7 @@ describe('vsac controls on generic template instances', () => {
   });
 
   test('can view value set details from template instance without editing', () => {
-    const valueSets = component.props().templateInstance.parameters[1].valueSets;
+    const valueSets = component.props().templateInstance.fields[1].valueSets;
     // Multiple value sets can be viewed.
     expect(component.find('#valueset-list')).toHaveLength(1);
     expect(component.find('#valueset-list > div')).toHaveLength(2);
@@ -107,7 +107,7 @@ describe('vsac controls on generic template instances', () => {
   });
 
   test('can delete a value set from a template instance', () => {
-    const valueSets = component.props().templateInstance.parameters[1].valueSets;
+    const valueSets = component.props().templateInstance.fields[1].valueSets;
     expect(valueSets).toHaveLength(2);
 
     // Multiple value sets can be viewed.
@@ -120,7 +120,7 @@ describe('vsac controls on generic template instances', () => {
 
     // The array that will be sent to get updated, without valueSets[0] since that is being deleted.
     const arrayToUpdate = [
-      { [component.props().templateInstance.parameters[1].id]: [valueSets[1]], attributeToEdit: 'valueSets' }
+      { [component.props().templateInstance.fields[1].id]: [valueSets[1]], attributeToEdit: 'valueSets' }
     ];
     const updateSpy = jest.spyOn(component.instance(), 'updateInstance');
     component.update();
@@ -129,7 +129,7 @@ describe('vsac controls on generic template instances', () => {
   });
 
   test('can delete a code from a template instance', () => {
-    const codes = component.props().templateInstance.parameters[1].codes;
+    const codes = component.props().templateInstance.fields[1].codes;
     expect(codes).toHaveLength(2);
 
     // Multiple codes can be viewed.
@@ -145,7 +145,7 @@ describe('vsac controls on generic template instances', () => {
 
     // The array that will be sent to get updated, without codes[0] since that is being deleted.
     const arrayToUpdate = [
-      { [component.props().templateInstance.parameters[1].id]: [codes[1]], attributeToEdit: 'codes' }
+      { [component.props().templateInstance.fields[1].id]: [codes[1]], attributeToEdit: 'codes' }
     ];
     const deleteSpy = jest.spyOn(component.instance(), 'deleteCode');
     const updateSpy = jest.spyOn(component.instance(), 'updateInstance');
@@ -343,7 +343,7 @@ describe('Base Element Uses of Use', () => {
         cqlLibraryFunction: 'C3F.Verified'
       }
     ];
-    useElement.parameters[0].value = 'B';
+    useElement.fields[0].value = 'B';
     baseElementProps.instanceNames = [
       { id: 'originalBaseElementId', name: 'A' },
       { id: 'useOfUseId', name: 'C' },
@@ -351,13 +351,13 @@ describe('Base Element Uses of Use', () => {
     ];
     const originalBaseElement = _.cloneDeep(genericBaseElementTemplateInstance);
     originalBaseElement.uniqueId = 'originalBaseElementId';
-    originalBaseElement.parameters[0].value = 'A';
+    originalBaseElement.fields[0].value = 'A';
     originalBaseElement.usedBy = [useElement.uniqueId];
 
     const useOfUseElement = _.cloneDeep(genericBaseElementUseTemplateInstance);
     useOfUseElement.uniqueId = 'useOfUseId';
-    useOfUseElement.parameters[0].value = 'C';
-    useOfUseElement.parameters[1].value = { id: useElement.uniqueId, type: 'Base Element' };
+    useOfUseElement.fields[0].value = 'C';
+    useOfUseElement.fields[1].value = { id: useElement.uniqueId, type: 'Base Element' };
     useOfUseElement.modifiers = [
       {
         id: 'BooleanExists',
@@ -441,7 +441,7 @@ describe('Base Element warnings', () => {
     ];
     const originalBaseElement = genericBaseElementTemplateInstance;
     originalBaseElement.uniqueId = 'originalBaseElementId';
-    originalBaseElement.parameters[0].value = 'Base Element Observation';
+    originalBaseElement.fields[0].value = 'Base Element Observation';
     baseElementProps.baseElements = [originalBaseElement];
     component = fullRenderComponentOnBody(TemplateInstance, { ...baseElementProps });
 
@@ -460,7 +460,7 @@ describe('Base Element warnings', () => {
     ];
     const originalBaseElement = genericBaseElementTemplateInstance;
     originalBaseElement.uniqueId = 'originalBaseElementId';
-    originalBaseElement.parameters[0].value = 'Base Element Observation';
+    originalBaseElement.fields[0].value = 'Base Element Observation';
     baseElementProps.baseElements = [originalBaseElement];
     baseElementProps.templateInstance.modifiers = [
       {
@@ -492,10 +492,10 @@ describe('Base Element warnings', () => {
 
     const originalBaseElement = genericBaseElementTemplateInstance;
     originalBaseElement.uniqueId = 'originalBaseElementId';
-    originalBaseElement.parameters[0].value = 'Base Element Observation';
+    originalBaseElement.fields[0].value = 'Base Element Observation';
     const useOfUseElement = genericBaseElementUseTemplateInstance;
     useOfUseElement.uniqueId = 'useOfUseId';
-    useOfUseElement.parameters[0].value = 'Base Element Observation';
+    useOfUseElement.fields[0].value = 'Base Element Observation';
 
     baseElementProps.baseElements = [originalBaseElement, baseElementProps.templateInstance, useOfUseElement];
     baseElementProps.allInstancesInAllTrees = [originalBaseElement, baseElementProps.templateInstance, useOfUseElement];
@@ -582,16 +582,16 @@ describe('Base Element warnings', () => {
     baseElementProps.templateInstance = unmodifiedUse;
 
     const tempInstanceWithSameName = _.cloneDeep(genericTemplateInstance);
-    tempInstanceWithSameName.parameters[0].value = baseElementProps.templateInstance.parameters[0].value;
+    tempInstanceWithSameName.fields[0].value = baseElementProps.templateInstance.fields[0].value;
 
     baseElementProps.instanceNames = [
       { id: 'originalBaseElementId', name: 'Base Element Observation' },
-      { id: unmodifiedUse.uniqueId, name: unmodifiedUse.parameters[0].value },
-      { id: tempInstanceWithSameName.uniqueId, name: tempInstanceWithSameName.parameters[0].value }
+      { id: unmodifiedUse.uniqueId, name: unmodifiedUse.fields[0].value },
+      { id: tempInstanceWithSameName.uniqueId, name: tempInstanceWithSameName.fields[0].value }
     ];
     const originalBaseElement = genericBaseElementTemplateInstance;
     originalBaseElement.uniqueId = 'originalBaseElementId';
-    originalBaseElement.parameters[0].value = 'Base Element Observation';
+    originalBaseElement.fields[0].value = 'Base Element Observation';
     baseElementProps.baseElements = [originalBaseElement];
 
     baseElementProps.allInstancesInAllTrees = [
@@ -616,12 +616,12 @@ describe('Base Element warnings', () => {
 
     baseElementProps.instanceNames = [
       { id: 'originalBaseElementId', name: 'Base Element Observation' },
-      { id: unmodifiedUse.uniqueId, name: unmodifiedUse.parameters[0].value },
-      { id: secondUse.uniqueId, name: secondUse.parameters[0].value }
+      { id: unmodifiedUse.uniqueId, name: unmodifiedUse.fields[0].value },
+      { id: secondUse.uniqueId, name: secondUse.fields[0].value }
     ];
     const originalBaseElement = genericBaseElementTemplateInstance;
     originalBaseElement.uniqueId = 'originalBaseElementId';
-    originalBaseElement.parameters[0].value = 'Base Element Observation';
+    originalBaseElement.fields[0].value = 'Base Element Observation';
     originalBaseElement.usedBy = [
       unmodifiedUse.uniqueId,
       secondUse.uniqueId

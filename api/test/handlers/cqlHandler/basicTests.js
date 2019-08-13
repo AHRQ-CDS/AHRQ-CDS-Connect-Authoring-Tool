@@ -23,7 +23,7 @@ describe('Basic CQL Handler Tests', () => {
     name: '',
     conjunction: true,
     returnType: 'boolean',
-    parameters: [{
+    fields: [{
       id: 'element_name',
       type: 'string',
       name: 'Group Name',
@@ -39,7 +39,7 @@ describe('Basic CQL Handler Tests', () => {
       id: 'ASCVD',
       name: 'ASCVD',
       extends: 'GenericCondition',
-      parameters: [
+      fields: [
         {
           id: 'element_name',
           value: 'HasASCVD',
@@ -70,7 +70,7 @@ describe('Basic CQL Handler Tests', () => {
     name: '',
     conjunction: true,
     returnType: 'boolean',
-    parameters: [{
+    fields: [{
       id: 'element_name',
       type: 'string',
       name: 'Group Name',
@@ -87,7 +87,7 @@ describe('Basic CQL Handler Tests', () => {
       name: 'Total Cholesterol',
       extends: 'GenericObservation',
       surpressedModifiers: ['ConceptValue'],
-      parameters: [
+      fields: [
         {
           id: 'element_name',
           value: 'TotalCholesterol',
@@ -130,7 +130,7 @@ describe('Basic CQL Handler Tests', () => {
       name: '',
       conjunction: true,
       returnType: 'boolean',
-      parameters: [
+      fields: [
         { id: 'element_name', type: 'string', name: 'Group Name' },
         { id: 'comment', name: 'Comment', type: 'textarea' }
       ],
@@ -140,7 +140,7 @@ describe('Basic CQL Handler Tests', () => {
         name: 'Age Range',
         returnType: 'boolean',
         surpressedModifiers: ['BooleanNot', 'BooleanComparison'],
-        parameters: [
+        fields: [
           {
             id: 'element_name',
             type: 'string',
@@ -212,7 +212,7 @@ describe('Subpopulation tests', () => {
     name: '',
     conjunction: true,
     returnType: 'boolean',
-    parameters: [
+    fields: [
       { id: 'element_name', type: 'string', name: 'Group Name', value: 'MeetsInclusionCriteria' },
       { id: 'comment', name: 'Comment', type: 'textarea' }
     ],
@@ -221,7 +221,7 @@ describe('Subpopulation tests', () => {
       id: 'StatinAllergen',
       name: 'Statin Allergen',
       extends: 'GenericAllergyIntolerance',
-      parameters: [
+      fields: [
         {
           id: 'element_name',
           value: 'StatinAllergen',
@@ -259,7 +259,7 @@ describe('Subpopulation tests', () => {
     name: '',
     conjunction: true,
     returnType: 'boolean',
-    parameters: [
+    fields: [
       { id: 'element_name', type: 'string', name: 'Group Name', value: 'MeetsExclusionCriteria' },
       { id: 'comment', name: 'Comment', type: 'textarea' }
     ],
@@ -329,7 +329,7 @@ describe('Subpopulation tests', () => {
       name: '',
       conjunction: true,
       returnType: 'boolean',
-      parameters: [
+      fields: [
         { id: 'element_name', type: 'string', name: 'Group Name' },
         { id: 'comment', name: 'Comment', type: 'textarea' }
       ],
@@ -338,7 +338,7 @@ describe('Subpopulation tests', () => {
         id: 'Diabetes',
         name: 'Diabetes',
         extends: 'GenericCondition',
-        parameters: [
+        fields: [
           { id: 'element_name', value: 'HasDiabetes', type: 'string', name: 'Element Name' },
           { id: 'condition', static: true, value: 'diabetes', type: 'condition', name: 'Condition' },
           { id: 'comment', name: 'Comment', type: 'textarea' }
@@ -363,7 +363,7 @@ describe('Subpopulation tests', () => {
       name: '',
       conjunction: true,
       returnType: 'boolean',
-      parameters: [
+      fields: [
         { id: 'element_name', type: 'string', name: 'Group Name' },
         { id: 'comment', name: 'Comment', type: 'textarea' }
       ],
@@ -375,7 +375,7 @@ describe('Subpopulation tests', () => {
         returnType: 'list_of_observations',
         extends: 'Base',
         suppressedModifiers: ['ConvertToMgPerdL'],
-        parameters: [
+        fields: [
           { id: 'element_name', value: 'My Observation', type: 'string', name: 'Element Name' },
           { id: 'observation', type: 'observation_vsac', static: true, value: 'Observation' },
           { id: 'comment', name: 'Comment', type: 'textarea' }

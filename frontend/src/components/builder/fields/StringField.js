@@ -3,17 +3,17 @@ import PropTypes from 'prop-types';
 import _ from 'lodash';
 
 /**
- * props are from a templateInstance parameters object,
+ * props are from a templateInstance field object,
  * and a function called UpdateInstance that takes an object with
  * key-value pairs that represents that state of the templateInstance
  */
-export default class StringParameter extends Component {
+export default class StringField extends Component {
   render() {
     const { id, name, value, updateInstance } = this.props;
-    const formId = _.uniqueId('parameter-');
+    const formId = _.uniqueId('field-');
 
     return (
-      <div className="string-parameter">
+      <div className="string-field">
         <div className="form__group">
           <label htmlFor={formId}>
             <div className="label">{name}:</div>
@@ -42,7 +42,7 @@ export default class StringParameter extends Component {
   }
 }
 
-StringParameter.propTypes = {
+StringField.propTypes = {
   id: PropTypes.string.isRequired,
   name: PropTypes.string.isRequired,
   value: PropTypes.string,

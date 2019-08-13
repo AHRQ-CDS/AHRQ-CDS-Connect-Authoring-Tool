@@ -106,7 +106,7 @@ export default class CodeSelectModal extends Component {
     if (selectedTemplate === undefined) return;
 
     // Push the newly selected code
-    let codesToAdd = selectedTemplate.parameters[1].codes;
+    let codesToAdd = selectedTemplate.fields[1].codes;
     if (codesToAdd === undefined) codesToAdd = [];
     if (this.state.selectedCS === null) return;
 
@@ -118,29 +118,29 @@ export default class CodeSelectModal extends Component {
     if (this.state.selectedCS.value === 'Other') newCode.codeSystem.id = this.state.codeSystemText;
     codesToAdd.push(newCode);
 
-    const nameParameter = selectedTemplate.parameters[0];
+    const nameField = selectedTemplate.fields[0];
     const lastCodeIndex = codesToAdd.length - 1;
 
     // Adding a new element and editing an existing element use different functions that take different parameters
     if (this.props.onElementSelected) {
       // Set the template's values initially to add it to the workspace.
-      if (nameParameter.value === undefined || nameParameter.value === '') {
-        selectedTemplate.parameters[0].value =
+      if (nameField.value === undefined || nameField.value === '') {
+        selectedTemplate.fields[0].value =
           `${codesToAdd[lastCodeIndex].codeSystem.name} ${codesToAdd[lastCodeIndex].code}`; // TODO: Best name for element
       }
-      selectedTemplate.parameters[1].codes = codesToAdd;
-      selectedTemplate.parameters[1].static = true;
+      selectedTemplate.fields[1].codes = codesToAdd;
+      selectedTemplate.fields[1].static = true;
       this.props.onElementSelected(selectedTemplate);
     } else if (this.props.updateElement) {
       // Update an existing element in the workspace
-      // Create array of which parameter to update, the new value to set, and the attribute to update (value is default)
+      // Create array of which field to update, the new value to set, and the attribute to update (value is default)
       const arrayToUpdate = [
-        { [selectedTemplate.parameters[1].id]: codesToAdd, attributeToEdit: 'codes' },
-        { [selectedTemplate.parameters[1].id]: true, attributeToEdit: 'static' }
+        { [selectedTemplate.fields[1].id]: codesToAdd, attributeToEdit: 'codes' },
+        { [selectedTemplate.fields[1].id]: true, attributeToEdit: 'static' }
       ];
-      if (nameParameter.value === undefined || nameParameter.value === '') {
+      if (nameField.value === undefined || nameField.value === '') {
         arrayToUpdate.push({
-          [selectedTemplate.parameters[0].id]:
+          [selectedTemplate.fields[0].id]:
             `${codesToAdd[lastCodeIndex].codeSystem.name} ${codesToAdd[lastCodeIndex].code}`
         });
       }
