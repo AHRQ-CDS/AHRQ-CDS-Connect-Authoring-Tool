@@ -400,7 +400,6 @@ export default class ElementSelect extends Component {
             value={selectedElementValue}
             placeholder={placeholderText}
             aria-label={placeholderText}
-            clearable={false}
             options={elementOptionsToDisplay}
             onChange={this.onElementSelected}
             optionRenderer={optionRenderer}
@@ -417,21 +416,21 @@ export default class ElementSelect extends Component {
               options={noAuthElementOptions}
               onChange={this.onNoAuthElementSelected}
               optionRenderer={optionRenderer}
-              />
+            />
           }
         </div>
 
-          {selectedElement && !selectedElement.vsacAuthRequired && selectedExternalLibrary &&
-            <Select
-              className="element-select__external-cql-field"
-              value={selectedExternalDefinitionValue}
-              placeholder={externalLibraryPlaceholder}
-              aria-label={externalLibraryPlaceholder}
-              options={selectedExternalLibraryOptions}
-              onChange={this.onExternalDefinitionSelected}
-              optionRenderer={optionRenderer}
-              />
-          }
+        {selectedElement && !selectedElement.vsacAuthRequired && selectedExternalLibrary &&
+          <Select
+            className="element-select__external-cql-field"
+            value={selectedExternalDefinitionValue}
+            placeholder={externalLibraryPlaceholder}
+            aria-label={externalLibraryPlaceholder}
+            options={selectedExternalLibraryOptions}
+            onChange={this.onExternalDefinitionSelected}
+            optionRenderer={optionRenderer}
+          />
+        }
 
         {selectedElement && selectedElement.vsacAuthRequired && this.renderVSACLogin()}
       </div>
