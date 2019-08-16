@@ -91,6 +91,7 @@ export default class CodeSelectModal extends Component {
 
     // If adding to a parameter, add it
     if (this.props.addToParameter) {
+      if (this.state.selectedCS === null) return;
       this.props.addToParameter({
         system: this.state.selectedCS.value,
         uri: this.state.selectedCS.id || this.state.codeSystemText,
@@ -206,7 +207,7 @@ export default class CodeSelectModal extends Component {
 
     return (
       <span className="code-select-modal element-select__modal element-modal">
-        <button className="primary-button" onClick={this.openCodeSelectModal}>
+        <button type="button" className="primary-button" onClick={this.openCodeSelectModal}>
           <FontAwesome name="medkit" />{' '}{buttonLabels.openButtonText}
         </button>
 
