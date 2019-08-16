@@ -91,6 +91,7 @@ export default class CodeSelectModal extends Component {
 
     // If adding to a parameter, add it
     if (this.props.addToParameter) {
+      if (this.state.selectedCS === null) return;
       this.props.addToParameter({
         system: this.state.selectedCS.value,
         uri: this.state.selectedCS.id || this.state.codeSystemText,
