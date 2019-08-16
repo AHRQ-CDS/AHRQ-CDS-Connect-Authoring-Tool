@@ -26,7 +26,13 @@ export default class TestingParameter extends Component {
       type: this.props.type != null ? this.props.type : null,
       label: 'Value:',
       value: this.props.value,
-      updateInstance: this.updateParameter
+      updateInstance: e => this.updateParameter({
+        name: this.props.name,
+        uniqueId: this.props.id,
+        type: this.props.type,
+        comment: this.props.comment,
+        value: (e != null ? e.value : null)
+      })
     };
 
     const codeEditorProps = {
@@ -46,11 +52,9 @@ export default class TestingParameter extends Component {
       case 'boolean':
         return <BooleanEditor {...parameterProps} />;
       case 'system_code':
-        // TODO: Re-enable editing once modal issue is fixed
-        return <CodeEditor {...parameterProps} {...codeEditorProps} disableEditing={true} />;
+        return <CodeEditor {...parameterProps} {...codeEditorProps} />;
       case 'system_concept':
-        // TODO: Re-enable editing once modal issue is fixed
-        return <CodeEditor {...parameterProps} {...codeEditorProps} isConcept={true} disableEditing={true} />;
+        return <CodeEditor {...parameterProps} {...codeEditorProps} isConcept={true} />;
       case 'integer':
         return <IntegerEditor {...parameterProps} />;
       case 'datetime':

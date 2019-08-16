@@ -206,7 +206,7 @@ export default class CodeSelectModal extends Component {
 
     return (
       <span className="code-select-modal element-select__modal element-modal">
-        <button className="primary-button" onClick={this.openCodeSelectModal}>
+        <button type="button" className="primary-button" onClick={this.openCodeSelectModal}>
           <FontAwesome name="medkit" />{' '}{buttonLabels.openButtonText}
         </button>
 
