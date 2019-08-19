@@ -53,7 +53,9 @@ export default class CodeSelectModal extends Component {
   }
 
   onCodeSystemSelected = (selectedCS) => {
-    if (selectedCS.value === 'Other') {
+    if (!selectedCS) {
+      this.setState({ selectedCS: null, displayOtherInput: false });
+    } else if (selectedCS.value === 'Other') {
       this.setState({ selectedCS, displayOtherInput: true });
     } else {
       this.setState({ selectedCS, displayOtherInput: false });
@@ -248,7 +250,6 @@ export default class CodeSelectModal extends Component {
                     className="element-modal__search-system"
                     placeholder={'Select code system'}
                     aria-label={'Select code system'}
-                    clearable={false}
                     value={this.state.selectedCS}
                     options={codeSystemOptions}
                     onChange={this.onCodeSystemSelected}

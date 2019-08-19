@@ -22,7 +22,6 @@ export default class ValueSetField extends Component {
                 placeholder={`Select ${this.props.field.name}`}
                 options={this.props.valueSets}
                 inputProps={{ id }}
-                clearable={true}
                 name={this.props.field.id}
                 value={this.props.field.value}
                 onChange={(value) => { this.props.updateInstance({ [this.props.field.id]: value }); }}

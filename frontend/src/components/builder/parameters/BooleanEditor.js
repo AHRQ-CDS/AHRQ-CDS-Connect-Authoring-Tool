@@ -20,7 +20,6 @@ export default class BooleanEditor extends Component {
               id={id}
               aria-label={'Select True or False'}
               inputProps={{ title: 'Select True or False', id: formId }}
-              clearable={true}
               options={[{ value: 'true', label: 'True' }, { value: 'false', label: 'False' }]}
               value={value}
               onChange={ (e) => { updateInstance({ name, type, label, value: _.get(e, 'value', null) }); }}

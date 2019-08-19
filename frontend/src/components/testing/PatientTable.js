@@ -78,15 +78,19 @@ export default class PatientTable extends Component {
   }
 
   selectArtifactForCQLModal = (artifact) => {
-    let params = [];
-    if (artifact.value && artifact.value.parameters) {
-      params = artifact.value.parameters.map(p => ({
-        name: p.name,
-        type: p.type,
-        value: _.clone(p.value)
-      }));
+    if (!artifact) {
+      this.setState({ artifactToExecute: null, paramsToExecute: [] });
+    } else {
+      let params = [];
+      if (artifact.value && artifact.value.parameters) {
+        params = artifact.value.parameters.map(p => ({
+          name: p.name,
+          type: p.type,
+          value: _.clone(p.value)
+        }));
+      }
+      this.setState({ artifactToExecute: artifact, paramsToExecute: params });
     }
-    this.setState({ artifactToExecute: artifact, paramsToExecute: params });
   }
 
   handleExecuteCQL = () => {
@@ -224,7 +228,6 @@ export default class PatientTable extends Component {
           <Select
             aria-label={'Select Artifact'}
             inputProps={{ title: 'Select Artifact' }}
-            clearable={false}
             options={artifactOptions}
             value={this.state.artifactToExecute}
             onChange={this.selectArtifactForCQLModal}

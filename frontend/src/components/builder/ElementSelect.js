@@ -316,14 +316,18 @@ export default class ElementSelect extends Component {
   }
 
   onNoAuthElementSelected = (element) => {
-    const suggestion = this.state.categories
-      .find(cat => cat.name === element.type)
-      .entries.find(entry => entry.id === element.value);
-
-    if (suggestion.type === 'externalCqlElement') {
-      this.setState({ selectedExternalLibrary: suggestion, selectedExternalDefinition: null });
+    if (!element) {
+      this.setState({ selectedExternalLibrary: null, selectedExternalDefinition: null });
     } else {
-      this.onSuggestionSelected(suggestion);
+      const suggestion = this.state.categories
+        .find(cat => cat.name === element.type)
+        .entries.find(entry => entry.id === element.value);
+
+      if (suggestion.type === 'externalCqlElement') {
+        this.setState({ selectedExternalLibrary: suggestion, selectedExternalDefinition: null });
+      } else {
+        this.onSuggestionSelected(suggestion);
+      }
     }
   }
 
@@ -412,7 +416,6 @@ export default class ElementSelect extends Component {
               value={selectedExternalLibraryName}
               placeholder={noAuthPlaceholder}
               aria-label={noAuthPlaceholder}
-              clearable={false}
               options={noAuthElementOptions}
               onChange={this.onNoAuthElementSelected}
               optionRenderer={optionRenderer}
