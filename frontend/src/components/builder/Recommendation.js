@@ -134,7 +134,6 @@ export default class Recommendation extends Component {
           valueKey="subpopulationName"
           placeholder="Add a subpopulation"
           aria-label="Add a subpopulation"
-          clearable={false}
           options={this.getRelevantSubpopulations()}
           labelKey='subpopulationName'
           onChange={this.applySubpopulation}

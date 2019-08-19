@@ -316,14 +316,18 @@ export default class ElementSelect extends Component {
   }
 
   onNoAuthElementSelected = (element) => {
-    const suggestion = this.state.categories
-      .find(cat => cat.name === element.type)
-      .entries.find(entry => entry.id === element.value);
-
-    if (suggestion.type === 'externalCqlElement') {
-      this.setState({ selectedExternalLibrary: suggestion, selectedExternalDefinition: null });
+    if (!element) {
+      this.setState({ selectedExternalLibrary: null, selectedExternalDefinition: null });
     } else {
-      this.onSuggestionSelected(suggestion);
+      const suggestion = this.state.categories
+        .find(cat => cat.name === element.type)
+        .entries.find(entry => entry.id === element.value);
+
+      if (suggestion.type === 'externalCqlElement') {
+        this.setState({ selectedExternalLibrary: suggestion, selectedExternalDefinition: null });
+      } else {
+        this.onSuggestionSelected(suggestion);
+      }
     }
   }
 
@@ -400,7 +404,6 @@ export default class ElementSelect extends Component {
             value={selectedElementValue}
             placeholder={placeholderText}
             aria-label={placeholderText}
-            clearable={false}
             options={elementOptionsToDisplay}
             onChange={this.onElementSelected}
             optionRenderer={optionRenderer}
@@ -413,25 +416,24 @@ export default class ElementSelect extends Component {
               value={selectedExternalLibraryName}
               placeholder={noAuthPlaceholder}
               aria-label={noAuthPlaceholder}
-              clearable={false}
               options={noAuthElementOptions}
               onChange={this.onNoAuthElementSelected}
               optionRenderer={optionRenderer}
-              />
+            />
           }
         </div>
 
-          {selectedElement && !selectedElement.vsacAuthRequired && selectedExternalLibrary &&
-            <Select
-              className="element-select__external-cql-field"
-              value={selectedExternalDefinitionValue}
-              placeholder={externalLibraryPlaceholder}
-              aria-label={externalLibraryPlaceholder}
-              options={selectedExternalLibraryOptions}
-              onChange={this.onExternalDefinitionSelected}
-              optionRenderer={optionRenderer}
-              />
-          }
+        {selectedElement && !selectedElement.vsacAuthRequired && selectedExternalLibrary &&
+          <Select
+            className="element-select__external-cql-field"
+            value={selectedExternalDefinitionValue}
+            placeholder={externalLibraryPlaceholder}
+            aria-label={externalLibraryPlaceholder}
+            options={selectedExternalLibraryOptions}
+            onChange={this.onExternalDefinitionSelected}
+            optionRenderer={optionRenderer}
+          />
+        }
 
         {selectedElement && selectedElement.vsacAuthRequired && this.renderVSACLogin()}
       </div>

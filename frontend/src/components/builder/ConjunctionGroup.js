@@ -175,15 +175,15 @@ export default class ConjunctionGroup extends Component {
   renderConjunctionSelect = i => (
     <Select
       className="card-group__conjunction-select"
-      name={ `conjunction-select-${i}` }
-      value={ this.props.instance.name }
+      name={`conjunction-select-${i}`}
+      value={this.props.instance.name}
       valueKey="name"
       labelKey="name"
       placeholder="Select one"
-      searchable={ false }
-      clearable={ false }
-      options={ this.props.options === 'listOperations' ? this.listOperations : this.types }
-      onChange={ this.handleTypeChange }
+      searchable={false}
+      clearable={false}
+      options={this.props.options === 'listOperations' ? this.listOperations : this.types}
+      onChange={this.handleTypeChange}
       inputProps={{ 'aria-label': 'Select conjunction type', title: 'Select conjunction type' }}
     />
   )

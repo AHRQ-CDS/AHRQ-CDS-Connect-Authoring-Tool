@@ -47,6 +47,12 @@ export default class Parameter extends Component {
     }
   }
 
+  changeParameterType = (type, name, comment) => {
+    if (type) {
+      this.updateParameter({ name, uniqueId: this.props.id, type: type.value, comment, value: null });
+    }
+  }
+
   renderParameter() {
     const parameterProps = {
       id: `param-name-${this.props.index}`,
@@ -216,21 +222,11 @@ export default class Parameter extends Component {
                 <Select
                   aria-label={'Select Parameter Type'}
                   inputProps={{ title: 'Select Parameter Type', id: `parameter-${index}` }}
-                  clearable={false}
                   options={typeOptions}
                   value={type}
                   disabled={parameterUsed}
-                  onChange={(e) => {
-                    if (e) { // in case of keystroke delete, where e is null/undefined
-                      this.updateParameter({
-                        name,
-                        uniqueId: this.props.id,
-                        type: e.value,
-                        comment,
-                        value: null
-                      });
-                    }
-                  }}
+                  clearable={false}
+                  onChange={parameterType => this.changeParameterType(parameterType, name, comment)}
                 />
               </div>
             </div>
