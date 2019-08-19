@@ -68,7 +68,6 @@ export class Builder extends Component {
         this.props.initializeArtifact(andTemplate, orTemplate);
       }
     });
-    this.props.publishArtifact();
     this.props.loadConversionFunctions();
   }
 
