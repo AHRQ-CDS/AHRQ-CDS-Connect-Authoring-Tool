@@ -3,7 +3,7 @@ import Select from 'react-select';
 import PatientTable from '../../../components/testing/PatientTable';
 import mockPatientDstu2 from '../../../mocks/mockPatientDstu2';
 import mockPatientStu3 from '../../../mocks/mockPatientStu3';
-import { shallowRenderComponent, fullRenderComponent, ReactWrapper } from '../../../utils/test_helpers';
+import { shallowRenderComponent, fullRenderComponent, fullRenderComponentOnBody, ReactWrapper } from '../../../utils/test_helpers';
 
 const artifactsMock = [{
   _id: 'blah',
@@ -135,7 +135,7 @@ test('PatientTable view opens details modal', () => {
 
 test('PatientTable execute opens confirmation modal and executes from modal', () => {
   const executeCQLMock = jest.fn();
-  const component = fullRenderComponent(PatientTable, {
+  const component = fullRenderComponentOnBody(PatientTable, {
     patients: patientsMock,
     artifacts: artifactsMock,
     deletePatient: jest.fn(),
@@ -152,15 +152,17 @@ test('PatientTable execute opens confirmation modal and executes from modal', ()
   const executeCQLModal = component.children().findWhere(n => (
     n.node.props && n.node.props.id === 'execute-cql-modal'
   ));
-  const button = component.find('button.execute-button').first();
+  const executeButton = component.find('button.execute-button').first();
+  const selectButton = component.find('button.invisible-button').first();
 
   expect(executeCQLModal.prop('isOpen')).toEqual(false);
   expect(component.state('showExecuteCQLModal')).toEqual(false);
-  expect(component.state('patientToExecute')).toEqual(null);
-  button.simulate('click');
+  expect(component.state('patientsToExecute')).toEqual([]);
+  selectButton.simulate('click');
+  executeButton.simulate('click');
   expect(executeCQLModal.prop('isOpen')).toEqual(true);
   expect(component.state('showExecuteCQLModal')).toEqual(true);
-  expect(component.state('patientToExecute')).not.toEqual(null);
+  expect(component.state('patientsToExecute')).not.toEqual([]);
 
   const modalContent = new ReactWrapper(executeCQLModal.node.portal, true);
   expect(modalContent.text()).toContain('Execute CQL');
