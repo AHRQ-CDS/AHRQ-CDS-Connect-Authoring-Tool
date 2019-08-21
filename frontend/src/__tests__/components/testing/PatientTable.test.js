@@ -3,7 +3,12 @@ import Select from 'react-select';
 import PatientTable from '../../../components/testing/PatientTable';
 import mockPatientDstu2 from '../../../mocks/mockPatientDstu2';
 import mockPatientStu3 from '../../../mocks/mockPatientStu3';
-import { shallowRenderComponent, fullRenderComponent, fullRenderComponentOnBody, ReactWrapper } from '../../../utils/test_helpers';
+import {
+  shallowRenderComponent,
+  fullRenderComponent,
+  fullRenderComponentOnBody,
+  ReactWrapper
+} from '../../../utils/test_helpers';
 
 const artifactsMock = [{
   _id: 'blah',
