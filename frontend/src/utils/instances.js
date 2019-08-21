@@ -39,3 +39,11 @@ export function allModifiersValid(modifiers) {
   });
   return areAllModifiersValid;
 }
+
+export function getFieldWithType(fields, type) {
+  return fields.find(f => f.type.endsWith(type));
+}
+
+export function getFieldWithId(fields, id) {
+  return fields.find(f => f.id === id);
+}
