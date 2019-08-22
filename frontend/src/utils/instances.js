@@ -41,7 +41,7 @@ export function allModifiersValid(modifiers) {
 }
 
 export function getFieldWithType(fields, type) {
-  return fields.find(f => f.type.endsWith(type));
+  return fields.find(f => f.type && f.type.endsWith(type));
 }
 
 export function getFieldWithId(fields, id) {

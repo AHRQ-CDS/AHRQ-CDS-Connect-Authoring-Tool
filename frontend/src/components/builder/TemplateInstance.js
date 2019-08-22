@@ -576,7 +576,7 @@ export default class TemplateInstance extends Component {
     if (this.props.templateInstance.fields.length > 1) {
       // All generic VSAC elements save the VS information on this field on the valueSets property.
       const vsacField = getFieldWithType(this.props.templateInstance.fields, '_vsac');
-      if (vsacField.valueSets) {
+      if (vsacField && vsacField.valueSets) {
         return (
           <div className="modifier__return__type" id="valueset-list">
             {vsacField.valueSets.map((vs, i) => (
@@ -609,7 +609,7 @@ export default class TemplateInstance extends Component {
     if (this.props.templateInstance.fields.length > 1) {
       // All generic VSAC elements save the VS information on this field on the codes property.
       const vsacField = getFieldWithType(this.props.templateInstance.fields, '_vsac');
-      if (vsacField.codes) {
+      if (vsacField && vsacField.codes) {
         return (
           <div className="modifier__return__type" id="code-list">
             {vsacField.codes.map((code, i) => (
