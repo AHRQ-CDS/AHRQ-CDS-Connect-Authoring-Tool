@@ -3,6 +3,7 @@ import ListGroup from '../../../components/builder/ListGroup';
 import { shallowRenderComponent, createTemplateInstance } from '../../../utils/test_helpers';
 import { elementGroups, genericBaseElementUseInstance, genericBaseElementListInstance }
   from '../../../utils/test_fixtures';
+import { getFieldWithId } from '../../../utils/instances';
 
 const genericBaseElementListTemplateInstance = createTemplateInstance(genericBaseElementListInstance);
 const genericBaseElementUseTemplateInstance = createTemplateInstance(genericBaseElementUseInstance);
@@ -123,9 +124,10 @@ test('Return Types of And and Or are correctly updated', () => {
 
 test('No warnings on base element lists when in use and unmodified', () => {
   const inUseProps = _.cloneDeep(props);
+  const nameField = getFieldWithId(inUseProps.instance.fields, 'element_name');
   inUseProps.instanceNames = [
     { id: 'testId1', name: 'UnionListName' },
-    { id: inUseProps.instance.uniqueId, name: inUseProps.instance.fields[0].value }
+    { id: inUseProps.instance.uniqueId, name: nameField.value }
   ];
   component = shallowRenderComponent(ListGroup, { ...inUseProps });
   const warningDiv = component.find('.warning');
@@ -135,6 +137,7 @@ test('No warnings on base element lists when in use and unmodified', () => {
 test('Base Element specific warning on base element list when in use and modified', () => {
   const baseElementListProps = _.cloneDeep(props);
   const modifiedUse = _.cloneDeep(genericBaseElementUseTemplateInstance);
+  const modifiedUseNameField = getFieldWithId(modifiedUse.fields, 'element_name');
   modifiedUse.modifiers = [
     {
       id: 'BooleanNot',
@@ -145,7 +148,7 @@ test('Base Element specific warning on base element list when in use and modifie
       cqlLibraryFunction: 'not'
     }
   ];
-  modifiedUse.fields[0].value = 'UnionListName';
+  modifiedUseNameField.value = 'UnionListName';
   modifiedUse.uniqueId = 'testId1';
   baseElementListProps.instanceNames = [
     { id: baseElementListProps.instance.uniqueId, name: 'UnionListName' },

@@ -2,6 +2,7 @@ import Modal from 'react-modal';
 import _ from 'lodash';
 import ElementModal from '../../../components/builder/ElementModal';
 import { fullRenderComponent, ReactWrapper } from '../../../utils/test_helpers';
+import { getFieldWithId, getFieldWithType } from '../../../utils/instances';
 
 let component;
 let input;
@@ -143,9 +144,12 @@ describe('with modal open', () => {
 
     // Set selected values on base template
     const templateWithSelectedValue = _.cloneDeep(component.props()).template;
-    templateWithSelectedValue.fields[0].value = element.name;
-    templateWithSelectedValue.fields[1].valueSets = [{ name: element.name, oid: element.oid }];
-    templateWithSelectedValue.fields[1].static = true;
+
+    const nameField = getFieldWithId(templateWithSelectedValue.fields, 'element_name');
+    const vsacField = getFieldWithType(templateWithSelectedValue.fields, '_vsac');
+    nameField.value = element.name;
+    vsacField.valueSets = [{ name: element.name, oid: element.oid }];
+    vsacField.static = true;
 
     // Clicking the select button class the onElementSelected function
     selectButton.simulate('click');
