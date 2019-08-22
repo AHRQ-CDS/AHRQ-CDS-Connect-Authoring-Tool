@@ -1,7 +1,8 @@
 import _ from 'lodash';
+import { getFieldWithType } from './instances';
 
 export function getOriginalBaseElement(instance, baseElements) {
-  const referenceField = instance.fields.find(field => field.type === 'reference');
+  const referenceField = getFieldWithType(instance.fields, 'reference');
   if (referenceField) {
     if (referenceField.id === 'parameterReference') {
       return instance;
@@ -15,7 +16,7 @@ export function getOriginalBaseElement(instance, baseElements) {
 
 export function getAllModifiersOnBaseElementUse(instance, baseElements, modifiers = []) {
   let currentModifiers = modifiers;
-  const referenceField = instance.fields.find(field => field.type === 'reference');
+  const referenceField = getFieldWithType(instance.fields, 'reference');
   if (referenceField) {
     if (referenceField.id === 'parameterReference') {
       return _.cloneDeep(instance.modifiers || []).concat(currentModifiers);
