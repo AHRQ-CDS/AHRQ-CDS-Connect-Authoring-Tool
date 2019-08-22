@@ -125,21 +125,18 @@ class Testing extends Component {
           <div className="patient-table__title">CQL Execution Results</div>
 
           <div className="patient-table__meta">
-            <div className="patient-table__meta-artifact">
-              <span className="meta-label">Artifact:</span> {artifactExecuted.name}
-            </div>
+            <div className="meta-label">Artifact:</div>
+            <div>{artifactExecuted.name}</div>
           </div>
 
           <div className="patient-table__meta">
-            <div className="patient-table__meta-inclusion">
-              <span className="meta-label">Meets Inclusion Criteria:</span> {resultsIncludedCount} of {resultsCount}
-            </div>
+            <div className="meta-label">Meets Inclusion Criteria:</div>
+            <div>{resultsIncludedCount} of {resultsCount}</div>
           </div>
 
           <div className="patient-table__meta">
-            <div className="patient-table__meta-exclusion">
-            <span className="meta-label">Meets Exclusion Criteria:</span> {resultsExcludedCount} of {resultsCount}
-            </div>
+            <div className="meta-label">Meets Exclusion Criteria:</div>
+            <div>{resultsExcludedCount} of {resultsCount}</div>
           </div>
 
           <div className="patients__table">
@@ -150,14 +147,19 @@ class Testing extends Component {
     } else if (isExecuting) {
       return <div className="execution-loading"><FontAwesome name="spinner" spin size="4x" /></div>;
     } else if (this.props.vsacFHIRCredentials.username == null) {
-      return <Breadcrumb className="execution-message">Log in to VSAC to execute CQL for a patient below.</Breadcrumb>;
+      return (
+        <Breadcrumb className="execution-message">
+          Log in to VSAC to execute CQL.
+        </Breadcrumb>
+      );
     }
 
-    return <Breadcrumb className="execution-message">
-      {this.props.errorMessage
-        && <div className="warning">{this.props.errorMessage}</div>}
-      <div>Execute CQL for a patient below.</div>
-    </Breadcrumb>;
+    return (
+      <Breadcrumb className="execution-message">
+        {this.props.errorMessage && <div className="warning">{this.props.errorMessage}</div>}
+        <div>Select one or more patients below and execute CQL.</div>
+      </Breadcrumb>
+    );
   }
 
   renderResultsDataSection = (patientExecuted) => {
@@ -231,8 +233,8 @@ class Testing extends Component {
             </p>
 
             <p className="dropzone__warning">
-              Do not upload any Personally Identifiable Information (PII) or Protected Health Information (PHI) to this
-              server. Upload synthetic data only.
+              Do not upload any Personally Identifiable Information (PII) or Protected Health Information (PHI). Upload
+              synthetic data only.
             </p>
           </Dropzone>
 

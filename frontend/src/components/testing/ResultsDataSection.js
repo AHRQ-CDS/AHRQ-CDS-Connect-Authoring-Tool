@@ -32,6 +32,7 @@ export default class ResultsDataSection extends Component {
         role="button"
         tabIndex={0}>
         <div className="header-title">{title}</div>
+        <div className="header-divider"></div>
         <Button onClick={this.toggle} className="header-button"><FontAwesome name={chevronIcon} /></Button>
       </div>
     );

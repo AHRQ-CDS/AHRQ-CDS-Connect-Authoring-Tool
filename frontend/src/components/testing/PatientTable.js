@@ -258,9 +258,12 @@ export default class PatientTable extends Component {
               differentFHIRVersion ? 'disabled' : ''
             }`}
             onClick={() => { if (!differentFHIRVersion) this.updatePatientsToExecute(patient); }}>
-            <FontAwesome name={patientSelected ? 'check-square' : 'square'} />
+            <FontAwesome
+              name={patientSelected ? 'check-square' : 'square'}
+              className={`select-patient-checkbox ${patientSelected ? 'checked' : ''}`} />
           </button>
         </td>
+
         {differentFHIRVersion &&
           <UncontrolledTooltip target={`SelectPatientTooltip-${patient._id}`} placement="top">
             To select this patient, first deselect all patients of other FHIR versions.
@@ -367,17 +370,21 @@ export default class PatientTable extends Component {
 
     return (
       <div className="patient-table">
-        <button aria-label="Execute CQL on Selected Patients"
-          disabled={
-            this.props.vsacFHIRCredentials.username == null
-            || this.state.patientsToExecute.length === 0
-          }
-          className={`button primary-button execute-button ${
-            this.props.vsacFHIRCredentials.username != null ? '' : 'disabled'
-          }`}
-          onClick={() => this.openExecuteCQLModal()}>
-          Execute CQL on Selected Patients
-        </button>
+        <div className="patient-table__buttons">
+          {this.renderVSACLogin()}
+
+          <button aria-label="Execute CQL on Selected Patients"
+            disabled={
+              this.props.vsacFHIRCredentials.username == null
+              || this.state.patientsToExecute.length === 0
+            }
+            className={`button primary-button execute-button ${
+              this.props.vsacFHIRCredentials.username != null ? '' : 'disabled'
+            }`}
+            onClick={() => this.openExecuteCQLModal()}>
+            Execute CQL on Selected Patients
+          </button>
+        </div>
 
         <table className="patients__table">
           <thead>
@@ -388,7 +395,7 @@ export default class PatientTable extends Component {
               <th scope="col" className="patients__tablecell-short">Gender</th>
               <th scope="col" className="patients__tablecell-short">Version</th>
               <th scope="col" className="patients__tablecell-wide">Last Updated</th>
-              <th>{this.renderVSACLogin()}</th>
+              <th></th>
             </tr>
           </thead>
 
