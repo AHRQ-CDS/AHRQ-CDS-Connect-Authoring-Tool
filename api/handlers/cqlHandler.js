@@ -44,6 +44,14 @@ module.exports = {
   buildCQL
 };
 
+function getFieldWithType(fields, type) {
+  return fields.find(f => f.type.endsWith(type));
+}
+
+function getFieldWithId(fields, id) {
+  return fields.find(f => f.id === id);
+}
+
 // Creates the cql file from an artifact ID
 function idToObj(req, res, next) {
   Artifact.findOne({ _id: req.params.artifact },
@@ -163,14 +171,14 @@ function addGroupedConceptExpression(referencedConceptElements, resourceMap, val
 }
 
 function isBaseElementUseChanged(element, baseElements) {
-  const referenceField = element.fields.find(field => field.type === 'reference');
+  const referenceField = getFieldWithType(element.fields, 'reference');
   if (!referenceField) {
     // This case should never happen because an element of type base element will never NOT have a reference field
     return true;
   }
 
-  const nameField = element.fields.find(field => field.id === 'element_name');
-  const commentField = element.fields.find(field => field.id === 'comment');
+  const nameField = getFieldWithId(element.fields, 'element_name');
+  const commentField = getFieldWithId(element.fields, 'comment');
 
   const originalBaseElement = baseElements.find(baseEl => referenceField.value.id === baseEl.uniqueId);
   if (!originalBaseElement) {
@@ -178,7 +186,8 @@ function isBaseElementUseChanged(element, baseElements) {
     return true;
   }
 
-  if (nameField.value !== originalBaseElement.fields[0].value) {
+  const originalBaseElementNameField = getFieldWithId(originalBaseElement.fields, 'element_name');
+  if (nameField.value !== originalBaseElementNameField.value) {
     // If the name of the use of the base element and the original base element are different, it's been changed.
     return true;
   }
@@ -187,7 +196,7 @@ function isBaseElementUseChanged(element, baseElements) {
     return true;
   }
 
-  const originalCommentField = originalBaseElement.fields.find(field => field.id === 'comment');
+  const originalCommentField = getFieldWithId(originalBaseElement.fields, 'comment');
   if (commentField.value !== originalCommentField.value) {
     // If the comment on the use of the base element and the original element are different, it's been changed.
     return true;
@@ -197,14 +206,14 @@ function isBaseElementUseChanged(element, baseElements) {
 }
 
 function isParameterUseChanged(element, parameters) {
-  const referenceField = element.fields.find(field => field.type === 'reference');
+  const referenceField = getFieldWithType(element.fields, 'reference');
   if (!referenceField) {
     // This case should never happen because an element of type parameter will never NOT have a reference field
     return true;
   }
 
-  const nameField = element.fields.find(field => field.id === 'element_name');
-  const commentField = element.fields.find(field => field.id === 'comment');
+  const nameField = getFieldWithId(element.fields, 'element_name');
+  const commentField = getFieldWithId(element.fields, 'comment');
 
   const originalParameter = parameters.find(param => referenceField.value.id === param.uniqueId);
   if (!originalParameter) {
@@ -341,9 +350,10 @@ class CqlArtifact {
       if (baseElement.type === 'parameter') {
         isParameterUseAndUnchanged = !isParameterUseChanged(baseElement, this.parameters);
       }
-      const count = getCountForUniqueExpressionName(baseElement.fields[0], this.names, 'value', '', false);
+      const baseElementNameField = getFieldWithId(baseElement.fields, 'element_name');
+      const count = getCountForUniqueExpressionName(baseElementNameField, this.names, 'value', '', false);
       if ((!(isBaseElementUseAndUnchanged || isParameterUseAndUnchanged)) && count > 0) {
-        baseElement.fields[0].value = `${baseElement.fields[0].value}_${count}`;
+        baseElementNameField.value = `${baseElementNameField.value}_${count}`;
       }
 
       if (baseElement.childInstances) {
@@ -479,11 +489,11 @@ class CqlArtifact {
         subpopref.subpopulationName === element.subpopulationName
       ))
     ));
-    const name = element.fields[0].value;
+    const name = getFieldWithId(element.fields, 'element_name').value;
     conjunction.element_name = (name || element.subpopulationName || element.uniqueId);
     (element.childInstances || []).forEach((child) => {
-      // TODO: Could a child of a conjunction ever be a subpopulation?
-      let childName = (child.fields[0]||{}).value || child.uniqueId;
+      const childNameField = getFieldWithId(child.fields, 'element_name');
+      let childName = (childNameField||{}).value || child.uniqueId;
       let isBaseElementUseAndUnchanged = false;
       let isParameterUseAndUnchanged = false;
       if (child.type === 'baseElement') {
@@ -493,11 +503,11 @@ class CqlArtifact {
         isParameterUseAndUnchanged = !isParameterUseChanged(child, this.parameters);
       }
       if (!(isBaseElementUseAndUnchanged || isParameterUseAndUnchanged)) {
-        const childCount = getCountForUniqueExpressionName(child.fields[0], this.names, 'value', '', false);
+        const childCount = getCountForUniqueExpressionName(childNameField, this.names, 'value', '', false);
         if (childCount > 0) {
           childName = `${childName}_${childCount}`;
-          if (child.fields[0].value) {
-            child.fields[0].value = childName;
+          if (childNameField.value) {
+            childNameField.value = childName;
           }
         }
       }
@@ -640,7 +650,8 @@ class CqlArtifact {
             context.values = [ `"${referencedParameterName}"` ];
           } else if (field.id === 'baseElementReference') {
             const referencedElement = this.baseElements.find(e => e.uniqueId === field.value.id);
-            const referencedElementName = referencedElement.fields[0].value || referencedElement.uniqueId;
+            const referencedElementName =
+              getFieldWithId(referencedElement.fields, 'element_name').value || referencedElement.uniqueId;
             context.values = [ `"${referencedElementName}"` ];
           } else if (field.id === 'externalCqlReference') {
             context.values = [`"${field.value.library}"."${field.value.element}"` ];
@@ -724,7 +735,7 @@ class CqlArtifact {
     return ejs.render(fs.readFileSync(artifactPath, 'utf-8'), this);
   }
   population() {
-    const getTreeName = tree => tree.fields.find(f => f.id === 'element_name').value || tree.uniqueId;
+    const getTreeName = tree => getFieldWithId(tree.fields, 'element_name').value || tree.uniqueId;
 
     const treeNames = {
       inclusions: this.inclusions.childInstances.length ? getTreeName(this.inclusions) : '',
