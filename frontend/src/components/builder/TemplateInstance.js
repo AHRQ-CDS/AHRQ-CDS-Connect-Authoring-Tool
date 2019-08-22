@@ -39,10 +39,11 @@ import Qualifier from './modifiers/Qualifier';
 import { hasDuplicateName, doesBaseElementUseNeedWarning, doesBaseElementInstanceNeedWarning,
   doesParameterUseNeedWarning, validateElement, hasGroupNestedWarning } from '../../utils/warnings';
 import { getOriginalBaseElement } from '../../utils/baseElements';
-import { getReturnType, validateModifier, allModifiersValid } from '../../utils/instances';
+import { getReturnType, validateModifier, allModifiersValid, getFieldWithType, getFieldWithId }
+  from '../../utils/instances';
 
 function getInstanceName(instance) {
-  return (instance.fields.find(f => f.id === 'element_name') || {}).value;
+  return (getFieldWithId(instance.fields, 'element_name') || {}).value;
 }
 
 export default class TemplateInstance extends Component {
@@ -443,13 +444,14 @@ export default class TemplateInstance extends Component {
 
   deleteCode = (codeToDelete) => {
     const templateInstanceClone = _.cloneDeep(this.props.templateInstance);
-    if (templateInstanceClone.fields[1] && templateInstanceClone.fields[1].codes) {
-      const updatedCodes = templateInstanceClone.fields[1].codes;
+    const vsacField = getFieldWithType(templateInstanceClone.fields, '_vsac');
+    if (vsacField && vsacField.codes) {
+      const updatedCodes = vsacField.codes;
       const indexOfCodeToRemove = updatedCodes.findIndex(code =>
         (code.code === codeToDelete.code && _.isEqual(code.codeSystem, codeToDelete.codeSystem)));
       updatedCodes.splice(indexOfCodeToRemove, 1);
       const arrayToUpdate = [
-        { [templateInstanceClone.fields[1].id]: updatedCodes, attributeToEdit: 'codes' }
+        { [vsacField.id]: updatedCodes, attributeToEdit: 'codes' }
       ];
       this.updateInstance(arrayToUpdate);
     }
@@ -573,7 +575,7 @@ export default class TemplateInstance extends Component {
   renderVSInfo = () => {
     if (this.props.templateInstance.fields.length > 1) {
       // All generic VSAC elements save the VS information on this field on the valueSets property.
-      const vsacField = this.props.templateInstance.fields[1];
+      const vsacField = getFieldWithType(this.props.templateInstance.fields, '_vsac');
       if (vsacField.valueSets) {
         return (
           <div className="modifier__return__type" id="valueset-list">
@@ -606,7 +608,7 @@ export default class TemplateInstance extends Component {
   renderCodeInfo = () => {
     if (this.props.templateInstance.fields.length > 1) {
       // All generic VSAC elements save the VS information on this field on the codes property.
-      const vsacField = this.props.templateInstance.fields[1];
+      const vsacField = getFieldWithType(this.props.templateInstance.fields, '_vsac');
       if (vsacField.codes) {
         return (
           <div className="modifier__return__type" id="code-list">
@@ -774,11 +776,11 @@ export default class TemplateInstance extends Component {
   renderBody() {
     const { templateInstance, validateReturnType } = this.props;
     const { returnType } = this.state;
-    const referenceField = templateInstance.fields.find(field => field.type === 'reference');
+    const referenceField = getFieldWithType(templateInstance.fields, 'reference');
     const validationError = validateElement(this.props.templateInstance, this.state);
     const returnError = (!(validateReturnType !== false) || returnType === 'boolean') ? null
       : "Element must have return type 'boolean'. Add expression(s) to change the return type.";
-    const commentField = templateInstance.fields.find(field => field.id === 'comment');
+    const commentField = getFieldWithId(templateInstance.fields, 'comment');
 
     return (
       <div className="card-element__body">
@@ -869,7 +871,7 @@ export default class TemplateInstance extends Component {
       let elementType = (templateInstance.type === 'parameter') ? 'Parameter' : templateInstance.name;
 
 
-      const referenceField = templateInstance.fields.find(field => field.type === 'reference');
+      const referenceField = getFieldWithType(templateInstance.fields, 'reference');
 
       if (referenceField && (referenceField.id === 'baseElementReference')) {
         // Element type to display in header will be the reference type for Base Elements.
@@ -921,7 +923,7 @@ export default class TemplateInstance extends Component {
   renderHeader = () => {
     const { templateInstance, renderIndentButtons } = this.props;
     const { showElement } = this.state;
-    const elementNameField = templateInstance.fields.find(field => field.id === 'element_name');
+    const elementNameField = getFieldWithId(templateInstance.fields, 'element_name');
     const headerClass = classNames('card-element__header', { collapsed: !showElement });
     const headerTopClass = classNames('card-element__header-top', { collapsed: !showElement });
 

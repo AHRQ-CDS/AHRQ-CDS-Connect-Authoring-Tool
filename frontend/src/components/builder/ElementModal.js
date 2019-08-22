@@ -4,6 +4,8 @@ import Modal from 'react-modal';
 import FontAwesome from 'react-fontawesome';
 import _ from 'lodash';
 
+import { getFieldWithId, getFieldWithType } from '../../utils/instances';
+
 export default class ElementModal extends Component {
   constructor(props) {
     super(props);
@@ -52,33 +54,35 @@ export default class ElementModal extends Component {
 
     if (selectedTemplate === undefined) return;
 
-    let valuesetsToAdd = selectedTemplate.fields[1].valueSets;
+    const vsacField = getFieldWithType(selectedTemplate.fields, '_vsac');
+
+    let valuesetsToAdd = vsacField.valueSets;
     if (valuesetsToAdd === undefined) {
       valuesetsToAdd = [];
     }
     valuesetsToAdd.push({ name: element.name, oid: element.oid });
-    const nameField = selectedTemplate.fields[0];
+    const nameField = getFieldWithId(selectedTemplate.fields, 'element_name');
 
     // Adding a new element and editing an existing element use different functions that take different parameters
     if (this.props.onElementSelected) {
       // Set the template's values based on value set selection initially to add it to the workspace.
       if (!nameField.value) {
         // Only set name of element if there isn't one already.
-        selectedTemplate.fields[0].value = element.name;
+        nameField.value = element.name;
       }
-      selectedTemplate.fields[1].valueSets = valuesetsToAdd;
-      selectedTemplate.fields[1].static = true;
+      vsacField.valueSets = valuesetsToAdd;
+      vsacField.static = true;
       this.props.onElementSelected(selectedTemplate);
     } else if (this.props.updateElement) {
       // Update an existing element in the workspace
       // Create array of which field to update, the new value to set, and the attribute to update (value is default)
       const arrayToUpdate = [
-        { [selectedTemplate.fields[1].id]: valuesetsToAdd, attributeToEdit: 'valueSets' },
-        { [selectedTemplate.fields[1].id]: true, attributeToEdit: 'static' }
+        { [vsacField.id]: valuesetsToAdd, attributeToEdit: 'valueSets' },
+        { [vsacField.id]: true, attributeToEdit: 'static' }
       ];
       if (!nameField.value) {
         // Only set name of element if there isn't one already.
-        arrayToUpdate.push({ [selectedTemplate.fields[0].id]: element.name });
+        arrayToUpdate.push({ [nameField.id]: element.name });
       }
       this.props.updateElement(arrayToUpdate);
     }

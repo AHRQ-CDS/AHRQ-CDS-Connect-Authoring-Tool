@@ -1,5 +1,6 @@
 import _ from 'lodash';
 import Validators from '../validators';
+import { getFieldWithId } from '../../utils/instances';
 
 function getOperation(operator) {
   switch (operator) {
@@ -336,29 +337,33 @@ function getOrderedExpressionSentenceArrayForAgeRange(expressionArray, ageFields
   orderedExpressionArray.push({ expressionText: 'age', isExpression: false, isType: true });
   orderedExpressionArray.push({ expressionText: 'is', isExpression: false });
 
-  const ageUnitString = `${(ageFields[2] && ageFields[2].value) ? ageFields[2].value.name : ''}`;
+  const minAgeField = getFieldWithId(ageFields, 'min_age');
+  const maxAgeField = getFieldWithId(ageFields, 'max_age');
+  const unitField = getFieldWithId(ageFields, 'unit_of_time');
 
-  if (ageFields[0].value && ageFields[1].value) { // The minimum age and the maximum age are both added
+  const ageUnitString = `${(unitField && unitField.value) ? unitField.value.name : ''}`;
+
+  if (minAgeField.value && maxAgeField.value) { // The minimum age and the maximum age are both added
     orderedExpressionArray.push({ expressionText: 'between', isExpression: false });
     orderedExpressionArray.push({
-      expressionText: `${ageFields[0].value} ${ageUnitString}`,
+      expressionText: `${minAgeField.value} ${ageUnitString}`,
       isExpression: true
     });
     orderedExpressionArray.push({ expressionText: 'and', isExpression: false });
     orderedExpressionArray.push({
-      expressionText: `${ageFields[1].value} ${ageUnitString}`,
+      expressionText: `${maxAgeField.value} ${ageUnitString}`,
       isExpression: true
     });
-  } else if (ageFields[0].value) { // Only a minimum age is added
+  } else if (minAgeField.value) { // Only a minimum age is added
     orderedExpressionArray.push({ expressionText: 'at least', isExpression: false });
     orderedExpressionArray.push({
-      expressionText: `${ageFields[0].value} ${ageUnitString}`,
+      expressionText: `${minAgeField.value} ${ageUnitString}`,
       isExpression: true
     });
-  } else if (ageFields[1].value) { // Only a maximum age is added
+  } else if (maxAgeField.value) { // Only a maximum age is added
     orderedExpressionArray.push({ expressionText: 'at most', isExpression: false });
     orderedExpressionArray.push({
-      expressionText: `${ageFields[1].value} ${ageUnitString}`,
+      expressionText: `${maxAgeField.value} ${ageUnitString}`,
       isExpression: true
     });
   }
@@ -376,8 +381,9 @@ function getOrderedExpressionSentenceArrayForGender(genderFields) {
   orderedExpressionArray.push({ expressionText: 'gender', isExpression: false, isType: true });
   orderedExpressionArray.push({ expressionText: 'is', isExpression: false });
 
-  if (genderFields[0].value) {
-    orderedExpressionArray.push({ expressionText: genderFields[0].value.name, isExpression: true });
+  const genderField = getFieldWithId(genderFields, 'gender');
+  if (genderField.value) {
+    orderedExpressionArray.push({ expressionText: genderField.value.name, isExpression: true });
   }
 
   return orderedExpressionArray;

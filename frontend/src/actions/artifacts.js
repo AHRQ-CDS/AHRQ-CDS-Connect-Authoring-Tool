@@ -10,6 +10,7 @@ import cqlfhir from 'cql-exec-fhir';
 
 import changeToCase from '../utils/strings';
 import createTemplateInstance from '../utils/templates';
+import { getFieldWithType, getFieldWithId } from '../utils/instances';
 import loadTemplates from './templates';
 import * as types from './types';
 
@@ -48,13 +49,13 @@ function parseConjunction(childInstances, names, baseElementsInUse, parametersIn
     // Add name of child to array
     const index = names.findIndex(name => name.id === child.uniqueId);
     if (index === -1) {
-      let name = child.fields[0].value;
+      let name = getFieldWithId(child.fields, 'element_name').value;
       if (name === undefined) name = '';
       names.push({ name, id: child.uniqueId });
     }
 
     // Add uniqueId of base elements and parameters that are currently used
-    const referenceField = child.fields.find(field => field.type === 'reference');
+    const referenceField = getFieldWithType(child.fields, 'reference');
     if (referenceField) {
       if (referenceField.id === 'baseElementReference') {
         const baseElementAlreadyInUse = baseElementsInUse.find(s => s.baseElementId === referenceField.value.id);
@@ -109,8 +110,9 @@ function parseForDuplicateNamesAndUsed(artifact) {
     }
   });
   artifact.baseElements.forEach((baseElement) => {
-    if (baseElement.fields && baseElement.fields[0]) {
-      names.push({ name: baseElement.fields[0].value, id: baseElement.uniqueId });
+    const nameField = getFieldWithId(baseElement.fields, 'element_name');
+    if (nameField) {
+      names.push({ name: nameField.value, id: baseElement.uniqueId });
     }
     if (baseElement.childInstances && baseElement.childInstances.length) {
       parseTree(baseElement, names, baseElementsInUse, parametersInUse, librariesInUse);
@@ -176,12 +178,12 @@ function initializeTrees(andTemplate, orTemplate) {
 
   const newExpTreeInclude = createTemplateInstance(andTemplate);
   newExpTreeInclude.path = '';
-  const newExpTreeIncludeNameField = newExpTreeInclude.fields.find(field => field.id === 'element_name');
+  const newExpTreeIncludeNameField = getFieldWithId(newExpTreeInclude.fields, 'element_name');
   if (newExpTreeIncludeNameField) newExpTreeIncludeNameField.value = 'MeetsInclusionCriteria';
 
   const newExpTreeExclude = createTemplateInstance(orTemplate);
   newExpTreeExclude.path = '';
-  const newExpTreeExcludeNameField = newExpTreeExclude.fields.find(field => field.id === 'element_name');
+  const newExpTreeExcludeNameField = getFieldWithId(newExpTreeExclude.fields, 'element_name');
   if (newExpTreeExcludeNameField) newExpTreeExcludeNameField.value = 'MeetsExclusionCriteria';
 
   return {
