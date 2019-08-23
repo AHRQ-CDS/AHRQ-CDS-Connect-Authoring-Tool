@@ -131,12 +131,12 @@ class Testing extends Component {
 
           <div className="patient-table__meta">
             <div className="meta-label">Meets Inclusion Criteria:</div>
-            <div>{resultsIncludedCount} of {resultsCount}</div>
+            <div>{resultsIncludedCount} of {resultsCount} patients</div>
           </div>
 
           <div className="patient-table__meta">
             <div className="meta-label">Meets Exclusion Criteria:</div>
-            <div>{resultsExcludedCount} of {resultsCount}</div>
+            <div>{resultsExcludedCount} of {resultsCount} patients</div>
           </div>
 
           <div className="patients__table">

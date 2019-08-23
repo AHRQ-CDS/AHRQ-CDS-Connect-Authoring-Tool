@@ -6,7 +6,7 @@ import { UncontrolledTooltip } from 'reactstrap';
 import _ from 'lodash';
 
 import renderDate from '../../utils/dates';
-import { sortAlphabeticallyByKey } from '../../utils/sort';
+import { sortAlphabeticallyByPatientName } from '../../utils/sort';
 import patientProps from '../../prop-types/patient';
 import artifactProps from '../../prop-types/artifact';
 
@@ -199,7 +199,8 @@ export default class PatientTable extends Component {
     const fhirVersionMap = { '1.0.2': 'DSTU2', '3.0.0': 'STU3' };
     const validArtifactsToExecute = this.props.artifacts.filter((a) => {
       const noFHIRVersion = a.fhirVersion === '';
-      const sameFHIRVersion = fhirVersionMap[a.fhirVersion] === _.get(this.state.patientToExecute, 'fhirVersion', '');
+      const sameFHIRVersion =
+        fhirVersionMap[a.fhirVersion] === _.get(this.state, 'patientsToExecute[0].fhirVersion', '');
       return noFHIRVersion || sameFHIRVersion;
     });
     const artifactOptions = _.map(validArtifactsToExecute, a => ({ value: a, label: a.name }));
@@ -400,7 +401,7 @@ export default class PatientTable extends Component {
           </thead>
 
           <tbody>
-            {patients.sort(sortAlphabeticallyByKey).map(this.renderTableRow)}
+            {patients.sort(sortAlphabeticallyByPatientName).map(this.renderTableRow)}
           </tbody>
         </table>
 
