@@ -1389,7 +1389,7 @@ export default class UserGuide extends Component {
 
                 <p>
                   The Testing tab is the main location to test that artifacts are behaving as expected when their CQL is executed
-                  against a patient.
+                  against synthetic patients.
                 </p>
 
                 <p>
@@ -1418,16 +1418,17 @@ export default class UserGuide extends Component {
                   </li>
 
                   <li>
+                    A disabled "Execute CQL on Selected Patients" button that will only be enabled once the user has authenticated
+                    with VSAC and has selected patients to test.
+                  </li>
+
+                  <li>
                     A table that displays some information about any patients associated to the user that are already in the
-                    database.
+                    database, and allows users to select patients to test.
                   </li>
 
                   <li>
-                    A "View" button that displays for a patient, which opens a modal to view the JSON FHIR Bundle in detail.
-                  </li>
-
-                  <li>
-                    A disabled "Execute CQL" button that will only be enabled once the user has authenticated with VSAC.
+                    A "View" button that displays a modal to view the JSON FHIR Bundle of a given patient in detail.
                   </li>
 
                   <li>
@@ -1456,7 +1457,16 @@ export default class UserGuide extends Component {
                   </li>
 
                   <li>
-                    The "Execute CQL" button for each patient is now enabled. Clicking on this button opens the Execute CQL Modal.
+                    The "Execute CQL on Selected Patients" button is now enabled. Clicking on this button
+                    opens the Execute CQL Modal.
+                  </li>
+
+                  <li>
+                    Any patient that is checked on the left side of the table has been selected for testing.
+                  </li>
+
+                  <li>
+                    A patient that has been selected cannot be deleted until it is deselected.
                   </li>
                 </ol>
               </div>
@@ -1478,12 +1488,8 @@ export default class UserGuide extends Component {
 
                 <ol>
                   <li>
-                    The name of the patient that was chosen for CQL execution.
-                  </li>
-
-                  <li>
-                    A dropdown that displays all the user's artifacts, allowing the user to choose which artifact should be used
-                    for CQL execution.
+                    A dropdown that displays all of the user's artifacts that are FHIR compatible with the selected patients.
+                    This allows the user to choose which artifact should be used for CQL execution.
                   </li>
 
                   <li>
@@ -1492,8 +1498,8 @@ export default class UserGuide extends Component {
                   </li>
 
                   <li>
-                    The "Execute CQL" button which runs the selected artifact's CQL against the selected patient for testing.
-                    The artifact CQL that is used for testing automatically matches the patient's FHIR version.
+                    The "Execute CQL" button which runs the selected artifact's CQL against the selected patients for testing.
+                    The artifact CQL that is used for testing automatically matches the patients' FHIR version.
                   </li>
                 </ol>
               </div>
@@ -1514,35 +1520,47 @@ export default class UserGuide extends Component {
 
                 <ol>
                   <li>
-                    The name of the patient that was used for testing.
-                  </li>
-
-                  <li>
                     The name of the artifact whose CQL was tested.
                   </li>
 
                   <li>
-                    An indication of whether the patient met the Artifact's inclusion criteria. In this case, the patient did meet
-                    the inclusion criteria.
+                    An indication of how many patients tested met the Artifact's inclusion criteria and exclusion criteria.
                   </li>
+
+                  <li>
+                    The collapsed execution results for one of the tested patients. This can be expanded by clicking
+                    on the patient's name.
+                  </li>
+
+                  <li>
+                    The expanded execution results for one of the tested patients. This can be collapsed by clicking
+                    on the patient's name. Details of the results are as follows.
+                  </li>
+
+                  <ul>
+                    <li>
+                      An indication of whether the patient met the Artifact's inclusion criteria. In this case,
+                      the patient did meet the inclusion criteria.
+                    </li>
 
                     <li>
-                    An indication of whether the patient met the Artifact's exclusion criteria. In this case, the patient did not
-                    meet the exclusion criteria.
-                  </li>
+                      An indication of whether the patient met the Artifact's exclusion criteria. In this case,
+                      the patient did not meet the exclusion criteria.
+                    </li>
 
-                  <li>
-                    The Recommendation from the artifact, given the result of the CQL execution.
-                  </li>
+                    <li>
+                      The Recommendation from the artifact, given the result of the CQL execution.
+                    </li>
 
-                  <li>
-                    The Rationale for the Recommendation from the artifact.
-                  </li>
+                    <li>
+                      The Rationale for the Recommendation from the artifact.
+                    </li>
 
 
-                  <li>
-                    Any Errors that occurred during the CQL Execution. In this case, there were no errors.
-                  </li>
+                    <li>
+                      Any Errors that occurred during the CQL Execution. In this case, there were no errors.
+                    </li>
+                  </ul>
                 </ol>
               </div>
             </div>
