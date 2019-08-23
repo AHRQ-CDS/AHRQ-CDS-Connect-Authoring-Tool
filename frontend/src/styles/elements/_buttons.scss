@@ -37,6 +37,24 @@ button.transparent-button {
   }
 }
 
+button.invisible-button {
+  @include button(
+    $default-button-text-color,
+    transparent,
+    transparent,
+    transparent,
+    none);
+
+  &:hover,
+  &:focus,
+  &:active {
+    background-color: $white;
+    text-decoration: underline;
+    color: $default-button-text-color;
+    outline: none;
+  }
+}
+
 button[disabled],
 button[disabled]:hover,
 button[disabled]:focus,

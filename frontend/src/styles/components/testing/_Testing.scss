@@ -29,6 +29,15 @@
 .patient-table {
   margin-top: 40px;
 
+  &__buttons {
+    display: flex;
+    align-items: center;
+
+    button {
+      margin-right: 20px;
+    }
+  }
+
   &__title {
     text-align: center;
     font-size: 1.2em;
@@ -37,12 +46,13 @@
   }
 
   &__meta {
-    margin-bottom: 40px;
+    display: flex;
+    margin-bottom: 10px;
 
     .meta-label {
       display: inline-block;
       font-weight: bold;
-      min-width: 100px;
+      min-width: 300px;
     }
   }
 
@@ -60,7 +70,8 @@
     padding-bottom: 0.5em;
   }
 
-  td {
+  td,
+  th {
     padding: 0.25em;
   }
 
@@ -89,6 +100,10 @@
 
 .patients__tablecell-short {
   width: 6em;
+}
+
+tbody td.patients__tablecell-tiny {
+  padding-right: 0;
 }
 
 .patient-info {

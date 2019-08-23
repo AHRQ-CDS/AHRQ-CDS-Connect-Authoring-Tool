@@ -1,0 +1,32 @@
+.select-patient-checkbox:not(.checked) {
+  text-shadow: 0 0 1px black, 0 0 1px black;
+  color: white;
+}
+
+.patient-data-section {
+  &__header {
+    &:hover,
+    &:focus {
+      background-color: darken($gray-blue, 5%);
+    }
+  }
+
+  &__table {
+    tbody tr {
+      &:hover,
+      &:focus {
+        background-color: darken($gray-blue, 5%);
+      }
+
+      &:first-of-type td {
+        padding-top: 2px;
+      }
+    }
+
+    tbody td {
+      border: 0;
+      padding: 2px 15px;
+      vertical-align: middle;
+    }
+  }
+}

@@ -209,7 +209,7 @@ describe('artifact actions', () => {
         {
           type: types.EXECUTE_ARTIFACT_SUCCESS,
           artifact: mockArtifact,
-          patient: mockPatientDstu2.patient,
+          patients: [mockPatientDstu2.patient],
           data: mockTestResultsDstu2.data
         }
       ];
@@ -219,7 +219,7 @@ describe('artifact actions', () => {
       return store.dispatch(actions.executeCQLArtifact(
         mockArtifact,
         [], // params
-        mockPatientDstu2.patient,
+        [mockPatientDstu2.patient],
         { username: 'u', password: 'p' },
         new CodeService(),
         { name: 'FHIR', version: '1.0.2' }
@@ -227,7 +227,7 @@ describe('artifact actions', () => {
         expect(_.initial(store.getActions())).toEqual(_.initial(expectedActions));
         expect(_.last(store.getActions()).type).toEqual(_.last(expectedActions).type);
         expect(_.last(store.getActions()).artifact).toEqual(_.last(expectedActions).artifact);
-        expect(_.last(store.getActions()).patient).toEqual(_.last(expectedActions).patient);
+        expect(_.last(store.getActions()).patients).toEqual(_.last(expectedActions).patients);
         expect(JSON.parse(JSON.stringify(_.last(store.getActions()).data))).toEqual(_.last(expectedActions).data);
       });
     });
@@ -246,7 +246,7 @@ describe('artifact actions', () => {
         {
           type: types.EXECUTE_ARTIFACT_SUCCESS,
           artifact: mockArtifact,
-          patient: mockPatientStu3.patient,
+          patients: [mockPatientStu3.patient],
           data: mockTestResultsStu3.data
         }
       ];
@@ -256,7 +256,7 @@ describe('artifact actions', () => {
       return store.dispatch(actions.executeCQLArtifact(
         mockArtifact,
         [], // params
-        mockPatientStu3.patient,
+        [mockPatientStu3.patient],
         { username: 'u', password: 'p' },
         new CodeService(),
         { name: 'FHIR', version: '3.0.0' }
@@ -264,7 +264,7 @@ describe('artifact actions', () => {
         expect(_.initial(store.getActions())).toEqual(_.initial(expectedActions));
         expect(_.last(store.getActions()).type).toEqual(_.last(expectedActions).type);
         expect(_.last(store.getActions()).artifact).toEqual(_.last(expectedActions).artifact);
-        expect(_.last(store.getActions()).patient).toEqual(_.last(expectedActions).patient);
+        expect(_.last(store.getActions()).patients).toEqual(_.last(expectedActions).patients);
         expect(JSON.parse(JSON.stringify(_.last(store.getActions()).data))).toEqual(_.last(expectedActions).data);
       });
     });

@@ -34,7 +34,7 @@ describe('artifacts reducer', () => {
         executeStatus: null,
         results: null,
         artifactExecuted: null,
-        patientExecuted: null,
+        patientsExecuted: null,
         errorMessage: null
       },
       artifactSaved: true,
@@ -205,7 +205,7 @@ describe('artifacts reducer', () => {
         executeStatus: null,
         results: null,
         artifactExecuted: null,
-        patientExecuted: null
+        patientsExecuted: null
       }
     };
     expect(reducer([], action)).toEqual(newState);
@@ -216,7 +216,7 @@ describe('artifacts reducer', () => {
         executeStatus: 'test',
         results: {},
         artifactExecuted: 'Test artifact',
-        patientExecuted: 'Test patient'
+        patientsExecuted: ['Test patient']
       }
     };
     expect(reducer(previousState, action)).toEqual(newState);
@@ -225,7 +225,7 @@ describe('artifacts reducer', () => {
       type: types.EXECUTE_ARTIFACT_SUCCESS,
       data: 'Test data',
       artifact: 'Test artifact',
-      patient: 'Test patient'
+      patients: ['Test patient']
     };
 
     newState = {
@@ -234,7 +234,7 @@ describe('artifacts reducer', () => {
         executeStatus: 'success',
         results: action.data,
         artifactExecuted: action.artifact,
-        patientExecuted: action.patient,
+        patientsExecuted: action.patients,
         errorMessage: null
       }
     };
