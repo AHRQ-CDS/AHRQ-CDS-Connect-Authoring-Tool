@@ -20,7 +20,7 @@ const testTemplate = {
   extends: 'Base',
   fields: [
     { id: 'element_name', type: 'string', name: 'Element Name' },
-    { id: 'observation', type: 'observation', name: 'Observation' }
+    { id: 'observation', type: 'observation_vsac', name: 'Observation' }
   ],
 };
 

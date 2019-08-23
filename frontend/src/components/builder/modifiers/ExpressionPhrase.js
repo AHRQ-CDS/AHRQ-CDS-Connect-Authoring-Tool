@@ -7,7 +7,7 @@ import { UncontrolledTooltip } from 'reactstrap';
 
 import convertToExpression from '../../../utils/artifacts/convertToExpression';
 import { getOriginalBaseElement, getAllModifiersOnBaseElementUse } from '../../../utils/baseElements';
-import { getReturnType } from '../../../utils/instances';
+import { getReturnType, getFieldWithId, getFieldWithType } from '../../../utils/instances';
 
 export default class ExpressionPhrase extends Component {
   getExpressionPhrase = (instance) => {
@@ -20,7 +20,7 @@ export default class ExpressionPhrase extends Component {
     let phraseTemplateInstance = instance;
     let phraseTemplateInstanceIsConjunction = false;
     if (instance.type === 'baseElement') {
-      const referenceField = instance.fields.find(field => field.type === 'reference');
+      const referenceField = getFieldWithType(instance.fields, 'reference');
       if (referenceField) {
         // Use the original base element as a base, but include all modifiers from derivative uses.
         const originalBaseElement = _.cloneDeep(getOriginalBaseElement(instance, baseElements));
@@ -47,13 +47,14 @@ export default class ExpressionPhrase extends Component {
     }
 
     let valueSets = [];
-    if (phraseTemplateInstance.fields[1] && phraseTemplateInstance.fields[1].valueSets) {
-      valueSets = phraseTemplateInstance.fields[1].valueSets;
+    const phraseTemplateInstanceVsacField = getFieldWithType(phraseTemplateInstance.fields, '_vsac');
+    if (phraseTemplateInstanceVsacField && phraseTemplateInstanceVsacField.valueSets) {
+      valueSets = phraseTemplateInstanceVsacField.valueSets;
     }
 
     let codes = [];
-    if (phraseTemplateInstance.fields[1] && phraseTemplateInstance.fields[1].codes) {
-      codes = phraseTemplateInstance.fields[1].codes;
+    if (phraseTemplateInstanceVsacField && phraseTemplateInstanceVsacField.codes) {
+      codes = phraseTemplateInstanceVsacField.codes;
     }
 
     const otherFields = phraseTemplateInstance.fields.filter(field =>
@@ -64,7 +65,7 @@ export default class ExpressionPhrase extends Component {
         let secondPhraseExpressions = [];
         if (child.childInstances && phraseTemplateInstance.usedBy) {
           // Groups expression phrases list the names of the elements within the group. They only go one level deep.
-          const childNames = child.childInstances.map(c => ({ name: c.fields[0].value }));
+          const childNames = child.childInstances.map(c => ({ name: getFieldWithId(c.fields, 'element_name').value }));
           secondPhraseExpressions = convertToExpression([], child.name, [], [], child.returnType, [], childNames);
         } else {
           // Individual elements give the full expression phrase in the tooltip
@@ -73,7 +74,8 @@ export default class ExpressionPhrase extends Component {
         const phraseArrayAsSentence = secondPhraseExpressions.reduce((acc, currentValue) =>
           `${acc}${currentValue.expressionText === ',' ? '' : ' '}
           ${currentValue.isName ? '"' : ''}${currentValue.expressionText}${currentValue.isName ? '"' : ''}`, '');
-        elementNamesInPhrase.push({ name: child.fields[0].value, tooltipText: phraseArrayAsSentence });
+        const nameField = getFieldWithId(child.fields, 'element_name');
+        elementNamesInPhrase.push({ name: nameField.value, tooltipText: phraseArrayAsSentence });
       });
     }
 
@@ -84,8 +86,7 @@ export default class ExpressionPhrase extends Component {
     if (type === 'parameter') {
       referenceElementName = phraseTemplateInstance.name;
     } else if (type === 'externalCqlElement') {
-      referenceElementName =
-        phraseTemplateInstance.fields.find(field => field.id === 'externalCqlReference').value.element;
+      referenceElementName = getFieldWithId(phraseTemplateInstance.fields, 'externalCqlReference').value.element;
     }
 
     const expressions = convertToExpression(

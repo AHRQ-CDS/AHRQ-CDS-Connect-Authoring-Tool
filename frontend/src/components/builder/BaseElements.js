@@ -5,13 +5,15 @@ import TemplateInstance from './TemplateInstance';
 import ListGroup from './ListGroup';
 
 import createTemplateInstance from '../../utils/templates';
+import { getFieldWithId } from '../../utils/instances';
 
 export default class BaseElements extends Component {
   addChild = (template) => {
     const instance = createTemplateInstance(template);
     instance.path = '';
     if (instance.conjunction) {
-      instance.fields[0].value = `Base Element ${this.props.instance.baseElements.length + 1}`;
+      const nameField = getFieldWithId(instance.fields, 'element_name');
+      nameField.value = `Base Element ${this.props.instance.baseElements.length + 1}`;
     }
     this.props.addBaseElement(instance);
   }

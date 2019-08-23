@@ -12,6 +12,7 @@ import CodeSelectModal from './CodeSelectModal';
 import changeToCase from '../../utils/strings';
 import filterUnsuppressed from '../../utils/filter';
 import { sortAlphabeticallyByKey } from '../../utils/sort';
+import { getFieldWithId, getFieldWithType } from '../../utils/instances';
 
 const getAllElements = categories => _.flatten(categories.map(cat => (
   cat.entries.map(e => ({
@@ -130,9 +131,10 @@ export default class ElementSelect extends Component {
     if (props.baseElements && props.baseElements.length && categoriesCopy[baseElementsIndex]) {
       categoriesCopy[baseElementsIndex].entries = props.baseElements.map((e) => {
         const returnType = _.isEmpty(e.modifiers) ? e.returnType : _.last(e.modifiers).returnType;
-        const commentField = e.fields.find(field => field.id === 'comment');
+        const commentField = getFieldWithId(e.fields, 'comment');
         const commentDefaultValue = commentField ? commentField.value : '';
         const type = e.type === 'parameter' ? e.type : e.name;
+        const value = getFieldWithId(e.fields, 'element_name').value;
         return ({
           id: _.uniqueId(e.id),
           name: 'Base Element',
@@ -140,7 +142,7 @@ export default class ElementSelect extends Component {
           template: 'GenericStatement',
           returnType,
           fields: [
-            { id: 'element_name', type: 'string', name: 'Element Name', value: e.fields[0].value },
+            { id: 'element_name', type: 'string', name: 'Element Name', value },
             {
               id: 'baseElementReference',
               type: 'reference',
@@ -351,8 +353,8 @@ export default class ElementSelect extends Component {
         .find(cat => cat.name === selectedElement.label)
         .entries.map(({ id, name, type, fields }) => {
           // Base elements display the field element_name entered by user, not the generic 'Base Element'.
-          const label = type === 'baseElement' ? fields[0].value : name;
-          const uniqueId = type === 'baseElement' ? fields[1].value.id : '';
+          const label = type === 'baseElement' ? getFieldWithId(fields, 'element_name').value : name;
+          const uniqueId = type === 'baseElement' ? getFieldWithType(fields, 'reference').value.id : '';
           return ({ value: id, label, type: selectedElement.label, uniqueId });
         });
       if (selectedElement.value === 'baseElement') {

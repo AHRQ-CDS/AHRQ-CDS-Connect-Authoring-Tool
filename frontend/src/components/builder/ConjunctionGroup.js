@@ -12,6 +12,7 @@ import ExpressionPhrase from './modifiers/ExpressionPhrase';
 import createTemplateInstance from '../../utils/templates';
 import { hasGroupNestedWarning } from '../../utils/warnings';
 import requiredIf from '../../utils/prop_types';
+import { getFieldWithId } from '../../utils/instances';
 
 export default class ConjunctionGroup extends Component {
   constructor(props) {
@@ -138,7 +139,7 @@ export default class ConjunctionGroup extends Component {
   }
 
   conjunctionHasDuplicateName = (child) => {
-    const elementNameField = child.fields.find(field => field.id === 'element_name');
+    const elementNameField = getFieldWithId(child.fields, 'element_name');
     const nameValue = elementNameField.value === undefined ? '' : elementNameField.value;
     const duplicateNameIndex = this.props.instanceNames.findIndex(name =>
       name.id !== child.uniqueId && name.name === nameValue);
@@ -218,7 +219,7 @@ export default class ConjunctionGroup extends Component {
   renderRoot() {
     const { showGroup } = this.state;
     const collapsedClass = showGroup ? '' : 'expression-collapsed';
-    const elementNameField = this.props.instance.fields.find(field => field.id === 'element_name');
+    const elementNameField = getFieldWithId(this.props.instance.fields, 'element_name');
     const conjunctionHasDuplicateName = this.conjunctionHasDuplicateName(this.props.instance);
 
     if (!this.props.root) {

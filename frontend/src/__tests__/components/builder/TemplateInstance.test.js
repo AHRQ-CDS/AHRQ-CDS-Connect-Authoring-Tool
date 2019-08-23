@@ -2,6 +2,7 @@ import _ from 'lodash';
 import { createTemplateInstance, fullRenderComponentOnBody } from '../../../utils/test_helpers';
 import { instanceTree, genericInstance, genericInstanceWithModifiers, genericBaseElementInstance,
   genericBaseElementInstanceWithModifiers, genericBaseElementUseInstance } from '../../../utils/test_fixtures';
+import { getFieldWithId, getFieldWithType } from '../../../utils/instances';
 
 import TemplateInstance from '../../../components/builder/TemplateInstance';
 
@@ -88,7 +89,8 @@ describe('vsac controls on generic template instances', () => {
   });
 
   test('can view value set details from template instance without editing', () => {
-    const valueSets = component.props().templateInstance.fields[1].valueSets;
+    const vsacField = getFieldWithType(component.props().templateInstance.fields, '_vsac');
+    const valueSets = vsacField.valueSets;
     // Multiple value sets can be viewed.
     expect(component.find('#valueset-list')).toHaveLength(1);
     expect(component.find('#valueset-list > div')).toHaveLength(2);
@@ -107,7 +109,8 @@ describe('vsac controls on generic template instances', () => {
   });
 
   test('can delete a value set from a template instance', () => {
-    const valueSets = component.props().templateInstance.fields[1].valueSets;
+    const vsacField = getFieldWithType(component.props().templateInstance.fields, '_vsac');
+    const valueSets = vsacField.valueSets;
     expect(valueSets).toHaveLength(2);
 
     // Multiple value sets can be viewed.
@@ -120,7 +123,7 @@ describe('vsac controls on generic template instances', () => {
 
     // The array that will be sent to get updated, without valueSets[0] since that is being deleted.
     const arrayToUpdate = [
-      { [component.props().templateInstance.fields[1].id]: [valueSets[1]], attributeToEdit: 'valueSets' }
+      { [vsacField.id]: [valueSets[1]], attributeToEdit: 'valueSets' }
     ];
     const updateSpy = jest.spyOn(component.instance(), 'updateInstance');
     component.update();
@@ -129,7 +132,8 @@ describe('vsac controls on generic template instances', () => {
   });
 
   test('can delete a code from a template instance', () => {
-    const codes = component.props().templateInstance.fields[1].codes;
+    const vsacField = getFieldWithType(component.props().templateInstance.fields, '_vsac');
+    const codes = vsacField.codes;
     expect(codes).toHaveLength(2);
 
     // Multiple codes can be viewed.
@@ -145,7 +149,7 @@ describe('vsac controls on generic template instances', () => {
 
     // The array that will be sent to get updated, without codes[0] since that is being deleted.
     const arrayToUpdate = [
-      { [component.props().templateInstance.fields[1].id]: [codes[1]], attributeToEdit: 'codes' }
+      { [vsacField.id]: [codes[1]], attributeToEdit: 'codes' }
     ];
     const deleteSpy = jest.spyOn(component.instance(), 'deleteCode');
     const updateSpy = jest.spyOn(component.instance(), 'updateInstance');
@@ -333,6 +337,7 @@ describe('Base Element Uses of Use', () => {
     // Set templateInstance for base element use and set instanceNames to include the original base element name.
     const baseElementProps = { ...props };
     const useElement = _.cloneDeep(genericBaseElementUseTemplateInstance);
+    const useElementNameField = getFieldWithId(useElement.fields, 'element_name');
     useElement.modifiers = [
       {
         id: 'VerifiedObservation',
@@ -343,21 +348,24 @@ describe('Base Element Uses of Use', () => {
         cqlLibraryFunction: 'C3F.Verified'
       }
     ];
-    useElement.fields[0].value = 'B';
+    useElementNameField.value = 'B';
     baseElementProps.instanceNames = [
       { id: 'originalBaseElementId', name: 'A' },
       { id: 'useOfUseId', name: 'C' },
       { id: useElement.uniqueId, name: 'B' }
     ];
     const originalBaseElement = _.cloneDeep(genericBaseElementTemplateInstance);
+    const originalBaseElementNameField = getFieldWithId(originalBaseElement.fields, 'element_name');
     originalBaseElement.uniqueId = 'originalBaseElementId';
-    originalBaseElement.fields[0].value = 'A';
+    originalBaseElementNameField.value = 'A';
     originalBaseElement.usedBy = [useElement.uniqueId];
 
     const useOfUseElement = _.cloneDeep(genericBaseElementUseTemplateInstance);
+    const useOfUseElementNameField = getFieldWithId(useOfUseElement.fields, 'element_name');
+    const useOfUseElementReferenceField = getFieldWithType(useOfUseElement.fields, 'reference');
     useOfUseElement.uniqueId = 'useOfUseId';
-    useOfUseElement.fields[0].value = 'C';
-    useOfUseElement.fields[1].value = { id: useElement.uniqueId, type: 'Base Element' };
+    useOfUseElementNameField.value = 'C';
+    useOfUseElementReferenceField.value = { id: useElement.uniqueId, type: 'Base Element' };
     useOfUseElement.modifiers = [
       {
         id: 'BooleanExists',
@@ -440,8 +448,9 @@ describe('Base Element warnings', () => {
       { id: genericBaseElementUseTemplateInstance.uniqueId, name: 'Base Element Observation' }
     ];
     const originalBaseElement = genericBaseElementTemplateInstance;
+    const originalBaseElementNameField = getFieldWithId(originalBaseElement.fields, 'element_name');
     originalBaseElement.uniqueId = 'originalBaseElementId';
-    originalBaseElement.fields[0].value = 'Base Element Observation';
+    originalBaseElementNameField.value = 'Base Element Observation';
     baseElementProps.baseElements = [originalBaseElement];
     component = fullRenderComponentOnBody(TemplateInstance, { ...baseElementProps });
 
@@ -459,8 +468,9 @@ describe('Base Element warnings', () => {
       { id: genericBaseElementUseTemplateInstance.uniqueId, name: 'Base Element Observation' }
     ];
     const originalBaseElement = genericBaseElementTemplateInstance;
+    const originalBaseElementNameField = getFieldWithId(originalBaseElement.fields, 'element_name');
     originalBaseElement.uniqueId = 'originalBaseElementId';
-    originalBaseElement.fields[0].value = 'Base Element Observation';
+    originalBaseElementNameField.value = 'Base Element Observation';
     baseElementProps.baseElements = [originalBaseElement];
     baseElementProps.templateInstance.modifiers = [
       {
@@ -491,11 +501,13 @@ describe('Base Element warnings', () => {
     baseElementProps.templateInstance.usedBy = ['useOfUseId'];
 
     const originalBaseElement = genericBaseElementTemplateInstance;
+    const originalBaseElementNameField = getFieldWithId(originalBaseElement.fields, 'element_name');
     originalBaseElement.uniqueId = 'originalBaseElementId';
-    originalBaseElement.fields[0].value = 'Base Element Observation';
+    originalBaseElementNameField.value = 'Base Element Observation';
     const useOfUseElement = genericBaseElementUseTemplateInstance;
+    const useOfUseElementNameField = getFieldWithId(useOfUseElement.fields, 'element_name');
     useOfUseElement.uniqueId = 'useOfUseId';
-    useOfUseElement.fields[0].value = 'Base Element Observation';
+    useOfUseElementNameField.value = 'Base Element Observation';
 
     baseElementProps.baseElements = [originalBaseElement, baseElementProps.templateInstance, useOfUseElement];
     baseElementProps.allInstancesInAllTrees = [originalBaseElement, baseElementProps.templateInstance, useOfUseElement];
@@ -579,19 +591,23 @@ describe('Base Element warnings', () => {
     // Set up an unmodified base element use and another template instance with same name
     const baseElementProps = { ...props };
     const unmodifiedUse = _.cloneDeep(genericBaseElementUseTemplateInstance);
+    const unmodifiedUseNameField = getFieldWithId(unmodifiedUse.fields, 'element_name');
     baseElementProps.templateInstance = unmodifiedUse;
 
     const tempInstanceWithSameName = _.cloneDeep(genericTemplateInstance);
-    tempInstanceWithSameName.fields[0].value = baseElementProps.templateInstance.fields[0].value;
+    const tempInstanceWithSameNameNameField = getFieldWithId(tempInstanceWithSameName.fields, 'element_name');
+    const baseElementPropsTINameField = getFieldWithId(baseElementProps.templateInstance.fields, 'element_name');
+    tempInstanceWithSameNameNameField.value = baseElementPropsTINameField.value;
 
     baseElementProps.instanceNames = [
       { id: 'originalBaseElementId', name: 'Base Element Observation' },
-      { id: unmodifiedUse.uniqueId, name: unmodifiedUse.fields[0].value },
-      { id: tempInstanceWithSameName.uniqueId, name: tempInstanceWithSameName.fields[0].value }
+      { id: unmodifiedUse.uniqueId, name: unmodifiedUseNameField.value },
+      { id: tempInstanceWithSameName.uniqueId, name: tempInstanceWithSameNameNameField.value }
     ];
     const originalBaseElement = genericBaseElementTemplateInstance;
+    const originalBaseElementNameField = getFieldWithId(originalBaseElement.fields, 'element_name');
     originalBaseElement.uniqueId = 'originalBaseElementId';
-    originalBaseElement.fields[0].value = 'Base Element Observation';
+    originalBaseElementNameField.value = 'Base Element Observation';
     baseElementProps.baseElements = [originalBaseElement];
 
     baseElementProps.allInstancesInAllTrees = [
@@ -610,18 +626,21 @@ describe('Base Element warnings', () => {
     // Set up two unmodified uses
     const baseElementProps = { ...props };
     const unmodifiedUse = _.cloneDeep(genericBaseElementUseTemplateInstance);
+    const unmodifiedUseNameField = getFieldWithId(unmodifiedUse.fields, 'element_name');
     baseElementProps.templateInstance = unmodifiedUse;
 
     const secondUse = _.cloneDeep(genericBaseElementUseTemplateInstance);
+    const secondUseNameField = getFieldWithId(secondUse.fields, 'element_name');
 
     baseElementProps.instanceNames = [
       { id: 'originalBaseElementId', name: 'Base Element Observation' },
-      { id: unmodifiedUse.uniqueId, name: unmodifiedUse.fields[0].value },
-      { id: secondUse.uniqueId, name: secondUse.fields[0].value }
+      { id: unmodifiedUse.uniqueId, name: unmodifiedUseNameField.value },
+      { id: secondUse.uniqueId, name: secondUseNameField.value }
     ];
     const originalBaseElement = genericBaseElementTemplateInstance;
+    const originalBaseElementNameField = getFieldWithId(originalBaseElement.fields, 'element_name');
     originalBaseElement.uniqueId = 'originalBaseElementId';
-    originalBaseElement.fields[0].value = 'Base Element Observation';
+    originalBaseElementNameField.value = 'Base Element Observation';
     originalBaseElement.usedBy = [
       unmodifiedUse.uniqueId,
       secondUse.uniqueId

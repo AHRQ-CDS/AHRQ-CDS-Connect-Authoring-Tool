@@ -6,6 +6,7 @@ import ConjunctionGroup from '../../components/builder/ConjunctionGroup';
 import TemplateInstance from '../../components/builder/TemplateInstance';
 import { shallowRenderContainer, shallowRenderComponent, createTemplateInstance } from '../../utils/test_helpers';
 import { instanceTree, emptyInstanceTree, elementGroups } from '../../utils/test_fixtures';
+import { getFieldWithId } from '../../utils/instances';
 import * as types from '../../actions/types';
 
 const operations = elementGroups.find(g => g.name === 'Operations');
@@ -201,8 +202,9 @@ test('edits a template instance', () => {
   component.dive().dive().instance().editInstance('expTreeInclude', { element_name: name }, 'childInstances.0');
 
   store.getActions()[0]((action) => {
+    const nameField = getFieldWithId(action.artifact.expTreeInclude.childInstances[0].fields, 'element_name');
     expect(action.type).toEqual(types.UPDATE_ARTIFACT);
-    expect(action.artifact.expTreeInclude.childInstances[0].fields[0].value).toEqual(name);
+    expect(nameField.value).toEqual(name);
   });
 });
 

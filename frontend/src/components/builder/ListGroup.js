@@ -7,7 +7,7 @@ import classNames from 'classnames';
 import { UncontrolledTooltip } from 'reactstrap';
 import { findValueAtPath } from '../../utils/find';
 import { doesBaseElementInstanceNeedWarning, hasDuplicateName, hasGroupNestedWarning } from '../../utils/warnings';
-import { getReturnType } from '../../utils/instances';
+import { getReturnType, getFieldWithId } from '../../utils/instances';
 
 import ConjunctionGroup from './ConjunctionGroup';
 import ExpressionPhrase from './modifiers/ExpressionPhrase';
@@ -71,7 +71,8 @@ export default class ListGroup extends Component {
     const newBaseElementLists = _.cloneDeep(this.props.artifact.baseElements);
     const baseElementIndex = this.props.artifact.baseElements.findIndex(baseElement =>
       baseElement.uniqueId === uniqueId);
-    newBaseElementLists[baseElementIndex].fields[0].value = name;
+    const nameField = getFieldWithId(newBaseElementLists[baseElementIndex].fields, 'element_name');
+    nameField.value = name;
 
     this.props.updateBaseElementLists(newBaseElementLists, 'baseElements');
   }
@@ -321,7 +322,7 @@ export default class ListGroup extends Component {
   renderList = () => {
     const { instance } = this.props;
     const { isExpanded } = this.state;
-    const name = instance.fields[0].value;
+    const name = getFieldWithId(instance.fields, 'element_name').value;
     const allInstancesInAllTrees = this.props.getAllInstancesInAllTrees();
     const { instanceNames, baseElements, parameters } = this.props;
     const needsDuplicateNameWarning
@@ -362,7 +363,7 @@ export default class ListGroup extends Component {
               :
               <div className="card-element__heading">
                 <div className="heading-name">
-                  {instance.fields[0].value}:
+                  {name}:
                   {(needsDuplicateNameWarning
                     || needsBaseElementWarning
                     || this.hasNestedWarnings(instance.childInstances))

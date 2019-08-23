@@ -5,6 +5,7 @@ import _ from 'lodash';
 import { UncontrolledTooltip } from 'reactstrap';
 
 import ElementModal from '../ElementModal';
+import { getFieldWithType } from '../../../utils/instances';
 
 export default class ValueSetTemplate extends Component {
   viewValueSetDetails = (valueSet) => {
@@ -47,13 +48,14 @@ export default class ValueSetTemplate extends Component {
 
   deleteValueSet = (valueSetToDelete) => {
     const templateInstanceClone = _.cloneDeep(this.props.templateInstance);
-    if (templateInstanceClone.fields[1] && templateInstanceClone.fields[1].valueSets) {
-      const updatedValueSets = templateInstanceClone.fields[1].valueSets;
+    const templateInstanceVsacField = getFieldWithType(templateInstanceClone.fields, '_vsac');
+    if (templateInstanceVsacField && templateInstanceVsacField.valueSets) {
+      const updatedValueSets = templateInstanceVsacField.valueSets;
       const indexOfVSToRemove = updatedValueSets.findIndex(vs =>
         (vs.name === valueSetToDelete.name && vs.oid === valueSetToDelete.oid));
       updatedValueSets.splice(indexOfVSToRemove, 1);
       const arrayToUpdate = [
-        { [templateInstanceClone.fields[1].id]: updatedValueSets, attributeToEdit: 'valueSets' }
+        { [templateInstanceVsacField.id]: updatedValueSets, attributeToEdit: 'valueSets' }
       ];
       this.props.updateInstance(arrayToUpdate);
     }
