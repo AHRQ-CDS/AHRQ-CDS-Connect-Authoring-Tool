@@ -6,7 +6,8 @@ import pluralize from 'pluralize';
 import classNames from 'classnames';
 import { UncontrolledTooltip } from 'reactstrap';
 import { findValueAtPath } from '../../utils/find';
-import { doesBaseElementInstanceNeedWarning, hasDuplicateName, hasGroupNestedWarning } from '../../utils/warnings';
+import { doesBaseElementInstanceNeedWarning, hasDuplicateName, hasGroupNestedWarning, hasInvalidListWarning }
+  from '../../utils/warnings';
 import { getReturnType, getFieldWithId } from '../../utils/instances';
 
 import ConjunctionGroup from './ConjunctionGroup';
@@ -249,6 +250,11 @@ export default class ListGroup extends Component {
     return (
       <div className="card-element__body">
         <div>
+          {isAndOrElement && hasInvalidListWarning(instance.returnType) &&
+            <div className='warning'>
+              Warning: Elements in groups combined with and/or must all have return type 'boolean'.
+            </div>}
+
           <ExpressionPhrase
             class="expression expression__group"
             instance={instance}

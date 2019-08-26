@@ -235,3 +235,7 @@ export function hasGroupNestedWarning(
   });
   return hasNestedWarning;
 }
+
+export function hasInvalidListWarning(returnType) {
+  return returnType.toLowerCase() === 'invalid';
+}
