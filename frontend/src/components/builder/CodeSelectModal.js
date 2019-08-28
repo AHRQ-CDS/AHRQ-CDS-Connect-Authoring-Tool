@@ -286,7 +286,10 @@ export default class CodeSelectModal extends Component {
 
               <button className="secondary-button" onClick={this.closeCodeSelectModal}>Cancel</button>
 
-              <button className="primary-button element-modal__search-button" onClick={this.chooseCode}>
+              <button
+                className="primary-button element-modal__search-button"
+                disabled={!this.state.selectedCS || !this.state.codeText}
+                onClick={this.chooseCode}>
                 Select
               </button>
             </footer>
