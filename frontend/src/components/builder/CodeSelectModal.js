@@ -131,8 +131,11 @@ export default class CodeSelectModal extends Component {
     if (this.props.onElementSelected) {
       // Set the template's values initially to add it to the workspace.
       if (nameField.value === undefined || nameField.value === '') {
-        nameField.value =
-          `${codesToAdd[lastCodeIndex].codeSystem.name} ${codesToAdd[lastCodeIndex].code}`; // TODO: Best name for element
+        if (this.props.codeData && this.props.codeData.display && this.props.codeData.display.length < 60) {
+          nameField.value = this.props.codeData.display;
+        } else {
+          nameField.value = `${codesToAdd[lastCodeIndex].codeSystem.name} ${codesToAdd[lastCodeIndex].code}`;
+        }
       }
       vsacField.codes = codesToAdd;
       vsacField.static = true;
@@ -145,10 +148,13 @@ export default class CodeSelectModal extends Component {
         { [vsacField.id]: true, attributeToEdit: 'static' }
       ];
       if (nameField.value === undefined || nameField.value === '') {
-        arrayToUpdate.push({
-          [nameField.id]:
-            `${codesToAdd[lastCodeIndex].codeSystem.name} ${codesToAdd[lastCodeIndex].code}`
-        });
+        let newName;
+        if (this.props.codeData && this.props.codeData.display && this.props.codeData.display.length < 60) {
+          newName = this.props.codeData.display;
+        } else {
+          newName = `${codesToAdd[lastCodeIndex].codeSystem.name} ${codesToAdd[lastCodeIndex].code}`;
+        }
+        arrayToUpdate.push({ [nameField.id]: newName });
       }
       this.props.updateElement(arrayToUpdate);
     }
