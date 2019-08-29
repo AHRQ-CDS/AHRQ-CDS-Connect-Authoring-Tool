@@ -160,7 +160,14 @@ describe('artifacts reducer', () => {
   it('should handle clear artifact errors', () => {
     const action = { type: types.CLEAR_ARTIFACT_VALIDATION_WARNINGS };
     const newState = {
-      downloadArtifact: { isDownloading: false, downloadStatus: null, elmErrors: [], elmFiles: [] }
+      downloadArtifact: { isDownloading: false, downloadStatus: null, elmErrors: [], elmFiles: [] },
+      executeArtifact: {
+        isExecuting: false,
+        executeStatus: null,
+        results: null,
+        artifactExecuted: null,
+        patientsExecuted: null
+      }
     };
     expect(reducer([], action)).toEqual(newState);
   });
