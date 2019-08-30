@@ -961,7 +961,7 @@ function buildConceptObjectForCodes(codes, listOfConcepts) {
       code.code = code.code.replace(/'/g, '\\\'').replace(/"/g, '\\"');
       code.display = code.display.replace(/'/g, '\\\'');
       code.codeSystem.id = code.codeSystem.id.replace(/'/g, '\\\'');
-      const codeName = code.display && code.display.length < 60 ? code.display : code.code;
+      const codeName = code.display && code.display.length < 60 ? code.display.replace(/"/g, '\\"') : code.code;
       const concept = {
         name: `${code.codeSystem.name} ${code.code} Concept`,
         codes: [
