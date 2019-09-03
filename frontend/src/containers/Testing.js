@@ -43,7 +43,9 @@ class Testing extends Component {
   }
 
   componentWillReceiveProps(newProps) {
-    this.setState({ showELMErrorModal: newProps.downloadedArtifact.elmErrors.length > 0 });
+    this.setState({
+      showELMErrorModal: (newProps.executeStatus != null) && (newProps.downloadedArtifact.elmErrors.length > 0)
+    });
   }
 
   addPatient = (patient) => {
@@ -270,6 +272,7 @@ Testing.propTypes = {
   patients: PropTypes.arrayOf(patientProps).isRequired,
   artifacts: PropTypes.arrayOf(artifactProps).isRequired,
   results: PropTypes.object,
+  executeStatus: PropTypes.string,
   isExecuting: PropTypes.bool.isRequired,
   isAdding: PropTypes.bool.isRequired,
   artifactExecuted: artifactProps,
@@ -316,6 +319,7 @@ function mapStateToProps(state) {
     artifacts: state.artifacts.artifacts,
     downloadedArtifact: state.artifacts.downloadArtifact,
     results: state.artifacts.executeArtifact.results,
+    executeStatus: state.artifacts.executeArtifact.executeStatus,
     errorMessage: state.artifacts.executeArtifact.errorMessage,
     isExecuting: state.artifacts.executeArtifact.isExecuting,
     isAdding: state.testing.addPatient.isAdding,
