@@ -422,6 +422,12 @@ export function clearArtifactValidationWarnings() {
   };
 }
 
+export function clearExecutionResults() {
+  return {
+    type: types.CLEAR_EXECUTION_RESULTS
+  };
+}
+
 function sendValidateArtifactRequest(artifact) {
   return axios.post(`${API_BASE}/cql/validate`, artifact);
 }

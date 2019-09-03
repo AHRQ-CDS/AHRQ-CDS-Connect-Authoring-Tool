@@ -182,6 +182,18 @@ export default function auth(state = defaultState, action) {
         ...state,
         downloadArtifact: { isDownloading: false, downloadStatus: null, elmFiles: [], elmErrors: [] }
       };
+    case types.CLEAR_EXECUTION_RESULTS:
+      return {
+        ...state,
+        executeArtifact: {
+          isExecuting: false,
+          executeStatus: null,
+          results: null,
+          artifactExecuted: null,
+          patientsExecuted: null,
+          errorMessage: null
+        }
+      };
     case types.PUBLISH_ARTIFACT_REQUEST:
       return {
         ...state,

@@ -8,7 +8,12 @@ import { Jumbotron, Breadcrumb } from 'reactstrap';
 import _ from 'lodash';
 
 import { loadPatients, addPatient, deletePatient } from '../actions/testing';
-import { loadArtifacts, clearArtifactValidationWarnings, executeCQLArtifact } from '../actions/artifacts';
+import {
+  loadArtifacts,
+  clearArtifactValidationWarnings,
+  clearExecutionResults,
+  executeCQLArtifact
+} from '../actions/artifacts';
 import { loginVSACUser, setVSACAuthStatus, validateCode, resetCodeValidation } from '../actions/vsac';
 
 import patientProps from '../prop-types/patient';
@@ -38,7 +43,9 @@ class Testing extends Component {
   }
 
   componentWillReceiveProps(newProps) {
-    this.setState({ showELMErrorModal: newProps.downloadedArtifact.elmErrors.length > 0 });
+    this.setState({
+      showELMErrorModal: (newProps.executeStatus != null) && (newProps.downloadedArtifact.elmErrors.length > 0)
+    });
   }
 
   addPatient = (patient) => {
@@ -92,6 +99,7 @@ class Testing extends Component {
 
   closeELMErrorModal = () => {
     this.setState({ showELMErrorModal: false });
+    this.props.clearExecutionResults();
     this.props.clearArtifactValidationWarnings();
   }
 
@@ -264,6 +272,7 @@ Testing.propTypes = {
   patients: PropTypes.arrayOf(patientProps).isRequired,
   artifacts: PropTypes.arrayOf(artifactProps).isRequired,
   results: PropTypes.object,
+  executeStatus: PropTypes.string,
   isExecuting: PropTypes.bool.isRequired,
   isAdding: PropTypes.bool.isRequired,
   artifactExecuted: artifactProps,
@@ -294,6 +303,7 @@ function mapDispatchToProps(dispatch) {
     deletePatient,
     loadArtifacts,
     clearArtifactValidationWarnings,
+    clearExecutionResults,
     executeCQLArtifact,
     loginVSACUser,
     setVSACAuthStatus,
@@ -309,6 +319,7 @@ function mapStateToProps(state) {
     artifacts: state.artifacts.artifacts,
     downloadedArtifact: state.artifacts.downloadArtifact,
     results: state.artifacts.executeArtifact.results,
+    executeStatus: state.artifacts.executeArtifact.executeStatus,
     errorMessage: state.artifacts.executeArtifact.errorMessage,
     isExecuting: state.artifacts.executeArtifact.isExecuting,
     isAdding: state.testing.addPatient.isAdding,

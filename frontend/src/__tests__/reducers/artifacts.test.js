@@ -165,6 +165,21 @@ describe('artifacts reducer', () => {
     expect(reducer([], action)).toEqual(newState);
   });
 
+  it('should handle clear execution results', () => {
+    const action = { type: types.CLEAR_EXECUTION_RESULTS };
+    const newState = {
+      executeArtifact: {
+        isExecuting: false,
+        executeStatus: null,
+        results: null,
+        artifactExecuted: null,
+        patientsExecuted: null,
+        errorMessage: null
+      }
+    };
+    expect(reducer([], action)).toEqual(newState);
+  });
+
   // ----------------------- DOWNLOAD ARTIFACT ----------------------------- //
   it('should handle downloading an artifact', () => {
     let action = { type: types.DOWNLOAD_ARTIFACT_REQUEST };
