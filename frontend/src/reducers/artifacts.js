@@ -180,7 +180,11 @@ export default function auth(state = defaultState, action) {
     case types.CLEAR_ARTIFACT_VALIDATION_WARNINGS:
       return {
         ...state,
-        downloadArtifact: { isDownloading: false, downloadStatus: null, elmFiles: [], elmErrors: [] },
+        downloadArtifact: { isDownloading: false, downloadStatus: null, elmFiles: [], elmErrors: [] }
+      };
+    case types.CLEAR_EXECUTION_RESULTS:
+      return {
+        ...state,
         executeArtifact: {
           isExecuting: false,
           executeStatus: null,

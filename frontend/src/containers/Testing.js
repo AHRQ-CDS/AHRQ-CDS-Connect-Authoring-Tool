@@ -8,7 +8,12 @@ import { Jumbotron, Breadcrumb } from 'reactstrap';
 import _ from 'lodash';
 
 import { loadPatients, addPatient, deletePatient } from '../actions/testing';
-import { loadArtifacts, clearArtifactValidationWarnings, executeCQLArtifact } from '../actions/artifacts';
+import {
+  loadArtifacts,
+  clearArtifactValidationWarnings,
+  clearExecutionResults,
+  executeCQLArtifact
+} from '../actions/artifacts';
 import { loginVSACUser, setVSACAuthStatus, validateCode, resetCodeValidation } from '../actions/vsac';
 
 import patientProps from '../prop-types/patient';
@@ -92,6 +97,7 @@ class Testing extends Component {
 
   closeELMErrorModal = () => {
     this.setState({ showELMErrorModal: false });
+    this.props.clearExecutionResults();
     this.props.clearArtifactValidationWarnings();
   }
 
@@ -294,6 +300,7 @@ function mapDispatchToProps(dispatch) {
     deletePatient,
     loadArtifacts,
     clearArtifactValidationWarnings,
+    clearExecutionResults,
     executeCQLArtifact,
     loginVSACUser,
     setVSACAuthStatus,
