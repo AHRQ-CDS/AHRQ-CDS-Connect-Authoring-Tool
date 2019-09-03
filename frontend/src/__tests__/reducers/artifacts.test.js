@@ -166,7 +166,8 @@ describe('artifacts reducer', () => {
         executeStatus: null,
         results: null,
         artifactExecuted: null,
-        patientsExecuted: null
+        patientsExecuted: null,
+        errorMessage: null
       }
     };
     expect(reducer([], action)).toEqual(newState);

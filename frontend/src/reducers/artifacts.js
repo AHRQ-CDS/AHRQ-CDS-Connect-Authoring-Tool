@@ -186,7 +186,8 @@ export default function auth(state = defaultState, action) {
           executeStatus: null,
           results: null,
           artifactExecuted: null,
-          patientsExecuted: null
+          patientsExecuted: null,
+          errorMessage: null
         }
       };
     case types.PUBLISH_ARTIFACT_REQUEST:
