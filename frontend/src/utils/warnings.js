@@ -161,6 +161,38 @@ export function parameterHasDuplicateName(parameterName, id, usedBy, instanceNam
   return duplicateNameIndex !== -1;
 }
 
+export function parameterIsIncompleteWarning(type, value) {
+  if (value) {
+    switch (type) {
+      case 'datetime':
+        if (value.time && !value.date) {
+          return 'A DateTime must have at least a date.';
+        }
+        break;
+      case 'system_quantity':
+        if (value.unit && !value.quantity) {
+          return 'A Quantity must have at least a numerical value.';
+        }
+        break;
+      case 'interval_of_datetime':
+        if ((value.firstTime && !value.firstDate)
+        || (value.secondTime && !value.secondDate)) {
+          return 'A DateTime must have at least a date.';
+        }
+        break;
+      case 'interval_of_quantity':
+        if (value.unit && !(value.firstQuantity || value.secondQuantity)) {
+          return 'A Quantity must have at least a numerical value.';
+        }
+        break;
+      default:
+        break;
+    }
+  }
+
+  return null;
+}
+
 export function validateElement(instance, templateInstanceFields) {
   if (instance.validator) {
     const validator = Validators[instance.validator.type];

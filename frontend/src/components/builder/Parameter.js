@@ -20,7 +20,11 @@ import IntervalOfDateTimeEditor from './parameters/IntervalOfDateTimeEditor';
 import IntervalOfDecimalEditor from './parameters/IntervalOfDecimalEditor';
 import IntervalOfQuantityEditor from './parameters/IntervalOfQuantityEditor';
 
-import { doesParameterNeedWarning, parameterHasDuplicateName } from '../../utils/warnings';
+import {
+  doesParameterNeedWarning,
+  parameterHasDuplicateName,
+  parameterIsIncompleteWarning
+} from '../../utils/warnings';
 
 export default class Parameter extends Component {
   componentDidMount = () => {
@@ -147,6 +151,7 @@ export default class Parameter extends Component {
       this.props.comment,
       this.props.getAllInstancesInAllTrees()
     );
+    const isIncompleteWarning = parameterIsIncompleteWarning(type, value);
 
     return (
       <div className="parameter card-group card-group__top" id={this.props.id}>
@@ -179,6 +184,14 @@ export default class Parameter extends Component {
                   To delete this parameter, remove all references to it.
               </UncontrolledTooltip> }
           </div>
+
+          {(isIncompleteWarning != null)
+            && !doesHaveDuplicateName
+            && !doesHaveParameterWarning
+            && <div className="warning">
+                  {`Warning: Default value is incomplete. ${isIncompleteWarning}`}
+                </div>
+          }
 
           {doesHaveDuplicateName
             && !doesHaveParameterWarning
