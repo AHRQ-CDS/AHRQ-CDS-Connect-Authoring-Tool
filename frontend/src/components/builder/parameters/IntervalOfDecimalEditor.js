@@ -24,16 +24,18 @@ export default class IntervalOfDecimalEditor extends Component {
     }
 
     if ((firstDecimal || firstDecimal === 0) || (secondDecimal || secondDecimal === 0)) {
+      const firstDecimalForString = (firstDecimal || firstDecimal === 0) ? firstDecimal : null;
+      const secondDecimalForString = (secondDecimal || secondDecimal === 0) ? secondDecimal : null;
       if (Number.isInteger(firstDecimal)) {
         if (Number.isInteger(secondDecimal)) {
-          str = `Interval[${firstDecimal}.0,${secondDecimal}.0]`;
+          str = `Interval[${firstDecimalForString}.0,${secondDecimalForString}.0]`;
         } else {
-          str = `Interval[${firstDecimal}.0,${secondDecimal}]`;
+          str = `Interval[${firstDecimalForString}.0,${secondDecimalForString}]`;
         }
       } else if (Number.isInteger(secondDecimal)) {
-        str = `Interval[${firstDecimal},${secondDecimal}.0]`;
+        str = `Interval[${firstDecimalForString},${secondDecimalForString}.0]`;
       } else {
-        str = `Interval[${firstDecimal},${secondDecimal}]`;
+        str = `Interval[${firstDecimalForString},${secondDecimalForString}]`;
       }
       return { firstDecimal, secondDecimal, str };
     }

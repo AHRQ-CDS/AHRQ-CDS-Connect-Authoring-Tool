@@ -23,7 +23,9 @@ export default class IntervalOfIntegerEditor extends Component {
     }
 
     if ((firstInteger != null) || (secondInteger != null)) {
-      const str = `Interval[${firstInteger},${secondInteger}]`;
+      const firstIntegerForString = (firstInteger || firstInteger === 0) ? firstInteger : null;
+      const secondIntegerForString = (secondInteger || secondInteger === 0) ? secondInteger : null;
+      const str = `Interval[${firstIntegerForString},${secondIntegerForString}]`;
       return { firstInteger, secondInteger, str };
     }
     return null;

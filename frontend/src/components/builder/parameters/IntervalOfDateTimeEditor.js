@@ -43,17 +43,28 @@ export default class IntervalOfDateTimeEditor extends Component {
     }
 
     if (firstDate || secondDate || firstTime || secondTime) {
-      if (firstTime) {
-        if (secondTime) {
-          str = `Interval[@${firstDate}T${firstTime},@${secondDate}T${secondTime}]`;
+      let firstDateTime = null;
+      let secondDateTime = null;
+
+      if (firstDate) {
+        if (firstTime) {
+          firstDateTime = `@${firstDate}T${firstTime}`;
         } else {
-          str = `Interval[@${firstDate}T${firstTime},@${secondDate}]`;
+          firstDateTime = `@${firstDate}`;
         }
-      } else if (secondTime) {
-        str = `Interval[@${firstDate},@${secondDate}T${secondTime}]`;
-      } else {
-        str = `Interval[@${firstDate},@${secondDate}]`;
       }
+
+      if (secondDate) {
+        if (secondTime) {
+          secondDateTime = `@${secondDate}T${secondTime}`;
+        } else {
+          console.log(secondDate);
+          secondDateTime = `@${secondDate}`;
+        }
+      }
+
+      str = `Interval[${firstDateTime},${secondDateTime}]`;
+
       return { firstDate, firstTime, secondDate, secondTime, str };
     }
     return null;

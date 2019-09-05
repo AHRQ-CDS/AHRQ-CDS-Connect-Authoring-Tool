@@ -170,19 +170,23 @@ export function parameterIsIncompleteWarning(type, value) {
         }
         break;
       case 'system_quantity':
-        if (value.unit && !value.quantity) {
+        if (value.unit && !(value.quantity || value.quantity === 0)) {
           return 'A Quantity must have at least a numerical value.';
         }
         break;
       case 'interval_of_datetime':
         if ((value.firstTime && !value.firstDate)
         || (value.secondTime && !value.secondDate)) {
-          return 'A DateTime must have at least a date.';
+          return 'An Interval<DateTime> must have at least one date.';
         }
         break;
       case 'interval_of_quantity':
-        if (value.unit && !(value.firstQuantity || value.secondQuantity)) {
-          return 'A Quantity must have at least a numerical value.';
+        if (value.unit &&
+          !(
+            (value.firstQuantity || value.firstQuantity === 0)
+            || (value.secondQuantity || value.secondQuantity === 0)
+          )) {
+          return 'An Interval<Quantity> must have at least one numerical value.';
         }
         break;
       default:
