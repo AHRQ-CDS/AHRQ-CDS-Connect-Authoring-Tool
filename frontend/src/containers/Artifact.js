@@ -17,7 +17,7 @@ class Artifact extends Component {
     this.state = { showForm: false };
   }
 
-  componentWillMount() {
+  UNSAFE_componentWillMount() { // eslint-disable-line camelcase
     this.props.loadArtifacts();
   }
 

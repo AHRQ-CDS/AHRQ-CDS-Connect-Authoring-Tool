@@ -68,7 +68,7 @@ export default class TemplateInstance extends Component {
     };
   }
 
-  componentWillMount() {
+  UNSAFE_componentWillMount() { // eslint-disable-line camelcase
     this.props.templateInstance.fields.forEach((field) => {
       this.setState({ [field.id]: field.value });
     });
@@ -78,7 +78,7 @@ export default class TemplateInstance extends Component {
     this.setAppliedModifiers(this.props.templateInstance.modifiers || []);
   }
 
-  componentWillReceiveProps(nextProps) {
+  UNSAFE_componentWillReceiveProps(nextProps) { // eslint-disable-line camelcase
     const otherInstances = this.getOtherInstances(nextProps);
     this.setState({ otherInstances });
 

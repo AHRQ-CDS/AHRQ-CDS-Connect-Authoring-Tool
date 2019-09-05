@@ -37,12 +37,12 @@ class Testing extends Component {
     };
   }
 
-  componentWillMount() {
+  UNSAFE_componentWillMount() { // eslint-disable-line camelcase
     this.props.loadPatients();
     this.props.loadArtifacts();
   }
 
-  componentWillReceiveProps(newProps) {
+  UNSAFE_componentWillReceiveProps(newProps) { // eslint-disable-line camelcase
     this.setState({
       showELMErrorModal: (newProps.executeStatus != null) && (newProps.downloadedArtifact.elmErrors.length > 0)
     });

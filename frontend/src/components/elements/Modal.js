@@ -11,7 +11,7 @@ export default class Modal extends Component {
     };
   }
 
-  componentWillReceiveProps(nextProps) {
+  UNSAFE_componentWillReceiveProps(nextProps) { // eslint-disable-line camelcase
     this.setState({
       classNames: Modal.modalClassNames(nextProps)
     });

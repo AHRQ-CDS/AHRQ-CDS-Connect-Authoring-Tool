@@ -1,12 +1,12 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import Select from 'react-select';
 import FontAwesome from 'react-fontawesome';
 import { UncontrolledTooltip } from 'reactstrap';
 
 import VSACAuthenticationModal from '../VSACAuthenticationModal';
 import ElementModal from '../ElementModal';
 import CodeSelectModal from '../CodeSelectModal';
+import StyledSelect from '../../elements/StyledSelect';
 
 /* eslint-disable jsx-a11y/no-onchange */
 export default class Qualifier extends Component {
@@ -162,7 +162,7 @@ export default class Qualifier extends Component {
     return (
       <div className="qualifier row">
         <div className="d-flex flex-wrap col-10">
-          <Select
+          <StyledSelect
             name="Qualifier"
             aria-label="Qualifier"
             title="Qualifier"

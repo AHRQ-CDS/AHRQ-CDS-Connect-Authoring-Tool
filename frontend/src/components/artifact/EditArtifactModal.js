@@ -18,7 +18,7 @@ export default class EditArtifactModal extends Component {
     };
   }
 
-  componentWillReceiveProps(nextProps) {
+  UNSAFE_componentWillReceiveProps(nextProps) { // eslint-disable-line camelcase
     const { artifactEditing: artifact } = nextProps;
 
     if (artifact) {

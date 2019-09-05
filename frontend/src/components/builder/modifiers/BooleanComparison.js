@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import Select from 'react-select';
+
+import StyledSelect from '../../elements/StyledSelect';
 
 /* eslint-disable jsx-a11y/no-onchange */
 export default class BooleanComparison extends Component {
@@ -11,7 +12,7 @@ export default class BooleanComparison extends Component {
   render() {
     return (
       <div className="boolean-comparison">
-        <Select
+        <StyledSelect
           name="Boolean Compare?"
           aria-label="Boolean Comparison"
           title="Boolean Comparison"

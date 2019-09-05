@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import Select from 'react-select';
 import _ from 'lodash';
+
+import StyledSelect from '../../elements/StyledSelect';
 
 const { Def } = window;
 
@@ -41,7 +42,7 @@ export default class ValueComparisonObservation extends Component {
 
     return (
       <div className="value-comparison-observation">
-        <Select
+        <StyledSelect
           className="operator"
           name="Min Operator"
           title="Min Operator"
@@ -76,7 +77,7 @@ export default class ValueComparisonObservation extends Component {
           />
         </label>
 
-        <Select
+        <StyledSelect
           className="operator"
           name="Max Operator"
           title="Max Operator"

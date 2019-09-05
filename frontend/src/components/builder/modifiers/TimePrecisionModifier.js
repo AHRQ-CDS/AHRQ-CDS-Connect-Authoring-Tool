@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import Select from 'react-select';
 import moment from 'moment';
 import TimePicker from 'rc-time-picker';
 import _ from 'lodash';
+
+import StyledSelect from '../../elements/StyledSelect';
 
 /* eslint-disable jsx-a11y/no-onchange */
 export default class TimePrecisionModifier extends Component {
@@ -61,9 +62,9 @@ export default class TimePrecisionModifier extends Component {
         />
 
         <label htmlFor={precId}>
-          <Select
-            name={'Precision'}
-            aria-label={'Precision'}
+          <StyledSelect
+            name="Precision"
+            aria-label="Precision"
             id={precId}
             value={this.props.precision}
             onChange={ (e) => {

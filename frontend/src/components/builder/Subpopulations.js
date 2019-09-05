@@ -21,7 +21,7 @@ export default class Subpopulations extends Component {
     };
   }
 
-  componentWillReceiveProps(nextProps) {
+  UNSAFE_componentWillReceiveProps(nextProps) { // eslint-disable-line camelcase
     this.setState({
       subpopulations: nextProps.artifact[this.props.name].filter(sp => !sp.special),
       baseElements: nextProps.artifact[this.props.name],

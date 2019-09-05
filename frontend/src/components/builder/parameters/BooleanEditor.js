@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import Select from 'react-select';
 import _ from 'lodash';
+
+import StyledSelect from '../../elements/StyledSelect';
 
 export default class BooleanEditor extends Component {
   render() {
@@ -16,7 +17,7 @@ export default class BooleanEditor extends Component {
           </div>
 
           <div className="col-9">
-            <Select
+            <StyledSelect
               id={id}
               aria-label={'Select True or False'}
               inputProps={{ title: 'Select True or False', id: formId }}

@@ -22,12 +22,12 @@ export default class ExternalCQL extends Component {
     };
   }
 
-  componentWillMount() {
+  UNSAFE_componentWillMount() { // eslint-disable-line camelcase
     const { artifact, loadExternalCqlList } = this.props;
     loadExternalCqlList(artifact._id);
   }
 
-  componentWillReceiveProps(nextProps) {
+  UNSAFE_componentWillReceiveProps(nextProps) { // eslint-disable-line camelcase
     const showELMErrorModal =
       nextProps.externalCqlErrors ? nextProps.externalCqlErrors.length > 0 : false;
     this.setState({ showELMErrorModal });

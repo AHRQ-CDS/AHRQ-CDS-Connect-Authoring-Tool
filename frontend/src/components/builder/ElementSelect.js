@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import _ from 'lodash';
-import Select from 'react-select';
 import FontAwesome from 'react-fontawesome';
 import pluralize from 'pluralize';
 
@@ -9,6 +8,8 @@ import ElementModal from './ElementModal';
 import ElementSelectMenuRenderer from './ElementSelectMenuRenderer';
 import VSACAuthenticationModal from './VSACAuthenticationModal';
 import CodeSelectModal from './CodeSelectModal';
+import StyledSelect from '../elements/StyledSelect';
+
 import changeToCase from '../../utils/strings';
 import filterUnsuppressed from '../../utils/filter';
 import { sortAlphabeticallyByKey } from '../../utils/sort';
@@ -84,7 +85,7 @@ export default class ElementSelect extends Component {
     this.categoryInputId = '';
   }
 
-  componentWillMount() {
+  UNSAFE_componentWillMount() { // eslint-disable-line camelcase
     const { artifactId, loadExternalCqlList } = this.props;
     loadExternalCqlList(artifactId);
     this.setState({ selectedCategory: this.state.categories.find(g => g.name === 'All') });
@@ -93,7 +94,7 @@ export default class ElementSelect extends Component {
   }
 
   // Needed to correctly update this.props.categories after fields were merged in Builder
-  componentWillReceiveProps(nextProps) {
+  UNSAFE_componentWillReceiveProps(nextProps) { // eslint-disable-line camelcase
     // Updates the categories and their entries to have correct fields
     this.internalCategories = this.generateInternalCategories(nextProps);
     this.setState({
@@ -400,7 +401,7 @@ export default class ElementSelect extends Component {
             Add element
           </div>
 
-          <Select
+          <StyledSelect
             className="element-select__element-field"
             name="element-select__element-field"
             value={selectedElementValue}
@@ -413,7 +414,7 @@ export default class ElementSelect extends Component {
           />
 
           {selectedElement && !selectedElement.vsacAuthRequired &&
-            <Select
+            <StyledSelect
               className="element-select__element-field"
               value={selectedExternalLibraryName}
               placeholder={noAuthPlaceholder}
@@ -426,7 +427,7 @@ export default class ElementSelect extends Component {
         </div>
 
         {selectedElement && !selectedElement.vsacAuthRequired && selectedExternalLibrary &&
-          <Select
+          <StyledSelect
             className="element-select__external-cql-field"
             value={selectedExternalDefinitionValue}
             placeholder={externalLibraryPlaceholder}

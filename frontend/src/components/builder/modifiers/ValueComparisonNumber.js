@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import Select from 'react-select';
 import _ from 'lodash';
+
+import StyledSelect from '../../elements/StyledSelect';
 
 /* eslint-disable jsx-a11y/no-onchange */
 export default class ValueComparisonNumber extends Component {
@@ -24,7 +25,7 @@ export default class ValueComparisonNumber extends Component {
 
     return (
       <div className="value-comparison-observation">
-        <Select
+        <StyledSelect
           className="operator"
           name="Min Operator"
           title="Min Operator"
@@ -59,7 +60,7 @@ export default class ValueComparisonNumber extends Component {
           />
         </label>
 
-        <Select
+        <StyledSelect
           className="operator"
           name="Max Operator"
           title="Max Operator"

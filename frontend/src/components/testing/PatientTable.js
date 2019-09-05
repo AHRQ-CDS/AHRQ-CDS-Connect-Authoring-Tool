@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import Select from 'react-select';
 import FontAwesome from 'react-fontawesome';
 import { UncontrolledTooltip } from 'reactstrap';
 import _ from 'lodash';
@@ -15,6 +14,7 @@ import VSACAuthenticationModal from '../builder/VSACAuthenticationModal';
 import CodeService from '../../utils/code_service/CodeService';
 import PatientView from './PatientView';
 import TestingParameters from './TestingParameters';
+import StyledSelect from '../elements/StyledSelect';
 
 export default class PatientTable extends Component {
   constructor(props) {
@@ -218,8 +218,8 @@ export default class PatientTable extends Component {
 
         <div className="patient-table__modal modal__content">
           <div className="select-label">FHIR Compatible Artifacts:</div>
-          <Select
-            aria-label={'Select Artifact'}
+          <StyledSelect
+            aria-label="Select Artifact"
             inputProps={{ title: 'Select Artifact' }}
             options={artifactOptions}
             value={this.state.artifactToExecute}

@@ -2,7 +2,6 @@ import React from 'react';
 import { render } from 'react-dom';
 import { BrowserRouter as Router } from 'react-router-dom';
 import ReactModal from 'react-modal';
-import 'react-select/dist/react-select.css';
 
 /* Polyfills for IE 11 */
 import 'core-js/fn/array/find';

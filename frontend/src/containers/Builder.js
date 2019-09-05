@@ -79,7 +79,7 @@ export class Builder extends Component {
     }
   }
 
-  componentWillReceiveProps(newProps) {
+  UNSAFE_componentWillReceiveProps(newProps) { // eslint-disable-line camelcase
     this.setState({ showELMErrorModal: newProps.downloadedArtifact.elmErrors.length > 0 });
   }
 

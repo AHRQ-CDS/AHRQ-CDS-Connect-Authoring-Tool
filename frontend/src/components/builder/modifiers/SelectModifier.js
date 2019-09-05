@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
-import Select from 'react-select';
 import _ from 'lodash';
+
+import StyledSelect from '../../elements/StyledSelect';
 
 class SelectModifier extends Component {
   handleChange = (selectedOption) => {
@@ -15,7 +16,7 @@ class SelectModifier extends Component {
     return (
       <div>
         <label htmlFor={selectId}>
-          <Select
+          <StyledSelect
             name={this.props.name}
             aria-label={this.props.name}
             id={selectId}

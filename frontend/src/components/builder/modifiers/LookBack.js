@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import Select from 'react-select';
 import _ from 'lodash';
+
+import StyledSelect from '../../elements/StyledSelect';
 
 /* eslint-disable jsx-a11y/no-onchange */
 export default class LookBack extends Component {
@@ -29,7 +30,7 @@ export default class LookBack extends Component {
         </label>
 
         <label htmlFor={unitId}>
-          <Select
+          <StyledSelect
             name="unit"
             aria-label="Unit Select"
             id={unitId}

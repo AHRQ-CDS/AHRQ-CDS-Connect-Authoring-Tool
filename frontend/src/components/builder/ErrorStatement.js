@@ -1,11 +1,12 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import Select from 'react-select';
 import _ from 'lodash';
+
+import StyledSelect from '../elements/StyledSelect';
 
 export default class ErrorStatement extends Component {
   // Ensures there is at least one statement to start
-  componentWillMount = () => {
+  UNSAFE_componentWillMount = () => { // eslint-disable-line camelcase
     const { statements } = this.props.errorStatement;
     if (statements.length < 1) {
       this.addStatement(null);
@@ -140,7 +141,7 @@ export default class ErrorStatement extends Component {
 
   // Renders if part
   renderCondition = (statement, parent, index) => (
-    <Select
+    <StyledSelect
       key={`condition-${parent != null ? parent : -1}-${index}`}
       inputProps={{ id: `condition-${parent != null ? parent : -1}-${index}` }}
       index={index}

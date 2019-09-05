@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import FontAwesome from 'react-fontawesome';
-import Select from 'react-select';
 import _ from 'lodash';
 import Modal from 'react-modal';
 
+import StyledSelect from '../elements/StyledSelect';
 import { getFieldWithId, getFieldWithType } from '../../utils/instances';
 
 export default class CodeSelectModal extends Component {
@@ -255,7 +255,7 @@ export default class CodeSelectModal extends Component {
                 />
 
                 <div>
-                  <Select
+                  <StyledSelect
                     className="element-modal__search-system"
                     placeholder={'Select code system'}
                     aria-label={'Select code system'}
