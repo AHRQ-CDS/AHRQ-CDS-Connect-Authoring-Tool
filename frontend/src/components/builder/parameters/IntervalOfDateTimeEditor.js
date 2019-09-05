@@ -58,7 +58,6 @@ export default class IntervalOfDateTimeEditor extends Component {
         if (secondTime) {
           secondDateTime = `@${secondDate}T${secondTime}`;
         } else {
-          console.log(secondDate);
           secondDateTime = `@${secondDate}`;
         }
       }
