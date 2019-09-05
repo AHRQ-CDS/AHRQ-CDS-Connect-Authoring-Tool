@@ -251,7 +251,8 @@ function addVSandCodeText(expressionArray, valueSets, codes) {
   // If there is more than one value set/code, add the rest to a tooltip.
   let tooltipText = '';
   const valueSetValues = valueSets.map(vs => vs.name);
-  const codeValues = codes.map(code => (code.display ? code.display : `${code.code} (${code.codeSystem.name})`));
+  const codeValues = codes.map(code =>
+    ((code.display && code.display.length < 110) ? code.display : `${code.code} (${code.codeSystem.name})`));
   const allValues = valueSetValues.concat(codeValues);
 
   if (allValues.length > 0) {
