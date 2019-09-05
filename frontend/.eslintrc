@@ -2,7 +2,8 @@
   "extends": [
     "react-app",
     "airbnb-base",
-    "plugin:jsx-a11y/recommended"
+    "plugin:jsx-a11y/recommended",
+    "plugin:import/errors"
   ],
   "rules": {
     "comma-dangle": 0,
