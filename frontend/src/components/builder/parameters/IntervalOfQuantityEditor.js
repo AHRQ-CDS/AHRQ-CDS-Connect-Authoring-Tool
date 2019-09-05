@@ -42,7 +42,7 @@ export default class IntervalOfQuantityEditor extends Component {
     }
 
     if ((firstQuantity || firstQuantity === 0) || (secondQuantity || secondQuantity === 0) || unit) {
-      const escapedQuoteUnit = unit ? unit.replace(/'/g, '\\\'') : unit;
+      const escapedQuoteUnit = (unit ? unit.replace(/'/g, '\\\'') : unit) || '1';
       if (Number.isInteger(firstQuantity)) {
         if (Number.isInteger(secondQuantity)) {
           str = `Interval[${firstQuantity}.0 '${escapedQuoteUnit}',${secondQuantity}.0 '${escapedQuoteUnit}']`;
