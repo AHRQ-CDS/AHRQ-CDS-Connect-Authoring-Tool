@@ -55,6 +55,7 @@ export default class DateTimeEditor extends Component {
                 ? moment(value.date, 'YYYY-MM-DD')
                 : null}
               dateFormat="L"
+              autoComplete="off"
               onChange={ (e) => {
                 updateInstance({ name, type, label, value: this.assignValue(e, 'date') });
               }}
@@ -68,6 +69,7 @@ export default class DateTimeEditor extends Component {
                 moment(_.get(value, 'time', null), 'HH:mm:ss').isValid()
                 ? moment(value.time, 'HH:mm:ss')
                 : null}
+              autoComplete="off"
               onChange={ (e) => {
                 updateInstance({ name, type, label, value: this.assignValue(e, 'time') });
               }}

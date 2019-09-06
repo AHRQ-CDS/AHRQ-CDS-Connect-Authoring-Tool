@@ -294,7 +294,7 @@ export default class CodeSelectModal extends Component {
 
               <button
                 className="primary-button element-modal__search-button"
-                disabled={!this.state.selectedCS || !this.state.codeText}
+                disabled={!this.state.selectedCS || !this.state.codeText || !this.state.codeSystemText}
                 onClick={this.chooseCode}>
                 Select
               </button>

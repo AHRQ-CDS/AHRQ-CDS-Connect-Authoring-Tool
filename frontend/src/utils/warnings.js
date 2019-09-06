@@ -177,7 +177,7 @@ export function parameterIsIncompleteWarning(type, value) {
       case 'interval_of_datetime':
         if ((value.firstTime && !value.firstDate)
         || (value.secondTime && !value.secondDate)) {
-          return 'An Interval<DateTime> must have at least one date.';
+          return 'An Interval<DateTime> must include a date.';
         }
         break;
       case 'interval_of_quantity':
