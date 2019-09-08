@@ -70,6 +70,8 @@
     "xml2js": "^0.4.19"
   },
   "devDependencies": {
+    "@testing-library/jest-dom": "^4.1.0",
+    "@testing-library/react": "^9.1.4",
     "axios-mock-adapter": "^1.8.1",
     "babel-eslint": "10.0.2",
     "chai": "^4.1.0",
@@ -103,5 +105,18 @@
     "lint-css": "stylelint 'src/styles/**/*.scss'",
     "lint": "eslint .",
     "lint-fix": "eslint --fix .; exit 0"
+  },
+  "browserslist": {
+    "development": [
+      "last 2 Chrome versions",
+      "last 2 Firefox versions",
+      "last 2 Safari versions"
+    ],
+    "production": [
+      "last 2 Chrome versions",
+      "last 2 Firefox versions",
+      "last 2 Safari versions",
+      "ie 11"
+    ]
   }
 }

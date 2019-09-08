@@ -349,6 +349,7 @@ const genericInstance = {
     }
   ],
   modifiers: [],
+  uniqueId: 'uuid'
 };
 
 const genericInstanceWithModifiers = {

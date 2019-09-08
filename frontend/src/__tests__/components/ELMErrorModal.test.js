@@ -1,14 +1,53 @@
+import React from 'react';
 import ELMErrorModal from '../../components/builder/ELMErrorModal';
-import { fullRenderComponent } from '../../utils/test_helpers';
+import { render, fireEvent } from '../../utils/test-utils';
 
-const closeModal = () => {};
+describe('<ELMErrorModal />', () => {
+  it('does not render the modal if it is not opened', () => {
+    const { container } = render(
+      <ELMErrorModal
+        isOpen={false}
+        closeModal={jest.fn()}
+        errors={[]}
+      />
+    );
 
-test('renders modal hidden', () => {
-  const component = fullRenderComponent(ELMErrorModal, { isOpen: false, closeModal, errors: [] });
-  expect(component.children().length).toEqual(1);
-});
+    expect(container.querySelector('.element-modal')).toBeEmpty();
+    expect(document.body.querySelector('.ReactModalPortal')).toBeEmpty();
+  });
 
-test('renders modal displayed', () => {
-  const component = fullRenderComponent(ELMErrorModal, { isOpen: false, closeModal, errors: [] });
-  expect(component.find('li')).toHaveLength(0);
+  it('renders the error messages', () => {
+    render(
+      <ELMErrorModal
+        isOpen={true}
+        closeModal={jest.fn()}
+        errors={[{ message: 'Message 1' }, { message: 'Message 2' }, { message: 'Message 1' }]}
+      />
+    );
+
+    const modalBody = document.body.querySelector('.modal__body');
+    expect(modalBody).toHaveTextContent(
+      'We detected some errors in the ELM files you just used:'
+    );
+    const errorMessages = modalBody.querySelectorAll('li');
+    expect(errorMessages).toHaveLength(2);
+    expect(errorMessages[0]).toHaveTextContent('Message 1');
+    expect(errorMessages[1]).toHaveTextContent('Message 2');
+  });
+
+  it('calls the closeModal prop when closed', () => {
+    const closeModal = jest.fn();
+
+    render(
+      <ELMErrorModal
+        isOpen={true}
+        closeModal={closeModal}
+        errors={[{ message: 'Message 1' }, { message: 'Message 2' }, { message: 'Message 1' }]}
+      />
+    );
+
+    fireEvent.click(document.body.querySelector('.modal__footer button[type="button"]'));
+
+    expect(closeModal).toBeCalled();
+  });
 });

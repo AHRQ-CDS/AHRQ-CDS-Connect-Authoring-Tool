@@ -1,109 +1,114 @@
+import React from 'react';
 import ArtifactTable from '../../../components/artifact/ArtifactTable';
-import { shallowRenderComponent, fullRenderComponent, ReactWrapper } from '../../../utils/test_helpers';
+import { render, fireEvent } from '../../../utils/test-utils';
 
-const match = {
-  path: ''
-};
+describe('<ArtifactTable />', () => {
+  const match = {
+    path: ''
+  };
 
-const artifactsMock = [{
-  _id: 'blah',
-  name: 'My CDS Artifact',
-  version: 'Alpha',
-  updatedAt: '2012-10-15T21:26:17Z'
-}, {
-  _id: 'blah2',
-  name: 'My Second CDS Artifact',
-  version: 'Alpha',
-  updatedAt: '2012-11-15T21:26:17Z'
-}];
+  const artifactsMock = [
+    {
+      _id: 'blah',
+      name: 'My CDS Artifact',
+      version: 'Alpha',
+      updatedAt: '2012-10-15T21:26:17Z'
+    },
+    {
+      _id: 'blah2',
+      name: 'My Second CDS Artifact',
+      version: 'Alpha',
+      updatedAt: '2012-11-15T21:26:17Z'
+    }
+  ];
 
-test('ArtifactTable renders without crashing', () => {
-  const afterAddArtifactMock = jest.fn();
-  const component = shallowRenderComponent(ArtifactTable, {
-    match,
-    afterAddArtifact: afterAddArtifactMock,
-    artifacts: artifactsMock,
-    deleteArtifact: jest.fn(),
-    updateAndSaveArtifact: jest.fn()
+  it('renders artifacts', () => {
+    const { container } = render(
+      <ArtifactTable
+        match={match}
+        artifacts={artifactsMock}
+        afterAddArtifact={jest.fn()}
+        deleteArtifact={jest.fn()}
+        updateAndSaveArtifact={jest.fn()}
+      />
+    );
+
+    expect(container.querySelectorAll('tbody tr')).toHaveLength(artifactsMock.length);
   });
 
-  expect(component).toBeDefined();
-});
+  it('allows editing of artifacts', () => {
+    const updateAndSaveArtifact = jest.fn();
+    const { container } = render(
+      <ArtifactTable
+        match={match}
+        artifacts={artifactsMock}
+        afterAddArtifact={jest.fn()}
+        deleteArtifact={jest.fn()}
+        updateAndSaveArtifact={updateAndSaveArtifact}
+      />
+    );
 
-test('ArtifactTable renders artifacts', () => {
-  const afterAddArtifactMock = jest.fn();
-  const component = shallowRenderComponent(ArtifactTable, {
-    match,
-    afterAddArtifact: afterAddArtifactMock,
-    artifacts: artifactsMock,
-    deleteArtifact: jest.fn(),
-    updateAndSaveArtifact: jest.fn()
+    fireEvent.click(container.querySelector('button.edit-artifact-button'));
+
+    fireEvent.change(
+      document.body.querySelector('input[name="name"]'),
+      { target: { name: 'name', value: 'Edited Artifact Name' } }
+    );
+    fireEvent.change(
+      document.body.querySelector('input[name="version"]'),
+      { target: { name: 'version', value: 'Edited Artifact Version' } }
+    );
+    fireEvent.click(document.body.querySelector('button[type="submit"]'));
+
+    expect(updateAndSaveArtifact).toBeCalledWith(
+      artifactsMock[0],
+      { name: 'Edited Artifact Name', version: 'Edited Artifact Version' }
+    );
   });
 
-  expect(component.find('tbody tr')).toHaveLength(artifactsMock.length);
-});
+  it('allows closing of the edit modal', () => {
+    const { container } = render(
+      <ArtifactTable
+        match={match}
+        artifacts={artifactsMock}
+        afterAddArtifact={jest.fn()}
+        deleteArtifact={jest.fn()}
+        updateAndSaveArtifact={jest.fn()}
+      />
+    );
 
-test('ArtifactTable allows editing of artifacts', () => {
-  const afterAddArtifactMock = jest.fn();
-  const component = fullRenderComponent(ArtifactTable, {
-    match,
-    afterAddArtifact: afterAddArtifactMock,
-    artifacts: artifactsMock,
-    deleteArtifact: jest.fn(),
-    updateAndSaveArtifact: jest.fn()
+    fireEvent.click(container.querySelector('button.edit-artifact-button'));
+    expect(document.querySelector('.artifact-table__modal')).not.toBeEmpty();
+
+    fireEvent.click(document.querySelector('.modal__deletebutton'));
+    expect(document.querySelector('.artifact-table__modal')).toBeNull();
   });
 
-  const button = component.find('button.edit-artifact-button').first();
-  const editModal = component.children().findWhere(n => n.node.props && n.node.props.id === 'edit-modal');
+  it('allows deleting of artifacts', () => {
+    const deleteArtifact = jest.fn();
 
-  expect(component.state('showEditArtifactModal')).toEqual(false);
-  expect(component.state('artifactEditing')).toEqual(null);
-  expect(editModal.prop('isOpen')).toEqual(false);
-  button.simulate('click');
-  component.update();
-  expect(component.state('showEditArtifactModal')).toEqual(true);
-  expect(component.state('artifactEditing')).not.toEqual(null);
-  expect(editModal.prop('isOpen')).toEqual(true);
+    const { container } = render(
+      <ArtifactTable
+        match={match}
+        artifacts={artifactsMock}
+        afterAddArtifact={jest.fn()}
+        deleteArtifact={deleteArtifact}
+        updateAndSaveArtifact={jest.fn()}
+      />
+    );
 
-  // this allows you to continue using the enzyme wrapper API
-  const modalContent = new ReactWrapper(editModal.node.portal, true);
+    fireEvent.click(container.querySelector('button.danger-button'));
 
-  expect(modalContent.text()).toContain('Edit Artifact');
-  modalContent.find('.modal__deletebutton').simulate('click');
-  component.update();
-  expect(component.state('showEditArtifactModal')).toEqual(false);
-  // expect(component.state('artifactEditing')).toEqual(null);
-  expect(editModal.prop('isOpen')).toEqual(false);
-});
+    expect(document.querySelector('.modal__heading')).toHaveTextContent('Delete Artifact Confirmation');
 
-test('ArtifactTable delete opens confirmation modal and deletes from modal', () => {
-  const afterAddArtifactMock = jest.fn();
-  const deleteArtifactMock = jest.fn();
-  const component = fullRenderComponent(ArtifactTable, {
-    match,
-    afterAddArtifact: afterAddArtifactMock,
-    artifacts: artifactsMock,
-    editArtifact: jest.fn(),
-    deleteArtifact: deleteArtifactMock,
-    updateAndSaveArtifact: jest.fn()
+    const [artifactName, artifactVersion] =
+      document.querySelectorAll('.delete-artifact-confirmation-modal .artifact-info');
+
+    expect(artifactName).toHaveTextContent(`Name: ${artifactsMock[0].name}`);
+    expect(artifactVersion).toHaveTextContent(`Version: ${artifactsMock[0].version}`);
+
+    fireEvent.click(document.body.querySelector('button[type="submit"]'));
+
+    expect(deleteArtifact).toBeCalledWith(artifactsMock[0]);
   });
-
-  const confirmDeleteModal = component.children().findWhere(n => (
-    n.node.props && n.node.props.id === 'confirm-delete-modal'
-  ));
-  const button = component.find('button.danger-button').first();
-
-  expect(confirmDeleteModal.prop('isOpen')).toEqual(false);
-  expect(component.state('showConfirmDeleteModal')).toEqual(false);
-  expect(component.state('artifactToDelete')).toEqual(null);
-  button.simulate('click');
-  expect(confirmDeleteModal.prop('isOpen')).toEqual(true);
-  expect(component.state('showConfirmDeleteModal')).toEqual(true);
-  expect(component.state('artifactToDelete')).not.toEqual(null);
-
-  const modalContent = new ReactWrapper(confirmDeleteModal.node.portal, true);
-  expect(modalContent.text()).toContain('Delete Artifact Confirmation');
-
-  modalContent.find('form').simulate('submit');
-  expect(deleteArtifactMock).toHaveBeenCalled();
 });

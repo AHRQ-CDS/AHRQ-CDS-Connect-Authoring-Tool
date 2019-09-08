@@ -4,6 +4,8 @@ import _ from 'lodash';
 
 import StyledSelect from '../../elements/StyledSelect';
 
+const options = [{ value: 'true', label: 'True' }, { value: 'false', label: 'False' }];
+
 export default class BooleanEditor extends Component {
   render() {
     const { id, name, type, label, value, updateInstance } = this.props;
@@ -21,8 +23,8 @@ export default class BooleanEditor extends Component {
               id={id}
               aria-label={'Select True or False'}
               inputProps={{ title: 'Select True or False', id: formId }}
-              options={[{ value: 'true', label: 'True' }, { value: 'false', label: 'False' }]}
-              value={value}
+              options={options}
+              value={options.find(option => option.value === value)}
               onChange={ (e) => { updateInstance({ name, type, label, value: _.get(e, 'value', null) }); }}
             />
           </div>

@@ -1,72 +1,61 @@
+import React from 'react';
 import PatientView from '../../../components/testing/PatientView';
-import { shallowRenderComponent } from '../../../utils/test_helpers';
+import { render } from '../../../utils/test-utils';
 import mockPatientDstu2 from '../../../mocks/mockPatientDstu2';
 import mockPatientStu3 from '../../../mocks/mockPatientStu3';
 
-let component;
+describe('<PatientView />', () => {
+  it('renders DSTU2 without crashing', () => {
+    const { container } = render(
+      <PatientView patient={mockPatientDstu2} />
+    );
 
-test('PatientView renders DSTU2 without crashing', () => {
-  const props = {
-    patient: mockPatientDstu2
-  };
+    expect(container).not.toBeEmpty();
+  });
 
-  component = shallowRenderComponent(PatientView, props);
+  it('header renders DSTU2 correctly', () => {
+    const { container } = render(
+      <PatientView patient={mockPatientDstu2} />
+    );
 
-  expect(component).toBeDefined();
-});
+    expect(container.querySelectorAll('.patient-view__patient')).toHaveLength(1);
+    expect(container.querySelector('.patient-data-name')).toHaveTextContent('Robin67 Baumbach677');
+    expect(container.querySelector('.patient-data-details-gender')).toHaveTextContent('female');
+    expect(container.querySelector('.patient-data-details-age')).toHaveTextContent('34 yrs');
+  });
 
-test('PatientView header renders DSTU2 correctly', () => {
-  const props = {
-    patient: mockPatientDstu2
-  };
+  it('renders the DSTU2 resources', () => {
+    const { container } = render(
+      <PatientView patient={mockPatientDstu2} />
+    );
 
-  component = shallowRenderComponent(PatientView, props);
+    expect(container.querySelectorAll('.patient-view__resources')).toHaveLength(1);
+  });
 
-  expect(component.find('.patient-view__patient')).toHaveLength(1);
-  expect(component.find('.patient-data-name').text()).toEqual('Robin67 Baumbach677');
-  expect(component.find('.patient-data-details-gender').text()).toEqual('female');
-  expect(component.find('.patient-data-details-age').text()).toEqual('34 yrs');
-});
+  it('renders STU3 without crashing', () => {
+    const { container } = render(
+      <PatientView patient={mockPatientStu3} />
+    );
 
-test('PatientView renders the DSTU2 resources', () => {
-  const props = {
-    patient: mockPatientDstu2
-  };
+    expect(container).not.toBeEmpty();
+  });
 
-  component = shallowRenderComponent(PatientView, props);
+  it('header renders STU3 correctly', () => {
+    const { container } = render(
+      <PatientView patient={mockPatientStu3} />
+    );
 
-  expect(component.find('.patient-view__resources')).toHaveLength(1);
-});
+    expect(container.querySelectorAll('.patient-view__patient')).toHaveLength(1);
+    expect(container.querySelector('.patient-data-name')).toHaveTextContent('Arnulfo253 McClure239');
+    expect(container.querySelector('.patient-data-details-gender')).toHaveTextContent('male');
+    expect(container.querySelector('.patient-data-details-age')).toHaveTextContent('33 yrs');
+  });
 
-test('PatientView renders STU3 without crashing', () => {
-  const props = {
-    patient: mockPatientStu3
-  };
+  it('renders the STU3 resources', () => {
+    const { container } = render(
+      <PatientView patient={mockPatientStu3} />
+    );
 
-  component = shallowRenderComponent(PatientView, props);
-
-  expect(component).toBeDefined();
-});
-
-test('PatientView header renders STU3 correctly', () => {
-  const props = {
-    patient: mockPatientStu3
-  };
-
-  component = shallowRenderComponent(PatientView, props);
-
-  expect(component.find('.patient-view__patient')).toHaveLength(1);
-  expect(component.find('.patient-data-name').text()).toEqual('Arnulfo253 McClure239');
-  expect(component.find('.patient-data-details-gender').text()).toEqual('male');
-  expect(component.find('.patient-data-details-age').text()).toEqual('33 yrs');
-});
-
-test('PatientView renders the STU3 resources', () => {
-  const props = {
-    patient: mockPatientStu3
-  };
-
-  component = shallowRenderComponent(PatientView, props);
-
-  expect(component.find('.patient-view__resources')).toHaveLength(1);
+    expect(container.querySelectorAll('.patient-view__resources')).toHaveLength(1);
+  });
 });

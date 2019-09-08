@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Fragment, Component } from 'react';
 import { Helmet } from 'react-helmet';
 import PropTypes from 'prop-types';
 
@@ -10,7 +10,7 @@ export default class Analytics extends Component {
     }
 
     return (
-      <noscript>
+      <Fragment>
         <Helmet>
           {/* Google Tag Manager */}
           <script type="text/javascript">{`
@@ -25,13 +25,15 @@ export default class Analytics extends Component {
           <script type="text/javascript" src={dapURL} id="_fed_an_ua_tag"></script>
           {/* End DAP Analytics */}
         </Helmet>
-        <iframe src={`https://www.googletagmanager.com/ns.html?id=${gtmKey}`}
-                height="0"
-                width="0"
-                title="Google Tag Manager"
-                style={{ display: 'none', visibility: 'hidden' }}>
-        </iframe>
-      </noscript>
+        <noscript>
+          <iframe src={`https://www.googletagmanager.com/ns.html?id=${gtmKey}`}
+                  height="0"
+                  width="0"
+                  title="Google Tag Manager"
+                  style={{ display: 'none', visibility: 'hidden' }}>
+          </iframe>
+        </noscript>
+      </Fragment>
     );
   }
 }

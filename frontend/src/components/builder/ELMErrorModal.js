@@ -41,6 +41,7 @@ class ELMErrorModal extends Component {
             </main>
             <footer className="modal__footer">
               <button className="primary-button"
+                      type="button"
                       onClick={ this.props.closeModal }
                       onKeyDown={ e => this.enterKeyCheck(this.props.closeModal, null, e) }>
                       Close

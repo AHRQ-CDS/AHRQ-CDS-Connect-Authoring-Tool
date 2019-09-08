@@ -1,34 +1,35 @@
+import React from 'react';
+import { Provider } from 'react-redux';
 import { createMockStore } from 'redux-test-utils';
-import { Route } from 'react-router-dom';
 import PrivateRoute from '../../containers/PrivateRoute';
-import NotLoggedInPage from '../../components/NotLoggedInPage';
-import Artifact from '../../containers/Artifact';
-import { shallowRenderContainer } from '../../utils/test_helpers';
+import { render } from '../../utils/test-utils';
 
-test('Unauthenticated user is rendered a Not Logged In message', () => {
-  const state = {
-    auth: { isAuthenticated: false }
-  };
-  const props = {
-    component: Artifact,
-    path: ''
-  };
-  const component = shallowRenderContainer(PrivateRoute, props, createMockStore(state));
+describe('<PrivateRoute />', () => {
+  it('Unauthenticated user is rendered a Not Logged In message', () => {
+    const store = createMockStore({
+      auth: { isAuthenticated: false }
+    });
 
-  expect(component).toBeDefined();
-  expect(component.dive().find(Route).prop('component')).toBe(NotLoggedInPage);
-});
+    const { container } = render(
+      <Provider store={store}>
+        <PrivateRoute component={() => <div>Private route</div>} path="" />
+      </Provider>
+    );
 
-test('Authenticated user is rendered the correct component', () => {
-  const state = {
-    auth: { isAuthenticated: true }
-  };
-  const props = {
-    component: Artifact,
-    path: ''
-  };
-  const component = shallowRenderContainer(PrivateRoute, props, createMockStore(state));
+    expect(container).toHaveTextContent('You must be logged in to access');
+  });
 
-  expect(component).toBeDefined();
-  expect(component.dive().find(Route).prop('component')).toBe(Artifact);
+  it('Authenticated user is rendered the correct component', () => {
+    const store = createMockStore({
+      auth: { isAuthenticated: true }
+    });
+
+    const { container } = render(
+      <Provider store={store}>
+        <PrivateRoute component={() => <div>Private route</div>} path="" />
+      </Provider>
+    );
+
+    expect(container).toHaveTextContent('Private route');
+  });
 });

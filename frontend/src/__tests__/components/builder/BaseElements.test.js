@@ -1,108 +1,101 @@
+import React from 'react';
 import BaseElements from '../../../components/builder/BaseElements';
-import TemplateInstance from '../../../components/builder/TemplateInstance';
-import ConjunctionGroup from '../../../components/builder/ConjunctionGroup';
-import ElementSelect from '../../../components/builder/ElementSelect';
-import ListGroup from '../../../components/builder/ListGroup';
-import { shallowRenderComponent, fullRenderComponentOnBody } from '../../../utils/test_helpers';
+import { render, fireEvent } from '../../../utils/test-utils';
 import { elementGroups, genericBaseElementInstance, genericBaseElementListInstance }
   from '../../../utils/test_fixtures';
 
-let component;
-let listBaseElementComponent;
+describe('<BaseElements />', () => {
+  const renderComponent = (props = {}) =>
+    render(
+      <BaseElements
+        addBaseElement={jest.fn()}
+        addInstance={jest.fn()}
+        baseElements={[]}
+        deleteInstance={jest.fn()}
+        editInstance={jest.fn()}
+        externalCqlList={[]}
+        getAllInstances={jest.fn()}
+        getAllInstancesInAllTrees={jest.fn(() => [])}
+        getVSDetails={jest.fn()}
+        instance={null}
+        instanceNames={[]}
+        isRetrievingDetails={false}
+        isSearchingVSAC={false}
+        isValidatingCode={false}
+        loadExternalCqlList={jest.fn()}
+        loadValueSets={jest.fn()}
+        loginVSACUser={jest.fn()}
+        parameters={[]}
+        resetCodeValidation={jest.fn()}
+        scrollToElement={jest.fn()}
+        searchVSACByKeyword={jest.fn()}
+        setVSACAuthStatus={jest.fn()}
+        templates={[]}
+        treeName="baseElements"
+        updateBaseElementLists={jest.fn()}
+        updateInstanceModifiers={jest.fn()}
+        validateCode={jest.fn()}
+        validateReturnType={false}
+        vsacDetailsCodes={[]}
+        vsacDetailsCodesError=""
+        vsacFHIRCredentials={{ username: 'name', password: 'pass' }}
+        vsacSearchCount={0}
+        vsacSearchResults={[]}
+        {...props}
+      />
+    );
 
-const getAllInstances = jest.fn();
-getAllInstances.mockReturnValue(genericBaseElementListInstance.childInstances);
+  it('renders separate template instances', () => {
+    const baseElements = [genericBaseElementInstance, genericBaseElementInstance];
 
-beforeEach(() => {
-  component = shallowRenderComponent(BaseElements, {
-    treeName: 'baseElements',
-    loadValueSets: jest.fn(),
-    templates: [],
-    instance: { baseElements: [genericBaseElementInstance, genericBaseElementInstance] },
-    addBaseElement: jest.fn(),
-    editInstance: jest.fn(),
-    updateInstanceModifiers: jest.fn(),
-    deleteInstance: jest.fn(),
-    instanceNames: [],
-    getAllInstancesInAllTrees: jest.fn(() => []),
-    parameters: [],
-    loginVSACUser: jest.fn(),
-    setVSACAuthStatus: jest.fn(),
-    searchVSACByKeyword: jest.fn(),
-    isSearchingVSAC: false,
-    vsacSearchResults: [],
-    vsacSearchCount: 0,
-    getVSDetails: jest.fn(),
-    isRetrievingDetails: false,
-    vsacDetailsCodes: [],
-    vsacFHIRCredentials: { username: 'name', password: 'pass' },
-    isValidatingCode: false,
-    validateCode: jest.fn(),
-    resetCodeValidation: jest.fn(),
-    validateReturnType: false,
-    externalCqlList: [],
-    loadExternalCqlList: jest.fn()
+    const { container } = renderComponent({
+      baseElements,
+      instance: { baseElements }
+    });
+
+    const templateInstanceHeaders = container.querySelectorAll('.card-element__header');
+    expect(templateInstanceHeaders).toHaveLength(2);
+    expect(templateInstanceHeaders[0]).toHaveTextContent('Observation');
+    expect(templateInstanceHeaders[1]).toHaveTextContent('Observation');
   });
 
-  listBaseElementComponent = fullRenderComponentOnBody(BaseElements, {
-    treeName: 'baseElements',
-    loadValueSets: jest.fn(),
-    templates: elementGroups,
-    instance: { baseElements: [genericBaseElementListInstance] },
-    addBaseElement: jest.fn(),
-    getAllInstances,
-    getAllInstancesInAllTrees: jest.fn(() => []),
-    editInstance: jest.fn(),
-    updateInstanceModifiers: jest.fn(),
-    deleteInstance: jest.fn(),
-    instanceNames: [],
-    parameters: [],
-    baseElements: [],
-    loginVSACUser: jest.fn(),
-    setVSACAuthStatus: jest.fn(),
-    searchVSACByKeyword: jest.fn(),
-    isSearchingVSAC: false,
-    vsacSearchResults: [],
-    vsacSearchCount: 0,
-    getVSDetails: jest.fn(),
-    isRetrievingDetails: false,
-    vsacDetailsCodes: [],
-    vsacFHIRCredentials: { username: 'name', password: 'pass' },
-    isValidatingCode: false,
-    validateCode: jest.fn(),
-    resetCodeValidation: jest.fn(),
-    validateReturnType: false,
-    externalCqlList: [],
-    loadExternalCqlList: jest.fn()
+  it('can render a list group with conjunction and a template instance inside', () => {
+    const baseElements = [genericBaseElementListInstance];
+    const getAllInstances = jest.fn();
+
+    getAllInstances.mockReturnValue(genericBaseElementListInstance.childInstances);
+
+    const { container } = renderComponent({
+      baseElements,
+      getAllInstances,
+      instance: { baseElements, uniqueId: 'uuid' },
+      templates: elementGroups
+    });
+
+    // ListGroup renders a ConjunctionGroup
+    const conjunctions = container.querySelectorAll('.subpopulations');
+    expect(conjunctions).toHaveLength(1);
+
+    // ConjunctionGroup renders a TemplateInstance and an ElementSelect
+    const [conjunctionGroup] = conjunctions;
+    const expressPhrase = conjunctionGroup.querySelectorAll('.expression-item');
+
+    console.log('phrases');
+    expect(expressPhrase[0]).toHaveTextContent('Union');
+    expect(expressPhrase[1]).toHaveTextContent('of');
+    expect(expressPhrase[2]).toHaveTextContent('VSAC Observation');
+
+    const elementSelects = conjunctionGroup.querySelectorAll('.element-select');
+    expect(elementSelects).toHaveLength(1);
+
+    // The Type options in the Conjunction group match the List options, not the usual operations
+    const conjunctionSelect = conjunctionGroup.querySelector('.card-group__conjunction-select');
+    fireEvent.keyDown(conjunctionSelect, { keyCode: 40 });
+
+    const listOperations = elementGroups[3].entries;
+    const menuOptions = conjunctionSelect.querySelectorAll('.conjunction-select__option');
+    expect(menuOptions).toHaveLength(2);
+    expect(menuOptions[0]).toHaveTextContent(listOperations[0].name);
+    expect(menuOptions[1]).toHaveTextContent(listOperations[1].name);
   });
-});
-
-test('Base Elements renders separate template instances', () => {
-  expect(component.find(TemplateInstance)).toHaveLength(2);
-  expect(component.find(ConjunctionGroup)).toHaveLength(0);
-});
-
-test('Base Elements can render a list group with conjunction and a template instance inside', () => {
-  const listGroupComponent = listBaseElementComponent.find(ListGroup);
-  expect(listGroupComponent).toHaveLength(1);
-
-  // ListGroup renders a ConjunctionGroup
-  const conjunctionInListComponent = listGroupComponent.find(ConjunctionGroup);
-  expect(conjunctionInListComponent).toHaveLength(1);
-
-  // ConjunctionGroup renders a TemplateInstance and an ElementSelect
-  const templateInstanceComponent = conjunctionInListComponent.find(TemplateInstance);
-  expect(templateInstanceComponent).toHaveLength(1);
-
-  const elementSelect = conjunctionInListComponent.find(ElementSelect);
-  expect(elementSelect).toHaveLength(1);
-
-  // The Type options in the Conjunction group match the List options, not the usual operations
-  const conjunctionSelection = conjunctionInListComponent.find('.card-group__conjunction-select');
-  conjunctionSelection.find('.Select-control').simulate('mouseDown', { button: 0 });
-  const typeOptions = conjunctionSelection.find('.Select-option');
-  const listOperations = elementGroups[3].entries;
-  expect(typeOptions).toHaveLength(2);
-  expect(typeOptions.at(0).text()).toEqual(listOperations[0].name);
-  expect(typeOptions.at(1).text()).toEqual(listOperations[1].name);
 });

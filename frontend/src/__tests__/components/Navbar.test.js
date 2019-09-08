@@ -1,12 +1,17 @@
+import React from 'react';
 import Navbar from '../../components/Navbar';
-import { shallowRenderComponent } from '../../utils/test_helpers';
+import { render } from '../../utils/test-utils';
 
-test('Navbar renders without crashing', () => {
-  const props = {
-    isAuthenticated: false,
-    loginUser() {},
-    logoutUser() {}
-  };
-  const component = shallowRenderComponent(Navbar, props);
-  expect(component).toBeDefined();
+describe('<Navbar />', () => {
+  it('renders without crashing', () => {
+    const { container } = render(
+      <Navbar
+        isAuthenticated={false}
+        loginUser={jest.fn()}
+        logoutUser={jest.fn()}
+      />
+    );
+
+    expect(container).not.toBeEmpty();
+  });
 });

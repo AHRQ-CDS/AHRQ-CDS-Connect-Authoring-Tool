@@ -217,7 +217,7 @@ export default class CodeSelectModal extends Component {
     ];
 
     return (
-      <span className="code-select-modal element-select__modal element-modal">
+      <span className="element-select__modal element-modal">
         <button type="button" className="primary-button" onClick={this.openCodeSelectModal}>
           <FontAwesome name="medkit" />{' '}{buttonLabels.openButtonText}
         </button>
@@ -227,7 +227,7 @@ export default class CodeSelectModal extends Component {
           onRequestClose={this.closeCodeSelectModal}
           shouldCloseOnOverlayClick={ true }
           contentLabel="Choose code"
-          className="modal-style modal-style__light modal-style--full-height element-modal"
+          className="modal-style modal-style__light modal-style--full-height code-select-modal element-modal"
           overlayClassName='modal-overlay modal-overlay__dark'>
           <div className="element-modal__container">
             <header className="modal__header">
@@ -262,6 +262,7 @@ export default class CodeSelectModal extends Component {
                     value={this.state.selectedCS}
                     options={codeSystemOptions}
                     onChange={this.onCodeSystemSelected}
+                    classNamePrefix="search-system-select"
                   />
 
                   {this.state.displayOtherInput &&

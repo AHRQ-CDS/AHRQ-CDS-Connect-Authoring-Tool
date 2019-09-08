@@ -186,6 +186,7 @@ export default class ConjunctionGroup extends Component {
       options={this.props.options === 'listOperations' ? this.listOperations : this.types}
       onChange={this.handleTypeChange}
       inputProps={{ 'aria-label': 'Select conjunction type', title: 'Select conjunction type' }}
+      classNamePrefix="conjunction-select"
     />
   )
 
