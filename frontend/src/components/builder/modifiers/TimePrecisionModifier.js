@@ -54,6 +54,7 @@ export default class TimePrecisionModifier extends Component {
             moment(this.props.time, 'HH:mm:ss').isValid()
             ? moment(this.props.time, 'HH:mm:ss')
             : null}
+          autoComplete="off"
           onChange={ (e) => {
             this.assignValue(e, 'time');
           }}
