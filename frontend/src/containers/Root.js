@@ -9,7 +9,7 @@ import Landing from '../containers/Landing';
 import BuilderContainer from '../containers/Builder';
 import Artifact from '../containers/Artifact';
 import Testing from '../containers/Testing';
-import UserGuide from '../components/UserGuide';
+import Documentation from '../components/Documentation';
 import NoMatch from '../components/NotFoundPage';
 
 const Root = (props) => {
@@ -24,7 +24,7 @@ const Root = (props) => {
           <PrivateRoute path='/build' component={BuilderContainer} />
           <PrivateRoute path='/artifacts' component={Artifact} />
           <PrivateRoute path='/testing' component={Testing} />
-          <Route path='/userguide' component={UserGuide} />
+          <Route path='/documentation' component={Documentation} />
           <Route component={NoMatch} />
         </Switch>
       </App>

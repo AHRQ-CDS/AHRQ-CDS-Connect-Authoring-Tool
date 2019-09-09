@@ -8,7 +8,7 @@ export default [
     image: `${process.env.PUBLIC_URL}/assets/images/whats-new-testing.png`,
     description: 'CDS Authors can now test their CDS artifacts against more than one synthetic patient at once. The selected CDS artifact will be executed against each patient the author selects, and individual results are displayed.',
     linkText: 'Documentation',
-    link: `${process.env.PUBLIC_URL}/userguide#Testing_Artifacts`
+    link: `${process.env.PUBLIC_URL}/documentation#Testing_Artifacts`
   },
   {
     id: 2,
@@ -16,7 +16,7 @@ export default [
     image: `${process.env.PUBLIC_URL}/assets/images/whats-new-external-cql.png`,
     description: 'CDS Authors can now import externally authored CQL libraries and use their defined expressions in Inclusions, Exclusions, Subpopulations, and Base Elements. This allows authors to fill gaps in logic that cannot be produced by the CDS Authoring Tool and to leverage pre-existing CQL expressions.',
     linkText: 'Documentation',
-    link: `${process.env.PUBLIC_URL}/userguide#External_CQL`
+    link: `${process.env.PUBLIC_URL}/documentation#External_CQL`
   },
   {
     id: 3,
@@ -24,7 +24,7 @@ export default [
     image: `${process.env.PUBLIC_URL}/assets/images/whats-new-comments.png`,
     description: 'CDS Authors now have the ability to add comments to individual CDS elements including single base elements. These comments are added to the generated CQL above the element’s definition.',
     linkText: 'Documentation',
-    link: `${process.env.PUBLIC_URL}/userguide#Comments`
+    link: `${process.env.PUBLIC_URL}/documentation#Comments`
   },
   {
     id: 4,
