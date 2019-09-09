@@ -42,17 +42,25 @@ export default class IntervalOfQuantityEditor extends Component {
     }
 
     if ((firstQuantity || firstQuantity === 0) || (secondQuantity || secondQuantity === 0) || unit) {
-      const escapedQuoteUnit = unit ? unit.replace(/'/g, '\\\'') : unit;
+      const escapedQuoteUnit = (unit ? unit.replace(/'/g, '\\\'') : unit) || '1';
+      const firstQuantityForString = (firstQuantity || firstQuantity === 0) ? firstQuantity : null;
+      const secondQuantityForString = (secondQuantity || secondQuantity === 0) ? secondQuantity : null;
+      const firstUnitForString = (firstQuantity || firstQuantity === 0) ? ` '${escapedQuoteUnit}'` : '';
+      const secondUnitForString = (secondQuantity || secondQuantity === 0) ? ` '${escapedQuoteUnit}'` : '';
       if (Number.isInteger(firstQuantity)) {
         if (Number.isInteger(secondQuantity)) {
-          str = `Interval[${firstQuantity}.0 '${escapedQuoteUnit}',${secondQuantity}.0 '${escapedQuoteUnit}']`;
+          str = `Interval[${firstQuantityForString}.0${firstUnitForString},`
+            + `${secondQuantityForString}.0${secondUnitForString}]`;
         } else {
-          str = `Interval[${firstQuantity}.0 '${escapedQuoteUnit}',${secondQuantity} '${escapedQuoteUnit}']`;
+          str = `Interval[${firstQuantityForString}.0${firstUnitForString},`
+            + `${secondQuantityForString}${secondUnitForString}]`;
         }
       } else if (Number.isInteger(secondQuantity)) {
-        str = `Interval[${firstQuantity} '${escapedQuoteUnit}',${secondQuantity}.0 '${escapedQuoteUnit}']`;
+        str = `Interval[${firstQuantityForString}${firstUnitForString},`
+          + `${secondQuantityForString}.0${secondUnitForString}]`;
       } else {
-        str = `Interval[${firstQuantity} '${escapedQuoteUnit}',${secondQuantity} '${escapedQuoteUnit}']`;
+        str = `Interval[${firstQuantityForString}${firstUnitForString},`
+          + `${secondQuantityForString}${secondUnitForString}]`;
       }
       return { firstQuantity, secondQuantity, unit, str };
     }

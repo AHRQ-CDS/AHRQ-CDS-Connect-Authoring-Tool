@@ -66,6 +66,7 @@ export default class DateTimePrecisionModifier extends Component {
             ? moment(this.props.date, 'YYYY-MM-DD')
             : null}
           dateFormat="L"
+          autoComplete="off"
           onChange={ (e) => {
             this.assignValue(e, 'date');
           }}
@@ -79,6 +80,7 @@ export default class DateTimePrecisionModifier extends Component {
             moment(this.props.time, 'HH:mm:ss').isValid()
             ? moment(this.props.time, 'HH:mm:ss')
             : null}
+          autoComplete="off"
           onChange={ (e) => {
             this.assignValue(e, 'time');
           }}

@@ -26,6 +26,7 @@ export default class TimeEditor extends Component {
             <TimePicker
               id={formId}
               defaultValue={moment(value, 'HH:mm:ss').isValid() ? moment(value, 'HH:mm:ss') : null}
+              autoComplete="off"
               onChange={ (e) => {
                 updateInstance({ name, type, label, value: this.assignValue(e) });
               }}

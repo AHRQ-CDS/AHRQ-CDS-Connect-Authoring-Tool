@@ -43,17 +43,27 @@ export default class IntervalOfDateTimeEditor extends Component {
     }
 
     if (firstDate || secondDate || firstTime || secondTime) {
-      if (firstTime) {
-        if (secondTime) {
-          str = `Interval[@${firstDate}T${firstTime},@${secondDate}T${secondTime}]`;
+      let firstDateTime = null;
+      let secondDateTime = null;
+
+      if (firstDate) {
+        if (firstTime) {
+          firstDateTime = `@${firstDate}T${firstTime}`;
         } else {
-          str = `Interval[@${firstDate}T${firstTime},@${secondDate}]`;
+          firstDateTime = `@${firstDate}`;
         }
-      } else if (secondTime) {
-        str = `Interval[@${firstDate},@${secondDate}T${secondTime}]`;
-      } else {
-        str = `Interval[@${firstDate},@${secondDate}]`;
       }
+
+      if (secondDate) {
+        if (secondTime) {
+          secondDateTime = `@${secondDate}T${secondTime}`;
+        } else {
+          secondDateTime = `@${secondDate}`;
+        }
+      }
+
+      str = `Interval[${firstDateTime},${secondDateTime}]`;
+
       return { firstDate, firstTime, secondDate, secondTime, str };
     }
     return null;
@@ -79,6 +89,7 @@ export default class IntervalOfDateTimeEditor extends Component {
                 ? moment(value.firstDate, 'YYYY-MM-DD')
                 : null}
               dateFormat="L"
+              autoComplete="off"
               onChange={(e) => {
                 updateInstance({ name, type, label, value: this.assignValue(e, 'firstDate') });
               }}
@@ -92,6 +103,7 @@ export default class IntervalOfDateTimeEditor extends Component {
                 moment(_.get(value, 'firstTime', null), 'HH:mm:ss').isValid()
                 ? moment(value.firstTime, 'HH:mm:ss')
                 : null}
+              autoComplete="off"
               onChange={(e) => {
                 updateInstance({ name, type, label, value: this.assignValue(e, 'firstTime') });
               }}
@@ -110,6 +122,7 @@ export default class IntervalOfDateTimeEditor extends Component {
                 ? moment(value.secondDate, 'YYYY-MM-DD')
                 : null}
               dateFormat="L"
+              autoComplete="off"
               onChange={(e) => {
                 updateInstance({ name, type, label, value: this.assignValue(e, 'secondDate') });
               }}
@@ -123,6 +136,7 @@ export default class IntervalOfDateTimeEditor extends Component {
                 moment(_.get(value, 'secondTime', null), 'HH:mm:ss').isValid()
                 ? moment(value.secondTime, 'HH:mm:ss')
                 : null}
+              autoComplete="off"
               onChange={(e) => {
                 updateInstance({ name, type, label, value: this.assignValue(e, 'secondTime') });
               }}
