@@ -125,8 +125,8 @@ export default class DataTypeGuide extends Component {
                         Summary: Returns a list of allergy intolerances that are either active or confirmed
                         <ul>
                           <li>
-                            In FHIR STU3, this returns allergy intolerances with <code>clinicalStatus</code> 'active' or
-                            <code>verificationStatus</code> 'confirmed'
+                            In FHIR STU3, this returns allergy intolerances with <code>clinicalStatus</code> 'active'
+                            or <code>verificationStatus</code> 'confirmed'
                           </li>
                           <li>
                             In FHIR DSTU2, this returns allergy intolerances with <code>status</code> 'active' or
@@ -177,8 +177,8 @@ export default class DataTypeGuide extends Component {
                         CQL function: <code>C3F.ActiveCondition</code>
                       </li>
                       <li>
-                        Summary: Returns a list of conditions with <code>clinicalStatus</code> 'active' and
-                        <code>abatement[x]</code> is 'null' or 'not true'
+                        Summary: Returns a list of conditions with <code>clinicalStatus</code> 'active'
+                        and <code>abatement[x]</code> is 'null' or 'not true'
                       </li>
                       <li>
                         Returns: List of Conditions
@@ -213,11 +213,11 @@ export default class DataTypeGuide extends Component {
                         <ul>
                           <li>
                             In FHIR STU3, this returns conditions with <code>onset[x]</code> or <code>assertedDate</code>
-                            that occurred within the period
+                            {' '}that occurred within the period
                           </li>
                           <li>
                             In FHIR DSTU2, this returns conditions with <code>onset[x]</code> or <code>dateRecorded</code>
-                            that occurred within the period
+                            {' '}that occurred within the period
                           </li>
                         </ul>
                       </li>
@@ -237,11 +237,11 @@ export default class DataTypeGuide extends Component {
                         <ul>
                           <li>
                             In FHIR STU3, this sorts conditions using <code>onset[x]</code> and <code>assertedDate</code>
-                            and returns the last condition from that list
+                            {' '}and returns the last condition from that list
                           </li>
                           <li>
                             In FHIR DSTU2, this sorts conditions using <code>onset[x]</code> and <code>dateRecorded</code>
-                            and returns the last condition from that list
+                            {' '}and returns the last condition from that list
                           </li>
                         </ul>
                       </li>
@@ -304,8 +304,8 @@ export default class DataTypeGuide extends Component {
                             In FHIR STU3, this returns a list of medication requests with <code>status</code> 'active'
                           </li>
                           <li>
-                            In FHIR DSTU2, this returns a list of medication orders with <code>status</code> 'active' and
-                            <code>dateEnded</code> is 'null'
+                            In FHIR DSTU2, this returns a list of medication orders with <code>status</code> 'active'
+                            and <code>dateEnded</code> is 'null'
                           </li>
                         </ul>
                       </li>
@@ -330,7 +330,7 @@ export default class DataTypeGuide extends Component {
                           </li>
                           <li>
                             In FHIR DSTU2, this returns a list of medication orders with <code>dateWritten</code> or
-                            <code>dateEnded</code> that occurred within the period
+                            {' '}<code>dateEnded</code> that occurred within the period
                           </li>
                         </ul>
                       </li>
@@ -362,9 +362,9 @@ export default class DataTypeGuide extends Component {
                             and <code>taken</code> is 'y' and <code>end of EffectivePeriod</code> is 'null' or 'after Now()'
                           </li>
                           <li>
-                            In FHIR DSTU2, this returns a list of medication statements where <code>status</code> is 'active',
-                            <code>wasNotTaken</code> is not true, and <code>end of EffectivePeriod</code> is 'null' or
-                            'after Now()'
+                            In FHIR DSTU2, this returns a list of medication statements where <code>status</code> is
+                            'active', <code>wasNotTaken</code> is not true, and <code>end of EffectivePeriod</code> is
+                            'null' or 'after Now()'
                           </li>
                         </ul>
                       </li>
@@ -440,7 +440,8 @@ export default class DataTypeGuide extends Component {
                       </li>
                       <li>
                         Summary: Returns the most recent observation from a list. Sorts observations by
-                        <code>effective[x]</code> and <code>issued</code> times and returns the last observation from that list.
+                        {' '}<code>effective[x]</code> and <code>issued</code> times and returns the last observation
+                        from that list.
                       </li>
                       <li>
                         Returns: Observation
@@ -485,7 +486,7 @@ export default class DataTypeGuide extends Component {
                           </li>
                           <li>
                             In FHIR DSTU2, returns observations with <code>valueQuantity.unit</code> or
-                            <code>valueQuantity.code</code> equal to the unit specified by the user
+                            {' '}<code>valueQuantity.code</code> equal to the unit specified by the user
                           </li>
                         </ul>
                       </li>
@@ -511,12 +512,12 @@ export default class DataTypeGuide extends Component {
                         Summary: Returns a list of procedures that are completed
                         <ul>
                           <li>
-                            In FHIR STU3, this returns procedures with <code>status</code> of 'completed' and
-                            <code>notDone</code> is 'not true'
+                            In FHIR STU3, this returns procedures with <code>status</code> of 'completed'
+                            and <code>notDone</code> is 'not true'
                           </li>
                           <li>
-                            In FHIR STU3, this returns procedures with <code>status</code> of 'completed' and
-                            <code>notPerformed</code> is 'not true'
+                            In FHIR STU3, this returns procedures with <code>status</code> of 'completed'
+                            and <code>notPerformed</code> is 'not true'
                           </li>
                         </ul>
                       </li>
@@ -535,12 +536,12 @@ export default class DataTypeGuide extends Component {
                         Summary: Returns a list of procedures that are in progress
                         <ul>
                           <li>
-                            In FHIR STU3, this returns procedures with <code>status</code> of 'in-progress' and
-                            <code>notDone</code> is 'not true'
+                            In FHIR STU3, this returns procedures with <code>status</code> of 'in-progress'
+                            and <code>notDone</code> is 'not true'
                           </li>
                           <li>
-                            In FHIR STU3, this returns procedures with <code>status</code> of 'in-progress' and
-                            <code>notPerformed</code> is 'not true'
+                            In FHIR STU3, this returns procedures with <code>status</code> of 'in-progress'
+                            and <code>notPerformed</code> is 'not true'
                           </li>
                         </ul>
                       </li>
@@ -847,8 +848,8 @@ export default class DataTypeGuide extends Component {
                             In FHIR STU3, this returns the 'codes' and 'display' of an observation <code>value</code>
                           </li>
                           <li>
-                            In FHIR DSTU2, this returns the 'codes' and 'display' of an observation
-                            <code>valueCodeableConcept</code>
+                            In FHIR DSTU2, this returns the 'codes' and 'display' of an
+                            observation <code>valueCodeableConcept</code>
                           </li>
                         </ul>
                       </li>
