@@ -149,7 +149,7 @@ export default class Parameter extends Component {
             </button>
 
             <button
-              id={`deletebutton-${this.props.id}`}
+              id={`deletebutton-${id}`}
               onClick={() => { this.deleteParameter(index); }}
               className={`button transparent-button delete-button ${disabledClass}`}
               aria-label="Delete Parameter">
@@ -157,7 +157,7 @@ export default class Parameter extends Component {
             </button>
             {parameterUsed &&
               <UncontrolledTooltip
-                target={`deletebutton-${this.props.id}`} placement="left">
+                target={`deletebutton-${id}`} placement="left">
                   To delete this parameter, remove all references to it.
               </UncontrolledTooltip> }
           </div>
