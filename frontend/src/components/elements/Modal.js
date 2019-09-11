@@ -38,7 +38,14 @@ export default class Modal extends Component {
 
   render() {
     const {
-      handleShowModal, handleCloseModal, modalTitle, modalId, hasSecondaryButton, modalSubmitButtonText, children
+      handleShowModal,
+      handleCloseModal,
+      modalTitle,
+      modalId,
+      hasSecondaryButton,
+      modalSubmitButtonText,
+      submitDisabled,
+      children
     } = this.props;
 
     return (
@@ -70,7 +77,12 @@ export default class Modal extends Component {
             {hasSecondaryButton
               && <button type="button" className="secondary-button" onClick={handleCloseModal}>Cancel</button>}
             {modalSubmitButtonText
-              && <button type="submit" className="primary-button">{modalSubmitButtonText}</button>}
+              && <button
+                type="submit"
+                disabled={submitDisabled}
+                className={`primary-button ${submitDisabled ? 'disabled-button' : ''}`}>
+                {modalSubmitButtonText}
+              </button>}
           </footer>
         </form>
       </ReactModal>
@@ -82,6 +94,7 @@ Modal.propTypes = {
   modalTitle: PropTypes.string.isRequired,
   modalId: PropTypes.string.isRequired,
   modalSubmitButtonText: PropTypes.string,
+  submitDisabled: PropTypes.bool,
   modalTheme: PropTypes.string,
   hasSecondaryButton: PropTypes.bool,
   handleShowModal: PropTypes.bool.isRequired,
@@ -91,5 +104,6 @@ Modal.propTypes = {
 };
 
 Modal.defaultTypes = {
-  hasSecondaryButton: true
+  hasSecondaryButton: true,
+  submitDisabled: false
 };

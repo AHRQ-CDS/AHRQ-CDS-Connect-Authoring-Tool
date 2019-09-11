@@ -210,7 +210,8 @@ export default class PatientTable extends Component {
         modalTitle="Execute CQL on Selected Patients"
         modalId="execute-cql-modal"
         modalTheme="light"
-        modalSubmitButtonText={this.state.artifactToExecute == null ? '' : 'Execute CQL'}
+        modalSubmitButtonText={'Execute CQL'}
+        submitDisabled={this.state.artifactToExecute == null}
         handleShowModal={this.state.showExecuteCQLModal}
         handleCloseModal={this.closeExecuteCQLModal}
         handleSaveModal={this.handleExecuteCQL}>
@@ -380,7 +381,7 @@ export default class PatientTable extends Component {
               || this.state.patientsToExecute.length === 0
             }
             className={`button primary-button execute-button ${
-              this.props.vsacFHIRCredentials.username != null ? '' : 'disabled'
+              this.props.vsacFHIRCredentials.username != null ? '' : 'disabled-button'
             }`}
             onClick={() => this.openExecuteCQLModal()}>
             Execute CQL on Selected Patients
