@@ -956,12 +956,12 @@ export default class DataTypeGuide extends Component {
                     Qualifier
                     <ul>
                       <li>
-                        CQL operator: CQL membership <code>in</code> or CQL equality <code>~</code>
+                        CQL operator: CQL membership <code>in</code> or CQL equivalence <code>~</code>
                       </li>
                       <li>
-                        Summary: Choosing "value is a code from" checks if current System Code is included
-                        in a valueset specified by the user using <code>in</code>. Choosing "value is the code from"
-                        checks if current System Code is equal to a code specified by the user using <code>~</code>.
+                        Summary: Choosing "value is a code from" checks if the current System Code is included
+                        in a valueset specified by the user. Choosing "value is the code"
+                        checks if the current System Code is the same as the code specified by the user.
                       </li>
                       <li>
                         Returns: Boolean
@@ -980,12 +980,12 @@ export default class DataTypeGuide extends Component {
                     Qualifier
                     <ul>
                       <li>
-                        CQL operator: CQL membership <code>in</code> or CQL equality <code>~</code>
+                        CQL operator: CQL membership <code>in</code> or CQL equivalence <code>~</code>
                       </li>
                       <li>
-                        Summary: Choosing "value is a code from" checks if current System Concept is included
-                        in a valueset specified by the user using <code>in</code>. Choosing "value is the code from"
-                        checks if current System Concept is equal to a code specified by the user using <code>~</code>.
+                        Summary: Choosing "value is a code from" checks if the current System Concept is included
+                        in a valueset specified by the user. Choosing "value is the code"
+                        checks if the current System Concept is the same as the code specified by the user.
                       </li>
                       <li>
                         Returns: Boolean
@@ -1007,11 +1007,11 @@ export default class DataTypeGuide extends Component {
                         CQL function: <code>Convert.to_mg_per_dL</code> or other available function chosen by the user
                       </li>
                       <li>
-                        Summary: Applies the chosen function to the current element
+                        Summary: Applies the chosen conversion function to the current element
                         <ul>
                           <li>
-                            <code>Convert.to_mg_per_dL</code> converts the System Quantity value from mmol/L to mg/dL and
-                            returns the converted quantity
+                            <code>Convert.to_mg_per_dL</code> converts the System Quantity value from mmol/L to mg/dL
+                            for blood cholesterol and returns the converted quantity
                           </li>
                         </ul>
                       </li>
