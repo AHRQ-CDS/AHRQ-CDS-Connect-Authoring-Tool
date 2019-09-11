@@ -108,7 +108,7 @@ export default class DataTypeGuide extends Component {
                     </ul>
                   </li>
                   <li>
-                    See expressions that can be applied to all types
+                    See expressions that can be applied to <a href="#any-type">any type</a>
                   </li>
                 </ul>
 
@@ -140,7 +140,7 @@ export default class DataTypeGuide extends Component {
                     </ul>
                   </li>
                   <li>
-                    See expressions that can be applied to all list types
+                    See expressions that can be applied to <a href="#list-types">any list</a>
                   </li>
                 </ul>
 
@@ -163,7 +163,7 @@ export default class DataTypeGuide extends Component {
                     </ul>
                   </li>
                   <li>
-                    See expressions that can be applied to all list types
+                    See expressions that can be applied to <a href="#list-types">any list</a>
                   </li>
                 </ul>
 
@@ -251,20 +251,20 @@ export default class DataTypeGuide extends Component {
                     </ul>
                   </li>
                   <li>
-                    See expressions that can be applied to all list types
+                    See expressions that can be applied to <a href="#list-types">any list</a>
                   </li>
                 </ul>
 
                 <h3 id="list-of-datetime">List of Datetime</h3>
 
                 <ul>
-                  <li>See expressions that can be applied to all list types</li>
+                  <li>See expressions that can be applied to <a href="#list-types">any list</a></li>
                 </ul>
 
                 <h3 id="list-of-decimals">List of Decimals</h3>
 
                 <ul>
-                  <li>See expressions that can be applied to all list types</li>
+                  <li>See expressions that can be applied to <a href="#list-types">any list</a></li>
                 </ul>
 
                 <h3 id="list-of-encounters">List of Encounters</h3>
@@ -278,14 +278,14 @@ export default class DataTypeGuide extends Component {
                     </ul>
                   </li>
                   <li>
-                    See expressions that can be applied to all list types
+                    See expressions that can be applied to <a href="#list-types">any list</a>
                   </li>
                 </ul>
 
                 <h3 id="list-of-integers">List of Integers</h3>
 
                 <ul>
-                  <li>See expressions that can be applied to all list types</li>
+                  <li>See expressions that can be applied to <a href="#list-types">any list</a></li>
                 </ul>
 
                 <h3 id="list-of-medication-order">List of Medication Order</h3>
@@ -340,7 +340,7 @@ export default class DataTypeGuide extends Component {
                     </ul>
                   </li>
                   <li>
-                    See expressions that can be applied to all list types
+                    See expressions that can be applied to <a href="#list-types">any list</a>
                   </li>
                 </ul>
 
@@ -389,7 +389,7 @@ export default class DataTypeGuide extends Component {
                     </ul>
                   </li>
                   <li>
-                    See expressions that can be applied to all list types
+                    See expressions that can be applied to <a href="#list-types">any list</a>
                   </li>
                 </ul>
 
@@ -496,7 +496,7 @@ export default class DataTypeGuide extends Component {
                     </ul>
                   </li>
                   <li>
-                    See expressions that can be applied to all list types
+                    See expressions that can be applied to <a href="#list-types">any list</a>
                   </li>
                 </ul>
 
@@ -581,50 +581,50 @@ export default class DataTypeGuide extends Component {
                     </ul>
                   </li>
                   <li>
-                    See expressions that can be applied to all list types
+                    See expressions that can be applied to <a href="#list-types">any list</a>
                   </li>
                 </ul>
 
                 <h3 id="list-of-strings">List of Strings</h3>
 
                 <ul>
-                  <li>See expressions that can be applied to all list types</li>
+                  <li>See expressions that can be applied to <a href="#list-types">any list</a></li>
                 </ul>
 
                 <h3 id="list-of-system-codes">List of System Codes</h3>
 
                 <ul>
-                  <li>See expressions that can be applied to all list types</li>
+                  <li>See expressions that can be applied to <a href="#list-types">any list</a></li>
                 </ul>
 
                 <h3 id="list-of-system-concepts">List of System Concepts</h3>
 
                 <ul>
-                  <li>See expressions that can be applied to all list types</li>
+                  <li>See expressions that can be applied to <a href="#list-types">any list</a></li>
                 </ul>
 
                 <h3 id="list-of-system-quantities">List of System Quantities</h3>
 
                 <ul>
-                  <li>See expressions that can be applied to all list types</li>
+                  <li>See expressions that can be applied to <a href="#list-types">any list</a></li>
                 </ul>
 
                 <h3 id="list-of-times">List of Times</h3>
 
                 <ul>
-                  <li>See expressions that can be applied to all list types</li>
+                  <li>See expressions that can be applied to <a href="#list-types">any list</a></li>
                 </ul>
 
                 <h3 id="list-of-any">List of Any</h3>
 
                 <ul>
-                  <li>See expressions that can be applied to all list types</li>
+                  <li>See expressions that can be applied to <a href="#list-types">any list</a></li>
                 </ul>
 
                 <h3 id="list-of-others">List of Others</h3>
 
                 <ul>
-                  <li>See expressions that can be applied to all list types</li>
+                  <li>See expressions that can be applied to <a href="#list-types">any list</a></li>
                 </ul>
               </div>
             </div>
@@ -665,7 +665,7 @@ export default class DataTypeGuide extends Component {
                     </ul>
                   </li>
                   <li>
-                    See expressions that can be applied to all types
+                    See expressions that can be applied to <a href="#any-type">any type</a>
                   </li>
                 </ul>
 
@@ -673,8 +673,8 @@ export default class DataTypeGuide extends Component {
 
                 <ul>
                   <li>
-                    See expressions that can be applied to all Intervals. User specifies an integer for each input value of
-                    the expression.
+                    See expressions that can be applied to <a href="#interval-types">any interval</a>. User specifies an
+                    integer for each input value of the expression.
                   </li>
                 </ul>
 
@@ -682,8 +682,8 @@ export default class DataTypeGuide extends Component {
 
                 <ul>
                   <li>
-                    See expressions that can be applied to all Intervals. User specifies a datetime for each input value of
-                    the expression.
+                    See expressions that can be applied to <a href="#interval-types">any interval</a>. User specifies a
+                    datetime for each input value of the expression.
                   </li>
                 </ul>
 
@@ -691,8 +691,8 @@ export default class DataTypeGuide extends Component {
 
                 <ul>
                   <li>
-                    See expressions that can be applied to all Intervals. User specifies a decimal for each input value of
-                    the expression.
+                    See expressions that can be applied to <a href="#interval-types">any interval</a>. User specifies a
+                    decimal for each input value of the expression.
                   </li>
                 </ul>
 
@@ -700,8 +700,8 @@ export default class DataTypeGuide extends Component {
 
                 <ul>
                   <li>
-                    See expressions that can be applied to all Intervals. User specifies a quantity value and unit for each
-                    input value of the expression.
+                    See expressions that can be applied to <a href="#interval-types">any interval</a>. User specifies a
+                    quantity value and unit for each input value of the expression.
                   </li>
                 </ul>
               </div>
@@ -714,7 +714,7 @@ export default class DataTypeGuide extends Component {
                 <h3 id="allergy-intolerance">Allergy Intolerance</h3>
 
                 <ul>
-                  <li>See expressions that can be applied to all types</li>
+                  <li>See expressions that can be applied to <a href="#any-type">any type</a></li>
                 </ul>
 
                 <h3 id="boolean">Boolean</h3>
@@ -736,14 +736,14 @@ export default class DataTypeGuide extends Component {
                     </ul>
                   </li>
                   <li>
-                    See expressions that can be applied to all types
+                    See expressions that can be applied to <a href="#any-type">any type</a>
                   </li>
                 </ul>
 
                 <h3 id="condition">Condition</h3>
 
                 <ul>
-                  <li>See expressions that can be applied to all types</li>
+                  <li>See expressions that can be applied to <a href="#any-type">any type</a></li>
                 </ul>
 
                 <h3 id="datetime">Datetime</h3>
@@ -765,7 +765,7 @@ export default class DataTypeGuide extends Component {
                       <li>Returns: Boolean</li>
                     </ul>
                   </li>
-                  <li>See expressions that can be applied to all types</li>
+                  <li>See expressions that can be applied to <a href="#any-type">any type</a></li>
                 </ul>
 
                 <h3 id="decimal">Decimal</h3>
@@ -779,13 +779,13 @@ export default class DataTypeGuide extends Component {
                       <li>Returns: Boolean</li>
                     </ul>
                   </li>
-                  <li>See expressions that can be applied to all types</li>
+                  <li>See expressions that can be applied to <a href="#any-type">any type</a></li>
                 </ul>
 
                 <h3 id="encounter">Encounter</h3>
 
                 <ul>
-                  <li>See expressions that can be applied to all types</li>
+                  <li>See expressions that can be applied to <a href="#any-type">any type</a></li>
                 </ul>
 
                 <h3 id="integer">Integer</h3>
@@ -799,19 +799,19 @@ export default class DataTypeGuide extends Component {
                       <li>Returns: Boolean</li>
                     </ul>
                   </li>
-                  <li>See expressions that can be applied to all types</li>
+                  <li>See expressions that can be applied to <a href="#any-type">any type</a></li>
                 </ul>
 
                 <h3 id="medication-order">Medication Order</h3>
 
                 <ul>
-                  <li>See expressions that can be applied to all types</li>
+                  <li>See expressions that can be applied to <a href="#any-type">any type</a></li>
                 </ul>
 
                 <h3 id="medication-statement">Medication Statement</h3>
 
                 <ul>
-                  <li>See expressions that can be applied to all types</li>
+                  <li>See expressions that can be applied to <a href="#any-type">any type</a></li>
                 </ul>
 
                 <h3 id="observation">Observation</h3>
@@ -859,14 +859,14 @@ export default class DataTypeGuide extends Component {
                     </ul>
                   </li>
                   <li>
-                    See expressions that can be applied to all types
+                    See expressions that can be applied to <a href="#any-type">any type</a>
                   </li>
                 </ul>
 
                 <h3 id="procedure">Procedure</h3>
 
                 <ul>
-                  <li>See expressions that can be applied to all types</li>
+                  <li>See expressions that can be applied to <a href="#any-type">any type</a></li>
                 </ul>
 
                 <h3 id="string">String</h3>
@@ -918,7 +918,7 @@ export default class DataTypeGuide extends Component {
                     </ul>
                   </li>
                   <li>
-                    See expressions that can be applied to all types
+                    See expressions that can be applied to <a href="#any-type">any type</a>
                   </li>
                 </ul>
 
@@ -942,7 +942,7 @@ export default class DataTypeGuide extends Component {
                     </ul>
                   </li>
                   <li>
-                    See expressions that can be applied to all types
+                    See expressions that can be applied to <a href="#any-type">any type</a>
                   </li>
                 </ul>
 
@@ -966,7 +966,7 @@ export default class DataTypeGuide extends Component {
                     </ul>
                   </li>
                   <li>
-                    See expressions that can be applied to all types
+                    See expressions that can be applied to <a href="#any-type">any type</a>
                   </li>
                 </ul>
 
@@ -1002,7 +1002,7 @@ export default class DataTypeGuide extends Component {
                     </ul>
                   </li>
                   <li>
-                    See expressions that can be applied to all types
+                    See expressions that can be applied to <a href="#any-type">any type</a>
                   </li>
                 </ul>
 
@@ -1026,20 +1026,20 @@ export default class DataTypeGuide extends Component {
                     </ul>
                   </li>
                   <li>
-                    See expressions that can be applied to all types
+                    See expressions that can be applied to <a href="#any-type">any type</a>
                   </li>
                 </ul>
 
                 <h3 id="any">Any</h3>
 
                 <ul>
-                  <li>See expressions that can be applied to all types</li>
+                  <li>See expressions that can be applied to <a href="#any-type">any type</a></li>
                 </ul>
 
                 <h3 id="other">Other</h3>
 
                 <ul>
-                  <li>See expressions that can be applied to all types</li>
+                  <li>See expressions that can be applied to <a href="#any-type">any type</a></li>
                 </ul>
               </div>
             </div>
