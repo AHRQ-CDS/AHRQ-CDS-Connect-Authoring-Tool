@@ -73,14 +73,19 @@ export default class DataTypeGuide extends Component {
               <h2 id="any-type">Any Type</h2>
 
               <div className="h3-wrapper">
-                <p>The following expressions can be applied to every data type:</p>
-                <li>Is (Not) Null?
+                <p>The following expressions can be applied to any data type:</p>
+                <ul>
+                  <li>Is (Not) Null?
                     <ul>
-                    <li>CQL function: CQL null test <code>is [not] null</code></li>
-                    <li>Summary: Checks if the current element <code>is [not] null</code></li>
-                    <li>Returns: Boolean</li>
-                  </ul>
-                </li>
+                      <li>CQL operator: <code>is null</code> or <code>is not null</code></li>
+                      <li>
+                        Summary: Checks if the current element is or is not <code>null</code>. In CQL,
+                        {' '}<code>null</code> is used to indicate that something is absent or has an unknown value.
+                      </li>
+                      <li>Returns: Boolean</li>
+                    </ul>
+                  </li>
+                </ul>
               </div>
             </div>
 
@@ -88,22 +93,25 @@ export default class DataTypeGuide extends Component {
               <h2 id="list-types">List Types</h2>
 
               <div className="h3-wrapper">
-                <p>All lists can use the following expressions:</p>
+                <p>The following expressions can be applied to any list:</p>
 
                 <ul>
                   <li>
                     Count
                     <ul>
-                      <li>CQL function: CQL function <code>Count</code></li>
-                      <li>Summary: Applies <code>Count</code> to current element</li>
+                      <li>CQL function: <code>Count</code></li>
+                      <li>Summary: Counts the number of items in the current list</li>
                       <li>Returns: Integer</li>
                     </ul>
                   </li>
                   <li>
                     Exists
                     <ul>
-                      <li>CQL function: CQL function <code>exists</code></li>
-                      <li>Summary: Applies <code>exists</code> to current element</li>
+                      <li>CQL operator: <code>exists</code></li>
+                      <li>
+                        Summary: Checks if the list contains at least one item. If the list contains at least one item,
+                        it returns <code>true</code>, otherwise it returns <code>false</code>
+                      </li>
                       <li>Returns: Boolean</li>
                     </ul>
                   </li>
@@ -149,16 +157,22 @@ export default class DataTypeGuide extends Component {
                   <li>
                     All True
                     <ul>
-                      <li>CQL function: CQL function <code>AllTrue</code></li>
-                      <li>Summary: Applies <code>AllTrue</code> to current element</li>
+                      <li>CQL function: <code>AllTrue</code></li>
+                      <li>
+                        Summary: Checks if every item in the list is <code>true</code>.  If so, it returns
+                        {' '}<code>true</code>. Otherwise (if any item is not <code>true</code>), it returns <code>false</code>.
+                      </li>
                       <li>Returns: Boolean</li>
                     </ul>
                   </li>
                   <li>
                     Any True
                     <ul>
-                      <li>CQL function: CQL function <code>AnyTrue</code></li>
-                      <li>Summary: Applies <code>AnyTrue</code> to current element</li>
+                      <li>CQL function: <code>AnyTrue</code></li>
+                      <li>
+                        Summary: Checks if at least one item in the list is <code>true</code>. If so, it returns
+                        {' '}<code>true</code>. Otherwise (if no item is <code>true</code>), it returns <code>false</code>.
+                      </li>
                       <li>Returns: Boolean</li>
                     </ul>
                   </li>
@@ -321,7 +335,7 @@ export default class DataTypeGuide extends Component {
                         CQL function: <code>C3F.MedicationOrderLookBack</code>
                       </li>
                       <li>
-                        Summary: Returns a list of medications that are issued between now and the time period specified
+                        Summary: Returns a list of medications that were written between now and the time period specified
                         by the user
                         <ul>
                           <li>
@@ -633,34 +647,28 @@ export default class DataTypeGuide extends Component {
               <h2 id="interval-types">Interval Types</h2>
 
               <div className="h3-wrapper">
-                <p>All lists can use the following expressions:</p>
+                <p>The following expressions can be applied to any interval:</p>
 
                 <ul>
                   <li>After
                     <ul>
-                      <li
-                        >CQL function: CQL timing phrase <code>after</code>
-                      </li>
-                      <li>
-                        Summary: Applies CQL phrase <code>after</code> using the value specified by the user.
-                      </li>
-                      <li>
-                        Returns: Boolean
-                      </li>
+                      <li>CQL operator: <code>after</code></li>
+                      <li>Summary: Applies CQL operator <code>after</code> using the value specified by the user</li>
+                      <li>Returns: Boolean</li>
                     </ul>
                   </li>
                   <li>
                     Before
                     <ul>
-                      <li>CQL function: CQL timing phrase <code>before</code></li>
-                      <li>Summary: Applies CQL phrase <code>before</code> using the value specified by the user.</li>
+                      <li>CQL operator: <code>before</code></li>
+                      <li>Summary: Applies CQL operator <code>before</code> using the value specified by the user</li>
                       <li>Returns: Boolean</li>
                     </ul>
                   </li>
                   <li>Contains
                     <ul>
-                      <li>CQL function: CQL membership <code>contains</code></li>
-                      <li>Summary: Applies CQL membership <code>contains</code> using the value specified by the user.</li>
+                      <li>CQL operator: <code>contains</code></li>
+                      <li>Summary: Applies CQL membership <code>contains</code> using the value specified by the user</li>
                       <li>Returns: Boolean</li>
                     </ul>
                   </li>
@@ -722,16 +730,25 @@ export default class DataTypeGuide extends Component {
                 <ul>
                   <li>Is (Not) True/False?
                     <ul>
-                      <li>CQL function: CQL boolean test operators <code>is [not] true</code> and <code>is [not] false</code></li>
-                      <li>Summary: Checks if the current element <code>is [not] true</code> or <code>is [not] false</code></li>
+                      <li
+                        >CQL operator: <code>is true</code>, <code>is not true</code>, <code>is false</code>, or
+                        {' '}<code>is not false</code>
+                      </li>
+                      <li>
+                        Summary: Checks if the current element is or is not <code>true</code> or <code>false</code>.
+                      </li>
                       <li>Returns: Boolean</li>
                     </ul>
                   </li>
                   <li>
                     Not
                     <ul>
-                      <li>CQL function: CQL function <code>not</code></li>
-                      <li>Summary: Applies <code>not</code> to the current element</li>
+                      <li>CQL operator: <code>not</code></li>
+                      <li>
+                        Summary: Negates the value of the current element. If the current value is <code>true</code>,
+                        this will return <code>false</code>. If the current value is <code>false</code>, this will return
+                        {' '}<code>true</code>.
+                      </li>
                       <li>Returns: Boolean</li>
                     </ul>
                   </li>
@@ -752,16 +769,16 @@ export default class DataTypeGuide extends Component {
                   <li>
                     After
                     <ul>
-                      <li>CQL function: CQL timing phrase <code>after</code></li>
-                      <li>Summary: Applies CQL phrase <code>after</code> using the time specified by the user</li>
+                      <li>CQL operator: <code>after</code></li>
+                      <li>Summary: Checks if the current datetime is after the datetime specified by the user</li>
                       <li>Returns: Boolean</li>
                     </ul>
                   </li>
                   <li>
                     Before
                     <ul>
-                      <li>CQL function: CQL timing phrase <code>before</code></li>
-                      <li>Summary: Applies CQL phrase <code>before</code> using the time specified by the user</li>
+                      <li>CQL operator: <code>before</code></li>
+                      <li>Summary: Checks if the current datetime is before the datetime specified by the user</li>
                       <li>Returns: Boolean</li>
                     </ul>
                   </li>
@@ -774,8 +791,14 @@ export default class DataTypeGuide extends Component {
                   <li>
                     Value Comparison
                     <ul>
-                      <li>CQL function: CQL comparison operators</li>
-                      <li>Summary: Applies the comparison operator(s) and value(s) specified by the user</li>
+                      <li>
+                        CQL operator: comparison operators <code>{'='}</code>, <code>{'!='}</code>, <code>{'>'}</code>,
+                        {' '}<code>{'>='}</code>, <code>{'<'}</code>, or <code>{'<='}</code>
+                      </li>
+                      <li>
+                        Summary: Compares the current decimal using the operator(s) and value(s) specified by the user. Users can
+                        choose one or two operators and values to create a one or two sided comparison.
+                      </li>
                       <li>Returns: Boolean</li>
                     </ul>
                   </li>
@@ -794,8 +817,14 @@ export default class DataTypeGuide extends Component {
                   <li>
                     Value Comparison
                     <ul>
-                      <li>CQL function: CQL comparison operators</li>
-                      <li>Summary: Applies the comparison operator(s) and value(s) specified by the user</li>
+                      <li>
+                        CQL operator: comparison operators <code>{'='}</code>, <code>{'!='}</code>, <code>{'>'}</code>,
+                        {' '}<code>{'>='}</code>, <code>{'<'}</code>, or <code>{'<='}</code>
+                      </li>
+                      <li>
+                        Summary: Compares the current integer using the operator(s) and value(s) specified by the user. Users can
+                        choose one or two operators and values to create a one or two sided comparison.
+                      </li>
                       <li>Returns: Boolean</li>
                     </ul>
                   </li>
@@ -876,11 +905,10 @@ export default class DataTypeGuide extends Component {
                     Ends With
                     <ul>
                       <li>
-                        CQL function: CQL <code>EndsWith</code>
+                        CQL operator: <code>EndsWith</code>
                       </li>
                       <li>
-                        Summary: Applies <code>EndsWith</code> function to the current element with the value specified
-                        by the user
+                        Summary: Checks if the current string ends with the string value specified by the user
                       </li>
                       <li>
                         Returns: Boolean
@@ -891,10 +919,10 @@ export default class DataTypeGuide extends Component {
                     Equals
                     <ul>
                       <li>
-                        CQL function: CQL equality <code>=</code>
+                        CQL operator: Equality <code>=</code>
                       </li>
                       <li>
-                        Summary: Checks equality between the current element and the value specified by the user
+                        Summary: Checks if the current string is equal to the string value specified by the user
                         using <code>=</code>
                       </li>
                       <li>
@@ -906,11 +934,10 @@ export default class DataTypeGuide extends Component {
                     Starts With
                     <ul>
                       <li>
-                        CQL function: CQL <code>StartsWith</code>
+                        CQL operator: <code>StartsWith</code>
                       </li>
                       <li>
-                        Summary: Applies <code>StartsWith</code> function to the current element with the value specified
-                        by the user
+                        Summary: Checks if the current string starts with the string specified by the user
                       </li>
                       <li>
                         Returns: Boolean
@@ -929,12 +956,12 @@ export default class DataTypeGuide extends Component {
                     Qualifier
                     <ul>
                       <li>
-                        CQL function: CQL equality <code>~</code> or CQL membership <code>in</code>
+                        CQL operator: CQL membership <code>in</code> or CQL equality <code>~</code>
                       </li>
                       <li>
-                        Summary: Choosing "value is a code from" checks the current System Code for inclusion in a
-                        valueset specified by the user using <code>in</code>. Choosing "value is the code from"
-                        checks the current System Code for equality to a code specified by the user using <code>~</code>.
+                        Summary: Choosing "value is a code from" checks if current System Code is included
+                        in a valueset specified by the user using <code>in</code>. Choosing "value is the code from"
+                        checks if current System Code is equal to a code specified by the user using <code>~</code>.
                       </li>
                       <li>
                         Returns: Boolean
@@ -953,12 +980,12 @@ export default class DataTypeGuide extends Component {
                     Qualifier
                     <ul>
                       <li>
-                        CQL function: CQL equality <code>~</code> or CQL membership <code>in</code>
+                        CQL operator: CQL membership <code>in</code> or CQL equality <code>~</code>
                       </li>
                       <li>
-                        Summary: Choosing "value is a code from" checks the current System Concept for inclusion
+                        Summary: Choosing "value is a code from" checks if current System Concept is included
                         in a valueset specified by the user using <code>in</code>. Choosing "value is the code from"
-                        checks the current System Concept for equality to a code specified by the user using <code>~</code>.
+                        checks if current System Concept is equal to a code specified by the user using <code>~</code>.
                       </li>
                       <li>
                         Returns: Boolean
@@ -996,8 +1023,14 @@ export default class DataTypeGuide extends Component {
                   <li>
                     Value Comparison
                     <ul>
-                      <li>CQL function: CQL comparison operators</li>
-                      <li>Summary: Applies the comparison operator(s), value(s), and unit specified by the user</li>
+                      <li>
+                        CQL operator: comparison operators <code>{'='}</code>, <code>{'!='}</code>, <code>{'>'}</code>,
+                        {' '}<code>{'>='}</code>, <code>{'<'}</code>, or <code>{'<='}</code>
+                      </li>
+                      <li>
+                        Summary: Compares the current quantity using the operator(s), value(s), and unit specified by the user.
+                        Users can choose one or two operators and values to create a one or two sided comparison.
+                      </li>
                       <li>Returns: Boolean</li>
                     </ul>
                   </li>
@@ -1012,16 +1045,16 @@ export default class DataTypeGuide extends Component {
                   <li>
                     After
                     <ul>
-                      <li>CQL function: CQL timing phrase <code>after</code></li>
-                      <li>Summary: Applies CQL phrase <code>after</code> using the time specified by the user</li>
+                      <li>CQL operator: <code>after</code></li>
+                      <li>Summary: Checks if the current element is after the time specified by the user</li>
                       <li>Returns: Boolean</li>
                     </ul>
                   </li>
                   <li>
                     Before
                     <ul>
-                      <li>CQL function: CQL timing phrase <code>before</code></li>
-                      <li>Summary: Applies CQL phrase <code>before</code> using the time specified by the user</li>
+                      <li>CQL operator: <code>before</code></li>
+                      <li>Summary: Checks if the current element is before the time specified by the user</li>
                       <li>Returns: Boolean</li>
                     </ul>
                   </li>
