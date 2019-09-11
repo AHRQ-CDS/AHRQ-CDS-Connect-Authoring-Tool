@@ -68,7 +68,7 @@ export function doesParameterUseNeedWarning(instance, parameters) {
   return false;
 }
 
-export function doesParameterNeedWarning(name, usedBy, comment, allInstancesInAllTrees) {
+export function doesParameterNeedUsageWarning(name, usedBy, comment, allInstancesInAllTrees) {
   if (usedBy && usedBy.length > 0) {
     let anyUseHasChanged = false;
     usedBy.forEach((usageId) => {
