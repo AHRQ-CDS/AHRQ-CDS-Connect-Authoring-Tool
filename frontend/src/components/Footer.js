@@ -22,7 +22,7 @@ const cdsAuthoringToolLinks = [
   { name: 'CDS Authoring Tool Home', link: `${process.env.PUBLIC_URL}/` },
   { name: 'Artifacts', link: `${process.env.PUBLIC_URL}/artifacts`, onlyWithAuth: true },
   { name: 'Workspace', link: `${process.env.PUBLIC_URL}/build`, onlyWithAuth: true },
-  { name: 'Documentation', link: `${process.env.PUBLIC_URL}/userguide` },
+  { name: 'Documentation', link: `${process.env.PUBLIC_URL}/documentation` },
   { name: 'Sign Up', link: 'https://cds.ahrq.gov/form/cds-authoring-tool-sign-up', onlyWithoutAuth: true, onClick: onVisitExternalForm },
   { name: 'Feedback', link: 'https://cds.ahrq.gov/contact-us', onClick: onVisitExternalForm }
 ];
