@@ -80,7 +80,7 @@ export default class Modal extends Component {
               && <button
                 type="submit"
                 disabled={submitDisabled}
-                className={`primary-button ${submitDisabled ? 'disabled' : ''}`}>
+                className={`primary-button ${submitDisabled ? 'disabled-button' : ''}`}>
                 {modalSubmitButtonText}
               </button>}
           </footer>
