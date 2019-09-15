@@ -1,239 +1,208 @@
-import Modal from 'react-modal';
-import _ from 'lodash';
+import React from 'react';
 import ElementModal from '../../../components/builder/ElementModal';
-import { fullRenderComponent, ReactWrapper } from '../../../utils/test_helpers';
 import { getFieldWithId, getFieldWithType } from '../../../utils/instances';
+import { render, fireEvent } from '../../../utils/test-utils';
 
-let component;
-let input;
-let getInput;
-let setInputValue;
-let internalModal;
-const onElementSelected = jest.fn();
-const searchVSACByKeyword = jest.fn();
-const getVSDetails = jest.fn();
+describe('<ElementModal />', () => {
+  const testTemplate = {
+    id: 'GenericObservation',
+    name: 'Observation',
+    returnType: 'list_of_observations',
+    suppress: true,
+    extends: 'Base',
+    fields: [
+      { id: 'element_name', type: 'string', name: 'Element Name' },
+      { id: 'observation', type: 'observation_vsac', name: 'Observation' }
+    ]
+  };
 
-const testVsacSearchResults = [
-  { name: 'Test VS', type: 'Grouping', steward: 'Test Steward', oid: '1.2.3', codeCount: 4, codeSystem: ['Test CS'] },
-  { name: 'New VS', type: 'Extentional', steward: 'New Steward', oid: '3.4.5', codeCount: 8, codeSystem: ['New CS'] }
-];
+  const testVsacDetails = [
+    { code: '123-4', codeSystem: '1.2.3', codeSystemName: 'CodeSysName', codeSystemVersion: '1.2', displayName: 'Name' }
+  ];
 
-const testVsacDetails = [
-  { code: '123-4', codeSystem: '1.2.3', codeSystemName: 'CodeSysName', codeSystemVersion: '1.2', displayName: 'Name' }
-];
+  const testVsacSearchResults = [
+    { name: 'Test VS', type: 'Grouping', steward: 'Test Steward', oid: '1.2.3', codeCount: 4, codeSystem: ['Test CS'] },
+    { name: 'New VS', type: 'Extentional', steward: 'New Steward', oid: '3.4.5', codeCount: 8, codeSystem: ['New CS'] }
+  ];
 
-const testTemplate = {
-  id: 'GenericObservation',
-  name: 'Observation',
-  returnType: 'list_of_observations',
-  suppress: true,
-  extends: 'Base',
-  fields: [
-    { id: 'element_name', type: 'string', name: 'Element Name' },
-    { id: 'observation', type: 'observation_vsac', name: 'Observation' }
-  ],
-};
-
-beforeEach(() => {
-  component = fullRenderComponent(
-    ElementModal,
-    {
-      onElementSelected,
-      searchVSACByKeyword,
-      isSearchingVSAC: false,
-      vsacSearchResults: testVsacSearchResults,
-      vsacSearchCount: 0,
-      template: testTemplate,
-      getVSDetails,
-      isRetrievingDetails: false,
-      vsacDetailsCodes: testVsacDetails,
-      vsacFHIRCredentials: { username: '', password: '' }
-    }
-  );
-
-  internalModal = new ReactWrapper(component.find(Modal).node.portal, true);
-
-  getInput = () => internalModal.find('.element-modal__search input');
-});
-
-test('renders the component with proper elements', () => {
-  expect(component.hasClass('element-modal')).toBeTruthy();
-  expect(component.find(Modal)).toHaveLength(1);
-  expect(component.find('button').first().text()).toEqual(' Add Value Set');
-});
-
-test('can set open and close state', () => {
-  expect(component.state().isOpen).toEqual(false);
-  component.instance().openModal();
-  expect(component.state().isOpen).toEqual(true);
-  component.instance().closeModal();
-  expect(component.state().isOpen).toEqual(false);
-});
-
-test('renders the proper children', () => {
-  component.instance().openModal();
-
-  expect(internalModal.find('.element-modal__container')).toHaveLength(1);
-  expect(internalModal.find('.element-modal__search')).toHaveLength(1);
-  expect(internalModal.find('.element-modal__content')).toHaveLength(1);
-});
-
-test('can open modal with "Add Value Set" button', () => {
-  expect(component.state().isOpen).toEqual(false);
-  component.find('button').first().simulate('click');
-  expect(component.state().isOpen).toEqual(true);
-});
-
-test('can open a modal using an icon instead of a button', () => {
-  // Default is to have a button open the modal.
-  expect(component.find('#open-modal-button > span > FontAwesome')).toHaveLength(0);
-  expect(component.find('#open-modal-button > button')).toHaveLength(1);
-
-  // Can set prop to use an icon in a span instead of the button default.
-  component.setProps({ useIconButton: true, iconForButton: 'eye' });
-  // Close and reopen modal to set state correctly.
-  component.instance().closeModal();
-  component.instance().openModal();
-  expect(component.find('#open-modal-button > span > FontAwesome')).toHaveLength(1);
-  expect(component.find('#open-modal-button > button')).toHaveLength(0);
-});
-
-describe('with modal open', () => {
-  beforeEach(() => {
-    component.instance().openModal();
-
-    input = getInput();
-    const searchButton = internalModal.find('.element-modal__search button');
-
-    setInputValue = (value) => {
-      input.simulate('focus');
-      input.node.value = value; // eslint-disable-line no-param-reassign
-      input.simulate('change');
-      searchButton.simulate('click');
-    };
-  });
-
-  test('can close modal with "Cancel" button', () => {
-    internalModal.find('.modal__footer button').first().simulate('click');
-    expect(component.state().isOpen).toEqual(false);
-  });
-
-  test('can select a valueset', () => {
-    const vsacSearchResult = component.props().vsacSearchResults[0];
-    const element = { name: vsacSearchResult.name, oid: vsacSearchResult.oid };
-
-    // Clicking the select button before choosing a value set does nothing
-    const selectButton = internalModal.find('.modal__footer .element-modal__searchbutton');
-    selectButton.simulate('click');
-    expect(component.props().onElementSelected).not.toBeCalled();
-
-    // Click on a VS returned by the search.
-    internalModal.find('.search__table tbody tr').first().simulate('click');
-
-    // Clicking an individual VS gets the details and displays them in the table and input field.
-    expect(component.state().selectedElement).toEqual(element);
-    expect(component.props().getVSDetails).toBeCalledWith(component.state().selectedElement.oid, '', '');
-    expect(internalModal.find('.search__table')).toHaveLength(1);
-    expect(internalModal.find('.search__table thead th')).toHaveLength(3);
-
-    const code = component.props().vsacDetailsCodes[0];
-    const codeToString = code.code + code.displayName + code.codeSystemName;
-
-    expect(internalModal.find('.search__table tbody tr').first().text()).toEqual(codeToString);
-    expect(input.node.value).toEqual(`${element.name} (${element.oid})`);
-
-    // Set selected values on base template
-    const templateWithSelectedValue = _.cloneDeep(component.props()).template;
-
-    const nameField = getFieldWithId(templateWithSelectedValue.fields, 'element_name');
-    const vsacField = getFieldWithType(templateWithSelectedValue.fields, '_vsac');
-    nameField.value = element.name;
-    vsacField.valueSets = [{ name: element.name, oid: element.oid }];
-    vsacField.static = true;
-
-    // Clicking the select button class the onElementSelected function
-    selectButton.simulate('click');
-    expect(component.props().onElementSelected).toBeCalledWith(templateWithSelectedValue);
-  });
-
-  test('calls vsac search action when searching', () => {
-    expect(component.props().vsacSearchResults).toHaveLength(2);
-
-    setInputValue('cholest');
-
-    expect(component.state().searchValue).toEqual('cholest');
-    expect(component.props().searchVSACByKeyword).toBeCalled();
-  });
-
-  test('using the back arrow returns to search results table', () => {
-    const vsacSearchResult = component.props().vsacSearchResults[0];
-    const element = { name: vsacSearchResult.name, oid: vsacSearchResult.oid };
-
-    // Click on a VS returned by the search, changes to the details table.
-    internalModal.find('.search__table tbody tr').first().simulate('click');
-    expect(internalModal.find('.search__table thead th')).toHaveLength(3);
-    expect(internalModal.find('.search__table thead').text()).toEqual('CodeNameCode System'); // Details table headings
-    expect(component.state().selectedElement).toEqual(element);
-
-    // Clicking the arrow button changes to search table and resets selectedElement.
-    internalModal.find('.nav-icon').simulate('click');
-    expect(internalModal.find('.search__table thead th')).toHaveLength(3);
-    expect(internalModal.find('.search__table thead').text())
-      .toEqual('Name/OIDStewardCodes'); // Search table headings
-    expect(component.state().selectedElement).toEqual(null);
-  });
-
-  test('viewOnly flag does not allow for selecting value set or navigating back to search', () => {
-    // Set new props to test, then close and reopen modal to set state correctly.
-    component.setProps({ viewOnly: true, selectedElement: { name: 'Test VS', oid: '1.2.3' } });
-    component.instance().closeModal();
-    component.instance().openModal();
-
-    expect(component.state().isOpen).toBeTruthy();
-    expect(internalModal.find('.nav-icon')).toHaveLength(0); // No back arrow.
-    expect(internalModal.find('.element-modal__searchbutton')).toHaveLength(0); // No search/select button.
-  });
-
-  test('resets search term when closing modal', () => {
-    const searchTerm = 'derp';
-    setInputValue(searchTerm);
-
-    expect(input.node.value).toEqual(searchTerm);
-
-    component.instance().closeModal();
-
-    expect(input.node.value).toEqual('');
-  });
-
-  test('Modal for modifier call correct update function', () => {
-    // Set up modal to be used on a modifier
-    const modifierModal = fullRenderComponent(
-      ElementModal,
-      {
-        updateModifier: jest.fn(),
-        searchVSACByKeyword,
-        isSearchingVSAC: false,
-        vsacSearchResults: testVsacSearchResults,
-        vsacSearchCount: 0,
-        template: testTemplate,
-        getVSDetails,
-        isRetrievingDetails: false,
-        vsacDetailsCodes: testVsacDetails,
-        vsacFHIRCredentials: { username: '', password: '' }
-      }
+  const renderComponent = (props = {}) =>
+    render(
+      <ElementModal
+        getVSDetails={jest.fn()}
+        isRetrievingDetails={false}
+        isSearchingVSAC={false}
+        onElementSelected={jest.fn()}
+        searchVSACByKeyword={jest.fn()}
+        template={testTemplate}
+        useIconButton={false}
+        vsacDetailsCodes={testVsacDetails}
+        vsacFHIRCredentials={{ username: '', password: '' }}
+        vsacSearchCount={0}
+        vsacSearchResults={testVsacSearchResults}
+        {...props}
+      />
     );
-    modifierModal.instance().openModal();
-    internalModal = new ReactWrapper(modifierModal.find(Modal).node.portal, true);
 
-    // Choose a value set
-    const vsacSearchResult = modifierModal.props().vsacSearchResults[0];
-    const element = { name: vsacSearchResult.name, oid: vsacSearchResult.oid };
-    internalModal.find('.search__table tbody tr').first().simulate('click');
+  it('renders the component with proper elements', () => {
+    const { container, queryByText } = renderComponent();
 
-    // Clicking the select button calls the modifier update function with correct object and closes modal
-    const selectButton = internalModal.find('.modal__footer .element-modal__searchbutton');
-    selectButton.simulate('click');
-    expect(modifierModal.props().updateModifier).toBeCalledWith({ name: element.name, oid: element.oid });
-    expect(modifierModal.state().isOpen).toEqual(false);
+    expect(container.firstChild).toHaveClass('element-modal');
+    expect(queryByText('Add Value Set')).not.toBeNull();
+  });
+
+  it('can set open and close the modal', () => {
+    const { getByText, getByLabelText } = renderComponent();
+
+    expect(document.querySelector('.element-modal__container')).toBeNull();
+    fireEvent.click(getByText('Add Value Set'));
+    expect(document.querySelector('.element-modal__container')).not.toBeNull();
+    fireEvent.click(getByLabelText('Close Value Set Select Modal'));
+    expect(document.querySelector('.element-modal__container')).toBeNull();
+  });
+
+  it('can open a modal using an icon instead of a button', () => {
+    const { container } = renderComponent({ useIconButton: true, iconForButton: 'eye' });
+
+    fireEvent.click(container.querySelector('span[role="button"]'));
+    expect(document.querySelector('.element-modal__container')).not.toBeNull();
+  });
+
+  describe('with modal open', () => {
+    const renderAndOpenModal = props => {
+      const component = renderComponent(props);
+      fireEvent.click(component.getByText('Add Value Set'));
+
+      return component;
+    };
+
+    const getSearchInput = () => document.querySelector('.element-modal__search input');
+
+    it('can close modal with "Cancel" button', () => {
+      const { getByText } = renderAndOpenModal();
+
+      fireEvent.click(getByText('Cancel'));
+      expect(document.querySelector('.element-modal__container')).toBeNull();
+    });
+
+    it('can select a valueset', () => {
+      const [vsacSearchResult] = testVsacSearchResults;
+
+      const getVSDetails = jest.fn();
+      const onElementSelected = jest.fn();
+
+      renderAndOpenModal({ getVSDetails, onElementSelected });
+
+      // Clicking the select button before choosing a value set does nothing
+      const selectButton = document.querySelector('.modal__footer .element-modal__searchbutton');
+      fireEvent.click(selectButton);
+      expect(onElementSelected).not.toBeCalled();
+
+      // Click on a VS returned by the search.
+      fireEvent.click(document.querySelector(`.search__table tbody tr[aria-label="${vsacSearchResult.name}"]`));
+
+      // Clicking an individual VS gets the details and displays them in the table and input field.
+      expect(getVSDetails).toBeCalledWith(vsacSearchResult.oid, '', '');
+      expect(document.querySelectorAll('.search__table')).toHaveLength(1);
+      expect(document.querySelectorAll('.search__table thead th')).toHaveLength(3);
+
+      const [code] = testVsacDetails;
+      const codeToString = code.code + code.displayName + code.codeSystemName;
+
+      expect(document.querySelector('.search__table tbody tr')).toHaveTextContent(codeToString);
+      expect(getSearchInput()).toHaveValue(
+        `${vsacSearchResult.name} (${vsacSearchResult.oid})`
+      );
+
+      // Clicking the select button class the onElementSelected function
+      fireEvent.click(selectButton);
+
+      const nameField = {
+        ...getFieldWithId(testTemplate.fields, 'element_name'),
+        value: vsacSearchResult.name
+      };
+      const vsacField = {
+        ...getFieldWithType(testTemplate.fields, '_vsac'),
+        static: true,
+        valueSets: [{ name: vsacSearchResult.name, oid: vsacSearchResult.oid }]
+      };
+
+      expect(onElementSelected).toBeCalledWith({
+        ...testTemplate,
+        fields: [
+          nameField,
+          vsacField
+        ]
+      });
+    });
+
+    it('calls vsac search action when searching', () => {
+      const searchVSACByKeyword = jest.fn();
+      renderAndOpenModal({ searchVSACByKeyword });
+
+      fireEvent.change(getSearchInput(), { target: { value: 'cholest' } });
+      fireEvent.keyDown(getSearchInput(), { key: 'Enter' });
+
+      expect(searchVSACByKeyword).toBeCalledWith('cholest', '', '');
+    });
+
+    it('using the back arrow returns to search results table', () => {
+      renderAndOpenModal();
+
+      // Click on a VS returned by the search, changes to the details table.
+      fireEvent.click(document.querySelector('.search__table tbody tr'));
+
+      expect(document.querySelector('.search__table thead')).toHaveTextContent('CodeNameCode System'); // Details table headings
+
+      // Clicking the arrow button changes to search table and resets selectedElement.
+      fireEvent.click(document.querySelector('.nav-icon'));
+
+      expect(document.querySelector('.search__table thead')).toHaveTextContent(
+        'Name/OIDStewardCodes' // Search table headings
+      );
+      expect(document.querySelector('.search__table')).toHaveClass('selectable');
+    });
+
+    it('viewOnly flag does not allow for selecting value set or navigating back to search', () => {
+      renderAndOpenModal({
+        selectedElement: { name: 'Test VS', oid: '1.2.3' },
+        viewOnly: true
+      });
+
+      expect(document.querySelectorAll('.nav-icon')).toHaveLength(0); // No back arrow.
+      expect(document.querySelectorAll('.element-modal__searchbutton')).toHaveLength(0); // No search/select button.
+    });
+
+    it('resets search term when closing modal', () => {
+      const searchVSACByKeyword = jest.fn();
+      const { getByText } = renderAndOpenModal({ searchVSACByKeyword });
+
+      // Set search input value
+      const searchTerm = 'derp';
+      fireEvent.change(getSearchInput(), { target: { value: searchTerm } });
+
+      // Close modal
+      fireEvent.click(getByText('Cancel'));
+
+      expect(searchVSACByKeyword).toBeCalledWith('');
+    });
+
+    it('calls the correct update function ', () => {
+      const [vsacSearchResult] = testVsacSearchResults;
+      const updateModifier = jest.fn();
+
+      renderAndOpenModal({ updateModifier });
+
+      // Choose a value set
+      fireEvent.click(document.querySelector(`.search__table tbody tr[aria-label="${vsacSearchResult.name}"]`));
+
+      // Clicking the select button calls the modifier update function with correct object and closes modal
+      fireEvent.click(document.querySelector('.modal__footer .element-modal__searchbutton'));
+
+      expect(updateModifier).toBeCalledWith({
+        name: vsacSearchResult.name,
+        oid: vsacSearchResult.oid
+      });
+      expect(document.querySelector('.element-modal__container')).toBeNull();
+    });
   });
 });
