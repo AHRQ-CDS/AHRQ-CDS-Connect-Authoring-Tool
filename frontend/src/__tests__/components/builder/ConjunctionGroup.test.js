@@ -1,10 +1,6 @@
 import React from 'react';
-import {prettyDOM} from '@testing-library/react';
-import _ from 'lodash';
 import ConjunctionGroup from '../../../components/builder/ConjunctionGroup';
-import TemplateInstance from '../../../components/builder/TemplateInstance';
-import { fullRenderComponent, shallowRenderComponent, createTemplateInstance, fullRenderComponentOnBody }
-  from '../../../utils/test_helpers';
+import { createTemplateInstance } from '../../../utils/test_helpers';
 import { render, fireEvent } from '../../../utils/test-utils';
 import { instanceTree, elementGroups } from '../../../utils/test_fixtures';
 
@@ -75,9 +71,6 @@ describe('<ConjunctionGroup />', () => {
     expect(cardGroups[2]).toHaveClass('card-group__odd');
   });
 
-  it('adds children at correct tree position', () => {
-  });
-
   it('can delete group', () => {
     const deleteInstance = jest.fn();
     const { container } = renderComponent({ deleteInstance });
@@ -122,194 +115,150 @@ describe('<ConjunctionGroup />', () => {
       false
     );
   });
-});
 
-describe.skip('skip', () => {
-  let rootConjunction;
-  let childConjunction;
-  let shallowConjunction;
-  let deeperConjunction;
-  let childConjunctionPath;
-  let disabledConjunction;
-  let disabledChildConjunction;
+  it('can\'t indent or outdent root group', () => {
+    const { container } = renderComponent();
 
-  const operations = elementGroups.find(g => g.name === 'Operations');
-  const orTemplate = operations.entries.find(e => e.id === 'Or');
-  const andTemplate = operations.entries.find(e => e.id === 'And');
-  const orInstance = createTemplateInstance(orTemplate);
-
-  instanceTree.path = '';
-  instanceTree.childInstances.push(orInstance);
-
-  const getAllInstances = jest.fn();
-  getAllInstances.mockReturnValue(instanceTree.childInstances);
-
-  const addInstance = jest.fn();
-  const editInstance = jest.fn();
-  const deleteInstance = jest.fn();
-
-  const treeName = 'MeetsInclusionCriteria';
-
-  const props = {
-    addInstance,
-    artifact: { [treeName]: { id: 'Or' } },
-    deleteInstance,
-    editInstance,
-    externalCqlList: [],
-    getAllInstances,
-    getAllInstancesInAllTrees: jest.fn(),
-    getVSDetails: jest.fn(),
-    instance: instanceTree,
-    instanceNames: [],
-    isRetrievingDetails: false,
-    isSearchingVSAC: false,
-    loadExternalCqlList: jest.fn(),
-    loadValueSets: jest.fn(),
-    loginVSACUser: jest.fn(),
-    parameters: [],
-    baseElements: [],
-    root: true,
-    searchVSACByKeyword: jest.fn(),
-    setVSACAuthStatus: jest.fn(),
-    templates: elementGroups,
-    treeName,
-    updateInstanceModifiers: jest.fn(),
-    vsacDetailsCodes: [],
-    vsacSearchCount: 0,
-    vsacSearchResults: [],
-    vsacStatus: '',
-    vsacStatusText: '',
-  };
-
-  beforeEach(() => {
-    shallowConjunction = shallowRenderComponent(ConjunctionGroup, props);
-    rootConjunction = fullRenderComponent(ConjunctionGroup, props);
-    childConjunction = rootConjunction.find(ConjunctionGroup).at(1); // The 'Or' instance pushed into tree above
-    childConjunctionPath = childConjunction.node.getPath();
+    expect(container.querySelector('.card-group__top > .card-group__top .indent-outdent-container')).toBeNull();
   });
 
-  afterEach(() => {
-    addInstance.mockClear();
-    editInstance.mockClear();
-    deleteInstance.mockClear();
+  it('can indent a child group', () => {
+    const deleteInstance = jest.fn();
+    const { container } = renderComponent({ deleteInstance });
+
+    const childConjunction = container.querySelector('.card-group__odd');
+    fireEvent.click(childConjunction.querySelector('button[aria-label="indent"]'));
+
+    const expectedInstance = {
+      ...createTemplateInstance(andTemplate, [orInstance]),
+      uniqueId: expect.any(String)
+    };
+
+    expect(deleteInstance).toHaveBeenCalledWith(
+      'MeetsInclusionCriteria',
+      '.childInstances.2',
+      [
+        {
+          instance: expectedInstance,
+          path: '',
+          index: 2
+        }
+      ]
+    );
   });
 
-  test('can\'t indent or outdent root group', () => {
-    expect(shallowConjunction.find('.indent-outdent-container')).toHaveLength(0);
+  it('can outdent a child group', () => {
+    const deleteInstance = jest.fn();
+    const { container } = renderComponent({ deleteInstance });
+
+    const childConjunction = container.querySelector('.card-group__odd');
+    fireEvent.click(childConjunction.querySelector('button[aria-label="outdent"]'));
+
+    expect(deleteInstance).toHaveBeenCalledWith('MeetsInclusionCriteria', '.childInstances.2', []);
   });
 
-  test('can indent a child group', () => {
-    childConjunction.find('button[aria-label="indent"]').simulate('click');
+  it('has an expression phrase', () => {
+    const childGroupInstance = {
+      ...instanceTree,
+      path: '',
+      childInstances: [
+        ...instanceTree.childInstances,
+        orInstance,
+        instanceTree
+      ]
+    };
 
-    const instance = createTemplateInstance(andTemplate, [childConjunction.node.props.instance]);
-    const path = childConjunctionPath.split('.').slice(0, -2).join('.');
-    const index = Number(childConjunctionPath.split('.').pop());
-
-    delete instance.uniqueId;
-    delete deleteInstance.mock.calls[0][2][0].instance.uniqueId;
-
-    expect(deleteInstance).toHaveBeenCalledWith(treeName, childConjunctionPath, [{ instance, path, index }]);
-  });
-
-  test('can outdent a child group', () => {
-    childConjunction.find('button[aria-label="outdent"]').simulate('click');
-
-    expect(deleteInstance).toHaveBeenCalledWith(treeName, childConjunctionPath, []);
-  });
-
-  test('has an expression phrase', () => {
-    const childGroupProps = _.cloneDeep(props);
-    const childGroupInstanceTree = _.cloneDeep(instanceTree);
-    childGroupInstanceTree.childInstances.push(_.cloneDeep(instanceTree));
-    childGroupProps.instance = childGroupInstanceTree;
-    const childGroupConjunction = fullRenderComponentOnBody(ConjunctionGroup, childGroupProps);
-    expect(childGroupConjunction.find('.expression__group')).toHaveLength(1);
+    const { container } = renderComponent({ instance: childGroupInstance });
+    expect(container.querySelectorAll('.expression__group')).toHaveLength(1);
   });
 
   describe('for deeper nested conjunction groups', () => {
-    beforeEach(() => {
-      const ageInstance = createTemplateInstance(elementGroups[0].entries[0]);
-      const deeperOr = _.cloneDeep(orInstance);
-      deeperOr.childInstances = [ageInstance];
-      const deeperTree = _.cloneDeep(instanceTree);
-      deeperTree.childInstances = [deeperOr];
-      const deeperProps = _.cloneDeep(props);
-      deeperProps.instance = deeperTree;
-      deeperConjunction = fullRenderComponentOnBody(ConjunctionGroup, deeperProps);
-      childConjunction = deeperConjunction.find(ConjunctionGroup).at(1);
-    });
+    const ageInstance = createTemplateInstance(elementGroups[0].entries[0]);
+    const deeperOr = {
+      ...orInstance,
+      childInstances: [ageInstance]
+    };
+    const deeperInstance = {
+      ...instanceTree,
+      childInstances: [deeperOr]
+    };
 
     // TODO: All the following should really verify what they were called with as well
 
-    test('can indent a child group', () => {
-      childConjunction.find('button[aria-label="indent"]').at(0).simulate('click');
+    it('can indent a child group', () => {
+      const deleteInstance = jest.fn();
+      const { container } = renderComponent({ instance: deeperInstance, deleteInstance });
 
-      expect(deleteInstance).toHaveBeenCalled();
+      const childConjunction = container.querySelector('.card-group__odd');
+      fireEvent.click(childConjunction.querySelector('button[aria-label="indent"]'));
+
+      expect(deleteInstance).toHaveBeenCalledWith(
+        'MeetsInclusionCriteria',
+        '.childInstances.0',
+        expect.anything()
+      );
     });
 
-    test('can outdent a child group', () => {
-      childConjunction.find('button[aria-label="outdent"]').at(0).simulate('click');
+    it('can outdent a child group', () => {
+      const deleteInstance = jest.fn();
+      const { container } = renderComponent({ instance: deeperInstance, deleteInstance });
 
-      expect(deleteInstance).toHaveBeenCalled();
+      const childConjunction = container.querySelector('.card-group__odd');
+      fireEvent.click(childConjunction.querySelector('button[aria-label="outdent"]'));
+
+      expect(deleteInstance).toHaveBeenCalledWith(
+        'MeetsInclusionCriteria',
+        '.childInstances.0',
+        expect.anything()
+      );
     });
 
-    test('can indent a child TemplateInstance', () => {
-      deeperConjunction
-        .find(TemplateInstance)
-        .first()
-        .find('button[aria-label="indent"]')
-        .first()
-        .simulate('click');
+    it('can indent a child TemplateInstance', () => {
+      const deleteInstance = jest.fn();
+      const { container } = renderComponent({ instance: deeperInstance, deleteInstance });
 
-      expect(deleteInstance).toHaveBeenCalled();
+      fireEvent.click(container.querySelector('.card-element__header button[aria-label="indent"]'));
+
+      expect(deleteInstance).toHaveBeenCalledWith(
+        'MeetsInclusionCriteria',
+        '.childInstances.0.childInstances.0',
+        expect.anything()
+      );
     });
 
-    test('can outdent a child TemplateInstance', () => {
-      deeperConjunction
-        .find(TemplateInstance)
-        .first()
-        .find('button[aria-label="outdent"]')
-        .first()
-        .simulate('click');
+    it('can outdent a child TemplateInstance', () => {
+      const deleteInstance = jest.fn();
+      const { container } = renderComponent({ instance: deeperInstance, deleteInstance });
 
-      expect(deleteInstance).toHaveBeenCalled();
+      fireEvent.click(container.querySelector('.card-element__header button[aria-label="outdent"]'));
+
+      expect(deleteInstance).toHaveBeenCalledWith(
+        'MeetsInclusionCriteria',
+        '.childInstances.0.childInstances.0',
+        expect.anything()
+      );
     });
   });
 
   describe('conjunctions that are in base elements in use', () => {
-    beforeEach(() => {
-      const disableElementProps = _.cloneDeep(props);
-      disableElementProps.disableElement = true;
-      disabledConjunction = fullRenderComponentOnBody(ConjunctionGroup, disableElementProps);
-      disabledChildConjunction = disabledConjunction.find(ConjunctionGroup).at(1);
+    it('cannot delete main or nested conjunctions', () => {
+      const { container } = renderComponent({ disableElement: true });
+
+      const disabledConjunction = container.querySelector('.card-group__odd');
+      const deleteButton = disabledConjunction.querySelector('.card-group__buttons .element__deletebutton');
+
+      expect(deleteButton).toHaveClass('disabled');
     });
 
-    test('cannot delete main or nested conjunctions', () => {
-      expect(disabledConjunction.props().disableElement).toBeTruthy();
+    it('cannot indent or outdent nested conjunctions', () => {
+      const { container } = renderComponent({ disableElement: true });
 
-      const deleteSpy = jest.spyOn(disabledConjunction.instance(), 'deleteInstance');
-      const propsDeleteSpy = jest.spyOn(disabledChildConjunction.props(), 'deleteInstance');
-      disabledConjunction.update();
-      const deleteButton = disabledConjunction.find('.card-group__buttons .element__deletebutton');
+      const disabledConjunction = container.querySelector('.card-group__odd');
+      const indentButton = disabledConjunction.querySelector('button[aria-label="indent"]');
+      const outdentButton = disabledConjunction.querySelector('button[aria-label="outdent"]');
 
-      // Deleting calls the CG's delete function, but not the function passed on props to actually delete it
-      disabledConjunction.instance().deleteInstance();
-      expect(deleteSpy).toBeCalled();
-      expect(propsDeleteSpy).not.toBeCalled();
-      expect(deleteButton.hasClass('disabled')).toBeTruthy();
-
-      deleteSpy.mockClear();
-      propsDeleteSpy.mockClear();
-    });
-
-    test('cannot indent or outdent nested conjunctions', () => {
-      const indentButton = disabledChildConjunction.find('button[aria-label="indent"]');
-      const outdentButton = disabledChildConjunction.find('button[aria-label="outdent"]');
-
-      indentButton.simulate('click');
-      expect(deleteInstance).not.toBeCalled();
-      outdentButton.simulate('click');
-      expect(deleteInstance).not.toBeCalled();
+      expect(indentButton).toHaveClass('disabled');
+      expect(outdentButton).toHaveClass('disabled');
     });
   });
 });
