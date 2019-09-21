@@ -6,6 +6,12 @@ import _ from 'lodash';
 
 import StyledSelect from '../../elements/StyledSelect';
 
+const options = [
+  { value: 'hour', label: 'hour' },
+  { value: 'minute', label: 'minute' },
+  { value: 'second', label: 'second' }
+];
+
 /* eslint-disable jsx-a11y/no-onchange */
 export default class TimePrecisionModifier extends Component {
   assignValue(evt, name) {
@@ -34,12 +40,6 @@ export default class TimePrecisionModifier extends Component {
     const timeId = _.uniqueId('time-');
     const precId = _.uniqueId('prec-');
 
-    const options = [
-      { value: 'hour', label: 'hour' },
-      { value: 'minute', label: 'minute' },
-      { value: 'second', label: 'second' }
-    ];
-
     return (
       /* eslint-disable jsx-a11y/label-has-for */
       <div className="col-9 d-flex modifier-vert-aligned">
@@ -63,10 +63,11 @@ export default class TimePrecisionModifier extends Component {
 
         <label htmlFor={precId}>
           <StyledSelect
+            className="Select"
             name="Precision"
             aria-label="Precision"
             id={precId}
-            value={this.props.precision}
+            value={options.find(({ value }) => value === this.props.precision)}
             onChange={ (e) => {
               this.assignValue(e, 'precision');
             }}

@@ -8,6 +8,11 @@ import ElementModal from '../ElementModal';
 import CodeSelectModal from '../CodeSelectModal';
 import StyledSelect from '../../elements/StyledSelect';
 
+const options = [
+  { value: 'value is a code from', label: 'value is a code from' },
+  { value: 'value is the code', label: 'value is the code' }
+];
+
 /* eslint-disable jsx-a11y/no-onchange */
 export default class Qualifier extends Component {
   viewValueSetDetails = (valueSet) => {
@@ -163,16 +168,14 @@ export default class Qualifier extends Component {
       <div className="qualifier row">
         <div className="d-flex flex-wrap col-10">
           <StyledSelect
+            className="Select"
             name="Qualifier"
             aria-label="Qualifier"
             title="Qualifier"
             placeholder="choose qualifier"
-            value={this.props.qualifier}
+            value={options.find(({ value }) => value === this.props.qualifier)}
             onChange={this.handleChange}
-            options={[
-              { value: 'value is a code from', label: 'value is a code from' },
-              { value: 'value is the code', label: 'value is the code' }
-            ]}
+            options={options}
           />
 
           {this.renderButton()}

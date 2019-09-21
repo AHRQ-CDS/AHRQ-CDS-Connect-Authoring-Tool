@@ -3,6 +3,13 @@ import PropTypes from 'prop-types';
 
 import StyledSelect from '../../elements/StyledSelect';
 
+const options = [
+  { value: 'is true', label: 'is true' },
+  { value: 'is not true', label: 'is not true' },
+  { value: 'is false', label: 'is false' },
+  { value: 'is not false', label: 'is not false' }
+];
+
 /* eslint-disable jsx-a11y/no-onchange */
 export default class BooleanComparison extends Component {
   handleChange = (selectedOption) => {
@@ -13,18 +20,14 @@ export default class BooleanComparison extends Component {
     return (
       <div className="boolean-comparison">
         <StyledSelect
+          className="Select"
           name="Boolean Compare?"
           aria-label="Boolean Comparison"
           title="Boolean Comparison"
           placeholder="boolean"
-          value={this.props.value}
+          value={options.find(({ value }) => value === this.props.value)}
           onChange={this.handleChange}
-          options={[
-            { value: 'is true', label: 'is true' },
-            { value: 'is not true', label: 'is not true' },
-            { value: 'is false', label: 'is false' },
-            { value: 'is not false', label: 'is not false' }
-          ]}
+          options={options}
         />
       </div>
     );

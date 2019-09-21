@@ -28,7 +28,8 @@ export default function StyledSelect({ styles = {}, ...props }) {
           input: {
             height: 'auto',
             boxShadow: 'none',
-            border: 0
+            border: 0,
+            marginLeft: 0
           }
         }),
         menu: provided => ({

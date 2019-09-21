@@ -7,6 +7,15 @@ import _ from 'lodash';
 
 import StyledSelect from '../../elements/StyledSelect';
 
+const options = [
+  { value: 'year', label: 'year' },
+  { value: 'month', label: 'month' },
+  { value: 'day', label: 'day' },
+  { value: 'hour', label: 'hour' },
+  { value: 'minute', label: 'minute' },
+  { value: 'second', label: 'second' }
+];
+
 /* eslint-disable jsx-a11y/no-onchange */
 export default class DateTimePrecisionModifier extends Component {
   assignValue(evt, name) {
@@ -41,15 +50,6 @@ export default class DateTimePrecisionModifier extends Component {
     const dateId = _.uniqueId('date-');
     const timeId = _.uniqueId('time-');
     const precId = _.uniqueId('prec-');
-
-    const options = [
-      { value: 'year', label: 'year' },
-      { value: 'month', label: 'month' },
-      { value: 'day', label: 'day' },
-      { value: 'hour', label: 'hour' },
-      { value: 'minute', label: 'minute' },
-      { value: 'second', label: 'second' }
-    ];
 
     return (
       /* eslint-disable jsx-a11y/label-has-for */
@@ -89,11 +89,12 @@ export default class DateTimePrecisionModifier extends Component {
 
         <label htmlFor={precId}>
           <StyledSelect
+            className="Select"
             name="Precision"
             aria-label="Precision"
             id={precId}
-            value={this.props.precision}
-            onChange={ (e) => {
+            value={options.find(({ value }) => value === this.props.precision)}
+            onChange={(e) => {
               this.assignValue(e, 'precision');
             }}
             options={options}

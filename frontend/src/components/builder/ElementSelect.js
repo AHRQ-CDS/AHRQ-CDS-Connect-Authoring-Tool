@@ -1,11 +1,11 @@
-import React, { Component } from 'react';
+import React, { Fragment, Component } from 'react';
 import PropTypes from 'prop-types';
 import _ from 'lodash';
 import FontAwesome from 'react-fontawesome';
 import pluralize from 'pluralize';
+import { components as SelectComponents } from 'react-select';
 
 import ElementModal from './ElementModal';
-import ElementSelectMenuRenderer from './ElementSelectMenuRenderer';
 import VSACAuthenticationModal from './VSACAuthenticationModal';
 import CodeSelectModal from './CodeSelectModal';
 import StyledSelect from '../elements/StyledSelect';
@@ -22,20 +22,44 @@ const getAllElements = categories => _.flatten(categories.map(cat => (
   }))
 )));
 
-const optionRenderer = option => (
-  <div className="element-select__option">
-    <span className="element-select__option-value">{option.label}</span>
+const ElementMenuList = ({ children, ...props }) => {
+  const { options } = props;
+  const isDisabled = options.some(({ isDisabled }) => isDisabled);
 
-    {option.vsacAuthRequired &&
-      <FontAwesome name="key" className={`element-select__option-category ${option.disabled ? 'is-disabled' : ''}`} />
-    }
-    {option.disabled &&
-      <FontAwesome name="ban" className={'element-select__option-category is-disabled'} />
-    }
-    {option.displayReturnType &&
-      <span className="element-select__option-value">{` (${option.displayReturnType})`}</span>
-    }
-  </div>
+  const optionStyle = {
+    padding: '8px 12px'
+  };
+
+  return (
+    <SelectComponents.MenuList {...props}>
+      {isDisabled ? (
+        <div style={{ ...optionStyle, color: '#ccc' }}>
+          <FontAwesome name="ban" /> Cannot add element when Base Element List in use
+        </div>
+      ) : (
+        <Fragment>
+          {children}
+          <div style={{borderTop: '1px solid #eee', color: '#ccc'}}>
+            <div style={optionStyle}>
+              <FontAwesome name="key" /> VSAC authentication required
+            </div>
+          </div>
+        </Fragment>
+      )}
+    </SelectComponents.MenuList>
+  );
+};
+
+const ElementOption = ({ children, ...props }) => (
+  <SelectComponents.Option {...props}>
+    <span className="element-select__option-value">{children}</span>
+    {(props.data.vsacAuthRequired || props.isDisabled) && (
+      <FontAwesome name="key" className={`element-select__option-category ${props.isDisabled ? 'is-disabled' : ''}`} />
+    )}
+    {props.data.displayReturnType && (
+      <span className="element-select__option-value">{` (${props.data.displayReturnType})`}</span>
+    )}
+  </SelectComponents.Option>
 );
 
 const elementOptions = [
@@ -339,15 +363,14 @@ export default class ElementSelect extends Component {
   }
 
   render() {
+    const { inBaseElements, disableElement, elementUniqueId } = this.props;
     const { selectedElement, selectedExternalLibrary, selectedExternalDefinition } = this.state;
     const placeholderText = 'Choose element type';
-    const elementOptionsToDisplay = _.cloneDeep(elementOptions).filter((e) => {
-      e.disabled = this.props.disableElement || false;
-      if (!this.props.inBaseElements) {
-        return e.value !== 'listOperations';
-      }
-      return true;
-    });
+    const elementOptionsToDisplay =
+      elementOptions
+        .filter(({ value }) => inBaseElements ? true : value !== 'listOperations')
+        .map(option => ({ ...option, isDisabled: disableElement }));
+
     let noAuthElementOptions;
     if (selectedElement && !selectedElement.vsacAuthRequired) {
       noAuthElementOptions = this.state.categories
@@ -359,7 +382,7 @@ export default class ElementSelect extends Component {
           return ({ value: id, label, type: selectedElement.label, uniqueId });
         });
       if (selectedElement.value === 'baseElement') {
-        noAuthElementOptions = noAuthElementOptions.filter(element => element.uniqueId !== this.props.elementUniqueId);
+        noAuthElementOptions = noAuthElementOptions.filter(element => element.uniqueId !== elementUniqueId);
       }
     }
     const selectedElementValue = selectedElement && selectedElement.value;
@@ -402,39 +425,46 @@ export default class ElementSelect extends Component {
           </div>
 
           <StyledSelect
-            className="element-select__element-field"
+            className="Select element-select__element-field"
+            classNamePrefix="element-select"
+            maxMenuHeight="none"
             name="element-select__element-field"
-            value={selectedElementValue}
+            value={
+              selectedElementValue
+                ? elementOptionsToDisplay.find(({ value }) => value === selectedElementValue.value)
+                : null
+            }
             placeholder={placeholderText}
             aria-label={placeholderText}
             options={elementOptionsToDisplay}
             onChange={this.onElementSelected}
-            optionRenderer={optionRenderer}
-            menuRenderer={ElementSelectMenuRenderer}
+            components={{ MenuList: ElementMenuList, Option: ElementOption }}
+            isClearable
           />
 
           {selectedElement && !selectedElement.vsacAuthRequired &&
             <StyledSelect
-              className="element-select__element-field"
+              className="Select element-select__element-field"
+              classNamePrefix="internal-select"
               value={selectedExternalLibraryName}
               placeholder={noAuthPlaceholder}
               aria-label={noAuthPlaceholder}
               options={noAuthElementOptions}
               onChange={this.onNoAuthElementSelected}
-              optionRenderer={optionRenderer}
+              components={{ Option: ElementOption }}
             />
           }
         </div>
 
         {selectedElement && !selectedElement.vsacAuthRequired && selectedExternalLibrary &&
           <StyledSelect
-            className="element-select__external-cql-field"
+            className="Select element-select__external-cql-field"
             value={selectedExternalDefinitionValue}
             placeholder={externalLibraryPlaceholder}
             aria-label={externalLibraryPlaceholder}
             options={selectedExternalLibraryOptions}
             onChange={this.onExternalDefinitionSelected}
-            optionRenderer={optionRenderer}
+            components={{ Option: ElementOption }}
           />
         }
 

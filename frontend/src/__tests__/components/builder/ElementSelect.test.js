@@ -1,170 +1,128 @@
+import React from 'react';
+import { prettyDOM } from '@testing-library/react';
 import ElementSelect from '../../../components/builder/ElementSelect';
 import { fullRenderComponent } from '../../../utils/test_helpers';
+import { render, fireEvent } from '../../../utils/test-utils';
 import { genericElementTypes, genericElementGroups } from '../../../utils/test_fixtures';
 
-let component;
-let componentInList;
-let elementField;
-let elementFieldInList;
-let setInputValue;
-const addInstance = jest.fn();
-
-const props = {
-  categories: genericElementGroups,
-  onSuggestionSelected: addInstance,
-  parameters: [],
-  loginVSACUser: jest.fn(),
-  setVSACAuthStatus: jest.fn(),
-  vsacStatus: '',
-  vsacStatusText: '',
-  searchVSACByKeyword: jest.fn(),
-  isSearchingVSAC: false,
-  vsacSearchResults: [],
-  vsacSearchCount: 0,
-  getVSDetails: jest.fn(),
-  isRetrievingDetails: false,
-  vsacDetailsCodes: [],
-  vsacFHIRCredentials: { username: 'name', password: 'pass' },
-  externalCqlList: [],
-  loadExternalCqlList: jest.fn()
-};
-
-beforeEach(() => {
-  component = fullRenderComponent(
-    ElementSelect,
-    { ...props }
-  );
-
-  elementField = component.find('.element-select');
-
-  setInputValue = (input, value) => {
-    input.simulate('focus');
-    input.node.value = value; // eslint-disable-line no-param-reassign
-    input.simulate('change');
-  };
-});
-
-test('renders the component with proper elements', () => {
-  expect(component.childAt(0).hasClass('element-select__add-element')).toBeTruthy();
-  expect(component.find('.Select')).toHaveLength(1);
-  expect(component.find('.is-open')).toHaveLength(0);
-});
-
-describe('the select element field', () => {
-  it('starts with correct placeholder text', () => {
-    expect(elementField.find('.Select-placeholder').text()).toEqual('Choose element type');
-    expect(elementField.find('input').at(0).prop('aria-label')).toEqual('Choose element type');
-  });
-
-  it('starts with a list of all elements', () => {
-    elementField.find('input').simulate('change');
-    expect(elementField.find('.element-select__element-field').hasClass('is-open')).toBeTruthy();
-    expect(elementField.find('.element-select__option')).toHaveLength(11);
-  });
-
-  it('options display correct values and have key icon if VSAC auth required', () => {
-    elementField.find('input').simulate('change');
-    const allOptions = elementField.find('.element-select__option');
-    const numOptions = allOptions.length;
-    for (let i = 0; i < numOptions; i++) {
-      const option = allOptions.at(i);
-      expect(option.find('.element-select__option-value')).toHaveLength(1);
-      expect(option.find('.element-select__option-value').text()).toEqual(genericElementTypes[i].label);
-      expect(option.find('.element-select__option-category').exists()).toBe(genericElementTypes[i].vsacAuthRequired);
-    }
-  });
-
-  it('filters correct options when typing', () => {
-    setInputValue(elementField.find('input'), 'Med');
-    const options = elementField.find('.element-select__option');
-
-    expect(options).toHaveLength(2);
-    expect(options.at(0).text().includes('Medication Statement')).toBeTruthy();
-  });
-
-  it('selects a generic type without VSAC authentication and adds it to the workspace', () => {
-    const demographics = genericElementGroups[0];
-    setInputValue(elementField.find('input'), 'Demographics');
-
-    const firstResult = elementField.find('.element-select__option').at(0);
-    firstResult.simulate('mouseDown');
-
-    const genericDemographicsOption = genericElementTypes[3];
-    genericDemographicsOption.disabled = false;
-    // Choosing no VSAC auth element renders second select box.
-    expect(component.state().selectedElement).toEqual(genericDemographicsOption);
-    expect(component.state().selectedElement.vsacAuthRequired).toBe(false);
-    expect(component.find('.element-select__element-field').length).toEqual(2);
-
-    // Get options in second select box for Demographics elements
-    const demographicsOptions = component.find('.element-select__element-field').at(1);
-    demographicsOptions.find('input').simulate('change');
-    expect(demographicsOptions.hasClass('is-open')).toBeTruthy();
-    expect(demographicsOptions.find('.Select-option')).toHaveLength(demographics.entries.length);
-
-    // Choosing first option adds it to workspace
-    const firstOption = demographicsOptions.find('.Select-option').at(0);
-    firstOption.simulate('mouseDown');
-    expect(addInstance).toBeCalledWith(genericElementGroups[0].entries[0]);
-    expect(component.state().selectedElement).toBeNull();
-  });
-
-  it('selects a generic type with VSAC auth controls based on if a username has been set', () => {
-    props.vsacFHIRCredentials = { username: null };
-    const unauthenticatedComponent = fullRenderComponent(
-      ElementSelect,
-      { ...props }
-    );
-    const unauthElementField = unauthenticatedComponent.find('.element-select__element-field');
-
-    setInputValue(elementField.find('input'), 'Observation');
-    setInputValue(unauthElementField.find('input'), 'Observation');
-
-    const obsResult = elementField.find('.element-select__option').at(0);
-    const unauthObsResult = unauthElementField.find('.element-select__option').at(0);
-    obsResult.simulate('mouseDown');
-    unauthObsResult.simulate('mouseDown');
-
-    // Choosing VSAC auth element with username stored has 2 VSAC control buttons.
-    const genericObservationOption = genericElementTypes[8];
-    genericObservationOption.disabled = false;
-    expect(component.state().selectedElement).toEqual(genericObservationOption);
-    expect(component.state().selectedElement.vsacAuthRequired).toEqual(true);
-    expect(component.find('.element-select__element-field').length).toEqual(1);
-    expect(component.find('.vsac-authenticate').length).toEqual(1);
-    expect(component.find('.vsac-authenticate button').length).toEqual(3);
-    expect(component.find('.vsac-authenticate button').at(0).text()).toEqual(' VSAC Authenticated');
-    expect(component.find('.vsac-authenticate button').at(1).text()).toEqual(' Add Value Set');
-
-    // Choosing VSAC auth element with no username stored has 1 VSAC control buttons.
-    expect(unauthenticatedComponent.state().selectedElement).toEqual(genericObservationOption);
-    expect(unauthenticatedComponent.state().selectedElement.vsacAuthRequired).toEqual(true);
-    expect(unauthenticatedComponent.find('.element-select__element-field').length).toEqual(1);
-    expect(unauthenticatedComponent.find('.vsac-authenticate').length).toEqual(1);
-    expect(unauthenticatedComponent.find('.vsac-authenticate button').length).toEqual(1);
-    expect(unauthenticatedComponent.find('.vsac-authenticate button').at(0).text()).toEqual(' Authenticate VSAC');
-  });
-});
-
-describe('In base elements', () => {
-  beforeEach(() => {
-    componentInList = fullRenderComponent(
-      ElementSelect,
-      { ...props, disableElement: true }
+describe('<ElementSelect />', () => {
+  const renderComponent = (props = {}) =>
+    render(
+      <ElementSelect
+        baseElements={[]}
+        categories={genericElementGroups}
+        externalCqlList={[]}
+        getVSDetails={jest.fn()}
+        inBaseElements={false}
+        isRetrievingDetails={false}
+        isSearchingVSAC={false}
+        isValidatingCode={false}
+        loadExternalCqlList={jest.fn()}
+        loginVSACUser={jest.fn()}
+        onSuggestionSelected={jest.fn()}
+        parameters={[]}
+        resetCodeValidation={jest.fn()}
+        searchVSACByKeyword={jest.fn()}
+        setVSACAuthStatus={jest.fn()}
+        validateCode={jest.fn()}
+        vsacDetailsCodes={[]}
+        vsacDetailsCodesError={''}
+        vsacFHIRCredentials={{ username: 'name', password: 'pass' }}
+        vsacSearchCount={0}
+        vsacSearchResults={[]}
+        vsacStatus={''}
+        vsacStatusText={''}
+        {...props}
+      />
     );
 
-    elementFieldInList = componentInList.find('.element-select');
+  it('renders the component with proper elements', () => {
+    const { container } = renderComponent();
+
+    expect(container.firstChild).toHaveClass('element-select');
+    expect(container.firstChild.firstChild).toHaveClass('element-select__add-element');
+
+    expect(container.querySelectorAll('.element-select__element-field')).toHaveLength(1);
+    expect(container.querySelectorAll('.is-open')).toHaveLength(0);
   });
 
-  it('if base element used, element select options are disabled', () => {
-    elementFieldInList.find('input').simulate('change');
-    const allOptions = elementFieldInList.find('.Select-option').not('.select-notice');
-    const numOptions = allOptions.length;
-    for (let i = 0; i < numOptions; i++) {
-      const option = allOptions.at(i);
-      expect(option.find('.element-select__option-value')).toHaveLength(1);
-      expect(option.hasClass('is-disabled')).toBeTruthy();
-      expect(option.find('.fa .fa-ban')).toHaveLength(1);
-    }
+  describe('select element field', () => {
+    it('starts with correct placeholder text', () => {
+      const { queryByText, queryByLabelText } = renderComponent();
+
+      expect(queryByText('Choose element type')).not.toBeNull();
+      expect(queryByLabelText('Choose element type')).not.toBeNull();
+    });
+
+    it('starts with a list of all elements', () => {
+      const { container, getByLabelText } = renderComponent();
+
+      fireEvent.keyDown(getByLabelText('Choose element type'), { keyCode: 40 });
+
+      expect(container.querySelectorAll('.element-select__option')).toHaveLength(11);
+    });
+
+    it('options display correct values and have key icon if VSAC auth required', () => {
+      const { container, getByLabelText } = renderComponent();
+
+      fireEvent.keyDown(getByLabelText('Choose element type'), { keyCode: 40 });
+
+      container.querySelectorAll('.element-select__option').forEach((option, i) => {
+        const { label, vsacAuthRequired } = genericElementTypes[i];
+
+        expect(option).toHaveTextContent(label);
+        expect(Boolean(option.querySelector('.element-select__option-category'))).toBe(vsacAuthRequired);
+      });
+    });
+
+    it('selects a generic type without VSAC authentication and adds it to the workspace', () => {
+      const onSuggestionSelected = jest.fn();
+      const { getByLabelText, getByText, queryByText } = renderComponent({ onSuggestionSelected });
+
+      fireEvent.keyDown(getByLabelText('Choose element type'), { keyCode: 40 });
+      fireEvent.click(getByText('Demographics'));
+
+      // Choosing no VSAC auth element renders second select box.
+      expect(queryByText('Select Demographics element')).not.toBeNull();
+
+      // Choosing first option adds it to workspace
+      fireEvent.keyDown(getByLabelText('Select Demographics element'), { keyCode: 40 });
+      fireEvent.click(getByText('Age Range'));
+
+      expect(onSuggestionSelected).toBeCalledWith(genericElementGroups[0].entries[0]);
+    });
+
+    it('displays the Authenticate VSAC button when not logged in and selecting a generic type with VSAC auth', () => {
+      const { getByText, getByLabelText } = renderComponent({ vsacFHIRCredentials: { username: null } });
+
+      fireEvent.keyDown(getByLabelText('Choose element type'), { keyCode: 40 });
+      fireEvent.click(getByText('Observation'));
+
+      expect(getByText('Authenticate VSAC')).not.toBeNull();
+    });
+
+    it(
+      'displays the Add Value Set and Add Code buttons when logged in and selecting a generic type with VSAC auth',
+      () => {
+        const { getByText, getByLabelText } = renderComponent();
+
+        fireEvent.keyDown(getByLabelText('Choose element type'), { keyCode: 40 });
+        fireEvent.click(getByText('Observation'));
+
+        expect(getByText('VSAC Authenticated')).not.toBeNull();
+        expect(getByText('Add Value Set')).not.toBeNull();
+        expect(getByText('Add Code')).not.toBeNull();
+      });
+  });
+
+  describe('in base elements', () => {
+    it('does not allow an option to be selected', () => {
+      const { container, getByText, getByLabelText } = renderComponent({ disableElement: true });
+
+      fireEvent.keyDown(getByLabelText('Choose element type'), { keyCode: 40 });
+
+      expect(container.querySelectorAll('.element-select__option')).toHaveLength(0);
+      expect(getByText('Cannot add element when Base Element List in use')).not.toBeNull();
+    });
   });
 });

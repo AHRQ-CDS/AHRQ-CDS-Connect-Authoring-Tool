@@ -13,14 +13,16 @@ class SelectModifier extends Component {
   render() {
     const selectId = _.uniqueId('select-');
     const options = this.props.options.map(option => ({ value: option.name, label: option.description }));
+
     return (
       <div>
         <label htmlFor={selectId}>
           <StyledSelect
+            className="Select"
             name={this.props.name}
             aria-label={this.props.name}
             id={selectId}
-            value={this.props.value}
+            value={options.find(({ value }) => value === this.props.value)}
             placeholder={this.props.name}
             onChange={this.handleChange}
             options={options}

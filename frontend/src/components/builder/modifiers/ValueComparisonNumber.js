@@ -4,6 +4,15 @@ import _ from 'lodash';
 
 import StyledSelect from '../../elements/StyledSelect';
 
+const options = [
+  { value: '>', label: '>' },
+  { value: '>=', label: '>=' },
+  { value: '=', label: '=' },
+  { value: '!=', label: '!=' },
+  { value: '<', label: '<' },
+  { value: '<=', label: '<=' }
+];
+
 /* eslint-disable jsx-a11y/no-onchange */
 export default class ValueComparisonNumber extends Component {
   handleChangeMin = (selectedMinOption) => {
@@ -26,22 +35,15 @@ export default class ValueComparisonNumber extends Component {
     return (
       <div className="value-comparison-observation">
         <StyledSelect
-          className="operator"
+          className="Select operator"
           name="Min Operator"
           title="Min Operator"
           aria-label="Min Operator"
           id={minOperatorId}
-          value={this.props.minOperator}
+          value={options.find(({ value }) => value === this.props.minOperator)}
           placeholder="minOp"
           onChange={this.handleChangeMin}
-          options={[
-            { value: '>', label: '>' },
-            { value: '>=', label: '>=' },
-            { value: '=', label: '=' },
-            { value: '!=', label: '!=' },
-            { value: '<', label: '<' },
-            { value: '<=', label: '<=' }
-          ]}
+          options={options}
         />
 
         <label htmlFor={minValueId}>
