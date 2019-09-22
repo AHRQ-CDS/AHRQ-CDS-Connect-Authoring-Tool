@@ -19,6 +19,7 @@ class SelectModifier extends Component {
         <label htmlFor={selectId}>
           <StyledSelect
             className="Select"
+            classNamePrefix="select-modifier-select"
             name={this.props.name}
             aria-label={this.props.name}
             id={selectId}

@@ -21,6 +21,7 @@ export default class BooleanComparison extends Component {
       <div className="boolean-comparison">
         <StyledSelect
           className="Select"
+          classNamePrefix="boolean-comparison-select"
           name="Boolean Compare?"
           aria-label="Boolean Comparison"
           title="Boolean Comparison"

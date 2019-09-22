@@ -19,6 +19,7 @@ export default class CheckExistence extends Component {
       <div className="check-existence">
         <StyledSelect
           className="Select"
+          classNamePrefix="check-existence-select"
           name="Check Existence?"
           aria-label="Check Existence"
           title="Check Existence"

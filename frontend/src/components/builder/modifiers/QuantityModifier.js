@@ -2,12 +2,10 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import _ from 'lodash';
 
-const { Def } = window;
-
 /* eslint-disable jsx-a11y/no-onchange */
 export default class QuantityModifier extends Component {
   componentDidMount = () => {
-    new Def.Autocompleter.Search( // eslint-disable-line no-new
+    new window.Def.Autocompleter.Search( // eslint-disable-line no-new
       this.props.uniqueId,
       'https://clin-table-search.lhc.nlm.nih.gov/api/ucum/v3/search',
       { tableFormat: true, valueCols: [0], colHeaders: ['Code', 'Name'] }
