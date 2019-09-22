@@ -1,7 +1,5 @@
 import React from 'react';
-import { prettyDOM } from '@testing-library/react';
 import ElementSelect from '../../../components/builder/ElementSelect';
-import { fullRenderComponent } from '../../../utils/test_helpers';
 import { render, fireEvent } from '../../../utils/test-utils';
 import { genericElementTypes, genericElementGroups } from '../../../utils/test_fixtures';
 

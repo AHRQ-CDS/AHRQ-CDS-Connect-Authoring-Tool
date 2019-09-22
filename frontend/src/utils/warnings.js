@@ -4,8 +4,7 @@ import { getReturnType, allModifiersValid, getFieldWithId, getFieldWithType } fr
 export function doesBaseElementInstanceNeedWarning(instance, allInstancesInAllTrees) {
   const isBaseElement = instance.usedBy;
   if (isBaseElement) {
-    let anyUseHasChanged = false;
-    instance.usedBy.forEach((usageId) => {
+    return instance.usedBy.some((usageId) => {
       const use = allInstancesInAllTrees.find(i => i.uniqueId === usageId);
       if (use) {
         const useCommentField = getFieldWithId(use.fields, 'comment');
@@ -14,13 +13,15 @@ export function doesBaseElementInstanceNeedWarning(instance, allInstancesInAllTr
         const instanceCommentField = getFieldWithId(instance.fields, 'comment');
         const instanceCommentValue = instanceCommentField ? instanceCommentField.value : '';
         const instanceNameField = getFieldWithId(instance.fields, 'element_name');
+
         if (((use.modifiers && use.modifiers.length > 0) || (instanceCommentValue !== useCommentValue)) &&
           instanceNameField.value === useNameField.value) {
-          anyUseHasChanged = true;
+          return true;
         }
       }
+
+      return false;
     });
-    return anyUseHasChanged;
   }
 
   return false;

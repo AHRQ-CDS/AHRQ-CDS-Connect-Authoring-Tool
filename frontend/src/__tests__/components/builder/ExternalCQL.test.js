@@ -1,39 +1,45 @@
+import React from 'react';
 import ExternalCQL from '../../../components/builder/ExternalCQL';
-import ExternalCQLTable from '../../../components/builder/ExternalCqlTable';
-import { shallowRenderComponent } from '../../../utils/test_helpers';
+import { render } from '../../../utils/test-utils';
 
-const externalCQLProps = {
-  artifact: {},
-  externalCqlList: [],
-  loadExternalCqlList: jest.fn(),
-  externalCQLLibraryParents: {},
-  deleteExternalCqlLibrary: jest.fn(),
-  addExternalLibrary: jest.fn(),
-  clearExternalCqlValidationWarnings: jest.fn(),
-  loadExternalCqlLibraryDetails: jest.fn(),
-  isLoadingExternalCqlDetails: false
-};
+describe('<ExternalCQL />', () => {
+  const renderComponent = (props = {}) =>
+    render(
+      <ExternalCQL
+        addExternalLibrary={jest.fn()}
+        artifact={{}}
+        clearAddLibraryErrorsAndMessages={jest.fn()}
+        clearExternalCqlValidationWarnings={jest.fn()}
+        deleteExternalCqlLibrary={jest.fn()}
+        externalCqlErrors={[]}
+        externalCQLLibraryParents={{}}
+        externalCqlList={[]}
+        isLoadingExternalCqlDetails={false}
+        librariesInUse={[]}
+        loadExternalCqlLibraryDetails={jest.fn()}
+        loadExternalCqlList={jest.fn()}
+        {...props}
+      />
+    );
 
-test('ExternalCQL renders without crashing', () => {
-  const component = shallowRenderComponent(ExternalCQL, externalCQLProps);
-  expect(component).toBeDefined();
-});
+  it('shows form and no table when there is no data', () => {
+    const { container, getByText } = renderComponent();
 
-test('ExternalCQL shows form and no table when there is no data', () => {
-  const component = shallowRenderComponent(ExternalCQL, externalCQLProps);
-  expect(component.text()).toContain('No external CQL libraries to show');
-  expect(component.find(ExternalCQLTable)).toHaveLength(0);
-});
+    expect(getByText(/No external CQL libraries to show/)).not.toBeNull();
+    expect(container.querySelector('.external-cql-table')).toBeNull();
+  });
 
-test('ExternalCQL shows a table when there is data', () => {
-  const newProps = {
-    externalCqlList: [{
-      name: 'My external lib',
-      details: {}
-    }]
-  };
-  const props = Object.assign({}, externalCQLProps, newProps);
-  const component = shallowRenderComponent(ExternalCQL, props);
-  expect(component.text()).not.toContain('No external CQL libraries to show');
-  expect(component.find(ExternalCQLTable)).toHaveLength(1);
+  it('shows a table when there is data', () => {
+    const { container, queryByText } = renderComponent({
+      externalCqlList: [{
+        _id: 'lib1',
+        name: 'My external lib',
+        details: {},
+        fhirVersion: '1.0.2'
+      }]
+    });
+
+    expect(queryByText(/No external CQL libraries to show/)).toBeNull();
+    expect(container.querySelector('.external-cql-table')).not.toBeNull();
+  });
 });

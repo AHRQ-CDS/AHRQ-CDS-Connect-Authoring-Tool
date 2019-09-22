@@ -251,7 +251,7 @@ export default class ListGroup extends Component {
       <div className="card-element__body">
         <div>
           {isAndOrElement && hasInvalidListWarning(instance.returnType) &&
-            <div className='warning'>
+            <div className="warning">
               Warning: Elements in groups combined with and/or must all have return type 'boolean'.
             </div>}
 
@@ -354,7 +354,7 @@ export default class ListGroup extends Component {
                   value={name}
                 />
                 {needsDuplicateNameWarning && !needsBaseElementWarning
-                  && <div className='warning'>Warning: Name already in use. Choose another name.</div>}
+                  && <div className="warning">Warning: Name already in use. Choose another name.</div>}
                 {needsBaseElementWarning &&
                   <div className="warning">
                     Warning: One or more uses of this Base Element have changed. Choose another name.
@@ -362,7 +362,7 @@ export default class ListGroup extends Component {
                 {instance.returnType === 'list_of_any'
                   && instance.name === 'Intersect'
                   && instance.childInstances.length > 0
-                  && <div className='warning'>
+                  && <div className="warning">
                     Warning: Intersecting different types will always result in an empty list
                   </div>}
               </div>
