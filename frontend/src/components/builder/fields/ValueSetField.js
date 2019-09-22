@@ -20,6 +20,7 @@ export default class ValueSetField extends Component {
             <div className="input">
               <StyledSelect
                 className="Select"
+                classNamePrefix="value-set-field-select"
                 getOptionLabel={({ name }) => name}
                 placeholder={`Select ${this.props.field.name}`}
                 options={this.props.valueSets}

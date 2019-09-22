@@ -99,7 +99,7 @@
     "start": "run-p watch-css _start",
     "_start-prod": "node server.js",
     "start-prod": "run-s build _start-prod",
-    "test": "react-scripts test --collectCoverageFrom='[\"*.js\", \"model/*.js\", \"src/**/*.{js,jsx}\", \"!src/index.js\", \"!setupTests.js\", \"!src/__tests__/*.js\"]' --noStackTrace",
+    "test": "react-scripts test",
     "test-ci": "react-scripts test --maxWorkers=2 --silent",
     "eject": "react-scripts eject",
     "lint-css": "stylelint 'src/styles/**/*.scss'",
