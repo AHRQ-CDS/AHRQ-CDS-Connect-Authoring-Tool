@@ -130,6 +130,7 @@ export default class Recommendation extends Component {
       <div className="recommendation__add-subpopulation">
         <StyledSelect
           className="recommendation__subpopulation-select"
+          classNamePrefix="subpopulation-select"
           name="recommendation__subpopulation-select"
           value="start"
           placeholder="Add a subpopulation"
@@ -140,15 +141,18 @@ export default class Recommendation extends Component {
           getOptionLabel={({ subpopulationName }) => subpopulationName}
         />
 
-        <a className="recommendation__new-subpopulation"
-           tabIndex="0"
-           role="button"
-           onClick={this.addBlankSubpopulation}
-           onKeyPress={(e) => {
-             e.which = e.which || e.keyCode;
-             if (e.which === 13) this.addBlankSubpopulation(e);
-           }}>
-           New subpopulation
+        <a
+          className="recommendation__new-subpopulation"
+          aria-label="New subpopulation"
+          tabIndex="0"
+          role="button"
+          onClick={this.addBlankSubpopulation}
+          onKeyPress={(e) => {
+            e.which = e.which || e.keyCode;
+            if (e.which === 13) this.addBlankSubpopulation(e);
+          }}
+        >
+          New subpopulation
         </a>
       </div>
     </div>
@@ -218,6 +222,7 @@ export default class Recommendation extends Component {
           :
             <button
               className="button primary-button recommendation__add-rationale"
+              aria-label="Add rationale"
               onClick={() => this.setState({ showRationale: !this.state.showRationale })}>
               Add rationale
             </button>
@@ -226,6 +231,7 @@ export default class Recommendation extends Component {
           {this.shouldShowSubpopulations() ? null :
             <button
               className="button primary-button pull-right"
+              aria-label="Add subpopulation"
               name="subpopulation"
               onClick={this.revealSubpopulations}>
               Add subpopulation
