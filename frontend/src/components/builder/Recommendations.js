@@ -96,7 +96,11 @@ export default class Recommendations extends Component {
           />
         ))}
 
-        <button className="button primary-button" onClick={this.addRecommendation}>
+        <button
+          className="button primary-button"
+          aria-label="New recommendation"
+          onClick={this.addRecommendation}
+        >
           New recommendation
         </button>
       </div>

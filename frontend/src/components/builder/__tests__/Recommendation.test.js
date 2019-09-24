@@ -1,5 +1,4 @@
 import React from 'react';
-import {prettyDOM} from '@testing-library/react';
 import Recommendation from '../Recommendation';
 import { render, fireEvent } from '../../../utils/test-utils';
 import { elementGroups } from '../../../utils/test_fixtures';
