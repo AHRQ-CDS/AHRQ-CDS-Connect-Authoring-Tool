@@ -64,56 +64,63 @@ export default class Subpopulations extends Component {
   }
 
   render() {
+    const newButtonLabel = `New ${pluralize.singular(this.props.name)}`;
+
     return (
       <div className="subpopulations">
         {this.state.subpopulations.map((subpop, i) => (
-            <Subpopulation
-              key={subpop.uniqueId}
-              treeName={this.props.name}
-              valueSets={this.props.valueSets}
-              loadValueSets={this.props.loadValueSets}
-              subpopulation={subpop}
-              subpopulationIndex={i + this.state.numOfSpecialSubpopulations} // System needs to know true index out of all subpopulations
-              setSubpopulationName={this.setSubpopulationName}
-              deleteSubpopulation={this.deleteSubpopulation}
-              parameters={this.props.parameters}
-              baseElements={this.props.baseElements}
-              externalCqlList={this.props.externalCqlList}
-              loadExternalCqlList={this.props.loadExternalCqlList}
-              addInstance={this.props.addInstance}
-              editInstance={this.props.editInstance}
-              updateInstanceModifiers={this.props.updateInstanceModifiers}
-              deleteInstance={this.props.deleteInstance}
-              getAllInstances={this.props.getAllInstances}
-              getAllInstancesInAllTrees={this.props.getAllInstancesInAllTrees}
-              templates={this.props.templates}
-              artifact={this.props.artifact}
-              conversionFunctions={this.props.conversionFunctions}
-              instanceNames={this.props.instanceNames}
-              scrollToElement={this.props.scrollToElement}
-              loginVSACUser={this.props.loginVSACUser}
-              setVSACAuthStatus={this.props.setVSACAuthStatus}
-              vsacStatus={this.props.vsacStatus}
-              vsacStatusText={this.props.vsacStatusText}
-              searchVSACByKeyword={this.props.searchVSACByKeyword}
-              isSearchingVSAC={this.props.isSearchingVSAC}
-              vsacSearchResults={this.props.vsacSearchResults}
-              vsacSearchCount={this.props.vsacSearchCount}
-              getVSDetails={this.props.getVSDetails}
-              isRetrievingDetails={this.props.isRetrievingDetails}
-              vsacDetailsCodes={this.props.vsacDetailsCodes}
-              vsacDetailsCodesError={this.props.vsacDetailsCodesError}
-              vsacFHIRCredentials={this.props.vsacFHIRCredentials}
-              validateReturnType={this.props.validateReturnType}
-              isValidatingCode={this.props.isValidatingCode}
-              isValidCode={this.props.isValidCode}
-              codeData={this.props.codeData}
-              validateCode={this.props.validateCode}
-              resetCodeValidation={this.props.resetCodeValidation}/>
-          ))}
+          <Subpopulation
+            key={subpop.uniqueId}
+            treeName={this.props.name}
+            valueSets={this.props.valueSets}
+            loadValueSets={this.props.loadValueSets}
+            subpopulation={subpop}
+            subpopulationIndex={i + this.state.numOfSpecialSubpopulations} // System needs to know true index out of all subpopulations
+            setSubpopulationName={this.setSubpopulationName}
+            deleteSubpopulation={this.deleteSubpopulation}
+            parameters={this.props.parameters}
+            baseElements={this.props.baseElements}
+            externalCqlList={this.props.externalCqlList}
+            loadExternalCqlList={this.props.loadExternalCqlList}
+            addInstance={this.props.addInstance}
+            editInstance={this.props.editInstance}
+            updateInstanceModifiers={this.props.updateInstanceModifiers}
+            deleteInstance={this.props.deleteInstance}
+            getAllInstances={this.props.getAllInstances}
+            getAllInstancesInAllTrees={this.props.getAllInstancesInAllTrees}
+            templates={this.props.templates}
+            artifact={this.props.artifact}
+            conversionFunctions={this.props.conversionFunctions}
+            instanceNames={this.props.instanceNames}
+            scrollToElement={this.props.scrollToElement}
+            loginVSACUser={this.props.loginVSACUser}
+            setVSACAuthStatus={this.props.setVSACAuthStatus}
+            vsacStatus={this.props.vsacStatus}
+            vsacStatusText={this.props.vsacStatusText}
+            searchVSACByKeyword={this.props.searchVSACByKeyword}
+            isSearchingVSAC={this.props.isSearchingVSAC}
+            vsacSearchResults={this.props.vsacSearchResults}
+            vsacSearchCount={this.props.vsacSearchCount}
+            getVSDetails={this.props.getVSDetails}
+            isRetrievingDetails={this.props.isRetrievingDetails}
+            vsacDetailsCodes={this.props.vsacDetailsCodes}
+            vsacDetailsCodesError={this.props.vsacDetailsCodesError}
+            vsacFHIRCredentials={this.props.vsacFHIRCredentials}
+            validateReturnType={this.props.validateReturnType}
+            isValidatingCode={this.props.isValidatingCode}
+            isValidCode={this.props.isValidCode}
+            codeData={this.props.codeData}
+            validateCode={this.props.validateCode}
+            resetCodeValidation={this.props.resetCodeValidation}
+          />
+        ))}
 
-        <button className="button primary-button new-subpopulation-button" onClick={this.addSubpopulation}>
-            New {pluralize.singular(this.props.name)}
+        <button
+          className="button primary-button new-subpopulation-button"
+          aria-label={newButtonLabel}
+          onClick={this.addSubpopulation}
+        >
+          {newButtonLabel}
         </button>
       </div>
     );

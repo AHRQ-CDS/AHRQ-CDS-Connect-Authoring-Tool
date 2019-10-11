@@ -12,7 +12,7 @@ const mockArtifact = {
     returnType: 'boolean',
     path: '',
     childInstances: [],
-    fields: []
+    fields: [{ id: 'element_name', value: 'AND' }]
   },
   expTreeExclude: {
     id: 'Or',
@@ -22,7 +22,7 @@ const mockArtifact = {
     returnType: 'boolean',
     path: '',
     childInstances: [],
-    fields: []
+    fields: [{ id: 'element_name', value: 'OR' }]
   },
   recommendations: [],
   baseElements: [],

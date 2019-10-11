@@ -6,6 +6,10 @@
  * @return {boolean} true if the artifact has no meaningful data, false otherwise
  */
 export default function isBlankArtifact(artifact) {
+  if (artifact == null) {
+    return true;
+  }
+
   // If it has an ID, it is pre-existing and considered non-blank
   if (artifact._id) {
     return false;
