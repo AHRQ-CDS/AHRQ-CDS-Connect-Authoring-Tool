@@ -71,7 +71,17 @@ describe('artifact actions', () => {
       const orTemplate = { id: 'Or', name: 'Or', conjunction: true, returnType: 'boolean', fields: [] };
       const expectedAction = {
         type: types.INITIALIZE_ARTIFACT,
-        artifact: mockArtifact
+        artifact: {
+          ...mockArtifact,
+          expTreeInclude: {
+            ...mockArtifact.expTreeInclude,
+            fields: []
+          },
+          expTreeExclude: {
+            ...mockArtifact.expTreeExclude,
+            fields: []
+          }
+        }
       };
 
       expect(actions.initializeArtifact(andTemplate, orTemplate)).toEqual(expectedAction);
@@ -155,7 +165,20 @@ describe('artifact actions', () => {
         { type: types.ADD_ARTIFACT_REQUEST },
         { type: types.TEMPLATES_REQUEST },
         { type: types.LOAD_TEMPLATES_SUCCESS, templates: mockTemplates },
-        { type: types.INITIALIZE_ARTIFACT, artifact: mockArtifact },
+        {
+          type: types.INITIALIZE_ARTIFACT,
+          artifact: {
+            ...mockArtifact,
+            expTreeInclude: {
+              ...mockArtifact.expTreeInclude,
+              fields: []
+            },
+            expTreeExclude: {
+              ...mockArtifact.expTreeExclude,
+              fields: []
+            }
+          }
+        },
         { type: types.SAVE_ARTIFACT_REQUEST },
         { type: types.SAVE_ARTIFACT_SUCCESS, artifact: {} },
         { type: types.ARTIFACTS_REQUEST },
