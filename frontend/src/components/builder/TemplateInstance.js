@@ -1036,6 +1036,7 @@ TemplateInstance.propTypes = {
   valueSets: PropTypes.array,
   vsacDetailsCodes: PropTypes.array.isRequired,
   vsacDetailsCodesError: PropTypes.string,
+  vsacFHIRCredentials: PropTypes.object.isRequired,
   vsacSearchCount: PropTypes.number.isRequired,
   vsacSearchResults: PropTypes.array.isRequired,
   vsacStatus: PropTypes.string,

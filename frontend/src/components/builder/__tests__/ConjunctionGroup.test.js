@@ -1,7 +1,7 @@
 import React from 'react';
 import ConjunctionGroup from '../ConjunctionGroup';
 import { createTemplateInstance } from '../../../utils/test_helpers';
-import { render, fireEvent } from '../../../utils/test-utils';
+import { render, fireEvent, openSelect } from '../../../utils/test-utils';
 import { instanceTree, elementGroups } from '../../../utils/test_fixtures';
 
 describe('<ConjunctionGroup />', () => {
@@ -86,7 +86,7 @@ describe('<ConjunctionGroup />', () => {
     const { container } = renderComponent({ editInstance });
 
     const typeSelect = container.querySelector('.card-group__conjunction-select');
-    fireEvent.keyDown(typeSelect, { keyCode: 40 });
+    openSelect(typeSelect);
 
     const orOption =
       Array.from(container.querySelectorAll('.conjunction-select__option')).find(node => node.textContent === 'Or');

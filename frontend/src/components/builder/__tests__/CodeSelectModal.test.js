@@ -1,6 +1,6 @@
 import React from 'react';
 import CodeSelectModal from '../CodeSelectModal';
-import { render, fireEvent } from '../../../utils/test-utils';
+import { render, fireEvent, openSelect } from '../../../utils/test-utils';
 
 describe('<CodeSelectModal />', () => {
   const renderComponent = (props = {}) =>
@@ -84,7 +84,7 @@ describe('<CodeSelectModal />', () => {
       setInputValue(codeInput, code);
 
       // Choose first code system from dropdown
-      fireEvent.keyDown(codeSystemSelect, { keyCode: 40 });
+      openSelect(codeSystemSelect);
       fireEvent.click(document.querySelector('.search-system-select__option'));
 
       // Select button should be enabled
@@ -109,7 +109,7 @@ describe('<CodeSelectModal />', () => {
       setInputValue(codeInput, '123-4');
 
       // Choosing 'Other' option opens second input box
-      fireEvent.keyDown(codeSystemSelect, { keyCode: 40 });
+      openSelect(codeSystemSelect);
       const allOptions = document.querySelectorAll('.search-system-select__option');
       const lastOption = allOptions[allOptions.length - 1];
       fireEvent.click(lastOption);
@@ -139,7 +139,7 @@ describe('<CodeSelectModal />', () => {
       setInputValue(codeInput(), '123-4');
 
       // Choose first code system from dropdown
-      fireEvent.keyDown(codeSystemSelect, { keyCode: 40 });
+      openSelect(codeSystemSelect);
       fireEvent.click(document.querySelector('.search-system-select__option'));
 
       // Close modal
@@ -166,7 +166,7 @@ describe('<CodeSelectModal />', () => {
       setInputValue(codeInput, code);
 
       // Choose SNOMED from dropdown
-      fireEvent.keyDown(codeSystemSelect, { keyCode: 40 });
+      openSelect(codeSystemSelect);
       fireEvent.click(getByText('SNOMED'));
 
       // Select button should be enabled

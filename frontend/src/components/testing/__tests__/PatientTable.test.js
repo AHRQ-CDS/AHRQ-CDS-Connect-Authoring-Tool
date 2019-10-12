@@ -2,7 +2,7 @@ import React from 'react';
 import PatientTable from '../PatientTable';
 import mockPatientDstu2 from '../../../mocks/mockPatientDstu2';
 import mockPatientStu3 from '../../../mocks/mockPatientStu3';
-import { render, fireEvent } from '../../../utils/test-utils';
+import { render, fireEvent, openSelect } from '../../../utils/test-utils';
 
 describe('<PatientTable />', () => {
   const artifactsMock = [
@@ -86,11 +86,11 @@ describe('<PatientTable />', () => {
     const modal = document.body.querySelector('.execute-cql-modal-modal');
     expect(modal.querySelector('.modal__header')).toHaveTextContent('Execute CQL on Selected Patients');
 
-    fireEvent.keyDown(getByText('Select...'), { keyCode: 40 });
+    openSelect(getByText('Select...'));
     fireEvent.click(getByText(artifactsMock[0].name, modal));
 
     const booleanEditor = modal.querySelector('.boolean-editor');
-    fireEvent.keyDown(getByText('True', booleanEditor), { keyCode: 40 });
+    openSelect(getByText('True', booleanEditor));
     fireEvent.click(getByText('False', booleanEditor));
 
     fireEvent.click(modal.querySelector('button[type="submit"]'));

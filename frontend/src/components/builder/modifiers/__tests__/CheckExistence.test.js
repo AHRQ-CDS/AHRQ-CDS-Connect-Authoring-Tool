@@ -1,6 +1,6 @@
 import React from 'react';
 import CheckExistence from '../CheckExistence';
-import { render, fireEvent } from '../../../../utils/test-utils';
+import { render, fireEvent, openSelect } from '../../../../utils/test-utils';
 
 describe('<CheckExistence />', () => {
   const renderComponent = (props = {}) =>
@@ -17,7 +17,7 @@ describe('<CheckExistence />', () => {
     const updateAppliedModifier = jest.fn();
     const { container, getByText } = renderComponent({ updateAppliedModifier });
 
-    fireEvent.keyDown(container.querySelector('.check-existence-select__control'), { keyCode: 40 });
+    openSelect(container.querySelector('.check-existence-select__control'));
     fireEvent.click(getByText('is null'));
 
     expect(updateAppliedModifier).toBeCalledWith(7, { value: 'is null' });

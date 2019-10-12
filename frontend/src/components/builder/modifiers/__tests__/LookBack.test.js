@@ -1,6 +1,6 @@
 import React from 'react';
 import LookBack from '../LookBack';
-import { render, fireEvent } from '../../../../utils/test-utils';
+import { render, fireEvent, openSelect } from '../../../../utils/test-utils';
 
 describe('<LookBack />', () => {
   const renderComponent = (props = {}) =>
@@ -21,7 +21,7 @@ describe('<LookBack />', () => {
     fireEvent.change(container.querySelector('input[type=number]'), { target: { value: 13 } });
     expect(updateAppliedModifier).toBeCalledWith(5, { value: 13 });
 
-    fireEvent.keyDown(getByLabelText('Unit Select'), { keyCode: 40 });
+    openSelect(getByLabelText('Unit Select'));
     fireEvent.click(getByText('Year(s)'));
 
     expect(updateAppliedModifier).toBeCalledWith(5, { unit: 'years' });

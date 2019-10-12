@@ -1,6 +1,6 @@
 import React from 'react';
 import ErrorStatement from '../ErrorStatement';
-import { render, fireEvent } from '../../../utils/test-utils';
+import { render, fireEvent, openSelect } from '../../../utils/test-utils';
 
 describe('<ErrorStatement />', () => {
   const renderComponent = (props = {}) =>
@@ -47,7 +47,7 @@ describe('<ErrorStatement />', () => {
     const updateErrorStatement = jest.fn();
     const { getByText } = renderComponent({ updateErrorStatement });
 
-    fireEvent.keyDown(getByText('Select...'), { keyCode: 40 });
+    openSelect(getByText('Select...'));
     fireEvent.click(getByText('Recommendations is null'));
 
     expect(updateErrorStatement).toHaveBeenCalled();

@@ -1,6 +1,6 @@
 import React from 'react';
 import DateTimePrecisionModifier from '../DateTimePrecisionModifier';
-import { render, fireEvent } from '../../../../utils/test-utils';
+import { render, fireEvent, openSelect } from '../../../../utils/test-utils';
 
 describe('<DateTimePrecisionModifier />', () => {
   const renderComponent = (props = {}) =>
@@ -38,7 +38,7 @@ describe('<DateTimePrecisionModifier />', () => {
       precision: ''
     });
 
-    fireEvent.keyDown(getByLabelText('Precision'), { keyCode: 40 });
+    openSelect(getByLabelText('Precision'));
     fireEvent.click(getByText('year'));
 
     expect(updateAppliedModifier).toBeCalledWith(6, {

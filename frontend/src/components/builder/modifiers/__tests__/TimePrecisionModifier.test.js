@@ -1,6 +1,6 @@
 import React from 'react';
 import TimePrecisionModifier from '../TimePrecisionModifier';
-import { render, fireEvent } from '../../../../utils/test-utils';
+import { render, fireEvent, openSelect } from '../../../../utils/test-utils';
 
 describe('<TimePrecisionModifier />', () => {
   const renderComponent = (props = {}) =>
@@ -27,7 +27,7 @@ describe('<TimePrecisionModifier />', () => {
       precision: ''
     });
 
-    fireEvent.keyDown(getByLabelText('Precision'), { keyCode: 40 });
+    openSelect(getByLabelText('Precision'));
     fireEvent.click(getByText('hour'));
 
     expect(updateAppliedModifier).toBeCalledWith(6, {

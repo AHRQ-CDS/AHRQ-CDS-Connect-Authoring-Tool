@@ -1,6 +1,6 @@
 import React from 'react';
 import Recommendation from '../Recommendation';
-import { render, fireEvent } from '../../../utils/test-utils';
+import { render, fireEvent, openSelect } from '../../../utils/test-utils';
 import { elementGroups } from '../../../utils/test_fixtures';
 
 const subpop = {
@@ -117,7 +117,7 @@ describe('<Recommendation />', () => {
   it('displays "No options" when there are no subpopulations to add', () => {
     const { getByText, getByLabelText } = renderComponent();
 
-    fireEvent.keyDown(getByLabelText('Add a subpopulation'), { keyCode: 40 });
+    openSelect(getByLabelText('Add a subpopulation'));
 
     expect(getByText('No options')).not.toBeNull();
   });
@@ -138,7 +138,7 @@ describe('<Recommendation />', () => {
     });
 
     fireEvent.click(getByLabelText('Add subpopulation'));
-    fireEvent.keyDown(getByLabelText('Add a subpopulation'), { keyCode: 40 });
+    openSelect(getByLabelText('Add a subpopulation'));
     fireEvent.click(getByText('Test Subpopulation 1'));
 
     expect(updateRecommendations).toBeCalledWith([rec]);
@@ -186,7 +186,7 @@ describe('<Recommendation />', () => {
     });
 
     fireEvent.click(getByLabelText('Add subpopulation'));
-    fireEvent.keyDown(getByLabelText('Add a subpopulation'), { keyCode: 40 });
+    openSelect(getByLabelText('Add a subpopulation'));
     fireEvent.click(getByText('Test Subpopulation 1'));
 
     expect(updateRecommendations).toHaveBeenCalledWith([{

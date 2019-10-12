@@ -1,10 +1,9 @@
 import React from 'react';
 import { Provider } from 'react-redux';
-import { MemoryRouter } from 'react-router-dom';
 import { createMockStore as reduxCreateMockStore } from 'redux-test-utils';
 import _ from 'lodash';
 import { instanceTree, emptyInstanceTree, artifact, reduxState } from '../../utils/test_fixtures';
-import { render, fireEvent } from '../../utils/test-utils';
+import { render, fireEvent, openSelect } from '../../utils/test-utils';
 import Builder from '../Builder';
 import { getFieldWithId } from '../../utils/instances';
 import * as types from '../../actions/types';
@@ -41,11 +40,9 @@ const expandAction = action => {
 describe('<Builder />', () => {
   const renderComponent = ({ store = createMockStore(defaultState), ...props } = {}) =>
     render(
-      <MemoryRouter>
-        <Provider store={store}>
-          <Builder match={{ params: {} }} {...props} />
-        </Provider>
-      </MemoryRouter>
+      <Provider store={store}>
+        <Builder match={{ params: {} }} {...props} />
+      </Provider>
     );
 
   it('shows loading screen when artifact is not loaded', () => {
@@ -76,10 +73,10 @@ describe('<Builder />', () => {
 
     const { getByText, getByLabelText } = renderComponent({ store: store });
 
-    fireEvent.keyDown(getByLabelText('Choose element type'), { keyCode: 40 });
+    openSelect(getByLabelText('Choose element type'));
     fireEvent.click(getByText('Demographics'));
 
-    fireEvent.keyDown(getByLabelText('Select Demographics element'), { keyCode: 40 });
+    openSelect(getByLabelText('Select Demographics element'));
     fireEvent.click(getByText('Age Range'));
 
     const actions = store.getActions().map(expandAction);
@@ -108,7 +105,7 @@ describe('<Builder />', () => {
     const store = createMockStore(defaultState);
     const { container, getByText } = renderComponent({ store });
 
-    fireEvent.keyDown(container.querySelector('.conjunction-select__single-value + input'), { keyCode: 40 });
+    openSelect(container.querySelector('.conjunction-select__single-value + input'));
     fireEvent.click(getByText('Or'));
 
     const updateAction = expandAction(_.last(store.getActions()));

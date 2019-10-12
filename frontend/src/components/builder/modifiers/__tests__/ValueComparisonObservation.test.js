@@ -1,6 +1,6 @@
 import React from 'react';
 import ValueComparisonObservation from '../ValueComparisonObservation';
-import { render, fireEvent } from '../../../../utils/test-utils';
+import { render, fireEvent, openSelect } from '../../../../utils/test-utils';
 
 describe('<ValueComparisonObservation />', () => {
   const renderComponent = (props = {}) =>
@@ -24,14 +24,14 @@ describe('<ValueComparisonObservation />', () => {
     fireEvent.change(getByLabelText('Min Value'), { target: { value: 21 } });
     expect(updateAppliedModifier).toBeCalledWith(303, { minValue: 21 });
 
-    fireEvent.keyDown(getByLabelText('Min Operator'), { keyCode: 40 });
+    openSelect(getByLabelText('Min Operator'));
     fireEvent.click(getByText('<'));
     expect(updateAppliedModifier).toBeCalledWith(303, { minOperator: '<' });
 
     fireEvent.change(getByLabelText('Max Value'), { target: { value: 189 } });
     expect(updateAppliedModifier).toBeCalledWith(303, { maxValue: 189 });
 
-    fireEvent.keyDown(getByLabelText('Max Operator'), { keyCode: 40 });
+    openSelect(getByLabelText('Max Operator'));
     fireEvent.click(getByText('!='));
     expect(updateAppliedModifier).toBeCalledWith(303, { maxOperator: '!=' });
   });

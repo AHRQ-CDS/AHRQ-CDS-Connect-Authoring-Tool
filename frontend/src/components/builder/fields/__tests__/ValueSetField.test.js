@@ -1,6 +1,6 @@
 import React from 'react';
 import ValueSetField from '../ValueSetField';
-import { render, fireEvent } from '../../../../utils/test-utils';
+import { render, fireEvent, openSelect } from '../../../../utils/test-utils';
 
 describe('<ValueSetField />', () => {
   const renderComponent = (props = {}) =>
@@ -24,7 +24,7 @@ describe('<ValueSetField />', () => {
     const loadValueSets = jest.fn();
     const { container } = renderComponent({ loadValueSets });
 
-    fireEvent.keyDown(container.querySelector('.value-set-field-select__control'), { keyCode: 40 });
+    openSelect(container.querySelector('.value-set-field-select__control'));
     fireEvent.focus(container.querySelector('input[type="text"]'));
 
     expect(loadValueSets).toBeCalledWith('demographics/units_of_time');
@@ -34,7 +34,7 @@ describe('<ValueSetField />', () => {
     const updateInstance = jest.fn();
     const { container, getByText } = renderComponent({ updateInstance });
 
-    fireEvent.keyDown(container.querySelector('.value-set-field-select__control'), { keyCode: 40 });
+    openSelect(container.querySelector('.value-set-field-select__control'));
     fireEvent.click(getByText('hours'));
 
     expect(updateInstance).toBeCalledWith({

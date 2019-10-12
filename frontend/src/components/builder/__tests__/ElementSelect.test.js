@@ -1,6 +1,6 @@
 import React from 'react';
 import ElementSelect from '../ElementSelect';
-import { render, fireEvent } from '../../../utils/test-utils';
+import { render, fireEvent, openSelect } from '../../../utils/test-utils';
 import { genericElementTypes, genericElementGroups } from '../../../utils/test_fixtures';
 
 describe('<ElementSelect />', () => {
@@ -55,7 +55,7 @@ describe('<ElementSelect />', () => {
     it('starts with a list of all elements', () => {
       const { container, getByLabelText } = renderComponent();
 
-      fireEvent.keyDown(getByLabelText('Choose element type'), { keyCode: 40 });
+      openSelect(getByLabelText('Choose element type'));
 
       expect(container.querySelectorAll('.element-select__option')).toHaveLength(11);
     });
@@ -63,7 +63,7 @@ describe('<ElementSelect />', () => {
     it('options display correct values and have key icon if VSAC auth required', () => {
       const { container, getByLabelText } = renderComponent();
 
-      fireEvent.keyDown(getByLabelText('Choose element type'), { keyCode: 40 });
+      openSelect(getByLabelText('Choose element type'));
 
       container.querySelectorAll('.element-select__option').forEach((option, i) => {
         const { label, vsacAuthRequired } = genericElementTypes[i];
@@ -77,14 +77,14 @@ describe('<ElementSelect />', () => {
       const onSuggestionSelected = jest.fn();
       const { getByLabelText, getByText, queryByText } = renderComponent({ onSuggestionSelected });
 
-      fireEvent.keyDown(getByLabelText('Choose element type'), { keyCode: 40 });
+      openSelect(getByLabelText('Choose element type'));
       fireEvent.click(getByText('Demographics'));
 
       // Choosing no VSAC auth element renders second select box.
       expect(queryByText('Select Demographics element')).not.toBeNull();
 
       // Choosing first option adds it to workspace
-      fireEvent.keyDown(getByLabelText('Select Demographics element'), { keyCode: 40 });
+      openSelect(getByLabelText('Select Demographics element'));
       fireEvent.click(getByText('Age Range'));
 
       expect(onSuggestionSelected).toBeCalledWith(genericElementGroups[0].entries[0]);
@@ -93,7 +93,7 @@ describe('<ElementSelect />', () => {
     it('displays the Authenticate VSAC button when not logged in and selecting a generic type with VSAC auth', () => {
       const { getByText, getByLabelText } = renderComponent({ vsacFHIRCredentials: { username: null } });
 
-      fireEvent.keyDown(getByLabelText('Choose element type'), { keyCode: 40 });
+      openSelect(getByLabelText('Choose element type'));
       fireEvent.click(getByText('Observation'));
 
       expect(getByText('Authenticate VSAC')).not.toBeNull();
@@ -104,7 +104,7 @@ describe('<ElementSelect />', () => {
       () => {
         const { getByText, getByLabelText } = renderComponent();
 
-        fireEvent.keyDown(getByLabelText('Choose element type'), { keyCode: 40 });
+        openSelect(getByLabelText('Choose element type'));
         fireEvent.click(getByText('Observation'));
 
         expect(getByText('VSAC Authenticated')).not.toBeNull();
@@ -117,7 +117,7 @@ describe('<ElementSelect />', () => {
     it('does not allow an option to be selected', () => {
       const { container, getByText, getByLabelText } = renderComponent({ disableElement: true });
 
-      fireEvent.keyDown(getByLabelText('Choose element type'), { keyCode: 40 });
+      openSelect(getByLabelText('Choose element type'));
 
       expect(container.querySelectorAll('.element-select__option')).toHaveLength(0);
       expect(getByText('Cannot add element when Base Element List in use')).not.toBeNull();

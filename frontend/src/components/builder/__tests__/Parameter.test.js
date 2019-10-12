@@ -1,6 +1,6 @@
 import React from 'react';
 import Parameter from '../Parameter';
-import { render, fireEvent } from '../../../utils/test-utils';
+import { render, fireEvent, openSelect } from '../../../utils/test-utils';
 
 jest.mock('../fields/TextAreaField', () => () => <div>TextAreaField</div>);
 jest.mock('../parameters/CodeEditor', () => () => <div>CodeEditor</div>);
@@ -77,7 +77,7 @@ describe('<Parameter />', () => {
     const updateInstanceOfParameter = jest.fn();
     const { getByText, getByLabelText } = renderComponent({ type: 'boolean', updateInstanceOfParameter });
 
-    fireEvent.keyDown(getByLabelText('Select Parameter Type'), { keyCode: 40 });
+    openSelect(getByLabelText('Select Parameter Type'));
     fireEvent.click(getByText('Integer'));
 
     expect(updateInstanceOfParameter).toBeCalledWith(

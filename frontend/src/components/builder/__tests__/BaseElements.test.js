@@ -1,6 +1,6 @@
 import React from 'react';
 import BaseElements from '../BaseElements';
-import { render, fireEvent } from '../../../utils/test-utils';
+import { render, openSelect } from '../../../utils/test-utils';
 import { elementGroups, genericBaseElementInstance, genericBaseElementListInstance }
   from '../../../utils/test_fixtures';
 
@@ -90,7 +90,7 @@ describe('<BaseElements />', () => {
 
     // The Type options in the Conjunction group match the List options, not the usual operations
     const conjunctionSelect = conjunctionGroup.querySelector('.card-group__conjunction-select');
-    fireEvent.keyDown(conjunctionSelect, { keyCode: 40 });
+    openSelect(conjunctionSelect);
 
     const listOperations = elementGroups[3].entries;
     const menuOptions = conjunctionSelect.querySelectorAll('.conjunction-select__option');

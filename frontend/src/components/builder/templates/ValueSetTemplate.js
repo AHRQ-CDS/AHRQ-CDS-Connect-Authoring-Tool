@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import FontAwesome from 'react-fontawesome';
-import _ from 'lodash';
 import { UncontrolledTooltip } from 'reactstrap';
+import _ from 'lodash';
 
 import ElementModal from '../ElementModal';
 import { getFieldWithType } from '../../../utils/instances';
@@ -13,17 +13,18 @@ export default class ValueSetTemplate extends Component {
       return (
         <span className='element-select__modal element-modal disabled'>
           <span>
-          <span
-              id={`LoginTooltip-${this.props.templateInstance.uniqueId}`}>
+            <span id={`LoginTooltip-${this.props.templateInstance.uniqueId}`}>
               <FontAwesome name="eye"/>
             </span>
-          <UncontrolledTooltip target={`LoginTooltip-${this.props.templateInstance.uniqueId}`} placement="left">
-            Authenticate VSAC to view details
+
+            <UncontrolledTooltip target={`LoginTooltip-${this.props.templateInstance.uniqueId}`} placement="left">
+              Authenticate VSAC to view details
             </UncontrolledTooltip>
           </span>
         </span>
       );
     }
+
     return (
       <ElementModal
         className="element-select__modal"
@@ -39,7 +40,7 @@ export default class ValueSetTemplate extends Component {
         vsacDetailsCodesError={this.props.vsacDetailsCodesError}
         selectedElement={this.props.valueSet}
         useIconButton={true}
-        iconForButton={'eye'}
+        iconForButton="eye"
         viewOnly={true}
         vsacFHIRCredentials={this.props.vsacFHIRCredentials}
       />

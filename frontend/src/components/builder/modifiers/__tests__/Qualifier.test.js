@@ -1,6 +1,6 @@
 import React from 'react';
 import Qualifier from '../Qualifier';
-import { render, fireEvent } from '../../../../utils/test-utils';
+import { render, fireEvent, openSelect } from '../../../../utils/test-utils';
 import { genericInstance } from '../../../../utils/test_fixtures';
 
 describe('<Qualifier />', () => {
@@ -46,7 +46,7 @@ describe('<Qualifier />', () => {
 
     const { getByText, getByLabelText } = renderComponent({ updateAppliedModifier });
 
-    fireEvent.keyDown(getByLabelText('Qualifier'), { keyCode: 40 });
+    openSelect(getByLabelText('Qualifier'));
     fireEvent.click(getByText('value is a code from'));
 
     expect(updateAppliedModifier).toBeCalledWith(5, {

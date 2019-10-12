@@ -1,6 +1,6 @@
 import React from 'react';
 import SelectModifier from '../SelectModifier';
-import { render, fireEvent } from '../../../../utils/test-utils';
+import { render, fireEvent, openSelect } from '../../../../utils/test-utils';
 
 describe('<SelectModifier />', () => {
   const renderComponent = (props = {}) =>
@@ -19,7 +19,7 @@ describe('<SelectModifier />', () => {
     const updateAppliedModifier = jest.fn();
     const { container, getByText } = renderComponent({ updateAppliedModifier });
 
-    fireEvent.keyDown(container.querySelector('.select-modifier-select__control'), { keyCode: 40 });
+    openSelect(container.querySelector('.select-modifier-select__control'));
     fireEvent.click(getByText('mmol/L to mg/dL'));
 
     expect(updateAppliedModifier).toBeCalledWith(6, {
