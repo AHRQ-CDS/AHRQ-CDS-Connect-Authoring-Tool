@@ -344,7 +344,7 @@ export default class TemplateInstance extends Component {
               role="button"
               id={`modifier-delete-${this.props.templateInstance.uniqueId}`}
               className={`modifier__deletebutton secondary-button ${canModifierBeRemoved ? '' : 'disabled'}`}
-              aria-label={'remove last expression'}
+              aria-label="remove last expression"
               onClick={() => this.removeLastModifier(canModifierBeRemoved)}
               tabIndex="0"
               onKeyPress={(e) => {
@@ -446,7 +446,7 @@ export default class TemplateInstance extends Component {
     const templateInstanceClone = _.cloneDeep(this.props.templateInstance);
     const vsacField = getFieldWithType(templateInstanceClone.fields, '_vsac');
     if (vsacField && vsacField.codes) {
-      const updatedCodes = vsacField.codes;
+      const updatedCodes = [...vsacField.codes];
       const indexOfCodeToRemove = updatedCodes.findIndex(code =>
         (code.code === codeToDelete.code && _.isEqual(code.codeSystem, codeToDelete.codeSystem)));
       updatedCodes.splice(indexOfCodeToRemove, 1);
@@ -468,7 +468,7 @@ export default class TemplateInstance extends Component {
             <button
               onClick={() => this.setState({ showModifiers: !this.state.showModifiers })}
               className="modifier__addbutton secondary-button"
-              aria-label={'add expression'}
+              aria-label="add expression"
               disabled={!allModifiersValid(this.props.templateInstance.modifiers)}>
               Add Expression
             </button>
@@ -477,9 +477,11 @@ export default class TemplateInstance extends Component {
               this.state.relevantModifiers
                 .filter(modifier => !baseElementIsInUse || modifier.returnType === this.state.returnType)
                 .map(modifier =>
-                  <button key={modifier.id}
-                    value={modifier.id}
-                    onClick={this.handleModifierSelected} className="modifier__button secondary-button">
+                  <button
+                    key={modifier.id}
+                    onClick={this.handleModifierSelected}
+                    className="modifier__button secondary-button"
+                    aria-label={modifier.name}>
                     {modifier.name}
                   </button>)
             }
@@ -554,8 +556,8 @@ export default class TemplateInstance extends Component {
               <span
                 role="button"
                 id={`definition-${this.props.templateInstance.uniqueId}`}
-                className={'element__linkbutton'}
-                aria-label={'see element definition'}
+                className="element__linkbutton"
+                aria-label="see element definition"
                 onClick={() => this.props.scrollToElement(scrollElementId, scrollReferenceType, tabIndex)}
                 tabIndex="0"
                 onKeyPress={(e) => {
