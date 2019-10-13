@@ -1,6 +1,6 @@
 import React from 'react';
 import TemplateInstance from '../TemplateInstance';
-import { render, fireEvent, prettyDOM } from '../../../utils/test-utils';
+import { render, fireEvent } from '../../../utils/test-utils';
 import { createTemplateInstance } from '../../../utils/test_helpers';
 import {
   genericInstance,
