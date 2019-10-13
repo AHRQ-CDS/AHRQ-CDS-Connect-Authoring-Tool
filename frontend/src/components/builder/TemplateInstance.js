@@ -479,6 +479,7 @@ export default class TemplateInstance extends Component {
                 .map(modifier =>
                   <button
                     key={modifier.id}
+                    value={modifier.id}
                     onClick={this.handleModifierSelected}
                     className="modifier__button secondary-button"
                     aria-label={modifier.name}>
