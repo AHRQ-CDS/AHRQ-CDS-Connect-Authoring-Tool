@@ -21,13 +21,13 @@ const modifierMap = loadTemplates(modifierPath);
 // Each library will be included. Aliases are optional.
 const includeLibrariesDstu2 = [
   { name: 'FHIRHelpers', version: '1.0.2', alias: 'FHIRHelpers' },
-  { name: 'CDS_Connect_Commons_for_FHIRv102', version: '1.3.0', alias: 'C3F' },
+  { name: 'CDS_Connect_Commons_for_FHIRv102', version: '1.3.2', alias: 'C3F' },
   { name: 'CDS_Connect_Conversions', version: '1', alias: 'Convert' }
 ];
 
 const includeLibrariesStu3 = [
   { name: 'FHIRHelpers', version: '3.0.0', alias: 'FHIRHelpers' },
-  { name: 'CDS_Connect_Commons_for_FHIRv300', version: '1.0.0', alias: 'C3F' },
+  { name: 'CDS_Connect_Commons_for_FHIRv300', version: '1.0.1', alias: 'C3F' },
   { name: 'CDS_Connect_Conversions', version: '1', alias: 'Convert' }
 ];
 
@@ -311,7 +311,7 @@ class CqlArtifact {
       if (parameter.value && parameter.value.unit) {
         parameter.value.unit = parameter.value.unit.replace(/'/g, '\\\'');
       }
-      
+
       if (parameter.type === "system_code" || parameter.type === "system_concept") {
         let system = _.get(parameter, 'value.system', '').replace(/'/g, '\\\'');
         let uri = _.get(parameter, 'value.uri', '').replace(/'/g, '\\\'');
