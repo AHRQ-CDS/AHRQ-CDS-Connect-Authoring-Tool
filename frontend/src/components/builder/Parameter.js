@@ -187,8 +187,6 @@ export default class Parameter extends Component {
       { value: 'interval_of_quantity', label: 'Interval<Quantity>' }
     ];
 
-    console.log(type);
-
     const doesHaveDuplicateName = parameterHasDuplicateName(
       name,
       id,
