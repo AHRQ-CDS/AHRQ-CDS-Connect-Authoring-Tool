@@ -140,16 +140,21 @@ export default class ErrorStatement extends Component {
   }
 
   // Renders if part
-  renderCondition = (statement, parent, index) => (
-    <StyledSelect
-      key={`condition-${parent != null ? parent : -1}-${index}`}
-      inputProps={{ id: `condition-${parent != null ? parent : -1}-${index}` }}
-      index={index}
-      value={statement.condition.value}
-      options={this.options()}
-      onChange={e => this.setStatement(e, parent, index, 'condition')}
-    />
-  )
+  renderCondition = (statement, parent, index) => {
+    let options = this.options();
+    let selectedOption = options.find(({ value }) => value === statement.condition.value);
+
+    return (
+      <StyledSelect
+        key={`condition-${parent != null ? parent : -1}-${index}`}
+        inputProps={{ id: `condition-${parent != null ? parent : -1}-${index}` }}
+        index={index}
+        value={selectedOption}
+        options={options}
+        onChange={e => this.setStatement(e, parent, index, 'condition')}
+      />
+    );
+  }
 
   // Renders then part of statement
   renderThen = (statement, parent, index) => (

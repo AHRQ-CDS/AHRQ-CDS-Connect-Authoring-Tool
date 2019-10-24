@@ -187,6 +187,8 @@ export default class Parameter extends Component {
       { value: 'interval_of_quantity', label: 'Interval<Quantity>' }
     ];
 
+    console.log(type);
+
     const doesHaveDuplicateName = parameterHasDuplicateName(
       name,
       id,
@@ -299,7 +301,7 @@ export default class Parameter extends Component {
                   aria-label={'Select Parameter Type'}
                   inputProps={{ title: 'Select Parameter Type', id: `parameter-${index}` }}
                   options={typeOptions}
-                  value={type}
+                  value={typeOptions.find(typeOption => typeOption.value === type)}
                   disabled={parameterUsed}
                   isClearable={false}
                   onChange={parameterType => this.changeParameterType(parameterType, name, comment)}
