@@ -89,7 +89,7 @@ export default class DateTimePrecisionModifier extends Component {
 
         <label htmlFor={precId}>
           <StyledSelect
-            className="Select"
+            className="Select date-time-precision-modifier__select"
             name="Precision"
             aria-label="Precision"
             id={precId}

@@ -146,6 +146,7 @@ export default class ErrorStatement extends Component {
 
     return (
       <StyledSelect
+        className="error-statement__select"
         key={`condition-${parent != null ? parent : -1}-${index}`}
         inputProps={{ id: `condition-${parent != null ? parent : -1}-${index}` }}
         index={index}

@@ -414,7 +414,6 @@ export default class ElementSelect extends Component {
         });
       });
     }
-    const selectedExternalDefinitionValue = selectedExternalDefinition && selectedExternalDefinition.value;
 
     return (
       <div className="element-select form__group">
@@ -446,7 +445,7 @@ export default class ElementSelect extends Component {
             <StyledSelect
               className="Select element-select__element-field"
               classNamePrefix="internal-select"
-              value={selectedExternalLibraryName}
+              value={noAuthElementOptions.find(({ value }) => value === selectedExternalLibraryName)}
               placeholder={noAuthPlaceholder}
               aria-label={noAuthPlaceholder}
               options={noAuthElementOptions}
@@ -459,7 +458,11 @@ export default class ElementSelect extends Component {
         {selectedElement && !selectedElement.vsacAuthRequired && selectedExternalLibrary &&
           <StyledSelect
             className="Select element-select__external-cql-field"
-            value={selectedExternalDefinitionValue}
+            value={
+              selectedExternalDefinition
+                ? selectedExternalLibraryOptions.find(({ value }) => value === selectedExternalDefinition.value)
+                : null
+            }
             placeholder={externalLibraryPlaceholder}
             aria-label={externalLibraryPlaceholder}
             options={selectedExternalLibraryOptions}
