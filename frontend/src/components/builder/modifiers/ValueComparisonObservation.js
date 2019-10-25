@@ -79,22 +79,15 @@ export default class ValueComparisonObservation extends Component {
         </label>
 
         <StyledSelect
-          className="operator"
+          className="Select operator"
           name="Max Operator"
           title="Max Operator"
           aria-label="Max Operator"
           id={maxOperatorId}
-          value={this.props.maxOperator}
+          value={options.find(({ value }) => value === this.props.maxOperator)}
           placeholder="maxOp"
           onChange={this.handleChangeMax}
-          options={[
-            { value: '>', label: '>' },
-            { value: '>=', label: '>=' },
-            { value: '=', label: '=' },
-            { value: '!=', label: '!=' },
-            { value: '<', label: '<' },
-            { value: '<=', label: '<=' }
-          ]}
+          options={options}
         />
 
         <label htmlFor={maxValueId}>
