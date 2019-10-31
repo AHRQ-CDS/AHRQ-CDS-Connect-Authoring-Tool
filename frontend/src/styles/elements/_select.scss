@@ -62,9 +62,7 @@
     max-height: 998px;
   }
 
-  &.operator > div {
-    width: calc(65px + 3vw);
-    min-width: inherit;
-    max-width: 120px;
+  &.operator {
+    min-width: 100px !important;
   }
 }

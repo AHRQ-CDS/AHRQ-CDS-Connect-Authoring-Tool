@@ -12,7 +12,7 @@ import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 
 class App extends Component {
-  componentWillMount() {
+  UNSAFE_componentWillMount() { // eslint-disable-line camelcase
     this.props.getCurrentUser();
   }
 

@@ -3,7 +3,8 @@ import PropTypes from 'prop-types';
 import _ from 'lodash';
 import FontAwesome from 'react-fontawesome';
 import update from 'immutability-helper';
-import Select from 'react-select';
+
+import StyledSelect from '../elements/StyledSelect';
 
 import createTemplateInstance from '../../utils/templates';
 
@@ -127,27 +128,31 @@ export default class Recommendation extends Component {
       </div>
 
       <div className="recommendation__add-subpopulation">
-        <Select
+        <StyledSelect
           className="recommendation__subpopulation-select"
+          classNamePrefix="subpopulation-select"
           name="recommendation__subpopulation-select"
           value="start"
-          valueKey="subpopulationName"
           placeholder="Add a subpopulation"
           aria-label="Add a subpopulation"
           options={this.getRelevantSubpopulations()}
-          labelKey='subpopulationName'
           onChange={this.applySubpopulation}
+          getOptionValue={({ subpopulationName }) => subpopulationName}
+          getOptionLabel={({ subpopulationName }) => subpopulationName}
         />
 
-        <a className="recommendation__new-subpopulation"
-           tabIndex="0"
-           role="button"
-           onClick={this.addBlankSubpopulation}
-           onKeyPress={(e) => {
-             e.which = e.which || e.keyCode;
-             if (e.which === 13) this.addBlankSubpopulation(e);
-           }}>
-           New subpopulation
+        <a
+          className="recommendation__new-subpopulation"
+          aria-label="New subpopulation"
+          tabIndex="0"
+          role="button"
+          onClick={this.addBlankSubpopulation}
+          onKeyPress={(e) => {
+            e.which = e.which || e.keyCode;
+            if (e.which === 13) this.addBlankSubpopulation(e);
+          }}
+        >
+          New subpopulation
         </a>
       </div>
     </div>
@@ -162,7 +167,7 @@ export default class Recommendation extends Component {
           <div className="recommendation__title">
             <div className="card-element__label">Recommend...</div>
 
-            {/* <Select
+            {/* <StyledSelect
               className="recommendation__grade"
               name="recommendation__grade"
               aria-label="Recommendation Grade"
@@ -175,7 +180,7 @@ export default class Recommendation extends Component {
                 { value: 'B', label: 'Grade B' },
                 { value: 'C', label: 'Grade C' }
               ]}
-              labelKey='recommendationGrade'
+              getOptionLabel={({recommendationGrade}) => recommendationGrade}
             /> */}
 
             {/* <button className="button" aria-label="copy recommendation">
@@ -217,6 +222,7 @@ export default class Recommendation extends Component {
           :
             <button
               className="button primary-button recommendation__add-rationale"
+              aria-label="Add rationale"
               onClick={() => this.setState({ showRationale: !this.state.showRationale })}>
               Add rationale
             </button>
@@ -225,6 +231,7 @@ export default class Recommendation extends Component {
           {this.shouldShowSubpopulations() ? null :
             <button
               className="button primary-button pull-right"
+              aria-label="Add subpopulation"
               name="subpopulation"
               onClick={this.revealSubpopulations}>
               Add subpopulation

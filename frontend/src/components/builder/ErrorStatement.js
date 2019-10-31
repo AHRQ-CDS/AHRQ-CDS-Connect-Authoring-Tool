@@ -1,11 +1,12 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import Select from 'react-select';
 import _ from 'lodash';
+
+import StyledSelect from '../elements/StyledSelect';
 
 export default class ErrorStatement extends Component {
   // Ensures there is at least one statement to start
-  componentWillMount = () => {
+  UNSAFE_componentWillMount = () => { // eslint-disable-line camelcase
     const { statements } = this.props.errorStatement;
     if (statements.length < 1) {
       this.addStatement(null);
@@ -139,16 +140,22 @@ export default class ErrorStatement extends Component {
   }
 
   // Renders if part
-  renderCondition = (statement, parent, index) => (
-    <Select
-      key={`condition-${parent != null ? parent : -1}-${index}`}
-      inputProps={{ id: `condition-${parent != null ? parent : -1}-${index}` }}
-      index={index}
-      value={statement.condition.value}
-      options={this.options()}
-      onChange={e => this.setStatement(e, parent, index, 'condition')}
-    />
-  )
+  renderCondition = (statement, parent, index) => {
+    let options = this.options();
+    let selectedOption = options.find(({ value }) => value === statement.condition.value);
+
+    return (
+      <StyledSelect
+        className="error-statement__select"
+        key={`condition-${parent != null ? parent : -1}-${index}`}
+        inputProps={{ id: `condition-${parent != null ? parent : -1}-${index}` }}
+        index={index}
+        value={selectedOption}
+        options={options}
+        onChange={e => this.setStatement(e, parent, index, 'condition')}
+      />
+    );
+  }
 
   // Renders then part of statement
   renderThen = (statement, parent, index) => (

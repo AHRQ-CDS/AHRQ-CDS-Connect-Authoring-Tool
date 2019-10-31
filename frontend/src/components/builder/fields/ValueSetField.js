@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import Select from 'react-select';
 import _ from 'lodash';
+
+import StyledSelect from '../../elements/StyledSelect';
 
 export default class ValueSetField extends Component {
   onFocus = () => {
@@ -17,8 +18,10 @@ export default class ValueSetField extends Component {
             <div className="label">{this.props.field.name}:</div>
 
             <div className="input">
-              <Select
-                labelKey={'name'}
+              <StyledSelect
+                className="Select"
+                classNamePrefix="value-set-field-select"
+                getOptionLabel={({ name }) => name}
                 placeholder={`Select ${this.props.field.name}`}
                 options={this.props.valueSets}
                 inputProps={{ id }}
@@ -26,7 +29,7 @@ export default class ValueSetField extends Component {
                 value={this.props.field.value}
                 onChange={(value) => { this.props.updateInstance({ [this.props.field.id]: value }); }}
                 onFocus={this.onFocus}
-                searchable={true} />
+                isSearchable={true} />
               </div>
           </label>
         </div>

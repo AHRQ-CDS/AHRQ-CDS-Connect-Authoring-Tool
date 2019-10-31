@@ -349,6 +349,7 @@ const genericInstance = {
     }
   ],
   modifiers: [],
+  uniqueId: 'uuid'
 };
 
 const genericInstanceWithModifiers = {
@@ -510,6 +511,66 @@ const genericBaseElementUseInstance = {
   modifiers: [],
 };
 
+const reduxState = {
+  artifacts: {
+    artifact: {},
+    artifacts: [],
+    artifactSaved: true,
+    downloadArtifact: {
+      elmErrors: []
+    },
+    executeArtifact: {
+      results: null,
+      isExecuting: false
+    },
+    librariesInUse: [],
+    names: []
+  },
+  auth: {
+    isAuthenticated: true,
+    isLoggingOut: false,
+    username: ''
+  },
+  errors: {
+    errorMessage: ''
+  },
+  externalCQL: {
+    addExternalCqlLibrary: {
+      isAdding: false
+    },
+    loadExternalCqlLibraryDetails: {
+      isLoading: false
+    },
+    externalCQLLibraryParents: {},
+    externalCqlList: []
+  },
+  modifiers: {},
+  templates: {
+    templates: elementGroups
+  },
+  testing: {
+    patients: [],
+    addPatient: {
+      isAdding: false
+    }
+  },
+  valueSets: {
+    valueSets: []
+  },
+  vsac: {
+    authStatus: '',
+    detailsCodes: [],
+    detailsCodesErrorMessage: '',
+    isAuthenticating: false,
+    isValidatingCode: false,
+    isRetrievingDetails: false,
+    isSearchingVSAC: false,
+    searchCount: 0,
+    searchResults: []
+  }
+};
+
+export { default as artifact } from '../mocks/mockArtifact';
 export {
   instanceTree,
   emptyInstanceTree,
@@ -521,5 +582,6 @@ export {
   genericBaseElementInstance,
   genericBaseElementInstanceWithModifiers,
   genericBaseElementListInstance,
-  genericBaseElementUseInstance
+  genericBaseElementUseInstance,
+  reduxState
 };

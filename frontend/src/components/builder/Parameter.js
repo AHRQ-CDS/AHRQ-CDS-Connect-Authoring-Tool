@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import Select from 'react-select';
 import FontAwesome from 'react-fontawesome';
 import { UncontrolledTooltip } from 'reactstrap';
 import _ from 'lodash';
@@ -19,6 +18,7 @@ import IntervalOfIntegerEditor from './parameters/IntervalOfIntegerEditor';
 import IntervalOfDateTimeEditor from './parameters/IntervalOfDateTimeEditor';
 import IntervalOfDecimalEditor from './parameters/IntervalOfDecimalEditor';
 import IntervalOfQuantityEditor from './parameters/IntervalOfQuantityEditor';
+import StyledSelect from '../elements/StyledSelect';
 
 import {
   doesParameterNeedUsageWarning,
@@ -295,13 +295,13 @@ export default class Parameter extends Component {
               </div>
 
               <div className="col-9">
-                <Select
+                <StyledSelect
                   aria-label={'Select Parameter Type'}
                   inputProps={{ title: 'Select Parameter Type', id: `parameter-${index}` }}
                   options={typeOptions}
-                  value={type}
+                  value={typeOptions.find(typeOption => typeOption.value === type)}
                   disabled={parameterUsed}
-                  clearable={false}
+                  isClearable={false}
                   onChange={parameterType => this.changeParameterType(parameterType, name, comment)}
                 />
               </div>

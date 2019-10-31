@@ -1,7 +1,10 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import Select from 'react-select';
 import _ from 'lodash';
+
+import StyledSelect from '../../elements/StyledSelect';
+
+const options = [{ value: 'true', label: 'True' }, { value: 'false', label: 'False' }];
 
 export default class BooleanEditor extends Component {
   render() {
@@ -16,12 +19,12 @@ export default class BooleanEditor extends Component {
           </div>
 
           <div className="col-9">
-            <Select
+            <StyledSelect
               id={id}
               aria-label={'Select True or False'}
               inputProps={{ title: 'Select True or False', id: formId }}
-              options={[{ value: 'true', label: 'True' }, { value: 'false', label: 'False' }]}
-              value={value}
+              options={options}
+              value={options.find(option => option.value === value)}
               onChange={ (e) => { updateInstance({ name, type, label, value: _.get(e, 'value', null) }); }}
             />
           </div>

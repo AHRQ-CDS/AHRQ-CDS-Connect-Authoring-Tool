@@ -1,9 +1,18 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import Select from 'react-select';
 import _ from 'lodash';
 
+import StyledSelect from '../../elements/StyledSelect';
+
 const { Def } = window;
+const options = [
+  { value: '>', label: '>' },
+  { value: '>=', label: '>=' },
+  { value: '=', label: '=' },
+  { value: '!=', label: '!=' },
+  { value: '<', label: '<' },
+  { value: '<=', label: '<=' }
+];
 
 /* eslint-disable jsx-a11y/no-onchange */
 export default class ValueComparisonObservation extends Component {
@@ -41,23 +50,16 @@ export default class ValueComparisonObservation extends Component {
 
     return (
       <div className="value-comparison-observation">
-        <Select
-          className="operator"
+        <StyledSelect
+          className="Select operator"
           name="Min Operator"
           title="Min Operator"
           aria-label="Min Operator"
           id={minOperatorId}
-          value={this.props.minOperator}
+          value={options.find(({ value }) => value === this.props.minOperator)}
           placeholder="minOp"
           onChange={this.handleChangeMin}
-          options={[
-            { value: '>', label: '>' },
-            { value: '>=', label: '>=' },
-            { value: '=', label: '=' },
-            { value: '!=', label: '!=' },
-            { value: '<', label: '<' },
-            { value: '<=', label: '<=' }
-          ]}
+          options={options}
         />
 
         <label htmlFor={minValueId}>
@@ -76,23 +78,16 @@ export default class ValueComparisonObservation extends Component {
           />
         </label>
 
-        <Select
-          className="operator"
+        <StyledSelect
+          className="Select operator"
           name="Max Operator"
           title="Max Operator"
           aria-label="Max Operator"
           id={maxOperatorId}
-          value={this.props.maxOperator}
+          value={options.find(({ value }) => value === this.props.maxOperator)}
           placeholder="maxOp"
           onChange={this.handleChangeMax}
-          options={[
-            { value: '>', label: '>' },
-            { value: '>=', label: '>=' },
-            { value: '=', label: '=' },
-            { value: '!=', label: '!=' },
-            { value: '<', label: '<' },
-            { value: '<=', label: '<=' }
-          ]}
+          options={options}
         />
 
         <label htmlFor={maxValueId}>

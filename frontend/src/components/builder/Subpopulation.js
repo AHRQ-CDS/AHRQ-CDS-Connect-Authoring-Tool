@@ -80,8 +80,8 @@ export default class Subpopulation extends Component {
               {isExpanded ?
                 <div className="card-element__heading">
                   <StringField
-                    id={'subpopulation_title'}
-                    name={'Subpopulation'}
+                    id="subpopulation_title"
+                    name="Subpopulation"
                     uniqueId={this.props.subpopulation.uniqueId}
                     updateInstance={(value) => {
                       this.props.setSubpopulationName(value.subpopulation_title, this.props.subpopulation.uniqueId);
@@ -108,7 +108,7 @@ export default class Subpopulation extends Component {
                   onClick={isExpanded ? this.collapse : this.expand}
                   id="collapse-icon"
                   className="element__hidebutton transparent-button"
-                  aria-label={`hide ${this.props.subpopulation.subpopulationName}`}>
+                  aria-label={`${isExpanded ? 'hide' : 'show'} ${this.props.subpopulation.subpopulationName}`}>
                   <FontAwesome name={isExpanded ? 'angle-double-down' : 'angle-double-right'} />
                 </button>
                 <button
@@ -137,56 +137,56 @@ export default class Subpopulation extends Component {
   renderContents() {
     return (
       <div className="card-element__body">
-              {this.subpopulationHasOneChildWarning() &&
-                <div className='warning'>This subpopulation needs at least one element</div>
-              }
-              <ExpressionPhrase
-                class="expression expression__group"
-                instance={this.props.subpopulation}
-                baseElements={this.props.baseElements}
-              />
-              <ConjunctionGroup
-                root={true}
-                treeName={this.props.treeName}
-                artifact={this.props.artifact}
-                templates={this.props.templates}
-                valueSets={this.props.valueSets}
-                loadValueSets={this.props.loadValueSets}
-                instance={this.props.subpopulation}
-                addInstance={this.addInstance}
-                editInstance={this.editInstance}
-                deleteInstance={this.deleteInstance}
-                getAllInstances={this.getAllInstances}
-                getAllInstancesInAllTrees={this.props.getAllInstancesInAllTrees}
-                updateInstanceModifiers={this.props.updateInstanceModifiers}
-                parameters={this.props.parameters}
-                baseElements={this.props.baseElements}
-                externalCqlList={this.props.externalCqlList}
-                loadExternalCqlList={this.props.loadExternalCqlList}
-                subPopulationIndex={this.props.subpopulationIndex}
-                conversionFunctions={this.props.conversionFunctions}
-                instanceNames={this.props.instanceNames}
-                scrollToElement={this.props.scrollToElement}
-                loginVSACUser={this.props.loginVSACUser}
-                setVSACAuthStatus={this.props.setVSACAuthStatus}
-                vsacStatus={this.props.vsacStatus}
-                vsacStatusText={this.props.vsacStatusText}
-                searchVSACByKeyword={this.props.searchVSACByKeyword}
-                isSearchingVSAC={this.props.isSearchingVSAC}
-                vsacSearchResults={this.props.vsacSearchResults}
-                vsacSearchCount={this.props.vsacSearchCount}
-                getVSDetails={this.props.getVSDetails}
-                isRetrievingDetails={this.props.isRetrievingDetails}
-                vsacDetailsCodes={this.props.vsacDetailsCodes}
-                vsacDetailsCodesError={this.props.vsacDetailsCodesError}
-                vsacFHIRCredentials={this.props.vsacFHIRCredentials}
-                validateReturnType={this.props.validateReturnType}
-                isValidatingCode={this.props.isValidatingCode}
-                isValidCode={this.props.isValidCode}
-                codeData={this.props.codeData}
-                validateCode={this.props.validateCode}
-                resetCodeValidation={this.props.resetCodeValidation}/>
-            </div>
+        {this.subpopulationHasOneChildWarning() &&
+          <div className='warning'>This subpopulation needs at least one element</div>
+        }
+        <ExpressionPhrase
+          class="expression expression__group"
+          instance={this.props.subpopulation}
+          baseElements={this.props.baseElements}
+        />
+        <ConjunctionGroup
+          root={true}
+          treeName={this.props.treeName}
+          artifact={this.props.artifact}
+          templates={this.props.templates}
+          valueSets={this.props.valueSets}
+          loadValueSets={this.props.loadValueSets}
+          instance={this.props.subpopulation}
+          addInstance={this.addInstance}
+          editInstance={this.editInstance}
+          deleteInstance={this.deleteInstance}
+          getAllInstances={this.getAllInstances}
+          getAllInstancesInAllTrees={this.props.getAllInstancesInAllTrees}
+          updateInstanceModifiers={this.props.updateInstanceModifiers}
+          parameters={this.props.parameters}
+          baseElements={this.props.baseElements}
+          externalCqlList={this.props.externalCqlList}
+          loadExternalCqlList={this.props.loadExternalCqlList}
+          subPopulationIndex={this.props.subpopulationIndex}
+          conversionFunctions={this.props.conversionFunctions}
+          instanceNames={this.props.instanceNames}
+          scrollToElement={this.props.scrollToElement}
+          loginVSACUser={this.props.loginVSACUser}
+          setVSACAuthStatus={this.props.setVSACAuthStatus}
+          vsacStatus={this.props.vsacStatus}
+          vsacStatusText={this.props.vsacStatusText}
+          searchVSACByKeyword={this.props.searchVSACByKeyword}
+          isSearchingVSAC={this.props.isSearchingVSAC}
+          vsacSearchResults={this.props.vsacSearchResults}
+          vsacSearchCount={this.props.vsacSearchCount}
+          getVSDetails={this.props.getVSDetails}
+          isRetrievingDetails={this.props.isRetrievingDetails}
+          vsacDetailsCodes={this.props.vsacDetailsCodes}
+          vsacDetailsCodesError={this.props.vsacDetailsCodesError}
+          vsacFHIRCredentials={this.props.vsacFHIRCredentials}
+          validateReturnType={this.props.validateReturnType}
+          isValidatingCode={this.props.isValidatingCode}
+          isValidCode={this.props.isValidCode}
+          codeData={this.props.codeData}
+          validateCode={this.props.validateCode}
+          resetCodeValidation={this.props.resetCodeValidation}/>
+      </div>
     );
   }
 }

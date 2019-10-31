@@ -43,8 +43,10 @@ class CodeService {
   findValueSetsByOid(oid) {
     const result = [];
     const vs = this.valueSets[oid];
+    let version;
+
     // eslint-disable-next-line no-restricted-syntax, guard-for-in
-    for (const version in vs) {
+    for (version in vs) {
       result.push(vs[version]);
     }
     return result;

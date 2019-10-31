@@ -252,7 +252,8 @@ export default class ElementModal extends Component {
           role="button"
           tabIndex="0"
           onClick={this.openModal}
-          onKeyDown={e => this.enterKeyCheck(this.openModal, null, e)}>
+          onKeyDown={e => this.enterKeyCheck(this.openModal, null, e)}
+          aria-label={buttonLabels.openButtonText}>
           <FontAwesome name={this.props.iconForButton}/>
         </span>
       );
@@ -262,7 +263,8 @@ export default class ElementModal extends Component {
       <button
         className="primary-button"
         onClick={this.openModal}
-        onKeyDown={e => this.enterKeyCheck(this.openModal, null, e)}>
+        onKeyDown={e => this.enterKeyCheck(this.openModal, null, e)}
+        aria-label={buttonLabels.openButtonText}>
         <FontAwesome name="th-list" />{' '}{buttonLabels.openButtonText}
       </button>
     );

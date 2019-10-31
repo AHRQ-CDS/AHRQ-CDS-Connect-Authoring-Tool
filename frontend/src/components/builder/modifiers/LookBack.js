@@ -1,7 +1,18 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import Select from 'react-select';
 import _ from 'lodash';
+
+import StyledSelect from '../../elements/StyledSelect';
+
+const options = [
+  { value: 'years', label: 'Year(s)' },
+  { value: 'months', label: 'Month(s)' },
+  { value: 'weeks', label: 'Week(s)' },
+  { value: 'days', label: 'Day(s)' },
+  { value: 'hours', label: 'Hour(s)' },
+  { value: 'minutes', label: 'Minute(s)' },
+  { value: 'seconds', label: 'Second(s)' }
+];
 
 /* eslint-disable jsx-a11y/no-onchange */
 export default class LookBack extends Component {
@@ -29,22 +40,15 @@ export default class LookBack extends Component {
         </label>
 
         <label htmlFor={unitId}>
-          <Select
+          <StyledSelect
+            className="Select"
             name="unit"
             aria-label="Unit Select"
             id={unitId}
-            value={this.props.unit}
+            value={options.find(({ value }) => value === this.props.unit)}
             placeholder="select unit"
             onChange={this.handleChange}
-            options={[
-              { value: 'years', label: 'Year(s)' },
-              { value: 'months', label: 'Month(s)' },
-              { value: 'weeks', label: 'Week(s)' },
-              { value: 'days', label: 'Day(s)' },
-              { value: 'hours', label: 'Hour(s)' },
-              { value: 'minutes', label: 'Minute(s)' },
-              { value: 'seconds', label: 'Second(s)' }
-            ]}
+            options={options}
           />
         </label>
       </div>
@@ -58,4 +62,3 @@ LookBack.propTypes = {
   unit: PropTypes.string,
   updateAppliedModifier: PropTypes.func.isRequired
 };
-

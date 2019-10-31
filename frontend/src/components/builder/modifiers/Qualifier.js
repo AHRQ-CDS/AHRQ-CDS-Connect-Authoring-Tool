@@ -1,12 +1,17 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import Select from 'react-select';
 import FontAwesome from 'react-fontawesome';
 import { UncontrolledTooltip } from 'reactstrap';
 
 import VSACAuthenticationModal from '../VSACAuthenticationModal';
 import ElementModal from '../ElementModal';
 import CodeSelectModal from '../CodeSelectModal';
+import StyledSelect from '../../elements/StyledSelect';
+
+const options = [
+  { value: 'value is a code from', label: 'value is a code from' },
+  { value: 'value is the code', label: 'value is the code' }
+];
 
 /* eslint-disable jsx-a11y/no-onchange */
 export default class Qualifier extends Component {
@@ -162,17 +167,15 @@ export default class Qualifier extends Component {
     return (
       <div className="qualifier row">
         <div className="d-flex flex-wrap col-10">
-          <Select
+          <StyledSelect
+            className="Select"
             name="Qualifier"
             aria-label="Qualifier"
             title="Qualifier"
             placeholder="choose qualifier"
-            value={this.props.qualifier}
+            value={options.find(({ value }) => value === this.props.qualifier)}
             onChange={this.handleChange}
-            options={[
-              { value: 'value is a code from', label: 'value is a code from' },
-              { value: 'value is the code', label: 'value is the code' }
-            ]}
+            options={options}
           />
 
           {this.renderButton()}

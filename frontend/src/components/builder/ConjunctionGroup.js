@@ -1,12 +1,12 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import Select from 'react-select';
 import FontAwesome from 'react-fontawesome';
 import { UncontrolledTooltip } from 'reactstrap';
 
 import TemplateInstance from './TemplateInstance';
 import ElementSelect from './ElementSelect';
 import StringField from './fields/StringField';
+import StyledSelect from '../elements/StyledSelect';
 import ExpressionPhrase from './modifiers/ExpressionPhrase';
 
 import createTemplateInstance from '../../utils/templates';
@@ -174,18 +174,19 @@ export default class ConjunctionGroup extends Component {
   );
 
   renderConjunctionSelect = i => (
-    <Select
+    <StyledSelect
       className="card-group__conjunction-select"
       name={`conjunction-select-${i}`}
-      value={this.props.instance.name}
-      valueKey="name"
-      labelKey="name"
+      value={this.props.instance}
+      getOptionValue={({ name }) => name}
+      getOptionLabel={({ name }) => name}
       placeholder="Select one"
-      searchable={false}
-      clearable={false}
+      isSearchable={false}
+      isClearable={false}
       options={this.props.options === 'listOperations' ? this.listOperations : this.types}
       onChange={this.handleTypeChange}
       inputProps={{ 'aria-label': 'Select conjunction type', title: 'Select conjunction type' }}
+      classNamePrefix="conjunction-select"
     />
   )
 
