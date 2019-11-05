@@ -1,43 +1,18 @@
-library CDS_Connect_Commons_for_FHIRv102 version '1.3.0'
+// CDS Connect Commons for FHIRv102
+// Change log:
+// - 1.3.1:
+//   - Changed C.dateRecorded to C.dateRecorded.value in ConditionLookBack
+//   - Changed G.statusDate to G.statusDate.value in GoalLookBack
+// - 1.3.2
+//   - Remove NullSafe conversion functions since FHIRHelpers now does null-safe conversions
+//   - Add MostRecentCondition
+//   - Add MostRecentProcedure
+library CDS_Connect_Commons_for_FHIRv102 version '1.3.2'
 
 using FHIR version '1.0.2'
 
 // Include the FHIRHelpers library for simplifying interacton w/ the FHIR data model
 include FHIRHelpers version '1.0.2' called FHIRHelpers
-
-// -------------------------------------------------- GENERAL ---------------------------------------------------------
-
-/**
- * A null-safe version of ToConcept.  Whereas FHIRHelpers.ToConcept will take a null argument and produce a
- * System.Concept that is empty, this implementation returns null instead.
- * @param C - a FHIR CodeableConcept
- * @returns {System.Concept} a CQL Concept or null if null was passed in
- */
-define function NullSafeToConcept(Cpt FHIR.CodeableConcept):
-  if Cpt is not null then FHIRHelpers.ToConcept(Cpt) else null
-
-/**
- * A null-safe version of ToInterval.  Whereas FHIRHelpers.ToInterval will take a null argument and produce a
- * System.Interval that is empty, this implementation returns null instead.
- * @param P - a FHIR Period
- * @returns {System.Interval} a CQL Interval or null if null was passed in
- */
-define function NullSafeToInterval(Pd FHIR.Period):
-  if Pd is not null then Interval[Pd."start".value, Pd."end".value] else null
-
-/**
- * A null-safe version of ToQuantity.  Whereas FHIRHelpers.ToQuantity will take a null argument and produce a
- * System.Quantity that is empty, this implementation returns null instead.
- * @param C - a FHIR Quantity
- * @returns {System.Quantity} a CQL Quantity or null if null was passed in
- */
-define function NullSafeToQuantity(Qty FHIR.Quantity):
-  if Qty is not null then
-    System.Quantity {
-      value: Qty.value.value,
-      unit: Coalesce(Qty.unit.value, Qty.code.value)
-    }
-  else null
 
 // -------------------------------------------------- OBSERVATIONS -----------------------------------------------------
 
@@ -48,7 +23,7 @@ define function NullSafeToQuantity(Qty FHIR.Quantity):
  * @returns {List<Observation>} a list of Observations matching the concept, or null if null was passed in
  */
 define function ObservationsByConcept(Koncept System.Concept):
-  [Observation] O where NullSafeToConcept(O.code) ~ Koncept
+  [Observation] O where FHIRHelpers.ToConcept(O.code) ~ Koncept
 
 /**
  * Observations that are complete and verified. In FHIR DSTU2, there are two statuses that indicate this state: 'final'
@@ -81,7 +56,7 @@ define function ObservationLookBack(ObsList List<Observation>, LookBack System.Q
   ObsList O
     let LookBackInterval: Interval[Now() - LookBack, Now()]
     where O.effectiveDateTime.value in LookBackInterval
-      or NullSafeToInterval(O.effectivePeriod) overlaps LookBackInterval
+      or FHIRHelpers.ToInterval(O.effectivePeriod) overlaps LookBackInterval
       or O.issued in LookBackInterval
 
 /**
@@ -101,7 +76,7 @@ define function MostRecent(ObsList List<Observation>):
  * @returns {System.Quantity} the Observation's value as a quantity, or null if there is no quantity value
  */
 define function QuantityValue(Obs Observation):
-  NullSafeToQuantity(Obs.valueQuantity)
+  FHIRHelpers.ToQuantity(Obs.valueQuantity)
 
 /**
  * Extracts the CodeableConcept value from an Observation, returning it as a CQL Concept
@@ -109,7 +84,7 @@ define function QuantityValue(Obs Observation):
  * @returns {System.Concept} the Observation's value as a concept, or null if there is no CodeabeConcept value
  */
 define function ConceptValue(Obs Observation):
-  NullSafeToConcept(Obs.valueCodeableConcept)
+  FHIRHelpers.ToConcept(Obs.valueCodeableConcept)
 
 /**
  * Finds the first non-null meaningful date that can be associated with this Observation.  This will look through the
@@ -122,13 +97,13 @@ define function FindDate(Obs Observation):
 
 // TODO: Confirm that this works as expected
 /**
- * The highest observation. 
+ * The highest observation.
  * The value will be used to compare Observations and determine the highest one.
  * @param ObsList - a list of Observations
  * @returns {System.Quantity} the quantity with the highest value from the list, or null if null was passed in
  */
 define function HighestObservation(ObsList List<Observation>):
-  Max(ObsList O return NullSafeToQuantity(O.valueQuantity))
+  Max(ObsList O return FHIRHelpers.ToQuantity(O.valueQuantity))
 
 
 // -------------------------------------------------- CONDITIONS -------------------------------------------------------
@@ -140,7 +115,7 @@ define function HighestObservation(ObsList List<Observation>):
  * @returns {List<Observation>} a list of Conditions matching the concept, or null if null was passed in
  */
 define function ConditionsByConcept(Koncept System.Concept):
-  [Condition] C where NullSafeToConcept(C.code) ~ Koncept
+  [Condition] C where FHIRHelpers.ToConcept(C.code) ~ Koncept
 
 /**
  * Conditions that are confirmed. In FHIR DSTU2, this is reflected by verificationStatus: 'confirmed'.
@@ -192,8 +167,8 @@ define function ConditionLookBack(CondList List<Condition>, LookBack System.Quan
   CondList C
     let LookBackInterval: Interval[Now() - LookBack, Now()]
     where C.onsetDateTime.value in LookBackInterval
-      or NullSafeToInterval(C.onsetPeriod) overlaps LookBackInterval
-      or C.dateRecorded in LookBackInterval 
+      or FHIRHelpers.ToInterval(C.onsetPeriod) overlaps LookBackInterval
+      or C.dateRecorded.value in LookBackInterval
 
 /**
  * The most recent condition.  For each Condition, this algorithm will use the Coalesce function, which uses the
@@ -205,7 +180,7 @@ define function ConditionLookBack(CondList List<Condition>, LookBack System.Quan
 define function MostRecentCondition(CondList List<Condition>):
   Last(CondList C sort by Coalesce(onsetDateTime.value, onsetPeriod."end".value, onsetPeriod."start".value, dateRecorded.value))
 
- // -------------------------------------------------- PROCEDURES ------------------------------------------------------
+// -------------------------------------------------- PROCEDURES -------------------------------------------------------
 
  /**
   * Filters Procedures by a concept rather than by a ValueSet.  In CQL 1.3, this will be built into the retrieve,
@@ -214,7 +189,7 @@ define function MostRecentCondition(CondList List<Condition>):
   * @returns {List<Procedure>} a list of Procedures matching the concept, or null if null was passed in
   */
  define function ProceduresByConcept(Koncept System.Concept):
-   [Procedure] P where NullSafeToConcept(P.code) ~ Koncept
+   [Procedure] P where FHIRHelpers.ToConcept(P.code) ~ Koncept
 
 /**
  * Procedures that are completed. In FHIR DSTU2, this is reflected by status: 'completed'.  In addition, the
@@ -241,6 +216,18 @@ define function ProcedureInProgress(ProcList List<Procedure>):
       and P.notPerformed.value is not true
 
 /**
+ * Procedures that actually happened or are happening. In FHIR DSTU2, there are a few properties that negate the
+ * procedure, most notably when status is 'entered-in-error' or notPerformed is true.
+ * @see http://hl7.org/fhir/DSTU2/valueset-procedure-status.html
+ * @param ProcList - a list of Procedures
+ * @returns {List<Procedure>} a list of Procedures that actually happened or are happening, or null if null was passed in
+ */
+define function ProcedurePerformance(ProcList List<Procedure>):
+  ProcList P
+    where P.status.value != 'entered-in-error'
+      and P.notPerformed.value is not true
+
+/**
  * Procedures performed in the specified "look back" period.  For example, PCIs performed in the
  * past 2 weeks.
  * TODO: Rename to LookBack once the execution engine supports overloaded functions.
@@ -253,7 +240,7 @@ define function ProcedureLookBack(ProcList List<Procedure>, LookBack System.Quan
   ProcList P
     let LookBackInterval: Interval[Now() - LookBack, Now()]
     where P.performedDateTime.value in LookBackInterval
-      or NullSafeToInterval(P.performedPeriod) overlaps LookBackInterval
+      or FHIRHelpers.ToInterval(P.performedPeriod) overlaps LookBackInterval
 
 /**
  * The most recent procedure.  For each Procedure, this algorithm will use the Coalesce function, which returns the
@@ -265,6 +252,80 @@ define function ProcedureLookBack(ProcList List<Procedure>, LookBack System.Quan
 define function MostRecentProcedure(ProcList List<Procedure>):
   Last(ProcList P sort by Coalesce(performedDateTime.value, performedPeriod."end".value, performedPeriod."start".value))
 
+
+// ---------------------------------------------- PROCEDUREREQUESTS ----------------------------------------------------
+
+ /**
+  * Filters ProcedureRequests by a concept rather than by a ValueSet.  In CQL 1.3, this will be built into the retrieve,
+  * but for now, we must use a query where clause.
+  * @param Koncept - the concept to filter on (intentionally mispelled to avoid naming clashes)
+  * @returns {List<ProcedureRequest>} a list of ProcedureRequests matching the concept, or null if null was passed in
+  */
+ define function ProcedureRequestsByConcept(Koncept System.Concept):
+   [ProcedureRequest] P where FHIRHelpers.ToConcept(P.code) ~ Koncept
+
+/**
+ * ProcedureRequests that are accepted, in progress, or completed. In FHIR DSTU2, this is reflected by the corresponding
+ * status status values.
+ * @see http://hl7.org/fhir/DSTU2/valueset-procedure-request-status.html
+ * @param ProcReqList - a list of ProcedureRequests
+ * @returns {List<ProcedureRequest>} a list of accepted, in-progress, or completed ProcedureRequests,
+ * or null if null was passed in
+ */
+define function ProcedureRequestAcceptedOrInProgressOrCompleted(ProcReqList List<ProcedureRequest>):
+  ProcReqList P
+    where P.status.value in List{'accepted', 'in-progress', 'completed'}
+
+/**
+ * ProcedureRequests ordered in the specified "look back" period.  For example, PCIs ordered in the
+ * past 2 weeks.
+ * TODO: Rename to LookBack once the execution engine supports overloaded functions.
+ * @param ProcReqList - a list of ProcedureRequests
+ * @param LookBack - the lookback period for when the procedure was ordered
+ * @returns {List<ProcedureRequest>} a list of ProcedureRequests ordered in the look back period, or null if null
+ * was passed in
+ */
+define function ProcedureRequestLookBack(ProcReqList List<ProcedureRequest>, LookBack System.Quantity):
+  ProcReqList P
+    where P.orderedOn.value in Interval[Now() - LookBack, Now()]
+
+// ----------------------------------------------- REFERRALREQUESTS ----------------------------------------------------
+
+ /**
+  * Filters ReferralRequests by a concept rather than by a ValueSet.  In CQL 1.3, this will be built into the retrieve,
+  * but for now, we must use a query where clause.
+  * @param Koncept - the concept to filter on (intentionally mispelled to avoid naming clashes)
+  * @returns {List<ReferralRequest>} a list of ReferralRequests matching the concept, or null if null was passed in
+  */
+ define function ReferralRequestsByServiceRequestedConcept(Koncept System.Concept):
+   [ReferralRequest] R
+   where exists((R.serviceRequested) SRC where FHIRHelpers.ToConcept(SRC) ~ Koncept)
+
+/**
+ * ReferralRequests that are accepted, active, or completed. In FHIR DSTU2, this is reflected by the corresponding
+ * status status values.
+ * @see http://hl7.org/fhir/DSTU2/valueset-referralstatus.html
+ * @param ReferralList - a list of ReferralRequests
+ * @returns {List<ReferralRequest>} a list of accepted, active, or completed ReferralRequests,
+ * or null if null was passed in
+ */
+define function ReferralRequestAcceptedOrActiveOrCompleted(ReferralList List<ReferralRequest>):
+  ReferralList R
+    where R.status.value in List{'accepted', 'active', 'completed'}
+
+/**
+ * ReferralRequests requested in the specified "look back" period.  For example, pace make insertions referrals sent
+ * in the past 2 weeks.
+ * TODO: Rename to LookBack once the execution engine supports overloaded functions.
+ * @param ReferralList - a list of ReferralRequests
+ * @param LookBack - the lookback period for when the referral was sent
+ * @returns {List<ReferralRequest>} a list of ReferralRequests sent in the look back period, or null if null
+ * was passed in
+ */
+define function ReferralRequestLookBack(ReferralList List<ReferralRequest>, LookBack System.Quantity):
+  ReferralList R
+    where R.dateSent.value in Interval[Now() - LookBack, Now()]
+
 // -------------------------------------------------- MEDICATIONS ------------------------------------------------------
 
 /**
@@ -274,7 +335,7 @@ define function MostRecentProcedure(ProcList List<Procedure>):
  * @returns {List<MedicationStatement>} a list of MedicationStatement matching the concept, or null if null was passed in
  */
 define function MedicationStatementsByConcept(Koncept System.Concept):
-  [MedicationStatement] M where NullSafeToConcept(M.medicationCodeableConcept) ~ Koncept
+  [MedicationStatement] M where FHIRHelpers.ToConcept(M.medicationCodeableConcept) ~ Koncept
 
 /**
  * Filters MedicationOrders by a concept rather than by a ValueSet.  In CQL 1.3, this will be built into the retrieve,
@@ -283,7 +344,7 @@ define function MedicationStatementsByConcept(Koncept System.Concept):
  * @returns {List<MedicationOrder>} a list of MedicationOrders matching the concept, or null if null was passed in
  */
 define function MedicationOrdersByConcept(Koncept System.Concept):
-  [MedicationOrder] M where NullSafeToConcept(M.medicationCodeableConcept) ~ Koncept
+  [MedicationOrder] M where FHIRHelpers.ToConcept(M.medicationCodeableConcept) ~ Koncept
 
 /**
  * Medications that are active, according to a statement, but not necessarily verified via a prescription.  For example,
@@ -296,7 +357,7 @@ define function MedicationOrdersByConcept(Koncept System.Concept):
  */
 define function ActiveMedicationStatement(MedList List<MedicationStatement>):
   MedList M
-    let EffectivePeriod: NullSafeToInterval(M.effectivePeriod)
+    let EffectivePeriod: FHIRHelpers.ToInterval(M.effectivePeriod)
     where M.status.value = 'active'
       and M.wasNotTaken.value is not true
       and (end of EffectivePeriod is null or end of EffectivePeriod after Now())
@@ -316,7 +377,7 @@ define function ActiveMedicationOrder(MedList List<MedicationOrder>):
   MedList M
     where M.status.value = 'active'
       and M.dateEnded.value is null
-      
+
 /**
 * Medications that are active or completed, according to a prescription.  In FHIR DSTU2, this is reflected by MedicationOrder
 * with status 'active' or 'completed'
@@ -330,32 +391,44 @@ define function ActiveOrCompletedMedicationOrder(MedList List<MedicationOrder>):
       or M.status.value = 'completed'
 
 /**
-* Medication Orders that are issued in the specified "look back" period.
-* TODO: Rename to LookBack once the execution engine supports overloaded functions.
-* @param MedList - a list of Medications
-* @param LookBack - the lookback period for when the medication was prescribed
-* @returns {List<MedicationOrder>} a list of Medications prescribed in the look back period, or null if null
-* was passed in
+* Medications that are active, completed, or stopped, according to a prescription.  In FHIR DSTU2, this is reflected by
+* MedicationOrder with status 'active', 'completed', or 'stopped'
+* @see http://hl7.org/fhir/DSTU2/valueset-medication-order-status.html
+* @param MedList - a list of MedicationOrders
+* @returns {List<MedicationOrder>} a list of active medication orders, or null if null was passed in
 */
-define function MedicationOrderLookBack(MedList List<MedicationOrder>, LookBack System.Quantity):
-MedList M
-  let LookBackInterval: Interval[Now() - LookBack, Now()]
-  where M.dateWritten.value in LookBackInterval
-    or M.dateEnded.value in LookBackInterval
+define function ActiveCompletedOrStoppedMedicationOrder(MedList List<MedicationOrder>):
+  MedList M
+    where M.status.value = 'active'
+      or M.status.value = 'completed'
+      or M.status.value = 'stopped'
 
 /**
-* Medication Statements that are issued in the specified "look back" period.
-* TODO: Rename to LookBack once the execution engine supports overloaded functions.
-* @param MedList - a list of Medications
-* @param LookBack - the lookback period for when the medication was prescribed
-* @returns {List<MedicationStatement>} a list of Medications prescribed in the look back period, or null if null
-* was passed in
-*/
+ * MedicationStatement with an effective date in the specified "look back" period.  For example, statements about opioid
+ * use in the last 180 days.
+ * TODO: Rename to LookBack once the execution engine supports overloaded functions.
+ * @param MedList - a list of MedicationStatements
+ * @param LookBack - a duration Quantity indicating how far back to look for MedicationStatements
+ * @returns {List<MedicationStatement>} a list of MedicationStatements with effective date in the specified lookback
+ * period, or null if null was passed in
+ */
 define function MedicationStatementLookBack(MedList List<MedicationStatement>, LookBack System.Quantity):
-MedList M
-  let LookBackInterval: Interval[Now() - LookBack, Now()]
-  where M.effectiveDateTime.value in LookBackInterval
-    or NullSafeToInterval(M.effectivePeriod) overlaps LookBackInterval
+  MedList M
+    let LookBackInterval: Interval[Now() - LookBack, Now()]
+    where M.effectiveDateTime.value in LookBackInterval
+      or FHIRHelpers.ToInterval(M.effectivePeriod) overlaps LookBackInterval
+
+/**
+ * MedicationOrders with a written date in the specified "look back" period.  For example, opioid orders in the last
+ * 180 days.
+ * TODO: Rename to LookBack once the execution engine supports overloaded functions.
+ * @param OrderList - a list of MedicationOrders
+ * @param LookBack - a duration Quantity indicating how far back to look for MedicationOrders
+ * @returns {List<MedicationOrder>} a list of MedicationOrders with written date in the specified lookback period,
+ * or null if null was passed in
+ */
+define function MedicationOrderLookBack(MedList List<MedicationOrder>, LookBack System.Quantity):
+  MedList M where M.dateWritten.value in Interval[Now() - LookBack, Now()]
 
 // -------------------------------------------------- ENCOUNTERS ------------------------------------------------------
 
@@ -366,7 +439,7 @@ MedList M
  * @returns {List<Encounter>} a list of Encounters matching the concept, or null if null was passed in
  */
 define function EncountersByConcept(Koncept System.Concept):
-  [Encounter] E where exists( (E.type) ET where NullSafeToConcept(ET) ~ Koncept )
+  [Encounter] E where exists( (E.type) ET where FHIRHelpers.ToConcept(ET) ~ Koncept )
 
 /**
  * Encounters that are in progress. In FHIR DSTU2, this is reflected by status: 'in-progress'.
@@ -377,8 +450,8 @@ define function EncountersByConcept(Koncept System.Concept):
 define function InProgress(EncList List<Encounter>):
   EncList E
     where E.status.value = 'in-progress'
-    
-// -------------------------------------------------- ALLERGY INTOLERANCES ------------------------------------------------------
+
+// -------------------------------------------------- ALLERGY INTOLERANCES ---------------------------------------------
 
 /**
  * Filters AllergyIntolerances by a concept rather than by a ValueSet.  In CQL 1.3, this will be built into the retrieve,
@@ -387,7 +460,7 @@ define function InProgress(EncList List<Encounter>):
  * @returns {List<AllergyIntolerance>} a list of Allergy Intolerances matching the concept, or null if null was passed in
  */
 define function AllergyIntolerancesByConcept(Koncept System.Concept):
-  [AllergyIntolerance] A where NullSafeToConcept(A.substance) ~ Koncept
+  [AllergyIntolerance] A where FHIRHelpers.ToConcept(A.substance) ~ Koncept
 
 /**
 * AllergyIntolerances that are active or confirmed.  In FHIR DSTU2, this is reflected by AllergyIntolerance
@@ -400,3 +473,21 @@ define function ActiveOrConfirmedAllergyIntolerance(AllergyIntolList List<Allerg
   AllergyIntolList A
     where A.status.value = 'active'
       or A.status.value = 'confirmed'
+
+// -------------------------------------------------------- GOALS ------------------------------------------------------
+
+/**
+ * Goals with a start, target, or status date in the specified "look back" period.  For example, Pain Management Goals
+ * in the last 2 years.
+ * TODO: Rename to LookBack once the execution engine supports overloaded functions.
+ * @param GoalList - a list of Goals
+ * @returns {List<Goal>} a list of Goals with a start, target, or status date in the specified lookback period, or null
+ * if null was passed in
+ */
+define function GoalLookBack(GoalList List<Goal>, LookBack System.Quantity):
+  GoalList G
+    let LookBackInterval: Interval[Now() - LookBack, Now()]
+    where G.startDate.value in LookBackInterval
+      or G.targetDate.value in LookBackInterval
+      or (G.startDate.value + FHIRHelpers.ToQuantity(G.targetQuantity)) in LookBackInterval
+      or G.statusDate.value in LookBackInterval

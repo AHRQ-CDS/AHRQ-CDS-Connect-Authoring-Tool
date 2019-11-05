@@ -3,27 +3,42 @@ library FHIRHelpers version '1.0.2'
 using FHIR version '1.0.2'
 
 define function ToInterval(period FHIR.Period):
-    Interval[period."start".value, period."end".value]
+    if period is null then
+        null
+    else
+        Interval[period."start".value, period."end".value]
 
 define function ToQuantity(quantity FHIR.Quantity):
-    System.Quantity { value: quantity.value.value, unit: quantity.unit.value }
+    if quantity is null then
+        null
+    else
+        System.Quantity { value: quantity.value.value, unit: quantity.unit.value }
 
 define function ToInterval(range FHIR.Range):
-    Interval[ToQuantity(range.low), ToQuantity(range.high)]
+    if range is null then
+        null
+    else
+        Interval[ToQuantity(range.low), ToQuantity(range.high)]
 
 define function ToCode(coding FHIR.Coding):
-    System.Code {
-      code: coding.code.value,
-      system: coding.system.value,
-      version: coding.version.value,
-      display: coding.display.value
-    }
+    if coding is null then
+        null
+    else
+        System.Code {
+          code: coding.code.value,
+          system: coding.system.value,
+          version: coding.version.value,
+          display: coding.display.value
+        }
 
 define function ToConcept(concept FHIR.CodeableConcept):
-    System.Concept {
-        codes: concept.coding C return ToCode(C),
-        display: concept.text.value
-    }
+    if concept is null then
+        null
+    else
+        System.Concept {
+            codes: concept.coding C return ToCode(C),
+            display: concept.text.value
+        }
 
 define function ToString(value FHIR.uuid): value.value
 define function ToString(value FHIR.ProvenanceEntityRole): value.value
@@ -45,7 +60,7 @@ define function ToString(value FHIR.ActionList): value.value
 define function ToString(value FHIR.ParticipationStatus): value.value
 define function ToDateTime(value FHIR.instant): value.value
 define function ToDateTime(value FHIR.dateTime): value.value
-define function ToDateTime(value FHIR.date): value.value
+define function ToDate(value FHIR.date): value.value
 define function ToString(value FHIR.DocumentMode): value.value
 define function ToString(value FHIR.AssertionOperatorType): value.value
 define function ToString(value FHIR.DaysOfWeek): value.value

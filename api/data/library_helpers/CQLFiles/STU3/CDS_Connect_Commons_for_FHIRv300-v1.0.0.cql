@@ -1,43 +1,14 @@
-library CDS_Connect_Commons_for_FHIRv300 version '1.0.0'
+// CDS Connect Commons for FHIRv102
+// Change log:
+// - 1.0.1
+//   - Remove NullSafe conversion functions since FHIRHelpers now does null-safe conversions
+//   - Note functions that exist in DSTU2 version of commons, but not here in STU3 version
+library CDS_Connect_Commons_for_FHIRv300 version '1.0.1'
 
 using FHIR version '3.0.0'
 
 // Include the FHIRHelpers library for simplifying interacton w/ the FHIR data model
 include FHIRHelpers version '3.0.0' called FHIRHelpers
-
-// -------------------------------------------------- GENERAL ---------------------------------------------------------
-
-/**
- * A null-safe version of ToConcept.  Whereas FHIRHelpers.ToConcept will take a null argument and produce a
- * System.Concept that is empty, this implementation returns null instead.
- * @param C - a FHIR CodeableConcept
- * @returns {System.Concept} a CQL Concept or null if null was passed in
- */
-define function NullSafeToConcept(Cpt FHIR.CodeableConcept):
-  if Cpt is not null then FHIRHelpers.ToConcept(Cpt) else null
-
-/**
- * A null-safe version of ToInterval.  Whereas FHIRHelpers.ToInterval will take a null argument and produce a
- * System.Interval that is empty, this implementation returns null instead.
- * @param P - a FHIR Period
- * @returns {System.Interval} a CQL Interval or null if null was passed in
- */
-define function NullSafeToInterval(Pd FHIR.Period):
-  if Pd is not null then Interval[Pd."start".value, Pd."end".value] else null
-
-/**
- * A null-safe version of ToQuantity.  Whereas FHIRHelpers.ToQuantity will take a null argument and produce a
- * System.Quantity that is empty, this implementation returns null instead.
- * @param C - a FHIR Quantity
- * @returns {System.Quantity} a CQL Quantity or null if null was passed in
- */
-define function NullSafeToQuantity(Qty FHIR.Quantity):
-  if Qty is not null then
-    System.Quantity {
-      value: Qty.value.value,
-      unit: Coalesce(Qty.unit.value, Qty.code.value)
-    }
-  else null
 
 // -------------------------------------------------- OBSERVATIONS -----------------------------------------------------
 
@@ -48,7 +19,7 @@ define function NullSafeToQuantity(Qty FHIR.Quantity):
  * @returns {List<Observation>} a list of Observations matching the concept, or null if null was passed in
  */
 define function ObservationsByConcept(Koncept System.Concept):
-  [Observation] O where NullSafeToConcept(O.code) ~ Koncept
+  [Observation] O where FHIRHelpers.ToConcept(O.code) ~ Koncept
 
 /**
  * Observations that are complete and verified. In FHIR STU3, there are two statuses that indicate this state: 'final',
@@ -82,7 +53,7 @@ define function ObservationLookBack(ObsList List<Observation>, LookBack System.Q
   ObsList O
     let LookBackInterval: Interval[Now() - LookBack, Now()]
     where (O.effective as FHIR.dateTime).value in LookBackInterval
-      or NullSafeToInterval(O.effective as FHIR.Period) overlaps LookBackInterval
+      or FHIRHelpers.ToInterval(O.effective as FHIR.Period) overlaps LookBackInterval
       or O.issued in LookBackInterval
 
 /**
@@ -102,7 +73,7 @@ define function MostRecent(ObsList List<Observation>):
  * @returns {System.Quantity} the Observation's value as a quantity, or null if there is no quantity value
  */
 define function QuantityValue(Obs Observation):
-  NullSafeToQuantity(Obs.value as FHIR.Quantity)
+  FHIRHelpers.ToQuantity(Obs.value as FHIR.Quantity)
 
 /**
  * Extracts the CodeableConcept value from an Observation, returning it as a CQL Concept
@@ -110,7 +81,7 @@ define function QuantityValue(Obs Observation):
  * @returns {System.Concept} the Observation's value as a concept, or null if there is no CodeabeConcept value
  */
 define function ConceptValue(Obs Observation):
-  NullSafeToConcept(Obs.value as FHIR.CodeableConcept)
+  FHIRHelpers.ToConcept(Obs.value as FHIR.CodeableConcept)
 
 /**
  * Finds the first non-null meaningful date that can be associated with this Observation.  This will look through the
@@ -123,13 +94,13 @@ define function FindDate(Obs Observation):
 
 // TODO: Confirm that this works as expected
 /**
- * The highest observation. 
+ * The highest observation.
  * The value will be used to compare Observations and determine the highest one.
  * @param ObsList - a list of Observations
  * @returns {System.Quantity} the quantity with the highest value from the list, or null if null was passed in
  */
 define function HighestObservation(ObsList List<Observation>):
-  Max(ObsList O return NullSafeToQuantity(O.value as FHIR.Quantity))
+  Max(ObsList O return FHIRHelpers.ToQuantity(O.value as FHIR.Quantity))
 
 
 // -------------------------------------------------- CONDITIONS -------------------------------------------------------
@@ -141,7 +112,7 @@ define function HighestObservation(ObsList List<Observation>):
  * @returns {List<Observation>} a list of Conditions matching the concept, or null if null was passed in
  */
 define function ConditionsByConcept(Koncept System.Concept):
-  [Condition] C where NullSafeToConcept(C.code) ~ Koncept
+  [Condition] C where FHIRHelpers.ToConcept(C.code) ~ Koncept
 
 /**
  * Conditions that are confirmed. In FHIR STU3, this is reflected by verificationStatus: 'confirmed'.
@@ -191,8 +162,8 @@ define function ConditionLookBack(CondList List<Condition>, LookBack System.Quan
   CondList C
     let LookBackInterval: Interval[Now() - LookBack, Now()]
     where (C.onset as FHIR.dateTime).value in LookBackInterval
-      or NullSafeToInterval(C.onset as FHIR.Period) overlaps LookBackInterval
-      or C.assertedDate in LookBackInterval 
+      or FHIRHelpers.ToInterval(C.onset as FHIR.Period) overlaps LookBackInterval
+      or C.assertedDate in LookBackInterval
 
 /**
  * The most recent condition.  For each Condition, this algorithm will use the Coalesce function, which uses the
@@ -213,7 +184,7 @@ define function MostRecentCondition(CondList List<Condition>):
   * @returns {List<Procedure>} a list of Procedures matching the concept, or null if null was passed in
   */
  define function ProceduresByConcept(Koncept System.Concept):
-   [Procedure] P where NullSafeToConcept(P.code) ~ Koncept
+   [Procedure] P where FHIRHelpers.ToConcept(P.code) ~ Koncept
 
 /**
  * Procedures that are completed. In FHIR STU3, this is reflected by status: 'completed'.  In addition, the
@@ -239,6 +210,8 @@ define function ProcedureInProgress(ProcList List<Procedure>):
     where P.status.value = 'in-progress'
       and P.notDone.value is not true
 
+// NOTE: The DSTU2 commons also has ProcedurePerformance, but we do not use that in the CDS Authoring Tool.
+
 /**
  * Procedures performed in the specified "look back" period.  For example, PCIs performed in the
  * past 2 weeks.
@@ -252,7 +225,7 @@ define function ProcedureLookBack(ProcList List<Procedure>, LookBack System.Quan
   ProcList P
     let LookBackInterval: Interval[Now() - LookBack, Now()]
     where (P.performed as FHIR.dateTime).value in LookBackInterval
-      or NullSafeToInterval(P.performed as FHIR.Period) overlaps LookBackInterval
+      or FHIRHelpers.ToInterval(P.performed as FHIR.Period) overlaps LookBackInterval
 
 /**
  * The most recent procedure.  For each Procedure, this algorithm will use the Coalesce function, which returns the
@@ -264,6 +237,10 @@ define function ProcedureLookBack(ProcList List<Procedure>, LookBack System.Quan
 define function MostRecentProcedure(ProcList List<Procedure>):
   Last(ProcList P sort by Coalesce((performed as FHIR.dateTime).value, (performed as FHIR.Period)."end".value, (performed as FHIR.Period)."start".value))
 
+// NOTE: The DSTU2 commons also has functions for ProcedureRequests, but we do not use them in the CDS Authoring Tool.
+
+// NOTE: The DSTU2 commons also has functions for ReferralRequests, but we do not use them in the CDS Authoring Tool.
+
 // -------------------------------------------------- MEDICATIONS ------------------------------------------------------
 
 /**
@@ -273,7 +250,7 @@ define function MostRecentProcedure(ProcList List<Procedure>):
  * @returns {List<MedicationStatement>} a list of MedicationStatement matching the concept, or null if null was passed in
  */
 define function MedicationStatementsByConcept(Koncept System.Concept):
-  [MedicationStatement] M where NullSafeToConcept(M.medication as FHIR.CodeableConcept) ~ Koncept
+  [MedicationStatement] M where FHIRHelpers.ToConcept(M.medication as FHIR.CodeableConcept) ~ Koncept
 
 /**
  * Filters MedicationRequests by a concept rather than by a ValueSet.  In CQL 1.3, this will be built into the retrieve,
@@ -282,7 +259,7 @@ define function MedicationStatementsByConcept(Koncept System.Concept):
  * @returns {List<MedicationRequest>} a list of MedicationRequests matching the concept, or null if null was passed in
  */
 define function MedicationRequestsByConcept(Koncept System.Concept):
-  [MedicationRequest] M where NullSafeToConcept(M.medication as FHIR.CodeableConcept) ~ Koncept
+  [MedicationRequest] M where FHIRHelpers.ToConcept(M.medication as FHIR.CodeableConcept) ~ Koncept
 
 /**
  * Medications that are active, according to a statement, but not necessarily verified via a prescription.  For example,
@@ -295,7 +272,7 @@ define function MedicationRequestsByConcept(Koncept System.Concept):
  */
 define function ActiveMedicationStatement(MedList List<MedicationStatement>):
   MedList M
-    let EffectivePeriod: NullSafeToInterval(M.effective as FHIR.Period)
+    let EffectivePeriod: FHIRHelpers.ToInterval(M.effective as FHIR.Period)
     where M.status.value = 'active'
       and M.taken.value = 'y'
       and (end of EffectivePeriod is null or end of EffectivePeriod after Now())
@@ -313,7 +290,7 @@ define function ActiveMedicationStatement(MedList List<MedicationStatement>):
 */
 define function ActiveMedicationRequest(MedList List<MedicationRequest>):
   MedList M where M.status.value = 'active'
-      
+
 /**
 * Medications that are active or completed, according to a prescription.  In FHIR STU3, this is reflected by MedicationRequest
 * with status 'active' or 'completed'
@@ -325,6 +302,8 @@ define function ActiveOrCompletedMedicationRequest(MedList List<MedicationReques
   MedList M
     where M.status.value = 'active'
       or M.status.value = 'completed'
+
+// NOTE: The DSTU2 commons also has ActiveCompletedOrStoppedMedicationOrder, but we do not use that in the CDS Authoring Tool.
 
 /**
 * Medication requests that are issued in the specified "look back" period.
@@ -338,7 +317,6 @@ define function MedicationRequestLookBack(MedList List<MedicationRequest>, LookB
 MedList M
   let LookBackInterval: Interval[Now() - LookBack, Now()]
   where M.authoredOn.value in LookBackInterval
-  // DSTU2 also checked the dateEnded property of MedicationOrder, but this doesn't exist for MedicationRequest
 
 /**
 * Medication Statements that are issued in the specified "look back" period.
@@ -352,7 +330,7 @@ define function MedicationStatementLookBack(MedList List<MedicationStatement>, L
 MedList M
   let LookBackInterval: Interval[Now() - LookBack, Now()]
   where (M.effective as FHIR.dateTime).value in LookBackInterval
-    or NullSafeToInterval(M.effective as FHIR.Period) overlaps LookBackInterval
+    or FHIRHelpers.ToInterval(M.effective as FHIR.Period) overlaps LookBackInterval
 
 // -------------------------------------------------- ENCOUNTERS ------------------------------------------------------
 
@@ -363,7 +341,7 @@ MedList M
  * @returns {List<Encounter>} a list of Encounters matching the concept, or null if null was passed in
  */
 define function EncountersByConcept(Koncept System.Concept):
-  [Encounter] E where exists( (E.type) ET where NullSafeToConcept(ET) ~ Koncept )
+  [Encounter] E where exists( (E.type) ET where FHIRHelpers.ToConcept(ET) ~ Koncept )
 
 /**
  * Encounters that are in progress. In FHIR STU3, this is reflected by status: 'in-progress'.
@@ -374,7 +352,7 @@ define function EncountersByConcept(Koncept System.Concept):
 define function InProgress(EncList List<Encounter>):
   EncList E
     where E.status.value = 'in-progress'
-    
+
 // -------------------------------------------------- ALLERGY INTOLERANCES ------------------------------------------------------
 
 /**
@@ -384,7 +362,7 @@ define function InProgress(EncList List<Encounter>):
  * @returns {List<AllergyIntolerance>} a list of Allergy Intolerances matching the concept, or null if null was passed in
  */
 define function AllergyIntolerancesByConcept(Koncept System.Concept):
-  [AllergyIntolerance] A where NullSafeToConcept(A.code) ~ Koncept
+  [AllergyIntolerance] A where FHIRHelpers.ToConcept(A.code) ~ Koncept
 
 /**
 * AllergyIntolerances that are active or confirmed.  In FHIR STU3, this is reflected by AllergyIntolerance
@@ -398,3 +376,5 @@ define function ActiveOrConfirmedAllergyIntolerance(AllergyIntolList List<Allerg
   AllergyIntolList A
     where A.clinicalStatus.value = 'active'
       or A.verificationStatus.value = 'confirmed'
+
+// NOTE: The DSTU2 commons also has GoalLookBack, but we do not use that in the CDS Authoring Tool.
