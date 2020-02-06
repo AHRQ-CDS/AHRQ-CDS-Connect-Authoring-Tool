@@ -66,10 +66,11 @@ export default class Login extends Component {
               Any communication or data transiting or stored on this system may be disclosed or used for any lawful
               Government purpose.
             </div>
-
             <div className="login-modal__form">
-              <input type='text' ref='username' className="form-control col" placeholder='username' />
-              <input type='password' ref='password' className="form-control col" placeholder='password' />
+              <div id="usernameLabel">Username</div>
+              <input type='text' ref='username' className="form-control col" placeholder='username' aria-labelledby="usernameLabel" />
+              <div id="passwordLabel">Password</div>
+              <input type='password' ref='password' className="form-control col" placeholder='password' aria-labelledby="passwordLabel" />
               {this.renderedAuthStatusText()}
             </div>
 

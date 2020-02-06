@@ -146,7 +146,8 @@ export default class ExternalCQL extends Component {
             accept=".cql,application/zip,text/plain"
             disabled={isDropzoneDisabled}
             disabledClassName='disabled'
-            multiple={false}>
+            multiple={false}
+            aria-label="External CQL Dropzone" >
             {this.renderDropzoneIcon()}
 
             {showUploadErrorBanner &&
