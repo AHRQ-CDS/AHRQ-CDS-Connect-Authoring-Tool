@@ -138,7 +138,7 @@ export default class RepoUploadModal extends Component {
   renderRepositoryArtifacts() {
     return (
       <div className="repo-list">
-        <table className="artifacts__table">
+        <table className="artifacts__table" role="table" aria-label="Artifacts">
           <thead>
             <tr>
               <th scope="col" className="artifacts__tablecell-wide">Artifact Name</th>

@@ -431,13 +431,15 @@ export class Builder extends Component {
                 <DropdownItem
                   id='dstu2DownloadOption'
                   className={disableDSTU2 ? 'disabled-dropdown' : ''}
-                  onClick={() => this.downloadOptionSelected(disableDSTU2, '1.0.2')}>
+                  onClick={() => this.downloadOptionSelected(disableDSTU2, '1.0.2')}
+                  role="menuitem">
                   FHIR DSTU2
                 </DropdownItem>
                 <DropdownItem
                   id='stu3DownloadOption'
                   className={disableSTU3 ? 'disabled-dropdown' : ''}
-                  onClick={() => this.downloadOptionSelected(disableSTU3, '3.0.0')}>
+                  onClick={() => this.downloadOptionSelected(disableSTU3, '3.0.0')}
+                  role="menuitem">
                   FHIR STU3
                 </DropdownItem>
                 {disableDSTU2 &&
