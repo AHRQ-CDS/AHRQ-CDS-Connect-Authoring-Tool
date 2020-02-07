@@ -1,4 +1,5 @@
 import React from 'react';
+import moment from 'moment';
 import PatientView from '../PatientView';
 import { render } from '../../../utils/test-utils';
 import mockPatientDstu2 from '../../../mocks/mockPatientDstu2';
@@ -21,7 +22,8 @@ describe('<PatientView />', () => {
     expect(container.querySelectorAll('.patient-view__patient')).toHaveLength(1);
     expect(container.querySelector('.patient-data-name')).toHaveTextContent('Robin67 Baumbach677');
     expect(container.querySelector('.patient-data-details-gender')).toHaveTextContent('female');
-    expect(container.querySelector('.patient-data-details-age')).toHaveTextContent('34 yrs');
+    const expectedAge = moment().diff(moment('1985-02-04'), 'years');
+    expect(container.querySelector('.patient-data-details-age')).toHaveTextContent(`${expectedAge} yrs`);
   });
 
   it('renders the DSTU2 resources', () => {
@@ -48,7 +50,8 @@ describe('<PatientView />', () => {
     expect(container.querySelectorAll('.patient-view__patient')).toHaveLength(1);
     expect(container.querySelector('.patient-data-name')).toHaveTextContent('Arnulfo253 McClure239');
     expect(container.querySelector('.patient-data-details-gender')).toHaveTextContent('male');
-    expect(container.querySelector('.patient-data-details-age')).toHaveTextContent('33 yrs');
+    const expectedAge = moment().diff(moment('1986-01-12'), 'years');
+    expect(container.querySelector('.patient-data-details-age')).toHaveTextContent(`${expectedAge} yrs`);
   });
 
   it('renders the STU3 resources', () => {
