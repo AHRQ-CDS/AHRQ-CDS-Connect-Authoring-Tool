@@ -1,4 +1,6 @@
-{
+import moment from 'moment';
+
+export default {
   "data": {
     "localIdPatientResultsMap": {
       "505bcdd9-5cc3-4ef3-8eea-6d479b1d4dc9": {
@@ -16,7 +18,7 @@
           "22": null,
           "23": null,
           "24": null,
-          "5": 34,
+          "5": moment().diff(moment('1985-02-04'), 'years'),
           "6": 18,
           "7": true,
           "8": true,
