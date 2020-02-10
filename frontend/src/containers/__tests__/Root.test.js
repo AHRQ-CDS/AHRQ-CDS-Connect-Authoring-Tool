@@ -34,6 +34,12 @@ describe('<Root />', () => {
       expect(getByText('Documentation Component')).toBeDefined();
     });
 
+    it('redirects /userguide to /documentation', () => {
+      const { getByText } = renderComponent({ path: '/userguide' });
+
+      expect(getByText('Documentation Component')).toBeDefined();
+    });
+
     it('renders a not found page', () => {
       const { getByText } = renderComponent({ path: '/foo' });
 
