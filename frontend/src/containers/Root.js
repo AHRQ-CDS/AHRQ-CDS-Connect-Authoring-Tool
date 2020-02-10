@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Provider } from 'react-redux';
-import { Route, Switch } from 'react-router-dom';
+import { Route, Switch, Redirect } from 'react-router-dom';
 
 import PrivateRoute from './PrivateRoute';
 import App from './App';
@@ -25,6 +25,7 @@ const Root = (props) => {
           <PrivateRoute path='/artifacts' component={Artifact} />
           <PrivateRoute path='/testing' component={Testing} />
           <Route path='/documentation' component={Documentation} />
+          <Redirect from='/userguide' to='/documentation' />
           <Route component={NoMatch} />
         </Switch>
       </App>
