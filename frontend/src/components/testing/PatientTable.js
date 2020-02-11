@@ -397,7 +397,7 @@ export default class PatientTable extends Component {
               <th scope="col" className="patients__tablecell-short">Gender</th>
               <th scope="col" className="patients__tablecell-short">Version</th>
               <th scope="col" className="patients__tablecell-wide">Last Updated</th>
-              <th></th>
+              <th aria-label="buttons"></th>
             </tr>
           </thead>
 

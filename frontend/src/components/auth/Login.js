@@ -67,10 +67,10 @@ export default class Login extends Component {
               Government purpose.
             </div>
             <div className="login-modal__form">
-              <div id="usernameLabel">Username</div>
-              <input type='text' ref='username' className="form-control col" placeholder='username' aria-labelledby="usernameLabel" />
-              <div id="passwordLabel">Password</div>
-              <input type='password' ref='password' className="form-control col" placeholder='password' aria-labelledby="passwordLabel" />
+              <label for='username'>Username</label>
+              <input type='text' id='username' ref='username' className="form-control col" placeholder='username' />
+              <label for='password'>Password</label>
+              <input type='password' id='password' ref='password' className="form-control col" placeholder='password'  />
               {this.renderedAuthStatusText()}
             </div>
 

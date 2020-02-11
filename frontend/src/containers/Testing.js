@@ -230,7 +230,7 @@ class Testing extends Component {
             className="dropzone"
             onDrop={this.addPatient.bind(this)}
             accept="application/json" multiple={false}
-            aria-label="Testing Patient"
+            aria-label="Testing Patient Dropzone"
           >
             {this.renderDropzoneIcon()}
 

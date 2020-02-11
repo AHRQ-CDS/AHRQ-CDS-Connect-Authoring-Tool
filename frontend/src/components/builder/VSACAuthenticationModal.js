@@ -76,20 +76,22 @@ class VSACAuthenticationModal extends Component {
             </div>
 
             <div className="login-modal__form">
-              <div id="vsacUsernameLabel">Username</div>
+              <label for="username">Username</label>
               <input
                 type='text'
                 autoFocus
                 autoComplete="username"
                 ref='username'
+                id='username'
                 className="form-control col"
                 placeholder='username'
                 aria-labelledby="vsacUsernameLabel"/>
-              <div id="vsacPasswordLabel">Password</div>
+              <label for="password">Password</label>
               <input
                 type='password'
                 autoComplete="current-password"
                 ref='password'
+                id='password'
                 className="form-control col"
                 placeholder='password'
                 aria-labelledby="vsacPasswordLabel"/>

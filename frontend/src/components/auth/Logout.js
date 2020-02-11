@@ -59,7 +59,7 @@ class Logout extends Component {
         <Dropdown isOpen={this.state.showMenu} toggle={this.toggleMenu} className="dropdown-button">
           <DropdownToggle caret>{authUser}</DropdownToggle>
           <DropdownMenu>
-            <DropdownItem onClick={artifactSaved ? this.handleLogoutClick : this.openConfirmLogoutModal} aria-label="menuitem">
+            <DropdownItem onClick={artifactSaved ? this.handleLogoutClick : this.openConfirmLogoutModal} role="menuitem">
               Logout
             </DropdownItem>
           </DropdownMenu>
