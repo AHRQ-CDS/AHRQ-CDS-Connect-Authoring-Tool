@@ -13,7 +13,7 @@ import mockPatientDstu2 from '../../mocks/mockPatientDstu2';
 import mockPatientStu3 from '../../mocks/mockPatientStu3';
 import mockElmFilesDstu2 from '../../mocks/mockElmFilesDstu2.json';
 import mockElmFilesStu3 from '../../mocks/mockElmFilesStu3.json';
-import mockTestResultsDstu2 from '../../mocks/mockTestResultsDstu2.json';
+import mockTestResultsDstu2 from '../../mocks/mockTestResultsDstu2';
 import mockTestResultsStu3 from '../../mocks/mockTestResultsStu3.json';
 
 import CodeService from '../../utils/code_service/CodeService';
