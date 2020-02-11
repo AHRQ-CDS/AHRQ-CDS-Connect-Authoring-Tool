@@ -37,7 +37,7 @@ export default class TextAreaField extends Component {
 
   recomputeHeight = () => {
     const origRows = this.textarea.rows;
-    this.textarea.rows = this.minRows;
+    this.textarea.rows = this.state.minRows;
 
     const rows =
       this.state.minRows +
