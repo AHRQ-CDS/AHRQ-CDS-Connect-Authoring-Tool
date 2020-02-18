@@ -121,13 +121,13 @@ export default class ArtifactTable extends Component {
 
     return (
       <div className="artifact-table">
-        <table className="artifacts__table">
+        <table className="artifacts__table" role="table" aria-label="Artifacts">
           <thead>
             <tr>
               <th scope="col" className="artifacts__tablecell-wide">Artifact Name</th>
               <th scope="col" className="artifacts__tablecell-short">Version</th>
               <th scope="col">Last Updated</th>
-              <td></td>
+              <th scope="col" aria-label="buttons"></th>
             </tr>
           </thead>
 

@@ -229,7 +229,9 @@ class Testing extends Component {
           <Dropzone
             className="dropzone"
             onDrop={this.addPatient.bind(this)}
-            accept="application/json" multiple={false}>
+            accept="application/json" multiple={false}
+            aria-label="Testing Patient Dropzone"
+          >
             {this.renderDropzoneIcon()}
 
             {this.state.uploadError &&
