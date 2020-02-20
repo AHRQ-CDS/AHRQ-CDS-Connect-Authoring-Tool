@@ -1365,6 +1365,6 @@ const mockPatientR4 = {
     "fhirVersion": "R4",
     "user": "demo",
     "__v": 0
-}
+};
 
 export default mockPatientR4;
