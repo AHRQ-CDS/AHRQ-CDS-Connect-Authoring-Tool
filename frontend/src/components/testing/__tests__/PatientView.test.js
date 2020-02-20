@@ -4,6 +4,7 @@ import PatientView from '../PatientView';
 import { render } from '../../../utils/test-utils';
 import mockPatientDstu2 from '../../../mocks/mockPatientDstu2';
 import mockPatientStu3 from '../../../mocks/mockPatientStu3';
+import mockPatientR4 from '../../../mocks/mockPatientR4';
 
 describe('<PatientView />', () => {
   it('renders DSTU2 without crashing', () => {
@@ -57,6 +58,34 @@ describe('<PatientView />', () => {
   it('renders the STU3 resources', () => {
     const { container } = render(
       <PatientView patient={mockPatientStu3} />
+    );
+
+    expect(container.querySelectorAll('.patient-view__resources')).toHaveLength(1);
+  });
+
+  it('renders R4 without crashing', () => {
+    const { container } = render(
+      <PatientView patient={mockPatientR4} />
+    );
+
+    expect(container).not.toBeEmpty();
+  });
+
+  it('header renders R4 correctly', () => {
+    const { container } = render(
+      <PatientView patient={mockPatientR4} />
+    );
+
+    expect(container.querySelectorAll('.patient-view__patient')).toHaveLength(1);
+    expect(container.querySelector('.patient-data-name')).toHaveTextContent('Geneva168 Reynolds644');
+    expect(container.querySelector('.patient-data-details-gender')).toHaveTextContent('female');
+    const expectedAge = moment().diff(moment('1999-10-10'), 'years');
+    expect(container.querySelector('.patient-data-details-age')).toHaveTextContent(`${expectedAge} yrs`);
+  });
+
+  it('renders the R4 resources', () => {
+    const { container } = render(
+      <PatientView patient={mockPatientR4} />
     );
 
     expect(container.querySelectorAll('.patient-view__resources')).toHaveLength(1);

@@ -498,9 +498,14 @@ function performExecuteArtifact(elmFiles, artifactName, params, patients, vsacCr
   const cqlExecParams = convertParameters(params);
 
   // Create the patient source
-  const patientSource = (dataModel.version === '3.0.0')
-    ? cqlfhir.PatientSource.FHIRv300()
-    : cqlfhir.PatientSource.FHIRv102();
+  let patientSource;
+  if (dataModel.version === '1.0.2') {
+    patientSource = cqlfhir.PatientSource.FHIRv102();
+  } else if (dataModel.version === '3.0.0') {
+    patientSource = cqlfhir.PatientSource.FHIRv300();
+  } else {
+    patientSource = cqlfhir.PatientSource.FHIRv400();
+  }
 
   // Load the patient source with the patient
   patientSource.loadBundles(patients);

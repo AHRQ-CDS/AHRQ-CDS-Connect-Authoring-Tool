@@ -4,7 +4,7 @@ const CQLLibrary = require('../models/cqlLibrary');
 const Artifact = require('../models/artifact');
 const makeCQLtoELMRequest = require('../handlers/cqlHandler').makeCQLtoELMRequest;
 
-const supportedFHIRVersions = ['1.0.2', '3.0.0'];
+const supportedFHIRVersions = ['1.0.2', '3.0.0', '4.0.0'];
 
 const authoringToolExports = [
   { name: 'FHIRHelpers', version: '1.0.2' },
@@ -12,6 +12,9 @@ const authoringToolExports = [
   { name: 'CDS_Connect_Conversions', version: '1' },
   { name: 'FHIRHelpers', version: '3.0.0' },
   { name: 'CDS_Connect_Commons_for_FHIRv300', version: '1.0.1' },
+  { name: 'CDS_Connect_Conversions', version: '1' },
+  { name: 'FHIRHelpers', version: '4.0.0' },
+  { name: 'CDS_Connect_Commons_for_FHIRv400', version: '1.0.1' },
   { name: 'CDS_Connect_Conversions', version: '1' }
 ];
 

@@ -196,7 +196,7 @@ export default class PatientTable extends Component {
   }
 
   renderExecuteCQLModal() {
-    const fhirVersionMap = { '1.0.2': 'DSTU2', '3.0.0': 'STU3' };
+    const fhirVersionMap = { '1.0.2': 'DSTU2', '3.0.0': 'STU3', '4.0.0': 'R4' };
     const validArtifactsToExecute = this.props.artifacts.filter((a) => {
       const noFHIRVersion = a.fhirVersion === '';
       const sameFHIRVersion =

@@ -96,7 +96,7 @@ export default class PatientView extends Component {
     const { patient } = this.props;
 
     let resourceType;
-    if (resourceName === 'MedicationOrder' && patient.fhirVersion === 'STU3') {
+    if (resourceName === 'MedicationOrder' && (patient.fhirVersion === 'STU3' || patient.fhirVersion === 'R4')) {
       resourceType = 'MedicationRequest';
     } else {
       resourceType = resourceName;

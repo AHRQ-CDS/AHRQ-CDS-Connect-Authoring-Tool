@@ -163,17 +163,26 @@ class Landing extends Component {
                   rel="nofollow noopener noreferrer"
                   onClick={onVisitExternalLink}
                   href="http://hl7.org/fhir/DSTU2/index.html">
-                  {' '}DSTU 2{' '}
+                  {' '}DSTU2{' '}
                 </a>
-                <i className="fa fa-external-link"></i> or
+                <i className="fa fa-external-link"></i>,
                 <a
                   target="_blank"
                   rel="nofollow noopener noreferrer"
                   onClick={onVisitExternalLink}
                   href="http://hl7.org/fhir/STU3/index.html">
-                  {' '}STU 3{' '}
+                  {' '}STU3{' '}
                 </a>
-                <i className="fa fa-external-link"></i> data model.
+                <i className="fa fa-external-link"></i>, or
+                <a
+                  target="_blank"
+                  rel="nofollow noopener noreferrer"
+                  onClick={onVisitExternalLink}
+                  href="http://hl7.org/fhir/R4/index.html">
+                  {' '}R4{' '}
+                </a>
+                <i className="fa fa-external-link"></i>
+                 data model.
               </div>
             </div>
 

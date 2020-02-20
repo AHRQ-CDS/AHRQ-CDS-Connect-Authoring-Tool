@@ -2,6 +2,7 @@ import React from 'react';
 import PatientTable from '../PatientTable';
 import mockPatientDstu2 from '../../../mocks/mockPatientDstu2';
 import mockPatientStu3 from '../../../mocks/mockPatientStu3';
+import mockPatientR4 from '../../../mocks/mockPatientR4';
 import { render, fireEvent, openSelect } from '../../../utils/test-utils';
 
 describe('<PatientTable />', () => {
@@ -28,7 +29,7 @@ describe('<PatientTable />', () => {
       updatedAt: '2012-11-15T21:26:17Z'
     }
   ];
-  const patientsMock = [mockPatientDstu2, mockPatientStu3];
+  const patientsMock = [mockPatientDstu2, mockPatientStu3, mockPatientR4];
 
   const renderComponent = (props = {}) =>
     render(

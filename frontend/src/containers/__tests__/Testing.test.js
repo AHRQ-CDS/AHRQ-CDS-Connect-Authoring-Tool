@@ -3,6 +3,7 @@ import { Provider } from 'react-redux';
 import { createMockStore } from 'redux-test-utils';
 import mockPatientDstu2 from '../../mocks/mockPatientDstu2';
 import mockPatientStu3 from '../../mocks/mockPatientStu3';
+import mockPatientR4 from '../../mocks/mockPatientR4';
 import { reduxState } from '../../utils/test_fixtures';
 import { render } from '../../utils/test-utils';
 import Testing from '../Testing';
@@ -28,7 +29,7 @@ describe('<Testing />', () => {
         ...reduxState,
         testing: {
           ...reduxState.testing,
-          patients: [mockPatientDstu2, mockPatientStu3]
+          patients: [mockPatientDstu2, mockPatientStu3, mockPatientR4]
         }
       }
     });
