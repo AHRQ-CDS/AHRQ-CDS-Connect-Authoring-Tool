@@ -1,28 +1,23 @@
 {
     "data": {
         "localIdPatientResultsMap": {
-            "a86c13ad-bbc9-40a2-b9b9-f48c7b9619d0": {
-                "Untitled-Artifact": {
-                    "10": null,
-                    "11": null,
-                    "12": null,
-                    "5": null,
-                    "6": null,
-                    "7": null,
-                    "8": null,
-                    "9": null
-                }
+            "5e0fd3ec-85c6-4cc3-a12d-c470a93c3132": {
+                "Untitled-Artifact": {}
             }
         },
         "patientResults": {
-            "a86c13ad-bbc9-40a2-b9b9-f48c7b9619d0": {
+            "5e0fd3ec-85c6-4cc3-a12d-c470a93c3132": {
                 "Errors": null,
-                "InPopulation": null,
+                "InPopulation": false,
+                "Is Child": false,
+                "Is Male": false,
+                "MeetsExclusionCriteria": false,
+                "MeetsInclusionCriteria": false,
                 "Patient": {
                     "address": [
                         {
                             "city": {
-                                "value": "Revere"
+                                "value": "Worcester"
                             },
                             "country": {
                                 "value": "US"
@@ -33,13 +28,13 @@
                                         {
                                             "url": "latitude",
                                             "value": {
-                                                "value": -70.990358
+                                                "value": 42.2894936261063
                                             }
                                         },
                                         {
                                             "url": "longitude",
                                             "value": {
-                                                "value": 42.421011
+                                                "value": -71.8218075651246
                                             }
                                         }
                                     ],
@@ -48,11 +43,11 @@
                             ],
                             "line": [
                                 {
-                                    "value": "725 Ankunding Tunnel"
+                                    "value": "462 Homenick Landing Suite 25"
                                 }
                             ],
                             "postalCode": {
-                                "value": "02151"
+                                "value": "01545"
                             },
                             "state": {
                                 "value": "Massachusetts"
@@ -60,7 +55,7 @@
                         }
                     ],
                     "birthDate": {
-                        "value": "1986-01-12"
+                        "value": "1999-10-10"
                     },
                     "communication": [
                         {
@@ -68,10 +63,10 @@
                                 "coding": [
                                     {
                                         "code": {
-                                            "value": "en-US"
+                                            "value": "pt"
                                         },
                                         "display": {
-                                            "value": "English"
+                                            "value": "Portuguese"
                                         },
                                         "system": {
                                             "value": "urn:ietf:bcp:47"
@@ -79,7 +74,7 @@
                                     }
                                 ],
                                 "text": {
-                                    "value": "English"
+                                    "value": "Portuguese"
                                 }
                             }
                         }
@@ -91,10 +86,10 @@
                                     "url": "ombCategory",
                                     "value": {
                                         "code": {
-                                            "value": "2054-5"
+                                            "value": "2106-3"
                                         },
                                         "display": {
-                                            "value": "Black or African American"
+                                            "value": "White"
                                         },
                                         "system": {
                                             "value": "urn:oid:2.16.840.1.113883.6.238"
@@ -104,7 +99,7 @@
                                 {
                                     "url": "text",
                                     "value": {
-                                        "value": "Black or African American"
+                                        "value": "White"
                                     }
                                 }
                             ],
@@ -138,26 +133,26 @@
                         {
                             "url": "http://hl7.org/fhir/StructureDefinition/patient-mothersMaidenName",
                             "value": {
-                                "value": "Arline53 Quitzon246"
+                                "value": "Lourdes258 Haag279"
                             }
                         },
                         {
                             "url": "http://hl7.org/fhir/us/core/StructureDefinition/us-core-birthsex",
                             "value": {
-                                "value": "M"
+                                "value": "F"
                             }
                         },
                         {
-                            "url": "http://hl7.org/fhir/StructureDefinition/birthPlace",
+                            "url": "http://hl7.org/fhir/StructureDefinition/patient-birthPlace",
                             "value": {
                                 "city": {
-                                    "value": "Abington"
+                                    "value": "Porto"
                                 },
                                 "country": {
-                                    "value": "US"
+                                    "value": "PT"
                                 },
                                 "state": {
-                                    "value": "Massachusetts"
+                                    "value": "Douro Litoral"
                                 }
                             }
                         },
@@ -170,15 +165,15 @@
                         {
                             "url": "http://synthetichealth.github.io/synthea/quality-adjusted-life-years",
                             "value": {
-                                "value": 31
+                                "value": 20
                             }
                         }
                     ],
                     "gender": {
-                        "value": "male"
+                        "value": "female"
                     },
                     "id": {
-                        "value": "a86c13ad-bbc9-40a2-b9b9-f48c7b9619d0"
+                        "value": "5e0fd3ec-85c6-4cc3-a12d-c470a93c3132"
                     },
                     "identifier": [
                         {
@@ -186,7 +181,7 @@
                                 "value": "https://github.com/synthetichealth/synthea"
                             },
                             "value": {
-                                "value": "5e948297-21c3-4518-bde5-e53ea55704b7"
+                                "value": "93c286a8-f2ec-4cac-aed7-2367a9117795"
                             }
                         },
                         {
@@ -203,7 +198,7 @@
                                             "value": "Medical Record Number"
                                         },
                                         "system": {
-                                            "value": "http://hl7.org/fhir/v2/0203"
+                                            "value": "http://terminology.hl7.org/CodeSystem/v2-0203"
                                         }
                                     }
                                 ],
@@ -212,7 +207,7 @@
                                 }
                             },
                             "value": {
-                                "value": "5e948297-21c3-4518-bde5-e53ea55704b7"
+                                "value": "93c286a8-f2ec-4cac-aed7-2367a9117795"
                             }
                         },
                         {
@@ -223,13 +218,13 @@
                                 "coding": [
                                     {
                                         "code": {
-                                            "value": "SB"
+                                            "value": "SS"
                                         },
                                         "display": {
                                             "value": "Social Security Number"
                                         },
                                         "system": {
-                                            "value": "http://hl7.org/fhir/identifier-type"
+                                            "value": "http://terminology.hl7.org/CodeSystem/v2-0203"
                                         }
                                     }
                                 ],
@@ -238,7 +233,7 @@
                                 }
                             },
                             "value": {
-                                "value": "999-45-4718"
+                                "value": "999-51-1344"
                             }
                         },
                         {
@@ -255,7 +250,7 @@
                                             "value": "Driver's License"
                                         },
                                         "system": {
-                                            "value": "http://hl7.org/fhir/v2/0203"
+                                            "value": "http://terminology.hl7.org/CodeSystem/v2-0203"
                                         }
                                     }
                                 ],
@@ -264,7 +259,7 @@
                                 }
                             },
                             "value": {
-                                "value": "S99933193"
+                                "value": "S99918722"
                             }
                         },
                         {
@@ -281,7 +276,7 @@
                                             "value": "Passport Number"
                                         },
                                         "system": {
-                                            "value": "http://hl7.org/fhir/v2/0203"
+                                            "value": "http://terminology.hl7.org/CodeSystem/v2-0203"
                                         }
                                     }
                                 ],
@@ -290,7 +285,7 @@
                                 }
                             },
                             "value": {
-                                "value": "X17774266X"
+                                "value": "X34486008X"
                             }
                         }
                     ],
@@ -301,15 +296,15 @@
                                     "value": "S"
                                 },
                                 "display": {
-                                    "value": "S"
+                                    "value": "Never Married"
                                 },
                                 "system": {
-                                    "value": "http://hl7.org/fhir/v3/MaritalStatus"
+                                    "value": "http://terminology.hl7.org/CodeSystem/v3-MaritalStatus"
                                 }
                             }
                         ],
                         "text": {
-                            "value": "S"
+                            "value": "Never Married"
                         }
                     },
                     "multipleBirth": {
@@ -318,16 +313,16 @@
                     "name": [
                         {
                             "family": {
-                                "value": "McClure239"
+                                "value": "Reynolds644"
                             },
                             "given": [
                                 {
-                                    "value": "Arnulfo253"
+                                    "value": "Geneva168"
                                 }
                             ],
                             "prefix": [
                                 {
-                                    "value": "Mr."
+                                    "value": "Ms."
                                 }
                             ],
                             "use": {
@@ -344,7 +339,7 @@
                                 "value": "home"
                             },
                             "value": {
-                                "value": "555-796-1783"
+                                "value": "555-935-6358"
                             }
                         }
                     ],

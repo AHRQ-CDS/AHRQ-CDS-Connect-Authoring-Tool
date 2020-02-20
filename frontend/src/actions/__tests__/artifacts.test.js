@@ -301,7 +301,7 @@ describe('artifact actions', () => {
         method: 'POST',
         response: { status: 200, response: { elmFiles: mockElmFilesR4.elmFiles } }
       });
-      console.log(JSON.stringify(mockArtifact));
+
       const store = mockStore({ artifacts: [mockArtifact], patients: [mockPatientR4] });
       const expectedActions = [
         { type: types.EXECUTE_ARTIFACT_REQUEST },
