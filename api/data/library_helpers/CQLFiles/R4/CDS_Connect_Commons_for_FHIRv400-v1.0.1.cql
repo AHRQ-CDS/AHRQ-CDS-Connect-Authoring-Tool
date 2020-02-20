@@ -1,8 +1,10 @@
-// CDS Connect Commons for FHIRv102
+// CDS Connect Commons for FHIRv400
 // Change log:
 // - 1.0.1
-//   - Remove NullSafe conversion functions since FHIRHelpers now does null-safe conversions
-//   - Note functions that exist in DSTU2 version of commons, but not here in STU3 version
+//   - Fix logic for ActiveOrRecurring to use equivalence matching (instead of "in"
+//     which uses equality matching)
+//   - Add back ...ByConcept functions for backwards compatibility w/ libraries that
+//     might expect them
 library CDS_Connect_Commons_for_FHIRv400 version '1.0.1'
 
 using FHIR version '4.0.0'
@@ -43,11 +45,25 @@ define function PeriodToInterval(period FHIR.Period):
   else
     Interval[period."start".value, period."end".value]
 
+/**
+ * Converts a FHIR Range to a CQL Interval.  FHIRHelpers provides a function for this, but
+ * FHIRHelpers provides several overloads of the ToInterval function, and the JavaScript CQL
+ * Execution Framework apparently does not handle this correctly.  Creating uniquely named
+ * functions here ensures safe execution.
+ * @param range - a FHIR Range
+ * @returns {System.Interval} a CQL Interval or null if null was passed in
+ */
+define function RangeToInterval(range FHIR.Range):
+  if range is null then
+    null
+  else
+    Interval[FHIRHelpers.ToQuantity(range.low), FHIRHelpers.ToQuantity(range.high)]
+
 // -------------------------------------------------- OBSERVATIONS -----------------------------------------------------
 
 /**
- * Filters Observations by a concept rather than by a ValueSet.  In CQL 1.3, this will be built into the retrieve,
- * but for now, we must use a query where clause.
+ * Filters Observations by a concept rather than by a ValueSet.  In CQL 1.3, this is built into the retrieve,
+ * but for backwards compatibility, we keep this query where clause as an option.
  * @param Koncept - the concept to filter on (intentionally mispelled to avoid naming clashes)
  * @returns {List<Observation>} a list of Observations matching the concept, or null if null was passed in
  */
@@ -55,9 +71,9 @@ define function ObservationsByConcept(Koncept System.Concept):
   [Observation] O where FHIRHelpers.ToConcept(O.code) ~ Koncept
 
 /**
- * Observations that are complete and verified. In FHIR STU3, there are two statuses that indicate this state: 'final',
+ * Observations that are complete and verified. In FHIR R4, there are three statuses that indicate this state: 'final',
  * 'corrected', and 'amended'.
- * @see http://hl7.org/fhir/valueset-observation-status.html
+ * @see http://hl7.org/fhir/R4/valueset-observation-status.html
  * @param ObsList - a list of Observations
  * @returns {List<Observation>} a list of verified Observations, or null if null was passed in
  */
@@ -139,7 +155,6 @@ define function FindDate(Obs Observation):
     Obs.issued.value
   )
 
-// TODO: Confirm that this works as expected
 /**
  * The highest observation.
  * The value will be used to compare Observations and determine the highest one.
@@ -153,8 +168,8 @@ define function HighestObservation(ObsList List<Observation>):
 // -------------------------------------------------- CONDITIONS -------------------------------------------------------
 
 /**
- * Filters Conditions by a concept rather than by a ValueSet.  In CQL 1.3, this will be built into the retrieve,
- * but for now, we must use a query where clause.
+ * Filters Conditions by a concept rather than by a ValueSet.  In CQL 1.3, this is built into the retrieve,
+ * but for backwards compatibility, we keep this query where clause as an option.
  * @param Koncept - the concept to filter on (intentionally mispelled to avoid naming clashes)
  * @returns {List<Observation>} a list of Conditions matching the concept, or null if null was passed in
  */
@@ -192,7 +207,7 @@ define function ActiveCondition(CondList List<Condition>):
  * @returns {List<Condition>} a list of active or recurring Conditions, or null if null was passed in
  */
 define function ActiveOrRecurring(CondList List<Condition>):
-  CondList C 
+  CondList C
     where C.clinicalStatus ~ "Condition Active"
       or C.clinicalStatus ~ "Condition Recurrence"
       or C.clinicalStatus ~ "Condition Relapse"
@@ -226,11 +241,12 @@ define function MostRecentCondition(CondList List<Condition>):
     (onset as FHIR.Period)."start".value,
     recordedDate.value)
   )
+
  // -------------------------------------------------- PROCEDURES ------------------------------------------------------
 
  /**
-  * Filters Procedures by a concept rather than by a ValueSet.  In CQL 1.3, this will be built into the retrieve,
-  * but for now, we must use a query where clause.
+  * Filters Procedures by a concept rather than by a ValueSet.  In CQL 1.3, this is built into the retrieve,
+ * but for backwards compatibility, we keep this query where clause as an option.
   * @param Koncept - the concept to filter on (intentionally mispelled to avoid naming clashes)
   * @returns {List<Procedure>} a list of Procedures matching the concept, or null if null was passed in
   */
@@ -257,8 +273,6 @@ define function ProcedureInProgress(ProcList List<Procedure>):
   ProcList P
     where P.status.value = 'in-progress'
 
-
-// NOTE: The DSTU2 commons also has ProcedurePerformance, but we do not use that in the CDS Authoring Tool.
 /**
  * Procedures that actually happened or are happening. In FHIR R4, there are a few properties that negate the
  * procedure, most notably when status is 'preparation', 'not-done', 'entered-in-error', or 'unknown'.
@@ -299,15 +313,40 @@ define function MostRecentProcedure(ProcList List<Procedure>):
     (performed as FHIR.Period)."start".value)
   )
 
-// NOTE: The DSTU2 commons also has functions for ProcedureRequests, but we do not use them in the CDS Authoring Tool.
+// ----------------------------------------------- SERVICEREQUESTS -----------------------------------------------------
 
-// NOTE: The DSTU2 commons also has functions for ReferralRequests, but we do not use them in the CDS Authoring Tool.
+// NOTE: In FHIR R4, ProcedureRequest and ReferralRequest are replaced by ServiceRequest
+
+/**
+ * ServiceRequests that are active or completed. In FHIR R4, this is reflected by the corresponding
+ * status values.
+ * @see http://hl7.org/fhir/R4/valueset-request-status.html
+ * @param ServiceRequestList - a list of ServiceRequests
+ * @returns {List<ServiceRequest>} a list of accepted, in-progress, or completed ProcedureRequests,
+ * or null if null was passed in
+ */
+define function ServiceRequestActiveOrCompleted(ServiceRequestList List<ServiceRequest>):
+  ServiceRequestList S
+    where S.status.value in List{'active', 'completed'}
+
+/**
+ * ServiceRequests ordered in the specified "look back" period.  For example, PCIs ordered in the
+ * past 2 weeks.
+ * TODO: Rename to LookBack once the execution engine supports overloaded functions.
+ * @param ServiceRequestList - a list of ServiceRequests
+ * @param LookBack - the lookback period for when the service was ordered
+ * @returns {List<ServiceRequest>} a list of ServiceRequests ordered in the look back period, or null if null
+ * was passed in
+ */
+define function ServiceRequestLookBack(ServiceRequestList List<ServiceRequest>, LookBack System.Quantity):
+  ServiceRequestList S
+    where S.authoredOn.value in Interval[Now() - LookBack, Now()]
 
 // -------------------------------------------------- MEDICATIONS ------------------------------------------------------
 
 /**
- * Filters MedicationStatements by a concept rather than by a ValueSet.  In CQL 1.3, this will be built into the retrieve,
- * but for now, we must use a query where clause.
+ * Filters MedicationStatements by a concept rather than by a ValueSet.  In CQL 1.3, this is built into the retrieve,
+ * but for backwards compatibility, we keep this query where clause as an option.
  * @param Koncept - the concept to filter on (intentionally mispelled to avoid naming clashes)
  * @returns {List<MedicationStatement>} a list of MedicationStatement matching the concept, or null if null was passed in
  */
@@ -315,8 +354,8 @@ define function MedicationStatementsByConcept(Koncept System.Concept):
   [MedicationStatement] M where FHIRHelpers.ToConcept(M.medication as FHIR.CodeableConcept) ~ Koncept
 
 /**
- * Filters MedicationRequests by a concept rather than by a ValueSet.  In CQL 1.3, this will be built into the retrieve,
- * but for now, we must use a query where clause.
+ * Filters MedicationRequests by a concept rather than by a ValueSet.  In CQL 1.3, this is built into the retrieve,
+ * but for backwards compatibility, we keep this query where clause as an option.
  * @param Koncept - the concept to filter on (intentionally mispelled to avoid naming clashes)
  * @returns {List<MedicationRequest>} a list of MedicationRequests matching the concept, or null if null was passed in
  */
@@ -370,7 +409,35 @@ define function ActiveOrCompletedMedicationRequest(MedList List<MedicationReques
     where M.status.value = 'active'
       or M.status.value = 'completed'
 
-// NOTE: The DSTU2 commons also has ActiveCompletedOrStoppedMedicationOrder, but we do not use that in the CDS Authoring Tool.
+/**
+ * Medications that are active or completed, according to a statement, but not necessarily verified via a prescription.
+ * For example, medications that a patient has self-reported to be taking.  This may, however, also represent
+ * medications that are expected to be active after providing a prescription (e.g., clinician-reported).  In FHIR R4,
+ * this is reflected by MedicationStatement with status 'active' or 'completed'.
+ * TODO: Rename to ActiveOrCompleted once the execution engine supports overloaded functions.
+ * @see http://hl7.org/fhir/R4/valueset-medication-statement-status.html
+ * @param MedList - a list of MedicationStatements
+ * @returns {List<MedicationStatement>} a list of active or completed medication statements, or null if null was passed
+ *   in
+ */
+define function ActiveOrCompletedMedicationStatement(MedList List<MedicationStatement>):
+  MedList M
+    where M.status.value = 'active'
+      or M.status.value = 'completed'
+
+/**
+* Medication requests that are active, completed, or stopped, according to a prescription.  In FHIR R4, this is
+* reflected by MedicationRequest with status 'active', 'completed', or 'stopped'. See the note above
+* (in ActiveMedicationRequest) for more nuance regarding MedicationRequest vs. MedicationStatement.
+* @see http://hl7.org/fhir/R4/valueset-medicationrequest-status.html
+* @param MedList - a list of MedicationOrders
+* @returns {List<MedicationRequestr>} a list of active medication requests, or null if null was passed in
+*/
+define function ActiveCompletedOrStoppedMedicationRequest(MedList List<MedicationRequest>):
+  MedList M
+    where M.status.value = 'active'
+      or M.status.value = 'completed'
+      or M.status.value = 'stopped'
 
 /**
 * Medication requests that are issued in the specified "look back" period.
@@ -384,6 +451,7 @@ define function MedicationRequestLookBack(MedList List<MedicationRequest>, LookB
   MedList M
     let LookBackInterval: Interval[Now() - LookBack, Now()]
     where M.authoredOn.value in LookBackInterval
+    // DSTU2 also checked the dateEnded property of MedicationOrder, but this doesn't exist for MedicationRequest
 
 /**
 * Medication Statements that are issued in the specified "look back" period.
@@ -402,8 +470,8 @@ define function MedicationStatementLookBack(MedList List<MedicationStatement>, L
 // -------------------------------------------------- ENCOUNTERS ------------------------------------------------------
 
 /**
- * Filters Encounters by a concept rather than by a ValueSet.  In CQL 1.3, this will be built into the retrieve,
- * but for now, we must use a query where clause.
+ * Filters Encounters by a concept rather than by a ValueSet.  In CQL 1.3, this is built into the retrieve,
+ * but for backwards compatibility, we keep this query where clause as an option.
  * @param Koncept - the concept to filter on (intentionally mispelled to avoid naming clashes)
  * @returns {List<Encounter>} a list of Encounters matching the concept, or null if null was passed in
  */
@@ -423,8 +491,8 @@ define function InProgress(EncList List<Encounter>):
 // -------------------------------------------------- ALLERGY INTOLERANCES ------------------------------------------------------
 
 /**
- * Filters AllergyIntolerances by a concept rather than by a ValueSet.  In CQL 1.3, this will be built into the retrieve,
- * but for now, we must use a query where clause.
+ * Filters AllergyIntolerances by a concept rather than by a ValueSet.  In CQL 1.3, this is built into the retrieve,
+ * but for backwards compatibility, we keep this query where clause as an option.
  * @param Koncept - the concept to filter on (intentionally mispelled to avoid naming clashes)
  * @returns {List<AllergyIntolerance>} a list of Allergy Intolerances matching the concept, or null if null was passed in
  */
@@ -444,4 +512,24 @@ define function ActiveOrConfirmedAllergyIntolerance(AllergyIntolList List<Allerg
     where A.clinicalStatus ~ "AllergyIntolerance Active"
       or A.verificationStatus ~ "AllergyIntolerance Confirmed"
 
-// NOTE: The DSTU2 commons also has GoalLookBack, but we do not use that in the CDS Authoring Tool.
+// -------------------------------------------------------- GOALS ------------------------------------------------------
+
+/**
+ * Goals with a start, target, or status date in the specified "look back" period.  For example, Pain Management Goals
+ * in the last 2 years.
+ * TODO: Rename to LookBack once the execution engine supports overloaded functions.
+ * @param GoalList - a list of Goals
+ * @returns {List<Goal>} a list of Goals with a start, target, or status date in the specified lookback period, or null
+ * if null was passed in
+ */
+define function GoalLookBack(GoalList List<Goal>, LookBack System.Quantity):
+  GoalList G
+    let LookBackInterval: Interval[Now() - LookBack, Now()],
+    StartDate: (G.start as FHIR.date).value,
+    StatusDate: G.statusDate.value,
+    TargetDates: (G.target) T return (T.due as FHIR.date).value,
+    TargetQuantities: (G.target) T return FHIRHelpers.ToQuantity(T.due as FHIR.Duration)
+    where StartDate in LookBackInterval
+      or StatusDate in LookBackInterval
+      or exists(TargetDates TD where TD in LookBackInterval)
+      or exists(TargetQuantities TQ where (StartDate + TQ) in LookBackInterval)
