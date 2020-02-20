@@ -129,7 +129,9 @@ export default class RepoUploadModal extends Component {
               this.updatePassword(event.target.value);
             }}
           />
-          <button className="primary-button" onClick={this.fetchArtifacts}>Login</button>
+          <button className="primary-button" onClick={this.fetchArtifacts} aria-label="Login">
+            Login
+          </button>
         </div>
       </div>
     );

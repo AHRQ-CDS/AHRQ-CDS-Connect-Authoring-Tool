@@ -218,7 +218,10 @@ export default class CodeSelectModal extends Component {
 
     return (
       <span className="element-select__modal element-modal">
-        <button type="button" className="primary-button" onClick={this.openCodeSelectModal}>
+        <button type="button"
+          className="primary-button"
+          onClick={this.openCodeSelectModal}
+          aria-label={buttonLabels.openButtonText}>
           <FontAwesome name="medkit" />{' '}{buttonLabels.openButtonText}
         </button>
 
@@ -280,7 +283,9 @@ export default class CodeSelectModal extends Component {
                   }
                 </div>
 
-                <button className="primary-button element-modal__search-button" onClick={this.validateCode}>
+                <button className="primary-button element-modal__search-button"
+                  onClick={this.validateCode}
+                  aria-label="Validate">
                   Validate
                 </button>
               </div>
@@ -291,7 +296,11 @@ export default class CodeSelectModal extends Component {
             <footer className="modal__footer">
               {this.renderCodeValidation()}
 
-              <button className="secondary-button" onClick={this.closeCodeSelectModal}>Cancel</button>
+              <button className="secondary-button"
+                onClick={this.closeCodeSelectModal}
+                aria-label="Cancel">
+              Cancel
+              </button>
 
               <button
                 className="primary-button element-modal__search-button"
@@ -300,7 +309,8 @@ export default class CodeSelectModal extends Component {
                   || !this.state.codeText
                   || (this.state.displayOtherInput && !this.state.codeSystemText)
                 }
-                onClick={this.chooseCode}>
+                onClick={this.chooseCode}
+                aria-label="Select">
                 Select
               </button>
             </footer>

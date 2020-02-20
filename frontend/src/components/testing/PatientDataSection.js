@@ -28,7 +28,9 @@ export default class PatientDataSection extends Component {
         tabIndex={0}>
         <div className="header-title">{title} ({data.length})</div>
         <div className="header-divider"></div>
-        <Button onClick={this.toggle} className="header-button"><FontAwesome name={chevronIcon} /></Button>
+        <Button onClick={this.toggle} className="header-button" aria-label="Chevron Icon">
+          <FontAwesome name={chevronIcon} />
+        </Button>
       </div>
     );
   }

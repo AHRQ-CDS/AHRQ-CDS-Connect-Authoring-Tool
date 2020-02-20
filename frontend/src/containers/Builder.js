@@ -455,14 +455,17 @@ export class Builder extends Component {
               </DropdownMenu>
             </Dropdown>
 
-            <button onClick={() => this.handleSaveArtifact(artifact)} className="secondary-button">
+            <button onClick={() => this.handleSaveArtifact(artifact)}
+              className="secondary-button"
+              aria-label="Save">
               <FontAwesome name="save" className="icon" />Save
             </button>
 
             { publishEnabled ?
               <button
                 onClick={() => { this.handleSaveArtifact(artifact); this.togglePublishModal(); }}
-                className="secondary-button">
+                className="secondary-button"
+                aria-label="Publish">
                 <FontAwesome name="align-right" className="icon" />Publish
               </button>
               : ''

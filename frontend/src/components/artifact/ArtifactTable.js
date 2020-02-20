@@ -108,7 +108,8 @@ export default class ArtifactTable extends Component {
           <FontAwesome name='pencil' /> Edit Info
         </button>
 
-        <button className="danger-button"
+        <button aria-label="Delete"
+          className="danger-button"
           onClick={() => this.openConfirmDeleteModal(artifact)}>
           <FontAwesome name='times' /> Delete
         </button>

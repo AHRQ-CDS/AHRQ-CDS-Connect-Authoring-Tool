@@ -330,7 +330,8 @@ export default class PatientTable extends Component {
             className={`button danger-button ${
               patientSelected ? 'disabled' : ''
             }`}
-            onClick={() => { if (!patientSelected) this.openConfirmDeleteModal(patient); }}>
+            onClick={() => { if (!patientSelected) this.openConfirmDeleteModal(patient); }}
+            aria-label="Delete">
             Delete
           </button>
           {patientSelected &&

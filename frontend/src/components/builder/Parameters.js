@@ -60,7 +60,10 @@ export default class Parameters extends Component {
           />
         ))}
 
-        <button className="button primary-button new-parameter" onClick={this.addParameter}>
+        <button
+            className="button primary-button new-parameter"
+            onClick={this.addParameter}
+            aria-label="New Parameter">
           New parameter
         </button>
       </div>

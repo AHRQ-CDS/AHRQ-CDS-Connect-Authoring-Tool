@@ -70,7 +70,7 @@ export default class Login extends Component {
               <label for='username'>Username</label>
               <input type='text' id='username' ref='username' className="form-control col" placeholder='username' />
               <label for='password'>Password</label>
-              <input type='password' id='password' ref='password' className="form-control col" placeholder='password'  />
+              <input type='password' id='password' ref='password' className="form-control col" placeholder='password'/>
               {this.renderedAuthStatusText()}
             </div>
 

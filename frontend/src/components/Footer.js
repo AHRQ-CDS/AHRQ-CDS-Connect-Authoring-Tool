@@ -99,7 +99,7 @@ export default class Footer extends Component {
             <div className="footer__top-cds col-12 col-md-6">
               <nav className="nav" aria-labelledby="sitemap-cds-authoring-tool">
                 <div className="link-header" id="sitemap-cds-authoring-tool">
-                  <img src={`${process.env.PUBLIC_URL}/assets/images/home-icon.png`} alt="cds authoring tool home" />
+                  <img src={`${process.env.PUBLIC_URL}/assets/images/home-icon.png`} alt="" />
                   <a href={`${process.env.PUBLIC_URL}/`} alt="home">CDS Authoring Tool Site</a>
                 </div>
 

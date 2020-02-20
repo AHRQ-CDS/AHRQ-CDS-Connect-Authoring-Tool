@@ -61,7 +61,9 @@ class Landing extends Component {
         <div className="new-buttons">
           {whatsNew.map((feature, i) =>
             <div className={`new-button-group feature-${i}`} key={i}>
-              <button className="new-button" onClick={() => this.toggleWhatsNewButton(i)} key={i}>
+              <button className="new-button"
+                onClick={() => this.toggleWhatsNewButton(i)} key={i}
+                aria-label={feature.name}>
                 {feature.name}
               </button>
               <div className={`triangle ${whatsNewIndex === i && whatsNewOpen ? 'active' : ''}`}></div>
@@ -195,7 +197,7 @@ class Landing extends Component {
               <img
                 className="home-card__image"
                 src={`${process.env.PUBLIC_URL}/assets/images/home-contribute.png`}
-                alt="contribute" />
+                alt="" />
 
               <div className="home-card__title">Contribute</div>
 
