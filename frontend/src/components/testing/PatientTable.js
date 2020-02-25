@@ -122,9 +122,14 @@ export default class PatientTable extends Component {
   // ----------------------- PERFORM CQL EXECUTION -------------------------- //
 
   executeCQL = (artifact, params, patients) => {
-    const dataModel = (patients[0].fhirVersion === 'STU3')
-      ? { name: 'FHIR', version: '3.0.0' }
-      : { name: 'FHIR', version: '1.0.2' };
+    const dataModel = { name: 'FHIR', version: '' };
+    if (patients[0].fhirVersion === 'DSTU2') {
+      dataModel.version = '1.0.2';
+    } else if (patients[0].fhirVersion === 'STU3') {
+      dataModel.version = '3.0.0';
+    } else {
+      dataModel.version = '4.0.0';
+    }
 
     const patientsInfo = patients
       .map(patient => patient.patient);
