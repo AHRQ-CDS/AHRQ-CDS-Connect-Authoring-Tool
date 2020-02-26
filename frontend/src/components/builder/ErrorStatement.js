@@ -206,6 +206,7 @@ export default class ErrorStatement extends Component {
       <button
         disabled={!statement.condition.value}
         aria-disabled={!statement.condition.value}
+        aria-label={this.props.errorStatement.statements[index].useThenClause ? 'And Also If...' : '(Remove nested statements)'}
         className={`button primary-button ${statement.condition.value ? '' : 'disabled'}`}
         onClick={e => this.handleUseThenClause(index)}>
         {this.props.errorStatement.statements[index].useThenClause ? 'And Also If...' : '(Remove nested statements)'}
@@ -222,6 +223,7 @@ export default class ErrorStatement extends Component {
         <button
           disabled={disabled}
           aria-disabled={disabled}
+          aria-label={"Or Else If"}
           className="button primary-button"
           onClick={e => this.addStatement(parent)}>Or Else If...</button>
       </div>
@@ -233,6 +235,7 @@ export default class ErrorStatement extends Component {
     <div className="error-statement__action">
       <button
         className="button primary-button"
+        aria-label={"Delete If Clause"}
         onClick={e => this.deleteStatement(parent, index)}>Delete If Clause
       </button>
     </div>

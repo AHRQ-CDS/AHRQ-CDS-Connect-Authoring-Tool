@@ -278,7 +278,7 @@ export default class ElementSelect extends Component {
 
     return (
       <div className="vsac-authenticate">
-        <button className="disabled-button" disabled={true}>
+        <button className="disabled-button" disabled={true} aria-label={"VSAC Authenticated"}>
           <FontAwesome name="check" /> VSAC Authenticated
         </button>
 

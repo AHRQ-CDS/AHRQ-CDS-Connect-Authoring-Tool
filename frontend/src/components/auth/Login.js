@@ -43,7 +43,9 @@ export default class Login extends Component {
   render() {
     return (
       <div className="login">
-        <button onClick={this.openLoginModal} className="btn btn-primary login__button col">Login</button>
+        <button onClick={this.openLoginModal} className="btn btn-primary login__button col" aria-label={"Login"}>
+          Login
+        </button>
 
         <Modal
           modalTitle="Login to your account"

@@ -75,7 +75,7 @@ class Landing extends Component {
           <div className="new-display">
             {whatsNew[whatsNewIndex].image !== '' &&
               <div className="display-image">
-                <img src={whatsNew[whatsNewIndex].image} alt={whatsNew[whatsNewIndex].name} />
+                <img src={whatsNew[whatsNewIndex].image}  />
               </div>
             }
 
@@ -127,7 +127,7 @@ class Landing extends Component {
               <img
                 className="home-card__image"
                 src={`${process.env.PUBLIC_URL}/assets/images/home-transform.png`}
-                alt="transform" />
+                alt="" />
 
               <div className="home-card__title">Transform</div>
 
@@ -142,7 +142,7 @@ class Landing extends Component {
               <img
                 className="home-card__image"
                 src={`${process.env.PUBLIC_URL}/assets/images/home-interface.png`}
-                alt="interface" />
+                alt="" />
 
               <div className="home-card__title">Create</div>
 
@@ -181,7 +181,7 @@ class Landing extends Component {
               <img
                 className="home-card__image"
                 src={`${process.env.PUBLIC_URL}/assets/images/home-repository.png`}
-                alt="repository" />
+                alt="" />
 
               <div className="home-card__title">Share</div>
 

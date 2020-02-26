@@ -44,14 +44,14 @@ class VSACAuthenticationModal extends Component {
   renderButton = () => {
     if (this.props.vsacIsAuthenticating) {
       return (
-        <button className="disabled-button" disabled={true}>
+        <button className="disabled-button" disabled={true} aria-label={"Authenticating"}>
           <FontAwesome name="spinner" size="2x" spin />
         </button>
       );
     }
 
     return (
-      <button className="primary-button" onClick={this.openVSACLoginModal}>
+      <button className="primary-button" onClick={this.openVSACLoginModal} aria-label={"Authenticate VSAC"}>
         <FontAwesome name="key" />{' '}Authenticate VSAC
       </button>
     );
