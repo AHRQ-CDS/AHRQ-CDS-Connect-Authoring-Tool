@@ -98,6 +98,7 @@ export default class IntervalOfQuantityEditor extends Component {
               id={id}
               name="secondQuantity"
               type="number"
+              aria-label="Second Quantity"
               value={
                 (_.get(value, 'secondQuantity', null) || _.get(value, 'secondQuantity', null) === 0)
                 ? _.get(value, 'secondQuantity')

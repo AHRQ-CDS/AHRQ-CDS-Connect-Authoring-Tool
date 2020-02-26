@@ -62,6 +62,7 @@ export default class IntervalOfIntegerEditor extends Component {
               id={id}
               name="secondInteger"
               type="number"
+              aria-label="Second Integer"
               value={
                 (_.get(value, 'secondInteger', null) || _.get(value, 'secondInteger', null) === 0)
                 ? _.get(value, 'secondInteger')
