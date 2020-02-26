@@ -51,7 +51,7 @@ export default class PatientDataSection extends Component {
           </td></tr>)}
           {!isOther && data.map((element, index) =>
             <tr key={index}>
-              {Object.keys(data[0]).map((key, indx) => <td key={indx}>{element[key]}</td>)}
+              {Object.keys(data[0]).map((key, index) => <td key={index}>{element[key]}</td>)}
             </tr>)
           }
         </tbody>

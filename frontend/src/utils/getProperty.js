@@ -46,7 +46,7 @@ export default function getProperty(object, path) {
     parser = property.slice(root.length);
   }
 
-  const target = parseObject(object, property);
+  let target = parseObject(object, property);
   if (target == null) {
     return '';
   }
@@ -56,5 +56,11 @@ export default function getProperty(object, path) {
   if (typeof parserFn === 'function') {
     return parserFn(target);
   }
+
+  // It could be a CodeableConcept, in which case we need to return its code
+  if (target && target.coding) {
+    target = target.coding[0].code;
+  }
+
   return `${target}`;
 }
