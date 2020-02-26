@@ -72,6 +72,8 @@ export default class CodeSelectModal extends Component {
       let selectedCodeSystemId;
       if (!this.state.selectedCS) {
         selectedCodeSystemId = '';
+      } else if (this.state.selectedCS.value === 'Other') {
+        selectedCodeSystemId = this.state.codeSystemText;
       } else {
         selectedCodeSystemId = this.state.selectedCS.id;
       }
