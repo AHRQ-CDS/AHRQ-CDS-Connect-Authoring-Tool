@@ -44,7 +44,7 @@ class ELMErrorModal extends Component {
                       type="button"
                       onClick={ this.props.closeModal }
                       onKeyDown={ e => this.enterKeyCheck(this.props.closeModal, null, e) }
-                      aria-label={"Close"}>
+                      aria-label="Close">
                       Close
               </button>
             </footer>

@@ -43,7 +43,7 @@ export default class Login extends Component {
   render() {
     return (
       <div className="login">
-        <button onClick={this.openLoginModal} className="btn btn-primary login__button col" aria-label={"Login"}>
+        <button onClick={this.openLoginModal} className="btn btn-primary login__button col" aria-label="Login">
           Login
         </button>
 
@@ -69,10 +69,12 @@ export default class Login extends Component {
               Government purpose.
             </div>
             <div className="login-modal__form">
-              <label for='username'>Username</label>
-              <input type='text' id='username' ref='username' className="form-control col" placeholder='username' />
-              <label for='password'>Password</label>
-              <input type='password' id='password' ref='password' className="form-control col" placeholder='password'/>
+              <label htmlFor='username'>Username</label>
+              <input type='text' id='username' ref='username'
+                className="form-control col" placeholder='username' />
+              <label htmlFor='password'>Password</label>
+              <input type='password' id='password' ref='password'
+                className="form-control col" placeholder='password' />
               {this.renderedAuthStatusText()}
             </div>
 

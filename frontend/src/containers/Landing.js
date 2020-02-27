@@ -75,7 +75,7 @@ class Landing extends Component {
           <div className="new-display">
             {whatsNew[whatsNewIndex].image !== '' &&
               <div className="display-image">
-                <img src={whatsNew[whatsNewIndex].image}  />
+                <img src={whatsNew[whatsNewIndex].image} alt="" />
               </div>
             }
 

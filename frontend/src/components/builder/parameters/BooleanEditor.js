@@ -21,7 +21,7 @@ export default class BooleanEditor extends Component {
           <div className="col-9">
             <StyledSelect
               id={id}
-              aria-label={'Select True or False'}
+              aria-label="Select True or False"
               inputProps={{ title: 'Select True or False', id: formId }}
               options={options}
               value={options.find(option => option.value === value)}

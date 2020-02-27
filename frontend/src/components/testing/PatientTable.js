@@ -361,7 +361,7 @@ export default class PatientTable extends Component {
 
     return (
       <div className="vsac-authenticate">
-        <button className="disabled-button" disabled={true} aria-label={"VSAC Authenticated"}>
+        <button className="disabled-button" disabled={true} aria-label="VSAC Authenticated">
           <FontAwesome name="check" /> VSAC Authenticated
         </button>
       </div>
@@ -376,7 +376,7 @@ export default class PatientTable extends Component {
         <div className="patient-table__buttons">
           {this.renderVSACLogin()}
 
-          <button aria-label={"Execute CQL on Selected Patients"}
+          <button aria-label="Execute CQL on Selected Patients"
             disabled={
               this.props.vsacFHIRCredentials.username == null
               || this.state.patientsToExecute.length === 0

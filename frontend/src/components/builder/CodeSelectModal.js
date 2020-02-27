@@ -241,7 +241,7 @@ export default class CodeSelectModal extends Component {
                 className="element__deletebutton transparent-button"
                 onClick={this.closeCodeSelectModal}
                 onKeyDown={e => this.enterKeyCheck(this.closeCodeSelectModal, null, e)}
-                aria-label={'Close Code Select Modal'}>
+                aria-label="Close Code Select Modal">
                 <FontAwesome name='close'/>
               </button>
             </header>
@@ -263,7 +263,7 @@ export default class CodeSelectModal extends Component {
                   <StyledSelect
                     className="element-modal__search-system"
                     placeholder={'Select code system'}
-                    aria-label={'Select code system'}
+                    aria-label="Select code system"
                     value={this.state.selectedCS}
                     options={codeSystemOptions}
                     onChange={this.onCodeSystemSelected}

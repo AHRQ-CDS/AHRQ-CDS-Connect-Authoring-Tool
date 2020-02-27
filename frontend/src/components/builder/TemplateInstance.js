@@ -667,7 +667,7 @@ export default class TemplateInstance extends Component {
 
     return (
       <div id="vsac-controls">
-        <button className="disabled-button" disabled={true} aria-label={"VSAC Authenticated"}>
+        <button className="disabled-button" disabled={true} aria-label="VSAC Authenticated">
           <FontAwesome name="check" /> VSAC Authenticated
         </button>
 

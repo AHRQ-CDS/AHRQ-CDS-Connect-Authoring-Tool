@@ -104,7 +104,7 @@ export default class ExternalCqlTable extends Component {
           <button
             className={`button danger-button ${disabledClass}`}
             id={`DeleteLibraryTooltip-${externalCqlLibrary._id}`}
-            aria-label={"Delete"}
+            aria-label="Delete"
             onClick={() => { if (!disableDelete) this.openConfirmDeleteModal(externalCqlLibrary); }}>
             Delete
           </button>

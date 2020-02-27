@@ -44,14 +44,14 @@ class VSACAuthenticationModal extends Component {
   renderButton = () => {
     if (this.props.vsacIsAuthenticating) {
       return (
-        <button className="disabled-button" disabled={true} aria-label={"Authenticating"}>
+        <button className="disabled-button" disabled={true} aria-label="Authenticating">
           <FontAwesome name="spinner" size="2x" spin />
         </button>
       );
     }
 
     return (
-      <button className="primary-button" onClick={this.openVSACLoginModal} aria-label={"Authenticate VSAC"}>
+      <button className="primary-button" onClick={this.openVSACLoginModal} aria-label="Authenticate VSAC">
         <FontAwesome name="key" />{' '}Authenticate VSAC
       </button>
     );
@@ -76,7 +76,7 @@ class VSACAuthenticationModal extends Component {
             </div>
 
             <div className="login-modal__form">
-              <label for="username">Username</label>
+              <label htmlFor="username">Username</label>
               <input
                 type='text'
                 autoFocus
@@ -86,7 +86,7 @@ class VSACAuthenticationModal extends Component {
                 className="form-control col"
                 placeholder='username'
                 aria-labelledby="vsacUsernameLabel"/>
-              <label for="password">Password</label>
+              <label htmlFor="password">Password</label>
               <input
                 type='password'
                 autoComplete="current-password"
