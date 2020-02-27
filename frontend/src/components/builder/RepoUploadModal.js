@@ -154,7 +154,7 @@ export default class RepoUploadModal extends Component {
                 <td>{a.title.replace(/<\/?[^>]+(>|$)/g, '')}</td>
                 <td>{a.field_version}</td>
                 <td>
-                    <button onClick={() => this.uploadArtifact(a.nid)} aria-label={"Update"}>
+                    <button onClick={() => this.uploadArtifact(a.nid)} aria-label="Update">
                         Update
                     </button>
                 </td>
