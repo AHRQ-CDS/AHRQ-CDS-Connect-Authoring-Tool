@@ -156,7 +156,7 @@ const RESOURCE_KEYS = {
       Status: 'status'
     },
     Claim: {
-      'Claim type': 'type',
+      'Claim type': 'CodeableConcept:type',
       'First item service': 'CodeableConcept:item.firstObject.service',
       Status: 'use'
     } 
