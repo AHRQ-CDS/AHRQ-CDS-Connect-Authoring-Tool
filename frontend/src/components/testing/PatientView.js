@@ -83,18 +83,18 @@ const RESOURCE_KEYS = {
       'Claim type': 'type',
       'First item type': 'Coding:item.firstObject.type',
       'First item service': 'Coding:item.firstObject.service',
-      Status: 'use'
+      Use: 'use'
     }
   },
   STU3: {
     Organization: {
       Name: 'name',
-      Type: 'CodeableConcept:type',
+      Type: 'CodeableConcept:type.firstObject',
       'Street address': 'address.firstObject.line.firstObject',
       City: 'address.firstObject.city',
       State: 'address.firstObject.state',
       'Zip code': 'address.firstObject.postalCode',
-      Contact: 'telecom.firstObject.value'
+      Contact: 'contact.firstObject.telecom.firstObject.value'
     },
     Condition: {
       Condition: 'CodeableConcept:code',
@@ -105,7 +105,7 @@ const RESOURCE_KEYS = {
     },
     AllergyIntolerance: {
       Substance: 'CodeableConcept:code',
-      Category: 'category',
+      Category: 'CodeableConcept:category.firstObject',
       Criticality: 'criticality',
       Onset: 'onset[x]',
       Status: 'clinicalStatus'
@@ -127,7 +127,7 @@ const RESOURCE_KEYS = {
       Status: 'status'
     },
     Observation: {
-      Category: 'CodeableConcept:category',
+      Category: 'CodeableConcept:category.firstObject',
       Type: 'CodeableConcept:code',
       Value: 'value[x]',
       Effective: 'effective[x]',
@@ -152,38 +152,39 @@ const RESOURCE_KEYS = {
       Type: 'CodeableConcept:code',
       Category: 'CodeableConcept:category',
       Effective: 'effective[x]',
-      'First Result': 'Coding:result.firstObject',
+      Conclusion: 'conclusion',
       Status: 'status'
     },
     Claim: {
       'Claim type': 'CodeableConcept:type',
       'First item service': 'CodeableConcept:item.firstObject.service',
-      Status: 'use'
+      Use: 'use',
+      Status: 'status'
     } 
   },
   R4: {
     Organization: {
       Name: 'name',
-      Type: 'CodeableConcept:type',
+      Type: 'CodeableConcept:type.firstObject',
       'Street address': 'address.firstObject.line.firstObject',
       City: 'address.firstObject.city',
       State: 'address.firstObject.state',
       'Zip code': 'address.firstObject.postalCode',
-      Contact: 'telecom.firstObject.value'
+      Contact: 'contact.firstObject.telecom.firstObject.value'
     },
     Condition: {
       Condition: 'CodeableConcept:code',
       'Date recorded': 'recordedDate',
       Onset: 'onset[x]',
       Abatement: 'abatement[x]',
-      Status: 'clinicalStatus'
+      Status: 'CodeableConcept:clinicalStatus'
     },
     AllergyIntolerance: {
       Substance: 'CodeableConcept:code',
-      Category: 'category',
+      Category: 'CodeableConcept:category.firstObject',
       Criticality: 'criticality',
       Onset: 'onset[x]',
-      Status: 'clinicalStatus'
+      Status: 'CodeableConcept:clinicalStatus'
     },
     MedicationRequest: {
       Medication: 'medication[x]',
@@ -202,7 +203,7 @@ const RESOURCE_KEYS = {
       Status: 'status'
     },
     Observation: {
-      Category: 'CodeableConcept:category',
+      Category: 'CodeableConcept:category.firstObject',
       Type: 'CodeableConcept:code',
       Value: 'value[x]',
       Effective: 'effective[x]',
@@ -225,15 +226,16 @@ const RESOURCE_KEYS = {
     },
     DiagnosticReport: {
       Type: 'CodeableConcept:code',
-      Category: 'CodeableConcept:category',
+      Category: 'CodeableConcept:category.firstObject',
       Effective: 'effective[x]',
-      'First Result': 'Coding:result.firstObject',
+      Conclusion: 'conclusion',
       Status: 'status'
     },
     Claim: {
       'Claim type': 'CodeableConcept:type',
       'First item service': 'CodeableConcept:item.firstObject.productOrService',
-      Status: 'use'
+      Use: 'use',
+      Status: 'status'
     } 
   }
 };
