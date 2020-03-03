@@ -94,7 +94,7 @@ const RESOURCE_KEYS = {
       City: 'address.firstObject.city',
       State: 'address.firstObject.state',
       'Zip code': 'address.firstObject.postalCode',
-      Contact: 'contact.firstObject.telecom.firstObject.value'
+      Contact: 'telecom.firstObject.value'
     },
     Condition: {
       Condition: 'CodeableConcept:code',
@@ -160,7 +160,7 @@ const RESOURCE_KEYS = {
       'First item service': 'CodeableConcept:item.firstObject.service',
       Use: 'use',
       Status: 'status'
-    } 
+    }
   },
   R4: {
     Organization: {
@@ -170,7 +170,7 @@ const RESOURCE_KEYS = {
       City: 'address.firstObject.city',
       State: 'address.firstObject.state',
       'Zip code': 'address.firstObject.postalCode',
-      Contact: 'contact.firstObject.telecom.firstObject.value'
+      Contact: 'telecom.firstObject.value'
     },
     Condition: {
       Condition: 'CodeableConcept:code',
@@ -236,7 +236,7 @@ const RESOURCE_KEYS = {
       'First item service': 'CodeableConcept:item.firstObject.productOrService',
       Use: 'use',
       Status: 'status'
-    } 
+    }
   }
 };
 
