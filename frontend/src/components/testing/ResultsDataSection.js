@@ -33,7 +33,9 @@ export default class ResultsDataSection extends Component {
         tabIndex={0}>
         <div className="header-title">{title}</div>
         <div className="header-divider"></div>
-        <Button onClick={this.toggle} className="header-button"><FontAwesome name={chevronIcon} /></Button>
+        <Button onClick={this.toggle} className="header-button" aria-label="Expand or Collapse">
+            <FontAwesome name={chevronIcon} />
+        </Button>
       </div>
     );
   }

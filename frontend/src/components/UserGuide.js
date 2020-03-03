@@ -88,7 +88,7 @@ export default class UserGuide extends Component {
 
                 <p>
                   <img
-                    alt="Homepage"
+                    alt=""
                     src={screenshotUrl('Homepage')}
                   className="img-fluid img-thumbnail rounded mx-auto d-block" />
                 </p>
@@ -120,7 +120,7 @@ export default class UserGuide extends Component {
 
                   <p>
                     <img
-                      alt="Unauthenticated Nav Bar"
+                      alt=""
                       src={screenshotUrl('Unauthenticated_NavBar')}
                     className="img-fluid img-thumbnail rounded mx-auto d-block" />
                   </p>
@@ -146,7 +146,7 @@ export default class UserGuide extends Component {
 
                   <p>
                     <img
-                      alt="Authenticated Nav Bar"
+                      alt=""
                       src={screenshotUrl('Authenticated_NavBar')}
                     className="img-fluid img-thumbnail rounded mx-auto d-block" />
                   </p>
@@ -175,7 +175,7 @@ export default class UserGuide extends Component {
 
                 <p>
                   <img
-                    alt="Artifact Page"
+                    alt=""
                     src={screenshotUrl('Artifact_List')}
                   className="img-fluid img-thumbnail rounded mx-auto d-block" />
                 </p>
@@ -220,7 +220,7 @@ export default class UserGuide extends Component {
 
                 <p>
                   <img
-                    alt="Edit Artifact Modal"
+                    alt=""
                     src={screenshotUrl('Artifact_Modal')}
                   className="img-fluid img-thumbnail rounded mx-auto d-block" />
                 </p>
@@ -252,7 +252,7 @@ export default class UserGuide extends Component {
 
                 <p>
                   <img
-                    alt="Workspace"
+                    alt=""
                     src={screenshotUrl('Workspace')}
                   className="img-fluid img-thumbnail rounded mx-auto d-block" />
                 </p>
@@ -304,7 +304,7 @@ export default class UserGuide extends Component {
 
                 <p>
                   <img
-                    alt="Element Picker"
+                    alt=""
                     src={screenshotUrl('Element_Picker')}
                   className="img-fluid img-thumbnail rounded mx-auto d-block" />
                 </p>
@@ -343,7 +343,7 @@ export default class UserGuide extends Component {
 
                   <p>
                     <img
-                      alt="Non-VSAC Element Picker"
+                      alt=""
                       src={screenshotUrl('Non_VSAC_Element_Picker')}
                     className="img-fluid img-thumbnail rounded mx-auto d-block" />
                   </p>
@@ -371,7 +371,7 @@ export default class UserGuide extends Component {
 
                   <p>
                     <img
-                      alt="VSAC Element Picker"
+                      alt=""
                       src={screenshotUrl('VSAC_Element_Picker')}
                     className="img-fluid img-thumbnail rounded mx-auto d-block" />
                   </p>
@@ -385,7 +385,7 @@ export default class UserGuide extends Component {
 
                   <p>
                     <img
-                      alt="Authenticated VSAC Element Picker"
+                      alt=""
                       src={screenshotUrl('VSAC_Element_Picker_Authenticated')}
                     className="img-fluid img-thumbnail rounded mx-auto d-block" />
                   </p>
@@ -412,7 +412,7 @@ export default class UserGuide extends Component {
 
                   <p>
                     <img
-                      alt="VSAC Value Set"
+                      alt=""
                       src={screenshotUrl('VSAC_Value_Set')}
                     className="img-fluid img-thumbnail rounded mx-auto d-block" />
                   </p>
@@ -452,7 +452,7 @@ export default class UserGuide extends Component {
 
                   <p>
                     <img
-                      alt="Selected VSAC Value Set"
+                      alt=""
                       src={screenshotUrl('VSAC_Value_Set_Selected')}
                     className="img-fluid img-thumbnail rounded mx-auto d-block" />
                   </p>
@@ -491,7 +491,7 @@ export default class UserGuide extends Component {
 
                   <p>
                     <img
-                      alt="VSAC Code"
+                      alt=""
                       src={screenshotUrl('VSAC_Code')}
                     className="img-fluid img-thumbnail rounded mx-auto d-block" />
                   </p>
@@ -543,7 +543,7 @@ export default class UserGuide extends Component {
 
                 <p>
                   <img
-                    alt="VSAC Element"
+                    alt=""
                     src={screenshotUrl('VSAC_Element')}
                   className="img-fluid img-thumbnail rounded mx-auto d-block" />
                 </p>
@@ -609,7 +609,7 @@ export default class UserGuide extends Component {
 
                 <p>
                   <img
-                    alt="Gender Element"
+                    alt=""
                     src={screenshotUrl('Gender_Element')}
                   className="img-fluid img-thumbnail rounded mx-auto d-block" />
                 </p>
@@ -658,7 +658,7 @@ export default class UserGuide extends Component {
 
                 <p>
                   <img
-                    alt="Expressions on an Element"
+                    alt=""
                     src={screenshotUrl('Expressions_on_Element')}
                   className="img-fluid img-thumbnail rounded mx-auto d-block" />
                 </p>
@@ -728,7 +728,7 @@ export default class UserGuide extends Component {
 
                 <p>
                   <img
-                    alt="Expressions on an Element"
+                    alt=""
                     src={screenshotUrl('Comment_on_Element')}
                     className="img-fluid img-thumbnail rounded mx-auto d-block" />
                 </p>
@@ -750,7 +750,7 @@ export default class UserGuide extends Component {
 
                 <p>
                   <img
-                    alt="Basic Logic Element"
+                    alt=""
                     src={screenshotUrl('Basic_Logic_Element')}
                   className="img-fluid img-thumbnail rounded mx-auto d-block" />
                 </p>
@@ -780,7 +780,7 @@ export default class UserGuide extends Component {
 
                 <p>
                   <img
-                    alt="Nested Logic Element"
+                    alt=""
                     src={screenshotUrl('Nested_Logic_Element')}
                   className="img-fluid img-thumbnail rounded mx-auto d-block" />
                 </p>
@@ -845,7 +845,7 @@ export default class UserGuide extends Component {
 
                 <p>
                   <img
-                    alt="Collapsed Subpopulation"
+                    alt=""
                     src={screenshotUrl('Collapsed_Subpopulation')}
                   className="img-fluid img-thumbnail rounded mx-auto d-block" />
                 </p>
@@ -868,7 +868,7 @@ export default class UserGuide extends Component {
 
                 <p>
                   <img
-                    alt="Expanded Subpopulation"
+                    alt=""
                     src={screenshotUrl('Expanded_Subpopulation')}
                   className="img-fluid img-thumbnail rounded mx-auto d-block" />
                 </p>
@@ -901,7 +901,7 @@ export default class UserGuide extends Component {
 
                   <p>
                     <img
-                      alt="Base Element"
+                      alt=""
                       src={screenshotUrl('Base_Element')}
                       className="img-fluid img-thumbnail rounded mx-auto d-block" />
                   </p>
@@ -926,7 +926,7 @@ export default class UserGuide extends Component {
 
                   <p>
                     <img
-                      alt="Base Element in Inclusions"
+                      alt=""
                       src={screenshotUrl('Base_Element_in_Use')}
                       className="img-fluid img-thumbnail rounded mx-auto d-block" />
                   </p>
@@ -959,7 +959,7 @@ export default class UserGuide extends Component {
                   </p>
                   <p>
                     <img
-                      alt="Base Element Can't Change"
+                      alt=""
                       src={screenshotUrl('Base_Element_Cant_Change')}
                       className="img-fluid img-thumbnail rounded mx-auto d-block" />
                   </p>
@@ -990,7 +990,7 @@ export default class UserGuide extends Component {
 
                   <p>
                     <img
-                      alt="Base Element List Group"
+                      alt=""
                       src={screenshotUrl('List_Group')}
                       className="img-fluid img-thumbnail rounded mx-auto d-block" />
                   </p>
@@ -1022,7 +1022,7 @@ export default class UserGuide extends Component {
 
                   <p>
                     <img
-                      alt="Base Element List Group in Inclusions"
+                      alt=""
                       src={screenshotUrl('List_Group_in_Use')}
                       className="img-fluid img-thumbnail rounded mx-auto d-block" />
                   </p>
@@ -1058,7 +1058,7 @@ export default class UserGuide extends Component {
 
                   <p>
                     <img
-                      alt="Base Element Logic Element"
+                      alt=""
                       src={screenshotUrl('Base_Element_Logic_Element')}
                       className="img-fluid img-thumbnail rounded mx-auto d-block" />
                   </p>
@@ -1102,7 +1102,7 @@ export default class UserGuide extends Component {
 
                 <p>
                   <img
-                    alt="Blank Recommendation"
+                    alt=""
                     src={screenshotUrl('Blank_Recommendation')}
                   className="img-fluid img-thumbnail rounded mx-auto d-block" />
                 </p>
@@ -1134,7 +1134,7 @@ export default class UserGuide extends Component {
 
                 <p>
                   <img
-                    alt="Recommendation with Rationale"
+                    alt=""
                     src={screenshotUrl('Recommendation_with_Rationale')}
                   className="img-fluid img-thumbnail rounded mx-auto d-block" />
                 </p>
@@ -1148,7 +1148,7 @@ export default class UserGuide extends Component {
 
                 <p>
                   <img
-                    alt="Recommendation with Subpopulations"
+                    alt=""
                     src={screenshotUrl('Recommendation_with_Subpopulations')}
                   className="img-fluid img-thumbnail rounded mx-auto d-block" />
                 </p>
@@ -1204,7 +1204,7 @@ export default class UserGuide extends Component {
 
                 <p>
                   <img
-                    alt="Parameters"
+                    alt=""
                     src={screenshotUrl('Parameters')}
                   className="img-fluid img-thumbnail rounded mx-auto d-block" />
                 </p>
@@ -1249,7 +1249,7 @@ export default class UserGuide extends Component {
 
                 <p>
                   <img
-                    alt="Errors"
+                    alt=""
                     src={screenshotUrl('Errors')}
                   className="img-fluid img-thumbnail rounded mx-auto d-block" />
                 </p>
@@ -1288,7 +1288,7 @@ export default class UserGuide extends Component {
 
                 <p>
                   <img
-                    alt="Errors Conditions Options"
+                    alt=""
                     src={screenshotUrl('Errors_Condition_Options')}
                   className="img-fluid img-thumbnail rounded mx-auto d-block" />
                 </p>
@@ -1326,7 +1326,7 @@ export default class UserGuide extends Component {
 
                 <p>
                   <img
-                    alt="External CQL"
+                    alt=""
                     src={screenshotUrl('External_CQL')}
                   className="img-fluid img-thumbnail rounded mx-auto d-block" />
                 </p>
@@ -1362,7 +1362,7 @@ export default class UserGuide extends Component {
 
                 <p>
                   <img
-                    alt="External CQL Element"
+                    alt=""
                     src={screenshotUrl('External_CQL_Element')}
                   className="img-fluid img-thumbnail rounded mx-auto d-block" />
                 </p>
@@ -1394,7 +1394,7 @@ export default class UserGuide extends Component {
 
                 <p>
                   <img
-                    alt="Testing Artifacts"
+                    alt=""
                     src={screenshotUrl('Testing_Artifacts')}
                   className="img-fluid img-thumbnail rounded mx-auto d-block" />
                 </p>
@@ -1442,7 +1442,7 @@ export default class UserGuide extends Component {
 
                 <p>
                   <img
-                    alt="Testing Authenticated"
+                    alt=""
                     src={screenshotUrl('Testing_Authenticated')}
                   className="img-fluid img-thumbnail rounded mx-auto d-block" />
                 </p>
@@ -1481,7 +1481,7 @@ export default class UserGuide extends Component {
 
                 <p>
                   <img
-                    alt="Execute CQL Modal"
+                    alt=""
                     src={screenshotUrl('Execute_CQL_Modal')}
                   className="img-fluid img-thumbnail rounded mx-auto d-block" />
                 </p>
@@ -1513,7 +1513,7 @@ export default class UserGuide extends Component {
 
                 <p>
                   <img
-                    alt="CQL Execution Results"
+                    alt=""
                     src={screenshotUrl('CQL_Execution_Results')}
                   className="img-fluid img-thumbnail rounded mx-auto d-block" />
                 </p>

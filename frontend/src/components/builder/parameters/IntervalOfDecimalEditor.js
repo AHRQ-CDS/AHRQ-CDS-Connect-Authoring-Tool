@@ -73,6 +73,7 @@ export default class IntervalOfDecimalEditor extends Component {
               id={id}
               name="secondDecimal"
               type="number"
+              aria-label="Second Decimal"
               value={
                 (_.get(value, 'secondDecimal', null) || _.get(value, 'secondDecimal', null) === 0)
                 ? _.get(value, 'secondDecimal')

@@ -35,11 +35,13 @@ class PatientVersionModal extends Component {
             </main>
             <footer className="modal__footer">
               <button className="primary-button"
-                      onClick={ () => this.props.selectStu3(this.props.patientData) }>
+                      onClick={ () => this.props.selectStu3(this.props.patientData) }
+                      aria-label="STU3">
                       STU3
               </button>
               <button className="primary-button"
-                      onClick={ () => this.props.selectDstu2(this.props.patientData) }>
+                      onClick={ () => this.props.selectDstu2(this.props.patientData) }
+                      aria-label="DSTU2">
                       DSTU2
               </button>
             </footer>

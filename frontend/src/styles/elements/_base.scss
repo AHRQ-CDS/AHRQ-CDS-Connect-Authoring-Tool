@@ -144,7 +144,7 @@ h6 {
   display: inline-block;
   color: $red;
   font-size: 0.8em;
-  background-color: lighten($red, 45%);
+  background-color: lighten($red, 58%);
   padding: 10px;
   margin: 10px;
 
@@ -181,3 +181,7 @@ h6 {
 
 .align-right { text-align: right; }
 
+.form-control::placeholder {
+  color: $gray-contrast;
+  opacity: 1;
+}

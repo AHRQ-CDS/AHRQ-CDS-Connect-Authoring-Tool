@@ -47,7 +47,9 @@ class Artifact extends Component {
           {this.state.showForm ?
             <NewArtifactForm formType="new" addArtifact={this.props.addArtifact} />
             :
-            <button className="primary-button" onClick={() => this.handleShowForm()}>
+            <button className="primary-button"
+              onClick={() => this.handleShowForm()}
+              aria-label="Create New Artifact">
               <FontAwesome name="plus" /> Create New Artifact
             </button>
           }

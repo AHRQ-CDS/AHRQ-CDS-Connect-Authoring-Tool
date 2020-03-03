@@ -75,12 +75,17 @@ export default class Modal extends Component {
 
           <footer className="modal__footer">
             {hasSecondaryButton
-              && <button type="button" className="secondary-button" onClick={handleCloseModal}>Cancel</button>}
+              && <button type="button" className="secondary-button"
+              onClick={handleCloseModal}
+              aria-label="Cancel">
+              Cancel
+            </button>}
             {modalSubmitButtonText
               && <button
                 type="submit"
                 disabled={submitDisabled}
-                className={`primary-button ${submitDisabled ? 'disabled-button' : ''}`}>
+                className={`primary-button ${submitDisabled ? 'disabled-button' : ''}`}
+                aria-label={modalSubmitButtonText}>
                 {modalSubmitButtonText}
               </button>}
           </footer>

@@ -296,7 +296,7 @@ export default class Parameter extends Component {
 
               <div className="col-9">
                 <StyledSelect
-                  aria-label={'Select Parameter Type'}
+                  aria-label="Select Parameter Type"
                   inputProps={{ title: 'Select Parameter Type', id: `parameter-${index}` }}
                   options={typeOptions}
                   value={typeOptions.find(typeOption => typeOption.value === type)}

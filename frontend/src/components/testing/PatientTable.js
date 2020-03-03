@@ -330,7 +330,8 @@ export default class PatientTable extends Component {
             className={`button danger-button ${
               patientSelected ? 'disabled' : ''
             }`}
-            onClick={() => { if (!patientSelected) this.openConfirmDeleteModal(patient); }}>
+            onClick={() => { if (!patientSelected) this.openConfirmDeleteModal(patient); }}
+            aria-label="Delete">
             Delete
           </button>
           {patientSelected &&
@@ -360,7 +361,7 @@ export default class PatientTable extends Component {
 
     return (
       <div className="vsac-authenticate">
-        <button className="disabled-button" disabled={true}>
+        <button className="disabled-button" disabled={true} aria-label="VSAC Authenticated">
           <FontAwesome name="check" /> VSAC Authenticated
         </button>
       </div>

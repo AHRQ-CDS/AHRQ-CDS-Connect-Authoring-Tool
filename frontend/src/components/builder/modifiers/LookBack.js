@@ -32,6 +32,7 @@ export default class LookBack extends Component {
             type="number"
             name="value"
             placeholder="value"
+            aria-label="Look back value"
             value={this.props.value || ''}
             onChange={(event) => {
               this.props.updateAppliedModifier(this.props.index, { value: parseInt(event.target.value, 10) });
