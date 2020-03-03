@@ -114,7 +114,7 @@ export default class ElementModal extends Component {
 
   enterKeyCheck = (func, argument, event) => {
     if (!event || event.type !== 'keydown' || event.key !== 'Enter') return;
-    //event.preventDefault();
+    event.preventDefault();
     if (argument) { func(argument); } else { func(); }
   }
 
