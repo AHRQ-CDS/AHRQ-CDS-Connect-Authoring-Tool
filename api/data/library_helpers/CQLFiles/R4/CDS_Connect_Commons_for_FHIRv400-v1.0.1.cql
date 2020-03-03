@@ -5,6 +5,7 @@
 //     which uses equality matching)
 //   - Add back ...ByConcept functions for backwards compatibility w/ libraries that
 //     might expect them
+//   - Consider effectiveInstant in ObservationLookBack
 library CDS_Connect_Commons_for_FHIRv400 version '1.0.1'
 
 using FHIR version '4.0.0'
@@ -102,6 +103,7 @@ define function ObservationLookBack(ObsList List<Observation>, LookBack System.Q
   ObsList O
     let LookBackInterval: Interval[Now() - LookBack, Now()]
     where (O.effective as FHIR.dateTime).value in LookBackInterval
+      or (O.effective as FHIR.instant).value in LookBackInterval
       or PeriodToInterval(O.effective as FHIR.Period) overlaps LookBackInterval
       or O.issued.value in LookBackInterval
 
