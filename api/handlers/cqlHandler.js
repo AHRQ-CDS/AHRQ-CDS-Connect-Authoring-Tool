@@ -814,7 +814,7 @@ class CqlArtifact {
     return {
       name: this.name,
       version: this.version,
-      filename: `${this.name}-v${this.version}`,
+      filename: this.name,
       text: this.toString(),
       type: 'text/plain'
     };
@@ -1018,7 +1018,7 @@ function objToCql(req, res) {
       libraries.forEach(lib => {
         artifactFromRequest.externalLibs.push({ name: lib.name, version: lib.version, alias: '' });
         const libJson = {
-          filename: `${lib.name}-v${lib.version}`,
+          filename: `${lib.name}`,
           version: lib.version,
           text: lib.details.cqlFileText,
           type: 'text/plain'
@@ -1050,7 +1050,7 @@ function objToELM(req, res) {
       libraries.forEach(lib => {
         artifactFromRequest.externalLibs.push({ name: lib.name, version: lib.version, alias: '' });
         const libJson = {
-          filename: `${lib.name}-v${lib.version}`,
+          filename: `${lib.name}`,
           version: lib.version,
           text: lib.details.cqlFileText,
           type: 'text/plain'
