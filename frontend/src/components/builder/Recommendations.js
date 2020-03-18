@@ -11,9 +11,7 @@ export default class Recommendations extends Component {
   constructor(props) {
     super(props);
 
-    this.state = {
-      mode: 'every'
-    };
+    this.state = { mode: 'every' };
   }
 
   componentDidMount() {
@@ -42,6 +40,11 @@ export default class Recommendations extends Component {
     newRecommendations.splice(position + direction, 0, recommendation);
 
     this.props.updateRecommendations(newRecommendations);
+
+    // will run after updated recommendatons rerender
+    setTimeout(() => {
+      document.getElementById(uid).scrollIntoView({ behavior: 'smooth' });
+    });
   }
 
   addRecommendation = () => {
