@@ -10,12 +10,26 @@ export default class Recommendations extends Component {
 
     this.state = {
       mode: 'every',
+      //refsCollection: {},
+      moved: '',
     };
+    //this.refsCollection = {};
+    this.refList = {};
+
   }
 
   componentDidMount() {
     if (this.props.artifact.recommendations.length === 0) {
       this.addRecommendation();
+    }
+  }
+
+  componentDidUpdate() {
+    if (this.props.artifact.recommendations.length > 0) {
+      console.log("COMPONENT DID UPDATE!1!");
+      console.log(this.state.moved);
+      //this.refList[this.state.moved].focus(); //this blows up, as focus isn't a method of a ref
+      document.getElementById(this.state.moved).focus(); //this gets the element. yay!  but it doesn't actually work
     }
   }
 
@@ -52,6 +66,43 @@ export default class Recommendations extends Component {
     this.props.updateRecommendations(newRecs);
   }
 
+  moveRecommendationUp = (uid) => {
+    const index = this.props.artifact.recommendations.findIndex(rec=> rec.uid === uid);
+    if(index > 0){
+      const prev = index - 1;
+      const first = this.props.artifact.recommendations[prev];
+      const second = this.props.artifact.recommendations[index];
+      //const newRecs = this.props.artifact.recommendations.slice(0,index);
+      const newRecs = update(this.props.artifact.recommendations, {
+        $splice: [[prev, 2,second,first]]
+      });
+      this.props.updateRecommendations(newRecs);
+      var n = document.getElementById(uid);
+      console.log(n.id);
+    }
+    //console.log("move up event fired: caught in Recommendations");
+  }
+
+  moveRecommendationDown = (uid) => {
+    const index = this.props.artifact.recommendations.findIndex(rec=> rec.uid === uid);
+    if(index < this.props.artifact.recommendations.length-1) {
+      const next = index + 1;
+      const first = this.props.artifact.recommendations[index];
+      const second = this.props.artifact.recommendations[next];
+      const newRecs = update(this.props.artifact.recommendations, {
+        $splice: [[index, 2,second,first]]
+      });
+      this.setState({'moved':uid});
+      this.props.updateRecommendations(newRecs);
+      //const n = document.getElementById(uid);
+      //const n2 = this.refList[uid].ref;
+      //n.focus();
+      //n2.focus();
+      //console.log(n.id);
+      //console.log(n2)
+    }
+    //console.log("move down even fired: Caught in Recommendations");
+  }
   render() {
     return (
       <div className="recommendations">
@@ -82,18 +133,23 @@ export default class Recommendations extends Component {
           <div className="recommendations__deliver-text">Deliver first recommendation</div>
         }
 
-        {this.props.artifact.recommendations && this.props.artifact.recommendations.map(rec => (
-          <Recommendation
-            key={rec.uid}
-            artifact={this.props.artifact}
-            templates={this.props.templates}
-            rec={rec}
-            onUpdate={this.updateRecommendation}
-            onRemove={this.removeRecommendation}
-            updateRecommendations={this.props.updateRecommendations}
-            updateSubpopulations={this.props.updateSubpopulations}
-            setActiveTab={this.props.setActiveTab}
-          />
+        {this.props.artifact.recommendations && this.props.artifact.recommendations.map((rec,i) => (
+          <div id={rec.uid}>
+            <Recommendation
+              key={rec.uid}
+              artifact={this.props.artifact}
+              templates={this.props.templates}
+              rec={rec}
+              onUpdate={this.updateRecommendation}
+              onRemove={this.removeRecommendation}
+              onMoveRecUp={this.moveRecommendationUp}
+              onMoveRecDown={this.moveRecommendationDown}
+              updateRecommendations={this.props.updateRecommendations}
+              updateSubpopulations={this.props.updateSubpopulations}
+              setActiveTab={this.props.setActiveTab}
+              ref={(el) => {this.refList[rec.uid] = el}}
+            />
+          </div>
         ))}
 
         <button

@@ -186,13 +186,26 @@ export default class Recommendation extends Component {
             {/* <button className="button" aria-label="copy recommendation">
               <FontAwesome fixedWidth name='copy' />
             </button> */}
-
-            <button
-              className="recommendation__remove transparent-button"
-              aria-label="remove recommendation"
-              onClick={() => this.props.onRemove(this.props.rec.uid)}>
-              <FontAwesome fixedWidth name='times' />
-            </button>
+            <div>
+              <button
+                className="recommendation__move transparent-button"
+                aria-label="Move Recommendation Up"
+                onClick={() => this.props.onMoveRecUp(this.props.rec.uid)}>
+                <FontAwesome fixedWidth name='caret-up'/>
+              </button>
+              <button
+                className="recommendation__move transparent-button"
+                aria-label="Move Recommendation Down"
+                onClick={() => this.props.onMoveRecDown(this.props.rec.uid)}>
+                <FontAwesome fixedWidth name='caret-down'/>
+              </button>
+              <button
+                className="recommendation__remove transparent-button"
+                aria-label="remove recommendation"
+                onClick={() => this.props.onRemove(this.props.rec.uid)}>
+                <FontAwesome fixedWidth name='times' />
+              </button>
+            </div>
           </div>
 
           <textarea
