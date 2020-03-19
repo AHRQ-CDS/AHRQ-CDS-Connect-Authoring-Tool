@@ -12,10 +12,7 @@ export default class Recommendations extends Component {
   constructor(props) {
     super(props);
 
-    this.state = {
-      mode: 'every',
-      moved: '',
-    };
+    this.state = {mode: 'every'};
   }
 
   componentDidMount() {
@@ -24,16 +21,6 @@ export default class Recommendations extends Component {
     }
   }
 
-  componentDidUpdate() {
-    if (this.props.artifact.recommendations.length > 0) {
-      console.log("COMPONENT DID UPDATE!1!");
-      console.log(this.state.moved);
-      //this.refList[this.state.moved].focus(); //this blows up, as focus isn't a method of a ref
-      if(this.state.moved !== '') {
-        document.getElementById(this.state.moved).focus(); //this gets the element. yay!  but it doesn't actually work
-      }
-    }
-  }
 
   handleModeChange = (event) => {
     this.setState({ mode: event.target.value });
@@ -88,7 +75,6 @@ export default class Recommendations extends Component {
     const newRecs = update(this.props.artifact.recommendations, {
       $splice: [[index, 1]]
     });
-    this.setState({'moved':''});
     this.props.updateRecommendations(newRecs);
   }
 
@@ -130,7 +116,7 @@ export default class Recommendations extends Component {
               templates={this.props.templates}
               rec={rec}
               onUpdate={this.updateRecommendation}
-          onRemove={this.openConfirmDeleteModal}
+              onRemove={this.openConfirmDeleteModal}
               onMoveRecUp={() => this.handleMove(rec.uid, UP)}
               onMoveRecDown={() => this.handleMove(rec.uid, DOWN)}
               updateRecommendations={this.props.updateRecommendations}
@@ -171,7 +157,7 @@ export default class Recommendations extends Component {
 
     return (
       <Modal
-        modalTitle="Delete Requirement"
+        modalTitle="Delete Recommendation"
         modalId="confirm-delete-modal"
         modalTheme="light"
         modalSubmitButtonText="Delete"
@@ -180,7 +166,7 @@ export default class Recommendations extends Component {
         handleSaveModal={this.handleDeleteRecommendation}>
 
         <div className="delete-external-cql-library-confirmation-modal modal__content">
-          <h5>Are you sure you want to permanently delete the following Reccomendation: {this.state.reccomendationToDelete}</h5>
+          <h5>Are you sure you want to permanently delete the Recommendation?</h5>
         </div>
     </Modal>
   );
