@@ -315,7 +315,7 @@ function singlePost(req, res) {
               if (error) res.status(500).send(error);
               else {
                 const nonAuthoringToolExportLibraries =
-                  _.differenceWith(elmResultsToSave, authoringToolExports, compareNameAndVersion);
+                  _.differenceWith(elmResultsToSave, authoringToolExports, (a, b) => a.name === b.name);
                 const authoringToolExportLibraries = _.difference(elmResultsToSave, nonAuthoringToolExportLibraries);
                 const nonDuplicateLibraries =
                   _.differenceWith(nonAuthoringToolExportLibraries, libraries, compareNameAndVersion);
