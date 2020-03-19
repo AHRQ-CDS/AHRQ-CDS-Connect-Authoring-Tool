@@ -332,9 +332,9 @@ function singlePost(req, res) {
                   supportedFHIRVersions.findIndex(v => v === newLibFHIRVersion) !== -1;
 
                 const exportLibrariesNotUploaded =
-                  authoringToolExportLibraries.map(lib => `library ${lib.name} version ${lib.version}`).join(', ');
-                const exportLibrariesNotUploadedMessage = `The following was not uploaded because the library is \
-                  included by default: ${exportLibrariesNotUploaded}.`;
+                  authoringToolExportLibraries.map(lib => `library ${lib.name}`).join(', ');
+                const exportLibrariesNotUploadedMessage = `The following were not uploaded because a version of the \
+                  library is included by default: ${exportLibrariesNotUploaded}.`;
                 // If any file has an error, upload nothing.
                 if (elmErrors.length > 0) {
                   res.status(400).send(elmErrors);
