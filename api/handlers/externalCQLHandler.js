@@ -421,6 +421,7 @@ function singlePost(req, res) {
           if (error) res.status(500).send(error);
           else {
             const elmResult = elmResultsToSave[0]; // This is the single file upload case, so elmResultsToSave will only ever have one item.
+            const defaultLibrary = authoringToolExports.map(l => l.name).includes(elmResult.name);
             const dupLibrary = libraries.find(lib => lib.name === elmResult.name && lib.version === elmResult.version);
             const newLibFHIRVersion = elmResult.fhirVersion;
             const fhirVersion = getCurrentFHIRVersion(libraries);
@@ -435,6 +436,8 @@ function singlePost(req, res) {
 
             if (elmErrors.length > 0) {
               res.status(400).send(elmErrors);
+            } else if (defaultLibrary) {
+              res.status(200).send('Library is already included by default, so it was not uploaded.');
             } else if (dupLibrary) {
               res.status(200).send('Library with identical name and version already exists.');
             } else if (!fhirVersionsMatch) {

@@ -14,7 +14,6 @@ export default class ExternalCQL extends Component {
     super(props);
 
     this.state = {
-      showExistingLibraryBanner: false,
       showUploadErrorBanner: false,
       showLibraryErrorBanner: props.addExternalCqlLibraryError != null,
       showLibraryNotificationBanner:
@@ -58,19 +57,6 @@ export default class ExternalCQL extends Component {
     reader.onload = (e) => {
       const cqlFileName = externalCqlLibrary[0].name;
       const cqlFileType = externalCqlLibrary[0].type;
-
-      const existingLibraryNames = [
-        'FHIRHelpers.cql',
-        'CDS_Connect_Conversions.cql',
-        'CDS_Connect_Commons_for_FHIRv102.cql',
-        'CDS_Connect_Commons_for_FHIRv300.cql',
-        'CDS_Connect_Commons_for_FHIRv400.cql'
-      ];
-
-      if (existingLibraryNames.includes(cqlFileName)) {
-        this.setState({ showExistingLibraryBanner: true });
-        return;
-      }
 
       const fileContentToSend = e.target.result.slice(e.target.result.indexOf(',') + 1);
       if (cqlFileType !== 'application/zip'
@@ -148,12 +134,7 @@ export default class ExternalCQL extends Component {
 
   render() {
     const { addExternalCqlLibraryErrorMessage } = this.props;
-    const {
-      showExistingLibraryBanner,
-      showUploadErrorBanner,
-      showLibraryErrorBanner,
-      showLibraryNotificationBanner
-    } = this.state;
+    const { showUploadErrorBanner, showLibraryErrorBanner, showLibraryNotificationBanner } = this.state;
     const isDropzoneDisabled = this.props.artifact._id === null;
 
     return (
@@ -168,12 +149,6 @@ export default class ExternalCQL extends Component {
             multiple={false}
             aria-label="External CQL Dropzone" >
             {this.renderDropzoneIcon()}
-
-            {showExistingLibraryBanner &&
-              <Banner type="notification" close={event => this.dismissBanner(event, 'showExistingLibraryBanner')}>
-                The CDS Authoring Tool already includes a version of this library, so it was not uploaded.
-              </Banner>
-            }
 
             {showUploadErrorBanner &&
               <Banner type="warning" close={event => this.dismissBanner(event, 'showUploadErrorBanner')}>
