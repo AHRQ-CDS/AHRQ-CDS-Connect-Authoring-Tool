@@ -21,7 +21,6 @@ export default class Recommendations extends Component {
     }
   }
 
-
   handleModeChange = (event) => {
     this.setState({ mode: event.target.value });
   }
@@ -108,7 +107,7 @@ export default class Recommendations extends Component {
           <div className="recommendations__deliver-text">Deliver first recommendation</div>
         }
 
-        {this.props.artifact.recommendations && this.props.artifact.recommendations.map((rec,i) => (
+        {this.props.artifact.recommendations && this.props.artifact.recommendations.map(rec => (
           <div id={rec.uid} key={rec.uid}>
             <Recommendation
               key={rec.uid}
@@ -140,10 +139,9 @@ export default class Recommendations extends Component {
 
   //DELETE MODAL
   openConfirmDeleteModal = (uid) => {
-    //const { clearAddLibraryErrorsAndMessages } = this.props;
-    //clearAddLibraryErrorsAndMessages();
     this.setState({ showConfirmDeleteModal: true, reccomendationToDelete: uid });
   }
+
   closeConfirmDeleteModal = () => {
     this.setState({ showConfirmDeleteModal: false});
   }
@@ -152,8 +150,8 @@ export default class Recommendations extends Component {
     this.removeRecommendation(uid);
     this.closeConfirmDeleteModal();
   }
+
   renderConfirmDeleteModal() {
-    const { recommendataionToDelete } = this.state;
 
     return (
       <Modal
