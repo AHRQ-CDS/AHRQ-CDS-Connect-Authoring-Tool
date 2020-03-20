@@ -115,7 +115,7 @@ export default class Recommendations extends Component {
               templates={this.props.templates}
               rec={rec}
               onUpdate={this.updateRecommendation}
-              onRemove={this.openConfirmDeleteModal}
+              onRemove={() => this.openConfirmDeleteModal(rec.uid)}
               onMoveRecUp={() => this.handleMove(rec.uid, UP)}
               onMoveRecDown={() => this.handleMove(rec.uid, DOWN)}
               updateRecommendations={this.props.updateRecommendations}
@@ -147,7 +147,7 @@ export default class Recommendations extends Component {
   }
 
   handleDeleteRecommendation = (uid) => {
-    this.removeRecommendation(uid);
+    this.removeRecommendation(this.state.reccomendationToDelete);
     this.closeConfirmDeleteModal();
   }
 
