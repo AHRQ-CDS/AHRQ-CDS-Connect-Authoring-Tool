@@ -82,10 +82,10 @@ const elementOptions = [
     template: 'GenericMedicationStatement_vsac'
   },
   {
-    value: 'medicationOrder',
-    label: 'Medication Order',
+    value: 'medicationRequest',
+    label: 'Medication Request',
     vsacAuthRequired: true,
-    template: 'GenericMedicationOrder_vsac'
+    template: 'GenericMedicationRequest_vsac'
   },
   { value: 'observation', label: 'Observation', vsacAuthRequired: true, template: 'GenericObservation_vsac' },
   { value: 'booleanParameter', label: 'Parameters', vsacAuthRequired: false },

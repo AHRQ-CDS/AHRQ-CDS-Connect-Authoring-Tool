@@ -31,8 +31,8 @@ const singularReturnTypeMap = {
   'Observation': 'observation',
   'Condition': 'condition',
   'MedicationStatement': 'medication_statement',
-  'MedicationOrder': 'medication_order',
-  'MedicationRequest': 'medication_order',
+  'MedicationOrder': 'medication_request',
+  'MedicationRequest': 'medication_request',
   'Procedure': 'procedure',
   'AllergyIntolerance': 'allergy_intolerance',
   'Encounter': 'encounter',
@@ -43,8 +43,8 @@ const listReturnTypeMap = {
   'Observation': 'list_of_observations',
   'Condition': 'list_of_conditions',
   'MedicationStatement': 'list_of_medication_statements',
-  'MedicationOrder': 'list_of_medication_orders',
-  'MedicationRequest': 'list_of_medication_orders',
+  'MedicationOrder': 'list_of_medication_requests',
+  'MedicationRequest': 'list_of_medication_requests',
   'Procedure': 'list_of_procedures',
   'AllergyIntolerance': 'list_of_allergy_intolerances',
   'Encounter': 'list_of_encounters',
@@ -80,7 +80,7 @@ const areChoicesKnownTypes = (choices) => {
         allChoicesKnown = false;
       }
       let typeToDisplay = convertedReturnType ? convertedReturnType : returnTypeOfChoice;
-      if (returnTypeOfChoice === 'MedicationRequest') typeToDisplay = 'Medication Request';
+      if (returnTypeOfChoice === 'MedicationOrder') typeToDisplay = 'Medication Order';
       typesOfChoices.push(_.startCase(typeToDisplay));
     } else {
       // Default to marking as unknown.
@@ -100,7 +100,7 @@ function mapReturnTypes(definitions) {
       elmReturnType = getTypeFromELMString(definition.resultTypeName);
       const convertedReturnType = singularReturnTypeMap[elmReturnType];
       if (!convertedReturnType) elmDisplay = `Other (${elmReturnType})`;
-      if (elmReturnType === 'MedicationRequest') elmDisplay = 'Medication Request';
+      if (elmReturnType === 'MedicationOrder') elmDisplay = 'Medication Order';
       elmReturnType = convertedReturnType ? convertedReturnType : 'other';
     } else if (definition.resultTypeSpecifier) {
       const typeSpecifier = definition.resultTypeSpecifier;
@@ -109,7 +109,7 @@ function mapReturnTypes(definitions) {
           elmReturnType = getTypeFromELMString(typeSpecifier.name);
           const convertedReturnType = singularReturnTypeMap[elmReturnType];
           if (!convertedReturnType) elmDisplay = `Other (${elmReturnType})`;
-          if (elmReturnType === 'MedicationRequest') elmDisplay = 'Medication Request';
+          if (elmReturnType === 'MedicationOrder') elmDisplay = 'Medication Order';
           elmReturnType = convertedReturnType ? convertedReturnType : 'other';
           break;
         }

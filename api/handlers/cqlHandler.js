@@ -607,18 +607,18 @@ class CqlArtifact {
           this.setFieldContexts(medicationStatementValueSets, 'MedicationStatement', context);
           break;
         }
-        case 'medicationOrder_vsac': {
-          const medicationOrderValueSets = {
-            id: 'generic_medication_order',
+        case 'medicationRequest_vsac': {
+          const medicationRequestValueSets = {
+            id: 'generic_medication_request',
             valuesets: [],
             concepts: []
           };
-          buildConceptObjectForCodes(field.codes, medicationOrderValueSets.concepts);
-          addValueSets(field, medicationOrderValueSets, 'valuesets');
+          buildConceptObjectForCodes(field.codes, medicationRequestValueSets.concepts);
+          addValueSets(field, medicationRequestValueSets, 'valuesets');
           if (fhirTarget.version === '3.0.0' || fhirTarget.version === '4.0.0') {
-            this.setFieldContexts(medicationOrderValueSets, 'MedicationRequest', context);
+            this.setFieldContexts(medicationRequestValueSets, 'MedicationRequest', context);
           } else {
-            this.setFieldContexts(medicationOrderValueSets, 'MedicationOrder', context);
+            this.setFieldContexts(medicationRequestValueSets, 'MedicationOrder', context);
           }
           break;
         }
@@ -722,9 +722,9 @@ class CqlArtifact {
     let expressions = this.contexts.concat(this.conjunctions);
     expressions = expressions.concat(this.conjunction_main);
     return expressions.map((context) => {
-      if (fhirTarget.version === '3.0.0' || fhirTarget.version === '4.0.0') {
-        if (context.template === 'GenericMedicationOrder') context.template = 'GenericMedicationRequest';
-        if (context.template === 'MedicationOrdersByConcept') context.template = 'MedicationRequestsByConcept';
+      if (fhirTarget.version.startsWith('1.0.')) {
+        if (context.template === 'GenericMedicationRequest') context.template = 'GenericMedicationOrder';
+        if (context.template === 'MedicationRequestsByConcept') context.template = 'MedicationOrdersByConcept';
       }
       if (context.withoutModifiers || context.components) {
         return ejs.render(specificMap[context.template], context);
@@ -831,9 +831,9 @@ function applyModifiers(values = [] , modifiers = []) { // default modifiers to 
   return values.map((value) => {
     let newValue = value;
     modifiers.forEach((modifier) => {
-      if (fhirTarget.version === '3.0.0' || fhirTarget.version === '4.0.0') {
-        if (modifier.id === 'ActiveMedicationOrder') modifier.cqlLibraryFunction = 'C3F.ActiveMedicationRequest';
-        if (modifier.id === 'LookBackMedicationOrder') modifier.cqlLibraryFunction = 'C3F.MedicationRequestLookBack';
+      if (fhirTarget.version.startsWith('1.0.')) {
+        if (modifier.id === 'ActiveMedicationRequest') modifier.cqlLibraryFunction = 'C3F.ActiveMedicationOrder';
+        if (modifier.id === 'LookBackMedicationRequest') modifier.cqlLibraryFunction = 'C3F.MedicationOrderLookBack';
       }
       if (!modifier.cqlLibraryFunction && modifier.values && modifier.values.templateName) {
         modifier.cqlLibraryFunction = modifier.values.templateName;

@@ -130,14 +130,14 @@ module.exports = [
         ]
       },
       {
-        id: 'GenericMedicationOrder_vsac',
-        name: 'Medication Order',
-        returnType: 'list_of_medication_orders',
+        id: 'GenericMedicationRequest_vsac',
+        name: 'Medication Request',
+        returnType: 'list_of_medication_requests',
         suppress: true,
         extends: 'Base',
-        template: 'GenericMedicationOrder',
+        template: 'GenericMedicationRequest',
         fields: [
-          { id: 'medicationOrder', type: 'medicationOrder_vsac', name: 'Medication Order' }
+          { id: 'medicationRequest', type: 'medicationRequest_vsac', name: 'Medication Request' }
         ]
       },
     ]

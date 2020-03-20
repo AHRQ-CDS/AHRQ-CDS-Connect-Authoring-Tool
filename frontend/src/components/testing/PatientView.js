@@ -245,8 +245,8 @@ export default class PatientView extends Component {
     const { patient } = this.props;
 
     let resourceType;
-    if (resourceName === 'MedicationOrder' && (patient.fhirVersion === 'STU3' || patient.fhirVersion === 'R4')) {
-      resourceType = 'MedicationRequest';
+    if (resourceName === 'MedicationRequest' && patient.fhirVersion === 'DSTU2') {
+      resourceType = 'MedicationOrder';
     } else {
       resourceType = resourceName;
     }
@@ -322,7 +322,7 @@ export default class PatientView extends Component {
           <PatientDataSection title="Organizations" data={this.extractData('Organization')} />
           <PatientDataSection title="Conditions" data={this.extractData('Condition')} />
           <PatientDataSection title="Allergies" data={this.extractData('AllergyIntolerance')} />
-          <PatientDataSection title="Medications" data={this.extractData('MedicationOrder')} />
+          <PatientDataSection title="Medications" data={this.extractData('MedicationRequest')} />
           <PatientDataSection title="Careplans" data={this.extractData('CarePlan')} />
           <PatientDataSection title="Encounters" data={this.extractData('Encounter')} />
           <PatientDataSection title="Observations" data={this.extractData('Observation')} />

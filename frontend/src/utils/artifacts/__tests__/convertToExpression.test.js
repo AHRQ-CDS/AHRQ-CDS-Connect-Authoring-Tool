@@ -1,9 +1,9 @@
 import convertToExpression from '../convertToExpression';
 
 const elementLists = ['list_of_observations', 'list_of_conditions', 'list_of_medication_statements',
-  'list_of_medication_orders', 'list_of_procedures', 'list_of_allergy_intolerances', 'list_of_encounters'];
+  'list_of_medication_requests', 'list_of_procedures', 'list_of_allergy_intolerances', 'list_of_encounters'];
 const everyElement = elementLists.concat(['boolean', 'system_quantity', 'system_concept', 'observation', 'condition',
-  'medication_statement', 'medication_order', 'procedure']);
+  'medication_statement', 'medication_request', 'procedure']);
 
 test('Simple modifiers Active, Confirmed, Exists builds expected phrase', () => {
   const modifiers = [
