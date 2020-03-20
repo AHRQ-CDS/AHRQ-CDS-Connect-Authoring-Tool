@@ -493,7 +493,6 @@ function performExecuteArtifact(elmFiles, artifactName, params, patients, vsacCr
   const libraries = _.filter(elmFiles, f =>
     f.name.replace(/[\s-\\/]/g, '') !== artifactName.replace(/[\s-\\/]/g, '')).map(f => JSON.parse(f.content));
   const library = new cql.Library(elmFile, new cql.Repository(libraries));
-
   // Set up the parameters
   const cqlExecParams = convertParameters(params);
 
@@ -607,7 +606,7 @@ function convertParameters(params = []) {
 
 export function executeCQLArtifact(artifact, params, patients, vsacCredentials, codeService, dataModel) {
   artifact.dataModel = dataModel;
-  const artifactName = `${slug(artifact.name ? artifact.name : 'untitled')}-v${artifact.version}`;
+  const artifactName = `${slug(artifact.name ? artifact.name : 'untitled')}`;
 
   return (dispatch) => {
     dispatch(requestExecuteArtifact());
