@@ -12,7 +12,10 @@ export default class Recommendations extends Component {
   constructor(props) {
     super(props);
 
-    this.state = {mode: 'every'};
+    this.state = {
+      mode: 'every',
+      showConfirmDeleteModal: false,
+    }
   }
 
   componentDidMount() {
@@ -139,7 +142,7 @@ export default class Recommendations extends Component {
 
   //DELETE MODAL
   openConfirmDeleteModal = (uid) => {
-    this.setState({ showConfirmDeleteModal: true, reccomendationToDelete: uid });
+    this.setState({ showConfirmDeleteModal: true, recommendationToDelete: uid });
   }
 
   closeConfirmDeleteModal = () => {
@@ -147,7 +150,7 @@ export default class Recommendations extends Component {
   }
 
   handleDeleteRecommendation = (uid) => {
-    this.removeRecommendation(this.state.reccomendationToDelete);
+    this.removeRecommendation(this.state.recommendationToDelete);
     this.closeConfirmDeleteModal();
   }
 
@@ -176,5 +179,6 @@ Recommendations.propTypes = {
   templates: PropTypes.array.isRequired,
   updateRecommendations: PropTypes.func.isRequired,
   updateSubpopulations: PropTypes.func.isRequired,
+  removeRecommendation: PropTypes.func.isRequired,
   setActiveTab: PropTypes.func.isRequired
 };
