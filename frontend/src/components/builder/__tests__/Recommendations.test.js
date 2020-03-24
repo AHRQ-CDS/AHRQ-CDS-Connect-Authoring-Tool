@@ -68,8 +68,7 @@ describe('<Recommendations />', () => {
   });
 
   it('shows a confirmation modal on delete and deletes on confirm', () => {
-    //const { container } = renderComponent();
-    const updateRecommendations = jest.fn()
+    const updateRecommendations = jest.fn();
     const { getByText, getByLabelText } = renderComponent({updateRecommendations});
 
     //click delete

@@ -15,7 +15,7 @@ export default class Recommendations extends Component {
     this.state = {
       mode: 'every',
       showConfirmDeleteModal: false,
-    }
+    };
   }
 
   componentDidMount() {
