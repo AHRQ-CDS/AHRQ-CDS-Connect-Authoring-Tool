@@ -22,6 +22,8 @@ describe('<Recommendations />', () => {
         templates={[]}
         updateRecommendations={jest.fn()}
         updateSubpopulations={jest.fn()}
+        openConfirmDeleteModal={jest.fn()}
+        removeRecommendation={jest.fn()}
         {...props}
       />
     );
@@ -65,12 +67,16 @@ describe('<Recommendations />', () => {
     }]);
   });
 
-  it('deletes a recommendation', () => {
+  it('shows a confirmation modal on delete and deletes on confirm', () => {
     const updateRecommendations = jest.fn();
-    const { getByLabelText } = renderComponent({ updateRecommendations });
+    const { getByText, getByLabelText } = renderComponent({updateRecommendations});
 
+    //click delete
     fireEvent.click(getByLabelText('remove recommendation'));
-
-    expect(updateRecommendations).toBeCalledWith([]);
+    //check the modal exists
+    expect(getByText('Delete Recommendation')).not.toBeNull();
+    //confirm the delete
+    fireEvent.click(getByLabelText("Delete"));
+    expect(updateRecommendations).toHaveBeenCalledWith([]);
   });
 });

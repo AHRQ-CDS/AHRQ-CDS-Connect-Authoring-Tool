@@ -162,6 +162,29 @@ export default class Recommendation extends Component {
     return (
       <div className="recommendation card-group card-group__top">
         <div className="card-element">
+          <div className="recommendation__title">
+            <div className="card-element__label"></div>
+            <div>
+              <button
+                className="recommendation__move transparent-button"
+                aria-label="Move Recommendation Up"
+                onClick={() => this.props.onMoveRecUp(this.props.rec.uid)}>
+                <FontAwesome fixedWidth name='caret-up'/>
+              </button>
+              <button
+                className="recommendation__move transparent-button"
+                aria-label="Move Recommendation Down"
+                onClick={() => this.props.onMoveRecDown(this.props.rec.uid)}>
+                <FontAwesome fixedWidth name='caret-down'/>
+              </button>
+              <button
+                className="recommendation__remove transparent-button"
+                aria-label="remove recommendation"
+                onClick={() => this.props.onRemove(this.props.rec.uid)}>
+                <FontAwesome fixedWidth name='times' />
+              </button>
+            </div>
+          </div>
           {this.shouldShowSubpopulations() ? this.renderSubpopulations() : null}
 
           <div className="recommendation__title">
@@ -187,12 +210,6 @@ export default class Recommendation extends Component {
               <FontAwesome fixedWidth name='copy' />
             </button> */}
 
-            <button
-              className="recommendation__remove transparent-button"
-              aria-label="remove recommendation"
-              onClick={() => this.props.onRemove(this.props.rec.uid)}>
-              <FontAwesome fixedWidth name='times' />
-            </button>
           </div>
 
           <textarea

@@ -3,6 +3,10 @@ import PropTypes from 'prop-types';
 import update from 'immutability-helper';
 
 import Recommendation from './Recommendation';
+import Modal from "../elements/Modal";
+
+const UP = -1;
+const DOWN = 1;
 
 export default class Recommendations extends Component {
   constructor(props) {
@@ -10,6 +14,7 @@ export default class Recommendations extends Component {
 
     this.state = {
       mode: 'every',
+      showConfirmDeleteModal: false,
     };
   }
 
@@ -21,6 +26,29 @@ export default class Recommendations extends Component {
 
   handleModeChange = (event) => {
     this.setState({ mode: event.target.value });
+  }
+
+  handleMove = (uid, direction) => {
+    const { recommendations } = this.props.artifact;
+    const position = recommendations.findIndex(index => index.uid === uid);
+    if (position < 0) {
+      throw new Error("Given recommendation not found.");
+    } else if (
+      (direction === UP && position === 0)
+      || (direction === DOWN && position === recommendations.length - 1)) {
+      return; // canot move outside of array
+    }
+
+    const recommendation = recommendations[position]; // save recommendation for later
+    const newRecommendations = recommendations.filter(rec => rec.uid !== uid); // remove recommendation from array
+    newRecommendations.splice(position + direction, 0, recommendation);
+
+    this.props.updateRecommendations(newRecommendations);
+
+    // will run after updated recommendatons rerender
+    setTimeout(() => {
+      document.getElementById(uid).scrollIntoView({ behavior: 'smooth' });
+    });
   }
 
   addRecommendation = () => {
@@ -83,17 +111,21 @@ export default class Recommendations extends Component {
         }
 
         {this.props.artifact.recommendations && this.props.artifact.recommendations.map(rec => (
-          <Recommendation
-            key={rec.uid}
-            artifact={this.props.artifact}
-            templates={this.props.templates}
-            rec={rec}
-            onUpdate={this.updateRecommendation}
-            onRemove={this.removeRecommendation}
-            updateRecommendations={this.props.updateRecommendations}
-            updateSubpopulations={this.props.updateSubpopulations}
-            setActiveTab={this.props.setActiveTab}
-          />
+          <div id={rec.uid} key={rec.uid}>
+            <Recommendation
+              key={rec.uid}
+              artifact={this.props.artifact}
+              templates={this.props.templates}
+              rec={rec}
+              onUpdate={this.updateRecommendation}
+              onRemove={() => this.openConfirmDeleteModal(rec.uid)}
+              onMoveRecUp={() => this.handleMove(rec.uid, UP)}
+              onMoveRecDown={() => this.handleMove(rec.uid, DOWN)}
+              updateRecommendations={this.props.updateRecommendations}
+              updateSubpopulations={this.props.updateSubpopulations}
+              setActiveTab={this.props.setActiveTab}
+            />
+          </div>
         ))}
 
         <button
@@ -103,8 +135,42 @@ export default class Recommendations extends Component {
         >
           New recommendation
         </button>
+      {this.renderConfirmDeleteModal()}
       </div>
     );
+  }
+
+  //DELETE MODAL
+  openConfirmDeleteModal = (uid) => {
+    this.setState({ showConfirmDeleteModal: true, recommendationToDelete: uid });
+  }
+
+  closeConfirmDeleteModal = () => {
+    this.setState({ showConfirmDeleteModal: false});
+  }
+
+  handleDeleteRecommendation = (uid) => {
+    this.removeRecommendation(this.state.recommendationToDelete);
+    this.closeConfirmDeleteModal();
+  }
+
+  renderConfirmDeleteModal() {
+
+    return (
+      <Modal
+        modalTitle="Delete Recommendation"
+        modalId="confirm-delete-modal"
+        modalTheme="light"
+        modalSubmitButtonText="Delete"
+        handleShowModal={this.state.showConfirmDeleteModal}
+        handleCloseModal={this.closeConfirmDeleteModal}
+        handleSaveModal={this.handleDeleteRecommendation}>
+
+        <div className="delete-external-cql-library-confirmation-modal modal__content">
+          <h5>Are you sure you want to permanently delete the Recommendation?</h5>
+        </div>
+    </Modal>
+  );
   }
 }
 
@@ -113,5 +179,6 @@ Recommendations.propTypes = {
   templates: PropTypes.array.isRequired,
   updateRecommendations: PropTypes.func.isRequired,
   updateSubpopulations: PropTypes.func.isRequired,
+  removeRecommendation: PropTypes.func.isRequired,
   setActiveTab: PropTypes.func.isRequired
 };
