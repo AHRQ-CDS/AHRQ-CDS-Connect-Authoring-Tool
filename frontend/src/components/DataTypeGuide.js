@@ -133,7 +133,7 @@ export default class DataTypeGuide extends Component {
                         Summary: Returns a list of allergy intolerances that are either active or confirmed
                         <ul>
                           <li>
-                            In FHIR STU3, this returns allergy intolerances with <code>clinicalStatus</code> 'active'
+                            In FHIR R4 and STU3, this returns allergy intolerances with <code>clinicalStatus</code> 'active'
                             or <code>verificationStatus</code> 'confirmed'
                           </li>
                           <li>
@@ -191,8 +191,18 @@ export default class DataTypeGuide extends Component {
                         CQL function: <code>C3F.ActiveCondition</code>
                       </li>
                       <li>
-                        Summary: Returns a list of conditions with <code>clinicalStatus</code> 'active'
-                        and <code>abatement[x]</code> is 'null' or 'not true'
+                        Summary: Returns a list of conditions with <code>clinicalStatus</code> 
+                        and <code>abatement[x]</code> indicating active
+                        <ul>
+                          <li>
+                            In FHIR R4, this returns conditions with <code>clinicalStatus</code> 'active'
+                            {' '}or <code>abatement[x]</code> 'null'
+                          </li>
+                          <li>
+                            In FHIR STU3 and DSTU2, this returns conditions with <code>clinicalStatus</code> 'active'
+                            {' '}or <code>abatement[x]</code> 'null' or 'not true'
+                          </li>
+                        </ul>
                       </li>
                       <li>
                         Returns: List of Conditions
@@ -203,7 +213,19 @@ export default class DataTypeGuide extends Component {
                     Active Or Recurring
                     <ul>
                       <li>CQL function: <code>C3F.ActiveOrRecurring</code></li>
-                      <li>Summary: Returns a list of conditions with <code>clinicalStatus</code> 'active' or 'relapse'</li>
+                      <li>
+                        Summary: Returns a list of conditions with <code>clinicalStatus</code>
+                        {' '}indicating active, recurring, or relapse
+                        <ul>
+                          <li>
+                            In FHIR R4, this returns conditions with <code>clinicalStatus</code> 'active' or
+                            {' '}'recurrence' or 'relapse'
+                          </li>
+                          <li>
+                            In FHIR STU3 and DSTU2, this returns conditions with <code>clinicalStatus</code> 'active' or 'relapse'
+                          </li>
+                        </ul>
+                      </li>
                       <li>Returns: List of Conditions</li>
                     </ul>
                   </li>
@@ -211,7 +233,9 @@ export default class DataTypeGuide extends Component {
                     Confirmed
                     <ul>
                       <li>CQL function: <code>C3F.Confirmed</code></li>
-                      <li>Summary: Returns a list of conditions with <code>verificationStatus</code> 'confirmed'</li>
+                      <li>
+                        Summary: Returns a list of conditions with <code>verificationStatus</code> 'confirmed'
+                      </li>
                       <li>Returns: List of Conditions</li>
                     </ul>
                   </li>
@@ -225,6 +249,10 @@ export default class DataTypeGuide extends Component {
                         Summary: Returns a list of conditions that occurred between now and the time period specified
                         by the user
                         <ul>
+                          <li>
+                            In FHIR R4, this returns conditions with <code>onset[x]</code> or <code>recordedDate</code>
+                            {' '}that occurred within the period
+                          </li>
                           <li>
                             In FHIR STU3, this returns conditions with <code>onset[x]</code> or <code>assertedDate</code>
                             {' '}that occurred within the period
@@ -249,6 +277,10 @@ export default class DataTypeGuide extends Component {
                       <li>
                         Summary: Returns the most recent condition from a list
                         <ul>
+                          <li>
+                            In FHIR R4, this sorts conditions using <code>onset[x]</code> and <code>recordedDate</code>
+                            {' '}and returns the last condition from that list
+                          </li>
                           <li>
                             In FHIR STU3, this sorts conditions using <code>onset[x]</code> and <code>assertedDate</code>
                             {' '}and returns the last condition from that list
@@ -302,29 +334,29 @@ export default class DataTypeGuide extends Component {
                   <li>See expressions that can be applied to <a href="#list-types">any list</a></li>
                 </ul>
 
-                <h3 id="list-of-medication-order">List of Medication Order</h3>
+                <h3 id="list-of-medication-order">List of Medication Requests or Medication Orders</h3>
 
                 <ul>
                   <li>
                     Active
                     <ul>
                       <li>
-                        CQL function: <code>C3F.ActiveMedicationOrder</code>
+                        CQL function: <code>C3F.ActiveMedicationRequest</code> or <code>C3F.ActiveMedicationOrder</code>
                       </li>
                       <li>
                         Summary: Returns a list of medications that are active according to a prescription
                         <ul>
                           <li>
-                            In FHIR STU3, this returns a list of medication requests with <code>status</code> 'active'
+                            In FHIR R4 and STU3, this returns a list of medication requests with <code>status</code> 'active'
                           </li>
                           <li>
                             In FHIR DSTU2, this returns a list of medication orders with <code>status</code> 'active'
-                            and <code>dateEnded</code> is 'null'
+                            {' '}and <code>dateEnded</code> is 'null'
                           </li>
                         </ul>
                       </li>
                       <li>
-                        Returns: List of Medication Orders
+                        Returns: List of Medication Requests or Medication Orders
                       </li>
                     </ul>
                   </li>
@@ -332,15 +364,15 @@ export default class DataTypeGuide extends Component {
                     Look Back
                     <ul>
                       <li>
-                        CQL function: <code>C3F.MedicationOrderLookBack</code>
+                        CQL function: <code>C3F.MedicationRequestLookBack</code> or <code>C3F.MedicationOrderLookBack</code>
                       </li>
                       <li>
                         Summary: Returns a list of medications that were written between now and the time period specified
                         by the user
                         <ul>
                           <li>
-                            In FHIR STU3, this returns a list of medication requests with <code>authoredOn</code> that
-                            occurred within the period
+                            In FHIR R4 and STU3, this returns a list of medication requests with <code>authoredOn</code> that
+                            {' '}occurred within the period
                           </li>
                           <li>
                             In FHIR DSTU2, this returns a list of medication orders with <code>dateWritten</code> or
@@ -349,7 +381,7 @@ export default class DataTypeGuide extends Component {
                         </ul>
                       </li>
                       <li>
-                        Returns: List of Medication Orders
+                        Returns: List of Medication Requests or Medication Orders
                       </li>
                     </ul>
                   </li>
@@ -371,6 +403,10 @@ export default class DataTypeGuide extends Component {
                         Summary: Returns a list of medication statements that are active according to a statement, but not
                         necessarily verified via a prescription
                         <ul>
+                          <li>
+                            In FHIR R4, this returns a list of medication statements where <code>status</code> is 'active'
+                            and <code>end of EffectivePeriod</code> is 'null' or 'after Now()'
+                          </li>
                           <li>
                             In FHIR STU3, this returns a list of medication statements where <code>status</code> is 'active'
                             and <code>taken</code> is 'y' and <code>end of EffectivePeriod</code> is 'null' or 'after Now()'
@@ -472,7 +508,7 @@ export default class DataTypeGuide extends Component {
                         Summary: Returns a list of observations that are complete and verified
                         <ul>
                           <li>
-                            In FHIR STU3, this returns observations with with <code>status</code> of 'final,' 'amended,' or
+                            In FHIR R4 and STU3, this returns observations with with <code>status</code> of 'final,' 'amended,' or
                             'corrected'
                           </li>
                           <li>
@@ -495,8 +531,8 @@ export default class DataTypeGuide extends Component {
                         Summary: Returns a list of observations with quantity values recorded in the unit specified by the user
                         <ul>
                           <li>
-                            In FHIR STU3, returns observations with <code>value.unit</code> or <code>value.code</code> equal
-                            to the unit specified by the user
+                            In FHIR R4 and STU3, returns observations with <code>value.unit</code> or <code>value.code</code>
+                            {' '}equal to the unit specified by the user
                           </li>
                           <li>
                             In FHIR DSTU2, returns observations with <code>valueQuantity.unit</code> or
@@ -526,11 +562,14 @@ export default class DataTypeGuide extends Component {
                         Summary: Returns a list of procedures that are completed
                         <ul>
                           <li>
+                            In FHIR R4, this returns procedures with <code>status</code> of 'completed'
+                          </li>
+                          <li>
                             In FHIR STU3, this returns procedures with <code>status</code> of 'completed'
                             and <code>notDone</code> is 'not true'
                           </li>
                           <li>
-                            In FHIR STU3, this returns procedures with <code>status</code> of 'completed'
+                            In FHIR DSTU2, this returns procedures with <code>status</code> of 'completed'
                             and <code>notPerformed</code> is 'not true'
                           </li>
                         </ul>
@@ -550,11 +589,14 @@ export default class DataTypeGuide extends Component {
                         Summary: Returns a list of procedures that are in progress
                         <ul>
                           <li>
+                            In FHIR R4, this returns procedures with <code>status</code> of 'in-progress'
+                          </li>
+                          <li>
                             In FHIR STU3, this returns procedures with <code>status</code> of 'in-progress'
                             and <code>notDone</code> is 'not true'
                           </li>
                           <li>
-                            In FHIR STU3, this returns procedures with <code>status</code> of 'in-progress'
+                            In FHIR DSTU2, this returns procedures with <code>status</code> of 'in-progress'
                             and <code>notPerformed</code> is 'not true'
                           </li>
                         </ul>
@@ -855,7 +897,7 @@ export default class DataTypeGuide extends Component {
                       <li>
                         Summary: Returns an observation value as a CQL Quantity
                         <ul>
-                          <li>In FHIR STU3, this returns the 'value' and 'unit' of an observation <code>value</code></li>
+                          <li>In FHIR R4 and STU3, this returns the 'value' and 'unit' of an observation <code>value</code></li>
                           <li>In FHIR DSTU2, this returns the 'value' and 'unit' of an observation <code>valueQuantity</code></li>
                         </ul>
                       </li>
@@ -874,7 +916,7 @@ export default class DataTypeGuide extends Component {
                         Summary: Returns an observation value as a CQL Concept
                         <ul>
                           <li>
-                            In FHIR STU3, this returns the 'codes' and 'display' of an observation <code>value</code>
+                            In FHIR R4 and STU3, this returns the 'codes' and 'display' of an observation <code>value</code>
                           </li>
                           <li>
                             In FHIR DSTU2, this returns the 'codes' and 'display' of an
