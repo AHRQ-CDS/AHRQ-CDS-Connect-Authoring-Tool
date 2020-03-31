@@ -163,8 +163,8 @@ export default class UserGuide extends Component {
               <p>
                 Your list of artifacts can only be seen by you.  No other users have access to your artifacts or any of the
                 content within them.  You can only share artifacts by downloading the CQL and distributing it yourself.
-                If you have an artifact that may be useful to others, we encourage you to consider posting it on the CDS
-                Connect Repository.
+                If you have an artifact that may be useful to others, we encourage you to consider posting it on
+                the <a href="https://cds.ahrq.gov/cdsconnect">CDS Connect Repository</a>.
               </p>
               <div className="h3-wrapper">
                 <h3 id="Creating_Artifacts">2.1 Creating New Artifacts</h3>
@@ -293,8 +293,6 @@ export default class UserGuide extends Component {
                     </li>
                   </ol>
                 </p>
-
-                {/* TODO: Screenshot of Completed Element  */}
 
                 <div className="h4-wrapper">
                   <h4 id="Select_Element_Type">3.1.1 Select an Element Type</h4>
@@ -437,8 +435,8 @@ export default class UserGuide extends Component {
                     criteria, it must have a return type "boolean" (e.g., a true or false answer). This is because every element
                     in the criteria is combined using "and" or "or" clauses to arrive at an aggregate answer: true (the patient
                     meets the criteria) or false (the patient does not meet the criteria). To satisfy the requirement for a
-                    specific return type, you must [modify the results](#Modify_Results) until the required return type is
-                    achieved.
+                    specific return type, you must <a href="#Modify_Results">modify the results</a> until the required return
+                    type is achieved.
                   </p>
                 </div>
 
@@ -630,7 +628,7 @@ export default class UserGuide extends Component {
                 <p>
                   The CDS Authoring Tool allows authors to delete elements they no longer need or use. To delete an element,
                   click the "X" button in the top-right corner of the element's box. Currently, the CDS Authoring Tool does not
-                  require author's to confirm deletion; the element is deleted immediately. This action cannot be undone.
+                  require authors to confirm deletion; the element is deleted immediately. This action cannot be undone.
                 </p>
                 <p>
                   <img alt="" src={screenshotUrl('Delete_Element')}
@@ -742,9 +740,9 @@ export default class UserGuide extends Component {
                     Sometimes authors need to create complex logic that requires the use of "And" and "Or" at the same time.
                     This is accomplished by creating and combining sub-groups of elements. For example, you might want to
                     indicate that a patient must be 40 - 75 years old and have either an LDL cholesterol reading above a certain
-                    threshold or a diagnosis of diabetes. To do this, you would create the first two elements as described in the
-                    <a href="#And">And</a> section above, but then you would convert the second element to an indented group and
-                    add the third element to that indented group, combining it using <a href="#Or">Or</a>.
+                    threshold or a diagnosis of diabetes. To do this, you would create the first two elements as described in
+                    the <a href="#And">And</a> section above, but then you would convert the second element to an indented group
+                    and add the third element to that indented group, combining it using <a href="#Or">Or</a>.
                   </p>
                   <p>
                     <img alt="" src={screenshotUrl('Indent_Element')}
@@ -1068,7 +1066,7 @@ export default class UserGuide extends Component {
                       className="img-fluid img-thumbnail rounded mx-auto d-block" />
                   </p>
                   <p>
-                    The parameter name should reflect the purpose of the parameter, making it easier for implementors to
+                    The parameter name should reflect the purpose of the parameter, making it easier for implementers to
                     understand what it represents and how it might affect the artifact. The comments box, however, can be used
                     to provide additional information about the parameter and its affect on the behavior of the artifact.
                   </p>
@@ -1077,7 +1075,7 @@ export default class UserGuide extends Component {
                     Integer, DateTime, Decimal, Quantity, String, Time, Interval&lt;Integer&gt;, Interval&lt;DateTime&gt;,
                     Interval&lt;Decimal&gt;, and Interval&lt;Quantity&gt;. Once you've selected a parameter type, the default
                     value editor will provide an appropriate interface for editing the type of value you chose. Specifying a
-                    default value is optional, but if no default value is specified, then implementors must specify a value for
+                    default value is optional, but if no default value is specified, then implementers must specify a value for
                     that parameter at run-time.
                   </p>
                   <p>
@@ -1516,11 +1514,11 @@ export default class UserGuide extends Component {
                     <li><strong>Artifact</strong>: the name of the artifact tested.</li>
                     <li>
                       <strong>Meets Inclusion Criteria</strong>: The number of patients that met the inclusion criteria
-                      (e.g., "2 of 5 patients").
+                      (e.g., "2 of 3 patients").
                     </li>
                     <li>
                       <strong>Meets Exclusion Criteria</strong>: The number of patients that met the exclusion criteria
-                      (e.g., "1 of 5 patients").
+                      (e.g., "1 of 3 patients").
                     </li>
                   </ul>
                   Below the execution results summary, a list of the test patients is displayed.
