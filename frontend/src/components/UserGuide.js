@@ -9,8 +9,7 @@ function screenshotUrl(name) {
 }
 
 /*
-<img alt="" src={screenshotUrl('image_file_name')}
-     className="img-fluid img-thumbnail rounded mx-auto d-block" />
+<p><img alt="" src={screenshotUrl('')} className="img-fluid img-thumbnail rounded mx-auto d-block" /></p>
 */
 
 export default class UserGuide extends Component {
@@ -88,14 +87,13 @@ export default class UserGuide extends Component {
                   <li>A UMLS Terminology Services account</li>
                 </ol>
               </p>
-
               <div className="h3-wrapper">
                 <h3 id="Requesting_CDS_AT_Account">Requesting a CDS Authoring Tool Account</h3>
                 <p>
                   You must request a CDS Authoring Tool account in order to log into the CDS Authoring Tool.  This account
                   provides you with your own space within the CDS Authoring Tool to create and manage CDS artifacts.
                 </p>
-                {/* TODO: Insert image of SIGN UP button */}
+                <p><img alt="" src={screenshotUrl('Sign_Up')} className="img-fluid img-thumbnail rounded mx-auto d-block" /></p>
                 <p>
                   To request a CDS Authoring Tool account:
                   <ol>
@@ -116,7 +114,10 @@ export default class UserGuide extends Component {
                   These services enable you to search for value sets, review value set contents, and test CQL that uses
                   value sets.
                 </p>
-                {/* TODO: Insert image of Sign Up link */}
+                <p>
+                  <img alt="" src={screenshotUrl('UMLS_TS_Sign_Up')}
+                    className="img-fluid img-thumbnail rounded mx-auto d-block" />
+                </p>
                 <p>
                   To request a UMLS Terminology Services account:
                   <ol>
@@ -132,11 +133,20 @@ export default class UserGuide extends Component {
               <div className="h3-wrapper">
                 <h3 id="Logging_In">Logging In to the CDS Authoring Tool</h3>
                 <p>
-                  Once you have a CDS Authoring Tool account, you can log in using your registered email address and password.
+                  Once you have a CDS Authoring Tool account, you can log in to start creating and managing CDS artifacts.
                   To log in, navigate to the CDS Authoring Tool home page and click the "Login" button in the Clinical Decision
                   Support Authoring Tool banner near the top of the page.
                 </p>
-                {/* TODO: Insert image of logging in */}
+                <p>
+                  <img alt="" src={screenshotUrl('Login')} className="img-fluid img-thumbnail rounded mx-auto d-block" />
+                </p>
+                <p>
+                  When you click "Login", a new dialog will be displayed with a simple login form. Type your registered username
+                  and password into the form and then hit the return key or click the "Login" button.
+                </p>
+                <p>
+                  <img alt="" src={screenshotUrl('Login_Details')} className="img-fluid img-thumbnail rounded mx-auto d-block" />
+                </p>
                 <p>
                   If you encounter any issues logging in, click the "Feedback" link on the CDS Authoring Tool home page to
                   request support.
@@ -145,13 +155,15 @@ export default class UserGuide extends Component {
             </div>
 
             <div className="h2-wrapper">
-              <h2 id="Creating_and_Managing_Artifacts">Creating and Managing Artifacts ("Artifacts" View)</h2>
+              <h2 id="Creating_and_Managing_Artifacts">Creating and Managing Artifacts</h2>
               <p>
                 You can create and manage CDS Artifacts by clicking the "Artifacts" link in the Clinical Decision Support
                 Authoring banner near the top of the page.  This will bring you to the "Artifacts" view that contains a
                 list of all your CDS artifacts.
               </p>
-              {/* TODO: Screenshot of "Artifacts" page */}
+              <p>
+                <img alt="" src={screenshotUrl('Artifacts_View')} className="img-fluid img-thumbnail rounded mx-auto d-block" />
+              </p>
               <p>
                 Your list of artifacts can only be seen by you.  No other users have access to your artifacts or any of the
                 content within them.  You can only share artifacts by downloading the CQL and distributing it yourself.
@@ -170,7 +182,10 @@ export default class UserGuide extends Component {
                   href="https://apr.apache.org/versioning.html">Apache APR Versioning Scheme</a>
                   <i className="fa fa-external-link"></i>.
                 </p>
-                {/* TODO: Screenshot of Create Artifact Form */}
+                <p>
+                  <img alt="" src={screenshotUrl('Create_Artifact')}
+                    className="img-fluid img-thumbnail rounded mx-auto d-block" />
+                </p>
                 <p>
                   Once you've entered an artifact name and version, click the "Create" button. Your new artifact will appear
                   at the top of the artifact list.
@@ -190,7 +205,9 @@ export default class UserGuide extends Component {
                     <li>"Delete" button</li>
                   </ul>
                 </p>
-                {/* TODO: Screenshot of Artifact Listing */}
+                <p>
+                  <img alt="" src={screenshotUrl('Artifact_List')} className="img-fluid img-thumbnail rounded mx-auto d-block" />
+                </p>
                 <p>
                   To edit an artifact's logic, click the artifact's hyperlinked name. This will bring you to the artifact's
                   "Workspace" view.
@@ -208,14 +225,20 @@ export default class UserGuide extends Component {
             </div>
 
             <div className="h2-wrapper">
-              <h2 id="Building_Artifacts">Building Artifacts ("Workspace" View)</h2>
+              <h2 id="Building_Artifacts">Building Artifacts</h2>
               <p>
                 The first step in building an artifact is to create a blank artifact. If you have not yet done this, see the
                 previous section, <a href="#Managing_Artifacts">Creating and Managing Artifacts</a>. Once you've created an
                 artifact, click on its hyperlinked name to go to its "Workspace" view.
               </p>
               <p>
-                The workspace view contains a number of components that are used when building an artifact:
+                The workspace view contains a number of components that are used when building an artifact.
+              </p>
+              <p>
+                <img alt="" src={screenshotUrl('Workspace_View')} className="img-fluid img-thumbnail rounded mx-auto d-block" />
+              </p>
+              <p>
+                <p>The following components can be found in the "Workspace" header:</p>
                 <ul>
                   <li>
                     <strong>Artifact Name</strong>: The artifact name. Click the pencil to the left of the artifact name to
@@ -237,8 +260,6 @@ export default class UserGuide extends Component {
                 </ul>
               </p>
 
-              {/* TODO: Screenshot of Workspace Header and Tabs */}
-
               <div className="h3-wrapper">
                 <h3 id="Element_Picker">Creating and Editing Elements</h3>
                 <p>
@@ -247,9 +268,9 @@ export default class UserGuide extends Component {
                   ("Inclusions"), should be disqualified from a recommendation ("Exclusions"), or should receive a more specific
                   recommendation ("Subpopulations").
                 </p>
-
-                {/* TODO: Screenshot of Element Picker */}
-
+                <p>
+                  <img alt="" src={screenshotUrl('Element_Picker')} className="img-fluid img-thumbnail rounded mx-auto d-block" />
+                </p>
                 <p>
                   The general approach for creating elements is the same across all contexts:
                   <ol>
@@ -284,7 +305,14 @@ export default class UserGuide extends Component {
                   <p>
                     The first step to create an element is to select the element's type.  The element type will determine what
                     kind of data the element retrieves from the patient record. To select an element type, click in the dropdown
-                    box next to the "Add element" label. Depending on your artifact you many see any or all of these choices:
+                    box next to the "Add element" label.
+                  </p>
+                  <p>
+                    <img alt="" src={screenshotUrl('Select_Element_Type')}
+                      className="img-fluid img-thumbnail rounded mx-auto d-block" />
+                  </p>
+                  <p>
+                    Depending on your artifact you many see any or all of these choices:
                     <ul>
                       <li><strong>Allergy Intolerance</strong>: Instances of the FHIR AllergyIntolerance resource type</li>
                       <li><strong>Base Elements</strong>: Re-usable elements defined in the "Base Elements" tab</li>
@@ -307,7 +335,6 @@ export default class UserGuide extends Component {
                     </ul>
                     Click on the choice corresponding to the type of data this element should be based on.
                   </p>
-                  {/* TODO: Screenshot of Selecting an Element  */}
                 </div>
 
                 <div className="h4-wrapper">
@@ -320,13 +347,27 @@ export default class UserGuide extends Component {
                     (VSAC).
                   </p>
                   <p>
+                    <img alt="" src={screenshotUrl('Authenticate_VSAC')}
+                      className="img-fluid img-thumbnail rounded mx-auto d-block" />
+                  </p>
+                  <p>
                     If you see an "Authenticate VSAC" button, you must click it and then enter in your UMLS Terminology Services
                     account username and password. This is not the same as your CDS Authoring Tool username and password. If
                     you do not have a UMLS Terminology Services account, see <a href="#Requesting_UTS_Account">Requesting a UMLS
-                    Terminology Services Account</a>. After you authenticate, you will see two new buttons appear in your
-                    element box: "Add Value Set" and "Add Code".
+                    Terminology Services Account</a>.
                   </p>
-                  {/* TODO: Screenshot of Logging In to VSAC */}
+                  <p>
+                    <img alt="" src={screenshotUrl('Authenticate_VSAC_Details')}
+                      className="img-fluid img-thumbnail rounded mx-auto d-block" />
+                  </p>
+                  <p>
+                    After you authenticate, you will see two new buttons appear in your element box: "Add Value Set" and
+                    "Add Code".
+                  </p>
+                  <p>
+                    <img alt="" src={screenshotUrl('Authenticate_VSAC_Success')}
+                      className="img-fluid img-thumbnail rounded mx-auto d-block" />
+                  </p>
                 </div>
 
                 <div className="h4-wrapper">
@@ -345,19 +386,29 @@ export default class UserGuide extends Component {
                     "Add Value Set" button, a modal dialog will appear allowing you to search for a value set by keyword. Enter
                     a keyword representing the value set you want to find and click the "Search" button.
                   </p>
-                  {/* TODO: Screenshot of Searching for Diabetes */}
+                  <p>
+                    <img alt="" src={screenshotUrl('VSAC_Search_LDL')}
+                      className="img-fluid img-thumbnail rounded mx-auto d-block" />
+                  </p>
                   <p>
                     After clicking "Search", a set of results will be displayed. Each item in the results represents a value set
                     in the VSAC, including its name, Object Identifier (OID), Steward, and the number of codes in the value set.
                     To see the contents of a specific value set in the results, click its name.
                   </p>
-                  {/* TODO: Screenshot Clicking a Value Set name */}
+                  <p>
+                    <img alt="" src={screenshotUrl('VSAC_Search_LDL_Results')}
+                      className="img-fluid img-thumbnail rounded mx-auto d-block" />
+                  </p>
                   <p>
                     After clicking on a specific value set, its full set of codes will be displayed. Each item in the list shows
                     a contained code, its name, and its system. This allows authors to confirm that the value set contents match
                     their intent. If this value set is not a good match or you want to inspect other value sets in the results,
                     click the left arrow button near the top of the dialog. Otherwise, click the "Select" button to confirm
                     the selection of the displayed value set.
+                  </p>
+                  <p>
+                    <img alt="" src={screenshotUrl('VSAC_LDL_Codes')}
+                      className="img-fluid img-thumbnail rounded mx-auto d-block" />
                   </p>
                   <p>
                     NOTE: The VSAC recently introduced a new approach toward authoring value sets that allows value sets to be
@@ -367,13 +418,16 @@ export default class UserGuide extends Component {
                     codes cannot be retrieved. You can, however, still select the value set if you are confident it is the one
                     you need.
                   </p>
-                  {/* TODO: Screenshot Showing Value Set contents */}
                   <p>
                     Upon selection of the value set, the element will be updated with the value set association and a name
                     (which defaults to the value set name). Feel free to modify the name to more closely match the final intent
                     of the element. At this point, you can associate additional value sets or codes. These value sets and codes
                     will be treated as a unioned set, meaning that an item in a patient's health record need only match one of
                     any of them in order to be matched on the element as a whole.
+                  </p>
+                  <p>
+                    <img alt="" src={screenshotUrl('LDL_C_Element')}
+                      className="img-fluid img-thumbnail rounded mx-auto d-block" />
                   </p>
                   <p>
                     Associated value sets will be reflected in the expression phrase as well as listed in the element's metadata.
@@ -390,7 +444,6 @@ export default class UserGuide extends Component {
                     specific return type, you must [modify the results](#Modify_Results) until the required return type is
                     achieved.
                   </p>
-                  {/* TODO: Screenshot Showing Element w/ Associated Value Set */}
                 </div>
 
                 <div className="h4-wrapper">
@@ -409,14 +462,20 @@ export default class UserGuide extends Component {
                     dropdown menu and provide the FHIR-compatible identifying URL for the code system. Once you've entered the
                     code and selected the appropriate system, click the "Validate" button.
                   </p>
-                  {/* TODO: Screenshot of Entering Code */}
+                  <p>
+                    <img alt="" src={screenshotUrl('VSAC_Enter_Code')}
+                      className="img-fluid img-thumbnail rounded mx-auto d-block" />
+                  </p>
                   <p>
                     After clicking "Validate", the CDS Authoring Tool will send the code to the VSAC for validation. If the code
                     is from a supported code system and verified by VSAC, the CDS Authoring Tool will display the code, its
                     system, and its display text. You can confirm the selection by clicking on the "Select" button at the
                     bottom of the dialog.
                   </p>
-                  {/* TODO: Screenshot of successfully validated code */}
+                  <p>
+                    <img alt="" src={screenshotUrl('VSAC_Code_Validation_Success')}
+                      className="img-fluid img-thumbnail rounded mx-auto d-block" />
+                  </p>
                   <p>
                     If the code fails validation, this means the code is invalid or the code system is not supported. In either
                     case, an error will be shown at the bottom of the dialog. You can choose to modify the code and try again,
@@ -424,13 +483,20 @@ export default class UserGuide extends Component {
                     selection, click the "Cancel" button at the bottom of the dialog. To select the code anyway, click the
                     "Select" button at the bottom of the dialog.
                   </p>
-                  {/* TODO: Screenshot of validation failure */}
                   <p>
-                    Upon selection of the code, the element will be updated with the code association and a name (which defaults
-                    to the code's display text, if it is available). Feel free to modify the name to more closely match the final
-                    intent of the element. At this point, you can associate additional codes or value sets. These codes and value
-                    sets will be treated as a unioned set, meaning that an item in a patient's health record need only match one
-                    of any of them in order to be matched on the element as a whole.
+                    <img alt="" src={screenshotUrl('VSAC_Code_Validation_Error')}
+                      className="img-fluid img-thumbnail rounded mx-auto d-block" />
+                  </p>
+                  <p>
+                    Upon selection of the code, the element will be updated with the code association and a name. Feel free to
+                    modify the name to more closely match the final intent of the element. At this point, you can associate
+                    additional codes or value sets. These codes and value sets will be treated as a unioned set, meaning that an
+                    item in a patient's health record need only match one of any of them in order to be matched on the element as
+                    a whole.
+                  </p>
+                  <p>
+                    <img alt="" src={screenshotUrl('Ten_Year_Risk_Element')}
+                      className="img-fluid img-thumbnail rounded mx-auto d-block" />
                   </p>
                   <p>
                     Associated codes will be reflected in the expression phrase as well as listed in the element's metadata.
@@ -440,7 +506,6 @@ export default class UserGuide extends Component {
                     Depending on the context of the element, you may also see a warning message indicating that the element
                     does not have the correct return type. For more information see the last paragraph in the section above.
                   </p>
-                  {/* TODO: Screenshot Showing Element w/ Associated Code */}
                 </div>
 
                 <div className="h4-wrapper">
@@ -451,7 +516,10 @@ export default class UserGuide extends Component {
                     to reflect the intent of the element in its name. For example, if an element checks for an LDL cholesterol
                     test with a result over 130 mg/dL, then "LDL-c > 130 mg/dL" is a better name than just "LDL-c Test".
                   </p>
-                  {/* TODO: Screenshot of updated Element name */}
+                  <p>
+                    <img alt="" src={screenshotUrl('LDL_C_Updated_Name')}
+                      className="img-fluid img-thumbnail rounded mx-auto d-block" />
+                  </p>
                   <p>
                     The comments field allows authors to provide additional information about an element. Recommended uses
                     of comments include:
@@ -474,7 +542,10 @@ export default class UserGuide extends Component {
                     All comments are added to the generated CQL above the element's definition. However, they are not
                     executed as part of the artifact and just serve as an annotation to the element.
                   </p>
-                  {/* TODO: Screenshot of Element w/ updated name and comments */}
+                  <p>
+                    <img alt="" src={screenshotUrl('Ten_Year_Risk_Comments')}
+                      className="img-fluid img-thumbnail rounded mx-auto d-block" />
+                  </p>
                   <p>
                     Some element types reqest additional information. Currently, the following two element types require
                     additional information:
@@ -489,12 +560,14 @@ export default class UserGuide extends Component {
                       </li>
                     </ul>
                   </p>
-                  {/* TODO: Screenshot of Age Range */}
+                  <p>
+                    <img alt="" src={screenshotUrl('Age_Range_Element')}
+                      className="img-fluid img-thumbnail rounded mx-auto d-block" />
+                  </p>
                 </div>
 
                 <div className="h4-wrapper">
                   <h4 id="Modify_Results">Modify Results</h4>
-
                   <p>
                     Once you have the core element defined, including associated value sets and codes (if applicable), its
                     return type will be displayed near the bottom of the element. For elements with FHIR-based types (e.g.,
@@ -517,14 +590,16 @@ export default class UserGuide extends Component {
                     element box. When you do this, a set of buttons will be displayed indicating the possible expression
                     modifiers that can be applied to the current element.
                   </p>
-                  {/* TODO: Screenshot of Expression modifiers selecting Condition Confirmed */}
+                  <p>
+                    <img alt="" src={screenshotUrl('Add_Expression')}
+                      className="img-fluid img-thumbnail rounded mx-auto d-block" />
+                  </p>
                   <p>
                     Expression modifiers can be chained onto one another in succession. The return type from the first expression
                     modifier that is applied will affect the types of expression modifiers that can be applied as the second, and
                     so on. The CDS Authoring Tool performs this filtering for the author automatically, always showing only the
                     expression modifiers that are valid in the current context.
                   </p>
-                  {/* TODO: (MAYBE) Screenshot of Exists being chained on Confirmed */}
                   <p>
                     Expression modifiers and their value (when applicable) are shown as a list in the main body of the element
                     box. The element type, its associations, and its expression modifiers are also used to display a user-friendly
@@ -533,13 +608,20 @@ export default class UserGuide extends Component {
                     Authoring Tool will update its expression phrase automatically.
                   </p>
                   <p>
+                    <img alt="" src={screenshotUrl('Expression_Phrase')}
+                      className="img-fluid img-thumbnail rounded mx-auto d-block" />
+                  </p>
+                  <p>
                     If you need to remove expression modifiers, you must remove them one at a time, starting with the last one.
                     To remove an expression modifier, click on the "X" on the far right hand side of the expression modifier's
                     row in the element's content. It is currently not possible to directly remove expression modifiers in the
                     middle of the expression modifier list because this might change the current return type at that point and
                     render the rest of the expression modifier list invalid.
                   </p>
-                  {/* TODO: Screenshot of whole element */}
+                  <p>
+                    <img alt="" src={screenshotUrl('LDL_C_Expressions')}
+                      className="img-fluid img-thumbnail rounded mx-auto d-block" />
+                  </p>
                   <p>
                     To see the full set of expression modifiers applicable to each element and/or return type, click on the
                     "Data Types" tab on the <a href="documentation">Documentation</a> page.
@@ -554,7 +636,10 @@ export default class UserGuide extends Component {
                   click the "X" button in the top-right corner of the element's box. Currently, the CDS Authoring Tool does not
                   require author's to confirm deletion; the element is deleted immediately. This action cannot be undone.
                 </p>
-                {/* TODO: Screenshot of deleting an element */}
+                <p>
+                  <img alt="" src={screenshotUrl('Delete_Element')}
+                    className="img-fluid img-thumbnail rounded mx-auto d-block" />
+                </p>
                 <p>
                   In some cases, the CDS Authoring Tool will not allow you to delete an element. If the CDS Authoring Tool
                   prevents you from deleting an element, this means that it is referenced and used elsewhere. To delete the
@@ -569,14 +654,16 @@ export default class UserGuide extends Component {
                   to allow for a more streamlined view of the artifact's logic, the CDS Authoring Tool allows authors to collapse
                   elements. When an element is collapsed, only its name and expression phrase are displayed.
                 </p>
-                {/* TODO: Screenshot of collapsed element */}
+                <p>
+                  <img alt="" src={screenshotUrl('Collapsed_Element')}
+                    className="img-fluid img-thumbnail rounded mx-auto d-block" />
+                </p>
                 <p>
                   To collapse an element, click the double-down arrow <span class="fa fa-angle-double-down" aria-hidden="true">
                   </span> between the indent button and the delete button in the element's box. To re-expand an element, click
                   the double-right arrow <span class="fa fa-angle-double-right" aria-hidden="true"></span> between the indent
                   button and the delete button in the element's box.
                 </p>
-                {/* TODO: Screenshot of collapsed button */}
               </div>
 
               <div className="h3-wrapper">
@@ -595,117 +682,137 @@ export default class UserGuide extends Component {
 
                 <div className="h4-wrapper">
                   <h4 id="And">And</h4>
-                  <div>
+                  <p>
                     Combining elements using "And" indicates that each of the elements should evaluate to a "true" result in order
                     for the logic to be satisfied. For example, you might combine an Age Range element and a Gender element using
                     "And" to indicate that a patient must be 40 - 75 years old AND male. Elements must have a boolean return
                     type in order to be combined using "And".
-                  </div>
-                  {/* TODO: Screenshot of Age 45 - 70 years and male? */}
-                  <div>
+                  </p>
+                  <p>
+                    <img alt="" src={screenshotUrl('Inclusions_And')}
+                      className="img-fluid img-thumbnail rounded mx-auto d-block" />
+                  </p>
+                  <p>
                     The Inclusions, Exclusions, and Subpopulations tabs all require elements to be combined using And, Or, or
                     indented groups. In these tabs, you can combine elements using "And" by clicking the dropdown between
                     elements and selecting "And". The CDS Authoring Tool requires that all sibling elements (e.g., elements
                     indented at the same level) use the same combination logic, so when you select "And" between two elements,
                     it will also be selected for all other elements at the same indent level.
-                  </div>
-                  {/* TODO: Screenshot of choosing And */}
-                  <div>
+                  </p>
+                  <p>
+                    <img alt="" src={screenshotUrl('List_Operations_And')}
+                      className="img-fluid img-thumbnail rounded mx-auto d-block" />
+                  </p>
+                  <p>
                     In the Base Elements tab, elements can be combined using the "List Operations" element type. Do this by
                     choosing "List Operations" in the element type dropdown and then selecting "And" in the second dropdown. This
                     will create a group that you can give a unique name and begin adding elements to.
-                  </div>
-                  {/* TODO: Screenshot of List Operations -> And */}
+                  </p>
                 </div>
 
                 <div className="h4-wrapper">
                   <h4 id="Or">Or</h4>
-                  <div>
+                  <p>
                     Combining elements using "Or" indicates that at least one of the elements should evaluate to a "true" result
-                    in order for the logic to be satisfied. For example, you might combine a Diabetes element and an LDL-c element
-                    to indicate that a patient should have a diagnosis of diabetes or an LDL cholesterol reading above a certain
-                    threshold. Elements must have a boolean return type in order to be combined using "Or".
-                  </div>
-                  {/* TODO: Screenshot of Diabetes and LDL-c > 130 mg/dL? */}
-                  <div>
+                    in order for the logic to be satisfied. For example, you might combine an LDL-c element and a Diabetes element
+                    to indicate that a patient should have an LDL cholesterol reading above a certain threshold or a diagnosis of
+                    diabetes. Elements must have a boolean return type in order to be combined using "Or".
+                  </p>
+                  <p>
+                    <img alt="" src={screenshotUrl('Inclusions_Or')}
+                      className="img-fluid img-thumbnail rounded mx-auto d-block" />
+                  </p>
+                  <p>
                     The Inclusions, Exclusions, and Subpopulations tabs all require elements to be combined using And, Or, or
                     indented groups. In these tabs, you can combine elements using "Or" by clicking the dropdown between
                     elements and selecting "Or". The CDS Authoring Tool requires that all sibling elements (e.g., elements
                     indented at the same level) use the same combination logic, so when you select "Or" between two elements,
                     it will also be selected for all other elements at the same indent level.
-                  </div>
-                  {/* TODO: Screenshot of choosing Or */}
-                  <div>
+                  </p>
+                  <p>
+                    <img alt="" src={screenshotUrl('List_Operations_Or')}
+                      className="img-fluid img-thumbnail rounded mx-auto d-block" />
+                  </p>
+                  <p>
                     In the Base Elements tab, elements can be combined using the "List Operations" element type. Do this by
                     choosing "List Operations" in the element type dropdown and then selecting "Or" in the second dropdown. This
                     will create a group that you can give a unique name and begin adding elements to.
-                  </div>
-                  {/* TODO: Screenshot of List Operations -> Or */}
+                  </p>
                 </div>
 
                 <div className="h4-wrapper">
                   <h4 id="Indented_Group">Indented Group</h4>
-                  <div>
+                  <p>
                     Sometimes authors need to create complex logic that requires the use of "And" and "Or" at the same time.
                     This is accomplished by creating and combining sub-groups of elements. For example, you might want to
-                    indicate that a patient must be 40 - 75 years old and male and have either a diagnosis of diabetes or an
-                    LDL cholesterol reading above a certain threshold. To do this, you would create the first two elements as
-                    described in the <a href="#And">And</a> section above, but then you would create an indented group to
-                    contain the remaining two elements that should be combined using <a href="#Or">Or</a>.
-                  </div>
-                  {/* TODO: Screenshot of Age 45 - 70 years and male and diabetes or LDL-c > 130 mg/dL */}
-                  <div>
+                    indicate that a patient must be 40 - 75 years old and have either an LDL cholesterol reading above a certain
+                    threshold or a diagnosis of diabetes. To do this, you would create the first two elements as described in the
+                    <a href="#And">And</a> section above, but then you would convert the second element to an indented group and
+                    add the third element to that indented group, combining it using <a href="#Or">Or</a>.
+                  </p>
+                  <p>
+                    <img alt="" src={screenshotUrl('Indent_Element')}
+                      className="img-fluid img-thumbnail rounded mx-auto d-block" />
+                  </p>
+                  <p>
                     To create a new indented group, create the first element that should go in the indented group as normal.
                     Then click on the "indent" button <span class="fa fa-indent" aria-hidden="true"></span> to the right of the
                     element name to automatically create a new indented group and place the element in it. This new group can
                     (and should) be given a unique name. To add more elements in the group, use the new "Add element" box that
                     is displayed at the bottom of the indent group.
-                  </div>
-                  {/* TODO: Screenshot of indented group */}
-                  <div>
+                  </p>
+                  <p>
+                    <img alt="" src={screenshotUrl('Indented_Group')}
+                      className="img-fluid img-thumbnail rounded mx-auto d-block" />
+                  </p>
+                  <p>
                     Groups can be indented multiple levels deep. In addition, groups can be outdented to return their elements
                     back to the outer indent level. Use the "outdent" button <span class="fa fa-outdent" aria-hidden="true">
                     </span> to outdent groups.
-                  </div>
+                  </p>
                 </div>
 
                 <div className="h4-wrapper">
                   <h4 id="Intersect">Intersect</h4>
-                  <div>
+                  <p>
                     Combining elements using "Intersect" indicates that each of the elements should be inspected and only those
                     items that match every element should be included in the intersection results. For example, if you combine
                     an element representing confirmed myocardial infarctions with an element representing myocardial infarctions
                     in the last six months, using "intersect", the result will be only myocardial infarctions that are in both
                     element sets (i.e., confirmed and within the last six months).
-                  </div>
-                  {/* TODO: Screenshot of confirmed MI and MI in the last 6 months? */}
-                  <div>
+                  </p>
+                  <p>
+                    <img alt="" src={screenshotUrl('List_Operations_Intersect')}
+                      className="img-fluid img-thumbnail rounded mx-auto d-block" />
+                  </p>
+                  <p>
                     The "Intersect" combination can only be applied in the Base Elements tab using the "List Operations" element
                     type. Do this by choosing "List Operations" in the element type dropdown and then selecting "Intersect" in
                     the second dropdown. This will create a group that you can give a unique name and begin adding elements to.
                     All of the elements in the group will be intersected together. Since intersection requires elements to have
                     returned items in common, the elements in an intersected group should all have the same result type,
                     otherwise it is impossible for any item to match against all of the elements.
-                  </div>
-                  {/* TODO: Screenshot of List Operations -> Intersect */}
+                  </p>
                 </div>
 
                 <div className="h4-wrapper">
                   <h4 id="Union">Union</h4>
-                  <div>
+                  <p>
                     Combining elements using "Union" indicates that all of the items across all of the elements should be
                     combined together into a single set of items. For example, combining an LDL-c element with an HDL-c element
                     using "Union" will result in all of LDL-c and HDL-c observations.
-                  </div>
-                  {/* TODO: Screenshot of ldl-c and hdl-c combined? */}
-                  <div>
+                  </p>
+                  <p>
+                    <img alt="" src={screenshotUrl('List_Operations_Union')}
+                      className="img-fluid img-thumbnail rounded mx-auto d-block" />
+                  </p>
+                  <p>
                     The "Union" combination can only be applied in the Base Elements tab using the "List Operations" element
                     type. Do this by choosing "List Operations" in the element type dropdown and then selecting "Union" in
                     the second dropdown. This will create a group that you can give a unique name and begin adding elements to.
                     All of the elements in the group will be unioned together. If elements in the union have different return
                     types, the return type of the overall union will be "Any".
-                  </div>
-                  {/* TODO: Screenshot of List Operations -> Union */}
+                  </p>
                 </div>
               </div>
 
@@ -718,11 +825,13 @@ export default class UserGuide extends Component {
                   artifact's recommendations apply.
                 </p>
                 <p>
+                  <img alt="" src={screenshotUrl('Inclusions')} className="img-fluid img-thumbnail rounded mx-auto d-block" />
+                </p>
+                <p>
                   Authors specify the Inclusions criteria by creating and combining elements as described in the sections above.
                   Typically, Inclusions criteria will use "And" combinations so that all of the criteria must be met in order to
                   receive a recommendation.
                 </p>
-                {/* TODO: Screenshot of Inclusions */}
               </div>
 
               <div className="h3-wrapper">
@@ -735,11 +844,13 @@ export default class UserGuide extends Component {
                   even if they are otherwise indicated.
                 </p>
                 <p>
+                  <img alt="" src={screenshotUrl('Exclusions')} className="img-fluid img-thumbnail rounded mx-auto d-block" />
+                </p>
+                <p>
                   Authors specify the Exclusions criteria by creating and combining elements as described in the sections above.
                   Typically, Exclusions criteria will use "Or" combinations so that any of the criteria can disqualify the
                   patient from the recommendation.
                 </p>
-                {/* TODO: Screenshot of Inclusions */}
               </div>
 
               <div className="h3-wrapper">
@@ -752,11 +863,13 @@ export default class UserGuide extends Component {
                   risk score of 8% versus a patient with a 10-year risk score of 12%.
                 </p>
                 <p>
+                  <img alt="" src={screenshotUrl('Subpopulations')} className="img-fluid img-thumbnail rounded mx-auto d-block" />
+                </p>
+                <p>
                   The Subpopulations tab allows authors to create as many subpopulations as needed. For each subpopulation, the
                   author must specify a unique name, then create and combine elements as described in the sections above. To
                   create a new subpopulation, click the "New subpopulation" button in the Subpopulations tab.
                 </p>
-                {/* TODO: Screenshot of Subpopulations */}
               </div>
 
               <div className="h3-wrapper">
@@ -767,6 +880,9 @@ export default class UserGuide extends Component {
                   where ever they may be needed. This also allows authors to define standalone elements outside of any specific
                   context and have these elements exported as-is in the CQL.
                 </p>
+                <p>
+                  <img alt="" src={screenshotUrl('Base_Elements')} className="img-fluid img-thumbnail rounded mx-auto d-block" />
+                </p>
                 <div className="h4-wrapper">
                   <h4 id="Creating_Base_Elements">Creating Base Elements</h4>
                   <p>
@@ -774,7 +890,10 @@ export default class UserGuide extends Component {
                     above. Since these elements are not in the context of specific logical constructs, they are not required to
                     have any specific return type.
                   </p>
-                  {/* TODO: Screenshot of Base element */}
+                  <p>
+                    <img alt="" src={screenshotUrl('Ten_Year_Risk_Value')}
+                      className="img-fluid img-thumbnail rounded mx-auto d-block" />
+                  </p>
                 </div>
                 <div className="h4-wrapper">
                   <h4 id="Using_Base_Elements">Using Base Elements</h4>
@@ -784,7 +903,10 @@ export default class UserGuide extends Component {
                     location by selecting the "Base Elements" type in the element type dropdown. A second dropdown will appear
                     allowing you to choose the Base Element you want.
                   </p>
-                  {/* TODO: Screenshot of Choosing Base element */}
+                  <p>
+                    <img alt="" src={screenshotUrl('Select_Base_Element')}
+                      className="img-fluid img-thumbnail rounded mx-auto d-block" />
+                  </p>
                   <p>
                     An element that is based on a base element is shaded light blue to make it more easily distinguishable.
                     In addition, it lists the original base element's name in the content of its element definition
@@ -793,20 +915,26 @@ export default class UserGuide extends Component {
                     element definition.
                   </p>
                   <p>
+                    <img alt="" src={screenshotUrl('Base_Element_Use')}
+                      className="img-fluid img-thumbnail rounded mx-auto d-block" />
+                  </p>
+                  <p>
                     If the base element does not have the return type required by its context (for example, if it is used in the
                     Inclusions tab but does not have a boolean return type), you can add expression modifiers to it in much the
                     same way as you would any element. In this case, the expression modifiers added to the use of the base
                     element will not affect the original definition of the base element in the Base Elements tab. This allows
                     base elements to used in a broad set of contexts in differing ways.
                   </p>
-                  {/* TODO: Screenshot of base element use? */}
                   <p>
                     When a Base Element has been used, the definition of the element in the Base Elements tab will show where
                     it is being used. This is indicated by rows labeled "Element Use" in the content of the element definition.
                     If you click the link icon <span class="fa fa-link delete-valueset-button" aria-hidden="true"></span> to the
                     far right of the use's elementname, you will go directly to the element's definition.
                   </p>
-                  {/* TODO: Screenshot of base element? */}
+                  <p>
+                    <img alt="" src={screenshotUrl('Base_Element_Linkbacks')}
+                      className="img-fluid img-thumbnail rounded mx-auto d-block" />
+                  </p>
                   <p>
                     Note that when a base element is used, certain restrictions are put into place. One restriction is that you
                     cannot delete it. To delete a base element that is being used, you must first delete (or edit) all of its
@@ -835,7 +963,10 @@ export default class UserGuide extends Component {
                   meets the Inclusions criteria but does not meet any Exclusions criteria. For more advanced cases, authors can
                   specify recommendations tailored to specific subpopulations.
                 </p>
-                {/* TODO: Screenshot of blank recommendation */}
+                <p>
+                  <img alt="" src={screenshotUrl('Recommendations')}
+                    className="img-fluid img-thumbnail rounded mx-auto d-block" />
+                </p>
 
                 <div className="h4-wrapper">
                   <h4 id="Creating_Recommendations">Creating Recommendations</h4>
@@ -846,11 +977,14 @@ export default class UserGuide extends Component {
                     the first recommendation for which they are eligible.
                   </p>
                   <p>
+                  <img alt="" src={screenshotUrl('Create_Recommendation')}
+                      className="img-fluid img-thumbnail rounded mx-auto d-block" />
+                  </p>
+                  <p>
                     Sometimes authors may want to include a rationale for the recommendation as a separate data field. To do
                     this, click on the "Add rationale" button in any recommendation element. This will display another text field
                     which can be used to enter the rationale.
                   </p>
-                  {/* TODO: Screenshot with recommendation and rationale */}
                 </div>
 
                 <div className="h4-wrapper">
@@ -875,13 +1009,16 @@ export default class UserGuide extends Component {
                     information on creating subpopulations, see <a href="#Subpopulations">Subpopulations</a> documentation.
                   </p>
                   <p>
+                    <img alt="" src={screenshotUrl('Associate_Subpopulation')}
+                        className="img-fluid img-thumbnail rounded mx-auto d-block" />
+                  </p>
+                  <p>
                     To associate a recommendation with subpopulations, click the "Add subpopulation" button. This will display
                     a section above the recommendation text where you can select a subpopulation or you can create a new
                     subpopulation using the "New subpopulation" link. After selecting a subpopulation, you can optionally select
                     another subpopulation. The recommendation will only be delivered if the patient meets every subpopulation
                     criteria that has been associated with the recommendation.
                   </p>
-                  {/* TODO: Screenshot selecting subpopulations */}
                 </div>
 
                 <div className="h4-wrapper">
@@ -894,12 +1031,15 @@ export default class UserGuide extends Component {
                     </span> on any recommendation to move it up or down.
                   </p>
                   <p>
+                    <img alt="" src={screenshotUrl('Reorder_Recommendation')}
+                        className="img-fluid img-thumbnail rounded mx-auto d-block" />
+                  </p>
+                  <p>
                     Authors may also need to delete recommendations if they were entered by mistake or are no longer applicable.
                     To do this, click the "X" button in the recommendation element box. This will prompt you to confirm the
                     deletion. Once you have confirmed this, the recommendation will be permanently deleted. This action cannot be
                     undone.
                   </p>
-                  {/* TODO: Screenshot of moving or deleting a recommendation */}
                 </div>
               </div>
 
@@ -916,7 +1056,9 @@ export default class UserGuide extends Component {
                   their logic to implement this behavior. To support this, parameters can be referred to in elements throughout
                   the CDS logic (much like base elements).
                 </p>
-                {/* TODO: Screenshot of parameters view */}
+                <p>
+                  <img alt="" src={screenshotUrl('Parameters')} className="img-fluid img-thumbnail rounded mx-auto d-block" />
+                </p>
 
                 <div className="h4-wrapper">
                   <h4 id="Creating_Parameters">Creating Parameters</h4>
@@ -924,6 +1066,10 @@ export default class UserGuide extends Component {
                     Authors can define as many parameters as they'd like. To create a parameter, click the "New parameter"
                     button. An empty parameter box will be displayed with fields for the parameter name, user-provided comments,
                     the parameter type, and an optional default value.
+                  </p>
+                  <p>
+                    <img alt="" src={screenshotUrl('Empty_Parameter')}
+                      className="img-fluid img-thumbnail rounded mx-auto d-block" />
                   </p>
                   <p>
                     The parameter name should reflect the purpose of the parameter, making it easier for implementors to
@@ -938,7 +1084,10 @@ export default class UserGuide extends Component {
                     default value is optional, but if no default value is specified, then implementors must specify a value for
                     that parameter at run-time.
                   </p>
-                  {/* TODO: Screenshot with parameter filled out */}
+                  <p>
+                    <img alt="" src={screenshotUrl('Allow_Grade_C_Parameter')}
+                      className="img-fluid img-thumbnail rounded mx-auto d-block" />
+                  </p>
                 </div>
 
                 <div className="h4-wrapper">
@@ -949,7 +1098,10 @@ export default class UserGuide extends Component {
                     any valid location by selecting the "Parameters" type in the element type dropdown. A second dropdown will
                     appear allowing you to choose the Parameter you want.
                   </p>
-                  {/* TODO: Screenshot of Choosing Parameter */}
+                  <p>
+                    <img alt="" src={screenshotUrl('Select_Allow_Grade_C')}
+                      className="img-fluid img-thumbnail rounded mx-auto d-block" />
+                  </p>
                   <p>
                     An element using a parameter indicates the parameter in its expression phrase as well as listing the
                     parameter's name in the content of its element definition using the "Parameter" label. If you click the link
@@ -961,7 +1113,10 @@ export default class UserGuide extends Component {
                     Inclusions tab but does not have a boolean return type), you can add expression modifiers to it in much the
                     same way as you would any element.
                   </p>
-                  {/* TODO: Screenshot of parameter use? */}
+                  <p>
+                    <img alt="" src={screenshotUrl('Allow_Grade_C_Element')}
+                      className="img-fluid img-thumbnail rounded mx-auto d-block" />
+                  </p>
                   <p>
                     Note that when a parameter is used, certain restrictions are put into place: it cannot be deleted nor can
                     its parameter type be changed. To delete a parameter or change its type, you must first delete (or edit) all
@@ -978,7 +1133,10 @@ export default class UserGuide extends Component {
                     this means you cannot delete the parameter because it is currently being used by another element. To delete
                     it, you must first remove all uses of it from other elements.
                   </p>
-                  {/* TODO: Screenshot of moving or deleting a parameter */}
+                  <p>
+                    <img alt="" src={screenshotUrl('Delete_Parameter')}
+                      className="img-fluid img-thumbnail rounded mx-auto d-block" />
+                  </p>
                 </div>
               </div>
 
@@ -991,6 +1149,9 @@ export default class UserGuide extends Component {
                   cases.
                 </p>
                 <p>
+                  <img alt="" src={screenshotUrl('Errors')} className="img-fluid img-thumbnail rounded mx-auto d-block" />
+                </p>
+                <p>
                   NOTE: Although CQL 1.2 introduced the "Messages" function to allow authors to return error messages to the
                   operating environment at run-time, the CDS Authoring Tool does not currently use this approach. Instead, it
                   creates a CQL statement called "Errors" that will return a list of the errors that are applicable to the
@@ -998,7 +1159,6 @@ export default class UserGuide extends Component {
                   Authoring Tool is currently only capable of returning one error per invocation, so the list length will never
                   be more than one.
                 </p>
-                {/* TODO: Screenshot of handle errors view */}
 
                 <div className="h4-wrapper">
                   <h4 id="Error_Conditions">Error Conditions</h4>
@@ -1007,7 +1167,7 @@ export default class UserGuide extends Component {
                     condition (or set of conditions) is met, then a certain error message should be returned. By default, the
                     CDS Authoring Tool provides three initial conditions that can be used when specifying errors:
                     <ul>
-                      <li><strong>Recommendations is null</strong>: indicates that no recommendation could be provided.</li>
+                      <li><strong>Recommendations is null</strong>: indicates that no recommendation was provided.</li>
                       <li>
                         <strong>Doesn't Meet Inclusion Criteria</strong>: indicates that the patient didn't meet the initial
                         criteria to receive the recommensation.
@@ -1021,7 +1181,10 @@ export default class UserGuide extends Component {
                     In addition to the conditions above, authors can select subpopulations or boolean-valued parameters as
                     conditions to indicate when an error message should be returned.
                   </p>
-                  {/* TODO: Screenshot showing condition list */}
+                  <p>
+                    <img alt="" src={screenshotUrl('Select_Error_If_Condition')}
+                      className="img-fluid img-thumbnail rounded mx-auto d-block" />
+                  </p>
                 </div>
 
                 <div className="h4-wrapper">
@@ -1031,7 +1194,10 @@ export default class UserGuide extends Component {
                     in the "Errors" box. After you've selected the condition on which the error should be returned, enter the
                     error message into the text box below the label "Then".
                   </p>
-                  {/* TODO: Screenshot of Simple Error Handling */}
+                  <p>
+                    <img alt="" src={screenshotUrl('Patient_Excluded_Error')}
+                      className="img-fluid img-thumbnail rounded mx-auto d-block" />
+                  </p>
                 </div>
 
                 <div className="h4-wrapper">
@@ -1064,7 +1230,6 @@ export default class UserGuide extends Component {
                     no error message will be returned if no other error condition has been satisfied.
                   </p>
                 </div>
-                {/* TODO: Screenshot of Complex Error Handling? */}
               </div>
 
               <div className="h3-wrapper">
@@ -1077,11 +1242,14 @@ export default class UserGuide extends Component {
                   external CQL but cannot re-use functions from external CQL.
                 </p>
                 <p>
+                  <img alt="" src={screenshotUrl('External_CQL')}
+                    className="img-fluid img-thumbnail rounded mx-auto d-block" />
+                </p>
+                <p>
                   Note that uploading a CQL library does not make it editable in the CDS Authoring Tool. The external CQL library
                   is considered read-only. Authors, however, can use external CQL library elements as the basis of authored
                   elements and apply further expression modifiers to customize them for their artifacts.
                 </p>
-                {/* TODO: Screenshot of External CQL Tab */}
 
                 <div className="h4-wrapper">
                   <h4 id="Uploading_External_CQL">Uploading External CQL</h4>
@@ -1097,6 +1265,10 @@ export default class UserGuide extends Component {
                       <li>Find the file on your local disk and drag it into the drop zone (outlined by a dashed line).</li>
                       <li>Click anywhere in the drop zone to open a dialog you can use to find and select your file.</li>
                     </ul>
+                    <p>
+                      <img alt="" src={screenshotUrl('Upload_External_CQL')}
+                        className="img-fluid img-thumbnail rounded mx-auto d-block" />
+                    </p>
                     The CDS Authoring Tool will attempt to compile your CQL file when you upload it. If there are any errors,
                     it will display an error message and the file upload will be abandoned. If there are no errors, the upload
                     is successful and the file will appear in the list of external CQL libraries below the drop zone.
@@ -1118,18 +1290,28 @@ export default class UserGuide extends Component {
                       <li>"Delete" button</li>
                     </ul>
                   </p>
-                  {/* TODO: Screenshot of Library Listing */}
+                  <p>
+                    <img alt="" src={screenshotUrl('External_CQL_List')}
+                      className="img-fluid img-thumbnail rounded mx-auto d-block" />
+                  </p>
                   <p>
                     To view a summary of the contents of the external CQL library, click on the eye icon <span class="fa fa-eye"
                     aria-hidden="true"></span>. This will display a modal window with high-level metadata about the library
                     and a listing of the library's parameter's, functions, and definitions. For each of these, the name and
                     return type are shown.
                   </p>
-                  {/* TODO: Screenshot of External CQL Details */}
+                  <p>
+                    <img alt="" src={screenshotUrl('External_CQL_Details')}
+                      className="img-fluid img-thumbnail rounded mx-auto d-block" />
+                  </p>
                   <p>
                     To delete an external CQL library, click its "Delete" button. This will open a modal dialog asking you to
                     confirm that you would like to delete the external CQL file. After clicking the "Delete" button to confirm,
                     the external CQL library will be permanently deleted.  This cannot be undone.
+                  </p>
+                  <p>
+                    <img alt="" src={screenshotUrl('Delete_External_CQL')}
+                      className="img-fluid img-thumbnail rounded mx-auto d-block" />
                   </p>
                   <p>
                     If the "Delete" button is disabled, then this CQL library is being used within the artifact or is declared
@@ -1149,7 +1331,10 @@ export default class UserGuide extends Component {
                     to choose the External CQL library that contains the definition you wish to use. After selecting a library,
                     a third dropdown will appear allowing you to choose the specific parameter or definition to use.
                   </p>
-                  {/* TODO: Screenshot of Choosing Base element */}
+                  <p>
+                    <img alt="" src={screenshotUrl('Using_External_CQL')}
+                      className="img-fluid img-thumbnail rounded mx-auto d-block" />
+                  </p>
                   <p>
                     After selecting the external CQL parameter or definition, it will be reflectect in the element's expression
                     phrase and listed in the element's metadata using the label "External CQL Element". If you wish (or if
@@ -1157,7 +1342,10 @@ export default class UserGuide extends Component {
                     In this case, the expression modifiers added to the use of the external CQL element will not affect the
                     original definition of the external CQL element.
                   </p>
-                  {/* TODO: Screenshot of base element use? */}
+                  <p>
+                    <img alt="" src={screenshotUrl('External_CQL_Use')}
+                      className="img-fluid img-thumbnail rounded mx-auto d-block" />
+                  </p>
                   <p>
                     Note that when an external CQL element is used, it prevents the external CQL library from being deleted from
                     the artifact. To delete the external CQL library, you must first delete its use. In addition, the first time
@@ -1170,12 +1358,16 @@ export default class UserGuide extends Component {
             </div>
 
             <div className="h2-wrapper">
-              <h2 id="Testing_Artifacts">Testing Artifacts ("Testing" View)</h2>
+              <h2 id="Testing_Artifacts">Testing Artifacts</h2>
               <p>
                 While CDS artifacts should always be tested in the environment where they are deployed, testing is an important
                 part of the artifact development process as well. Testing CDS logic before it is deployed in a test environment
                 allows authors to discover and fix bugs earlier in the process, saving both time and money. This also makes it
-                easier to distinguish between bugs in the logic and bugs in the data or integration environment.
+                easier to distinguish between bugs in the logic and bugs in the data or integration environment. To test your
+                artifacts, click on the "Testing" link in the Clinical Decision Support Authoring banner near the top of the page.
+              </p>
+              <p>
+                <img alt="" src={screenshotUrl('Testing_View')} className="img-fluid img-thumbnail rounded mx-auto d-block" />
               </p>
               <p>
                 The CDS Authoring Tool testing view allows authors to upload their own synthetic test patients as FHIR bundles of
@@ -1187,7 +1379,6 @@ export default class UserGuide extends Component {
                 href="https://github.com/AHRQ-CDS/CQL-Testing-Framework">CQL Testing Framework</a> <i
                 className="fa fa-external-link"></i>.
               </p>
-              {/* TODO: Screenshot of testing view */}
 
               <div className="h3-wrapper">
                 <h3 id="Uploading_Test_Patients">Uploading Test Patients</h3>
@@ -1211,12 +1402,21 @@ export default class UserGuide extends Component {
                     <li>Find the file on your local disk and drag it into the drop zone (outlined by a dashed line).</li>
                     <li>Click anywhere in the drop zone to open a dialog you can use to find and select your file.</li>
                   </ul>
+                </p>
+                <p>
+                  <img alt="" src={screenshotUrl('Upload_Patient')}
+                    className="img-fluid img-thumbnail rounded mx-auto d-block" />
+                </p>
+                <p>
                   When you upload a patient, the CDS Authoring Tool will display a modal dialog asking you to indicate which
                   version of FHIR the patient data conforms to. Choose DSTU2, STU3, or R4. This may affect what artifacts can
                   be tested using this patient and/or what FHIR version of the artifact will be used to do the testing on this
                   patient.
                 </p>
-                {/* TODO: Screenshot of FHIR version dialog */}
+                <p>
+                  <img alt="" src={screenshotUrl('Patient_FHIR_Version')}
+                    className="img-fluid img-thumbnail rounded mx-auto d-block" />
+                </p>
               </div>
 
               <div className="h3-wrapper">
@@ -1234,7 +1434,10 @@ export default class UserGuide extends Component {
                     <li>"Delete" button</li>
                   </ul>
                 </p>
-                {/* TODO: Screenshot of Library Listing */}
+                <p>
+                  <img alt="" src={screenshotUrl('Patient_List')}
+                    className="img-fluid img-thumbnail rounded mx-auto d-block" />
+                </p>
                 <p>
                   To view a summary of a synthetic test patient's data, click on the eye icon <span class="fa fa-eye"
                   aria-hidden="true"></span>. This will display a modal window with the patient's demographic data and
@@ -1245,17 +1448,27 @@ export default class UserGuide extends Component {
                   table with the most relevant data for that type (e.g., conditions show onset and abatement, medications
                   show date written, etc.).
                 </p>
-                {/* TODO: Screenshot of Patient Details */}
+                <p>
+                  <img alt="" src={screenshotUrl('Patient_Details')}
+                    className="img-fluid img-thumbnail rounded mx-auto d-block" />
+                </p>
                 <p>
                   At the bottom of the patient details view, an object browsers allows authors to see the exact FHIR
                   representation. This can be helpful for more detailed debugging or when the patient view summary data
                   does not show the relevant fields of interest.
                 </p>
-                {/* TODO: Screenshot of Patient Details Object Browser */}
+                <p>
+                  <img alt="" src={screenshotUrl('Patient_Details_Object_Browser')}
+                    className="img-fluid img-thumbnail rounded mx-auto d-block" />
+                </p>
                 <p>
                   To delete a patient, click its "Delete" button. This will open a modal dialog asking you to confirm that you
                   would like to delete the patient. After clicking the "Delete" button to confirm, the patient will be
                   permanently deleted.  This cannot be undone.
+                </p>
+                <p>
+                  <img alt="" src={screenshotUrl('Delete_Patient')}
+                    className="img-fluid img-thumbnail rounded mx-auto d-block" />
                 </p>
               </div>
 
@@ -1274,7 +1487,10 @@ export default class UserGuide extends Component {
                   the same as your CDS Authoring Tool username and password). After you authenticate, you will see a new button
                   titled "Execute CQL on Selected Patients".
                 </p>
-                {/* TODO: Screenshot of Authenticating VSAC? */}
+                <p>
+                  <img alt="" src={screenshotUrl('Select_Test_Patients')}
+                    className="img-fluid img-thumbnail rounded mx-auto d-block" />
+                </p>
                 <p>
                   To run your CDS artifact against your test patients, select the patients you want to test by checking the box
                   to the left of each patient's name. Once you've chosen the first test patient, you can only select other
@@ -1282,7 +1498,10 @@ export default class UserGuide extends Component {
                   versions of FHIR in a single test run. After selecting the patients you want to test click the "Execute CQL on
                   Selected Patients" button to open the testing details modal dialog.
                 </p>
-                {/* TODO: Screenshot of Selecting Patients and Clicking the Button */}
+                <p>
+                  <img alt="" src={screenshotUrl('Test_Execution_Details')}
+                    className="img-fluid img-thumbnail rounded mx-auto d-block" />
+                </p>
                 <p>
                   The testing details dialog contains a dropdown select box allowing authors to choose a FHIR compatible artifact.
                   Choose the artifact you want to test from the list. If you do not see your artifact, it is likely locked to a
@@ -1291,7 +1510,6 @@ export default class UserGuide extends Component {
                   these fields to override the default values. After populating the parameter values (if applicable), click on
                   the "Execute CQL" button to close the dialog and execute the CQL.
                 </p>
-                {/* TODO: Screenshot of testing details */}
               </div>
               <div className="h3-wrapper">
                 <h3 id="Review_Testing_Results">Reviewing Artifact Testing Results</h3>
@@ -1311,11 +1529,20 @@ export default class UserGuide extends Component {
                   </ul>
                   Below the execution results summary, a list of the test patients is displayed.
                 </p>
-                {/* TODO: Screenshot of testing results */}
+                <p>
+                  <img alt="" src={screenshotUrl('Test_Results')}
+                    className="img-fluid img-thumbnail rounded mx-auto d-block" />
+                </p>
                 <p>
                   To see the individual results for test patients, click the right-arrow button <span class="fa fa-chevron-down"
-                  aria-hidden="true"></span> to the right of the patient you want to view results for. This will list the five
-                  most important CQL result elements for the patient:
+                  aria-hidden="true"></span> to the right of the patient you want to view results for.
+                </p>
+                <p>
+                  <img alt="" src={screenshotUrl('Test_Results_Details')}
+                    className="img-fluid img-thumbnail rounded mx-auto d-block" />
+                </p>
+                <p>
+                  This lists the five most important CQL result elements for the patient:
                   <ul>
                     <li>
                       <strong>MeetsInclusionCriteria</strong>: A green checkmark <span class="fa fa-check boolean-check"
@@ -1342,7 +1569,6 @@ export default class UserGuide extends Component {
                       otherwise the phrase "No Value" is displayed.
                     </li>
                   </ul>
-                  {/* TODO: Screenshot of individual testing results */}
                 </p>
               </div>
             </div>
