@@ -8,10 +8,6 @@ function screenshotUrl(name) {
   return `${process.env.PUBLIC_URL}/assets/images/screenshots/${name}.png`;
 }
 
-/*
-<p><img alt="" src={screenshotUrl('')} className="img-fluid img-thumbnail rounded mx-auto d-block" /></p>
-*/
-
 export default class UserGuide extends Component {
   componentDidMount() {
     tocbot.init({
@@ -79,7 +75,7 @@ export default class UserGuide extends Component {
             </p>
 
             <div className="h2-wrapper">
-              <h2 id="Starting">Starting with the CDS Authoring Tool</h2>
+              <h2 id="Starting">1. Starting with the CDS Authoring Tool</h2>
               <p>
                 Before you can build CDS artifacts in the CDS Authoring Tool, you must have two accounts:
                 <ol>
@@ -88,7 +84,7 @@ export default class UserGuide extends Component {
                 </ol>
               </p>
               <div className="h3-wrapper">
-                <h3 id="Requesting_CDS_AT_Account">Requesting a CDS Authoring Tool Account</h3>
+                <h3 id="Requesting_CDS_AT_Account">1.1 Requesting a CDS Authoring Tool Account</h3>
                 <p>
                   You must request a CDS Authoring Tool account in order to log into the CDS Authoring Tool.  This account
                   provides you with your own space within the CDS Authoring Tool to create and manage CDS artifacts.
@@ -107,7 +103,7 @@ export default class UserGuide extends Component {
               </div>
 
               <div className="h3-wrapper">
-                <h3 id="Requesting_UTS_Account">Requesting a UMLS Terminology Services Account</h3>
+                <h3 id="Requesting_UTS_Account">1.2 Requesting a UMLS Terminology Services Account</h3>
                 <p>
                   UMLS Terminology Services accounts are managed by the National Library of Medicine (NLM).  This account
                   is used within the CDS Authoring Tool to access services provided by the Value Set Authority Center (VSAC).
@@ -131,7 +127,7 @@ export default class UserGuide extends Component {
               </div>
 
               <div className="h3-wrapper">
-                <h3 id="Logging_In">Logging In to the CDS Authoring Tool</h3>
+                <h3 id="Logging_In">1.3 Logging In to the CDS Authoring Tool</h3>
                 <p>
                   Once you have a CDS Authoring Tool account, you can log in to start creating and managing CDS artifacts.
                   To log in, navigate to the CDS Authoring Tool home page and click the "Login" button in the Clinical Decision
@@ -155,7 +151,7 @@ export default class UserGuide extends Component {
             </div>
 
             <div className="h2-wrapper">
-              <h2 id="Creating_and_Managing_Artifacts">Creating and Managing Artifacts</h2>
+              <h2 id="Creating_and_Managing_Artifacts">2. Creating and Managing Artifacts</h2>
               <p>
                 You can create and manage CDS Artifacts by clicking the "Artifacts" link in the Clinical Decision Support
                 Authoring banner near the top of the page.  This will bring you to the "Artifacts" view that contains a
@@ -171,7 +167,7 @@ export default class UserGuide extends Component {
                 Connect Repository.
               </p>
               <div className="h3-wrapper">
-                <h3 id="Creating_Artifacts">Creating New Artifacts</h3>
+                <h3 id="Creating_Artifacts">2.1 Creating New Artifacts</h3>
                 <p>
                   To create a new artifact, click the "Create New Artifact" button in the "Artifacts" view.  This will reveal
                   a form, allowing you to enter an artifact name and version.  There are no specific rules about artifact names
@@ -193,7 +189,7 @@ export default class UserGuide extends Component {
               </div>
 
               <div className="h3-wrapper">
-                <h3 id="Managing_Artifacts">Managing Existing Artifacts</h3>
+                <h3 id="Managing_Artifacts">2.2 Managing Existing Artifacts</h3>
                 <p>
                   The "Artifacts" view contains a list of existing artifacts, showing the following information and controls
                   for each artifact:
@@ -225,7 +221,7 @@ export default class UserGuide extends Component {
             </div>
 
             <div className="h2-wrapper">
-              <h2 id="Building_Artifacts">Building Artifacts</h2>
+              <h2 id="Building_Artifacts">3. Building Artifacts</h2>
               <p>
                 The first step in building an artifact is to create a blank artifact. If you have not yet done this, see the
                 previous section, <a href="#Managing_Artifacts">Creating and Managing Artifacts</a>. Once you've created an
@@ -261,7 +257,7 @@ export default class UserGuide extends Component {
               </p>
 
               <div className="h3-wrapper">
-                <h3 id="Element_Picker">Creating and Editing Elements</h3>
+                <h3 id="Element_Picker">3.1 Creating and Editing Elements</h3>
                 <p>
                   The CDS Authoring Tool allows authors to create CDS by building and combining "elements" in specific contexts.
                   Elements describe the criteria that is used to determine if a given patient qualifies for a CDS recommendation
@@ -301,7 +297,7 @@ export default class UserGuide extends Component {
                 {/* TODO: Screenshot of Completed Element  */}
 
                 <div className="h4-wrapper">
-                  <h4 id="Select_Element_Type">Select an Element Type</h4>
+                  <h4 id="Select_Element_Type">3.1.1 Select an Element Type</h4>
                   <p>
                     The first step to create an element is to select the element's type.  The element type will determine what
                     kind of data the element retrieves from the patient record. To select an element type, click in the dropdown
@@ -338,7 +334,7 @@ export default class UserGuide extends Component {
                 </div>
 
                 <div className="h4-wrapper">
-                  <h4 id="Associate_Element">Associate the Element</h4>
+                  <h4 id="Associate_Element">3.1.2 Associate the Element</h4>
                   <p>
                     After choosing a type, you may need to associate it with a Value Set or Code. If you see a button labeled
                     "Authenticate VSAC", "Add Value Set", or "Add Code", then you have selected an element type which requires you
@@ -371,7 +367,7 @@ export default class UserGuide extends Component {
                 </div>
 
                 <div className="h4-wrapper">
-                  <h4 id="Add_Value_Set">Add Value Set</h4>
+                  <h4 id="Add_Value_Set">3.1.3 Add Value Set</h4>
                   <p>
                     In the CDS Authoring Tool, authors use value sets to indicate a grouping of codes that should be used to
                     find matching items in a patient's health record. For example, a "Diabetes" value set might contain many
@@ -447,7 +443,7 @@ export default class UserGuide extends Component {
                 </div>
 
                 <div className="h4-wrapper">
-                  <h4 id="Add_Code">Add Code</h4>
+                  <h4 id="Add_Code">3.1.4 Add Code</h4>
                   <p>
                     In cases where only a certain code should be used to match patient data for an element, authors can
                     associate a single code with an element without using a value set. This feature can also be used to support
@@ -509,7 +505,7 @@ export default class UserGuide extends Component {
                 </div>
 
                 <div className="h4-wrapper">
-                  <h4 id="Provide_Additional_Information">Provide Additional Information</h4>
+                  <h4 id="Provide_Additional_Information">3.1.5 Provide Additional Information</h4>
                   <p>
                     All elements provide user-configurable fields for the element name as well as a comment. In some cases, the
                     element name may be pre-populated, but you may change the name if desired. It's considered a best practice
@@ -567,7 +563,7 @@ export default class UserGuide extends Component {
                 </div>
 
                 <div className="h4-wrapper">
-                  <h4 id="Modify_Results">Modify Results</h4>
+                  <h4 id="Modify_Results">3.1.6 Modify Results</h4>
                   <p>
                     Once you have the core element defined, including associated value sets and codes (if applicable), its
                     return type will be displayed near the bottom of the element. For elements with FHIR-based types (e.g.,
@@ -630,7 +626,7 @@ export default class UserGuide extends Component {
               </div>
 
               <div className="h3-wrapper">
-                <h3 id="Deleting_Elements">Deleting Elements</h3>
+                <h3 id="Deleting_Elements">3.2 Deleting Elements</h3>
                 <p>
                   The CDS Authoring Tool allows authors to delete elements they no longer need or use. To delete an element,
                   click the "X" button in the top-right corner of the element's box. Currently, the CDS Authoring Tool does not
@@ -648,7 +644,7 @@ export default class UserGuide extends Component {
               </div>
 
               <div className="h3-wrapper">
-                <h3 id="Deleting_Elements">Collapsing Elements</h3>
+                <h3 id="Collapsing_Elements">3.3 Collapsing Elements</h3>
                 <p>
                   Because elements can contain a lot of detail, they may take up a large amount of space on the screen. In order
                   to allow for a more streamlined view of the artifact's logic, the CDS Authoring Tool allows authors to collapse
@@ -667,7 +663,7 @@ export default class UserGuide extends Component {
               </div>
 
               <div className="h3-wrapper">
-                <h3 id="Combining_Elements">Combining Elements</h3>
+                <h3 id="Combining_Elements">3.4 Combining Elements</h3>
                 <p>
                   While elements can be useful on their own, usually they are combined with other elements in order to represent
                   more complex ideas or requirements. The CDS Authoring Tool supports the following ways of combining elements:
@@ -681,7 +677,7 @@ export default class UserGuide extends Component {
                 </p>
 
                 <div className="h4-wrapper">
-                  <h4 id="And">And</h4>
+                  <h4 id="And">3.3.1 And</h4>
                   <p>
                     Combining elements using "And" indicates that each of the elements should evaluate to a "true" result in order
                     for the logic to be satisfied. For example, you might combine an Age Range element and a Gender element using
@@ -711,7 +707,7 @@ export default class UserGuide extends Component {
                 </div>
 
                 <div className="h4-wrapper">
-                  <h4 id="Or">Or</h4>
+                  <h4 id="Or">3.3.2 Or</h4>
                   <p>
                     Combining elements using "Or" indicates that at least one of the elements should evaluate to a "true" result
                     in order for the logic to be satisfied. For example, you might combine an LDL-c element and a Diabetes element
@@ -741,7 +737,7 @@ export default class UserGuide extends Component {
                 </div>
 
                 <div className="h4-wrapper">
-                  <h4 id="Indented_Group">Indented Group</h4>
+                  <h4 id="Indented_Group">3.3.3 Indented Group</h4>
                   <p>
                     Sometimes authors need to create complex logic that requires the use of "And" and "Or" at the same time.
                     This is accomplished by creating and combining sub-groups of elements. For example, you might want to
@@ -773,7 +769,7 @@ export default class UserGuide extends Component {
                 </div>
 
                 <div className="h4-wrapper">
-                  <h4 id="Intersect">Intersect</h4>
+                  <h4 id="Intersect">3.3.4 Intersect</h4>
                   <p>
                     Combining elements using "Intersect" indicates that each of the elements should be inspected and only those
                     items that match every element should be included in the intersection results. For example, if you combine
@@ -796,7 +792,7 @@ export default class UserGuide extends Component {
                 </div>
 
                 <div className="h4-wrapper">
-                  <h4 id="Union">Union</h4>
+                  <h4 id="Union">3.3.5 Union</h4>
                   <p>
                     Combining elements using "Union" indicates that all of the items across all of the elements should be
                     combined together into a single set of items. For example, combining an LDL-c element with an HDL-c element
@@ -817,7 +813,7 @@ export default class UserGuide extends Component {
               </div>
 
               <div className="h3-wrapper">
-                <h3 id="Inclusions">Inclusions Tab</h3>
+                <h3 id="Inclusions">3.5 Inclusions Tab</h3>
                 <p>
                   Authors use the Inclusions tab to specify the criteria that patients should meet in order to receive a
                   recommendation from the artifact. If a patient meets the criteria in the Inclusions tab and does not meet any
@@ -835,7 +831,7 @@ export default class UserGuide extends Component {
               </div>
 
               <div className="h3-wrapper">
-                <h3 id="Exclusions">Exclusions Tab</h3>
+                <h3 id="Exclusions">3.6 Exclusions Tab</h3>
                 <p>
                   Authors use the Exclusions tab to specify criteria that should disqualify patients from receiving a
                   recommendation from the artifact. Even if a patient meets the criteria in the Inclusions tab, the criteria in
@@ -854,7 +850,7 @@ export default class UserGuide extends Component {
               </div>
 
               <div className="h3-wrapper">
-                <h3 id="Subpopulations">Subpopulations Tab</h3>
+                <h3 id="Subpopulations">3.7 Subpopulations Tab</h3>
                 <p>
                   Authors use the Subpopulations tab to specify criteria that groups patients into subpopulation that can be
                   associated with more specific recommendations. While subpopulations are not required, they can be useful for
@@ -873,7 +869,7 @@ export default class UserGuide extends Component {
               </div>
 
               <div className="h3-wrapper">
-                <h3 id="Base_Elements">Base Elements Tab</h3>
+                <h3 id="Base_Elements">3.8 Base Elements Tab</h3>
                 <p>
                   Authors use Base Elements to create elements that can be re-used across several elements and contexts
                   within the artifact. This allows for common elements to be defined once and used, as well as further modified,
@@ -884,7 +880,7 @@ export default class UserGuide extends Component {
                   <img alt="" src={screenshotUrl('Base_Elements')} className="img-fluid img-thumbnail rounded mx-auto d-block" />
                 </p>
                 <div className="h4-wrapper">
-                  <h4 id="Creating_Base_Elements">Creating Base Elements</h4>
+                  <h4 id="Creating_Base_Elements">3.8.1 Creating Base Elements</h4>
                   <p>
                     Authors specify Base Elements by creating and (optionally) combining elements as described in the sections
                     above. Since these elements are not in the context of specific logical constructs, they are not required to
@@ -896,7 +892,7 @@ export default class UserGuide extends Component {
                   </p>
                 </div>
                 <div className="h4-wrapper">
-                  <h4 id="Using_Base_Elements">Using Base Elements</h4>
+                  <h4 id="Using_Base_Elements">3.8.2 Using Base Elements</h4>
                   <p>
                     Authors can reference and use Base Elements in the Inclusions tab, Exclusions tab, and Subpopulations tab.
                     To use a base element, it must be created in the Base Elements tab first. After that, use it in any valid
@@ -955,7 +951,7 @@ export default class UserGuide extends Component {
               </div>
 
               <div className="h3-wrapper">
-                <h3 id="Recommendations">Recommendations Tab</h3>
+                <h3 id="Recommendations">3.9 Recommendations Tab</h3>
                 <p>
                   Recommendations are the resulting notices that should be delivered to the clinician after the CDS
                   Artifact is executed. Recommendations are written as free text and can have an accompanying Rationale.
@@ -969,7 +965,7 @@ export default class UserGuide extends Component {
                 </p>
 
                 <div className="h4-wrapper">
-                  <h4 id="Creating_Recommendations">Creating Recommendations</h4>
+                  <h4 id="Creating_Recommendations">3.9.1 Creating Recommendations</h4>
                   <p>
                     A blank recommendation is included in the Recommendations tab by default. To create additional
                     recommendations, click the "New recommendation" button. This will add a blank recommendation below the last
@@ -988,7 +984,7 @@ export default class UserGuide extends Component {
                 </div>
 
                 <div className="h4-wrapper">
-                  <h4 id="Associating_Recommendations">Associating Recommendations with Subpopulations</h4>
+                  <h4 id="Associating_Recommendations">3.9.2 Associating Recommendations with Subpopulations</h4>
                   <p>
                     For CDS artifacts that may deliver more than one recommendation, authors must associate recommendations with
                     the subpopulations to which they apply. The CDS Authoring Tool includes the following subpopulations by
@@ -1022,7 +1018,7 @@ export default class UserGuide extends Component {
                 </div>
 
                 <div className="h4-wrapper">
-                  <h4 id="Managing_Recommendations">Re-ordering and Deleting Recommendations</h4>
+                  <h4 id="Managing_Recommendations">3.9.3 Re-ordering and Deleting Recommendations</h4>
                   <p>
                     Since patients will receive the first recommendation that applies to them, the order that recommendations
                     are listed will affect how the CDS artifact behaves. In some cases, authors may need to re-order their
@@ -1044,7 +1040,7 @@ export default class UserGuide extends Component {
               </div>
 
               <div className="h3-wrapper">
-                <h3 id="Parameters">Parameters Tab</h3>
+                <h3 id="Parameters">3.10 Parameters Tab</h3>
                 <p>
                   Parameters allow authors to create named elements whose values can be supplied by the CDS execution environment
                   at run-time. Authors can specify default values for parameters, but are not required to do so. Parameters
@@ -1061,7 +1057,7 @@ export default class UserGuide extends Component {
                 </p>
 
                 <div className="h4-wrapper">
-                  <h4 id="Creating_Parameters">Creating Parameters</h4>
+                  <h4 id="Creating_Parameters">3.10.1 Creating Parameters</h4>
                   <p>
                     Authors can define as many parameters as they'd like. To create a parameter, click the "New parameter"
                     button. An empty parameter box will be displayed with fields for the parameter name, user-provided comments,
@@ -1091,7 +1087,7 @@ export default class UserGuide extends Component {
                 </div>
 
                 <div className="h4-wrapper">
-                  <h4 id="Using_Parameters">Using Parameters</h4>
+                  <h4 id="Using_Parameters">3.10.2 Using Parameters</h4>
                   <p>
                     Authors can reference and use Parameters in the Inclusions tab, Exclusions tab, Subpopulations tab, and
                     Handle Errors tab. To use a parameter, it must be created in the Parameters tab first. After that, use it in
@@ -1125,7 +1121,7 @@ export default class UserGuide extends Component {
                 </div>
 
                 <div className="h4-wrapper">
-                  <h4 id="Deleting_Parameters">Deleting Parameters</h4>
+                  <h4 id="Deleting_Parameters">3.10.3 Deleting Parameters</h4>
                   <p>
                     Authors may want to delete parameters if they were entered by mistake or are no longer applicable.
                     To do this, click the "X" button in the parameter element box. This will immediately delete the parameter
@@ -1141,7 +1137,7 @@ export default class UserGuide extends Component {
               </div>
 
               <div className="h3-wrapper">
-                <h3 id="Handle_Errors">Handle Errors Tab</h3>
+                <h3 id="Handle_Errors">3.11 Handle Errors Tab</h3>
                 <p>
                   Authors use the "Handle Errors" tab to define what messages should be provided to end users when certain error
                   conditions arise. For example, an author might want to return an error message if required data is missing from
@@ -1161,7 +1157,7 @@ export default class UserGuide extends Component {
                 </p>
 
                 <div className="h4-wrapper">
-                  <h4 id="Error_Conditions">Error Conditions</h4>
+                  <h4 id="Error_Conditions">3.11.1 Error Conditions</h4>
                   <p>
                     Authors specify error handling by chaining together conditional "If" statements, indicating that if a certain
                     condition (or set of conditions) is met, then a certain error message should be returned. By default, the
@@ -1188,7 +1184,7 @@ export default class UserGuide extends Component {
                 </div>
 
                 <div className="h4-wrapper">
-                  <h4 id="Handle_Errors_If">If Condition Then</h4>
+                  <h4 id="Handle_Errors_If">3.11.2 If Condition Then</h4>
                   <p>
                     To setup the simplest error handling case, choose a condition from the dropdown menu below the "If" label
                     in the "Errors" box. After you've selected the condition on which the error should be returned, enter the
@@ -1201,7 +1197,7 @@ export default class UserGuide extends Component {
                 </div>
 
                 <div className="h4-wrapper">
-                  <h4 id="Handle_Errors_And_Also_If">And Also If...</h4>
+                  <h4 id="Handle_Errors_And_Also_If">3.11.3 And Also If...</h4>
                   <p>
                     To create more complex conditional logic, click on the "And Also If..." button. This allows you to specify
                     more detailed error handling for when the top-level condition is met. Clicking the "And Also If..." button
@@ -1211,7 +1207,7 @@ export default class UserGuide extends Component {
                 </div>
 
                 <div className="h4-wrapper">
-                  <h4 id="Handle_Or_Else_If">Or Else If...</h4>
+                  <h4 id="Handle_Or_Else_If">3.11.4 Or Else If...</h4>
                   <p>
                     To create alternate error messages for other conditions, click on the "Or Else If..." button. This allows
                     you to choose a condition that will be evaluated only if none of the other "If" or "Else if" conditions
@@ -1221,7 +1217,7 @@ export default class UserGuide extends Component {
                 </div>
 
                 <div className="h4-wrapper">
-                  <h4 id="Handle_Else">Else</h4>
+                  <h4 id="Handle_Else">3.11.5 Else</h4>
                   <p>
                     The "Else" text box allows authors to specify an error if no other error messages were generated. This is
                     rarely used at the top-level, as most CDS should not return any error if everything runs smoothly. In nested
@@ -1233,7 +1229,7 @@ export default class UserGuide extends Component {
               </div>
 
               <div className="h3-wrapper">
-                <h3 id="External_CQL">External CQL Tab</h3>
+                <h3 id="External_CQL">3.12 External CQL Tab</h3>
                 <p>
                   Authors can use the "External CQL" tab to upload CQL files that contain logic that the author wants to use in
                   the current CDS artifact. This is useful when you want to re-use existing logic rather than re-write it or
@@ -1252,7 +1248,7 @@ export default class UserGuide extends Component {
                 </p>
 
                 <div className="h4-wrapper">
-                  <h4 id="Uploading_External_CQL">Uploading External CQL</h4>
+                  <h4 id="Uploading_External_CQL">3.12.1 Uploading External CQL</h4>
                   <p>
                     The CQL Authoring Tool allows CQL files to be uploaded individually or as a group of files contained in a
                     zip file. CQL files that are uploaded individually must not depend on any external libraries aside from
@@ -1277,7 +1273,7 @@ export default class UserGuide extends Component {
 
 
                 <div className="h4-wrapper">
-                  <h4 id="Reviewing_External_CQL">Managing External CQL</h4>
+                  <h4 id="Reviewing_External_CQL">3.12.2 Managing External CQL</h4>
                   <p>
                     The "External CQL" tab contains a list of uploaded CQL libraries, showing the following information and
                     controls for each artifact:
@@ -1322,7 +1318,7 @@ export default class UserGuide extends Component {
                 </div>
 
                 <div className="h4-wrapper">
-                  <h4 id="Using_External_CQL_Elements">Using CQL Elements</h4>
+                  <h4 id="Using_External_CQL_Elements">3.12.3 Using External CQL Elements</h4>
                   <p>
                     Authors can reference and use parameters and definitions from external CQL libraries in the Inclusions tab,
                     Exclusions tab, Subpopulations tab, and Base Elements tab. Currently, the CDS Authoring Tool does not support
@@ -1358,7 +1354,7 @@ export default class UserGuide extends Component {
             </div>
 
             <div className="h2-wrapper">
-              <h2 id="Testing_Artifacts">Testing Artifacts</h2>
+              <h2 id="Testing_Artifacts">4. Testing Artifacts</h2>
               <p>
                 While CDS artifacts should always be tested in the environment where they are deployed, testing is an important
                 part of the artifact development process as well. Testing CDS logic before it is deployed in a test environment
@@ -1381,7 +1377,7 @@ export default class UserGuide extends Component {
               </p>
 
               <div className="h3-wrapper">
-                <h3 id="Uploading_Test_Patients">Uploading Test Patients</h3>
+                <h3 id="Uploading_Test_Patients">4.1 Uploading Test Patients</h3>
                 <p>
                   The first step in testing an artifact is to upload synthetic patient data to the CDS Authoring Tool. The CDS
                   Authoring Tool environment is not appropriate for real patient data (whether de-identified or not). Only
@@ -1420,7 +1416,7 @@ export default class UserGuide extends Component {
               </div>
 
               <div className="h3-wrapper">
-                <h3 id="Managing_Test_Patients">Managing Test Patients</h3>
+                <h3 id="Managing_Test_Patients">4.2 Managing Test Patients</h3>
                 <p>
                   The "Testing" tab contains a list of uploaded synthetic test patients, showing the following information and
                   controls for each patient:
@@ -1473,7 +1469,7 @@ export default class UserGuide extends Component {
               </div>
 
               <div className="h3-wrapper">
-                <h3 id="Testing_Artifacts">Testing Artifacts</h3>
+                <h3 id="Test_Execution">4.3 Test Execution</h3>
                 <p>
                   Once your test patients have been uploaded (see section above), you can run any compatible CDS artifact against
                   them. Compatible artifacts are artifacts that can be exported using the same version of FHIR as the patient data
@@ -1512,7 +1508,7 @@ export default class UserGuide extends Component {
                 </p>
               </div>
               <div className="h3-wrapper">
-                <h3 id="Review_Testing_Results">Reviewing Artifact Testing Results</h3>
+                <h3 id="Test_Execution_Results">4.4 Test Execution Results</h3>
                 <p>
                   After executing the CQL, the results will be displayed on the main testing page under the dropzone in a box
                   labeled "CQL Execution Results". Under the label, high-level metadata will be shown, including:
