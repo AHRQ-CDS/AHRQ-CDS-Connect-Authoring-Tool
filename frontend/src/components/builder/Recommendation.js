@@ -22,8 +22,10 @@ export default class Recommendation extends Component {
       grade: props.rec.grade,
       text: props.rec.text,
       rationale: props.rec.rationale,
+      comment: props.rec.comment,
       showSubpopulations: !!((props.rec.subpopulations && props.rec.subpopulations.length)),
       showRationale: !!props.rec.rationale.length,
+      showComment: !!((props.rec.comment && props.rec.comment.length)),
     };
   }
 
@@ -236,7 +238,24 @@ export default class Recommendation extends Component {
                 onChange={this.handleChange}
               />
             </div>
-          :
+          :null}
+
+          {this.state.showComment ?
+            <div className="recommendation__comment">
+              <div className="card-element__label">Comment...</div>
+                <textarea
+                  className="card-element__textarea"
+                  name="comment"
+                  aria-label="Comment"
+                  title="Comment text"
+                  placeholder='Add an optional comment'
+                  value={this.state.comment}
+                  onChange={this.handleChange}
+                />
+            </div>
+          : null}
+
+          {this.state.showRationale ? null :
             <button
               className="button primary-button recommendation__add-rationale"
               aria-label="Add rationale"
@@ -247,13 +266,24 @@ export default class Recommendation extends Component {
 
           {this.shouldShowSubpopulations() ? null :
             <button
-              className="button primary-button pull-right"
+              className="button primary-button"
               aria-label="Add subpopulation"
               name="subpopulation"
               onClick={this.revealSubpopulations}>
               Add subpopulation
             </button>
           }
+
+          {this.state.showComment ? null :
+            <button
+              className="button primary-button"
+              aria-label="Show Comments"
+              name="comments"
+              onClick={() => this.setState({ showComment: !this.state.showComment })}>
+              Show Comments
+            </button>
+          }
+
         </div>
       </div>
     );

@@ -13,7 +13,8 @@ const rec = {
   grade: 'A',
   subpopulations: [subpop],
   text: 'recommendation text',
-  rationale: 'rationale text'
+  rationale: 'rationale text',
+  comment: 'comment text',
 };
 
 describe('<Recommendation />', () => {
@@ -56,6 +57,12 @@ describe('<Recommendation />', () => {
     expect(getByLabelText('Rationale')).toHaveValue('rationale text');
   });
 
+  it('displays the comment text', () => {
+    const { getByLabelText } = renderComponent();
+
+    expect(getByLabelText('Comment')).toHaveValue('comment text');
+  });
+
   it('displays the adds rationale button when there is no rationale', () => {
     const { getByLabelText, queryByLabelText } = renderComponent({
       rec: {
@@ -70,6 +77,22 @@ describe('<Recommendation />', () => {
 
     expect(queryByLabelText('Rationale')).not.toBeNull();
   });
+
+  it('displays the add comment button when there is no rationale', () => {
+    const { getByLabelText, queryByLabelText } = renderComponent({
+    rec: {
+        ...rec,
+        comment: ''
+      }
+    });
+
+    expect(queryByLabelText('Comment')).toBeNull();
+
+    fireEvent.click(getByLabelText('Show Comments'));
+
+    expect(queryByLabelText('Comment')).not.toBeNull();
+  });
+
 
   it('can edit recommendation text', () => {
     const newText = 'This is a test.';
@@ -90,6 +113,17 @@ describe('<Recommendation />', () => {
     fireEvent.change(getByLabelText('Rationale'), { target: { name: 'rationale', value: newText } });
 
     expect(onUpdate).toBeCalledWith(rec.uid, { rationale: newText });
+  });
+
+  it('can edit comment text', () => {
+    const newText = 'This is a test comment.';
+    const onUpdate = jest.fn();
+
+    const { getByLabelText } = renderComponent({ onUpdate });
+
+    fireEvent.change(getByLabelText('Comment'), { target: { name: 'comment', value: newText } });
+
+    expect(onUpdate).toBeCalledWith(rec.uid, { comment: newText });
   });
 
   it('renders subpopulations', () => {

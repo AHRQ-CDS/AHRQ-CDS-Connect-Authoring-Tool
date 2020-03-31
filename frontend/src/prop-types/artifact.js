@@ -52,6 +52,7 @@ const artifactProps = {
     grade: PropTypes.string,
     rationale: PropTypes.string,
     text: PropTypes.string,
+    comment: PropTypes.string,
     subpopulations: PropTypes.arrayOf(PropTypes.shape(subpopulationsProps))
   })),
   subpopulations: PropTypes.arrayOf(PropTypes.shape(subpopulationsProps)),

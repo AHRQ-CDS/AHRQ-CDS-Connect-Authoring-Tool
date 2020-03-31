@@ -57,7 +57,8 @@ export default class Recommendations extends Component {
       grade: 'A',
       subpopulations: [],
       text: '',
-      rationale: ''
+      rationale: '',
+      comment: ''
     };
     const newRecs = this.props.artifact.recommendations.concat([newRec]);
 

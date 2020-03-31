@@ -765,6 +765,17 @@ class CqlArtifact {
     return ejs.render(templateMap.BaseTemplate, { element_name: 'Rationale', cqlString: rationaleText });
   }
 
+  comment() {
+    let commentText = this.recommendations.map((recommendation) => {
+      const conditional = constructOneRecommendationConditional(recommendation);
+      return conditional + (_.isEmpty(recommendation.comment)
+        ? 'null'
+        : `'${sanitizeCQLString(recommendation.comment)}'`);
+    });
+    commentText = _.isEmpty(commentText) ? 'null' : commentText.join('\n  else ').concat('\n  else null');
+    return ejs.render(templateMap.BaseTemplate, { element_name: 'Comment', cqlString: commentText });
+  }
+
   errors() {
     this.errorStatement.statements.forEach((statement, index) => {
       this.errorStatement.statements[index].condition.label = sanitizeCQLString(statement.condition.label);
@@ -791,7 +802,7 @@ class CqlArtifact {
     const bodyString = this.body();
     const headerString = this.header();
     let fullString = `${headerString}${bodyString}\n${this.population()}\n${this.recommendation()}\n` +
-      `${this.rationale()}${this.errors()}`;
+      `${this.rationale()}\n${this.comment()}${this.errors()}`;
     fullString = fullString.replace(/\r\n|\r|\n/g, '\r\n'); // Make all line endings CRLF
     return fullString;
   }
