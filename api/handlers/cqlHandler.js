@@ -1150,7 +1150,21 @@ function convertToElm(artifacts, callback /* (error, elmFiles) */) {
 }
 
 function makeCQLtoELMRequest(files, fileStreams, callback) {
-  const requestEndpoint = `${config.get('cqlToElm.url')}?result-types=true&signatures=All`;
+  // Request endpoint query parameters are being updated according to CPG guidance
+  // http://build.fhir.org/ig/HL7/cqf-recommendations/documentation-libraries.html
+  const requestParams = [
+    'annotations=true',
+    'locators=true',
+    'disable-list-demotion=true',
+    'disable-list-promotion=true',
+    'disable-method-invocation=true',
+    'date-range-optimization=true',
+    'result-types=true',
+    'detailed-errors=false',
+    'disable-list-traversal=false',
+    'signatures=All'
+  ]
+  const requestEndpoint = `${config.get('cqlToElm.url')}?${requestParams.join('&')}`;
   // NOTE: the request isn't posted until the next event loop, so we can modify it after calling request.post
   const cqlReq = request.post(requestEndpoint, (err2, resp, body) => {
     if (err2) {
