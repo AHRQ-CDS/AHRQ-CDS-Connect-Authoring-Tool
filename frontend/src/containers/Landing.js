@@ -85,12 +85,23 @@ class Landing extends Component {
               <div className="description">
                 {whatsNew[whatsNewIndex].description}
 
-                {whatsNew[whatsNewIndex].link !== '' &&
+                {whatsNew[whatsNewIndex].link !== '' && whatsNew[whatsNewIndex].linkExternal !== true &&
                   <a
                     className={`link feature-${whatsNewIndex}`}
                     href={whatsNew[whatsNewIndex].link}
                   >
                     {whatsNew[whatsNewIndex].linkText}
+                  </a>
+                }
+                {whatsNew[whatsNewIndex].link !== '' && whatsNew[whatsNewIndex].linkExternal === true &&
+                  <a
+                    target="_blank"
+                    rel="nofollow noopener noreferrer"
+                    onClick={onVisitExternalLink}
+                    className={`link feature-${whatsNewIndex}`}
+                    href={whatsNew[whatsNewIndex].link}
+                  >
+                    {whatsNew[whatsNewIndex].linkText} <i className="fa fa-external-link"></i>
                   </a>
                 }
               </div>
