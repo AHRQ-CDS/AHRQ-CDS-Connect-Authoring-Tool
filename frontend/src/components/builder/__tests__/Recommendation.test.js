@@ -78,7 +78,7 @@ describe('<Recommendation />', () => {
     expect(queryByLabelText('Rationale')).not.toBeNull();
   });
 
-  it('displays the add comment button when there is no rationale', () => {
+  it('displays comment input after clicking show comments', () => {
     const { getByLabelText, queryByLabelText } = renderComponent({
     rec: {
         ...rec,
