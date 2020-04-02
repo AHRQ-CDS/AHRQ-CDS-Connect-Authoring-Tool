@@ -6,6 +6,7 @@ import Modal from 'react-modal';
 
 import StyledSelect from '../elements/StyledSelect';
 import { getFieldWithId, getFieldWithType } from '../../utils/instances';
+import { onVisitExternalLink } from '../../utils/handlers';
 
 export default class CodeSelectModal extends Component {
   constructor(props) {
@@ -199,7 +200,7 @@ export default class CodeSelectModal extends Component {
 
   render() {
     const codeInputLabel = 'Enter code';
-    const otherInputLabel = 'Enter system URI or OID';
+    const otherInputLabel = 'Enter system canonical URL';
     let buttonLabels = {
       openButtonText: 'Add Code',
       closeButtonText: 'Close'
@@ -247,6 +248,13 @@ export default class CodeSelectModal extends Component {
             </header>
 
             <main className="modal__body">
+              {this.state.displayOtherInput
+                && <div className="notification">
+                      <FontAwesome name="exclamation-circle" />
+                      Code systems should use their canonical URL.
+                      See <a href="http://build.fhir.org/ig/HL7/cqf-recommendations/documentation-libraries.html" target="_blank" rel="noopener noreferrer" onClick={onVisitExternalLink}>FHIR Clinical Guidelines</a> for more information.
+                    </div>}
+  
               <div className="element-modal__search">
                 <input
                   className="element-modal__search-code"

@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import FontAwesome from 'react-fontawesome';
 import _ from 'lodash';
+import { onVisitExternalLink } from '../../utils/handlers';
 
 export default class NewArtifactForm extends Component {
   constructor(props) {
@@ -28,6 +30,12 @@ export default class NewArtifactForm extends Component {
 
     return (
       <form className="form__inline" aria-label="New Artifact Form" onSubmit={this.handleAddArtifact}>
+        {this.state.version && !(/^\d+\.\d+\.\d+$/.test(this.state.version))
+          && <div className="notification">
+                <FontAwesome name="exclamation-circle" />
+                Version should follow the Apache APR versioning scheme (e.g., 1.0.0).
+                See <a href="http://build.fhir.org/ig/HL7/cqf-recommendations/documentation-libraries.html" target="_blank" rel="noopener noreferrer" onClick={onVisitExternalLink}>FHIR Clinical Guidelines</a> for more information.
+              </div>}
         <div className="artifact-form__inputs d-flex justify-content-start">
           <div className="form__group p-2">
             <label htmlFor={nameID}>Artifact Name</label>
