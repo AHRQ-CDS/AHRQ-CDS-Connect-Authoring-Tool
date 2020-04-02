@@ -31,6 +31,18 @@ const includeLibrariesStu3 = [
   { name: 'CDS_Connect_Conversions', version: '1', alias: 'Convert' }
 ];
 
+const includeLibrariesR4 = [
+  { name: 'FHIRHelpers', version: '4.0.0', alias: 'FHIRHelpers' },
+  { name: 'CDS_Connect_Commons_for_FHIRv400', version: '1.0.1', alias: 'C3F' },
+  { name: 'CDS_Connect_Conversions', version: '1', alias: 'Convert' }
+];
+
+const includeLibrariesMap = {
+  '1.0.2': includeLibrariesDstu2,
+  '3.0.0': includeLibrariesStu3,
+  '4.0.0': includeLibrariesR4
+};
+
 // A flag to hold the FHIR version, so that it can be used
 // in functions external to the artifact.
 let fhirTarget;
@@ -274,7 +286,8 @@ class CqlArtifact {
     this.name = slug(artifact.name ? artifact.name : 'untitled');
     this.version = artifact.version ? artifact.version : 1;
     this.dataModel = artifact.dataModel;
-    this.includeLibraries = (artifact.dataModel.version === '3.0.0') ? includeLibrariesStu3 : includeLibrariesDstu2;
+    this.includeLibraries =
+      artifact.dataModel.version ? includeLibrariesMap[artifact.dataModel.version] : includeLibrariesR4;
     this.includeLibraries = this.includeLibraries.concat(artifact.externalLibs || []);
     this.context = artifact.context ? artifact.context : 'Patient';
     this.inclusions = artifact.expTreeInclude;
@@ -594,18 +607,18 @@ class CqlArtifact {
           this.setFieldContexts(medicationStatementValueSets, 'MedicationStatement', context);
           break;
         }
-        case 'medicationOrder_vsac': {
-          const medicationOrderValueSets = {
-            id: 'generic_medication_order',
+        case 'medicationRequest_vsac': {
+          const medicationRequestValueSets = {
+            id: 'generic_medication_request',
             valuesets: [],
             concepts: []
           };
-          buildConceptObjectForCodes(field.codes, medicationOrderValueSets.concepts);
-          addValueSets(field, medicationOrderValueSets, 'valuesets');
-          if (fhirTarget.version === '3.0.0') {
-            this.setFieldContexts(medicationOrderValueSets, 'MedicationRequest', context);
+          buildConceptObjectForCodes(field.codes, medicationRequestValueSets.concepts);
+          addValueSets(field, medicationRequestValueSets, 'valuesets');
+          if (fhirTarget.version === '3.0.0' || fhirTarget.version === '4.0.0') {
+            this.setFieldContexts(medicationRequestValueSets, 'MedicationRequest', context);
           } else {
-            this.setFieldContexts(medicationOrderValueSets, 'MedicationOrder', context);
+            this.setFieldContexts(medicationRequestValueSets, 'MedicationOrder', context);
           }
           break;
         }
@@ -709,9 +722,9 @@ class CqlArtifact {
     let expressions = this.contexts.concat(this.conjunctions);
     expressions = expressions.concat(this.conjunction_main);
     return expressions.map((context) => {
-      if (fhirTarget.version === '3.0.0') {
-        if (context.template === 'GenericMedicationOrder') context.template = 'GenericMedicationRequest';
-        if (context.template === 'MedicationOrdersByConcept') context.template = 'MedicationRequestsByConcept';
+      if (fhirTarget.version.startsWith('1.0.')) {
+        if (context.template === 'GenericMedicationRequest') context.template = 'GenericMedicationOrder';
+        if (context.template === 'MedicationRequestsByConcept') context.template = 'MedicationOrdersByConcept';
       }
       if (context.withoutModifiers || context.components) {
         return ejs.render(specificMap[context.template], context);
@@ -801,7 +814,7 @@ class CqlArtifact {
     return {
       name: this.name,
       version: this.version,
-      filename: `${this.name}-v${this.version}`,
+      filename: this.name,
       text: this.toString(),
       type: 'text/plain'
     };
@@ -818,9 +831,9 @@ function applyModifiers(values = [] , modifiers = []) { // default modifiers to 
   return values.map((value) => {
     let newValue = value;
     modifiers.forEach((modifier) => {
-      if (fhirTarget.version === '3.0.0') {
-        if (modifier.id === 'ActiveMedicationOrder') modifier.cqlLibraryFunction = 'C3F.ActiveMedicationRequest';
-        if (modifier.id === 'LookBackMedicationOrder') modifier.cqlLibraryFunction = 'C3F.MedicationRequestLookBack';
+      if (fhirTarget.version.startsWith('1.0.')) {
+        if (modifier.id === 'ActiveMedicationRequest') modifier.cqlLibraryFunction = 'C3F.ActiveMedicationOrder';
+        if (modifier.id === 'LookBackMedicationRequest') modifier.cqlLibraryFunction = 'C3F.MedicationOrderLookBack';
       }
       if (!modifier.cqlLibraryFunction && modifier.values && modifier.values.templateName) {
         modifier.cqlLibraryFunction = modifier.values.templateName;
@@ -1005,7 +1018,7 @@ function objToCql(req, res) {
       libraries.forEach(lib => {
         artifactFromRequest.externalLibs.push({ name: lib.name, version: lib.version, alias: '' });
         const libJson = {
-          filename: `${lib.name}-v${lib.version}`,
+          filename: `${lib.name}`,
           version: lib.version,
           text: lib.details.cqlFileText,
           type: 'text/plain'
@@ -1037,7 +1050,7 @@ function objToELM(req, res) {
       libraries.forEach(lib => {
         artifactFromRequest.externalLibs.push({ name: lib.name, version: lib.version, alias: '' });
         const libJson = {
-          filename: `${lib.name}-v${lib.version}`,
+          filename: `${lib.name}`,
           version: lib.version,
           text: lib.details.cqlFileText,
           type: 'text/plain'
@@ -1103,7 +1116,9 @@ function writeZip(cqlArtifact, externalLibs, writeStream, callback /* (error) */
       archive.append(e.content.replace(/\r\n|\r|\n/g, '\r\n'), { name: `${e.name}.json` });
     });
     let helperPath;
-    if (fhirTarget.version === '3.0.0') {
+    if (fhirTarget.version === '4.0.0') {
+      helperPath = `${__dirname}/../data/library_helpers/CQLFiles/R4`;
+    } else if (fhirTarget.version === '3.0.0') {
       helperPath = `${__dirname}/../data/library_helpers/CQLFiles/STU3`;
     } else {
       helperPath = `${__dirname}/../data/library_helpers/CQLFiles/DSTU2`;
@@ -1122,7 +1137,9 @@ function convertToElm(artifacts, callback /* (error, elmFiles) */) {
 
   // Load all the supplementary CQL files, open file streams to them, and convert to ELM
   let helperPath;
-  if (fhirTarget.version === '3.0.0') {
+  if (fhirTarget.version === '4.0.0') {
+    helperPath = `${__dirname}/../data/library_helpers/CQLFiles/R4`;
+  } else if (fhirTarget.version === '3.0.0') {
     helperPath = `${__dirname}/../data/library_helpers/CQLFiles/STU3`;
   } else {
     helperPath = `${__dirname}/../data/library_helpers/CQLFiles/DSTU2`;

@@ -493,14 +493,18 @@ function performExecuteArtifact(elmFiles, artifactName, params, patients, vsacCr
   const libraries = _.filter(elmFiles, f =>
     f.name.replace(/[\s-\\/]/g, '') !== artifactName.replace(/[\s-\\/]/g, '')).map(f => JSON.parse(f.content));
   const library = new cql.Library(elmFile, new cql.Repository(libraries));
-
   // Set up the parameters
   const cqlExecParams = convertParameters(params);
 
   // Create the patient source
-  const patientSource = (dataModel.version === '3.0.0')
-    ? cqlfhir.PatientSource.FHIRv300()
-    : cqlfhir.PatientSource.FHIRv102();
+  let patientSource;
+  if (dataModel.version === '1.0.2') {
+    patientSource = cqlfhir.PatientSource.FHIRv102();
+  } else if (dataModel.version === '3.0.0') {
+    patientSource = cqlfhir.PatientSource.FHIRv300();
+  } else {
+    patientSource = cqlfhir.PatientSource.FHIRv400();
+  }
 
   // Load the patient source with the patient
   patientSource.loadBundles(patients);
@@ -602,7 +606,7 @@ function convertParameters(params = []) {
 
 export function executeCQLArtifact(artifact, params, patients, vsacCredentials, codeService, dataModel) {
   artifact.dataModel = dataModel;
-  const artifactName = `${slug(artifact.name ? artifact.name : 'untitled')}-v${artifact.version}`;
+  const artifactName = `${slug(artifact.name ? artifact.name : 'untitled')}`;
 
   return (dispatch) => {
     dispatch(requestExecuteArtifact());

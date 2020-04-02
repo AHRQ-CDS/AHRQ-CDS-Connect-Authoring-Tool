@@ -85,12 +85,23 @@ class Landing extends Component {
               <div className="description">
                 {whatsNew[whatsNewIndex].description}
 
-                {whatsNew[whatsNewIndex].link !== '' &&
+                {whatsNew[whatsNewIndex].link !== '' && whatsNew[whatsNewIndex].linkExternal !== true &&
                   <a
                     className={`link feature-${whatsNewIndex}`}
                     href={whatsNew[whatsNewIndex].link}
                   >
                     {whatsNew[whatsNewIndex].linkText}
+                  </a>
+                }
+                {whatsNew[whatsNewIndex].link !== '' && whatsNew[whatsNewIndex].linkExternal === true &&
+                  <a
+                    target="_blank"
+                    rel="nofollow noopener noreferrer"
+                    onClick={onVisitExternalLink}
+                    className={`link feature-${whatsNewIndex}`}
+                    href={whatsNew[whatsNewIndex].link}
+                  >
+                    {whatsNew[whatsNewIndex].linkText} <i className="fa fa-external-link"></i>
                   </a>
                 }
               </div>
@@ -154,7 +165,7 @@ class Landing extends Component {
                   rel="nofollow noopener noreferrer"
                   onClick={onVisitExternalLink}
                   href="https://cql.hl7.org/">
-                  {' '}Health Level Seven (HL7) Clinical Quality Language (CQL) 1.2{' '}
+                  {' '}Health Level Seven (HL7) Clinical Quality Language (CQL) 1.3{' '}
                 </a>
                 <i className="fa fa-external-link"></i> artifacts using the HL7 Fast Healthcare
                 Interoperability Resources (FHIR)
@@ -163,17 +174,26 @@ class Landing extends Component {
                   rel="nofollow noopener noreferrer"
                   onClick={onVisitExternalLink}
                   href="http://hl7.org/fhir/DSTU2/index.html">
-                  {' '}DSTU 2{' '}
+                  {' '}DSTU2{' '}
                 </a>
-                <i className="fa fa-external-link"></i> or
+                <i className="fa fa-external-link"></i>,
                 <a
                   target="_blank"
                   rel="nofollow noopener noreferrer"
                   onClick={onVisitExternalLink}
                   href="http://hl7.org/fhir/STU3/index.html">
-                  {' '}STU 3{' '}
+                  {' '}STU3{' '}
                 </a>
-                <i className="fa fa-external-link"></i> data model.
+                <i className="fa fa-external-link"></i>, or
+                <a
+                  target="_blank"
+                  rel="nofollow noopener noreferrer"
+                  onClick={onVisitExternalLink}
+                  href="http://hl7.org/fhir/R4/index.html">
+                  {' '}R4{' '}
+                </a>
+                <i className="fa fa-external-link"></i>
+                 data model.
               </div>
             </div>
 
@@ -216,13 +236,6 @@ class Landing extends Component {
                 <i className="fa fa-external-link"></i>.
               </div>
             </div>
-          </div>
-
-          <div className="home-screenshot">
-            <img
-              className="img-fluid img-thumbnail rounded mx-auto d-block"
-              alt="screenshot of authoring a CDS artifact about statin use"
-              src={`${process.env.PUBLIC_URL}/assets/images/statin-use-screenshot.png`} />
           </div>
 
           <div className="home-footer">

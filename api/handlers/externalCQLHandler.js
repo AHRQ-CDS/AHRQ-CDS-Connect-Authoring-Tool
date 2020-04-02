@@ -4,7 +4,7 @@ const CQLLibrary = require('../models/cqlLibrary');
 const Artifact = require('../models/artifact');
 const makeCQLtoELMRequest = require('../handlers/cqlHandler').makeCQLtoELMRequest;
 
-const supportedFHIRVersions = ['1.0.2', '3.0.0'];
+const supportedFHIRVersions = ['1.0.2', '3.0.0', '4.0.0'];
 
 const authoringToolExports = [
   { name: 'FHIRHelpers', version: '1.0.2' },
@@ -12,6 +12,9 @@ const authoringToolExports = [
   { name: 'CDS_Connect_Conversions', version: '1' },
   { name: 'FHIRHelpers', version: '3.0.0' },
   { name: 'CDS_Connect_Commons_for_FHIRv300', version: '1.0.1' },
+  { name: 'CDS_Connect_Conversions', version: '1' },
+  { name: 'FHIRHelpers', version: '4.0.0' },
+  { name: 'CDS_Connect_Commons_for_FHIRv400', version: '1.0.1' },
   { name: 'CDS_Connect_Conversions', version: '1' }
 ];
 
@@ -28,8 +31,8 @@ const singularReturnTypeMap = {
   'Observation': 'observation',
   'Condition': 'condition',
   'MedicationStatement': 'medication_statement',
-  'MedicationOrder': 'medication_order',
-  'MedicationRequest': 'medication_order',
+  'MedicationOrder': 'medication_request',
+  'MedicationRequest': 'medication_request',
   'Procedure': 'procedure',
   'AllergyIntolerance': 'allergy_intolerance',
   'Encounter': 'encounter',
@@ -40,8 +43,8 @@ const listReturnTypeMap = {
   'Observation': 'list_of_observations',
   'Condition': 'list_of_conditions',
   'MedicationStatement': 'list_of_medication_statements',
-  'MedicationOrder': 'list_of_medication_orders',
-  'MedicationRequest': 'list_of_medication_orders',
+  'MedicationOrder': 'list_of_medication_requests',
+  'MedicationRequest': 'list_of_medication_requests',
   'Procedure': 'list_of_procedures',
   'AllergyIntolerance': 'list_of_allergy_intolerances',
   'Encounter': 'list_of_encounters',
@@ -77,7 +80,7 @@ const areChoicesKnownTypes = (choices) => {
         allChoicesKnown = false;
       }
       let typeToDisplay = convertedReturnType ? convertedReturnType : returnTypeOfChoice;
-      if (returnTypeOfChoice === 'MedicationRequest') typeToDisplay = 'Medication Request';
+      if (returnTypeOfChoice === 'MedicationOrder') typeToDisplay = 'Medication Order';
       typesOfChoices.push(_.startCase(typeToDisplay));
     } else {
       // Default to marking as unknown.
@@ -97,7 +100,7 @@ function mapReturnTypes(definitions) {
       elmReturnType = getTypeFromELMString(definition.resultTypeName);
       const convertedReturnType = singularReturnTypeMap[elmReturnType];
       if (!convertedReturnType) elmDisplay = `Other (${elmReturnType})`;
-      if (elmReturnType === 'MedicationRequest') elmDisplay = 'Medication Request';
+      if (elmReturnType === 'MedicationOrder') elmDisplay = 'Medication Order';
       elmReturnType = convertedReturnType ? convertedReturnType : 'other';
     } else if (definition.resultTypeSpecifier) {
       const typeSpecifier = definition.resultTypeSpecifier;
@@ -106,7 +109,7 @@ function mapReturnTypes(definitions) {
           elmReturnType = getTypeFromELMString(typeSpecifier.name);
           const convertedReturnType = singularReturnTypeMap[elmReturnType];
           if (!convertedReturnType) elmDisplay = `Other (${elmReturnType})`;
-          if (elmReturnType === 'MedicationRequest') elmDisplay = 'Medication Request';
+          if (elmReturnType === 'MedicationOrder') elmDisplay = 'Medication Order';
           elmReturnType = convertedReturnType ? convertedReturnType : 'other';
           break;
         }
@@ -312,7 +315,7 @@ function singlePost(req, res) {
               if (error) res.status(500).send(error);
               else {
                 const nonAuthoringToolExportLibraries =
-                  _.differenceWith(elmResultsToSave, authoringToolExports, compareNameAndVersion);
+                  _.differenceWith(elmResultsToSave, authoringToolExports, (a, b) => a.name === b.name);
                 const authoringToolExportLibraries = _.difference(elmResultsToSave, nonAuthoringToolExportLibraries);
                 const nonDuplicateLibraries =
                   _.differenceWith(nonAuthoringToolExportLibraries, libraries, compareNameAndVersion);
@@ -329,9 +332,9 @@ function singlePost(req, res) {
                   supportedFHIRVersions.findIndex(v => v === newLibFHIRVersion) !== -1;
 
                 const exportLibrariesNotUploaded =
-                  authoringToolExportLibraries.map(lib => `library ${lib.name} version ${lib.version}`).join(', ');
-                const exportLibrariesNotUploadedMessage = `The following was not uploaded because the library is \
-                  included by default: ${exportLibrariesNotUploaded}.`;
+                  authoringToolExportLibraries.map(lib => `library ${lib.name}`).join(', ');
+                const exportLibrariesNotUploadedMessage = `The following were not uploaded because a version of the \
+                  library is included by default: ${exportLibrariesNotUploaded}.`;
                 // If any file has an error, upload nothing.
                 if (elmErrors.length > 0) {
                   res.status(400).send(elmErrors);
@@ -418,6 +421,7 @@ function singlePost(req, res) {
           if (error) res.status(500).send(error);
           else {
             const elmResult = elmResultsToSave[0]; // This is the single file upload case, so elmResultsToSave will only ever have one item.
+            const defaultLibrary = authoringToolExports.map(l => l.name).includes(elmResult.name);
             const dupLibrary = libraries.find(lib => lib.name === elmResult.name && lib.version === elmResult.version);
             const newLibFHIRVersion = elmResult.fhirVersion;
             const fhirVersion = getCurrentFHIRVersion(libraries);
@@ -432,6 +436,8 @@ function singlePost(req, res) {
 
             if (elmErrors.length > 0) {
               res.status(400).send(elmErrors);
+            } else if (defaultLibrary) {
+              res.status(200).send('Library is already included by default, so it was not uploaded.');
             } else if (dupLibrary) {
               res.status(200).send('Library with identical name and version already exists.');
             } else if (!fhirVersionsMatch) {

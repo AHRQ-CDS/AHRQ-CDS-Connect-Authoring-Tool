@@ -1,6 +1,6 @@
 /* eslint-disable object-curly-newline */
 const elementLists = ['list_of_observations', 'list_of_conditions', 'list_of_medication_statements',
-  'list_of_medication_orders', 'list_of_procedures', 'list_of_allergy_intolerances', 'list_of_encounters'];
+  'list_of_medication_requests', 'list_of_procedures', 'list_of_allergy_intolerances', 'list_of_encounters'];
 
 /**
  * Example TemplateInstances
@@ -256,10 +256,10 @@ const genericElementTypes = [
     template: 'GenericMedicationStatement_vsac'
   },
   {
-    value: 'medicationOrder',
-    label: 'Medication Order',
+    value: 'medicationRequest',
+    label: 'Medication Request',
     vsacAuthRequired: true,
-    template: 'GenericMedicationOrder_vsac'
+    template: 'GenericMedicationRequest_vsac'
   },
   { value: 'observation', label: 'Observation', vsacAuthRequired: true, template: 'GenericObservation_vsac' },
   { value: 'booleanParameter', label: 'Parameters', vsacAuthRequired: false },

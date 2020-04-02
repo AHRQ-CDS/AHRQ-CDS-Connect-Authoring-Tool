@@ -58,21 +58,10 @@ class Testing extends Component {
         .find({ resource: { resourceType: 'Patient' } })
         .get('resource')
         .value();
-      const patientResourceFamilyName = _.get(patientResource, 'name[0].family');
 
       // Check for FHIR Bundle containing FHIR Patient
       if ((patientDataResourceType === 'Bundle') && (patientResource)) { // Check for FHIR Patient in Bundle
-        if (patientResourceFamilyName && (typeof patientResourceFamilyName !== 'string')) { // Is DSTU2
-          this.setState({ patientVersion: 'DSTU2' });
-          this.props.addPatient(this.state.patientData, this.state.patientVersion);
-          this.setState({ uploadError: false });
-        } else if (patientResourceFamilyName) { // Is STU3
-          this.setState({ patientVersion: 'STU3' });
-          this.props.addPatient(this.state.patientData, this.state.patientVersion);
-          this.setState({ uploadError: false });
-        } else { // Could not detect version
-          this.showPatientVersionModal();
-        }
+        this.showPatientVersionModal();
       } else { // No patient could be found
         this.setState({ uploadError: true });
       }
@@ -103,16 +92,8 @@ class Testing extends Component {
     this.props.clearArtifactValidationWarnings();
   }
 
-  selectStu3 = (patientData) => {
-    Promise.resolve(this.setState({ patientVersion: 'STU3' }))
-      .then(() => {
-        this.props.addPatient(patientData, this.state.patientVersion);
-        this.closePatientVersionModal();
-      });
-  }
-
-  selectDstu2 = (patientData) => {
-    Promise.resolve(this.setState({ patientVersion: 'DSTU2' }))
+  selectVersion = (patientData, patientVersion) => {
+    Promise.resolve(this.setState({ patientVersion: patientVersion }))
       .then(() => {
         this.props.addPatient(patientData, this.state.patientVersion);
         this.closePatientVersionModal();
@@ -235,11 +216,11 @@ class Testing extends Component {
             {this.renderDropzoneIcon()}
 
             {this.state.uploadError &&
-              <div className="warning">Invalid file type. Only valid JSON FHIR STU3 or DSTU2 Bundles are accepted.</div>
+              <div className="warning">Invalid file type. Only valid JSON FHIR Bundles are accepted.</div>
             }
 
             <p className="dropzone__instructions">
-              Drop a valid JSON FHIR STU3 or DSTU2 bundle containing a synthetic patient here, or click to browse.
+              Drop a valid JSON FHIR bundle containing a synthetic patient here, or click to browse.
             </p>
 
             <p className="dropzone__warning">
@@ -262,8 +243,7 @@ class Testing extends Component {
             isOpen={this.state.showPatientVersionModal}
             closeModal={this.closePatientVersionModal}
             patientData={this.state.patientData}
-            selectStu3={this.selectStu3}
-            selectDstu2={this.selectDstu2}/>
+            selectVersion={this.selectVersion}/>
         </div>
       </div>
     );

@@ -17,6 +17,7 @@ export default class ExternalCqlDetails extends Component {
   getFhirVersion = (version) => {
     if (version === '1.0.2') return '1.0.2 (DSTU2)';
     if (version.startsWith('3.0.')) return `${version} (STU3)`;
+    if (version.startsWith('4.0.')) return `${version} (R4)`;
     return version;
   }
 
