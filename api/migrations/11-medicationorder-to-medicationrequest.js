@@ -21,7 +21,7 @@ function parseTree(element) {
 
 function parseElement(element) {
   if ((element.id === 'GenericMedicationOrder_vsac')
-  || (element.id.startsWith('GenericMedicationOrder_vsac') && element.type === 'baseElement')
+  || (element.id && element.id.startsWith('GenericMedicationOrder_vsac') && element.type === 'baseElement')
   || (element.type === 'externalCqlElement')) {
     if (element.id === 'GenericMedicationOrder_vsac') {
       element.id = 'GenericMedicationRequest_vsac';
@@ -42,7 +42,7 @@ function parseElement(element) {
       field.type = 'medicationRequest_vsac';
       field.name = 'Medication Request';
     }
-    
+
     const baseElementField = element.fields.find(f => f.id === 'baseElementReference');
     if (baseElementField && baseElementField.value && (baseElementField.value.type === 'Medication Order')) {
       baseElementField.value.type = 'Medication Request';
@@ -145,4 +145,3 @@ module.exports.down = function (done) {
   // use this.db for MongoDB communication, and this.log() for logging
   done();
 };
-

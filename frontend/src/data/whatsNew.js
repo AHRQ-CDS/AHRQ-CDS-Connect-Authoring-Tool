@@ -6,8 +6,8 @@ export default [
     id: 1,
     name: 'FHIR R4 Support',
     image: `${process.env.PUBLIC_URL}/assets/images/whats-new-fhir-r4.png`,
-    description: 'CDS Authors can now download and test their CDS artifacts using FHIR R4, the first normative edition of the FHIR specification. Support for FHIR R4 supplements existing support for FHIR DSTU2 and STU3.',
-    linkText: 'FHIR R4 Specification',
+    description: 'CDS Authors can now download and test their CDS artifacts using HL7 FHIR R4, the first normative edition of the FHIR specification. Support for FHIR R4 supplements existing support for FHIR DSTU2 and STU3.',
+    linkText: 'HL7 FHIR R4',
     link: 'http://hl7.org/fhir/R4/index.html',
     linkExternal: true
   },
