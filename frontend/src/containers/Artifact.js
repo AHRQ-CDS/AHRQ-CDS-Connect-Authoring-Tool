@@ -7,22 +7,26 @@ import FontAwesome from 'react-fontawesome';
 import { loadArtifacts, addArtifact, deleteArtifact, updateAndSaveArtifact } from '../actions/artifacts';
 import artifactProps from '../prop-types/artifact';
 
-import NewArtifactForm from '../components/artifact/NewArtifactForm';
+import NewArtifactModal from '../components/artifact/NewArtifactModal';
 import ArtifactTable from '../components/artifact/ArtifactTable';
 
 class Artifact extends Component {
   constructor(props) {
     super(props);
 
-    this.state = { showForm: false };
+    this.state = { showNewArtifactModal: false };
   }
 
   UNSAFE_componentWillMount() { // eslint-disable-line camelcase
     this.props.loadArtifacts();
   }
 
-  handleShowForm = () => {
-    this.setState({ showForm: !this.state.showForm });
+  openNewArtifactModal = () => {
+    this.setState({ showNewArtifactModal: true });
+  }
+
+  closeNewArtifactModal = () => {
+    this.setState({ showNewArtifactModal: false });
   }
 
   renderArtifactsTable() {
@@ -44,18 +48,19 @@ class Artifact extends Component {
     return (
       <div className="artifact" id="maincontent">
         <div className="artifact-wrapper">
-          {this.state.showForm ?
-            <NewArtifactForm formType="new" addArtifact={this.props.addArtifact} />
-            :
-            <button className="primary-button"
-              onClick={() => this.handleShowForm()}
-              aria-label="Create New Artifact">
-              <FontAwesome name="plus" /> Create New Artifact
-            </button>
-          }
+          <button className="primary-button"
+            onClick={() => this.openNewArtifactModal()}
+            aria-label="Create New Artifact">
+            <FontAwesome name="plus" /> Create New Artifact
+          </button>
 
           {this.renderArtifactsTable()}
         </div>
+
+        <NewArtifactModal
+          addArtifact={this.props.addArtifact}
+          showModal={this.state.showNewArtifactModal}
+          closeModal={this.closeNewArtifactModal} />
       </div>
     );
   }
