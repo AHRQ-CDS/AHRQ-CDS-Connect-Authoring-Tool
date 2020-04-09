@@ -38,39 +38,41 @@ export default class EditArtifactModal extends Component {
     const versionID = artifactEditing ? artifactEditing.version : _.uniqueId('artifact-version-');
 
     return (
-      <Modal
-        modalTitle="Edit Artifact"
-        modalId="edit-modal"
-        modalTheme="light"
-        modalSubmitButtonText="Save"
-        handleShowModal={showModal}
-        handleCloseModal={closeModal}
-        handleSaveModal={() => saveModal(this.state)}>
+      <div className="element-modal">
+        <Modal
+          modalTitle="Edit Artifact"
+          modalId="edit-modal"
+          modalTheme="light"
+          modalSubmitButtonText="Save"
+          handleShowModal={showModal}
+          handleCloseModal={closeModal}
+          handleSaveModal={() => saveModal(this.state)}>
 
-        <div className="artifact-table__modal modal__content">
-          <div className="artifact-form__edit">
-            {this.state.version && !(/^\d+\.\d+\.\d+$/.test(this.state.version))
-              && <div className="notification">
-                    <FontAwesome name="exclamation-circle" />
-                    Version should follow the Apache APR versioning scheme (e.g., 1.0.0).
-                    See <a href="http://build.fhir.org/ig/HL7/cqf-recommendations/documentation-libraries.html" target="_blank" rel="noopener noreferrer" onClick={onVisitExternalLink}>FHIR Clinical Guidelines</a> for more information.
-                  </div>}
-            <div className="artifact-form__inputs d-flex justify-content-start">
-              <div className='form__group p-2'>
-                <label htmlFor={nameID}>Artifact Name</label>
-                <input id={nameID} required className='input__long' name='name' type='text'
-                  value={name} onChange={this.handleInputChange} />
-              </div>
+          <div className="artifact-table__modal modal__content">
+            <div className="artifact-form__edit">
+              {this.state.version && !(/^\d+\.\d+\.\d+$/.test(this.state.version))
+                && <div className="notification">
+                      <FontAwesome name="exclamation-circle" />
+                      Version should follow the Apache APR versioning scheme (e.g., 1.0.0).
+                      See <a href="http://build.fhir.org/ig/HL7/cqf-recommendations/documentation-libraries.html" target="_blank" rel="noopener noreferrer" onClick={onVisitExternalLink}>FHIR Clinical Guidelines</a> for more information.
+                    </div>}
+              <div className="artifact-form__inputs d-flex justify-content-start">
+                <div className='form__group p-2'>
+                  <label htmlFor={nameID}>Artifact Name</label>
+                  <input id={nameID} required className='input__long' name='name' type='text'
+                    value={name} onChange={this.handleInputChange} />
+                </div>
 
-              <div className='form__group p-2'>
-                <label htmlFor={versionID}>Version</label>
-                <input id={versionID} className='input__short' name='version' type='text'
-                  value={version} onChange={this.handleInputChange} />
+                <div className='form__group p-2'>
+                  <label htmlFor={versionID}>Version</label>
+                  <input id={versionID} className='input__short' name='version' type='text'
+                    value={version} onChange={this.handleInputChange} />
+                </div>
               </div>
             </div>
           </div>
-        </div>
-      </Modal>
+        </Modal>
+      </div>
     );
   }
 }
