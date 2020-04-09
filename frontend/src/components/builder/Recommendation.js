@@ -26,6 +26,7 @@ export default class Recommendation extends Component {
       showSubpopulations: !!((props.rec.subpopulations && props.rec.subpopulations.length)),
       showRationale: !!props.rec.rationale.length,
       showComment: !!((props.rec.comment && props.rec.comment.length)),
+      showReordering: (props.rec.length > 1),
     };
   }
 
@@ -107,7 +108,22 @@ export default class Recommendation extends Component {
     this.setState(newState);
   }
 
+  handleShowRationale = () => {
+    this.setState({ showRationale: !this.state.showRationale });
+  }
+
+  handleShowComment = () => {
+    this.setState({ showComment: !this.state.showComment });
+  }
+
   shouldShowSubpopulations = () => this.state.showSubpopulations || this.props.rec.subpopulations.length;
+  shouldShowReorderingButtons = () => {
+      let show = false;
+      if(this.props.artifact.recommendations.length > 1){
+        show = true;
+      }
+      return show;
+  }
 
   renderSubpopulations = () => (
     <div className="recommendation__subpopulations">
@@ -167,21 +183,28 @@ export default class Recommendation extends Component {
           <div className="recommendation__title">
             <div className="card-element__label"></div>
             <div>
-              <button
-                className="recommendation__move transparent-button"
-                aria-label="Move Recommendation Up"
-                onClick={() => this.props.onMoveRecUp(this.props.rec.uid)}>
-                <FontAwesome fixedWidth name='caret-up'/>
-              </button>
-              <button
-                className="recommendation__move transparent-button"
-                aria-label="Move Recommendation Down"
-                onClick={() => this.props.onMoveRecDown(this.props.rec.uid)}>
-                <FontAwesome fixedWidth name='caret-down'/>
-              </button>
+              {this.shouldShowReorderingButtons() ?
+                <span>
+                <button
+                  className="recommendation__move transparent-button"
+                  aria-label="Move Recommendation Up"
+                  title="Move Recommendation Up"
+                  onClick={() => this.props.onMoveRecUp(this.props.rec.uid)}>
+                  <FontAwesome fixedWidth name='caret-up'/>
+                </button>
+                <button
+                  className="recommendation__move transparent-button"
+                  aria-label="Move Recommendation Down"
+                  title="Move Recommendation Down"
+                  onClick={() => this.props.onMoveRecDown(this.props.rec.uid)}>
+                  <FontAwesome fixedWidth name='caret-down'/>
+                </button>
+                </span>
+              :null}
               <button
                 className="recommendation__remove transparent-button"
                 aria-label="remove recommendation"
+                title="Remove Recommendation"
                 onClick={() => this.props.onRemove(this.props.rec.uid)}>
                 <FontAwesome fixedWidth name='times' />
               </button>
@@ -248,7 +271,7 @@ export default class Recommendation extends Component {
                   name="comment"
                   aria-label="Comment"
                   title="Comment text"
-                  placeholder='Add an optional comment'
+                  placeholder="Add an optional comment"
                   value={this.state.comment}
                   onChange={this.handleChange}
                 />
@@ -259,7 +282,7 @@ export default class Recommendation extends Component {
             <button
               className="button primary-button recommendation__add-rationale"
               aria-label="Add rationale"
-              onClick={() => this.setState({ showRationale: !this.state.showRationale })}>
+              onClick={this.handleShowRationale}>
               Add rationale
             </button>
           }
@@ -277,10 +300,10 @@ export default class Recommendation extends Component {
           {this.state.showComment ? null :
             <button
               className="button primary-button"
-              aria-label="Show Comments"
+              aria-label="Add Comments"
               name="comments"
-              onClick={() => this.setState({ showComment: !this.state.showComment })}>
-              Show Comments
+              onClick={this.handleShowComment}>
+              Add Comments
             </button>
           }
 
