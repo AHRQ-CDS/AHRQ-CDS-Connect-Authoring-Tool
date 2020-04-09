@@ -48,7 +48,7 @@ class Artifact extends Component {
     return (
       <div className="artifact" id="maincontent">
         <div className="artifact-wrapper">
-          <button className="primary-button"
+          <button className="primary-button pull-right"
             onClick={() => this.openNewArtifactModal()}
             aria-label="Create New Artifact">
             <FontAwesome name="plus" /> Create New Artifact
