@@ -6,7 +6,6 @@ import { render, fireEvent } from '../../utils/test-utils';
 import Artifact from '../Artifact';
 
 jest.mock('../../components/artifact/ArtifactTable', () => () => <div>ArtifactTable Component</div>);
-jest.mock('../../components/artifact/NewArtifactForm', () => () => <div>NewArtifactForm Component</div>);
 
 describe('<Artifact />', () => {
   const renderComponent = ({ store = reduxState, ...props } = {}) =>
@@ -22,8 +21,6 @@ describe('<Artifact />', () => {
     expect(getByText('No artifacts to show.')).toBeDefined();
 
     fireEvent.click(getByText('Create New Artifact'));
-
-    expect(getByText('NewArtifactForm Component')).toBeDefined();
   });
 
   it('shows a table when there is data', () => {

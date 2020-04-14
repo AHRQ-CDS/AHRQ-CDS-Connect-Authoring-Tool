@@ -4,52 +4,46 @@ import FontAwesome from 'react-fontawesome';
 import _ from 'lodash';
 
 import Modal from '../elements/Modal';
-import artifactProps from '../../prop-types/artifact';
 import { onVisitExternalLink } from '../../utils/handlers';
 
-export default class EditArtifactModal extends Component {
+export default class NewArtifactModal extends Component {
   constructor(props) {
     super(props);
 
-    const { artifactEditing: artifact } = props;
-
-    this.state = {
-      name: artifact ? artifact.name : '',
-      version: artifact ? artifact.version : ''
-    };
-  }
-
-  UNSAFE_componentWillReceiveProps(nextProps) { // eslint-disable-line camelcase
-    const { artifactEditing: artifact } = nextProps;
-
-    if (artifact) {
-      this.setState({ name: artifact.name, version: artifact.version });
-    }
+    this.state = { name: '', version: '' };
   }
 
   handleInputChange = (event) => {
     this.setState({ [event.target.name]: event.target.value });
   }
 
+  handleAddArtifact = (event) => {
+    event.preventDefault();
+
+    this.props.addArtifact({ name: this.state.name, version: this.state.version });
+    this.setState({ name: '', version: '' });
+    this.props.closeModal();
+  }
+
   render() {
-    const { showModal, closeModal, saveModal, artifactEditing } = this.props;
+    const { showModal, closeModal } = this.props;
     const { name, version } = this.state;
-    const nameID = artifactEditing ? artifactEditing.name : _.uniqueId('artifact-name-');
-    const versionID = artifactEditing ? artifactEditing.version : _.uniqueId('artifact-version-');
+    const nameID = _.uniqueId('artifact-name-');
+    const versionID = _.uniqueId('artifact-version-');
 
     return (
       <div className="element-modal">
         <Modal
-          modalTitle="Edit Artifact"
-          modalId="edit-modal"
+          modalTitle="New Artifact"
+          modalId="new-modal"
           modalTheme="light"
           modalSubmitButtonText="Save"
           handleShowModal={showModal}
           handleCloseModal={closeModal}
-          handleSaveModal={() => saveModal(this.state)}>
+          handleSaveModal={this.handleAddArtifact}>
 
           <div className="artifact-table__modal modal__content">
-            <div className="artifact-form__edit">
+            <div className="artifact-form__new">
               {this.state.version && !(/^\d+\.\d+\.\d+$/.test(this.state.version))
                 && <div className="notification">
                       <FontAwesome name="exclamation-circle" />
@@ -77,9 +71,8 @@ export default class EditArtifactModal extends Component {
   }
 }
 
-EditArtifactModal.propTypes = {
-  artifactEditing: artifactProps,
+NewArtifactModal.propTypes = {
+  addArtifact: PropTypes.func.isRequired,
   showModal: PropTypes.bool.isRequired,
-  closeModal: PropTypes.func.isRequired,
-  saveModal: PropTypes.func.isRequired
+  closeModal: PropTypes.func.isRequired
 };
