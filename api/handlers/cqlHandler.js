@@ -770,16 +770,6 @@ class CqlArtifact {
     return ejs.render(templateMap.BaseTemplate, { element_name: 'Rationale', cqlString: rationaleText });
   }
 
-  recommendationComment() {
-    let commentText = this.recommendations.map((recommendation) => {
-      //const conditional = constructOneRecommendationConditional(recommendation);
-      return (_.isEmpty(recommendation.comment)
-        ? 'null'
-        : `'//${sanitizeCQLString(recommendation.comment)}'`);
-    });
-    commentText = _.isEmpty(commentText) ? '' : commentText.join('\n').concat('\n');
-    return commentText;
-  }
 
   errors() {
     this.errorStatement.statements.forEach((statement, index) => {
@@ -807,7 +797,7 @@ class CqlArtifact {
     const bodyString = this.body();
     const headerString = this.header();
     let fullString = `${headerString}${bodyString}\n${this.population()}\n${this.recommendation()}\n` +
-      `${this.rationale()}\n}${this.errors()}`;
+      `${this.rationale()}\n${this.errors()}`;
     fullString = fullString.replace(/\r\n|\r|\n/g, '\r\n'); // Make all line endings CRLF
     return fullString;
   }
@@ -875,7 +865,7 @@ function applyModifiers(values = [] , modifiers = []) { // default modifiers to 
 
 function constructOneRecommendationConditional(recommendation, text) {
   const conjunction = 'and'; // possible that this may become `or`, or some combo of the two conjunctions
-  let conditionalText,commentText,returnValue;
+  let conditionalText;
   if (!_.isEmpty(recommendation.subpopulations)) {
     conditionalText = recommendation.subpopulations.map((subpopulation) => {
       if (subpopulation.special_subpopulationName) {
@@ -886,10 +876,7 @@ function constructOneRecommendationConditional(recommendation, text) {
   } else {
     conditionalText = '"InPopulation"'; // TODO: Is there a better way than hard-coding this?
   }
-  //console.log("constructing rec conditional");
-  //returnValue = constructComment(recommendation.comment) + `if ${conditionalText} then`;
   return `if ${conditionalText} then `;
-  //return returnValue;
 }
 
 function constructComment(comment){
