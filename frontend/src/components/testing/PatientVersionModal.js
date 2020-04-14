@@ -7,8 +7,7 @@ class PatientVersionModal extends Component {
     isOpen: PropTypes.bool.isRequired,
     closeModal: PropTypes.func.isRequired,
     patientData: PropTypes.object,
-    selectStu3: PropTypes.func.isRequired,
-    selectDstu2: PropTypes.func.isRequired
+    selectVersion: PropTypes.func.isRequired
   }
 
   render() {
@@ -29,18 +28,22 @@ class PatientVersionModal extends Component {
             </header>
             <main className="modal__body">
               <div className="element-modal modal__content">
-                FHIR version could not be automatically detected. Please select the FHIR
-                version of this patient from the options below.
+                Please select the FHIR version of this patient from the options below.
               </div>
             </main>
             <footer className="modal__footer">
               <button className="primary-button"
-                      onClick={ () => this.props.selectStu3(this.props.patientData) }
+                      onClick={ () => this.props.selectVersion(this.props.patientData, 'R4') }
+                      aria-label="R4">
+                      R4
+              </button>
+              <button className="primary-button"
+                      onClick={ () => this.props.selectVersion(this.props.patientData, 'STU3') }
                       aria-label="STU3">
                       STU3
               </button>
               <button className="primary-button"
-                      onClick={ () => this.props.selectDstu2(this.props.patientData) }
+                      onClick={ () => this.props.selectVersion(this.props.patientData, 'DSTU2') }
                       aria-label="DSTU2">
                       DSTU2
               </button>

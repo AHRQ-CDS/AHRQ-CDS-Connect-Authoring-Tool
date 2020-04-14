@@ -437,7 +437,7 @@ module.exports = {
         {
           // TODO: Reused from statin CQM artifact; needs review against other value sets in VSAC.
           name: 'Low intensity statin therapy',
-          type: 'MedicationOrder',
+          type: 'MedicationRequest',
           oid: '2.16.840.1.113762.1.4.1047.107'
         },
         {
@@ -449,7 +449,7 @@ module.exports = {
         {
           // TODO: Reused from statin CQM artifact; needs review against other value sets in VSAC.
           name: 'Low Intensity Statin Therapy Branded',
-          type: 'MedicationOrder',
+          type: 'MedicationRequest',
           oid: '2.16.840.1.113762.1.4.1032.16'
         },
         {
@@ -461,7 +461,7 @@ module.exports = {
         {
           // TODO: Reused from statin CQM artifact; needs review against other value sets in VSAC.
           name: 'Moderate intensity statin therapy',
-          type: 'MedicationOrder',
+          type: 'MedicationRequest',
           oid: '2.16.840.1.113762.1.4.1047.98'
         },
         {
@@ -473,7 +473,7 @@ module.exports = {
         {
           // TODO: Reused from statin CQM artifact; needs review against other value sets in VSAC.
           name: 'Moderate Intensity Statin Therapy Branded',
-          type: 'MedicationOrder',
+          type: 'MedicationRequest',
           oid: '2.16.840.1.113762.1.4.1032.17'
         },
         {
@@ -485,7 +485,7 @@ module.exports = {
         {
           // TODO: Reused from statin CQM artifact; needs review against other value sets in VSAC.
           name: 'High intensity statin therapy',
-          type: 'MedicationOrder',
+          type: 'MedicationRequest',
           oid: '2.16.840.1.113762.1.4.1047.97'
         },
         {
@@ -497,7 +497,7 @@ module.exports = {
         {
           // TODO: Reused from statin CQM artifact; needs review against other value sets in VSAC.
           name: 'High Intensity Statin Therapy Branded',
-          type: 'MedicationOrder',
+          type: 'MedicationRequest',
           oid: '2.16.840.1.113762.1.4.1032.18'
         }
       ]
@@ -512,7 +512,7 @@ module.exports = {
         },
         {
           name: 'Low intensity statin therapy',
-          type: 'MedicationOrder',
+          type: 'MedicationRequest',
           oid: '2.16.840.1.113762.1.4.1047.107'
         },
         {
@@ -522,7 +522,7 @@ module.exports = {
         },
         {
           name: 'Moderate intensity statin therapy',
-          type: 'MedicationOrder',
+          type: 'MedicationRequest',
           oid: '2.16.840.1.113762.1.4.1047.98'
         },
         {
@@ -532,7 +532,7 @@ module.exports = {
         },
         {
           name: 'High intensity statin therapy',
-          type: 'MedicationOrder',
+          type: 'MedicationRequest',
           oid: '2.16.840.1.113762.1.4.1047.97'
         },
       ]

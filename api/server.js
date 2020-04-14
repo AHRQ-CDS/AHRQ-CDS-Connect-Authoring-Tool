@@ -52,7 +52,7 @@ if (!module.parent) { // check if within a test or not.
     const migrator = new mm.Migrator(mmConfig);
     migrator.runFromDir(path.resolve(__dirname, 'migrations'), (err, results) => {
       if (err) {
-        console.err('Migration Error:', err);
+        console.error('Migration Error:', err);
         process.exit(1);
       }
       console.log('Migrations Complete');

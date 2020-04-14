@@ -6,11 +6,11 @@
 // NOTE -- Any modifier that requires text for an expression phrase will need to be added to the list in artifact.js
 
 const elementLists = ['list_of_observations', 'list_of_conditions', 'list_of_medication_statements',
-  'list_of_medication_orders', 'list_of_procedures', 'list_of_allergy_intolerances', 'list_of_encounters',
+  'list_of_medication_requests', 'list_of_procedures', 'list_of_allergy_intolerances', 'list_of_encounters',
   'list_of_any', 'list_of_booleans', 'list_of_system_quantities', 'list_of_system_concepts', 'list_of_system_codes',
   'list_of_integers', 'list_of_datetimes', 'list_of_strings', 'list_of_decimals', 'list_of_times', 'list_of_others'];
 const everyElement = elementLists.concat(['boolean', 'system_quantity', 'system_concept', 'system_code',
-  'observation', 'condition', 'medication_statement', 'medication_order', 'procedure', 'allergy_intolerance',
+  'observation', 'condition', 'medication_statement', 'medication_request', 'procedure', 'allergy_intolerance',
   'encounter', 'integer', 'datetime', 'decimal', 'string', 'time', 'interval_of_integer',
   'interval_of_datetime', 'interval_of_decimal', 'interval_of_quantity', 'any', 'other']);
 
@@ -150,12 +150,12 @@ export default [
     cqlLibraryFunction: 'C3F.ActiveMedicationStatement'
   },
   {
-    id: 'ActiveMedicationOrder',
+    id: 'ActiveMedicationRequest',
     name: 'Active',
-    inputTypes: ['list_of_medication_orders'],
-    returnType: 'list_of_medication_orders',
+    inputTypes: ['list_of_medication_requests'],
+    returnType: 'list_of_medication_requests',
     cqlTemplate: 'BaseModifier',
-    cqlLibraryFunction: 'C3F.ActiveMedicationOrder'
+    cqlLibraryFunction: 'C3F.ActiveMedicationRequest'
   },
   // allergy intolerances
   {
@@ -406,14 +406,14 @@ export default [
     cqlTemplate: 'LookBackModifier',
     cqlLibraryFunction: 'C3F.ConditionLookBack' },
   {
-    id: 'LookBackMedicationOrder',
+    id: 'LookBackMedicationRequest',
     type: 'LookBack',
     name: 'Look Back',
-    inputTypes: ['list_of_medication_orders'],
-    returnType: 'list_of_medication_orders',
+    inputTypes: ['list_of_medication_requests'],
+    returnType: 'list_of_medication_requests',
     values: { value: undefined, unit: undefined },
     cqlTemplate: 'LookBackModifier',
-    cqlLibraryFunction: 'C3F.MedicationOrderLookBack' },
+    cqlLibraryFunction: 'C3F.MedicationRequestLookBack' },
   {
     id: 'LookBackMedicationStatement',
     type: 'LookBack',

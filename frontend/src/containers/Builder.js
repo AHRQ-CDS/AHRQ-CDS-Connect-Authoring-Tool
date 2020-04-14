@@ -408,10 +408,21 @@ export class Builder extends Component {
     const artifactName = artifact ? artifact.name : null;
     let disableDSTU2 = false;
     let disableSTU3 = false;
+    let disableR4 = false;
 
     const artifactFHIRVersion = artifact.fhirVersion;
-    if (artifactFHIRVersion === '1.0.2') disableSTU3 = true;
-    if (artifactFHIRVersion === '3.0.0') disableDSTU2 = true;
+    if (artifactFHIRVersion === '1.0.2') {
+      disableSTU3 = true;
+      disableR4 = true;
+    }
+    if (artifactFHIRVersion === '3.0.0') {
+      disableDSTU2 = true;
+      disableR4 = true;
+    }
+    if (artifactFHIRVersion === '4.0.0') {
+      disableDSTU2 = true;
+      disableSTU3 = true;
+    }
 
     return (
       <header className="builder__header" aria-label="Workspace Header">
@@ -442,6 +453,12 @@ export class Builder extends Component {
                   role="menuitem">
                   FHIR STU3
                 </DropdownItem>
+                <DropdownItem
+                  id='r4DownloadOption'
+                  className={disableR4 ? 'disabled-dropdown' : ''}
+                  onClick={() => this.downloadOptionSelected(disableR4, '4.0.0')}>
+                  FHIR R4
+                </DropdownItem>
                 {disableDSTU2 &&
                   <UncontrolledTooltip className='light-tooltip' target='dstu2DownloadOption' placement="left">
                     Downloading this FHIR version is disabled based on external library versions.
@@ -449,6 +466,11 @@ export class Builder extends Component {
                 }
                 {disableSTU3 &&
                   <UncontrolledTooltip className='light-tooltip' target='stu3DownloadOption' placement="left">
+                    Downloading this FHIR version is disabled based on external library versions.
+                  </UncontrolledTooltip>
+                }
+                {disableR4 &&
+                  <UncontrolledTooltip className='light-tooltip' target='r4DownloadOption' placement="left">
                     Downloading this FHIR version is disabled based on external library versions.
                   </UncontrolledTooltip>
                 }

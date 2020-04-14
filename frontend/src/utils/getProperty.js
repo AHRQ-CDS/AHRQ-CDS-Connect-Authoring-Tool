@@ -56,5 +56,6 @@ export default function getProperty(object, path) {
   if (typeof parserFn === 'function') {
     return parserFn(target);
   }
+
   return `${target}`;
 }

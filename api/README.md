@@ -32,7 +32,7 @@ yarn # e.g. yarn install. installs this app's dependencies based on this project
 
 By default, the project will attempt to convert CQL to ELM on download or publish.  To disable this in development, see the configuration section below.  If enabled, you will need the CQL-to-ELM translation service, a Java application that can be run locally via Maven or Docker.
 * To run locally with Maven: https://github.com/cqframework/cql-translation-service
-* To run locally with Docker, install Docker and run: `docker run -p 8080:8080 cqframework/cql-translation-service:v1.3.17`
+* To run locally with Docker, install Docker and run: `docker run -p 8080:8080 cqframework/cql-translation-service:v1.3.19`
 
 ### Add / Remove / Adjust dependencies
 
@@ -105,7 +105,7 @@ For information on running the CDS Authoring Tool in Docker, see the main [READM
 
 ### Conversion functions
 
-`CDS_Connect_Conversions` provides a list of available functions to convert units. When updating or adding to these functions, update the file in `data/library_helpers/CQLFiles/CDS_Connect_Conversions.cql` with the functions needed. After, regenerate the ELM file for this CQL file and update it in `data/library_helpers/ELMFiles/CDS_Connect_Conversions-v1.json`. If a function requires a more understandable description to be displayed in the user interface, such as the start and target units for the function, update the list of descriptions in `data/handlers/configHandler.js`.
+`CDS_Connect_Conversions` provides a list of available functions to convert units. When updating or adding to these functions, update the file in `data/library_helpers/CQLFiles/CDS_Connect_Conversions.cql` with the functions needed. After, regenerate the ELM file for this CQL file and update it in `data/library_helpers/ELMFiles/CDS_Connect_Conversions.json`. If a function requires a more understandable description to be displayed in the user interface, such as the start and target units for the function, update the list of descriptions in `data/handlers/configHandler.js`.
 
 ## LICENSE
 
