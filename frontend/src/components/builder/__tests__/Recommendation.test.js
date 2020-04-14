@@ -88,7 +88,7 @@ describe('<Recommendation />', () => {
 
     expect(queryByLabelText('Comment')).toBeNull();
 
-    fireEvent.click(getByLabelText('Show Comments'));
+    fireEvent.click(getByLabelText('Add Comments'));
 
     expect(queryByLabelText('Comment')).not.toBeNull();
   });

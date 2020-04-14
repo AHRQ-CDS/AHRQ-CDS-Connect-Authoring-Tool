@@ -180,6 +180,5 @@ Recommendations.propTypes = {
   templates: PropTypes.array.isRequired,
   updateRecommendations: PropTypes.func.isRequired,
   updateSubpopulations: PropTypes.func.isRequired,
-  removeRecommendation: PropTypes.func.isRequired,
   setActiveTab: PropTypes.func.isRequired
 };

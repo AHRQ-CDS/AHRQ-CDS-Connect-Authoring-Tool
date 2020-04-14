@@ -278,7 +278,7 @@ export default class Recommendation extends Component {
             </div>
           : null}
 
-          {this.state.showRationale ? null :
+          {!this.state.showRationale &&
             <button
               className="button primary-button recommendation__add-rationale"
               aria-label="Add rationale"
@@ -287,7 +287,7 @@ export default class Recommendation extends Component {
             </button>
           }
 
-          {this.shouldShowSubpopulations() ? null :
+          {!this.shouldShowSubpopulations() &&
             <button
               className="button primary-button"
               aria-label="Add subpopulation"
@@ -297,7 +297,7 @@ export default class Recommendation extends Component {
             </button>
           }
 
-          {this.state.showComment ? null :
+          {!this.state.showComment &&
             <button
               className="button primary-button"
               aria-label="Add Comments"
