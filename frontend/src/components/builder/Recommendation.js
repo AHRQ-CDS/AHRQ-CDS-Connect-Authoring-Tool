@@ -117,13 +117,8 @@ export default class Recommendation extends Component {
   }
 
   shouldShowSubpopulations = () => this.state.showSubpopulations || this.props.rec.subpopulations.length;
-  shouldShowReorderingButtons = () => {
-      let show = false;
-      if(this.props.artifact.recommendations.length > 1){
-        show = true;
-      }
-      return show;
-  }
+
+  shouldShowReorderingButtons = () => this.props.artifact.recommendations.length > 1;
 
   renderSubpopulations = () => (
     <div className="recommendation__subpopulations">
