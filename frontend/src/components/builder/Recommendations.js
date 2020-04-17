@@ -57,7 +57,8 @@ export default class Recommendations extends Component {
       grade: 'A',
       subpopulations: [],
       text: '',
-      rationale: ''
+      rationale: '',
+      comment: ''
     };
     const newRecs = this.props.artifact.recommendations.concat([newRec]);
 
@@ -179,6 +180,5 @@ Recommendations.propTypes = {
   templates: PropTypes.array.isRequired,
   updateRecommendations: PropTypes.func.isRequired,
   updateSubpopulations: PropTypes.func.isRequired,
-  removeRecommendation: PropTypes.func.isRequired,
   setActiveTab: PropTypes.func.isRequired
 };

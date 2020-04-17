@@ -113,7 +113,7 @@ describe('Basic CQL Handler Tests', () => {
     }],
     path: ''
   };
-  raw.recommendations = [{ uid: 'rec-53', grade: 'A', subpopulations: [], text: 'One rec.', rationale: '' }];
+  raw.recommendations = [{ uid: 'rec-53', grade: 'A', subpopulations: [], text: 'One rec.', rationale: '', comment: '' }];
   raw.subpopulations = [
     {
       special: true,
@@ -281,19 +281,22 @@ describe('Subpopulation tests', () => {
         }
       ],
       text: 'Both subpopulations rec.',
-      rationale: ''
+      rationale: '',
+      comment: '',
     }, {
       uid: 'rec-37',
       grade: 'A',
       subpopulations: [{ uniqueId: 'And-0', subpopulationName: 'Subpopulation 1' }],
       text: 'subpop 1 only',
-      rationale: ''
+      rationale: '',
+      comment: '',
     }, {
       uid: 'rec-38',
       grade: 'A',
       subpopulations: [{ uniqueId: 'And-5', subpopulationName: 'Subpopulation 2' }],
       text: 'subpop 2 only',
-      rationale: ''
+      rationale: '',
+      comment: '',
     }, {
       uid: 'rec-39',
       grade: 'A',
@@ -304,13 +307,15 @@ describe('Subpopulation tests', () => {
         special_subpopulationName: 'not "MeetsInclusionCriteria"'
       }],
       text: 'Not included rec.',
-      rationale: ''
+      rationale: '',
+      comment: '',
     }, {
       uid: 'rec-40',
       grade: 'A',
       subpopulations: [],
       text: 'Fallback rec.',
-      rationale: ''
+      rationale: '',
+      comment: '',
     }
   ];
   raw.subpopulations = [

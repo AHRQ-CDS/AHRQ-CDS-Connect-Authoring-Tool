@@ -38,7 +38,7 @@ export default function isBlankArtifact(artifact) {
   // If it has only one recommendation, check if it is a blank recommendation
   if (artifact.recommendations.length === 1) {
     const r = artifact.recommendations[0];
-    if (r.grade !== 'A' || r.text !== '' || r.rationale !== '' || r.subpopulations.length > 1) {
+    if (r.grade !== 'A' || r.text !== '' || r.rationale !== '' || r.comment !== '' || r.subpopulations.length > 1) {
       return false;
     }
   }

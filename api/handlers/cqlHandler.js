@@ -759,9 +759,14 @@ class CqlArtifact {
   }
 
   recommendation() {
-    let text = this.recommendations.map((recommendation) => {
+    let text = this.recommendations.map((recommendation,index) => {
       const conditional = constructOneRecommendationConditional(recommendation);
-      return `${conditional}'${sanitizeCQLString(recommendation.text)}'`;
+      let comment = constructComment(recommendation.comment);
+      //if we have more than 1 comment, we want to put it on a new line and indent
+      if(index > 0){
+        comment = "\n  " + comment;
+      }
+      return `${comment}${conditional}'${sanitizeCQLString(recommendation.text)}'`;
     });
     text = _.isEmpty(text) ? 'null' : text.join('\n  else ').concat('\n  else null');
     return ejs.render(templateMap.BaseTemplate, { element_name: 'Recommendation', cqlString: text });
@@ -777,6 +782,7 @@ class CqlArtifact {
     rationaleText = _.isEmpty(rationaleText) ? 'null' : rationaleText.join('\n  else ').concat('\n  else null');
     return ejs.render(templateMap.BaseTemplate, { element_name: 'Rationale', cqlString: rationaleText });
   }
+
 
   errors() {
     this.errorStatement.statements.forEach((statement, index) => {
@@ -804,7 +810,7 @@ class CqlArtifact {
     const bodyString = this.body();
     const headerString = this.header();
     let fullString = `${headerString}${bodyString}\n${this.population()}\n${this.recommendation()}\n` +
-      `${this.rationale()}${this.errors()}`;
+      `${this.rationale()}\n${this.errors()}`;
     fullString = fullString.replace(/\r\n|\r|\n/g, '\r\n'); // Make all line endings CRLF
     return fullString;
   }
@@ -886,6 +892,13 @@ function constructOneRecommendationConditional(recommendation, text) {
   return `if ${conditionalText} then `;
 }
 
+function constructComment(comment){
+  let commentText;
+  if(!_.isEmpty(comment)){
+    commentText = "//" + comment.split("\n").join("\n  //") + "\n  ";
+  }
+  return commentText;
+}
 /**
  * Checks a map to see if an identical expression is being added. Adds new expressions with a unique name.
  *
