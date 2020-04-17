@@ -22,7 +22,7 @@ For specific development details of each component, including configuration, see
 
 ### Prerequisites
 
-First, ensure you have [Node.js LTS](https://nodejs.org/), [Yarn](https://yarnpkg.com/), and MongoDB[https://www.mongodb.com/download-center/community] installed.  The CDS Authoring Tool is tested using MongoDB 3.4.x, but later versions are expected to work.
+First, ensure you have [Node.js LTS](https://nodejs.org/), [Yarn](https://yarnpkg.com/), and [MongoDB](https://www.mongodb.com/download-center/community) installed.  The CDS Authoring Tool is tested using MongoDB 3.4.x, but later versions are expected to work.
 
 ### Install Node Foreman
 
