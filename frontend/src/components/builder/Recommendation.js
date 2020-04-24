@@ -112,6 +112,16 @@ export default class Recommendation extends Component {
     this.setState({ showRationale: !this.state.showRationale });
   }
 
+  removeRationale = () => {
+    this.handleChange({"target":{"name":"rationale","value":""}});
+    this.handleShowRationale();
+  }
+
+  removeComment = () => {
+    this.handleChange({"target":{"name":"comment","value":""}});
+    this.handleShowComment();
+  }
+
   handleShowComment = () => {
     this.setState({ showComment: !this.state.showComment });
   }
@@ -244,8 +254,16 @@ export default class Recommendation extends Component {
 
           {this.state.showRationale ?
             <div className="recommendation__rationale">
-              <div className="card-element__label">Rationale...</div>
+              <div className="card-element__label">Rationale...
 
+                <button
+                  className="rationale__remove transparent-button pull-right"
+                  aria-label="remove rationale"
+                  title="Remove Rationale"
+                  onClick={() => this.removeRationale()}>
+                  <FontAwesome fixedWidth name='times' />
+                </button>
+              </div>
               <textarea
                 className="card-element__textarea"
                 name="rationale"
@@ -260,7 +278,15 @@ export default class Recommendation extends Component {
 
           {this.state.showComment ?
             <div className="recommendation__comment">
-              <div className="card-element__label">Comment...</div>
+              <div className="card-element__label">Comment...
+                <button
+                  className="comment__remove transparent-button pull-right"
+                  aria-label="remove comment"
+                  title="Remove Comment"
+                  onClick={() => this.removeComment()}>
+                  <FontAwesome fixedWidth name='times' />
+                </button>
+              </div>
                 <textarea
                   className="card-element__textarea"
                   name="comment"
