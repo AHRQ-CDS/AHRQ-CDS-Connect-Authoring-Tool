@@ -26,7 +26,7 @@ export default class LookBack extends Component {
 
     return (
       <div className="look-back">
-        <label htmlFor={valueId}>Lookback</label>
+        <label className="look-back label" htmlFor={valueId}>Look back within the last...</label>
           <input
             id={valueId}
             type="number"

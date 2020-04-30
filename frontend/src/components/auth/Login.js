@@ -32,12 +32,7 @@ export default class Login extends Component {
   //going to check the username input, if it looks like an
   //email address, warn the user to use username instead.
   loginWatcher = (event) => {
-    //TODO: may want to make this check more robust
-    if(_.includes(event.target.value,"@")){
-      this.setState({showLoginWarning:true});
-    }else{
-      this.setState({showLoginWarning:false});
-    }
+    this.setState({showLoginWarning: _.includes(event.target.value,"@")});
   }
 
   renderedAuthStatusText() {
@@ -80,11 +75,11 @@ export default class Login extends Component {
               Any communication or data transiting or stored on this system may be disclosed or used for any lawful
               Government purpose.
             </div>
-            {this.state.showLoginWarning ?
+            {this.state.showLoginWarning &&
               <div className="warning" aria-label="Username warning">
-                Please enter a username, and not an email address.
+                Please enter your username, not your email address.
               </div>
-            : null}
+            }
             <div className="login-modal__form">
               <label htmlFor='username'>Username</label>
               <input type='text' id='username' ref='username'

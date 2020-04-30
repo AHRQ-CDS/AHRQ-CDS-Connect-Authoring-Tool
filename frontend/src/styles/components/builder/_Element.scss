@@ -161,7 +161,13 @@
       justify-content: space-between;
     }
 
-    .look-back,
+    .look-back{
+      align-items: center;
+      label{
+        padding-right: 0.5rem;
+      }
+    }
+
     .value-comparison-observation {
       display: flex;
       flex-wrap: wrap;

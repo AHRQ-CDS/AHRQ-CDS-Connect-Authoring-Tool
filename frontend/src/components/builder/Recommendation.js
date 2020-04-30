@@ -83,6 +83,9 @@ export default class Recommendation extends Component {
       }
     });
 
+    if(this.props.rec.subpopulations.length === 1){
+      this.setState({showSubpopulations:false});
+    }
     this.props.updateRecommendations(newRecs);
   }
 
