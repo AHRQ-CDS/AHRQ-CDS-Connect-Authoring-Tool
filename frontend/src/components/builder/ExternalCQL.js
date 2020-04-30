@@ -65,7 +65,7 @@ export default class ExternalCQL extends Component {
           cqlFileName,
           cqlFileContent: fileContentToSend,
           fileType: cqlFileType,
-          artifactId: artifact._id
+          artifact
         };
 
         this.props.addExternalLibrary(library);
@@ -117,7 +117,7 @@ export default class ExternalCQL extends Component {
     if (externalCqlList && externalCqlList.length > 0) {
       return (
         <ExternalCqlTable
-          artifactId={artifact._id}
+          artifact={artifact}
           externalCqlList={externalCqlList}
           externalCQLLibraryParents={externalCQLLibraryParents}
           externalCqlLibraryDetails={externalCqlLibraryDetails}
