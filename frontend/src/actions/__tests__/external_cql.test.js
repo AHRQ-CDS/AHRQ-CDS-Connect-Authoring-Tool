@@ -205,7 +205,7 @@ describe('external cql actions', () => {
 
     it('dispatches ADD_EXTERNAL_CQL_LIBRARY_SUCCESS action upon successful add', () => {
       const store = mockStore({});
-      const library = { artifactId: 'id123' };
+      const library = { artifact: mockArtifact };
       const externalCqlList = [
         { name: 'My Artifact', version: '1', details: { dependencies: [] } },
         { name: 'My other artifact', version: '1', details: { dependencies: [] } }
@@ -216,19 +216,29 @@ describe('external cql actions', () => {
       };
 
       moxios.stubs.track({
+        url: '/authoring/api/artifacts',
+        method: 'PUT',
+        response: { status: 200, response: mockArtifact }
+      });
+
+      moxios.stubs.track({
+        url: /\/artifacts.*/, method: 'GET', response: { status: 200, response: [mockArtifact] }
+      });
+
+      moxios.stubs.track({
         url: '/authoring/api/externalCQL',
         method: 'POST',
         response: { status: 200, response: {} }
       });
 
       moxios.stubs.track({
-        url: `/authoring/api/externalCQL/${library.artifactId}`,
+        url: `/authoring/api/externalCQL/${mockArtifact._id}`,
         method: 'GET',
         response: { status: 200, response: externalCqlList }
       });
 
       moxios.stubs.track({
-        url: `/authoring/api/artifacts/${library.artifactId}`,
+        url: `/authoring/api/artifacts/${mockArtifact._id}`,
         method: 'GET',
         response: { status: 200, response: [mockArtifact] }
       });
@@ -236,9 +246,13 @@ describe('external cql actions', () => {
       const expectedActions = [
         { type: types.ADD_EXTERNAL_CQL_LIBRARY_REQUEST },
         { type: types.ADD_EXTERNAL_CQL_LIBRARY_SUCCESS, message: '' },
+        { type: types.SAVE_ARTIFACT_REQUEST },
+        { type: types.SAVE_ARTIFACT_SUCCESS, artifact: mockArtifact },
+        { type: types.ARTIFACTS_REQUEST },
+        { type: types.LOAD_ARTIFACTS_SUCCESS, artifacts: [mockArtifact] },
         { type: types.EXTERNAL_CQL_LIST_REQUEST },
         { type: types.LOAD_EXTERNAL_CQL_LIST_SUCCESS, externalCqlList, parentsOfLibraries },
-        { type: types.ARTIFACT_REQUEST, id: library.artifactId },
+        { type: types.ARTIFACT_REQUEST, id: mockArtifact._id },
         { type: types.LOAD_ARTIFACT_SUCCESS, artifact: mockArtifact, names: mockArtifactNames, librariesInUse: [] },
         { type: types.SET_STATUS_MESSAGE, message: null }
       ];
@@ -250,7 +264,7 @@ describe('external cql actions', () => {
 
     it('dispatches a ADD_EXTERNAL_CQL_LIBRARY_FAILURE action upon an unsuccessful add due to CQL-to-ELM errors', () => {
       const store = mockStore({});
-      const badLibrary = { artifactId: 'id123' };
+      const badLibrary = { artifact: mockArtifact };
       const elmErrors = [{ startLine: 1 }, { startLine: 2 }];
       const externalCqlList = [
         { name: 'My Artifact', version: '1', details: { dependencies: [] } },
@@ -262,19 +276,29 @@ describe('external cql actions', () => {
       };
 
       moxios.stubs.track({
+        url: '/authoring/api/artifacts',
+        method: 'PUT',
+        response: { status: 200, response: mockArtifact }
+      });
+
+      moxios.stubs.track({
+        url: /\/artifacts.*/, method: 'GET', response: { status: 200, response: [mockArtifact] }
+      });
+
+      moxios.stubs.track({
         url: '/authoring/api/externalCQL',
         method: 'POST',
         response: { status: 400, statusText: 'Bad Request', response: elmErrors }
       });
 
       moxios.stubs.track({
-        url: `/authoring/api/externalCQL/${badLibrary.artifactId}`,
+        url: `/authoring/api/externalCQL/${mockArtifact._id}`,
         method: 'GET',
         response: { status: 200, response: externalCqlList }
       });
 
       moxios.stubs.track({
-        url: `/authoring/api/artifacts/${badLibrary.artifactId}`,
+        url: `/authoring/api/artifacts/${mockArtifact._id}`,
         method: 'GET',
         response: { status: 200, response: [mockArtifact] }
       });
@@ -282,9 +306,13 @@ describe('external cql actions', () => {
       const expectedActions = [
         { type: types.ADD_EXTERNAL_CQL_LIBRARY_REQUEST },
         { type: types.ADD_EXTERNAL_CQL_LIBRARY_FAILURE, status: 400, statusText: '', data: elmErrors },
+        { type: types.SAVE_ARTIFACT_REQUEST },
+        { type: types.SAVE_ARTIFACT_SUCCESS, artifact: mockArtifact },
+        { type: types.ARTIFACTS_REQUEST },
+        { type: types.LOAD_ARTIFACTS_SUCCESS, artifacts: [mockArtifact] },
         { type: types.EXTERNAL_CQL_LIST_REQUEST },
         { type: types.LOAD_EXTERNAL_CQL_LIST_SUCCESS, externalCqlList, parentsOfLibraries },
-        { type: types.ARTIFACT_REQUEST, id: badLibrary.artifactId },
+        { type: types.ARTIFACT_REQUEST, id: mockArtifact._id },
         { type: types.LOAD_ARTIFACT_SUCCESS, artifact: mockArtifact, names: mockArtifactNames, librariesInUse: [] },
         { type: types.SET_STATUS_MESSAGE, message: null }
       ];
@@ -296,7 +324,7 @@ describe('external cql actions', () => {
 
     it('dispatches a ADD_EXTERNAL_CQL_LIBRARY_SUCCESS action upon an unsuccessful add due to duplicate library', () => {
       const store = mockStore({});
-      const badLibrary = { artifactId: 'id123' };
+      const badLibrary = { artifact: mockArtifact };
       const dupLibraryText = 'Library with identical name and version already exists.';
       const externalCqlList = [
         { name: 'My Artifact', version: '1', details: { dependencies: [] } },
@@ -308,19 +336,29 @@ describe('external cql actions', () => {
       };
 
       moxios.stubs.track({
+        url: '/authoring/api/artifacts',
+        method: 'PUT',
+        response: { status: 200, response: mockArtifact }
+      });
+
+      moxios.stubs.track({
+        url: /\/artifacts.*/, method: 'GET', response: { status: 200, response: [mockArtifact] }
+      });
+
+      moxios.stubs.track({
         url: '/authoring/api/externalCQL',
         method: 'POST',
         response: { status: 200, statusText: 'OK', response: dupLibraryText }
       });
 
       moxios.stubs.track({
-        url: `/authoring/api/externalCQL/${badLibrary.artifactId}`,
+        url: `/authoring/api/externalCQL/${mockArtifact._id}`,
         method: 'GET',
         response: { status: 200, response: externalCqlList }
       });
 
       moxios.stubs.track({
-        url: `/authoring/api/artifacts/${badLibrary.artifactId}`,
+        url: `/authoring/api/artifacts/${mockArtifact._id}`,
         method: 'GET',
         response: { status: 200, response: [mockArtifact] }
       });
@@ -328,9 +366,13 @@ describe('external cql actions', () => {
       const expectedActions = [
         { type: types.ADD_EXTERNAL_CQL_LIBRARY_REQUEST },
         { type: types.ADD_EXTERNAL_CQL_LIBRARY_SUCCESS, message: dupLibraryText },
+        { type: types.SAVE_ARTIFACT_REQUEST },
+        { type: types.SAVE_ARTIFACT_SUCCESS, artifact: mockArtifact },
+        { type: types.ARTIFACTS_REQUEST },
+        { type: types.LOAD_ARTIFACTS_SUCCESS, artifacts: [mockArtifact] },
         { type: types.EXTERNAL_CQL_LIST_REQUEST },
         { type: types.LOAD_EXTERNAL_CQL_LIST_SUCCESS, externalCqlList, parentsOfLibraries },
-        { type: types.ARTIFACT_REQUEST, id: badLibrary.artifactId },
+        { type: types.ARTIFACT_REQUEST, id: mockArtifact._id },
         { type: types.LOAD_ARTIFACT_SUCCESS, artifact: mockArtifact, names: mockArtifactNames, librariesInUse: [] },
         { type: types.SET_STATUS_MESSAGE, message: null }
       ];
@@ -343,7 +385,7 @@ describe('external cql actions', () => {
     it('dispatches a ADD_EXTERNAL_CQL_LIBRARY_FAILURE action upon an unsuccessful add due to other errors', () => {
       // An other error could be that the cql-to-elm translator is down.
       const store = mockStore({});
-      const badLibrary = { artifactId: 'id123' };
+      const badLibrary = { artifact: mockArtifact };
       const externalCqlList = [
         { name: 'My Artifact', version: '1', details: { dependencies: [] } },
         { name: 'My other artifact', version: '1', details: { dependencies: [] } }
@@ -354,19 +396,29 @@ describe('external cql actions', () => {
       };
 
       moxios.stubs.track({
+        url: '/authoring/api/artifacts',
+        method: 'PUT',
+        response: { status: 200, response: mockArtifact }
+      });
+
+      moxios.stubs.track({
+        url: /\/artifacts.*/, method: 'GET', response: { status: 200, response: [mockArtifact] }
+      });
+
+      moxios.stubs.track({
         url: '/authoring/api/externalCQL',
         method: 'POST',
         response: { status: 500, statusText: 'Internal Server Error' }
       });
 
       moxios.stubs.track({
-        url: `/authoring/api/externalCQL/${badLibrary.artifactId}`,
+        url: `/authoring/api/externalCQL/${mockArtifact._id}`,
         method: 'GET',
         response: { status: 200, response: externalCqlList }
       });
 
       moxios.stubs.track({
-        url: `/authoring/api/artifacts/${badLibrary.artifactId}`,
+        url: `/authoring/api/artifacts/${mockArtifact._id}`,
         method: 'GET',
         response: { status: 200, response: [mockArtifact] }
       });
@@ -374,9 +426,13 @@ describe('external cql actions', () => {
       const expectedActions = [
         { type: types.ADD_EXTERNAL_CQL_LIBRARY_REQUEST },
         { type: types.ADD_EXTERNAL_CQL_LIBRARY_FAILURE, status: 500, statusText: '', data: [] },
+        { type: types.SAVE_ARTIFACT_REQUEST },
+        { type: types.SAVE_ARTIFACT_SUCCESS, artifact: mockArtifact },
+        { type: types.ARTIFACTS_REQUEST },
+        { type: types.LOAD_ARTIFACTS_SUCCESS, artifacts: [mockArtifact] },
         { type: types.EXTERNAL_CQL_LIST_REQUEST },
         { type: types.LOAD_EXTERNAL_CQL_LIST_SUCCESS, externalCqlList, parentsOfLibraries },
-        { type: types.ARTIFACT_REQUEST, id: badLibrary.artifactId },
+        { type: types.ARTIFACT_REQUEST, id: mockArtifact._id },
         { type: types.LOAD_ARTIFACT_SUCCESS, artifact: mockArtifact, names: mockArtifactNames, librariesInUse: [] },
         { type: types.SET_STATUS_MESSAGE, message: null }
       ];
@@ -395,7 +451,6 @@ describe('external cql actions', () => {
     it('dispatches a DELETE_EXTERNAL_CQL_LIBRARY_SUCCESS action upon successful delete', () => {
       const store = mockStore({});
       const libraryId = 'lib123';
-      const artifactId = 'artifact123';
       const externalCqlList = [
         { name: 'My Artifact', version: '1', details: { dependencies: [] } },
         { name: 'My other artifact', version: '1', details: { dependencies: [] } }
@@ -404,6 +459,16 @@ describe('external cql actions', () => {
         'my-artifact-1': [],
         'my-other-artifact-1': []
       };
+
+      moxios.stubs.track({
+        url: '/authoring/api/artifacts',
+        method: 'PUT',
+        response: { status: 200, response: mockArtifact }
+      });
+
+      moxios.stubs.track({
+        url: /\/artifacts.*/, method: 'GET', response: { status: 200, response: [mockArtifact] }
+      });
 
       moxios.stubs.track({
         url: `/authoring/api/externalCQL/${libraryId}`,
@@ -412,13 +477,13 @@ describe('external cql actions', () => {
       });
 
       moxios.stubs.track({
-        url: `/authoring/api/externalCQL/${artifactId}`,
+        url: `/authoring/api/externalCQL/${mockArtifact._id}`,
         method: 'GET',
         response: { status: 200, response: externalCqlList }
       });
 
       moxios.stubs.track({
-        url: `/authoring/api/artifacts/${artifactId}`,
+        url: `/authoring/api/artifacts/${mockArtifact._id}`,
         method: 'GET',
         response: { status: 200, response: [mockArtifact] }
       });
@@ -426,14 +491,18 @@ describe('external cql actions', () => {
       const expectedActions = [
         { type: types.DELETE_EXTERNAL_CQL_LIBRARY_REQUEST },
         { type: types.DELETE_EXTERNAL_CQL_LIBRARY_SUCCESS },
+        { type: types.SAVE_ARTIFACT_REQUEST },
+        { type: types.SAVE_ARTIFACT_SUCCESS, artifact: mockArtifact },
+        { type: types.ARTIFACTS_REQUEST },
+        { type: types.LOAD_ARTIFACTS_SUCCESS, artifacts: [mockArtifact] },
         { type: types.EXTERNAL_CQL_LIST_REQUEST },
         { type: types.LOAD_EXTERNAL_CQL_LIST_SUCCESS, externalCqlList, parentsOfLibraries },
-        { type: types.ARTIFACT_REQUEST, id: artifactId },
+        { type: types.ARTIFACT_REQUEST, id: mockArtifact._id },
         { type: types.LOAD_ARTIFACT_SUCCESS, artifact: mockArtifact, names: mockArtifactNames, librariesInUse: [] },
         { type: types.SET_STATUS_MESSAGE, message: null }
       ];
 
-      return store.dispatch(actions.deleteExternalCqlLibrary(libraryId, artifactId)).then(() => {
+      return store.dispatch(actions.deleteExternalCqlLibrary(libraryId, mockArtifact)).then(() => {
         expect(store.getActions()).toEqual(expectedActions);
       });
     });
@@ -441,7 +510,6 @@ describe('external cql actions', () => {
     it('dispatches a DELETE_EXTERNAL_CQL_LIBRARY_FAILURE action upon failed delete', () => {
       const store = mockStore({});
       const libraryId = 'lib123';
-      const artifactId = 'artifact123';
       const externalCqlList = [
         { name: 'My Artifact', version: '1', details: { dependencies: [] } },
         { name: 'My other artifact', version: '1', details: { dependencies: [] } }
@@ -452,19 +520,29 @@ describe('external cql actions', () => {
       };
 
       moxios.stubs.track({
+        url: '/authoring/api/artifacts',
+        method: 'PUT',
+        response: { status: 200, response: mockArtifact }
+      });
+
+      moxios.stubs.track({
+        url: /\/artifacts.*/, method: 'GET', response: { status: 200, response: [mockArtifact] }
+      });
+
+      moxios.stubs.track({
         url: `/authoring/api/externalCQL/${libraryId}`,
         method: 'DELETE',
         response: { status: 404, statusText: 'Not found', response: {} }
       });
 
       moxios.stubs.track({
-        url: `/authoring/api/externalCQL/${artifactId}`,
+        url: `/authoring/api/externalCQL/${mockArtifact._id}`,
         method: 'GET',
         response: { status: 200, response: externalCqlList }
       });
 
       moxios.stubs.track({
-        url: `/authoring/api/artifacts/${artifactId}`,
+        url: `/authoring/api/artifacts/${mockArtifact._id}`,
         method: 'GET',
         response: { status: 200, response: [mockArtifact] }
       });
@@ -472,14 +550,18 @@ describe('external cql actions', () => {
       const expectedActions = [
         { type: types.DELETE_EXTERNAL_CQL_LIBRARY_REQUEST },
         { type: types.DELETE_EXTERNAL_CQL_LIBRARY_FAILURE, status: 404, statusText: 'Not found' },
+        { type: types.SAVE_ARTIFACT_REQUEST },
+        { type: types.SAVE_ARTIFACT_SUCCESS, artifact: mockArtifact },
+        { type: types.ARTIFACTS_REQUEST },
+        { type: types.LOAD_ARTIFACTS_SUCCESS, artifacts: [mockArtifact] },
         { type: types.EXTERNAL_CQL_LIST_REQUEST },
         { type: types.LOAD_EXTERNAL_CQL_LIST_SUCCESS, externalCqlList, parentsOfLibraries },
-        { type: types.ARTIFACT_REQUEST, id: artifactId },
+        { type: types.ARTIFACT_REQUEST, id: mockArtifact._id },
         { type: types.LOAD_ARTIFACT_SUCCESS, artifact: mockArtifact, names: mockArtifactNames, librariesInUse: [] },
         { type: types.SET_STATUS_MESSAGE, message: null }
       ];
 
-      return store.dispatch(actions.deleteExternalCqlLibrary(libraryId, artifactId)).then(() => {
+      return store.dispatch(actions.deleteExternalCqlLibrary(libraryId, mockArtifact)).then(() => {
         expect(store.getActions()).toEqual(expectedActions);
       });
     });
