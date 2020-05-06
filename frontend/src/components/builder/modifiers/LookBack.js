@@ -26,7 +26,7 @@ export default class LookBack extends Component {
 
     return (
       <div className="look-back">
-        <label htmlFor={valueId}>
+        <label className="look-back label" htmlFor={valueId}>Look back within the last...</label>
           <input
             id={valueId}
             type="number"
@@ -38,7 +38,7 @@ export default class LookBack extends Component {
               this.props.updateAppliedModifier(this.props.index, { value: parseInt(event.target.value, 10) });
             }}
           />
-        </label>
+
 
         <label htmlFor={unitId}>
           <StyledSelect

@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import FontAwesome from 'react-fontawesome';
+import _ from 'lodash';
 
 import Modal from '../elements/Modal';
 import { onVisitExternalForm } from '../../utils/handlers';
@@ -9,7 +10,7 @@ export default class Login extends Component {
   constructor(props) {
     super(props);
 
-    this.state = { showLoginModal: false };
+    this.state = { showLoginModal: false, showLoginWarning: false };
   }
 
   openLoginModal = () => {
@@ -26,6 +27,12 @@ export default class Login extends Component {
 
     const { username, password } = this.refs;
     this.props.onLoginClick(username.value.trim(), password.value.trim());
+  }
+
+  //going to check the username input, if it looks like an
+  //email address, warn the user to use username instead.
+  loginWatcher = (event) => {
+    this.setState({showLoginWarning: _.includes(event.target.value,"@")});
   }
 
   renderedAuthStatusText() {
@@ -68,10 +75,15 @@ export default class Login extends Component {
               Any communication or data transiting or stored on this system may be disclosed or used for any lawful
               Government purpose.
             </div>
+            {this.state.showLoginWarning &&
+              <div className="warning" aria-label="Username warning">
+                Please enter your username, not your email address.
+              </div>
+            }
             <div className="login-modal__form">
               <label htmlFor='username'>Username</label>
               <input type='text' id='username' ref='username'
-                className="form-control col" placeholder='username' />
+                className="form-control col" placeholder='username' onChange={this.loginWatcher} />
               <label htmlFor='password'>Password</label>
               <input type='password' id='password' ref='password'
                 className="form-control col" placeholder='password' />

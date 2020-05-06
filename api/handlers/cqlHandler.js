@@ -893,7 +893,7 @@ function constructOneRecommendationConditional(recommendation, text) {
 }
 
 function constructComment(comment){
-  let commentText;
+  let commentText = "";
   if(!_.isEmpty(comment)){
     commentText = "//" + comment.split("\n").join("\n  //") + "\n  ";
   }

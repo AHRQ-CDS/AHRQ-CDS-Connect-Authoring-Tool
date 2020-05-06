@@ -115,6 +115,17 @@ describe('<Recommendation />', () => {
     expect(onUpdate).toBeCalledWith(rec.uid, { rationale: newText });
   });
 
+  it('can remove rationale', () =>{
+    const newText = '';
+    const onUpdate = jest.fn();
+
+    const { getByLabelText } = renderComponent({ onUpdate });
+
+    fireEvent.click(getByLabelText('remove rationale'));
+
+    expect(onUpdate).toBeCalledWith(rec.uid, { rationale: newText });
+  });
+
   it('can edit comment text', () => {
     const newText = 'This is a test comment.';
     const onUpdate = jest.fn();
@@ -122,6 +133,17 @@ describe('<Recommendation />', () => {
     const { getByLabelText } = renderComponent({ onUpdate });
 
     fireEvent.change(getByLabelText('Comment'), { target: { name: 'comment', value: newText } });
+
+    expect(onUpdate).toBeCalledWith(rec.uid, { comment: newText });
+  });
+
+  it('can remove a comment', () => {
+    const newText = '';
+    const onUpdate = jest.fn();
+
+    const { getByLabelText } = renderComponent({ onUpdate });
+
+    fireEvent.click(getByLabelText('remove comment'));
 
     expect(onUpdate).toBeCalledWith(rec.uid, { comment: newText });
   });
