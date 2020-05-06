@@ -290,7 +290,8 @@ function parseELMFiles(elmFiles, artifactId, userId, files) {
 // Post a single external CQL library
 function singlePost(req, res) {
   if (req.user) {
-    const { cqlFileName, cqlFileContent, fileType, artifactId } = req.body.library;
+    const { cqlFileName, cqlFileContent, fileType, artifact } = req.body.library;
+    const artifactId = artifact._id;
 
     const decodedBuffer = Buffer.from(cqlFileContent, 'base64');
 

@@ -1,5 +1,5 @@
 const mockArtifact = {
-  _id: null,
+  _id: 'artifact123',
   name: 'Untitled Artifact',
   version: '1',
   fhirVersion: '',

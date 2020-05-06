@@ -58,9 +58,9 @@ export default class ExternalCqlTable extends Component {
   }
 
   handleDeleteExternalCqlLibrary = () => {
-    const { artifactId, deleteExternalCqlLibrary } = this.props;
+    const { artifact, deleteExternalCqlLibrary } = this.props;
     const { externalCqlLibraryToDelete } = this.state;
-    deleteExternalCqlLibrary(externalCqlLibraryToDelete._id, artifactId);
+    deleteExternalCqlLibrary(externalCqlLibraryToDelete._id, artifact);
     this.closeConfirmDeleteModal();
   }
 
@@ -190,7 +190,7 @@ export default class ExternalCqlTable extends Component {
 }
 
 ExternalCqlTable.propTypes = {
-  artifactId: PropTypes.string,
+  artifact: PropTypes.object,
   externalCqlList: PropTypes.array,
   externalCqlLibraryDetails: PropTypes.object,
   externalCQLLibraryParents: PropTypes.object.isRequired,
