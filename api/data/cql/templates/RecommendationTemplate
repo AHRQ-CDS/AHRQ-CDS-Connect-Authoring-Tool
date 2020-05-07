@@ -1,0 +1,10 @@
+<% if (locals.comment) {
+// Render each line in the comment
+locals.comment.forEach(c => {
+%>// <%-c%>
+<%});
+} -%>
+define "<%-element_name%>": <% locals.recs.forEach(r => { if(r.comment){%>
+  //<%-r.comment%><%};%>
+  <%-r.conditional%>'<%-r.text%>'<%});%>
+  else null
