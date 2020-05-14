@@ -113,7 +113,9 @@ describe('Basic CQL Handler Tests', () => {
     }],
     path: ''
   };
-  raw.recommendations = [{ uid: 'rec-53', grade: 'A', subpopulations: [], text: 'One rec.', rationale: '', comment: '' }];
+  raw.recommendations = [
+    { uid: 'rec-53', grade: 'A', subpopulations: [], text: 'One rec.', rationale: '', comment: '' }
+  ];
   raw.subpopulations = [
     {
       special: true,
