@@ -73,57 +73,63 @@ export default class IntervalOfQuantityEditor extends Component {
 
     return (
       <div className="interval-of-quantity-editor">
-        <div className="parameter__item row">
-          <div className="col-3 bold align-right">
-            <label htmlFor={formId}>{label}</label>
-          </div>
+        <div className="form__group">
+          <label htmlFor={formId}>
+            <div className="label">{label}</div>
 
-          <div className="col-9 d-flex">
-            <input
-              id={formId}
-              name="firstQuantity"
-              type="number"
-              value={
-                (_.get(value, 'firstQuantity', null) || _.get(value, 'firstQuantity', null) === 0)
-                ? _.get(value, 'firstQuantity')
-                : '' }
-              onChange={ (e) => {
-                updateInstance({ name, type, label, value: this.assignValue(e) });
-              }}
-            />
+            <div className="input input-3">
+              <div className="input-group input-group-3">
+                <input
+                  id={formId}
+                  name="firstQuantity"
+                  type="number"
+                  value={
+                    (_.get(value, 'firstQuantity', null) || _.get(value, 'firstQuantity', null) === 0)
+                    ? _.get(value, 'firstQuantity')
+                    : '' }
+                  onChange={ (e) => {
+                    updateInstance({ name, type, label, value: this.assignValue(e) });
+                  }}
+                />
+                <div className="dash">-</div>
+              </div>
 
-            <span className="dash">_</span>
 
-            <input
-              id={id}
-              name="secondQuantity"
-              type="number"
-              aria-label="Second Quantity"
-              value={
-                (_.get(value, 'secondQuantity', null) || _.get(value, 'secondQuantity', null) === 0)
-                ? _.get(value, 'secondQuantity')
-                : '' }
-              onChange={ (e) => {
-                updateInstance({ name, type, label, value: this.assignValue(e) });
-              }}
-            />
+              <div className="input-group input-group-3">
+                <input
+                  id={id}
+                  name="secondQuantity"
+                  type="number"
+                  aria-label="Second Quantity"
+                  value={
+                    (_.get(value, 'secondQuantity', null) || _.get(value, 'secondQuantity', null) === 0)
+                    ? _.get(value, 'secondQuantity')
+                    : '' }
+                  onChange={ (e) => {
+                    updateInstance({ name, type, label, value: this.assignValue(e) });
+                  }}
+                />
+              </div>
 
-            <input
-              type="text"
-              className="interval-of-quantity-unit-ucum"
-              id={`${this.props.id}-unit-ucum`}
-              name="unit"
-              placeholder="enter unit"
-              aria-label="Enter Unit"
-              value={_.get(value, 'unit', null) || ''}
-              onChange={(e) => {
-                updateInstance({ name, type, label, value: this.assignValue(e) });
-              }}
-              onSelect={(e) => {
-                updateInstance({ name, type, label, value: this.assignValue(e) });
-              }}
-            />
-          </div>
+              <div className="input-group input-group-3">
+                <input
+                  type="text"
+                  className="interval-of-quantity-unit-ucum"
+                  id={`${this.props.id}-unit-ucum`}
+                  name="unit"
+                  placeholder="enter unit"
+                  aria-label="Enter Unit"
+                  value={_.get(value, 'unit', null) || ''}
+                  onChange={(e) => {
+                    updateInstance({ name, type, label, value: this.assignValue(e) });
+                  }}
+                  onSelect={(e) => {
+                    updateInstance({ name, type, label, value: this.assignValue(e) });
+                  }}
+                />
+              </div>
+            </div>
+          </label>
         </div>
       </div>
     );

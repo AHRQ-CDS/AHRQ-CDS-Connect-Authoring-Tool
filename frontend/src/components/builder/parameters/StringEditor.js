@@ -15,21 +15,21 @@ export default class StringEditor extends Component {
 
     return (
       <div className="string-editor">
-        <div className="parameter__item row">
-          <div className="col-3 bold align-right">
-            <label htmlFor={formId}>{label}</label>
-          </div>
+        <div className="form__group">
+          <label htmlFor={formId}>
+            <div className="label">{label}</div>
 
-          <div className="col-9">
-            <input
-              id={formId}
-              type="text"
-              value={value ? value.replace(/'/g, '') : ''}
-              onChange={ (e) => {
-                updateInstance({ name, type, label, value: this.assignValue(e) });
-              }}
-            />
-          </div>
+            <div className="input">
+              <input
+                id={formId}
+                type="text"
+                value={value ? value.replace(/'/g, '') : ''}
+                onChange={ (e) => {
+                  updateInstance({ name, type, label, value: this.assignValue(e) });
+                }}
+              />
+            </div>
+          </label>
         </div>
       </div>
     );

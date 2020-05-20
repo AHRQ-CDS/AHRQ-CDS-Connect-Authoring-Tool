@@ -50,43 +50,43 @@ export default class QuantityEditor extends Component {
 
     return (
       <div className="quantity-editor">
-        <div className="parameter__item row">
-          <div className="col-3 bold align-right">
-            <label htmlFor={formId}>{label}</label>
-          </div>
+        <div className="form__group">
+          <label htmlFor={formId}>
+            <div className="label">{label}</div>
 
-          <div className="col-9">
-            <input
-              id={id}
-              name="quantity"
-              type="number"
-              value={
-                (_.get(value, 'quantity', null) || _.get(value, 'quantity', null) === 0)
-                ? _.get(value, 'quantity')
-                : '' }
-              onChange={ (e) => {
-                updateInstance({ name, type, label, value: this.assignValue(e) });
-              }}
-            />
+            <div className="input-group">
+              <input
+                id={id}
+                name="quantity"
+                type="number"
+                value={
+                  (_.get(value, 'quantity', null) || _.get(value, 'quantity', null) === 0)
+                  ? _.get(value, 'quantity')
+                  : '' }
+                onChange={ (e) => {
+                  updateInstance({ name, type, label, value: this.assignValue(e) });
+                }}
+              />
+            </div>
 
-            <span>  </span>
-
-            <input
-              type="text"
-              id={`${this.props.id}-unit-ucum`}
-              className="quantity-unit-ucum"
-              name="unit"
-              placeholder="enter unit"
-              aria-label="Enter Unit"
-              value={_.get(value, 'unit', null) || ''}
-              onChange={(e) => {
-                updateInstance({ name, type, label, value: this.assignValue(e) });
-              }}
-              onSelect={(e) => {
-                updateInstance({ name, type, label, value: this.assignValue(e) });
-              }}
-            />
-          </div>
+            <div className="input-group">
+              <input
+                type="text"
+                id={`${this.props.id}-unit-ucum`}
+                className="quantity-unit-ucum"
+                name="unit"
+                placeholder="enter unit"
+                aria-label="Enter Unit"
+                value={_.get(value, 'unit', null) || ''}
+                onChange={(e) => {
+                  updateInstance({ name, type, label, value: this.assignValue(e) });
+                }}
+                onSelect={(e) => {
+                  updateInstance({ name, type, label, value: this.assignValue(e) });
+                }}
+              />
+            </div>
+          </label>
         </div>
       </div>
     );

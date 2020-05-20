@@ -49,7 +49,7 @@ export default class TextAreaField extends Component {
   };
 
   render() {
-    const { id, name, value, customClass, updateInstance } = this.props;
+    const { id, name, value, updateInstance } = this.props;
     const { rows } = this.state;
     const formId = _.uniqueId('field-');
 
@@ -57,9 +57,9 @@ export default class TextAreaField extends Component {
       <div className="textarea-field">
         <div className="form__group">
           <label htmlFor={formId}>
-            <div className={"label " + (customClass||"")}>{name}:</div>
+            <div className="label">{name}:</div>
 
-            <div className={"input " + (customClass||"")}>
+            <div className="input">
               <textarea
                 rows={rows}
                 ref={(ref) => { this.textarea = ref; }}
@@ -83,6 +83,5 @@ TextAreaField.propTypes = {
   id: PropTypes.string.isRequired,
   name: PropTypes.string.isRequired,
   value: PropTypes.string,
-  customClass: PropTypes.string,
   updateInstance: PropTypes.func.isRequired
 };

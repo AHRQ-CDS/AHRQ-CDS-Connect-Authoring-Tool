@@ -948,13 +948,15 @@ export default class TemplateInstance extends Component {
               </div>
             }
           </div>
+
           <div className="card-element__buttons">
             {showElement && !this.props.disableIndent && renderIndentButtons(templateInstance)}
 
             <button
               onClick={this.showHideElementBody}
               className="element__hidebutton transparent-button"
-              aria-label={`hide ${templateInstance.name}`}>
+              aria-label={`hide ${templateInstance.name}`}
+            >
               <FontAwesome name={showElement ? 'angle-double-down' : 'angle-double-right'} />
             </button>
 
@@ -962,19 +964,24 @@ export default class TemplateInstance extends Component {
               id={`deletebutton-${templateInstance.uniqueId}`}
               onClick={this.deleteInstance}
               className={`element__deletebutton transparent-button ${disabledClass}`}
-              aria-label={`remove ${templateInstance.name}`}>
+              aria-label={`remove ${templateInstance.name}`}
+            >
               <FontAwesome name="close" />
             </button>
-            { baseElementUsed &&
+
+            {baseElementUsed &&
               <UncontrolledTooltip
                 target={`deletebutton-${templateInstance.uniqueId}`} placement="left">
                   To delete this Base Element, remove all references to it.
-              </UncontrolledTooltip> }
-            { baseElementInUsedList &&
+              </UncontrolledTooltip>
+            }
+
+            {baseElementInUsedList &&
               <UncontrolledTooltip
                 target={`deletebutton-${templateInstance.uniqueId}`} placement="left">
                 To delete this element, remove all references to the Base Element List.
-              </UncontrolledTooltip> }
+              </UncontrolledTooltip>
+            }
           </div>
         </div>
 

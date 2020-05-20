@@ -76,72 +76,82 @@ export default class IntervalOfDateTimeEditor extends Component {
 
     return (
       <div className="interval-of-date-time-editor">
-        <div className="parameter__item row">
-          <div className="col-3 bold align-right">
-            <label htmlFor={formIdFirst}>{label}</label>
-          </div>
+        <div className="form__group">
+          <label htmlFor={formIdFirst}>
+            <div className="label">{label}</div>
 
-          <div className="col-9 d-flex">
-            <DatePicker
-              id={formIdFirst}
-              selected={
-                moment(_.get(value, 'firstDate', null), 'YYYY-MM-DD').isValid()
-                ? moment(value.firstDate, 'YYYY-MM-DD')
-                : null}
-              dateFormat="L"
-              autoComplete="off"
-              onChange={(e) => {
-                updateInstance({ name, type, label, value: this.assignValue(e, 'firstDate') });
-              }}
-            />
+            <div className="input-group">
+              <span className="date-label">Date:</span>
 
-            <span>  </span>
+              <DatePicker
+                id={formIdFirst}
+                selected={
+                  moment(_.get(value, 'firstDate', null), 'YYYY-MM-DD').isValid()
+                  ? moment(value.firstDate, 'YYYY-MM-DD')
+                  : null}
+                dateFormat="L"
+                autoComplete="off"
+                onChange={(e) => {
+                  updateInstance({ name, type, label, value: this.assignValue(e, 'firstDate') });
+                }}
+              />
+            </div>
 
-            <TimePicker
-              id={id}
-              defaultValue={
-                moment(_.get(value, 'firstTime', null), 'HH:mm:ss').isValid()
-                ? moment(value.firstTime, 'HH:mm:ss')
-                : null}
-              autoComplete="off"
-              onChange={(e) => {
-                updateInstance({ name, type, label, value: this.assignValue(e, 'firstTime') });
-              }}
-            />
-          </div>
+            <div className="input-group">
+              <span className="date-label">Time:</span>
+
+              <TimePicker
+                id={id}
+                defaultValue={
+                  moment(_.get(value, 'firstTime', null), 'HH:mm:ss').isValid()
+                  ? moment(value.firstTime, 'HH:mm:ss')
+                  : null}
+                autoComplete="off"
+                onChange={(e) => {
+                  updateInstance({ name, type, label, value: this.assignValue(e, 'firstTime') });
+                }}
+              />
+            </div>
+          </label>
         </div>
 
-        <div className="parameter__item row">
-          <div className="col-3 bold align-right"></div>
+        <div className="form__group">
+          <label htmlFor={formIdSecond}>
+            <div className="label"></div>
 
-          <div className="col-9 d-flex">
-            <DatePicker
-              id={formIdSecond}
-              selected={
-                moment(_.get(value, 'secondDate', null), 'YYYY-MM-DD').isValid()
-                ? moment(value.secondDate, 'YYYY-MM-DD')
-                : null}
-              dateFormat="L"
-              autoComplete="off"
-              onChange={(e) => {
-                updateInstance({ name, type, label, value: this.assignValue(e, 'secondDate') });
-              }}
-            />
+            <div className="input-group">
+              <span className="date-label">Date:</span>
 
-            <span>  </span>
+              <DatePicker
+                id={formIdSecond}
+                selected={
+                  moment(_.get(value, 'secondDate', null), 'YYYY-MM-DD').isValid()
+                  ? moment(value.secondDate, 'YYYY-MM-DD')
+                  : null}
+                dateFormat="L"
+                autoComplete="off"
+                onChange={(e) => {
+                  updateInstance({ name, type, label, value: this.assignValue(e, 'secondDate') });
+                }}
+              />
+            </div>
 
-            <TimePicker
-              id={id}
-              defaultValue={
-                moment(_.get(value, 'secondTime', null), 'HH:mm:ss').isValid()
-                ? moment(value.secondTime, 'HH:mm:ss')
-                : null}
-              autoComplete="off"
-              onChange={(e) => {
-                updateInstance({ name, type, label, value: this.assignValue(e, 'secondTime') });
-              }}
-            />
-          </div>
+            <div className="input-group">
+              <span className="date-label">Time:</span>
+
+              <TimePicker
+                id={id}
+                defaultValue={
+                  moment(_.get(value, 'secondTime', null), 'HH:mm:ss').isValid()
+                  ? moment(value.secondTime, 'HH:mm:ss')
+                  : null}
+                autoComplete="off"
+                onChange={(e) => {
+                  updateInstance({ name, type, label, value: this.assignValue(e, 'secondTime') });
+                }}
+              />
+            </div>
+          </label>
         </div>
       </div>
     );

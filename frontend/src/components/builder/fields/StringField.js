@@ -18,23 +18,25 @@ export default class StringField extends Component {
           <label htmlFor={formId}>
             <div className="label">{name}:</div>
 
-            <input
-              id={formId}
-              type="text"
-              name={id}
-              value={value || ''}
-              disabled={this.props.disabled}
-              className={this.props.disabled ? 'input disabled' : 'input'}
-              aria-label={name}
-              onKeyPress={(event) => {
-                if (event.which === 34) { // Quotation mark (")
-                  event.preventDefault();
-                }
-              }}
-              onChange={(event) => {
-                updateInstance({ [event.target.name]: event.target.value });
-              }}
-            />
+            <div className="input">
+              <input
+                id={formId}
+                type="text"
+                name={id}
+                value={value || ''}
+                disabled={this.props.disabled}
+                className={this.props.disabled ? 'input disabled' : 'input'}
+                aria-label={name}
+                onKeyPress={(event) => {
+                  if (event.which === 34) { // Quotation mark (")
+                    event.preventDefault();
+                  }
+                }}
+                onChange={(event) => {
+                  updateInstance({ [event.target.name]: event.target.value });
+                }}
+              />
+            </div>
           </label>
         </div>
       </div>

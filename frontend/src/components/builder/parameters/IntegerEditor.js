@@ -16,21 +16,21 @@ export default class IntegerEditor extends Component {
 
     return (
       <div className="integer-editor">
-        <div className="parameter__item row">
-          <div className="col-3 bold align-right">
-            <label htmlFor={formId}>{label}</label>
-          </div>
+        <div className="form-group">
+          <label htmlFor={formId}>
+            <div className="label">{label}</div>
 
-          <div className="col-9">
-            <input
-              id={formId}
-              type="number"
-              value={(value || value === 0) ? value : ''}
-              onChange={ (e) => {
-                updateInstance({ name, type, label, value: this.assignValue(e) });
-              }}
-            />
-          </div>
+            <div className="input">
+              <input
+                id={formId}
+                type="number"
+                value={(value || value === 0) ? value : ''}
+                onChange={ (e) => {
+                  updateInstance({ name, type, label, value: this.assignValue(e) });
+                }}
+              />
+            </div>
+          </label>
         </div>
       </div>
     );

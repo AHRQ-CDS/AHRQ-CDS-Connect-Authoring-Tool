@@ -171,11 +171,13 @@ export default class Parameter extends Component {
               aria-label="Delete Parameter">
               <FontAwesome fixedWidth name='close' />
             </button>
+
             {parameterUsed &&
               <UncontrolledTooltip
                 target={`deletebutton-${id}`} placement="left">
                   To delete this parameter, remove all references to it.
-              </UncontrolledTooltip> }
+              </UncontrolledTooltip>
+            }
           </div>
         </div>
         <div className="expression expression__group expression-collapsed">
@@ -243,20 +245,21 @@ export default class Parameter extends Component {
       <div className="parameter card-group card-group__top" id={id}>
         {showParameter ? <div className="card-element">
           <div className="card-element__header">
-            <StringField
-              id={`param-name-${index}`}
-              name={'Parameter Name'}
-              value={name}
-              disabled={parameterUsed}
-              updateInstance={e => (this.updateParameter({
-                name: e[`param-name-${index}`],
-                uniqueId: id,
-                type,
-                comment,
-                value
-              }))}
-            />
-
+            <div className="card-group__header-title">
+              <StringField
+                id={`param-name-${index}`}
+                name={'Parameter Name'}
+                value={name}
+                disabled={parameterUsed}
+                updateInstance={e => (this.updateParameter({
+                  name: e[`param-name-${index}`],
+                  uniqueId: id,
+                  type,
+                  comment,
+                  value
+                }))}
+              />
+            </div>
 
             <div className="card-element__buttons">
               <button
@@ -306,37 +309,31 @@ export default class Parameter extends Component {
           }
 
           <div className="card-element__body">
-            <div className="parameter__item">
-              <TextAreaField
-                key={id}
-                id={id}
-                name={'Comment'}
-                value={comment}
-                updateInstance={e => this.updateParameter({
-                  name,
-                  uniqueId: id,
-                  type,
-                  comment: e[id],
-                  value
-                })}
-                />
-            </div>
+            <TextAreaField
+              id={id}
+              name="Comment"
+              value={comment}
+              updateInstance={e => this.updateParameter({ name, uniqueId: id, type, comment: e[id], value })}
+            />
 
-            <div className="parameter__item row">
-              <div className="col-3 bold align-right">
-                <label htmlFor={`parameter-${index}`}>Parameter Type:</label>
-              </div>
+            <div className="parameter-field">
+              <div className="form__group">
+                <label htmlFor={`parameter-${index}`}>
+                  <div className="label">Parameter Type:</div>
 
-              <div className="col-9">
-                <StyledSelect
-                  aria-label="Select Parameter Type"
-                  inputProps={{ title: 'Select Parameter Type', id: `parameter-${index}` }}
-                  options={typeOptions}
-                  value={typeOptions.find(typeOption => typeOption.value === type)}
-                  disabled={parameterUsed}
-                  isClearable={false}
-                  onChange={parameterType => this.changeParameterType(parameterType, name, comment)}
-                />
+                  <div className="input">
+                    <StyledSelect
+                      className="Select"
+                      aria-label="Select Parameter Type"
+                      inputProps={{ title: 'Select Parameter Type', id: `parameter-${index}` }}
+                      options={typeOptions}
+                      value={typeOptions.find(typeOption => typeOption.value === type)}
+                      disabled={parameterUsed}
+                      isClearable={false}
+                      onChange={parameterType => this.changeParameterType(parameterType, name, comment)}
+                    />
+                  </div>
+                </label>
               </div>
             </div>
 
