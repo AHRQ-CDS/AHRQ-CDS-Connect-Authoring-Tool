@@ -128,9 +128,12 @@ export default class Parameter extends Component {
     }
   }
 
-  renderCollapsed(id, index, name, parameterUsed, disabledClass, parameterNeedsWarning) {
+  renderCollapsed(id, index, name, type, parameterUsed, disabledClass, parameterNeedsWarning) {
     const { showParameter } = this.state;
-
+    let value = this.props.value;
+    if((typeof value) !== "string") {
+      value = value.str;
+    }
     return (
       <div className="card-element">
         <div className="card-element__header">
@@ -161,6 +164,14 @@ export default class Parameter extends Component {
                   To delete this parameter, remove all references to it.
               </UncontrolledTooltip> }
           </div>
+        </div>
+        <div className="expression-logic">
+          <span className="expression-item expression-tag" aria-label="Type">
+            {type}
+          </span>
+          <span className="expression-item expression-tag" aria-label="Default Value">
+              {value}
+          </span>
         </div>
       </div>
     );
@@ -309,7 +320,7 @@ export default class Parameter extends Component {
 
             {this.renderParameter()}
           </div>
-        </div> : this.renderCollapsed(id, index, name, parameterUsed, disabledClass, parameterNeedsWarning)}
+        </div> : this.renderCollapsed(id, index, name, typeOptions.find(typeOption => typeOption.value === type).label, parameterUsed, disabledClass, parameterNeedsWarning)}
       </div>
     );
   }
