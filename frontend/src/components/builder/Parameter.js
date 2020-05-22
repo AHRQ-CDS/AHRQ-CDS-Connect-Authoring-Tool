@@ -165,13 +165,15 @@ export default class Parameter extends Component {
               </UncontrolledTooltip> }
           </div>
         </div>
-        <div className="expression-logic">
-          <span className="expression-item expression-tag" aria-label="Type">
-            {type}
-          </span>
-          <span className="expression-item expression-tag" aria-label="Default Value">
-              {value}
-          </span>
+        <div className="expression expression__group expression-collapsed">
+          <div className="expression-logic">
+            <span className="expression-item expression-tag" aria-label="Type">
+              {type}
+            </span>
+            <span className="expression-item expression-tag" aria-label="Default Value">
+                {value}
+            </span>
+          </div>
         </div>
       </div>
     );
