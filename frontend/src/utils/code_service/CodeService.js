@@ -1,4 +1,5 @@
 import downloadFromVSAC from './download-vsac';
+import extractOid from './extractOid';
 
 /**
  * Constructs a code service with functions for downloading codes from the National Library of Medicine's
@@ -52,7 +53,8 @@ class CodeService {
     return result;
   }
 
-  findValueSet(oid, version) {
+  findValueSet(id, version) {
+    const oid = extractOid(id);
     if (version != null) {
       const vsObj = this.valueSets[oid];
       if (typeof vsObj !== 'undefined') {

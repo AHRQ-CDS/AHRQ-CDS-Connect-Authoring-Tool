@@ -8,7 +8,7 @@ include "<%=includeLibrary.name%>" version '<%=includeLibrary.version%>'<%if (in
 codesystem "<%=key%>": '<%-resource.id%>' <%}) -%>
 
 <% resourceMap.forEach((resource, key) => {%>
-valueset "<%-resource.name%>": '<%=resource.oid%>'<%});-%>
+valueset "<%-resource.name%>": 'https://cts.nlm.nih.gov/fhir/ValueSet/<%=resource.oid%>'<%});-%>
 
 <% codeMap.forEach((code) => { %>
 code "<%-code.name%>": '<%-code.code%>' from "<%-code.codeSystem.name%>"

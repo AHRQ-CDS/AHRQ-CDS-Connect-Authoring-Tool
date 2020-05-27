@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { Code, ValueSet } from 'cql-execution';
+import extractOid from './extractOid';
 
 const API_BASE = process.env.REACT_APP_API_URL;
 
@@ -12,7 +13,7 @@ function downloadFromVSAC(username, password, input, vsDB = {}) {
     }
   });
   if (Object.keys(vsJSON).length > 0) {
-    const oids = Object.keys(vsJSON).map(k => vsJSON[k]);
+    const oids = Object.keys(vsJSON).map(k => extractOid(vsJSON[k]));
     const promises = oids.map(oid =>
       // Catch errors and convert to resolutions returning an error.  This ensures Promise.all waits for all promises.
       // See: http://stackoverflow.com/questions/31424561/wait-until-all-es6-promises-complete-even-rejected-promises
