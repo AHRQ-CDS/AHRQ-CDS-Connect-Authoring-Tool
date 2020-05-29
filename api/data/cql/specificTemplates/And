@@ -1,3 +1,8 @@
+<% if (comment) {
+// Render each line in the comment
+comment.forEach(c => {
+%>// <%-c%>
+<%})}; -%>
 define "<%-element_name%>":<%if(assumeInPopulation){%>
   if "InPopulation" is not true then
     null

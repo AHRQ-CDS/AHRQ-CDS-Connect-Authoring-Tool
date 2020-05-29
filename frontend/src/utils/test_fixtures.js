@@ -13,7 +13,8 @@ const instanceTree = {
   path: '',
   uniqueId: 'And-1',
   fields: [
-    { id: 'element_name', type: 'string', name: 'Group Name', value: 'MeetsInclusionCriteria' }
+    { id: 'element_name', type: 'string', name: 'Group Name', value: 'MeetsInclusionCriteria' },
+    { id: 'comment', type: 'string', name: 'Comment', value: 'Includes a comment'}
   ],
   childInstances: [
     {
@@ -93,7 +94,8 @@ const emptyInstanceTree = {
   path: '',
   uniqueId: 'And-1',
   fields: [
-    { id: 'element_name', type: 'string', name: 'Group Name', value: 'MeetsInclusionCriteria' }
+    { id: 'element_name', type: 'string', name: 'Group Name', value: 'MeetsInclusionCriteria' },
+    { id: 'comment', type: 'string', name: 'Comment', value: 'Includes a comment'}
   ],
   childInstances: []
 };
@@ -196,7 +198,8 @@ const elementGroups = [
         conjunction: true,
         returnType: 'boolean',
         fields: [
-          { id: 'element_name', type: 'string', name: 'Group Name' }
+          { id: 'element_name', type: 'string', name: 'Group Name' },
+          { id: 'comment', type: 'string', name: 'Comment'}
         ]
       },
       {
@@ -205,7 +208,8 @@ const elementGroups = [
         conjunction: true,
         returnType: 'boolean',
         fields: [
-          { id: 'element_name', type: 'string', name: 'Group Name' }
+          { id: 'element_name', type: 'string', name: 'Group Name' },
+          { id: 'comment', type: 'string', name: 'Comment'}
         ]
       }
     ]
@@ -488,7 +492,8 @@ const genericBaseElementListInstance = {
   uniqueId: 'Union-1',
   usedBy: ['testId1'],
   fields: [
-    { id: 'element_name', type: 'string', name: 'Group Name', value: 'UnionListName' }
+    { id: 'element_name', type: 'string', name: 'Group Name', value: 'UnionListName' },
+    { id: 'comment', type: 'string', name: 'Comment', value: 'UnionListName Comment'}
   ],
   childInstances: [genericInstance]
 };
