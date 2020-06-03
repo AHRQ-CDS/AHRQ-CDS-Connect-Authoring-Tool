@@ -6,6 +6,7 @@ import { UncontrolledTooltip } from 'reactstrap';
 import TemplateInstance from './TemplateInstance';
 import ElementSelect from './ElementSelect';
 import StringField from './fields/StringField';
+import TextAreaField from './fields/TextAreaField';
 import StyledSelect from '../elements/StyledSelect';
 import ExpressionPhrase from './modifiers/ExpressionPhrase';
 
@@ -34,6 +35,10 @@ export default class ConjunctionGroup extends Component {
   }
 
   handleNameChange = (state) => {
+    this.props.editInstance(this.props.treeName, state, this.getPath(), false);
+  }
+
+  handleCommentChange = (state) => {
     this.props.editInstance(this.props.treeName, state, this.getPath(), false);
   }
 
@@ -221,6 +226,7 @@ export default class ConjunctionGroup extends Component {
     const { showGroup } = this.state;
     const collapsedClass = showGroup ? '' : 'expression-collapsed';
     const elementNameField = getFieldWithId(this.props.instance.fields, 'element_name');
+    const elementCommentField = getFieldWithId(this.props.instance.fields,'comment');
     const conjunctionHasDuplicateName = this.conjunctionHasDuplicateName(this.props.instance);
 
     if (!this.props.root) {
@@ -231,12 +237,21 @@ export default class ConjunctionGroup extends Component {
             <div className="card-group__header-title">
               {showGroup ?
                 <div>
+                  <div>
                   <StringField
                     id={elementNameField.id}
                     name={elementNameField.name}
                     value={elementNameField.value}
                     updateInstance={this.handleNameChange}
-                  />
+                  /></div>
+                  <div>
+                  <TextAreaField
+                    id={elementCommentField.id}
+                    name={elementCommentField.name}
+                    value={elementCommentField.value}
+                    customClass="conjunction_comment"
+                    updateInstance={this.handleCommentChange}
+                  /></div>
                   {conjunctionHasDuplicateName
                     && <div className="warning">Warning: Name already in use. Choose another name.</div>}
                 </div>

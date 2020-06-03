@@ -503,7 +503,9 @@ class CqlArtifact {
       ))
     ));
     const name = getFieldWithId(element.fields, 'element_name').value;
+    const comment = getFieldWithId(element.fields, 'comment').value;
     conjunction.element_name = (name || element.subpopulationName || element.uniqueId);
+    conjunction.comment = (createCommentArray(comment) || "");
     (element.childInstances || []).forEach((child) => {
       const childNameField = getFieldWithId(child.fields, 'element_name');
       let childName = (childNameField||{}).value || child.uniqueId;

@@ -3,8 +3,7 @@
 // Render each line in the comment
 comment.forEach(c => {
 %>// <%-c%>
-<%});
-} -%>
+<%})}; -%>
 define "<%-element_name%>":
   "__ageRange_for_<%-element_name%>" <%-checkExistenceValue%>
   
@@ -16,8 +15,7 @@ define "__ageRange_for_<%-element_name%>":
 // Render each line in the comment
 comment.forEach(c => {
 %>// <%-c%>
-<%});
-} -%>
+<%})}; -%>
 define "<%-element_name%>":
 <% } -%>
   <%if (min_age !== null && min_age >=0) {%><% if(unit_of_time) { %><%-unit_of_time.value%><% } else { %>AgeInYears()<% } %> >= <%=min_age%><%}%><%if (min_age !== null && max_age !== null && min_age >=0 && max_age >= 0){%> and <%}%><%if (max_age !== null && max_age >=0) {%><% if(unit_of_time) { %><%-unit_of_time.value%><% } else { %>AgeInYears()<% } %> <= <%=max_age%><%}%>

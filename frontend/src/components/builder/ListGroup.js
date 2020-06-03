@@ -13,6 +13,7 @@ import { getReturnType, getFieldWithId } from '../../utils/instances';
 import ConjunctionGroup from './ConjunctionGroup';
 import ExpressionPhrase from './modifiers/ExpressionPhrase';
 import StringField from './fields/StringField';
+import TextAreaField from "./fields/TextAreaField";
 
 const listTypes = [
   'list_of_observations',
@@ -68,12 +69,12 @@ export default class ListGroup extends Component {
     }
   }
 
-  updateBaseElementList = (name, uniqueId) => {
+  updateBaseElementList = (data, type, uniqueId) => {
     const newBaseElementLists = _.cloneDeep(this.props.artifact.baseElements);
     const baseElementIndex = this.props.artifact.baseElements.findIndex(baseElement =>
       baseElement.uniqueId === uniqueId);
-    const nameField = getFieldWithId(newBaseElementLists[baseElementIndex].fields, 'element_name');
-    nameField.value = name;
+    const field = getFieldWithId(newBaseElementLists[baseElementIndex].fields, type);
+    field.value = data;
 
     this.props.updateBaseElementLists(newBaseElementLists, 'baseElements');
   }
@@ -272,7 +273,6 @@ export default class ListGroup extends Component {
             </div>
           </div>
         </div>
-
         <ConjunctionGroup
           root={true}
           treeName={this.props.treeName}
@@ -329,6 +329,7 @@ export default class ListGroup extends Component {
     const { instance } = this.props;
     const { isExpanded } = this.state;
     const name = getFieldWithId(instance.fields, 'element_name').value;
+    const comment = getFieldWithId(instance.fields,'comment').value;
     const allInstancesInAllTrees = this.props.getAllInstancesInAllTrees();
     const { instanceNames, baseElements, parameters } = this.props;
     const needsDuplicateNameWarning
@@ -349,9 +350,18 @@ export default class ListGroup extends Component {
                   name={'Group'}
                   uniqueId={instance.uniqueId}
                   updateInstance={(value) => {
-                    this.updateBaseElementList(value.base_element_name, instance.uniqueId);
+                    this.updateBaseElementList(value.base_element_name, "element_name", instance.uniqueId);
                   }}
                   value={name}
+                />
+                <TextAreaField
+                  id={'base_comment'}
+                  name={'Comment'}
+                  customClass="base_comment"
+                  value={comment}
+                  updateInstance={(value)=>{
+                    this.updateBaseElementList(value.base_comment, "comment", instance.uniqueId);
+                  }}
                 />
                 {needsDuplicateNameWarning && !needsBaseElementWarning
                   && <div className="warning">Warning: Name already in use. Choose another name.</div>}
