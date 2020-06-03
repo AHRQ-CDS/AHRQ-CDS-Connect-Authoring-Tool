@@ -3,7 +3,7 @@ define "<%-element_name%>":
 <%if (index > 0) {-%>
   else if <%- statement.condition.value !== null ? statement.condition.value : 'null' %> then
 <%} else {-%>
-  if "<%- statement.condition.value !== null ? statement.condition.value : 'null' %>" then
+  if <%- statement.condition.value !== null ? statement.condition.value : 'null' %> then
 <%}-%>
 <%if (statement.useThenClause) {-%>
     {'<%-statement.thenClause%>'}
