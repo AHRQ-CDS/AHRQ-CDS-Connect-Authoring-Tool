@@ -786,9 +786,6 @@ class CqlArtifact {
   errors() {
     this.errorStatement.statements.forEach((statement, index) => {
       this.errorStatement.statements[index].condition.label = sanitizeCQLString(statement.condition.label);
-      /*if(_.includes(statement.condition.value," ")){
-        this.errorStatement.statements[index].condition.value = "\"" + statement.condition.value + "\"";
-      }*/
       this.errorStatement.statements[index].condition.value = quoteCQLConditional(statement.condition.value);
       if (statement.useThenClause) {
         this.errorStatement.statements[index].thenClause = sanitizeCQLString(statement.thenClause);
@@ -839,7 +836,7 @@ function sanitizeCQLString(cqlString) {
 function quoteCQLConditional(conditional){
   let returnValue = conditional;
   //some conditionals may already be quoted
-  if(!(_.startsWith(conditional,"\""))){
+  if(!(_.includes(conditional,"\""))){
     returnValue = "\"" + conditional + "\"";
   }
   return returnValue;
