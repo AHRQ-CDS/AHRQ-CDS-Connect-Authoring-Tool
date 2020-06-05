@@ -176,7 +176,7 @@ function mapReturnTypes(definitions) {
 }
 
 function checkMatch(elmResults, files) {
-  const libraryAndVersionRegex = /library\s+(([A-Z][A-Za-z0-9_]*)|"(.+)")\s+version\s+'(.+)'/m;
+  const libraryAndVersionRegex = /library\s+(([A-Za-z_][A-Za-z0-9_]*)|"(.+)")\s+version\s+'(.+)'/m;
   const fileForELMResult = files.find(file => {
     const matches = libraryAndVersionRegex.exec(file.text);
     const isMatch =
