@@ -188,8 +188,6 @@ function checkMatch(elmResults, files) {
 
 const filterDefinition = def => (def.name !== 'Patient' && def.accessLevel === 'Public');
 
-const compareNameAndVersion = (a, b) => a.name === b.name && a.version === b.version;
-
 const filterCQLFiles = file => {
   const filePathArray = file.path.split('/');
   const fileName = filePathArray[filePathArray.length - 1];
@@ -319,7 +317,7 @@ function singlePost(req, res) {
                   _.differenceWith(elmResultsToSave, authoringToolExports, (a, b) => a.name === b.name);
                 const authoringToolExportLibraries = _.difference(elmResultsToSave, nonAuthoringToolExportLibraries);
                 const nonDuplicateLibraries =
-                  _.differenceWith(nonAuthoringToolExportLibraries, libraries, compareNameAndVersion);
+                  _.differenceWith(nonAuthoringToolExportLibraries, libraries, (a, b) => a.name === b.name);
                 const duplicateLibraries = _.difference(nonAuthoringToolExportLibraries, nonDuplicateLibraries);
 
                 const newLibFHIRVersion = getCurrentFHIRVersion(elmResultsToSave);
@@ -354,7 +352,7 @@ function singlePost(req, res) {
                       // confirm they work with the non-duplicate libraries.
                       const librariesNotUploaded =
                         duplicateLibraries.map(lib => `library ${lib.name} version ${lib.version}`).join(', ');
-                      let message = `The following was not uploaded because a library with identical name and version \
+                      let message = `The following was not uploaded because a library with identical name \
                         already exists: ${librariesNotUploaded}.`;
                       if (exportLibrariesNotUploaded.length > 0) {
                         message = message.concat(` ${exportLibrariesNotUploadedMessage}`);
@@ -423,7 +421,7 @@ function singlePost(req, res) {
           else {
             const elmResult = elmResultsToSave[0]; // This is the single file upload case, so elmResultsToSave will only ever have one item.
             const defaultLibrary = authoringToolExports.map(l => l.name).includes(elmResult.name);
-            const dupLibrary = libraries.find(lib => lib.name === elmResult.name && lib.version === elmResult.version);
+            const dupLibrary = libraries.find(lib => lib.name === elmResult.name);
             const newLibFHIRVersion = elmResult.fhirVersion;
             const fhirVersion = getCurrentFHIRVersion(libraries);
 
@@ -440,7 +438,7 @@ function singlePost(req, res) {
             } else if (defaultLibrary) {
               res.status(200).send('Library is already included by default, so it was not uploaded.');
             } else if (dupLibrary) {
-              res.status(200).send('Library with identical name and version already exists.');
+              res.status(200).send('Library with identical name already exists.');
             } else if (!fhirVersionsMatch) {
               const message = 'A library using a different version of FHIR is uploaded. Only one FHIR version can be \
                 supported at a time.';
