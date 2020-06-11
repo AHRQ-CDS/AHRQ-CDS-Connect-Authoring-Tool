@@ -4,7 +4,7 @@ import { getFieldWithType } from './instances';
 export function getOriginalBaseElement(instance, baseElements) {
   const referenceField = getFieldWithType(instance.fields, 'reference');
   if (referenceField) {
-    if (referenceField.id === 'parameterReference') {
+    if (referenceField.id === 'parameterReference' || referenceField.id === 'externalCqlReference') {
       return instance;
     }
     const baseElementReferenced = baseElements.find(element =>
@@ -18,7 +18,7 @@ export function getAllModifiersOnBaseElementUse(instance, baseElements, modifier
   let currentModifiers = modifiers;
   const referenceField = getFieldWithType(instance.fields, 'reference');
   if (referenceField) {
-    if (referenceField.id === 'parameterReference') {
+    if (referenceField.id === 'parameterReference' || referenceField.id === 'externalCqlReference') {
       return _.cloneDeep(instance.modifiers || []).concat(currentModifiers);
     }
     const baseElementReferenced = baseElements.find(element =>
