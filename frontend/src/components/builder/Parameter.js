@@ -67,6 +67,11 @@ export default class Parameter extends Component {
     }
   }
 
+  startsWithVowel = (toCheck) => {
+    const vowelRegex = '^[aieouAEIOU].*';
+    return toCheck.match(vowelRegex);
+  }
+
   renderParameter() {
     const parameterProps = {
       id: `param-name-${this.props.index}`,
@@ -130,9 +135,17 @@ export default class Parameter extends Component {
 
   renderCollapsed(id, index, name, type, parameterUsed, disabledClass, parameterNeedsWarning) {
     const { showParameter } = this.state;
-    let value = this.props.value;
-    if((typeof value) !== "string") {
-      value = value.str;
+    let value = this.props.value || "";
+    //integers and objects (datetime, codes, etc) are handled differently
+    switch (typeof value){
+      case 'number':
+        value = value.toString();
+        break;
+      case 'object':
+        value = value.str;
+        break;
+      default:
+        break;
     }
     return (
       <div className="card-element">
@@ -147,7 +160,7 @@ export default class Parameter extends Component {
             <button
               onClick={this.showHideParameterBody}
               className="element__hidebutton transparent-button"
-              aria-label={`hide ${name}`}>
+              aria-label={`hide-${name}`}>
               <FontAwesome name={showParameter ? 'angle-double-down' : 'angle-double-right'} />
             </button>
 
@@ -167,12 +180,18 @@ export default class Parameter extends Component {
         </div>
         <div className="expression expression__group expression-collapsed">
           <div className="expression-logic">
+              {this.startsWithVowel(type) ? "An " : "A "}
             <span className="expression-item expression-tag" aria-label="Type">
               {type}
             </span>
-            <span className="expression-item expression-tag" aria-label="Default Value">
-                {value}
-            </span>
+              parameter {value ? " that defaults to " : " with no default value."}
+            { value &&
+                <span className='expression-item expression-tag' aria-label='Default Value' >
+                  {value}
+                </span>
+            }
+
+
           </div>
         </div>
       </div>
@@ -218,6 +237,7 @@ export default class Parameter extends Component {
     const isIncompleteWarning = parameterIsIncompleteWarning(type, value);
     const parameterNeedsWarning
       = doesHaveDuplicateName || doesHaveParameterUsageWarning || (isIncompleteWarning != null);
+    const typeLabel  = typeOptions.find(typeOption => typeOption.value === type).label;
 
     return (
       <div className="parameter card-group card-group__top" id={id}>
@@ -242,7 +262,7 @@ export default class Parameter extends Component {
               <button
                 onClick={this.showHideParameterBody}
                 className="element__hidebutton transparent-button"
-                aria-label={`hide ${name}`}>
+                aria-label={`hide-${name}`}>
                 <FontAwesome name={showParameter ? 'angle-double-down' : 'angle-double-right'} />
               </button>
 
@@ -322,7 +342,7 @@ export default class Parameter extends Component {
 
             {this.renderParameter()}
           </div>
-        </div> : this.renderCollapsed(id, index, name, typeOptions.find(typeOption => typeOption.value === type).label, parameterUsed, disabledClass, parameterNeedsWarning)}
+        </div> : this.renderCollapsed(id, index, name, typeLabel, parameterUsed, disabledClass, parameterNeedsWarning)}
       </div>
     );
   }
