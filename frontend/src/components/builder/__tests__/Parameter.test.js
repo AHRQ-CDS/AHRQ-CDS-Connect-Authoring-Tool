@@ -46,6 +46,7 @@ describe('<Parameter />', () => {
     const updateInstanceOfParameter = jest.fn();
 
     const { getByLabelText } = renderComponent({
+      type: 'boolean',
       updateInstanceOfParameter
     });
 
@@ -55,7 +56,7 @@ describe('<Parameter />', () => {
       {
         comment: '',
         name: 'Parameter 007',
-        type: '',
+        type: 'boolean',
         uniqueId: 'test-id',
         value: null
       },
@@ -66,7 +67,11 @@ describe('<Parameter />', () => {
   it('can be deleted', () => {
     const deleteParameter = jest.fn();
     const index = 5;
-    const { getByLabelText } = renderComponent({ deleteParameter, index });
+    const { getByLabelText } = renderComponent({
+      type: 'boolean',
+      deleteParameter,
+      index
+    });
 
     fireEvent.click(getByLabelText('Delete Parameter'));
 
@@ -90,6 +95,20 @@ describe('<Parameter />', () => {
       },
       0
     );
+  });
+
+  it('can be collapsed and expanded', () => {
+    const collapseParameter = jest.fn();
+    const { getByLabelText } = renderComponent({
+      type: 'boolean',
+      collapseParameter,
+    });
+    //collapse the parameter
+    fireEvent.click(getByLabelText('hide-'));
+    expect(getByLabelText('Type')).not.toBeNull();
+    //expand the parameter
+    fireEvent.click(getByLabelText('hide-'));
+    expect(getByLabelText('Select Parameter Type')).not.toBeNull();
   });
 
   describe('parameter component rendering', () => {

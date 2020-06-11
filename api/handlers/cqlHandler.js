@@ -788,6 +788,7 @@ class CqlArtifact {
   errors() {
     this.errorStatement.statements.forEach((statement, index) => {
       this.errorStatement.statements[index].condition.label = sanitizeCQLString(statement.condition.label);
+      this.errorStatement.statements[index].condition.value = quoteCQLConditional(statement.condition.value);
       if (statement.useThenClause) {
         this.errorStatement.statements[index].thenClause = sanitizeCQLString(statement.thenClause);
       } else {
@@ -831,6 +832,16 @@ class CqlArtifact {
 // Replaces all instances of `'` in the string with the escaped `\'` - Might be expanded in the future
 function sanitizeCQLString(cqlString) {
   return _.replace(cqlString, /'/g, '\\\'');
+}
+
+//we want to quote conditionals with a space, but some may already have quotes around them
+function quoteCQLConditional(conditional){
+  let returnValue = conditional;
+  //some conditionals may already be quoted
+  if(!(_.includes(conditional,"\""))){
+    returnValue = "\"" + conditional + "\"";
+  }
+  return returnValue;
 }
 
 // Both parameters are arrays. All modifiers will be applied to all values, and joined with "\n or".
