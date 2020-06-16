@@ -222,15 +222,14 @@ class Landing extends Component {
               <div className="home-card__title">Contribute</div>
 
               <div className="home-card__text">
-                The CDS Authoring Tool is released under an open source Apache 2.0 license and is available on GitHub
-                at:{' '}
+                The CDS Authoring Tool is released under an open source Apache 2.0 license and is available on
 
                 <a
                   target="_blank"
                   rel="nofollow noopener noreferrer"
                   onClick={onVisitExternalLink}
                   href="https://github.com/ahrq-cds/ahrq-cds-connect-authoring-tool">
-                  {' '}https://github.com/ahrq-cds/ahrq-cds-connect-authoring-tool{' '}
+                  {' '}GitHub{' '}
                 </a>
 
                 <i className="fa fa-external-link"></i>.
