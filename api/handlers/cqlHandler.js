@@ -1138,7 +1138,16 @@ function writeZip(artifactJson, externalLibs, writeStream, callback /* (error) *
     elmFiles.forEach(e => {
       archive.append(e.content.replace(/\r\n|\r|\n/g, '\r\n'), { name: `${e.name}.json` });
     });
-    archive.glob('FHIRHelpers.cql', { cwd: `${__dirname}/../data/library_helpers/CQLFiles/DSTU2` });
+
+    let helperPath;
+    if (fhirTarget.version === '4.0.0') {
+      helperPath = `${__dirname}/../data/library_helpers/CQLFiles/R4`;
+    } else if (fhirTarget.version === '3.0.0') {
+      helperPath = `${__dirname}/../data/library_helpers/CQLFiles/STU3`;
+    } else {
+      helperPath = `${__dirname}/../data/library_helpers/CQLFiles/DSTU2`;
+    }
+    archive.glob('FHIRHelpers.cql', { cwd: helperPath });
     archive.finalize();
   });
 }
