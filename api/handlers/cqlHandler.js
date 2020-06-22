@@ -1064,13 +1064,13 @@ function objConvert(req, res, callback) {
       let helperPath;
       let commonsPath;
       if (fhirTarget.version === '4.0.0') {
-        helperPath = `${__dirname}/../data/library_helpers/CQLFiles/R4`;
+        helperPath = path.join(__dirname, '..', 'data', 'library_helpers', 'CQLFiles', 'R4');
         commonsPath = path.join(helperPath, 'CDS_Connect_Commons_for_FHIRv400.cql');
       } else if (fhirTarget.version === '3.0.0') {
-        helperPath = `${__dirname}/../data/library_helpers/CQLFiles/STU3`;
+        helperPath = path.join(__dirname, '..', 'data', 'library_helpers', 'CQLFiles', 'STU3');
         commonsPath = path.join(helperPath, 'CDS_Connect_Commons_for_FHIRv300.cql');
       } else {
-        helperPath = `${__dirname}/../data/library_helpers/CQLFiles/DSTU2`;
+        helperPath = path.join(__dirname, '..', 'data', 'library_helpers', 'CQLFiles', 'DSTU2');
         commonsPath = path.join(helperPath, 'CDS_Connect_Commons_for_FHIRv102.cql');
       }
       const conversionsPath = path.join(helperPath, 'CDS_Connect_Conversions.cql');
@@ -1141,11 +1141,11 @@ function writeZip(artifactJson, externalLibs, writeStream, callback /* (error) *
 
     let helperPath;
     if (fhirTarget.version === '4.0.0') {
-      helperPath = `${__dirname}/../data/library_helpers/CQLFiles/R4`;
+      helperPath = path.join(__dirname, '..', 'data', 'library_helpers', 'CQLFiles', 'R4');
     } else if (fhirTarget.version === '3.0.0') {
-      helperPath = `${__dirname}/../data/library_helpers/CQLFiles/STU3`;
+      helperPath = path.join(__dirname, '..', 'data', 'library_helpers', 'CQLFiles', 'STU3');
     } else {
-      helperPath = `${__dirname}/../data/library_helpers/CQLFiles/DSTU2`;
+      helperPath = path.join(__dirname, '..', 'data', 'library_helpers', 'CQLFiles', 'DSTU2');
     }
     archive.glob('FHIRHelpers.cql', { cwd: helperPath });
     archive.finalize();
@@ -1162,11 +1162,11 @@ function convertToElm(artifacts, callback /* (error, elmFiles) */) {
   // Load all the supplementary CQL files, open file streams to them, and convert to ELM
   let helperPath;
   if (fhirTarget.version === '4.0.0') {
-    helperPath = `${__dirname}/../data/library_helpers/CQLFiles/R4`;
+    helperPath = path.join(__dirname, '..', 'data', 'library_helpers', 'CQLFiles', 'R4');
   } else if (fhirTarget.version === '3.0.0') {
-    helperPath = `${__dirname}/../data/library_helpers/CQLFiles/STU3`;
+    helperPath = path.join(__dirname, '..', 'data', 'library_helpers', 'CQLFiles', 'STU3');
   } else {
-    helperPath = `${__dirname}/../data/library_helpers/CQLFiles/DSTU2`;
+    helperPath = path.join(__dirname, '..', 'data', 'library_helpers', 'CQLFiles', 'DSTU2');
   }
   // We might not need glob anymore, but we keep it just in case we need to bundle more
   // helper libraries into the CQL to ELM request again eventually
