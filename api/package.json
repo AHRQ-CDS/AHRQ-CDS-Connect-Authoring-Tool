@@ -12,7 +12,7 @@
     "change-case": "^3.1.0",
     "connect-mongo": "^2.0.0",
     "convict": "^4.0.1",
-    "cql-merge": "file:localDependencies/cql-merge-1.0.0.tgz",
+    "cql-merge": "file:./localDependencies/cql-merge-1.0.0.tgz",
     "ejs": "^2.5.7",
     "express": "^4.16.2",
     "express-session": "^1.15.6",
