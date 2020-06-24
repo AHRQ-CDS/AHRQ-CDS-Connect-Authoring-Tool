@@ -7,4 +7,6 @@ locals.comment.forEach(c => {
 define "<%-element_name%>": <% locals.recs.forEach(r => { if(r.comment){%>
   //<%-r.comment%><%};%>
   <%-r.conditional%>'<%-r.text%>'<%});%>
-  else null
+  <% if(locals.recs.length > 0) {-%>else null
+  <%}else{ -%>null<%}-%>
+
