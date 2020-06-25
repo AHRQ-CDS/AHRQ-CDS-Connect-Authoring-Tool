@@ -70,7 +70,7 @@ export default class ListGroup extends Component {
     }
   }
 
-  showHideGroupComment = () => {
+  toggleComment = () => {
     this.setState({ showComment: !this.state.showComment });
   }
 
@@ -407,7 +407,7 @@ export default class ListGroup extends Component {
 
             <div className="card-element__buttons">
               <button
-                onClick={this.showHideGroupComment}
+                onClick={this.toggleComment}
                 className="element_hidebutton transparent-button"
                 aria-label="show comment"
               >

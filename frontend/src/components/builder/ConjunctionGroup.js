@@ -170,7 +170,7 @@ export default class ConjunctionGroup extends Component {
     this.setState({ showGroup: !this.state.showGroup });
   }
 
-  showHideGroupComment = () => {
+  toggleComment = () => {
     this.setState({ showComment: !this.state.showComment });
   }
 
@@ -278,7 +278,7 @@ export default class ConjunctionGroup extends Component {
               {showGroup && this.renderIndentButtons(this.props.instance)}
 
               <button
-                onClick={this.showHideGroupComment}
+                onClick={this.toggleComment}
                 className="element_hidebutton transparent-button"
                 aria-label="show comment"
               >
