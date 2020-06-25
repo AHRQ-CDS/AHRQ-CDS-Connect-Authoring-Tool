@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import FontAwesome from 'react-fontawesome';
 import { UncontrolledTooltip } from 'reactstrap';
+import classnames from 'classnames';
 
 import TemplateInstance from './TemplateInstance';
 import ElementSelect from './ElementSelect';
@@ -234,6 +235,7 @@ export default class ConjunctionGroup extends Component {
     const elementCommentField = getFieldWithId(this.props.instance.fields,'comment');
     const conjunctionHasDuplicateName = this.conjunctionHasDuplicateName(this.props.instance);
     const showHasWarnings = conjunctionHasDuplicateName || this.hasNestedWarnings(this.props.instance.childInstances);
+    const hasComment = elementCommentField && elementCommentField.value && elementCommentField.value !== '';
 
     if (!this.props.root) {
       const { disableElement } = this.props;
@@ -277,13 +279,15 @@ export default class ConjunctionGroup extends Component {
             <div className="card-group__buttons">
               {showGroup && this.renderIndentButtons(this.props.instance)}
 
-              <button
-                onClick={this.toggleComment}
-                className="element_hidebutton transparent-button"
-                aria-label="show comment"
-              >
-                <FontAwesome name="comment" />
-              </button>
+              {showGroup &&
+                <button
+                  onClick={this.toggleComment}
+                  className={classnames('element_hidebutton', 'transparent-button', hasComment && 'has-comment')}
+                  aria-label="show comment"
+                >
+                  <FontAwesome name={hasComment ? 'comment-dots' : 'comment'} />
+                </button>
+              }
 
               <button
                 onClick={this.showHideGroupBody}

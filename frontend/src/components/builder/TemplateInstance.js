@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import FontAwesome from 'react-fontawesome';
 import { UncontrolledTooltip } from 'reactstrap';
-import classNames from 'classnames';
+import classnames from 'classnames';
 import _ from 'lodash';
 
 import VSACAuthenticationModal from './VSACAuthenticationModal';
@@ -871,7 +871,6 @@ export default class TemplateInstance extends Component {
 
     if (elementNameField) {
       let elementType = (templateInstance.type === 'parameter') ? 'Parameter' : templateInstance.name;
-
       const referenceField = getFieldWithType(templateInstance.fields, 'reference');
 
       if (referenceField && (referenceField.id === 'baseElementReference')) {
@@ -897,10 +896,11 @@ export default class TemplateInstance extends Component {
             uniqueId={templateInstance.uniqueId}
           />
 
-          {doesHaveDuplicateName &&
-          !doesHaveBaseElementUseWarning &&
-          !doesHaveBaseElementInstanceWarning &&
-          !doesHaveParameterUseWarning &&
+          {
+            doesHaveDuplicateName &&
+            !doesHaveBaseElementUseWarning &&
+            !doesHaveBaseElementInstanceWarning &&
+            !doesHaveParameterUseWarning &&
             <div className="warning">Warning: Name already in use. Choose another name.</div>
           }
 
@@ -922,7 +922,8 @@ export default class TemplateInstance extends Component {
             <TextAreaField
               key={commentField.id}
               {...commentField}
-              updateInstance={this.updateInstance} />
+              updateInstance={this.updateInstance}
+            />
           }
         </div>
       );
@@ -936,12 +937,13 @@ export default class TemplateInstance extends Component {
     const { templateInstance, renderIndentButtons } = this.props;
     const { showElement } = this.state;
     const elementNameField = getFieldWithId(templateInstance.fields, 'element_name');
-    const headerClass = classNames('card-element__header', { collapsed: !showElement });
-    const headerTopClass = classNames('card-element__header-top', { collapsed: !showElement });
-
+    const headerClass = classnames('card-element__header', { collapsed: !showElement });
+    const headerTopClass = classnames('card-element__header-top', { collapsed: !showElement });
     const baseElementUsed = this.isBaseElementUsed();
     const baseElementInUsedList = this.props.disableElement;
     const disabledClass = (baseElementUsed || baseElementInUsedList) ? 'disabled' : '';
+    const commentField = getFieldWithId(templateInstance.fields, 'comment');
+    const hasComment = commentField && commentField.value && commentField.value !== '';
 
     return (
       <div className={headerClass}>
@@ -961,13 +963,15 @@ export default class TemplateInstance extends Component {
           <div className="card-element__buttons">
             {showElement && !this.props.disableIndent && renderIndentButtons(templateInstance)}
 
-            <button
-              onClick={this.toggleComment}
-              className="element_hidebutton transparent-button"
-              aria-label="show comment"
-            >
-              <FontAwesome name="comment" />
-            </button>
+            {showElement &&
+              <button
+                onClick={this.toggleComment}
+                className={classnames('element_hidebutton', 'transparent-button', hasComment && 'has-comment')}
+                aria-label="show comment"
+              >
+                <FontAwesome name={hasComment ? 'comment-dots' : 'comment'} />
+              </button>
+            }
 
             <button
               onClick={this.showHideElementBody}

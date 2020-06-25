@@ -125,3 +125,7 @@ button.danger-button {
 .fa-eye {
   cursor: pointer;
 }
+
+button.has-comment .fa {
+  color: $blue-light;
+}
