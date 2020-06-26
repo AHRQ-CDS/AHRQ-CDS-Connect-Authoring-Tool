@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import FontAwesome from 'react-fontawesome';
 import { UncontrolledTooltip } from 'reactstrap';
+import classnames from 'classnames';
 
 import TemplateInstance from './TemplateInstance';
 import ElementSelect from './ElementSelect';
@@ -26,7 +27,8 @@ export default class ConjunctionGroup extends Component {
     this.allTypes = this.props.templates.reduce((prev, curr) => [...prev, ...curr.entries], []);
 
     this.state = {
-      showGroup: true
+      showGroup: true,
+      showComment: false
     };
   }
 
@@ -169,6 +171,10 @@ export default class ConjunctionGroup extends Component {
     this.setState({ showGroup: !this.state.showGroup });
   }
 
+  toggleComment = () => {
+    this.setState({ showComment: !this.state.showComment });
+  }
+
   // ----------------------- RENDERS --------------------------------------- //
 
   renderDisabledTooltip = id => (
@@ -223,43 +229,49 @@ export default class ConjunctionGroup extends Component {
   )
 
   renderRoot() {
-    const { showGroup } = this.state;
+    const { showGroup, showComment } = this.state;
     const collapsedClass = showGroup ? '' : 'expression-collapsed';
     const elementNameField = getFieldWithId(this.props.instance.fields, 'element_name');
     const elementCommentField = getFieldWithId(this.props.instance.fields,'comment');
     const conjunctionHasDuplicateName = this.conjunctionHasDuplicateName(this.props.instance);
+    const showHasWarnings = conjunctionHasDuplicateName || this.hasNestedWarnings(this.props.instance.childInstances);
+    const hasComment = elementCommentField && elementCommentField.value && elementCommentField.value !== '';
 
     if (!this.props.root) {
       const { disableElement } = this.props;
+
       return (
         <div className="card-group__top">
           <div className="card-group__header">
             <div className="card-group__header-title">
               {showGroup ?
-                <div>
-                  <div>
+                <>
                   <StringField
                     id={elementNameField.id}
                     name={elementNameField.name}
                     value={elementNameField.value}
                     updateInstance={this.handleNameChange}
-                  /></div>
-                  <div>
-                  <TextAreaField
-                    id={elementCommentField.id}
-                    name={elementCommentField.name}
-                    value={elementCommentField.value}
-                    customClass="conjunction_comment"
-                    updateInstance={this.handleCommentChange}
-                  /></div>
-                  {conjunctionHasDuplicateName
-                    && <div className="warning">Warning: Name already in use. Choose another name.</div>}
-                </div>
+                  />
+
+                  {showComment &&
+                    <TextAreaField
+                      id={elementCommentField.id}
+                      name={elementCommentField.name}
+                      value={elementCommentField.value}
+                      updateInstance={this.handleCommentChange}
+                    />
+                  }
+
+                  {conjunctionHasDuplicateName &&
+                    <div className="warning">Warning: Name already in use. Choose another name.</div>
+                  }
+                </>
               :
                 <div className="group-heading-name">
                   {elementNameField.value}:
-                  {(conjunctionHasDuplicateName || this.hasNestedWarnings(this.props.instance.childInstances))
-                    && <div className="warning"><FontAwesome name="exclamation-circle" /> Has warnings</div>}
+                  {showHasWarnings &&
+                    <div className="warning"><FontAwesome name="exclamation-circle" /> Has warnings</div>
+                  }
                 </div>
               }
             </div>
@@ -267,10 +279,21 @@ export default class ConjunctionGroup extends Component {
             <div className="card-group__buttons">
               {showGroup && this.renderIndentButtons(this.props.instance)}
 
+              {showGroup &&
+                <button
+                  onClick={this.toggleComment}
+                  className={classnames('element_hidebutton', 'transparent-button', hasComment && 'has-comment')}
+                  aria-label="show comment"
+                >
+                  <FontAwesome name={hasComment ? 'comment-dots' : 'comment'} />
+                </button>
+              }
+
               <button
                 onClick={this.showHideGroupBody}
                 className="element__hidebutton transparent-button"
-                aria-label={`hide ${elementNameField.name}`}>
+                aria-label={`hide ${elementNameField.name}`}
+              >
                 <FontAwesome name={showGroup ? 'angle-double-down' : 'angle-double-right'} />
               </button>
 
@@ -278,12 +301,15 @@ export default class ConjunctionGroup extends Component {
                 className={`element__deletebutton transparent-button ${disableElement ? 'disabled' : ''}`}
                 id={`deletebutton-${this.props.instance.uniqueId}`}
                 onClick={this.deleteInstance}
-                aria-label={`remove ${this.props.instance.name}`}>
-                <FontAwesome name='close'/>
+                aria-label={`remove ${this.props.instance.name}`}
+              >
+                <FontAwesome name="close" />
               </button>
-              { disableElement && this.renderDisabledTooltip(`deletebutton-${this.props.instance.uniqueId}`) }
+
+              {disableElement && this.renderDisabledTooltip(`deletebutton-${this.props.instance.uniqueId}`)}
             </div>
           </div>
+
           <ExpressionPhrase
             class={`expression expression__group ${collapsedClass}`}
             instance={this.props.instance}

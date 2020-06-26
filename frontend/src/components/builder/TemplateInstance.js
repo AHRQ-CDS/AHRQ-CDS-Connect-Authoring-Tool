@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import FontAwesome from 'react-fontawesome';
 import { UncontrolledTooltip } from 'reactstrap';
-import classNames from 'classnames';
+import classnames from 'classnames';
 import _ from 'lodash';
 
 import VSACAuthenticationModal from './VSACAuthenticationModal';
@@ -61,6 +61,7 @@ export default class TemplateInstance extends Component {
 
     this.state = {
       showElement: true,
+      showComment: false,
       relevantModifiers: (this.modifersByInputType[props.templateInstance.returnType] || []),
       showModifiers: false,
       otherInstances: this.getOtherInstances(props),
@@ -145,6 +146,10 @@ export default class TemplateInstance extends Component {
     if (!baseElementIsInUse) {
       this.props.deleteInstance(this.props.treeName, this.getPath());
     }
+  }
+
+  toggleComment = () => {
+    this.setState({ showComment: !this.state.showComment });
   }
 
   renderAppliedModifier = (modifier, index) => {
@@ -783,7 +788,6 @@ export default class TemplateInstance extends Component {
     const validationError = validateElement(this.props.templateInstance, this.state);
     const returnError = (!(validateReturnType !== false) || returnType === 'boolean') ? null
       : "Element must have return type 'boolean'. Add expression(s) to change the return type.";
-    const commentField = getFieldWithId(templateInstance.fields, 'comment');
 
     return (
       <div className="card-element__body">
@@ -795,13 +799,6 @@ export default class TemplateInstance extends Component {
           instance={templateInstance}
           baseElements={this.props.baseElements}
         />
-
-        {commentField &&
-          <TextAreaField
-            key={commentField.id}
-            {...commentField}
-            updateInstance={this.updateInstance} />
-        }
 
         {templateInstance.fields.map((field, index) => {
           if (field.id !== 'element_name' && field.id !== 'comment') {
@@ -869,11 +866,11 @@ export default class TemplateInstance extends Component {
 
   renderHeading = (elementNameField) => {
     const { templateInstance, instanceNames, baseElements, parameters, allInstancesInAllTrees } = this.props;
+    const { showComment } = this.state;
+    const commentField = getFieldWithId(templateInstance.fields, 'comment');
 
     if (elementNameField) {
       let elementType = (templateInstance.type === 'parameter') ? 'Parameter' : templateInstance.name;
-
-
       const referenceField = getFieldWithType(templateInstance.fields, 'reference');
 
       if (referenceField && (referenceField.id === 'baseElementReference')) {
@@ -898,22 +895,35 @@ export default class TemplateInstance extends Component {
             name={elementType}
             uniqueId={templateInstance.uniqueId}
           />
-          {doesHaveDuplicateName &&
-          !doesHaveBaseElementUseWarning &&
-          !doesHaveBaseElementInstanceWarning &&
-          !doesHaveParameterUseWarning &&
+
+          {
+            doesHaveDuplicateName &&
+            !doesHaveBaseElementUseWarning &&
+            !doesHaveBaseElementInstanceWarning &&
+            !doesHaveParameterUseWarning &&
             <div className="warning">Warning: Name already in use. Choose another name.</div>
           }
+
           {doesHaveBaseElementUseWarning &&
             <div className="warning">Warning: This use of the Base Element has changed. Choose another name.</div>
           }
+
           {doesHaveBaseElementInstanceWarning &&
             <div className="warning">
               Warning: One or more uses of this Base Element have changed. Choose another name.
             </div>
           }
+
           {doesHaveParameterUseWarning &&
             <div className="warning">Warning: This use of the Parameter has changed. Choose another name.</div>
+          }
+
+          {commentField && showComment &&
+            <TextAreaField
+              key={commentField.id}
+              {...commentField}
+              updateInstance={this.updateInstance}
+            />
           }
         </div>
       );
@@ -927,12 +937,13 @@ export default class TemplateInstance extends Component {
     const { templateInstance, renderIndentButtons } = this.props;
     const { showElement } = this.state;
     const elementNameField = getFieldWithId(templateInstance.fields, 'element_name');
-    const headerClass = classNames('card-element__header', { collapsed: !showElement });
-    const headerTopClass = classNames('card-element__header-top', { collapsed: !showElement });
-
+    const headerClass = classnames('card-element__header', { collapsed: !showElement });
+    const headerTopClass = classnames('card-element__header-top', { collapsed: !showElement });
     const baseElementUsed = this.isBaseElementUsed();
     const baseElementInUsedList = this.props.disableElement;
     const disabledClass = (baseElementUsed || baseElementInUsedList) ? 'disabled' : '';
+    const commentField = getFieldWithId(templateInstance.fields, 'comment');
+    const hasComment = commentField && commentField.value && commentField.value !== '';
 
     return (
       <div className={headerClass}>
@@ -948,13 +959,25 @@ export default class TemplateInstance extends Component {
               </div>
             }
           </div>
+
           <div className="card-element__buttons">
             {showElement && !this.props.disableIndent && renderIndentButtons(templateInstance)}
+
+            {showElement &&
+              <button
+                onClick={this.toggleComment}
+                className={classnames('element_hidebutton', 'transparent-button', hasComment && 'has-comment')}
+                aria-label="show comment"
+              >
+                <FontAwesome name={hasComment ? 'comment-dots' : 'comment'} />
+              </button>
+            }
 
             <button
               onClick={this.showHideElementBody}
               className="element__hidebutton transparent-button"
-              aria-label={`hide ${templateInstance.name}`}>
+              aria-label={`hide ${templateInstance.name}`}
+            >
               <FontAwesome name={showElement ? 'angle-double-down' : 'angle-double-right'} />
             </button>
 
@@ -962,19 +985,24 @@ export default class TemplateInstance extends Component {
               id={`deletebutton-${templateInstance.uniqueId}`}
               onClick={this.deleteInstance}
               className={`element__deletebutton transparent-button ${disabledClass}`}
-              aria-label={`remove ${templateInstance.name}`}>
+              aria-label={`remove ${templateInstance.name}`}
+            >
               <FontAwesome name="close" />
             </button>
-            { baseElementUsed &&
+
+            {baseElementUsed &&
               <UncontrolledTooltip
                 target={`deletebutton-${templateInstance.uniqueId}`} placement="left">
                   To delete this Base Element, remove all references to it.
-              </UncontrolledTooltip> }
-            { baseElementInUsedList &&
+              </UncontrolledTooltip>
+            }
+
+            {baseElementInUsedList &&
               <UncontrolledTooltip
                 target={`deletebutton-${templateInstance.uniqueId}`} placement="left">
                 To delete this element, remove all references to the Base Element List.
-              </UncontrolledTooltip> }
+              </UncontrolledTooltip>
+            }
           </div>
         </div>
 

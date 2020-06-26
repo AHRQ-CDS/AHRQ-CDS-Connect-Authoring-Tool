@@ -14,7 +14,8 @@
 
 .Select {
   margin-right: 10px;
-  max-width: 400px;
+  max-width: 500px;
+  min-width: 400px;
 
   &-input {
     @include respond-to-min('1440px') { height: 46px; }
@@ -63,6 +64,6 @@
   }
 
   &.operator {
-    min-width: 100px !important;
+    min-width: 150px;
   }
 }

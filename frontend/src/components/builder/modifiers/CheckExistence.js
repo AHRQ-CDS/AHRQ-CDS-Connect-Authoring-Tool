@@ -16,7 +16,7 @@ export default class CheckExistence extends Component {
 
   render() {
     return (
-      <div className="check-existence">
+      <div className="check-existence input">
         <StyledSelect
           className="Select"
           classNamePrefix="check-existence-select"

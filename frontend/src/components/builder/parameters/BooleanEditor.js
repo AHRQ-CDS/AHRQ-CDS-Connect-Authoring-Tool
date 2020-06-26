@@ -13,21 +13,22 @@ export default class BooleanEditor extends Component {
 
     return (
       <div className="boolean-editor">
-        <div className="parameter__item row">
-          <div className="col-3 bold align-right">
-            <label htmlFor={formId}>{label}</label>
-          </div>
+        <div className="form__group">
+          <label htmlFor={formId}>
+            <div className="label">{label}</div>
 
-          <div className="col-9">
-            <StyledSelect
-              id={id}
-              aria-label="Select True or False"
-              inputProps={{ title: 'Select True or False', id: formId }}
-              options={options}
-              value={options.find(option => option.value === value)}
-              onChange={ (e) => { updateInstance({ name, type, label, value: _.get(e, 'value', null) }); }}
-            />
-          </div>
+            <div className="input">
+              <StyledSelect
+                className="Select"
+                id={id}
+                aria-label="Select True or False"
+                inputProps={{ title: 'Select True or False', id: formId }}
+                options={options}
+                value={options.find(option => option.value === value)}
+                onChange={ (e) => { updateInstance({ name, type, label, value: _.get(e, 'value', null) }); }}
+              />
+            </div>
+          </label>
         </div>
       </div>
     );

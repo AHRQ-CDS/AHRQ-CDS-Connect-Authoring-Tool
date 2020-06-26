@@ -48,41 +48,43 @@ export default class IntervalOfDecimalEditor extends Component {
 
     return (
       <div className="interval-of-decimal-editor">
-        <div className="parameter__item row">
-          <div className="col-3 bold align-right">
-            <label htmlFor={formId}>{label}</label>
-          </div>
+        <div className="form-group">
+          <label htmlFor={formId}>
+            <div className="label">{label}</div>
 
-          <div className="col-9 d-flex">
-            <input
-              id={formId}
-              name="firstDecimal"
-              type="number"
-              value={
-                (_.get(value, 'firstDecimal', null) || _.get(value, 'firstDecimal', null) === 0)
-                ? _.get(value, 'firstDecimal')
-                : '' }
-              onChange={ (e) => {
-                updateInstance({ name, type, label, value: this.assignValue(e) });
-              }}
-            />
+            <div className="input-group">
+              <input
+                id={formId}
+                name="firstDecimal"
+                type="number"
+                value={
+                  (_.get(value, 'firstDecimal', null) || _.get(value, 'firstDecimal', null) === 0)
+                  ? _.get(value, 'firstDecimal')
+                  : '' }
+                onChange={ (e) => {
+                  updateInstance({ name, type, label, value: this.assignValue(e) });
+                }}
+              />
 
-            <span className="dash">_</span>
+              <div className="dash">-</div>
+            </div>
 
-            <input
-              id={id}
-              name="secondDecimal"
-              type="number"
-              aria-label="Second Decimal"
-              value={
-                (_.get(value, 'secondDecimal', null) || _.get(value, 'secondDecimal', null) === 0)
-                ? _.get(value, 'secondDecimal')
-                : '' }
-              onChange={ (e) => {
-                updateInstance({ name, type, label, value: this.assignValue(e) });
-              }}
-            />
-          </div>
+            <div className="input-group">
+              <input
+                id={id}
+                name="secondDecimal"
+                type="number"
+                aria-label="Second Decimal"
+                value={
+                  (_.get(value, 'secondDecimal', null) || _.get(value, 'secondDecimal', null) === 0)
+                  ? _.get(value, 'secondDecimal')
+                  : '' }
+                onChange={ (e) => {
+                  updateInstance({ name, type, label, value: this.assignValue(e) });
+                }}
+              />
+            </div>
+          </label>
         </div>
       </div>
     );
