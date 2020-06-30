@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import FontAwesome from 'react-fontawesome';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faExclamationCircle, faTimes } from '@fortawesome/free-solid-svg-icons';
 
 export default class Banner extends Component {
   handleClose = (event) => {
@@ -13,8 +14,8 @@ export default class Banner extends Component {
 
     return (
       <div className={`banner ${type}`}>
-        <div className="message"><FontAwesome name="exclamation-circle" /> {children}</div>
-        {close && <FontAwesome className="close-icon" name="times" onClick={event => this.handleClose(event)}/>}
+        <div className="message"><FontAwesomeIcon icon={faExclamationCircle} /> {children}</div>
+        {close && <FontAwesomeIcon className="close-icon" icon={faTimes} onClick={event => this.handleClose(event)}/>}
       </div>
     );
   }

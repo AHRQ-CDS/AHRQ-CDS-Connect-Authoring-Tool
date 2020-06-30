@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import FontAwesome from 'react-fontawesome';
+import Dropzone from 'react-dropzone';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faSpinner, faCloudUploadAlt } from '@fortawesome/free-solid-svg-icons';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import Dropzone from 'react-dropzone';
 import { Jumbotron, Breadcrumb } from 'reactstrap';
 import _ from 'lodash';
 
@@ -134,7 +135,7 @@ class Testing extends Component {
         </Jumbotron>
       );
     } else if (isExecuting) {
-      return <div className="execution-loading"><FontAwesome name="spinner" spin size="4x" /></div>;
+      return <div className="execution-loading"><FontAwesomeIcon icon={faSpinner} spin size="4x" /></div>;
     } else if (this.props.vsacFHIRCredentials.username == null) {
       return (
         <Breadcrumb className="execution-message">
@@ -153,7 +154,6 @@ class Testing extends Component {
 
   renderResultsDataSection = (patientExecuted) => {
     const { results } = this.props;
-
     const patientResource = _.chain(patientExecuted)
       .get('entry')
       .find({ resource: { resourceType: 'Patient' } })
@@ -162,14 +162,14 @@ class Testing extends Component {
     const patientId = patientResource.id;
     const patientNameGiven = _.get(patientResource, 'name[0].given[0]', 'given_placeholder');
     const patientNameFamily = _.get(patientResource, 'name[0].family', 'family_placeholder');
-
     const patientResults = results.patientResults[patientId];
 
     return (
       <ResultsDataSection
         key={patientId}
         title={`${patientNameGiven} ${patientNameFamily}`}
-        results={patientResults} />
+        results={patientResults}
+      />
     );
   }
 
@@ -191,7 +191,8 @@ class Testing extends Component {
           isValidCode={this.props.isValidCode}
           codeData={this.props.codeData}
           validateCode={this.props.validateCode}
-          resetCodeValidation={this.props.resetCodeValidation} />
+          resetCodeValidation={this.props.resetCodeValidation}
+        />
       );
     }
 
@@ -199,8 +200,8 @@ class Testing extends Component {
   }
 
   renderDropzoneIcon = () => {
-    if (this.props.isAdding) return <FontAwesome name="spinner" size="5x" spin />;
-    return <FontAwesome name="cloud-upload" size="5x" />;
+    if (this.props.isAdding) return <FontAwesomeIcon icon={faSpinner} size="5x" spin />;
+    return <FontAwesomeIcon icon={faCloudUploadAlt} size="5x" />;
   }
 
   render() {
@@ -237,13 +238,15 @@ class Testing extends Component {
           <ELMErrorModal
             isOpen={this.state.showELMErrorModal}
             closeModal={this.closeELMErrorModal}
-            errors={this.props.downloadedArtifact.elmErrors}/>
+            errors={this.props.downloadedArtifact.elmErrors}
+          />
 
           <PatientVersionModal
             isOpen={this.state.showPatientVersionModal}
             closeModal={this.closePatientVersionModal}
             patientData={this.state.patientData}
-            selectVersion={this.selectVersion}/>
+            selectVersion={this.selectVersion}
+          />
         </div>
       </div>
     );

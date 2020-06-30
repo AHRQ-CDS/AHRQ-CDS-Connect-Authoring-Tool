@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import Modal from 'react-modal';
-import FontAwesome from 'react-fontawesome';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faSpinner, faArrowLeft, faThList, faTimes, faEye } from '@fortawesome/free-solid-svg-icons';
 import _ from 'lodash';
 
 import { getFieldWithId, getFieldWithType } from '../../utils/instances';
@@ -165,7 +166,7 @@ export default class ElementModal extends Component {
   renderSearchResultsTable = () => {
     if (this.props.isSearchingVSAC || this.props.isRetrievingDetails) {
       return (
-        <div className="loading-icon"><FontAwesome name="spinner" spin/></div>
+        <div className="loading-icon"><FontAwesomeIcon icon={faSpinner} spin/></div>
       );
     } else if (this.state.selectedElement) {
       if (this.props.vsacDetailsCodesError) {
@@ -240,7 +241,7 @@ export default class ElementModal extends Component {
           tabIndex="0"
           onClick={this.backToSearchResults}
           onKeyDown={e => this.enterKeyCheck(this.backToSearchResults, null, e)}>
-          <FontAwesome name="arrow-left" />
+          <FontAwesomeIcon icon={faArrowLeft} />
         </span>
       );
     }
@@ -257,7 +258,7 @@ export default class ElementModal extends Component {
           onClick={this.openModal}
           onKeyDown={e => this.enterKeyCheck(this.openModal, null, e)}
           aria-label={buttonLabels.openButtonText}>
-          <FontAwesome name={this.props.iconForButton}/>
+          <FontAwesomeIcon icon={faEye} />
         </span>
       );
     }
@@ -268,7 +269,7 @@ export default class ElementModal extends Component {
         onClick={this.openModal}
         onKeyDown={e => this.enterKeyCheck(this.openModal, null, e)}
         aria-label={buttonLabels.openButtonText}>
-        <FontAwesome name="th-list" />{' '}{buttonLabels.openButtonText}
+        <FontAwesomeIcon icon={faThList} />{' '}{buttonLabels.openButtonText}
       </button>
     );
   }
@@ -302,21 +303,24 @@ export default class ElementModal extends Component {
           shouldCloseOnOverlayClick={ true }
           contentLabel="Browse elements"
           className="modal-style modal-style__light modal-style--full-height element-modal"
-          overlayClassName='modal-overlay modal-overlay__dark'>
+          overlayClassName='modal-overlay modal-overlay__dark'
+        >
           <div className="element-modal__container">
             <header className="modal__header">
               <span className="modal__heading">Choose Value Sets</span>
-              { this.props.vsacSearchCount > 0 ?
-                <span><FontAwesome name="th-list" />
+              {this.props.vsacSearchCount > 0 &&
+                <span><FontAwesomeIcon icon={faThList} />
                   {' '}{this.state.selectedElement ? 1 : this.props.vsacSearchCount}
-                </span> :
-                null}
+                </span>
+              }
+
               <button
                 className="element__deletebutton transparent-button"
                 onClick={this.closeModal}
                 onKeyDown={e => this.enterKeyCheck(this.closeModal, null, e)}
-                aria-label="Close Value Set Select Modal">
-                <FontAwesome name='close' />
+                aria-label="Close Value Set Select Modal"
+              >
+                <FontAwesomeIcon icon={faTimes} />
               </button>
             </header>
 
@@ -332,7 +336,8 @@ export default class ElementModal extends Component {
                   title={ modalInputLabel }
                   value={ inputDisplayValue }
                   onChange={ this.handleSearchValueChange }
-                  onKeyDown={ e => this.enterKeyCheck(this.searchVSAC, this.state.searchValue, e)}/>
+                  onKeyDown={ e => this.enterKeyCheck(this.searchVSAC, this.state.searchValue, e)}
+                />
 
                 {this.renderSearchButton()}
               </div>
@@ -347,7 +352,8 @@ export default class ElementModal extends Component {
                 className="secondary-button"
                 onClick={ this.closeModal }
                 onKeyDown={ e => this.enterKeyCheck(this.closeModal, null, e) }
-                aria-label="Close">
+                aria-label="Close"
+              >
                 {buttonLabels.closeButtonText}
               </button>
               {this.renderSelectButton()}
@@ -361,7 +367,6 @@ export default class ElementModal extends Component {
 
 ElementModal.propTypes = {
   getVSDetails: PropTypes.func.isRequired,
-  iconForButton: PropTypes.string,
   isRetrievingDetails: PropTypes.bool.isRequired,
   isSearchingVSAC: PropTypes.bool.isRequired,
   labels: PropTypes.object,

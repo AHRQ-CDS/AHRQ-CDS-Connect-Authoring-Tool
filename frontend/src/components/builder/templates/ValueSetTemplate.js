@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import FontAwesome from 'react-fontawesome';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faEye, faTimes } from '@fortawesome/free-solid-svg-icons';
 import { UncontrolledTooltip } from 'reactstrap';
 import _ from 'lodash';
 
@@ -14,7 +15,7 @@ export default class ValueSetTemplate extends Component {
         <span className='element-select__modal element-modal disabled'>
           <span>
             <span id={`LoginTooltip-${this.props.templateInstance.uniqueId}`}>
-              <FontAwesome name="eye"/>
+              <FontAwesomeIcon icon={faEye} />
             </span>
 
             <UncontrolledTooltip target={`LoginTooltip-${this.props.templateInstance.uniqueId}`} placement="left">
@@ -40,7 +41,6 @@ export default class ValueSetTemplate extends Component {
         vsacDetailsCodesError={this.props.vsacDetailsCodesError}
         selectedElement={this.props.valueSet}
         useIconButton={true}
-        iconForButton="eye"
         viewOnly={true}
         vsacFHIRCredentials={this.props.vsacFHIRCredentials}
       />
@@ -91,8 +91,9 @@ export default class ValueSetTemplate extends Component {
               onKeyPress={(e) => {
                 e.which = e.which || e.keyCode;
                 if (e.which === 13) this.deleteValueSet(valueSet);
-              }}>
-              <FontAwesome name="close" className="delete-valueset-button" />
+              }}
+            >
+              <FontAwesomeIcon icon={faTimes} className="delete-valueset-button" />
             </span>
           </div>
         </div>

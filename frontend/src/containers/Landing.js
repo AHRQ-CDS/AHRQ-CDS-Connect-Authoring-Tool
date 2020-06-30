@@ -1,11 +1,14 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import classnames from 'classnames';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
-import FontAwesome from 'react-fontawesome';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faChevronDown, faChevronRight } from '@fortawesome/free-solid-svg-icons';
 
-import { onVisitExternalLink, onVisitExternalForm } from '../utils/handlers';
+import { onVisitExternalForm } from '../utils/handlers';
 import whatsNew from '../data/whatsNew';
+import ExternalLink from '../components/elements/ExternalLink';
 
 class Landing extends Component {
   constructor(props) {
@@ -53,22 +56,25 @@ class Landing extends Component {
           tabIndex="0"
           className="header"
           onClick={() => this.toggleWhatsNew()}
-          onKeyDown={() => null}>
+          onKeyDown={() => null}
+        >
           What's New
-          {whatsNewOpen ? <FontAwesome name="chevron-down" /> : <FontAwesome name="chevron-right" />}
+          <FontAwesomeIcon icon={whatsNewOpen ? faChevronDown : faChevronRight} />
         </div>
 
         <div className="new-buttons">
           {whatsNew.map((feature, i) =>
             <div className={`new-button-group feature-${i}`} key={i}>
-              <button className="new-button"
+              <button
+                className="new-button"
                 onClick={() => this.toggleWhatsNewButton(i)} key={i}
-                aria-label={feature.name}>
+                aria-label={feature.name}
+              >
                 {feature.name}
               </button>
-              <div className={`triangle ${whatsNewIndex === i && whatsNewOpen ? 'active' : ''}`}></div>
-            </div>)
-          }
+              <div className={classnames('triangle', whatsNewIndex === i && whatsNewOpen && 'active')}></div>
+            </div>
+          )}
         </div>
 
         {whatsNewOpen &&
@@ -98,15 +104,7 @@ class Landing extends Component {
                 {whatsNew[whatsNewIndex].link &&
                   whatsNew[whatsNewIndex].link !== '' &&
                   whatsNew[whatsNewIndex].linkExternal === true &&
-                  <a
-                    target="_blank"
-                    rel="nofollow noopener noreferrer"
-                    onClick={onVisitExternalLink}
-                    className={`link feature-${whatsNewIndex}`}
-                    href={whatsNew[whatsNewIndex].link}
-                  >
-                    {whatsNew[whatsNewIndex].linkText} <i className="fa fa-external-link"></i>
-                  </a>
+                  <ExternalLink href={whatsNew[whatsNewIndex].link} text={whatsNew[whatsNewIndex].linkText} />
                 }
               </div>
             </div>
@@ -142,7 +140,8 @@ class Landing extends Component {
               <img
                 className="home-card__image"
                 src={`${process.env.PUBLIC_URL}/assets/images/home-transform.png`}
-                alt="" />
+                alt=""
+              />
 
               <div className="home-card__title">Transform</div>
 
@@ -157,47 +156,22 @@ class Landing extends Component {
               <img
                 className="home-card__image"
                 src={`${process.env.PUBLIC_URL}/assets/images/home-interface.png`}
-                alt="" />
+                alt=""
+              />
 
               <div className="home-card__title">Create</div>
 
               <div className="home-card__text">
                 The CDS Authoring Tool provides an interface for creating CDS logic using simple forms and exporting
-                it as
-                <a
-                  target="_blank"
-                  rel="nofollow noopener noreferrer"
-                  onClick={onVisitExternalLink}
-                  href="https://cql.hl7.org/">
-                  {' '}Health Level Seven (HL7) Clinical Quality Language (CQL) 1.3{' '}
-                </a>
-                <i className="fa fa-external-link"></i> artifacts using the HL7 Fast Healthcare
-                Interoperability Resources (FHIR)
-                <a
-                  target="_blank"
-                  rel="nofollow noopener noreferrer"
-                  onClick={onVisitExternalLink}
-                  href="http://hl7.org/fhir/DSTU2/index.html">
-                  {' '}DSTU2{' '}
-                </a>
-                <i className="fa fa-external-link"></i>,
-                <a
-                  target="_blank"
-                  rel="nofollow noopener noreferrer"
-                  onClick={onVisitExternalLink}
-                  href="http://hl7.org/fhir/STU3/index.html">
-                  {' '}STU3{' '}
-                </a>
-                <i className="fa fa-external-link"></i>, or
-                <a
-                  target="_blank"
-                  rel="nofollow noopener noreferrer"
-                  onClick={onVisitExternalLink}
-                  href="http://hl7.org/fhir/R4/index.html">
-                  {' '}R4{' '}
-                </a>
-                <i className="fa fa-external-link"></i>
-                 data model.
+                it as{' '}
+                <ExternalLink href="https://cql.hl7.org/" text="Health Level Seven (HL7) Clinical Quality Language (CQL) 1.3" />
+                {' '}artifacts using the HL7 Fast Healthcare Interoperability Resources (FHIR){' '}
+                <ExternalLink href="http://hl7.org/fhir/DSTU2/index.html" text="DSTU2" />
+                {' '},{' '}
+                <ExternalLink href="http://hl7.org/fhir/STU3/index.html" text="STU3" />
+                {' '}, or{' '}
+                <ExternalLink href="http://hl7.org/fhir/R4/index.html" text="R4" />
+                {' '}data model.
               </div>
             </div>
 
@@ -205,10 +179,10 @@ class Landing extends Component {
               <img
                 className="home-card__image"
                 src={`${process.env.PUBLIC_URL}/assets/images/home-repository.png`}
-                alt="" />
+                alt=""
+              />
 
               <div className="home-card__title">Share</div>
-
               <div className="home-card__text">
                 CDS Connect provides a repository of CDS artifacts and a prototype infrastructure for sharing
                 CDS across different health care settings and technologies. The CDS Authoring Tool, along with the
@@ -221,22 +195,13 @@ class Landing extends Component {
               <img
                 className="home-card__image"
                 src={`${process.env.PUBLIC_URL}/assets/images/home-contribute.png`}
-                alt="" />
-
+                alt=""
+              />
               <div className="home-card__title">Contribute</div>
-
               <div className="home-card__text">
-                The CDS Authoring Tool is released under an open source Apache 2.0 license and is available on
-
-                <a
-                  target="_blank"
-                  rel="nofollow noopener noreferrer"
-                  onClick={onVisitExternalLink}
-                  href="https://github.com/ahrq-cds/ahrq-cds-connect-authoring-tool">
-                  {' '}GitHub{' '}
-                </a>
-
-                <i className="fa fa-external-link"></i>.
+                The CDS Authoring Tool is released under an open source Apache 2.0 license and is available on{' '}
+                <ExternalLink href="https://github.com/ahrq-cds/ahrq-cds-connect-authoring-tool" text="GitHub" />
+                .
               </div>
             </div>
           </div>

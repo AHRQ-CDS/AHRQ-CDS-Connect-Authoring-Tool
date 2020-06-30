@@ -1,10 +1,14 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import _ from 'lodash';
-import FontAwesome from 'react-fontawesome';
 import pluralize from 'pluralize';
-import classNames from 'classnames';
+import classnames from 'classnames';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import {
+  faCheck, faExclamationCircle, faComment, faCommentDots, faAngleDoubleDown, faAngleDoubleRight, faTimes
+} from '@fortawesome/free-solid-svg-icons';
 import { UncontrolledTooltip } from 'reactstrap';
+import _ from 'lodash';
+
 import { findValueAtPath } from '../../utils/find';
 import { doesBaseElementInstanceNeedWarning, hasDuplicateName, hasGroupNestedWarning, hasInvalidListWarning }
   from '../../utils/warnings';
@@ -259,7 +263,8 @@ export default class ListGroup extends Component {
           {isAndOrElement && hasInvalidListWarning(instance.returnType) &&
             <div className="warning">
               Warning: Elements in groups combined with and/or must all have return type 'boolean'.
-            </div>}
+            </div>
+          }
 
           <ExpressionPhrase
             class="expression expression__group"
@@ -269,11 +274,15 @@ export default class ListGroup extends Component {
 
           <div className="return-type">
             <div className="bold align-right return-type__label">Return Type:</div>
+
             <div className="return-type__value">
-              {isAndOrElement
-                && (_.startCase(instance.returnType) === 'Boolean' || instance.childInstances.length === 1)
-                && <FontAwesome name="check" className="check" />}
-              {!isAndOrElement && <FontAwesome name="check" className="check" />}
+              {
+                isAndOrElement &&
+                (_.startCase(instance.returnType) === 'Boolean' || instance.childInstances.length === 1) &&
+                <FontAwesomeIcon icon={faCheck} className="check" />
+              }
+
+              {!isAndOrElement && <FontAwesomeIcon icon={faCheck} className="check" />}
               {_.startCase(instance.returnType)}
             </div>
           </div>
@@ -348,8 +357,9 @@ export default class ListGroup extends Component {
 
     const baseElementListUsed = this.isBaseElementListUsed(instance);
     const disabledClass = baseElementListUsed ? 'disabled' : '';
-    const headerClass = classNames('card-element__header', { collapsed: !isExpanded });
-    const headerTopClass = classNames('card-element__header-top', { collapsed: !isExpanded });
+    const headerClass = classnames('card-element__header', { collapsed: !isExpanded });
+    const headerTopClass = classnames('card-element__header-top', { collapsed: !isExpanded });
+    const hasComment = comment && comment !== '';
 
     return (
       <div className="card-element">
@@ -399,27 +409,29 @@ export default class ListGroup extends Component {
                 <div className="heading-name">
                   {name}:
                   {needsHasWarningsWarning &&
-                    <div className="warning"><FontAwesome name="exclamation-circle" /> Has warnings</div>
+                    <div className="warning"><FontAwesomeIcon icon={faExclamationCircle} /> Has warnings</div>
                   }
                 </div>
               </div>
             }
 
             <div className="card-element__buttons">
-              <button
-                onClick={this.toggleComment}
-                className="element_hidebutton transparent-button"
-                aria-label="show comment"
-              >
-                <FontAwesome name="comment" />
-              </button>
+              {isExpanded &&
+                <button
+                  onClick={this.toggleComment}
+                  className={classnames('element_hidebutton', 'transparent-button', hasComment && 'has-comment')}
+                  aria-label="show comment"
+                >
+                  <FontAwesomeIcon icon={hasComment ? faCommentDots : faComment} />
+                </button>
+              }
 
               <button
                 onClick={isExpanded ? this.collapse : this.expand}
                 className="element__hidebutton transparent-button"
                 aria-label={`hide ${name}`}
               >
-                <FontAwesome name={isExpanded ? 'angle-double-down' : 'angle-double-right'} />
+                <FontAwesomeIcon icon={isExpanded ? faAngleDoubleDown : faAngleDoubleRight} />
               </button>
 
               <button
@@ -428,14 +440,14 @@ export default class ListGroup extends Component {
                 id={`deletebutton-${instance.uniqueId}`}
                 onClick={() => this.deleteBaseElementList(instance.uniqueId)}
               >
-                <FontAwesome name="close" />
+                <FontAwesomeIcon icon={faTimes} />
               </button>
 
               {baseElementListUsed &&
-                <UncontrolledTooltip
-                  target={`deletebutton-${instance.uniqueId}`} placement="left">
+                <UncontrolledTooltip target={`deletebutton-${instance.uniqueId}`} placement="left">
                   To delete this Base Element List, remove all references to it.
-              </UncontrolledTooltip>}
+                </UncontrolledTooltip>
+              }
             </div>
           </div>
 

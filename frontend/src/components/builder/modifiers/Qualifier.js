@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import FontAwesome from 'react-fontawesome';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faEye } from '@fortawesome/free-solid-svg-icons';
 import { UncontrolledTooltip } from 'reactstrap';
 
 import VSACAuthenticationModal from '../VSACAuthenticationModal';
@@ -22,8 +23,9 @@ export default class Qualifier extends Component {
           <span>
             <span
               id={`LoginTooltip-${this.props.template.uniqueId}-qualifier`}>
-              <FontAwesome name="eye" />
+              <FontAwesomeIcon icon={faEye} />
             </span>
+
             <UncontrolledTooltip target={`LoginTooltip-${this.props.template.uniqueId}-qualifier`} placement="left">
               Authenticate VSAC to view details
             </UncontrolledTooltip>
@@ -47,7 +49,6 @@ export default class Qualifier extends Component {
         vsacFHIRCredentials={this.props.vsacFHIRCredentials}
         selectedElement={valueSet}
         useIconButton={true}
-        iconForButton={'eye'}
         viewOnly={true}
       />
     );

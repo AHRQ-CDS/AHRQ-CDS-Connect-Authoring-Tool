@@ -1,9 +1,11 @@
-import React, { Fragment, Component } from 'react';
+import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import _ from 'lodash';
-import FontAwesome from 'react-fontawesome';
 import pluralize from 'pluralize';
+import classnames from 'classnames';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faBan, faKey, faCheck, faPlus } from '@fortawesome/free-solid-svg-icons';
 import { components as SelectComponents } from 'react-select';
+import _ from 'lodash';
 
 import ElementModal from './ElementModal';
 import VSACAuthenticationModal from './VSACAuthenticationModal';
@@ -34,17 +36,18 @@ const ElementMenuList = ({ children, ...props }) => {
     <SelectComponents.MenuList {...props}>
       {isDisabled ? (
         <div style={{ ...optionStyle, color: '#ccc' }}>
-          <FontAwesome name="ban" /> Cannot add element when Base Element List in use
+          <FontAwesomeIcon icon={faBan} /> Cannot add element when Base Element List in use
         </div>
       ) : (
-        <Fragment>
+        <>
           {children}
+
           <div style={{borderTop: '1px solid #eee', color: '#ccc'}}>
             <div style={optionStyle}>
-              <FontAwesome name="key" /> VSAC authentication required
+              <FontAwesomeIcon icon={faKey} /> VSAC authentication required
             </div>
           </div>
-        </Fragment>
+        </>
       )}
     </SelectComponents.MenuList>
   );
@@ -53,11 +56,17 @@ const ElementMenuList = ({ children, ...props }) => {
 const ElementOption = ({ children, ...props }) => (
   <SelectComponents.Option {...props}>
     <span className="element-select__option-value">{children}</span>
-    {(props.data.vsacAuthRequired || props.isDisabled) && (
-      <FontAwesome name="key" className={`element-select__option-category ${props.isDisabled ? 'is-disabled' : ''}`} />
-    )}
+    {(props.data.vsacAuthRequired || props.isDisabled) &&
+      <FontAwesomeIcon
+        icon={faKey}
+        className={classnames('element-select__option-category', props.isDisabled && 'is-disabled')}
+      />
+    }
+
     {props.data.displayReturnType && (
-      <span className="element-select__option-value">{` (${props.data.displayReturnType})`}</span>
+      <span className="element-select__option-value">
+        {` (${props.data.displayReturnType})`}
+      </span>
     )}
   </SelectComponents.Option>
 );
@@ -279,7 +288,7 @@ export default class ElementSelect extends Component {
     return (
       <div className="vsac-authenticate">
         <button className="disabled-button" disabled={true} aria-label="VSAC Authenticated">
-          <FontAwesome name="check" /> VSAC Authenticated
+          <FontAwesomeIcon icon={faCheck} /> VSAC Authenticated
         </button>
 
         <ElementModal
@@ -295,7 +304,6 @@ export default class ElementSelect extends Component {
           vsacDetailsCodes={this.props.vsacDetailsCodes}
           vsacDetailsCodesError={this.props.vsacDetailsCodesError}
           vsacFHIRCredentials={this.props.vsacFHIRCredentials}
-
         />
 
         <CodeSelectModal
@@ -419,8 +427,7 @@ export default class ElementSelect extends Component {
       <div className="element-select form__group">
         <div className="element-select__add-element">
           <div className="element-select__label">
-            <FontAwesome name="plus" />
-            Add element
+            <FontAwesomeIcon icon={faPlus} /> Add element
           </div>
 
           <StyledSelect

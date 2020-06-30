@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import Inspector from 'react-inspector';
 import moment from 'moment';
-import FontAwesome from 'react-fontawesome';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faUserCircle } from '@fortawesome/free-solid-svg-icons';
 import _ from 'lodash';
 
 import getProperty from '../../utils/getProperty';
@@ -304,7 +305,7 @@ export default class PatientView extends Component {
     return (
       <div className="patient-view">
         <div className="patient-view__patient">
-          <div className="patient-icon"><FontAwesome name="user-circle" /></div>
+          <div className="patient-icon"><FontAwesomeIcon icon={faUserCircle} /></div>
 
           <div className="patient-data">
             <div className="patient-data-name">

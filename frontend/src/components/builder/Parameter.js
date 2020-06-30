@@ -1,8 +1,11 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import FontAwesome from 'react-fontawesome';
-import { UncontrolledTooltip } from 'reactstrap';
 import classnames from 'classnames';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import {
+  faExclamationCircle, faCommentDots, faComment, faAngleDoubleDown, faAngleDoubleRight, faTimes
+} from '@fortawesome/free-solid-svg-icons';
+import { UncontrolledTooltip } from 'reactstrap';
 import _ from 'lodash';
 
 import StringField from './fields/StringField';
@@ -161,7 +164,7 @@ export default class Parameter extends Component {
         <div className="card-element__header">
           <div className="heading-name">
             {name}: {parameterNeedsWarning &&
-              <div className="warning"><FontAwesome name="exclamation-circle" /> Has warnings</div>
+              <div className="warning"><FontAwesomeIcon icon={faExclamationCircle} /> Has warnings</div>
             }
           </div>
 
@@ -170,7 +173,7 @@ export default class Parameter extends Component {
 
         <div className="expression expression__group expression-collapsed">
           <div className="expression-logic">
-              {this.startsWithVowel(type) ? "An " : "A "}
+            {this.startsWithVowel(type) ? "An " : "A "}
             <span className="expression-item expression-tag" aria-label="Type">
               {type}
             </span>
@@ -199,23 +202,25 @@ export default class Parameter extends Component {
             className={classnames('element_hidebutton', 'transparent-button', hasComment && 'has-comment')}
             aria-label="show comment"
           >
-            <FontAwesome name={hasComment ? 'comment-dots' : 'comment'} />
+            <FontAwesomeIcon icon={hasComment ? faCommentDots : faComment} /> {/*TODO: match to*/}
           </button>
         }
 
         <button
           onClick={this.showHideParameterBody}
           className="element__hidebutton transparent-button"
-          aria-label={`hide-${name}`}>
-          <FontAwesome name={showParameter ? 'angle-double-down' : 'angle-double-right'} />
+          aria-label={`hide-${name}`}
+        >
+          <FontAwesomeIcon icon={showParameter ? faAngleDoubleDown : faAngleDoubleRight} />
         </button>
 
         <button
           id={`deletebutton-${id}`}
           onClick={() => { this.deleteParameter(index); }}
           className={`button transparent-button delete-button ${disabledClass}`}
-          aria-label="Delete Parameter">
-          <FontAwesome fixedWidth name='close' />
+          aria-label="Delete Parameter"
+        >
+          <FontAwesomeIcon fixedWidth icon={faTimes} />
         </button>
 
         {parameterUsed &&
@@ -319,7 +324,7 @@ export default class Parameter extends Component {
 
             {parameterUsed &&
               <div className="notification">
-                <FontAwesome name="exclamation-circle" />
+                <FontAwesomeIcon icon={faExclamationCircle} />
                 Parameter name and type can't be changed while it is being referenced.
               </div>
             }

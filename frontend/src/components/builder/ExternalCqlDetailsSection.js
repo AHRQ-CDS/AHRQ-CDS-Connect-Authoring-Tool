@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import _ from 'lodash';
 import { Table, Collapse, Button } from 'reactstrap';
-import FontAwesome from 'react-fontawesome';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faChevronDown, faChevronRight } from '@fortawesome/free-solid-svg-icons';
+import _ from 'lodash';
 
 export default class ExternalCqlDetailsSection extends Component {
   constructor(props) {
@@ -17,24 +18,21 @@ export default class ExternalCqlDetailsSection extends Component {
     this.setState({ expand: !this.state.expand });
   }
 
-  renderHeader = (title, definitions) => {
-    const chevronIcon = this.state.expand ? 'chevron-down' : 'chevron-right';
-
-    return (
-      <div
-        className="external-cql-details-section__header"
-        onClick={event => this.toggle(event)}
-        onKeyPress={event => this.toggle(event)}
-        role="button"
-        tabIndex={0}>
-        <div className="header-title">{title} ({definitions.length})</div>
-        <div className="header-divider"></div>
-        <Button onClick={this.toggle} className="header-button" aria-label="Expand or Collapse">
-          <FontAwesome name={chevronIcon} />
-        </Button>
-      </div>
-    );
-  }
+  renderHeader = (title, definitions) => (
+    <div
+      className="external-cql-details-section__header"
+      onClick={event => this.toggle(event)}
+      onKeyPress={event => this.toggle(event)}
+      role="button"
+      tabIndex={0}
+    >
+      <div className="header-title">{title} ({definitions.length})</div>
+      <div className="header-divider"></div>
+      <Button onClick={this.toggle} className="header-button" aria-label="Expand or Collapse">
+        <FontAwesomeIcon icon={this.state.expand ? faChevronDown : faChevronRight} />
+      </Button>
+    </div>
+  );
 
   renderTable = (type, definitions) => (
       <Table className="external-cql-details-section__table">

@@ -61,7 +61,7 @@ describe('<ElementModal />', () => {
   });
 
   it('can open a modal using an icon instead of a button', () => {
-    const { container } = renderComponent({ useIconButton: true, iconForButton: 'eye' });
+    const { container } = renderComponent({ useIconButton: true });
 
     fireEvent.click(container.querySelector('span[role="button"]'));
     expect(document.querySelector('.element-modal__container')).not.toBeNull();

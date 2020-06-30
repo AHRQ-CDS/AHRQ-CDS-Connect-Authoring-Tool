@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import FontAwesome from 'react-fontawesome';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faSpinner, faCloudUploadAlt } from '@fortawesome/free-solid-svg-icons';
 import Dropzone from 'react-dropzone';
 
 import artifactProps from '../../prop-types/artifact';
@@ -98,8 +99,8 @@ export default class ExternalCQL extends Component {
 
   renderDropzoneIcon = () => {
     const { isAddingExternalCqlLibrary } = this.props;
-    if (isAddingExternalCqlLibrary) return <FontAwesome name="spinner" size="5x" spin />;
-    return <FontAwesome name="cloud-upload" size="5x" />;
+    if (isAddingExternalCqlLibrary) return <FontAwesomeIcon icon={faSpinner} size="5x" spin />;
+    return <FontAwesomeIcon icon={faCloudUploadAlt} size="5x" />;
   }
 
   renderExternalCqlTable() {
@@ -181,10 +182,10 @@ export default class ExternalCQL extends Component {
         </div>
 
         <ELMErrorModal
-            isOpen={this.state.showELMErrorModal}
-            closeModal={this.closeELMErrorModal}
-            errors={this.props.externalCqlErrors}/>
-
+          isOpen={this.state.showELMErrorModal}
+          closeModal={this.closeELMErrorModal}
+          errors={this.props.externalCqlErrors}
+        />
       </div>
     );
   }
