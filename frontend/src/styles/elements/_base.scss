@@ -148,6 +148,10 @@ h6 {
   padding: 10px;
   margin: 10px 0;
 
+  &.errorStatement{
+    margin: 10px 10px;
+  }
+
   span.fa {
     margin-right: 5px;
   }
