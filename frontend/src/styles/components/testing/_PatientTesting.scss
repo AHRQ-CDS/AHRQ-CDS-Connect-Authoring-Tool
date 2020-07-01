@@ -1,6 +1,9 @@
 .select-patient-checkbox:not(.checked) {
-  text-shadow: 0 0 1px black, 0 0 1px black;
   color: white;
+  border: 1px solid $blue;
+  height: 17.5px;
+  width: 17.5px;
+  border-radius: 2px;
 }
 
 .patient-data-section {

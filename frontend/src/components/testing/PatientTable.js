@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import classnames from 'classnames';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCheckSquare, faSquare, faEye, faCheck } from '@fortawesome/free-solid-svg-icons';
+import { faCheckSquare, faSquare, faEye, faCheck, faTimes } from '@fortawesome/free-solid-svg-icons';
 import { UncontrolledTooltip } from 'reactstrap';
 import _ from 'lodash';
 
@@ -326,7 +326,7 @@ export default class PatientTable extends Component {
             className="button primary-button details-button"
             onClick={() => this.openViewDetailsModal(patient)}
           >
-            <FontAwesomeIcon icon={faEye} />
+            <FontAwesomeIcon icon={faEye} /> View
           </button>
 
           <button
@@ -335,7 +335,7 @@ export default class PatientTable extends Component {
             onClick={() => { if (!patientSelected) this.openConfirmDeleteModal(patient); }}
             aria-label="Delete"
           >
-            Delete
+            <FontAwesomeIcon icon={faTimes} /> Delete
           </button>
 
           {patientSelected &&
