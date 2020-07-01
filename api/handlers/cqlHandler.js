@@ -785,6 +785,23 @@ class CqlArtifact {
     return ejs.render(templateMap.BaseTemplate, { element_name: 'Rationale', cqlString: rationaleText });
   }
 
+  /*
+    this function handles a condition in which the error statement is notionally null, but isn't exactly null
+    if this function returns true,  the cql generated will be:
+    define "Errors":
+      null
+  */
+  isErrorEmpty(errorStatement){
+    let retVal = false;
+    let firstStatement = errorStatement.statements[0];
+    if(_.isEmpty(firstStatement.condition.label) &&
+      _.isEmpty(firstStatement.child) &&
+      _.isEmpty(firstStatement.thenClause) &&
+      _.isEmpty(errorStatement.elseClause)){
+      retVal = true;
+    }
+    return retVal;
+  }
 
   errors() {
     this.errorStatement.statements.forEach((statement, index) => {
@@ -804,6 +821,12 @@ class CqlArtifact {
     });
     this.errorStatement.elseClause =
       _.isEmpty(this.errorStatement.elseClause) ? null : sanitizeCQLString(this.errorStatement.elseClause);
+    //if the user clicks "Handle Errors" in the UI, there are non-null elements in errorStatement.statements
+    //even though they are effectively "null"
+    if( (this.errorStatement.statements.length > 0) && this.isErrorEmpty(this.errorStatement)){
+      this.errorStatement.statements = [];
+      this.errorStatement.elseCaluse = null;
+    }
     return ejs.render(templateMap.ErrorStatements, { element_name: 'Errors', errorStatement: this.errorStatement });
   }
 

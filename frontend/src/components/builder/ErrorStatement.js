@@ -129,13 +129,20 @@ export default class ErrorStatement extends Component {
   }
 
   renderWarning = (statement) => {
-    if (statement.condition.value) { return null; }
-
-    if ((statement.thenClause !== '') || (statement.child && statement.child.statements
-        && statement.child.statements.some(val => this.renderWarning(val)))) {
-      return <div className="warning">You need an If statement</div>;
+    if (statement.condition.value && (_.isEmpty(statement.thenClause) )) {
+      return <div className="warning errorStatement">You need a Then statement</div>;
     }
 
+    if ( ((statement.thenClause !== '') && _.isEmpty(statement.condition.value))||
+      (statement.child && statement.child.statements  &&
+        statement.child.statements.some(val => this.renderWarning(val)))) {
+      return <div className="warning errorStatement">You need an If statement</div>;
+    }
+
+    console.log(_.isEmpty(statement.condition.value));
+    if ( !(_.isEmpty(this.props.errorStatement.elseClause)) && _.isEmpty(statement.condition.value)){
+      return <div className="warning errorStatement">You need an If statement</div>;
+    }
     return null;
   }
 
