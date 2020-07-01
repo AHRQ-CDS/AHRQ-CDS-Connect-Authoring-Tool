@@ -202,7 +202,7 @@ export default class Parameter extends Component {
             className={classnames('element_hidebutton', 'transparent-button', hasComment && 'has-comment')}
             aria-label="show comment"
           >
-            <FontAwesomeIcon icon={hasComment ? faCommentDots : faComment} /> {/*TODO: match to*/}
+            <FontAwesomeIcon icon={hasComment ? faCommentDots : faComment} />
           </button>
         }
 
