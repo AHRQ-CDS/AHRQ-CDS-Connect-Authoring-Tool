@@ -212,7 +212,7 @@ export default class UserGuide extends Component {
                     className="img-fluid img-thumbnail rounded mx-auto d-block" />
                 </div>
                 <div>
-                  Once you've entered an artifact name and version, click the "Create" button. Your new artifact will appear
+                  Once you've entered an artifact name and version, click the "Save" button. Your new artifact will appear
                   at the top of the artifact list.
                 </div>
               </div>
@@ -318,7 +318,7 @@ export default class UserGuide extends Component {
                     <li>
                       <strong>Modify the results</strong> using "expression modifiers" to further filter the results (e.g.,
                       "Verified"), get a specific property of the result (e.g., "Quantity Value"), or test the result (e.g.,
-                      "> 130 mg/dL").
+                      "&gt; 130 mg/dL").
                     </li>
                   </ol>
                 </div>
@@ -533,20 +533,32 @@ export default class UserGuide extends Component {
                 </div>
 
                 <div className="h4-wrapper">
-                  <h4 id="Provide_Additional_Information">3.1.5 Provide Additional Information</h4>
+                  <h4 id="Name_Element">3.1.5 Name the Element</h4>
                   <div>
-                    All elements provide user-configurable fields for the element name as well as a comment. In some cases, the
+                    All elements provide a user-configurable field for the element name. In some cases, the
                     element name may be pre-populated, but you may change the name if desired. It's considered a best practice
                     to reflect the intent of the element in its name. For example, if an element checks for an LDL cholesterol
-                    test with a result over 130 mg/dL, then "LDL-c > 130 mg/dL" is a better name than just "LDL-c Test".
+                    test with a result over 130 mg/dL, then "LDL-c &gt; 130 mg/dL" is a better name than just "LDL-c Test".
                   </div>
                   <div>
                     <img alt="" src={screenshotUrl('LDL_C_Updated_Name')}
                       className="img-fluid img-thumbnail rounded mx-auto d-block" />
                   </div>
+                </div>
+
+                <div className="h4-wrapper">
+                  <h4 id="Annotate_Element">3.1.6 Annotate the Element</h4>
                   <div>
-                    The comments field allows authors to provide additional information about an element. Recommended uses
-                    of comments include:
+                    All elements support comments. The comments field allows authors to provide additional information about
+                    an element. By default, comments are collapsed in order to preserve space in the user interface. To toggle
+                    a comment field's visibility, click on the comment icon in the element header.
+                  </div>
+                  <div>
+                    <img alt="" src={screenshotUrl('Ten_Year_Risk_Open_Comments')}
+                      className="img-fluid img-thumbnail rounded mx-auto d-block" />
+                  </div>
+                  <div>
+                    Comments can be used in many ways. Recommended uses of comments include:
                     <ul>
                       <li>
                         Providing a rationale for why the element is created or indicating a decision that was made when
@@ -571,16 +583,29 @@ export default class UserGuide extends Component {
                       className="img-fluid img-thumbnail rounded mx-auto d-block" />
                   </div>
                   <div>
+                    When an element's comment field contains information, the comments icon changes to a subtle blue color
+                    and contains three dots. This allows authors to quickly see which elements have comments, even when the
+                    comments are collapsed.
+                  </div>
+                  <div>
+                    <img alt="" src={screenshotUrl('Ten_Year_Risk_Closed_Comments')}
+                      className="img-fluid img-thumbnail rounded mx-auto d-block" />
+                  </div>
+                </div>
+
+                <div className="h4-wrapper">
+                  <h4 id="Provide_Additional_Information">3.1.7 Provide Additional Information</h4>
+                  <div>
                     Some element types reqest additional information. Currently, the following two element types require
                     additional information:
                     <ul>
                       <li>
-                        <strong>Demographics -> Age Range</strong> requires at least one of: Minimum Age, Maximum Age; as well
+                        <strong>Demographics {'->'} Age Range</strong> requires at least one of: Minimum Age, Maximum Age; as well
                         as the unit of time (e.g., years).
                       </li>
                       <li>
-                        <strong>Demographics -> Gender</strong> requires one of the following values to be selected: Male, Female,
-                        Other, Unknown.
+                        <strong>Demographics {'->'} Gender</strong> requires one of the following values to be selected:
+                        Male, Female, Other, Unknown.
                       </li>
                     </ul>
                   </div>
@@ -591,7 +616,7 @@ export default class UserGuide extends Component {
                 </div>
 
                 <div className="h4-wrapper">
-                  <h4 id="Modify_Results">3.1.6 Modify Results</h4>
+                  <h4 id="Modify_Results">3.1.8 Modify Results</h4>
                   <div>
                     Once you have the core element defined, including associated value sets and codes (if applicable), its
                     return type will be displayed near the bottom of the element. For elements with FHIR-based types (e.g.,
@@ -1465,7 +1490,7 @@ export default class UserGuide extends Component {
                     <li>Gender</li>
                     <li>FHIR Version</li>
                     <li>Last Updated</li>
-                    <li>View Details button <FontAwesomeIcon icon={faEye} aria-hidden="true" /></li>
+                    <li>"View" button</li>
                     <li>"Delete" button</li>
                   </ul>
                 </div>
@@ -1474,9 +1499,8 @@ export default class UserGuide extends Component {
                     className="img-fluid img-thumbnail rounded mx-auto d-block" />
                 </div>
                 <div>
-                  To view a summary of a synthetic test patient's data, click on the eye icon{' '}
-                  <FontAwesomeIcon icon={faEye} aria-hidden="true" />
-                  . This will display a modal window with the patient's demographic data and
+                  To view a summary of a synthetic test patient's data, click on the "View" button.
+                  This will display a modal window with the patient's demographic data and
                   the individual entries within the patient's health record. The entries are grouped according to type
                   (e.g., Conditions, Medications, Encounters, etc.). Groups can be expanded and collapsed using the
                   right arrow{' '}

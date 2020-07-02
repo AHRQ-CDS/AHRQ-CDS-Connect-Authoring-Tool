@@ -14,7 +14,7 @@ export default [
     image: `${process.env.PUBLIC_URL}/assets/images/whats-new-collapsible-comments.png`,
     description: 'User-provided comments are now supported on most authoring elements.  Comments are collapsed by default to allow users to see the most relevant data without being overwhelmed by empty comment blocks.',
     linkText: 'Documentation',
-    link: `${process.env.PUBLIC_URL}/documentation#Provide_Additional_Information`
+    link: `${process.env.PUBLIC_URL}/documentation#Annotate_Element`
   },
   {
     id: 3,
