@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import FontAwesome from 'react-fontawesome';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faExclamationCircle } from '@fortawesome/free-solid-svg-icons';
 import _ from 'lodash';
 
 import Modal from '../elements/Modal';
@@ -46,7 +47,7 @@ export default class NewArtifactModal extends Component {
             <div className="artifact-form__new">
               {this.state.version && !(/^\d+\.\d+\.\d+$/.test(this.state.version))
                 && <div className="notification">
-                      <FontAwesome name="exclamation-circle" />
+                      <FontAwesomeIcon icon={faExclamationCircle} />
                       Version should follow the Apache APR versioning scheme (e.g., 1.0.0).
                       See <a href="http://build.fhir.org/ig/HL7/cqf-recommendations/documentation-libraries.html" target="_blank" rel="noopener noreferrer" onClick={onVisitExternalLink}>FHIR Clinical Guidelines</a> for more information.
                     </div>}

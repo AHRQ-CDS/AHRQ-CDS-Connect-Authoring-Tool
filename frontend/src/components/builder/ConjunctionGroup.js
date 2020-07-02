@@ -1,6 +1,16 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import FontAwesome from 'react-fontawesome';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import {
+  faOutdent,
+  faIndent,
+  faExclamationCircle,
+  faCommentDots,
+  faComment,
+  faAngleDoubleDown,
+  faAngleDoubleRight,
+  faTimes
+} from '@fortawesome/free-solid-svg-icons';
 import { UncontrolledTooltip } from 'reactstrap';
 import classnames from 'classnames';
 
@@ -211,7 +221,7 @@ export default class ConjunctionGroup extends Component {
             className={`element__hidebutton transparent-button ${this.props.disableElement ? 'disabled' : ''}`}
             id={`outdentbutton-${instance.uniqueId}`}
             onClick={() => this.outdentClickHandler(instance)}>
-            <FontAwesome name="dedent" />
+            <FontAwesomeIcon icon={faOutdent} />
           </button>
           {this.props.disableElement && this.renderDisabledTooltip(`outdentbutton-${instance.uniqueId}`) }
         </span>
@@ -222,7 +232,7 @@ export default class ConjunctionGroup extends Component {
         className={`element__hidebutton transparent-button ${this.props.disableElement ? 'disabled' : ''}`}
         id={`indentbutton-${instance.uniqueId}`}
         onClick={() => this.indentClickHandler(instance)}>
-        <FontAwesome name="indent" />
+        <FontAwesomeIcon icon={faIndent} />
       </button>
       { this.props.disableElement && this.renderDisabledTooltip(`indentbutton-${instance.uniqueId}`) }
     </span>
@@ -270,7 +280,7 @@ export default class ConjunctionGroup extends Component {
                 <div className="group-heading-name">
                   {elementNameField.value}:
                   {showHasWarnings &&
-                    <div className="warning"><FontAwesome name="exclamation-circle" /> Has warnings</div>
+                    <div className="warning"><FontAwesomeIcon icon={faExclamationCircle} /> Has warnings</div>
                   }
                 </div>
               }
@@ -285,7 +295,7 @@ export default class ConjunctionGroup extends Component {
                   className={classnames('element_hidebutton', 'transparent-button', hasComment && 'has-comment')}
                   aria-label="show comment"
                 >
-                  <FontAwesome name={hasComment ? 'comment-dots' : 'comment'} />
+                  <FontAwesomeIcon icon={hasComment ? faCommentDots : faComment} />
                 </button>
               }
 
@@ -294,7 +304,7 @@ export default class ConjunctionGroup extends Component {
                 className="element__hidebutton transparent-button"
                 aria-label={`hide ${elementNameField.name}`}
               >
-                <FontAwesome name={showGroup ? 'angle-double-down' : 'angle-double-right'} />
+                <FontAwesomeIcon icon={showGroup ? faAngleDoubleDown : faAngleDoubleRight} />
               </button>
 
               <button
@@ -303,7 +313,7 @@ export default class ConjunctionGroup extends Component {
                 onClick={this.deleteInstance}
                 aria-label={`remove ${this.props.instance.name}`}
               >
-                <FontAwesome name="close" />
+                <FontAwesomeIcon icon={faTimes} />
               </button>
 
               {disableElement && this.renderDisabledTooltip(`deletebutton-${this.props.instance.uniqueId}`)}

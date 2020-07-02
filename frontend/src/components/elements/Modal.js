@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import ReactModal from 'react-modal';
-import FontAwesome from 'react-fontawesome';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faTimes } from '@fortawesome/free-solid-svg-icons';
 
 export default class Modal extends Component {
   constructor(props) {
@@ -56,14 +57,14 @@ export default class Modal extends Component {
         onRequestClose={handleCloseModal}
         className={this.state.classNames.modal}
         shouldCloseOnOverlayClick={false}
-        overlayClassName={this.state.classNames.overlay}>
-
+        overlayClassName={this.state.classNames.overlay}
+      >
         <div className="modal__header">
           <div className="modal__heading">{modalTitle}</div>
 
           <div className="modal__buttonbar">
             <button type="button" onClick={handleCloseModal} className="modal__deletebutton" aria-label="close modal">
-              <FontAwesome fixedWidth name='close' />
+              <FontAwesomeIcon fixedWidth icon={faTimes} />
             </button>
           </div>
         </div>
@@ -74,20 +75,25 @@ export default class Modal extends Component {
           </div>
 
           <footer className="modal__footer">
-            {hasSecondaryButton
-              && <button type="button" className="secondary-button"
-              onClick={handleCloseModal}
-              aria-label="Cancel">
-              Cancel
-            </button>}
-            {modalSubmitButtonText
-              && <button
+            {hasSecondaryButton &&
+              <button type="button" className="secondary-button"
+                onClick={handleCloseModal}
+                aria-label="Cancel"
+              >
+                Cancel
+              </button>
+            }
+
+            {modalSubmitButtonText &&
+              <button
                 type="submit"
                 disabled={submitDisabled}
                 className={`primary-button ${submitDisabled ? 'disabled-button' : ''}`}
-                aria-label={modalSubmitButtonText}>
+                aria-label={modalSubmitButtonText}
+              >
                 {modalSubmitButtonText}
-              </button>}
+              </button>
+            }
           </footer>
         </form>
       </ReactModal>

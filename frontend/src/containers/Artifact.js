@@ -2,7 +2,8 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import FontAwesome from 'react-fontawesome';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faPlus } from '@fortawesome/free-solid-svg-icons';
 
 import { loadArtifacts, addArtifact, deleteArtifact, updateAndSaveArtifact } from '../actions/artifacts';
 import artifactProps from '../prop-types/artifact';
@@ -50,8 +51,9 @@ class Artifact extends Component {
         <div className="artifact-wrapper">
           <button className="primary-button pull-right"
             onClick={() => this.openNewArtifactModal()}
-            aria-label="Create New Artifact">
-            <FontAwesome name="plus" /> Create New Artifact
+            aria-label="Create New Artifact"
+          >
+            <FontAwesomeIcon icon={faPlus} /> Create New Artifact
           </button>
 
           {this.renderArtifactsTable()}
@@ -60,7 +62,8 @@ class Artifact extends Component {
         <NewArtifactModal
           addArtifact={this.props.addArtifact}
           showModal={this.state.showNewArtifactModal}
-          closeModal={this.closeNewArtifactModal} />
+          closeModal={this.closeNewArtifactModal}
+        />
       </div>
     );
   }

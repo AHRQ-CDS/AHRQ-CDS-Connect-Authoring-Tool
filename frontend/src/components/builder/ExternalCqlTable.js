@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import FontAwesome from 'react-fontawesome';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faEye } from '@fortawesome/free-solid-svg-icons';
 import { UncontrolledTooltip } from 'reactstrap';
 
 import Modal from '../elements/Modal';
@@ -98,22 +99,26 @@ export default class ExternalCqlTable extends Component {
         <td className="external-cql-table__tablecell-button" data-th="">
           <button aria-label="View"
             className="button primary-button details-button"
-            onClick={() => this.openViewDetailsModal(externalCqlLibrary)}>
-            <FontAwesome name='eye'/>
+            onClick={() => this.openViewDetailsModal(externalCqlLibrary)}
+          >
+            <FontAwesomeIcon icon={faEye} />
           </button>
 
           <button
             className={`button danger-button ${disabledClass}`}
             id={`DeleteLibraryTooltip-${externalCqlLibrary._id}`}
             aria-label="Delete"
-            onClick={() => { if (!disableDelete) this.openConfirmDeleteModal(externalCqlLibrary); }}>
+            onClick={() => { if (!disableDelete) this.openConfirmDeleteModal(externalCqlLibrary); }}
+          >
             Delete
           </button>
+
           {disableForUse &&
             <UncontrolledTooltip target={`DeleteLibraryTooltip-${externalCqlLibrary._id}`} placement="left">
               To delete this library, first remove all references to it.
             </UncontrolledTooltip>
           }
+
           {!disableForUse && disableForDependency &&
             <UncontrolledTooltip target={`DeleteLibraryTooltip-${externalCqlLibrary._id}`} placement="left">
               To delete this library, first remove all libraries that depend on it.
@@ -135,8 +140,8 @@ export default class ExternalCqlTable extends Component {
         modalSubmitButtonText="Delete"
         handleShowModal={this.state.showConfirmDeleteModal}
         handleCloseModal={this.closeConfirmDeleteModal}
-        handleSaveModal={this.handleDeleteExternalCqlLibrary}>
-
+        handleSaveModal={this.handleDeleteExternalCqlLibrary}
+      >
         <div className="delete-external-cql-library-confirmation-modal modal__content">
           <h5>Are you sure you want to permanently delete the following external CQL library?</h5>
 
@@ -180,7 +185,8 @@ export default class ExternalCqlTable extends Component {
             externalCqlLibrary={externalCqlLibraryToView}
             externalCqlLibraryDetails={externalCqlLibraryDetails}
             loadExternalCqlLibraryDetails={loadExternalCqlLibraryDetails}
-            isLoadingExternalCqlDetails={isLoadingExternalCqlDetails} />
+            isLoadingExternalCqlDetails={isLoadingExternalCqlDetails}
+          />
         }
 
         {this.renderConfirmDeleteModal()}

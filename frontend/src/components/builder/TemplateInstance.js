@@ -1,8 +1,18 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import FontAwesome from 'react-fontawesome';
-import { UncontrolledTooltip } from 'reactstrap';
 import classnames from 'classnames';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import {
+  faTimes,
+  faExclamationCircle,
+  faLink,
+  faCheck,
+  faCommentDots,
+  faComment,
+  faAngleDoubleDown,
+  faAngleDoubleRight
+} from '@fortawesome/free-solid-svg-icons';
+import { UncontrolledTooltip } from 'reactstrap';
 import _ from 'lodash';
 
 import VSACAuthenticationModal from './VSACAuthenticationModal';
@@ -355,14 +365,18 @@ export default class TemplateInstance extends Component {
               onKeyPress={(e) => {
                 e.which = e.which || e.keyCode;
                 if (e.which === 13) this.removeLastModifier(canModifierBeRemoved);
-              }}>
+              }}
+            >
+              <FontAwesomeIcon icon={faTimes} className="delete-valueset-button" />
 
-              <FontAwesome name="close" className="delete-valueset-button" />
-              { !canModifierBeRemoved &&
+              {!canModifierBeRemoved &&
                 <UncontrolledTooltip
-                  target={`modifier-delete-${this.props.templateInstance.uniqueId}`} placement="left">
+                  target={`modifier-delete-${this.props.templateInstance.uniqueId}`}
+                  placement="left"
+                >
                   Cannot remove modifier because return type cannot change while in use.
-                </UncontrolledTooltip> }
+                </UncontrolledTooltip>
+              }
             </span>
           }
         </div>
@@ -474,7 +488,8 @@ export default class TemplateInstance extends Component {
               onClick={() => this.setState({ showModifiers: !this.state.showModifiers })}
               className="modifier__addbutton secondary-button"
               aria-label="add expression"
-              disabled={!allModifiersValid(this.props.templateInstance.modifiers)}>
+              disabled={!allModifiersValid(this.props.templateInstance.modifiers)}
+            >
               Add Expression
             </button>
 
@@ -489,13 +504,14 @@ export default class TemplateInstance extends Component {
                     className="modifier__button secondary-button"
                     aria-label={modifier.name}>
                     {modifier.name}
-                  </button>)
+                  </button>
+                )
             }
           </div>
 
           {this.state.showModifiers && baseElementIsInUse &&
             <div className="notification">
-              <FontAwesome name="exclamation-circle" />
+              <FontAwesomeIcon icon={faExclamationCircle} />
               Limited expressions displayed because return type cannot change while in use.
             </div>
           }
@@ -546,7 +562,6 @@ export default class TemplateInstance extends Component {
     if (baseUseTab === 'subpopulations') tabLabel = 'Subpopulations';
     if (baseUseTab === 'baseElements') tabLabel = 'Base Element';
 
-
     return (
       <div className="modifier__return__type" id="base-element-list" key={referenceField.value.id}>
         <div className="code-info">
@@ -557,23 +572,23 @@ export default class TemplateInstance extends Component {
               {referenceField.id === 'baseElementUse' && <span> &#8594; {tabLabel}</span>}
             </div>
 
-            {(referenceField.id !== 'externalCqlReference') &&
-            <div className="code-info__buttons align-right">
-              <span
-                role="button"
-                id={`definition-${this.props.templateInstance.uniqueId}`}
-                className="element__linkbutton"
-                aria-label="see element definition"
-                onClick={() => this.props.scrollToElement(scrollElementId, scrollReferenceType, tabIndex)}
-                tabIndex="0"
-                onKeyPress={(e) => {
-                  e.which = e.which || e.keyCode;
-                  if (e.which === 13) this.props.scrollToElement(scrollElementId, scrollReferenceType, tabIndex);
-                }}>
-
-                <FontAwesome name="link" className="delete-valueset-button" />
-              </span>
-            </div>}
+            {referenceField.id !== 'externalCqlReference' &&
+              <div className="code-info__buttons align-right">
+                <span
+                  role="button"
+                  id={`definition-${this.props.templateInstance.uniqueId}`}
+                  className="element__linkbutton"
+                  aria-label="see element definition"
+                  onClick={() => this.props.scrollToElement(scrollElementId, scrollReferenceType, tabIndex)}
+                  tabIndex="0"
+                  onKeyPress={(e) => {
+                    e.which = e.which || e.keyCode;
+                    if (e.which === 13) this.props.scrollToElement(scrollElementId, scrollReferenceType, tabIndex);
+                  }}>
+                  <FontAwesomeIcon icon={faLink} className="delete-valueset-button" />
+                </span>
+              </div>
+            }
           </div>
         </div>
       </div>
@@ -603,13 +618,15 @@ export default class TemplateInstance extends Component {
                   isRetrievingDetails={this.props.isRetrievingDetails}
                   vsacDetailsCodes={this.props.vsacDetailsCodes}
                   vsacDetailsCodesError={this.props.vsacDetailsCodesError}
-                  vsacFHIRCredentials={this.props.vsacFHIRCredentials} />
+                  vsacFHIRCredentials={this.props.vsacFHIRCredentials}
+                />
               </div>
             ))}
           </div>
         );
       }
     }
+
     return null;
   }
 
@@ -640,9 +657,9 @@ export default class TemplateInstance extends Component {
                       onKeyPress={(e) => {
                         e.which = e.which || e.keyCode;
                         if (e.which === 13) this.deleteCode(code);
-                      }}>
-
-                      <FontAwesome name="close" className="delete-code-button" />
+                      }}
+                    >
+                      <FontAwesomeIcon icon={faTimes} className="delete-code-button" />
                     </span>
                   </div>
                 </div>
@@ -652,6 +669,7 @@ export default class TemplateInstance extends Component {
         );
       }
     }
+
     return null;
   }
 
@@ -673,7 +691,7 @@ export default class TemplateInstance extends Component {
     return (
       <div id="vsac-controls">
         <button className="disabled-button" disabled={true} aria-label="VSAC Authenticated">
-          <FontAwesome name="check" /> VSAC Authenticated
+          <FontAwesomeIcon icon={faCheck} /> VSAC Authenticated
         </button>
 
         <ElementModal
@@ -711,7 +729,8 @@ export default class TemplateInstance extends Component {
       return (
         <StaticField
           key={field.id}
-          updateInstance={this.updateInstance} />
+          updateInstance={this.updateInstance}
+        />
       );
     }
 
@@ -723,21 +742,24 @@ export default class TemplateInstance extends Component {
             field={field}
             value={this.state[field.id]}
             typeOfNumber={field.typeOfNumber}
-            updateInstance={this.updateInstance} />
+            updateInstance={this.updateInstance}
+          />
         );
       case 'string':
         return (
           <StringField
             key={field.id}
             {...field}
-            updateInstance={this.updateInstance} />
+            updateInstance={this.updateInstance}
+          />
         );
       case 'textarea':
         return (
           <TextAreaField
             key={field.id}
             {...field}
-            updateInstance={this.updateInstance} />
+            updateInstance={this.updateInstance}
+          />
         );
       case 'observation_vsac':
       case 'condition_vsac':
@@ -750,7 +772,8 @@ export default class TemplateInstance extends Component {
           <StringField
             key={field.id}
             {...field}
-            updateInstance={this.updateInstance} />
+            updateInstance={this.updateInstance}
+          />
         );
       case 'valueset':
         return (
@@ -759,7 +782,8 @@ export default class TemplateInstance extends Component {
             field={field}
             valueSets={this.props.valueSets}
             loadValueSets={this.props.loadValueSets}
-            updateInstance={this.updateInstance}/>
+            updateInstance={this.updateInstance}
+          />
         );
       default:
         return undefined;
@@ -770,7 +794,7 @@ export default class TemplateInstance extends Component {
     this.setState({ showElement: !this.state.showElement });
   }
 
-  getPath = () => this.props.getPath(this.props.templateInstance.uniqueId)
+  getPath = () => this.props.getPath(this.props.templateInstance.uniqueId);
 
   hasBaseElementLinks = () => {
     const { baseElements, templateInstance } = this.props;
@@ -838,7 +862,7 @@ export default class TemplateInstance extends Component {
             <div className="bold align-right return-type__label">Return Type:</div>
             <div className="return-type__value">
               { (validateReturnType === false || _.startCase(returnType) === 'Boolean') &&
-                <FontAwesome name="check" className="check" />}
+                <FontAwesomeIcon icon={faCheck} className="check" />}
               {_.startCase(returnType)}
             </div>
           </div>
@@ -954,7 +978,7 @@ export default class TemplateInstance extends Component {
             :
               <div className="heading-name">
                 {elementNameField.value}: {this.hasWarnings() &&
-                  <div className="warning"><FontAwesome name="exclamation-circle" /> Has warnings</div>
+                  <div className="warning"><FontAwesomeIcon icon={faExclamationCircle} /> Has warnings</div>
                 }
               </div>
             }
@@ -969,7 +993,7 @@ export default class TemplateInstance extends Component {
                 className={classnames('element_hidebutton', 'transparent-button', hasComment && 'has-comment')}
                 aria-label="show comment"
               >
-                <FontAwesome name={hasComment ? 'comment-dots' : 'comment'} />
+                <FontAwesomeIcon icon={hasComment ? faCommentDots : faComment} />
               </button>
             }
 
@@ -978,7 +1002,7 @@ export default class TemplateInstance extends Component {
               className="element__hidebutton transparent-button"
               aria-label={`hide ${templateInstance.name}`}
             >
-              <FontAwesome name={showElement ? 'angle-double-down' : 'angle-double-right'} />
+              <FontAwesomeIcon icon={showElement ? faAngleDoubleDown : faAngleDoubleRight} />
             </button>
 
             <button
@@ -987,7 +1011,7 @@ export default class TemplateInstance extends Component {
               className={`element__deletebutton transparent-button ${disabledClass}`}
               aria-label={`remove ${templateInstance.name}`}
             >
-              <FontAwesome name="close" />
+              <FontAwesomeIcon icon={faTimes} />
             </button>
 
             {baseElementUsed &&

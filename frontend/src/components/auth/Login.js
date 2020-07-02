@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import FontAwesome from 'react-fontawesome';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faExclamationCircle } from '@fortawesome/free-solid-svg-icons';
 import _ from 'lodash';
 
 import Modal from '../elements/Modal';
@@ -42,7 +43,7 @@ export default class Login extends Component {
 
     return (
       <div className="login__auth-status">
-        <FontAwesome name="exclamation-circle" /> {authStatusText}
+        <FontAwesomeIcon icon={faExclamationCircle} /> {authStatusText}
       </div>
     );
   }

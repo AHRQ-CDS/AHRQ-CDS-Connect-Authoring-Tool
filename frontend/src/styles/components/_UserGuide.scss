@@ -1,8 +1,12 @@
 .userguide {
+  div {
+    margin: 10px 0;
+  }
+
   &-wrapper {
     @include componentWidth;
   }
-  
+
   &-guide {
     width: 75%;
 
@@ -30,7 +34,7 @@
     border-left: 3px solid $ahrq-color-dark-blue;
     padding-left: 20px;
   }
-  
+
   .userguide-toc {
     position: absolute;
     background-color: rgba(255, 255, 255, 0.9);

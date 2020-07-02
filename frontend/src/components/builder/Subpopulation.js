@@ -1,7 +1,10 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import FontAwesome from 'react-fontawesome';
 import classNames from 'classnames';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import {
+  faExclamationCircle, faAngleDoubleDown, faAngleDoubleRight, faTimes
+} from '@fortawesome/free-solid-svg-icons';
 
 import ConjunctionGroup from './ConjunctionGroup';
 import ExpressionPhrase from './modifiers/ExpressionPhrase';
@@ -72,6 +75,7 @@ export default class Subpopulation extends Component {
     const headerTopClass = classNames('card-element__header-top', { collapsed: !isExpanded });
     const duplicateNameIndex = instanceNames.findIndex(name =>
       name.id !== subpopulation.uniqueId && name.name === subpopulation.subpopulationName);
+
     return (
       <div className="subpopulation card-group card-group__top">
         <div className="card-element">
@@ -88,17 +92,21 @@ export default class Subpopulation extends Component {
                     }}
                     value={this.props.subpopulation.subpopulationName}
                   />
-                  {duplicateNameIndex !== -1
-                    && <div className='warning'>Warning: Name already in use. Choose another name.</div>}
+
+                  {duplicateNameIndex !== -1 &&
+                    <div className='warning'>Warning: Name already in use. Choose another name.</div>
+                  }
                 </div>
               :
                 <div className="card-element__heading">
                   <div className="heading-name">
                     {this.props.subpopulation.subpopulationName}:
-                    {(duplicateNameIndex !== -1
-                      || this.subpopulationHasOneChildWarning()
-                      || this.hasNestedWarnings(this.props.subpopulation.childInstances))
-                      && <div className="warning"><FontAwesome name="exclamation-circle" /> Has warnings</div>}
+                    {
+                      (duplicateNameIndex !== -1 ||
+                      this.subpopulationHasOneChildWarning() ||
+                      this.hasNestedWarnings(this.props.subpopulation.childInstances)) &&
+                      <div className="warning"><FontAwesomeIcon icon={faExclamationCircle} /> Has warnings</div>
+                    }
                   </div>
                 </div>
               }
@@ -108,24 +116,28 @@ export default class Subpopulation extends Component {
                   onClick={isExpanded ? this.collapse : this.expand}
                   id="collapse-icon"
                   className="element__hidebutton transparent-button"
-                  aria-label={`${isExpanded ? 'hide' : 'show'} ${this.props.subpopulation.subpopulationName}`}>
-                  <FontAwesome name={isExpanded ? 'angle-double-down' : 'angle-double-right'} />
+                  aria-label={`${isExpanded ? 'hide' : 'show'} ${this.props.subpopulation.subpopulationName}`}
+                >
+                  <FontAwesomeIcon icon={isExpanded ? faAngleDoubleDown : faAngleDoubleRight} />
                 </button>
+
                 <button
                   aria-label="Remove subpopulation"
                   className="element__deletebutton transparent-button"
-                  onClick={() => this.props.deleteSubpopulation(this.props.subpopulation.uniqueId)}>
-                  <FontAwesome name="close" />
+                  onClick={() => this.props.deleteSubpopulation(this.props.subpopulation.uniqueId)}
+                >
+                  <FontAwesomeIcon icon={faTimes} />
                 </button>
               </div>
             </div>
-            {!isExpanded ?
+
+            {!isExpanded &&
               <ExpressionPhrase
                 class="expression expression__group expression-collapsed"
                 instance={this.props.subpopulation}
                 baseElements={this.props.baseElements}
               />
-              : null}
+            }
           </div>
 
           {isExpanded && this.renderContents()}
@@ -134,61 +146,62 @@ export default class Subpopulation extends Component {
     );
   }
 
-  renderContents() {
-    return (
-      <div className="card-element__body">
-        {this.subpopulationHasOneChildWarning() &&
-          <div className='warning'>This subpopulation needs at least one element</div>
-        }
-        <ExpressionPhrase
-          class="expression expression__group"
-          instance={this.props.subpopulation}
-          baseElements={this.props.baseElements}
-        />
-        <ConjunctionGroup
-          root={true}
-          treeName={this.props.treeName}
-          artifact={this.props.artifact}
-          templates={this.props.templates}
-          valueSets={this.props.valueSets}
-          loadValueSets={this.props.loadValueSets}
-          instance={this.props.subpopulation}
-          addInstance={this.addInstance}
-          editInstance={this.editInstance}
-          deleteInstance={this.deleteInstance}
-          getAllInstances={this.getAllInstances}
-          getAllInstancesInAllTrees={this.props.getAllInstancesInAllTrees}
-          updateInstanceModifiers={this.props.updateInstanceModifiers}
-          parameters={this.props.parameters}
-          baseElements={this.props.baseElements}
-          externalCqlList={this.props.externalCqlList}
-          loadExternalCqlList={this.props.loadExternalCqlList}
-          subPopulationIndex={this.props.subpopulationIndex}
-          conversionFunctions={this.props.conversionFunctions}
-          instanceNames={this.props.instanceNames}
-          scrollToElement={this.props.scrollToElement}
-          loginVSACUser={this.props.loginVSACUser}
-          setVSACAuthStatus={this.props.setVSACAuthStatus}
-          vsacStatus={this.props.vsacStatus}
-          vsacStatusText={this.props.vsacStatusText}
-          searchVSACByKeyword={this.props.searchVSACByKeyword}
-          isSearchingVSAC={this.props.isSearchingVSAC}
-          vsacSearchResults={this.props.vsacSearchResults}
-          vsacSearchCount={this.props.vsacSearchCount}
-          getVSDetails={this.props.getVSDetails}
-          isRetrievingDetails={this.props.isRetrievingDetails}
-          vsacDetailsCodes={this.props.vsacDetailsCodes}
-          vsacDetailsCodesError={this.props.vsacDetailsCodesError}
-          vsacFHIRCredentials={this.props.vsacFHIRCredentials}
-          validateReturnType={this.props.validateReturnType}
-          isValidatingCode={this.props.isValidatingCode}
-          isValidCode={this.props.isValidCode}
-          codeData={this.props.codeData}
-          validateCode={this.props.validateCode}
-          resetCodeValidation={this.props.resetCodeValidation}/>
-      </div>
-    );
-  }
+  renderContents = () => (
+    <div className="card-element__body">
+      {this.subpopulationHasOneChildWarning() &&
+        <div className='warning'>This subpopulation needs at least one element</div>
+      }
+
+      <ExpressionPhrase
+        class="expression expression__group"
+        instance={this.props.subpopulation}
+        baseElements={this.props.baseElements}
+      />
+  
+      <ConjunctionGroup
+        root={true}
+        treeName={this.props.treeName}
+        artifact={this.props.artifact}
+        templates={this.props.templates}
+        valueSets={this.props.valueSets}
+        loadValueSets={this.props.loadValueSets}
+        instance={this.props.subpopulation}
+        addInstance={this.addInstance}
+        editInstance={this.editInstance}
+        deleteInstance={this.deleteInstance}
+        getAllInstances={this.getAllInstances}
+        getAllInstancesInAllTrees={this.props.getAllInstancesInAllTrees}
+        updateInstanceModifiers={this.props.updateInstanceModifiers}
+        parameters={this.props.parameters}
+        baseElements={this.props.baseElements}
+        externalCqlList={this.props.externalCqlList}
+        loadExternalCqlList={this.props.loadExternalCqlList}
+        subPopulationIndex={this.props.subpopulationIndex}
+        conversionFunctions={this.props.conversionFunctions}
+        instanceNames={this.props.instanceNames}
+        scrollToElement={this.props.scrollToElement}
+        loginVSACUser={this.props.loginVSACUser}
+        setVSACAuthStatus={this.props.setVSACAuthStatus}
+        vsacStatus={this.props.vsacStatus}
+        vsacStatusText={this.props.vsacStatusText}
+        searchVSACByKeyword={this.props.searchVSACByKeyword}
+        isSearchingVSAC={this.props.isSearchingVSAC}
+        vsacSearchResults={this.props.vsacSearchResults}
+        vsacSearchCount={this.props.vsacSearchCount}
+        getVSDetails={this.props.getVSDetails}
+        isRetrievingDetails={this.props.isRetrievingDetails}
+        vsacDetailsCodes={this.props.vsacDetailsCodes}
+        vsacDetailsCodesError={this.props.vsacDetailsCodesError}
+        vsacFHIRCredentials={this.props.vsacFHIRCredentials}
+        validateReturnType={this.props.validateReturnType}
+        isValidatingCode={this.props.isValidatingCode}
+        isValidCode={this.props.isValidCode}
+        codeData={this.props.codeData}
+        validateCode={this.props.validateCode}
+        resetCodeValidation={this.props.resetCodeValidation}
+      />
+    </div>
+  );
 }
 
 Subpopulation.propTypes = {

@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
-import FontAwesome from 'react-fontawesome';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faPencilAlt, faTimes } from '@fortawesome/free-solid-svg-icons';
 
 import renderDate from '../../utils/dates';
 import { sortMostRecent } from '../../utils/sort';
@@ -105,13 +106,13 @@ export default class ArtifactTable extends Component {
         <button aria-label="Edit"
           className="primary-button edit-artifact-button"
           onClick={() => this.openEditArtifactModal(artifact)}>
-          <FontAwesome name='pencil' /> Edit Info
+          <FontAwesomeIcon icon={faPencilAlt} /> Edit Info
         </button>
 
         <button aria-label="Delete"
           className="danger-button"
           onClick={() => this.openConfirmDeleteModal(artifact)}>
-          <FontAwesome name='times' /> Delete
+          <FontAwesomeIcon icon={faTimes} /> Delete
         </button>
       </td>
     </tr>

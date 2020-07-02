@@ -1,8 +1,11 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import FontAwesome from 'react-fontawesome';
-import _ from 'lodash';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import {
+  faCheckCircle, faExclamationTriangle, faSpinner, faMedkit, faTimes, faExclamationCircle
+} from '@fortawesome/free-solid-svg-icons';
 import Modal from 'react-modal';
+import _ from 'lodash';
 
 import StyledSelect from '../elements/StyledSelect';
 import { getFieldWithId, getFieldWithType } from '../../utils/instances';
@@ -168,13 +171,13 @@ export default class CodeSelectModal extends Component {
     if (this.props.isValidCode === true) {
       return (
         <span className='modal__footer_status'>
-          <FontAwesome name='check-circle'/> Validation Successful!
+          <FontAwesomeIcon icon={faCheckCircle} /> Validation Successful!
         </span>
       );
     } else if (this.props.isValidCode === false) {
       return (
         <span className='modal__footer_status'>
-          <FontAwesome name='exclamation-triangle'/> Validation Error: Unable to validate code and/or code system.
+          <FontAwesomeIcon icon={faExclamationTriangle} /> Validation Error: Unable to validate code and/or code system.
           Please try again, or select this code without validation.
         </span>
       );
@@ -184,7 +187,7 @@ export default class CodeSelectModal extends Component {
 
   renderCodeData = () => {
     if (this.props.isValidatingCode) {
-      return <div className="loading-icon"><FontAwesome name="spinner" spin/></div>;
+      return <div className="loading-icon"><FontAwesomeIcon icon={faSpinner} spin/></div>;
     } else if (this.props.isValidCode) {
       return (
         <div className="code-display">
@@ -225,7 +228,7 @@ export default class CodeSelectModal extends Component {
           className="primary-button"
           onClick={this.openCodeSelectModal}
           aria-label={buttonLabels.openButtonText}>
-          <FontAwesome name="medkit" />{' '}{buttonLabels.openButtonText}
+          <FontAwesomeIcon icon={faMedkit} />{' '}{buttonLabels.openButtonText}
         </button>
 
         <Modal
@@ -234,7 +237,8 @@ export default class CodeSelectModal extends Component {
           shouldCloseOnOverlayClick={ true }
           contentLabel="Choose code"
           className="modal-style modal-style__light modal-style--full-height code-select-modal element-modal"
-          overlayClassName='modal-overlay modal-overlay__dark'>
+          overlayClassName='modal-overlay modal-overlay__dark'
+        >
           <div className="element-modal__container">
             <header className="modal__header">
               <span className="modal__heading">Choose Code</span>
@@ -242,18 +246,20 @@ export default class CodeSelectModal extends Component {
                 className="element__deletebutton transparent-button"
                 onClick={this.closeCodeSelectModal}
                 onKeyDown={e => this.enterKeyCheck(this.closeCodeSelectModal, null, e)}
-                aria-label="Close Code Select Modal">
-                <FontAwesome name='close'/>
+                aria-label="Close Code Select Modal"
+              >
+                <FontAwesomeIcon icon={faTimes} />
               </button>
             </header>
 
             <main className="modal__body">
-              {this.state.displayOtherInput
-                && <div className="notification">
-                      <FontAwesome name="exclamation-circle" />
-                      Code systems should use their canonical URL.
-                      See <a href="http://build.fhir.org/ig/HL7/cqf-recommendations/documentation-libraries.html" target="_blank" rel="noopener noreferrer" onClick={onVisitExternalLink}>FHIR Clinical Guidelines</a> for more information.
-                    </div>}
+              {this.state.displayOtherInput &&
+                <div className="notification">
+                  <FontAwesomeIcon icon={faExclamationCircle} />
+                  Code systems should use their canonical URL.
+                  See <a href="http://build.fhir.org/ig/HL7/cqf-recommendations/documentation-libraries.html" target="_blank" rel="noopener noreferrer" onClick={onVisitExternalLink}>FHIR Clinical Guidelines</a> for more information.
+                </div>
+              }
   
               <div className="element-modal__search">
                 <input
@@ -308,8 +314,9 @@ export default class CodeSelectModal extends Component {
 
               <button className="secondary-button"
                 onClick={this.closeCodeSelectModal}
-                aria-label="Cancel">
-              Cancel
+                aria-label="Cancel"
+              >
+                Cancel
               </button>
 
               <button
@@ -320,7 +327,8 @@ export default class CodeSelectModal extends Component {
                   || (this.state.displayOtherInput && !this.state.codeSystemText)
                 }
                 onClick={this.chooseCode}
-                aria-label="Select">
+                aria-label="Select"
+              >
                 Select
               </button>
             </footer>
