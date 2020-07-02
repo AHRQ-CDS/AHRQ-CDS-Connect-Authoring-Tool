@@ -85,7 +85,9 @@ class Landing extends Component {
               <div className="description">
                 {whatsNew[whatsNewIndex].description}
 
-                {whatsNew[whatsNewIndex].link !== '' && whatsNew[whatsNewIndex].linkExternal !== true &&
+                {whatsNew[whatsNewIndex].link &&
+                  whatsNew[whatsNewIndex].link !== '' &&
+                  whatsNew[whatsNewIndex].linkExternal !== true &&
                   <a
                     className={`link feature-${whatsNewIndex}`}
                     href={whatsNew[whatsNewIndex].link}
@@ -93,7 +95,9 @@ class Landing extends Component {
                     {whatsNew[whatsNewIndex].linkText}
                   </a>
                 }
-                {whatsNew[whatsNewIndex].link !== '' && whatsNew[whatsNewIndex].linkExternal === true &&
+                {whatsNew[whatsNewIndex].link &&
+                  whatsNew[whatsNewIndex].link !== '' &&
+                  whatsNew[whatsNewIndex].linkExternal === true &&
                   <a
                     target="_blank"
                     rel="nofollow noopener noreferrer"
