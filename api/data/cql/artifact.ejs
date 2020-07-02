@@ -11,13 +11,11 @@ codesystem "<%=key%>": '<%-resource.id%>' <%}) -%>
 valueset "<%-resource.name%>": 'https://cts.nlm.nih.gov/fhir/ValueSet/<%=resource.oid%>'<%});-%>
 
 <% codeMap.forEach((code) => { %>
-code "<%-code.name%>": '<%-code.code%>' from "<%-code.codeSystem.name%>"
-  display '<%-code.display%>'
+code "<%-code.name%>": '<%-code.code%>' from "<%-code.codeSystem.name%>" display '<%-code.display%>'
 <%})-%>
 
 <% conceptMap.forEach((concept) => {%>
-concept "<%-concept.name%>" : { <%concept.codes.forEach((code, index) => {%>"<%if (index > 0) {%>, <%}%><%-code.name%>"<%})%>}
-  display '<%-concept.display%>'
+concept "<%-concept.name%>" : { <%concept.codes.forEach((code, index) => {%>"<%if (index > 0) {%>, <%}%><%-code.name%>"<%})%>} display '<%-concept.display%>'
 <%})-%>
 
 <% parameters.forEach(parameter => { if(parameter.name) {
