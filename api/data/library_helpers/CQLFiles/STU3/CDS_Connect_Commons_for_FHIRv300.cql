@@ -3,7 +3,9 @@
 // - 1.0.1
 //   - Remove NullSafe conversion functions since FHIRHelpers now does null-safe conversions
 //   - Note functions that exist in DSTU2 version of commons, but not here in STU3 version
-library CDS_Connect_Commons_for_FHIRv300 version '1.0.1'
+// - 1.0.2
+//   - Add functions for the Immunization resource
+library CDS_Connect_Commons_for_FHIRv300 version '1.0.2'
 
 using FHIR version '3.0.0'
 
@@ -376,5 +378,48 @@ define function ActiveOrConfirmedAllergyIntolerance(AllergyIntolList List<Allerg
   AllergyIntolList A
     where A.clinicalStatus.value = 'active'
       or A.verificationStatus.value = 'confirmed'
+
+// -------------------------------------------------- Immunizations ----------------------------------------------------
+
+ /**
+  * Filters Immunizations by a concept rather than by a ValueSet.
+  * @param Koncept - the concept to filter on (intentionally mispelled to avoid naming clashes)
+  * @returns {List<Immunization>} a list of Immunizations matching the concept, or null if null was passed in
+  */
+ define function ImmunizationsByConcept(Koncept System.Concept):
+   [Immunization] I where FHIRHelpers.ToConcept(I.vaccineCode) ~ Koncept
+
+/**
+ * Immunizations that are completed. In FHIR STU3, this is reflected by status: 'completed'.  In addition, the
+ * notGiven flag must be checked to ensure it is not 'true'.
+ * @see http://hl7.org/fhir/STU3/valueset-immunization-status.html
+ * @param ImmunizationList - a list of Immunizations
+ * @returns {List<Immunization>} a list of completed Immunizations, or null if null was passed in
+ */
+define function CompletedImmunization(ImmunizationList List<Immunization>):
+  ImmunizationList I
+    where I.status.value = 'completed'
+      and I.notGiven.value is not true
+
+/**
+ * Immunizations given in the specified "look back" period.
+ * TODO: Rename to LookBack once the execution engine supports overloaded functions.
+ * @param ImmunizationList - a list of Immunizations
+ * @param LookBack - the lookback period for when the immunization was given
+ * @returns {List<Immunization>} a list of Immunizations given in the look back period, or null if null
+ * was passed in
+ */
+define function ImmunizationLookBack(ImmunizationList List<Immunization>, LookBack System.Quantity):
+  ImmunizationList I
+    let LookBackInterval: Interval[Now() - LookBack, Now()]
+    where I.date.value in LookBackInterval
+
+/**
+ * The most recent Immunization.
+ * @param ImmunizationList - a list of Immunizations
+ * @returns {Immunization} the most recent Immunization from the list, or null if null was passed in
+ */
+define function MostRecentImmunization(ImmunizationList List<Immunization>):
+  Last(ImmunizationList I sort by date.value)
 
 // NOTE: The DSTU2 commons also has GoalLookBack, but we do not use that in the CDS Authoring Tool.

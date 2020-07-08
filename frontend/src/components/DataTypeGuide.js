@@ -60,13 +60,13 @@ export default class DataTypeGuide extends Component {
             </p>
 
             <p>
-              Note: <code>C3F</code> refers to the CDS Connect Commons library. The appropriate version for the FHIR
-              version of an artifact will be selected and included in the artifact download.
+              Note: <code>C3F</code> refers to the CDS Connect Commons library. Any functions used from this library will be
+              automatically embedded into the artifact's primary CQL library.
             </p>
 
             <p>
-              Note: <code>Convert</code> refers to the CDS Connect Conversions library, which will be included in the
-              artifact download.
+              Note: <code>Convert</code> refers to the CDS Connect Conversions library. Any functions used from this library will
+              be automatically embedded into the artifact's primary CQL library.
             </p>
 
             <div className="h2-wrapper">
@@ -191,7 +191,7 @@ export default class DataTypeGuide extends Component {
                         CQL function: <code>C3F.ActiveCondition</code>
                       </li>
                       <li>
-                        Summary: Returns a list of conditions with <code>clinicalStatus</code> 
+                        Summary: Returns a list of conditions with <code>clinicalStatus</code>
                         and <code>abatement[x]</code> indicating active
                         <ul>
                           <li>
@@ -321,6 +321,88 @@ export default class DataTypeGuide extends Component {
                       <li>CQL function: <code>C3F.InProgress</code></li>
                       <li>Summary: Returns a list of encounters with <code>status</code> 'in-progress'</li>
                       <li>Returns: List of Encounters</li>
+                    </ul>
+                  </li>
+                  <li>
+                    See expressions that can be applied to <a href="#list-types">any list</a>
+                  </li>
+                </ul>
+
+                <h3 id="list-of-Immunizations">List of Immunizations</h3>
+
+                <ul>
+                  <li>Completed
+                    <ul>
+                      <li>
+                        CQL function: <code>C3F.CompletedImmunization</code>
+                      </li>
+                      <li>
+                        Summary: Returns a list of immunizations that have been completed
+                        <ul>
+                          <li>
+                            In FHIR R4, this returns immunizations with <code>status</code> of 'completed'
+                          </li>
+                          <li>
+                            In FHIR STU3, this returns immunizations with <code>status</code> of 'completed'
+                            and <code>notGiven</code> is 'not true'
+                          </li>
+                          <li>
+                            In FHIR DSTU2, this returns immunizations with <code>status</code> of 'completed'
+                            and <code>wasNotGiven</code> is 'not true'
+                          </li>
+                        </ul>
+                      </li>
+                      <li>
+                        Returns: List of Immunizations
+                      </li>
+                    </ul>
+                  </li>
+                  <li>
+                    Look Back
+                    <ul>
+                      <li>
+                        CQL function: <code>C3F.ImmunizationLookBack</code>
+                      </li>
+                      <li>
+                        Summary: Returns a list of immunizations that occurred between now and the time period specified by the
+                        user
+                        <ul>
+                          <li>
+                            In FHIR R4, this returns immunizations with <code>occurrence[x]</code> that occurred within the period
+                          </li>
+                          <li>
+                            In FHIR STU3 and DSTU2, this returns immunizations with <code>date</code> that occurred within the
+                            {' '}period
+                          </li>
+                        </ul>
+                      </li>
+                      <li>
+                        Returns: List of Immunizations
+                      </li>
+                    </ul>
+                  </li>
+                  <li>
+                    Most Recent
+                    <ul>
+                      <li>
+                        CQL function: <code>C3F.MostRecentProcedure</code>
+                      </li>
+                      <li>
+                        Summary: Returns the most recent immunization from a list.
+                        <ul>
+                          <li>
+                            In FHIR R4, this sorts immunizations by <code>occurrence[x]</code> datetimes and returns the last
+                            {' '}immunization from that list.
+                          </li>
+                          <li>
+                            In FHIR STU3 and DSTU2, this sorts immunizations by <code>date</code> values and returns the last
+                            {' '}immunization from that list.
+                          </li>
+                        </ul>
+                      </li>
+                      <li>
+                        Returns: Immunization
+                      </li>
                     </ul>
                   </li>
                   <li>
@@ -848,6 +930,12 @@ export default class DataTypeGuide extends Component {
                 </ul>
 
                 <h3 id="encounter">Encounter</h3>
+
+                <ul>
+                  <li>See expressions that can be applied to <a href="#any-type">any type</a></li>
+                </ul>
+
+                <h3 id="immunization">Immunization</h3>
 
                 <ul>
                   <li>See expressions that can be applied to <a href="#any-type">any type</a></li>

@@ -2,9 +2,10 @@ import convertToExpression from '../convertToExpression';
 import modifierList from '../../../data/modifiers'
 
 const elementLists = ['list_of_observations', 'list_of_conditions', 'list_of_medication_statements',
-  'list_of_medication_requests', 'list_of_procedures', 'list_of_allergy_intolerances', 'list_of_encounters'];
+  'list_of_medication_requests', 'list_of_procedures', 'list_of_allergy_intolerances', 'list_of_encounters',
+  'list_of_immunizations'];
 const everyElement = elementLists.concat(['boolean', 'system_quantity', 'system_concept', 'observation', 'condition',
-  'medication_statement', 'medication_request', 'procedure']);
+  'medication_statement', 'medication_request', 'procedure', 'immunization']);
 
 function getModifier(name, values) {
   let modifier = modifierList.find(m => m.id === name);
@@ -451,6 +452,33 @@ test('Count expression builds phrase that uses the count as the subject of the p
     { expressionText: 'with a code from', isExpression: false },
     { expressionText: 'LDL', isExpression: true },
     { expressionText: 'is greater than 10', isExpression: true }
+  ];
+
+  expect(expressionPhrase).toEqual(expectedOutput);
+});
+
+test('Immunization Phrases', () => {
+  const modifiers = [
+    getModifier('LookBackImmunization', { value: 6, unit: 'years' }),
+    getModifier('CompletedImmunization'),
+    getModifier('MostRecentImmunization'),
+    getModifier('CheckExistence', { value: 'is not null' })
+  ];
+  const name = 'Immunization';
+  const valueSets = [{ name: 'FluVaccines', oid: '1.2.3' }];
+  const codes = [];
+  const expressionPhrase = convertToExpression(modifiers, name, valueSets, codes, 'boolean');
+
+  const expectedOutput = [
+    { expressionText: 'A', isExpression: false },
+    { expressionText: 'most recent', isExpression: true },
+    { expressionText: 'completed', isExpression: true },
+    { expressionText: 'immunization', isExpression: false, isType: true },
+    { expressionText: 'with a code from', isExpression: false },
+    { expressionText: 'FluVaccines', isExpression: true },
+    { expressionText: 'which occurred', isExpression: false },
+    { expressionText: 'within the last 6 years', isExpression: true },
+    { expressionText: 'is not null', isExpression: true }
   ];
 
   expect(expressionPhrase).toEqual(expectedOutput);

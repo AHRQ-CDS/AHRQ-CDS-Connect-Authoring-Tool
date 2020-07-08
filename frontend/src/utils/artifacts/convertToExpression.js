@@ -43,6 +43,7 @@ function getExpressionSentenceValue(modifier) {
     ActiveOrRecurring: { modifierText: 'active or recurring', leadingText: '', type: 'list' },
     ActiveConiditon: { modifierText: 'active', leadingText: '', type: 'list' },
     CompletedProcedure: { modifierText: 'completed', leadingText: '', type: 'list' },
+    CompletedImmunization: { modifierText: 'completed', leadingText: '', type: 'list' },
     InProgressProcedure: { modifierText: 'in progress', leadingText: '', type: 'list' },
     ActiveMedicationStatement: { modifierText: 'active', leadingText: '', type: 'list' },
     ActiveMedicationRequest: { modifierText: 'active', leadingText: '', type: 'list' },
@@ -69,6 +70,8 @@ function getExpressionSentenceValue(modifier) {
     MostRecentObservation: { modifierText: 'most recent', leadingText: '', type: 'descriptor' },
     MostRecentProcedure: { modifierText: 'most recent', leadingText: '', type: 'descriptor' },
     MostRecentCondition: { modifierText: 'most recent', leadingText: '', type: 'descriptor' },
+    MostRecentImmunization: { modifierText: 'most recent', leadingText: '', type: 'descriptor' },
+    LookBackImmunization: { modifierText: 'look back', leadingText: 'which occurred', type: 'post' },
     LookBackObservation: { modifierText: 'look back', leadingText: 'which occurred', type: 'post' },
     LookBackCondition: { modifierText: 'look back', leadingText: 'which occurred', type: 'post' },
     LookBackMedicationRequest: { modifierText: 'look back', leadingText: 'which occurred', type: 'post' },
@@ -212,6 +215,7 @@ function getExpressionSentenceValue(modifier) {
       }
       case 'LookBackObservation':
       case 'LookBackCondition':
+      case 'LookBackImmunization':
       case 'LookBackMedicationRequest':
       case 'LookBackMedicationStatement':
       case 'LookBackProcedure': {
