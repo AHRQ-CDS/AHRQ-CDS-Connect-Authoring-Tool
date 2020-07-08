@@ -1,37 +1,24 @@
 import convertToExpression from '../convertToExpression';
+import modifierList from '../../../data/modifiers'
 
 const elementLists = ['list_of_observations', 'list_of_conditions', 'list_of_medication_statements',
   'list_of_medication_requests', 'list_of_procedures', 'list_of_allergy_intolerances', 'list_of_encounters'];
 const everyElement = elementLists.concat(['boolean', 'system_quantity', 'system_concept', 'observation', 'condition',
   'medication_statement', 'medication_request', 'procedure']);
 
+function getModifier(name, values) {
+  let modifier = modifierList.find(m => m.id === name);
+  if (modifier && values) {
+    modifier = Object.assign({}, modifier, { values });
+  }
+  return modifier;
+}
+
 test('Simple modifiers Active, Confirmed, Exists builds expected phrase', () => {
   const modifiers = [
-    {
-      id: 'ActiveConiditon',
-      type: 'Active',
-      name: 'Active',
-      inputTypes: ['list_of_conditions'],
-      returnType: 'list_of_conditions',
-      cqlTemplate: 'BaseModifier',
-      cqlLibraryFunction: 'C3F.ActiveCondition'
-    },
-    {
-      id: 'ConfirmedCondition',
-      name: 'Confirmed',
-      inputTypes: ['list_of_conditions'],
-      returnType: 'list_of_conditions',
-      cqlTemplate: 'BaseModifier',
-      cqlLibraryFunction: 'C3F.Confirmed'
-    },
-    {
-      id: 'BooleanExists',
-      name: 'Exists',
-      inputTypes: elementLists,
-      returnType: 'boolean',
-      cqlTemplate: 'BaseModifier',
-      cqlLibraryFunction: 'exists'
-    }
+    getModifier('ActiveConiditon'),
+    getModifier('ConfirmedCondition'),
+    getModifier('BooleanExists')
   ];
   const name = 'Condition';
   const valueSets = [{ name: 'Diabetes', oid: '1.2.3' }];
@@ -55,51 +42,11 @@ test('Simple modifiers Active, Confirmed, Exists builds expected phrase', () => 
 // MostRecent starts the list, Qualifier added correctly, LookBack added correctly, ConceptValue not added to phrase
 test('More complicated modifiers, including Qualifier, builds expected phrase', () => {
   const modifiers = [
-    {
-      id: 'VerifiedObservation',
-      name: 'Verified',
-      inputTypes: ['list_of_observations'],
-      returnType: 'list_of_observations',
-      cqlTemplate: 'BaseModifier',
-      cqlLibraryFunction: 'C3F.Verified'
-    },
-    {
-      id: 'LookBackObservation',
-      type: 'LookBack',
-      name: 'Look Back',
-      inputTypes: ['list_of_observations'],
-      returnType: 'list_of_observations',
-      values: { value: 14, unit: 'years' },
-      validator: { type: 'require', fields: ['value', 'unit'], args: null },
-      cqlTemplate: 'LookBackModifier',
-      cqlLibraryFunction: 'C3F.ObservationLookBack'
-    },
-    {
-      id: 'MostRecentObservation',
-      name: 'Most Recent',
-      inputTypes: ['list_of_observations'],
-      returnType: 'observation',
-      cqlTemplate: 'BaseModifier',
-      cqlLibraryFunction: 'C3F.MostRecent'
-    },
-    {
-      id: 'ConceptValue',
-      name: 'Concept Value',
-      inputTypes: ['observation'],
-      returnType: 'system_concept',
-      cqlTemplate: 'BaseModifier',
-      cqlLibraryFunction: 'C3F.ConceptValue'
-    },
-    {
-      id: 'Qualifier',
-      name: 'Qualifier',
-      inputTypes: ['system_concept'],
-      returnType: 'boolean',
-      validator: { type: 'requiredIfThenOne', fields: ['qualifier', 'valueSet', 'code'] },
-      values: { qualifier: 'value is a code from', valueSet: { name: 'Smoker', oid: '1.2.3' }, code: null },
-      cqlTemplate: null,
-      cqlLibraryFunction: null
-    }
+    getModifier('VerifiedObservation'),
+    getModifier('LookBackObservation', { value: 14, unit: 'years' }),
+    getModifier('MostRecentObservation'),
+    getModifier('ConceptValue'),
+    getModifier('Qualifier', { qualifier: 'value is a code from', valueSet: { name: 'Smoker', oid: '1.2.3' }, code: null })
   ];
 
   const name = 'Observation';
@@ -127,63 +74,22 @@ test('More complicated modifiers, including Qualifier, builds expected phrase', 
 // MostRecent starts the list, ValueComparison, WithUnit, ConvertUnits all added correctly
 test('More complicated modifiers, including Value Comparison, builds correct phrase', () => {
   const modifiers = [
-    {
-      id: 'VerifiedObservation',
-      name: 'Verified',
-      inputTypes: ['list_of_observations'],
-      returnType: 'list_of_observations',
-      cqlTemplate: 'BaseModifier',
-      cqlLibraryFunction: 'C3F.Verified'
-    },
-    {
-      id: 'WithUnit',
-      name: 'With Unit',
-      inputTypes: ['list_of_observations'],
-      returnType: 'list_of_observations',
-      values: { unit: 'mg/dL' },
-      validator: { type: 'require', fields: ['unit'], args: null },
-      cqlTemplate: 'WithUnit',
-      cqlLibraryFunction: 'C3F.WithUnit',
-    },
-    {
-      id: 'MostRecentObservation',
-      name: 'Most Recent',
-      inputTypes: ['list_of_observations'],
-      returnType: 'observation',
-      cqlTemplate: 'BaseModifier',
-      cqlLibraryFunction: 'C3F.MostRecent'
-    },
-    {
-      id: 'QuantityValue',
-      name: 'Quantity Value',
-      inputTypes: ['observation'],
-      returnType: 'system_quantity',
-      cqlTemplate: 'BaseModifier',
-      cqlLibraryFunction: 'C3F.QuantityValue'
-    },
-    {
-      id: 'ConvertObservation',
-      name: 'Convert Units',
-      inputTypes: ['system_quantity'],
-      returnType: 'system_quantity',
-      values: {
-        value: 'Convert.mg_per_dL',
-        templateName: 'Convert.mg_per_dL',
-        description: 'mmol/L to mg/dL for blood cholesterol'
-      },
-      validator: { type: 'require', fields: ['value'], args: null },
-      cqlTemplate: 'BaseModifier',
-    },
-    {
-      id: 'ValueComparisonObservation',
-      name: 'Value Comparison',
-      inputTypes: ['system_quantity'],
-      returnType: 'boolean',
-      validator: { type: 'require', fields: ['minValue', 'minOperator', 'unit'], args: null },
-      values: { minOperator: '>=', minValue: '120', maxOperator: '<', maxValue: '300', unit: 'mg/dL' },
-      cqlTemplate: 'ValueComparisonObservation',
-      comparisonOperator: null
-    }
+    getModifier('VerifiedObservation'),
+    getModifier('WithUnit', { unit: 'mg/dL' }),
+    getModifier('MostRecentObservation'),
+    getModifier('QuantityValue'),
+    getModifier('ConvertObservation', {
+      value: 'Convert.mg_per_dL',
+      templateName: 'Convert.mg_per_dL',
+      description: 'mmol/L to mg/dL for blood cholesterol'
+    }),
+    getModifier('ValueComparisonObservation', {
+      minOperator: '>=',
+      minValue: '120',
+      maxOperator: '<',
+      maxValue: '300',
+      unit: 'mg/dL'
+    })
   ];
 
   const name = 'Observation';
@@ -214,40 +120,10 @@ test('More complicated modifiers, including Value Comparison, builds correct phr
 // Highest starts the list, Not is at the beginning of expression, is null added to end
 test('More complicated expression, with Highest, Not, and Is Null, builds correct phrase', () => {
   const modifiers = [
-    {
-      id: 'VerifiedObservation',
-      name: 'Verified',
-      inputTypes: ['list_of_observations'],
-      returnType: 'list_of_observations',
-      cqlTemplate: 'BaseModifier',
-      cqlLibraryFunction: 'C3F.Verified'
-    },
-    {
-      id: 'HighestObservationValue',
-      name: 'Highest Observation Value',
-      inputTypes: ['list_of_observations'],
-      returnType: 'system_quantity',
-      cqlTemplate: 'BaseModifier',
-      cqlLibraryFunction: 'C3F.HighestObservation'
-    },
-    {
-      id: 'CheckExistence',
-      name: 'Is (Not) Null?',
-      inputTypes: everyElement,
-      returnType: 'boolean',
-      values: { value: 'is null' },
-      cqlTemplate: 'postModifier',
-      comparisonOperator: null,
-      validator: { type: 'require', fields: ['value'], args: null },
-    },
-    {
-      id: 'BooleanNot',
-      name: 'Not',
-      inputTypes: ['boolean'],
-      returnType: 'boolean',
-      cqlTemplate: 'BaseModifier',
-      cqlLibraryFunction: 'not'
-    }
+    getModifier('VerifiedObservation'),
+    getModifier('HighestObservationValue'),
+    getModifier('CheckExistence', { value: 'is null' }),
+    getModifier('BooleanNot')
   ];
 
   const name = 'Observation';
@@ -274,16 +150,7 @@ test('More complicated expression, with Highest, Not, and Is Null, builds correc
 
 test('Only validated modifiers are added to the phrase', () => {
   const modifiers = [
-    {
-      id: 'CheckExistence',
-      name: 'Is (Not) Null?',
-      inputTypes: everyElement,
-      returnType: 'boolean',
-      values: { value: undefined }, // Not filled in
-      cqlTemplate: 'postModifier',
-      comparisonOperator: null,
-      validator: { type: 'require', fields: ['value'], args: null }
-    }
+    getModifier('CheckExistence', { value: undefined }) // not filled in
   ];
 
   const name = 'Observation';
@@ -305,14 +172,7 @@ test('Only validated modifiers are added to the phrase', () => {
 // Multiple value sets and codes (with and without a display) are added correctly to phrase and tooltip text
 test('All value sets and codes are added to phrase, but only first three are displayed, rest in tooltip text', () => {
   const modifiers = [
-    {
-      id: 'BooleanExists',
-      name: 'Exists',
-      inputTypes: elementLists,
-      returnType: 'boolean',
-      cqlTemplate: 'BaseModifier',
-      cqlLibraryFunction: 'exists'
-    }
+    getModifier('BooleanExists')
   ];
 
   const name = 'Observation';
@@ -421,14 +281,7 @@ describe('Demographics elements support special case phrases', () => {
 
 test('Base Element Lists create a phrase with individual element\'s phrases in a tooltip', () => {
   const modifiers = [
-    {
-      id: 'BooleanExists',
-      name: 'Exists',
-      inputTypes: elementLists,
-      returnType: 'boolean',
-      cqlTemplate: 'BaseModifier',
-      cqlLibraryFunction: 'exists'
-    }
+    getModifier('BooleanExists')
   ];
 
   const name = 'Union';
@@ -503,14 +356,7 @@ test('Conjunction Groups create a phrase with the group\'s children 1 level deep
 
 test('Parameters with BooleanNot create a phrase with the parameter name', () => {
   const modifiers = [
-    {
-      id: 'BooleanNot',
-      name: 'Not',
-      inputTypes: ['boolean'],
-      returnType: 'boolean',
-      cqlTemplate: 'BaseModifier',
-      cqlLibraryFunction: 'not'
-    }
+    getModifier('BooleanNot')
   ];
 
   const name = 'parameter';
@@ -545,16 +391,13 @@ test('Parameters with BooleanNot create a phrase with the parameter name', () =>
 
 test('Quantity parameters with Value Comparison create a phrase with the parameter name and comparison', () => {
   const modifiers = [
-    {
-      id: 'ValueComparisonObservation',
-      name: 'Value Comparison',
-      inputTypes: ['system_quantity'],
-      returnType: 'boolean',
-      validator: { type: 'require', fields: ['minValue', 'minOperator', 'unit'], args: null },
-      values: { minOperator: '>=', minValue: '120', maxOperator: '<', maxValue: '300', unit: 'mg/dL' },
-      cqlTemplate: 'ValueComparisonObservation',
-      comparisonOperator: null
-    }
+    getModifier('ValueComparisonObservation', {
+      minOperator: '>=',
+      minValue: '120',
+      maxOperator: '<',
+      maxValue: '300',
+      unit: 'mg/dL'
+    })
   ];
 
   const name = 'parameter';
@@ -589,24 +432,8 @@ test('Quantity parameters with Value Comparison create a phrase with the paramet
 
 test('Count expression builds phrase that uses the count as the subject of the phrase', () => {
   const modifiers = [
-    {
-      id: 'Count',
-      name: 'Count',
-      inputTypes: elementLists,
-      returnType: 'integer',
-      cqlTemplate: 'BaseModifier',
-      cqlLibraryFunction: 'Count'
-    },
-    {
-      id: 'ValueComparisonNumber',
-      name: 'Value Comparison',
-      inputTypes: ['integer', 'decimal'],
-      returnType: 'boolean',
-      validator: { type: 'require', fields: ['minValue', 'minOperator'], args: null },
-      values: { minOperator: '>', minValue: '10', maxOperator: undefined, maxValue: '', unit: '' },
-      cqlTemplate: 'ValueComparisonNumber',
-      comparisonOperator: null
-    }
+    getModifier('Count'),
+    getModifier('ValueComparisonNumber', { minOperator: '>', minValue: '10', maxOperator: undefined, maxValue: '', unit: '' })
   ];
 
   const name = 'Observation';
