@@ -347,6 +347,7 @@ export default class UserGuide extends Component {
                       <li>
                         <strong>External CQL</strong>: Named CQL definitions from CQL files uploaded in the "External CQL" tab
                       </li>
+                      <li><strong>Immunization</strong>: Instances of the FHIR Immunization resource type</li>
                       <li><strong>Medication Statement</strong>: Instances of the FHIR MedicationStatement resource type</li>
                       <li>
                         <strong>Medication Request</strong>: Instances of the FHIR MedicationRequest(STU3/R4) or
