@@ -1,11 +1,5 @@
 import convertToExpression from '../convertToExpression';
-import modifierList from '../../../data/modifiers'
-
-const elementLists = ['list_of_observations', 'list_of_conditions', 'list_of_medication_statements',
-  'list_of_medication_requests', 'list_of_procedures', 'list_of_allergy_intolerances', 'list_of_encounters',
-  'list_of_immunizations'];
-const everyElement = elementLists.concat(['boolean', 'system_quantity', 'system_concept', 'observation', 'condition',
-  'medication_statement', 'medication_request', 'procedure', 'immunization']);
+import modifierList from '../../../data/modifiers';
 
 function getModifier(name, values) {
   let modifier = modifierList.find(m => m.id === name);
@@ -47,7 +41,14 @@ test('More complicated modifiers, including Qualifier, builds expected phrase', 
     getModifier('LookBackObservation', { value: 14, unit: 'years' }),
     getModifier('MostRecentObservation'),
     getModifier('ConceptValue'),
-    getModifier('Qualifier', { qualifier: 'value is a code from', valueSet: { name: 'Smoker', oid: '1.2.3' }, code: null })
+    getModifier('Qualifier', {
+      qualifier: 'value is a code from',
+      valueSet: {
+        name: 'Smoker',
+        oid: '1.2.3'
+      },
+      code: null
+    })
   ];
 
   const name = 'Observation';
@@ -434,7 +435,13 @@ test('Quantity parameters with Value Comparison create a phrase with the paramet
 test('Count expression builds phrase that uses the count as the subject of the phrase', () => {
   const modifiers = [
     getModifier('Count'),
-    getModifier('ValueComparisonNumber', { minOperator: '>', minValue: '10', maxOperator: undefined, maxValue: '', unit: '' })
+    getModifier('ValueComparisonNumber', {
+      minOperator: '>',
+      minValue: '10',
+      maxOperator: undefined,
+      maxValue: '',
+      unit: ''
+    })
   ];
 
   const name = 'Observation';
