@@ -6,7 +6,9 @@
 //   - Add back ...ByConcept functions for backwards compatibility w/ libraries that
 //     might expect them
 //   - Consider effectiveInstant in ObservationLookBack
-library CDS_Connect_Commons_for_FHIRv400 version '1.0.1'
+// - 1.0.2
+//   - Add functions for the Immunization resource
+library CDS_Connect_Commons_for_FHIRv400 version '1.0.2'
 
 using FHIR version '4.0.0'
 
@@ -535,3 +537,44 @@ define function GoalLookBack(GoalList List<Goal>, LookBack System.Quantity):
       or StatusDate in LookBackInterval
       or exists(TargetDates TD where TD in LookBackInterval)
       or exists(TargetQuantities TQ where (StartDate + TQ) in LookBackInterval)
+
+// -------------------------------------------------- Immunizations ----------------------------------------------------
+
+ /**
+  * Filters Immunizations by a concept rather than by a ValueSet.
+  * @param Koncept - the concept to filter on (intentionally mispelled to avoid naming clashes)
+  * @returns {List<Immunization>} a list of Immunizations matching the concept, or null if null was passed in
+  */
+ define function ImmunizationsByConcept(Koncept System.Concept):
+   [Immunization] I where FHIRHelpers.ToConcept(I.vaccineCode) ~ Koncept
+
+/**
+ * Immunizations that are completed. In FHIR R4, this is reflected by status: 'completed'.
+ * @see http://hl7.org/fhir/R4/valueset-immunization-status.html
+ * @param ImmunizationList - a list of Immunizations
+ * @returns {List<Immunization>} a list of completed Immunizations, or null if null was passed in
+ */
+define function CompletedImmunization(ImmunizationList List<Immunization>):
+  ImmunizationList I
+    where I.status.value = 'completed'
+
+/**
+ * Immunizations given in the specified "look back" period.
+ * TODO: Rename to LookBack once the execution engine supports overloaded functions.
+ * @param ImmunizationList - a list of Immunizations
+ * @param LookBack - the lookback period for when the immunization was given
+ * @returns {List<Immunization>} a list of Immunizations given in the look back period, or null if null
+ * was passed in
+ */
+define function ImmunizationLookBack(ImmunizationList List<Immunization>, LookBack System.Quantity):
+  ImmunizationList I
+    let LookBackInterval: Interval[Now() - LookBack, Now()]
+    where (I.occurrence as FHIR.dateTime).value in LookBackInterval
+
+/**
+ * The most recent Immunization.
+ * @param ImmunizationList - a list of Immunizations
+ * @returns {Immunization} the most recent Immunization from the list, or null if null was passed in
+ */
+define function MostRecentImmunization(ImmunizationList List<Immunization>):
+  Last(ImmunizationList I sort by (occurrence as FHIR.dateTime).value)

@@ -658,6 +658,17 @@ class CqlArtifact {
           this.setFieldContexts(allergyIntoleranceValueSets, 'AllergyIntolerance', context);
           break;
         }
+        case 'immunization_vsac': {
+          const immunizationValueSets = {
+            id: 'generic_immunization',
+            valuesets: [],
+            concepts: []
+          }
+          buildConceptObjectForCodes(field.codes, immunizationValueSets.concepts);
+          addValueSets(field, immunizationValueSets, 'valuesets');
+          this.setFieldContexts(immunizationValueSets, 'Immunization', context);
+          break;
+        }
         case 'reference': {
           // Need to pull the element name from the reference to support renaming the elements while being used.
           if (field.id === 'parameterReference') {

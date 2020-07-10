@@ -57,7 +57,7 @@ describe('<ElementSelect />', () => {
 
       openSelect(getByLabelText('Choose element type'));
 
-      expect(container.querySelectorAll('.element-select__option')).toHaveLength(11);
+      expect(container.querySelectorAll('.element-select__option')).toHaveLength(12);
     });
 
     it('options display correct values and have key icon if VSAC auth required', () => {

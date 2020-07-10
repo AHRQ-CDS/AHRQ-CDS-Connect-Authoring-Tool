@@ -252,4 +252,22 @@ module.exports = [
     name: 'External CQL',
     entries: []
   },
+  {
+    id: 13,
+    icon: 'syringe',
+    name: 'Immunizations',
+    entries: [
+      {
+        id: 'GenericImmunization_vsac',
+        name: 'Immunization',
+        returnType: 'list_of_immunizations',
+        suppress: true,
+        extends: 'Base',
+        template: 'GenericImmunization',
+        fields: [
+          { id: 'immunization', type: 'immunization_vsac', name: 'Immunization' }
+        ]
+      },
+    ]
+  }
 ];

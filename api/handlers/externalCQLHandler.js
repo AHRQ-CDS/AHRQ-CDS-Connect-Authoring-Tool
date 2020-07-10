@@ -30,6 +30,7 @@ const singularReturnTypeMap = {
   'Procedure': 'procedure',
   'AllergyIntolerance': 'allergy_intolerance',
   'Encounter': 'encounter',
+  'Immunization': 'immunization',
   'Any': 'any'
 };
 
@@ -42,6 +43,7 @@ const listReturnTypeMap = {
   'Procedure': 'list_of_procedures',
   'AllergyIntolerance': 'list_of_allergy_intolerances',
   'Encounter': 'list_of_encounters',
+  'Immunization': 'list_of_immunizations',
   'Any': 'list_of_any',
   'Boolean': 'list_of_booleans',
   'Code': 'list_of_system_codes',

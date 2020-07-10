@@ -27,6 +27,7 @@ const listTypes = [
   'list_of_procedures',
   'list_of_allergy_intolerances',
   'list_of_encounters',
+  'list_of_immunizations',
   'list_of_booleans',
   'list_of_system_quantities',
   'list_of_system_concepts',
@@ -41,6 +42,7 @@ const singularTypes = [
   'procedure',
   'allergy_intolerance',
   'encounter',
+  'immunization',
   'boolean',
   'system_quantity',
   'system_concept'
