@@ -235,7 +235,8 @@ function singleGet(req, res) {
 function parseELMFiles(elmFiles, artifactId, userId, files) {
   const elmResultsToSave = [];
   let elmErrors = [];
-  elmFiles.forEach((file) => {
+  let notFHIR = false;
+  for (const file of elmFiles) {
     let elmResults = {
       linkedArtifactId: artifactId,
       user: userId
@@ -250,8 +251,13 @@ function parseELMFiles(elmFiles, artifactId, userId, files) {
 
     const fileForELMResult = checkMatch(elmResults, files);
 
-    // Find FHIR version used by library
+    // Make sure there is no data model that isn't default System or FHIR.
+    // If there is, we can break since none of this will be uploaded.
     const elmDefs = _.get(library, 'usings.def', []);
+    notFHIR = elmDefs.some(def => !['System', 'FHIR'].includes(def.localIdentifier));
+    if (notFHIR) break;
+    
+    // Find FHIR version used by library
     const fhirDef = _.find(elmDefs, { localIdentifier: 'FHIR' });
     elmResults.fhirVersion = _.get(fhirDef, 'version', '');
 
@@ -277,8 +283,9 @@ function parseELMFiles(elmFiles, artifactId, userId, files) {
     details.dependencies = fileDependencies;
     elmResults.details = details;
     elmResultsToSave.push(elmResults);
-  });
-  return { elmErrors, elmResultsToSave };
+  }
+
+  return { elmErrors, elmResultsToSave, notFHIR };
 }
 
 // Post a single external CQL library
@@ -304,7 +311,13 @@ function singlePost(req, res) {
               return;
             }
 
-            const { elmErrors, elmResultsToSave } = parseELMFiles(elmFiles, artifactId, req.user.uid, files);
+            const { elmErrors, elmResultsToSave, notFHIR } = parseELMFiles(elmFiles, artifactId, req.user.uid, files);
+
+            if (notFHIR) {
+              res.status(400).send(`None of the libraries were uploaded because at least one
+                uses a data model that is not FHIR.`);
+              return;
+            }
 
             CQLLibrary.find({ user: req.user.uid, linkedArtifactId: artifactId }, (error, libraries) => {
               if (error) res.status(500).send(error);
@@ -410,7 +423,12 @@ function singlePost(req, res) {
           return;
         }
 
-        const { elmErrors, elmResultsToSave } = parseELMFiles(elmFiles, artifactId, req.user.uid, files);
+        const { elmErrors, elmResultsToSave, notFHIR } = parseELMFiles(elmFiles, artifactId, req.user.uid, files);
+
+        if (notFHIR) {
+          res.status(400).send('Library uses a data model that is not FHIR.');
+          return;
+        }
 
         CQLLibrary.find({ user: req.user.uid, linkedArtifactId: artifactId }, (error, libraries) => {
           if (error) res.status(500).send(error);
