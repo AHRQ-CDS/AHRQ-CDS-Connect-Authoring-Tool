@@ -343,6 +343,7 @@ export default class UserGuide extends Component {
                       <li>
                         <strong>Demographics</strong>: Age or Gender as specified in an instance of the FHIR Patient resource type
                       </li>
+                      <li><strong>Device</strong>: Instances of the FHIR Device resource type</li>
                       <li><strong>Encounter</strong>: Instances of the FHIR Encounter resource type</li>
                       <li>
                         <strong>External CQL</strong>: Named CQL definitions from CQL files uploaded in the "External CQL" tab

@@ -85,6 +85,10 @@ const RESOURCE_KEYS = {
       'First item type': 'Coding:item.firstObject.type',
       'First item service': 'Coding:item.firstObject.service',
       Use: 'use'
+    },
+    Device: {
+      Type: 'CodeableConcept:type',
+      Status: 'status'
     }
   },
   STU3: {
@@ -161,6 +165,10 @@ const RESOURCE_KEYS = {
       'First item service': 'CodeableConcept:item.firstObject.service',
       Use: 'use',
       Status: 'status'
+    },
+    Device: {
+      Type: 'CodeableConcept:type',
+      Status: 'status'
     }
   },
   R4: {
@@ -236,6 +244,10 @@ const RESOURCE_KEYS = {
       'Claim type': 'CodeableConcept:type',
       'First item service': 'CodeableConcept:item.firstObject.productOrService',
       Use: 'use',
+      Status: 'status'
+    },
+    Device: {
+      Type: 'CodeableConcept:type',
       Status: 'status'
     }
   }
@@ -324,6 +336,7 @@ export default class PatientView extends Component {
           <PatientDataSection title="Conditions" data={this.extractData('Condition')} />
           <PatientDataSection title="Allergies" data={this.extractData('AllergyIntolerance')} />
           <PatientDataSection title="Medications" data={this.extractData('MedicationRequest')} />
+          <PatientDataSection title="Devices" data={this.extractData('Device')} />
           <PatientDataSection title="Careplans" data={this.extractData('CarePlan')} />
           <PatientDataSection title="Encounters" data={this.extractData('Encounter')} />
           <PatientDataSection title="Observations" data={this.extractData('Observation')} />
