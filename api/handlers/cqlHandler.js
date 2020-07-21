@@ -290,7 +290,7 @@ class CqlArtifact {
     this.includeLibraries =
       artifact.dataModel.version ? includeLibrariesMap[artifact.dataModel.version] : includeLibrariesR4;
     this.includeLibraries = this.includeLibraries.concat(artifact.externalLibs || []);
-    this.context = artifact.context ? artifact.context : 'Patient';
+    this.context = artifact.context && artifact.context.length ? artifact.context : 'Patient';
     this.inclusions = artifact.expTreeInclude;
     this.parameters = artifact.parameters;
     this.exclusions = artifact.expTreeExclude;
