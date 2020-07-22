@@ -290,7 +290,7 @@ class CqlArtifact {
     this.includeLibraries =
       artifact.dataModel.version ? includeLibrariesMap[artifact.dataModel.version] : includeLibrariesR4;
     this.includeLibraries = this.includeLibraries.concat(artifact.externalLibs || []);
-    this.context = artifact.context ? artifact.context : 'Patient';
+    this.context = artifact.context && artifact.context.length ? artifact.context : 'Patient';
     this.inclusions = artifact.expTreeInclude;
     this.parameters = artifact.parameters;
     this.exclusions = artifact.expTreeExclude;
@@ -504,7 +504,9 @@ class CqlArtifact {
       ))
     ));
     const name = getFieldWithId(element.fields, 'element_name').value;
-    const comment = getFieldWithId(element.fields, 'comment').value;
+    const commentField = getFieldWithId(element.fields, 'comment');
+    // Older artifacts might not have a comment field -- so account for that.
+    const comment = commentField ? commentField.value : '';
     conjunction.element_name = (name || element.subpopulationName || element.uniqueId);
     conjunction.comment = (createCommentArray(comment) || "");
     (element.childInstances || []).forEach((child) => {
