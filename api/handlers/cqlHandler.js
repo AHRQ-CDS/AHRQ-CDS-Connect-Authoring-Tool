@@ -504,7 +504,9 @@ class CqlArtifact {
       ))
     ));
     const name = getFieldWithId(element.fields, 'element_name').value;
-    const comment = getFieldWithId(element.fields, 'comment').value;
+    const commentField = getFieldWithId(element.fields, 'comment');
+    // Older artifacts might not have a comment field -- so account for that.
+    const comment = commentField ? commentField.value : '';
     conjunction.element_name = (name || element.subpopulationName || element.uniqueId);
     conjunction.comment = (createCommentArray(comment) || "");
     (element.childInstances || []).forEach((child) => {
