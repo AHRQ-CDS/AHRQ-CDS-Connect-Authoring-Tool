@@ -81,6 +81,7 @@ const elementOptions = [
   { value: 'baseElement', label: 'Base Elements', vsacAuthRequired: false },
   { value: 'condition', label: 'Condition', vsacAuthRequired: true, template: 'GenericCondition_vsac' },
   { value: 'demographics', label: 'Demographics', vsacAuthRequired: false },
+  { value: 'device', label: 'Device', vsacAuthRequired: true, template: 'GenericDevice_vsac' },
   { value: 'encounter', label: 'Encounter', vsacAuthRequired: true, template: 'GenericEncounter_vsac' },
   { value: 'externalCqlElement', label: 'External CQL', vsacAuthRequired: false },
   { value: 'immunization', label: 'Immunization', vsacAuthRequired: true, template: 'GenericImmunization_vsac' },

@@ -490,3 +490,26 @@ test('Immunization Phrases', () => {
 
   expect(expressionPhrase).toEqual(expectedOutput);
 });
+
+test('Device Phrases', () => {
+  const modifiers = [
+    getModifier('ActiveDevice'),
+    getModifier('BooleanExists')
+  ];
+  const name = 'Device';
+  const valueSets = [{ name: 'PaceMakers', oid: '1.2.3' }];
+  const codes = [];
+  const expressionPhrase = convertToExpression(modifiers, name, valueSets, codes, 'boolean');
+
+  const expectedOutput = [
+    { expressionText: 'There', isExpression: false },
+    { expressionText: 'exists', isExpression: true },
+    { expressionText: 'an', isExpression: false },
+    { expressionText: 'active', isExpression: true },
+    { expressionText: 'device', isExpression: false, isType: true },
+    { expressionText: 'with a code from', isExpression: false },
+    { expressionText: 'PaceMakers', isExpression: true },
+  ];
+
+  expect(expressionPhrase).toEqual(expectedOutput);
+});

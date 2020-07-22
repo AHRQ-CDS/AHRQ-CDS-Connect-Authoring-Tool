@@ -769,6 +769,7 @@ export default class TemplateInstance extends Component {
       case 'encounter_vsac':
       case 'allergyIntolerance_vsac':
       case 'immunization_vsac':
+      case 'device_vsac':
         return (
           <StringField
             key={field.id}

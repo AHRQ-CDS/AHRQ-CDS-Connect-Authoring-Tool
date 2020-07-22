@@ -313,6 +313,36 @@ export default class DataTypeGuide extends Component {
                   <li>See expressions that can be applied to <a href="#list-types">any list</a></li>
                 </ul>
 
+                <h3 id="list-of-Devices">List of Devices</h3>
+
+                <ul>
+                  <li>Active
+                    <ul>
+                      <li>
+                        CQL function: <code>C3F.ActiveDevice</code>
+                      </li>
+                      <li>
+                        Summary: Returns a list of active devices. In FHIR, a device is considered "active" if it is available
+                        for use. If it is an implanted device, this means it is implanted in the patient.
+                        <ul>
+                          <li>
+                            In FHIR R4 and STU3, this returns devices with <code>status</code> of 'active'
+                          </li>
+                          <li>
+                            In FHIR DSTU2, this returns devices with <code>status</code> of 'available'
+                          </li>
+                        </ul>
+                      </li>
+                      <li>
+                        Returns: List of Devices
+                      </li>
+                    </ul>
+                  </li>
+                  <li>
+                    See expressions that can be applied to <a href="#list-types">any list</a>
+                  </li>
+                </ul>
+
                 <h3 id="list-of-encounters">List of Encounters</h3>
 
                 <ul>
@@ -926,6 +956,12 @@ export default class DataTypeGuide extends Component {
                       <li>Returns: Boolean</li>
                     </ul>
                   </li>
+                  <li>See expressions that can be applied to <a href="#any-type">any type</a></li>
+                </ul>
+
+                <h3 id="device">Device</h3>
+
+                <ul>
                   <li>See expressions that can be applied to <a href="#any-type">any type</a></li>
                 </ul>
 

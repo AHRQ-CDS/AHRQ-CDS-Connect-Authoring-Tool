@@ -8,6 +8,7 @@
 //   - Consider effectiveInstant in ObservationLookBack
 // - 1.0.2
 //   - Add functions for the Immunization resource
+//   - Add functions for the Device resource
 library CDS_Connect_Commons_for_FHIRv400 version '1.0.2'
 
 using FHIR version '4.0.0'
@@ -578,3 +579,23 @@ define function ImmunizationLookBack(ImmunizationList List<Immunization>, LookBa
  */
 define function MostRecentImmunization(ImmunizationList List<Immunization>):
   Last(ImmunizationList I sort by (occurrence as FHIR.dateTime).value)
+
+// ----------------------------------------------------- Devices -------------------------------------------------------
+
+ /**
+  * Filters Devices by a concept rather than by a ValueSet.
+  * @param Koncept - the concept to filter on (intentionally mispelled to avoid naming clashes)
+  * @returns {List<Device>} a list of Devices matching the concept, or null if null was passed in
+  */
+ define function DevicesByConcept(Koncept System.Concept):
+   [Device] D where FHIRHelpers.ToConcept(D.type) ~ Koncept
+
+/**
+ * Devices that are active. In FHIR R4, this is reflected by status: 'active'.
+ * @see http://hl7.org/fhir/R4/valueset-device-status.html
+ * @param DeviceList - a list of Devices
+ * @returns {List<Device>} a list of active Devices, or null if null was passed in
+ */
+define function ActiveDevice(DeviceList List<Device>):
+  DeviceList D
+    where D.status.value = 'active'

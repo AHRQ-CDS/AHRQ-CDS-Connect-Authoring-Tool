@@ -269,5 +269,23 @@ module.exports = [
         ]
       },
     ]
+  },
+  {
+    id: 14,
+    icon: 'heartbeat',
+    name: 'Device',
+    entries: [
+      {
+        id: 'GenericDevice_vsac',
+        name: 'Device',
+        returnType: 'list_of_devices',
+        suppress: true,
+        extends: 'Base',
+        template: 'GenericDevice',
+        fields: [
+          { id: 'device', type: 'device_vsac', name: 'Device' }
+        ]
+      },
+    ]
   }
 ];

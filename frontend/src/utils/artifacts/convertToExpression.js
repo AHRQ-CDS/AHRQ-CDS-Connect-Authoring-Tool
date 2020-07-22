@@ -48,6 +48,7 @@ function getExpressionSentenceValue(modifier) {
     ActiveMedicationStatement: { modifierText: 'active', leadingText: '', type: 'list' },
     ActiveMedicationRequest: { modifierText: 'active', leadingText: '', type: 'list' },
     ActiveOrConfirmedAllergyIntolerance: { modifierText: 'active or confirmed', leadingText: '', type: 'list' },
+    ActiveDevice: { modifierText: 'active', leadingText: '', type: 'list' },
     EqualsString: { modifierText: 'equals', leadingText: '', type: 'post' },
     EndsWithString: { modifierText: 'ends with', leadingText: '', type: 'post' },
     StartsWithString: { modifierText: 'starts with', leadingText: '', type: 'post' },

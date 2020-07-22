@@ -7,12 +7,12 @@
 
 const elementLists = ['list_of_observations', 'list_of_conditions', 'list_of_medication_statements',
   'list_of_medication_requests', 'list_of_procedures', 'list_of_allergy_intolerances', 'list_of_encounters',
-  'list_of_immunizations', 'list_of_any', 'list_of_booleans', 'list_of_system_quantities', 'list_of_system_concepts',
-  'list_of_system_codes', 'list_of_integers', 'list_of_datetimes', 'list_of_strings', 'list_of_decimals',
-  'list_of_times', 'list_of_others'];
+  'list_of_immunizations', 'list_of_devices', 'list_of_any', 'list_of_booleans', 'list_of_system_quantities',
+  'list_of_system_concepts', 'list_of_system_codes', 'list_of_integers', 'list_of_datetimes', 'list_of_strings',
+  'list_of_decimals', 'list_of_times', 'list_of_others'];
 const everyElement = elementLists.concat(['boolean', 'system_quantity', 'system_concept', 'system_code',
   'observation', 'condition', 'medication_statement', 'medication_request', 'procedure', 'allergy_intolerance',
-  'encounter', 'immunization', 'integer', 'datetime', 'decimal', 'string', 'time', 'interval_of_integer',
+  'encounter', 'immunization', 'device', 'integer', 'datetime', 'decimal', 'string', 'time', 'interval_of_integer',
   'interval_of_datetime', 'interval_of_decimal', 'interval_of_quantity', 'any', 'other']);
 
 export default [
@@ -176,6 +176,15 @@ export default [
     returnType: 'list_of_immunizations',
     cqlTemplate: 'BaseModifier',
     cqlLibraryFunction: 'C3F.CompletedImmunization'
+  },
+  // devices
+  {
+    id: 'ActiveDevice',
+    name: 'Active',
+    inputTypes: ['list_of_devices'],
+    returnType: 'list_of_devices',
+    cqlTemplate: 'BaseModifier',
+    cqlLibraryFunction: 'C3F.ActiveDevice'
   },
 
   // strings
