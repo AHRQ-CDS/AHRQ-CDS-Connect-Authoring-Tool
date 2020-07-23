@@ -7,7 +7,7 @@ import { loginUser, logoutUser, setAuthStatus, getCurrentUser } from '../actions
 import setErrorMessage from '../actions/errors';
 
 import Analytics from '../components/Analytics';
-import Header from '../components/Header';
+import Header from '../components/header/Header';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 
