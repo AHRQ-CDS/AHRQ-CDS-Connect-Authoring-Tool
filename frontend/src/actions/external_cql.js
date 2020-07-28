@@ -29,14 +29,6 @@ function calculateParentsOfAllLibraries(libraries) {
   return parentsOfLibraries;
 }
 
-function calculateFhirVersion(externalCqlList){
-  let retVal = "";
-  if(externalCqlList.length > 0){
-    retVal = externalCqlList[0].fhirVersion;
-  }
-  console.log("CALCULATED RETVAL: " + retVal);
-  return retVal;
-}
 
 // ------------------------- LOAD EXTERNAL CQL LIST ------------------------ //
 
@@ -48,12 +40,10 @@ function requestExternalCqlList() {
 
 function loadExternalCqlListSuccess(externalCqlList) {
   const parentsOfLibraries = calculateParentsOfAllLibraries(externalCqlList);
-  const fhirVersion = calculateFhirVersion(externalCqlList);
   return {
     type: types.LOAD_EXTERNAL_CQL_LIST_SUCCESS,
     externalCqlList,
-    parentsOfLibraries,
-    fhirVersion
+    parentsOfLibraries
   };
 }
 
@@ -207,7 +197,6 @@ export function addExternalLibrary(library) {
     return sendAddExternalCqlLibraryRequest(library)
       .then(data => dispatch(addExternalCqlLibrarySuccess(data)))
       .catch(error => dispatch(addExternalCqlLibraryFailure(error)))
-      .then(() => dispatch(saveArtifact(library.artifact)))
       .then(() => dispatch(loadExternalCqlList(library.artifact._id)))
       .then(() => dispatch(loadArtifact(library.artifact._id)));
   };

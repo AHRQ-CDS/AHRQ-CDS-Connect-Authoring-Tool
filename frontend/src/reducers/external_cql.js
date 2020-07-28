@@ -28,7 +28,6 @@ export default function externalCQL(state = defaultState, action) {
         externalCqlList: action.externalCqlList,
         externalCQLLibraryParents: action.parentsOfLibraries,
         loadExternalCqlList: { isLoading: false, loadStatus: 'success' },
-        fhirVersion: action.fhirVersion
       };
     case types.LOAD_EXTERNAL_CQL_LIST_FAILURE:
       return {
