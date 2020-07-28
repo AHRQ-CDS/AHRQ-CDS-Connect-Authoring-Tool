@@ -9,7 +9,8 @@ import setErrorMessage from '../actions/errors';
 import Analytics from '../components/Analytics';
 import Header from '../components/header/Header';
 import Navbar from '../components/Navbar';
-import Footer from '../components/Footer';
+import CdsFooter from '../components/footer/CdsFooter';
+import AhrqFooter from '../components/footer/AhrqFooter';
 
 class App extends Component {
   UNSAFE_componentWillMount() { // eslint-disable-line camelcase
@@ -62,7 +63,8 @@ class App extends Component {
         {this.renderedErrorMessage()}
         {children}
 
-        <Footer isAuthenticated={isAuthenticated} />
+        <CdsFooter />
+        <AhrqFooter />
       </div>
     );
   }

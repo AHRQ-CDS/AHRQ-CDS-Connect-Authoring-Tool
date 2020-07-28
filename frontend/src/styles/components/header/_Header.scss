@@ -4,34 +4,6 @@
   -webkit-font-smoothing: auto;
   a { text-decoration: none; }
 
-  //------------------------ AHRQ Banner ------------------------------------//
-  .ahrq {
-    font-size: 18px;
-    font-family:
-      -apple-system,
-      BlinkMacSystemFont,
-      "Segoe UI",
-      Roboto,
-      "Helvetica Neue",
-      Arial,
-      "Noto Sans",
-      sans-serif,
-      "Apple Color Emoji",
-      "Segoe UI Emoji",
-      "Segoe UI Symbol",
-      "Noto Color Emoji";
-    font-feature-settings: "kern" 1;
-    font-kerning: normal;
-
-    .row {
-      align-items: center;
-    }
-
-    img {
-      font-size: 1.2em;
-    }
-  }
-
   //------------------------ Links ------------------------------------------//
   &__links {
     margin-top: 3px;

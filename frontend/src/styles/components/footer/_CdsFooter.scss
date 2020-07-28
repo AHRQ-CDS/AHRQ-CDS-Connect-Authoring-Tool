@@ -1,0 +1,43 @@
+.cds-footer {
+  @include fullBleed($footer-background-gradient-1);
+
+  color: $white;
+
+  &__container {
+    display: flex;
+    margin: 1em 16em;
+    height: 200px;
+  }
+
+  &__column {
+    margin-right: 100px;
+  }
+
+  &__header {
+    font-weight: bold;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+    white-space: nowrap;
+  }
+
+  &__tagline {
+    font-size: 0.9em;
+  }
+
+  &__links {
+    display: flex;
+    flex-flow: column wrap;
+    align-items: flex-start;
+    height: 150px;
+    font-size: 0.9em;
+  }
+
+  a {
+    display: block;
+    color: $white;
+    box-sizing: border-box;
+    margin-right: 40px;
+    cursor: pointer;
+    white-space: nowrap;
+  }
+}
