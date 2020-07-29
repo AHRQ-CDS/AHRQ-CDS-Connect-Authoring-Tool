@@ -246,10 +246,10 @@ describe('external cql actions', () => {
       const expectedActions = [
         { type: types.ADD_EXTERNAL_CQL_LIBRARY_REQUEST },
         { type: types.ADD_EXTERNAL_CQL_LIBRARY_SUCCESS, message: '' },
-        { type: types.SAVE_ARTIFACT_REQUEST },
-        { type: types.SAVE_ARTIFACT_SUCCESS, artifact: mockArtifact },
-        { type: types.ARTIFACTS_REQUEST },
-        { type: types.LOAD_ARTIFACTS_SUCCESS, artifacts: [mockArtifact] },
+        //{ type: types.SAVE_ARTIFACT_REQUEST },
+        //{ type: types.SAVE_ARTIFACT_SUCCESS, artifact: mockArtifact },
+        //{ type: types.ARTIFACTS_REQUEST },
+        //{ type: types.LOAD_ARTIFACTS_SUCCESS, artifacts: [mockArtifact] },
         { type: types.EXTERNAL_CQL_LIST_REQUEST },
         { type: types.LOAD_EXTERNAL_CQL_LIST_SUCCESS, externalCqlList, parentsOfLibraries },
         { type: types.ARTIFACT_REQUEST, id: mockArtifact._id },
@@ -306,10 +306,10 @@ describe('external cql actions', () => {
       const expectedActions = [
         { type: types.ADD_EXTERNAL_CQL_LIBRARY_REQUEST },
         { type: types.ADD_EXTERNAL_CQL_LIBRARY_FAILURE, status: 400, statusText: '', data: elmErrors },
-        { type: types.SAVE_ARTIFACT_REQUEST },
+        /*{ type: types.SAVE_ARTIFACT_REQUEST },
         { type: types.SAVE_ARTIFACT_SUCCESS, artifact: mockArtifact },
         { type: types.ARTIFACTS_REQUEST },
-        { type: types.LOAD_ARTIFACTS_SUCCESS, artifacts: [mockArtifact] },
+        { type: types.LOAD_ARTIFACTS_SUCCESS, artifacts: [mockArtifact] },*/
         { type: types.EXTERNAL_CQL_LIST_REQUEST },
         { type: types.LOAD_EXTERNAL_CQL_LIST_SUCCESS, externalCqlList, parentsOfLibraries },
         { type: types.ARTIFACT_REQUEST, id: mockArtifact._id },
@@ -366,10 +366,10 @@ describe('external cql actions', () => {
       const expectedActions = [
         { type: types.ADD_EXTERNAL_CQL_LIBRARY_REQUEST },
         { type: types.ADD_EXTERNAL_CQL_LIBRARY_SUCCESS, message: dupLibraryText },
-        { type: types.SAVE_ARTIFACT_REQUEST },
+        /*{ type: types.SAVE_ARTIFACT_REQUEST },
         { type: types.SAVE_ARTIFACT_SUCCESS, artifact: mockArtifact },
         { type: types.ARTIFACTS_REQUEST },
-        { type: types.LOAD_ARTIFACTS_SUCCESS, artifacts: [mockArtifact] },
+        { type: types.LOAD_ARTIFACTS_SUCCESS, artifacts: [mockArtifact] },*/
         { type: types.EXTERNAL_CQL_LIST_REQUEST },
         { type: types.LOAD_EXTERNAL_CQL_LIST_SUCCESS, externalCqlList, parentsOfLibraries },
         { type: types.ARTIFACT_REQUEST, id: mockArtifact._id },
@@ -426,10 +426,10 @@ describe('external cql actions', () => {
       const expectedActions = [
         { type: types.ADD_EXTERNAL_CQL_LIBRARY_REQUEST },
         { type: types.ADD_EXTERNAL_CQL_LIBRARY_FAILURE, status: 500, statusText: '', data: [] },
-        { type: types.SAVE_ARTIFACT_REQUEST },
+        /*{ type: types.SAVE_ARTIFACT_REQUEST },
         { type: types.SAVE_ARTIFACT_SUCCESS, artifact: mockArtifact },
         { type: types.ARTIFACTS_REQUEST },
-        { type: types.LOAD_ARTIFACTS_SUCCESS, artifacts: [mockArtifact] },
+        { type: types.LOAD_ARTIFACTS_SUCCESS, artifacts: [mockArtifact] },*/
         { type: types.EXTERNAL_CQL_LIST_REQUEST },
         { type: types.LOAD_EXTERNAL_CQL_LIST_SUCCESS, externalCqlList, parentsOfLibraries },
         { type: types.ARTIFACT_REQUEST, id: mockArtifact._id },
@@ -491,10 +491,10 @@ describe('external cql actions', () => {
       const expectedActions = [
         { type: types.DELETE_EXTERNAL_CQL_LIBRARY_REQUEST },
         { type: types.DELETE_EXTERNAL_CQL_LIBRARY_SUCCESS },
-        { type: types.SAVE_ARTIFACT_REQUEST },
+        /*{ type: types.SAVE_ARTIFACT_REQUEST },
         { type: types.SAVE_ARTIFACT_SUCCESS, artifact: mockArtifact },
         { type: types.ARTIFACTS_REQUEST },
-        { type: types.LOAD_ARTIFACTS_SUCCESS, artifacts: [mockArtifact] },
+        { type: types.LOAD_ARTIFACTS_SUCCESS, artifacts: [mockArtifact] },*/
         { type: types.EXTERNAL_CQL_LIST_REQUEST },
         { type: types.LOAD_EXTERNAL_CQL_LIST_SUCCESS, externalCqlList, parentsOfLibraries },
         { type: types.ARTIFACT_REQUEST, id: mockArtifact._id },
@@ -550,10 +550,10 @@ describe('external cql actions', () => {
       const expectedActions = [
         { type: types.DELETE_EXTERNAL_CQL_LIBRARY_REQUEST },
         { type: types.DELETE_EXTERNAL_CQL_LIBRARY_FAILURE, status: 404, statusText: 'Not found' },
-        { type: types.SAVE_ARTIFACT_REQUEST },
+        /*{ type: types.SAVE_ARTIFACT_REQUEST },
         { type: types.SAVE_ARTIFACT_SUCCESS, artifact: mockArtifact },
         { type: types.ARTIFACTS_REQUEST },
-        { type: types.LOAD_ARTIFACTS_SUCCESS, artifacts: [mockArtifact] },
+        { type: types.LOAD_ARTIFACTS_SUCCESS, artifacts: [mockArtifact] },*/
         { type: types.EXTERNAL_CQL_LIST_REQUEST },
         { type: types.LOAD_EXTERNAL_CQL_LIST_SUCCESS, externalCqlList, parentsOfLibraries },
         { type: types.ARTIFACT_REQUEST, id: mockArtifact._id },
