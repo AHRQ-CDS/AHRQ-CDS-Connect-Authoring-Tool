@@ -47,7 +47,7 @@
 @import 'components/builder/RepoUploadModal';
 @import 'components/builder/Subpopulations';
 @import 'components/elements/Banner';
-@import 'components/header/Header';
+@import 'components/header/CdsHeader';
 @import 'components/footer/CdsFooter';
 @import 'components/Landing';
 @import 'components/Navbar';
@@ -62,9 +62,9 @@
 // vendors
 @import "vendors/bootstrap";
 @import "vendors/addthis";
-@import "vendors/ahrq";
 @import "vendors/ahrq-uswds2.0";
 @import "vendors/ahrq-global";
+@import "vendors/ahrq";
 
 /* ------------------------- FONTS ----------------------------------------- */
 @font-face {

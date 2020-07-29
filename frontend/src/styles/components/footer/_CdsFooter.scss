@@ -5,12 +5,18 @@
 
   &__container {
     display: flex;
-    margin: 1em 16em;
-    height: 200px;
+    justify-content: space-around;
+    margin: 1em 4em;
+
+    @include respond-to('mobile') { flex-direction: column; }
   }
 
   &__column {
-    margin-right: 100px;
+    margin-right: 3em;
+  }
+
+  &__column:first-child {
+    @include respond-to('mobile') { margin-bottom: 2em; }
   }
 
   &__header {
@@ -26,9 +32,6 @@
 
   &__links {
     display: flex;
-    flex-flow: column wrap;
-    align-items: flex-start;
-    height: 150px;
     font-size: 0.9em;
   }
 

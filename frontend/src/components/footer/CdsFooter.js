@@ -1,11 +1,14 @@
 import React from 'react';
 
-const cdsToolLinks = [
+const cdsToolLinksLeft = [
   { name: 'CDS Home', link: 'https://cds.ahrq.gov/' },
   { name: 'CDS Connect', link: 'https://cds.ahrq.gov/cdsconnect' },
   { name: 'Evaluation', link: 'https://cds.ahrq.gov/evaluation' },
   { name: 'Resources', link: 'https://cds.ahrq.gov/resources' },
-  { name: 'Disclaimer for CDS Connect', link: 'https://cds.ahrq.gov/disclaimer' },
+  { name: 'Disclaimer for CDS Connect', link: 'https://cds.ahrq.gov/disclaimer' }
+];
+
+const cdsToolLinksRight = [
   { name: 'Overview', link: 'https://cds.ahrq.gov/overview' },
   { name: 'Learning Network', link: 'https://cds.ahrq.gov/learning-network' },
   { name: 'Funding Opportunities', link: 'https://cds.ahrq.gov/funding-opportunities' },
@@ -33,10 +36,19 @@ export default function CdsFooter() {
 
         <div className="cds-footer__column">
           <h6 className="cds-footer__header">CDS Site Links</h6>
+
           <div className="cds-footer__links">
-            {cdsToolLinks.map(link =>
-              <a href={link.link}>{link.name}</a>
-            )}
+            <div>
+              {cdsToolLinksLeft.map(link =>
+                <a href={link.link}>{link.name}</a>
+              )}
+            </div>
+
+            <div>
+              {cdsToolLinksRight.map(link =>
+                <a href={link.link}>{link.name}</a>
+              )}
+            </div>
           </div>
         </div>
       </div>

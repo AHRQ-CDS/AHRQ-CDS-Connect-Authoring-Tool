@@ -86,7 +86,7 @@ export default function Footer() {
                   />
 
                   <div role="search">
-                    <label className="usa-sr-only" for="email">Search</label>
+                    <label className="usa-sr-only" htmlFor="email">Search</label>
                     <input className="usa-input email-input" id="email" type="text" name="email" />
                     <input className="usa-button email-update-button" type="submit" name="commit" value="Sign Up" />
                   </div>
