@@ -79,12 +79,6 @@ export default function Footer() {
                 >
                   <input name="utf8" type="hidden" value="✓" />
 
-                  <input
-                    type="hidden"
-                    name="authenticity_token"
-                    value="y9/sIPG+wf/QL20R4sTfazeOp4MyAOwD9ZszmZKWH0PZjGUt2JIEhyyE6dPCNgLP+WZWUcH1NjJVivzbrc8wmg=="
-                  />
-
                   <div role="search">
                     <label className="usa-sr-only" htmlFor="email">Search</label>
                     <input className="usa-input email-input" id="email" type="text" name="email" />
