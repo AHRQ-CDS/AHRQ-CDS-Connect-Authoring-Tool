@@ -43,7 +43,7 @@ function loadExternalCqlListSuccess(externalCqlList) {
   return {
     type: types.LOAD_EXTERNAL_CQL_LIST_SUCCESS,
     externalCqlList,
-    parentsOfLibraries
+    parentsOfLibraries,
   };
 }
 
@@ -197,6 +197,7 @@ export function addExternalLibrary(library) {
     return sendAddExternalCqlLibraryRequest(library)
       .then(data => dispatch(addExternalCqlLibrarySuccess(data)))
       .catch(error => dispatch(addExternalCqlLibraryFailure(error)))
+      //.then(() => dispatch(saveArtifact(library.artifact)))
       .then(() => dispatch(loadExternalCqlList(library.artifact._id)))
       .then(() => dispatch(loadArtifact(library.artifact._id)));
   };
@@ -251,7 +252,7 @@ export function deleteExternalCqlLibrary(libraryId, artifact) {
     return sendDeleteExternalCqlLibraryRequest(libraryId)
       .then(data => dispatch(deleteExternalCqlLibrarySuccess()))
       .catch(error => dispatch(deleteExternalCqlLibraryFailure(error)))
-      .then(() => dispatch(saveArtifact(artifact)))
+      //.then(() => dispatch(saveArtifact(artifact)))
       .then(() => dispatch(loadExternalCqlList(artifact._id)))
       .then(() => dispatch(loadArtifact(artifact._id)));
   };
