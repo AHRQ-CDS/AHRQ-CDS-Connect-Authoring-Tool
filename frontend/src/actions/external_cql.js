@@ -29,6 +29,7 @@ function calculateParentsOfAllLibraries(libraries) {
   return parentsOfLibraries;
 }
 
+
 // ------------------------- LOAD EXTERNAL CQL LIST ------------------------ //
 
 function requestExternalCqlList() {
@@ -191,12 +192,14 @@ function sendAddExternalCqlLibraryRequest(library) {
 
 export function addExternalLibrary(library) {
   return (dispatch) => {
+    //save the artifact BEFORE making external CQL changes
+    //other wise the fhirVersion gets overwritten
+    dispatch(saveArtifact(library.artifact));
     dispatch(requestAddExternalCqlLibrary());
 
     return sendAddExternalCqlLibraryRequest(library)
       .then(data => dispatch(addExternalCqlLibrarySuccess(data)))
       .catch(error => dispatch(addExternalCqlLibraryFailure(error)))
-      .then(() => dispatch(saveArtifact(library.artifact)))
       .then(() => dispatch(loadExternalCqlList(library.artifact._id)))
       .then(() => dispatch(loadArtifact(library.artifact._id)));
   };
@@ -246,12 +249,14 @@ function sendDeleteExternalCqlLibraryRequest(libraryId) {
 
 export function deleteExternalCqlLibrary(libraryId, artifact) {
   return (dispatch) => {
+    //save the artifact BEFORE making external CQL changes
+    //other wise the fhirVersion gets overwritten
+    dispatch(saveArtifact(artifact));
     dispatch(requestDeleteExternalCqlLibrary());
 
     return sendDeleteExternalCqlLibraryRequest(libraryId)
       .then(data => dispatch(deleteExternalCqlLibrarySuccess()))
       .catch(error => dispatch(deleteExternalCqlLibraryFailure(error)))
-      .then(() => dispatch(saveArtifact(artifact)))
       .then(() => dispatch(loadExternalCqlList(artifact._id)))
       .then(() => dispatch(loadArtifact(artifact._id)));
   };
