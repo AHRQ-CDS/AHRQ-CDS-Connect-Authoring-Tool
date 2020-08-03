@@ -74,7 +74,7 @@ export default function Footer() {
                 <form
                   id="GD-snippet-form"
                   action="https://subscriptions.ahrq.gov/accounts/USAHRQ/subscribers/qualify"
-                  accept-charset="UTF-8"
+                  acceptCharset="UTF-8"
                   method="post"
                 >
                   <input name="utf8" type="hidden" value="✓" />

@@ -1,20 +1,40 @@
 import React from 'react';
 
-const cdsToolLinksLeft = [
+const chunkArray = (array, chunkSize) => {
+  const chunkedArray = [];
+  for (let index = 0; index < array.length; index += chunkSize) {
+    chunkedArray.push(array.slice(index, index + chunkSize));
+  }
+  return chunkedArray;
+};
+
+const cdsToolLinks = [
   { name: 'CDS Home', link: 'https://cds.ahrq.gov/' },
   { name: 'CDS Connect', link: 'https://cds.ahrq.gov/cdsconnect' },
   { name: 'Evaluation', link: 'https://cds.ahrq.gov/evaluation' },
   { name: 'Resources', link: 'https://cds.ahrq.gov/resources' },
-  { name: 'Disclaimer for CDS Connect', link: 'https://cds.ahrq.gov/disclaimer' }
-];
-
-const cdsToolLinksRight = [
+  { name: 'Disclaimer for CDS Connect', link: 'https://cds.ahrq.gov/disclaimer' },
   { name: 'Overview', link: 'https://cds.ahrq.gov/overview' },
   { name: 'Learning Network', link: 'https://cds.ahrq.gov/learning-network' },
   { name: 'Funding Opportunities', link: 'https://cds.ahrq.gov/funding-opportunities' },
   { name: 'Contact Us', link: 'https://cds.ahrq.gov/contact-us' },
   { name: 'Privacy Statement', link: 'https://cds.ahrq.gov/privacy' }
 ];
+
+function CdsToolLinks({ className, numRows }) {
+  const cdsToolLinksChunked = chunkArray(cdsToolLinks, numRows);
+  return (
+    <div className={className}>
+      {cdsToolLinksChunked.map((row, index) => (
+        <div key={index}>
+          {row.map((link, linkIndex) => (
+            <a key={`${index}-${linkIndex}`} href={link.link}>{link.name}</a>
+          ))}
+        </div>
+      ))}
+    </div>
+  );
+}
 
 export default function CdsFooter() {
   return (
@@ -29,27 +49,8 @@ export default function CdsFooter() {
             /> Clinical Decision Support (CDS)
           </div>
 
-          <div className="cds-footer__tagline">
-            Accelerating Evidence into Practice through CDS.
-          </div>
-        </div>
-
-        <div className="cds-footer__column">
-          <h6 className="cds-footer__header">CDS Site Links</h6>
-
-          <div className="cds-footer__links">
-            <div>
-              {cdsToolLinksLeft.map(link =>
-                <a href={link.link}>{link.name}</a>
-              )}
-            </div>
-
-            <div>
-              {cdsToolLinksRight.map(link =>
-                <a href={link.link}>{link.name}</a>
-              )}
-            </div>
-          </div>
+          <CdsToolLinks className="cds-footer__links footer-wide" numRows={2} />
+          <CdsToolLinks className="cds-footer__links footer-mobile" numRows={5} />
         </div>
       </div>
     </footer>
