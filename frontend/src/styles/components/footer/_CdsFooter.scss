@@ -1,0 +1,52 @@
+.cds-footer {
+  @include fullBleed($footer-background-gradient-1);
+
+  color: $white;
+
+  &__container {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    margin: 1em 4em;
+
+    @include respond-to('mobile') { flex-direction: column; }
+  }
+
+  &__column:first-child {
+    @include respond-to('mobile') { margin-bottom: 2em; }
+  }
+
+  &__header {
+    text-align: center;
+    margin-bottom: 10px;
+    font-weight: bold;
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+
+  &__links {
+    display: flex;
+    font-size: 0.9em;
+  }
+
+  a {
+    display: block;
+    color: $white;
+    box-sizing: border-box;
+    margin: 0 20px;
+    cursor: pointer;
+    white-space: nowrap;
+  }
+
+  .footer-wide {
+    @include respond-to('mobile') { display: none; }
+  }
+
+  .footer-mobile {
+    @include respond-to('tablet') { display: none; }
+
+    @include respond-to('desktop') { display: none; }
+
+    @include respond-to('desktop-wide') { display: none; }
+  }
+}

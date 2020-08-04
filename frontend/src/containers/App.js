@@ -7,9 +7,11 @@ import { loginUser, logoutUser, setAuthStatus, getCurrentUser } from '../actions
 import setErrorMessage from '../actions/errors';
 
 import Analytics from '../components/Analytics';
-import Header from '../components/Header';
+import CdsHeader from '../components/header/CdsHeader';
+import AhrqHeader from '../components/header/AhrqHeader';
 import Navbar from '../components/Navbar';
-import Footer from '../components/Footer';
+import CdsFooter from '../components/footer/CdsFooter';
+import AhrqFooter from '../components/footer/AhrqFooter';
 
 class App extends Component {
   UNSAFE_componentWillMount() { // eslint-disable-line camelcase
@@ -42,12 +44,10 @@ class App extends Component {
     return (
       <div className="app">
         <a className="skiplink" href="#maincontent">Skip to main content</a>
+        <Analytics gtmKey={process.env.REACT_APP_GTM_KEY} dapURL={process.env.REACT_APP_DAP_URL} />
+        <AhrqHeader />
 
-        <Analytics
-          gtmKey={process.env.REACT_APP_GTM_KEY}
-          dapURL={process.env.REACT_APP_DAP_URL} />
-
-        <Header
+        <CdsHeader
           isAuthenticated={isAuthenticated}
           authUser={authUser}
           authStatus={authStatus}
@@ -55,14 +55,14 @@ class App extends Component {
           artifactSaved={artifactSaved}
           loginUser={this.props.loginUser}
           logoutUser={this.props.logoutUser}
-          setAuthStatus={this.props.setAuthStatus} />
+          setAuthStatus={this.props.setAuthStatus}
+        />
 
         <Navbar isAuthenticated={isAuthenticated} />
-
         {this.renderedErrorMessage()}
         {children}
-
-        <Footer isAuthenticated={isAuthenticated} />
+        <CdsFooter />
+        <AhrqFooter />
       </div>
     );
   }
