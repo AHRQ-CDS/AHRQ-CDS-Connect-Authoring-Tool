@@ -327,10 +327,21 @@ function singlePost(req, res) {
                 const nonAuthoringToolExportLibraries =
                   _.differenceWith(elmResultsToSave, authoringToolExports, (a, b) => a.name === b.name);
                 const authoringToolExportLibraries = _.difference(elmResultsToSave, nonAuthoringToolExportLibraries);
-                const nonDuplicateLibraries =
-                  _.differenceWith(nonAuthoringToolExportLibraries, libraries, (a, b) => a.name === b.name);
+
+                const nonDuplicateLibraries = _.differenceWith(
+                  nonAuthoringToolExportLibraries,
+                  libraries,
+                  (a, b) => ((a.name === b.name) && (a.version === b.version))
+                );
                 const duplicateLibraries = _.difference(nonAuthoringToolExportLibraries, nonDuplicateLibraries);
 
+                const librariesToInsert = _.differenceWith(
+                  nonDuplicateLibraries,
+                  libraries,
+                  (a, b) => ((a.name === b.name) && (a.version !== b.version))
+                );
+                const librariesToUpdate = _.difference(nonDuplicateLibraries, librariesToInsert);
+                
                 const newLibFHIRVersion = getCurrentFHIRVersion(elmResultsToSave);
                 const fhirVersion = getCurrentFHIRVersion(libraries);
 
@@ -341,6 +352,9 @@ function singlePost(req, res) {
                 const supportedFHIRVersion = newLibFHIRVersion === '' ||
                   supportedFHIRVersions.findIndex(v => v === newLibFHIRVersion) !== -1;
 
+                //If repeats of the same library are being uploaded (regardless of version), we will not support this
+                const hasRepeats = (nonAuthoringToolExportLibraries.length !==
+                  (new Set(nonAuthoringToolExportLibraries.map(l => l.name)).size));
                 const exportLibrariesNotUploaded =
                   authoringToolExportLibraries.map(lib => `library ${lib.name}`).join(', ');
                 const exportLibrariesNotUploadedMessage = `The following were not uploaded because a version of the \
@@ -354,8 +368,15 @@ function singlePost(req, res) {
                   res.status(400).send(message);
                 } else if (!supportedFHIRVersion) {
                   res.status(400).send('Unsupported FHIR version.');
+                } else if (hasRepeats) {
+                  const message = 'More than one library in this package has the same name. Only one library of the \
+                    same name can be uploaded at a time.'
+                  res.status(400).send(message);
                 } else {
-                  CQLLibrary.insertMany(nonDuplicateLibraries, (error, response) => {
+                  Promise.allSettled(librariesToUpdate.map(async (library) => {
+                    return CQLLibrary.update({ user: req.user.uid, name: library.name }, library);
+                  }));
+                  CQLLibrary.insertMany(librariesToInsert, (error, response) => {
                     if (error) {
                       res.status(500).send(error);
                     } else if (duplicateLibraries.length > 0) {
@@ -364,7 +385,7 @@ function singlePost(req, res) {
                       const librariesNotUploaded =
                         duplicateLibraries.map(lib => `library ${lib.name} version ${lib.version}`).join(', ');
                       let message = `The following was not uploaded because a library with identical name \
-                        already exists: ${librariesNotUploaded}.`;
+                        and version already exists: ${librariesNotUploaded}.`;
                       if (exportLibrariesNotUploaded.length > 0) {
                         message = message.concat(` ${exportLibrariesNotUploadedMessage}`);
                       }
@@ -437,7 +458,8 @@ function singlePost(req, res) {
           else {
             const elmResult = elmResultsToSave[0]; // This is the single file upload case, so elmResultsToSave will only ever have one item.
             const defaultLibrary = authoringToolExports.map(l => l.name).includes(elmResult.name);
-            const dupLibrary = libraries.find(lib => lib.name === elmResult.name);
+            const dupName = libraries.find(lib => lib.name === elmResult.name);
+            const dupVersion = libraries.find(lib => lib.version === elmResult.version);
             const newLibFHIRVersion = elmResult.fhirVersion;
             const fhirVersion = getCurrentFHIRVersion(libraries);
 
@@ -453,14 +475,22 @@ function singlePost(req, res) {
               res.status(400).send(elmErrors);
             } else if (defaultLibrary) {
               res.status(200).send('Library is already included by default, so it was not uploaded.');
-            } else if (dupLibrary) {
-              res.status(200).send('Library with identical name already exists.');
             } else if (!fhirVersionsMatch) {
               const message = 'A library using a different version of FHIR is uploaded. Only one FHIR version can be \
                 supported at a time.';
               res.status(400).send(message);
             } else if (!supportedFHIRVersion) {
               res.status(400).send('Unsupported FHIR version.');
+            } else if (dupName) {
+              if (dupVersion) {
+                res.status(200).send('Library with identical name and version already exists.');
+              } else {
+                CQLLibrary.update({ user: req.user.uid, name: elmResult.name }, elmResult,
+                  (error, response) => {
+                    if (error) res.status(500).send(error);
+                    else res.status(201).json(response);
+                  });
+              }
             } else {
               CQLLibrary.insertMany(elmResult, (error, response) => {
                 if (error) res.status(500).send(error);
