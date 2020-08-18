@@ -432,6 +432,9 @@ function singlePost(req, res) {
                   }
 
                   if (shouldUpdate) {
+                    // Any error that is thrown through updating should either be the same as an error
+                    // encountered by the insertion below, or would have already been caught in the
+                    // process above to determine whether we should update
                     Promise.allSettled(librariesToUpdate.map(async (library) => {
                       return CQLLibrary.update({ user: req.user.uid, name: library.name }, library);
                     }));
@@ -471,21 +474,26 @@ function singlePost(req, res) {
                             res.status(201).send(exportLibrariesNotUploadedMessage);
                           }
                         } else {
+                          let updateMessage;
+                          if (librariesToUpdate.length > 0) updateMessage =
+                            'One or more of the libraries on this artifact have been updated.';
                           if (newLibFHIRVersion) {
                             Artifact.update({ user: req.user.uid, _id: artifactId }, { fhirVersion: newLibFHIRVersion },
                               (error, response) => {
                                 if (error) res.status(500).send(error);
                                 else if (response.n === 0) res.sendStatus(404);
+                                else if (updateMessage) res.status(201).send(updateMessage);
                                 else res.status(201).json(response);
                               });
                           } else {
-                            res.status(201).json(response);
+                            if (updateMessage) res.status(201).send(updateMessage);
+                            else res.status(201).json(response);
                           }
                         }
                       }
                     });
                   } else {
-                    const message = 'The libraries could not be uploaded/updated, because the artifact uses content \
+                    const message = 'The libraries could not be uploaded/updated because the artifact uses content \
                       from at least one library that has changed between versions.';
                     res.status(400).send(message);
                   }
@@ -569,9 +577,10 @@ function singlePost(req, res) {
 
                 if (shouldUpdate) {
                   CQLLibrary.update({ user: req.user.uid, name: elmResult.name }, elmResult,
-                    (error, response) => {
+                    (error) => {
+                      const message = `Library ${elmResult.name} successfully updated to version ${elmResult.version}.`;
                       if (error) res.status(500).send(error);
-                      else res.status(201).json(response);
+                      else res.status(200).send(message);
                     });
                 } else {
                   const message = 'Library could not be updated, because the artifact uses content that has \

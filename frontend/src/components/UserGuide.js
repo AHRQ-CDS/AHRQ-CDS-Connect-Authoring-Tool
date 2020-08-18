@@ -1345,7 +1345,7 @@ export default class UserGuide extends Component {
                     controls for each artifact:
                     <ul>
                       <li>Library</li>
-                      <li>Date Added</li>
+                      <li>Last Updated</li>
                       <li>Version</li>
                       <li>FHIR Version</li>
                       <li>View Details button <FontAwesomeIcon icon={faEye} aria-hidden="true" /></li>
