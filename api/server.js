@@ -20,6 +20,7 @@ const app = express();
 const port = process.env.API_PORT || 3001;
 
 // MongoDB Configuration
+mongoose.Promise = global.Promise;
 mongoose.connect(config.get('mongo.url'));
 
 // Configure API to use BodyParser and handle json data

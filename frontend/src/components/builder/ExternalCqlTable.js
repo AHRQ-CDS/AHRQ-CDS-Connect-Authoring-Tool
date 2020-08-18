@@ -84,8 +84,8 @@ export default class ExternalCqlTable extends Component {
           <div>{externalCqlLibrary.name}</div>
         </td>
 
-        <td className="external-cql-table__tablecell-short" data-th="Added">
-          <div>{renderDate(externalCqlLibrary.createdAt)}</div>
+        <td className="external-cql-table__tablecell-short" data-th="Updated">
+          <div>{renderDate(externalCqlLibrary.updatedAt)}</div>
         </td>
 
         <td className="external-cql-table__tablecell-short center" data-th="Version">
@@ -166,7 +166,7 @@ export default class ExternalCqlTable extends Component {
           <thead>
             <tr>
               <th scope="col" className="external-cql-table__tablecell-wide">Library</th>
-              <th scope="col" className="external-cql-table__tablecell-short">Date Added</th>
+              <th scope="col" className="external-cql-table__tablecell-short">Last Updated</th>
               <th scope="col" className="external-cql-table__tablecell-short center">Version</th>
               <th scope="col" className="external-cql-table__tablecell-short">FHIR Version</th>
               <th></th>
