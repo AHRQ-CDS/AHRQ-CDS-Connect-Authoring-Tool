@@ -237,6 +237,39 @@ const getArtifactLibraryElements = (artifact, libraryName) => {
   return libraryElements;
 }
 
+const shouldLibraryBeUpdated = (library, artifact) => {
+  const statementReturnTypes = {};
+  const elementReturnTypes = {};
+
+  // In this situation, definitions and parameters behave identically, so they are bucketed together
+  library.details.definitions.concat(library.details.parameters).forEach(def => {
+    statementReturnTypes[def.name] = def.calculatedReturnType;
+  });
+
+  // The parens for functions are added to delineate names from definitions, since both can have the
+  // same name legally in CQL
+  library.details.functions.forEach(func => {
+    statementReturnTypes[`${func.name}()`] = func.calculatedReturnType;
+  });
+
+  const libraryElements = getArtifactLibraryElements(artifact, library.name);
+  libraryElements.forEach(el => {
+    const referenceField = el.fields.find(f => f.id === 'externalCqlReference');
+    elementReturnTypes[
+      `${_.get(referenceField, 'value.element')}${el.template === 'GenericFunction' ? '()' : ''}`
+    ] = el.returnType;
+  });
+
+  // If a library to update has contents whose names or return types have changed, and the
+  // artifact is using these contents, we cannot update it and we shouldn't make any upload/update
+  let shouldUpdate = true;
+  Object.keys(elementReturnTypes).forEach((key) => {
+    shouldUpdate = shouldUpdate && (statementReturnTypes[key] === elementReturnTypes[key]);
+  });
+  
+  return shouldUpdate;
+}
+
 module.exports = {
   allGet,
   singleGet,
@@ -436,21 +469,8 @@ function singlePost(req, res) {
                   // If a library to update has contents whose names or return types have changed, and the
                   // artifact is using these contents, we cannot update it and we shouldn't make any upload/update
                   let shouldUpdate = true;
-
                   for (const library of librariesToUpdate) {
-                    const definitionReturnTypes = {};
-                    const elementReturnTypes = {};
-                    library.details.definitions.forEach(def => {
-                      definitionReturnTypes[def.name] = def.calculatedReturnType;
-                    });
-                    const libraryElements = getArtifactLibraryElements(artifact, library.name);
-                    libraryElements.forEach(el => {
-                      const nameField = el.fields.find(f => f.id === 'element_name');
-                      elementReturnTypes[_.get(nameField, 'value')] = el.returnType;
-                    });
-                    Object.keys(elementReturnTypes).forEach((key) => {
-                      shouldUpdate = shouldUpdate && (definitionReturnTypes[key] === elementReturnTypes[key]);
-                    });
+                    shouldUpdate = shouldLibraryBeUpdated(library, artifact);
                     if (!shouldUpdate) break;
                   }
 
@@ -595,25 +615,7 @@ function singlePost(req, res) {
               if (dupVersion) {
                 res.status(200).send('Library with identical name and version already exists.');
               } else {
-                const definitionReturnTypes = {};
-                const elementReturnTypes = {};
-                elmResult.details.definitions.forEach(def => {
-                  definitionReturnTypes[def.name] = def.calculatedReturnType;
-                });
-                const libraryElements = getArtifactLibraryElements(artifact, elmResult.name);
-                libraryElements.forEach(el => {
-                  const nameField = el.fields.find(f => f.id === 'element_name');
-                  elementReturnTypes[_.get(nameField, 'value')] = el.returnType;
-                });
-
-                // If the library to update has contents whose names or return types have changed, and the
-                // artifact is using these contents, we cannot update it
-                let shouldUpdate = true;
-                Object.keys(elementReturnTypes).forEach((key) => {
-                  shouldUpdate = shouldUpdate && (definitionReturnTypes[key] === elementReturnTypes[key]);
-                });
-
-                if (shouldUpdate) {
+                if (shouldLibraryBeUpdated(elmResult, artifact)) {
                   CQLLibrary.update({ user: req.user.uid, name: elmResult.name }, elmResult,
                     (error) => {
                       const message = `Library ${elmResult.name} successfully updated to version ${elmResult.version}.`;

@@ -226,13 +226,20 @@ export default class ElementSelect extends Component {
     }
 
     if (props.externalCqlList.length && categoriesCopy[externalCqlIndex]) {
-      categoriesCopy[externalCqlIndex].entries = props.externalCqlList.map(e =>
-        ({
+
+      categoriesCopy[externalCqlIndex].entries = props.externalCqlList.map(e => {
+        // TODO: We don't yet support functions that have any arguments, so we only want to allow the functions
+        // that have no arguments associated with them to be selected. This should be removed when we have support
+        // for arbitrary numbers of arguments in functions.
+        const functions = e.details.functions.filter(f => f.operand.length === 0);
+        return {
           id: e.name,
           name: e.name,
           type: 'externalCqlElement',
-          definitions: e.details.definitions.concat(e.details.parameters)
-        }));
+          definitions: e.details.definitions.concat(e.details.parameters), // parameters behave like definitions
+          functions
+        };
+      });
     }
 
     _.each(categoriesCopy, (cat) => {
@@ -326,7 +333,7 @@ export default class ElementSelect extends Component {
       id: selectedExternalDefinition.uniqueId,
       name: 'External CQL Element',
       type: selectedExternalDefinition.type,
-      template: 'GenericStatement',
+      template: selectedExternalDefinition.statementType === 'definition' ? 'GenericStatement' : 'GenericFunction',
       returnType: selectedExternalDefinition.returnType,
       fields: [
         { id: 'element_name', type: 'string', name: 'Element Name', value: selectedExternalDefinition.value },
@@ -412,24 +419,32 @@ export default class ElementSelect extends Component {
         noAuthPlaceholder = `Select ${selectedElement.label} element`;
       }
     }
-    const externalLibraryPlaceholder = 'Choose definition or parameter';
+    const externalLibraryPlaceholder = 'Choose definition, function, or parameter';
     const selectedExternalLibraryName = selectedExternalLibrary && selectedExternalLibrary.name;
-    let selectedExternalLibraryOptions;
+    const selectedExternalLibraryOptions = [];
     if (selectedExternalLibrary) {
-      selectedExternalLibraryOptions = selectedExternalLibrary.definitions.map((definition) => {
-        const name = definition.name;
-        const returnType = definition.calculatedReturnType;
-        const displayReturnType = definition.displayReturnType
-          ? definition.displayReturnType
-          : _.startCase(definition.calculatedReturnType);
+      const statementMapper = (statement, statementType) => {
+        const name = statement.name;
+        const returnType = statement.calculatedReturnType;
+        const displayReturnType = statement.displayReturnType
+          ? statement.displayReturnType
+          : _.startCase(statement.calculatedReturnType);
         return ({
           value: name,
           label: name,
           type: 'externalCqlElement',
           uniqueId: _.uniqueId(),
           returnType,
-          displayReturnType
+          displayReturnType,
+          statementType
         });
+      };
+
+      selectedExternalLibrary.definitions.forEach((statement) => {
+        selectedExternalLibraryOptions.push(statementMapper(statement, 'definition'));
+      });
+      selectedExternalLibrary.functions.forEach((statement) => {
+        selectedExternalLibraryOptions.push(statementMapper(statement, 'function'));
       });
     }
 
