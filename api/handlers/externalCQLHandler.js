@@ -240,6 +240,7 @@ const getArtifactLibraryElements = (artifact, libraryName) => {
 const shouldLibraryBeUpdated = (library, artifact) => {
   const statementReturnTypes = {};
   const elementReturnTypes = {};
+  const functionArgCounts = {};
 
   // In this situation, definitions and parameters behave identically, so they are bucketed together
   library.details.definitions.concat(library.details.parameters).forEach(def => {
@@ -250,6 +251,7 @@ const shouldLibraryBeUpdated = (library, artifact) => {
   // same name legally in CQL
   library.details.functions.forEach(func => {
     statementReturnTypes[`${func.name}()`] = func.calculatedReturnType;
+    functionArgCounts[`${func.name}()`] = func.operand.length;
   });
 
   const libraryElements = getArtifactLibraryElements(artifact, library.name);
@@ -260,14 +262,22 @@ const shouldLibraryBeUpdated = (library, artifact) => {
     ] = el.returnType;
   });
 
-  // If a library to update has contents whose names or return types have changed, and the
+  // If a library to update has contents whose names, return types, or arg counts have changed, and the
   // artifact is using these contents, we cannot update it and we shouldn't make any upload/update
-  let shouldUpdate = true;
+  let returnTypesMatch = true;
+  let argCountsMatch = true;
   Object.keys(elementReturnTypes).forEach((key) => {
-    shouldUpdate = shouldUpdate && (statementReturnTypes[key] === elementReturnTypes[key]);
+    returnTypesMatch = returnTypesMatch && (statementReturnTypes[key] === elementReturnTypes[key]);
+    // TODO: We currently only support zero-arg functions, so we don't want to allow upload of a function
+    // in use that has more than one argument. Eventually, when we are able to track the number of arguments
+    // in the frontend elements as well, we want to make this check actually test a match rather than
+    // simply testing for zero.
+    argCountsMatch = argCountsMatch && (functionArgCounts[key] === 0);
   });
-  
-  return shouldUpdate;
+
+  console.log(returnTypesMatch);
+  console.log(argCountsMatch);
+  return returnTypesMatch && argCountsMatch;
 }
 
 module.exports = {
