@@ -275,8 +275,6 @@ const shouldLibraryBeUpdated = (library, artifact) => {
     argCountsMatch = argCountsMatch && (functionArgCounts[key] === 0);
   });
 
-  console.log(returnTypesMatch);
-  console.log(argCountsMatch);
   return returnTypesMatch && argCountsMatch;
 }
 
