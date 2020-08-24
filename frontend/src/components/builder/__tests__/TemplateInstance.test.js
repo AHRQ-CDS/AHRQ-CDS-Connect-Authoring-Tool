@@ -30,7 +30,7 @@ describe('<TemplateInstance />', () => {
         baseElements={[]}
         codeData={{}}
         deleteInstance={jest.fn()}
-        disableElement={false}
+        disableAddElement={false}
         disableIndent={false}
         editInstance={jest.fn()}
         getPath={(path) => path}
@@ -400,7 +400,7 @@ describe('<TemplateInstance />', () => {
     it('can remove modifiers', () => {
       const updateInstanceModifiers = jest.fn();
       const { getByLabelText } = renderComponent({
-        disableElement: true,
+        disableAddElement: true,
         templateInstance: templateWithModifiersInstance,
         updateInstanceModifiers
       });
@@ -420,7 +420,7 @@ describe('<TemplateInstance />', () => {
     it('cannot remove modifiers that change return type when in use', () => {
       const updateInstanceModifiers = jest.fn();
       const { getByLabelText } = renderComponent({
-        disableElement: true,
+        disableAddElement: true,
         templateInstance: {
           ...templateWithModifiersInstance,
           modifiers: templateWithModifiersInstance.modifiers.slice(0, -1)
@@ -437,7 +437,7 @@ describe('<TemplateInstance />', () => {
 
     it('cannot add modifiers that change return type when in use', () => {
       const { getByLabelText, getByText } = renderComponent({
-        disableElement: true,
+        disableAddElement: true,
         templateInstance: templateWithModifiersInstance
       });
 
@@ -449,7 +449,7 @@ describe('<TemplateInstance />', () => {
     it('cannot be deleted when list in use', () => {
       const deleteInstance = jest.fn();
       const { getByLabelText } = renderComponent({
-        disableElement: true,
+        disableAddElement: true,
         deleteInstance,
         templateInstance: templateWithModifiersInstance
       });

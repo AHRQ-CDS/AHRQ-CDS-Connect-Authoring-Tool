@@ -242,7 +242,7 @@ describe('<ConjunctionGroup />', () => {
 
   describe('conjunctions that are in base elements in use', () => {
     it('cannot delete main or nested conjunctions', () => {
-      const { container } = renderComponent({ disableElement: true });
+      const { container } = renderComponent({ disableAddElement: true });
 
       const disabledConjunction = container.querySelector('.card-group__odd');
       const deleteButton = disabledConjunction.querySelector('.card-group__buttons .element__deletebutton');
@@ -251,7 +251,7 @@ describe('<ConjunctionGroup />', () => {
     });
 
     it('cannot indent or outdent nested conjunctions', () => {
-      const { container } = renderComponent({ disableElement: true });
+      const { container } = renderComponent({ disableAddElement: true });
 
       const disabledConjunction = container.querySelector('.card-group__odd');
       const indentButton = disabledConjunction.querySelector('button[aria-label="indent"]');

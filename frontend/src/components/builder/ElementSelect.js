@@ -26,15 +26,11 @@ const getAllElements = categories => _.flatten(categories.map(cat => (
 
 const ElementMenuList = ({ children, ...props }) => {
   const { options } = props;
-  const isDisabled = options.some(({ isDisabled }) => isDisabled);
-
-  const optionStyle = {
-    padding: '8px 12px'
-  };
+  const optionStyle = { padding: '8px 12px' };
 
   return (
     <SelectComponents.MenuList {...props}>
-      {isDisabled ? (
+      {options.length === 0 ? (
         <div style={{ ...optionStyle, color: '#ccc' }}>
           <FontAwesomeIcon icon={faBan} /> Cannot add element when Base Element List in use
         </div>
@@ -56,7 +52,7 @@ const ElementMenuList = ({ children, ...props }) => {
 const ElementOption = ({ children, ...props }) => (
   <SelectComponents.Option {...props}>
     <span className="element-select__option-value">{children}</span>
-    {(props.data.vsacAuthRequired || props.isDisabled) &&
+    {props.data.vsacAuthRequired &&
       <FontAwesomeIcon
         icon={faKey}
         className={classnames('element-select__option-category', props.isDisabled && 'is-disabled')}
@@ -372,14 +368,26 @@ export default class ElementSelect extends Component {
     this.setState({ selectedElement, selectedExternalLibrary: null, selectedExternalDefinition: null });
   }
 
+  disableElement = elementType => {
+    const { categories } = this.state;
+    const disableableElements = ['Base Elements', 'Parameters', 'External CQL'];
+    const elementCategory = categories.find(category => category.name === elementType);
+
+    if (!elementCategory || disableableElements.indexOf(elementType) === -1) return false;
+    return elementCategory.entries.length === 0;
+  }
+
   render() {
-    const { inBaseElements, disableElement, elementUniqueId } = this.props;
+    const { inBaseElements, elementUniqueId, disableAddElement } = this.props;
     const { selectedElement, selectedExternalLibrary, selectedExternalDefinition } = this.state;
     const placeholderText = 'Choose element type';
     const elementOptionsToDisplay =
       elementOptions
         .filter(({ value }) => inBaseElements ? true : value !== 'listOperations')
-        .map(option => ({ ...option, isDisabled: disableElement }));
+        .map(option => ({
+          ...option,
+          isDisabled: this.disableElement(option.label)
+        }));
 
     let noAuthElementOptions;
     if (selectedElement && !selectedElement.vsacAuthRequired) {
@@ -444,7 +452,7 @@ export default class ElementSelect extends Component {
             }
             placeholder={placeholderText}
             aria-label={placeholderText}
-            options={elementOptionsToDisplay}
+            options={disableAddElement ? [] : elementOptionsToDisplay}
             onChange={this.onElementSelected}
             components={{ MenuList: ElementMenuList, Option: ElementOption }}
             isClearable
@@ -510,7 +518,7 @@ ElementSelect.propTypes = {
   baseElements: PropTypes.array.isRequired,
   inBaseElements: PropTypes.bool.isRequired,
   elementUniqueId: PropTypes.string,
-  disableElement: PropTypes.bool,
+  disableAddElement: PropTypes.bool,
   externalCqlList: PropTypes.array.isRequired,
   loadExternalCqlList: PropTypes.func.isRequired
 };

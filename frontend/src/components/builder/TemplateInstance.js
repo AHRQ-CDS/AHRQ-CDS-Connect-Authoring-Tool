@@ -152,7 +152,7 @@ export default class TemplateInstance extends Component {
   }
 
   deleteInstance = () => {
-    const baseElementIsInUse = this.isBaseElementUsed() || this.props.disableElement;
+    const baseElementIsInUse = this.isBaseElementUsed() || this.props.disableAddElement;
     if (!baseElementIsInUse) {
       this.props.deleteInstance(this.props.treeName, this.getPath());
     }
@@ -442,7 +442,7 @@ export default class TemplateInstance extends Component {
   }
 
   canModifierBeRemoved = () => {
-    const baseElementIsInUse = this.isBaseElementUsed() || this.props.disableElement;
+    const baseElementIsInUse = this.isBaseElementUsed() || this.props.disableAddElement;
 
     if (baseElementIsInUse) {
       // If a base element is in use, need to make sure the modifiers removed don't change the return type.
@@ -479,7 +479,7 @@ export default class TemplateInstance extends Component {
   renderModifierSelect = () => {
     if (!this.props.templateInstance.cannotHaveModifiers
       && (this.state.relevantModifiers.length > 0 || (this.props.templateInstance.modifiers || []).length === 0)) {
-      const baseElementIsInUse = this.isBaseElementUsed() || this.props.disableElement;
+      const baseElementIsInUse = this.isBaseElementUsed() || this.props.disableAddElement;
 
       return (
         <div className="modifier-select">
@@ -966,7 +966,7 @@ export default class TemplateInstance extends Component {
     const headerClass = classnames('card-element__header', { collapsed: !showElement });
     const headerTopClass = classnames('card-element__header-top', { collapsed: !showElement });
     const baseElementUsed = this.isBaseElementUsed();
-    const baseElementInUsedList = this.props.disableElement;
+    const baseElementInUsedList = this.props.disableAddElement;
     const disabledClass = (baseElementUsed || baseElementInUsedList) ? 'disabled' : '';
     const commentField = getFieldWithId(templateInstance.fields, 'comment');
     const hasComment = commentField && commentField.value && commentField.value !== '';
@@ -1065,7 +1065,7 @@ TemplateInstance.propTypes = {
   baseElements: PropTypes.array.isRequired,
   codeData: PropTypes.object,
   deleteInstance: PropTypes.func.isRequired,
-  disableElement: PropTypes.bool,
+  disableAddElement: PropTypes.bool,
   disableIndent: PropTypes.bool,
   editInstance: PropTypes.func.isRequired,
   getPath: PropTypes.func.isRequired,
