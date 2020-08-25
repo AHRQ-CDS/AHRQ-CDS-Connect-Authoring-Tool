@@ -49,6 +49,9 @@ const ElementMenuList = ({ children, ...props }) => {
   );
 };
 
+// TODO: This is currently hardcoded to display functions with zero arguments since those are
+// the only functions that can be used. This will need to updated to dynamically reflect the
+// number of arguments in the function when we have access to that data.
 const ElementOption = ({ children, ...props }) => (
   <SelectComponents.Option {...props}>
     <span className="element-select__option-value">{children}</span>
@@ -59,9 +62,15 @@ const ElementOption = ({ children, ...props }) => (
       />
     }
 
+    {props.data.statementType === 'function' && (
+      <span className="element-select__option-value">
+        {` | Function(0)`}
+      </span>
+    )}
+
     {props.data.displayReturnType && (
       <span className="element-select__option-value">
-        {` (${props.data.displayReturnType})`}
+        {` | ${props.data.displayReturnType}`}
       </span>
     )}
   </SelectComponents.Option>
@@ -333,7 +342,7 @@ export default class ElementSelect extends Component {
       id: selectedExternalDefinition.uniqueId,
       name: 'External CQL Element',
       type: selectedExternalDefinition.type,
-      template: selectedExternalDefinition.statementType === 'definition' ? 'GenericStatement' : 'GenericFunction',
+      template: selectedExternalDefinition.statementType === 'function' ? 'GenericFunction' : 'GenericStatement',
       returnType: selectedExternalDefinition.returnType,
       fields: [
         { id: 'element_name', type: 'string', name: 'Element Name', value: selectedExternalDefinition.value },
@@ -342,7 +351,11 @@ export default class ElementSelect extends Component {
           type: 'reference',
           name: 'reference',
           value: {
-            id: `${selectedExternalDefinition.value} from ${this.state.selectedExternalLibrary.name}`,
+            id: `${selectedExternalDefinition.value}${
+              selectedExternalDefinition.statementType === 'function'
+              ? ' (Function)'
+              : ''
+            } from ${this.state.selectedExternalLibrary.name}`,
             element: selectedExternalDefinition.value,
             library: this.state.selectedExternalLibrary.name
           },
