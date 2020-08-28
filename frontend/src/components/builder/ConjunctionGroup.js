@@ -88,8 +88,8 @@ export default class ConjunctionGroup extends Component {
   // ----------------------- CLICK HANDLERS -------------------------------- //
 
   indentClickHandler = (instance) => {
-    const { treeName, artifact, templates, disableElement } = this.props;
-    if (disableElement) {
+    const { treeName, artifact, templates, disableAddElement } = this.props;
+    if (disableAddElement) {
       return;
     }
     const operationTemplates = templates.find(template => template.name === 'Operations').entries;
@@ -122,8 +122,8 @@ export default class ConjunctionGroup extends Component {
   }
 
   outdentClickHandler = (instance) => {
-    const { disableElement } = this.props;
-    if (disableElement) {
+    const { disableAddElement } = this.props;
+    if (disableAddElement) {
       return;
     }
     if (instance.conjunction) {
@@ -150,7 +150,7 @@ export default class ConjunctionGroup extends Component {
   }
 
   deleteInstance = () => {
-    if (!this.props.disableElement) {
+    if (!this.props.disableAddElement) {
       this.props.deleteInstance(this.props.treeName, this.getPath());
     }
   }
@@ -218,23 +218,23 @@ export default class ConjunctionGroup extends Component {
         <span>
           <button
             aria-label="outdent"
-            className={`element__hidebutton transparent-button ${this.props.disableElement ? 'disabled' : ''}`}
+            className={`element__hidebutton transparent-button ${this.props.disableAddElement ? 'disabled' : ''}`}
             id={`outdentbutton-${instance.uniqueId}`}
             onClick={() => this.outdentClickHandler(instance)}>
             <FontAwesomeIcon icon={faOutdent} />
           </button>
-          {this.props.disableElement && this.renderDisabledTooltip(`outdentbutton-${instance.uniqueId}`) }
+          {this.props.disableAddElement && this.renderDisabledTooltip(`outdentbutton-${instance.uniqueId}`) }
         </span>
       }
 
       <button
         aria-label="indent"
-        className={`element__hidebutton transparent-button ${this.props.disableElement ? 'disabled' : ''}`}
+        className={`element__hidebutton transparent-button ${this.props.disableAddElement ? 'disabled' : ''}`}
         id={`indentbutton-${instance.uniqueId}`}
         onClick={() => this.indentClickHandler(instance)}>
         <FontAwesomeIcon icon={faIndent} />
       </button>
-      { this.props.disableElement && this.renderDisabledTooltip(`indentbutton-${instance.uniqueId}`) }
+      { this.props.disableAddElement && this.renderDisabledTooltip(`indentbutton-${instance.uniqueId}`) }
     </span>
   )
 
@@ -248,7 +248,7 @@ export default class ConjunctionGroup extends Component {
     const hasComment = elementCommentField && elementCommentField.value && elementCommentField.value !== '';
 
     if (!this.props.root) {
-      const { disableElement } = this.props;
+      const { disableAddElement } = this.props;
 
       return (
         <div className="card-group__top">
@@ -308,7 +308,7 @@ export default class ConjunctionGroup extends Component {
               </button>
 
               <button
-                className={`element__deletebutton transparent-button ${disableElement ? 'disabled' : ''}`}
+                className={`element__deletebutton transparent-button ${disableAddElement ? 'disabled' : ''}`}
                 id={`deletebutton-${this.props.instance.uniqueId}`}
                 onClick={this.deleteInstance}
                 aria-label={`remove ${this.props.instance.name}`}
@@ -316,7 +316,7 @@ export default class ConjunctionGroup extends Component {
                 <FontAwesomeIcon icon={faTimes} />
               </button>
 
-              {disableElement && this.renderDisabledTooltip(`deletebutton-${this.props.instance.uniqueId}`)}
+              {disableAddElement && this.renderDisabledTooltip(`deletebutton-${this.props.instance.uniqueId}`)}
             </div>
           </div>
 
@@ -384,7 +384,7 @@ export default class ConjunctionGroup extends Component {
               codeData={this.props.codeData}
               validateCode={this.props.validateCode}
               resetCodeValidation={this.props.resetCodeValidation}
-              disableElement={this.props.disableElement}
+              disableAddElement={this.props.disableAddElement}
               elementUniqueId={this.props.elementUniqueId}
             />
 
@@ -399,6 +399,7 @@ export default class ConjunctionGroup extends Component {
 
   renderTemplate(instance) {
     const allInstancesInAllTrees = this.props.getAllInstancesInAllTrees();
+
     return (
       <div key={instance.uniqueId} className="card-group-section" id={instance.uniqueId}>
         <TemplateInstance
@@ -438,7 +439,7 @@ export default class ConjunctionGroup extends Component {
           codeData={this.props.codeData}
           validateCode={this.props.validateCode}
           resetCodeValidation={this.props.resetCodeValidation}
-          disableElement={this.props.disableElement}
+          disableAddElement={this.props.disableAddElement}
           disableIndent={this.props.disableIndent} />
 
         {this.renderConjunctionSelect(instance)}
@@ -484,7 +485,7 @@ export default class ConjunctionGroup extends Component {
               validateCode={this.props.validateCode}
               resetCodeValidation={this.props.resetCodeValidation}
               inBaseElements={false}
-              disableElement={this.props.disableElement}
+              disableAddElement={this.props.disableAddElement}
               elementUniqueId={this.props.elementUniqueId}
             />
           </div>
@@ -499,7 +500,7 @@ ConjunctionGroup.propTypes = {
   codeData: PropTypes.object,
   conversionFunctions: PropTypes.array,
   deleteInstance: PropTypes.func.isRequired,
-  disableElement: PropTypes.bool,
+  disableAddElement: PropTypes.bool,
   disableIndent: PropTypes.bool,
   elementUniqueId: PropTypes.string,
   externalCqlList: PropTypes.array.isRequired,

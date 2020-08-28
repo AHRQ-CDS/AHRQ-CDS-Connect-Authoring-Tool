@@ -115,7 +115,7 @@ describe('<ElementSelect />', () => {
 
   describe('in base elements', () => {
     it('does not allow an option to be selected', () => {
-      const { container, getByText, getByLabelText } = renderComponent({ disableElement: true });
+      const { container, getByText, getByLabelText } = renderComponent({ disableAddElement: true });
 
       openSelect(getByLabelText('Choose element type'));
 

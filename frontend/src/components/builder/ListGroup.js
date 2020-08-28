@@ -337,7 +337,7 @@ export default class ListGroup extends Component {
           validateReturnType={isAndOrElement}
           options={isAndOrElement ? '' : 'listOperations'}
           disableIndent={!isAndOrElement}
-          disableElement={baseElementListUsed}
+          disableAddElement={baseElementListUsed}
           elementUniqueId={instance.uniqueId}
         />
       </div>
