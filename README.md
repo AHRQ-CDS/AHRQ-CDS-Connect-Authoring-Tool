@@ -29,7 +29,7 @@ First, ensure you have [Node.js LTS](https://nodejs.org/), [Yarn](https://yarnpk
 To allow for simple development, a _Procfile_ is provided which will launch the _api_ and _frontend_ projects in development mode.  To use the Procfile, you must install [node-foreman](https://www.npmjs.com/package/foreman).
 
 ```bash
-yarn add global foreman
+yarn global add foreman
 ```
 
 ### Install Dependencies
