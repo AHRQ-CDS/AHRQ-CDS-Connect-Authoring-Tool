@@ -49,9 +49,6 @@ const ElementMenuList = ({ children, ...props }) => {
   );
 };
 
-// TODO: This is currently hardcoded to display functions with zero arguments since those are
-// the only functions that can be used. This will need to updated to dynamically reflect the
-// number of arguments in the function when we have access to that data.
 const ElementOption = ({ children, ...props }) => (
   <SelectComponents.Option {...props}>
     <span className="element-select__option-value">{children}</span>
@@ -64,7 +61,7 @@ const ElementOption = ({ children, ...props }) => (
 
     {props.data.statementType === 'function' && (
       <span className="element-select__option-value">
-        {` | Function(0)`}
+        {` | Function(${props.data.arguments.length})`}
       </span>
     )}
 
@@ -237,10 +234,10 @@ export default class ElementSelect extends Component {
     if (props.externalCqlList.length && categoriesCopy[externalCqlIndex]) {
 
       categoriesCopy[externalCqlIndex].entries = props.externalCqlList.map(e => {
-        // TODO: We don't yet support functions that have any arguments, so we only want to allow the functions
+        // TODO: We don't yet support functions that have multiple arguments, so we only want to allow the functions
         // that have no arguments associated with them to be selected. This should be removed when we have support
         // for arbitrary numbers of arguments in functions.
-        const functions = e.details.functions.filter(f => f.operand.length === 0);
+        const functions = e.details.functions.filter(f => f.operand.length <= 1);
         return {
           id: e.name,
           name: e.name,
@@ -337,7 +334,6 @@ export default class ElementSelect extends Component {
 
   onExternalDefinitionSelected = (selectedExternalDefinition) => {
     this.setState({ selectedExternalDefinition });
-
     const suggestion = {
       id: selectedExternalDefinition.uniqueId,
       name: 'External CQL Element',
@@ -357,7 +353,8 @@ export default class ElementSelect extends Component {
               : ''
             } from ${this.state.selectedExternalLibrary.name}`,
             element: selectedExternalDefinition.value,
-            library: this.state.selectedExternalLibrary.name
+            library: this.state.selectedExternalLibrary.name,
+            arguments: selectedExternalDefinition.arguments // will only exist if the statement is a function
           },
           static: true
         },
@@ -449,7 +446,8 @@ export default class ElementSelect extends Component {
           uniqueId: _.uniqueId(),
           returnType,
           displayReturnType,
-          statementType
+          statementType,
+          arguments: statement.operand // will only exist if the statement is a function
         });
       };
 

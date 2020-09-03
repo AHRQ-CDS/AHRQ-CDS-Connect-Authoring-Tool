@@ -240,42 +240,43 @@ const getArtifactLibraryElements = (artifact, libraryName) => {
 const shouldLibraryBeUpdated = (library, artifact) => {
   const statementReturnTypes = {};
   const elementReturnTypes = {};
-  const functionArgCounts = {};
-
+  const statementArgs = {};
+  const elementArgs = {};
   // In this situation, definitions and parameters behave identically, so they are bucketed together
   library.details.definitions.concat(library.details.parameters).forEach(def => {
     statementReturnTypes[def.name] = def.calculatedReturnType;
   });
 
-  // The parens for functions are added to delineate names from definitions, since both can have the
+  // The prefix for functions is added to delineate names from definitions, since both can have the
   // same name legally in CQL
   library.details.functions.forEach(func => {
-    statementReturnTypes[`${func.name}()`] = func.calculatedReturnType;
-    functionArgCounts[`${func.name}()`] = func.operand.length;
+    statementReturnTypes[`func:${func.name}`] = func.calculatedReturnType;
+    statementArgs[`func:${func.name}`] = func.operand;
   });
 
   const libraryElements = getArtifactLibraryElements(artifact, library.name);
   libraryElements.forEach(el => {
     const referenceField = el.fields.find(f => f.id === 'externalCqlReference');
-    elementReturnTypes[
-      `${_.get(referenceField, 'value.element')}${el.template === 'GenericFunction' ? '()' : ''}`
-    ] = el.returnType;
+    const referenceFieldValueElement = referenceField.value.element;
+    if (el.template === 'GenericFunction') {
+      elementReturnTypes[`func:${referenceFieldValueElement}`] = el.returnType;
+      elementArgs[`func:${referenceFieldValueElement}`] = referenceField.value.arguments;
+    } else {
+      elementReturnTypes[referenceFieldValueElement] = el.returnType;
+    }
   });
 
-  // If a library to update has contents whose names, return types, or arg counts have changed, and the
+  // If a library to update has contents whose names, return types, or args have changed, and the
   // artifact is using these contents, we cannot update it and we shouldn't make any upload/update
   let returnTypesMatch = true;
-  let argCountsMatch = true;
+  let argsMatch = true;
+
   Object.keys(elementReturnTypes).forEach((key) => {
     returnTypesMatch = returnTypesMatch && (statementReturnTypes[key] === elementReturnTypes[key]);
-    // TODO: We currently only support zero-arg functions, so we don't want to allow upload of a function
-    // in use that has more than one argument. Eventually, when we are able to track the number of arguments
-    // in the frontend elements as well, we want to make this check actually test a match rather than
-    // simply testing for zero.
-    argCountsMatch = argCountsMatch && (functionArgCounts[key] === 0);
+    argsMatch = argsMatch && (_.isEqual(statementArgs, elementArgs));
   });
 
-  return returnTypesMatch && argCountsMatch;
+  return returnTypesMatch && argsMatch;
 }
 
 module.exports = {
