@@ -1,45 +1,87 @@
-Demo Script for CDS Authoring Tool (8/1/17)
-This is a list of steps to run a demonstration of the main features of the CDS Authoring Tool.
+Demo Script for CDS Authoring Tool (9/1/20)
 
-1. User selects "Artifacts" tab
-2. Create a new artifact by entering the "Artifact Name" and "Version" and clicking "New Artifact"
-  Name: Basic_Statin_Artifact
-  Version: 1
-3. User opens the artifact by clicking the name of the artifact in the list.
-4. User searches for and selects "Age Range" element
-  - User can use the scroll on the dropdown, the search bar, filter by the dropdown on the right, or use the browse modal by selecting "Browse" on the far right.
-5. User enters an element name (target_age) and any age (minimum = 40, maximum = 75)
-6. User selects AND from the dropdown directly beneath the element
-7. User search for and selects "Diabetes" element
-8. User clicks "Add Expression" on the element to add expressions
-9. User selects expressions in the following order: Active, Confirmed, Exists
-10. User searches for and selects "ASCVD Risk Assessment"
-11. User clicks "Add Expression" on the element to add expressions 
-12. User selects the following expressions: 
-  - Look Back and enters a number and selects the unit from the dropdown (6 years)
+This is a list of steps to run a demonstration of building a very simple (and clinically incomplete)
+artifact in the CDS Authoring Tool. For demonstration purposes only!
+
+===================================================================================================
+CREATE ARTIFACT
+===================================================================================================
+1.  User selects "Artifacts" tab
+2.  User clicks "Create New Artifact" button
+3.  User enters Artifact Name and Version then clicks "Save"
+    - Artifact Name: Basic Statin Artifact
+    - Version: 0.0.1
+4.  User opens the artifact by clicking the name of the artifact in the list.
+
+===================================================================================================
+INCLUSIONS: Between 40 and 75 Years Old
+===================================================================================================
+5.  User selects "Demographics" from the "Add element" menu in the "Inclusions" tab
+6.  User selects "Age Range" from the Demographics sub-menu
+7.  User enters the name of the element in the first input box of the form
+    - Age Range: Between 40 and 75 Years Old
+8.  User enters the logical age range criteria in the form
+    - Minimum Age: 40
+    - Maximum Age: 75
+    - Unit of Time: years
+
+===================================================================================================
+INCLUSIONS: Diabetes
+===================================================================================================
+9.  User selects "Condition" from the "Add element" menu in the next element on the page
+10. User clicks "Authenticate VSAC" to log into the VSAC integration
+11. User enters UMLS Terminology Services username and password, then clicks "Login"
+    - Get a UMLS Terminology Services account here: https://uts.nlm.nih.gov/home.html
+12. User clicks "Add Value Set" button
+13. User enters "Diabetes" and clicks "Search"
+14. User selects "Diabetes" value set with OID "2.16.840.1.113883.3.464.1003.103.12.1001"
+15. User confirms value set by clicking "Select"
+16. User clicks "Add Expression" on the Diabetes element to further refine the criteria
+17. User adds expressions in the following order: Active, Confirmed, Exists
+
+===================================================================================================
+INCLUSIONS: CVD 10-yr Risk >= 10 %
+===================================================================================================
+18. User selects "Observation" from the "Add element" menu in the next element on the page
+19. User clicks "Add Code" button
+20. User enters the following information and then clicks "Validate"
+    - Code: 79423-0
+    - Code System: LOINC
+21. User confirms code by clicking "Select"
+22. User updates the element name from "LOINC 79423-0" to "CVD 10-yr Risk >= 10 %"
+25. User clicks "Add Expression" to further refine the criteria
+26. User adds expressions in the following order with the following information:
+  - Look Back: 6 Year(s)
   - Verified
   - Most Recent
   - Quantity Value
-  - Value Comparison and selects either one or both operators and enters either one or both numbers in the value box. (>= 7.5)
-13. User can click "Save" at the top right at any time to save progress on the artifact.
-14. User switches to Exclusions tab
-15. User searches for and adds "Pregnancy dx" element
-16. User selects OR from the dropdown directly beneath the element
-17. User searches for and adds "On Statin Therapy" element and adds the following expressions: Active, Exists
-18. User switches to the Subpopulations tab
-19. User clicks the "New Subpopulation" button
-20. User renames the subpopulation from "Subpopulation 1" to "ShouldStartStatin"
-21. User searches for and selects "ASCVD Risk Assessment" element
-22. User selects the same expressions as 12. (Value Comparison will be >= 10 instead)
-23. User switches to Recommendations tab
-24. User clicks "Add Subpopulation button"
-25. User selects a subpopulation to use or clicks "New Subpopulation" link to redirect back to Subpopulation tab. (select "ShouldStartStatin")
-26. User types a recommendation ("Start low to moderate statin")
-27. User clicks "Add Rationale" and types a rationale ("Based on guidelines...")
-28. User could click "Add Recommendation" to add a second recommendation for a different subpopulation
-29. User could switch to Parameters tab, click "New parameter" button and create a new parameter
-30. User switches to Handle Errors tab
-31. User selects "Recommendations is null" from the first select box under "If"
-32. User describes the error in the box under "Then" ("This is an error...")
-33. User clicks "Download CQL" button at the top right to download a zip file of the CQL artifact that was authored and the helper libraries the artifact uses.
-34. User clicks "Publish" button to publish the artifact to the repository
+  - Value Comparison: minOp >=, minValue 10, unit %
+27. User can click "Save" at the top right at any time to save progress on the artifact.
+
+===================================================================================================
+EXCLUSIONS: On Statin Therapy
+===================================================================================================
+28. User selects Exclusions tab
+29. User selects "Medication Request" from the "Add element" menu in the Exclusions tab
+30. User clicks "Add Value Set" button
+31. User enters "statin therapy" and clicks "Search"
+32. User selects "Low Intensity Statin Therapy" value set with OID "2.16.840.1.113762.1.4.1047.107"
+33. User confirms value set by clicking "Select"
+34. User repeats steps 30 - 33 to add more value sets to the element:
+    - Moderate Intensity Statin Therapy (2.16.840.1.113762.1.4.1047.98)
+    - High Intensity Statin Therapy (2.16.840.1.113762.1.4.1047.97)
+35. User updates the element name to "On Statin Therapy"
+36. User clicks "Add Expression" to further refine the criteria
+37. User adds expressions in the following order: Active, Exists
+
+===================================================================================================
+RECOMMENDATION: Start low to moderate intensity statin
+===================================================================================================
+38. User selects Recommendations tab
+26. User types a recommendation: "Start low to moderate intensity statin"
+
+===================================================================================================
+DOWNLOAD CQL
+===================================================================================================
+33. User clicks "Download CQL" and chooses "FHIR R4".
+34. User unzips basic_statin_artifact_v0.0.1_cql.zip and inspects contents

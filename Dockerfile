@@ -1,10 +1,10 @@
-FROM node:10.16.3-alpine
+FROM node:10.22.0-alpine
 
 ARG NODE_ENV
 ENV NODE_ENV $NODE_ENV
 
 # Install the globabl pm2 process manager
-RUN yarn global add pm2@2.7.2 -g
+RUN yarn global add pm2@4.4.1 -g
 
 # First copy over the yarn files and install dependencies (multi-stage build optimization)
 

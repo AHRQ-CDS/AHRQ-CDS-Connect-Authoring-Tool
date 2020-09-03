@@ -9,7 +9,7 @@ module.exports = {
     // API Server
     {
       name: 'API',
-      script: 'api/server.js',
+      script: 'server.js',
       cwd: 'api',
       env_production: {
         NODE_ENV: 'production'
@@ -18,7 +18,7 @@ module.exports = {
     // Fronted Server
     {
       name: 'FrontEnd',
-      script: 'frontend/server.js',
+      script: 'server.js',
       cwd: 'frontend',
       env_production: {
         NODE_ENV: 'production'
