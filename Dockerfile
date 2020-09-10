@@ -3,8 +3,6 @@ FROM node:12.18.3-alpine
 ARG NODE_ENV
 ENV NODE_ENV $NODE_ENV
 
-# Increase size because as of Node 12, heap management strategy has changed
-ENV NODE_OPTIONS --max_old_space_size=1300
 
 # Install the globabl pm2 process manager
 RUN yarn global add pm2@4.4.1 -g
@@ -32,7 +30,13 @@ RUN yarn install
 #Frontend
 WORKDIR /usr/src/app/frontend
 COPY ./frontend /usr/src/app/frontend
+# Increase size because as of Node 12, heap management strategy has changed
+# This is only needed for 'yarn build', which is a memory hog
+ENV NODE_OPTIONS --max_old_space_size=1300
+# Do the memory-intensive build
 RUN yarn build
+# Reset size back to default since we don't need this setting at runtime
+ENV NODE_OPTIONS=
 
 # API
 COPY ./api /usr/src/app/api
