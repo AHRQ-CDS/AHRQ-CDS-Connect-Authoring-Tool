@@ -4,7 +4,7 @@ ARG NODE_ENV
 ENV NODE_ENV $NODE_ENV
 
 # Increase size because as of Node 12, heap management strategy has changed
-ENV NODE_OPTIONS --max_old_space_size=8000
+ENV NODE_OPTIONS --max_old_space_size=1300
 
 # Install the globabl pm2 process manager
 RUN yarn global add pm2@4.4.1 -g
