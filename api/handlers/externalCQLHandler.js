@@ -432,12 +432,14 @@ function singlePost(req, res) {
                   }
 
                   if (shouldUpdate) {
+                    // Emulates the functionality of Promise.allSettled() which is only supported as of Node 12.
                     // Any error that is thrown through updating should either be the same as an error
                     // encountered by the insertion below, or would have already been caught in the
                     // process above to determine whether we should update
-                    Promise.allSettled(librariesToUpdate.map(async (library) => {
+                    Promise.all(librariesToUpdate.map(async (library) => {
                       return CQLLibrary.update({ user: req.user.uid, name: library.name }, library);
-                    }));
+                    }).map(p => p.catch(e => null)));
+
                     CQLLibrary.insertMany(librariesToInsert, (error, response) => {
                       if (error) {
                         res.status(500).send(error);
