@@ -234,10 +234,10 @@ export default class ElementSelect extends Component {
     if (props.externalCqlList.length && categoriesCopy[externalCqlIndex]) {
 
       categoriesCopy[externalCqlIndex].entries = props.externalCqlList.map(e => {
-        // TODO: We don't yet support functions that have multiple arguments, so we only want to allow the functions
+        // TODO: We don't yet support functions that have any arguments, so we only want to allow the functions
         // that have no arguments associated with them to be selected. This should be removed when we have support
         // for arbitrary numbers of arguments in functions.
-        const functions = e.details.functions.filter(f => f.operand.length <= 1);
+        const functions = e.details.functions.filter(f => f.operand.length === 0);
         return {
           id: e.name,
           name: e.name,

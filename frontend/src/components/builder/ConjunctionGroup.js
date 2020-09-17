@@ -403,6 +403,7 @@ export default class ConjunctionGroup extends Component {
     return (
       <div key={instance.uniqueId} className="card-group-section" id={instance.uniqueId}>
         <TemplateInstance
+          artifactId={this.props.artifact._id}
           valueSets={this.props.valueSets}
           loadValueSets={this.props.loadValueSets}
           getPath={this.getChildsPath}
@@ -440,7 +441,9 @@ export default class ConjunctionGroup extends Component {
           validateCode={this.props.validateCode}
           resetCodeValidation={this.props.resetCodeValidation}
           disableAddElement={this.props.disableAddElement}
-          disableIndent={this.props.disableIndent} />
+          disableIndent={this.props.disableIndent}
+          externalCqlList={this.props.externalCqlList}
+          loadExternalCqlList={this.props.loadExternalCqlList} />
 
         {this.renderConjunctionSelect(instance)}
       </div>

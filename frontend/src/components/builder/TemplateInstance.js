@@ -10,7 +10,8 @@ import {
   faCommentDots,
   faComment,
   faAngleDoubleDown,
-  faAngleDoubleRight
+  faAngleDoubleRight,
+  faBook
 } from '@fortawesome/free-solid-svg-icons';
 import { UncontrolledTooltip } from 'reactstrap';
 import _ from 'lodash';
@@ -45,6 +46,7 @@ import ValueComparisonNumber from './modifiers/ValueComparisonNumber';
 import ValueComparisonObservation from './modifiers/ValueComparisonObservation';
 import WithUnit from './modifiers/WithUnit';
 import Qualifier from './modifiers/Qualifier';
+import ExternalModifier from './modifiers/ExternalModifier';
 
 import { hasDuplicateName, doesBaseElementUseNeedWarning, doesBaseElementInstanceNeedWarning,
   doesParameterUseNeedWarning, validateElement, hasGroupNestedWarning } from '../../utils/warnings';
@@ -61,18 +63,18 @@ export default class TemplateInstance extends Component {
     super(props);
 
     this.modifierMap = _.keyBy(Modifiers, 'id');
-    this.modifersByInputType = {};
+    this.modifiersByInputType = {};
 
     Modifiers.forEach((modifier) => {
       modifier.inputTypes.forEach((inputType) => {
-        this.modifersByInputType[inputType] = (this.modifersByInputType[inputType] || []).concat(modifier);
+        this.modifiersByInputType[inputType] = (this.modifiersByInputType[inputType] || []).concat(modifier);
       });
     });
 
     this.state = {
       showElement: true,
       showComment: false,
-      relevantModifiers: (this.modifersByInputType[props.templateInstance.returnType] || []),
+      relevantModifiers: (this.modifiersByInputType[props.templateInstance.returnType] || []),
       showModifiers: false,
       otherInstances: this.getOtherInstances(props),
       returnType: props.templateInstance.returnType
@@ -80,6 +82,36 @@ export default class TemplateInstance extends Component {
   }
 
   UNSAFE_componentWillMount() { // eslint-disable-line camelcase
+    const { artifactId, loadExternalCqlList, externalCqlList } = this.props;
+    loadExternalCqlList(artifactId);
+
+    const externalModifiers = [];
+    externalCqlList.forEach(lib => {
+      lib.details.functions.forEach(func => {
+        // TODO: Eventually support functions with multiple arguments
+        if (func.operand.length === 1) {
+          const functionName = `${func.name} (from ${lib.name})`;
+          const modifier = {
+            id: functionName,
+            type: 'ExternalModifier',
+            name: functionName,
+            inputTypes: func.calculatedInputTypes,
+            returnType: func.calculatedReturnType,
+            cqlTemplate: 'BaseModifier',
+            cqlLibraryFunction: `"${lib.name}"."${func.name}"`
+          };
+          externalModifiers.push(modifier);
+        }
+      });
+    });
+
+    externalModifiers.forEach(modifier => {
+      this.modifierMap[modifier.id] = modifier;
+      modifier.inputTypes.forEach((inputType) => {
+        this.modifiersByInputType[inputType] = (this.modifiersByInputType[inputType] || []).concat(modifier);
+      });
+    });
+
     this.props.templateInstance.fields.forEach((field) => {
       this.setState({ [field.id]: field.value });
     });
@@ -164,7 +196,7 @@ export default class TemplateInstance extends Component {
 
   renderAppliedModifier = (modifier, index) => {
     // Reset values on modifiers that were not previously set or saved in the database
-    if (!modifier.values && this.modifierMap[modifier.id].values) {
+    if (!modifier.values && this.modifierMap[modifier.id] && this.modifierMap[modifier.id].values) {
       modifier.values = this.modifierMap[modifier.id].values;
     }
 
@@ -342,6 +374,8 @@ export default class TemplateInstance extends Component {
               value={mod.values.value}
               updateAppliedModifier={this.updateAppliedModifier}/>
           );
+        case 'ExternalModifier':
+          return (<ExternalModifier key={index} name={mod.name} id={mod.id}/>);
         default:
           return (<LabelModifier key={index} name={mod.name} id={mod.id}/>);
       }
@@ -411,7 +445,7 @@ export default class TemplateInstance extends Component {
   }
 
   filterRelevantModifiers = () => {
-    const relevantModifiers = this.modifersByInputType[this.state.returnType] || [];
+    const relevantModifiers = this.modifiersByInputType[this.state.returnType] || [];
     if (!this.props.templateInstance.checkInclusionInVS) { // Rather than suppressing `CheckInclusionInVS` in every element, assume it's suppressed unless explicity stated otherwise
       _.remove(relevantModifiers, modifier => modifier.id === 'CheckInclusionInVS');
     }
@@ -503,7 +537,7 @@ export default class TemplateInstance extends Component {
                     onClick={this.handleModifierSelected}
                     className="modifier__button secondary-button"
                     aria-label={modifier.name}>
-                    {modifier.name}
+                    {modifier.type === 'ExternalModifier' && <FontAwesomeIcon icon={faBook} />} {modifier.name}
                   </button>
                 )
             }
@@ -1062,12 +1096,14 @@ export default class TemplateInstance extends Component {
 
 TemplateInstance.propTypes = {
   allInstancesInAllTrees: PropTypes.array.isRequired,
+  artifactId: PropTypes.string,
   baseElements: PropTypes.array.isRequired,
   codeData: PropTypes.object,
   deleteInstance: PropTypes.func.isRequired,
   disableAddElement: PropTypes.bool,
   disableIndent: PropTypes.bool,
   editInstance: PropTypes.func.isRequired,
+  externalCqlList: PropTypes.array.isRequired,
   getPath: PropTypes.func.isRequired,
   getVSDetails: PropTypes.func.isRequired,
   instanceNames: PropTypes.array.isRequired,
@@ -1075,6 +1111,7 @@ TemplateInstance.propTypes = {
   isSearchingVSAC: PropTypes.bool.isRequired,
   isValidatingCode: PropTypes.bool,
   isValidCode: PropTypes.bool,
+  loadExternalCqlList: PropTypes.func.isRequired,
   loadValueSets: PropTypes.func.isRequired,
   loginVSACUser: PropTypes.func.isRequired,
   otherInstances: PropTypes.array.isRequired,

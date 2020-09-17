@@ -7,7 +7,7 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faPencilAlt, faDownload, faSave, faAlignRight } from '@fortawesome/free-solid-svg-icons';
+import { faPencilAlt, faDownload, faSave, faAlignRight, faBook } from '@fortawesome/free-solid-svg-icons';
 import _ from 'lodash';
 
 import loadTemplates from '../actions/templates';
@@ -548,7 +548,9 @@ export class Builder extends Component {
                 <Tab>Recommendations</Tab>
                 <Tab>Parameters</Tab>
                 <Tab>Handle Errors</Tab>
-                <Tab>External CQL</Tab>
+                <Tab>
+                  <FontAwesomeIcon icon={faBook} /> External CQL
+                </Tab>
               </TabList>
 
               <div className="tab-panel-container">

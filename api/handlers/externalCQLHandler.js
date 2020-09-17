@@ -12,7 +12,7 @@ const authoringToolExports = [
   { name: 'FHIRHelpers', version: '4.0.0' }
 ];
 
-const singularReturnTypeMap = {
+const singularTypeMap = {
   'Boolean': 'boolean',
   'Code': 'system_code',
   'Concept': 'system_concept',
@@ -35,7 +35,7 @@ const singularReturnTypeMap = {
   'Any': 'any'
 };
 
-const listReturnTypeMap = {
+const listTypeMap = {
   'Observation': 'list_of_observations',
   'Condition': 'list_of_conditions',
   'MedicationStatement': 'list_of_medication_statements',
@@ -58,7 +58,7 @@ const listReturnTypeMap = {
   'Time': 'list_of_times',
 }
 
-const intervalReturnTypeMap = {
+const intervalTypeMap = {
   'Integer': 'interval_of_integer',
   'DateTime': 'interval_of_datetime',
   'Decimal': 'interval_of_decimal',
@@ -73,11 +73,11 @@ const areChoicesKnownTypes = (choices) => {
   choices.forEach((choice) => {
     if (choice.type === 'NamedTypeSpecifier') {
       const returnTypeOfChoice = getTypeFromELMString(choice.name);
-      const convertedReturnType = singularReturnTypeMap[returnTypeOfChoice];
-      if (!convertedReturnType) {
+      const convertedType = singularTypeMap[returnTypeOfChoice];
+      if (!convertedType) {
         allChoicesKnown = false;
       }
-      let typeToDisplay = convertedReturnType ? convertedReturnType : returnTypeOfChoice;
+      let typeToDisplay = convertedType ? convertedType : returnTypeOfChoice;
       if (returnTypeOfChoice === 'MedicationOrder') typeToDisplay = 'Medication Order';
       typesOfChoices.push(_.startCase(typeToDisplay));
     } else {
@@ -89,86 +89,103 @@ const areChoicesKnownTypes = (choices) => {
   return { allChoicesKnown, typesOfChoices };
 }
 
-function mapReturnTypes(definitions) {
+function calculateType(definition) {
+  let elmType, elmDisplay;
+
+  if (definition.resultTypeName || definition.operandType) {
+    elmType = getTypeFromELMString(definition.resultTypeName || definition.operandType);
+    const convertedType = singularTypeMap[elmType];
+    if (!convertedType) elmDisplay = `Other (${elmType})`;
+    if (elmType === 'MedicationOrder') elmDisplay = 'Medication Order';
+    elmType = convertedType ? convertedType : 'other';
+  } else if (definition.resultTypeSpecifier || definition.operandTypeSpecifier) {
+    const typeSpecifier = definition.resultTypeSpecifier || definition.operandTypeSpecifier;
+    switch (typeSpecifier.type) {
+      case 'NamedTypeSpecifier': {
+        elmType = getTypeFromELMString(typeSpecifier.name);
+        const convertedType = singularTypeMap[elmType];
+        if (!convertedType) elmDisplay = `Other (${elmType})`;
+        if (elmType === 'MedicationOrder') elmDisplay = 'Medication Order';
+        elmType = convertedType ? convertedType : 'other';
+        break;
+      }
+      case 'IntervalTypeSpecifier': {
+        elmType = getTypeFromELMString(typeSpecifier.pointType.name);
+        const convertedType = intervalTypeMap[elmType];
+        if (!convertedType) elmDisplay = `Interval of Others (${elmType})`;
+        elmType = convertedType ? convertedType : 'interval_of_other';
+        break;
+      }
+      case 'ListTypeSpecifier': {
+        if (typeSpecifier.elementType.type === 'ChoiceTypeSpecifier') {
+          const { allChoicesKnown, typesOfChoices } = areChoicesKnownTypes(typeSpecifier.elementType.choice);
+          elmType = allChoicesKnown ? 'list_of_any' : 'list_of_others';
+          if (!allChoicesKnown) elmDisplay = `List of Others (${typesOfChoices.join(', ')})`;
+          else elmDisplay = `List of Any (${typesOfChoices.join(', ')})`;
+        } else if (typeSpecifier.elementType.type === 'TupleTypeSpecifier') {
+          elmType = 'list_of_others';
+          elmDisplay = 'List of Others (Tuple)';
+        } else if (typeSpecifier.elementType.type === 'NamedTypeSpecifier') {
+          elmType = getTypeFromELMString(typeSpecifier.elementType.name);
+          const convertedType = listTypeMap[elmType];
+          if (!convertedType) elmDisplay = `List of Others (${elmType})`;
+          if (elmType === 'MedicationRequest') elmDisplay = 'List of Medication Requests';
+          elmType = convertedType ? convertedType : 'list_of_others';
+        } else if (typeSpecifier.elementType.type === 'ListTypeSpecifier') {
+          elmType = 'list_of_others';
+          elmDisplay = 'List of Lists';
+        } else if (typeSpecifier.elementType.type === 'IntervalTypeSpecifier') {
+          elmType = 'list_of_others';
+          elmDisplay = 'List of Intervals';
+        } else {
+          elmType = 'list_of_others';
+          elmDisplay = 'List of Others (unknown)';
+        }
+        break;
+      }
+      case 'TupleTypeSpecifier': {
+        elmType = 'other';
+        elmDisplay = 'Other (Tuple)';
+        break;
+      }
+      case 'ChoiceTypeSpecifier': {
+        const { allChoicesKnown, typesOfChoices } = areChoicesKnownTypes(typeSpecifier.choice);
+        elmType = allChoicesKnown ? 'any' : 'other';
+        if (!allChoicesKnown) elmDisplay = `Other (Choice of ${typesOfChoices.join(', ')})`;
+        break;
+      }
+      default: {
+        elmType = 'other';
+        elmDisplay = 'Other (unknown)';
+        break;
+      }
+    }
+  } else {
+    elmType = 'other';
+    elmDisplay = 'Other (unknown)';
+  }
+
+  return { elmType, elmDisplay };
+}
+
+function mapTypes(definitions) {
   const mappedDefinitions = definitions;
   mappedDefinitions.map(definition => {
-    let elmReturnType, elmDisplay;
-
-    if (definition.resultTypeName) {
-      elmReturnType = getTypeFromELMString(definition.resultTypeName);
-      const convertedReturnType = singularReturnTypeMap[elmReturnType];
-      if (!convertedReturnType) elmDisplay = `Other (${elmReturnType})`;
-      if (elmReturnType === 'MedicationOrder') elmDisplay = 'Medication Order';
-      elmReturnType = convertedReturnType ? convertedReturnType : 'other';
-    } else if (definition.resultTypeSpecifier) {
-      const typeSpecifier = definition.resultTypeSpecifier;
-      switch (typeSpecifier.type) {
-        case 'NamedTypeSpecifier': {
-          elmReturnType = getTypeFromELMString(typeSpecifier.name);
-          const convertedReturnType = singularReturnTypeMap[elmReturnType];
-          if (!convertedReturnType) elmDisplay = `Other (${elmReturnType})`;
-          if (elmReturnType === 'MedicationOrder') elmDisplay = 'Medication Order';
-          elmReturnType = convertedReturnType ? convertedReturnType : 'other';
-          break;
-        }
-        case 'IntervalTypeSpecifier': {
-          elmReturnType = getTypeFromELMString(typeSpecifier.pointType.name);
-          const convertedReturnType = intervalReturnTypeMap[elmReturnType];
-          if (!convertedReturnType) elmDisplay = `Interval of Others (${elmReturnType})`;
-          elmReturnType = convertedReturnType ? convertedReturnType : 'interval_of_other';
-          break;
-        }
-        case 'ListTypeSpecifier': {
-          if (typeSpecifier.elementType.type === 'ChoiceTypeSpecifier') {
-            const { allChoicesKnown, typesOfChoices } = areChoicesKnownTypes(typeSpecifier.elementType.choice);
-            elmReturnType = allChoicesKnown ? 'list_of_any' : 'list_of_others';
-            if (!allChoicesKnown) elmDisplay = `List of Others (${typesOfChoices.join(', ')})`;
-            else elmDisplay = `List of Any (${typesOfChoices.join(', ')})`;
-          } else if (typeSpecifier.elementType.type === 'TupleTypeSpecifier') {
-            elmReturnType = 'list_of_others';
-            elmDisplay = 'List of Others (Tuple)';
-          } else if (typeSpecifier.elementType.type === 'NamedTypeSpecifier') {
-            elmReturnType = getTypeFromELMString(typeSpecifier.elementType.name);
-            const convertedReturnType = listReturnTypeMap[elmReturnType];
-            if (!convertedReturnType) elmDisplay = `List of Others (${elmReturnType})`;
-            if (elmReturnType === 'MedicationRequest') elmDisplay = 'List of Medication Requests';
-            elmReturnType = convertedReturnType ? convertedReturnType : 'list_of_others';
-          } else if (typeSpecifier.elementType.type === 'ListTypeSpecifier') {
-            elmReturnType = 'list_of_others';
-            elmDisplay = 'List of Lists';
-          } else if (typeSpecifier.elementType.type === 'IntervalTypeSpecifier') {
-            elmReturnType = 'list_of_others';
-            elmDisplay = 'List of Intervals';
-          } else {
-            elmReturnType = 'list_of_others';
-            elmDisplay = 'List of Others (unknown)';
-          }
-          break;
-        }
-        case 'TupleTypeSpecifier': {
-          elmReturnType = 'other';
-          elmDisplay = 'Other (Tuple)';
-          break;
-        }
-        case 'ChoiceTypeSpecifier': {
-          const { allChoicesKnown, typesOfChoices } = areChoicesKnownTypes(typeSpecifier.choice);
-          elmReturnType = allChoicesKnown ? 'any' : 'other';
-          if (!allChoicesKnown) elmDisplay = `Other (Choice of ${typesOfChoices.join(', ')})`;
-          break;
-        }
-        default: {
-          elmReturnType = 'other';
-          elmDisplay = 'Other (unknown)';
-          break;
-        }
-      }
-    } else {
-      elmReturnType = 'other';
-      elmDisplay = 'Other (unknown)';
-    }
-
-    definition.calculatedReturnType = elmReturnType || 'other';
+    const { elmType, elmDisplay } = calculateType(definition);
+    definition.calculatedReturnType = elmType || 'other';
     definition.displayReturnType = elmDisplay;
+
+    if (definition.operand) {
+      const calculatedInputTypes = [];
+      const displayInputTypes = [];
+      definition.operand.forEach(operand => {
+        const { elmType, elmDisplay } = calculateType(operand);
+        calculatedInputTypes.push(elmType || 'other');
+        displayInputTypes.push(elmDisplay);
+      });
+      definition.calculatedInputTypes = calculatedInputTypes;
+      definition.displayInputTypes = displayInputTypes;
+    }
   });
   return mappedDefinitions;
 }
@@ -357,9 +374,9 @@ function parseELMFiles(elmFiles, artifactId, userId, files) {
     });
     const defineStatements = elmDefinitions.filter(def => def.type !== 'FunctionDef');
     const functionStatements = elmDefinitions.filter(def => def.type === 'FunctionDef');
-    details.parameters = mapReturnTypes(elmParameters);
-    details.definitions = mapReturnTypes(defineStatements);
-    details.functions = mapReturnTypes(functionStatements);
+    details.parameters = mapTypes(elmParameters);
+    details.definitions = mapTypes(defineStatements);
+    details.functions = mapTypes(functionStatements);
     const fileDependencies = _.get(library, 'includes.def', []);
     details.dependencies = fileDependencies;
     elmResults.details = details;

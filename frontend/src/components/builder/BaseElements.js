@@ -91,11 +91,13 @@ export default class BaseElements extends Component {
             <div className="card-group-section subpopulation base-element">
               <TemplateInstance
                 allInstancesInAllTrees={allInstancesInAllTrees}
+                artifactId={this.props.instance._id}
                 baseElements={this.props.baseElements}
                 codeData={this.props.codeData}
                 conversionFunctions={this.props.conversionFunctions}
                 deleteInstance={this.props.deleteInstance}
                 editInstance={this.props.editInstance}
+                externalCqlList={this.props.externalCqlList}
                 getPath={this.getChildsPath}
                 getVSDetails={this.props.getVSDetails}
                 instanceNames={this.props.instanceNames}
@@ -103,6 +105,7 @@ export default class BaseElements extends Component {
                 isSearchingVSAC={this.props.isSearchingVSAC}
                 isValidatingCode={this.props.isValidatingCode}
                 isValidCode={this.props.isValidCode}
+                loadExternalCqlList={this.props.loadExternalCqlList}
                 loadValueSets={this.props.loadValueSets}
                 loginVSACUser={this.props.loginVSACUser}
                 otherInstances={[]}
