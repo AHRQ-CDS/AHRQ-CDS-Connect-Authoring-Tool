@@ -452,7 +452,7 @@ export class Builder extends Component {
                   onClick={() => this.downloadOptionSelected(disableDSTU2, '1.0.2')}
                   role="menuitem"
                 >
-                  FHIR DSTU2
+                  FHIR<sup>®</sup> DSTU2
                 </DropdownItem>
 
                 <DropdownItem
@@ -461,7 +461,7 @@ export class Builder extends Component {
                   onClick={() => this.downloadOptionSelected(disableSTU3, '3.0.0')}
                   role="menuitem"
                 >
-                  FHIR STU3
+                  FHIR<sup>®</sup> STU3
                 </DropdownItem>
 
                 <DropdownItem
@@ -469,7 +469,7 @@ export class Builder extends Component {
                   className={classnames(disableR4 && 'disabled-dropdown')}
                   onClick={() => this.downloadOptionSelected(disableR4, '4.0.0')}
                 >
-                  FHIR R4
+                  FHIR<sup>®</sup> R4
                 </DropdownItem>
 
                 {disableDSTU2 &&

@@ -75,7 +75,9 @@ export default class UserGuide extends Component {
             <div>
               The Clinical Decision Support (CDS) Authoring Tool is a web-based application to help CDS authors develop
               production-ready{' '}
-              <ExternalLink href="https://cql.hl7.org/" text="Health Level Seven (HL7) Clinical Quality Language (CQL)" />
+              <ExternalLink
+                href="https://cql.hl7.org/"
+                text={["Health Level Seven (HL7",<sup>®</sup>,") Clinical Quality Language (CQL)"]} />
               {' '}logic without the need to fully understand the CQL specification.
             </div>
             <div>
@@ -201,7 +203,7 @@ export default class UserGuide extends Component {
                   or versions, but{' '}
                   <ExternalLink
                     href="http://hl7.org/fhir/uv/cpg/2019Sep/documentation-libraries.html"
-                    text="FHIR Clinical Guidelines"
+                    text={["FHIR",<sup>®</sup>," Clinical Guidelines"]}
                   />
                   {' '}suggests using the{' '}
                   <ExternalLink href="https://apr.apache.org/versioning.html" text="Apache APR Versioning Scheme" />
@@ -1347,7 +1349,7 @@ export default class UserGuide extends Component {
                       <li>Library</li>
                       <li>Last Updated</li>
                       <li>Version</li>
-                      <li>FHIR Version</li>
+                      <li>FHIR<sup>®</sup> Version</li>
                       <li>View Details button <FontAwesomeIcon icon={faEye} aria-hidden="true" /></li>
                       <li>"Delete" button</li>
                     </ul>
@@ -1455,7 +1457,7 @@ export default class UserGuide extends Component {
                   ,{' '}
                   <ExternalLink href="http://clinfhir.com/" text="ClinFHIR" />
                   , and{' '}
-                  <ExternalLink href="https://build.fhir.org/ig/HL7/fhir-shorthand/" text="FHIR Shorthand" />
+                  <ExternalLink href="https://build.fhir.org/ig/HL7/fhir-shorthand/" text="FHIR® Shorthand" />
                   .
                 </div>
                 <div>
@@ -1490,7 +1492,7 @@ export default class UserGuide extends Component {
                     <li>Name</li>
                     <li>Birth Date</li>
                     <li>Gender</li>
-                    <li>FHIR Version</li>
+                    <li>FHIR<sup>®</sup> Version</li>
                     <li>Last Updated</li>
                     <li>"View" button</li>
                     <li>"Delete" button</li>

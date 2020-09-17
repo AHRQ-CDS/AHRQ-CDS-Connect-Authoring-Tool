@@ -133,8 +133,8 @@ export default class DataTypeGuide extends Component {
                         Summary: Returns a list of allergy intolerances that are either active or confirmed
                         <ul>
                           <li>
-                            In FHIR R4 and STU3, this returns allergy intolerances with <code>clinicalStatus</code> 'active'
-                            or <code>verificationStatus</code> 'confirmed'
+                            In FHIR<sup>®</sup> R4 and STU3, this returns allergy intolerances with
+                            <code>clinicalStatus</code> 'active'or <code>verificationStatus</code> 'confirmed'
                           </li>
                           <li>
                             In FHIR DSTU2, this returns allergy intolerances with <code>status</code> 'active' or

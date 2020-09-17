@@ -354,7 +354,7 @@ function singlePost(req, res) {
 
             if (notFHIR) {
               res.status(400).send(`None of the libraries were uploaded because at least one
-                uses a data model that is not FHIR.`);
+                uses a data model that is not FHIR®.`);
               return;
             }
 
@@ -400,11 +400,11 @@ function singlePost(req, res) {
                 if (elmErrors.length > 0) {
                   res.status(400).send(elmErrors);
                 } else if (!fhirVersionsMatch) {
-                  const message = 'A library using a different version of FHIR is uploaded. Only one FHIR version can \
+                  const message = 'A library using a different version of FHIR® is uploaded. Only one FHIR® version can \
                     be supported at a time.';
                   res.status(400).send(message);
                 } else if (!supportedFHIRVersion) {
-                  res.status(400).send('Unsupported FHIR version.');
+                  res.status(400).send('Unsupported FHIR® version.');
                 } else if (hasRepeats) {
                   const message = 'More than one library in this package has the same name. Only one library of the \
                     same name can be uploaded at a time.'
@@ -523,7 +523,7 @@ function singlePost(req, res) {
         const { elmErrors, elmResultsToSave, notFHIR } = parseELMFiles(elmFiles, artifactId, req.user.uid, files);
 
         if (notFHIR) {
-          res.status(400).send('Library uses a data model that is not FHIR.');
+          res.status(400).send('Library uses a data model that is not FHIR®.');
           return;
         }
 
@@ -550,11 +550,11 @@ function singlePost(req, res) {
             } else if (defaultLibrary) {
               res.status(200).send('Library is already included by default, so it was not uploaded.');
             } else if (!fhirVersionsMatch) {
-              const message = 'A library using a different version of FHIR is uploaded. Only one FHIR version can be \
+              const message = 'A library using a different version of FHIR® is uploaded. Only one FHIR® version can be \
                 supported at a time.';
               res.status(400).send(message);
             } else if (!supportedFHIRVersion) {
-              res.status(400).send('Unsupported FHIR version.');
+              res.status(400).send('Unsupported FHIR® version.');
             } else if (dupName) {
               if (dupVersion) {
                 res.status(200).send('Library with identical name and version already exists.');

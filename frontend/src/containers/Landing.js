@@ -68,9 +68,9 @@ class Landing extends Component {
               <button
                 className="new-button"
                 onClick={() => this.toggleWhatsNewButton(i)} key={i}
-                aria-label={feature.name}
+                aria-label={feature.ariaLabel || feature.name}
               >
-                {feature.name}
+                <span>{feature.name}</span>
               </button>
               <div className={classnames('triangle', whatsNewIndex === i && whatsNewOpen && 'active')}></div>
             </div>
@@ -167,8 +167,8 @@ class Landing extends Component {
               <div className="home-card__text">
                 The CDS Authoring Tool provides an interface for creating CDS logic using simple forms and exporting
                 it as{' '}
-                <ExternalLink href="https://cql.hl7.org/" text="Health Level Seven (HL7) Clinical Quality Language (CQL) 1.3" />
-                {' '}artifacts using the HL7 Fast Healthcare Interoperability Resources (FHIR){' '}
+                <ExternalLink href="https://cql.hl7.org/" text="Health Level Seven (HL7®) Clinical Quality Language (CQL) 1.3" />
+                {' '}artifacts using the HL7® Fast Healthcare Interoperability Resources (FHIR®){' '}
                 <ExternalLink href="http://hl7.org/fhir/DSTU2/index.html" text="DSTU2" />
                 {' '},{' '}
                 <ExternalLink href="http://hl7.org/fhir/STU3/index.html" text="STU3" />

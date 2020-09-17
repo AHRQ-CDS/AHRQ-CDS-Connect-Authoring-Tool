@@ -57,7 +57,7 @@ export default class ExternalCqlDetails extends Component {
             </div>
 
             <div className="library-meta-item">
-              <div className="item-label">FHIR Version</div>
+              <div className="item-label">FHIR<sup>®</sup> Version</div>
               <div className="item-value">{this.getFhirVersion(externalCqlLibraryDetails.fhirVersion)}</div>
             </div>
           </div>

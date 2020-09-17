@@ -257,7 +257,7 @@ export default class CodeSelectModal extends Component {
                 <div className="notification">
                   <FontAwesomeIcon icon={faExclamationCircle} />
                   Code systems should use their canonical URL.
-                  See <a href="http://build.fhir.org/ig/HL7/cqf-recommendations/documentation-libraries.html" target="_blank" rel="noopener noreferrer" onClick={onVisitExternalLink}>FHIR Clinical Guidelines</a> for more information.
+                  See <a href="http://build.fhir.org/ig/HL7/cqf-recommendations/documentation-libraries.html" target="_blank" rel="noopener noreferrer" onClick={onVisitExternalLink}>FHIR® Clinical Guidelines</a> for more information.
                 </div>
               }
   

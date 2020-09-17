@@ -217,11 +217,11 @@ class Testing extends Component {
             {this.renderDropzoneIcon()}
 
             {this.state.uploadError &&
-              <div className="warning">Invalid file type. Only valid JSON FHIR Bundles are accepted.</div>
+              <div className="warning">Invalid file type. Only valid JSON FHIR<sup>®</sup> Bundles are accepted.</div>
             }
 
             <p className="dropzone__instructions">
-              Drop a valid JSON FHIR bundle containing a synthetic patient here, or click to browse.
+              Drop a valid JSON FHIR<sup>®</sup> bundle containing a synthetic patient here, or click to browse.
             </p>
 
             <p className="dropzone__warning">

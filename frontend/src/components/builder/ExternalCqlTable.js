@@ -168,7 +168,7 @@ export default class ExternalCqlTable extends Component {
               <th scope="col" className="external-cql-table__tablecell-wide">Library</th>
               <th scope="col" className="external-cql-table__tablecell-short">Last Updated</th>
               <th scope="col" className="external-cql-table__tablecell-short center">Version</th>
-              <th scope="col" className="external-cql-table__tablecell-short">FHIR Version</th>
+              <th scope="col" className="external-cql-table__tablecell-short">FHIR<sup>®</sup> Version</th>
               <th></th>
             </tr>
           </thead>
