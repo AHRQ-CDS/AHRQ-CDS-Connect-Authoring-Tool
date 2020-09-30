@@ -327,12 +327,21 @@ function parseELMFiles(elmFiles, artifactId, userId, files) {
   return { elmErrors, elmResultsToSave, notFHIR };
 }
 
+function checkUploadedLibrary(libraryName, artifactName){
+  //the artifact may have spaces, which will be replace by a '-' upon export
+  //therefore we will compare the uploaded library with a modified artifact name
+  let tmpArtifactName = artifactName.replace(/\s/g,"-");
+  //localeCompare returns 0 if they are equivalent.  the sensitivity option ignores characters with accents
+  //https://stackoverflow.com/questions/2140627/how-to-do-case-insensitive-string-comparison
+  return( libraryName.localeCompare(tmpArtifactName, undefined, { sensitivity: 'accent' }) === 0);
+}
+
 // Post a single external CQL library
 function singlePost(req, res) {
   if (req.user) {
     const { cqlFileName, cqlFileContent, fileType, artifact } = req.body.library;
     const artifactId = artifact._id;
-
+    let duplicateLib = {flag: false, libraryName: ''};
     const decodedBuffer = Buffer.from(cqlFileContent, 'base64');
 
     if (fileType === 'application/zip') {
@@ -351,6 +360,20 @@ function singlePost(req, res) {
             }
 
             const { elmErrors, elmResultsToSave, notFHIR } = parseELMFiles(elmFiles, artifactId, req.user.uid, files);
+
+            elmResultsToSave.forEach(elmResult => {
+              if(checkUploadedLibrary(elmResult.name, artifact.name)){
+                duplicateLib.flag = true;
+                duplicateLib.libraryName = elmResult.name;
+                duplicateLib.fileName = elmResult.details.fileName;
+              }
+            });
+
+            if(duplicateLib.flag){
+              res.status(400).send('Upload failed because the external library \'' + duplicateLib.libraryName +
+                '\' in the file \'' + duplicateLib.fileName +'\' shares the same name as the artifact itself.');
+              return;
+            }
 
             if (notFHIR) {
               res.status(400).send(`None of the libraries were uploaded because at least one
@@ -524,6 +547,19 @@ function singlePost(req, res) {
 
         if (notFHIR) {
           res.status(400).send('Library uses a data model that is not FHIR®.');
+          return;
+        }
+
+        elmResultsToSave.forEach(elmResult => {
+          if(checkUploadedLibrary(elmResult.name, artifact.name)){
+            duplicateLib.flag = true;
+            duplicateLib.libraryName = elmResult.name;
+          }
+        });
+
+        if(duplicateLib.flag){
+          res.status(400).send('Upload failed because the external library \'' + duplicateLib.libraryName +
+            '\' shares the same name as the artifact itself.');
           return;
         }
 
