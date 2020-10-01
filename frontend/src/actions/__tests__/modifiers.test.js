@@ -2,13 +2,43 @@ import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 import moxios from 'moxios';
 
-import { loadConversionFunctions } from '../modifiers';
+import * as actions from '../modifiers';
 import * as types from '../types';
 
 const middlewares = [thunk];
 const mockStore = configureMockStore(middlewares);
 
 describe('modifiers actions', () => {
+  describe('loadModifiers', () => {
+    beforeEach(() => { moxios.install(); });
+    afterEach(() => { moxios.uninstall(); });
+
+    it('dispatches a LOAD_MODIFIERS_SUCCESS action on successful load', () => {
+      const store = mockStore({});
+
+      const expectedActions = [
+        { type: types.MODIFIERS_REQUEST },
+        { type: types.LOAD_MODIFIERS_SUCCESS, modifierMap: {}, modifiersByInputType: {} }
+      ];
+
+      return store.dispatch(actions.loadModifiers()).then(() => {
+        expect(store.getActions()).toEqual(expectedActions);
+      });
+    });
+
+    it('dispatches a LOAD_MODIFIERS_FAILURE action on failure', () => {
+      const store = mockStore({});
+
+      const expectedActions = [
+        { type: types.MODIFIERS_REQUEST },
+        { type: types.LOAD_MODIFIERS_FAILURE, status: '', statusText: '' }
+      ];
+
+      return store.dispatch(actions.loadModifiers()).then(() => {
+        expect(store.getActions()).toEqual(expectedActions);
+      });
+    });
+  });
   describe('loadConversionFunctions', () => {
     beforeEach(() => { moxios.install(); });
     afterEach(() => { moxios.uninstall(); });
@@ -27,7 +57,7 @@ describe('modifiers actions', () => {
         { type: types.LOAD_CONVERSION_FUNCTIONS_SUCCESS, conversionFunctions: [] }
       ];
 
-      return store.dispatch(loadConversionFunctions()).then(() => {
+      return store.dispatch(actions.loadConversionFunctions()).then(() => {
         expect(store.getActions()).toEqual(expectedActions);
       });
     });
@@ -46,7 +76,7 @@ describe('modifiers actions', () => {
         { type: types.LOAD_CONVERSION_FUNCTIONS_FAILURE, status: 401, statusText: 'Unauthorized' }
       ];
 
-      return store.dispatch(loadConversionFunctions()).then(() => {
+      return store.dispatch(actions.loadConversionFunctions()).then(() => {
         expect(store.getActions()).toEqual(expectedActions);
       });
     });
