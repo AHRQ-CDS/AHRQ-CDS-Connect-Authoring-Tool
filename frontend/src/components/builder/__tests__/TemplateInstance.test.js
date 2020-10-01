@@ -37,6 +37,7 @@ describe('<TemplateInstance />', () => {
         getPath={(path) => path}
         getVSDetails={jest.fn()}
         instanceNames={[]}
+        isLoadingModifiers={false}
         isRetrievingDetails={false}
         isSearchingVSAC={false}
         isValidatingCode={false}
@@ -44,6 +45,8 @@ describe('<TemplateInstance />', () => {
         loadExternalCqlList={jest.fn()}
         loadValueSets={jest.fn()}
         loginVSACUser={jest.fn()}
+        modifierMap={{}}
+        modifiersByInputType={{}}
         otherInstances={[]}
         parameters={[]}
         renderIndentButtons={jest.fn()}

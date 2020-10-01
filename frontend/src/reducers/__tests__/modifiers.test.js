@@ -4,7 +4,10 @@ import reducer from '../modifiers';
 describe('modifiers reducer', () => {
   it('should return the initial state', () => {
     expect(reducer(undefined, {})).toEqual({
+      modifierMap: {},
+      modifiersByInputType: {},
       conversionFunctions: [],
+      loadModifiers: { isLoadingModifiers: null, loadModifiersStatus: null },
       loadConversionFunctions: { isLoadingConversionFunctions: null, loadConversionFunctionsStatus: null }
     });
   });

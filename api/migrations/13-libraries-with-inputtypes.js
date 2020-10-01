@@ -1,8 +1,10 @@
 /**
  * Migrates all cqllibraries, applying the following changes:
- * - calculates and adds calculatedInputTypes and displayInputTypes to details.functions based on details.functions.operands
+ * - calculates and adds calculatedInputTypes and displayInputTypes to details.functions
+ *   based on details.functions.operands
  */
 'use strict';
+const _ = require('lodash');
 
 module.exports.id = "libraries-with-inputtypes";
 

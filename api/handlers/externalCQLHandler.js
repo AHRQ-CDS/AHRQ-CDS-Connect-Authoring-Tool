@@ -325,8 +325,8 @@ const shouldLibraryBeUpdated = (library, artifact) => {
 
   Object.keys(elementReturnTypes).forEach((key) => {
     returnTypesMatch = returnTypesMatch && (statementReturnTypes[key] === elementReturnTypes[key]);
-    statementArgsToMatch = deleteNestedMetadataProps(_.cloneDeep(statementArgs[key]));
-    elementArgsToMatch = deleteNestedMetadataProps(_.cloneDeep(elementArgs[key]));
+    const statementArgsToMatch = deleteNestedMetadataProps(_.cloneDeep(statementArgs[key]));
+    const elementArgsToMatch = deleteNestedMetadataProps(_.cloneDeep(elementArgs[key]));
     argsMatch = argsMatch && (_.isEqual(statementArgsToMatch, elementArgsToMatch));
   });
 

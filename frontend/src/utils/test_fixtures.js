@@ -551,7 +551,14 @@ const reduxState = {
     externalCQLLibraryParents: {},
     externalCqlList: []
   },
-  modifiers: {},
+  modifiers: {
+    modifierMap: {},
+    modifiersByInputType: {},
+    loadModifiers: {
+      isLoadingModifiers: null,
+      loadModifiersStatus: null
+    }
+  },
   templates: {
     templates: elementGroups
   },
