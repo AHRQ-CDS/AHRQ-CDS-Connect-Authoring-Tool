@@ -327,7 +327,7 @@ function parseELMFiles(elmFiles, artifactId, userId, files) {
   return { elmErrors, elmResultsToSave, notFHIR };
 }
 
-function checkUploadedLibrary(libraryName, artifactName){
+function doesUploadedLibraryMatchArtifactName(libraryName, artifactName){
   //the artifact may have spaces, which will be replace by a '-' upon export
   //therefore we will compare the uploaded library with a modified artifact name
   let tmpArtifactName = artifactName.replace(/\s/g,"-");
@@ -362,7 +362,7 @@ function singlePost(req, res) {
             const { elmErrors, elmResultsToSave, notFHIR } = parseELMFiles(elmFiles, artifactId, req.user.uid, files);
 
             elmResultsToSave.forEach(elmResult => {
-              if(checkUploadedLibrary(elmResult.name, artifact.name)){
+              if(doesUploadedLibraryMatchArtifactName(elmResult.name, artifact.name)){
                 duplicateLib.flag = true;
                 duplicateLib.libraryName = elmResult.name;
                 duplicateLib.fileName = elmResult.details.fileName;
@@ -551,7 +551,7 @@ function singlePost(req, res) {
         }
 
         elmResultsToSave.forEach(elmResult => {
-          if(checkUploadedLibrary(elmResult.name, artifact.name)){
+          if(doesUploadedLibraryMatchArtifactName(elmResult.name, artifact.name)){
             duplicateLib.flag = true;
             duplicateLib.libraryName = elmResult.name;
           }
