@@ -29,7 +29,6 @@ import ValueSetField from './fields/ValueSetField';
 
 import ValueSetTemplate from './templates/ValueSetTemplate';
 
-import Modifiers from '../../data/modifiers';
 import BooleanComparison from './modifiers/BooleanComparison';
 import CheckExistence from './modifiers/CheckExistence';
 import ExpressionPhrase from './modifiers/ExpressionPhrase';
@@ -62,19 +61,10 @@ export default class TemplateInstance extends Component {
   constructor(props) {
     super(props);
 
-    this.modifierMap = _.keyBy(Modifiers, 'id');
-    this.modifiersByInputType = {};
-
-    Modifiers.forEach((modifier) => {
-      modifier.inputTypes.forEach((inputType) => {
-        this.modifiersByInputType[inputType] = (this.modifiersByInputType[inputType] || []).concat(modifier);
-      });
-    });
-
     this.state = {
       showElement: true,
       showComment: false,
-      relevantModifiers: (this.modifiersByInputType[props.templateInstance.returnType] || []),
+      relevantModifiers: (props.modifiersByInputType[props.templateInstance.returnType] || []),
       showModifiers: false,
       otherInstances: this.getOtherInstances(props),
       returnType: props.templateInstance.returnType
@@ -82,36 +72,6 @@ export default class TemplateInstance extends Component {
   }
 
   UNSAFE_componentWillMount() { // eslint-disable-line camelcase
-    const { artifactId, loadExternalCqlList, externalCqlList } = this.props;
-    loadExternalCqlList(artifactId);
-
-    const externalModifiers = [];
-    externalCqlList.forEach(lib => {
-      lib.details.functions.forEach(func => {
-        // TODO: Eventually support functions with multiple arguments
-        if (func.operand.length === 1) {
-          const functionName = `${func.name} (from ${lib.name})`;
-          const modifier = {
-            id: functionName,
-            type: 'ExternalModifier',
-            name: functionName,
-            inputTypes: func.calculatedInputTypes,
-            returnType: func.calculatedReturnType,
-            cqlTemplate: 'BaseModifier',
-            cqlLibraryFunction: `"${lib.name}"."${func.name}"`
-          };
-          externalModifiers.push(modifier);
-        }
-      });
-    });
-
-    externalModifiers.forEach(modifier => {
-      this.modifierMap[modifier.id] = modifier;
-      modifier.inputTypes.forEach((inputType) => {
-        this.modifiersByInputType[inputType] = (this.modifiersByInputType[inputType] || []).concat(modifier);
-      });
-    });
-
     this.props.templateInstance.fields.forEach((field) => {
       this.setState({ [field.id]: field.value });
     });
@@ -125,12 +85,16 @@ export default class TemplateInstance extends Component {
     const otherInstances = this.getOtherInstances(nextProps);
     this.setState({ otherInstances });
 
-    if (this.props.templateInstance.modifiers !== nextProps.templateInstance.modifiers) {
-      let returnType = nextProps.templateInstance.returnType;
-      if (!(_.isEmpty(nextProps.templateInstance.modifiers))) {
-        returnType = getReturnType(nextProps.templateInstance.returnType, nextProps.templateInstance.modifiers);
-      }
-      this.setState({ returnType });
+    let returnType = nextProps.templateInstance.returnType;
+    if (!(_.isEmpty(nextProps.templateInstance.modifiers))) {
+      returnType = getReturnType(nextProps.templateInstance.returnType, nextProps.templateInstance.modifiers);
+    }
+    this.setState({ returnType });
+
+    if (!nextProps.isLoadingModifiers) {
+      this.setState({
+        relevantModifiers: (nextProps.modifiersByInputType[returnType] || [])
+      });
     }
   }
 
@@ -195,9 +159,10 @@ export default class TemplateInstance extends Component {
   }
 
   renderAppliedModifier = (modifier, index) => {
+    const { modifierMap } = this.props;
     // Reset values on modifiers that were not previously set or saved in the database
-    if (!modifier.values && this.modifierMap[modifier.id] && this.modifierMap[modifier.id].values) {
-      modifier.values = this.modifierMap[modifier.id].values;
+    if (!modifier.values && modifierMap[modifier.id] && modifierMap[modifier.id].values) {
+      modifier.values = modifierMap[modifier.id].values;
     }
 
     const validationWarning = validateModifier(modifier);
@@ -445,7 +410,7 @@ export default class TemplateInstance extends Component {
   }
 
   filterRelevantModifiers = () => {
-    const relevantModifiers = this.modifiersByInputType[this.state.returnType] || [];
+    const relevantModifiers = this.props.modifiersByInputType[this.state.returnType] || [];
     if (!this.props.templateInstance.checkInclusionInVS) { // Rather than suppressing `CheckInclusionInVS` in every element, assume it's suppressed unless explicity stated otherwise
       _.remove(relevantModifiers, modifier => modifier.id === 'CheckInclusionInVS');
     }
@@ -457,7 +422,7 @@ export default class TemplateInstance extends Component {
   }
 
   handleModifierSelected = (event) => {
-    const selectedModifier = _.cloneDeep(this.modifierMap[event.target.value]);
+    const selectedModifier = _.cloneDeep(this.props.modifierMap[event.target.value]);
     const modifiers = (this.props.templateInstance.modifiers || []).concat(selectedModifier);
     this.setState({ showModifiers: false });
     this.setAppliedModifiers(modifiers);
@@ -511,8 +476,10 @@ export default class TemplateInstance extends Component {
   }
 
   renderModifierSelect = () => {
-    if (!this.props.templateInstance.cannotHaveModifiers
-      && (this.state.relevantModifiers.length > 0 || (this.props.templateInstance.modifiers || []).length === 0)) {
+    if (this.props.templateInstance.cannotHaveModifiers) return null;
+    if (this.props.isLoadingModifiers) return (<div>Loading modifiers...</div>);
+
+    if (this.state.relevantModifiers.length > 0 || (this.props.templateInstance.modifiers || []).length === 0) {
       const baseElementIsInUse = this.isBaseElementUsed() || this.props.disableAddElement;
 
       return (
@@ -1099,11 +1066,14 @@ TemplateInstance.propTypes = {
   artifactId: PropTypes.string,
   baseElements: PropTypes.array.isRequired,
   codeData: PropTypes.object,
+  modifierMap: PropTypes.object.isRequired,
+  modifiersByInputType: PropTypes.object.isRequired,
+  isLoadingModifiers: PropTypes.bool,
+  conversionFunctions: PropTypes.array,
   deleteInstance: PropTypes.func.isRequired,
   disableAddElement: PropTypes.bool,
   disableIndent: PropTypes.bool,
   editInstance: PropTypes.func.isRequired,
-  externalCqlList: PropTypes.array.isRequired,
   getPath: PropTypes.func.isRequired,
   getVSDetails: PropTypes.func.isRequired,
   instanceNames: PropTypes.array.isRequired,
@@ -1111,7 +1081,6 @@ TemplateInstance.propTypes = {
   isSearchingVSAC: PropTypes.bool.isRequired,
   isValidatingCode: PropTypes.bool,
   isValidCode: PropTypes.bool,
-  loadExternalCqlList: PropTypes.func.isRequired,
   loadValueSets: PropTypes.func.isRequired,
   loginVSACUser: PropTypes.func.isRequired,
   otherInstances: PropTypes.array.isRequired,

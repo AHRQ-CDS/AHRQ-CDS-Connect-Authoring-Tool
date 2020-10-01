@@ -84,6 +84,18 @@ function parseConjunction(childInstances, names, baseElementsInUse, parametersIn
       }
     }
 
+    if (child.modifiers) {
+      child.modifiers.forEach((modifier) => {
+        if (modifier.type === 'ExternalModifier') {
+          const libraryAlreadyInUse = librariesInUse.find(l => l === modifier.libraryName);
+          if (libraryAlreadyInUse === undefined) {
+            // Add the library name
+            librariesInUse.push(modifier.libraryName);
+          }
+        }
+      });
+    }
+
     if (child.type === 'parameter' && child.returnType !== _.toLower(child.returnType)) {
       child.returnType = _.toLower(child.returnType);
     }

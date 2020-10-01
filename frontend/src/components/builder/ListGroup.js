@@ -313,6 +313,9 @@ export default class ListGroup extends Component {
           baseElements={this.props.baseElements}
           externalCqlList={this.props.externalCqlList}
           loadExternalCqlList={this.props.loadExternalCqlList}
+          modifierMap={this.props.modifierMap}
+          modifiersByInputType={this.props.modifiersByInputType}
+          isLoadingModifiers={this.props.isLoadingModifiers}
           conversionFunctions={this.props.conversionFunctions}
           instanceNames={this.props.instanceNames}
           scrollToElement={this.props.scrollToElement}
@@ -497,6 +500,9 @@ ListGroup.propTypes = {
   baseElements: PropTypes.array.isRequired,
   externalCqlList: PropTypes.array.isRequired,
   loadExternalCqlList: PropTypes.func.isRequired,
+  modifierMap: PropTypes.object.isRequired,
+  modifiersByInputType: PropTypes.object.isRequired,
+  isLoadingModifiers: PropTypes.bool,
   conversionFunctions: PropTypes.array,
   instanceNames: PropTypes.array.isRequired,
   loginVSACUser: PropTypes.func.isRequired,

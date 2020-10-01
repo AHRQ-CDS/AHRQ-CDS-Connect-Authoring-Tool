@@ -1,12 +1,32 @@
 import * as types from '../actions/types';
 
 const defaultState = {
+  modifierMap: {},
+  modifiersByInputType: {},
   conversionFunctions: [],
+  loadModifiers: { isLoadingModifiers: null, loadModifiersStatus: null },
   loadConversionFunctions: { isLoadingConversionFunctions: null, loadConversionFunctionsStatus: null }
 };
 
-export default function conversionFunctions(state = defaultState, action) {
+export default function modifiers(state = defaultState, action) {
   switch (action.type) {
+    case types.MODIFIERS_REQUEST:
+      return {
+        ...state,
+        loadModifiers: { isLoadingModifiers: true, loadModifiersStatus: null }
+      };
+    case types.LOAD_MODIFIERS_SUCCESS:
+      return {
+        ...state,
+        modifierMap: action.modifierMap,
+        modifiersByInputType: action.modifiersByInputType,
+        loadModifiers: { isLoadingModifiers: false, loadModifiersStatus: 'success' }
+      };
+    case types.LOAD_MODIFIERS_FAILURE:
+      return {
+        ...state,
+        loadModifiers: { isLoadingModifiers: false, loadModifiersStatus: 'failure' }
+      };
     case types.CONVERSION_FUNCTIONS_REQUEST:
       return {
         ...state,

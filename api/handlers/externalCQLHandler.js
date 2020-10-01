@@ -217,41 +217,52 @@ function getCurrentFHIRVersion(libraries) {
   return currentFHIRVersion;
 }
 
-const collectLibraryElementsFromElement = (element, libraryName, libraryElements) => {
+const collectLibraryElementsFromElement = (element, libraryName, libraryElements, modifierElements) => {
+  // Collect external CQL elements associated with this library
   if (element.type === 'externalCqlElement') {
     const referenceField = element.fields.find(f => f.id === 'externalCqlReference');
     if (_.get(referenceField, 'value.library') === libraryName) libraryElements.push(element);
   }
+
+  // Collect any elements that have external CQL functions associated with this library.
+  if (element.modifiers) {
+    element.modifiers.forEach((modifier) => {
+      if (modifier.type === 'ExternalModifier' && modifier.libraryName === libraryName) modifierElements.push(element);
+    });
+  }
 }
 
-const collectLibraryElementsFromTree = (element, libraryName, libraryElements) => {
+const collectLibraryElementsFromTree = (element, libraryName, libraryElements, modifierElements) => {
   let children = element.childInstances ? element.childInstances : [];
   children = children.map((child) => {
     if (child.childInstances) {
-      return collectLibraryElementsFromTree(child, libraryName, libraryElements);
+      return collectLibraryElementsFromTree(child, libraryName, libraryElements, modifierElements);
     } else {
-      return collectLibraryElementsFromElement(child, libraryName, libraryElements);
+      return collectLibraryElementsFromElement(child, libraryName, libraryElements, modifierElements);
     }
   });
   element.childInstances = children;
   return element;
 }
 
-const getArtifactLibraryElements = (artifact, libraryName) => {
+const getExternalLibraryAndModifierElements = (artifact, libraryName) => {
   const libraryElements = [];
-  collectLibraryElementsFromTree(artifact.expTreeInclude, libraryName, libraryElements);
-  collectLibraryElementsFromTree(artifact.expTreeExclude, libraryName, libraryElements);
+  const modifierElements = [];
+  collectLibraryElementsFromTree(artifact.expTreeInclude, libraryName, libraryElements, modifierElements);
+  collectLibraryElementsFromTree(artifact.expTreeExclude, libraryName, libraryElements, modifierElements);
   artifact.subpopulations.forEach((subpopulation) => {
-    if (!subpopulation.special) collectLibraryElementsFromTree(subpopulation, libraryName, libraryElements);
+    if (!subpopulation.special) {
+      collectLibraryElementsFromTree(subpopulation, libraryName, libraryElements, modifierElements);
+    }
   });
   artifact.baseElements.forEach((baseElement) => {
     if (baseElement.childInstances) {
-      collectLibraryElementsFromTree(baseElement, libraryName, libraryElements);
+      collectLibraryElementsFromTree(baseElement, libraryName, libraryElements, modifierElements);
     } else {
-      collectLibraryElementsFromElement(baseElement, libraryName, libraryElements);
+      collectLibraryElementsFromElement(baseElement, libraryName, libraryElements, modifierElements);
     }
   });
-  return libraryElements;
+  return { libraryElements, modifierElements };
 }
 
 const shouldLibraryBeUpdated = (library, artifact) => {
@@ -271,7 +282,11 @@ const shouldLibraryBeUpdated = (library, artifact) => {
     statementArgs[`func:${func.name}`] = func.operand;
   });
 
-  const libraryElements = getArtifactLibraryElements(artifact, library.name);
+  const { libraryElements, modifierElements } = getExternalLibraryAndModifierElements(artifact, library.name);
+
+  // It's possible in the following calculation for elementReturnTypes and elementArgs that some of the fields
+  // may be overwritten, but this is okay because all instances that we collect will be identical within the
+  // same artifact
   libraryElements.forEach(el => {
     const referenceField = el.fields.find(f => f.id === 'externalCqlReference');
     const referenceFieldValueElement = referenceField.value.element;
@@ -282,15 +297,37 @@ const shouldLibraryBeUpdated = (library, artifact) => {
       elementReturnTypes[referenceFieldValueElement] = el.returnType;
     }
   });
+  modifierElements.forEach(el => {
+    el.modifiers.forEach(mod => {
+      if (mod.type === 'ExternalModifier') {
+        elementReturnTypes[`func:${mod.functionName}`] = mod.returnType;
+        elementArgs[`func:${mod.functionName}`] = mod.arguments;
+      }
+    });
+  });
 
   // If a library to update has contents whose names, return types, or args have changed, and the
   // artifact is using these contents, we cannot update it and we shouldn't make any upload/update
   let returnTypesMatch = true;
   let argsMatch = true;
+  const deleteNestedMetadataProps = (obj) => {
+    for (const prop in obj) {
+        // These fields are not useful for comparison and can cause false differences between
+        // data since they are only for metadata
+        if (['annotation', 'localId', 'locator'].includes(prop)) {
+          delete obj[prop];
+        } else if (typeof obj[prop] === 'object') {
+          deleteNestedMetadataProps(obj[prop]);
+        }
+    }
+    return obj;
+  }
 
   Object.keys(elementReturnTypes).forEach((key) => {
     returnTypesMatch = returnTypesMatch && (statementReturnTypes[key] === elementReturnTypes[key]);
-    argsMatch = argsMatch && (_.isEqual(statementArgs, elementArgs));
+    statementArgsToMatch = deleteNestedMetadataProps(_.cloneDeep(statementArgs[key]));
+    elementArgsToMatch = deleteNestedMetadataProps(_.cloneDeep(elementArgs[key]));
+    argsMatch = argsMatch && (_.isEqual(statementArgsToMatch, elementArgsToMatch));
   });
 
   return returnTypesMatch && argsMatch;

@@ -6,6 +6,7 @@ import changeToCase from '../utils/strings';
 
 import * as types from './types';
 import { saveArtifact, loadArtifact } from './artifacts';
+import { loadModifiers } from './modifiers';
 
 const API_BASE = process.env.REACT_APP_API_URL;
 
@@ -69,7 +70,8 @@ export function loadExternalCqlList(artifactId) {
 
     return sendExternalCqlListRequest(artifactId)
       .then(data => dispatch(loadExternalCqlListSuccess(data)))
-      .catch(error => dispatch(loadExternalCqlListFailure(error)));
+      .catch(error => dispatch(loadExternalCqlListFailure(error)))
+      .then(() => dispatch(loadModifiers()));
   };
 }
 

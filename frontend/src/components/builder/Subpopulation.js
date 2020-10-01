@@ -177,6 +177,9 @@ export default class Subpopulation extends Component {
         externalCqlList={this.props.externalCqlList}
         loadExternalCqlList={this.props.loadExternalCqlList}
         subPopulationIndex={this.props.subpopulationIndex}
+        modifierMap={this.props.modifierMap}
+        modifiersByInputType={this.props.modifiersByInputType}
+        isLoadingModifiers={this.props.isLoadingModifiers}
         conversionFunctions={this.props.conversionFunctions}
         instanceNames={this.props.instanceNames}
         scrollToElement={this.props.scrollToElement}
@@ -224,6 +227,9 @@ Subpopulation.propTypes = {
   externalCqlList: PropTypes.array.isRequired,
   loadExternalCqlList: PropTypes.func.isRequired,
   templates: PropTypes.array.isRequired,
+  modifierMap: PropTypes.object.isRequired,
+  modifiersByInputType: PropTypes.object.isRequired,
+  isLoadingModifiers: PropTypes.bool,
   conversionFunctions: PropTypes.array,
   scrollToElement: PropTypes.func,
   loginVSACUser: PropTypes.func.isRequired,

@@ -90,6 +90,9 @@ export default class Subpopulations extends Component {
             getAllInstancesInAllTrees={this.props.getAllInstancesInAllTrees}
             templates={this.props.templates}
             artifact={this.props.artifact}
+            modifierMap={this.props.modifierMap}
+            modifiersByInputType={this.props.modifiersByInputType}
+            isLoadingModifiers={this.props.isLoadingModifiers}
             conversionFunctions={this.props.conversionFunctions}
             instanceNames={this.props.instanceNames}
             scrollToElement={this.props.scrollToElement}
@@ -146,6 +149,9 @@ Subpopulations.propTypes = {
   externalCqlList: PropTypes.array.isRequired,
   loadExternalCqlList: PropTypes.func.isRequired,
   name: PropTypes.string.isRequired,
+  modifierMap: PropTypes.object.isRequired,
+  modifiersByInputType: PropTypes.object.isRequired,
+  isLoadingModifiers: PropTypes.bool,
   conversionFunctions: PropTypes.array,
   scrollToElement: PropTypes.func,
   loginVSACUser: PropTypes.func.isRequired,
