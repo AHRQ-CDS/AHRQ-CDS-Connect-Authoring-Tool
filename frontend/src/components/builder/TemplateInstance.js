@@ -410,7 +410,7 @@ export default class TemplateInstance extends Component {
   }
 
   filterRelevantModifiers = () => {
-    const relevantModifiers = this.props.modifiersByInputType[this.state.returnType] || [];
+    const relevantModifiers = (this.props.modifiersByInputType[this.state.returnType] || []).slice();
     if (!this.props.templateInstance.checkInclusionInVS) { // Rather than suppressing `CheckInclusionInVS` in every element, assume it's suppressed unless explicity stated otherwise
       _.remove(relevantModifiers, modifier => modifier.id === 'CheckInclusionInVS');
     }

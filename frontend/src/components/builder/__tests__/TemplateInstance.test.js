@@ -9,6 +9,7 @@ import {
   genericBaseElementUseInstance
 } from '../../../utils/test_fixtures';
 import { getFieldWithType } from '../../../utils/instances';
+import localModifiers from '../../../data/modifiers';
 
 const templateInstance = createTemplateInstance(genericInstance);
 const baseElementTemplateInstance = {
@@ -21,6 +22,15 @@ const baseElementUseTemplateInstance = {
   uniqueId: 'baseElementUseId',
   tab: 'expTreeInclude'
 };
+const modifiersByInputType = {};
+
+localModifiers.forEach((modifier) => {
+  modifier.inputTypes.forEach((inputType) => {
+    modifiersByInputType[inputType] = (
+      modifiersByInputType[inputType] || []
+    ).concat(modifier);
+  });
+});
 
 describe('<TemplateInstance />', () => {
   const renderComponent = (props = {}) =>
@@ -46,7 +56,7 @@ describe('<TemplateInstance />', () => {
         loadValueSets={jest.fn()}
         loginVSACUser={jest.fn()}
         modifierMap={{}}
-        modifiersByInputType={{}}
+        modifiersByInputType={modifiersByInputType}
         otherInstances={[]}
         parameters={[]}
         renderIndentButtons={jest.fn()}
@@ -170,180 +180,6 @@ describe('<TemplateInstance />', () => {
         ],
         baseElements: [baseElementTemplateInstance],
         templateInstance: baseElementTemplateInstance,
-        modifiersByInputType: {
-          list_of_observations: [
-            {
-              id: 'VerifiedObservation',
-              name: 'Verified',
-              inputTypes: ['list_of_observations'],
-              returnType: 'list_of_observations',
-              cqlTemplate: 'BaseModifier',
-              cqlLibraryFunction: 'C3F.Verified'
-            },
-            {
-              id: 'WithUnit',
-              name: 'With Unit',
-              inputTypes: ['list_of_observations'],
-              returnType: 'list_of_observations',
-              values: {},
-              validator: {
-                type: 'require',
-                fields: ['unit'],
-                args: null
-              },
-              cqlTemplate: 'WithUnit',
-              cqlLibraryFunction: 'C3F.WithUnit'
-            },
-            {
-              id: 'HighestObservationValue',
-              name: 'Highest Observation Value',
-              inputTypes: ['list_of_observations'],
-              returnType: 'system_quantity',
-              cqlTemplate: 'BaseModifier',
-              cqlLibraryFunction: 'C3F.HighestObservation'
-            },
-            {
-              id: 'MostRecentObservation',
-              name: 'Most Recent',
-              inputTypes: ['list_of_observations'],
-              returnType: 'observation',
-              cqlTemplate: 'BaseModifier',
-              cqlLibraryFunction: 'C3F.MostRecent'
-            },
-            {
-              id: 'LookBackObservation',
-              type: 'LookBack',
-              name: 'Look Back',
-              inputTypes: ['list_of_observations'],
-              returnType: 'list_of_observations',
-              values: {},
-              validator: {
-                type: 'require',
-                fields: ['value', 'unit'],
-                args: null
-              },
-              cqlTemplate: 'LookBackModifier',
-              cqlLibraryFunction: 'C3F.ObservationLookBack'
-            },
-            {
-              id: 'Count',
-              name: 'Count',
-              inputTypes: [
-                'list_of_observations',
-                'list_of_conditions',
-                'list_of_medication_statements',
-                'list_of_medication_requests',
-                'list_of_procedures',
-                'list_of_allergy_intolerances',
-                'list_of_encounters',
-                'list_of_immunizations',
-                'list_of_devices',
-                'list_of_any',
-                'list_of_booleans',
-                'list_of_system_quantities',
-                'list_of_system_concepts',
-                'list_of_system_codes',
-                'list_of_integers',
-                'list_of_datetimes',
-                'list_of_strings',
-                'list_of_decimals',
-                'list_of_times',
-                'list_of_others'
-              ],
-              returnType: 'integer',
-              cqlTemplate: 'BaseModifier',
-              cqlLibraryFunction: 'Count'
-            },
-            {
-              id: 'BooleanExists',
-              name: 'Exists',
-              inputTypes: [
-                'list_of_observations',
-                'list_of_conditions',
-                'list_of_medication_statements',
-                'list_of_medication_requests',
-                'list_of_procedures',
-                'list_of_allergy_intolerances',
-                'list_of_encounters',
-                'list_of_immunizations',
-                'list_of_devices',
-                'list_of_any',
-                'list_of_booleans',
-                'list_of_system_quantities',
-                'list_of_system_concepts',
-                'list_of_system_codes',
-                'list_of_integers',
-                'list_of_datetimes',
-                'list_of_strings',
-                'list_of_decimals',
-                'list_of_times',
-                'list_of_others'
-              ],
-              returnType: 'boolean',
-              cqlTemplate: 'BaseModifier',
-              cqlLibraryFunction: 'exists'
-            },
-            {
-              id: 'CheckExistence',
-              name: 'Is (Not) Null?',
-              inputTypes: [
-                'list_of_observations',
-                'list_of_conditions',
-                'list_of_medication_statements',
-                'list_of_medication_requests',
-                'list_of_procedures',
-                'list_of_allergy_intolerances',
-                'list_of_encounters',
-                'list_of_immunizations',
-                'list_of_devices',
-                'list_of_any',
-                'list_of_booleans',
-                'list_of_system_quantities',
-                'list_of_system_concepts',
-                'list_of_system_codes',
-                'list_of_integers',
-                'list_of_datetimes',
-                'list_of_strings',
-                'list_of_decimals',
-                'list_of_times',
-                'list_of_others',
-                'boolean',
-                'system_quantity',
-                'system_concept',
-                'system_code',
-                'observation',
-                'condition',
-                'medication_statement',
-                'medication_request',
-                'procedure',
-                'allergy_intolerance',
-                'encounter',
-                'immunization',
-                'device',
-                'integer',
-                'datetime',
-                'decimal',
-                'string',
-                'time',
-                'interval_of_integer',
-                'interval_of_datetime',
-                'interval_of_decimal',
-                'interval_of_quantity',
-                'any',
-                'other'
-              ],
-              returnType: 'boolean',
-              values: {},
-              cqlTemplate: 'postModifier',
-              comparisonOperator: null,
-              validator: {
-                type: 'require',
-                fields: ['value'],
-                args: null
-              }
-            }
-          ]
-        },
         ...props
       });
 
@@ -680,241 +516,6 @@ describe('<TemplateInstance />', () => {
       const { getByLabelText, getByText } = renderComponent({
         disableAddElement: true,
         templateInstance: templateWithModifiersInstance,
-        modifiersByInputType: {
-          list_of_observations: [
-            {
-              id: 'VerifiedObservation',
-              name: 'Verified',
-              inputTypes: ['list_of_observations'],
-              returnType: 'list_of_observations',
-              cqlTemplate: 'BaseModifier',
-              cqlLibraryFunction: 'C3F.Verified'
-            },
-            {
-              id: 'WithUnit',
-              name: 'With Unit',
-              inputTypes: ['list_of_observations'],
-              returnType: 'list_of_observations',
-              values: {},
-              validator: {
-                type: 'require',
-                fields: ['unit'],
-                args: null
-              },
-              cqlTemplate: 'WithUnit',
-              cqlLibraryFunction: 'C3F.WithUnit'
-            },
-            {
-              id: 'HighestObservationValue',
-              name: 'Highest Observation Value',
-              inputTypes: ['list_of_observations'],
-              returnType: 'system_quantity',
-              cqlTemplate: 'BaseModifier',
-              cqlLibraryFunction: 'C3F.HighestObservation'
-            },
-            {
-              id: 'MostRecentObservation',
-              name: 'Most Recent',
-              inputTypes: ['list_of_observations'],
-              returnType: 'observation',
-              cqlTemplate: 'BaseModifier',
-              cqlLibraryFunction: 'C3F.MostRecent'
-            },
-            {
-              id: 'LookBackObservation',
-              type: 'LookBack',
-              name: 'Look Back',
-              inputTypes: ['list_of_observations'],
-              returnType: 'list_of_observations',
-              values: {},
-              validator: {
-                type: 'require',
-                fields: ['value', 'unit'],
-                args: null
-              },
-              cqlTemplate: 'LookBackModifier',
-              cqlLibraryFunction: 'C3F.ObservationLookBack'
-            },
-            {
-              id: 'Count',
-              name: 'Count',
-              inputTypes: [
-                'list_of_observations',
-                'list_of_conditions',
-                'list_of_medication_statements',
-                'list_of_medication_requests',
-                'list_of_procedures',
-                'list_of_allergy_intolerances',
-                'list_of_encounters',
-                'list_of_immunizations',
-                'list_of_devices',
-                'list_of_any',
-                'list_of_booleans',
-                'list_of_system_quantities',
-                'list_of_system_concepts',
-                'list_of_system_codes',
-                'list_of_integers',
-                'list_of_datetimes',
-                'list_of_strings',
-                'list_of_decimals',
-                'list_of_times',
-                'list_of_others'
-              ],
-              returnType: 'integer',
-              cqlTemplate: 'BaseModifier',
-              cqlLibraryFunction: 'Count'
-            },
-            {
-              id: 'BooleanExists',
-              name: 'Exists',
-              inputTypes: [
-                'list_of_observations',
-                'list_of_conditions',
-                'list_of_medication_statements',
-                'list_of_medication_requests',
-                'list_of_procedures',
-                'list_of_allergy_intolerances',
-                'list_of_encounters',
-                'list_of_immunizations',
-                'list_of_devices',
-                'list_of_any',
-                'list_of_booleans',
-                'list_of_system_quantities',
-                'list_of_system_concepts',
-                'list_of_system_codes',
-                'list_of_integers',
-                'list_of_datetimes',
-                'list_of_strings',
-                'list_of_decimals',
-                'list_of_times',
-                'list_of_others'
-              ],
-              returnType: 'boolean',
-              cqlTemplate: 'BaseModifier',
-              cqlLibraryFunction: 'exists'
-            },
-            {
-              id: 'CheckExistence',
-              name: 'Is (Not) Null?',
-              inputTypes: [
-                'list_of_observations',
-                'list_of_conditions',
-                'list_of_medication_statements',
-                'list_of_medication_requests',
-                'list_of_procedures',
-                'list_of_allergy_intolerances',
-                'list_of_encounters',
-                'list_of_immunizations',
-                'list_of_devices',
-                'list_of_any',
-                'list_of_booleans',
-                'list_of_system_quantities',
-                'list_of_system_concepts',
-                'list_of_system_codes',
-                'list_of_integers',
-                'list_of_datetimes',
-                'list_of_strings',
-                'list_of_decimals',
-                'list_of_times',
-                'list_of_others',
-                'boolean',
-                'system_quantity',
-                'system_concept',
-                'system_code',
-                'observation',
-                'condition',
-                'medication_statement',
-                'medication_request',
-                'procedure',
-                'allergy_intolerance',
-                'encounter',
-                'immunization',
-                'device',
-                'integer',
-                'datetime',
-                'decimal',
-                'string',
-                'time',
-                'interval_of_integer',
-                'interval_of_datetime',
-                'interval_of_decimal',
-                'interval_of_quantity',
-                'any',
-                'other'
-              ],
-              returnType: 'boolean',
-              values: {},
-              cqlTemplate: 'postModifier',
-              comparisonOperator: null,
-              validator: {
-                type: 'require',
-                fields: ['value'],
-                args: null
-              }
-            }
-          ],
-          boolean: [
-            {
-              id: 'CheckExistence',
-              name: 'Is (Not) Null?',
-              inputTypes: [
-                'list_of_observations',
-                'list_of_conditions',
-                'list_of_medication_statements',
-                'list_of_medication_requests',
-                'list_of_procedures',
-                'list_of_allergy_intolerances',
-                'list_of_encounters',
-                'list_of_immunizations',
-                'list_of_devices',
-                'list_of_any',
-                'list_of_booleans',
-                'list_of_system_quantities',
-                'list_of_system_concepts',
-                'list_of_system_codes',
-                'list_of_integers',
-                'list_of_datetimes',
-                'list_of_strings',
-                'list_of_decimals',
-                'list_of_times',
-                'list_of_others',
-                'boolean',
-                'system_quantity',
-                'system_concept',
-                'system_code',
-                'observation',
-                'condition',
-                'medication_statement',
-                'medication_request',
-                'procedure',
-                'allergy_intolerance',
-                'encounter',
-                'immunization',
-                'device',
-                'integer',
-                'datetime',
-                'decimal',
-                'string',
-                'time',
-                'interval_of_integer',
-                'interval_of_datetime',
-                'interval_of_decimal',
-                'interval_of_quantity',
-                'any',
-                'other'
-              ],
-              returnType: 'boolean',
-              values: {},
-              cqlTemplate: 'postModifier',
-              comparisonOperator: null,
-              validator: {
-                type: 'require',
-                fields: ['value'],
-                args: null
-              }
-            }
-          ]
-        }
       });
 
       fireEvent.click(getByLabelText('add expression'));
