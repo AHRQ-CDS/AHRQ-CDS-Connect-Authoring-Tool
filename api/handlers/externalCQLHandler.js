@@ -423,8 +423,8 @@ function singlePost(req, res) {
                 if (elmErrors.length > 0) {
                   res.status(400).send(elmErrors);
                 } else if (!fhirVersionsMatch) {
-                  const message = 'A library using a different version of FHIR® is uploaded. Only one FHIR® version can \
-                    be supported at a time.';
+                  const message = 'A library using a different version of FHIR® is uploaded. Only one FHIR® version \
+                    can be supported at a time.';
                   res.status(400).send(message);
                 } else if (!supportedFHIRVersion) {
                   res.status(400).send('Unsupported FHIR® version.');
