@@ -406,7 +406,6 @@ export default class ConjunctionGroup extends Component {
     return (
       <div key={instance.uniqueId} className="card-group-section" id={instance.uniqueId}>
         <TemplateInstance
-          artifactId={this.props.artifact._id}
           valueSets={this.props.valueSets}
           loadValueSets={this.props.loadValueSets}
           getPath={this.getChildsPath}

@@ -94,7 +94,6 @@ export default class BaseElements extends Component {
             <div className="card-group-section subpopulation base-element">
               <TemplateInstance
                 allInstancesInAllTrees={allInstancesInAllTrees}
-                artifactId={this.props.instance._id}
                 baseElements={this.props.baseElements}
                 codeData={this.props.codeData}
                 modifierMap={this.props.modifierMap}

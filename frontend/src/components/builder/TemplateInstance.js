@@ -1063,7 +1063,6 @@ export default class TemplateInstance extends Component {
 
 TemplateInstance.propTypes = {
   allInstancesInAllTrees: PropTypes.array.isRequired,
-  artifactId: PropTypes.string,
   baseElements: PropTypes.array.isRequired,
   codeData: PropTypes.object,
   modifierMap: PropTypes.object.isRequired,
