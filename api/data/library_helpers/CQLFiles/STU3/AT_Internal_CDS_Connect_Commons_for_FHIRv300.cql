@@ -6,7 +6,7 @@
 // - 1.0.2
 //   - Add functions for the Immunization resource
 //   - Add functions for the Device resource
-library CDS_Connect_Commons_for_FHIRv300 version '1.0.2'
+library AT_Internal_CDS_Connect_Commons_for_FHIRv300 version '1.0.2'
 
 using FHIR version '3.0.0'
 
