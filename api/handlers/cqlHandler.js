@@ -22,20 +22,20 @@ const modifierMap = loadTemplates(modifierPath);
 // Each library will be included. Aliases are optional.
 const includeLibrariesDstu2 = [
   { name: 'FHIRHelpers', version: '1.0.2', alias: 'FHIRHelpers' },
-  { name: 'CDS_Connect_Commons_for_FHIRv102', version: '1.3.2', alias: 'C3F' },
-  { name: 'CDS_Connect_Conversions', version: '1', alias: 'Convert' }
+  { name: 'AT_Internal_CDS_Connect_Commons_for_FHIRv102', version: '1.3.2', alias: 'C3F' },
+  { name: 'AT_Internal_CDS_Connect_Conversions', version: '1', alias: 'Convert' }
 ];
 
 const includeLibrariesStu3 = [
   { name: 'FHIRHelpers', version: '3.0.0', alias: 'FHIRHelpers' },
-  { name: 'CDS_Connect_Commons_for_FHIRv300', version: '1.0.1', alias: 'C3F' },
-  { name: 'CDS_Connect_Conversions', version: '1', alias: 'Convert' }
+  { name: 'AT_Internal_CDS_Connect_Commons_for_FHIRv300', version: '1.0.1', alias: 'C3F' },
+  { name: 'AT_Internal_CDS_Connect_Conversions', version: '1', alias: 'Convert' }
 ];
 
 const includeLibrariesR4 = [
   { name: 'FHIRHelpers', version: '4.0.0', alias: 'FHIRHelpers' },
-  { name: 'CDS_Connect_Commons_for_FHIRv400', version: '1.0.1', alias: 'C3F' },
-  { name: 'CDS_Connect_Conversions', version: '1', alias: 'Convert' }
+  { name: 'AT_Internal_CDS_Connect_Commons_for_FHIRv400', version: '1.0.1', alias: 'C3F' },
+  { name: 'AT_Internal_CDS_Connect_Conversions', version: '1', alias: 'Convert' }
 ];
 
 const includeLibrariesMap = {
@@ -1112,15 +1112,15 @@ function objConvert(req, res, callback) {
       let commonsPath;
       if (fhirTarget.version === '4.0.0') {
         helperPath = path.join(__dirname, '..', 'data', 'library_helpers', 'CQLFiles', 'R4');
-        commonsPath = path.join(helperPath, 'CDS_Connect_Commons_for_FHIRv400.cql');
+        commonsPath = path.join(helperPath, 'AT_Internal_CDS_Connect_Commons_for_FHIRv400.cql');
       } else if (fhirTarget.version === '3.0.0') {
         helperPath = path.join(__dirname, '..', 'data', 'library_helpers', 'CQLFiles', 'STU3');
-        commonsPath = path.join(helperPath, 'CDS_Connect_Commons_for_FHIRv300.cql');
+        commonsPath = path.join(helperPath, 'AT_Internal_CDS_Connect_Commons_for_FHIRv300.cql');
       } else {
         helperPath = path.join(__dirname, '..', 'data', 'library_helpers', 'CQLFiles', 'DSTU2');
-        commonsPath = path.join(helperPath, 'CDS_Connect_Commons_for_FHIRv102.cql');
+        commonsPath = path.join(helperPath, 'AT_Internal_CDS_Connect_Commons_for_FHIRv102.cql');
       }
-      const conversionsPath = path.join(helperPath, 'CDS_Connect_Conversions.cql');
+      const conversionsPath = path.join(helperPath, 'AT_Internal_CDS_Connect_Conversions.cql');
       const artifactRaw = new RawCQL(artifactJson.text);
       const commonsRaw = new RawCQL(fs.readFileSync(commonsPath, 'utf-8'));
       const conversionsRaw = new RawCQL(fs.readFileSync(conversionsPath, 'utf-8'));
