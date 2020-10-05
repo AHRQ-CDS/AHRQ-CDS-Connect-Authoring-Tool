@@ -78,6 +78,7 @@ const areChoicesKnownTypes = (choices) => {
         allChoicesKnown = false;
       }
       let typeToDisplay = convertedType ? convertedType : returnTypeOfChoice;
+      if (returnTypeOfChoice === 'MedicationRequest') typeToDisplay = 'Medication Request';
       if (returnTypeOfChoice === 'MedicationOrder') typeToDisplay = 'Medication Order';
       typesOfChoices.push(_.startCase(typeToDisplay));
     } else {
@@ -96,6 +97,7 @@ function calculateType(definition) {
     elmType = getTypeFromELMString(definition.resultTypeName || definition.operandType);
     const convertedType = singularTypeMap[elmType];
     if (!convertedType) elmDisplay = `Other (${elmType})`;
+    if (elmType === 'MedicationRequest') elmDisplay = 'Medication Request';
     if (elmType === 'MedicationOrder') elmDisplay = 'Medication Order';
     elmType = convertedType ? convertedType : 'other';
   } else if (definition.resultTypeSpecifier || definition.operandTypeSpecifier) {
@@ -105,6 +107,7 @@ function calculateType(definition) {
         elmType = getTypeFromELMString(typeSpecifier.name);
         const convertedType = singularTypeMap[elmType];
         if (!convertedType) elmDisplay = `Other (${elmType})`;
+        if (elmType === 'MedicationRequest') elmDisplay = 'Medication Request';
         if (elmType === 'MedicationOrder') elmDisplay = 'Medication Order';
         elmType = convertedType ? convertedType : 'other';
         break;
@@ -130,6 +133,7 @@ function calculateType(definition) {
           const convertedType = listTypeMap[elmType];
           if (!convertedType) elmDisplay = `List of Others (${elmType})`;
           if (elmType === 'MedicationRequest') elmDisplay = 'List of Medication Requests';
+          if (elmType === 'MedicationOrder') elmDisplay = 'List of Medication Orders';
           elmType = convertedType ? convertedType : 'list_of_others';
         } else if (typeSpecifier.elementType.type === 'ListTypeSpecifier') {
           elmType = 'list_of_others';

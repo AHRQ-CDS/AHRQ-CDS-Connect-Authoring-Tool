@@ -41,7 +41,6 @@ describe('<TemplateInstance />', () => {
         disableAddElement={false}
         disableIndent={false}
         editInstance={jest.fn()}
-        externalCqlList={[]}
         getPath={(path) => path}
         getVSDetails={jest.fn()}
         instanceNames={[]}
@@ -50,7 +49,6 @@ describe('<TemplateInstance />', () => {
         isSearchingVSAC={false}
         isValidatingCode={false}
         isValidCode={false}
-        loadExternalCqlList={jest.fn()}
         loadValueSets={jest.fn()}
         loginVSACUser={jest.fn()}
         modifierMap={{}}
