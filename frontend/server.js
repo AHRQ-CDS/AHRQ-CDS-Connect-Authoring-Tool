@@ -7,12 +7,11 @@
  *
  * This is mainly used by PM2 and our Docker image.
  */
-require('dotenv').config();
+require('dotenv-expand')(require('dotenv').config());
 
 const express = require('express');
 const proxy = require('express-http-proxy');
 const path = require('path');
-const process = require('process');
 const url = require('url');
 
 const app = express();

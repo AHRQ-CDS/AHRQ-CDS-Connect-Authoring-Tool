@@ -1,4 +1,5 @@
 .notLoggedIn {
   &-wrapper { @include componentWidth; }
+
   padding: $global-padding;
 }

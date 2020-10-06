@@ -82,14 +82,15 @@
     text-align: right;
     white-space: nowrap;
     padding-right: 2em;
-    white-space: nowrap;
+
     &.conjunction_comment {
-      flex:none;
-      padding-right:6.25em;
+      flex: none;
+      padding-right: 6.25em;
     }
+
     &.base_comment {
-      flex:none;
-      padding-right:3.25em;
+      flex: none;
+      padding-right: 3.25em;
     }
   }
 

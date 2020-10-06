@@ -1,5 +1,4 @@
 import { combineReducers } from 'redux';
-import { routerReducer } from 'react-router-redux';
 
 import * as types from '../actions/types';
 import authReducer from './auth';
@@ -13,7 +12,6 @@ import modifiersReducer from './modifiers';
 import externalCqlReducer from './external_cql';
 
 const appReducer = combineReducers({
-  routing: routerReducer,
   auth: authReducer,
   errors: errorsReducer,
   artifacts: artifactsReducer,

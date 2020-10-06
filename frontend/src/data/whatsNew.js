@@ -18,12 +18,11 @@ export default [
   },
   {
     id: 3,
-    name: ['FHIR',<sup>®</sup>, ' R4 Support'],
+    name: <>FHIR<sup>®</sup> R4 Support</>,
     ariaLabel: 'FHIR R4 Support',
     image: `${process.env.PUBLIC_URL}/assets/images/whats-new-fhir-r4.png`,
-    description: ['CDS Authors can now download and test their CDS artifacts using HL7',<sup>®</sup>, ' FHIR', <sup>®</sup>, ' R4, the first normative edition of the FHIR specification. Support for FHIR R4 supplements existing support for FHIR DSTU2 and STU3.'],
-    linkText: [" HL7",<sup>®</sup> , " FHIR",<sup>®</sup>, " R4"],
-    //linkText: 'HL7® FHIR® R4',
+    description: <>CDS Authors can now download and test their CDS artifacts using HL7<sup>®</sup> FHIR<sup>®</sup> R4, the first normative edition of the FHIR specification. Support for FHIR R4 supplements existing support for FHIR DSTU2 and STU3.</>,
+    linkText: <> HL7<sup>®</sup> FHIR<sup>®</sup> R4</>,
     link: 'http://hl7.org/fhir/R4/index.html',
     linkExternal: true
   },

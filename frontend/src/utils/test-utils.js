@@ -1,3 +1,4 @@
+/* eslint-disable import/no-extraneous-dependencies */
 import React from 'react';
 import { render, fireEvent } from '@testing-library/react'; // eslint-disable-line import/no-extraneous-dependencies
 import { MemoryRouter } from 'react-router-dom';
