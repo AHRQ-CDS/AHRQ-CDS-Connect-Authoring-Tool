@@ -8,7 +8,7 @@
   "rules": {
     "comma-dangle": 0,
     "import/namespace": ["error", { "allowComputed": true }],
-    "import/no-extraneous-dependencies": ["error", {"devDependencies": ["src/helpers/*.js", "test/**/*.js", "setupTests.js"]}], // don't check helpers for extraneous deps
+    "import/no-extraneous-dependencies": ["error", { "devDependencies": ["src/helpers/*.js", "test/**/*.js", "setupTests.js"] }], // don't check helpers for extraneous deps
     "import/no-named-default": "off", // turning it off since it's currently broken w/ yarn (see: https://github.com/yarnpkg/yarn/issues/3332)
     "jsx-a11y/href-no-hash": 0,
     "jsx-a11y/label-has-for": ["error", { "required": { "some": ["nesting", "id"] } }],
