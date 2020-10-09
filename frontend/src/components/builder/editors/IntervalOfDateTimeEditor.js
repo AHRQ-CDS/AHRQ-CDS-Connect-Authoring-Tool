@@ -71,8 +71,8 @@ export default class IntervalOfDateTimeEditor extends Component {
 
   render() {
     const { id, name, type, label, value, updateInstance } = this.props;
-    const formIdFirst = _.uniqueId('parameter-date-');
-    const formIdSecond = _.uniqueId('parameter-time-');
+    const formIdFirst = _.uniqueId('editor-date-');
+    const formIdSecond = _.uniqueId('editor-time-');
 
     return (
       <div className="interval-of-date-time-editor">

@@ -340,7 +340,14 @@ export default class TemplateInstance extends Component {
               updateAppliedModifier={this.updateAppliedModifier}/>
           );
         case 'ExternalModifier':
-          return (<ExternalModifier key={index} name={mod.name} id={mod.id}/>);
+          return (
+            <ExternalModifier
+              key={index}
+              index={index}
+              name={mod.name}
+              value={mod.values.value}
+              updateAppliedModifier={this.updateAppliedModifier}/>
+          );
         default:
           return (<LabelModifier key={index} name={mod.name} id={mod.id}/>);
       }

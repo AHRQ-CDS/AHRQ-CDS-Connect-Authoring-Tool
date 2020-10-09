@@ -1,0 +1,1 @@
+<%-cqlLibraryFunction%>(<%-value_name%><%if (values.value) {%>, <%-values.value%><%}%>)

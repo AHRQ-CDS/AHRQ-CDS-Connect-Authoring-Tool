@@ -44,7 +44,7 @@ export default class IntervalOfDecimalEditor extends Component {
 
   render() {
     const { id, name, type, label, value, updateInstance } = this.props;
-    const formId = _.uniqueId('parameter-');
+    const formId = _.uniqueId('editor-');
 
     return (
       <div className="interval-of-decimal-editor">

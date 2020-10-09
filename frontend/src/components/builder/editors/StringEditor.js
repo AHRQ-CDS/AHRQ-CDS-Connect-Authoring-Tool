@@ -11,7 +11,7 @@ export default class StringEditor extends Component {
 
   render() {
     const { name, type, label, value, updateInstance } = this.props;
-    const formId = _.uniqueId('parameter-');
+    const formId = _.uniqueId('editor-');
 
     return (
       <div className="string-editor">

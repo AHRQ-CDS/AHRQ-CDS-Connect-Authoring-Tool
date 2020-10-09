@@ -24,6 +24,7 @@ function loadModifiersSuccess(modifiers) {
       modifiersByInputType[inputType] = (modifiersByInputType[inputType] || []).concat(modifier);
     });
   });
+
   return {
     type: types.LOAD_MODIFIERS_SUCCESS,
     modifierMap,
@@ -51,8 +52,7 @@ function sendModifiersRequest() {
             // and arguments field that is not on other modifiers. This is
             // needed for the sake of testing whether external CQL libraries
             // can be deleted or updated, by checking these details.
-            // TODO: Eventually support functions with multiple arguments
-            if (func.operand.length === 1) {
+            if (func.operand.length >= 1) {
               const functionAndLibraryName = `${func.name} (from ${lib.name})`;
               const modifier = {
                 id: functionAndLibraryName,
@@ -60,8 +60,9 @@ function sendModifiersRequest() {
                 name: functionAndLibraryName,
                 inputTypes: func.calculatedInputTypes,
                 returnType: func.calculatedReturnType,
-                cqlTemplate: 'BaseModifier',
+                cqlTemplate: 'ExternalModifier',
                 cqlLibraryFunction: `"${lib.name}"."${func.name}"`,
+                values: { value: '' },
                 functionName: func.name,
                 libraryName: lib.name,
                 arguments: func.operand

@@ -167,16 +167,10 @@ function calculateInputType(definition) {
 function mapInputTypes(definitions) {
   const mappedDefinitions = definitions;
   mappedDefinitions.map(definition => {
-    if (definition.operand) {
-      const calculatedInputTypes = [];
-      const displayInputTypes = [];
-      definition.operand.forEach(operand => {
-        const { elmType, elmDisplay } = calculateInputType(operand);
-        calculatedInputTypes.push(elmType || 'other');
-        displayInputTypes.push(elmDisplay);
-      });
-      definition.calculatedInputTypes = calculatedInputTypes;
-      definition.displayInputTypes = displayInputTypes;
+    if (definition.operand && definition.operand.length > 0) {
+      const { elmType, elmDisplay } = calculateInputType(definition.operand[0]);
+      definition.calculatedInputTypes = [elmType || 'other'];
+      definition.displayInputTypes = [elmDisplay];
     }
   });
   return mappedDefinitions;

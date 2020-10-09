@@ -179,16 +179,10 @@ function mapTypes(definitions) {
     definition.calculatedReturnType = elmType || 'other';
     definition.displayReturnType = elmDisplay;
 
-    if (definition.operand) {
-      const calculatedInputTypes = [];
-      const displayInputTypes = [];
-      definition.operand.forEach(operand => {
-        const { elmType, elmDisplay } = calculateType(operand);
-        calculatedInputTypes.push(elmType || 'other');
-        displayInputTypes.push(elmDisplay);
-      });
-      definition.calculatedInputTypes = calculatedInputTypes;
-      definition.displayInputTypes = displayInputTypes;
+    if (definition.operand && definition.operand.length > 0) {
+      const { elmType, elmDisplay } = calculateType(definition.operand[0]);
+      definition.calculatedInputTypes = [elmType || 'other'];
+      definition.displayInputTypes = [elmDisplay];
     }
   });
   return mappedDefinitions;

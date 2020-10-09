@@ -51,7 +51,7 @@ export default class CodeEditor extends Component {
   }
 
   render() {
-    const formId = _.uniqueId('parameter-');
+    const formId = _.uniqueId('editor-');
 
     return (
       <div className="code-editor">

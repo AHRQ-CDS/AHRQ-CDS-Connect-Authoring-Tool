@@ -9,7 +9,7 @@ const options = [{ value: 'true', label: 'True' }, { value: 'false', label: 'Fal
 export default class BooleanEditor extends Component {
   render() {
     const { id, name, type, label, value, updateInstance } = this.props;
-    const formId = _.uniqueId('parameter-');
+    const formId = _.uniqueId('editor-');
 
     return (
       <div className="boolean-editor">

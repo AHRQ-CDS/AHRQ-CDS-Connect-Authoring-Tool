@@ -2,21 +2,32 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import _ from 'lodash';
 
-export default class IntegerEditor extends Component {
+export default class DecimalEditor extends Component {
   assignValue = (evt) => {
-    let value = _.get(evt, 'target.value', null);
-    // read the value as an int, then convert it to a string
-    if (value != null) { value = parseInt(value, 10); }
-    return value;
+    let decimal = null;
+    let str = null;
+
+    decimal = _.get(evt, 'target.value', null);
+    if (decimal != null) { decimal = parseFloat(decimal); }
+
+    if (decimal || decimal === 0) {
+      if (Number.isInteger(decimal)) {
+        str = `${decimal}.0`;
+      } else {
+        str = `${decimal}`;
+      }
+      return { decimal, str };
+    }
+    return null;
   }
 
   render() {
     const { name, type, label, value, updateInstance } = this.props;
-    const formId = _.uniqueId('parameter-');
+    const formId = _.uniqueId('editor-');
 
     return (
-      <div className="integer-editor">
-        <div className="form-group">
+      <div className="decimal-editor">
+        <div className="form__group">
           <label htmlFor={formId}>
             <div className="label">{label}</div>
 
@@ -24,7 +35,10 @@ export default class IntegerEditor extends Component {
               <input
                 id={formId}
                 type="number"
-                value={(value || value === 0) ? value : ''}
+                value={
+                  (_.get(value, 'decimal', null) || _.get(value, 'decimal', null) === 0)
+                  ? _.get(value, 'decimal')
+                  : '' }
                 onChange={ (e) => {
                   updateInstance({ name, type, label, value: this.assignValue(e) });
                 }}
@@ -37,10 +51,10 @@ export default class IntegerEditor extends Component {
   }
 }
 
-IntegerEditor.propTypes = {
+DecimalEditor.propTypes = {
   name: PropTypes.string,
   type: PropTypes.string.isRequired,
   label: PropTypes.string.isRequired,
-  value: PropTypes.number,
+  value: PropTypes.object,
   updateInstance: PropTypes.func.isRequired
 };
