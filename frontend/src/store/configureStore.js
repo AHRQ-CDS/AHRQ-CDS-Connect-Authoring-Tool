@@ -8,7 +8,7 @@ import templateMerger from '../middleware/template_merger';
 export default function configureStore(initialState) {
   const middleware = [promiseMiddleware(), thunkMiddleware, templateMerger];
   // disable the redux-logger in a production environment
-  if (process.env.NODE_ENV !== 'production') {
+  if (process.env.NODE_ENV === 'development') {
     middleware.push(createLogger());
   }
 

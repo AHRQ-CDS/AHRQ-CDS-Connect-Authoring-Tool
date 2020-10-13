@@ -80,7 +80,6 @@ describe('<BaseElements />', () => {
     const [conjunctionGroup] = conjunctions;
     const expressPhrase = conjunctionGroup.querySelectorAll('.expression-item');
 
-    console.log('phrases');
     expect(expressPhrase[0]).toHaveTextContent('Union');
     expect(expressPhrase[1]).toHaveTextContent('of');
     expect(expressPhrase[2]).toHaveTextContent('VSAC Observation');

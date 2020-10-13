@@ -1,0 +1,627 @@
+[
+  {
+    "Code": "DX",
+    "Display": "Diagnostics or therapeutics unit",
+    "Definition": "A practice setting where diagnostic procedures or therapeutic interventions are performed"
+  },
+  {
+    "Code": "CVDX",
+    "Display": "Cardiovascular diagnostics or therapeutics unit",
+    "Definition": "A practice setting where cardiovascular diagnostic procedures or therapeutic interventions are performed (e.g., cardiac catheterization lab, echocardiography suite)"
+  },
+  {
+    "Code": "CATH",
+    "Display": "Cardiac catheterization lab",
+    "Definition": ""
+  },
+  {
+    "Code": "ECHO",
+    "Display": "Echocardiography lab",
+    "Definition": ""
+  },
+  {
+    "Code": "GIDX",
+    "Display": "Gastroenterology diagnostics or therapeutics lab",
+    "Definition": "A practice setting where GI procedures (such as endoscopies) are performed"
+  },
+  {
+    "Code": "ENDOS",
+    "Display": "Endoscopy lab",
+    "Definition": "(X12N 261QD0000N)"
+  },
+  {
+    "Code": "RADDX",
+    "Display": "Radiology diagnostics or therapeutics unit",
+    "Definition": "A practice setting where radiology services (diagnostic or therapeutic) are provided (X12N 261QR0200N)"
+  },
+  {
+    "Code": "RADO",
+    "Display": "Radiation oncology unit",
+    "Definition": "(X12N 261QX0203N)"
+  },
+  {
+    "Code": "RNEU",
+    "Display": "Neuroradiology unit",
+    "Definition": ""
+  },
+  {
+    "Code": "HOSP",
+    "Display": "Hospital",
+    "Definition": "An acute care institution that provides medical, surgical, or psychiatric care and treatment for the sick or the injured."
+  },
+  {
+    "Code": "CHR",
+    "Display": "Chronic Care Facility",
+    "Definition": "(1) A hospital including a physical plant and personnel that provides multidisciplinary diagnosis and treatment for diseases that have one or more of the following characteristics: is permanent; leaves residual disability; is caused by nonreversible pathological alteration; requires special training of the patient for rehabilitation; and/or may be expected to require a long period of supervision or care. In addition, patients require the safety, security, and shelter of these specialized inpatient or partial hospitalization settings. (2) A hospital that provides medical and skilled nursing services to patients with long-term illnesses who are not in an acute phase but who require an intensity of services not available in nursing homes"
+  },
+  {
+    "Code": "GACH",
+    "Display": "Hospitals; General Acute Care Hospital",
+    "Definition": "(X12N 282N00000N)"
+  },
+  {
+    "Code": "MHSP",
+    "Display": "Military Hospital",
+    "Definition": "A health care facility operated by the Department of Defense or other military operation."
+  },
+  {
+    "Code": "PSYCHF",
+    "Display": "Psychatric Care Facility",
+    "Definition": "Healthcare facility that cares for patients with psychiatric illness(s)."
+  },
+  {
+    "Code": "RH",
+    "Display": "Rehabilitation hospital",
+    "Definition": "(X12N 283X00000N)"
+  },
+  {
+    "Code": "RHAT",
+    "Display": "addiction treatment center",
+    "Definition": "**Description:** A location that plays the role of delivering services which may include life training and/or social support to people with addictions."
+  },
+  {
+    "Code": "RHII",
+    "Display": "intellectual impairment center",
+    "Definition": "**Description:** A location that plays the role of delivering services which may include adaptation, rehabilitation and social integration services for people with intellectual and/or pervasive development disorders such as autism or severe behaviour disorder."
+  },
+  {
+    "Code": "RHMAD",
+    "Display": "parents with adjustment difficulties center",
+    "Definition": "**Description:** A location that plays the role of delivering services which may social support services for adolescents who are pregnant or have child and are experiencing adaptation issues/difficulties in their current or eventual parenting role."
+  },
+  {
+    "Code": "RHPI",
+    "Display": "physical impairment center",
+    "Definition": "**Description:** A location that plays the role of delivering services which may include adaptation, rehabilitation and social integration services for people with physical impairments."
+  },
+  {
+    "Code": "RHPIH",
+    "Display": "physical impairment - hearing center",
+    "Definition": "**Description:** A location that plays the role of delivering services for people with hearing impairments."
+  },
+  {
+    "Code": "RHPIMS",
+    "Display": "physical impairment - motor skills center",
+    "Definition": "**Description:** A location that plays the role of delivering services for people with motor skill impairments."
+  },
+  {
+    "Code": "RHPIVS",
+    "Display": "physical impairment - visual skills center",
+    "Definition": "**Description:** A location that plays the role of delivering services for people with visual skill impairments."
+  },
+  {
+    "Code": "RHYAD",
+    "Display": "youths with adjustment difficulties center",
+    "Definition": "**Description:** A location that plays the role of delivering services which may include life training and/or social support services for the adaption, rehabilitation and social integration of youths with adjustment difficulties."
+  },
+  {
+    "Code": "HU",
+    "Display": "Hospital unit",
+    "Definition": ""
+  },
+  {
+    "Code": "BMTU",
+    "Display": "Bone marrow transplant unit",
+    "Definition": ""
+  },
+  {
+    "Code": "CCU",
+    "Display": "Coronary care unit",
+    "Definition": ""
+  },
+  {
+    "Code": "CHEST",
+    "Display": "Chest unit",
+    "Definition": "A specialty unit in hospital that focuses on chronic respirator patients and pulmonary failure"
+  },
+  {
+    "Code": "EPIL",
+    "Display": "Epilepsy unit",
+    "Definition": ""
+  },
+  {
+    "Code": "ER",
+    "Display": "Emergency room",
+    "Definition": "The section of a health care facility for providing rapid treatment to victims of sudden illness or trauma."
+  },
+  {
+    "Code": "ETU",
+    "Display": "Emergency trauma unit",
+    "Definition": ""
+  },
+  {
+    "Code": "HD",
+    "Display": "Hemodialysis unit",
+    "Definition": ""
+  },
+  {
+    "Code": "HLAB",
+    "Display": "hospital laboratory",
+    "Definition": "**Description:** A location that plays the role of delivering services which may include tests done based on clinical specimens to get health information about a patient as pertaining to the diagnosis, treatment and prevention of disease. Hospital laboratories may be further divided into specialized units such as Anatomic Pathology, Microbiology, and Biochemistry."
+  },
+  {
+    "Code": "INLAB",
+    "Display": "inpatient laboratory",
+    "Definition": "**Description:** A location that plays the role of delivering services which may include tests are done on clinical specimens to get health information about a patient pertaining to the diagnosis, treatment, and prevention of disease for a hospital visit longer than one day."
+  },
+  {
+    "Code": "OUTLAB",
+    "Display": "outpatient laboratory",
+    "Definition": "**Description:** A location that plays the role of delivering services which may include tests are done on clinical specimens to get health information about a patient pertaining to the diagnosis, treatment, and prevention of disease for same day visits."
+  },
+  {
+    "Code": "HRAD",
+    "Display": "radiology unit",
+    "Definition": "**Description:** A location that plays the role of delivering services which may include the branch of medicine that uses ionizing and non-ionizing radiation to diagnose and treat diseases. The radiology unit may be further divided into subspecialties such as Imaging, Cardiovascular, Thoracic, and Ultrasound."
+  },
+  {
+    "Code": "HUSCS",
+    "Display": "specimen collection site",
+    "Definition": "**Description:** A location that plays the role of delivering services which may include collecting specimens and/or samples from patients for laboratory testing purposes, but does not perform any tests or analysis functions."
+  },
+  {
+    "Code": "ICU",
+    "Display": "Intensive care unit",
+    "Definition": ""
+  },
+  {
+    "Code": "PEDICU",
+    "Display": "Pediatric intensive care unit",
+    "Definition": ""
+  },
+  {
+    "Code": "PEDNICU",
+    "Display": "Pediatric neonatal intensive care unit",
+    "Definition": ""
+  },
+  {
+    "Code": "INPHARM",
+    "Display": "inpatient pharmacy",
+    "Definition": "**Description:** A location that plays the role of delivering services which may include providing judicious, safe, efficacious, appropriate and cost effective use of medicines for treatment of patients for visits longer than one day. The distinction between inpatient pharmacies and retail (or outpatient) pharmacies is that they are part of a patient's continuity of care while staying in the hospital."
+  },
+  {
+    "Code": "MBL",
+    "Display": "medical laboratory",
+    "Definition": "**Description:** A location that plays the role of delivering services which include biochemistry, hematology, microbiology, immunochemistry, and toxicology."
+  },
+  {
+    "Code": "NCCS",
+    "Display": "Neurology critical care and stroke unit",
+    "Definition": ""
+  },
+  {
+    "Code": "NS",
+    "Display": "Neurosurgery unit",
+    "Definition": ""
+  },
+  {
+    "Code": "OUTPHARM",
+    "Display": "outpatient pharmacy",
+    "Definition": "**Description:** A location that plays the role of delivering services which may include providing judicious, safe, efficacious, appropriate and cost effective use of medicines for treatment of patients for outpatient visits and may also be used for discharge prescriptions."
+  },
+  {
+    "Code": "PEDU",
+    "Display": "Pediatric unit",
+    "Definition": ""
+  },
+  {
+    "Code": "PHU",
+    "Display": "Psychiatric hospital unit",
+    "Definition": "(X12N 273R00000N)"
+  },
+  {
+    "Code": "RHU",
+    "Display": "Rehabilitation hospital unit",
+    "Definition": ""
+  },
+  {
+    "Code": "SLEEP",
+    "Display": "Sleep disorders unit",
+    "Definition": "(X12N 261QA1200N)"
+  },
+  {
+    "Code": "NCCF",
+    "Display": "Nursing or custodial care facility",
+    "Definition": ""
+  },
+  {
+    "Code": "SNF",
+    "Display": "Skilled nursing facility",
+    "Definition": "(X12N 314000000N)"
+  },
+  {
+    "Code": "OF",
+    "Display": "Outpatient facility",
+    "Definition": ""
+  },
+  {
+    "Code": "ALL",
+    "Display": "Allergy clinic",
+    "Definition": ""
+  },
+  {
+    "Code": "AMPUT",
+    "Display": "Amputee clinic",
+    "Definition": ""
+  },
+  {
+    "Code": "BMTC",
+    "Display": "Bone marrow transplant clinic",
+    "Definition": ""
+  },
+  {
+    "Code": "BREAST",
+    "Display": "Breast clinic",
+    "Definition": ""
+  },
+  {
+    "Code": "CANC",
+    "Display": "Child and adolescent neurology clinic",
+    "Definition": ""
+  },
+  {
+    "Code": "CAPC",
+    "Display": "Child and adolescent psychiatry clinic",
+    "Definition": ""
+  },
+  {
+    "Code": "CARD",
+    "Display": "Ambulatory Health Care Facilities; Clinic/Center; Rehabilitation: Cardiac Facilities",
+    "Definition": ""
+  },
+  {
+    "Code": "PEDCARD",
+    "Display": "Pediatric cardiology clinic",
+    "Definition": ""
+  },
+  {
+    "Code": "COAG",
+    "Display": "Coagulation clinic",
+    "Definition": ""
+  },
+  {
+    "Code": "CRS",
+    "Display": "Colon and rectal surgery clinic",
+    "Definition": ""
+  },
+  {
+    "Code": "DERM",
+    "Display": "Dermatology clinic",
+    "Definition": ""
+  },
+  {
+    "Code": "ENDO",
+    "Display": "Endocrinology clinic",
+    "Definition": ""
+  },
+  {
+    "Code": "PEDE",
+    "Display": "Pediatric endocrinology clinic",
+    "Definition": ""
+  },
+  {
+    "Code": "ENT",
+    "Display": "Otorhinolaryngology clinic",
+    "Definition": ""
+  },
+  {
+    "Code": "FMC",
+    "Display": "Family medicine clinic",
+    "Definition": ""
+  },
+  {
+    "Code": "GI",
+    "Display": "Gastroenterology clinic",
+    "Definition": ""
+  },
+  {
+    "Code": "PEDGI",
+    "Display": "Pediatric gastroenterology clinic",
+    "Definition": ""
+  },
+  {
+    "Code": "GIM",
+    "Display": "General internal medicine clinic",
+    "Definition": ""
+  },
+  {
+    "Code": "GYN",
+    "Display": "Gynecology clinic",
+    "Definition": ""
+  },
+  {
+    "Code": "HEM",
+    "Display": "Hematology clinic",
+    "Definition": ""
+  },
+  {
+    "Code": "PEDHEM",
+    "Display": "Pediatric hematology clinic",
+    "Definition": ""
+  },
+  {
+    "Code": "HTN",
+    "Display": "Hypertension clinic",
+    "Definition": ""
+  },
+  {
+    "Code": "IEC",
+    "Display": "Impairment evaluation center",
+    "Definition": "Focuses on assessing disability"
+  },
+  {
+    "Code": "INFD",
+    "Display": "Infectious disease clinic",
+    "Definition": ""
+  },
+  {
+    "Code": "PEDID",
+    "Display": "Pediatric infectious disease clinic",
+    "Definition": ""
+  },
+  {
+    "Code": "INV",
+    "Display": "Infertility clinic",
+    "Definition": ""
+  },
+  {
+    "Code": "LYMPH",
+    "Display": "Lympedema clinic",
+    "Definition": ""
+  },
+  {
+    "Code": "MGEN",
+    "Display": "Medical genetics clinic",
+    "Definition": ""
+  },
+  {
+    "Code": "NEPH",
+    "Display": "Nephrology clinic",
+    "Definition": ""
+  },
+  {
+    "Code": "PEDNEPH",
+    "Display": "Pediatric nephrology clinic",
+    "Definition": ""
+  },
+  {
+    "Code": "NEUR",
+    "Display": "Neurology clinic",
+    "Definition": ""
+  },
+  {
+    "Code": "OB",
+    "Display": "Obstetrics clinic",
+    "Definition": ""
+  },
+  {
+    "Code": "OMS",
+    "Display": "Oral and maxillofacial surgery clinic",
+    "Definition": ""
+  },
+  {
+    "Code": "ONCL",
+    "Display": "Medical oncology clinic",
+    "Definition": ""
+  },
+  {
+    "Code": "PEDHO",
+    "Display": "Pediatric oncology clinic",
+    "Definition": ""
+  },
+  {
+    "Code": "OPH",
+    "Display": "Opthalmology clinic",
+    "Definition": ""
+  },
+  {
+    "Code": "OPTC",
+    "Display": "optometry clinic",
+    "Definition": "**Description:** A location that plays the role of delivering services which may include examination, diagnosis, treatment, management, and prevention of diseases and disorders of the eye as well as prescribing and fitting appropriate corrective lenses (glasses or contact lenses) as needed. Optometry clinics may also provide tests for visual field screening, measuring intra-ocular pressure and ophthalmoscopy, as and when required."
+  },
+  {
+    "Code": "ORTHO",
+    "Display": "Orthopedics clinic",
+    "Definition": ""
+  },
+  {
+    "Code": "HAND",
+    "Display": "Hand clinic",
+    "Definition": ""
+  },
+  {
+    "Code": "PAINCL",
+    "Display": "Pain clinic",
+    "Definition": "(X12N 261QP3300N)"
+  },
+  {
+    "Code": "PC",
+    "Display": "Primary care clinic",
+    "Definition": "(X12N 261QP2300N)"
+  },
+  {
+    "Code": "PEDC",
+    "Display": "Pediatrics clinic",
+    "Definition": ""
+  },
+  {
+    "Code": "PEDRHEUM",
+    "Display": "Pediatric rheumatology clinic",
+    "Definition": ""
+  },
+  {
+    "Code": "POD",
+    "Display": "Podiatry clinic",
+    "Definition": "(X12N 261QP1100N)"
+  },
+  {
+    "Code": "PREV",
+    "Display": "Preventive medicine clinic",
+    "Definition": ""
+  },
+  {
+    "Code": "PROCTO",
+    "Display": "Proctology clinic",
+    "Definition": ""
+  },
+  {
+    "Code": "PROFF",
+    "Display": "Provider's Office",
+    "Definition": "Location where healthcare service was delivered, identified as the healthcare provider's practice office."
+  },
+  {
+    "Code": "PROS",
+    "Display": "Prosthodontics clinic",
+    "Definition": ""
+  },
+  {
+    "Code": "PSI",
+    "Display": "Psychology clinic",
+    "Definition": ""
+  },
+  {
+    "Code": "PSY",
+    "Display": "Psychiatry clinic",
+    "Definition": ""
+  },
+  {
+    "Code": "RHEUM",
+    "Display": "Rheumatology clinic",
+    "Definition": ""
+  },
+  {
+    "Code": "SPMED",
+    "Display": "Sports medicine clinic",
+    "Definition": ""
+  },
+  {
+    "Code": "SU",
+    "Display": "Surgery clinic",
+    "Definition": ""
+  },
+  {
+    "Code": "PLS",
+    "Display": "Plastic surgery clinic",
+    "Definition": ""
+  },
+  {
+    "Code": "URO",
+    "Display": "Urology clinic",
+    "Definition": ""
+  },
+  {
+    "Code": "TR",
+    "Display": "Transplant clinic",
+    "Definition": ""
+  },
+  {
+    "Code": "TRAVEL",
+    "Display": "Travel and geographic medicine clinic",
+    "Definition": ""
+  },
+  {
+    "Code": "WND",
+    "Display": "Wound clinic",
+    "Definition": ""
+  },
+  {
+    "Code": "RTF",
+    "Display": "Residential treatment facility",
+    "Definition": ""
+  },
+  {
+    "Code": "PRC",
+    "Display": "Pain rehabilitation center",
+    "Definition": ""
+  },
+  {
+    "Code": "SURF",
+    "Display": "Substance use rehabilitation facility",
+    "Definition": "(X12N 324500000N)"
+  },
+  {
+    "Code": "_DedicatedNonClinicalLocationRoleType",
+    "Display": "DedicatedNonClinicalLocationRoleType",
+    "Definition": "A role of a place that further classifies a setting that is intended to house the provision of non-clinical services."
+  },
+  {
+    "Code": "DADDR",
+    "Display": "Delivery Address",
+    "Definition": "Location address where medical supplies were transported to for use."
+  },
+  {
+    "Code": "MOBL",
+    "Display": "Mobile Unit",
+    "Definition": "Location (mobile) where healthcare service was delivered."
+  },
+  {
+    "Code": "AMB",
+    "Display": "Ambulance",
+    "Definition": "Location (mobile) where healthcare service was delivered, identified specifically as an ambulance."
+  },
+  {
+    "Code": "PHARM",
+    "Display": "Pharmacy",
+    "Definition": "Location where healthcare service was delivered, identified as a pharmacy."
+  },
+  {
+    "Code": "_IncidentalServiceDeliveryLocationRoleType",
+    "Display": "IncidentalServiceDeliveryLocationRoleType",
+    "Definition": ""
+  },
+  {
+    "Code": "ACC",
+    "Display": "accident site",
+    "Definition": "Location of an accident where healthcare service was delivered, such as a roadside."
+  },
+  {
+    "Code": "COMM",
+    "Display": "Community Location",
+    "Definition": "Community location where healthcare is delivered."
+  },
+  {
+    "Code": "CSC",
+    "Display": "community service center",
+    "Definition": "**Description:** A location that plays the role of delivering services which may include providing front-line services to the population of a defined geographic area such as: healthcare services and social services, preventive or curative, rehabilitation or reintegration."
+  },
+  {
+    "Code": "PTRES",
+    "Display": "Patient's Residence",
+    "Definition": "location where healthcare was delivered which is the residence of the Patient."
+  },
+  {
+    "Code": "SCHOOL",
+    "Display": "school",
+    "Definition": "Location where healthcare service was delivered, identified as a school or educational facility."
+  },
+  {
+    "Code": "UPC",
+    "Display": "underage protection center",
+    "Definition": "**Description:** A location that plays the role of delivering services which may include: social emergency services required for a young person as required under any jurisdictional youth laws, child placement, and family mediation in the defined geographical area the SDL is responsible for. It may provide expertise in a judiciary setting on child custody, adoption and biological history research."
+  },
+  {
+    "Code": "WORK",
+    "Display": "work site",
+    "Definition": "Location where healthcare service was delivered, identified as a work place."
+  }
+]

@@ -1105,6 +1105,7 @@ function objConvert(req, res, callback) {
         externalLibs.push(libJson);
       });
       const artifact = new CqlArtifact(artifactFromRequest);
+      artifact._id = artifactId;
       const artifactJson = artifact.toJson();
 
       // Merge the artifact with the commons and conversions libraries
@@ -1130,7 +1131,7 @@ function objConvert(req, res, callback) {
       // artifactJson are affected by the merge operation here.
       artifactJson.text = exportCQL(libraryGroup);
 
-      callback(artifactJson, externalLibs, res, (err) => {
+      callback(artifact, artifactJson, externalLibs, res, (err) => {
         if (err) {
           res.status(500).send({ error: err.message });
         }
@@ -1139,7 +1140,9 @@ function objConvert(req, res, callback) {
   });
 }
 
-function validateELM(artifactJson, externalLibs, writeStream, callback) {
+// While the artifact argument is not used, it's required because the callback
+// that calls this function requires that argument to be present
+function validateELM(artifact, artifactJson, externalLibs, writeStream, callback) {
   const artifacts = [artifactJson, ...externalLibs];
   convertToElm(artifacts, (err, elmFiles) => {
     if (err) {
@@ -1162,40 +1165,68 @@ function validateELM(artifactJson, externalLibs, writeStream, callback) {
 }
 
 
-function writeZip(artifactJson, externalLibs, writeStream, callback /* (error) */) {
+//given a CQLArtifact, find the associated Artifact in the DB, convert it to a CPG Publishable Library
+function convertToCPGPL(cqlArtifact){
+  return Artifact.findOne({_id: { $ne: null, $eq: cqlArtifact._id }})
+    .exec()
+    .then((artifact) => {
+      let cpg = artifact.toPublishableLibrary();
+      let cqlBuffer = Buffer.from(cqlArtifact.toJson().text);
+      cpg['content'] = [
+        {
+          "contentType": "application/cql",
+          "data": cqlBuffer.toString('base64'),
+        },
+      ]; //{content type: application/cql, data: base64 of the CQL)
+      return JSON.stringify(cpg,null,2);
+
+    })
+    .catch((err) => {
+      return {"error": err};
+    });
+}
+
+function writeZip(artifact, artifactJson, externalLibs, writeStream, callback /* (error) */) {
   const artifacts = [artifactJson, ...externalLibs];
-  // We must first convert to ELM before packaging up
-  convertToElm(artifacts, (err, elmFiles) => {
-    if (err) {
-      callback(err);
-      return;
-    }
-    // Now build the zip, piping it to the writestream
-    writeStream.attachment('archive-name.zip');
-    const archive = archiver('zip', { zlib: { level: 9 } })
-      .on('error', callback);
-    writeStream.on('close', callback);
-    archive.pipe(writeStream);
+  //convert the artifact to a CPG Publishable Library
+  convertToCPGPL(artifact).then(function(cpgString){
+    // We must first convert to ELM before packaging up
+    convertToElm(artifacts, (err, elmFiles) => {
+      if (err) {
+        callback(err);
+        return;
+      }
+      // Now build the zip, piping it to the writestream
+      writeStream.attachment('archive-name.zip');
+      const archive = archiver('zip', { zlib: { level: 9 } })
+        .on('error', callback);
+      writeStream.on('close', callback);
+      archive.pipe(writeStream);
 
-    externalLibs.forEach(artifact => {
-      archive.append(artifact.text, { name: `${artifact.filename}.cql` });
-    });
+      externalLibs.forEach(externalLib => {
+        archive.append(externalLib.text, { name: `${externalLib.filename}.cql` });
+      });
+      if(typeof(cpgString) === "string") {
+        archive.append(cpgString, {name: `Library-${artifactJson.filename}.json`});
+      }else{
+        console.log("Error with CPG Publishable library: " + cpgString["error"]);
+      }
+      archive.append(artifactJson.text, { name: `${artifactJson.filename}.cql` });
+      elmFiles.forEach(e => {
+        archive.append(e.content.replace(/\r\n|\r|\n/g, '\r\n'), { name: `${e.name}.json` });
+      });
 
-    archive.append(artifactJson.text, { name: `${artifactJson.filename}.cql` });
-    elmFiles.forEach(e => {
-      archive.append(e.content.replace(/\r\n|\r|\n/g, '\r\n'), { name: `${e.name}.json` });
-    });
-
-    let helperPath;
-    if (fhirTarget.version === '4.0.0') {
-      helperPath = path.join(__dirname, '..', 'data', 'library_helpers', 'CQLFiles', 'R4');
-    } else if (fhirTarget.version === '3.0.0') {
-      helperPath = path.join(__dirname, '..', 'data', 'library_helpers', 'CQLFiles', 'STU3');
-    } else {
-      helperPath = path.join(__dirname, '..', 'data', 'library_helpers', 'CQLFiles', 'DSTU2');
-    }
-    archive.glob('FHIRHelpers.cql', { cwd: helperPath });
-    archive.finalize();
+      let helperPath;
+      if (fhirTarget.version === '4.0.0') {
+        helperPath = path.join(__dirname, '..', 'data', 'library_helpers', 'CQLFiles', 'R4');
+      } else if (fhirTarget.version === '3.0.0') {
+        helperPath = path.join(__dirname, '..', 'data', 'library_helpers', 'CQLFiles', 'STU3');
+      } else {
+        helperPath = path.join(__dirname, '..', 'data', 'library_helpers', 'CQLFiles', 'DSTU2');
+      }
+      archive.glob('FHIRHelpers.cql', { cwd: helperPath });
+      archive.finalize();
+    })
   });
 }
 

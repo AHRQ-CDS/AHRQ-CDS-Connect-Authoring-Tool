@@ -1,0 +1,88 @@
+{
+  "resourceType": "Library",
+  "type": {
+    "coding": [
+      {
+        "system": "http://terminology.hl7.org/CodeSystem/library-type",
+        "code": "logic-library",
+        "display": "Logic Library"
+      }
+    ]
+  },
+  "name": "Test_CPG_Export",
+  "title": "Test CPG Export",
+  "version": "1.0.0",
+  "description": "An artifact for testing CPG Publishable Libraries",
+  "url": "https://test.hl7.test",
+  "status": "draft",
+  "publisher": "NULL Publishing",
+  "useContext": [
+    {
+      "code": {
+        "system": "http://terminology.hl7.org/CodeSystem/usage-context-type",
+        "code": "gender"
+      },
+      "valueCodeableConcept": {
+        "coding": [
+          {
+            "system": "http://hl7.org/fhir/administrative-gender",
+            "code": "male",
+            "display": "Male"
+          }
+        ]
+      }
+    },
+    {
+      "code": {
+        "system": "http://terminology.hl7.org/CodeSystem/usage-context-type",
+        "code": "focus"
+      },
+      "valueCodeableConcept": {
+        "coding": [
+          {
+            "system": "http://www.nlm.nih.gov/research/umls/rxnorm",
+            "code": "435"
+          }
+        ]
+      }
+    }
+  ],
+  "purpose": "Testing purposes.",
+  "approvalDate": "2020-09-01",
+  "lastReviewDate": "2020-09-10",
+  "effectivePeriod": {
+    "start": "2020-09-12",
+    "end": "2020-09-19"
+  },
+  "topic": [
+    {
+      "coding": [
+        {
+          "system": "http://www.nlm.nih.gov/research/umls/rxnorm",
+          "code": "435"
+        }
+      ]
+    }
+  ],
+  "author": [
+    {
+      "name": "Mr. Tester"
+    },
+    {
+      "name": "Ms. Tester (no relation)"
+    }
+  ],
+  "reviewer": [
+    {
+      "name": "Dr. Reviewer"
+    }
+  ],
+  "relatedArtifact": [
+    {
+      "type": "citation",
+      "display": "This citation is fictional purely for the use of testing.",
+      "url": "https://test.test.test",
+      "citation": "Journal of Testing Artifacts, 2020"
+    }
+  ]
+}

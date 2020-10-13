@@ -1,6 +1,14 @@
 const { expect } = require('chai');
 const { buildCQL } = require('../../../handlers/cqlHandler');
 const _ = require('lodash');
+const Artifact = require('../../../models/artifact');
+
+const testEmptyPublishableLibrary = require('../../data/Library-Test-Empty-Artifact');
+const testPublishableLibraryWithDates = require('../../data/Library-Test-Artifact-With-Dates');
+const testPublishableLibraryWithDatesAndContext = require('../../data/Library-Test-Artifact-With-Dates-And-Context');
+const testPublishableLibrary = require('../../data/Library-Test-CPG-Export');
+const testExpandedContext = require('../../data/Library-Test-Expanded-Context');
+
 
 const baseArtifact = {
   name: 'a test',
@@ -14,6 +22,94 @@ const baseArtifact = {
   parameters: [],
   errorStatement: {},
   uniqueIdCounter: 9999
+};
+
+//despite it being empty, we still need a name
+const emptyCPGArtifact = {
+  name: "Test Empty Artifact",
+};
+
+const datesCPGArtifact = {
+  name: "Test Artifact With Dates",
+  approvalDate: "2020-09-01T04:00:00.000Z",
+  lastReviewDate: "2020-09-10T04:00:00.000Z",
+  effectivePeriod: {start: "2020-09-12T04:00:00.000Z", end: "2020-09-19T04:00:00.000Z"},
+};
+
+const datesAndContextCPGArtifact = {
+  name: "Test Artifact With Dates and Context",
+  approvalDate: "2020-09-01T04:00:00.000Z",
+  lastReviewDate: "2020-09-10T04:00:00.000Z",
+  effectivePeriod: {start: "2020-09-12T04:00:00.000Z", end: "2020-09-19T04:00:00.000Z"},
+  context: [{gender: "male", contextType: "gender"},{system: "RXNORM", code: "435", contextType: "clinicalFocus"}],
+};
+
+const baseCPGArtifact = {
+  name: "Test CPG Export",
+  version: "1.0.0",
+  description: "An artifact for testing CPG Publishable Libraries",
+  url: "https://test.hl7.test",
+  status: "draft",
+  experimental: true,
+  publisher: "NULL Publishing",
+  context: [{gender: "male", contextType: "gender"},{system: "RXNORM", code: "435", contextType: "clinicalFocus"}],
+  purpose: "Testing purposes.",
+  usage: "Only use for testing.",
+  copyright: "NULL",
+  approvalDate: "2020-09-01T04:00:00.000Z",
+  lastReviewDate: "2020-09-10T04:00:00.000Z",
+  effectivePeriod: {start: "2020-09-12T04:00:00.000Z", end: "2020-09-19T04:00:00.000Z"},
+  topic: [{system: "RXNORM", code: "435"}],
+  author: [{author: "Mr. Tester"}, {author: "Ms. Tester (no relation)"}],
+  reviewer: [{reviewer: "Dr. Reviewer"}],
+  endorser: [],
+  relatedArtifact: [{citation: "Journal of Testing Artifacts, 2020", url: "https://test.test.test",
+    description: "This citation is fictional purely for the use of testing.",
+    relatedArtifactType: "citation"}],
+};
+
+const contextCPGArtifact = {
+  name: "Testing CPG Context",
+  version: "1.0.0",
+  context: [{
+    system: "LOINC",
+    code: "80350-2",
+    contextType: "species"
+  },{
+    gender: "female",
+    contextType: "gender"
+  },{
+    ageRangeUnitOfTime: "weeks",
+    ageRangeMax: "5",
+    ageRangeMin: "1",
+    contextType: "ageRange"
+  },{
+    contextType: "userType",
+    userType: "user-101Y00000X",
+  },{
+    contextType: "workflowSetting",
+    workflowSetting: "inpatientEncounter"
+  },{
+    contextType: "workflowTask",
+    workflowTask: "ALLERLREV",
+  },{
+    contextType: "clinicalVenue",
+    clinicalVenue: "ECHO",
+  },{
+    contextType: "program",
+    program: "?",
+  },{
+    contextType: "clinicalFocus",
+    code: "435",
+    system: "RXNORM"
+  }],
+  lastReviewDate: "2020-08-28T04:00:00.000+00:00",
+  effectivePeriod: {start: "2020-08-26T04:00:00.000+00:00"},
+  author: [{author:"Original Author"}],
+  reviewer: [{reviewer:"The Reviewer"}],
+  endorser: [{endorser:"Endorser 1"}, {endorser:"Endorser II"}],
+  relatedArtifact: [{citation: "NULL", url: "https://test.test.test",
+    description: "Test Description", relatedArtifactType: "citation"}],
 };
 
 describe('Basic CQL Handler Tests', () => {
@@ -507,5 +603,55 @@ describe('Subpopulation tests', () => {
 
     expect(converted).to.match(/.*^\s*define "Subpopulation 1":\s+"HasDiabetes"\s+/m);
     expect(converted).to.match(/.*^\s*define "Subpopulation 2":\s+"My Observation"\s+/m);
+  });
+});
+
+describe('CPG Publishable Library tests', () => {
+  //function below referenced from https://gist.github.com/Yimiprod/7ee176597fef230d1451
+  //using to diff two objects, as _.isEqual returns false if array elements are not in the same order
+  /**
+   * Deep diff between two object, using lodash
+   * @param  {Object} object Object compared
+   * @param  {Object} base   Object to compare with
+   * @return {Object}        Return a new object who represent the diff
+   */
+  function difference(object, base) {
+    function changes(object, base) {
+      return _.transform(object, function(result, value, key) {
+        if (!_.isEqual(value, base[key])) {
+          result[key] = (_.isObject(value) && _.isObject(base[key])) ? changes(value, base[key]) : value;
+        }
+      });
+    }
+    return changes(object, base);
+  }
+
+  it('Creates an empty CPG Artifact and exports as a Publishable Library', () => {
+    //create a CPG artifact with fields defined above
+    const testEmptyArtifact = new Artifact(emptyCPGArtifact);
+    //convert it to a publishable library JSON object
+    const emptyPL = testEmptyArtifact.toPublishableLibrary();
+    //compare it to the known "good" example file
+    expect(_.isEqual(emptyPL,testEmptyPublishableLibrary)).to.equal(true);
+  });
+  it('Creates a CPG Artifact with context and exports as a Publishable Library',() => {
+    const testDates = new Artifact(datesCPGArtifact);
+    const datePL = testDates.toPublishableLibrary();
+    expect(_.isEqual(difference(datePL,testPublishableLibraryWithDates),{})).to.equal(true);
+  });
+  it('Creates a CPG Artifact with context and dates and exports as a Publishable Library',() => {
+    const testContext = new Artifact(datesAndContextCPGArtifact);
+    const contextPL = testContext.toPublishableLibrary();
+    expect(_.isEqual(difference(contextPL,testPublishableLibraryWithDatesAndContext),{})).to.equal(true);
+  });
+  it('Creates a mostly complete CPG Artifact and exports as a Publishable Library', () => {
+    const testArtifact = new Artifact(baseCPGArtifact);
+    const cpgPL = testArtifact.toPublishableLibrary();
+    expect(_.isEqual(difference(cpgPL,testPublishableLibrary),{})).to.equal(true);
+  });
+  it('Creates a mostly complete CPG Artifact with expanded context and exports as a Publishable Library', () => {
+    const testCtxArtifact = new Artifact(contextCPGArtifact);
+    const ecPL = testCtxArtifact.toPublishableLibrary();
+    expect(_.isEqual(difference(ecPL,testExpandedContext),{})).to.equal(true);
   });
 });

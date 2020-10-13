@@ -28,7 +28,7 @@ concept "<%-concept.name%>" : { <%concept.codes.forEach((code, index) => {%>"<%i
 parameter "<%-parameter.name%>" <%- parameter.value || parameter.value === 0 ? 'default ' + (typeof parameter.value === 'object' ? parameter.value.str : parameter.value) : parameter.type %>
 <%}});-%>
 
-context <%=context%>
+context Patient
 
 <% referencedElements.forEach((element) => { -%>
 define "<%=element.name%>":

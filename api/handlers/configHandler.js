@@ -3,8 +3,8 @@ const ValueSets = require('../data/valueSets');
 const config = require('../config');
 const conversionsELMFile = require('../data/library_helpers/ELMFiles/AT_Internal_CDS_Connect_Conversions.json');
 
-// If new functions are added to AT_Internal_CDS_Connect_Conversions and a separate description is desired, add a key value
-// pair to the following object with the descripton: function_name : function_description
+// If new functions are added to AT_Internal_CDS_Connect_Conversions and a separate description is desired, add a
+// key value pair to the following object with the descripton: function_name : function_description
 const conversionFunctionDescriptions = { 'to_mg_per_dL': 'mmol/L to mg/dL for blood cholesterol' };
 
 module.exports = {

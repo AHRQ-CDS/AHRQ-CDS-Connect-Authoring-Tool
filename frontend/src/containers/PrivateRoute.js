@@ -17,7 +17,7 @@ class PrivateRoute extends Component {
 PrivateRoute.propTypes = {
   isAuthenticated: PropTypes.bool.isRequired,
   path: PropTypes.string.isRequired,
-  component: PropTypes.func.isRequired
+  component: PropTypes.object.isRequired
 };
 
 function mapStateToProps(state) {

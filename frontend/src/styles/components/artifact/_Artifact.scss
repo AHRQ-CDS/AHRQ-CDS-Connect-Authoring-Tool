@@ -53,3 +53,106 @@
   font-size: 0.9em;
   color: $gray;
 }
+
+.artifact-form {
+  display: flex;
+  flex-wrap: wrap;
+  padding: 20px 40px;
+
+  .form__group {
+    display: flex;
+    padding: 10px 0;
+  }
+
+  .input__group {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+
+    .helper-text {
+      font-size: 0.7em;
+      color: $gray;
+    }
+  }
+
+  label {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    min-width: 200px;
+    margin: 9px 15px 0;
+
+    &.has-helper-text {
+      margin-bottom: 25px;
+    }
+  }
+
+  input,
+  textarea {
+    width: 100%;
+  }
+
+  textarea {
+    padding-top: 8px;
+  }
+
+  .cpg-button {
+    margin: 20px 230px;
+  }
+
+  #code-display {
+    line-height: 50px;
+  }
+
+  .status__input {
+    height: 0;
+  }
+
+  .cpg-tag {
+    background-color: $orange;
+    color: $white;
+    font-size: 0.5em;
+    padding: 1px 3px;
+    border-radius: 3px;
+    font-weight: bold;
+    margin-left: 5px;
+
+    &.cpg-tag-complete {
+      background-color: $blue;
+    }
+  }
+
+  .cpg-percentage {
+    height: 20px;
+    margin-bottom: 5px;
+    background-color: $gray-blue;
+    color: $white;
+    border-radius: 20px;
+    width: 100%;
+    font-size: 14px;
+    font-weight: 600;
+
+    &-complete {
+      background-color: $blue;
+      border-radius: 20px;
+    }
+
+    &-label {
+      padding: 0 8px;
+      text-align: right;
+
+      &.zero {
+        color: $blue;
+      }
+    }
+  }
+
+  .date-range-group {
+    display: flex;
+    justify-content: space-between;
+
+    .date-range-to {
+      margin: 10px 20px;
+    }
+  }
+}

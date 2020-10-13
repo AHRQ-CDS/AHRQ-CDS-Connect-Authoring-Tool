@@ -69,17 +69,14 @@ export default class Modal extends Component {
           </div>
         </div>
 
-        <form onSubmit={this.handleFormSubmit}>
+        <>
           <div className="modal__body">
             {children}
           </div>
 
           <footer className="modal__footer">
             {hasSecondaryButton &&
-              <button type="button" className="secondary-button"
-                onClick={handleCloseModal}
-                aria-label="Cancel"
-              >
+              <button type="button" className="secondary-button" onClick={handleCloseModal} aria-label="Cancel">
                 Cancel
               </button>
             }
@@ -89,13 +86,18 @@ export default class Modal extends Component {
                 type="submit"
                 disabled={submitDisabled}
                 className={`primary-button ${submitDisabled ? 'disabled-button' : ''}`}
+                onClick={this.handleFormSubmit}
                 aria-label={modalSubmitButtonText}
-              >
+                onKeyPress={(e) => {
+                  e.which = e.which || e.keyCode;
+                  if (e.which === 13) this.handleFormSubmit(e);
+                }}
+                >
                 {modalSubmitButtonText}
               </button>
             }
           </footer>
-        </form>
+        </>
       </ReactModal>
     );
   }

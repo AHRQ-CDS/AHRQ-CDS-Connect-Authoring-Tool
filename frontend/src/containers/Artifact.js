@@ -8,7 +8,7 @@ import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import { loadArtifacts, addArtifact, deleteArtifact, updateAndSaveArtifact } from '../actions/artifacts';
 import artifactProps from '../prop-types/artifact';
 
-import NewArtifactModal from '../components/artifact/NewArtifactModal';
+import ArtifactModal from '../components/artifact/ArtifactModal';
 import ArtifactTable from '../components/artifact/ArtifactTable';
 
 class Artifact extends Component {
@@ -59,8 +59,7 @@ class Artifact extends Component {
           {this.renderArtifactsTable()}
         </div>
 
-        <NewArtifactModal
-          addArtifact={this.props.addArtifact}
+        <ArtifactModal
           showModal={this.state.showNewArtifactModal}
           closeModal={this.closeNewArtifactModal}
         />

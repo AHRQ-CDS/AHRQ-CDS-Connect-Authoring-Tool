@@ -1,0 +1,177 @@
+{
+  "resourceType": "Library",
+  "type": {
+    "coding": [
+      {
+        "system": "http://terminology.hl7.org/CodeSystem/library-type",
+        "code": "logic-library",
+        "display": "Logic Library"
+      }
+    ]
+  },
+  "name": "Testing_CPG_Context",
+  "title": "Testing CPG Context",
+  "version": "1.0.0",
+  "status": "draft",
+  "useContext": [
+    {
+      "code": {
+        "code": "species",
+        "system": "http://terminology.hl7.org/CodeSystem/usage-context-type"
+      },
+      "valueCodeableConcept": {
+        "coding": [
+          {
+            "system": "http://loinc.org",
+            "code": "80350-2"
+          }
+        ]
+      }
+    },
+    {
+      "code": {
+        "system": "http://terminology.hl7.org/CodeSystem/usage-context-type",
+        "code": "gender"
+      },
+      "valueCodeableConcept": {
+        "coding": [
+          {
+            "system": "http://hl7.org/fhir/administrative-gender",
+            "code": "female",
+            "display": "Female"
+          }
+        ]
+      }
+    },
+    {
+      "code": {
+        "system": "http://terminology.hl7.org/CodeSystem/usage-context-type",
+        "code": "age"
+      },
+      "valueRange": {
+        "low": {
+          "value": 1,
+          "unit": "weeks",
+          "system": "http://unitsofmeasure.org",
+          "code": "wk"
+        },
+        "high": {
+          "value": 5,
+          "unit": "weeks",
+          "system": "http://unitsofmeasure.org",
+          "code": "wk"
+        }
+      }
+    },
+    {
+      "code": {
+        "system": "http://terminology.hl7.org/CodeSystem/usage-context-type",
+        "code": "user"
+      },
+      "valueCodeableConcept": {
+        "coding": [
+          {
+            "system": "http://nucc.org/provider-taxonomy",
+            "code": "101Y00000X",
+            "display": "Counselor"
+          }
+        ]
+      }
+    },
+    {
+      "code": {
+        "system": "http://terminology.hl7.org/CodeSystem/usage-context-type",
+        "code": "workflow"
+      },
+      "valueCodeableConcept": {
+        "coding": [
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-ActCode",
+            "code": "IMP",
+            "display": "inpatient encounter"
+          }
+        ]
+      }
+    },
+    {
+      "code": {
+        "system": "http://terminology.hl7.org/CodeSystem/usage-context-type",
+        "code": "task"
+      },
+      "valueCodeableConcept": {
+        "coding": [
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-ActCode",
+            "code": "ALLERLREV",
+            "display": "allergy list review"
+          }
+        ]
+      }
+    },
+    {
+      "code": {
+        "system": "http://terminology.hl7.org/CodeSystem/usage-context-type",
+        "code": "venue"
+      },
+      "valueCodeableConcept": {
+        "coding": [
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+            "code": "ECHO",
+            "display": "Echocardiography lab"
+          }
+        ]
+      }
+    },
+    {
+      "code": {
+        "system": "http://terminology.hl7.org/CodeSystem/usage-context-type",
+        "code": "program"
+      },
+      "valueCodeableConcept": {
+        "text": "?"
+      }
+    },
+    {
+      "code": {
+        "system": "http://terminology.hl7.org/CodeSystem/usage-context-type",
+        "code": "focus"
+      },
+      "valueCodeableConcept": {
+        "coding": [
+          {
+            "system": "http://www.nlm.nih.gov/research/umls/rxnorm",
+            "code": "435"
+          }
+        ]
+      }
+    }
+  ],
+  "lastReviewDate": "2020-08-28",
+  "author": [
+    {
+      "name": "Original Author"
+    }
+  ],
+  "reviewer": [
+    {
+      "name": "The Reviewer"
+    }
+  ],
+  "endorser": [
+    {
+      "name": "Endorser 1"
+    },
+    {
+      "name": "Endorser II"
+    }
+  ],
+  "relatedArtifact": [
+    {
+      "type": "citation",
+      "display": "Test Description",
+      "url": "https://test.test.test",
+      "citation": "NULL"
+    }
+  ]
+}

@@ -9,7 +9,7 @@ import { sortMostRecent } from '../../utils/sort';
 import artifactProps from '../../prop-types/artifact';
 
 import Modal from '../elements/Modal';
-import EditArtifactModal from './EditArtifactModal';
+import ArtifactModal from './ArtifactModal';
 
 export default class ArtifactTable extends Component {
   constructor(props) {
@@ -18,24 +18,24 @@ export default class ArtifactTable extends Component {
     this.state = {
       artifactEditing: null,
       artifactToDelete: null,
-      showEditArtifactModal: false,
+      showArtifactModal: false,
       showConfirmDeleteModal: false
     };
   }
 
   // ----------------------- EDIT ARTIFACT MODAL --------------------------- //
 
-  openEditArtifactModal = (artifact) => {
-    this.setState({ artifactEditing: artifact, showEditArtifactModal: true });
+  openArtifactModal = (artifact) => {
+    this.setState({ artifactEditing: artifact, showArtifactModal: true });
   }
 
-  closeEditArtifactModal = () => {
-    this.setState({ showEditArtifactModal: false });
+  closeArtifactModal = () => {
+    this.setState({ showArtifactModal: false });
   }
 
   handleEditArtifact = (props) => {
     this.props.updateAndSaveArtifact(this.state.artifactEditing, props);
-    this.closeEditArtifactModal(false);
+    this.closeArtifactModal(false);
   }
 
   // ----------------------- CONFIRM DELETE MODAL -------------------------- //
@@ -105,7 +105,7 @@ export default class ArtifactTable extends Component {
       <td data-th="">
         <button aria-label="Edit"
           className="primary-button edit-artifact-button"
-          onClick={() => this.openEditArtifactModal(artifact)}>
+          onClick={() => this.openArtifactModal(artifact)}>
           <FontAwesomeIcon icon={faPencilAlt} /> Edit Info
         </button>
 
@@ -138,10 +138,10 @@ export default class ArtifactTable extends Component {
           </tbody>
         </table>
 
-        <EditArtifactModal
+        <ArtifactModal
           artifactEditing={this.state.artifactEditing}
-          showModal={this.state.showEditArtifactModal}
-          closeModal={this.closeEditArtifactModal}
+          showModal={this.state.showArtifactModal}
+          closeModal={this.closeArtifactModal}
           saveModal={this.handleEditArtifact} />
 
         {this.renderConfirmDeleteModal()}

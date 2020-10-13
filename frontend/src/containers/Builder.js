@@ -27,7 +27,8 @@ import {
 
 import BaseElements from '../components/builder/BaseElements';
 import ConjunctionGroup from '../components/builder/ConjunctionGroup';
-import EditArtifactModal from '../components/artifact/EditArtifactModal';
+import ArtifactModal from '../components/artifact/ArtifactModal';
+
 import ELMErrorModal from '../components/builder/ELMErrorModal';
 import ErrorStatement from '../components/builder/ErrorStatement';
 import ExternalCQL from '../components/builder/ExternalCQL';
@@ -49,7 +50,7 @@ export class Builder extends Component {
     super(props);
 
     this.state = {
-      showEditArtifactModal: false,
+      showArtifactModal: false,
       showPublishModal: false,
       showELMErrorModal: false,
       showMenu: false,
@@ -252,18 +253,18 @@ export class Builder extends Component {
 
   // ----------------------- ARTIFACTS ------------------------------------- //
 
-  openEditArtifactModal = () => {
-    this.setState({ showEditArtifactModal: true });
+  openArtifactModal = () => {
+    this.setState({ showArtifactModal: true });
   }
 
-  closeEditArtifactModal = () => {
-    this.setState({ showEditArtifactModal: false });
+  closeArtifactModal = () => {
+    this.setState({ showArtifactModal: false });
   }
 
 
   handleSaveArtifact = (artifactPropsChanged) => {
     this.props.updateAndSaveArtifact(this.props.artifact, artifactPropsChanged);
-    this.closeEditArtifactModal(false);
+    this.closeArtifactModal(false);
   }
 
   // ----------------------- TREES ----------------------------------------- //
@@ -431,7 +432,7 @@ export class Builder extends Component {
     return (
       <header className="builder__header" aria-label="Workspace Header">
         <h2 className="builder__heading">
-          <button aria-label="Edit" className="secondary-button" onClick={this.openEditArtifactModal}>
+          <button aria-label="Edit" className="secondary-button" onClick={this.openArtifactModal}>
             <FontAwesomeIcon icon={faPencilAlt} />
           </button>
 
@@ -760,11 +761,10 @@ export class Builder extends Component {
           version={artifact.version}
         />
 
-        <EditArtifactModal
+        <ArtifactModal
           artifactEditing={artifact}
-          showModal={this.state.showEditArtifactModal}
-          closeModal={this.closeEditArtifactModal}
-          saveModal={this.handleSaveArtifact}
+          showModal={this.state.showArtifactModal}
+          closeModal={this.closeArtifactModal}
         />
 
         <ELMErrorModal

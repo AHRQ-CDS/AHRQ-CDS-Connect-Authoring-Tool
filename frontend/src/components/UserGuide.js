@@ -217,6 +217,23 @@ export default class UserGuide extends Component {
                   Once you've entered an artifact name and version, click the "Save" button. Your new artifact will appear
                   at the top of the artifact list.
                 </div>
+                <h4 id="CPG_Form">2.1.1 FHIR Clinical Guidelines (a.k.a. CPG on FHIR) Metadata</h4>
+                <div>
+                  The Authoring Tool supports metadata conforming to the{' '}
+                  <ExternalLink
+                    href="http://build.fhir.org/ig/HL7/cqf-recommendations/StructureDefinition-cpg-publishablelibrary.html"
+                    text={"FHIR Clinical Guidelines Publishable Library"}
+                  />
+                  {' '}specification. By clicking the "Show CPG Fields" button, form data may be entered.
+                </div>
+                <div>
+                  <img alt="" src={screenshotUrl('CPG_Form_Fields')}
+                  className="img-fluid img-thumbnail rounded mx-auto d-block"/>
+                </div>
+                <div>
+                    A progress bar at the top of the form
+                shows a score relative to the completion percentage of entered CPG metadata.
+                </div>
               </div>
 
               <div className="h3-wrapper">
@@ -272,8 +289,10 @@ export default class UserGuide extends Component {
                     edit it.
                   </li>
                   <li>
-                    <strong>Download CQL Button</strong>: Allows the author to download the artifact as FHIR-based CQL. When you
-                    click this button, you can choose which version of FHIR to use in the exported CQL (DSTU2, STU3, or R4).
+                    <strong>Download CQL Button</strong>: Allows the author to download the artifact as both FHIR-based CQL and
+                    as a Clinical Practice Guidelines (a.k.a. CPG on FHIR) Publishable Library. When you click this button,
+                    you can choose which version of FHIR to use in the exported CQL (DSTU2, STU3, or R4).  NOTE: FHIR version
+                    may be restricted depending on the FHIR version of any external CQL that has been imported.
                   </li>
                   <li>
                     <strong>Save Button</strong>: Allows the author to explicitly save their progress. NOTE: Progress will also be

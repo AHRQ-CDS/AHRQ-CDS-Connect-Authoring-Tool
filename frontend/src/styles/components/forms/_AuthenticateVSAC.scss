@@ -1,0 +1,13 @@
+.authenticate-vsac {
+  width: 100%;
+
+  &__disclaimer {
+    font-style: italic;
+    margin-left: 215px;
+    font-size: 0.9em;
+  }
+
+  .login__auth-status {
+    margin-left: 215px;
+  }
+}

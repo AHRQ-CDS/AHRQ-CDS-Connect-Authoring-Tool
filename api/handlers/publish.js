@@ -20,8 +20,9 @@ function publish(req, res) {
   const fd = tmp.fileSync({ postfix: '.zip' });
   const output = fs.createWriteStream(fd.name);
   // TODO: cqlHandler.writeZip has been updated and the call to it here needs to be updated accordingly.
-  // A second argument should be an array of any external libraries that the artifact uses.
-  cqlHandler.writeZip(artifact.toJson(), [], output, (err) => {
+  // A third argument should be an array of any external libraries that the artifact uses.
+  // The second argument should be JSON accounting for cql-merge.
+  cqlHandler.writeZip(artifact, artifact.toJson(), [], output, (err) => {
     if (err) {
       res.status(500).send({ error: err.message });
       return;

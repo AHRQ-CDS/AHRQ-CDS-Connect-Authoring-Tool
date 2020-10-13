@@ -50,6 +50,7 @@ describe('<ConjunctionGroup />', () => {
         validateCode={jest.fn()}
         vsacDetailsCodes={[]}
         vsacDetailsCodesError=""
+        vsacFHIRCredentials={{}}
         vsacSearchCount={0}
         vsacSearchResults={[]}
         vsacStatus=""

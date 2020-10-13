@@ -1,0 +1,224 @@
+[
+  {
+    "Lvl": 1,
+    "Code": "OE",
+    "Display": "order entry task",
+    "Definition": "A clinician creates a request for a service to be performed for a given patient."
+  },
+  {
+    "Lvl": 2,
+    "Code": "LABOE",
+    "Display": "laboratory test order entry task",
+    "Definition": "A clinician creates a request for a laboratory test to be done for a given patient."
+  },
+  {
+    "Lvl": 2,
+    "Code": "MEDOE",
+    "Display": "medication order entry task",
+    "Definition": "A clinician creates a request for the administration of one or more medications to a given patient."
+  },
+  {
+    "Lvl": 1,
+    "Code": "PATDOC",
+    "Display": "patient documentation task",
+    "Definition": "A person enters documentation about a given patient."
+  },
+  {
+    "Lvl": 2,
+    "Code": "ALLERLREV",
+    "Display": "allergy list review",
+    "Definition": "**Description:** A person reviews a list of known allergies of a given patient."
+  },
+  {
+    "Lvl": 2,
+    "Code": "CLINNOTEE",
+    "Display": "clinical note entry task",
+    "Definition": "A clinician enters a clinical note about a given patient"
+  },
+  {
+    "Lvl": 3,
+    "Code": "DIAGLISTE",
+    "Display": "diagnosis list entry task",
+    "Definition": "A clinician enters a diagnosis for a given patient."
+  },
+  {
+    "Lvl": 3,
+    "Code": "DISCHINSTE",
+    "Display": "discharge instruction entry",
+    "Definition": "A person provides a discharge instruction to a patient."
+  },
+  {
+    "Lvl": 3,
+    "Code": "DISCHSUME",
+    "Display": "discharge summary entry task",
+    "Definition": "A clinician enters a discharge summary for a given patient."
+  },
+  {
+    "Lvl": 3,
+    "Code": "PATEDUE",
+    "Display": "patient education entry",
+    "Definition": "A person provides a patient-specific education handout to a patient."
+  },
+  {
+    "Lvl": 3,
+    "Code": "PATREPE",
+    "Display": "pathology report entry task",
+    "Definition": "A pathologist enters a report for a given patient."
+  },
+  {
+    "Lvl": 3,
+    "Code": "PROBLISTE",
+    "Display": "problem list entry task",
+    "Definition": "A clinician enters a problem for a given patient."
+  },
+  {
+    "Lvl": 3,
+    "Code": "RADREPE",
+    "Display": "radiology report entry task",
+    "Definition": "A radiologist enters a report for a given patient."
+  },
+  {
+    "Lvl": 2,
+    "Code": "IMMLREV",
+    "Display": "immunization list review",
+    "Definition": "**Description:** A person reviews a list of immunizations due or received for a given patient."
+  },
+  {
+    "Lvl": 2,
+    "Code": "REMLREV",
+    "Display": "reminder list review",
+    "Definition": "**Description:** A person reviews a list of health care reminders for a given patient."
+  },
+  {
+    "Lvl": 3,
+    "Code": "WELLREMLREV",
+    "Display": "wellness reminder list review",
+    "Definition": "**Description:** A person reviews a list of wellness or preventive care reminders for a given patient."
+  },
+  {
+    "Lvl": 1,
+    "Code": "PATINFO",
+    "Display": "patient information review task",
+    "Definition": "A person (e.g., clinician, the patient herself) reviews patient information in the electronic medical record."
+  },
+  {
+    "Lvl": 2,
+    "Code": "ALLERLE",
+    "Display": "allergy list entry",
+    "Definition": "**Description:** A person enters a known allergy for a given patient."
+  },
+  {
+    "Lvl": 2,
+    "Code": "CDSREV",
+    "Display": "clinical decision support intervention review",
+    "Definition": "A person reviews a recommendation/assessment provided automatically by a clinical decision support application for a given patient."
+  },
+  {
+    "Lvl": 2,
+    "Code": "CLINNOTEREV",
+    "Display": "clinical note review task",
+    "Definition": "A person reviews a clinical note of a given patient."
+  },
+  {
+    "Lvl": 3,
+    "Code": "DISCHSUMREV",
+    "Display": "discharge summary review task",
+    "Definition": "A person reviews a discharge summary of a given patient."
+  },
+  {
+    "Lvl": 2,
+    "Code": "DIAGLISTREV",
+    "Display": "diagnosis list review task",
+    "Definition": "A person reviews a list of diagnoses of a given patient."
+  },
+  {
+    "Lvl": 2,
+    "Code": "IMMLE",
+    "Display": "immunization list entry",
+    "Definition": "**Description:** A person enters an immunization due or received for a given patient."
+  },
+  {
+    "Lvl": 2,
+    "Code": "LABRREV",
+    "Display": "laboratory results review task",
+    "Definition": "A person reviews a list of laboratory results of a given patient."
+  },
+  {
+    "Lvl": 2,
+    "Code": "MICRORREV",
+    "Display": "microbiology results review task",
+    "Definition": "A person reviews a list of microbiology results of a given patient."
+  },
+  {
+    "Lvl": 3,
+    "Code": "MICROORGRREV",
+    "Display": "microbiology organisms results review task",
+    "Definition": "A person reviews organisms of microbiology results of a given patient."
+  },
+  {
+    "Lvl": 3,
+    "Code": "MICROSENSRREV",
+    "Display": "microbiology sensitivity test results review task",
+    "Definition": "A person reviews the sensitivity test of microbiology results of a given patient."
+  },
+  {
+    "Lvl": 2,
+    "Code": "MLREV",
+    "Display": "medication list review task",
+    "Definition": "A person reviews a list of medication orders submitted to a given patient"
+  },
+  {
+    "Lvl": 3,
+    "Code": "MARWLREV",
+    "Display": "medication administration record work list review task",
+    "Definition": "A clinician reviews a work list of medications to be administered to a given patient."
+  },
+  {
+    "Lvl": 2,
+    "Code": "OREV",
+    "Display": "orders review task",
+    "Definition": "A person reviews a list of orders submitted to a given patient."
+  },
+  {
+    "Lvl": 2,
+    "Code": "PATREPREV",
+    "Display": "pathology report review task",
+    "Definition": "A person reviews a pathology report of a given patient."
+  },
+  {
+    "Lvl": 2,
+    "Code": "PROBLISTREV",
+    "Display": "problem list review task",
+    "Definition": "A person reviews a list of problems of a given patient."
+  },
+  {
+    "Lvl": 2,
+    "Code": "RADREPREV",
+    "Display": "radiology report review task",
+    "Definition": "A person reviews a radiology report of a given patient."
+  },
+  {
+    "Lvl": 2,
+    "Code": "REMLE",
+    "Display": "reminder list entry",
+    "Definition": "**Description:** A person enters a health care reminder for a given patient."
+  },
+  {
+    "Lvl": 3,
+    "Code": "WELLREMLE",
+    "Display": "wellness reminder list entry",
+    "Definition": "**Description:** A person enters a wellness or preventive care reminder for a given patient."
+  },
+  {
+    "Lvl": 2,
+    "Code": "RISKASSESS",
+    "Display": "risk assessment instrument task",
+    "Definition": "A person reviews a Risk Assessment Instrument report of a given patient."
+  },
+  {
+    "Lvl": 3,
+    "Code": "FALLRISK",
+    "Display": "falls risk assessment instrument task",
+    "Definition": "A person reviews a Falls Risk Assessment Instrument report of a given patient."
+  }
+]
