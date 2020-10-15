@@ -41,6 +41,10 @@ function loadModifiersFailure(error) {
 }
 
 function sendModifiersRequest() {
+  // We only support editors for these types, so we have to use this list to
+  // filter functions for modifiers that we are able to support.
+  const editorTypes = ['boolean', 'system_code', 'system_concept', 'integer', 'datetime', 'decimal', 'system_quantity',
+    'string', 'time', 'interval_of_integer', 'interval_of_datetime', 'interval_of_decimal', 'interval_of_quantity'];
   return (dispatch, getState) => {
     return new Promise((resolve, reject) => {
       try {
@@ -52,7 +56,7 @@ function sendModifiersRequest() {
             // arguments, and argumentTypes field that is not on other modifiers.
             // This is needed for the sake of testing whether external CQL libraries
             // can be deleted or updated or used as modifiers, by checking these details.
-            if (func.operand.length >= 1) {
+            if (func.operand.length >= 1 && func.argumentTypes.every(type => editorTypes.includes(type.calculated))) {
               const functionAndLibraryName = `${func.name} (from ${lib.name})`;
               const modifier = {
                 id: functionAndLibraryName,
