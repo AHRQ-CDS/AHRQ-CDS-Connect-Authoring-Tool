@@ -346,7 +346,19 @@ export default class TemplateInstance extends Component {
               index={index}
               name={mod.name}
               value={mod.values.value}
-              updateAppliedModifier={this.updateAppliedModifier}/>
+              arguments={mod.arguments}
+              argumentTypes={mod.argumentTypes}
+              updateAppliedModifier={this.updateAppliedModifier}
+              vsacFHIRCredentials={this.props.vsacFHIRCredentials}
+              loginVSACUser={this.props.loginVSACUser}
+              setVSACAuthStatus={this.props.setVSACAuthStatus}
+              vsacStatus={this.props.vsacStatus}
+              vsacStatusText={this.props.vsacStatusText}
+              isValidatingCode={this.props.isValidatingCode}
+              isValidCode={this.props.isValidCode}
+              codeData={this.props.codeData}
+              validateCode={this.props.validateCode}
+              resetCodeValidation={this.props.resetCodeValidation} />
           );
         default:
           return (<LabelModifier key={index} name={mod.name} id={mod.id}/>);

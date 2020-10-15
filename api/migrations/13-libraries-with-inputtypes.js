@@ -168,9 +168,17 @@ function mapInputTypes(definitions) {
   const mappedDefinitions = definitions;
   mappedDefinitions.map(definition => {
     if (definition.operand && definition.operand.length > 0) {
-      const { elmType, elmDisplay } = calculateInputType(definition.operand[0]);
-      definition.calculatedInputTypes = [elmType || 'other'];
-      definition.displayInputTypes = [elmDisplay];
+      const argumentTypes = [];
+      definition.operand.forEach(operand => {
+        const { elmType, elmDisplay } = calculateInputType(operand);
+        argumentTypes.push({ calculated: (elmType || 'other'), display: elmDisplay });
+      });
+      definition.argumentTypes = argumentTypes;
+      // The inputTypes should only be equivalent to the input type of the first argument
+      // so that external CQL modifiers can use the element return type as this input
+      definition.inputTypes = (definition.argumentTypes.length > 0)
+        ? [definition.argumentTypes[0].calculated]
+        : [];
     }
   });
   return mappedDefinitions;

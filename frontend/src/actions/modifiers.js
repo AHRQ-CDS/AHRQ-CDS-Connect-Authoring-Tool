@@ -49,23 +49,24 @@ function sendModifiersRequest() {
         externalCqlList.forEach(lib => {
           lib.details.functions.forEach(func => {
             // The ExternalModifier requires a functionName, libraryName,
-            // and arguments field that is not on other modifiers. This is
-            // needed for the sake of testing whether external CQL libraries
-            // can be deleted or updated, by checking these details.
+            // arguments, and argumentTypes field that is not on other modifiers.
+            // This is needed for the sake of testing whether external CQL libraries
+            // can be deleted or updated or used as modifiers, by checking these details.
             if (func.operand.length >= 1) {
               const functionAndLibraryName = `${func.name} (from ${lib.name})`;
               const modifier = {
                 id: functionAndLibraryName,
                 type: 'ExternalModifier',
                 name: functionAndLibraryName,
-                inputTypes: func.calculatedInputTypes,
+                inputTypes: func.inputTypes,
                 returnType: func.calculatedReturnType,
                 cqlTemplate: 'ExternalModifier',
                 cqlLibraryFunction: `"${lib.name}"."${func.name}"`,
-                values: { value: '' },
+                values: { value: [] },
                 functionName: func.name,
                 libraryName: lib.name,
-                arguments: func.operand
+                arguments: func.operand,
+                argumentTypes: func.argumentTypes
               };
               externalModifiers.push(modifier);
             }
