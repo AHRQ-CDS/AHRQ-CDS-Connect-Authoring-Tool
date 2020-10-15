@@ -348,7 +348,7 @@ export default class Parameter extends Component {
                         inputProps={{ title: 'Select Parameter Type', id: `parameter-${index}` }}
                         options={typeOptions}
                         value={typeOptions.find(typeOption => typeOption.value === type)}
-                        disabled={parameterUsed}
+                        isDisabled={parameterUsed}
                         isClearable={false}
                         onChange={parameterType => this.changeParameterType(parameterType, name, comment)}
                       />
