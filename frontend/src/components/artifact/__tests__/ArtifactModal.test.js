@@ -118,6 +118,8 @@ describe('<ArtifactModal />', () => {
     });
 
     it('can fill out the CPG form', async () => {
+      // Increase timeout as this test takes a long time when running in the Docker container
+      jest.setTimeout(30000);
       const { getByText, getByLabelText } = render(
         <ArtifactModal
           artifactEditing={null}
@@ -200,9 +202,10 @@ describe('<ArtifactModal />', () => {
           purpose: 'NewArtifactPurpose',
           usage: 'NewArtifactUsage',
           copyright: 'NewArtifactCopyright',
-          approvalDate: '2000-01-01T05:00:00.000Z',
-          lastReviewDate: '2000-01-02T05:00:00.000Z',
-          effectivePeriod: { start: '2000-01-03T05:00:00.000Z', end: '2000-01-04T05:00:00.000Z' },
+          // Format dates using this approach so tests pass regardless of the TZ they are run in
+          approvalDate: new Date(2000, 0, 1).toISOString(),
+          lastReviewDate: new Date(2000, 0, 2).toISOString(),
+          effectivePeriod: { start: new Date(2000, 0, 3).toISOString(), end: new Date(2000, 0, 4).toISOString() },
           topic: [],
           author: [{ author: 'NewArtifactAuthor' }],
           reviewer: [{ reviewer: 'NewArtifactReviewer' }],
