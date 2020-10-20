@@ -77,7 +77,8 @@ export default class UserGuide extends Component {
               production-ready{' '}
               <ExternalLink
                 href="https://cql.hl7.org/"
-                text={["Health Level Seven (HL7",<sup>®</sup>,") Clinical Quality Language (CQL)"]} />
+                text={<>Health Level Seven (HL7<sup>®</sup>) Clinical Quality Language (CQL)</>}
+              />
               {' '}logic without the need to fully understand the CQL specification.
             </div>
             <div>
@@ -203,7 +204,7 @@ export default class UserGuide extends Component {
                   or versions, but{' '}
                   <ExternalLink
                     href="http://hl7.org/fhir/uv/cpg/2019Sep/documentation-libraries.html"
-                    text={["FHIR",<sup>®</sup>," Clinical Guidelines"]}
+                    text={<>FHIR<sup>®</sup> Clinical Guidelines</>}
                   />
                   {' '}suggests using the{' '}
                   <ExternalLink href="https://apr.apache.org/versioning.html" text="Apache APR Versioning Scheme" />
