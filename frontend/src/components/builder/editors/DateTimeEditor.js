@@ -6,6 +6,17 @@ import TimePicker from 'rc-time-picker';
 import _ from 'lodash';
 
 export default class DateTimeEditor extends Component {
+  constructor(props) {
+    super(props);
+
+    const date = _.get(props, 'value.date', null);
+    const time = _.get(props, 'value.time', null);
+  
+    this.state = {
+      showInputWarning: (time && !date)
+    };
+  }
+
   assignValue(evt, name) {
     let date = null;
     let time = null;
@@ -23,6 +34,8 @@ export default class DateTimeEditor extends Component {
       default:
         break;
     }
+
+    this.setState({ showInputWarning: (time && !date) });
 
     if (date || time) {
       if (time) {
@@ -43,43 +56,51 @@ export default class DateTimeEditor extends Component {
     return (
       <div className="date-time-editor">
         <div className="form__group">
-          <label htmlFor={formId}>
+          <label className="label-container" htmlFor={formId}>
             <div className="label">{label}</div>
 
-            <div className="input-group">
-              <span className="date-label">Date:</span>
+            <div className="input-group-container">
+              <div className="input-group">
+                <span className="date-label">Date:</span>
 
-              <DatePicker
-                id={id}
-                selected={
-                  moment(_.get(value, 'date', null), 'YYYY-MM-DD').isValid()
-                  ? moment(value.date, 'YYYY-MM-DD').toDate()
-                  : null}
-                dateFormat="MM/dd/yyyy"
-                autoComplete="off"
-                onChange={ (e) => {
-                  updateInstance({ name, type, label, value: this.assignValue(moment(e), 'date') });
-                }}
-              />
-            </div>
+                <DatePicker
+                  id={id}
+                  selected={
+                    moment(_.get(value, 'date', null), 'YYYY-MM-DD').isValid()
+                    ? moment(value.date, 'YYYY-MM-DD').toDate()
+                    : null}
+                  dateFormat="MM/dd/yyyy"
+                  autoComplete="off"
+                  onChange={ (e) => {
+                    updateInstance({ name, type, label, value: this.assignValue(moment(e), 'date') });
+                  }}
+                />
+              </div>
 
-            <div className="input-group">
-              <span className="date-label">Time:</span>
+              <div className="input-group">
+                <span className="date-label">Time:</span>
 
-              <TimePicker
-                id={id}
-                defaultValue={
-                  moment(_.get(value, 'time', null), 'HH:mm:ss').isValid()
-                  ? moment(value.time, 'HH:mm:ss')
-                  : null}
-                autoComplete="off"
-                onChange={ (e) => {
-                  updateInstance({ name, type, label, value: this.assignValue(e, 'time') });
-                }}
-              />
+                <TimePicker
+                  id={id}
+                  defaultValue={
+                    moment(_.get(value, 'time', null), 'HH:mm:ss').isValid()
+                    ? moment(value.time, 'HH:mm:ss')
+                    : null}
+                  autoComplete="off"
+                  onChange={ (e) => {
+                    updateInstance({ name, type, label, value: this.assignValue(e, 'time') });
+                  }}
+                />
+              </div>
             </div>
           </label>
         </div>
+
+        {this.state.showInputWarning &&
+          <div className="warning">
+            {`Warning: A DateTime must have at least a date.`}
+          </div>
+        }
       </div>
     );
   }

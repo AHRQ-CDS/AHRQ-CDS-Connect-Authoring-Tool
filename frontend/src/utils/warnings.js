@@ -162,42 +162,6 @@ export function parameterHasDuplicateName(parameterName, id, usedBy, instanceNam
   return duplicateNameIndex !== -1;
 }
 
-export function parameterIsIncompleteWarning(type, value) {
-  if (value) {
-    switch (type) {
-      case 'datetime':
-        if (value.time && !value.date) {
-          return 'A DateTime must have at least a date.';
-        }
-        break;
-      case 'system_quantity':
-        if (value.unit && !(value.quantity || value.quantity === 0)) {
-          return 'A Quantity must have at least a numerical value.';
-        }
-        break;
-      case 'interval_of_datetime':
-        if ((value.firstTime && !value.firstDate)
-        || (value.secondTime && !value.secondDate)) {
-          return 'An Interval<DateTime> cannot include a time without a corresponding date.';
-        }
-        break;
-      case 'interval_of_quantity':
-        if (value.unit &&
-          !(
-            (value.firstQuantity || value.firstQuantity === 0)
-            || (value.secondQuantity || value.secondQuantity === 0)
-          )) {
-          return 'An Interval<Quantity> must have at least one numerical value.';
-        }
-        break;
-      default:
-        break;
-    }
-  }
-
-  return null;
-}
-
 export function validateElement(instance, templateInstanceFields) {
   if (instance.validator) {
     const validator = Validators[instance.validator.type];

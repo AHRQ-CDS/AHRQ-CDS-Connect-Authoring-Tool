@@ -5,8 +5,7 @@ import _ from 'lodash';
 export default class IntegerEditor extends Component {
   assignValue = (evt) => {
     let value = _.get(evt, 'target.value', null);
-    // read the value as an int, then convert it to a string
-    if (value != null) { value = parseInt(value, 10); }
+    if (value != null) value = parseInt(value, 10);
     return value;
   }
 
@@ -17,18 +16,20 @@ export default class IntegerEditor extends Component {
     return (
       <div className="integer-editor">
         <div className="form-group">
-          <label htmlFor={formId}>
+          <label className="label-container" htmlFor={formId}>
             <div className="label">{label}</div>
 
-            <div className="input">
-              <input
-                id={formId}
-                type="number"
-                value={(value || value === 0) ? value : ''}
-                onChange={ (e) => {
-                  updateInstance({ name, type, label, value: this.assignValue(e) });
-                }}
-              />
+            <div className="input-group-container">
+              <div className="input">
+                <input
+                  id={formId}
+                  type="number"
+                  value={(value || value === 0) ? value : NaN}
+                  onChange={(e) => {
+                    updateInstance({ name, type, label, value: this.assignValue(e) });
+                  }}
+                />
+              </div>
             </div>
           </label>
         </div>

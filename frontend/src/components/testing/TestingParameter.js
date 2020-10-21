@@ -34,7 +34,7 @@ export default class TestingParameter extends Component {
       resetCodeValidation: this.props.resetCodeValidation
     };
 
-    return <Editor {...editorProps} />
+    return <Editor {...editorProps} />;
   }
 
   render() {

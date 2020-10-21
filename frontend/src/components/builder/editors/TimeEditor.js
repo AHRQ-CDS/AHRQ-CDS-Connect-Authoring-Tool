@@ -18,18 +18,20 @@ export default class TimeEditor extends Component {
     return (
       <div className="time-editor">
         <div className="form__group">
-          <label htmlFor={formId}>
+          <label className="label-container" htmlFor={formId}>
             <div className="label">{label}</div>
 
-            <div className="input">
-              <TimePicker
-                id={formId}
-                defaultValue={moment(value, 'HH:mm:ss').isValid() ? moment(value, 'HH:mm:ss') : null}
-                autoComplete="off"
-                onChange={ (e) => {
-                  updateInstance({ name, type, label, value: this.assignValue(e) });
-                }}
-              />
+            <div className="input-group-container">
+              <div className="input">
+                <TimePicker
+                  id={formId}
+                  defaultValue={moment(value, 'HH:mm:ss').isValid() ? moment(value, 'HH:mm:ss') : null}
+                  autoComplete="off"
+                  onChange={ (e) => {
+                    updateInstance({ name, type, label, value: this.assignValue(e) });
+                  }}
+                />
+              </div>
             </div>
           </label>
         </div>

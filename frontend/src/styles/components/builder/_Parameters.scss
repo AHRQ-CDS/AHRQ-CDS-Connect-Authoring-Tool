@@ -133,6 +133,12 @@
     }
   }
 
+  .input-group-container {
+    display: flex;
+    flex: 4 1;
+    width: 18em;
+  }
+
   textarea {
     height: auto;
     min-height: 50px;

@@ -38,41 +38,43 @@ export default class IntervalOfIntegerEditor extends Component {
     return (
       <div className="interval-of-integer-editor">
         <div className="form__group">
-          <label htmlFor={formId}>
+          <label className="label-container" htmlFor={formId}>
             <div className="label">{label}</div>
 
-            <div className="input-group">
-              <input
-                id={formId}
-                name="firstInteger"
-                type="number"
-                value={
-                  (_.get(value, 'firstInteger', null) || _.get(value, 'firstInteger', null) === 0)
-                  ? _.get(value, 'firstInteger')
-                  : '' }
-                onChange={ (e) => {
-                  updateInstance({ name, type, label, value: this.assignValue(e) });
-                }}
-              />
+            <div className="input-group-container">
+              <div className="input-group">
+                <input
+                  id={formId}
+                  name="firstInteger"
+                  type="number"
+                  value={
+                    (_.get(value, 'firstInteger', null) || _.get(value, 'firstInteger', null) === 0)
+                    ? _.get(value, 'firstInteger')
+                    : NaN }
+                  onChange={ (e) => {
+                    updateInstance({ name, type, label, value: this.assignValue(e) });
+                  }}
+                />
 
-              <div className="dash">-</div>
-            </div>
+                <div className="dash">-</div>
+              </div>
 
 
-            <div className="input-group">
-              <input
-                id={id}
-                name="secondInteger"
-                type="number"
-                aria-label="Second Integer"
-                value={
-                  (_.get(value, 'secondInteger', null) || _.get(value, 'secondInteger', null) === 0)
-                  ? _.get(value, 'secondInteger')
-                  : '' }
-                onChange={ (e) => {
-                  updateInstance({ name, type, label, value: this.assignValue(e) });
-                }}
-              />
+              <div className="input-group">
+                <input
+                  id={id}
+                  name="secondInteger"
+                  type="number"
+                  aria-label="Second Integer"
+                  value={
+                    (_.get(value, 'secondInteger', null) || _.get(value, 'secondInteger', null) === 0)
+                    ? _.get(value, 'secondInteger')
+                    : NaN }
+                  onChange={ (e) => {
+                    updateInstance({ name, type, label, value: this.assignValue(e) });
+                  }}
+                />
+              </div>
             </div>
           </label>
         </div>

@@ -15,8 +15,7 @@ import StyledSelect from '../elements/StyledSelect';
 
 import {
   doesParameterNeedUsageWarning,
-  parameterHasDuplicateName,
-  parameterIsIncompleteWarning
+  parameterHasDuplicateName
 } from '../../utils/warnings';
 
 export default class Parameter extends Component {
@@ -229,9 +228,8 @@ export default class Parameter extends Component {
       this.props.getAllInstancesInAllTrees()
     );
 
-    const isIncompleteWarning = parameterIsIncompleteWarning(type, value);
     const parameterNeedsWarning
-      = doesHaveDuplicateName || doesHaveParameterUsageWarning || (isIncompleteWarning != null);
+      = doesHaveDuplicateName || doesHaveParameterUsageWarning;
     const typeLabel  = typeOptions.find(typeOption => typeOption.value === type).label;
 
     return (
@@ -268,12 +266,6 @@ export default class Parameter extends Component {
                 {this.renderElementButtons(parameterUsed, disabledClass)}
               </div>
             </div>
-
-            {isIncompleteWarning != null && !doesHaveDuplicateName && !doesHaveParameterUsageWarning &&
-              <div className="warning">
-                {`Warning: Default value is incomplete. ${isIncompleteWarning}`}
-              </div>
-            }
 
             {doesHaveDuplicateName && !doesHaveParameterUsageWarning &&
               <div className="warning">Warning: Name already in use. Choose another name.</div>

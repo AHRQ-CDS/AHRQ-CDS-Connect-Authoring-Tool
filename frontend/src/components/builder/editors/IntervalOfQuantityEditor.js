@@ -5,6 +5,18 @@ import _ from 'lodash';
 const { Def } = window;
 
 export default class IntervalOfQuantityEditor extends Component {
+  constructor(props) {
+    super(props);
+
+    const firstQuantity = _.get(props, 'value.firstQuantity', null);
+    const secondQuantity = _.get(props, 'value.secondQuantity', null);
+    const unit = _.get(props, 'value.unit', null);
+
+    this.state = {
+      showInputWarning: (unit && !((firstQuantity || firstQuantity === 0) || (secondQuantity || secondQuantity === 0)))
+    };
+  }
+
   componentDidMount = () => {
     new Def.Autocompleter.Search( // eslint-disable-line no-new
       `${this.props.id}-unit-ucum`,
@@ -41,6 +53,10 @@ export default class IntervalOfQuantityEditor extends Component {
         break;
     }
 
+    this.setState({
+      showInputWarning: (unit && !((firstQuantity || firstQuantity === 0) || (secondQuantity || secondQuantity === 0)))
+    });
+
     if ((firstQuantity || firstQuantity === 0) || (secondQuantity || secondQuantity === 0) || unit) {
       const escapedQuoteUnit = (unit ? unit.replace(/'/g, '\\\'') : unit) || '1';
       const firstQuantityForString = (firstQuantity || firstQuantity === 0) ? firstQuantity : null;
@@ -74,10 +90,10 @@ export default class IntervalOfQuantityEditor extends Component {
     return (
       <div className="interval-of-quantity-editor">
         <div className="form__group">
-          <label htmlFor={formId}>
+          <label className="label-container" htmlFor={formId}>
             <div className="label">{label}</div>
 
-            <div className="input input-3">
+            <div className="input-group-container">
               <div className="input-group input-group-3">
                 <input
                   id={formId}
@@ -86,14 +102,14 @@ export default class IntervalOfQuantityEditor extends Component {
                   value={
                     (_.get(value, 'firstQuantity', null) || _.get(value, 'firstQuantity', null) === 0)
                     ? _.get(value, 'firstQuantity')
-                    : '' }
+                    : NaN }
                   onChange={ (e) => {
                     updateInstance({ name, type, label, value: this.assignValue(e) });
                   }}
                 />
-                <div className="dash">-</div>
               </div>
 
+              <div className="dash">-</div>
 
               <div className="input-group input-group-3">
                 <input
@@ -104,7 +120,7 @@ export default class IntervalOfQuantityEditor extends Component {
                   value={
                     (_.get(value, 'secondQuantity', null) || _.get(value, 'secondQuantity', null) === 0)
                     ? _.get(value, 'secondQuantity')
-                    : '' }
+                    : NaN }
                   onChange={ (e) => {
                     updateInstance({ name, type, label, value: this.assignValue(e) });
                   }}
@@ -131,6 +147,12 @@ export default class IntervalOfQuantityEditor extends Component {
             </div>
           </label>
         </div>
+
+        {this.state.showInputWarning &&
+          <div className="warning">
+            {`Warning: An Interval<Quantity> must have at least one numerical value.`}
+          </div>
+        }
       </div>
     );
   }

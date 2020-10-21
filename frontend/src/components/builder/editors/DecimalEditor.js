@@ -28,21 +28,23 @@ export default class DecimalEditor extends Component {
     return (
       <div className="decimal-editor">
         <div className="form__group">
-          <label htmlFor={formId}>
+          <label className="label-container" htmlFor={formId}>
             <div className="label">{label}</div>
 
-            <div className="input">
-              <input
-                id={formId}
-                type="number"
-                value={
-                  (_.get(value, 'decimal', null) || _.get(value, 'decimal', null) === 0)
-                  ? _.get(value, 'decimal')
-                  : '' }
-                onChange={ (e) => {
-                  updateInstance({ name, type, label, value: this.assignValue(e) });
-                }}
-              />
+            <div className="input-group-container">
+              <div className="input">
+                <input
+                  id={formId}
+                  type="number"
+                  value={
+                    (_.get(value, 'decimal', null) || _.get(value, 'decimal', null) === 0)
+                    ? _.get(value, 'decimal')
+                    : NaN }
+                  onChange={ (e) => {
+                    updateInstance({ name, type, label, value: this.assignValue(e) });
+                  }}
+                />
+              </div>
             </div>
           </label>
         </div>

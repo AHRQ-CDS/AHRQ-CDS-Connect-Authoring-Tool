@@ -5,6 +5,17 @@ import _ from 'lodash';
 const { Def } = window;
 
 export default class QuantityEditor extends Component {
+  constructor(props) {
+    super(props);
+
+    const quantity = _.get(props, 'value.quantity', null);
+    const unit = _.get(props, 'value.unit', null);
+  
+    this.state = {
+      showInputWarning: (unit && !(quantity || quantity === 0))
+    };
+  }
+
   componentDidMount = () => {
     new Def.Autocompleter.Search( // eslint-disable-line no-new
       `${this.props.id}-unit-ucum`,
@@ -32,6 +43,8 @@ export default class QuantityEditor extends Component {
         break;
     }
 
+    this.setState({ showInputWarning: (unit && !(quantity || quantity === 0)) });
+
     if ((quantity || quantity === 0) || unit) {
       const escapedQuoteUnit = (unit ? unit.replace(/'/g, '\\\'') : unit) || '1';
       if (Number.isInteger(quantity)) {
@@ -51,43 +64,51 @@ export default class QuantityEditor extends Component {
     return (
       <div className="quantity-editor">
         <div className="form__group">
-          <label htmlFor={formId}>
+          <label className="label-container" htmlFor={formId}>
             <div className="label">{label}</div>
 
-            <div className="input-group">
-              <input
-                id={id}
-                name="quantity"
-                type="number"
-                value={
-                  (_.get(value, 'quantity', null) || _.get(value, 'quantity', null) === 0)
-                  ? _.get(value, 'quantity')
-                  : '' }
-                onChange={ (e) => {
-                  updateInstance({ name, type, label, value: this.assignValue(e) });
-                }}
-              />
-            </div>
+            <div className="input-group-container">
+              <div className="input-group">
+                <input
+                  id={id}
+                  name="quantity"
+                  type="number"
+                  value={
+                    (_.get(value, 'quantity', null) || _.get(value, 'quantity', null) === 0)
+                    ? _.get(value, 'quantity')
+                    : NaN }
+                  onChange={ (e) => {
+                    updateInstance({ name, type, label, value: this.assignValue(e) });
+                  }}
+                />
+              </div>
 
-            <div className="input-group">
-              <input
-                type="text"
-                id={`${this.props.id}-unit-ucum`}
-                className="quantity-unit-ucum"
-                name="unit"
-                placeholder="enter unit"
-                aria-label="Enter Unit"
-                value={_.get(value, 'unit', null) || ''}
-                onChange={(e) => {
-                  updateInstance({ name, type, label, value: this.assignValue(e) });
-                }}
-                onSelect={(e) => {
-                  updateInstance({ name, type, label, value: this.assignValue(e) });
-                }}
-              />
+              <div className="input-group">
+                <input
+                  type="text"
+                  id={`${this.props.id}-unit-ucum`}
+                  className="quantity-unit-ucum"
+                  name="unit"
+                  placeholder="enter unit"
+                  aria-label="Enter Unit"
+                  value={_.get(value, 'unit', null) || ''}
+                  onChange={(e) => {
+                    updateInstance({ name, type, label, value: this.assignValue(e) });
+                  }}
+                  onSelect={(e) => {
+                    updateInstance({ name, type, label, value: this.assignValue(e) });
+                  }}
+                />
+              </div>
             </div>
           </label>
         </div>
+
+        {this.state.showInputWarning &&
+          <div className="warning">
+            {`Warning: A Quantity must have at least a numerical value.`}
+          </div>
+        }
       </div>
     );
   }

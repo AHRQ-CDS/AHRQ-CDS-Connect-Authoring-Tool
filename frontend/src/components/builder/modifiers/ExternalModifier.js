@@ -5,7 +5,17 @@ import _ from 'lodash';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBook } from '@fortawesome/free-solid-svg-icons';
 
+/* eslint-disable jsx-a11y/label-has-for */
 export default class ExternalModifier extends Component {
+  constructor(props) {
+    super(props);
+
+    // We want to fill a null value array of the length of the arguments array if it doesn't already exist
+    if (props.value.length === 0) {
+      props.updateAppliedModifier(props.index, { value: new Array(props.arguments.length).fill(null) });
+    }
+  }
+
   assignValue(event, argIndex) {
     const valuesClone = _.cloneDeep(this.props.value);
     valuesClone[argIndex] = event.value;
@@ -35,7 +45,7 @@ export default class ExternalModifier extends Component {
         editorProps.key = argIndex;
         editorProps.id = `external-modifier-${this.props.index}-${argIndex}`;
         editorProps.name = arg.name;
-        editorProps.label = `Argument ${arg.name}:`;
+        editorProps.label = `${arg.name}:`;
         editorProps.type = this.props.argumentTypes[argIndex].calculated;
         editorProps.value = this.props.value[argIndex];
         editorProps.updateInstance = (event => this.assignValue(event, argIndex));
@@ -45,7 +55,7 @@ export default class ExternalModifier extends Component {
 
     return (
       <div className="external-modifier form__group">
-        <label>
+        <label className="modifier-title">
           {this.props.name} <FontAwesomeIcon icon={faBook} />
         </label>
 

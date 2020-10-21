@@ -6,6 +6,19 @@ import moment from 'moment';
 import _ from 'lodash';
 
 export default class IntervalOfDateTimeEditor extends Component {
+  constructor(props) {
+    super(props);
+
+    const firstDate = _.get(props, 'value.firstDate', null);
+    const firstTime = _.get(props, 'value.firstTime', null);
+    const secondDate = _.get(props, 'value.secondDate', null);
+    const secondTime = _.get(props, 'value.secondTime', null);
+
+    this.state = {
+      showInputWarning: ((firstTime && !firstDate) || (secondTime && !secondDate))
+    };
+  }
+
   assignValue(evt, name) {
     let firstDate = null;
     let firstTime = null;
@@ -42,6 +55,8 @@ export default class IntervalOfDateTimeEditor extends Component {
         break;
     }
 
+    this.setState({ showInputWarning: ((firstTime && !firstDate) || (secondTime && !secondDate)) });
+
     if (firstDate || secondDate || firstTime || secondTime) {
       let firstDateTime = null;
       let secondDateTime = null;
@@ -77,7 +92,7 @@ export default class IntervalOfDateTimeEditor extends Component {
     return (
       <div className="interval-of-date-time-editor">
         <div className="form__group">
-          <label htmlFor={formIdFirst}>
+          <label className="label-container" htmlFor={formIdFirst}>
             <div className="label">{label}</div>
 
             <div className="input-group">
@@ -87,8 +102,8 @@ export default class IntervalOfDateTimeEditor extends Component {
                 id={formIdFirst}
                 selected={
                   moment(_.get(value, 'firstDate', null), 'YYYY-MM-DD').isValid()
-                  ? moment(value.firstDate, 'YYYY-MM-DD').toDate()
-                  : null}
+                    ? moment(value.firstDate, 'YYYY-MM-DD').toDate()
+                    : null}
                 dateFormat="MM/dd/yyyy"
                 autoComplete="off"
                 onChange={(e) => {
@@ -104,8 +119,8 @@ export default class IntervalOfDateTimeEditor extends Component {
                 id={id}
                 defaultValue={
                   moment(_.get(value, 'firstTime', null), 'HH:mm:ss').isValid()
-                  ? moment(value.firstTime, 'HH:mm:ss')
-                  : null}
+                    ? moment(value.firstTime, 'HH:mm:ss')
+                    : null}
                 autoComplete="off"
                 onChange={(e) => {
                   updateInstance({ name, type, label, value: this.assignValue(e, 'firstTime') });
@@ -116,7 +131,7 @@ export default class IntervalOfDateTimeEditor extends Component {
         </div>
 
         <div className="form__group">
-          <label htmlFor={formIdSecond}>
+          <label className="label-container" htmlFor={formIdSecond}>
             <div className="label"></div>
 
             <div className="input-group">
@@ -126,8 +141,8 @@ export default class IntervalOfDateTimeEditor extends Component {
                 id={formIdSecond}
                 selected={
                   moment(_.get(value, 'secondDate', null), 'YYYY-MM-DD').isValid()
-                  ? moment(value.secondDate, 'YYYY-MM-DD').toDate()
-                  : null}
+                    ? moment(value.secondDate, 'YYYY-MM-DD').toDate()
+                    : null}
                 dateFormat="MM/dd/yyyy"
                 autoComplete="off"
                 onChange={(e) => {
@@ -143,8 +158,8 @@ export default class IntervalOfDateTimeEditor extends Component {
                 id={id}
                 defaultValue={
                   moment(_.get(value, 'secondTime', null), 'HH:mm:ss').isValid()
-                  ? moment(value.secondTime, 'HH:mm:ss')
-                  : null}
+                    ? moment(value.secondTime, 'HH:mm:ss')
+                    : null}
                 autoComplete="off"
                 onChange={(e) => {
                   updateInstance({ name, type, label, value: this.assignValue(e, 'secondTime') });
@@ -153,6 +168,12 @@ export default class IntervalOfDateTimeEditor extends Component {
             </div>
           </label>
         </div>
+
+        {this.state.showInputWarning &&
+          <div className="warning">
+            {`Warning: An Interval<DateTime> cannot include a time without a corresponding date.`}
+          </div>
+        }
       </div>
     );
   }

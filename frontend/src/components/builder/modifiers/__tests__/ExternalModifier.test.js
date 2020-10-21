@@ -7,6 +7,7 @@ describe('<ExternalModifier />', () => {
     render(
       <ExternalModifier
         name="external"
+        arguments={[]}
         {...props}
       />
     );
