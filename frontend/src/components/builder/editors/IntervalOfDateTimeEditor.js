@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import DatePicker from 'react-datepicker';
 import TimePicker from 'rc-time-picker';
 import moment from 'moment';
+import classnames from 'classnames';
 import _ from 'lodash';
 
 export default class IntervalOfDateTimeEditor extends Component {
@@ -85,70 +86,80 @@ export default class IntervalOfDateTimeEditor extends Component {
   }
 
   render() {
-    const { id, name, type, label, value, updateInstance } = this.props;
+    const { id, name, type, label, value, updateInstance, condenseUI } = this.props;
     const formIdFirst = _.uniqueId('editor-date-');
     const formIdSecond = _.uniqueId('editor-time-');
 
     return (
-      <div className="interval-of-date-time-editor">
+      <div className="editor interval-of-date-time-editor">
         <div className="form__group">
-          <label className="label-container" htmlFor={formIdFirst}>
-            <div className="label">{label}</div>
+          <label
+            className={classnames('editor-container', { condense: condenseUI })}
+            htmlFor={formIdFirst}
+          >
+            <div className="editor-label label">{label}</div>
 
-            <div className="input-group">
-              <span className="date-label">Date:</span>
+            <div className="editor-input-group">
+              <div className="editor-input">
+                <span className="date-label">Date:</span>
 
-              <DatePicker
-                id={formIdFirst}
-                selected={
-                  moment(_.get(value, 'firstDate', null), 'YYYY-MM-DD').isValid()
+                <DatePicker
+                  id={formIdFirst}
+                  selected={
+                    moment(_.get(value, 'firstDate', null), 'YYYY-MM-DD').isValid()
                     ? moment(value.firstDate, 'YYYY-MM-DD').toDate()
                     : null}
-                dateFormat="MM/dd/yyyy"
-                autoComplete="off"
-                onChange={(e) => {
-                  updateInstance({ name, type, label, value: this.assignValue(moment(e), 'firstDate') });
-                }}
-              />
-            </div>
+                    dateFormat="MM/dd/yyyy"
+                    autoComplete="off"
+                  onChange={(e) => {
+                    updateInstance({ name, type, label, value: this.assignValue(moment(e), 'firstDate') });
+                  }}
+                />
+              </div>
 
-            <div className="input-group">
-              <span className="date-label">Time:</span>
+              <div className="editor-input">
+                <span className="date-label">Time:</span>
 
-              <TimePicker
-                id={id}
-                defaultValue={
-                  moment(_.get(value, 'firstTime', null), 'HH:mm:ss').isValid()
+                <TimePicker
+                  id={id}
+                  defaultValue={
+                    moment(_.get(value, 'firstTime', null), 'HH:mm:ss').isValid()
                     ? moment(value.firstTime, 'HH:mm:ss')
                     : null}
-                autoComplete="off"
-                onChange={(e) => {
-                  updateInstance({ name, type, label, value: this.assignValue(e, 'firstTime') });
-                }}
-              />
+                  autoComplete="off"
+                  onChange={(e) => {
+                    updateInstance({ name, type, label, value: this.assignValue(e, 'firstTime') });
+                  }}
+                />
+              </div>
             </div>
           </label>
         </div>
 
         <div className="form__group">
-          <label className="label-container" htmlFor={formIdSecond}>
-            <div className="label"></div>
+          <label
+            className={classnames('editor-container', { condense: condenseUI })}
+            htmlFor={formIdSecond}
+          >
+            <div className="editor-label label"></div>
 
-            <div className="input-group">
-              <span className="date-label">Date:</span>
+            <div className="editor-input-group">
+              <div className="editor-input">
+                <span className="date-label">Date:</span>
 
-              <DatePicker
-                id={formIdSecond}
-                selected={
-                  moment(_.get(value, 'secondDate', null), 'YYYY-MM-DD').isValid()
-                    ? moment(value.secondDate, 'YYYY-MM-DD').toDate()
-                    : null}
-                dateFormat="MM/dd/yyyy"
-                autoComplete="off"
-                onChange={(e) => {
-                  updateInstance({ name, type, label, value: this.assignValue(moment(e), 'secondDate') });
-                }}
-              />
+                <DatePicker
+                  id={formIdSecond}
+                  selected={
+                    moment(_.get(value, 'secondDate', null), 'YYYY-MM-DD').isValid()
+                      ? moment(value.secondDate, 'YYYY-MM-DD').toDate()
+                      : null}
+                  dateFormat="MM/dd/yyyy"
+                  autoComplete="off"
+                  onChange={(e) => {
+                    updateInstance({ name, type, label, value: this.assignValue(moment(e), 'secondDate') });
+                  }}
+                />
+              </div>
             </div>
 
             <div className="input-group">
@@ -185,5 +196,6 @@ IntervalOfDateTimeEditor.propTypes = {
   type: PropTypes.string.isRequired,
   label: PropTypes.string.isRequired,
   value: PropTypes.object,
-  updateInstance: PropTypes.func.isRequired
+  updateInstance: PropTypes.func.isRequired,
+  condenseUI: PropTypes.bool,
 };

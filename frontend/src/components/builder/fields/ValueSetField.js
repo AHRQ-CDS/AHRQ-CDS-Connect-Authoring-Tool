@@ -12,7 +12,7 @@ export default class ValueSetField extends Component {
   render() {
     const id = _.uniqueId('field-');
     return (
-      <div className="value-set-field">
+      <div className="field value-set-field">
         <div className="form__group">
           <label htmlFor={id}>
             <div className="label">{this.props.field.name}:</div>

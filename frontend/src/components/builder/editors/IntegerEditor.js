@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import classnames from 'classnames';
 import _ from 'lodash';
 
 export default class IntegerEditor extends Component {
@@ -7,20 +8,23 @@ export default class IntegerEditor extends Component {
     let value = _.get(evt, 'target.value', null);
     if (value != null) value = parseInt(value, 10);
     return value;
-  }
+  };
 
   render() {
-    const { name, type, label, value, updateInstance } = this.props;
+    const { name, type, label, value, updateInstance, condenseUI } = this.props;
     const formId = _.uniqueId('editor-');
 
     return (
-      <div className="integer-editor">
+      <div className="editor integer-editor">
         <div className="form-group">
-          <label className="label-container" htmlFor={formId}>
-            <div className="label">{label}</div>
+          <label
+            className={classnames('editor-container', { condense: condenseUI })}
+            htmlFor={formId}
+          >
+            <div className="editor-label label">{label}</div>
 
-            <div className="input-group-container">
-              <div className="input">
+            <div className="editor-input-group">
+              <div className="editor-input">
                 <input
                   id={formId}
                   type="number"
@@ -43,5 +47,6 @@ IntegerEditor.propTypes = {
   type: PropTypes.string.isRequired,
   label: PropTypes.string.isRequired,
   value: PropTypes.number,
-  updateInstance: PropTypes.func.isRequired
+  updateInstance: PropTypes.func.isRequired,
+  condenseUI: PropTypes.bool
 };

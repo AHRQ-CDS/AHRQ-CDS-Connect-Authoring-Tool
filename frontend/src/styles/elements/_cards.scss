@@ -48,6 +48,7 @@
     border-radius: 0.2em;
     font-weight: 500;
     width: 100%;
+    margin-bottom: 1em;
 
     &__label {
       font-size: 1.2em;
@@ -62,17 +63,33 @@
     }
 
     &.base-element {
-      background-color: lighten($blue-light, 35%);
+      background-color: lighten($blue-light, 40%);
+      border-color: lighten($blue-light, 20%);
+
+      .card-element__body,
+      .card-element__footer {
+        border-color: lighten($blue-light, 20%);
+      }
     }
 
     &__header {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 0.5em 0.5em 0.5em 2em;
+      padding: 1em 0.5em 1em 2em;
+
+      label {
+        display: flex;
+        align-items: center;
+      }
+
+      input {
+        width: 30em;
+      }
 
       &-top {
         display: flex;
+        align-items: center;
         width: 100%;
 
         .card-element__heading {
@@ -82,12 +99,7 @@
         .card-element__buttons {
           flex: 1;
           text-align: right;
-          margin-top: 10px;
           white-space: nowrap;
-        }
-
-        &.collapsed {
-          margin-top: 10px;
         }
       }
 
@@ -117,7 +129,7 @@
 
     &__body {
       border-top: 0.1em solid $border-color;
-      padding: 1em;
+      padding: 1em 2em;
 
       &-element {
         display: flex;
@@ -149,15 +161,15 @@
   .card-group__header {
     display: flex;
     padding-left: 20px;
+
+    label {
+      display: flex;
+      align-items: center;
+    }
   }
 
   .card-group__header-title {
     flex: 4;
-
-    .label {
-      text-align: left;
-      padding-right: 1em;
-    }
   }
 
   .card-group__buttons {

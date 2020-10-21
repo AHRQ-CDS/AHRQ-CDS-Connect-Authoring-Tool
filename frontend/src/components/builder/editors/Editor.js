@@ -17,7 +17,16 @@ import IntervalOfQuantityEditor from './IntervalOfQuantityEditor';
 
 export default class Editor extends Component {
   render() {
-    const genericProps = _.pick(this.props, ['id', 'name', 'type', 'label', 'value', 'updateInstance']);
+    const genericProps = _.pick(this.props, [
+      'id',
+      'name',
+      'type',
+      'label',
+      'value',
+      'updateInstance',
+      'condenseUI'
+    ]);
+
     const codeEditorProps = _.pick(this.props, [
       'vsacFHIRCredentials',
       'loginVSACUser',
@@ -82,5 +91,10 @@ Editor.propTypes = {
   isValidCode: PropTypes.bool,
   codeData: PropTypes.object,
   validateCode: PropTypes.func.isRequired,
-  resetCodeValidation: PropTypes.func.isRequired
+  resetCodeValidation: PropTypes.func.isRequired,
+  condenseUI: PropTypes.bool
+};
+
+Editor.defaultProps = {
+  condenseUI: false
 };

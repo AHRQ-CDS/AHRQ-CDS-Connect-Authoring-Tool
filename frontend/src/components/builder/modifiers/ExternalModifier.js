@@ -35,7 +35,8 @@ export default class ExternalModifier extends Component {
         isValidCode: this.props.isValidCode,
         codeData: this.props.codeData,
         validateCode: this.props.validateCode,
-        resetCodeValidation: this.props.resetCodeValidation
+        resetCodeValidation: this.props.resetCodeValidation,
+        condenseUI: true
       };
 
       this.props.arguments.forEach((arg, argIndex) => {
@@ -56,12 +57,14 @@ export default class ExternalModifier extends Component {
     return (
       <div className="external-modifier form__group">
         <label className="modifier-title">
-          {this.props.name} <FontAwesomeIcon icon={faBook} />
+          <FontAwesomeIcon icon={faBook} /> {this.props.name}
         </label>
 
-        {editorPropsArray.map(editorProps => {
-          return <Editor {...editorProps} />;
-        })}
+        <div className="modifier-editor-group">
+          {editorPropsArray.map(editorProps => {
+            return <Editor {...editorProps} />;
+          })}
+        </div>
       </div>
     );
   } 

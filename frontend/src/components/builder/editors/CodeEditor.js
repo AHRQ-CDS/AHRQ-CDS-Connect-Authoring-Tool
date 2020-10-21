@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import classnames from 'classnames';
 import _ from 'lodash';
 
 import CodeSelectModal from '../CodeSelectModal';
@@ -54,81 +55,69 @@ export default class CodeEditor extends Component {
     const formId = _.uniqueId('editor-');
 
     return (
-      <div className="code-editor">
-        {this.props.value != null ?
-          <div className="code-editor__show">
-            <div className="parameter__item row">
-              <div className="col-3 bold align-right">
-                <label htmlFor={formId}>System:</label>
-              </div>
-
-              <div className="col-9">
-                {this.props.value.system}
-              </div>
+      <div className="editor code-editor">
+        <div className="form__group">
+          <label
+            className={classnames("editor-container", {
+              condense: this.props.condenseUI,
+            })}
+            htmlFor={formId}
+          >
+            <div className="editor-label label">
+              {this.props.isConcept ? "Concept:" : "Code:"}
             </div>
 
-            <div className="parameter__item row">
-              <div className="col-3 bold align-right">
-                <label htmlFor={formId}>System URI:</label>
-              </div>
+            <div className="editor-input-group">
+              <div className="">
+                {this.props.value != null ? (
+                  <div className="code-editor__show">
+                    <div className="code-editor-row">
+                      <label className="label" htmlFor={formId}>Code:</label>
+                      <div>{this.props.value.code}</div>
+                    </div>
 
-              <div className="col-9">
-                {this.props.value.uri}
+                    <div className="code-editor-row">
+                      <label className="label" htmlFor={formId}>System:</label>
+                      <div>{this.props.value.system}</div>
+                    </div>
+
+                    <div className="code-editor-row">
+                      <label className="label" htmlFor={formId}>System URI:</label>
+                      <div>{this.props.value.uri}</div>
+                    </div>
+
+                    <div className="code-editor-row">
+                      <label className="label" htmlFor={formId}>Display:</label>
+                      <div>{this.props.value.display}</div>
+                    </div>
+
+                    <div className="code-editor-footer">
+                      {this.props.disableEditing ? (
+                        <span>
+                          Changing {this.props.isConcept ? "concept" : "code"}{" "}
+                          value is currently not supported
+                        </span>
+                      ) : (
+                        this.renderCodePicker("Change Code")
+                      )}
+                    </div>
+                  </div>
+                ) : (
+                  <div className="parameter__item">
+                    {this.props.disableEditing ? (
+                      <span>
+                        Setting {this.props.isConcept ? "concept" : "code"}{" "}
+                        value is currently not supported
+                      </span>
+                    ) : (
+                      this.renderCodePicker("Add Code")
+                    )}
+                  </div>
+                )}
               </div>
             </div>
-
-            <div className="parameter__item row">
-              <div className="col-3 bold align-right">
-                <label htmlFor={formId}>Code:</label>
-              </div>
-
-              <div className="col-9">
-                {this.props.value.code}
-              </div>
-            </div>
-
-            <div className="parameter__item row">
-              <div className="col-3 bold align-right">
-                <label htmlFor={formId}>Display:</label>
-              </div>
-
-              <div className="col-9">
-                {this.props.value.display}
-              </div>
-            </div>
-
-            <div className="parameter__item row">
-              <div className="col-3 bold align-right">
-                {/* intentionally blank */}
-              </div>
-              <div className="col-9">
-                {this.props.disableEditing ?
-                  <span>Changing {this.props.isConcept ? 'concept' : 'code'} value is currently not supported</span>
-                  :
-                  this.renderCodePicker('Change Code')
-                }
-              </div>
-            </div>
-          </div>
-        :
-          <div className="parameter__item row">
-            <div className="col-3 bold align-right">
-              {this.props.disableEditing ?
-                ''
-                :
-                this.props.label
-              }
-            </div>
-
-            <div className="col-9">
-              {this.props.disableEditing ?
-                <span>Setting {this.props.isConcept ? 'concept' : 'code'} value is currently not supported</span>
-                :
-                this.renderCodePicker('Add Code')
-              }
-            </div>
-          </div>
-        }
+          </label>
+        </div>
       </div>
     );
   }
@@ -152,5 +141,6 @@ CodeEditor.propTypes = {
   isValidCode: PropTypes.bool,
   codeData: PropTypes.object,
   validateCode: PropTypes.func.isRequired,
-  resetCodeValidation: PropTypes.func.isRequired
+  resetCodeValidation: PropTypes.func.isRequired,
+  condenseUI: PropTypes.bool
 };

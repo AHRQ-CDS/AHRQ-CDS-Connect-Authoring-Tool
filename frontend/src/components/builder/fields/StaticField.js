@@ -7,7 +7,7 @@ import React from 'react';
  * and a function called Validation that validates what is entered
  */
 const StaticField = props => (
-  <div className="static-field">
+  <div className="field static-field">
     <input
       type="hidden"
       aria-hidden="true"

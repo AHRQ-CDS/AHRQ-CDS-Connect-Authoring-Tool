@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import classnames from 'classnames';
 import _ from 'lodash';
 
 const { Def } = window;
@@ -10,7 +11,7 @@ export default class QuantityEditor extends Component {
 
     const quantity = _.get(props, 'value.quantity', null);
     const unit = _.get(props, 'value.unit', null);
-  
+
     this.state = {
       showInputWarning: (unit && !(quantity || quantity === 0))
     };
@@ -58,17 +59,20 @@ export default class QuantityEditor extends Component {
   }
 
   render() {
-    const { id, name, type, label, value, updateInstance } = this.props;
+    const { id, name, type, label, value, updateInstance, condenseUI } = this.props;
     const formId = _.uniqueId('editor-');
 
     return (
-      <div className="quantity-editor">
+      <div className="editor quantity-editor">
         <div className="form__group">
-          <label className="label-container" htmlFor={formId}>
-            <div className="label">{label}</div>
+          <label
+            className={classnames('editor-container', { condense: condenseUI })}
+            htmlFor={formId}
+          >
+            <div className="editor-label label">{label}</div>
 
-            <div className="input-group-container">
-              <div className="input-group">
+            <div className="editor-input-group">
+              <div className="editor-input">
                 <input
                   id={id}
                   name="quantity"
@@ -83,7 +87,7 @@ export default class QuantityEditor extends Component {
                 />
               </div>
 
-              <div className="input-group">
+              <div className="editor-input">
                 <input
                   type="text"
                   id={`${this.props.id}-unit-ucum`}
@@ -120,5 +124,6 @@ QuantityEditor.propTypes = {
   type: PropTypes.string.isRequired,
   label: PropTypes.string.isRequired,
   value: PropTypes.object,
-  updateInstance: PropTypes.func.isRequired
+  updateInstance: PropTypes.func.isRequired,
+  condenseUI: PropTypes.bool
 };

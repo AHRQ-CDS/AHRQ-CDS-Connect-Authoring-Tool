@@ -54,7 +54,7 @@ export default class TextAreaField extends Component {
     const formId = _.uniqueId('field-');
 
     return (
-      <div className="textarea-field">
+      <div className="field textarea-field">
         <div className="form__group">
           <label htmlFor={formId}>
             <div className="label">{name}:</div>

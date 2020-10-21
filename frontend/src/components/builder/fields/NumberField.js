@@ -21,7 +21,7 @@ export default class NumberField extends Component {
     const id = _.uniqueId('field-');
 
     return (
-      <div className="number-field">
+      <div className="field number-field">
         <div className='form__group'>
           <label htmlFor={id}>
             <div className="label">{field.name}:</div>

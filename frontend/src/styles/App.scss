@@ -32,6 +32,7 @@
 @import 'elements/inputs';
 @import 'elements/modals';
 @import 'elements/select';
+@import 'elements/timepicker';
 @import 'elements/typography';
 
 // component-specific
@@ -48,6 +49,7 @@
 @import 'components/builder/ExternalCqlDetails';
 @import 'components/builder/ExternalCqlDetailsSection';
 @import 'components/builder/ExternalCqlTable';
+@import 'components/builder/Fields';
 @import 'components/builder/Modifiers';
 @import 'components/builder/Parameters';
 @import 'components/builder/Recommendations';

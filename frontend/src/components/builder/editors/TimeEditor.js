@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import moment from 'moment';
 import TimePicker from 'rc-time-picker';
+import classnames from 'classnames';
 import _ from 'lodash';
 
 export default class TimeEditor extends Component {
@@ -12,17 +13,20 @@ export default class TimeEditor extends Component {
   }
 
   render() {
-    const { name, type, label, value, updateInstance } = this.props;
+    const { name, type, label, value, updateInstance, condenseUI } = this.props;
     const formId = _.uniqueId('editor-');
 
     return (
-      <div className="time-editor">
+      <div className="editor time-editor">
         <div className="form__group">
-          <label className="label-container" htmlFor={formId}>
-            <div className="label">{label}</div>
+          <label
+            className={classnames('editor-container', { condense: condenseUI })}
+            htmlFor={formId}
+          >
+            <div className="editor-label label">{label}</div>
 
-            <div className="input-group-container">
-              <div className="input">
+            <div className="editor-input-group">
+              <div className="editor-input">
                 <TimePicker
                   id={formId}
                   defaultValue={moment(value, 'HH:mm:ss').isValid() ? moment(value, 'HH:mm:ss') : null}
@@ -45,5 +49,6 @@ TimeEditor.propTypes = {
   type: PropTypes.string.isRequired,
   label: PropTypes.string.isRequired,
   value: PropTypes.string,
-  updateInstance: PropTypes.func.isRequired
+  updateInstance: PropTypes.func.isRequired,
+  condenseUI: PropTypes.bool
 };

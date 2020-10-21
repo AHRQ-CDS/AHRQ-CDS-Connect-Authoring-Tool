@@ -409,7 +409,7 @@ export default class TemplateInstance extends Component {
       <div className="applied-modifiers__info">
         <div className="applied-modifiers__info-expressions">
           {this.props.templateInstance.modifiers && this.props.templateInstance.modifiers.length > 0 &&
-            <div className="bold align-right applied-modifiers__label">Expressions:</div>
+            <div className="label expressions-label">Expressions:</div>
           }
 
           <div className="modifier__list" aria-label="Expression List">
@@ -585,7 +585,7 @@ export default class TemplateInstance extends Component {
     return (
       <div className="modifier__return__type" id="base-element-list" key={referenceField.value.id}>
         <div className="code-info">
-          <div className="bold align-right code-info__label">{label}</div>
+          <div className="label">{label}</div>
           <div className="code-info__info">
             <div className="code-info__text">
               <span>{referenceName}</span>
@@ -659,7 +659,7 @@ export default class TemplateInstance extends Component {
           <div className="modifier__return__type" id="code-list">
             {vsacField.codes.map((code, i) => (
               <div key={`selected-code-${i}`} className="code-info">
-                <div className="bold align-right code-info__label">
+                <div className="label">
                   Code{vsacField.codes.length > 1 ? ` ${i + 1}` : ''}:
                 </div>
 
@@ -881,7 +881,7 @@ export default class TemplateInstance extends Component {
 
         <div className="modifier__return__type">
           <div className="return-type">
-            <div className="bold align-right return-type__label">Return Type:</div>
+            <div className="label">Return Type:</div>
             <div className="return-type__value">
               { (validateReturnType === false || _.startCase(returnType) === 'Boolean') &&
                 <FontAwesomeIcon icon={faCheck} className="check" />}
@@ -933,7 +933,7 @@ export default class TemplateInstance extends Component {
       const doesHaveParameterUseWarning = doesParameterUseNeedWarning(templateInstance, parameters);
 
       return (
-        <div className="card-element__heading">
+        <>
           <StringField
             key={elementNameField.id}
             {...elementNameField}
@@ -971,7 +971,7 @@ export default class TemplateInstance extends Component {
               updateInstance={this.updateInstance}
             />
           }
-        </div>
+        </>
       );
     }
 

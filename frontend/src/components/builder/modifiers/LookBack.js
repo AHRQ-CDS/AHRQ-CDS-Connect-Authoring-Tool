@@ -26,7 +26,9 @@ export default class LookBack extends Component {
 
     return (
       <div className="look-back">
-        <label className="look-back label" htmlFor={valueId}>Look back within the last...</label>
+        <label className="look-back" htmlFor={valueId}>Look back within the last...</label>
+
+        <div className="look-back-group">
           <input
             id={valueId}
             type="number"
@@ -39,19 +41,19 @@ export default class LookBack extends Component {
             }}
           />
 
-
-        <label htmlFor={unitId}>
-          <StyledSelect
-            className="Select"
-            name="unit"
-            aria-label="Unit Select"
-            id={unitId}
-            value={options.find(({ value }) => value === this.props.unit)}
-            placeholder="select unit"
-            onChange={this.handleChange}
-            options={options}
-          />
-        </label>
+          <label htmlFor={unitId}>
+            <StyledSelect
+              className="Select"
+              name="unit"
+              aria-label="Unit Select"
+              id={unitId}
+              value={options.find(({ value }) => value === this.props.unit)}
+              placeholder="select unit"
+              onChange={this.handleChange}
+              options={options}
+            />
+          </label>
+        </div>
       </div>
     );
   }

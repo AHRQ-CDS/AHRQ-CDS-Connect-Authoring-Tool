@@ -13,7 +13,7 @@ export default class StringField extends Component {
     const formId = _.uniqueId('field-');
 
     return (
-      <div className="string-field">
+      <div className="field string-field">
         <div className="form__group">
           <label htmlFor={formId}>
             <div className="label">{name}:</div>

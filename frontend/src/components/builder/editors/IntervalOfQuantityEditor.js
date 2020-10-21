@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import classnames from 'classnames';
 import _ from 'lodash';
 
 const { Def } = window;
@@ -84,17 +85,20 @@ export default class IntervalOfQuantityEditor extends Component {
   }
 
   render() {
-    const { id, name, type, label, value, updateInstance } = this.props;
+    const { id, name, type, label, value, updateInstance, condenseUI } = this.props;
     const formId = _.uniqueId('editor-');
 
     return (
-      <div className="interval-of-quantity-editor">
+      <div className="editor interval-of-quantity-editor">
         <div className="form__group">
-          <label className="label-container" htmlFor={formId}>
-            <div className="label">{label}</div>
+          <label
+            className={classnames('editor-container', { condense: condenseUI })}
+            htmlFor={formId}
+          >
+            <div className="editor-label label">{label}</div>
 
-            <div className="input-group-container">
-              <div className="input-group input-group-3">
+            <div className="editor-input-group">
+              <div className="editor-input">
                 <input
                   id={formId}
                   name="firstQuantity"
@@ -111,7 +115,7 @@ export default class IntervalOfQuantityEditor extends Component {
 
               <div className="dash">-</div>
 
-              <div className="input-group input-group-3">
+              <div className="editor-input">
                 <input
                   id={id}
                   name="secondQuantity"
@@ -127,10 +131,10 @@ export default class IntervalOfQuantityEditor extends Component {
                 />
               </div>
 
-              <div className="input-group input-group-3">
+              <div className="editor-input">
                 <input
                   type="text"
-                  className="interval-of-quantity-unit-ucum"
+                  className="quantity-unit-ucum"
                   id={`${this.props.id}-unit-ucum`}
                   name="unit"
                   placeholder="enter unit"
@@ -164,5 +168,6 @@ IntervalOfQuantityEditor.propTypes = {
   type: PropTypes.string.isRequired,
   label: PropTypes.string.isRequired,
   value: PropTypes.object,
-  updateInstance: PropTypes.func.isRequired
+  updateInstance: PropTypes.func.isRequired,
+  condenseUI: PropTypes.bool
 };

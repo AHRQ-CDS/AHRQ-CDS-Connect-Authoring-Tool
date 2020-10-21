@@ -277,7 +277,7 @@ export default class ListGroup extends Component {
           />
 
           <div className="return-type">
-            <div className="bold align-right return-type__label">Return Type:</div>
+            <div className="label">Return Type:</div>
 
             <div className="return-type__value">
               {

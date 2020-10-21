@@ -1,27 +1,59 @@
-.applied-modifiers {
-  &__item {
+.editor {
+  margin: 10px 0;
+
+  &.code-editor {
+    .editor-input-group {
+      background-color: #fff;
+      width: 100%;
+      padding: 20px;
+    }
+
+    .code-editor-row {
+      display: flex;
+    }
+
+    .code-editor-footer {
+      margin-top: 20px;
+    }
+
+    .code-editor__item {
+      align-items: center;
+      margin-bottom: 0.8em;
+    }
+  }
+
+  &.string-editor {
+    input {
+      min-width: 600px;
+    }
+  }
+
+  .quantity-unit-ucum {
+    width: 200px;
+    background-size: 15px;
+  }
+
+  .editor-container {
+    display: flex;
     align-items: center;
-    margin-bottom: 1em;
-  }
 
-  .card-element {
-    margin-bottom: 1em;
-  }
+    .editor-input-group {
+      display: flex;
 
-  .react-datepicker__navigation {
-    height: 5px;
-    box-shadow: none;
-
-    &:hover {
-      background-color: $datepicker-bg;
+      .editor-input {
+        display: flex;
+        flex-direction: column;
+        margin-right: 1em;
+      }
     }
 
-    &--previous:hover {
-      border-color: $datepicker-bg $blue $datepicker-bg $datepicker-bg;
-    }
+    &.condense {
+      flex-direction: column;
+      align-items: flex-start;
 
-    &--next:hover {
-      border-color: $datepicker-bg $datepicker-bg $datepicker-bg $blue;
+      .editor-label {
+        text-align: left;
+      }
     }
   }
 
@@ -30,131 +62,7 @@
     flex-grow: 1;
     text-align: center;
     flex-direction: column;
-    margin-left: 2px;
+    margin-right: 0.6em;
     font-size: 1.5em;
-  }
-
-  .quantity-unit-ucum,
-  .interval-of-quantity-unit-ucum {
-    width: 200px;
-    background-size: 15px;
-  }
-
-  .rc-time-picker-input { color: initial; }
-
-  .boolean-editor,
-  .integer-editor,
-  .date-time-editor,
-  .decimal-editor,
-  .quantity-editor,
-  .string-editor,
-  .time-editor,
-  .interval-of-integer-editor,
-  .interval-of-date-time-editor,
-  .interval-of-decimal-editor,
-  .interval-of-quantity-editor {
-    margin: 10px 0;
-
-    .form__group,
-    .input textarea,
-    .input input[type="text"] {
-      width: 100%;
-    }
-
-    label.label-container {
-      align-items: flex-start;
-      display: flex;
-      flex-direction: column;
-    }
-
-    .label {
-      flex: 1;
-      font-weight: bold;
-      text-align: left;
-      white-space: nowrap;
-      padding-right: 2em;
-
-      &.conjunction_comment {
-        flex: none;
-        padding-right: 6.25em;
-      }
-
-      &.base_comment {
-        flex: none;
-        padding-right: 3.25em;
-      }
-    }
-
-    .Select {
-      min-width: 245px;
-      padding: 0;
-    }
-
-    input,
-    textarea {
-      margin: 0;
-      min-width: 300px;
-    }
-
-    .input {
-      flex: 4;
-    }
-
-    .input-3 {
-      display: flex;
-      align-items: center;
-    }
-
-    .input-group {
-      display: flex;
-      align-items: center;
-      flex: 2;
-      margin-bottom: 10px;
-
-      .date-label {
-        margin-right: 10px;
-      }
-    }
-
-    .input-group-3 {
-      flex: 3;
-
-      input {
-        min-width: 200px;
-      }
-    }
-
-    .input-group-container {
-      width: 100%;
-      display: flex;
-    }
-
-    textarea {
-      height: auto;
-      min-height: 50px;
-      padding: 8px 14px;
-      margin-bottom: -8px;
-
-      @include respond-to('1439px') {
-        min-height: 36px;
-      }
-    }
-
-    .icon {
-      padding: 10px;
-    }
-  }
-
-  .value-set-field .Select {
-    display: inline-block;
-  }
-
-  .code-editor {
-    padding: 20px;
-    background-color: #fff;
-  }
-
-  .interval-of-integer-editor {
-    position: relative;
   }
 }

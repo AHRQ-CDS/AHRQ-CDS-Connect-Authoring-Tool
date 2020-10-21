@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import moment from 'moment';
 import DatePicker from 'react-datepicker';
 import TimePicker from 'rc-time-picker';
+import classnames from 'classnames';
 import _ from 'lodash';
 
 export default class DateTimeEditor extends Component {
@@ -11,7 +12,7 @@ export default class DateTimeEditor extends Component {
 
     const date = _.get(props, 'value.date', null);
     const time = _.get(props, 'value.time', null);
-  
+
     this.state = {
       showInputWarning: (time && !date)
     };
@@ -50,17 +51,20 @@ export default class DateTimeEditor extends Component {
   }
 
   render() {
-    const { id, name, type, label, value, updateInstance } = this.props;
+    const { id, name, type, label, value, updateInstance, condenseUI } = this.props;
     const formId = _.uniqueId('editor-');
 
     return (
-      <div className="date-time-editor">
+      <div className="editor date-time-editor">
         <div className="form__group">
-          <label className="label-container" htmlFor={formId}>
-            <div className="label">{label}</div>
+          <label
+            className={classnames("editor-container", { condense: condenseUI })}
+            htmlFor={formId}
+          >
+            <div className="editor-label label">{label}</div>
 
-            <div className="input-group-container">
-              <div className="input-group">
+            <div className="editor-input-group">
+              <div className="editor-input">
                 <span className="date-label">Date:</span>
 
                 <DatePicker
@@ -77,7 +81,7 @@ export default class DateTimeEditor extends Component {
                 />
               </div>
 
-              <div className="input-group">
+              <div className="editor-input">
                 <span className="date-label">Time:</span>
 
                 <TimePicker
@@ -112,5 +116,6 @@ DateTimeEditor.propTypes = {
   type: PropTypes.string.isRequired,
   label: PropTypes.string.isRequired,
   value: PropTypes.object,
-  updateInstance: PropTypes.func.isRequired
+  updateInstance: PropTypes.func.isRequired,
+  condenseUI: PropTypes.bool
 };

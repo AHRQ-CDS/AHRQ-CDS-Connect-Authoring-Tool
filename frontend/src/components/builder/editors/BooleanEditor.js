@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import classnames from 'classnames';
 import _ from 'lodash';
 
 import StyledSelect from '../../elements/StyledSelect';
@@ -8,17 +9,28 @@ const options = [{ value: 'true', label: 'True' }, { value: 'false', label: 'Fal
 
 export default class BooleanEditor extends Component {
   render() {
-    const { id, name, type, label, value, updateInstance } = this.props;
-    const formId = _.uniqueId('editor-');
+    const {
+      id,
+      name,
+      type,
+      label,
+      value,
+      updateInstance,
+      condenseUI,
+    } = this.props;
+    const formId = _.uniqueId("editor-");
 
     return (
-      <div className="boolean-editor">
+      <div className="editor boolean-editor">
         <div className="form__group">
-          <label className="label-container" htmlFor={formId}>
-            <div className="label">{label}</div>
+          <label
+            className={classnames("editor-container", { condense: condenseUI })}
+            htmlFor={formId}
+          >
+            <div className="editor-label label">{label}</div>
 
-            <div className="input-group-container">
-              <div className="input">
+            <div className="editor-input-group">
+              <div className="editor-input">
                 <StyledSelect
                   className="Select"
                   id={id}
@@ -43,5 +55,6 @@ BooleanEditor.propTypes = {
   label: PropTypes.string.isRequired,
   type: PropTypes.string.isRequired,
   value: PropTypes.string,
-  updateInstance: PropTypes.func.isRequired
+  updateInstance: PropTypes.func.isRequired,
+  condenseUI: PropTypes.bool,
 };

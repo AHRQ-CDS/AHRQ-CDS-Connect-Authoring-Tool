@@ -285,10 +285,10 @@ export default class Parameter extends Component {
             }
 
             <div className="card-element__body">
-              <div className="parameter-field">
+              <div className="field parameter-field">
                 <div className="form__group">
                   <label htmlFor={`parameter-${index}`}>
-                    <div className="label">Parameter Type:</div>
+                    <div className="label editor-label">Parameter Type:</div>
 
                     <div className="input">
                       <StyledSelect

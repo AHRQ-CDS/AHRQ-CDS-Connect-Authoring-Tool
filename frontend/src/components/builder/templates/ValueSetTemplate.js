@@ -71,7 +71,7 @@ export default class ValueSetTemplate extends Component {
 
     return (
       <div className="vs-info">
-        <div className="bold align-right vs-info__label">
+        <div className="label">
           Value Set{vsacField.valueSets.length > 1 ? ` ${index + 1}` : ''}:
         </div>
 
