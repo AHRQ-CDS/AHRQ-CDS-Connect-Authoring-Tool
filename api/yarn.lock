@@ -3115,11 +3115,10 @@ sliced@1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/sliced/-/sliced-1.0.1.tgz#0b3a662b5d04c3177b1926bea82b03f837a2ef41"
 
-slug@^0.9.1:
-  version "0.9.4"
-  resolved "https://registry.yarnpkg.com/slug/-/slug-0.9.4.tgz#fad5f1ef33150830c7688cd8500514576eccabd8"
-  dependencies:
-    unicode ">= 0.3.1"
+slug@^3.5.1:
+  version "3.5.1"
+  resolved "https://registry.yarnpkg.com/slug/-/slug-3.5.1.tgz#4279aa760da705252783bbefe3d70de235ef2cf7"
+  integrity sha512-ei0JnJzg8HKhLunZy+vpNlILRRradfaAQ+p2YEI4b4r8yX/5TlFi1JSwcYQCg7INZxdTC43BT68rHMkRxzn7Xg==
 
 snake-case@^2.1.0:
   version "2.1.0"
@@ -3466,10 +3465,6 @@ undefsafe@^2.0.2:
 underscore@~1.6.0:
   version "1.6.0"
   resolved "https://registry.yarnpkg.com/underscore/-/underscore-1.6.0.tgz#8b38b10cacdef63337b8b24e4ff86d45aea529a8"
-
-"unicode@>= 0.3.1":
-  version "12.1.0"
-  resolved "https://registry.yarnpkg.com/unicode/-/unicode-12.1.0.tgz#7ee53a7a0ca5539b353419432823d8da58bbbf33"
 
 union-value@^1.0.0:
   version "1.0.1"

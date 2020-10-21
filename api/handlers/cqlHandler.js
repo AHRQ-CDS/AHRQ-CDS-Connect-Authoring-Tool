@@ -284,7 +284,7 @@ function createCommentArray(comment) {
 // Class to handle all cql generation
 class CqlArtifact {
   constructor(artifact) {
-    this.name = slug(artifact.name ? artifact.name : 'untitled');
+    this.name = slug(artifact.name ? artifact.name : 'untitled', { lower: false });
     this.version = artifact.version ? artifact.version : 1;
     this.dataModel = artifact.dataModel;
     this.includeLibraries =

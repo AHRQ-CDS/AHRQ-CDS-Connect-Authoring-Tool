@@ -50,7 +50,7 @@
     "redux-promise-middleware": "^4.4.1",
     "redux-test-utils": "^0.3.0",
     "redux-thunk": "^2.3.0",
-    "slug": "^1.1.0",
+    "slug": "^3.5.1",
     "tocbot": "^3.0.7"
   },
   "devDependencies": {

@@ -606,7 +606,7 @@ function convertParameters(params = []) {
 
 export function executeCQLArtifact(artifact, params, patients, vsacCredentials, codeService, dataModel) {
   artifact.dataModel = dataModel;
-  const artifactName = `${slug(artifact.name ? artifact.name : 'untitled')}`;
+  const artifactName = `${slug(artifact.name ? artifact.name : 'untitled', { lower: false })}`;
 
   return (dispatch) => {
     dispatch(requestExecuteArtifact());
