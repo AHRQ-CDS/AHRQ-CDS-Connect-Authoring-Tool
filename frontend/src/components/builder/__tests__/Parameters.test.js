@@ -2,8 +2,6 @@ import React from 'react';
 import Parameters from '../Parameters';
 import { render, fireEvent, openSelect } from '../../../utils/test-utils';
 
-jest.mock('../fields/TextAreaField', () => () => <div>TextAreaField</div>);
-
 describe('<Parameters />', () => {
   const renderComponent = (props = {}) =>
     render(

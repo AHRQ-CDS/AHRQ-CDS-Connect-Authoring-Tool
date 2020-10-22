@@ -2,6 +2,7 @@ import React from 'react';
 import Parameter from '../Parameter';
 import { render, fireEvent, openSelect } from '../../../utils/test-utils';
 
+jest.mock('../editors/Editor', () => () => <div>Editor</div>);
 jest.mock('../editors/CodeEditor', () => () => <div>CodeEditor</div>);
 jest.mock('../editors/BooleanEditor', () => () => <div>BooleanEditor</div>);
 jest.mock('../editors/IntegerEditor', () => () => <div>IntegerEditor</div>);
@@ -110,83 +111,9 @@ describe('<Parameter />', () => {
     expect(getByLabelText('Select Parameter Type')).not.toBeNull();
   });
 
-  describe('parameter component rendering', () => {
-    it('displays the Boolean editor when the type is boolean', () => {
-      const { getByText } = renderComponent({ type: 'boolean' });
+  it('displays the Editor when passed a valid parameter type', () => {
+    const { getByText } = renderComponent({ type: 'boolean' });
 
-      expect(getByText('BooleanEditor')).not.toBeNull();
-    });
-
-    it('displays the Code editor when the type is system_code', () => {
-      const { getByText } = renderComponent({ type: 'system_code' });
-
-      expect(getByText('CodeEditor')).not.toBeNull();
-    });
-
-    it('displays the Code editor when the type is system_concept', () => {
-      const { getByText } = renderComponent({ type: 'system_concept' });
-
-      expect(getByText('CodeEditor')).not.toBeNull();
-    });
-
-    it('displays the Integer editor when the type is integer', () => {
-      const { getByText } = renderComponent({ type: 'integer' });
-
-      expect(getByText('IntegerEditor')).not.toBeNull();
-    });
-
-    it('displays the DateTime editor when the type is datetime', () => {
-      const { getByText } = renderComponent({ type: 'datetime' });
-
-      expect(getByText('DateTimeEditor')).not.toBeNull();
-    });
-
-    it('displays the Decimal editor when the type is decimal', () => {
-      const { getByText } = renderComponent({ type: 'decimal' });
-
-      expect(getByText('DecimalEditor')).not.toBeNull();
-    });
-
-    it('displays the Quantity editor when the type is system_quantity', () => {
-      const { getByText } = renderComponent({ type: 'system_quantity' });
-
-      expect(getByText('QuantityEditor')).not.toBeNull();
-    });
-
-    it('displays the String editor when the type is string', () => {
-      const { getByText } = renderComponent({ type: 'string' });
-
-      expect(getByText('StringEditor')).not.toBeNull();
-    });
-
-    it('displays the Time editor when the type is time', () => {
-      const { getByText } = renderComponent({ type: 'time' });
-
-      expect(getByText('TimeEditor')).not.toBeNull();
-    });
-
-    it('displays the Interval<Integer> editor when the type is interval_of_integer', () => {
-      const { getByText } = renderComponent({ type: 'interval_of_integer' });
-
-      expect(getByText('IntervalOfIntegerEditor')).not.toBeNull();
-    });
-
-    it('displays the Interval<DateTime> editor when the type is interval_of_datetime', () => {
-      const { getByText } = renderComponent({ type: 'interval_of_datetime' });
-
-      expect(getByText('IntervalOfDateTimeEditor')).not.toBeNull();
-    });
-
-    it('displays the Interval<Decimal> editor when the type is interval_of_decimal', () => {
-      const { getByText } = renderComponent({ type: 'interval_of_decimal' });
-
-      expect(getByText('IntervalOfDecimalEditor')).not.toBeNull();
-    });
-
-    it('displays the Interval<Quantity> editor when the type is interval_of_quantity', () => {
-      const { getByText } = renderComponent({ type: 'interval_of_quantity' });
-
-      expect(getByText('IntervalOfQuantityEditor')).not.toBeNull();
-    });
+    expect(getByText('Editor')).not.toBeNull();
   });
 });
