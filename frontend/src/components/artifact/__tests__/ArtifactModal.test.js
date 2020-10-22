@@ -146,8 +146,8 @@ describe('<ArtifactModal />', () => {
       fireEvent.change(getByLabelText(/Purpose/), { target: { value: 'NewArtifactPurpose' } });
       fireEvent.change(getByLabelText(/Usage/), { target: { value: 'NewArtifactUsage' } });
       fireEvent.change(getByLabelText(/Copyright/), { target: { value: 'NewArtifactCopyright' } });
-      fireEvent.change(getByLabelText(/Approval Date/), { target: { value: '01012000' } });
-      fireEvent.change(getByLabelText(/Last Review Date/), { target: { value: '01022000' } });
+      fireEvent.change(getByLabelText(/Approval Date/), { target: { value: '01/01/2000' } });
+      fireEvent.change(getByLabelText(/Last Review Date/), { target: { value: '01/02/2000' } });
       fireEvent.change(document.querySelector(
         'input[name="effectivePeriod.start"]'),
         { target: { value: '01032000' } }

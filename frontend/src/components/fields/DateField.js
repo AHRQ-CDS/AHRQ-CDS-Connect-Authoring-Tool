@@ -22,7 +22,7 @@ export default memo(function DateField({
   const [field, , { setValue }] = useField(fieldName);
   const { value } = field;
   const { values } = useFormikContext();
-  const currentDateValue = useMemo(() => value ? moment(value) : null, [value]);
+  const currentDateValue = useMemo(() => value ? moment(value).toDate() : null, [value]);
 
   const handleChange = useCallback(value => {
     setValue(value ? value.toISOString() : null);
@@ -50,7 +50,7 @@ export default memo(function DateField({
           aria-label={`Date ${name}`}
           onChange={handleChange}
           selected={currentDateValue}
-          dateFormat="L"
+          dateFormat="MM/dd/yyyy"
           autoComplete="off"
           showYearDropdown
           placeholderText="MM/DD/YYYY"

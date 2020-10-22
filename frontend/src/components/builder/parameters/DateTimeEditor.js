@@ -53,12 +53,12 @@ export default class DateTimeEditor extends Component {
                 id={id}
                 selected={
                   moment(_.get(value, 'date', null), 'YYYY-MM-DD').isValid()
-                  ? moment(value.date, 'YYYY-MM-DD')
+                  ? moment(value.date, 'YYYY-MM-DD').toDate()
                   : null}
-                dateFormat="L"
+                dateFormat="MM/dd/yyyy"
                 autoComplete="off"
                 onChange={ (e) => {
-                  updateInstance({ name, type, label, value: this.assignValue(e, 'date') });
+                  updateInstance({ name, type, label, value: this.assignValue(moment(e), 'date') });
                 }}
               />
             </div>

@@ -12,7 +12,7 @@ const DateRangePicker = memo(({ fieldName, name, rangeType, noDateOption, noDate
   const [field, , { setValue }] = useField(rangeFieldName);
   const [noDateField, , { setValue: setNoDateFieldValue }] = useField(`${fieldName}.${rangeType}NoDate`);
   const { value } = field;
-  const currentDateValue = useMemo(() => value ? moment(value) : null, [value]);
+  const currentDateValue = useMemo(() => value ? moment(value).toDate() : null, [value]);
 
   const handleChange = useCallback(value => {
     setValue(value ? value.toISOString() : null);
@@ -31,7 +31,7 @@ const DateRangePicker = memo(({ fieldName, name, rangeType, noDateOption, noDate
         aria-label={`Date ${name}`}
         onChange={handleChange}
         selected={currentDateValue}
-        dateFormat="L"
+        dateFormat="MM/dd/yyyy"
         autoComplete="off"
         showYearDropdown
         placeholderText="MM/DD/YYYY"

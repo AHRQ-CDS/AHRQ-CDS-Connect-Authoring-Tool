@@ -64,12 +64,12 @@ export default class DateTimePrecisionModifier extends Component {
           id={dateId}
           selected={
             moment(this.props.date, 'YYYY-MM-DD').isValid()
-            ? moment(this.props.date, 'YYYY-MM-DD')
+            ? moment(this.props.date, 'YYYY-MM-DD').toDate()
             : null}
-          dateFormat="L"
+          dateFormat="MM/dd/yyyy"
           autoComplete="off"
           onChange={ (e) => {
-            this.assignValue(e, 'date');
+            this.assignValue(moment(e), 'date');
           }}
         />
 
