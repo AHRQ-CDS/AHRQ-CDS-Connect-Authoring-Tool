@@ -209,25 +209,35 @@ class Testing extends Component {
       <div className="testing" id="maincontent">
         <div className="testing-wrapper">
           <Dropzone
-            className="dropzone"
-            onDrop={this.addPatient.bind(this)}
-            accept="application/json" multiple={false}
+            onDrop={acceptedFiles => this.addPatient(acceptedFiles)}
+            accept="application/json"
+            multiple={false}
             aria-label="Testing Patient Dropzone"
           >
-            {this.renderDropzoneIcon()}
+            {({ getRootProps, getInputProps }) => (
+              <section className="container">
+                <div {...getRootProps({ className: 'dropzone' })}>
+                  <input {...getInputProps()} />
 
-            {this.state.uploadError &&
-              <div className="warning">Invalid file type. Only valid JSON FHIR<sup>®</sup> Bundles are accepted.</div>
-            }
+                  {this.renderDropzoneIcon()}
 
-            <p className="dropzone__instructions">
-              Drop a valid JSON FHIR<sup>®</sup> bundle containing a synthetic patient here, or click to browse.
-            </p>
+                  {this.state.uploadError &&
+                    <div className="warning">
+                      Invalid file type. Only valid JSON FHIR<sup>®</sup> Bundles are accepted.
+                    </div>
+                  }
 
-            <p className="dropzone__warning">
-              Do not upload any Personally Identifiable Information (PII) or Protected Health Information (PHI). Upload
-              synthetic data only.
-            </p>
+                  <p className="dropzone__instructions">
+                    Drop a valid JSON FHIR<sup>®</sup> bundle containing a synthetic patient here, or click to browse.
+                  </p>
+
+                  <p className="dropzone__warning">
+                    Do not upload any Personally Identifiable Information (PII) or Protected Health Information (PHI).
+                    Upload synthetic data only.
+                  </p>
+                </div>
+              </section>
+            )}
           </Dropzone>
 
           <div className="testing-wrapper">
