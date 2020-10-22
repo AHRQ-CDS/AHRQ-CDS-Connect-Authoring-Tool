@@ -33,7 +33,7 @@
     "react-app-polyfill": "^1.0.6",
     "react-datepicker": "~1.4.0",
     "react-dom": "^16.14.0",
-    "react-dropzone": "^4.2.9",
+    "react-dropzone": "^11.2.0",
     "react-graceful-unmount": "^1.0.7",
     "react-helmet": "^5.2.0",
     "react-inspector": "^2.3.0",
