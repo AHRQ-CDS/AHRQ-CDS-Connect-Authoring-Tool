@@ -3,18 +3,6 @@ import Parameter from '../Parameter';
 import { render, fireEvent, openSelect } from '../../../utils/test-utils';
 
 jest.mock('../editors/Editor', () => () => <div>Editor</div>);
-jest.mock('../editors/CodeEditor', () => () => <div>CodeEditor</div>);
-jest.mock('../editors/BooleanEditor', () => () => <div>BooleanEditor</div>);
-jest.mock('../editors/IntegerEditor', () => () => <div>IntegerEditor</div>);
-jest.mock('../editors/DateTimeEditor', () => () => <div>DateTimeEditor</div>);
-jest.mock('../editors/DecimalEditor', () => () => <div>DecimalEditor</div>);
-jest.mock('../editors/QuantityEditor', () => () => <div>QuantityEditor</div>);
-jest.mock('../editors/StringEditor', () => () => <div>StringEditor</div>);
-jest.mock('../editors/TimeEditor', () => () => <div>TimeEditor</div>);
-jest.mock('../editors/IntervalOfIntegerEditor', () => () => <div>IntervalOfIntegerEditor</div>);
-jest.mock('../editors/IntervalOfDateTimeEditor', () => () => <div>IntervalOfDateTimeEditor</div>);
-jest.mock('../editors/IntervalOfDecimalEditor', () => () => <div>IntervalOfDecimalEditor</div>);
-jest.mock('../editors/IntervalOfQuantityEditor', () => () => <div>IntervalOfQuantityEditor</div>);
 
 describe('<Parameter />', () => {
   const renderComponent = (props = {}) =>
