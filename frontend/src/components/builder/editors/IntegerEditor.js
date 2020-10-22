@@ -28,7 +28,7 @@ export default class IntegerEditor extends Component {
                 <input
                   id={formId}
                   type="number"
-                  value={(value || value === 0) ? value : NaN}
+                  value={(value || value === 0) ? value : 'NaN'}
                   onChange={(e) => {
                     updateInstance({ name, type, label, value: this.assignValue(e) });
                   }}

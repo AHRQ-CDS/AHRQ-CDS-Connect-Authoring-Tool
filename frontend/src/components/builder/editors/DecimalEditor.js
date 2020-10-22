@@ -43,7 +43,7 @@ export default class DecimalEditor extends Component {
                   value={
                     (_.get(value, 'decimal', null) || _.get(value, 'decimal', null) === 0)
                     ? _.get(value, 'decimal')
-                    : NaN }
+                    : 'NaN' }
                   onChange={ (e) => {
                     updateInstance({ name, type, label, value: this.assignValue(e) });
                   }}

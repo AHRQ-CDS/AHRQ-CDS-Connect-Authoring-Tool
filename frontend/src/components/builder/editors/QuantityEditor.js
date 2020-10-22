@@ -80,7 +80,7 @@ export default class QuantityEditor extends Component {
                   value={
                     (_.get(value, 'quantity', null) || _.get(value, 'quantity', null) === 0)
                     ? _.get(value, 'quantity')
-                    : NaN }
+                    : 'NaN' }
                   onChange={ (e) => {
                     updateInstance({ name, type, label, value: this.assignValue(e) });
                   }}

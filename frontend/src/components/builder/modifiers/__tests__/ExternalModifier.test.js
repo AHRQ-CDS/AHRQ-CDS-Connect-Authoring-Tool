@@ -8,6 +8,7 @@ describe('<ExternalModifier />', () => {
       <ExternalModifier
         name="external"
         arguments={[]}
+        updateAppliedModifier={jest.fn()}
         {...props}
       />
     );

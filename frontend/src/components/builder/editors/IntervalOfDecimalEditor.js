@@ -65,7 +65,7 @@ export default class IntervalOfDecimalEditor extends Component {
                   value={
                     (_.get(value, 'firstDecimal', null) || _.get(value, 'firstDecimal', null) === 0)
                     ? _.get(value, 'firstDecimal')
-                    : NaN }
+                    : 'NaN' }
                   onChange={ (e) => {
                     updateInstance({ name, type, label, value: this.assignValue(e) });
                   }}
@@ -83,7 +83,7 @@ export default class IntervalOfDecimalEditor extends Component {
                   value={
                     (_.get(value, 'secondDecimal', null) || _.get(value, 'secondDecimal', null) === 0)
                     ? _.get(value, 'secondDecimal')
-                    : NaN }
+                    : 'NaN' }
                   onChange={ (e) => {
                     updateInstance({ name, type, label, value: this.assignValue(e) });
                   }}

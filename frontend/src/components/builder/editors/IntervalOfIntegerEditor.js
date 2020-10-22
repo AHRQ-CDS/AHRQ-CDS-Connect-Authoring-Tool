@@ -54,7 +54,7 @@ export default class IntervalOfIntegerEditor extends Component {
                   value={
                     (_.get(value, 'firstInteger', null) || _.get(value, 'firstInteger', null) === 0)
                     ? _.get(value, 'firstInteger')
-                    : NaN }
+                    : 'NaN' }
                   onChange={ (e) => {
                     updateInstance({ name, type, label, value: this.assignValue(e) });
                   }}
@@ -72,7 +72,7 @@ export default class IntervalOfIntegerEditor extends Component {
                   value={
                     (_.get(value, 'secondInteger', null) || _.get(value, 'secondInteger', null) === 0)
                     ? _.get(value, 'secondInteger')
-                    : NaN }
+                    : 'NaN' }
                   onChange={ (e) => {
                     updateInstance({ name, type, label, value: this.assignValue(e) });
                   }}

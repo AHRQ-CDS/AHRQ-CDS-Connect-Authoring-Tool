@@ -2,7 +2,6 @@ import React from 'react';
 import Parameter from '../Parameter';
 import { render, fireEvent, openSelect } from '../../../utils/test-utils';
 
-jest.mock('../fields/TextAreaField', () => () => <div>TextAreaField</div>);
 jest.mock('../editors/CodeEditor', () => () => <div>CodeEditor</div>);
 jest.mock('../editors/BooleanEditor', () => () => <div>BooleanEditor</div>);
 jest.mock('../editors/IntegerEditor', () => () => <div>IntegerEditor</div>);

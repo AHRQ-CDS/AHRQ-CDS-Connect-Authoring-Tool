@@ -106,7 +106,7 @@ export default class IntervalOfQuantityEditor extends Component {
                   value={
                     (_.get(value, 'firstQuantity', null) || _.get(value, 'firstQuantity', null) === 0)
                     ? _.get(value, 'firstQuantity')
-                    : NaN }
+                    : 'NaN' }
                   onChange={ (e) => {
                     updateInstance({ name, type, label, value: this.assignValue(e) });
                   }}
@@ -124,7 +124,7 @@ export default class IntervalOfQuantityEditor extends Component {
                   value={
                     (_.get(value, 'secondQuantity', null) || _.get(value, 'secondQuantity', null) === 0)
                     ? _.get(value, 'secondQuantity')
-                    : NaN }
+                    : 'NaN' }
                   onChange={ (e) => {
                     updateInstance({ name, type, label, value: this.assignValue(e) });
                   }}
