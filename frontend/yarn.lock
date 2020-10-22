@@ -10908,11 +10908,10 @@ to-regex@^3.0.1, to-regex@^3.0.2:
     regex-not "^1.0.2"
     safe-regex "^1.1.0"
 
-tocbot@^3.0.7:
-  version "3.0.7"
-  resolved "https://registry.yarnpkg.com/tocbot/-/tocbot-3.0.7.tgz#cc3973ad96ba35e7d525e0875f20a5bee5d34e1e"
-  dependencies:
-    zenscroll "^4.0.0"
+tocbot@^4.12.0:
+  version "4.12.0"
+  resolved "https://registry.yarnpkg.com/tocbot/-/tocbot-4.12.0.tgz#5f3a8baa01d8bff2767bab00fce95d034116a33c"
+  integrity sha512-THn/RJCRsbo1fgCP0fWHJwkk1K9mQFfYUX5rJdoJMQ7twkVX7zjNJZOjHmrpDzFd6nTPkXpQNsZUniCgdCwFLg==
 
 toidentifier@1.0.0:
   version "1.0.0"
@@ -11728,7 +11727,3 @@ yargs@^3.5.4:
     string-width "^1.0.1"
     window-size "^0.1.4"
     y18n "^3.2.0"
-
-zenscroll@^4.0.0:
-  version "4.0.2"
-  resolved "https://registry.yarnpkg.com/zenscroll/-/zenscroll-4.0.2.tgz#e8d5774d1c0738a47bcfa8729f3712e2deddeb25"
