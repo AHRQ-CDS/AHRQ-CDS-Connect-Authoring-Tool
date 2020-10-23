@@ -56,7 +56,8 @@ function sendModifiersRequest() {
             // arguments, and argumentTypes field that is not on other modifiers.
             // This is needed for the sake of testing whether external CQL libraries
             // can be deleted or updated or used as modifiers, by checking these details.
-            if (func.operand.length >= 1 && func.argumentTypes.every(type => editorTypes.includes(type.calculated))) {
+            if ((func.operand.length) >= 1 && (func.argumentTypes.length >= 1)
+              && func.argumentTypes.slice(1).every(type => editorTypes.includes(type.calculated))) {
               const functionAndLibraryName = `${func.name} (from ${lib.name})`;
               const modifier = {
                 id: functionAndLibraryName,
