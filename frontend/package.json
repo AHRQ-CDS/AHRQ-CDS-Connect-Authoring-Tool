@@ -25,7 +25,7 @@
     "moment": "^2.29.1",
     "moxios": "^0.4.0",
     "node-bourbon": "^4.2.8",
-    "pluralize": "^7.0.0",
+    "pluralize": "^8.0.0",
     "promise": "^8.1.0",
     "prop-types": "^15.7.2",
     "rc-time-picker": "^3.7.3",
