@@ -162,20 +162,20 @@ export default class IntervalOfDateTimeEditor extends Component {
               </div>
 
               <div className="editor-input">
-              <span className="date-label">Time:</span>
+                <span className="date-label">Time:</span>
 
-              <TimePicker
-                id={id}
-                defaultValue={
-                  moment(_.get(value, 'secondTime', null), 'HH:mm:ss').isValid()
-                    ? moment(value.secondTime, 'HH:mm:ss')
-                    : null}
-                autoComplete="off"
-                onChange={(e) => {
-                  updateInstance({ name, type, label, value: this.assignValue(e, 'secondTime') });
-                }}
-              />
-            </div>
+                <TimePicker
+                  id={id}
+                  defaultValue={
+                    moment(_.get(value, 'secondTime', null), 'HH:mm:ss').isValid()
+                      ? moment(value.secondTime, 'HH:mm:ss')
+                      : null}
+                  autoComplete="off"
+                  onChange={(e) => {
+                    updateInstance({ name, type, label, value: this.assignValue(e, 'secondTime') });
+                  }}
+                />
+              </div>
             </div>
           </label>
         </div>
