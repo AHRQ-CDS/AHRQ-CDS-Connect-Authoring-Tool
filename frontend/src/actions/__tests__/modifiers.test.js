@@ -56,7 +56,11 @@ describe('modifiers actions', () => {
 
       const expectedActions = [
         { type: types.MODIFIERS_REQUEST },
-        { type: types.LOAD_MODIFIERS_FAILURE, status: '', statusText: '' }
+        {
+          type: types.LOAD_MODIFIERS_FAILURE,
+          status: 'error',
+          statusText: `Cannot read property 'externalCqlList' of undefined`
+        }
       ];
 
       return store.dispatch(actions.loadModifiers()).then(() => {
