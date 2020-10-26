@@ -87,12 +87,12 @@ export default class IntervalOfDateTimeEditor extends Component {
                 id={formIdFirst}
                 selected={
                   moment(_.get(value, 'firstDate', null), 'YYYY-MM-DD').isValid()
-                  ? moment(value.firstDate, 'YYYY-MM-DD')
+                  ? moment(value.firstDate, 'YYYY-MM-DD').toDate()
                   : null}
-                dateFormat="L"
+                dateFormat="MM/dd/yyyy"
                 autoComplete="off"
                 onChange={(e) => {
-                  updateInstance({ name, type, label, value: this.assignValue(e, 'firstDate') });
+                  updateInstance({ name, type, label, value: this.assignValue(moment(e), 'firstDate') });
                 }}
               />
             </div>
@@ -126,12 +126,12 @@ export default class IntervalOfDateTimeEditor extends Component {
                 id={formIdSecond}
                 selected={
                   moment(_.get(value, 'secondDate', null), 'YYYY-MM-DD').isValid()
-                  ? moment(value.secondDate, 'YYYY-MM-DD')
+                  ? moment(value.secondDate, 'YYYY-MM-DD').toDate()
                   : null}
-                dateFormat="L"
+                dateFormat="MM/dd/yyyy"
                 autoComplete="off"
                 onChange={(e) => {
-                  updateInstance({ name, type, label, value: this.assignValue(e, 'secondDate') });
+                  updateInstance({ name, type, label, value: this.assignValue(moment(e), 'secondDate') });
                 }}
               />
             </div>
