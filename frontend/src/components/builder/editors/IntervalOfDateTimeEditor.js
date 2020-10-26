@@ -107,10 +107,10 @@ export default class IntervalOfDateTimeEditor extends Component {
                   id={formIdFirst}
                   selected={
                     moment(_.get(value, 'firstDate', null), 'YYYY-MM-DD').isValid()
-                    ? moment(value.firstDate, 'YYYY-MM-DD').toDate()
-                    : null}
-                    dateFormat="MM/dd/yyyy"
-                    autoComplete="off"
+                      ? moment(value.firstDate, 'YYYY-MM-DD').toDate()
+                      : null}
+                  dateFormat="MM/dd/yyyy"
+                  autoComplete="off"
                   onChange={(e) => {
                     updateInstance({ name, type, label, value: this.assignValue(moment(e), 'firstDate') });
                   }}
@@ -124,8 +124,8 @@ export default class IntervalOfDateTimeEditor extends Component {
                   id={id}
                   defaultValue={
                     moment(_.get(value, 'firstTime', null), 'HH:mm:ss').isValid()
-                    ? moment(value.firstTime, 'HH:mm:ss')
-                    : null}
+                      ? moment(value.firstTime, 'HH:mm:ss')
+                      : null}
                   autoComplete="off"
                   onChange={(e) => {
                     updateInstance({ name, type, label, value: this.assignValue(e, 'firstTime') });
@@ -160,9 +160,8 @@ export default class IntervalOfDateTimeEditor extends Component {
                   }}
                 />
               </div>
-            </div>
 
-            <div className="input-group">
+              <div className="editor-input">
               <span className="date-label">Time:</span>
 
               <TimePicker
@@ -176,6 +175,7 @@ export default class IntervalOfDateTimeEditor extends Component {
                   updateInstance({ name, type, label, value: this.assignValue(e, 'secondTime') });
                 }}
               />
+            </div>
             </div>
           </label>
         </div>

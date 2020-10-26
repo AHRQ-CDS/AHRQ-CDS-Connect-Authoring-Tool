@@ -80,8 +80,6 @@
 
 .modifier__selection {
   .modifier__addbutton {
-    margin-bottom: 10px;
-
     @extend .primary-button;
   }
 }
@@ -186,7 +184,10 @@
   }
 }
 
-.modifier__button { margin-left: 10px; }
+.modifier__button {
+  margin-left: 10px;
+  margin-bottom: 10px;
+}
 
 .modifier__comparison__value { width: 6em; }
 
