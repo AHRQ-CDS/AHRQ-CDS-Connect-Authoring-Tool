@@ -76,16 +76,6 @@
   }
 }
 
-body.ReactModal__Body--open {
-  overflow: hidden;
-
-  #root {
-    filter: blur(10px);
-
-    @include ie10plus { opacity: 0.1; }
-  }
-}
-
 .modal-overlay {
   position: fixed;
   top: 0;
