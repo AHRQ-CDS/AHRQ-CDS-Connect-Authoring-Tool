@@ -35,8 +35,8 @@ function loadModifiersSuccess(modifiers) {
 function loadModifiersFailure(error) {
   return {
     type: types.LOAD_MODIFIERS_FAILURE,
-    status: error.response ? error.response.status : '',
-    statusText: error.response ? error.response.statusText : ''
+    status: 'error',
+    statusText: error.message
   };
 }
 
