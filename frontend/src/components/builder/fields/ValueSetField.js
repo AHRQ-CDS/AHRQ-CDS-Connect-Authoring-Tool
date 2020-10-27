@@ -5,8 +5,8 @@ import _ from 'lodash';
 import StyledSelect from '../../elements/StyledSelect';
 
 export default class ValueSetField extends Component {
-  onFocus = () => {
-    this.props.loadValueSets(this.props.field.select);
+  componentDidMount() {
+    if (!this.props.valueSets) this.props.loadValueSets(this.props.field.select);
   }
 
   render() {
@@ -23,12 +23,11 @@ export default class ValueSetField extends Component {
                 classNamePrefix="value-set-field-select"
                 getOptionLabel={({ name }) => name}
                 placeholder={`Select ${this.props.field.name}`}
-                options={this.props.valueSets}
+                options={this.props.valueSets ?? []}
                 inputProps={{ id }}
                 name={this.props.field.id}
                 value={this.props.field.value}
                 onChange={(value) => { this.props.updateInstance({ [this.props.field.id]: value }); }}
-                onFocus={this.onFocus}
                 isSearchable={true} />
               </div>
           </label>

@@ -20,14 +20,20 @@ describe('<ValueSetField />', () => {
       />
     );
 
-  it('calls loadValueSets on focus', () => {
+  it('calls loadValueSets on mount if none are present', () => {
     const loadValueSets = jest.fn();
-    const { container } = renderComponent({ loadValueSets });
 
-    openSelect(container.querySelector('.value-set-field-select__control'));
-    fireEvent.focus(container.querySelector('input[type="text"]'));
+    renderComponent({ loadValueSets, valueSets: null });
 
     expect(loadValueSets).toBeCalledWith('demographics/units_of_time');
+  });
+
+  it('does not call loadValueSets on mount if value sets are present', () => {
+    const loadValueSets = jest.fn();
+
+    renderComponent({ loadValueSets });
+
+    expect(loadValueSets).not.toHaveBeenCalled(); //toBeCalledWith('demographics/units_of_time');
   });
 
   it('calls updateInstance when an option is selected', () => {
