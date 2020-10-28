@@ -51,6 +51,14 @@ function sendModifiersRequest() {
         const externalCqlList = getState().externalCQL.externalCqlList;
         const externalModifiers = [];
         externalCqlList.forEach(lib => {
+          if ([
+            'CDS_Connect_Commons_for_FHIRv102',
+            'CDS_Connect_Commons_for_FHIRv300',
+            'CDS_Connect_Commons_for_FHIRv400',
+            'CDS_Connect_Conversions',
+            'FHIRHelpers'
+          ].includes(lib.name)) return;
+
           lib.details.functions.forEach(func => {
             // The ExternalModifier requires a functionName, libraryName,
             // arguments, and argumentTypes field that is not on other modifiers.

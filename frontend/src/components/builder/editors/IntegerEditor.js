@@ -6,6 +6,7 @@ import _ from 'lodash';
 export default class IntegerEditor extends Component {
   assignValue = (evt) => {
     let value = _.get(evt, 'target.value', null);
+    console.log(value);
     if (value != null) value = parseInt(value, 10);
     return value;
   };
