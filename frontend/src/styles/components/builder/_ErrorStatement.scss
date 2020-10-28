@@ -13,6 +13,10 @@
     &-then,
     &-else {
       margin: 1em 0;
+
+      .label {
+        text-align: left;
+      }
     }
 
     &-then {

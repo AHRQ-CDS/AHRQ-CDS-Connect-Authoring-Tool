@@ -368,7 +368,8 @@ export default class UserGuide extends Component {
                       <li><strong>Device</strong>: Instances of the FHIR Device resource type</li>
                       <li><strong>Encounter</strong>: Instances of the FHIR Encounter resource type</li>
                       <li>
-                        <strong>External CQL</strong>: Named CQL definitions from CQL files uploaded in the "External CQL" tab
+                        <strong>External CQL</strong>: Named CQL definitions, parameters, and functions from CQL files
+                        uploaded in the "External CQL" tab
                       </li>
                       <li><strong>Immunization</strong>: Instances of the FHIR Immunization resource type</li>
                       <li><strong>Medication Statement</strong>: Instances of the FHIR MedicationStatement resource type</li>
@@ -697,7 +698,9 @@ export default class UserGuide extends Component {
                   </div>
                   <div>
                     To see the full set of expression modifiers applicable to each element and/or return type, click on the
-                    "Data Types" tab on the <a href="documentation">Documentation</a> page.
+                    "Data Types" tab on the <a href="documentation">Documentation</a> page. The "External CQL Tab" section of this
+                    documentation details the process to add additional expression modifiers to use in an artifact in the
+                    CDS Authoring Tool.
                   </div>
                 </div>
               </div>
