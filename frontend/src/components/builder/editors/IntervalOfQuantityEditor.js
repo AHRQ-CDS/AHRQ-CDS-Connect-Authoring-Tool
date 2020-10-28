@@ -9,13 +9,22 @@ export default class IntervalOfQuantityEditor extends Component {
   constructor(props) {
     super(props);
 
-    const firstQuantity = _.get(props, 'value.firstQuantity', null);
-    const secondQuantity = _.get(props, 'value.secondQuantity', null);
-    const unit = _.get(props, 'value.unit', null);
+    const firstQuantity = _.get(props, 'value.firstQuantity', '');
+    const secondQuantity = _.get(props, 'value.secondQuantity', '');
+    const unit = _.get(props, 'value.unit', '');
 
     this.state = {
-      showInputWarning: (unit && !((firstQuantity || firstQuantity === 0) || (secondQuantity || secondQuantity === 0)))
+      showInputWarning: this.shouldShowInputWarning(firstQuantity) || this.shouldShowInputWarning(secondQuantity),
+      showIncompleteWarning: this.shouldShowIncompleteWarning(firstQuantity, secondQuantity, unit)
     };
+  }
+
+  shouldShowInputWarning = (value) => {
+    return value && !/^-?\d+(\.\d+)?$/.test(value);
+  }
+
+  shouldShowIncompleteWarning = (firstQuantity, secondQuantity, unit) => {
+    return (unit && !((firstQuantity || firstQuantity === 0) || (secondQuantity || secondQuantity === 0)));
   }
 
   componentDidMount = () => {
@@ -34,45 +43,44 @@ export default class IntervalOfQuantityEditor extends Component {
 
     switch (evt.target.name) {
       case 'firstQuantity':
-        firstQuantity = _.get(evt, 'target.value', null);
-        if (firstQuantity != null) { firstQuantity = parseFloat(firstQuantity); }
-        secondQuantity = _.get(this, 'props.value.secondQuantity', null);
-        unit = _.get(this, 'props.value.unit', null);
+        firstQuantity = _.get(evt, 'target.value', '');
+        secondQuantity = _.get(this, 'props.value.secondQuantity', '');
+        unit = _.get(this, 'props.value.unit', '');
         break;
       case 'secondQuantity':
-        firstQuantity = _.get(this, 'props.value.firstQuantity', null);
-        secondQuantity = _.get(evt, 'target.value', null);
-        if (secondQuantity != null) { secondQuantity = parseFloat(secondQuantity); }
-        unit = _.get(this, 'props.value.unit', null);
+        firstQuantity = _.get(this, 'props.value.firstQuantity', '');
+        secondQuantity = _.get(evt, 'target.value', '');
+        unit = _.get(this, 'props.value.unit', '');
         break;
       case 'unit':
-        firstQuantity = _.get(this, 'props.value.firstQuantity', null);
-        secondQuantity = _.get(this, 'props.value.secondQuantity', null);
-        unit = _.get(evt, 'target.value', null);
+        firstQuantity = _.get(this, 'props.value.firstQuantity', '');
+        secondQuantity = _.get(this, 'props.value.secondQuantity', '');
+        unit = _.get(evt, 'target.value', '');
         break;
       default:
         break;
     }
 
     this.setState({
-      showInputWarning: (unit && !((firstQuantity || firstQuantity === 0) || (secondQuantity || secondQuantity === 0)))
+      showInputWarning: this.shouldShowInputWarning(firstQuantity) || this.shouldShowInputWarning(secondQuantity),
+      showIncompleteWarning: this.shouldShowIncompleteWarning(firstQuantity, secondQuantity, unit)
     });
 
-    if ((firstQuantity || firstQuantity === 0) || (secondQuantity || secondQuantity === 0) || unit) {
+    if (firstQuantity || secondQuantity || unit) {
       const escapedQuoteUnit = (unit ? unit.replace(/'/g, '\\\'') : unit) || '1';
-      const firstQuantityForString = (firstQuantity || firstQuantity === 0) ? firstQuantity : null;
-      const secondQuantityForString = (secondQuantity || secondQuantity === 0) ? secondQuantity : null;
-      const firstUnitForString = (firstQuantity || firstQuantity === 0) ? ` '${escapedQuoteUnit}'` : '';
-      const secondUnitForString = (secondQuantity || secondQuantity === 0) ? ` '${escapedQuoteUnit}'` : '';
-      if (Number.isInteger(firstQuantity)) {
-        if (Number.isInteger(secondQuantity)) {
+      const firstQuantityForString = firstQuantity || null;
+      const secondQuantityForString = secondQuantity || null;
+      const firstUnitForString = firstQuantity ? ` '${escapedQuoteUnit}'` : '';
+      const secondUnitForString = secondQuantity ? ` '${escapedQuoteUnit}'` : '';
+      if (Number.isInteger(parseFloat(firstQuantity))) {
+        if (Number.isInteger(parseFloat(secondQuantity))) {
           str = `Interval[${firstQuantityForString}.0${firstUnitForString},`
             + `${secondQuantityForString}.0${secondUnitForString}]`;
         } else {
           str = `Interval[${firstQuantityForString}.0${firstUnitForString},`
             + `${secondQuantityForString}${secondUnitForString}]`;
         }
-      } else if (Number.isInteger(secondQuantity)) {
+      } else if (Number.isInteger(parseFloat(secondQuantity))) {
         str = `Interval[${firstQuantityForString}${firstUnitForString},`
           + `${secondQuantityForString}.0${secondUnitForString}]`;
       } else {
@@ -102,11 +110,7 @@ export default class IntervalOfQuantityEditor extends Component {
                 <input
                   id={formId}
                   name="firstQuantity"
-                  type="number"
-                  value={
-                    (_.get(value, 'firstQuantity', null) || _.get(value, 'firstQuantity', null) === 0)
-                    ? _.get(value, 'firstQuantity')
-                    : 'NaN' }
+                  value={_.get(value, 'firstQuantity', '')}
                   onChange={ (e) => {
                     updateInstance({ name, type, label, value: this.assignValue(e) });
                   }}
@@ -119,12 +123,8 @@ export default class IntervalOfQuantityEditor extends Component {
                 <input
                   id={id}
                   name="secondQuantity"
-                  type="number"
                   aria-label="Second Quantity"
-                  value={
-                    (_.get(value, 'secondQuantity', null) || _.get(value, 'secondQuantity', null) === 0)
-                    ? _.get(value, 'secondQuantity')
-                    : 'NaN' }
+                  value={_.get(value, 'secondQuantity', '')}
                   onChange={ (e) => {
                     updateInstance({ name, type, label, value: this.assignValue(e) });
                   }}
@@ -139,7 +139,7 @@ export default class IntervalOfQuantityEditor extends Component {
                   name="unit"
                   placeholder="enter unit"
                   aria-label="Enter Unit"
-                  value={_.get(value, 'unit', null) || ''}
+                  value={_.get(value, 'unit', '')}
                   onChange={(e) => {
                     updateInstance({ name, type, label, value: this.assignValue(e) });
                   }}
@@ -153,6 +153,12 @@ export default class IntervalOfQuantityEditor extends Component {
         </div>
 
         {this.state.showInputWarning &&
+          <div className="warning">
+            {`Warning: A Quantity's numerical value must be valid Decimal.`}
+          </div>
+        }
+
+        {this.state.showIncompleteWarning &&
           <div className="warning">
             {`Warning: An Interval<Quantity> must have at least one numerical value.`}
           </div>

@@ -9,12 +9,21 @@ export default class QuantityEditor extends Component {
   constructor(props) {
     super(props);
 
-    const quantity = _.get(props, 'value.quantity', null);
-    const unit = _.get(props, 'value.unit', null);
+    const quantity = _.get(props, 'value.quantity', '');
+    const unit = _.get(props, 'value.unit', '');
 
     this.state = {
-      showInputWarning: (unit && !(quantity || quantity === 0))
+      showInputWarning: this.shouldShowInputWarning(quantity),
+      showIncompleteWarning: this.shouldShowIncompleteWarning(quantity, unit)
     };
+  }
+
+  shouldShowInputWarning = (value) => {
+    return value && !/^-?\d+(\.\d+)?$/.test(value);
+  }
+
+  shouldShowIncompleteWarning = (quantity, unit) => {
+    return (unit && !(quantity || quantity === 0));
   }
 
   componentDidMount = () => {
@@ -32,23 +41,25 @@ export default class QuantityEditor extends Component {
 
     switch (evt.target.name) {
       case 'quantity':
-        quantity = _.get(evt, 'target.value', null);
-        if (quantity != null) { quantity = parseFloat(quantity); }
-        unit = _.get(this, 'props.value.unit', null);
+        quantity = _.get(evt, 'target.value', '');
+        unit = _.get(this, 'props.value.unit', '');
         break;
       case 'unit':
-        quantity = _.get(this, 'props.value.quantity', null);
-        unit = _.get(evt, 'target.value', null);
+        quantity = _.get(this, 'props.value.quantity', '');
+        unit = _.get(evt, 'target.value', '');
         break;
       default:
         break;
     }
 
-    this.setState({ showInputWarning: (unit && !(quantity || quantity === 0)) });
+    this.setState({
+      showInputWarning: this.shouldShowInputWarning(quantity),
+      showIncompleteWarning: this.shouldShowIncompleteWarning(quantity, unit)
+    });
 
-    if ((quantity || quantity === 0) || unit) {
+    if (quantity || unit) {
       const escapedQuoteUnit = (unit ? unit.replace(/'/g, '\\\'') : unit) || '1';
-      if (Number.isInteger(quantity)) {
+      if (Number.isInteger(parseFloat(quantity))) {
         str = `${quantity}.0 '${escapedQuoteUnit}'`;
       } else {
         str = `${quantity} '${escapedQuoteUnit}'`;
@@ -76,11 +87,7 @@ export default class QuantityEditor extends Component {
                 <input
                   id={id}
                   name="quantity"
-                  type="number"
-                  value={
-                    (_.get(value, 'quantity', null) || _.get(value, 'quantity', null) === 0)
-                    ? _.get(value, 'quantity')
-                    : 'NaN' }
+                  value={_.get(value, 'quantity', '')}
                   onChange={ (e) => {
                     updateInstance({ name, type, label, value: this.assignValue(e) });
                   }}
@@ -95,7 +102,7 @@ export default class QuantityEditor extends Component {
                   name="unit"
                   placeholder="enter unit"
                   aria-label="Enter Unit"
-                  value={_.get(value, 'unit', null) || ''}
+                  value={_.get(value, 'unit', '')}
                   onChange={(e) => {
                     updateInstance({ name, type, label, value: this.assignValue(e) });
                   }}
@@ -109,6 +116,12 @@ export default class QuantityEditor extends Component {
         </div>
 
         {this.state.showInputWarning &&
+          <div className="warning">
+            {`Warning: The Quantity's numerical value must be valid Decimal.`}
+          </div>
+        }
+
+        {this.state.showIncompleteWarning &&
           <div className="warning">
             {`Warning: A Quantity must have at least a numerical value.`}
           </div>

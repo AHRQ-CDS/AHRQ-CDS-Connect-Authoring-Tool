@@ -4,28 +4,46 @@ import classnames from 'classnames';
 import _ from 'lodash';
 
 export default class IntervalOfIntegerEditor extends Component {
+  constructor(props) {
+    super(props);
+
+    const firstInteger = _.get(props, 'value.firstInteger', '');
+    const secondInteger = _.get(props, 'value.secondInteger', '');
+
+    this.state = {
+      showInputWarning: this.shouldShowInputWarning(firstInteger) || this.shouldShowInputWarning(secondInteger)
+    };
+  }
+
+  shouldShowInputWarning = (value) => {
+    return value && !/^-?\d+$/.test(value);
+  }
+
   assignValue(evt) {
     let firstInteger = null;
     let secondInteger = null;
 
     switch (evt.target.name) {
       case 'firstInteger':
-        firstInteger = _.get(evt, 'target.value', null);
-        if (firstInteger != null) { firstInteger = parseInt(firstInteger, 10); }
-        secondInteger = _.get(this, 'props.value.secondInteger', null);
+        firstInteger = _.get(evt, 'target.value', '');
+        secondInteger = _.get(this, 'props.value.secondInteger', '');
         break;
       case 'secondInteger':
-        firstInteger = _.get(this, 'props.value.firstInteger', null);
-        secondInteger = _.get(evt, 'target.value', null);
-        if (secondInteger != null) { secondInteger = parseInt(secondInteger, 10); }
+        firstInteger = _.get(this, 'props.value.firstInteger', '');
+        secondInteger = _.get(evt, 'target.value', '');
         break;
       default:
         break;
     }
 
-    if ((firstInteger != null) || (secondInteger != null)) {
-      const firstIntegerForString = (firstInteger || firstInteger === 0) ? firstInteger : null;
-      const secondIntegerForString = (secondInteger || secondInteger === 0) ? secondInteger : null;
+    this.setState({
+      showInputWarning:
+        this.shouldShowInputWarning(firstInteger) || this.shouldShowInputWarning(secondInteger)
+    });
+
+    if (firstInteger || secondInteger) {
+      const firstIntegerForString = firstInteger || null;
+      const secondIntegerForString = secondInteger || null;
       const str = `Interval[${firstIntegerForString},${secondIntegerForString}]`;
       return { firstInteger, secondInteger, str };
     }
@@ -50,11 +68,7 @@ export default class IntervalOfIntegerEditor extends Component {
                 <input
                   id={formId}
                   name="firstInteger"
-                  type="number"
-                  value={
-                    (_.get(value, 'firstInteger', null) || _.get(value, 'firstInteger', null) === 0)
-                    ? _.get(value, 'firstInteger')
-                    : 'NaN' }
+                  value={_.get(value, 'firstInteger', '')}
                   onChange={ (e) => {
                     updateInstance({ name, type, label, value: this.assignValue(e) });
                   }}
@@ -67,12 +81,8 @@ export default class IntervalOfIntegerEditor extends Component {
                 <input
                   id={id}
                   name="secondInteger"
-                  type="number"
                   aria-label="Second Integer"
-                  value={
-                    (_.get(value, 'secondInteger', null) || _.get(value, 'secondInteger', null) === 0)
-                    ? _.get(value, 'secondInteger')
-                    : 'NaN' }
+                  value={_.get(value, 'secondInteger', '')}
                   onChange={ (e) => {
                     updateInstance({ name, type, label, value: this.assignValue(e) });
                   }}
@@ -81,6 +91,12 @@ export default class IntervalOfIntegerEditor extends Component {
             </div>
           </label>
         </div>
+
+        {this.state.showInputWarning &&
+          <div className="warning">
+            {`Warning: At least one of the values is not a valid Integer.`}
+          </div>
+        }
       </div>
     );
   }

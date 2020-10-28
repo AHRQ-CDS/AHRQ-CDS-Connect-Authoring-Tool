@@ -4,6 +4,22 @@ import classnames from 'classnames';
 import _ from 'lodash';
 
 export default class IntervalOfDecimalEditor extends Component {
+  constructor(props) {
+    super(props);
+
+    const firstDecimal = _.get(props, 'value.firstDecimal', '');
+    const secondDecimal = _.get(props, 'value.secondDecimal', '');
+
+    this.state = {
+      showInputWarning:
+        this.shouldShowInputWarning(firstDecimal) || this.shouldShowInputWarning(secondDecimal)
+    };
+  }
+
+  shouldShowInputWarning = (value) => {
+    return value && !/^-?\d+(\.\d+)?$/.test(value);
+  }
+
   assignValue(evt) {
     let firstDecimal = null;
     let secondDecimal = null;
@@ -11,29 +27,32 @@ export default class IntervalOfDecimalEditor extends Component {
 
     switch (evt.target.name) {
       case 'firstDecimal':
-        firstDecimal = _.get(evt, 'target.value', null);
-        if (firstDecimal != null) { firstDecimal = parseFloat(firstDecimal); }
-        secondDecimal = _.get(this, 'props.value.secondDecimal', null);
+        firstDecimal = _.get(evt, 'target.value', '');
+        secondDecimal = _.get(this, 'props.value.secondDecimal', '');
         break;
       case 'secondDecimal':
-        firstDecimal = _.get(this, 'props.value.firstDecimal', null);
-        secondDecimal = _.get(evt, 'target.value', null);
-        if (secondDecimal != null) { secondDecimal = parseFloat(secondDecimal); }
+        firstDecimal = _.get(this, 'props.value.firstDecimal', '');
+        secondDecimal = _.get(evt, 'target.value', '');
         break;
       default:
         break;
     }
 
-    if ((firstDecimal || firstDecimal === 0) || (secondDecimal || secondDecimal === 0)) {
-      const firstDecimalForString = (firstDecimal || firstDecimal === 0) ? firstDecimal : null;
-      const secondDecimalForString = (secondDecimal || secondDecimal === 0) ? secondDecimal : null;
-      if (Number.isInteger(firstDecimal)) {
-        if (Number.isInteger(secondDecimal)) {
+    this.setState({
+      showInputWarning:
+        this.shouldShowInputWarning(firstDecimal) || this.shouldShowInputWarning(secondDecimal)
+    });
+
+    if (firstDecimal || secondDecimal) {
+      const firstDecimalForString = firstDecimal || null;
+      const secondDecimalForString = secondDecimal || null;
+      if (Number.isInteger(parseFloat(firstDecimal))) {
+        if (Number.isInteger(parseFloat(secondDecimal))) {
           str = `Interval[${firstDecimalForString}.0,${secondDecimalForString}.0]`;
         } else {
           str = `Interval[${firstDecimalForString}.0,${secondDecimalForString}]`;
         }
-      } else if (Number.isInteger(secondDecimal)) {
+      } else if (Number.isInteger(parseFloat(secondDecimal))) {
         str = `Interval[${firstDecimalForString},${secondDecimalForString}.0]`;
       } else {
         str = `Interval[${firstDecimalForString},${secondDecimalForString}]`;
@@ -61,11 +80,7 @@ export default class IntervalOfDecimalEditor extends Component {
                 <input
                   id={formId}
                   name="firstDecimal"
-                  type="number"
-                  value={
-                    (_.get(value, 'firstDecimal', null) || _.get(value, 'firstDecimal', null) === 0)
-                    ? _.get(value, 'firstDecimal')
-                    : 'NaN' }
+                  value={_.get(value, 'firstDecimal', '')}
                   onChange={ (e) => {
                     updateInstance({ name, type, label, value: this.assignValue(e) });
                   }}
@@ -78,12 +93,8 @@ export default class IntervalOfDecimalEditor extends Component {
                 <input
                   id={id}
                   name="secondDecimal"
-                  type="number"
                   aria-label="Second Decimal"
-                  value={
-                    (_.get(value, 'secondDecimal', null) || _.get(value, 'secondDecimal', null) === 0)
-                    ? _.get(value, 'secondDecimal')
-                    : 'NaN' }
+                  value={_.get(value, 'secondDecimal', '')}
                   onChange={ (e) => {
                     updateInstance({ name, type, label, value: this.assignValue(e) });
                   }}
@@ -92,6 +103,12 @@ export default class IntervalOfDecimalEditor extends Component {
             </div>
           </label>
         </div>
+
+        {this.state.showInputWarning &&
+          <div className="warning">
+            {`Warning: At least one of the values is not a valid Decimal.`}
+          </div>
+        }
       </div>
     );
   }

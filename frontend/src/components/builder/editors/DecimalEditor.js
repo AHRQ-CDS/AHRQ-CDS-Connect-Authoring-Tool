@@ -4,15 +4,30 @@ import classnames from 'classnames';
 import _ from 'lodash';
 
 export default class DecimalEditor extends Component {
+  constructor(props) {
+    super(props);
+
+    const decimal = _.get(props, 'value.decimal', '');
+
+    this.state = {
+      showInputWarning: this.shouldShowInputWarning(decimal)
+    };
+  }
+
+  shouldShowInputWarning = (value) => {
+    return value && !/^-?\d+(\.\d+)?$/.test(value);
+  }
+
   assignValue = (evt) => {
     let decimal = null;
     let str = null;
 
-    decimal = _.get(evt, 'target.value', null);
-    if (decimal != null) { decimal = parseFloat(decimal); }
+    decimal = _.get(evt, 'target.value', '');
 
-    if (decimal || decimal === 0) {
-      if (Number.isInteger(decimal)) {
+    this.setState({ showInputWarning: this.shouldShowInputWarning(decimal) });
+
+    if (decimal) {
+      if (Number.isInteger(parseFloat(decimal))) {
         str = `${decimal}.0`;
       } else {
         str = `${decimal}`;
@@ -39,11 +54,7 @@ export default class DecimalEditor extends Component {
               <div className="editor-input">
                 <input
                   id={formId}
-                  type="number"
-                  value={
-                    (_.get(value, 'decimal', null) || _.get(value, 'decimal', null) === 0)
-                    ? _.get(value, 'decimal')
-                    : 'NaN' }
+                  value={_.get(value, 'decimal', '')}
                   onChange={ (e) => {
                     updateInstance({ name, type, label, value: this.assignValue(e) });
                   }}
@@ -52,6 +63,12 @@ export default class DecimalEditor extends Component {
             </div>
           </label>
         </div>
+
+        {this.state.showInputWarning &&
+          <div className="warning">
+            {`Warning: The value is not a valid Decimal.`}
+          </div>
+        }
       </div>
     );
   }

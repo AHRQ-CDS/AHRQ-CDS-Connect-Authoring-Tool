@@ -1,1 +1,1 @@
-<%-cqlLibraryFunction%>(<%-value_name%><%if (values.value && values.value.length > 1) {%>, <%-values.value.slice(1).map(v => (typeof v === 'object' && v != null) ? v.str : v).map(v => v != null ? v : 'null').join(', ')%><%}%>)
+<%-cqlLibraryFunction%>(<%-value_name%><%if (values.value && values.value.length > 1) {%>, <%-values.value.slice(1).map(v => (typeof v === 'object' && v != null) ? v.str : v).map(v => v || 'null').join(', ')%><%}%>)

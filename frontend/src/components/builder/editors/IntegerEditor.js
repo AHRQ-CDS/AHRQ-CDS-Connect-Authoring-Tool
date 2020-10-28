@@ -4,10 +4,21 @@ import classnames from 'classnames';
 import _ from 'lodash';
 
 export default class IntegerEditor extends Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      showInputWarning: this.shouldShowInputWarning(props.value)
+    };
+  }
+
+  shouldShowInputWarning = (value) => {
+    return value && !/^-?\d+$/.test(value);
+  }
+
   assignValue = (evt) => {
-    let value = _.get(evt, 'target.value', null);
-    console.log(value);
-    if (value != null) value = parseInt(value, 10);
+    let value = _.get(evt, 'target.value', '');
+    this.setState({ showInputWarning: this.shouldShowInputWarning(value) });
     return value;
   };
 
@@ -28,8 +39,7 @@ export default class IntegerEditor extends Component {
               <div className="editor-input">
                 <input
                   id={formId}
-                  type="number"
-                  value={(value || value === 0) ? value : 'NaN'}
+                  value={value || ''}
                   onChange={(e) => {
                     updateInstance({ name, type, label, value: this.assignValue(e) });
                   }}
@@ -38,6 +48,12 @@ export default class IntegerEditor extends Component {
             </div>
           </label>
         </div>
+
+        {this.state.showInputWarning &&
+          <div className="warning">
+            {`Warning: The value is not a valid Integer.`}
+          </div>
+        }
       </div>
     );
   }
@@ -47,7 +63,7 @@ IntegerEditor.propTypes = {
   name: PropTypes.string,
   type: PropTypes.string.isRequired,
   label: PropTypes.string.isRequired,
-  value: PropTypes.number,
+  value: PropTypes.string,
   updateInstance: PropTypes.func.isRequired,
   condenseUI: PropTypes.bool
 };
