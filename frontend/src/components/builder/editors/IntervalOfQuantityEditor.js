@@ -154,7 +154,7 @@ export default class IntervalOfQuantityEditor extends Component {
 
         {this.state.showInputWarning &&
           <div className="warning">
-            {`Warning: A Quantity's numerical value must be valid Decimal.`}
+            {`Warning: A Quantity's numerical value must be a valid Decimal.`}
           </div>
         }
 
