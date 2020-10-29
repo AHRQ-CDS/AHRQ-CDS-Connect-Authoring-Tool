@@ -12,6 +12,6 @@ describe('<Navbar />', () => {
       />
     );
 
-    expect(container).not.toBeEmpty();
+    expect(container).not.toBeEmptyDOMElement();
   });
 });

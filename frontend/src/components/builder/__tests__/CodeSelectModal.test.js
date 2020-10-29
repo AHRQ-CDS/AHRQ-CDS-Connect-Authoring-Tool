@@ -48,7 +48,7 @@ describe('<CodeSelectModal />', () => {
     const { getByText } = renderComponent();
 
     fireEvent.click(getByText('Add Code'));
-    expect(getCodeSelectModal()).not.toBeEmpty();
+    expect(getCodeSelectModal()).not.toBeEmptyDOMElement();
   });
 
   describe('with modal open', () => {

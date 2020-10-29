@@ -38,7 +38,7 @@ describe('<PatientDataSection />', () => {
     const { container } = renderComponent();
     const table = container.querySelector('.patient-data-section__table');
 
-    expect(table).not.toBeEmpty();
+    expect(table).not.toBeEmptyDOMElement();
     expect(table.querySelectorAll('thead > tr > th')).toHaveLength(5);
     expect(table.querySelector('thead > tr > th')).toHaveTextContent('Substance');
     expect(table.querySelectorAll('tbody > tr')).toHaveLength(2);

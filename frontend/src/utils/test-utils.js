@@ -18,7 +18,7 @@ const customRender = (ui, options) =>
 
 const openSelect = (node) => fireEvent.keyDown(node, { keyCode: 40 });
 
-export { act, fireEvent, wait, prettyDOM } from '@testing-library/react';
+export { act, fireEvent, waitFor, prettyDOM, screen } from '@testing-library/react';
 export { default as userEvent } from '@testing-library/user-event';
 export {
   customRender as render,

@@ -139,7 +139,6 @@ export default class ErrorStatement extends Component {
       return <div className="warning errorStatement">You need an If statement</div>;
     }
 
-    console.log(_.isEmpty(statement.condition.value));
     if ( !(_.isEmpty(this.props.errorStatement.elseClause)) && _.isEmpty(statement.condition.value)){
       return <div className="warning errorStatement">You need an If statement</div>;
     }

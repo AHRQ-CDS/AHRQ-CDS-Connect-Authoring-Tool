@@ -3,7 +3,7 @@ import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import UserGuide from './UserGuide';
 import DataTypeGuide from './DataTypeGuide';
 
-export default () => (
+const Documentation = () => (
   <div className="builder">
     <div className="builder-wrapper">
       <section className="builder__canvas">
@@ -26,3 +26,5 @@ export default () => (
     </div>
   </div>
 );
+
+export default Documentation;

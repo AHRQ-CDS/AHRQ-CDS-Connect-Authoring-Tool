@@ -36,7 +36,7 @@ describe('<Analytics />', () => {
   it('does not render GTM iframe when GTM/DAP is not configured', () => {
     const { container } = render(<Analytics />);
 
-    expect(container).toBeEmpty();
+    expect(container).toBeEmptyDOMElement();
   });
 
   it('does not render GTM and DAP script tags in HEAD when GTM/DAP is not configured', () => {

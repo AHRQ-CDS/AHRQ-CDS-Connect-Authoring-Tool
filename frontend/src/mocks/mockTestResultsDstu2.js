@@ -1,6 +1,6 @@
 import moment from 'moment';
 
-export default {
+const mockTestResultsDstu2 = {
   "data": {
     "localIdPatientResultsMap": {
       "505bcdd9-5cc3-4ef3-8eea-6d479b1d4dc9": {
@@ -319,3 +319,5 @@ export default {
     "populationResults": {}
   }
 };
+
+export default mockTestResultsDstu2;

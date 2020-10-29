@@ -12,8 +12,8 @@ describe('<ELMErrorModal />', () => {
       />
     );
 
-    expect(container.querySelector('.element-modal')).toBeEmpty();
-    expect(document.body.querySelector('.ReactModalPortal')).toBeEmpty();
+    expect(container.querySelector('.element-modal')).toBeEmptyDOMElement();
+    expect(document.body.querySelector('.ReactModalPortal')).toBeEmptyDOMElement();
   });
 
   it('renders the error messages', () => {
