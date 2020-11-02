@@ -48,7 +48,7 @@
     "redux-logger": "^3.0.6",
     "redux-mock-store": "^1.5.4",
     "redux-promise-middleware": "^6.1.2",
-    "redux-test-utils": "^0.3.0",
+    "redux-test-utils": "^1.0.0",
     "redux-thunk": "^2.3.0",
     "slug": "^3.5.1",
     "tocbot": "^4.12.0"
