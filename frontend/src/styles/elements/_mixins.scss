@@ -14,8 +14,11 @@
   margin: 0 auto;
 
   @include respond-to('desktop-wide') { width: 1170px; } // 1200px and over
+
   @include respond-to('desktop') { width: 970px; }       // 992px to 1199px
+
   @include respond-to('tablet') { width: 750px; }        // 768px to 991px
+
   @include respond-to('mobile') { width: 100%; }         // 767px and under
 }
 
@@ -94,15 +97,11 @@
 }
 
 @mixin native-focus() {
-  outline-width: 2px;
-  outline-style: solid;
-  outline-color: Highlight;
+  outline: 2px solid Highlight;
 
   /* WebKit gets its native focus styles.
    */
   @media (-webkit-min-device-pixel-ratio: 0) {
-    outline-width: 5px;
-    outline-style: auto;
-    outline-color: -webkit-focus-ring-color;
+    outline: 5px auto -webkit-focus-ring-color;
   }
 }
