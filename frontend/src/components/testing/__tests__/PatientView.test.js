@@ -12,7 +12,7 @@ describe('<PatientView />', () => {
       <PatientView patient={mockPatientDstu2} />
     );
 
-    expect(container).not.toBeEmpty();
+    expect(container).not.toBeEmptyDOMElement();
   });
 
   it('header renders DSTU2 correctly', () => {
@@ -40,7 +40,7 @@ describe('<PatientView />', () => {
       <PatientView patient={mockPatientStu3} />
     );
 
-    expect(container).not.toBeEmpty();
+    expect(container).not.toBeEmptyDOMElement();
   });
 
   it('header renders STU3 correctly', () => {
@@ -68,7 +68,7 @@ describe('<PatientView />', () => {
       <PatientView patient={mockPatientR4} />
     );
 
-    expect(container).not.toBeEmpty();
+    expect(container).not.toBeEmptyDOMElement();
   });
 
   it('header renders R4 correctly', () => {

@@ -1,13 +1,19 @@
 /* ------------------------- IMPORT VARIABLES ------------------------------ */
 @import "elements/variables";
 
+/* ------------------------- IMPORT 3RD PARTY FONTS ------------------------ */
+@import "~fontsource-source-sans-pro/latin.css";
+@import "~fontsource-roboto-mono/latin.css";
+@import "~fontsource-public-sans/latin.css";
+@import "~fontsource-merriweather/latin.css";
+
 /* ------------------------- IMPORT 3RD PARTY VENDORS ---------------------- */
-@import "node_modules/bootstrap/scss/bootstrap.scss";
-@import "node_modules/bourbon/app/assets/stylesheets/bourbon";
-@import 'node_modules/tocbot/src/scss/tocbot-core';
-@import 'node_modules/tocbot/src/scss/tocbot-default-theme';
-@import 'node_modules/react-datepicker/dist/react-datepicker';
-@import 'node_modules/rc-time-picker/assets/index';
+@import "~bootstrap/scss/bootstrap.scss";
+@import "~bourbon/app/assets/stylesheets/bourbon";
+@import '~tocbot/src/scss/tocbot-core';
+@import '~tocbot/src/scss/tocbot-default-theme';
+@import '~react-datepicker/dist/react-datepicker.css';
+@import '~rc-time-picker/assets/index.css';
 
 /* ------------------------- IMPORT CUSTOM SCSS ---------------------------- */
 // site-wide elements

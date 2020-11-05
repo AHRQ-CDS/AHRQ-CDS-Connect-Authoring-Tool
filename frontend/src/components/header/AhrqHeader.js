@@ -26,7 +26,8 @@ export default function AhrqHeader() {
               <div className="col-sm-8 col-lg-8 txt-gov-banner">
                 <p className="usa-banner__header-text">
                   <a href="https://www.hhs.gov/">
-                    An official website of the Department of Health &amp; Human Services
+                    An official website of the Department of Health &amp; Human
+                    Services
                   </a>
                 </p>
               </div>
@@ -37,7 +38,12 @@ export default function AhrqHeader() {
 
       <div role="main" className="container-fluid js-quickedit-main-content">
         <div className="row">
-          <header id="primary-header" className="header row-side-margins mobile-row-side-margins" role="heading">
+          <header
+            id="primary-header"
+            className="header row-side-margins mobile-row-side-margins"
+            role="heading"
+            aria-level="1"
+          >
             <div className="col-md-12">
               <div className="primary-header-wrapper">
                 <div className="row">
@@ -56,19 +62,31 @@ export default function AhrqHeader() {
                     <div id="utility-nav">
                       <ul className="clearfix">
                         <li className="first">
-                          <a href="https://search.ahrq.gov/" target="_blank" rel="noopener noreferrer">
+                          <a
+                            href="https://search.ahrq.gov/"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                          >
                             Search All AHRQ Sites
                           </a>
                         </li>
 
                         <li>
-                          <a href="https://www.ahrq.gov/cpi/about/careers/index.html" target="_blank" rel="noopener noreferrer">
+                          <a
+                            href="https://www.ahrq.gov/cpi/about/careers/index.html"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                          >
                             Careers
                           </a>
                         </li>
 
                         <li>
-                          <a href="https://www.ahrq.gov/contact/index.html" target="_blank" rel="noopener noreferrer">
+                          <a
+                            href="https://www.ahrq.gov/contact/index.html"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                          >
                             Contact Us
                           </a>
                         </li>
@@ -84,7 +102,13 @@ export default function AhrqHeader() {
                         </li>
 
                         <li className="last">
-                          <a href="https://info.ahrq.gov/" target="_blank" rel="noopener noreferrer">FAQs</a>
+                          <a
+                            href="https://info.ahrq.gov/"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                          >
+                            FAQs
+                          </a>
                         </li>
 
                         <li>
@@ -99,7 +123,8 @@ export default function AhrqHeader() {
                               height="18"
                               className="utility-envelope"
                               alt=""
-                            /> Email Updates
+                            />{' '}
+                            Email Updates
                           </a>
                         </li>
                       </ul>

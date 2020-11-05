@@ -2,7 +2,7 @@ import React from 'react';
 
 import ArtifactModal from '../ArtifactModal';
 import { addArtifact, updateAndSaveArtifact } from '../../../actions/artifacts';
-import { render, fireEvent, wait, userEvent, openSelect } from '../../../utils/test-utils';
+import { render, fireEvent, waitFor, userEvent, openSelect } from '../../../utils/test-utils';
 
 const artifactMock = {
   _id: 'artifact2',
@@ -30,11 +30,15 @@ const artifactMock = {
 
 jest.mock('../../../actions/artifacts', () => ({
   __esModule: true,
-  addArtifact: jest.fn(() => ({ type: 'ADD_ARTIFACT' })),
-  updateAndSaveArtifact: jest.fn(() => ({ type: 'UPDATE_AND_SAVE_ARTIFACT' }))
+  addArtifact: jest.fn(),
+  updateAndSaveArtifact: jest.fn()
 }));
 
 describe('<ArtifactModal />', () => {
+  beforeEach(() => {
+    addArtifact.mockImplementation(() => ({ type: 'ADD_ARTIFACT'}));
+    updateAndSaveArtifact.mockImplementation(() => ({ type: 'UPDATE_AND_SAVE_ARTIFACT' }));
+  });
   afterEach(() => jest.clearAllMocks());
 
   it('does not render the modal if it is not opened', () => {
@@ -46,8 +50,8 @@ describe('<ArtifactModal />', () => {
       />
     );
 
-    expect(container.querySelector('.element-modal')).toBeEmpty();
-    expect(document.querySelector('.ReactModalPortal')).toBeEmpty();
+    expect(container.querySelector('.element-modal')).toBeEmptyDOMElement();
+    expect(document.querySelector('.ReactModalPortal')).toBeEmptyDOMElement();
   });
 
   it('allows submission and calls closeModal', async () => {
@@ -65,7 +69,7 @@ describe('<ArtifactModal />', () => {
     userEvent.type(document.querySelector('input[name="version"]'), 'NewArtifactVersion');
     fireEvent.click(getByText('Create'));
 
-    await wait(() => {
+    await waitFor(() => {
       expect(closeModal).toHaveBeenCalled();
     });
   });
@@ -189,7 +193,7 @@ describe('<ArtifactModal />', () => {
 
       fireEvent.click(getByText('Create'));
 
-      await wait(() => {
+      await waitFor(() => {
         expect(addArtifact).toHaveBeenCalledWith({
           name: 'NewArtifactName',
           version: 'NewArtifactVersion',
@@ -235,7 +239,7 @@ describe('<ArtifactModal />', () => {
       userEvent.type(nameField, 'Edited Artifact Name');
       fireEvent.click(getByText('Save'));
 
-      await wait(() => {
+      await waitFor(() => {
         expect(updateAndSaveArtifact).toHaveBeenCalledWith(
           artifactMock,
           expect.objectContaining({ name: 'Edited Artifact Name' })

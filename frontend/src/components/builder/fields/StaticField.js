@@ -6,7 +6,7 @@ import React from 'react';
  * key-value pairs that represents that state of the templateInstance,
  * and a function called Validation that validates what is entered
  */
-export default props => (
+const StaticField = props => (
   <div className="static-field">
     <input
       type="hidden"
@@ -14,3 +14,5 @@ export default props => (
     />
   </div>
 );
+
+export default StaticField;

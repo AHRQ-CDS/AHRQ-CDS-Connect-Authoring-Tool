@@ -1,6 +1,6 @@
 const exists = el => el !== undefined && el !== '' && el !== null && !Number.isNaN(el);
 
-export default {
+const validators = {
   or: {
     check: (values, args = []) => values.some(exists),
     warning: (fields, args) => `You should provide at least one of the following: ${fields.join(', ')}.`
@@ -36,3 +36,5 @@ export default {
     warning: (fields, args = []) => `You must specify ${fields[0]} and one of ${fields.slice(1).join(', ')}.`
   }
 };
+
+export default validators;

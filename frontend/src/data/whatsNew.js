@@ -1,7 +1,8 @@
 /* eslint-disable max-len */
 import React from 'react';
+
 // data for what's new section of homepage - should have between 1 and 4 objects
-export default [
+const whatsNew = [
   {
     id: 1,
     name: (
@@ -78,3 +79,5 @@ export default [
     linkExternal: true,
   },
 ];
+
+export default whatsNew;
