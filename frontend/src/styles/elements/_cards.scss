@@ -5,6 +5,8 @@
   &__top {
     margin-left: 0;
     border-radius: 0.2em;
+    justify-content: space-between;
+    width: 100%;
 
     .card-element { background-color: $gray-lightest; }
   }
@@ -172,11 +174,6 @@
     border-radius: 0.2em;
     box-shadow: 1px 1px 1px 0 rgba(21, 21, 21, 0.1);
     min-width: 200px;
-  }
-
-  &__top {
-    justify-content: space-between;
-    width: 100%;
   }
 
   .group-heading-name {
