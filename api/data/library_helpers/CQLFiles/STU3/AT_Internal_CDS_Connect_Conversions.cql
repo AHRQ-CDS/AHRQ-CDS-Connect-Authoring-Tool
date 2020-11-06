@@ -11,9 +11,9 @@ library AT_Internal_CDS_Connect_Conversions version '1'
  * @param Q - a Quantity
  * @returns {Quantity} a Quantity using mg/dL units or null if null was passed in or unit couldn't be converted
  */
-define function to_mg_per_dL (Q Quantity):
+define function to_mg_per_dL (Q System.Quantity):
   case
     when Q.unit = 'mg/dL' then Q
-    when Q.unit = 'mmol/L' then Quantity{value: Q.value * 38.66976, unit: 'mg/dL'}
+    when Q.unit = 'mmol/L' then System.Quantity{value: Q.value * 38.66976, unit: 'mg/dL'}
     else null
   end
