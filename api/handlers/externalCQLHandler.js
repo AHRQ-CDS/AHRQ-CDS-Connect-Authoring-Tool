@@ -55,31 +55,50 @@ const listTypeMap = {
   'Decimal': 'list_of_decimals',
   'Quantity': 'list_of_system_quantities',
   'String': 'list_of_strings',
-  'Time': 'list_of_times',
-}
+  'Time': 'list_of_times'
+};
 
 const intervalTypeMap = {
   'Integer': 'interval_of_integer',
   'DateTime': 'interval_of_datetime',
   'Decimal': 'interval_of_decimal',
   'Quantity': 'interval_of_quantity'
-}
+};
 
-const getTypeFromELMString = (string) => string.substring(string.indexOf('}') + 1);
+const getTypeFromELMString = (string) => {
+  const namespace = string.split('}')[0].substring(1);
+  const elmType = string.substring(string.indexOf('}') + 1);
+  const typesFromFHIR = [
+    'Observation',
+    'Condition',
+    'MedicationStatement',
+    'MedicationOrder',
+    'MedicationRequest',
+    'Procedure',
+    'AllergyIntolerance',
+    'Encounter',
+    'Immunization',
+    'Device'
+  ];
+  const isSystem = namespace === 'urn:hl7-org:elm-types:r1';
+  const isFHIR = namespace === 'http://hl7.org/fhir';
+  const isValidType = (isSystem || (isFHIR && typesFromFHIR.includes(elmType)));
+  return { elmType, isValidType };
+}
 
 const areChoicesKnownTypes = (choices) => {
   let allChoicesKnown = true;
   const typesOfChoices = [];
   choices.forEach((choice) => {
     if (choice.type === 'NamedTypeSpecifier') {
-      const returnTypeOfChoice = getTypeFromELMString(choice.name);
-      const convertedType = singularTypeMap[returnTypeOfChoice];
+      const { elmType, isValidType } = getTypeFromELMString(choice.name);
+      const convertedType = isValidType ? singularTypeMap[elmType] : null;
       if (!convertedType) {
         allChoicesKnown = false;
       }
-      let typeToDisplay = convertedType ? convertedType : returnTypeOfChoice;
-      if (returnTypeOfChoice === 'MedicationRequest') typeToDisplay = 'Medication Request';
-      if (returnTypeOfChoice === 'MedicationOrder') typeToDisplay = 'Medication Order';
+      let typeToDisplay = convertedType ? convertedType : elmType;
+      if (elmType === 'MedicationRequest') typeToDisplay = 'Medication Request';
+      if (elmType === 'MedicationOrder') typeToDisplay = 'Medication Order';
       typesOfChoices.push(_.startCase(typeToDisplay));
     } else {
       // Default to marking as unknown.
@@ -91,11 +110,11 @@ const areChoicesKnownTypes = (choices) => {
 }
 
 function calculateType(definition) {
-  let elmType, elmDisplay;
+  let elmType, elmDisplay, isValidType;
 
   if (definition.resultTypeName || definition.operandType) {
-    elmType = getTypeFromELMString(definition.resultTypeName || definition.operandType);
-    const convertedType = singularTypeMap[elmType];
+    ({ elmType, isValidType } = getTypeFromELMString(definition.resultTypeName || definition.operandType));
+    const convertedType = isValidType ? singularTypeMap[elmType] : null;
     if (!convertedType) elmDisplay = `Other (${elmType})`;
     if (elmType === 'MedicationRequest') elmDisplay = 'Medication Request';
     if (elmType === 'MedicationOrder') elmDisplay = 'Medication Order';
@@ -104,8 +123,8 @@ function calculateType(definition) {
     const typeSpecifier = definition.resultTypeSpecifier || definition.operandTypeSpecifier;
     switch (typeSpecifier.type) {
       case 'NamedTypeSpecifier': {
-        elmType = getTypeFromELMString(typeSpecifier.name);
-        const convertedType = singularTypeMap[elmType];
+        ({ elmType, isValidType } = getTypeFromELMString(typeSpecifier.name));
+        const convertedType = isValidType ? singularTypeMap[elmType] : null;
         if (!convertedType) elmDisplay = `Other (${elmType})`;
         if (elmType === 'MedicationRequest') elmDisplay = 'Medication Request';
         if (elmType === 'MedicationOrder') elmDisplay = 'Medication Order';
@@ -113,8 +132,8 @@ function calculateType(definition) {
         break;
       }
       case 'IntervalTypeSpecifier': {
-        elmType = getTypeFromELMString(typeSpecifier.pointType.name);
-        const convertedType = intervalTypeMap[elmType];
+        ({ elmType, isValidType } = getTypeFromELMString(typeSpecifier.pointType.name));
+        const convertedType = isValidType ? intervalTypeMap[elmType] : null;
         if (!convertedType) elmDisplay = `Interval of Others (${elmType})`;
         elmType = convertedType ? convertedType : 'interval_of_other';
         break;
@@ -129,8 +148,8 @@ function calculateType(definition) {
           elmType = 'list_of_others';
           elmDisplay = 'List of Others (Tuple)';
         } else if (typeSpecifier.elementType.type === 'NamedTypeSpecifier') {
-          elmType = getTypeFromELMString(typeSpecifier.elementType.name);
-          const convertedType = listTypeMap[elmType];
+          ({ elmType, isValidType } = getTypeFromELMString(typeSpecifier.elementType.name));
+          const convertedType = isValidType ? listTypeMap[elmType] : null;
           if (!convertedType) elmDisplay = `List of Others (${elmType})`;
           if (elmType === 'MedicationRequest') elmDisplay = 'List of Medication Requests';
           if (elmType === 'MedicationOrder') elmDisplay = 'List of Medication Orders';
