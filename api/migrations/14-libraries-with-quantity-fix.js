@@ -20,6 +20,11 @@ function updateQuantityTypes(definitions) {
       definition.calculatedReturnType = 'interval_of_other';
       definition.displayReturnType = 'Interval of Others (Quantity)'
     }
+    if ((_.get(definition, 'resultTypeSpecifier.type') === 'ListTypeSpecifier')
+    && (_.get(definition, 'resultTypeSpecifier.elementType.name') === '{http://hl7.org/fhir}Quantity')) {
+      definition.calculatedReturnType = 'list_of_others';
+      definition.displayReturnType = 'List of Others (Quantity)'
+    }
     if (definition.operand) {
       definition.operand.forEach((op, index) => {
         if (_.get(op, 'operandTypeSpecifier.resultTypeName') === '{http://hl7.org/fhir}Quantity') {
@@ -30,6 +35,13 @@ function updateQuantityTypes(definitions) {
           definition.argumentTypes[index] = {
             display: 'Interval of Others (Quantity)',
             calculated: 'interval_of_other'
+          };
+        }
+        if ((_.get(op, 'operandTypeSpecifier.resultTypeSpecifier.type') === 'ListTypeSpecifier')
+        && (_.get(op, 'operandTypeSpecifier.resultTypeSpecifier.elementType.name') === '{http://hl7.org/fhir}Quantity')) {
+          definition.argumentTypes[index] = {
+            display: 'List of Others (Quantity)',
+            calculated: 'list_of_others'
           };
         }
       });
