@@ -1,8 +1,7 @@
 import React from 'react';
-
+import { addArtifact, updateAndSaveArtifact } from 'actions/artifacts';
+import { render, screen, fireEvent, userEvent, waitFor, within, act } from 'utils/test-utils';
 import ArtifactModal from '../ArtifactModal';
-import { addArtifact, updateAndSaveArtifact } from '../../../actions/artifacts';
-import { render, fireEvent, waitFor, userEvent, openSelect } from '../../../utils/test-utils';
 
 const artifactMock = {
   _id: 'artifact2',
@@ -28,6 +27,15 @@ const artifactMock = {
   relatedArtifact: []
 };
 
+const renderComponent = (props = {}) =>
+  render(<ArtifactModal artifactEditing={null} showModal={true} closeModal={jest.fn()} {...props} />);
+
+const waitForDropdownToClose = () => waitFor(() => expect(screen.queryAllByRole('option')).toHaveLength(0));
+const waitForInputValueChange = (input, value, expectedValue) => {
+  fireEvent.change(input, { target: { value } });
+  return waitFor(() => expect(input).toHaveValue(expectedValue ?? value));
+};
+
 jest.mock('../../../actions/artifacts', () => ({
   __esModule: true,
   addArtifact: jest.fn(),
@@ -36,38 +44,28 @@ jest.mock('../../../actions/artifacts', () => ({
 
 describe('<ArtifactModal />', () => {
   beforeEach(() => {
-    addArtifact.mockImplementation(() => ({ type: 'ADD_ARTIFACT'}));
+    addArtifact.mockImplementation(() => ({ type: 'ADD_ARTIFACT' }));
     updateAndSaveArtifact.mockImplementation(() => ({ type: 'UPDATE_AND_SAVE_ARTIFACT' }));
   });
+
   afterEach(() => jest.clearAllMocks());
 
   it('does not render the modal if it is not opened', () => {
-    const { container } = render(
-      <ArtifactModal
-        artifactEditing={null}
-        showModal={false}
-        closeModal={jest.fn()}
-      />
-    );
+    renderComponent({ showModal: false });
 
-    expect(container.querySelector('.element-modal')).toBeEmptyDOMElement();
-    expect(document.querySelector('.ReactModalPortal')).toBeEmptyDOMElement();
+    expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
   });
 
   it('allows submission and calls closeModal', async () => {
     const closeModal = jest.fn();
+    renderComponent({ closeModal });
 
-    const { getByText } = render(
-      <ArtifactModal
-        artifactEditing={null}
-        showModal={true}
-        closeModal={closeModal}
-      />
-    );
+    const dialog = within(screen.getByRole('dialog'));
 
-    userEvent.type(document.querySelector('input[name="name"]'), 'NewArtifactName');
-    userEvent.type(document.querySelector('input[name="version"]'), 'NewArtifactVersion');
-    fireEvent.click(getByText('Create'));
+    await waitForInputValueChange(dialog.getByLabelText(/Artifact Name/), 'NewArtifactName');
+    await waitForInputValueChange(dialog.getByLabelText('Version:'), 'NewArtifactVersion');
+
+    userEvent.click(dialog.getByText('Create'));
 
     await waitFor(() => {
       expect(closeModal).toHaveBeenCalled();
@@ -75,162 +73,163 @@ describe('<ArtifactModal />', () => {
   });
 
   describe('modal title', () => {
-    it('displays Create New Artifact for new artifacts', () => {
-      const { getByText } = render(
-        <ArtifactModal
-          artifactEditing={null}
-          showModal={true}
-          closeModal={jest.fn()}
-        />
-      );
+    it('displays Create New Artifact for new artifacts', async () => {
+      renderComponent();
 
-      expect(getByText('Create New Artifact')).toBeDefined();
+      expect(await screen.findByText('Create New Artifact')).toBeInTheDocument();
     });
 
-    it('displays Edit Artifact Details when editing an artifact', () => {
-      const { getByText } = render(
-        <ArtifactModal
-          artifactEditing={artifactMock}
-          showModal={true}
-          closeModal={jest.fn()}
-        />
-      );
+    it('displays Edit Artifact Details when editing an artifact', async () => {
+      renderComponent({ artifactEditing: artifactMock });
 
-      expect(getByText('Edit Artifact Details')).toBeDefined();
+      expect(await screen.findByText('Edit Artifact Details')).toBeInTheDocument();
     });
   });
 
   describe('cpg fields', () => {
-    it('toggles the CPG tag when the field is filled out', () => {
-      const { getByText, getByLabelText } = render(
-        <ArtifactModal
-          artifactEditing={null}
-          showModal={true}
-          closeModal={jest.fn()}
-        />
-      );
+    it('toggles the CPG tag when the field is filled out', async () => {
+      renderComponent();
 
-      fireEvent.click(getByText('Show CPG Fields'));
+      const dialog = within(await screen.findByRole('dialog'));
 
-      let cpgTag = getByText(/Description/).querySelector('.cpg-tag');
+      userEvent.click(dialog.getByText('Show CPG Fields'));
+
+      let cpgTag = dialog.getByText(/Description/).querySelector('.cpg-tag');
       expect(cpgTag).not.toHaveClass('cpg-tag-complete');
 
-      userEvent.type(getByLabelText(/Description/), 'description');
+      await waitForInputValueChange(dialog.getByLabelText(/Description/), 'description');
 
-      cpgTag = getByText(/Description/).querySelector('.cpg-tag');
+      cpgTag = dialog.getByText(/Description/).querySelector('.cpg-tag');
       expect(cpgTag).toHaveClass('cpg-tag-complete');
     });
 
     it('can fill out the CPG form', async () => {
-      // Increase timeout as this test takes a long time when running in the Docker container
-      jest.setTimeout(30000);
-      const { getByText, getByLabelText } = render(
-        <ArtifactModal
-          artifactEditing={null}
-          showModal={true}
-          closeModal={jest.fn()}
-        />
-      );
+      renderComponent();
+      const dialog = within(await screen.findByRole('dialog'));
 
-      userEvent.type(document.querySelector('input[name="name"]'), 'NewArtifactName');
-      userEvent.type(document.querySelector('input[name="version"]'), 'NewArtifactVersion');
-      fireEvent.click(getByText('Show CPG Fields'));
-      fireEvent.change(getByLabelText(/Description/), { target: { value: 'NewArtifactDescription' } });
-      fireEvent.change(getByLabelText(/URL/), { target: { value: 'NewArtifactUrl' } });
-      openSelect(document.querySelector('input[name=status]').parentNode);
-      fireEvent.click(getByText('draft'));
-      openSelect(document.querySelector('input[name=experimental]').parentNode);
-      fireEvent.click(getByText('false'));
-      fireEvent.change(getByLabelText(/Publisher/), { target: { value: 'NewArtifactPublisher' } });
-      fireEvent.click(getByText('Add Context'));
-      openSelect(document.querySelector('input[name="context[0].contextType"]').parentNode);
-      fireEvent.click(getByText('gender'));
-      openSelect(document.querySelector('input[name="context[0].gender"]').parentNode);
-      fireEvent.click(getByText('female'));
-      fireEvent.change(getByLabelText(/Purpose/), { target: { value: 'NewArtifactPurpose' } });
-      fireEvent.change(getByLabelText(/Usage/), { target: { value: 'NewArtifactUsage' } });
-      fireEvent.change(getByLabelText(/Copyright/), { target: { value: 'NewArtifactCopyright' } });
-      fireEvent.change(getByLabelText(/Approval Date/), { target: { value: '01/01/2000' } });
-      fireEvent.change(getByLabelText(/Last Review Date/), { target: { value: '01/02/2000' } });
-      fireEvent.change(document.querySelector(
-        'input[name="effectivePeriod.start"]'),
-        { target: { value: '01032000' } }
-      );
-      fireEvent.change(document.querySelector(
-        'input[name="effectivePeriod.end"]'),
-        { target: { value: '01042000' } }
-      );
-      fireEvent.click(getByText('Add Author'));
-      fireEvent.change(document.querySelector(
-        'input[name="author[0].author"]'),
-        { target: { value: 'NewArtifactAuthor' } }
-      );
-      fireEvent.click(getByText('Add Reviewer'));
-      fireEvent.change(document.querySelector(
-        'input[name="reviewer[0].reviewer"]'),
-        { target: { value: 'NewArtifactReviewer' } }
-      );
-      fireEvent.click(getByText('Add Endorser'));
-      fireEvent.change(document.querySelector(
-        'input[name="endorser[0].endorser"]'),
-        { target: { value: 'NewArtifactEndorser' } }
-      );
-      fireEvent.click(getByText('Add Related Artifact'));
-      openSelect(document.querySelector('input[name="relatedArtifact[0].relatedArtifactType"]').parentNode);
-      fireEvent.click(getByText('Citation'));
-      fireEvent.change(document.querySelector(
-        'textarea[name="relatedArtifact[0].description"]'),
-        { target: { value: 'NewArtifactCitationDescription' } }
-      );
-      fireEvent.change(document.querySelector(
-        'textarea[name="relatedArtifact[0].url"]'),
-        { target: { value: 'NewArtifactCitationUrl' } }
-      );
-      fireEvent.change(document.querySelector(
-        'textarea[name="relatedArtifact[0].citation"]'),
-        { target: { value: 'NewArtifactCitationCitation' } }
-      );
+      await waitForInputValueChange(dialog.getByLabelText(/Artifact Name/), 'NewArtifactName');
+      await waitForInputValueChange(dialog.getByLabelText('Version:'), 'NewArtifactVersion');
 
-      fireEvent.click(getByText('Create'));
+      userEvent.click(dialog.getByText('Show CPG Fields'));
+
+      await act(async () => {
+        fireEvent.change(dialog.getByLabelText(/Description/), { target: { value: 'NewArtifactDescription' } });
+        fireEvent.change(dialog.getByLabelText(/URL/), { target: { value: 'NewArtifactUrl' } });
+        fireEvent.change(dialog.getByLabelText(/Publisher/), { target: { value: 'NewArtifactPublisher' } });
+        fireEvent.change(dialog.getByLabelText(/Purpose/), { target: { value: 'NewArtifactPurpose' } });
+        fireEvent.change(dialog.getByLabelText(/Usage/), { target: { value: 'NewArtifactUsage' } });
+        fireEvent.change(dialog.getByLabelText(/Copyright/), { target: { value: 'NewArtifactCopyright' } });
+        fireEvent.change(dialog.getByLabelText(/Approval Date/), { target: { value: '01/01/2000' } });
+        fireEvent.change(dialog.getByLabelText(/Last Review Date/), { target: { value: '01/02/2000' } });
+
+        fireEvent.change(document.querySelector('input[name="effectivePeriod.start"]'), {
+          target: { value: '01032000' }
+        });
+        await waitForInputValueChange(
+          document.querySelector('input[name="effectivePeriod.end"]'),
+          '01042000',
+          '01/04/2000'
+        );
+      });
+
+      userEvent.click(dialog.getAllByLabelText('Select...')[0]); // status
+      userEvent.click(screen.getByRole('option', { name: 'draft' }));
+
+      await waitForDropdownToClose();
+
+      userEvent.click(dialog.getByLabelText('Select...')); // experimental
+      userEvent.click(screen.getByRole('option', { name: 'false' }));
+
+      await waitForDropdownToClose();
+
+      userEvent.click(dialog.getByText('Add Context'));
+
+      userEvent.click(dialog.getByLabelText('Select...')); // context type
+      userEvent.click(screen.getByRole('option', { name: 'gender' }));
+
+      await waitForDropdownToClose();
+
+      userEvent.click(dialog.getByLabelText('Select...')); // gender
+      userEvent.click(screen.getByRole('option', { name: 'female' }));
+
+      await waitForDropdownToClose();
+
+      userEvent.click(dialog.getByText('Add Author'));
+      userEvent.click(dialog.getByText('Add Reviewer'));
+      userEvent.click(dialog.getByText('Add Endorser'));
+
+      await act(async () => {
+        fireEvent.change(document.querySelector('input[name="reviewer[0].reviewer"]'), {
+          target: { value: 'NewArtifactReviewer' }
+        });
+        fireEvent.change(document.querySelector('input[name="author[0].author"]'), {
+          target: { value: 'NewArtifactAuthor' }
+        });
+        await waitForInputValueChange(
+          document.querySelector('input[name="endorser[0].endorser"]'),
+          'NewArtifactEndorser'
+        );
+      });
+
+      userEvent.click(dialog.getByText('Add Related Artifact'));
+      userEvent.click(dialog.getByLabelText('Select...')); // related artifact type
+      userEvent.click(screen.getByRole('option', { name: 'Citation' }));
+
+      await waitForDropdownToClose();
+
+      await act(async () => {
+        fireEvent.change(document.querySelector('textarea[name="relatedArtifact[0].description"]'), {
+          target: { value: 'NewArtifactCitationDescription' }
+        });
+        fireEvent.change(document.querySelector('textarea[name="relatedArtifact[0].url"]'), {
+          target: { value: 'NewArtifactCitationUrl' }
+        });
+        await waitForInputValueChange(
+          document.querySelector('textarea[name="relatedArtifact[0].citation"]'),
+          'NewArtifactCitationCitation'
+        );
+      });
+
+      userEvent.click(dialog.getByText('Create'));
 
       await waitFor(() => {
-        expect(addArtifact).toHaveBeenCalledWith({
-          name: 'NewArtifactName',
-          version: 'NewArtifactVersion',
-          description: 'NewArtifactDescription',
-          url: 'NewArtifactUrl',
-          status: 'draft',
-          experimental: 'false',
-          publisher: 'NewArtifactPublisher',
-          context: [{ contextType: 'gender', gender: 'female' }],
-          purpose: 'NewArtifactPurpose',
-          usage: 'NewArtifactUsage',
-          copyright: 'NewArtifactCopyright',
-          // Format dates using this approach so tests pass regardless of the TZ they are run in
-          approvalDate: new Date(2000, 0, 1).toISOString(),
-          lastReviewDate: new Date(2000, 0, 2).toISOString(),
-          effectivePeriod: { start: new Date(2000, 0, 3).toISOString(), end: new Date(2000, 0, 4).toISOString() },
-          topic: [],
-          author: [{ author: 'NewArtifactAuthor' }],
-          reviewer: [{ reviewer: 'NewArtifactReviewer' }],
-          endorser: [{ endorser: 'NewArtifactEndorser' }],
-          relatedArtifact: [{
+        expect(addArtifact).toHaveBeenCalled();
+      });
+
+      expect(addArtifact).toHaveBeenCalledWith({
+        name: 'NewArtifactName',
+        version: 'NewArtifactVersion',
+        description: 'NewArtifactDescription',
+        url: 'NewArtifactUrl',
+        status: 'draft',
+        experimental: 'false',
+        publisher: 'NewArtifactPublisher',
+        context: [{ contextType: 'gender', gender: 'female' }],
+        purpose: 'NewArtifactPurpose',
+        usage: 'NewArtifactUsage',
+        copyright: 'NewArtifactCopyright',
+        // Format dates using this approach so tests pass regardless of the TZ they are run in
+        approvalDate: new Date(2000, 0, 1).toISOString(),
+        lastReviewDate: new Date(2000, 0, 2).toISOString(),
+        effectivePeriod: { start: new Date(2000, 0, 3).toISOString(), end: new Date(2000, 0, 4).toISOString() },
+        topic: [],
+        author: [{ author: 'NewArtifactAuthor' }],
+        reviewer: [{ reviewer: 'NewArtifactReviewer' }],
+        endorser: [{ endorser: 'NewArtifactEndorser' }],
+        relatedArtifact: [
+          {
             relatedArtifactType: 'citation',
             description: 'NewArtifactCitationDescription',
             url: 'NewArtifactCitationUrl',
             citation: 'NewArtifactCitationCitation'
-          }]
-        });
+          }
+        ]
       });
-    });
+    }, 30000);
 
     it('can edit the form', async () => {
       const { getByText } = render(
-        <ArtifactModal
-          artifactEditing={artifactMock}
-          showModal={true}
-          closeModal={jest.fn()}
-        />
+        <ArtifactModal artifactEditing={artifactMock} showModal={true} closeModal={jest.fn()} />
       );
 
       const nameField = document.querySelector('input[name="name"]');

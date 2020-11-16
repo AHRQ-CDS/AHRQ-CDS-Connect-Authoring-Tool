@@ -13,7 +13,7 @@ export default memo(forwardRef(function RawTextField({
   return (
     <div className={classnames('form__group', `flex-col-${colSize}`)}>
       {label &&
-        <label htmlFor={name} className={classnames(helperText && 'has-helper-text')}>
+        <label htmlFor={name} className={classnames('field-label', helperText && 'has-helper-text')}>
           {label}{required && <span className="required">*</span>}:
         </label>
       }

@@ -131,6 +131,10 @@
       border-top: 0.1em solid $border-color;
       padding: 1em 2em;
 
+      .form__group {
+        margin: 10px 0;
+      }
+
       &-element {
         display: flex;
         align-items: center;

@@ -11,7 +11,7 @@ import {
   DateRangeField
 } from '../fields';
 
-import { onVisitExternalLink } from '../../utils/handlers';
+import { ExternalLink } from 'components/elements';
 import nuccProviderTaxonomy from '../../data/nuccProviderTaxonomyV20.0'; // http://nucc.org/
 import fhirWorkflowTaskCodes from '../../data/fhirWorkflowTaskCodesV3'; // https://terminology.hl7.org/1.0.0/ValueSet-v3-ActTaskCode.html
 import fhirClinicalVenueCodes from '../../data/fhirClinicalVenueCodesV3'; // https://terminology.hl7.org/1.0.0/ValueSet-v3-ServiceDeliveryLocationRoleType.html
@@ -20,27 +20,25 @@ import fhirClinicalVenueCodes from '../../data/fhirClinicalVenueCodesV3'; // htt
 
 const versionHelperText = (
   <>
-    Version should follow the Apache APR versioning scheme (e.g., 1.0.0).
-    See <a
+    Version should follow the Apache APR versioning scheme (e.g., 1.0.0). See{' '}
+    <ExternalLink
       href="http://build.fhir.org/ig/HL7/cqf-recommendations/documentation-libraries.html"
-      target="_blank"
-      rel="noopener noreferrer"
-      onClick={onVisitExternalLink}>FHIR Clinical Guidelines
-    </a> for more information.
+      text="FHIR Clinical Guidelines"
+    />
+    {' '}for more information.
   </>
 );
 
 const cpgScoreHelperText = (
   <>
-    The CPG score is the percentage of optional CPG-on-FHIR fields completed on this
-    form. <a
+    The CPG score is the percentage of optional CPG-on-FHIR fields completed on this form.{' '}
+    <ExternalLink
       href="http://hl7.org/fhir/uv/cpg/2019Sep/"
-      target="_blank"
-      rel="noopener noreferrer"
-      onClick={onVisitExternalLink}>Clinical Practice Guidelines on FHIR (CPG-on-FHIR)
-    </a> is a standards-based standardized approach serving as a framework for
-    shareable, interoperable, computable guidelines with the goal of connecting research and evidence swiftly
-    and accurately to those who need it most, including clinicians and patients.
+      text="Clinical Practice Guidelines on FHIR (CPG-on-FHIR)"
+    />
+    {' '}is a standards-based standardized approach serving as a framework for shareable, interoperable,
+    computable guidelines with the goal of connecting research and evidence swiftly and accurately to those
+    who need it most, including clinicians and patients.
   </>
 );
 

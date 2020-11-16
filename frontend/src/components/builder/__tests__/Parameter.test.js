@@ -1,6 +1,6 @@
 import React from 'react';
+import { render, fireEvent, userEvent, screen } from 'utils/test-utils';
 import Parameter from '../Parameter';
-import { render, fireEvent, openSelect } from '../../../utils/test-utils';
 
 jest.mock('../editors/Editor', () => () => <div>Editor</div>);
 
@@ -68,10 +68,10 @@ describe('<Parameter />', () => {
 
   it('changes parameter type when edited', () => {
     const updateInstanceOfParameter = jest.fn();
-    const { getByText, getByLabelText } = renderComponent({ type: 'boolean', updateInstanceOfParameter });
+    renderComponent({ type: 'boolean', updateInstanceOfParameter });
 
-    openSelect(getByLabelText('Select Parameter Type'));
-    fireEvent.click(getByText('Integer'));
+    userEvent.click(screen.getByRole('button', {name: /Parameter type/}));
+    userEvent.click(screen.getByText('Integer'));
 
     expect(updateInstanceOfParameter).toBeCalledWith(
       {
@@ -91,12 +91,14 @@ describe('<Parameter />', () => {
       type: 'boolean',
       collapseParameter,
     });
-    //collapse the parameter
+    
+    // collapse the parameter
     fireEvent.click(getByLabelText('hide-'));
-    expect(getByLabelText('Type')).not.toBeNull();
-    //expand the parameter
+    expect(getByLabelText('Type')).toBeInTheDocument();
+    
+    // expand the parameter
     fireEvent.click(getByLabelText('hide-'));
-    expect(getByLabelText('Select Parameter Type')).not.toBeNull();
+    expect(screen.getByRole('button', {name: /Parameter type/})).toBeInTheDocument();
   });
 
   it('displays the Editor when passed a valid parameter type', () => {

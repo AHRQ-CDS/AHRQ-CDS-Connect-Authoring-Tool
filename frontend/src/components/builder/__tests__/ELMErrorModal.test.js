@@ -1,10 +1,10 @@
 import React from 'react';
+import { render, userEvent, screen } from 'utils/test-utils';
 import ELMErrorModal from '../ELMErrorModal';
-import { render, fireEvent } from '../../../utils/test-utils';
 
 describe('<ELMErrorModal />', () => {
   it('does not render the modal if it is not opened', () => {
-    const { container } = render(
+    render(
       <ELMErrorModal
         isOpen={false}
         closeModal={jest.fn()}
@@ -12,8 +12,8 @@ describe('<ELMErrorModal />', () => {
       />
     );
 
-    expect(container.querySelector('.element-modal')).toBeEmptyDOMElement();
-    expect(document.body.querySelector('.ReactModalPortal')).toBeEmptyDOMElement();
+    expect(document.querySelector('.element-modal')).toBeEmptyDOMElement();
+    expect(document.body.children).toHaveLength(1);
   });
 
   it('renders the error messages', () => {
@@ -25,11 +25,9 @@ describe('<ELMErrorModal />', () => {
       />
     );
 
-    const modalBody = document.body.querySelector('.modal__body');
-    expect(modalBody).toHaveTextContent(
-      'We detected some errors in the ELM files you just used:'
-    );
-    const errorMessages = modalBody.querySelectorAll('li');
+    expect(screen.getByText('We detected some errors in the ELM files you just used:')).toBeInTheDocument();
+
+    const errorMessages = screen.getAllByRole('listitem');
     expect(errorMessages).toHaveLength(2);
     expect(errorMessages[0]).toHaveTextContent('Message 1');
     expect(errorMessages[1]).toHaveTextContent('Message 2');
@@ -46,7 +44,7 @@ describe('<ELMErrorModal />', () => {
       />
     );
 
-    fireEvent.click(document.body.querySelector('.modal__footer button[type="button"]'));
+    userEvent.click(screen.getByText('Close'));
 
     expect(closeModal).toBeCalled();
   });

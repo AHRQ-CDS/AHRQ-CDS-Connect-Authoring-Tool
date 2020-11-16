@@ -3,8 +3,8 @@ import PropTypes from 'prop-types';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faFile } from '@fortawesome/free-solid-svg-icons';
 
-import Modal from '../elements/Modal';
-import renderDate from '../../utils/dates';
+import { Modal }  from 'components/elements';
+import renderDate from 'utils/dates';
 
 import ExternalCqlDetailsSection from './ExternalCqlDetailsSection';
 
@@ -31,11 +31,8 @@ export default class ExternalCqlDetails extends Component {
 
     return (
       <Modal
-        modalTitle="View External CQL Details"
-        modalId="view-details-modal"
-        modalTheme="light"
-        modalSubmitButtonText="Close"
-        hasSecondaryButton={false}
+        title="View External CQL Details"
+        submitButtonText="Close"
         handleShowModal={openModal}
         handleCloseModal={closeModal}
         handleSaveModal={closeModal}

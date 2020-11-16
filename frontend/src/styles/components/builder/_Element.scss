@@ -196,8 +196,11 @@
   display: inline-block;
 }
 
+.vsac-authenticate,
 #vsac-controls {
-  > span {
-    margin-left: 20px;
+  display: flex;
+
+  .disabled-button {
+    margin-right: 0.5em;
   }
 }

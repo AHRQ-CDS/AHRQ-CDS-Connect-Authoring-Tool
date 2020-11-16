@@ -1,11 +1,10 @@
 /* eslint-disable jsx-a11y/no-autofocus */
-
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faExclamationCircle, faSpinner, faKey } from '@fortawesome/free-solid-svg-icons';
 
-import Modal from '../elements/Modal';
+import { Modal }  from 'components/elements';
 
 class VSACAuthenticationModal extends Component {
   constructor(props) {
@@ -63,10 +62,11 @@ class VSACAuthenticationModal extends Component {
         {this.renderButton()}
 
         <Modal
-          modalTitle="Log in to your VSAC account"
-          modalId="vsac-login"
-          modalTheme="dark"
-          modalSubmitButtonText="Login"
+          title="Login to your VSAC account"
+          theme="dark"
+          maxWidth="md"
+          submitButtonText="Login"
+          hasCancelButton
           handleShowModal={this.state.showVSACAuthModal}
           handleCloseModal={this.closeVSACLoginModal}
           handleSaveModal={this.loginToVSAC}
@@ -90,7 +90,7 @@ class VSACAuthenticationModal extends Component {
               </ul>
             </div>
 
-            <div className="login-modal__form">
+             <form id="modal-form" onSubmit={this.loginToVSAC} className="login-modal__form">
               <label htmlFor="apiKey">API Key</label>
               <input
                 type='password'
@@ -102,7 +102,7 @@ class VSACAuthenticationModal extends Component {
               />
 
               {this.renderedAuthStatusText()}
-            </div>
+            </form>
           </div>
         </Modal>
       </div>

@@ -26,7 +26,6 @@
 
 .code-display {
   display: flex;
-  margin: 2em;
 
   &__code,
   &__system-name {
@@ -35,5 +34,33 @@
 
   &__display {
     flex: 5;
+  }
+}
+
+.code-select-modal {
+  &__search-container {
+    display: flex;
+    background-color: $gray-lightest;
+    border-bottom: $border-global;
+    padding: 1em;
+  }
+
+  &__search,
+  &__code-system,
+  &__search-other-system {
+    flex: 1;
+    margin-right: 20px;
+
+    input {
+      width: 100%;
+    }
+  }
+
+  &__code-system {
+    width: 300px;
+  }
+
+  &__body {
+    min-height: 300px;
   }
 }

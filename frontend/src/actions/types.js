@@ -77,12 +77,6 @@ export const TEMPLATES_REQUEST = 'TEMPLATES_REQUEST';
 export const LOAD_TEMPLATES_SUCCESS = 'LOAD_TEMPLATES_SUCCESS';
 export const LOAD_TEMPLATES_FAILURE = 'LOAD_TEMPLATES_FAILURE';
 
-// ------------------------- VALUE SETS ------------------------------------- //
-
-export const VALUE_SETS_REQUEST = 'VALUE_SETS_REQUEST';
-export const LOAD_VALUE_SETS_SUCCESS = 'LOAD_VALUE_SETS_SUCCESS';
-export const LOAD_VALUE_SETS_FAILURE = 'LOAD_VALUE_SETS_FAILURE';
-
 // ------------------------- VSAC ------------------------------------------- //
 
 export const VSAC_LOGIN_REQUEST = 'VSAC_LOGIN_REQUEST';

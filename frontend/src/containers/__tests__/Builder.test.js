@@ -2,12 +2,12 @@ import React from 'react';
 import { Provider } from 'react-redux';
 import { createMockStore as reduxCreateMockStore } from 'redux-test-utils';
 import _ from 'lodash';
-import { instanceTree, emptyInstanceTree, artifact, reduxState } from '../../utils/test_fixtures';
-import { render, fireEvent, openSelect } from '../../utils/test-utils';
+import * as types from 'actions/types';
+import localModifiers from 'data/modifiers';
+import { render, fireEvent, userEvent, screen } from 'utils/test-utils';
+import { instanceTree, emptyInstanceTree, artifact, reduxState } from 'utils/test_fixtures';
+import { getFieldWithId } from 'utils/instances';
 import Builder from '../Builder';
-import { getFieldWithId } from '../../utils/instances';
-import localModifiers from '../../data/modifiers';
-import * as types from '../../actions/types';
 
 const modifierMap = _.keyBy(localModifiers, 'id');
 const modifiersByInputType = {};
@@ -86,13 +86,13 @@ describe('<Builder />', () => {
       }
     });
 
-    const { getByText, getByLabelText } = renderComponent({ store: store });
+    renderComponent({ store: store });
 
-    openSelect(getByLabelText('Choose element type'));
-    fireEvent.click(getByText('Demographics'));
+    userEvent.click(screen.getByLabelText('Element type'));
+    userEvent.click(screen.getByText('Demographics'));
 
-    openSelect(getByLabelText('Select Demographics element'));
-    fireEvent.click(getByText('Age Range'));
+    userEvent.click(screen.getByLabelText('Demographics element'));
+    userEvent.click(screen.getByText('Age Range'));
 
     const actions = store.getActions().map(expandAction);
     const updateAction = actions.find(({ type }) => type === types.UPDATE_ARTIFACT);
@@ -120,10 +120,10 @@ describe('<Builder />', () => {
 
   it('can edit a conjunction instance', () => {
     const store = createMockStore(defaultState);
-    const { container, getByText } = renderComponent({ store });
+    renderComponent({ store });
 
-    openSelect(container.querySelector('.conjunction-select__single-value + input'));
-    fireEvent.click(getByText('Or'));
+    userEvent.click(screen.getAllByRole('button', { name: 'And' })[0]);
+    userEvent.click(screen.getByText('Or'));
 
     const updateAction = expandAction(_.last(store.getActions()));
     const instance = updateAction.artifact.expTreeInclude;

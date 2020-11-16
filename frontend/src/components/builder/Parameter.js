@@ -11,7 +11,7 @@ import _ from 'lodash';
 import StringField from './fields/StringField';
 import TextAreaField from './fields/TextAreaField';
 import Editor from './editors/Editor';
-import StyledSelect from '../elements/StyledSelect';
+import { Dropdown } from 'components/elements';
 
 import {
   doesParameterNeedUsageWarning,
@@ -60,7 +60,8 @@ export default class Parameter extends Component {
     }
   }
 
-  changeParameterType = (type, name, comment) => {
+  changeParameterType = (event, name, comment, typeOptions) => {
+    const type = typeOptions.find(option => option.value === event.target.value);
     if (type) {
       this.updateParameter({ name, uniqueId: this.props.id, type: type.value, comment, value: null });
     }
@@ -291,15 +292,13 @@ export default class Parameter extends Component {
                     <div className="label editor-label">Parameter Type:</div>
 
                     <div className="input">
-                      <StyledSelect
-                        className="Select"
-                        aria-label="Select Parameter Type"
-                        inputProps={{ title: 'Select Parameter Type', id: `parameter-${index}` }}
+                      <Dropdown
+                        disabled={parameterUsed}
+                        id={`parameter-${index}`}
+                        label="Parameter type"
+                        onChange={event => this.changeParameterType(event, name, comment, typeOptions)}
                         options={typeOptions}
-                        value={typeOptions.find(typeOption => typeOption.value === type)}
-                        isDisabled={parameterUsed}
-                        isClearable={false}
-                        onChange={parameterType => this.changeParameterType(parameterType, name, comment)}
+                        value={type}
                       />
                     </div>
                   </label>

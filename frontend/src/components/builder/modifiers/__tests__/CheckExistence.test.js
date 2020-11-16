@@ -1,6 +1,6 @@
 import React from 'react';
 import CheckExistence from '../CheckExistence';
-import { render, fireEvent, openSelect } from '../../../../utils/test-utils';
+import { render, screen, userEvent } from 'utils/test-utils';
 
 describe('<CheckExistence />', () => {
   const renderComponent = (props = {}) =>
@@ -15,10 +15,10 @@ describe('<CheckExistence />', () => {
 
   it('calls updateAppliedModifier on input change', () => {
     const updateAppliedModifier = jest.fn();
-    const { container, getByText } = renderComponent({ updateAppliedModifier });
+    renderComponent({ updateAppliedModifier });
 
-    openSelect(container.querySelector('.check-existence-select__control'));
-    fireEvent.click(getByText('is null'));
+    userEvent.click(screen.getByLabelText("check existence"));
+    userEvent.click(screen.getByText('is null'));
 
     expect(updateAppliedModifier).toBeCalledWith(7, { value: 'is null' });
   });

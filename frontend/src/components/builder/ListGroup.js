@@ -297,8 +297,6 @@ export default class ListGroup extends Component {
           treeName={this.props.treeName}
           artifact={this.props.artifact}
           templates={this.props.templates}
-          valueSets={this.props.valueSets}
-          loadValueSets={this.props.loadValueSets}
           instance={this.props.instance}
           addInstance={(name, template, path) => this.addInstance(name, template, path, instance, isAndOrElement)}
           editInstance={(treeName, fields, path, editingConjunction) =>
@@ -485,8 +483,6 @@ ListGroup.propTypes = {
   treeName: PropTypes.string.isRequired,
   artifact: PropTypes.object,
   templates: PropTypes.array,
-  valueSets: PropTypes.array,
-  loadValueSets: PropTypes.func.isRequired,
   instance: PropTypes.object.isRequired,
   index: PropTypes.number.isRequired,
   addInstance: PropTypes.func.isRequired,

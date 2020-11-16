@@ -3,11 +3,11 @@ import { Formik, Form, useFormikContext } from 'formik';
 import { useDispatch } from 'react-redux';
 import classnames from 'classnames';
 
-import Modal from '../elements/Modal';
-import { TextField } from '../fields';
-import { addArtifact, updateAndSaveArtifact } from '../../actions/artifacts';
+import { Modal }  from 'components/elements';
+import { TextField } from 'components/fields';
+import { addArtifact, updateAndSaveArtifact } from 'actions/artifacts';
 import cpgFields, { versionHelperText, cpgScoreHelperText } from './cpgFields';
-import { stripContextFields, getCpgCompleteCount } from '../../utils/fields';
+import { stripContextFields, getCpgCompleteCount } from 'utils/fields';
 
 function getInitialValue(artifactEditing, valueName, defaultValue, transformer = (x) => x) {
   if (!artifactEditing || artifactEditing[valueName] == null) return defaultValue;
@@ -58,7 +58,7 @@ const ArtifactModalForm = memo(({ setSubmitDisabled }) => {
       <TextField name="version" label="Version" helperText={versionHelperText} />
 
       <div className="cpg-score form__group">
-        <label htmlFor="cpg-score">CPG Score:</label>
+        <label className="field-label" htmlFor="cpg-score">CPG Score:</label>
 
         <div id="cpg-score" className="input__group">
           <div className="cpg-percentage">
@@ -124,16 +124,11 @@ export default function ArtifactModal({ artifactEditing, showModal, closeModal }
     [closeModal, dispatch, artifactEditing]
   );
 
-  const modalTitle = artifactEditing ? 'Edit Artifact Details' : 'Create New Artifact';
-  const modalId = artifactEditing ? 'edit-modal' : 'new-modal';
-
   return (
     <div className="element-modal">
       <Modal
-        modalTitle={modalTitle}
-        modalId={modalId}
-        modalTheme="light"
-        modalSubmitButtonText={artifactEditing ? "Save" : "Create"}
+        title={artifactEditing ? 'Edit Artifact Details' : 'Create New Artifact'}
+        submitButtonText={artifactEditing ? 'Save' : 'Create'}
         submitDisabled={submitDisabled}
         handleShowModal={showModal}
         handleCloseModal={closeModal}

@@ -1,7 +1,7 @@
 import React from 'react';
 import ElementModal from '../ElementModal';
-import { getFieldWithId, getFieldWithType } from '../../../utils/instances';
-import { render, fireEvent } from '../../../utils/test-utils';
+import { getFieldWithId, getFieldWithType } from 'utils/instances';
+import { render, screen, userEvent, waitFor } from 'utils/test-utils';
 
 describe('<ElementModal />', () => {
   const testTemplate = {
@@ -47,45 +47,52 @@ describe('<ElementModal />', () => {
     const { container, queryByText } = renderComponent();
 
     expect(container.firstChild).toHaveClass('element-modal');
-    expect(queryByText('Add Value Set')).not.toBeNull();
+    expect(queryByText('Add Value Set')).toBeInTheDocument();
   });
 
-  it('can set open and close the modal', () => {
-    const { getByText, getByLabelText } = renderComponent();
+  it('can set open and close the modal', async () => {
+    const { getByText } = renderComponent();
 
-    expect(document.querySelector('.element-modal__container')).toBeNull();
-    fireEvent.click(getByText('Add Value Set'));
-    expect(document.querySelector('.element-modal__container')).not.toBeNull();
-    fireEvent.click(getByLabelText('Close Value Set Select Modal'));
-    expect(document.querySelector('.element-modal__container')).toBeNull();
+    expect(document.querySelector('.MuiDialog-root')).not.toBeInTheDocument();
+    userEvent.click(getByText('Add Value Set'));
+    expect(document.querySelector('.MuiDialog-root')).toBeInTheDocument();
+    
+    userEvent.click(screen.getByRole('button', { name: 'Cancel' }));
+
+    await waitFor(() => {
+      expect(document.querySelector('.MuiDialog-root')).not.toBeInTheDocument();
+    });
   });
 
   it('can open a modal using an icon instead of a button', () => {
-    const { container } = renderComponent({ useIconButton: true });
+    renderComponent({ useIconButton: true });
 
-    fireEvent.click(container.querySelector('span[role="button"]'));
-    expect(document.querySelector('.element-modal__container')).not.toBeNull();
+    userEvent.click(screen.getByRole('button'));
+    expect(document.querySelector('.MuiDialog-root')).toBeInTheDocument();
   });
 
   describe('with modal open', () => {
     const renderAndOpenModal = props => {
       const component = renderComponent(props);
-      fireEvent.click(component.getByText('Add Value Set'));
+      userEvent.click(component.getByText('Add Value Set'));
 
       return component;
     };
 
     const getSearchInput = () => document.querySelector('.element-modal__search input');
 
-    it('can close modal with "Cancel" button', () => {
-      const { getByText } = renderAndOpenModal();
+    it('can close modal with "Cancel" button', async () => {
+      renderAndOpenModal();
 
-      fireEvent.click(getByText('Cancel'));
-      expect(document.querySelector('.element-modal__container')).toBeNull();
+      userEvent.click(screen.getByRole('button', { name: 'Cancel' }));
+
+      await waitFor(() => {
+        expect(document.querySelector('.MuiDialog-root')).not.toBeInTheDocument();
+      });
     });
 
     it('can select a valueset', () => {
-      const [vsacSearchResult] = testVsacSearchResults;
+      const [ vsacSearchResult ] = testVsacSearchResults;
 
       const getVSDetails = jest.fn();
       const onElementSelected = jest.fn();
@@ -93,12 +100,12 @@ describe('<ElementModal />', () => {
       renderAndOpenModal({ getVSDetails, onElementSelected });
 
       // Clicking the select button before choosing a value set does nothing
-      const selectButton = document.querySelector('.modal__footer .element-modal__searchbutton');
-      fireEvent.click(selectButton);
+      const selectButton = screen.getByRole('button', { name: 'Select' });
+      userEvent.click(selectButton);
       expect(onElementSelected).not.toBeCalled();
 
-      // Click on a VS returned by the search.
-      fireEvent.click(document.querySelector(`.search__table tbody tr[aria-label="${vsacSearchResult.name}"]`));
+      // Click on a VS returned by the search
+      userEvent.click(document.querySelector(`.search__table tbody tr[aria-label="${vsacSearchResult.name}"]`));
 
       // Clicking an individual VS gets the details and displays them in the table and input field.
       expect(getVSDetails).toBeCalledWith(vsacSearchResult.oid, 'key');
@@ -114,12 +121,13 @@ describe('<ElementModal />', () => {
       );
 
       // Clicking the select button class the onElementSelected function
-      fireEvent.click(selectButton);
+      userEvent.click(selectButton);
 
       const nameField = {
         ...getFieldWithId(testTemplate.fields, 'element_name'),
         value: vsacSearchResult.name
       };
+
       const vsacField = {
         ...getFieldWithType(testTemplate.fields, '_vsac'),
         static: true,
@@ -139,8 +147,8 @@ describe('<ElementModal />', () => {
       const searchVSACByKeyword = jest.fn();
       renderAndOpenModal({ searchVSACByKeyword });
 
-      fireEvent.change(getSearchInput(), { target: { value: 'cholest' } });
-      fireEvent.keyDown(getSearchInput(), { key: 'Enter' });
+      userEvent.type(getSearchInput(), 'cholest');
+      userEvent.type(getSearchInput(), '{enter}');
 
       expect(searchVSACByKeyword).toBeCalledWith('cholest', 'key');
     });
@@ -149,12 +157,12 @@ describe('<ElementModal />', () => {
       renderAndOpenModal();
 
       // Click on a VS returned by the search, changes to the details table.
-      fireEvent.click(document.querySelector('.search__table tbody tr'));
+      userEvent.click(document.querySelector('.search__table tbody tr'));
 
       expect(document.querySelector('.search__table thead')).toHaveTextContent('CodeNameCode System'); // Details table headings
 
       // Clicking the arrow button changes to search table and resets selectedElement.
-      fireEvent.click(document.querySelector('.nav-icon'));
+      userEvent.click(document.querySelector('.nav-icon'));
 
       expect(document.querySelector('.search__table thead')).toHaveTextContent(
         'Name/OIDStewardCodes' // Search table headings
@@ -177,32 +185,34 @@ describe('<ElementModal />', () => {
       const { getByText } = renderAndOpenModal({ searchVSACByKeyword });
 
       // Set search input value
-      const searchTerm = 'derp';
-      fireEvent.change(getSearchInput(), { target: { value: searchTerm } });
+      userEvent.type(getSearchInput(), 'derp');
 
       // Close modal
-      fireEvent.click(getByText('Cancel'));
+      userEvent.click(getByText('Cancel'));
 
       expect(searchVSACByKeyword).toBeCalledWith('');
     });
 
-    it('calls the correct update function ', () => {
+    it('calls the correct update function ', async () => {
       const [vsacSearchResult] = testVsacSearchResults;
       const updateModifier = jest.fn();
 
-      renderAndOpenModal({ updateModifier });
+      const { getByText } = renderAndOpenModal({ updateModifier });
 
       // Choose a value set
-      fireEvent.click(document.querySelector(`.search__table tbody tr[aria-label="${vsacSearchResult.name}"]`));
+      userEvent.click(document.querySelector(`.search__table tbody tr[aria-label="${vsacSearchResult.name}"]`));
 
       // Clicking the select button calls the modifier update function with correct object and closes modal
-      fireEvent.click(document.querySelector('.modal__footer .element-modal__searchbutton'));
+      userEvent.click(getByText('Select'));
 
       expect(updateModifier).toBeCalledWith({
         name: vsacSearchResult.name,
         oid: vsacSearchResult.oid
       });
-      expect(document.querySelector('.element-modal__container')).toBeNull();
+
+      await waitFor(() => {
+        expect(document.querySelector('.MuiDialog-root')).not.toBeInTheDocument();
+      });
     });
   });
 });

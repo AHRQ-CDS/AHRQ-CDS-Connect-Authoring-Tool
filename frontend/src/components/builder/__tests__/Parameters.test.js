@@ -1,6 +1,6 @@
 import React from 'react';
+import { render, fireEvent, userEvent, screen } from 'utils/test-utils';
 import Parameters from '../Parameters';
-import { render, fireEvent, openSelect } from '../../../utils/test-utils';
 
 describe('<Parameters />', () => {
   const renderComponent = (props = {}) =>
@@ -53,18 +53,20 @@ describe('<Parameters />', () => {
 
   it('can update a parameter', () => {
     const updateParameters = jest.fn();
-    const { getByText, getByLabelText } = renderComponent({ updateParameters });
+    renderComponent({ updateParameters });
 
-    openSelect(getByLabelText('Select Parameter Type'));
-    fireEvent.click(getByText('Integer'));
+    userEvent.click(screen.getByRole('button', { name: /Parameter type/ }));
+    fireEvent.click(screen.getByText('Integer'));
 
-    expect(updateParameters).toBeCalledWith([{
-      name: 'Parameter 007',
-      uniqueId: 'parameter-007',
-      type: 'integer',
-      comment: '',
-      value: null
-    }]);
+    expect(updateParameters).toBeCalledWith([
+      {
+        name: 'Parameter 007',
+        uniqueId: 'parameter-007',
+        type: 'integer',
+        comment: '',
+        value: null
+      }
+    ]);
   });
 
   it('can delete parameter', () => {

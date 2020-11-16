@@ -141,63 +141,6 @@
   }
 }
 
-// ------------------------- SELECT ---------------------------------------- //
-// Relevant to the react-select plugin
-
-.Select {
-  .Select-control {
-    color: $black;
-    border: $border-global;
-    border-radius: $border-radius;
-    box-shadow: $box-shadow;
-    min-width: 200px;
-
-    &:hover {
-      box-shadow: $box-shadow;
-    }
-  }
-
-  .Select-placeholder,
-  .Select--single > .Select-control .Select-value {
-    color: $form-input-placeholder-color;
-  }
-
-  .Select-menu-outer {
-    box-shadow: $box-shadow;
-    overflow: hidden;
-  }
-
-  .Select-option {
-    color: $black;
-  }
-
-  .Select-clear {
-    color: #333;
-  }
-
-  &.is-open > .Select-control {
-    border-bottom-left-radius: 0;
-    border-bottom-right-radius: 0;
-  }
-
-  &.is-searchable {
-    .Select-control,
-    .Select-control:hover {
-      box-shadow: $box-shadow-inset;
-    }
-  }
-
-  &.is-focused {
-    .Select-control {
-      @include native-focus();
-    }
-  }
-
-  &.is-focused:not(.is-open) > .Select-control {
-    box-shadow: none;
-  }
-}
-
 // ------------------------- GROUPED FIELDS -------------------------------- //
 
 .grouped-fields {

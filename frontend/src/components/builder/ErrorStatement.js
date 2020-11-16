@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import _ from 'lodash';
 
-import StyledSelect from '../elements/StyledSelect';
+import { Dropdown } from 'components/elements';
 
 export default class ErrorStatement extends Component {
   // Ensures there is at least one statement to start
@@ -69,19 +69,19 @@ export default class ErrorStatement extends Component {
     this.props.updateErrorStatement(newErrorStatement);
   }
 
+  // event => this.setStatement(event, parent, index, 'condition', options)
   // Updates the if/then statements in base and child
-  setStatement = (value, parent, index, type) => {
-    let newValue = value;
-    if (newValue === null) {
-      newValue = { label: null, value: null };
-    }
+  setStatement = (event, parent, index, type, options = null) => {
+    let value = event?.target?.value;
+    if (options) value = options.find(option => option.value === event.target.value);
+    if (value == null) value = { label: null, value: null };
 
     const newErrorStatement = _.cloneDeep(this.props.errorStatement);
     const { statements } = newErrorStatement;
     if (parent == null) {
-      statements[index][type] = newValue;
+      statements[index][type] = value;
     } else {
-      statements[parent].child.statements[index][type] = newValue;
+      statements[parent].child.statements[index][type] = value;
     }
 
     this.props.updateErrorStatement(newErrorStatement);
@@ -149,17 +149,18 @@ export default class ErrorStatement extends Component {
   renderCondition = (statement, parent, index) => {
     let options = this.options();
     let selectedOption = options.find(({ value }) => value === statement.condition.value);
+    const id = `condition-${parent != null ? parent : -1}-${index}`;
 
     return (
-      <StyledSelect
-        className="error-statement__select"
-        key={`condition-${parent != null ? parent : -1}-${index}`}
-        inputProps={{ id: `condition-${parent != null ? parent : -1}-${index}` }}
-        index={index}
-        value={selectedOption}
-        options={options}
-        onChange={e => this.setStatement(e, parent, index, 'condition')}
-      />
+      <div className="error-statement__select" key={id}>
+        <Dropdown
+          id={id}
+          label="Choose if statement"
+          onChange={event => this.setStatement(event, parent, index, 'condition', options)}
+          options={options}
+          value={selectedOption ? selectedOption.value : ''}
+        />
+      </div>
     );
   }
 
@@ -176,7 +177,7 @@ export default class ErrorStatement extends Component {
           aria-label="ThenClause"
           placeholder='Describe your error'
           value={statement.thenClause}
-          onChange={e => this.setStatement(e.target.value, parent, index, 'thenClause')} />
+          onChange={event => this.setStatement(event, parent, index, 'thenClause')} />
       </div>
     </div>
   )

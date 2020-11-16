@@ -87,6 +87,10 @@
   }
 }
 
+.modal__options {
+  margin-top: 1em;
+}
+
 .modal-overlay {
   position: fixed;
   top: 0;
@@ -105,6 +109,9 @@
 }
 
 .loading-icon {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   font-size: 3em;
   margin: auto;
 }

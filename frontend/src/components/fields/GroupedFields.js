@@ -49,7 +49,7 @@ const FastGroupedFieldArray = memo(({
 
   return (
     <div className="form__group flex-col-1">
-      <label htmlFor={name}>
+      <label htmlFor={name} className="field-label">
         {label}
         {isCpgField &&
           <span className={classnames('cpg-tag', cpgFieldComplete && 'cpg-tag-complete')}>CPG</span>

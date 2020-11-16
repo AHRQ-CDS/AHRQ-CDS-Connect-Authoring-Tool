@@ -3,7 +3,7 @@ import { withRouter } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { Dropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
 
-import Modal from '../elements/Modal';
+import { Modal } from 'components/elements';
 
 class Logout extends Component {
   constructor(props) {
@@ -34,16 +34,16 @@ class Logout extends Component {
   }
 
   renderConfirmLogoutModal() {
+    const { showConfirmLogoutModal } = this.state;
+
     return (
       <Modal
-        modalTitle="Logout Confirmation"
-        modalId="confirm-logout-modal"
-        modalTheme="light"
-        modalSubmitButtonText="Logout"
-        handleShowModal={this.state.showConfirmLogoutModal}
+        title="Logout Confirmation"
+        submitButtonText="Logout"
+        handleShowModal={showConfirmLogoutModal}
         handleCloseModal={this.closeConfirmLogoutModal}
-        handleSaveModal={this.handleLogoutClick}>
-
+        handleSaveModal={this.handleLogoutClick}
+      >
         <div className="logout-confirmation-modal modal__content">
           <h5>Are you sure you want to log out without saving your changes?</h5>
         </div>

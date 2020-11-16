@@ -1,6 +1,6 @@
 import React from 'react';
+import { render, userEvent, screen } from 'utils/test-utils';
 import DateTimePrecisionModifier from '../DateTimePrecisionModifier';
-import { render, fireEvent, openSelect } from '../../../../utils/test-utils';
 
 describe('<DateTimePrecisionModifier />', () => {
   const renderComponent = (props = {}) =>
@@ -18,10 +18,10 @@ describe('<DateTimePrecisionModifier />', () => {
 
   it('calls updateAppliedModifier on input change', () => {
     const updateAppliedModifier = jest.fn();
-    const { container, getByText, getByLabelText } = renderComponent({ updateAppliedModifier });
+    renderComponent({ updateAppliedModifier });
 
-    fireEvent.focus(container.querySelector('.react-datepicker-wrapper input'));
-    fireEvent.click(container.querySelector('.react-datepicker__day--today'));
+    userEvent.click(screen.getAllByRole('textbox')[0]);
+    userEvent.click(document.querySelector('.react-datepicker__day--today'));
 
     expect(updateAppliedModifier).toBeCalledWith(6, {
       date: expect.stringMatching(/^@\d{4}-\d{2}-\d{2}$/),
@@ -29,8 +29,8 @@ describe('<DateTimePrecisionModifier />', () => {
       precision: ''
     });
 
-    fireEvent.click(container.querySelector('.rc-time-picker-input'));
-    fireEvent.click(document.querySelector('.rc-time-picker-panel-select-option-selected'));
+    userEvent.click(screen.getAllByRole('textbox')[1]);
+    userEvent.click(document.querySelector('.rc-time-picker-panel-select-option-selected'));
 
     expect(updateAppliedModifier).toBeCalledWith(6, {
       date: '',
@@ -38,8 +38,8 @@ describe('<DateTimePrecisionModifier />', () => {
       precision: ''
     });
 
-    openSelect(getByLabelText('Precision'));
-    fireEvent.click(getByText('year'));
+    userEvent.click(screen.getByLabelText('Precision'));
+    userEvent.click(screen.getByText('year'));
 
     expect(updateAppliedModifier).toBeCalledWith(6, {
       date: '',

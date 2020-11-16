@@ -163,8 +163,6 @@ export default class Subpopulation extends Component {
         treeName={this.props.treeName}
         artifact={this.props.artifact}
         templates={this.props.templates}
-        valueSets={this.props.valueSets}
-        loadValueSets={this.props.loadValueSets}
         instance={this.props.subpopulation}
         addInstance={this.addInstance}
         editInstance={this.editInstance}
@@ -209,8 +207,6 @@ export default class Subpopulation extends Component {
 
 Subpopulation.propTypes = {
   artifact: PropTypes.object.isRequired,
-  valueSets: PropTypes.array,
-  loadValueSets: PropTypes.func.isRequired,
   subpopulation: PropTypes.object.isRequired,
   subpopulationIndex: PropTypes.number.isRequired,
   setSubpopulationName: PropTypes.func.isRequired,

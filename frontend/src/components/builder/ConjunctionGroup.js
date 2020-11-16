@@ -14,11 +14,11 @@ import {
 import { UncontrolledTooltip } from 'reactstrap';
 import classnames from 'classnames';
 
+import { Dropdown } from 'components/elements';
 import TemplateInstance from './TemplateInstance';
 import ElementSelect from './ElementSelect';
 import StringField from './fields/StringField';
 import TextAreaField from './fields/TextAreaField';
-import StyledSelect from '../elements/StyledSelect';
 import ExpressionPhrase from './modifiers/ExpressionPhrase';
 
 import createTemplateInstance from '../../utils/templates';
@@ -42,7 +42,8 @@ export default class ConjunctionGroup extends Component {
     };
   }
 
-  handleTypeChange = (type) => {
+  handleTypeChange = (event, selectOptions) => {
+    const type = selectOptions.find(option => option.name === event.target.value);
     this.props.editInstance(this.props.treeName, type, this.getPath(), true);
   }
 
@@ -194,22 +195,24 @@ export default class ConjunctionGroup extends Component {
     </UncontrolledTooltip>
   );
 
-  renderConjunctionSelect = i => (
-    <StyledSelect
-      className="card-group__conjunction-select"
-      name={`conjunction-select-${i}`}
-      value={this.props.instance}
-      getOptionValue={({ name }) => name}
-      getOptionLabel={({ name }) => name}
-      placeholder="Select one"
-      isSearchable={false}
-      isClearable={false}
-      options={this.props.options === 'listOperations' ? this.listOperations : this.types}
-      onChange={this.handleTypeChange}
-      inputProps={{ 'aria-label': 'Select conjunction type', title: 'Select conjunction type' }}
-      classNamePrefix="conjunction-select"
-    />
-  )
+  renderConjunctionSelect = () => {
+    const { options, instance } = this.props;
+    const selectOptions = options === 'listOperations' ? this.listOperations : this.types;
+
+    return (
+      <div className="card-group__conjunction-select">
+        <Dropdown
+          id="conjunction-select"
+          label={instance.name ? null : "Select one"}
+          onChange={event => this.handleTypeChange(event, selectOptions)}
+          options={selectOptions}
+          value={instance.name}
+          valueKey="id"
+          labelKey="name"
+        />
+      </div>
+    );
+  };
 
   renderIndentButtons = instance => (
     // Indenting is always possible, outdent only possible when not at root already
@@ -334,7 +337,7 @@ export default class ConjunctionGroup extends Component {
 
   renderChildren() {
     const {
-      artifact, treeName, templates, valueSets, addInstance, editInstance, deleteInstance
+      artifact, treeName, templates, addInstance, editInstance, deleteInstance
     } = this.props;
 
     return this.props.instance.childInstances.map((instance, i) => {
@@ -347,8 +350,6 @@ export default class ConjunctionGroup extends Component {
               treeName={treeName}
               artifact={artifact}
               templates={templates}
-              valueSets={valueSets}
-              loadValueSets={this.props.loadValueSets}
               instance={instance}
               addInstance={addInstance}
               editInstance={editInstance}
@@ -406,8 +407,6 @@ export default class ConjunctionGroup extends Component {
     return (
       <div key={instance.uniqueId} className="card-group-section" id={instance.uniqueId}>
         <TemplateInstance
-          valueSets={this.props.valueSets}
-          loadValueSets={this.props.loadValueSets}
           getPath={this.getChildsPath}
           treeName={this.props.treeName}
           templateInstance={instance}
@@ -521,7 +520,6 @@ ConjunctionGroup.propTypes = {
   isValidatingCode: PropTypes.bool.isRequired,
   isValidCode: PropTypes.bool,
   loadExternalCqlList: PropTypes.func.isRequired,
-  loadValueSets: PropTypes.func.isRequired,
   loginVSACUser: PropTypes.func.isRequired,
   modifierMap: PropTypes.object.isRequired,
   modifiersByInputType: PropTypes.object.isRequired,
@@ -535,7 +533,6 @@ ConjunctionGroup.propTypes = {
   treeName: PropTypes.string.isRequired,
   validateCode: PropTypes.func.isRequired,
   validateReturnType: PropTypes.bool,
-  valueSets: PropTypes.array,
   vsacApiKey: PropTypes.string,
   vsacDetailsCodes: PropTypes.array.isRequired,
   vsacDetailsCodesError: PropTypes.string.isRequired,

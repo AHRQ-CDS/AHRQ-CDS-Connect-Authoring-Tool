@@ -1,6 +1,6 @@
 import React from 'react';
+import { render, fireEvent } from 'utils/test-utils';
 import Recommendations from '../Recommendations';
-import { render, fireEvent } from '../../../utils/test-utils';
 
 const rec = {
   uid: 'rec-100',
@@ -69,14 +69,16 @@ describe('<Recommendations />', () => {
 
   it('shows a confirmation modal on delete and deletes on confirm', () => {
     const updateRecommendations = jest.fn();
-    const { getByText, getByLabelText } = renderComponent({updateRecommendations});
+    const { getByText, getByLabelText, getByRole } = renderComponent({ updateRecommendations });
 
-    //click delete
+    // click delete
     fireEvent.click(getByLabelText('remove recommendation'));
-    //check the modal exists
+    
+    // check the modal exists
     expect(getByText('Delete Recommendation')).not.toBeNull();
-    //confirm the delete
-    fireEvent.click(getByLabelText("Delete"));
+    
+    // confirm the delete
+    fireEvent.click(getByRole('button', { name: 'Delete' }));
     expect(updateRecommendations).toHaveBeenCalledWith([]);
   });
 });

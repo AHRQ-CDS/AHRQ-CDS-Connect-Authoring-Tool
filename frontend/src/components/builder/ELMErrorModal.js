@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import Modal from 'react-modal';
+
+import { Modal } from 'components/elements';
 
 class ELMErrorModal extends Component {
   static propTypes = {
@@ -16,39 +17,26 @@ class ELMErrorModal extends Component {
   }
 
   render() {
-    const uniqueErrors = [...new Set(this.props.errors.map(e => e.message))];
+    const { closeModal, errors, isOpen } = this.props;
+    const uniqueErrors = [...new Set(errors.map(error => error.message))];
 
     return (
       <div className="element-modal">
         <Modal
-          isOpen={this.props.isOpen}
-          onRequestClose={this.props.closeModal}
-          shouldCloseOnOverlayClick={ true }
-          contentLabel="ELM Download Warnings"
-          className="modal-style modal-style__light modal-style--full-height element-modal"
-          overlayClassName='modal-overlay modal-overlay__dark'>
-          <div className="element-modal__container">
-            <header className="modal__header">
-              <span className="modal__heading">
-                About your CQL...
-              </span>
-            </header>
-            <main className="modal__body">
+          title="About your CQL..."
+          submitButtonText="Close"
+          handleShowModal={isOpen}
+          handleCloseModal={closeModal}
+          handleSaveModal={closeModal}
+        >
+          <main className="modal__body">
+            <p>
               We detected some errors in the ELM files you just used:
               <ul>
-                {uniqueErrors.map((e, i) => <li key={i}> {e} </li>)}
+                {uniqueErrors.map((error, index) => <li key={index}>{error}</li>)}
               </ul>
-            </main>
-            <footer className="modal__footer">
-              <button className="primary-button"
-                      type="button"
-                      onClick={ this.props.closeModal }
-                      onKeyDown={ e => this.enterKeyCheck(this.props.closeModal, null, e) }
-                      aria-label="Close">
-                      Close
-              </button>
-            </footer>
-          </div>
+            </p>
+          </main>
         </Modal>
       </div>
     );

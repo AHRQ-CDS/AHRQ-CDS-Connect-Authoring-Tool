@@ -1,7 +1,7 @@
 import React from 'react';
+import { render, userEvent, screen } from 'utils/test-utils';
+import { genericInstance } from 'utils/test_fixtures';
 import Qualifier from '../Qualifier';
-import { render, fireEvent, openSelect } from '../../../../utils/test-utils';
-import { genericInstance } from '../../../../utils/test_fixtures';
 
 describe('<Qualifier />', () => {
   const renderComponent = (props = {}) =>
@@ -44,10 +44,10 @@ describe('<Qualifier />', () => {
   it('selects type of qualifier', () => {
     const updateAppliedModifier = jest.fn();
 
-    const { getByText, getByLabelText } = renderComponent({ updateAppliedModifier });
+    renderComponent({ updateAppliedModifier });
 
-    openSelect(getByLabelText('Qualifier'));
-    fireEvent.click(getByText('value is a code from'));
+    userEvent.click(screen.getByLabelText('Qualifier'));
+    userEvent.click(screen.getByText('value is a code from'));
 
     expect(updateAppliedModifier).toBeCalledWith(5, {
       qualifier: 'value is a code from',

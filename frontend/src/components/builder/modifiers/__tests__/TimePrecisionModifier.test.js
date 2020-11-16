@@ -1,6 +1,6 @@
 import React from 'react';
+import { render, userEvent, screen } from 'utils/test-utils';
 import TimePrecisionModifier from '../TimePrecisionModifier';
-import { render, fireEvent, openSelect } from '../../../../utils/test-utils';
 
 describe('<TimePrecisionModifier />', () => {
   const renderComponent = (props = {}) =>
@@ -17,18 +17,18 @@ describe('<TimePrecisionModifier />', () => {
 
   it('calls updateAppliedModifier on input change', () => {
     const updateAppliedModifier = jest.fn();
-    const { container, getByText, getByLabelText } = renderComponent({ updateAppliedModifier });
+    renderComponent({ updateAppliedModifier });
 
-    fireEvent.click(container.querySelector('.rc-time-picker-input'));
-    fireEvent.click(document.querySelector('.rc-time-picker-panel-select-option-selected'));
+    userEvent.click(screen.getByRole('textbox'));
+    userEvent.click(document.querySelector('.rc-time-picker-panel-select-option-selected'));
 
     expect(updateAppliedModifier).toBeCalledWith(6, {
       time: expect.stringMatching(/^@T\d{2}:\d{2}:\d{2}$/),
       precision: ''
     });
 
-    openSelect(getByLabelText('Precision'));
-    fireEvent.click(getByText('hour'));
+    userEvent.click(screen.getByLabelText('Precision'));
+    userEvent.click(screen.getByText('hour'));
 
     expect(updateAppliedModifier).toBeCalledWith(6, {
       time: '',

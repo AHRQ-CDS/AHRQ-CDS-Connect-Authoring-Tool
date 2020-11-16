@@ -639,7 +639,7 @@ export default class TemplateInstance extends Component {
                   vsacDetailsCodes={this.props.vsacDetailsCodes}
                   vsacDetailsCodesError={this.props.vsacDetailsCodesError}
                   vsacApiKey={this.props.vsacApiKey}
-                  />
+                />
               </div>
             ))}
           </div>
@@ -802,8 +802,6 @@ export default class TemplateInstance extends Component {
           <ValueSetField
             key={field.id}
             field={field}
-            valueSets={this.props.valueSets}
-            loadValueSets={this.props.loadValueSets}
             updateInstance={this.updateInstance}
           />
         );
@@ -1099,7 +1097,6 @@ TemplateInstance.propTypes = {
   isSearchingVSAC: PropTypes.bool.isRequired,
   isValidatingCode: PropTypes.bool,
   isValidCode: PropTypes.bool,
-  loadValueSets: PropTypes.func.isRequired,
   loginVSACUser: PropTypes.func.isRequired,
   otherInstances: PropTypes.array.isRequired,
   parameters: PropTypes.array,
@@ -1114,7 +1111,6 @@ TemplateInstance.propTypes = {
   updateInstanceModifiers: PropTypes.func.isRequired,
   validateCode: PropTypes.func,
   validateReturnType: PropTypes.bool,
-  valueSets: PropTypes.array,
   vsacApiKey: PropTypes.string,
   vsacDetailsCodes: PropTypes.array.isRequired,
   vsacDetailsCodesError: PropTypes.string,
