@@ -1,17 +1,16 @@
 import React from 'react';
 import { MemoryRouter } from 'react-router-dom';
 import { createMockStore } from 'redux-test-utils';
-import { reduxState } from '../../utils/test_fixtures';
-import { render } from '../../utils/test-utils';
+import { reduxState } from 'utils/test_fixtures';
+import { render } from 'utils/test-utils';
 import Root from '../Root';
 
-jest.mock('../../containers/Landing', () => () => <div>Landing Container</div>);
-jest.mock('../../containers/Builder', () => () => <div>Builder Container</div>);
-jest.mock('../../containers/Artifact', () => () => <div>Artifact Container</div>);
-jest.mock('../../containers/Testing', () => () => <div>Testing Container</div>);
-jest.mock('../../components/Documentation', () => () => <div>Documentation Component</div>);
-jest.mock('../../components/NotFoundPage', () => () => <div>NotFoundPage Component</div>);
-jest.mock('../../components/NotLoggedInPage', () => () => <div>NotLoggedInPage Component</div>);
+jest.mock('components/landing/Landing', () => () => <div>Landing Container</div>);
+jest.mock('containers/Builder', () => () => <div>Builder Container</div>);
+jest.mock('containers/Artifact', () => () => <div>Artifact Container</div>);
+jest.mock('containers/Testing', () => () => <div>Testing Container</div>);
+jest.mock('components/documentation/Documentation', () => () => <div>Documentation Component</div>);
+jest.mock('components/base/ErrorPage', () => () => <div>ErrorPage Component</div>);
 
 describe('<Root />', () => {
   const renderComponent = ({ path = '/', store = reduxState, ...props } = {}) =>
@@ -43,11 +42,11 @@ describe('<Root />', () => {
     it('renders a not found page', () => {
       const { getByText } = renderComponent({ path: '/foo' });
 
-      expect(getByText('NotFoundPage Component')).toBeDefined();
+      expect(getByText('ErrorPage Component')).toBeDefined();
     });
 
     describe('private routes', () => {
-      it('renders the NotLoggedInPage when not logged in', () => {
+      it('renders the not logged in error page when not logged in', () => {
         const { getByText } = renderComponent({
           path: '/build',
           store: {
@@ -59,7 +58,7 @@ describe('<Root />', () => {
           }
         });
 
-        expect(getByText('NotLoggedInPage Component')).toBeDefined();
+        expect(getByText('ErrorPage Component')).toBeDefined();
       });
 
       it('renders the Builder index page', () => {
