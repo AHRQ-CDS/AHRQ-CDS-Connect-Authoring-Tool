@@ -25,7 +25,7 @@ function updateQuantityTypes(definitions) {
       definition.calculatedReturnType = 'list_of_others';
       definition.displayReturnType = 'List of Others (Quantity)'
     }
-    if (definition.operand) {
+    if (definition.operand && definition.operand.length > 0) {
       definition.operand.forEach((op, index) => {
         if (_.get(op, 'operandTypeSpecifier.resultTypeName') === '{http://hl7.org/fhir}Quantity') {
           definition.argumentTypes[index] = { display: 'Other (Quantity)', calculated: 'other' };
