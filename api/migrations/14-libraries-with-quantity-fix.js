@@ -52,7 +52,7 @@ function updateQuantityTypes(definitions) {
 }
 
 module.exports.up = function (done) {
-  this.log('Migrating: libraries-with-inputtypes');
+  this.log('Migrating: libraries-with-quantity-fix');
   var coll = this.db.collection('cqllibraries');
   // NOTE: We can't use the special $[] operator since we're not yet on Mongo 3.6.
   // Instead, we need to iterate the documents and fields using forEach.
