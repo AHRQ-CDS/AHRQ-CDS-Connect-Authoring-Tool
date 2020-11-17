@@ -6,7 +6,17 @@ import { instanceTree, emptyInstanceTree, artifact, reduxState } from '../../uti
 import { render, fireEvent, openSelect } from '../../utils/test-utils';
 import Builder from '../Builder';
 import { getFieldWithId } from '../../utils/instances';
+import localModifiers from '../../data/modifiers';
 import * as types from '../../actions/types';
+
+const modifierMap = _.keyBy(localModifiers, 'id');
+const modifiersByInputType = {};
+
+localModifiers.forEach((modifier) => {
+  modifier.inputTypes.forEach((inputType) => {
+    modifiersByInputType[inputType] = (modifiersByInputType[inputType] || []).concat(modifier);
+  });
+});
 
 const defaultState = {
   ...reduxState,
@@ -16,6 +26,11 @@ const defaultState = {
       ...artifact,
       expTreeInclude: instanceTree
     }
+  },
+  modifiers: {
+    ...reduxState.modifiers,
+    modifierMap,
+    modifiersByInputType
   }
 };
 
@@ -31,9 +46,9 @@ const createMockStore = (state) => {
   return store;
 };
 
-const expandAction = action => {
+const expandAction = (action) => {
   let args;
-  action(actionArgs => (args = actionArgs));
+  action((actionArgs) => (args = actionArgs));
   return args;
 };
 
@@ -92,7 +107,9 @@ describe('<Builder />', () => {
     const store = createMockStore(defaultState);
     const { getByLabelText } = renderComponent({ store });
 
-    fireEvent.change(getByLabelText('Age Range'), { target: { value: '30 to 45' } });
+    fireEvent.change(getByLabelText('Age Range'), {
+      target: { value: '30 to 45' }
+    });
 
     const updateAction = expandAction(_.last(store.getActions()));
     const nameField = getFieldWithId(updateAction.artifact.expTreeInclude.childInstances[0].fields, 'element_name');
@@ -116,9 +133,11 @@ describe('<Builder />', () => {
     expect(instance.name).toEqual('Or');
   });
 
-  it('can update an instance\'s modifiers', () => {
+  it("can update an instance's modifiers", () => {
     const store = createMockStore(defaultState);
-    const { getAllByLabelText, getByText } = renderComponent({ store });
+    const { getAllByLabelText, getByText } = renderComponent({
+      store
+    });
 
     fireEvent.click(getAllByLabelText('add expression')[0]);
     fireEvent.click(getByText('Is (Not) Null?'));

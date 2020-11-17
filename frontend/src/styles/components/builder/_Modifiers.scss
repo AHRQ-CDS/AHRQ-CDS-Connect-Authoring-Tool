@@ -35,3 +35,12 @@
   flex-direction: column;
   margin-bottom: 10px;
 }
+
+label.modifier-title {
+  margin-bottom: 10px;
+}
+
+.modifier-editor-group {
+  padding-left: 1em;
+  border-left: 4px solid $gray-lighter;
+}

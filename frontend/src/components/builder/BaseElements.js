@@ -33,6 +33,9 @@ export default class BaseElements extends Component {
         artifact={this.props.instance}
         baseElements={this.props.baseElements}
         codeData={this.props.codeData}
+        modifierMap={this.props.modifierMap}
+        modifiersByInputType={this.props.modifiersByInputType}
+        isLoadingModifiers={this.props.isLoadingModifiers}
         conversionFunctions={this.props.conversionFunctions}
         deleteInstance={this.props.deleteInstance}
         editInstance={this.props.editInstance}
@@ -93,6 +96,9 @@ export default class BaseElements extends Component {
                 allInstancesInAllTrees={allInstancesInAllTrees}
                 baseElements={this.props.baseElements}
                 codeData={this.props.codeData}
+                modifierMap={this.props.modifierMap}
+                modifiersByInputType={this.props.modifiersByInputType}
+                isLoadingModifiers={this.props.isLoadingModifiers}
                 conversionFunctions={this.props.conversionFunctions}
                 deleteInstance={this.props.deleteInstance}
                 editInstance={this.props.editInstance}
@@ -171,6 +177,9 @@ BaseElements.propTypes = {
   addBaseElement: PropTypes.func.isRequired,
   addInstance: PropTypes.func.isRequired,
   codeData: PropTypes.object,
+  modifierMap: PropTypes.object.isRequired,
+  modifiersByInputType: PropTypes.object.isRequired,
+  isLoadingModifiers: PropTypes.bool,
   conversionFunctions: PropTypes.array,
   deleteInstance: PropTypes.func.isRequired,
   editInstance: PropTypes.func.isRequired,

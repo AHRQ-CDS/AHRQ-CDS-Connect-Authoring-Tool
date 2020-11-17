@@ -905,6 +905,13 @@ function applyModifiers(values = [], modifiers = []) { // default modifiers to [
         modifier.cqlLibraryFunction = modifier.values.templateName;
       }
       const modifierContext = { cqlLibraryFunction: modifier.cqlLibraryFunction, value_name: newValue };
+      if (modifier.values && modifier.type === 'ExternalModifier') {
+        modifier.values.value.forEach(value => {
+          let system = _.get(value, 'system', '').replace(/'/g, '\\\'');
+          let uri = _.get(value, 'uri', '').replace(/'/g, '\\\'');
+          if (system && uri) { this.codeSystemMap.set(system, { name: system, id: uri }); }
+        });
+      }
       // Modifiers that add new value sets, will have a valueSet attribute on values.
       if (modifier.values && modifier.values.valueSet) {
         modifier.values.valueSet.name = `${modifier.values.valueSet.name.replace(/"/g, '\\"')} VS`;

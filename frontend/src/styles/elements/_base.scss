@@ -36,6 +36,14 @@ main {
 
 label { margin-bottom: 0; }
 
+.label {
+  font-weight: bold;
+  white-space: nowrap;
+  padding-right: 1em;
+  min-width: 10em;
+  text-align: right;
+}
+
 .button-style,
 #{$all-buttons},
 #{$all-text-inputs} {

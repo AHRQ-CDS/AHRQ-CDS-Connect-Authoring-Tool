@@ -12,7 +12,7 @@ const authoringToolExports = [
   { name: 'FHIRHelpers', version: '4.0.0' }
 ];
 
-const singularReturnTypeMap = {
+const singularTypeMap = {
   'Boolean': 'boolean',
   'Code': 'system_code',
   'Concept': 'system_concept',
@@ -35,7 +35,7 @@ const singularReturnTypeMap = {
   'Any': 'any'
 };
 
-const listReturnTypeMap = {
+const listTypeMap = {
   'Observation': 'list_of_observations',
   'Condition': 'list_of_conditions',
   'MedicationStatement': 'list_of_medication_statements',
@@ -55,30 +55,50 @@ const listReturnTypeMap = {
   'Decimal': 'list_of_decimals',
   'Quantity': 'list_of_system_quantities',
   'String': 'list_of_strings',
-  'Time': 'list_of_times',
-}
+  'Time': 'list_of_times'
+};
 
-const intervalReturnTypeMap = {
+const intervalTypeMap = {
   'Integer': 'interval_of_integer',
   'DateTime': 'interval_of_datetime',
   'Decimal': 'interval_of_decimal',
   'Quantity': 'interval_of_quantity'
-}
+};
 
-const getTypeFromELMString = (string) => string.substring(string.indexOf('}') + 1);
+const getTypeFromELMString = (string) => {
+  const namespace = string.split('}')[0].substring(1);
+  const elmType = string.substring(string.indexOf('}') + 1);
+  const typesFromFHIR = [
+    'Observation',
+    'Condition',
+    'MedicationStatement',
+    'MedicationOrder',
+    'MedicationRequest',
+    'Procedure',
+    'AllergyIntolerance',
+    'Encounter',
+    'Immunization',
+    'Device'
+  ];
+  const isSystem = namespace === 'urn:hl7-org:elm-types:r1';
+  const isFHIR = namespace === 'http://hl7.org/fhir';
+  const isValidType = (isSystem || (isFHIR && typesFromFHIR.includes(elmType)));
+  return { elmType, isValidType };
+}
 
 const areChoicesKnownTypes = (choices) => {
   let allChoicesKnown = true;
   const typesOfChoices = [];
   choices.forEach((choice) => {
     if (choice.type === 'NamedTypeSpecifier') {
-      const returnTypeOfChoice = getTypeFromELMString(choice.name);
-      const convertedReturnType = singularReturnTypeMap[returnTypeOfChoice];
-      if (!convertedReturnType) {
+      const { elmType, isValidType } = getTypeFromELMString(choice.name);
+      const convertedType = isValidType ? singularTypeMap[elmType] : null;
+      if (!convertedType) {
         allChoicesKnown = false;
       }
-      let typeToDisplay = convertedReturnType ? convertedReturnType : returnTypeOfChoice;
-      if (returnTypeOfChoice === 'MedicationOrder') typeToDisplay = 'Medication Order';
+      let typeToDisplay = convertedType ? convertedType : elmType;
+      if (elmType === 'MedicationRequest') typeToDisplay = 'Medication Request';
+      if (elmType === 'MedicationOrder') typeToDisplay = 'Medication Order';
       typesOfChoices.push(_.startCase(typeToDisplay));
     } else {
       // Default to marking as unknown.
@@ -89,86 +109,108 @@ const areChoicesKnownTypes = (choices) => {
   return { allChoicesKnown, typesOfChoices };
 }
 
-function mapReturnTypes(definitions) {
+function calculateType(definition) {
+  let elmType, elmDisplay, isValidType;
+
+  if (definition.resultTypeName || definition.operandType) {
+    ({ elmType, isValidType } = getTypeFromELMString(definition.resultTypeName || definition.operandType));
+    const convertedType = isValidType ? singularTypeMap[elmType] : null;
+    if (!convertedType) elmDisplay = `Other (${elmType})`;
+    if (elmType === 'MedicationRequest') elmDisplay = 'Medication Request';
+    if (elmType === 'MedicationOrder') elmDisplay = 'Medication Order';
+    elmType = convertedType ? convertedType : 'other';
+  } else if (definition.resultTypeSpecifier || definition.operandTypeSpecifier) {
+    const typeSpecifier = definition.resultTypeSpecifier || definition.operandTypeSpecifier;
+    switch (typeSpecifier.type) {
+      case 'NamedTypeSpecifier': {
+        ({ elmType, isValidType } = getTypeFromELMString(typeSpecifier.name));
+        const convertedType = isValidType ? singularTypeMap[elmType] : null;
+        if (!convertedType) elmDisplay = `Other (${elmType})`;
+        if (elmType === 'MedicationRequest') elmDisplay = 'Medication Request';
+        if (elmType === 'MedicationOrder') elmDisplay = 'Medication Order';
+        elmType = convertedType ? convertedType : 'other';
+        break;
+      }
+      case 'IntervalTypeSpecifier': {
+        ({ elmType, isValidType } = getTypeFromELMString(typeSpecifier.pointType.name));
+        const convertedType = isValidType ? intervalTypeMap[elmType] : null;
+        if (!convertedType) elmDisplay = `Interval of Others (${elmType})`;
+        elmType = convertedType ? convertedType : 'interval_of_other';
+        break;
+      }
+      case 'ListTypeSpecifier': {
+        if (typeSpecifier.elementType.type === 'ChoiceTypeSpecifier') {
+          const { allChoicesKnown, typesOfChoices } = areChoicesKnownTypes(typeSpecifier.elementType.choice);
+          elmType = allChoicesKnown ? 'list_of_any' : 'list_of_others';
+          if (!allChoicesKnown) elmDisplay = `List of Others (${typesOfChoices.join(', ')})`;
+          else elmDisplay = `List of Any (${typesOfChoices.join(', ')})`;
+        } else if (typeSpecifier.elementType.type === 'TupleTypeSpecifier') {
+          elmType = 'list_of_others';
+          elmDisplay = 'List of Others (Tuple)';
+        } else if (typeSpecifier.elementType.type === 'NamedTypeSpecifier') {
+          ({ elmType, isValidType } = getTypeFromELMString(typeSpecifier.elementType.name));
+          const convertedType = isValidType ? listTypeMap[elmType] : null;
+          if (!convertedType) elmDisplay = `List of Others (${elmType})`;
+          if (elmType === 'MedicationRequest') elmDisplay = 'List of Medication Requests';
+          if (elmType === 'MedicationOrder') elmDisplay = 'List of Medication Orders';
+          elmType = convertedType ? convertedType : 'list_of_others';
+        } else if (typeSpecifier.elementType.type === 'ListTypeSpecifier') {
+          elmType = 'list_of_others';
+          elmDisplay = 'List of Lists';
+        } else if (typeSpecifier.elementType.type === 'IntervalTypeSpecifier') {
+          elmType = 'list_of_others';
+          elmDisplay = 'List of Intervals';
+        } else {
+          elmType = 'list_of_others';
+          elmDisplay = 'List of Others (unknown)';
+        }
+        break;
+      }
+      case 'TupleTypeSpecifier': {
+        elmType = 'other';
+        elmDisplay = 'Other (Tuple)';
+        break;
+      }
+      case 'ChoiceTypeSpecifier': {
+        const { allChoicesKnown, typesOfChoices } = areChoicesKnownTypes(typeSpecifier.choice);
+        elmType = allChoicesKnown ? 'any' : 'other';
+        if (!allChoicesKnown) elmDisplay = `Other (Choice of ${typesOfChoices.join(', ')})`;
+        break;
+      }
+      default: {
+        elmType = 'other';
+        elmDisplay = 'Other (unknown)';
+        break;
+      }
+    }
+  } else {
+    elmType = 'other';
+    elmDisplay = 'Other (unknown)';
+  }
+
+  return { elmType, elmDisplay };
+}
+
+function mapTypes(definitions) {
   const mappedDefinitions = definitions;
   mappedDefinitions.map(definition => {
-    let elmReturnType, elmDisplay;
-
-    if (definition.resultTypeName) {
-      elmReturnType = getTypeFromELMString(definition.resultTypeName);
-      const convertedReturnType = singularReturnTypeMap[elmReturnType];
-      if (!convertedReturnType) elmDisplay = `Other (${elmReturnType})`;
-      if (elmReturnType === 'MedicationOrder') elmDisplay = 'Medication Order';
-      elmReturnType = convertedReturnType ? convertedReturnType : 'other';
-    } else if (definition.resultTypeSpecifier) {
-      const typeSpecifier = definition.resultTypeSpecifier;
-      switch (typeSpecifier.type) {
-        case 'NamedTypeSpecifier': {
-          elmReturnType = getTypeFromELMString(typeSpecifier.name);
-          const convertedReturnType = singularReturnTypeMap[elmReturnType];
-          if (!convertedReturnType) elmDisplay = `Other (${elmReturnType})`;
-          if (elmReturnType === 'MedicationOrder') elmDisplay = 'Medication Order';
-          elmReturnType = convertedReturnType ? convertedReturnType : 'other';
-          break;
-        }
-        case 'IntervalTypeSpecifier': {
-          elmReturnType = getTypeFromELMString(typeSpecifier.pointType.name);
-          const convertedReturnType = intervalReturnTypeMap[elmReturnType];
-          if (!convertedReturnType) elmDisplay = `Interval of Others (${elmReturnType})`;
-          elmReturnType = convertedReturnType ? convertedReturnType : 'interval_of_other';
-          break;
-        }
-        case 'ListTypeSpecifier': {
-          if (typeSpecifier.elementType.type === 'ChoiceTypeSpecifier') {
-            const { allChoicesKnown, typesOfChoices } = areChoicesKnownTypes(typeSpecifier.elementType.choice);
-            elmReturnType = allChoicesKnown ? 'list_of_any' : 'list_of_others';
-            if (!allChoicesKnown) elmDisplay = `List of Others (${typesOfChoices.join(', ')})`;
-            else elmDisplay = `List of Any (${typesOfChoices.join(', ')})`;
-          } else if (typeSpecifier.elementType.type === 'TupleTypeSpecifier') {
-            elmReturnType = 'list_of_others';
-            elmDisplay = 'List of Others (Tuple)';
-          } else if (typeSpecifier.elementType.type === 'NamedTypeSpecifier') {
-            elmReturnType = getTypeFromELMString(typeSpecifier.elementType.name);
-            const convertedReturnType = listReturnTypeMap[elmReturnType];
-            if (!convertedReturnType) elmDisplay = `List of Others (${elmReturnType})`;
-            if (elmReturnType === 'MedicationRequest') elmDisplay = 'List of Medication Requests';
-            elmReturnType = convertedReturnType ? convertedReturnType : 'list_of_others';
-          } else if (typeSpecifier.elementType.type === 'ListTypeSpecifier') {
-            elmReturnType = 'list_of_others';
-            elmDisplay = 'List of Lists';
-          } else if (typeSpecifier.elementType.type === 'IntervalTypeSpecifier') {
-            elmReturnType = 'list_of_others';
-            elmDisplay = 'List of Intervals';
-          } else {
-            elmReturnType = 'list_of_others';
-            elmDisplay = 'List of Others (unknown)';
-          }
-          break;
-        }
-        case 'TupleTypeSpecifier': {
-          elmReturnType = 'other';
-          elmDisplay = 'Other (Tuple)';
-          break;
-        }
-        case 'ChoiceTypeSpecifier': {
-          const { allChoicesKnown, typesOfChoices } = areChoicesKnownTypes(typeSpecifier.choice);
-          elmReturnType = allChoicesKnown ? 'any' : 'other';
-          if (!allChoicesKnown) elmDisplay = `Other (Choice of ${typesOfChoices.join(', ')})`;
-          break;
-        }
-        default: {
-          elmReturnType = 'other';
-          elmDisplay = 'Other (unknown)';
-          break;
-        }
-      }
-    } else {
-      elmReturnType = 'other';
-      elmDisplay = 'Other (unknown)';
-    }
-
-    definition.calculatedReturnType = elmReturnType || 'other';
+    const { elmType, elmDisplay } = calculateType(definition);
+    definition.calculatedReturnType = elmType || 'other';
     definition.displayReturnType = elmDisplay;
+
+    if (definition.operand && definition.operand.length > 0) {
+      const argumentTypes = [];
+      definition.operand.forEach(operand => {
+        const { elmType, elmDisplay } = calculateType(operand);
+        argumentTypes.push({ calculated: (elmType || 'other'), display: elmDisplay });
+      });
+      definition.argumentTypes = argumentTypes;
+      // The inputTypes should only be equivalent to the input type of the first argument
+      // so that external CQL modifiers can use the element return type as this input
+      definition.inputTypes = (definition.argumentTypes.length > 0)
+        ? [definition.argumentTypes[0].calculated]
+        : [];
+    }
   });
   return mappedDefinitions;
 }
@@ -200,41 +242,120 @@ function getCurrentFHIRVersion(libraries) {
   return currentFHIRVersion;
 }
 
-const collectLibraryElementsFromElement = (element, libraryName, libraryElements) => {
+const collectLibraryElementsFromElement = (element, libraryName, libraryElements, modifierElements) => {
+  // Collect external CQL elements associated with this library
   if (element.type === 'externalCqlElement') {
     const referenceField = element.fields.find(f => f.id === 'externalCqlReference');
     if (_.get(referenceField, 'value.library') === libraryName) libraryElements.push(element);
   }
+
+  // Collect any elements that have external CQL functions associated with this library.
+  if (element.modifiers) {
+    element.modifiers.forEach((modifier) => {
+      if (modifier.type === 'ExternalModifier' && modifier.libraryName === libraryName) modifierElements.push(element);
+    });
+  }
 }
 
-const collectLibraryElementsFromTree = (element, libraryName, libraryElements) => {
+const collectLibraryElementsFromTree = (element, libraryName, libraryElements, modifierElements) => {
   let children = element.childInstances ? element.childInstances : [];
   children = children.map((child) => {
     if (child.childInstances) {
-      return collectLibraryElementsFromTree(child, libraryName, libraryElements);
+      return collectLibraryElementsFromTree(child, libraryName, libraryElements, modifierElements);
     } else {
-      return collectLibraryElementsFromElement(child, libraryName, libraryElements);
+      return collectLibraryElementsFromElement(child, libraryName, libraryElements, modifierElements);
     }
   });
   element.childInstances = children;
   return element;
 }
 
-const getArtifactLibraryElements = (artifact, libraryName) => {
+const getExternalLibraryAndModifierElements = (artifact, libraryName) => {
   const libraryElements = [];
-  collectLibraryElementsFromTree(artifact.expTreeInclude, libraryName, libraryElements);
-  collectLibraryElementsFromTree(artifact.expTreeExclude, libraryName, libraryElements);
+  const modifierElements = [];
+  collectLibraryElementsFromTree(artifact.expTreeInclude, libraryName, libraryElements, modifierElements);
+  collectLibraryElementsFromTree(artifact.expTreeExclude, libraryName, libraryElements, modifierElements);
   artifact.subpopulations.forEach((subpopulation) => {
-    if (!subpopulation.special) collectLibraryElementsFromTree(subpopulation, libraryName, libraryElements);
+    if (!subpopulation.special) {
+      collectLibraryElementsFromTree(subpopulation, libraryName, libraryElements, modifierElements);
+    }
   });
   artifact.baseElements.forEach((baseElement) => {
     if (baseElement.childInstances) {
-      collectLibraryElementsFromTree(baseElement, libraryName, libraryElements);
+      collectLibraryElementsFromTree(baseElement, libraryName, libraryElements, modifierElements);
     } else {
-      collectLibraryElementsFromElement(baseElement, libraryName, libraryElements);
+      collectLibraryElementsFromElement(baseElement, libraryName, libraryElements, modifierElements);
     }
   });
-  return libraryElements;
+  return { libraryElements, modifierElements };
+}
+
+const shouldLibraryBeUpdated = (library, artifact) => {
+  const statementReturnTypes = {};
+  const elementReturnTypes = {};
+  const statementArgs = {};
+  const elementArgs = {};
+  // In this situation, definitions and parameters behave identically, so they are bucketed together
+  library.details.definitions.concat(library.details.parameters).forEach(def => {
+    statementReturnTypes[def.name] = def.calculatedReturnType;
+  });
+
+  // The prefix for functions is added to delineate names from definitions, since both can have the
+  // same name legally in CQL
+  library.details.functions.forEach(func => {
+    statementReturnTypes[`func:${func.name}`] = func.calculatedReturnType;
+    statementArgs[`func:${func.name}`] = func.operand;
+  });
+
+  const { libraryElements, modifierElements } = getExternalLibraryAndModifierElements(artifact, library.name);
+
+  // It's possible in the following calculation for elementReturnTypes and elementArgs that some of the fields
+  // may be overwritten, but this is okay because all instances that we collect will be identical within the
+  // same artifact
+  libraryElements.forEach(el => {
+    const referenceField = el.fields.find(f => f.id === 'externalCqlReference');
+    const referenceFieldValueElement = referenceField.value.element;
+    if (el.template === 'GenericFunction') {
+      elementReturnTypes[`func:${referenceFieldValueElement}`] = el.returnType;
+      elementArgs[`func:${referenceFieldValueElement}`] = referenceField.value.arguments;
+    } else {
+      elementReturnTypes[referenceFieldValueElement] = el.returnType;
+    }
+  });
+  modifierElements.forEach(el => {
+    el.modifiers.forEach(mod => {
+      if (mod.type === 'ExternalModifier') {
+        elementReturnTypes[`func:${mod.functionName}`] = mod.returnType;
+        elementArgs[`func:${mod.functionName}`] = mod.arguments;
+      }
+    });
+  });
+
+  // If a library to update has contents whose names, return types, or args have changed, and the
+  // artifact is using these contents, we cannot update it and we shouldn't make any upload/update
+  let returnTypesMatch = true;
+  let argsMatch = true;
+  const deleteNestedMetadataProps = (obj) => {
+    for (const prop in obj) {
+        // These fields are not useful for comparison and can cause false differences between
+        // data since they are only for metadata
+        if (['annotation', 'localId', 'locator'].includes(prop)) {
+          delete obj[prop];
+        } else if (typeof obj[prop] === 'object') {
+          deleteNestedMetadataProps(obj[prop]);
+        }
+    }
+    return obj;
+  }
+
+  Object.keys(elementReturnTypes).forEach((key) => {
+    returnTypesMatch = returnTypesMatch && (statementReturnTypes[key] === elementReturnTypes[key]);
+    const statementArgsToMatch = deleteNestedMetadataProps(_.cloneDeep(statementArgs[key]));
+    const elementArgsToMatch = deleteNestedMetadataProps(_.cloneDeep(elementArgs[key]));
+    argsMatch = argsMatch && (_.isEqual(statementArgsToMatch, elementArgsToMatch));
+  });
+
+  return returnTypesMatch && argsMatch;
 }
 
 module.exports = {
@@ -315,9 +436,9 @@ function parseELMFiles(elmFiles, artifactId, userId, files) {
     });
     const defineStatements = elmDefinitions.filter(def => def.type !== 'FunctionDef');
     const functionStatements = elmDefinitions.filter(def => def.type === 'FunctionDef');
-    details.parameters = mapReturnTypes(elmParameters);
-    details.definitions = mapReturnTypes(defineStatements);
-    details.functions = mapReturnTypes(functionStatements);
+    details.parameters = mapTypes(elmParameters);
+    details.definitions = mapTypes(defineStatements);
+    details.functions = mapTypes(functionStatements);
     const fileDependencies = _.get(library, 'includes.def', []);
     details.dependencies = fileDependencies;
     elmResults.details = details;
@@ -436,21 +557,8 @@ function singlePost(req, res) {
                   // If a library to update has contents whose names or return types have changed, and the
                   // artifact is using these contents, we cannot update it and we shouldn't make any upload/update
                   let shouldUpdate = true;
-
                   for (const library of librariesToUpdate) {
-                    const definitionReturnTypes = {};
-                    const elementReturnTypes = {};
-                    library.details.definitions.forEach(def => {
-                      definitionReturnTypes[def.name] = def.calculatedReturnType;
-                    });
-                    const libraryElements = getArtifactLibraryElements(artifact, library.name);
-                    libraryElements.forEach(el => {
-                      const nameField = el.fields.find(f => f.id === 'element_name');
-                      elementReturnTypes[_.get(nameField, 'value')] = el.returnType;
-                    });
-                    Object.keys(elementReturnTypes).forEach((key) => {
-                      shouldUpdate = shouldUpdate && (definitionReturnTypes[key] === elementReturnTypes[key]);
-                    });
+                    shouldUpdate = shouldLibraryBeUpdated(library, artifact);
                     if (!shouldUpdate) break;
                   }
 
@@ -595,25 +703,7 @@ function singlePost(req, res) {
               if (dupVersion) {
                 res.status(200).send('Library with identical name and version already exists.');
               } else {
-                const definitionReturnTypes = {};
-                const elementReturnTypes = {};
-                elmResult.details.definitions.forEach(def => {
-                  definitionReturnTypes[def.name] = def.calculatedReturnType;
-                });
-                const libraryElements = getArtifactLibraryElements(artifact, elmResult.name);
-                libraryElements.forEach(el => {
-                  const nameField = el.fields.find(f => f.id === 'element_name');
-                  elementReturnTypes[_.get(nameField, 'value')] = el.returnType;
-                });
-
-                // If the library to update has contents whose names or return types have changed, and the
-                // artifact is using these contents, we cannot update it
-                let shouldUpdate = true;
-                Object.keys(elementReturnTypes).forEach((key) => {
-                  shouldUpdate = shouldUpdate && (definitionReturnTypes[key] === elementReturnTypes[key]);
-                });
-
-                if (shouldUpdate) {
+                if (shouldLibraryBeUpdated(elmResult, artifact)) {
                   CQLLibrary.update({ user: req.user.uid, name: elmResult.name }, elmResult,
                     (error) => {
                       const message = `Library ${elmResult.name} successfully updated to version ${elmResult.version}.`;

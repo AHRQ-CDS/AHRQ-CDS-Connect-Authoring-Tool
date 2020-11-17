@@ -69,7 +69,6 @@ export default class ExternalCqlTable extends Component {
 
   renderTableRow = (externalCqlLibrary) => {
     const { librariesInUse } = this.props;
-
     const libName = changeToCase(externalCqlLibrary.name, 'paramCase');
     const libVersion = externalCqlLibrary.version;
     const currentLibraryParents =

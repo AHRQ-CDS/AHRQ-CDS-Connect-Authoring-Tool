@@ -7,12 +7,12 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faPencilAlt, faDownload, faSave, faAlignRight } from '@fortawesome/free-solid-svg-icons';
+import { faPencilAlt, faDownload, faSave, faAlignRight, faBook } from '@fortawesome/free-solid-svg-icons';
 import _ from 'lodash';
 
 import loadTemplates from '../actions/templates';
 import loadValueSets from '../actions/value_sets';
-import loadConversionFunctions from '../actions/modifiers';
+import { loadConversionFunctions } from '../actions/modifiers';
 import {
   setStatusMessage, downloadArtifact, saveArtifact, loadArtifact, updateArtifact, initializeArtifact,
   updateAndSaveArtifact, publishArtifact, clearArtifactValidationWarnings
@@ -355,7 +355,8 @@ export class Builder extends Component {
     const {
       artifact, templates, valueSets,
       vsacStatus, vsacStatusText,
-      isRetrievingDetails, vsacDetailsCodes, vsacDetailsCodesError, conversionFunctions,
+      isRetrievingDetails, vsacDetailsCodes, vsacDetailsCodesError,
+      modifierMap, modifiersByInputType, isLoadingModifiers, conversionFunctions,
       isValidatingCode, isValidCode, codeData
     } = this.props;
     const namedParameters = _.filter(artifact.parameters, p => (!_.isNull(p.name) && p.name.length));
@@ -380,6 +381,9 @@ export class Builder extends Component {
           baseElements={artifact.baseElements}
           externalCqlList={this.props.externalCqlList}
           loadExternalCqlList={this.props.loadExternalCqlList}
+          modifierMap={modifierMap}
+          modifiersByInputType={modifiersByInputType}
+          isLoadingModifiers={isLoadingModifiers}
           conversionFunctions={conversionFunctions}
           instanceNames={this.props.names}
           scrollToElement={this.scrollToElement}
@@ -517,7 +521,9 @@ export class Builder extends Component {
   }
 
   render() {
-    const { artifact, templates, conversionFunctions } = this.props;
+    const {
+      artifact, templates, modifierMap, modifiersByInputType, isLoadingModifiers, conversionFunctions
+    } = this.props;
     let namedParameters = [];
     if (artifact) {
       namedParameters = _.filter(artifact.parameters, p => (!_.isNull(p.name) && p.name.length));
@@ -548,7 +554,9 @@ export class Builder extends Component {
                 <Tab>Recommendations</Tab>
                 <Tab>Parameters</Tab>
                 <Tab>Handle Errors</Tab>
-                <Tab>External CQL</Tab>
+                <Tab>
+                  <FontAwesomeIcon icon={faBook} /> External CQL
+                </Tab>
               </TabList>
 
               <div className="tab-panel-container">
@@ -596,6 +604,9 @@ export class Builder extends Component {
                     templates={templates}
                     checkSubpopulationUsage={this.checkSubpopulationUsage}
                     updateRecsSubpop={this.updateRecsSubpop}
+                    modifierMap={modifierMap}
+                    modifiersByInputType={modifiersByInputType}
+                    isLoadingModifiers={isLoadingModifiers}
                     conversionFunctions={conversionFunctions}
                     instanceNames={this.props.names}
                     scrollToElement={this.scrollToElement}
@@ -640,6 +651,9 @@ export class Builder extends Component {
                     updateBaseElementLists={this.updateSubpopulations}
                     templates={templates}
                     valueSets={this.props.valueSets}
+                    modifierMap={modifierMap}
+                    modifiersByInputType={modifiersByInputType}
+                    isLoadingModifiers={isLoadingModifiers}
                     conversionFunctions={conversionFunctions}
                     instanceNames={this.props.names}
                     baseElements={artifact.baseElements}
@@ -790,6 +804,9 @@ Builder.propTypes = {
   downloadArtifact: PropTypes.func.isRequired,
   saveArtifact: PropTypes.func.isRequired,
   updateAndSaveArtifact: PropTypes.func.isRequired,
+  modifierMap: PropTypes.object.isRequired,
+  modifiersByInputType: PropTypes.object.isRequired,
+  isLoadingModifiers: PropTypes.bool,
   conversionFunctions: PropTypes.array,
   validateCode: PropTypes.func.isRequired,
   resetCodeValidation: PropTypes.func.isRequired,
@@ -867,6 +884,9 @@ function mapStateToProps(state) {
     vsacDetailsCodes: state.vsac.detailsCodes,
     vsacDetailsCodesError: state.vsac.detailsCodesErrorMessage,
     vsacFHIRCredentials: { username: state.vsac.username, password: state.vsac.password },
+    modifierMap: state.modifiers.modifierMap,
+    modifiersByInputType: state.modifiers.modifiersByInputType,
+    isLoadingModifiers: state.modifiers.loadModifiers.isLoadingModifiers,
     conversionFunctions: state.modifiers.conversionFunctions,
     isLoggingOut: state.auth.isLoggingOut,
     externalCqlList: state.externalCQL.externalCqlList,

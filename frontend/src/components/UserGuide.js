@@ -14,7 +14,8 @@ import {
   faChevronRight,
   faChevronDown,
   faCheck,
-  faTimes
+  faTimes,
+  faBook
 } from '@fortawesome/free-solid-svg-icons';
 import _ from 'lodash';
 
@@ -368,7 +369,8 @@ export default class UserGuide extends Component {
                       <li><strong>Device</strong>: Instances of the FHIR Device resource type</li>
                       <li><strong>Encounter</strong>: Instances of the FHIR Encounter resource type</li>
                       <li>
-                        <strong>External CQL</strong>: Named CQL definitions from CQL files uploaded in the "External CQL" tab
+                        <strong>External CQL</strong>: Named CQL definitions, parameters, and functions from CQL files
+                        uploaded in the "External CQL" tab
                       </li>
                       <li><strong>Immunization</strong>: Instances of the FHIR Immunization resource type</li>
                       <li><strong>Medication Statement</strong>: Instances of the FHIR MedicationStatement resource type</li>
@@ -697,7 +699,9 @@ export default class UserGuide extends Component {
                   </div>
                   <div>
                     To see the full set of expression modifiers applicable to each element and/or return type, click on the
-                    "Data Types" tab on the <a href="documentation">Documentation</a> page.
+                    "Data Types" tab on the <a href="documentation">Documentation</a> page. The "External CQL Tab" section of this
+                    documentation details the process to add additional expression modifiers to use in an artifact in the
+                    CDS Authoring Tool.
                   </div>
                 </div>
               </div>
@@ -1322,8 +1326,7 @@ export default class UserGuide extends Component {
                   Authors can use the "External CQL" tab to upload CQL files that contain logic that the author wants to use in
                   the current CDS artifact. This is useful when you want to re-use existing logic rather than re-write it or
                   when you want to use CQL logic that the CDS Authoring Tool is not capable of producing (for example, complex
-                  mathematical operations or timing relationships). Currently, the CDS Authoring Tool can re-use definitions from
-                  external CQL but cannot re-use functions from external CQL.
+                  mathematical operations or timing relationships).
                 </div>
                 <div>
                   <img alt="" src={screenshotUrl('External_CQL')}
@@ -1382,7 +1385,8 @@ export default class UserGuide extends Component {
                     To view a summary of the contents of the external CQL library, click on the eye icon{' '}
                     <FontAwesomeIcon icon={faEye} aria-hidden="true" />
                     . This will display a modal window with high-level metadata about the library and a listing of the library's
-                    parameter's, functions, and definitions. For each of these, the name and return type are shown.
+                    definitions, parameters, and functions. For each of these, the name and return type are shown. For functions,
+                    the list of arguments is also shown.
                   </div>
                   <div>
                     <img alt="" src={screenshotUrl('External_CQL_Details')}
@@ -1391,7 +1395,7 @@ export default class UserGuide extends Component {
                   <div>
                     To delete an external CQL library, click its "Delete" button. This will open a modal dialog asking you to
                     confirm that you would like to delete the external CQL file. After clicking the "Delete" button to confirm,
-                    the external CQL library will be permanently deleted.  This cannot be undone.
+                    the external CQL library will be permanently deleted. This cannot be undone.
                   </div>
                   <div>
                     <img alt="" src={screenshotUrl('Delete_External_CQL')}
@@ -1408,23 +1412,24 @@ export default class UserGuide extends Component {
                 <div className="h4-wrapper">
                   <h4 id="Using_External_CQL_Elements">3.12.3 Using External CQL Elements</h4>
                   <div>
-                    Authors can reference and use parameters and definitions from external CQL libraries in the Inclusions tab,
-                    Exclusions tab, Subpopulations tab, and Base Elements tab. Currently, the CDS Authoring Tool does not support
-                    using functions from external CQL libraries. To use an external CQL element, select the "External CQL" type
-                    in the element type dropdown in place an element can be created. A second dropdown will appear allowing you
-                    to choose the External CQL library that contains the definition you wish to use. After selecting a library,
-                    a third dropdown will appear allowing you to choose the specific parameter or definition to use.
+                    Authors can reference and use definitions, parameters, and functions from external CQL libraries in the
+                    Inclusions tab, Exclusions tab, Subpopulations tab, and Base Elements tab. To use an external CQL element,
+                    select the "External CQL" type in the element type dropdown in a place an element can be created. A second
+                    dropdown will appear allowing you to choose the External CQL library that contains the definition, parameter,
+                    or function you wish to use. After selecting a library, a third dropdown will appear allowing you to choose
+                    the specific definition, parameter, or function to use. Currently, only functions that do not have input
+                    arguments are usable directly through elements in this way.
                   </div>
                   <div>
                     <img alt="" src={screenshotUrl('Using_External_CQL')}
                       className="img-fluid img-thumbnail rounded mx-auto d-block" />
                   </div>
                   <div>
-                    After selecting the external CQL parameter or definition, it will be reflectect in the element's expression
-                    phrase and listed in the element's metadata using the label "External CQL Element". If you wish (or if
-                    required), you can add expression modifiers to the element in much the same way as you would any element.
-                    In this case, the expression modifiers added to the use of the external CQL element will not affect the
-                    original definition of the external CQL element.
+                    After selecting the external CQL definition, parameter, or function, it will be reflected in the element's
+                    expression phrase and listed in the element's metadata using the label "External CQL Element". If you wish
+                    (or if required), you can add expression modifiers to the element in much the same way as you would any
+                    element. In this case, the expression modifiers added to the use of the external CQL element will not affect
+                    the original definition of the external CQL element.
                   </div>
                   <div>
                     <img alt="" src={screenshotUrl('External_CQL_Use')}
@@ -1432,10 +1437,51 @@ export default class UserGuide extends Component {
                   </div>
                   <div>
                     Note that when an external CQL element is used, it prevents the external CQL library from being deleted from
-                    the artifact. To delete the external CQL library, you must first delete its use. In addition, the first time
-                    you use external CQL in an artifact, that artifact will become locked into the same version of FHIR that the
-                    external CQL uses. After this, you cannot download the artifact as other versions of FHIR nor can you test
-                    the artifact against synthetic patient data using another version of FHIR.
+                    the artifact. To delete the external CQL library, you must first delete its use. In addition, when an external
+                    CQL library is uploaded in an artifact, that artifact will become locked into the same version of FHIR that
+                    the external CQL uses. After this, you cannot download the artifact as other versions of FHIR, you cannot test
+                    the artifact against synthetic patient data using another version of FHIR, and you cannot upload additional
+                    external CQL using a different version of FHIR.
+                  </div>
+                </div>
+
+                <div className="h4-wrapper">
+                  <h4 id="Using_External_CQL_Expression_Modifiers">3.12.4 Using External CQL Expression Modifiers</h4>
+                  <div>
+                    In certain situations, authors can use functions from external CQL libraries as expression modifiers on
+                    elements in an artifact. An external function can be used to modify an element in this way if all of the
+                    following conditions are met:
+                    <ul>
+                      <li>The function has at least one argument.</li>
+                      <li>The first argument of the function matches the return type of the element.</li>
+                      <li>Each remaining argument of the function matches one of the following types: Boolean, Code, Concept,
+                      Integer, DateTime, Decimal, Quantity, String, Time, Interval&lt;Integer&gt;, Interval&lt;DateTime&gt;,
+                      Interval&lt;Decimal&gt;, and Interval&lt;Quantity&gt;.</li>
+                    </ul>
+                    If these conditions are met, the expression modifier will appear just like any other after selecting the
+                    "Add Expression" button. The expression will be labeled with the function's name and the library's name,
+                    as well as a book icon{' '}<FontAwesomeIcon icon={faBook} aria-hidden="true" />{' '} to indicate that it is
+                    from an external CQL library.
+                  </div>
+                  <div>
+                    <img alt="" src={screenshotUrl('External_CQL_Modifier')}
+                      className="img-fluid img-thumbnail rounded mx-auto d-block" />
+                  </div>
+                  <div>
+                    Once an external CQL expression modifier is selected, it is displayed on the element just like any other
+                    expression modifier. The return type of the element will now be the return type of the external CQL function.
+                    If the external CQL function only has one argument, then the expression modifier is complete and no further
+                    action is required because this argument will be populated by the existing element. If the function has
+                    additional arguments, then the expression modifier will have an editor to manually input a value for each
+                    of these additional arguments.
+                  </div>
+                  <div>
+                    <img alt="" src={screenshotUrl('External_CQL_Modifier_Use')}
+                      className="img-fluid img-thumbnail rounded mx-auto d-block" />
+                  </div>
+                  <div>
+                    Similarly to when an external CQL element is used, when an external CQL expression modifier is used, its
+                    corresponding external CQL library cannot be deleted until the modifier is removed.
                   </div>
                 </div>
               </div>

@@ -361,6 +361,9 @@ export default class ConjunctionGroup extends Component {
               externalCqlList={this.props.externalCqlList}
               loadExternalCqlList={this.props.loadExternalCqlList}
               getPath={this.getChildsPath}
+              modifierMap={this.props.modifierMap}
+              modifiersByInputType={this.props.modifiersByInputType}
+              isLoadingModifiers={this.props.isLoadingModifiers}
               conversionFunctions={this.props.conversionFunctions}
               instanceNames={this.props.instanceNames}
               subPopulationIndex={this.props.subPopulationIndex}
@@ -415,6 +418,9 @@ export default class ConjunctionGroup extends Component {
           deleteInstance={this.props.deleteInstance}
           subpopulationIndex={this.props.subPopulationIndex}
           renderIndentButtons={this.renderIndentButtons}
+          modifierMap={this.props.modifierMap}
+          modifiersByInputType={this.props.modifiersByInputType}
+          isLoadingModifiers={this.props.isLoadingModifiers}
           conversionFunctions={this.props.conversionFunctions}
           instanceNames={this.props.instanceNames}
           parameters={this.props.parameters}
@@ -509,6 +515,7 @@ ConjunctionGroup.propTypes = {
   getPath: requiredIf(PropTypes.func, props => !props.root), // path needed for children
   getVSDetails: PropTypes.func.isRequired,
   instanceNames: PropTypes.array.isRequired,
+  isLoadingModifiers: PropTypes.bool,
   isRetrievingDetails: PropTypes.bool.isRequired,
   isSearchingVSAC: PropTypes.bool.isRequired,
   isValidatingCode: PropTypes.bool.isRequired,
@@ -516,6 +523,8 @@ ConjunctionGroup.propTypes = {
   loadExternalCqlList: PropTypes.func.isRequired,
   loadValueSets: PropTypes.func.isRequired,
   loginVSACUser: PropTypes.func.isRequired,
+  modifierMap: PropTypes.object.isRequired,
+  modifiersByInputType: PropTypes.object.isRequired,
   options: PropTypes.string,
   resetCodeValidation: PropTypes.func.isRequired,
   root: PropTypes.bool.isRequired,

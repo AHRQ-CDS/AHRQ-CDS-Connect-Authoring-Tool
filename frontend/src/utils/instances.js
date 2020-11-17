@@ -3,7 +3,7 @@ import Validators from './validators';
 export function validateModifier(modifier) {
   let validationWarning = null;
 
-  if (modifier.validator) {
+  if (modifier && modifier.validator) {
     const validator = Validators[modifier.validator.type];
     const values = modifier.validator.fields.map(v => modifier.values && modifier.values[v]);
     const args = modifier.validator.args ? modifier.validator.args.map(v => modifier.values[v]) : [];

@@ -35,32 +35,37 @@ export default class ExternalCqlDetailsSection extends Component {
   );
 
   renderTable = (type, definitions) => (
-      <Table className="external-cql-details-section__table">
-        <thead>
-          <tr>
-            <th scope="col" className="details-table__tablecell">Name</th>
-            <th scope="col" className="details-table__tablecell">Return Type</th>
-          </tr>
-        </thead>
+    <Table className="external-cql-details-section__table">
+      <thead>
+        <tr>
+          <th scope="col" className="details-table__tablecell">Name</th>
+          {type === 'Functions' && <th scope="col" className="details-table__tablecell">Arguments</th>}
+          <th scope="col" className="details-table__tablecell">Return Type</th>
+        </tr>
+      </thead>
 
-        <tbody>
-          {definitions.map((definition, i) =>
-            <tr key={i}>
-              <td className="details-table__tablecell" data-th="Name">
-                <div>{definition.name}</div>
-              </td>
+      <tbody>
+        {definitions.map((definition, i) =>
+          <tr key={i}>
+            <td className="details-table__tablecell" data-th="Name">
+              <div>{definition.name}</div>
+            </td>
 
-              <td className="details-table__tablecell" data-th="Return Type">
-                <div>
-                  {definition.displayReturnType
-                    ? definition.displayReturnType
-                    : _.startCase(definition.calculatedReturnType)}
-                </div>
-              </td>
-            </tr>)}
-        </tbody>
-      </Table>
-  )
+            {type === 'Functions' && <td className="details-table__tablecell" data-th="Arguments">
+              <div>{definition.operand.map(op => op.name).join(' | ')}</div>
+            </td>}
+
+            <td className="details-table__tablecell" data-th="Return Type">
+              <div>
+                {definition.displayReturnType
+                  ? definition.displayReturnType
+                  : _.startCase(definition.calculatedReturnType)}
+              </div>
+            </td>
+          </tr>)}
+      </tbody>
+    </Table>
+  );
 
   render() {
     const { title, definitions } = this.props;

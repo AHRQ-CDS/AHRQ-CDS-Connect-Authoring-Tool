@@ -10,24 +10,12 @@ import _ from 'lodash';
 
 import StringField from './fields/StringField';
 import TextAreaField from './fields/TextAreaField';
-import BooleanEditor from './parameters/BooleanEditor';
-import CodeEditor from './parameters/CodeEditor';
-import IntegerEditor from './parameters/IntegerEditor';
-import DateTimeEditor from './parameters/DateTimeEditor';
-import DecimalEditor from './parameters/DecimalEditor';
-import QuantityEditor from './parameters/QuantityEditor';
-import StringEditor from './parameters/StringEditor';
-import TimeEditor from './parameters/TimeEditor';
-import IntervalOfIntegerEditor from './parameters/IntervalOfIntegerEditor';
-import IntervalOfDateTimeEditor from './parameters/IntervalOfDateTimeEditor';
-import IntervalOfDecimalEditor from './parameters/IntervalOfDecimalEditor';
-import IntervalOfQuantityEditor from './parameters/IntervalOfQuantityEditor';
+import Editor from './editors/Editor';
 import StyledSelect from '../elements/StyledSelect';
 
 import {
   doesParameterNeedUsageWarning,
-  parameterHasDuplicateName,
-  parameterIsIncompleteWarning
+  parameterHasDuplicateName
 } from '../../utils/warnings';
 
 export default class Parameter extends Component {
@@ -84,7 +72,7 @@ export default class Parameter extends Component {
   }
 
   renderParameter() {
-    const parameterProps = {
+    const editorProps = {
       id: `param-name-${this.props.index}`,
       name: this.props.name,
       type: this.props.type != null ? this.props.type : null,
@@ -96,10 +84,7 @@ export default class Parameter extends Component {
         type: this.props.type,
         comment: this.props.comment,
         value: (e != null ? e.value : null)
-      })
-    };
-
-    const codeEditorProps = {
+      }),
       vsacFHIRCredentials: this.props.vsacFHIRCredentials,
       loginVSACUser: this.props.loginVSACUser,
       setVSACAuthStatus: this.props.setVSACAuthStatus,
@@ -112,36 +97,7 @@ export default class Parameter extends Component {
       resetCodeValidation: this.props.resetCodeValidation
     };
 
-    switch (this.props.type) {
-      case 'boolean':
-        return <BooleanEditor {...parameterProps} />;
-      case 'system_code':
-        return <CodeEditor {...parameterProps} {...codeEditorProps} />;
-      case 'system_concept':
-        return <CodeEditor {...parameterProps} {...codeEditorProps} isConcept={true} />;
-      case 'integer':
-        return <IntegerEditor {...parameterProps} />;
-      case 'datetime':
-        return <DateTimeEditor {...parameterProps} />;
-      case 'decimal':
-        return <DecimalEditor {...parameterProps} />;
-      case 'system_quantity':
-        return <QuantityEditor {...parameterProps} />;
-      case 'string':
-        return <StringEditor {...parameterProps} />;
-      case 'time':
-        return <TimeEditor {...parameterProps} />;
-      case 'interval_of_integer':
-        return <IntervalOfIntegerEditor {...parameterProps} />;
-      case 'interval_of_datetime':
-        return <IntervalOfDateTimeEditor {...parameterProps} />;
-      case 'interval_of_decimal':
-        return <IntervalOfDecimalEditor {...parameterProps} />;
-      case 'interval_of_quantity':
-        return <IntervalOfQuantityEditor {...parameterProps} />;
-      default:
-        return null;
-    }
+    return <Editor {...editorProps} />;
   }
 
   renderCollapsed(id, index, name, type, parameterUsed, disabledClass, parameterNeedsWarning) {
@@ -272,9 +228,8 @@ export default class Parameter extends Component {
       this.props.getAllInstancesInAllTrees()
     );
 
-    const isIncompleteWarning = parameterIsIncompleteWarning(type, value);
     const parameterNeedsWarning
-      = doesHaveDuplicateName || doesHaveParameterUsageWarning || (isIncompleteWarning != null);
+      = doesHaveDuplicateName || doesHaveParameterUsageWarning;
     const typeLabel  = typeOptions.find(typeOption => typeOption.value === type).label;
 
     return (
@@ -312,12 +267,6 @@ export default class Parameter extends Component {
               </div>
             </div>
 
-            {isIncompleteWarning != null && !doesHaveDuplicateName && !doesHaveParameterUsageWarning &&
-              <div className="warning">
-                {`Warning: Default value is incomplete. ${isIncompleteWarning}`}
-              </div>
-            }
-
             {doesHaveDuplicateName && !doesHaveParameterUsageWarning &&
               <div className="warning">Warning: Name already in use. Choose another name.</div>
             }
@@ -336,10 +285,10 @@ export default class Parameter extends Component {
             }
 
             <div className="card-element__body">
-              <div className="parameter-field">
+              <div className="field parameter-field">
                 <div className="form__group">
                   <label htmlFor={`parameter-${index}`}>
-                    <div className="label">Parameter Type:</div>
+                    <div className="label editor-label">Parameter Type:</div>
 
                     <div className="input">
                       <StyledSelect

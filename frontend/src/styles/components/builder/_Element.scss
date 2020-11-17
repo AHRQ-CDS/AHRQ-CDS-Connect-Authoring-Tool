@@ -60,7 +60,10 @@
 
     > div { flex-grow: 1; }
 
-    &__deletebutton { text-align: right; }
+    &__deletebutton {
+      text-align: right;
+      align-self: flex-start;
+    }
 
     > .warning {
       flex-basis: 100%;
@@ -77,8 +80,6 @@
 
 .modifier__selection {
   .modifier__addbutton {
-    margin-bottom: 10px;
-
     @extend .primary-button;
   }
 }
@@ -123,11 +124,6 @@
   align-items: center;
   padding: 15px 0;
 
-  &__label {
-    flex: 1;
-    padding-right: 2em;
-  }
-
   &__value {
     flex: 4;
   }
@@ -138,12 +134,10 @@
 .applied-modifiers {
   &__info-expressions {
     display: flex;
-  }
 
-  &__label {
-    flex: 1;
-    padding-right: 2em;
-    margin-top: 20px;
+    .expressions-label {
+      margin-top: 10px;
+    }
   }
 
   .modifier__list {
@@ -162,10 +156,14 @@
     }
 
     .look-back {
-      align-items: center;
+      .look-back-group {
+        input {
+          margin-right: 1em;
+        }
 
-      label {
-        padding-right: 0.5rem;
+        label {
+          padding-right: 0.5rem;
+        }
       }
     }
 
@@ -186,7 +184,10 @@
   }
 }
 
-.modifier__button { margin-left: 10px; }
+.modifier__button {
+  margin-left: 10px;
+  margin-bottom: 10px;
+}
 
 .modifier__comparison__value { width: 6em; }
 

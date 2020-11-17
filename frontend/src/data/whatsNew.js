@@ -5,6 +5,21 @@ import React from 'react';
 const whatsNew = [
   {
     id: 1,
+    name: 'External CQL Functions',
+    ariaLabel: 'External CQL Functions',
+    image: `${process.env.PUBLIC_URL}/assets/images/whats-new-external-modifiers.png`,
+    description: (
+      <>
+        External CQL functions can now be used as expression modifiers on the elements
+        of an artifact. This allows CDS Authors to more easily and effectively extend
+        the functionality of the CDS Authoring Tool to suit their specific needs.
+      </>
+    ),
+    linkText: 'Documentation',
+    link: `${process.env.PUBLIC_URL}/documentation#Using_External_CQL_Expression_Modifiers`,
+  },
+  {
+    id: 2,
     name: (
       <>
         CPG on FHIR<sup>®</sup> Support
@@ -27,8 +42,9 @@ const whatsNew = [
     linkExternal: true,
   },
   {
-    id: 2,
+    id: 3,
     name: 'Common Functions',
+    ariaLabel: 'Common Functions',
     image: `${process.env.PUBLIC_URL}/assets/images/whats-new-common-functions.png`,
     description: (
       <>
@@ -39,8 +55,9 @@ const whatsNew = [
     ),
   },
   {
-    id: 3,
+    id: 4,
     name: 'Collapsible Comments',
+    ariaLabel: 'Collapsible Comments',
     image: `${process.env.PUBLIC_URL}/assets/images/whats-new-collapsible-comments.png`,
     description: (
       <>
@@ -51,32 +68,6 @@ const whatsNew = [
     ),
     linkText: 'Documentation',
     link: `${process.env.PUBLIC_URL}/documentation#Annotate_Element`,
-  },
-  {
-    id: 4,
-    name: (
-      <>
-        FHIR<sup>®</sup> R4 Support
-      </>
-    ),
-    ariaLabel: 'FHIR R4 Support',
-    image: `${process.env.PUBLIC_URL}/assets/images/whats-new-fhir-r4.png`,
-    description: (
-      <>
-        CDS Authors can now download and test their CDS artifacts using HL7
-        <sup>®</sup> FHIR<sup>®</sup> R4, the first normative edition of the
-        FHIR specification. Support for FHIR R4 supplements existing support for
-        FHIR DSTU2 and STU3.
-      </>
-    ),
-    linkText: (
-      <>
-        {' '}
-        HL7<sup>®</sup> FHIR<sup>®</sup> R4
-      </>
-    ),
-    link: 'http://hl7.org/fhir/R4/index.html',
-    linkExternal: true,
   },
 ];
 

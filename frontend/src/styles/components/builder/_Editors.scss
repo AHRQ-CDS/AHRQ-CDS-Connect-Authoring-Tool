@@ -1,0 +1,68 @@
+.editor {
+  margin: 10px 0;
+
+  &.code-editor {
+    .editor-input-group {
+      background-color: #fff;
+      width: 100%;
+      padding: 20px;
+    }
+
+    .code-editor-row {
+      display: flex;
+    }
+
+    .code-editor-footer {
+      margin-top: 20px;
+    }
+
+    .code-editor__item {
+      align-items: center;
+      margin-bottom: 0.8em;
+    }
+  }
+
+  &.string-editor {
+    input {
+      min-width: 600px;
+    }
+  }
+
+  .quantity-unit-ucum {
+    width: 200px;
+    background-size: 15px;
+  }
+
+  .editor-container {
+    display: flex;
+    align-items: center;
+
+    .editor-input-group {
+      display: flex;
+
+      .editor-input {
+        display: flex;
+        flex-direction: column;
+        margin-right: 1em;
+      }
+    }
+
+    &.condense {
+      flex-direction: column;
+      align-items: flex-start;
+
+      .editor-label {
+        text-align: left;
+      }
+    }
+  }
+
+  .dash {
+    display: flex;
+    flex-grow: 1;
+    text-align: center;
+    flex-direction: column;
+    margin-right: 0.6em;
+    font-size: 1.5em;
+  }
+}

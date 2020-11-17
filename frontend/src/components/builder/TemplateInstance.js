@@ -10,7 +10,8 @@ import {
   faCommentDots,
   faComment,
   faAngleDoubleDown,
-  faAngleDoubleRight
+  faAngleDoubleRight,
+  faBook
 } from '@fortawesome/free-solid-svg-icons';
 import { UncontrolledTooltip } from 'reactstrap';
 import _ from 'lodash';
@@ -28,7 +29,6 @@ import ValueSetField from './fields/ValueSetField';
 
 import ValueSetTemplate from './templates/ValueSetTemplate';
 
-import Modifiers from '../../data/modifiers';
 import BooleanComparison from './modifiers/BooleanComparison';
 import CheckExistence from './modifiers/CheckExistence';
 import ExpressionPhrase from './modifiers/ExpressionPhrase';
@@ -45,6 +45,7 @@ import ValueComparisonNumber from './modifiers/ValueComparisonNumber';
 import ValueComparisonObservation from './modifiers/ValueComparisonObservation';
 import WithUnit from './modifiers/WithUnit';
 import Qualifier from './modifiers/Qualifier';
+import ExternalModifier from './modifiers/ExternalModifier';
 
 import { hasDuplicateName, doesBaseElementUseNeedWarning, doesBaseElementInstanceNeedWarning,
   doesParameterUseNeedWarning, validateElement, hasGroupNestedWarning } from '../../utils/warnings';
@@ -60,19 +61,10 @@ export default class TemplateInstance extends Component {
   constructor(props) {
     super(props);
 
-    this.modifierMap = _.keyBy(Modifiers, 'id');
-    this.modifersByInputType = {};
-
-    Modifiers.forEach((modifier) => {
-      modifier.inputTypes.forEach((inputType) => {
-        this.modifersByInputType[inputType] = (this.modifersByInputType[inputType] || []).concat(modifier);
-      });
-    });
-
     this.state = {
       showElement: true,
       showComment: false,
-      relevantModifiers: (this.modifersByInputType[props.templateInstance.returnType] || []),
+      relevantModifiers: (props.modifiersByInputType[props.templateInstance.returnType] || []),
       showModifiers: false,
       otherInstances: this.getOtherInstances(props),
       returnType: props.templateInstance.returnType
@@ -93,12 +85,16 @@ export default class TemplateInstance extends Component {
     const otherInstances = this.getOtherInstances(nextProps);
     this.setState({ otherInstances });
 
-    if (this.props.templateInstance.modifiers !== nextProps.templateInstance.modifiers) {
-      let returnType = nextProps.templateInstance.returnType;
-      if (!(_.isEmpty(nextProps.templateInstance.modifiers))) {
-        returnType = getReturnType(nextProps.templateInstance.returnType, nextProps.templateInstance.modifiers);
-      }
-      this.setState({ returnType });
+    let returnType = nextProps.templateInstance.returnType;
+    if (!(_.isEmpty(nextProps.templateInstance.modifiers))) {
+      returnType = getReturnType(nextProps.templateInstance.returnType, nextProps.templateInstance.modifiers);
+    }
+    this.setState({ returnType });
+
+    if (!nextProps.isLoadingModifiers) {
+      this.setState({
+        relevantModifiers: (nextProps.modifiersByInputType[returnType] || [])
+      });
     }
   }
 
@@ -163,9 +159,10 @@ export default class TemplateInstance extends Component {
   }
 
   renderAppliedModifier = (modifier, index) => {
+    const { modifierMap } = this.props;
     // Reset values on modifiers that were not previously set or saved in the database
-    if (!modifier.values && this.modifierMap[modifier.id].values) {
-      modifier.values = this.modifierMap[modifier.id].values;
+    if (!modifier.values && modifierMap[modifier.id] && modifierMap[modifier.id].values) {
+      modifier.values = modifierMap[modifier.id].values;
     }
 
     const validationWarning = validateModifier(modifier);
@@ -342,6 +339,27 @@ export default class TemplateInstance extends Component {
               value={mod.values.value}
               updateAppliedModifier={this.updateAppliedModifier}/>
           );
+        case 'ExternalModifier':
+          return (
+            <ExternalModifier
+              key={index}
+              index={index}
+              name={mod.name}
+              value={mod.values.value}
+              arguments={mod.arguments}
+              argumentTypes={mod.argumentTypes}
+              updateAppliedModifier={this.updateAppliedModifier}
+              vsacFHIRCredentials={this.props.vsacFHIRCredentials}
+              loginVSACUser={this.props.loginVSACUser}
+              setVSACAuthStatus={this.props.setVSACAuthStatus}
+              vsacStatus={this.props.vsacStatus}
+              vsacStatusText={this.props.vsacStatusText}
+              isValidatingCode={this.props.isValidatingCode}
+              isValidCode={this.props.isValidCode}
+              codeData={this.props.codeData}
+              validateCode={this.props.validateCode}
+              resetCodeValidation={this.props.resetCodeValidation} />
+          );
         default:
           return (<LabelModifier key={index} name={mod.name} id={mod.id}/>);
       }
@@ -391,7 +409,7 @@ export default class TemplateInstance extends Component {
       <div className="applied-modifiers__info">
         <div className="applied-modifiers__info-expressions">
           {this.props.templateInstance.modifiers && this.props.templateInstance.modifiers.length > 0 &&
-            <div className="bold align-right applied-modifiers__label">Expressions:</div>
+            <div className="label expressions-label">Expressions:</div>
           }
 
           <div className="modifier__list" aria-label="Expression List">
@@ -411,7 +429,7 @@ export default class TemplateInstance extends Component {
   }
 
   filterRelevantModifiers = () => {
-    const relevantModifiers = this.modifersByInputType[this.state.returnType] || [];
+    const relevantModifiers = (this.props.modifiersByInputType[this.state.returnType] || []).slice();
     if (!this.props.templateInstance.checkInclusionInVS) { // Rather than suppressing `CheckInclusionInVS` in every element, assume it's suppressed unless explicity stated otherwise
       _.remove(relevantModifiers, modifier => modifier.id === 'CheckInclusionInVS');
     }
@@ -423,7 +441,7 @@ export default class TemplateInstance extends Component {
   }
 
   handleModifierSelected = (event) => {
-    const selectedModifier = _.cloneDeep(this.modifierMap[event.target.value]);
+    const selectedModifier = _.cloneDeep(this.props.modifierMap[event.target.value]);
     const modifiers = (this.props.templateInstance.modifiers || []).concat(selectedModifier);
     this.setState({ showModifiers: false });
     this.setAppliedModifiers(modifiers);
@@ -477,8 +495,10 @@ export default class TemplateInstance extends Component {
   }
 
   renderModifierSelect = () => {
-    if (!this.props.templateInstance.cannotHaveModifiers
-      && (this.state.relevantModifiers.length > 0 || (this.props.templateInstance.modifiers || []).length === 0)) {
+    if (this.props.templateInstance.cannotHaveModifiers) return null;
+    if (this.props.isLoadingModifiers) return (<div>Loading modifiers...</div>);
+
+    if (this.state.relevantModifiers.length > 0 || (this.props.templateInstance.modifiers || []).length === 0) {
       const baseElementIsInUse = this.isBaseElementUsed() || this.props.disableAddElement;
 
       return (
@@ -503,7 +523,7 @@ export default class TemplateInstance extends Component {
                     onClick={this.handleModifierSelected}
                     className="modifier__button secondary-button"
                     aria-label={modifier.name}>
-                    {modifier.name}
+                    {modifier.type === 'ExternalModifier' && <FontAwesomeIcon icon={faBook} />} {modifier.name}
                   </button>
                 )
             }
@@ -565,7 +585,7 @@ export default class TemplateInstance extends Component {
     return (
       <div className="modifier__return__type" id="base-element-list" key={referenceField.value.id}>
         <div className="code-info">
-          <div className="bold align-right code-info__label">{label}</div>
+          <div className="label">{label}</div>
           <div className="code-info__info">
             <div className="code-info__text">
               <span>{referenceName}</span>
@@ -639,7 +659,7 @@ export default class TemplateInstance extends Component {
           <div className="modifier__return__type" id="code-list">
             {vsacField.codes.map((code, i) => (
               <div key={`selected-code-${i}`} className="code-info">
-                <div className="bold align-right code-info__label">
+                <div className="label">
                   Code{vsacField.codes.length > 1 ? ` ${i + 1}` : ''}:
                 </div>
 
@@ -861,7 +881,7 @@ export default class TemplateInstance extends Component {
 
         <div className="modifier__return__type">
           <div className="return-type">
-            <div className="bold align-right return-type__label">Return Type:</div>
+            <div className="label">Return Type:</div>
             <div className="return-type__value">
               { (validateReturnType === false || _.startCase(returnType) === 'Boolean') &&
                 <FontAwesomeIcon icon={faCheck} className="check" />}
@@ -913,7 +933,7 @@ export default class TemplateInstance extends Component {
       const doesHaveParameterUseWarning = doesParameterUseNeedWarning(templateInstance, parameters);
 
       return (
-        <div className="card-element__heading">
+        <>
           <StringField
             key={elementNameField.id}
             {...elementNameField}
@@ -951,7 +971,7 @@ export default class TemplateInstance extends Component {
               updateInstance={this.updateInstance}
             />
           }
-        </div>
+        </>
       );
     }
 
@@ -1064,6 +1084,10 @@ TemplateInstance.propTypes = {
   allInstancesInAllTrees: PropTypes.array.isRequired,
   baseElements: PropTypes.array.isRequired,
   codeData: PropTypes.object,
+  modifierMap: PropTypes.object.isRequired,
+  modifiersByInputType: PropTypes.object.isRequired,
+  isLoadingModifiers: PropTypes.bool,
+  conversionFunctions: PropTypes.array,
   deleteInstance: PropTypes.func.isRequired,
   disableAddElement: PropTypes.bool,
   disableIndent: PropTypes.bool,

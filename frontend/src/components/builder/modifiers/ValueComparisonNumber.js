@@ -63,7 +63,7 @@ export default class ValueComparisonNumber extends Component {
         </label>
 
         <StyledSelect
-          className="operator"
+          className="Select operator"
           name="Max Operator"
           title="Max Operator"
           aria-label="Max Operator"

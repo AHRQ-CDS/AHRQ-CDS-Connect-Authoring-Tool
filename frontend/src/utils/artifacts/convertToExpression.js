@@ -238,7 +238,17 @@ function getExpressionSentenceValue(modifier) {
     return expressionSentenceValue;
   }
 
-  // If the modifier is not listed in the object, return just the name of the modifier to be placed at the end.
+  // If the modifier is not listed in the object but it's from external CQL, return the following.
+  if (modifier.type === 'ExternalModifier') {
+    return {
+      modifierText: `with ${modifier.name.substring(0, modifier.name.indexOf('(') - 1)}`,
+      leadingText: '',
+      type: 'post',
+      id: modifier.id
+    };
+  }
+  // If the modifier is not listed in the object and it's not from external CQL,
+  // return just the name of the modifier to be placed at the end.
   return { modifierText: _.lowerCase(modifier.name), leadingText: '', type: 'post', id: modifier.id };
 }
 
@@ -432,10 +442,10 @@ function orderExpressionSentenceArray(
     const nulls = ['is null', 'is not null'];
     return nulls.indexOf(expression.modifierText) !== -1;
   });
-  let otherExpressions = _.uniqWith(expressionArray.filter((expression) => {
+  let otherExpressions = expressionArray.filter((expression) => {
     const knownTypes = ['not', 'BooleanExists', 'descriptor', 'list', 'post-list', 'value', 'Count'];
     return knownTypes.indexOf(expression.type) === -1;
-  }), _.isEqual);
+  });
   let hasStarted = false;
 
   // Count modifier will always refer to a group of elements, so always treat it as plural
