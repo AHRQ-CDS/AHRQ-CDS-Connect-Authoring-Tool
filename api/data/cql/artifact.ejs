@@ -25,7 +25,7 @@ concept "<%-concept.name%>" : { <%concept.codes.forEach((code, index) => {%>"<%i
   %>// <%-c%>
 <%});
   }-%>
-parameter "<%-parameter.name%>" <%- parameter.value || parameter.value === 0 ? 'default ' + (typeof parameter.value === 'object' ? parameter.value.str : parameter.value) : parameter.type %>
+parameter "<%-parameter.name%>" <%- parameter.value || parameter.value === 0 ? 'default ' + (typeof parameter.value === 'object' ? parameter.value.str : parameter.value) : parameter.type.replace('Quantity', 'System.Quantity') %>
 <%}});-%>
 
 context Patient
