@@ -26,8 +26,7 @@ class VSACAuthenticationModal extends Component {
   loginToVSAC = (event) => {
     event.preventDefault();
 
-    const { username, password } = this.refs;
-    this.props.loginVSACUser(username.value.trim(), password.value.trim());
+    this.props.loginVSACUser('', this.refs.apiKey.value.trim());
   }
 
   renderedAuthStatusText() {
@@ -78,27 +77,14 @@ class VSACAuthenticationModal extends Component {
             </div>
 
             <div className="login-modal__form">
-              <label htmlFor="username">Username</label>
-              <input
-                type='text'
-                autoFocus
-                autoComplete="username"
-                ref='username'
-                id='username'
-                className="form-control col"
-                placeholder='username'
-                aria-labelledby="vsacUsernameLabel"
-              />
-
-              <label htmlFor="password">Password</label>
+              <label htmlFor="apiKey">API Key</label>
               <input
                 type='password'
-                autoComplete="current-password"
-                ref='password'
-                id='password'
+                ref='apiKey'
+                id='apiKey'
                 className="form-control col"
-                placeholder='password'
-                aria-labelledby="vsacPasswordLabel"
+                placeholder='API Key'
+                aria-labelledby="vsacApiKeyLabel"
               />
 
               {this.renderedAuthStatusText()}
