@@ -140,7 +140,7 @@ export default class PatientTable extends Component {
       artifact,
       params,
       patientsInfo,
-      this.props.vsacFHIRCredentials,
+      this.props.vsacApiKey,
       this.state.codeService,
       dataModel
     );
@@ -232,7 +232,7 @@ export default class PatientTable extends Component {
           <TestingParameters
             parameters={this.state.paramsToExecute}
             updateParameters={this.updateParameters}
-            vsacFHIRCredentials={this.props.vsacFHIRCredentials}
+            vsacApiKey={this.props.vsacApiKey}
             loginVSACUser={this.props.loginVSACUser}
             setVSACAuthStatus={this.props.setVSACAuthStatus}
             vsacStatus={this.props.vsacStatus}
@@ -350,7 +350,7 @@ export default class PatientTable extends Component {
 
   renderVSACLogin = () => {
     // If last time authenticated was less than 7.5 hours ago, force user to log in again.
-    if (this.props.vsacFHIRCredentials.username == null) {
+    if (!this.props.vsacApiKey) {
       return (
         <div className="vsac-authenticate">
           <VSACAuthenticationModal
@@ -374,7 +374,7 @@ export default class PatientTable extends Component {
 
   render() {
     const patients = this.props.patients;
-    const loggedIn = this.props.vsacFHIRCredentials.username != null;
+    const loggedIn = Boolean(this.props.vsacApiKey);
 
     return (
       <div className="patient-table">
@@ -383,8 +383,7 @@ export default class PatientTable extends Component {
 
           <button aria-label="Execute CQL on Selected Patients"
             disabled={
-              this.props.vsacFHIRCredentials.username == null
-              || this.state.patientsToExecute.length === 0
+              !this.props.vsacApiKey || this.state.patientsToExecute.length === 0
             }
             className={classnames('button primary-button execute-button', !loggedIn && 'disabled-button')}
             onClick={() => this.openExecuteCQLModal()}
@@ -424,7 +423,7 @@ PatientTable.propTypes = {
   artifacts: PropTypes.arrayOf(artifactProps).isRequired,
   deletePatient: PropTypes.func.isRequired,
   executeCQLArtifact: PropTypes.func.isRequired,
-  vsacFHIRCredentials: PropTypes.object,
+  vsacApiKey: PropTypes.string,
   loginVSACUser: PropTypes.func.isRequired,
   setVSACAuthStatus: PropTypes.func.isRequired,
   vsacStatus: PropTypes.string,

@@ -10,7 +10,7 @@ import { getFieldWithType } from '../../../utils/instances';
 
 export default class ValueSetTemplate extends Component {
   viewValueSetDetails = (valueSet) => {
-    if (!this.props.vsacFHIRCredentials.password) {
+    if (!this.props.vsacApiKey) {
       return (
         <span className='element-select__modal element-modal disabled'>
           <span>
@@ -42,8 +42,8 @@ export default class ValueSetTemplate extends Component {
         selectedElement={this.props.valueSet}
         useIconButton={true}
         viewOnly={true}
-        vsacFHIRCredentials={this.props.vsacFHIRCredentials}
-      />
+        vsacApiKey={this.props.vsacApiKey}
+        />
     );
   }
 

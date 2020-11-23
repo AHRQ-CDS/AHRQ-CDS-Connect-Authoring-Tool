@@ -28,7 +28,7 @@ export default class Editor extends Component {
     ]);
 
     const codeEditorProps = _.pick(this.props, [
-      'vsacFHIRCredentials',
+      'vsacApiKey',
       'loginVSACUser',
       'setVSACAuthStatus',
       'vsacStatus',
@@ -82,7 +82,7 @@ Editor.propTypes = {
   updateInstance: PropTypes.func.isRequired,
   isConcept: PropTypes.bool,
   disableEditing: PropTypes.bool,
-  vsacFHIRCredentials: PropTypes.object,
+  vsacApiKey: PropTypes.string,
   loginVSACUser: PropTypes.func.isRequired,
   setVSACAuthStatus: PropTypes.func.isRequired,
   vsacStatus: PropTypes.string,

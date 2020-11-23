@@ -26,7 +26,7 @@ export default class ExternalModifier extends Component {
     const editorPropsArray = [];
     if (this.props.arguments.length > 1) {
       const defaultEditorProps = {
-        vsacFHIRCredentials: this.props.vsacFHIRCredentials,
+        vsacApiKey: this.props.vsacApiKey,
         loginVSACUser: this.props.loginVSACUser,
         setVSACAuthStatus: this.props.setVSACAuthStatus,
         vsacStatus: this.props.vsacStatus,
@@ -77,7 +77,7 @@ ExternalModifier.propTypes = {
   arguments: PropTypes.array.isRequired,
   argumentTypes: PropTypes.array.isRequired,
   updateAppliedModifier: PropTypes.func.isRequired,
-  vsacFHIRCredentials: PropTypes.object,
+  vsacApiKey: PropTypes.string,
   loginVSACUser: PropTypes.func.isRequired,
   setVSACAuthStatus: PropTypes.func.isRequired,
   vsacStatus: PropTypes.string,

@@ -17,7 +17,7 @@ const options = [
 /* eslint-disable jsx-a11y/no-onchange */
 export default class Qualifier extends Component {
   viewValueSetDetails = (valueSet) => {
-    if (!this.props.vsacFHIRCredentials.password) {
+    if (!this.props.vsacApiKey) {
       return (
         <span className='element-select__modal element-modal disabled'>
           <span>
@@ -46,7 +46,7 @@ export default class Qualifier extends Component {
         isRetrievingDetails={this.props.isRetrievingDetails}
         vsacDetailsCodes={this.props.vsacDetailsCodes}
         vsacDetailsCodesError={this.props.vsacDetailsCodesError}
-        vsacFHIRCredentials={this.props.vsacFHIRCredentials}
+        vsacApiKey={this.props.vsacApiKey}
         selectedElement={valueSet}
         useIconButton={true}
         viewOnly={true}
@@ -77,7 +77,7 @@ export default class Qualifier extends Component {
     const hasSelectedVS = qualifierMod.values.valueSet != null;
     const hasSelectedCode = qualifierMod.values.code != null;
 
-    if (this.props.vsacFHIRCredentials.username == null && !hasSelectedCode && !hasSelectedVS) {
+    if (!this.props.vsacApiKey && !hasSelectedCode && !hasSelectedVS) {
       return (
         <div id="vsac-controls">
           <VSACAuthenticationModal
@@ -101,7 +101,7 @@ export default class Qualifier extends Component {
           isRetrievingDetails={this.props.isRetrievingDetails}
           vsacDetailsCodes={this.props.vsacDetailsCodes}
           vsacDetailsCodesError={this.props.vsacDetailsCodesError}
-          vsacFHIRCredentials={this.props.vsacFHIRCredentials}
+          vsacApiKey={this.props.vsacApiKey}
         />
       );
     } else if (this.props.qualifier === 'value is the code' && !hasSelectedCode) {
@@ -109,7 +109,7 @@ export default class Qualifier extends Component {
         <CodeSelectModal
           className="element-select__modal"
           template={this.props.template}
-          vsacFHIRCredentials={this.props.vsacFHIRCredentials}
+          vsacApiKey={this.props.vsacApiKey}
           isValidatingCode={this.props.isValidatingCode}
           isValidCode={this.props.isValidCode}
           codeData={this.props.codeData}
@@ -207,7 +207,7 @@ Qualifier.propTypes = {
   setVSACAuthStatus: PropTypes.func.isRequired,
   vsacStatus: PropTypes.string,
   vsacStatusText: PropTypes.string,
-  vsacFHIRCredentials: PropTypes.object,
+  vsacApiKey: PropTypes.string,
   isValidatingCode: PropTypes.bool.isRequired,
   isValidCode: PropTypes.bool,
   codeData: PropTypes.object,

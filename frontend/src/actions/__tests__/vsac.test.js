@@ -16,8 +16,7 @@ describe('vsac actions', () => {
 
     it('dispatches a VSAC_LOGIN_SUCCESS action upon a successful login attempt', () => {
       const store = mockStore({});
-      const username = 'myUserName';
-      const password = 'myPw';
+      const apiKey = 'myApiKey';
 
       moxios.stubs.track({
         url: '/authoring/api/fhir/login',
@@ -27,18 +26,18 @@ describe('vsac actions', () => {
 
       const expectedActions = [
         { type: types.VSAC_LOGIN_REQUEST },
-        { type: types.VSAC_LOGIN_SUCCESS, username: 'myUserName', password: 'myPw' }
+        { type: types.VSAC_LOGIN_SUCCESS, apiKey: 'myApiKey' }
       ];
 
-      return store.dispatch(actions.loginVSACUser(username, password)).then(() => {
+      return store.dispatch(actions.loginVSACUser(apiKey)).then(() => {
         expect(store.getActions()).toEqual(expectedActions);
       });
     });
 
     it('dispatches a VSAC_LOGIN_FAILURE action upon an unsuccessful login attempt', () => {
       const store = mockStore({});
-      const username = 'myUserName';
-      const password = 'myPw';
+      const apiKey = 'myApiKey';
+
 
       moxios.stubs.track({
         url: '/authoring/api/fhir/login',
@@ -51,7 +50,7 @@ describe('vsac actions', () => {
         { type: types.VSAC_LOGIN_FAILURE, status: 401, statusText: 'Unauthorized' }
       ];
 
-      return store.dispatch(actions.loginVSACUser(username, password)).then(() => {
+      return store.dispatch(actions.loginVSACUser(apiKey)).then(() => {
         expect(store.getActions()).toEqual(expectedActions);
       });
     });

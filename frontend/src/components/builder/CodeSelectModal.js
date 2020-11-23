@@ -69,10 +69,7 @@ export default class CodeSelectModal extends Component {
   }
 
   validateCode = () => {
-    if (this.props.vsacFHIRCredentials) {
-      const username = this.props.vsacFHIRCredentials.username;
-      const password = this.props.vsacFHIRCredentials.password;
-
+    if (this.props.vsacApiKey) {
       let selectedCodeSystemId;
       if (!this.state.selectedCS) {
         selectedCodeSystemId = '';
@@ -82,7 +79,7 @@ export default class CodeSelectModal extends Component {
         selectedCodeSystemId = this.state.selectedCS.id;
       }
 
-      this.props.validateCode(this.state.codeText, selectedCodeSystemId, username, password);
+      this.props.validateCode(this.state.codeText, selectedCodeSystemId, this.props.vsacApiKey);
     }
   }
 

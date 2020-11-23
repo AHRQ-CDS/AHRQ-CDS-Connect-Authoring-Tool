@@ -39,9 +39,9 @@ describe('<BaseElements />', () => {
         updateInstanceModifiers={jest.fn()}
         validateCode={jest.fn()}
         validateReturnType={false}
+        vsacApiKey={'key'}
         vsacDetailsCodes={[]}
         vsacDetailsCodesError=""
-        vsacFHIRCredentials={{ username: 'name', password: 'pass' }}
         vsacSearchCount={0}
         vsacSearchResults={[]}
         {...props}

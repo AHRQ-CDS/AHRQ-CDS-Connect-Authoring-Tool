@@ -99,24 +99,22 @@ export default memo(function ValidateVSACCode({ namePrefix }) {
   const prevSystemValue = usePrevious(systemFieldValue);
   const dispatch = useDispatch();
   const authStatus = useSelector(state => state.vsac.authStatus);
-  const username = useSelector(state => state.vsac.username);
-  const password = useSelector(state => state.vsac.password);
+  const apiKey = useSelector(state => state.vsac.apiKey);
   const fieldValuesRef = useRef({
-    username: username,
-    password: password,
+    apiKey: apiKey,
     code: codeFieldValue,
     system: systemFieldValue,
   });
 
   const handleValidateCode = useCallback(
     async () => {
-      const { code, system, username, password } = fieldValuesRef.current;
+      const { code, system, apiKey } = fieldValuesRef.current;
 
-      if (!system || !code || !username || !password) return;
+      if (!system || !code || !apiKey) return;
       const systemId = codeSystemOptions.find(({ value }) => value === system).id;
       setIsValidating(true);
 
-      const { codeData } = await dispatch(validateCode(code, systemId, username, password));
+      const { codeData } = await dispatch(validateCode(code, systemId, apiKey));
 
       batch(() => {
         setValidatedCode(codeData);
@@ -132,11 +130,10 @@ export default memo(function ValidateVSACCode({ namePrefix }) {
       fieldValuesRef.current = {
         code: codeFieldValue,
         system: systemFieldValue,
-        username,
-        password
+        apiKey
       };
     },
-    [codeFieldValue, systemFieldValue, username, password]
+    [codeFieldValue, systemFieldValue, apiKey]
   );
 
   useEffect(() => {

@@ -273,7 +273,7 @@ export default class ElementSelect extends Component {
   }
 
   renderVSACLogin = () => {
-    if (this.props.vsacFHIRCredentials.username == null) {
+    if (!this.props.vsacApiKey) {
       return (
         <div className="vsac-authenticate">
           <VSACAuthenticationModal
@@ -314,14 +314,14 @@ export default class ElementSelect extends Component {
           isRetrievingDetails={this.props.isRetrievingDetails}
           vsacDetailsCodes={this.props.vsacDetailsCodes}
           vsacDetailsCodesError={this.props.vsacDetailsCodesError}
-          vsacFHIRCredentials={this.props.vsacFHIRCredentials}
-        />
+          vsacApiKey={this.props.vsacApiKey}
+          />
 
         <CodeSelectModal
           className="element-select__modal"
           onElementSelected={this.onSuggestionSelected}
           template={selectedTemplate}
-          vsacFHIRCredentials={this.props.vsacFHIRCredentials}
+          vsacApiKey={this.props.vsacApiKey}
           isValidatingCode={this.props.isValidatingCode}
           isValidCode={this.props.isValidCode}
           codeData={this.props.codeData}

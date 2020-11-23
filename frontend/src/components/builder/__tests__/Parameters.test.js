@@ -22,7 +22,7 @@ describe('<Parameters />', () => {
         setVSACAuthStatus={jest.fn()}
         updateParameters={jest.fn()}
         validateCode={jest.fn()}
-        vsacFHIRCredentials={{ username: 'username', password: 'password' }}
+        vsacApiKey={'key'}
         vsacStatus=""
         vsacStatusText=""
         {...props}

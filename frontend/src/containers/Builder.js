@@ -399,7 +399,7 @@ export class Builder extends Component {
           isRetrievingDetails={isRetrievingDetails}
           vsacDetailsCodes={vsacDetailsCodes}
           vsacDetailsCodesError={vsacDetailsCodesError}
-          vsacFHIRCredentials={this.props.vsacFHIRCredentials}
+          vsacApiKey={this.props.vsacApiKey}
           isValidatingCode={isValidatingCode}
           isValidCode={isValidCode}
           codeData={codeData}
@@ -622,7 +622,7 @@ export class Builder extends Component {
                     isRetrievingDetails={this.props.isRetrievingDetails}
                     vsacDetailsCodes={this.props.vsacDetailsCodes}
                     vsacDetailsCodesError={this.props.vsacDetailsCodesError}
-                    vsacFHIRCredentials={this.props.vsacFHIRCredentials}
+                    vsacApiKey={this.props.vsacApiKey}
                     isValidatingCode={this.props.isValidatingCode}
                     isValidCode={this.props.isValidCode}
                     codeData={this.props.codeData}
@@ -673,7 +673,7 @@ export class Builder extends Component {
                     isRetrievingDetails={this.props.isRetrievingDetails}
                     vsacDetailsCodes={this.props.vsacDetailsCodes}
                     vsacDetailsCodesError={this.props.vsacDetailsCodesError}
-                    vsacFHIRCredentials={this.props.vsacFHIRCredentials}
+                    vsacApiKey={this.props.vsacApiKey}
                     isValidatingCode={this.props.isValidatingCode}
                     isValidCode={this.props.isValidCode}
                     codeData={this.props.codeData}
@@ -710,7 +710,7 @@ export class Builder extends Component {
                     parameters={this.props.artifact.parameters}
                     updateParameters={this.updateParameters}
                     instanceNames={this.props.names}
-                    vsacFHIRCredentials={this.props.vsacFHIRCredentials}
+                    vsacApiKey={this.props.vsacApiKey}
                     loginVSACUser={this.props.loginVSACUser}
                     setVSACAuthStatus={this.props.setVSACAuthStatus}
                     vsacStatus={this.props.vsacStatus}
@@ -883,7 +883,7 @@ function mapStateToProps(state) {
     codeData: state.vsac.codeData,
     vsacDetailsCodes: state.vsac.detailsCodes,
     vsacDetailsCodesError: state.vsac.detailsCodesErrorMessage,
-    vsacFHIRCredentials: { username: state.vsac.username, password: state.vsac.password },
+    vsacApiKey: state.vsac.apiKey,
     modifierMap: state.modifiers.modifierMap,
     modifiersByInputType: state.modifiers.modifiersByInputType,
     isLoadingModifiers: state.modifiers.loadModifiers.isLoadingModifiers,

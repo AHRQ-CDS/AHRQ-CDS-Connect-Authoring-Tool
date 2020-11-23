@@ -28,16 +28,14 @@ export default class ElementModal extends Component {
   searchVSAC = () => {
     this.props.searchVSACByKeyword(
       this.state.searchValue,
-      this.props.vsacFHIRCredentials.username,
-      this.props.vsacFHIRCredentials.password
+      this.props.vsacApiKey
     );
   }
 
   handleElementSelected = (selectedElement) => {
     this.props.getVSDetails(
       selectedElement.oid,
-      this.props.vsacFHIRCredentials.username,
-      this.props.vsacFHIRCredentials.password
+      this.props.vsacApiKey
     );
     this.setState({ selectedElement: { name: selectedElement.name, oid: selectedElement.oid } });
   }
@@ -101,8 +99,7 @@ export default class ElementModal extends Component {
     if (selectedElement) {
       this.props.getVSDetails(
         selectedElement.oid,
-        this.props.vsacFHIRCredentials.username,
-        this.props.vsacFHIRCredentials.password
+        this.props.vsacApiKey
       );
     }
   }

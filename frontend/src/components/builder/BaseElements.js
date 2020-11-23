@@ -64,9 +64,9 @@ export default class BaseElements extends Component {
         updateInstanceModifiers={this.props.updateInstanceModifiers}
         validateCode={this.props.validateCode}
         valueSets={this.props.valueSets}
+        vsacApiKey={this.props.vsacApiKey}
         vsacDetailsCodes={this.props.vsacDetailsCodes}
         vsacDetailsCodesError={this.props.vsacDetailsCodesError}
-        vsacFHIRCredentials={this.props.vsacFHIRCredentials}
         vsacSearchCount={this.props.vsacSearchCount}
         vsacSearchResults={this.props.vsacSearchResults}
         vsacStatus={this.props.vsacStatus}
@@ -124,9 +124,9 @@ export default class BaseElements extends Component {
                 validateCode={this.props.validateCode}
                 validateReturnType={this.props.validateReturnType}
                 valueSets={this.props.valueSets}
+                vsacApiKey={this.props.vsacApiKey}
                 vsacDetailsCodes={this.props.vsacDetailsCodes}
                 vsacDetailsCodesError={this.props.vsacDetailsCodesError}
-                vsacFHIRCredentials={this.props.vsacFHIRCredentials}
                 vsacSearchCount={this.props.vsacSearchCount}
                 vsacSearchResults={this.props.vsacSearchResults}
                 vsacStatus={this.props.vsacStatus}
@@ -159,9 +159,9 @@ export default class BaseElements extends Component {
             searchVSACByKeyword={this.props.searchVSACByKeyword}
             setVSACAuthStatus={this.props.setVSACAuthStatus}
             validateCode={this.props.validateCode}
+            vsacApiKey={this.props.vsacApiKey}
             vsacDetailsCodes={this.props.vsacDetailsCodes}
             vsacDetailsCodesError={this.props.vsacDetailsCodesError}
-            vsacFHIRCredentials={this.props.vsacFHIRCredentials}
             vsacSearchCount={this.props.vsacSearchCount}
             vsacSearchResults={this.props.vsacSearchResults}
             vsacStatus={this.props.vsacStatus}
@@ -208,9 +208,9 @@ BaseElements.propTypes = {
   validateCode: PropTypes.func.isRequired,
   validateReturnType: PropTypes.bool.isRequired,
   valueSets: PropTypes.array,
+  vsacApiKey: PropTypes.string,
   vsacDetailsCodes: PropTypes.array.isRequired,
   vsacDetailsCodesError: PropTypes.string.isRequired,
-  vsacFHIRCredentials: PropTypes.object.isRequired,
   vsacSearchCount: PropTypes.number.isRequired,
   vsacSearchResults: PropTypes.array.isRequired,
   vsacStatus: PropTypes.string,

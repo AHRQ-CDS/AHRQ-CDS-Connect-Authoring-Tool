@@ -13,8 +13,7 @@ describe('vsac reducer', () => {
       isRetrievingDetails: false,
       detailsCodes: [],
       detailsCodesErrorMessage: '',
-      username: null,
-      password: null,
+      apiKey: null,
       codeData: null,
       isValidCode: null,
       isValidatingCode: false
@@ -69,8 +68,7 @@ describe('vsac reducer', () => {
       isRetrievingDetails: false,
       detailsCodes: [],
       detailsCodesErrorMessage: '',
-      username: null,
-      password: null,
+      apiKey: null,
       codeData: null,
       isValidCode: null,
       isValidatingCode: false

@@ -30,7 +30,7 @@ export default memo(function AuthenticateVSAC() {
   const vsacStatusText = useSelector(state => state.vsac.vsacStatusText);
 
   const onLogin = useCallback(
-    () => dispatch(loginVSACUser('', apiKeyRef.current.value)),
+    () => dispatch(loginVSACUser(apiKeyRef.current.value)),
     [dispatch, apiKeyRef]
   );
 

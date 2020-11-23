@@ -85,7 +85,7 @@ export default class Parameter extends Component {
         comment: this.props.comment,
         value: (e != null ? e.value : null)
       }),
-      vsacFHIRCredentials: this.props.vsacFHIRCredentials,
+      vsacApiKey: this.props.vsacApiKey,
       loginVSACUser: this.props.loginVSACUser,
       setVSACAuthStatus: this.props.setVSACAuthStatus,
       vsacStatus: this.props.vsacStatus,
@@ -324,7 +324,7 @@ Parameter.propTypes = {
   updateInstanceOfParameter: PropTypes.func.isRequired,
   deleteParameter: PropTypes.func.isRequired,
   instanceNames: PropTypes.array.isRequired,
-  vsacFHIRCredentials: PropTypes.object,
+  vsacApiKey: PropTypes.string,
   setVSACAuthStatus: PropTypes.func.isRequired,
   vsacStatus: PropTypes.string,
   vsacStatusText: PropTypes.string,

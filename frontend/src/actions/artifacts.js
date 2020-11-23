@@ -498,7 +498,7 @@ function executeArtifactFailure(error) {
   };
 }
 
-function performExecuteArtifact(elmFiles, artifactName, params, patients, vsacCredentials, codeService, dataModel) {
+function performExecuteArtifact(elmFiles, artifactName, params, patients, vsacApiKey, codeService, dataModel) {
   // Set up the library
   const elmFile = JSON.parse(_.find(elmFiles, f =>
     f.name.replace(/[\s-\\/]/g, '') === artifactName.replace(/[\s-\\/]/g, '')).content);
@@ -528,7 +528,7 @@ function performExecuteArtifact(elmFiles, artifactName, params, patients, vsacCr
   }
 
   // Ensure value sets, downloading any missing value sets
-  return codeService.ensureValueSets(valueSets, vsacCredentials.username, vsacCredentials.password)
+  return codeService.ensureValueSets(valueSets, vsacApiKey)
     .then(() => {
       // Value sets are loaded, so execute!
       const executor = new cql.Executor(library, codeService, cqlExecParams);
@@ -616,7 +616,7 @@ function convertParameters(params = []) {
   return paramsObj;
 }
 
-export function executeCQLArtifact(artifact, params, patients, vsacCredentials, codeService, dataModel) {
+export function executeCQLArtifact(artifact, params, patients, vsacApiKey, codeService, dataModel) {
   artifact.dataModel = dataModel;
   const artifactName = `${slug(artifact.name ? artifact.name : 'untitled', { lower: false })}`;
 
@@ -639,7 +639,7 @@ export function executeCQLArtifact(artifact, params, patients, vsacCredentials, 
       artifactName,
       params,
       patients,
-      vsacCredentials,
+      vsacApiKey,
       codeService,
       dataModel
     ))

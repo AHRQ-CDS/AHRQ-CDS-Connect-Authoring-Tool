@@ -19,7 +19,7 @@ export default class CodeEditor extends Component {
   }
 
   renderCodePicker(openButtonText) {
-    if (this.props.vsacFHIRCredentials.username == null) {
+    if (!this.props.vsacApiKey) {
       return (
         <div id="vsac-controls">
           <VSACAuthenticationModal
@@ -36,7 +36,7 @@ export default class CodeEditor extends Component {
       <CodeSelectModal
         className="element-select__modal"
         template={this.props.templateInstance}
-        vsacFHIRCredentials={this.props.vsacFHIRCredentials}
+        vsacApiKey={this.props.vsacApiKey}
         isValidatingCode={this.props.isValidatingCode}
         isValidCode={this.props.isValidCode}
         codeData={this.props.codeData}
@@ -132,7 +132,7 @@ CodeEditor.propTypes = {
   isConcept: PropTypes.bool,
   disableEditing: PropTypes.bool,
   updateInstance: PropTypes.func.isRequired,
-  vsacFHIRCredentials: PropTypes.object,
+  vsacApiKey: PropTypes.string,
   loginVSACUser: PropTypes.func.isRequired,
   setVSACAuthStatus: PropTypes.func.isRequired,
   vsacStatus: PropTypes.string,

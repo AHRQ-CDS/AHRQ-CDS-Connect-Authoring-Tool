@@ -26,7 +26,7 @@ class VSACAuthenticationModal extends Component {
   loginToVSAC = (event) => {
     event.preventDefault();
 
-    this.props.loginVSACUser('', this.refs.apiKey.value.trim());
+    this.props.loginVSACUser(this.refs.apiKey.value.trim());
   }
 
   renderedAuthStatusText() {

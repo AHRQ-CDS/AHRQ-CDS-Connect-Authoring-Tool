@@ -47,7 +47,7 @@ export default class Parameters extends Component {
             instanceNames={this.props.instanceNames}
             updateInstanceOfParameter={this.updateInstanceOfParameter}
             deleteParameter={this.deleteParameter}
-            vsacFHIRCredentials={this.props.vsacFHIRCredentials}
+            vsacApiKey={this.props.vsacApiKey}
             loginVSACUser={this.props.loginVSACUser}
             setVSACAuthStatus={this.props.setVSACAuthStatus}
             vsacStatus={this.props.vsacStatus}
@@ -76,7 +76,7 @@ Parameters.propTypes = {
   parameters: PropTypes.array.isRequired,
   updateParameters: PropTypes.func.isRequired,
   instanceNames: PropTypes.array.isRequired,
-  vsacFHIRCredentials: PropTypes.object,
+  vsacApiKey: PropTypes.string,
   loginVSACUser: PropTypes.func.isRequired,
   setVSACAuthStatus: PropTypes.func.isRequired,
   vsacStatus: PropTypes.string,

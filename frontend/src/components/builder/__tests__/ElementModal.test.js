@@ -35,8 +35,8 @@ describe('<ElementModal />', () => {
         searchVSACByKeyword={jest.fn()}
         template={testTemplate}
         useIconButton={false}
+        vsacApiKey={'key'}
         vsacDetailsCodes={testVsacDetails}
-        vsacFHIRCredentials={{ username: '', password: '' }}
         vsacSearchCount={0}
         vsacSearchResults={testVsacSearchResults}
         {...props}
@@ -101,7 +101,7 @@ describe('<ElementModal />', () => {
       fireEvent.click(document.querySelector(`.search__table tbody tr[aria-label="${vsacSearchResult.name}"]`));
 
       // Clicking an individual VS gets the details and displays them in the table and input field.
-      expect(getVSDetails).toBeCalledWith(vsacSearchResult.oid, '', '');
+      expect(getVSDetails).toBeCalledWith(vsacSearchResult.oid, 'key');
       expect(document.querySelectorAll('.search__table')).toHaveLength(1);
       expect(document.querySelectorAll('.search__table thead th')).toHaveLength(3);
 
@@ -142,7 +142,7 @@ describe('<ElementModal />', () => {
       fireEvent.change(getSearchInput(), { target: { value: 'cholest' } });
       fireEvent.keyDown(getSearchInput(), { key: 'Enter' });
 
-      expect(searchVSACByKeyword).toBeCalledWith('cholest', '', '');
+      expect(searchVSACByKeyword).toBeCalledWith('cholest', 'key');
     });
 
     it('using the back arrow returns to search results table', () => {
