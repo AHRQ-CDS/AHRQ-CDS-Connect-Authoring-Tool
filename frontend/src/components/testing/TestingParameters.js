@@ -25,7 +25,7 @@ export default class TestingParameters extends Component {
             type={parameter.type}
             value={parameter.value}
             updateInstanceOfParameter={this.updateInstanceOfParameter}
-            vsacFHIRCredentials={this.props.vsacFHIRCredentials}
+            vsacApiKey={this.props.vsacApiKey}
             loginVSACUser={this.props.loginVSACUser}
             setVSACAuthStatus={this.props.setVSACAuthStatus}
             vsacStatus={this.props.vsacStatus}
@@ -45,7 +45,7 @@ export default class TestingParameters extends Component {
 TestingParameters.propTypes = {
   parameters: PropTypes.array.isRequired,
   updateParameters: PropTypes.func.isRequired,
-  vsacFHIRCredentials: PropTypes.object,
+  vsacApiKey: PropTypes.string,
   loginVSACUser: PropTypes.func.isRequired,
   setVSACAuthStatus: PropTypes.func.isRequired,
   vsacStatus: PropTypes.string,

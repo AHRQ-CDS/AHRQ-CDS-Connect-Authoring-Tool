@@ -108,7 +108,7 @@ export default class Subpopulations extends Component {
             isRetrievingDetails={this.props.isRetrievingDetails}
             vsacDetailsCodes={this.props.vsacDetailsCodes}
             vsacDetailsCodesError={this.props.vsacDetailsCodesError}
-            vsacFHIRCredentials={this.props.vsacFHIRCredentials}
+            vsacApiKey={this.props.vsacApiKey}
             validateReturnType={this.props.validateReturnType}
             isValidatingCode={this.props.isValidatingCode}
             isValidCode={this.props.isValidCode}

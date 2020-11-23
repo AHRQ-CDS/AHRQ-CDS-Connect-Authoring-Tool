@@ -67,9 +67,9 @@ describe('<TemplateInstance />', () => {
         validateCode={jest.fn()}
         validateReturnType={false}
         valueSets={[]}
+        vsacApiKey={'key'}
         vsacDetailsCodes={[]}
         vsacDetailsCodesError=""
-        vsacFHIRCredentials={{ username: 'name', password: 'pass' }}
         vsacSearchCount={0}
         vsacSearchResults={[]}
         vsacStatus=""
@@ -98,9 +98,7 @@ describe('<TemplateInstance />', () => {
 
   describe('generic template instances', () => {
     it('enables the VSAC controls if not logged in', () => {
-      const { getByText } = renderComponent({
-        vsacFHIRCredentials: { username: null, password: null }
-      });
+      const { getByText } = renderComponent({ vsacApiKey: null });
 
       expect(getByText('Authenticate VSAC')).not.toHaveAttribute('disabled');
     });

@@ -22,7 +22,7 @@ export default class TestingParameter extends Component {
         comment: this.props.comment,
         value: (e != null ? e.value : null)
       }),
-      vsacFHIRCredentials: this.props.vsacFHIRCredentials,
+      vsacApiKey: this.props.vsacApiKey,
       loginVSACUser: this.props.loginVSACUser,
       setVSACAuthStatus: this.props.setVSACAuthStatus,
       vsacStatus: this.props.vsacStatus,
@@ -58,7 +58,7 @@ TestingParameter.propTypes = {
   name: PropTypes.string,
   type: PropTypes.string,
   updateInstanceOfParameter: PropTypes.func.isRequired,
-  vsacFHIRCredentials: PropTypes.object,
+  vsacApiKey: PropTypes.string,
   loginVSACUser: PropTypes.func.isRequired,
   setVSACAuthStatus: PropTypes.func.isRequired,
   vsacStatus: PropTypes.string,

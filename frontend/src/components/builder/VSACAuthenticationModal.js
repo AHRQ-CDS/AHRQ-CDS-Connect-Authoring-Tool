@@ -26,8 +26,7 @@ class VSACAuthenticationModal extends Component {
   loginToVSAC = (event) => {
     event.preventDefault();
 
-    const { username, password } = this.refs;
-    this.props.loginVSACUser(username.value.trim(), password.value.trim());
+    this.props.loginVSACUser(this.refs.apiKey.value.trim());
   }
 
   renderedAuthStatusText() {
@@ -64,7 +63,7 @@ class VSACAuthenticationModal extends Component {
         {this.renderButton()}
 
         <Modal
-          modalTitle="Login to VSAC your account"
+          modalTitle="Log in to your VSAC account"
           modalId="vsac-login"
           modalTheme="dark"
           modalSubmitButtonText="Login"
@@ -74,31 +73,32 @@ class VSACAuthenticationModal extends Component {
         >
           <div className="login-modal modal__content">
             <div className="login-modal__disclaimer">
-              Use your UMLS account to log in to VSAC to access value sets and codes within the CDS Authoring Tool.
+              Use your UMLS Terminology Services API key to log in to VSAC to access value sets and codes within the CDS
+              Authoring Tool.
+              <p/>
+              <ul className="modal__helptext">
+                <li>
+                  Need an account? {' '}
+                  <a href={`${process.env.PUBLIC_URL}/documentation#Requesting_UTS_Account`} target="_blank"
+                     rel="noopener noreferrer">Request a UMLS Terminology Services account.</a>
+                </li>
+                <li>
+                  Don't know your UMLS API key? {' '}
+                  <a href={`${process.env.PUBLIC_URL}/documentation#Accessing_UMLS_API_Key`} target="_blank"
+                     rel="noopener noreferrer">Find your UMLS Terminology Services API key.</a>
+                </li>
+              </ul>
             </div>
 
             <div className="login-modal__form">
-              <label htmlFor="username">Username</label>
-              <input
-                type='text'
-                autoFocus
-                autoComplete="username"
-                ref='username'
-                id='username'
-                className="form-control col"
-                placeholder='username'
-                aria-labelledby="vsacUsernameLabel"
-              />
-
-              <label htmlFor="password">Password</label>
+              <label htmlFor="apiKey">API Key</label>
               <input
                 type='password'
-                autoComplete="current-password"
-                ref='password'
-                id='password'
+                ref='apiKey'
+                id='apiKey'
                 className="form-control col"
-                placeholder='password'
-                aria-labelledby="vsacPasswordLabel"
+                placeholder='API Key'
+                aria-labelledby="vsacApiKeyLabel"
               />
 
               {this.renderedAuthStatusText()}

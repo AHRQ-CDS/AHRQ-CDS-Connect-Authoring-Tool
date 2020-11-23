@@ -23,9 +23,9 @@ describe('<ElementSelect />', () => {
         searchVSACByKeyword={jest.fn()}
         setVSACAuthStatus={jest.fn()}
         validateCode={jest.fn()}
+        vsacApiKey={'key'}
         vsacDetailsCodes={[]}
         vsacDetailsCodesError={''}
-        vsacFHIRCredentials={{ username: 'name', password: 'pass' }}
         vsacSearchCount={0}
         vsacSearchResults={[]}
         vsacStatus={''}
@@ -91,7 +91,7 @@ describe('<ElementSelect />', () => {
     });
 
     it('displays the Authenticate VSAC button when not logged in and selecting a generic type with VSAC auth', () => {
-      const { getByText, getByLabelText } = renderComponent({ vsacFHIRCredentials: { username: null } });
+      const { getByText, getByLabelText } = renderComponent({ vsacApiKey:  null });
 
       openSelect(getByLabelText('Choose element type'));
       fireEvent.click(getByText('Observation'));

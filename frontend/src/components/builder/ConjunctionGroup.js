@@ -380,7 +380,7 @@ export default class ConjunctionGroup extends Component {
               isRetrievingDetails={this.props.isRetrievingDetails}
               vsacDetailsCodes={this.props.vsacDetailsCodes}
               vsacDetailsCodesError={this.props.vsacDetailsCodesError}
-              vsacFHIRCredentials={this.props.vsacFHIRCredentials}
+              vsacApiKey={this.props.vsacApiKey}
               validateReturnType={this.props.validateReturnType}
               isValidatingCode={this.props.isValidatingCode}
               isValidCode={this.props.isValidCode}
@@ -438,7 +438,7 @@ export default class ConjunctionGroup extends Component {
           isRetrievingDetails={this.props.isRetrievingDetails}
           vsacDetailsCodes={this.props.vsacDetailsCodes}
           vsacDetailsCodesError={this.props.vsacDetailsCodesError}
-          vsacFHIRCredentials={this.props.vsacFHIRCredentials}
+          vsacApiKey={this.props.vsacApiKey}
           validateReturnType={this.props.validateReturnType}
           isValidatingCode={this.props.isValidatingCode}
           isValidCode={this.props.isValidCode}
@@ -484,7 +484,7 @@ export default class ConjunctionGroup extends Component {
               isRetrievingDetails={this.props.isRetrievingDetails}
               vsacDetailsCodes={this.props.vsacDetailsCodes}
               vsacDetailsCodesError={this.props.vsacDetailsCodesError}
-              vsacFHIRCredentials={this.props.vsacFHIRCredentials}
+              vsacApiKey={this.props.vsacApiKey}
               isValidatingCode={this.props.isValidatingCode}
               isValidCode={this.props.isValidCode}
               codeData={this.props.codeData}
@@ -536,9 +536,9 @@ ConjunctionGroup.propTypes = {
   validateCode: PropTypes.func.isRequired,
   validateReturnType: PropTypes.bool,
   valueSets: PropTypes.array,
+  vsacApiKey: PropTypes.string,
   vsacDetailsCodes: PropTypes.array.isRequired,
   vsacDetailsCodesError: PropTypes.string.isRequired,
-  vsacFHIRCredentials: PropTypes.object,
   vsacSearchCount: PropTypes.number.isRequired,
   vsacSearchResults: PropTypes.array.isRequired,
   vsacStatus: PropTypes.string,

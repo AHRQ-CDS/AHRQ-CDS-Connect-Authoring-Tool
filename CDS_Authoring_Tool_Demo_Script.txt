@@ -29,7 +29,7 @@ INCLUSIONS: Between 40 and 75 Years Old
 INCLUSIONS: Diabetes
 ===================================================================================================
 9.  User selects "Condition" from the "Add element" menu in the next element on the page
-10. User clicks "Authenticate VSAC" to log into the VSAC integration
+10. User clicks "Authenticate VSAC" to log in to the VSAC integration
 11. User enters UMLS Terminology Services username and password, then clicks "Login"
     - Get a UMLS Terminology Services account here: https://uts.nlm.nih.gov/home.html
 12. User clicks "Add Value Set" button

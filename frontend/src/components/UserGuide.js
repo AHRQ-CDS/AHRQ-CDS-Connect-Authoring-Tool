@@ -113,7 +113,7 @@ export default class UserGuide extends Component {
               <div className="h3-wrapper">
                 <h3 id="Requesting_CDS_AT_Account">1.1 Requesting a CDS Authoring Tool Account</h3>
                 <div>
-                  You must request a CDS Authoring Tool account in order to log into the CDS Authoring Tool.  This account
+                  You must request a CDS Authoring Tool account in order to log in to the CDS Authoring Tool. This account
                   provides you with your own space within the CDS Authoring Tool to create and manage CDS artifacts.
                 </div>
                 <div>
@@ -148,17 +148,54 @@ export default class UserGuide extends Component {
                   <ol>
                     <li>
                       Navigate to{' '}
-                      <ExternalLink href="https://uts.nlm.nih.gov/home.html" text="https://uts.nlm.nih.gov/home.html" />
+                      <ExternalLink href="https://uts.nlm.nih.gov/uts/" text="https://uts.nlm.nih.gov/uts/" />
                       .
                     </li>
-                    <li>Click on the "Request a License" link (in left pane) or "Sign Up" link (in banner).</li>
+                    <li>Click on the "Sign Up" link in the banner.</li>
                     <li>Follow the instructions from NLM to create your account.</li>
                   </ol>
                 </div>
               </div>
 
               <div className="h3-wrapper">
-                <h3 id="Logging_In">1.3 Logging In to the CDS Authoring Tool</h3>
+                <h3 id="Accessing_UMLS_API_Key">1.3 Accessing Your UMLS API Key</h3>
+                <div>
+                  To use your UMLS Terminology Services account in the CDS Authoring Tool, you must provide your UMLS API key.
+                  While previous versions of the CDS Authoring Tool used your UMLS username and password, recent changes to UMLS
+                  Terminology Services now require an API key instead. To find your UMLS API key, navigate to {' '}
+                  <ExternalLink href="https://uts.nlm.nih.gov/uts/" text="https://uts.nlm.nih.gov/uts/" /> and click the "Sign In"
+                  button in the banner.
+                </div>
+                <div>
+                  <img alt="" src={screenshotUrl('UMLS_TS_Sign_In')}
+                    className="img-fluid img-thumbnail rounded mx-auto d-block" />
+                </div>
+                <div>
+                  Follow the directions to sign in and then click on the "My Profile" button in the banner.
+                </div>
+                <div>
+                  <img alt="" src={screenshotUrl('UMLS_TS_My_Profile')}
+                    className="img-fluid img-thumbnail rounded mx-auto d-block" />
+                </div>
+                <div>
+                  Your API key is listed in your profile details. If you do not yet have an API key, you will see a hyperlink
+                  that allows you to generate one.
+                </div>
+                <div>
+                  <img alt="" src={screenshotUrl('UMLS_TS_API_Key')}
+                    className="img-fluid img-thumbnail rounded mx-auto d-block" />
+                </div>
+                <div>
+                  Since your API key is a long sequence of random characters, you may want to store it safely in a file on your
+                  system that you can easily copy and paste from in the future. Otherwise you will need to do the above sequence
+                  each time you authenticate to VSAC in the CDS Authoring Tool. NOTE: Your API key is personal to you and should
+                  not be shared with others. If you are using a public or shared computer, do <strong>not</strong> copy your API
+                  key to a local file.
+                </div>
+              </div>
+
+              <div className="h3-wrapper">
+                <h3 id="Logging_In">1.4 Logging In to the CDS Authoring Tool</h3>
                 <div>
                   Once you have a CDS Authoring Tool account, you can log in to start creating and managing CDS artifacts.
                   To log in, navigate to the CDS Authoring Tool home page and click the "Login" button in the Clinical Decision
@@ -401,9 +438,9 @@ export default class UserGuide extends Component {
                   </div>
                   <div>
                     If you see an "Authenticate VSAC" button, you must click it and then enter in your UMLS Terminology Services
-                    account username and password. This is not the same as your CDS Authoring Tool username and password. If
-                    you do not have a UMLS Terminology Services account, see <a href="#Requesting_UTS_Account">Requesting a UMLS
-                    Terminology Services Account</a>.
+                    API key. If you do not have a UMLS Terminology Services account, see {' '}
+                    <a href="#Requesting_UTS_Account">Requesting a UMLS Terminology Services Account</a>. If you do not know
+                    your UMLS API key, see <a href="#Accessing_UMLS_API_Key">Accessing Your UMLS API Key</a>.
                   </div>
                   <div>
                     <img alt="" src={screenshotUrl('Authenticate_VSAC_Details')}

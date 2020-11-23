@@ -136,7 +136,7 @@ class Testing extends Component {
       );
     } else if (isExecuting) {
       return <div className="execution-loading"><FontAwesomeIcon icon={faSpinner} spin size="4x" /></div>;
-    } else if (this.props.vsacFHIRCredentials.username == null) {
+    } else if (!this.props.vsacApiKey) {
       return (
         <Breadcrumb className="execution-message">
           Log in to VSAC to execute CQL.
@@ -181,7 +181,7 @@ class Testing extends Component {
           artifacts={this.props.artifacts}
           deletePatient={this.props.deletePatient}
           executeCQLArtifact={this.props.executeCQLArtifact}
-          vsacFHIRCredentials={this.props.vsacFHIRCredentials}
+          vsacApiKey={this.props.vsacApiKey}
           loginVSACUser={this.props.loginVSACUser}
           setVSACAuthStatus={this.props.setVSACAuthStatus}
           vsacStatus={this.props.vsacStatus}
@@ -277,7 +277,7 @@ Testing.propTypes = {
   deletePatient: PropTypes.func.isRequired,
   loadArtifacts: PropTypes.func.isRequired,
   executeCQLArtifact: PropTypes.func.isRequired,
-  vsacFHIRCredentials: PropTypes.object,
+  vsacApiKey: PropTypes.string,
   loginVSACUser: PropTypes.func.isRequired,
   setVSACAuthStatus: PropTypes.func.isRequired,
   vsacStatus: PropTypes.string,
@@ -323,7 +323,7 @@ function mapStateToProps(state) {
     vsacStatus: state.vsac.authStatus,
     vsacStatusText: state.vsac.authStatusText,
     vsacIsAuthenticating: state.vsac.isAuthenticating,
-    vsacFHIRCredentials: { username: state.vsac.username, password: state.vsac.password },
+    vsacApiKey: state.vsac.apiKey,
     isValidatingCode: state.vsac.isValidatingCode,
     isValidCode: state.vsac.isValidCode,
     codeData: state.vsac.codeData,

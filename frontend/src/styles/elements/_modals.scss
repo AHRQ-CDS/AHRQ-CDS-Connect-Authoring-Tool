@@ -23,6 +23,17 @@
     .modal__deletebutton {
       @include button($white, transparent, transparent, transparent, none);
     }
+
+    .modal__helptext {
+      a,
+      a:hover,
+      a:focus,
+      a:active,
+      a:visited {
+        font-weight: bold;
+        color: $white;
+      }
+    }
   }
 
   .modal__deletebutton {

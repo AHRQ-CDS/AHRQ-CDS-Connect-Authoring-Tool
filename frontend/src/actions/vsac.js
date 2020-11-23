@@ -19,11 +19,10 @@ function requestLogin() {
   };
 }
 
-function loginSuccess(username, password) {
+function loginSuccess(apiKey) {
   return {
     type: VSAC_LOGIN_SUCCESS,
-    username,
-    password,
+    apiKey
   };
 }
 
@@ -35,11 +34,11 @@ function loginFailure(error) {
   };
 }
 
-function sendLoginRequest(username, password) {
+function sendLoginRequest(apiKey) {
   return new Promise((resolve, reject) => {
     const auth = {
-      username,
-      password
+      username: '',
+      password: apiKey
     };
 
     axios.post(`${API_BASE}/fhir/login`, {}, { auth })
@@ -48,12 +47,12 @@ function sendLoginRequest(username, password) {
   });
 }
 
-export function loginVSACUser(username, password) {
+export function loginVSACUser(apiKey) {
   return (dispatch) => {
     dispatch(requestLogin());
 
-    return sendLoginRequest(username, password)
-      .then(() => dispatch(loginSuccess(username, password)))
+    return sendLoginRequest(apiKey)
+      .then(() => dispatch(loginSuccess(apiKey)))
       .catch(error => dispatch(loginFailure(error)));
   };
 }
@@ -89,10 +88,10 @@ function searchFailure(error) {
   };
 }
 
-export function searchVSACFHIR(keyword, username, password) {
+export function searchVSACFHIR(keyword, apiKey) {
   const auth = {
-    username,
-    password
+    username: '',
+    password: apiKey
   };
 
   return new Promise((resolve, reject) => {
@@ -103,11 +102,11 @@ export function searchVSACFHIR(keyword, username, password) {
 }
 
 
-export function searchVSACByKeyword(keyword, username, password) {
+export function searchVSACByKeyword(keyword, apiKey) {
   return (dispatch) => {
     dispatch(requestSearch());
 
-    return searchVSACFHIR(keyword, username, password)
+    return searchVSACFHIR(keyword, apiKey)
       .then(data => dispatch(searchSuccess(data)))
       .catch(error => dispatch(searchFailure(error)));
   };
@@ -140,10 +139,10 @@ function detailsFailure(error) {
   };
 }
 
-function getVSDetailsByOIDFHIR(oid, username, password) {
+function getVSDetailsByOIDFHIR(oid, apiKey) {
   const auth = {
-    username,
-    password
+    username: '',
+    password: apiKey
   };
 
   return new Promise((resolve, reject) => {
@@ -153,11 +152,11 @@ function getVSDetailsByOIDFHIR(oid, username, password) {
   });
 }
 
-export function getVSDetails(oid, username, password) {
+export function getVSDetails(oid, apiKey) {
   return (dispatch) => {
     dispatch(requestDetails());
 
-    return getVSDetailsByOIDFHIR(oid, username, password)
+    return getVSDetailsByOIDFHIR(oid, apiKey)
       .then(data => dispatch(detailsSuccess(data)))
       .catch(error => dispatch(detailsFailure(error)));
   };
@@ -184,10 +183,10 @@ function validateCodeFailure(error) {
   };
 }
 
-function getValidateCode(codeText, selectedId, username, password) {
+function getValidateCode(codeText, selectedId, apiKey) {
   const auth = {
-    username,
-    password
+    username: '',
+    password: apiKey
   };
 
   return new Promise((resolve, reject) => {
@@ -197,11 +196,11 @@ function getValidateCode(codeText, selectedId, username, password) {
   });
 }
 
-export function validateCode(codeText, selectedId, username, password) {
+export function validateCode(codeText, selectedId, apiKey) {
   return (dispatch) => {
     dispatch(requestValidateCode());
 
-    return getValidateCode(codeText, selectedId, username, password)
+    return getValidateCode(codeText, selectedId, apiKey)
       .then(data => dispatch(validateCodeSuccess(data)))
       .catch(error => dispatch(validateCodeFailure(error)));
   };

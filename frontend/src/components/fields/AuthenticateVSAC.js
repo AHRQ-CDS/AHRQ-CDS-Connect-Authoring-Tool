@@ -23,16 +23,15 @@ export const AuthenticateVSACButton = memo((
 ));
 
 export default memo(function AuthenticateVSAC() {
-  const usernameRef = useRef();
-  const passwordRef = useRef();
+  const apiKeyRef = useRef();
   const dispatch = useDispatch();
   const authStatus = useSelector(state => state.vsac.authStatus);
   const isAuthenticating = useSelector(state => state.vsac.isAuthenticating);
   const vsacStatusText = useSelector(state => state.vsac.vsacStatusText);
 
   const onLogin = useCallback(
-    () => dispatch(loginVSACUser(usernameRef.current.value, passwordRef.current.value)),
-    [dispatch, usernameRef, passwordRef]
+    () => dispatch(loginVSACUser(apiKeyRef.current.value)),
+    [dispatch, apiKeyRef]
   );
 
   const showForm = authStatus == null || authStatus === 'loginFailure';
@@ -43,22 +42,29 @@ export default memo(function AuthenticateVSAC() {
         {showForm && (
           <>
             <div className="authenticate-vsac__disclaimer">
-              Use your UMLS account to log in to VSAC to access value sets and codes.
+              Use your UMLS Terminology Services API key to log in to VSAC to access value sets and codes.
+              <p/>
+              <ul>
+                <li>
+                  Need an account? {' '}
+                  <a href={`${process.env.PUBLIC_URL}/documentation#Requesting_UTS_Account`} target="_blank"
+                     rel="noopener noreferrer">Request a UMLS Terminology Services account.</a>
+                </li>
+                <li>
+                  Don't know your UMLS API key? {' '}
+                  <a href={`${process.env.PUBLIC_URL}/documentation#Accessing_UMLS_API_Key`} target="_blank"
+                     rel="noopener noreferrer">Find your UMLS Terminology Services API key.</a>
+                </li>
+              </ul>
             </div>
 
             <div className="authenticate-vsac__form">
               <RawTextField
-                name="username"
-                label="Username"
-                placeholder="username"
-                ref={usernameRef}
-              />
-              <RawTextField
-                name="password"
-                label="Password"
-                placeholder="password"
+                name="apiKey"
+                label="API Key"
+                placeholder="API Key"
                 type="password"
-                ref={passwordRef}
+                ref={apiKeyRef}
               />
 
               <AuthenticateVSACButton

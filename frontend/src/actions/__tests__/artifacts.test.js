@@ -252,7 +252,7 @@ describe('artifact actions', () => {
         mockArtifact,
         [], // params
         [mockPatientDstu2.patient],
-        { username: 'u', password: 'p' },
+        'apiKey',
         new CodeService(),
         { name: 'FHIR', version: '1.0.2' }
       )).then(() => {
@@ -289,7 +289,7 @@ describe('artifact actions', () => {
         mockArtifact,
         [], // params
         [mockPatientStu3.patient],
-        { username: 'u', password: 'p' },
+        'apiKey',
         new CodeService(),
         { name: 'FHIR', version: '3.0.0' }
       )).then(() => {
@@ -326,7 +326,7 @@ describe('artifact actions', () => {
         mockArtifact,
         [], // params
         [mockPatientR4.patient],
-        { username: 'u', password: 'p' },
+        'apiKey',
         new CodeService(),
         { name: 'FHIR', version: '4.0.0' }
       )).then(() => {

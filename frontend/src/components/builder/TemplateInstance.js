@@ -259,7 +259,7 @@ export default class TemplateInstance extends Component {
               setVSACAuthStatus={this.props.setVSACAuthStatus}
               vsacStatus={this.props.vsacStatus}
               vsacStatusText={this.props.vsacStatusText}
-              vsacFHIRCredentials={this.props.vsacFHIRCredentials}
+              vsacApiKey={this.props.vsacApiKey}
               isValidatingCode={this.props.isValidatingCode}
               isValidCode={this.props.isValidCode}
               codeData={this.props.codeData}
@@ -349,7 +349,7 @@ export default class TemplateInstance extends Component {
               arguments={mod.arguments}
               argumentTypes={mod.argumentTypes}
               updateAppliedModifier={this.updateAppliedModifier}
-              vsacFHIRCredentials={this.props.vsacFHIRCredentials}
+              vsacApiKey={this.props.vsacApiKey}
               loginVSACUser={this.props.loginVSACUser}
               setVSACAuthStatus={this.props.setVSACAuthStatus}
               vsacStatus={this.props.vsacStatus}
@@ -638,8 +638,8 @@ export default class TemplateInstance extends Component {
                   isRetrievingDetails={this.props.isRetrievingDetails}
                   vsacDetailsCodes={this.props.vsacDetailsCodes}
                   vsacDetailsCodesError={this.props.vsacDetailsCodesError}
-                  vsacFHIRCredentials={this.props.vsacFHIRCredentials}
-                />
+                  vsacApiKey={this.props.vsacApiKey}
+                  />
               </div>
             ))}
           </div>
@@ -695,7 +695,7 @@ export default class TemplateInstance extends Component {
 
   renderVSACOptions = () => {
     // If last time authenticated was less than 7.5 hours ago, force user to log in again.
-    if (this.props.vsacFHIRCredentials.username == null) {
+    if (!this.props.vsacApiKey) {
       return (
         <div id="vsac-controls">
           <VSACAuthenticationModal
@@ -726,14 +726,14 @@ export default class TemplateInstance extends Component {
           isRetrievingDetails={this.props.isRetrievingDetails}
           vsacDetailsCodes={this.props.vsacDetailsCodes}
           vsacDetailsCodesError={this.props.vsacDetailsCodesError}
-          vsacFHIRCredentials={this.props.vsacFHIRCredentials}
+          vsacApiKey={this.props.vsacApiKey}
         />
 
         <CodeSelectModal
           className="element-select__modal"
           updateElement={this.updateInstance}
           template={this.props.templateInstance}
-          vsacFHIRCredentials={this.props.vsacFHIRCredentials}
+          vsacApiKey={this.props.vsacApiKey}
           isValidatingCode={this.props.isValidatingCode}
           isValidCode={this.props.isValidCode}
           codeData={this.props.codeData}
@@ -1115,9 +1115,9 @@ TemplateInstance.propTypes = {
   validateCode: PropTypes.func,
   validateReturnType: PropTypes.bool,
   valueSets: PropTypes.array,
+  vsacApiKey: PropTypes.string,
   vsacDetailsCodes: PropTypes.array.isRequired,
   vsacDetailsCodesError: PropTypes.string,
-  vsacFHIRCredentials: PropTypes.object.isRequired,
   vsacSearchCount: PropTypes.number.isRequired,
   vsacSearchResults: PropTypes.array.isRequired,
   vsacStatus: PropTypes.string,
