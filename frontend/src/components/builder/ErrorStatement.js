@@ -69,7 +69,6 @@ export default class ErrorStatement extends Component {
     this.props.updateErrorStatement(newErrorStatement);
   }
 
-  // event => this.setStatement(event, parent, index, 'condition', options)
   // Updates the if/then statements in base and child
   setStatement = (event, parent, index, type, options = null) => {
     let value = event?.target?.value;
