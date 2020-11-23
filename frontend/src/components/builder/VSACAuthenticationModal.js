@@ -63,7 +63,7 @@ class VSACAuthenticationModal extends Component {
         {this.renderButton()}
 
         <Modal
-          modalTitle="Login to VSAC your account"
+          modalTitle="Log in to your VSAC account"
           modalId="vsac-login"
           modalTheme="dark"
           modalSubmitButtonText="Login"
@@ -73,7 +73,21 @@ class VSACAuthenticationModal extends Component {
         >
           <div className="login-modal modal__content">
             <div className="login-modal__disclaimer">
-              Use your UMLS account to log in to VSAC to access value sets and codes within the CDS Authoring Tool.
+              Use your UMLS Terminology Services API key to log in to VSAC to access value sets and codes within the CDS
+              Authoring Tool.
+              <p/>
+              <ul className="modal__helptext">
+                <li>
+                  Need an account? {' '}
+                  <a href={`${process.env.PUBLIC_URL}/documentation#Requesting_UTS_Account`} target="_blank"
+                     rel="noopener noreferrer">Request a UMLS Terminology Services account.</a>
+                </li>
+                <li>
+                  Don't know your UMLS API key? {' '}
+                  <a href={`${process.env.PUBLIC_URL}/documentation#Accessing_UMLS_API_Key`} target="_blank"
+                     rel="noopener noreferrer">Find your UMLS Terminology Services API key.</a>
+                </li>
+              </ul>
             </div>
 
             <div className="login-modal__form">

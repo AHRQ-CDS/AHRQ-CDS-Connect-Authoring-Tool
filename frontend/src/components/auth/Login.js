@@ -56,7 +56,7 @@ export default class Login extends Component {
         </button>
 
         <Modal
-          modalTitle="Login to your account"
+          modalTitle="Log in to your account"
           modalId="login"
           modalTheme="dark"
           modalSubmitButtonText="Login"
