@@ -89,7 +89,7 @@ describe('<ElementSelect />', () => {
     });
 
     it('displays the Authenticate VSAC button when not logged in and selecting a generic type with VSAC auth', () => {
-      const { getByText, getByLabelText } = renderComponent({ vsacApiKey:  null });
+      const { getByText } = renderComponent({ vsacApiKey:  null });
 
       userEvent.click(screen.getByLabelText('Element type'));
       userEvent.click(getByText('Observation'));

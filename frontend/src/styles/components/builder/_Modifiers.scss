@@ -65,3 +65,13 @@ label.modifier-title {
   padding-left: 1em;
   border-left: 4px solid $gray-lighter;
 }
+
+.applied-modifiers .modifier .value-comparison-observation {
+  @include respond-to('handheld') {
+    display: block;
+
+    .modifier-input {
+      margin: 10px 0;
+    }
+  }
+}

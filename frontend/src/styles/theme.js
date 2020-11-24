@@ -9,6 +9,7 @@ const colors = {
   blue: '#1f2f3c',
   blueDark: '#08101c',
   blueLight: '#303e4a',
+  blueLink: '#004198',
   red: '#961328'
 };
 
@@ -126,6 +127,11 @@ const materialUiOverridesBase = {
       }
     }
   },
+  MuiLink: {
+    root: {
+      color: colors.blueLink
+    }
+  },
   MuiPaper: {
     root: {
       backgroundColor: colors.white
@@ -153,6 +159,15 @@ const materialUiOverridesDark ={
       color: colors.grayLighter,
       '&:hover': {
         backgroundColor: colors.blueLight
+      }
+    }
+  },
+  MuiLink: {
+    root: {
+      color: colors.white,
+      fontWeight: 'bold',
+      '&:hover, &:focus': {
+        color: colors.white
       }
     }
   },

@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faExclamationCircle, faSpinner, faKey } from '@fortawesome/free-solid-svg-icons';
 
-import { Modal }  from 'components/elements';
+import { Link, Modal }  from 'components/elements';
 
 class VSACAuthenticationModal extends Component {
   constructor(props) {
@@ -78,14 +78,18 @@ class VSACAuthenticationModal extends Component {
               <p/>
               <ul className="modal__helptext">
                 <li>
-                  Need an account? {' '}
-                  <a href={`${process.env.PUBLIC_URL}/documentation#Requesting_UTS_Account`} target="_blank"
-                     rel="noopener noreferrer">Request a UMLS Terminology Services account.</a>
+                  Need an account?{' '}
+                  <Link
+                    href={`${process.env.PUBLIC_URL}/documentation#Requesting_UTS_Account`}
+                    text="Request a UMLS Terminology Services account."
+                  />
                 </li>
                 <li>
-                  Don't know your UMLS API key? {' '}
-                  <a href={`${process.env.PUBLIC_URL}/documentation#Accessing_UMLS_API_Key`} target="_blank"
-                     rel="noopener noreferrer">Find your UMLS Terminology Services API key.</a>
+                  Don't know your UMLS API key?{' '}
+                  <Link
+                    href={`${process.env.PUBLIC_URL}/documentation#Accessing_UMLS_API_Key`}
+                    text="Find your UMLS Terminology Services API key."
+                  />
                 </li>
               </ul>
             </div>

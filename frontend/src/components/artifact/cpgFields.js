@@ -11,7 +11,7 @@ import {
   DateRangeField
 } from '../fields';
 
-import { ExternalLink } from 'components/elements';
+import { Link } from 'components/elements';
 import nuccProviderTaxonomy from '../../data/nuccProviderTaxonomyV20.0'; // http://nucc.org/
 import fhirWorkflowTaskCodes from '../../data/fhirWorkflowTaskCodesV3'; // https://terminology.hl7.org/1.0.0/ValueSet-v3-ActTaskCode.html
 import fhirClinicalVenueCodes from '../../data/fhirClinicalVenueCodesV3'; // https://terminology.hl7.org/1.0.0/ValueSet-v3-ServiceDeliveryLocationRoleType.html
@@ -21,7 +21,8 @@ import fhirClinicalVenueCodes from '../../data/fhirClinicalVenueCodesV3'; // htt
 const versionHelperText = (
   <>
     Version should follow the Apache APR versioning scheme (e.g., 1.0.0). See{' '}
-    <ExternalLink
+    <Link
+      external
       href="http://build.fhir.org/ig/HL7/cqf-recommendations/documentation-libraries.html"
       text="FHIR Clinical Guidelines"
     />
@@ -32,7 +33,8 @@ const versionHelperText = (
 const cpgScoreHelperText = (
   <>
     The CPG score is the percentage of optional CPG-on-FHIR fields completed on this form.{' '}
-    <ExternalLink
+    <Link
+      external
       href="http://hl7.org/fhir/uv/cpg/2019Sep/"
       text="Clinical Practice Guidelines on FHIR (CPG-on-FHIR)"
     />

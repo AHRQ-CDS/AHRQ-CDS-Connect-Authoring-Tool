@@ -6,7 +6,7 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import _ from 'lodash';
 
-import { Dropdown, ExternalLink, Modal } from 'components/elements';
+import { Dropdown, Link, Modal } from 'components/elements';
 import { getFieldWithId, getFieldWithType } from '../../utils/instances';
 
 export default class CodeSelectModal extends Component {
@@ -220,7 +220,8 @@ export default class CodeSelectModal extends Component {
           <div className="notification">
             <FontAwesomeIcon icon={faExclamationCircle} />
             Code systems should use their canonical URL. See{' '}
-            <ExternalLink
+            <Link
+              external
               href="http://build.fhir.org/ig/HL7/cqf-recommendations/documentation-libraries.html"
               text="FHIR® Clinical Guidelines"
             />

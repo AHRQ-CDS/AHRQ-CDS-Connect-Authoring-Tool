@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { Link as MuiLink } from '@material-ui/core';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faExternalLinkAlt } from '@fortawesome/free-solid-svg-icons';
 
@@ -17,21 +18,41 @@ function onVisitExternalLink(e) {
   }
 }
 
-const ExternalLink = ({ href, text }) => (
-  <a
-    target="_blank"
-    rel="nofollow noopener noreferrer"
-    onClick={onVisitExternalLink}
-    href={href}
-  >
-    <span>{text} </span>
-    <FontAwesomeIcon icon={faExternalLinkAlt} size="xs" />
-  </a>
-);
+const Link = ({ external = false, href, sameTab = false, text }) => {
+  if (external) {
+    return (
+      <MuiLink
+        target="_blank"
+        rel="nofollow noopener noreferrer"
+        onClick={onVisitExternalLink}
+        href={href}
+      >
+        <span>{text} </span>
+        <FontAwesomeIcon icon={faExternalLinkAlt} size="xs" />
+      </MuiLink>
+    );
+  }
 
-ExternalLink.propTypes = {
+  if (!external && !sameTab) {
+    return (
+      <MuiLink
+        target="_blank"
+        rel="nofollow noopener noreferrer"
+        href={href}
+      >
+        {text}
+      </MuiLink>
+    );
+  }
+
+  if (!external && sameTab) return <MuiLink href={href}>{text}</MuiLink>;
+};
+
+Link.propTypes = {
+  external: PropTypes.bool,
   href: PropTypes.string.isRequired,
+  sameTab: PropTypes.bool,
   text: PropTypes.string.isRequired
 };
 
-export default ExternalLink;
+export default Link;

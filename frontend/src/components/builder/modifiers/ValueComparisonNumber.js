@@ -41,7 +41,7 @@ export default class ValueComparisonNumber extends Component {
         <div className="modifier-dropdown-short">
           <Dropdown
             id={minOperatorId}
-            label="Min Operator"
+            label="minOp"
             onChange={this.handleChangeMin}
             options={options}
             value={minOperator}
@@ -69,7 +69,7 @@ export default class ValueComparisonNumber extends Component {
         <div className="modifier-dropdown-short">
           <Dropdown
             id={maxOperatorId}
-            label="Max Operator"
+            label="maxOp"
             onChange={this.handleChangeMax}
             options={options}
             value={maxOperator}
