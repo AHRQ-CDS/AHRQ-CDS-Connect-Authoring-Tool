@@ -235,15 +235,17 @@ export default class Recommendation extends Component {
             <div className="card-element__label">Recommend...</div>
           </div>
 
-          <textarea
-            className="card-element__textarea"
-            name="text"
-            aria-label="Recommendation"
-            title="Recommendation text"
-            placeholder='Describe your recommendation'
-            value={this.state.text}
-            onChange={this.handleChange}
-          />
+          <div>
+            <textarea
+              className="card-element__textarea"
+              name="text"
+              aria-label="Recommendation"
+              title="Recommendation text"
+              placeholder='Describe your recommendation'
+              value={this.state.text}
+              onChange={this.handleChange}
+            />
+          </div>
 
           {this.state.showRationale &&
             <div className="recommendation__rationale">

@@ -940,28 +940,6 @@ export default class TemplateInstance extends Component {
             uniqueId={templateInstance.uniqueId}
           />
 
-          {
-            doesHaveDuplicateName &&
-            !doesHaveBaseElementUseWarning &&
-            !doesHaveBaseElementInstanceWarning &&
-            !doesHaveParameterUseWarning &&
-            <div className="warning">Warning: Name already in use. Choose another name.</div>
-          }
-
-          {doesHaveBaseElementUseWarning &&
-            <div className="warning">Warning: This use of the Base Element has changed. Choose another name.</div>
-          }
-
-          {doesHaveBaseElementInstanceWarning &&
-            <div className="warning">
-              Warning: One or more uses of this Base Element have changed. Choose another name.
-            </div>
-          }
-
-          {doesHaveParameterUseWarning &&
-            <div className="warning">Warning: This use of the Parameter has changed. Choose another name.</div>
-          }
-
           {commentField && showComment &&
             <TextAreaField
               key={commentField.id}
@@ -969,6 +947,30 @@ export default class TemplateInstance extends Component {
               updateInstance={this.updateInstance}
             />
           }
+
+          <div className="card-element__warnings">
+            {
+              doesHaveDuplicateName &&
+              !doesHaveBaseElementUseWarning &&
+              !doesHaveBaseElementInstanceWarning &&
+              !doesHaveParameterUseWarning &&
+              <div className="warning">Warning: Name already in use. Choose another name.</div>
+            }
+
+            {doesHaveBaseElementUseWarning &&
+              <div className="warning">Warning: This use of the Base Element has changed. Choose another name.</div>
+            }
+
+            {doesHaveBaseElementInstanceWarning &&
+              <div className="warning">
+                Warning: One or more uses of this Base Element have changed. Choose another name.
+              </div>
+            }
+
+            {doesHaveParameterUseWarning &&
+              <div className="warning">Warning: This use of the Parameter has changed. Choose another name.</div>
+            }
+          </div>
         </>
       );
     }

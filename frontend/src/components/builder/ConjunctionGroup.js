@@ -256,7 +256,7 @@ export default class ConjunctionGroup extends Component {
       return (
         <div className="card-group__top">
           <div className="card-group__header">
-            <div className="card-group__header-title">
+            <div className="card-group__title">
               {showGroup ?
                 <>
                   <StringField
@@ -273,10 +273,6 @@ export default class ConjunctionGroup extends Component {
                       value={elementCommentField.value}
                       updateInstance={this.handleCommentChange}
                     />
-                  }
-
-                  {conjunctionHasDuplicateName &&
-                    <div className="warning">Warning: Name already in use. Choose another name.</div>
                   }
                 </>
               :
@@ -321,6 +317,12 @@ export default class ConjunctionGroup extends Component {
 
               {disableAddElement && this.renderDisabledTooltip(`deletebutton-${this.props.instance.uniqueId}`)}
             </div>
+          </div>
+
+          <div className="card-group__warnings">
+            {conjunctionHasDuplicateName && showGroup &&
+              <div className="warning">Warning: Name already in use. Choose another name.</div>
+            }
           </div>
 
           <ExpressionPhrase

@@ -118,28 +118,32 @@ export default class Parameter extends Component {
 
     return (
       <div className="card-element">
-        <div className="card-element__header">
-          <div className="heading-name">
-            {name}: {parameterNeedsWarning &&
-              <div className="warning"><FontAwesomeIcon icon={faExclamationCircle} /> Has warnings</div>
-            }
+        <div className="card-element__header collapsed">
+          <div className="card-element__header-top">
+            <div className="card-group__title card-element__heading">
+              <div className="heading-name">
+                {name}: {parameterNeedsWarning &&
+                  <div className="warning"><FontAwesomeIcon icon={faExclamationCircle} /> Has warnings</div>
+                }
+              </div>
+            </div>
+
+            {this.renderElementButtons(parameterUsed, disabledClass)}
           </div>
 
-          {this.renderElementButtons(parameterUsed, disabledClass)}
-        </div>
-
-        <div className="expression expression__group expression-collapsed">
-          <div className="expression-logic">
-            {this.startsWithVowel(type) ? "An " : "A "}
-            <span className="expression-item expression-tag" aria-label="Type">
-              {type}
-            </span>
-              parameter {value ? " that defaults to " : " with no default value."}
-            {value &&
-              <span className='expression-item expression-tag' aria-label='Default Value' >
-                {value}
+          <div className="expression expression__group expression-collapsed">
+            <div className="expression-logic">
+              {this.startsWithVowel(type) ? "An " : "A "}
+              <span className="expression-item expression-tag" aria-label="Type">
+                {type}
               </span>
-            }
+                parameter {value ? " that defaults to " : " with no default value."}
+              {value &&
+                <span className='expression-item expression-tag' aria-label='Default Value' >
+                  {value}
+                </span>
+              }
+            </div>
           </div>
         </div>
       </div>
@@ -239,7 +243,7 @@ export default class Parameter extends Component {
           <div className="card-element">
             <div className="card-element__header">
               <div className="card-element__header-top">
-                <div className="card-group__header-title">
+                <div className="card-group__title">
                   <StringField
                     id={`param-name-${index}`}
                     name={'Parameter Name'}
@@ -263,27 +267,29 @@ export default class Parameter extends Component {
                     />
                   }
                 </div>
+              </div>
 
-                {this.renderElementButtons(parameterUsed, disabledClass)}
+              {this.renderElementButtons(parameterUsed, disabledClass)}
+
+              <div className="card-group__warnings">
+                {doesHaveDuplicateName && !doesHaveParameterUsageWarning &&
+                  <div className="warning">Warning: Name already in use. Choose another name.</div>
+                }
+
+                {parameterUsed &&
+                  <div className="notification">
+                    <FontAwesomeIcon icon={faExclamationCircle} />
+                    Parameter name and type can't be changed while it is being referenced.
+                  </div>
+                }
+
+                {doesHaveParameterUsageWarning &&
+                  <div className="warning">
+                    Warning: One or more uses of this Parameter have changed. Choose another name.
+                  </div>
+                }
               </div>
             </div>
-
-            {doesHaveDuplicateName && !doesHaveParameterUsageWarning &&
-              <div className="warning">Warning: Name already in use. Choose another name.</div>
-            }
-
-            {parameterUsed &&
-              <div className="notification">
-                <FontAwesomeIcon icon={faExclamationCircle} />
-                Parameter name and type can't be changed while it is being referenced.
-              </div>
-            }
-
-            {doesHaveParameterUsageWarning &&
-              <div className="warning">
-                Warning: One or more uses of this Parameter have changed. Choose another name.
-              </div>
-            }
 
             <div className="card-element__body">
               <div className="field parameter-field">

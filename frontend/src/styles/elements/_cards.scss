@@ -1,14 +1,57 @@
 .card-group {
-  width: 100%;
+  flex-flow: column;
   border-radius: 0.2em;
 
   &__top {
-    margin-left: 0;
-    border-radius: 0.2em;
-    justify-content: space-between;
     width: 100%;
 
-    .card-element { background-color: $gray-lightest; }
+    .card-element {
+      background-color: $gray-lightest;
+    }
+  }
+
+  &__header {
+    display: flex;
+  }
+
+  &__title {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+
+    .field {
+      margin-bottom: 10px;
+    }
+
+    .input {
+      width: 100%;
+
+      textarea {
+        padding: 6px 15px;
+      }
+
+      input,
+      textarea {
+        width: 95%;
+      }
+    }
+
+    .group-heading-name {
+      display: flex;
+      align-items: center;
+      font-weight: bold;
+
+      .warning {
+        margin-left: 20px;
+        font-weight: normal;
+      }
+    }
+  }
+
+  &__buttons {
+    flex: 1;
+    text-align: right;
+    white-space: nowrap;
   }
 
   &__even {
@@ -43,16 +86,63 @@
   }
 
   .card-element {
-    padding: 0;
     border: 0.1em solid $border-color;
     border-radius: 0.2em;
-    font-weight: 500;
-    width: 100%;
-    margin-bottom: 1em;
 
-    &__label {
-      font-size: 1.2em;
-      margin: 0;
+    &__header {
+      display: flex;
+      justify-content: space-between;
+      padding: 1em;
+
+      &.collapsed {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+    }
+
+    &__header-top {
+      display: flex;
+      flex: 4;
+      width: 100%;
+
+      .card-element__heading {
+        flex: 4;
+      }
+
+      .card-element__buttons {
+        text-align: right;
+        white-space: nowrap;
+      }
+    }
+
+    &__heading {
+      .field {
+        margin-bottom: 10px;
+      }
+
+      .input {
+        width: 100%;
+
+        textarea {
+          padding: 6px 15px;
+        }
+
+        input,
+        textarea {
+          width: 95%;
+        }
+      }
+
+      .heading-name {
+        display: flex;
+        align-items: center;
+        font-weight: bold;
+
+        .warning {
+          margin-left: 20px;
+          font-weight: normal;
+        }
+      }
     }
 
     &__textarea {
@@ -60,6 +150,11 @@
       min-height: 100px;
       margin: 0.5em 0;
       padding: 0.5em;
+    }
+
+    &__label {
+      font-size: 1.2em;
+      margin: 0;
     }
 
     &.base-element {
@@ -70,61 +165,6 @@
       .card-element__footer {
         border-color: lighten($blue-light, 20%);
       }
-    }
-
-    &__header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 1em 0.5em 1em 2em;
-
-      label {
-        display: flex;
-        align-items: center;
-      }
-
-      input {
-        width: 30em;
-      }
-
-      &-top {
-        display: flex;
-        align-items: center;
-        width: 100%;
-
-        .card-element__heading {
-          flex: 4;
-        }
-
-        .card-element__buttons {
-          flex: 1;
-          text-align: right;
-          white-space: nowrap;
-        }
-      }
-
-      &.collapsed {
-        flex-direction: column;
-        align-items: flex-start;
-      }
-
-      &-expression {
-        margin-bottom: 20px;
-      }
-    }
-
-    &__heading .heading-name {
-      display: flex;
-      align-items: center;
-      font-weight: bold;
-
-      .warning {
-        font-weight: normal;
-      }
-    }
-
-    &__buttons button {
-      margin-left: 0.5em;
     }
 
     &__body {
@@ -162,27 +202,6 @@
     }
   }
 
-  .card-group__header {
-    display: flex;
-    padding-left: 20px;
-
-    label {
-      display: flex;
-      align-items: center;
-    }
-  }
-
-  .card-group__header-title {
-    flex: 4;
-  }
-
-  .card-group__buttons {
-    flex: 1;
-    text-align: right;
-    margin-top: 10px;
-    white-space: nowrap;
-  }
-
   .card-select {
     width: 12em;
     margin: 20px 0;
@@ -190,15 +209,5 @@
     border-radius: 0.2em;
     box-shadow: 1px 1px 1px 0 rgba(21, 21, 21, 0.1);
     min-width: 200px;
-  }
-
-  .group-heading-name {
-    display: flex;
-    align-items: center;
-    font-weight: bold;
-
-    .warning {
-      font-weight: normal;
-    }
   }
 }
