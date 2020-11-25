@@ -41,7 +41,11 @@
 }
 
 .modifier-dropdown-short {
-  width: 150px;
+  width: 120px;
+
+  @include respond-to('1439px') {
+    width: 90px;
+  }
 }
 
 .modifier-dropdown-wide {
