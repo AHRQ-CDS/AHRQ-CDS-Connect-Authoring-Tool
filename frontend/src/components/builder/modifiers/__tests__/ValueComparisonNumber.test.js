@@ -1,6 +1,6 @@
 import React from 'react';
+import { render, fireEvent, userEvent, screen } from 'utils/test-utils';
 import ValueComparisonNumber from '../ValueComparisonNumber';
-import { render, fireEvent, openSelect } from '../../../../utils/test-utils';
 
 describe('<ValueComparisonNumber />', () => {
   const renderComponent = (props = {}) =>
@@ -19,20 +19,20 @@ describe('<ValueComparisonNumber />', () => {
 
   it('calls updateAppliedModifier when input changes', () => {
     const updateAppliedModifier = jest.fn();
-    const { getByText, getByLabelText } = renderComponent({ updateAppliedModifier });
+    renderComponent({ updateAppliedModifier });
 
-    fireEvent.change(getByLabelText('Min Value'), { target: { value: 21 } });
+    fireEvent.change(screen.getByLabelText('Min Value'), { target: { value: 21 } });
     expect(updateAppliedModifier).toBeCalledWith(303, { minValue: 21 });
 
-    openSelect(getByLabelText('Min Operator'));
-    fireEvent.click(getByText('<'));
-    expect(updateAppliedModifier).toBeCalledWith(303, { minOperator: '<' });
+    userEvent.click(screen.getByLabelText('minOp'));
+    userEvent.click(screen.getByText('<'));
 
-    fireEvent.change(getByLabelText('Max Value'), { target: { value: 189 } });
+    fireEvent.change(screen.getByLabelText('Max Value'), { target: { value: 189 } });
     expect(updateAppliedModifier).toBeCalledWith(303, { maxValue: 189 });
 
-    openSelect(getByLabelText('Max Operator'));
-    fireEvent.click(getByText('!='));
+    userEvent.click(screen.getByLabelText('maxOp'));
+    userEvent.click(screen.getAllByText('!=')[1]);
+
     expect(updateAppliedModifier).toBeCalledWith(303, { maxOperator: '!=' });
   });
 });

@@ -1,11 +1,12 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import Modal from 'react-modal';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faSpinner, faArrowLeft, faThList, faTimes, faEye } from '@fortawesome/free-solid-svg-icons';
+import { faSpinner, faArrowLeft, faThList, faEye } from '@fortawesome/free-solid-svg-icons';
+import classnames from 'classnames';
 import _ from 'lodash';
 
-import { getFieldWithId, getFieldWithType } from '../../utils/instances';
+import { Modal } from 'components/elements';
+import { getFieldWithId, getFieldWithType } from 'utils/instances';
 
 export default class ElementModal extends Component {
   constructor(props) {
@@ -202,52 +203,38 @@ export default class ElementModal extends Component {
     return null;
   }
 
-  renderSearchButton = () => {
-    if (this.props.viewOnly || this.state.selectedElement) return null;
+  renderSearchButton = () => (
+    <button
+      className="primary-button element-modal__searchbutton"
+      onClick={this.searchVSAC}
+      aria-label="Search"
+    >
+      Search
+    </button>
+  );
 
-    return (
-      <button className="primary-button element-modal__searchbutton"
-        onClick={this.searchVSAC}
-        aria-label="Search">
-        Search
-      </button>
-    );
-  }
+  renderBackButton = () => (
+    <div
+      className="nav-icon"
+      role="button"
+      tabIndex="0"
+      onClick={this.backToSearchResults}
+      onKeyDown={e => this.enterKeyCheck(this.backToSearchResults, null, e)}
+    >
+      <FontAwesomeIcon icon={faArrowLeft} />
+    </div>
+  );
 
-  renderSelectButton = () => {
-    if (this.props.viewOnly) return null;
+  renderButtonToOpenModal = () => {
+    const { labels, useIconButton } = this.props;
+    let buttonLabels = {
+      openButtonText: 'Add Value Set',
+      closeButtonText: 'Cancel'
+    };
 
-    return (
-      <button
-        disabled={!this.state.selectedElement}
-        className="primary-button element-modal__searchbutton"
-        onClick={this.handleChosenVS}
-        aria-label="Select">
-        Select
-      </button>
-    );
-  }
+    if (labels) buttonLabels = labels;
 
-  renderBackButton = () => {
-    if (this.props.viewOnly) return null;
-
-    if (this.state.selectedElement) {
-      return (
-        <span className="nav-icon"
-          role="button"
-          tabIndex="0"
-          onClick={this.backToSearchResults}
-          onKeyDown={e => this.enterKeyCheck(this.backToSearchResults, null, e)}>
-          <FontAwesomeIcon icon={faArrowLeft} />
-        </span>
-      );
-    }
-
-    return null;
-  }
-
-  renderButtonToOpenModal = (buttonLabels) => {
-    if (this.props.useIconButton) {
+    if (useIconButton) {
       return (
         <span
           role="button"
@@ -271,93 +258,68 @@ export default class ElementModal extends Component {
     );
   }
 
-  render() {
+  renderModalHeader = () => {
+    const { viewOnly } = this.props;
+    const { searchValue, selectedElement } = this.state;
     const modalInputLabel = 'Enter value set keyword...';
 
-    let buttonLabels = {
-      openButtonText: 'Add Value Set',
-      closeButtonText: 'Cancel'
-    };
-
-    if (this.props.labels) {
-      buttonLabels = this.props.labels;
-    }
-
     let inputDisplayValue;
-    if (this.state.selectedElement) {
-      inputDisplayValue = `${this.state.selectedElement.name} (${this.state.selectedElement.oid})`;
+    if (selectedElement) {
+      inputDisplayValue = `${selectedElement.name} (${selectedElement.oid})`;
     } else {
-      inputDisplayValue = this.state.searchValue;
+      inputDisplayValue = searchValue;
     }
 
     return (
-      <span className={ `${this.props.className} element-modal` }>
-        <span id="open-modal-button">{this.renderButtonToOpenModal(buttonLabels)}</span>
+      <div className="element-modal__header">
+        <div className="element-modal__search-container">
+          {!viewOnly && selectedElement && this.renderBackButton()}
+
+          <div className="element-modal__search">
+            <input
+              type="text"
+              disabled={selectedElement}
+              placeholder={modalInputLabel}
+              aria-label={modalInputLabel}
+              title={modalInputLabel}
+              value={inputDisplayValue}
+              onChange={this.handleSearchValueChange}
+              onKeyDown={event => this.enterKeyCheck(this.searchVSAC, searchValue, event)}
+            />
+          </div>
+
+          {!viewOnly && !selectedElement && this.renderSearchButton()}
+        </div>
+      </div>
+    );
+  };
+
+  render() {
+    const { className, viewOnly, vsacSearchCount } = this.props;
+    const { isOpen, selectedElement } = this.state;
+
+    return (
+      <div className={classnames('element-modal', className)}>
+        <div id="open-modal-button">{this.renderButtonToOpenModal()}</div>
 
         <Modal
-          isOpen={ this.state.isOpen }
-          onRequestClose={ this.closeModal }
-          shouldCloseOnOverlayClick={ true }
-          contentLabel="Browse elements"
-          className="modal-style modal-style__light modal-style--full-height element-modal"
-          overlayClassName='modal-overlay modal-overlay__dark'
+          handleCloseModal={this.closeModal}
+          handleSaveModal={this.handleChosenVS}
+          handleShowModal={isOpen}
+          hasCancelButton
+          hasTitleIcon={vsacSearchCount > 0}
+          hideSubmitButton={viewOnly}
+          Header={this.renderModalHeader()}
+          submitButtonText="Select"
+          submitDisabled={!selectedElement}
+          title="Choose value sets"
+          TitleIcon={<><FontAwesomeIcon icon={faThList} /> {selectedElement ? 1 : vsacSearchCount}</>}
         >
-          <div className="element-modal__container">
-            <header className="modal__header">
-              <span className="modal__heading">Choose Value Sets</span>
-              {this.props.vsacSearchCount > 0 &&
-                <span><FontAwesomeIcon icon={faThList} />
-                  {' '}{this.state.selectedElement ? 1 : this.props.vsacSearchCount}
-                </span>
-              }
-
-              <button
-                className="element__deletebutton transparent-button"
-                onClick={this.closeModal}
-                onKeyDown={e => this.enterKeyCheck(this.closeModal, null, e)}
-                aria-label="Close Value Set Select Modal"
-              >
-                <FontAwesomeIcon icon={faTimes} />
-              </button>
-            </header>
-
-            <main className="modal__body">
-              <div className="element-modal__search">
-                {this.renderBackButton()}
-
-                <input
-                  type="text"
-                  disabled={this.state.selectedElement}
-                  placeholder={ modalInputLabel }
-                  aria-label={ modalInputLabel }
-                  title={ modalInputLabel }
-                  value={ inputDisplayValue }
-                  onChange={ this.handleSearchValueChange }
-                  onKeyDown={ e => this.enterKeyCheck(this.searchVSAC, this.state.searchValue, e)}
-                />
-
-                {this.renderSearchButton()}
-              </div>
-
-              <div className="element-modal__content">
-                {this.renderSearchResultsTable()}
-              </div>
-            </main>
-
-            <footer className="modal__footer">
-              <button
-                className="secondary-button"
-                onClick={ this.closeModal }
-                onKeyDown={ e => this.enterKeyCheck(this.closeModal, null, e) }
-                aria-label="Close"
-              >
-                {buttonLabels.closeButtonText}
-              </button>
-              {this.renderSelectButton()}
-            </footer>
+          <div className="element-modal__content">
+            {this.renderSearchResultsTable()}
           </div>
         </Modal>
-      </span>
+      </div>
     );
   }
 }

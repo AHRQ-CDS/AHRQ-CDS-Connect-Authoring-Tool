@@ -11,7 +11,6 @@ import { faPencilAlt, faDownload, faSave, faAlignRight, faBook } from '@fortawes
 import _ from 'lodash';
 
 import loadTemplates from '../actions/templates';
-import loadValueSets from '../actions/value_sets';
 import { loadConversionFunctions } from '../actions/modifiers';
 import {
   setStatusMessage, downloadArtifact, saveArtifact, loadArtifact, updateArtifact, initializeArtifact,
@@ -353,7 +352,7 @@ export class Builder extends Component {
 
   renderConjunctionGroup = (treeName) => {
     const {
-      artifact, templates, valueSets,
+      artifact, templates,
       vsacStatus, vsacStatusText,
       isRetrievingDetails, vsacDetailsCodes, vsacDetailsCodesError,
       modifierMap, modifiersByInputType, isLoadingModifiers, conversionFunctions,
@@ -368,8 +367,6 @@ export class Builder extends Component {
           treeName={treeName}
           artifact={artifact}
           templates={templates}
-          valueSets={valueSets}
-          loadValueSets={this.props.loadValueSets}
           instance={artifact[treeName]}
           addInstance={this.addInstance}
           editInstance={this.editInstance}
@@ -588,8 +585,6 @@ export class Builder extends Component {
                   <Subpopulations
                     name={'subpopulations'}
                     artifact={artifact}
-                    valueSets={this.props.valueSets}
-                    loadValueSets={this.props.loadValueSets}
                     updateSubpopulations={this.updateSubpopulations}
                     parameters={namedParameters}
                     baseElements={artifact.baseElements}
@@ -641,7 +636,6 @@ export class Builder extends Component {
                     treeName='baseElements'
                     instance={artifact}
                     addBaseElement={this.addBaseElement}
-                    loadValueSets={this.props.loadValueSets}
                     getAllInstances={this.getAllInstances}
                     getAllInstancesInAllTrees={this.getAllInstancesInAllTrees}
                     addInstance={this.addInstance}
@@ -650,7 +644,6 @@ export class Builder extends Component {
                     deleteInstance={this.deleteInstance}
                     updateBaseElementLists={this.updateSubpopulations}
                     templates={templates}
-                    valueSets={this.props.valueSets}
                     modifierMap={modifierMap}
                     modifiersByInputType={modifiersByInputType}
                     isLoadingModifiers={isLoadingModifiers}
@@ -796,7 +789,6 @@ Builder.propTypes = {
   statusMessage: PropTypes.string,
   templates: PropTypes.array,
   loadTemplates: PropTypes.func.isRequired,
-  loadValueSets: PropTypes.func.isRequired,
   loadArtifact: PropTypes.func.isRequired,
   initializeArtifact: PropTypes.func.isRequired,
   updateArtifact: PropTypes.func.isRequired,
@@ -835,7 +827,6 @@ Builder.propTypes = {
 function mapDispatchToProps(dispatch) {
   return bindActionCreators({
     loadTemplates,
-    loadValueSets,
     loadArtifact,
     initializeArtifact,
     updateArtifact,
@@ -868,7 +859,6 @@ function mapStateToProps(state) {
     downloadedArtifact: state.artifacts.downloadArtifact,
     statusMessage: state.artifacts.statusMessage,
     templates: state.templates.templates,
-    valueSets: state.valueSets.valueSets,
     publishEnabled: state.artifacts.publishEnabled,
     names: state.artifacts.names,
     librariesInUse: state.artifacts.librariesInUse,

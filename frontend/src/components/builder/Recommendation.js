@@ -5,8 +5,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTimes, faCaretUp, faCaretDown } from '@fortawesome/free-solid-svg-icons';
 import _ from 'lodash';
 
-import StyledSelect from '../elements/StyledSelect';
-
+import { Dropdown } from 'components/elements';
 import createTemplateInstance from '../../utils/templates';
 
 /* eslint-disable jsx-a11y/label-has-for */
@@ -27,7 +26,7 @@ export default class Recommendation extends Component {
       showSubpopulations: !!((props.rec.subpopulations && props.rec.subpopulations.length)),
       showRationale: !!props.rec.rationale.length,
       showComment: !!((props.rec.comment && props.rec.comment.length)),
-      showReordering: (props.rec.length > 1),
+      showReordering: (props.rec.length > 1)
     };
   }
 
@@ -55,7 +54,8 @@ export default class Recommendation extends Component {
     this.setState({ showSubpopulations: true });
   }
 
-  applySubpopulation = (subpop) => {
+  applySubpopulation = (event, subpopulationOptions) => {
+    const subpop = subpopulationOptions.find(option => option.uniqueId === event.target.value);
     const refSubpop = {
       uniqueId: subpop.uniqueId,
       subpopulationName: subpop.subpopulationName
@@ -134,57 +134,60 @@ export default class Recommendation extends Component {
 
   shouldShowReorderingButtons = () => this.props.artifact.recommendations.length > 1;
 
-  renderSubpopulations = () => (
-    <div className="recommendation__subpopulations">
-      {/* TODO: The following should have options: any/all */}
-      <div className="card-element__label">If all of the following apply...</div>
+  renderSubpopulations = () => {
+    const subpopulationOptions = this.getRelevantSubpopulations();
 
-      <div className="recommendation__subpopulation-pills">
-        {this.props.rec.subpopulations.map((subpop, i) => (
-          <div key={subpop.uniqueId} className="recommendation__subpopulation-pill">
-            {subpop.subpopulationName}
+    return (
+      <div className="recommendation__subpopulations">
+        {/* TODO: The following should have options: any/all */}
+        <div className="card-element__label">If all of the following apply...</div>
 
-            <button
-              className="transparent-button"
-              aria-label={`Remove ${subpop.subpopulationName}`}
-              onClick={() => this.removeSubpopulation(i)}
-            >
-              <FontAwesomeIcon fixedWidth icon={faTimes} />
-            </button>
+        <div className="recommendation__subpopulation-pills">
+          {this.props.rec.subpopulations.map((subpop, i) => (
+            <div key={subpop.uniqueId} className="recommendation__subpopulation-pill">
+              {subpop.subpopulationName}
+
+              <button
+                className="transparent-button"
+                aria-label={`Remove ${subpop.subpopulationName}`}
+                onClick={() => this.removeSubpopulation(i)}
+              >
+                <FontAwesomeIcon fixedWidth icon={faTimes} />
+              </button>
+            </div>
+          ))}
+        </div>
+
+        <div className="recommendation__add-subpopulation">
+          <div className="recommendation__subpopulation-select">
+            <Dropdown
+              id="subpopulation-select"
+              label="Add a subpopulation"
+              onChange={event => this.applySubpopulation(event, subpopulationOptions)}
+              options={subpopulationOptions}
+              value=""
+              valueKey="uniqueId"
+              labelKey="subpopulationName"
+            />
           </div>
-        ))}
-      </div>
 
-      <div className="recommendation__add-subpopulation">
-        <StyledSelect
-          className="recommendation__subpopulation-select"
-          classNamePrefix="subpopulation-select"
-          name="recommendation__subpopulation-select"
-          value="start"
-          placeholder="Add a subpopulation"
-          aria-label="Add a subpopulation"
-          options={this.getRelevantSubpopulations()}
-          onChange={this.applySubpopulation}
-          getOptionValue={({ subpopulationName }) => subpopulationName}
-          getOptionLabel={({ subpopulationName }) => subpopulationName}
-        />
-
-        <a
-          className="recommendation__new-subpopulation"
-          aria-label="New subpopulation"
-          tabIndex="0"
-          role="button"
-          onClick={this.addBlankSubpopulation}
-          onKeyPress={(e) => {
-            e.which = e.which || e.keyCode;
-            if (e.which === 13) this.addBlankSubpopulation(e);
-          }}
-        >
-          New subpopulation
-        </a>
+          <a
+            className="recommendation__new-subpopulation"
+            aria-label="New subpopulation"
+            tabIndex="0"
+            role="button"
+            onClick={this.addBlankSubpopulation}
+            onKeyPress={(e) => {
+              e.which = e.which || e.keyCode;
+              if (e.which === 13) this.addBlankSubpopulation(e);
+            }}
+          >
+            New subpopulation
+          </a>
+        </div>
       </div>
-    </div>
-  );
+    );
+  }
 
   render() {
     return (
@@ -232,15 +235,17 @@ export default class Recommendation extends Component {
             <div className="card-element__label">Recommend...</div>
           </div>
 
-          <textarea
-            className="card-element__textarea"
-            name="text"
-            aria-label="Recommendation"
-            title="Recommendation text"
-            placeholder='Describe your recommendation'
-            value={this.state.text}
-            onChange={this.handleChange}
-          />
+          <div>
+            <textarea
+              className="card-element__textarea"
+              name="text"
+              aria-label="Recommendation"
+              title="Recommendation text"
+              placeholder='Describe your recommendation'
+              value={this.state.text}
+              onChange={this.handleChange}
+            />
+          </div>
 
           {this.state.showRationale &&
             <div className="recommendation__rationale">

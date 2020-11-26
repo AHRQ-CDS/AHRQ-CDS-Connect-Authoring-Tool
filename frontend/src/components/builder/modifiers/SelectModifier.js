@@ -1,34 +1,31 @@
 import React, { Component } from 'react';
 import _ from 'lodash';
 
-import StyledSelect from '../../elements/StyledSelect';
+import { Dropdown } from 'components/elements';
 
 class SelectModifier extends Component {
-  handleChange = (selectedOption) => {
+  handleChange = (event, selectOptions) => {
+    const { index, updateAppliedModifier } = this.props;
+    const selectedOption = selectOptions.find(option => option.value === event.target.value);
     const value = selectedOption ? selectedOption.value : '';
     const description = selectedOption ? selectedOption.label : '';
-    this.props.updateAppliedModifier(this.props.index, { value, templateName: value, description });
+    updateAppliedModifier(index, { value, templateName: value, description });
   }
 
   render() {
+    const { name, options, value } = this.props;
     const selectId = _.uniqueId('select-');
-    const options = this.props.options.map(option => ({ value: option.name, label: option.description }));
+    const selectOptions = options.map(option => ({ value: option.name, label: option.description }));
 
     return (
-      <div>
-        <label htmlFor={selectId}>
-          <StyledSelect
-            className="Select"
-            classNamePrefix="select-modifier-select"
-            name={this.props.name}
-            aria-label={this.props.name}
-            id={selectId}
-            value={options.find(({ value }) => value === this.props.value)}
-            placeholder={this.props.name}
-            onChange={this.handleChange}
-            options={options}
-          />
-        </label>
+      <div className="modifier-dropdown-wide">
+        <Dropdown
+          id={selectId}
+          label={name}
+          onChange={event => this.handleChange(event, selectOptions)}
+          options={selectOptions}
+          value={value}
+        />
       </div>
     );
   }

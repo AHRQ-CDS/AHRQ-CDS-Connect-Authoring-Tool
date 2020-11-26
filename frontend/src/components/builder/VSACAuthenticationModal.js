@@ -1,11 +1,10 @@
 /* eslint-disable jsx-a11y/no-autofocus */
-
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faExclamationCircle, faSpinner, faKey } from '@fortawesome/free-solid-svg-icons';
 
-import Modal from '../elements/Modal';
+import { Link, Modal }  from 'components/elements';
 
 class VSACAuthenticationModal extends Component {
   constructor(props) {
@@ -63,10 +62,11 @@ class VSACAuthenticationModal extends Component {
         {this.renderButton()}
 
         <Modal
-          modalTitle="Log in to your VSAC account"
-          modalId="vsac-login"
-          modalTheme="dark"
-          modalSubmitButtonText="Login"
+          title="Login to your VSAC account"
+          theme="dark"
+          maxWidth="md"
+          submitButtonText="Login"
+          hasCancelButton
           handleShowModal={this.state.showVSACAuthModal}
           handleCloseModal={this.closeVSACLoginModal}
           handleSaveModal={this.loginToVSAC}
@@ -78,19 +78,23 @@ class VSACAuthenticationModal extends Component {
               <p/>
               <ul className="modal__helptext">
                 <li>
-                  Need an account? {' '}
-                  <a href={`${process.env.PUBLIC_URL}/documentation#Requesting_UTS_Account`} target="_blank"
-                     rel="noopener noreferrer">Request a UMLS Terminology Services account.</a>
+                  Need an account?{' '}
+                  <Link
+                    href={`${process.env.PUBLIC_URL}/documentation#Requesting_UTS_Account`}
+                    text="Request a UMLS Terminology Services account."
+                  />
                 </li>
                 <li>
-                  Don't know your UMLS API key? {' '}
-                  <a href={`${process.env.PUBLIC_URL}/documentation#Accessing_UMLS_API_Key`} target="_blank"
-                     rel="noopener noreferrer">Find your UMLS Terminology Services API key.</a>
+                  Don't know your UMLS API key?{' '}
+                  <Link
+                    href={`${process.env.PUBLIC_URL}/documentation#Accessing_UMLS_API_Key`}
+                    text="Find your UMLS Terminology Services API key."
+                  />
                 </li>
               </ul>
             </div>
 
-            <div className="login-modal__form">
+             <form id="modal-form" onSubmit={this.loginToVSAC} className="login-modal__form">
               <label htmlFor="apiKey">API Key</label>
               <input
                 type='password'
@@ -102,7 +106,7 @@ class VSACAuthenticationModal extends Component {
               />
 
               {this.renderedAuthStatusText()}
-            </div>
+            </form>
           </div>
         </Modal>
       </div>

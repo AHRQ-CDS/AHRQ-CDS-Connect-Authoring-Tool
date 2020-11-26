@@ -1,37 +1,26 @@
-import React, { memo, useCallback, useMemo } from 'react';
+import React, { memo, useCallback } from 'react';
 import { FastField, useFormikContext } from 'formik';
 import classnames from 'classnames';
 
-import StyledSelect from '../elements/StyledSelect';
-import { isCpgComplete } from '../../utils/fields';
+import { Dropdown } from 'components/elements';
+import { isCpgComplete } from 'utils/fields';
 
-const FormikSelect = ({
-  field: { name, value, onChange, onBlur },
-  form: { setFieldValue },
-  options,
-  ...selectProps
-}) => {
-  const handleChange = useCallback(option => {
-    setFieldValue(name, option ? option.value : null);
-  }, [setFieldValue, name]);
-
-  const selectedOption = useMemo(
-    () => {
-      if (value == null) return null;
-      return options.find(option => option.value === value);
+const FormikSelect = ({ field: { name, value, onChange }, form: { setFieldValue }, options }) => {
+  const handleChange = useCallback(
+    event => {
+      const option = options.find(option => option.value === event.target.value);
+      setFieldValue(name, option ? option.value : null);
     },
-    [options, value]
+    [name, options, setFieldValue]
   );
 
   return (
-    <StyledSelect
-      name={name}
-      value={selectedOption}
+    <Dropdown
+      id={name}
+      label={value ? null : 'Select...'}
       onChange={handleChange}
-      onBlur={onBlur}
       options={options}
-      isClearable
-      {...selectProps}
+      value={value}
     />
   );
 };
@@ -50,14 +39,15 @@ export default memo(function SelectField({
 
   return (
     <div className={classnames('form__group', `flex-col-${colSize}`)}>
-      {label &&
-        <label htmlFor={fieldName} className={classnames(helperText && 'has-helper-text')}>
+      {label && (
+        <label htmlFor={fieldName} className={classnames('field-label', helperText && 'has-helper-text')}>
           {label}
-          {isCpgField &&
+          {isCpgField && (
             <span className={classnames('cpg-tag', isCpgComplete(name, values) && 'cpg-tag-complete')}>CPG</span>
-          }:
+          )}
+          :
         </label>
-      }
+      )}
 
       <div className="input__group">
         <FastField

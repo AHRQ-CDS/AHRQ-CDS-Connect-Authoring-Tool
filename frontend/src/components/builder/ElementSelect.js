@@ -1,16 +1,16 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import pluralize from 'pluralize';
-import classnames from 'classnames';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBan, faKey, faCheck, faPlus } from '@fortawesome/free-solid-svg-icons';
-import { components as SelectComponents } from 'react-select';
+import { IconButton } from '@material-ui/core';
+import CloseIcon from '@material-ui/icons/Close';
 import _ from 'lodash';
 
 import ElementModal from './ElementModal';
 import VSACAuthenticationModal from './VSACAuthenticationModal';
 import CodeSelectModal from './CodeSelectModal';
-import StyledSelect from '../elements/StyledSelect';
+import { Dropdown } from 'components/elements';
 
 import changeToCase from '../../utils/strings';
 import filterUnsuppressed from '../../utils/filter';
@@ -24,53 +24,26 @@ const getAllElements = categories => _.flatten(categories.map(cat => (
   }))
 )));
 
-const ElementMenuList = ({ children, ...props }) => {
-  const { options } = props;
-  const optionStyle = { padding: '8px 12px' };
+const ElementOption = ({ option }) => (
+  <>
+    <span className="element-select__option-value">{option.label}</span>
 
-  return (
-    <SelectComponents.MenuList {...props}>
-      {options.length === 0 ? (
-        <div style={{ ...optionStyle, color: '#ccc' }}>
-          <FontAwesomeIcon icon={faBan} /> Cannot add element when Base Element List in use
-        </div>
-      ) : (
-        <>
-          {children}
-
-          <div style={{borderTop: '1px solid #eee', color: '#ccc'}}>
-            <div style={optionStyle}>
-              <FontAwesomeIcon icon={faKey} /> VSAC authentication required
-            </div>
-          </div>
-        </>
-      )}
-    </SelectComponents.MenuList>
-  );
-};
-
-const ElementOption = ({ children, ...props }) => (
-  <SelectComponents.Option {...props}>
-    <span className="element-select__option-value">{children}</span>
-    {props.data.vsacAuthRequired &&
-      <FontAwesomeIcon
-        icon={faKey}
-        className={classnames('element-select__option-category', props.isDisabled && 'is-disabled')}
-      />
+    {option.vsacAuthRequired &&
+      <FontAwesomeIcon icon={faKey} className="element-select__option-category" />
     }
 
-    {props.data.statementType === 'function' && (
+    {option.statementType === 'function' && (
       <span className="element-select__option-value">
-        {` | Function(${props.data.arguments.length})`}
+        {` | Function(${option.arguments.length})`}
       </span>
     )}
 
-    {props.data.displayReturnType && (
+    {option.displayReturnType && (
       <span className="element-select__option-value">
-        {` | ${props.data.displayReturnType}`}
+        {` | ${option.displayReturnType}`}
       </span>
     )}
-  </SelectComponents.Option>
+  </>
 );
 
 const elementOptions = [
@@ -332,7 +305,10 @@ export default class ElementSelect extends Component {
     );
   }
 
-  onExternalDefinitionSelected = (selectedExternalDefinition) => {
+  onExternalDefinitionSelected = (event, selectedExternalLibraryOptions) => {
+    const selectedExternalDefinition =
+      selectedExternalLibraryOptions.find(({ value }) => value === event.target.value);
+
     this.setState({ selectedExternalDefinition });
     const suggestion = {
       id: selectedExternalDefinition.uniqueId,
@@ -365,7 +341,9 @@ export default class ElementSelect extends Component {
     this.onSuggestionSelected(suggestion);
   }
 
-  onNoAuthElementSelected = (element) => {
+  onNoAuthElementSelected = (event, noAuthElementOptions) => {
+    const element = noAuthElementOptions.find(({ value }) => value === event.target.value);
+
     if (!element) {
       this.setState({ selectedExternalLibrary: null, selectedExternalDefinition: null });
     } else {
@@ -381,8 +359,14 @@ export default class ElementSelect extends Component {
     }
   }
 
-  onElementSelected = (selectedElement) => {
-    this.setState({ selectedElement, selectedExternalLibrary: null, selectedExternalDefinition: null });
+  onElementSelected = event => {
+    const selectedElement = event ? elementOptions.find(({ value }) => value === event.target.value) : null;
+
+    this.setState({
+      selectedElement,
+      selectedExternalLibrary: null,
+      selectedExternalDefinition: null
+    });
   }
 
   disableElement = elementType => {
@@ -397,14 +381,16 @@ export default class ElementSelect extends Component {
   render() {
     const { inBaseElements, elementUniqueId, disableAddElement } = this.props;
     const { selectedElement, selectedExternalLibrary, selectedExternalDefinition } = this.state;
-    const placeholderText = 'Choose element type';
+
     const elementOptionsToDisplay =
-      elementOptions
-        .filter(({ value }) => inBaseElements ? true : value !== 'listOperations')
-        .map(option => ({
-          ...option,
-          isDisabled: this.disableElement(option.label)
-        }));
+      disableAddElement
+        ? []
+        : elementOptions
+            .filter(({ value }) => inBaseElements ? true : value !== 'listOperations')
+            .map(option => ({
+              ...option,
+              isDisabled: this.disableElement(option.label)
+            }));
 
     let noAuthElementOptions;
     if (selectedElement && !selectedElement.vsacAuthRequired) {
@@ -424,12 +410,11 @@ export default class ElementSelect extends Component {
     let noAuthPlaceholder = '';
     if (selectedElement) {
       if (selectedElement.value === 'baseElement') {
-        noAuthPlaceholder = `Select ${pluralize.singular(selectedElement.label)}`;
+        noAuthPlaceholder = `${pluralize.singular(selectedElement.label)}`;
       } else {
-        noAuthPlaceholder = `Select ${selectedElement.label} element`;
+        noAuthPlaceholder = `${selectedElement.label} element`;
       }
     }
-    const externalLibraryPlaceholder = 'Choose definition, function, or parameter';
     const selectedExternalLibraryName = selectedExternalLibrary && selectedExternalLibrary.name;
     const selectedExternalLibraryOptions = [];
     if (selectedExternalLibrary) {
@@ -466,52 +451,60 @@ export default class ElementSelect extends Component {
             <FontAwesomeIcon icon={faPlus} /> Add element
           </div>
 
-          <StyledSelect
-            className="Select element-select__element-field"
-            classNamePrefix="element-select"
-            maxMenuHeight="none"
-            name="element-select__element-field"
-            value={
-              selectedElementValue
-                ? elementOptionsToDisplay.find(({ value }) => value === selectedElementValue.value)
-                : null
-            }
-            placeholder={placeholderText}
-            aria-label={placeholderText}
-            options={disableAddElement ? [] : elementOptionsToDisplay}
-            onChange={this.onElementSelected}
-            components={{ MenuList: ElementMenuList, Option: ElementOption }}
-            isClearable
-          />
+          <div className="element-select__dropdown">
+            <Dropdown
+              id="element-select"
+              label="Element type"
+              onChange={this.onElementSelected}
+              options={elementOptionsToDisplay}
+              value={selectedElementValue}
+              message={disableAddElement && (
+                <>
+                  <FontAwesomeIcon icon={faBan} className="element-select__option-icon" />
+                  Cannot add element when Base Element List in use
+                </>
+              )}
+              renderItem={option => <ElementOption option={option} />}
+              Footer={
+                <>
+                  <FontAwesomeIcon icon={faKey} className="element-select__option-icon"/>
+                  VSAC authentication required
+                </>
+              }
+            />
+          </div>
 
           {selectedElement && !selectedElement.vsacAuthRequired &&
-            <StyledSelect
-              className="Select element-select__element-field"
-              classNamePrefix="internal-select"
-              value={noAuthElementOptions.find(({ value }) => value === selectedExternalLibraryName)}
-              placeholder={noAuthPlaceholder}
-              aria-label={noAuthPlaceholder}
-              options={noAuthElementOptions}
-              onChange={this.onNoAuthElementSelected}
-              components={{ Option: ElementOption }}
-            />
+            <div className="element-select__dropdown">
+              <Dropdown
+                id="internal-select"
+                label={noAuthPlaceholder}
+                onChange={event => this.onNoAuthElementSelected(event, noAuthElementOptions)}
+                options={noAuthElementOptions}
+                value={selectedExternalLibraryName}
+                renderItem={option => <ElementOption option={option} />}
+              />
+            </div>
+          }
+
+          {selectedElementValue &&
+            <IconButton onClick={() => this.onElementSelected(null)}>
+              <CloseIcon />
+            </IconButton>
           }
         </div>
 
         {selectedElement && !selectedElement.vsacAuthRequired && selectedExternalLibrary &&
-          <StyledSelect
-            className="Select element-select__external-cql-field"
-            value={
-              selectedExternalDefinition
-                ? selectedExternalLibraryOptions.find(({ value }) => value === selectedExternalDefinition.value)
-                : null
-            }
-            placeholder={externalLibraryPlaceholder}
-            aria-label={externalLibraryPlaceholder}
-            options={selectedExternalLibraryOptions}
-            onChange={this.onExternalDefinitionSelected}
-            components={{ Option: ElementOption }}
-          />
+          <div className="element-select__dropdown">
+            <Dropdown
+              id="external-cql-field"
+              label="Definition, function, or parameter"
+              onChange={event => this.onExternalDefinitionSelected(event, selectedExternalLibraryOptions)}
+              options={selectedExternalLibraryOptions}
+              value={selectedExternalDefinition}
+              renderItem={option => <ElementOption option={option} />}
+            />
+          </div>
         }
 
         {selectedElement && selectedElement.vsacAuthRequired && this.renderVSACLogin()}

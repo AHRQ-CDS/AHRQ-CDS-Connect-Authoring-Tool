@@ -4,7 +4,7 @@ import { get, post } from 'axios';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTimes } from '@fortawesome/free-solid-svg-icons';
 
-import Modal from '../elements/Modal';
+import { Modal }  from 'components/elements';
 
 const API_BASE = process.env.REACT_APP_API_URL;
 const REPO_BASE = process.env.REACT_APP_REPO_URL;
@@ -218,13 +218,11 @@ export default class RepoUploadModal extends Component {
   render() {
     return (
       <Modal
-        modalTitle="Submit to Repository"
-        modalId="submit-to-repository-modal"
-        modalTheme="light"
-        modalSubmitButtonText="Save"
+        title="Submit to Repository"
         handleShowModal={this.props.showModal}
         handleCloseModal={this.closeModal}
-        handleSaveModal={this.closeModal}>
+        handleSaveModal={this.closeModal}
+      >
         {this.renderPage()}
       </Modal>
     );

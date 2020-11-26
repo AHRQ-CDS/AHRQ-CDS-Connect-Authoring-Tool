@@ -6,7 +6,6 @@ import errorsReducer from './errors';
 import artifactsReducer from './artifacts';
 import testingReducer from './testing';
 import templatesReducer from './templates';
-import valueSetsReducer from './value_sets';
 import vsacReducer from './vsac';
 import modifiersReducer from './modifiers';
 import externalCqlReducer from './external_cql';
@@ -17,7 +16,6 @@ const appReducer = combineReducers({
   artifacts: artifactsReducer,
   testing: testingReducer,
   templates: templatesReducer,
-  valueSets: valueSetsReducer,
   vsac: vsacReducer,
   modifiers: modifiersReducer,
   externalCQL: externalCqlReducer

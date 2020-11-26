@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import _ from 'lodash';
 
-import StyledSelect from '../../elements/StyledSelect';
+import { Dropdown } from 'components/elements';
 
 const options = [
   { value: 'years', label: 'Year(s)' },
@@ -16,17 +16,22 @@ const options = [
 
 /* eslint-disable jsx-a11y/no-onchange */
 export default class LookBack extends Component {
-  handleChange = (selectedOption) => {
-    this.props.updateAppliedModifier(this.props.index, { unit: selectedOption ? selectedOption.value : null });
+  handleChange = event => {
+    const { index, updateAppliedModifier } = this.props;
+    const selectedOption = options.find(option => option.value === event.target.value);
+    updateAppliedModifier(index, { unit: selectedOption ? selectedOption.value : null });
   }
 
   render() {
+    const { index, unit, updateAppliedModifier, value } = this.props;
     const valueId = _.uniqueId('value-');
     const unitId = _.uniqueId('unit-');
 
     return (
       <div className="look-back">
-        <label className="look-back" htmlFor={valueId}>Look back within the last...</label>
+        <label className="look-back" htmlFor={valueId}>
+          Look back within the last...
+        </label>
 
         <div className="look-back-group">
           <input
@@ -35,22 +40,19 @@ export default class LookBack extends Component {
             name="value"
             placeholder="value"
             aria-label="Look back value"
-            value={this.props.value || ''}
+            value={value || ''}
             onChange={(event) => {
-              this.props.updateAppliedModifier(this.props.index, { value: parseInt(event.target.value, 10) });
+              updateAppliedModifier(index, { value: parseInt(event.target.value, 10) });
             }}
           />
 
-          <label htmlFor={unitId}>
-            <StyledSelect
-              className="Select"
-              name="unit"
-              aria-label="Unit Select"
+          <label htmlFor={unitId} className="modifier-dropdown">
+            <Dropdown
               id={unitId}
-              value={options.find(({ value }) => value === this.props.unit)}
-              placeholder="select unit"
+              label="Unit"
               onChange={this.handleChange}
               options={options}
+              value={unit}
             />
           </label>
         </div>

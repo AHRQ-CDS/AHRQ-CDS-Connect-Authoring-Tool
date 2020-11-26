@@ -1,7 +1,6 @@
 import React from 'react';
-
+import { render, screen, userEvent, waitFor, within } from 'utils/test-utils';
 import ArtifactTable from '../ArtifactTable';
-import { render, fireEvent } from '../../../utils/test-utils';
 
 describe('<ArtifactTable />', () => {
   const match = {
@@ -57,92 +56,49 @@ describe('<ArtifactTable />', () => {
     }
   ];
 
+  const renderComponent = (props = {}) =>
+    render(
+      <ArtifactTable
+        match={match}
+        artifacts={artifactsMock}
+        afterAddArtifact={jest.fn()}
+        deleteArtifact={jest.fn()}
+        {...props}
+      />
+    );
+
   it('renders artifacts', () => {
-    const { container } = render(
-      <ArtifactTable
-        match={match}
-        artifacts={artifactsMock}
-        afterAddArtifact={jest.fn()}
-        deleteArtifact={jest.fn()}
-        updateAndSaveArtifact={jest.fn()}
-      />
-    );
+    renderComponent();
 
-    expect(container.querySelectorAll('tbody tr')).toHaveLength(artifactsMock.length);
+    expect(screen.getByText('My Second CDS Artifact')).toBeInTheDocument();
+    expect(screen.getByText('My CDS Artifact')).toBeInTheDocument();
   });
 
-  it.skip('allows editing of artifacts', () => {
-    const updateAndSaveArtifact = jest.fn();
-    const { container } = render(
-      <ArtifactTable
-        match={match}
-        artifacts={artifactsMock}
-        afterAddArtifact={jest.fn()}
-        deleteArtifact={jest.fn()}
-        updateAndSaveArtifact={updateAndSaveArtifact}
-      />
-    );
+  it('allows opening and closing of the edit modal', async () => {
+    renderComponent();
 
-    fireEvent.click(container.querySelector('button.edit-artifact-button'));
+    userEvent.click(screen.getAllByRole('button', { name: 'Edit' })[0]);
+    expect(screen.getByText('Edit Artifact Details')).toBeInTheDocument();
 
-    fireEvent.change(
-      document.body.querySelector('input[name="name"]'),
-      { target: { name: 'name', value: 'Edited Artifact Name' } }
-    );
-    fireEvent.change(
-      document.body.querySelector('input[name="version"]'),
-      { target: { name: 'version', value: 'Edited Artifact Version' } }
-    );
-    fireEvent.click(document.body.querySelector('button[type="submit"]'));
-
-    expect(updateAndSaveArtifact).toBeCalledWith(
-      artifactsMock[0],
-      { name: 'Edited Artifact Name', version: 'Edited Artifact Version' }
-    );
-  });
-
-  it('allows closing of the edit modal', () => {
-    const { container, queryByLabelText } = render(
-      <ArtifactTable
-        match={match}
-        artifacts={artifactsMock}
-        afterAddArtifact={jest.fn()}
-        deleteArtifact={jest.fn()}
-        updateAndSaveArtifact={jest.fn()}
-      />
-    );
-
-    fireEvent.click(container.querySelector('button.edit-artifact-button'));
-    expect(queryByLabelText('Edit Artifact Details')).not.toBeNull();
-
-    fireEvent.click(document.querySelector('.modal__deletebutton'));
-    expect(queryByLabelText('Edit Artifact Details')).toBeNull();
+    userEvent.click(screen.getByRole('button', { name: 'close' }));
+    await waitFor(() => {
+      expect(screen.queryByText('Edit Artifact Details')).not.toBeInTheDocument();
+    });
   });
 
   it('allows deleting of artifacts', () => {
     const deleteArtifact = jest.fn();
+    renderComponent({ deleteArtifact });
 
-    const { container } = render(
-      <ArtifactTable
-        match={match}
-        artifacts={artifactsMock}
-        afterAddArtifact={jest.fn()}
-        deleteArtifact={deleteArtifact}
-        updateAndSaveArtifact={jest.fn()}
-      />
-    );
+    userEvent.click(screen.getAllByRole('button', { name: 'Delete' })[0]);
+    expect(screen.getByText('Delete Artifact Confirmation')).toBeInTheDocument();
 
-    fireEvent.click(container.querySelector('button.danger-button'));
+    const dialog = within(screen.getByRole('dialog'));
 
-    expect(document.querySelector('.modal__heading')).toHaveTextContent('Delete Artifact Confirmation');
+    expect(dialog.getByText(artifactsMock[0].name)).toBeInTheDocument();
+    expect(dialog.getByText(artifactsMock[0].version)).toBeInTheDocument();
 
-    const [artifactName, artifactVersion] =
-      document.querySelectorAll('.delete-artifact-confirmation-modal .artifact-info');
-
-    expect(artifactName).toHaveTextContent(`Name: ${artifactsMock[0].name}`);
-    expect(artifactVersion).toHaveTextContent(`Version: ${artifactsMock[0].version}`);
-
-    fireEvent.click(document.body.querySelector('button[type="submit"]'));
+    userEvent.click(dialog.getByRole('button', {name: 'Delete'}));
 
     expect(deleteArtifact).toBeCalledWith(artifactsMock[0]);
   });

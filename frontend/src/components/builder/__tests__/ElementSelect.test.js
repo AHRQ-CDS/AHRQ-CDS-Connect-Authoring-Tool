@@ -1,7 +1,7 @@
 import React from 'react';
+import { render, userEvent, screen } from 'utils/test-utils';
+import { genericElementTypes, genericElementGroups } from 'utils/test_fixtures';
 import ElementSelect from '../ElementSelect';
-import { render, fireEvent, openSelect } from '../../../utils/test-utils';
-import { genericElementTypes, genericElementGroups } from '../../../utils/test_fixtures';
 
 describe('<ElementSelect />', () => {
   const renderComponent = (props = {}) =>
@@ -40,87 +40,85 @@ describe('<ElementSelect />', () => {
     expect(container.firstChild).toHaveClass('element-select');
     expect(container.firstChild.firstChild).toHaveClass('element-select__add-element');
 
-    expect(container.querySelectorAll('.element-select__element-field')).toHaveLength(1);
-    expect(container.querySelectorAll('.is-open')).toHaveLength(0);
+    expect(screen.getByLabelText('Element type')).toBeInTheDocument();
+    expect(screen.queryAllByRole('option').length).toEqual(0);
   });
 
   describe('select element field', () => {
     it('starts with correct placeholder text', () => {
-      const { queryByText, queryByLabelText } = renderComponent();
+      renderComponent();
 
-      expect(queryByText('Choose element type')).not.toBeNull();
-      expect(queryByLabelText('Choose element type')).not.toBeNull();
+      expect(screen.getByLabelText('Element type')).toBeInTheDocument();
     });
 
     it('starts with a list of all elements', () => {
-      const { container, getByLabelText } = renderComponent();
+      renderComponent();
 
-      openSelect(getByLabelText('Choose element type'));
-
-      expect(container.querySelectorAll('.element-select__option')).toHaveLength(13);
+      userEvent.click(screen.getByLabelText('Element type'));
+      expect(screen.queryAllByRole('option').length).toEqual(15);
     });
 
     it('options display correct values and have key icon if VSAC auth required', () => {
-      const { container, getByLabelText } = renderComponent();
+      renderComponent();
 
-      openSelect(getByLabelText('Choose element type'));
+      expect(screen.getByLabelText('Element type')).toBeInTheDocument();
 
-      container.querySelectorAll('.element-select__option').forEach((option, i) => {
-        const { label, vsacAuthRequired } = genericElementTypes[i];
-
+      screen.queryAllByRole('option').forEach((option, index) => {
+        const { label, vsacAuthRequired } = genericElementTypes[index];
         expect(option).toHaveTextContent(label);
-        expect(Boolean(option.querySelector('.element-select__option-category'))).toBe(vsacAuthRequired);
+        expect(Boolean(option.queryAllByRole('option'))).toBe(vsacAuthRequired);
       });
     });
 
     it('selects a generic type without VSAC authentication and adds it to the workspace', () => {
       const onSuggestionSelected = jest.fn();
-      const { getByLabelText, getByText, queryByText } = renderComponent({ onSuggestionSelected });
+      const { getByText } = renderComponent({ onSuggestionSelected });
 
-      openSelect(getByLabelText('Choose element type'));
-      fireEvent.click(getByText('Demographics'));
+      expect(screen.getByLabelText('Element type')).toBeInTheDocument();
+      userEvent.click(screen.getByLabelText('Element type'));
+      userEvent.click(getByText('Demographics'));
 
       // Choosing no VSAC auth element renders second select box.
-      expect(queryByText('Select Demographics element')).not.toBeNull();
+      expect(screen.getByLabelText('Demographics element')).toBeInTheDocument();
 
       // Choosing first option adds it to workspace
-      openSelect(getByLabelText('Select Demographics element'));
-      fireEvent.click(getByText('Age Range'));
+      userEvent.click(screen.getByLabelText('Demographics element'));
+      userEvent.click(getByText('Age Range'));
 
       expect(onSuggestionSelected).toBeCalledWith(genericElementGroups[0].entries[0]);
     });
 
     it('displays the Authenticate VSAC button when not logged in and selecting a generic type with VSAC auth', () => {
-      const { getByText, getByLabelText } = renderComponent({ vsacApiKey:  null });
+      const { getByText } = renderComponent({ vsacApiKey:  null });
 
-      openSelect(getByLabelText('Choose element type'));
-      fireEvent.click(getByText('Observation'));
+      userEvent.click(screen.getByLabelText('Element type'));
+      userEvent.click(getByText('Observation'));
 
-      expect(getByText('Authenticate VSAC')).not.toBeNull();
+      expect(getByText('Authenticate VSAC')).toBeInTheDocument();
     });
 
     it(
       'displays the Add Value Set and Add Code buttons when logged in and selecting a generic type with VSAC auth',
       () => {
-        const { getByText, getByLabelText } = renderComponent();
+        const { getByText } = renderComponent();
 
-        openSelect(getByLabelText('Choose element type'));
-        fireEvent.click(getByText('Observation'));
+        userEvent.click(screen.getByLabelText('Element type'));
+        userEvent.click(getByText('Observation'));
 
-        expect(getByText('VSAC Authenticated')).not.toBeNull();
-        expect(getByText('Add Value Set')).not.toBeNull();
-        expect(getByText('Add Code')).not.toBeNull();
+        expect(getByText('VSAC Authenticated')).toBeInTheDocument();
+        expect(getByText('Add Value Set')).toBeInTheDocument();
+        expect(getByText('Add Code')).toBeInTheDocument();
       });
   });
 
   describe('in base elements', () => {
     it('does not allow an option to be selected', () => {
-      const { container, getByText, getByLabelText } = renderComponent({ disableAddElement: true });
+      const { container, getByText } = renderComponent({ disableAddElement: true });
 
-      openSelect(getByLabelText('Choose element type'));
+      userEvent.click(screen.getByLabelText('Element type'));
 
       expect(container.querySelectorAll('.element-select__option')).toHaveLength(0);
-      expect(getByText('Cannot add element when Base Element List in use')).not.toBeNull();
+      expect(getByText('Cannot add element when Base Element List in use')).toBeInTheDocument();
     });
   });
 });

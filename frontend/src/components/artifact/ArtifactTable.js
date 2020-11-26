@@ -4,11 +4,11 @@ import { Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPencilAlt, faTimes } from '@fortawesome/free-solid-svg-icons';
 
-import renderDate from '../../utils/dates';
-import { sortMostRecent } from '../../utils/sort';
-import artifactProps from '../../prop-types/artifact';
+import renderDate from 'utils/dates';
+import { sortMostRecent } from 'utils/sort';
+import artifactProps from 'prop-types/artifact';
 
-import Modal from '../elements/Modal';
+import { Modal }  from 'components/elements';
 import ArtifactModal from './ArtifactModal';
 
 export default class ArtifactTable extends Component {
@@ -33,11 +33,6 @@ export default class ArtifactTable extends Component {
     this.setState({ showArtifactModal: false });
   }
 
-  handleEditArtifact = (props) => {
-    this.props.updateAndSaveArtifact(this.state.artifactEditing, props);
-    this.closeArtifactModal(false);
-  }
-
   // ----------------------- CONFIRM DELETE MODAL -------------------------- //
 
   openConfirmDeleteModal = (artifact) => {
@@ -58,13 +53,12 @@ export default class ArtifactTable extends Component {
   renderConfirmDeleteModal() {
     return (
       <Modal
-        modalTitle="Delete Artifact Confirmation"
-        modalId="confirm-delete-modal"
-        modalTheme="light"
-        modalSubmitButtonText="Delete"
+        title="Delete Artifact Confirmation"
+        submitButtonText="Delete"
         handleShowModal={this.state.showConfirmDeleteModal}
         handleCloseModal={this.closeConfirmDeleteModal}
-        handleSaveModal={this.handleDeleteArtifact}>
+        handleSaveModal={this.handleDeleteArtifact}
+      >
 
         <div className="delete-artifact-confirmation-modal modal__content">
           <h5>Are you sure you want to permanently delete the following CDS Artifact?</h5>
@@ -141,8 +135,7 @@ export default class ArtifactTable extends Component {
         <ArtifactModal
           artifactEditing={this.state.artifactEditing}
           showModal={this.state.showArtifactModal}
-          closeModal={this.closeArtifactModal}
-          saveModal={this.handleEditArtifact} />
+          closeModal={this.closeArtifactModal} />
 
         {this.renderConfirmDeleteModal()}
       </div>
@@ -153,5 +146,4 @@ export default class ArtifactTable extends Component {
 ArtifactTable.propTypes = {
   artifacts: PropTypes.arrayOf(artifactProps),
   deleteArtifact: PropTypes.func.isRequired,
-  updateAndSaveArtifact: PropTypes.func.isRequired
 };

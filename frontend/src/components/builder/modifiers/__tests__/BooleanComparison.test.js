@@ -1,6 +1,6 @@
 import React from 'react';
+import { render, userEvent, screen } from 'utils/test-utils';
 import BooleanComparison from '../BooleanComparison';
-import { render, fireEvent, openSelect } from '../../../../utils/test-utils';
 
 describe('<BooleanComparison />', () => {
   const renderComponent = (props = {}) =>
@@ -15,10 +15,10 @@ describe('<BooleanComparison />', () => {
 
   it('calls updateAppliedModifier on input change', () => {
     const updateAppliedModifier = jest.fn();
-    const { container, getByText } = renderComponent({ updateAppliedModifier });
+    renderComponent({ updateAppliedModifier });
 
-    openSelect(container.querySelector('.boolean-comparison-select__control'));
-    fireEvent.click(getByText('is not true'));
+    userEvent.click(screen.getByLabelText('Boolean'));
+    userEvent.click(screen.getByText('is not true'));
 
     expect(updateAppliedModifier).toBeCalledWith(80, { value: 'is not true' });
   });

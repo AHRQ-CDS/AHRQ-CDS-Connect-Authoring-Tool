@@ -1,6 +1,6 @@
 import React from 'react';
+import { render, fireEvent, userEvent, screen } from 'utils/test-utils';
 import ErrorStatement from '../ErrorStatement';
-import { render, fireEvent, openSelect } from '../../../utils/test-utils';
 
 describe('<ErrorStatement />', () => {
   const renderComponent = (props = {}) =>
@@ -45,10 +45,10 @@ describe('<ErrorStatement />', () => {
 
   it('can select one of the special populations', () => {
     const updateErrorStatement = jest.fn();
-    const { getByText } = renderComponent({ updateErrorStatement });
+    renderComponent({ updateErrorStatement });
 
-    openSelect(getByText('Select...'));
-    fireEvent.click(getByText('Recommendations is null'));
+    userEvent.click(screen.getByLabelText('Choose if statement'));
+    userEvent.click(screen.getByText('Recommendations is null'));
 
     expect(updateErrorStatement).toHaveBeenCalled();
   });

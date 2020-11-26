@@ -1,9 +1,9 @@
 import React from 'react';
+import { render, userEvent, screen, waitFor, within } from 'utils/test-utils';
+import mockPatientDstu2 from 'mocks/mockPatientDstu2';
+import mockPatientStu3 from 'mocks/mockPatientStu3';
+import mockPatientR4 from 'mocks/mockPatientR4';
 import PatientTable from '../PatientTable';
-import mockPatientDstu2 from '../../../mocks/mockPatientDstu2';
-import mockPatientStu3 from '../../../mocks/mockPatientStu3';
-import mockPatientR4 from '../../../mocks/mockPatientR4';
-import { render, fireEvent, openSelect } from '../../../utils/test-utils';
 
 describe('<PatientTable />', () => {
   const artifactsMock = [
@@ -12,14 +12,16 @@ describe('<PatientTable />', () => {
       name: 'My CDS Patient',
       version: 'Alpha',
       updatedAt: '2012-10-15T21:26:17Z',
-      parameters: [{
-        value: 'true',
-        comment: null,
-        type: 'boolean',
-        uniqueId: 'parameter-72',
-        name: 'BoolParam',
-        usedBy: []
-      }],
+      parameters: [
+        {
+          value: 'true',
+          comment: null,
+          type: 'boolean',
+          uniqueId: 'parameter-72',
+          name: 'BoolParam',
+          usedBy: []
+        }
+      ],
       fhirVersion: ''
     },
     {
@@ -55,47 +57,56 @@ describe('<PatientTable />', () => {
     expect(container.querySelectorAll('tbody tr')).toHaveLength(patientsMock.length);
   });
 
-  it('can open confirmation modal and deletes from modal', () => {
+  it('can open confirmation modal and deletes from modal', async () => {
     const deletePatientMock = jest.fn();
-    const { container } = renderComponent({ deletePatient: deletePatientMock });
+    renderComponent({ deletePatient: deletePatientMock });
 
-    fireEvent.click(container.querySelector('button.danger-button'));
+    userEvent.click(screen.getAllByLabelText('Delete')[0]);
 
-    const modal = document.body.querySelector('.confirm-delete-modal-modal');
-    expect(modal.querySelector('.modal__header')).toHaveTextContent('Delete Patient Confirmation');
+    const dialog = within(screen.getByRole('dialog'));
+    expect(dialog.getByText('Delete Patient Confirmation')).toBeInTheDocument();
 
-    fireEvent.click(modal.querySelector('button[type="submit"]'));
-    expect(deletePatientMock).toBeCalledWith(patientsMock[0]);
+    userEvent.click(dialog.getByRole('button', { name: 'Delete' }));
+
+    await waitFor(() => {
+      expect(deletePatientMock).toBeCalledWith(patientsMock[0]);
+    });
   });
 
   it('opens the details modal when view is clicked', () => {
-    const { container } = renderComponent();
+    renderComponent();
 
-    fireEvent.click(container.querySelector('button.details-button'));
+    userEvent.click(screen.getAllByLabelText('View')[1]);
 
-    const modal = document.body.querySelector('.view-details-modal-modal');
-    expect(modal.querySelector('.modal__header')).toHaveTextContent('View Patient Details');
+    const dialog = within(screen.getByRole('dialog'));
+    expect(dialog.getByText('View Patient Details')).toBeInTheDocument();
   });
 
   it('executes opens confirmation modal and executes from modal', () => {
     const executeCQLMock = jest.fn();
-    const { container, getByText } = renderComponent({ executeCQLArtifact: executeCQLMock });
+    renderComponent({ executeCQLArtifact: executeCQLMock });
 
-    fireEvent.click(container.querySelector('button.invisible-button'));
-    fireEvent.click(container.querySelector('button.execute-button'));
+    userEvent.click(screen.getAllByLabelText('View')[0]); // select first patient
+    userEvent.click(screen.getByLabelText('Execute CQL on Selected Patients')); // open modal
 
-    const modal = document.body.querySelector('.execute-cql-modal-modal');
-    expect(modal.querySelector('.modal__header')).toHaveTextContent('Execute CQL on Selected Patients');
+    const dialog = within(screen.getByRole('dialog'));
+    expect(dialog.getByText('Execute CQL on Selected Patients')).toBeInTheDocument();
 
-    openSelect(getByText('Select...'));
-    fireEvent.click(getByText(artifactsMock[0].name, modal));
+    userEvent.click(dialog.getByLabelText('Select...'));
+    userEvent.click(screen.getByRole('option', { name: artifactsMock[0].name })); // select option
 
-    const booleanEditor = modal.querySelector('.boolean-editor');
-    openSelect(getByText('True', booleanEditor));
-    fireEvent.click(getByText('False', booleanEditor));
+    userEvent.click(dialog.getByLabelText('Boolean value'));
+    userEvent.click(screen.getByRole('option', { name: 'False' })); // choose param
 
-    fireEvent.click(modal.querySelector('button[type="submit"]'));
+    userEvent.click(dialog.getByText('Execute CQL'));
 
-    expect(executeCQLMock).toHaveBeenCalled();
+    expect(executeCQLMock).toHaveBeenCalledWith(
+      artifactsMock[0],
+      expect.anything(),
+      expect.anything(),
+      expect.anything(),
+      expect.anything(),
+      { name: 'FHIR', version: '3.0.0' }
+    );
   });
 });

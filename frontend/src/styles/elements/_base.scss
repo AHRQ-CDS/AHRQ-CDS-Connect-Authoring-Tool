@@ -40,7 +40,7 @@ label { margin-bottom: 0; }
   font-weight: bold;
   white-space: nowrap;
   padding-right: 1em;
-  min-width: 10em;
+  min-width: 12.5em;
   text-align: right;
 }
 
@@ -160,7 +160,8 @@ h6 {
     margin: 10px;
   }
 
-  span.fa {
+  span.fa,
+  svg {
     margin-right: 5px;
   }
 }
@@ -172,7 +173,8 @@ h6 {
   padding: 10px;
   margin: 10px;
 
-  span.fa {
+  span.fa,
+  svg {
     margin-right: 5px;
   }
 }

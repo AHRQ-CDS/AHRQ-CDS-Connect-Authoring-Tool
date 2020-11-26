@@ -4,12 +4,12 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEye } from '@fortawesome/free-solid-svg-icons';
 import { UncontrolledTooltip } from 'reactstrap';
 
-import Modal from '../elements/Modal';
+import { Modal }  from 'components/elements';
 import ExternalCqlDetails from './ExternalCqlDetails';
 
-import { sortMostRecent } from '../../utils/sort';
-import renderDate from '../../utils/dates';
-import changeToCase from '../../utils/strings';
+import { sortMostRecent } from 'utils/sort';
+import renderDate from 'utils/dates';
+import changeToCase from 'utils/strings';
 
 export default class ExternalCqlTable extends Component {
   constructor(props) {
@@ -133,10 +133,8 @@ export default class ExternalCqlTable extends Component {
 
     return (
       <Modal
-        modalTitle="Delete External CQL Library Confirmation"
-        modalId="confirm-delete-modal"
-        modalTheme="light"
-        modalSubmitButtonText="Delete"
+        title="Delete External CQL Library Confirmation"
+        submitButtonText="Delete"
         handleShowModal={this.state.showConfirmDeleteModal}
         handleCloseModal={this.closeConfirmDeleteModal}
         handleSaveModal={this.handleDeleteExternalCqlLibrary}

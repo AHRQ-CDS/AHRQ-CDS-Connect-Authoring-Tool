@@ -19,7 +19,7 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import _ from 'lodash';
 
-import ExternalLink from '../components/elements/ExternalLink';
+import { Link } from 'components/elements';
 
 function screenshotUrl(name) {
   return `${process.env.PUBLIC_URL}/assets/images/screenshots/${name}.png`;
@@ -76,7 +76,8 @@ export default class UserGuide extends Component {
             <div>
               The Clinical Decision Support (CDS) Authoring Tool is a web-based application to help CDS authors develop
               production-ready{' '}
-              <ExternalLink
+              <Link
+                external
                 href="https://cql.hl7.org/"
                 text={<>Health Level Seven (HL7<sup>®</sup>) Clinical Quality Language (CQL)</>}
               />
@@ -148,7 +149,7 @@ export default class UserGuide extends Component {
                   <ol>
                     <li>
                       Navigate to{' '}
-                      <ExternalLink href="https://uts.nlm.nih.gov/uts/" text="https://uts.nlm.nih.gov/uts/" />
+                      <Link external href="https://uts.nlm.nih.gov/uts/" text="https://uts.nlm.nih.gov/uts/" />
                       .
                     </li>
                     <li>Click on the "Sign Up" link in the banner.</li>
@@ -163,8 +164,8 @@ export default class UserGuide extends Component {
                   To use your UMLS Terminology Services account in the CDS Authoring Tool, you must provide your UMLS API key.
                   While previous versions of the CDS Authoring Tool used your UMLS username and password, recent changes to UMLS
                   Terminology Services now require an API key instead. To find your UMLS API key, navigate to {' '}
-                  <ExternalLink href="https://uts.nlm.nih.gov/uts/" text="https://uts.nlm.nih.gov/uts/" /> and click the "Sign In"
-                  button in the banner.
+                  <Link external href="https://uts.nlm.nih.gov/uts/" text="https://uts.nlm.nih.gov/uts/" /> and click the
+                  "Sign In" button in the banner.
                 </div>
                 <div>
                   <img alt="" src={screenshotUrl('UMLS_TS_Sign_In')}
@@ -240,12 +241,13 @@ export default class UserGuide extends Component {
                   To create a new artifact, click the "Create New Artifact" button in the "Artifacts" view.  This will reveal
                   a form, allowing you to enter an artifact name and version.  There are no specific rules about artifact names
                   or versions, but{' '}
-                  <ExternalLink
+                  <Link
+                    external
                     href="http://hl7.org/fhir/uv/cpg/2019Sep/documentation-libraries.html"
                     text={<>FHIR<sup>®</sup> Clinical Guidelines</>}
                   />
                   {' '}suggests using the{' '}
-                  <ExternalLink href="https://apr.apache.org/versioning.html" text="Apache APR Versioning Scheme" />
+                  <Link external href="https://apr.apache.org/versioning.html" text="Apache APR Versioning Scheme" />
                   .
                 </div>
                 <div>
@@ -259,7 +261,8 @@ export default class UserGuide extends Component {
                 <h4 id="CPG_Form">2.1.1 FHIR Clinical Guidelines (a.k.a. CPG on FHIR) Metadata</h4>
                 <div>
                   The Authoring Tool supports metadata conforming to the{' '}
-                  <ExternalLink
+                  <Link
+                    external
                     href="http://build.fhir.org/ig/HL7/cqf-recommendations/StructureDefinition-cpg-publishablelibrary.html"
                     text={"FHIR Clinical Guidelines Publishable Library"}
                   />
@@ -1542,7 +1545,7 @@ export default class UserGuide extends Component {
                 the results to determine if they are as expected. The CDS Authoring Tool does not currently provide a test
                 patient editor, nor does it provide a mechanism for automated verification of results (e.g., "test assertions").
                 For more advanced testing capabilities, consider CDS Connect's{' '}
-                <ExternalLink href="https://github.com/AHRQ-CDS/CQL-Testing-Framework" text="CQL Testing Framework" />
+                <Link external href="https://github.com/AHRQ-CDS/CQL-Testing-Framework" text="CQL Testing Framework" />
                 .
               </div>
 
@@ -1554,13 +1557,13 @@ export default class UserGuide extends Component {
                   synthetic data should be used. Patient data should be uploaded as a FHIR bundle (DSTU2, STU3, or R4). Authors
                   familiar with FHIR can use their tool of choice to create patient test data. Popular options include
                   CDS Connect's{' '}
-                  <ExternalLink href="https://github.com/AHRQ-CDS/CQL-Testing-Framework" text="CQL Testing Framework" />
+                  <Link external href="https://github.com/AHRQ-CDS/CQL-Testing-Framework" text="CQL Testing Framework" />
                   ,{' '}
-                  <ExternalLink href="https://github.com/synthetichealth/synthea" text="Synthea" />
+                  <Link external href="https://github.com/synthetichealth/synthea" text="Synthea" />
                   ,{' '}
-                  <ExternalLink href="http://clinfhir.com/" text="ClinFHIR" />
+                  <Link external href="http://clinfhir.com/" text="ClinFHIR" />
                   , and{' '}
-                  <ExternalLink href="https://build.fhir.org/ig/HL7/fhir-shorthand/" text="FHIR® Shorthand" />
+                  <Link external href="https://build.fhir.org/ig/HL7/fhir-shorthand/" text="FHIR® Shorthand" />
                   .
                 </div>
                 <div>

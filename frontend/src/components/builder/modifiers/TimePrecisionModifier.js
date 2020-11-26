@@ -4,7 +4,7 @@ import moment from 'moment';
 import TimePicker from 'rc-time-picker';
 import _ from 'lodash';
 
-import StyledSelect from '../../elements/StyledSelect';
+import { Dropdown } from 'components/elements';
 
 const options = [
   { value: 'hour', label: 'hour' },
@@ -14,18 +14,18 @@ const options = [
 
 /* eslint-disable jsx-a11y/no-onchange */
 export default class TimePrecisionModifier extends Component {
-  assignValue(evt, name) {
+  assignValue(event, name) {
     let time = this.props.time;
     let precision = this.props.precision;
 
     switch (name) {
       case 'time': {
-        const timeMoment = evt != null ? evt.format('HH:mm:ss') : null;
+        const timeMoment = event != null ? event.format('HH:mm:ss') : null;
         time = timeMoment ? `@T${timeMoment}` : null;
         break;
       }
       case 'precision': {
-        precision = evt ? evt.value : null;
+        precision = event.target.value;
         break;
       }
       default: {
@@ -37,43 +37,37 @@ export default class TimePrecisionModifier extends Component {
   }
 
   render() {
+    const { name, precision, time } = this.props;
     const timeId = _.uniqueId('time-');
     const precId = _.uniqueId('prec-');
 
     return (
       /* eslint-disable jsx-a11y/label-has-for */
       <div className="col-9 d-flex modifier-vert-aligned">
-        <label className="modifier-label">
-          {`${this.props.name}: `}
-        </label>
+        <label className="modifier-label">{name}</label>
 
-        <span>  </span>
-
-        <TimePicker
-          id={timeId}
-          defaultValue={
-            moment(this.props.time, 'HH:mm:ss').isValid()
-            ? moment(this.props.time, 'HH:mm:ss')
-            : null}
-          autoComplete="off"
-          onChange={ (e) => {
-            this.assignValue(e, 'time');
-          }}
-        />
-
-        <label htmlFor={precId}>
-          <StyledSelect
-            className="Select"
-            name="Precision"
-            aria-label="Precision"
-            id={precId}
-            value={options.find(({ value }) => value === this.props.precision)}
-            onChange={ (e) => {
-              this.assignValue(e, 'precision');
-            }}
-            options={options}
+        <div className="modifier-input">
+          <TimePicker
+            id={timeId}
+            defaultValue={
+              moment(time, 'HH:mm:ss').isValid()
+              ? moment(time, 'HH:mm:ss')
+              : null
+            }
+            autoComplete="off"
+            onChange={event => this.assignValue(event, 'time')}
           />
-        </label>
+        </div>
+
+        <div className="modifier-dropdown">
+          <Dropdown
+            id={precId}
+            label="Precision"
+            onChange={event => this.assignValue(event, 'precision')}
+            options={options}
+            value={precision}
+          />
+        </div>
       </div>
     );
   }

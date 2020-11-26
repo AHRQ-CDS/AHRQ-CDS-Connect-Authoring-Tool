@@ -72,8 +72,6 @@ export default class Subpopulations extends Component {
           <Subpopulation
             key={subpop.uniqueId}
             treeName={this.props.name}
-            valueSets={this.props.valueSets}
-            loadValueSets={this.props.loadValueSets}
             subpopulation={subpop}
             subpopulationIndex={i + this.state.numOfSpecialSubpopulations} // System needs to know true index out of all subpopulations
             setSubpopulationName={this.setSubpopulationName}
@@ -132,8 +130,6 @@ export default class Subpopulations extends Component {
 
 Subpopulations.propTypes = {
   artifact: PropTypes.object.isRequired,
-  valueSets: PropTypes.array,
-  loadValueSets: PropTypes.func.isRequired,
   updateSubpopulations: PropTypes.func.isRequired,
   templates: PropTypes.array.isRequired,
   addInstance: PropTypes.func.isRequired,

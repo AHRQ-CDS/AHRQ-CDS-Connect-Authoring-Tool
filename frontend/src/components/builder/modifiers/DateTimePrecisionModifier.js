@@ -5,7 +5,7 @@ import DatePicker from 'react-datepicker';
 import TimePicker from 'rc-time-picker';
 import _ from 'lodash';
 
-import StyledSelect from '../../elements/StyledSelect';
+import { Dropdown } from 'components/elements';
 
 const options = [
   { value: 'year', label: 'year' },
@@ -18,24 +18,24 @@ const options = [
 
 /* eslint-disable jsx-a11y/no-onchange */
 export default class DateTimePrecisionModifier extends Component {
-  assignValue(evt, name) {
+  assignValue(event, name) {
     let date = this.props.date;
     let time = this.props.time;
     let precision = this.props.precision;
 
     switch (name) {
       case 'date': {
-        const dateMoment = evt != null ? evt.format('YYYY-MM-DD') : null;
+        const dateMoment = event != null ? event.format('YYYY-MM-DD') : null;
         date = dateMoment ? `@${dateMoment}` : null;
         break;
       }
       case 'time': {
-        const timeMoment = evt != null ? evt.format('HH:mm:ss') : null;
+        const timeMoment = event != null ? event.format('HH:mm:ss') : null;
         time = timeMoment ? `T${timeMoment}` : null;
         break;
       }
       case 'precision': {
-        precision = evt ? evt.value : null;
+        precision = event.target.value;
         break;
       }
       default: {
@@ -47,6 +47,7 @@ export default class DateTimePrecisionModifier extends Component {
   }
 
   render() {
+    const { date, name, precision, time } = this.props;
     const dateId = _.uniqueId('date-');
     const timeId = _.uniqueId('time-');
     const precId = _.uniqueId('prec-');
@@ -54,50 +55,43 @@ export default class DateTimePrecisionModifier extends Component {
     return (
       /* eslint-disable jsx-a11y/label-has-for */
       <div className="col-9 d-flex modifier-vert-aligned">
-        <label className="modifier-label">
-          {`${this.props.name}: `}
-        </label>
+        <label className="modifier-label">{name}</label>
 
-        <span>  </span>
+        <div className="modifier-input">
+          <DatePicker
+            id={dateId}
+            selected={
+              moment(date, 'YYYY-MM-DD').isValid()
+              ? moment(date, 'YYYY-MM-DD').toDate()
+              : null
+            }
+            dateFormat="MM/dd/yyyy"
+            autoComplete="off"
+            onChange={event => this.assignValue(moment(event), 'date')}
+          />
+        </div>
 
-        <DatePicker
-          id={dateId}
-          selected={
-            moment(this.props.date, 'YYYY-MM-DD').isValid()
-            ? moment(this.props.date, 'YYYY-MM-DD').toDate()
-            : null}
-          dateFormat="MM/dd/yyyy"
-          autoComplete="off"
-          onChange={ (e) => {
-            this.assignValue(moment(e), 'date');
-          }}
-        />
-
-        <span>  </span>
-
-        <TimePicker
-          id={timeId}
-          defaultValue={
-            moment(this.props.time, 'HH:mm:ss').isValid()
-            ? moment(this.props.time, 'HH:mm:ss')
-            : null}
-          autoComplete="off"
-          onChange={ (e) => {
-            this.assignValue(e, 'time');
-          }}
-        />
-
-        <label htmlFor={precId}>
-          <StyledSelect
-            className="Select date-time-precision-modifier__select"
-            name="Precision"
-            aria-label="Precision"
-            id={precId}
-            value={options.find(({ value }) => value === this.props.precision)}
-            onChange={(e) => {
-              this.assignValue(e, 'precision');
+        <div className="modifier-input">
+          <TimePicker
+            id={timeId}
+            defaultValue={
+              moment(time, 'HH:mm:ss').isValid()
+              ? moment(time, 'HH:mm:ss')
+              : null}
+            autoComplete="off"
+            onChange={ (e) => {
+              this.assignValue(e, 'time');
             }}
+          />
+        </div>
+
+        <label htmlFor={precId} className="modifier-dropdown">
+          <Dropdown
+            id={precId}
+            label="Precision"
+            onChange={event => this.assignValue(event, 'precision')}
             options={options}
+            value={precision}
           />
         </label>
       </div>

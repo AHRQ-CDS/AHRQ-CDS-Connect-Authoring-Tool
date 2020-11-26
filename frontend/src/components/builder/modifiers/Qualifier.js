@@ -7,7 +7,7 @@ import { UncontrolledTooltip } from 'reactstrap';
 import VSACAuthenticationModal from '../VSACAuthenticationModal';
 import ElementModal from '../ElementModal';
 import CodeSelectModal from '../CodeSelectModal';
-import StyledSelect from '../../elements/StyledSelect';
+import { Dropdown } from 'components/elements';
 
 const options = [
   { value: 'value is a code from', label: 'value is a code from' },
@@ -54,7 +54,9 @@ export default class Qualifier extends Component {
     );
   }
 
-  handleChange = (selectedOption) => {
+  handleChange = event => {
+    const selectedOption = options.find(option => option.value === event.target.value);
+
     this.props.updateAppliedModifier(this.props.index, {
       qualifier: selectedOption ? selectedOption.value : null,
       valueSet: null,
@@ -165,22 +167,23 @@ export default class Qualifier extends Component {
   }
 
   render() {
+    const { qualifier } = this.props;
+
     return (
       <div className="qualifier row">
         <div className="d-flex flex-wrap col-10">
-          <StyledSelect
-            className="Select"
-            name="Qualifier"
-            aria-label="Qualifier"
-            title="Qualifier"
-            placeholder="choose qualifier"
-            value={options.find(({ value }) => value === this.props.qualifier)}
-            onChange={this.handleChange}
-            options={options}
-          />
+          <div className="modifier-dropdown">
+            <Dropdown
+              id="qualifier"
+              label="Qualifier"
+              onChange={this.handleChange}
+              options={options}
+              value={qualifier}
+            />
+          </div>
 
-          {this.renderButton()}
-          {this.renderQualifierSelection()}
+          <div className="modifier-input">{this.renderButton()}</div>
+          {this.renderQualifierSelection()}``
         </div>
 
         {this.renderValueSetViewButton()}

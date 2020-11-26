@@ -28,7 +28,7 @@ export default memo(function TextField({
   return (
     <div className={classnames('form__group', `flex-col-${colSize}`)}>
       {label &&
-        <label htmlFor={labelId} className={classnames(helperText && 'has-helper-text')}>
+        <label htmlFor={labelId} className={classnames('field-label', helperText && 'has-helper-text')}>
           {label}
           {required && <span className="required">*</span>}
           {isCpgField &&

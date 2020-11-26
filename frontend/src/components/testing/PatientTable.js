@@ -11,12 +11,11 @@ import { sortAlphabeticallyByPatientName } from '../../utils/sort';
 import patientProps from '../../prop-types/patient';
 import artifactProps from '../../prop-types/artifact';
 
-import Modal from '../elements/Modal';
+import { Dropdown, Modal } from 'components/elements';
 import VSACAuthenticationModal from '../builder/VSACAuthenticationModal';
 import CodeService from '../../utils/code_service/CodeService';
 import PatientView from './PatientView';
 import TestingParameters from './TestingParameters';
-import StyledSelect from '../elements/StyledSelect';
 
 export default class PatientTable extends Component {
   constructor(props) {
@@ -79,7 +78,10 @@ export default class PatientTable extends Component {
     });
   }
 
-  selectArtifactForCQLModal = (artifact) => {
+  selectArtifactForCQLModal = (event, validArtifactsToExecute) => {
+    const artifactValue = validArtifactsToExecute.find(artifact => artifact.name === event.target.value);
+    const artifact = { label: event.target.value, value: artifactValue };
+
     if (!artifact) {
       this.setState({ artifactToExecute: null, paramsToExecute: [] });
     } else {
@@ -150,10 +152,9 @@ export default class PatientTable extends Component {
 
   renderConfirmDeleteModal = () => (
     <Modal
-      modalTitle="Delete Patient Confirmation"
-      modalId="confirm-delete-modal"
-      modalTheme="light"
-      modalSubmitButtonText="Delete"
+      title="Delete Patient Confirmation"
+      submitButtonText="Delete"
+      hasCancelButton
       handleShowModal={this.state.showConfirmDeleteModal}
       handleCloseModal={this.closeConfirmDeleteModal}
       handleSaveModal={this.handleDeletePatient}
@@ -183,12 +184,11 @@ export default class PatientTable extends Component {
 
   renderViewDetailsModal = () => (
     <Modal
-      modalTitle="View Patient Details"
-      modalId="view-details-modal"
-      modalTheme="light"
+      title="View Patient Details"
       handleShowModal={this.state.showViewDetailsModal}
       handleCloseModal={this.closeViewDetailsModal}
       handleSaveModal={this.handleViewDetails}
+      submitButtonText="Close"
     >
       <div className="patient-table__modal modal__content">
         <div className="patient-info">
@@ -199,6 +199,7 @@ export default class PatientTable extends Component {
   );
 
   renderExecuteCQLModal() {
+    const { artifactToExecute } = this.state;
     const fhirVersionMap = { '1.0.2': 'DSTU2', '3.0.0': 'STU3', '4.0.0': 'R4' };
     const validArtifactsToExecute = this.props.artifacts.filter((a) => {
       const noFHIRVersion = a.fhirVersion === '';
@@ -206,14 +207,12 @@ export default class PatientTable extends Component {
         fhirVersionMap[a.fhirVersion] === _.get(this.state, 'patientsToExecute[0].fhirVersion', '');
       return noFHIRVersion || sameFHIRVersion;
     });
-    const artifactOptions = _.map(validArtifactsToExecute, a => ({ value: a, label: a.name }));
+    const artifactOptions = _.map(validArtifactsToExecute, a => ({ value: a.name, label: a.name }));
 
     return (
       <Modal
-        modalTitle="Execute CQL on Selected Patients"
-        modalId="execute-cql-modal"
-        modalTheme="light"
-        modalSubmitButtonText={'Execute CQL'}
+        title="Execute CQL on Selected Patients"
+        submitButtonText="Execute CQL"
         submitDisabled={this.state.artifactToExecute == null}
         handleShowModal={this.state.showExecuteCQLModal}
         handleCloseModal={this.closeExecuteCQLModal}
@@ -221,12 +220,13 @@ export default class PatientTable extends Component {
       >
         <div className="patient-table__modal modal__content">
           <div className="select-label">FHIR Compatible Artifacts:</div>
-          <StyledSelect
-            aria-label="Select Artifact"
-            inputProps={{ title: 'Select Artifact' }}
+
+          <Dropdown
+            id="select-artifact"
+            label={artifactToExecute ? null : 'Select...'}
+            onChange={event => this.selectArtifactForCQLModal(event, validArtifactsToExecute)}
             options={artifactOptions}
-            value={this.state.artifactToExecute}
-            onChange={this.selectArtifactForCQLModal}
+            value={artifactToExecute ? artifactToExecute.label : ''}
           />
 
           <TestingParameters

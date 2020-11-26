@@ -3,12 +3,11 @@ import PropTypes from 'prop-types';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSpinner, faCloudUploadAlt } from '@fortawesome/free-solid-svg-icons';
 import Dropzone from 'react-dropzone';
+import { Alert } from '@material-ui/lab';
 
 import artifactProps from '../../prop-types/artifact';
-
 import ExternalCqlTable from './ExternalCqlTable';
 import ELMErrorModal from './ELMErrorModal';
-import Banner from '../elements/Banner';
 
 export default class ExternalCQL extends Component {
   constructor(props) {
@@ -157,25 +156,28 @@ export default class ExternalCQL extends Component {
                   {this.renderDropzoneIcon()}
 
                   {showUploadErrorBanner &&
-                    <Banner type="warning" close={event => this.dismissBanner(event, 'showUploadErrorBanner')}>
+                    <Alert severity="error" onClose={event => this.dismissBanner(event, 'showUploadErrorBanner')}>
                       Invalid file type.
-                    </Banner>
+                    </Alert>
                   }
 
                   {showLibraryErrorBanner &&
-                    <Banner type="warning" close={event => this.dismissBanner(event, 'showLibraryErrorBanner')}>
+                    <Alert severity="error" onClose={event => this.dismissBanner(event, 'showLibraryErrorBanner')}>
                       {addExternalCqlLibraryErrorMessage || 'An error occurred.'}
-                    </Banner>
+                    </Alert>
                   }
 
                   {showLibraryNotificationBanner &&
-                    <Banner close={event => this.dismissBanner(event, 'showLibraryNotificationBanner')}>
+                    <Alert
+                      severity="info"
+                      onClose={event => this.dismissBanner(event, 'showLibraryNotificationBanner')}
+                    >
                       {addExternalCqlLibraryErrorMessage}
-                    </Banner>
+                    </Alert>
                   }
 
                   {isDropzoneDisabled &&
-                    <Banner type="warning">Artifact must be saved before uploading libraries.</Banner>
+                    <Alert severity="warning">Artifact must be saved before uploading libraries.</Alert>
                   }
 
                   <div className="dropzone__instructions">

@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
-import StyledSelect from '../../elements/StyledSelect';
+import { Dropdown } from 'components/elements';
 
 const options = [
   { value: 'is true', label: 'is true' },
@@ -12,23 +12,23 @@ const options = [
 
 /* eslint-disable jsx-a11y/no-onchange */
 export default class BooleanComparison extends Component {
-  handleChange = (selectedOption) => {
-    this.props.updateAppliedModifier(this.props.index, { value: selectedOption ? selectedOption.value : null });
+  handleChange = event => {
+    const { index, updateAppliedModifier } = this.props;
+    const selectedOption = options.find(option => option.value === event.target.value);
+    updateAppliedModifier(index, { value: selectedOption ? selectedOption.value : null });
   }
 
   render() {
+    const { value } = this.props;
+
     return (
-      <div className="boolean-comparison">
-        <StyledSelect
-          className="Select"
-          classNamePrefix="boolean-comparison-select"
-          name="Boolean Compare?"
-          aria-label="Boolean Comparison"
-          title="Boolean Comparison"
-          placeholder="boolean"
-          value={options.find(({ value }) => value === this.props.value)}
+      <div className="modifier-dropdown">
+        <Dropdown
+          id="boolean-comparison"
+          label="Boolean"
           onChange={this.handleChange}
           options={options}
+          value={value}
         />
       </div>
     );
@@ -37,6 +37,6 @@ export default class BooleanComparison extends Component {
 
 BooleanComparison.propTypes = {
   index: PropTypes.number.isRequired,
-  value: PropTypes.string,
-  updateAppliedModifier: PropTypes.func.isRequired
+  updateAppliedModifier: PropTypes.func.isRequired,
+  value: PropTypes.string
 };

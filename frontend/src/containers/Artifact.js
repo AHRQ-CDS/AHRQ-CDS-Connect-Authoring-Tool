@@ -5,7 +5,7 @@ import { bindActionCreators } from 'redux';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 
-import { loadArtifacts, addArtifact, deleteArtifact, updateAndSaveArtifact } from '../actions/artifacts';
+import { loadArtifacts, addArtifact, deleteArtifact } from '../actions/artifacts';
 import artifactProps from '../prop-types/artifact';
 
 import ArtifactModal from '../components/artifact/ArtifactModal';
@@ -37,8 +37,7 @@ class Artifact extends Component {
       return (
         <ArtifactTable
           artifacts={artifacts}
-          deleteArtifact={this.props.deleteArtifact}
-          updateAndSaveArtifact={this.props.updateAndSaveArtifact} />
+          deleteArtifact={this.props.deleteArtifact} />
       );
     }
 
@@ -72,8 +71,7 @@ Artifact.propTypes = {
   artifacts: PropTypes.arrayOf(artifactProps),
   loadArtifacts: PropTypes.func.isRequired,
   addArtifact: PropTypes.func.isRequired,
-  deleteArtifact: PropTypes.func.isRequired,
-  updateAndSaveArtifact: PropTypes.func.isRequired
+  deleteArtifact: PropTypes.func.isRequired
 };
 
 // these props are used for dispatching actions
@@ -81,8 +79,7 @@ function mapDispatchToProps(dispatch) {
   return bindActionCreators({
     loadArtifacts,
     addArtifact,
-    deleteArtifact,
-    updateAndSaveArtifact
+    deleteArtifact
   }, dispatch);
 }
 

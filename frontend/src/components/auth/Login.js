@@ -4,8 +4,8 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faExclamationCircle } from '@fortawesome/free-solid-svg-icons';
 import _ from 'lodash';
 
-import Modal from '../elements/Modal';
-import { onVisitExternalForm } from '../../utils/handlers';
+import { Modal } from 'components/elements';
+import { onVisitExternalForm } from 'utils/handlers';
 
 export default class Login extends Component {
   constructor(props) {
@@ -56,14 +56,13 @@ export default class Login extends Component {
         </button>
 
         <Modal
-          modalTitle="Log in to your account"
-          modalId="login"
-          modalTheme="dark"
-          modalSubmitButtonText="Login"
+          title="Login to your account"
+          theme="dark"
+          submitButtonText="Login"
           handleShowModal={this.state.showLoginModal}
           handleCloseModal={this.closeLoginModal}
-          handleSaveModal={this.login}>
-
+          handleSaveModal={this.login}
+        >
           <div className="login-modal modal__content">
             <div className="login-modal__disclaimer">
               This warning banner provides privacy and security notices consistent with applicable federal laws,
@@ -76,11 +75,13 @@ export default class Login extends Component {
               Any communication or data transiting or stored on this system may be disclosed or used for any lawful
               Government purpose.
             </div>
+
             {this.state.showLoginWarning &&
               <div className="warning" aria-label="Username warning">
                 Please enter your username, not your email address.
               </div>
             }
+
             <div className="login-modal__form">
               <label htmlFor='username'>Username</label>
               <input type='text' id='username' ref='username'

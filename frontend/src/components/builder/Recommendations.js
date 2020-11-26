@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import update from 'immutability-helper';
 
 import Recommendation from './Recommendation';
-import Modal from "../elements/Modal";
+import { Modal }  from 'components/elements';
 
 const UP = -1;
 const DOWN = 1;
@@ -159,10 +159,8 @@ export default class Recommendations extends Component {
 
     return (
       <Modal
-        modalTitle="Delete Recommendation"
-        modalId="confirm-delete-modal"
-        modalTheme="light"
-        modalSubmitButtonText="Delete"
+        title="Delete Recommendation"
+        submitButtonText="Delete"
         handleShowModal={this.state.showConfirmDeleteModal}
         handleCloseModal={this.closeConfirmDeleteModal}
         handleSaveModal={this.handleDeleteRecommendation}>

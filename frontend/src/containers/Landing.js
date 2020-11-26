@@ -2,13 +2,13 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import classnames from 'classnames';
 import { connect } from 'react-redux';
-import { Link } from 'react-router-dom';
+import { Link as RouterLink } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faChevronDown, faChevronRight } from '@fortawesome/free-solid-svg-icons';
 
-import { onVisitExternalForm } from '../utils/handlers';
-import whatsNew from '../data/whatsNew';
-import ExternalLink from '../components/elements/ExternalLink';
+import { onVisitExternalForm } from 'utils/handlers';
+import whatsNew from 'data/whatsNew';
+import { Link } from 'components/elements';
 
 class Landing extends Component {
   constructor(props) {
@@ -33,7 +33,7 @@ class Landing extends Component {
 
   renderedButton = () => {
     if (this.props.isAuthenticated) {
-      return <Link to="/artifacts" className="primary-button-link">GET STARTED</Link>;
+      return <RouterLink to="/artifacts" className="primary-button-link">GET STARTED</RouterLink>;
     }
 
     return (
@@ -107,7 +107,7 @@ class Landing extends Component {
                   whatsNew[whatsNewIndex].link &&
                   whatsNew[whatsNewIndex].link !== '' &&
                   whatsNew[whatsNewIndex].linkExternal === true &&
-                  <ExternalLink href={whatsNew[whatsNewIndex].link} text={whatsNew[whatsNewIndex].linkText} />
+                  <Link external href={whatsNew[whatsNewIndex].link} text={whatsNew[whatsNewIndex].linkText} />
                 }
               </div>
             </div>
@@ -149,9 +149,10 @@ class Landing extends Component {
               <div className="home-card__title">Transform</div>
 
               <div className="home-card__text">
-                CDS Connect, sponsored by the <a href="https://www.ahrq.gov/">Agency for Healthcare Research and
-                Quality</a>, aims to offer a systematic and replicable process for transforming patient-centered
-                outcomes research (PCOR) findings into shareable standards-based CDS artifacts.
+                CDS Connect, sponsored by the <Link external href="https://www.ahrq.gov/"
+                text="Agency for Healthcare Research and Quality" />, aims to offer a systematic and replicable
+                process for transforming patient-centered outcomes research (PCOR) findings into shareable
+                standards-based CDS artifacts.
               </div>
             </div>
 
@@ -167,13 +168,13 @@ class Landing extends Component {
               <div className="home-card__text">
                 The CDS Authoring Tool provides an interface for creating CDS logic using simple forms and exporting
                 it as{' '}
-                <ExternalLink href="https://cql.hl7.org/" text="Health Level Seven (HL7®) Clinical Quality Language (CQL) 1.3" />
+                <Link external href="https://cql.hl7.org/" text="Health Level Seven (HL7®) Clinical Quality Language (CQL) 1.3" />
                 {' '}artifacts using the HL7® Fast Healthcare Interoperability Resources (FHIR®){' '}
-                <ExternalLink href="http://hl7.org/fhir/DSTU2/index.html" text="DSTU2" />
+                <Link external href="http://hl7.org/fhir/DSTU2/index.html" text="DSTU2" />
                 {' '},{' '}
-                <ExternalLink href="http://hl7.org/fhir/STU3/index.html" text="STU3" />
+                <Link external href="http://hl7.org/fhir/STU3/index.html" text="STU3" />
                 {' '}, or{' '}
-                <ExternalLink href="http://hl7.org/fhir/R4/index.html" text="R4" />
+                <Link external href="http://hl7.org/fhir/R4/index.html" text="R4" />
                 {' '}data model.
               </div>
             </div>
@@ -188,9 +189,10 @@ class Landing extends Component {
               <div className="home-card__title">Share</div>
               <div className="home-card__text">
                 CDS Connect provides a repository of CDS artifacts and a prototype infrastructure for sharing
-                CDS across different health care settings and technologies. The CDS Authoring Tool, along with the
-                <a href="https://cds.ahrq.gov/cdsconnect"> CDS Connect Repository</a>, is designed to promote the creation and
-                use of CDS in everyday clinical settings, connecting high-quality CDS to the U.S. healthcare community.
+                CDS across different health care settings and technologies. The CDS Authoring Tool, along with the{' '}
+                <Link href="https://cds.ahrq.gov/cdsconnect" text="CDS Connect Repository" />, is designed to promote
+                the creation and use of CDS in everyday clinical settings, connecting high-quality CDS to the U.S.
+                healthcare community.
               </div>
             </div>
 
@@ -203,7 +205,7 @@ class Landing extends Component {
               <div className="home-card__title">Contribute</div>
               <div className="home-card__text">
                 The CDS Authoring Tool is released under an open source Apache 2.0 license and is available on{' '}
-                <ExternalLink href="https://github.com/ahrq-cds/ahrq-cds-connect-authoring-tool" text="GitHub" />
+                <Link external href="https://github.com/ahrq-cds/ahrq-cds-connect-authoring-tool" text="GitHub" />
                 .
               </div>
             </div>

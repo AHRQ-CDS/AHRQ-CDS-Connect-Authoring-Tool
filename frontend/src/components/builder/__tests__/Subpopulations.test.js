@@ -46,7 +46,6 @@ describe('<Subpopulations />', () => {
         isSearchingVSAC={false}
         isValidatingCode={false}
         loadExternalCqlList={jest.fn()}
-        loadValueSets={jest.fn()}
         loginVSACUser={jest.fn()}
         modifierMap={{}}
         modifiersByInputType={{}}

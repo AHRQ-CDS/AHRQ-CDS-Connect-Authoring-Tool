@@ -1,8 +1,8 @@
 import React from 'react';
+import { render, fireEvent, userEvent, screen } from 'utils/test-utils';
+import { createTemplateInstance } from 'utils/test_helpers';
+import { instanceTree, elementGroups } from 'utils/test_fixtures';
 import ConjunctionGroup from '../ConjunctionGroup';
-import { createTemplateInstance } from '../../../utils/test_helpers';
-import { render, fireEvent, openSelect } from '../../../utils/test-utils';
-import { instanceTree, elementGroups } from '../../../utils/test_fixtures';
 
 describe('<ConjunctionGroup />', () => {
   const operations = elementGroups.find(g => g.name === 'Operations');
@@ -37,7 +37,6 @@ describe('<ConjunctionGroup />', () => {
         isSearchingVSAC={false}
         isValidatingCode={false}
         loadExternalCqlList={jest.fn()}
-        loadValueSets={jest.fn()}
         loginVSACUser={jest.fn()}
         modifierMap={{}}
         modifiersByInputType={{}}
@@ -87,14 +86,10 @@ describe('<ConjunctionGroup />', () => {
 
   it('edits own type', () => {
     const editInstance = jest.fn();
-    const { container } = renderComponent({ editInstance });
+    renderComponent({ editInstance });
 
-    const typeSelect = container.querySelector('.card-group__conjunction-select');
-    openSelect(typeSelect);
-
-    const orOption =
-      Array.from(container.querySelectorAll('.conjunction-select__option')).find(node => node.textContent === 'Or');
-    fireEvent.click(orOption);
+    userEvent.click(screen.getAllByRole('button', { name: 'And' })[0]);
+    userEvent.click(screen.getByRole('option', { name: 'Or' }));
 
     const orType = operations.entries.find(({ id }) => id === 'Or');
 

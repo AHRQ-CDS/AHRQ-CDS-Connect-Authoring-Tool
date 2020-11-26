@@ -35,7 +35,7 @@ export default memo(function DateField({
   return (
     <div className={classnames('form__group', `flex-col-${colSize}`)}>
       {label &&
-        <label htmlFor={fieldName} className={classnames(helperText && 'has-helper-text')}>
+        <label htmlFor={fieldName} className={classnames('field-label', helperText && 'has-helper-text')}>
           {label}
           {isCpgField &&
             <span className={classnames('cpg-tag', isCpgComplete(name, values) && 'cpg-tag-complete')}>CPG</span>

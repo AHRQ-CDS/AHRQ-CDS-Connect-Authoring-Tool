@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import _ from 'lodash';
 
-import StyledSelect from '../../elements/StyledSelect';
+import { Dropdown } from 'components/elements';
 
 const options = [
   { value: '>', label: '>' },
@@ -15,18 +15,22 @@ const options = [
 
 /* eslint-disable jsx-a11y/no-onchange */
 export default class ValueComparisonNumber extends Component {
-  handleChangeMin = (selectedMinOption) => {
+  handleChangeMin = event => {
+    const { index, updateAppliedModifier } = this.props;
+    const selectedMinOption = options.find(option => option.value === event.target.value);
     const value = selectedMinOption ? selectedMinOption.value : null;
-    this.props.updateAppliedModifier(this.props.index, { minOperator: value });
+    updateAppliedModifier(index, { minOperator: value });
   }
 
-  handleChangeMax = (selectedMaxOption) => {
+  handleChangeMax = event => {
+    const { index, updateAppliedModifier } = this.props;
+    const selectedMaxOption = options.find(option => option.value === event.target.value);
     const value = selectedMaxOption ? selectedMaxOption.value : null;
-    this.props.updateAppliedModifier(this.props.index, { maxOperator: value });
+    updateAppliedModifier(index, { maxOperator: value });
   }
 
   render() {
-    const { minValue, maxValue } = this.props;
+    const { index, minOperator, maxOperator, minValue, maxValue, updateAppliedModifier } = this.props;
     const minValueId = _.uniqueId('value-');
     const minOperatorId = _.uniqueId('operator-');
     const maxValueId = _.uniqueId('value2-');
@@ -34,61 +38,61 @@ export default class ValueComparisonNumber extends Component {
 
     return (
       <div className="value-comparison-observation">
-        <StyledSelect
-          className="Select operator"
-          name="Min Operator"
-          title="Min Operator"
-          aria-label="Min Operator"
-          id={minOperatorId}
-          value={options.find(({ value }) => value === this.props.minOperator)}
-          placeholder="minOp"
-          onChange={this.handleChangeMin}
-          options={options}
-        />
-
-        <label htmlFor={minValueId}>
-          <input
-            id={minValueId}
-            placeholder="minValue"
-            className="modifier__comparison__value"
-            type="number"
-            step="any"
-            name="Min value"
-            aria-label="Min Value"
-            value={(minValue || minValue === 0) ? minValue : ''}
-            onChange={(event) => {
-              this.props.updateAppliedModifier(this.props.index, { minValue: parseFloat(event.target.value) });
-            }}
+        <div className="modifier-dropdown-short">
+          <Dropdown
+            id={minOperatorId}
+            label="minOp"
+            onChange={this.handleChangeMin}
+            options={options}
+            value={minOperator}
           />
-        </label>
+        </div>
 
-        <StyledSelect
-          className="Select operator"
-          name="Max Operator"
-          title="Max Operator"
-          aria-label="Max Operator"
-          id={maxOperatorId}
-          value={options.find(({ value }) => value === this.props.maxOperator)}
-          placeholder="maxOp"
-          onChange={this.handleChangeMax}
-          options={options}
-        />
+        <div className="modifier-input">
+          <label htmlFor={minValueId}>
+            <input
+              id={minValueId}
+              placeholder="minValue"
+              className="modifier__comparison__value"
+              type="number"
+              step="any"
+              name="Min value"
+              aria-label="Min Value"
+              value={(minValue || minValue === 0) ? minValue : ''}
+              onChange={event => {
+                updateAppliedModifier(index, { minValue: parseFloat(event.target.value) });
+              }}
+            />
+          </label>
+        </div>
 
-        <label htmlFor={maxValueId}>
-          <input
-            placeholder="maxValue"
-            id={maxValueId}
-            className="modifier__comparison__value"
-            type="number"
-            step="any"
-            name="Max value"
-            aria-label="Max Value"
-            value={(maxValue || maxValue === 0) ? maxValue : ''}
-            onChange={(event) => {
-              this.props.updateAppliedModifier(this.props.index, { maxValue: parseFloat(event.target.value) });
-            }}
+        <div className="modifier-dropdown-short">
+          <Dropdown
+            id={maxOperatorId}
+            label="maxOp"
+            onChange={this.handleChangeMax}
+            options={options}
+            value={maxOperator}
           />
-        </label>
+        </div>
+
+        <div className="modifier-input">
+          <label htmlFor={maxValueId}>
+            <input
+              placeholder="maxValue"
+              id={maxValueId}
+              className="modifier__comparison__value"
+              type="number"
+              step="any"
+              name="Max value"
+              aria-label="Max Value"
+              value={(maxValue || maxValue === 0) ? maxValue : ''}
+              onChange={event => {
+                updateAppliedModifier(index, { maxValue: parseFloat(event.target.value) });
+              }}
+            />
+          </label>
+        </div>
       </div>
     );
   }

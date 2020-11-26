@@ -51,7 +51,6 @@ export default class BaseElements extends Component {
         isValidatingCode={this.props.isValidatingCode}
         isValidCode={this.props.isValidCode}
         loadExternalCqlList={this.props.loadExternalCqlList}
-        loadValueSets={this.props.loadValueSets}
         loginVSACUser={this.props.loginVSACUser}
         parameters={this.props.parameters}
         resetCodeValidation={this.props.resetCodeValidation}
@@ -63,7 +62,6 @@ export default class BaseElements extends Component {
         updateBaseElementLists={this.props.updateBaseElementLists}
         updateInstanceModifiers={this.props.updateInstanceModifiers}
         validateCode={this.props.validateCode}
-        valueSets={this.props.valueSets}
         vsacApiKey={this.props.vsacApiKey}
         vsacDetailsCodes={this.props.vsacDetailsCodes}
         vsacDetailsCodesError={this.props.vsacDetailsCodesError}
@@ -109,7 +107,6 @@ export default class BaseElements extends Component {
                 isSearchingVSAC={this.props.isSearchingVSAC}
                 isValidatingCode={this.props.isValidatingCode}
                 isValidCode={this.props.isValidCode}
-                loadValueSets={this.props.loadValueSets}
                 loginVSACUser={this.props.loginVSACUser}
                 otherInstances={[]}
                 parameters={this.props.parameters}
@@ -123,7 +120,6 @@ export default class BaseElements extends Component {
                 updateInstanceModifiers={this.props.updateInstanceModifiers}
                 validateCode={this.props.validateCode}
                 validateReturnType={this.props.validateReturnType}
-                valueSets={this.props.valueSets}
                 vsacApiKey={this.props.vsacApiKey}
                 vsacDetailsCodes={this.props.vsacDetailsCodes}
                 vsacDetailsCodesError={this.props.vsacDetailsCodesError}
@@ -194,7 +190,6 @@ BaseElements.propTypes = {
   isValidatingCode: PropTypes.bool.isRequired,
   isValidCode: PropTypes.bool,
   loadExternalCqlList: PropTypes.func.isRequired,
-  loadValueSets: PropTypes.func.isRequired,
   loginVSACUser: PropTypes.func.isRequired,
   parameters: PropTypes.array.isRequired,
   resetCodeValidation: PropTypes.func.isRequired,
@@ -207,7 +202,6 @@ BaseElements.propTypes = {
   updateInstanceModifiers: PropTypes.func.isRequired,
   validateCode: PropTypes.func.isRequired,
   validateReturnType: PropTypes.bool.isRequired,
-  valueSets: PropTypes.array,
   vsacApiKey: PropTypes.string,
   vsacDetailsCodes: PropTypes.array.isRequired,
   vsacDetailsCodesError: PropTypes.string.isRequired,
