@@ -14,17 +14,17 @@ const ErrorPage = ({ errorType }) => {
       case 'notLoggedIn':
         return (
           <>
-            You must be logged in to access <code>{pathname}</code>
+            Unable to reach <code>{pathname}</code>. You may need to log in to access.
           </>
         );
       case 'notFound':
         return (
           <>
-            No match for <code>{pathname}</code>
+            No match for <code>{pathname}</code>.
           </>
         );
       default:
-        return 'An error has occured';
+        return 'An error has occurred.';
     }
   };
 

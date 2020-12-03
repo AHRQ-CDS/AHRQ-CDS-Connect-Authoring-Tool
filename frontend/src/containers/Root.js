@@ -29,7 +29,7 @@ const Root = (props) => {
             <PrivateRoute path='/testing' component={Testing} />
             <Route path='/documentation'><Documentation /></Route>
             <Redirect from='/userguide' to='/documentation' />
-            <Route><ErrorPage errorType='notFound' /></Route>
+            <Route path='*'><ErrorPage errorType='notFound' /></Route>
           </Switch>
         </App>
       </ThemeProvider>
