@@ -1,37 +1,10 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { Table, Collapse, Button } from 'reactstrap';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faChevronDown, faChevronRight } from '@fortawesome/free-solid-svg-icons';
+import { Accordion, AccordionSummary, AccordionDetails } from '@material-ui/core';
+import { ExpandMore as ExpandMoreIcon } from '@material-ui/icons';
+import { Table } from 'reactstrap';
 
 export default class PatientDataSection extends Component {
-  constructor(props) {
-    super(props);
-
-    this.state = { collapse: false };
-  }
-
-  toggle = (event) => {
-    event.preventDefault();
-
-    this.setState({ collapse: !this.state.collapse });
-  }
-
-  renderHeader = (title, data) => (
-    <div
-      className="patient-data-section__header"
-      onClick={event => this.toggle(event)}
-      onKeyPress={event => this.toggle(event)}
-      role="button"
-      tabIndex={0}>
-      <div className="header-title">{title} ({data.length})</div>
-      <div className="header-divider"></div>
-      <Button onClick={this.toggle} className="header-button" aria-label="Expand or Collapse">
-        <FontAwesomeIcon icon={this.state.collapse ? faChevronDown : faChevronRight} />
-      </Button>
-    </div>
-  );
-
   renderTable = (type, data) => {
     const isOther = this.props.title === 'Other';
 
@@ -65,11 +38,22 @@ export default class PatientDataSection extends Component {
 
     return (
       <div className="patient-data-section">
-        {this.renderHeader(title, data)}
+        <Accordion>
+          <AccordionSummary
+            expandIcon={<ExpandMoreIcon />}
+            aria-controls="patient-data-section-content"
+            id="patient-data-section-header"
+          >
+            <div className="patient-data-section__header">
+              <div className="header-title">{title} ({ data.length })</div>
+              <div className="header-divider"></div>
+            </div>
+          </AccordionSummary>
 
-        <Collapse isOpen={this.state.collapse}>
-          {data && this.renderTable(title, data)}
-        </Collapse>
+          <AccordionDetails>
+            {data && this.renderTable(title, data)}
+          </AccordionDetails>
+        </Accordion>
       </div>
     );
   }

@@ -91,8 +91,9 @@
 
     &__header {
       display: flex;
+      flex-direction: column;
       justify-content: space-between;
-      padding: 1em;
+      padding: 10px;
 
       &.collapsed {
         flex-direction: column;
@@ -112,6 +113,7 @@
       .card-element__buttons {
         text-align: right;
         white-space: nowrap;
+        margin-top: 10px;
       }
     }
 

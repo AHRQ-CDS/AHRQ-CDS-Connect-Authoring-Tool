@@ -1,18 +1,19 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import { Button, IconButton } from '@material-ui/core';
+import {
+  ChatBubble as ChatBubbleIcon,
+  Check as CheckIcon,
+  Close as CloseIcon,
+  ExpandLess as ExpandLessIcon,
+  ExpandMore as ExpandMoreIcon,
+  Link as LinkIcon,
+  Sms as SmsIcon
+} from '@material-ui/icons';
+import clsx from 'clsx';
 import classnames from 'classnames';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import {
-  faTimes,
-  faExclamationCircle,
-  faLink,
-  faCheck,
-  faCommentDots,
-  faComment,
-  faAngleDoubleDown,
-  faAngleDoubleRight,
-  faBook
-} from '@fortawesome/free-solid-svg-icons';
+import { faExclamationCircle, faBook} from '@fortawesome/free-solid-svg-icons';
 import { UncontrolledTooltip } from 'reactstrap';
 import _ from 'lodash';
 
@@ -20,12 +21,7 @@ import VSACAuthenticationModal from './VSACAuthenticationModal';
 import ElementModal from './ElementModal';
 import CodeSelectModal from './CodeSelectModal';
 
-// Try to keep these ordered same as in folder (i.e. alphabetically)
-import NumberField from './fields/NumberField';
-import StaticField from './fields/StaticField';
-import StringField from './fields/StringField';
-import TextAreaField from './fields/TextAreaField';
-import ValueSetField from './fields/ValueSetField';
+import { NumberField, StaticField, StringField, TextAreaField, ValueSetField } from './fields';
 
 import ValueSetTemplate from './templates/ValueSetTemplate';
 
@@ -41,17 +37,16 @@ import QuantityModifier from './modifiers/QuantityModifier';
 import DateTimeModifier from './modifiers/DateTimeModifier';
 import DateTimePrecisionModifier from './modifiers/DateTimePrecisionModifier';
 import TimePrecisionModifier from './modifiers/TimePrecisionModifier';
-import ValueComparisonNumber from './modifiers/ValueComparisonNumber';
-import ValueComparisonObservation from './modifiers/ValueComparisonObservation';
+import ValueComparisonModifier from './modifiers/ValueComparisonModifier';
 import WithUnit from './modifiers/WithUnit';
 import Qualifier from './modifiers/Qualifier';
 import ExternalModifier from './modifiers/ExternalModifier';
 
 import { hasDuplicateName, doesBaseElementUseNeedWarning, doesBaseElementInstanceNeedWarning,
-  doesParameterUseNeedWarning, validateElement, hasGroupNestedWarning } from '../../utils/warnings';
-import { getOriginalBaseElement } from '../../utils/baseElements';
+  doesParameterUseNeedWarning, validateElement, hasGroupNestedWarning } from 'utils/warnings';
+import { getOriginalBaseElement } from 'utils/baseElements';
 import { getReturnType, validateModifier, allModifiersValid, getFieldWithType, getFieldWithId }
-  from '../../utils/instances';
+  from 'utils/instances';
 
 function getInstanceName(instance) {
   return (getFieldWithId(instance.fields, 'element_name') || {}).value;
@@ -167,31 +162,32 @@ export default class TemplateInstance extends Component {
 
     const validationWarning = validateModifier(modifier);
 
-    const modifierForm = ((mod) => {
-      switch (mod.type || mod.id) {
+    const modifierForm = (() => {
+      switch (modifier.type || modifier.id) {
         case 'ValueComparisonNumber':
           return (
-            <ValueComparisonNumber
-              key={index}
+            <ValueComparisonModifier
               index={index}
+              key={index}
+              maxOperator={modifier.values?.maxOperator}
+              maxValue={modifier.values?.maxValue}
+              minOperator={modifier.values?.minOperator}
+              minValue={modifier.values?.minValue}
               uniqueId={`${this.props.templateInstance.uniqueId}-comparison-${index}`}
-              minOperator={mod.values.minOperator}
-              minValue={mod.values.minValue}
-              maxOperator={mod.values.maxOperator}
-              maxValue={mod.values.maxValue}
               updateAppliedModifier={this.updateAppliedModifier}/>
           );
         case 'ValueComparisonObservation':
           return (
-            <ValueComparisonObservation
-              key={index}
+            <ValueComparisonModifier
               index={index}
+              hasUnit
+              key={index}
+              maxOperator={modifier.values?.maxOperator}
+              maxValue={modifier.values?.maxValue}
+              minOperator={modifier.values?.minOperator}
+              minValue={modifier.values?.minValue}
               uniqueId={`${this.props.templateInstance.uniqueId}-comparison-${index}`}
-              minOperator={mod.values.minOperator}
-              minValue={mod.values.minValue}
-              maxOperator={mod.values.maxOperator}
-              maxValue={mod.values.maxValue}
-              unit={mod.values.unit}
+              unit={modifier.values?.unit}
               updateAppliedModifier={this.updateAppliedModifier}/>
           );
         case 'LookBack':
@@ -199,8 +195,8 @@ export default class TemplateInstance extends Component {
             <LookBack
               key={index}
               index={index}
-              value={mod.values.value}
-              unit={mod.values.unit}
+              value={modifier.values?.value}
+              unit={modifier.values?.unit}
               updateAppliedModifier={this.updateAppliedModifier}/>
           );
         case 'WithUnit':
@@ -208,16 +204,16 @@ export default class TemplateInstance extends Component {
             <WithUnit
               key={index}
               index={index}
-              uniqueId={`${this.props.templateInstance.uniqueId}-unit-${index}`}
-              unit={mod.values.unit}
-              updateAppliedModifier={this.updateAppliedModifier}/>
+              unit={modifier.values?.unit}
+              updateAppliedModifier={this.updateAppliedModifier}
+            />
           );
         case 'BooleanComparison':
           return (
             <BooleanComparison
               key={index}
               index={index}
-              value={mod.values.value}
+              value={modifier.values?.value}
               updateAppliedModifier={this.updateAppliedModifier}/>
           );
         case 'CheckExistence':
@@ -225,7 +221,7 @@ export default class TemplateInstance extends Component {
             <CheckExistence
               key={index}
               index={index}
-              value={mod.values.value}
+              value={modifier.values?.value}
               updateAppliedModifier={this.updateAppliedModifier}/>
           );
         case 'ConvertObservation':
@@ -233,38 +229,40 @@ export default class TemplateInstance extends Component {
             <SelectModifier
               key={index}
               index={index}
-              value={mod.values.value}
-              name={mod.name}
+              value={modifier.values?.value}
+              name={modifier.name}
               options={this.props.conversionFunctions}
               updateAppliedModifier={this.updateAppliedModifier}/>
           );
         case 'Qualifier':
           return (
             <Qualifier
-              key={index}
-              index={index}
-              qualifier={mod.values.qualifier}
-              updateAppliedModifier={this.updateAppliedModifier}
-              updateInstance={this.updateInstance}
-              searchVSACByKeyword={this.props.searchVSACByKeyword}
-              isSearchingVSAC={this.props.isSearchingVSAC}
-              vsacSearchResults={this.props.vsacSearchResults}
-              vsacSearchCount={this.props.vsacSearchCount}
-              template={this.props.templateInstance}
+              codeData={this.props.codeData}
               getVSDetails={this.props.getVSDetails}
+              index={index}
               isRetrievingDetails={this.props.isRetrievingDetails}
-              vsacDetailsCodes={this.props.vsacDetailsCodes}
-              vsacDetailsCodesError={this.props.vsacDetailsCodesError}
-              loginVSACUser={this.props.loginVSACUser}
-              setVSACAuthStatus={this.props.setVSACAuthStatus}
-              vsacStatus={this.props.vsacStatus}
-              vsacStatusText={this.props.vsacStatusText}
-              vsacApiKey={this.props.vsacApiKey}
+              isSearchingVSAC={this.props.isSearchingVSAC}
               isValidatingCode={this.props.isValidatingCode}
               isValidCode={this.props.isValidCode}
-              codeData={this.props.codeData}
+              key={index}
+              loginVSACUser={this.props.loginVSACUser}
+              qualifier={modifier.values?.qualifier}
+              resetCodeValidation={this.props.resetCodeValidation}
+              searchVSACByKeyword={this.props.searchVSACByKeyword}
+              setVSACAuthStatus={this.props.setVSACAuthStatus}
+              template={this.props.templateInstance}
+              updateAppliedModifier={this.updateAppliedModifier}
+              updateInstance={this.updateInstance}
               validateCode={this.props.validateCode}
-              resetCodeValidation={this.props.resetCodeValidation} />
+              vsacApiKey={this.props.vsacApiKey}
+              vsacDetailsCodes={this.props.vsacDetailsCodes}
+              vsacDetailsCodesError={this.props.vsacDetailsCodesError}
+              vsacIsAuthenticating={this.props.vsacIsAuthenticating}
+              vsacSearchCount={this.props.vsacSearchCount}
+              vsacSearchResults={this.props.vsacSearchResults}
+              vsacStatus={this.props.vsacStatus}
+              vsacStatusText={this.props.vsacStatusText}
+            />
           );
         case 'BeforeDateTimePrecise':
         case 'AfterDateTimePrecise':
@@ -272,10 +270,10 @@ export default class TemplateInstance extends Component {
             <DateTimePrecisionModifier
               key={index}
               index={index}
-              name={mod.name}
-              date={mod.values.date}
-              time={mod.values.time}
-              precision={mod.values.precision}
+              name={modifier.name}
+              date={modifier.values?.date}
+              time={modifier.values?.time}
+              precision={modifier.values?.precision}
               updateAppliedModifier={this.updateAppliedModifier}/>
           );
         case 'BeforeTimePrecise':
@@ -284,9 +282,9 @@ export default class TemplateInstance extends Component {
             <TimePrecisionModifier
               key={index}
               index={index}
-              name={mod.name}
-              time={mod.values.time}
-              precision={mod.values.precision}
+              name={modifier.name}
+              time={modifier.values?.time}
+              precision={modifier.values?.precision}
               updateAppliedModifier={this.updateAppliedModifier}/>
           );
         case 'ContainsQuantity':
@@ -296,10 +294,10 @@ export default class TemplateInstance extends Component {
             <QuantityModifier
               key={index}
               index={index}
-              name={mod.name}
+              name={modifier.name}
               uniqueId={`${this.props.templateInstance.uniqueId}-quantity-${index}`}
-              value={mod.values.value}
-              unit={mod.values.unit}
+              value={modifier.values?.value}
+              unit={modifier.values?.unit}
               updateAppliedModifier={this.updateAppliedModifier}/>
           );
         case 'ContainsInteger':
@@ -312,8 +310,8 @@ export default class TemplateInstance extends Component {
             <NumberModifier
               key={index}
               index={index}
-              name={mod.name}
-              value={mod.values.value}
+              name={modifier.name}
+              value={modifier.values?.value}
               updateAppliedModifier={this.updateAppliedModifier}/>
           );
         case 'ContainsDateTime':
@@ -323,9 +321,9 @@ export default class TemplateInstance extends Component {
             <DateTimeModifier
               key={index}
               index={index}
-              name={mod.name}
-              date={mod.values.date}
-              time={mod.values.time}
+              name={modifier.name}
+              date={modifier.values?.date}
+              time={modifier.values?.time}
               updateAppliedModifier={this.updateAppliedModifier}/>
           );
         case 'EqualsString':
@@ -335,87 +333,87 @@ export default class TemplateInstance extends Component {
             <StringModifier
               key={index}
               index={index}
-              name={mod.name}
-              value={mod.values.value}
+              name={modifier.name}
+              value={modifier.values?.value}
               updateAppliedModifier={this.updateAppliedModifier}/>
           );
         case 'ExternalModifier':
           return (
             <ExternalModifier
-              key={index}
+              argumentTypes={modifier.argumentTypes}
+              codeData={this.props.codeData}
               index={index}
-              name={mod.name}
-              value={mod.values.value}
-              arguments={mod.arguments}
-              argumentTypes={mod.argumentTypes}
-              updateAppliedModifier={this.updateAppliedModifier}
-              vsacApiKey={this.props.vsacApiKey}
-              loginVSACUser={this.props.loginVSACUser}
-              setVSACAuthStatus={this.props.setVSACAuthStatus}
-              vsacStatus={this.props.vsacStatus}
-              vsacStatusText={this.props.vsacStatusText}
               isValidatingCode={this.props.isValidatingCode}
               isValidCode={this.props.isValidCode}
-              codeData={this.props.codeData}
+              key={index}
+              loginVSACUser={this.props.loginVSACUser}
+              modifierArguments={modifier.arguments}
+              name={modifier.name}
+              resetCodeValidation={this.props.resetCodeValidation}
+              setVSACAuthStatus={this.props.setVSACAuthStatus}
+              updateAppliedModifier={this.updateAppliedModifier}
               validateCode={this.props.validateCode}
-              resetCodeValidation={this.props.resetCodeValidation} />
+              value={modifier.values?.value}
+              vsacApiKey={this.props.vsacApiKey}
+              vsacIsAuthenticating={this.props.vsacIsAuthenticating}
+              vsacStatus={this.props.vsacStatus}
+              vsacStatusText={this.props.vsacStatusText}
+            />
           );
         default:
-          return (<LabelModifier key={index} name={mod.name} id={mod.id}/>);
+          return (<LabelModifier key={index} name={modifier.name} id={modifier.id}/>);
       }
-    })(modifier);
+    })();
 
     const canModifierBeRemoved = this.canModifierBeRemoved();
 
     return (
-      <div key={index} className={`modifier modifier-${modifier.type || modifier.id}`}>
-        <div className="modifier__info">
+      <div
+        key={index}
+        className={clsx('element-field-details', `modifier-${modifier.type || modifier.id}`)}
+      >
+        <div className="element-field-display">
           {modifierForm}
-
-          {index + 1 === this.props.templateInstance.modifiers.length &&
-            <span
-              role="button"
-              id={`modifier-delete-${this.props.templateInstance.uniqueId}`}
-              className={`modifier__deletebutton secondary-button ${canModifierBeRemoved ? '' : 'disabled'}`}
-              aria-label="remove last expression"
-              onClick={() => this.removeLastModifier(canModifierBeRemoved)}
-              tabIndex="0"
-              onKeyPress={(e) => {
-                e.which = e.which || e.keyCode;
-                if (e.which === 13) this.removeLastModifier(canModifierBeRemoved);
-              }}
-            >
-              <FontAwesomeIcon icon={faTimes} className="delete-valueset-button" />
-
-              {!canModifierBeRemoved &&
-                <UncontrolledTooltip
-                  target={`modifier-delete-${this.props.templateInstance.uniqueId}`}
-                  placement="left"
-                >
-                  Cannot remove modifier because return type cannot change while in use.
-                </UncontrolledTooltip>
-              }
-            </span>
-          }
+          {validationWarning && <div className="warning">{validationWarning}</div>}
         </div>
 
-        {validationWarning && <div className="warning">{validationWarning}</div>}
+        {index + 1 === this.props.templateInstance.modifiers.length &&
+          <div className="element-field-buttons">
+            <span id={`modifier-delete-${this.props.templateInstance.uniqueId}`}>
+              <IconButton
+                aria-label="remove last expression"
+                color="primary"
+                disabled={!canModifierBeRemoved}
+                onClick={() => this.removeLastModifier(canModifierBeRemoved)}
+              >
+                <CloseIcon fontSize="small" />
+              </IconButton>
+            </span>
+
+            {!canModifierBeRemoved &&
+              <UncontrolledTooltip
+                target={`modifier-delete-${this.props.templateInstance.uniqueId}`}
+                placement="left"
+              >
+                Cannot remove modifier because return type cannot change while in use.
+              </UncontrolledTooltip>
+            }
+          </div>
+        }
       </div>
     );
   }
 
   renderAppliedModifiers = () => (
-    <div className="applied-modifiers">
-      <div className="applied-modifiers__info">
-        <div className="applied-modifiers__info-expressions">
-          {this.props.templateInstance.modifiers && this.props.templateInstance.modifiers.length > 0 &&
-            <div className="label expressions-label">Expressions:</div>
-          }
+    <div id="applied-modifiers">
+      <div className="element-field">
+        {this.props.templateInstance.modifiers?.length > 0 &&
+          <div className="element-field-label">Expressions:</div>
+        }
 
-          <div className="modifier__list" aria-label="Expression List">
-            {(this.props.templateInstance.modifiers || []).map((modifier, index) =>
-              this.renderAppliedModifier(modifier, index))}
-          </div>
+        <div className="element-field-details-group" aria-label="Expression List">
+          {(this.props.templateInstance.modifiers || []).map((modifier, index) =>
+            this.renderAppliedModifier(modifier, index))}
         </div>
       </div>
     </div>
@@ -440,8 +438,8 @@ export default class TemplateInstance extends Component {
     this.setState({ relevantModifiers });
   }
 
-  handleModifierSelected = (event) => {
-    const selectedModifier = _.cloneDeep(this.props.modifierMap[event.target.value]);
+  handleModifierSelected = modifierId => {
+    const selectedModifier = _.cloneDeep(this.props.modifierMap[modifierId]);
     const modifiers = (this.props.templateInstance.modifiers || []).concat(selectedModifier);
     this.setState({ showModifiers: false });
     this.setAppliedModifiers(modifiers);
@@ -504,27 +502,27 @@ export default class TemplateInstance extends Component {
       return (
         <div className="modifier-select">
           <div className="modifier__selection">
-            <button
-              onClick={() => this.setState({ showModifiers: !this.state.showModifiers })}
-              className="modifier__addbutton secondary-button"
-              aria-label="add expression"
+            <Button
+              color="primary"
               disabled={!allModifiersValid(this.props.templateInstance.modifiers)}
+              onClick={() => this.setState({ showModifiers: !this.state.showModifiers })}
+              variant="contained"
             >
-              Add Expression
-            </button>
+              Add expression
+            </Button>
 
             {this.state.showModifiers &&
               this.state.relevantModifiers
                 .filter(modifier => !baseElementIsInUse || modifier.returnType === this.state.returnType)
                 .map(modifier =>
-                  <button
+                  <Button
+                    className="modifier-select-button"
                     key={modifier.id}
-                    value={modifier.id}
-                    onClick={this.handleModifierSelected}
-                    className="modifier__button secondary-button"
-                    aria-label={modifier.name}>
+                    onClick={() => this.handleModifierSelected(modifier.id)}
+                    variant="contained"
+                  >
                     {modifier.type === 'ExternalModifier' && <FontAwesomeIcon icon={faBook} />} {modifier.name}
-                  </button>
+                  </Button>
                 )
             }
           </div>
@@ -583,29 +581,26 @@ export default class TemplateInstance extends Component {
     if (baseUseTab === 'baseElements') tabLabel = 'Base Element';
 
     return (
-      <div className="modifier__return__type" id="base-element-list" key={referenceField.value.id}>
-        <div className="code-info">
-          <div className="label">{label}</div>
-          <div className="code-info__info">
-            <div className="code-info__text">
+      <div id="base-element-list" key={referenceField.value.id}>
+        <div className="element-field">
+          <div className="element-field-label">{label}</div>
+
+          <div className="element-field-details code-info__info">
+            <div className="element-field-display code-info__text">
               <span>{referenceName}</span>
               {referenceField.id === 'baseElementUse' && <span> &#8594; {tabLabel}</span>}
             </div>
 
             {referenceField.id !== 'externalCqlReference' &&
-              <div className="code-info__buttons align-right">
-                <span
-                  role="button"
-                  id={`definition-${this.props.templateInstance.uniqueId}`}
-                  className="element__linkbutton"
-                  aria-label="see element definition"
-                  onClick={() => this.props.scrollToElement(scrollElementId, scrollReferenceType, tabIndex)}
-                  tabIndex="0"
-                  onKeyPress={(e) => {
-                    e.which = e.which || e.keyCode;
-                    if (e.which === 13) this.props.scrollToElement(scrollElementId, scrollReferenceType, tabIndex);
-                  }}>
-                  <FontAwesomeIcon icon={faLink} className="delete-valueset-button" />
+              <div className="element-field-buttons code-info__buttons align-right">
+                <span id={`definition-${this.props.templateInstance.uniqueId}`}>
+                  <IconButton
+                    aria-label="see element definition"
+                    color="primary"
+                    onClick={() => this.props.scrollToElement(scrollElementId, scrollReferenceType, tabIndex)}
+                  >
+                    <LinkIcon fontSize="small" />
+                  </IconButton>
                 </span>
               </div>
             }
@@ -621,26 +616,25 @@ export default class TemplateInstance extends Component {
       const vsacField = getFieldWithType(this.props.templateInstance.fields, '_vsac');
       if (vsacField && vsacField.valueSets) {
         return (
-          <div className="modifier__return__type" id="valueset-list">
+          <div id="valueset-list">
             {vsacField.valueSets.map((vs, i) => (
-              <div key={`selected-valueset-${i}`}>
-                <ValueSetTemplate
-                  index={i}
-                  vsacField={vsacField}
-                  valueSet={vs}
-                  updateInstance={this.updateInstance}
-                  searchVSACByKeyword={this.props.searchVSACByKeyword}
-                  isSearchingVSAC={this.props.isSearchingVSAC}
-                  vsacSearchResults={this.props.vsacSearchResults}
-                  vsacSearchCount={this.props.vsacSearchCount}
-                  templateInstance={this.props.templateInstance}
-                  getVSDetails={this.props.getVSDetails}
-                  isRetrievingDetails={this.props.isRetrievingDetails}
-                  vsacDetailsCodes={this.props.vsacDetailsCodes}
-                  vsacDetailsCodesError={this.props.vsacDetailsCodesError}
-                  vsacApiKey={this.props.vsacApiKey}
-                />
-              </div>
+              <ValueSetTemplate
+                getVSDetails={this.props.getVSDetails}
+                index={i}
+                isRetrievingDetails={this.props.isRetrievingDetails}
+                isSearchingVSAC={this.props.isSearchingVSAC}
+                key={`selected-valueset-${i}`}
+                searchVSACByKeyword={this.props.searchVSACByKeyword}
+                templateInstance={this.props.templateInstance}
+                updateInstance={this.updateInstance}
+                valueSet={vs}
+                vsacApiKey={this.props.vsacApiKey}
+                vsacDetailsCodes={this.props.vsacDetailsCodes}
+                vsacDetailsCodesError={this.props.vsacDetailsCodesError}
+                vsacField={vsacField}
+                vsacSearchCount={this.props.vsacSearchCount}
+                vsacSearchResults={this.props.vsacSearchResults}
+              />
             ))}
           </div>
         );
@@ -656,31 +650,27 @@ export default class TemplateInstance extends Component {
       const vsacField = getFieldWithType(this.props.templateInstance.fields, '_vsac');
       if (vsacField && vsacField.codes) {
         return (
-          <div className="modifier__return__type" id="code-list">
+          <div id="code-list">
             {vsacField.codes.map((code, i) => (
-              <div key={`selected-code-${i}`} className="code-info">
-                <div className="label">
+              <div key={`selected-code-${i}`} className="element-field code-info">
+                <div className="element-field-label">
                   Code{vsacField.codes.length > 1 ? ` ${i + 1}` : ''}:
                 </div>
 
                 {/* Code name will come with validation */}
-                <div className="code-info__info">
-                  <div className="code-info__text">{`${code.codeSystem.name} (${code.code})
-                   ${code.display === '' ? '' : ` - ${code.display}`}`}</div>
+                <div className="element-field-details code-info__info">
+                  <div className="code-info__text element-field-display">
+                    {`${code.codeSystem.name} (${code.code}) ${code.display === '' ? '' : ` - ${code.display}`}`}
+                  </div>
 
-                  <div className="code-info__buttons align-right">
-                    <span
-                      role="button"
-                      id="delete-code"
-                      tabIndex="0"
+                  <div className="code-info__buttons element-field-buttons">
+                    <IconButton
+                      aria-label="delete code"
+                      color="primary"
                       onClick={() => this.deleteCode(code)}
-                      onKeyPress={(e) => {
-                        e.which = e.which || e.keyCode;
-                        if (e.which === 13) this.deleteCode(code);
-                      }}
                     >
-                      <FontAwesomeIcon icon={faTimes} className="delete-code-button" />
-                    </span>
+                      <CloseIcon fontSize="small" />
+                    </IconButton>
                   </div>
                 </div>
               </div>
@@ -695,7 +685,7 @@ export default class TemplateInstance extends Component {
 
   renderVSACOptions = () => {
     // If last time authenticated was less than 7.5 hours ago, force user to log in again.
-    if (!this.props.vsacApiKey) {
+    if (!this.props.vsacApiKey && !this.props.vsacIsAuthenticating) {
       return (
         <div id="vsac-controls">
           <VSACAuthenticationModal
@@ -710,9 +700,9 @@ export default class TemplateInstance extends Component {
 
     return (
       <div id="vsac-controls">
-        <button className="disabled-button" disabled={true} aria-label="VSAC Authenticated">
-          <FontAwesomeIcon icon={faCheck} /> VSAC Authenticated
-        </button>
+        <Button color="primary" disabled variant="contained" startIcon={<CheckIcon />}>
+          VSAC Authenticated
+        </Button>
 
         <ElementModal
           className="element-select__modal"
@@ -852,17 +842,13 @@ export default class TemplateInstance extends Component {
         })}
 
         {templateInstance.id && templateInstance.id.includes('_vsac') &&
-          <div className="vsac-info">
+          <>
             {this.renderVSInfo()}
             {this.renderCodeInfo()}
-          </div>
+          </>
         }
 
-        {referenceField &&
-          <div className="vsac-info">
-            {this.renderReferenceInfo(referenceField)}
-          </div>
-        }
+        {referenceField && this.renderReferenceInfo(referenceField)}
 
         {this.hasBaseElementLinks() &&
           <div className="base-element-links">
@@ -877,12 +863,15 @@ export default class TemplateInstance extends Component {
 
         {this.renderAppliedModifiers()}
 
-        <div className="modifier__return__type">
-          <div className="return-type">
-            <div className="label">Return Type:</div>
-            <div className="return-type__value">
-              { (validateReturnType === false || _.startCase(returnType) === 'Boolean') &&
-                <FontAwesomeIcon icon={faCheck} className="check" />}
+        <div className="element-field">
+          <div className="element-field-label">Return Type:</div>
+
+          <div className="element-field-details return-type">
+            <div>
+              {(validateReturnType === false || _.startCase(returnType) === 'Boolean') &&
+                <CheckIcon fontSize="small" />
+              }
+
               {_.startCase(returnType)}
             </div>
           </div>
@@ -987,7 +976,6 @@ export default class TemplateInstance extends Component {
     const headerTopClass = classnames('card-element__header-top', { collapsed: !showElement });
     const baseElementUsed = this.isBaseElementUsed();
     const baseElementInUsedList = this.props.disableAddElement;
-    const disabledClass = (baseElementUsed || baseElementInUsedList) ? 'disabled' : '';
     const commentField = getFieldWithId(templateInstance.fields, 'comment');
     const hasComment = commentField && commentField.value && commentField.value !== '';
 
@@ -1010,31 +998,34 @@ export default class TemplateInstance extends Component {
             {showElement && !this.props.disableIndent && renderIndentButtons(templateInstance)}
 
             {showElement &&
-              <button
-                onClick={this.toggleComment}
-                className={classnames('element_hidebutton', 'transparent-button', hasComment && 'has-comment')}
+              <IconButton
                 aria-label="show comment"
+                className={clsx(hasComment && 'has-comment')}
+                color="primary"
+                onClick={this.toggleComment}
               >
-                <FontAwesomeIcon icon={hasComment ? faCommentDots : faComment} />
-              </button>
+                {hasComment ? <SmsIcon fontSize="small" /> : <ChatBubbleIcon fontSize="small" />}
+              </IconButton>
             }
 
-            <button
-              onClick={this.showHideElementBody}
-              className="element__hidebutton transparent-button"
+            <IconButton
               aria-label={`hide ${templateInstance.name}`}
+              color="primary"
+              onClick={this.showHideElementBody}
             >
-              <FontAwesomeIcon icon={showElement ? faAngleDoubleDown : faAngleDoubleRight} />
-            </button>
+              {showElement ? <ExpandLessIcon fontSize="small" /> : <ExpandMoreIcon fontSize="small" />}
+            </IconButton>
 
-            <button
-              id={`deletebutton-${templateInstance.uniqueId}`}
-              onClick={this.deleteInstance}
-              className={`element__deletebutton transparent-button ${disabledClass}`}
-              aria-label={`remove ${templateInstance.name}`}
-            >
-              <FontAwesomeIcon icon={faTimes} />
-            </button>
+            <span id={`deletebutton-${templateInstance.uniqueId}`}>
+              <IconButton
+                aria-label={`remove ${templateInstance.name}`}
+                color="primary"
+                disabled={baseElementUsed || baseElementInUsedList}
+                onClick={this.deleteInstance}
+              >
+                <CloseIcon fontSize="small" />
+              </IconButton>
+            </span>
 
             {baseElementUsed &&
               <UncontrolledTooltip
@@ -1116,6 +1107,7 @@ TemplateInstance.propTypes = {
   vsacApiKey: PropTypes.string,
   vsacDetailsCodes: PropTypes.array.isRequired,
   vsacDetailsCodesError: PropTypes.string,
+  vsacIsAuthenticating: PropTypes.bool.isRequired,
   vsacSearchCount: PropTypes.number.isRequired,
   vsacSearchResults: PropTypes.array.isRequired,
   vsacStatus: PropTypes.string,

@@ -1,6 +1,6 @@
 import React, { memo, useCallback } from 'react';
 import { FastField, useFormikContext } from 'formik';
-import classnames from 'classnames';
+import clsx from 'clsx';
 
 import { Dropdown } from 'components/elements';
 import { isCpgComplete } from 'utils/fields';
@@ -38,25 +38,26 @@ export default memo(function SelectField({
   const { values } = useFormikContext();
 
   return (
-    <div className={classnames('form__group', `flex-col-${colSize}`)}>
+    <div className="field select-field">
       {label && (
-        <label htmlFor={fieldName} className={classnames('field-label', helperText && 'has-helper-text')}>
+        <label htmlFor={fieldName} className="field-label">
           {label}
           {isCpgField && (
-            <span className={classnames('cpg-tag', isCpgComplete(name, values) && 'cpg-tag-complete')}>CPG</span>
+            <span className={clsx('cpg-tag', isCpgComplete(name, values) && 'cpg-tag-complete')}>CPG</span>
           )}
           :
         </label>
       )}
 
-      <div className="input__group">
+      <div className="field-input field-input-lg">
         <FastField
-          name={fieldName}
-          component={FormikSelect}
-          options={options}
           aria-label={`Select ${name}`}
           classNamePrefix={name}
+          component={FormikSelect}
+          name={fieldName}
+          options={options}
         />
+
         {helperText && <div className="helper-text">{helperText}</div>}
       </div>
     </div>

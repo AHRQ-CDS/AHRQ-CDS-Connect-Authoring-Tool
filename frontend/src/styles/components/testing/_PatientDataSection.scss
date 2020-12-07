@@ -1,4 +1,5 @@
-.patient-data-section {
+.patient-data-section,
+.results-data-section {
   &__header {
     display: flex;
     justify-content: space-between;
@@ -7,13 +8,6 @@
     padding-left: 15px;
     width: 100%;
     margin: 5px 0;
-
-    &:hover,
-    &:focus {
-      background-color: $gray-blue;
-      border-radius: 5px;
-      outline: none;
-    }
 
     .header-title {
       color: $blue-light;
@@ -27,16 +21,6 @@
     .header-divider {
       width: 100%;
       border-bottom: 2px solid $blue-light;
-    }
-
-    .header-button {
-      background-color: transparent;
-      border: 0;
-      box-shadow: none;
-
-      svg {
-        color: $blue-light;
-      }
     }
   }
 
@@ -55,4 +39,13 @@
       padding: 5px 15px;
     }
   }
+
+  #results-data-section-header {
+    background-color: darken($gray-blue, 10%);
+  }
+}
+
+div.results-data-section {
+  background-color: $gray-blue;
+  margin: 10px 0;
 }

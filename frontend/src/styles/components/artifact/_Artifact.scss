@@ -49,6 +49,10 @@
   width: 6em;
 }
 
+.artifacts__tablecell-buttons button {
+  margin-left: 10px;
+}
+
 .artifact-info {
   font-size: 0.9em;
   color: $gray;
@@ -59,53 +63,32 @@
   flex-wrap: wrap;
   padding: 20px 40px;
 
-  .form__group {
-    display: flex;
-    padding: 10px 0;
-  }
-
-  .input__group {
-    display: flex;
-    flex-direction: column;
-    width: 100%;
+  .date-field,
+  .date-range-field {
+    button {
+      padding: 20px 5px;
+    }
 
     .helper-text {
-      font-size: 0.7em;
-      color: $gray;
+      margin-top: -10px;
     }
   }
 
-  .field-label {
-    display: flex;
-    align-items: center;
-    justify-content: flex-end;
-    min-width: 200px;
-    margin: 9px 15px 0;
-
-    &.has-helper-text {
-      margin-bottom: 25px;
-    }
-  }
-
-  input,
-  textarea {
-    width: 100%;
-  }
-
-  textarea {
-    padding-top: 8px;
+  .field-checkbox {
+    margin-left: 20px;
   }
 
   .cpg-button {
-    margin: 20px 230px;
+    margin: 20px 12.5em;
   }
 
   #code-display {
-    line-height: 50px;
-  }
+    display: flex;
+    align-items: center;
 
-  .status__input {
-    height: 0;
+    > div {
+      margin-left: 10px;
+    }
   }
 
   .cpg-tag {
@@ -153,6 +136,14 @@
 
     .date-range-to {
       margin: 10px 20px;
+    }
+  }
+
+  .grouped-fields {
+    .field-group-container {
+      background-color: $gray-blue;
+      margin-bottom: 10px;
+      padding-top: 4em;
     }
   }
 }

@@ -22,6 +22,10 @@
     margin: 0;
     padding-right: 1em;
     font-weight: $font-weight-regular;
+
+    svg {
+      color: $white;
+    }
   }
 
   &__canvas {

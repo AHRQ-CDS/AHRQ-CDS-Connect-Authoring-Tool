@@ -1,19 +1,24 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import classnames from 'classnames';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCheckSquare, faSquare, faEye, faCheck, faTimes } from '@fortawesome/free-solid-svg-icons';
+import { Button, IconButton } from '@material-ui/core';
+import {
+  Check as CheckIcon,
+  CheckBox as CheckBoxIcon,
+  CheckBoxOutlineBlank as CheckBoxOutlineBlankIcon,
+  Delete as DeleteIcon,
+  Visibility as VisibilityIcon
+} from '@material-ui/icons';
 import { UncontrolledTooltip } from 'reactstrap';
 import _ from 'lodash';
 
-import renderDate from '../../utils/dates';
-import { sortAlphabeticallyByPatientName } from '../../utils/sort';
-import patientProps from '../../prop-types/patient';
-import artifactProps from '../../prop-types/artifact';
+import renderDate from 'utils/dates';
+import { sortAlphabeticallyByPatientName } from 'utils/sort';
+import patientProps from 'prop-types/patient';
+import artifactProps from 'prop-types/artifact';
 
 import { Dropdown, Modal } from 'components/elements';
 import VSACAuthenticationModal from '../builder/VSACAuthenticationModal';
-import CodeService from '../../utils/code_service/CodeService';
+import CodeService from 'utils/code_service/CodeService';
 import PatientView from './PatientView';
 import TestingParameters from './TestingParameters';
 
@@ -37,7 +42,8 @@ export default class PatientTable extends Component {
 
   // ----------------------- CONFIRM DELETE MODAL -------------------------- //
 
-  openConfirmDeleteModal = (patient) => {
+  openConfirmDeleteModal = (patient, patientSelected) => {
+    if (patientSelected) return;
     this.setState({ showConfirmDeleteModal: true, patientToDelete: patient });
   }
 
@@ -104,7 +110,8 @@ export default class PatientTable extends Component {
 
   // ----------------------- HANDLE PATIENTS ---------------------------- //
 
-  updatePatientsToExecute = (patient) => {
+  updatePatientsToExecute = (patient, differentFHIRVersion) => {
+    if (differentFHIRVersion) return;
     const patientsClone = [...this.state.patientsToExecute];
     const patientIndex = patientsClone.findIndex(p => p._id === patient._id);
 
@@ -257,16 +264,16 @@ export default class PatientTable extends Component {
     return (
       <tr key={patient._id}>
         <td className="patients__tablecell-tiny" data-th="Check Box">
-          <button aria-label="View"
-            id={`SelectPatientTooltip-${patient._id}`}
-            className={classnames('button invisible-button', differentFHIRVersion && 'disabled')}
-            onClick={() => { if (!differentFHIRVersion) this.updatePatientsToExecute(patient); }}
-          >
-            <FontAwesomeIcon
-              icon={patientSelected ? faCheckSquare : faSquare}
-              className={classnames('select-patient-checkbox', patientSelected && 'checked')}
-            />
-          </button>
+          <span id={`SelectPatientTooltip-${patient._id}`}>
+            <IconButton
+              aria-label="view"
+              color="primary"
+              disabled={differentFHIRVersion}
+              onClick={() => this.updatePatientsToExecute(patient, differentFHIRVersion)}
+            >
+              {patientSelected ? <CheckBoxIcon size="small" /> : <CheckBoxOutlineBlankIcon size="small" />}
+            </IconButton>
+          </span>
         </td>
 
         {differentFHIRVersion &&
@@ -321,22 +328,27 @@ export default class PatientTable extends Component {
           {renderDate(patient.updatedAt)}
         </td>
 
-        <td data-th="">
-          <button aria-label="View"
-            className="button primary-button details-button"
+        <td className="patients__tablecell-buttons" data-th="">
+          <Button
+            color="primary"
             onClick={() => this.openViewDetailsModal(patient)}
+            startIcon={<VisibilityIcon />}
+            variant="contained"
           >
-            <FontAwesomeIcon icon={faEye} /> View
-          </button>
+            View
+          </Button>
 
-          <button
-            id={`DeletePatientTooltip-${patient._id}`}
-            className={classnames('button danger-button', patientSelected && 'disabled')}
-            onClick={() => { if (!patientSelected) this.openConfirmDeleteModal(patient); }}
-            aria-label="Delete"
-          >
-            <FontAwesomeIcon icon={faTimes} /> Delete
-          </button>
+          <span id={`DeletePatientTooltip-${patient._id}`}>
+            <Button
+              color="secondary"
+              disabled={patientSelected}
+              onClick={() => this.openConfirmDeleteModal(patient, patientSelected)}
+              startIcon={<DeleteIcon />}
+              variant="contained"
+            >
+              Delete
+            </Button>
+          </span>
 
           {patientSelected &&
             <UncontrolledTooltip target={`DeletePatientTooltip-${patient._id}`} placement="top">
@@ -365,9 +377,9 @@ export default class PatientTable extends Component {
 
     return (
       <div className="vsac-authenticate">
-        <button className="disabled-button" disabled={true} aria-label="VSAC Authenticated">
-          <FontAwesomeIcon icon={faCheck} /> VSAC Authenticated
-        </button>
+        <Button color="primary" disabled variant="contained" startIcon={<CheckIcon />}>
+          VSAC Authenticated
+        </Button>
       </div>
     );
   }
@@ -381,15 +393,14 @@ export default class PatientTable extends Component {
         <div className="patient-table__buttons">
           {this.renderVSACLogin()}
 
-          <button aria-label="Execute CQL on Selected Patients"
-            disabled={
-              !this.props.vsacApiKey || this.state.patientsToExecute.length === 0
-            }
-            className={classnames('button primary-button execute-button', !loggedIn && 'disabled-button')}
+          <Button
+            color="primary"
+            disabled={!loggedIn || !this.props.vsacApiKey || this.state.patientsToExecute.length === 0}
             onClick={() => this.openExecuteCQLModal()}
+            variant="contained"
           >
             Execute CQL on Selected Patients
-          </button>
+          </Button>
         </div>
 
         <table className="patients__table">

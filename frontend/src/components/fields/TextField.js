@@ -1,10 +1,25 @@
 import React, { memo, useMemo } from 'react';
 import { FastField, useFormikContext } from 'formik';
-import classnames from 'classnames';
+import { TextField as MuiTextField } from '@material-ui/core';
+import clsx from 'clsx';
 
-import { isCpgComplete } from '../../utils/fields';
+import { isCpgComplete } from 'utils/fields';
 
 let labelUuid = 0;
+
+const MuiFastField = ({ field: { name, value, onChange, onBlur }, form: { touched, errors }, ...props }) => (
+  <MuiTextField
+    error={touched[name] && Boolean(errors[name])}
+    fullWidth
+    helperText={touched[name] && errors[name]}
+    name={name}
+    onBlur={onBlur}
+    onChange={onChange}
+    value={value}
+    variant="outlined"
+    {...props}
+  />
+);
 
 export default memo(function TextField({
   name,
@@ -22,28 +37,30 @@ export default memo(function TextField({
 
   const labelId = useMemo(() => {
     if (!label) return null;
-    return `TextField-${labelUuid += 1}`;
+    return `TextField-${(labelUuid += 1)}`;
   }, [label]);
 
   return (
-    <div className={classnames('form__group', `flex-col-${colSize}`)}>
-      {label &&
-        <label htmlFor={labelId} className={classnames('field-label', helperText && 'has-helper-text')}>
+    <div className="field text-field">
+      {label && (
+        <label htmlFor={labelId} className="field-label">
           {label}
           {required && <span className="required">*</span>}
-          {isCpgField &&
-            <span className={classnames('cpg-tag', isCpgComplete(name, values) && 'cpg-tag-complete')}>CPG</span>
-          }:
+          {isCpgField && (
+            <span className={clsx('cpg-tag', isCpgComplete(name, values) && 'cpg-tag-complete')}>CPG</span>
+          )}
+          :
         </label>
-      }
+      )}
 
-      <div className="input__group">
+      <div className="field-input field-input-full-width">
         <FastField
+          component={MuiFastField}
           id={labelId}
-          type={type}
           name={fieldName}
           placeholder={placeholder}
           required={required}
+          type={type}
         />
 
         {helperText && <div className="helper-text">{helperText}</div>}

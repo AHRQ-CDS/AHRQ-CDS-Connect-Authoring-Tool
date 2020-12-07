@@ -1,43 +1,16 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { Table, Collapse, Button } from 'reactstrap';
+import { Accordion, AccordionSummary, AccordionDetails } from '@material-ui/core';
+import { ExpandMore as ExpandMoreIcon } from '@material-ui/icons';
+import { Table } from 'reactstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCheck, faTimes, faChevronDown, faChevronRight } from '@fortawesome/free-solid-svg-icons';
+import { faCheck, faTimes } from '@fortawesome/free-solid-svg-icons';
 
 export default class ResultsDataSection extends Component {
-  constructor(props) {
-    super(props);
-
-    this.state = { expand: false };
-  }
-
-  toggle = event => {
-    event.preventDefault();
-
-    this.setState({ expand: !this.state.expand });
-  }
-
   renderBoolean = (bool) => {
     if (bool) return <FontAwesomeIcon icon={faCheck} className="boolean-check" />;
     return <FontAwesomeIcon icon={faTimes} className="boolean-x" />;
   }
-
-  renderHeader = title => (
-    <div
-      className="patient-data-section__header"
-      onClick={event => this.toggle(event)}
-      onKeyPress={event => this.toggle(event)}
-      role="button"
-      tabIndex={0}
-    >
-      <div className="header-title">{title}</div>
-      <div className="header-divider"></div>
-
-      <Button onClick={this.toggle} className="header-button" aria-label="Expand or Collapse">
-        <FontAwesomeIcon icon={this.state.expand ? faChevronDown : faChevronRight} />
-      </Button>
-    </div>
-  );
 
   renderTable = results => (
     <Table className="patient-data-section__table">
@@ -101,11 +74,22 @@ export default class ResultsDataSection extends Component {
 
     return (
       <div className="patient-data-section">
-        {this.renderHeader(title, results)}
+        <Accordion defaultExpanded className="results-data-section">
+          <AccordionSummary
+            expandIcon={<ExpandMoreIcon />}
+            aria-controls="results-data-section-content"
+            id="results-data-section-header"
+          >
+            <div className="results-data-section__header">
+              <div className="header-title">{title}</div>
+              <div className="header-divider"></div>
+            </div>
+          </AccordionSummary>
 
-        <Collapse isOpen={this.state.expand}>
-          {results && this.renderTable(results)}
-        </Collapse>
+          <AccordionDetails>
+            {results && this.renderTable(results)}
+          </AccordionDetails>
+        </Accordion>
       </div>
     );
   }

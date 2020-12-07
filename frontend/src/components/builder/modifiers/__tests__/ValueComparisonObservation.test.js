@@ -1,12 +1,13 @@
 import React from 'react';
 import { render, fireEvent, userEvent, screen } from 'utils/test-utils';
-import ValueComparisonObservation from '../ValueComparisonObservation';
+import ValueComparisonModifier from '../ValueComparisonModifier';
 
 describe('<ValueComparisonObservation />', () => {
   const renderComponent = (props = {}) =>
     render(
-      <ValueComparisonObservation
+      <ValueComparisonModifier
         index={303}
+        hasUnit
         maxOperator=""
         maxValue=""
         minOperator=""

@@ -102,6 +102,14 @@
   width: 6em;
 }
 
+.patients__tablecell-buttons {
+  white-space: nowrap;
+
+  button {
+    margin-left: 10px;
+  }
+}
+
 tbody td.patients__tablecell-tiny {
   padding-right: 0;
 }

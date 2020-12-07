@@ -1,43 +1,41 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import moment from 'moment';
-import TimePicker from 'rc-time-picker';
-import classnames from 'classnames';
-import _ from 'lodash';
+import { KeyboardTimePicker } from '@material-ui/pickers';
+import { Schedule as TimeIcon } from '@material-ui/icons';
+import { format, parse } from 'date-fns';
 
 export default class TimeEditor extends Component {
-  assignValue = (evt) => {
-    let time = evt != null ? evt.format('HH:mm:ss') : null;
-    time = time ? `@T${time}` : null;
-    return time;
-  }
+  handleChange = newValue => {
+    if (newValue && Number.isNaN(newValue.valueOf())) return;
+
+    const { name, type, label, updateInstance } = this.props;
+    const time = newValue ? `@T${format(newValue, 'HH:mm:ss')}` : null;
+
+    updateInstance({ name, type, label, value: time });
+  };
 
   render() {
-    const { name, type, label, value, updateInstance, condenseUI } = this.props;
-    const formId = _.uniqueId('editor-');
+    const { label, value } = this.props;
+    const time = value ? parse(value.replace(/^@T/, ''), 'HH:mm:ss', new Date()) : null;
 
     return (
       <div className="editor time-editor">
-        <div className="form__group">
-          <label
-            className={classnames('editor-container', { condense: condenseUI })}
-            htmlFor={formId}
-          >
-            <div className="editor-label label">{label}</div>
+        <div className="editor-label">{label}</div>
 
-            <div className="editor-input-group">
-              <div className="editor-input">
-                <TimePicker
-                  id={formId}
-                  defaultValue={moment(value, 'HH:mm:ss').isValid() ? moment(value, 'HH:mm:ss') : null}
-                  autoComplete="off"
-                  onChange={ (e) => {
-                    updateInstance({ name, type, label, value: this.assignValue(e) });
-                  }}
-                />
-              </div>
-            </div>
-          </label>
+        <div className="editor-inputs">
+          <KeyboardTimePicker
+            className="field-input"
+            format="HH:mm:ss"
+            inputVariant="outlined"
+            KeyboardButtonProps={{ 'aria-label': 'change time' }}
+            keyboardIcon={<TimeIcon />}
+            label="Time"
+            margin="normal"
+            onChange={this.handleChange}
+            placeholder="hh:mm:ss"
+            value={time}
+            views={['hours', 'minutes', 'seconds']}
+          />
         </div>
       </div>
     );
@@ -49,6 +47,5 @@ TimeEditor.propTypes = {
   type: PropTypes.string.isRequired,
   label: PropTypes.string.isRequired,
   value: PropTypes.string,
-  updateInstance: PropTypes.func.isRequired,
-  condenseUI: PropTypes.bool
+  updateInstance: PropTypes.func.isRequired
 };

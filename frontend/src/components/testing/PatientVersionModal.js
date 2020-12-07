@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import { Button } from '@material-ui/core';
 
 import { Modal } from 'components/elements';
 
@@ -23,17 +24,17 @@ class PatientVersionModal extends Component {
             </div>
 
             <div className="modal__options">
-              <button className="primary-button" onClick={() => selectVersion(patientData, 'R4')}  aria-label="R4">
+              <Button color="primary" onClick={() => selectVersion(patientData, 'R4')} variant="contained">
                 R4
-              </button>
+              </Button>
 
-              <button className="primary-button" onClick={() => selectVersion(patientData, 'STU3')} aria-label="STU3">
+              <Button color="primary" onClick={() => selectVersion(patientData, 'STU3')} variant="contained">
                 STU3
-              </button>
+              </Button>
 
-              <button className="primary-button" onClick={() => selectVersion(patientData, 'DSTU2')} aria-label="DSTU2">
+              <Button color="primary" onClick={() => selectVersion(patientData, 'DSTU2')} variant="contained">
                 DSTU2
-              </button>
+              </Button>
             </div>
           </main>
         </Modal>

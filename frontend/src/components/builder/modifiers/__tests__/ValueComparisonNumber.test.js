@@ -1,11 +1,11 @@
 import React from 'react';
 import { render, fireEvent, userEvent, screen } from 'utils/test-utils';
-import ValueComparisonNumber from '../ValueComparisonNumber';
+import ValueComparisonModifier from '../ValueComparisonModifier';
 
 describe('<ValueComparisonNumber />', () => {
   const renderComponent = (props = {}) =>
     render(
-      <ValueComparisonNumber
+      <ValueComparisonModifier
         index={303}
         maxOperator=""
         maxValue=""

@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
-import Editor from '../editors/Editor';
 import PropTypes from 'prop-types';
-import _ from 'lodash';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBook } from '@fortawesome/free-solid-svg-icons';
+import _ from 'lodash';
 
-/* eslint-disable jsx-a11y/label-has-for */
+import Editor from '../editors/Editor';
+
 export default class ExternalModifier extends Component {
   constructor(props) {
     super(props);
@@ -17,74 +17,96 @@ export default class ExternalModifier extends Component {
   }
 
   assignValue(event, argIndex) {
-    const valuesClone = _.cloneDeep(this.props.value);
+    const { index, updateAppliedModifier, value } = this.props;
+    const valuesClone = _.cloneDeep(value);
     valuesClone[argIndex] = event.value;
-    this.props.updateAppliedModifier(this.props.index, { value: valuesClone });
+
+    updateAppliedModifier(index, { value: valuesClone });
   }
 
   render() {
+    const {
+      modifierArguments,
+      argumentTypes,
+      codeData,
+      index,
+      isValidatingCode,
+      isValidCode,
+      loginVSACUser,
+      name,
+      resetCodeValidation,
+      setVSACAuthStatus,
+      validateCode,
+      value,
+      vsacApiKey,
+      vsacIsAuthenticating,
+      vsacStatus,
+      vsacStatusText
+    } = this.props;
     const editorPropsArray = [];
-    if (this.props.arguments.length > 1) {
+
+    if (modifierArguments.length > 1) {
       const defaultEditorProps = {
-        vsacApiKey: this.props.vsacApiKey,
-        loginVSACUser: this.props.loginVSACUser,
-        setVSACAuthStatus: this.props.setVSACAuthStatus,
-        vsacStatus: this.props.vsacStatus,
-        vsacStatusText: this.props.vsacStatusText,
-        isValidatingCode: this.props.isValidatingCode,
-        isValidCode: this.props.isValidCode,
-        codeData: this.props.codeData,
-        validateCode: this.props.validateCode,
-        resetCodeValidation: this.props.resetCodeValidation,
-        condenseUI: true
+        codeData,
+        isValidatingCode,
+        isValidCode,
+        loginVSACUser,
+        resetCodeValidation,
+        setVSACAuthStatus,
+        validateCode,
+        vsacApiKey,
+        vsacIsAuthenticating,
+        vsacStatus,
+        vsacStatusText
       };
 
-      this.props.arguments.forEach((arg, argIndex) => {
+      modifierArguments.forEach((arg, argIndex) => {
         // We don't want the modifier input arguments to include the first function argument
         if (argIndex === 0) return;
         const editorProps = _.cloneDeep(defaultEditorProps);
         editorProps.key = argIndex;
-        editorProps.id = `external-modifier-${this.props.index}-${argIndex}`;
+        editorProps.id = `external-modifier-${index}-${argIndex}`;
         editorProps.name = arg.name;
         editorProps.label = `${arg.name}:`;
-        editorProps.type = this.props.argumentTypes[argIndex].calculated;
-        editorProps.value = this.props.value[argIndex];
-        editorProps.updateInstance = (event => this.assignValue(event, argIndex));
+        editorProps.type = argumentTypes[argIndex].calculated;
+        editorProps.value = value[argIndex];
+        editorProps.updateInstance = event => this.assignValue(event, argIndex);
         editorPropsArray.push(editorProps);
       });
     }
 
     return (
-      <div className="external-modifier form__group">
-        <label className="modifier-title">
-          <FontAwesomeIcon icon={faBook} /> {this.props.name}
-        </label>
+      <div className="external-modifier">
+        <div className="external-modifier-title">
+          <FontAwesomeIcon icon={faBook} /> {name}
+        </div>
 
-        <div className="modifier-editor-group">
-          {editorPropsArray.map(editorProps => {
-            return <Editor {...editorProps} />;
-          })}
+        <div className="editors">
+          {editorPropsArray.map(editorProps => (
+            <Editor {...editorProps} />
+          ))}
         </div>
       </div>
     );
-  } 
-};
+  }
+}
 
 ExternalModifier.propTypes = {
-  index: PropTypes.number.isRequired,
-  name: PropTypes.string.isRequired,
-  value: PropTypes.any,
-  arguments: PropTypes.array.isRequired,
   argumentTypes: PropTypes.array.isRequired,
-  updateAppliedModifier: PropTypes.func.isRequired,
-  vsacApiKey: PropTypes.string,
-  loginVSACUser: PropTypes.func.isRequired,
-  setVSACAuthStatus: PropTypes.func.isRequired,
-  vsacStatus: PropTypes.string,
-  vsacStatusText: PropTypes.string,
+  codeData: PropTypes.object,
+  index: PropTypes.number.isRequired,
   isValidatingCode: PropTypes.bool.isRequired,
   isValidCode: PropTypes.bool,
-  codeData: PropTypes.object,
+  loginVSACUser: PropTypes.func.isRequired,
+  modifierArguments: PropTypes.array.isRequired,
+  name: PropTypes.string.isRequired,
+  resetCodeValidation: PropTypes.func.isRequired,
+  setVSACAuthStatus: PropTypes.func.isRequired,
+  updateAppliedModifier: PropTypes.func.isRequired,
   validateCode: PropTypes.func.isRequired,
-  resetCodeValidation: PropTypes.func.isRequired
+  value: PropTypes.any,
+  vsacApiKey: PropTypes.string,
+  vsacIsAuthenticating: PropTypes.bool,
+  vsacStatus: PropTypes.string,
+  vsacStatusText: PropTypes.string
 };

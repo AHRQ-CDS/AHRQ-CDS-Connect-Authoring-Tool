@@ -7,6 +7,11 @@
 .recommendation {
   margin-bottom: 1em;
 
+  .card-element__label {
+    display: flex;
+    justify-content: space-between;
+  }
+
   &__subpopulation-pill {
     display: flex;
     align-items: center;
@@ -29,9 +34,8 @@
 
     > div { flex: 1; }
 
-    a {
-      margin-left: 1em;
-      cursor: pointer;
+    button {
+      margin-left: 10px;
     }
   }
 
@@ -41,7 +45,15 @@
     justify-content: space-between;
   }
 
+  &__buttons button {
+    margin-right: 10px;
+  }
+
   .card-element {
     padding: 1em 2em;
   }
+}
+
+div.recommendation-input {
+  margin-bottom: 20px;
 }

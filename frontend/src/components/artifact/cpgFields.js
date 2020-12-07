@@ -1,6 +1,7 @@
 import React from 'react';
 import {
   AuthenticateVSAC,
+  AutocompleteField,
   GroupedFields,
   SelectConditionalField,
   SelectField,
@@ -162,7 +163,7 @@ const contextTypeConditions = {
       type: 'input',
       name: 'userType',
       label: 'User Type',
-      component: SelectField,
+      component: AutocompleteField,
       options: contextTypeUserOptions
     }
   ],
@@ -180,7 +181,7 @@ const contextTypeConditions = {
       type: 'input',
       name: 'workflowTask',
       label: 'Workflow Task',
-      component: SelectField,
+      component: AutocompleteField,
       options: contextTypeWorkflowTaskOptions
     }
   ],
@@ -189,7 +190,7 @@ const contextTypeConditions = {
       type: 'input',
       name: 'clinicalVenue',
       label: 'Clinical Venue',
-      component: SelectField,
+      component: AutocompleteField,
       options: contextTypeClinicalVenueOptions
     }
   ],

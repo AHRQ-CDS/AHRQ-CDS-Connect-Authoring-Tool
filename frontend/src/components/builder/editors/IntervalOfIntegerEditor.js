@@ -1,113 +1,86 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import classnames from 'classnames';
-import _ from 'lodash';
+import { TextField } from '@material-ui/core';
+import { Remove as DashIcon } from '@material-ui/icons';
 
 export default class IntervalOfIntegerEditor extends Component {
   constructor(props) {
     super(props);
 
-    const firstInteger = _.get(props, 'value.firstInteger', '');
-    const secondInteger = _.get(props, 'value.secondInteger', '');
+    const firstInteger = props.value?.firstInteger || '';
+    const secondInteger = props.value?.secondInteger || '';
 
     this.state = {
       showInputWarning: this.shouldShowInputWarning(firstInteger) || this.shouldShowInputWarning(secondInteger)
     };
   }
 
-  shouldShowInputWarning = (value) => {
-    return value && !/^-?\d+$/.test(value);
-  }
-
-  assignValue(evt) {
-    let firstInteger = null;
-    let secondInteger = null;
-
-    switch (evt.target.name) {
-      case 'firstInteger':
-        firstInteger = _.get(evt, 'target.value', '');
-        secondInteger = _.get(this, 'props.value.secondInteger', '');
-        break;
-      case 'secondInteger':
-        firstInteger = _.get(this, 'props.value.firstInteger', '');
-        secondInteger = _.get(evt, 'target.value', '');
-        break;
-      default:
-        break;
-    }
+  handleChange = (newValue, inputType) => {
+    const { name, type, label, updateInstance, value } = this.props;
+    const firstInteger = inputType === 'firstInteger' ? newValue : value?.firstInteger || '';
+    const secondInteger = inputType === 'secondInteger'? newValue : value?.secondInteger || '';
+    const str = `Interval[${firstInteger},${secondInteger}]`;
 
     this.setState({
       showInputWarning:
         this.shouldShowInputWarning(firstInteger) || this.shouldShowInputWarning(secondInteger)
     });
 
-    if (firstInteger || secondInteger) {
-      const firstIntegerForString = firstInteger || null;
-      const secondIntegerForString = secondInteger || null;
-      const str = `Interval[${firstIntegerForString},${secondIntegerForString}]`;
-      return { firstInteger, secondInteger, str };
-    }
-    return null;
-  }
+    updateInstance({ name, type, label, value: { firstInteger, secondInteger, str } });
+  };
+
+  shouldShowInputWarning = value => {
+    return value && !/^-?\d+$/.test(value);
+  };
 
   render() {
-    const { id, name, type, label, value, updateInstance, condenseUI } = this.props;
-    const formId = _.uniqueId('editor-');
+    const { label, value } = this.props;
+    const { showInputWarning } = this.state;
 
     return (
       <div className="editor interval-of-integer-editor">
-        <div className="form__group">
-          <label
-            className={classnames("editor-container", { condense: condenseUI })}
-            htmlFor={formId}
-          >
-            <div className="editor-label label">{label}</div>
+        <div className="editor-label">{label}</div>
 
-            <div className="editor-input-group">
-              <div className="editor-input">
-                <input
-                  id={formId}
-                  name="firstInteger"
-                  value={_.get(value, 'firstInteger', '')}
-                  onChange={ (e) => {
-                    updateInstance({ name, type, label, value: this.assignValue(e) });
-                  }}
-                />
-              </div>
+        <div className="editor-inputs">
+          <div className="field-input field-input-sm">
+            <TextField
+              fullWidth
+              label="Value"
+              onChange={event => this.handleChange(event.target.value, 'firstInteger')}
+              value={value?.firstInteger || ''}
+              variant="outlined"
+            />
+          </div>
 
-              <div className="dash">-</div>
+          <div className="field-input"><DashIcon /></div>
 
-              <div className="editor-input">
-                <input
-                  id={id}
-                  name="secondInteger"
-                  aria-label="Second Integer"
-                  value={_.get(value, 'secondInteger', '')}
-                  onChange={ (e) => {
-                    updateInstance({ name, type, label, value: this.assignValue(e) });
-                  }}
-                />
-              </div>
-            </div>
-          </label>
+          <div className="field-input field-input-sm">
+            <TextField
+              fullWidth
+              label="Value"
+              onChange={event => this.handleChange(event.target.value, 'secondInteger')}
+              value={value?.secondInteger || ''}
+              variant="outlined"
+            />
+          </div>
         </div>
 
-        {this.state.showInputWarning &&
-          <div className="warning">
-            {`Warning: At least one of the values is not a valid Integer.`}
-          </div>
-        }
+        <div className="editor-warnings">
+          {showInputWarning &&
+            <div className="warning">
+              Warning: At least one of the values is not a valid Integer.
+            </div>
+          }
+        </div>
       </div>
     );
   }
 }
 
 IntervalOfIntegerEditor.propTypes = {
-  id: PropTypes.string.isRequired,
   name: PropTypes.string,
   type: PropTypes.string.isRequired,
   label: PropTypes.string.isRequired,
   value: PropTypes.object,
-  updateInstance: PropTypes.func.isRequired,
-  condenseUI: PropTypes.bool
+  updateInstance: PropTypes.func.isRequired
 };

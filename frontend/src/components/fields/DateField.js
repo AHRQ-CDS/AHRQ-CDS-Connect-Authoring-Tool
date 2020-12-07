@@ -1,11 +1,11 @@
 import React, { memo, useState, useCallback, useMemo } from 'react';
-import classnames from 'classnames';
-import DatePicker from 'react-datepicker';
-import MaskedInput from 'react-text-mask';
-import moment from 'moment';
+import { Checkbox, FormControlLabel } from '@material-ui/core';
+import { KeyboardDatePicker } from '@material-ui/pickers';
+import { format } from 'date-fns';
 import { useField, useFormikContext } from 'formik';
+import clsx from 'clsx';
 
-import { isCpgComplete } from '../../utils/fields';
+import { isCpgComplete } from 'utils/fields';
 
 export default memo(function DateField({
   name,
@@ -22,61 +22,54 @@ export default memo(function DateField({
   const [field, , { setValue }] = useField(fieldName);
   const { value } = field;
   const { values } = useFormikContext();
-  const currentDateValue = useMemo(() => value ? moment(value).toDate() : null, [value]);
+  const currentDateValue = useMemo(() => value ? format(value, 'yyyy-MM-dd') : null, [value]);
 
-  const handleChange = useCallback(value => {
-    setValue(value ? value.toISOString() : null);
-  }, [setValue]);
   const toggleSelectNoDate = useCallback(() => {
     setValue(null);
     setNoDateSelected(currentValue => !currentValue);
   }, [setNoDateSelected, setValue]);
 
   return (
-    <div className={classnames('form__group', `flex-col-${colSize}`)}>
+    <div className="field date-field">
       {label &&
-        <label htmlFor={fieldName} className={classnames('field-label', helperText && 'has-helper-text')}>
+        <label htmlFor={fieldName} className="field-label">
           {label}
           {isCpgField &&
-            <span className={classnames('cpg-tag', isCpgComplete(name, values) && 'cpg-tag-complete')}>CPG</span>
+            <span className={clsx('cpg-tag', isCpgComplete(name, values) && 'cpg-tag-complete')}>CPG</span>
           }:
         </label>
       }
 
-      <div className="input__group">
-        <DatePicker
-          id={fieldName}
-          name={field.name}
-          aria-label={`Date ${name}`}
-          onChange={handleChange}
-          selected={currentDateValue}
-          dateFormat="MM/dd/yyyy"
-          autoComplete="off"
-          showYearDropdown
-          placeholderText="MM/DD/YYYY"
+      <div className="field-input">
+        <KeyboardDatePicker
           disabled={noDateSelected}
-          isClearable
-          customInput={
-            <MaskedInput
-              mask={[/\d/, /\d/, '/', /\d/, /\d/, '/', /\d/, /\d/, /\d/, /\d/]}
-              keepCharPositions={true}
-              guide={true}
-            />
-          }
+          format="MM/dd/yyyy"
+          inputVariant="outlined"
+          KeyboardButtonProps={{ 'aria-label': 'change date' }}
+          label="Date"
+          margin="normal"
+          onChange={value => setValue(value)}
+          placeholder="mm/dd/yyyy"
+          value={currentDateValue}
         />
-        {helperText && <div className="helper-text">{helperText}</div>}
 
-        {noDateOption &&
-          <label className="input-checkbox">
-            <input
-              type="checkbox"
-              onChange={toggleSelectNoDate}
-              selected={noDateSelected}
-            />
-            <span className="input-checkbox-text">{noDateText}</span>
-          </label>
-        }
+        {helperText && <div className="helper-text">{helperText}</div>}
       </div>
+
+      {noDateOption &&
+        <div className="field-checkbox">
+          <FormControlLabel
+            control={
+              <Checkbox
+                checked={noDateSelected}
+                color="primary"
+                onChange={toggleSelectNoDate}
+              />
+            }
+            label={noDateText}
+          />
+        </div>
+      }
     </div>
   );
 });

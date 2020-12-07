@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import moment from 'moment';
-import TimePicker from 'rc-time-picker';
-import _ from 'lodash';
+import { KeyboardTimePicker } from '@material-ui/pickers';
+import { Schedule as TimeIcon } from '@material-ui/icons';
+import { format, parse } from 'date-fns';
 
 import { Dropdown } from 'components/elements';
 
@@ -12,58 +12,43 @@ const options = [
   { value: 'second', label: 'second' }
 ];
 
-/* eslint-disable jsx-a11y/no-onchange */
 export default class TimePrecisionModifier extends Component {
-  assignValue(event, name) {
-    let time = this.props.time;
-    let precision = this.props.precision;
+  handleChange = (newValue, inputType) => {
+    if (newValue && Number.isNaN(newValue.valueOf())) return;
 
-    switch (name) {
-      case 'time': {
-        const timeMoment = event != null ? event.format('HH:mm:ss') : null;
-        time = timeMoment ? `@T${timeMoment}` : null;
-        break;
-      }
-      case 'precision': {
-        precision = event.target.value;
-        break;
-      }
-      default: {
-        break;
-      }
-    }
+    const { index, precision, time, updateAppliedModifier } = this.props;
+    const newTime = inputType === 'time' ? (newValue ? `T${format(newValue, 'HH:mm:ss')}` : null) : time || null;
+    const newPrecision = inputType === 'precision' ? newValue : precision;
 
-    this.props.updateAppliedModifier(this.props.index, { time, precision });
-  }
+    updateAppliedModifier(index, { time: newTime, precision: newPrecision });
+  };
 
   render() {
     const { name, precision, time } = this.props;
-    const timeId = _.uniqueId('time-');
-    const precId = _.uniqueId('prec-');
+    const timeValue = time ? parse(time.replace(/^T/, ''), 'HH:mm:ss', new Date()) : null;
 
     return (
-      /* eslint-disable jsx-a11y/label-has-for */
-      <div className="col-9 d-flex modifier-vert-aligned">
-        <label className="modifier-label">{name}</label>
+      <div className="modifier time-precision-modifier">
+        <div className="modifier-text">{name}</div>
 
-        <div className="modifier-input">
-          <TimePicker
-            id={timeId}
-            defaultValue={
-              moment(time, 'HH:mm:ss').isValid()
-              ? moment(time, 'HH:mm:ss')
-              : null
-            }
-            autoComplete="off"
-            onChange={event => this.assignValue(event, 'time')}
-          />
-        </div>
+        <KeyboardTimePicker
+          className="field-input"
+          format="HH:mm:ss"
+          inputVariant="outlined"
+          KeyboardButtonProps={{ 'aria-label': 'change time' }}
+          keyboardIcon={<TimeIcon />}
+          label="Time"
+          margin="normal"
+          onChange={newValue => this.handleChange(newValue, 'time')}
+          placeholder="hh:mm:ss"
+          value={timeValue}
+          views={['hours', 'minutes', 'seconds']}
+        />
 
-        <div className="modifier-dropdown">
+        <div className="field-input field-input-md">
           <Dropdown
-            id={precId}
             label="Precision"
-            onChange={event => this.assignValue(event, 'precision')}
+            onChange={event => this.handleChange(event.target.value, 'precision')}
             options={options}
             value={precision}
           />
@@ -76,7 +61,7 @@ export default class TimePrecisionModifier extends Component {
 TimePrecisionModifier.propTypes = {
   index: PropTypes.number.isRequired,
   name: PropTypes.string.isRequired,
-  time: PropTypes.string,
   precision: PropTypes.string,
+  time: PropTypes.string,
   updateAppliedModifier: PropTypes.func.isRequired
 };

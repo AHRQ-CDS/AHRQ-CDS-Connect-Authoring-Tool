@@ -14,7 +14,7 @@ const FastSelectConditionalField = memo(({
   currentValue
 }) => {
   return (
-    <div className="form__group flex-col-1 select-conditional-field">
+    <div className="field-group select-conditional-field">
       <SelectField name={name} label={label} options={options} helperText={helperText} />
 
       {currentValue && conditions[currentValue] && conditions[currentValue].map((field, index) => {

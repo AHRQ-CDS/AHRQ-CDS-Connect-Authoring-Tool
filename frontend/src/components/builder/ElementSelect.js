@@ -1,8 +1,10 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import { Button } from '@material-ui/core';
+import { Check as CheckIcon } from '@material-ui/icons';
 import pluralize from 'pluralize';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faBan, faKey, faCheck, faPlus } from '@fortawesome/free-solid-svg-icons';
+import { faBan, faKey, faPlus } from '@fortawesome/free-solid-svg-icons';
 import { IconButton } from '@material-ui/core';
 import CloseIcon from '@material-ui/icons/Close';
 import _ from 'lodash';
@@ -271,9 +273,9 @@ export default class ElementSelect extends Component {
 
     return (
       <div className="vsac-authenticate">
-        <button className="disabled-button" disabled={true} aria-label="VSAC Authenticated">
-          <FontAwesomeIcon icon={faCheck} /> VSAC Authenticated
-        </button>
+        <Button color="primary" disabled variant="contained" startIcon={<CheckIcon />}>
+          VSAC Authenticated
+        </Button>
 
         <ElementModal
           className="element-select__modal"

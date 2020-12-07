@@ -1,27 +1,27 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faEye, faTimes } from '@fortawesome/free-solid-svg-icons';
+import { IconButton } from '@material-ui/core';
+import { Close as CloseIcon, Visibility as VisibilityIcon } from '@material-ui/icons';
 import { UncontrolledTooltip } from 'reactstrap';
 import _ from 'lodash';
 
 import ElementModal from '../ElementModal';
-import { getFieldWithType } from '../../../utils/instances';
+import { getFieldWithType } from 'utils/instances';
 
 export default class ValueSetTemplate extends Component {
   viewValueSetDetails = (valueSet) => {
     if (!this.props.vsacApiKey) {
       return (
         <span className='element-select__modal element-modal disabled'>
-          <span>
-            <span id={`LoginTooltip-${this.props.templateInstance.uniqueId}`}>
-              <FontAwesomeIcon icon={faEye} />
-            </span>
-
-            <UncontrolledTooltip target={`LoginTooltip-${this.props.templateInstance.uniqueId}`} placement="left">
-              Authenticate VSAC to view details
-            </UncontrolledTooltip>
+          <span id={`LoginTooltip-${this.props.templateInstance.uniqueId}`}>
+            <IconButton aria-label="view" disabled color="primary">
+              <VisibilityIcon fontSize="small" />
+            </IconButton>
           </span>
+
+          <UncontrolledTooltip target={`LoginTooltip-${this.props.templateInstance.uniqueId}`} placement="left">
+            Authenticate VSAC to view details
+          </UncontrolledTooltip>
         </span>
       );
     }
@@ -70,31 +70,22 @@ export default class ValueSetTemplate extends Component {
     const { vsacField, valueSet, index } = this.props;
 
     return (
-      <div className="vs-info">
-        <div className="label">
+      <div className="element-field vs-info">
+        <div className="element-field-label">
           Value Set{vsacField.valueSets.length > 1 ? ` ${index + 1}` : ''}:
         </div>
 
-        <div className="vs-info__info">
-          <div className="vs-info__text">
+        <div className="element-field-details vs-info__info">
+          <div className="element-field-display vs-info__text">
             {` ${valueSet.name} (${valueSet.oid})`}
           </div>
 
-          <div className="align-right vs-info__buttons">
+          <div className="element-field-buttons">
             {this.viewValueSetDetails(valueSet)}
 
-            <span
-              role="button"
-              id="delete-valueset"
-              tabIndex="0"
-              onClick={() => this.deleteValueSet(valueSet)}
-              onKeyPress={(e) => {
-                e.which = e.which || e.keyCode;
-                if (e.which === 13) this.deleteValueSet(valueSet);
-              }}
-            >
-              <FontAwesomeIcon icon={faTimes} className="delete-valueset-button" />
-            </span>
+            <IconButton aria-label="close" color="primary" onClick={() => this.deleteValueSet(valueSet)}>
+              <CloseIcon fontSize="small" />
+            </IconButton>
           </div>
         </div>
       </div>

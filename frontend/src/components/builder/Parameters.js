@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import { Button } from '@material-ui/core';
 import _ from 'lodash';
 
 import Parameter from './Parameter';
@@ -61,12 +62,9 @@ export default class Parameters extends Component {
           />
         ))}
 
-        <button
-            className="button primary-button new-parameter"
-            onClick={this.addParameter}
-            aria-label="New Parameter">
+        <Button color="primary" onClick={this.addParameter} variant="contained">
           New parameter
-        </button>
+        </Button>
       </div>
     );
   }

@@ -1,11 +1,17 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import classnames from 'classnames';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { IconButton } from '@material-ui/core';
 import {
-  faExclamationCircle, faCommentDots, faComment, faAngleDoubleDown, faAngleDoubleRight, faTimes
-} from '@fortawesome/free-solid-svg-icons';
+  ChatBubble as ChatBubbleIcon,
+  Close as CloseIcon,
+  ExpandLess as ExpandLessIcon,
+  ExpandMore as ExpandMoreIcon,
+  Sms as SmsIcon
+} from '@material-ui/icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faExclamationCircle } from '@fortawesome/free-solid-svg-icons';
 import { UncontrolledTooltip } from 'reactstrap';
+import clsx from 'clsx';
 import _ from 'lodash';
 
 import StringField from './fields/StringField';
@@ -158,31 +164,34 @@ export default class Parameter extends Component {
     return (
       <div className="card-element__buttons">
         {showParameter &&
-          <button
-            onClick={this.toggleComment}
-            className={classnames('element_hidebutton', 'transparent-button', hasComment && 'has-comment')}
+          <IconButton
             aria-label="show comment"
+            className={clsx(hasComment && 'has-comment')}
+            color="primary"
+            onClick={this.toggleComment}
           >
-            <FontAwesomeIcon icon={hasComment ? faCommentDots : faComment} />
-          </button>
+            {hasComment ? <SmsIcon fontSize="small" /> : <ChatBubbleIcon fontSize="small" />}
+          </IconButton>
         }
 
-        <button
-          onClick={this.showHideParameterBody}
-          className="element__hidebutton transparent-button"
+        <IconButton
           aria-label={`hide-${name}`}
+          color="primary"
+          onClick={this.showHideParameterBody}
         >
-          <FontAwesomeIcon icon={showParameter ? faAngleDoubleDown : faAngleDoubleRight} />
-        </button>
+          {showParameter ? <ExpandLessIcon fontSize="small" /> : <ExpandMoreIcon fontSize="small" />}
+        </IconButton>
 
-        <button
-          id={`deletebutton-${id}`}
-          onClick={() => { this.deleteParameter(index); }}
-          className={`button transparent-button delete-button ${disabledClass}`}
-          aria-label="Delete Parameter"
-        >
-          <FontAwesomeIcon fixedWidth icon={faTimes} />
-        </button>
+        <span id={`deletebutton-${id}`}>
+          <IconButton
+            aria-label="delete parameter"
+            color="primary"
+            disabled={parameterUsed}
+            onClick={() => this.deleteParameter(index)}
+          >
+            <CloseIcon fontSize="small" />
+          </IconButton>
+        </span>
 
         {parameterUsed &&
           <UncontrolledTooltip target={`deletebutton-${id}`} placement="left">
@@ -267,9 +276,9 @@ export default class Parameter extends Component {
                     />
                   }
                 </div>
-              </div>
 
-              {this.renderElementButtons(parameterUsed, disabledClass)}
+                {this.renderElementButtons(parameterUsed, disabledClass)}
+              </div>
 
               <div className="card-group__warnings">
                 {doesHaveDuplicateName && !doesHaveParameterUsageWarning &&
@@ -292,23 +301,18 @@ export default class Parameter extends Component {
             </div>
 
             <div className="card-element__body">
-              <div className="field parameter-field">
-                <div className="form__group">
-                  <label htmlFor={`parameter-${index}`}>
-                    <div className="label editor-label">Parameter Type:</div>
+              <div className="field">
+                <div className="field-label">Parameter Type:</div>
 
-                    <div className="input">
-                      <Dropdown
-                        disabled={parameterUsed}
-                        id={`parameter-${index}`}
-                        label="Parameter type"
-                        onChange={event => this.changeParameterType(event, name, comment, typeOptions)}
-                        options={typeOptions}
-                        value={type}
-                      />
-                    </div>
-                  </label>
-                </div>
+                <Dropdown
+                  className="field-input field-input-lg"
+                  disabled={parameterUsed}
+                  id={`parameter-${index}`}
+                  label={type ? null : 'Parameter type'}
+                  onChange={event => this.changeParameterType(event, name, comment, typeOptions)}
+                  options={typeOptions}
+                  value={type}
+                />
               </div>
 
               {this.renderParameter()}

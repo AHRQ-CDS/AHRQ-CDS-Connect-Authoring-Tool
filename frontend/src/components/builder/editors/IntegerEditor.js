@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import classnames from 'classnames';
-import _ from 'lodash';
+import { TextField } from '@material-ui/core';
 
 export default class IntegerEditor extends Component {
   constructor(props) {
@@ -10,50 +9,45 @@ export default class IntegerEditor extends Component {
     this.state = {
       showInputWarning: this.shouldShowInputWarning(props.value)
     };
-  }
+  };
 
-  shouldShowInputWarning = (value) => {
+  handleChange = newValue => {
+    const { name, type, label, updateInstance } = this.props;
+    this.setState({ showInputWarning: this.shouldShowInputWarning(newValue) });
+    updateInstance({ name, type, label, value: newValue });
+  };
+
+  shouldShowInputWarning = value => {
     return value && !/^-?\d+$/.test(value);
-  }
-
-  assignValue = (evt) => {
-    let value = _.get(evt, 'target.value', '');
-    this.setState({ showInputWarning: this.shouldShowInputWarning(value) });
-    return value;
   };
 
   render() {
-    const { name, type, label, value, updateInstance, condenseUI } = this.props;
-    const formId = _.uniqueId('editor-');
+    const { label, value } = this.props;
+    const { showInputWarning } = this.state;
 
     return (
       <div className="editor integer-editor">
-        <div className="form-group">
-          <label
-            className={classnames('editor-container', { condense: condenseUI })}
-            htmlFor={formId}
-          >
-            <div className="editor-label label">{label}</div>
+        <div className="editor-label">{label}</div>
 
-            <div className="editor-input-group">
-              <div className="editor-input">
-                <input
-                  id={formId}
-                  value={value || ''}
-                  onChange={(e) => {
-                    updateInstance({ name, type, label, value: this.assignValue(e) });
-                  }}
-                />
-              </div>
-            </div>
-          </label>
+        <div className="editor-inputs">
+          <div className="field-input field-input-md">
+            <TextField
+              fullWidth
+              label="Value"
+              onChange={event => this.handleChange(event.target.value)}
+              value={value || ''}
+              variant="outlined"
+            />
+          </div>
         </div>
 
-        {this.state.showInputWarning &&
-          <div className="warning">
-            {`Warning: The value is not a valid Integer.`}
-          </div>
-        }
+        <div className="editor-warnings">
+          {showInputWarning &&
+            <div className="warning">
+              Warning: The value is not a valid Integer.
+            </div>
+          }
+        </div>
       </div>
     );
   }
@@ -64,6 +58,5 @@ IntegerEditor.propTypes = {
   type: PropTypes.string.isRequired,
   label: PropTypes.string.isRequired,
   value: PropTypes.string,
-  updateInstance: PropTypes.func.isRequired,
-  condenseUI: PropTypes.bool
+  updateInstance: PropTypes.func.isRequired
 };

@@ -1,8 +1,10 @@
 /* eslint-disable jsx-a11y/no-autofocus */
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import { Button, CircularProgress, TextField } from '@material-ui/core';
+import { Lock as LockIcon } from '@material-ui/icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faExclamationCircle, faSpinner, faKey } from '@fortawesome/free-solid-svg-icons';
+import { faExclamationCircle } from '@fortawesome/free-solid-svg-icons';
 
 import { Link, Modal }  from 'components/elements';
 
@@ -10,7 +12,10 @@ class VSACAuthenticationModal extends Component {
   constructor(props) {
     super(props);
 
-    this.state = { showVSACAuthModal: false };
+    this.state = {
+      apiKey: '',
+      showVSACAuthModal: false
+    };
   }
 
   openVSACLoginModal = () => {
@@ -22,11 +27,14 @@ class VSACAuthenticationModal extends Component {
     this.props.setVSACAuthStatus(null);
   }
 
-  loginToVSAC = (event) => {
+  loginToVSAC = event => {
     event.preventDefault();
-
-    this.props.loginVSACUser(this.refs.apiKey.value.trim());
+    this.props.loginVSACUser(this.state.apiKey);
   }
+
+  handleApiKeyChange = event => {
+    this.setState({ apiKey: event.target.value });
+  };
 
   renderedAuthStatusText() {
     const { vsacStatus, vsacStatusText } = this.props;
@@ -40,23 +48,21 @@ class VSACAuthenticationModal extends Component {
     );
   }
 
-  renderButton = () => {
-    if (this.props.vsacIsAuthenticating) {
-      return (
-        <button className="disabled-button" disabled={true} aria-label="Authenticating">
-          <FontAwesomeIcon icon={faSpinner} size="2x" spin />
-        </button>
-      );
-    }
-
-    return (
-      <button className="primary-button" onClick={this.openVSACLoginModal} aria-label="Authenticate VSAC">
-        <FontAwesomeIcon icon={faKey} />{' '}Authenticate VSAC
-      </button>
-    );
-  }
+  renderButton = () => (
+    <Button
+      color="primary"
+      onClick={this.openVSACLoginModal}
+      variant="contained"
+      startIcon={this.props.vsacIsAuthenticating ? <CircularProgress size={20} /> : <LockIcon />}
+    >
+      Authenticate VSAC
+    </Button>
+  );
 
   render() {
+    const { vsacIsAuthenticating } = this.props;
+    const { apiKey, showVSACAuthModal } = this.state;
+
     return (
       <div className="vsac-authentication-modal">
         {this.renderButton()}
@@ -67,9 +73,11 @@ class VSACAuthenticationModal extends Component {
           maxWidth="md"
           submitButtonText="Login"
           hasCancelButton
-          handleShowModal={this.state.showVSACAuthModal}
+          hasEnterKeySubmit={false}
+          handleShowModal={showVSACAuthModal}
           handleCloseModal={this.closeVSACLoginModal}
           handleSaveModal={this.loginToVSAC}
+          isLoading={vsacIsAuthenticating}
         >
           <div className="login-modal modal__content">
             <div className="login-modal__disclaimer">
@@ -95,16 +103,18 @@ class VSACAuthenticationModal extends Component {
             </div>
 
              <form id="modal-form" onSubmit={this.loginToVSAC} className="login-modal__form">
-              <label htmlFor="apiKey">API Key</label>
-              <input
-                type='password'
-                ref='apiKey'
-                id='apiKey'
-                className="form-control col"
-                placeholder='API Key'
-                aria-labelledby="vsacApiKeyLabel"
+              <TextField
+                autoComplete="new-password"
+                autoFocus
+                fullWidth
+                label="API Key"
+                onChange={this.handleApiKeyChange}
+                type="password"
+                value={apiKey}
+                variant="outlined"
               />
 
+              {vsacIsAuthenticating && <CircularProgress />}
               {this.renderedAuthStatusText()}
             </form>
           </div>

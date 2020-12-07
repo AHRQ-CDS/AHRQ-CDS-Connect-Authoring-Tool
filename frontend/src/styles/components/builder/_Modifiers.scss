@@ -1,162 +1,41 @@
-.qualifier {
+.modifier {
   display: flex;
-  align-items: center;
-  width: 100%;
   flex-wrap: wrap;
-
-  .Select {
-    margin-right: 20px;
-  }
-
-  .selected-qualifier {
-    padding: 5px 0;
-  }
-
-  .vs-info__buttons {
-    padding-right: 0;
-
-    #open-modal-button {
-      @include respond-to('1439px') { margin-right: -5px; }
-    }
-  }
-}
-
-.modifier-vert-aligned {
-  display: flex;
   align-items: center;
-}
 
-.modifier-label {
-  padding-right: 5px;
-}
+  &.date-time-precision-modifier,
+  &.time-precision-modifier,
+  &.date-time-modifier {
+    .field-input {
+      margin: 0 10px 10px 0;
+    }
 
-.modifier-select {
-  display: flex;
-  flex-direction: column;
-  margin-bottom: 10px;
-}
-
-.modifier-dropdown {
-  width: 300px;
-
-  @include respond-to('1439px') {
-    width: 200px;
-  }
-}
-
-.modifier-dropdown-short {
-  width: 120px;
-
-  @include respond-to('1439px') {
-    width: 90px;
-  }
-}
-
-.modifier-dropdown-wide {
-  width: 600px;
-}
-
-.modifier-input {
-  margin: 0 10px;
-}
-
-.look-back-group {
-  margin-left: 20px;
-
-  input {
-    width: 100px;
-  }
-}
-
-.look-back,
-.look-back-group {
-  display: flex;
-  align-items: center;
-}
-
-label.modifier-title {
-  margin-bottom: 10px;
-}
-
-.modifier-editor-group {
-  padding-left: 1em;
-  border-left: 4px solid $gray-lighter;
-}
-
-.applied-modifiers .modifier .value-comparison-observation {
-  @include respond-to('handheld') {
-    display: block;
-
-    .modifier-input {
-      margin: 10px 0;
+    .MuiIconButton-root {
+      padding: 20px 5px;
     }
   }
 }
 
-.modifier__list {
-  .modifier {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
+.modifier-group {
+  width: 100%;
+}
 
-    > div { flex-grow: 1; }
+.modifier-select button {
+  margin: 0 10px 10px 0;
+}
 
-    &__deletebutton {
-      text-align: right;
-      align-self: flex-start;
-      margin-top: 10px;
-    }
+button.modifier-select-button {
+  text-transform: none;
 
-    > .warning {
-      flex-basis: 100%;
-      margin-top: 10px;
-    }
-
-    .ucum-unit,
-    .with-unit-ucum {
-      width: 200px;
-      background-size: 15px;
-    }
+  svg {
+    margin-right: 10px;
   }
 }
 
-.modifier__selection {
-  .modifier__addbutton {
-    @extend .primary-button;
-  }
+.modifier-text {
+  margin-right: 10px;
 }
 
-.modifier__return__type {
-  .vs-info,
-  .code-info {
-    display: flex;
-    align-items: center;
-
-    &__label,
-    &__info {
-      padding: 15px 0;
-    }
-
-    &__label {
-      flex: 1;
-      padding-right: 2em;
-    }
-
-    &__info {
-      display: flex;
-      align-items: center;
-      flex: 4;
-      border-bottom: 1px solid lighten($gray-light, 15%);
-      margin-left: 0;
-    }
-
-    &__text {
-      flex: 4;
-      padding: 0;
-    }
-
-    &__buttons {
-      flex: 1;
-    }
-  }
+.modifier-button {
+  margin: 10px 0;
 }

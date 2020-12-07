@@ -1,8 +1,12 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import update from 'immutability-helper';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faTimes, faCaretUp, faCaretDown } from '@fortawesome/free-solid-svg-icons';
+import { Button, IconButton, TextField } from '@material-ui/core';
+import {
+  ArrowDropDown as ArrowDropDownIcon,
+  ArrowDropUp as ArrowDropUpIcon,
+  Close as CloseIcon
+} from '@material-ui/icons';
 import _ from 'lodash';
 
 import { Dropdown } from 'components/elements';
@@ -147,13 +151,13 @@ export default class Recommendation extends Component {
             <div key={subpop.uniqueId} className="recommendation__subpopulation-pill">
               {subpop.subpopulationName}
 
-              <button
-                className="transparent-button"
-                aria-label={`Remove ${subpop.subpopulationName}`}
+              <IconButton
+                aria-label={`remove ${subpop.subpopulationName}`}
+                color="primary"
                 onClick={() => this.removeSubpopulation(i)}
               >
-                <FontAwesomeIcon fixedWidth icon={faTimes} />
-              </button>
+                <CloseIcon fontSize="small" />
+              </IconButton>
             </div>
           ))}
         </div>
@@ -171,19 +175,13 @@ export default class Recommendation extends Component {
             />
           </div>
 
-          <a
-            className="recommendation__new-subpopulation"
-            aria-label="New subpopulation"
-            tabIndex="0"
-            role="button"
+          <Button
+            color="primary"
             onClick={this.addBlankSubpopulation}
-            onKeyPress={(e) => {
-              e.which = e.which || e.keyCode;
-              if (e.which === 13) this.addBlankSubpopulation(e);
-            }}
+            variant="contained"
           >
             New subpopulation
-          </a>
+          </Button>
         </div>
       </div>
     );
@@ -198,34 +196,31 @@ export default class Recommendation extends Component {
             <div>
               {this.shouldShowReorderingButtons() &&
                 <span>
-                  <button
-                    className="recommendation__move transparent-button"
-                    aria-label="Move Recommendation Up"
-                    title="Move Recommendation Up"
+                  <IconButton
+                    aria-label="move up recommendation"
+                    color="primary"
                     onClick={() => this.props.onMoveRecUp(this.props.rec.uid)}
                   >
-                    <FontAwesomeIcon fixedWidth icon={faCaretUp} />
-                  </button>
+                    <ArrowDropUpIcon fontSize="small" />
+                  </IconButton>
 
-                  <button
-                    className="recommendation__move transparent-button"
-                    aria-label="Move Recommendation Down"
-                    title="Move Recommendation Down"
+                  <IconButton
+                    aria-label="move down recommendation"
+                    color="primary"
                     onClick={() => this.props.onMoveRecDown(this.props.rec.uid)}
                   >
-                    <FontAwesomeIcon fixedWidth icon={faCaretDown} />
-                  </button>
+                    <ArrowDropDownIcon fontSize="small" />
+                  </IconButton>
                 </span>
               }
 
-              <button
-                className="recommendation__remove transparent-button"
+              <IconButton
                 aria-label="remove recommendation"
-                title="Remove Recommendation"
+                color="primary"
                 onClick={() => this.props.onRemove(this.props.rec.uid)}
               >
-                <FontAwesomeIcon fixedWidth icon={faTimes} />
-              </button>
+                <CloseIcon fontSize="small" />
+              </IconButton>
             </div>
           </div>
 
@@ -235,39 +230,38 @@ export default class Recommendation extends Component {
             <div className="card-element__label">Recommend...</div>
           </div>
 
-          <div>
-            <textarea
-              className="card-element__textarea"
-              name="text"
-              aria-label="Recommendation"
-              title="Recommendation text"
-              placeholder='Describe your recommendation'
-              value={this.state.text}
-              onChange={this.handleChange}
-            />
-          </div>
+          <TextField
+            className="recommendation-input"
+            fullWidth
+            label={null}
+            multiline
+            onChange={this.handleChange}
+            placeholder="Describe your recommendation"
+            value={this.state.text}
+            variant="outlined"
+          />
 
           {this.state.showRationale &&
             <div className="recommendation__rationale">
               <div className="card-element__label">Rationale...
-                <button
-                  className="rationale__remove transparent-button pull-right"
+                <IconButton
                   aria-label="remove rationale"
-                  title="Remove Rationale"
+                  color="primary"
                   onClick={() => this.removeRationale()}
                 >
-                  <FontAwesomeIcon fixedWidth icon={faTimes} />
-                </button>
+                  <CloseIcon fontSize="small" />
+                </IconButton>
               </div>
 
-              <textarea
-                className="card-element__textarea"
-                name="rationale"
-                aria-label="Rationale"
-                title="Rationale text"
-                placeholder='Describe the rationale for your recommendation'
-                value={this.state.rationale}
+              <TextField
+                className="recommendation-input"
+                fullWidth
+                label={null}
+                multiline
                 onChange={this.handleChange}
+                placeholder="Describe the rationale for your recommendation"
+                value={this.state.rationale}
+                variant="outlined"
               />
             </div>
           }
@@ -275,59 +269,59 @@ export default class Recommendation extends Component {
           {this.state.showComment &&
             <div className="recommendation__comment">
               <div className="card-element__label">Comment...
-                <button
-                  className="comment__remove transparent-button pull-right"
+                <IconButton
                   aria-label="remove comment"
-                  title="Remove Comment"
+                  color="primary"
                   onClick={() => this.removeComment()}
                 >
-                  <FontAwesomeIcon fixedWidth icon={faTimes} />
-                </button>
+                  <CloseIcon fontSize="small" />
+                </IconButton>
               </div>
 
-              <textarea
-                className="card-element__textarea"
-                name="comment"
-                aria-label="Comment"
-                title="Comment text"
+              <TextField
+                className="recommendation-input"
+                fullWidth
+                label={null}
+                multiline
+                onChange={this.handleChange}
                 placeholder="Add an optional comment"
                 value={this.state.comment}
-                onChange={this.handleChange}
+                variant="outlined"
               />
             </div>
           }
 
-          {!this.state.showRationale &&
-            <button
-              className="button primary-button recommendation__add-rationale"
-              aria-label="Add rationale"
-              onClick={this.handleShowRationale}
-            >
-              Add rationale
-            </button>
-          }
+          <div className="recommendation__buttons">
+            {!this.state.showRationale &&
+              <Button
+                color="primary"
+                onClick={this.handleShowRationale}
+                variant="contained"
+              >
+                Add rationale
+              </Button>
+            }
 
-          {!this.shouldShowSubpopulations() &&
-            <button
-              className="button primary-button"
-              aria-label="Add subpopulation"
-              name="subpopulation"
-              onClick={this.revealSubpopulations}
-            >
-              Add subpopulation
-            </button>
-          }
+            {!this.shouldShowSubpopulations() &&
+              <Button
+                color="primary"
+                onClick={this.revealSubpopulations}
+                variant="contained"
+              >
+                Add subpopulation
+              </Button>
+            }
 
-          {!this.state.showComment &&
-            <button
-              className="button primary-button"
-              aria-label="Add Comments"
-              name="comments"
-              onClick={this.handleShowComment}
-            >
-              Add Comments
-            </button>
-          }
+            {!this.state.showComment &&
+              <Button
+                color="primary"
+                onClick={this.handleShowComment}
+                variant="contained"
+              >
+                Add comments
+              </Button>
+            }
+          </div>
         </div>
       </div>
     );

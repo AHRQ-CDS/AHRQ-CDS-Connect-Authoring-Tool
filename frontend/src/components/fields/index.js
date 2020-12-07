@@ -1,4 +1,5 @@
 export { default as AuthenticateVSAC } from './AuthenticateVSAC';
+export { default as AutocompleteField } from './AutocompleteField';
 export { default as GroupedFields } from './GroupedFields';
 export { default as SelectConditionalField } from './SelectConditionalField';
 export { default as SelectField } from './SelectField';

@@ -1,87 +1,36 @@
-import React, { Component } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
-import _ from 'lodash';
+import { TextField } from '@material-ui/core';
+import clsx from 'clsx';
 
-/**
- * props are from a templateInstance field object,
- * and a function called UpdateInstance that takes an object with
- * key-value pairs that represents that state of the templateInstance
- */
-const LINE_HEIGHT = 30;
+import { useFlexStyles } from 'styles/hooks';
+import useStyles from './styles';
 
-export default class TextAreaField extends Component {
-  constructor(props) {
-    super(props);
+const TextAreaField = ({ id, name, updateInstance, value }) => {
+  const styles = useStyles();
+  const flexStyles = useFlexStyles();
 
-    this.textarea = null;
-    this.baseScrollHeight = 0;
-    this.state = { minRows: 1, rows: 1 };
-  }
+  return (
+    <div className={clsx('text-area-field', styles.field)}>
+      <div className={styles.fieldLabel}>{name}:</div>
 
-  componentDidMount() {
-    const { textarea } = this;
-    const savedValue = textarea.value;
-
-    textarea.value = '';
-    this.baseScrollHeight = textarea.scrollHeight;
-    textarea.value = savedValue;
-
-    this.recomputeHeight();
-  }
-
-  componentDidUpdate(prevProps) {
-    if (prevProps.value !== this.props.value) {
-      this.recomputeHeight();
-    }
-  }
-
-  recomputeHeight = () => {
-    const origRows = this.textarea.rows;
-    this.textarea.rows = this.state.minRows;
-
-    const rows =
-      this.state.minRows +
-      Math.ceil((this.textarea.scrollHeight - this.baseScrollHeight) / LINE_HEIGHT);
-
-    this.textarea.rows = origRows;
-
-    this.setState({ rows });
-  };
-
-  render() {
-    const { id, name, value, updateInstance } = this.props;
-    const { rows } = this.state;
-    const formId = _.uniqueId('field-');
-
-    return (
-      <div className="field textarea-field">
-        <div className="form__group">
-          <label htmlFor={formId}>
-            <div className="label">{name}:</div>
-
-            <div className="input">
-              <textarea
-                rows={rows}
-                ref={(ref) => { this.textarea = ref; }}
-                id={formId}
-                name={id}
-                value={value || ''}
-                aria-label={name}
-                onChange={(event) => {
-                  updateInstance({ [event.target.name]: event.target.value });
-                }}
-              />
-            </div>
-          </label>
-        </div>
-      </div>
-    );
-  }
-}
+      <TextField
+        className={clsx(styles.fieldInput, flexStyles.flex1)}
+        fullWidth
+        multiline
+        onChange={event => updateInstance({ [id]: event.target.value })}
+        value={value || ''}
+        variant="outlined"
+      />
+    </div>
+  );
+};
 
 TextAreaField.propTypes = {
   id: PropTypes.string.isRequired,
   name: PropTypes.string.isRequired,
-  value: PropTypes.string,
-  updateInstance: PropTypes.func.isRequired
+  updateInstance: PropTypes.func.isRequired,
+  value: PropTypes.string
 };
+
+export default TextAreaField;

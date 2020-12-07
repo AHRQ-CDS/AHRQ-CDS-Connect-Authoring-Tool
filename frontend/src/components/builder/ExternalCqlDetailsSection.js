@@ -1,39 +1,11 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { Table, Collapse, Button } from 'reactstrap';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faChevronDown, faChevronRight } from '@fortawesome/free-solid-svg-icons';
+import { Accordion, AccordionSummary, AccordionDetails } from '@material-ui/core';
+import { ExpandMore as ExpandMoreIcon } from '@material-ui/icons';
+import { Table } from 'reactstrap';
 import _ from 'lodash';
 
 export default class ExternalCqlDetailsSection extends Component {
-  constructor(props) {
-    super(props);
-
-    this.state = { expand: true };
-  }
-
-  toggle = (event) => {
-    event.preventDefault();
-
-    this.setState({ expand: !this.state.expand });
-  }
-
-  renderHeader = (title, definitions) => (
-    <div
-      className="external-cql-details-section__header"
-      onClick={event => this.toggle(event)}
-      onKeyPress={event => this.toggle(event)}
-      role="button"
-      tabIndex={0}
-    >
-      <div className="header-title">{title} ({definitions.length})</div>
-      <div className="header-divider"></div>
-      <Button onClick={this.toggle} className="header-button" aria-label="Expand or Collapse">
-        <FontAwesomeIcon icon={this.state.expand ? faChevronDown : faChevronRight} />
-      </Button>
-    </div>
-  );
-
   renderTable = (type, definitions) => (
     <Table className="external-cql-details-section__table">
       <thead>
@@ -73,11 +45,22 @@ export default class ExternalCqlDetailsSection extends Component {
 
     return (
       <div className="external-cql-details-section">
-        {this.renderHeader(title, definitions)}
+        <Accordion>
+          <AccordionSummary
+            expandIcon={<ExpandMoreIcon />}
+            aria-controls="external-cql-details-content"
+            id="external-cql-details-header"
+          >
+            <div className="external-cql-details-section__header">
+              <div className="header-title">{title} ({ definitions.length })</div>
+              <div className="header-divider"></div>
+            </div>
+          </AccordionSummary>
 
-        <Collapse isOpen={this.state.expand}>
-          {definitions && this.renderTable(title, definitions)}
-        </Collapse>
+          <AccordionDetails>
+            {definitions && this.renderTable(title, definitions)}
+          </AccordionDetails>
+        </Accordion>
       </div>
     );
   }

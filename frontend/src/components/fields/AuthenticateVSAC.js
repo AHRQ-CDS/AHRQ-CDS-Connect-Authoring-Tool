@@ -1,93 +1,99 @@
-import React, { memo, useCallback, useRef } from 'react';
+import React, { memo, useCallback, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faKey, faSpinner, faCheck, faExclamationCircle } from '@fortawesome/free-solid-svg-icons';
+import { Button, CircularProgress, TextField } from '@material-ui/core';
+import { Check as CheckIcon, Lock as LockIcon } from '@material-ui/icons';
+import { Alert } from '@material-ui/lab';
+import { useUnmount } from 'react-use';
 
-import RawTextField from './RawTextField';
-import { loginVSACUser } from '../../actions/vsac';
+import { loginVSACUser, setVSACAuthStatus } from 'actions/vsac';
 
 export const AuthenticateVSACButton = memo((
   { onLogin, disabled, isAuthenticating = false, isAuthenticated = false }
 ) => (
-  <button
-    type="button"
-    className="primary-button pull-right"
-    onClick={onLogin}
-    aria-label="Authenticate VSAC"
-    disabled={disabled}
-  >
-    {!isAuthenticated && !isAuthenticating && <><FontAwesomeIcon icon={faKey} /> Authenticate VSAC</>}
-    {isAuthenticating && <><FontAwesomeIcon icon={faSpinner} spin /> Authenticate VSAC</>}
-    {isAuthenticated && <><FontAwesomeIcon icon={faCheck} /> VSAC Authenticated</>}
-  </button>
+  <div className="field-group-button">
+    <Button
+      color="primary"
+      disabled={disabled}
+      onClick={onLogin}
+      startIcon={isAuthenticating ? <CircularProgress size={20} /> : isAuthenticated ? <CheckIcon /> : <LockIcon />}
+      variant="contained"
+    >
+      {isAuthenticated ? 'VSAC Authenticated' : 'Authenticate VSAC'}
+    </Button>
+  </div>
 ));
 
 export default memo(function AuthenticateVSAC() {
-  const apiKeyRef = useRef();
+  const [apiKey, setApiKey] = useState(null);
   const dispatch = useDispatch();
   const authStatus = useSelector(state => state.vsac.authStatus);
   const isAuthenticating = useSelector(state => state.vsac.isAuthenticating);
-  const vsacStatusText = useSelector(state => state.vsac.vsacStatusText);
+  const authStatusText = useSelector(state => state.vsac.authStatusText);
+
+  useUnmount(() => {
+    if (authStatus === 'loginFailure') dispatch(setVSACAuthStatus(null));
+  });
 
   const onLogin = useCallback(
-    () => dispatch(loginVSACUser(apiKeyRef.current.value)),
-    [dispatch, apiKeyRef]
+    () => dispatch(loginVSACUser(apiKey)),
+    [dispatch, apiKey]
   );
 
   const showForm = authStatus == null || authStatus === 'loginFailure';
 
   return (
-    <div className="authenticate-vsac">
-      <div className="authenticate-vsac__content">
-        {showForm && (
-          <>
-            <div className="authenticate-vsac__disclaimer">
-              Use your UMLS Terminology Services API key to log in to VSAC to access value sets and codes.
-              <p/>
-              <ul>
-                <li>
-                  Need an account? {' '}
-                  <a href={`${process.env.PUBLIC_URL}/documentation#Requesting_UTS_Account`} target="_blank"
-                     rel="noopener noreferrer">Request a UMLS Terminology Services account.</a>
-                </li>
-                <li>
-                  Don't know your UMLS API key? {' '}
-                  <a href={`${process.env.PUBLIC_URL}/documentation#Accessing_UMLS_API_Key`} target="_blank"
-                     rel="noopener noreferrer">Find your UMLS Terminology Services API key.</a>
-                </li>
-              </ul>
-            </div>
+    <div className="field-group authenticate-vsac">
+      {showForm && (
+        <>
+          <div className="authenticate-vsac__disclaimer">
+            Use your UMLS Terminology Services API key to log in to VSAC to access value sets and codes.
 
-            <div className="authenticate-vsac__form">
-              <RawTextField
-                name="apiKey"
-                label="API Key"
-                placeholder="API Key"
-                type="password"
-                ref={apiKeyRef}
-              />
+            <ul>
+              <li>
+                Need an account?{' '}
+                <a
+                  href={`${process.env.PUBLIC_URL}/documentation#Requesting_UTS_Account`}
+                  target="_blank"
+                  rel="noopener noreferrer">Request a UMLS Terminology Services account.
+                </a>
+              </li>
 
-              <AuthenticateVSACButton
-                onLogin={onLogin}
-                disabled={isAuthenticating}
-                isAuthenticating={isAuthenticating}
-              />
-            </div>
-          </>
-        )}
-
-        {authStatus === 'loginFailure' && (
-          <div className="login__auth-status">
-            <FontAwesomeIcon icon={faExclamationCircle} /> {vsacStatusText}
+              <li>
+                Don't know your UMLS API key?{' '}
+                <a
+                  href={`${process.env.PUBLIC_URL}/documentation#Accessing_UMLS_API_Key`}
+                  target="_blank"
+                  rel="noopener noreferrer">Find your UMLS Terminology Services API key.
+                </a>
+              </li>
+            </ul>
           </div>
-        )}
 
-        {authStatus === 'loginSuccess' && (
-          <div className="login__auth-status">
-            <AuthenticateVSACButton disabled isAuthenticated />
+          <div className="field-group">
+            <TextField
+              autoComplete="current-password"
+              fullWidth
+              label="API Key"
+              onChange={event => setApiKey(event.target.value)}
+              type="password"
+              value={apiKey || ''}
+              variant="outlined"
+            />
+
+            {authStatus === 'loginFailure' && (
+              <Alert severity="error" onClose={() => dispatch(setVSACAuthStatus(null))}>
+                {authStatusText}
+              </Alert>
+            )}
+
+            <AuthenticateVSACButton
+              onLogin={onLogin}
+              disabled={isAuthenticating}
+              isAuthenticating={isAuthenticating}
+            />
           </div>
-        )}
-      </div>
+        </>
+      )}
     </div>
   );
 });

@@ -3,7 +3,6 @@
 
   &__modal {
     display: inline-flex;
-    padding-right: 10px;
   }
 
   &__label {
@@ -65,10 +64,11 @@
   }
 
   &__search {
-    flex: 1;
+    display: flex;
+    width: 100%;
 
-    input {
-      width: 100%;
+    button {
+      margin-left: 20px;
     }
   }
 

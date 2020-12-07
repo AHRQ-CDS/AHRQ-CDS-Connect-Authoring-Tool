@@ -1,8 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { get, post } from 'axios';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faTimes } from '@fortawesome/free-solid-svg-icons';
+import { Button, TextField } from '@material-ui/core';
 
 import { Modal }  from 'components/elements';
 
@@ -90,47 +89,33 @@ export default class RepoUploadModal extends Component {
 
   renderLogin = () => (
     <div>
-      <div className="modal__header">
-        <span className="modal__heading">Log in to CDS Connect</span>
-
-        <div className="modal__buttonbar">
-          <button onClick={this.closeModal}
-            className="modal__deletebutton"
-            aria-label="Close CDS Connect login modal"
-          >
-            <FontAwesomeIcon fixedWidth icon={faTimes} />
-          </button>
-        </div>
-      </div>
+      <h3>Log in to CDS Connect</h3>
 
       <div className='form__group repo-login-form'>
-        <label htmlFor={'repoUserName'}>Username</label>
-        <input id='repoUserName'
-          className='repo-login-field'
+        <TextField
+          className="repo-login-form__input"
+          fullWidth
+          label="username"
+          onChange={event => this.updateUserName(event.target.value)}
           value={this.state.userName}
-          type="text"
-          name={this.state.userName}
-          aria-describedby={'repoUserName'}
-          onChange={(event) => {
-            this.updateUserName(event.target.value);
-          }}
+          variant="outlined"
         />
 
-        <label htmlFor={'repoPassword'}>Password</label>
-        <input id='repoPassword'
-          className='repo-login-field'
-          value={this.state.password}
+        <TextField
+          className="repo-login-form__input"
+          fullWidth
+          label="password"
+          onChange={event => this.updatePassword(event.target.value)}
           type="password"
-          name={this.state.password}
-          aria-describedby={'repoPassword'}
-          onChange={(event) => {
-            this.updatePassword(event.target.value);
-          }}
+          value={this.state.password}
+          variant="outlined"
         />
 
-        <button className="primary-button" onClick={this.fetchArtifacts} aria-label="Login">
-          Login
-        </button>
+        <div className="repo-login-form__input">
+          <Button color="primary" onClick={this.fetchArtifacts} variant="contained">
+            Login
+          </Button>
+        </div>
       </div>
     </div>
   );
@@ -147,25 +132,19 @@ export default class RepoUploadModal extends Component {
         </thead>
 
         <tbody>
-        {this.state.artifacts.map(a => (
+          {this.state.artifacts.map(a => (
             <tr key={a.nid}>
               <td>{a.title.replace(/<\/?[^>]+(>|$)/g, '')}</td>
               <td>{a.field_version}</td>
               <td>
-                  <button onClick={() => this.uploadArtifact(a.nid)} aria-label="Update">
-                      Update
-                  </button>
+                <Button color="primary" onClick={() => this.uploadArtifact(a.nid)} variant="contained">
+                  Update
+                </Button>
               </td>
             </tr>
           ))}
         </tbody>
       </table>
-
-      <div className="buttonbar">
-        <button onClick={this.closeModal} className="modal__deletebutton" aria-label="Close modal">
-          Cancel
-        </button>
-      </div>
     </div>
   );
 
@@ -179,15 +158,6 @@ export default class RepoUploadModal extends Component {
     <div>
       <div className="modal__header">
         <span className="modal__heading">Error</span>
-
-        <div className="modal__buttonbar">
-          <button onClick={this.closeModal}
-            className="modal__deletebutton"
-            aria-label="Close CDS Connect error modal"
-          >
-            <FontAwesomeIcon fixedWidth icon={faTimes} />
-          </button>
-        </div>
       </div>
 
       <p className="repo-upload-error-message">

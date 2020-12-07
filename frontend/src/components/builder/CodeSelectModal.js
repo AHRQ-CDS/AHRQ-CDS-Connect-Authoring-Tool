@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import { Button, TextField } from '@material-ui/core';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   faCheckCircle, faExclamationTriangle, faSpinner, faMedkit, faExclamationCircle
@@ -38,12 +39,6 @@ export default class CodeSelectModal extends Component {
     });
 
     this.props.resetCodeValidation();
-  }
-
-  enterKeyCheck = (func, argument, event) => {
-    if (!event || event.type !== 'keydown' || event.key !== 'Enter') return;
-    event.preventDefault();
-    if (argument) { func(argument); } else { func(); }
   }
 
   handleSearchValueChange = (event) => {
@@ -201,8 +196,6 @@ export default class CodeSelectModal extends Component {
 
   renderModalHeader = () => {
     const { codeSystemText, codeText, displayOtherInput, selectedCS } = this.state;
-    const codeInputLabel = 'Enter code';
-    const otherInputLabel = 'Enter system canonical URL';
 
     const codeSystemOptions = [
       { value: 'SNOMED', label: 'SNOMED', id: 'http://snomed.info/sct' },
@@ -231,15 +224,12 @@ export default class CodeSelectModal extends Component {
 
         <div className="code-select-modal__search-container">
           <div className="code-select-modal__search">
-            <input
-              className="code-select-modal__search-code"
-              type="text"
-              id="code-input"
-              placeholder={codeInputLabel}
-              aria-label={codeInputLabel}
-              title={codeInputLabel}
-              value={codeText}
+            <TextField
+              fullWidth
+              label="Code"
               onChange={this.handleSearchValueChange}
+              value={codeText}
+              variant="outlined"
             />
           </div>
 
@@ -255,25 +245,19 @@ export default class CodeSelectModal extends Component {
 
           {displayOtherInput &&
             <div className="code-select-modal__search-other-system">
-              <input
-                type="text"
-                id="other-code-system"
-                placeholder={otherInputLabel}
-                aria-label={otherInputLabel}
-                title={otherInputLabel}
-                value={codeSystemText}
+              <TextField
+                fullWidth
+                label="System canonical URL"
                 onChange={this.handleOtherCodeSystemChange}
+                value={codeSystemText}
+                variant="outlined"
               />
             </div>
           }
 
-          <button
-            className="primary-button code-select-modal__search-button"
-            onClick={this.validateCode}
-            aria-label="Validate"
-          >
+          <Button color="primary" onClick={this.validateCode} variant="contained">
             Validate
-          </button>
+          </Button>
         </div>
       </div>
     );
@@ -281,26 +265,29 @@ export default class CodeSelectModal extends Component {
 
   render() {
     const { codeSystemText, codeText, displayOtherInput, selectedCS, showCodeSelectModal } = this.state;
-    const { isValidCode, labels } = this.props;
+    const { labels } = this.props;
     let buttonLabels = { openButtonText: 'Add Code', closeButtonText: 'Close'};
     if (labels) buttonLabels = labels;
 
     return (
       <span className="code-select-modal">
-        <button type="button"
-          className="primary-button"
+        <Button
+          color="primary"
           onClick={this.openCodeSelectModal}
-          aria-label={buttonLabels.openButtonText}>
-          <FontAwesomeIcon icon={faMedkit} />{' '}{buttonLabels.openButtonText}
-        </button>
+          variant="contained"
+          startIcon={<FontAwesomeIcon icon={faMedkit} />}
+        >
+          {buttonLabels.openButtonText}
+        </Button>
 
         <Modal
-          Footer={isValidCode && this.renderCodeValidation()}
+          Footer={this.renderCodeValidation()}
           handleCloseModal={this.closeCodeSelectModal}
           handleSaveModal={this.chooseCode}
           handleShowModal={showCodeSelectModal}
           hasCancelButton
           Header={this.renderModalHeader()}
+          maxWidth="xl"
           submitButtonText="Select"
           submitDisabled={!selectedCS || !codeText || (displayOtherInput && !codeSystemText)}
           title="Choose code"

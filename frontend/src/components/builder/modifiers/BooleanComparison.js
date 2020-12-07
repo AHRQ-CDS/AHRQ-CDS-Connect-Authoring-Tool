@@ -22,8 +22,9 @@ export default class BooleanComparison extends Component {
     const { value } = this.props;
 
     return (
-      <div className="modifier-dropdown">
+      <div className="modifier">
         <Dropdown
+          className="field-input field-input-md"
           id="boolean-comparison"
           label="Boolean"
           onChange={this.handleChange}

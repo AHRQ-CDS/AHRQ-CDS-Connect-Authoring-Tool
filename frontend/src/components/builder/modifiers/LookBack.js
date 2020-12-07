@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import _ from 'lodash';
+import { TextField } from '@material-ui/core';
 
 import { Dropdown } from 'components/elements';
 
@@ -14,7 +14,6 @@ const options = [
   { value: 'seconds', label: 'Second(s)' }
 ];
 
-/* eslint-disable jsx-a11y/no-onchange */
 export default class LookBack extends Component {
   handleChange = event => {
     const { index, updateAppliedModifier } = this.props;
@@ -24,38 +23,27 @@ export default class LookBack extends Component {
 
   render() {
     const { index, unit, updateAppliedModifier, value } = this.props;
-    const valueId = _.uniqueId('value-');
-    const unitId = _.uniqueId('unit-');
 
     return (
-      <div className="look-back">
-        <label className="look-back" htmlFor={valueId}>
-          Look back within the last...
-        </label>
+      <div className="modifier">
+        <div className="modifier-text">Look back within the last...</div>
 
-        <div className="look-back-group">
-          <input
-            id={valueId}
-            type="number"
-            name="value"
-            placeholder="value"
-            aria-label="Look back value"
-            value={value || ''}
-            onChange={(event) => {
-              updateAppliedModifier(index, { value: parseInt(event.target.value, 10) });
-            }}
-          />
+        <TextField
+          className="field-input flex-1 field-input-sm"
+          label="Value"
+          onChange={event => updateAppliedModifier(index, { value: parseInt(event.target.value, 10) })}
+          type="number"
+          value={value || ''}
+          variant="outlined"
+        />
 
-          <label htmlFor={unitId} className="modifier-dropdown">
-            <Dropdown
-              id={unitId}
-              label="Unit"
-              onChange={this.handleChange}
-              options={options}
-              value={unit}
-            />
-          </label>
-        </div>
+        <Dropdown
+          className="field-input flex-2 field-input-md"
+          label="Unit"
+          onChange={this.handleChange}
+          options={options}
+          value={unit}
+        />
       </div>
     );
   }

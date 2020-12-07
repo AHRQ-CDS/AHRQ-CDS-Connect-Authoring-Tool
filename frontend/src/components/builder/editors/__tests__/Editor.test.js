@@ -1,6 +1,6 @@
 import React from 'react';
 import Editor from '../Editor';
-import { render } from '../../../../utils/test-utils';
+import { render } from 'utils/test-utils';
 
 jest.mock('../CodeEditor', () => () => <div>CodeEditor</div>);
 jest.mock('../BooleanEditor', () => () => <div>BooleanEditor</div>);
@@ -19,7 +19,6 @@ describe('<Editor />', () => {
   const renderComponent = (props = {}) =>
     render(
       <Editor
-        id="test-id"
         name=""
         type=""
         label=""

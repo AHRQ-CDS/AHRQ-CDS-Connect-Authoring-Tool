@@ -16,6 +16,9 @@ export default makeStyles(
     },
     titleIcon: {
       marginRight: '1em'
+    },
+    footerButtons: {
+      whiteSpace: 'nowrap'
     }
   }),
   { name: 'Modal' }

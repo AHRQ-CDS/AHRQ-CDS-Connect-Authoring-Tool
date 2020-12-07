@@ -12,7 +12,7 @@ const Dropdown = ({
   valueKey = 'value',
   ...props
 }) => (
-  <TextField fullWidth select value={value || ''} variant="outlined" {...props}>
+  <TextField autoComplete="off" fullWidth select value={value || ''} variant="outlined" {...props}>
     {options.map(option => (
       <MenuItem key={option[valueKey]} value={option[valueKey]} disabled={option.isDisabled}>
         {renderItem ? renderItem(option) : option[labelKey]}

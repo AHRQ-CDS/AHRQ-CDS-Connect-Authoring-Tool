@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import classnames from 'classnames';
-import _ from 'lodash';
+import { IconButton, Paper } from '@material-ui/core';
+import { Close as CloseIcon } from '@material-ui/icons';
 
 import CodeSelectModal from '../CodeSelectModal';
 import VSACAuthenticationModal from '../VSACAuthenticationModal';
@@ -25,6 +25,7 @@ export default class CodeEditor extends Component {
           <VSACAuthenticationModal
             loginVSACUser={this.props.loginVSACUser}
             setVSACAuthStatus={this.props.setVSACAuthStatus}
+            vsacIsAuthenticating={this.props.vsacIsAuthenticating}
             vsacStatus={this.props.vsacStatus}
             vsacStatusText={this.props.vsacStatusText}
           />
@@ -52,71 +53,64 @@ export default class CodeEditor extends Component {
   }
 
   render() {
-    const formId = _.uniqueId('editor-');
+    const { disableEditing, isConcept, updateInstance, value } = this.props;
 
     return (
       <div className="editor code-editor">
-        <div className="form__group">
-          <label
-            className={classnames("editor-container", {
-              condense: this.props.condenseUI,
-            })}
-            htmlFor={formId}
-          >
-            <div className="editor-label label">
-              {this.props.isConcept ? "Concept:" : "Code:"}
-            </div>
+        <div className="editor-label">{isConcept ? "Concept:" : "Code:"}</div>
 
-            <div className="editor-input-group">
-              <div className="">
-                {this.props.value != null ? (
-                  <div className="code-editor__show">
-                    <div className="code-editor-row">
-                      <label className="label" htmlFor={formId}>Code:</label>
-                      <div>{this.props.value.code}</div>
-                    </div>
+        <div className="editor-inputs">
+          {value != null ? (
+            <Paper className="code-editor-container">
+              <div className="close-button">
+                <IconButton aria-label="close" color="primary" onClick={() => updateInstance({ value: null })}>
+                  <CloseIcon />
+                </IconButton>
+              </div>
 
-                    <div className="code-editor-row">
-                      <label className="label" htmlFor={formId}>System:</label>
-                      <div>{this.props.value.system}</div>
-                    </div>
+              <div className="code-editor-element">
+                <div className="code-editor-element-label">Code:</div>
+                <div className="code-editor-element-value">{value.code}</div>
+              </div>
 
-                    <div className="code-editor-row">
-                      <label className="label" htmlFor={formId}>System URI:</label>
-                      <div>{this.props.value.uri}</div>
-                    </div>
+              <div className="code-editor-element">
+                <div className="code-editor-element-label">System:</div>
+                <div className="code-editor-element-value">{value.system}</div>
+              </div>
 
-                    <div className="code-editor-row">
-                      <label className="label" htmlFor={formId}>Display:</label>
-                      <div>{this.props.value.display}</div>
-                    </div>
+              <div className="code-editor-element">
+                <div className="code-editor-element-label">System URI:</div>
+                <div className="code-editor-element-value">{value.uri}</div>
+              </div>
 
-                    <div className="code-editor-footer">
-                      {this.props.disableEditing ? (
-                        <span>
-                          Changing {this.props.isConcept ? "concept" : "code"}{" "}
-                          value is currently not supported
-                        </span>
-                      ) : (
-                        this.renderCodePicker("Change Code")
-                      )}
-                    </div>
+              {value.display &&
+                <div className="code-editor-element">
+                  <div className="code-editor-element-label">Display:</div>
+                  <div className="code-editor-element-value">{value.display}</div>
+                </div>
+              }
+
+              <div className="code-editor-footer">
+                {disableEditing ? (
+                  <div className="warning flex-1">
+                    Changing {isConcept ? 'concept' : 'code'} value is currently not supported.
                   </div>
                 ) : (
-                  <div className="parameter__item">
-                    {this.props.disableEditing ? (
-                      <span>
-                        Setting {this.props.isConcept ? "concept" : "code"}{" "}
-                        value is currently not supported
-                      </span>
-                    ) : (
-                      this.renderCodePicker("Add Code")
-                    )}
-                  </div>
+                  this.renderCodePicker('Change Code')
                 )}
               </div>
-            </div>
-          </label>
+            </Paper>
+          ) : (
+            <>
+              {disableEditing ? (
+                <div className="warning flex-1">
+                  Setting {isConcept ? 'concept' : 'code'} value is currently not supported.
+                </div>
+              ) : (
+                this.renderCodePicker('Add Code')
+              )}
+            </>
+          )}
         </div>
       </div>
     );
@@ -124,23 +118,19 @@ export default class CodeEditor extends Component {
 }
 
 CodeEditor.propTypes = {
-  id: PropTypes.string.isRequired,
-  name: PropTypes.string,
-  type: PropTypes.string.isRequired,
-  label: PropTypes.string.isRequired,
-  value: PropTypes.object,
-  isConcept: PropTypes.bool,
+  codeData: PropTypes.object,
   disableEditing: PropTypes.bool,
-  updateInstance: PropTypes.func.isRequired,
-  vsacApiKey: PropTypes.string,
-  loginVSACUser: PropTypes.func.isRequired,
-  setVSACAuthStatus: PropTypes.func.isRequired,
-  vsacStatus: PropTypes.string,
-  vsacStatusText: PropTypes.string,
+  isConcept: PropTypes.bool,
   isValidatingCode: PropTypes.bool.isRequired,
   isValidCode: PropTypes.bool,
-  codeData: PropTypes.object,
-  validateCode: PropTypes.func.isRequired,
+  loginVSACUser: PropTypes.func.isRequired,
   resetCodeValidation: PropTypes.func.isRequired,
-  condenseUI: PropTypes.bool
+  setVSACAuthStatus: PropTypes.func.isRequired,
+  updateInstance: PropTypes.func.isRequired,
+  validateCode: PropTypes.func.isRequired,
+  value: PropTypes.object,
+  vsacApiKey: PropTypes.string,
+  vsacIsAuthenticating: PropTypes.bool,
+  vsacStatus: PropTypes.string,
+  vsacStatusText: PropTypes.string
 };
