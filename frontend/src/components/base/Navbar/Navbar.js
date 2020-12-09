@@ -60,6 +60,7 @@ const Navbar = ({ isAuthenticated }) => {
       <Tabs
         value={tabNavigationValue({ pathname, isAuthenticated })}
         className={clsx(styles.tabs, spacingStyles.fullBleed)}
+        TabIndicatorProps={{ style: { display: 'none' } }}
       >
         <Navtab label="Home" index={0} value="/" exact />
 

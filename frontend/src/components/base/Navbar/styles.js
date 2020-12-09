@@ -3,10 +3,14 @@ import { makeStyles, Theme as AugmentedTheme } from '@material-ui/core/styles';
 export default makeStyles(
   (theme: AugmentedTheme) => ({
     tabs: {
-      backgroundColor: theme.palette.common.ahrqDarkBlue
+      backgroundColor: theme.palette.common.ahrqDarkBlue,
+      paddingBottom: '10px'
     },
     tab: {
       color: theme.palette.common.white,
+      marginRight: '15px',
+      borderRadius: '5px',
+      textTransform: 'none',
       opacity: 1,
       '&:hover, &:focus': {
         color: theme.palette.common.white,

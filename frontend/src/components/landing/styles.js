@@ -94,6 +94,7 @@ export default makeStyles(
       borderRadius: 0,
       boxShadow: 'none',
       border: 0,
+      textTransform: 'none',
       '&:focus': {
         outline: 'none'
       }

@@ -14,16 +14,16 @@ describe('<ErrorPage />', () => {
   it('renders a generic message when errorType is not provided', () => {
     renderComponent();
 
-    expect(screen.getByRole('heading', {name: 'An error has occured'})).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: 'An error has occurred.' })).toBeInTheDocument();
   });
 
   it('renders a not found message with the intended location', () => {
     renderComponent({
       errorType: 'notFound',
-      pathname: '/fake-path',
+      pathname: '/fake-path'
     });
 
-    expect(screen.getByRole('heading', {name: 'No match for /fake-path'})).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: 'No match for /fake-path .' })).toBeInTheDocument();
   });
 
   it('renders a must be logged in message with the intended location', () => {
@@ -32,6 +32,8 @@ describe('<ErrorPage />', () => {
       pathname: '/artifacts'
     });
 
-    expect(screen.getByRole('heading', {name: 'You must be logged in to access /artifacts'})).toBeInTheDocument();
+    expect(
+      screen.getByRole('heading', { name: 'Unable to reach /artifacts . You may need to log in to access.' })
+    ).toBeInTheDocument();
   });
 });
