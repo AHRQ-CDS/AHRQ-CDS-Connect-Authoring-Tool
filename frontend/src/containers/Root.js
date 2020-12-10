@@ -6,12 +6,12 @@ import { ThemeProvider } from '@material-ui/core/styles';
 
 import PrivateRoute from './PrivateRoute';
 import App from './App';
-import Landing from 'containers/Landing';
 import BuilderContainer from 'containers/Builder';
 import Artifact from 'containers/Artifact';
 import Testing from 'containers/Testing';
-import Documentation from 'components/Documentation';
-import NoMatch from 'components/NotFoundPage';
+import { Landing } from 'components/landing';
+import { Documentation } from 'components/documentation';
+import { ErrorPage } from 'components/base';
 import lightTheme from 'styles/theme';
 
 const Root = (props) => {
@@ -22,14 +22,14 @@ const Root = (props) => {
       <ThemeProvider theme={lightTheme}>
         <App>
           <Switch>
-            <Route exact path="/" component={Landing} />
+            <Route exact path="/"><Landing /></Route>
             <PrivateRoute path='/build/:id' component={BuilderContainer} />
             <PrivateRoute path='/build' component={BuilderContainer} />
             <PrivateRoute path='/artifacts' component={Artifact} />
             <PrivateRoute path='/testing' component={Testing} />
-            <Route path='/documentation' component={Documentation} />
+            <Route path='/documentation'><Documentation /></Route>
             <Redirect from='/userguide' to='/documentation' />
-            <Route component={NoMatch} />
+            <Route path='*'><ErrorPage errorType='notFound' /></Route>
           </Switch>
         </App>
       </ThemeProvider>

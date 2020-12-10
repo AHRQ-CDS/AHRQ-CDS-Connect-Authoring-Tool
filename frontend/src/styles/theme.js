@@ -1,16 +1,36 @@
 import { createMuiTheme } from '@material-ui/core/styles';
 import deepmerge from 'deepmerge';
 
+const breakpoints = {
+  values: {
+    xs: 0,
+    sm: 480,
+    md: 768,
+    lg: 992,
+    xl: 1200,
+    xxl: 1440
+  }
+};
+
 const colors = {
-  white: '#fff',
-  grayLightest: '#f8f8f8',
-  grayLighter: '#ececec',
-  gray: '#494d55',
+  ahrqDarkBlue: '#1e2f40',
+  ahrqGray: '#4a5968',
+  ahrqLightBlue: '#6693ee',
   blue: '#1f2f3c',
   blueDark: '#08101c',
+  blueDarker: '#071119',
   blueLight: '#303e4a',
   blueLink: '#004198',
-  red: '#961328'
+  gray: '#494d55',
+  grayDark: '#323a45',
+  grayLight: '#646974',
+  grayLighter: '#ececec',
+  grayLightest: '#f8f8f8',
+  green: '#36a0a0',
+  red: '#961328',
+  redLight: '#e1756a',
+  white: '#fff',
+  yellow: '#b48e43'
 };
 
 const variables = {
@@ -54,6 +74,7 @@ const materialUiOverridesBase = {
     root: {
       padding: '8px 24px',
       border: '1px solid transparent',
+      borderRadius: 0,
       '&:focus': {
         outline: 'none'
       },
@@ -202,6 +223,7 @@ const paletteBase = {
 };
 
 const lightTheme = createMuiTheme({
+  breakpoints: { ...breakpoints },
   typography: { ...typography },
   palette: { ...paletteBase },
   overrides: { ...materialUiOverridesBase },
@@ -209,6 +231,7 @@ const lightTheme = createMuiTheme({
 });
 
 const darkTheme = createMuiTheme({
+  breakpoints: { ...breakpoints },
   typography: { ...typography },
   palette: deepmerge(paletteBase, {
     text: {

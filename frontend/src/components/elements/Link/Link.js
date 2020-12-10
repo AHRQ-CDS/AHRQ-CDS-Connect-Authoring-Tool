@@ -52,7 +52,7 @@ Link.propTypes = {
   external: PropTypes.bool,
   href: PropTypes.string.isRequired,
   sameTab: PropTypes.bool,
-  text: PropTypes.string.isRequired
+  text: PropTypes.oneOfType([ PropTypes.element, PropTypes.string ])
 };
 
 export default Link;

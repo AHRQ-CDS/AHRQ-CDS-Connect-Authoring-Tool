@@ -3,15 +3,14 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 
-import { loginUser, logoutUser, setAuthStatus, getCurrentUser } from '../actions/auth';
-import setErrorMessage from '../actions/errors';
+import { loginUser, logoutUser, setAuthStatus, getCurrentUser } from 'actions/auth';
+import setErrorMessage from 'actions/errors';
 
-import Analytics from '../components/Analytics';
-import CdsHeader from '../components/header/CdsHeader';
-import AhrqHeader from '../components/header/AhrqHeader';
-import Navbar from '../components/Navbar';
-import CdsFooter from '../components/footer/CdsFooter';
-import AhrqFooter from '../components/footer/AhrqFooter';
+import { Analytics, Navbar } from 'components/base';
+import CdsHeader from 'components/header/CdsHeader';
+import AhrqHeader from 'components/header/AhrqHeader';
+import CdsFooter from 'components/footer/CdsFooter';
+import AhrqFooter from 'components/footer/AhrqFooter';
 
 class App extends Component {
   UNSAFE_componentWillMount() { // eslint-disable-line camelcase
@@ -59,8 +58,10 @@ class App extends Component {
         />
 
         <Navbar isAuthenticated={isAuthenticated} />
+
         {this.renderedErrorMessage()}
         {children}
+
         <CdsFooter />
         <AhrqFooter />
       </div>

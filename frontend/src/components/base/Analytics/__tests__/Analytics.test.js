@@ -1,29 +1,27 @@
 import React from 'react';
 import { Helmet } from 'react-helmet';
-import Analytics from '../Analytics';
-import { render } from '../../utils/test-utils';
+import { render } from 'utils/test-utils';
+import { Analytics } from 'components/base';
 
 describe('<Analytics />', () => {
-  it('renders a noscript tag when GTM/DAP is configured', () => {
-    const { container } = render(
-      <Analytics
-        gtmKey="TEST-GTM-KEY"
-        dapURL="http://example.org/dap"
-      />
-    );
-
-    const noscript = container.querySelector('noscript');
-    expect(noscript).not.toBeNull();
-  });
-
-  it('renders GTM and DAP script tags in HEAD when GTM/DAP is configured', () => {
+  const renderComponent = (props = {}) =>
     render(
       <Analytics
         gtmKey="TEST-GTM-KEY"
         dapURL="http://example.org/dap"
+        {...props}
       />
     );
 
+  it('renders a noscript tag when GTM/DAP is configured', () => {
+    const { container } = renderComponent();
+    const noscript = container.querySelector('noscript');
+
+    expect(noscript).not.toBeNull();
+  });
+
+  it('renders GTM and DAP script tags in HEAD when GTM/DAP is configured', () => {
+    renderComponent();
     const helmet = Helmet.peek();
 
     expect(helmet.scriptTags).toHaveLength(2);
@@ -34,13 +32,13 @@ describe('<Analytics />', () => {
   });
 
   it('does not render GTM iframe when GTM/DAP is not configured', () => {
-    const { container } = render(<Analytics />);
+    const { container } = renderComponent({ gtmKey: null, dapURL: null });
 
     expect(container).toBeEmptyDOMElement();
   });
 
   it('does not render GTM and DAP script tags in HEAD when GTM/DAP is not configured', () => {
-    render(<Analytics />);
+    renderComponent({ gtmKey: null, dapURL: null });
 
     expect(document.head.querySelectorAll('script')).toHaveLength(0);
   });
