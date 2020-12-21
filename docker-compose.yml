@@ -13,6 +13,6 @@ services:
     - cat-mongo
     - cat-cql2elm
   cat-mongo:
-    image: mongo:3.4
+    image: mongo:4.4
   cat-cql2elm:
     image: cqframework/cql-translation-service:v1.3.19
