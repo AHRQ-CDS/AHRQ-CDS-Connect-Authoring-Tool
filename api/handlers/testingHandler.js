@@ -55,7 +55,7 @@ function singleDelete(req, res) {
     const id = req.params.patient;
     Patient.remove({ user: req.user.uid, _id: id }, (error, response) => {
       if (error) res.status(500).send(error);
-      else if (response.result.n === 0) res.sendStatus(404);
+      else if (response.n === 0) res.sendStatus(404);
       else res.sendStatus(200);
     });
   } else {
