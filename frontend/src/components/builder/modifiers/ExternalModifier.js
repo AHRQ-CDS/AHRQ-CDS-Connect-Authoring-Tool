@@ -12,7 +12,7 @@ export default class ExternalModifier extends Component {
 
     // We want to fill a null value array of the length of the arguments array if it doesn't already exist
     if (!props.value || props.value.length === 0) {
-      props.updateAppliedModifier(props.index, { value: new Array(props.arguments.length).fill(null) });
+      props.updateAppliedModifier(props.index, { value: new Array(props.modifierArguments.length).fill(null) });
     }
   }
 

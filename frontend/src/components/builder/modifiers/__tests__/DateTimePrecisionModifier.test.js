@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, userEvent, screen } from 'utils/test-utils';
+import { render, userEvent, screen, waitFor } from 'utils/test-utils';
 import DateTimePrecisionModifier from '../DateTimePrecisionModifier';
 
 describe('<DateTimePrecisionModifier />', () => {
@@ -16,35 +16,43 @@ describe('<DateTimePrecisionModifier />', () => {
       />
     );
 
-  it('calls updateAppliedModifier on input change', () => {
+  it('calls updateAppliedModifier on input change', async () => {
     const updateAppliedModifier = jest.fn();
     renderComponent({ updateAppliedModifier });
 
-    userEvent.click(screen.getAllByRole('textbox')[0]);
-    userEvent.click(document.querySelector('.react-datepicker__day--today'));
+    userEvent.click(screen.getByRole('button', { name: 'change date' }));
+    userEvent.click(screen.getByRole('button', { name: 'OK' }));
+
+    await waitFor(() => {
+      expect(screen.queryByRole('button', { name: 'OK' })).toBeNull();
+    });
 
     expect(updateAppliedModifier).toBeCalledWith(6, {
       date: expect.stringMatching(/^@\d{4}-\d{2}-\d{2}$/),
-      time: '',
+      time: null,
       precision: ''
     });
 
-    userEvent.click(screen.getAllByRole('textbox')[1]);
-    userEvent.click(document.querySelector('.rc-time-picker-panel-select-option-selected'));
+    userEvent.click(screen.getByRole('button', { name: 'change time' }));
+    userEvent.click(screen.getByRole('button', { name: 'OK' }));
+
+    await waitFor(() => {
+      expect(screen.queryByRole('button', { name: 'OK' })).toBeNull();
+    });
 
     expect(updateAppliedModifier).toBeCalledWith(6, {
-      date: '',
+      date: null,
       time: expect.stringMatching(/^T\d{2}:\d{2}:\d{2}$/),
       precision: ''
     });
 
-    userEvent.click(screen.getByLabelText('Precision'));
-    userEvent.click(screen.getByText('year'));
+    userEvent.click(screen.getByRole('button', { name: /Precision/ }));
+    userEvent.click(screen.getByRole('option', { name: 'year' }));
 
     expect(updateAppliedModifier).toBeCalledWith(6, {
-      date: '',
-      time: '',
+      date: null,
+      time: null,
       precision: 'year'
     });
-  });
+  }, 40000);
 });

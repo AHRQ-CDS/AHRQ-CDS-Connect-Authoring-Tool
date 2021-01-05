@@ -1,9 +1,8 @@
-import React, { memo, useCallback, useMemo } from 'react';
+import React, { memo, useCallback } from 'react';
 import { Checkbox, FormControlLabel } from '@material-ui/core';
 import { KeyboardDatePicker } from '@material-ui/pickers';
 import { Remove as DashIcon } from '@material-ui/icons';
 import { useField, useFormikContext } from 'formik';
-import { format } from 'date-fns';
 import clsx from 'clsx';
 
 import { isCpgComplete } from 'utils/fields';
@@ -13,7 +12,6 @@ const DateRangePicker = memo(({ fieldName, helperText, name, rangeType, noDateOp
   const [field, , { setValue }] = useField(rangeFieldName);
   const [noDateField, , { setValue: setNoDateFieldValue }] = useField(`${fieldName}.${rangeType}NoDate`);
   const { value } = field;
-  const currentDateValue = useMemo(() => value ? format(value, 'yyyy-MM-dd') : null, [value]);
 
   const toggleSelectNoDate = useCallback(() => {
     setNoDateFieldValue(!noDateField.value);
@@ -32,7 +30,7 @@ const DateRangePicker = memo(({ fieldName, helperText, name, rangeType, noDateOp
           margin="normal"
           onChange={value => setValue(value)}
           placeholder="mm/dd/yyyy"
-          value={currentDateValue}
+          value={value}
         />
 
         {helperText && <div className="helper-text">{helperText}</div>}

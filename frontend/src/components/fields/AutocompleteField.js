@@ -1,5 +1,3 @@
-/* eslint-disable */
-
 import React, { memo, useCallback } from 'react';
 import { FastField, useFormikContext } from 'formik';
 import { TextField } from '@material-ui/core';

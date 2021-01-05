@@ -616,6 +616,7 @@ export class Builder extends Component {
                     codeData={this.props.codeData}
                     validateCode={this.props.validateCode}
                     resetCodeValidation={this.props.resetCodeValidation}
+                    vsacIsAuthenticating={this.props.vsacIsAuthenticating}
                   />
                 </TabPanel>
 
@@ -666,6 +667,7 @@ export class Builder extends Component {
                     validateCode={this.props.validateCode}
                     resetCodeValidation={this.props.resetCodeValidation}
                     validateReturnType={false}
+                    vsacIsAuthenticating={this.props.vsacIsAuthenticating}
                   />
                 </TabPanel>
 
@@ -707,6 +709,7 @@ export class Builder extends Component {
                     validateCode={this.props.validateCode}
                     resetCodeValidation={this.props.resetCodeValidation}
                     getAllInstancesInAllTrees={this.getAllInstancesInAllTrees}
+                    vsacIsAuthenticating={this.props.vsacIsAuthenticating}
                   />
                 </TabPanel>
 

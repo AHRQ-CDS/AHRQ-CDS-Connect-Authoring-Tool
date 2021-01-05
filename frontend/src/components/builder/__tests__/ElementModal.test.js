@@ -162,7 +162,7 @@ describe('<ElementModal />', () => {
       expect(document.querySelector('.search__table thead')).toHaveTextContent('CodeNameCode System'); // Details table headings
 
       // Clicking the arrow button changes to search table and resets selectedElement.
-      userEvent.click(document.querySelector('.nav-icon'));
+      userEvent.click(screen.getByRole('button', { name: 'back' }));
 
       expect(document.querySelector('.search__table thead')).toHaveTextContent(
         'Name/OIDStewardCodes' // Search table headings

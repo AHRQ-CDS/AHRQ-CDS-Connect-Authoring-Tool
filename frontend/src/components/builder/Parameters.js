@@ -59,6 +59,7 @@ export default class Parameters extends Component {
             validateCode={this.props.validateCode}
             resetCodeValidation={this.props.resetCodeValidation}
             getAllInstancesInAllTrees={this.props.getAllInstancesInAllTrees}
+            vsacIsAuthenticating={this.props.vsacIsAuthenticating}
           />
         ))}
 
@@ -79,5 +80,6 @@ Parameters.propTypes = {
   setVSACAuthStatus: PropTypes.func.isRequired,
   vsacStatus: PropTypes.string,
   vsacStatusText: PropTypes.string,
+  vsacIsAuthenticating: PropTypes.bool,
   getAllInstancesInAllTrees: PropTypes.func.isRequired
 };

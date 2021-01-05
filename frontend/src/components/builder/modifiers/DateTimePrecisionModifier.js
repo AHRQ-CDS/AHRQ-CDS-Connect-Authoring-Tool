@@ -28,7 +28,7 @@ export default class DateTimePrecisionModifier extends Component {
   };
 
   render() {
-    const { date, name, precision, time } = this.props;
+    const { date, name, precision, time, index } = this.props;
     const dateValue = date ? parse(date.replace(/^@/, ''), 'yyyy-MM-dd', new Date()) : null;
     const timeValue = time ? parse(time.replace(/^T/, ''), 'HH:mm:ss', new Date()) : null;
 
@@ -68,6 +68,7 @@ export default class DateTimePrecisionModifier extends Component {
             onChange={event => this.handleChange(event.target.value, 'precision')}
             options={options}
             value={precision}
+            id={`date-time-precision-modifier-${index}`}
           />
         </div>
       </div>

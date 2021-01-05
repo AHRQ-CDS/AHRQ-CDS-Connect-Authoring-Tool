@@ -48,6 +48,7 @@ const ValueComparisonModifier = ({
         onChange={handleChangeMin}
         options={options}
         value={minOperator}
+        id={`value-comparison-modifier-minop-${index}`}
       />
 
       <TextField
@@ -57,6 +58,7 @@ const ValueComparisonModifier = ({
         type="number"
         value={minValue || minValue === 0 ? minValue : ''}
         variant="outlined"
+        id={`value-comparison-modifier-minvalue-${index}`}
       />
 
       <Dropdown
@@ -65,6 +67,7 @@ const ValueComparisonModifier = ({
         onChange={handleChangeMax}
         options={options}
         value={maxOperator}
+        id={`value-comparison-modifier-maxop-${index}`}
       />
 
       <TextField
@@ -74,6 +77,7 @@ const ValueComparisonModifier = ({
         type="number"
         value={maxValue || maxValue === 0 ? maxValue : ''}
         variant="outlined"
+        id={`value-comparison-modifier-maxvalue-${index}`}
       />
 
       {hasUnit &&

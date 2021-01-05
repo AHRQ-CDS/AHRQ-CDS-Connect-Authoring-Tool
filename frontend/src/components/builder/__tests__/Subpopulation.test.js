@@ -1,8 +1,8 @@
 import React from 'react';
+import { render, fireEvent, userEvent, screen } from 'utils/test-utils';
+import { createTemplateInstance } from 'utils/test_helpers';
+import { elementGroups } from 'utils/test_fixtures';
 import Subpopulation from '../Subpopulation';
-import { render, fireEvent } from '../../../utils/test-utils';
-import { createTemplateInstance } from '../../../utils/test_helpers';
-import { elementGroups } from '../../../utils/test_fixtures';
 
 const subpopulationName = 'Subpopulation 1';
 const subpopulation = {
@@ -55,6 +55,7 @@ describe('<Subpopulation />', () => {
         validateCode={jest.fn()}
         vsacDetailsCodes={[]}
         vsacDetailsCodesError=""
+        vsacIsAuthenticating={false}
         vsacSearchCount={0}
         vsacSearchResults={[]}
         vsacStatus=""
@@ -70,29 +71,29 @@ describe('<Subpopulation />', () => {
   });
 
   it('can be expanded and collapsed via header', () => {
-    const { container, getByLabelText } = renderComponent();
+    const { container } = renderComponent();
 
-    fireEvent.click(getByLabelText(`hide ${subpopulationName}`));
+    userEvent.click(screen.getByLabelText(`hide ${subpopulationName}`));
     expect(container.querySelectorAll('.card-element__body')).toHaveLength(0);
 
-    fireEvent.click(getByLabelText(`show ${subpopulationName}`));
+    userEvent.click(screen.getByLabelText(`show ${subpopulationName}`));
     expect(container.querySelectorAll('.card-element__body')).toHaveLength(1);
   });
 
   it('calls setSubpopulationName when the subpopulation name is changed', () => {
     const setSubpopulationName = jest.fn();
-    const { getByLabelText } = renderComponent({ setSubpopulationName });
+    renderComponent({ setSubpopulationName });
 
-    fireEvent.change(getByLabelText('Subpopulation'), { target: { value: 'New name' } });
+    fireEvent.change(document.querySelector('input[type=text]'), { target: { value: 'New name' } });
 
     expect(setSubpopulationName).toBeCalledWith('New name', subpopulation.uniqueId);
   });
 
   it('calls deleteSubpopulation when the subpopulation is deleted', () => {
     const deleteSubpopulation = jest.fn();
-    const { getByLabelText } = renderComponent({ deleteSubpopulation });
+    renderComponent({ deleteSubpopulation });
 
-    fireEvent.click(getByLabelText('Remove subpopulation'));
+    userEvent.click(screen.getByRole('button', { name: 'remove subpopulation' }));
 
     expect(deleteSubpopulation).toBeCalledWith(subpopulation.uniqueId);
   });

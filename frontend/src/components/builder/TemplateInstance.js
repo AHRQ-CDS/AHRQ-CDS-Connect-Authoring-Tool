@@ -665,7 +665,7 @@ export default class TemplateInstance extends Component {
 
                   <div className="code-info__buttons element-field-buttons">
                     <IconButton
-                      aria-label="delete code"
+                      aria-label={`delete code ${code.codeSystem.name} (${code.code})`}
                       color="primary"
                       onClick={() => this.deleteCode(code)}
                     >

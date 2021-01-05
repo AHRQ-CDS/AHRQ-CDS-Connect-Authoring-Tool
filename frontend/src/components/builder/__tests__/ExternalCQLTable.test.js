@@ -1,13 +1,13 @@
 import React from 'react';
-import ExternalCQLTable from '../ExternalCqlTable';
-import mockExternalLib from '../../../mocks/mockExternalCQLLibrary.json';
-import mockExternalLibDependency from '../../../mocks/mockExternalCQLLibraryDependency.json';
-import { render, fireEvent } from '../../../utils/test-utils';
+import mockExternalLib from 'mocks/mockExternalCQLLibrary.json';
+import mockExternalLibDependency from 'mocks/mockExternalCQLLibraryDependency.json';
+import { render, screen, userEvent, within } from 'utils/test-utils';
+import ExternalCqlTable from '../ExternalCqlTable';
 
-describe('<ExternalCQLTable />', () => {
+describe('<ExternalCqlTable />', () => {
   const renderComponent = (props = {}) =>
     render(
-      <ExternalCQLTable
+      <ExternalCqlTable
         artifact={{}}
         clearAddLibraryErrorsAndMessages={jest.fn()}
         deleteExternalCqlLibrary={jest.fn()}
@@ -23,36 +23,38 @@ describe('<ExternalCQLTable />', () => {
     );
 
   it('renders external libraries', () => {
-    const { container } = renderComponent();
+    renderComponent();
 
-    expect(container.querySelectorAll('tbody tr')).toHaveLength(2);
+    expect(document.querySelectorAll('tbody tr')).toHaveLength(2);
   });
 
   it('shows a confirmation modal on delete and deletes on confirm', () => {
     const deleteExternalCqlLibrary = jest.fn();
-    const { getByText, getAllByText } = renderComponent({ deleteExternalCqlLibrary });
+    renderComponent({ deleteExternalCqlLibrary });
 
-    fireEvent.click(getAllByText('Delete')[0]);
+    userEvent.click(screen.getAllByRole('button', { name: 'Delete' })[0]);
 
-    expect(getByText('Delete External CQL Library Confirmation')).not.toBeNull();
+    const dialog = within(screen.getByRole('dialog'));
 
-    const deleteButtons = getAllByText('Delete');
-    fireEvent.click(deleteButtons[deleteButtons.length - 1]);
+    expect(dialog.getByText('Delete External CQL Library Confirmation')).toBeInTheDocument();
+    userEvent.click(dialog.getByRole('button', { name: 'Delete' }));
 
     expect(deleteExternalCqlLibrary).toHaveBeenCalled();
   });
 
   it('shows the details modal when View is clicked', () => {
-    const { getByText, getAllByLabelText } = renderComponent({ externalCqlLibraryDetails: mockExternalLib });
+    renderComponent({ externalCqlLibraryDetails: mockExternalLib });
 
-    fireEvent.click(getAllByLabelText('View')[0]);
+    userEvent.click(screen.getAllByRole('button', { name: 'View' })[0]);
 
-    expect(getByText('View External CQL Details')).not.toBeNull();
+    const dialog = within(screen.getByRole('dialog'));
+
+    expect(dialog.getByText('View External CQL Details')).toBeInTheDocument();
   });
 
-  it('doesn\'t allow delete on libraries that are depended on by others', () => {
+  it("doesn't allow delete on libraries that are depended on by others", () => {
     const deleteExternalCqlLibrary = jest.fn();
-    const { container, getAllByText } = renderComponent({
+    renderComponent({
       deleteExternalCqlLibrary,
       externalCqlLibraryDetails: mockExternalLib,
       externalCQLLibraryParents: {
@@ -62,16 +64,16 @@ describe('<ExternalCQLTable />', () => {
     });
 
     // Two libraries, one depends on the other. Dependency delete is disabled.
-    let deleteButtons = container.querySelectorAll('button.danger-button');
-    let disabledButton = container.querySelectorAll('button.danger-button.disabled');
+    const deleteButtons = screen.getAllByRole('button', { name: 'Delete' });
     expect(deleteButtons).toHaveLength(2);
-    expect(disabledButton).toHaveLength(1);
+    expect(deleteButtons[0]).not.toBeDisabled();
+    expect(deleteButtons[1]).toBeDisabled();
 
     // Delete a library that has no parents
-    fireEvent.click(container.querySelector('button.danger-button:not(.disabled)'));
+    userEvent.click(deleteButtons[0]);
 
-    deleteButtons = getAllByText('Delete');
-    fireEvent.click(deleteButtons[deleteButtons.length - 1]);
+    const dialog = within(screen.getByRole('dialog'));
+    userEvent.click(dialog.getByRole('button', { name: 'Delete' }));
 
     expect(deleteExternalCqlLibrary).toHaveBeenCalled();
   });

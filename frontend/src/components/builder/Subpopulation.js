@@ -125,7 +125,7 @@ export default class Subpopulation extends Component {
                 </IconButton>
 
                 <IconButton
-                  aria-label="close"
+                  aria-label="remove subpopulation"
                   color="primary"
                   onClick={() => this.props.deleteSubpopulation(this.props.subpopulation.uniqueId)}
                 >
@@ -203,6 +203,7 @@ export default class Subpopulation extends Component {
         codeData={this.props.codeData}
         validateCode={this.props.validateCode}
         resetCodeValidation={this.props.resetCodeValidation}
+        vsacIsAuthenticating={this.props.vsacIsAuthenticating}
       />
     </div>
   );
@@ -243,4 +244,5 @@ Subpopulation.propTypes = {
   isRetrievingDetails: PropTypes.bool.isRequired,
   vsacDetailsCodes: PropTypes.array.isRequired,
   vsacDetailsCodesError: PropTypes.string.isRequired,
+  vsacIsAuthenticating: PropTypes.bool.isRequired
 };

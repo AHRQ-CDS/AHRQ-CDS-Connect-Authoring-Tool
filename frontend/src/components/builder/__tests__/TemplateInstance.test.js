@@ -1,15 +1,15 @@
 import React from 'react';
-import TemplateInstance from '../TemplateInstance';
-import { render, fireEvent } from '../../../utils/test-utils';
-import { createTemplateInstance } from '../../../utils/test_helpers';
+import { render, fireEvent, userEvent, screen } from 'utils/test-utils';
+import { createTemplateInstance } from 'utils/test_helpers';
 import {
   genericInstance,
   genericInstanceWithModifiers,
   genericBaseElementInstance,
   genericBaseElementUseInstance
-} from '../../../utils/test_fixtures';
-import { getFieldWithType } from '../../../utils/instances';
-import localModifiers from '../../../data/modifiers';
+} from 'utils/test_fixtures';
+import { getFieldWithType } from 'utils/instances';
+import localModifiers from 'data/modifiers';
+import TemplateInstance from '../TemplateInstance';
 
 const templateInstance = createTemplateInstance(genericInstance);
 const baseElementTemplateInstance = {
@@ -24,8 +24,8 @@ const baseElementUseTemplateInstance = {
 };
 const modifiersByInputType = {};
 
-localModifiers.forEach((modifier) => {
-  modifier.inputTypes.forEach((inputType) => {
+localModifiers.forEach(modifier => {
+  modifier.inputTypes.forEach(inputType => {
     modifiersByInputType[inputType] = (modifiersByInputType[inputType] || []).concat(modifier);
   });
 });
@@ -41,7 +41,7 @@ describe('<TemplateInstance />', () => {
         disableAddElement={false}
         disableIndent={false}
         editInstance={jest.fn()}
-        getPath={(path) => path}
+        getPath={path => path}
         getVSDetails={jest.fn()}
         instanceNames={[]}
         isLoadingModifiers={false}
@@ -68,6 +68,7 @@ describe('<TemplateInstance />', () => {
         vsacApiKey={'key'}
         vsacDetailsCodes={[]}
         vsacDetailsCodesError=""
+        vsacIsAuthenticating={false}
         vsacSearchCount={0}
         vsacSearchResults={[]}
         vsacStatus=""
@@ -96,15 +97,15 @@ describe('<TemplateInstance />', () => {
 
   describe('generic template instances', () => {
     it('enables the VSAC controls if not logged in', () => {
-      const { getByText } = renderComponent({ vsacApiKey: null });
+      renderComponent({ vsacApiKey: null });
 
-      expect(getByText('Authenticate VSAC')).not.toHaveAttribute('disabled');
+      expect(screen.getByRole('button', { name: 'Authenticate VSAC' })).not.toBeDisabled();
     });
 
     it('disables the VSAC controls if logged in', () => {
-      const { getByText } = renderComponent();
+      renderComponent();
 
-      expect(getByText('VSAC Authenticated')).toHaveAttribute('disabled');
+      expect(screen.getByRole('button', { name: 'VSAC Authenticated' })).toBeDisabled();
     });
 
     it('can view value set details from template instance without editing', () => {
@@ -120,10 +121,9 @@ describe('<TemplateInstance />', () => {
       const { valueSets } = vsacField;
       const editInstance = jest.fn();
 
-      const { container } = renderComponent({ editInstance });
+      renderComponent({ editInstance });
 
-      const deleteValueSetIcon = container.querySelector('#delete-valueset');
-      fireEvent.click(deleteValueSetIcon);
+      userEvent.click(screen.getByRole('button', { name: 'delete value set VS' }));
 
       expect(editInstance).toHaveBeenCalledWith(
         'MeetsInclusionCriteria',
@@ -138,10 +138,9 @@ describe('<TemplateInstance />', () => {
       const { codes } = vsacField;
       const editInstance = jest.fn();
 
-      const { container } = renderComponent({ editInstance });
+      renderComponent({ editInstance });
 
-      const deleteCodeIcon = container.querySelector('#delete-code');
-      fireEvent.click(deleteCodeIcon);
+      userEvent.click(screen.getByRole('button', { name: 'delete code TestName (123-4)' }));
 
       expect(editInstance).toHaveBeenCalledWith(
         'MeetsInclusionCriteria',
@@ -204,32 +203,31 @@ describe('<TemplateInstance />', () => {
     });
 
     it('cannot add modifiers that change the return type if in use in the artifact', () => {
-      const { container, getByText, getByLabelText } = renderBaseElementComponent();
+      renderBaseElementComponent();
 
-      fireEvent.click(getByLabelText('add expression'));
+      userEvent.click(screen.getByRole('button', { name: 'Add expression' }));
 
-      expect(getByText('Limited expressions displayed because return type cannot change while in use.')).toBeDefined();
+      expect(
+        screen.getByText('Limited expressions displayed because return type cannot change while in use.')
+      ).toBeInTheDocument();
 
-      const modifierOptions = [...container.querySelectorAll('.modifier__button')].map((node) =>
-        node.textContent.trim()
-      );
-      expect(modifierOptions).toEqual(['Verified', 'With Unit', 'Look Back']);
+      expect(document.querySelectorAll('.modifier-select-button')).toHaveLength(3);
+      expect(screen.getByRole('button', { name: 'Verified' })).toBeInTheDocument();
+      expect(screen.getByRole('button', { name: 'With Unit' })).toBeInTheDocument();
+      expect(screen.getByRole('button', { name: 'Look Back' })).toBeInTheDocument();
     });
 
     it('displays all modifiers when not in use', () => {
-      const { container, getByLabelText } = renderBaseElementComponent({
+      renderBaseElementComponent({
         templateInstance: {
           ...baseElementTemplateInstance,
           usedBy: []
         }
       });
 
-      fireEvent.click(getByLabelText('add expression'));
+      userEvent.click(screen.getByRole('button', { name: 'Add expression' }));
 
-      const modifierOptions = [...container.querySelectorAll('.modifier__button')].map((node) =>
-        node.textContent.trim()
-      );
-      expect(modifierOptions).toEqual([
+      [
         'Verified',
         'With Unit',
         'Highest Observation Value',
@@ -238,7 +236,10 @@ describe('<TemplateInstance />', () => {
         'Count',
         'Exists',
         'Is (Not) Null?'
-      ]);
+      ].forEach(name => {
+        expect(screen.getByRole('button', { name })).toBeInTheDocument();
+      });
+      expect(document.querySelectorAll('.modifier-select-button')).toHaveLength(8);
     });
 
     it('cannot remove modifiers that change the return type if in use in the artifact', () => {
@@ -393,12 +394,10 @@ describe('<TemplateInstance />', () => {
       expect(container.querySelector('#base-element-list')).toHaveTextContent('Base Element:B');
 
       // The topmost base element's type
-      expect(container.querySelector('.card-element__heading .label')).toHaveTextContent('Observation');
+      expect(container.querySelector('.card-element__heading')).toHaveTextContent('Observation');
 
       // Only the current elements expressions are listed
-      expect(container.querySelector('.applied-modifiers__info-expressions .modifier__list')).toHaveTextContent(
-        'Exists'
-      );
+      expect(document.getElementById('applied-modifiers')).toHaveTextContent('Expressions:Exists');
 
       // All expressions and VS included in the phrase
       expect(container.querySelector('.expression-logic')).toHaveTextContent(
@@ -461,14 +460,16 @@ describe('<TemplateInstance />', () => {
     });
 
     it('cannot add modifiers that change return type when in use', () => {
-      const { getByLabelText, getByText } = renderComponent({
+      renderComponent({
         disableAddElement: true,
         templateInstance: templateWithModifiersInstance
       });
 
-      fireEvent.click(getByLabelText('add expression'));
+      userEvent.click(screen.getByRole('button', { name: 'Add expression' }));
 
-      expect(getByText('Limited expressions displayed because return type cannot change while in use.')).toBeDefined();
+      expect(
+        screen.getByText('Limited expressions displayed because return type cannot change while in use.')
+      ).toBeInTheDocument();
     });
 
     it('cannot be deleted when list in use', () => {

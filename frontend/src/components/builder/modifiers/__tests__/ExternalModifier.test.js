@@ -1,6 +1,6 @@
 import React from 'react';
+import { render } from 'utils/test-utils';
 import ExternalModifier from '../ExternalModifier';
-import { render } from '../../../../utils/test-utils';
 
 jest.mock('../../editors/Editor', () => () => <div>Editor</div>);
 
@@ -11,7 +11,7 @@ describe('<ExternalModifier />', () => {
         index={0}
         name="external"
         value={[]}
-        arguments={[]}
+        modifierArguments={[]}
         argumentTypes={[]}
         updateAppliedModifier={jest.fn()}
         vsacApiKey={'key'}
@@ -34,7 +34,7 @@ describe('<ExternalModifier />', () => {
 
   it('renders no editors when there is only one argument and argumentType', () => {
     const { queryByText } = renderComponent({
-      arguments: [{ name: 'first' }],
+      modifierArguments: [{ name: 'first' }],
       argumentTypes: [{ calculated: 'boolean' }]
     });
 
@@ -43,7 +43,7 @@ describe('<ExternalModifier />', () => {
 
   it('renders one editor when there are two arguments', () => {
     const { getByText } = renderComponent({
-      arguments: [{ name: 'first' }, { name: 'second' }],
+      modifierArguments: [{ name: 'first' }, { name: 'second' }],
       argumentTypes: [{ calculated: 'decimal' }, { calculated: 'integer' }]
     });
 
@@ -53,7 +53,7 @@ describe('<ExternalModifier />', () => {
   it('renders n-1 editors when there are n arguments', () => {
     // Test with five arguments to verify four editors are present
     const { getAllByText } = renderComponent({
-      arguments: [
+      modifierArguments: [
         { name: 'first' },
         { name: 'second' },
         { name: 'third' },

@@ -1,6 +1,6 @@
 import React from 'react';
+import { render, userEvent, screen, waitFor } from 'utils/test-utils';
 import DateTimeModifier from '../DateTimeModifier';
-import { render, fireEvent } from '../../../../utils/test-utils';
 
 describe('<DateTimeModifier />', () => {
   const renderComponent = (props = {}) =>
@@ -15,24 +15,28 @@ describe('<DateTimeModifier />', () => {
       />
     );
 
-  it('calls updateAppliedModifier on input change', () => {
+  it('calls updateAppliedModifier on input change', async () => {
     const updateAppliedModifier = jest.fn();
-    const { container } = renderComponent({ updateAppliedModifier });
+    renderComponent({ updateAppliedModifier });
 
-    fireEvent.focus(container.querySelector('.react-datepicker-wrapper input'));
-    fireEvent.click(container.querySelector('.react-datepicker__day--today'));
+    userEvent.click(screen.getByRole('button', { name: 'change date' }));
+    userEvent.click(screen.getByRole('button', { name: 'OK' }));
+
+    await waitFor(() => {
+      expect(screen.queryByRole('button', { name: 'OK' })).toBeNull();
+    });
 
     expect(updateAppliedModifier).toBeCalledWith(6, {
       date: expect.stringMatching(/^@\d{4}-\d{2}-\d{2}$/),
-      time: ''
+      time: null
     });
 
-    fireEvent.click(container.querySelector('.rc-time-picker-input'));
-    fireEvent.click(document.querySelector('.rc-time-picker-panel-select-option-selected'));
+    userEvent.click(screen.getByRole('button', { name: 'change time' }));
+    userEvent.click(screen.getByRole('button', { name: 'OK' }));
 
     expect(updateAppliedModifier).toBeCalledWith(6, {
-      date: '',
+      date: null,
       time: expect.stringMatching(/^T\d{2}:\d{2}:\d{2}$/)
     });
-  });
+  }, 30000);
 });

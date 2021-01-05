@@ -395,7 +395,7 @@ export default class PatientTable extends Component {
 
           <Button
             color="primary"
-            disabled={!loggedIn || !this.props.vsacApiKey || this.state.patientsToExecute.length === 0}
+            disabled={!loggedIn || this.state.patientsToExecute.length === 0}
             onClick={() => this.openExecuteCQLModal()}
             variant="contained"
           >

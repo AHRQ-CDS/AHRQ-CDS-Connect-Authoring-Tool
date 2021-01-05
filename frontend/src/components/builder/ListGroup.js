@@ -337,6 +337,7 @@ export default class ListGroup extends Component {
           vsacDetailsCodes={this.props.vsacDetailsCodes}
           vsacDetailsCodesError={this.props.vsacDetailsCodesError}
           vsacApiKey={this.props.vsacApiKey}
+          vsacIsAuthenticating={this.props.vsacIsAuthenticating}
           isValidatingCode={this.props.isValidatingCode}
           isValidCode={this.props.isValidCode}
           codeData={this.props.codeData}
@@ -523,6 +524,7 @@ ListGroup.propTypes = {
   vsacDetailsCodes: PropTypes.array.isRequired,
   vsacDetailsCodesError: PropTypes.string.isRequired,
   vsacApiKey: PropTypes.string,
+  vsacIsAuthenticating: PropTypes.bool.isRequired,
   isValidatingCode: PropTypes.bool.isRequired,
   isValidCode: PropTypes.bool,
   codeData: PropTypes.object,

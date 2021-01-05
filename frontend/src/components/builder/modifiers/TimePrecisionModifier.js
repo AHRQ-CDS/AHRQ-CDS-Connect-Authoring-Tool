@@ -17,15 +17,15 @@ export default class TimePrecisionModifier extends Component {
     if (newValue && Number.isNaN(newValue.valueOf())) return;
 
     const { index, precision, time, updateAppliedModifier } = this.props;
-    const newTime = inputType === 'time' ? (newValue ? `T${format(newValue, 'HH:mm:ss')}` : null) : time || null;
+    const newTime = inputType === 'time' ? (newValue ? `@T${format(newValue, 'HH:mm:ss')}` : null) : time || null;
     const newPrecision = inputType === 'precision' ? newValue : precision;
 
     updateAppliedModifier(index, { time: newTime, precision: newPrecision });
   };
 
   render() {
-    const { name, precision, time } = this.props;
-    const timeValue = time ? parse(time.replace(/^T/, ''), 'HH:mm:ss', new Date()) : null;
+    const { name, precision, time, index } = this.props;
+    const timeValue = time ? parse(time.replace(/^@?T/, ''), 'HH:mm:ss', new Date()) : null;
 
     return (
       <div className="modifier time-precision-modifier">
@@ -51,6 +51,7 @@ export default class TimePrecisionModifier extends Component {
             onChange={event => this.handleChange(event.target.value, 'precision')}
             options={options}
             value={precision}
+            id={`time-precision-modifier-precision-${index}`}
           />
         </div>
       </div>

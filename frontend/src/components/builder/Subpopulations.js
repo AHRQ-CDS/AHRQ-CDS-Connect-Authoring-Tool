@@ -114,6 +114,7 @@ export default class Subpopulations extends Component {
             codeData={this.props.codeData}
             validateCode={this.props.validateCode}
             resetCodeValidation={this.props.resetCodeValidation}
+            vsacIsAuthenticating={this.props.vsacIsAuthenticating}
           />
         ))}
 
@@ -163,5 +164,6 @@ Subpopulations.propTypes = {
   isRetrievingDetails: PropTypes.bool.isRequired,
   vsacDetailsCodes: PropTypes.array.isRequired,
   vsacDetailsCodesError: PropTypes.string.isRequired,
-  validateReturnType: PropTypes.bool
+  validateReturnType: PropTypes.bool,
+  vsacIsAuthenticating: PropTypes.bool.isRequired
 };

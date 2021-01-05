@@ -101,7 +101,8 @@ export default class Parameter extends Component {
       isValidCode: this.props.isValidCode,
       codeData: this.props.codeData,
       validateCode: this.props.validateCode,
-      resetCodeValidation: this.props.resetCodeValidation
+      resetCodeValidation: this.props.resetCodeValidation,
+      vsacIsAuthenticating: this.props.vsacIsAuthenticating
     };
 
     return <Editor {...editorProps} />;
@@ -342,5 +343,6 @@ Parameter.propTypes = {
   codeData: PropTypes.object,
   validateCode: PropTypes.func.isRequired,
   resetCodeValidation: PropTypes.func.isRequired,
-  getAllInstancesInAllTrees: PropTypes.func.isRequired
+  getAllInstancesInAllTrees: PropTypes.func.isRequired,
+  vsacIsAuthenticating: PropTypes.bool.isRequired
 };

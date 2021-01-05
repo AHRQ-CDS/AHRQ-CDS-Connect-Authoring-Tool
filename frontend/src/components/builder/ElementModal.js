@@ -215,6 +215,7 @@ export default class ElementModal extends Component {
     <IconButton
       aria-label="back"
       color="primary"
+      onClick={this.backToSearchResults}
     >
       <ArrowBackIosIcon fontSize="small" />
     </IconButton>
@@ -279,7 +280,7 @@ export default class ElementModal extends Component {
             />
 
             {!viewOnly && !selectedElement &&
-              <Button color="primary" onClick={this.searchVSAC} variant="contained">
+              <Button type="submit" color="primary" variant="contained">
                 Search
               </Button>
             }

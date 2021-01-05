@@ -460,12 +460,12 @@ export default class ElementSelect extends Component {
               onChange={this.onElementSelected}
               options={elementOptionsToDisplay}
               value={selectedElementValue}
-              message={disableAddElement && (
+              message={disableAddElement ? (
                 <>
                   <FontAwesomeIcon icon={faBan} className="element-select__option-icon" />
                   Cannot add element when Base Element List in use
                 </>
-              )}
+              ) : null}
               renderItem={option => <ElementOption option={option} />}
               Footer={
                 <>

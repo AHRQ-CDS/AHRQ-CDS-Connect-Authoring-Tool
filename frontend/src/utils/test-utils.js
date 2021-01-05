@@ -1,13 +1,18 @@
-/* eslint-disable import/no-extraneous-dependencies */
 import React from 'react';
 import { Provider } from 'react-redux';
-import { render } from '@testing-library/react'; // eslint-disable-line import/no-extraneous-dependencies
+import { render } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
+import { MuiPickersUtilsProvider } from '@material-ui/pickers';
+import DateFnsUtils from '@date-io/date-fns';
 import configureStore from '../store/configureStore';
 
 const ProviderWrapper = ({ children }) => (
   <MemoryRouter>
-    <Provider store={configureStore()}>{children}</Provider>
+    <Provider store={configureStore()}>
+      <MuiPickersUtilsProvider utils={DateFnsUtils}>
+        {children}
+      </MuiPickersUtilsProvider>
+    </Provider>
   </MemoryRouter>
 );
 

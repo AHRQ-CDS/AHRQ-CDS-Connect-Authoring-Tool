@@ -12,8 +12,8 @@ import Builder from '../Builder';
 const modifierMap = _.keyBy(localModifiers, 'id');
 const modifiersByInputType = {};
 
-localModifiers.forEach((modifier) => {
-  modifier.inputTypes.forEach((inputType) => {
+localModifiers.forEach(modifier => {
+  modifier.inputTypes.forEach(inputType => {
     modifiersByInputType[inputType] = (modifiersByInputType[inputType] || []).concat(modifier);
   });
 });
@@ -34,7 +34,7 @@ const defaultState = {
   }
 };
 
-const createMockStore = (state) => {
+const createMockStore = state => {
   const store = reduxCreateMockStore(state);
   const { dispatch } = store;
 
@@ -46,9 +46,9 @@ const createMockStore = (state) => {
   return store;
 };
 
-const expandAction = (action) => {
+const expandAction = action => {
   let args;
-  action((actionArgs) => (args = actionArgs));
+  action(actionArgs => (args = actionArgs));
   return args;
 };
 
@@ -105,9 +105,9 @@ describe('<Builder />', () => {
 
   it('can edit a template instance', () => {
     const store = createMockStore(defaultState);
-    const { getByLabelText } = renderComponent({ store });
+    renderComponent({ store });
 
-    fireEvent.change(getByLabelText('Age Range'), {
+    fireEvent.change(document.querySelector('input[type=text]'), {
       target: { value: '30 to 45' }
     });
 
@@ -135,12 +135,12 @@ describe('<Builder />', () => {
 
   it("can update an instance's modifiers", () => {
     const store = createMockStore(defaultState);
-    const { getAllByLabelText, getByText } = renderComponent({
+    renderComponent({
       store
     });
 
-    fireEvent.click(getAllByLabelText('add expression')[0]);
-    fireEvent.click(getByText('Is (Not) Null?'));
+    userEvent.click(screen.getAllByRole('button', { name: 'Add expression' })[0]);
+    userEvent.click(screen.getByRole('button', { name: 'Is (Not) Null?' }));
 
     const updateAction = expandAction(_.last(store.getActions()));
     const [instance] = updateAction.artifact.expTreeInclude.childInstances;

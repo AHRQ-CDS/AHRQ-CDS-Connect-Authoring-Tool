@@ -226,6 +226,7 @@ export default class CodeSelectModal extends Component {
           <div className="code-select-modal__search">
             <TextField
               fullWidth
+              id="select-code-code"
               label="Code"
               onChange={this.handleSearchValueChange}
               value={codeText}
@@ -247,6 +248,7 @@ export default class CodeSelectModal extends Component {
             <div className="code-select-modal__search-other-system">
               <TextField
                 fullWidth
+                id="select-code-system-url"
                 label="System canonical URL"
                 onChange={this.handleOtherCodeSystemChange}
                 value={codeSystemText}

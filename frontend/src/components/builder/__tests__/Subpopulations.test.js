@@ -1,8 +1,8 @@
 import React from 'react';
+import { render, fireEvent, userEvent, screen } from 'utils/test-utils';
+import { createTemplateInstance } from 'utils/test_helpers';
+import { elementGroups } from 'utils/test_fixtures';
 import Subpopulations from '../Subpopulations';
-import { render, fireEvent } from '../../../utils/test-utils';
-import { createTemplateInstance } from '../../../utils/test_helpers';
-import { elementGroups } from '../../../utils/test_fixtures';
 
 const subpopulation = {
   id: 'And',
@@ -62,6 +62,7 @@ describe('<Subpopulations />', () => {
         validateCode={jest.fn()}
         vsacDetailsCodes={[]}
         vsacDetailsCodesError=""
+        vsacIsAuthenticating={false}
         vsacSearchCount={0}
         vsacSearchResults={[]}
         vsacStatus=""
@@ -88,9 +89,9 @@ describe('<Subpopulations />', () => {
 
   it('can add subpopulations', () => {
     const updateSubpopulations = jest.fn();
-    const { getByLabelText } = renderComponent({ updateSubpopulations });
+    renderComponent({ updateSubpopulations });
 
-    fireEvent.click(getByLabelText('New subpopulation'));
+    userEvent.click(screen.getByRole('button', { name: 'New subpopulation' }));
 
     expect(updateSubpopulations).toHaveBeenCalledWith(
       [
@@ -109,7 +110,7 @@ describe('<Subpopulations />', () => {
     const checkSubpopulationUsage = jest.fn().mockReturnValueOnce(false);
     const updateSubpopulations = jest.fn();
 
-    const { getByLabelText } = renderComponent({
+    renderComponent({
       artifact: {
         subpopulations: [specialSubpop, subpopulation]
       },
@@ -117,19 +118,16 @@ describe('<Subpopulations />', () => {
       updateSubpopulations
     });
 
-    fireEvent.click(getByLabelText('Remove subpopulation'));
+    userEvent.click(screen.getByRole('button', { name: 'remove subpopulation' }));
 
-    expect(updateSubpopulations).toHaveBeenCalledWith(
-      [specialSubpop],
-      'subpopulations'
-    );
+    expect(updateSubpopulations).toHaveBeenCalledWith([specialSubpop], 'subpopulations');
   });
 
-  it('can\'t delete subpopulation in use', () => {
+  it("can't delete subpopulation in use", () => {
     const checkSubpopulationUsage = jest.fn().mockReturnValueOnce(true);
     const updateSubpopulations = jest.fn();
 
-    const { getByLabelText } = renderComponent({
+    renderComponent({
       artifact: {
         subpopulations: [specialSubpop, subpopulation]
       },
@@ -137,9 +135,10 @@ describe('<Subpopulations />', () => {
       updateSubpopulations
     });
 
-    fireEvent.click(getByLabelText('Remove subpopulation'));
+    userEvent.click(screen.getByRole('button', { name: 'remove subpopulation' }));
 
     expect(updateSubpopulations).not.toHaveBeenCalled();
+    expect(window.alert).toHaveBeenCalledWith('Subpopulation in use');
   });
 
   it('can update a subpopulation name', () => {
@@ -147,7 +146,7 @@ describe('<Subpopulations />', () => {
     const updateRecsSubpop = jest.fn();
     const updateSubpopulations = jest.fn();
 
-    const { getByLabelText } = renderComponent({
+    renderComponent({
       artifact: {
         subpopulations: [specialSubpop, subpopulation]
       },
@@ -155,7 +154,7 @@ describe('<Subpopulations />', () => {
       updateSubpopulations
     });
 
-    fireEvent.change(getByLabelText('Subpopulation'), { target: { value: newSubpopName }});
+    fireEvent.change(document.querySelector('input[type=text]'), { target: { value: newSubpopName } });
 
     expect(updateSubpopulations).toHaveBeenCalledWith(
       [

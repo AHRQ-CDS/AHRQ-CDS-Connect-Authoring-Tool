@@ -32,6 +32,7 @@ const ValueSetField = ({ field, updateInstance }) => {
         value={valueSets.length > 0 && field.value ? field.value.id : ''}
         valueKey="id"
         labelKey="name"
+        id={field.id}
       />
     </div>
   );

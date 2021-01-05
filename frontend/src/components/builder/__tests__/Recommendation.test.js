@@ -48,19 +48,19 @@ describe('<Recommendation />', () => {
   it('displays the recommendation text', () => {
     renderComponent();
 
-    expect(screen.getByLabelText('Recommendation')).toHaveValue('recommendation text');
+    expect(screen.getByPlaceholderText('Describe your recommendation')).toHaveValue('recommendation text');
   });
 
   it('displays the rationale text', () => {
     renderComponent();
 
-    expect(screen.getByLabelText('Rationale')).toHaveValue('rationale text');
+    expect(screen.getByPlaceholderText('Describe the rationale for your recommendation')).toHaveValue('rationale text');
   });
 
   it('displays the comment text', () => {
     renderComponent();
 
-    expect(screen.getByLabelText('Comment')).toHaveValue('comment text');
+    expect(screen.getByPlaceholderText('Add an optional comment')).toHaveValue('comment text');
   });
 
   it('displays the adds rationale button when there is no rationale', () => {
@@ -71,11 +71,11 @@ describe('<Recommendation />', () => {
       }
     });
 
-    expect(screen.queryByLabelText('Rationale')).not.toBeInTheDocument();
+    expect(screen.queryByPlaceholderText('Describe the rationale for your recommendation')).not.toBeInTheDocument();
 
-    userEvent.click(screen.getByLabelText('Add rationale'));
+    userEvent.click(screen.getByRole('button', { name: 'Add rationale' }));
 
-    expect(screen.getByLabelText('Rationale')).toBeInTheDocument();
+    expect(screen.getByPlaceholderText('Describe the rationale for your recommendation')).toBeInTheDocument();
   });
 
   it('displays comment input after clicking show comments', () => {
@@ -86,11 +86,11 @@ describe('<Recommendation />', () => {
       }
     });
 
-    expect(screen.queryByLabelText('Comment')).not.toBeInTheDocument();
+    expect(screen.queryByPlaceholderText('Add an optional comment')).not.toBeInTheDocument();
 
-    userEvent.click(screen.getByLabelText('Add Comments'));
+    userEvent.click(screen.getByRole('button', { name: 'Add comments' }));
 
-    expect(screen.getByLabelText('Comment')).toBeInTheDocument();
+    expect(screen.getByPlaceholderText('Add an optional comment')).toBeInTheDocument();
   });
 
   it('can edit recommendation text', () => {
@@ -98,7 +98,9 @@ describe('<Recommendation />', () => {
     const onUpdate = jest.fn();
     renderComponent({ onUpdate });
 
-    fireEvent.change(screen.getByLabelText('Recommendation'), { target: { name: 'text', value: newText } });
+    fireEvent.change(screen.getByPlaceholderText('Describe your recommendation'), {
+      target: { name: 'text', value: newText }
+    });
 
     expect(onUpdate).toBeCalledWith(rec.uid, { text: newText });
   });
@@ -109,9 +111,24 @@ describe('<Recommendation />', () => {
 
     renderComponent({ onUpdate });
 
-    fireEvent.change(screen.getByLabelText('Rationale'), { target: { name: 'rationale', value: newText } });
+    fireEvent.change(screen.getByPlaceholderText('Describe the rationale for your recommendation'), {
+      target: { name: 'rationale', value: newText }
+    });
 
     expect(onUpdate).toBeCalledWith(rec.uid, { rationale: newText });
+  });
+
+  it('can edit comment text', () => {
+    const newText = 'This is a test comment.';
+    const onUpdate = jest.fn();
+
+    renderComponent({ onUpdate });
+
+    fireEvent.change(screen.getByPlaceholderText('Add an optional comment'), {
+      target: { name: 'comment', value: newText }
+    });
+
+    expect(onUpdate).toBeCalledWith(rec.uid, { comment: newText });
   });
 
   it('can remove rationale', () => {
@@ -123,17 +140,6 @@ describe('<Recommendation />', () => {
     userEvent.click(screen.getByLabelText('remove rationale'));
 
     expect(onUpdate).toBeCalledWith(rec.uid, { rationale: newText });
-  });
-
-  it('can edit comment text', () => {
-    const newText = 'This is a test comment.';
-    const onUpdate = jest.fn();
-
-    renderComponent({ onUpdate });
-
-    fireEvent.change(screen.getByLabelText('Comment'), { target: { name: 'comment', value: newText } });
-
-    expect(onUpdate).toBeCalledWith(rec.uid, { comment: newText });
   });
 
   it('can remove a comment', () => {
@@ -164,7 +170,7 @@ describe('<Recommendation />', () => {
 
     expect(container.querySelectorAll('.recommendation__subpopulations')).toHaveLength(0);
 
-    userEvent.click(screen.getByLabelText('Add subpopulation'));
+    userEvent.click(screen.getByRole('button', { name: 'Add subpopulation' }));
 
     expect(container.querySelectorAll('.recommendation__subpopulations')).toHaveLength(1);
   });
@@ -192,9 +198,9 @@ describe('<Recommendation />', () => {
       updateRecommendations
     });
 
-    userEvent.click(screen.getByLabelText('Add subpopulation'));
-    userEvent.click(screen.getByLabelText('Add a subpopulation'));
-    userEvent.click(screen.getByText('Test Subpopulation 1'));
+    userEvent.click(screen.getByRole('button', { name: 'Add subpopulation' }));
+    userEvent.click(screen.getByRole('button', { name: /Add a subpopulation/ }));
+    userEvent.click(screen.getByRole('option', { name: 'Test Subpopulation 1' }));
 
     expect(updateRecommendations).toBeCalledWith([rec]);
   });
@@ -203,7 +209,7 @@ describe('<Recommendation />', () => {
     const updateRecommendations = jest.fn();
     renderComponent({ updateRecommendations });
 
-    userEvent.click(screen.getByLabelText('Remove Test Subpopulation 1'));
+    userEvent.click(screen.getByRole('button', { name: 'remove Test Subpopulation 1' }));
 
     expect(updateRecommendations).toBeCalledWith([
       {
@@ -217,7 +223,7 @@ describe('<Recommendation />', () => {
     const setActiveTab = jest.fn();
     renderComponent({ setActiveTab });
 
-    userEvent.click(screen.getByLabelText('New subpopulation'));
+    userEvent.click(screen.getByRole('button', { name: 'New subpopulation' }));
 
     expect(setActiveTab).toBeCalledWith(2);
   });
@@ -242,9 +248,9 @@ describe('<Recommendation />', () => {
       updateRecommendations
     });
 
-    userEvent.click(screen.getByLabelText('Add subpopulation'));
-    userEvent.click(screen.getByLabelText('Add a subpopulation'));
-    userEvent.click(screen.getByText('Test Subpopulation 1'));
+    userEvent.click(screen.getByRole('button', { name: 'Add subpopulation' }));
+    userEvent.click(screen.getByRole('button', { name: /Add a subpopulation/ }));
+    userEvent.click(screen.getByRole('option', { name: 'Test Subpopulation 1' }));
 
     expect(updateRecommendations).toHaveBeenCalledWith([
       {

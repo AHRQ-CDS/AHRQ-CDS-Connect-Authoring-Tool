@@ -14,7 +14,7 @@ export default class QuantityModifier extends Component {
   };
 
   render() {
-    const { name, unit, value } = this.props;
+    const { name, unit, value, index } = this.props;
 
     return (
       <div className="modifier quantity-modifier">
@@ -27,6 +27,7 @@ export default class QuantityModifier extends Component {
           onChange={event => this.handleChange(event.target.value, 'quantity')}
           value={(value || value === 0) ? value : ''}
           variant="outlined"
+          id={`quantity-modifier-${index}`}
         />
 
         <div className="field-input field-input-lg">

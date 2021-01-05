@@ -1,7 +1,6 @@
-import React, { memo, useState, useCallback, useMemo } from 'react';
+import React, { memo, useState, useCallback } from 'react';
 import { Checkbox, FormControlLabel } from '@material-ui/core';
 import { KeyboardDatePicker } from '@material-ui/pickers';
-import { format } from 'date-fns';
 import { useField, useFormikContext } from 'formik';
 import clsx from 'clsx';
 
@@ -22,7 +21,6 @@ export default memo(function DateField({
   const [field, , { setValue }] = useField(fieldName);
   const { value } = field;
   const { values } = useFormikContext();
-  const currentDateValue = useMemo(() => value ? format(value, 'yyyy-MM-dd') : null, [value]);
 
   const toggleSelectNoDate = useCallback(() => {
     setValue(null);
@@ -31,14 +29,15 @@ export default memo(function DateField({
 
   return (
     <div className="field date-field">
-      {label &&
+      {label && (
         <label htmlFor={fieldName} className="field-label">
           {label}
-          {isCpgField &&
+          {isCpgField && (
             <span className={clsx('cpg-tag', isCpgComplete(name, values) && 'cpg-tag-complete')}>CPG</span>
-          }:
+          )}
+          :
         </label>
-      }
+      )}
 
       <div className="field-input">
         <KeyboardDatePicker
@@ -50,26 +49,20 @@ export default memo(function DateField({
           margin="normal"
           onChange={value => setValue(value)}
           placeholder="mm/dd/yyyy"
-          value={currentDateValue}
+          value={value}
         />
 
         {helperText && <div className="helper-text">{helperText}</div>}
       </div>
 
-      {noDateOption &&
+      {noDateOption && (
         <div className="field-checkbox">
           <FormControlLabel
-            control={
-              <Checkbox
-                checked={noDateSelected}
-                color="primary"
-                onChange={toggleSelectNoDate}
-              />
-            }
+            control={<Checkbox checked={noDateSelected} color="primary" onChange={toggleSelectNoDate} />}
             label={noDateText}
           />
         </div>
-      }
+      )}
     </div>
   );
 });

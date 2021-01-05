@@ -402,6 +402,7 @@ export default class ConjunctionGroup extends Component {
               resetCodeValidation={this.props.resetCodeValidation}
               disableAddElement={this.props.disableAddElement}
               elementUniqueId={this.props.elementUniqueId}
+              vsacIsAuthenticating={this.props.vsacIsAuthenticating}
             />
 
             {this.renderConjunctionSelect(i)}
