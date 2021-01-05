@@ -18,6 +18,14 @@
     display: block;
     text-align: center;
     font-style: italic;
+
+    .breadcrumb {
+      align-items: center;
+
+      .warning {
+        margin-right: 10px;
+      }
+    }
   }
 
   .execution-loading {
@@ -28,6 +36,10 @@
 
 .patient-table {
   margin-top: 40px;
+
+  &__modal .parameters div.editor-label {
+    text-align: left;
+  }
 
   &__buttons {
     display: flex;
@@ -121,4 +133,12 @@ tbody td.patients__tablecell-tiny {
 
 .select-label {
   margin-bottom: 5px;
+}
+
+.patient-version-modal__options {
+  margin-top: 10px;
+
+  button {
+    margin-right: 10px;
+  }
 }

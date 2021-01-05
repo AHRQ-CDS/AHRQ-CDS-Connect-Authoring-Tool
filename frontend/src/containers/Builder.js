@@ -472,15 +472,15 @@ export class Builder extends Component {
               onClose={this.handleCloseDownloadMenu}
               open={Boolean(downloadMenuAnchorElement)}
             >
-              <MenuItem onClick={() => this.downloadOptionSelected(disableDSTU2, '1.0.2')}>
+              <MenuItem disabled={disableDSTU2} onClick={() => this.downloadOptionSelected(disableDSTU2, '1.0.2')}>
                 FHIR<sup>®</sup> DSTU2
               </MenuItem>
 
-              <MenuItem onClick={() => this.downloadOptionSelected(disableSTU3, '3.0.0')}>
+              <MenuItem disabled={disableSTU3} onClick={() => this.downloadOptionSelected(disableSTU3, '3.0.0')}>
                 FHIR<sup>®</sup> STU3
               </MenuItem>
 
-              <MenuItem onClick={() => this.downloadOptionSelected(disableR4, '4.0.0')}>
+              <MenuItem disabled={disableR4} onClick={() => this.downloadOptionSelected(disableR4, '4.0.0')}>
                 FHIR<sup>®</sup> R4
               </MenuItem>
             </Menu>

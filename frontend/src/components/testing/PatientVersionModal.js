@@ -9,7 +9,7 @@ class PatientVersionModal extends Component {
     const { closeModal, isOpen, patientData, selectVersion } = this.props;
 
     return (
-      <div className="element-modal">
+      <div className="patient-version-modal">
         <Modal
           title="Select a FHIR Version"
           handleShowModal={isOpen}
@@ -18,12 +18,12 @@ class PatientVersionModal extends Component {
           hasCancelButton
           hideSubmitButton
         >
-          <main className="modal__body">
-            <div className="element-modal modal__content">
+          <main className="patient-version-modal__body">
+            <div className="patient-version-modal__content">
               Please select the FHIR version of this patient from the options below.
             </div>
 
-            <div className="modal__options">
+            <div className="patient-version-modal__options">
               <Button color="primary" onClick={() => selectVersion(patientData, 'R4')} variant="contained">
                 R4
               </Button>
