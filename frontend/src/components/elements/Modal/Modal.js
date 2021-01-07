@@ -1,8 +1,17 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { ThemeProvider } from '@material-ui/core/styles';
+import {
+  Button,
+  CircularProgress,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  IconButton,
+  Typography
+} from '@material-ui/core';
 import CloseIcon from '@material-ui/icons/Close';
-import { Button, Dialog, DialogActions, DialogContent, DialogTitle, IconButton, Typography } from '@material-ui/core';
 
 import { lightTheme, darkTheme } from 'styles/theme';
 import useStyles from './styles';
@@ -14,9 +23,11 @@ const Modal = ({
   handleSaveModal,
   handleShowModal,
   hasCancelButton = false,
+  hasEnterKeySubmit = true,
   hasTitleIcon = false,
   Header,
   hideSubmitButton = false,
+  isLoading = false,
   maxWidth = 'lg',
   submitButtonText = 'Save',
   submitDisabled = false,
@@ -28,16 +39,26 @@ const Modal = ({
   let modalTheme = lightTheme;
   if (theme === 'dark') modalTheme = darkTheme;
 
+  const enterKeyCheck = (func, argument, event) => {
+    if (!event || event.type !== 'keydown' || event.key !== 'Enter') return;
+    event.preventDefault();
+    if (argument) { func(argument); } else { func(); }
+  };
+
   return (
     <ThemeProvider theme={modalTheme}>
-      <Dialog open={handleShowModal} onClose={handleCloseModal} fullWidth maxWidth={maxWidth}>
+      <Dialog
+        fullWidth
+        maxWidth={maxWidth}
+        onClose={handleCloseModal}
+        onKeyDown={hasEnterKeySubmit ? e => enterKeyCheck(handleSaveModal, null, e) : null}
+        open={handleShowModal}
+      >
         <DialogTitle disableTypography>
           <Typography variant="body1">{title}</Typography>
 
           <div>
-            <div className={styles.titleIcon}>
-              {hasTitleIcon && TitleIcon}
-            </div>
+            <div className={styles.titleIcon}>{hasTitleIcon && TitleIcon}</div>
 
             <IconButton aria-label="close" className={styles.closeButton} onClick={handleCloseModal}>
               <CloseIcon />
@@ -51,25 +72,26 @@ const Modal = ({
         <DialogActions>
           {Footer || <div></div>}
 
-          <div>
+          <div className={styles.footerButtons}>
             {hasCancelButton && (
-              <Button className={styles.cancelButton} onClick={handleCloseModal} type="button" variant="text">
+              <Button className={styles.cancelButton} onClick={handleCloseModal} variant="text">
                 Cancel
               </Button>
             )}
 
-            {!hideSubmitButton &&
+            {!hideSubmitButton && (
               <Button
-                color={theme === 'dark' ? 'secondary' : 'primary'}
+                color={theme === 'dark' ? 'default' : 'primary'}
+                disabled={submitDisabled || isLoading}
                 form="modal-form"
                 onClick={handleSaveModal}
+                startIcon={isLoading && <CircularProgress size={20} />}
                 type="submit"
                 variant="contained"
-                disabled={submitDisabled}
               >
                 {submitButtonText}
               </Button>
-            }
+            )}
           </div>
         </DialogActions>
       </Dialog>
@@ -79,14 +101,16 @@ const Modal = ({
 
 Modal.propTypes = {
   children: PropTypes.element.isRequired,
-  Footer: PropTypes.element,
+  Footer: PropTypes.oneOfType([ PropTypes.element, PropTypes.bool ]),
   handleCloseModal: PropTypes.func.isRequired,
   handleSaveModal: PropTypes.func.isRequired,
   handleShowModal: PropTypes.bool.isRequired,
-  hasTitleIcon: PropTypes.bool,
   hasCancelButton: PropTypes.bool,
+  hasEnterKeySubmit: PropTypes.bool,
+  hasTitleIcon: PropTypes.bool,
   Header: PropTypes.element,
   hideSubmitButton: PropTypes.bool,
+  isLoading: PropTypes.bool,
   maxWidth: PropTypes.string,
   submitButtonText: PropTypes.string,
   submitDisabled: PropTypes.bool,

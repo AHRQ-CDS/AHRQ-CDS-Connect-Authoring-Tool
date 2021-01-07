@@ -1,13 +1,12 @@
 import React, { memo, useCallback, useEffect, useRef, useState } from 'react';
 import { unstable_batchedUpdates as batch } from 'react-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faExclamationTriangle, faSpinner, faCheck, faCheckCircle } from '@fortawesome/free-solid-svg-icons';
+import { Button, CircularProgress } from '@material-ui/core';
+import { Alert } from '@material-ui/lab';
 import { useField } from 'formik';
 
-import TextField from './TextField';
-import SelectField from './SelectField';
-import { validateCode, resetCodeValidation } from '../../actions/vsac';
+import { TextField, SelectField } from '.';
+import { validateCode, resetCodeValidation } from 'actions/vsac';
 
 const codeSystemOptions = [
   { value: 'SNOMED', label: 'SNOMED', id: 'http://snomed.info/sct' },
@@ -39,49 +38,37 @@ const FastValidateVSACCode = memo(({
   isMissingInput
 }) => {
   return (
-    <div className="validate-vsac-code">
-      <div className="validate-vsac-code__form">
-        <TextField name={codeFieldName} label="Code" />
+    <div className="field-group validate-vsac-code">
+      <TextField name={codeFieldName} label="Code" />
+      <SelectField name={systemFieldName} label="System" options={codeSystemOptions}/>
 
-        <SelectField
-          name={systemFieldName}
-          label="System"
-          options={codeSystemOptions}
-        />
+      {isValid === false &&
+        <Alert className="field" severity="warning">Unable to validate code and/or code system.</Alert>
+      }
 
-        {isValid === false &&
-          <div className="form__group flex-col-1">
-            <label className="label" htmlFor="code-invalid">{''}</label>
-            <div id="code-invalid">
-              <FontAwesomeIcon icon={faExclamationTriangle} /> Unable to validate code and/or code system.
-            </div>
-          </div>
-        }
-
-        {!validatedCode &&
-          <button
-            type="button"
-            className="primary-button pull-right"
-            onClick={handleValidateCode}
-            aria-label="Authenticate VSAC"
+      {!validatedCode &&
+        <div className="field-group-button">
+          <Button
+            color="primary"
             disabled={isValidating || isMissingInput}
+            onClick={handleValidateCode}
+            startIcon={isValidating && <CircularProgress size={20} />}
+            variant="contained"
           >
-            {(!isValid && !isValidating) && <>Validate</>}
-            {isValidating && <><FontAwesomeIcon icon={faSpinner} spin /> Validate</>}
-            {(isValid && validatedCode) && <><FontAwesomeIcon icon={faCheck} /> Validated</>}
-          </button>
-        }
+            Validate
+          </Button>
+        </div>
+      }
 
-        {isValid && validatedCode &&
-          <div className="form__group flex-col-1">
-            <label className="label" htmlFor="code-display">Display:</label>
-            <div id="code-display">
-              {validatedCode.display}
-              <span className="validated-text"><FontAwesomeIcon icon={faCheckCircle} /> Validated</span>
-            </div>
+      {isValid && validatedCode &&
+        <div className="field">
+          <label className="field-label" htmlFor="code-display">Display:</label>
+          <div id="code-display">
+            {validatedCode.display}
+            <Alert severity="success">Validated</Alert>
           </div>
-        }
-      </div>
+        </div>
+      }
     </div>
   );
 });

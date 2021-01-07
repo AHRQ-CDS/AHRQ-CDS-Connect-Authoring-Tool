@@ -1,21 +1,8 @@
 import React from 'react';
+import { fireEvent, render, screen, within } from 'utils/test-utils';
 import WithUnit from '../WithUnit';
-import { render, fireEvent } from '../../../../utils/test-utils';
 
 describe('<WithUnit />', () => {
-  let origDef = null;
-  beforeEach(() => {
-    origDef = window.Def;
-    window.Def = {
-      Autocompleter: {
-        Search: jest.fn()
-      }
-    };
-  });
-  afterEach(() => {
-    window.Def = origDef;
-  });
-
   const renderComponent = (props = {}) =>
     render(
       <WithUnit
@@ -29,10 +16,16 @@ describe('<WithUnit />', () => {
 
   it('calls updateAppliedModifier when selection changes', () => {
     const updateAppliedModifier = jest.fn();
-    const { getByLabelText } = renderComponent({ updateAppliedModifier });
+    renderComponent({ updateAppliedModifier });
 
-    fireEvent.change(getByLabelText('With Unit'), { target: { value: 'mg/dL' } });
+    const autocomplete = screen.getByRole('combobox');
+    const input = within(autocomplete).getByRole('textbox');
 
-    expect(updateAppliedModifier).toBeCalledWith(5, { unit: 'mg/dL' });
+    autocomplete.focus();
+    fireEvent.change(input, { target: { value: 'mg/dL' } });
+    fireEvent.keyDown(autocomplete, { key: 'ArrowDown' });
+    fireEvent.keyDown(autocomplete, { key: 'Enter' });
+
+    expect(input.value).toEqual('mg/dL');
   });
 });

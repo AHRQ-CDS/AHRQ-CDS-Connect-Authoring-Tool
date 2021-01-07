@@ -1,6 +1,6 @@
 import React from 'react';
+import { screen, render, fireEvent } from 'utils/test-utils';
 import StringModifier from '../StringModifier';
-import { render, fireEvent } from '../../../../utils/test-utils';
 
 describe('<StringModifier />', () => {
   const renderComponent = (props = {}) =>
@@ -16,9 +16,9 @@ describe('<StringModifier />', () => {
 
   it('calls updateAppliedModifier on input change', () => {
     const updateAppliedModifier = jest.fn();
-    const { getByLabelText } = renderComponent({ updateAppliedModifier });
+    renderComponent({ updateAppliedModifier });
 
-    fireEvent.change(getByLabelText('String Modifier'), { target: { value: 'test' } });
+    fireEvent.change(screen.getByRole('textbox'), { target: { value: 'test' } });
 
     expect(updateAppliedModifier).toBeCalledWith(6, { value: 'test' });
   });

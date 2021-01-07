@@ -18,8 +18,9 @@ class SelectModifier extends Component {
     const selectOptions = options.map(option => ({ value: option.name, label: option.description }));
 
     return (
-      <div className="modifier-dropdown-wide">
+      <div className="modifier">
         <Dropdown
+          className="field-input field-input-xl"
           id={selectId}
           label={name}
           onChange={event => this.handleChange(event, selectOptions)}

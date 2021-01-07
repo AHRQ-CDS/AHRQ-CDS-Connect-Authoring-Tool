@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
+import { Alert } from '@material-ui/lab';
 
 import { loginUser, logoutUser, setAuthStatus, getCurrentUser } from 'actions/auth';
 import setErrorMessage from 'actions/errors';
@@ -25,19 +26,17 @@ class App extends Component {
   renderedErrorMessage() {
     const { errorMessage } = this.props;
     if (errorMessage === '') { return null; }
+
     return (
-      <div className="error-message">
+      <Alert severity="error" onClose={this.handleDismissClick}>
         {errorMessage}
-        <button className="close" aria-label="Close" onClick={this.handleDismissClick}>
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
+      </Alert>
     );
   }
 
   render() {
     const {
-      children, isAuthenticated, authUser, authStatus, authStatusText, artifactSaved
+      artifactSaved, authStatus, authStatusText, authUser, children, isAuthenticated, isAuthenticating
     } = this.props;
 
     return (
@@ -48,6 +47,7 @@ class App extends Component {
 
         <CdsHeader
           isAuthenticated={isAuthenticated}
+          isAuthenticating={isAuthenticating}
           authUser={authUser}
           authStatus={authStatus}
           authStatusText={authStatusText}
@@ -70,12 +70,13 @@ class App extends Component {
 }
 
 App.propTypes = {
-  isAuthenticated: PropTypes.bool.isRequired,
-  authUser: PropTypes.string,
+  artifactSaved: PropTypes.bool.isRequired,
   authStatus: PropTypes.string,
   authStatusText: PropTypes.string,
-  artifactSaved: PropTypes.bool.isRequired,
+  authUser: PropTypes.string,
   getCurrentUser: PropTypes.func.isRequired,
+  isAuthenticated: PropTypes.bool.isRequired,
+  isAuthenticating: PropTypes.bool.isRequired,
   loginUser: PropTypes.func.isRequired,
   logoutUser: PropTypes.func.isRequired,
   setAuthStatus: PropTypes.func.isRequired
@@ -95,12 +96,13 @@ function mapDispatchToProps(dispatch) {
 // these props come from the application's state when it is started
 function mapStateToProps(state) {
   return {
-    isAuthenticated: state.auth.isAuthenticated,
-    authUser: state.auth.username,
+    artifactSaved: state.artifacts.artifactSaved,
     authStatus: state.auth.authStatus,
     authStatusText: state.auth.authStatusText,
+    authUser: state.auth.username,
     errorMessage: state.errors.errorMessage,
-    artifactSaved: state.artifacts.artifactSaved
+    isAuthenticated: state.auth.isAuthenticated,
+    isAuthenticating: state.auth.isAuthenticating
   };
 }
 

@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import update from 'immutability-helper';
+import { Button } from '@material-ui/core';
 
 import Recommendation from './Recommendation';
 import { Modal }  from 'components/elements';
@@ -129,13 +130,9 @@ export default class Recommendations extends Component {
           </div>
         ))}
 
-        <button
-          className="button primary-button"
-          aria-label="New recommendation"
-          onClick={this.addRecommendation}
-        >
+        <Button color="primary" onClick={this.addRecommendation} variant="contained">
           New recommendation
-        </button>
+        </Button>
       {this.renderConfirmDeleteModal()}
       </div>
     );

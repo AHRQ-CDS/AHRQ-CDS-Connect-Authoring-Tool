@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import { Button } from '@material-ui/core';
 import _ from 'lodash';
 
 import { Dropdown } from 'components/elements';
@@ -209,44 +210,41 @@ export default class ErrorStatement extends Component {
   // Renders button to manage then or nested if
   renderNestingButton = (statement, index) => (
     <div className="error-statement__action">
-      <button
+      <Button
+        color="primary"
         disabled={!statement.condition.value}
-        aria-disabled={!statement.condition.value}
-        aria-label={
-            this.props.errorStatement.statements[index].useThenClause ?
-                'And Also If...' : '(Remove nested statements)'
-        }
-        className={`button primary-button ${statement.condition.value ? '' : 'disabled'}`}
-        onClick={e => this.handleUseThenClause(index)}>
-        {this.props.errorStatement.statements[index].useThenClause ? 'And Also If...' : '(Remove nested statements)'}
-      </button>
+        onClick={() => this.handleUseThenClause(index)}
+        variant="contained"
+      >
+        {this.props.errorStatement.statements[index].useThenClause ? 'And Also If...' : 'Remove nested statements'}
+      </Button>
     </div>
   )
 
   // Renders button to add if else statements
-  renderAddIfButton = (parent) => {
-    const disabled = !this.props.errorStatement.statements.every(s => s.condition.label);
-
-    return (
-      <div className="error-statement__action">
-        <button
-          disabled={disabled}
-          aria-disabled={disabled}
-          aria-label="Or Else If"
-          className="button primary-button"
-          onClick={e => this.addStatement(parent)}>Or Else If...</button>
-      </div>
-    );
-  }
+  renderAddIfButton = parent => (
+    <div className="error-statement__action">
+      <Button
+        color="primary"
+        disabled={!this.props.errorStatement.statements.every(s => s.condition.label)}
+        onClick={() => this.addStatement(parent)}
+        variant="contained"
+      >
+        Or Else If...
+      </Button>
+    </div>
+  );
 
   // Renders delete if/then button
   renderDeleteButton = (parent, index) => (
     <div className="error-statement__action">
-      <button
-        className="button primary-button"
-        aria-label="Delete If Clause"
-        onClick={e => this.deleteStatement(parent, index)}>Delete If Clause
-      </button>
+      <Button
+        color="primary"
+        onClick={() => this.deleteStatement(parent, index)}
+        variant="contained"
+      >
+        Delete If Clause
+      </Button>
     </div>
   )
 

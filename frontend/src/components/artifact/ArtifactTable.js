@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faPencilAlt, faTimes } from '@fortawesome/free-solid-svg-icons';
+import { Button } from '@material-ui/core';
+import { Delete as DeleteIcon, Edit as EditIcon } from '@material-ui/icons';
 
 import renderDate from 'utils/dates';
 import { sortMostRecent } from 'utils/sort';
@@ -96,18 +96,24 @@ export default class ArtifactTable extends Component {
 
       <td data-th="Updated">{renderDate(artifact.updatedAt)}</td>
 
-      <td data-th="">
-        <button aria-label="Edit"
-          className="primary-button edit-artifact-button"
-          onClick={() => this.openArtifactModal(artifact)}>
-          <FontAwesomeIcon icon={faPencilAlt} /> Edit Info
-        </button>
+      <td data-th="" className="artifacts__tablecell-buttons">
+        <Button
+          color="primary"
+          onClick={() => this.openArtifactModal(artifact)}
+          startIcon={<EditIcon />}
+          variant="contained"
+        >
+          Edit Info
+        </Button>
 
-        <button aria-label="Delete"
-          className="danger-button"
-          onClick={() => this.openConfirmDeleteModal(artifact)}>
-          <FontAwesomeIcon icon={faTimes} /> Delete
-        </button>
+        <Button
+          color="secondary"
+          onClick={() => this.openConfirmDeleteModal(artifact)}
+          startIcon={<DeleteIcon />}
+          variant="contained"
+        >
+          Delete
+        </Button>
       </td>
     </tr>
   );

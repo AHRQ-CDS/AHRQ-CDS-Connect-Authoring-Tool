@@ -44,42 +44,6 @@ label { margin-bottom: 0; }
   text-align: right;
 }
 
-.button-style,
-#{$all-buttons},
-#{$all-text-inputs} {
-  font-size: 1rem;
-  padding: 0 0.75em;
-  border-radius: $border-radius;
-  height: 50px;
-
-  @media (min-width: 600px) and (max-width: 1439px) { height: 36px; }
-
-  @media (max-width: 599px) { height: 36px; }
-}
-
-.button-style,
-#{$all-buttons} {
-  @include button($default-button-text-color, $default-button-bg-color);
-
-  & + #{$all-buttons} {
-    // add margin between two buttons that are side by side!
-    margin-left: 0.25em;
-  }
-
-  &:hover {
-    cursor: pointer;
-  }
-}
-
-#{$all-buttons-hover} {
-  cursor: pointer;
-}
-
-#{$all-text-inputs} {
-  border: $border-global;
-  box-shadow: $box-shadow-inset;
-}
-
 table {
   border-collapse: collapse;
 
@@ -202,4 +166,8 @@ h6 {
 
 .is-position-relative {
   position: relative;
+}
+
+.has-comment svg {
+  color: $blue-light;
 }

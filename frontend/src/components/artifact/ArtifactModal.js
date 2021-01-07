@@ -1,17 +1,29 @@
 import React, { memo, useState, useCallback, useEffect, useMemo, useRef } from 'react';
 import { Formik, Form, useFormikContext } from 'formik';
 import { useDispatch } from 'react-redux';
+import { Button } from '@material-ui/core';
 import classnames from 'classnames';
+import { parseISO, formatISO } from 'date-fns';
 
-import { Modal }  from 'components/elements';
+import { Modal } from 'components/elements';
 import { TextField } from 'components/fields';
 import { addArtifact, updateAndSaveArtifact } from 'actions/artifacts';
 import cpgFields, { versionHelperText, cpgScoreHelperText } from './cpgFields';
 import { stripContextFields, getCpgCompleteCount } from 'utils/fields';
 
-function getInitialValue(artifactEditing, valueName, defaultValue, transformer = (x) => x) {
+function getInitialValue(artifactEditing, valueName, defaultValue, transformer = x => x) {
   if (!artifactEditing || artifactEditing[valueName] == null) return defaultValue;
   return transformer(artifactEditing[valueName]);
+}
+
+function stringToDateTransform(value) {
+  if (value == null) return value;
+  return parseISO(value);
+}
+
+function dateToStringTransform(value) {
+  if (value == null) return value;
+  return formatISO(value);
 }
 
 const useInitialValues = artifactEditing =>
@@ -22,15 +34,20 @@ const useInitialValues = artifactEditing =>
       description: getInitialValue(artifactEditing, 'description', ''),
       url: getInitialValue(artifactEditing, 'url', ''),
       status: getInitialValue(artifactEditing, 'status', null),
-      experimental: getInitialValue(artifactEditing, 'experimental', null, (value) => `${value}`),
+      experimental: getInitialValue(artifactEditing, 'experimental', null, value => `${value}`),
       publisher: getInitialValue(artifactEditing, 'publisher', ''),
       context: getInitialValue(artifactEditing, 'context', []),
       purpose: getInitialValue(artifactEditing, 'purpose', ''),
       usage: getInitialValue(artifactEditing, 'usage', ''),
       copyright: getInitialValue(artifactEditing, 'copyright', ''),
-      approvalDate: getInitialValue(artifactEditing, 'approvalDate', null),
-      lastReviewDate: getInitialValue(artifactEditing, 'lastReviewDate', null),
-      effectivePeriod: getInitialValue(artifactEditing, 'effectivePeriod', { start: null, end: null }),
+      approvalDate: getInitialValue(artifactEditing, 'approvalDate', null, stringToDateTransform),
+      lastReviewDate: getInitialValue(artifactEditing, 'lastReviewDate', null, stringToDateTransform),
+      effectivePeriod: getInitialValue(
+        artifactEditing,
+        'effectivePeriod',
+        { start: null, end: null },
+        ({ start, end }) => ({ start: stringToDateTransform(start), end: stringToDateTransform(end) })
+      ),
       topic: getInitialValue(artifactEditing, 'topic', []),
       author: getInitialValue(artifactEditing, 'author', []),
       reviewer: getInitialValue(artifactEditing, 'reviewer', []),
@@ -44,7 +61,7 @@ const ArtifactModalForm = memo(({ setSubmitDisabled }) => {
   const [openForm, setOpenForm] = useState(false);
   const { values, isValid } = useFormikContext();
   const { cpgTotalCount, cpgCompleteCount } = getCpgCompleteCount(values);
-  const cpgPercentage = Math.floor(cpgCompleteCount / cpgTotalCount * 100);
+  const cpgPercentage = Math.floor((cpgCompleteCount / cpgTotalCount) * 100);
 
   const toggleForm = useCallback(() => {
     setOpenForm(isOpen => !isOpen);
@@ -54,18 +71,18 @@ const ArtifactModalForm = memo(({ setSubmitDisabled }) => {
 
   return (
     <Form className="artifact-form">
-      <TextField name="name" label="Artifact Name" required={true} helperText="*Required." />
+      <TextField name="name" label="Artifact Name" required={true} />
       <TextField name="version" label="Version" helperText={versionHelperText} />
 
-      <div className="cpg-score form__group">
-        <label className="field-label" htmlFor="cpg-score">CPG Score:</label>
+      <div className="cpg-score field">
+        <label className="field-label" htmlFor="cpg-score">
+          CPG Score:
+        </label>
 
-        <div id="cpg-score" className="input__group">
+        <div id="cpg-score" className="field-input">
           <div className="cpg-percentage">
             <div className="cpg-percentage-complete" style={{ width: `${cpgPercentage}%` }}>
-              <div className={classnames('cpg-percentage-label', cpgPercentage === 0 && 'zero')}>
-                {cpgPercentage}%
-              </div>
+              <div className={classnames('cpg-percentage-label', cpgPercentage === 0 && 'zero')}>{cpgPercentage}%</div>
             </div>
           </div>
 
@@ -73,19 +90,17 @@ const ArtifactModalForm = memo(({ setSubmitDisabled }) => {
         </div>
       </div>
 
-      <button
-        className="cpg-button primary-button"
-        onClick={toggleForm}
-        aria-label="open cpg form"
-        type="button"
-      >
-        {openForm ? 'Hide CPG Fields' : 'Show CPG Fields'}
-      </button>
+      <div className="cpg-button">
+        <Button color="primary" onClick={toggleForm} variant="contained">
+          {openForm ? 'Hide CPG Fields' : 'Show CPG Fields'}
+        </Button>
+      </div>
 
-      {openForm && cpgFields.map(field => {
-        const FormComponent = field.component;
-        return <FormComponent key={field.name} isCpgField {...field} />;
-      })}
+      {openForm &&
+        cpgFields.map(field => {
+          const FormComponent = field.component;
+          return <FormComponent key={field.name} isCpgField {...field} />;
+        })}
     </Form>
   );
 });
@@ -110,6 +125,12 @@ export default function ArtifactModal({ artifactEditing, showModal, closeModal }
     values => {
       const newValues = {
         ...values,
+        approvalDate: dateToStringTransform(values.approvalDate),
+        lastReviewDate: dateToStringTransform(values.lastReviewDate),
+        effectivePeriod: {
+          start: dateToStringTransform(values.effectivePeriod.start),
+          end: dateToStringTransform(values.effectivePeriod.end)
+        },
         context: stripContextFields(values.context)
       };
 
@@ -127,12 +148,13 @@ export default function ArtifactModal({ artifactEditing, showModal, closeModal }
   return (
     <div className="element-modal">
       <Modal
-        title={artifactEditing ? 'Edit Artifact Details' : 'Create New Artifact'}
-        submitButtonText={artifactEditing ? 'Save' : 'Create'}
-        submitDisabled={submitDisabled}
-        handleShowModal={showModal}
         handleCloseModal={closeModal}
         handleSaveModal={handleSaveModal}
+        handleShowModal={showModal}
+        maxWidth="xl"
+        submitButtonText={artifactEditing ? 'Save' : 'Create'}
+        submitDisabled={submitDisabled}
+        title={artifactEditing ? 'Edit Artifact Details' : 'Create New Artifact'}
       >
         <Formik
           innerRef={formRef}

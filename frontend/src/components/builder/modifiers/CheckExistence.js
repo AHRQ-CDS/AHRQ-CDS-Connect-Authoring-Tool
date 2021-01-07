@@ -19,10 +19,11 @@ export default class CheckExistence extends Component {
     const { value } = this.props;
 
     return (
-      <div className="modifier-dropdown input">
+      <div className="modifier">
         <Dropdown
+          className="field-input field-input-lg"
           id="check-existence"
-          label="check existence"
+          label="Check existence"
           onChange={this.handleChange}
           options={options}
           value={value}

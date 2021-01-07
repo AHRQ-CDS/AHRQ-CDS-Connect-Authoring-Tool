@@ -18,26 +18,25 @@ import IntervalOfQuantityEditor from './IntervalOfQuantityEditor';
 export default class Editor extends Component {
   render() {
     const genericProps = _.pick(this.props, [
-      'id',
+      'label',
       'name',
       'type',
-      'label',
-      'value',
       'updateInstance',
-      'condenseUI'
+      'value'
     ]);
 
     const codeEditorProps = _.pick(this.props, [
-      'vsacApiKey',
-      'loginVSACUser',
-      'setVSACAuthStatus',
-      'vsacStatus',
-      'vsacStatusText',
+      'codeData',
       'isValidatingCode',
       'isValidCode',
-      'codeData',
+      'loginVSACUser',
+      'resetCodeValidation',
+      'setVSACAuthStatus',
       'validateCode',
-      'resetCodeValidation'
+      'vsacApiKey',
+      'vsacIsAuthenticating',
+      'vsacStatus',
+      'vsacStatusText'
     ]);
 
     switch (this.props.type) {
@@ -74,27 +73,22 @@ export default class Editor extends Component {
 }
 
 Editor.propTypes = {
-  id: PropTypes.string.isRequired,
-  name: PropTypes.string,
-  label: PropTypes.string.isRequired,
-  type: PropTypes.string.isRequired,
-  value: PropTypes.any,
-  updateInstance: PropTypes.func.isRequired,
-  isConcept: PropTypes.bool,
+  codeData: PropTypes.object,
   disableEditing: PropTypes.bool,
-  vsacApiKey: PropTypes.string,
-  loginVSACUser: PropTypes.func.isRequired,
-  setVSACAuthStatus: PropTypes.func.isRequired,
-  vsacStatus: PropTypes.string,
-  vsacStatusText: PropTypes.string,
+  isConcept: PropTypes.bool,
   isValidatingCode: PropTypes.bool.isRequired,
   isValidCode: PropTypes.bool,
-  codeData: PropTypes.object,
-  validateCode: PropTypes.func.isRequired,
+  label: PropTypes.string.isRequired,
+  loginVSACUser: PropTypes.func.isRequired,
+  name: PropTypes.string,
   resetCodeValidation: PropTypes.func.isRequired,
-  condenseUI: PropTypes.bool
-};
-
-Editor.defaultProps = {
-  condenseUI: false
+  setVSACAuthStatus: PropTypes.func.isRequired,
+  type: PropTypes.string.isRequired,
+  updateInstance: PropTypes.func.isRequired,
+  validateCode: PropTypes.func.isRequired,
+  value: PropTypes.any,
+  vsacApiKey: PropTypes.string,
+  vsacIsAuthenticating: PropTypes.bool,
+  vsacStatus: PropTypes.string,
+  vsacStatusText: PropTypes.string,
 };

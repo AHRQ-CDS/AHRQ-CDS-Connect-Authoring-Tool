@@ -1,53 +1,37 @@
-import React, { Component } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
-import _ from 'lodash';
+import { TextField } from '@material-ui/core';
+import clsx from 'clsx';
 
-/**
- * props are from a templateInstance field object,
- * and a function called UpdateInstance that takes an object with
- * key-value pairs that represents that state of the templateInstance
- */
-export default class StringField extends Component {
-  render() {
-    const { id, name, value, updateInstance } = this.props;
-    const formId = _.uniqueId('field-');
+import { useFlexStyles } from 'styles/hooks';
+import useStyles from './styles';
 
-    return (
-      <div className="field string-field">
-        <div className="form__group">
-          <label htmlFor={formId}>
-            <div className="label">{name}:</div>
+const StringField = ({ disabled, id, name, updateInstance, value }) => {
+  const styles = useStyles();
+  const flexStyles = useFlexStyles();
 
-            <div className="input">
-              <input
-                id={formId}
-                type="text"
-                name={id}
-                value={value || ''}
-                disabled={this.props.disabled}
-                className={this.props.disabled ? 'input disabled' : 'input'}
-                aria-label={name}
-                onKeyPress={(event) => {
-                  if (event.which === 34) { // Quotation mark (")
-                    event.preventDefault();
-                  }
-                }}
-                onChange={(event) => {
-                  updateInstance({ [event.target.name]: event.target.value });
-                }}
-              />
-            </div>
-          </label>
-        </div>
-      </div>
-    );
-  }
-}
+  return (
+    <div className={clsx('string-field', styles.field)}>
+      <div className={styles.fieldLabel}>{name}:</div>
+
+      <TextField
+        className={clsx(styles.fieldInput, flexStyles.flex1)}
+        disabled={disabled}
+        fullWidth
+        onChange={event => updateInstance({ [id]: event.target.value })}
+        value={value || ''}
+        variant="outlined"
+      />
+    </div>
+  );
+};
 
 StringField.propTypes = {
+  disabled: PropTypes.bool,
   id: PropTypes.string.isRequired,
   name: PropTypes.string.isRequired,
-  value: PropTypes.string,
-  disabled: PropTypes.bool,
-  updateInstance: PropTypes.func.isRequired
+  updateInstance: PropTypes.func.isRequired,
+  value: PropTypes.string
 };
+
+export default StringField;

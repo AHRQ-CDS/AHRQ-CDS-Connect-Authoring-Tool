@@ -1,65 +1,41 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import _ from 'lodash';
+import { TextField } from '@material-ui/core';
 
-/* eslint-disable jsx-a11y/no-onchange */
+import UcumField from 'components/builder/fields/UcumField';
+
 export default class QuantityModifier extends Component {
-  componentDidMount = () => {
-    new window.Def.Autocompleter.Search( // eslint-disable-line no-new
-      this.props.uniqueId,
-      'https://clin-table-search.lhc.nlm.nih.gov/api/ucum/v3/search',
-      { tableFormat: true, valueCols: [0], colHeaders: ['Code', 'Name'] }
-    );
-  }
+  handleChange = (newValue, inputType) => {
+    const { index, unit, updateAppliedModifier, value } = this.props;
+    const newQuantity = inputType === 'quantity' ? parseFloat(newValue) : value || '';
+    const newUnit = inputType === 'unit' ? newValue || '' : unit || '';
+
+    updateAppliedModifier(index, { value: newQuantity, unit: newUnit });
+  };
 
   render() {
-    const { value } = this.props;
-    const valueId = _.uniqueId('value-');
-    const unitId = _.uniqueId('unit-');
+    const { name, unit, value, index } = this.props;
 
     return (
-      /* eslint-disable jsx-a11y/label-has-for */
-      <div className="quantity-modifier">
-        <label>
-          {`${this.props.name}: `}
-        </label>
+      <div className="modifier quantity-modifier">
+        <div className="modifier-text">{name}:</div>
 
-        <span>  </span>
+        <TextField
+          className="field-input field-input-sm"
+          fullWidth
+          label="Value"
+          onChange={event => this.handleChange(event.target.value, 'quantity')}
+          value={(value || value === 0) ? value : ''}
+          variant="outlined"
+          id={`quantity-modifier-${index}`}
+        />
 
-        <label htmlFor={valueId}>
-          <input
-            type="number"
-            className="quantity-modifier-value"
-            placeholder="enter value"
-            aria-label="Quantity Modifier Value"
-            value={(value || value === 0) ? value : ''}
-            onChange={(event) => {
-              this.props.updateAppliedModifier(
-                this.props.index,
-                { value: _.isNaN(parseFloat(event.target.value)) ? null : parseFloat(event.target.value) }
-              );
-            }}
-            onSelect={(event) => {
-              this.props.updateAppliedModifier(
-                this.props.index,
-                { value: _.isNaN(parseFloat(event.target.value)) ? null : parseFloat(event.target.value) }
-              );
-            }}
+        <div className="field-input field-input-lg">
+          <UcumField
+            handleChangeUnit={(event, option) => this.handleChange(option?.value, 'unit')}
+            unit={unit || ''}
           />
-        </label>
-
-        <label htmlFor={unitId}>
-          <input
-            type="text"
-            id={this.props.uniqueId}
-            className="quantity-modifier-unit"
-            placeholder="enter unit"
-            aria-label="Quantity Modifier Unit"
-            value={this.props.unit || ''}
-            onChange={(event) => { this.props.updateAppliedModifier(this.props.index, { unit: event.target.value }); }}
-            onSelect={(event) => { this.props.updateAppliedModifier(this.props.index, { unit: event.target.value }); }}
-          />
-        </label>
+        </div>
       </div>
     );
   }
@@ -67,7 +43,6 @@ export default class QuantityModifier extends Component {
 
 QuantityModifier.propTypes = {
   index: PropTypes.number.isRequired,
-  uniqueId: PropTypes.string.isRequired,
   name: PropTypes.string.isRequired,
   value: PropTypes.number,
   unit: PropTypes.string,

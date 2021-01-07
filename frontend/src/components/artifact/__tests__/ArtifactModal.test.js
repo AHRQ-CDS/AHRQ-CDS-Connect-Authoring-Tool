@@ -1,4 +1,5 @@
 import React from 'react';
+import { formatISO } from 'date-fns';
 import { addArtifact, updateAndSaveArtifact } from 'actions/artifacts';
 import { render, screen, fireEvent, userEvent, waitFor, within, act } from 'utils/test-utils';
 import ArtifactModal from '../ArtifactModal';
@@ -119,17 +120,18 @@ describe('<ArtifactModal />', () => {
         fireEvent.change(dialog.getByLabelText(/Purpose/), { target: { value: 'NewArtifactPurpose' } });
         fireEvent.change(dialog.getByLabelText(/Usage/), { target: { value: 'NewArtifactUsage' } });
         fireEvent.change(dialog.getByLabelText(/Copyright/), { target: { value: 'NewArtifactCopyright' } });
-        fireEvent.change(dialog.getByLabelText(/Approval Date/), { target: { value: '01/01/2000' } });
-        fireEvent.change(dialog.getByLabelText(/Last Review Date/), { target: { value: '01/02/2000' } });
 
-        fireEvent.change(document.querySelector('input[name="effectivePeriod.start"]'), {
+        const [approvalDate, lastReviewDate, effectivePeriodStart, effectivePeriodEnd] = dialog.getAllByPlaceholderText(
+          'mm/dd/yyyy'
+        );
+
+        fireEvent.change(approvalDate, { target: { value: '01/01/2000' } });
+        fireEvent.change(lastReviewDate, { target: { value: '01/02/2000' } });
+
+        fireEvent.change(effectivePeriodStart, {
           target: { value: '01032000' }
         });
-        await waitForInputValueChange(
-          document.querySelector('input[name="effectivePeriod.end"]'),
-          '01042000',
-          '01/04/2000'
-        );
+        await waitForInputValueChange(effectivePeriodEnd, '01042000', '01/04/2000');
       });
 
       userEvent.click(dialog.getAllByLabelText('Select...')[0]); // status
@@ -209,9 +211,9 @@ describe('<ArtifactModal />', () => {
         usage: 'NewArtifactUsage',
         copyright: 'NewArtifactCopyright',
         // Format dates using this approach so tests pass regardless of the TZ they are run in
-        approvalDate: new Date(2000, 0, 1).toISOString(),
-        lastReviewDate: new Date(2000, 0, 2).toISOString(),
-        effectivePeriod: { start: new Date(2000, 0, 3).toISOString(), end: new Date(2000, 0, 4).toISOString() },
+        approvalDate: formatISO(new Date(2000, 0, 1)),
+        lastReviewDate: formatISO(new Date(2000, 0, 2)),
+        effectivePeriod: { start: formatISO(new Date(2000, 0, 3)), end: formatISO(new Date(2000, 0, 4)) },
         topic: [],
         author: [{ author: 'NewArtifactAuthor' }],
         reviewer: [{ reviewer: 'NewArtifactReviewer' }],

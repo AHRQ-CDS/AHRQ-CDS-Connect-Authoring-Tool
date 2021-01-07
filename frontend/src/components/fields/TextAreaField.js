@@ -1,10 +1,26 @@
 import React, { memo, useMemo } from 'react';
 import { FastField, useFormikContext } from 'formik';
-import classnames from 'classnames';
+import { TextField as MuiTextField } from '@material-ui/core';
+import clsx from 'clsx';
 
-import { isCpgComplete } from '../../utils/fields';
+import { isCpgComplete } from 'utils/fields';
 
 let labelUuid = 0;
+
+const MuiFastField = ({ field: { name, value, onChange, onBlur }, form: { touched, errors }, ...props }) => (
+  <MuiTextField
+    error={touched[name] && Boolean(errors[name])}
+    fullWidth
+    helperText={touched[name] && errors[name]}
+    multiline
+    name={name}
+    onBlur={onBlur}
+    onChange={onChange}
+    value={value}
+    variant="outlined"
+    {...props}
+  />
+);
 
 export default memo(function TextAreaField({
   name,
@@ -24,18 +40,23 @@ export default memo(function TextAreaField({
   }, [label]);
   
   return (
-    <div className={classnames('form__group', `flex-col-${colSize}`)}>
+    <div className="field text-area-field">
       {label &&
-        <label htmlFor={labelId} className={classnames('field-label', helperText && 'has-helper-text')}>
+        <label htmlFor={labelId} className={clsx('field-label', helperText && 'has-helper-text')}>
           {label}
           {isCpgField &&
-            <span className={classnames('cpg-tag', isCpgComplete(name, values) && 'cpg-tag-complete')}>CPG</span>
+            <span className={clsx('cpg-tag', isCpgComplete(name, values) && 'cpg-tag-complete')}>CPG</span>
           }:
         </label>
       }
 
-      <div className="input__group">
-        <FastField id={labelId} as="textarea" name={fieldName} placeholder={placeholder} />
+      <div className="field-input field-input-full-width">
+        <FastField
+          component={MuiFastField}
+          id={labelId}
+          name={fieldName}
+          placeholder={placeholder}
+        />
 
         {helperText && <div className="helper-text">{helperText}</div>}
       </div>

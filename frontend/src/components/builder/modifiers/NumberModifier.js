@@ -1,42 +1,28 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import _ from 'lodash';
+import { TextField } from '@material-ui/core';
 
-/* eslint-disable jsx-a11y/no-onchange */
 export default class NumberModifier extends Component {
+  handleChange = newValue => {
+    const { index, updateAppliedModifier } = this.props;
+    updateAppliedModifier(index, { value: parseFloat(newValue) });
+  };
+
   render() {
-    const { value } = this.props;
-    const valueId = _.uniqueId('value-');
+    const { name, value } = this.props;
 
     return (
-      /* eslint-disable jsx-a11y/label-has-for */
-      <div className="number-modifier">
-        <label>
-          {`${this.props.name}: `}
-        </label>
+      <div className="modifier number-modifier">
+        <div className="modifier-text">{name}:</div>
 
-        <span>  </span>
-
-        <label htmlFor={valueId}>
-          <input
-            type="number"
-            placeholder="enter value"
-            aria-label="Number Modifier"
-            value={(value || value === 0) ? value : ''}
-            onChange={(event) => {
-              this.props.updateAppliedModifier(
-                this.props.index,
-                { value: _.isNaN(parseFloat(event.target.value)) ? null : parseFloat(event.target.value) }
-              );
-            }}
-            onSelect={(event) => {
-              this.props.updateAppliedModifier(
-                this.props.index,
-                { value: _.isNaN(parseFloat(event.target.value)) ? null : parseFloat(event.target.value) }
-              );
-            }}
-          />
-        </label>
+        <TextField
+          className="field-input field-input-sm"
+          fullWidth
+          label="Value"
+          onChange={event => this.handleChange(event.target.value)}
+          value={(value || value === 0) ? value : ''}
+          variant="outlined"
+        />
       </div>
     );
   }

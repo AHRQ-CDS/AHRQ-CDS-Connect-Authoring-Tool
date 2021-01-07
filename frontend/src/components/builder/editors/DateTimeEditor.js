@@ -1,121 +1,83 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import moment from 'moment';
-import DatePicker from 'react-datepicker';
-import TimePicker from 'rc-time-picker';
-import classnames from 'classnames';
-import _ from 'lodash';
+import { KeyboardDatePicker, KeyboardTimePicker } from '@material-ui/pickers';
+import { Schedule as TimeIcon } from '@material-ui/icons';
+import { format, parse } from 'date-fns';
 
 export default class DateTimeEditor extends Component {
   constructor(props) {
     super(props);
 
-    const date = _.get(props, 'value.date', null);
-    const time = _.get(props, 'value.time', null);
+    const date = props.value?.date || null;
+    const time = props.value?.time || null;
 
     this.state = {
-      showInputWarning: (time && !date)
+      showInputWarning: time && !date
     };
   }
 
-  assignValue(evt, name) {
-    let date = null;
-    let time = null;
-    let str = null;
+  handleChange = (newValue, inputType) => {
+    if (newValue && Number.isNaN(newValue.valueOf())) return;
 
-    switch (name) {
-      case 'date':
-        date = evt != null ? evt.format('YYYY-MM-DD') : null;
-        time = _.get(this, 'props.value.time', null);
-        break;
-      case 'time':
-        date = _.get(this, 'props.value.date', null);
-        time = evt != null ? evt.format('HH:mm:ss') : null;
-        break;
-      default:
-        break;
-    }
+    const { name, type, label, updateInstance, value } = this.props;
+    const date = inputType === 'date' ? (newValue ? format(newValue, 'yyyy-MM-dd') : null) : value?.date || null;
+    const time = inputType === 'time' ? (newValue ? format(newValue, 'HH:mm:ss') : null) : value?.time || null;
+    const str = inputType === 'date' ? `@${date}` : `@${date}T${time}`;
 
-    this.setState({ showInputWarning: (time && !date) });
-
-    if (date || time) {
-      if (time) {
-        str = `@${date}T${time}`;
-      } else {
-        str = `@${date}`;
-      }
-      return { date, time, str };
-    }
-
-    return null;
-  }
+    this.setState({ showInputWarning: time && !date });
+    updateInstance({ name, type, label, value: { date, time, str } });
+  };
 
   render() {
-    const { id, name, type, label, value, updateInstance, condenseUI } = this.props;
-    const formId = _.uniqueId('editor-');
+    const { label, value } = this.props;
+    const { showInputWarning } = this.state;
+    const date = value?.date ? parse(value.date, 'yyyy-MM-dd', new Date()) : null;
+    const time = value?.time ? parse(value.time, 'HH:mm:ss', new Date()) : null;
 
     return (
       <div className="editor date-time-editor">
-        <div className="form__group">
-          <label
-            className={classnames("editor-container", { condense: condenseUI })}
-            htmlFor={formId}
-          >
-            <div className="editor-label label">{label}</div>
+        <div className="editor-label">{label}</div>
 
-            <div className="editor-input-group">
-              <div className="editor-input">
-                <span className="date-label">Date:</span>
+        <div className="editor-inputs">
+          <KeyboardDatePicker
+            className="field-input"
+            format="MM/dd/yyyy"
+            inputVariant="outlined"
+            KeyboardButtonProps={{ 'aria-label': 'change date' }}
+            label="Date"
+            margin="normal"
+            onChange={newValue => this.handleChange(newValue, 'date')}
+            placeholder="mm/dd/yyyy"
+            value={date}
+          />
 
-                <DatePicker
-                  id={id}
-                  selected={
-                    moment(_.get(value, 'date', null), 'YYYY-MM-DD').isValid()
-                    ? moment(value.date, 'YYYY-MM-DD').toDate()
-                    : null}
-                  dateFormat="MM/dd/yyyy"
-                  autoComplete="off"
-                  onChange={ (e) => {
-                    updateInstance({ name, type, label, value: this.assignValue(moment(e), 'date') });
-                  }}
-                />
-              </div>
-
-              <div className="editor-input">
-                <span className="date-label">Time:</span>
-
-                <TimePicker
-                  id={id}
-                  defaultValue={
-                    moment(_.get(value, 'time', null), 'HH:mm:ss').isValid()
-                    ? moment(value.time, 'HH:mm:ss')
-                    : null}
-                  autoComplete="off"
-                  onChange={ (e) => {
-                    updateInstance({ name, type, label, value: this.assignValue(e, 'time') });
-                  }}
-                />
-              </div>
-            </div>
-          </label>
+          <KeyboardTimePicker
+            className="field-input"
+            format="HH:mm:ss"
+            inputVariant="outlined"
+            KeyboardButtonProps={{ 'aria-label': 'change time' }}
+            keyboardIcon={<TimeIcon />}
+            label="Time"
+            margin="normal"
+            onChange={newValue => this.handleChange(newValue, 'time')}
+            placeholder="hh:mm:ss"
+            value={time}
+            views={['hours', 'minutes', 'seconds']}
+          />
         </div>
 
-        {this.state.showInputWarning &&
-          <div className="warning">
-            {`Warning: A DateTime must have at least a date.`}
-          </div>
-        }
+        <div className="editor-warnings">
+          {showInputWarning && <div className="warning">Warning: A DateTime must have at least a date.</div>}
+        </div>
       </div>
     );
   }
 }
 
 DateTimeEditor.propTypes = {
-  id: PropTypes.string.isRequired,
   name: PropTypes.string,
   type: PropTypes.string.isRequired,
   label: PropTypes.string.isRequired,
   value: PropTypes.object,
-  updateInstance: PropTypes.func.isRequired,
-  condenseUI: PropTypes.bool
+  updateInstance: PropTypes.func.isRequired
 };

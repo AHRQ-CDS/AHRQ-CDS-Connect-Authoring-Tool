@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import _ from 'lodash';
+import { Button } from '@material-ui/core';
 import pluralize from 'pluralize';
+import _ from 'lodash';
 
 import Subpopulation from './Subpopulation';
-import createTemplateInstance from '../../utils/templates';
+import createTemplateInstance from 'utils/templates';
 
 export default class Subpopulations extends Component {
   constructor(props) {
@@ -113,16 +114,17 @@ export default class Subpopulations extends Component {
             codeData={this.props.codeData}
             validateCode={this.props.validateCode}
             resetCodeValidation={this.props.resetCodeValidation}
+            vsacIsAuthenticating={this.props.vsacIsAuthenticating}
           />
         ))}
 
-        <button
-          className="button primary-button new-subpopulation-button"
-          aria-label={newButtonLabel}
+        <Button
+          color="primary"
           onClick={this.addSubpopulation}
+          variant="contained"
         >
           {newButtonLabel}
-        </button>
+        </Button>
       </div>
     );
   }
@@ -162,5 +164,6 @@ Subpopulations.propTypes = {
   isRetrievingDetails: PropTypes.bool.isRequired,
   vsacDetailsCodes: PropTypes.array.isRequired,
   vsacDetailsCodesError: PropTypes.string.isRequired,
-  validateReturnType: PropTypes.bool
+  validateReturnType: PropTypes.bool,
+  vsacIsAuthenticating: PropTypes.bool.isRequired
 };

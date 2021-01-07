@@ -1,10 +1,14 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { IconButton } from '@material-ui/core';
 import {
-  faExclamationCircle, faAngleDoubleDown, faAngleDoubleRight, faTimes
-} from '@fortawesome/free-solid-svg-icons';
+  Close as CloseIcon,
+  ExpandLess as ExpandLessIcon,
+  ExpandMore as ExpandMoreIcon
+} from '@material-ui/icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faExclamationCircle } from '@fortawesome/free-solid-svg-icons';
 
 import ConjunctionGroup from './ConjunctionGroup';
 import ExpressionPhrase from './modifiers/ExpressionPhrase';
@@ -112,22 +116,21 @@ export default class Subpopulation extends Component {
               }
 
               <div className="card-element__buttons">
-                <button
-                  onClick={isExpanded ? this.collapse : this.expand}
-                  id="collapse-icon"
-                  className="element__hidebutton transparent-button"
+                <IconButton
                   aria-label={`${isExpanded ? 'hide' : 'show'} ${this.props.subpopulation.subpopulationName}`}
+                  color="primary"
+                  onClick={isExpanded ? this.collapse : this.expand}
                 >
-                  <FontAwesomeIcon icon={isExpanded ? faAngleDoubleDown : faAngleDoubleRight} />
-                </button>
+                  {isExpanded ? <ExpandLessIcon fontSize="small" /> : <ExpandMoreIcon fontSize="small" />}
+                </IconButton>
 
-                <button
-                  aria-label="Remove subpopulation"
-                  className="element__deletebutton transparent-button"
+                <IconButton
+                  aria-label="remove subpopulation"
+                  color="primary"
                   onClick={() => this.props.deleteSubpopulation(this.props.subpopulation.uniqueId)}
                 >
-                  <FontAwesomeIcon icon={faTimes} />
-                </button>
+                  <CloseIcon fontSize="small" />
+                </IconButton>
               </div>
             </div>
 
@@ -200,6 +203,7 @@ export default class Subpopulation extends Component {
         codeData={this.props.codeData}
         validateCode={this.props.validateCode}
         resetCodeValidation={this.props.resetCodeValidation}
+        vsacIsAuthenticating={this.props.vsacIsAuthenticating}
       />
     </div>
   );
@@ -240,4 +244,5 @@ Subpopulation.propTypes = {
   isRetrievingDetails: PropTypes.bool.isRequired,
   vsacDetailsCodes: PropTypes.array.isRequired,
   vsacDetailsCodesError: PropTypes.string.isRequired,
+  vsacIsAuthenticating: PropTypes.bool.isRequired
 };

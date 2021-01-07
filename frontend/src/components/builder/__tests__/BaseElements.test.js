@@ -40,6 +40,7 @@ describe('<BaseElements />', () => {
         vsacApiKey={'key'}
         vsacDetailsCodes={[]}
         vsacDetailsCodesError=""
+        vsacIsAuthenticating={false}
         vsacSearchCount={0}
         vsacSearchResults={[]}
         {...props}

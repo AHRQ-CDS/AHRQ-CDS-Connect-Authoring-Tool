@@ -45,11 +45,11 @@ describe('<CodeSelectModal />', () => {
     const dialog = within(screen.getByRole('dialog'));
 
     expect(dialog.getByText('Choose code')).toBeInTheDocument();
-    expect(dialog.getByLabelText('Enter code')).toBeInTheDocument();
+    expect(dialog.getByLabelText('Code')).toBeInTheDocument();
     expect(dialog.getByLabelText('Code system')).toBeInTheDocument();
-    expect(dialog.getByLabelText('Validate')).toBeInTheDocument();
-    expect(dialog.getByRole('button', {name: 'Select'})).toBeInTheDocument();
-    expect(dialog.getByRole('button', {name: 'Cancel'})).toBeInTheDocument();
+    expect(dialog.getByRole('button', { name: 'Validate' })).toBeInTheDocument();
+    expect(dialog.getByRole('button', { name: 'Select' })).toBeInTheDocument();
+    expect(dialog.getByRole('button', { name: 'Cancel' })).toBeInTheDocument();
   });
 
   describe('with modal open', () => {
@@ -80,14 +80,16 @@ describe('<CodeSelectModal />', () => {
 
       renderAndOpenModal({ onElementSelected });
 
+      const dialog = within(screen.getByRole('dialog'));
+
       // Enter code
-      setInputValue(screen.getByLabelText('Enter code'), code);
+      setInputValue(dialog.getByLabelText('Code'), code);
 
       // Choose first code system from dropdown
-      userEvent.click(screen.getByLabelText('Code system'));
+      userEvent.click(dialog.getByLabelText('Code system'));
       userEvent.click(screen.getAllByRole('option')[0]);
 
-      userEvent.click(screen.getByRole('button', { name: 'Select' }));
+      userEvent.click(dialog.getByRole('button', { name: 'Select' }));
 
       // Selecting options calls onElementSelected to add to workspace and closes the modal
       await waitFor(() => {
@@ -102,16 +104,18 @@ describe('<CodeSelectModal />', () => {
 
       renderAndOpenModal({ addToParameter });
 
+      const dialog = within(screen.getByRole('dialog'));
+
       // Enter code
-      setInputValue(screen.getByLabelText('Enter code'), '123-4');
+      setInputValue(dialog.getByLabelText('Code'), '123-4');
 
       // Choosing 'Other' option opens second input box
-      userEvent.click(screen.getByLabelText('Code system'));
+      userEvent.click(dialog.getByLabelText('Code system'));
       userEvent.click(screen.getByRole('option', { name: 'Other' }));
 
-      setInputValue(screen.getByLabelText('Enter system canonical URL'), otherCS);
+      setInputValue(dialog.getByLabelText('System canonical URL'), otherCS);
 
-      userEvent.click(screen.getByRole('button', { name: 'Select' }));
+      userEvent.click(dialog.getByRole('button', { name: 'Select' }));
 
       await waitFor(() => {
         expect(addToParameter).toBeCalledWith({
@@ -126,23 +130,27 @@ describe('<CodeSelectModal />', () => {
     it('resets code and code system when closing modal', async () => {
       renderAndOpenModal();
 
+      let dialog = within(screen.getByRole('dialog'));
+
       // Enter code
-      setInputValue(screen.getByLabelText('Enter code'), '123-4');
+      setInputValue(dialog.getByLabelText('Code'), '123-4');
 
       // Choose first code system from dropdown
-      userEvent.click(screen.getByLabelText('Code system'));
+      userEvent.click(dialog.getByLabelText('Code system'));
       userEvent.click(screen.getAllByRole('option')[0]);
 
       // Close modal
-      userEvent.click(screen.getByRole('button', { name: 'Cancel' }));
+      userEvent.click(dialog.getByRole('button', { name: 'Cancel' }));
 
       // Open modal
       fireEvent.click(await screen.findByRole('button', { name: 'Add Code' }));
 
+      dialog = within(screen.getByRole('dialog'));
+
       // Inputs should be reset
-      expect(screen.getByLabelText('Enter code')).toHaveAttribute('value', '');
-      expect(screen.getByLabelText('Code system')).toHaveTextContent('\u200B');
-    });
+      expect(dialog.getByLabelText('Code')).toHaveAttribute('value', '');
+      expect(dialog.getByLabelText('Code system')).toHaveTextContent('\u200B');
+    }, 30000);
 
     it('Modal for modifier calls correct function to update a modifier', async () => {
       const updateModifier = jest.fn();
@@ -150,15 +158,17 @@ describe('<CodeSelectModal />', () => {
 
       renderAndOpenModal({ updateModifier });
 
+      const dialog = within(screen.getByRole('dialog'));
+
       // Enter code
-      setInputValue(screen.getByLabelText('Enter code'), code);
+      setInputValue(dialog.getByLabelText('Code'), code);
 
       // Choose SNOMED from dropdown
-      userEvent.click(screen.getByLabelText('Code system'));
+      userEvent.click(dialog.getByLabelText('Code system'));
       userEvent.click(screen.getByRole('option', { name: 'SNOMED' }));
 
       // Select button should be enabled
-      userEvent.click(screen.getByRole('button', { name: 'Select' }));
+      userEvent.click(dialog.getByRole('button', { name: 'Select' }));
 
       await waitFor(() => {
         expect(updateModifier).toBeCalledWith({

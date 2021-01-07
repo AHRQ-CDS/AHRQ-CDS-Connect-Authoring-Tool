@@ -7,13 +7,6 @@
 }
 
 .patient-data-section {
-  &__header {
-    &:hover,
-    &:focus {
-      background-color: darken($gray-blue, 5%);
-    }
-  }
-
   &__table {
     tbody tr {
       &:hover,

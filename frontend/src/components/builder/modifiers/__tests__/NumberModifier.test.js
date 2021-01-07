@@ -1,6 +1,6 @@
 import React from 'react';
+import { render, screen, fireEvent } from 'utils/test-utils';
 import NumberModifier from '../NumberModifier';
-import { render, fireEvent } from '../../../../utils/test-utils';
 
 describe('<NumberModifier />', () => {
   const renderComponent = (props = {}) =>
@@ -16,9 +16,9 @@ describe('<NumberModifier />', () => {
 
   it('calls updateAppliedModifier on input change', () => {
     const updateAppliedModifier = jest.fn();
-    const { getByLabelText } = renderComponent({ updateAppliedModifier });
+    renderComponent({ updateAppliedModifier });
 
-    fireEvent.change(getByLabelText('Number Modifier'), { target: { value: '3' } });
+    fireEvent.change(screen.getByRole('textbox'), { target: { value: '3' } });
 
     expect(updateAppliedModifier).toBeCalledWith(6, { value: 3 });
   });

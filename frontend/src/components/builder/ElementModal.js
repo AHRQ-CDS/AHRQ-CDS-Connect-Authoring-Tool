@@ -1,7 +1,13 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import { Button, IconButton, TextField } from '@material-ui/core';
+import {
+  ArrowBackIos as ArrowBackIosIcon,
+  List as ListIcon,
+  Visibility as VisibilityIcon
+} from '@material-ui/icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faSpinner, faArrowLeft, faThList, faEye } from '@fortawesome/free-solid-svg-icons';
+import { faSpinner} from '@fortawesome/free-solid-svg-icons';
 import classnames from 'classnames';
 import _ from 'lodash';
 
@@ -26,7 +32,9 @@ export default class ElementModal extends Component {
     if (!this.state.selectedElement) this.setState({ searchValue });
   }
 
-  searchVSAC = () => {
+  searchVSAC = event => {
+    event.preventDefault();
+
     this.props.searchVSACByKeyword(
       this.state.searchValue,
       this.props.vsacApiKey
@@ -203,26 +211,14 @@ export default class ElementModal extends Component {
     return null;
   }
 
-  renderSearchButton = () => (
-    <button
-      className="primary-button element-modal__searchbutton"
-      onClick={this.searchVSAC}
-      aria-label="Search"
-    >
-      Search
-    </button>
-  );
-
   renderBackButton = () => (
-    <div
-      className="nav-icon"
-      role="button"
-      tabIndex="0"
+    <IconButton
+      aria-label="back"
+      color="primary"
       onClick={this.backToSearchResults}
-      onKeyDown={e => this.enterKeyCheck(this.backToSearchResults, null, e)}
     >
-      <FontAwesomeIcon icon={faArrowLeft} />
-    </div>
+      <ArrowBackIosIcon fontSize="small" />
+    </IconButton>
   );
 
   renderButtonToOpenModal = () => {
@@ -236,32 +232,31 @@ export default class ElementModal extends Component {
 
     if (useIconButton) {
       return (
-        <span
-          role="button"
-          tabIndex="0"
+        <IconButton
+          aria-label={buttonLabels.openButtonText}
+          color="primary"
           onClick={this.openModal}
-          onKeyDown={e => this.enterKeyCheck(this.openModal, null, e)}
-          aria-label={buttonLabels.openButtonText}>
-          <FontAwesomeIcon icon={faEye} />
-        </span>
+        >
+          <VisibilityIcon />
+        </IconButton>
       );
     }
 
     return (
-      <button
-        className="primary-button"
+      <Button
+        color="primary"
         onClick={this.openModal}
-        onKeyDown={e => this.enterKeyCheck(this.openModal, null, e)}
-        aria-label={buttonLabels.openButtonText}>
-        <FontAwesomeIcon icon={faThList} />{' '}{buttonLabels.openButtonText}
-      </button>
+        startIcon={<ListIcon />}
+        variant="contained"
+      >
+        {buttonLabels.openButtonText}
+      </Button>
     );
   }
 
   renderModalHeader = () => {
     const { viewOnly } = this.props;
     const { searchValue, selectedElement } = this.state;
-    const modalInputLabel = 'Enter value set keyword...';
 
     let inputDisplayValue;
     if (selectedElement) {
@@ -275,20 +270,21 @@ export default class ElementModal extends Component {
         <div className="element-modal__search-container">
           {!viewOnly && selectedElement && this.renderBackButton()}
 
-          <div className="element-modal__search">
-            <input
-              type="text"
-              disabled={selectedElement}
-              placeholder={modalInputLabel}
-              aria-label={modalInputLabel}
-              title={modalInputLabel}
-              value={inputDisplayValue}
+          <form onSubmit={this.searchVSAC} className="element-modal__search">
+            <TextField
+              fullWidth
+              label="Value set keyword"
               onChange={this.handleSearchValueChange}
-              onKeyDown={event => this.enterKeyCheck(this.searchVSAC, searchValue, event)}
+              value={inputDisplayValue}
+              variant="outlined"
             />
-          </div>
 
-          {!viewOnly && !selectedElement && this.renderSearchButton()}
+            {!viewOnly && !selectedElement &&
+              <Button type="submit" color="primary" variant="contained">
+                Search
+              </Button>
+            }
+          </form>
         </div>
       </div>
     );
@@ -307,13 +303,15 @@ export default class ElementModal extends Component {
           handleSaveModal={this.handleChosenVS}
           handleShowModal={isOpen}
           hasCancelButton
+          hasEnterKeySubmit={false}
           hasTitleIcon={vsacSearchCount > 0}
           hideSubmitButton={viewOnly}
           Header={this.renderModalHeader()}
+          maxWidth="xl"
           submitButtonText="Select"
           submitDisabled={!selectedElement}
           title="Choose value sets"
-          TitleIcon={<><FontAwesomeIcon icon={faThList} /> {selectedElement ? 1 : vsacSearchCount}</>}
+          TitleIcon={<><ListIcon /> {selectedElement ? 1 : vsacSearchCount}</>}
         >
           <div className="element-modal__content">
             {this.renderSearchResultsTable()}

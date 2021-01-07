@@ -61,7 +61,7 @@ describe('<PatientTable />', () => {
     const deletePatientMock = jest.fn();
     renderComponent({ deletePatient: deletePatientMock });
 
-    userEvent.click(screen.getAllByLabelText('Delete')[0]);
+    userEvent.click(screen.getAllByRole('button', { name: 'Delete' })[0]);
 
     const dialog = within(screen.getByRole('dialog'));
     expect(dialog.getByText('Delete Patient Confirmation')).toBeInTheDocument();
@@ -76,7 +76,7 @@ describe('<PatientTable />', () => {
   it('opens the details modal when view is clicked', () => {
     renderComponent();
 
-    userEvent.click(screen.getAllByLabelText('View')[1]);
+    userEvent.click(screen.getAllByRole('button', { name: 'View' })[1]);
 
     const dialog = within(screen.getByRole('dialog'));
     expect(dialog.getByText('View Patient Details')).toBeInTheDocument();
@@ -86,8 +86,8 @@ describe('<PatientTable />', () => {
     const executeCQLMock = jest.fn();
     renderComponent({ executeCQLArtifact: executeCQLMock });
 
-    userEvent.click(screen.getAllByLabelText('View')[0]); // select first patient
-    userEvent.click(screen.getByLabelText('Execute CQL on Selected Patients')); // open modal
+    userEvent.click(screen.getAllByRole('button', { name: 'view' })[0]); // select first patient
+    userEvent.click(screen.getByRole('button', { name: 'Execute CQL on Selected Patients' })); // open modal
 
     const dialog = within(screen.getByRole('dialog'));
     expect(dialog.getByText('Execute CQL on Selected Patients')).toBeInTheDocument();
@@ -95,7 +95,7 @@ describe('<PatientTable />', () => {
     userEvent.click(dialog.getByLabelText('Select...'));
     userEvent.click(screen.getByRole('option', { name: artifactsMock[0].name })); // select option
 
-    userEvent.click(dialog.getByLabelText('Boolean value'));
+    userEvent.click(dialog.getByRole('button', { name: 'True' }));
     userEvent.click(screen.getByRole('option', { name: 'False' })); // choose param
 
     userEvent.click(dialog.getByText('Execute CQL'));

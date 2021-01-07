@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, fireEvent } from 'utils/test-utils';
+import { render, fireEvent, userEvent, screen, within } from 'utils/test-utils';
 import Recommendations from '../Recommendations';
 
 const rec = {
@@ -29,18 +29,18 @@ describe('<Recommendations />', () => {
     );
 
   it('renders a list of recommendations', () => {
-    const { container } = renderComponent();
+    renderComponent();
 
-    expect(container.querySelectorAll('.recommendation')).toHaveLength(1);
+    expect(document.querySelectorAll('.recommendation')).toHaveLength(1);
   });
 
   it('can add a new recommendation with button', () => {
     const updateRecommendations = jest.fn();
-    const { getByLabelText } = renderComponent({
+    renderComponent({
       updateRecommendations
     });
 
-    fireEvent.click(getByLabelText('New recommendation'));
+    userEvent.click(screen.getByRole('button', { name: 'New recommendation' }));
 
     expect(updateRecommendations).toBeCalledWith([
       rec,
@@ -57,28 +57,34 @@ describe('<Recommendations />', () => {
   it('updates a recommendation', () => {
     const newText = 'this is a test';
     const updateRecommendations = jest.fn();
-    const { getByLabelText } = renderComponent({ updateRecommendations });
+    renderComponent({ updateRecommendations });
 
-    fireEvent.change(getByLabelText('Recommendation'), { target: { name: 'text', value: newText } });
+    fireEvent.change(screen.getByPlaceholderText('Describe your recommendation'), {
+      target: { name: 'text', value: newText }
+    });
 
-    expect(updateRecommendations).toHaveBeenCalledWith([{
-      ...rec,
-      text: newText
-    }]);
+    expect(updateRecommendations).toHaveBeenCalledWith([
+      {
+        ...rec,
+        text: newText
+      }
+    ]);
   });
 
   it('shows a confirmation modal on delete and deletes on confirm', () => {
     const updateRecommendations = jest.fn();
-    const { getByText, getByLabelText, getByRole } = renderComponent({ updateRecommendations });
+    renderComponent({ updateRecommendations });
 
     // click delete
-    fireEvent.click(getByLabelText('remove recommendation'));
-    
+    userEvent.click(screen.getByRole('button', {name: 'remove recommendation'}));
+
+    const dialog = within(screen.getByRole('dialog'));
+
     // check the modal exists
-    expect(getByText('Delete Recommendation')).not.toBeNull();
-    
+    expect(dialog.getByText('Delete Recommendation')).toBeInTheDocument();
+
     // confirm the delete
-    fireEvent.click(getByRole('button', { name: 'Delete' }));
+    userEvent.click(dialog.getByRole('button', { name: 'Delete' }));
     expect(updateRecommendations).toHaveBeenCalledWith([]);
   });
 });

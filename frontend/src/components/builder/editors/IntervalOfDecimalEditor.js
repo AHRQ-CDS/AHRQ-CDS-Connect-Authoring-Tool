@@ -1,14 +1,14 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import classnames from 'classnames';
-import _ from 'lodash';
+import { TextField } from '@material-ui/core';
+import { Remove as DashIcon } from '@material-ui/icons';
 
 export default class IntervalOfDecimalEditor extends Component {
   constructor(props) {
     super(props);
 
-    const firstDecimal = _.get(props, 'value.firstDecimal', '');
-    const secondDecimal = _.get(props, 'value.secondDecimal', '');
+    const firstDecimal = props.value?.firstDecimal || '';
+    const secondDecimal = props.value?.secondDecimal || '';
 
     this.state = {
       showInputWarning:
@@ -16,110 +16,92 @@ export default class IntervalOfDecimalEditor extends Component {
     };
   }
 
-  shouldShowInputWarning = (value) => {
-    return value && !/^-?\d+(\.\d+)?$/.test(value);
-  }
-
-  assignValue(evt) {
-    let firstDecimal = null;
-    let secondDecimal = null;
-    let str = null;
-
-    switch (evt.target.name) {
-      case 'firstDecimal':
-        firstDecimal = _.get(evt, 'target.value', '');
-        secondDecimal = _.get(this, 'props.value.secondDecimal', '');
-        break;
-      case 'secondDecimal':
-        firstDecimal = _.get(this, 'props.value.firstDecimal', '');
-        secondDecimal = _.get(evt, 'target.value', '');
-        break;
-      default:
-        break;
-    }
+  handleChange = (newValue, inputType) => {
+    const { name, type, label, updateInstance, value } = this.props;
+    const firstDecimal = inputType === 'firstDecimal' ? newValue : value?.firstDecimal || '';
+    const secondDecimal = inputType === 'secondDecimal' ? newValue : value?.secondDecimal || '';
+    const str = this.getString(firstDecimal, secondDecimal);
 
     this.setState({
       showInputWarning:
         this.shouldShowInputWarning(firstDecimal) || this.shouldShowInputWarning(secondDecimal)
     });
 
-    if (firstDecimal || secondDecimal) {
-      const firstDecimalForString = firstDecimal || null;
-      const secondDecimalForString = secondDecimal || null;
-      if (Number.isInteger(parseFloat(firstDecimal))) {
-        if (Number.isInteger(parseFloat(secondDecimal))) {
-          str = `Interval[${firstDecimalForString}.0,${secondDecimalForString}.0]`;
-        } else {
-          str = `Interval[${firstDecimalForString}.0,${secondDecimalForString}]`;
-        }
-      } else if (Number.isInteger(parseFloat(secondDecimal))) {
-        str = `Interval[${firstDecimalForString},${secondDecimalForString}.0]`;
+    updateInstance({ name, type, label, value: { firstDecimal, secondDecimal, str } });
+  };
+
+  shouldShowInputWarning = value => {
+    return value && !/^-?\d+(\.\d+)?$/.test(value);
+  };
+
+  getString = (firstDecimal, secondDecimal) => {
+    let str = '';
+
+    const firstDecimalForString = firstDecimal || null;
+    const secondDecimalForString = secondDecimal || null;
+    if (Number.isInteger(parseFloat(firstDecimal))) {
+      if (Number.isInteger(parseFloat(secondDecimal))) {
+        str = `Interval[${firstDecimalForString}.0,${secondDecimalForString}.0]`;
       } else {
-        str = `Interval[${firstDecimalForString},${secondDecimalForString}]`;
+        str = `Interval[${firstDecimalForString}.0,${secondDecimalForString}]`;
       }
-      return { firstDecimal, secondDecimal, str };
+    } else if (Number.isInteger(parseFloat(secondDecimal))) {
+      str = `Interval[${firstDecimalForString},${secondDecimalForString}.0]`;
+    } else {
+      str = `Interval[${firstDecimalForString},${secondDecimalForString}]`;
     }
-    return null;
-  }
+
+    return str;
+  };
 
   render() {
-    const { id, name, type, label, value, updateInstance, condenseUI } = this.props;
-    const formId = _.uniqueId('editor-');
+    const { label, value } = this.props;
+    const { showInputWarning } = this.state;
 
     return (
       <div className="editor interval-of-decimal-editor">
-        <div className="form-group">
-          <label
-            className={classnames('editor-container', { condense: condenseUI })}
-            htmlFor={formId}
-          >
-            <div className="editor-label label">{label}</div>
+        <div className="editor-label">{label}</div>
 
-            <div className="editor-input-group">
-              <div className="editor-input">
-                <input
-                  id={formId}
-                  name="firstDecimal"
-                  value={_.get(value, 'firstDecimal', '')}
-                  onChange={ (e) => {
-                    updateInstance({ name, type, label, value: this.assignValue(e) });
-                  }}
-                />
-              </div>
+        <div className="editor-inputs">
+          <div className="field-input field-input-sm">
+            <TextField
+              fullWidth
+              label="Value"
+              onChange={event => this.handleChange(event.target.value, 'firstDecimal')}
+              value={value?.firstDecimal || ''}
+              variant="outlined"
+            />
+          </div>
 
-              <div className="dash">-</div>
+          <div className="field-input"><DashIcon /></div>
 
-              <div className="editor-input">
-                <input
-                  id={id}
-                  name="secondDecimal"
-                  aria-label="Second Decimal"
-                  value={_.get(value, 'secondDecimal', '')}
-                  onChange={ (e) => {
-                    updateInstance({ name, type, label, value: this.assignValue(e) });
-                  }}
-                />
-              </div>
-            </div>
-          </label>
+          <div className="field-input field-input-sm">
+            <TextField
+              fullWidth
+              label="Value"
+              onChange={event => this.handleChange(event.target.value, 'secondDecimal')}
+              value={value?.secondDecimal || ''}
+              variant="outlined"
+            />
+          </div>
         </div>
 
-        {this.state.showInputWarning &&
-          <div className="warning">
-            {`Warning: At least one of the values is not a valid Decimal.`}
-          </div>
-        }
+        <div className="editor-warnings">
+          {showInputWarning &&
+            <div className="warning">
+              Warning: At least one of the values is not a valid Decimal.
+            </div>
+          }
+        </div>
       </div>
     );
   }
 }
 
 IntervalOfDecimalEditor.propTypes = {
-  id: PropTypes.string.isRequired,
   name: PropTypes.string,
   type: PropTypes.string.isRequired,
   label: PropTypes.string.isRequired,
   value: PropTypes.object,
-  updateInstance: PropTypes.func.isRequired,
-  condenseUI: PropTypes.bool
+  updateInstance: PropTypes.func.isRequired
 };

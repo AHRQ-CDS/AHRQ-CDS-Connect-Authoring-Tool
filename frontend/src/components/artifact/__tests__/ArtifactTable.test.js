@@ -77,7 +77,7 @@ describe('<ArtifactTable />', () => {
   it('allows opening and closing of the edit modal', async () => {
     renderComponent();
 
-    userEvent.click(screen.getAllByRole('button', { name: 'Edit' })[0]);
+    userEvent.click(screen.getAllByRole('button', { name: 'Edit Info' })[0]);
     expect(screen.getByText('Edit Artifact Details')).toBeInTheDocument();
 
     userEvent.click(screen.getByRole('button', { name: 'close' }));

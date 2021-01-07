@@ -1,21 +1,12 @@
 import React from 'react';
+import axios from 'axios';
+import nock from 'nock';
+import { render, screen, fireEvent, userEvent } from 'utils/test-utils';
 import QuantityModifier from '../QuantityModifier';
-import { render, fireEvent } from '../../../../utils/test-utils';
+
+axios.defaults.adapter = require('axios/lib/adapters/http');
 
 describe('<QuantityModifier />', () => {
-  let origDef = null;
-  beforeEach(() => {
-    origDef = window.Def;
-    window.Def = {
-      Autocompleter: {
-        Search: jest.fn()
-      }
-    };
-  });
-  afterEach(() => {
-    window.Def = origDef;
-  });
-
   const renderComponent = (props = {}) =>
     render(
       <QuantityModifier
@@ -29,14 +20,30 @@ describe('<QuantityModifier />', () => {
       />
     );
 
-  it('calls updateAppliedModifier on input change', () => {
+  it('can change the quantity', () => {
     const updateAppliedModifier = jest.fn();
-    const { getByLabelText } = renderComponent({ updateAppliedModifier });
+    renderComponent({ updateAppliedModifier });
 
-    fireEvent.change(getByLabelText('Quantity Modifier Value'), { target: { value: '3' } });
-    fireEvent.change(getByLabelText('Quantity Modifier Unit'), { target: { value: 'mg/dL' } });
+    fireEvent.change(screen.getByRole('textbox', { name: 'Value' }), { target: { value: '3' } });
 
-    expect(updateAppliedModifier).toBeCalledWith(6, { value: 3 });
-    expect(updateAppliedModifier).toBeCalledWith(6, { unit: 'mg/dL' });
+    expect(updateAppliedModifier).toBeCalledWith(6, { unit: '', value: 3 });
   });
+
+  it('can search for and change the unit', async () => {
+    const scope = nock('https://clin-table-search.lhc.nlm.nih.gov')
+      .get('/api/ucum/v3/search?terms=mg/dL')
+      .reply(200, [1, ['mg/dL'], null, [['mg/dL', 'milligram per deciliter']]]);
+
+    const updateAppliedModifier = jest.fn();
+    renderComponent({ updateAppliedModifier });
+
+    const unitAutocomplete = screen.getByRole('textbox', { name: 'Unit' });
+    userEvent.click(unitAutocomplete);
+    fireEvent.change(unitAutocomplete, { target: { value: 'mg/dL' } });
+    userEvent.click(await screen.findByRole('option', { name: 'mg/dL (milligram per deciliter)' }));
+
+    expect(updateAppliedModifier).toBeCalledWith(6, { unit: 'mg/dL', value: '' });
+
+    scope.done();
+  }, 30000);
 });

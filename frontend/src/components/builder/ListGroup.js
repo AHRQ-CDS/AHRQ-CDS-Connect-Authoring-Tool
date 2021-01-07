@@ -2,11 +2,18 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import pluralize from 'pluralize';
 import classnames from 'classnames';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { IconButton } from '@material-ui/core';
 import {
-  faCheck, faExclamationCircle, faComment, faCommentDots, faAngleDoubleDown, faAngleDoubleRight, faTimes
-} from '@fortawesome/free-solid-svg-icons';
+  ChatBubble as ChatBubbleIcon,
+  Close as CloseIcon,
+  ExpandLess as ExpandLessIcon,
+  ExpandMore as ExpandMoreIcon,
+  Sms as SmsIcon
+} from '@material-ui/icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faCheck, faExclamationCircle } from '@fortawesome/free-solid-svg-icons';
 import { UncontrolledTooltip } from 'reactstrap';
+import clsx from 'clsx';
 import _ from 'lodash';
 
 import { findValueAtPath } from '../../utils/find';
@@ -330,6 +337,7 @@ export default class ListGroup extends Component {
           vsacDetailsCodes={this.props.vsacDetailsCodes}
           vsacDetailsCodesError={this.props.vsacDetailsCodesError}
           vsacApiKey={this.props.vsacApiKey}
+          vsacIsAuthenticating={this.props.vsacIsAuthenticating}
           isValidatingCode={this.props.isValidatingCode}
           isValidCode={this.props.isValidCode}
           codeData={this.props.codeData}
@@ -361,7 +369,6 @@ export default class ListGroup extends Component {
       needsDuplicateNameWarning || needsBaseElementWarning || this.hasNestedWarnings(instance.childInstances);
 
     const baseElementListUsed = this.isBaseElementListUsed(instance);
-    const disabledClass = baseElementListUsed ? 'disabled' : '';
     const headerClass = classnames('card-element__header', { collapsed: !isExpanded });
     const headerTopClass = classnames('card-element__header-top', { collapsed: !isExpanded });
     const hasComment = comment && comment !== '';
@@ -422,31 +429,34 @@ export default class ListGroup extends Component {
 
             <div className="card-element__buttons">
               {isExpanded &&
-                <button
-                  onClick={this.toggleComment}
-                  className={classnames('element_hidebutton', 'transparent-button', hasComment && 'has-comment')}
+                <IconButton
                   aria-label="show comment"
+                  className={clsx(hasComment && 'has-comment')}
+                  color="primary"
+                  onClick={this.toggleComment}
                 >
-                  <FontAwesomeIcon icon={hasComment ? faCommentDots : faComment} />
-                </button>
+                  {hasComment ? <SmsIcon fontSize="small" /> : <ChatBubbleIcon fontSize="small" />}
+                </IconButton>
               }
 
-              <button
-                onClick={isExpanded ? this.collapse : this.expand}
-                className="element__hidebutton transparent-button"
+              <IconButton
                 aria-label={`hide ${name}`}
+                color="primary"
+                onClick={isExpanded ? this.collapse : this.expand}
               >
-                <FontAwesomeIcon icon={isExpanded ? faAngleDoubleDown : faAngleDoubleRight} />
-              </button>
+                {isExpanded ? <ExpandLessIcon fontSize="small" /> : <ExpandMoreIcon fontSize="small" />}
+              </IconButton>
 
-              <button
-                aria-label="Remove base element list"
-                className={`element__deletebutton transparent-button ${disabledClass}`}
-                id={`deletebutton-${instance.uniqueId}`}
-                onClick={() => this.deleteBaseElementList(instance.uniqueId)}
-              >
-                <FontAwesomeIcon icon={faTimes} />
-              </button>
+              <span id={`deletebutton-${instance.uniqueId}`}>
+                <IconButton
+                  aria-label="remove base element list"
+                  color="primary"
+                  disabled={baseElementListUsed}
+                  onClick={() => this.deleteBaseElementList(instance.uniqueId)}
+                >
+                  <CloseIcon fontSize="small" />
+                </IconButton>
+              </span>
 
               {baseElementListUsed &&
                 <UncontrolledTooltip target={`deletebutton-${instance.uniqueId}`} placement="left">
@@ -514,6 +524,7 @@ ListGroup.propTypes = {
   vsacDetailsCodes: PropTypes.array.isRequired,
   vsacDetailsCodesError: PropTypes.string.isRequired,
   vsacApiKey: PropTypes.string,
+  vsacIsAuthenticating: PropTypes.bool.isRequired,
   isValidatingCode: PropTypes.bool.isRequired,
   isValidCode: PropTypes.bool,
   codeData: PropTypes.object,

@@ -1,31 +1,28 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import _ from 'lodash';
+import { TextField } from '@material-ui/core';
 
-/* eslint-disable jsx-a11y/no-onchange */
 export default class StringModifier extends Component {
+  handleChange = newValue => {
+    const { index, updateAppliedModifier } = this.props;
+    updateAppliedModifier(index, { value: newValue });
+  };
+
   render() {
-    const valueId = _.uniqueId('value-');
+    const { name, value } = this.props;
 
     return (
-      /* eslint-disable jsx-a11y/label-has-for */
-      <div className="string-modifier">
-        <label>
-          {`${this.props.name}: `}
-        </label>
+      <div className="modifier string-modifier">
+        <div className="modifier-text">{name}:</div>
 
-        <span>  </span>
-
-        <label htmlFor={valueId}>
-          <input
-            type="text"
-            placeholder="enter value"
-            aria-label="String Modifier"
-            value={this.props.value || ''}
-            onChange={(event) => { this.props.updateAppliedModifier(this.props.index, { value: event.target.value }); }}
-            onSelect={(event) => { this.props.updateAppliedModifier(this.props.index, { value: event.target.value }); }}
-          />
-        </label>
+        <TextField
+          className="field-input field-input-xl"
+          fullWidth
+          label="Value"
+          onChange={event => this.handleChange(event.target.value)}
+          value={value || ''}
+          variant="outlined"
+        />
       </div>
     );
   }

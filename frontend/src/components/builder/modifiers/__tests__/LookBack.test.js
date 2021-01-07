@@ -18,11 +18,11 @@ describe('<LookBack />', () => {
     const updateAppliedModifier = jest.fn();
     renderComponent({ updateAppliedModifier });
 
-    fireEvent.change(screen.getByLabelText('Look back value'), { target: { value: '13' } });
+    fireEvent.change(screen.getByRole('spinbutton'), { target: { value: '13' } });
 
     expect(updateAppliedModifier).toBeCalledWith(5, { value: 13 });
 
-    userEvent.click(screen.getByRole('button', {name: /Unit/}));
+    userEvent.click(screen.getByRole('button', { name: 'Day(s)' }));
     userEvent.click(screen.getByText('Year(s)'));
 
     expect(updateAppliedModifier).toBeCalledWith(5, { unit: 'years' });

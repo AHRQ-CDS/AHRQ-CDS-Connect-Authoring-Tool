@@ -1,73 +1,53 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import moment from 'moment';
-import DatePicker from 'react-datepicker';
-import TimePicker from 'rc-time-picker';
-import _ from 'lodash';
+import { KeyboardDatePicker, KeyboardTimePicker } from '@material-ui/pickers';
+import { Schedule as TimeIcon } from '@material-ui/icons';
+import { format, parse } from 'date-fns';
 
-/* eslint-disable jsx-a11y/no-onchange */
 export default class DateTimeModifier extends Component {
-  assignValue(evt, name) {
-    let date = this.props.date;
-    let time = this.props.time;
+  handleChange = (newValue, inputType) => {
+    if (newValue && Number.isNaN(newValue.valueOf())) return;
 
-    switch (name) {
-      case 'date': {
-        const dateMoment = evt != null ? evt.format('YYYY-MM-DD') : null;
-        date = dateMoment ? `@${dateMoment}` : null;
-        break;
-      }
-      case 'time': {
-        const timeMoment = evt != null ? evt.format('HH:mm:ss') : null;
-        time = timeMoment ? `T${timeMoment}` : null;
-        break;
-      }
-      default: {
-        break;
-      }
-    }
+    const { date, index, time, updateAppliedModifier } = this.props;
+    const newDate = inputType === 'date' ? (newValue ? `@${format(newValue, 'yyyy-MM-dd')}` : null) : date || null;
+    const newTime = inputType === 'time' ? (newValue ? `T${format(newValue, 'HH:mm:ss')}` : null) : time || null;
 
-    this.props.updateAppliedModifier(this.props.index, { date, time });
-  }
+    updateAppliedModifier(index, { date: newDate, time: newTime });
+  };
 
   render() {
-    const dateId = _.uniqueId('date-');
-    const timeId = _.uniqueId('time-');
+    const { date, name, time } = this.props;
+    const dateValue = date ? parse(date.replace(/^@/, ''), 'yyyy-MM-dd', new Date()) : null;
+    const timeValue = time ? parse(time.replace(/^T/, ''), 'HH:mm:ss', new Date()) : null;
 
     return (
-      /* eslint-disable jsx-a11y/label-has-for */
-      <div className="col-9 d-flex modifier-vert-aligned">
-        <label className="modifier-label">
-          {`${this.props.name}: `}
-        </label>
+      <div className="modifier date-time-modifier">
+        <div className="modifier-text">{name}:</div>
 
-        <span>  </span>
-
-        <DatePicker
-          id={dateId}
-          selected={
-            moment(this.props.date, 'YYYY-MM-DD').isValid()
-            ? moment(this.props.date, 'YYYY-MM-DD').toDate()
-            : null}
-          dateFormat="MM/dd/yyyy"
-          autoComplete="off"
-          onChange={ (e) => {
-            this.assignValue(moment(e), 'date');
-          }}
+        <KeyboardDatePicker
+          className="field-input"
+          format="MM/dd/yyyy"
+          inputVariant="outlined"
+          KeyboardButtonProps={{ 'aria-label': 'change date' }}
+          label="Date"
+          margin="normal"
+          onChange={newValue => this.handleChange(newValue, 'date')}
+          placeholder="mm/dd/yyyy"
+          value={dateValue}
         />
 
-        <span>  </span>
-
-        <TimePicker
-          id={timeId}
-          defaultValue={
-            moment(this.props.time, 'HH:mm:ss').isValid()
-            ? moment(this.props.time, 'HH:mm:ss')
-            : null}
-          autoComplete="off"
-          onChange={ (e) => {
-            this.assignValue(e, 'time');
-          }}
+        <KeyboardTimePicker
+          className="field-input"
+          format="HH:mm:ss"
+          inputVariant="outlined"
+          KeyboardButtonProps={{ 'aria-label': 'change time' }}
+          keyboardIcon={<TimeIcon />}
+          label="Time"
+          margin="normal"
+          onChange={newValue => this.handleChange(newValue, 'time')}
+          placeholder="hh:mm:ss"
+          value={timeValue}
+          views={['hours', 'minutes', 'seconds']}
         />
       </div>
     );

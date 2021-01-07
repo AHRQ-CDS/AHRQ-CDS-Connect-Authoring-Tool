@@ -24,6 +24,7 @@ describe('<Parameter />', () => {
         validateCode={jest.fn()}
         value={null}
         vsacApiKey={'key'}
+        vsacIsAuthenticating={false}
         vsacStatus=""
         vsacStatusText=""
         {...props}
@@ -33,12 +34,12 @@ describe('<Parameter />', () => {
   it('can be named', () => {
     const updateInstanceOfParameter = jest.fn();
 
-    const { getByLabelText } = renderComponent({
+    renderComponent({
       type: 'boolean',
       updateInstanceOfParameter
     });
 
-    fireEvent.change(getByLabelText('Parameter Name'), { target: { value: 'Parameter 007' } });
+    fireEvent.change(document.querySelector('input[type=text]'), { target: { value: 'Parameter 007' } });
 
     expect(updateInstanceOfParameter).toBeCalledWith(
       {
@@ -55,13 +56,13 @@ describe('<Parameter />', () => {
   it('can be deleted', () => {
     const deleteParameter = jest.fn();
     const index = 5;
-    const { getByLabelText } = renderComponent({
+    renderComponent({
       type: 'boolean',
       deleteParameter,
       index
     });
 
-    fireEvent.click(getByLabelText('Delete Parameter'));
+    userEvent.click(screen.getByRole('button', { name: 'delete parameter' }));
 
     expect(deleteParameter).toBeCalledWith(index);
   });
@@ -70,8 +71,8 @@ describe('<Parameter />', () => {
     const updateInstanceOfParameter = jest.fn();
     renderComponent({ type: 'boolean', updateInstanceOfParameter });
 
-    userEvent.click(screen.getByRole('button', {name: /Parameter type/}));
-    userEvent.click(screen.getByText('Integer'));
+    userEvent.click(screen.getByRole('button', { name: 'Boolean' }));
+    userEvent.click(screen.getByRole('option', { name: 'Integer' }));
 
     expect(updateInstanceOfParameter).toBeCalledWith(
       {
@@ -87,23 +88,23 @@ describe('<Parameter />', () => {
 
   it('can be collapsed and expanded', () => {
     const collapseParameter = jest.fn();
-    const { getByLabelText } = renderComponent({
+    renderComponent({
       type: 'boolean',
-      collapseParameter,
+      collapseParameter
     });
-    
+
     // collapse the parameter
-    fireEvent.click(getByLabelText('hide-'));
-    expect(getByLabelText('Type')).toBeInTheDocument();
-    
+    fireEvent.click(screen.getByLabelText('hide-'));
+    expect(screen.getByLabelText('Type')).toBeInTheDocument();
+
     // expand the parameter
-    fireEvent.click(getByLabelText('hide-'));
-    expect(screen.getByRole('button', {name: /Parameter type/})).toBeInTheDocument();
+    fireEvent.click(screen.getByLabelText('hide-'));
+    expect(screen.getByRole('button', { name: 'Boolean' })).toBeInTheDocument();
   });
 
   it('displays the Editor when passed a valid parameter type', () => {
-    const { getByText } = renderComponent({ type: 'boolean' });
+    renderComponent({ type: 'boolean' });
 
-    expect(getByText('Editor')).not.toBeNull();
+    expect(screen.getByText('Editor')).not.toBeNull();
   });
 });

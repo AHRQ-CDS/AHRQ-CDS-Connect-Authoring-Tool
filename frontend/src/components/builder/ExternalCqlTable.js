@@ -1,7 +1,10 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faEye } from '@fortawesome/free-solid-svg-icons';
+import { Button } from '@material-ui/core';
+import {
+  Delete as DeleteIcon,
+  Visibility as VisibilityIcon
+} from '@material-ui/icons';
 import { UncontrolledTooltip } from 'reactstrap';
 
 import { Modal }  from 'components/elements';
@@ -48,7 +51,8 @@ export default class ExternalCqlTable extends Component {
 
   // ----------------------- DELETE MODAL ---------------------------------- //
 
-  openConfirmDeleteModal = (externalCqlLibrary) => {
+  openConfirmDeleteModal = (disableDelete, externalCqlLibrary) => {
+    if (disableDelete) return;
     const { clearAddLibraryErrorsAndMessages } = this.props;
     clearAddLibraryErrorsAndMessages();
     this.setState({ showConfirmDeleteModal: true, externalCqlLibraryToDelete: externalCqlLibrary });
@@ -76,7 +80,7 @@ export default class ExternalCqlTable extends Component {
     const disableForDependency = currentLibraryParents.length > 0;
     const disableForUse = librariesInUse.includes(externalCqlLibrary.name);
     const disableDelete = disableForDependency || disableForUse;
-    const disabledClass = disableDelete ? 'disabled' : '';
+
     return (
       <tr key={externalCqlLibrary._id}>
         <td className="external-cql-table__tablecell-wide" data-th="Library">
@@ -96,21 +100,26 @@ export default class ExternalCqlTable extends Component {
         </td>
 
         <td className="external-cql-table__tablecell-button" data-th="">
-          <button aria-label="View"
-            className="button primary-button details-button"
+          <Button
+            color="primary"
             onClick={() => this.openViewDetailsModal(externalCqlLibrary)}
+            startIcon={<VisibilityIcon />}
+            variant="contained"
           >
-            <FontAwesomeIcon icon={faEye} />
-          </button>
+            View
+          </Button>
 
-          <button
-            className={`button danger-button ${disabledClass}`}
-            id={`DeleteLibraryTooltip-${externalCqlLibrary._id}`}
-            aria-label="Delete"
-            onClick={() => { if (!disableDelete) this.openConfirmDeleteModal(externalCqlLibrary); }}
-          >
-            Delete
-          </button>
+          <span id={`DeleteLibraryTooltip-${externalCqlLibrary._id}`}>
+            <Button
+              color="secondary"
+              disabled={disableForUse || disableForDependency}
+              onClick={() => this.openConfirmDeleteModal(disableDelete, externalCqlLibrary)}
+              startIcon={<DeleteIcon />}
+              variant="contained"
+            >
+              Delete
+            </Button>
+          </span>
 
           {disableForUse &&
             <UncontrolledTooltip target={`DeleteLibraryTooltip-${externalCqlLibrary._id}`} placement="left">

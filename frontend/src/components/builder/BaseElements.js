@@ -65,6 +65,7 @@ export default class BaseElements extends Component {
         vsacApiKey={this.props.vsacApiKey}
         vsacDetailsCodes={this.props.vsacDetailsCodes}
         vsacDetailsCodesError={this.props.vsacDetailsCodesError}
+        vsacIsAuthenticating={this.props.vsacIsAuthenticating}
         vsacSearchCount={this.props.vsacSearchCount}
         vsacSearchResults={this.props.vsacSearchResults}
         vsacStatus={this.props.vsacStatus}
@@ -123,6 +124,7 @@ export default class BaseElements extends Component {
                 vsacApiKey={this.props.vsacApiKey}
                 vsacDetailsCodes={this.props.vsacDetailsCodes}
                 vsacDetailsCodesError={this.props.vsacDetailsCodesError}
+                vsacIsAuthenticating={this.props.vsacIsAuthenticating}
                 vsacSearchCount={this.props.vsacSearchCount}
                 vsacSearchResults={this.props.vsacSearchResults}
                 vsacStatus={this.props.vsacStatus}
@@ -205,6 +207,7 @@ BaseElements.propTypes = {
   vsacApiKey: PropTypes.string,
   vsacDetailsCodes: PropTypes.array.isRequired,
   vsacDetailsCodesError: PropTypes.string.isRequired,
+  vsacIsAuthenticating: PropTypes.bool.isRequired,
   vsacSearchCount: PropTypes.number.isRequired,
   vsacSearchResults: PropTypes.array.isRequired,
   vsacStatus: PropTypes.string,
