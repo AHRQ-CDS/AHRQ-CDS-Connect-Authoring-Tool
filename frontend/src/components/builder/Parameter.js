@@ -18,11 +18,7 @@ import StringField from './fields/StringField';
 import TextAreaField from './fields/TextAreaField';
 import Editor from './editors/Editor';
 import { Dropdown } from 'components/elements';
-
-import {
-  doesParameterNeedUsageWarning,
-  parameterHasDuplicateName
-} from '../../utils/warnings';
+import { doesParameterNeedUsageWarning, parameterHasDuplicateName } from 'utils/warnings';
 
 export default class Parameter extends Component {
   constructor(props) {

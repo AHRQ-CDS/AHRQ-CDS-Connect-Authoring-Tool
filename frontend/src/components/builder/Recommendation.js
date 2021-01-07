@@ -106,8 +106,8 @@ export default class Recommendation extends Component {
     return !match;
   })
 
-  handleChange = (event) => {
-    const newValues = { [event.target.name]: event.target.value };
+  handleChange = (name, value) => {
+    const newValues = { [name]: value };
     this.props.onUpdate(this.state.uid, newValues);
     const newState = update(this.state, {
       $merge: newValues
@@ -121,12 +121,12 @@ export default class Recommendation extends Component {
   }
 
   removeRationale = () => {
-    this.handleChange({"target":{"name":"rationale","value":""}});
+    this.handleChange('rationale', '');
     this.handleShowRationale();
   }
 
   removeComment = () => {
-    this.handleChange({"target":{"name":"comment","value":""}});
+    this.handleChange('comment', '');
     this.handleShowComment();
   }
 
@@ -235,7 +235,7 @@ export default class Recommendation extends Component {
             fullWidth
             label={null}
             multiline
-            onChange={this.handleChange}
+            onChange={event => this.handleChange('text', event.target.value)}
             placeholder="Describe your recommendation"
             value={this.state.text}
             variant="outlined"
@@ -258,7 +258,7 @@ export default class Recommendation extends Component {
                 fullWidth
                 label={null}
                 multiline
-                onChange={this.handleChange}
+                onChange={event => this.handleChange('rationale', event.target.value)}
                 placeholder="Describe the rationale for your recommendation"
                 value={this.state.rationale}
                 variant="outlined"
@@ -283,7 +283,7 @@ export default class Recommendation extends Component {
                 fullWidth
                 label={null}
                 multiline
-                onChange={this.handleChange}
+                onChange={event => this.handleChange('comment', event.target.value)}
                 placeholder="Add an optional comment"
                 value={this.state.comment}
                 variant="outlined"

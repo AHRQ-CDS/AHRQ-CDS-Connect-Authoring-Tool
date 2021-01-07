@@ -2,7 +2,7 @@ import React, { useRef } from 'react';
 import PropTypes from 'prop-types';
 import { useHistory } from 'react-router-dom';
 import { useToggle } from 'react-use';
-import { Button, Menu, MenuItem } from '@material-ui/core';
+import { Button, ClickAwayListener, Grow, MenuItem, MenuList, Paper, Popper } from '@material-ui/core';
 import { ArrowDropDown as ArrowDropDownIcon } from '@material-ui/icons';
 
 import { Modal } from 'components/elements';
@@ -26,14 +26,25 @@ const Logout = ({ authUser, onLogoutClick, artifactSaved }) => {
     artifactSaved ? logout() : toggleModal(true);
   };
 
-  const handleClose = () => {
+  const handleClose = event => {
+    if (anchorRef.current && anchorRef.current.contains(event.target)) {
+      return;
+    }
+
     toggleMenu(false);
+  };
+
+  const handleListKeyDown = event => {
+    if (event.key === 'Tab') {
+      event.preventDefault();
+      toggleMenu(false);
+    }
   };
 
   return (
     <div>
       <Button
-        aria-controls="logout-menu"
+        aria-controls={showMenu ? 'logout-menu' : undefined}
         aria-haspopup="true"
         className={styles.logoutButton}
         onClick={toggleMenu}
@@ -43,9 +54,22 @@ const Logout = ({ authUser, onLogoutClick, artifactSaved }) => {
         {authUser}
       </Button>
 
-      <Menu anchorEl={anchorRef.current} keepMounted open={showMenu} onClose={handleClose}>
-        <MenuItem onClick={handleLogout}>Logout</MenuItem>
-      </Menu>
+      <Popper open={showMenu} anchorEl={anchorRef.current} role={undefined} transition disablePortal>
+        {({ TransitionProps, placement }) => (
+          <Grow
+            {...TransitionProps}
+            style={{ transformOrigin: placement === 'bottom' ? 'center top' : 'center bottom' }}
+          >
+            <Paper>
+              <ClickAwayListener onClickAway={handleClose}>
+                <MenuList autoFocusItem={showMenu} id="logout-menu" onKeyDown={handleListKeyDown}>
+                  <MenuItem onClick={handleLogout}>Logout</MenuItem>
+                </MenuList>
+              </ClickAwayListener>
+            </Paper>
+          </Grow>
+        )}
+      </Popper>
 
       <Modal
         title="Logout Confirmation"

@@ -5,7 +5,8 @@ import { TextField } from '@material-ui/core';
 export default class StringEditor extends Component {
   handleChange = newValue => {
     const { name, type, label, updateInstance } = this.props;
-    updateInstance({ name, type, label, value: String(newValue) });
+    const value = newValue ? `'${newValue}'` : null;
+    updateInstance({ name, type, label, value: String(value) });
   };
 
   render() {

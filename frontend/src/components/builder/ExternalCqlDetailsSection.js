@@ -45,7 +45,7 @@ export default class ExternalCqlDetailsSection extends Component {
 
     return (
       <div className="external-cql-details-section">
-        <Accordion>
+        <Accordion defaultExpanded>
           <AccordionSummary
             expandIcon={<ExpandMoreIcon />}
             aria-controls="external-cql-details-content"
