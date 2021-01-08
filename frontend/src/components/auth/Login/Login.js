@@ -16,9 +16,9 @@ const Login = () => {
   const [showWarning, setShowWarning] = useState(false);
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const isAuthenticating = useSelector(state => state.auth.isAuthenticating);
   const authStatus = useSelector(state => state.auth.authStatus);
   const authStatusText = useSelector(state => state.auth.authStatusText);
+  const isAuthenticating = useSelector(state => state.auth.isAuthenticating);
   const dispatch = useDispatch();
   const history = useHistory();
   const styles = useStyles();
@@ -65,7 +65,7 @@ const Login = () => {
       <Modal
         handleCloseModal={closeModal}
         handleSaveModal={handleLogin}
-        handleShowModal={showModal}
+        isOpen={showModal}
         isLoading={isAuthenticating}
         submitButtonText="Login"
         theme="dark"

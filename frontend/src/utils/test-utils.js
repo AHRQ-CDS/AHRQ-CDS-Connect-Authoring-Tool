@@ -4,13 +4,14 @@ import { render } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 import { MuiPickersUtilsProvider } from '@material-ui/pickers';
 import DateFnsUtils from '@date-io/date-fns';
+import { QueryClient, QueryClientProvider } from 'react-query';
 import configureStore from '../store/configureStore';
 
 const ProviderWrapper = ({ children }) => (
   <MemoryRouter>
     <Provider store={configureStore()}>
       <MuiPickersUtilsProvider utils={DateFnsUtils}>
-        {children}
+        <QueryClientProvider client={new QueryClient()}>{children}</QueryClientProvider>
       </MuiPickersUtilsProvider>
     </Provider>
   </MemoryRouter>

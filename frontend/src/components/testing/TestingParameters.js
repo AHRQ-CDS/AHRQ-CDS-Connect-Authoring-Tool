@@ -19,22 +19,13 @@ export default class TestingParameters extends Component {
         {this.props.parameters.map((parameter, i) => (
           <TestingParameter
             key={`param-${i}`}
+            id={parameter.uniqueId}
             index={i}
             name={parameter.name}
-            id={parameter.uniqueId}
             type={parameter.type}
-            value={parameter.value}
             updateInstanceOfParameter={this.updateInstanceOfParameter}
+            value={parameter.value}
             vsacApiKey={this.props.vsacApiKey}
-            loginVSACUser={this.props.loginVSACUser}
-            setVSACAuthStatus={this.props.setVSACAuthStatus}
-            vsacStatus={this.props.vsacStatus}
-            vsacStatusText={this.props.vsacStatusText}
-            isValidatingCode={this.props.isValidatingCode}
-            isValidCode={this.props.isValidCode}
-            codeData={this.props.codeData}
-            validateCode={this.props.validateCode}
-            resetCodeValidation={this.props.resetCodeValidation}
           />
         ))}
       </div>
@@ -45,14 +36,5 @@ export default class TestingParameters extends Component {
 TestingParameters.propTypes = {
   parameters: PropTypes.array.isRequired,
   updateParameters: PropTypes.func.isRequired,
-  vsacApiKey: PropTypes.string,
-  loginVSACUser: PropTypes.func.isRequired,
-  setVSACAuthStatus: PropTypes.func.isRequired,
-  vsacStatus: PropTypes.string,
-  vsacStatusText: PropTypes.string,
-  isValidatingCode: PropTypes.bool.isRequired,
-  isValidCode: PropTypes.bool,
-  codeData: PropTypes.object,
-  validateCode: PropTypes.func.isRequired,
-  resetCodeValidation: PropTypes.func.isRequired
+  vsacApiKey: PropTypes.string
 };

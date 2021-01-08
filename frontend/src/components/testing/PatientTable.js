@@ -6,6 +6,7 @@ import {
   CheckBox as CheckBoxIcon,
   CheckBoxOutlineBlank as CheckBoxOutlineBlankIcon,
   Delete as DeleteIcon,
+  Lock as LockIcon,
   Visibility as VisibilityIcon
 } from '@material-ui/icons';
 import { UncontrolledTooltip } from 'reactstrap';
@@ -17,7 +18,7 @@ import patientProps from 'prop-types/patient';
 import artifactProps from 'prop-types/artifact';
 
 import { Dropdown, Modal } from 'components/elements';
-import VSACAuthenticationModal from '../builder/VSACAuthenticationModal';
+import { VSACAuthenticationModal } from 'components/modals';
 import CodeService from 'utils/code_service/CodeService';
 import PatientView from './PatientView';
 import TestingParameters from './TestingParameters';
@@ -27,17 +28,28 @@ export default class PatientTable extends Component {
     super(props);
 
     this.state = {
-      patientToDelete: null,
-      showConfirmDeleteModal: false,
-      patientToView: null,
-      showViewDetailsModal: false,
-      patientsToExecute: [],
       artifactToExecute: null,
+      codeService: new CodeService(),
       paramsToExecute: [],
+      patientsToExecute: [],
+      patientToDelete: null,
+      patientToView: null,
+      showConfirmDeleteModal: false,
       showExecuteCQLModal: false,
+      showViewDetailsModal: false,
+      showVSACAuthenticationModal: false,
       testReport: null,
-      codeService: new CodeService()
     };
+  }
+
+  // ----------------------- VSAC AUTHENTICATION MODAL -------------------------- //
+
+  openVSACAuthenticationModal = () => {
+    this.setState({ showVSACAuthenticationModal: true });
+  }
+
+  closeVSACAuthenticationModal = () => {
+    this.setState({ showVSACAuthenticationModal: false });
   }
 
   // ----------------------- CONFIRM DELETE MODAL -------------------------- //
@@ -162,7 +174,7 @@ export default class PatientTable extends Component {
       title="Delete Patient Confirmation"
       submitButtonText="Delete"
       hasCancelButton
-      handleShowModal={this.state.showConfirmDeleteModal}
+      isOpen={this.state.showConfirmDeleteModal}
       handleCloseModal={this.closeConfirmDeleteModal}
       handleSaveModal={this.handleDeletePatient}
     >
@@ -192,7 +204,7 @@ export default class PatientTable extends Component {
   renderViewDetailsModal = () => (
     <Modal
       title="View Patient Details"
-      handleShowModal={this.state.showViewDetailsModal}
+      isOpen={this.state.showViewDetailsModal}
       handleCloseModal={this.closeViewDetailsModal}
       handleSaveModal={this.handleViewDetails}
       submitButtonText="Close"
@@ -221,7 +233,7 @@ export default class PatientTable extends Component {
         title="Execute CQL on Selected Patients"
         submitButtonText="Execute CQL"
         submitDisabled={this.state.artifactToExecute == null}
-        handleShowModal={this.state.showExecuteCQLModal}
+        isOpen={this.state.showExecuteCQLModal}
         handleCloseModal={this.closeExecuteCQLModal}
         handleSaveModal={this.handleExecuteCQL}
       >
@@ -240,15 +252,6 @@ export default class PatientTable extends Component {
             parameters={this.state.paramsToExecute}
             updateParameters={this.updateParameters}
             vsacApiKey={this.props.vsacApiKey}
-            loginVSACUser={this.props.loginVSACUser}
-            setVSACAuthStatus={this.props.setVSACAuthStatus}
-            vsacStatus={this.props.vsacStatus}
-            vsacStatusText={this.props.vsacStatusText}
-            isValidatingCode={this.props.isValidatingCode}
-            isValidCode={this.props.isValidCode}
-            codeData={this.props.codeData}
-            validateCode={this.props.validateCode}
-            resetCodeValidation={this.props.resetCodeValidation}
           />
         </div>
       </Modal>
@@ -360,42 +363,30 @@ export default class PatientTable extends Component {
     );
   }
 
-  renderVSACLogin = () => {
-    // If last time authenticated was less than 7.5 hours ago, force user to log in again.
-    if (!this.props.vsacApiKey) {
-      return (
-        <div className="vsac-authenticate">
-          <VSACAuthenticationModal
-            loginVSACUser={this.props.loginVSACUser}
-            setVSACAuthStatus={this.props.setVSACAuthStatus}
-            vsacStatus={this.props.vsacStatus}
-            vsacStatusText={this.props.vsacStatusText}
-            vsacIsAuthenticating={this.props.vsacIsAuthenticating} />
-        </div>
-      );
-    }
-
-    return (
-      <div className="vsac-authenticate">
-        <Button color="primary" disabled variant="contained" startIcon={<CheckIcon />}>
-          VSAC Authenticated
-        </Button>
-      </div>
-    );
-  }
-
   render() {
-    const patients = this.props.patients;
-    const loggedIn = Boolean(this.props.vsacApiKey);
+    const { patients, vsacApiKey } = this.props;
+    const { patientsToExecute, showVSACAuthenticationModal } = this.state;
 
     return (
       <div className="patient-table">
         <div className="patient-table__buttons">
-          {this.renderVSACLogin()}
+          <Button
+            color="primary"
+            disabled={Boolean(vsacApiKey)}
+            onClick={this.openVSACAuthenticationModal}
+            variant="contained"
+            startIcon={Boolean(vsacApiKey) ? <CheckIcon /> : <LockIcon />}
+          >
+            {Boolean(vsacApiKey) ? 'VSAC Authenticated' : 'Authenticate VSAC' }
+          </Button>
+
+          {showVSACAuthenticationModal && (
+            <VSACAuthenticationModal handleCloseModal={this.closeVSACAuthenticationModal} />
+          )}
 
           <Button
             color="primary"
-            disabled={!loggedIn || this.state.patientsToExecute.length === 0}
+            disabled={!Boolean(vsacApiKey) || patientsToExecute.length === 0}
             onClick={() => this.openExecuteCQLModal()}
             variant="contained"
           >
@@ -430,19 +421,9 @@ export default class PatientTable extends Component {
 }
 
 PatientTable.propTypes = {
-  patients: PropTypes.arrayOf(patientProps).isRequired,
   artifacts: PropTypes.arrayOf(artifactProps).isRequired,
   deletePatient: PropTypes.func.isRequired,
   executeCQLArtifact: PropTypes.func.isRequired,
-  vsacApiKey: PropTypes.string,
-  loginVSACUser: PropTypes.func.isRequired,
-  setVSACAuthStatus: PropTypes.func.isRequired,
-  vsacStatus: PropTypes.string,
-  vsacStatusText: PropTypes.string,
-  isValidatingCode: PropTypes.bool.isRequired,
-  isValidCode: PropTypes.bool,
-  codeData: PropTypes.object,
-  validateCode: PropTypes.func.isRequired,
-  resetCodeValidation: PropTypes.func.isRequired,
-  vsacIsAuthenticating: PropTypes.bool.isRequired
+  patients: PropTypes.arrayOf(patientProps).isRequired,
+  vsacApiKey: PropTypes.string
 };

@@ -1,10 +1,7 @@
 import React from 'react';
-import axios from 'axios';
 import nock from 'nock';
 import { render, screen, fireEvent, userEvent } from 'utils/test-utils';
 import QuantityModifier from '../QuantityModifier';
-
-axios.defaults.adapter = require('axios/lib/adapters/http');
 
 describe('<QuantityModifier />', () => {
   const renderComponent = (props = {}) =>

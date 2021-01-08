@@ -1,18 +1,16 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { useQuery } from 'react-query';
-import axios from 'axios';
 import clsx from 'clsx';
 
 import { Dropdown } from 'components/elements';
+import fetchValueSets from 'queries/fetchValueSets';
 import useStyles from './styles';
-
-const fetchValueSets = (key, { type }) =>
-  axios.get(`${process.env.REACT_APP_API_URL}/config/valuesets/${type}`).then(({ data }) => data.expansion);
 
 const ValueSetField = ({ field, updateInstance }) => {
   const styles = useStyles();
-  const { data } = useQuery(['valueSets', { type: field.select }], fetchValueSets);
+  const query = { type: field.select };
+  const { data } = useQuery(['valueSets', query], () => fetchValueSets(query));
   const valueSets = data ?? [];
 
   const handleUpdateInstance = event => {

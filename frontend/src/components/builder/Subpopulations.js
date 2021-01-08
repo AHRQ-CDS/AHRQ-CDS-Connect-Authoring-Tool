@@ -72,49 +72,31 @@ export default class Subpopulations extends Component {
         {this.state.subpopulations.map((subpop, i) => (
           <Subpopulation
             key={subpop.uniqueId}
-            treeName={this.props.name}
-            subpopulation={subpop}
-            subpopulationIndex={i + this.state.numOfSpecialSubpopulations} // System needs to know true index out of all subpopulations
-            setSubpopulationName={this.setSubpopulationName}
-            deleteSubpopulation={this.deleteSubpopulation}
-            parameters={this.props.parameters}
-            baseElements={this.props.baseElements}
-            externalCqlList={this.props.externalCqlList}
-            loadExternalCqlList={this.props.loadExternalCqlList}
             addInstance={this.props.addInstance}
-            editInstance={this.props.editInstance}
-            updateInstanceModifiers={this.props.updateInstanceModifiers}
+            artifact={this.props.artifact}
+            baseElements={this.props.baseElements}
+            conversionFunctions={this.props.conversionFunctions}
             deleteInstance={this.props.deleteInstance}
+            deleteSubpopulation={this.deleteSubpopulation}
+            editInstance={this.props.editInstance}
+            externalCqlList={this.props.externalCqlList}
             getAllInstances={this.props.getAllInstances}
             getAllInstancesInAllTrees={this.props.getAllInstancesInAllTrees}
-            templates={this.props.templates}
-            artifact={this.props.artifact}
+            instanceNames={this.props.instanceNames}
+            isLoadingModifiers={this.props.isLoadingModifiers}
+            loadExternalCqlList={this.props.loadExternalCqlList}
             modifierMap={this.props.modifierMap}
             modifiersByInputType={this.props.modifiersByInputType}
-            isLoadingModifiers={this.props.isLoadingModifiers}
-            conversionFunctions={this.props.conversionFunctions}
-            instanceNames={this.props.instanceNames}
+            parameters={this.props.parameters}
             scrollToElement={this.props.scrollToElement}
-            loginVSACUser={this.props.loginVSACUser}
-            setVSACAuthStatus={this.props.setVSACAuthStatus}
-            vsacStatus={this.props.vsacStatus}
-            vsacStatusText={this.props.vsacStatusText}
-            searchVSACByKeyword={this.props.searchVSACByKeyword}
-            isSearchingVSAC={this.props.isSearchingVSAC}
-            vsacSearchResults={this.props.vsacSearchResults}
-            vsacSearchCount={this.props.vsacSearchCount}
-            getVSDetails={this.props.getVSDetails}
-            isRetrievingDetails={this.props.isRetrievingDetails}
-            vsacDetailsCodes={this.props.vsacDetailsCodes}
-            vsacDetailsCodesError={this.props.vsacDetailsCodesError}
-            vsacApiKey={this.props.vsacApiKey}
+            setSubpopulationName={this.setSubpopulationName}
+            subpopulation={subpop}
+            subpopulationIndex={i + this.state.numOfSpecialSubpopulations} // System needs to know true index out of all subpopulations
+            templates={this.props.templates}
+            treeName={this.props.name}
+            updateInstanceModifiers={this.props.updateInstanceModifiers}
             validateReturnType={this.props.validateReturnType}
-            isValidatingCode={this.props.isValidatingCode}
-            isValidCode={this.props.isValidCode}
-            codeData={this.props.codeData}
-            validateCode={this.props.validateCode}
-            resetCodeValidation={this.props.resetCodeValidation}
-            vsacIsAuthenticating={this.props.vsacIsAuthenticating}
+            vsacApiKey={this.props.vsacApiKey}
           />
         ))}
 
@@ -131,39 +113,28 @@ export default class Subpopulations extends Component {
 }
 
 Subpopulations.propTypes = {
-  artifact: PropTypes.object.isRequired,
-  updateSubpopulations: PropTypes.func.isRequired,
-  templates: PropTypes.array.isRequired,
   addInstance: PropTypes.func.isRequired,
-  editInstance: PropTypes.func.isRequired,
-  updateInstanceModifiers: PropTypes.func.isRequired,
+  artifact: PropTypes.object.isRequired,
+  baseElements: PropTypes.array.isRequired,
+  checkSubpopulationUsage: PropTypes.func.isRequired,
+  conversionFunctions: PropTypes.array,
   deleteInstance: PropTypes.func.isRequired,
+  editInstance: PropTypes.func.isRequired,
+  externalCqlList: PropTypes.array.isRequired,
   getAllInstances: PropTypes.func.isRequired,
   getAllInstancesInAllTrees: PropTypes.func.isRequired,
   instanceNames: PropTypes.array.isRequired,
-  updateRecsSubpop: PropTypes.func.isRequired,
-  checkSubpopulationUsage: PropTypes.func.isRequired,
-  parameters: PropTypes.array.isRequired,
-  externalCqlList: PropTypes.array.isRequired,
+  isLoadingModifiers: PropTypes.bool,
   loadExternalCqlList: PropTypes.func.isRequired,
-  name: PropTypes.string.isRequired,
   modifierMap: PropTypes.object.isRequired,
   modifiersByInputType: PropTypes.object.isRequired,
-  isLoadingModifiers: PropTypes.bool,
-  conversionFunctions: PropTypes.array,
+  name: PropTypes.string.isRequired,
+  parameters: PropTypes.array.isRequired,
   scrollToElement: PropTypes.func,
-  loginVSACUser: PropTypes.func.isRequired,
-  setVSACAuthStatus: PropTypes.func.isRequired,
-  vsacStatus: PropTypes.string,
-  vsacStatusText: PropTypes.string,
-  searchVSACByKeyword: PropTypes.func.isRequired,
-  isSearchingVSAC: PropTypes.bool.isRequired,
-  vsacSearchResults: PropTypes.array.isRequired,
-  vsacSearchCount: PropTypes.number.isRequired,
-  getVSDetails: PropTypes.func.isRequired,
-  isRetrievingDetails: PropTypes.bool.isRequired,
-  vsacDetailsCodes: PropTypes.array.isRequired,
-  vsacDetailsCodesError: PropTypes.string.isRequired,
+  templates: PropTypes.array.isRequired,
+  updateInstanceModifiers: PropTypes.func.isRequired,
+  updateRecsSubpop: PropTypes.func.isRequired,
+  updateSubpopulations: PropTypes.func.isRequired,
   validateReturnType: PropTypes.bool,
-  vsacIsAuthenticating: PropTypes.bool.isRequired
+  vsacApiKey: PropTypes.string
 };

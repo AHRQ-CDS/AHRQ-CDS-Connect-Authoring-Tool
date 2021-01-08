@@ -38,28 +38,18 @@ export default class Parameters extends Component {
         {this.props.parameters.map((parameter, i) => (
           <Parameter
             key={`param-${i}`}
-            index={i}
-            name={parameter.name}
-            id={parameter.uniqueId}
-            type={parameter.type}
-            value={parameter.value}
-            usedBy={parameter.usedBy}
             comment={parameter.comment}
-            instanceNames={this.props.instanceNames}
-            updateInstanceOfParameter={this.updateInstanceOfParameter}
             deleteParameter={this.deleteParameter}
-            vsacApiKey={this.props.vsacApiKey}
-            loginVSACUser={this.props.loginVSACUser}
-            setVSACAuthStatus={this.props.setVSACAuthStatus}
-            vsacStatus={this.props.vsacStatus}
-            vsacStatusText={this.props.vsacStatusText}
-            isValidatingCode={this.props.isValidatingCode}
-            isValidCode={this.props.isValidCode}
-            codeData={this.props.codeData}
-            validateCode={this.props.validateCode}
-            resetCodeValidation={this.props.resetCodeValidation}
             getAllInstancesInAllTrees={this.props.getAllInstancesInAllTrees}
-            vsacIsAuthenticating={this.props.vsacIsAuthenticating}
+            id={parameter.uniqueId}
+            index={i}
+            instanceNames={this.props.instanceNames}
+            name={parameter.name}
+            type={parameter.type}
+            updateInstanceOfParameter={this.updateInstanceOfParameter}
+            usedBy={parameter.usedBy}
+            value={parameter.value}
+            vsacApiKey={this.props.vsacApiKey}
           />
         ))}
 
@@ -72,14 +62,9 @@ export default class Parameters extends Component {
 }
 
 Parameters.propTypes = {
+  getAllInstancesInAllTrees: PropTypes.func.isRequired,
+  instanceNames: PropTypes.array.isRequired,
   parameters: PropTypes.array.isRequired,
   updateParameters: PropTypes.func.isRequired,
-  instanceNames: PropTypes.array.isRequired,
-  vsacApiKey: PropTypes.string,
-  loginVSACUser: PropTypes.func.isRequired,
-  setVSACAuthStatus: PropTypes.func.isRequired,
-  vsacStatus: PropTypes.string,
-  vsacStatusText: PropTypes.string,
-  vsacIsAuthenticating: PropTypes.bool,
-  getAllInstancesInAllTrees: PropTypes.func.isRequired
+  vsacApiKey: PropTypes.string
 };

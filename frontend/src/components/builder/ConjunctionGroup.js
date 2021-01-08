@@ -178,7 +178,7 @@ export default class ConjunctionGroup extends Component {
       <Modal
         title="Delete Group Confirmation"
         submitButtonText="Delete"
-        handleShowModal={this.state.showConfirmDeleteModal}
+        isOpen={this.state.showConfirmDeleteModal}
         handleCloseModal={this.closeConfirmDeleteModal}
         handleSaveModal={this.handleDeleteInstance}
       >
@@ -397,51 +397,33 @@ export default class ConjunctionGroup extends Component {
         return (
           <div key={instance.uniqueId} className="card-group">
             <ConjunctionGroup
-              root={false}
-              treeName={treeName}
-              artifact={artifact}
-              templates={templates}
-              instance={instance}
               addInstance={addInstance}
-              editInstance={editInstance}
+              artifact={artifact}
+              baseElements={this.props.baseElements}
+              conversionFunctions={this.props.conversionFunctions}
               deleteInstance={deleteInstance}
+              disableAddElement={this.props.disableAddElement}
+              editInstance={editInstance}
+              elementUniqueId={this.props.elementUniqueId}
+              externalCqlList={this.props.externalCqlList}
               getAllInstances={this.props.getAllInstances}
               getAllInstancesInAllTrees={this.props.getAllInstancesInAllTrees}
-              updateInstanceModifiers={this.props.updateInstanceModifiers}
-              parameters={this.props.parameters}
-              baseElements={this.props.baseElements}
-              externalCqlList={this.props.externalCqlList}
-              loadExternalCqlList={this.props.loadExternalCqlList}
               getPath={this.getChildsPath}
+              instance={instance}
+              instanceNames={this.props.instanceNames}
+              isLoadingModifiers={this.props.isLoadingModifiers}
+              loadExternalCqlList={this.props.loadExternalCqlList}
               modifierMap={this.props.modifierMap}
               modifiersByInputType={this.props.modifiersByInputType}
-              isLoadingModifiers={this.props.isLoadingModifiers}
-              conversionFunctions={this.props.conversionFunctions}
-              instanceNames={this.props.instanceNames}
-              subPopulationIndex={this.props.subPopulationIndex}
+              parameters={this.props.parameters}
+              root={false}
               scrollToElement={this.props.scrollToElement}
-              loginVSACUser={this.props.loginVSACUser}
-              setVSACAuthStatus={this.props.setVSACAuthStatus}
-              vsacStatus={this.props.vsacStatus}
-              vsacStatusText={this.props.vsacStatusText}
-              searchVSACByKeyword={this.props.searchVSACByKeyword}
-              isSearchingVSAC={this.props.isSearchingVSAC}
-              vsacSearchResults={this.props.vsacSearchResults}
-              vsacSearchCount={this.props.vsacSearchCount}
-              getVSDetails={this.props.getVSDetails}
-              isRetrievingDetails={this.props.isRetrievingDetails}
-              vsacDetailsCodes={this.props.vsacDetailsCodes}
-              vsacDetailsCodesError={this.props.vsacDetailsCodesError}
-              vsacApiKey={this.props.vsacApiKey}
+              subPopulationIndex={this.props.subPopulationIndex}
+              templates={templates}
+              treeName={treeName}
+              updateInstanceModifiers={this.props.updateInstanceModifiers}
               validateReturnType={this.props.validateReturnType}
-              isValidatingCode={this.props.isValidatingCode}
-              isValidCode={this.props.isValidCode}
-              codeData={this.props.codeData}
-              validateCode={this.props.validateCode}
-              resetCodeValidation={this.props.resetCodeValidation}
-              disableAddElement={this.props.disableAddElement}
-              elementUniqueId={this.props.elementUniqueId}
-              vsacIsAuthenticating={this.props.vsacIsAuthenticating}
+              vsacApiKey={this.props.vsacApiKey}
             />
 
             {this.renderConjunctionSelect(i)}
@@ -461,44 +443,26 @@ export default class ConjunctionGroup extends Component {
         <TemplateInstance
           allInstancesInAllTrees={allInstancesInAllTrees}
           baseElements={this.props.baseElements}
-          codeData={this.props.codeData}
           conversionFunctions={this.props.conversionFunctions}
           deleteInstance={this.props.deleteInstance}
           disableAddElement={this.props.disableAddElement}
           disableIndent={this.props.disableIndent}
           editInstance={this.props.editInstance}
           getPath={this.getChildsPath}
-          getVSDetails={this.props.getVSDetails}
           instanceNames={this.props.instanceNames}
           isLoadingModifiers={this.props.isLoadingModifiers}
-          isRetrievingDetails={this.props.isRetrievingDetails}
-          isSearchingVSAC={this.props.isSearchingVSAC}
-          isValidatingCode={this.props.isValidatingCode}
-          isValidCode={this.props.isValidCode}
-          loginVSACUser={this.props.loginVSACUser}
           modifierMap={this.props.modifierMap}
           modifiersByInputType={this.props.modifiersByInputType}
           otherInstances={this.props.getAllInstances(this.props.treeName)}
           parameters={this.props.parameters}
           renderIndentButtons={this.renderIndentButtons}
-          resetCodeValidation={this.props.resetCodeValidation}
           scrollToElement={this.props.scrollToElement}
-          searchVSACByKeyword={this.props.searchVSACByKeyword}
-          setVSACAuthStatus={this.props.setVSACAuthStatus}
           subpopulationIndex={this.props.subPopulationIndex}
           templateInstance={instance}
           treeName={this.props.treeName}
           updateInstanceModifiers={this.props.updateInstanceModifiers}
-          validateCode={this.props.validateCode}
           validateReturnType={this.props.validateReturnType}
           vsacApiKey={this.props.vsacApiKey}
-          vsacDetailsCodes={this.props.vsacDetailsCodes}
-          vsacDetailsCodesError={this.props.vsacDetailsCodesError}
-          vsacIsAuthenticating={this.props.vsacIsAuthenticating}
-          vsacSearchCount={this.props.vsacSearchCount}
-          vsacSearchResults={this.props.vsacSearchResults}
-          vsacStatus={this.props.vsacStatus}
-          vsacStatusText={this.props.vsacStatusText}
         />
 
         {this.renderConjunctionSelect(instance)}
@@ -519,33 +483,16 @@ export default class ConjunctionGroup extends Component {
           <div className="card-element">
             <ElementSelect
               artifactId={this.props.artifact._id}
-              categories={this.props.templates}
-              onSuggestionSelected={this.addChild}
-              parameters={this.props.parameters}
               baseElements={this.props.baseElements}
-              externalCqlList={this.props.externalCqlList}
-              loadExternalCqlList={this.props.loadExternalCqlList}
-              loginVSACUser={this.props.loginVSACUser}
-              setVSACAuthStatus={this.props.setVSACAuthStatus}
-              vsacStatus={this.props.vsacStatus}
-              vsacStatusText={this.props.vsacStatusText}
-              searchVSACByKeyword={this.props.searchVSACByKeyword}
-              isSearchingVSAC={this.props.isSearchingVSAC}
-              vsacSearchResults={this.props.vsacSearchResults}
-              vsacSearchCount={this.props.vsacSearchCount}
-              getVSDetails={this.props.getVSDetails}
-              isRetrievingDetails={this.props.isRetrievingDetails}
-              vsacDetailsCodes={this.props.vsacDetailsCodes}
-              vsacDetailsCodesError={this.props.vsacDetailsCodesError}
-              vsacApiKey={this.props.vsacApiKey}
-              isValidatingCode={this.props.isValidatingCode}
-              isValidCode={this.props.isValidCode}
-              codeData={this.props.codeData}
-              validateCode={this.props.validateCode}
-              resetCodeValidation={this.props.resetCodeValidation}
-              inBaseElements={false}
+              categories={this.props.templates}
               disableAddElement={this.props.disableAddElement}
               elementUniqueId={this.props.elementUniqueId}
+              externalCqlList={this.props.externalCqlList}
+              inBaseElements={false}
+              loadExternalCqlList={this.props.loadExternalCqlList}
+              onSuggestionSelected={this.addChild}
+              parameters={this.props.parameters}
+              vsacApiKey={this.props.vsacApiKey}
             />
           </div>
         }
@@ -556,44 +503,33 @@ export default class ConjunctionGroup extends Component {
 }
 
 ConjunctionGroup.propTypes = {
+  addInstance: PropTypes.func.isRequired,
   artifact: PropTypes.object,
-  codeData: PropTypes.object,
+  baseElements: PropTypes.array.isRequired,
   conversionFunctions: PropTypes.array,
   deleteInstance: PropTypes.func.isRequired,
   disableAddElement: PropTypes.bool,
   disableIndent: PropTypes.bool,
+  editInstance: PropTypes.func.isRequired,
   elementUniqueId: PropTypes.string,
   externalCqlList: PropTypes.array.isRequired,
   getAllInstances: PropTypes.func.isRequired,
   getAllInstancesInAllTrees: PropTypes.func.isRequired,
   getPath: requiredIf(PropTypes.func, props => !props.root), // path needed for children
-  getVSDetails: PropTypes.func.isRequired,
+  instance: PropTypes.object.isRequired,
   instanceNames: PropTypes.array.isRequired,
   isLoadingModifiers: PropTypes.bool,
-  isRetrievingDetails: PropTypes.bool.isRequired,
-  isSearchingVSAC: PropTypes.bool.isRequired,
-  isValidatingCode: PropTypes.bool.isRequired,
-  isValidCode: PropTypes.bool,
   loadExternalCqlList: PropTypes.func.isRequired,
-  loginVSACUser: PropTypes.func.isRequired,
   modifierMap: PropTypes.object.isRequired,
   modifiersByInputType: PropTypes.object.isRequired,
   options: PropTypes.string,
-  resetCodeValidation: PropTypes.func.isRequired,
+  parameters: PropTypes.array,
   root: PropTypes.bool.isRequired,
   scrollToElement: PropTypes.func.isRequired,
-  searchVSACByKeyword: PropTypes.func.isRequired,
-  setVSACAuthStatus: PropTypes.func.isRequired,
+  subPopulationIndex: PropTypes.number,
   templates: PropTypes.array,
   treeName: PropTypes.string.isRequired,
-  validateCode: PropTypes.func.isRequired,
+  updateInstanceModifiers: PropTypes.func.isRequired,
   validateReturnType: PropTypes.bool,
-  vsacApiKey: PropTypes.string,
-  vsacDetailsCodes: PropTypes.array.isRequired,
-  vsacDetailsCodesError: PropTypes.string.isRequired,
-  vsacIsAuthenticating: PropTypes.bool.isRequired,
-  vsacSearchCount: PropTypes.number.isRequired,
-  vsacSearchResults: PropTypes.array.isRequired,
-  vsacStatus: PropTypes.string,
-  vsacStatusText: PropTypes.string
+  vsacApiKey: PropTypes.string
 };

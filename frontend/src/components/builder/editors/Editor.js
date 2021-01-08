@@ -26,17 +26,7 @@ export default class Editor extends Component {
     ]);
 
     const codeEditorProps = _.pick(this.props, [
-      'codeData',
-      'isValidatingCode',
-      'isValidCode',
-      'loginVSACUser',
-      'resetCodeValidation',
-      'setVSACAuthStatus',
-      'validateCode',
-      'vsacApiKey',
-      'vsacIsAuthenticating',
-      'vsacStatus',
-      'vsacStatusText'
+      'vsacApiKey'
     ]);
 
     switch (this.props.type) {
@@ -73,22 +63,12 @@ export default class Editor extends Component {
 }
 
 Editor.propTypes = {
-  codeData: PropTypes.object,
   disableEditing: PropTypes.bool,
   isConcept: PropTypes.bool,
-  isValidatingCode: PropTypes.bool.isRequired,
-  isValidCode: PropTypes.bool,
   label: PropTypes.string.isRequired,
-  loginVSACUser: PropTypes.func.isRequired,
   name: PropTypes.string,
-  resetCodeValidation: PropTypes.func.isRequired,
-  setVSACAuthStatus: PropTypes.func.isRequired,
   type: PropTypes.string.isRequired,
   updateInstance: PropTypes.func.isRequired,
-  validateCode: PropTypes.func.isRequired,
   value: PropTypes.any,
-  vsacApiKey: PropTypes.string,
-  vsacIsAuthenticating: PropTypes.bool,
-  vsacStatus: PropTypes.string,
-  vsacStatusText: PropTypes.string,
+  vsacApiKey: PropTypes.string
 };

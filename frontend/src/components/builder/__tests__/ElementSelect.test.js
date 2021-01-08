@@ -10,26 +10,11 @@ describe('<ElementSelect />', () => {
         baseElements={[]}
         categories={genericElementGroups}
         externalCqlList={[]}
-        getVSDetails={jest.fn()}
         inBaseElements={false}
-        isRetrievingDetails={false}
-        isSearchingVSAC={false}
-        isValidatingCode={false}
         loadExternalCqlList={jest.fn()}
-        loginVSACUser={jest.fn()}
         onSuggestionSelected={jest.fn()}
         parameters={[]}
-        resetCodeValidation={jest.fn()}
-        searchVSACByKeyword={jest.fn()}
-        setVSACAuthStatus={jest.fn()}
-        validateCode={jest.fn()}
-        vsacApiKey={'key'}
-        vsacDetailsCodes={[]}
-        vsacDetailsCodesError={''}
-        vsacSearchCount={0}
-        vsacSearchResults={[]}
-        vsacStatus={''}
-        vsacStatusText={''}
+        vsacApiKey="key"
         {...props}
       />
     );

@@ -1,10 +1,11 @@
-import React, { memo, useState, useCallback } from 'react';
+  import React, { memo, useState, useCallback } from 'react';
 import { Checkbox, FormControlLabel } from '@material-ui/core';
 import { KeyboardDatePicker } from '@material-ui/pickers';
 import { useField, useFormikContext } from 'formik';
 import clsx from 'clsx';
 
 import { isCpgComplete } from 'utils/fields';
+import useStyles from './styles';
 
 export default memo(function DateField({
   name,
@@ -21,6 +22,7 @@ export default memo(function DateField({
   const [field, , { setValue }] = useField(fieldName);
   const { value } = field;
   const { values } = useFormikContext();
+  const styles = useStyles();
 
   const toggleSelectNoDate = useCallback(() => {
     setValue(null);
@@ -28,18 +30,18 @@ export default memo(function DateField({
   }, [setNoDateSelected, setValue]);
 
   return (
-    <div className="field date-field">
+    <div className={clsx(styles.field, styles.fieldCentered)}>
       {label && (
-        <label htmlFor={fieldName} className="field-label">
+        <label htmlFor={fieldName} className={styles.fieldLabel}>
           {label}
           {isCpgField && (
-            <span className={clsx('cpg-tag', isCpgComplete(name, values) && 'cpg-tag-complete')}>CPG</span>
+            <span className={clsx(styles.cpgTag, isCpgComplete(name, values) && styles.cpgTagComplete)}>CPG</span>
           )}
           :
         </label>
       )}
 
-      <div className="field-input">
+      <div className={clsx(styles.fieldInput, styles.dateFieldInput)}>
         <KeyboardDatePicker
           disabled={noDateSelected}
           format="MM/dd/yyyy"
@@ -52,11 +54,11 @@ export default memo(function DateField({
           value={value}
         />
 
-        {helperText && <div className="helper-text">{helperText}</div>}
+        {helperText && <div className={styles.helperText}>{helperText}</div>}
       </div>
 
       {noDateOption && (
-        <div className="field-checkbox">
+        <div className={styles.fieldCheckbox}>
           <FormControlLabel
             control={<Checkbox checked={noDateSelected} color="primary" onChange={toggleSelectNoDate} />}
             label={noDateText}

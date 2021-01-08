@@ -5,14 +5,16 @@ import { Add as AddIcon, Close as CloseIcon } from '@material-ui/icons';
 import clsx from 'clsx';
 
 import { isCpgComplete } from 'utils/fields';
+import useStyles from './styles';
 
 const FastGroupedField = memo(({ name, colSize, index, remove, fields }) => {
   const handleRemove = useCallback(() => remove(index), [remove, index]);
   const namePrefix = `${name}[${index}]`;
+  const styles = useStyles();
 
   return (
-    <Paper className="field-group-container">
-      <div className="close-button">
+    <Paper className={styles.fieldGroupContainer}>
+      <div className={styles.fieldGroupCloseButton}>
         <IconButton aria-label="close" color="primary" onClick={handleRemove}>
           <CloseIcon />
         </IconButton>
@@ -23,7 +25,7 @@ const FastGroupedField = memo(({ name, colSize, index, remove, fields }) => {
 
         return (
           <FormComponent
-            className="field-input"
+            className={styles.fieldInput}
             key={field.name}
             name={field.name}
             namePrefix={namePrefix}
@@ -41,17 +43,18 @@ const FastGroupedFieldArray = memo(({
     const hasGroupedFields = values[name].length > 0;
     const addGroup = useCallback(() => push(defaultValue), [push, defaultValue]);
     const cpgFieldComplete = isCpgComplete(name, values);
+    const styles = useStyles();
 
     return (
-      <div className="field grouped-fields">
-        <label htmlFor={name} className="field-label">
+      <div className={clsx(styles.field, styles.groupedFields)}>
+        <label htmlFor={name} className={styles.fieldLabel}>
           {label}
-          {isCpgField && <span className={clsx('cpg-tag', cpgFieldComplete && 'cpg-tag-complete')}>CPG</span>}:
+          {isCpgField && <span className={clsx(styles.cpgTag, cpgFieldComplete && styles.cpgTagComplete)}>CPG</span>}:
         </label>
 
-        <div className="field-groups">
+        <div className={styles.fieldGroups}>
           {hasGroupedFields && (
-            <div className="field-group">
+            <div className={styles.fieldGroup}>
               {values[name].map((value, index) => (
                 <FastGroupedField
                   name={name}
@@ -65,7 +68,7 @@ const FastGroupedFieldArray = memo(({
             </div>
           )}
 
-          <div className="field-input">
+          <div className={styles.fieldInput}>
             <Button
               color="primary"
               onClick={addGroup}

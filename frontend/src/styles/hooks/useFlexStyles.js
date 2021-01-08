@@ -1,7 +1,7 @@
-import { makeStyles, Theme as AugmentedTheme } from '@material-ui/core/styles';
+import { makeStyles } from '@material-ui/core/styles';
 
 export default makeStyles(
-  (theme: AugmentedTheme) => ({
+  {
     flex: {
       display: 'flex'
     },
@@ -40,7 +40,7 @@ export default makeStyles(
     },
     flexCol4: {
       width: '25%'
-    },
-  }),
+    }
+  },
   { name: 'Flex' }
 );

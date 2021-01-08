@@ -4,6 +4,7 @@ import { TextField as MuiTextField } from '@material-ui/core';
 import clsx from 'clsx';
 
 import { isCpgComplete } from 'utils/fields';
+import useStyles from './styles';
 
 let labelUuid = 0;
 
@@ -34,6 +35,7 @@ export default memo(function TextField({
 }) {
   const { values } = useFormikContext();
   const fieldName = namePrefix ? `${namePrefix}.${name}` : name;
+  const styles = useStyles();
 
   const labelId = useMemo(() => {
     if (!label) return null;
@@ -41,19 +43,19 @@ export default memo(function TextField({
   }, [label]);
 
   return (
-    <div className="field text-field">
+    <div className={styles.field}>
       {label && (
-        <label htmlFor={labelId} className="field-label">
+        <label htmlFor={labelId} className={styles.fieldLabel}>
           {label}
-          {required && <span className="required">*</span>}
+          {required && <span className={styles.required}>*</span>}
           {isCpgField && (
-            <span className={clsx('cpg-tag', isCpgComplete(name, values) && 'cpg-tag-complete')}>CPG</span>
+            <span className={clsx(styles.cpgTag, isCpgComplete(name, values) && styles.cpgTagComplete)}>CPG</span>
           )}
           :
         </label>
       )}
 
-      <div className="field-input field-input-full-width">
+      <div className={clsx(styles.fieldInput, styles.fieldInputFullWidth)}>
         <FastField
           component={MuiFastField}
           id={labelId}
@@ -63,7 +65,7 @@ export default memo(function TextField({
           type={type}
         />
 
-        {helperText && <div className="helper-text">{helperText}</div>}
+        {helperText && <div className={styles.helperText}>{helperText}</div>}
       </div>
     </div>
   );

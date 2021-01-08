@@ -22,16 +22,7 @@ export default class TestingParameter extends Component {
         comment: this.props.comment,
         value: (e != null ? e.value : null)
       }),
-      vsacApiKey: this.props.vsacApiKey,
-      loginVSACUser: this.props.loginVSACUser,
-      setVSACAuthStatus: this.props.setVSACAuthStatus,
-      vsacStatus: this.props.vsacStatus,
-      vsacStatusText: this.props.vsacStatusText,
-      isValidatingCode: this.props.isValidatingCode,
-      isValidCode: this.props.isValidCode,
-      codeData: this.props.codeData,
-      validateCode: this.props.validateCode,
-      resetCodeValidation: this.props.resetCodeValidation
+      vsacApiKey: this.props.vsacApiKey
     };
 
     return <Editor {...editorProps} />;
@@ -54,18 +45,10 @@ export default class TestingParameter extends Component {
 }
 
 TestingParameter.propTypes = {
+  id: PropTypes.string.isRequired,
   index: PropTypes.number.isRequired,
   name: PropTypes.string,
   type: PropTypes.string,
   updateInstanceOfParameter: PropTypes.func.isRequired,
-  vsacApiKey: PropTypes.string,
-  loginVSACUser: PropTypes.func.isRequired,
-  setVSACAuthStatus: PropTypes.func.isRequired,
-  vsacStatus: PropTypes.string,
-  vsacStatusText: PropTypes.string,
-  isValidatingCode: PropTypes.bool.isRequired,
-  isValidCode: PropTypes.bool,
-  codeData: PropTypes.object,
-  validateCode: PropTypes.func.isRequired,
-  resetCodeValidation: PropTypes.func.isRequired
+  vsacApiKey: PropTypes.string
 };

@@ -158,7 +158,7 @@ export default class Recommendations extends Component {
       <Modal
         title="Delete Recommendation"
         submitButtonText="Delete"
-        handleShowModal={this.state.showConfirmDeleteModal}
+        isOpen={this.state.showConfirmDeleteModal}
         handleCloseModal={this.closeConfirmDeleteModal}
         handleSaveModal={this.handleDeleteRecommendation}>
 

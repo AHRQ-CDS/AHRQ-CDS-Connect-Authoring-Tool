@@ -1,23 +1,21 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Button } from '@material-ui/core';
-import { Check as CheckIcon } from '@material-ui/icons';
+import { Check as CheckIcon, List as ListIcon } from '@material-ui/icons';
 import pluralize from 'pluralize';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBan, faKey, faPlus } from '@fortawesome/free-solid-svg-icons';
 import { IconButton } from '@material-ui/core';
-import CloseIcon from '@material-ui/icons/Close';
+import { Close as CloseIcon, LocalHospital as LocalHospitalIcon, Lock as LockIcon } from '@material-ui/icons';
 import _ from 'lodash';
 
-import ElementModal from './ElementModal';
-import VSACAuthenticationModal from './VSACAuthenticationModal';
-import CodeSelectModal from './CodeSelectModal';
 import { Dropdown } from 'components/elements';
+import { CodeSelectModal, ValueSetSelectModal, VSACAuthenticationModal } from 'components/modals';
 
-import changeToCase from '../../utils/strings';
-import filterUnsuppressed from '../../utils/filter';
-import { sortAlphabeticallyByKey } from '../../utils/sort';
-import { getFieldWithId, getFieldWithType } from '../../utils/instances';
+import changeToCase from 'utils/strings';
+import filterUnsuppressed from 'utils/filter';
+import { sortAlphabeticallyByKey } from 'utils/sort';
+import { getFieldWithId, getFieldWithType } from 'utils/instances';
 
 const getAllElements = categories => _.flatten(categories.map(cat => (
   cat.entries.map(e => ({
@@ -88,6 +86,9 @@ export default class ElementSelect extends Component {
 
     this.state = {
       categories: this.internalCategories.sort(sortAlphabeticallyByKey('name')),
+      showCodeSelectModal: false,
+      showValueSetSelectModal: false,
+      showVSACAuthenticationModal: false,
       selectedElement: null,
       selectedExternalLibrary: null,
       selectedExternalDefinition: null
@@ -121,6 +122,30 @@ export default class ElementSelect extends Component {
     if (nextProps.artifactId !== this.props.artifactId) {
       this.props.loadExternalCqlList(nextProps.artifactId);
     }
+  }
+
+  openVSACAuthenticationModal = () => {
+    this.setState({ showVSACAuthenticationModal: true });
+  }
+
+  closeVSACAuthenticationModal = () => {
+    this.setState({ showVSACAuthenticationModal: false });
+  }
+
+  openValueSetSelectModal = () => {
+    this.setState({ showValueSetSelectModal: true });
+  }
+
+  closeValueSetSelectModal = () => {
+    this.setState({ showValueSetSelectModal: false });
+  }
+
+  openCodeSelectModal = () => {
+    this.setState({ showCodeSelectModal: true });
+  }
+
+  closeCodeSelectModal = () => {
+    this.setState({ showCodeSelectModal: false });
   }
 
   generateInternalCategories = (props) => {
@@ -247,62 +272,111 @@ export default class ElementSelect extends Component {
     this.setState({ selectedCategory: category });
   }
 
-  renderVSACLogin = () => {
-    if (!this.props.vsacApiKey) {
-      return (
-        <div className="vsac-authenticate">
-          <VSACAuthenticationModal
-            loginVSACUser={this.props.loginVSACUser}
-            setVSACAuthStatus={this.props.setVSACAuthStatus}
-            vsacStatus={this.props.vsacStatus}
-            vsacStatusText={this.props.vsacStatusText}
-          />
-        </div>
-      );
+  handleSelectValueSet = (template, valueSet) => {
+    const selectedTemplate = _.cloneDeep(template);
+    const vsacField = getFieldWithType(selectedTemplate.fields, '_vsac');
+    const nameField = getFieldWithId(selectedTemplate.fields, 'element_name');
+    const valueSetsToAdd = vsacField?.valueSets || [];
+    valueSetsToAdd.push(valueSet);
+
+    // Set the element instance's values based on value set selection initially to add it to the workspace
+    if (!nameField.value) {
+      // Only set name of element if there isn't one already
+      nameField.value = valueSet.name;
     }
 
-    const { selectedElement } = this.state;
+    vsacField.valueSets = valueSetsToAdd;
+    vsacField.static = true;
+    this.onSuggestionSelected(selectedTemplate);
+  }
 
-    // Get template for selected element
-    let selectedTemplate;
-    this.props.categories.find((group) => {
-      selectedTemplate = group.entries.find(entry => entry.id === selectedElement.template);
+  handleSelectCode = (template, codeData) => {
+    const selectedTemplate = _.cloneDeep(template);
+    const vsacField = getFieldWithType(selectedTemplate.fields, '_vsac');
+    const nameField = getFieldWithId(selectedTemplate.fields, 'element_name');
+    const codesToAdd = vsacField?.codes || [];
+    codesToAdd.push(codeData);
+
+    // Set the template's values initially to add it to the workspace
+    const lastCodeIndex = codesToAdd.length - 1;
+    if (!nameField.value || nameField.value === '') {
+      nameField.value = codeData?.display?.length < 60
+        ? codeData.display
+        : `${codesToAdd[lastCodeIndex].codeSystem.name} ${codesToAdd[lastCodeIndex].code}`;
+    }
+
+    vsacField.codes = codesToAdd;
+    vsacField.static = true;
+    this.onSuggestionSelected(selectedTemplate);
+  }
+
+  renderVSACLogin = () => {
+    const { categories, vsacApiKey } = this.props;
+    const {
+      selectedElement,
+      showCodeSelectModal,
+      showValueSetSelectModal,
+      showVSACAuthenticationModal
+    } = this.state;
+
+    let template;
+    categories.find(category => {
+      template = category.entries.find(entry => entry.id === selectedElement.template);
       // If a template is found in the entries of a group, stop searching.
-      return selectedTemplate !== undefined;
+      return template !== undefined;
     });
 
     return (
       <div className="vsac-authenticate">
-        <Button color="primary" disabled variant="contained" startIcon={<CheckIcon />}>
-          VSAC Authenticated
+        <Button 
+          color="primary"
+          disabled={Boolean(vsacApiKey)}
+          onClick={this.openVSACAuthenticationModal}
+          variant="contained"
+          startIcon={Boolean(vsacApiKey) ? <CheckIcon /> : <LockIcon />}
+        >
+          {Boolean(vsacApiKey) ? 'VSAC Authenticated' : 'Authenticate VSAC' }
         </Button>
 
-        <ElementModal
-          className="element-select__modal"
-          onElementSelected={this.onSuggestionSelected}
-          searchVSACByKeyword={this.props.searchVSACByKeyword}
-          isSearchingVSAC={this.props.isSearchingVSAC}
-          vsacSearchResults={this.props.vsacSearchResults}
-          vsacSearchCount={this.props.vsacSearchCount}
-          template={selectedTemplate}
-          getVSDetails={this.props.getVSDetails}
-          isRetrievingDetails={this.props.isRetrievingDetails}
-          vsacDetailsCodes={this.props.vsacDetailsCodes}
-          vsacDetailsCodesError={this.props.vsacDetailsCodesError}
-          vsacApiKey={this.props.vsacApiKey}
-          />
+        {Boolean(vsacApiKey) && (
+          <>
+            <Button
+              color="primary"
+              onClick={this.openValueSetSelectModal}
+              startIcon={<ListIcon />}
+              variant="contained"
+            >
+              Add Value Set
+            </Button>
 
-        <CodeSelectModal
-          className="element-select__modal"
-          onElementSelected={this.onSuggestionSelected}
-          template={selectedTemplate}
-          vsacApiKey={this.props.vsacApiKey}
-          isValidatingCode={this.props.isValidatingCode}
-          isValidCode={this.props.isValidCode}
-          codeData={this.props.codeData}
-          validateCode={this.props.validateCode}
-          resetCodeValidation={this.props.resetCodeValidation}
-        />
+            <Button
+              color="primary"
+              onClick={this.openCodeSelectModal}
+              startIcon={<LocalHospitalIcon />}
+              variant="contained"
+            >
+              Add Code
+            </Button>
+          </>
+        )}
+
+        {showVSACAuthenticationModal && (
+          <VSACAuthenticationModal handleCloseModal={this.closeVSACAuthenticationModal} />
+        )}
+
+        {showValueSetSelectModal && (
+          <ValueSetSelectModal
+            handleCloseModal={this.closeValueSetSelectModal}
+            handleSelectValueSet={valueSet => this.handleSelectValueSet(template, valueSet)}
+          />
+        )}
+
+        {showCodeSelectModal && (
+          <CodeSelectModal
+            handleCloseModal={this.closeCodeSelectModal}
+            handleSelectCode={codeData => this.handleSelectCode(template, codeData)}
+          />
+        )}
       </div>
     );
   }
@@ -361,7 +435,7 @@ export default class ElementSelect extends Component {
     }
   }
 
-  onElementSelected = event => {
+  selectNewElement = event => {
     const selectedElement = event ? elementOptions.find(({ value }) => value === event.target.value) : null;
 
     this.setState({
@@ -457,7 +531,7 @@ export default class ElementSelect extends Component {
             <Dropdown
               id="element-select"
               label="Element type"
-              onChange={this.onElementSelected}
+              onChange={this.selectNewElement}
               options={elementOptionsToDisplay}
               value={selectedElementValue}
               message={disableAddElement ? (
@@ -490,7 +564,7 @@ export default class ElementSelect extends Component {
           }
 
           {selectedElementValue &&
-            <IconButton onClick={() => this.onElementSelected(null)}>
+            <IconButton onClick={() => this.selectNewElement(null)}>
               <CloseIcon />
             </IconButton>
           }
@@ -517,29 +591,14 @@ export default class ElementSelect extends Component {
 
 ElementSelect.propTypes = {
   artifactId: PropTypes.string,
-  categories: PropTypes.array.isRequired,
-  onSuggestionSelected: PropTypes.func.isRequired,
-  loginVSACUser: PropTypes.func.isRequired,
-  setVSACAuthStatus: PropTypes.func.isRequired,
-  vsacStatus: PropTypes.string,
-  vsacStatusText: PropTypes.string,
-  searchVSACByKeyword: PropTypes.func.isRequired,
-  isSearchingVSAC: PropTypes.bool.isRequired,
-  vsacSearchResults: PropTypes.array.isRequired,
-  vsacSearchCount: PropTypes.number.isRequired,
-  getVSDetails: PropTypes.func.isRequired,
-  isRetrievingDetails: PropTypes.bool.isRequired,
-  vsacDetailsCodes: PropTypes.array.isRequired,
-  vsacDetailsCodesError: PropTypes.string.isRequired,
-  isValidatingCode: PropTypes.bool.isRequired,
-  isValidCode: PropTypes.bool,
-  codeData: PropTypes.object,
-  validateCode: PropTypes.func.isRequired,
-  resetCodeValidation: PropTypes.func.isRequired,
   baseElements: PropTypes.array.isRequired,
-  inBaseElements: PropTypes.bool.isRequired,
-  elementUniqueId: PropTypes.string,
+  categories: PropTypes.array.isRequired,
   disableAddElement: PropTypes.bool,
+  elementUniqueId: PropTypes.string,
   externalCqlList: PropTypes.array.isRequired,
-  loadExternalCqlList: PropTypes.func.isRequired
+  inBaseElements: PropTypes.bool.isRequired,
+  loadExternalCqlList: PropTypes.func.isRequired,
+  onSuggestionSelected: PropTypes.func.isRequired,
+  parameters: PropTypes.array.isRequired,
+  vsacApiKey: PropTypes.string
 };

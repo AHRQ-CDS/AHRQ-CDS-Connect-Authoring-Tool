@@ -1,7 +1,9 @@
 import React, { memo } from 'react';
 import { useField } from 'formik';
+import clsx from 'clsx';
 
 import SelectField from './SelectField';
+import useStyles from './styles';
 
 const FastSelectConditionalField = memo(({
   name,
@@ -13,8 +15,10 @@ const FastSelectConditionalField = memo(({
   namePrefix,
   currentValue
 }) => {
+  const styles = useStyles();
+
   return (
-    <div className="field-group select-conditional-field">
+    <div className={clsx(styles.fieldGroup, styles.selectConditionField)}>
       <SelectField name={name} label={label} options={options} helperText={helperText} />
 
       {currentValue && conditions[currentValue] && conditions[currentValue].map((field, index) => {

@@ -8,22 +8,20 @@ import { bindActionCreators } from 'redux';
 import { Jumbotron, Breadcrumb } from 'reactstrap';
 import _ from 'lodash';
 
-import { loadPatients, addPatient, deletePatient } from '../actions/testing';
+import { loadPatients, addPatient, deletePatient } from 'actions/testing';
 import {
   loadArtifacts,
   clearArtifactValidationWarnings,
   clearExecutionResults,
   executeCQLArtifact
-} from '../actions/artifacts';
-import { loginVSACUser, setVSACAuthStatus, validateCode, resetCodeValidation } from '../actions/vsac';
+} from 'actions/artifacts';
 
-import patientProps from '../prop-types/patient';
-import artifactProps from '../prop-types/artifact';
+import patientProps from 'prop-types/patient';
+import artifactProps from 'prop-types/artifact';
 
-import PatientTable from '../components/testing/PatientTable';
-import PatientVersionModal from '../components/testing/PatientVersionModal';
-import ResultsDataSection from '../components/testing/ResultsDataSection';
-import ELMErrorModal from '../components/builder/ELMErrorModal';
+import { ELMErrorModal, PatientVersionModal } from 'components/modals';
+import PatientTable from 'components/testing/PatientTable';
+import ResultsDataSection from 'components/testing/ResultsDataSection';
 
 class Testing extends Component {
   constructor(props) {
@@ -32,7 +30,6 @@ class Testing extends Component {
     this.state = {
       showPatientVersionModal: false,
       patientData: null,
-      patientVersion: null,
       showELMErrorModal: false,
       uploadError: false
     };
@@ -62,7 +59,7 @@ class Testing extends Component {
 
       // Check for FHIR Bundle containing FHIR Patient
       if ((patientDataResourceType === 'Bundle') && (patientResource)) { // Check for FHIR Patient in Bundle
-        this.showPatientVersionModal();
+        this.setState({ showPatientVersionModal: true });
       } else { // No patient could be found
         this.setState({ uploadError: true });
       }
@@ -73,10 +70,6 @@ class Testing extends Component {
     } catch (error) {
       this.setState({ uploadError: true });
     }
-  }
-
-  showPatientVersionModal = () => {
-    this.setState({ showPatientVersionModal: true });
   }
 
   closePatientVersionModal = () => {
@@ -93,12 +86,9 @@ class Testing extends Component {
     this.props.clearArtifactValidationWarnings();
   }
 
-  selectVersion = (patientData, patientVersion) => {
-    Promise.resolve(this.setState({ patientVersion: patientVersion }))
-      .then(() => {
-        this.props.addPatient(patientData, this.state.patientVersion);
-        this.closePatientVersionModal();
-      });
+  selectVersion = patientVersion => {
+    this.props.addPatient(this.state.patientData, patientVersion);
+    this.closePatientVersionModal();
   }
 
   renderResults = () => {
@@ -136,7 +126,7 @@ class Testing extends Component {
       );
     } else if (isExecuting) {
       return <div className="execution-loading"><FontAwesomeIcon icon={faSpinner} spin size="4x" /></div>;
-    } else if (!this.props.vsacApiKey) {
+    } else if (!Boolean(this.props.vsacApiKey)) {
       return (
         <Breadcrumb className="execution-message">
           Log in to VSAC to execute CQL.
@@ -177,21 +167,11 @@ class Testing extends Component {
     if (this.props.patients && this.props.patients.length > 0) {
       return (
         <PatientTable
-          patients={this.props.patients}
           artifacts={this.props.artifacts}
           deletePatient={this.props.deletePatient}
           executeCQLArtifact={this.props.executeCQLArtifact}
+          patients={this.props.patients}
           vsacApiKey={this.props.vsacApiKey}
-          loginVSACUser={this.props.loginVSACUser}
-          setVSACAuthStatus={this.props.setVSACAuthStatus}
-          vsacStatus={this.props.vsacStatus}
-          vsacStatusText={this.props.vsacStatusText}
-          vsacIsAuthenticating={this.props.vsacIsAuthenticating}
-          isValidatingCode={this.props.isValidatingCode}
-          isValidCode={this.props.isValidCode}
-          codeData={this.props.codeData}
-          validateCode={this.props.validateCode}
-          resetCodeValidation={this.props.resetCodeValidation}
         />
       );
     }
@@ -205,6 +185,9 @@ class Testing extends Component {
   }
 
   render() {
+    const { downloadedArtifact } = this.props;
+    const { showELMErrorModal, showPatientVersionModal, uploadError } = this.state;
+
     return (
       <div className="testing" id="maincontent">
         <div className="testing-wrapper">
@@ -221,7 +204,7 @@ class Testing extends Component {
 
                   {this.renderDropzoneIcon()}
 
-                  {this.state.uploadError &&
+                  {uploadError &&
                     <div className="warning">
                       Invalid file type. Only valid JSON FHIR<sup>®</sup> Bundles are accepted.
                     </div>
@@ -245,18 +228,16 @@ class Testing extends Component {
             {this.renderPatientsTable()}
           </div>
 
-          <ELMErrorModal
-            isOpen={this.state.showELMErrorModal}
-            closeModal={this.closeELMErrorModal}
-            errors={this.props.downloadedArtifact.elmErrors}
-          />
+          {showELMErrorModal &&
+            <ELMErrorModal handleCloseModal={this.closeELMErrorModal} errors={downloadedArtifact.elmErrors} />
+          }
 
-          <PatientVersionModal
-            isOpen={this.state.showPatientVersionModal}
-            closeModal={this.closePatientVersionModal}
-            patientData={this.state.patientData}
-            selectVersion={this.selectVersion}
-          />
+          {showPatientVersionModal &&
+            <PatientVersionModal
+              handleCloseModal={this.closePatientVersionModal}
+              selectVersion={this.selectVersion}
+            />
+          }
         </div>
       </div>
     );
@@ -264,69 +245,49 @@ class Testing extends Component {
 }
 
 Testing.propTypes = {
-  patients: PropTypes.arrayOf(patientProps).isRequired,
-  artifacts: PropTypes.arrayOf(artifactProps).isRequired,
-  results: PropTypes.object,
-  executeStatus: PropTypes.string,
-  isExecuting: PropTypes.bool.isRequired,
-  isAdding: PropTypes.bool.isRequired,
-  artifactExecuted: artifactProps,
-  patientsExecuted: PropTypes.arrayOf(patientProps),
-  loadPatients: PropTypes.func.isRequired,
   addPatient: PropTypes.func.isRequired,
+  artifactExecuted: artifactProps,
+  artifacts: PropTypes.arrayOf(artifactProps).isRequired,
   deletePatient: PropTypes.func.isRequired,
-  loadArtifacts: PropTypes.func.isRequired,
   executeCQLArtifact: PropTypes.func.isRequired,
-  vsacApiKey: PropTypes.string,
-  loginVSACUser: PropTypes.func.isRequired,
-  setVSACAuthStatus: PropTypes.func.isRequired,
-  vsacStatus: PropTypes.string,
-  vsacStatusText: PropTypes.string,
-  validateCode: PropTypes.func.isRequired,
-  resetCodeValidation: PropTypes.func.isRequired,
-  isValidatingCode: PropTypes.bool.isRequired,
-  isValidCode: PropTypes.bool,
-  codeData: PropTypes.object,
-  vsacIsAuthenticating: PropTypes.bool.isRequired
+  executeStatus: PropTypes.string,
+  isAdding: PropTypes.bool.isRequired,
+  isExecuting: PropTypes.bool.isRequired,
+  loadArtifacts: PropTypes.func.isRequired,
+  loadPatients: PropTypes.func.isRequired,
+  patients: PropTypes.arrayOf(patientProps).isRequired,
+  patientsExecuted: PropTypes.arrayOf(patientProps),
+  results: PropTypes.object,
+  vsacApiKey: PropTypes.string
 };
 
 // these props are used for dispatching actions
 function mapDispatchToProps(dispatch) {
   return bindActionCreators({
-    loadPatients,
     addPatient,
-    deletePatient,
-    loadArtifacts,
     clearArtifactValidationWarnings,
     clearExecutionResults,
+    deletePatient,
     executeCQLArtifact,
-    loginVSACUser,
-    setVSACAuthStatus,
-    validateCode,
-    resetCodeValidation
+    loadArtifacts,
+    loadPatients
   }, dispatch);
 }
 
 // these props come from the application's state when it is started
 function mapStateToProps(state) {
   return {
-    patients: state.testing.patients,
+    artifactExecuted: state.artifacts.executeArtifact.artifactExecuted,
     artifacts: state.artifacts.artifacts,
     downloadedArtifact: state.artifacts.downloadArtifact,
-    results: state.artifacts.executeArtifact.results,
-    executeStatus: state.artifacts.executeArtifact.executeStatus,
     errorMessage: state.artifacts.executeArtifact.errorMessage,
-    isExecuting: state.artifacts.executeArtifact.isExecuting,
+    executeStatus: state.artifacts.executeArtifact.executeStatus,
     isAdding: state.testing.addPatient.isAdding,
-    artifactExecuted: state.artifacts.executeArtifact.artifactExecuted,
+    isExecuting: state.artifacts.executeArtifact.isExecuting,
+    patients: state.testing.patients,
     patientsExecuted: state.artifacts.executeArtifact.patientsExecuted,
-    vsacStatus: state.vsac.authStatus,
-    vsacStatusText: state.vsac.authStatusText,
-    vsacIsAuthenticating: state.vsac.isAuthenticating,
-    vsacApiKey: state.vsac.apiKey,
-    isValidatingCode: state.vsac.isValidatingCode,
-    isValidCode: state.vsac.isValidCode,
-    codeData: state.vsac.codeData,
+    results: state.artifacts.executeArtifact.results,
+    vsacApiKey: state.vsac.apiKey
   };
 }
 

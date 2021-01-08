@@ -33,7 +33,7 @@ export default class ExternalCqlDetails extends Component {
       <Modal
         title="View External CQL Details"
         submitButtonText="Close"
-        handleShowModal={openModal}
+        isOpen={openModal}
         handleCloseModal={closeModal}
         handleSaveModal={closeModal}
       >

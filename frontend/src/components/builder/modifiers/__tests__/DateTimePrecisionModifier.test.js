@@ -23,8 +23,9 @@ describe('<DateTimePrecisionModifier />', () => {
     userEvent.click(screen.getByRole('button', { name: 'change date' }));
     userEvent.click(screen.getByRole('button', { name: 'OK' }));
 
-    await waitFor(() => {
-      expect(screen.queryByRole('button', { name: 'OK' })).toBeNull();
+    await waitFor(() => expect(screen.queryByRole('button', { name: 'OK' })).toBeNull(), {
+      timeout: 5000,
+      interval: 200
     });
 
     expect(updateAppliedModifier).toBeCalledWith(6, {
@@ -36,8 +37,9 @@ describe('<DateTimePrecisionModifier />', () => {
     userEvent.click(screen.getByRole('button', { name: 'change time' }));
     userEvent.click(screen.getByRole('button', { name: 'OK' }));
 
-    await waitFor(() => {
-      expect(screen.queryByRole('button', { name: 'OK' })).toBeNull();
+    await waitFor(() => expect(screen.queryByRole('button', { name: 'OK' })).toBeNull(), {
+      timeout: 5000,
+      interval: 200
     });
 
     expect(updateAppliedModifier).toBeCalledWith(6, {
@@ -54,5 +56,5 @@ describe('<DateTimePrecisionModifier />', () => {
       time: null,
       precision: 'year'
     });
-  }, 40000);
+  }, 60000);
 });

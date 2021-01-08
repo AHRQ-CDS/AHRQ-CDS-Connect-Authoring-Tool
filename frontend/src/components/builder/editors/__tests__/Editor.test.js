@@ -30,8 +30,6 @@ describe('<Editor />', () => {
         vsacStatus=""
         vsacStatusText=""
         isValidatingCode={false}
-        validateCode={jest.fn()}
-        resetCodeValidation={jest.fn()}
         {...props}
       />
     );

@@ -18,10 +18,11 @@ import useStyles from './styles';
 
 const Modal = ({
   children,
+  closeButtonText = 'Cancel',
   Footer,
   handleCloseModal,
   handleSaveModal,
-  handleShowModal,
+  isOpen,
   hasCancelButton = false,
   hasEnterKeySubmit = true,
   hasTitleIcon = false,
@@ -52,7 +53,7 @@ const Modal = ({
         maxWidth={maxWidth}
         onClose={handleCloseModal}
         onKeyDown={hasEnterKeySubmit ? e => enterKeyCheck(handleSaveModal, null, e) : null}
-        open={handleShowModal}
+        open={isOpen}
       >
         <DialogTitle disableTypography>
           <Typography variant="body1">{title}</Typography>
@@ -75,7 +76,7 @@ const Modal = ({
           <div className={styles.footerButtons}>
             {hasCancelButton && (
               <Button className={styles.cancelButton} onClick={handleCloseModal} variant="text">
-                Cancel
+                {closeButtonText}
               </Button>
             )}
 
@@ -101,10 +102,11 @@ const Modal = ({
 
 Modal.propTypes = {
   children: PropTypes.element.isRequired,
+  closeButtonText: PropTypes.string,
   Footer: PropTypes.oneOfType([ PropTypes.element, PropTypes.bool ]),
   handleCloseModal: PropTypes.func.isRequired,
   handleSaveModal: PropTypes.func.isRequired,
-  handleShowModal: PropTypes.bool.isRequired,
+  isOpen: PropTypes.bool.isRequired,
   hasCancelButton: PropTypes.bool,
   hasEnterKeySubmit: PropTypes.bool,
   hasTitleIcon: PropTypes.bool,

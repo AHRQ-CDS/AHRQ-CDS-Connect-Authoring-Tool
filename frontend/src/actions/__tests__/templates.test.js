@@ -1,6 +1,6 @@
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
-import moxios from 'moxios';
+import nock from 'nock';
 
 import loadTemplates from '../templates';
 import * as types from '../types';
@@ -10,17 +10,12 @@ const mockStore = configureMockStore(middlewares);
 
 describe('template actions', () => {
   describe('loadTemplates', () => {
-    beforeEach(() => { moxios.install(); });
-    afterEach(() => { moxios.uninstall(); });
-
     it('dispatches a LOAD_TEMPLATES_SUCCESS action on successful load', () => {
       const store = mockStore({});
 
-      moxios.stubs.track({
-        url: '/authoring/api/config/templates',
-        method: 'GET',
-        response: { status: 200, response: [] }
-      });
+      nock('http://localhost')
+        .get('/authoring/api/config/templates')
+        .reply(200, []);
 
       const expectedActions = [
         { type: types.TEMPLATES_REQUEST },
@@ -35,11 +30,12 @@ describe('template actions', () => {
     it('dispatches a LOAD_TEMPLATES_FAILURE action on failure', () => {
       const store = mockStore({});
 
-      moxios.stubs.track({
-        url: '/authoring/api/config/templates',
-        method: 'GET',
-        response: { status: 401, statusText: 'Unauthorized' }
-      });
+      nock('http://localhost')
+        .get('/authoring/api/config/templates')
+        .reply(401, function() {
+          this.req.response.statusMessage = 'Unauthorized';
+          return { status: 401 };
+        });
 
       const expectedActions = [
         { type: types.TEMPLATES_REQUEST },

@@ -2,14 +2,16 @@ import React, { memo, useState, useCallback, useEffect, useMemo, useRef } from '
 import { Formik, Form, useFormikContext } from 'formik';
 import { useDispatch } from 'react-redux';
 import { Button } from '@material-ui/core';
-import classnames from 'classnames';
 import { parseISO, formatISO } from 'date-fns';
+import clsx from 'clsx';
 
 import { Modal } from 'components/elements';
 import { TextField } from 'components/fields';
 import { addArtifact, updateAndSaveArtifact } from 'actions/artifacts';
 import cpgFields, { versionHelperText, cpgScoreHelperText } from './cpgFields';
 import { stripContextFields, getCpgCompleteCount } from 'utils/fields';
+import useStyles from './styles';
+import useFieldStyles from 'components/fields/styles';
 
 function getInitialValue(artifactEditing, valueName, defaultValue, transformer = x => x) {
   if (!artifactEditing || artifactEditing[valueName] == null) return defaultValue;
@@ -62,6 +64,8 @@ const ArtifactModalForm = memo(({ setSubmitDisabled }) => {
   const { values, isValid } = useFormikContext();
   const { cpgTotalCount, cpgCompleteCount } = getCpgCompleteCount(values);
   const cpgPercentage = Math.floor((cpgCompleteCount / cpgTotalCount) * 100);
+  const styles = useStyles();
+  const fieldStyles = useFieldStyles();
 
   const toggleForm = useCallback(() => {
     setOpenForm(isOpen => !isOpen);
@@ -70,27 +74,29 @@ const ArtifactModalForm = memo(({ setSubmitDisabled }) => {
   useEffect(() => setSubmitDisabled(!isValid), [isValid, setSubmitDisabled]);
 
   return (
-    <Form className="artifact-form">
+    <Form className={styles.artifactForm}>
       <TextField name="name" label="Artifact Name" required={true} />
       <TextField name="version" label="Version" helperText={versionHelperText} />
 
-      <div className="cpg-score field">
-        <label className="field-label" htmlFor="cpg-score">
+      <div className={fieldStyles.field}>
+        <label className={fieldStyles.fieldLabel} htmlFor="cpg-score">
           CPG Score:
         </label>
 
-        <div id="cpg-score" className="field-input">
-          <div className="cpg-percentage">
-            <div className="cpg-percentage-complete" style={{ width: `${cpgPercentage}%` }}>
-              <div className={classnames('cpg-percentage-label', cpgPercentage === 0 && 'zero')}>{cpgPercentage}%</div>
+        <div id="cpg-score" className={fieldStyles.fieldInput}>
+          <div className={styles.cpgPercentage}>
+            <div className={styles.cpgPercentageComplete} style={{ width: `${cpgPercentage}%` }}>
+              <div className={clsx(styles.cpgPercentageLabel, cpgPercentage === 0 && styles.cpgPercentageLabelZero)}>
+                {cpgPercentage}%
+              </div>
             </div>
           </div>
 
-          <div className="helper-text">{cpgScoreHelperText}</div>
+          <div className={fieldStyles.helperText}>{cpgScoreHelperText}</div>
         </div>
       </div>
 
-      <div className="cpg-button">
+      <div className={styles.cpgButton}>
         <Button color="primary" onClick={toggleForm} variant="contained">
           {openForm ? 'Hide CPG Fields' : 'Show CPG Fields'}
         </Button>
@@ -146,26 +152,24 @@ export default function ArtifactModal({ artifactEditing, showModal, closeModal }
   );
 
   return (
-    <div className="element-modal">
-      <Modal
-        handleCloseModal={closeModal}
-        handleSaveModal={handleSaveModal}
-        handleShowModal={showModal}
-        maxWidth="xl"
-        submitButtonText={artifactEditing ? 'Save' : 'Create'}
-        submitDisabled={submitDisabled}
-        title={artifactEditing ? 'Edit Artifact Details' : 'Create New Artifact'}
+    <Modal
+      handleCloseModal={closeModal}
+      handleSaveModal={handleSaveModal}
+      isOpen={showModal}
+      maxWidth="xl"
+      submitButtonText={artifactEditing ? 'Save' : 'Create'}
+      submitDisabled={submitDisabled}
+      title={artifactEditing ? 'Edit Artifact Details' : 'Create New Artifact'}
+    >
+      <Formik
+        innerRef={formRef}
+        initialValues={initialValues}
+        onSubmit={handleSubmit}
+        validate={validate}
+        validateOnMount
       >
-        <Formik
-          innerRef={formRef}
-          initialValues={initialValues}
-          onSubmit={handleSubmit}
-          validate={validate}
-          validateOnMount
-        >
-          <ArtifactModalForm setSubmitDisabled={setSubmitDisabled} />
-        </Formik>
-      </Modal>
-    </div>
+        <ArtifactModalForm setSubmitDisabled={setSubmitDisabled} />
+      </Formik>
+    </Modal>
   );
 }

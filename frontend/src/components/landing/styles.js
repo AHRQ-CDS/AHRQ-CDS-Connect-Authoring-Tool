@@ -1,4 +1,4 @@
-import { makeStyles, Theme as AugmentedTheme } from '@material-ui/core/styles';
+import { makeStyles } from '@material-ui/core/styles';
 import backgroundImage from './cds-connect-background.jpg';
 
 const buttonStyles = (theme, color) => {
@@ -13,7 +13,7 @@ const buttonStyles = (theme, color) => {
 };
 
 export default makeStyles(
-  (theme: AugmentedTheme) => ({
+  theme => ({
     root: {
       padding: '0 20px'
     },

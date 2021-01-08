@@ -572,15 +572,13 @@ const reduxState = {
     valueSets: []
   },
   vsac: {
-    authStatus: '',
-    detailsCodes: [],
-    detailsCodesErrorMessage: '',
     isAuthenticating: false,
+    authStatus: null,
+    authStatusText: '',
     isValidatingCode: false,
-    isRetrievingDetails: false,
-    isSearchingVSAC: false,
-    searchCount: 0,
-    searchResults: []
+    isValidCode: null,
+    codeData: null,
+    apiKey: null
   }
 };
 

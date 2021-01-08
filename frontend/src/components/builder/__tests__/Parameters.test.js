@@ -8,8 +8,6 @@ describe('<Parameters />', () => {
       <Parameters
         getAllInstancesInAllTrees={jest.fn()}
         instanceNames={[]}
-        isValidatingCode={false}
-        loginVSACUser={jest.fn()}
         parameters={[
           {
             name: 'Parameter 007',
@@ -20,14 +18,8 @@ describe('<Parameters />', () => {
             comment: ''
           }
         ]}
-        resetCodeValidation={jest.fn()}
-        setVSACAuthStatus={jest.fn()}
         updateParameters={jest.fn()}
-        validateCode={jest.fn()}
-        vsacApiKey={'key'}
-        vsacIsAuthenticating={false}
-        vsacStatus=""
-        vsacStatusText=""
+        vsacApiKey="key"
         {...props}
       />
     );

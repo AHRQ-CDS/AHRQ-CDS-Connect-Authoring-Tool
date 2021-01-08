@@ -6,7 +6,7 @@ import { Link as RouterLink } from 'react-router-dom';
 import { Button } from '@material-ui/core';
 import clsx from 'clsx';
 
-import { WhatsNew } from '.';
+import WhatsNew from './WhatsNew';
 import { Link } from 'components/elements';
 import { onVisitExternalForm } from 'utils/handlers';
 import { useSpacingStyles } from 'styles/hooks';

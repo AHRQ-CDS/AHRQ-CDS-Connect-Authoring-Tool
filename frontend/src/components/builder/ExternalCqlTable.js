@@ -144,7 +144,7 @@ export default class ExternalCqlTable extends Component {
       <Modal
         title="Delete External CQL Library Confirmation"
         submitButtonText="Delete"
-        handleShowModal={this.state.showConfirmDeleteModal}
+        isOpen={this.state.showConfirmDeleteModal}
         handleCloseModal={this.closeConfirmDeleteModal}
         handleSaveModal={this.handleDeleteExternalCqlLibrary}
       >
