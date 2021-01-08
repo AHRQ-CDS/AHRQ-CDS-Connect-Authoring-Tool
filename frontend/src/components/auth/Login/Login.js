@@ -1,6 +1,5 @@
 import React, { useCallback, useState } from 'react';
 import PropTypes from 'prop-types';
-import { useHistory } from 'react-router-dom';
 import { Button, CircularProgress, TextField } from '@material-ui/core';
 import { Alert } from '@material-ui/lab';
 import ErrorOutlineOutlinedIcon from '@material-ui/icons/ErrorOutlineOutlined';
@@ -8,29 +7,27 @@ import _ from 'lodash';
 
 import { Modal } from 'components/elements';
 import { onVisitExternalForm } from 'utils/handlers';
+import { loginUser, setAuthStatus } from 'actions/auth';
 import useStyles from '../styles';
 
-const Login = ({ authStatus, authStatusText, isAuthenticating, onLoginClick, setAuthStatus }) => {
+const Login = () => {
   const [showModal, setShowModal] = useState(false);
   const [showWarning, setShowWarning] = useState(false);
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const history = useHistory();
   const styles = useStyles();
 
   const closeModal = useCallback(() => {
     setShowModal(false);
-    setAuthStatus(null);
-  }, [setAuthStatus]);
+    dispatch(setAuthStatus(null));
+  }, [dispatch]);
 
   const handleLogin = useCallback(
-    event => {
-      onLoginClick(username, password)
-        .then((r) => {
-          if (r.type === 'LOGIN_SUCCESS') history.push('/artifacts');
-        });
-    },
-    [onLoginClick, username, password, history]
+    () => dispatch(loginUser(username, password))
+      .then(response => {
+        if (response.type === 'LOGIN_SUCCESS') history.push('/artifacts');
+      }),
+    [dispatch, username, password]
   );
 
   const handleChangeUsername = useCallback(event => {
@@ -114,14 +111,6 @@ const Login = ({ authStatus, authStatusText, isAuthenticating, onLoginClick, set
       </Modal>
     </div>
   );
-};
-
-Login.propTypes = {
-  authStatus: PropTypes.string,
-  authStatusText: PropTypes.string,
-  isAuthenticating: PropTypes.bool.isRequired,
-  onLoginClick: PropTypes.func.isRequired,
-  setAuthStatus: PropTypes.func.isRequired
 };
 
 export default Login;

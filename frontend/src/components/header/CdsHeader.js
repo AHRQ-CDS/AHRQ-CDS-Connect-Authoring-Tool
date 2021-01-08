@@ -1,5 +1,5 @@
-import React, { memo } from 'react';
-import PropTypes from 'prop-types';
+import React from 'react';
+import { useSelector } from 'react-redux';
 import { ThemeProvider } from '@material-ui/core/styles';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faLink } from '@fortawesome/free-solid-svg-icons';
@@ -7,17 +7,9 @@ import { faLink } from '@fortawesome/free-solid-svg-icons';
 import { Login, Logout } from 'components/auth';
 import darkTheme from 'styles/theme';
 
-const CdsHeader = memo(function Header({
-  artifactSaved,
-  authStatus,
-  authStatusText,
-  authUser,
-  isAuthenticated,
-  isAuthenticating,
-  loginUser,
-  logoutUser,
-  setAuthStatus
-}) {
+const CdsHeader = () => {
+  const isAuthenticated = useSelector(state => state.auth.isAuthenticated);
+
   return (
     <ThemeProvider theme={darkTheme}>
       <header className="cds-header">
@@ -35,41 +27,13 @@ const CdsHeader = memo(function Header({
                 <FontAwesomeIcon icon={faLink} /> CDS Home
               </a>
 
-              {isAuthenticated ?
-                <Logout
-                  artifactSaved={artifactSaved}
-                  authStatus={authStatus}
-                  authStatusText={authStatusText}
-                  authUser={authUser}
-                  onLogoutClick={logoutUser}
-                />
-              :
-                <Login
-                  authStatus={authStatus}
-                  authStatusText={authStatusText}
-                  isAuthenticating={isAuthenticating}
-                  onLoginClick={loginUser}
-                  setAuthStatus={setAuthStatus}
-                />
-              }
+              {isAuthenticated ? <Logout /> : <Login />}
             </div>
           </div>
         </div>
       </header>
     </ThemeProvider>
   );
-});
-
-CdsHeader.propTypes = {
-  artifactSaved: PropTypes.bool.isRequired,
-  authStatus: PropTypes.string,
-  authStatusText: PropTypes.string,
-  authUser: PropTypes.string,
-  isAuthenticated: PropTypes.bool.isRequired,
-  isAuthenticating: PropTypes.bool.isRequired,
-  loginUser: PropTypes.func.isRequired,
-  logoutUser: PropTypes.func.isRequired,
-  setAuthStatus: PropTypes.func.isRequired
 };
 
 export default CdsHeader;
