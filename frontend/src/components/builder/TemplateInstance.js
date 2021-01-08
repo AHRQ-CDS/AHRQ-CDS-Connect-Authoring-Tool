@@ -17,6 +17,7 @@ import { faExclamationCircle, faBook} from '@fortawesome/free-solid-svg-icons';
 import { UncontrolledTooltip } from 'reactstrap';
 import _ from 'lodash';
 
+import { Modal }  from 'components/elements';
 import VSACAuthenticationModal from './VSACAuthenticationModal';
 import ElementModal from './ElementModal';
 import CodeSelectModal from './CodeSelectModal';
@@ -62,7 +63,8 @@ export default class TemplateInstance extends Component {
       relevantModifiers: (props.modifiersByInputType[props.templateInstance.returnType] || []),
       showModifiers: false,
       otherInstances: this.getOtherInstances(props),
-      returnType: props.templateInstance.returnType
+      returnType: props.templateInstance.returnType,
+      showConfirmDeleteModal: false
     };
   }
 
@@ -143,10 +145,48 @@ export default class TemplateInstance extends Component {
   }
 
   deleteInstance = () => {
+    this.props.deleteInstance(this.props.treeName, this.getPath());
+  }
+
+  openConfirmDeleteModal = () => {
     const baseElementIsInUse = this.isBaseElementUsed() || this.props.disableAddElement;
     if (!baseElementIsInUse) {
-      this.props.deleteInstance(this.props.treeName, this.getPath());
+      this.setState({ showConfirmDeleteModal: true });
     }
+  }
+
+  closeConfirmDeleteModal = () => {
+    this.setState({ showConfirmDeleteModal: false });
+  }
+
+  handleDeleteInstance = () => {
+    this.deleteInstance();
+    this.closeConfirmDeleteModal();
+  }
+
+  renderConfirmDeleteModal() {
+    const elementName = getFieldWithId(this.props.templateInstance.fields, 'element_name').value;
+
+    return (
+      <Modal
+        title="Delete Element Confirmation"
+        submitButtonText="Delete"
+        handleShowModal={this.state.showConfirmDeleteModal}
+        handleCloseModal={this.closeConfirmDeleteModal}
+        handleSaveModal={this.handleDeleteInstance}
+      >
+        <div className="delete-element-confirmation-modal modal__content">
+          <h5>
+            {`Are you sure you want to permanently delete ${elementName ? 'the following' : 'this unnamed'} element?`}
+          </h5>
+
+          {elementName && <div className="element-info">
+            <span>Element: </span>
+            <span>{elementName}</span>
+          </div>}
+        </div>
+      </Modal>
+    );
   }
 
   toggleComment = () => {
@@ -1021,7 +1061,7 @@ export default class TemplateInstance extends Component {
                 aria-label={`remove ${templateInstance.name}`}
                 color="primary"
                 disabled={baseElementUsed || baseElementInUsedList}
-                onClick={this.deleteInstance}
+                onClick={this.openConfirmDeleteModal}
               >
                 <CloseIcon fontSize="small" />
               </IconButton>
@@ -1066,6 +1106,7 @@ export default class TemplateInstance extends Component {
         {this.renderHeader()}
         {showElement && this.renderBody()}
         {showElement && this.renderFooter()}
+        {this.renderConfirmDeleteModal()}
       </div>
     );
   }

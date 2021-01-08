@@ -94,6 +94,7 @@ describe('<Subpopulation />', () => {
     renderComponent({ deleteSubpopulation });
 
     userEvent.click(screen.getByRole('button', { name: 'remove subpopulation' }));
+    userEvent.click(screen.getByRole('button', { name: 'Delete' }));
 
     expect(deleteSubpopulation).toBeCalledWith(subpopulation.uniqueId);
   });

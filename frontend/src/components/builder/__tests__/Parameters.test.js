@@ -77,6 +77,7 @@ describe('<Parameters />', () => {
     renderComponent({ updateParameters });
 
     userEvent.click(screen.getByRole('button', { name: 'delete parameter' }));
+    userEvent.click(screen.getByRole('button', { name: 'Delete' }));
 
     expect(updateParameters).toBeCalledWith([]);
   });

@@ -10,6 +10,7 @@ import {
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faExclamationCircle } from '@fortawesome/free-solid-svg-icons';
 
+import { Modal } from 'components/elements';
 import ConjunctionGroup from './ConjunctionGroup';
 import ExpressionPhrase from './modifiers/ExpressionPhrase';
 
@@ -21,7 +22,8 @@ export default class Subpopulation extends Component {
     super(props);
 
     this.state = {
-      isExpanded: this.props.subpopulation.expanded || false
+      isExpanded: this.props.subpopulation.expanded || false,
+      showConfirmDeleteModal: false
     };
   }
 
@@ -45,6 +47,45 @@ export default class Subpopulation extends Component {
 
   deleteInstance = (treeName, path, toAdd) => {
     this.props.deleteInstance(treeName, path, toAdd, this.props.subpopulation.uniqueId);
+  }
+
+  openConfirmDeleteModal = () => {
+    this.setState({ showConfirmDeleteModal: true });
+  }
+
+  closeConfirmDeleteModal = () => {
+    this.setState({ showConfirmDeleteModal: false });
+  }
+
+  handleDeleteSubpopulation = () => {
+    this.props.deleteSubpopulation(this.props.subpopulation.uniqueId);
+    this.closeConfirmDeleteModal();
+  }
+
+  renderConfirmDeleteModal() {
+    const subpopulationName = this.props.subpopulation.subpopulationName;
+
+    return (
+      <Modal
+        title="Delete Subpopulation Confirmation"
+        submitButtonText="Delete"
+        handleShowModal={this.state.showConfirmDeleteModal}
+        handleCloseModal={this.closeConfirmDeleteModal}
+        handleSaveModal={this.handleDeleteSubpopulation}
+      >
+        <div className="delete-subpopulation-confirmation-modal modal__content">
+          <h5>
+            {`Are you sure you want to permanently delete
+              ${subpopulationName ? 'the following' : 'this unnamed'} subpopulation?`}
+          </h5>
+
+          {subpopulationName && <div className="subpopulation-info">
+            <span>Subpopulation: </span>
+            <span>{subpopulationName}</span>
+          </div>}
+        </div>
+      </Modal>
+    );
   }
 
   onEnterKey = (e) => {
@@ -127,7 +168,7 @@ export default class Subpopulation extends Component {
                 <IconButton
                   aria-label="remove subpopulation"
                   color="primary"
-                  onClick={() => this.props.deleteSubpopulation(this.props.subpopulation.uniqueId)}
+                  onClick={this.openConfirmDeleteModal}
                 >
                   <CloseIcon fontSize="small" />
                 </IconButton>
@@ -205,6 +246,7 @@ export default class Subpopulation extends Component {
         resetCodeValidation={this.props.resetCodeValidation}
         vsacIsAuthenticating={this.props.vsacIsAuthenticating}
       />
+      {this.renderConfirmDeleteModal()}
     </div>
   );
 }

@@ -166,9 +166,10 @@ describe('<Builder />', () => {
       }
     });
 
-    const { getByLabelText } = renderComponent({ store });
+    const { getByLabelText, getByText } = renderComponent({ store });
 
     fireEvent.click(getByLabelText('remove Age Range'));
+    fireEvent.click(getByText('Delete'));
 
     const updateAction = expandAction(_.last(store.getActions()));
 

@@ -182,15 +182,16 @@ describe('<TemplateInstance />', () => {
 
     it('cannot be deleted if in use in the artifact', () => {
       const deleteInstance = jest.fn();
-      const { getByLabelText } = renderBaseElementComponent({ deleteInstance });
+      const { getByLabelText, queryByText } = renderBaseElementComponent({ deleteInstance });
 
       fireEvent.click(getByLabelText(`remove ${baseElementTemplateInstance.name}`));
+      expect(queryByText('Delete')).toBeNull();
       expect(deleteInstance).not.toBeCalled();
     });
 
     it('can be deleted if not in use in the artifact', () => {
       const deleteInstance = jest.fn();
-      const { getByLabelText } = renderBaseElementComponent({
+      const { getByLabelText, getByText } = renderBaseElementComponent({
         deleteInstance,
         templateInstance: {
           ...baseElementTemplateInstance,
@@ -199,6 +200,7 @@ describe('<TemplateInstance />', () => {
       });
 
       fireEvent.click(getByLabelText(`remove ${baseElementTemplateInstance.name}`));
+      fireEvent.click(getByText('Delete'));
       expect(deleteInstance).toHaveBeenCalledWith('MeetsInclusionCriteria', 'originalBaseElementId');
     });
 

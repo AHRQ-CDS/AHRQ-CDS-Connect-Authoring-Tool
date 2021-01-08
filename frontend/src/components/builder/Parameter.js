@@ -17,7 +17,8 @@ import _ from 'lodash';
 import StringField from './fields/StringField';
 import TextAreaField from './fields/TextAreaField';
 import Editor from './editors/Editor';
-import { Dropdown } from 'components/elements';
+
+import { Dropdown, Modal } from 'components/elements';
 import { doesParameterNeedUsageWarning, parameterHasDuplicateName } from 'utils/warnings';
 
 export default class Parameter extends Component {
@@ -26,7 +27,8 @@ export default class Parameter extends Component {
 
     this.state = {
       showParameter: true,
-      showComment: false
+      showComment: false,
+      showConfirmDeleteModal: false
     };
   }
 
@@ -55,11 +57,48 @@ export default class Parameter extends Component {
     this.props.updateInstanceOfParameter(object, this.props.index);
   }
 
-  deleteParameter = (index) => {
+  deleteParameter = () => {
+    this.props.deleteParameter(this.props.index);
+  }
+
+  openConfirmDeleteModal = () => {
     const parameterUsed = this.props.usedBy ? this.props.usedBy.length !== 0 : false;
     if (!parameterUsed) {
-      this.props.deleteParameter(index);
+      this.setState({ showConfirmDeleteModal: true });
     }
+  }
+
+  closeConfirmDeleteModal = () => {
+    this.setState({ showConfirmDeleteModal: false });
+  }
+
+  handleDeleteParameter = () => {
+    this.deleteParameter();
+    this.closeConfirmDeleteModal();
+  }
+
+  renderConfirmDeleteModal() {
+    return (
+      <Modal
+        title="Delete Parameter Confirmation"
+        submitButtonText="Delete"
+        handleShowModal={this.state.showConfirmDeleteModal}
+        handleCloseModal={this.closeConfirmDeleteModal}
+        handleSaveModal={this.handleDeleteParameter}
+      >
+        <div className="delete-parameter-confirmation-modal modal__content">
+          <h5>
+            {`Are you sure you want to permanently delete
+            ${this.props.name ? 'the following' : 'this unnamed'} parameter?`}
+          </h5>
+
+          {this.props.name && <div className="parameter-info">
+            <span>Parameter: </span>
+            <span>{this.props.name}</span>
+          </div>}
+        </div>
+      </Modal>
+    );
   }
 
   changeParameterType = (event, name, comment, typeOptions) => {
@@ -154,7 +193,7 @@ export default class Parameter extends Component {
   }
 
   renderElementButtons = (parameterUsed, disabledClass) => {
-    const { index, name, id, comment } = this.props;
+    const { name, id, comment } = this.props;
     const { showParameter } = this.state;
     const hasComment = comment && comment !== '';
 
@@ -184,7 +223,7 @@ export default class Parameter extends Component {
             aria-label="delete parameter"
             color="primary"
             disabled={parameterUsed}
-            onClick={() => this.deleteParameter(index)}
+            onClick={this.openConfirmDeleteModal}
           >
             <CloseIcon fontSize="small" />
           </IconButton>
@@ -316,6 +355,7 @@ export default class Parameter extends Component {
             </div>
           </div>
         : this.renderCollapsed(id, index, name, typeLabel, parameterUsed, disabledClass, parameterNeedsWarning)}
+        {this.renderConfirmDeleteModal()}
       </div>
     );
   }

@@ -21,6 +21,7 @@ import { doesBaseElementInstanceNeedWarning, hasDuplicateName, hasGroupNestedWar
   from '../../utils/warnings';
 import { getReturnType, getFieldWithId } from '../../utils/instances';
 
+import { Modal } from 'components/elements';
 import ConjunctionGroup from './ConjunctionGroup';
 import ExpressionPhrase from './modifiers/ExpressionPhrase';
 import StringField from './fields/StringField';
@@ -63,7 +64,8 @@ export default class ListGroup extends Component {
 
     this.state = {
       isExpanded: true,
-      showComment: false
+      showComment: false,
+      showConfirmDeleteModal: false
     };
   }
 
@@ -103,11 +105,53 @@ export default class ListGroup extends Component {
     const newBaseElementLists = _.cloneDeep(this.props.artifact.baseElements);
     const baseElementIndex = this.props.artifact.baseElements.findIndex(baseElement =>
       baseElement.uniqueId === uniqueId);
+    newBaseElementLists.splice(baseElementIndex, 1);
+    this.props.updateBaseElementLists(newBaseElementLists, 'baseElements');
+  }
+
+  openConfirmDeleteModal = (uniqueId) => {
+    const newBaseElementLists = _.cloneDeep(this.props.artifact.baseElements);
+    const baseElementIndex = this.props.artifact.baseElements.findIndex(baseElement =>
+      baseElement.uniqueId === uniqueId);
     const baseElementListIsInUse = this.isBaseElementListUsed(newBaseElementLists[baseElementIndex]);
     if (!baseElementListIsInUse) {
-      newBaseElementLists.splice(baseElementIndex, 1);
-      this.props.updateBaseElementLists(newBaseElementLists, 'baseElements');
+      this.setState({ showConfirmDeleteModal: true });
     }
+  }
+
+  closeConfirmDeleteModal = () => {
+    this.setState({ showConfirmDeleteModal: false });
+  }
+
+  handleDeleteBaseElementList = () => {
+    this.deleteBaseElementList(this.props.instance.uniqueId);
+    this.closeConfirmDeleteModal();
+  }
+
+  renderConfirmDeleteModal() {
+    const elementName = getFieldWithId(this.props.instance.fields, 'element_name').value;
+
+    return (
+      <Modal
+        title="Delete List Group Confirmation"
+        submitButtonText="Delete"
+        handleShowModal={this.state.showConfirmDeleteModal}
+        handleCloseModal={this.closeConfirmDeleteModal}
+        handleSaveModal={this.handleDeleteBaseElementList}
+      >
+        <div className="delete-list-group-confirmation-modal modal__content">
+          <h5>
+            {`Are you sure you want to permanently delete
+              ${elementName ? 'the following' : 'this unnamed'} list group?`}
+          </h5>
+
+          {elementName && <div className="list-group-info">
+            <span>List Group: </span>
+            <span>{elementName}</span>
+          </div>}
+        </div>
+      </Modal>
+    );
   }
 
   promoteReturnTypeToList = (returnType) => {
@@ -452,7 +496,7 @@ export default class ListGroup extends Component {
                   aria-label="remove base element list"
                   color="primary"
                   disabled={baseElementListUsed}
-                  onClick={() => this.deleteBaseElementList(instance.uniqueId)}
+                  onClick={() => this.openConfirmDeleteModal(instance.uniqueId)}
                 >
                   <CloseIcon fontSize="small" />
                 </IconButton>
@@ -476,6 +520,7 @@ export default class ListGroup extends Component {
         </div>
 
         {isExpanded && this.renderListGroup()}
+        {this.renderConfirmDeleteModal()}
       </div>
     );
   }

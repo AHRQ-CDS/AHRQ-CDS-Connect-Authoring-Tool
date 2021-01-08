@@ -15,7 +15,7 @@ import { faExclamationCircle } from '@fortawesome/free-solid-svg-icons';
 import { UncontrolledTooltip } from 'reactstrap';
 import clsx from 'clsx';
 
-import { Dropdown } from 'components/elements';
+import { Dropdown, Modal } from 'components/elements';
 import TemplateInstance from './TemplateInstance';
 import ElementSelect from './ElementSelect';
 import StringField from './fields/StringField';
@@ -39,7 +39,8 @@ export default class ConjunctionGroup extends Component {
 
     this.state = {
       showGroup: true,
-      showComment: false
+      showComment: false,
+      showConfirmDeleteModal: false
     };
   }
 
@@ -152,9 +153,47 @@ export default class ConjunctionGroup extends Component {
   }
 
   deleteInstance = () => {
+    this.props.deleteInstance(this.props.treeName, this.getPath());
+  }
+
+  openConfirmDeleteModal = () => {
     if (!this.props.disableAddElement) {
-      this.props.deleteInstance(this.props.treeName, this.getPath());
+      this.setState({ showConfirmDeleteModal: true });
     }
+  }
+
+  closeConfirmDeleteModal = () => {
+    this.setState({ showConfirmDeleteModal: false });
+  }
+
+  handleDeleteInstance = () => {
+    this.deleteInstance();
+    this.closeConfirmDeleteModal();
+  }
+
+  renderConfirmDeleteModal() {
+    const elementName = getFieldWithId(this.props.instance.fields, 'element_name').value;
+
+    return (
+      <Modal
+        title="Delete Group Confirmation"
+        submitButtonText="Delete"
+        handleShowModal={this.state.showConfirmDeleteModal}
+        handleCloseModal={this.closeConfirmDeleteModal}
+        handleSaveModal={this.handleDeleteInstance}
+      >
+        <div className="delete-group-confirmation-modal modal__content">
+          <h5>
+            {`Are you sure you want to permanently delete ${elementName ? 'the following' : 'this unnamed'} group?`}
+          </h5>
+
+          {elementName && <div className="group-info">
+            <span>Group: </span>
+            <span>{elementName}</span>
+          </div>}
+        </div>
+      </Modal>
+    );
   }
 
   conjunctionHasDuplicateName = (child) => {
@@ -319,7 +358,7 @@ export default class ConjunctionGroup extends Component {
                   aria-label={`remove ${this.props.instance.name}`}
                   color="primary"
                   disabled={disableAddElement}
-                  onClick={this.deleteInstance}
+                  onClick={this.openConfirmDeleteModal}
                 >
                   <CloseIcon fontSize="small" />
                 </IconButton>
@@ -510,6 +549,7 @@ export default class ConjunctionGroup extends Component {
             />
           </div>
         }
+        {this.renderConfirmDeleteModal()}
       </div>
     );
   }

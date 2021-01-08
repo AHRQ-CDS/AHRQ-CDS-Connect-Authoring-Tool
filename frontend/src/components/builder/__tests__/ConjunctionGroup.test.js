@@ -74,12 +74,12 @@ describe('<ConjunctionGroup />', () => {
 
   it('can delete group', () => {
     const deleteInstance = jest.fn();
-    const { container } = renderComponent({ deleteInstance });
+    renderComponent({ deleteInstance });
 
-    const childConjunction = container.querySelector('.card-group__odd');
-    fireEvent.click(childConjunction.querySelector('.card-group__buttons button'));
+    userEvent.click(screen.getByRole('button', { name: 'remove Or' }));
+    userEvent.click(screen.getByRole('button', { name: 'Delete' }));
 
-    expect(deleteInstance).toHaveBeenCalledWith('MeetsInclusionCriteria', '.childInstances.2', []);
+    expect(deleteInstance).toHaveBeenCalledWith('MeetsInclusionCriteria', '.childInstances.2');
   });
 
   it('edits own type', () => {

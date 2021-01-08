@@ -119,6 +119,7 @@ describe('<Subpopulations />', () => {
     });
 
     userEvent.click(screen.getByRole('button', { name: 'remove subpopulation' }));
+    userEvent.click(screen.getByRole('button', { name: 'Delete' }));
 
     expect(updateSubpopulations).toHaveBeenCalledWith([specialSubpop], 'subpopulations');
   });
@@ -135,7 +136,14 @@ describe('<Subpopulations />', () => {
       updateSubpopulations
     });
 
+    // TODO: Currently Subpopulations protect against deletion by sending an alert
+    // message rather than disabling the delete button. This means that the
+    // modal still appears and we need to test that it doesn't actually
+    // cause deletion. When the Subpopulation and Subpopulations components
+    // are refactored, we can make sure that the modal doesn't show up to
+    // begin with, and we can make a change here to verify that.
     userEvent.click(screen.getByRole('button', { name: 'remove subpopulation' }));
+    userEvent.click(screen.getByRole('button', { name: 'Delete' }));
 
     expect(updateSubpopulations).not.toHaveBeenCalled();
     expect(window.alert).toHaveBeenCalledWith('Subpopulation in use');

@@ -75,6 +75,7 @@ describe('<ListGroup />', () => {
     });
 
     userEvent.click(screen.getByRole('button', { name: 'remove base element list' }));
+    userEvent.click(screen.getByRole('button', { name: 'Delete' }));
 
     expect(updateBaseElementLists).toBeCalled();
   });
