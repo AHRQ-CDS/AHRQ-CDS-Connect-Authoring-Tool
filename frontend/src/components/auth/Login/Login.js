@@ -25,8 +25,10 @@ const Login = ({ authStatus, authStatusText, isAuthenticating, onLoginClick, set
 
   const handleLogin = useCallback(
     event => {
-      onLoginClick(username, password);
-      window.setTimeout(() => history.push('/artifacts'), 10);
+      onLoginClick(username, password)
+        .then((r) => {
+          if (r.type === 'LOGIN_SUCCESS') history.push('/artifacts');
+        });
     },
     [onLoginClick, username, password, history]
   );
