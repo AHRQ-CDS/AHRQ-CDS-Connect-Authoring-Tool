@@ -1,5 +1,6 @@
 import React, { useCallback, useState } from 'react';
 import PropTypes from 'prop-types';
+import { useHistory } from 'react-router-dom';
 import { Button, CircularProgress, TextField } from '@material-ui/core';
 import { Alert } from '@material-ui/lab';
 import ErrorOutlineOutlinedIcon from '@material-ui/icons/ErrorOutlineOutlined';
@@ -14,6 +15,7 @@ const Login = ({ authStatus, authStatusText, isAuthenticating, onLoginClick, set
   const [showWarning, setShowWarning] = useState(false);
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const history = useHistory();
   const styles = useStyles();
 
   const closeModal = useCallback(() => {
@@ -23,9 +25,12 @@ const Login = ({ authStatus, authStatusText, isAuthenticating, onLoginClick, set
 
   const handleLogin = useCallback(
     event => {
-      onLoginClick(username, password);
+      onLoginClick(username, password)
+        .then((r) => {
+          if (r.type === 'LOGIN_SUCCESS') history.push('/artifacts');
+        });
     },
-    [onLoginClick, username, password]
+    [onLoginClick, username, password, history]
   );
 
   const handleChangeUsername = useCallback(event => {
