@@ -1,5 +1,6 @@
 import React, { useCallback, useState } from 'react';
-import PropTypes from 'prop-types';
+import { useDispatch, useSelector } from 'react-redux';
+import { useHistory } from 'react-router-dom';
 import { Button, CircularProgress, TextField } from '@material-ui/core';
 import { Alert } from '@material-ui/lab';
 import ErrorOutlineOutlinedIcon from '@material-ui/icons/ErrorOutlineOutlined';
@@ -15,6 +16,11 @@ const Login = () => {
   const [showWarning, setShowWarning] = useState(false);
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const isAuthenticating = useSelector(state => state.auth.isAuthenticating);
+  const authStatus = useSelector(state => state.auth.authStatus);
+  const authStatusText = useSelector(state => state.auth.authStatusText);
+  const dispatch = useDispatch();
+  const history = useHistory();
   const styles = useStyles();
 
   const closeModal = useCallback(() => {
@@ -27,7 +33,7 @@ const Login = () => {
       .then(response => {
         if (response.type === 'LOGIN_SUCCESS') history.push('/artifacts');
       }),
-    [dispatch, username, password]
+    [dispatch, history, username, password]
   );
 
   const handleChangeUsername = useCallback(event => {
