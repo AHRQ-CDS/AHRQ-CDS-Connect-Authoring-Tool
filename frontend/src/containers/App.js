@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { Alert } from '@material-ui/lab';
 
-import { loginUser, logoutUser, setAuthStatus, getCurrentUser } from 'actions/auth';
+import { getCurrentUser } from 'actions/auth';
 import setErrorMessage from 'actions/errors';
 
 import { Analytics, Navbar } from 'components/base';
@@ -35,33 +35,17 @@ class App extends Component {
   }
 
   render() {
-    const {
-      artifactSaved, authStatus, authStatusText, authUser, children, isAuthenticated, isAuthenticating
-    } = this.props;
+    const { children, isAuthenticated } = this.props;
 
     return (
       <div className="app">
         <a className="skiplink" href="#maincontent">Skip to main content</a>
         <Analytics gtmKey={process.env.REACT_APP_GTM_KEY} dapURL={process.env.REACT_APP_DAP_URL} />
         <AhrqHeader />
-
-        <CdsHeader
-          isAuthenticated={isAuthenticated}
-          isAuthenticating={isAuthenticating}
-          authUser={authUser}
-          authStatus={authStatus}
-          authStatusText={authStatusText}
-          artifactSaved={artifactSaved}
-          loginUser={this.props.loginUser}
-          logoutUser={this.props.logoutUser}
-          setAuthStatus={this.props.setAuthStatus}
-        />
-
+        <CdsHeader />
         <Navbar isAuthenticated={isAuthenticated} />
-
         {this.renderedErrorMessage()}
         {children}
-
         <CdsFooter />
         <AhrqFooter />
       </div>
@@ -70,25 +54,14 @@ class App extends Component {
 }
 
 App.propTypes = {
-  artifactSaved: PropTypes.bool.isRequired,
-  authStatus: PropTypes.string,
-  authStatusText: PropTypes.string,
-  authUser: PropTypes.string,
   getCurrentUser: PropTypes.func.isRequired,
-  isAuthenticated: PropTypes.bool.isRequired,
-  isAuthenticating: PropTypes.bool.isRequired,
-  loginUser: PropTypes.func.isRequired,
-  logoutUser: PropTypes.func.isRequired,
-  setAuthStatus: PropTypes.func.isRequired
+  isAuthenticated: PropTypes.bool.isRequired
 };
 
 // these props are used for dispatching actions
 function mapDispatchToProps(dispatch) {
   return bindActionCreators({
     getCurrentUser,
-    loginUser,
-    logoutUser,
-    setAuthStatus,
     setErrorMessage
   }, dispatch);
 }
@@ -96,13 +69,8 @@ function mapDispatchToProps(dispatch) {
 // these props come from the application's state when it is started
 function mapStateToProps(state) {
   return {
-    artifactSaved: state.artifacts.artifactSaved,
-    authStatus: state.auth.authStatus,
-    authStatusText: state.auth.authStatusText,
-    authUser: state.auth.username,
     errorMessage: state.errors.errorMessage,
-    isAuthenticated: state.auth.isAuthenticated,
-    isAuthenticating: state.auth.isAuthenticating
+    isAuthenticated: state.auth.isAuthenticated
   };
 }
 

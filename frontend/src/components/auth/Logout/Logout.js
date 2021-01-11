@@ -1,30 +1,34 @@
-import React, { useRef } from 'react';
-import PropTypes from 'prop-types';
+import React, { useCallback, useRef } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import { useToggle } from 'react-use';
 import { Button, ClickAwayListener, Grow, MenuItem, MenuList, Paper, Popper } from '@material-ui/core';
 import { ArrowDropDown as ArrowDropDownIcon } from '@material-ui/icons';
 
 import { Modal } from 'components/elements';
+import { logoutUser } from 'actions/auth';
 import useStyles from '../styles';
 
-const Logout = ({ authUser, onLogoutClick, artifactSaved }) => {
+const Logout = () => {
   const [showModal, toggleModal] = useToggle(false);
   const [showMenu, toggleMenu] = useToggle(false);
+  const authUser = useSelector(state => state.auth.username);
+  const artifactSaved = useSelector(state => state.artifacts.artifactSaved);
+  const dispatch = useDispatch();
   const anchorRef = useRef(null);
   const history = useHistory();
   const styles = useStyles();
 
-  const logout = () => {
+  const logout = useCallback(() => {
     toggleModal(false);
     toggleMenu(false);
-    onLogoutClick();
+    dispatch(logoutUser());
     window.setTimeout(() => history.push('/'), 10);
-  };
+  }, [dispatch, history, toggleMenu, toggleModal]);
 
-  const handleLogout = () => {
+  const handleLogout = useCallback(() => {
     artifactSaved ? logout() : toggleModal(true);
-  };
+  }, [artifactSaved, logout, toggleModal]);
 
   const handleClose = event => {
     if (anchorRef.current && anchorRef.current.contains(event.target)) {
@@ -82,12 +86,6 @@ const Logout = ({ authUser, onLogoutClick, artifactSaved }) => {
       </Modal>
     </div>
   );
-};
-
-Logout.propTypes = {
-  authUser: PropTypes.string.isRequired,
-  onLogoutClick: PropTypes.func.isRequired,
-  artifactSaved: PropTypes.bool.isRequired
 };
 
 export default Logout;
