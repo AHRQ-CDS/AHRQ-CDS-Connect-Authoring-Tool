@@ -13,7 +13,7 @@
     "@material-ui/icons": "^4.9.1",
     "@material-ui/lab": "^4.0.0-alpha.56",
     "@material-ui/pickers": "^3.2.10",
-    "axios": "^0.20.0",
+    "axios": "^0.21.1",
     "bootstrap": "^4.0.0-beta",
     "change-case": "^4.1.1",
     "classnames": "^2.2.6",
