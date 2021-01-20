@@ -318,25 +318,6 @@ describe('artifact actions', () => {
     });
   });
 
-  // ----------------------- PUBLISH ARTIFACT ------------------------------ //
-  describe('publish artifact', () => {
-    it('creates PUBLISH_ARTIFACT_SUCCESS after successfully publishing an artifact', () => {
-      const store = mockStore({ artifacts: [] });
-      const expectedActions = [
-        { type: types.PUBLISH_ARTIFACT_REQUEST },
-        { type: types.PUBLISH_ARTIFACT_SUCCESS, active: false }
-      ];
-
-      nock('http://localhost')
-        .get('/authoring/api/config/repo/publish')
-        .reply(200, { active: false });
-
-      return store.dispatch(actions.publishArtifact(mockArtifact)).then(() => {
-        expect(store.getActions()).toEqual(expectedActions);
-      });
-    });
-  });
-
   // ----------------------- SAVE ARTIFACT --------------------------------- //
   describe('save artifact', () => {
     it('makes a POST request to save a new artifact', () => {

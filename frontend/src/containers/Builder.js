@@ -7,19 +7,14 @@ import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBook } from '@fortawesome/free-solid-svg-icons';
 import { Button, IconButton, Menu, MenuItem } from '@material-ui/core';
-import {
-  Edit as EditIcon,
-  GetApp as GetAppIcon,
-  Publish as PublishIcon,
-  Save as SaveIcon
-} from '@material-ui/icons';
+import { Edit as EditIcon, GetApp as GetAppIcon, Save as SaveIcon } from '@material-ui/icons';
 import _ from 'lodash';
 
 import loadTemplates from 'actions/templates';
 import { loadConversionFunctions } from 'actions/modifiers';
 import {
   setStatusMessage, downloadArtifact, saveArtifact, loadArtifact, updateArtifact, initializeArtifact,
-  updateAndSaveArtifact, publishArtifact, clearArtifactValidationWarnings
+  updateAndSaveArtifact, clearArtifactValidationWarnings
 } from 'actions/artifacts';
 import {
   loadExternalCqlList, loadExternalCqlLibraryDetails, addExternalLibrary, deleteExternalCqlLibrary,
@@ -35,7 +30,6 @@ import ErrorStatement from 'components/builder/ErrorStatement';
 import ExternalCQL from 'components/builder/ExternalCQL';
 import Parameters from 'components/builder/Parameters';
 import Recommendations from 'components/builder/Recommendations';
-import RepoUploadModal from 'components/builder/RepoUploadModal';
 import Subpopulations from 'components/builder/Subpopulations';
 
 import isBlankArtifact from 'utils/artifacts/isBlankArtifact';
@@ -52,7 +46,6 @@ export class Builder extends Component {
 
     this.state = {
       showArtifactModal: false,
-      showPublishModal: false,
       showELMErrorModal: false,
       showMenu: false,
       activeTabIndex: 0,
@@ -338,10 +331,6 @@ export class Builder extends Component {
     return false;
   }
 
-  togglePublishModal = () => {
-    this.setState({ showPublishModal: !this.state.showPublishModal });
-  }
-
   handleClickDownloadMenu = event => {
     this.setState({ downloadMenuAnchorElement: event.currentTarget });
   };
@@ -402,7 +391,7 @@ export class Builder extends Component {
   }
 
   renderHeader() {
-    const { statusMessage, artifact, publishEnabled } = this.props;
+    const { statusMessage, artifact } = this.props;
     const { downloadMenuAnchorElement } = this.state;
     const artifactName = artifact ? artifact.name : null;
     let disableDSTU2 = false;
@@ -472,16 +461,6 @@ export class Builder extends Component {
             >
               Save
             </Button>
-
-            {publishEnabled &&
-              <Button
-                onClick={() => { this.handleSaveArtifact(artifact); this.togglePublishModal(); }}
-                startIcon={<PublishIcon />}
-                variant="contained"
-              >
-                Publish
-              </Button>
-            }
           </div>
 
           <div role="status" aria-live="assertive">{statusMessage}</div>
@@ -519,7 +498,7 @@ export class Builder extends Component {
       templates,
       vsacApiKey
     } = this.props;
-    const { activeTabIndex, showArtifactModal, showELMErrorModal, showPublishModal, uniqueIdCounter } = this.state;
+    const { activeTabIndex, showArtifactModal, showELMErrorModal, uniqueIdCounter } = this.state;
 
     let namedParameters = [];
     if (artifact) {
@@ -724,14 +703,6 @@ export class Builder extends Component {
           </section>
         </div>
 
-        <RepoUploadModal
-          artifact={artifact}
-          closeModal={this.togglePublishModal}
-          hasCancelButton
-          showModal={showPublishModal}
-          version={artifact.version}
-        />
-
         <ArtifactModal
           artifactEditing={artifact}
           closeModal={this.closeArtifactModal}
@@ -796,7 +767,6 @@ function mapDispatchToProps(dispatch) {
     loadExternalCqlLibraryDetails,
     loadExternalCqlList,
     loadTemplates,
-    publishArtifact,
     saveArtifact,
     setStatusMessage,
     updateAndSaveArtifact,
@@ -826,7 +796,6 @@ function mapStateToProps(state) {
     modifierMap: state.modifiers.modifierMap,
     modifiersByInputType: state.modifiers.modifiersByInputType,
     names: state.artifacts.names,
-    publishEnabled: state.artifacts.publishEnabled,
     statusMessage: state.artifacts.statusMessage,
     templates: state.templates.templates,
     vsacApiKey: state.vsac.apiKey
