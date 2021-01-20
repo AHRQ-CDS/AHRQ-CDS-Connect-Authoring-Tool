@@ -1,12 +1,16 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { Button } from '@material-ui/core';
-import { Check as CheckIcon, List as ListIcon } from '@material-ui/icons';
 import pluralize from 'pluralize';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBan, faKey, faPlus } from '@fortawesome/free-solid-svg-icons';
-import { IconButton } from '@material-ui/core';
-import { Close as CloseIcon, LocalHospital as LocalHospitalIcon, Lock as LockIcon } from '@material-ui/icons';
+import { Button, IconButton } from '@material-ui/core';
+import {
+  Check as CheckIcon,
+  Close as CloseIcon,
+  List as ListIcon,
+  LocalHospital as LocalHospitalIcon,
+  Lock as LockIcon
+} from '@material-ui/icons';
 import _ from 'lodash';
 
 import { Dropdown } from 'components/elements';
