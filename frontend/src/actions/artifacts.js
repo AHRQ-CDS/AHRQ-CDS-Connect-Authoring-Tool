@@ -24,7 +24,6 @@ export function setStatusMessage(statusType) {
 
   if (statusType === 'save') message = `Saved ${time}.`;
   if (statusType === 'download') message = `Downloaded ${time}.`;
-  if (statusType === 'publish') message = `Publishing not available. Saved ${time}.`;
 
   return {
     type: types.SET_STATUS_MESSAGE,
@@ -645,55 +644,6 @@ export function executeCQLArtifact(artifact, params, patients, vsacApiKey, codeS
     ))
       .then(r => dispatch(executeArtifactSuccess(r, artifact, patients)))
       .catch(error => dispatch(executeArtifactFailure(error)));
-  };
-}
-
-// ------------------------- PUBLISH ARTIFACT ---------------------- //
-
-function requestPublishArtifact() {
-  return {
-    type: types.PUBLISH_ARTIFACT_REQUEST
-  };
-}
-
-function publishArtifactSuccess(data) {
-  return {
-    type: types.PUBLISH_ARTIFACT_SUCCESS,
-    active: data.active
-  };
-}
-
-function publishArtifactFailure(error) {
-  return {
-    type: types.PUBLISH_ARTIFACT_FAILURE,
-    status: error.response.status,
-    statusText: error.response.statusText
-  };
-}
-
-function sendPublishArtifactRequest(artifact) {
-  return new Promise((resolve, reject) => {
-    // TODO: This is not the correct API call. This will need to work with the RepoUploadModal.
-    axios.get(`${API_BASE}/config/repo/publish`)
-      .then(result => resolve(result.data))
-      .catch(error => reject(error));
-  });
-}
-
-export function publishArtifact(artifact) {
-  return (dispatch) => {
-    dispatch(requestPublishArtifact());
-
-    return sendPublishArtifactRequest(artifact)
-      .then(data => dispatch(publishArtifactSuccess(data)))
-      .catch(error => dispatch(publishArtifactFailure(error)));
-  };
-}
-
-export function updatePublishEnabled(bool) {
-  return {
-    type: types.UPDATE_PUBLISH_ENABLED,
-    bool
   };
 }
 

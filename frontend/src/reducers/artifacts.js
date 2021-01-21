@@ -13,7 +13,6 @@ const defaultState = {
   editArtifact: { isEditing: false, editStatus: null },
   deleteArtifact: { isDeleting: false, deleteStatus: null },
   saveArtifact: { isSaving: false, saveStatus: null },
-  publishArtifact: { isPublishing: false, publishStatus: null },
   downloadArtifact: {
     isDownloading: false,
     downloadStatus: null,
@@ -31,7 +30,6 @@ const defaultState = {
     errorMessage: null
   },
   artifactSaved: true,
-  publishEnabled: false,
   librariesInUse: []
 };
 
@@ -193,31 +191,6 @@ export default function auth(state = defaultState, action) {
           patientsExecuted: null,
           errorMessage: null
         }
-      };
-    case types.PUBLISH_ARTIFACT_REQUEST:
-      return {
-        ...state,
-        statusMessage: null,
-        publishArtifact: { isPublishing: true, publishStatus: null }
-      };
-    case types.PUBLISH_ARTIFACT_SUCCESS: {
-      const time = moment().format('dddd, MMMM Do YYYY, h:mm:ss a');
-      return {
-        ...state,
-        statusMessage: `Published ${time}.`,
-        publishArtifact: { isPublishing: false, publishStatus: 'success' }
-      };
-    }
-    case types.PUBLISH_ARTIFACT_FAILURE:
-      return {
-        ...state,
-        statusMessage: `Publish failed. ${action.statusText}.`,
-        publishArtifact: { isPublishing: false, publishStatus: 'failure' }
-      };
-    case types.UPDATE_PUBLISH_ENABLED:
-      return {
-        ...state,
-        publishEnabled: action.bool
       };
     case types.SAVE_ARTIFACT_REQUEST:
       return {

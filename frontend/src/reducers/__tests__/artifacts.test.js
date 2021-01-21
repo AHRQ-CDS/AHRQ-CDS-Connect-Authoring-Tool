@@ -20,7 +20,6 @@ describe('artifacts reducer', () => {
       editArtifact: { isEditing: false, editStatus: null },
       deleteArtifact: { isDeleting: false, deleteStatus: null },
       saveArtifact: { isSaving: false, saveStatus: null },
-      publishArtifact: { isPublishing: false, publishStatus: null },
       downloadArtifact: {
         isDownloading: false,
         downloadStatus: null,
@@ -38,7 +37,6 @@ describe('artifacts reducer', () => {
         errorMessage: null
       },
       artifactSaved: true,
-      publishEnabled: false,
       librariesInUse: []
     });
   });
@@ -267,34 +265,6 @@ describe('artifacts reducer', () => {
       }
     };
     expect(reducer(previousState, action)).toEqual(newState);
-  });
-
-  // ----------------------- PUBLISH ARTIFACT ------------------------------ //
-  it('should handle publishing an artifact', () => {
-    let action = { type: types.PUBLISH_ARTIFACT_REQUEST };
-    let newState = { statusMessage: null, publishArtifact: { isPublishing: true, publishStatus: null } };
-    expect(reducer([], action)).toEqual(newState);
-
-    const previousState = { statusMessage: 'test', publishArtifact: { isPublishing: false, publishStatus: 'test' } };
-    expect(reducer(previousState, action)).toEqual(newState);
-
-    action = { type: types.PUBLISH_ARTIFACT_SUCCESS };
-    newState = {
-      statusMessage: `Published ${time()}.`,
-      publishArtifact: { isPublishing: false, publishStatus: 'success' }
-    };
-    expect(reducer(previousState, action)).toEqual(newState);
-
-    action = { type: types.PUBLISH_ARTIFACT_FAILURE, status: 'Test status', statusText: 'Test status message' };
-    newState = {
-      statusMessage: 'Publish failed. Test status message.',
-      publishArtifact: { isPublishing: false, publishStatus: 'failure' }
-    };
-    expect(reducer(previousState, action)).toEqual(newState);
-
-    action = { type: types.UPDATE_PUBLISH_ENABLED, bool: true };
-    newState = { publishEnabled: true };
-    expect(reducer([], action)).toEqual(newState);
   });
 
   // ----------------------- SAVE ARTIFACT --------------------------------- //
