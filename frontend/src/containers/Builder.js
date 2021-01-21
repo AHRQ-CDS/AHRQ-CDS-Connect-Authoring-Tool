@@ -62,17 +62,15 @@ export class Builder extends Component {
   }
 
   componentDidMount() {
-    this.props.loadTemplates().then((result) => {
-      // if there is a current artifact, load it, otherwise initialize new artifact
-      if (this.props.match.params.id) {
-        this.props.loadArtifact(this.props.match.params.id);
-      } else {
-        const operations = result.templates.find(template => template.name === 'Operations');
-        const andTemplate = operations.entries.find(entry => entry.name === 'And');
-        const orTemplate = operations.entries.find(entry => entry.name === 'Or');
-        this.props.initializeArtifact(andTemplate, orTemplate);
-      }
-    });
+    // if there is a current artifact, load it, otherwise initialize new artifact
+    if (this.props.match.params.id) {
+      this.props.loadArtifact(this.props.match.params.id);
+    } else {
+      const operations = this.props.templates.find(template => template.name === 'Operations');
+      const andTemplate = operations.entries.find(entry => entry.name === 'And');
+      const orTemplate = operations.entries.find(entry => entry.name === 'Or');
+      this.props.initializeArtifact(andTemplate, orTemplate);
+    }
     this.props.loadConversionFunctions();
   }
 

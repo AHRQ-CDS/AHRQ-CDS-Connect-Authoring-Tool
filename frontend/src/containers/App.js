@@ -6,6 +6,7 @@ import { Alert } from '@material-ui/lab';
 
 import { getCurrentUser } from 'actions/auth';
 import setErrorMessage from 'actions/errors';
+import loadTemplates from 'actions/templates';
 
 import { Analytics, Navbar } from 'components/base';
 import CdsHeader from 'components/header/CdsHeader';
@@ -16,6 +17,7 @@ import AhrqFooter from 'components/footer/AhrqFooter';
 class App extends Component {
   UNSAFE_componentWillMount() { // eslint-disable-line camelcase
     this.props.getCurrentUser();
+    this.props.loadTemplates();
   }
 
   handleDismissClick = (e) => {
@@ -62,6 +64,7 @@ App.propTypes = {
 function mapDispatchToProps(dispatch) {
   return bindActionCreators({
     getCurrentUser,
+    loadTemplates,
     setErrorMessage
   }, dispatch);
 }
