@@ -87,7 +87,6 @@ const Modal = ({
                 form="modal-form"
                 onClick={handleSaveModal}
                 startIcon={isLoading && <CircularProgress size={20} />}
-                type="submit"
                 variant="contained"
               >
                 {submitButtonText}
