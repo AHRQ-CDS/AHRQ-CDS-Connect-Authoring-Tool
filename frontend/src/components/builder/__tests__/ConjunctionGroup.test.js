@@ -1,4 +1,5 @@
 import React from 'react';
+import nock from 'nock';
 import { render, fireEvent, userEvent, screen, within } from 'utils/test-utils';
 import { createTemplateInstance } from 'utils/test_helpers';
 import { instanceTree, elementGroups } from 'utils/test_fixtures';
@@ -50,6 +51,12 @@ describe('<ConjunctionGroup />', () => {
         {...props}
       />
     );
+
+  beforeEach(() => {
+    nock('http://localhost')
+      .get('/authoring/api/config/valuesets/demographics/units_of_time')
+      .reply(200, {expansion: []});
+  });
 
   it('has correct base class', () => {
     const { container } = renderComponent();

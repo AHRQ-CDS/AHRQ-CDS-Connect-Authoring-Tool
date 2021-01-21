@@ -2,6 +2,7 @@ import React from 'react';
 import { Provider } from 'react-redux';
 import { createMockStore as reduxCreateMockStore } from 'redux-test-utils';
 import _ from 'lodash';
+import nock from 'nock';
 import * as types from 'actions/types';
 import localModifiers from 'data/modifiers';
 import { render, fireEvent, userEvent, screen } from 'utils/test-utils';
@@ -59,6 +60,12 @@ describe('<Builder />', () => {
         <Builder match={{ params: {} }} {...props} />
       </Provider>
     );
+
+  beforeEach(() => {
+    nock('http://localhost')
+      .get('/authoring/api/config/valuesets/demographics/units_of_time')
+      .reply(200, {expansion: []});
+  });
 
   it('shows loading screen when artifact is not loaded', () => {
     const { getByText } = renderComponent({
