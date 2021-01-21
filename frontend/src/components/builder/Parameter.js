@@ -82,7 +82,7 @@ export default class Parameter extends Component {
       <Modal
         title="Delete Parameter Confirmation"
         submitButtonText="Delete"
-        handleShowModal={this.state.showConfirmDeleteModal}
+        isOpen={this.state.showConfirmDeleteModal}
         handleCloseModal={this.closeConfirmDeleteModal}
         handleSaveModal={this.handleDeleteParameter}
       >
@@ -127,17 +127,7 @@ export default class Parameter extends Component {
         comment: this.props.comment,
         value: (e != null ? e.value : null)
       }),
-      vsacApiKey: this.props.vsacApiKey,
-      loginVSACUser: this.props.loginVSACUser,
-      setVSACAuthStatus: this.props.setVSACAuthStatus,
-      vsacStatus: this.props.vsacStatus,
-      vsacStatusText: this.props.vsacStatusText,
-      isValidatingCode: this.props.isValidatingCode,
-      isValidCode: this.props.isValidCode,
-      codeData: this.props.codeData,
-      validateCode: this.props.validateCode,
-      resetCodeValidation: this.props.resetCodeValidation,
-      vsacIsAuthenticating: this.props.vsacIsAuthenticating
+      vsacApiKey: this.props.vsacApiKey
     };
 
     return <Editor {...editorProps} />;
@@ -362,23 +352,16 @@ export default class Parameter extends Component {
 }
 
 Parameter.propTypes = {
+  comment: PropTypes.string,
+  deleteParameter: PropTypes.func.isRequired,
+  getAllInstancesInAllTrees: PropTypes.func.isRequired,
+  id: PropTypes.string,
   index: PropTypes.number.isRequired,
+  instanceNames: PropTypes.array.isRequired,
   name: PropTypes.string,
   type: PropTypes.string,
-  id: PropTypes.string,
-  usedBy: PropTypes.array,
   updateInstanceOfParameter: PropTypes.func.isRequired,
-  deleteParameter: PropTypes.func.isRequired,
-  instanceNames: PropTypes.array.isRequired,
-  vsacApiKey: PropTypes.string,
-  setVSACAuthStatus: PropTypes.func.isRequired,
-  vsacStatus: PropTypes.string,
-  vsacStatusText: PropTypes.string,
-  isValidatingCode: PropTypes.bool.isRequired,
-  isValidCode: PropTypes.bool,
-  codeData: PropTypes.object,
-  validateCode: PropTypes.func.isRequired,
-  resetCodeValidation: PropTypes.func.isRequired,
-  getAllInstancesInAllTrees: PropTypes.func.isRequired,
-  vsacIsAuthenticating: PropTypes.bool.isRequired
+  usedBy: PropTypes.array,
+  value: PropTypes.any,
+  vsacApiKey: PropTypes.string
 };

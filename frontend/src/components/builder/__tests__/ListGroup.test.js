@@ -13,43 +13,29 @@ describe('<ListGroup />', () => {
   const renderComponent = (props = {}) =>
     render(
       <ListGroup
-        addBaseElement={jest.fn()}
         addInstance={jest.fn()}
         artifact={{ baseElements: [genericBaseElementListTemplateInstance] }}
         baseElements={[]}
+        conversionFunctions={[]}
         deleteInstance={jest.fn()}
         editInstance={jest.fn()}
         externalCqlList={[]}
         getAllInstances={() => genericBaseElementListInstance.childInstances}
         getAllInstancesInAllTrees={() => []}
-        getVSDetails={jest.fn()}
         index={0}
         instance={genericBaseElementListTemplateInstance}
         instanceNames={[]}
-        isRetrievingDetails={false}
-        isSearchingVSAC={false}
-        isValidatingCode={false}
+        isLoadingModifiers={false}
         loadExternalCqlList={jest.fn()}
-        loginVSACUser={jest.fn()}
         modifierMap={{}}
         modifiersByInputType={{}}
         parameters={[]}
-        resetCodeValidation={jest.fn()}
         scrollToElement={jest.fn()}
-        searchVSACByKeyword={jest.fn()}
-        setVSACAuthStatus={jest.fn()}
         templates={elementGroups}
         treeName="baseElements"
         updateBaseElementLists={jest.fn()}
         updateInstanceModifiers={jest.fn()}
-        validateCode={jest.fn()}
-        validateReturnType={false}
-        vsacApiKey={'key'}
-        vsacDetailsCodes={[]}
-        vsacDetailsCodesError=""
-        vsacIsAuthenticating={false}
-        vsacSearchCount={0}
-        vsacSearchResults={[]}
+        vsacApiKey="key"
         {...props}
       />
     );

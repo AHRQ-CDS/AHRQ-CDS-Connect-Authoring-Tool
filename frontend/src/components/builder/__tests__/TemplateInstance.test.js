@@ -36,43 +36,25 @@ describe('<TemplateInstance />', () => {
       <TemplateInstance
         allInstancesInAllTrees={[]}
         baseElements={[]}
-        codeData={{}}
         deleteInstance={jest.fn()}
         disableAddElement={false}
         disableIndent={false}
         editInstance={jest.fn()}
         getPath={path => path}
-        getVSDetails={jest.fn()}
         instanceNames={[]}
         isLoadingModifiers={false}
-        isRetrievingDetails={false}
-        isSearchingVSAC={false}
-        isValidatingCode={false}
-        isValidCode={false}
-        loginVSACUser={jest.fn()}
         modifierMap={{}}
         modifiersByInputType={modifiersByInputType}
         otherInstances={[]}
         parameters={[]}
         renderIndentButtons={jest.fn()}
-        resetCodeValidation={jest.fn()}
         scrollToElement={jest.fn()}
-        searchVSACByKeyword={jest.fn()}
-        setVSACAuthStatus={jest.fn()}
         subpopulationIndex={0}
         templateInstance={templateInstance}
         treeName="MeetsInclusionCriteria"
         updateInstanceModifiers={jest.fn()}
-        validateCode={jest.fn()}
         validateReturnType={false}
-        vsacApiKey={'key'}
-        vsacDetailsCodes={[]}
-        vsacDetailsCodesError=""
-        vsacIsAuthenticating={false}
-        vsacSearchCount={0}
-        vsacSearchResults={[]}
-        vsacStatus=""
-        vsacStatusText=""
+        vsacApiKey="key"
         {...props}
       />
     );

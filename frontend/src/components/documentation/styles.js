@@ -1,9 +1,9 @@
-import { makeStyles, Theme as AugmentedTheme } from '@material-ui/core/styles';
+import { makeStyles } from '@material-ui/core/styles';
 
 export default makeStyles(
-  (theme: AugmentedTheme) => ({
+  theme => ({
     tabBar: {
-      backgroundColor: theme.palette.common.blueDarker,
+      backgroundColor: theme.palette.common.blueDarkest,
       paddingTop: '30px'
     },
     tab: {

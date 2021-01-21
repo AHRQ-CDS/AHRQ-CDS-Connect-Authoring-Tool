@@ -45,8 +45,6 @@ describe('<PatientTable />', () => {
         setVSACAuthStatus={jest.fn()}
         vsacIsAuthenticating={false}
         isValidatingCode={false}
-        validateCode={jest.fn()}
-        resetCodeValidation={jest.fn()}
         {...props}
       />
     );

@@ -1,54 +1,90 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { IconButton, Paper } from '@material-ui/core';
-import { Close as CloseIcon } from '@material-ui/icons';
+import { Button, IconButton, Paper } from '@material-ui/core';
+import { Close as CloseIcon, LocalHospital as LocalHospitalIcon, Lock as LockIcon } from '@material-ui/icons';
 
-import CodeSelectModal from '../CodeSelectModal';
-import VSACAuthenticationModal from '../VSACAuthenticationModal';
+import { CodeSelectModal, VSACAuthenticationModal } from 'components/modals';
 
 export default class CodeEditor extends Component {
-  handleCodeAdded = ({ system, uri, code, display }) => {
-    let str;
-    if (this.props.isConcept) {
-      str = `Concept { Code '${code.replace(/'/g, '\\\'')}' from "${system}" } display '${display}'`;
-    } else {
-      str = `Code '${code.replace(/'/g, '\\\'')}' from "${system}" display '${display}'`;
-    }
+  constructor(props) {
+    super(props);
 
-    this.props.updateInstance({ value: { system, uri, code, display, str } });
+    this.state = {
+      showCodeSelectModal: false,
+      showVSACAuthenticationModal: false
+    };
+  }
+
+  openVSACAuthenticationModal = () => {
+    this.setState({ showVSACAuthenticationModal: true });
+  }
+
+  closeVSACAuthenticationModal = () => {
+    this.setState({ showVSACAuthenticationModal: false });
+  }
+
+  openCodeSelectModal = () => {
+    this.setState({ showCodeSelectModal: true });
+  }
+
+  closeCodeSelectModal = () => {
+    this.setState({ showCodeSelectModal: false });
+  }
+
+  handleSelectCode = codeData => {
+    const { isConcept, updateInstance } = this.props;
+    const codeStr = `Code '${codeData.code.replace(/'/g, '\\\'')}' from "${codeData.system}"`;
+    const displayStr = `display '${codeData.display}'`;
+    const str = isConcept ? `Concept { ${codeStr} } ${displayStr}` : `${codeStr} ${displayStr}`;
+
+    updateInstance({
+      value: {
+        system: codeData.codeSystem.name,
+        uri: codeData.codeSystem.id,
+        code: codeData.code,
+        display: codeData.display,
+        str
+      }
+    });
   }
 
   renderCodePicker(openButtonText) {
-    if (!this.props.vsacApiKey) {
-      return (
-        <div id="vsac-controls">
-          <VSACAuthenticationModal
-            loginVSACUser={this.props.loginVSACUser}
-            setVSACAuthStatus={this.props.setVSACAuthStatus}
-            vsacIsAuthenticating={this.props.vsacIsAuthenticating}
-            vsacStatus={this.props.vsacStatus}
-            vsacStatusText={this.props.vsacStatusText}
-          />
-        </div>
-      );
-    }
+    const { vsacApiKey } = this.props;
+    const { showCodeSelectModal, showVSACAuthenticationModal } = this.state;
 
     return (
-      <CodeSelectModal
-        className="element-select__modal"
-        template={this.props.templateInstance}
-        vsacApiKey={this.props.vsacApiKey}
-        isValidatingCode={this.props.isValidatingCode}
-        isValidCode={this.props.isValidCode}
-        codeData={this.props.codeData}
-        validateCode={this.props.validateCode}
-        resetCodeValidation={this.props.resetCodeValidation}
-        addToParameter={this.handleCodeAdded}
-        labels={{
-          openButtonText,
-          closeButtonText: 'Close'
-        }}
-      />
+      <>
+        {!Boolean(vsacApiKey) ? (
+          <Button
+            color="primary"
+            onClick={this.openVSACAuthenticationModal}
+            variant="contained"
+            startIcon={<LockIcon />}
+          >
+            Authenticate VSAC
+          </Button>
+        ) : (
+          <Button
+            color="primary"
+            onClick={this.openCodeSelectModal}
+            startIcon={<LocalHospitalIcon />}
+            variant="contained"
+          >
+            {openButtonText}
+          </Button>
+        )}
+
+        {showVSACAuthenticationModal && (
+          <VSACAuthenticationModal handleCloseModal={this.closeVSACAuthenticationModal} />
+        )}
+
+        {showCodeSelectModal && (
+          <CodeSelectModal
+            handleCloseModal={this.closeCodeSelectModal}
+            handleSelectCode={codeData => this.handleSelectCode(codeData)}
+          />
+        )}
+      </>
     );
   }
 
@@ -118,19 +154,9 @@ export default class CodeEditor extends Component {
 }
 
 CodeEditor.propTypes = {
-  codeData: PropTypes.object,
   disableEditing: PropTypes.bool,
   isConcept: PropTypes.bool,
-  isValidatingCode: PropTypes.bool.isRequired,
-  isValidCode: PropTypes.bool,
-  loginVSACUser: PropTypes.func.isRequired,
-  resetCodeValidation: PropTypes.func.isRequired,
-  setVSACAuthStatus: PropTypes.func.isRequired,
   updateInstance: PropTypes.func.isRequired,
-  validateCode: PropTypes.func.isRequired,
   value: PropTypes.object,
-  vsacApiKey: PropTypes.string,
-  vsacIsAuthenticating: PropTypes.bool,
-  vsacStatus: PropTypes.string,
-  vsacStatusText: PropTypes.string
+  vsacApiKey: PropTypes.string
 };

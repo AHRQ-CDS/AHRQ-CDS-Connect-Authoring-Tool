@@ -7,19 +7,9 @@ describe('<Qualifier />', () => {
   const renderComponent = (props = {}) =>
     render(
       <Qualifier
-        codeData={{}}
-        getVSDetails={jest.fn()}
         index={5}
-        isRetrievingDetails={false}
-        isSearchingVSAC={false}
-        isValidatingCode={false}
-        isValidCode={false}
-        loginVSACUser={jest.fn()}
         name="qualifier-test"
         qualifier=""
-        resetCodeValidation={jest.fn()}
-        searchVSACByKeyword={jest.fn()}
-        setVSACAuthStatus={jest.fn()}
         template={{
           ...genericInstance,
           modifiers: [{
@@ -28,15 +18,7 @@ describe('<Qualifier />', () => {
           }]
         }}
         updateAppliedModifier={jest.fn()}
-        updateInstance={jest.fn()}
-        validateCode={jest.fn()}
-        vsacApiKey={'key'}
-        vsacDetailsCodes={[]}
-        vsacDetailsCodesError=""
-        vsacSearchCount={0}
-        vsacSearchResults={[]}
-        vsacStatus=""
-        vsacStatusText=""
+        vsacApiKey="key"
         {...props}
       />
     );

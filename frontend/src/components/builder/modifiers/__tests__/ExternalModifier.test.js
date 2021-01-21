@@ -8,20 +8,13 @@ describe('<ExternalModifier />', () => {
   const renderComponent = (props = {}) =>
     render(
       <ExternalModifier
-        index={0}
-        name="external"
-        value={[]}
-        modifierArguments={[]}
         argumentTypes={[]}
+        index={0}
+        modifierArguments={[]}
+        name="external"
         updateAppliedModifier={jest.fn()}
-        vsacApiKey={'key'}
-        loginVSACUser={jest.fn()}
-        setVSACAuthStatus={jest.fn()}
-        vsacStatus=""
-        vsacStatusText=""
-        isValidatingCode={false}
-        validateCode={jest.fn()}
-        resetCodeValidation={jest.fn()}
+        value={[]}
+        vsacApiKey="key"
         {...props}
       />
     );

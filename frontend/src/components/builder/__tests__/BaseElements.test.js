@@ -10,39 +10,26 @@ describe('<BaseElements />', () => {
         addBaseElement={jest.fn()}
         addInstance={jest.fn()}
         baseElements={[]}
+        conversionFunctions={[]}
         deleteInstance={jest.fn()}
         editInstance={jest.fn()}
         externalCqlList={[]}
         getAllInstances={jest.fn()}
         getAllInstancesInAllTrees={jest.fn(() => [])}
-        getVSDetails={jest.fn()}
         instance={null}
         instanceNames={[]}
         isLoadingModifiers={false}
-        isRetrievingDetails={false}
-        isSearchingVSAC={false}
-        isValidatingCode={false}
         loadExternalCqlList={jest.fn()}
-        loginVSACUser={jest.fn()}
         modifierMap={{}}
         modifiersByInputType={{}}
         parameters={[]}
-        resetCodeValidation={jest.fn()}
         scrollToElement={jest.fn()}
-        searchVSACByKeyword={jest.fn()}
-        setVSACAuthStatus={jest.fn()}
         templates={[]}
         treeName="baseElements"
         updateBaseElementLists={jest.fn()}
         updateInstanceModifiers={jest.fn()}
-        validateCode={jest.fn()}
         validateReturnType={false}
-        vsacApiKey={'key'}
-        vsacDetailsCodes={[]}
-        vsacDetailsCodesError=""
-        vsacIsAuthenticating={false}
-        vsacSearchCount={0}
-        vsacSearchResults={[]}
+        vsacApiKey="key"
         {...props}
       />
     );

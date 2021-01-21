@@ -4,6 +4,7 @@ import { TextField as MuiTextField } from '@material-ui/core';
 import clsx from 'clsx';
 
 import { isCpgComplete } from 'utils/fields';
+import useStyles from './styles';
 
 let labelUuid = 0;
 
@@ -33,6 +34,7 @@ export default memo(function TextAreaField({
 }) {
   const { values } = useFormikContext();
   const fieldName = namePrefix ? `${namePrefix}.${name}` : name;
+  const styles = useStyles();
 
   const labelId = useMemo(() => {
     if (!label) return null;
@@ -40,17 +42,17 @@ export default memo(function TextAreaField({
   }, [label]);
   
   return (
-    <div className="field text-area-field">
+    <div className={styles.field}>
       {label &&
-        <label htmlFor={labelId} className={clsx('field-label', helperText && 'has-helper-text')}>
+        <label htmlFor={labelId} className={styles.fieldLabel}>
           {label}
           {isCpgField &&
-            <span className={clsx('cpg-tag', isCpgComplete(name, values) && 'cpg-tag-complete')}>CPG</span>
+            <span className={clsx(styles.cpgTag, isCpgComplete(name, values) && styles.cpgTagComplete)}>CPG</span>
           }:
         </label>
       }
 
-      <div className="field-input field-input-full-width">
+      <div className={clsx(styles.fieldInput, styles.fieldInputFullWidth)}>
         <FastField
           component={MuiFastField}
           id={labelId}
@@ -58,7 +60,7 @@ export default memo(function TextAreaField({
           placeholder={placeholder}
         />
 
-        {helperText && <div className="helper-text">{helperText}</div>}
+        {helperText && <div className={styles.helperText}>{helperText}</div>}
       </div>
     </div>
   );

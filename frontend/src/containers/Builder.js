@@ -15,36 +15,33 @@ import {
 } from '@material-ui/icons';
 import _ from 'lodash';
 
-import loadTemplates from '../actions/templates';
-import { loadConversionFunctions } from '../actions/modifiers';
+import loadTemplates from 'actions/templates';
+import { loadConversionFunctions } from 'actions/modifiers';
 import {
   setStatusMessage, downloadArtifact, saveArtifact, loadArtifact, updateArtifact, initializeArtifact,
   updateAndSaveArtifact, publishArtifact, clearArtifactValidationWarnings
-} from '../actions/artifacts';
-import {
-  loginVSACUser, setVSACAuthStatus, searchVSACByKeyword, getVSDetails, validateCode, resetCodeValidation
-} from '../actions/vsac';
+} from 'actions/artifacts';
 import {
   loadExternalCqlList, loadExternalCqlLibraryDetails, addExternalLibrary, deleteExternalCqlLibrary,
   clearExternalCqlValidationWarnings, clearAddLibraryErrorsAndMessages
-} from '../actions/external_cql';
+} from 'actions/external_cql';
 
-import BaseElements from '../components/builder/BaseElements';
-import ConjunctionGroup from '../components/builder/ConjunctionGroup';
-import ArtifactModal from '../components/artifact/ArtifactModal';
+import { ELMErrorModal } from 'components/modals';
+import BaseElements from 'components/builder/BaseElements';
+import ConjunctionGroup from 'components/builder/ConjunctionGroup';
+import ArtifactModal from 'components/artifact/ArtifactModal';
 
-import ELMErrorModal from '../components/builder/ELMErrorModal';
-import ErrorStatement from '../components/builder/ErrorStatement';
-import ExternalCQL from '../components/builder/ExternalCQL';
-import Parameters from '../components/builder/Parameters';
-import Recommendations from '../components/builder/Recommendations';
-import RepoUploadModal from '../components/builder/RepoUploadModal';
-import Subpopulations from '../components/builder/Subpopulations';
+import ErrorStatement from 'components/builder/ErrorStatement';
+import ExternalCQL from 'components/builder/ExternalCQL';
+import Parameters from 'components/builder/Parameters';
+import Recommendations from 'components/builder/Recommendations';
+import RepoUploadModal from 'components/builder/RepoUploadModal';
+import Subpopulations from 'components/builder/Subpopulations';
 
-import isBlankArtifact from '../utils/artifacts/isBlankArtifact';
-import { findValueAtPath } from '../utils/find';
+import isBlankArtifact from 'utils/artifacts/isBlankArtifact';
+import { findValueAtPath } from 'utils/find';
 
-import artifactProps from '../prop-types/artifact';
+import artifactProps from 'prop-types/artifact';
 
 // TODO: This is needed because the tree on this.state is not updated in time. Figure out a better way to handle this
 let localTree;
@@ -75,8 +72,8 @@ export class Builder extends Component {
         const orTemplate = operations.entries.find(entry => entry.name === 'Or');
         this.props.initializeArtifact(andTemplate, orTemplate);
       }
+      this.props.loadConversionFunctions();
     });
-    this.props.loadConversionFunctions();
   }
 
   componentWillUnmount() {
@@ -363,11 +360,12 @@ export class Builder extends Component {
 
   renderConjunctionGroup = (treeName) => {
     const {
-      artifact, templates,
-      vsacStatus, vsacStatusText,
-      isRetrievingDetails, vsacDetailsCodes, vsacDetailsCodesError,
-      modifierMap, modifiersByInputType, isLoadingModifiers, conversionFunctions,
-      isValidatingCode, isValidCode, codeData
+      artifact,
+      conversionFunctions,
+      isLoadingModifiers,
+      modifierMap,
+      modifiersByInputType,
+      templates
     } = this.props;
     const namedParameters = _.filter(artifact.parameters, p => (!_.isNull(p.name) && p.name.length));
 
@@ -377,43 +375,25 @@ export class Builder extends Component {
           addInstance={this.addInstance}
           artifact={artifact}
           baseElements={artifact.baseElements}
-          codeData={codeData}
           conversionFunctions={conversionFunctions}
           deleteInstance={this.deleteInstance}
           editInstance={this.editInstance}
           externalCqlList={this.props.externalCqlList}
           getAllInstances={this.getAllInstances}
           getAllInstancesInAllTrees={this.getAllInstancesInAllTrees}
-          getVSDetails={this.props.getVSDetails}
           instance={artifact[treeName]}
           instanceNames={this.props.names}
           isLoadingModifiers={isLoadingModifiers}
-          isRetrievingDetails={isRetrievingDetails}
-          isSearchingVSAC={this.props.isSearchingVSAC}
-          isValidatingCode={isValidatingCode}
-          isValidCode={isValidCode}
           loadExternalCqlList={this.props.loadExternalCqlList}
-          loginVSACUser={this.props.loginVSACUser}
           modifierMap={modifierMap}
           modifiersByInputType={modifiersByInputType}
           parameters={namedParameters}
-          resetCodeValidation={this.props.resetCodeValidation}
           root={true}
           scrollToElement={this.scrollToElement}
-          searchVSACByKeyword={this.props.searchVSACByKeyword}
-          setVSACAuthStatus={this.props.setVSACAuthStatus}
           templates={templates}
           treeName={treeName}
           updateInstanceModifiers={this.updateInstanceModifiers}
-          validateCode={this.props.validateCode}
           vsacApiKey={this.props.vsacApiKey}
-          vsacDetailsCodes={vsacDetailsCodes}
-          vsacDetailsCodesError={vsacDetailsCodesError}
-          vsacIsAuthenticating={this.props.vsacIsAuthenticating}
-          vsacSearchCount={this.props.vsacSearchCount}
-          vsacSearchResults={this.props.vsacSearchResults}
-          vsacStatus={vsacStatus}
-          vsacStatusText={vsacStatusText}
         />
       );
     }
@@ -512,8 +492,35 @@ export class Builder extends Component {
 
   render() {
     const {
-      artifact, templates, modifierMap, modifiersByInputType, isLoadingModifiers, conversionFunctions
+      addExternalLibrary,
+      addExternalCqlLibraryError,
+      addExternalCqlLibraryErrorMessage,
+      artifact,
+      clearAddLibraryErrorsAndMessages,
+      clearExternalCqlValidationWarnings,
+      conversionFunctions,
+      deleteExternalCqlLibrary,
+      downloadedArtifact,
+      externalCqlErrors,
+      externalCqlFhirVersion,
+      externalCqlLibrary,
+      externalCqlLibraryDetails,
+      externalCQLLibraryParents,
+      externalCqlList,
+      isLoadingExternalCqlDetails,
+      isAddingExternalCqlLibrary,
+      isLoadingModifiers,
+      librariesInUse,
+      loadExternalCqlLibraryDetails,
+      loadExternalCqlList,
+      modifierMap,
+      modifiersByInputType,
+      names,
+      templates,
+      vsacApiKey
     } = this.props;
+    const { activeTabIndex, showArtifactModal, showELMErrorModal, showPublishModal, uniqueIdCounter } = this.state;
+
     let namedParameters = [];
     if (artifact) {
       namedParameters = _.filter(artifact.parameters, p => (!_.isNull(p.name) && p.name.length));
@@ -535,7 +542,7 @@ export class Builder extends Component {
           {this.renderHeader()}
 
           <section className="builder__canvas">
-            <Tabs selectedIndex={this.state.activeTabIndex} onSelect={tabIndex => this.setActiveTab(tabIndex)}>
+            <Tabs selectedIndex={activeTabIndex} onSelect={tabIndex => this.setActiveTab(tabIndex)}>
               <TabList aria-label="Workspace Tabs">
                 <Tab>Inclusions</Tab>
                 <Tab>Exclusions</Tab>
@@ -575,48 +582,31 @@ export class Builder extends Component {
                     receive more specific recommendations. An example might be splitting the population by risk score
                     so that higher risk patients receive a stronger recommendation than lower risk patients.
                   </div>
+
                   <Subpopulations
-                    name={'subpopulations'}
-                    artifact={artifact}
-                    updateSubpopulations={this.updateSubpopulations}
-                    parameters={namedParameters}
-                    baseElements={artifact.baseElements}
-                    externalCqlList={this.props.externalCqlList}
-                    loadExternalCqlList={this.props.loadExternalCqlList}
                     addInstance={this.addInstance}
-                    editInstance={this.editInstance}
-                    updateInstanceModifiers={this.updateInstanceModifiers}
+                    artifact={artifact}
+                    baseElements={artifact.baseElements}
+                    checkSubpopulationUsage={this.checkSubpopulationUsage}
+                    conversionFunctions={conversionFunctions}
                     deleteInstance={this.deleteInstance}
+                    editInstance={this.editInstance}
+                    externalCqlList={externalCqlList}
                     getAllInstances={this.getAllInstances}
                     getAllInstancesInAllTrees={this.getAllInstancesInAllTrees}
-                    templates={templates}
-                    checkSubpopulationUsage={this.checkSubpopulationUsage}
-                    updateRecsSubpop={this.updateRecsSubpop}
+                    instanceNames={names}
+                    isLoadingModifiers={isLoadingModifiers}
+                    loadExternalCqlList={loadExternalCqlList}
                     modifierMap={modifierMap}
                     modifiersByInputType={modifiersByInputType}
-                    isLoadingModifiers={isLoadingModifiers}
-                    conversionFunctions={conversionFunctions}
-                    instanceNames={this.props.names}
+                    name={'subpopulations'}
+                    parameters={namedParameters}
                     scrollToElement={this.scrollToElement}
-                    loginVSACUser={this.props.loginVSACUser}
-                    setVSACAuthStatus={this.props.setVSACAuthStatus}
-                    vsacStatus={this.props.vsacStatus}
-                    vsacStatusText={this.props.vsacStatusText}
-                    searchVSACByKeyword={this.props.searchVSACByKeyword}
-                    isSearchingVSAC={this.props.isSearchingVSAC}
-                    vsacSearchResults={this.props.vsacSearchResults}
-                    vsacSearchCount={this.props.vsacSearchCount}
-                    getVSDetails={this.props.getVSDetails}
-                    isRetrievingDetails={this.props.isRetrievingDetails}
-                    vsacDetailsCodes={this.props.vsacDetailsCodes}
-                    vsacDetailsCodesError={this.props.vsacDetailsCodesError}
-                    vsacApiKey={this.props.vsacApiKey}
-                    isValidatingCode={this.props.isValidatingCode}
-                    isValidCode={this.props.isValidCode}
-                    codeData={this.props.codeData}
-                    validateCode={this.props.validateCode}
-                    resetCodeValidation={this.props.resetCodeValidation}
-                    vsacIsAuthenticating={this.props.vsacIsAuthenticating}
+                    templates={templates}
+                    updateInstanceModifiers={this.updateInstanceModifiers}
+                    updateRecsSubpop={this.updateRecsSubpop}
+                    updateSubpopulations={this.updateSubpopulations}
+                    vsacApiKey={vsacApiKey}
                   />
                 </TabPanel>
 
@@ -626,48 +616,31 @@ export class Builder extends Component {
                     or should standalone as independent expressions in the resulting artifact. An example might be a lab
                     result value that is referenced multiple times throughout the artifact.
                   </div>
+
                   <BaseElements
-                    treeName='baseElements'
-                    instance={artifact}
                     addBaseElement={this.addBaseElement}
+                    addInstance={this.addInstance}
+                    baseElements={artifact.baseElements}
+                    conversionFunctions={conversionFunctions}
+                    deleteInstance={this.deleteInstance}
+                    editInstance={this.editInstance}
+                    externalCqlList={externalCqlList}
                     getAllInstances={this.getAllInstances}
                     getAllInstancesInAllTrees={this.getAllInstancesInAllTrees}
-                    addInstance={this.addInstance}
-                    editInstance={this.editInstance}
-                    updateInstanceModifiers={this.updateInstanceModifiers}
-                    deleteInstance={this.deleteInstance}
-                    updateBaseElementLists={this.updateSubpopulations}
-                    templates={templates}
+                    instance={artifact}
+                    instanceNames={names}
+                    isLoadingModifiers={isLoadingModifiers}
+                    loadExternalCqlList={loadExternalCqlList}
                     modifierMap={modifierMap}
                     modifiersByInputType={modifiersByInputType}
-                    isLoadingModifiers={isLoadingModifiers}
-                    conversionFunctions={conversionFunctions}
-                    instanceNames={this.props.names}
-                    baseElements={artifact.baseElements}
                     parameters={namedParameters}
-                    externalCqlList={this.props.externalCqlList}
-                    loadExternalCqlList={this.props.loadExternalCqlList}
                     scrollToElement={this.scrollToElement}
-                    loginVSACUser={this.props.loginVSACUser}
-                    setVSACAuthStatus={this.props.setVSACAuthStatus}
-                    vsacStatus={this.props.vsacStatus}
-                    vsacStatusText={this.props.vsacStatusText}
-                    searchVSACByKeyword={this.props.searchVSACByKeyword}
-                    isSearchingVSAC={this.props.isSearchingVSAC}
-                    vsacSearchResults={this.props.vsacSearchResults}
-                    vsacSearchCount={this.props.vsacSearchCount}
-                    getVSDetails={this.props.getVSDetails}
-                    isRetrievingDetails={this.props.isRetrievingDetails}
-                    vsacDetailsCodes={this.props.vsacDetailsCodes}
-                    vsacDetailsCodesError={this.props.vsacDetailsCodesError}
-                    vsacApiKey={this.props.vsacApiKey}
-                    isValidatingCode={this.props.isValidatingCode}
-                    isValidCode={this.props.isValidCode}
-                    codeData={this.props.codeData}
-                    validateCode={this.props.validateCode}
-                    resetCodeValidation={this.props.resetCodeValidation}
+                    templates={templates}
+                    treeName='baseElements'
+                    updateBaseElementLists={this.updateSubpopulations}
+                    updateInstanceModifiers={this.updateInstanceModifiers}
                     validateReturnType={false}
-                    vsacIsAuthenticating={this.props.vsacIsAuthenticating}
+                    vsacApiKey={vsacApiKey}
                   />
                 </TabPanel>
 
@@ -677,13 +650,14 @@ export class Builder extends Component {
                     meets the eligible criteria as defined in the artifact. Examples might include recommendations to
                     order a medication, perform a test, or provide the patient educational materials.
                   </div>
+
                   <Recommendations
                     artifact={artifact}
                     templates={templates}
                     updateRecommendations={this.updateRecommendations}
                     updateSubpopulations={this.updateSubpopulations}
                     setActiveTab={this.setActiveTab}
-                    uniqueIdCounter={this.state.uniqueIdCounter}
+                    uniqueIdCounter={uniqueIdCounter}
                     incrementUniqueIdCounter={this.incrementUniqueIdCounter}
                   />
                 </TabPanel>
@@ -694,22 +668,13 @@ export class Builder extends Component {
                     artifact in their own environment. Examples might include the option to allow lower grade evidence,
                     thresholds at which recommendations should be provided, or customized age ranges.
                   </div>
+
                   <Parameters
-                    parameters={this.props.artifact.parameters}
-                    updateParameters={this.updateParameters}
-                    instanceNames={this.props.names}
-                    vsacApiKey={this.props.vsacApiKey}
-                    loginVSACUser={this.props.loginVSACUser}
-                    setVSACAuthStatus={this.props.setVSACAuthStatus}
-                    vsacStatus={this.props.vsacStatus}
-                    vsacStatusText={this.props.vsacStatusText}
-                    isValidatingCode={this.props.isValidatingCode}
-                    isValidCode={this.props.isValidCode}
-                    codeData={this.props.codeData}
-                    validateCode={this.props.validateCode}
-                    resetCodeValidation={this.props.resetCodeValidation}
                     getAllInstancesInAllTrees={this.getAllInstancesInAllTrees}
-                    vsacIsAuthenticating={this.props.vsacIsAuthenticating}
+                    instanceNames={names}
+                    parameters={artifact.parameters}
+                    updateParameters={this.updateParameters}
+                    vsacApiKey={vsacApiKey}
                   />
                 </TabPanel>
 
@@ -722,8 +687,8 @@ export class Builder extends Component {
 
                   <ErrorStatement
                     parameters={namedParameters}
-                    subpopulations={this.props.artifact.subpopulations}
-                    errorStatement={this.props.artifact.errorStatement}
+                    subpopulations={artifact.subpopulations}
+                    errorStatement={artifact.errorStatement}
                     updateErrorStatement={this.updateErrorStatement}
                   />
                 </TabPanel>
@@ -732,25 +697,26 @@ export class Builder extends Component {
                   <div className="workspace-blurb">
                     Reference external CQL libraries that can be used in Inclusions, Exclusions, and Subpopulations.
                   </div>
+
                   <ExternalCQL
-                    artifact={this.props.artifact}
-                    externalCqlList={this.props.externalCqlList}
-                    externalCqlLibrary={this.props.externalCqlLibrary}
-                    externalCQLLibraryParents={this.props.externalCQLLibraryParents}
-                    externalCqlLibraryDetails={this.props.externalCqlLibraryDetails}
-                    externalCqlFhirVersion={this.props.externalCqlFhirVersion}
-                    externalCqlErrors={this.props.externalCqlErrors}
-                    isAddingExternalCqlLibrary={this.props.isAddingExternalCqlLibrary}
-                    deleteExternalCqlLibrary={this.props.deleteExternalCqlLibrary}
-                    addExternalLibrary={this.props.addExternalLibrary}
-                    loadExternalCqlList={this.props.loadExternalCqlList}
-                    clearExternalCqlValidationWarnings={this.props.clearExternalCqlValidationWarnings}
-                    clearAddLibraryErrorsAndMessages={this.props.clearAddLibraryErrorsAndMessages}
-                    loadExternalCqlLibraryDetails={this.props.loadExternalCqlLibraryDetails}
-                    isLoadingExternalCqlDetails={this.props.isLoadingExternalCqlDetails}
-                    addExternalCqlLibraryError={this.props.addExternalCqlLibraryError}
-                    addExternalCqlLibraryErrorMessage={this.props.addExternalCqlLibraryErrorMessage}
-                    librariesInUse={this.props.librariesInUse}
+                    artifact={artifact}
+                    externalCqlList={externalCqlList}
+                    externalCqlLibrary={externalCqlLibrary}
+                    externalCQLLibraryParents={externalCQLLibraryParents}
+                    externalCqlLibraryDetails={externalCqlLibraryDetails}
+                    externalCqlFhirVersion={externalCqlFhirVersion}
+                    externalCqlErrors={externalCqlErrors}
+                    isAddingExternalCqlLibrary={isAddingExternalCqlLibrary}
+                    deleteExternalCqlLibrary={deleteExternalCqlLibrary}
+                    addExternalLibrary={addExternalLibrary}
+                    loadExternalCqlList={loadExternalCqlList}
+                    clearExternalCqlValidationWarnings={clearExternalCqlValidationWarnings}
+                    clearAddLibraryErrorsAndMessages={clearAddLibraryErrorsAndMessages}
+                    loadExternalCqlLibraryDetails={loadExternalCqlLibraryDetails}
+                    isLoadingExternalCqlDetails={isLoadingExternalCqlDetails}
+                    addExternalCqlLibraryError={addExternalCqlLibraryError}
+                    addExternalCqlLibraryErrorMessage={addExternalCqlLibraryErrorMessage}
+                    librariesInUse={librariesInUse}
                   />
                 </TabPanel>
               </div>
@@ -762,21 +728,19 @@ export class Builder extends Component {
           artifact={artifact}
           closeModal={this.togglePublishModal}
           hasCancelButton
-          showModal={this.state.showPublishModal}
+          showModal={showPublishModal}
           version={artifact.version}
         />
 
         <ArtifactModal
           artifactEditing={artifact}
           closeModal={this.closeArtifactModal}
-          showModal={this.state.showArtifactModal}
+          showModal={showArtifactModal}
         />
 
-        <ELMErrorModal
-          closeModal={this.closeELMErrorModal}
-          errors={this.props.downloadedArtifact.elmErrors}
-          isOpen={this.state.showELMErrorModal}
-        />
+        {showELMErrorModal &&
+          <ELMErrorModal handleCloseModal={this.closeELMErrorModal} errors={downloadedArtifact.elmErrors} />
+        }
       </div>
     );
   }
@@ -787,7 +751,6 @@ Builder.propTypes = {
   addExternalCqlLibraryErrorMessage: PropTypes.string,
   addExternalLibrary: PropTypes.func.isRequired,
   artifact: artifactProps,
-  codeData: PropTypes.object,
   conversionFunctions: PropTypes.array,
   deleteExternalCqlLibrary: PropTypes.func.isRequired,
   downloadArtifact: PropTypes.func.isRequired,
@@ -801,8 +764,6 @@ Builder.propTypes = {
   isAddingExternalCqlLibrary: PropTypes.bool.isRequired,
   isLoadingExternalCqlDetails: PropTypes.bool.isRequired,
   isLoadingModifiers: PropTypes.bool,
-  isValidatingCode: PropTypes.bool.isRequired,
-  isValidCode: PropTypes.bool,
   librariesInUse: PropTypes.array.isRequired,
   loadArtifact: PropTypes.func.isRequired,
   loadExternalCqlLibraryDetails: PropTypes.func.isRequired,
@@ -811,15 +772,13 @@ Builder.propTypes = {
   modifierMap: PropTypes.object.isRequired,
   modifiersByInputType: PropTypes.object.isRequired,
   names: PropTypes.array.isRequired,
-  resetCodeValidation: PropTypes.func.isRequired,
   saveArtifact: PropTypes.func.isRequired,
   setStatusMessage: PropTypes.func.isRequired,
   statusMessage: PropTypes.string,
   templates: PropTypes.array,
   updateAndSaveArtifact: PropTypes.func.isRequired,
   updateArtifact: PropTypes.func.isRequired,
-  validateCode: PropTypes.func.isRequired,
-  vsacIsAuthenticating: PropTypes.bool.isRequired
+  vsacApiKey: PropTypes.string
 };
 
 // these props are used for dispatching actions
@@ -831,64 +790,46 @@ function mapDispatchToProps(dispatch) {
     clearExternalCqlValidationWarnings,
     deleteExternalCqlLibrary,
     downloadArtifact,
-    getVSDetails,
     initializeArtifact,
     loadArtifact,
     loadConversionFunctions,
     loadExternalCqlLibraryDetails,
     loadExternalCqlList,
     loadTemplates,
-    loginVSACUser,
     publishArtifact,
-    resetCodeValidation,
     saveArtifact,
-    searchVSACByKeyword,
     setStatusMessage,
-    setVSACAuthStatus,
     updateAndSaveArtifact,
-    updateArtifact,
-    validateCode
+    updateArtifact
   }, dispatch);
 }
 
 // these props come from the application's state when it is started
 function mapStateToProps(state) {
   return {
-     addExternalCqlLibraryError: state.externalCQL.addExternalCqlLibrary.error,
-     addExternalCqlLibraryErrorMessage: state.externalCQL.addExternalCqlLibrary.message,
-     artifact: state.artifacts.artifact,
-     codeData: state.vsac.codeData,
-     conversionFunctions: state.modifiers.conversionFunctions,
-     downloadedArtifact: state.artifacts.downloadArtifact,
-     externalCqlErrors: state.externalCQL.externalCqlErrors,
-     externalCqlFhirVersion: state.externalCQL.fhirVersion,
-     externalCqlLibrary: state.externalCQL.externalCqlLibrary,
-     externalCqlLibraryDetails: state.externalCQL.externalCqlLibraryDetails,
-     externalCQLLibraryParents: state.externalCQL.externalCQLLibraryParents,
-     externalCqlList: state.externalCQL.externalCqlList,
-     isAddingExternalCqlLibrary: state.externalCQL.addExternalCqlLibrary.isAdding,
-     isLoadingExternalCqlDetails: state.externalCQL.loadExternalCqlLibraryDetails.isLoading,
-     isLoadingModifiers: state.modifiers.loadModifiers.isLoadingModifiers,
-     isLoggingOut: state.auth.isLoggingOut,
-     isRetrievingDetails: state.vsac.isRetrievingDetails,
-     isSearchingVSAC: state.vsac.isSearchingVSAC,
-     isValidatingCode: state.vsac.isValidatingCode,
-     isValidCode: state.vsac.isValidCode,
-     librariesInUse: state.artifacts.librariesInUse,
-     modifierMap: state.modifiers.modifierMap,
-     modifiersByInputType: state.modifiers.modifiersByInputType,
-     names: state.artifacts.names,
-     publishEnabled: state.artifacts.publishEnabled,
-     statusMessage: state.artifacts.statusMessage,
-     templates: state.templates.templates,
-     vsacApiKey: state.vsac.apiKey,
-     vsacDetailsCodes: state.vsac.detailsCodes,
-     vsacDetailsCodesError: state.vsac.detailsCodesErrorMessage,
-     vsacIsAuthenticating: state.vsac.isAuthenticating,
-     vsacSearchCount: state.vsac.searchCount,
-     vsacSearchResults: state.vsac.searchResults,
-     vsacStatus: state.vsac.authStatus,
-     vsacStatusText: state.vsac.authStatusText
+    addExternalCqlLibraryError: state.externalCQL.addExternalCqlLibrary.error,
+    addExternalCqlLibraryErrorMessage: state.externalCQL.addExternalCqlLibrary.message,
+    artifact: state.artifacts.artifact,
+    conversionFunctions: state.modifiers.conversionFunctions,
+    downloadedArtifact: state.artifacts.downloadArtifact,
+    externalCqlErrors: state.externalCQL.externalCqlErrors,
+    externalCqlFhirVersion: state.externalCQL.fhirVersion,
+    externalCqlLibrary: state.externalCQL.externalCqlLibrary,
+    externalCqlLibraryDetails: state.externalCQL.externalCqlLibraryDetails,
+    externalCQLLibraryParents: state.externalCQL.externalCQLLibraryParents,
+    externalCqlList: state.externalCQL.externalCqlList,
+    isAddingExternalCqlLibrary: state.externalCQL.addExternalCqlLibrary.isAdding,
+    isLoadingExternalCqlDetails: state.externalCQL.loadExternalCqlLibraryDetails.isLoading,
+    isLoadingModifiers: state.modifiers.loadModifiers.isLoadingModifiers,
+    isLoggingOut: state.auth.isLoggingOut,
+    librariesInUse: state.artifacts.librariesInUse,
+    modifierMap: state.modifiers.modifierMap,
+    modifiersByInputType: state.modifiers.modifiersByInputType,
+    names: state.artifacts.names,
+    publishEnabled: state.artifacts.publishEnabled,
+    statusMessage: state.artifacts.statusMessage,
+    templates: state.templates.templates,
+    vsacApiKey: state.vsac.apiKey
   };
 }
 

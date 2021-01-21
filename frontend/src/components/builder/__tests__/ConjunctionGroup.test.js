@@ -1,4 +1,5 @@
 import React from 'react';
+import nock from 'nock';
 import { render, fireEvent, userEvent, screen, within } from 'utils/test-utils';
 import { createTemplateInstance } from 'utils/test_helpers';
 import { instanceTree, elementGroups } from 'utils/test_fixtures';
@@ -21,43 +22,41 @@ describe('<ConjunctionGroup />', () => {
         addInstance={jest.fn()}
         artifact={{ MeetsInclusionCriteria: { id: 'Or' } }}
         baseElements={[]}
+        conversionFunctions={[]}
         deleteInstance={jest.fn()}
+        disableAddElement={false}
+        disableIndent={false}
         editInstance={jest.fn()}
+        elementUniqueId=""
         externalCqlList={[]}
         getAllInstances={() => instance.childInstances}
         getAllInstancesInAllTrees={jest.fn().mockReturnValue([])}
-        getVSDetails={jest.fn()}
+        getPath={jest.fn()}
         instance={instance}
         instanceNames={[]}
         isLoadingModifiers={false}
-        isRetrievingDetails={false}
-        isSearchingVSAC={false}
-        isValidatingCode={false}
         loadExternalCqlList={jest.fn()}
-        loginVSACUser={jest.fn()}
         modifierMap={{}}
         modifiersByInputType={{}}
+        options=""
         parameters={[]}
-        resetCodeValidation={jest.fn()}
         root={true}
         scrollToElement={jest.fn()}
-        searchVSACByKeyword={jest.fn()}
-        setVSACAuthStatus={jest.fn()}
+        subPopulationIndex={0}
         templates={elementGroups}
         treeName="MeetsInclusionCriteria"
         updateInstanceModifiers={jest.fn()}
-        validateCode={jest.fn()}
-        vsacApiKey={'key'}
-        vsacDetailsCodes={[]}
-        vsacDetailsCodesError=""
-        vsacIsAuthenticating={false}
-        vsacSearchCount={0}
-        vsacSearchResults={[]}
-        vsacStatus=""
-        vsacStatusText=""
+        validateReturnType={false}
+        vsacApiKey="key"
         {...props}
       />
     );
+
+  beforeEach(() => {
+    nock('http://localhost')
+      .get('/authoring/api/config/valuesets/demographics/units_of_time')
+      .reply(200, {expansion: []});
+  });
 
   it('has correct base class', () => {
     const { container } = renderComponent();

@@ -42,10 +42,6 @@
   &.form__group-invalid {
     @include state-color($form-validation-error-color);
   }
-
-  .required {
-    color: $red;
-  }
 }
 
 // ------------------------- CHECKBOXES ------------------------------------ //
@@ -139,44 +135,4 @@
   &-text {
     white-space: nowrap;
   }
-}
-
-// ------------------------- GROUPED FIELDS -------------------------------- //
-
-.grouped-fields {
-  display: flex;
-  align-items: flex-start;
-  width: 100%;
-
-  &.has-grouped-fields {
-    flex-direction: column;
-  }
-
-  .grouped-field.form__group {
-    position: relative;
-    padding: 0;
-  }
-
-  .delete-grouped-field-button {
-    position: absolute;
-    right: 10px;
-    top: 10px;
-    cursor: pointer;
-  }
-
-  .grouped-field {
-    > div {
-      flex-wrap: wrap;
-      padding: 20px;
-      margin: 5px 0;
-      background-color: $gray-blue;
-    }
-  }
-}
-
-// ------------------------- SELECT CONDITIONAL FIELDS --------------------- //
-
-div.form__group.select-conditional-field {
-  flex-direction: column;
-  align-items: flex-start;
 }

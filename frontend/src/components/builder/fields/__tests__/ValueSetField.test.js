@@ -1,10 +1,10 @@
 import React from 'react';
-import moxios from 'moxios';
+import nock from 'nock';
 import { render, userEvent, screen, waitFor } from 'utils/test-utils';
 import ValueSetField from '../ValueSetField';
 
 describe('<ValueSetField />', () => {
-  const renderComponent = ({ queryCache, ...props } = {}) =>
+  const renderComponent = (props = {}) =>
     render(
       <ValueSetField
         field={{
@@ -20,60 +20,50 @@ describe('<ValueSetField />', () => {
     );
 
   beforeEach(() => {
-    moxios.install();
-
-    moxios.stubs.track({
-      url: `/authoring/api/config/valuesets/demographics/units_of_time`,
-      method: 'GET',
-      response: {
-        status: 200,
-        response: {
-          id: 'units_of_time',
-          name: 'Units of Time',
-          oid: 'oid',
-          expansion: [
-            {
-              id: 's',
-              name: 'seconds',
-              value: 'AgeInSeconds()'
-            },
-            {
-              id: 'min',
-              name: 'minutes',
-              value: 'AgeInMinutes()'
-            },
-            {
-              id: 'h',
-              name: 'hours',
-              value: 'AgeInHours()'
-            },
-            {
-              id: 'd',
-              name: 'days',
-              value: 'AgeInDays()'
-            },
-            {
-              id: 'wk',
-              name: 'weeks',
-              value: 'AgeInWeeks()'
-            },
-            {
-              id: 'mo',
-              name: 'months',
-              value: 'AgeInMonths()'
-            },
-            {
-              id: 'a',
-              name: 'years',
-              value: 'AgeInYears()'
-            }
-          ]
-        }
-      }
-    });
-  });
-  afterEach(() => {
-    moxios.uninstall();
+    nock('http://localhost')
+      .get('/authoring/api/config/valuesets/demographics/units_of_time')
+      .reply(200, {
+        id: 'units_of_time',
+        name: 'Units of Time',
+        oid: 'oid',
+        expansion: [
+          {
+            id: 's',
+            name: 'seconds',
+            value: 'AgeInSeconds()'
+          },
+          {
+            id: 'min',
+            name: 'minutes',
+            value: 'AgeInMinutes()'
+          },
+          {
+            id: 'h',
+            name: 'hours',
+            value: 'AgeInHours()'
+          },
+          {
+            id: 'd',
+            name: 'days',
+            value: 'AgeInDays()'
+          },
+          {
+            id: 'wk',
+            name: 'weeks',
+            value: 'AgeInWeeks()'
+          },
+          {
+            id: 'mo',
+            name: 'months',
+            value: 'AgeInMonths()'
+          },
+          {
+            id: 'a',
+            name: 'years',
+            value: 'AgeInYears()'
+          }
+        ]
+      });
   });
 
   it('loads the value sets from the api', async () => {
@@ -88,7 +78,7 @@ describe('<ValueSetField />', () => {
 
   it('calls updateInstance when an option is selected', async () => {
     const updateInstance = jest.fn();
-    renderComponent({updateInstance});
+    renderComponent({ updateInstance });
 
     userEvent.click(screen.getByLabelText('Unit of Time'));
     userEvent.click(await screen.findByText('hours'));

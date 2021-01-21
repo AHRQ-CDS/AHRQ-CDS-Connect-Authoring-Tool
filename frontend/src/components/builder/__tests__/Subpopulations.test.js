@@ -1,6 +1,5 @@
 import React from 'react';
 import { render, fireEvent, userEvent, screen } from 'utils/test-utils';
-import { createTemplateInstance } from 'utils/test_helpers';
 import { elementGroups } from 'utils/test_fixtures';
 import Subpopulations from '../Subpopulations';
 
@@ -29,44 +28,29 @@ describe('<Subpopulations />', () => {
     render(
       <Subpopulations
         addInstance={jest.fn()}
-        artifact={{
-          subpopulations: [specialSubpop]
-        }}
+        artifact={{ subpopulations: [specialSubpop] }}
         baseElements={[]}
         checkSubpopulationUsage={jest.fn()}
-        createTemplateInstance={createTemplateInstance}
+        conversionFunctions={[]}
         deleteInstance={jest.fn()}
         editInstance={jest.fn()}
         externalCqlList={[]}
         getAllInstances={jest.fn()}
         getAllInstancesInAllTrees={jest.fn()}
-        getVSDetails={jest.fn()}
         instanceNames={[]}
-        isRetrievingDetails={false}
-        isSearchingVSAC={false}
-        isValidatingCode={false}
+        isLoadingModifiers={false}
         loadExternalCqlList={jest.fn()}
-        loginVSACUser={jest.fn()}
         modifierMap={{}}
         modifiersByInputType={{}}
         name="subpopulations"
         parameters={[]}
-        resetCodeValidation={jest.fn()}
         scrollToElement={jest.fn()}
-        searchVSACByKeyword={jest.fn()}
-        setVSACAuthStatus={jest.fn()}
         templates={elementGroups}
         updateInstanceModifiers={jest.fn()}
         updateRecsSubpop={jest.fn()}
         updateSubpopulations={jest.fn()}
-        validateCode={jest.fn()}
-        vsacDetailsCodes={[]}
-        vsacDetailsCodesError=""
-        vsacIsAuthenticating={false}
-        vsacSearchCount={0}
-        vsacSearchResults={[]}
-        vsacStatus=""
-        vsacStatusText=""
+        validateReturnType={false}
+        vsacApiKey="key"
         {...props}
       />
     );

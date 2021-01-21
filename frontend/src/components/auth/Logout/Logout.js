@@ -78,7 +78,7 @@ const Logout = () => {
       <Modal
         title="Logout Confirmation"
         submitButtonText="Logout"
-        handleShowModal={showModal}
+        isOpen={showModal}
         handleCloseModal={() => toggleModal(false)}
         handleSaveModal={() => logout()}
       >

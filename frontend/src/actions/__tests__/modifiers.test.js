@@ -1,6 +1,6 @@
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
-import moxios from 'moxios';
+import nock from 'nock';
 import _ from 'lodash';
 
 import * as actions from '../modifiers';
@@ -23,13 +23,6 @@ localModifiers.forEach((modifier) => {
 
 describe('modifiers actions', () => {
   describe('loadModifiers', () => {
-    beforeEach(() => {
-      moxios.install();
-    });
-    afterEach(() => {
-      moxios.uninstall();
-    });
-
     it('dispatches a LOAD_MODIFIERS_SUCCESS action on successful load', () => {
       const store = mockStore({
         externalCQL: {
@@ -68,22 +61,14 @@ describe('modifiers actions', () => {
       });
     });
   });
-  describe('loadConversionFunctions', () => {
-    beforeEach(() => {
-      moxios.install();
-    });
-    afterEach(() => {
-      moxios.uninstall();
-    });
 
+  describe('loadConversionFunctions', () => {
     it('dispatches a LOAD_CONVERSION_FUNCTIONS_SUCCESS action on successful load', () => {
       const store = mockStore({});
 
-      moxios.stubs.track({
-        url: '/authoring/api/config/conversions',
-        method: 'GET',
-        response: { status: 200, response: [] }
-      });
+      nock('http://localhost')
+        .get('/authoring/api/config/conversions')
+        .reply(200, []);
 
       const expectedActions = [
         { type: types.CONVERSION_FUNCTIONS_REQUEST },
@@ -101,11 +86,12 @@ describe('modifiers actions', () => {
     it('dispatches a LOAD_CONVERSION_FUNCTIONS_FAILURE action on failure', () => {
       const store = mockStore({});
 
-      moxios.stubs.track({
-        url: '/authoring/api/config/conversions',
-        method: 'GET',
-        response: { status: 401, statusText: 'Unauthorized' }
-      });
+      nock('http://localhost')
+        .get('/authoring/api/config/conversions')
+        .reply(401, function() {
+          this.req.response.statusMessage = 'Unauthorized';
+          return { status: 401 };
+        });
 
       const expectedActions = [
         { type: types.CONVERSION_FUNCTIONS_REQUEST },

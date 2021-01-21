@@ -5,9 +5,9 @@ import { faSpinner, faCloudUploadAlt } from '@fortawesome/free-solid-svg-icons';
 import Dropzone from 'react-dropzone';
 import { Alert } from '@material-ui/lab';
 
-import artifactProps from '../../prop-types/artifact';
+import { ELMErrorModal } from 'components/modals';
+import artifactProps from 'prop-types/artifact';
 import ExternalCqlTable from './ExternalCqlTable';
-import ELMErrorModal from './ELMErrorModal';
 
 export default class ExternalCQL extends Component {
   constructor(props) {
@@ -133,8 +133,13 @@ export default class ExternalCQL extends Component {
   }
 
   render() {
-    const { addExternalCqlLibraryErrorMessage } = this.props;
-    const { showUploadErrorBanner, showLibraryErrorBanner, showLibraryNotificationBanner } = this.state;
+    const { addExternalCqlLibraryErrorMessage, externalCqlErrors } = this.props;
+    const {
+      showELMErrorModal,
+      showLibraryErrorBanner,
+      showLibraryNotificationBanner,
+      showUploadErrorBanner
+    } = this.state;
     const isDropzoneDisabled = this.props.artifact._id === null;
 
     return (
@@ -193,11 +198,9 @@ export default class ExternalCQL extends Component {
           </div>
         </div>
 
-        <ELMErrorModal
-          isOpen={this.state.showELMErrorModal}
-          closeModal={this.closeELMErrorModal}
-          errors={this.props.externalCqlErrors}
-        />
+        {showELMErrorModal &&
+          <ELMErrorModal handleCloseModal={this.closeELMErrorModal} errors={externalCqlErrors} />
+        }
       </div>
     );
   }

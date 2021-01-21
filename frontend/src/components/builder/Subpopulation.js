@@ -69,7 +69,7 @@ export default class Subpopulation extends Component {
       <Modal
         title="Delete Subpopulation Confirmation"
         submitButtonText="Delete"
-        handleShowModal={this.state.showConfirmDeleteModal}
+        isOpen={this.state.showConfirmDeleteModal}
         handleCloseModal={this.closeConfirmDeleteModal}
         handleSaveModal={this.handleDeleteSubpopulation}
       >
@@ -203,48 +203,30 @@ export default class Subpopulation extends Component {
       />
   
       <ConjunctionGroup
-        root={true}
-        treeName={this.props.treeName}
-        artifact={this.props.artifact}
-        templates={this.props.templates}
-        instance={this.props.subpopulation}
         addInstance={this.addInstance}
-        editInstance={this.editInstance}
+        artifact={this.props.artifact}
+        baseElements={this.props.baseElements}
+        conversionFunctions={this.props.conversionFunctions}
         deleteInstance={this.deleteInstance}
+        editInstance={this.editInstance}
+        externalCqlList={this.props.externalCqlList}
         getAllInstances={this.getAllInstances}
         getAllInstancesInAllTrees={this.props.getAllInstancesInAllTrees}
-        updateInstanceModifiers={this.props.updateInstanceModifiers}
-        parameters={this.props.parameters}
-        baseElements={this.props.baseElements}
-        externalCqlList={this.props.externalCqlList}
+        instance={this.props.subpopulation}
+        instanceNames={this.props.instanceNames}
+        isLoadingModifiers={this.props.isLoadingModifiers}
         loadExternalCqlList={this.props.loadExternalCqlList}
-        subPopulationIndex={this.props.subpopulationIndex}
         modifierMap={this.props.modifierMap}
         modifiersByInputType={this.props.modifiersByInputType}
-        isLoadingModifiers={this.props.isLoadingModifiers}
-        conversionFunctions={this.props.conversionFunctions}
-        instanceNames={this.props.instanceNames}
+        parameters={this.props.parameters}
+        root={true}
         scrollToElement={this.props.scrollToElement}
-        loginVSACUser={this.props.loginVSACUser}
-        setVSACAuthStatus={this.props.setVSACAuthStatus}
-        vsacStatus={this.props.vsacStatus}
-        vsacStatusText={this.props.vsacStatusText}
-        searchVSACByKeyword={this.props.searchVSACByKeyword}
-        isSearchingVSAC={this.props.isSearchingVSAC}
-        vsacSearchResults={this.props.vsacSearchResults}
-        vsacSearchCount={this.props.vsacSearchCount}
-        getVSDetails={this.props.getVSDetails}
-        isRetrievingDetails={this.props.isRetrievingDetails}
-        vsacDetailsCodes={this.props.vsacDetailsCodes}
-        vsacDetailsCodesError={this.props.vsacDetailsCodesError}
-        vsacApiKey={this.props.vsacApiKey}
+        subPopulationIndex={this.props.subpopulationIndex}
+        templates={this.props.templates}
+        treeName={this.props.treeName}
+        updateInstanceModifiers={this.props.updateInstanceModifiers}
         validateReturnType={this.props.validateReturnType}
-        isValidatingCode={this.props.isValidatingCode}
-        isValidCode={this.props.isValidCode}
-        codeData={this.props.codeData}
-        validateCode={this.props.validateCode}
-        resetCodeValidation={this.props.resetCodeValidation}
-        vsacIsAuthenticating={this.props.vsacIsAuthenticating}
+        vsacApiKey={this.props.vsacApiKey}
       />
       {this.renderConfirmDeleteModal()}
     </div>
@@ -252,39 +234,28 @@ export default class Subpopulation extends Component {
 }
 
 Subpopulation.propTypes = {
-  artifact: PropTypes.object.isRequired,
-  subpopulation: PropTypes.object.isRequired,
-  subpopulationIndex: PropTypes.number.isRequired,
-  setSubpopulationName: PropTypes.func.isRequired,
-  deleteSubpopulation: PropTypes.func.isRequired,
   addInstance: PropTypes.func.isRequired,
-  editInstance: PropTypes.func.isRequired,
-  updateInstanceModifiers: PropTypes.func.isRequired,
+  artifact: PropTypes.object.isRequired,
+  baseElements: PropTypes.array.isRequired,
+  conversionFunctions: PropTypes.array,
   deleteInstance: PropTypes.func.isRequired,
+  deleteSubpopulation: PropTypes.func.isRequired,
+  editInstance: PropTypes.func.isRequired,
+  externalCqlList: PropTypes.array.isRequired,
   getAllInstances: PropTypes.func.isRequired,
   getAllInstancesInAllTrees: PropTypes.func.isRequired,
   instanceNames: PropTypes.array.isRequired,
-  treeName: PropTypes.string.isRequired,
-  parameters: PropTypes.array.isRequired,
-  externalCqlList: PropTypes.array.isRequired,
+  isLoadingModifiers: PropTypes.bool,
   loadExternalCqlList: PropTypes.func.isRequired,
-  templates: PropTypes.array.isRequired,
   modifierMap: PropTypes.object.isRequired,
   modifiersByInputType: PropTypes.object.isRequired,
-  isLoadingModifiers: PropTypes.bool,
-  conversionFunctions: PropTypes.array,
+  parameters: PropTypes.array.isRequired,
   scrollToElement: PropTypes.func,
-  loginVSACUser: PropTypes.func.isRequired,
-  setVSACAuthStatus: PropTypes.func.isRequired,
-  vsacStatus: PropTypes.string,
-  vsacStatusText: PropTypes.string,
-  searchVSACByKeyword: PropTypes.func.isRequired,
-  isSearchingVSAC: PropTypes.bool.isRequired,
-  vsacSearchResults: PropTypes.array.isRequired,
-  vsacSearchCount: PropTypes.number.isRequired,
-  getVSDetails: PropTypes.func.isRequired,
-  isRetrievingDetails: PropTypes.bool.isRequired,
-  vsacDetailsCodes: PropTypes.array.isRequired,
-  vsacDetailsCodesError: PropTypes.string.isRequired,
-  vsacIsAuthenticating: PropTypes.bool.isRequired
+  setSubpopulationName: PropTypes.func.isRequired,
+  subpopulation: PropTypes.object.isRequired,
+  subpopulationIndex: PropTypes.number.isRequired,
+  templates: PropTypes.array.isRequired,
+  treeName: PropTypes.string.isRequired,
+  updateInstanceModifiers: PropTypes.func.isRequired,
+  vsacApiKey: PropTypes.string
 };

@@ -1,6 +1,5 @@
 import React from 'react';
 import { render, fireEvent, userEvent, screen } from 'utils/test-utils';
-import { createTemplateInstance } from 'utils/test_helpers';
 import { elementGroups } from 'utils/test_fixtures';
 import Subpopulation from '../Subpopulation';
 
@@ -25,41 +24,26 @@ describe('<Subpopulation />', () => {
         addInstance={jest.fn()}
         artifact={{}}
         baseElements={[]}
-        createTemplateInstance={createTemplateInstance}
+        conversionFunctions={[]}
         deleteInstance={jest.fn()}
         deleteSubpopulation={jest.fn()}
         editInstance={jest.fn()}
         externalCqlList={[]}
         getAllInstances={jest.fn()}
         getAllInstancesInAllTrees={jest.fn()}
-        getVSDetails={jest.fn()}
         instanceNames={[]}
-        isRetrievingDetails={false}
-        isSearchingVSAC={false}
-        isValidatingCode={false}
         loadExternalCqlList={jest.fn()}
-        loginVSACUser={jest.fn()}
         modifierMap={{}}
         modifiersByInputType={{}}
         parameters={[]}
-        resetCodeValidation={jest.fn()}
         scrollToElement={jest.fn()}
-        searchVSACByKeyword={jest.fn()}
         setSubpopulationName={jest.fn()}
-        setVSACAuthStatus={jest.fn()}
         subpopulation={subpopulation}
         subpopulationIndex={0}
         templates={elementGroups}
         treeName="testtree"
         updateInstanceModifiers={jest.fn()}
-        validateCode={jest.fn()}
-        vsacDetailsCodes={[]}
-        vsacDetailsCodesError=""
-        vsacIsAuthenticating={false}
-        vsacSearchCount={0}
-        vsacSearchResults={[]}
-        vsacStatus=""
-        vsacStatusText=""
+        vsaApiKey="key"
         {...props}
       />
     );

@@ -2,7 +2,8 @@ import React, { useState } from 'react';
 import { AppBar, Tabs, Tab } from '@material-ui/core';
 import clsx from 'clsx';
 
-import { DataTypeGuide, UserGuide } from '.';
+import DataTypeGuide from './DataTypeGuide';
+import UserGuide from './UserGuide';
 import { useSpacingStyles } from 'styles/hooks';
 import useStyles from './styles';
 

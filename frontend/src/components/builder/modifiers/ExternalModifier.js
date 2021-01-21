@@ -25,40 +25,11 @@ export default class ExternalModifier extends Component {
   }
 
   render() {
-    const {
-      modifierArguments,
-      argumentTypes,
-      codeData,
-      index,
-      isValidatingCode,
-      isValidCode,
-      loginVSACUser,
-      name,
-      resetCodeValidation,
-      setVSACAuthStatus,
-      validateCode,
-      value,
-      vsacApiKey,
-      vsacIsAuthenticating,
-      vsacStatus,
-      vsacStatusText
-    } = this.props;
+    const { argumentTypes, index, modifierArguments, name, value, vsacApiKey } = this.props;
     const editorPropsArray = [];
 
     if (modifierArguments.length > 1) {
-      const defaultEditorProps = {
-        codeData,
-        isValidatingCode,
-        isValidCode,
-        loginVSACUser,
-        resetCodeValidation,
-        setVSACAuthStatus,
-        validateCode,
-        vsacApiKey,
-        vsacIsAuthenticating,
-        vsacStatus,
-        vsacStatusText
-      };
+      const defaultEditorProps = { vsacApiKey };
 
       modifierArguments.forEach((arg, argIndex) => {
         // We don't want the modifier input arguments to include the first function argument
@@ -93,20 +64,10 @@ export default class ExternalModifier extends Component {
 
 ExternalModifier.propTypes = {
   argumentTypes: PropTypes.array.isRequired,
-  codeData: PropTypes.object,
   index: PropTypes.number.isRequired,
-  isValidatingCode: PropTypes.bool.isRequired,
-  isValidCode: PropTypes.bool,
-  loginVSACUser: PropTypes.func.isRequired,
   modifierArguments: PropTypes.array.isRequired,
   name: PropTypes.string.isRequired,
-  resetCodeValidation: PropTypes.func.isRequired,
-  setVSACAuthStatus: PropTypes.func.isRequired,
   updateAppliedModifier: PropTypes.func.isRequired,
-  validateCode: PropTypes.func.isRequired,
   value: PropTypes.any,
-  vsacApiKey: PropTypes.string,
-  vsacIsAuthenticating: PropTypes.bool,
-  vsacStatus: PropTypes.string,
-  vsacStatusText: PropTypes.string
+  vsacApiKey: PropTypes.string
 };

@@ -55,7 +55,7 @@ export default class ArtifactTable extends Component {
       <Modal
         title="Delete Artifact Confirmation"
         submitButtonText="Delete"
-        handleShowModal={this.state.showConfirmDeleteModal}
+        isOpen={this.state.showConfirmDeleteModal}
         handleCloseModal={this.closeConfirmDeleteModal}
         handleSaveModal={this.handleDeleteArtifact}
       >

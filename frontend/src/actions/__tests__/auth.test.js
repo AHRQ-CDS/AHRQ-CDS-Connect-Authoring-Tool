@@ -1,6 +1,6 @@
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
-import moxios from 'moxios';
+import nock from 'nock';
 
 import * as actions from '../auth';
 import * as types from '../types';
@@ -11,18 +11,14 @@ const mockStore = configureMockStore(middlewares);
 describe('auth actions', () => {
   // ----------------------- USER ------------------------------------------ //
   describe('get current user', () => {
-    beforeEach(() => { moxios.install(); });
-    afterEach(() => { moxios.uninstall(); });
-
     it('sends a GET request to find the current user', () => {
       const store = mockStore({});
       const username = 'myUserName';
 
-      moxios.stubs.track({
-        url: /\/authoring\/api\/auth\/user\?.*/,
-        method: 'GET',
-        response: { status: 200, response: { uid: username } }
-      });
+      nock('http://localhost')
+        .get('/authoring/api/auth/user')
+        .query(true)
+        .reply(200, { uid: username });
 
       const expectedActions = [
         { type: types.USER_REQUEST },
@@ -37,11 +33,10 @@ describe('auth actions', () => {
     it('sends a USER_RECEIVED action with a null username if the request fails', () => {
       const store = mockStore({});
 
-      moxios.stubs.track({
-        url: /\/authoring\/api\/auth\/user\?.*/,
-        method: 'GET',
-        response: { status: 403, response: {} }
-      });
+      nock('http://localhost')
+        .get('/authoring/api/auth/user')
+        .query(true)
+        .reply(403);
 
       const expectedActions = [
         { type: types.USER_REQUEST },
@@ -56,19 +51,14 @@ describe('auth actions', () => {
 
   // ----------------------- LOGIN ----------------------------------------- //
   describe('logging in', () => {
-    beforeEach(() => { moxios.install(); });
-    afterEach(() => { moxios.uninstall(); });
-
     it('dispatches a LOGIN_SUCCESS action upon a successful login attempt', () => {
       const store = mockStore({});
       const username = 'myUserName';
       const password = 'myPw';
 
-      moxios.stubs.track({
-        url: '/authoring/api/auth/login',
-        method: 'POST',
-        response: { status: 200, response: { uid: username } }
-      });
+      nock('http://localhost')
+        .post('/authoring/api/auth/login')
+        .reply(200, { uid: username });
 
       const expectedActions = [
         { type: types.LOGIN_REQUEST },
@@ -85,11 +75,12 @@ describe('auth actions', () => {
       const username = 'myUserName';
       const password = 'myPw';
 
-      moxios.stubs.track({
-        url: '/authoring/api/auth/login',
-        method: 'POST',
-        response: { status: 403, statusText: 'Invalid credentials' }
-      });
+      nock('http://localhost')
+        .post('/authoring/api/auth/login')
+        .reply(403, function() {
+          this.req.response.statusMessage = 'Invalid credentials';
+          return { status: 403 };
+        });
 
       const expectedActions = [
         { type: types.LOGIN_REQUEST },
@@ -104,17 +95,12 @@ describe('auth actions', () => {
 
   // ----------------------- LOGOUT ---------------------------------------- //
   describe('logging out', () => {
-    beforeEach(() => { moxios.install(); });
-    afterEach(() => { moxios.uninstall(); });
-
     it('dispatches a LOGOUT_SUCCESS action upon successful logout', () => {
       const store = mockStore({});
 
-      moxios.stubs.track({
-        url: '/authoring/api/auth/logout',
-        method: 'GET',
-        response: { status: 200, response: {} }
-      });
+      nock('http://localhost')
+        .get('/authoring/api/auth/logout')
+        .reply(200, {});
 
       const expectedActions = [
         { type: types.LOGOUT_REQUEST },
@@ -129,11 +115,12 @@ describe('auth actions', () => {
     it('dispatches a LOGOUT_FAILURE action upon an unsuccessful logout', () => {
       const store = mockStore({});
 
-      moxios.stubs.track({
-        url: '/authoring/api/auth/logout',
-        method: 'GET',
-        response: { status: 500, statusText: 'Whoops!' }
-      });
+      nock('http://localhost')
+        .get('/authoring/api/auth/logout')
+        .reply(500, function() {
+          this.req.response.statusMessage = 'Whoops!';
+          return { status: 500 };
+        });
 
       const expectedActions = [
         { type: types.LOGOUT_REQUEST },

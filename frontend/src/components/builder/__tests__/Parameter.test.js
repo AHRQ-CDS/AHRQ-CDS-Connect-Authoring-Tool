@@ -14,19 +14,12 @@ describe('<Parameter />', () => {
         id="test-id"
         index={0}
         instanceNames={[]}
-        isValidatingCode={false}
-        isValidCode={false}
         name=""
-        resetCodeValidation={jest.fn()}
-        setVSACAuthStatus={jest.fn()}
         type=""
         updateInstanceOfParameter={jest.fn()}
-        validateCode={jest.fn()}
+        usedBy={[]}
         value={null}
-        vsacApiKey={'key'}
-        vsacIsAuthenticating={false}
-        vsacStatus=""
-        vsacStatusText=""
+        vsacApiKey="key"
         {...props}
       />
     );

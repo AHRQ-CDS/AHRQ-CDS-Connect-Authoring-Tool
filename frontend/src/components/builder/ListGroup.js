@@ -135,7 +135,7 @@ export default class ListGroup extends Component {
       <Modal
         title="Delete List Group Confirmation"
         submitButtonText="Delete"
-        handleShowModal={this.state.showConfirmDeleteModal}
+        isOpen={this.state.showConfirmDeleteModal}
         handleCloseModal={this.closeConfirmDeleteModal}
         handleSaveModal={this.handleDeleteBaseElementList}
       >
@@ -344,54 +344,36 @@ export default class ListGroup extends Component {
         </div>
 
         <ConjunctionGroup
-          root={true}
-          treeName={this.props.treeName}
-          artifact={this.props.artifact}
-          templates={this.props.templates}
-          instance={this.props.instance}
           addInstance={(name, template, path) => this.addInstance(name, template, path, instance, isAndOrElement)}
-          editInstance={(treeName, fields, path, editingConjunction) =>
-            this.editInstance(treeName, fields, path, editingConjunction, instance)}
+          artifact={this.props.artifact}
+          baseElements={this.props.baseElements}
+          conversionFunctions={this.props.conversionFunctions}
           deleteInstance={(treeName, path, toAdd) =>
             this.deleteInstance(treeName, path, toAdd, instance, isAndOrElement)}
+          disableAddElement={baseElementListUsed}
+          disableIndent={!isAndOrElement}
+          editInstance={(treeName, fields, path, editingConjunction) =>
+            this.editInstance(treeName, fields, path, editingConjunction, instance)}
+          elementUniqueId={instance.uniqueId}
+          externalCqlList={this.props.externalCqlList}
           getAllInstances={this.getAllInstances}
           getAllInstancesInAllTrees={this.props.getAllInstancesInAllTrees}
-          updateInstanceModifiers={(t, modifiers, path) =>
-            this.updateInstanceModifiers(t, modifiers, path, index, isAndOrElement)}
-          parameters={this.props.parameters}
-          baseElements={this.props.baseElements}
-          externalCqlList={this.props.externalCqlList}
+          instance={this.props.instance}
+          instanceNames={this.props.instanceNames}
+          isLoadingModifiers={this.props.isLoadingModifiers}
           loadExternalCqlList={this.props.loadExternalCqlList}
           modifierMap={this.props.modifierMap}
           modifiersByInputType={this.props.modifiersByInputType}
-          isLoadingModifiers={this.props.isLoadingModifiers}
-          conversionFunctions={this.props.conversionFunctions}
-          instanceNames={this.props.instanceNames}
-          scrollToElement={this.props.scrollToElement}
-          loginVSACUser={this.props.loginVSACUser}
-          setVSACAuthStatus={this.props.setVSACAuthStatus}
-          vsacStatus={this.props.vsacStatus}
-          vsacStatusText={this.props.vsacStatusText}
-          searchVSACByKeyword={this.props.searchVSACByKeyword}
-          isSearchingVSAC={this.props.isSearchingVSAC}
-          vsacSearchResults={this.props.vsacSearchResults}
-          vsacSearchCount={this.props.vsacSearchCount}
-          getVSDetails={this.props.getVSDetails}
-          isRetrievingDetails={this.props.isRetrievingDetails}
-          vsacDetailsCodes={this.props.vsacDetailsCodes}
-          vsacDetailsCodesError={this.props.vsacDetailsCodesError}
-          vsacApiKey={this.props.vsacApiKey}
-          vsacIsAuthenticating={this.props.vsacIsAuthenticating}
-          isValidatingCode={this.props.isValidatingCode}
-          isValidCode={this.props.isValidCode}
-          codeData={this.props.codeData}
-          validateCode={this.props.validateCode}
-          resetCodeValidation={this.props.resetCodeValidation}
-          validateReturnType={isAndOrElement}
           options={isAndOrElement ? '' : 'listOperations'}
-          disableIndent={!isAndOrElement}
-          disableAddElement={baseElementListUsed}
-          elementUniqueId={instance.uniqueId}
+          parameters={this.props.parameters}
+          root={true}
+          scrollToElement={this.props.scrollToElement}
+          templates={this.props.templates}
+          treeName={this.props.treeName}
+          updateInstanceModifiers={(t, modifiers, path) =>
+            this.updateInstanceModifiers(t, modifiers, path, index, isAndOrElement)}
+          validateReturnType={isAndOrElement}
+          vsacApiKey={this.props.vsacApiKey}
         />
       </div>
     );
@@ -535,45 +517,27 @@ export default class ListGroup extends Component {
 }
 
 ListGroup.propTypes = {
-  treeName: PropTypes.string.isRequired,
-  artifact: PropTypes.object,
-  templates: PropTypes.array,
-  instance: PropTypes.object.isRequired,
-  index: PropTypes.number.isRequired,
   addInstance: PropTypes.func.isRequired,
-  editInstance: PropTypes.func.isRequired,
+  artifact: PropTypes.object,
+  baseElements: PropTypes.array.isRequired,
+  conversionFunctions: PropTypes.array,
   deleteInstance: PropTypes.func.isRequired,
+  editInstance: PropTypes.func.isRequired,
+  externalCqlList: PropTypes.array.isRequired,
   getAllInstances: PropTypes.func.isRequired,
   getAllInstancesInAllTrees: PropTypes.func.isRequired,
-  updateInstanceModifiers: PropTypes.func.isRequired,
-  updateBaseElementLists: PropTypes.func.isRequired,
-  parameters: PropTypes.array.isRequired,
-  baseElements: PropTypes.array.isRequired,
-  externalCqlList: PropTypes.array.isRequired,
+  index: PropTypes.number.isRequired,
+  instance: PropTypes.object.isRequired,
+  instanceNames: PropTypes.array.isRequired,
+  isLoadingModifiers: PropTypes.bool,
   loadExternalCqlList: PropTypes.func.isRequired,
   modifierMap: PropTypes.object.isRequired,
   modifiersByInputType: PropTypes.object.isRequired,
-  isLoadingModifiers: PropTypes.bool,
-  conversionFunctions: PropTypes.array,
-  instanceNames: PropTypes.array.isRequired,
-  loginVSACUser: PropTypes.func.isRequired,
-  setVSACAuthStatus: PropTypes.func.isRequired,
-  vsacStatus: PropTypes.string,
-  vsacStatusText: PropTypes.string,
-  searchVSACByKeyword: PropTypes.func.isRequired,
-  isSearchingVSAC: PropTypes.bool.isRequired,
-  vsacSearchResults: PropTypes.array.isRequired,
-  vsacSearchCount: PropTypes.number.isRequired,
-  getVSDetails: PropTypes.func.isRequired,
-  isRetrievingDetails: PropTypes.bool.isRequired,
-  vsacDetailsCodes: PropTypes.array.isRequired,
-  vsacDetailsCodesError: PropTypes.string.isRequired,
-  vsacApiKey: PropTypes.string,
-  vsacIsAuthenticating: PropTypes.bool.isRequired,
-  isValidatingCode: PropTypes.bool.isRequired,
-  isValidCode: PropTypes.bool,
-  codeData: PropTypes.object,
-  validateCode: PropTypes.func.isRequired,
-  resetCodeValidation: PropTypes.func.isRequired,
+  parameters: PropTypes.array.isRequired,
   scrollToElement: PropTypes.func.isRequired,
+  templates: PropTypes.array,
+  treeName: PropTypes.string.isRequired,
+  updateBaseElementLists: PropTypes.func.isRequired,
+  updateInstanceModifiers: PropTypes.func.isRequired,
+  vsacApiKey: PropTypes.string
 };

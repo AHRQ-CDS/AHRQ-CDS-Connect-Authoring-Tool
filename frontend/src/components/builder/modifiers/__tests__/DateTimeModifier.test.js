@@ -22,8 +22,9 @@ describe('<DateTimeModifier />', () => {
     userEvent.click(screen.getByRole('button', { name: 'change date' }));
     userEvent.click(screen.getByRole('button', { name: 'OK' }));
 
-    await waitFor(() => {
-      expect(screen.queryByRole('button', { name: 'OK' })).toBeNull();
+    await waitFor(() => expect(screen.queryByRole('button', { name: 'OK' })).toBeNull(), {
+      timeout: 5000,
+      interval: 200
     });
 
     expect(updateAppliedModifier).toBeCalledWith(6, {

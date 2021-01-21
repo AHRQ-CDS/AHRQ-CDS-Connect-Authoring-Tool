@@ -95,13 +95,15 @@ describe('<ArtifactModal />', () => {
 
       userEvent.click(dialog.getByText('Show CPG Fields'));
 
-      let cpgTag = dialog.getByText(/Description/).querySelector('.cpg-tag');
-      expect(cpgTag).not.toHaveClass('cpg-tag-complete');
+      const descriptionField = within(dialog.getByText(/Description/));
+      const cpgTag = descriptionField.getByText('CPG');
+
+      expect(cpgTag).toHaveAttribute('class', expect.stringContaining('cpgTag'));
+      expect(cpgTag).toHaveAttribute('class', expect.not.stringContaining('cpgTagComplete'));
 
       await waitForInputValueChange(dialog.getByLabelText(/Description/), 'description');
 
-      cpgTag = dialog.getByText(/Description/).querySelector('.cpg-tag');
-      expect(cpgTag).toHaveClass('cpg-tag-complete');
+      expect(cpgTag).toHaveAttribute('class', expect.stringContaining('cpgTagComplete'));
     });
 
     it('can fill out the CPG form', async () => {

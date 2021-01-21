@@ -189,7 +189,7 @@ export default class RepoUploadModal extends Component {
     return (
       <Modal
         title="Submit to Repository"
-        handleShowModal={this.props.showModal}
+        isOpen={this.props.showModal}
         handleCloseModal={this.closeModal}
         handleSaveModal={this.closeModal}
       >

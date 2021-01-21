@@ -1,15 +1,15 @@
 import React from 'react';
 import {
-  AuthenticateVSAC,
+  AuthenticateVSACField,
   AutocompleteField,
+  CodeSelectField,
+  DateField,
+  DateRangeField,
   GroupedFields,
   SelectConditionalField,
   SelectField,
   TextAreaField,
-  TextField,
-  ValidateVSACCode,
-  DateField,
-  DateRangeField
+  TextField
 } from '../fields';
 
 import { Link } from 'components/elements';
@@ -155,8 +155,8 @@ const contextTypeConditions = {
     }
   ],
   clinicalFocus: [
-    { type: 'button', component: AuthenticateVSAC },
-    { type: 'button', component: ValidateVSACCode }
+    { type: 'button', component: AuthenticateVSACField },
+    { type: 'button', component: CodeSelectField }
   ],
   userType: [
     {
@@ -195,8 +195,8 @@ const contextTypeConditions = {
     }
   ],
   species: [
-    { type: 'button', component: AuthenticateVSAC },
-    { type: 'button', component: ValidateVSACCode }
+    { type: 'button', component: AuthenticateVSACField },
+    { type: 'button', component: CodeSelectField }
   ],
   program: [
     { name: 'program', label: 'Program', component: TextField }
@@ -242,8 +242,8 @@ const contextFields = [
 ];
 
 const topicFields = [
-  { type: 'button', name: 'topicCodeAuth', component: AuthenticateVSAC },
-  { type: 'button', name: 'topicCode', component: ValidateVSACCode }
+  { type: 'button', name: 'topicCode', component: AuthenticateVSACField },
+  { type: 'button', name: 'topicCode', component: CodeSelectField }
 ];
 
 const authorFields = [{ name: 'author', component: TextField }];
