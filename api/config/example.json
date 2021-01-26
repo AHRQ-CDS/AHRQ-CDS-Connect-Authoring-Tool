@@ -8,12 +8,6 @@
   "migrations": {
     "active": true
   },
-  "repo": {
-    "url": "https://localhost/cdsconnect",
-    "publish": {
-      "active": false
-    }
-  },
   "cqlToElm": {
     "url": "http://localhost:8080/cql/translator",
     "active": true

@@ -1,6 +1,5 @@
 const Templates = require('../data/formTemplates');
 const ValueSets = require('../data/valueSets');
-const config = require('../config');
 const conversionsELMFile = require('../data/library_helpers/ELMFiles/AT_Internal_CDS_Connect_Conversions.json');
 
 // If new functions are added to AT_Internal_CDS_Connect_Conversions and a separate description is desired,
@@ -11,7 +10,6 @@ module.exports = {
   getTemplates,
   getValueSets,
   getOneValueSet,
-  getRepoPublishConfig,
   getConversionFunctions
 };
 
@@ -46,10 +44,6 @@ function getOneValueSet(request, result) {
     }
   }
   result.json(selectedObject);
-}
-
-function getRepoPublishConfig(request, result) {
-  result.json(config.get('repo.publish'));
 }
 
 function getConversionFunctions(request, result) {

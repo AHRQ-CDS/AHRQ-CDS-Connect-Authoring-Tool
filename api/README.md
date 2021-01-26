@@ -30,7 +30,7 @@ Once the prerequisite tools are installed, use yarn to install the dependency li
 yarn # e.g. yarn install. installs this app's dependencies based on this project's yarn.lock / package.json
 ```
 
-By default, the project will attempt to convert CQL to ELM on download or publish.  To disable this in development, see the configuration section below.  If enabled, you will need the CQL-to-ELM translation service, a Java application that can be run locally via Maven or Docker.
+By default, the project will attempt to convert CQL to ELM on download.  To disable this in development, see the configuration section below.  If enabled, you will need the CQL-to-ELM translation service, a Java application that can be run locally via Maven or Docker.
 * To run locally with Maven: https://github.com/cqframework/cql-translation-service
 * To run locally with Docker, install Docker and run: `docker run -p 8080:8080 cqframework/cql-translation-service:v1.3.19`
 
