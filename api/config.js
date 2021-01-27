@@ -34,22 +34,6 @@ const config = convict({
       env: 'MIGRATIONS_ACTIVE',
     }
   },
-  repo: {
-    url: {
-      doc: 'The URL to the CDS Connect repository.',
-      format: laxUrl('http', 'https'),
-      default: 'https://cdsconnect.ahrqdev.org',
-      env: 'REPO_URL',
-    },
-    publish: {
-      active: {
-        doc: 'Indicates if publishing to the repo is active.',
-        format: 'Boolean',
-        default: false,
-        env: 'REPO_PUBLISH_ACTIVE',
-      }
-    }
-  },
   cqlToElm: {
     url: {
       doc: 'The URL endpoint for the CQL translation service.',

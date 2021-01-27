@@ -4,7 +4,6 @@ const externalCQLRouter = require('./routers/externalCQLRouter.js');
 const configRouter = require('./routers/configRouter.js');
 const cqlRouter = require('./routers/cqlRouter');
 const authRouter = require('./routers/authRouter.js');
-const repository = require('./routers/repository');
 const fhirRouter = require('./routers/fhirRouter');
 const foreseeHandler = require('./handlers/foreseeHandler');
 
@@ -31,9 +30,6 @@ module.exports = (app) => {
 
   // Routing for Auth
   app.use('/authoring/api/auth', authRouter);
-
-  // Routing for repository
-  app.use('/authoring/api/repository', repository);
 
   // Routing for FHIR VSAC endpoint
   app.use('/authoring/api/fhir', fhirRouter);

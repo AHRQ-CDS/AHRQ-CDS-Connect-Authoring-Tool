@@ -15,10 +15,6 @@ ConfigRouter.route('/valuesets')
 ConfigRouter.route('/valuesets/:valueset*')
   .get(config.getOneValueSet);
 
-// Routes for /authoring/api/repo/publish
-ConfigRouter.route('/repo/publish')
-  .get(config.getRepoPublishConfig);
-
 // Routes for /authoring/api/config/conversions
 ConfigRouter.route('/conversions')
   .get(config.getConversionFunctions);
