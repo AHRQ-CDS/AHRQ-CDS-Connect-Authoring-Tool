@@ -9,8 +9,10 @@ import {
 } from '@material-ui/icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faExclamationCircle } from '@fortawesome/free-solid-svg-icons';
+import { UncontrolledTooltip } from 'reactstrap';
+import _ from 'lodash';
 
-import { Modal } from 'components/elements';
+import { DeleteConfirmationModal } from 'components/modals';
 import ConjunctionGroup from './ConjunctionGroup';
 import ExpressionPhrase from './modifiers/ExpressionPhrase';
 
@@ -58,34 +60,13 @@ export default class Subpopulation extends Component {
   }
 
   handleDeleteSubpopulation = () => {
-    this.props.deleteSubpopulation(this.props.subpopulation.uniqueId);
+    const { artifact, name, subpopulation, updateSubpopulations } = this.props;
+    const newSubpopulations = _.cloneDeep(artifact[name]);
+    const subpopulationIndex = artifact[name].findIndex(sp => sp.uniqueId === subpopulation.uniqueId);
+    newSubpopulations.splice(subpopulationIndex, 1);
+
+    updateSubpopulations(newSubpopulations, name);
     this.closeConfirmDeleteModal();
-  }
-
-  renderConfirmDeleteModal() {
-    const subpopulationName = this.props.subpopulation.subpopulationName;
-
-    return (
-      <Modal
-        title="Delete Subpopulation Confirmation"
-        submitButtonText="Delete"
-        isOpen={this.state.showConfirmDeleteModal}
-        handleCloseModal={this.closeConfirmDeleteModal}
-        handleSaveModal={this.handleDeleteSubpopulation}
-      >
-        <div className="delete-subpopulation-confirmation-modal modal__content">
-          <h5>
-            {`Are you sure you want to permanently delete
-              ${subpopulationName ? 'the following' : 'this unnamed'} subpopulation?`}
-          </h5>
-
-          {subpopulationName && <div className="subpopulation-info">
-            <span>Subpopulation: </span>
-            <span>{subpopulationName}</span>
-          </div>}
-        </div>
-      </Modal>
-    );
   }
 
   onEnterKey = (e) => {
@@ -114,8 +95,9 @@ export default class Subpopulation extends Component {
   }
 
   render() {
-    const { subpopulation, instanceNames } = this.props;
+    const { checkSubpopulationUsage, instanceNames, setSubpopulationName, subpopulation } = this.props;
     const { isExpanded } = this.state;
+    const subpopulationUsed = checkSubpopulationUsage(subpopulation.uniqueId);
     const headerClass = classNames('card-element__header', { collapsed: !isExpanded });
     const headerTopClass = classNames('card-element__header-top', { collapsed: !isExpanded });
     const duplicateNameIndex = instanceNames.findIndex(name =>
@@ -131,11 +113,11 @@ export default class Subpopulation extends Component {
                   <StringField
                     id="subpopulation_title"
                     name="Subpopulation"
-                    uniqueId={this.props.subpopulation.uniqueId}
+                    uniqueId={subpopulation.uniqueId}
                     updateInstance={(value) => {
-                      this.props.setSubpopulationName(value.subpopulation_title, this.props.subpopulation.uniqueId);
+                      setSubpopulationName(value.subpopulation_title, subpopulation.uniqueId);
                     }}
-                    value={this.props.subpopulation.subpopulationName}
+                    value={subpopulation.subpopulationName}
                   />
 
                   {duplicateNameIndex !== -1 &&
@@ -145,11 +127,11 @@ export default class Subpopulation extends Component {
               :
                 <div className="card-element__heading">
                   <div className="heading-name">
-                    {this.props.subpopulation.subpopulationName}:
+                    {subpopulation.subpopulationName}:
                     {
                       (duplicateNameIndex !== -1 ||
                       this.subpopulationHasOneChildWarning() ||
-                      this.hasNestedWarnings(this.props.subpopulation.childInstances)) &&
+                      this.hasNestedWarnings(subpopulation.childInstances)) &&
                       <div className="warning"><FontAwesomeIcon icon={faExclamationCircle} /> Has warnings</div>
                     }
                   </div>
@@ -158,20 +140,29 @@ export default class Subpopulation extends Component {
 
               <div className="card-element__buttons">
                 <IconButton
-                  aria-label={`${isExpanded ? 'hide' : 'show'} ${this.props.subpopulation.subpopulationName}`}
+                  aria-label={`${isExpanded ? 'hide' : 'show'} ${subpopulation.subpopulationName}`}
                   color="primary"
                   onClick={isExpanded ? this.collapse : this.expand}
                 >
                   {isExpanded ? <ExpandLessIcon fontSize="small" /> : <ExpandMoreIcon fontSize="small" />}
                 </IconButton>
 
-                <IconButton
-                  aria-label="remove subpopulation"
-                  color="primary"
-                  onClick={this.openConfirmDeleteModal}
-                >
-                  <CloseIcon fontSize="small" />
-                </IconButton>
+                <span id={`deletebutton-${subpopulation.uniqueId}`}>
+                  <IconButton
+                    aria-label="delete subpopulation"
+                    color="primary"
+                    disabled={subpopulationUsed}
+                    onClick={this.openConfirmDeleteModal}
+                  >
+                    <CloseIcon fontSize="small" />
+                  </IconButton>
+                </span>
+
+                {subpopulationUsed &&
+                  <UncontrolledTooltip target={`deletebutton-${subpopulation.uniqueId}`} placement="left">
+                    To delete this subpopulation, remove all references to it.
+                  </UncontrolledTooltip>
+                }
               </div>
             </div>
 
@@ -190,56 +181,91 @@ export default class Subpopulation extends Component {
     );
   }
 
-  renderContents = () => (
-    <div className="card-element__body">
-      {this.subpopulationHasOneChildWarning() &&
-        <div className='warning'>This subpopulation needs at least one element</div>
-      }
+  renderContents = () => {
+    const {
+      artifact,
+      baseElements,
+      conversionFunctions,
+      externalCqlList,
+      getAllInstancesInAllTrees,
+      instanceNames,
+      isLoadingModifiers,
+      loadExternalCqlList,
+      modifierMap,
+      modifiersByInputType,
+      parameters,
+      scrollToElement,
+      subpopulation,
+      subpopulationIndex,
+      templates,
+      treeName,
+      updateInstanceModifiers,
+      validateReturnType,
+      vsacApiKey
+    } = this.props;
+    const { showConfirmDeleteModal } = this.state;
+    const subpopulationName = subpopulation.subpopulationName;
 
-      <ExpressionPhrase
-        class="expression expression__group"
-        instance={this.props.subpopulation}
-        baseElements={this.props.baseElements}
-      />
-  
-      <ConjunctionGroup
-        addInstance={this.addInstance}
-        artifact={this.props.artifact}
-        baseElements={this.props.baseElements}
-        conversionFunctions={this.props.conversionFunctions}
-        deleteInstance={this.deleteInstance}
-        editInstance={this.editInstance}
-        externalCqlList={this.props.externalCqlList}
-        getAllInstances={this.getAllInstances}
-        getAllInstancesInAllTrees={this.props.getAllInstancesInAllTrees}
-        instance={this.props.subpopulation}
-        instanceNames={this.props.instanceNames}
-        isLoadingModifiers={this.props.isLoadingModifiers}
-        loadExternalCqlList={this.props.loadExternalCqlList}
-        modifierMap={this.props.modifierMap}
-        modifiersByInputType={this.props.modifiersByInputType}
-        parameters={this.props.parameters}
-        root={true}
-        scrollToElement={this.props.scrollToElement}
-        subPopulationIndex={this.props.subpopulationIndex}
-        templates={this.props.templates}
-        treeName={this.props.treeName}
-        updateInstanceModifiers={this.props.updateInstanceModifiers}
-        validateReturnType={this.props.validateReturnType}
-        vsacApiKey={this.props.vsacApiKey}
-      />
-      {this.renderConfirmDeleteModal()}
-    </div>
-  );
+    return (
+      <div className="card-element__body">
+        {this.subpopulationHasOneChildWarning() &&
+          <div className='warning'>This subpopulation needs at least one element</div>
+        }
+
+        <ExpressionPhrase
+          class="expression expression__group"
+          instance={subpopulation}
+          baseElements={baseElements}
+        />
+
+        <ConjunctionGroup
+          addInstance={this.addInstance}
+          artifact={artifact}
+          baseElements={baseElements}
+          conversionFunctions={conversionFunctions}
+          deleteInstance={this.deleteInstance}
+          editInstance={this.editInstance}
+          externalCqlList={externalCqlList}
+          getAllInstances={this.getAllInstances}
+          getAllInstancesInAllTrees={getAllInstancesInAllTrees}
+          instance={subpopulation}
+          instanceNames={instanceNames}
+          isLoadingModifiers={isLoadingModifiers}
+          loadExternalCqlList={loadExternalCqlList}
+          modifierMap={modifierMap}
+          modifiersByInputType={modifiersByInputType}
+          parameters={parameters}
+          root={true}
+          scrollToElement={scrollToElement}
+          subPopulationIndex={subpopulationIndex}
+          templates={templates}
+          treeName={treeName}
+          updateInstanceModifiers={updateInstanceModifiers}
+          validateReturnType={validateReturnType}
+          vsacApiKey={vsacApiKey}
+        />
+
+        {showConfirmDeleteModal &&
+          <DeleteConfirmationModal
+            deleteType="Subpopulation"
+            handleCloseModal={this.closeConfirmDeleteModal}
+            handleDelete={this.handleDeleteSubpopulation}
+          >
+            <div>Subpopulation: {subpopulationName ? subpopulationName :'unnamed'}</div>
+          </DeleteConfirmationModal>
+        }
+      </div>
+    );
+  }
 }
 
 Subpopulation.propTypes = {
   addInstance: PropTypes.func.isRequired,
   artifact: PropTypes.object.isRequired,
   baseElements: PropTypes.array.isRequired,
+  checkSubpopulationUsage: PropTypes.func.isRequired,
   conversionFunctions: PropTypes.array,
   deleteInstance: PropTypes.func.isRequired,
-  deleteSubpopulation: PropTypes.func.isRequired,
   editInstance: PropTypes.func.isRequired,
   externalCqlList: PropTypes.array.isRequired,
   getAllInstances: PropTypes.func.isRequired,
@@ -249,6 +275,7 @@ Subpopulation.propTypes = {
   loadExternalCqlList: PropTypes.func.isRequired,
   modifierMap: PropTypes.object.isRequired,
   modifiersByInputType: PropTypes.object.isRequired,
+  name: PropTypes.string.isRequired,
   parameters: PropTypes.array.isRequired,
   scrollToElement: PropTypes.func,
   setSubpopulationName: PropTypes.func.isRequired,
@@ -257,5 +284,6 @@ Subpopulation.propTypes = {
   templates: PropTypes.array.isRequired,
   treeName: PropTypes.string.isRequired,
   updateInstanceModifiers: PropTypes.func.isRequired,
+  updateSubpopulations: PropTypes.func.isRequired,
   vsacApiKey: PropTypes.string
 };

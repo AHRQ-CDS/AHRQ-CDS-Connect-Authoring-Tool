@@ -242,7 +242,7 @@ const contextFields = [
 ];
 
 const topicFields = [
-  { type: 'button', name: 'topicCode', component: AuthenticateVSACField },
+  { type: 'button', name: 'topicVSAC', component: AuthenticateVSACField },
   { type: 'button', name: 'topicCode', component: CodeSelectField }
 ];
 

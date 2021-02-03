@@ -18,7 +18,7 @@ import patientProps from 'prop-types/patient';
 import artifactProps from 'prop-types/artifact';
 
 import { Dropdown, Modal } from 'components/elements';
-import { VSACAuthenticationModal } from 'components/modals';
+import { DeleteConfirmationModal, VSACAuthenticationModal } from 'components/modals';
 import CodeService from 'utils/code_service/CodeService';
 import PatientView from './PatientView';
 import TestingParameters from './TestingParameters';
@@ -166,40 +166,6 @@ export default class PatientTable extends Component {
       dataModel
     );
   }
-
-  // ----------------------- RENDER ---------------------------------------- //
-
-  renderConfirmDeleteModal = () => (
-    <Modal
-      title="Delete Patient Confirmation"
-      submitButtonText="Delete"
-      hasCancelButton
-      isOpen={this.state.showConfirmDeleteModal}
-      handleCloseModal={this.closeConfirmDeleteModal}
-      handleSaveModal={this.handleDeletePatient}
-    >
-      <div className="delete-patient-confirmation-modal modal__content">
-        <h5>Are you sure you want to permanently delete the following Patient?</h5>
-
-        <div className="patient-info">
-          <span>Name: </span>
-          <span>
-            {_.chain(this.state.patientToDelete)
-                .get('patient.entry')
-                .find({ resource: { resourceType: 'Patient' } })
-                .get('resource.name[0].given[0]')
-                .value() || 'given_placeholder'}
-            {' '}
-            {_.chain(this.state.patientToDelete)
-              .get('patient.entry')
-              .find({ resource: { resourceType: 'Patient' } })
-              .get('resource.name[0].family')
-              .value() || 'family_placeholder'}
-          </span>
-        </div>
-      </div>
-    </Modal>
-  );
 
   renderViewDetailsModal = () => (
     <Modal
@@ -365,7 +331,12 @@ export default class PatientTable extends Component {
 
   render() {
     const { patients, vsacApiKey } = this.props;
-    const { patientsToExecute, showVSACAuthenticationModal } = this.state;
+    const { patientToDelete, patientsToExecute, showConfirmDeleteModal, showVSACAuthenticationModal } = this.state;
+    const patientName = `${_.chain(patientToDelete)
+      .get('patient.entry').find({ resource: { resourceType: 'Patient' } })
+      .get('resource.name[0].given[0]').value() || 'given_placeholder'}
+      ${_.chain(patientToDelete).get('patient.entry').find({ resource: { resourceType: 'Patient' } })
+      .get('resource.name[0].family').value() || 'family_placeholder'}`;
 
     return (
       <div className="patient-table">
@@ -412,7 +383,16 @@ export default class PatientTable extends Component {
           </tbody>
         </table>
 
-        {this.renderConfirmDeleteModal()}
+        {showConfirmDeleteModal &&
+          <DeleteConfirmationModal
+            deleteType="Patient"
+            handleCloseModal={this.closeConfirmDeleteModal}
+            handleDelete={this.handleDeletePatient}
+          >
+            <div>Name: {patientName}</div>
+          </DeleteConfirmationModal>
+        }
+
         {this.renderViewDetailsModal()}
         {this.renderExecuteCQLModal()}
       </div>

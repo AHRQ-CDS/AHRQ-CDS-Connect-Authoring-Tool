@@ -3,10 +3,6 @@ import { render, screen, userEvent, waitFor, within } from 'utils/test-utils';
 import ArtifactTable from '../ArtifactTable';
 
 describe('<ArtifactTable />', () => {
-  const match = {
-    path: ''
-  };
-
   const artifactsMock = [
     {
       _id: 'artifact1',
@@ -59,10 +55,9 @@ describe('<ArtifactTable />', () => {
   const renderComponent = (props = {}) =>
     render(
       <ArtifactTable
-        match={match}
         artifacts={artifactsMock}
-        afterAddArtifact={jest.fn()}
-        deleteArtifact={jest.fn()}
+        handleDeleteArtifact={jest.fn()}
+        handleUpdateArtifact={jest.fn()}
         {...props}
       />
     );
@@ -87,19 +82,19 @@ describe('<ArtifactTable />', () => {
   });
 
   it('allows deleting of artifacts', () => {
-    const deleteArtifact = jest.fn();
-    renderComponent({ deleteArtifact });
+    const handleDeleteArtifact = jest.fn();
+    renderComponent({ handleDeleteArtifact });
 
     userEvent.click(screen.getAllByRole('button', { name: 'Delete' })[0]);
-    expect(screen.getByText('Delete Artifact Confirmation')).toBeInTheDocument();
+    expect(screen.getByText('Delete CDS Artifact Confirmation')).toBeInTheDocument();
 
     const dialog = within(screen.getByRole('dialog'));
 
-    expect(dialog.getByText(artifactsMock[0].name)).toBeInTheDocument();
-    expect(dialog.getByText(artifactsMock[0].version)).toBeInTheDocument();
+    expect(dialog.getByText(/My Second CDS Artifact/)).toBeInTheDocument();
+    expect(dialog.getByText(/1\.0\.1/)).toBeInTheDocument();
 
-    userEvent.click(dialog.getByRole('button', {name: 'Delete'}));
+    userEvent.click(dialog.getByRole('button', { name: 'Delete' }));
 
-    expect(deleteArtifact).toBeCalledWith(artifactsMock[0]);
+    expect(handleDeleteArtifact).toBeCalledWith(artifactsMock[0]);
   });
 });

@@ -1,7 +1,6 @@
 import React from 'react';
 import { formatISO } from 'date-fns';
-import { addArtifact, updateAndSaveArtifact } from 'actions/artifacts';
-import { render, screen, fireEvent, userEvent, waitFor, within, act } from 'utils/test-utils';
+import { act, fireEvent, render, screen, userEvent, waitFor, within } from 'utils/test-utils';
 import ArtifactModal from '../ArtifactModal';
 
 const artifactMock = {
@@ -29,7 +28,15 @@ const artifactMock = {
 };
 
 const renderComponent = (props = {}) =>
-  render(<ArtifactModal artifactEditing={null} showModal={true} closeModal={jest.fn()} {...props} />);
+  render(
+    <ArtifactModal
+      artifactEditing={null}
+      handleAddArtifact={jest.fn()}
+      handleCloseModal={jest.fn()}
+      handleUpdateArtifact={jest.fn()}
+      {...props}
+    />
+  );
 
 const waitForDropdownToClose = () => waitFor(() => expect(screen.queryAllByRole('option')).toHaveLength(0));
 const waitForInputValueChange = (input, value, expectedValue) => {
@@ -37,29 +44,10 @@ const waitForInputValueChange = (input, value, expectedValue) => {
   return waitFor(() => expect(input).toHaveValue(expectedValue ?? value));
 };
 
-jest.mock('../../../actions/artifacts', () => ({
-  __esModule: true,
-  addArtifact: jest.fn(),
-  updateAndSaveArtifact: jest.fn()
-}));
-
 describe('<ArtifactModal />', () => {
-  beforeEach(() => {
-    addArtifact.mockImplementation(() => ({ type: 'ADD_ARTIFACT' }));
-    updateAndSaveArtifact.mockImplementation(() => ({ type: 'UPDATE_AND_SAVE_ARTIFACT' }));
-  });
-
-  afterEach(() => jest.clearAllMocks());
-
-  it('does not render the modal if it is not opened', () => {
-    renderComponent({ showModal: false });
-
-    expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
-  });
-
-  it('allows submission and calls closeModal', async () => {
-    const closeModal = jest.fn();
-    renderComponent({ closeModal });
+  it('allows submission and closes modal', async () => {
+    const handleCloseModal = jest.fn();
+    renderComponent({ handleCloseModal });
 
     const dialog = within(screen.getByRole('dialog'));
 
@@ -69,7 +57,7 @@ describe('<ArtifactModal />', () => {
     userEvent.click(dialog.getByText('Create'));
 
     await waitFor(() => {
-      expect(closeModal).toHaveBeenCalled();
+      expect(handleCloseModal).toHaveBeenCalled();
     });
   });
 
@@ -92,9 +80,7 @@ describe('<ArtifactModal />', () => {
       renderComponent();
 
       const dialog = within(await screen.findByRole('dialog'));
-
       userEvent.click(dialog.getByText('Show CPG Fields'));
-
       const descriptionField = within(dialog.getByText(/Description/));
       const cpgTag = descriptionField.getByText('CPG');
 
@@ -102,17 +88,16 @@ describe('<ArtifactModal />', () => {
       expect(cpgTag).toHaveAttribute('class', expect.not.stringContaining('cpgTagComplete'));
 
       await waitForInputValueChange(dialog.getByLabelText(/Description/), 'description');
-
       expect(cpgTag).toHaveAttribute('class', expect.stringContaining('cpgTagComplete'));
     });
 
     it('can fill out the CPG form', async () => {
-      renderComponent();
-      const dialog = within(await screen.findByRole('dialog'));
+      const handleAddArtifact = jest.fn();
+      renderComponent({handleAddArtifact});
 
+      const dialog = within(await screen.findByRole('dialog'));
       await waitForInputValueChange(dialog.getByLabelText(/Artifact Name/), 'NewArtifactName');
       await waitForInputValueChange(dialog.getByLabelText('Version:'), 'NewArtifactVersion');
-
       userEvent.click(dialog.getByText('Show CPG Fields'));
 
       await act(async () => {
@@ -123,39 +108,32 @@ describe('<ArtifactModal />', () => {
         fireEvent.change(dialog.getByLabelText(/Usage/), { target: { value: 'NewArtifactUsage' } });
         fireEvent.change(dialog.getByLabelText(/Copyright/), { target: { value: 'NewArtifactCopyright' } });
 
-        const [approvalDate, lastReviewDate, effectivePeriodStart, effectivePeriodEnd] = dialog.getAllByPlaceholderText(
-          'mm/dd/yyyy'
-        );
-
+        const [approvalDate, lastReviewDate, effectivePeriodStart, effectivePeriodEnd] = 
+          dialog.getAllByPlaceholderText('mm/dd/yyyy');
         fireEvent.change(approvalDate, { target: { value: '01/01/2000' } });
         fireEvent.change(lastReviewDate, { target: { value: '01/02/2000' } });
-
         fireEvent.change(effectivePeriodStart, {
           target: { value: '01032000' }
         });
+
         await waitForInputValueChange(effectivePeriodEnd, '01042000', '01/04/2000');
       });
 
       userEvent.click(dialog.getAllByLabelText('Select...')[0]); // status
       userEvent.click(screen.getByRole('option', { name: 'draft' }));
-
       await waitForDropdownToClose();
 
       userEvent.click(dialog.getByLabelText('Select...')); // experimental
       userEvent.click(screen.getByRole('option', { name: 'false' }));
-
       await waitForDropdownToClose();
 
       userEvent.click(dialog.getByText('Add Context'));
-
       userEvent.click(dialog.getByLabelText('Select...')); // context type
       userEvent.click(screen.getByRole('option', { name: 'gender' }));
-
       await waitForDropdownToClose();
 
       userEvent.click(dialog.getByLabelText('Select...')); // gender
       userEvent.click(screen.getByRole('option', { name: 'female' }));
-
       await waitForDropdownToClose();
 
       userEvent.click(dialog.getByText('Add Author'));
@@ -178,7 +156,6 @@ describe('<ArtifactModal />', () => {
       userEvent.click(dialog.getByText('Add Related Artifact'));
       userEvent.click(dialog.getByLabelText('Select...')); // related artifact type
       userEvent.click(screen.getByRole('option', { name: 'Citation' }));
-
       await waitForDropdownToClose();
 
       await act(async () => {
@@ -195,55 +172,50 @@ describe('<ArtifactModal />', () => {
       });
 
       userEvent.click(dialog.getByText('Create'));
-
       await waitFor(() => {
-        expect(addArtifact).toHaveBeenCalled();
-      });
-
-      expect(addArtifact).toHaveBeenCalledWith({
-        name: 'NewArtifactName',
-        version: 'NewArtifactVersion',
-        description: 'NewArtifactDescription',
-        url: 'NewArtifactUrl',
-        status: 'draft',
-        experimental: 'false',
-        publisher: 'NewArtifactPublisher',
-        context: [{ contextType: 'gender', gender: 'female' }],
-        purpose: 'NewArtifactPurpose',
-        usage: 'NewArtifactUsage',
-        copyright: 'NewArtifactCopyright',
-        // Format dates using this approach so tests pass regardless of the TZ they are run in
-        approvalDate: formatISO(new Date(2000, 0, 1)),
-        lastReviewDate: formatISO(new Date(2000, 0, 2)),
-        effectivePeriod: { start: formatISO(new Date(2000, 0, 3)), end: formatISO(new Date(2000, 0, 4)) },
-        topic: [],
-        author: [{ author: 'NewArtifactAuthor' }],
-        reviewer: [{ reviewer: 'NewArtifactReviewer' }],
-        endorser: [{ endorser: 'NewArtifactEndorser' }],
-        relatedArtifact: [
-          {
-            relatedArtifactType: 'citation',
-            description: 'NewArtifactCitationDescription',
-            url: 'NewArtifactCitationUrl',
-            citation: 'NewArtifactCitationCitation'
-          }
-        ]
+        expect(handleAddArtifact).toHaveBeenCalledWith({
+          name: 'NewArtifactName',
+          version: 'NewArtifactVersion',
+          description: 'NewArtifactDescription',
+          url: 'NewArtifactUrl',
+          status: 'draft',
+          experimental: 'false',
+          publisher: 'NewArtifactPublisher',
+          context: [{ contextType: 'gender', gender: 'female' }],
+          purpose: 'NewArtifactPurpose',
+          usage: 'NewArtifactUsage',
+          copyright: 'NewArtifactCopyright',
+          // Format dates using this approach so tests pass regardless of the TZ they are run in
+          approvalDate: formatISO(new Date(2000, 0, 1)),
+          lastReviewDate: formatISO(new Date(2000, 0, 2)),
+          effectivePeriod: { start: formatISO(new Date(2000, 0, 3)), end: formatISO(new Date(2000, 0, 4)) },
+          topic: [],
+          author: [{ author: 'NewArtifactAuthor' }],
+          reviewer: [{ reviewer: 'NewArtifactReviewer' }],
+          endorser: [{ endorser: 'NewArtifactEndorser' }],
+          relatedArtifact: [
+            {
+              relatedArtifactType: 'citation',
+              description: 'NewArtifactCitationDescription',
+              url: 'NewArtifactCitationUrl',
+              citation: 'NewArtifactCitationCitation'
+            }
+          ]
+        });
       });
     }, 30000);
 
     it('can edit the form', async () => {
-      const { getByText } = render(
-        <ArtifactModal artifactEditing={artifactMock} showModal={true} closeModal={jest.fn()} />
-      );
+      const handleUpdateArtifact = jest.fn();
+      renderComponent({artifactEditing: artifactMock, handleUpdateArtifact});
 
-      const nameField = document.querySelector('input[name="name"]');
+      const dialog = within(await screen.findByRole('dialog'));
+      await waitForInputValueChange(dialog.getByLabelText(/Artifact Name/), 'Edited Artifact Name');
 
-      userEvent.clear(nameField);
-      userEvent.type(nameField, 'Edited Artifact Name');
-      fireEvent.click(getByText('Save'));
+      userEvent.click(dialog.getByText('Save'));
 
       await waitFor(() => {
-        expect(updateAndSaveArtifact).toHaveBeenCalledWith(
+        expect(handleUpdateArtifact).toHaveBeenCalledWith(
           artifactMock,
           expect.objectContaining({ name: 'Edited Artifact Name' })
         );

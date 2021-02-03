@@ -9,9 +9,7 @@ const defaultState = {
   statusMessage: null,
   loadArtifacts: { isLoading: false, loadStatus: null },
   loadArtifact: { isLoading: false, loadStatus: null },
-  addArtifact: { isAdding: false, addStatus: null },
   editArtifact: { isEditing: false, editStatus: null },
-  deleteArtifact: { isDeleting: false, deleteStatus: null },
   saveArtifact: { isSaving: false, saveStatus: null },
   downloadArtifact: {
     isDownloading: false,
@@ -87,21 +85,6 @@ export default function auth(state = defaultState, action) {
       return {
         ...state,
         loadArtifact: { isLoading: false, loadStatus: 'failure' }
-      };
-    case types.ADD_ARTIFACT_REQUEST:
-      return {
-        ...state,
-        addArtifact: { isAdding: true, addStatus: null }
-      };
-    case types.ADD_ARTIFACT_SUCCESS:
-      return {
-        ...state,
-        addArtifact: { isAdding: false, addStatus: 'success' }
-      };
-    case types.ADD_ARTIFACT_FAILURE:
-      return {
-        ...state,
-        addArtifact: { isAdding: false, addStatus: 'failure' }
       };
     case types.DOWNLOAD_ARTIFACT_REQUEST:
       return {
@@ -214,26 +197,6 @@ export default function auth(state = defaultState, action) {
         ...state,
         statusMessage: `Save failed. ${action.statusText}.`,
         saveArtifact: { isSaving: false, saveStatus: 'failure' }
-      };
-    case types.DELETE_ARTIFACT_REQUEST:
-      return {
-        ...state,
-        statusMessage: null,
-        deleteArtifact: { isDeleting: true, deleteStatus: null }
-      };
-    case types.DELETE_ARTIFACT_SUCCESS: {
-      const time = moment().format('dddd, MMMM Do YYYY, h:mm:ss a');
-      return {
-        ...state,
-        statusMessage: `Deleted ${time}.`,
-        deleteArtifact: { isDeleting: false, deleteStatus: 'success' }
-      };
-    }
-    case types.DELETE_ARTIFACT_FAILURE:
-      return {
-        ...state,
-        statusMessage: `Delete failed. ${action.statusText}.`,
-        deleteArtifact: { isDeleting: false, deleteStatus: 'failure' }
       };
     default:
       return state;

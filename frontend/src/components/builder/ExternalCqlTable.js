@@ -7,7 +7,7 @@ import {
 } from '@material-ui/icons';
 import { UncontrolledTooltip } from 'reactstrap';
 
-import { Modal }  from 'components/elements';
+import { DeleteConfirmationModal } from 'components/modals';
 import ExternalCqlDetails from './ExternalCqlDetails';
 
 import { sortMostRecent } from 'utils/sort';
@@ -137,34 +137,19 @@ export default class ExternalCqlTable extends Component {
     );
   };
 
-  renderConfirmDeleteModal() {
-    const { externalCqlLibraryToDelete } = this.state;
-
-    return (
-      <Modal
-        title="Delete External CQL Library Confirmation"
-        submitButtonText="Delete"
-        isOpen={this.state.showConfirmDeleteModal}
-        handleCloseModal={this.closeConfirmDeleteModal}
-        handleSaveModal={this.handleDeleteExternalCqlLibrary}
-      >
-        <div className="delete-external-cql-library-confirmation-modal modal__content">
-          <h5>Are you sure you want to permanently delete the following external CQL library?</h5>
-
-          <div className="external-cql-library-info">
-            <span>Library: </span>
-            <span>{externalCqlLibraryToDelete && externalCqlLibraryToDelete.name}</span>
-          </div>
-        </div>
-      </Modal>
-    );
-  }
-
   render() {
     const {
-      externalCqlList, externalCqlLibraryDetails, loadExternalCqlLibraryDetails, isLoadingExternalCqlDetails
+      externalCqlLibraryDetails,
+      externalCqlList,
+      isLoadingExternalCqlDetails,
+      loadExternalCqlLibraryDetails
     } = this.props;
-    const { showViewDetailsModal, externalCqlLibraryToView } = this.state;
+    const {
+      externalCqlLibraryToDelete,
+      externalCqlLibraryToView,
+      showConfirmDeleteModal,
+      showViewDetailsModal
+    } = this.state;
 
     return (
       <div className="external-cql-table">
@@ -195,7 +180,15 @@ export default class ExternalCqlTable extends Component {
           />
         }
 
-        {this.renderConfirmDeleteModal()}
+        {showConfirmDeleteModal &&
+          <DeleteConfirmationModal
+            deleteType="External CQL Library"
+            handleCloseModal={this.closeConfirmDeleteModal}
+            handleDelete={this.handleDeleteExternalCqlLibrary}
+          >
+            <div>Library: {externalCqlLibraryToDelete.name}</div>
+          </DeleteConfirmationModal>
+        }
       </div>
     );
   }

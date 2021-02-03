@@ -90,49 +90,6 @@ describe('<Subpopulations />', () => {
     );
   });
 
-  it('can delete subpopulation not in use', () => {
-    const checkSubpopulationUsage = jest.fn().mockReturnValueOnce(false);
-    const updateSubpopulations = jest.fn();
-
-    renderComponent({
-      artifact: {
-        subpopulations: [specialSubpop, subpopulation]
-      },
-      checkSubpopulationUsage,
-      updateSubpopulations
-    });
-
-    userEvent.click(screen.getByRole('button', { name: 'remove subpopulation' }));
-    userEvent.click(screen.getByRole('button', { name: 'Delete' }));
-
-    expect(updateSubpopulations).toHaveBeenCalledWith([specialSubpop], 'subpopulations');
-  });
-
-  it("can't delete subpopulation in use", () => {
-    const checkSubpopulationUsage = jest.fn().mockReturnValueOnce(true);
-    const updateSubpopulations = jest.fn();
-
-    renderComponent({
-      artifact: {
-        subpopulations: [specialSubpop, subpopulation]
-      },
-      checkSubpopulationUsage,
-      updateSubpopulations
-    });
-
-    // TODO: Currently Subpopulations protect against deletion by sending an alert
-    // message rather than disabling the delete button. This means that the
-    // modal still appears and we need to test that it doesn't actually
-    // cause deletion. When the Subpopulation and Subpopulations components
-    // are refactored, we can make sure that the modal doesn't show up to
-    // begin with, and we can make a change here to verify that.
-    userEvent.click(screen.getByRole('button', { name: 'remove subpopulation' }));
-    userEvent.click(screen.getByRole('button', { name: 'Delete' }));
-
-    expect(updateSubpopulations).not.toHaveBeenCalled();
-    expect(window.alert).toHaveBeenCalledWith('Subpopulation in use');
-  });
-
   it('can update a subpopulation name', () => {
     const newSubpopName = 'newSubpopName';
     const updateRecsSubpop = jest.fn();
@@ -159,5 +116,40 @@ describe('<Subpopulations />', () => {
     );
 
     expect(updateRecsSubpop).toHaveBeenCalledWith(newSubpopName, subpopulation.uniqueId);
+  });
+
+  it('can delete subpopulation not in use', () => {
+    const checkSubpopulationUsage = jest.fn().mockReturnValueOnce(false);
+    const updateSubpopulations = jest.fn();
+
+    renderComponent({
+      artifact: {
+        subpopulations: [specialSubpop, subpopulation]
+      },
+      checkSubpopulationUsage,
+      updateSubpopulations
+    });
+
+    userEvent.click(screen.getByRole('button', { name: 'delete subpopulation' }));
+    userEvent.click(screen.getByRole('button', { name: 'Delete' }));
+
+    expect(updateSubpopulations).toHaveBeenCalledWith([specialSubpop], 'subpopulations');
+  });
+
+  it("can't delete subpopulation in use", () => {
+    const checkSubpopulationUsage = jest.fn().mockReturnValueOnce(true);
+    const updateSubpopulations = jest.fn();
+
+    renderComponent({
+      artifact: {
+        subpopulations: [specialSubpop, subpopulation]
+      },
+      checkSubpopulationUsage,
+      updateSubpopulations
+    });
+
+    userEvent.click(screen.getByRole('button', { name: 'delete subpopulation' }));
+
+    expect(updateSubpopulations).not.toHaveBeenCalled();
   });
 });

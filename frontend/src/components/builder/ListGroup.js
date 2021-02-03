@@ -5,23 +5,24 @@ import classnames from 'classnames';
 import { IconButton } from '@material-ui/core';
 import {
   ChatBubble as ChatBubbleIcon,
+  Check as CheckIcon,
   Close as CloseIcon,
   ExpandLess as ExpandLessIcon,
   ExpandMore as ExpandMoreIcon,
   Sms as SmsIcon
 } from '@material-ui/icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCheck, faExclamationCircle } from '@fortawesome/free-solid-svg-icons';
+import { faExclamationCircle } from '@fortawesome/free-solid-svg-icons';
 import { UncontrolledTooltip } from 'reactstrap';
 import clsx from 'clsx';
 import _ from 'lodash';
 
-import { findValueAtPath } from '../../utils/find';
+import { findValueAtPath } from 'utils/find';
 import { doesBaseElementInstanceNeedWarning, hasDuplicateName, hasGroupNestedWarning, hasInvalidListWarning }
-  from '../../utils/warnings';
-import { getReturnType, getFieldWithId } from '../../utils/instances';
+  from 'utils/warnings';
+import { getReturnType, getFieldWithId } from 'utils/instances';
 
-import { Modal } from 'components/elements';
+import { DeleteConfirmationModal } from 'components/modals';
 import ConjunctionGroup from './ConjunctionGroup';
 import ExpressionPhrase from './modifiers/ExpressionPhrase';
 import StringField from './fields/StringField';
@@ -126,32 +127,6 @@ export default class ListGroup extends Component {
   handleDeleteBaseElementList = () => {
     this.deleteBaseElementList(this.props.instance.uniqueId);
     this.closeConfirmDeleteModal();
-  }
-
-  renderConfirmDeleteModal() {
-    const elementName = getFieldWithId(this.props.instance.fields, 'element_name').value;
-
-    return (
-      <Modal
-        title="Delete List Group Confirmation"
-        submitButtonText="Delete"
-        isOpen={this.state.showConfirmDeleteModal}
-        handleCloseModal={this.closeConfirmDeleteModal}
-        handleSaveModal={this.handleDeleteBaseElementList}
-      >
-        <div className="delete-list-group-confirmation-modal modal__content">
-          <h5>
-            {`Are you sure you want to permanently delete
-              ${elementName ? 'the following' : 'this unnamed'} list group?`}
-          </h5>
-
-          {elementName && <div className="list-group-info">
-            <span>List Group: </span>
-            <span>{elementName}</span>
-          </div>}
-        </div>
-      </Modal>
-    );
   }
 
   promoteReturnTypeToList = (returnType) => {
@@ -312,6 +287,10 @@ export default class ListGroup extends Component {
     const { instance, index, baseElements } = this.props;
     const baseElementListUsed = this.isBaseElementListUsed(instance);
     const isAndOrElement = instance.id === 'And' || instance.id === 'Or';
+    let showCheck = true;
+    if (isAndOrElement) showCheck =
+      _.startCase(instance.returnType) === 'Boolean' || instance.childInstances.length === 1;
+
     return (
       <div className="card-element__body">
         <div>
@@ -327,18 +306,14 @@ export default class ListGroup extends Component {
             baseElements={baseElements}
           />
 
-          <div className="return-type">
-            <div className="label">Return Type:</div>
+          <div className="element-field">
+            <div className="element-field-label">Return Type:</div>
 
-            <div className="return-type__value">
-              {
-                isAndOrElement &&
-                (_.startCase(instance.returnType) === 'Boolean' || instance.childInstances.length === 1) &&
-                <FontAwesomeIcon icon={faCheck} className="check" />
-              }
-
-              {!isAndOrElement && <FontAwesomeIcon icon={faCheck} className="check" />}
-              {_.startCase(instance.returnType)}
+            <div className="element-field-details return-type">
+              <div>
+                {showCheck && <CheckIcon fontSize="small" />}
+                {_.startCase(instance.returnType)}
+              </div>
             </div>
           </div>
         </div>
@@ -380,11 +355,18 @@ export default class ListGroup extends Component {
   }
 
   renderList = () => {
-    const { instance, instanceNames, baseElements, parameters } = this.props;
-    const { isExpanded, showComment } = this.state;
+    const {
+      baseElements,
+      getAllInstancesInAllTrees,
+      instance,
+      instanceNames,
+      parameters
+    } = this.props;
+    const { isExpanded, showComment, showConfirmDeleteModal } = this.state;
     const name = getFieldWithId(instance.fields, 'element_name').value;
     const comment = getFieldWithId(instance.fields,'comment').value;
-    const allInstancesInAllTrees = this.props.getAllInstancesInAllTrees();
+    const allInstancesInAllTrees = getAllInstancesInAllTrees();
+    const elementName = getFieldWithId(instance.fields, 'element_name').value;
 
     const needsDuplicateNameWarning
       = hasDuplicateName(instance, instanceNames, baseElements, parameters, allInstancesInAllTrees);
@@ -407,7 +389,7 @@ export default class ListGroup extends Component {
               <div className="card-element__heading">
                 <StringField
                   id="base_element_name"
-                  name="Group"
+                  name="List Group"
                   uniqueId={instance.uniqueId}
                   updateInstance={value => {
                     this.updateBaseElementList(value.base_element_name, "element_name", instance.uniqueId);
@@ -502,7 +484,16 @@ export default class ListGroup extends Component {
         </div>
 
         {isExpanded && this.renderListGroup()}
-        {this.renderConfirmDeleteModal()}
+
+        {showConfirmDeleteModal &&
+          <DeleteConfirmationModal
+            deleteType="List Group"
+            handleCloseModal={this.closeConfirmDeleteModal}
+            handleDelete={this.handleDeleteBaseElementList}
+          >
+            <div>List Group: {elementName ? elementName :'unnamed'}</div>
+          </DeleteConfirmationModal>
+        }
       </div>
     );
   }

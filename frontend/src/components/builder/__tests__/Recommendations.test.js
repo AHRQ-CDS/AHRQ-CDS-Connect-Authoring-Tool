@@ -81,7 +81,7 @@ describe('<Recommendations />', () => {
     const dialog = within(screen.getByRole('dialog'));
 
     // check the modal exists
-    expect(dialog.getByText('Delete Recommendation')).toBeInTheDocument();
+    expect(dialog.getByText('Delete Recommendation Confirmation')).toBeInTheDocument();
 
     // confirm the delete
     userEvent.click(dialog.getByRole('button', { name: 'Delete' }));

@@ -41,20 +41,6 @@ export default class Subpopulations extends Component {
     this.props.updateSubpopulations(newSubpopulations, this.props.name);
   }
 
-  deleteSubpopulation = (uniqueId) => {
-    const subpopExists = this.props.checkSubpopulationUsage(uniqueId);
-    if (subpopExists) {
-      // eslint-disable-next-line no-alert
-      alert('Subpopulation in use');
-    } else {
-      const newSubpopulations = _.cloneDeep(this.props.artifact[this.props.name]);
-      const subpopulationIndex = this.props.artifact[this.props.name].findIndex(sp => sp.uniqueId === uniqueId);
-      newSubpopulations.splice(subpopulationIndex, 1);
-
-      this.props.updateSubpopulations(newSubpopulations, this.props.name);
-    }
-  }
-
   setSubpopulationName = (name, uniqueId) => {
     const newSubpopulations = _.cloneDeep(this.props.artifact[this.props.name]);
     const subpopulationIndex = this.props.artifact[this.props.name].findIndex(sp => sp.uniqueId === uniqueId);
@@ -75,9 +61,9 @@ export default class Subpopulations extends Component {
             addInstance={this.props.addInstance}
             artifact={this.props.artifact}
             baseElements={this.props.baseElements}
+            checkSubpopulationUsage={this.props.checkSubpopulationUsage}
             conversionFunctions={this.props.conversionFunctions}
             deleteInstance={this.props.deleteInstance}
-            deleteSubpopulation={this.deleteSubpopulation}
             editInstance={this.props.editInstance}
             externalCqlList={this.props.externalCqlList}
             getAllInstances={this.props.getAllInstances}
@@ -87,6 +73,7 @@ export default class Subpopulations extends Component {
             loadExternalCqlList={this.props.loadExternalCqlList}
             modifierMap={this.props.modifierMap}
             modifiersByInputType={this.props.modifiersByInputType}
+            name={this.props.name}
             parameters={this.props.parameters}
             scrollToElement={this.props.scrollToElement}
             setSubpopulationName={this.setSubpopulationName}
@@ -95,6 +82,7 @@ export default class Subpopulations extends Component {
             templates={this.props.templates}
             treeName={this.props.name}
             updateInstanceModifiers={this.props.updateInstanceModifiers}
+            updateSubpopulations={this.props.updateSubpopulations}
             validateReturnType={this.props.validateReturnType}
             vsacApiKey={this.props.vsacApiKey}
           />

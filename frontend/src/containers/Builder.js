@@ -24,7 +24,7 @@ import {
 import { ELMErrorModal } from 'components/modals';
 import BaseElements from 'components/builder/BaseElements';
 import ConjunctionGroup from 'components/builder/ConjunctionGroup';
-import ArtifactModal from 'components/artifact/ArtifactModal';
+import { ArtifactModal } from 'components/artifact';
 
 import ErrorStatement from 'components/builder/ErrorStatement';
 import ExternalCQL from 'components/builder/ExternalCQL';
@@ -73,7 +73,7 @@ export class Builder extends Component {
     const { artifact, isLoggingOut } = this.props;
 
     if (!isBlankArtifact(artifact) && !isLoggingOut) {
-      this.handleSaveArtifact(artifact);
+      this.handleSaveArtifact(artifact, artifact);
     }
   }
 
@@ -236,7 +236,6 @@ export class Builder extends Component {
     this.props.updateArtifact(this.props.artifact, { [treeName]: tree });
   }
 
-
   showELMErrorModal = () => {
     this.setState({ showELMErrorModal: true });
   }
@@ -256,9 +255,8 @@ export class Builder extends Component {
     this.setState({ showArtifactModal: false });
   }
 
-
-  handleSaveArtifact = (artifactPropsChanged) => {
-    this.props.updateAndSaveArtifact(this.props.artifact, artifactPropsChanged);
+  handleSaveArtifact = (artifactEditing, artifactPropsChanged) => {
+    this.props.updateAndSaveArtifact(artifactEditing, artifactPropsChanged);
     this.closeArtifactModal(false);
   }
 
@@ -455,7 +453,7 @@ export class Builder extends Component {
             </Menu>
 
             <Button
-              onClick={() => this.handleSaveArtifact(artifact)}
+              onClick={() => this.handleSaveArtifact(artifact, artifact)}
               startIcon={<SaveIcon />}
               variant="contained"
             >
@@ -703,11 +701,13 @@ export class Builder extends Component {
           </section>
         </div>
 
-        <ArtifactModal
-          artifactEditing={artifact}
-          closeModal={this.closeArtifactModal}
-          showModal={showArtifactModal}
-        />
+        {showArtifactModal &&
+          <ArtifactModal
+            artifactEditing={artifact}
+            handleCloseModal={this.closeArtifactModal}
+            handleUpdateArtifact={this.handleSaveArtifact}
+          />
+        }
 
         {showELMErrorModal &&
           <ELMErrorModal handleCloseModal={this.closeELMErrorModal} errors={downloadedArtifact.elmErrors} />

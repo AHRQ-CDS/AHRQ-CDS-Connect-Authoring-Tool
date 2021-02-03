@@ -20,7 +20,7 @@ import { faExclamationCircle, faBook} from '@fortawesome/free-solid-svg-icons';
 import { UncontrolledTooltip } from 'reactstrap';
 import _ from 'lodash';
 
-import { Modal }  from 'components/elements';
+import { DeleteConfirmationModal } from 'components/modals';
 import { CodeSelectModal, ValueSetSelectModal, VSACAuthenticationModal } from 'components/modals';
 import { NumberField, StaticField, StringField, TextAreaField, ValueSetField } from './fields';
 import ValueSetTemplate from './templates/ValueSetTemplate';
@@ -188,31 +188,6 @@ export default class TemplateInstance extends Component {
   handleDeleteInstance = () => {
     this.deleteInstance();
     this.closeConfirmDeleteModal();
-  }
-
-  renderConfirmDeleteModal() {
-    const elementName = getFieldWithId(this.props.templateInstance.fields, 'element_name').value;
-
-    return (
-      <Modal
-        title="Delete Element Confirmation"
-        submitButtonText="Delete"
-        isOpen={this.state.showConfirmDeleteModal}
-        handleCloseModal={this.closeConfirmDeleteModal}
-        handleSaveModal={this.handleDeleteInstance}
-      >
-        <div className="delete-element-confirmation-modal modal__content">
-          <h5>
-            {`Are you sure you want to permanently delete ${elementName ? 'the following' : 'this unnamed'} element?`}
-          </h5>
-
-          {elementName && <div className="element-info">
-            <span>Element: </span>
-            <span>{elementName}</span>
-          </div>}
-        </div>
-      </Modal>
-    );
   }
 
   toggleComment = () => {
@@ -827,7 +802,7 @@ export default class TemplateInstance extends Component {
           <NumberField
             key={field.id}
             field={field}
-            value={this.state[field.id]}
+            value={this.state[field.id] || ''}
             typeOfNumber={field.typeOfNumber}
             updateInstance={this.updateInstance}
           />
@@ -1134,16 +1109,26 @@ export default class TemplateInstance extends Component {
   }
 
   render() {
-    const { showElement } = this.state;
     const { templateInstance } = this.props;
+    const { showConfirmDeleteModal, showElement } = this.state;
     const baseElementClass = templateInstance.type === 'baseElement' ? 'base-element' : '';
+    const elementName = getFieldWithId(templateInstance.fields, 'element_name').value;
 
     return (
       <div className={`card-element element__expanded ${baseElementClass}`}>
         {this.renderHeader()}
         {showElement && this.renderBody()}
         {showElement && this.renderFooter()}
-        {this.renderConfirmDeleteModal()}
+
+        {showConfirmDeleteModal &&
+          <DeleteConfirmationModal
+            deleteType="Element"
+            handleCloseModal={this.closeConfirmDeleteModal}
+            handleDelete={this.handleDeleteInstance}
+          >
+            <div>Element: {elementName ? elementName :'unnamed'}</div>
+          </DeleteConfirmationModal>
+        }
       </div>
     );
   }

@@ -7,7 +7,6 @@ import Root from '../Root';
 
 jest.mock('components/landing/Landing', () => () => <div>Landing Container</div>);
 jest.mock('containers/Builder', () => () => <div>Builder Container</div>);
-jest.mock('containers/Artifact', () => () => <div>Artifact Container</div>);
 jest.mock('containers/Testing', () => () => <div>Testing Container</div>);
 jest.mock('components/documentation/Documentation', () => () => <div>Documentation Component</div>);
 jest.mock('components/base/ErrorPage', () => () => <div>ErrorPage Component</div>);
@@ -71,12 +70,6 @@ describe('<Root />', () => {
         let { getByText } = renderComponent({ path: '/build/123' });
 
         expect(getByText('Builder Container')).toBeDefined();
-      });
-
-      it('renders the Artifact page', () => {
-        let { getByText } = renderComponent({ path: '/artifacts' });
-
-        expect(getByText('Artifact Container')).toBeDefined();
       });
 
       it('renders the Testing page', () => {

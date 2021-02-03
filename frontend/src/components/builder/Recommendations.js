@@ -4,7 +4,7 @@ import update from 'immutability-helper';
 import { Button } from '@material-ui/core';
 
 import Recommendation from './Recommendation';
-import { Modal }  from 'components/elements';
+import { DeleteConfirmationModal } from 'components/modals';
 
 const UP = -1;
 const DOWN = 1;
@@ -82,63 +82,6 @@ export default class Recommendations extends Component {
     this.props.updateRecommendations(newRecs);
   }
 
-  render() {
-    return (
-      <div className="recommendations">
-        {/*
-          // TODO: Leaving this commented out for now in case we decide to go back to it
-          (this.props.artifact.recommendations && this.props.artifact.recommendations.length > 1) &&
-          <div className="recommendations__deliver-text">
-            Deliver
-            <span className="field recommendations__mode">
-              <span className="control">
-                <span className="select">
-                  <select
-                    value={this.state.mode}
-                    onBlur={this.handleModeChange}
-                    title="Recommendation mode"
-                    aria-label="Recommendation mode">
-                    <option value='every'>every</option>
-                    <option value='first'>first</option>
-                  </select>
-                </span>
-              </span>
-            </span>
-            recommendation
-          </div>
-        */}
-
-        {this.props.artifact.recommendations && this.props.artifact.recommendations.length > 1 &&
-          <div className="recommendations__deliver-text">Deliver first recommendation</div>
-        }
-
-        {this.props.artifact.recommendations && this.props.artifact.recommendations.map(rec => (
-          <div id={rec.uid} key={rec.uid}>
-            <Recommendation
-              key={rec.uid}
-              artifact={this.props.artifact}
-              templates={this.props.templates}
-              rec={rec}
-              onUpdate={this.updateRecommendation}
-              onRemove={() => this.openConfirmDeleteModal(rec.uid)}
-              onMoveRecUp={() => this.handleMove(rec.uid, UP)}
-              onMoveRecDown={() => this.handleMove(rec.uid, DOWN)}
-              updateRecommendations={this.props.updateRecommendations}
-              updateSubpopulations={this.props.updateSubpopulations}
-              setActiveTab={this.props.setActiveTab}
-            />
-          </div>
-        ))}
-
-        <Button color="primary" onClick={this.addRecommendation} variant="contained">
-          New recommendation
-        </Button>
-      {this.renderConfirmDeleteModal()}
-      </div>
-    );
-  }
-
-  //DELETE MODAL
   openConfirmDeleteModal = (uid) => {
     this.setState({ showConfirmDeleteModal: true, recommendationToDelete: uid });
   }
@@ -152,28 +95,54 @@ export default class Recommendations extends Component {
     this.closeConfirmDeleteModal();
   }
 
-  renderConfirmDeleteModal() {
+  render() {
+    const { artifact, setActiveTab, templates, updateRecommendations, updateSubpopulations } = this.props;
+    const { showConfirmDeleteModal } = this.state;
 
     return (
-      <Modal
-        title="Delete Recommendation"
-        submitButtonText="Delete"
-        isOpen={this.state.showConfirmDeleteModal}
-        handleCloseModal={this.closeConfirmDeleteModal}
-        handleSaveModal={this.handleDeleteRecommendation}>
+      <div className="recommendations">
+        {artifact.recommendations && artifact.recommendations.length > 1 &&
+          <div className="recommendations__deliver-text">Deliver first recommendation</div>
+        }
 
-        <div className="delete-external-cql-library-confirmation-modal modal__content">
-          <h5>Are you sure you want to permanently delete the Recommendation?</h5>
-        </div>
-    </Modal>
-  );
+        {artifact.recommendations && artifact.recommendations.map(rec => (
+          <div id={rec.uid} key={rec.uid}>
+            <Recommendation
+              key={rec.uid}
+              artifact={artifact}
+              templates={templates}
+              rec={rec}
+              onUpdate={this.updateRecommendation}
+              onRemove={() => this.openConfirmDeleteModal(rec.uid)}
+              onMoveRecUp={() => this.handleMove(rec.uid, UP)}
+              onMoveRecDown={() => this.handleMove(rec.uid, DOWN)}
+              updateRecommendations={updateRecommendations}
+              updateSubpopulations={updateSubpopulations}
+              setActiveTab={setActiveTab}
+            />
+          </div>
+        ))}
+
+        <Button color="primary" onClick={this.addRecommendation} variant="contained">
+          New recommendation
+        </Button>
+
+        {showConfirmDeleteModal &&
+          <DeleteConfirmationModal
+            deleteType="Recommendation"
+            handleCloseModal={this.closeConfirmDeleteModal}
+            handleDelete={this.handleDeleteRecommendation}
+          />
+        }
+      </div>
+    );
   }
 }
 
 Recommendations.propTypes = {
   artifact: PropTypes.object.isRequired,
+  setActiveTab: PropTypes.func.isRequired,
   templates: PropTypes.array.isRequired,
   updateRecommendations: PropTypes.func.isRequired,
-  updateSubpopulations: PropTypes.func.isRequired,
-  setActiveTab: PropTypes.func.isRequired
+  updateSubpopulations: PropTypes.func.isRequired
 };

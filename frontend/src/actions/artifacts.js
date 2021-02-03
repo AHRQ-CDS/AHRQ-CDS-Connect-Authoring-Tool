@@ -8,10 +8,9 @@ import _ from 'lodash';
 import cql from 'cql-execution';
 import cqlfhir from 'cql-exec-fhir';
 
-import changeToCase from '../utils/strings';
-import createTemplateInstance from '../utils/templates';
-import { getFieldWithType, getFieldWithId } from '../utils/instances';
-import loadTemplates from './templates';
+import changeToCase from 'utils/strings';
+import createTemplateInstance from 'utils/templates';
+import { getFieldWithType, getFieldWithId } from 'utils/instances';
 import * as types from './types';
 
 const API_BASE = process.env.REACT_APP_API_URL;
@@ -329,50 +328,6 @@ export function loadArtifact(id) {
   };
 }
 
-// ------------------------- ADD ARTIFACT ---------------------------------- //
-
-function requestAddArtifact() {
-  return {
-    type: types.ADD_ARTIFACT_REQUEST
-  };
-}
-
-function addArtifactSuccess() {
-  return {
-    type: types.ADD_ARTIFACT_SUCCESS
-  };
-}
-
-function addArtifactFailure(error) {
-  return {
-    type: types.ADD_ARTIFACT_FAILURE,
-    status: error.response ? error.response.status : '',
-    statusText: error.response ? error.response.statusText : ''
-  };
-}
-
-function sendAddArtifactRequest(artifactProps) {
-  return (dispatch, getState) => dispatch(loadTemplates())
-    .then((result) => {
-      const operations = result.templates.find(template => template.name === 'Operations');
-      const andTemplate = operations.entries.find(entry => entry.name === 'And');
-      const orTemplate = operations.entries.find(entry => entry.name === 'Or');
-
-      return dispatch(initializeArtifact(andTemplate, orTemplate));
-    })
-    .then(() => dispatch(updateAndSaveArtifact(getState().artifacts.artifact, artifactProps)));
-}
-
-export function addArtifact(artifactProps) {
-  return (dispatch) => {
-    dispatch(requestAddArtifact());
-
-    return dispatch(sendAddArtifactRequest(artifactProps))
-      .then(data => dispatch(addArtifactSuccess()))
-      .catch(error => dispatch(addArtifactFailure(error)));
-  };
-}
-
 // ------------------------- DOWNLOAD ARTIFACT ----------------------------- //
 
 function requestDownloadArtifact() {
@@ -687,48 +642,6 @@ export function saveArtifact(artifact) {
     return sendSaveArtifactRequest(artifact)
       .then(data => dispatch(saveArtifactSuccess(data)))
       .catch(error => dispatch(saveArtifactFailure(error)))
-      .then(() => dispatch(loadArtifacts()));
-  };
-}
-
-// ------------------------- DELETE ARTIFACT ---------------------------------- //
-
-function requestDeleteArtifact() {
-  return {
-    type: types.DELETE_ARTIFACT_REQUEST
-  };
-}
-
-function deleteArtifactSuccess(artifact) {
-  return {
-    type: types.DELETE_ARTIFACT_SUCCESS,
-    artifact
-  };
-}
-
-function deleteArtifactFailure(error) {
-  return {
-    type: types.DELETE_ARTIFACT_FAILURE,
-    status: error.response.status,
-    statusText: error.response.statusText
-  };
-}
-
-function sendDeleteArtifactRequest(artifact) {
-  return new Promise((resolve, reject) => {
-    axios.delete(`${API_BASE}/artifacts/${artifact._id}`)
-      .then(result => resolve(result.data))
-      .catch(error => reject(error));
-  });
-}
-
-export function deleteArtifact(artifact) {
-  return (dispatch) => {
-    dispatch(requestDeleteArtifact());
-
-    return sendDeleteArtifactRequest(artifact)
-      .then(data => dispatch(deleteArtifactSuccess(artifact)))
-      .catch(error => dispatch(deleteArtifactFailure(error)))
       .then(() => dispatch(loadArtifacts()));
   };
 }

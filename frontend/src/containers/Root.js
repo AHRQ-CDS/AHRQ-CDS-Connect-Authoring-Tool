@@ -8,7 +8,7 @@ import { ThemeProvider } from '@material-ui/core/styles';
 import DateFnsUtils from '@date-io/date-fns';
 
 import App from './App';
-import Artifact from 'containers/Artifact';
+import { Artifact } from 'components/artifact';
 import Builder from 'containers/Builder';
 import Testing from 'containers/Testing';
 import { Documentation } from 'components/documentation';

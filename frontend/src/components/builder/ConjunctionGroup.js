@@ -15,17 +15,18 @@ import { faExclamationCircle } from '@fortawesome/free-solid-svg-icons';
 import { UncontrolledTooltip } from 'reactstrap';
 import clsx from 'clsx';
 
-import { Dropdown, Modal } from 'components/elements';
+import { Dropdown } from 'components/elements';
+import { DeleteConfirmationModal } from 'components/modals';
 import TemplateInstance from './TemplateInstance';
 import ElementSelect from './ElementSelect';
 import StringField from './fields/StringField';
 import TextAreaField from './fields/TextAreaField';
 import ExpressionPhrase from './modifiers/ExpressionPhrase';
 
-import createTemplateInstance from '../../utils/templates';
-import { hasGroupNestedWarning } from '../../utils/warnings';
-import requiredIf from '../../utils/prop_types';
-import { getFieldWithId } from '../../utils/instances';
+import createTemplateInstance from 'utils/templates';
+import { hasGroupNestedWarning } from 'utils/warnings';
+import requiredIf from 'utils/prop_types';
+import { getFieldWithId } from 'utils/instances';
 
 export default class ConjunctionGroup extends Component {
   constructor(props) {
@@ -169,31 +170,6 @@ export default class ConjunctionGroup extends Component {
   handleDeleteInstance = () => {
     this.deleteInstance();
     this.closeConfirmDeleteModal();
-  }
-
-  renderConfirmDeleteModal() {
-    const elementName = getFieldWithId(this.props.instance.fields, 'element_name').value;
-
-    return (
-      <Modal
-        title="Delete Group Confirmation"
-        submitButtonText="Delete"
-        isOpen={this.state.showConfirmDeleteModal}
-        handleCloseModal={this.closeConfirmDeleteModal}
-        handleSaveModal={this.handleDeleteInstance}
-      >
-        <div className="delete-group-confirmation-modal modal__content">
-          <h5>
-            {`Are you sure you want to permanently delete ${elementName ? 'the following' : 'this unnamed'} group?`}
-          </h5>
-
-          {elementName && <div className="group-info">
-            <span>Group: </span>
-            <span>{elementName}</span>
-          </div>}
-        </div>
-      </Modal>
-    );
   }
 
   conjunctionHasDuplicateName = (child) => {
@@ -471,8 +447,21 @@ export default class ConjunctionGroup extends Component {
   }
 
   render() {
-    const { showGroup } = this.state;
+    const {
+      artifact,
+      baseElements,
+      disableAddElement,
+      elementUniqueId,
+      externalCqlList,
+      loadExternalCqlList,
+      instance,
+      parameters,
+      templates,
+      vsacApiKey
+    } = this.props;
+    const { showConfirmDeleteModal, showGroup } = this.state;
     const classname = `card-group ${this.getNestingClassName()}`;
+    const elementName = getFieldWithId(instance.fields, 'element_name').value;
 
     return (
       <div className={classname}>
@@ -482,21 +471,30 @@ export default class ConjunctionGroup extends Component {
         {showGroup &&
           <div className="card-element">
             <ElementSelect
-              artifactId={this.props.artifact._id}
-              baseElements={this.props.baseElements}
-              categories={this.props.templates}
-              disableAddElement={this.props.disableAddElement}
-              elementUniqueId={this.props.elementUniqueId}
-              externalCqlList={this.props.externalCqlList}
+              artifactId={artifact._id}
+              baseElements={baseElements}
+              categories={templates}
+              disableAddElement={disableAddElement}
+              elementUniqueId={elementUniqueId}
+              externalCqlList={externalCqlList}
               inBaseElements={false}
-              loadExternalCqlList={this.props.loadExternalCqlList}
+              loadExternalCqlList={loadExternalCqlList}
               onSuggestionSelected={this.addChild}
-              parameters={this.props.parameters}
-              vsacApiKey={this.props.vsacApiKey}
+              parameters={parameters}
+              vsacApiKey={vsacApiKey}
             />
           </div>
         }
-        {this.renderConfirmDeleteModal()}
+
+        {showConfirmDeleteModal &&
+          <DeleteConfirmationModal
+            deleteType="Group"
+            handleCloseModal={this.closeConfirmDeleteModal}
+            handleDelete={this.handleDeleteInstance}
+          >
+            <div>Group: {elementName ? elementName :'unnamed'}</div>
+          </DeleteConfirmationModal>
+        }
       </div>
     );
   }

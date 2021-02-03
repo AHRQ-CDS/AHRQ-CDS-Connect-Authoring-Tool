@@ -24,17 +24,19 @@ describe('<Subpopulation />', () => {
         addInstance={jest.fn()}
         artifact={{}}
         baseElements={[]}
+        checkSubpopulationUsage={jest.fn()}
         conversionFunctions={[]}
         deleteInstance={jest.fn()}
-        deleteSubpopulation={jest.fn()}
         editInstance={jest.fn()}
         externalCqlList={[]}
         getAllInstances={jest.fn()}
         getAllInstancesInAllTrees={jest.fn()}
         instanceNames={[]}
+        isLoadingModifiers={false}
         loadExternalCqlList={jest.fn()}
         modifierMap={{}}
         modifiersByInputType={{}}
+        name=""
         parameters={[]}
         scrollToElement={jest.fn()}
         setSubpopulationName={jest.fn()}
@@ -43,6 +45,7 @@ describe('<Subpopulation />', () => {
         templates={elementGroups}
         treeName="testtree"
         updateInstanceModifiers={jest.fn()}
+        updateSubpopulations={jest.fn()}
         vsaApiKey="key"
         {...props}
       />
@@ -71,15 +74,5 @@ describe('<Subpopulation />', () => {
     fireEvent.change(document.querySelector('input[type=text]'), { target: { value: 'New name' } });
 
     expect(setSubpopulationName).toBeCalledWith('New name', subpopulation.uniqueId);
-  });
-
-  it('calls deleteSubpopulation when the subpopulation is deleted', () => {
-    const deleteSubpopulation = jest.fn();
-    renderComponent({ deleteSubpopulation });
-
-    userEvent.click(screen.getByRole('button', { name: 'remove subpopulation' }));
-    userEvent.click(screen.getByRole('button', { name: 'Delete' }));
-
-    expect(deleteSubpopulation).toBeCalledWith(subpopulation.uniqueId);
   });
 });

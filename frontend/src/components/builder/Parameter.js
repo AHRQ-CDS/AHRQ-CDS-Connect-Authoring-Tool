@@ -18,7 +18,8 @@ import StringField from './fields/StringField';
 import TextAreaField from './fields/TextAreaField';
 import Editor from './editors/Editor';
 
-import { Dropdown, Modal } from 'components/elements';
+import { Dropdown } from 'components/elements';
+import { DeleteConfirmationModal } from 'components/modals';
 import { doesParameterNeedUsageWarning, parameterHasDuplicateName } from 'utils/warnings';
 
 export default class Parameter extends Component {
@@ -75,30 +76,6 @@ export default class Parameter extends Component {
   handleDeleteParameter = () => {
     this.deleteParameter();
     this.closeConfirmDeleteModal();
-  }
-
-  renderConfirmDeleteModal() {
-    return (
-      <Modal
-        title="Delete Parameter Confirmation"
-        submitButtonText="Delete"
-        isOpen={this.state.showConfirmDeleteModal}
-        handleCloseModal={this.closeConfirmDeleteModal}
-        handleSaveModal={this.handleDeleteParameter}
-      >
-        <div className="delete-parameter-confirmation-modal modal__content">
-          <h5>
-            {`Are you sure you want to permanently delete
-            ${this.props.name ? 'the following' : 'this unnamed'} parameter?`}
-          </h5>
-
-          {this.props.name && <div className="parameter-info">
-            <span>Parameter: </span>
-            <span>{this.props.name}</span>
-          </div>}
-        </div>
-      </Modal>
-    );
   }
 
   changeParameterType = (event, name, comment, typeOptions) => {
@@ -230,11 +207,18 @@ export default class Parameter extends Component {
 
   render() {
     const {
-      index, name, id, type, value, comment, usedBy, instanceNames
+      comment,
+      getAllInstancesInAllTrees,
+      id,
+      index,
+      instanceNames,
+      name,
+      type,
+      usedBy,
+      value
     } = this.props;
-
-    const { showParameter, showComment } = this.state;
-    const parameterUsed = this.props.usedBy ? this.props.usedBy.length !== 0 : false;
+    const { showComment, showConfirmDeleteModal, showParameter } = this.state;
+    const parameterUsed = usedBy ? usedBy.length !== 0 : false;
     const disabledClass = parameterUsed ? 'disabled' : '';
 
     const typeOptions = [
@@ -258,14 +242,14 @@ export default class Parameter extends Component {
       id,
       usedBy,
       instanceNames,
-      this.props.getAllInstancesInAllTrees()
+      getAllInstancesInAllTrees()
     );
 
     const doesHaveParameterUsageWarning = doesParameterNeedUsageWarning(
       name,
       usedBy,
       comment,
-      this.props.getAllInstancesInAllTrees()
+      getAllInstancesInAllTrees()
     );
 
     const parameterNeedsWarning
@@ -345,7 +329,16 @@ export default class Parameter extends Component {
             </div>
           </div>
         : this.renderCollapsed(id, index, name, typeLabel, parameterUsed, disabledClass, parameterNeedsWarning)}
-        {this.renderConfirmDeleteModal()}
+
+        {showConfirmDeleteModal &&
+          <DeleteConfirmationModal
+            deleteType="Parameter"
+            handleCloseModal={this.closeConfirmDeleteModal}
+            handleDelete={this.handleDeleteParameter}
+          >
+            <div>Parameter: {name ? name :'unnamed'}</div>
+          </DeleteConfirmationModal>
+        }
       </div>
     );
   }

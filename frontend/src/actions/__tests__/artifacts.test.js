@@ -7,19 +7,18 @@ import FileSaver from 'file-saver';
 
 import * as actions from '../artifacts';
 import * as types from '../types';
-import mockArtifact from '../../mocks/mockArtifact';
-import mockTemplates from '../../mocks/mockTemplates';
-import mockPatientDstu2 from '../../mocks/mockPatientDstu2';
-import mockPatientStu3 from '../../mocks/mockPatientStu3';
-import mockPatientR4 from '../../mocks/mockPatientR4';
-import mockElmFilesDstu2 from '../../mocks/mockElmFilesDstu2.json';
-import mockElmFilesStu3 from '../../mocks/mockElmFilesStu3.json';
-import mockElmFilesR4 from '../../mocks/mockElmFilesR4.json';
-import mockTestResultsDstu2 from '../../mocks/mockTestResultsDstu2';
-import mockTestResultsStu3 from '../../mocks/mockTestResultsStu3.json';
-import mockTestResultsR4 from '../../mocks/mockTestResultsR4.json';
+import mockArtifact from 'mocks/mockArtifact';
+import mockPatientDstu2 from 'mocks/mockPatientDstu2';
+import mockPatientStu3 from 'mocks/mockPatientStu3';
+import mockPatientR4 from 'mocks/mockPatientR4';
+import mockElmFilesDstu2 from 'mocks/mockElmFilesDstu2.json';
+import mockElmFilesStu3 from 'mocks/mockElmFilesStu3.json';
+import mockElmFilesR4 from 'mocks/mockElmFilesR4.json';
+import mockTestResultsDstu2 from 'mocks/mockTestResultsDstu2';
+import mockTestResultsStu3 from 'mocks/mockTestResultsStu3.json';
+import mockTestResultsR4 from 'mocks/mockTestResultsR4.json';
 
-import CodeService from '../../utils/code_service/CodeService';
+import CodeService from 'utils/code_service/CodeService';
 
 const middlewares = [thunk];
 const mockStore = configureMockStore(middlewares);
@@ -136,52 +135,6 @@ describe('artifact actions', () => {
         .reply(200, [mockArtifact]);
 
       return store.dispatch(actions.loadArtifact(id)).then(() => {
-        expect(store.getActions()).toEqual(expectedActions);
-      });
-    });
-  });
-
-  // ----------------------- ADD ARTIFACT ---------------------------------- //
-  describe('add artifact', () => {
-    it('creates ADD_ARTIFACT_SUCCESS after successfully adding an artifact', () => {
-      const mockArtifactWithoutId = _.cloneDeep(mockArtifact);
-      mockArtifactWithoutId._id = null;
-
-      nock('http://localhost')
-        .get('/authoring/api/config/templates')
-        .reply(200, mockTemplates)
-        .post('/authoring/api/artifacts')
-        .reply(200, {})
-        .get('/authoring/api/artifacts')
-        .reply(200, [mockArtifactWithoutId]);
-
-      const store = mockStore({ artifacts: { artifact: {} } });
-      const expectedActions = [
-        { type: types.ADD_ARTIFACT_REQUEST },
-        { type: types.TEMPLATES_REQUEST },
-        { type: types.LOAD_TEMPLATES_SUCCESS, templates: mockTemplates },
-        {
-          type: types.INITIALIZE_ARTIFACT,
-          artifact: {
-            ...mockArtifactWithoutId,
-            expTreeInclude: {
-              ...mockArtifactWithoutId.expTreeInclude,
-              fields: []
-            },
-            expTreeExclude: {
-              ...mockArtifactWithoutId.expTreeExclude,
-              fields: []
-            }
-          }
-        },
-        { type: types.SAVE_ARTIFACT_REQUEST },
-        { type: types.SAVE_ARTIFACT_SUCCESS, artifact: {} },
-        { type: types.ARTIFACTS_REQUEST },
-        { type: types.LOAD_ARTIFACTS_SUCCESS, artifacts: [mockArtifactWithoutId] },
-        { type: types.ADD_ARTIFACT_SUCCESS }
-      ];
-
-      return store.dispatch(actions.addArtifact(mockArtifactWithoutId)).then(() => {
         expect(store.getActions()).toEqual(expectedActions);
       });
     });
@@ -359,29 +312,6 @@ describe('artifact actions', () => {
       ];
 
       return store.dispatch(actions.saveArtifact(mockArtifact)).then(() => {
-        expect(store.getActions()).toEqual(expectedActions);
-      });
-    });
-  });
-
-  // ----------------------- DELETE ARTIFACT ------------------------------- //
-  describe('delete artifact', () => {
-    it('makes a DELETE request to delete an artifact', () => {
-      nock('http://localhost')
-        .delete(`/authoring/api/artifacts/${mockArtifact._id}`)
-        .reply(200)
-        .get('/authoring/api/artifacts')
-        .reply(200, []);
-
-      const store = mockStore({});
-      const expectedActions = [
-        { type: types.DELETE_ARTIFACT_REQUEST },
-        { type: types.DELETE_ARTIFACT_SUCCESS, artifact: mockArtifact },
-        { type: types.ARTIFACTS_REQUEST },
-        { type: types.LOAD_ARTIFACTS_SUCCESS, artifacts: [] }
-      ];
-
-      return store.dispatch(actions.deleteArtifact(mockArtifact)).then(() => {
         expect(store.getActions()).toEqual(expectedActions);
       });
     });

@@ -20,6 +20,10 @@ export default makeStyles(
     fullBleed: {
       margin: '0 -9999rem',
       padding: '0 9999rem'
+    },
+    verticalPadding: {
+      marginTop: '2em',
+      marginBottom: '2em'
     }
   }),
   { name: 'Spacing' }

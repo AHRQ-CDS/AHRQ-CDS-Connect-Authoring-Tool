@@ -57,7 +57,7 @@ NumberField.propTypes = {
   field: PropTypes.object.isRequired,
   typeOfNumber: PropTypes.string.isRequired,
   updateInstance: PropTypes.func.isRequired,
-  value: PropTypes.number
+  value: PropTypes.oneOfType([ PropTypes.number, PropTypes.string ]).isRequired
 };
 
 export default NumberField;

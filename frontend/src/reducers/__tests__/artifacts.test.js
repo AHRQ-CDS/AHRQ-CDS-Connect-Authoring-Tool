@@ -1,6 +1,6 @@
 import moment from 'moment';
 
-import * as types from '../../actions/types';
+import * as types from 'actions/types';
 import reducer from '../artifacts';
 
 // Get the time right now.  Note that tests can fail if the clock changes to the next minute
@@ -16,9 +16,7 @@ describe('artifacts reducer', () => {
       statusMessage: null,
       loadArtifacts: { isLoading: false, loadStatus: null },
       loadArtifact: { isLoading: false, loadStatus: null },
-      addArtifact: { isAdding: false, addStatus: null },
       editArtifact: { isEditing: false, editStatus: null },
-      deleteArtifact: { isDeleting: false, deleteStatus: null },
       saveArtifact: { isSaving: false, saveStatus: null },
       downloadArtifact: {
         isDownloading: false,
@@ -105,77 +103,6 @@ describe('artifacts reducer', () => {
     action = { type: types.LOAD_ARTIFACT_FAILURE, status: 'Test status', statusText: 'Test status message' };
     newState = { loadArtifact: { isLoading: false, loadStatus: 'failure' } };
     expect(reducer(previousState, action)).toEqual(newState);
-  });
-
-  // ----------------------- ADD ARTIFACT ---------------------------------- //
-  it('should handle adding an artifact', () => {
-    let action = { type: types.ADD_ARTIFACT_REQUEST };
-    let newState = { addArtifact: { isAdding: true, addStatus: null } };
-    expect(reducer([], action)).toEqual(newState);
-
-    const previousState = { addArtifact: { isAdding: false, addStatus: 'status' } };
-    expect(reducer(previousState, action)).toEqual(newState);
-
-    action = { type: types.ADD_ARTIFACT_SUCCESS };
-    newState = { addArtifact: { isAdding: false, addStatus: 'success' } };
-    expect(reducer(previousState, action)).toEqual(newState);
-
-    action = { type: types.ADD_ARTIFACT_FAILURE, status: 'Test status', statusText: 'Test status message' };
-    newState = { addArtifact: { isAdding: false, addStatus: 'failure' } };
-    expect(reducer(previousState, action)).toEqual(newState);
-  });
-
-  it('should handle valid artifacts', () => {
-    const action = { type: types.VALIDATE_ARTIFACT_SUCCESS, data: { elmErrors: [] } };
-    const newState = {
-      downloadArtifact: { isValidating: false, elmFiles: undefined, elmErrors: [], validateStatus: 'success' }
-    };
-    expect(reducer([], action)).toEqual(newState);
-  });
-
-  it('should handle artifacts with errors', () => {
-    const action = {
-      type: types.VALIDATE_ARTIFACT_SUCCESS,
-      data: {
-        elmErrors: [
-          { message: 'Syntax error at define', errorType: 'syntax', errorSeverity: 'error', type: 'CqlToElmError' }
-        ]
-      }
-    };
-    const newState = {
-      downloadArtifact: {
-        elmErrors: [
-          { message: 'Syntax error at define', errorType: 'syntax', errorSeverity: 'error', type: 'CqlToElmError' }
-        ],
-        elmFiles: undefined,
-        isValidating: false,
-        validateStatus: 'success'
-      }
-    };
-    expect(reducer([], action)).toEqual(newState);
-  });
-
-  it('should handle clear artifact errors', () => {
-    const action = { type: types.CLEAR_ARTIFACT_VALIDATION_WARNINGS };
-    const newState = {
-      downloadArtifact: { isDownloading: false, downloadStatus: null, elmErrors: [], elmFiles: [] }
-    };
-    expect(reducer([], action)).toEqual(newState);
-  });
-
-  it('should handle clear execution results', () => {
-    const action = { type: types.CLEAR_EXECUTION_RESULTS };
-    const newState = {
-      executeArtifact: {
-        isExecuting: false,
-        executeStatus: null,
-        results: null,
-        artifactExecuted: null,
-        patientsExecuted: null,
-        errorMessage: null
-      }
-    };
-    expect(reducer([], action)).toEqual(newState);
   });
 
   // ----------------------- DOWNLOAD ARTIFACT ----------------------------- //
@@ -293,27 +220,6 @@ describe('artifacts reducer', () => {
     newState = {
       statusMessage: 'Save failed. Test status message.',
       saveArtifact: { isSaving: false, saveStatus: 'failure' }
-    };
-    expect(reducer(previousState, action)).toEqual(newState);
-  });
-
-  // ----------------------- DELETE ARTIFACT ------------------------------- //
-  it('should handle deleting an artifact', () => {
-    let action = { type: types.DELETE_ARTIFACT_REQUEST };
-    let newState = { statusMessage: null, deleteArtifact: { isDeleting: true, deleteStatus: null } };
-    expect(reducer([], action)).toEqual(newState);
-
-    const previousState = { statusMessage: 'Test', deleteArtifact: { isDeleting: false, deleteStatus: 'Test' } };
-    expect(reducer(previousState, action)).toEqual(newState);
-
-    action = { type: types.DELETE_ARTIFACT_SUCCESS };
-    newState = { statusMessage: `Deleted ${time()}.`, deleteArtifact: { isDeleting: false, deleteStatus: 'success' } };
-    expect(reducer(previousState, action)).toEqual(newState);
-
-    action = { type: types.DELETE_ARTIFACT_FAILURE, status: 'Test status', statusText: 'Test status message' };
-    newState = {
-      statusMessage: 'Delete failed. Test status message.',
-      deleteArtifact: { isDeleting: false, deleteStatus: 'failure' }
     };
     expect(reducer(previousState, action)).toEqual(newState);
   });
