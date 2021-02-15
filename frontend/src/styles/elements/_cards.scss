@@ -89,11 +89,15 @@
     border: 0.1em solid $border-color;
     border-radius: 0.2em;
 
+    &__warnings {
+      margin: -10px 0 0 12.5em;
+    }
+
     &__header {
       display: flex;
       flex-direction: column;
       justify-content: space-between;
-      padding: 10px;
+      padding: 1em;
 
       &.collapsed {
         flex-direction: column;
@@ -136,8 +140,7 @@
       }
 
       .heading-name {
-        display: flex;
-        align-items: center;
+        margin: 1em;
         font-weight: bold;
 
         .warning {

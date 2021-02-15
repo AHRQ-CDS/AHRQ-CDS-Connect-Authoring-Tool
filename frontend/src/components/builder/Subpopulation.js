@@ -14,9 +14,9 @@ import _ from 'lodash';
 
 import { DeleteConfirmationModal } from 'components/modals';
 import ConjunctionGroup from './ConjunctionGroup';
-import ExpressionPhrase from './modifiers/ExpressionPhrase';
+import ExpressionPhrase from './ExpressionPhrase';
 
-import { hasGroupNestedWarning } from '../../utils/warnings';
+import { hasGroupNestedWarning } from 'utils/warnings';
 import StringField from './fields/StringField';
 
 export default class Subpopulation extends Component {

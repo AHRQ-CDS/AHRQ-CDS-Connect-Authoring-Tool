@@ -46,7 +46,7 @@
   &-label {
     font-weight: bold;
     min-width: 12.5em;
-    padding: 20px 1em 0 0;
+    margin: 20px 1em 0 0;
     text-align: right;
     white-space: nowrap;
   }
@@ -69,13 +69,30 @@
   }
 
   &-display {
+    display: flex;
+    align-items: center;
     width: 100%;
-    padding: 10px 0;
+  }
+
+  &-display-group {
+    width: 100%;
   }
 
   &-buttons {
     display: flex;
     align-items: flex-start;
     white-space: nowrap;
+  }
+}
+
+.modifier-select button {
+  margin: 0 10px 10px 0;
+}
+
+button.modifier-select-button {
+  text-transform: none;
+
+  svg {
+    margin-right: 10px;
   }
 }

@@ -6,20 +6,19 @@ describe('<NumberModifier />', () => {
   const renderComponent = (props = {}) =>
     render(
       <NumberModifier
-        index={6}
+        handleUpdateModifier={jest.fn()}
         name="number-modifier-test"
         value={0}
-        updateAppliedModifier={jest.fn()}
         {...props}
       />
     );
 
-  it('calls updateAppliedModifier on input change', () => {
-    const updateAppliedModifier = jest.fn();
-    renderComponent({ updateAppliedModifier });
+  it('calls handleUpdateModifier on input change', () => {
+    const handleUpdateModifier = jest.fn();
+    renderComponent({ handleUpdateModifier });
 
     fireEvent.change(screen.getByRole('textbox'), { target: { value: '3' } });
 
-    expect(updateAppliedModifier).toBeCalledWith(6, { value: 3 });
+    expect(handleUpdateModifier).toBeCalledWith({ value: 3 });
   });
 });

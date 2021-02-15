@@ -6,20 +6,19 @@ describe('<StringModifier />', () => {
   const renderComponent = (props = {}) =>
     render(
       <StringModifier
-        index={6}
+        handleUpdateModifier={jest.fn()}
         name="string-modifier-test"
         value=""
-        updateAppliedModifier={jest.fn()}
         {...props}
       />
     );
 
-  it('calls updateAppliedModifier on input change', () => {
-    const updateAppliedModifier = jest.fn();
-    renderComponent({ updateAppliedModifier });
+  it('calls handleUpdateModifier on input change', () => {
+    const handleUpdateModifier = jest.fn();
+    renderComponent({ handleUpdateModifier });
 
     fireEvent.change(screen.getByRole('textbox'), { target: { value: 'test' } });
 
-    expect(updateAppliedModifier).toBeCalledWith(6, { value: 'test' });
+    expect(handleUpdateModifier).toBeCalledWith({ value: 'test' });
   });
 });

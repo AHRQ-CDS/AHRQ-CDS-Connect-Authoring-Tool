@@ -1,6 +1,6 @@
 import React from 'react';
 import LabelModifier from '../LabelModifier';
-import { render } from '../../../../utils/test-utils';
+import { render } from 'utils/test-utils';
 
 describe('<LabelModifier />', () => {
   const renderComponent = (props = {}) =>

@@ -1,9 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { TextField } from '@material-ui/core';
+import clsx from 'clsx';
 
 import { Dropdown } from 'components/elements';
 import UcumField from 'components/builder/fields/UcumField';
+import { useFieldStyles } from 'styles/hooks';
+import useStyles from './styles';
 
 const options = [
   { value: '>', label: '>' },
@@ -14,90 +17,77 @@ const options = [
   { value: '<=', label: '<=' }
 ];
 
-const ValueComparisonModifier = ({
-  index,
-  hasUnit = false,
-  maxOperator,
-  maxValue,
-  minOperator,
-  minValue,
-  unit,
-  updateAppliedModifier
-}) => {
-  const handleChangeMin = event => {
-    const selectedMinOption = options.find(option => option.value === event.target.value);
-    const value = selectedMinOption ? selectedMinOption.value : null;
-    updateAppliedModifier(index, { minOperator: value });
-  };
+const ValueComparisonModifier = ({ handleUpdateModifier, values }) => {
+  const fieldStyles = useFieldStyles();
+  const styles = useStyles();
 
-  const handleChangeMax = event => {
-    const selectedMaxOption = options.find(option => option.value === event.target.value);
-    const value = selectedMaxOption ? selectedMaxOption.value : null;
-    updateAppliedModifier(index, { maxOperator: value });
-  };
-
-  const handleChangeUnit = (event, option) => {
-    updateAppliedModifier(index, { unit: option?.value || '' });
+  const handleChange = (event, key) => {
+    const selectedOption = options.find(option => option.value === event.target.value);
+    const value = selectedOption ? selectedOption.value : null;
+    handleUpdateModifier({ [key]: value });
   };
 
   return (
-    <div className="modifier">
+    <div className={styles.modifier}>
       <Dropdown
-        className="field-input flex-1 field-input-sm"
+        className={clsx(fieldStyles.fieldInput, fieldStyles.fieldInputSm)}
         label="minOp"
-        onChange={handleChangeMin}
+        onChange={event => handleChange(event, 'minOperator')}
         options={options}
-        value={minOperator}
-        id={`value-comparison-modifier-minop-${index}`}
+        value={values.minOperator}
+        id="value-comparison-modifier-minop"
       />
 
       <TextField
-        className="field-input flex-1 field-input-sm"
+        className={clsx(fieldStyles.fieldInput, fieldStyles.fieldInputSm)}
         label="minValue"
-        onChange={event => updateAppliedModifier(index, { minValue: parseFloat(event.target.value) })}
+        onChange={event => handleUpdateModifier({ minValue: parseFloat(event.target.value) })}
         type="number"
-        value={minValue || minValue === 0 ? minValue : ''}
+        value={values.minValue || values.minValue === 0 ? values.minValue : ''}
         variant="outlined"
-        id={`value-comparison-modifier-minvalue-${index}`}
+        id="value-comparison-modifier-minvalue"
       />
 
       <Dropdown
-        className="field-input flex-1 field-input-sm"
+        className={clsx(fieldStyles.fieldInput, fieldStyles.fieldInputSm)}
         label="maxOp"
-        onChange={handleChangeMax}
+        onChange={event => handleChange(event, 'maxOperator')}
         options={options}
-        value={maxOperator}
-        id={`value-comparison-modifier-maxop-${index}`}
+        value={values.maxOperator}
+        id="value-comparison-modifier-maxop"
       />
 
       <TextField
-        className="field-input flex-1 field-input-sm"
+        className={clsx(fieldStyles.fieldInput, fieldStyles.fieldInputSm)}
         label="maxValue"
-        onChange={event => updateAppliedModifier(index, { maxValue: parseFloat(event.target.value) })}
+        onChange={event => handleUpdateModifier({ maxValue: parseFloat(event.target.value) })}
         type="number"
-        value={maxValue || maxValue === 0 ? maxValue : ''}
+        value={values.maxValue || values.maxValue === 0 ? values.maxValue : ''}
         variant="outlined"
-        id={`value-comparison-modifier-maxvalue-${index}`}
+        id="value-comparison-modifier-maxvalue"
       />
 
-      {hasUnit &&
-        <div className="field-input flex-2 field-input-md">
-          <UcumField handleChangeUnit={handleChangeUnit} unit={unit} />
+      {values.unit != null && (
+        <div className={clsx(fieldStyles.fieldInput, fieldStyles.fieldInputLg)}>
+          <UcumField
+            handleChangeUnit={(event, option) => handleUpdateModifier({ unit: option.value })}
+            unit={values.unit}
+          />
         </div>
-      }
+      )}
     </div>
   );
 };
 
 ValueComparisonModifier.propTypes = {
-  hasUnit: PropTypes.bool,
-  index: PropTypes.number.isRequired,
-  maxOperator: PropTypes.string,
-  maxValue: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
-  minOperator: PropTypes.string,
-  minValue: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
-  unit: PropTypes.string,
-  updateAppliedModifier: PropTypes.func.isRequired
+  handleUpdateModifier: PropTypes.func.isRequired,
+  values: PropTypes.shape({
+    maxOperator: PropTypes.string,
+    maxValue: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+    minOperator: PropTypes.string,
+    minValue: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+    unit: PropTypes.string
+  })
 };
 
 export default ValueComparisonModifier;

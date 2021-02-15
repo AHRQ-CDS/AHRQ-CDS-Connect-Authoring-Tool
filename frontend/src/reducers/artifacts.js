@@ -1,16 +1,11 @@
 import moment from 'moment';
 
-import * as types from '../actions/types';
+import * as types from 'actions/types';
 
 const defaultState = {
   artifacts: [],
   artifact: null,
-  names: [],
-  statusMessage: null,
-  loadArtifacts: { isLoading: false, loadStatus: null },
-  loadArtifact: { isLoading: false, loadStatus: null },
-  editArtifact: { isEditing: false, editStatus: null },
-  saveArtifact: { isSaving: false, saveStatus: null },
+  artifactSaved: true,
   downloadArtifact: {
     isDownloading: false,
     downloadStatus: null,
@@ -19,6 +14,7 @@ const defaultState = {
     elmFiles: [],
     elmErrors: []
   },
+  editArtifact: { isEditing: false, editStatus: null },
   executeArtifact: {
     isExecuting: false,
     executeStatus: null,
@@ -27,8 +23,12 @@ const defaultState = {
     patientsExecuted: null,
     errorMessage: null
   },
-  artifactSaved: true,
-  librariesInUse: []
+  librariesInUse: [],
+  loadArtifact: { isLoading: false, loadStatus: null },
+  loadArtifacts: { isLoading: false, loadStatus: null },
+  names: [],
+  saveArtifact: { isSaving: false, saveStatus: null },
+  statusMessage: null
 };
 
 export default function auth(state = defaultState, action) {

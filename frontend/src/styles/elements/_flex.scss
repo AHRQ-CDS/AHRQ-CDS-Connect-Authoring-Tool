@@ -15,3 +15,12 @@
 .flex-col-2 { width: 50%; }
 .flex-col-3 { width: 33%; }
 .flex-col-4 { width: 25%; }
+
+.flex-align-center {
+  display: flex;
+  align-items: center;
+
+  svg {
+    margin-right: 5px;
+  }
+}

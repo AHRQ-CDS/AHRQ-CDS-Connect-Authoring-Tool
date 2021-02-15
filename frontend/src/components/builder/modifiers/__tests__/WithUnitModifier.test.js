@@ -1,22 +1,20 @@
 import React from 'react';
 import { fireEvent, render, screen, within } from 'utils/test-utils';
-import WithUnit from '../WithUnit';
+import WithUnitModifier from '../WithUnitModifier';
 
-describe('<WithUnit />', () => {
+describe('<WithUnitModifier />', () => {
   const renderComponent = (props = {}) =>
     render(
-      <WithUnit
-        index={5}
-        uniqueId="uniqueId"
+      <WithUnitModifier
+        handleUpdateModifier={jest.fn()}
         unit=""
-        updateAppliedModifier={jest.fn()}
         {...props}
       />
     );
 
-  it('calls updateAppliedModifier when selection changes', () => {
-    const updateAppliedModifier = jest.fn();
-    renderComponent({ updateAppliedModifier });
+  it('calls handleUpdateModifier when selection changes', () => {
+    const handleUpdateModifier = jest.fn();
+    renderComponent({ handleUpdateModifier });
 
     const autocomplete = screen.getByRole('combobox');
     const input = within(autocomplete).getByRole('textbox');

@@ -21,7 +21,7 @@ import TemplateInstance from './TemplateInstance';
 import ElementSelect from './ElementSelect';
 import StringField from './fields/StringField';
 import TextAreaField from './fields/TextAreaField';
-import ExpressionPhrase from './modifiers/ExpressionPhrase';
+import ExpressionPhrase from './ExpressionPhrase';
 
 import createTemplateInstance from 'utils/templates';
 import { hasGroupNestedWarning } from 'utils/warnings';

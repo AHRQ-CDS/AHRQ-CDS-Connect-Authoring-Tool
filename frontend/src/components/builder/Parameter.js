@@ -34,11 +34,11 @@ export default class Parameter extends Component {
   }
 
   componentDidMount = () => {
-    const { id, type, name, value, comment } = this.props;
+    const { id, type, name, value, comment, index } = this.props;
     if (_.isUndefined(id)) {
       this.updateParameter({
         name,
-        uniqueId: _.uniqueId('parameter-'),
+        uniqueId: `parameter-${index}`,
         type,
         comment,
         value

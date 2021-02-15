@@ -6,23 +6,24 @@ describe('<ValueComparisonModifier />', () => {
   const renderComponent = (props = {}) =>
     render(
       <ValueComparisonModifier
-        index={303}
-        maxOperator=""
-        maxValue=""
-        minOperator=""
-        minValue=""
-        uniqueId="uniqueId"
-        updateAppliedModifier={jest.fn()}
+        handleUpdateModifier={jest.fn()}
+        values={{
+          maxOperator: '',
+          maxValue: '',
+          minOperator: '',
+          minValue: '',
+          unit: ''
+        }}
         {...props}
       />
     );
 
-  it('calls updateAppliedModifier when input changes', async () => {
-    const updateAppliedModifier = jest.fn();
-    renderComponent({ updateAppliedModifier });
+  it('calls handleUpdateModifier when input changes', async () => {
+    const handleUpdateModifier = jest.fn();
+    renderComponent({ handleUpdateModifier });
 
     fireEvent.change(screen.getByRole('spinbutton', { name: 'minValue' }), { target: { value: '21' } });
-    expect(updateAppliedModifier).toBeCalledWith(303, { minValue: 21 });
+    expect(handleUpdateModifier).toBeCalledWith({ minValue: 21 });
 
     userEvent.click(screen.getByRole('button', { name: /minOp/ }));
     userEvent.click(screen.getByRole('option', { name: '<' }));
@@ -32,11 +33,11 @@ describe('<ValueComparisonModifier />', () => {
     });
 
     fireEvent.change(screen.getByRole('spinbutton', { name: 'maxValue' }), { target: { value: '189' } });
-    expect(updateAppliedModifier).toBeCalledWith(303, { maxValue: 189 });
+    expect(handleUpdateModifier).toBeCalledWith({ maxValue: 189 });
 
     userEvent.click(screen.getByRole('button', { name: /maxOp/ }));
     userEvent.click(screen.getByRole('option', { name: '!=' }));
 
-    expect(updateAppliedModifier).toBeCalledWith(303, { maxOperator: '!=' });
+    expect(handleUpdateModifier).toBeCalledWith({ maxOperator: '!=' });
   }, 30000);
 });

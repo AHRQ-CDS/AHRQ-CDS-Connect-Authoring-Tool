@@ -1,36 +1,35 @@
-import React, { Component } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import { TextField } from '@material-ui/core';
+import clsx from 'clsx';
 
-export default class NumberModifier extends Component {
-  handleChange = newValue => {
-    const { index, updateAppliedModifier } = this.props;
-    updateAppliedModifier(index, { value: parseFloat(newValue) });
-  };
+import { useFieldStyles } from 'styles/hooks';
+import useStyles from './styles';
 
-  render() {
-    const { name, value } = this.props;
+const NumberModifier = ({ handleUpdateModifier, name, value }) => {
+  const fieldStyles = useFieldStyles();
+  const styles = useStyles();
 
-    return (
-      <div className="modifier number-modifier">
-        <div className="modifier-text">{name}:</div>
+  return (
+    <div className={styles.modifier}>
+      <div className={styles.modifierText}>{name}:</div>
 
-        <TextField
-          className="field-input field-input-sm"
-          fullWidth
-          label="Value"
-          onChange={event => this.handleChange(event.target.value)}
-          value={(value || value === 0) ? value : ''}
-          variant="outlined"
-        />
-      </div>
-    );
-  }
-}
+      <TextField
+        className={clsx(fieldStyles.fieldInput, fieldStyles.fieldInputSm)}
+        fullWidth
+        label="Value"
+        onChange={event => handleUpdateModifier({ value: parseFloat(event.target.value) })}
+        value={(value || value === 0) ? value : ''}
+        variant="outlined"
+      />
+    </div>
+  );
+};
 
 NumberModifier.propTypes = {
-  index: PropTypes.number.isRequired,
+  handleUpdateModifier: PropTypes.func.isRequired,
   name: PropTypes.string.isRequired,
-  value: PropTypes.number,
-  updateAppliedModifier: PropTypes.func.isRequired
+  value: PropTypes.number
 };
+
+export default NumberModifier;

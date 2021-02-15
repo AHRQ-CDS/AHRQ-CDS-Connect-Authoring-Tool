@@ -1,6 +1,7 @@
 /* eslint max-len: ["error", 130] */
 import React from 'react';
 import { Waypoint } from 'react-waypoint';
+import { MenuBook as MenuBookIcon } from '@material-ui/icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   faEye,
@@ -14,8 +15,7 @@ import {
   faChevronRight,
   faChevronDown,
   faCheck,
-  faTimes,
-  faBook
+  faTimes
 } from '@fortawesome/free-solid-svg-icons';
 import clsx from 'clsx';
 
@@ -1717,7 +1717,7 @@ const UserGuide = () => {
                 </ul>
                 If these conditions are met, the expression modifier will appear just like any other after selecting the
                 "Add Expression" button. The expression will be labeled with the function's name and the library's name,
-                as well as a book icon <FontAwesomeIcon icon={faBook} aria-hidden="true" /> to indicate that it is from
+                as well as a book icon <MenuBookIcon fontSize="small" aria-hidden="true" /> to indicate that it is from
                 an external CQL library.
               </div>
               <div>

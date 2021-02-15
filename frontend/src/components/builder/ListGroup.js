@@ -24,7 +24,7 @@ import { getReturnType, getFieldWithId } from 'utils/instances';
 
 import { DeleteConfirmationModal } from 'components/modals';
 import ConjunctionGroup from './ConjunctionGroup';
-import ExpressionPhrase from './modifiers/ExpressionPhrase';
+import ExpressionPhrase from './ExpressionPhrase';
 import StringField from './fields/StringField';
 import TextAreaField from "./fields/TextAreaField";
 

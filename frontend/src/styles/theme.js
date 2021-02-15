@@ -16,6 +16,7 @@ const colors = {
   ahrqDarkBlue: '#1e2f40',
   ahrqGray: '#4a5968',
   ahrqLightBlue: '#6693ee',
+  black: '#333',
   blue: '#1f2f3c',
   blueDark: '#08101c',
   blueDarker: '#192732',
@@ -247,6 +248,15 @@ const materialUiOverridesBase = {
       '@media (max-width: 1440px)': {
         top: 'calc(50% - 10px)'
       }
+    }
+  },
+  MuiTooltip: {
+    arrow: {
+      color: colors.black
+    },
+    tooltip: {
+      backgroundColor: colors.black,
+      fontSize: '0.8em'
     }
   }
 };

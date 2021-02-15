@@ -5,11 +5,13 @@ import { Add as AddIcon, Close as CloseIcon } from '@material-ui/icons';
 import clsx from 'clsx';
 
 import { isCpgComplete } from 'utils/fields';
+import { useFieldStyles } from 'styles/hooks';
 import useStyles from './styles';
 
 const FastGroupedField = memo(({ name, colSize, index, remove, fields }) => {
   const handleRemove = useCallback(() => remove(index), [remove, index]);
   const namePrefix = `${name}[${index}]`;
+  const fieldStyles = useFieldStyles();
   const styles = useStyles();
 
   return (
@@ -25,7 +27,7 @@ const FastGroupedField = memo(({ name, colSize, index, remove, fields }) => {
 
         return (
           <FormComponent
-            className={styles.fieldInput}
+            className={fieldStyles.fieldInput}
             key={field.name}
             name={field.name}
             namePrefix={namePrefix}
@@ -43,11 +45,12 @@ const FastGroupedFieldArray = memo(({
     const hasGroupedFields = values[name].length > 0;
     const addGroup = useCallback(() => push(defaultValue), [push, defaultValue]);
     const cpgFieldComplete = isCpgComplete(name, values);
+    const fieldStyles = useFieldStyles();
     const styles = useStyles();
 
     return (
-      <div className={clsx(styles.field, styles.groupedFields)}>
-        <label htmlFor={name} className={styles.fieldLabel}>
+      <div className={clsx(fieldStyles.field, styles.groupedFields)}>
+        <label htmlFor={name} className={fieldStyles.fieldLabel}>
           {label}
           {isCpgField && <span className={clsx(styles.cpgTag, cpgFieldComplete && styles.cpgTagComplete)}>CPG</span>}:
         </label>
@@ -68,7 +71,7 @@ const FastGroupedFieldArray = memo(({
             </div>
           )}
 
-          <div className={styles.fieldInput}>
+          <div className={fieldStyles.fieldInput}>
             <Button
               color="primary"
               onClick={addGroup}

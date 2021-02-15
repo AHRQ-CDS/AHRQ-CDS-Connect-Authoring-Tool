@@ -11,12 +11,13 @@ import {
   List as ListIcon,
   LocalHospital as LocalHospitalIcon,
   Lock as LockIcon,
+  MenuBook as MenuBookIcon,
   Sms as SmsIcon
 } from '@material-ui/icons';
 import clsx from 'clsx';
 import classnames from 'classnames';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faExclamationCircle, faBook} from '@fortawesome/free-solid-svg-icons';
+import { faExclamationCircle} from '@fortawesome/free-solid-svg-icons';
 import { UncontrolledTooltip } from 'reactstrap';
 import _ from 'lodash';
 
@@ -25,23 +26,22 @@ import { CodeSelectModal, ValueSetSelectModal, VSACAuthenticationModal } from 'c
 import { NumberField, StaticField, StringField, TextAreaField, ValueSetField } from './fields';
 import ValueSetTemplate from './templates/ValueSetTemplate';
 
-import BooleanComparison from './modifiers/BooleanComparison';
-import CheckExistence from './modifiers/CheckExistence';
-import ExpressionPhrase from './modifiers/ExpressionPhrase';
-import LabelModifier from './modifiers/LabelModifier';
-import LookBack from './modifiers/LookBack';
-import SelectModifier from './modifiers/SelectModifier';
-import StringModifier from './modifiers/StringModifier';
-import NumberModifier from './modifiers/NumberModifier';
-import QuantityModifier from './modifiers/QuantityModifier';
-import DateTimeModifier from './modifiers/DateTimeModifier';
-import DateTimePrecisionModifier from './modifiers/DateTimePrecisionModifier';
-import TimePrecisionModifier from './modifiers/TimePrecisionModifier';
-import ValueComparisonModifier from './modifiers/ValueComparisonModifier';
-import WithUnit from './modifiers/WithUnit';
-import Qualifier from './modifiers/Qualifier';
-import ExternalModifier from './modifiers/ExternalModifier';
-
+import ExpressionPhrase from './ExpressionPhrase';
+import {
+  BooleanComparisonModifier,
+  CheckExistenceModifier,
+  DateTimeModifier,
+  ExternalModifier,
+  LabelModifier,
+  LookBackModifier,
+  NumberModifier,
+  QualifierModifier,
+  QuantityModifier,
+  SelectModifier,
+  StringModifier,
+  ValueComparisonModifier,
+  WithUnitModifier
+} from './modifiers';
 import { hasDuplicateName, doesBaseElementUseNeedWarning, doesBaseElementInstanceNeedWarning,
   doesParameterUseNeedWarning, validateElement, hasGroupNestedWarning } from 'utils/warnings';
 import { getOriginalBaseElement } from 'utils/baseElements';
@@ -208,119 +208,108 @@ export default class TemplateInstance extends Component {
         case 'ValueComparisonNumber':
           return (
             <ValueComparisonModifier
-              index={index}
-              key={index}
-              maxOperator={modifier.values?.maxOperator}
-              maxValue={modifier.values?.maxValue}
-              minOperator={modifier.values?.minOperator}
-              minValue={modifier.values?.minValue}
-              uniqueId={`${this.props.templateInstance.uniqueId}-comparison-${index}`}
-              updateAppliedModifier={this.updateAppliedModifier}/>
+              handleUpdateModifier={values => this.handleUpdateModifier(index, values)}
+              values={{
+                maxOperator: modifier.values?.maxOperator || '',
+                maxValue: modifier.values?.maxValue || '',
+                minOperator: modifier.values?.minOperator || '',
+                minValue: modifier.values?.minValue || ''
+              }}
+            />
           );
         case 'ValueComparisonObservation':
           return (
             <ValueComparisonModifier
-              index={index}
-              hasUnit
-              key={index}
-              maxOperator={modifier.values?.maxOperator}
-              maxValue={modifier.values?.maxValue}
-              minOperator={modifier.values?.minOperator}
-              minValue={modifier.values?.minValue}
-              uniqueId={`${this.props.templateInstance.uniqueId}-comparison-${index}`}
-              unit={modifier.values?.unit}
-              updateAppliedModifier={this.updateAppliedModifier}/>
+              handleUpdateModifier={values => this.handleUpdateModifier(index, values)}
+              values={{
+                maxOperator: modifier.values?.maxOperator || '',
+                maxValue: modifier.values?.maxValue || '',
+                minOperator: modifier.values?.minOperator || '',
+                minValue: modifier.values?.minValue || '',
+                unit: modifier.values?.unit || ''
+              }}
+            />
           );
         case 'LookBack':
           return (
-            <LookBack
-              key={index}
-              index={index}
-              value={modifier.values?.value}
+            <LookBackModifier
+              handleUpdateModifier={value => this.handleUpdateModifier(index, value)}
               unit={modifier.values?.unit}
-              updateAppliedModifier={this.updateAppliedModifier}/>
+              value={modifier.values?.value}
+            />
           );
         case 'WithUnit':
           return (
-            <WithUnit
-              key={index}
-              index={index}
+            <WithUnitModifier
+              handleUpdateModifier={value => this.handleUpdateModifier(index, value)}
               unit={modifier.values?.unit}
-              updateAppliedModifier={this.updateAppliedModifier}
             />
           );
         case 'BooleanComparison':
           return (
-            <BooleanComparison
-              key={index}
-              index={index}
+            <BooleanComparisonModifier
+              handleUpdateModifier={value => this.handleUpdateModifier(index, value)}
               value={modifier.values?.value}
-              updateAppliedModifier={this.updateAppliedModifier}/>
+            />
           );
         case 'CheckExistence':
           return (
-            <CheckExistence
-              key={index}
-              index={index}
+            <CheckExistenceModifier
+              handleUpdateModifier={value => this.handleUpdateModifier(index, value)}
               value={modifier.values?.value}
-              updateAppliedModifier={this.updateAppliedModifier}/>
+            />
           );
         case 'ConvertObservation':
           return (
             <SelectModifier
-              key={index}
-              index={index}
-              value={modifier.values?.value}
+              handleUpdateModifier={value => this.handleUpdateModifier(index, value)}
               name={modifier.name}
-              options={this.props.conversionFunctions}
-              updateAppliedModifier={this.updateAppliedModifier}/>
+              value={modifier.values?.value}
+            />
           );
         case 'Qualifier':
           return (
-            <Qualifier
-              index={index}
-              key={index}
+            <QualifierModifier
+              handleUpdateModifier={value => this.handleUpdateModifier(index, value)}
               qualifier={modifier.values?.qualifier}
               template={this.props.templateInstance}
-              updateAppliedModifier={this.updateAppliedModifier}
-              vsacApiKey={this.props.vsacApiKey}
             />
           );
         case 'BeforeDateTimePrecise':
         case 'AfterDateTimePrecise':
           return (
-            <DateTimePrecisionModifier
-              key={index}
-              index={index}
+            <DateTimeModifier
+              handleUpdateModifier={value => this.handleUpdateModifier(index, value)}
               name={modifier.name}
-              date={modifier.values?.date}
-              time={modifier.values?.time}
-              precision={modifier.values?.precision}
-              updateAppliedModifier={this.updateAppliedModifier}/>
+              values={{
+                date: modifier.values?.date || '',
+                time: modifier.values?.time || '',
+                precision: modifier.values?.precision || ''
+              }}
+            />
           );
         case 'BeforeTimePrecise':
         case 'AfterTimePrecise':
           return (
-            <TimePrecisionModifier
-              key={index}
-              index={index}
+            <DateTimeModifier
+              handleUpdateModifier={value => this.handleUpdateModifier(index, value)}
               name={modifier.name}
-              time={modifier.values?.time}
-              precision={modifier.values?.precision}
-              updateAppliedModifier={this.updateAppliedModifier}/>
+              values={{
+                time: modifier.values?.time || '',
+                precision: modifier.values?.precision || ''
+              }}
+            />
           );
         case 'ContainsQuantity':
         case 'BeforeQuantity':
         case 'AfterQuantity':
           return (
             <QuantityModifier
-              key={index}
-              index={index}
+              handleUpdateModifier={value => this.handleUpdateModifier(index, value)}
               name={modifier.name}
-              uniqueId={`${this.props.templateInstance.uniqueId}-quantity-${index}`}
-              value={modifier.values?.value}
               unit={modifier.values?.unit}
-              updateAppliedModifier={this.updateAppliedModifier}/>
+              value={modifier.values?.value}
+            />
           );
         case 'ContainsInteger':
         case 'BeforeInteger':
@@ -330,50 +319,43 @@ export default class TemplateInstance extends Component {
         case 'AfterDecimal':
           return (
             <NumberModifier
-              key={index}
-              index={index}
+              handleUpdateModifier={value => this.handleUpdateModifier(index, value)}
               name={modifier.name}
               value={modifier.values?.value}
-              updateAppliedModifier={this.updateAppliedModifier}/>
+            />
           );
         case 'ContainsDateTime':
         case 'BeforeDateTime':
         case 'AfterDateTime':
           return (
             <DateTimeModifier
-              key={index}
-              index={index}
+              handleUpdateModifier={value => this.handleUpdateModifier(index, value)}
               name={modifier.name}
-              date={modifier.values?.date}
-              time={modifier.values?.time}
-              updateAppliedModifier={this.updateAppliedModifier}/>
+              values={{ date: modifier.values?.date || '', time: modifier.values?.time || '' }}
+            />
           );
         case 'EqualsString':
         case 'EndsWithString':
         case 'StartsWithString':
           return (
             <StringModifier
-              key={index}
-              index={index}
+              handleUpdateModifier={value => this.handleUpdateModifier(index, value)}
               name={modifier.name}
               value={modifier.values?.value}
-              updateAppliedModifier={this.updateAppliedModifier}/>
+            />
           );
         case 'ExternalModifier':
           return (
             <ExternalModifier
               argumentTypes={modifier.argumentTypes}
-              index={index}
-              key={index}
+              handleUpdateModifier={value => this.handleUpdateModifier(index, value)}
               modifierArguments={modifier.arguments}
               name={modifier.name}
-              updateAppliedModifier={this.updateAppliedModifier}
               value={modifier.values?.value}
-              vsacApiKey={this.props.vsacApiKey}
             />
           );
         default:
-          return (<LabelModifier key={index} name={modifier.name} id={modifier.id}/>);
+          return <LabelModifier name={modifier.name} />;
       }
     })();
 
@@ -384,7 +366,7 @@ export default class TemplateInstance extends Component {
         key={index}
         className={clsx('element-field-details', `modifier-${modifier.type || modifier.id}`)}
       >
-        <div className="element-field-display">
+        <div className="element-field-display-group">
           {modifierForm}
           {validationWarning && <div className="warning">{validationWarning}</div>}
         </div>
@@ -463,9 +445,9 @@ export default class TemplateInstance extends Component {
     this.setAppliedModifiers(modifiers);
   }
 
-  updateAppliedModifier = (index, value) => {
+  handleUpdateModifier = (index, values) => {
     const modifiers = this.props.templateInstance.modifiers;
-    _.assign(modifiers[index].values, value);
+    _.assign(modifiers[index].values, values);
     this.setAppliedModifiers(modifiers);
   }
 
@@ -573,7 +555,7 @@ export default class TemplateInstance extends Component {
                     onClick={() => this.handleModifierSelected(modifier.id)}
                     variant="contained"
                   >
-                    {modifier.type === 'ExternalModifier' && <FontAwesomeIcon icon={faBook} />} {modifier.name}
+                    {modifier.type === 'ExternalModifier' && <MenuBookIcon fontSize="small" />} {modifier.name}
                   </Button>
                 )
             }

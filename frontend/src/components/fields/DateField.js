@@ -5,6 +5,7 @@ import { useField, useFormikContext } from 'formik';
 import clsx from 'clsx';
 
 import { isCpgComplete } from 'utils/fields';
+import { useFieldStyles } from 'styles/hooks';
 import useStyles from './styles';
 
 export default memo(function DateField({
@@ -22,6 +23,7 @@ export default memo(function DateField({
   const [field, , { setValue }] = useField(fieldName);
   const { value } = field;
   const { values } = useFormikContext();
+  const fieldStyles = useFieldStyles();
   const styles = useStyles();
 
   const toggleSelectNoDate = useCallback(() => {
@@ -30,9 +32,9 @@ export default memo(function DateField({
   }, [setNoDateSelected, setValue]);
 
   return (
-    <div className={clsx(styles.field, styles.fieldCentered)}>
+    <div className={clsx(fieldStyles.field, styles.fieldCentered)}>
       {label && (
-        <label htmlFor={fieldName} className={styles.fieldLabel}>
+        <label htmlFor={fieldName} className={fieldStyles.fieldLabel}>
           {label}
           {isCpgField && (
             <span className={clsx(styles.cpgTag, isCpgComplete(name, values) && styles.cpgTagComplete)}>CPG</span>
@@ -41,7 +43,7 @@ export default memo(function DateField({
         </label>
       )}
 
-      <div className={clsx(styles.fieldInput, styles.dateFieldInput)}>
+      <div className={clsx(fieldStyles.fieldInput, styles.dateFieldInput)}>
         <KeyboardDatePicker
           disabled={noDateSelected}
           format="MM/dd/yyyy"
@@ -54,7 +56,7 @@ export default memo(function DateField({
           value={value}
         />
 
-        {helperText && <div className={styles.helperText}>{helperText}</div>}
+        {helperText && <div className={fieldStyles.helperText}>{helperText}</div>}
       </div>
 
       {noDateOption && (

@@ -4,10 +4,13 @@ import withGracefulUnmount from 'react-graceful-unmount';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faBook } from '@fortawesome/free-solid-svg-icons';
 import { Button, IconButton, Menu, MenuItem } from '@material-ui/core';
-import { Edit as EditIcon, GetApp as GetAppIcon, Save as SaveIcon } from '@material-ui/icons';
+import {
+  Edit as EditIcon,
+  GetApp as GetAppIcon,
+  MenuBook as MenuBookIcon,
+  Save as SaveIcon
+} from '@material-ui/icons';
 import _ from 'lodash';
 
 import loadTemplates from 'actions/templates';
@@ -528,9 +531,7 @@ export class Builder extends Component {
                 <Tab>Recommendations</Tab>
                 <Tab>Parameters</Tab>
                 <Tab>Handle Errors</Tab>
-                <Tab>
-                  <FontAwesomeIcon icon={faBook} /> External CQL
-                </Tab>
+                <Tab className="flex-align-center"><MenuBookIcon fontSize="small" /> External CQL</Tab>
               </TabList>
 
               <div className="tab-panel-container">

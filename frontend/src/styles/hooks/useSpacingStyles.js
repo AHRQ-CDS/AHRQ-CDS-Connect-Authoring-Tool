@@ -17,6 +17,11 @@ export default makeStyles(
         width: '100%'
       }
     },
+    indent: {
+      margin: '10px 0',
+      paddingLeft: '1em',
+      borderLeft: `4px solid ${theme.palette.common.grayLighter}`
+    },
     fullBleed: {
       margin: '0 -9999rem',
       padding: '0 9999rem'

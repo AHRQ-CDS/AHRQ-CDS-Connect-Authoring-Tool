@@ -6,6 +6,7 @@ import { useField, useFormikContext } from 'formik';
 import clsx from 'clsx';
 
 import { isCpgComplete } from 'utils/fields';
+import { useFieldStyles } from 'styles/hooks';
 import useStyles from './styles';
 
 const DateRangePicker = memo(({ fieldName, helperText, name, rangeType, noDateOption, noDateText }) => {
@@ -13,6 +14,7 @@ const DateRangePicker = memo(({ fieldName, helperText, name, rangeType, noDateOp
   const [field, , { setValue }] = useField(rangeFieldName);
   const [noDateField, , { setValue: setNoDateFieldValue }] = useField(`${fieldName}.${rangeType}NoDate`);
   const { value } = field;
+  const fieldStyles = useFieldStyles();
   const styles = useStyles();
 
   const toggleSelectNoDate = useCallback(() => {
@@ -22,7 +24,7 @@ const DateRangePicker = memo(({ fieldName, helperText, name, rangeType, noDateOp
 
   return (
     <>
-      <div className={styles.fieldInput}>
+      <div className={fieldStyles.fieldInput}>
         <KeyboardDatePicker
           disabled={noDateField.value}
           format="MM/dd/yyyy"
@@ -35,7 +37,7 @@ const DateRangePicker = memo(({ fieldName, helperText, name, rangeType, noDateOp
           value={value}
         />
 
-        {helperText && <div className={styles.helperText}>{helperText}</div>}
+        {helperText && <div className={fieldStyles.helperText}>{helperText}</div>}
       </div>
 
       {noDateOption &&
@@ -67,12 +69,13 @@ export default memo(function DateRangeField({
 }) {
   const fieldName = namePrefix ? `${namePrefix}.${name}` : name;
   const { values } = useFormikContext();
+  const fieldStyles = useFieldStyles();
   const styles = useStyles();
 
   return (
-    <div className={clsx(styles.field, styles.fieldCentered)}>
+    <div className={clsx(fieldStyles.field, styles.fieldCentered)}>
       {label &&
-        <label htmlFor={fieldName} className={styles.fieldLabel}>
+        <label htmlFor={fieldName} className={fieldStyles.fieldLabel}>
           {label}
           {isCpgField &&
             <span className={clsx(styles.cpgTag, isCpgComplete(name, values) && styles.cpgTagComplete)}>CPG</span>
@@ -89,7 +92,7 @@ export default memo(function DateRangeField({
           rangeType="start"
         />
 
-        <div className={styles.fieldInput}><DashIcon /></div>
+        <div className={fieldStyles.fieldInput}><DashIcon /></div>
 
         <DateRangePicker
           fieldName={fieldName}

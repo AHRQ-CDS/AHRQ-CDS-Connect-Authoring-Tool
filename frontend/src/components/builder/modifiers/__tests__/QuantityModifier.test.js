@@ -7,23 +7,21 @@ describe('<QuantityModifier />', () => {
   const renderComponent = (props = {}) =>
     render(
       <QuantityModifier
-        index={6}
+        handleUpdateModifier={jest.fn()}
         name="quantity-modifier-test"
-        value={0}
-        updateAppliedModifier={jest.fn()}
         unit=""
-        uniqueId="uniqueId"
+        value={0}
         {...props}
       />
     );
 
   it('can change the quantity', () => {
-    const updateAppliedModifier = jest.fn();
-    renderComponent({ updateAppliedModifier });
+    const handleUpdateModifier = jest.fn();
+    renderComponent({ handleUpdateModifier });
 
     fireEvent.change(screen.getByRole('textbox', { name: 'Value' }), { target: { value: '3' } });
 
-    expect(updateAppliedModifier).toBeCalledWith(6, { unit: '', value: 3 });
+    expect(handleUpdateModifier).toBeCalledWith({ unit: '', value: 3 });
   });
 
   it('can search for and change the unit', async () => {
@@ -31,15 +29,15 @@ describe('<QuantityModifier />', () => {
       .get('/api/ucum/v3/search?terms=mg/dL')
       .reply(200, [1, ['mg/dL'], null, [['mg/dL', 'milligram per deciliter']]]);
 
-    const updateAppliedModifier = jest.fn();
-    renderComponent({ updateAppliedModifier });
+    const handleUpdateModifier = jest.fn();
+    renderComponent({ handleUpdateModifier });
 
     const unitAutocomplete = screen.getByRole('textbox', { name: 'Unit' });
     userEvent.click(unitAutocomplete);
     fireEvent.change(unitAutocomplete, { target: { value: 'mg/dL' } });
     userEvent.click(await screen.findByRole('option', { name: 'mg/dL (milligram per deciliter)' }));
 
-    expect(updateAppliedModifier).toBeCalledWith(6, { unit: 'mg/dL', value: '' });
+    expect(handleUpdateModifier).toBeCalledWith({ unit: 'mg/dL', value: '' });
 
     scope.done();
   }, 30000);

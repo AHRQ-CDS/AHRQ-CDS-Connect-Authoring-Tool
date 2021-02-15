@@ -5,10 +5,10 @@ import clsx from 'clsx';
 
 import { Dropdown } from 'components/elements';
 import fetchValueSets from 'queries/fetchValueSets';
-import useStyles from './styles';
+import { useFieldStyles } from 'styles/hooks';
 
 const ValueSetField = ({ field, updateInstance }) => {
-  const styles = useStyles();
+  const fieldStyles = useFieldStyles();
   const query = { type: field.select };
   const { data } = useQuery(['valueSets', query], () => fetchValueSets(query));
   const valueSets = data ?? [];
@@ -19,11 +19,11 @@ const ValueSetField = ({ field, updateInstance }) => {
   };
 
   return (
-    <div className={clsx('value-set-field', styles.field)}>
-      <div className={styles.fieldLabel}>{field.name}:</div>
+    <div className={clsx('value-set-field', fieldStyles.field)}>
+      <div className={fieldStyles.fieldLabel}>{field.name}:</div>
 
       <Dropdown
-        className={clsx(styles.fieldInput, styles.fieldInputMd)}
+        className={clsx(fieldStyles.fieldInput, fieldStyles.fieldInputMd)}
         label={field.name}
         onChange={handleUpdateInstance}
         options={valueSets}

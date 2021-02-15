@@ -3,19 +3,18 @@ import PropTypes from 'prop-types';
 import { TextField } from '@material-ui/core';
 import clsx from 'clsx';
 
-import { useFlexStyles } from 'styles/hooks';
-import useStyles from './styles';
+import { useFieldStyles, useFlexStyles } from 'styles/hooks';
 
 const StringField = ({ disabled, id, name, updateInstance, value }) => {
-  const styles = useStyles();
+  const fieldStyles = useFieldStyles();
   const flexStyles = useFlexStyles();
 
   return (
-    <div className={clsx('string-field', styles.field)}>
-      <div className={styles.fieldLabel}>{name}:</div>
+    <div className={clsx('string-field', fieldStyles.field)}>
+      <div className={fieldStyles.fieldLabel}>{name}:</div>
 
       <TextField
-        className={clsx(styles.fieldInput, flexStyles.flex1)}
+        className={clsx(fieldStyles.fieldInput, flexStyles.flex1)}
         disabled={disabled}
         fullWidth
         onChange={event => updateInstance({ [id]: event.target.value })}

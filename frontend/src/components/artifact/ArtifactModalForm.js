@@ -7,7 +7,7 @@ import clsx from 'clsx';
 import { TextField } from 'components/fields';
 import cpgFields, { versionHelperText, cpgScoreHelperText } from './cpgFields';
 import { getCpgCompleteCount } from 'utils/fields';
-import useFieldStyles from 'components/fields/styles';
+import { useFieldStyles } from 'styles/hooks';
 import useStyles from './styles';
 
 const ArtifactModalForm = memo(({ setSubmitDisabled }) => {
@@ -15,8 +15,8 @@ const ArtifactModalForm = memo(({ setSubmitDisabled }) => {
   const { values, isValid } = useFormikContext();
   const { cpgTotalCount, cpgCompleteCount } = getCpgCompleteCount(values);
   const cpgPercentage = Math.floor((cpgCompleteCount / cpgTotalCount) * 100);
-  const styles = useStyles();
   const fieldStyles = useFieldStyles();
+  const styles = useStyles();
 
   const toggleForm = useCallback(() => {
     setOpenForm(isOpen => !isOpen);

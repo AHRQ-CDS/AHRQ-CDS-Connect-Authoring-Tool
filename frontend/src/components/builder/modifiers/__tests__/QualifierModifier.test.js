@@ -1,14 +1,12 @@
 import React from 'react';
 import { render, userEvent, screen } from 'utils/test-utils';
 import { genericInstance } from 'utils/test_fixtures';
-import Qualifier from '../Qualifier';
+import QualifierModifier from '../QualifierModifier';
 
-describe('<Qualifier />', () => {
+describe('<QualifierModifier />', () => {
   const renderComponent = (props = {}) =>
     render(
-      <Qualifier
-        index={5}
-        name="qualifier-test"
+      <QualifierModifier
         qualifier=""
         template={{
           ...genericInstance,
@@ -17,21 +15,19 @@ describe('<Qualifier />', () => {
             values: {}
           }]
         }}
-        updateAppliedModifier={jest.fn()}
-        vsacApiKey="key"
+        handleUpdateModifier={jest.fn()}
         {...props}
       />
     );
 
   it('selects type of qualifier', () => {
-    const updateAppliedModifier = jest.fn();
-
-    renderComponent({ updateAppliedModifier });
+    const handleUpdateModifier = jest.fn();
+    renderComponent({ handleUpdateModifier });
 
     userEvent.click(screen.getByLabelText('Qualifier'));
     userEvent.click(screen.getByText('value is a code from'));
 
-    expect(updateAppliedModifier).toBeCalledWith(5, {
+    expect(handleUpdateModifier).toBeCalledWith({
       qualifier: 'value is a code from',
       valueSet: null,
       code: null

@@ -1,4 +1,5 @@
 import React from 'react';
+import nock from 'nock';
 import { render, userEvent, screen } from 'utils/test-utils';
 import SelectModifier from '../SelectModifier';
 
@@ -6,23 +7,25 @@ describe('<SelectModifier />', () => {
   const renderComponent = (props = {}) =>
     render(
       <SelectModifier
-        index={6}
+        handleUpdateModifier={jest.fn()}
         name="select-modifier-test"
-        options={[{ name: 'Convert.to_mg_per_dL', description: 'mmol/L to mg/dL' }]}
-        updateAppliedModifier={jest.fn()}
         value=""
         {...props}
       />
     );
 
-  it('calls updateAppliedModifier on selection change', () => {
-    const updateAppliedModifier = jest.fn();
-    renderComponent({ updateAppliedModifier });
+  it('calls handleUpdateModifier on selection change', async () => {
+    nock('http://localhost')
+      .get('/authoring/api/config/conversions')
+      .reply(200, [{ name: 'Convert.to_mg_per_dL', description: 'mmol/L to mg/dL' }]);
 
-    userEvent.click(screen.getByRole('button', { name: /select-modifier-test/ }));
+    const handleUpdateModifier = jest.fn();
+    renderComponent({ handleUpdateModifier });
+
+    userEvent.click(await screen.findByRole('button', { name: /select-modifier-test/ }));
     userEvent.click(screen.getByText('mmol/L to mg/dL'));
 
-    expect(updateAppliedModifier).toBeCalledWith(6, {
+    expect(handleUpdateModifier).toBeCalledWith({
       value: 'Convert.to_mg_per_dL',
       templateName: 'Convert.to_mg_per_dL',
       description: 'mmol/L to mg/dL'

@@ -3,10 +3,12 @@ import PropTypes from 'prop-types';
 import { Checkbox, FormControlLabel, TextField } from '@material-ui/core';
 import clsx from 'clsx';
 
+import { useFieldStyles } from 'styles/hooks';
 import useStyles from './styles';
 
 const NumberField = ({ field, typeOfNumber, updateInstance, value }) => {
   const [checked, setChecked] = useState(field.exclusive);
+  const fieldStyles = useFieldStyles();
   const styles = useStyles();
 
   const updateExclusive = event => {
@@ -20,11 +22,11 @@ const NumberField = ({ field, typeOfNumber, updateInstance, value }) => {
   };
 
   return (
-    <div className={clsx('number-field', styles.field)}>
+    <div className={clsx('number-field', fieldStyles.field)}>
       <div className={styles.fieldGroup}>
-        <div className={styles.fieldLabel}>{field.name}:</div>
+        <div className={fieldStyles.fieldLabel}>{field.name}:</div>
 
-        <div className={styles.fieldInput}>
+        <div className={fieldStyles.fieldInput}>
           <TextField
             fullWidth
             label={field.name}
@@ -44,7 +46,7 @@ const NumberField = ({ field, typeOfNumber, updateInstance, value }) => {
                 onChange={event => updateExclusive(event)}
               />
             }
-            className={styles.fieldInput}
+            className={fieldStyles.fieldInput}
             label="Exclusive"
           />
         }

@@ -4,6 +4,7 @@ import clsx from 'clsx';
 
 import { Dropdown } from 'components/elements';
 import { isCpgComplete } from 'utils/fields';
+import { useFieldStyles } from 'styles/hooks';
 import useStyles from './styles';
 
 const FormikSelect = ({ field: { name, value, onChange }, form: { setFieldValue }, options }) => {
@@ -37,12 +38,13 @@ export default memo(function SelectField({
 }) {
   const fieldName = namePrefix ? `${namePrefix}.${name}` : name;
   const { values } = useFormikContext();
+  const fieldStyles = useFieldStyles();
   const styles = useStyles();
 
   return (
-    <div className={styles.field}>
+    <div className={fieldStyles.field}>
       {label && (
-        <label htmlFor={fieldName} className={styles.fieldLabel}>
+        <label htmlFor={fieldName} className={fieldStyles.fieldLabel}>
           {label}
           {isCpgField && (
             <span className={clsx(styles.cpgTag, isCpgComplete(name, values) && styles.cpgTagComplete)}>CPG</span>
@@ -51,7 +53,7 @@ export default memo(function SelectField({
         </label>
       )}
 
-      <div className={clsx(styles.fieldInput, styles.fieldInputLg)}>
+      <div className={clsx(fieldStyles.fieldInput, fieldStyles.fieldInputLg)}>
         <FastField
           aria-label={`Select ${name}`}
           classNamePrefix={name}
@@ -60,7 +62,7 @@ export default memo(function SelectField({
           options={options}
         />
 
-        {helperText && <div className={styles.helperText}>{helperText}</div>}
+        {helperText && <div className={fieldStyles.helperText}>{helperText}</div>}
       </div>
     </div>
   );

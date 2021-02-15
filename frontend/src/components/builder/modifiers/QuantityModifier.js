@@ -1,50 +1,52 @@
-import React, { Component } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import { TextField } from '@material-ui/core';
+import clsx from 'clsx';
 
 import UcumField from 'components/builder/fields/UcumField';
+import { useFieldStyles } from 'styles/hooks';
+import useStyles from './styles';
 
-export default class QuantityModifier extends Component {
-  handleChange = (newValue, inputType) => {
-    const { index, unit, updateAppliedModifier, value } = this.props;
+const QuantityModifier = ({ handleUpdateModifier, name, unit, value }) => {
+  const fieldStyles = useFieldStyles();
+  const styles = useStyles();
+
+  const handleChange = (newValue, inputType) => {
     const newQuantity = inputType === 'quantity' ? parseFloat(newValue) : value || '';
     const newUnit = inputType === 'unit' ? newValue || '' : unit || '';
 
-    updateAppliedModifier(index, { value: newQuantity, unit: newUnit });
+    handleUpdateModifier({ value: newQuantity, unit: newUnit });
   };
 
-  render() {
-    const { name, unit, value, index } = this.props;
+  return (
+    <div className={styles.modifier}>
+      <div className={styles.modifierText}>{name}:</div>
 
-    return (
-      <div className="modifier quantity-modifier">
-        <div className="modifier-text">{name}:</div>
+      <TextField
+        className={clsx(fieldStyles.fieldInput, fieldStyles.fieldInputSm)}
+        fullWidth
+        label="Value"
+        onChange={event => handleChange(event.target.value, 'quantity')}
+        value={(value || value === 0) ? value : ''}
+        variant="outlined"
+        id="quantity-modifier"
+      />
 
-        <TextField
-          className="field-input field-input-sm"
-          fullWidth
-          label="Value"
-          onChange={event => this.handleChange(event.target.value, 'quantity')}
-          value={(value || value === 0) ? value : ''}
-          variant="outlined"
-          id={`quantity-modifier-${index}`}
+      <div className={clsx(fieldStyles.fieldInput, fieldStyles.fieldInputLg)}>
+        <UcumField
+          handleChangeUnit={(event, option) => handleChange(option?.value, 'unit')}
+          unit={unit || ''}
         />
-
-        <div className="field-input field-input-lg">
-          <UcumField
-            handleChangeUnit={(event, option) => this.handleChange(option?.value, 'unit')}
-            unit={unit || ''}
-          />
-        </div>
       </div>
-    );
-  }
-}
+    </div>
+  );
+};
 
 QuantityModifier.propTypes = {
-  index: PropTypes.number.isRequired,
+  handleUpdateModifier: PropTypes.func.isRequired,
   name: PropTypes.string.isRequired,
-  value: PropTypes.number,
   unit: PropTypes.string,
-  updateAppliedModifier: PropTypes.func.isRequired
+  value: PropTypes.number
 };
+
+export default QuantityModifier;

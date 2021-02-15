@@ -2,19 +2,17 @@ import React from 'react';
 import { render } from 'utils/test-utils';
 import ExternalModifier from '../ExternalModifier';
 
-jest.mock('../../editors/Editor', () => () => <div>Editor</div>);
+jest.mock('components/builder/editors/Editor', () => () => <div>Editor</div>);
 
 describe('<ExternalModifier />', () => {
   const renderComponent = (props = {}) =>
     render(
       <ExternalModifier
         argumentTypes={[]}
-        index={0}
+        handleUpdateModifier={jest.fn()}
         modifierArguments={[]}
         name="external"
-        updateAppliedModifier={jest.fn()}
         value={[]}
-        vsacApiKey="key"
         {...props}
       />
     );

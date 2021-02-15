@@ -5,9 +5,9 @@ import _ from 'lodash';
 import classNames from 'classnames';
 import { UncontrolledTooltip } from 'reactstrap';
 
-import convertToExpression from '../../../utils/artifacts/convertToExpression';
-import { getOriginalBaseElement, getAllModifiersOnBaseElementUse } from '../../../utils/baseElements';
-import { getReturnType, getFieldWithId, getFieldWithType } from '../../../utils/instances';
+import convertToExpression from 'utils/artifacts/convertToExpression';
+import { getOriginalBaseElement, getAllModifiersOnBaseElementUse } from 'utils/baseElements';
+import { getReturnType, getFieldWithId, getFieldWithType } from 'utils/instances';
 
 export default class ExpressionPhrase extends Component {
   getExpressionPhrase = (instance) => {

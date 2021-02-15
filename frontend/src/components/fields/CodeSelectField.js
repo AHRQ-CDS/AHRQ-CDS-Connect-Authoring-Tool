@@ -10,6 +10,7 @@ import codeSystemOptions from 'data/codeSystemOptions';
 import validateCode from 'queries/validateCode';
 import SelectField from './SelectField';
 import TextField from './TextField';
+import { useFieldStyles } from 'styles/hooks';
 import useStyles from './styles';
 
 const CodeSelectField = ({ namePrefix }) => {
@@ -25,6 +26,7 @@ const CodeSelectField = ({ namePrefix }) => {
     code: codeFieldValue,
     system: systemFieldValue
   });
+  const fieldStyles = useFieldStyles();
   const styles = useStyles();
 
   const handleValidateCode = useCallback(() => {
@@ -49,14 +51,14 @@ const CodeSelectField = ({ namePrefix }) => {
       <SelectField name={systemFieldName} label="System" options={codeSystemOptions} />
 
       {isError && (
-        <Alert className={styles.field} severity="warning">
+        <Alert className={fieldStyles.field} severity="warning">
           Unable to validate code and/or code system.
         </Alert>
       )}
 
       {isSuccess && codeData ? (
-        <div className={styles.field}>
-          <label className={styles.fieldLabel} htmlFor="code-display">
+        <div className={fieldStyles.field}>
+          <label className={fieldStyles.fieldLabel} htmlFor="code-display">
             Display:
           </label>
 
