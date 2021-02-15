@@ -7,11 +7,13 @@ import Parameter from './Parameter';
 
 export default class Parameters extends Component {
   addParameter = () => {
+    const newIndex = this.props.parameters.length;
+
     const newParameter = {
       name: null,
       type: 'boolean',
       value: null,
-      uniqueId: _.uniqueId('parameter-'),
+      uniqueId: `parameter-${newIndex}`,
       comment: null
     };
 

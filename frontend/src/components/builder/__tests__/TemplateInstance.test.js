@@ -94,7 +94,7 @@ describe('<TemplateInstance />', () => {
       const { valueSets } = getFieldWithType(templateInstance.fields, '_vsac');
       const { container } = renderComponent();
 
-      const [selectedValueSet] = container.querySelectorAll('.vs-info');
+      const [selectedValueSet] = container.querySelectorAll('#value-set-list-template');
       expect(selectedValueSet).toHaveTextContent(`Value Set 1: ${valueSets[0].name} (${valueSets[0].oid})`);
     });
 
@@ -381,7 +381,7 @@ describe('<TemplateInstance />', () => {
       expect(container.querySelector('.card-element__heading')).toHaveTextContent('Observation');
 
       // Only the current elements expressions are listed
-      expect(document.getElementById('applied-modifiers')).toHaveTextContent('Expressions:Exists');
+      expect(document.getElementById('modifiers-template')).toHaveTextContent('Expressions:Exists');
 
       // All expressions and VS included in the phrase
       expect(container.querySelector('.expression-logic')).toHaveTextContent(

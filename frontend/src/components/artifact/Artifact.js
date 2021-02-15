@@ -3,15 +3,17 @@ import { useMutation, useQuery, useQueryClient } from 'react-query';
 import { Button, CircularProgress } from '@material-ui/core';
 import { Alert } from '@material-ui/lab';
 import { Add as AddIcon } from '@material-ui/icons';
+import clsx from 'clsx';
 
 import ArtifactModal from './ArtifactModal';
 import ArtifactTable from './ArtifactTable';
-import { useSpacingStyles } from 'styles/hooks';
+import { useSpacingStyles, useTextStyles } from 'styles/hooks';
 import { addArtifact, deleteArtifact, fetchArtifacts, updateArtifact } from 'queries/artifacts';
 
 const Artifact = () => {
   const [showModal, setShowModal] = useState(false);
   const spacingStyles = useSpacingStyles();
+  const textStyles = useTextStyles();
   const queryClient = useQueryClient();
   const { data, error, isLoading, isSuccess } = useQuery('artifacts', () => fetchArtifacts());
   const artifacts = data ?? [];
@@ -32,7 +34,7 @@ const Artifact = () => {
       {isLoading && <CircularProgress />}
 
       {isSuccess && (
-        <div className={spacingStyles.verticalPadding}>
+        <div className={clsx(spacingStyles.minHeight, spacingStyles.verticalPadding)}>
           <Button color="primary" onClick={() => setShowModal(true)} startIcon={<AddIcon />} variant="contained">
             Create New Artifact
           </Button>
@@ -44,7 +46,7 @@ const Artifact = () => {
               handleUpdateArtifact={handleUpdateArtifact}
             />
           ) : (
-            <div>No artifacts to show.</div>
+            <div className={clsx(spacingStyles.verticalPadding, textStyles.italic)}>No artifacts to show.</div>
           )}
         </div>
       )}

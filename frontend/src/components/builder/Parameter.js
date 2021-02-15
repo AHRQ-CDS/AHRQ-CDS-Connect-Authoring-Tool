@@ -317,7 +317,6 @@ export default class Parameter extends Component {
                 <Dropdown
                   className="field-input field-input-lg"
                   disabled={parameterUsed}
-                  id={`parameter-${index}`}
                   label={type ? null : 'Parameter type'}
                   onChange={event => this.changeParameterType(event, name, comment, typeOptions)}
                   options={typeOptions}

@@ -5,6 +5,9 @@ export default makeStyles(
     bold: {
       fontWeight: '600'
     },
+    italic: {
+      fontStyle: 'italic'
+    },
     noWrap: {
       whiteSpace: 'nowrap'
     },
