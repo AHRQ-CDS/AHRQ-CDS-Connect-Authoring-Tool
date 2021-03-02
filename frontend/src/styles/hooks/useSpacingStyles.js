@@ -26,6 +26,9 @@ export default makeStyles(
       margin: '0 -9999rem',
       padding: '0 9999rem'
     },
+    minHeight: {
+      minHeight: '500px'
+    },
     verticalPadding: {
       marginTop: '2em',
       marginBottom: '2em'

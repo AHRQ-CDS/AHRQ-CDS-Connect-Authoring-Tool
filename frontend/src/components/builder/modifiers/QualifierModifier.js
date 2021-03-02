@@ -9,11 +9,9 @@ import {
   Visibility as VisibilityIcon
 } from '@material-ui/icons';
 import clsx from 'clsx';
-import _ from 'lodash';
 
 import { Dropdown } from 'components/elements';
 import { CodeSelectModal, ValueSetSelectModal, VSACAuthenticationModal } from 'components/modals';
-import { getFieldWithType, getFieldWithId } from 'utils/instances';
 import { useFieldStyles } from 'styles/hooks';
 import useStyles from './styles';
 
@@ -22,7 +20,7 @@ const options = [
   { value: 'value is the code', label: 'value is the code' }
 ];
 
-const QualifierModifier = ({ handleUpdateModifier, qualifier, template }) => {
+const QualifierModifier = ({ code, handleSelectValueSet, handleUpdateModifier, qualifier, valueSet }) => {
   const [showCodeSelectModal, setShowCodeSelectModal] = useState(false);
   const [showValueSetSelectModal, setShowValueSetSelectModal] = useState(false);
   const [showValueSetViewModal, setShowValueSetViewModal] = useState(false);
@@ -31,20 +29,11 @@ const QualifierModifier = ({ handleUpdateModifier, qualifier, template }) => {
   const fieldStyles = useFieldStyles();
   const styles = useStyles();
 
-  const qualifierMod = template?.modifiers.find(mod => mod.id === 'Qualifier');
-  const valueSet = qualifierMod?.values.valueSet;
-  const code = qualifierMod?.values.code;
   const qualifierIsCode = qualifier === 'value is the code';
 
   let selection = '';
-  if (valueSet) {
-    const qualifierValueSet = qualifierMod.values.valueSet;
-    selection = `${qualifierValueSet.name} (${qualifierValueSet.oid})`;
-  } else if (code) {
-    const qualifierCode = qualifierMod.values.code;
-    selection = `${qualifierCode.codeSystem.name} (${qualifierCode.code})
-      ${qualifierCode.display === '' ? '' : ` - ${qualifierCode.display}`}`;
-  }
+  if (valueSet) selection = `${valueSet.name} (${valueSet.oid})`;
+  if (code) selection = `${code.codeSystem.name} (${code.code}) ${code.display === '' ? '' : ` - ${code.display}`}`;
 
   const handleChange = useCallback(
     event => {
@@ -52,28 +41,6 @@ const QualifierModifier = ({ handleUpdateModifier, qualifier, template }) => {
       handleUpdateModifier({ qualifier: selectedOption?.value, valueSet: null, code: null });
     },
     [handleUpdateModifier]
-  );
-
-  const handleSelectValueSet = useCallback(
-    selectedValueSet => {
-      const selectedTemplate = _.cloneDeep(template);
-      const vsacField = getFieldWithType(selectedTemplate.fields, '_vsac');
-      const nameField = getFieldWithId(selectedTemplate.fields, 'element_name');
-      const valueSetsToAdd = vsacField?.valueSets || [];
-      valueSetsToAdd.push(selectedValueSet);
-
-      // Create array of which field to update, the new value to set, and the attribute to update (value is default)
-      const arrayToUpdate = [
-        { [vsacField.id]: valueSetsToAdd, attributeToEdit: 'valueSets' },
-        { [vsacField.id]: true, attributeToEdit: 'static' }
-      ];
-
-      // Only set name of element if there isn't one already
-      if (!nameField.value) arrayToUpdate.push({ [nameField.id]: selectedValueSet.name });
-
-      handleUpdateModifier({ valueSet: arrayToUpdate });
-    },
-    [handleUpdateModifier, template]
   );
 
   return (
@@ -166,9 +133,11 @@ const QualifierModifier = ({ handleUpdateModifier, qualifier, template }) => {
 };
 
 QualifierModifier.propTypes = {
+  code: PropTypes.object,
+  handleSelectValueSet: PropTypes.func.isRequired,
   handleUpdateModifier: PropTypes.func.isRequired,
   qualifier: PropTypes.string,
-  template: PropTypes.object.isRequired
+  valueSet: PropTypes.object
 };
 
 export default QualifierModifier;

@@ -21,31 +21,19 @@ import { faExclamationCircle} from '@fortawesome/free-solid-svg-icons';
 import { UncontrolledTooltip } from 'reactstrap';
 import _ from 'lodash';
 
-import { DeleteConfirmationModal } from 'components/modals';
-import { CodeSelectModal, ValueSetSelectModal, VSACAuthenticationModal } from 'components/modals';
-import { NumberField, StaticField, StringField, TextAreaField, ValueSetField } from './fields';
-import ValueSetTemplate from './templates/ValueSetTemplate';
-
-import ExpressionPhrase from './ExpressionPhrase';
 import {
-  BooleanComparisonModifier,
-  CheckExistenceModifier,
-  DateTimeModifier,
-  ExternalModifier,
-  LabelModifier,
-  LookBackModifier,
-  NumberModifier,
-  QualifierModifier,
-  QuantityModifier,
-  SelectModifier,
-  StringModifier,
-  ValueComparisonModifier,
-  WithUnitModifier
-} from './modifiers';
+  CodeSelectModal,
+  DeleteConfirmationModal,
+  ValueSetSelectModal,
+  VSACAuthenticationModal
+} from 'components/modals';
+import { NumberField, StaticField, StringField, TextAreaField, ValueSetField } from './fields';
+import { CodeListTemplate, ModifiersTemplate, ReturnTypeTemplate, ValueSetListTemplate } from './templates';
+import ExpressionPhrase from './ExpressionPhrase';
 import { hasDuplicateName, doesBaseElementUseNeedWarning, doesBaseElementInstanceNeedWarning,
   doesParameterUseNeedWarning, validateElement, hasGroupNestedWarning } from 'utils/warnings';
 import { getOriginalBaseElement } from 'utils/baseElements';
-import { getReturnType, validateModifier, allModifiersValid, getFieldWithType, getFieldWithId }
+import { getReturnType, allModifiersValid, getFieldWithType, getFieldWithId }
   from 'utils/instances';
 
 function getInstanceName(instance) {
@@ -194,225 +182,6 @@ export default class TemplateInstance extends Component {
     this.setState({ showComment: !this.state.showComment });
   }
 
-  renderAppliedModifier = (modifier, index) => {
-    const { modifierMap } = this.props;
-    // Reset values on modifiers that were not previously set or saved in the database
-    if (!modifier.values && modifierMap[modifier.id] && modifierMap[modifier.id].values) {
-      modifier.values = modifierMap[modifier.id].values;
-    }
-
-    const validationWarning = validateModifier(modifier);
-
-    const modifierForm = (() => {
-      switch (modifier.type || modifier.id) {
-        case 'ValueComparisonNumber':
-          return (
-            <ValueComparisonModifier
-              handleUpdateModifier={values => this.handleUpdateModifier(index, values)}
-              values={{
-                maxOperator: modifier.values?.maxOperator || '',
-                maxValue: modifier.values?.maxValue || '',
-                minOperator: modifier.values?.minOperator || '',
-                minValue: modifier.values?.minValue || ''
-              }}
-            />
-          );
-        case 'ValueComparisonObservation':
-          return (
-            <ValueComparisonModifier
-              handleUpdateModifier={values => this.handleUpdateModifier(index, values)}
-              values={{
-                maxOperator: modifier.values?.maxOperator || '',
-                maxValue: modifier.values?.maxValue || '',
-                minOperator: modifier.values?.minOperator || '',
-                minValue: modifier.values?.minValue || '',
-                unit: modifier.values?.unit || ''
-              }}
-            />
-          );
-        case 'LookBack':
-          return (
-            <LookBackModifier
-              handleUpdateModifier={value => this.handleUpdateModifier(index, value)}
-              unit={modifier.values?.unit}
-              value={modifier.values?.value}
-            />
-          );
-        case 'WithUnit':
-          return (
-            <WithUnitModifier
-              handleUpdateModifier={value => this.handleUpdateModifier(index, value)}
-              unit={modifier.values?.unit}
-            />
-          );
-        case 'BooleanComparison':
-          return (
-            <BooleanComparisonModifier
-              handleUpdateModifier={value => this.handleUpdateModifier(index, value)}
-              value={modifier.values?.value}
-            />
-          );
-        case 'CheckExistence':
-          return (
-            <CheckExistenceModifier
-              handleUpdateModifier={value => this.handleUpdateModifier(index, value)}
-              value={modifier.values?.value}
-            />
-          );
-        case 'ConvertObservation':
-          return (
-            <SelectModifier
-              handleUpdateModifier={value => this.handleUpdateModifier(index, value)}
-              name={modifier.name}
-              value={modifier.values?.value}
-            />
-          );
-        case 'Qualifier':
-          return (
-            <QualifierModifier
-              handleUpdateModifier={value => this.handleUpdateModifier(index, value)}
-              qualifier={modifier.values?.qualifier}
-              template={this.props.templateInstance}
-            />
-          );
-        case 'BeforeDateTimePrecise':
-        case 'AfterDateTimePrecise':
-          return (
-            <DateTimeModifier
-              handleUpdateModifier={value => this.handleUpdateModifier(index, value)}
-              name={modifier.name}
-              values={{
-                date: modifier.values?.date || '',
-                time: modifier.values?.time || '',
-                precision: modifier.values?.precision || ''
-              }}
-            />
-          );
-        case 'BeforeTimePrecise':
-        case 'AfterTimePrecise':
-          return (
-            <DateTimeModifier
-              handleUpdateModifier={value => this.handleUpdateModifier(index, value)}
-              name={modifier.name}
-              values={{
-                time: modifier.values?.time || '',
-                precision: modifier.values?.precision || ''
-              }}
-            />
-          );
-        case 'ContainsQuantity':
-        case 'BeforeQuantity':
-        case 'AfterQuantity':
-          return (
-            <QuantityModifier
-              handleUpdateModifier={value => this.handleUpdateModifier(index, value)}
-              name={modifier.name}
-              unit={modifier.values?.unit}
-              value={modifier.values?.value}
-            />
-          );
-        case 'ContainsInteger':
-        case 'BeforeInteger':
-        case 'AfterInteger':
-        case 'ContainsDecimal':
-        case 'BeforeDecimal':
-        case 'AfterDecimal':
-          return (
-            <NumberModifier
-              handleUpdateModifier={value => this.handleUpdateModifier(index, value)}
-              name={modifier.name}
-              value={modifier.values?.value}
-            />
-          );
-        case 'ContainsDateTime':
-        case 'BeforeDateTime':
-        case 'AfterDateTime':
-          return (
-            <DateTimeModifier
-              handleUpdateModifier={value => this.handleUpdateModifier(index, value)}
-              name={modifier.name}
-              values={{ date: modifier.values?.date || '', time: modifier.values?.time || '' }}
-            />
-          );
-        case 'EqualsString':
-        case 'EndsWithString':
-        case 'StartsWithString':
-          return (
-            <StringModifier
-              handleUpdateModifier={value => this.handleUpdateModifier(index, value)}
-              name={modifier.name}
-              value={modifier.values?.value}
-            />
-          );
-        case 'ExternalModifier':
-          return (
-            <ExternalModifier
-              argumentTypes={modifier.argumentTypes}
-              handleUpdateModifier={value => this.handleUpdateModifier(index, value)}
-              modifierArguments={modifier.arguments}
-              name={modifier.name}
-              value={modifier.values?.value}
-            />
-          );
-        default:
-          return <LabelModifier name={modifier.name} />;
-      }
-    })();
-
-    const canModifierBeRemoved = this.canModifierBeRemoved();
-
-    return (
-      <div
-        key={index}
-        className={clsx('element-field-details', `modifier-${modifier.type || modifier.id}`)}
-      >
-        <div className="element-field-display-group">
-          {modifierForm}
-          {validationWarning && <div className="warning">{validationWarning}</div>}
-        </div>
-
-        {index + 1 === this.props.templateInstance.modifiers.length &&
-          <div className="element-field-buttons">
-            <span id={`modifier-delete-${this.props.templateInstance.uniqueId}`}>
-              <IconButton
-                aria-label="remove last expression"
-                color="primary"
-                disabled={!canModifierBeRemoved}
-                onClick={() => this.removeLastModifier(canModifierBeRemoved)}
-              >
-                <CloseIcon fontSize="small" />
-              </IconButton>
-            </span>
-
-            {!canModifierBeRemoved &&
-              <UncontrolledTooltip
-                target={`modifier-delete-${this.props.templateInstance.uniqueId}`}
-                placement="left"
-              >
-                Cannot remove modifier because return type cannot change while in use.
-              </UncontrolledTooltip>
-            }
-          </div>
-        }
-      </div>
-    );
-  }
-
-  renderAppliedModifiers = () => (
-    <div id="applied-modifiers">
-      <div className="element-field">
-        {this.props.templateInstance.modifiers?.length > 0 &&
-          <div className="element-field-label">Expressions:</div>
-        }
-
-        <div className="element-field-details-group" aria-label="Expression List">
-          {(this.props.templateInstance.modifiers || []).map((modifier, index) =>
-            this.renderAppliedModifier(modifier, index))}
-        </div>
-      </div>
-    </div>
-  );
-
   setAppliedModifiers = (modifiers) => {
     this.setState({
       returnType: getReturnType(this.props.templateInstance.returnType, modifiers)
@@ -439,7 +208,7 @@ export default class TemplateInstance extends Component {
     this.setAppliedModifiers(modifiers);
   }
 
-  removeLastModifier = (canRemove) => {
+  handleRemoveLastModifier = (canRemove) => {
     if (!canRemove) return;
     const modifiers = _.initial(this.props.templateInstance.modifiers);
     this.setAppliedModifiers(modifiers);
@@ -451,61 +220,8 @@ export default class TemplateInstance extends Component {
     this.setAppliedModifiers(modifiers);
   }
 
-  canModifierBeRemoved = () => {
-    const baseElementIsInUse = this.isBaseElementUsed() || this.props.disableAddElement;
-
-    if (baseElementIsInUse) {
-      // If a base element is in use, need to make sure the modifiers removed don't change the return type.
-      const length = this.props.templateInstance.modifiers.length;
-      let nextReturnType = this.props.templateInstance.returnType; // Defaults to the element's return type.
-      if (length > 1) {
-        // If there is another modifier applied after the last one is removed, use that modifier type.
-        nextReturnType = this.props.templateInstance.modifiers[length - 2].returnType;
-      }
-
-      // If a base element is being used, but the next return type is the same as the current, modifier can be removed.
-      return nextReturnType === this.state.returnType;
-    }
-
-    // If not a base element being used elsewhere, modifiers can be removed.
-    return true;
-  }
-
-  deleteCode = (codeToDelete) => {
-    const templateInstanceClone = _.cloneDeep(this.props.templateInstance);
-    const vsacField = getFieldWithType(templateInstanceClone.fields, '_vsac');
-    if (vsacField && vsacField.codes) {
-      const updatedCodes = [...vsacField.codes];
-      const indexOfCodeToRemove = updatedCodes.findIndex(code =>
-        (code.code === codeToDelete.code && _.isEqual(code.codeSystem, codeToDelete.codeSystem)));
-      updatedCodes.splice(indexOfCodeToRemove, 1);
-      const arrayToUpdate = [
-        { [vsacField.id]: updatedCodes, attributeToEdit: 'codes' }
-      ];
-      this.updateInstance(arrayToUpdate);
-    }
-  }
-
-  handleSelectValueSet = (template, valueSet) => {
-    const selectedTemplate = _.cloneDeep(template);
-    const vsacField = getFieldWithType(selectedTemplate.fields, '_vsac');
-    const nameField = getFieldWithId(selectedTemplate.fields, 'element_name');
-    const valueSetsToAdd = vsacField?.valueSets || [];
-    valueSetsToAdd.push(valueSet);
-
-    // Create array of which field to update, the new value to set, and the attribute to update (value is default)
-    const arrayToUpdate = [
-      { [vsacField.id]: valueSetsToAdd, attributeToEdit: 'valueSets' },
-      { [vsacField.id]: true, attributeToEdit: 'static' }
-    ];
-
-    // Only set name of element if there isn't one already
-    if (!nameField.value) arrayToUpdate.push({ [nameField.id]: valueSet.name });
-    this.updateInstance(arrayToUpdate);
-  }
-
-  handleSelectCode = (template, codeData) => {
-    const selectedTemplate = _.cloneDeep(template);
+  handleSelectCode = codeData => {
+    const selectedTemplate = _.cloneDeep(this.props.templateInstance);
     const vsacField = getFieldWithType(selectedTemplate.fields, '_vsac');
     const nameField = getFieldWithId(selectedTemplate.fields, 'element_name');
     const codesToAdd = vsacField?.codes || [];
@@ -524,6 +240,53 @@ export default class TemplateInstance extends Component {
     }
 
     this.updateInstance(arrayToUpdate);
+  }
+
+  handleSelectValueSet = valueSet => {
+    const selectedTemplate = _.cloneDeep(this.props.templateInstance);
+    const vsacField = getFieldWithType(selectedTemplate.fields, '_vsac');
+    const nameField = getFieldWithId(selectedTemplate.fields, 'element_name');
+    const valueSetsToAdd = vsacField?.valueSets || [];
+    valueSetsToAdd.push(valueSet);
+
+    // Create array of which field to update, the new value to set, and the attribute to update (value is default)
+    const arrayToUpdate = [
+      { [vsacField.id]: valueSetsToAdd, attributeToEdit: 'valueSets' },
+      { [vsacField.id]: true, attributeToEdit: 'static' }
+    ];
+
+    // Only set name of element if there isn't one already
+    if (!nameField.value) arrayToUpdate.push({ [nameField.id]: valueSet.name });
+    this.updateInstance(arrayToUpdate);
+  }
+
+  handleDeleteCode = codeToDelete => {
+    const templateInstanceClone = _.cloneDeep(this.props.templateInstance);
+    const vsacField = getFieldWithType(templateInstanceClone.fields, '_vsac');
+    if (vsacField && vsacField.codes) {
+      const updatedCodes = [...vsacField.codes];
+      const indexOfCodeToRemove = updatedCodes.findIndex(code =>
+        (code.code === codeToDelete.code && _.isEqual(code.codeSystem, codeToDelete.codeSystem)));
+      updatedCodes.splice(indexOfCodeToRemove, 1);
+      const arrayToUpdate = [
+        { [vsacField.id]: updatedCodes, attributeToEdit: 'codes' }
+      ];
+      this.updateInstance(arrayToUpdate);
+    }
+  }
+
+  handleDeleteValueSet = valueSetToDelete => {
+    const templateInstanceClone = _.cloneDeep(this.props.templateInstance);
+    const templateInstanceVsacField = getFieldWithType(templateInstanceClone.fields, '_vsac');
+    if (templateInstanceVsacField && templateInstanceVsacField.valueSets) {
+      const updatedValueSets = templateInstanceVsacField.valueSets;
+      const indexOfVSToRemove = updatedValueSets.findIndex(
+        vs => vs.name === valueSetToDelete.name && vs.oid === valueSetToDelete.oid
+      );
+      updatedValueSets.splice(indexOfVSToRemove, 1);
+      const arrayToUpdate = [{ [templateInstanceVsacField.id]: updatedValueSets, attributeToEdit: 'valueSets' }];
+      this.updateInstance(arrayToUpdate);
+    }
   }
 
   renderModifierSelect = () => {
@@ -644,73 +407,8 @@ export default class TemplateInstance extends Component {
     );
   }
 
-  renderVSInfo = () => {
-    if (this.props.templateInstance.fields.length > 1) {
-      // All generic VSAC elements save the VS information on this field on the valueSets property.
-      const vsacField = getFieldWithType(this.props.templateInstance.fields, '_vsac');
-      if (vsacField && vsacField.valueSets) {
-        return (
-          <div id="valueset-list">
-            {vsacField.valueSets.map((vs, i) => (
-              <ValueSetTemplate
-                index={i}
-                key={`selected-valueset-${i}`}
-                templateInstance={this.props.templateInstance}
-                updateInstance={this.updateInstance}
-                valueSet={vs}
-                vsacApiKey={this.props.vsacApiKey}
-                vsacField={vsacField}
-              />
-            ))}
-          </div>
-        );
-      }
-    }
-
-    return null;
-  }
-
-  renderCodeInfo = () => {
-    if (this.props.templateInstance.fields.length > 1) {
-      // All generic VSAC elements save the VS information on this field on the codes property.
-      const vsacField = getFieldWithType(this.props.templateInstance.fields, '_vsac');
-      if (vsacField && vsacField.codes) {
-        return (
-          <div id="code-list">
-            {vsacField.codes.map((code, i) => (
-              <div key={`selected-code-${i}`} className="element-field code-info">
-                <div className="element-field-label">
-                  Code{vsacField.codes.length > 1 ? ` ${i + 1}` : ''}:
-                </div>
-
-                {/* Code name will come with validation */}
-                <div className="element-field-details code-info__info">
-                  <div className="code-info__text element-field-display">
-                    {`${code.codeSystem.name} (${code.code}) ${code.display === '' ? '' : ` - ${code.display}`}`}
-                  </div>
-
-                  <div className="code-info__buttons element-field-buttons">
-                    <IconButton
-                      aria-label={`delete code ${code.codeSystem.name} (${code.code})`}
-                      color="primary"
-                      onClick={() => this.deleteCode(code)}
-                    >
-                      <CloseIcon fontSize="small" />
-                    </IconButton>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        );
-      }
-    }
-
-    return null;
-  }
-
   renderVSACOptions = () => {
-    const { templateInstance, vsacApiKey } = this.props;
+    const { vsacApiKey } = this.props;
     const { showCodeSelectModal, showValueSetSelectModal, showVSACAuthenticationModal } = this.state;
 
     return (
@@ -754,14 +452,14 @@ export default class TemplateInstance extends Component {
         {showValueSetSelectModal && (
           <ValueSetSelectModal
             handleCloseModal={this.closeValueSetSelectModal}
-            handleSelectValueSet={valueSet => this.handleSelectValueSet(templateInstance, valueSet)}
+            handleSelectValueSet={valueSet => this.handleSelectValueSet(valueSet)}
           />
         )}
 
         {showCodeSelectModal && (
           <CodeSelectModal
             handleCloseModal={this.closeCodeSelectModal}
-            handleSelectCode={codeData => this.handleSelectCode(templateInstance, codeData)}
+            handleSelectCode={codeData => this.handleSelectCode(codeData)}
           />
         )}
       </div>
@@ -850,8 +548,10 @@ export default class TemplateInstance extends Component {
   }
 
   renderBody() {
-    const { templateInstance, validateReturnType } = this.props;
+    const { disableAddElement, templateInstance, validateReturnType } = this.props;
     const { returnType } = this.state;
+    const baseElementIsUsed = this.isBaseElementUsed() || disableAddElement;
+    const vsacField = getFieldWithType(this.props.templateInstance.fields, '_vsac');
     const referenceField = getFieldWithType(templateInstance.fields, 'reference');
     const validationError = validateElement(this.props.templateInstance, this.state);
     const returnError = (!(validateReturnType !== false) || returnType === 'boolean') ? null
@@ -875,10 +575,14 @@ export default class TemplateInstance extends Component {
           return null;
         })}
 
-        {templateInstance.id && templateInstance.id.includes('_vsac') &&
+        {templateInstance.id?.includes('_vsac') && templateInstance.fields.length > 1 &&
           <>
-            {this.renderVSInfo()}
-            {this.renderCodeInfo()}
+            <ValueSetListTemplate
+              handleDeleteValueSet={this.handleDeleteValueSet}
+              valueSets={vsacField?.valueSets || []}
+            />
+
+            <CodeListTemplate handleDeleteCode={this.handleDeleteCode} codes={vsacField?.codes || []} />
           </>
         }
 
@@ -895,21 +599,20 @@ export default class TemplateInstance extends Component {
           </div>
         }
 
-        {this.renderAppliedModifiers()}
+        {templateInstance.modifiers?.length > 0 &&
+          <ModifiersTemplate
+            baseElementIsUsed={baseElementIsUsed}
+            elementInstance={templateInstance}
+            handleRemoveLastModifier={this.handleRemoveLastModifier}
+            handleSelectValueSet={this.handleSelectValueSet}
+            handleUpdateModifier={this.handleUpdateModifier}
+          />
+        }
 
-        <div className="element-field">
-          <div className="element-field-label">Return Type:</div>
-
-          <div className="element-field-details return-type">
-            <div>
-              {(validateReturnType === false || _.startCase(returnType) === 'Boolean') &&
-                <CheckIcon fontSize="small" />
-              }
-
-              {_.startCase(returnType)}
-            </div>
-          </div>
-        </div>
+        <ReturnTypeTemplate
+          returnType={_.startCase(returnType)}
+          shouldValidateReturnType={validateReturnType !== false}
+        />
       </div>
     );
   }
