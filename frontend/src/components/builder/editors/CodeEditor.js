@@ -33,7 +33,7 @@ export default class CodeEditor extends Component {
 
   handleSelectCode = codeData => {
     const { isConcept, updateInstance } = this.props;
-    const codeStr = `Code '${codeData.code.replace(/'/g, '\\\'')}' from "${codeData.system}"`;
+    const codeStr = `Code '${codeData.code.replace(/'/g, '\\\'')}' from "${codeData.codeSystem.name}"`;
     const displayStr = `display '${codeData.display}'`;
     const str = isConcept ? `Concept { ${codeStr} } ${displayStr}` : `${codeStr} ${displayStr}`;
 
