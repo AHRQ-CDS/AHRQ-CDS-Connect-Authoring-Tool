@@ -10,6 +10,11 @@ const NumberModifier = ({ handleUpdateModifier, name, value }) => {
   const fieldStyles = useFieldStyles();
   const styles = useStyles();
 
+  const handleOnChange = newValue => {
+    const needsLeadingZero = newValue.startsWith('.') || newValue.startsWith('-.');
+    handleUpdateModifier({ value: needsLeadingZero ? newValue.replace('.', '0.') : newValue });
+  };
+
   return (
     <div className={styles.modifier}>
       <div className={styles.modifierText}>{name}:</div>
@@ -18,7 +23,8 @@ const NumberModifier = ({ handleUpdateModifier, name, value }) => {
         className={clsx(fieldStyles.fieldInput, fieldStyles.fieldInputSm)}
         fullWidth
         label="Value"
-        onChange={event => handleUpdateModifier({ value: parseFloat(event.target.value) })}
+        type="number"
+        onChange={event => handleOnChange(event.target.value)}
         value={(value || value === 0) ? value : ''}
         variant="outlined"
       />
@@ -29,7 +35,7 @@ const NumberModifier = ({ handleUpdateModifier, name, value }) => {
 NumberModifier.propTypes = {
   handleUpdateModifier: PropTypes.func.isRequired,
   name: PropTypes.string.isRequired,
-  value: PropTypes.number
+  value: PropTypes.string
 };
 
 export default NumberModifier;
