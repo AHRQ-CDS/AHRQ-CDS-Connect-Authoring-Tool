@@ -49,18 +49,22 @@ class Testing extends Component {
   addPatient = (patient) => {
     const reader = new FileReader();
     reader.onload = (e) => {
-      this.setState({ patientData: JSON.parse(e.target.result) });
-      const patientDataResourceType = _.get(this.state.patientData, 'resourceType');
-      const patientResource = _.chain(this.state.patientData)
-        .get('entry')
-        .find({ resource: { resourceType: 'Patient' } })
-        .get('resource')
-        .value();
+      try {
+        this.setState({ patientData: JSON.parse(e.target.result) });
+        const patientDataResourceType = _.get(this.state.patientData, 'resourceType');
+        const patientResource = _.chain(this.state.patientData)
+          .get('entry')
+          .find({ resource: { resourceType: 'Patient' } })
+          .get('resource')
+          .value();
 
-      // Check for FHIR Bundle containing FHIR Patient
-      if ((patientDataResourceType === 'Bundle') && (patientResource)) { // Check for FHIR Patient in Bundle
-        this.setState({ showPatientVersionModal: true });
-      } else { // No patient could be found
+        // Check for FHIR Bundle containing FHIR Patient
+        if ((patientDataResourceType === 'Bundle') && (patientResource)) { // Check for FHIR Patient in Bundle
+          this.setState({ showPatientVersionModal: true });
+        } else { // No patient could be found
+          this.setState({ uploadError: true });
+        }
+      } catch (error) {
         this.setState({ uploadError: true });
       }
     };
