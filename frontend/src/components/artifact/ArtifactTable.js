@@ -21,8 +21,6 @@ const ArtifactTable = ({ artifacts, handleDeleteArtifact, handleUpdateArtifact }
   columns.push(createColumn('Date Created', sortByDateCreated));
 
   const handleLabelClick = id => {
-    console.log('Selected Column:', id);
-
     if (parseInt(id) === selectedColumn) {
       setColumnOrder(columnOrder === 'asc' ? 'desc' : 'asc');
     } else {
@@ -65,7 +63,6 @@ const ArtifactTable = ({ artifacts, handleDeleteArtifact, handleUpdateArtifact }
         </TableHead>
 
         <TableBody>
-          {artifacts.map(art => console.log(art))}
           {artifacts.sort(getActiveSort()).map(artifact => (
             <TableRow key={artifact._id}>
               <ArtifactTableRow
