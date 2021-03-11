@@ -93,7 +93,7 @@ describe('<ArtifactModal />', () => {
 
     it('can fill out the CPG form', async () => {
       const handleAddArtifact = jest.fn();
-      renderComponent({handleAddArtifact});
+      renderComponent({ handleAddArtifact });
 
       const dialog = within(await screen.findByRole('dialog'));
       await waitForInputValueChange(dialog.getByLabelText(/Artifact Name/), 'NewArtifactName');
@@ -108,8 +108,9 @@ describe('<ArtifactModal />', () => {
         fireEvent.change(dialog.getByLabelText(/Usage/), { target: { value: 'NewArtifactUsage' } });
         fireEvent.change(dialog.getByLabelText(/Copyright/), { target: { value: 'NewArtifactCopyright' } });
 
-        const [approvalDate, lastReviewDate, effectivePeriodStart, effectivePeriodEnd] = 
-          dialog.getAllByPlaceholderText('mm/dd/yyyy');
+        const [approvalDate, lastReviewDate, effectivePeriodStart, effectivePeriodEnd] = dialog.getAllByPlaceholderText(
+          'mm/dd/yyyy'
+        );
         fireEvent.change(approvalDate, { target: { value: '01/01/2000' } });
         fireEvent.change(lastReviewDate, { target: { value: '01/02/2000' } });
         fireEvent.change(effectivePeriodStart, {
@@ -207,7 +208,7 @@ describe('<ArtifactModal />', () => {
 
     it('can edit the form', async () => {
       const handleUpdateArtifact = jest.fn();
-      renderComponent({artifactEditing: artifactMock, handleUpdateArtifact});
+      renderComponent({ artifactEditing: artifactMock, handleUpdateArtifact });
 
       const dialog = within(await screen.findByRole('dialog'));
       await waitForInputValueChange(dialog.getByLabelText(/Artifact Name/), 'Edited Artifact Name');
