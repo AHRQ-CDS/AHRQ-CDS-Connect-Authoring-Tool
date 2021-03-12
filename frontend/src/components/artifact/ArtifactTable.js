@@ -1,4 +1,4 @@
-import { React, useState } from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TableSortLabel } from '@material-ui/core';
 
@@ -16,7 +16,7 @@ const ArtifactTable = ({ artifacts, handleDeleteArtifact, handleUpdateArtifact }
     {columnName: 'Last Changed', columnSortHandler: sortByDateEdited},
     {columnName: 'Date Created', columnSortHandler: sortByDateCreated},
   ];
-  
+
   const handleLabelClick = id => {
     if (parseInt(id) === selectedColumn) {
       setColumnOrder(columnOrder === 'asc' ? 'desc' : 'asc');
