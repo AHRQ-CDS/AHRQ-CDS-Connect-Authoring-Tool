@@ -7,7 +7,7 @@ import { sortByName, sortByVersion, sortByDateEdited, sortByDateCreated } from '
 import artifactProps from 'prop-types/artifact';
 
 const ArtifactTable = ({ artifacts, handleDeleteArtifact, handleUpdateArtifact }) => {
-  const [selectedColumn, setSelectedColumn] = useState(0);
+  const [selectedColumn, setSelectedColumn] = useState(2);
   const [columnOrder, setColumnOrder] = useState('asc');
 
   const createColumn = (columnName, columnSortHandler) => {

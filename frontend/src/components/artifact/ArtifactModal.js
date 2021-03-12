@@ -25,10 +25,7 @@ const ArtifactModal = ({ artifactEditing, handleAddArtifact, handleCloseModal, h
 
   const validate = useCallback(values => {
     const errors = {};
-    // eslint-disable-next-line
-    const apr_regex = /\b\d{1}\.\d{1}\.\d{1}\b/;
     if (values.name === '') errors.name = 'Required';
-    if (values.version !== '' && !values.version.match(apr_regex)) errors.version = '\tVersion is invalid! See Below.';
     return errors;
   }, []);
 
