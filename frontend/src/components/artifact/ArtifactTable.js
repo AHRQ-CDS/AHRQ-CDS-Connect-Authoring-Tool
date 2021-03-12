@@ -10,16 +10,13 @@ const ArtifactTable = ({ artifacts, handleDeleteArtifact, handleUpdateArtifact }
   const [selectedColumn, setSelectedColumn] = useState(2);
   const [columnOrder, setColumnOrder] = useState('asc');
 
-  const createColumn = (columnName, columnSortHandler) => {
-    return { columnName: columnName, columnSortHandler: columnSortHandler };
-  };
-
-  const columns = [];
-  columns.push(createColumn('Artifact Name', sortByName));
-  columns.push(createColumn('Version', sortByVersion));
-  columns.push(createColumn('Last Changed', sortByDateEdited));
-  columns.push(createColumn('Date Created', sortByDateCreated));
-
+  const columns = [
+    {columnName: 'Artifact Name', columnSortHandler: sortByName},
+    {columnName: 'Version', columnSortHandler: sortByVersion},
+    {columnName: 'Last Changed', columnSortHandler: sortByDateEdited},
+    {columnName: 'Date Created', columnSortHandler: sortByDateCreated},
+  ];
+  
   const handleLabelClick = id => {
     if (parseInt(id) === selectedColumn) {
       setColumnOrder(columnOrder === 'asc' ? 'desc' : 'asc');
