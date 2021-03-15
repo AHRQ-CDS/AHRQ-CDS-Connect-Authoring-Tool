@@ -158,7 +158,6 @@ describe('artifactSort', () => {
       });
 
       artifacts = artifacts.sort(sortByVersion);
-
       expect(JSON.stringify(artifacts.map(a => a.version))).toEqual(JSON.stringify(orderedVersions));
     });
   });
