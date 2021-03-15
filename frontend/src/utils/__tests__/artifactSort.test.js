@@ -144,10 +144,7 @@ describe('artifactSort', () => {
         return createMockArtifact(index.toString(), version, '', '');
       });
 
-      console.log(JSON.stringify(artifacts.map(a => a.version)));
       artifacts = artifacts.sort(sortByVersion);
-      console.log(JSON.stringify(artifacts.map(a => a.version)));
-
       expect(JSON.stringify(artifacts.map(a => a.version))).toEqual(JSON.stringify(orderedVersions));
     });
 
@@ -155,7 +152,6 @@ describe('artifactSort', () => {
     it('should sort artifacts by APR version strings (REVERSE),\
          then default to STRING comparison, then to EMPTY strings', () => {
       let unorderedVersions = orderedVersions.map(v => v).reverse();
-      console.log(unorderedVersions);
 
       let artifacts = unorderedVersions.map((version, index) => {
         return createMockArtifact(index.toString(), version, '', '');
@@ -164,9 +160,6 @@ describe('artifactSort', () => {
       artifacts = artifacts.sort(sortByVersion);
 
       expect(JSON.stringify(artifacts.map(a => a.version))).toEqual(JSON.stringify(orderedVersions));
-
-      console.log(JSON.stringify(orderedVersions));
-      console.log(JSON.stringify(artifacts.map(a => a.version)));
     });
   });
 });
