@@ -121,23 +121,25 @@ describe('artifactSort', () => {
 
   describe('sortByVersion: Greater APR Precedes Lesser APR', () => {
     const orderedVersions = [
-      // '1.1.0',
-      // '1.0.1',
-      // '1.0.0',
-      // '0.1.0',
-      // '0.0.1',
-      // '0.0.0',
+      '1.1.0',
+      '1.0.1',
+      '1.0.0',
+      '0.1.0',
+      '0.0.1',
+      '0.0.0',
       'alphabet',
       'balloons',
       'cats',
       'dylan',
       'jacob',
       'xylem',
-      'zebras'
-      // ''
+      'zebras',
+      ''
     ];
 
-    it('should sort artifacts by APR version strings (IN-ORDER), then default to STRING comparison, then to EMPTY strings', () => {
+    //eslint-disable-next-line
+    it('should sort artifacts by APR version strings (IN-ORDER),\
+         then default to STRING comparison, then to EMPTY strings', () => {
       let artifacts = orderedVersions.map((version, index) => {
         return createMockArtifact(index.toString(), version, '', '');
       });
@@ -147,12 +149,11 @@ describe('artifactSort', () => {
       console.log(JSON.stringify(artifacts.map(a => a.version)));
 
       expect(JSON.stringify(artifacts.map(a => a.version))).toEqual(JSON.stringify(orderedVersions));
-
-      // console.log(JSON.stringify(orderedVersions));
-      // console.log(JSON.stringify(artifacts.map(a => a.version)));
     });
 
-    it('should sort artifacts by APR version strings (REVERSE), then default to STRING comparison, then to EMPTY strings', () => {
+    //eslint-disable-next-line
+    it('should sort artifacts by APR version strings (REVERSE),\
+         then default to STRING comparison, then to EMPTY strings', () => {
       let unorderedVersions = orderedVersions.map(v => v).reverse();
       console.log(unorderedVersions);
 

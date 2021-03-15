@@ -47,7 +47,6 @@ const ArtifactTableRow = ({ artifact, handleDeleteArtifact, handleUpdateArtifact
         </Button>
 
         <Button
-          size="small"
           className={styles.artifactButton}
           color="secondary"
           onClick={() => setShowDeleteConfirmationModal(true)}
