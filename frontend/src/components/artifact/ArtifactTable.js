@@ -33,17 +33,17 @@ const ArtifactTable = ({ artifacts, handleDeleteArtifact, handleUpdateArtifact }
         <TableHead>
           <TableRow>
             {columns.map((column, index) => (
-                <TableCell key={index}>
-                  <TableSortLabel
-                    id={index}
-                    direction={selectedColumnIndex !== index || sortAsc ? 'asc' : 'desc'}
-                    active={selectedColumnIndex === index}
-                    onClick={() => handleRequestSort(index)}
-                    style={{ whiteSpace: 'nowrap' }}
-                  >
-                    {column.columnName}
-                  </TableSortLabel>
-                </TableCell>
+              <TableCell key={index}>
+                <TableSortLabel
+                  id={index}
+                  direction={selectedColumnIndex !== index || sortAsc ? 'asc' : 'desc'}
+                  active={selectedColumnIndex === index}
+                  onClick={() => handleRequestSort(index)}
+                  style={{ whiteSpace: 'nowrap' }}
+                >
+                  {column.columnName}
+                </TableSortLabel>
+              </TableCell>
             ))}
 
             <TableCell></TableCell>
