@@ -7,8 +7,8 @@ import { sortByName, sortByVersion, sortByDateEdited, sortByDateCreated } from '
 import artifactProps from 'prop-types/artifact';
 
 const ArtifactTable = ({ artifacts, handleDeleteArtifact, handleUpdateArtifact }) => {
-  const [selectedColumn, setSelectedColumn] = useState(2);
-  const [columnOrder, setColumnOrder] = useState(true);
+  const [selectedColumnIndex, setSelectedColumnIndex] = useState(2);
+  const [sortAsc, setSortAsc] = useState(true);
 
   const columns = [
     { columnName: 'Artifact Name', columnSortHandler: sortByName },
@@ -17,18 +17,14 @@ const ArtifactTable = ({ artifacts, handleDeleteArtifact, handleUpdateArtifact }
     { columnName: 'Date Created', columnSortHandler: sortByDateCreated }
   ];
 
-  const handleLabelClick = id => {
-    if (parseInt(id) === selectedColumn) {
-      setColumnOrder(columnOrder === true ? false : true);
-    } else {
-      setSelectedColumn(parseInt(id));
-      setColumnOrder(true);
-    }
+  const handleRequestSort = columnIndex => {
+    setSelectedColumnIndex(columnIndex);
+    setSortAsc(columnIndex === selectedColumnIndex ? !sortAsc : true);
   };
 
   const getActiveSort = () => {
-    const activeSort = columns[selectedColumn].columnSortHandler;
-    return (a, b) => (columnOrder ? 1 : -1) * activeSort(a, b);
+    const activeSort = columns[selectedColumnIndex].columnSortHandler;
+    return (a, b) => (sortAsc ? 1 : -1) * activeSort(a, b);
   };
 
   return (
@@ -36,20 +32,19 @@ const ArtifactTable = ({ artifacts, handleDeleteArtifact, handleUpdateArtifact }
       <Table aria-label="artifact table">
         <TableHead>
           <TableRow>
-            {columns.map((column, index) => {
-              return (
-                <TableCell key={index} padding="none">
+            {columns.map((column, index) => (
+                <TableCell key={index}>
                   <TableSortLabel
                     id={index}
-                    direction={selectedColumn === index ? (columnOrder ? 'asc' : 'desc') : 'asc'}
-                    active={selectedColumn === index}
-                    onClick={() => handleLabelClick(index)}
+                    direction={selectedColumnIndex !== index || sortAsc ? 'asc' : 'desc'}
+                    active={selectedColumnIndex === index}
+                    onClick={() => handleRequestSort(index)}
+                    style={{ whiteSpace: 'nowrap' }}
                   >
                     {column.columnName}
                   </TableSortLabel>
                 </TableCell>
-              );
-            })}
+            ))}
 
             <TableCell></TableCell>
           </TableRow>
