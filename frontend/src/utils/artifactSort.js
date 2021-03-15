@@ -19,7 +19,10 @@ export function sortByName(a, b) {
 
 export function sortByVersion(a, b) {
   const aprRegex = /\b\d{1}\.\d{1}\.\d{1}\b/;
+  // console.log("comparing", a.version, b.version);
+  // Compare two APRS
   if (a.version.match(aprRegex) && b.version.match(aprRegex)) {
+    // console.log("comparing aprs");
     const digitsA = a.version.split('.').map(strNumeral => parseInt(strNumeral));
     const digitsB = b.version.split('.').map(strNumeral => parseInt(strNumeral));
 
@@ -32,12 +35,13 @@ export function sortByVersion(a, b) {
   } else if (a.version.match(aprRegex) && !b.version.match(aprRegex)) {
     return -1;
   } else if (!a.version.match(aprRegex) && b.version.match(aprRegex)) {
-    return 1;   
-  } else if (a.version === "" && b.version !== "") {
-      return 1;
-  } else if (a.version !== "" && b.version === "") {
-      return -1;
+    return 1;
+  } else if (a.version === '' && b.version !== '') {
+    return 1;
+  } else if (a.version !== '' && b.version === '') {
+    return -1;
   } else {
-    return -1 * a.name.localeCompare(b.name);
+    console.log('a and b are strings', a.name.localeCompare(b.name, 'en'));
+    return Math.sign(a.version.localeCompare(b.version, 'en'));
   }
 }

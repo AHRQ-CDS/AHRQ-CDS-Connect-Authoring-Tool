@@ -25,7 +25,6 @@ const ArtifactTableRow = ({ artifact, handleDeleteArtifact, handleUpdateArtifact
     [handleDeleteArtifact]
   );
 
-
   return (
     <>
       <TableCell className={textStyles.bold}>
@@ -36,29 +35,28 @@ const ArtifactTableRow = ({ artifact, handleDeleteArtifact, handleUpdateArtifact
       <TableCell>{renderDate(artifact.updatedAt)}</TableCell>
       <TableCell>{renderDate(artifact.createdAt)}</TableCell>
 
-        <TableCell align={"right"} style={{whiteSpace : "nowrap"}}>
-          <Button
-            size="small"
-            className={styles.artifactButton}
-            color="primary"
-            onClick={() => setShowArtifactModal(true)}
-            startIcon={<EditIcon />}
-            variant="contained"
-          >
-            Edit Info
-          </Button>
+      <TableCell align={'right'} style={{ whiteSpace: 'nowrap' }}>
+        <Button
+          className={styles.artifactButton}
+          color="primary"
+          onClick={() => setShowArtifactModal(true)}
+          startIcon={<EditIcon />}
+          variant="contained"
+        >
+          Edit Info
+        </Button>
 
-          <Button
-            size="small"
-            className={styles.artifactButton}
-            color="secondary"
-            onClick={() => setShowDeleteConfirmationModal(true)}
-            startIcon={<DeleteIcon />}
-            variant="contained"
-          >
-            Delete
-          </Button>
-        </TableCell>
+        <Button
+          size="small"
+          className={styles.artifactButton}
+          color="secondary"
+          onClick={() => setShowDeleteConfirmationModal(true)}
+          startIcon={<DeleteIcon />}
+          variant="contained"
+        >
+          Delete
+        </Button>
+      </TableCell>
 
       {showArtifactModal && (
         <ArtifactModal

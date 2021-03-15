@@ -8,31 +8,27 @@ import artifactProps from 'prop-types/artifact';
 
 const ArtifactTable = ({ artifacts, handleDeleteArtifact, handleUpdateArtifact }) => {
   const [selectedColumn, setSelectedColumn] = useState(2);
-  const [columnOrder, setColumnOrder] = useState('asc');
+  const [columnOrder, setColumnOrder] = useState(true);
 
   const columns = [
-    {columnName: 'Artifact Name', columnSortHandler: sortByName},
-    {columnName: 'Version', columnSortHandler: sortByVersion},
-    {columnName: 'Last Changed', columnSortHandler: sortByDateEdited},
-    {columnName: 'Date Created', columnSortHandler: sortByDateCreated},
+    { columnName: 'Artifact Name', columnSortHandler: sortByName },
+    { columnName: 'Version', columnSortHandler: sortByVersion },
+    { columnName: 'Last Changed', columnSortHandler: sortByDateEdited },
+    { columnName: 'Date Created', columnSortHandler: sortByDateCreated }
   ];
 
   const handleLabelClick = id => {
     if (parseInt(id) === selectedColumn) {
-      setColumnOrder(columnOrder === 'asc' ? 'desc' : 'asc');
+      setColumnOrder(columnOrder === true ? false : true);
     } else {
       setSelectedColumn(parseInt(id));
-      setColumnOrder('asc');
+      setColumnOrder(true);
     }
   };
 
-  const isActiveColumn = columnIndex => (selectedColumn === columnIndex ? true : false);
-
   const getActiveSort = () => {
     const activeSort = columns[selectedColumn].columnSortHandler;
-    return (a, b) => {
-      return (columnOrder === 'asc' ? 1 : -1) * activeSort(a, b);
-    };
+    return (a, b) => (columnOrder ? 1 : -1) * activeSort(a, b);
   };
 
   return (
@@ -45,8 +41,8 @@ const ArtifactTable = ({ artifacts, handleDeleteArtifact, handleUpdateArtifact }
                 <TableCell key={index} padding="none">
                   <TableSortLabel
                     id={index}
-                    direction={isActiveColumn(index) ? columnOrder : 'asc'}
-                    active={isActiveColumn(index)}
+                    direction={selectedColumn === index ? (columnOrder ? 'asc' : 'desc') : 'asc'}
+                    active={selectedColumn === index}
                     onClick={() => handleLabelClick(index)}
                   >
                     {column.columnName}
