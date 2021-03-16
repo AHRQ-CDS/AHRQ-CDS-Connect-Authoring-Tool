@@ -33,8 +33,9 @@ const ArtifactTableRow = ({ artifact, handleDeleteArtifact, handleUpdateArtifact
 
       <TableCell>{artifact.version}</TableCell>
       <TableCell>{renderDate(artifact.updatedAt)}</TableCell>
+      <TableCell>{renderDate(artifact.createdAt)}</TableCell>
 
-      <TableCell align="right">
+      <TableCell align="right" style={{ whiteSpace: 'nowrap' }}>
         <Button
           className={styles.artifactButton}
           color="primary"

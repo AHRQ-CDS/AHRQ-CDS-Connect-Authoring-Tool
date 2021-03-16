@@ -26,8 +26,8 @@ const versionHelperText = (
       external
       href="http://build.fhir.org/ig/HL7/cqf-recommendations/documentation-libraries.html"
       text="FHIR Clinical Guidelines"
-    />
-    {' '}for more information.
+    />{' '}
+    for more information.
   </>
 );
 
@@ -38,10 +38,10 @@ const cpgScoreHelperText = (
       external
       href="http://hl7.org/fhir/uv/cpg/2019Sep/"
       text="Clinical Practice Guidelines on FHIR (CPG-on-FHIR)"
-    />
-    {' '}is a standards-based standardized approach serving as a framework for shareable, interoperable,
-    computable guidelines with the goal of connecting research and evidence swiftly and accurately to those
-    who need it most, including clinicians and patients.
+    />{' '}
+    is a standards-based standardized approach serving as a framework for shareable, interoperable, computable
+    guidelines with the goal of connecting research and evidence swiftly and accurately to those who need it most,
+    including clinicians and patients.
   </>
 );
 
@@ -107,13 +107,15 @@ const contextTypeWorkflowSettingOptions = [
   { value: 'virtual', label: 'virtual' }
 ];
 
-const contextTypeWorkflowTaskOptions = fhirWorkflowTaskCodes.map(taskCode =>
-  ({ value: taskCode.Code, label: `${taskCode.Code} - ${taskCode.Display}` })
-);
+const contextTypeWorkflowTaskOptions = fhirWorkflowTaskCodes.map(taskCode => ({
+  value: taskCode.Code,
+  label: `${taskCode.Code} - ${taskCode.Display}`
+}));
 
-const contextTypeClinicalVenueOptions = fhirClinicalVenueCodes.map(venueCode =>
-  ({ value: venueCode.Code, label: `${venueCode.Code} - ${venueCode.Display}` })
-);
+const contextTypeClinicalVenueOptions = fhirClinicalVenueCodes.map(venueCode => ({
+  value: venueCode.Code,
+  label: `${venueCode.Code} - ${venueCode.Display}`
+}));
 
 const unitOfTimeOptions = [
   { value: 'seconds', label: 'seconds' },
@@ -125,9 +127,7 @@ const unitOfTimeOptions = [
   { value: 'years', label: 'years' }
 ];
 
-const relatedArtifactOptions = [
-  { value: 'citation', label: 'Citation' }
-];
+const relatedArtifactOptions = [{ value: 'citation', label: 'Citation' }];
 
 // conditions
 
@@ -198,9 +198,7 @@ const contextTypeConditions = {
     { type: 'button', component: AuthenticateVSACField },
     { type: 'button', component: CodeSelectField }
   ],
-  program: [
-    { name: 'program', label: 'Program', component: TextField }
-  ]
+  program: [{ name: 'program', label: 'Program', component: TextField }]
 };
 
 const relatedArtifactConditions = {
