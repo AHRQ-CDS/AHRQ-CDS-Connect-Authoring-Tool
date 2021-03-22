@@ -236,6 +236,11 @@ const materialUiOverridesBase = {
       backgroundColor: colors.white
     }
   },
+  MuiPickersBasePicker: {
+    pickerView: {
+      maxWidth: 'inherit'
+    }
+  },
   MuiSelect: {
     root: {
       padding: '14px 16px',

@@ -5,20 +5,18 @@ import clsx from 'clsx';
 
 import { useFieldStyles, useFlexStyles } from 'styles/hooks';
 
-const TextAreaField = ({ id, name, updateInstance, value }) => {
+const TextAreaField = ({ field, handleUpdateField }) => {
   const fieldStyles = useFieldStyles();
   const flexStyles = useFlexStyles();
 
   return (
-    <div className={clsx('text-area-field', fieldStyles.field)}>
-      <div className={fieldStyles.fieldLabel}>{name}:</div>
-
+    <div id="text-area-field">
       <TextField
         className={clsx(fieldStyles.fieldInput, flexStyles.flex1)}
         fullWidth
         multiline
-        onChange={event => updateInstance({ [id]: event.target.value })}
-        value={value || ''}
+        onChange={event => handleUpdateField({ [field.id]: event.target.value })}
+        value={field.value || ''}
         variant="outlined"
       />
     </div>
@@ -26,10 +24,8 @@ const TextAreaField = ({ id, name, updateInstance, value }) => {
 };
 
 TextAreaField.propTypes = {
-  id: PropTypes.string.isRequired,
-  name: PropTypes.string.isRequired,
-  updateInstance: PropTypes.func.isRequired,
-  value: PropTypes.string
+  field: PropTypes.object.isRequired,
+  handleUpdateField: PropTypes.func.isRequired
 };
 
 export default TextAreaField;

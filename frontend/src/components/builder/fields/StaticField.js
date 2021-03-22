@@ -1,7 +1,7 @@
 import React from 'react';
 
 const StaticField = props => (
-  <div className="static-field">
+  <div id="static-field">
     <input
       type="hidden"
       aria-hidden="true"

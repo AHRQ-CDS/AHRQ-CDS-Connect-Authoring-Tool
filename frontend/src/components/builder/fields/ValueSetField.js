@@ -7,38 +7,33 @@ import { Dropdown } from 'components/elements';
 import fetchValueSets from 'queries/fetchValueSets';
 import { useFieldStyles } from 'styles/hooks';
 
-const ValueSetField = ({ field, updateInstance }) => {
+const ValueSetField = ({ field, handleUpdateField }) => {
   const fieldStyles = useFieldStyles();
   const query = { type: field.select };
   const { data } = useQuery(['valueSets', query], () => fetchValueSets(query));
   const valueSets = data ?? [];
 
-  const handleUpdateInstance = event => {
-    const value = valueSets.find(valueSet => valueSet.id === event.target.value);
-    updateInstance({ [field.id]: value });
-  };
-
   return (
-    <div className={clsx('value-set-field', fieldStyles.field)}>
-      <div className={fieldStyles.fieldLabel}>{field.name}:</div>
-
+    <div id="value-set-field">
       <Dropdown
         className={clsx(fieldStyles.fieldInput, fieldStyles.fieldInputMd)}
+        id={field.id}
         label={field.name}
-        onChange={handleUpdateInstance}
+        labelKey="name"
+        onChange={event =>
+          handleUpdateField({ [field.id]: valueSets.find(valueSet => valueSet.id === event.target.value) })
+        }
         options={valueSets}
         value={valueSets.length > 0 && field.value ? field.value.id : ''}
         valueKey="id"
-        labelKey="name"
-        id={field.id}
       />
     </div>
   );
 };
 
 ValueSetField.propTypes = {
-  field: PropTypes.object,
-  updateInstance: PropTypes.func
+  field: PropTypes.object.isRequired,
+  handleUpdateField: PropTypes.func.isRequired
 };
 
 export default ValueSetField;

@@ -1,104 +1,103 @@
-import React, { Component } from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { TextField } from '@material-ui/core';
+import { Alert } from '@material-ui/lab';
+import { Remove as DashIcon } from '@material-ui/icons';
+import clsx from 'clsx';
 
 import UcumField from 'components/builder/fields/UcumField';
+import { isInteger } from 'utils/numbers';
+import { useFieldStyles } from 'styles/hooks';
 
-export default class QuantityEditor extends Component {
-  constructor(props) {
-    super(props);
+const QuantityEditor = ({ handleUpdateEditor, isInterval, value }) => {
+  const [showInputWarning, setShowInputWarning] = useState(false);
+  const [showIncompleteWarning, setShowIncompleteWarning] = useState(false);
+  const fieldStyles = useFieldStyles();
 
-    const quantity = props.value?.quantity || '';
-    const unit = props.value?.unit || '';
+  const shouldShowInputWarning = quantity => Boolean(quantity && !/^-?\d+(\.\d+)?$/.test(quantity));
+  const shouldShowIncompleteWarning = (unit, quantity) => Boolean(unit && !(quantity || quantity === 0));
 
-    this.state = {
-      showInputWarning: this.shouldShowInputWarning(quantity),
-      showIncompleteWarning: this.shouldShowIncompleteWarning(quantity, unit)
-    };
-  }
-
-  handleChange = (newValue, inputType) => {
-    const { name, type, label, updateInstance, value } = this.props;
-    const quantity = inputType === 'quantity' ? newValue : value?.quantity || '';
+  const handleChange = (newValue, inputType) => {
+    if (newValue && Number.isNaN(newValue.valueOf())) return;
     const unit = inputType === 'unit' ? newValue || '' : value?.unit || '';
-    const str = this.getString(quantity, unit);
+    const escapedQuoteUnit = (unit ? unit.replace(/'/g, "\\'") : unit) || '1';
 
-    this.setState({
-      showInputWarning: this.shouldShowInputWarning(quantity),
-      showIncompleteWarning: this.shouldShowIncompleteWarning(quantity, unit)
-    });
+    if (isInterval) {
+      const firstQuantity = (inputType === 'firstQuantity' ? newValue : value?.firstQuantity) || null;
+      const secondQuantity = (inputType === 'secondQuantity' ? newValue : value?.secondQuantity) || null;
+      const firstQuantityStr =
+        firstQuantity != null ? `${firstQuantity}${isInteger(firstQuantity) ? '.0' : ''} '${escapedQuoteUnit}'` : null;
+      const secondQuantityStr =
+        secondQuantity != null
+          ? `${secondQuantity}${isInteger(secondQuantity) ? '.0' : ''} '${escapedQuoteUnit}'`
+          : null;
+      const str = `Interval[${firstQuantityStr},${secondQuantityStr}]`;
 
-    updateInstance({ name, type, label, value: { quantity, unit, str } });
-  };
-
-  getString = (quantity, unit) => {
-    let str = '';
-    const escapedQuoteUnit = (unit ? unit.replace(/'/g, '\\\'') : unit) || '1';
-    if (Number.isInteger(parseFloat(quantity))) {
-      str = `${quantity}.0 '${escapedQuoteUnit}'`;
+      setShowInputWarning(shouldShowInputWarning(firstQuantity) || shouldShowInputWarning(secondQuantity));
+      setShowIncompleteWarning(
+        shouldShowIncompleteWarning(unit, firstQuantity) && shouldShowIncompleteWarning(unit, secondQuantity)
+      );
+      handleUpdateEditor(firstQuantity || secondQuantity || unit ? { firstQuantity, secondQuantity, unit, str } : null);
     } else {
-      str = `${quantity} '${escapedQuoteUnit}'`;
-    }
+      const quantity = inputType === 'quantity' ? newValue : value?.quantity || '';
+      const str = `${quantity}${isInteger(quantity) ? '.0' : ''} '${escapedQuoteUnit}'`;
 
-    return str;
+      setShowInputWarning(shouldShowInputWarning(quantity));
+      setShowIncompleteWarning(shouldShowIncompleteWarning(unit, quantity));
+      handleUpdateEditor(quantity || unit ? { quantity, unit, str } : null);
+    }
   };
 
-  shouldShowInputWarning = value => {
-    return Boolean(value && !/^-?\d+(\.\d+)?$/.test(value));
-  }
+  return (
+    <div className={fieldStyles.fieldInputFullWidth} id="quantity-editor">
+      <div className={clsx(fieldStyles.fieldInputGroup, fieldStyles.fieldInputGroupJustifyLeft)}>
+        <TextField
+          className={clsx(fieldStyles.fieldInput, fieldStyles.fieldInputSm)}
+          fullWidth
+          label="Value"
+          onChange={event => handleChange(event.target.value, isInterval ? 'firstQuantity' : 'quantity')}
+          value={isInterval ? value?.firstQuantity || '' : value?.quantity || ''}
+          variant="outlined"
+        />
 
-  shouldShowIncompleteWarning = (quantity, unit) => {
-    return Boolean((unit && !(quantity || quantity === 0)));
-  }
+        {isInterval && (
+          <>
+            <DashIcon className={fieldStyles.fieldInput} />
 
-  render() {
-    const { label, value } = this.props;
-    const { showInputWarning, showIncompleteWarning } = this.state;
-
-    return (
-      <div className="editor quantity-editor">
-        <div className="editor-label">{label}</div>
-
-        <div className="editor-inputs">
-          <TextField
-            className="field-input field-input-sm"
-            fullWidth
-            label="Value"
-            onChange={event => this.handleChange(event.target.value, 'quantity')}
-            value={value?.quantity || ''}
-            variant="outlined"
-          />
-
-          <div className="field-input field-input-lg">
-            <UcumField
-              handleChangeUnit={(event, option) => this.handleChange(option?.value, 'unit')}
-              unit={value?.unit || ''}
+            <TextField
+              className={clsx(fieldStyles.fieldInput, fieldStyles.fieldInputSm)}
+              fullWidth
+              label="Value"
+              onChange={event => handleChange(event.target.value, 'secondQuantity')}
+              value={value?.secondQuantity || ''}
+              variant="outlined"
             />
-          </div>
-        </div>
+          </>
+        )}
 
-        <div className="editor-warnings">
-          {showInputWarning &&
-            <div className="warning">
-              Warning: The Quantity's numerical value must be a valid Decimal.
-            </div>
-          }
-
-          {showIncompleteWarning &&
-            <div className="warning">
-              Warning: A Quantity must have at least a numerical value.
-            </div>
-          }
+        <div className={clsx(fieldStyles.fieldInput, fieldStyles.fieldInputLg)}>
+          <UcumField
+            handleChangeUnit={(event, option) => handleChange(option?.value, 'unit')}
+            unit={value?.unit || ''}
+          />
         </div>
       </div>
-    );
-  }
-}
+
+      {showInputWarning && (
+        <Alert severity="error">Warning: The Quantity's numerical value must be a valid Decimal.</Alert>
+      )}
+
+      {showIncompleteWarning && (
+        <Alert severity="error">Warning: A Quantity must have at least a numerical value.</Alert>
+      )}
+    </div>
+  );
+};
 
 QuantityEditor.propTypes = {
-  name: PropTypes.string,
-  type: PropTypes.string.isRequired,
-  label: PropTypes.string.isRequired,
-  value: PropTypes.object,
-  updateInstance: PropTypes.func.isRequired
+  handleUpdateEditor: PropTypes.func.isRequired,
+  isInterval: PropTypes.bool,
+  value: PropTypes.oneOfType([PropTypes.string, PropTypes.object])
 };
+
+export default QuantityEditor;

@@ -2,8 +2,6 @@ import React from 'react';
 import { render, fireEvent, userEvent, screen } from 'utils/test-utils';
 import Parameter from '../Parameter';
 
-jest.mock('../editors/Editor', () => () => <div>Editor</div>);
-
 describe('<Parameter />', () => {
   const renderComponent = (props = {}) =>
     render(
@@ -99,6 +97,6 @@ describe('<Parameter />', () => {
   it('displays the Editor when passed a valid parameter type', () => {
     renderComponent({ type: 'boolean' });
 
-    expect(screen.getByText('Editor')).not.toBeNull();
+    expect(screen.getByText('Default Value:')).toBeInTheDocument();
   });
 });

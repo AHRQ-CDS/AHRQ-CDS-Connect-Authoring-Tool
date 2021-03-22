@@ -1,162 +1,115 @@
-import React, { Component } from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
+import { useSelector } from 'react-redux';
 import { Button, IconButton, Paper } from '@material-ui/core';
 import { Close as CloseIcon, LocalHospital as LocalHospitalIcon, Lock as LockIcon } from '@material-ui/icons';
+import clsx from 'clsx';
 
 import { CodeSelectModal, VSACAuthenticationModal } from 'components/modals';
+import { useFieldStyles } from 'styles/hooks';
 
-export default class CodeEditor extends Component {
-  constructor(props) {
-    super(props);
+const CodeEditorButtons = ({ codeButtonText, handleSelectCode }) => {
+  const [showCodeSelectModal, setShowCodeSelectModal] = useState(false);
+  const [showVSACAuthModal, setShowVSACAuthModal] = useState(false);
+  const vsacApiKey = useSelector(state => state.vsac.apiKey);
 
-    this.state = {
-      showCodeSelectModal: false,
-      showVSACAuthenticationModal: false
-    };
-  }
+  return (
+    <>
+      {!Boolean(vsacApiKey) ? (
+        <Button color="primary" onClick={() => setShowVSACAuthModal(true)} variant="contained" startIcon={<LockIcon />}>
+          Authenticate VSAC
+        </Button>
+      ) : (
+        <Button
+          color="primary"
+          onClick={() => setShowCodeSelectModal(true)}
+          startIcon={<LocalHospitalIcon />}
+          variant="contained"
+        >
+          {codeButtonText}
+        </Button>
+      )}
 
-  openVSACAuthenticationModal = () => {
-    this.setState({ showVSACAuthenticationModal: true });
-  }
+      {showVSACAuthModal && <VSACAuthenticationModal handleCloseModal={() => setShowVSACAuthModal(false)} />}
 
-  closeVSACAuthenticationModal = () => {
-    this.setState({ showVSACAuthenticationModal: false });
-  }
+      {showCodeSelectModal && (
+        <CodeSelectModal
+          handleCloseModal={() => setShowCodeSelectModal(false)}
+          handleSelectCode={codeData => handleSelectCode(codeData)}
+        />
+      )}
+    </>
+  );
+};
 
-  openCodeSelectModal = () => {
-    this.setState({ showCodeSelectModal: true });
-  }
+CodeEditorButtons.propTypes = {
+  codeButtonText: PropTypes.string.isRequired,
+  handleSelectCode: PropTypes.func.isRequired
+};
 
-  closeCodeSelectModal = () => {
-    this.setState({ showCodeSelectModal: false });
-  }
+const CodeEditorField = ({ label, value }) => {
+  const fieldStyles = useFieldStyles();
 
-  handleSelectCode = codeData => {
-    const { isConcept, updateInstance } = this.props;
-    const codeStr = `Code '${codeData.code.replace(/'/g, '\\\'')}' from "${codeData.codeSystem.name}"`;
+  return (
+    <div className={clsx(fieldStyles.field, fieldStyles.condensedField)}>
+      <div className={fieldStyles.fieldLabel}>{label}:</div>
+      <div className={fieldStyles.fieldInput}>{value}</div>
+    </div>
+  );
+};
+
+CodeEditorField.propTypes = {
+  label: PropTypes.string.isRequired,
+  value: PropTypes.string.isRequired
+};
+
+const CodeEditor = ({ handleUpdateEditor, isConcept = false, value }) => {
+  const fieldStyles = useFieldStyles();
+
+  const handleSelectCode = codeData => {
+    const codeStr = `Code '${codeData.code.replace(/'/g, "\\'")}' from "${codeData.codeSystem.name}"`;
     const displayStr = `display '${codeData.display}'`;
     const str = isConcept ? `Concept { ${codeStr} } ${displayStr}` : `${codeStr} ${displayStr}`;
 
-    updateInstance({
-      value: {
-        system: codeData.codeSystem.name,
-        uri: codeData.codeSystem.id,
-        code: codeData.code,
-        display: codeData.display,
-        str
-      }
+    handleUpdateEditor({
+      system: codeData.codeSystem.name,
+      uri: codeData.codeSystem.id,
+      code: codeData.code,
+      display: codeData.display,
+      str
     });
-  }
+  };
 
-  renderCodePicker(openButtonText) {
-    const { vsacApiKey } = this.props;
-    const { showCodeSelectModal, showVSACAuthenticationModal } = this.state;
+  return (
+    <div className={fieldStyles.fieldInputFullWidth} id="code-editor">
+      {value != null ? (
+        <Paper className={fieldStyles.fieldCard}>
+          <div className={fieldStyles.fieldCardCloseButton}>
+            <IconButton aria-label="close" color="primary" onClick={() => handleUpdateEditor(null)}>
+              <CloseIcon />
+            </IconButton>
+          </div>
 
-    return (
-      <>
-        {!Boolean(vsacApiKey) ? (
-          <Button
-            color="primary"
-            onClick={this.openVSACAuthenticationModal}
-            variant="contained"
-            startIcon={<LockIcon />}
-          >
-            Authenticate VSAC
-          </Button>
-        ) : (
-          <Button
-            color="primary"
-            onClick={this.openCodeSelectModal}
-            startIcon={<LocalHospitalIcon />}
-            variant="contained"
-          >
-            {openButtonText}
-          </Button>
-        )}
+          <CodeEditorField label="Code" value={value.code} />
+          <CodeEditorField label="System" value={value.system} />
+          <CodeEditorField label="System URI" value={value.uri} />
+          {value.display && <CodeEditorField label="Display" value={value.display} />}
 
-        {showVSACAuthenticationModal && (
-          <VSACAuthenticationModal handleCloseModal={this.closeVSACAuthenticationModal} />
-        )}
-
-        {showCodeSelectModal && (
-          <CodeSelectModal
-            handleCloseModal={this.closeCodeSelectModal}
-            handleSelectCode={codeData => this.handleSelectCode(codeData)}
-          />
-        )}
-      </>
-    );
-  }
-
-  render() {
-    const { disableEditing, isConcept, updateInstance, value } = this.props;
-
-    return (
-      <div className="editor code-editor">
-        <div className="editor-label">{isConcept ? "Concept:" : "Code:"}</div>
-
-        <div className="editor-inputs">
-          {value != null ? (
-            <Paper className="code-editor-container">
-              <div className="close-button">
-                <IconButton aria-label="close" color="primary" onClick={() => updateInstance({ value: null })}>
-                  <CloseIcon />
-                </IconButton>
-              </div>
-
-              <div className="code-editor-element">
-                <div className="code-editor-element-label">Code:</div>
-                <div className="code-editor-element-value">{value.code}</div>
-              </div>
-
-              <div className="code-editor-element">
-                <div className="code-editor-element-label">System:</div>
-                <div className="code-editor-element-value">{value.system}</div>
-              </div>
-
-              <div className="code-editor-element">
-                <div className="code-editor-element-label">System URI:</div>
-                <div className="code-editor-element-value">{value.uri}</div>
-              </div>
-
-              {value.display &&
-                <div className="code-editor-element">
-                  <div className="code-editor-element-label">Display:</div>
-                  <div className="code-editor-element-value">{value.display}</div>
-                </div>
-              }
-
-              <div className="code-editor-footer">
-                {disableEditing ? (
-                  <div className="warning flex-1">
-                    Changing {isConcept ? 'concept' : 'code'} value is currently not supported.
-                  </div>
-                ) : (
-                  this.renderCodePicker('Change Code')
-                )}
-              </div>
-            </Paper>
-          ) : (
-            <>
-              {disableEditing ? (
-                <div className="warning flex-1">
-                  Setting {isConcept ? 'concept' : 'code'} value is currently not supported.
-                </div>
-              ) : (
-                this.renderCodePicker('Add Code')
-              )}
-            </>
-          )}
-        </div>
-      </div>
-    );
-  }
-}
+          <div className={fieldStyles.fieldCardFooter}>
+            <CodeEditorButtons codeButtonText="Change Code" handleSelectCode={handleSelectCode} />
+          </div>
+        </Paper>
+      ) : (
+        <CodeEditorButtons codeButtonText="Add Code" handleSelectCode={handleSelectCode} />
+      )}
+    </div>
+  );
+};
 
 CodeEditor.propTypes = {
-  disableEditing: PropTypes.bool,
+  handleUpdateEditor: PropTypes.func.isRequired,
   isConcept: PropTypes.bool,
-  updateInstance: PropTypes.func.isRequired,
-  value: PropTypes.object,
-  vsacApiKey: PropTypes.string
+  value: PropTypes.object
 };
+
+export default CodeEditor;

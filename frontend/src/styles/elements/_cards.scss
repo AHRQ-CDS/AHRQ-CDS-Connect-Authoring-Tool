@@ -52,6 +52,7 @@
     flex: 1;
     text-align: right;
     white-space: nowrap;
+    margin-top: 15px;
   }
 
   &__even {
@@ -214,5 +215,28 @@
     border-radius: 0.2em;
     box-shadow: 1px 1px 1px 0 rgba(21, 21, 21, 0.1);
     min-width: 200px;
+  }
+}
+
+.card-field-group {
+  width: 100%;
+}
+
+.card-field {
+  width: 100%;
+  margin: 10px 0;
+  display: flex;
+
+  .card-label {
+    min-width: 12.5em;
+    margin-top: 10px;
+    text-align: right;
+    font-weight: bold;
+    white-space: nowrap;
+    padding-right: 1em;
+  }
+
+  .card-input {
+    flex: 1;
   }
 }

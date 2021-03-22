@@ -1,65 +1,50 @@
-import React, { useState } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import { Checkbox, FormControlLabel, TextField } from '@material-ui/core';
 import clsx from 'clsx';
 
-import { useFieldStyles } from 'styles/hooks';
-import useStyles from './styles';
+import { useFieldStyles, useFlexStyles } from 'styles/hooks';
 
-const NumberField = ({ field, typeOfNumber, updateInstance, value }) => {
-  const [checked, setChecked] = useState(field.exclusive);
+const NumberField = ({ field, handleUpdateField, isInteger = false }) => {
   const fieldStyles = useFieldStyles();
-  const styles = useStyles();
+  const flexStyles = useFlexStyles();
 
-  const updateExclusive = event => {
-    field.exclusive = event.target.checked;
-    setChecked(event.target.checked);
+  const handleChangeValue = event => {
+    const newValue = isInteger === 'integer' ? parseInt(event.target.value, 10) : parseFloat(event.target.value);
+    handleUpdateField({ [field.id]: newValue });
   };
 
-  const handleChange = event => {
-    const newValue = (typeOfNumber === 'integer') ? parseInt(event.target.value, 10) : parseFloat(event.target.value);
-    updateInstance({ [field.id]: newValue });
+  const handleChangeExclusive = event => {
+    handleUpdateField({ [field.id]: event.target.value });
   };
 
   return (
-    <div className={clsx('number-field', fieldStyles.field)}>
-      <div className={styles.fieldGroup}>
-        <div className={fieldStyles.fieldLabel}>{field.name}:</div>
+    <div className={flexStyles.flex} id="number-field">
+      <TextField
+        className={clsx(fieldStyles.fieldInput, fieldStyles.fieldInputMd)}
+        fullWidth
+        label={field.name}
+        onChange={handleChangeValue}
+        type="number"
+        value={field.value || ''}
+        variant="outlined"
+      />
 
-        <div className={fieldStyles.fieldInput}>
-          <TextField
-            fullWidth
-            label={field.name}
-            onChange={handleChange}
-            type="number"
-            value={value}
-            variant="outlined"
-          />
-        </div>
-
-        {('exclusive' in field) &&
-          <FormControlLabel
-            control={
-              <Checkbox
-                checked={checked || false}
-                color="primary"
-                onChange={event => updateExclusive(event)}
-              />
-            }
-            className={fieldStyles.fieldInput}
-            label="Exclusive"
-          />
-        }
-      </div>
+      {field.exclusive && (
+        <FormControlLabel
+          className={fieldStyles.fieldInput}
+          control={<Checkbox checked={field.exclusive || false} color="primary" onChange={handleChangeExclusive} />}
+          label="Exclusive"
+        />
+      )}
     </div>
   );
 };
 
 NumberField.propTypes = {
   field: PropTypes.object.isRequired,
-  typeOfNumber: PropTypes.string.isRequired,
-  updateInstance: PropTypes.func.isRequired,
-  value: PropTypes.oneOfType([ PropTypes.number, PropTypes.string ]).isRequired
+  handleUpdateField: PropTypes.func.isRequired,
+  isInteger: PropTypes.bool
 };
 
 export default NumberField;

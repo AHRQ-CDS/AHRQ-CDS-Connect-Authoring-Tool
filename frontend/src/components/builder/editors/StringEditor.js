@@ -1,41 +1,29 @@
-import React, { Component } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import { TextField } from '@material-ui/core';
+import clsx from 'clsx';
 
-export default class StringEditor extends Component {
-  handleChange = newValue => {
-    const { name, type, label, updateInstance } = this.props;
-    const value = newValue ? `'${newValue}'` : null;
-    updateInstance({ name, type, label, value: String(value) });
-  };
+import { useFieldStyles } from 'styles/hooks';
 
-  render() {
-    const { label, value } = this.props;
+const StringEditor = ({ handleUpdateEditor, value }) => {
+  const fieldStyles = useFieldStyles();
 
-    return (
-      <div className="editor string-editor">
-        <div className="editor-label">{label}</div>
-
-        <div className="editor-inputs">
-          <div className="field-input field-input-full-width">
-            <TextField
-              fullWidth
-              label="Value"
-              onChange={event => this.handleChange(event.target.value)}
-              value={value ? value.replace(/'/g, '') : ''}
-              variant="outlined"
-            />
-          </div>
-        </div>
-      </div>
-    );
-  }
-}
+  return (
+    <div className={clsx(fieldStyles.fieldInput, fieldStyles.fieldInputMd)} id="string-editor">
+      <TextField
+        fullWidth
+        label="Value"
+        onChange={event => handleUpdateEditor(event.target.value ? `'${event.target.value}'` : null)}
+        value={value ? value.replace(/'/g, '') : ''}
+        variant="outlined"
+      />
+    </div>
+  );
+};
 
 StringEditor.propTypes = {
-  name: PropTypes.string,
-  type: PropTypes.string.isRequired,
-  label: PropTypes.string.isRequired,
-  value: PropTypes.string,
-  updateInstance: PropTypes.func.isRequired
+  handleUpdateEditor: PropTypes.func.isRequired,
+  value: PropTypes.string
 };
+
+export default StringEditor;

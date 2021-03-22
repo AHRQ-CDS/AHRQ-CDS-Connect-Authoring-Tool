@@ -1,49 +1,28 @@
 import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
-import { useSelector } from 'react-redux';
 import { MenuBook as MenuBookIcon } from '@material-ui/icons';
 import _ from 'lodash';
 
-import Editor from 'components/builder/editors/Editor';
+import { EditorsTemplate } from 'components/builder/templates';
 import { useSpacingStyles } from 'styles/hooks';
 import useStyles from './styles';
 
-const ExternalModifier = ({ argumentTypes, handleUpdateModifier, modifierArguments, name, value }) => {
-  const vsacApiKey = useSelector(state => state.vsac.apiKey);
+const ExternalModifier = ({ argumentTypes, handleUpdateModifier, modifierArguments, name, values }) => {
   const spacingStyles = useSpacingStyles();
   const styles = useStyles();
 
-  const assignValue = (event, argIndex) => {
-    const valuesClone = _.cloneDeep(value);
-    valuesClone[argIndex] = event.value;
+  const assignValue = (newValue, index) => {
+    const valuesClone = _.cloneDeep(values);
+    valuesClone[index] = newValue;
 
     handleUpdateModifier({ value: valuesClone });
   };
 
-  const editorPropsArray = [];
-  if (modifierArguments.length > 1) {
-    const defaultEditorProps = { vsacApiKey };
-
-    modifierArguments.forEach((arg, argIndex) => {
-      // We don't want the modifier input arguments to include the first function argument
-      if (argIndex === 0) return;
-      const editorProps = _.cloneDeep(defaultEditorProps);
-      editorProps.key = argIndex;
-      editorProps.id = `external-modifier-${argIndex}`;
-      editorProps.name = arg.name;
-      editorProps.label = `${arg.name}:`;
-      editorProps.type = argumentTypes[argIndex].calculated;
-      editorProps.value = value[argIndex];
-      editorProps.updateInstance = event => assignValue(event, argIndex);
-      editorPropsArray.push(editorProps);
-    });
-  }
-
   useEffect(() => {
-    if (!value || value.length === 0) {
+    if (!values || values.length === 0) {
       handleUpdateModifier({ value: new Array(modifierArguments.length).fill(null) });
     }
-  }, [handleUpdateModifier, modifierArguments.length, value]);
+  }, [handleUpdateModifier, modifierArguments.length, values]);
 
   return (
     <div className={styles.modifier}>
@@ -52,10 +31,22 @@ const ExternalModifier = ({ argumentTypes, handleUpdateModifier, modifierArgumen
         {name}
       </div>
 
-      <div className={spacingStyles.indent}>
-        {editorPropsArray.map(editorProps => (
-          <Editor {...editorProps} />
-        ))}
+      <div className={spacingStyles.indent} data-testid="editors">
+        {modifierArguments.length > 1 && modifierArguments.map((modifierArg, index) => {
+          // We don't want the modifier input arguments to include the first function argument
+          if (index === 0) return null;
+
+          return (
+            <EditorsTemplate
+              key={index}
+              handleUpdateEditor={newValue => assignValue(newValue, index)}
+              label={modifierArg.name}
+              isNested
+              type={argumentTypes[index].calculated}
+              value={values[index]}
+            />
+          );
+        })}
       </div>
     </div>
   );

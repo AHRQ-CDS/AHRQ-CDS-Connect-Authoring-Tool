@@ -1,83 +1,100 @@
-import React, { Component } from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import { KeyboardDatePicker, KeyboardTimePicker } from '@material-ui/pickers';
-import { Schedule as TimeIcon } from '@material-ui/icons';
-import { format, parse } from 'date-fns';
+import { Remove as DashIcon } from '@material-ui/icons';
+import { Alert } from '@material-ui/lab';
+import clsx from 'clsx';
 
-export default class DateTimeEditor extends Component {
-  constructor(props) {
-    super(props);
+import { DatePicker, TimePicker } from 'components/elements/Pickers';
+import {
+  convertDateForPicker,
+  convertTimeForPicker,
+  convertPickerDateToCQL,
+  convertPickerTimeToCQL
+} from 'utils/dates';
+import { useFieldStyles } from 'styles/hooks';
 
-    const date = props.value?.date || null;
-    const time = props.value?.time || null;
-
-    this.state = {
-      showInputWarning: time && !date
-    };
+const convertDateTimeForCQL = (newValues, isInterval, isTime) => {
+  const { date, time, firstDate, firstTime, secondDate, secondTime } = newValues;
+  if (isInterval) {
+    const firstDateTime = firstDate ? (firstTime ? `@${firstDate}T${firstTime}` : `@${firstDate}`) : null;
+    const secondDateTime = secondDate ? (secondTime ? `@${secondDate}T${secondTime}` : `@${secondDate}`) : null;
+    return firstDate || firstTime || secondDate || secondTime
+      ? { firstDate, firstTime, secondDate, secondTime, str: `Interval[${firstDateTime},${secondDateTime}]` }
+      : null;
   }
+  if (isTime) return time ? { time, str: `@T${time}` } : null;
+  return date || time ? { date, time, str: date ? (time ? `@${date}T${time}` : `@${date}`) : null } : null;
+};
 
-  handleChange = (newValue, inputType) => {
+const DateTimeEditor = ({ handleUpdateEditor, isInterval = false, isTime = false, value }) => {
+  const [showInputWarning, setShowInputWarning] = useState(!isTime && value?.time && !value?.date);
+  const fieldStyles = useFieldStyles();
+
+  const handleChange = (newValue, inputType) => {
     if (newValue && Number.isNaN(newValue.valueOf())) return;
 
-    const { name, type, label, updateInstance, value } = this.props;
-    const date = inputType === 'date' ? (newValue ? format(newValue, 'yyyy-MM-dd') : null) : value?.date || null;
-    const time = inputType === 'time' ? (newValue ? format(newValue, 'HH:mm:ss') : null) : value?.time || null;
-    const str = inputType === 'date' ? `@${date}` : `@${date}T${time}`;
+    let newValues = {};
+    if (isInterval) {
+      newValues.firstDate = inputType === 'firstDate' ? convertPickerDateToCQL(newValue) : value?.firstDate || null;
+      newValues.firstTime = inputType === 'firstTime' ? convertPickerTimeToCQL(newValue) : value?.firstTime || null;
+      newValues.secondDate = inputType === 'secondDate' ? convertPickerDateToCQL(newValue) : value?.secondDate || null;
+      newValues.secondTime = inputType === 'secondTime' ? convertPickerTimeToCQL(newValue) : value?.secondTime || null;
+      setShowInputWarning(
+        (newValues.firstTime && !newValues.firstDate) || (newValues.secondTime && !newValues.secondDate)
+      );
+    } else {
+      newValues.date = inputType === 'date' ? convertPickerDateToCQL(newValue) : value?.date || null;
+      newValues.time = inputType === 'time' ? convertPickerTimeToCQL(newValue) : value?.time || null;
+      setShowInputWarning(!isTime && newValues.time && !newValues.date);
+    }
 
-    this.setState({ showInputWarning: time && !date });
-    updateInstance({ name, type, label, value: { date, time, str } });
+    handleUpdateEditor(convertDateTimeForCQL(newValues, isInterval, isTime));
   };
 
-  render() {
-    const { label, value } = this.props;
-    const { showInputWarning } = this.state;
-    const date = value?.date ? parse(value.date, 'yyyy-MM-dd', new Date()) : null;
-    const time = value?.time ? parse(value.time, 'HH:mm:ss', new Date()) : null;
-
-    return (
-      <div className="editor date-time-editor">
-        <div className="editor-label">{label}</div>
-
-        <div className="editor-inputs">
-          <KeyboardDatePicker
-            className="field-input"
-            format="MM/dd/yyyy"
-            inputVariant="outlined"
-            KeyboardButtonProps={{ 'aria-label': 'change date' }}
-            label="Date"
-            margin="normal"
-            onChange={newValue => this.handleChange(newValue, 'date')}
-            placeholder="mm/dd/yyyy"
-            value={date}
+  return (
+    <div className={fieldStyles.fieldInputFullWidth} id="date-time-editor">
+      <div className={clsx(fieldStyles.fieldInputGroup, fieldStyles.fieldInputGroupJustifyLeft)}>
+        {!isTime && (
+          <DatePicker
+            onChange={newValue => handleChange(newValue, isInterval ? 'firstDate' : 'date')}
+            value={convertDateForPicker(isInterval ? value?.firstDate : value?.date)}
           />
+        )}
 
-          <KeyboardTimePicker
-            className="field-input"
-            format="HH:mm:ss"
-            inputVariant="outlined"
-            KeyboardButtonProps={{ 'aria-label': 'change time' }}
-            keyboardIcon={<TimeIcon />}
-            label="Time"
-            margin="normal"
-            onChange={newValue => this.handleChange(newValue, 'time')}
-            placeholder="hh:mm:ss"
-            value={time}
-            views={['hours', 'minutes', 'seconds']}
-          />
-        </div>
+        <TimePicker
+          onChange={newValue => handleChange(newValue, isInterval ? 'firstTime' : 'time')}
+          value={convertTimeForPicker(isInterval ? value?.firstTime : value?.time)}
+        />
 
-        <div className="editor-warnings">
-          {showInputWarning && <div className="warning">Warning: A DateTime must have at least a date.</div>}
-        </div>
+        {isInterval && <DashIcon />}
       </div>
-    );
-  }
-}
+
+      {isInterval && (
+        <div className={clsx(fieldStyles.fieldInputGroup, fieldStyles.fieldInputGroupJustifyLeft)}>
+          {!isTime && (
+            <DatePicker
+              onChange={newValue => handleChange(newValue, 'secondDate')}
+              value={convertDateForPicker(value?.secondDate)}
+            />
+          )}
+
+          <TimePicker
+            onChange={newValue => handleChange(newValue, 'secondTime')}
+            value={convertTimeForPicker(value?.secondTime)}
+          />
+        </div>
+      )}
+
+      {showInputWarning && <Alert severity="error">Warning: A DateTime must have at least a date.</Alert>}
+    </div>
+  );
+};
 
 DateTimeEditor.propTypes = {
-  name: PropTypes.string,
-  type: PropTypes.string.isRequired,
-  label: PropTypes.string.isRequired,
-  value: PropTypes.object,
-  updateInstance: PropTypes.func.isRequired
+  handleUpdateEditor: PropTypes.func.isRequired,
+  isInterval: PropTypes.bool,
+  isTime: PropTypes.bool,
+  value: PropTypes.object
 };
+
+export default DateTimeEditor;

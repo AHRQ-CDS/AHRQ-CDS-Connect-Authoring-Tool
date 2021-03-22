@@ -5,9 +5,9 @@ import _ from 'lodash';
 import TestingParameter from './TestingParameter';
 
 export default class TestingParameters extends Component {
-  updateInstanceOfParameter = (parameter, index) => {
+  updateInstanceOfParameter = (newValue, index) => {
     const parameters = _.clone(this.props.parameters);
-    parameters[index] = _.clone(parameter);
+    parameters[index] = _.clone(newValue);
     delete parameters[index].label;
     this.props.updateParameters(parameters);
   }
@@ -23,7 +23,7 @@ export default class TestingParameters extends Component {
             index={i}
             name={parameter.name}
             type={parameter.type}
-            updateInstanceOfParameter={this.updateInstanceOfParameter}
+            updateInstanceOfParameter={newValue => this.updateInstanceOfParameter(newValue, i)}
             value={parameter.value}
             vsacApiKey={this.props.vsacApiKey}
           />

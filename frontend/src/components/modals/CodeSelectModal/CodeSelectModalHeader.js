@@ -67,7 +67,7 @@ const CodeSelectModalHeader = ({
               className={styles.formInput}
               fullWidth
               id="select-code-system-url"
-              label="System canonical URL"
+              label="System URI"
               onChange={event => setOtherCodeSystem(event.target.value)}
               value={otherCodeSystem}
               variant="outlined"

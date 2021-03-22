@@ -19,8 +19,7 @@ import { Dropdown } from 'components/elements';
 import { DeleteConfirmationModal } from 'components/modals';
 import TemplateInstance from './TemplateInstance';
 import ElementSelect from './ElementSelect';
-import StringField from './fields/StringField';
-import TextAreaField from './fields/TextAreaField';
+import { StringField, TextAreaField } from 'components/builder/fields';
 import ExpressionPhrase from './ExpressionPhrase';
 
 import createTemplateInstance from 'utils/templates';
@@ -280,23 +279,25 @@ export default class ConjunctionGroup extends Component {
           <div className="card-group__header">
             <div className="card-group__title">
               {showGroup ?
-                <>
-                  <StringField
-                    id={elementNameField.id}
-                    name={elementNameField.name}
-                    value={elementNameField.value}
-                    updateInstance={this.handleNameChange}
-                  />
+                <div className="card-field-group">
+                  <div className="card-field">
+                    <div className="card-label">Group:</div>
+
+                    <div className="card-input">
+                      <StringField field={elementNameField} handleUpdateField={this.handleNameChange} />
+                    </div>
+                  </div>
 
                   {showComment &&
-                    <TextAreaField
-                      id={elementCommentField.id}
-                      name={elementCommentField.name}
-                      value={elementCommentField.value}
-                      updateInstance={this.handleCommentChange}
-                    />
+                    <div className="card-field">
+                      <div className="card-label">Comment:</div>
+
+                      <div className="card-input">
+                        <TextAreaField field={elementCommentField} handleUpdateField={this.handleCommentChange} />
+                      </div>
+                    </div>
                   }
-                </>
+                </div>
               :
                 <div className="group-heading-name">
                   {elementNameField.value}:

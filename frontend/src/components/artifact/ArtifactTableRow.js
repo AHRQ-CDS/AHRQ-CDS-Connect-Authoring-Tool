@@ -6,7 +6,7 @@ import { Delete as DeleteIcon, Edit as EditIcon } from '@material-ui/icons';
 import ArtifactModal from './ArtifactModal';
 import { Link } from 'components/elements';
 import { DeleteConfirmationModal } from 'components/modals';
-import renderDate from 'utils/dates';
+import { renderDate } from 'utils/dates';
 import artifactProps from 'prop-types/artifact';
 import { useTextStyles } from 'styles/hooks';
 import useStyles from './styles';

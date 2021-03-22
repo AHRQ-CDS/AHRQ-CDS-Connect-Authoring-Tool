@@ -9,34 +9,34 @@ describe('<NumberField />', () => {
         field={{
           exclusive: false,
           name: 'age',
-          id: 'age'
+          id: 'age',
+          value: '0'
         }}
-        typeOfNumber="integer"
-        updateInstance={jest.fn()}
-        value={0}
+        isInteger={true}
+        handleUpdateField={jest.fn()}
         {...props}
       />
     );
 
   it('changes input with type integer', () => {
-    const updateInstance = jest.fn();
-    renderComponent({ updateInstance });
+    const handleUpdateField = jest.fn();
+    renderComponent({ handleUpdateField });
 
     const numberInput = document.querySelector('input[type="number"]');
 
     fireEvent.change(numberInput, { target: { value: '10' } });
 
-    expect(updateInstance).toBeCalledWith({ age: 10 });
+    expect(handleUpdateField).toBeCalledWith({ age: 10 });
   });
 
   it('changes input with type float', () => {
-    const updateInstance = jest.fn();
-    renderComponent({ typeOfNumber: 'float', updateInstance });
+    const handleUpdateField = jest.fn();
+    renderComponent({ typeOfNumber: 'float', handleUpdateField });
 
     const numberInput = document.querySelector('input[type="number"]');
 
     fireEvent.change(numberInput, { target: { value: '10.02345' } });
 
-    expect(updateInstance).toBeCalledWith({ age: 10.02345 });
+    expect(handleUpdateField).toBeCalledWith({ age: 10.02345 });
   });
 });

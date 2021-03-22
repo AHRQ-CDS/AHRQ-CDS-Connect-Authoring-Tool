@@ -4,6 +4,7 @@ import { useSelector } from 'react-redux';
 import { IconButton, Tooltip } from '@material-ui/core';
 import { Alert } from '@material-ui/lab';
 import { Close as CloseIcon } from '@material-ui/icons';
+import clsx from 'clsx';
 
 import {
   BooleanComparisonModifier,
@@ -21,6 +22,7 @@ import {
   WithUnitModifier
 } from 'components/builder/modifiers';
 import { getReturnType, validateModifier } from 'utils/instances';
+import { useFieldStyles } from 'styles/hooks';
 import useStyles from './styles';
 
 const ModifierTemplate = ({
@@ -192,7 +194,7 @@ const ModifierTemplate = ({
             handleUpdateModifier={value => handleUpdateModifier(index, value)}
             modifierArguments={modifier.arguments}
             name={modifier.name}
-            value={modifier.values?.value}
+            values={modifier.values?.value}
           />
         );
       default:
@@ -242,6 +244,7 @@ const ModifiersTemplate = ({
   handleUpdateModifier
 }) => {
   const { modifiers, returnType } = elementInstance;
+  const fieldStyles = useFieldStyles();
   const styles = useStyles();
 
   let canBeRemoved = true;
@@ -252,8 +255,8 @@ const ModifiersTemplate = ({
   }
 
   return (
-    <div className={styles.templateField} id="modifiers-template">
-      <div className={styles.templateFieldLabel}>Expressions:</div>
+    <div className={fieldStyles.field} id="modifiers-template">
+      <div className={clsx(fieldStyles.fieldLabel, fieldStyles.fieldLabelWithInput)}>Expressions:</div>
 
       <div className={styles.templateFieldDisplayGroup}>
         {modifiers.map((modifier, index) => (

@@ -2,16 +2,16 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Check as CheckIcon } from '@material-ui/icons';
 
-import useStyles from './styles';
+import { useFieldStyles } from 'styles/hooks';
 
 const ReturnTypeTemplate = ({ returnType, shouldValidateReturnType }) => {
-  const styles = useStyles();
+  const fieldStyles = useFieldStyles();
 
   return (
-    <div className={styles.templateField} id="return-type-template">
-      <div className={styles.templateFieldLabel}>Return Type:</div>
+    <div className={fieldStyles.field} id="return-type-template">
+      <div className={fieldStyles.fieldLabel}>Return Type:</div>
 
-      <div className={styles.templateFieldDisplayPadded}>
+      <div className={fieldStyles.fieldInput}>
         {shouldValidateReturnType && returnType === 'Boolean' && <CheckIcon fontSize="small" />}
         {returnType}
       </div>

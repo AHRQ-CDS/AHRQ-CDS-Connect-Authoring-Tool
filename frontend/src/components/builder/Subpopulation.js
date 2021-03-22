@@ -94,8 +94,13 @@ export default class Subpopulation extends Component {
     return hasNestedWarning;
   }
 
+  handleUpdateField = value => {
+    const { setSubpopulationName, subpopulation } = this.props;
+    setSubpopulationName(value.subpopulation_title, subpopulation.uniqueId);
+  }
+
   render() {
-    const { checkSubpopulationUsage, instanceNames, setSubpopulationName, subpopulation } = this.props;
+    const { checkSubpopulationUsage, instanceNames, subpopulation } = this.props;
     const { isExpanded } = this.state;
     const subpopulationUsed = checkSubpopulationUsage(subpopulation.uniqueId);
     const headerClass = classNames('card-element__header', { collapsed: !isExpanded });
@@ -109,16 +114,17 @@ export default class Subpopulation extends Component {
           <div className={headerClass}>
             <div className={headerTopClass}>
               {isExpanded ?
-                <div className="card-element__heading">
-                  <StringField
-                    id="subpopulation_title"
-                    name="Subpopulation"
-                    uniqueId={subpopulation.uniqueId}
-                    updateInstance={(value) => {
-                      setSubpopulationName(value.subpopulation_title, subpopulation.uniqueId);
-                    }}
-                    value={subpopulation.subpopulationName}
-                  />
+                <div className="card-field-group">
+                  <div className="card-field">
+                    <div className="card-label">Subpopulation:</div>
+
+                    <div className="card-input">
+                      <StringField
+                        field={{ id: 'subpopulation_title', value: subpopulation.subpopulationName }}
+                        handleUpdateField={this.handleUpdateField}
+                      />
+                    </div>
+                  </div>
 
                   {duplicateNameIndex !== -1 &&
                     <div className='warning'>Warning: Name already in use. Choose another name.</div>

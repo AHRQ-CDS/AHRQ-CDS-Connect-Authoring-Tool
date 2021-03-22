@@ -5,19 +5,21 @@ import { IconButton, Tooltip } from '@material-ui/core';
 import { Close as CloseIcon, Visibility as VisibilityIcon } from '@material-ui/icons';
 
 import { ValueSetSelectModal } from 'components/modals';
+import { useFieldStyles } from 'styles/hooks';
 import useStyles from './styles';
 
 const ValueSetListTemplate = ({ handleDeleteValueSet, valueSets }) => {
   const [showValueSetViewModal, setShowValueSetViewModal] = useState(false);
   const vsacApiKey = useSelector(state => state.vsac.apiKey);
+  const fieldStyles = useFieldStyles();
   const styles = useStyles();
 
   return (
     <>
       {valueSets.map((valueSet, index) => (
         <div key={`value-set-${index}`} id="value-set-list-template">
-          <div className={styles.templateField}>
-            <div className={styles.templateFieldLabel} id="value-set-label">
+          <div className={fieldStyles.field}>
+            <div className={fieldStyles.fieldLabel} id="value-set-label">
               Value Set{valueSets.length > 1 ? ` ${index + 1}` : ''}:
             </div>
 

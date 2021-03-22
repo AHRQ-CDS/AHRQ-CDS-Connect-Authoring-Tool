@@ -1,8 +1,6 @@
 import React from 'react';
-import { render } from 'utils/test-utils';
+import { render, screen } from 'utils/test-utils';
 import ExternalModifier from '../ExternalModifier';
-
-jest.mock('components/builder/editors/Editor', () => () => <div>Editor</div>);
 
 describe('<ExternalModifier />', () => {
   const renderComponent = (props = {}) =>
@@ -12,7 +10,7 @@ describe('<ExternalModifier />', () => {
         handleUpdateModifier={jest.fn()}
         modifierArguments={[]}
         name="external"
-        value={[]}
+        values={[]}
         {...props}
       />
     );
@@ -24,26 +22,27 @@ describe('<ExternalModifier />', () => {
   });
 
   it('renders no editors when there is only one argument and argumentType', () => {
-    const { queryByText } = renderComponent({
+    renderComponent({
       modifierArguments: [{ name: 'first' }],
       argumentTypes: [{ calculated: 'boolean' }]
     });
 
-    expect(queryByText('Editor')).toBeNull();
+    expect(screen.getByTestId('editors')).toBeEmptyDOMElement();
   });
 
   it('renders one editor when there are two arguments', () => {
-    const { getByText } = renderComponent({
+    renderComponent({
       modifierArguments: [{ name: 'first' }, { name: 'second' }],
       argumentTypes: [{ calculated: 'decimal' }, { calculated: 'integer' }]
     });
 
-    expect(getByText('Editor')).not.toBeNull();
+    expect(screen.queryByText(/first/)).not.toBeInTheDocument();
+    expect(screen.getByText(/second/)).toBeInTheDocument();
   });
 
   it('renders n-1 editors when there are n arguments', () => {
     // Test with five arguments to verify four editors are present
-    const { getAllByText } = renderComponent({
+    renderComponent({
       modifierArguments: [
         { name: 'first' },
         { name: 'second' },
@@ -60,6 +59,10 @@ describe('<ExternalModifier />', () => {
       ]
     });
 
-    expect(getAllByText('Editor')).toHaveLength(4);
+    expect(screen.queryByText(/first/)).not.toBeInTheDocument();
+    expect(screen.getByText(/second/)).toBeInTheDocument();
+    expect(screen.getByText(/third/)).toBeInTheDocument();
+    expect(screen.getByText(/fourth/)).toBeInTheDocument();
+    expect(screen.getByText(/fifth/)).toBeInTheDocument();
   });
 });

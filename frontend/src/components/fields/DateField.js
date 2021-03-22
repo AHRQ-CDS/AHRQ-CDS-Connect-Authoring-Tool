@@ -1,9 +1,9 @@
-  import React, { memo, useState, useCallback } from 'react';
+import React, { memo, useState, useCallback } from 'react';
 import { Checkbox, FormControlLabel } from '@material-ui/core';
-import { KeyboardDatePicker } from '@material-ui/pickers';
 import { useField, useFormikContext } from 'formik';
 import clsx from 'clsx';
 
+import { DatePicker } from 'components/elements/Pickers';
 import { isCpgComplete } from 'utils/fields';
 import { useFieldStyles } from 'styles/hooks';
 import useStyles from './styles';
@@ -44,18 +44,7 @@ export default memo(function DateField({
       )}
 
       <div className={clsx(fieldStyles.fieldInput, styles.dateFieldInput)}>
-        <KeyboardDatePicker
-          disabled={noDateSelected}
-          format="MM/dd/yyyy"
-          inputVariant="outlined"
-          KeyboardButtonProps={{ 'aria-label': 'change date' }}
-          label="Date"
-          margin="normal"
-          onChange={value => setValue(value)}
-          placeholder="mm/dd/yyyy"
-          value={value}
-        />
-
+        <DatePicker disabled={noDateSelected} onChange={value => setValue(value)} value={value} />
         {helperText && <div className={fieldStyles.helperText}>{helperText}</div>}
       </div>
 

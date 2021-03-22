@@ -493,7 +493,7 @@ function performExecuteArtifact(elmFiles, artifactName, params, patients, vsacAp
 
 function convertParameters(params = []) {
   const paramsObj = {};
-  params.forEach((p) => {
+  params.forEach(p => {
     // Handle the null case first so we don't have to guard against it later
     if (p.value == null) {
       paramsObj[p.name] = null;
@@ -507,10 +507,10 @@ function convertParameters(params = []) {
         paramsObj[p.name] = cql.DateTime.parse(p.value.str.slice(1));
         break;
       case 'decimal':
-        paramsObj[p.name] = p.value.decimal;
+        paramsObj[p.name] = parseFloat(p.value.decimal);
         break;
       case 'integer':
-        paramsObj[p.name] = p.value;
+        paramsObj[p.name] = parseInt(p.value);
         break;
       case 'interval_of_datetime': {
         let d1 = null;
@@ -527,20 +527,26 @@ function convertParameters(params = []) {
         break;
       }
       case 'interval_of_decimal':
-        paramsObj[p.name] = new cql.Interval(p.value.firstDecimal, p.value.secondDecimal);
+        paramsObj[p.name] = new cql.Interval(parseFloat(p.value.firstDecimal), parseFloat(p.value.secondDecimal));
         break;
       case 'interval_of_integer':
-        paramsObj[p.name] = new cql.Interval(p.value.firstInteger, p.value.secondInteger);
+        paramsObj[p.name] = new cql.Interval(parseInt(p.value.firstInteger), parseInt(p.value.secondInteger));
         break;
       case 'interval_of_quantity': {
-        const q1 = p.value.firstQuantity != null ? new cql.Quantity({
-          value: p.value.firstQuantity,
-          unit: p.value.unit
-        }) : null;
-        const q2 = p.value.secondQuantity != null ? new cql.Quantity({
-          value: p.value.secondQuantity,
-          unit: p.value.unit
-        }) : null;
+        const q1 =
+          p.value.firstQuantity != null
+            ? new cql.Quantity({
+                value: p.value.firstQuantity,
+                unit: p.value.unit
+              })
+            : null;
+        const q2 =
+          p.value.secondQuantity != null
+            ? new cql.Quantity({
+                value: p.value.secondQuantity,
+                unit: p.value.unit
+              })
+            : null;
         paramsObj[p.name] = new cql.Interval(q1, q2);
         break;
       }
@@ -562,7 +568,7 @@ function convertParameters(params = []) {
         break;
       case 'time':
         // CQL exec doesn't expose a Time class, so we must construct a DT and then get the Time
-        paramsObj[p.name] = cql.DateTime.parse(`@0000-01-01${p.value.slice(1)}`).getTime();
+        paramsObj[p.name] = cql.DateTime.parse(`@0000-01-01${p.value.str.slice(1)}`).getTime();
         break;
       default: // do nothing
     }

@@ -56,7 +56,7 @@ describe('<CodeSelectModal />', () => {
     setInputValue(dialog.getByLabelText('Code'), code);
     userEvent.click(dialog.getByLabelText('Code system'));
     userEvent.click(screen.getByRole('option', { name: 'Other' }));
-    setInputValue(dialog.getByLabelText('System canonical URL'), codeSystemUri);
+    setInputValue(dialog.getByLabelText('System URI'), codeSystemUri);
 
     userEvent.click(dialog.getByRole('button', { name: 'Select' }));
 

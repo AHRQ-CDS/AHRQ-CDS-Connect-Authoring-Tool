@@ -4,7 +4,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faFile } from '@fortawesome/free-solid-svg-icons';
 
 import { Modal }  from 'components/elements';
-import renderDate from 'utils/dates';
+import { renderDate } from 'utils/dates';
 
 import ExternalCqlDetailsSection from './ExternalCqlDetailsSection';
 

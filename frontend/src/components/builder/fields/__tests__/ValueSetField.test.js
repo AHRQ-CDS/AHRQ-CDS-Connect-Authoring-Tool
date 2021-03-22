@@ -14,7 +14,7 @@ describe('<ValueSetField />', () => {
           type: 'valueset',
           value: null
         }}
-        updateInstance={jest.fn()}
+        handleUpdateField={jest.fn()}
         {...props}
       />
     );
@@ -76,14 +76,14 @@ describe('<ValueSetField />', () => {
     });
   });
 
-  it('calls updateInstance when an option is selected', async () => {
-    const updateInstance = jest.fn();
-    renderComponent({ updateInstance });
+  it('calls handleUpdateField when an option is selected', async () => {
+    const handleUpdateField = jest.fn();
+    renderComponent({ handleUpdateField });
 
     userEvent.click(screen.getByLabelText('Unit of Time'));
     userEvent.click(await screen.findByText('hours'));
 
-    expect(updateInstance).toBeCalledWith({
+    expect(handleUpdateField).toBeCalledWith({
       unit_of_time: {
         id: 'h',
         name: 'hours',

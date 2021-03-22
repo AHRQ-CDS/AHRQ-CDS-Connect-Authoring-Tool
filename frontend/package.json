@@ -6,6 +6,7 @@
   "license": "Apache-2.0",
   "dependencies": {
     "@date-io/date-fns": "1.x",
+    "@fontsource/open-sans": "^4.2.2",
     "@fortawesome/fontawesome-svg-core": "^1.2.32",
     "@fortawesome/free-solid-svg-icons": "^5.15.1",
     "@fortawesome/react-fontawesome": "^0.1.11",

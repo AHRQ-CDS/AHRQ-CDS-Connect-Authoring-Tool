@@ -16,8 +16,7 @@ import _ from 'lodash';
 
 import StringField from './fields/StringField';
 import TextAreaField from './fields/TextAreaField';
-import Editor from './editors/Editor';
-
+import { EditorsTemplate } from 'components/builder/templates';
 import { Dropdown } from 'components/elements';
 import { DeleteConfirmationModal } from 'components/modals';
 import { doesParameterNeedUsageWarning, parameterHasDuplicateName } from 'utils/warnings';
@@ -88,26 +87,6 @@ export default class Parameter extends Component {
   startsWithVowel = (toCheck) => {
     const vowelRegex = '^[aieouAEIOU].*';
     return toCheck.match(vowelRegex);
-  }
-
-  renderParameter() {
-    const editorProps = {
-      id: `param-name-${this.props.index}`,
-      name: this.props.name,
-      type: this.props.type != null ? this.props.type : null,
-      label: 'Default Value:',
-      value: this.props.value,
-      updateInstance: e => this.updateParameter({
-        name: this.props.name,
-        uniqueId: this.props.id,
-        type: this.props.type,
-        comment: this.props.comment,
-        value: (e != null ? e.value : null)
-      }),
-      vsacApiKey: this.props.vsacApiKey
-    };
-
-    return <Editor {...editorProps} />;
   }
 
   renderCollapsed(id, index, name, type, parameterUsed, disabledClass, parameterNeedsWarning) {
@@ -263,27 +242,33 @@ export default class Parameter extends Component {
             <div className="card-element__header">
               <div className="card-element__header-top">
                 <div className="card-group__title">
-                  <StringField
-                    id={`param-name-${index}`}
-                    name={'Parameter Name'}
-                    value={name}
-                    disabled={parameterUsed}
-                    updateInstance={e => (this.updateParameter({
-                      name: e[`param-name-${index}`],
-                      uniqueId: id,
-                      type,
-                      comment,
-                      value
-                    }))}
-                  />
+                  <div className="card-field">
+                    <div className="card-label">Parameter:</div>
+
+                    <div className="card-input">
+                      <StringField
+                        field={{ id: `param-name-${index}`, value: name }}
+                        handleUpdateField={event => (this.updateParameter({
+                          name: event[`param-name-${index}`], uniqueId: id, type, comment, value
+                        }))}
+                        isDisabled={parameterUsed}
+                      />
+                    </div>
+                  </div>
 
                   {showComment &&
-                    <TextAreaField
-                      id={id}
-                      name="Comment"
-                      value={comment}
-                      updateInstance={e => this.updateParameter({ name, uniqueId: id, type, comment: e[id], value })}
-                    />
+                    <div className="card-field">
+                      <div className="card-label">Comment:</div>
+
+                      <div className="card-input">
+                        <TextAreaField
+                          field={{ id, name: 'Comment', value: comment }}
+                          handleUpdateField={event =>
+                            this.updateParameter({ name, uniqueId: id, type, comment: event[id], value })
+                          }
+                        />
+                      </div>
+                    </div>
                   }
                 </div>
 
@@ -324,7 +309,14 @@ export default class Parameter extends Component {
                 />
               </div>
 
-              {this.renderParameter()}
+              <EditorsTemplate
+                handleUpdateEditor={
+                  newValue => this.updateParameter({ name, uniqueId: id, type, comment, value: newValue })
+                }
+                label="Default Value"
+                type={type}
+                value={value}
+              />
             </div>
           </div>
         : this.renderCollapsed(id, index, name, typeLabel, parameterUsed, disabledClass, parameterNeedsWarning)}

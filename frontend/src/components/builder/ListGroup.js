@@ -387,25 +387,32 @@ export default class ListGroup extends Component {
           <div className={headerTopClass}>
             {isExpanded ?
               <div className="card-element__heading">
-                <StringField
-                  id="base_element_name"
-                  name="List Group"
-                  uniqueId={instance.uniqueId}
-                  updateInstance={value => {
-                    this.updateBaseElementList(value.base_element_name, "element_name", instance.uniqueId);
-                  }}
-                  value={name}
-                />
+                <div className="card-field">
+                  <div className="card-label">List Group:</div>
+
+                  <div className="card-input">
+                    <StringField
+                      field={{ id: 'base_element_name', value: name }}
+                      handleUpdateField={value => {
+                        this.updateBaseElementList(value.base_element_name, "element_name", instance.uniqueId);
+                      }}
+                    />
+                  </div>
+                </div>
 
                 {showComment &&
-                  <TextAreaField
-                    id="base_comment"
-                    name="Comment"
-                    value={comment}
-                    updateInstance={value => {
-                      this.updateBaseElementList(value.base_comment, "comment", instance.uniqueId);
-                    }}
-                  />
+                  <div className="card-field">
+                    <div className="card-label">Comment:</div>
+
+                    <div className="card-input">
+                      <TextAreaField
+                        field={{ id: 'base_comment', value: comment }}
+                        handleUpdateField={value => {
+                          this.updateBaseElementList(value.base_comment, 'comment', instance.uniqueId);
+                        }}
+                      />
+                    </div>
+                  </div>
                 }
 
                 {needsDuplicateNameWarning && !needsBaseElementWarning &&

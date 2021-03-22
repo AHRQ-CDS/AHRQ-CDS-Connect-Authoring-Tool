@@ -5,20 +5,18 @@ import clsx from 'clsx';
 
 import { useFieldStyles, useFlexStyles } from 'styles/hooks';
 
-const StringField = ({ disabled, id, name, updateInstance, value }) => {
+const StringField = ({ field, handleUpdateField, isDisabled = false }) => {
   const fieldStyles = useFieldStyles();
   const flexStyles = useFlexStyles();
 
   return (
-    <div className={clsx('string-field', fieldStyles.field)}>
-      <div className={fieldStyles.fieldLabel}>{name}:</div>
-
+    <div id="string-field">
       <TextField
         className={clsx(fieldStyles.fieldInput, flexStyles.flex1)}
-        disabled={disabled}
+        disabled={isDisabled}
         fullWidth
-        onChange={event => updateInstance({ [id]: event.target.value })}
-        value={value || ''}
+        onChange={event => handleUpdateField({ [field.id]: event.target.value })}
+        value={field.value || ''}
         variant="outlined"
       />
     </div>
@@ -26,11 +24,9 @@ const StringField = ({ disabled, id, name, updateInstance, value }) => {
 };
 
 StringField.propTypes = {
-  disabled: PropTypes.bool,
-  id: PropTypes.string.isRequired,
-  name: PropTypes.string.isRequired,
-  updateInstance: PropTypes.func.isRequired,
-  value: PropTypes.string
+  field: PropTypes.object.isRequired,
+  handleUpdateField: PropTypes.func.isRequired,
+  isDisabled: PropTypes.bool
 };
 
 export default StringField;

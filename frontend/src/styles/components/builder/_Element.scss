@@ -45,8 +45,9 @@
 
   &-label {
     font-weight: bold;
+    margin-top: 5px;
     min-width: 12.5em;
-    margin: 20px 1em 0 0;
+    padding-right: 1em;
     text-align: right;
     white-space: nowrap;
   }
@@ -59,7 +60,6 @@
     border-bottom: 1px solid lighten($gray-light, 15%);
     display: flex;
     justify-content: space-between;
-    padding: 10px 0;
     width: 100%;
 
     &.return-type {

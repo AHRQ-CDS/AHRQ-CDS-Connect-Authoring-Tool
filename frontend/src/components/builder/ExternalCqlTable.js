@@ -11,7 +11,7 @@ import { DeleteConfirmationModal } from 'components/modals';
 import ExternalCqlDetails from './ExternalCqlDetails';
 
 import { sortMostRecent } from 'utils/sort';
-import renderDate from 'utils/dates';
+import { renderDate } from 'utils/dates';
 import changeToCase from 'utils/strings';
 
 export default class ExternalCqlTable extends Component {

@@ -1,10 +1,10 @@
 import React, { memo, useCallback } from 'react';
 import { Checkbox, FormControlLabel } from '@material-ui/core';
-import { KeyboardDatePicker } from '@material-ui/pickers';
 import { Remove as DashIcon } from '@material-ui/icons';
 import { useField, useFormikContext } from 'formik';
 import clsx from 'clsx';
 
+import { DatePicker } from 'components/elements/Pickers';
 import { isCpgComplete } from 'utils/fields';
 import { useFieldStyles } from 'styles/hooks';
 import useStyles from './styles';
@@ -25,15 +25,10 @@ const DateRangePicker = memo(({ fieldName, helperText, name, rangeType, noDateOp
   return (
     <>
       <div className={fieldStyles.fieldInput}>
-        <KeyboardDatePicker
+        <DatePicker
           disabled={noDateField.value}
-          format="MM/dd/yyyy"
-          inputVariant="outlined"
-          KeyboardButtonProps={{ 'aria-label': 'change date' }}
           label={field.name === 'effectivePeriod.start' ? 'Start date' : 'End date' }
-          margin="normal"
           onChange={value => setValue(value)}
-          placeholder="mm/dd/yyyy"
           value={value}
         />
 

@@ -12,7 +12,7 @@ import {
 import { UncontrolledTooltip } from 'reactstrap';
 import _ from 'lodash';
 
-import renderDate from 'utils/dates';
+import { renderDate } from 'utils/dates';
 import { sortAlphabeticallyByPatientName } from 'utils/sort';
 import patientProps from 'prop-types/patient';
 import artifactProps from 'prop-types/artifact';

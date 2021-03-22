@@ -14,7 +14,7 @@ export default makeStyles(
       borderBottom: `1px solid ${theme.palette.common.grayLight}`,
       display: 'flex',
       justifyContent: 'space-between',
-      padding: '10px 0',
+      padding: '5px 0',
       width: '100%'
     },
     templateFieldDisplay: {

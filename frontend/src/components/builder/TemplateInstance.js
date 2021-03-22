@@ -27,8 +27,14 @@ import {
   ValueSetSelectModal,
   VSACAuthenticationModal
 } from 'components/modals';
-import { NumberField, StaticField, StringField, TextAreaField, ValueSetField } from './fields';
-import { CodeListTemplate, ModifiersTemplate, ReturnTypeTemplate, ValueSetListTemplate } from './templates';
+import { StringField, TextAreaField } from './fields';
+import {
+  CodeListTemplate,
+  FieldsTemplate,
+  ModifiersTemplate,
+  ReturnTypeTemplate,
+  ValueSetListTemplate
+} from './templates';
 import ExpressionPhrase from './ExpressionPhrase';
 import { hasDuplicateName, doesBaseElementUseNeedWarning, doesBaseElementInstanceNeedWarning,
   doesParameterUseNeedWarning, validateElement, hasGroupNestedWarning } from 'utils/warnings';
@@ -466,72 +472,6 @@ export default class TemplateInstance extends Component {
     );
   }
 
-  selectTemplate = (field) => {
-    if (field.static) {
-      return (
-        <StaticField
-          key={field.id}
-          updateInstance={this.updateInstance}
-        />
-      );
-    }
-
-    switch (field.type) {
-      case 'number':
-        return (
-          <NumberField
-            key={field.id}
-            field={field}
-            value={this.state[field.id] || ''}
-            typeOfNumber={field.typeOfNumber}
-            updateInstance={this.updateInstance}
-          />
-        );
-      case 'string':
-        return (
-          <StringField
-            key={field.id}
-            {...field}
-            updateInstance={this.updateInstance}
-          />
-        );
-      case 'textarea':
-        return (
-          <TextAreaField
-            key={field.id}
-            {...field}
-            updateInstance={this.updateInstance}
-          />
-        );
-      case 'observation_vsac':
-      case 'condition_vsac':
-      case 'medicationStatement_vsac':
-      case 'medicationRequest_vsac':
-      case 'procedure_vsac':
-      case 'encounter_vsac':
-      case 'allergyIntolerance_vsac':
-      case 'immunization_vsac':
-      case 'device_vsac':
-        return (
-          <StringField
-            key={field.id}
-            {...field}
-            updateInstance={this.updateInstance}
-          />
-        );
-      case 'valueset':
-        return (
-          <ValueSetField
-            key={field.id}
-            field={field}
-            updateInstance={this.updateInstance}
-          />
-        );
-      default:
-        return undefined;
-    }
-  }
-
   showHideElementBody = () => {
     this.setState({ showElement: !this.state.showElement });
   }
@@ -550,6 +490,21 @@ export default class TemplateInstance extends Component {
   renderBody() {
     const { disableAddElement, templateInstance, validateReturnType } = this.props;
     const { returnType } = this.state;
+    const fieldsToRender = [
+      'allergyIntolerance_vsac',
+      'condition_vsac',
+      'device_vsac',
+      'encounter_vsac',
+      'immunization_vsac',
+      'medicationRequest_vsac',
+      'medicationStatement_vsac',
+      'number',
+      'observation_vsac',
+      'procedure_vsac',
+      'string',
+      'textarea',
+      'valueset'
+    ];
     const baseElementIsUsed = this.isBaseElementUsed() || disableAddElement;
     const vsacField = getFieldWithType(this.props.templateInstance.fields, '_vsac');
     const referenceField = getFieldWithType(templateInstance.fields, 'reference');
@@ -568,12 +523,12 @@ export default class TemplateInstance extends Component {
           baseElements={this.props.baseElements}
         />
 
-        {templateInstance.fields.map((field, index) => {
-          if (field.id !== 'element_name' && field.id !== 'comment') {
-            return this.selectTemplate(field);
-          }
-          return null;
-        })}
+        {templateInstance.fields?.length > 2 &&
+          <FieldsTemplate
+            fields={templateInstance.fields.slice(2).filter(field => fieldsToRender.includes(field.type))}
+            handleUpdateField={this.updateInstance}
+          />
+        }
 
         {templateInstance.id?.includes('_vsac') && templateInstance.fields.length > 1 &&
           <>
@@ -658,20 +613,25 @@ export default class TemplateInstance extends Component {
 
       return (
         <>
-          <StringField
-            key={elementNameField.id}
-            {...elementNameField}
-            updateInstance={this.updateInstance}
-            name={elementType}
-            uniqueId={templateInstance.uniqueId}
-          />
+          <div className="card-field">
+            <div className="card-label">{elementType}:</div>
+
+            <div className="card-input">
+              <StringField
+                field={{ ...elementNameField, name: elementType }}
+                handleUpdateField={this.updateInstance}
+              />
+            </div>
+          </div>
 
           {commentField && showComment &&
-            <TextAreaField
-              key={commentField.id}
-              {...commentField}
-              updateInstance={this.updateInstance}
-            />
+            <div className="card-field">
+              <div className="card-label">Comment:</div>
+
+              <div className="card-input">
+                <TextAreaField field={commentField} handleUpdateField={this.updateInstance} />
+              </div>
+            </div>
           }
 
           <div className="card-element__warnings">
