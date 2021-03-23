@@ -1,7 +1,7 @@
+import { v4 as uuidv4 } from 'uuid';
 import _ from 'lodash';
 
 const testMode = process.env.NODE_ENV === 'test';
-let uniqueIdCounter = 1;
 
 /**
  * Returns an instance with the given template and children and a unique id.
@@ -17,7 +17,7 @@ export default function createTemplateInstance(template, children) {
     // TODO: find a better way to implement this
     instance.uniqueId = `${instance.id}-TEST-1`;
   } else {
-    instance.uniqueId = _.uniqueId(`${instance.id}-${++uniqueIdCounter}`); // eslint-disable-line no-plusplus
+    instance.uniqueId = `${instance.id}-${uuidv4()}`;
   }
 
   // if the template has a conjunction, add the given children or an empty array

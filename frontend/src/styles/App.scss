@@ -18,7 +18,6 @@
 @import 'elements/accessibility';
 @import 'elements/base';
 @import 'elements/cards';
-@import 'elements/dropzone';
 @import 'elements/expressions';
 @import 'elements/flex';
 @import 'elements/forms';
@@ -26,7 +25,6 @@
 @import 'elements/typography';
 
 // component-specific
-@import 'components/artifact/Artifact';
 @import 'components/builder/Builder';
 @import 'components/builder/Element';
 @import 'components/builder/ElementSelect';
@@ -41,10 +39,6 @@
 @import 'components/builder/Subpopulations';
 @import 'components/header/CdsHeader';
 @import 'components/footer/CdsFooter';
-@import 'components/testing/PatientDataSection';
-@import 'components/testing/PatientTesting';
-@import 'components/testing/PatientView';
-@import 'components/testing/Testing';
 
 // vendors
 @import "vendors/bootstrap";

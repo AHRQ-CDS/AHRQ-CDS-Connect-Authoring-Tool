@@ -15,14 +15,6 @@ const defaultState = {
     elmErrors: []
   },
   editArtifact: { isEditing: false, editStatus: null },
-  executeArtifact: {
-    isExecuting: false,
-    executeStatus: null,
-    results: null,
-    artifactExecuted: null,
-    patientsExecuted: null,
-    errorMessage: null
-  },
   librariesInUse: [],
   loadArtifact: { isLoading: false, loadStatus: null },
   loadArtifacts: { isLoading: false, loadStatus: null },
@@ -106,11 +98,6 @@ export default function auth(state = defaultState, action) {
         statusMessage: `Download failed. ${action.statusText}.`,
         downloadArtifact: { isDownloading: false, downloadStatus: 'failure', elmErrors: [] }
       };
-    case types.VALIDATE_ARTIFACT_REQUEST:
-      return {
-        ...state,
-        downloadArtifact: { isValidating: true, validateStatus: null, elmFiles: [], elmErrors: [] }
-      };
     case types.VALIDATE_ARTIFACT_SUCCESS:
       return {
         ...state,
@@ -121,59 +108,10 @@ export default function auth(state = defaultState, action) {
           elmErrors: action.data.elmErrors
         }
       };
-    case types.VALIDATE_ARTIFACT_FAILURE:
-      return {
-        ...state,
-        downloadArtifact: { isValidating: false, validateStatus: 'failure', elmFiles: [], elmErrors: [] }
-      };
-    case types.EXECUTE_ARTIFACT_REQUEST:
-      return {
-        ...state,
-        executeArtifact: {
-          isExecuting: true,
-          executeStatus: null,
-          results: null,
-          artifactExecuted: null,
-          patientsExecuted: null
-        }
-      };
-    case types.EXECUTE_ARTIFACT_SUCCESS:
-      return {
-        ...state,
-        executeArtifact: {
-          isExecuting: false,
-          executeStatus: 'success',
-          results: action.data,
-          artifactExecuted: action.artifact,
-          patientsExecuted: action.patients,
-          errorMessage: null
-        }
-      };
-    case types.EXECUTE_ARTIFACT_FAILURE:
-      return {
-        ...state,
-        executeArtifact: {
-          isExecuting: false,
-          executeStatus: 'failure',
-          errorMessage: `Execute failed. ${action.statusText}.`
-        }
-      };
     case types.CLEAR_ARTIFACT_VALIDATION_WARNINGS:
       return {
         ...state,
         downloadArtifact: { isDownloading: false, downloadStatus: null, elmFiles: [], elmErrors: [] }
-      };
-    case types.CLEAR_EXECUTION_RESULTS:
-      return {
-        ...state,
-        executeArtifact: {
-          isExecuting: false,
-          executeStatus: null,
-          results: null,
-          artifactExecuted: null,
-          patientsExecuted: null,
-          errorMessage: null
-        }
       };
     case types.SAVE_ARTIFACT_REQUEST:
       return {

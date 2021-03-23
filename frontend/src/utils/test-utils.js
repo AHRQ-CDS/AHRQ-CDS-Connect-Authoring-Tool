@@ -20,6 +20,6 @@ const ProviderWrapper = ({ children }) => (
 const customRender = (ui, options) => render(ui, { wrapper: ProviderWrapper, ...options });
 
 export { getRoles, logRoles } from '@testing-library/dom';
-export { act, fireEvent, waitFor, prettyDOM, screen, within } from '@testing-library/react';
+export { act, fireEvent, waitFor, waitForElementToBeRemoved, prettyDOM, screen, within } from '@testing-library/react';
 export { default as userEvent } from '@testing-library/user-event';
 export { customRender as render };

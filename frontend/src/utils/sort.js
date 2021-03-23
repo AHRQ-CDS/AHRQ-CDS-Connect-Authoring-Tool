@@ -1,4 +1,4 @@
-import _ from 'lodash';
+import { getPatientLastName } from 'utils/patients';
 
 const sortDifference = (a, b) => {
   if (a < b) return -1;
@@ -19,16 +19,8 @@ export function sortAlphabeticallyByKey(key, key2 = undefined) {
 }
 
 export function sortAlphabeticallyByPatientName(a, b) {
-  const aName = _.chain(a)
-    .get('patient.entry')
-    .find({ resource: { resourceType: 'Patient' } })
-    .get('resource.name[0].given')
-    .value() || 'family_placeholder';
-  const bName = _.chain(b)
-    .get('patient.entry')
-    .find({ resource: { resourceType: 'Patient' } })
-    .get('resource.name[0].given')
-    .value() || 'family_placeholder';
+  const aName = getPatientLastName(a);
+  const bName= getPatientLastName(b);
 
   if (aName > bName || (aName && !bName)) {
     return 1;

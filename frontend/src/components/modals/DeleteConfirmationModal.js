@@ -1,11 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import _ from 'lodash';
 
 import { Modal }  from 'components/elements';
 
 const DeleteConfirmationModal = ({ children, deleteType, handleCloseModal, handleDelete }) => (
   <Modal
-    title={`Delete ${deleteType} Confirmation`}
+    title={`Delete ${_.upperFirst(deleteType)} Confirmation`}
     submitButtonText="Delete"
     isOpen
     handleCloseModal={handleCloseModal}

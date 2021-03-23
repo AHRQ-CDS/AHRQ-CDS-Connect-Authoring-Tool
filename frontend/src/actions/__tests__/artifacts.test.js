@@ -8,17 +8,6 @@ import FileSaver from 'file-saver';
 import * as actions from '../artifacts';
 import * as types from '../types';
 import mockArtifact from 'mocks/mockArtifact';
-import mockPatientDstu2 from 'mocks/mockPatientDstu2';
-import mockPatientStu3 from 'mocks/mockPatientStu3';
-import mockPatientR4 from 'mocks/mockPatientR4';
-import mockElmFilesDstu2 from 'mocks/mockElmFilesDstu2.json';
-import mockElmFilesStu3 from 'mocks/mockElmFilesStu3.json';
-import mockElmFilesR4 from 'mocks/mockElmFilesR4.json';
-import mockTestResultsDstu2 from 'mocks/mockTestResultsDstu2';
-import mockTestResultsStu3 from 'mocks/mockTestResultsStu3.json';
-import mockTestResultsR4 from 'mocks/mockTestResultsR4.json';
-
-import CodeService from 'utils/code_service/CodeService';
 
 const middlewares = [thunk];
 const mockStore = configureMockStore(middlewares);
@@ -159,114 +148,6 @@ describe('artifact actions', () => {
 
       return store.dispatch(actions.downloadArtifact(mockArtifact)).then(() => {
         expect(store.getActions()).toEqual(expectedActions);
-      });
-    });
-  });
-
-  // ----------------------- EXECUTE ARTIFACT ------------------------------ //
-  describe('execute artifact', () => {
-    it('creates EXECUTE_ARTIFACT_SUCCESS after successfully executing an artifact for DSTU2', () => {
-      nock('http://localhost')
-        .post('/authoring/api/cql/validate')
-        .reply(200, { elmFiles: mockElmFilesDstu2.elmFiles });
-
-      const store = mockStore({ artifacts: [mockArtifact], patients: [mockPatientDstu2] });
-      const expectedActions = [
-        { type: types.EXECUTE_ARTIFACT_REQUEST },
-        { type: types.VALIDATE_ARTIFACT_SUCCESS, data: { elmFiles: mockElmFilesDstu2.elmFiles } },
-        {
-          type: types.EXECUTE_ARTIFACT_SUCCESS,
-          artifact: mockArtifact,
-          patients: [mockPatientDstu2.patient],
-          data: mockTestResultsDstu2.data
-        }
-      ];
-
-      // If for some reason the mock ELM files or the mock patients ever need to be changed,
-      // the mock test results will need to be changed to match them
-      return store.dispatch(actions.executeCQLArtifact(
-        mockArtifact,
-        [], // params
-        [mockPatientDstu2.patient],
-        'apiKey',
-        new CodeService(),
-        { name: 'FHIR', version: '1.0.2' }
-      )).then(() => {
-        expect(_.initial(store.getActions())).toEqual(_.initial(expectedActions));
-        expect(_.last(store.getActions()).type).toEqual(_.last(expectedActions).type);
-        expect(_.last(store.getActions()).artifact).toEqual(_.last(expectedActions).artifact);
-        expect(_.last(store.getActions()).patients).toEqual(_.last(expectedActions).patients);
-        expect(JSON.parse(JSON.stringify(_.last(store.getActions()).data))).toEqual(_.last(expectedActions).data);
-      });
-    });
-
-    it('creates EXECUTE_ARTIFACT_SUCCESS after successfully executing an artifact for STU3', () => {
-      nock('http://localhost')
-        .post('/authoring/api/cql/validate')
-        .reply(200, { elmFiles: mockElmFilesStu3.elmFiles });
-
-      const store = mockStore({ artifacts: [mockArtifact], patients: [mockPatientStu3] });
-      const expectedActions = [
-        { type: types.EXECUTE_ARTIFACT_REQUEST },
-        { type: types.VALIDATE_ARTIFACT_SUCCESS, data: { elmFiles: mockElmFilesStu3.elmFiles } },
-        {
-          type: types.EXECUTE_ARTIFACT_SUCCESS,
-          artifact: mockArtifact,
-          patients: [mockPatientStu3.patient],
-          data: mockTestResultsStu3.data
-        }
-      ];
-
-      // If for some reason the mock ELM files or the mock patients ever need to be changed,
-      // the mock test results will need to be changed to match them
-      return store.dispatch(actions.executeCQLArtifact(
-        mockArtifact,
-        [], // params
-        [mockPatientStu3.patient],
-        'apiKey',
-        new CodeService(),
-        { name: 'FHIR', version: '3.0.0' }
-      )).then(() => {
-        expect(_.initial(store.getActions())).toEqual(_.initial(expectedActions));
-        expect(_.last(store.getActions()).type).toEqual(_.last(expectedActions).type);
-        expect(_.last(store.getActions()).artifact).toEqual(_.last(expectedActions).artifact);
-        expect(_.last(store.getActions()).patients).toEqual(_.last(expectedActions).patients);
-        expect(JSON.parse(JSON.stringify(_.last(store.getActions()).data))).toEqual(_.last(expectedActions).data);
-      });
-    });
-
-    it('creates EXECUTE_ARTIFACT_SUCCESS after successfully executing an artifact for R4', () => {
-      nock('http://localhost')
-        .post('/authoring/api/cql/validate')
-        .reply(200, { elmFiles: mockElmFilesR4.elmFiles });
-
-      const store = mockStore({ artifacts: [mockArtifact], patients: [mockPatientR4] });
-      const expectedActions = [
-        { type: types.EXECUTE_ARTIFACT_REQUEST },
-        { type: types.VALIDATE_ARTIFACT_SUCCESS, data: { elmFiles: mockElmFilesR4.elmFiles } },
-        {
-          type: types.EXECUTE_ARTIFACT_SUCCESS,
-          artifact: mockArtifact,
-          patients: [mockPatientR4.patient],
-          data: mockTestResultsR4.data
-        }
-      ];
-
-      // If for some reason the mock ELM files or the mock patients ever need to be changed,
-      // the mock test results will need to be changed to match them
-      return store.dispatch(actions.executeCQLArtifact(
-        mockArtifact,
-        [], // params
-        [mockPatientR4.patient],
-        'apiKey',
-        new CodeService(),
-        { name: 'FHIR', version: '4.0.0' }
-      )).then(() => {
-        expect(_.initial(store.getActions())).toEqual(_.initial(expectedActions));
-        expect(_.last(store.getActions()).type).toEqual(_.last(expectedActions).type);
-        expect(_.last(store.getActions()).artifact).toEqual(_.last(expectedActions).artifact);
-        expect(_.last(store.getActions()).patients).toEqual(_.last(expectedActions).patients);
-        expect(JSON.parse(JSON.stringify(_.last(store.getActions()).data))).toEqual(_.last(expectedActions).data);
       });
     });
   });

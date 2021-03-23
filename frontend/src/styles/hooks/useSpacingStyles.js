@@ -2,6 +2,12 @@ import { makeStyles } from '@material-ui/core/styles';
 
 export default makeStyles(
   theme => ({
+    center: {
+      alignItems: 'center',
+      display: 'flex',
+      flexDirection: 'column',
+      margin: '2em 0'
+    },
     globalPadding: {
       margin: 'auto',
       [theme.breakpoints.down('xl')]: {
@@ -18,9 +24,9 @@ export default makeStyles(
       }
     },
     indent: {
+      borderLeft: `4px solid ${theme.palette.common.grayLighter}`,
       margin: '10px 0',
-      paddingLeft: '1em',
-      borderLeft: `4px solid ${theme.palette.common.grayLighter}`
+      paddingLeft: '1em'
     },
     fullBleed: {
       margin: '0 -9999rem',
@@ -30,8 +36,7 @@ export default makeStyles(
       minHeight: '500px'
     },
     verticalPadding: {
-      marginTop: '2em',
-      marginBottom: '2em'
+      margin: '2em 0'
     }
   }),
   { name: 'Spacing' }

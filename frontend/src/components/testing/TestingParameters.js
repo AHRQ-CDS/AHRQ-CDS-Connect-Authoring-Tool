@@ -1,40 +1,32 @@
-import React, { Component } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
-import _ from 'lodash';
 
 import TestingParameter from './TestingParameter';
 
-export default class TestingParameters extends Component {
-  updateInstanceOfParameter = (newValue, index) => {
-    const parameters = _.clone(this.props.parameters);
-    parameters[index] = _.clone(newValue);
-    delete parameters[index].label;
-    this.props.updateParameters(parameters);
-  }
+const TestingParameters = ({ handleUpdateParameters, parameters }) => {
+  const handleUpdateParameter = (parameter, newValue, index) => {
+    const params = [...parameters];
+    params[index] = { ...parameter, value: newValue };
+    handleUpdateParameters(params);
+  };
 
-  render() {
-    return (
-      <div className="parameters">
-        {this.props.parameters.length > 0 ? <br /> : '' }
-        {this.props.parameters.map((parameter, i) => (
-          <TestingParameter
-            key={`param-${i}`}
-            id={parameter.uniqueId}
-            index={i}
-            name={parameter.name}
-            type={parameter.type}
-            updateInstanceOfParameter={newValue => this.updateInstanceOfParameter(newValue, i)}
-            value={parameter.value}
-            vsacApiKey={this.props.vsacApiKey}
-          />
-        ))}
-      </div>
-    );
-  }
-}
+  return (
+    <>
+      {parameters.length > 0 ? <br /> : ''}
+      {parameters.map((parameter, index) => (
+        <TestingParameter
+          key={`param-${index}`}
+          parameter={parameter}
+          handleUpdateParameter={newValue => handleUpdateParameter(parameter, newValue, index)}
+        />
+      ))}
+    </>
+  );
+};
 
 TestingParameters.propTypes = {
-  parameters: PropTypes.array.isRequired,
-  updateParameters: PropTypes.func.isRequired,
-  vsacApiKey: PropTypes.string
+  handleUpdateParameters: PropTypes.func.isRequired,
+  parameters: PropTypes.array.isRequired
 };
+
+export default TestingParameters;

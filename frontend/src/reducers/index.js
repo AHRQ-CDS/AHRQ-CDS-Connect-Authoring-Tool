@@ -4,7 +4,6 @@ import * as types from '../actions/types';
 import authReducer from './auth';
 import errorsReducer from './errors';
 import artifactsReducer from './artifacts';
-import testingReducer from './testing';
 import templatesReducer from './templates';
 import vsacReducer from './vsac';
 import modifiersReducer from './modifiers';
@@ -14,7 +13,6 @@ const appReducer = combineReducers({
   auth: authReducer,
   errors: errorsReducer,
   artifacts: artifactsReducer,
-  testing: testingReducer,
   templates: templatesReducer,
   vsac: vsacReducer,
   modifiers: modifiersReducer,

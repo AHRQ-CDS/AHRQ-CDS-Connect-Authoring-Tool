@@ -1,40 +1,36 @@
-import React, { Component } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
+import { Card, CardContent, CardHeader } from '@material-ui/core';
 
 import { EditorsTemplate } from 'components/builder/templates';
+import { useTextStyles } from 'styles/hooks';
 
-export default class TestingParameter extends Component {
-  render() {
-    const { comment, id, name, type, updateInstanceOfParameter, value } = this.props;
+const TestingParameter = ({ handleUpdateParameter, parameter }) => {
+  const textStyles = useTextStyles();
+  const { name, type, uniqueId, value } = parameter;
 
-    return (
-      <div className="parameter card-group card-group__top" id={id}>
-        <div className="card-element">
-          <div className="card-element__header">
+  return (
+    <Card id={uniqueId}>
+      <CardHeader
+        disableTypography
+        title={
+          <>
+            <span className={textStyles.bold}>Parameter:{' '}</span>
             {name}
-          </div>
+          </>
+        }
+      />
 
-          <div className="card-element__body">
-            <EditorsTemplate
-              handleUpdateEditor={
-                newValue => updateInstanceOfParameter({ name, uniqueId: id, type, comment, value: newValue })
-              }
-              label="Value"
-              isNested
-              type={type}
-              value={value}
-            />
-          </div>
-        </div>
-      </div>
-    );
-  }
-}
+      <CardContent>
+        <EditorsTemplate handleUpdateEditor={handleUpdateParameter} label="Value" isNested type={type} value={value} />
+      </CardContent>
+    </Card>
+  );
+};
 
 TestingParameter.propTypes = {
-  id: PropTypes.string.isRequired,
-  name: PropTypes.string,
-  type: PropTypes.string,
-  updateInstanceOfParameter: PropTypes.func.isRequired,
-  vsacApiKey: PropTypes.string
+  handleUpdateParameter: PropTypes.func.isRequired,
+  parameter: PropTypes.object.isRequired
 };
+
+export default TestingParameter;

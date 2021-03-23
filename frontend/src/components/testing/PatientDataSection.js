@@ -1,65 +1,93 @@
-import React, { Component } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
-import { Accordion, AccordionSummary, AccordionDetails } from '@material-ui/core';
+import {
+  Accordion,
+  AccordionDetails,
+  AccordionSummary,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow
+} from '@material-ui/core';
 import { ExpandMore as ExpandMoreIcon } from '@material-ui/icons';
-import { Table } from 'reactstrap';
+import clsx from 'clsx';
 
-export default class PatientDataSection extends Component {
-  renderTable = (type, data) => {
-    const isOther = this.props.title === 'Other';
+import { useTableStyles, useTextStyles } from 'styles/hooks';
 
-    return (
-      <Table className="patient-data-section__table">
-        <thead>
-          {isOther && data.length > 0 && <tr><th>Resource type</th></tr>}
-          {!isOther && <tr>{Object.keys(data[0]).map((key, index) => <th key={index}>{key}</th>)}</tr>}
-        </thead>
+const PatientDataSection = ({ data, title }) => {
+  const tableStyles = useTableStyles();
+  const textStyles = useTextStyles();
 
-        <tbody>
-          {isOther && data.map((resource, index) => (
-            <tr key={index}>
-              <td>{resource.resource} ({resource.count})</td>
-            </tr>
-          ))}
+  if (data.length === 0) return null;
 
-          {!isOther && data.map((element, index) => (
-            <tr key={index}>
-              {Object.keys(data[0]).map((key, index) => <td key={index}>{element[key]}</td>)}
-            </tr>
-          ))}
-        </tbody>
-      </Table>
-    );
-  }
+  return (
+    <Accordion>
+      <AccordionSummary
+        expandIcon={<ExpandMoreIcon />}
+        aria-controls="patient-data-section-content"
+        id="patient-data-section-header"
+      >
+        <>
+          {title} ({data.length})
+        </>
+      </AccordionSummary>
 
-  render() {
-    const { title, data } = this.props;
-    if (data.length === 0) return null;
+      <AccordionDetails>
+        {data && (
+          <TableContainer>
+            <Table aria-label="patient data section table" size="small">
+              <TableHead>
+                {title === 'Other' && data.length > 0 && (
+                  <TableRow>
+                    <TableCell className={textStyles.fontSizeSmall}>Resource type</TableCell>
+                  </TableRow>
+                )}
 
-    return (
-      <div className="patient-data-section">
-        <Accordion>
-          <AccordionSummary
-            expandIcon={<ExpandMoreIcon />}
-            aria-controls="patient-data-section-content"
-            id="patient-data-section-header"
-          >
-            <div className="patient-data-section__header">
-              <div className="header-title">{title} ({ data.length })</div>
-              <div className="header-divider"></div>
-            </div>
-          </AccordionSummary>
+                {title !== 'Other' && (
+                  <TableRow>
+                    {Object.keys(data[0]).map((key, index) => (
+                      <TableCell key={index} className={clsx(tableStyles.noWrapCell, textStyles.fontSizeSmall)}>
+                        {key}
+                      </TableCell>
+                    ))}
+                  </TableRow>
+                )}
+              </TableHead>
 
-          <AccordionDetails>
-            {data && this.renderTable(title, data)}
-          </AccordionDetails>
-        </Accordion>
-      </div>
-    );
-  }
-}
+              <TableBody>
+                {title === 'Other' &&
+                  data.map((resource, index) => (
+                    <TableRow key={index}>
+                      <TableCell className={textStyles.fontSizeSmall}>
+                        {resource.resource} ({resource.count})
+                      </TableCell>
+                    </TableRow>
+                  ))}
+
+                {title !== 'Other' &&
+                  data.map((element, index) => (
+                    <TableRow key={index}>
+                      {Object.keys(data[0]).map((key, index) => (
+                        <TableCell key={index} className={textStyles.fontSizeSmall}>
+                          {element[key]}
+                        </TableCell>
+                      ))}
+                    </TableRow>
+                  ))}
+              </TableBody>
+            </Table>
+          </TableContainer>
+        )}
+      </AccordionDetails>
+    </Accordion>
+  );
+};
 
 PatientDataSection.propTypes = {
-  title: PropTypes.string.isRequired,
-  data: PropTypes.array
+  data: PropTypes.array.isRequired,
+  title: PropTypes.string.isRequired
 };
+
+export default PatientDataSection;

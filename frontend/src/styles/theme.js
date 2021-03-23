@@ -79,6 +79,7 @@ const materialUiOverridesBase = {
         backgroundColor: colors.grayLighter
       },
       '&.Mui-expanded': {
+        backgroundColor: colors.grayLighter,
         minHeight: 'inherit'
       }
     },
@@ -167,6 +168,23 @@ const materialUiOverridesBase = {
       '&:hover': {
         boxShadow: 'none'
       }
+    }
+  },
+  MuiCard: {
+    root: {
+      backgroundColor: colors.grayLightest,
+      margin: '1em 0'
+    }
+  },
+  MuiCardContent: {
+    root: {
+      padding: '10px 20px'
+    }
+  },
+  MuiCardHeader: {
+    root: {
+      borderBottom: `1px solid ${colors.grayLighter}`,
+      padding: '20px'
     }
   },
   MuiDialogActions: {

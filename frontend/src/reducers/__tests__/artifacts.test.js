@@ -26,14 +26,6 @@ describe('artifacts reducer', () => {
         elmFiles: [],
         elmErrors: []
       },
-      executeArtifact: {
-        isExecuting: false,
-        executeStatus: null,
-        results: null,
-        artifactExecuted: null,
-        patientsExecuted: null,
-        errorMessage: null
-      },
       artifactSaved: true,
       librariesInUse: []
     });
@@ -132,64 +124,6 @@ describe('artifacts reducer', () => {
     newState = {
       statusMessage: 'Download failed. Test status message.',
       downloadArtifact: { isDownloading: false, downloadStatus: 'failure', elmErrors: [] }
-    };
-    expect(reducer(previousState, action)).toEqual(newState);
-  });
-
-  // ----------------------- EXECUTE ARTIFACT ---------------------------- //
-  it('should handle executing an artifact', () => {
-    let action = { type: types.EXECUTE_ARTIFACT_REQUEST };
-    let newState = {
-      executeArtifact: {
-        isExecuting: true,
-        executeStatus: null,
-        results: null,
-        artifactExecuted: null,
-        patientsExecuted: null
-      }
-    };
-    expect(reducer([], action)).toEqual(newState);
-
-    const previousState = {
-      executeArtifact: {
-        isExecuting: false,
-        executeStatus: 'test',
-        results: {},
-        artifactExecuted: 'Test artifact',
-        patientsExecuted: ['Test patient']
-      }
-    };
-    expect(reducer(previousState, action)).toEqual(newState);
-
-    action = {
-      type: types.EXECUTE_ARTIFACT_SUCCESS,
-      data: 'Test data',
-      artifact: 'Test artifact',
-      patients: ['Test patient']
-    };
-
-    newState = {
-      executeArtifact: {
-        isExecuting: false,
-        executeStatus: 'success',
-        results: action.data,
-        artifactExecuted: action.artifact,
-        patientsExecuted: action.patients,
-        errorMessage: null
-      }
-    };
-    expect(reducer(previousState, action)).toEqual(newState);
-
-    action = {
-      type: types.EXECUTE_ARTIFACT_FAILURE,
-      statusText: 'Test status message'
-    };
-    newState = {
-      executeArtifact: {
-        isExecuting: false,
-        executeStatus: 'failure',
-        errorMessage: `Execute failed. ${action.statusText}.`
-      }
     };
     expect(reducer(previousState, action)).toEqual(newState);
   });

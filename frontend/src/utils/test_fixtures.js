@@ -562,15 +562,6 @@ const reduxState = {
   templates: {
     templates: elementGroups
   },
-  testing: {
-    patients: [],
-    addPatient: {
-      isAdding: false
-    }
-  },
-  valueSets: {
-    valueSets: []
-  },
   vsac: {
     isAuthenticating: false,
     authStatus: null,
