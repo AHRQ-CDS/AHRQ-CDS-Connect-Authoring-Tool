@@ -214,8 +214,10 @@ describe('<TemplateInstance />', () => {
       [
         'Verified',
         'With Unit',
+        'Average Observation Value',
         'Highest Observation Value',
         'Most Recent',
+        'First',
         'Look Back',
         'Count',
         'Exists',
@@ -223,7 +225,7 @@ describe('<TemplateInstance />', () => {
       ].forEach(name => {
         expect(screen.getByRole('button', { name })).toBeInTheDocument();
       });
-      expect(document.querySelectorAll('.modifier-select-button')).toHaveLength(8);
+      expect(document.querySelectorAll('.modifier-select-button')).toHaveLength(10);
     });
 
     it('cannot remove modifiers that change the return type if in use in the artifact', () => {

@@ -7,6 +7,10 @@ import * as types from 'actions/types';
 import localModifiers from 'data/modifiers';
 import { render, fireEvent, userEvent, screen } from 'utils/test-utils';
 import { instanceTree, emptyInstanceTree, artifact, reduxState } from 'utils/test_fixtures';
+import { simpleObservationInstanceTree } from 'utils/test_fixtures';
+import { simpleConditionInstanceTree } from 'utils/test_fixtures';
+import { simpleProcedureInstanceTree } from 'utils/test_fixtures';
+import { simpleImmunizationInstanceTree } from 'utils/test_fixtures';
 import { getFieldWithId } from 'utils/instances';
 import Builder from '../Builder';
 
@@ -33,6 +37,24 @@ const defaultState = {
     modifierMap,
     modifiersByInputType
   }
+};
+
+const getDefaultStateWithInstanceTree = instanceTree => {
+  return {
+    ...reduxState,
+    artifacts: {
+      ...reduxState.artifacts,
+      artifact: {
+        ...artifact,
+        expTreeInclude: instanceTree
+      }
+    },
+    modifiers: {
+      ...reduxState.modifiers,
+      modifierMap,
+      modifiersByInputType
+    }
+  };
 };
 
 const createMockStore = state => {
@@ -64,7 +86,7 @@ describe('<Builder />', () => {
   beforeEach(() => {
     nock('http://localhost')
       .get('/authoring/api/config/valuesets/demographics/units_of_time')
-      .reply(200, {expansion: []});
+      .reply(200, { expansion: [] });
   });
 
   it('shows loading screen when artifact is not loaded', () => {
@@ -197,6 +219,114 @@ describe('<Builder />', () => {
 
       fireEvent.click(getByText('Parameters'));
       expect(getByText('Parameters')).toHaveClass('react-tabs__tab--selected');
+    });
+  });
+
+  describe('Test that certain modifiers appear given current return type of list_of_observations', () => {
+    beforeEach(() => {
+      nock('http://localhost')
+        .get('/authoring/api/config/valuesets/demographics/units_of_time')
+        .reply(200, { expansion: [] });
+    });
+
+    describe('Test FirstObservation modifier.', () => {
+      const store = createMockStore(getDefaultStateWithInstanceTree(simpleObservationInstanceTree));
+
+      it('should render as a modifier option within a button and dispatch UPDATE_ARTIFACT when added', () => {
+        renderComponent({ store });
+
+        userEvent.click(screen.getAllByRole('button', { name: 'Add expression' })[0]);
+        userEvent.click(screen.getByRole('button', { name: 'First' }));
+
+        const updateAction = expandAction(_.last(store.getActions()));
+        const [instance] = updateAction.artifact.expTreeInclude.childInstances;
+        const [modifier] = instance.modifiers;
+
+        expect(updateAction).toBeDefined();
+        expect(updateAction.type).toEqual(types.UPDATE_ARTIFACT);
+        expect(modifier.id).toEqual('FirstObservation');
+        expect(modifier.name).toEqual('First');
+      });
+    });
+
+    describe('Test AverageObservationValue modifier.', () => {
+      const store = createMockStore(getDefaultStateWithInstanceTree(simpleObservationInstanceTree));
+
+      it('should render as a modifier option within a button and dispatch UPDATE_ARTIFACT when added', () => {
+        renderComponent({ store });
+
+        userEvent.click(screen.getAllByRole('button', { name: 'Add expression' })[0]);
+        userEvent.click(screen.getByRole('button', { name: 'Average Observation Value' }));
+
+        const updateAction = expandAction(_.last(store.getActions()));
+        const [instance] = updateAction.artifact.expTreeInclude.childInstances;
+        const [modifier] = instance.modifiers;
+
+        expect(updateAction).toBeDefined();
+        expect(updateAction.type).toEqual(types.UPDATE_ARTIFACT);
+        expect(modifier.id).toEqual('AverageObservationValue');
+        expect(modifier.name).toEqual('Average Observation Value');
+      });
+    });
+
+    describe('Test FirstCondition Modifier.', () => {
+      const store = createMockStore(getDefaultStateWithInstanceTree(simpleConditionInstanceTree));
+
+      it('should render as a modifier option within a button and dispatch UPDATE_ARTIFACT when added', () => {
+        renderComponent({ store });
+
+        userEvent.click(screen.getAllByRole('button', { name: 'Add expression' })[0]);
+        userEvent.click(screen.getByRole('button', { name: 'First' }));
+
+        const updateAction = expandAction(_.last(store.getActions()));
+        const [instance] = updateAction.artifact.expTreeInclude.childInstances;
+        const [modifier] = instance.modifiers;
+
+        expect(updateAction).toBeDefined();
+        expect(updateAction.type).toEqual(types.UPDATE_ARTIFACT);
+        expect(modifier.id).toEqual('FirstCondition');
+        expect(modifier.name).toEqual('First');
+      });
+    });
+
+    describe('Test FirstProcedure Modifier.', () => {
+      const store = createMockStore(getDefaultStateWithInstanceTree(simpleProcedureInstanceTree));
+
+      it('should render as a modifier option within a button and dispatch UPDATE_ARTIFACT when added', () => {
+        renderComponent({ store });
+
+        userEvent.click(screen.getAllByRole('button', { name: 'Add expression' })[0]);
+        userEvent.click(screen.getByRole('button', { name: 'First' }));
+
+        const updateAction = expandAction(_.last(store.getActions()));
+        const [instance] = updateAction.artifact.expTreeInclude.childInstances;
+        const [modifier] = instance.modifiers;
+
+        expect(updateAction).toBeDefined();
+        expect(updateAction.type).toEqual(types.UPDATE_ARTIFACT);
+        expect(modifier.id).toEqual('FirstProcedure');
+        expect(modifier.name).toEqual('First');
+      });
+    });
+
+    describe('Test FirstImmunization Modifier.', () => {
+      const store = createMockStore(getDefaultStateWithInstanceTree(simpleImmunizationInstanceTree));
+
+      it('should render as a modifier option within a button and dispatch UPDATE_ARTIFACT when added', () => {
+        renderComponent({ store });
+
+        userEvent.click(screen.getAllByRole('button', { name: 'Add expression' })[0]);
+        userEvent.click(screen.getByRole('button', { name: 'First' }));
+
+        const updateAction = expandAction(_.last(store.getActions()));
+        const [instance] = updateAction.artifact.expTreeInclude.childInstances;
+        const [modifier] = instance.modifiers;
+
+        expect(updateAction).toBeDefined();
+        expect(updateAction.type).toEqual(types.UPDATE_ARTIFACT);
+        expect(modifier.id).toEqual('FirstImmunization');
+        expect(modifier.name).toEqual('First');
+      });
     });
   });
 });

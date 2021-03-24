@@ -99,6 +99,14 @@ const modifiers = [
     cqlTemplate: 'BaseModifier',
     cqlLibraryFunction: 'C3F.HighestObservation'
   },
+  {
+    id: 'AverageObservationValue',
+    name: 'Average Observation Value',
+    inputTypes: ['list_of_observations'],
+    returnType: 'system_quantity',
+    cqlTemplate: 'BaseModifier',
+    cqlLibraryFunction: 'C3F.AverageObservation'
+  },
   // conditions
   {
     id: 'ConfirmedCondition',
@@ -117,7 +125,7 @@ const modifiers = [
     cqlLibraryFunction: 'C3F.ActiveOrRecurring'
   },
   {
-    id: 'ActiveConiditon',
+    id: 'ActiveCondition',
     type: 'Active',
     name: 'Active',
     inputTypes: ['list_of_conditions'],
@@ -414,6 +422,39 @@ const modifiers = [
     returnType: 'immunization',
     cqlTemplate: 'BaseModifier',
     cqlLibraryFunction: 'C3F.MostRecentImmunization'
+  },
+  // First
+  {
+    id: 'FirstObservation',
+    name: 'First',
+    inputTypes: ['list_of_observations'],
+    returnType: 'observation',
+    cqlTemplate: 'BaseModifier',
+    cqlLibraryFunction: 'C3F.FirstObservation'
+  },
+  {
+    id: 'FirstCondition',
+    name: 'First',
+    inputTypes: ['list_of_conditions'],
+    returnType: 'condition',
+    cqlTemplate: 'BaseModifier',
+    cqlLibraryFunction: 'C3F.FirstCondition'
+  },
+  {
+    id: 'FirstProcedure',
+    name: 'First',
+    inputTypes: ['list_of_procedures'],
+    returnType: 'procedure',
+    cqlTemplate: 'BaseModifier',
+    cqlLibraryFunction: 'C3F.FirstProcedure'
+  },
+  {
+    id: 'FirstImmunization',
+    name: 'First',
+    inputTypes: ['list_of_immunizations'],
+    returnType: 'immunization',
+    cqlTemplate: 'BaseModifier',
+    cqlLibraryFunction: 'C3F.FirstImmunization'
   },
   // Look Back
   {

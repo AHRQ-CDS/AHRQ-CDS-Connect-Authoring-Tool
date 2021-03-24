@@ -39,9 +39,10 @@ function getExpressionSentenceValue(modifier) {
     Qualifier: { modifierText: 'with a code', leadingText: '', type: 'post' },
     ConvertObservation: { modifierText: 'convert', leadingText: 'with', type: 'post' },
     HighestObservationValue: { modifierText: 'highest', leadingText: '', type: 'descriptor' },
+    AverageObservationValue: { modifierText: 'average', leadingText: '', type: 'descriptor' },
     ConfirmedCondition: { modifierText: 'confirmed', leadingText: '', type: 'list' },
     ActiveOrRecurring: { modifierText: 'active or recurring', leadingText: '', type: 'list' },
-    ActiveConiditon: { modifierText: 'active', leadingText: '', type: 'list' },
+    ActiveCondition: { modifierText: 'active', leadingText: '', type: 'list' },
     CompletedProcedure: { modifierText: 'completed', leadingText: '', type: 'list' },
     CompletedImmunization: { modifierText: 'completed', leadingText: '', type: 'list' },
     InProgressProcedure: { modifierText: 'in progress', leadingText: '', type: 'list' },
@@ -68,6 +69,10 @@ function getExpressionSentenceValue(modifier) {
     AfterDateTime: { modifierText: 'is after', leadingText: '', type: 'post' },
     AfterDecimal: { modifierText: 'is after', leadingText: '', type: 'post' },
     AfterQuantity: { modifierText: 'is after', leadingText: '', type: 'post' },
+    FirstObservation: { modifierText: 'first', leadingText: '', type: 'descriptor'},
+    FirstProcedure: { modifierText: 'first', leadingText: '', type: 'descriptor'},
+    FirstCondition: { modifierText: 'first', leadingText: '', type: 'descriptor'},
+    FirstImmunization: { modifierText: 'first', leadingText: '', type: 'descriptor'},
     MostRecentObservation: { modifierText: 'most recent', leadingText: '', type: 'descriptor' },
     MostRecentProcedure: { modifierText: 'most recent', leadingText: '', type: 'descriptor' },
     MostRecentCondition: { modifierText: 'most recent', leadingText: '', type: 'descriptor' },
@@ -506,8 +511,9 @@ function orderExpressionSentenceArray(
 
   // Handle descriptors (ex. highest, most recent)
   if (descriptorExpression) {
+    const useArticleThe = ['highest', 'average', 'most recent', 'first'];
     const descriptorText = descriptorExpression.modifierText;
-    const descriptorArticle = descriptorText === 'highest' ? 'the' : getArticle(descriptorText);
+    const descriptorArticle = useArticleThe.includes(descriptorText) ? 'the' : getArticle(descriptorText);
     if (hasStarted) {
       orderedExpressionArray.push({ expressionText: descriptorArticle, isExpression: false });
       orderedExpressionArray.push({ expressionText: descriptorText, isExpression: true });

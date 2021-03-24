@@ -11,7 +11,7 @@ function getModifier(name, values) {
 
 test('Simple modifiers Active, Confirmed, Exists builds expected phrase', () => {
   const modifiers = [
-    getModifier('ActiveConiditon'),
+    getModifier('ActiveCondition'),
     getModifier('ConfirmedCondition'),
     getModifier('BooleanExists')
   ];
@@ -59,7 +59,7 @@ test('More complicated modifiers, including Qualifier, builds expected phrase', 
 
   const expectedOutput = [
     { expressionText: 'There exists', isExpression: false },
-    { expressionText: 'a', isExpression: false },
+    { expressionText: 'the', isExpression: false },
     { expressionText: 'most recent', isExpression: true },
     { expressionText: 'verified', isExpression: true },
     { expressionText: 'observation', isExpression: false, isType: true },
@@ -69,7 +69,7 @@ test('More complicated modifiers, including Qualifier, builds expected phrase', 
     { expressionText: 'within the last 14 years', isExpression: true },
     { expressionText: 'whose value is a code from Smoker', isExpression: true }
   ];
-
+  
   expect(expressionPhrase).toEqual(expectedOutput);
 });
 
@@ -102,7 +102,7 @@ test('More complicated modifiers, including Value Comparison, builds correct phr
 
   const expectedOutput = [
     { expressionText: 'There exists', isExpression: false },
-    { expressionText: 'a', isExpression: false },
+    { expressionText: 'the', isExpression: false },
     { expressionText: 'most recent', isExpression: true },
     { expressionText: 'verified', isExpression: true },
     { expressionText: 'observation', isExpression: false, isType: true },
@@ -477,7 +477,7 @@ test('Immunization Phrases', () => {
   const expressionPhrase = convertToExpression(modifiers, name, valueSets, codes, 'boolean');
 
   const expectedOutput = [
-    { expressionText: 'A', isExpression: false },
+    { expressionText: 'The', isExpression: false },
     { expressionText: 'most recent', isExpression: true },
     { expressionText: 'completed', isExpression: true },
     { expressionText: 'immunization', isExpression: false, isType: true },

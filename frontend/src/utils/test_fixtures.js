@@ -1,6 +1,13 @@
 /* eslint-disable object-curly-newline */
-const elementLists = ['list_of_observations', 'list_of_conditions', 'list_of_medication_statements',
-  'list_of_medication_requests', 'list_of_procedures', 'list_of_allergy_intolerances', 'list_of_encounters'];
+const elementLists = [
+  'list_of_observations',
+  'list_of_conditions',
+  'list_of_medication_statements',
+  'list_of_medication_requests',
+  'list_of_procedures',
+  'list_of_allergy_intolerances',
+  'list_of_encounters'
+];
 
 /**
  * Example TemplateInstances
@@ -14,7 +21,7 @@ const instanceTree = {
   uniqueId: 'And-1',
   fields: [
     { id: 'element_name', type: 'string', name: 'Group Name', value: 'MeetsInclusionCriteria' },
-    { id: 'comment', type: 'string', name: 'Comment', value: 'Includes a comment'}
+    { id: 'comment', type: 'string', name: 'Comment', value: 'Includes a comment' }
   ],
   childInstances: [
     {
@@ -95,9 +102,232 @@ const emptyInstanceTree = {
   uniqueId: 'And-1',
   fields: [
     { id: 'element_name', type: 'string', name: 'Group Name', value: 'MeetsInclusionCriteria' },
-    { id: 'comment', type: 'string', name: 'Comment', value: 'Includes a comment'}
+    { id: 'comment', type: 'string', name: 'Comment', value: 'Includes a comment' }
   ],
   childInstances: []
+};
+
+const simpleObservationInstanceTree = {
+  id: 'And',
+  name: 'And',
+  conjunction: true,
+  returnType: 'boolean',
+  path: '',
+  uniqueId: 'And-65',
+  fields: [
+    { id: 'element_name', type: 'string', name: 'Group Name', value: 'MeetsInclusionCriteria' },
+    { id: 'comment', type: 'textarea', name: 'Comment', value: 'Includes a comment' }
+  ],
+  childInstances: [
+    {
+      id: 'GenericObservation_vsac',
+      name: 'Observation',
+      returnType: 'list_of_observations',
+      suppress: true,
+      extends: 'Base',
+      template: 'GenericObservation',
+      suppressedModifiers: ['ConvertToMgPerdL'],
+      fields: [
+        {
+          id: 'element_name',
+          type: 'string',
+          name: 'Element Name',
+          value: 'LDL Cholesterol'
+        },
+        {
+          id: 'comment',
+          type: 'textarea',
+          name: 'Comment'
+        },
+        {
+          id: 'observation',
+          type: 'observation_vsac',
+          name: 'Observation',
+          valueSets: [
+            {
+              name: 'LDL Cholesterol',
+              oid: '2.16.840.1.113883.3.526.3.1573'
+            }
+          ],
+          static: true
+        }
+      ],
+      type: 'element',
+      uniqueId: 'GenericObservation_vsac-23',
+      modifiers: []
+    }
+  ]
+};
+
+const simpleConditionInstanceTree = {
+  id: 'And',
+  name: 'And',
+  conjunction: true,
+  returnType: 'boolean',
+  path: '',
+  uniqueId: 'And-34',
+  fields: [
+    { id: 'element_name', type: 'string', name: 'Group Name', value: 'MeetsInclusionCriteria' },
+    { id: 'comment', type: 'textarea', name: 'Comment', value: 'Includes a comment' }
+  ],
+  childInstances: [
+    {
+      id: 'GenericCondition_vsac',
+      name: 'Condition',
+      returnType: 'list_of_conditions',
+      suppress: true,
+      extends: 'Base',
+      template: 'GenericCondition',
+      fields: [
+        {
+          id: 'element_name',
+          type: 'string',
+          name: 'Element Name',
+          value: 'All Infections'
+        },
+        {
+          id: 'comment',
+          type: 'textarea',
+          name: 'Comment'
+        },
+        {
+          id: 'condition',
+          type: 'condition_vsac',
+          name: 'Condition',
+          valueSets: [
+            {
+              name: 'All Infections',
+              oid: '2.16.840.1.113762.1.4.1200.143'
+            }
+          ],
+          static: true
+        }
+      ],
+      type: 'element',
+      uniqueId: 'GenericCondition_vsac-23',
+      modifiers: []
+    }
+  ]
+};
+
+const simpleProcedureInstanceTree = {
+  id: 'And',
+  name: 'And',
+  conjunction: true,
+  returnType: 'boolean',
+  path: '',
+  uniqueId: 'And-32',
+  fields: [
+    {
+      id: 'element_name',
+      type: 'string',
+      name: 'Group Name',
+      value: 'MeetsInclusionCriteria'
+    },
+    {
+      id: 'comment',
+      type: 'textarea',
+      name: 'Comment'
+    }
+  ],
+  childInstances: [
+    {
+      id: 'GenericProcedure_vsac',
+      name: 'Procedure',
+      returnType: 'list_of_procedures',
+      suppress: true,
+      extends: 'Base',
+      template: 'GenericProcedure',
+      fields: [
+        {
+          id: 'element_name',
+          type: 'string',
+          name: 'Element Name',
+          value: 'ADHD'
+        },
+        {
+          id: 'comment',
+          type: 'textarea',
+          name: 'Comment'
+        },
+        {
+          id: 'procedure',
+          type: 'procedure_vsac',
+          name: 'Procedure',
+          valueSets: [
+            {
+              name: 'ADHD',
+              oid: '2.16.840.1.113883.3.67.1.101.1.314'
+            }
+          ],
+          static: true
+        }
+      ],
+      type: 'element',
+      uniqueId: 'GenericProcedure_vsac-23',
+      modifiers: []
+    }
+  ]
+};
+
+const simpleImmunizationInstanceTree = {
+  id: 'And',
+  name: 'And',
+  conjunction: true,
+  returnType: 'boolean',
+  path: '',
+  fields: [
+    {
+      id: 'element_name',
+      type: 'string',
+      name: 'Group Name',
+      value: 'MeetsInclusionCriteria'
+    },
+    {
+      id: 'comment',
+      type: 'textarea',
+      name: 'Comment'
+    }
+  ],
+  uniqueId: 'And-45',
+  childInstances: [
+    {
+      id: 'GenericImmunization_vsac',
+      name: 'Immunization',
+      returnType: 'list_of_immunizations',
+      suppress: true,
+      extends: 'Base',
+      template: 'GenericImmunization',
+      fields: [
+        {
+          id: 'element_name',
+          type: 'string',
+          name: 'Element Name',
+          value: 'CVX Vaccines Administered Vaccine Set'
+        },
+        {
+          id: 'comment',
+          type: 'textarea',
+          name: 'Comment'
+        },
+        {
+          id: 'immunization',
+          type: 'immunization_vsac',
+          name: 'Immunization',
+          valueSets: [
+            {
+              name: 'CVX Vaccines Administered Vaccine Set',
+              oid: '2.16.840.1.113762.1.4.1010.6'
+            }
+          ],
+          static: true
+        }
+      ],
+      type: 'element',
+      uniqueId: 'GenericImmunization_vsac-23',
+      modifiers: []
+    }
+  ]
 };
 
 const elementGroups = [
@@ -114,8 +344,8 @@ const elementGroups = [
         fields: [
           { id: 'element_name', type: 'string', name: 'Element Name' },
           { id: 'min_age', type: 'number', typeOfNumber: 'integer', name: 'Minimum Age' },
-          { id: 'max_age', type: 'number', typeOfNumber: 'integer', name: 'Maximum Age' },
-        ],
+          { id: 'max_age', type: 'number', typeOfNumber: 'integer', name: 'Maximum Age' }
+        ]
       },
       {
         id: 'Gender',
@@ -124,8 +354,8 @@ const elementGroups = [
         cannotHaveModifiers: true,
         fields: [
           { id: 'element_name', type: 'string', name: 'Element Name' },
-          { id: 'gender', type: 'valueset', select: 'demographics/gender', name: 'Gender' },
-        ],
+          { id: 'gender', type: 'valueset', select: 'demographics/gender', name: 'Gender' }
+        ]
       }
     ]
   },
@@ -142,7 +372,7 @@ const elementGroups = [
         suppressedModifiers: ['ConceptValue'],
         fields: [
           { id: 'element_name', value: 'TotalCholesterol' },
-          { id: 'observation', static: true, value: 'total_cholesterol' },
+          { id: 'observation', static: true, value: 'total_cholesterol' }
         ]
       },
       {
@@ -153,7 +383,7 @@ const elementGroups = [
         suppressedModifiers: ['ConceptValue'],
         fields: [
           { id: 'element_name', value: 'HDLCholesterol' },
-          { id: 'observation', static: true, value: 'hdl_cholesterol' },
+          { id: 'observation', static: true, value: 'hdl_cholesterol' }
         ]
       },
       {
@@ -164,7 +394,7 @@ const elementGroups = [
         suppressedModifiers: ['ConceptValue'],
         fields: [
           { id: 'element_name', value: 'LDL_Test' },
-          { id: 'observation', static: true, value: 'ldl_test' },
+          { id: 'observation', static: true, value: 'ldl_test' }
         ]
       },
       {
@@ -199,7 +429,7 @@ const elementGroups = [
         returnType: 'boolean',
         fields: [
           { id: 'element_name', type: 'string', name: 'Group Name' },
-          { id: 'comment', type: 'string', name: 'Comment'}
+          { id: 'comment', type: 'string', name: 'Comment' }
         ]
       },
       {
@@ -209,7 +439,7 @@ const elementGroups = [
         returnType: 'boolean',
         fields: [
           { id: 'element_name', type: 'string', name: 'Group Name' },
-          { id: 'comment', type: 'string', name: 'Comment'}
+          { id: 'comment', type: 'string', name: 'Comment' }
         ]
       }
     ]
@@ -224,19 +454,15 @@ const elementGroups = [
         name: 'Intersect',
         conjunction: true,
         returnType: 'list_of_any',
-        fields: [
-          { id: 'element_name', type: 'string', name: 'Group Name' }
-        ]
+        fields: [{ id: 'element_name', type: 'string', name: 'Group Name' }]
       },
       {
         id: 'Union',
         name: 'Union',
         conjunction: true,
         returnType: 'list_of_any',
-        fields: [
-          { id: 'element_name', type: 'string', name: 'Group Name' }
-        ]
-      },
+        fields: [{ id: 'element_name', type: 'string', name: 'Group Name' }]
+      }
     ]
   }
 ];
@@ -286,8 +512,8 @@ const genericElementGroups = [
         fields: [
           { id: 'element_name', type: 'string', name: 'Element Name' },
           { id: 'min_age', type: 'number', typeOfNumber: 'integer', name: 'Minimum Age' },
-          { id: 'max_age', type: 'number', typeOfNumber: 'integer', name: 'Maximum Age' },
-        ],
+          { id: 'max_age', type: 'number', typeOfNumber: 'integer', name: 'Maximum Age' }
+        ]
       },
       {
         id: 'Gender',
@@ -296,9 +522,9 @@ const genericElementGroups = [
         cannotHaveModifiers: true,
         fields: [
           { id: 'element_name', type: 'string', name: 'Element Name' },
-          { id: 'gender', type: 'valueset', select: 'demographics/gender', name: 'Gender' },
-        ],
-      },
+          { id: 'gender', type: 'valueset', select: 'demographics/gender', name: 'Gender' }
+        ]
+      }
     ]
   },
   {
@@ -312,9 +538,7 @@ const genericElementGroups = [
         returnType: 'list_of_observations',
         suppress: true,
         extends: 'Base',
-        fields: [
-          { id: 'observation', type: 'observation', name: 'Observation' },
-        ],
+        fields: [{ id: 'observation', type: 'observation', name: 'Observation' }]
       },
       {
         id: 'GenericObservation_vsac',
@@ -324,9 +548,7 @@ const genericElementGroups = [
         extends: 'Base',
         template: 'GenericObservation',
         suppressedModifiers: ['WithUnit', 'ConvertToMgPerdL'], // checkInclusionInVS is assumed to be suppressed
-        fields: [
-          { id: 'observation', type: 'observation_vsac', name: 'Observation' },
-        ]
+        fields: [{ id: 'observation', type: 'observation_vsac', name: 'Observation' }]
       }
     ]
   }
@@ -347,7 +569,10 @@ const genericInstance = {
       id: 'observation',
       type: 'observation_vsac',
       name: 'Observation',
-      valueSets: [{ name: 'VS', oid: '1.2.3' }, { name: 'VS2', oid: '2.3.4' }],
+      valueSets: [
+        { name: 'VS', oid: '1.2.3' },
+        { name: 'VS2', oid: '2.3.4' }
+      ],
       codes: [
         { code: '123-4', codeSystem: { name: 'TestName', id: 'TestId' } },
         { code: '456-7', codeSystem: { name: 'TestNameA', id: 'TestIdA' } }
@@ -373,7 +598,10 @@ const genericInstanceWithModifiers = {
       id: 'observation',
       type: 'observation_vsac',
       name: 'Observation',
-      valueSets: [{ name: 'VS', oid: '1.2.3' }, { name: 'VS2', oid: '2.3.4' }],
+      valueSets: [
+        { name: 'VS', oid: '1.2.3' },
+        { name: 'VS2', oid: '2.3.4' }
+      ],
       codes: [
         { code: '123-4', codeSystem: { name: 'TestName', id: 'TestId' } },
         { code: '456-7', codeSystem: { name: 'TestNameA', id: 'TestIdA' } }
@@ -405,7 +633,7 @@ const genericInstanceWithModifiers = {
       cqlTemplate: 'BaseModifier',
       cqlLibraryFunction: 'not'
     }
-  ],
+  ]
 };
 
 const genericBaseElementInstance = {
@@ -424,14 +652,17 @@ const genericBaseElementInstance = {
       id: 'observation',
       type: 'observation_vsac',
       name: 'Observation',
-      valueSets: [{ name: 'VS', oid: '1.2.3' }, { name: 'VS2', oid: '2.3.4' }],
+      valueSets: [
+        { name: 'VS', oid: '1.2.3' },
+        { name: 'VS2', oid: '2.3.4' }
+      ],
       codes: [
         { code: '123-4', codeSystem: { name: 'TestName', id: 'TestId' } },
         { code: '456-7', codeSystem: { name: 'TestNameA', id: 'TestIdA' } }
       ]
     }
   ],
-  modifiers: [],
+  modifiers: []
 };
 
 const genericBaseElementInstanceWithModifiers = {
@@ -450,7 +681,10 @@ const genericBaseElementInstanceWithModifiers = {
       id: 'observation',
       type: 'observation_vsac',
       name: 'Observation',
-      valueSets: [{ name: 'VS', oid: '1.2.3' }, { name: 'VS2', oid: '2.3.4' }],
+      valueSets: [
+        { name: 'VS', oid: '1.2.3' },
+        { name: 'VS2', oid: '2.3.4' }
+      ],
       codes: [
         { code: '123-4', codeSystem: { name: 'TestName', id: 'TestId' } },
         { code: '456-7', codeSystem: { name: 'TestNameA', id: 'TestIdA' } }
@@ -482,7 +716,7 @@ const genericBaseElementInstanceWithModifiers = {
       cqlTemplate: 'BaseModifier',
       cqlLibraryFunction: 'not'
     }
-  ],
+  ]
 };
 
 const genericBaseElementListInstance = {
@@ -495,7 +729,7 @@ const genericBaseElementListInstance = {
   usedBy: ['testId1'],
   fields: [
     { id: 'element_name', type: 'string', name: 'Group Name', value: 'UnionListName' },
-    { id: 'comment', type: 'string', name: 'Comment', value: 'UnionListName Comment'}
+    { id: 'comment', type: 'string', name: 'Comment', value: 'UnionListName Comment' }
   ],
   childInstances: [genericInstance]
 };
@@ -515,7 +749,7 @@ const genericBaseElementUseInstance = {
       value: { id: 'originalBaseElementId', type: 'Observation' }
     }
   ],
-  modifiers: [],
+  modifiers: []
 };
 
 const reduxState = {
@@ -577,6 +811,10 @@ export { default as artifact } from '../mocks/mockArtifact';
 export {
   instanceTree,
   emptyInstanceTree,
+  simpleObservationInstanceTree,
+  simpleConditionInstanceTree,
+  simpleProcedureInstanceTree,
+  simpleImmunizationInstanceTree,
   elementGroups,
   genericElementTypes,
   genericElementGroups,
