@@ -218,6 +218,32 @@ const DataTypeGuide = ({ gtmKey, dapURL }) => {
                 </ul>
               </li>
               <li>
+                First
+                <ul>
+                  <li>
+                    CQL function: <code>C3F.FirstCondition</code>
+                  </li>
+                  <li>
+                    Summary: Returns the first (least recent) condition from a list
+                    <ul>
+                      <li>
+                        In FHIR R4, this sorts conditions using <code>onset[x]</code> and <code>recordedDate</code> and
+                        returns the first condition from that list
+                      </li>
+                      <li>
+                        In FHIR STU3, this sorts conditions using <code>onset[x]</code> and <code>assertedDate</code>{' '}
+                        and returns the first condition from that list
+                      </li>
+                      <li>
+                        In FHIR DSTU2, this sorts conditions using <code>onset[x]</code> and <code>dateRecorded</code>{' '}
+                        and returns the first condition from that list
+                      </li>
+                    </ul>
+                  </li>
+                  <li>Returns: Condition</li>
+                </ul>
+              </li>
+              <li>
                 Look Back
                 <ul>
                   <li>
@@ -366,6 +392,28 @@ const DataTypeGuide = ({ gtmKey, dapURL }) => {
                     </ul>
                   </li>
                   <li>Returns: List of Immunizations</li>
+                </ul>
+              </li>
+              <li>
+                First
+                <ul>
+                  <li>
+                    CQL function: <code>C3F.FirstImmunization</code>
+                  </li>
+                  <li>
+                    Summary: Returns the first (least recent) immunization from a list.
+                    <ul>
+                      <li>
+                        In FHIR R4, this sorts immunizations by <code>occurrence[x]</code> datetimes and returns the
+                        first immunization from that list.
+                      </li>
+                      <li>
+                        In FHIR STU3 and DSTU2, this sorts immunizations by <code>date</code> values and returns the
+                        first immunization from that list.
+                      </li>
+                    </ul>
+                  </li>
+                  <li>Returns: Immunization</li>
                 </ul>
               </li>
               <li>
@@ -531,6 +579,34 @@ const DataTypeGuide = ({ gtmKey, dapURL }) => {
             <h3 id="list-of-observations">List of Observations</h3>
 
             <ul>
+            <li>
+                Average Observation
+                <ul>
+                  <li>
+                    CQL function: <code>C3F.AverageObservation</code>
+                  </li>
+                  <li>
+                    Summary: Returns the average value of all valid observations in a 
+                    list. It uses the CQL aggregator method {' '}
+                    <code>Avg()</code> on each observation via <code>value[x]</code> and returns the average value.
+                  </li>
+                  <li>Returns: System Quantity</li>
+                </ul>
+            </li>
+            <li>
+                First
+                <ul>
+                  <li>
+                    CQL function: <code>C3F.FirstObservation</code>
+                  </li>
+                  <li>
+                    Summary: Returns the first (least recent) observation from a list. Sorts observations by{' '}
+                    <code>effective[x]</code> and <code>issued</code> times and returns the first observation from that
+                    list.
+                  </li>
+                  <li>Returns: Observation</li>
+                </ul>
+              </li>
               <li>
                 Highest Observation Value
                 <ul>
@@ -653,6 +729,20 @@ const DataTypeGuide = ({ gtmKey, dapURL }) => {
                     </ul>
                   </li>
                   <li>Returns: List of Procedures</li>
+                </ul>
+              </li>
+              <li>
+                First
+                <ul>
+                  <li>
+                    CQL function: <code>C3F.FirstProcedure</code>
+                  </li>
+                  <li>
+                    Summary: Returns the first (least recent) procedure from a list. Sorts procedures by{' '}
+                    <code>performed[x]</code>
+                    times and returns the first procedure from that list.
+                  </li>
+                  <li>Returns: Procedure</li>
                 </ul>
               </li>
               <li>
