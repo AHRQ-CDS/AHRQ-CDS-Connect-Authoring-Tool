@@ -1,6 +1,5 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import clsx from 'clsx';
 
 import { NumberField, StaticField, StringField, TextAreaField, ValueSetField } from 'components/builder/fields';
 import { useFieldStyles } from 'styles/hooks';
@@ -14,15 +13,6 @@ const FieldTemplate = ({ field, handleUpdateField }) => {
     switch (field.type) {
       case 'number':
         return <NumberField field={field} handleUpdateField={handleUpdateField} />;
-      case 'allergyIntolerance_vsac':
-      case 'condition_vsac':
-      case 'device_vsac':
-      case 'encounter_vsac':
-      case 'immunization_vsac':
-      case 'medicationRequest_vsac':
-      case 'medicationStatement_vsac':
-      case 'observation_vsac':
-      case 'procedure_vsac':
       case 'string':
         return <StringField field={field} handleUpdateField={handleUpdateField} />;
       case 'textarea':
@@ -36,11 +26,8 @@ const FieldTemplate = ({ field, handleUpdateField }) => {
 
   return (
     <div className={fieldStyles.field} id="field-template">
-      <div className={clsx(fieldStyles.fieldLabel, fieldStyles.fieldLabelWithInput)}>{field.name}:</div>
-
-      <div className={fieldStyles.fieldInputGroup}>
-        {fieldComponent}
-      </div>
+      <div className={fieldStyles.fieldLabel}>{field.name}:</div>
+      <div className={fieldStyles.fieldInputGroup}>{fieldComponent}</div>
     </div>
   );
 };
@@ -52,9 +39,9 @@ FieldTemplate.propTypes = {
 
 const FieldsTemplate = ({ fields, handleUpdateField }) => (
   <div id="fields-template">
-    {fields.map((field, index) =>
+    {fields.map((field, index) => (
       <FieldTemplate key={index} field={field} handleUpdateField={handleUpdateField} />
-    )}
+    ))}
   </div>
 );
 

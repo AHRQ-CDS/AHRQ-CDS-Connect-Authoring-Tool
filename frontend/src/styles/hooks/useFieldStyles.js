@@ -4,7 +4,7 @@ export default makeStyles(
   theme => ({
     field: {
       display: 'flex',
-      margin: '10px 0',
+      marginBottom: '10px',
       width: '100%'
     },
     fieldCard: {

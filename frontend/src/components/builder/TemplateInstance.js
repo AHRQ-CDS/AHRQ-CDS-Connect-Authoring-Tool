@@ -490,21 +490,7 @@ export default class TemplateInstance extends Component {
   renderBody() {
     const { disableAddElement, templateInstance, validateReturnType } = this.props;
     const { returnType } = this.state;
-    const fieldsToRender = [
-      'allergyIntolerance_vsac',
-      'condition_vsac',
-      'device_vsac',
-      'encounter_vsac',
-      'immunization_vsac',
-      'medicationRequest_vsac',
-      'medicationStatement_vsac',
-      'number',
-      'observation_vsac',
-      'procedure_vsac',
-      'string',
-      'textarea',
-      'valueset'
-    ];
+    const fieldsToRender = ['number', 'string', 'textarea', 'valueset'];
     const baseElementIsUsed = this.isBaseElementUsed() || disableAddElement;
     const vsacField = getFieldWithType(this.props.templateInstance.fields, '_vsac');
     const referenceField = getFieldWithType(templateInstance.fields, 'reference');
@@ -525,7 +511,8 @@ export default class TemplateInstance extends Component {
 
         {templateInstance.fields?.length > 2 &&
           <FieldsTemplate
-            fields={templateInstance.fields.slice(2).filter(field => fieldsToRender.includes(field.type))}
+            fields={templateInstance.fields.filter(field =>
+              fieldsToRender.includes(field.type) && field.id !== 'comment' && field.id !== 'element_name')}
             handleUpdateField={this.updateInstance}
           />
         }

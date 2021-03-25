@@ -40,7 +40,6 @@ const VSACAuthenticationModal = ({ handleCloseModal }) => {
       handleSaveModal={login}
       isOpen
       hasCancelButton
-      hasEnterKeySubmit={false}
       isLoading={isLoading}
       maxWidth="md"
       submitButtonText="Login"
