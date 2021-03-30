@@ -66,7 +66,7 @@ define function ObservationLookBack(ObsList List<Observation>, LookBack System.Q
       or O.issued in LookBackInterval
 
 /**
- * The most recent observation.  For each Observation, this algorithm will use the FindDate function, which uses the
+ * The most recent observation.  For each Observation, this algorithm will use the Coalesce function, which uses the
  * first non-null date value from these fields: effectiveDateTime, effectivePeriod.end, effectivePeriod.start, issued.
  * The found date will be used to compare Observations and determine the most recent one.
  * NOTE: We can't use FindDate because it appears that the execution engine may have problems sorting by the

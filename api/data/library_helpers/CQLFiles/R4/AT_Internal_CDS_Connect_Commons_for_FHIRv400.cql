@@ -287,8 +287,8 @@ define function MostRecentCondition(CondList List<Condition>):
 define function FirstCondition(CondList List<Condition>):
   First(CondList C sort by Coalesce(
     (onset as FHIR.dateTime).value,
-    (onset as FHIR.Period)."end".value,
     (onset as FHIR.Period)."start".value,
+    (onset as FHIR.Period)."end".value,
     recordedDate.value)
   )
 

@@ -86,7 +86,7 @@ define function MostRecent(ObsList List<Observation>):
  * @returns {Observation} the most recent Observation from the list, or null if only null elements were passed in
  */
 define function FirstObservation(ObsList List<Observation>):
-  First(ObsList O sort by Coalesce((effective as FHIR.dateTime).value, (effective as FHIR.Period)."end".value, (effective as FHIR.Period)."start".value, issued.value))
+  First(ObsList O sort by Coalesce((effective as FHIR.dateTime).value, (effective as FHIR.Period)."start".value, (effective as FHIR.Period)."end".value, issued.value))
 
 /**
  * Extracts the quantity value from an Observation, returning it as a CQL Quantity
