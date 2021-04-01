@@ -14,4 +14,9 @@ ArtifactRouter.route('/:artifact')
   .get(artifact.singleGet)
   .delete(artifact.singleDelete);
 
+// Route for /authoring/api/artifacts/:artifact/duplicate
+ArtifactRouter.route('/:artifact/duplicate')
+  .post(artifact.duplicate);
+
+
 module.exports = ArtifactRouter;

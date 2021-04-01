@@ -58,6 +58,7 @@ describe('<ArtifactTable />', () => {
         artifacts={artifactsMock}
         handleDeleteArtifact={jest.fn()}
         handleUpdateArtifact={jest.fn()}
+        handleDuplicateArtifact={jest.fn()}
         {...props}
       />
     );
@@ -96,5 +97,14 @@ describe('<ArtifactTable />', () => {
     userEvent.click(dialog.getByRole('button', { name: 'Delete' }));
 
     expect(handleDeleteArtifact).toBeCalledWith(artifactsMock[0]);
+  });
+
+  it('allows duplication of artifacts', () => {
+    const handleDuplicateArtifact = jest.fn();
+    renderComponent({ handleDuplicateArtifact });
+
+    userEvent.click(screen.getAllByTitle('Duplicate')[0]);
+
+    expect(handleDuplicateArtifact).toBeCalledWith(artifactsMock[0]);
   });
 });

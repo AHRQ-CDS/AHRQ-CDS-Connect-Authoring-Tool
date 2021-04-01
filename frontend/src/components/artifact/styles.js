@@ -3,7 +3,8 @@ import { makeStyles } from '@material-ui/core/styles';
 export default makeStyles(
   theme => ({
     artifactButton: {
-      marginLeft: '10px'
+      margin: '-20px 0',
+      transform: 'scale(0.8)'
     },
     artifactForm: {
       display: 'flex',

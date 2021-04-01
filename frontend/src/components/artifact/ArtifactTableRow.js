@@ -1,7 +1,7 @@
 import React, { useCallback, useState } from 'react';
 import PropTypes from 'prop-types';
-import { Button, TableCell } from '@material-ui/core';
-import { Delete as DeleteIcon, Edit as EditIcon } from '@material-ui/icons';
+import { IconButton, TableCell, Tooltip } from '@material-ui/core';
+import { Delete as DeleteIcon, Edit as EditIcon, FileCopy as CopyIcon} from '@material-ui/icons';
 
 import ArtifactModal from './ArtifactModal';
 import { Link } from 'components/elements';
@@ -9,13 +9,14 @@ import { DeleteConfirmationModal } from 'components/modals';
 import { renderDate } from 'utils/dates';
 import artifactProps from 'prop-types/artifact';
 import { useTextStyles } from 'styles/hooks';
+
 import useStyles from './styles';
 
-const ArtifactTableRow = ({ artifact, handleDeleteArtifact, handleUpdateArtifact }) => {
+const ArtifactTableRow = ({ artifact, handleDeleteArtifact, handleDuplicateArtifact, handleUpdateArtifact }) => {
   const [showArtifactModal, setShowArtifactModal] = useState(false);
   const [showDeleteConfirmationModal, setShowDeleteConfirmationModal] = useState(false);
-  const styles = useStyles();
   const textStyles = useTextStyles();
+  const styles = useStyles();
 
   const deleteArtifact = useCallback(
     artifact => {
@@ -36,25 +37,38 @@ const ArtifactTableRow = ({ artifact, handleDeleteArtifact, handleUpdateArtifact
       <TableCell>{renderDate(artifact.createdAt)}</TableCell>
 
       <TableCell align="right" style={{ whiteSpace: 'nowrap' }}>
-        <Button
-          className={styles.artifactButton}
-          color="primary"
-          onClick={() => setShowArtifactModal(true)}
-          startIcon={<EditIcon />}
-          variant="contained"
-        >
-          Edit Info
-        </Button>
+        <Tooltip title="Edit Info" arrow>
+          <IconButton
+            className={styles.artifactButton}
+            color="primary"
+            onClick={() => setShowArtifactModal(true)}
+            variant="contained"
+          >
+            <EditIcon/>
+          </IconButton>
+        </Tooltip>
 
-        <Button
-          className={styles.artifactButton}
-          color="secondary"
-          onClick={() => setShowDeleteConfirmationModal(true)}
-          startIcon={<DeleteIcon />}
-          variant="contained"
-        >
-          Delete
-        </Button>
+        <Tooltip title="Duplicate" arrow>
+          <IconButton
+            className={styles.artifactButton}
+            color="primary"
+            onClick={() => handleDuplicateArtifact(artifact)}
+            variant="contained"
+          >
+            <CopyIcon/>
+          </IconButton>
+        </Tooltip>
+
+        <Tooltip title="Delete" arrow>
+          <IconButton
+            className={styles.artifactButton}
+            color="secondary"
+            onClick={() => setShowDeleteConfirmationModal(true)}
+            variant="contained"
+          >
+            <DeleteIcon/>
+          </IconButton>
+        </Tooltip>
       </TableCell>
 
       {showArtifactModal && (

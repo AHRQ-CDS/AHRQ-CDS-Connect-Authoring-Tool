@@ -6,7 +6,7 @@ import ArtifactTableRow from './ArtifactTableRow';
 import { sortByName, sortByVersion, sortByDateEdited, sortByDateCreated } from 'utils/artifactSort';
 import artifactProps from 'prop-types/artifact';
 
-const ArtifactTable = ({ artifacts, handleDeleteArtifact, handleUpdateArtifact }) => {
+const ArtifactTable = ({ artifacts, handleDeleteArtifact, handleDuplicateArtifact, handleUpdateArtifact }) => {
   const [selectedColumnIndex, setSelectedColumnIndex] = useState(2);
   const [sortAsc, setSortAsc] = useState(true);
 
@@ -56,6 +56,7 @@ const ArtifactTable = ({ artifacts, handleDeleteArtifact, handleUpdateArtifact }
               <ArtifactTableRow
                 artifact={artifact}
                 handleDeleteArtifact={handleDeleteArtifact}
+                handleDuplicateArtifact={handleDuplicateArtifact}
                 handleUpdateArtifact={handleUpdateArtifact}
               />
             </TableRow>

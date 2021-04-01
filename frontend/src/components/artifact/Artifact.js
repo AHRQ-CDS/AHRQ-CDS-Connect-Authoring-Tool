@@ -8,7 +8,7 @@ import clsx from 'clsx';
 import ArtifactModal from './ArtifactModal';
 import ArtifactTable from './ArtifactTable';
 import { useSpacingStyles, useTextStyles } from 'styles/hooks';
-import { addArtifact, deleteArtifact, fetchArtifacts, updateArtifact } from 'queries/artifacts';
+import { addArtifact, deleteArtifact, fetchArtifacts, updateArtifact, duplicateArtifact } from 'queries/artifacts';
 
 const Artifact = () => {
   const [showModal, setShowModal] = useState(false);
@@ -20,7 +20,10 @@ const Artifact = () => {
   const resetArtifacts = () => queryClient.invalidateQueries('artifacts');
   const { mutateAsync: asyncDeleteArtifact } = useMutation(deleteArtifact, { onSuccess: resetArtifacts });
   const { mutateAsync: asyncAddArtifact } = useMutation(addArtifact, { onSuccess: resetArtifacts });
+  const { mutateAsync: asyncDuplicateArtifact } = useMutation(duplicateArtifact, { onSuccess: resetArtifacts });
   const { mutateAsync: asyncUpdateArtifact } = useMutation(updateArtifact, { onSuccess: resetArtifacts });
+  const handleDuplicateArtifact = useCallback(artifactProps =>
+    asyncDuplicateArtifact({artifactProps}), [asyncDuplicateArtifact]);
   const handleDeleteArtifact = useCallback(artifact => asyncDeleteArtifact({ artifact }), [asyncDeleteArtifact]);
   const handleAddArtifact = useCallback(artifactProps => asyncAddArtifact({ artifactProps }), [asyncAddArtifact]);
   const handleUpdateArtifact = useCallback(
@@ -43,6 +46,7 @@ const Artifact = () => {
             <ArtifactTable
               artifacts={artifacts}
               handleDeleteArtifact={handleDeleteArtifact}
+              handleDuplicateArtifact={handleDuplicateArtifact}
               handleUpdateArtifact={handleUpdateArtifact}
             />
           ) : (

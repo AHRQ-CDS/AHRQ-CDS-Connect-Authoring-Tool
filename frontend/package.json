@@ -94,7 +94,8 @@
     "lint:css": "stylelint 'src/styles/**/*.scss'",
     "lint:js": "eslint .",
     "lint": "run-p --aggregate-output -c lint:*",
-    "lint-fix": "eslint --fix ."
+    "lint-fix": "eslint --fix .",
+    "prepare": "cd .. && husky install frontend/.husky"
   },
   "browserslist": {
     "development": [
@@ -115,10 +116,5 @@
     "singleQuote": true,
     "printWidth": 120,
     "arrowParens": "avoid"
-  },
-  "husky": {
-    "hooks": {
-      "pre-commit": "pretty-quick --staged"
-    }
   }
 }
