@@ -284,6 +284,7 @@ const UserGuide = () => {
                 <li>Version</li>
                 <li>When it was last updated</li>
                 <li>"Edit Info" button</li>
+                <li>"Duplicate" button</li>
                 <li>"Delete" button</li>
               </ul>
             </div>
@@ -301,6 +302,10 @@ const UserGuide = () => {
             <div>
               To edit an artifact's name or version, click its "Edit Info" button. This will open a modal dialog with a
               form for editing the name and version.
+            </div>
+            <div>
+              To duplicate an artifact, click its "Duplicate" button. This will create a completely new 
+              copy of your artifact in the artifact table.
             </div>
             <div>
               To delete an artifact, click its "Delete" button. This will open a modal dialog asking you to confirm that
