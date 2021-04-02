@@ -15,7 +15,7 @@ import {
   faChevronRight,
   faChevronDown,
   faCheck,
-  faTimes,
+  faTimes
 } from '@fortawesome/free-solid-svg-icons';
 import clsx from 'clsx';
 
@@ -301,19 +301,19 @@ const UserGuide = () => {
               "Workspace" view.
             </div>
             <div>
-              To edit an artifact's name or version, click its "Edit Info" button &nbsp;
+              To edit an artifact's name or version, click its "Edit Info" button {' '}
               <EditIcon color="primary" fontSize="small" aria-hidden="true" />
               . This will open a modal dialog with a
               form for editing the name and version.
             </div>
             <div>
-              To duplicate an artifact, click its "Duplicate" button &nbsp;
+              To duplicate an artifact, click its "Duplicate" button {' '}
               <CopyIcon color="primary" fontSize="small" aria-hidden="true" />
               . This will create a completely new 
               copy of your artifact in the artifact table.
             </div>
             <div>
-              To delete an artifact, click its "Delete" button &nbsp;
+              To delete an artifact, click its "Delete" button {' '}
               <DeleteIcon color="secondary" fontSize="small" aria-hidden="true" />
               . This will open a modal dialog asking you to confirm that
               you would like to delete the artifact. After clicking the "Delete" button to confirm, the artifact will be
