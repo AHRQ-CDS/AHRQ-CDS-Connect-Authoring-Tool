@@ -1,7 +1,7 @@
 /* eslint max-len: ["error", 130] */
 import React from 'react';
 import { Waypoint } from 'react-waypoint';
-import { MenuBook as MenuBookIcon } from '@material-ui/icons';
+import { Delete as DeleteIcon, Edit as EditIcon, FileCopy as CopyIcon, MenuBook as MenuBookIcon } from '@material-ui/icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   faEye,
@@ -283,7 +283,9 @@ const UserGuide = () => {
                 <li>Name</li>
                 <li>Version</li>
                 <li>When it was last updated</li>
+                <li>When it was created</li>
                 <li>"Edit Info" button</li>
+                <li>"Duplicate" button</li>
                 <li>"Delete" button</li>
               </ul>
             </div>
@@ -299,13 +301,27 @@ const UserGuide = () => {
               "Workspace" view.
             </div>
             <div>
-              To edit an artifact's name or version, click its "Edit Info" button. This will open a modal dialog with a
+              To edit an artifact's name or version, click its "Edit Info" button {' '}
+              <EditIcon color="primary" fontSize="small" aria-hidden="true" />
+              . This will open a modal dialog with a
               form for editing the name and version.
             </div>
             <div>
-              To delete an artifact, click its "Delete" button. This will open a modal dialog asking you to confirm that
+              To duplicate an artifact, click its "Duplicate" button {' '}
+              <CopyIcon color="primary" fontSize="small" aria-hidden="true" />
+              . This will create a completely new 
+              copy of your artifact in the artifact table.
+            </div>
+            <div>
+              To delete an artifact, click its "Delete" button {' '}
+              <DeleteIcon color="secondary" fontSize="small" aria-hidden="true" />
+              . This will open a modal dialog asking you to confirm that
               you would like to delete the artifact. After clicking the "Delete" button to confirm, the artifact will be
               permanently deleted. This cannot be undone.
+            </div>
+            <div>
+              To sort the table by any of the columns simply click the column name. To reverse the order of the sort,
+              click the column name again and the arrow indicating ascending / descending sort will change directions.
             </div>
           </div>
         </div>
