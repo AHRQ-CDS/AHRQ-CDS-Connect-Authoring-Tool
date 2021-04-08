@@ -702,9 +702,7 @@ const DataTypeGuide = ({ gtmKey, dapURL }) => {
                 See expressions that can be applied to <a href="#list-types">any list</a>
               </li>
             </ul>
-
             <h3 id="list-of-procedures">List of Procedures</h3>
-
             <ul>
               <li>
                 Completed
@@ -795,6 +793,72 @@ const DataTypeGuide = ({ gtmKey, dapURL }) => {
                     times and returns the last procedure from that list.
                   </li>
                   <li>Returns: Procedure</li>
+                </ul>
+              </li>
+              <li>
+                See expressions that can be applied to <a href="#list-types">any list</a>
+              </li>
+            </ul>
+            <h3 id="list-of-service-requests">List of Service Requests</h3>
+            <ul>
+              <li>
+                Service Request Lookback
+                <ul>
+                  <li>
+                    CQL function: <code>C3F.ServiceRequestLookBack</code>
+                  </li>
+                  <li>
+                    Summary: Returns a list of Service Requests with <code>authoredOn</code> time
+                    between now and the time period specified by the user.
+                  </li>
+                  <li>
+                    Returns: List of Service Requests
+                  </li>
+                </ul>
+              </li>
+              <li>
+                Active or Completed
+                <ul>
+                  <li>
+                    CQL function: <code>C3F.ServiceRequestActiveOrCompleted</code>
+                  </li>
+                  <li>
+                    Summary: Returns a list of Service Requests with <code>status</code>{' '}codes
+                    active or completed.
+                  </li>
+                  <li>
+                    Returns: List of Service Requests
+                  </li>
+                </ul>
+              </li>
+              <li>
+                Active
+                <ul>
+                  <li>
+                    CQL function: <code>C3F.ServiceRequestActive</code>
+                  </li>
+                  <li>
+                    Summary: Returns a list of Service Requests with the <code>status</code>{' '}code
+                    active.
+                  </li>
+                  <li>
+                    Returns: List of Service Requests
+                  </li>
+                </ul>
+              </li>
+              <li>
+                Completed
+                <ul>
+                  <li>
+                    CQL function: <code>C3F.ServiceRequestCompleted</code>
+                  </li>
+                  <li>
+                    Summary: Returns a list of Service Requests with the <code>status</code>{' '}code
+                    completed.
+                  </li>
+                  <li>
+                    Returns: List of Service Requests
+                  </li>
                 </ul>
               </li>
               <li>

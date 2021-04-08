@@ -583,6 +583,17 @@ class CqlArtifact {
           this.setFieldContexts(observationValueSets, 'Observation', context);
           break;
         }
+        case 'service_request_vsac': {
+          const serviceRequestValueSets = {
+            id: 'generic_service_request',
+            valuesets: [],
+            concepts: []
+          };
+          buildConceptObjectForCodes(field.codes, serviceRequestValueSets.concepts);
+          addValueSets(field, serviceRequestValueSets, 'valuesets');
+          this.setFieldContexts(serviceRequestValueSets, 'ServiceRequest', context);
+          break;
+        }
         case 'number': {
           context[field.id] = field.value;
           if ('exclusive' in field) {

@@ -388,8 +388,22 @@ define function FirstProcedure(ProcList List<Procedure>):
  * @param ServiceRequestList - a list of ServiceRequests
  * @returns {List<ServiceRequest>} a list of accepted, in-progress, or completed ProcedureRequests,
  * or null if null was passed in
+ * NOTE: This function is deprecated and is maintained only for backwards compatibility
+ * Please use C3F.ActiveOrCompletedServiceRequest instead
  */
 define function ServiceRequestActiveOrCompleted(ServiceRequestList List<ServiceRequest>):
+  ServiceRequestList S
+    where S.status.value in List{'active', 'completed'}
+
+/**
+ * ServiceRequests that are active or completed. In FHIR R4, this is reflected by the corresponding
+ * status values.
+ * @see http://hl7.org/fhir/R4/valueset-request-status.html
+ * @param ServiceRequestList - a list of ServiceRequests
+ * @returns {List<ServiceRequest>} a list of accepted, in-progress, or completed ProcedureRequests,
+ * or null if null was passed in
+ */
+define function ActiveOrCompletedServiceRequest(ServiceRequestList List<ServiceRequest>):
   ServiceRequestList S
     where S.status.value in List{'active', 'completed'}
 
@@ -405,6 +419,30 @@ define function ServiceRequestActiveOrCompleted(ServiceRequestList List<ServiceR
 define function ServiceRequestLookBack(ServiceRequestList List<ServiceRequest>, LookBack System.Quantity):
   ServiceRequestList S
     where S.authoredOn.value in Interval[Now() - LookBack, Now()]
+
+/**
+ * ServiceRequests that are active. In FHIR R4, this is reflected by the corresponding
+ * status values.
+ * @see http://hl7.org/fhir/R4/valueset-request-status.html
+ * @param ServiceRequestList - a list of ServiceRequests
+ * @returns {List<ServiceRequest>} a list of active Service Requests,
+ * or null if null was passed in
+ */
+define function ActiveServiceRequest(ServiceRequestList List<ServiceRequest>):
+  ServiceRequestList S
+    where S.status.value = 'active'
+
+/**
+ * ServiceRequests that are completed. In FHIR R4, this is reflected by the corresponding
+ * status values.
+ * @see http://hl7.org/fhir/R4/valueset-request-status.html
+ * @param ServiceRequestList - a list of ServiceRequests
+ * @returns {List<ServiceRequest>} a list of completed Service Requests,
+ * or null if null was passed in
+ */
+define function CompletedServiceRequest(ServiceRequestList List<ServiceRequest>):
+  ServiceRequestList S
+    where S.status.value = 'completed'
 
 // -------------------------------------------------- MEDICATIONS ------------------------------------------------------
 

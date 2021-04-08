@@ -5,23 +5,28 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import { Button, IconButton, Menu, MenuItem } from '@material-ui/core';
-import {
-  Edit as EditIcon,
-  GetApp as GetAppIcon,
-  MenuBook as MenuBookIcon,
-  Save as SaveIcon
-} from '@material-ui/icons';
+import { Edit as EditIcon, GetApp as GetAppIcon, MenuBook as MenuBookIcon, Save as SaveIcon } from '@material-ui/icons';
 import _ from 'lodash';
 
 import loadTemplates from 'actions/templates';
 import { loadConversionFunctions } from 'actions/modifiers';
 import {
-  setStatusMessage, downloadArtifact, saveArtifact, loadArtifact, updateArtifact, initializeArtifact,
-  updateAndSaveArtifact, clearArtifactValidationWarnings
+  setStatusMessage,
+  downloadArtifact,
+  saveArtifact,
+  loadArtifact,
+  updateArtifact,
+  initializeArtifact,
+  updateAndSaveArtifact,
+  clearArtifactValidationWarnings
 } from 'actions/artifacts';
 import {
-  loadExternalCqlList, loadExternalCqlLibraryDetails, addExternalLibrary, deleteExternalCqlLibrary,
-  clearExternalCqlValidationWarnings, clearAddLibraryErrorsAndMessages
+  loadExternalCqlList,
+  loadExternalCqlLibraryDetails,
+  addExternalLibrary,
+  deleteExternalCqlLibrary,
+  clearExternalCqlValidationWarnings,
+  clearAddLibraryErrorsAndMessages
 } from 'actions/external_cql';
 
 import { ELMErrorModal } from 'components/modals';
@@ -58,7 +63,7 @@ export class Builder extends Component {
   }
 
   componentDidMount() {
-    this.props.loadTemplates().then((result) => {
+    this.props.loadTemplates().then(result => {
       // if there is a current artifact, load it, otherwise initialize new artifact
       if (this.props.match.params.id) {
         this.props.loadArtifact(this.props.match.params.id);
@@ -80,15 +85,16 @@ export class Builder extends Component {
     }
   }
 
-  UNSAFE_componentWillReceiveProps(newProps) { // eslint-disable-line camelcase
+  UNSAFE_componentWillReceiveProps(newProps) {
+    // eslint-disable-line camelcase
     this.setState({ showELMErrorModal: newProps.downloadedArtifact.elmErrors.length > 0 });
   }
 
   // ----------------------- TABS ------------------------------------------ //
 
-  setActiveTab = (activeTabIndex) => {
+  setActiveTab = activeTabIndex => {
     this.setState({ activeTabIndex });
-  }
+  };
 
   scrollToElement = (elementId, referenceType, tabIndex = null) => {
     const baseElementTabIndex = 3;
@@ -105,7 +111,7 @@ export class Builder extends Component {
       const elementToScrollTo = document.getElementById(elementId);
       if (elementToScrollTo) elementToScrollTo.scrollIntoView();
     });
-  }
+  };
 
   // ----------------------- INSTANCES ------------------------------------- //
 
@@ -113,19 +119,21 @@ export class Builder extends Component {
     const { artifact } = this.props;
     let allInstancesInAllTrees = this.getAllInstances('expTreeInclude');
     allInstancesInAllTrees = allInstancesInAllTrees.concat(this.getAllInstances('expTreeExclude'));
-    artifact.subpopulations.forEach((s) => {
+    artifact.subpopulations.forEach(s => {
       if (!s.special) {
-        allInstancesInAllTrees =
-          allInstancesInAllTrees.concat(this.getAllInstances('subpopulations', null, s.uniqueId));
+        allInstancesInAllTrees = allInstancesInAllTrees.concat(
+          this.getAllInstances('subpopulations', null, s.uniqueId)
+        );
       }
     });
-    artifact.baseElements.forEach((baseElement) => {
-      allInstancesInAllTrees =
-        allInstancesInAllTrees.concat(this.getAllInstances('baseElements', null, baseElement.uniqueId));
+    artifact.baseElements.forEach(baseElement => {
+      allInstancesInAllTrees = allInstancesInAllTrees.concat(
+        this.getAllInstances('baseElements', null, baseElement.uniqueId)
+      );
     });
 
     return allInstancesInAllTrees;
-  }
+  };
 
   getAllInstances = (treeName, treeInstance = null, uid = null) => {
     // if treeInstance is null, find and assign tree (only used recursively)
@@ -139,18 +147,21 @@ export class Builder extends Component {
       return [treeInstance];
     }
 
-    const result = _.flatten((treeInstance.childInstances || []).map((instance) => {
-      if (instance.childInstances) {
-        return _.flatten([instance, this.getAllInstances(treeName, instance)]);
-      }
-      instance.tab = treeName;
-      return instance;
-    }));
+    const result = _.flatten(
+      (treeInstance.childInstances || []).map(instance => {
+        if (instance.childInstances) {
+          return _.flatten([instance, this.getAllInstances(treeName, instance)]);
+        }
+        instance.tab = treeName;
+        return instance;
+      })
+    );
 
     return result;
-  }
+  };
 
-  addInstance = (treeName, instance, parentPath, uid = null, currentIndex, incomingTree, updatedReturnType = null) => {
+  addInstance = async (treeName, instance, parentPath, uid = null,
+     currentIndex, incomingTree, updatedReturnType = null) => {
     const treeData = this.findTree(treeName, uid);
     const tree = incomingTree || treeData.tree;
     const target = findValueAtPath(tree, parentPath).childInstances;
@@ -160,17 +171,18 @@ export class Builder extends Component {
     if (updatedReturnType) {
       tree.returnType = updatedReturnType;
     }
-
     localTree = tree;
-    this.setTree(treeName, treeData, tree);
-  }
+    await this.setTree(treeName, treeData, tree);
+    this.updateFHIRVersion();
+  };
 
-  addBaseElement = (instance, uid = null, incomingTree) => {
+  addBaseElement = async (instance, uid = null, incomingTree) => {
     const treeData = this.findTree('baseElements', uid);
     const tree = incomingTree || treeData.tree;
     tree.push(instance);
-    this.setTree('baseElements', treeData, tree);
-  }
+    await this.setTree('baseElements', treeData, tree);
+    this.updateFHIRVersion();
+  };
 
   editInstance = (treeName, editedFields, path, editingConjunctionType = false, uid = null) => {
     const treeData = this.findTree(treeName, uid);
@@ -186,10 +198,11 @@ export class Builder extends Component {
         editedFields = [editedFields]; // eslint-disable-line no-param-reassign
       }
       // Update each field attribute that needs updating. Then updated the full tree with changes.
-      editedFields.forEach((editedField) => {
+      editedFields.forEach(editedField => {
         // function to retrieve relevant field
         const fieldIndex = target.fields.findIndex(field =>
-          Object.prototype.hasOwnProperty.call(editedField, field.id));
+          Object.prototype.hasOwnProperty.call(editedField, field.id)
+        );
 
         // If an attribute was specified, update that one. Otherwise update the value attribute.
         if (editedField.attributeToEdit) {
@@ -201,9 +214,9 @@ export class Builder extends Component {
     }
 
     this.setTree(treeName, treeData, tree);
-  }
+  };
 
-  deleteInstance = (treeName, path, elementsToAdd, uid = null, updatedReturnType = null) => {
+  deleteInstance = async (treeName, path, elementsToAdd, uid = null, updatedReturnType = null) => {
     const treeData = this.findTree(treeName, uid);
     const tree = treeData.tree;
     const index = path.slice(-1);
@@ -214,16 +227,19 @@ export class Builder extends Component {
       tree.returnType = updatedReturnType;
     }
 
-    this.setTree(treeName, treeData, tree);
+
+    await this.setTree(treeName, treeData, tree);
     localTree = tree;
 
     // elementsToAdd is an array of elements to be readded when indenting or outdenting
     if (elementsToAdd) {
-      elementsToAdd.forEach((element) => {
+      elementsToAdd.forEach(element => {
         this.addInstance(treeName, element.instance, element.path, uid, element.index, localTree);
       });
     }
-  }
+
+    this.updateFHIRVersion();
+  };
 
   // subpop_index is an optional parameter, for determining which tree within subpop we are referring to
   updateInstanceModifiers = (treeName, modifiers, path, subpopIndex, updatedReturnType = null) => {
@@ -237,42 +253,62 @@ export class Builder extends Component {
     }
 
     this.props.updateArtifact(this.props.artifact, { [treeName]: tree });
-  }
+  };
 
   showELMErrorModal = () => {
     this.setState({ showELMErrorModal: true });
-  }
+  };
 
   closeELMErrorModal = () => {
     this.setState({ showELMErrorModal: false });
     this.props.clearArtifactValidationWarnings();
-  }
+  };
 
   // ----------------------- ARTIFACTS ------------------------------------- //
 
   openArtifactModal = () => {
     this.setState({ showArtifactModal: true });
-  }
+  };
 
   closeArtifactModal = () => {
     this.setState({ showArtifactModal: false });
-  }
+  };
 
   handleSaveArtifact = (artifactEditing, artifactPropsChanged) => {
     this.props.updateAndSaveArtifact(artifactEditing, artifactPropsChanged);
     this.closeArtifactModal(false);
-  }
+  };
+
+instanceIncludes = (instances, instanceName) => {
+  if (!instances || instances.length === 0) return false;
+  if (instances.some(instance => instance.name === instanceName)) return true;
+  return false;
+};
+
+updateFHIRVersion = () => {
+  const { artifact, externalCqlList, updateAndSaveArtifact } = this.props;
+  const hasExternalCql =
+    externalCqlList && Boolean(externalCqlList.find(cqlLibrary => cqlLibrary.linkedArtifactId === artifact._id));
+  if (hasExternalCql) return;
+
+  const hasServiceRequest = this.instanceIncludes(this.getAllInstancesInAllTrees(), 'Service Request');
+  let updatedArtifact = _.cloneDeep(artifact);
+  updatedArtifact.fhirVersion = hasServiceRequest ? '4.0.0' : '';
+  updateAndSaveArtifact(updatedArtifact);
+};
 
   // ----------------------- TREES ----------------------------------------- //
 
   // Identifies tree to modify whether state tree or tree in an array.
   findTree = (treeName, uid) => {
     const clonedTree = _.cloneDeep(this.props.artifact[treeName]);
-    if (uid == null) { return { tree: clonedTree }; }
+    if (uid == null) {
+      return { tree: clonedTree };
+    }
 
     const index = clonedTree.findIndex(sub => sub.uniqueId === uid);
     return { array: clonedTree, tree: clonedTree[index], index };
-  }
+  };
 
   // Sets new tree based on if state tree or array tree
   setTree = (treeName, treeData, tree) => {
@@ -283,13 +319,13 @@ export class Builder extends Component {
     } else {
       this.props.updateArtifact(this.props.artifact, { [treeName]: tree });
     }
-  }
+  };
 
   // ----------------------------------------------------------------------- //
 
   incrementUniqueIdCounter = () => {
     this.setState({ uniqueIdCounter: this.state.uniqueIdCounter + 1 });
-  }
+  };
 
   updateRecsSubpop = (newName, uniqueId) => {
     const recs = _.cloneDeep(this.props.artifact.recommendations);
@@ -302,25 +338,26 @@ export class Builder extends Component {
       }
     }
     this.setState({ recommendations: recs });
-  }
+  };
 
-  updateSubpopulations = (subpopulations, target = 'subpopulations') => {
-    this.props.updateArtifact(this.props.artifact, { [target]: subpopulations });
-  }
+  updateSubpopulations = async (subpopulations, target = 'subpopulations') => {
+    await this.props.updateArtifact(this.props.artifact, { [target]: subpopulations });
+    this.updateFHIRVersion();
+  };
 
-  updateRecommendations = (recommendations) => {
+  updateRecommendations = recommendations => {
     this.props.updateArtifact(this.props.artifact, { recommendations });
-  }
+  };
 
-  updateParameters = (parameters) => {
+  updateParameters = parameters => {
     this.props.updateArtifact(this.props.artifact, { parameters });
-  }
+  };
 
-  updateErrorStatement = (errorStatement) => {
+  updateErrorStatement = errorStatement => {
     this.props.updateArtifact(this.props.artifact, { errorStatement });
-  }
+  };
 
-  checkSubpopulationUsage = (uniqueId) => {
+  checkSubpopulationUsage = uniqueId => {
     for (let i = 0; i < this.props.artifact.recommendations.length; i++) {
       const subpops = this.props.artifact.recommendations[i].subpopulations;
       for (let j = 0; j < subpops.length; j++) {
@@ -330,7 +367,7 @@ export class Builder extends Component {
       }
     }
     return false;
-  }
+  };
 
   handleClickDownloadMenu = event => {
     this.setState({ downloadMenuAnchorElement: event.currentTarget });
@@ -344,11 +381,11 @@ export class Builder extends Component {
     const { artifact } = this.props;
     if (!disabled) this.props.downloadArtifact(artifact, { name: 'FHIR', version });
     this.handleCloseDownloadMenu();
-  }
+  };
 
   // ----------------------- RENDER ---------------------------------------- //
 
-  renderConjunctionGroup = (treeName) => {
+  renderConjunctionGroup = treeName => {
     const {
       artifact,
       conversionFunctions,
@@ -357,7 +394,7 @@ export class Builder extends Component {
       modifiersByInputType,
       templates
     } = this.props;
-    const namedParameters = _.filter(artifact.parameters, p => (!_.isNull(p.name) && p.name.length));
+    const namedParameters = _.filter(artifact.parameters, p => !_.isNull(p.name) && p.name.length);
 
     if (artifact && artifact[treeName].childInstances) {
       return (
@@ -389,7 +426,7 @@ export class Builder extends Component {
     }
 
     return <div>Loading...</div>;
-  }
+  };
 
   renderHeader() {
     const { statusMessage, artifact } = this.props;
@@ -464,7 +501,9 @@ export class Builder extends Component {
             </Button>
           </div>
 
-          <div role="status" aria-live="assertive">{statusMessage}</div>
+          <div role="status" aria-live="assertive">
+            {statusMessage}
+          </div>
         </div>
       </header>
     );
@@ -503,7 +542,7 @@ export class Builder extends Component {
 
     let namedParameters = [];
     if (artifact) {
-      namedParameters = _.filter(artifact.parameters, p => (!_.isNull(p.name) && p.name.length));
+      namedParameters = _.filter(artifact.parameters, p => !_.isNull(p.name) && p.name.length);
     }
 
     if (artifact == null) {
@@ -531,7 +570,9 @@ export class Builder extends Component {
                 <Tab>Recommendations</Tab>
                 <Tab>Parameters</Tab>
                 <Tab>Handle Errors</Tab>
-                <Tab className="flex-align-center"><MenuBookIcon fontSize="small" /> External CQL</Tab>
+                <Tab className="flex-align-center">
+                  <MenuBookIcon fontSize="small" /> External CQL
+                </Tab>
               </TabList>
 
               <div className="tab-panel-container">
@@ -548,17 +589,17 @@ export class Builder extends Component {
                   <div className="workspace-blurb">
                     Specify criteria to identify patients that should be excluded from the target population and,
                     therefore, from receiving a recommendation from this artifact. Examples might include pregnancy
-                    status, out of bound lab results, or evidence that the recommended therapy is already being used
-                    by the patient.
+                    status, out of bound lab results, or evidence that the recommended therapy is already being used by
+                    the patient.
                   </div>
                   {this.renderConjunctionGroup('expTreeExclude')}
                 </TabPanel>
 
                 <TabPanel>
                   <div className="workspace-blurb">
-                    Specify criteria that further segments the target population into subpopulations that should
-                    receive more specific recommendations. An example might be splitting the population by risk score
-                    so that higher risk patients receive a stronger recommendation than lower risk patients.
+                    Specify criteria that further segments the target population into subpopulations that should receive
+                    more specific recommendations. An example might be splitting the population by risk score so that
+                    higher risk patients receive a stronger recommendation than lower risk patients.
                   </div>
 
                   <Subpopulations
@@ -603,6 +644,7 @@ export class Builder extends Component {
                     deleteInstance={this.deleteInstance}
                     editInstance={this.editInstance}
                     externalCqlList={externalCqlList}
+                    fhirVersion={artifact.fhirVersion}
                     getAllInstances={this.getAllInstances}
                     getAllInstancesInAllTrees={this.getAllInstancesInAllTrees}
                     instance={artifact}
@@ -614,7 +656,7 @@ export class Builder extends Component {
                     parameters={namedParameters}
                     scrollToElement={this.scrollToElement}
                     templates={templates}
-                    treeName='baseElements'
+                    treeName="baseElements"
                     updateBaseElementLists={this.updateSubpopulations}
                     updateInstanceModifiers={this.updateInstanceModifiers}
                     validateReturnType={false}
@@ -702,17 +744,17 @@ export class Builder extends Component {
           </section>
         </div>
 
-        {showArtifactModal &&
+        {showArtifactModal && (
           <ArtifactModal
             artifactEditing={artifact}
             handleCloseModal={this.closeArtifactModal}
             handleUpdateArtifact={this.handleSaveArtifact}
           />
-        }
+        )}
 
-        {showELMErrorModal &&
+        {showELMErrorModal && (
           <ELMErrorModal handleCloseModal={this.closeELMErrorModal} errors={downloadedArtifact.elmErrors} />
-        }
+        )}
       </div>
     );
   }
@@ -755,24 +797,27 @@ Builder.propTypes = {
 
 // these props are used for dispatching actions
 function mapDispatchToProps(dispatch) {
-  return bindActionCreators({
-    addExternalLibrary,
-    clearAddLibraryErrorsAndMessages,
-    clearArtifactValidationWarnings,
-    clearExternalCqlValidationWarnings,
-    deleteExternalCqlLibrary,
-    downloadArtifact,
-    initializeArtifact,
-    loadArtifact,
-    loadConversionFunctions,
-    loadExternalCqlLibraryDetails,
-    loadExternalCqlList,
-    loadTemplates,
-    saveArtifact,
-    setStatusMessage,
-    updateAndSaveArtifact,
-    updateArtifact
-  }, dispatch);
+  return bindActionCreators(
+    {
+      addExternalLibrary,
+      clearAddLibraryErrorsAndMessages,
+      clearArtifactValidationWarnings,
+      clearExternalCqlValidationWarnings,
+      deleteExternalCqlLibrary,
+      downloadArtifact,
+      initializeArtifact,
+      loadArtifact,
+      loadConversionFunctions,
+      loadExternalCqlLibraryDetails,
+      loadExternalCqlList,
+      loadTemplates,
+      saveArtifact,
+      setStatusMessage,
+      updateAndSaveArtifact,
+      updateArtifact
+    },
+    dispatch
+  );
 }
 
 // these props come from the application's state when it is started

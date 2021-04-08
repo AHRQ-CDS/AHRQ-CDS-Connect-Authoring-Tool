@@ -106,6 +106,7 @@ export default class BaseElements extends Component {
             baseElements={this.props.baseElements}
             categories={this.props.templates}
             externalCqlList={this.props.externalCqlList}
+            fhirVersion={this.props.fhirVersion}
             inBaseElements={true}
             loadExternalCqlList={this.props.loadExternalCqlList}
             onSuggestionSelected={this.addChild}

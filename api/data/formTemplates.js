@@ -287,5 +287,23 @@ module.exports = [
         ]
       },
     ]
+  },
+  {
+    id: 15,
+    icon: 'heartbeat',
+    name: 'Service Request',
+    entries: [
+      {
+      id: 'GenericServiceRequest_vsac',
+      name: 'Service Request',
+      returnType: 'list_of_service_requests',
+      suppress: true,
+      extends: 'Base',
+      template: 'GenericServiceRequest',
+      fields: [
+        { id: 'service_request', type: 'service_request_vsac', name: 'Service Request'}
+      ]
+    },
+    ]
   }
 ];

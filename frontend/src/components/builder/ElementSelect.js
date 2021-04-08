@@ -51,12 +51,10 @@ const ElementOption = ({ option }) => (
 );
 
 const elementOptions = [
-  {
-    value: 'allergy_intolerance',
+  { value: 'allergy_intolerance',
     label: 'Allergy Intolerance',
     vsacAuthRequired: true,
-    template: 'GenericAllergyIntolerance_vsac'
-  },
+    template: 'GenericAllergyIntolerance_vsac' },
   { value: 'baseElement', label: 'Base Elements', vsacAuthRequired: false },
   { value: 'condition', label: 'Condition', vsacAuthRequired: true, template: 'GenericCondition_vsac' },
   { value: 'demographics', label: 'Demographics', vsacAuthRequired: false },
@@ -79,7 +77,8 @@ const elementOptions = [
   },
   { value: 'observation', label: 'Observation', vsacAuthRequired: true, template: 'GenericObservation_vsac' },
   { value: 'booleanParameter', label: 'Parameters', vsacAuthRequired: false },
-  { value: 'procedure', label: 'Procedure', vsacAuthRequired: true, template: 'GenericProcedure_vsac' }
+  { value: 'procedure', label: 'Procedure', vsacAuthRequired: true, template: 'GenericProcedure_vsac' },
+  { value: 'serviceRequest', label: 'Service Request', vsacAuthRequired: true, template: 'GenericServiceRequest_vsac'}
 ];
 
 export default class ElementSelect extends Component {
@@ -236,7 +235,6 @@ export default class ElementSelect extends Component {
     }
 
     if (props.externalCqlList.length && categoriesCopy[externalCqlIndex]) {
-
       categoriesCopy[externalCqlIndex].entries = props.externalCqlList.map(e => {
         // TODO: We don't yet support functions that have any arguments, so we only want to allow the functions
         // that have no arguments associated with them to be selected. This should be removed when we have support
@@ -451,10 +449,12 @@ export default class ElementSelect extends Component {
 
   disableElement = elementType => {
     const { categories } = this.state;
-    const disableableElements = ['Base Elements', 'Parameters', 'External CQL'];
+    const disableableElements = ['Base Elements', 'Parameters', 'External CQL', 'Service Request'];
     const elementCategory = categories.find(category => category.name === elementType);
 
     if (!elementCategory || disableableElements.indexOf(elementType) === -1) return false;
+    else if (elementType === 'Service Request' && 
+    (!this.props.fhirVersion || this.props.fhirVersion === "4.0.0")) return false;
     return elementCategory.entries.length === 0;
   }
 
@@ -600,6 +600,7 @@ ElementSelect.propTypes = {
   disableAddElement: PropTypes.bool,
   elementUniqueId: PropTypes.string,
   externalCqlList: PropTypes.array.isRequired,
+  fhirVersion: PropTypes.string,
   inBaseElements: PropTypes.bool.isRequired,
   loadExternalCqlList: PropTypes.func.isRequired,
   onSuggestionSelected: PropTypes.func.isRequired,

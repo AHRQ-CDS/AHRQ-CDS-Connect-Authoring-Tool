@@ -5,18 +5,59 @@
 // src/components/builder/modifiers while the cqlTemplate matches the cqlTemplate in app/data/cql/modifiers
 // NOTE -- Any modifier that requires text for an expression phrase will need to be added to the list in artifact.js
 
-const elementLists = ['list_of_observations', 'list_of_conditions', 'list_of_medication_statements',
-  'list_of_medication_requests', 'list_of_procedures', 'list_of_allergy_intolerances', 'list_of_encounters',
-  'list_of_immunizations', 'list_of_devices', 'list_of_any', 'list_of_booleans', 'list_of_system_quantities',
-  'list_of_system_concepts', 'list_of_system_codes', 'list_of_integers', 'list_of_datetimes', 'list_of_strings',
-  'list_of_decimals', 'list_of_times', 'list_of_others'];
-const everyElement = elementLists.concat(['boolean', 'system_quantity', 'system_concept', 'system_code',
-  'observation', 'condition', 'medication_statement', 'medication_request', 'procedure', 'allergy_intolerance',
-  'encounter', 'immunization', 'device', 'integer', 'datetime', 'decimal', 'string', 'time', 'interval_of_integer',
-  'interval_of_datetime', 'interval_of_decimal', 'interval_of_quantity', 'any', 'other']);
+const elementLists = [
+  'list_of_observations',
+  'list_of_conditions',
+  'list_of_medication_statements',
+  'list_of_medication_requests',
+  'list_of_procedures',
+  'list_of_allergy_intolerances',
+  'list_of_encounters',
+  'list_of_immunizations',
+  'list_of_devices',
+  'list_of_any',
+  'list_of_booleans',
+  'list_of_service_requests',
+  'list_of_system_quantities',
+  'list_of_system_concepts',
+  'list_of_system_codes',
+  'list_of_integers',
+  'list_of_datetimes',
+  'list_of_strings',
+  'list_of_decimals',
+  'list_of_times',
+  'list_of_others'
+];
+const everyElement = elementLists.concat([
+  'boolean',
+  'system_quantity',
+  'system_concept',
+  'system_code',
+  'observation',
+  'condition',
+  'medication_statement',
+  'medication_request',
+  'procedure',
+  'allergy_intolerance',
+  'encounter',
+  'immunization',
+  'device',
+  'service_request',
+  'integer',
+  'datetime',
+  'decimal',
+  'string',
+  'time',
+  'interval_of_integer',
+  'interval_of_datetime',
+  'interval_of_decimal',
+  'interval_of_quantity',
+  'any',
+  'other'
+]);
 
 const modifiers = [
-  // observations
+  // Observations
   {
     id: 'VerifiedObservation',
     name: 'Verified',
@@ -33,7 +74,7 @@ const modifiers = [
     values: { unit: undefined },
     validator: { type: 'require', fields: ['unit'], args: null },
     cqlTemplate: 'WithUnit',
-    cqlLibraryFunction: 'C3F.WithUnit',
+    cqlLibraryFunction: 'C3F.WithUnit'
   },
   {
     id: 'ValueComparisonNumber',
@@ -88,7 +129,7 @@ const modifiers = [
     returnType: 'system_quantity',
     values: { value: '', templateName: '' },
     validator: { type: 'require', fields: ['value'], args: null },
-    cqlTemplate: 'BaseModifier',
+    cqlTemplate: 'BaseModifier'
     // cqlLibraryFunction is left off because it gets set based on option selected.
   },
   {
@@ -466,7 +507,8 @@ const modifiers = [
     values: { value: undefined, unit: undefined },
     validator: { type: 'require', fields: ['value', 'unit'], args: null },
     cqlTemplate: 'LookBackModifier',
-    cqlLibraryFunction: 'C3F.ObservationLookBack' },
+    cqlLibraryFunction: 'C3F.ObservationLookBack'
+  },
   {
     id: 'LookBackCondition',
     type: 'LookBack',
@@ -476,7 +518,8 @@ const modifiers = [
     values: { value: undefined, unit: undefined },
     validator: { type: 'require', fields: ['value', 'unit'], args: null },
     cqlTemplate: 'LookBackModifier',
-    cqlLibraryFunction: 'C3F.ConditionLookBack' },
+    cqlLibraryFunction: 'C3F.ConditionLookBack'
+  },
   {
     id: 'LookBackMedicationRequest',
     type: 'LookBack',
@@ -485,7 +528,8 @@ const modifiers = [
     returnType: 'list_of_medication_requests',
     values: { value: undefined, unit: undefined },
     cqlTemplate: 'LookBackModifier',
-    cqlLibraryFunction: 'C3F.MedicationRequestLookBack' },
+    cqlLibraryFunction: 'C3F.MedicationRequestLookBack'
+  },
   {
     id: 'LookBackMedicationStatement',
     type: 'LookBack',
@@ -494,7 +538,8 @@ const modifiers = [
     returnType: 'list_of_medication_statements',
     values: { value: undefined, unit: undefined },
     cqlTemplate: 'LookBackModifier',
-    cqlLibraryFunction: 'C3F.MedicationStatementLookBack' },
+    cqlLibraryFunction: 'C3F.MedicationStatementLookBack'
+  },
   {
     id: 'LookBackProcedure',
     type: 'LookBack',
@@ -504,7 +549,8 @@ const modifiers = [
     values: { value: undefined, unit: undefined },
     validator: { type: 'require', fields: ['value', 'unit'], args: null },
     cqlTemplate: 'LookBackModifier',
-    cqlLibraryFunction: 'C3F.ProcedureLookBack' },
+    cqlLibraryFunction: 'C3F.ProcedureLookBack'
+  },
   {
     id: 'LookBackImmunization',
     type: 'LookBack',
@@ -514,7 +560,19 @@ const modifiers = [
     values: { value: undefined, unit: undefined },
     validator: { type: 'require', fields: ['value', 'unit'], args: null },
     cqlTemplate: 'LookBackModifier',
-    cqlLibraryFunction: 'C3F.ImmunizationLookBack' },
+    cqlLibraryFunction: 'C3F.ImmunizationLookBack'
+  },
+  {
+    id: 'LookBackServiceRequest',
+    type: 'LookBack',
+    name: 'Look Back',
+    inputTypes: ['list_of_service_requests'],
+    returnType: 'list_of_service_requests',
+    values: { value: undefined, unit: undefined },
+    validator: { type: 'require', fields: ['value', 'unit'], args: null },
+    cqlTemplate: 'LookBackModifier',
+    cqlLibraryFunction: 'C3F.ServiceRequestLookBack'
+  },
   {
     id: 'Count',
     name: 'Count',
@@ -549,8 +607,7 @@ const modifiers = [
     values: { value: undefined },
     cqlTemplate: 'postModifier',
     comparisonOperator: null,
-    validator: { type: 'require', fields: ['value'], args: null },
-
+    validator: { type: 'require', fields: ['value'], args: null }
   },
   {
     id: 'BooleanNot',
@@ -583,6 +640,31 @@ const modifiers = [
     returnType: 'boolean',
     cqlTemplate: 'BaseModifier',
     cqlLibraryFunction: 'AnyTrue'
+  },
+  // Service Requests
+  {
+    id: 'ActiveOrCompletedServiceRequest',
+    name: 'Active Or Completed',
+    inputTypes: ['list_of_service_requests'],
+    returnType: 'list_of_service_requests',
+    cqlTemplate: 'BaseModifier',
+    cqlLibraryFunction: 'C3F.ActiveOrCompletedServiceRequest'
+  },
+  {
+    id: 'ActiveServiceRequest',
+    name: 'Active',
+    inputTypes: ['list_of_service_requests'],
+    returnType: 'list_of_service_requests',
+    cqlTemplate: 'BaseModifier',
+    cqlLibraryFunction: 'C3F.ActiveServiceRequest'
+  },
+  {
+    id: 'CompletedServiceRequest',
+    name: 'Completed',
+    inputTypes: ['list_of_service_requests'],
+    returnType: 'list_of_service_requests',
+    cqlTemplate: 'BaseModifier',
+    cqlLibraryFunction: 'C3F.CompletedServiceRequest'
   }
 ];
 

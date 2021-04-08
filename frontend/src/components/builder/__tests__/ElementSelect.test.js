@@ -40,7 +40,7 @@ describe('<ElementSelect />', () => {
       renderComponent();
 
       userEvent.click(screen.getByLabelText('Element type'));
-      expect(screen.queryAllByRole('option').length).toEqual(15);
+      expect(screen.queryAllByRole('option').length).toEqual(16);
     });
 
     it('options display correct values and have key icon if VSAC auth required', () => {

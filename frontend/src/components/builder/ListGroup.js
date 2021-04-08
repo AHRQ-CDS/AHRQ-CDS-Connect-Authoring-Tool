@@ -41,6 +41,7 @@ const listTypes = [
   'list_of_booleans',
   'list_of_system_quantities',
   'list_of_system_concepts',
+  'list_of_service_requests',
   'list_of_any'
 ];
 
@@ -55,6 +56,7 @@ const singularTypes = [
   'immunization',
   'device',
   'boolean',
+  'service_request',
   'system_quantity',
   'system_concept'
 ];

@@ -161,5 +161,3 @@ async function duplicate(req, res) {
     });
   } else res.sendStatus(401);
 }
-
-exports.prepareDuplicateArtifact = prepareDuplicateArtifact;

@@ -1,7 +1,7 @@
 const express = require('express');
 const artifact = require('../handlers/artifactHandler');
-
 const ArtifactRouter = express.Router();
+
 
 // Routes for /authoring/api/artifacts
 ArtifactRouter.route('/')

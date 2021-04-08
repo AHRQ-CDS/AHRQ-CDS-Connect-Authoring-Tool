@@ -478,6 +478,7 @@ export default class ConjunctionGroup extends Component {
               disableAddElement={disableAddElement}
               elementUniqueId={elementUniqueId}
               externalCqlList={externalCqlList}
+              fhirVersion={artifact.fhirVersion}
               inBaseElements={false}
               loadExternalCqlList={loadExternalCqlList}
               onSuggestionSelected={this.addChild}
