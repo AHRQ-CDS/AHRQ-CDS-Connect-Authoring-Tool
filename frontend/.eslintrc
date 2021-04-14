@@ -1,23 +1,20 @@
 {
-  "extends": [
-    "react-app",
-    "airbnb/hooks",
-    "plugin:jsx-a11y/recommended",
-    "plugin:import/errors"
-  ],
+  "extends": ["react-app", "airbnb/hooks", "plugin:jsx-a11y/recommended", "plugin:import/errors"],
   "rules": {
     "comma-dangle": 0,
     "import/namespace": ["error", { "allowComputed": true }],
-    "import/no-extraneous-dependencies": ["error", { "devDependencies": ["src/utils/test-utils.js", "src/**/*.test.js", "src/setupTests.js"] }], // don't check helpers for extraneous deps
+    "import/no-extraneous-dependencies": [
+      "error",
+      { "devDependencies": ["src/utils/test-utils.js", "src/**/*.test.js", "src/setupTests.js"] }
+    ], // don't check helpers for extraneous deps
     "import/no-named-default": "off", // turning it off since it's currently broken w/ yarn (see: https://github.com/yarnpkg/yarn/issues/3332)
     "jsx-a11y/href-no-hash": 0,
     "jsx-a11y/label-has-for": ["error", { "required": { "some": ["nesting", "id"] } }],
-    "max-len": ["error", { "code": 120, "ignoreUrls": true , "ignoreTrailingComments": true, "ignoreRegExpLiterals": true }], // allow longer lines when there is a url or trailing comment
     "no-console": 0, // allow console.log statements
     "no-param-reassign": ["error", { "props": false }],
     "no-plusplus": ["error", { "allowForLoopAfterthoughts": true }], // allow ++ in for loop expression
     "no-underscore-dangle": ["error", { "allow": ["_id"] }], // because mongo
-    "no-unused-vars": [ "error", { "args": "none" } ], // don't check function arguments
+    "no-unused-vars": ["error", { "args": "none" }], // don't check function arguments
     "no-use-before-define": ["error", "nofunc"],
     "object-curly-newline": ["error", { "minProperties": 8, "consistent": true }],
     "prefer-destructuring": ["error", { "AssignmentExpression": { "array": false, "object": false } }],
@@ -29,10 +26,7 @@
     },
     "import/resolver": {
       "node": {
-        "moduleDirectory": [
-          "node_modules",
-          "src"
-        ]
+        "moduleDirectory": ["node_modules", "src"]
       }
     }
   }
