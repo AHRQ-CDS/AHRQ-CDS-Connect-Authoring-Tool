@@ -68,7 +68,7 @@ describe('<CodeSelectModal />', () => {
     expect(handleCloseModal).toHaveBeenCalled();
   });
 
-  it('can validate codes and save their display name', async () => {
+  it.only('can validate codes and save their display name', async () => {
     const handleSelectCode = jest.fn();
     const handleCloseModal = jest.fn();
     const code = '123-4';

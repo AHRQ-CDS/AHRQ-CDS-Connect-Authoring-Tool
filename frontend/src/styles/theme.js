@@ -176,9 +176,18 @@ const materialUiOverridesBase = {
       margin: '1em 0'
     }
   },
+  MuiCardActions: {
+    root: {
+      borderTop: `1px solid ${colors.grayLighter}`,
+      padding: '20px'
+    }
+  },
   MuiCardContent: {
     root: {
-      padding: '10px 20px'
+      padding: '10px 20px',
+      '&:last-child': {
+        paddingBottom: '10px'
+      }
     }
   },
   MuiCardHeader: {

@@ -746,7 +746,7 @@ const genericBaseElementUseInstance = {
       id: 'baseElementReference',
       type: 'reference',
       name: 'reference',
-      value: { id: 'originalBaseElementId', type: 'Observation' }
+      value: { id: 'element-1', type: 'Observation' }
     }
   ],
   modifiers: []

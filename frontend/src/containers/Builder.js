@@ -9,7 +9,7 @@ import { Edit as EditIcon, GetApp as GetAppIcon, MenuBook as MenuBookIcon, Save 
 import _ from 'lodash';
 
 import loadTemplates from 'actions/templates';
-import { loadConversionFunctions } from 'actions/modifiers';
+import { loadConversionFunctions, loadModifiers } from 'actions/modifiers';
 import {
   setStatusMessage,
   downloadArtifact,
@@ -74,6 +74,7 @@ export class Builder extends Component {
         this.props.initializeArtifact(andTemplate, orTemplate);
       }
       this.props.loadConversionFunctions();
+      this.props.loadModifiers();
     });
   }
 
@@ -160,8 +161,15 @@ export class Builder extends Component {
     return result;
   };
 
-  addInstance = async (treeName, instance, parentPath, uid = null,
-     currentIndex, incomingTree, updatedReturnType = null) => {
+  addInstance = async (
+    treeName,
+    instance,
+    parentPath,
+    uid = null,
+    currentIndex,
+    incomingTree,
+    updatedReturnType = null
+  ) => {
     const treeData = this.findTree(treeName, uid);
     const tree = incomingTree || treeData.tree;
     const target = findValueAtPath(tree, parentPath).childInstances;
@@ -227,7 +235,6 @@ export class Builder extends Component {
       tree.returnType = updatedReturnType;
     }
 
-
     await this.setTree(treeName, treeData, tree);
     localTree = tree;
 
@@ -279,23 +286,23 @@ export class Builder extends Component {
     this.closeArtifactModal(false);
   };
 
-instanceIncludes = (instances, instanceName) => {
-  if (!instances || instances.length === 0) return false;
-  if (instances.some(instance => instance.name === instanceName)) return true;
-  return false;
-};
+  instancesInclude = (instances, instanceName) => {
+    if (!instances || instances.length === 0) return false;
+    if (instances.some(instance => instance.name === instanceName)) return true;
+    return false;
+  };
 
-updateFHIRVersion = () => {
-  const { artifact, externalCqlList, updateAndSaveArtifact } = this.props;
-  const hasExternalCql =
-    externalCqlList && Boolean(externalCqlList.find(cqlLibrary => cqlLibrary.linkedArtifactId === artifact._id));
-  if (hasExternalCql) return;
+  updateFHIRVersion = () => {
+    const { artifact, externalCqlList, updateAndSaveArtifact } = this.props;
+    const hasExternalCql =
+      externalCqlList && Boolean(externalCqlList.find(cqlLibrary => cqlLibrary.linkedArtifactId === artifact._id));
+    const hasServiceRequest = this.instancesInclude(this.getAllInstancesInAllTrees(), 'Service Request');
+    if (hasExternalCql & !hasServiceRequest) return;
 
-  const hasServiceRequest = this.instanceIncludes(this.getAllInstancesInAllTrees(), 'Service Request');
-  let updatedArtifact = _.cloneDeep(artifact);
-  updatedArtifact.fhirVersion = hasServiceRequest ? '4.0.0' : '';
-  updateAndSaveArtifact(updatedArtifact);
-};
+    let updatedArtifact = _.cloneDeep(artifact);
+    updatedArtifact.fhirVersion = hasServiceRequest ? '4.0.0' : '';
+    updateAndSaveArtifact(updatedArtifact);
+  };
 
   // ----------------------- TREES ----------------------------------------- //
 
@@ -810,6 +817,7 @@ function mapDispatchToProps(dispatch) {
       loadConversionFunctions,
       loadExternalCqlLibraryDetails,
       loadExternalCqlList,
+      loadModifiers,
       loadTemplates,
       saveArtifact,
       setStatusMessage,

@@ -51,11 +51,7 @@ const EditorsTemplate = ({ handleUpdateEditor, label, isNested = false, type, va
   return (
     <div className={clsx(fieldStyles.field, isNested && fieldStyles.nestedField)} id="editors-template">
       <div
-        className={clsx(
-          fieldStyles.fieldLabel,
-          fieldStyles.fieldLabelWithInput,
-          isNested && fieldStyles.nestedFieldLabel
-        )}
+        className={clsx(fieldStyles.fieldLabel, fieldStyles.fieldLabelTall, isNested && fieldStyles.nestedFieldLabel)}
       >
         {label}:
       </div>

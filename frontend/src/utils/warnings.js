@@ -30,13 +30,13 @@ export function doesBaseElementInstanceNeedWarning(instance, allInstancesInAllTr
 export function doesBaseElementUseNeedWarning(instance, baseElements) {
   const elementNameField = getFieldWithId(instance.fields, 'element_name');
   const instanceCommentField = getFieldWithId(instance.fields, 'comment');
-  const instanceCommentValue = instanceCommentField ? instanceCommentField.value : '';
+  const instanceCommentValue = instanceCommentField?.value || '';
 
   if (instance.type === 'baseElement') {
     const referenceField = getFieldWithType(instance.fields, 'reference');
     const originalBaseElement = baseElements.find(baseEl => referenceField.value.id === baseEl.uniqueId);
     const originalCommentField = getFieldWithId(originalBaseElement.fields, 'comment');
-    const originalCommentValue = originalCommentField ? originalCommentField.value : '';
+    const originalCommentValue = originalCommentField?.value || '';
     const originalNameField = getFieldWithId(originalBaseElement.fields, 'element_name');
     // If some modifiers applied AND the name is the same as original, it should be changed. Need a warning.
     if (((instance.modifiers && instance.modifiers.length > 0) || (instanceCommentValue !== originalCommentValue)) &&

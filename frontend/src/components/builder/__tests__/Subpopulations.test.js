@@ -1,7 +1,13 @@
 import React from 'react';
+import { createStore } from 'redux';
+import { Provider } from 'react-redux';
+import nock from 'nock';
 import { render, fireEvent, userEvent, screen } from 'utils/test-utils';
 import { elementGroups } from 'utils/test_fixtures';
 import Subpopulations from '../Subpopulations';
+import mockArtifact from 'mocks/mockArtifact';
+import mockExternalCqlLibrary from 'mocks/mockExternalCQLLibrary';
+import { mockTemplates2 } from 'mocks/mockTemplates';
 
 const subpopulation = {
   id: 'And',
@@ -26,34 +32,47 @@ const specialSubpop = {
 describe('<Subpopulations />', () => {
   const renderComponent = (props = {}) =>
     render(
-      <Subpopulations
-        addInstance={jest.fn()}
-        artifact={{ subpopulations: [specialSubpop] }}
-        baseElements={[]}
-        checkSubpopulationUsage={jest.fn()}
-        conversionFunctions={[]}
-        deleteInstance={jest.fn()}
-        editInstance={jest.fn()}
-        externalCqlList={[]}
-        getAllInstances={jest.fn()}
-        getAllInstancesInAllTrees={jest.fn()}
-        instanceNames={[]}
-        isLoadingModifiers={false}
-        loadExternalCqlList={jest.fn()}
-        modifierMap={{}}
-        modifiersByInputType={{}}
-        name="subpopulations"
-        parameters={[]}
-        scrollToElement={jest.fn()}
-        templates={elementGroups}
-        updateInstanceModifiers={jest.fn()}
-        updateRecsSubpop={jest.fn()}
-        updateSubpopulations={jest.fn()}
-        validateReturnType={false}
-        vsacApiKey="key"
-        {...props}
-      />
+      <Provider store={createStore(x => x, { artifacts: { artifact: mockArtifact } })}>
+        <Subpopulations
+          addInstance={jest.fn()}
+          artifact={{ subpopulations: [specialSubpop] }}
+          baseElements={[]}
+          checkSubpopulationUsage={jest.fn()}
+          conversionFunctions={[]}
+          deleteInstance={jest.fn()}
+          editInstance={jest.fn()}
+          externalCqlList={[]}
+          getAllInstances={jest.fn()}
+          getAllInstancesInAllTrees={jest.fn()}
+          instanceNames={[]}
+          isLoadingModifiers={false}
+          loadExternalCqlList={jest.fn()}
+          modifierMap={{}}
+          modifiersByInputType={{}}
+          name="subpopulations"
+          parameters={[]}
+          scrollToElement={jest.fn()}
+          templates={elementGroups}
+          updateInstanceModifiers={jest.fn()}
+          updateRecsSubpop={jest.fn()}
+          updateSubpopulations={jest.fn()}
+          validateReturnType={false}
+          vsacApiKey="key"
+          {...props}
+        />
+      </Provider>
     );
+
+  beforeEach(() => {
+    nock('http://localhost')
+      .persist()
+      .get(`/authoring/api/externalCQL/${mockArtifact._id}`)
+      .reply(200, [mockExternalCqlLibrary])
+      .get('/authoring/api/config/templates')
+      .reply(200, mockTemplates2);
+  });
+
+  afterEach(() => nock.cleanAll());
 
   let origAlert;
   beforeEach(() => {

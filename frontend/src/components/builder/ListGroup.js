@@ -5,7 +5,6 @@ import classnames from 'classnames';
 import { IconButton } from '@material-ui/core';
 import {
   ChatBubble as ChatBubbleIcon,
-  Check as CheckIcon,
   Close as CloseIcon,
   ExpandLess as ExpandLessIcon,
   ExpandMore as ExpandMoreIcon,
@@ -23,6 +22,7 @@ import { doesBaseElementInstanceNeedWarning, hasDuplicateName, hasGroupNestedWar
 import { getReturnType, getFieldWithId } from 'utils/instances';
 
 import { DeleteConfirmationModal } from 'components/modals';
+import { ReturnTypeTemplate } from 'components/builder/templates';
 import ConjunctionGroup from './ConjunctionGroup';
 import ExpressionPhrase from './ExpressionPhrase';
 import StringField from './fields/StringField';
@@ -308,16 +308,7 @@ export default class ListGroup extends Component {
             baseElements={baseElements}
           />
 
-          <div className="element-field">
-            <div className="element-field-label">Return Type:</div>
-
-            <div className="element-field-details return-type">
-              <div>
-                {showCheck && <CheckIcon fontSize="small" />}
-                {_.startCase(instance.returnType)}
-              </div>
-            </div>
-          </div>
+          <ReturnTypeTemplate returnType={_.startCase(instance.returnType)} returnTypeIsValid={showCheck} />
         </div>
 
         <ConjunctionGroup

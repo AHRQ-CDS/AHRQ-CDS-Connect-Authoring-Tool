@@ -1,41 +1,63 @@
 import React from 'react';
+import { createStore } from 'redux';
+import { Provider } from 'react-redux';
+import nock from 'nock';
+
 import BaseElements from '../BaseElements';
 import { render, screen, userEvent } from 'utils/test-utils';
 import { elementGroups, genericBaseElementInstance, genericBaseElementListInstance } from 'utils/test_fixtures';
+import mockArtifact from 'mocks/mockArtifact';
+import mockExternalCqlLibrary from 'mocks/mockExternalCQLLibrary';
+import { mockTemplates2 } from 'mocks/mockTemplates';
 
 describe('<BaseElements />', () => {
   const renderComponent = (props = {}) =>
     render(
-      <BaseElements
-        addBaseElement={jest.fn()}
-        addInstance={jest.fn()}
-        baseElements={[]}
-        conversionFunctions={[]}
-        deleteInstance={jest.fn()}
-        editInstance={jest.fn()}
-        externalCqlList={[]}
-        getAllInstances={jest.fn()}
-        getAllInstancesInAllTrees={jest.fn(() => [])}
-        instance={null}
-        instanceNames={[]}
-        isLoadingModifiers={false}
-        loadExternalCqlList={jest.fn()}
-        modifierMap={{}}
-        modifiersByInputType={{}}
-        parameters={[]}
-        scrollToElement={jest.fn()}
-        templates={[]}
-        treeName="baseElements"
-        updateBaseElementLists={jest.fn()}
-        updateInstanceModifiers={jest.fn()}
-        validateReturnType={false}
-        vsacApiKey="key"
-        {...props}
-      />
+      <Provider store={createStore(x => x, { artifacts: { artifact: mockArtifact }, vsac: { apiKey: '1234' } })}>
+        <BaseElements
+          addBaseElement={jest.fn()}
+          addInstance={jest.fn()}
+          baseElements={[]}
+          conversionFunctions={[]}
+          deleteInstance={jest.fn()}
+          editInstance={jest.fn()}
+          externalCqlList={[]}
+          getAllInstances={jest.fn()}
+          getAllInstancesInAllTrees={jest.fn(() => [])}
+          instance={null}
+          instanceNames={[]}
+          isLoadingModifiers={false}
+          loadExternalCqlList={jest.fn()}
+          modifierMap={{}}
+          modifiersByInputType={{}}
+          parameters={[]}
+          scrollToElement={jest.fn()}
+          templates={[]}
+          treeName="baseElements"
+          updateBaseElementLists={jest.fn()}
+          updateInstanceModifiers={jest.fn()}
+          validateReturnType={false}
+          vsacApiKey="key"
+          {...props}
+        />
+      </Provider>
     );
 
+  beforeEach(() => {
+    nock('http://localhost')
+      .persist()
+      .get(`/authoring/api/externalCQL/${mockArtifact._id}`)
+      .reply(200, [mockExternalCqlLibrary])
+      .get('/authoring/api/config/templates')
+      .reply(200, mockTemplates2);
+  });
+
+  afterEach(() => nock.cleanAll());
+
   it('renders separate template instances', () => {
-    const baseElements = [genericBaseElementInstance, genericBaseElementInstance];
+    const genericBaseElementInstanceWithoutUsedBy = { ...genericBaseElementInstance, usedBy: [] };
+
+    const baseElements = [genericBaseElementInstanceWithoutUsedBy, genericBaseElementInstanceWithoutUsedBy];
 
     const { container } = renderComponent({
       baseElements,
@@ -48,15 +70,11 @@ describe('<BaseElements />', () => {
     expect(templateInstanceHeaders[1]).toHaveTextContent('Observation');
   });
 
-  it('can render a list group with conjunction and a template instance inside', () => {
+  it('can render a list group with conjunction and a template instance inside', async () => {
     const baseElements = [genericBaseElementListInstance];
-    const getAllInstances = jest.fn();
-
-    getAllInstances.mockReturnValue(genericBaseElementListInstance.childInstances);
-
     const { container } = renderComponent({
       baseElements,
-      getAllInstances,
+      getAllInstances: () => genericBaseElementListInstance.childInstances,
       instance: { baseElements, uniqueId: 'uuid' },
       templates: elementGroups
     });
@@ -72,9 +90,6 @@ describe('<BaseElements />', () => {
     expect(expressPhrase[0]).toHaveTextContent('Union');
     expect(expressPhrase[1]).toHaveTextContent('of');
     expect(expressPhrase[2]).toHaveTextContent('VSAC Observation');
-
-    const elementSelects = conjunctionGroup.querySelectorAll('.element-select');
-    expect(elementSelects).toHaveLength(1);
 
     // The Type options in the Conjunction group match the List options, not the usual operations
     userEvent.click(screen.getByRole('button', { name: 'Union' }));

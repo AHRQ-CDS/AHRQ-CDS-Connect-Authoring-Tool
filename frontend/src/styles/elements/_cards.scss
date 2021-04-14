@@ -72,7 +72,8 @@
     padding: 1em;
 
     > .card-group-section > .card-element,
-    > .card-element {
+    > .card-element,
+    > .MuiCard-root {
       background-color: $body-bg;
     }
   }
@@ -118,7 +119,8 @@
       .card-element__buttons {
         text-align: right;
         white-space: nowrap;
-        margin-top: 10px;
+        margin-top: 18px;
+        margin-left: 10px;
       }
     }
 
@@ -204,7 +206,9 @@
       padding: 1em;
       border-top: $border-global;
 
-      &:empty { display: none; }
+      &:empty {
+        display: none;
+      }
     }
   }
 
@@ -229,7 +233,7 @@
 
   .card-label {
     min-width: 12.5em;
-    margin-top: 12px;
+    margin-top: 18px;
     text-align: right;
     font-weight: bold;
     white-space: nowrap;

@@ -1,14 +1,14 @@
 /* ------------------------- IMPORT VARIABLES ------------------------------ */
-@import "elements/variables";
+@import 'elements/variables';
 
 /* ------------------------- IMPORT 3RD PARTY FONTS ------------------------ */
-@import "~fontsource-source-sans-pro/latin.css";
-@import "~fontsource-roboto-mono/latin.css";
-@import "~fontsource-public-sans/latin.css";
-@import "~fontsource-merriweather/latin.css";
+@import '~fontsource-source-sans-pro/latin.css';
+@import '~fontsource-roboto-mono/latin.css';
+@import '~fontsource-public-sans/latin.css';
+@import '~fontsource-merriweather/latin.css';
 
 /* ------------------------- IMPORT 3RD PARTY VENDORS ---------------------- */
-@import "~bootstrap/scss/bootstrap.scss";
+@import '~bootstrap/scss/bootstrap.scss';
 @import '~tocbot/src/scss/tocbot-core';
 @import '~tocbot/src/scss/tocbot-default-theme';
 
@@ -28,7 +28,6 @@
 // component-specific
 @import 'components/builder/Builder';
 @import 'components/builder/Element';
-@import 'components/builder/ElementSelect';
 @import 'components/builder/ErrorStatement';
 @import 'components/builder/ExternalCQL';
 @import 'components/builder/ExternalCqlDetails';
@@ -42,70 +41,77 @@
 @import 'components/footer/CdsFooter';
 
 // vendors
-@import "vendors/bootstrap";
-@import "vendors/ahrq-uswds2.0";
-@import "vendors/ahrq-global";
-@import "vendors/ahrq";
+@import 'vendors/bootstrap';
+@import 'vendors/ahrq-uswds2.0';
+@import 'vendors/ahrq-global';
+@import 'vendors/ahrq';
 
 /* ------------------------- FONTS ----------------------------------------- */
+
+/* prettier-ignore */
 @font-face {
   font-family: 'Code-Pro';
-  src: url("./fonts/233341_0_0.eot");
+  src: url('./fonts/233341_0_0.eot');
   src:
-    url("./fonts/233341_0_0.eot?#iefix") format("embedded-opentype"),
-    url("./fonts/233341_0_0.woff") format("woff"),
-    url("./fonts/233341_0_0.ttf") format("truetype");
+    url('./fonts/233341_0_0.eot?#iefix') format('embedded-opentype'),
+    url('./fonts/233341_0_0.woff') format('woff'),
+    url('./fonts/233341_0_0.ttf') format('truetype');
 }
 
+/* prettier-ignore */
 @font-face {
   font-family: 'Code-Pro-LC';
-  src: url("./fonts/235257_0_0.eot");
+  src: url('./fonts/235257_0_0.eot');
   src:
-    url("./fonts/235257_0_0.eot?#iefix") format("embedded-opentype"),
-    url("./fonts/235257_0_0.woff") format("woff"),
-    url("./fonts/235257_0_0.ttf") format("truetype");
+    url('./fonts/235257_0_0.eot?#iefix') format('embedded-opentype'),
+    url('./fonts/235257_0_0.woff') format('woff'),
+    url('./fonts/235257_0_0.ttf') format('truetype');
 }
 
+/* prettier-ignore */
 @font-face {
   font-family: 'CartoGothicStdBook';
-  src: url("./fonts/CartoGothicStd-Book-webfont.eot");
+  src: url('./fonts/CartoGothicStd-Book-webfont.eot');
   src:
-    url("./fonts/CartoGothicStd-Book-webfont.eot?#iefix") format("embedded-opentype"),
-    url("./fonts/CartoGothicStd-Book-webfont.woff") format("woff"),
-    url("./fonts/CartoGothicStd-Book-webfont.ttf") format("truetype");
+    url('./fonts/CartoGothicStd-Book-webfont.eot?#iefix') format('embedded-opentype'),
+    url('./fonts/CartoGothicStd-Book-webfont.woff') format('woff'),
+    url('./fonts/CartoGothicStd-Book-webfont.ttf') format('truetype');
   font-weight: normal;
   font-style: normal;
 }
 
+/* prettier-ignore */
 @font-face {
   font-family: 'CartoGothicStdItalic';
-  src: url("./fonts/CartoGothicStd-Italic-webfont.eot");
+  src: url('./fonts/CartoGothicStd-Italic-webfont.eot');
   src:
-    url("./fonts/CartoGothicStd-Italic-webfont.eot?#iefix") format("embedded-opentype"),
-    url("./fonts/CartoGothicStd-Italic-webfont.woff") format("woff"),
-    url("./fonts/CartoGothicStd-Italic-webfont.ttf") format("truetype");
+    url('./fonts/CartoGothicStd-Italic-webfont.eot?#iefix') format('embedded-opentype'),
+    url('./fonts/CartoGothicStd-Italic-webfont.woff') format('woff'),
+    url('./fonts/CartoGothicStd-Italic-webfont.ttf') format('truetype');
   font-weight: normal;
   font-style: normal;
 }
 
+/* prettier-ignore */
 @font-face {
   font-family: 'CartoGothicStdBold';
-  src: url("./fonts/CartoGothicStd-Bold-webfont.eot");
+  src: url('./fonts/CartoGothicStd-Bold-webfont.eot');
   src:
-    url("./fonts/CartoGothicStd-Bold-webfont.eot?#iefix") format("embedded-opentype"),
-    url("./fonts/CartoGothicStd-Bold-webfont.woff") format("woff"),
-    url("./fonts/CartoGothicStd-Bold-webfont.ttf") format("truetype");
+    url('./fonts/CartoGothicStd-Bold-webfont.eot?#iefix') format('embedded-opentype'),
+    url('./fonts/CartoGothicStd-Bold-webfont.woff') format('woff'),
+    url('./fonts/CartoGothicStd-Bold-webfont.ttf') format('truetype');
   font-weight: normal;
   font-style: normal;
 }
 
+/* prettier-ignore */
 @font-face {
   font-family: 'CartoGothicStdBoldItalic';
-  src: url("./fonts/CartoGothicStd-BoldItalic-webfont.eot");
+  src: url('./fonts/CartoGothicStd-BoldItalic-webfont.eot');
   src:
-    url("./fonts/CartoGothicStd-BoldItalic-webfont.eot?#iefix") format("embedded-opentype"),
-    url("./fonts/CartoGothicStd-BoldItalic-webfont.woff") format("woff"),
-    url("./fonts/CartoGothicStd-BoldItalic-webfont.ttf") format("truetype");
+    url('./fonts/CartoGothicStd-BoldItalic-webfont.eot?#iefix') format('embedded-opentype'),
+    url('./fonts/CartoGothicStd-BoldItalic-webfont.woff') format('woff'),
+    url('./fonts/CartoGothicStd-BoldItalic-webfont.ttf') format('truetype');
   font-weight: normal;
   font-style: normal;
 }

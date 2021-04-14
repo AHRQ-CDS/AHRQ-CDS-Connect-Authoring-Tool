@@ -18,7 +18,7 @@ import clsx from 'clsx';
 import { Dropdown } from 'components/elements';
 import { DeleteConfirmationModal } from 'components/modals';
 import TemplateInstance from './TemplateInstance';
-import ElementSelect from './ElementSelect';
+import { ElementSelect } from './element-select';
 import { StringField, TextAreaField } from 'components/builder/fields';
 import ExpressionPhrase from './ExpressionPhrase';
 
@@ -47,20 +47,20 @@ export default class ConjunctionGroup extends Component {
   handleTypeChange = (event, selectOptions) => {
     const type = selectOptions.find(option => option.name === event.target.value);
     this.props.editInstance(this.props.treeName, type, this.getPath(), true);
-  }
+  };
 
-  handleNameChange = (state) => {
+  handleNameChange = state => {
     this.props.editInstance(this.props.treeName, state, this.getPath(), false);
-  }
+  };
 
-  handleCommentChange = (state) => {
+  handleCommentChange = state => {
     this.props.editInstance(this.props.treeName, state, this.getPath(), false);
-  }
+  };
 
-  addChild = (template) => {
+  addChild = template => {
     const instance = createTemplateInstance(template);
     this.props.addInstance(this.props.treeName, instance, this.getPath());
-  }
+  };
 
   // if root component, returns root artifact path, otherwise calls child's getPath function with artifact id
   getPath() {
@@ -70,15 +70,17 @@ export default class ConjunctionGroup extends Component {
     return this.props.getPath(this.props.instance.uniqueId);
   }
 
-  getChildsPath = (id) => {
+  getChildsPath = id => {
     const artifactTree = this.props.instance;
     const childIndex = artifactTree.childInstances.findIndex(instance => instance.uniqueId === id);
     return `${this.getPath()}.childInstances.${childIndex}`;
-  }
+  };
 
   // returns class name for odd conjunction groups determined from length of child instances
   getNestingClassName = () => {
-    const level = this.getPath().split('.').filter(pathSection => pathSection === 'childInstances').length;
+    const level = this.getPath()
+      .split('.')
+      .filter(pathSection => pathSection === 'childInstances').length;
     if (level === 0) {
       return 'card-group__top';
     } else if (level % 2 === 0) {
@@ -86,11 +88,11 @@ export default class ConjunctionGroup extends Component {
     }
 
     return 'card-group__odd';
-  }
+  };
 
   // ----------------------- CLICK HANDLERS -------------------------------- //
 
-  indentClickHandler = (instance) => {
+  indentClickHandler = instance => {
     const { treeName, artifact, templates, disableAddElement } = this.props;
     if (disableAddElement) {
       return;
@@ -102,7 +104,8 @@ export default class ConjunctionGroup extends Component {
     let conjunctionType;
     if (artifact[treeName].id === 'Or') {
       conjunctionType = conjunctionTemplates.find(template => template.id === 'And');
-    } else { // Default is adding an OR
+    } else {
+      // Default is adding an OR
       conjunctionType = conjunctionTemplates.find(template => template.id === 'Or');
     }
 
@@ -122,9 +125,9 @@ export default class ConjunctionGroup extends Component {
 
       this.props.deleteInstance(treeName, this.getChildsPath(instance.uniqueId), toAdd);
     }
-  }
+  };
 
-  outdentClickHandler = (instance) => {
+  outdentClickHandler = instance => {
     const { disableAddElement } = this.props;
     if (disableAddElement) {
       return;
@@ -150,36 +153,37 @@ export default class ConjunctionGroup extends Component {
       const toAdd = [{ instance, path: parentPath, index }];
       this.props.deleteInstance(this.props.treeName, this.getChildsPath(instance.uniqueId), toAdd);
     }
-  }
+  };
 
   deleteInstance = () => {
     this.props.deleteInstance(this.props.treeName, this.getPath());
-  }
+  };
 
   openConfirmDeleteModal = () => {
     if (!this.props.disableAddElement) {
       this.setState({ showConfirmDeleteModal: true });
     }
-  }
+  };
 
   closeConfirmDeleteModal = () => {
     this.setState({ showConfirmDeleteModal: false });
-  }
+  };
 
   handleDeleteInstance = () => {
     this.deleteInstance();
     this.closeConfirmDeleteModal();
-  }
+  };
 
-  conjunctionHasDuplicateName = (child) => {
+  conjunctionHasDuplicateName = child => {
     const elementNameField = getFieldWithId(child.fields, 'element_name');
     const nameValue = elementNameField.value === undefined ? '' : elementNameField.value;
-    const duplicateNameIndex = this.props.instanceNames.findIndex(name =>
-      name.id !== child.uniqueId && name.name === nameValue);
+    const duplicateNameIndex = this.props.instanceNames.findIndex(
+      name => name.id !== child.uniqueId && name.name === nameValue
+    );
     return duplicateNameIndex !== -1;
-  }
+  };
 
-  hasNestedWarnings = (childInstances) => {
+  hasNestedWarnings = childInstances => {
     const { instanceNames, baseElements, parameters, getAllInstancesInAllTrees, validateReturnType } = this.props;
     const allInstancesInAllTrees = getAllInstancesInAllTrees();
     const hasNestedWarning = hasGroupNestedWarning(
@@ -191,21 +195,20 @@ export default class ConjunctionGroup extends Component {
       validateReturnType
     );
     return hasNestedWarning;
-  }
+  };
 
   showHideGroupBody = () => {
     this.setState({ showGroup: !this.state.showGroup });
-  }
+  };
 
   toggleComment = () => {
     this.setState({ showComment: !this.state.showComment });
-  }
+  };
 
   // ----------------------- RENDERS --------------------------------------- //
 
   renderDisabledTooltip = id => (
-    <UncontrolledTooltip
-      target={id} placement="left">
+    <UncontrolledTooltip target={id} placement="left">
       To edit or delete this element, remove all references to the Base Element List.
     </UncontrolledTooltip>
   );
@@ -218,7 +221,7 @@ export default class ConjunctionGroup extends Component {
       <div className="card-group__conjunction-select">
         <Dropdown
           id="conjunction-select"
-          label={instance.name ? null : "Select one"}
+          label={instance.name ? null : 'Select one'}
           onChange={event => this.handleTypeChange(event, selectOptions)}
           options={selectOptions}
           value={instance.name}
@@ -232,7 +235,7 @@ export default class ConjunctionGroup extends Component {
   renderIndentButtons = instance => (
     // Indenting is always possible, outdent only possible when not at root already
     <span className="indent-outdent-container">
-      {this.getPath() !== '' &&
+      {this.getPath() !== '' && (
         <span id={`outdentbutton-${instance.uniqueId}`}>
           <IconButton
             aria-label="outdent"
@@ -245,7 +248,7 @@ export default class ConjunctionGroup extends Component {
 
           {this.props.disableAddElement && this.renderDisabledTooltip(`outdentbutton-${instance.uniqueId}`)}
         </span>
-      }
+      )}
 
       <span id={`indentbutton-${instance.uniqueId}`}>
         <IconButton
@@ -260,13 +263,13 @@ export default class ConjunctionGroup extends Component {
         {this.props.disableAddElement && this.renderDisabledTooltip(`indentbutton-${instance.uniqueId}`)}
       </span>
     </span>
-  )
+  );
 
   renderRoot() {
     const { showGroup, showComment } = this.state;
     const collapsedClass = showGroup ? '' : 'expression-collapsed';
     const elementNameField = getFieldWithId(this.props.instance.fields, 'element_name');
-    const elementCommentField = getFieldWithId(this.props.instance.fields,'comment');
+    const elementCommentField = getFieldWithId(this.props.instance.fields, 'comment');
     const conjunctionHasDuplicateName = this.conjunctionHasDuplicateName(this.props.instance);
     const showHasWarnings = conjunctionHasDuplicateName || this.hasNestedWarnings(this.props.instance.childInstances);
     const hasComment = elementCommentField && elementCommentField.value && elementCommentField.value !== '';
@@ -278,7 +281,7 @@ export default class ConjunctionGroup extends Component {
         <div className="card-group__top">
           <div className="card-group__header">
             <div className="card-group__title">
-              {showGroup ?
+              {showGroup ? (
                 <div className="card-field-group">
                   <div className="card-field">
                     <div className="card-label">Group:</div>
@@ -288,7 +291,7 @@ export default class ConjunctionGroup extends Component {
                     </div>
                   </div>
 
-                  {showComment &&
+                  {showComment && (
                     <div className="card-field">
                       <div className="card-label">Comment:</div>
 
@@ -296,22 +299,24 @@ export default class ConjunctionGroup extends Component {
                         <TextAreaField field={elementCommentField} handleUpdateField={this.handleCommentChange} />
                       </div>
                     </div>
-                  }
+                  )}
                 </div>
-              :
+              ) : (
                 <div className="group-heading-name">
                   {elementNameField.value}:
-                  {showHasWarnings &&
-                    <div className="warning"><FontAwesomeIcon icon={faExclamationCircle} /> Has warnings</div>
-                  }
+                  {showHasWarnings && (
+                    <div className="warning">
+                      <FontAwesomeIcon icon={faExclamationCircle} /> Has warnings
+                    </div>
+                  )}
                 </div>
-              }
+              )}
             </div>
 
             <div className="card-group__buttons">
               {showGroup && this.renderIndentButtons(this.props.instance)}
 
-              {showGroup &&
+              {showGroup && (
                 <IconButton
                   aria-label="show comment"
                   className={clsx(hasComment && 'has-comment')}
@@ -320,13 +325,9 @@ export default class ConjunctionGroup extends Component {
                 >
                   {hasComment ? <SmsIcon fontSize="small" /> : <ChatBubbleIcon fontSize="small" />}
                 </IconButton>
-              }
+              )}
 
-              <IconButton
-                aria-label={`hide ${elementNameField.name}`}
-                color="primary"
-                onClick={this.showHideGroupBody}
-              >
+              <IconButton aria-label={`hide ${elementNameField.name}`} color="primary" onClick={this.showHideGroupBody}>
                 {showGroup ? <ExpandLessIcon fontSize="small" /> : <ExpandMoreIcon fontSize="small" />}
               </IconButton>
 
@@ -346,9 +347,9 @@ export default class ConjunctionGroup extends Component {
           </div>
 
           <div className="card-group__warnings">
-            {conjunctionHasDuplicateName && showGroup &&
+            {conjunctionHasDuplicateName && showGroup && (
               <div className="warning">Warning: Name already in use. Choose another name.</div>
-            }
+            )}
           </div>
 
           <ExpressionPhrase
@@ -364,9 +365,7 @@ export default class ConjunctionGroup extends Component {
   }
 
   renderChildren() {
-    const {
-      artifact, treeName, templates, addInstance, editInstance, deleteInstance
-    } = this.props;
+    const { artifact, treeName, templates, addInstance, editInstance, deleteInstance } = this.props;
 
     return this.props.instance.childInstances.map((instance, i) => {
       // return null if child instance conjunction is false
@@ -382,14 +381,12 @@ export default class ConjunctionGroup extends Component {
               disableAddElement={this.props.disableAddElement}
               editInstance={editInstance}
               elementUniqueId={this.props.elementUniqueId}
-              externalCqlList={this.props.externalCqlList}
               getAllInstances={this.props.getAllInstances}
               getAllInstancesInAllTrees={this.props.getAllInstancesInAllTrees}
               getPath={this.getChildsPath}
               instance={instance}
               instanceNames={this.props.instanceNames}
               isLoadingModifiers={this.props.isLoadingModifiers}
-              loadExternalCqlList={this.props.loadExternalCqlList}
               modifierMap={this.props.modifierMap}
               modifiersByInputType={this.props.modifiersByInputType}
               parameters={this.props.parameters}
@@ -448,18 +445,7 @@ export default class ConjunctionGroup extends Component {
   }
 
   render() {
-    const {
-      artifact,
-      baseElements,
-      disableAddElement,
-      elementUniqueId,
-      externalCqlList,
-      loadExternalCqlList,
-      instance,
-      parameters,
-      templates,
-      vsacApiKey
-    } = this.props;
+    const { disableAddElement, elementUniqueId, instance } = this.props;
     const { showConfirmDeleteModal, showGroup } = this.state;
     const classname = `card-group ${this.getNestingClassName()}`;
     const elementName = getFieldWithId(instance.fields, 'element_name').value;
@@ -469,34 +455,24 @@ export default class ConjunctionGroup extends Component {
         {this.renderRoot()}
         {showGroup && this.renderChildren()}
 
-        {showGroup &&
-          <div className="card-element">
-            <ElementSelect
-              artifactId={artifact._id}
-              baseElements={baseElements}
-              categories={templates}
-              disableAddElement={disableAddElement}
-              elementUniqueId={elementUniqueId}
-              externalCqlList={externalCqlList}
-              fhirVersion={artifact.fhirVersion}
-              inBaseElements={false}
-              loadExternalCqlList={loadExternalCqlList}
-              onSuggestionSelected={this.addChild}
-              parameters={parameters}
-              vsacApiKey={vsacApiKey}
-            />
-          </div>
-        }
+        {showGroup && (
+          <ElementSelect
+            excludeListOperations
+            handleAddElement={this.addChild}
+            isDisabled={disableAddElement}
+            parentElementId={elementUniqueId}
+          />
+        )}
 
-        {showConfirmDeleteModal &&
+        {showConfirmDeleteModal && (
           <DeleteConfirmationModal
             deleteType="Group"
             handleCloseModal={this.closeConfirmDeleteModal}
             handleDelete={this.handleDeleteInstance}
           >
-            <div>Group: {elementName ? elementName :'unnamed'}</div>
+            <div>Group: {elementName ? elementName : 'unnamed'}</div>
           </DeleteConfirmationModal>
-        }
+        )}
       </div>
     );
   }
@@ -512,14 +488,12 @@ ConjunctionGroup.propTypes = {
   disableIndent: PropTypes.bool,
   editInstance: PropTypes.func.isRequired,
   elementUniqueId: PropTypes.string,
-  externalCqlList: PropTypes.array.isRequired,
   getAllInstances: PropTypes.func.isRequired,
   getAllInstancesInAllTrees: PropTypes.func.isRequired,
   getPath: requiredIf(PropTypes.func, props => !props.root), // path needed for children
   instance: PropTypes.object.isRequired,
   instanceNames: PropTypes.array.isRequired,
   isLoadingModifiers: PropTypes.bool,
-  loadExternalCqlList: PropTypes.func.isRequired,
   modifierMap: PropTypes.object.isRequired,
   modifiersByInputType: PropTypes.object.isRequired,
   options: PropTypes.string,

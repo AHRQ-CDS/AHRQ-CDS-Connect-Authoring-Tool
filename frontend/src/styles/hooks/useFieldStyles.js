@@ -4,8 +4,15 @@ export default makeStyles(
   theme => ({
     field: {
       display: 'flex',
-      marginBottom: '10px',
       width: '100%'
+    },
+    fieldButtons: {
+      alignItems: 'flex-start',
+      display: 'flex',
+      whiteSpace: 'nowrap'
+    },
+    fieldButtonsAlignCenter: {
+      alignItems: 'center'
     },
     fieldCard: {
       position: 'relative',
@@ -23,11 +30,26 @@ export default makeStyles(
       alignItems: 'flex-end',
       marginTop: '1em'
     },
+    fieldDetails: {
+      borderBottom: `1px solid ${theme.palette.common.gray}`,
+      display: 'flex',
+      padding: '10px 0',
+      width: '100%'
+    },
+    fieldDetailsLast: {
+      border: 'none',
+      marginBottom: '20px'
+    },
+    fieldDisplay: {
+      alignItems: 'center',
+      display: 'flex',
+      width: '100%'
+    },
+    fieldGroup: {
+      width: '100%'
+    },
     fieldInput: {
-      margin: '5px 10px 5px 0',
-      [theme.breakpoints.down('md')]: {
-        margin: '5px 5px 5px 0'
-      }
+      margin: '10px 10px 10px 0'
     },
     fieldInputFullWidth: {
       width: '100%'
@@ -63,10 +85,10 @@ export default makeStyles(
       paddingRight: '1em',
       minWidth: '12.5em',
       textAlign: 'right',
-      marginTop: '5px'
+      marginTop: '10px'
     },
-    fieldLabelWithInput: {
-      marginTop: '15px'
+    fieldLabelTall: {
+      marginTop: '18px'
     },
     helperText: {
       fontSize: '0.7em',

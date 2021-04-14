@@ -32,12 +32,18 @@ export default makeStyles(
       margin: '0 -9999rem',
       padding: '0 9999rem'
     },
+    marginLeft: {
+      marginLeft: '10px'
+    },
+    marginRight: {
+      marginRight: '10px'
+    },
     minHeight: {
       minHeight: '500px'
     },
     verticalPadding: {
       margin: '2em 0'
-    }
+    },
   }),
   { name: 'Spacing' }
 );

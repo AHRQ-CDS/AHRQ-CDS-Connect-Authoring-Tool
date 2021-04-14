@@ -1,8 +1,13 @@
 import React from 'react';
+import { createStore } from 'redux';
+import { Provider } from 'react-redux';
 import nock from 'nock';
 import { render, fireEvent, userEvent, screen, within } from 'utils/test-utils';
 import { createTemplateInstance } from 'utils/test_helpers';
 import { instanceTree, elementGroups } from 'utils/test_fixtures';
+import mockArtifact from 'mocks/mockArtifact';
+import mockExternalCqlLibrary from 'mocks/mockExternalCQLLibrary';
+import { mockTemplates2 } from 'mocks/mockTemplates';
 import ConjunctionGroup from '../ConjunctionGroup';
 
 describe('<ConjunctionGroup />', () => {
@@ -10,53 +15,56 @@ describe('<ConjunctionGroup />', () => {
   const orTemplate = operations.entries.find(e => e.id === 'Or');
   const andTemplate = operations.entries.find(e => e.id === 'And');
   const orInstance = createTemplateInstance(orTemplate);
-  const instance = {
-    ...instanceTree,
-    path: '',
-    childInstances: [...instanceTree.childInstances, orInstance]
-  };
+  const instance = { ...instanceTree, path: '', childInstances: [...instanceTree.childInstances, orInstance] };
 
   const renderComponent = (props = {}) =>
     render(
-      <ConjunctionGroup
-        addInstance={jest.fn()}
-        artifact={{ MeetsInclusionCriteria: { id: 'Or' } }}
-        baseElements={[]}
-        conversionFunctions={[]}
-        deleteInstance={jest.fn()}
-        disableAddElement={false}
-        disableIndent={false}
-        editInstance={jest.fn()}
-        elementUniqueId=""
-        externalCqlList={[]}
-        getAllInstances={() => instance.childInstances}
-        getAllInstancesInAllTrees={jest.fn().mockReturnValue([])}
-        getPath={jest.fn()}
-        instance={instance}
-        instanceNames={[]}
-        isLoadingModifiers={false}
-        loadExternalCqlList={jest.fn()}
-        modifierMap={{}}
-        modifiersByInputType={{}}
-        options=""
-        parameters={[]}
-        root={true}
-        scrollToElement={jest.fn()}
-        subPopulationIndex={0}
-        templates={elementGroups}
-        treeName="MeetsInclusionCriteria"
-        updateInstanceModifiers={jest.fn()}
-        validateReturnType={false}
-        vsacApiKey="key"
-        {...props}
-      />
+      <Provider store={createStore(x => x, { artifacts: { artifact: mockArtifact } })}>
+        <ConjunctionGroup
+          addInstance={jest.fn()}
+          artifact={{ MeetsInclusionCriteria: { id: 'Or' } }}
+          baseElements={[]}
+          conversionFunctions={[]}
+          deleteInstance={jest.fn()}
+          disableAddElement={false}
+          disableIndent={false}
+          editInstance={jest.fn()}
+          elementUniqueId=""
+          getAllInstances={() => instance.childInstances}
+          getAllInstancesInAllTrees={jest.fn().mockReturnValue([])}
+          getPath={jest.fn()}
+          instance={instance}
+          instanceNames={[]}
+          isLoadingModifiers={false}
+          modifierMap={{}}
+          modifiersByInputType={{}}
+          options=""
+          parameters={[]}
+          root={true}
+          scrollToElement={jest.fn()}
+          subPopulationIndex={0}
+          templates={elementGroups}
+          treeName="MeetsInclusionCriteria"
+          updateInstanceModifiers={jest.fn()}
+          validateReturnType={false}
+          vsacApiKey="key"
+          {...props}
+        />
+      </Provider>
     );
 
   beforeEach(() => {
     nock('http://localhost')
+      .persist()
       .get('/authoring/api/config/valuesets/demographics/units_of_time')
-      .reply(200, {expansion: []});
+      .reply(200, { expansion: [] })
+      .get(`/authoring/api/externalCQL/${mockArtifact._id}`)
+      .reply(200, [mockExternalCqlLibrary])
+      .get('/authoring/api/config/templates')
+      .reply(200, mockTemplates2);
   });
+
+  afterEach(() => nock.cleanAll());
 
   it('has correct base class', () => {
     const { container } = renderComponent();

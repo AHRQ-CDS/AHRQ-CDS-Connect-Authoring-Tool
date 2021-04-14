@@ -2,28 +2,27 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { IconButton } from '@material-ui/core';
 import { Close as CloseIcon } from '@material-ui/icons';
+import clsx from 'clsx';
 
 import { useFieldStyles } from 'styles/hooks';
-import useStyles from './styles';
 
 const CodeListTemplate = ({ codes, handleDeleteCode }) => {
   const fieldStyles = useFieldStyles();
-  const styles = useStyles();
 
   return (
     <div id="code-list-template">
       {codes.map((code, index) => (
         <div key={`code-${index}`} className={fieldStyles.field}>
-          <div className={fieldStyles.fieldLabel} id="code-label">
+          <div className={clsx(fieldStyles.fieldLabel, fieldStyles.fieldLabelTall)} id="code-label">
             Code{codes.length > 1 && ` ${index + 1}`}:
           </div>
 
-          <div className={styles.templateFieldDetails}>
-            <div className={styles.templateFieldDisplay}>
+          <div className={fieldStyles.fieldDetails}>
+            <div className={fieldStyles.fieldDisplay}>
               {`${code.codeSystem.name} (${code.code}) ${code.display === '' ? '' : ` - ${code.display}`}`}
             </div>
 
-            <div className={styles.templateFieldButtons}>
+            <div className={clsx(fieldStyles.fieldButtons, fieldStyles.fieldButtonsAlignCenter)}>
               <IconButton
                 aria-label={`delete code ${code.codeSystem.name} (${code.code})`}
                 color="primary"

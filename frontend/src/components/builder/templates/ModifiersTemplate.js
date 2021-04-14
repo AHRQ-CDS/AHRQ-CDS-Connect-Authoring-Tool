@@ -23,7 +23,6 @@ import {
 } from 'components/builder/modifiers';
 import { getReturnType, validateModifier } from 'utils/instances';
 import { useFieldStyles } from 'styles/hooks';
-import useStyles from './styles';
 
 const ModifierTemplate = ({
   canBeRemoved,
@@ -35,7 +34,7 @@ const ModifierTemplate = ({
   modifier
 }) => {
   const modifierMap = useSelector(state => state.modifiers.modifierMap);
-  const styles = useStyles();
+  const fieldStyles = useFieldStyles();
 
   // Reset values on modifiers that were not previously set or saved in the database
   if (!modifier.values && modifierMap[modifier.id] && modifierMap[modifier.id].values) {
@@ -203,21 +202,21 @@ const ModifierTemplate = ({
   })();
 
   return (
-    <div className={styles.templateFieldDetails}>
-      <div className={styles.templateFieldDisplayGroup}>
+    <div className={fieldStyles.fieldDetails}>
+      <div className={fieldStyles.fieldGroup}>
         {modifierForm}
         {validationWarning && <Alert severity="warning">{validationWarning}</Alert>}
       </div>
 
       {isLastModifier && (
-        <div className={styles.templateFieldButtons}>
+        <div className={fieldStyles.fieldButtons}>
           {!canBeRemoved && (
             <Tooltip
               arrow
               title="Cannot remove expression because return type cannot change while in use"
               placement="left"
             >
-              <span className={styles.modifierButton}>
+              <span>
                 <IconButton aria-label="remove last expression" disabled color="primary">
                   <CloseIcon fontSize="small" />
                 </IconButton>
@@ -245,7 +244,6 @@ const ModifiersTemplate = ({
 }) => {
   const { modifiers, returnType } = elementInstance;
   const fieldStyles = useFieldStyles();
-  const styles = useStyles();
 
   let canBeRemoved = true;
   if (baseElementIsUsed) {
@@ -256,9 +254,9 @@ const ModifiersTemplate = ({
 
   return (
     <div className={fieldStyles.field} id="modifiers-template">
-      <div className={clsx(fieldStyles.fieldLabel, fieldStyles.fieldLabelWithInput)}>Expressions:</div>
+      <div className={clsx(fieldStyles.fieldLabel, fieldStyles.fieldLabelTall)}>Expressions:</div>
 
-      <div className={styles.templateFieldDisplayGroup}>
+      <div className={fieldStyles.fieldGroup}>
         {modifiers.map((modifier, index) => (
           <ModifierTemplate
             key={index}

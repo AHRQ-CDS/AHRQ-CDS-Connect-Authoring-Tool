@@ -1,10 +1,16 @@
 import React from 'react';
+import { createStore } from 'redux';
+import { Provider } from 'react-redux';
+import nock from 'nock';
 import _ from 'lodash';
 import { createTemplateInstance } from 'utils/test_helpers';
 import { render, userEvent, screen } from 'utils/test-utils';
 import { elementGroups, genericBaseElementUseInstance, genericBaseElementListInstance } from 'utils/test_fixtures';
 import { getFieldWithId } from 'utils/instances';
 import ListGroup from '../ListGroup';
+import mockArtifact from 'mocks/mockArtifact';
+import mockExternalCqlLibrary from 'mocks/mockExternalCQLLibrary';
+import { mockTemplates2 } from 'mocks/mockTemplates';
 
 describe('<ListGroup />', () => {
   const genericBaseElementListTemplateInstance = createTemplateInstance(genericBaseElementListInstance);
@@ -12,33 +18,46 @@ describe('<ListGroup />', () => {
 
   const renderComponent = (props = {}) =>
     render(
-      <ListGroup
-        addInstance={jest.fn()}
-        artifact={{ baseElements: [genericBaseElementListTemplateInstance] }}
-        baseElements={[]}
-        conversionFunctions={[]}
-        deleteInstance={jest.fn()}
-        editInstance={jest.fn()}
-        externalCqlList={[]}
-        getAllInstances={() => genericBaseElementListInstance.childInstances}
-        getAllInstancesInAllTrees={() => []}
-        index={0}
-        instance={genericBaseElementListTemplateInstance}
-        instanceNames={[]}
-        isLoadingModifiers={false}
-        loadExternalCqlList={jest.fn()}
-        modifierMap={{}}
-        modifiersByInputType={{}}
-        parameters={[]}
-        scrollToElement={jest.fn()}
-        templates={elementGroups}
-        treeName="baseElements"
-        updateBaseElementLists={jest.fn()}
-        updateInstanceModifiers={jest.fn()}
-        vsacApiKey="key"
-        {...props}
-      />
+      <Provider store={createStore(x => x, { artifacts: { artifact: mockArtifact } })}>
+        <ListGroup
+          addInstance={jest.fn()}
+          artifact={{ baseElements: [genericBaseElementListTemplateInstance] }}
+          baseElements={[]}
+          conversionFunctions={[]}
+          deleteInstance={jest.fn()}
+          editInstance={jest.fn()}
+          externalCqlList={[]}
+          getAllInstances={() => genericBaseElementListInstance.childInstances}
+          getAllInstancesInAllTrees={() => []}
+          index={0}
+          instance={genericBaseElementListTemplateInstance}
+          instanceNames={[]}
+          isLoadingModifiers={false}
+          loadExternalCqlList={jest.fn()}
+          modifierMap={{}}
+          modifiersByInputType={{}}
+          parameters={[]}
+          scrollToElement={jest.fn()}
+          templates={elementGroups}
+          treeName="baseElements"
+          updateBaseElementLists={jest.fn()}
+          updateInstanceModifiers={jest.fn()}
+          vsacApiKey="key"
+          {...props}
+        />
+      </Provider>
     );
+
+  beforeEach(() => {
+    nock('http://localhost')
+      .persist()
+      .get(`/authoring/api/externalCQL/${mockArtifact._id}`)
+      .reply(200, [mockExternalCqlLibrary])
+      .get('/authoring/api/config/templates')
+      .reply(200, mockTemplates2);
+  });
+
+  afterEach(() => nock.cleanAll());
 
   it('cannot be deleted when in use', () => {
     const updateBaseElementLists = jest.fn();

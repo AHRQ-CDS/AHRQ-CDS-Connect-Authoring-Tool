@@ -1,11 +1,17 @@
 .subpopulation {
   margin-bottom: 1em;
 
-  .card-element__body:last-child .card-element {
-    background-color: $body-bg;
+  .card-element__body:last-child {
+    .card-element {
+      background-color: $body-bg;
 
-    &.base-element {
-      background-color: lighten($blue-light, 35%);
+      &.base-element {
+        background-color: lighten($blue-light, 35%);
+      }
+    }
+
+    .MuiCard-root {
+      background-color: $body-bg;
     }
   }
 

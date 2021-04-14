@@ -1,4 +1,5 @@
 import Validators from './validators';
+import _ from 'lodash';
 
 export function validateModifier(modifier) {
   let validationWarning = null;
@@ -34,7 +35,7 @@ export function allModifiersValid(modifiers) {
   if (!modifiers) return true;
 
   let areAllModifiersValid = true;
-  modifiers.forEach((modifier) => {
+  modifiers.forEach(modifier => {
     if (validateModifier(modifier) !== null) areAllModifiersValid = false;
   });
   return areAllModifiersValid;
@@ -46,4 +47,24 @@ export function getFieldWithType(fields, type) {
 
 export function getFieldWithId(fields, id) {
   return fields.find(f => f.id === id);
+}
+
+export function getElementTemplate(elementTemplateGroups, templateId) {
+  let elementTemplate;
+  elementTemplateGroups.find(templateGroup => {
+    elementTemplate = templateGroup.entries.find(template => template.id === templateId);
+    return elementTemplate !== undefined;
+  });
+
+  return _.cloneDeep(elementTemplate).filter(template => !template.suppress);
+}
+
+export function getInstanceByReference(allInstances, referenceField) {
+  return allInstances.find(instance =>
+    Boolean(instance.fields.find(field => _.isEqual(field, referenceField)))
+  );
+}
+
+export function getInstanceById(allInstances, instanceId) {
+  return allInstances.find(instance => instance.uniqueId === instanceId);
 }

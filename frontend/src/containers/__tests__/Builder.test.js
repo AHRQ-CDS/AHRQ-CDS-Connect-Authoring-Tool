@@ -6,13 +6,16 @@ import nock from 'nock';
 import * as types from 'actions/types';
 import localModifiers from 'data/modifiers';
 import { render, fireEvent, userEvent, screen } from 'utils/test-utils';
-import { instanceTree, emptyInstanceTree, artifact, reduxState } from 'utils/test_fixtures';
+import { instanceTree, artifact, reduxState } from 'utils/test_fixtures';
 import { simpleObservationInstanceTree } from 'utils/test_fixtures';
 import { simpleConditionInstanceTree } from 'utils/test_fixtures';
 import { simpleProcedureInstanceTree } from 'utils/test_fixtures';
 import { simpleImmunizationInstanceTree } from 'utils/test_fixtures';
 import { getFieldWithId } from 'utils/instances';
 import Builder from '../Builder';
+import mockArtifact from 'mocks/mockArtifact';
+import mockExternalCqlLibrary from 'mocks/mockExternalCQLLibrary';
+import { mockTemplates2 } from 'mocks/mockTemplates';
 
 const modifierMap = _.keyBy(localModifiers, 'id');
 const modifiersByInputType = {};
@@ -70,6 +73,7 @@ const createMockStore = state => {
 };
 
 const expandAction = action => {
+  if (typeof action !== 'function') return action;
   let args;
   action(actionArgs => (args = actionArgs));
   return args;
@@ -85,9 +89,15 @@ describe('<Builder />', () => {
 
   beforeEach(() => {
     nock('http://localhost')
+      .persist()
       .get('/authoring/api/config/valuesets/demographics/units_of_time')
-      .reply(200, { expansion: [] });
+      .reply(200, { expansion: [] })
+      .get(`/authoring/api/externalCQL/${mockArtifact._id}`)
+      .reply(200, [mockExternalCqlLibrary])
+      .get('/authoring/api/config/templates')
+      .reply(200, mockTemplates2);
   });
+  afterEach(() => nock.cleanAll());
 
   it('shows loading screen when artifact is not loaded', () => {
     const { getByText } = renderComponent({
@@ -101,35 +111,6 @@ describe('<Builder />', () => {
     });
 
     expect(getByText('Loading...')).toBeDefined();
-  });
-
-  it('can add an Inclusion', () => {
-    const store = createMockStore({
-      ...defaultState,
-      artifacts: {
-        ...defaultState.artifacts,
-        artifact: {
-          ...artifact,
-          expTreeInclude: emptyInstanceTree
-        }
-      }
-    });
-
-    renderComponent({ store: store });
-
-    userEvent.click(screen.getByLabelText('Element type'));
-    userEvent.click(screen.getByText('Demographics'));
-
-    userEvent.click(screen.getByLabelText('Demographics element'));
-    userEvent.click(screen.getByText('Age Range'));
-
-    const actions = store.getActions().map(expandAction);
-    const updateAction = actions.find(({ type }) => type === types.UPDATE_ARTIFACT);
-
-    const [instance] = updateAction.artifact.expTreeInclude.childInstances;
-
-    expect(instance).toBeDefined();
-    expect(instance.id).toEqual('AgeRange');
   });
 
   it('can edit a template instance', () => {

@@ -1,14 +1,20 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import ElementSelect from './ElementSelect';
+
+import { ElementSelect } from './element-select';
 import TemplateInstance from './TemplateInstance';
 import ListGroup from './ListGroup';
 
-import createTemplateInstance from '../../utils/templates';
-import { getFieldWithId } from '../../utils/instances';
+import createTemplateInstance from 'utils/templates';
+import { getFieldWithId } from 'utils/instances';
 
 export default class BaseElements extends Component {
-  addChild = (template) => {
+  UNSAFE_componentWillMount() {
+    // eslint-disable-line camelcase
+    this.props.loadExternalCqlList(this.props.instance._id);
+  }
+
+  addChild = template => {
     const instance = createTemplateInstance(template);
     instance.path = '';
     if (instance.conjunction) {
@@ -16,15 +22,15 @@ export default class BaseElements extends Component {
       nameField.value = `Base Element ${this.props.instance.baseElements.length + 1}`;
     }
     this.props.addBaseElement(instance);
-  }
+  };
 
   getPath = () => 'baseElements';
 
-  getChildsPath = (id) => {
+  getChildsPath = id => {
     const artifactTree = this.props.instance;
     const childIndex = artifactTree.baseElements.findIndex(instance => instance.uniqueId === id);
     return `${childIndex}`;
-  }
+  };
 
   renderListOperationConjunction = (s, i) => (
     <div>
@@ -58,64 +64,50 @@ export default class BaseElements extends Component {
 
   render() {
     const allInstancesInAllTrees = this.props.getAllInstancesInAllTrees();
-    return <div>
-      {this.props.instance.baseElements.map((s, i) => {
-        if (s.conjunction) {
+
+    return (
+      <div>
+        {this.props.instance.baseElements.map((s, i) => {
+          if (s.conjunction) {
+            return (
+              <div className="subpopulations" key={i} id={s.uniqueId}>
+                {this.renderListOperationConjunction(s, i)}
+              </div>
+            );
+          }
+
           return (
-            <div className="subpopulations"
-              key={i}
-              id={s.uniqueId}>
-              {this.renderListOperationConjunction(s, i)}
+            <div className="card-group card-group__top" key={i} id={s.uniqueId}>
+              <div className="card-group-section subpopulation base-element">
+                <TemplateInstance
+                  allInstancesInAllTrees={allInstancesInAllTrees}
+                  baseElements={this.props.baseElements}
+                  conversionFunctions={this.props.conversionFunctions}
+                  deleteInstance={this.props.deleteInstance}
+                  editInstance={this.props.editInstance}
+                  getPath={this.getChildsPath}
+                  instanceNames={this.props.instanceNames}
+                  isLoadingModifiers={this.props.isLoadingModifiers}
+                  modifierMap={this.props.modifierMap}
+                  modifiersByInputType={this.props.modifiersByInputType}
+                  otherInstances={[]}
+                  parameters={this.props.parameters}
+                  renderIndentButtons={() => {}}
+                  scrollToElement={this.props.scrollToElement}
+                  templateInstance={s}
+                  treeName={this.props.treeName}
+                  updateInstanceModifiers={this.props.updateInstanceModifiers}
+                  validateReturnType={this.props.validateReturnType}
+                  vsacApiKey={this.props.vsacApiKey}
+                />
+              </div>
             </div>
           );
-        }
+        })}
 
-        return (
-          <div className="card-group card-group__top" key={i} id={s.uniqueId}>
-            <div className="card-group-section subpopulation base-element">
-              <TemplateInstance
-                allInstancesInAllTrees={allInstancesInAllTrees}
-                baseElements={this.props.baseElements}
-                conversionFunctions={this.props.conversionFunctions}
-                deleteInstance={this.props.deleteInstance}
-                editInstance={this.props.editInstance}
-                getPath={this.getChildsPath}
-                instanceNames={this.props.instanceNames}
-                isLoadingModifiers={this.props.isLoadingModifiers}
-                modifierMap={this.props.modifierMap}
-                modifiersByInputType={this.props.modifiersByInputType}
-                otherInstances={[]}
-                parameters={this.props.parameters}
-                renderIndentButtons={() => {}}
-                scrollToElement={this.props.scrollToElement}
-                templateInstance={s}
-                treeName={this.props.treeName}
-                updateInstanceModifiers={this.props.updateInstanceModifiers}
-                validateReturnType={this.props.validateReturnType}
-                vsacApiKey={this.props.vsacApiKey}
-              />
-            </div>
-          </div>
-        );
-      })}
-
-      <div className="card-group card-group__top">
-        <div className="card-element">
-          <ElementSelect
-            artifactId={this.props.instance._id}
-            baseElements={this.props.baseElements}
-            categories={this.props.templates}
-            externalCqlList={this.props.externalCqlList}
-            fhirVersion={this.props.fhirVersion}
-            inBaseElements={true}
-            loadExternalCqlList={this.props.loadExternalCqlList}
-            onSuggestionSelected={this.addChild}
-            parameters={this.props.parameters}
-            vsacApiKey={this.props.vsacApiKey}
-          />
-        </div>
+        <ElementSelect handleAddElement={this.addChild} />
       </div>
-    </div>;
+    );
   }
 }
 

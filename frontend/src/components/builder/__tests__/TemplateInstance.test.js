@@ -1,4 +1,7 @@
 import React from 'react';
+import { createStore } from 'redux';
+import { Provider } from 'react-redux';
+import nock from 'nock';
 import { render, fireEvent, userEvent, screen } from 'utils/test-utils';
 import { createTemplateInstance } from 'utils/test_helpers';
 import {
@@ -10,18 +13,31 @@ import {
 import { getFieldWithType } from 'utils/instances';
 import localModifiers from 'data/modifiers';
 import TemplateInstance from '../TemplateInstance';
+import mockArtifact from 'mocks/mockArtifact';
+import mockExternalCqlLibrary from 'mocks/mockExternalCQLLibrary';
+import { mockTemplates2 } from 'mocks/mockTemplates';
+import _ from 'lodash';
 
 const templateInstance = createTemplateInstance(genericInstance);
-const baseElementTemplateInstance = {
+
+const baseElementBeingUsed = {
   ...createTemplateInstance(genericBaseElementInstance),
-  uniqueId: 'originalBaseElementId',
-  usedBy: ['baseElementUseId']
+  uniqueId: 'element-1',
+  usedBy: ['element-2']
 };
-const baseElementUseTemplateInstance = {
+
+const useOfBaseElementInInclusions = {
   ...createTemplateInstance(genericBaseElementUseInstance),
-  uniqueId: 'baseElementUseId',
-  tab: 'expTreeInclude'
+  tab: 'expTreeInclude',
+  uniqueId: 'element-2'
 };
+
+const baseElementNotBeingUsed = {
+  ...createTemplateInstance(genericBaseElementInstance),
+  uniqueId: 'element-3',
+  usedBy: []
+};
+
 const modifiersByInputType = {};
 
 localModifiers.forEach(modifier => {
@@ -33,31 +49,59 @@ localModifiers.forEach(modifier => {
 describe('<TemplateInstance />', () => {
   const renderComponent = (props = {}) =>
     render(
-      <TemplateInstance
-        allInstancesInAllTrees={[]}
-        baseElements={[]}
-        deleteInstance={jest.fn()}
-        disableAddElement={false}
-        disableIndent={false}
-        editInstance={jest.fn()}
-        getPath={path => path}
-        instanceNames={[]}
-        isLoadingModifiers={false}
-        modifierMap={{}}
-        modifiersByInputType={modifiersByInputType}
-        otherInstances={[]}
-        parameters={[]}
-        renderIndentButtons={jest.fn()}
-        scrollToElement={jest.fn()}
-        subpopulationIndex={0}
-        templateInstance={templateInstance}
-        treeName="MeetsInclusionCriteria"
-        updateInstanceModifiers={jest.fn()}
-        validateReturnType={false}
-        vsacApiKey="key"
-        {...props}
-      />
+      <Provider
+        store={createStore(x => x, {
+          artifacts: {
+            artifact: mockArtifact,
+            names: [
+              { id: 'element-1', name: 'Base Element Being Used' },
+              { id: 'element-2', name: 'Use of Base Element in Inclusions' },
+              { id: 'element-3', name: 'Base Element Not Being Used' },
+              { id: 'element-4', name: 'B' },
+              { id: 'element-5', name: 'C' }
+            ]
+          },
+          modifiers: { modifierMap: {} },
+          vsac: { apiKey: 'key' }
+        })}
+      >
+        <TemplateInstance
+          allInstancesInAllTrees={[]}
+          baseElements={[]}
+          deleteInstance={jest.fn()}
+          disableAddElement={false}
+          disableIndent={false}
+          editInstance={jest.fn()}
+          getPath={path => path}
+          instanceNames={[]}
+          isLoadingModifiers={false}
+          modifierMap={{}}
+          modifiersByInputType={modifiersByInputType}
+          otherInstances={[]}
+          parameters={[]}
+          renderIndentButtons={jest.fn()}
+          scrollToElement={jest.fn()}
+          subpopulationIndex={0}
+          templateInstance={templateInstance}
+          treeName="MeetsInclusionCriteria"
+          updateInstanceModifiers={jest.fn()}
+          validateReturnType={false}
+          vsacApiKey="key"
+          {...props}
+        />
+      </Provider>
     );
+
+  beforeEach(() => {
+    nock('http://localhost')
+      .persist()
+      .get(`/authoring/api/externalCQL/${mockArtifact._id}`)
+      .reply(200, [mockExternalCqlLibrary])
+      .get('/authoring/api/config/templates')
+      .reply(200, mockTemplates2);
+  });
+
+  afterEach(() => nock.cleanAll());
 
   let origCreateRange;
 
@@ -145,28 +189,25 @@ describe('<TemplateInstance />', () => {
   describe('Base Element instances', () => {
     const renderBaseElementComponent = (props = {}) =>
       renderComponent({
-        allInstancesInAllTrees: [baseElementTemplateInstance, baseElementUseTemplateInstance],
-        baseElements: [baseElementTemplateInstance],
-        templateInstance: baseElementTemplateInstance,
+        allInstancesInAllTrees: [baseElementBeingUsed, baseElementNotBeingUsed, useOfBaseElementInInclusions],
+        baseElements: [baseElementBeingUsed, baseElementNotBeingUsed],
+        templateInstance: baseElementBeingUsed,
         ...props
       });
 
     it('can navigate to its uses', () => {
       const scrollToElement = jest.fn();
-      const { getByLabelText } = renderBaseElementComponent({
-        scrollToElement
-      });
+      const { getByLabelText } = renderBaseElementComponent({ scrollToElement });
 
       fireEvent.click(getByLabelText('see element definition'));
-
-      expect(scrollToElement).toHaveBeenCalledWith('baseElementUseId', 'baseElementUse', 0);
+      expect(scrollToElement).toHaveBeenCalledWith('element-2', 'baseElementUse', 0);
     });
 
     it('cannot be deleted if in use in the artifact', () => {
       const deleteInstance = jest.fn();
       const { getByLabelText, queryByText } = renderBaseElementComponent({ deleteInstance });
 
-      fireEvent.click(getByLabelText(`remove ${baseElementTemplateInstance.name}`));
+      fireEvent.click(getByLabelText(`remove ${baseElementBeingUsed.name}`));
       expect(queryByText('Delete')).toBeNull();
       expect(deleteInstance).not.toBeCalled();
     });
@@ -175,15 +216,12 @@ describe('<TemplateInstance />', () => {
       const deleteInstance = jest.fn();
       const { getByLabelText, getByText } = renderBaseElementComponent({
         deleteInstance,
-        templateInstance: {
-          ...baseElementTemplateInstance,
-          usedBy: []
-        }
+        templateInstance: baseElementNotBeingUsed
       });
 
-      fireEvent.click(getByLabelText(`remove ${baseElementTemplateInstance.name}`));
+      fireEvent.click(getByLabelText(`remove ${baseElementBeingUsed.name}`));
       fireEvent.click(getByText('Delete'));
-      expect(deleteInstance).toHaveBeenCalledWith('MeetsInclusionCriteria', 'originalBaseElementId');
+      expect(deleteInstance).toHaveBeenCalledWith('MeetsInclusionCriteria', 'element-3');
     });
 
     it('cannot add modifiers that change the return type if in use in the artifact', () => {
@@ -204,7 +242,7 @@ describe('<TemplateInstance />', () => {
     it('displays all modifiers when not in use', () => {
       renderBaseElementComponent({
         templateInstance: {
-          ...baseElementTemplateInstance,
+          ...baseElementBeingUsed,
           usedBy: []
         }
       });
@@ -233,7 +271,8 @@ describe('<TemplateInstance />', () => {
       const updateInstanceModifiers = jest.fn();
       const { getByLabelText } = renderBaseElementComponent({
         templateInstance: {
-          ...baseElementTemplateInstance,
+          ...baseElementBeingUsed,
+          getAllInstancesInAllTrees: () => baseElementBeingUsed.childInstances,
           modifiers
         },
         updateInstanceModifiers
@@ -249,7 +288,7 @@ describe('<TemplateInstance />', () => {
       const updateInstanceModifiers = jest.fn();
       const { getByLabelText } = renderBaseElementComponent({
         templateInstance: {
-          ...baseElementTemplateInstance,
+          ...baseElementNotBeingUsed,
           modifiers: genericInstanceWithModifiers.modifiers
         },
         updateInstanceModifiers
@@ -261,7 +300,7 @@ describe('<TemplateInstance />', () => {
       expect(updateInstanceModifiers).toHaveBeenCalledWith(
         'MeetsInclusionCriteria',
         genericInstanceWithModifiers.modifiers.slice(0, -1),
-        'originalBaseElementId',
+        'element-3',
         0
       );
     });
@@ -270,124 +309,93 @@ describe('<TemplateInstance />', () => {
   describe('Base Element uses', () => {
     const renderBaseElementUseComponent = (props = {}) =>
       renderComponent({
-        baseElements: [baseElementTemplateInstance],
+        allInstancesInAllTrees: [baseElementBeingUsed, useOfBaseElementInInclusions],
+        baseElements: [baseElementBeingUsed],
         instanceNames: [
-          { id: 'originalBaseElementId', name: 'My Base Element' },
-          {
-            id: baseElementUseTemplateInstance.uniqueId,
-            name: 'Base Element Observation'
-          }
+          { id: 'element-1', name: 'Base Element Being Used' },
+          { id: 'element-2', name: 'Use of Base Element in Inclusions' }
         ],
-        templateInstance: baseElementUseTemplateInstance,
+        templateInstance: useOfBaseElementInInclusions,
         ...props
       });
 
     it('visualizes original base element information', () => {
-      const { container } = renderBaseElementUseComponent();
+      renderBaseElementUseComponent();
 
-      expect(container.querySelector('#base-element-list')).toHaveTextContent('Base Element:My Base Element');
+      expect(screen.getByText(/base element being used/i)).toBeInTheDocument();
     });
 
     it('can navigate to original definition', () => {
       const scrollToElement = jest.fn();
-      const { getByLabelText } = renderBaseElementUseComponent({
-        scrollToElement
-      });
+      renderBaseElementUseComponent({ scrollToElement });
 
-      fireEvent.click(getByLabelText('see element definition'));
-
-      expect(scrollToElement).toHaveBeenCalledWith('originalBaseElementId', 'baseElementReference', undefined);
+      fireEvent.click(screen.getByRole('button', { name: /see element definition/i }));
+      expect(scrollToElement).toHaveBeenCalledWith('element-1', 'baseElementReference', 0);
     });
   });
 
   describe('Base Element Uses of Use', () => {
     it('uses root base element for type and phrase', () => {
-      const { fields: useFields } = baseElementUseTemplateInstance;
-      const { fields: baseFields } = baseElementTemplateInstance;
-      const useNameFieldIndex = useFields.findIndex(({ id }) => id === 'element_name');
-      const useReferenceFieldIndex = useFields.findIndex(({ id }) => id === 'baseElementReference');
-      const baseNameFieldIndex = baseFields.findIndex(({ id }) => id === 'element_name');
+      const useNameFieldIndex = useOfBaseElementInInclusions.fields.findIndex(({ id }) => id === 'element_name');
 
-      const useElement = {
-        ...baseElementUseTemplateInstance,
-        fields: [...useFields],
-        modifiers: [
-          {
-            id: 'VerifiedObservation',
-            name: 'Verified',
-            inputTypes: ['list_of_observations'],
-            returnType: 'list_of_observations',
-            cqlTemplate: 'BaseModifier',
-            cqlLibraryFunction: 'C3F.Verified'
-          }
-        ]
-      };
-      useElement.fields.splice(useNameFieldIndex, 1, {
-        ...useFields[useNameFieldIndex],
-        value: 'B'
-      });
-
-      const originalBaseElement = {
-        ...baseElementTemplateInstance,
-        fields: [...baseFields],
-        usedBy: [useElement.uniqueId],
-        uniqueId: 'originalBaseElementId'
-      };
-      originalBaseElement.fields.splice(baseNameFieldIndex, 1, {
-        ...baseFields[baseNameFieldIndex],
-        value: 'A'
-      });
-
-      const useOfUseElement = {
-        ...baseElementUseTemplateInstance,
-        fields: [...useFields],
-        modifiers: [
-          {
-            id: 'BooleanExists',
-            name: 'Exists',
-            inputTypes: ['list_of_observations'],
-            returnType: 'boolean',
-            cqlTemplate: 'BaseModifier',
-            cqlLibraryFunction: 'exists'
-          }
-        ],
-        uniqueId: 'useOfUseId'
-      };
-      useOfUseElement.fields.splice(useNameFieldIndex, 1, {
-        ...useFields[useNameFieldIndex],
-        value: 'C'
-      });
-      useOfUseElement.fields.splice(useReferenceFieldIndex, 1, {
-        ...useFields[useReferenceFieldIndex],
-        value: {
-          id: useElement.uniqueId,
-          type: 'Base Element'
+      // create new use of base element, add verified modifier, and change name
+      let verifiedUseOfBaseElementInInclusions = _.cloneDeep(useOfBaseElementInInclusions);
+      verifiedUseOfBaseElementInInclusions.modifiers = [
+        {
+          id: 'VerifiedObservation',
+          name: 'Verified',
+          inputTypes: ['list_of_observations'],
+          returnType: 'list_of_observations',
+          cqlTemplate: 'BaseModifier',
+          cqlLibraryFunction: 'C3F.Verified'
         }
-      });
-      useElement.usedBy = [useOfUseElement.uniqueId];
+      ];
+      verifiedUseOfBaseElementInInclusions.uniqueId = 'element-4';
+      verifiedUseOfBaseElementInInclusions.fields[useNameFieldIndex].value =
+        'Verified use of Base Element in Inclusions';
+
+      // create new use of base element in base elements, add exists modifier, and change name
+      let existsUseOfBaseElementInInclusions = _.cloneDeep(useOfBaseElementInInclusions);
+      existsUseOfBaseElementInInclusions.modifiers = [
+        {
+          id: 'BooleanExists',
+          name: 'Exists',
+          inputTypes: ['list_of_observations'],
+          returnType: 'boolean',
+          cqlTemplate: 'BaseModifier',
+          cqlLibraryFunction: 'exists'
+        }
+      ];
+      existsUseOfBaseElementInInclusions.uniqueId = 'element-5';
+      existsUseOfBaseElementInInclusions.fields[useNameFieldIndex].value = 'Exists use of Base Element in Inclusions';
 
       const { container } = renderComponent({
-        baseElements: [originalBaseElement, useElement, useOfUseElement],
-        instanceNames: [
-          { id: 'originalBaseElementId', name: 'A' },
-          { id: 'useOfUseId', name: 'C' },
-          { id: useElement.uniqueId, name: 'B' }
+        allInstancesInAllTrees: [
+          baseElementBeingUsed,
+          verifiedUseOfBaseElementInInclusions,
+          existsUseOfBaseElementInInclusions
         ],
-        templateInstance: useOfUseElement
+        baseElements: [baseElementBeingUsed],
+        instanceNames: [
+          { id: 'element-1', name: 'Base Element Being Used' },
+          { id: 'element-4', name: 'Verified use of Base Element in Inclusions' },
+          { id: 'element-5', name: 'Exists use of Base Element in Inclusions' }
+        ],
+        templateInstance: existsUseOfBaseElementInInclusions
       });
 
       // The base element the use came directly from
-      expect(container.querySelector('#base-element-list')).toHaveTextContent('Base Element:B');
+      expect(screen.getByDisplayValue(/exists use of base element in inclusions/i)).toBeInTheDocument();
 
-      // The topmost base element's type
-      expect(container.querySelector('.card-element__heading')).toHaveTextContent('Observation');
+      // The top most base element's type
+      expect(screen.getByText(/observation:/i)).toBeInTheDocument();
 
       // Only the current elements expressions are listed
       expect(document.getElementById('modifiers-template')).toHaveTextContent('Expressions:Exists');
 
       // All expressions and VS included in the phrase
       expect(container.querySelector('.expression-logic')).toHaveTextContent(
-        'Thereexistsaverifiedobservationwith a code fromVS,VS2,123-4 (TestName),or...'
+        'Thereexistsanobservationwith a code fromVS,VS2,123-4 (TestName),or...'
       );
     });
   });
@@ -473,229 +481,109 @@ describe('<TemplateInstance />', () => {
   });
 
   describe('Base Element warnings', () => {
-    const nameFieldIndex = baseElementTemplateInstance.fields.findIndex(({ id }) => id === 'element_name');
-    const originalBaseElement = {
-      ...baseElementTemplateInstance,
-      fields: [...baseElementTemplateInstance.fields],
-      uniqueId: 'originalBaseElementId'
-    };
-    originalBaseElement.fields.splice(nameFieldIndex, 1, {
-      ...originalBaseElement.fields[nameFieldIndex],
-      value: 'Base Element Observation'
-    });
+    const newBaseElementBeingUsed = _.cloneDeep(baseElementBeingUsed);
+    newBaseElementBeingUsed.fields[0].value = 'Base Element Being Used';
+
+    const newUseOfBaseElementInInclusions = _.cloneDeep(useOfBaseElementInInclusions);
+    newUseOfBaseElementInInclusions.fields[0].value = 'Base Element Being Used';
+
+    const renderBaseElementComponent = instanceToTest =>
+      renderComponent({
+        allInstancesInAllTrees: [newBaseElementBeingUsed, instanceToTest],
+        baseElements: [newBaseElementBeingUsed],
+        templateInstance: instanceToTest
+      });
 
     it('unmodified uses have no warnings', () => {
-      const { container } = renderComponent({
-        baseElements: [originalBaseElement],
-        templateInstance: {
-          ...baseElementUseTemplateInstance,
-          instanceNames: [
-            { id: 'originalBaseElementId', name: 'Base Element Observation' },
-            {
-              id: baseElementUseTemplateInstance.uniqueId,
-              name: 'Base Element Observation'
-            }
-          ]
-        }
-      });
+      const { container } = renderBaseElementComponent(newUseOfBaseElementInInclusions);
 
       // No warnings on unmodified use
       expect(container.querySelectorAll('.warning')).toHaveLength(0);
     });
 
     it('modified uses to have a warning', () => {
-      const { container, getByText } = renderComponent({
-        baseElements: [originalBaseElement],
-        instanceNames: [
-          { id: 'originalBaseElementId', name: 'Base Element Observation' },
-          {
-            id: baseElementUseTemplateInstance.uniqueId,
-            name: 'Base Element Observation'
-          }
-        ],
-        templateInstance: {
-          ...baseElementUseTemplateInstance,
-          modifiers: [
-            {
-              id: 'BooleanExists',
-              name: 'Exists',
-              inputTypes: ['list_of_observations'],
-              returnType: 'boolean',
-              cqlTemplate: 'BaseModifier',
-              cqlLibraryFunction: 'exists'
-            }
-          ]
+      let verifiedUseOfBaseElementInInclusions = _.cloneDeep(newUseOfBaseElementInInclusions);
+      verifiedUseOfBaseElementInInclusions.modifiers = [
+        {
+          id: 'VerifiedObservation',
+          name: 'Verified',
+          inputTypes: ['list_of_observations'],
+          returnType: 'list_of_observations',
+          cqlTemplate: 'BaseModifier',
+          cqlLibraryFunction: 'C3F.Verified'
         }
-      });
+      ];
 
-      expect(container.querySelectorAll('.warning')).toHaveLength(1);
-      expect(getByText('Warning: This use of the Base Element has changed. Choose another name.')).toBeDefined();
+      renderBaseElementComponent(verifiedUseOfBaseElementInInclusions);
+
+      expect(screen.getByText('Warning: This use of the Base Element has changed. Choose another name.')).toBeDefined();
     });
 
     it('unmodified uses of uses have no warnings', () => {
-      const useNameFieldIndex = baseElementUseTemplateInstance.fields.findIndex(({ id }) => id === 'element_name');
-      const useOfUseElement = {
-        ...baseElementUseTemplateInstance,
-        uniqueId: 'useOfUseId'
-      };
-      useOfUseElement.fields.splice(useNameFieldIndex, 1, {
-        ...useOfUseElement.fields[useNameFieldIndex],
-        value: 'Base Element Observation'
-      });
+      let useOfBaseElementInBaseElements = _.cloneDeep(useOfBaseElementInInclusions);
+      useOfBaseElementInBaseElements.tab = 'baseElements';
 
-      const { container } = renderComponent({
-        allInstancesInAllTrees: [originalBaseElement, templateInstance, useOfUseElement],
-        baseElements: [originalBaseElement, templateInstance, useOfUseElement],
-        instanceNames: [
-          { id: 'originalBaseElementId', name: 'Base Element Observation' },
-          { id: 'useOfUseId', name: 'Base Element Observation' },
-          {
-            id: baseElementUseTemplateInstance.uniqueId,
-            name: 'Base Element Observation'
-          }
-        ],
-        templateInstance: {
-          ...baseElementUseTemplateInstance,
-          usedBy: ['useOfUseId']
-        }
-      });
+      const { container } = renderBaseElementComponent(useOfBaseElementInBaseElements);
 
       // No warnings on unmodified use
       expect(container.querySelectorAll('.warning')).toHaveLength(0);
     });
 
     it('instance with no modified uses to have no warning', () => {
-      const { container } = renderComponent({
-        instanceNames: [
-          { id: 'originalBaseElementId', name: 'Base Element Observation' },
-          {
-            id: baseElementUseTemplateInstance.uniqueId,
-            name: 'Base Element Observation'
-          }
-        ],
-        templateInstance: {
-          ...baseElementTemplateInstance,
-          allInstancesInAllTrees: [baseElementTemplateInstance, baseElementUseTemplateInstance],
-          modifiers: [
-            {
-              id: 'BooleanExists',
-              name: 'Exists',
-              inputTypes: ['list_of_observations'],
-              returnType: 'boolean',
-              cqlTemplate: 'BaseModifier',
-              cqlLibraryFunction: 'exists'
-            }
-          ],
-          usedBy: [baseElementUseTemplateInstance.uniqueId]
-        }
-      });
+      const copyOfBaseElementBeingUsed = _.cloneDeep(newBaseElementBeingUsed);
+      copyOfBaseElementBeingUsed.uniqueId = 'element-6';
+
+      const { container } = renderBaseElementComponent(copyOfBaseElementBeingUsed);
 
       expect(container.querySelectorAll('.warning')).toHaveLength(0);
     });
 
-    it.skip('instances with modified use have a warning', () => {
-      const modifiedUse = {
-        ...baseElementUseTemplateInstance,
-        modifiers: [
-          {
-            id: 'BooleanNot',
-            name: 'Not',
-            inputTypes: ['boolean'],
-            returnType: 'boolean',
-            cqlTemplate: 'BaseModifier',
-            cqlLibraryFunction: 'not'
-          }
-        ]
-      };
+    it('unmodified use with a different element with duplicate name (not a use) has duplicate name warning', () => {
+      const copyOfBaseElementBeingUsed = _.cloneDeep(newBaseElementBeingUsed);
+      copyOfBaseElementBeingUsed.uniqueId = 'element-6';
+      copyOfBaseElementBeingUsed.usedBy = ['element-7'];
+
+      const useOfCopyOfBaseElementInInclusions = _.cloneDeep(newUseOfBaseElementInInclusions);
+      useOfCopyOfBaseElementInInclusions.uniqueId = 'element-7';
 
       const { container, getByText } = renderComponent({
-        allInstancesInAllTrees: [baseElementTemplateInstance, modifiedUse],
-        instanceNames: [
-          { id: 'originalBaseElementId', name: 'Base Element Observation' },
-          { id: modifiedUse.uniqueId, name: 'Base Element Observation' }
+        allInstancesInAllTrees: [
+          newBaseElementBeingUsed,
+          newUseOfBaseElementInInclusions,
+          copyOfBaseElementBeingUsed,
+          useOfCopyOfBaseElementInInclusions
         ],
-        templateInstance: {
-          ...baseElementTemplateInstance,
-          modifiers: [
-            {
-              id: 'BooleanExists',
-              name: 'Exists',
-              inputTypes: ['list_of_observations'],
-              returnType: 'boolean',
-              cqlTemplate: 'BaseModifier',
-              cqlLibraryFunction: 'exists'
-            }
-          ],
-          usedBy: [modifiedUse.uniqueId]
-        }
+        instanceNames: [
+          { id: 'element-1', name: 'Base Element Being Used' },
+          { id: 'element-2', name: 'Base Element Being Used' },
+          { id: 'element-6', name: 'Base Element Being Used' },
+          { id: 'element-7', name: 'Base Element Being Used' }
+        ],
+        baseElements: [newBaseElementBeingUsed, copyOfBaseElementBeingUsed],
+        templateInstance: useOfCopyOfBaseElementInInclusions
       });
 
       expect(container.querySelectorAll('.warning')).toHaveLength(1);
-      expect(
-        getByText('Warning: One or more uses of this Base Element have changed. Choose another name.')
-      ).toBeDefined();
-    });
-
-    // eslint-disable-next-line max-len
-    it.skip('unmodified use with a different element with duplicate name (not a use) has duplicate name warning', () => {
-      const useNameFieldIndex = baseElementUseTemplateInstance.fields.findIndex(({ id }) => id === 'element_name');
-      const unmodifiedUse = {
-        ...baseElementUseTemplateInstance
-      };
-
-      const tempInstanceWithSameName = {
-        ...templateInstance,
-        fields: [...templateInstance.fields]
-      };
-
-      const { container, getByText } = renderComponent({
-        allInstancesInAllTrees: [originalBaseElement, unmodifiedUse, tempInstanceWithSameName],
-        baseElements: [originalBaseElement],
-        instanceNames: [
-          { id: 'originalBaseElementId', name: 'Base Element Observation' },
-          {
-            id: unmodifiedUse.uniqueId,
-            name: unmodifiedUse.fields[useNameFieldIndex].value
-          },
-          {
-            id: tempInstanceWithSameName.uniqueId,
-            name: templateInstance.fields.find(({ id }) => id === 'element_name').value
-          }
-        ],
-        templateInstance: unmodifiedUse
-      });
-
-      expect(container.querySelectorAll('.warning')).toHaveLength(1);
-      expect(
-        getByText('Warning: One or more uses of this Base Element have changed. Choose another name.')
-      ).toBeDefined();
+      expect(getByText('Warning: Name already in use. Choose another name.')).toBeDefined();
     });
 
     it('unmodified use with another use with same name gives no duplicate name warning', () => {
-      const unmodifiedUse = { ...baseElementUseTemplateInstance };
-      const secondUse = { ...baseElementUseTemplateInstance };
-      const usedOriginalBaseElement = {
-        ...originalBaseElement,
-        usedBy: [unmodifiedUse.uniqueId, secondUse.uniqueId]
-      };
-
-      const getElementNameField = ({ id }) => id === 'element_name';
+      const copyOfNewUseOfBaseElementInInclusion = _.cloneDeep(newUseOfBaseElementInInclusions);
+      copyOfNewUseOfBaseElementInInclusion.uniqueId = 'element-7';
 
       const { container } = renderComponent({
-        allInstancesInAllTrees: [originalBaseElement, unmodifiedUse, secondUse],
-        baseElements: [usedOriginalBaseElement],
-        instanceNames: [
-          { id: 'originalBaseElementId', name: 'Base Element Observation' },
-          {
-            id: unmodifiedUse.uniqueId,
-            name: getElementNameField(unmodifiedUse.fields).value
-          },
-          {
-            id: secondUse.uniqueId,
-            name: getElementNameField(secondUse.fields).value
-          }
+        allInstancesInAllTrees: [
+          newBaseElementBeingUsed,
+          newUseOfBaseElementInInclusions,
+          copyOfNewUseOfBaseElementInInclusion
         ],
-        templateInstance: unmodifiedUse
+        instanceNames: [
+          { id: 'element-1', name: 'Base Element Being Used' },
+          { id: 'element-2', name: 'Base Element Being Used' },
+          { id: 'element-7', name: 'Base Element Being Used' }
+        ],
+        baseElements: [newBaseElementBeingUsed],
+        templateInstance: copyOfNewUseOfBaseElementInInclusion
       });
 
       expect(container.querySelectorAll('.warning')).toHaveLength(0);

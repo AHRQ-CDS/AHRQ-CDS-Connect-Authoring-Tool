@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import clsx from 'clsx';
 
 import { NumberField, StaticField, StringField, TextAreaField, ValueSetField } from 'components/builder/fields';
 import { useFieldStyles } from 'styles/hooks';
@@ -26,7 +27,7 @@ const FieldTemplate = ({ field, handleUpdateField }) => {
 
   return (
     <div className={fieldStyles.field} id="field-template">
-      <div className={fieldStyles.fieldLabel}>{field.name}:</div>
+      <div className={clsx(fieldStyles.fieldLabel, fieldStyles.fieldLabelTall)}>{field.name}:</div>
       <div className={fieldStyles.fieldInputGroup}>{fieldComponent}</div>
     </div>
   );

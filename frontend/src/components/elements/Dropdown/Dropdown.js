@@ -44,7 +44,7 @@ const Dropdown = ({
 Dropdown.propTypes = {
   Footer: PropTypes.element,
   labelKey: PropTypes.string,
-  message: PropTypes.element,
+  message: PropTypes.oneOfType([PropTypes.element, PropTypes.bool]),
   options: PropTypes.array.isRequired,
   renderItem: PropTypes.func,
   value: PropTypes.string,
