@@ -104,5 +104,5 @@ export default makeStyles(
       textAlign: 'left'
     }
   }),
-  { name: 'Fields' }
+  { name: 'Fields', index: 1 }
 );
