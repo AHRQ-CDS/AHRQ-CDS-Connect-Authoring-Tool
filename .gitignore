@@ -3,3 +3,6 @@
 # misc
 .DS_Store
 .vscode
+
+# IDE files and directories
+.idea/
