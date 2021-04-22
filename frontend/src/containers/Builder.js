@@ -104,8 +104,7 @@ export class Builder extends Component {
     let activeTabIndex = 0;
     if (referenceType === 'baseElementReference') activeTabIndex = baseElementTabIndex;
     if (referenceType === 'parameterReference') activeTabIndex = parameterTabIndex;
-    if (referenceType === 'baseElementUse') activeTabIndex = tabIndex;
-
+    if (['baseElementUse', 'parameterUse'].includes(referenceType)) activeTabIndex = tabIndex;
     if (activeTabIndex == null) return;
 
     this.setState({ activeTabIndex }, () => {
@@ -700,6 +699,7 @@ export class Builder extends Component {
                     getAllInstancesInAllTrees={this.getAllInstancesInAllTrees}
                     instanceNames={names}
                     parameters={artifact.parameters}
+                    scrollToElement={this.scrollToElement}
                     updateParameters={this.updateParameters}
                     vsacApiKey={vsacApiKey}
                   />

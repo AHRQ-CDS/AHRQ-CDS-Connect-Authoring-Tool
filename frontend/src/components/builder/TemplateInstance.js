@@ -473,7 +473,7 @@ export default class TemplateInstance extends Component {
             <CodeListTemplate handleDeleteCode={this.handleDeleteCode} codes={vsacField?.codes || []} />
           </>
         )}
-
+        
         {referenceField && (
           <ReferenceTemplate
             referenceInstanceTab={getInstanceByReference(allInstancesInAllTrees, referenceField).tab}

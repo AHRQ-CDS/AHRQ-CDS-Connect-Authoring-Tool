@@ -3,17 +3,18 @@ import { render, fireEvent, userEvent, screen } from 'utils/test-utils';
 import Parameter from '../Parameter';
 
 describe('<Parameter />', () => {
-  const renderComponent = (props = {}) =>
+  const renderComponent = (props = {}, instances = []) =>
     render(
       <Parameter
         comment=""
         deleteParameter={jest.fn()}
-        getAllInstancesInAllTrees={jest.fn()}
+        getAllInstancesInAllTrees={jest.fn(() => instances)}
         id="test-id"
         index={0}
         instanceNames={[]}
         name=""
         type=""
+        scrollToElement={jest.fn()}
         updateInstanceOfParameter={jest.fn()}
         usedBy={[]}
         value={null}

@@ -26,12 +26,15 @@ const ReferenceTemplate = ({ referenceField, referenceInstanceTab, scrollToEleme
   const referenceLabelMap = {
     baseElementReference: 'Base Element',
     parameterReference: 'Parameter',
+    parameterUse: 'Parameter Use',
     externalCqlReference: 'External CQL Element',
     baseElementUse: 'Element Use'
   };
 
   const scrollToTabIndex = Object.keys(tabLabelMap).indexOf(referenceInstanceTab);
-  const referenceLabel = referenceField.id === 'baseElementUse' ? <>&#8594; {tabLabelMap[referenceInstanceTab]}</> : '';
+  const referenceLabel =
+    referenceField.id === 'baseElementUse' || referenceField.id === 'parameterUse' ? (
+      <>&#8594; {tabLabelMap[referenceInstanceTab]}</>) : ('');
 
   return (
     <div className={fieldStyles.field} id="reference-template">

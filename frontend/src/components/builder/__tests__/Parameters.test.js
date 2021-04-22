@@ -3,26 +3,29 @@ import { render, userEvent, screen } from 'utils/test-utils';
 import Parameters from '../Parameters';
 
 describe('<Parameters />', () => {
-  const renderComponent = (props = {}) =>
-    render(
+  const renderComponent = (props = {}) => {
+    const parameters = [
+      {
+        name: 'Parameter 007',
+        uniqueId: 'parameter-007',
+        type: 'string',
+        value: '',
+        usedBy: [],
+        comment: ''
+      }
+    ];
+    return render(
       <Parameters
-        getAllInstancesInAllTrees={jest.fn()}
+        getAllInstancesInAllTrees={jest.fn(() => parameters)}
         instanceNames={[]}
-        parameters={[
-          {
-            name: 'Parameter 007',
-            uniqueId: 'parameter-007',
-            type: 'string',
-            value: '',
-            usedBy: [],
-            comment: ''
-          }
-        ]}
+        parameters={parameters}
+        scrollToElement={jest.fn()}
         updateParameters={jest.fn()}
         vsacApiKey="key"
         {...props}
       />
-    );
+      );
+    };
 
   it('renders a list of parameters', () => {
     const { container } = renderComponent();

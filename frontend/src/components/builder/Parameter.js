@@ -20,6 +20,7 @@ import { EditorsTemplate } from 'components/builder/templates';
 import { Dropdown } from 'components/elements';
 import { DeleteConfirmationModal } from 'components/modals';
 import { doesParameterNeedUsageWarning, parameterHasDuplicateName } from 'utils/warnings';
+import { ReferenceTemplate } from 'components/builder/templates';
 
 export default class Parameter extends Component {
   constructor(props) {
@@ -296,6 +297,20 @@ export default class Parameter extends Component {
             </div>
 
             <div className="card-element__body">
+
+            {parameterUsed &&
+              usedBy.map(parameterUse => {
+                const useInstance = getAllInstancesInAllTrees().find(instance => instance.uniqueId === parameterUse);
+                return (
+                  <ReferenceTemplate
+                    key={parameterUse}
+                    referenceInstanceTab={useInstance.tab}
+                    referenceField={{ id: 'parameterUse', value: { id: parameterUse } }}
+                    scrollToElement={this.props.scrollToElement}
+                  />
+                );
+              })
+            }
               <div className="field">
                 <div className="field-label">Parameter Type:</div>
 
@@ -343,6 +358,7 @@ Parameter.propTypes = {
   index: PropTypes.number.isRequired,
   instanceNames: PropTypes.array.isRequired,
   name: PropTypes.string,
+  scrollToElement: PropTypes.func.isRequired,
   type: PropTypes.string,
   updateInstanceOfParameter: PropTypes.func.isRequired,
   usedBy: PropTypes.array,
