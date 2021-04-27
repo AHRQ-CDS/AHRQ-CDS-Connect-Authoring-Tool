@@ -11,8 +11,9 @@ import {
   StringEditor
 } from 'components/builder/editors';
 import { useFieldStyles } from 'styles/hooks';
+import changeToCase from 'utils/strings';
 
-const EditorsTemplate = ({ handleUpdateEditor, label, isNested = false, type, value }) => {
+const EditorsTemplate = ({ handleUpdateEditor, label, isNested, showArgumentType, type, value }) => {
   const fieldStyles = useFieldStyles();
 
   const editor = (() => {
@@ -50,21 +51,30 @@ const EditorsTemplate = ({ handleUpdateEditor, label, isNested = false, type, va
 
   return (
     <div className={clsx(fieldStyles.field, isNested && fieldStyles.nestedField)} id="editors-template">
-      <div
-        className={clsx(fieldStyles.fieldLabel, fieldStyles.fieldLabelTall, isNested && fieldStyles.nestedFieldLabel)}
-      >
-        {label}:
-      </div>
+      {label && (
+        <div
+          className={clsx(fieldStyles.fieldLabel, fieldStyles.fieldLabelTall, isNested && fieldStyles.nestedFieldLabel)}
+        >
+          {label}:
+        </div>
+      )}
 
-      <div className={fieldStyles.fieldInputGroup}>{editor}</div>
+      <div className={fieldStyles.fieldInputGroupContainer}>
+        <div className={fieldStyles.fieldInputGroup}>{editor}</div>
+
+        {showArgumentType && (
+          <div className={fieldStyles.footer}>Argument Type: {changeToCase(type, 'capitalCase')}</div>
+        )}
+      </div>
     </div>
   );
 };
 
 EditorsTemplate.propTypes = {
   handleUpdateEditor: PropTypes.func.isRequired,
-  label: PropTypes.string.isRequired,
   isNested: PropTypes.bool,
+  label: PropTypes.string.isRequired,
+  showArgumentType: PropTypes.bool,
   type: PropTypes.string.isRequired,
   value: PropTypes.any
 };

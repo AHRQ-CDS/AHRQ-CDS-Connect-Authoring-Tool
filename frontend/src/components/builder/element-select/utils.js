@@ -5,9 +5,15 @@ import _ from 'lodash';
 import { getFieldWithId } from 'utils/instances';
 import { sortAlphabeticallyByKey } from 'utils/sort';
 import changeToCase from 'utils/strings';
+import { isSupportedEditorType } from 'components/builder/editors/utils';
 
 export const vsacCodeDisplayName = vsacCode =>
   vsacCode.display?.length < 60 ? vsacCode.display : `${vsacCode.codeSystem.name} ${vsacCode.code}`;
+
+const isSupportedCqlFunction = cqlFunction => {
+  if (cqlFunction.operand.length === 0 || !cqlFunction.argumentTypes) return true;
+  return cqlFunction.argumentTypes.every(argType => isSupportedEditorType(argType.calculated));
+};
 
 export const generateElement = ({
   artifact,
@@ -61,7 +67,9 @@ export const generateElement = ({
       const cqlLibrary = externalCqlList.find(cqlLibrary => cqlLibrary._id === subOption);
       const cqlLibraryDefinitions = cqlLibrary.details.definitions.concat(cqlLibrary.details.parameters);
       const selectedCqlDefinition = cqlLibraryDefinitions.find(({ name }) => name === cqlOption);
-      const cqlLibraryFunctions = cqlLibrary.details.functions.filter(cqlFunction => cqlFunction.operand.length === 0);
+      const cqlLibraryFunctions = cqlLibrary.details.functions.filter(cqlFunction =>
+        isSupportedCqlFunction(cqlFunction)
+      );
       const selectedCqlFunction = cqlLibraryFunctions.find(({ name }) => name === cqlOption);
       const selectedCqlEntry = selectedCqlDefinition || selectedCqlFunction;
       const selectedCqlEntryType = selectedCqlDefinition ? 'GenericStatement' : 'GenericFunction';
@@ -156,11 +164,8 @@ export const getElementEntries = ({ entryType, artifact, elementTemplates, exter
     case 'externalCql':
       if (!externalCqlList) return [];
       return externalCqlList.map(externalCql => {
-        // TODO: We don't yet support functions that have any arguments, so we only want to allow the functions
-        // that have no arguments associated with them to be selected. This should be removed when we have support
-        // for arbitrary numbers of arguments in functions.
         const cqlFunctions = externalCql.details.functions
-          .filter(cqlFunction => cqlFunction.operand.length === 0)
+          .filter(cqlFunction => isSupportedCqlFunction(cqlFunction))
           .map(cqlFunction => ({
             value: cqlFunction.name,
             label: `${cqlFunction.name} | Function(${cqlFunction.operand.length}) | ${cqlFunction.calculatedReturnType}`

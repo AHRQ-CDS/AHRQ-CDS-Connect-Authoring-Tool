@@ -39,7 +39,7 @@ describe('<CodeEditor />', () => {
         uri: 'http://snomed.info/sct',
         code: '123',
         display: '',
-        str: `Code '123' from "SNOMED" display ''`
+        str: `Code '123' from "SNOMED"`
       });
     });
   });
@@ -68,7 +68,7 @@ describe('<CodeEditor />', () => {
         uri: 'http://snomed.info/sct',
         code: '123',
         display: '',
-        str: `Concept { Code '123' from "SNOMED" } display ''`
+        str: `Concept { Code '123' from "SNOMED" }`
       });
     });
   });

@@ -74,6 +74,7 @@ export class Builder extends Component {
         this.props.initializeArtifact(andTemplate, orTemplate);
       }
       this.props.loadConversionFunctions();
+      this.props.loadExternalCqlList(this.props.match.params.id);
       this.props.loadModifiers();
     });
   }

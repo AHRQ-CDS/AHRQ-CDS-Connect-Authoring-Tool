@@ -68,8 +68,10 @@ const CodeEditor = ({ handleUpdateEditor, isConcept = false, value }) => {
 
   const handleSelectCode = codeData => {
     const codeStr = `Code '${codeData.code.replace(/'/g, "\\'")}' from "${codeData.codeSystem.name}"`;
-    const displayStr = `display '${codeData.display}'`;
-    const str = isConcept ? `Concept { ${codeStr} } ${displayStr}` : `${codeStr} ${displayStr}`;
+    const displayStr = ` display '${codeData.display}'`;
+    const str = isConcept
+      ? `Concept { ${codeStr} }${codeData.display ? displayStr : ''}`
+      : `${codeStr}${codeData.display ? displayStr : ''}`;
 
     handleUpdateEditor({
       system: codeData.codeSystem.name,

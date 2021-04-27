@@ -44,6 +44,7 @@ describe('<Tester />', () => {
     };
 
     it('displays CQL validation errors', async () => {
+      jest.setTimeout(10000);
       scope = scope
         .post('/authoring/api/cql/validate', { ...mockArtifact, dataModel: { name: 'FHIR', version: '3.0.0' } })
         .reply(200, {

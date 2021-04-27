@@ -32,6 +32,9 @@ export default makeStyles(
       margin: '0 -9999rem',
       padding: '0 9999rem'
     },
+    fullWidth: {
+      width: '100%'
+    },
     marginLeft: {
       marginLeft: '10px'
     },
@@ -43,7 +46,7 @@ export default makeStyles(
     },
     verticalPadding: {
       margin: '2em 0'
-    },
+    }
   }),
   { name: 'Spacing' }
 );

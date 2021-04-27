@@ -29,6 +29,7 @@ import {
 import { StringField, TextAreaField } from './fields';
 import {
   CodeListTemplate,
+  ExternalCqlTemplate,
   FieldsTemplate,
   ModifiersTemplate,
   ReferenceTemplate,
@@ -311,6 +312,13 @@ export default class TemplateInstance extends Component {
     }
   };
 
+  handleUpdateExternalCqlArguments = externalCqlArguments => {
+    const { templateInstance } = this.props;
+    const externalCqlField = getFieldWithId(templateInstance.fields, 'externalCqlReference');
+    const externalCqlReference = { ...externalCqlField.value, arguments: externalCqlArguments };
+    this.updateInstance({ externalCqlReference });
+  };
+
   renderModifierSelect = () => {
     if (this.props.templateInstance.cannotHaveModifiers) return null;
     if (this.props.isLoadingModifiers) return <div>Loading modifiers...</div>;
@@ -441,6 +449,7 @@ export default class TemplateInstance extends Component {
     const baseElementIsUsed = this.isBaseElementUsed() || disableAddElement;
     const vsacField = getFieldWithType(templateInstance.fields, '_vsac');
     const referenceField = getFieldWithType(templateInstance.fields, 'reference');
+    const externalCqlField = getFieldWithId(templateInstance.fields, 'externalCqlReference');
     const validationError = validateElement(templateInstance, this.state);
     const returnError =
       !(validateReturnType !== false) || returnType === 'boolean'
@@ -454,12 +463,19 @@ export default class TemplateInstance extends Component {
 
         <ExpressionPhrase class="expression" instance={templateInstance} baseElements={baseElements} />
 
-        {templateInstance.fields?.length > 2 && (
+        {templateInstance.fields?.length > 2 && templateInstance.type !== 'externalCqlElement' && (
           <FieldsTemplate
             fields={templateInstance.fields.filter(
               field => fieldsToRender.includes(field.type) && field.id !== 'comment' && field.id !== 'element_name'
             )}
             handleUpdateField={this.updateInstance}
+          />
+        )}
+
+        {templateInstance.fields?.length > 2 && templateInstance.type === 'externalCqlElement' && (
+          <ExternalCqlTemplate
+            externalCqlArguments={externalCqlField.value.arguments ? externalCqlField.value.arguments : []}
+            handleUpdateExternalCqlArguments={this.handleUpdateExternalCqlArguments}
           />
         )}
 

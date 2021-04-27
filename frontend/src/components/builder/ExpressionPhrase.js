@@ -10,10 +10,10 @@ import { getOriginalBaseElement, getAllModifiersOnBaseElementUse } from 'utils/b
 import { getReturnType, getFieldWithId, getFieldWithType } from 'utils/instances';
 
 export default class ExpressionPhrase extends Component {
-  getExpressionPhrase = (instance) => {
+  getExpressionPhrase = instance => {
     const { baseElements } = this.props;
     let returnType = instance.returnType;
-    if (!(_.isEmpty(instance.modifiers))) {
+    if (!_.isEmpty(instance.modifiers)) {
       returnType = getReturnType(instance.returnType, instance.modifiers);
     }
 
@@ -40,9 +40,14 @@ export default class ExpressionPhrase extends Component {
       const baseElementModifiers = instance.modifiers || [];
       modifiers = modifiers.concat(baseElementModifiers);
     }
-    let type = (phraseTemplateInstance.type === 'parameter' || phraseTemplateInstance.type === 'externalCqlElement') ?
-      phraseTemplateInstance.type : phraseTemplateInstance.name;
-    if (phraseTemplateInstance.subpopulationName && type === '') { // Subpopulation type not selected yet
+    let type = phraseTemplateInstance.type === 'parameter' ? phraseTemplateInstance.type : phraseTemplateInstance.name;
+
+    if (phraseTemplateInstance.type === 'externalCqlElement') {
+      type = phraseTemplateInstance.template === 'GenericStatement' ? 'externalCqlStatement' : 'externalCqlFunction';
+    }
+
+    if (phraseTemplateInstance.subpopulationName && type === '') {
+      // Subpopulation type not selected yet
       type = phraseTemplateInstance.id;
     }
 
@@ -57,11 +62,12 @@ export default class ExpressionPhrase extends Component {
       codes = phraseTemplateInstanceVsacField.codes;
     }
 
-    const otherFields = phraseTemplateInstance.fields.filter(field =>
-      field.type === 'number' || field.type === 'valueset');
+    const otherFields = phraseTemplateInstance.fields.filter(
+      field => field.type === 'number' || field.type === 'valueset'
+    );
 
     if (phraseTemplateInstanceIsConjunction) {
-      phraseTemplateInstance.childInstances.forEach((child) => {
+      phraseTemplateInstance.childInstances.forEach(child => {
         let secondPhraseExpressions = [];
         if (child.childInstances && phraseTemplateInstance.usedBy) {
           // Groups expression phrases list the names of the elements within the group. They only go one level deep.
@@ -71,21 +77,26 @@ export default class ExpressionPhrase extends Component {
           // Individual elements give the full expression phrase in the tooltip
           secondPhraseExpressions = this.getExpressionPhrase(child);
         }
-        const phraseArrayAsSentence = secondPhraseExpressions.reduce((acc, currentValue) =>
-          `${acc}${currentValue.expressionText === ',' ? '' : ' '}
-          ${currentValue.isName ? '"' : ''}${currentValue.expressionText}${currentValue.isName ? '"' : ''}`, '');
+        const phraseArrayAsSentence = secondPhraseExpressions.reduce(
+          (acc, currentValue) =>
+            `${acc}${currentValue.expressionText === ',' ? '' : ' '}
+          ${currentValue.isName ? '"' : ''}${currentValue.expressionText}${currentValue.isName ? '"' : ''}`,
+          ''
+        );
         const nameField = getFieldWithId(child.fields, 'element_name');
         elementNamesInPhrase.push({ name: nameField.value, tooltipText: phraseArrayAsSentence });
       });
     }
 
-    const isBaseElementAndOr = phraseTemplateInstanceIsConjunction && instance.type === 'baseElement' &&
+    const isBaseElementAndOr =
+      phraseTemplateInstanceIsConjunction &&
+      instance.type === 'baseElement' &&
       (phraseTemplateInstance.name === 'And' || phraseTemplateInstance.name === 'Or');
 
     let referenceElementName = null;
     if (type === 'parameter') {
       referenceElementName = phraseTemplateInstance.name;
-    } else if (type === 'externalCqlElement') {
+    } else if (type === 'externalCqlStatement' || type === 'externalCqlFunction') {
       referenceElementName = getFieldWithId(phraseTemplateInstance.fields, 'externalCqlReference').value.element;
     }
 
@@ -102,23 +113,24 @@ export default class ExpressionPhrase extends Component {
     );
 
     return expressions;
-  }
+  };
 
   render() {
     const { instance } = this.props;
     const expressions = this.getExpressionPhrase(instance);
     const hasElements = expressions.some(expression => expression.isExpression);
 
-    if (!expressions || !hasElements) { return null; }
+    if (!expressions || !hasElements) {
+      return null;
+    }
 
     return (
       <div className={this.props.class}>
         <div className="expression-logic">
           {expressions.map((expression, i) => {
-            const expressionTextClass = classNames(
-              'expression-item expression-text',
-              { 'expression-type': expression.isType }
-            );
+            const expressionTextClass = classNames('expression-item expression-text', {
+              'expression-type': expression.isType
+            });
 
             if (expression.isExpression) {
               return (
@@ -127,15 +139,20 @@ export default class ExpressionPhrase extends Component {
                     {expression.expressionText}
                   </span>
 
-                  {expression.tooltipText &&
-                    <UncontrolledTooltip target={`expression-${instance.uniqueId}-${i}`} placement='top'>
+                  {expression.tooltipText && (
+                    <UncontrolledTooltip target={`expression-${instance.uniqueId}-${i}`} placement="top">
                       {expression.tooltipText}
-                    </UncontrolledTooltip>}
+                    </UncontrolledTooltip>
+                  )}
                 </span>
               );
             }
 
-            return <span className={expressionTextClass} key={i}>{expression.expressionText}</span>;
+            return (
+              <span className={expressionTextClass} key={i}>
+                {expression.expressionText}
+              </span>
+            );
           })}
         </div>
       </div>
@@ -146,5 +163,5 @@ export default class ExpressionPhrase extends Component {
 ExpressionPhrase.propTypes = {
   baseElements: PropTypes.array.isRequired,
   class: PropTypes.string.isRequired,
-  instance: PropTypes.object.isRequired,
+  instance: PropTypes.object.isRequired
 };

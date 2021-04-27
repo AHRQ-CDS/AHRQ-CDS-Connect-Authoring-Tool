@@ -38,6 +38,7 @@
     "chai-as-promised": "^7.1.1",
     "eslint": "^4.11.0",
     "eslint-plugin-flowtype": "^2.39.1",
+    "husky": "6.0.0",
     "mocha": "^6.1.4",
     "nock": "^9.1.4",
     "nodemon": "^2.0.7"
@@ -52,6 +53,13 @@
     "test-watch": "./node_modules/.bin/mocha --reporter spec --recursive --watch",
     "test-ci": "./node_modules/.bin/mocha --reporter spec --recursive --no-colors",
     "lint": "eslint .",
-    "lint:fix": "eslint --fix .; exit 0"
+    "lint:fix": "eslint --fix .; exit 0",
+    "prepare": "cd .. && husky install api/.husky"
+  },
+  "prettier": {
+    "trailingComma": "none",
+    "singleQuote": true,
+    "printWidth": 120,
+    "arrowParens": "avoid"
   }
 }

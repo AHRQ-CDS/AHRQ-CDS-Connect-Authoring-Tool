@@ -17,7 +17,8 @@ export default makeStyles(
     fieldCard: {
       position: 'relative',
       width: '100%',
-      padding: '2em'
+      padding: '2em',
+      marginBottom: '5px'
     },
     fieldCardCloseButton: {
       position: 'absolute',
@@ -31,7 +32,7 @@ export default makeStyles(
       marginTop: '1em'
     },
     fieldDetails: {
-      borderBottom: `1px solid ${theme.palette.common.gray}`,
+      borderBottom: `3px solid ${theme.palette.common.grayLighter}`,
       display: 'flex',
       padding: '10px 0',
       width: '100%'
@@ -58,6 +59,9 @@ export default makeStyles(
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'space-between',
+      width: '100%'
+    },
+    fieldInputGroupContainer: {
       width: '100%'
     },
     fieldInputGroupJustifyLeft: {
@@ -89,6 +93,15 @@ export default makeStyles(
     },
     fieldLabelTall: {
       marginTop: '18px'
+    },
+    footer: {
+      borderBottom: `3px solid ${theme.palette.common.grayLighter}`,
+      color: theme.palette.common.grayLight,
+      fontSize: '0.7em',
+      marginBottom: '10px',
+      paddingBottom: '5px',
+      textAlign: 'right',
+      whiteSpace: 'nowrap'
     },
     helperText: {
       fontSize: '0.7em',

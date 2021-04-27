@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { MenuBook as MenuBookIcon } from '@material-ui/icons';
+import clsx from 'clsx';
 import _ from 'lodash';
 
 import { EditorsTemplate } from 'components/builder/templates';
@@ -31,22 +32,24 @@ const ExternalModifier = ({ argumentTypes, handleUpdateModifier, modifierArgumen
         {name}
       </div>
 
-      <div className={spacingStyles.indent} data-testid="editors">
-        {modifierArguments.length > 1 && modifierArguments.map((modifierArg, index) => {
-          // We don't want the modifier input arguments to include the first function argument
-          if (index === 0) return null;
+      <div className={clsx(spacingStyles.indent, spacingStyles.fullWidth)} data-testid="editors">
+        {modifierArguments.length > 1 &&
+          modifierArguments.map((modifierArg, index) => {
+            // We don't want the modifier input arguments to include the first function argument
+            if (index === 0) return null;
 
-          return (
-            <EditorsTemplate
-              key={index}
-              handleUpdateEditor={newValue => assignValue(newValue, index)}
-              label={modifierArg.name}
-              isNested
-              type={argumentTypes[index].calculated}
-              value={values[index]}
-            />
-          );
-        })}
+            return (
+              <EditorsTemplate
+                key={index}
+                handleUpdateEditor={newValue => assignValue(newValue, index)}
+                label={modifierArg.name}
+                isNested
+                showArgumentType
+                type={argumentTypes[index].calculated}
+                value={values[index]}
+              />
+            );
+          })}
       </div>
     </div>
   );
