@@ -51,9 +51,9 @@ const ModifierTemplate = ({
             handleUpdateModifier={values => handleUpdateModifier(index, values)}
             values={{
               maxOperator: modifier.values?.maxOperator || '',
-              maxValue: modifier.values?.maxValue || '',
+              maxValue: modifier.values?.maxValue ?? '',
               minOperator: modifier.values?.minOperator || '',
-              minValue: modifier.values?.minValue || ''
+              minValue: modifier.values?.minValue ?? ''
             }}
           />
         );
@@ -63,9 +63,9 @@ const ModifierTemplate = ({
             handleUpdateModifier={values => handleUpdateModifier(index, values)}
             values={{
               maxOperator: modifier.values?.maxOperator || '',
-              maxValue: modifier.values?.maxValue || '',
+              maxValue: modifier.values?.maxValue ?? '',
               minOperator: modifier.values?.minOperator || '',
-              minValue: modifier.values?.minValue || '',
+              minValue: modifier.values?.minValue ?? '',
               unit: modifier.values?.unit || ''
             }}
           />
