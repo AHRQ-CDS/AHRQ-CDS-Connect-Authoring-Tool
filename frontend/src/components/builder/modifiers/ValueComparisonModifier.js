@@ -3,7 +3,8 @@ import PropTypes from 'prop-types';
 import { TextField } from '@material-ui/core';
 import clsx from 'clsx';
 
-import { Dropdown } from 'components/elements';
+import { Autocomplete } from '@material-ui/lab';
+
 import UcumField from 'components/builder/fields/UcumField';
 import { useFieldStyles } from 'styles/hooks';
 import useStyles from './styles';
@@ -21,25 +22,20 @@ const ValueComparisonModifier = ({ handleUpdateModifier, values }) => {
   const fieldStyles = useFieldStyles();
   const styles = useStyles();
 
-  const handleChange = (event, key) => {
-    const selectedOption = options.find(option => option.value === event.target.value);
-    const value = selectedOption ? selectedOption.value : null;
-    handleUpdateModifier({ [key]: value });
-  };
-
   return (
     <div className={styles.modifier}>
-      <Dropdown
+      <Autocomplete
         className={clsx(fieldStyles.fieldInput, fieldStyles.fieldInputSm)}
-        label="minOp"
-        onChange={event => handleChange(event, 'minOperator')}
-        options={options}
-        value={values.minOperator}
+        getOptionLabel={option => option?.label || ''}
         id="value-comparison-modifier-minop"
+        onChange={(event, option) => handleUpdateModifier({ minOperator: option?.value || '' })}
+        options={options}
+        renderInput={params => <TextField {...params} label="minOp" variant="outlined" />}
+        value={options.find(option => option.value === values.minOperator) || null}
       />
 
       <TextField
-        className={clsx(fieldStyles.fieldInput, fieldStyles.fieldInputSm)}
+        className={clsx(fieldStyles.fieldInput, fieldStyles.fieldInputXs)}
         label="minValue"
         onChange={event => handleUpdateModifier({ minValue: parseFloat(event.target.value) })}
         type="number"
@@ -48,17 +44,18 @@ const ValueComparisonModifier = ({ handleUpdateModifier, values }) => {
         id="value-comparison-modifier-minvalue"
       />
 
-      <Dropdown
+      <Autocomplete
         className={clsx(fieldStyles.fieldInput, fieldStyles.fieldInputSm)}
-        label="maxOp"
-        onChange={event => handleChange(event, 'maxOperator')}
-        options={options}
-        value={values.maxOperator}
+        getOptionLabel={option => option?.value || ''}
         id="value-comparison-modifier-maxop"
+        onChange={(event, option) => handleUpdateModifier({ maxOperator: option?.value || '' })}
+        options={options}
+        renderInput={params => <TextField {...params} label="maxOp" variant="outlined" />}
+        value={options.find(option => option.value === values.maxOperator) || null}
       />
 
       <TextField
-        className={clsx(fieldStyles.fieldInput, fieldStyles.fieldInputSm)}
+        className={clsx(fieldStyles.fieldInput, fieldStyles.fieldInputXs)}
         label="maxValue"
         onChange={event => handleUpdateModifier({ maxValue: parseFloat(event.target.value) })}
         type="number"

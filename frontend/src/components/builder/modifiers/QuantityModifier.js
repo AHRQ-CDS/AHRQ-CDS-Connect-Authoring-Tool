@@ -23,20 +23,17 @@ const QuantityModifier = ({ handleUpdateModifier, name, unit, value }) => {
       <div className={styles.modifierText}>{name}:</div>
 
       <TextField
-        className={clsx(fieldStyles.fieldInput, fieldStyles.fieldInputSm)}
+        className={clsx(fieldStyles.fieldInput, fieldStyles.fieldInputXs)}
         fullWidth
         label="Value"
         onChange={event => handleChange(event.target.value, 'quantity')}
-        value={(value || value === 0) ? value : ''}
+        value={value || value === 0 ? value : ''}
         variant="outlined"
         id="quantity-modifier"
       />
 
       <div className={clsx(fieldStyles.fieldInput, fieldStyles.fieldInputLg)}>
-        <UcumField
-          handleChangeUnit={(event, option) => handleChange(option?.value, 'unit')}
-          unit={unit || ''}
-        />
+        <UcumField handleChangeUnit={(event, option) => handleChange(option?.value, 'unit')} unit={unit || ''} />
       </div>
     </div>
   );

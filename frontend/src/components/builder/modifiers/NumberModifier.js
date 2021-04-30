@@ -20,12 +20,12 @@ const NumberModifier = ({ handleUpdateModifier, name, value }) => {
       <div className={styles.modifierText}>{name}:</div>
 
       <TextField
-        className={clsx(fieldStyles.fieldInput, fieldStyles.fieldInputSm)}
+        className={clsx(fieldStyles.fieldInput, fieldStyles.fieldInputXs)}
         fullWidth
         label="Value"
         type="number"
         onChange={event => handleOnChange(event.target.value)}
-        value={(value || value === 0) ? value : ''}
+        value={value || value === 0 ? value : ''}
         variant="outlined"
       />
     </div>

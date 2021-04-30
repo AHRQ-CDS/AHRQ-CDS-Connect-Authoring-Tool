@@ -76,6 +76,10 @@ export default makeStyles(
       maxWidth: '250px'
     },
     fieldInputSm: {
+      minWidth: '150px',
+      maxWidth: '200px'
+    },
+    fieldInputXs: {
       minWidth: '100px',
       maxWidth: '150px'
     },

@@ -21,17 +21,20 @@ const LookBackModifier = ({ handleUpdateModifier, unit, value }) => {
   const fieldStyles = useFieldStyles();
   const styles = useStyles();
 
-  const handleSelectUnit = useCallback(event => {
-    const selectedOption = options.find(option => option.value === event.target.value);
-    handleUpdateModifier({ unit: selectedOption ? selectedOption.value : null });
-  }, [handleUpdateModifier]);
+  const handleSelectUnit = useCallback(
+    event => {
+      const selectedOption = options.find(option => option.value === event.target.value);
+      handleUpdateModifier({ unit: selectedOption ? selectedOption.value : null });
+    },
+    [handleUpdateModifier]
+  );
 
   return (
     <div className={styles.modifier}>
       <div className={styles.modifierText}>Look back within the last...</div>
 
       <TextField
-        className={clsx(fieldStyles.fieldInput, fieldStyles.fieldInputSm)}
+        className={clsx(fieldStyles.fieldInput, fieldStyles.fieldInputXs)}
         label="Value"
         onChange={event => handleUpdateModifier({ value: parseInt(event.target.value, 10) })}
         type="number"

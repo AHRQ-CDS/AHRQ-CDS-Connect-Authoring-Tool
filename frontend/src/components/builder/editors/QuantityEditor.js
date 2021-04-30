@@ -52,7 +52,7 @@ const QuantityEditor = ({ handleUpdateEditor, isInterval, value }) => {
     <div className={fieldStyles.fieldInputFullWidth} id="quantity-editor">
       <div className={clsx(fieldStyles.fieldInputGroup, fieldStyles.fieldInputGroupJustifyLeft)}>
         <TextField
-          className={clsx(fieldStyles.fieldInput, fieldStyles.fieldInputSm)}
+          className={clsx(fieldStyles.fieldInput, fieldStyles.fieldInputXs)}
           fullWidth
           label="Value"
           onChange={event => handleChange(event.target.value, isInterval ? 'firstQuantity' : 'quantity')}
