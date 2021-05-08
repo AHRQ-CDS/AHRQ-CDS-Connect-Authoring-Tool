@@ -18,7 +18,7 @@
     "express-session": "^1.15.6",
     "fs-extra": "^5.0.0",
     "glob": "^7.1.2",
-    "lodash": "^4.17.20",
+    "lodash": "^4.17.21",
     "mongodb-migrations": "^0.8.5",
     "mongoose": "^5.10.0",
     "passport": "^0.4.0",
