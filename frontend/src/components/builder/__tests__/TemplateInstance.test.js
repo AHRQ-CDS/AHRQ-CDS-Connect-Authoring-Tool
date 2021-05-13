@@ -266,10 +266,10 @@ describe('<TemplateInstance />', () => {
       expect(document.querySelectorAll('.modifier-select-button')).toHaveLength(10);
     });
 
-    it('cannot remove modifiers that change the return type if in use in the artifact', () => {
-      const modifiers = genericInstanceWithModifiers.modifiers.slice(0, -1);
+    it('can remove modifiers that do not change the return type', () => {
+      const modifiers = genericInstanceWithModifiers.modifiers;
       const updateInstanceModifiers = jest.fn();
-      const { getByLabelText } = renderBaseElementComponent({
+      renderBaseElementComponent({
         templateInstance: {
           ...baseElementBeingUsed,
           getAllInstancesInAllTrees: () => baseElementBeingUsed.childInstances,
@@ -279,14 +279,32 @@ describe('<TemplateInstance />', () => {
       });
 
       updateInstanceModifiers.mockClear();
-      fireEvent.click(getByLabelText('remove last expression'));
+      fireEvent.click(screen.getAllByRole('button', { name: 'remove expression' })[0]);
+
+      expect(updateInstanceModifiers).toBeCalled();
+    });
+
+    it('cannot remove modifiers that change the return type if in use in the artifact', () => {
+      const modifiers = genericInstanceWithModifiers.modifiers;
+      const updateInstanceModifiers = jest.fn();
+      renderBaseElementComponent({
+        templateInstance: {
+          ...baseElementBeingUsed,
+          getAllInstancesInAllTrees: () => baseElementBeingUsed.childInstances,
+          modifiers
+        },
+        updateInstanceModifiers
+      });
+
+      updateInstanceModifiers.mockClear();
+      fireEvent.click(screen.getAllByRole('button', { name: 'remove expression' })[1]);
 
       expect(updateInstanceModifiers).not.toBeCalled();
     });
 
     it('can remove modifiers', () => {
       const updateInstanceModifiers = jest.fn();
-      const { getByLabelText } = renderBaseElementComponent({
+      renderBaseElementComponent({
         templateInstance: {
           ...baseElementNotBeingUsed,
           modifiers: genericInstanceWithModifiers.modifiers
@@ -295,7 +313,7 @@ describe('<TemplateInstance />', () => {
       });
 
       updateInstanceModifiers.mockClear();
-      fireEvent.click(getByLabelText('remove last expression'));
+      fireEvent.click(screen.getAllByRole('button', { name: 'remove expression' })[2]);
 
       expect(updateInstanceModifiers).toHaveBeenCalledWith(
         'MeetsInclusionCriteria',
@@ -417,7 +435,7 @@ describe('<TemplateInstance />', () => {
 
     it('can remove modifiers', () => {
       const updateInstanceModifiers = jest.fn();
-      const { getByLabelText } = renderComponent({
+      renderComponent({
         disableAddElement: true,
         templateInstance: templateWithModifiersInstance,
         updateInstanceModifiers
@@ -425,7 +443,7 @@ describe('<TemplateInstance />', () => {
 
       updateInstanceModifiers.mockClear();
 
-      fireEvent.click(getByLabelText('remove last expression'));
+      fireEvent.click(screen.getAllByRole('button', { name: 'remove expression' })[2]);
 
       expect(updateInstanceModifiers).toHaveBeenCalledWith(
         'MeetsInclusionCriteria',
@@ -437,7 +455,7 @@ describe('<TemplateInstance />', () => {
 
     it('cannot remove modifiers that change return type when in use', () => {
       const updateInstanceModifiers = jest.fn();
-      const { getByLabelText } = renderComponent({
+      renderComponent({
         disableAddElement: true,
         templateInstance: {
           ...templateWithModifiersInstance,
@@ -448,7 +466,7 @@ describe('<TemplateInstance />', () => {
 
       updateInstanceModifiers.mockClear();
 
-      fireEvent.click(getByLabelText('remove last expression'));
+      fireEvent.click(screen.getAllByRole('button', { name: 'remove expression' })[1]);
 
       expect(updateInstanceModifiers).not.toBeCalled();
     });

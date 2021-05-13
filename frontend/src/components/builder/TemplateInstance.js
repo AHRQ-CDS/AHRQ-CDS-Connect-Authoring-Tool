@@ -233,10 +233,10 @@ export default class TemplateInstance extends Component {
     this.setAppliedModifiers(modifiers);
   };
 
-  handleRemoveLastModifier = canRemove => {
-    if (!canRemove) return;
-    const modifiers = _.initial(this.props.templateInstance.modifiers);
-    this.setAppliedModifiers(modifiers);
+  handleRemoveModifier = index => {
+    const newModifiers = _.cloneDeep(this.props.templateInstance.modifiers);
+    if (index > -1) newModifiers.splice(index, 1);
+    this.setAppliedModifiers(newModifiers);
   };
 
   handleUpdateModifier = (index, values) => {
@@ -489,7 +489,7 @@ export default class TemplateInstance extends Component {
             <CodeListTemplate handleDeleteCode={this.handleDeleteCode} codes={vsacField?.codes || []} />
           </>
         )}
-        
+
         {referenceField && (
           <ReferenceTemplate
             referenceInstanceTab={getInstanceByReference(allInstancesInAllTrees, referenceField).tab}
@@ -514,7 +514,7 @@ export default class TemplateInstance extends Component {
           <ModifiersTemplate
             baseElementIsUsed={baseElementIsUsed}
             elementInstance={templateInstance}
-            handleRemoveLastModifier={this.handleRemoveLastModifier}
+            handleRemoveModifier={this.handleRemoveModifier}
             handleSelectValueSet={this.handleSelectValueSet}
             handleUpdateModifier={this.handleUpdateModifier}
           />

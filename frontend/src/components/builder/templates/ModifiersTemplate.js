@@ -25,12 +25,12 @@ import { getReturnType, validateModifier } from 'utils/instances';
 import { useFieldStyles } from 'styles/hooks';
 
 const ModifierTemplate = ({
-  canBeRemoved,
-  handleRemoveLastModifier,
+  baseElementIsUsed,
+  elementInstance,
+  handleRemoveModifier,
   handleSelectValueSet,
   handleUpdateModifier,
   index,
-  isLastModifier,
   modifier
 }) => {
   const modifierMap = useSelector(state => state.modifiers.modifierMap);
@@ -39,6 +39,38 @@ const ModifierTemplate = ({
   // Reset values on modifiers that were not previously set or saved in the database
   if (!modifier.values && modifierMap[modifier.id] && modifierMap[modifier.id].values) {
     modifier.values = modifierMap[modifier.id].values;
+  }
+
+  const { modifiers, returnType } = elementInstance;
+
+  const hasMultipleModifiers = modifiers.length > 1;
+  const nextModifierAllowsReturnType = Boolean(modifiers[index + 1]?.inputTypes.includes(returnType));
+  const isFirstModifier = index === 0;
+  const isLastModifier = index === modifiers.length - 1;
+  const nextModifierAllowsPreviousReturnType = Boolean(
+    modifiers[index + 1]?.inputTypes.includes(modifiers[index - 1]?.returnType)
+  );
+  const nextToLastModifierReturnTypeMatchesElement = Boolean(
+    modifiers[modifiers.length - 2]?.returnType === getReturnType(returnType, modifiers)
+  );
+  const lastModifierReturnTypeMatchesElement = returnType === getReturnType(returnType, modifiers);
+
+  let canBeRemoved = true;
+  let tooltipText;
+  if (hasMultipleModifiers) {
+    if (isFirstModifier) {
+      canBeRemoved = nextModifierAllowsReturnType;
+      if (!canBeRemoved) tooltipText = 'Cannot remove expression because return type does not match next input type.';
+    } else if (isLastModifier) {
+      canBeRemoved = baseElementIsUsed ? nextToLastModifierReturnTypeMatchesElement : true;
+      if (!canBeRemoved) tooltipText = 'Cannot remove expression because final return type would change while in use.';
+    } else {
+      canBeRemoved = nextModifierAllowsPreviousReturnType;
+      if (!canBeRemoved) tooltipText = 'Cannot remove expression because return type does not match next input type.';
+    }
+  } else if (baseElementIsUsed) {
+    canBeRemoved = lastModifierReturnTypeMatchesElement;
+    if (!canBeRemoved) tooltipText = 'Cannot remove expression because final return type would change while in use.';
   }
 
   const validationWarning = validateModifier(modifier);
@@ -208,29 +240,23 @@ const ModifierTemplate = ({
         {validationWarning && <Alert severity="warning">{validationWarning}</Alert>}
       </div>
 
-      {isLastModifier && (
-        <div className={fieldStyles.fieldButtons}>
-          {!canBeRemoved && (
-            <Tooltip
-              arrow
-              title="Cannot remove expression because return type cannot change while in use"
-              placement="left"
-            >
-              <span>
-                <IconButton aria-label="remove last expression" disabled color="primary">
-                  <CloseIcon fontSize="small" />
-                </IconButton>
-              </span>
-            </Tooltip>
-          )}
+      <div className={fieldStyles.fieldButtons}>
+        {tooltipText && (
+          <Tooltip arrow title={tooltipText} placement="left">
+            <span>
+              <IconButton aria-label="remove expression" disabled color="primary">
+                <CloseIcon fontSize="small" />
+              </IconButton>
+            </span>
+          </Tooltip>
+        )}
 
-          {canBeRemoved && (
-            <IconButton aria-label="remove last expression" color="primary" onClick={handleRemoveLastModifier}>
-              <CloseIcon fontSize="small" />
-            </IconButton>
-          )}
-        </div>
-      )}
+        {canBeRemoved && (
+          <IconButton aria-label="remove expression" color="primary" onClick={() => handleRemoveModifier(index)}>
+            <CloseIcon fontSize="small" />
+          </IconButton>
+        )}
+      </div>
     </div>
   );
 };
@@ -238,19 +264,12 @@ const ModifierTemplate = ({
 const ModifiersTemplate = ({
   baseElementIsUsed,
   elementInstance,
-  handleRemoveLastModifier,
+  handleRemoveModifier,
   handleSelectValueSet,
   handleUpdateModifier
 }) => {
-  const { modifiers, returnType } = elementInstance;
+  const { modifiers } = elementInstance;
   const fieldStyles = useFieldStyles();
-
-  let canBeRemoved = true;
-  if (baseElementIsUsed) {
-    let nextReturnType = returnType;
-    if (modifiers.length > 1) nextReturnType = modifiers[modifiers.length - 2].returnType; // new return type if last modifier removed
-    canBeRemoved = nextReturnType === getReturnType(returnType, modifiers); // can be removed if they match, else cannot
-  }
 
   return (
     <div className={fieldStyles.field} id="modifiers-template">
@@ -260,12 +279,12 @@ const ModifiersTemplate = ({
         {modifiers.map((modifier, index) => (
           <ModifierTemplate
             key={index}
-            canBeRemoved={canBeRemoved}
-            handleRemoveLastModifier={handleRemoveLastModifier}
+            baseElementIsUsed={baseElementIsUsed}
+            elementInstance={elementInstance}
+            handleRemoveModifier={handleRemoveModifier}
             handleSelectValueSet={handleSelectValueSet}
             handleUpdateModifier={handleUpdateModifier}
             index={index}
-            isLastModifier={index + 1 === modifiers.length}
             modifier={modifier}
           />
         ))}
@@ -277,7 +296,7 @@ const ModifiersTemplate = ({
 ModifiersTemplate.propTypes = {
   baseElementIsUsed: PropTypes.bool,
   elementInstance: PropTypes.object.isRequired,
-  handleRemoveLastModifier: PropTypes.func.isRequired,
+  handleRemoveModifier: PropTypes.func.isRequired,
   handleSelectValueSet: PropTypes.func.isRequired,
   handleUpdateModifier: PropTypes.func.isRequired
 };
