@@ -1,4 +1,4 @@
-version: '3'
+version: "3"
 services:
   cat:
     build: .
@@ -7,12 +7,12 @@ services:
       CQL_TO_ELM_URL: http://cat-cql2elm:8080/cql/translator
       NODE_ENV: development
     ports:
-    - "3001:3001"
-    - "9000:9000"
+      - "3001:3001"
+      - "9000:9000"
     links:
-    - cat-mongo
-    - cat-cql2elm
+      - cat-mongo
+      - cat-cql2elm
   cat-mongo:
     image: mongo:4.4
   cat-cql2elm:
-    image: cqframework/cql-translation-service:v1.3.19
+    image: cqframework/cql-translation-service:v1.5.2
