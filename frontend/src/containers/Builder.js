@@ -34,7 +34,7 @@ import BaseElements from 'components/builder/BaseElements';
 import ConjunctionGroup from 'components/builder/ConjunctionGroup';
 import { ArtifactModal } from 'components/artifact';
 
-import ErrorStatement from 'components/builder/ErrorStatement';
+import { ErrorStatement } from 'components/builder/error-statement';
 import ExternalCQL from 'components/builder/ExternalCQL';
 import Parameters from 'components/builder/Parameters';
 import Recommendations from 'components/builder/Recommendations';
@@ -713,12 +713,7 @@ export class Builder extends Component {
                     receive the recommendation but has been excluded.
                   </div>
 
-                  <ErrorStatement
-                    parameters={namedParameters}
-                    subpopulations={artifact.subpopulations}
-                    errorStatement={artifact.errorStatement}
-                    updateErrorStatement={this.updateErrorStatement}
-                  />
+                  <ErrorStatement handleUpdateErrorStatement={this.updateErrorStatement} />
                 </TabPanel>
 
                 <TabPanel>

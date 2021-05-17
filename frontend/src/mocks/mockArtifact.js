@@ -29,7 +29,7 @@ const mockArtifact = {
   subpopulations: [
     {
       uniqueId: 'default-subpopulation-1',
-      subpopulationName: 'Doesn\'t Meet Inclusion Criteria',
+      subpopulationName: "Doesn't Meet Inclusion Criteria",
       special: true,
       special_subpopulationName: 'not "MeetsInclusionCriteria"'
     },
@@ -37,7 +37,7 @@ const mockArtifact = {
       special: true,
       special_subpopulationName: '"MeetsExclusionCriteria"',
       subpopulationName: 'Meets Exclusion Criteria',
-      uniqueId: 'default-subpopulation-2',
+      uniqueId: 'default-subpopulation-2'
     },
     {
       childInstances: [],
@@ -49,11 +49,21 @@ const mockArtifact = {
       path: '',
       returnType: 'boolean',
       subpopulationName: 'Subpopulation 1',
-      uniqueId: 'And-TEST-1',
+      uniqueId: 'And-TEST-1'
     }
   ],
   parameters: [],
-  errorStatement: { statements: [] }
+  errorStatement: {
+    id: 'root',
+    ifThenClauses: [
+      {
+        ifCondition: { label: null, value: null },
+        statements: [],
+        thenClause: ''
+      }
+    ],
+    elseClause: ''
+  }
 };
 
 export default mockArtifact;

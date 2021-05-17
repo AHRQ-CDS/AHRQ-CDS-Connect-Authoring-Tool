@@ -29,6 +29,7 @@
     "slug": "^3.5.1",
     "tmp": "^0.0.33",
     "unzipper": "^0.10.0",
+    "uuid": "^8.3.2",
     "validator": "^9.1.1",
     "xlsx": "^0.11.16",
     "xml2js": "^0.4.19"
@@ -36,8 +37,9 @@
   "devDependencies": {
     "chai": "^4.3.4",
     "chai-as-promised": "^7.1.1",
-    "eslint": "^7.26.0",
-    "eslint-plugin-flowtype": "^5.7.2",
+    "chai-exclude": "^2.0.3",
+    "eslint": "^4.11.0",
+    "eslint-plugin-flowtype": "^2.39.1",
     "husky": "6.0.0",
     "mocha": "^8.4.0",
     "nock": "^9.1.4",

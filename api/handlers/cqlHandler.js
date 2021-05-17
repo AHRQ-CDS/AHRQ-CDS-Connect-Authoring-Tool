@@ -465,14 +465,15 @@ class CqlArtifact {
         }
       });
     });
-    this.errorStatement.statements.forEach(errorStatement => {
-      if (errorStatement.condition.uniqueId === id) {
-        errorStatement.condition.value = `"${name}"`;
+
+    this.errorStatement.ifThenClauses.forEach(ifThenClause => {
+      if (ifThenClause.ifCondition.uniqueId === id) {
+        ifThenClause.ifCondition.value = `"${name}"`;
       }
-      if (errorStatement.child) {
-        errorStatement.child.statements.forEach(childStatement => {
-          if (childStatement.condition.uniqueId === id) {
-            childStatement.condition.value = `"${name}"`;
+      if (ifThenClause.statements) {
+        ifThenClause.statements.ifThenClauses.forEach(ifThenClause => {
+          if (ifThenClause.ifCondition.uniqueId === id) {
+            ifThenClause.ifCondition.value = `"${name}"`;
           }
         });
       }
@@ -980,11 +981,11 @@ class CqlArtifact {
   */
   isErrorEmpty(errorStatement) {
     let retVal = false;
-    let firstStatement = errorStatement.statements[0];
+    let firstIfThenClause = errorStatement.ifThenClauses[0];
     if (
-      _.isEmpty(firstStatement.condition.label) &&
-      _.isEmpty(firstStatement.child) &&
-      _.isEmpty(firstStatement.thenClause) &&
+      _.isEmpty(firstIfThenClause.ifCondition.label) &&
+      _.isEmpty(firstIfThenClause.statements) &&
+      _.isEmpty(firstIfThenClause.thenClause) &&
       _.isEmpty(errorStatement.elseClause)
     ) {
       retVal = true;
@@ -993,30 +994,6 @@ class CqlArtifact {
   }
 
   errors() {
-    this.errorStatement.statements.forEach((statement, index) => {
-      this.errorStatement.statements[index].condition.label = sanitizeCQLString(statement.condition.label);
-      this.errorStatement.statements[index].condition.value = quoteCQLConditional(statement.condition.value);
-      if (statement.useThenClause) {
-        this.errorStatement.statements[index].thenClause = sanitizeCQLString(statement.thenClause);
-      } else {
-        const errStatementChild = this.errorStatement.statements[index].child;
-        statement.child.statements.forEach((childStatement, childIndex) => {
-          errStatementChild.statements[childIndex].condition.label = sanitizeCQLString(childStatement.condition.label);
-          errStatementChild.statements[childIndex].thenClause = sanitizeCQLString(childStatement.thenClause);
-        });
-        const noElseClause = _.isEmpty(statement.child.elseClause) || statement.child.elseClause === 'null';
-        errStatementChild.elseClause = noElseClause ? null : sanitizeCQLString(statement.child.elseClause);
-      }
-    });
-    this.errorStatement.elseClause = _.isEmpty(this.errorStatement.elseClause)
-      ? null
-      : sanitizeCQLString(this.errorStatement.elseClause);
-    //if the user clicks "Handle Errors" in the UI, there are non-null elements in errorStatement.statements
-    //even though they are effectively "null"
-    if (this.errorStatement.statements.length > 0 && this.isErrorEmpty(this.errorStatement)) {
-      this.errorStatement.statements = [];
-      this.errorStatement.elseCaluse = null;
-    }
     return ejs.render(templateMap.ErrorStatements, {
       element_name: 'Errors',
       errorStatement: this.errorStatement
@@ -1050,16 +1027,6 @@ class CqlArtifact {
 // Replaces all instances of `'` in the string with the escaped `\'` - Might be expanded in the future
 function sanitizeCQLString(cqlString) {
   return _.replace(cqlString, /'/g, "\\'");
-}
-
-//we want to quote conditionals with a space, but some may already have quotes around them
-function quoteCQLConditional(conditional) {
-  let returnValue = conditional;
-  //some conditionals may already be quoted
-  if (!_.includes(conditional, '"')) {
-    returnValue = '"' + conditional + '"';
-  }
-  return returnValue;
 }
 
 // Both parameters are arrays. All modifiers will be applied to all values, and joined with "\n or".

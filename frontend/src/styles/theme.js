@@ -21,6 +21,7 @@ const colors = {
   blueDark: '#08101c',
   blueDarker: '#192732',
   blueDarkest: '#071119',
+  blueHighlight: '#5178a4',
   blueLight: '#303e4a',
   blueLink: '#266798',
   blueLinkLight: '#2e7eba',
@@ -194,6 +195,10 @@ const materialUiOverridesBase = {
     root: {
       borderBottom: `1px solid ${colors.grayLighter}`,
       padding: '20px'
+    },
+    title: {
+      fontSize: '1.2em',
+      marginLeft: '20px'
     }
   },
   MuiDialogActions: {
@@ -293,7 +298,7 @@ const materialUiOverridesBase = {
   }
 };
 
-const materialUiOverridesDark ={
+const materialUiOverridesDark = {
   MuiButton: {
     contained: {
       backgroundColor: colors.white,
@@ -358,7 +363,7 @@ const materialUiOverridesDark ={
   },
   MuiPaper: {
     root: {
-       backgroundColor: colors.blue
+      backgroundColor: colors.blue
     }
   }
 };

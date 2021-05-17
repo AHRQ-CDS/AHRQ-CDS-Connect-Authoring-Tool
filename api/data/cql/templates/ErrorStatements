@@ -1,25 +1,35 @@
-define "<%-element_name%>":
-<%errorStatement.statements.forEach((statement, index) => {-%>
-<%if (index > 0) {-%>
-  else if <%- statement.condition.value !== null ? statement.condition.value : 'null' %> then
-<%} else {-%>
-  if <%- statement.condition.value !== null ? statement.condition.value : 'null' %> then
-<%}-%>
-<%if (statement.useThenClause) {-%>
-    {'<%-statement.thenClause%>'}
-<%} else {-%>
-<%statement.child.statements.forEach((childStatement, childIndex) => {-%>
-<%if (childIndex > 0) {-%>
-    else if <%- childStatement.condition.value !== null ? childStatement.condition.value : 'null' %> then
-      {'<%-childStatement.thenClause%>'}
-<%} else {-%>
-    if <%- childStatement.condition.value !== null ? childStatement.condition.value : 'null' %> then
-      {'<%-childStatement.thenClause%>'}
-<%}-%>
-<%})-%>
-    else
-      <%if (statement.child.elseClause === null) {%>null<%} else {%>{'<%-String(statement.child.elseClause)%>'}<%}%>
-<%}-%>
-<%})-%>
-  <%if(errorStatement.statements.length > 0) {%>else <%if (errorStatement.elseClause === null) {%>null<%} else {%>{'<%-String(errorStatement.elseClause)%>'}<%}}
-  else {%>null<%}%>
+<%
+writeStatement = function(statement) {
+  if (statement.ifThenClauses.length === 0 || statement.ifThenClauses[0].ifCondition.value == null)
+    return '  null';
+
+  const statements = [];
+  const quoteCQLConditional = value => `{'${(value || '').replace(/'/g, "\\'")}'}`;
+  const sanitizeCQLString = value => {
+    if (value == null) return null;
+    if (value.includes('"')) return value;
+
+    return `"${value}"`;
+  };
+
+  const generateIfElseTree = (statement, indent) => {
+    const indentPrefix = ' '.repeat(indent);
+    statement.ifThenClauses.forEach((ifThenClause, index) => {
+      statements.push(`${indentPrefix}${index > 0 ? 'else ' : ''}if ${sanitizeCQLString(ifThenClause.ifCondition.value)} then`);
+
+      if (ifThenClause.statements.length === 0) {
+        statements.push(`${indentPrefix}  ${quoteCQLConditional(ifThenClause.thenClause)}`);
+      } else {
+        ifThenClause.statements.forEach(nestedStatement => generateIfElseTree(nestedStatement, indent + 2));
+      }
+    });
+    statements.push(`${indentPrefix}else`);
+    statements.push(`${indentPrefix}  ${quoteCQLConditional(statement.elseClause)}`);
+  };
+
+  generateIfElseTree(statement, 2);
+
+  return statements.join('\n');
+}
+%>define "<%- element_name %>":
+<%- writeStatement(errorStatement) %>

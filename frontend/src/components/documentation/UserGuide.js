@@ -1523,9 +1523,9 @@ const UserGuide = () => {
             <div className={styles.h4Wrapper}>
               <h4 id="Handle_Errors_If">3.11.2 If Condition Then</h4>
               <div>
-                To setup the simplest error handling case, choose a condition from the dropdown menu below the "If"
-                label in the "Errors" box. After you've selected the condition on which the error should be returned,
-                enter the error message into the text box below the label "Then".
+                To setup the simplest error handling case, choose a condition from the dropdown menu to the right of the
+                "If" label in the "Errors" box. After you've selected the condition on which the error should be
+                returned, enter the error message into the text box below the label "Then".
               </div>
               <div>
                 <img

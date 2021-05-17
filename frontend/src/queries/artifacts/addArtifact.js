@@ -3,6 +3,7 @@ import _ from 'lodash';
 
 import createTemplateInstance from 'utils/templates';
 import { getFieldWithId } from 'utils/instances';
+import { generateErrorStatement } from 'components/builder/error-statement/utils';
 
 function initializeTrees(andTemplate, orTemplate) {
   const newSubpopulation = createTemplateInstance(andTemplate);
@@ -59,7 +60,7 @@ function initializeArtifact(templates) {
     ],
     baseElements: [],
     parameters: [],
-    errorStatement: { statements: [] },
+    errorStatement: generateErrorStatement('root'),
     uniqueIdCounter: 0
   };
 }

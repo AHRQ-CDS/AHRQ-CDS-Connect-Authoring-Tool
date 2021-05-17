@@ -7,6 +7,7 @@ import _ from 'lodash';
 import changeToCase from 'utils/strings';
 import createTemplateInstance from 'utils/templates';
 import { getFieldWithType, getFieldWithId } from 'utils/instances';
+import { generateErrorStatement } from 'components/builder/error-statement/utils';
 import * as types from './types';
 
 const API_BASE = process.env.REACT_APP_API_URL;
@@ -31,7 +32,7 @@ export function setStatusMessage(statusType) {
 function parseTree(element, names, baseElementsInUse, parametersInUse, librariesInUse) {
   parseConjunction(element.childInstances, names, baseElementsInUse, parametersInUse, librariesInUse);
   const children = element.childInstances;
-  children.forEach((child) => {
+  children.forEach(child => {
     if ('childInstances' in child) {
       parseTree(child, names, baseElementsInUse, parametersInUse, librariesInUse);
     }
@@ -39,7 +40,7 @@ function parseTree(element, names, baseElementsInUse, parametersInUse, libraries
 }
 
 function parseConjunction(childInstances, names, baseElementsInUse, parametersInUse, librariesInUse) {
-  childInstances.forEach((child) => {
+  childInstances.forEach(child => {
     // Add name of child to array
     const index = names.findIndex(name => name.id === child.uniqueId);
     if (index === -1) {
@@ -79,7 +80,7 @@ function parseConjunction(childInstances, names, baseElementsInUse, parametersIn
     }
 
     if (child.modifiers) {
-      child.modifiers.forEach((modifier) => {
+      child.modifiers.forEach(modifier => {
         if (modifier.type === 'ExternalModifier') {
           const libraryAlreadyInUse = librariesInUse.find(l => l === modifier.libraryName);
           if (libraryAlreadyInUse === undefined) {
@@ -107,15 +108,16 @@ function parseForDuplicateNamesAndUsed(artifact) {
   if (artifact.expTreeExclude.childInstances.length) {
     parseTree(artifact.expTreeExclude, names, baseElementsInUse, parametersInUse, librariesInUse);
   }
-  artifact.subpopulations.forEach((subpopulation) => {
+  artifact.subpopulations.forEach(subpopulation => {
     names.push({ name: subpopulation.subpopulationName, id: subpopulation.uniqueId });
-    if (!subpopulation.special) { // `Doesn't Meet Inclusion Criteria` and `Meets Exclusion Criteria` are special
+    if (!subpopulation.special) {
+      // `Doesn't Meet Inclusion Criteria` and `Meets Exclusion Criteria` are special
       if (subpopulation.childInstances.length) {
         parseTree(subpopulation, names, baseElementsInUse, parametersInUse, librariesInUse);
       }
     }
   });
-  artifact.baseElements.forEach((baseElement) => {
+  artifact.baseElements.forEach(baseElement => {
     const nameField = getFieldWithId(baseElement.fields, 'element_name');
     if (nameField) {
       names.push({ name: nameField.value, id: baseElement.uniqueId });
@@ -127,14 +129,14 @@ function parseForDuplicateNamesAndUsed(artifact) {
       parseConjunction([baseElement], names, baseElementsInUse, parametersInUse, librariesInUse);
     }
   });
-  artifact.parameters.forEach((parameter) => {
+  artifact.parameters.forEach(parameter => {
     names.push({ name: parameter.name, id: parameter.uniqueId });
   });
   return { names, baseElementsInUse, parametersInUse, librariesInUse };
 }
 
 export function updateArtifact(artifactToUpdate, props) {
-  return (dispatch) => {
+  return dispatch => {
     const artifact = {
       ...artifactToUpdate,
       ...props
@@ -142,13 +144,13 @@ export function updateArtifact(artifactToUpdate, props) {
     const { names, baseElementsInUse, parametersInUse, librariesInUse } = parseForDuplicateNamesAndUsed(artifact);
 
     // Add uniqueId to list on base element to mark where it is used.
-    artifact.baseElements.forEach((element) => {
+    artifact.baseElements.forEach(element => {
       const elementInUse = baseElementsInUse.find(usedBaseEl => usedBaseEl.baseElementId === element.uniqueId);
       element.usedBy = elementInUse ? elementInUse.usedBy : [];
     });
 
     // Add uniqueId to list on parameter to mark where it is used.
-    artifact.parameters.forEach((parameter) => {
+    artifact.parameters.forEach(parameter => {
       const parameterInUse = parametersInUse.find(usedParameter => usedParameter.parameterId === parameter.uniqueId);
       parameter.usedBy = parameterInUse ? parameterInUse.usedBy : [];
     });
@@ -163,7 +165,7 @@ export function updateArtifact(artifactToUpdate, props) {
 }
 
 export function updateAndSaveArtifact(artifactToUpdate, props) {
-  return (dispatch) => {
+  return dispatch => {
     const artifact = {
       ...artifactToUpdate,
       ...props
@@ -227,7 +229,7 @@ export function initializeArtifact(andTemplate, orTemplate) {
     ],
     baseElements: [],
     parameters: [],
-    errorStatement: { statements: [] },
+    errorStatement: generateErrorStatement('root'),
     uniqueIdCounter: 0
   };
 
@@ -262,14 +264,15 @@ function loadArtifactsFailure(error) {
 
 function sendArtifactsRequest() {
   return new Promise((resolve, reject) => {
-    axios.get(`${API_BASE}/artifacts`)
+    axios
+      .get(`${API_BASE}/artifacts`)
       .then(result => resolve(result.data))
       .catch(error => reject(error));
   });
 }
 
 export function loadArtifacts() {
-  return (dispatch) => {
+  return dispatch => {
     dispatch(requestArtifacts());
 
     return sendArtifactsRequest()
@@ -307,14 +310,15 @@ function loadArtifactFailure(error) {
 
 function sendArtifactRequest(id) {
   return new Promise((resolve, reject) => {
-    axios.get(`${API_BASE}/artifacts/${id}`)
+    axios
+      .get(`${API_BASE}/artifacts/${id}`)
       .then(result => resolve(result.data[0]))
       .catch(error => reject(error));
   });
 }
 
 export function loadArtifact(id) {
-  return (dispatch) => {
+  return dispatch => {
     dispatch(requestArtifact(id));
 
     return sendArtifactRequest(id)
@@ -334,7 +338,7 @@ function requestDownloadArtifact() {
 
 function downloadArtifactSuccess() {
   return {
-    type: types.DOWNLOAD_ARTIFACT_SUCCESS,
+    type: types.DOWNLOAD_ARTIFACT_SUCCESS
   };
 }
 
@@ -358,8 +362,12 @@ function sendDownloadArtifactRequest(artifact, dataModel) {
   const fileName = changeToCase(`${artifact.name}-v${artifact.version}-cql`, 'snakeCase');
 
   return new Promise((resolve, reject) => {
-    axios.post(`${API_BASE}/cql`, artifact, { responseType: 'blob' })
-      .then((result) => { FileSaver.saveAs(result.data, `${fileName}.zip`); resolve(result.data); })
+    axios
+      .post(`${API_BASE}/cql`, artifact, { responseType: 'blob' })
+      .then(result => {
+        FileSaver.saveAs(result.data, `${fileName}.zip`);
+        resolve(result.data);
+      })
       .catch(error => reject(error));
   });
 }
@@ -375,14 +383,13 @@ function sendValidateArtifactRequest(artifact) {
 }
 
 export function downloadArtifact(artifact, dataModel) {
-  return (dispatch) => {
+  return dispatch => {
     dispatch(requestDownloadArtifact());
 
     return sendDownloadArtifactRequest(artifact, dataModel)
       .then(() => {
         dispatch(downloadArtifactSuccess());
-        sendValidateArtifactRequest(artifact)
-          .then(res => dispatch(validateArtifactSuccess(res.data)));
+        sendValidateArtifactRequest(artifact).then(res => dispatch(validateArtifactSuccess(res.data)));
       })
       .catch(error => dispatch(downloadArtifactFailure(error)));
   };
@@ -414,15 +421,14 @@ function saveArtifactFailure(error) {
 function sendSaveArtifactRequest(artifact) {
   if (artifact._id == null) {
     const artifactWithoutId = _.omit(artifact, ['_id']);
-    return axios.post(`${API_BASE}/artifacts`, artifactWithoutId)
-      .then(result => result.data);
+    return axios.post(`${API_BASE}/artifacts`, artifactWithoutId).then(result => result.data);
   }
 
   return axios.put(`${API_BASE}/artifacts`, artifact).then(() => artifact);
 }
 
 export function saveArtifact(artifact) {
-  return (dispatch) => {
+  return dispatch => {
     dispatch(requestSaveArtifact());
 
     return sendSaveArtifactRequest(artifact)
