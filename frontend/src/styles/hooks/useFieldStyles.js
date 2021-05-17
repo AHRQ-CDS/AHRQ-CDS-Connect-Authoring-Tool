@@ -95,15 +95,19 @@ export default makeStyles(
       textAlign: 'right',
       marginTop: '10px'
     },
+    fieldLabelShort: {
+      marginTop: '0px',
+      paddingBottom: '3px'
+    },
     fieldLabelTall: {
       marginTop: '18px'
     },
+    fieldLabelTaller: {
+      marginTop: '30px'
+    },
     footer: {
-      borderBottom: `3px solid ${theme.palette.common.grayLighter}`,
       color: theme.palette.common.grayLight,
       fontSize: '0.7em',
-      marginBottom: '10px',
-      paddingBottom: '5px',
       textAlign: 'right',
       whiteSpace: 'nowrap'
     },

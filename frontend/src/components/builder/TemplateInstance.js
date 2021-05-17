@@ -20,6 +20,8 @@ import { faExclamationCircle } from '@fortawesome/free-solid-svg-icons';
 import { UncontrolledTooltip } from 'reactstrap';
 import _ from 'lodash';
 
+import { getTypeByCqlArgument } from './editors/utils.js';
+
 import {
   CodeSelectModal,
   DeleteConfirmationModal,
@@ -227,7 +229,15 @@ export default class TemplateInstance extends Component {
   };
 
   handleModifierSelected = modifierId => {
-    const selectedModifier = _.cloneDeep(this.props.modifierMap[modifierId]);
+    let selectedModifier = _.cloneDeep(this.props.modifierMap[modifierId]);
+    if (selectedModifier?.type && selectedModifier.type === 'ExternalModifier') {
+      if (selectedModifier?.arguments) {
+        selectedModifier.values.value = selectedModifier.arguments.map((argValue, index) => {
+          if (index === 0) return null;
+          return { argSource: 'editor', type: getTypeByCqlArgument(argValue)};
+        });
+      }
+    }
     const modifiers = (this.props.templateInstance.modifiers || []).concat(selectedModifier);
     this.setState({ showModifiers: false });
     this.setAppliedModifiers(modifiers);
@@ -426,6 +436,26 @@ export default class TemplateInstance extends Component {
 
   getPath = () => this.props.getPath(this.props.templateInstance.uniqueId);
 
+  getReferenceArguments = referenceFieldArgs => {
+    let referenceSetIds = new Set();
+    referenceFieldArgs.forEach(arg => {
+      if (
+        arg.value &&
+        arg.value.argSource &&
+        arg.value.argSource !== 'editor' &&
+        arg.value.argSource !== '' &&
+        arg.value.argSource !== 'externalCql' &&
+        arg.value.selected
+      ) {
+        referenceSetIds.add(arg.value.selected);
+      }
+    });
+
+    return [...referenceSetIds].map(referenceSetId =>
+      referenceFieldArgs.find(arg => arg.value?.selected === referenceSetId)
+    );
+  };
+
   hasBaseElementLinks = () => {
     const { baseElements, templateInstance } = this.props;
     const thisBaseElement = baseElements.find(baseElement => baseElement.uniqueId === templateInstance.uniqueId);
@@ -442,7 +472,9 @@ export default class TemplateInstance extends Component {
       disableAddElement,
       scrollToElement,
       templateInstance,
-      validateReturnType
+      validateReturnType,
+      parameters,
+      treeName
     } = this.props;
     const { returnType } = this.state;
     const fieldsToRender = ['number', 'string', 'textarea', 'valueset'];
@@ -474,8 +506,13 @@ export default class TemplateInstance extends Component {
 
         {templateInstance.fields?.length > 2 && templateInstance.type === 'externalCqlElement' && (
           <ExternalCqlTemplate
+            allInstancesInAllTrees={allInstancesInAllTrees}
+            baseElements={baseElements}
             externalCqlArguments={externalCqlField.value.arguments ? externalCqlField.value.arguments : []}
             handleUpdateExternalCqlArguments={this.handleUpdateExternalCqlArguments}
+            parameters={parameters}
+            scrollToElement={scrollToElement}
+            treeName={treeName}
           />
         )}
 
@@ -490,6 +527,21 @@ export default class TemplateInstance extends Component {
           </>
         )}
 
+        {referenceField?.id === 'externalCqlReference' &&
+          referenceField.value?.arguments &&
+          [...this.getReferenceArguments(referenceField.value.arguments)].map((arg, index) => (
+            <ReferenceTemplate
+              key={index}
+              referenceInstanceTab={getInstanceByReference(allInstancesInAllTrees, referenceField).tab}
+              referenceField={{
+                id:
+                  arg.value.argSource === 'baseElement' ? 'baseElementArgumentReference' : 'parameterArgumentReference',
+                value: { id: arg.value?.selected, elementName: arg.value?.elementName }
+              }}
+              scrollToElement={scrollToElement}
+            />
+          ))}
+
         {referenceField && (
           <ReferenceTemplate
             referenceInstanceTab={getInstanceByReference(allInstancesInAllTrees, referenceField).tab}
@@ -499,16 +551,16 @@ export default class TemplateInstance extends Component {
         )}
 
         {this.hasBaseElementLinks() &&
-          baseElements
-            .find(baseElement => baseElement.uniqueId === templateInstance.uniqueId)
-            .usedBy.map(link => (
-              <ReferenceTemplate
-                key={link}
-                referenceInstanceTab={getInstanceById(allInstancesInAllTrees, link).tab}
-                referenceField={{ id: 'baseElementUse', value: { id: link } }}
-                scrollToElement={scrollToElement}
-              />
-            ))}
+          [
+            ...new Set(baseElements.find(baseElement => baseElement.uniqueId === templateInstance.uniqueId).usedBy)
+          ].map((link, index) => (
+            <ReferenceTemplate
+              key={`standalone-${link}-${index}`}
+              referenceInstanceTab={getInstanceById(allInstancesInAllTrees, link).tab}
+              referenceField={{ id: 'baseElementUse', value: { id: link } }}
+              scrollToElement={scrollToElement}
+            />
+          ))}
 
         {templateInstance.modifiers?.length > 0 && (
           <ModifiersTemplate
@@ -747,7 +799,7 @@ TemplateInstance.propTypes = {
   modifierMap: PropTypes.object.isRequired,
   modifiersByInputType: PropTypes.object.isRequired,
   otherInstances: PropTypes.array.isRequired,
-  parameters: PropTypes.array,
+  parameters: PropTypes.array.isRequired,
   renderIndentButtons: PropTypes.func.isRequired,
   scrollToElement: PropTypes.func.isRequired,
   subpopulationIndex: PropTypes.number,

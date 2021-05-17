@@ -4,7 +4,7 @@ import { MenuBook as MenuBookIcon } from '@material-ui/icons';
 import clsx from 'clsx';
 import _ from 'lodash';
 
-import { EditorsTemplate } from 'components/builder/templates';
+import { ArgumentsTemplate } from 'components/builder/templates';
 import { useSpacingStyles } from 'styles/hooks';
 import useStyles from './styles';
 
@@ -26,7 +26,7 @@ const ExternalModifier = ({ argumentTypes, handleUpdateModifier, modifierArgumen
   }, [handleUpdateModifier, modifierArguments.length, values]);
 
   return (
-    <div className={styles.modifier}>
+    <div key={name} className={styles.modifier}>
       <div className={styles.modifierHeader}>
         <MenuBookIcon fontSize="small" />
         {name}
@@ -39,14 +39,13 @@ const ExternalModifier = ({ argumentTypes, handleUpdateModifier, modifierArgumen
             if (index === 0) return null;
 
             return (
-              <EditorsTemplate
+              <ArgumentsTemplate
                 key={index}
-                handleUpdateEditor={newValue => assignValue(newValue, index)}
-                label={modifierArg.name}
+                argumentLabel={modifierArg.name}
+                argumentType={argumentTypes[index].calculated}
+                argumentValue={values[index]}
+                handleUpdateArgument={newValue => assignValue(newValue, index)}
                 isNested
-                showArgumentType
-                type={argumentTypes[index].calculated}
-                value={values[index]}
               />
             );
           })}

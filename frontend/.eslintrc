@@ -16,7 +16,6 @@
     "no-underscore-dangle": ["error", { "allow": ["_id"] }], // because mongo
     "no-unused-vars": ["error", { "args": "none" }], // don't check function arguments
     "no-use-before-define": ["error", "nofunc"],
-    "object-curly-newline": ["error", { "minProperties": 8, "consistent": true }],
     "prefer-destructuring": ["error", { "AssignmentExpression": { "array": false, "object": false } }],
     "semi": ["error", "always"]
   },

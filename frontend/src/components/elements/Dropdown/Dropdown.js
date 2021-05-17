@@ -42,7 +42,7 @@ const Dropdown = ({
 );
 
 Dropdown.propTypes = {
-  Footer: PropTypes.element,
+  Footer: PropTypes.oneOfType([PropTypes.element, PropTypes.bool]),
   labelKey: PropTypes.string,
   message: PropTypes.oneOfType([PropTypes.element, PropTypes.bool]),
   options: PropTypes.array.isRequired,

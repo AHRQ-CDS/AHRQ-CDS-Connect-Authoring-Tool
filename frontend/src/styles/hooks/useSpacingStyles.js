@@ -2,6 +2,9 @@ import { makeStyles } from '@material-ui/core/styles';
 
 export default makeStyles(
   theme => ({
+    alignCenter: {
+      alignItems: 'center'
+    },
     center: {
       alignItems: 'center',
       display: 'flex',
@@ -40,6 +43,9 @@ export default makeStyles(
     },
     marginRight: {
       marginRight: '10px'
+    },
+    marginTop: {
+      marginTop: '20px'
     },
     minHeight: {
       minHeight: '500px'

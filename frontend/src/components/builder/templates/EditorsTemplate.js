@@ -11,7 +11,6 @@ import {
   StringEditor
 } from 'components/builder/editors';
 import { useFieldStyles } from 'styles/hooks';
-import changeToCase from 'utils/strings';
 
 const EditorsTemplate = ({ handleUpdateEditor, label, isNested, showArgumentType, type, value }) => {
   const fieldStyles = useFieldStyles();
@@ -61,10 +60,6 @@ const EditorsTemplate = ({ handleUpdateEditor, label, isNested, showArgumentType
 
       <div className={fieldStyles.fieldInputGroupContainer}>
         <div className={fieldStyles.fieldInputGroup}>{editor}</div>
-
-        {showArgumentType && (
-          <div className={fieldStyles.footer}>Argument Type: {changeToCase(type, 'capitalCase')}</div>
-        )}
       </div>
     </div>
   );
@@ -73,7 +68,7 @@ const EditorsTemplate = ({ handleUpdateEditor, label, isNested, showArgumentType
 EditorsTemplate.propTypes = {
   handleUpdateEditor: PropTypes.func.isRequired,
   isNested: PropTypes.bool,
-  label: PropTypes.string.isRequired,
+  label: PropTypes.string,
   showArgumentType: PropTypes.bool,
   type: PropTypes.string.isRequired,
   value: PropTypes.any

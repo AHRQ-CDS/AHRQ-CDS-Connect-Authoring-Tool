@@ -5,17 +5,26 @@ import { IconButton } from '@material-ui/core';
 import { Link as LinkIcon } from '@material-ui/icons';
 import clsx from 'clsx';
 
-import { useFieldStyles } from 'styles/hooks';
+import { useFieldStyles, useSpacingStyles } from 'styles/hooks';
 
 const ReferenceTemplate = ({ referenceField, referenceInstanceTab, scrollToElement }) => {
   const artifactNames = useSelector(state => state.artifacts.names);
   const fieldStyles = useFieldStyles();
+  const spacingStyles = useSpacingStyles();
 
-  const referenceName =
-    referenceField.id === 'externalCqlReference'
-      ? referenceField.value.id
-      : artifactNames.find(name => name.id === referenceField.value.id).name || '';
+  const getReferenceName = () => {
+    switch (referenceField.id) {
+      case 'externalCqlReference':
+        return referenceField.value.id;
+      case 'baseElementArgumentReference':
+      case 'parameterArgumentReference':
+        return referenceField.value.elementName;
+      default:
+        return artifactNames.find(name => name.id === referenceField.value.id).name || '';
+    }
+  };
 
+  // keep in this order
   const tabLabelMap = {
     expTreeInclude: 'Inclusions',
     expTreeExclude: 'Exclusions',
@@ -24,27 +33,27 @@ const ReferenceTemplate = ({ referenceField, referenceInstanceTab, scrollToEleme
   };
 
   const referenceLabelMap = {
+    baseElementArgumentReference: 'Base Element',
     baseElementReference: 'Base Element',
-    parameterReference: 'Parameter',
-    parameterUse: 'Parameter Use',
+    baseElementUse: 'Element Use',
     externalCqlReference: 'External CQL Element',
-    baseElementUse: 'Element Use'
+    parameterArgumentReference: 'Parameter',
+    parameterReference: 'Parameter',
+    parameterUse: 'Parameter Use'
   };
 
   const scrollToTabIndex = Object.keys(tabLabelMap).indexOf(referenceInstanceTab);
-  const referenceLabel =
-    referenceField.id === 'baseElementUse' || referenceField.id === 'parameterUse' ? (
-      <>&#8594; {tabLabelMap[referenceInstanceTab]}</>) : ('');
+  const isUse = referenceField.id === 'baseElementUse' || referenceField.id === 'parameterUse';
 
   return (
-    <div className={fieldStyles.field} id="reference-template">
-      <div className={clsx(fieldStyles.fieldLabel, fieldStyles.fieldLabelTall)}>
+    <div className={clsx(fieldStyles.field, spacingStyles.alignCenter)} id="reference-template">
+      <div className={clsx(fieldStyles.fieldLabel, fieldStyles.fieldLabelShort)}>
         {referenceLabelMap[referenceField.id]}:
       </div>
 
       <div className={fieldStyles.fieldDetails}>
         <div className={fieldStyles.fieldDisplay}>
-          {referenceName} {referenceLabel}
+          {getReferenceName()} {isUse && <>&#8594; {tabLabelMap[referenceInstanceTab]}</>}
         </div>
 
         {referenceField.id !== 'externalCqlReference' && (

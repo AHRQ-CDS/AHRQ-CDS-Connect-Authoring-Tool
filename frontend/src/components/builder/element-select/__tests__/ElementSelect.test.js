@@ -27,7 +27,12 @@ describe('<ElementSelect />', () => {
 
   const renderComponent = ({ apiKey = null, artifact = mockElementSelectArtifact, ...props } = {}) =>
     render(
-      <Provider store={createStore(x => x, { artifacts: { artifact }, vsac: { apiKey } })}>
+      <Provider
+        store={createStore(x => x, {
+          artifacts: { artifact },
+          vsac: { apiKey }
+        })}
+      >
         <ElementSelect excludeListOperations={true} handleAddElement={jest.fn()} isDisabled={false} {...props} />
       </Provider>
     );

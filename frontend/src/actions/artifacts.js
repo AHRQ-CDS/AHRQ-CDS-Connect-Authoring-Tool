@@ -39,6 +39,44 @@ function parseTree(element, names, baseElementsInUse, parametersInUse, libraries
   });
 }
 
+function getExternalParameterUsage(cqlElementArgs, child, parametersInUse) {
+  let newParametersInUse = [];
+  cqlElementArgs.forEach(arg => {
+    if (arg?.argSource && arg?.selected) {
+      if (arg.argSource === 'parameter') {
+        const parameterAlreadyInUse = parametersInUse.find(s => s.parameterId === arg.selected);
+        if (parameterAlreadyInUse === undefined) {
+          // Add the base element id and begin the list of other instances using the base element
+          newParametersInUse.push({ parameterId: arg.selected, usedBy: [child.uniqueId] });
+        } else {
+          // If the base element is already used elsewhere, just add to the list of instances using it
+          newParametersInUse.push(parameterAlreadyInUse.usedBy.push(child.uniqueId));
+        }
+      }
+    }
+  });
+  return newParametersInUse;
+}
+
+function getExternalBaseElementUsage(cqlElementArgs, child, baseElementsInUse) {
+  let newBaseElementsInUse = [];
+  cqlElementArgs.forEach(arg => {
+    if (arg?.argSource && arg?.selected) {
+      if (arg.argSource === 'baseElement') {
+        const baseElementAlreadyInUse = baseElementsInUse.find(s => s.baseElementId === arg.selected);
+        if (baseElementAlreadyInUse === undefined) {
+          // Add the base element id and begin the list of other instances using the base element
+          newBaseElementsInUse.push({ baseElementId: arg.selected, usedBy: [child.uniqueId] });
+        } else {
+          // If the base element is already used elsewhere, just add to the list of instances using it
+          newBaseElementsInUse.push(baseElementAlreadyInUse.usedBy.push(child.uniqueId));
+        }
+      }
+    }
+  });
+  return newBaseElementsInUse;
+}
+
 function parseConjunction(childInstances, names, baseElementsInUse, parametersInUse, librariesInUse) {
   childInstances.forEach(child => {
     // Add name of child to array
@@ -76,16 +114,74 @@ function parseConjunction(childInstances, names, baseElementsInUse, parametersIn
           // Add the library name
           librariesInUse.push(referenceField.value.library);
         }
+        if (referenceField?.value?.arguments) {
+          getExternalParameterUsage(
+            referenceField.value.arguments.map(arg => arg.value),
+            child,
+            parametersInUse
+          ).forEach(usage => {
+            const usageInstanceIndex = parametersInUse.findIndex(
+              paramInUse => paramInUse.parameterId === usage.parameterId
+            );
+            if (usageInstanceIndex !== -1) parametersInUse[usageInstanceIndex] = usage;
+            else parametersInUse.push(usage);
+          });
+          getExternalBaseElementUsage(
+            referenceField.value.arguments.map(arg => arg.value),
+            child,
+            baseElementsInUse
+          ).forEach(usage => {
+            const usageInstanceIndex = baseElementsInUse.findIndex(
+              elementInUse => elementInUse.baseElementId === usage.baseElementId
+            );
+            if (usageInstanceIndex !== -1) baseElementsInUse[usageInstanceIndex] = usage;
+            else baseElementsInUse.push(usage);
+          });
+        }
       }
     }
 
+    // Handle Both External CQL References as well as external arguments
+    // for external cql modifiers.
     if (child.modifiers) {
-      child.modifiers.forEach(modifier => {
+      child.modifiers.forEach((modifier, index) => {
         if (modifier.type === 'ExternalModifier') {
           const libraryAlreadyInUse = librariesInUse.find(l => l === modifier.libraryName);
           if (libraryAlreadyInUse === undefined) {
             // Add the library name
             librariesInUse.push(modifier.libraryName);
+          }
+          if (modifier.values?.value) {
+            getExternalParameterUsage(modifier.values.value, child, parametersInUse).forEach(usage => {
+              const usageInstanceIndex = parametersInUse.findIndex(
+                paramInUse => paramInUse.parameterId === usage.parameterId
+              );
+              if (usageInstanceIndex !== -1)
+                parametersInUse[usageInstanceIndex] = {
+                  ...usage,
+                  modifier: { parentInstanceId: child.uniqueId, modifierIndex: index }
+                };
+              else
+                parametersInUse.push({
+                  ...usage,
+                  modifier: { parentInstanceId: child.uniqueId, modifierIndex: index }
+                });
+            });
+            getExternalBaseElementUsage(modifier.values.value, child, baseElementsInUse).forEach(usage => {
+              const usageInstanceIndex = baseElementsInUse.findIndex(
+                elementInUse => elementInUse.baseElementId === usage.baseElementId
+              );
+              if (usageInstanceIndex !== -1)
+                baseElementsInUse[usageInstanceIndex] = {
+                  ...usage,
+                  modifier: { parentInstanceId: child.uniqueId, modifierIndex: index }
+                };
+              else
+                baseElementsInUse.push({
+                  ...usage,
+                  modifier: { parentInstanceId: child.uniqueId, modifierIndex: index }
+                });
+            });
           }
         }
       });

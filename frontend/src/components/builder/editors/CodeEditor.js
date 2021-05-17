@@ -84,7 +84,7 @@ const CodeEditor = ({ handleUpdateEditor, isConcept = false, value }) => {
 
   return (
     <div className={fieldStyles.fieldInputFullWidth} id="code-editor">
-      {value != null ? (
+      {value != null && value !== '' ? (
         <Paper className={fieldStyles.fieldCard}>
           <div className={fieldStyles.fieldCardCloseButton}>
             <IconButton aria-label="close" color="primary" onClick={() => handleUpdateEditor(null)}>

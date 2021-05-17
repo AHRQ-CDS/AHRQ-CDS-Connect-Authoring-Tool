@@ -31,7 +31,7 @@ const ModifierTemplate = ({
   handleSelectValueSet,
   handleUpdateModifier,
   index,
-  modifier
+  modifier,
 }) => {
   const modifierMap = useSelector(state => state.modifiers.modifierMap);
   const fieldStyles = useFieldStyles();
@@ -266,7 +266,7 @@ const ModifiersTemplate = ({
   elementInstance,
   handleRemoveModifier,
   handleSelectValueSet,
-  handleUpdateModifier
+  handleUpdateModifier,
 }) => {
   const { modifiers } = elementInstance;
   const fieldStyles = useFieldStyles();
@@ -285,6 +285,7 @@ const ModifiersTemplate = ({
             handleSelectValueSet={handleSelectValueSet}
             handleUpdateModifier={handleUpdateModifier}
             index={index}
+            isLastModifier={index + 1 === modifiers.length}
             modifier={modifier}
           />
         ))}
@@ -298,7 +299,7 @@ ModifiersTemplate.propTypes = {
   elementInstance: PropTypes.object.isRequired,
   handleRemoveModifier: PropTypes.func.isRequired,
   handleSelectValueSet: PropTypes.func.isRequired,
-  handleUpdateModifier: PropTypes.func.isRequired
+  handleUpdateModifier: PropTypes.func.isRequired,
 };
 
 export default ModifiersTemplate;

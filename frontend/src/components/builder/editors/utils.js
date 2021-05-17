@@ -25,7 +25,7 @@ export function getTypeByCqlArgument(cqlArgument) {
 
   // Note: there is a large overlap between this type map and one stored
   // in the backend in the file api/handlers/cqlHandler.js
-  // If you update something here, be sure to update it there also.
+  // If you update something here, be sure to update it there
   const argumentTypeMap = {
     '{urn:hl7-org:elm-types:r1}Boolean': 'boolean',
     '{urn:hl7-org:elm-types:r1}Code': 'system_code',

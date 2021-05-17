@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { Alert } from '@material-ui/lab';
 import _ from 'lodash';
 
-import EditorsTemplate from './EditorsTemplate';
+import { ArgumentsTemplate } from 'components/builder/templates';
 import { getTypeByCqlArgument } from 'components/builder/editors/utils';
 
 const ExternalCQLTemplate = ({ externalCqlArguments, handleUpdateExternalCqlArguments }) => {
@@ -26,13 +26,12 @@ const ExternalCQLTemplate = ({ externalCqlArguments, handleUpdateExternalCqlArgu
       )}
 
       {externalCqlArguments?.map((cqlArgument, index) => (
-        <EditorsTemplate
+        <ArgumentsTemplate
           key={index}
-          handleUpdateEditor={newArgValue => handleSelectExternalCqlArgument(newArgValue, index)}
-          label={cqlArgument.name}
-          showArgumentType
-          type={getTypeByCqlArgument(cqlArgument)}
-          value={cqlArgument.value}
+          argumentLabel={cqlArgument.name}
+          argumentType={getTypeByCqlArgument(cqlArgument)}
+          argumentValue={externalCqlArguments[index].value}
+          handleUpdateArgument={newValue => handleSelectExternalCqlArgument(newValue, index)}
         />
       ))}
     </div>

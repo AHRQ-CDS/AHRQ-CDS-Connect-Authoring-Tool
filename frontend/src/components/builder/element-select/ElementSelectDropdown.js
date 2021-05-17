@@ -18,6 +18,11 @@ const ElementSelectDropdown = ({ handleSelectOption, isDisabled, label, options,
       id={dropdownId}
       className={fieldStyles.fieldInputXl}
       label={label}
+      message={isDisabled && <Alert severity="error">Cannot add element when Base Element List in use.</Alert>}
+      onChange={event => handleSelectOption(event.target.value)}
+      options={isDisabled ? [] : options}
+      renderItem={option => <ElementOption option={option} />}
+      value={value}
       Footer={
         showFooter && (
           <div>
@@ -42,11 +47,6 @@ const ElementSelectDropdown = ({ handleSelectOption, isDisabled, label, options,
           </div>
         )
       }
-      message={isDisabled && <Alert severity="error">Cannot add element when Base Element List in use.</Alert>}
-      onChange={event => handleSelectOption(event.target.value)}
-      options={isDisabled ? [] : options}
-      renderItem={option => <ElementOption option={option} />}
-      value={value}
     />
   );
 };

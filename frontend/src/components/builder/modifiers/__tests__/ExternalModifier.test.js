@@ -1,18 +1,23 @@
 import React from 'react';
+import { createStore } from 'redux';
+import { Provider } from 'react-redux';
 import { render, screen } from 'utils/test-utils';
+import mockArtifact from 'mocks/mockArtifact';
 import ExternalModifier from '../ExternalModifier';
 
 describe('<ExternalModifier />', () => {
-  const renderComponent = (props = {}) =>
+  const renderComponent = ({ artifact = mockArtifact, ...props } = {}) =>
     render(
-      <ExternalModifier
-        argumentTypes={[]}
-        handleUpdateModifier={jest.fn()}
-        modifierArguments={[]}
-        name="external"
-        values={[]}
-        {...props}
-      />
+      <Provider store={createStore(x => x, { artifacts: { artifact }, externalCQL: { externalCqlList: [] } })}>
+        <ExternalModifier
+          argumentTypes={[]}
+          handleUpdateModifier={jest.fn()}
+          modifierArguments={[]}
+          name="external"
+          values={[]}
+          {...props}
+        />
+      </Provider>
     );
 
   it('renders the name', () => {

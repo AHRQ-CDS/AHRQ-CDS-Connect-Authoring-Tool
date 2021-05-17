@@ -1,3 +1,4 @@
+export { default as ArgumentsTemplate } from './ArgumentsTemplate';
 export { default as CodeListTemplate } from './CodeListTemplate';
 export { default as EditorsTemplate } from './EditorsTemplate';
 export { default as ExternalCqlTemplate } from './ExternalCqlTemplate';

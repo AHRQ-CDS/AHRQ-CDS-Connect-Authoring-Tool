@@ -21,34 +21,45 @@ const templateMap = loadTemplates(templatePath);
 const modifierMap = loadTemplates(modifierPath);
 // Each library will be included. Aliases are optional.
 
-const resolveCQLFieldType = field => {
-  // These conversions are everything that we have a picker for.
-  // They come directly from src/components/builder/editors directory
+const getCQLValueString = externalCQLArgument => {
+  switch (externalCQLArgument.type) {
+    case 'integer':
+    case 'boolean':
+    case 'string':
+      return externalCQLArgument.selected;
+    case 'decimal':
+      return parseFloat(externalCQLArgument.selected.str);
+    case 'system_code':
+    case 'system_concept':
+      if (externalCQLArgument.selected.system && externalCQLArgument.selected.uri)
+        if (
+          this.codeSystemMap.get(externalCQLArgument.selected.system) &&
+          externalCQLArgument.selected.system === 'Other'
+        ) {
+          let systemUID;
+          let ctr = 0;
+          do {
+            ctr += 1;
+            systemUID = externalCQLArgument.selected.system.concat(`_${ctr.toString()}`);
+          } while (this.codeSystemMap.get(systemUID));
+          this.codeSystemMap.set(systemUID, {
+            name: systemUID,
+            id: externalCQLArgument.selected.uri
+          });
+          if (externalCQLArgument.type === 'system_concept')
+            return `Concept { Code '${externalCQLArgument.selected.code}' from "${systemUID}" }`;
+          else return `Code '${externalCQLArgument.selected.code}' from "${systemUID}"`;
+        } else {
+          this.codeSystemMap.set(externalCQLArgument.selected.system, {
+            name: externalCQLArgument.selected.system,
+            id: externalCQLArgument.selected.uri
+          });
+        }
+      return externalCQLArgument.selected.str;
 
-  // Note: there is a large overlap between this type map and one stored
-  // in the frontend in the file frontend/src/components/builder/editors/utils.js
-  // If you update something here, be sure to update it there also.
-  const convert = {
-    '{urn:hl7-org:elm-types:r1}Integer': 'integer',
-    '{urn:hl7-org:elm-types:r1}Boolean': 'boolean',
-    '{urn:hl7-org:elm-types:r1}Decimal': 'decimal',
-    '{urn:hl7-org:elm-types:r1}Code': 'system_code',
-    '{urn:hl7-org:elm-types:r1}Concept': 'system_concept',
-    '{urn:hl7-org:elm-types:r1}DateTime': 'datetime',
-    '{urn:hl7-org:elm-types:r1}String': 'string',
-    '{urn:hl7-org:elm-types:r1}Time': 'time',
-    '{urn:hl7-org:elm-types:r1}Quantity': 'system_quantity'
-  };
-  const convert_interval = {
-    '{urn:hl7-org:elm-types:r1}Decimal': 'interval_of_decimal',
-    '{urn:hl7-org:elm-types:r1}Quantity': 'interval_of_quantity',
-    '{urn:hl7-org:elm-types:r1}DateTime': 'interval_of_datetime',
-    '{urn:hl7-org:elm-types:r1}Integer': 'interval_of_integer'
-  };
-
-  if (field.operandTypeSpecifier && field.operandTypeSpecifier.pointType)
-    return convert_interval[field.operandTypeSpecifier.pointType.resultTypeName];
-  return convert[field.operandTypeSpecifier.resultTypeName];
+    default:
+      return externalCQLArgument.selected.str;
+  }
 };
 
 const includeLibrariesDstu2 = [
@@ -795,44 +806,27 @@ class CqlArtifact {
           } else if (field.id === 'externalCqlReference') {
             if (field.value.arguments && field.value.arguments.length > 0) {
               const expandArgs = field.value.arguments
-                .map(arg => {
-                  if (arg.value)
-                    switch (resolveCQLFieldType(arg)) {
-                      case 'integer':
-                      case 'boolean':
-                      case 'string':
-                        return arg.value;
-                      case 'decimal':
-                        return parseFloat(arg.value.decimal);
-                      case 'system_code':
-                      case 'system_concept':
-                        if (arg.value.system && arg.value.uri)
-                          if (this.codeSystemMap.get(arg.value.system) && arg.value.system === 'Other') {
-                            let systemUID;
-                            let ctr = 0;
-                            do {
-                              ctr += 1;
-                              systemUID = arg.value.system.concat(`_${ctr.toString()}`);
-                            } while (this.codeSystemMap.get(systemUID));
-                            this.codeSystemMap.set(systemUID, {
-                              name: systemUID,
-                              id: arg.value.uri
-                            });
-                            if (resolveCQLFieldType(arg) === 'system_concept')
-                              return `Concept { Code '${arg.value.code}' from "${systemUID}" }`;
-                            else return `Code '${arg.value.code}' from "${systemUID}"`;
-                          } else {
-                            this.codeSystemMap.set(arg.value.system, {
-                              name: arg.value.system,
-                              id: arg.value.uri
-                            });
-                          }
-                        return arg.value.str;
-
-                      default:
-                        return arg.value.str;
+                .map((arg, index) => {
+                  if (arg.value) {
+                    if (arg.value.argSource && arg.value.selected) {
+                      if (arg.value.argSource === 'editor' && arg.value.selected != '') {
+                        return getCQLValueString(arg.value);
+                      } else if (arg.value.argSource === 'parameter') {
+                        return `"${arg.value.elementName}"`;
+                      } else if (arg.value.argSource === 'baseElement' && arg.value.selected != '') {
+                        return `"${arg.value.elementName}"`;
+                      } else if (
+                        arg.value.argSource === 'externalCql' &&
+                        arg.value.elementName &&
+                        arg.value.elementType
+                      ) {
+                        return arg.value.elementType === 'function'
+                          ? `${arg.value.elementName}()`
+                          : arg.value.elementName;
+                      }
                     }
-                  else return 'null';
+                  }
+                  return 'null';
                 })
                 .join(', ');
               context.values = [`"${field.value.library}"."${field.value.element}"(${expandArgs})`];
@@ -1043,9 +1037,10 @@ function applyModifiers(values = [], modifiers = []) {
         if (!modifier.cqlLibraryFunction && modifier.values && modifier.values.templateName) {
           modifier.cqlLibraryFunction = modifier.values.templateName;
         }
-        const modifierContext = {
+        let modifierContext = {
           cqlLibraryFunction: modifier.cqlLibraryFunction,
-          value_name: newValue
+          value_name: newValue,
+          values: { value: null }
         };
         if (modifier.values && modifier.type === 'ExternalModifier') {
           modifier.values.value.forEach(value => {
@@ -1076,7 +1071,25 @@ function applyModifiers(values = [], modifiers = []) {
         }
         if (modifier.values) {
           if (modifier.values.unit) modifier.values.unit = modifier.values.unit.replace(/'/g, "\\'");
-          modifierContext.values = modifier.values; // Certain modifiers (such as lookback) require values, so provide them here
+          if (modifier.values.value && Array.isArray(modifier.values.value)) {
+            modifierContext.values = {
+              value: modifier.values.value.map((value, index) => {
+                if (index === 0) return null;
+                if (value && value.argSource && value.selected) {
+                  if (value.argSource === 'editor' && value.type) {
+                    return getCQLValueString(value);
+                  } else if (value.argSource === 'parameter' && value.elementName) {
+                    return { ...value, str: `"${value.elementName}"` };
+                  } else if (value.argSource === 'baseElement' && value.elementName) {
+                    return { ...value, str: `"${value.elementName}"` };
+                  } else if (value.argSource === 'externalCql' && value.elementName && value.elementType) {
+                    return value.elementType === 'function' ? `${value.elementName}()` : value.elementName;
+                  }
+                }
+                return null;
+              })
+            }; // Certain modifiers (such as lookback) require values, so provide them here
+          }
         }
         if (!(modifier.cqlTemplate in modifierMap)) {
           console.error(`Modifier Template could not be found: ${modifier.cqlTemplate}`);

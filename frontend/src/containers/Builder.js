@@ -63,6 +63,7 @@ export class Builder extends Component {
   }
 
   componentDidMount() {
+    this.props.loadExternalCqlList(this.props.match.params.id);
     this.props.loadTemplates().then(result => {
       // if there is a current artifact, load it, otherwise initialize new artifact
       if (this.props.match.params.id) {
@@ -74,7 +75,6 @@ export class Builder extends Component {
         this.props.initializeArtifact(andTemplate, orTemplate);
       }
       this.props.loadConversionFunctions();
-      this.props.loadExternalCqlList(this.props.match.params.id);
       this.props.loadModifiers();
     });
   }
@@ -103,9 +103,11 @@ export class Builder extends Component {
     const parameterTabIndex = 5;
 
     let activeTabIndex = 0;
-    if (referenceType === 'baseElementReference') activeTabIndex = baseElementTabIndex;
-    if (referenceType === 'parameterReference') activeTabIndex = parameterTabIndex;
-    if (['baseElementUse', 'parameterUse'].includes(referenceType)) activeTabIndex = tabIndex;
+    if (referenceType === 'baseElementReference' || referenceType === 'baseElementArgumentReference')
+      activeTabIndex = baseElementTabIndex;
+    else if (referenceType === 'parameterReference' || referenceType === 'parameterArgumentReference')
+      activeTabIndex = parameterTabIndex;
+    else if (referenceType === 'baseElementUse' || referenceType === 'parameterUse') activeTabIndex = tabIndex;
     if (activeTabIndex == null) return;
 
     this.setState({ activeTabIndex }, () => {

@@ -5,7 +5,7 @@ import _ from 'lodash';
 import { getFieldWithId } from 'utils/instances';
 import { sortAlphabeticallyByKey } from 'utils/sort';
 import changeToCase from 'utils/strings';
-import { isSupportedEditorType } from 'components/builder/editors/utils';
+import { isSupportedEditorType, getTypeByCqlArgument } from 'components/builder/editors/utils';
 
 export const vsacCodeDisplayName = vsacCode =>
   vsacCode.display?.length < 60 ? vsacCode.display : `${vsacCode.codeSystem.name} ${vsacCode.code}`;
@@ -92,7 +92,9 @@ export const generateElement = ({
               }`,
               element: selectedCqlEntry.name,
               library: cqlLibrary.name,
-              arguments: selectedCqlEntry.operand
+              arguments: selectedCqlEntry?.operand
+                ? selectedCqlEntry.operand.map(operand => ({ ...operand, value: { argSource: 'editor', type: getTypeByCqlArgument(operand)} }))
+                : undefined
             },
             static: true
           },
