@@ -82,6 +82,28 @@ describe('<ValueSetSelectModal />', () => {
 
     userEvent.click(dialog.getByText('New VS'));
 
+    expect(handleSelectValueSet).toHaveBeenCalledWith({ name: 'New VS', oid: '3.4.5' });
+    expect(handleCloseModal).toHaveBeenCalled();
+  });
+
+  it('can search for and select a value set after viewing codes', async () => {
+    const handleSelectValueSet = jest.fn();
+    const handleCloseModal = jest.fn();
+    renderComponent({ handleSelectValueSet, handleCloseModal });
+
+    const dialog = within(screen.getByRole('dialog'));
+
+    expect(dialog.getByText('Choose value set')).toBeInTheDocument();
+
+    fireEvent.change(dialog.getByRole('textbox'), { target: { value: 'TestCondition' } });
+    userEvent.click(dialog.getByRole('button', { name: 'Search' }));
+
+    expect(await dialog.findByText('Name/OID')).toBeInTheDocument();
+    expect(dialog.getByText('Test VS')).toBeInTheDocument();
+    expect(dialog.getByText('New VS')).toBeInTheDocument();
+
+    userEvent.click(dialog.getAllByRole('button', { name: 'View Value Set' })[0]);
+
     expect(await dialog.findByText('Code System')).toBeInTheDocument();
     expect(dialog.getByRole('textbox')).toHaveValue('New VS (3.4.5)');
     expect(dialog.getByText('123-4')).toBeInTheDocument();
@@ -102,7 +124,11 @@ describe('<ValueSetSelectModal />', () => {
     fireEvent.change(dialog.getByRole('textbox'), { target: { value: 'TestCondition' } });
     userEvent.click(dialog.getByRole('button', { name: 'Search' }));
 
-    userEvent.click(await dialog.findByText('New VS'));
+    expect(await dialog.findByText('Name/OID')).toBeInTheDocument();
+    expect(dialog.getByText('Test VS')).toBeInTheDocument();
+    expect(dialog.getByText('New VS')).toBeInTheDocument();
+
+    userEvent.click(dialog.getAllByRole('button', { name: 'View Value Set' })[0]);
 
     expect(await dialog.findByText('Code System')).toBeInTheDocument();
 

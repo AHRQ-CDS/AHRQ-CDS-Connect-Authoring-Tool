@@ -5,7 +5,8 @@ import {
   Delete as DeleteIcon,
   Edit as EditIcon,
   FileCopy as CopyIcon,
-  MenuBook as MenuBookIcon
+  MenuBook as MenuBookIcon,
+  Visibility as VisibilityIcon 
 } from '@material-ui/icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
@@ -542,7 +543,8 @@ const UserGuide = () => {
               <div>
                 After clicking "Search", a set of results will be displayed. Each item in the results represents a value
                 set in the VSAC, including its name, Object Identifier (OID), Steward, and the number of codes in the
-                value set. To see the contents of a specific value set in the results, click its name.
+                value set. Click on the value set you'd like to add, or to see the contents of a specific value set,
+                click its eye icon <VisibilityIcon fontSize="small" />  under codes.
               </div>
               <div>
                 <img
@@ -552,11 +554,12 @@ const UserGuide = () => {
                 />
               </div>
               <div>
-                After clicking on a specific value set, its full set of codes will be displayed. Each item in the list
-                shows a contained code, its name, and its system. This allows authors to confirm that the value set
-                contents match their intent. If this value set is not a good match or you want to inspect other value
-                sets in the results, click the left arrow button near the top of the dialog. Otherwise, click the
-                "Select" button to confirm the selection of the displayed value set.
+                After clicking on a specific value set's eye icon <VisibilityIcon fontSize="small" />, 
+                its full set of codes will be displayed. Each item in the list shows a contained code, its name, and its system.
+                This allows authors to confirm that the value set contents match their intent.
+                If this value set is not a good match or you want to inspect other value sets in the results,
+                click the left arrow button near the top of the dialog. Otherwise, click the specific value set or
+                "Select" button while viewing the contained codes to confirm the selection of the displayed value set.
               </div>
               <div>
                 <img

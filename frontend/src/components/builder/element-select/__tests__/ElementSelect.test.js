@@ -276,7 +276,6 @@ describe('<ElementSelect />', () => {
       fireEvent.change(dialog.getByRole('textbox'), { target: { value: 'TestCondition' } });
       userEvent.click(dialog.getByRole('button', { name: 'Search' }));
       userEvent.click(await dialog.findByText('New VS'));
-      userEvent.click(dialog.getByRole('button', { name: 'Select' }));
 
       const element = {
         extends: 'Base',

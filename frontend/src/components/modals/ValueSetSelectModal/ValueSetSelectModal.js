@@ -16,21 +16,22 @@ const ValueSetSelectModal = ({ handleCloseModal, handleSelectValueSet, readOnly 
   const selectedValueSetRef = useLatest(selectedValueSet);
   const styles = useStyles();
 
-  const handleSaveValueSetSelection = useCallback(() => {
-    handleSelectValueSet(selectedValueSetRef.current);
+  const handleSaveValueSetSelection = useCallback(valueSet => {
+    handleSelectValueSet(valueSet);
     handleCloseModal();
-  }, [handleCloseModal, handleSelectValueSet, selectedValueSetRef]);
+  }, [handleCloseModal, handleSelectValueSet]);
 
   return (
     <Modal
       closeButtonText={readOnly ? 'Close' : 'Cancel'}
       handleCloseModal={handleCloseModal}
-      handleSaveModal={handleSaveValueSetSelection}
+      handleSaveModal={() =>
+        handleSaveValueSetSelection(selectedValueSetRef.current)}
       isOpen
       hasCancelButton
       hasEnterKeySubmit={false}
       hasTitleIcon={searchCount > 0}
-      hideSubmitButton={readOnly}
+      hideSubmitButton={readOnly || !selectedValueSet}
       Header={
         <ValueSetSelectModalHeader
           goBack={() => setSelectedValueSet(null)}
@@ -57,6 +58,8 @@ const ValueSetSelectModal = ({ handleCloseModal, handleSelectValueSet, readOnly 
             keyword={searchKeyword}
             setSearchCount={setSearchCount}
             setSelectedValueSet={setSelectedValueSet}
+            handleSaveValueSetSelection={handleSaveValueSetSelection}
+            handleCloseModal={handleCloseModal}
           />
         )}
       </div>
