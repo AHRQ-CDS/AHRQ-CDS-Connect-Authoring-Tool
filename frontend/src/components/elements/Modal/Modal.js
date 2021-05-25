@@ -43,7 +43,11 @@ const Modal = ({
   const enterKeyCheck = (func, argument, event) => {
     if (!event || event.type !== 'keydown' || event.key !== 'Enter') return;
     event.preventDefault();
-    if (argument) { func(argument); } else { func(); }
+    if (argument) {
+      func(argument);
+    } else {
+      func();
+    }
   };
 
   return (
@@ -102,7 +106,7 @@ const Modal = ({
 Modal.propTypes = {
   children: PropTypes.element.isRequired,
   closeButtonText: PropTypes.string,
-  Footer: PropTypes.oneOfType([ PropTypes.element, PropTypes.bool ]),
+  Footer: PropTypes.oneOfType([PropTypes.element, PropTypes.bool]),
   handleCloseModal: PropTypes.func.isRequired,
   handleSaveModal: PropTypes.func.isRequired,
   isOpen: PropTypes.bool.isRequired,

@@ -234,7 +234,7 @@ export default class TemplateInstance extends Component {
       if (selectedModifier?.arguments) {
         selectedModifier.values.value = selectedModifier.arguments.map((argValue, index) => {
           if (index === 0) return null;
-          return { argSource: 'editor', type: getTypeByCqlArgument(argValue)};
+          return { argSource: 'editor', type: getTypeByCqlArgument(argValue) };
         });
       }
     }

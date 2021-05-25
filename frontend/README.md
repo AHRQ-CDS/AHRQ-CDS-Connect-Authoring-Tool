@@ -12,9 +12,9 @@ For information about contributing to this project, please see [CONTRIBUTING](..
 
 ## Development Details
 
-This project provides the R (React) in the MERN application architecture.  It was bootstrapped with [Create React App](https://github.com/facebookincubator/create-react-app). Relevant files are in the `src/` filter. Refer to the Create React App [User Guide](https://github.com/facebookincubator/create-react-app/blob/master/packages/react-scripts/template/README.md) for guidance on features and how to perform common tasks.
+This project provides the R (React) in the MERN application architecture. It was bootstrapped with [Create React App](https://github.com/facebookincubator/create-react-app). Relevant files are in the `src/` filter. Refer to the Create React App [User Guide](https://github.com/facebookincubator/create-react-app/blob/master/packages/react-scripts/template/README.md) for guidance on features and how to perform common tasks.
 
-To develop this project, you must node and yarn.  On Mac OS X, this can be done through brew:
+To develop this project, you must node and yarn. On Mac OS X, this can be done through brew:
 
 ```bash
 brew install node # install node
@@ -41,11 +41,12 @@ yarn remove <thing> # remove a package.
 
 ### Configuration
 
-This project has very few configuration needs.  Currently, four data points are configurable:
-* `REACT_APP_API_URL`: the URL for the backend API (defaults to `/authoring/api`)
-* `REACT_APP_DAP_URL`: the URL for the DAP analytics endpoint (blank by default, indicating no analytics)
-* `REACT_APP_GTM_KEY`: the Google Tag Manager key for analytics (blank by default, indicating no analytics)
-The default values can be found in the `.env` file and overridden via environment variables.  Note that during a production build, the current values in the environment and/or `.env` will be hard-coded into the resulting HTML and JS.
+This project has very few configuration needs. Currently, four data points are configurable:
+
+- `REACT_APP_API_URL`: the URL for the backend API (defaults to `/authoring/api`)
+- `REACT_APP_DAP_URL`: the URL for the DAP analytics endpoint (blank by default, indicating no analytics)
+- `REACT_APP_GTM_KEY`: the Google Tag Manager key for analytics (blank by default, indicating no analytics)
+  The default values can be found in the `.env` file and overridden via environment variables. Note that during a production build, the current values in the environment and/or `.env` will be hard-coded into the resulting HTML and JS.
 
 ### Run
 
@@ -59,13 +60,13 @@ To easily run both the backend API server and the frontend in development mode, 
 
 ### Production Build and Run
 
-A production build compiles all of the files to standard HTML, CSS, and JavaScript that can be run from any web server.  It does require, however, that the path _/authoring/api_ be proxied to the API server.
+A production build compiles all of the files to standard HTML, CSS, and JavaScript that can be run from any web server. It does require, however, that the path _/authoring/api_ be proxied to the API server.
 
 ```bash
 yarn build # does a production build, putting resulting files in ./build.
 ```
 
-You can run the production code simply by launching the `server.js` script.  It uses Express to host the production code and proxy to the API server.  This requires the API server to be running.
+You can run the production code simply by launching the `server.js` script. It uses Express to host the production code and proxy to the API server. This requires the API server to be running.
 
 ```bash
 node server.js
@@ -96,18 +97,21 @@ yarn test-backend # also runs all backend tests
 ```
 
 Jest provides the overall testing framework. The default setup running Jest via `yarn run test` will only run any tests that have been updated since the last commit. Use the prompt to specify running all tests or specific tests. Useful tools it provides are:
-* [Setup and teardown](https://facebook.github.io/jest/docs/setup-teardown.html#content) methods
-* [Matchers](https://facebook.github.io/jest/docs/expect.html) (assertions) to write statements expressing what a given value should be
-* [Mock functions](https://facebook.github.io/jest/docs/mock-function-api.html#content) to test a component without having to include all needed functionality
-* [Snapshot testing](https://facebook.github.io/jest/docs/snapshot-testing.html)
+
+- [Setup and teardown](https://facebook.github.io/jest/docs/setup-teardown.html#content) methods
+- [Matchers](https://facebook.github.io/jest/docs/expect.html) (assertions) to write statements expressing what a given value should be
+- [Mock functions](https://facebook.github.io/jest/docs/mock-function-api.html#content) to test a component without having to include all needed functionality
+- [Snapshot testing](https://facebook.github.io/jest/docs/snapshot-testing.html)
 
 Enzyme is used for rendering and manipulating DOM elements. Shallow rendering will render a component without rendering any other components that are children, whereas full rendering will render a component with all its children components. Our rendered components can get and set state or props, find certain strings, classes, or tags, and simulate events.
-* [Shallow rendering](http://airbnb.io/enzyme/docs/api/shallow.html) API reference
-* [Full rendering](http://airbnb.io/enzyme/docs/api/mount.html) API reference
+
+- [Shallow rendering](http://airbnb.io/enzyme/docs/api/shallow.html) API reference
+- [Full rendering](http://airbnb.io/enzyme/docs/api/mount.html) API reference
 
 Helpful articles on working with Jest and Enzyme:
-* https://hackernoon.com/testing-react-components-with-jest-and-enzyme-41d592c174f (apparently Enzyme has a debug method that I learned just now from this..)
-* https://www.sitepoint.com/test-react-components-jest/
+
+- https://hackernoon.com/testing-react-components-with-jest-and-enzyme-41d592c174f (apparently Enzyme has a debug method that I learned just now from this..)
+- https://www.sitepoint.com/test-react-components-jest/
 
 ### Docker
 
@@ -128,4 +132,3 @@ distributed under the License is distributed on an "AS IS" BASIS,
 WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
-

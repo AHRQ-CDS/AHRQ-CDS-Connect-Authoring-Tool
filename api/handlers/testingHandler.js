@@ -39,11 +39,10 @@ function singlePost(req, res) {
   if (req.user) {
     const newPatient = req.body;
     newPatient.user = req.user.uid;
-    Patient.create(newPatient,
-      (error, response) => {
-        if (error) res.status(500).send(error);
-        else res.status(201).json(response);
-      });
+    Patient.create(newPatient, (error, response) => {
+      if (error) res.status(500).send(error);
+      else res.status(201).json(response);
+    });
   } else {
     res.sendStatus(401);
   }

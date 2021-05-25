@@ -53,11 +53,17 @@ const DateTimeModifier = ({ handleUpdateModifier, name, values }) => {
       <div className={styles.modifierText}>{name}:</div>
 
       {values?.date != null && (
-        <DatePicker onChange={newValue => handleChange(newValue, 'date')} value={convertDateForPicker(values.date.replace(/^@/, ''))} />
+        <DatePicker
+          onChange={newValue => handleChange(newValue, 'date')}
+          value={convertDateForPicker(values.date.replace(/^@/, ''))}
+        />
       )}
 
       {values?.time != null && (
-        <TimePicker onChange={newValue => handleChange(newValue, 'time')} value={convertTimeForPicker(values.time.replace(/^@?T/, ''))} />
+        <TimePicker
+          onChange={newValue => handleChange(newValue, 'time')}
+          value={convertTimeForPicker(values.time.replace(/^@?T/, ''))}
+        />
       )}
 
       {values.precision != null && (

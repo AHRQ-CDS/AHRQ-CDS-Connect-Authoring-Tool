@@ -17,13 +17,7 @@ const FormikSelect = ({ field: { name, value, onChange }, form: { setFieldValue 
   );
 
   return (
-    <Dropdown
-      id={name}
-      label={value ? null : 'Select...'}
-      onChange={handleChange}
-      options={options}
-      value={value}
-    />
+    <Dropdown id={name} label={value ? null : 'Select...'} onChange={handleChange} options={options} value={value} />
   );
 };
 

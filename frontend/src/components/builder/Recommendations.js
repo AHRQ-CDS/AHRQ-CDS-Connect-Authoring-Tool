@@ -15,7 +15,7 @@ export default class Recommendations extends Component {
 
     this.state = {
       mode: 'every',
-      showConfirmDeleteModal: false,
+      showConfirmDeleteModal: false
     };
   }
 
@@ -25,18 +25,19 @@ export default class Recommendations extends Component {
     }
   }
 
-  handleModeChange = (event) => {
+  handleModeChange = event => {
     this.setState({ mode: event.target.value });
-  }
+  };
 
   handleMove = (uid, direction) => {
     const { recommendations } = this.props.artifact;
     const position = recommendations.findIndex(index => index.uid === uid);
     if (position < 0) {
-      throw new Error("Given recommendation not found.");
+      throw new Error('Given recommendation not found.');
     } else if (
-      (direction === UP && position === 0)
-      || (direction === DOWN && position === recommendations.length - 1)) {
+      (direction === UP && position === 0) ||
+      (direction === DOWN && position === recommendations.length - 1)
+    ) {
       return; // canot move outside of array
     }
 
@@ -50,7 +51,7 @@ export default class Recommendations extends Component {
     setTimeout(() => {
       document.getElementById(uid).scrollIntoView({ behavior: 'smooth' });
     });
-  }
+  };
 
   addRecommendation = () => {
     const newRec = {
@@ -64,7 +65,7 @@ export default class Recommendations extends Component {
     const newRecs = this.props.artifact.recommendations.concat([newRec]);
 
     this.props.updateRecommendations(newRecs);
-  }
+  };
 
   updateRecommendation = (uid, newValues) => {
     const index = this.props.artifact.recommendations.findIndex(rec => rec.uid === uid);
@@ -72,28 +73,28 @@ export default class Recommendations extends Component {
       [index]: { $merge: newValues }
     });
     this.props.updateRecommendations(newRecs);
-  }
+  };
 
-  removeRecommendation = (uid) => {
+  removeRecommendation = uid => {
     const index = this.props.artifact.recommendations.findIndex(rec => rec.uid === uid);
     const newRecs = update(this.props.artifact.recommendations, {
       $splice: [[index, 1]]
     });
     this.props.updateRecommendations(newRecs);
-  }
+  };
 
-  openConfirmDeleteModal = (uid) => {
+  openConfirmDeleteModal = uid => {
     this.setState({ showConfirmDeleteModal: true, recommendationToDelete: uid });
-  }
+  };
 
   closeConfirmDeleteModal = () => {
-    this.setState({ showConfirmDeleteModal: false});
-  }
+    this.setState({ showConfirmDeleteModal: false });
+  };
 
-  handleDeleteRecommendation = (uid) => {
+  handleDeleteRecommendation = uid => {
     this.removeRecommendation(this.state.recommendationToDelete);
     this.closeConfirmDeleteModal();
-  }
+  };
 
   render() {
     const { artifact, setActiveTab, templates, updateRecommendations, updateSubpopulations } = this.props;
@@ -101,39 +102,40 @@ export default class Recommendations extends Component {
 
     return (
       <div className="recommendations">
-        {artifact.recommendations && artifact.recommendations.length > 1 &&
+        {artifact.recommendations && artifact.recommendations.length > 1 && (
           <div className="recommendations__deliver-text">Deliver first recommendation</div>
-        }
+        )}
 
-        {artifact.recommendations && artifact.recommendations.map(rec => (
-          <div id={rec.uid} key={rec.uid}>
-            <Recommendation
-              key={rec.uid}
-              artifact={artifact}
-              templates={templates}
-              rec={rec}
-              onUpdate={this.updateRecommendation}
-              onRemove={() => this.openConfirmDeleteModal(rec.uid)}
-              onMoveRecUp={() => this.handleMove(rec.uid, UP)}
-              onMoveRecDown={() => this.handleMove(rec.uid, DOWN)}
-              updateRecommendations={updateRecommendations}
-              updateSubpopulations={updateSubpopulations}
-              setActiveTab={setActiveTab}
-            />
-          </div>
-        ))}
+        {artifact.recommendations &&
+          artifact.recommendations.map(rec => (
+            <div id={rec.uid} key={rec.uid}>
+              <Recommendation
+                key={rec.uid}
+                artifact={artifact}
+                templates={templates}
+                rec={rec}
+                onUpdate={this.updateRecommendation}
+                onRemove={() => this.openConfirmDeleteModal(rec.uid)}
+                onMoveRecUp={() => this.handleMove(rec.uid, UP)}
+                onMoveRecDown={() => this.handleMove(rec.uid, DOWN)}
+                updateRecommendations={updateRecommendations}
+                updateSubpopulations={updateSubpopulations}
+                setActiveTab={setActiveTab}
+              />
+            </div>
+          ))}
 
         <Button color="primary" onClick={this.addRecommendation} variant="contained">
           New recommendation
         </Button>
 
-        {showConfirmDeleteModal &&
+        {showConfirmDeleteModal && (
           <DeleteConfirmationModal
             deleteType="Recommendation"
             handleCloseModal={this.closeConfirmDeleteModal}
             handleDelete={this.handleDeleteRecommendation}
           />
-        }
+        )}
       </div>
     );
   }

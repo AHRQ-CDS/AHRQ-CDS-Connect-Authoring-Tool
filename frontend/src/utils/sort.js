@@ -20,7 +20,7 @@ export function sortAlphabeticallyByKey(key, key2 = undefined) {
 
 export function sortAlphabeticallyByPatientName(a, b) {
   const aName = getPatientLastName(a);
-  const bName= getPatientLastName(b);
+  const bName = getPatientLastName(b);
 
   if (aName > bName || (aName && !bName)) {
     return 1;

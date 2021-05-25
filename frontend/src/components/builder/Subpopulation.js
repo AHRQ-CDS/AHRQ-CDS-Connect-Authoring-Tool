@@ -2,11 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import { IconButton } from '@material-ui/core';
-import {
-  Close as CloseIcon,
-  ExpandLess as ExpandLessIcon,
-  ExpandMore as ExpandMoreIcon
-} from '@material-ui/icons';
+import { Close as CloseIcon, ExpandLess as ExpandLessIcon, ExpandMore as ExpandMoreIcon } from '@material-ui/icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faExclamationCircle } from '@fortawesome/free-solid-svg-icons';
 import { UncontrolledTooltip } from 'reactstrap';
@@ -31,33 +27,33 @@ export default class Subpopulation extends Component {
 
   expand = () => {
     this.setState({ isExpanded: true });
-  }
+  };
 
   collapse = () => {
     this.setState({ isExpanded: false });
-  }
+  };
 
   addInstance = (name, template, path) => {
     this.props.addInstance(name, template, path, this.props.subpopulation.uniqueId);
-  }
+  };
 
-  getAllInstances = treeName => this.props.getAllInstances(treeName, null, this.props.subpopulation.uniqueId)
+  getAllInstances = treeName => this.props.getAllInstances(treeName, null, this.props.subpopulation.uniqueId);
 
   editInstance = (treeName, fields, path, editingConjunction) => {
     this.props.editInstance(treeName, fields, path, editingConjunction, this.props.subpopulation.uniqueId);
-  }
+  };
 
   deleteInstance = (treeName, path, toAdd) => {
     this.props.deleteInstance(treeName, path, toAdd, this.props.subpopulation.uniqueId);
-  }
+  };
 
   openConfirmDeleteModal = () => {
     this.setState({ showConfirmDeleteModal: true });
-  }
+  };
 
   closeConfirmDeleteModal = () => {
     this.setState({ showConfirmDeleteModal: false });
-  }
+  };
 
   handleDeleteSubpopulation = () => {
     const { artifact, name, subpopulation, updateSubpopulations } = this.props;
@@ -67,20 +63,20 @@ export default class Subpopulation extends Component {
 
     updateSubpopulations(newSubpopulations, name);
     this.closeConfirmDeleteModal();
-  }
+  };
 
-  onEnterKey = (e) => {
+  onEnterKey = e => {
     e.which = e.which || e.keyCode;
     if (e.which === 13) {
       if (this.state.isExpanded) this.collapse();
       else this.expand();
     }
-  }
+  };
 
   subpopulationHasOneChildWarning = () =>
     this.props.subpopulation.childInstances && this.props.subpopulation.childInstances.length < 1;
 
-  hasNestedWarnings = (childInstances) => {
+  hasNestedWarnings = childInstances => {
     const { instanceNames, baseElements, parameters, getAllInstancesInAllTrees, validateReturnType } = this.props;
     const allInstancesInAllTrees = getAllInstancesInAllTrees();
     const hasNestedWarning = hasGroupNestedWarning(
@@ -92,12 +88,12 @@ export default class Subpopulation extends Component {
       validateReturnType
     );
     return hasNestedWarning;
-  }
+  };
 
   handleUpdateField = value => {
     const { setSubpopulationName, subpopulation } = this.props;
     setSubpopulationName(value.subpopulation_title, subpopulation.uniqueId);
-  }
+  };
 
   render() {
     const { checkSubpopulationUsage, instanceNames, subpopulation } = this.props;
@@ -105,15 +101,16 @@ export default class Subpopulation extends Component {
     const subpopulationUsed = checkSubpopulationUsage(subpopulation.uniqueId);
     const headerClass = classNames('card-element__header', { collapsed: !isExpanded });
     const headerTopClass = classNames('card-element__header-top', { collapsed: !isExpanded });
-    const duplicateNameIndex = instanceNames.findIndex(name =>
-      name.id !== subpopulation.uniqueId && name.name === subpopulation.subpopulationName);
+    const duplicateNameIndex = instanceNames.findIndex(
+      name => name.id !== subpopulation.uniqueId && name.name === subpopulation.subpopulationName
+    );
 
     return (
       <div className="subpopulation card-group card-group__top">
         <div className="card-element">
           <div className={headerClass}>
             <div className={headerTopClass}>
-              {isExpanded ?
+              {isExpanded ? (
                 <div className="card-field-group">
                   <div className="card-field">
                     <div className="card-label">Subpopulation:</div>
@@ -126,23 +123,24 @@ export default class Subpopulation extends Component {
                     </div>
                   </div>
 
-                  {duplicateNameIndex !== -1 &&
-                    <div className='warning'>Warning: Name already in use. Choose another name.</div>
-                  }
+                  {duplicateNameIndex !== -1 && (
+                    <div className="warning">Warning: Name already in use. Choose another name.</div>
+                  )}
                 </div>
-              :
+              ) : (
                 <div className="card-element__heading">
                   <div className="heading-name">
                     {subpopulation.subpopulationName}:
-                    {
-                      (duplicateNameIndex !== -1 ||
+                    {(duplicateNameIndex !== -1 ||
                       this.subpopulationHasOneChildWarning() ||
-                      this.hasNestedWarnings(subpopulation.childInstances)) &&
-                      <div className="warning"><FontAwesomeIcon icon={faExclamationCircle} /> Has warnings</div>
-                    }
+                      this.hasNestedWarnings(subpopulation.childInstances)) && (
+                      <div className="warning">
+                        <FontAwesomeIcon icon={faExclamationCircle} /> Has warnings
+                      </div>
+                    )}
                   </div>
                 </div>
-              }
+              )}
 
               <div className="card-element__buttons">
                 <IconButton
@@ -164,21 +162,21 @@ export default class Subpopulation extends Component {
                   </IconButton>
                 </span>
 
-                {subpopulationUsed &&
+                {subpopulationUsed && (
                   <UncontrolledTooltip target={`deletebutton-${subpopulation.uniqueId}`} placement="left">
                     To delete this subpopulation, remove all references to it.
                   </UncontrolledTooltip>
-                }
+                )}
               </div>
             </div>
 
-            {!isExpanded &&
+            {!isExpanded && (
               <ExpressionPhrase
                 class="expression expression__group expression-collapsed"
                 instance={this.props.subpopulation}
                 baseElements={this.props.baseElements}
               />
-            }
+            )}
           </div>
 
           {isExpanded && this.renderContents()}
@@ -214,15 +212,11 @@ export default class Subpopulation extends Component {
 
     return (
       <div className="card-element__body">
-        {this.subpopulationHasOneChildWarning() &&
-          <div className='warning'>This subpopulation needs at least one element</div>
-        }
+        {this.subpopulationHasOneChildWarning() && (
+          <div className="warning">This subpopulation needs at least one element</div>
+        )}
 
-        <ExpressionPhrase
-          class="expression expression__group"
-          instance={subpopulation}
-          baseElements={baseElements}
-        />
+        <ExpressionPhrase class="expression expression__group" instance={subpopulation} baseElements={baseElements} />
 
         <ConjunctionGroup
           addInstance={this.addInstance}
@@ -251,18 +245,18 @@ export default class Subpopulation extends Component {
           vsacApiKey={vsacApiKey}
         />
 
-        {showConfirmDeleteModal &&
+        {showConfirmDeleteModal && (
           <DeleteConfirmationModal
             deleteType="Subpopulation"
             handleCloseModal={this.closeConfirmDeleteModal}
             handleDelete={this.handleDeleteSubpopulation}
           >
-            <div>Subpopulation: {subpopulationName ? subpopulationName :'unnamed'}</div>
+            <div>Subpopulation: {subpopulationName ? subpopulationName : 'unnamed'}</div>
           </DeleteConfirmationModal>
-        }
+        )}
       </div>
     );
-  }
+  };
 }
 
 Subpopulation.propTypes = {

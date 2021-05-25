@@ -11,7 +11,8 @@
   },
   "name": "Test_Artifact_With_Dates",
   "title": "Test Artifact With Dates",
-  "status": "draft",  "approvalDate": "2020-09-01",
+  "status": "draft",
+  "approvalDate": "2020-09-01",
   "lastReviewDate": "2020-09-10",
   "effectivePeriod": {
     "start": "2020-09-12",

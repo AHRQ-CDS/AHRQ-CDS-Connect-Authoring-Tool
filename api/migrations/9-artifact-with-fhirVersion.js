@@ -4,7 +4,7 @@
  */
 'use strict';
 
-module.exports.id = "artifact-with-fhirVersion";
+module.exports.id = 'artifact-with-fhirVersion';
 
 module.exports.up = function (done) {
   this.log('Migrating: artifact-with-fhirVersion');
@@ -15,13 +15,11 @@ module.exports.up = function (done) {
   // Since db operations are asynchronous, use promises to ensure all updates happen before we call done().
   // The promises array collects all the promises which must be resolved before we're done.
   const promises = [];
-  coll.find({ 'fhirVersion': { $exists: false } }).forEach((artifact) => {
-    const p = new Promise((resolve, reject) => {
-      // update the document, adding the new fhirVersion key/value
-      coll.updateOne(
-        { _id: artifact._id },
-        { '$set': { fhirVersion: '' } },
-        (err, result) => {
+  coll.find({ fhirVersion: { $exists: false } }).forEach(
+    artifact => {
+      const p = new Promise((resolve, reject) => {
+        // update the document, adding the new fhirVersion key/value
+        coll.updateOne({ _id: artifact._id }, { $set: { fhirVersion: '' } }, (err, result) => {
           if (err) {
             this.log(`${artifact._id}: error:`, err);
             reject(err);
@@ -29,26 +27,27 @@ module.exports.up = function (done) {
             this.log(`${artifact._id}: added { fhirVersion: '' }; `);
             resolve(result);
           }
-        }
-      );
-    });
-    promises.push(p);
-  }, (err) => {
-    if (err) {
-      this.log('Migration Error:', err);
-      done(err);
-    } else {
-      Promise.all(promises)
-        .then((results) => {
-          this.log(`Migrated ${results.length} artifacts (only applicable artifacts are counted)`);
-          done();
-        })
-        .catch((err) => {
-          this.log('Migration Error:', err);
-          done(err);
         });
+      });
+      promises.push(p);
+    },
+    err => {
+      if (err) {
+        this.log('Migration Error:', err);
+        done(err);
+      } else {
+        Promise.all(promises)
+          .then(results => {
+            this.log(`Migrated ${results.length} artifacts (only applicable artifacts are counted)`);
+            done();
+          })
+          .catch(err => {
+            this.log('Migration Error:', err);
+            done(err);
+          });
+      }
     }
-  });
+  );
 };
 
 module.exports.down = function (done) {

@@ -27,11 +27,13 @@ describe('propertyParsers', () => {
   describe('CodeableConcept', () => {
     it('should return the text when it is present', () => {
       const concept = {
-        coding: [{
-          system: 'http://snomed.info/sct',
-          code: '73211009',
-          display: 'Diabetes mellitus (disorder)'
-        }],
+        coding: [
+          {
+            system: 'http://snomed.info/sct',
+            code: '73211009',
+            display: 'Diabetes mellitus (disorder)'
+          }
+        ],
         text: 'Diabetes'
       };
       expect(p.codeableConcept(concept)).toEqual('Diabetes');
@@ -39,38 +41,46 @@ describe('propertyParsers', () => {
 
     it('should return the coding display when text is not present', () => {
       const concept = {
-        coding: [{
-          system: 'http://snomed.info/sct',
-          code: '73211009',
-          display: 'Diabetes mellitus (disorder)'
-        }]
+        coding: [
+          {
+            system: 'http://snomed.info/sct',
+            code: '73211009',
+            display: 'Diabetes mellitus (disorder)'
+          }
+        ]
       };
       expect(p.codeableConcept(concept)).toEqual('Diabetes mellitus (disorder)');
     });
 
     it('should return the first non-blank display when text is not present', () => {
       const concept = {
-        coding: [{
-          system: 'http://snomed.info/sct',
-          code: '44054006'
-        }, {
-          system: 'http://snomed.info/sct',
-          code: '73211009',
-          display: 'Diabetes mellitus (disorder)'
-        }]
+        coding: [
+          {
+            system: 'http://snomed.info/sct',
+            code: '44054006'
+          },
+          {
+            system: 'http://snomed.info/sct',
+            code: '73211009',
+            display: 'Diabetes mellitus (disorder)'
+          }
+        ]
       };
       expect(p.codeableConcept(concept)).toEqual('Diabetes mellitus (disorder)');
     });
 
     it('should return the first code when text and displays are not present', () => {
       const concept = {
-        coding: [{
-          system: 'http://snomed.info/sct',
-          code: '44054006'
-        }, {
-          system: 'http://snomed.info/sct',
-          code: '73211009'
-        }]
+        coding: [
+          {
+            system: 'http://snomed.info/sct',
+            code: '44054006'
+          },
+          {
+            system: 'http://snomed.info/sct',
+            code: '73211009'
+          }
+        ]
       };
       expect(p.codeableConcept(concept)).toEqual('44054006');
     });
@@ -277,19 +287,20 @@ describe('propertyParsers', () => {
   describe('Annotation', () => {
     it('should return the text if present', () => {
       const annotation = {
-        text: 'Don\'t worry. Everything is fine.'
+        text: "Don't worry. Everything is fine."
       };
-      expect(p.annotation(annotation)).toEqual('Don\'t worry. Everything is fine.');
+      expect(p.annotation(annotation)).toEqual("Don't worry. Everything is fine.");
     });
 
     it('should return truncated text if long', () => {
       const annotation = {
-        text: 'Four score and seven years ago our fathers brought forth on this continent, a new nation, ' +
-        'conceived in Liberty, and dedicated to the proposition that all men are created equal. Now we are ' +
-        'engaged in a great civil war, testing whether that nation, or any nation so conceived and so ' +
-        'dedicated, can long endure. We are met on a great battle-field of that war. We have come to dedicate ' +
-        'a portion of that field, as a final resting place for those who here gave their lives that that ' +
-        'nation might live. It is altogether fitting and proper that we should do this.'
+        text:
+          'Four score and seven years ago our fathers brought forth on this continent, a new nation, ' +
+          'conceived in Liberty, and dedicated to the proposition that all men are created equal. Now we are ' +
+          'engaged in a great civil war, testing whether that nation, or any nation so conceived and so ' +
+          'dedicated, can long endure. We are met on a great battle-field of that war. We have come to dedicate ' +
+          'a portion of that field, as a final resting place for those who here gave their lives that that ' +
+          'nation might live. It is altogether fitting and proper that we should do this.'
       };
       expect(p.annotation(annotation)).toEqual('Four score and seven years ago our fathers brou...');
     });
@@ -337,7 +348,7 @@ describe('propertyParsers', () => {
     it('should return just the city if state and country are not present', () => {
       const address = {
         line: ['1050 W Wishard Blvd'],
-        city: 'Indianapolis',
+        city: 'Indianapolis'
       };
       expect(p.address(address)).toEqual('Indianapolis');
     });
@@ -469,7 +480,9 @@ describe('propertyParsers', () => {
   describe('Signature', () => {
     it('should return <signature> for any Signature', () => {
       const s = {
-        type: [{ system: 'http://hl7.org/fhir/valueset-signature-type', code: '1.2.840.10065.1.12.1.1', display: 'AuthorID' }],
+        type: [
+          { system: 'http://hl7.org/fhir/valueset-signature-type', code: '1.2.840.10065.1.12.1.1', display: 'AuthorID' }
+        ],
         when: '2001-01-01T10:30:00.0-05:00',
         whoUri: 'urn:oid:1.2.3.4.5',
         contentType: 'application/pdf',

@@ -25,7 +25,7 @@
  */
 'use strict';
 
-module.exports.id = "artifact-with-cpgFields";
+module.exports.id = 'artifact-with-cpgFields';
 
 module.exports.up = function (done) {
   this.log('Migrating: artifact-with-cpgFields');
@@ -60,13 +60,11 @@ module.exports.up = function (done) {
     relatedArtifact: []
   };
 
-  coll.find().forEach((artifact) => {
-    const p = new Promise((resolve, reject) => {
-      // update the document, adding the new CPG fields
-      coll.updateOne(
-        { _id: artifact._id },
-        { '$set': cpgFields },
-        (err, result) => {
+  coll.find().forEach(
+    artifact => {
+      const p = new Promise((resolve, reject) => {
+        // update the document, adding the new CPG fields
+        coll.updateOne({ _id: artifact._id }, { $set: cpgFields }, (err, result) => {
           if (err) {
             this.log(`${artifact._id}: error:`, err);
             reject(err);
@@ -74,26 +72,27 @@ module.exports.up = function (done) {
             this.log(`${artifact._id}: added CPG fields; `);
             resolve(result);
           }
-        }
-      );
-    });
-    promises.push(p);
-  }, (err) => {
-    if (err) {
-      this.log('Migration Error:', err);
-      done(err);
-    } else {
-      Promise.all(promises)
-        .then((results) => {
-          this.log(`Migrated ${results.length} artifacts (only applicable artifacts are counted)`);
-          done();
-        })
-        .catch((err) => {
-          this.log('Migration Error:', err);
-          done(err);
         });
+      });
+      promises.push(p);
+    },
+    err => {
+      if (err) {
+        this.log('Migration Error:', err);
+        done(err);
+      } else {
+        Promise.all(promises)
+          .then(results => {
+            this.log(`Migrated ${results.length} artifacts (only applicable artifacts are counted)`);
+            done();
+          })
+          .catch(err => {
+            this.log('Migration Error:', err);
+            done(err);
+          });
+      }
     }
-  });
+  );
 };
 
 module.exports.down = function (done) {

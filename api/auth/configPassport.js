@@ -10,16 +10,19 @@ const findLocalUserById = require('./localAuthUsers').findByUsername;
 
 function getLdapConfiguration(req, callback) {
   // Replace {{username}} and {{password}} with values from request
-  const ldapConfig = JSON.parse(JSON.stringify(config.get('auth.ldap'))
-    .replace(/\{\{username\}\}/g, req.body.username)
-    .replace(/\{\{password\}\}/g, req.body.password)
+  const ldapConfig = JSON.parse(
+    JSON.stringify(config.get('auth.ldap'))
+      .replace(/\{\{username\}\}/g, req.body.username)
+      .replace(/\{\{password\}\}/g, req.body.password)
   );
   callback(null, ldapConfig);
 }
 
 function getLocalConfiguration(username, password, done) {
   findLocalUserById(username, (err, user) => {
-    if (err) { return done(err); }
+    if (err) {
+      return done(err);
+    }
     if (!user) {
       return done(null, false);
     }
@@ -30,7 +33,7 @@ function getLocalConfiguration(username, password, done) {
   });
 }
 
-module.exports = (app) => {
+module.exports = app => {
   // Configuring cookie security as suggested at: https://github.com/expressjs/session#cookiesecure
   const sess = {
     secret: config.get('auth.session.secret'),

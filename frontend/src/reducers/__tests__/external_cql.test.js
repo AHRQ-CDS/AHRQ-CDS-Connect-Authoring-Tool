@@ -102,7 +102,10 @@ describe('external_cql reducer', () => {
 
     // Other generic errors cause an add failure
     action = {
-      type: types.ADD_EXTERNAL_CQL_LIBRARY_FAILURE, status: 500, statusText: '', data: []
+      type: types.ADD_EXTERNAL_CQL_LIBRARY_FAILURE,
+      status: 500,
+      statusText: '',
+      data: []
     };
     newState = {
       addExternalCqlLibrary: { isAdding: false, addStatus: 'failure', error: 500, message: '' },
@@ -123,8 +126,9 @@ describe('external_cql reducer', () => {
     const action = { type: types.CLEAR_ADD_EXTERNAL_LIBRARY_ERROR_AND_MESSAGES };
     const newState = { addExternalCqlLibrary: { isAdding: false, addStatus: null, error: null, message: '' } };
 
-    const previousState =
-      { addExternalCqlLibrary: { isAdding: false, addStatus: null, error: 'some error', message: 'a message' } };
+    const previousState = {
+      addExternalCqlLibrary: { isAdding: false, addStatus: null, error: 'some error', message: 'a message' }
+    };
     expect(reducer(previousState, action)).toEqual(newState);
   });
 

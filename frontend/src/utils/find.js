@@ -35,8 +35,10 @@ export function findValueAtPath(object, path) {
     }
 
     const e = path.shift();
-    if (Object.prototype.toString.call(object[e]) === '[object Object]'
-      || Object.prototype.toString.call(object[e]) === '[object Array]') {
+    if (
+      Object.prototype.toString.call(object[e]) === '[object Object]' ||
+      Object.prototype.toString.call(object[e]) === '[object Array]'
+    ) {
       return findValueAtPath(object[e], path);
     }
 

@@ -19,14 +19,17 @@ const app = express();
 app.use('/authoring', express.static(path.join(__dirname, 'build')));
 
 // When running this in Docker without a proxy in front of it, we need to proxy /authoring/api in Express.
-const proxyActive = !(/^(false|f|no|n|0)$/i.test(process.env.API_PROXY_ACTIVE));
+const proxyActive = !/^(false|f|no|n|0)$/i.test(process.env.API_PROXY_ACTIVE);
 if (proxyActive) {
   const apiHost = process.env.API_PROXY_HOST || 'localhost';
   const apiPort = process.env.API_PROXY_PORT || 3001;
-  app.use(process.env.REACT_APP_API_URL, proxy(`${apiHost}:${apiPort}`, {
-    // By default, the API base URL (e.g., /authoring/api) isn't preserved, so we need to add it back
-    proxyReqPathResolver: req => `${process.env.REACT_APP_API_URL}${url.parse(req.url).path}`
-  }));
+  app.use(
+    process.env.REACT_APP_API_URL,
+    proxy(`${apiHost}:${apiPort}`, {
+      // By default, the API base URL (e.g., /authoring/api) isn't preserved, so we need to add it back
+      proxyReqPathResolver: req => `${process.env.REACT_APP_API_URL}${url.parse(req.url).path}`
+    })
+  );
 }
 
 app.get('/authoring/*', (req, res) => {

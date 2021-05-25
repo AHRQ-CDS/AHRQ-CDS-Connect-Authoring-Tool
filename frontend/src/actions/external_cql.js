@@ -12,13 +12,13 @@ const API_BASE = process.env.REACT_APP_API_URL;
 
 function calculateParentsOfAllLibraries(libraries) {
   const parentsOfLibraries = {};
-  libraries.forEach((lib) => {
+  libraries.forEach(lib => {
     const libName = changeToCase(lib.name, 'paramCase');
     const libVersion = lib.version;
     if (_.isUndefined(parentsOfLibraries[`${libName}-${libVersion}`])) {
       parentsOfLibraries[`${libName}-${libVersion}`] = [];
     }
-    lib.details.dependencies.forEach((dep) => {
+    lib.details.dependencies.forEach(dep => {
       const depName = changeToCase(dep.path, 'paramCase');
       const depVersion = dep.version;
       if (_.isUndefined(parentsOfLibraries[`${depName}-${depVersion}`])) {
@@ -29,7 +29,6 @@ function calculateParentsOfAllLibraries(libraries) {
   });
   return parentsOfLibraries;
 }
-
 
 // ------------------------- LOAD EXTERNAL CQL LIST ------------------------ //
 
@@ -44,7 +43,7 @@ function loadExternalCqlListSuccess(externalCqlList) {
   return {
     type: types.LOAD_EXTERNAL_CQL_LIST_SUCCESS,
     externalCqlList,
-    parentsOfLibraries,
+    parentsOfLibraries
   };
 }
 
@@ -58,14 +57,15 @@ function loadExternalCqlListFailure(error) {
 
 function sendExternalCqlListRequest(artifactId) {
   return new Promise((resolve, reject) => {
-    axios.get(`${API_BASE}/externalCQL/${artifactId}`)
+    axios
+      .get(`${API_BASE}/externalCQL/${artifactId}`)
       .then(result => resolve(result.data))
       .catch(error => reject(error));
   });
 }
 
 export function loadExternalCqlList(artifactId) {
-  return (dispatch) => {
+  return dispatch => {
     dispatch(requestExternalCqlList());
 
     return sendExternalCqlListRequest(artifactId)
@@ -100,14 +100,15 @@ function loadExternalCqlLibraryFailure(error) {
 
 function sendExternalCqlLibraryRequest(id) {
   return new Promise((resolve, reject) => {
-    axios.get(`${API_BASE}/externalCQL/${id}`)
+    axios
+      .get(`${API_BASE}/externalCQL/${id}`)
       .then(result => resolve(result.data))
       .catch(error => reject(error));
   });
 }
 
 export function loadExternalCqlLibrary(id) {
-  return (dispatch) => {
+  return dispatch => {
     dispatch(requestExternalCqlLibrary());
 
     return sendExternalCqlLibraryRequest(id)
@@ -141,14 +142,15 @@ function loadExternalCqlLibraryDetailsFailure(error) {
 
 function sendExternalCqlLibraryDetailsRequest(libraryId) {
   return new Promise((resolve, reject) => {
-    axios.get(`${API_BASE}/externalCQL/details/${libraryId}`)
+    axios
+      .get(`${API_BASE}/externalCQL/details/${libraryId}`)
       .then(result => resolve(result.data))
       .catch(error => reject(error));
   });
 }
 
 export function loadExternalCqlLibraryDetails(libraryId) {
-  return (dispatch) => {
+  return dispatch => {
     dispatch(requestExternalCqlLibraryDetails());
 
     return sendExternalCqlLibraryDetailsRequest(libraryId)
@@ -174,8 +176,8 @@ function addExternalCqlLibrarySuccess(data) {
 }
 
 function addExternalCqlLibraryFailure(error) {
-  const statusText = (error.response && (typeof error.response.data === 'string')) ? error.response.data : '';
-  const data = (error.response && _.isArray(error.response.data)) ? error.response.data : [];
+  const statusText = error.response && typeof error.response.data === 'string' ? error.response.data : '';
+  const data = error.response && _.isArray(error.response.data) ? error.response.data : [];
   return {
     type: types.ADD_EXTERNAL_CQL_LIBRARY_FAILURE,
     status: error.response ? error.response.status : '',
@@ -186,14 +188,15 @@ function addExternalCqlLibraryFailure(error) {
 
 function sendAddExternalCqlLibraryRequest(library) {
   return new Promise((resolve, reject) => {
-    axios.post(`${API_BASE}/externalCQL`, { library })
+    axios
+      .post(`${API_BASE}/externalCQL`, { library })
       .then(result => resolve(result.data))
       .catch(error => reject(error));
   });
 }
 
 export function addExternalLibrary(library) {
-  return (dispatch) => {
+  return dispatch => {
     //save the artifact BEFORE making external CQL changes
     //other wise the fhirVersion gets overwritten
     dispatch(saveArtifact(library.artifact));
@@ -243,14 +246,15 @@ function deleteExternalCqlLibraryFailure(error) {
 
 function sendDeleteExternalCqlLibraryRequest(libraryId) {
   return new Promise((resolve, reject) => {
-    axios.delete(`${API_BASE}/externalCQL/${libraryId}`)
+    axios
+      .delete(`${API_BASE}/externalCQL/${libraryId}`)
       .then(result => resolve(result.data))
       .catch(error => reject(error));
   });
 }
 
 export function deleteExternalCqlLibrary(libraryId, artifact) {
-  return (dispatch) => {
+  return dispatch => {
     //save the artifact BEFORE making external CQL changes
     //other wise the fhirVersion gets overwritten
     dispatch(saveArtifact(artifact));

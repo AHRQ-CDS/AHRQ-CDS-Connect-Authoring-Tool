@@ -27,7 +27,7 @@ const DateRangePicker = memo(({ fieldName, helperText, name, rangeType, noDateOp
       <div className={fieldStyles.fieldInput}>
         <DatePicker
           disabled={noDateField.value}
-          label={field.name === 'effectivePeriod.start' ? 'Start date' : 'End date' }
+          label={field.name === 'effectivePeriod.start' ? 'Start date' : 'End date'}
           onChange={value => setValue(value)}
           value={value}
         />
@@ -35,20 +35,14 @@ const DateRangePicker = memo(({ fieldName, helperText, name, rangeType, noDateOp
         {helperText && <div className={fieldStyles.helperText}>{helperText}</div>}
       </div>
 
-      {noDateOption &&
+      {noDateOption && (
         <div className={styles.fieldCheckbox}>
           <FormControlLabel
-            control={
-              <Checkbox
-                checked={noDateField.value}
-                color="primary"
-                onChange={toggleSelectNoDate}
-              />
-            }
+            control={<Checkbox checked={noDateField.value} color="primary" onChange={toggleSelectNoDate} />}
             label={noDateText}
           />
         </div>
-      }
+      )}
     </>
   );
 });
@@ -69,14 +63,15 @@ export default memo(function DateRangeField({
 
   return (
     <div className={clsx(fieldStyles.field, styles.fieldCentered)}>
-      {label &&
+      {label && (
         <label htmlFor={fieldName} className={fieldStyles.fieldLabel}>
           {label}
-          {isCpgField &&
+          {isCpgField && (
             <span className={clsx(styles.cpgTag, isCpgComplete(name, values) && styles.cpgTagComplete)}>CPG</span>
-          }:
+          )}
+          :
         </label>
-      }
+      )}
 
       <div className={clsx(styles.fieldGroup, styles.dateFieldInput)}>
         <DateRangePicker
@@ -87,7 +82,9 @@ export default memo(function DateRangeField({
           rangeType="start"
         />
 
-        <div className={fieldStyles.fieldInput}><DashIcon /></div>
+        <div className={fieldStyles.fieldInput}>
+          <DashIcon />
+        </div>
 
         <DateRangePicker
           fieldName={fieldName}

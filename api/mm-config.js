@@ -5,4 +5,4 @@ module.exports = {
   url: config.get('mongo.url'),
   directory: path.relative('', path.resolve(__dirname, 'migrations')),
   collection: 'migrations'
-}
+};

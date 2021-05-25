@@ -101,9 +101,9 @@ describe('getProperty', () => {
 
     it('should get an Annotation property', () => {
       const obj = {
-        foo: { text: 'Don\'t worry. Everything is fine.' }
+        foo: { text: "Don't worry. Everything is fine." }
       };
-      expect(getProperty(obj, 'Annotation:foo')).toEqual('Don\'t worry. Everything is fine.');
+      expect(getProperty(obj, 'Annotation:foo')).toEqual("Don't worry. Everything is fine.");
     });
 
     it('should get an Address property', () => {
@@ -163,7 +163,13 @@ describe('getProperty', () => {
     it('should get a Signature property', () => {
       const obj = {
         foo: {
-          type: [{ system: 'http://hl7.org/fhir/valueset-signature-type', code: '1.2.840.10065.1.12.1.1', display: 'AuthorID' }],
+          type: [
+            {
+              system: 'http://hl7.org/fhir/valueset-signature-type',
+              code: '1.2.840.10065.1.12.1.1',
+              display: 'AuthorID'
+            }
+          ],
           when: '2001-01-01T10:30:00.0-05:00',
           whoUri: 'urn:oid:1.2.3.4.5',
           contentType: 'application/pdf',
@@ -301,9 +307,9 @@ describe('getProperty', () => {
 
     it('should get an Annotation property', () => {
       const obj = {
-        fooAnnotation: { text: 'Don\'t worry. Everything is fine.' }
+        fooAnnotation: { text: "Don't worry. Everything is fine." }
       };
-      expect(getProperty(obj, 'foo[x]')).toEqual('Don\'t worry. Everything is fine.');
+      expect(getProperty(obj, 'foo[x]')).toEqual("Don't worry. Everything is fine.");
     });
 
     it('should get an Address property', () => {
@@ -363,7 +369,13 @@ describe('getProperty', () => {
     it('should get a Signature property', () => {
       const obj = {
         fooSignature: {
-          type: [{ system: 'http://hl7.org/fhir/valueset-signature-type', code: '1.2.840.10065.1.12.1.1', display: 'AuthorID' }],
+          type: [
+            {
+              system: 'http://hl7.org/fhir/valueset-signature-type',
+              code: '1.2.840.10065.1.12.1.1',
+              display: 'AuthorID'
+            }
+          ],
           when: '2001-01-01T10:30:00.0-05:00',
           whoUri: 'urn:oid:1.2.3.4.5',
           contentType: 'application/pdf',

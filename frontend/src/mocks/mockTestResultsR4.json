@@ -1,358 +1,358 @@
 {
-    "data": {
-        "localIdPatientResultsMap": {
-            "5e0fd3ec-85c6-4cc3-a12d-c470a93c3132": {
-                "Untitled-Artifact": {}
-            }
-        },
-        "patientResults": {
-            "5e0fd3ec-85c6-4cc3-a12d-c470a93c3132": {
-                "Errors": null,
-                "InPopulation": false,
-                "Is Child": false,
-                "Is Male": false,
-                "MeetsExclusionCriteria": false,
-                "MeetsInclusionCriteria": false,
-                "Patient": {
-                    "address": [
-                        {
-                            "city": {
-                                "value": "Worcester"
-                            },
-                            "country": {
-                                "value": "US"
-                            },
-                            "extension": [
-                                {
-                                    "extension": [
-                                        {
-                                            "url": "latitude",
-                                            "value": {
-                                                "value": 42.2894936261063
-                                            }
-                                        },
-                                        {
-                                            "url": "longitude",
-                                            "value": {
-                                                "value": -71.8218075651246
-                                            }
-                                        }
-                                    ],
-                                    "url": "http://hl7.org/fhir/StructureDefinition/geolocation"
-                                }
-                            ],
-                            "line": [
-                                {
-                                    "value": "462 Homenick Landing Suite 25"
-                                }
-                            ],
-                            "postalCode": {
-                                "value": "01545"
-                            },
-                            "state": {
-                                "value": "Massachusetts"
-                            }
-                        }
-                    ],
-                    "birthDate": {
-                        "value": "1999-10-10"
+  "data": {
+    "localIdPatientResultsMap": {
+      "5e0fd3ec-85c6-4cc3-a12d-c470a93c3132": {
+        "Untitled-Artifact": {}
+      }
+    },
+    "patientResults": {
+      "5e0fd3ec-85c6-4cc3-a12d-c470a93c3132": {
+        "Errors": null,
+        "InPopulation": false,
+        "Is Child": false,
+        "Is Male": false,
+        "MeetsExclusionCriteria": false,
+        "MeetsInclusionCriteria": false,
+        "Patient": {
+          "address": [
+            {
+              "city": {
+                "value": "Worcester"
+              },
+              "country": {
+                "value": "US"
+              },
+              "extension": [
+                {
+                  "extension": [
+                    {
+                      "url": "latitude",
+                      "value": {
+                        "value": 42.2894936261063
+                      }
                     },
-                    "communication": [
-                        {
-                            "language": {
-                                "coding": [
-                                    {
-                                        "code": {
-                                            "value": "pt"
-                                        },
-                                        "display": {
-                                            "value": "Portuguese"
-                                        },
-                                        "system": {
-                                            "value": "urn:ietf:bcp:47"
-                                        }
-                                    }
-                                ],
-                                "text": {
-                                    "value": "Portuguese"
-                                }
-                            }
-                        }
-                    ],
-                    "extension": [
-                        {
-                            "extension": [
-                                {
-                                    "url": "ombCategory",
-                                    "value": {
-                                        "code": {
-                                            "value": "2106-3"
-                                        },
-                                        "display": {
-                                            "value": "White"
-                                        },
-                                        "system": {
-                                            "value": "urn:oid:2.16.840.1.113883.6.238"
-                                        }
-                                    }
-                                },
-                                {
-                                    "url": "text",
-                                    "value": {
-                                        "value": "White"
-                                    }
-                                }
-                            ],
-                            "url": "http://hl7.org/fhir/us/core/StructureDefinition/us-core-race"
-                        },
-                        {
-                            "extension": [
-                                {
-                                    "url": "ombCategory",
-                                    "value": {
-                                        "code": {
-                                            "value": "2186-5"
-                                        },
-                                        "display": {
-                                            "value": "Not Hispanic or Latino"
-                                        },
-                                        "system": {
-                                            "value": "urn:oid:2.16.840.1.113883.6.238"
-                                        }
-                                    }
-                                },
-                                {
-                                    "url": "text",
-                                    "value": {
-                                        "value": "Not Hispanic or Latino"
-                                    }
-                                }
-                            ],
-                            "url": "http://hl7.org/fhir/us/core/StructureDefinition/us-core-ethnicity"
-                        },
-                        {
-                            "url": "http://hl7.org/fhir/StructureDefinition/patient-mothersMaidenName",
-                            "value": {
-                                "value": "Lourdes258 Haag279"
-                            }
-                        },
-                        {
-                            "url": "http://hl7.org/fhir/us/core/StructureDefinition/us-core-birthsex",
-                            "value": {
-                                "value": "F"
-                            }
-                        },
-                        {
-                            "url": "http://hl7.org/fhir/StructureDefinition/patient-birthPlace",
-                            "value": {
-                                "city": {
-                                    "value": "Porto"
-                                },
-                                "country": {
-                                    "value": "PT"
-                                },
-                                "state": {
-                                    "value": "Douro Litoral"
-                                }
-                            }
-                        },
-                        {
-                            "url": "http://synthetichealth.github.io/synthea/disability-adjusted-life-years",
-                            "value": {
-                                "value": 0
-                            }
-                        },
-                        {
-                            "url": "http://synthetichealth.github.io/synthea/quality-adjusted-life-years",
-                            "value": {
-                                "value": 20
-                            }
-                        }
-                    ],
-                    "gender": {
-                        "value": "female"
-                    },
-                    "id": {
-                        "value": "5e0fd3ec-85c6-4cc3-a12d-c470a93c3132"
-                    },
-                    "identifier": [
-                        {
-                            "system": {
-                                "value": "https://github.com/synthetichealth/synthea"
-                            },
-                            "value": {
-                                "value": "93c286a8-f2ec-4cac-aed7-2367a9117795"
-                            }
-                        },
-                        {
-                            "system": {
-                                "value": "http://hospital.smarthealthit.org"
-                            },
-                            "type": {
-                                "coding": [
-                                    {
-                                        "code": {
-                                            "value": "MR"
-                                        },
-                                        "display": {
-                                            "value": "Medical Record Number"
-                                        },
-                                        "system": {
-                                            "value": "http://terminology.hl7.org/CodeSystem/v2-0203"
-                                        }
-                                    }
-                                ],
-                                "text": {
-                                    "value": "Medical Record Number"
-                                }
-                            },
-                            "value": {
-                                "value": "93c286a8-f2ec-4cac-aed7-2367a9117795"
-                            }
-                        },
-                        {
-                            "system": {
-                                "value": "http://hl7.org/fhir/sid/us-ssn"
-                            },
-                            "type": {
-                                "coding": [
-                                    {
-                                        "code": {
-                                            "value": "SS"
-                                        },
-                                        "display": {
-                                            "value": "Social Security Number"
-                                        },
-                                        "system": {
-                                            "value": "http://terminology.hl7.org/CodeSystem/v2-0203"
-                                        }
-                                    }
-                                ],
-                                "text": {
-                                    "value": "Social Security Number"
-                                }
-                            },
-                            "value": {
-                                "value": "999-51-1344"
-                            }
-                        },
-                        {
-                            "system": {
-                                "value": "urn:oid:2.16.840.1.113883.4.3.25"
-                            },
-                            "type": {
-                                "coding": [
-                                    {
-                                        "code": {
-                                            "value": "DL"
-                                        },
-                                        "display": {
-                                            "value": "Driver's License"
-                                        },
-                                        "system": {
-                                            "value": "http://terminology.hl7.org/CodeSystem/v2-0203"
-                                        }
-                                    }
-                                ],
-                                "text": {
-                                    "value": "Driver's License"
-                                }
-                            },
-                            "value": {
-                                "value": "S99918722"
-                            }
-                        },
-                        {
-                            "system": {
-                                "value": "http://standardhealthrecord.org/fhir/StructureDefinition/passportNumber"
-                            },
-                            "type": {
-                                "coding": [
-                                    {
-                                        "code": {
-                                            "value": "PPN"
-                                        },
-                                        "display": {
-                                            "value": "Passport Number"
-                                        },
-                                        "system": {
-                                            "value": "http://terminology.hl7.org/CodeSystem/v2-0203"
-                                        }
-                                    }
-                                ],
-                                "text": {
-                                    "value": "Passport Number"
-                                }
-                            },
-                            "value": {
-                                "value": "X34486008X"
-                            }
-                        }
-                    ],
-                    "maritalStatus": {
-                        "coding": [
-                            {
-                                "code": {
-                                    "value": "S"
-                                },
-                                "display": {
-                                    "value": "Never Married"
-                                },
-                                "system": {
-                                    "value": "http://terminology.hl7.org/CodeSystem/v3-MaritalStatus"
-                                }
-                            }
-                        ],
-                        "text": {
-                            "value": "Never Married"
-                        }
-                    },
-                    "multipleBirth": {
-                        "value": false
-                    },
-                    "name": [
-                        {
-                            "family": {
-                                "value": "Reynolds644"
-                            },
-                            "given": [
-                                {
-                                    "value": "Geneva168"
-                                }
-                            ],
-                            "prefix": [
-                                {
-                                    "value": "Ms."
-                                }
-                            ],
-                            "use": {
-                                "value": "official"
-                            }
-                        }
-                    ],
-                    "telecom": [
-                        {
-                            "system": {
-                                "value": "phone"
-                            },
-                            "use": {
-                                "value": "home"
-                            },
-                            "value": {
-                                "value": "555-935-6358"
-                            }
-                        }
-                    ],
-                    "text": {
-                        "status": {
-                            "value": "generated"
-                        }
+                    {
+                      "url": "longitude",
+                      "value": {
+                        "value": -71.8218075651246
+                      }
                     }
-                },
-                "Rationale": null,
-                "Recommendation": null
+                  ],
+                  "url": "http://hl7.org/fhir/StructureDefinition/geolocation"
+                }
+              ],
+              "line": [
+                {
+                  "value": "462 Homenick Landing Suite 25"
+                }
+              ],
+              "postalCode": {
+                "value": "01545"
+              },
+              "state": {
+                "value": "Massachusetts"
+              }
             }
+          ],
+          "birthDate": {
+            "value": "1999-10-10"
+          },
+          "communication": [
+            {
+              "language": {
+                "coding": [
+                  {
+                    "code": {
+                      "value": "pt"
+                    },
+                    "display": {
+                      "value": "Portuguese"
+                    },
+                    "system": {
+                      "value": "urn:ietf:bcp:47"
+                    }
+                  }
+                ],
+                "text": {
+                  "value": "Portuguese"
+                }
+              }
+            }
+          ],
+          "extension": [
+            {
+              "extension": [
+                {
+                  "url": "ombCategory",
+                  "value": {
+                    "code": {
+                      "value": "2106-3"
+                    },
+                    "display": {
+                      "value": "White"
+                    },
+                    "system": {
+                      "value": "urn:oid:2.16.840.1.113883.6.238"
+                    }
+                  }
+                },
+                {
+                  "url": "text",
+                  "value": {
+                    "value": "White"
+                  }
+                }
+              ],
+              "url": "http://hl7.org/fhir/us/core/StructureDefinition/us-core-race"
+            },
+            {
+              "extension": [
+                {
+                  "url": "ombCategory",
+                  "value": {
+                    "code": {
+                      "value": "2186-5"
+                    },
+                    "display": {
+                      "value": "Not Hispanic or Latino"
+                    },
+                    "system": {
+                      "value": "urn:oid:2.16.840.1.113883.6.238"
+                    }
+                  }
+                },
+                {
+                  "url": "text",
+                  "value": {
+                    "value": "Not Hispanic or Latino"
+                  }
+                }
+              ],
+              "url": "http://hl7.org/fhir/us/core/StructureDefinition/us-core-ethnicity"
+            },
+            {
+              "url": "http://hl7.org/fhir/StructureDefinition/patient-mothersMaidenName",
+              "value": {
+                "value": "Lourdes258 Haag279"
+              }
+            },
+            {
+              "url": "http://hl7.org/fhir/us/core/StructureDefinition/us-core-birthsex",
+              "value": {
+                "value": "F"
+              }
+            },
+            {
+              "url": "http://hl7.org/fhir/StructureDefinition/patient-birthPlace",
+              "value": {
+                "city": {
+                  "value": "Porto"
+                },
+                "country": {
+                  "value": "PT"
+                },
+                "state": {
+                  "value": "Douro Litoral"
+                }
+              }
+            },
+            {
+              "url": "http://synthetichealth.github.io/synthea/disability-adjusted-life-years",
+              "value": {
+                "value": 0
+              }
+            },
+            {
+              "url": "http://synthetichealth.github.io/synthea/quality-adjusted-life-years",
+              "value": {
+                "value": 20
+              }
+            }
+          ],
+          "gender": {
+            "value": "female"
+          },
+          "id": {
+            "value": "5e0fd3ec-85c6-4cc3-a12d-c470a93c3132"
+          },
+          "identifier": [
+            {
+              "system": {
+                "value": "https://github.com/synthetichealth/synthea"
+              },
+              "value": {
+                "value": "93c286a8-f2ec-4cac-aed7-2367a9117795"
+              }
+            },
+            {
+              "system": {
+                "value": "http://hospital.smarthealthit.org"
+              },
+              "type": {
+                "coding": [
+                  {
+                    "code": {
+                      "value": "MR"
+                    },
+                    "display": {
+                      "value": "Medical Record Number"
+                    },
+                    "system": {
+                      "value": "http://terminology.hl7.org/CodeSystem/v2-0203"
+                    }
+                  }
+                ],
+                "text": {
+                  "value": "Medical Record Number"
+                }
+              },
+              "value": {
+                "value": "93c286a8-f2ec-4cac-aed7-2367a9117795"
+              }
+            },
+            {
+              "system": {
+                "value": "http://hl7.org/fhir/sid/us-ssn"
+              },
+              "type": {
+                "coding": [
+                  {
+                    "code": {
+                      "value": "SS"
+                    },
+                    "display": {
+                      "value": "Social Security Number"
+                    },
+                    "system": {
+                      "value": "http://terminology.hl7.org/CodeSystem/v2-0203"
+                    }
+                  }
+                ],
+                "text": {
+                  "value": "Social Security Number"
+                }
+              },
+              "value": {
+                "value": "999-51-1344"
+              }
+            },
+            {
+              "system": {
+                "value": "urn:oid:2.16.840.1.113883.4.3.25"
+              },
+              "type": {
+                "coding": [
+                  {
+                    "code": {
+                      "value": "DL"
+                    },
+                    "display": {
+                      "value": "Driver's License"
+                    },
+                    "system": {
+                      "value": "http://terminology.hl7.org/CodeSystem/v2-0203"
+                    }
+                  }
+                ],
+                "text": {
+                  "value": "Driver's License"
+                }
+              },
+              "value": {
+                "value": "S99918722"
+              }
+            },
+            {
+              "system": {
+                "value": "http://standardhealthrecord.org/fhir/StructureDefinition/passportNumber"
+              },
+              "type": {
+                "coding": [
+                  {
+                    "code": {
+                      "value": "PPN"
+                    },
+                    "display": {
+                      "value": "Passport Number"
+                    },
+                    "system": {
+                      "value": "http://terminology.hl7.org/CodeSystem/v2-0203"
+                    }
+                  }
+                ],
+                "text": {
+                  "value": "Passport Number"
+                }
+              },
+              "value": {
+                "value": "X34486008X"
+              }
+            }
+          ],
+          "maritalStatus": {
+            "coding": [
+              {
+                "code": {
+                  "value": "S"
+                },
+                "display": {
+                  "value": "Never Married"
+                },
+                "system": {
+                  "value": "http://terminology.hl7.org/CodeSystem/v3-MaritalStatus"
+                }
+              }
+            ],
+            "text": {
+              "value": "Never Married"
+            }
+          },
+          "multipleBirth": {
+            "value": false
+          },
+          "name": [
+            {
+              "family": {
+                "value": "Reynolds644"
+              },
+              "given": [
+                {
+                  "value": "Geneva168"
+                }
+              ],
+              "prefix": [
+                {
+                  "value": "Ms."
+                }
+              ],
+              "use": {
+                "value": "official"
+              }
+            }
+          ],
+          "telecom": [
+            {
+              "system": {
+                "value": "phone"
+              },
+              "use": {
+                "value": "home"
+              },
+              "value": {
+                "value": "555-935-6358"
+              }
+            }
+          ],
+          "text": {
+            "status": {
+              "value": "generated"
+            }
+          }
         },
-        "populationResults": {}
-    }
+        "Rationale": null,
+        "Recommendation": null
+      }
+    },
+    "populationResults": {}
+  }
 }

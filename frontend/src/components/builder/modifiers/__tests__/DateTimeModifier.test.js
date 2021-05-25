@@ -4,14 +4,7 @@ import DateTimeModifier from '../DateTimeModifier';
 
 describe('<DateTimeModifier />', () => {
   const renderComponent = (props = {}) =>
-    render(
-      <DateTimeModifier
-        name="date-time-modifier-test"
-        handleUpdateModifier={jest.fn()}
-        values={{}}
-        {...props}
-      />
-    );
+    render(<DateTimeModifier name="date-time-modifier-test" handleUpdateModifier={jest.fn()} values={{}} {...props} />);
 
   it('calls handleUpdateModifier on input change for date time modifier with no precision', async () => {
     const handleUpdateModifier = jest.fn();

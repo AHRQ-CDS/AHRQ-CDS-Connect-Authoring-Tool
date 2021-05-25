@@ -1,14 +1,18 @@
 import isEmpty from 'lodash/isEmpty';
 
 export function coding(c) {
-  if (c == null) { return ''; }
+  if (c == null) {
+    return '';
+  }
 
   const text = isEmpty(c.display) ? c.code : c.display;
   return text;
 }
 
 export function codeableConcept(c) {
-  if (c == null) { return ''; }
+  if (c == null) {
+    return '';
+  }
 
   // Prefer the concept's text property
   if (!isEmpty(c.text)) {
@@ -26,7 +30,9 @@ export function codeableConcept(c) {
 }
 
 export function quantity(q) {
-  if (q == null) { return ''; }
+  if (q == null) {
+    return '';
+  }
 
   const value = q.value != null ? q.value : '<null>';
   if (!isEmpty(q.code)) {
@@ -38,7 +44,9 @@ export function quantity(q) {
 }
 
 export function range(r) {
-  if (r == null) { return ''; }
+  if (r == null) {
+    return '';
+  }
 
   if (r.low && r.high) {
     return `${quantity(r.low)} - ${quantity(r.high)}`;
@@ -51,7 +59,9 @@ export function range(r) {
 }
 
 export function ratio(r) {
-  if (r == null) { return ''; }
+  if (r == null) {
+    return '';
+  }
 
   if (r.numerator && r.denominator) {
     return `${quantity(r.numerator)} / ${quantity(r.denominator)}`;
@@ -64,7 +74,9 @@ export function ratio(r) {
 }
 
 export function period(p) {
-  if (p == null) { return ''; }
+  if (p == null) {
+    return '';
+  }
 
   if (p.start && p.end) {
     return `${p.start} - ${p.end}`;
@@ -77,7 +89,9 @@ export function period(p) {
 }
 
 export function identifier(i) {
-  if (i == null) { return ''; }
+  if (i == null) {
+    return '';
+  }
 
   if (i.value != null) {
     return i.value;
@@ -86,7 +100,9 @@ export function identifier(i) {
 }
 
 export function humanName(n) {
-  if (n == null) { return ''; }
+  if (n == null) {
+    return '';
+  }
 
   if (!isEmpty(n.text)) {
     return n.text;
@@ -101,7 +117,9 @@ export function humanName(n) {
 }
 
 export function annotation(n) {
-  if (n == null) { return ''; }
+  if (n == null) {
+    return '';
+  }
 
   if (n.text != null) {
     if (n.text.length > 50) {
@@ -113,7 +131,9 @@ export function annotation(n) {
 }
 
 export function address(a) {
-  if (a == null) { return ''; }
+  if (a == null) {
+    return '';
+  }
 
   const parts = [];
   if (!isEmpty(a.city)) {
@@ -130,7 +150,9 @@ export function address(a) {
 }
 
 export function contactPoint(cp) {
-  if (cp == null) { return ''; }
+  if (cp == null) {
+    return '';
+  }
 
   if (cp.value != null) {
     return cp.value;
@@ -139,7 +161,9 @@ export function contactPoint(cp) {
 }
 
 export function reference(r) {
-  if (r == null) { return ''; }
+  if (r == null) {
+    return '';
+  }
 
   if (!isEmpty(r.display)) {
     return r.display;
@@ -151,24 +175,32 @@ export function reference(r) {
 
 // Note: We don't try to parse sampled data.  We just indicate it is sampled data.
 export function sampledData(a) {
-  if (a == null) { return ''; }
+  if (a == null) {
+    return '';
+  }
   return '<sampled data>';
 }
 
 // Note: We don't try to parse attachment.  We just indicate it is an attachment.
 export function attachment(a) {
-  if (a == null) { return ''; }
+  if (a == null) {
+    return '';
+  }
   return '<attachment>';
 }
 
 // Note: We don't try to parse timing.  We just indicate it is a timing.
 export function timing(t) {
-  if (t == null) { return ''; }
+  if (t == null) {
+    return '';
+  }
   return '<timing>';
 }
 
 // Note: We don't try to parse signature.  We just indicate it is a signature.
 export function signature(t) {
-  if (t == null) { return ''; }
+  if (t == null) {
+    return '';
+  }
   return '<signature>';
 }

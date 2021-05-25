@@ -10,11 +10,7 @@ function getModifier(name, values) {
 }
 
 test('Simple modifiers Active, Confirmed, Exists builds expected phrase', () => {
-  const modifiers = [
-    getModifier('ActiveCondition'),
-    getModifier('ConfirmedCondition'),
-    getModifier('BooleanExists')
-  ];
+  const modifiers = [getModifier('ActiveCondition'), getModifier('ConfirmedCondition'), getModifier('BooleanExists')];
   const name = 'Condition';
   const valueSets = [{ name: 'Diabetes', oid: '1.2.3' }];
   const codes = [];
@@ -69,7 +65,7 @@ test('More complicated modifiers, including Qualifier, builds expected phrase', 
     { expressionText: 'within the last 14 years', isExpression: true },
     { expressionText: 'whose value is a code from Smoker', isExpression: true }
   ];
-  
+
   expect(expressionPhrase).toEqual(expectedOutput);
 });
 
@@ -173,15 +169,16 @@ test('Only validated modifiers are added to the phrase', () => {
 
 // Multiple value sets and codes (with and without a display) are added correctly to phrase and tooltip text
 test('All value sets and codes are added to phrase, but only first three are displayed, rest in tooltip text', () => {
-  const modifiers = [
-    getModifier('BooleanExists')
-  ];
+  const modifiers = [getModifier('BooleanExists')];
 
   const name = 'Observation';
-  const valueSets = [{ name: 'LDL', oid: '1.2.3' }, { name: 'HDL', oid: '3.2.1' }];
+  const valueSets = [
+    { name: 'LDL', oid: '1.2.3' },
+    { name: 'HDL', oid: '3.2.1' }
+  ];
   const codes = [
     { code: '123-4', codeSystem: { name: 'CS1', id: '123' }, display: 'Test code' },
-    { code: '432-1', codeSystem: { name: 'CS2', id: '321' } },
+    { code: '432-1', codeSystem: { name: 'CS2', id: '321' } }
   ];
 
   const expressionPhrase = convertToExpression(modifiers, name, valueSets, codes, 'boolean');
@@ -240,13 +237,13 @@ describe('Demographics elements support special case phrases', () => {
           name: 'years',
           value: 'AgeInYears()'
         }
-      },
+      }
     ];
 
     const expressionPhrase = convertToExpression(modifiers, name, [], [], 'boolean', ages);
 
     const expectedOutput = [
-      { expressionText: 'The patient\'s', isExpression: false },
+      { expressionText: "The patient's", isExpression: false },
       { expressionText: 'age', isExpression: false, isType: true },
       { expressionText: 'is', isExpression: false },
       { expressionText: 'between', isExpression: false },
@@ -260,18 +257,20 @@ describe('Demographics elements support special case phrases', () => {
   test('Gender supports gender selection', () => {
     const modifiers = [];
     const name = 'Gender';
-    const gender = [{
-      id: 'gender',
-      name: 'Gender',
-      select: 'demographics/gender',
-      type: 'valueset',
-      value: { id: 'male', name: 'Male', value: 'male' }
-    }];
+    const gender = [
+      {
+        id: 'gender',
+        name: 'Gender',
+        select: 'demographics/gender',
+        type: 'valueset',
+        value: { id: 'male', name: 'Male', value: 'male' }
+      }
+    ];
 
     const expressionPhrase = convertToExpression(modifiers, name, [], [], 'boolean', gender);
 
     const expectedOutput = [
-      { expressionText: 'The patient\'s', isExpression: false },
+      { expressionText: "The patient's", isExpression: false },
       { expressionText: 'gender', isExpression: false, isType: true },
       { expressionText: 'is', isExpression: false },
       { expressionText: 'Male', isExpression: true }
@@ -281,10 +280,8 @@ describe('Demographics elements support special case phrases', () => {
   });
 });
 
-test('Base Element Lists create a phrase with individual element\'s phrases in a tooltip', () => {
-  const modifiers = [
-    getModifier('BooleanExists')
-  ];
+test("Base Element Lists create a phrase with individual element's phrases in a tooltip", () => {
+  const modifiers = [getModifier('BooleanExists')];
 
   const name = 'Union';
   const valueSets = [];
@@ -320,7 +317,7 @@ test('Base Element Lists create a phrase with individual element\'s phrases in a
   expect(expressionPhrase).toEqual(expectedOutput);
 });
 
-test('Conjunction Groups create a phrase with the group\'s children 1 level deep and its type', () => {
+test("Conjunction Groups create a phrase with the group's children 1 level deep and its type", () => {
   const modifiers = [];
 
   const name = 'Or';
@@ -328,11 +325,7 @@ test('Conjunction Groups create a phrase with the group\'s children 1 level deep
   const codes = [];
   const returnType = 'boolean';
   const otherFields = [];
-  const elementNamesInPhrase = [
-    { name: 'Child 1' },
-    { name: 'Child 2' },
-    { name: 'Group Child' }
-  ];
+  const elementNamesInPhrase = [{ name: 'Child 1' }, { name: 'Child 2' }, { name: 'Group Child' }];
 
   const expressionPhrase = convertToExpression(
     modifiers,
@@ -350,16 +343,14 @@ test('Conjunction Groups create a phrase with the group\'s children 1 level deep
     { expressionText: 'Child 2', isExpression: true, isName: true },
     { expressionText: ',', isExpression: false },
     { expressionText: 'or', isExpression: false, isType: true },
-    { expressionText: 'Group Child', isExpression: true, isName: true },
+    { expressionText: 'Group Child', isExpression: true, isName: true }
   ];
 
   expect(expressionPhrase).toEqual(expectedOutput);
 });
 
 test('Parameters with BooleanNot create a phrase with the parameter name', () => {
-  const modifiers = [
-    getModifier('BooleanNot')
-  ];
+  const modifiers = [getModifier('BooleanNot')];
 
   const name = 'parameter';
   const valueSets = [];
@@ -385,7 +376,7 @@ test('Parameters with BooleanNot create a phrase with the parameter name', () =>
     { expressionText: 'Not', isExpression: true },
     { expressionText: 'the', isExpression: false },
     { expressionText: 'parameter', isExpression: false, isType: true },
-    { expressionText: 'Original Param', isExpression: true },
+    { expressionText: 'Original Param', isExpression: true }
   ];
 
   expect(expressionPhrase).toEqual(expectedOutput);
@@ -492,10 +483,7 @@ test('Immunization Phrases', () => {
 });
 
 test('Device Phrases', () => {
-  const modifiers = [
-    getModifier('ActiveDevice'),
-    getModifier('BooleanExists')
-  ];
+  const modifiers = [getModifier('ActiveDevice'), getModifier('BooleanExists')];
   const name = 'Device';
   const valueSets = [{ name: 'PaceMakers', oid: '1.2.3' }];
   const codes = [];
@@ -508,7 +496,7 @@ test('Device Phrases', () => {
     { expressionText: 'active', isExpression: true },
     { expressionText: 'device', isExpression: false, isType: true },
     { expressionText: 'with a code from', isExpression: false },
-    { expressionText: 'PaceMakers', isExpression: true },
+    { expressionText: 'PaceMakers', isExpression: true }
   ];
 
   expect(expressionPhrase).toEqual(expectedOutput);

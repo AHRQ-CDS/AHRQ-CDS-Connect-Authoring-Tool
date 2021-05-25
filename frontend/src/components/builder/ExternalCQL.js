@@ -22,25 +22,30 @@ export default class ExternalCQL extends Component {
     };
   }
 
-  UNSAFE_componentWillMount() { // eslint-disable-line camelcase
+  UNSAFE_componentWillMount() {
+    // eslint-disable-line camelcase
     const { artifact, loadExternalCqlList } = this.props;
     loadExternalCqlList(artifact._id);
   }
 
-  UNSAFE_componentWillReceiveProps(nextProps) { // eslint-disable-line camelcase
-    const showELMErrorModal =
-      nextProps.externalCqlErrors ? nextProps.externalCqlErrors.length > 0 : false;
+  UNSAFE_componentWillReceiveProps(nextProps) {
+    // eslint-disable-line camelcase
+    const showELMErrorModal = nextProps.externalCqlErrors ? nextProps.externalCqlErrors.length > 0 : false;
     this.setState({ showELMErrorModal });
 
     if (nextProps.addExternalCqlLibraryError !== this.props.addExternalCqlLibraryError) {
       this.setState({ showLibraryErrorBanner: nextProps.addExternalCqlLibraryError != null });
-      this.setState({ showLibraryNotificationBanner:
-          nextProps.addExternalCqlLibraryError === null && nextProps.addExternalCqlLibraryErrorMessage !== '' });
+      this.setState({
+        showLibraryNotificationBanner:
+          nextProps.addExternalCqlLibraryError === null && nextProps.addExternalCqlLibraryErrorMessage !== ''
+      });
     }
 
     if (nextProps.addExternalCqlLibraryErrorMessage !== this.props.addExternalCqlLibraryErrorMessage) {
-      this.setState({ showLibraryNotificationBanner:
-        nextProps.addExternalCqlLibraryError === null && nextProps.addExternalCqlLibraryErrorMessage !== '' });
+      this.setState({
+        showLibraryNotificationBanner:
+          nextProps.addExternalCqlLibraryError === null && nextProps.addExternalCqlLibraryErrorMessage !== ''
+      });
     }
   }
 
@@ -49,18 +54,17 @@ export default class ExternalCQL extends Component {
     clearAddLibraryErrorsAndMessages();
   }
 
-  handleAddExternalCQL = (externalCqlLibrary) => {
+  handleAddExternalCQL = externalCqlLibrary => {
     const { artifact } = this.props;
     this.setState({ showUploadErrorBanner: false });
 
     const reader = new FileReader();
-    reader.onload = (e) => {
+    reader.onload = e => {
       const cqlFileName = externalCqlLibrary[0].name;
       const cqlFileType = externalCqlLibrary[0].type;
 
       const fileContentToSend = e.target.result.slice(e.target.result.indexOf(',') + 1);
-      if (cqlFileType !== 'application/zip'
-      || (cqlFileType === 'application/zip' && cqlFileName.endsWith('.zip'))) {
+      if (cqlFileType !== 'application/zip' || (cqlFileType === 'application/zip' && cqlFileName.endsWith('.zip'))) {
         const library = {
           cqlFileName,
           cqlFileContent: fileContentToSend,
@@ -80,27 +84,27 @@ export default class ExternalCQL extends Component {
     } catch (error) {
       this.setState({ showUploadErrorBanner: true });
     }
-  }
+  };
 
   dismissBanner = (event, bannerType) => {
     event.stopPropagation();
     this.setState({ [bannerType]: false });
-  }
+  };
 
   showELMErrorModal = () => {
     this.setState({ showELMErrorModal: true });
-  }
+  };
 
   closeELMErrorModal = () => {
     this.setState({ showELMErrorModal: false });
     this.props.clearExternalCqlValidationWarnings();
-  }
+  };
 
   renderDropzoneIcon = () => {
     const { isAddingExternalCqlLibrary } = this.props;
     if (isAddingExternalCqlLibrary) return <FontAwesomeIcon icon={faSpinner} size="5x" spin />;
     return <FontAwesomeIcon icon={faCloudUploadAlt} size="5x" />;
-  }
+  };
 
   renderExternalCqlTable() {
     const {
@@ -125,7 +129,8 @@ export default class ExternalCQL extends Component {
           loadExternalCqlLibraryDetails={loadExternalCqlLibraryDetails}
           isLoadingExternalCqlDetails={isLoadingExternalCqlDetails}
           clearAddLibraryErrorsAndMessages={clearAddLibraryErrorsAndMessages}
-          librariesInUse={librariesInUse} />
+          librariesInUse={librariesInUse}
+        />
       );
     }
 
@@ -160,30 +165,30 @@ export default class ExternalCQL extends Component {
 
                   {this.renderDropzoneIcon()}
 
-                  {showUploadErrorBanner &&
+                  {showUploadErrorBanner && (
                     <Alert severity="error" onClose={event => this.dismissBanner(event, 'showUploadErrorBanner')}>
                       Invalid file type.
                     </Alert>
-                  }
+                  )}
 
-                  {showLibraryErrorBanner &&
+                  {showLibraryErrorBanner && (
                     <Alert severity="error" onClose={event => this.dismissBanner(event, 'showLibraryErrorBanner')}>
                       {addExternalCqlLibraryErrorMessage || 'An error occurred.'}
                     </Alert>
-                  }
+                  )}
 
-                  {showLibraryNotificationBanner &&
+                  {showLibraryNotificationBanner && (
                     <Alert
                       severity="info"
                       onClose={event => this.dismissBanner(event, 'showLibraryNotificationBanner')}
                     >
                       {addExternalCqlLibraryErrorMessage}
                     </Alert>
-                  }
+                  )}
 
-                  {isDropzoneDisabled &&
+                  {isDropzoneDisabled && (
                     <Alert severity="warning">Artifact must be saved before uploading libraries.</Alert>
-                  }
+                  )}
 
                   <div className="dropzone__instructions">
                     Drop a valid external CQL library or zip file here, or click to browse.
@@ -193,14 +198,10 @@ export default class ExternalCQL extends Component {
             )}
           </Dropzone>
 
-          <div className="external-cql__display">
-            {this.renderExternalCqlTable()}
-          </div>
+          <div className="external-cql__display">{this.renderExternalCqlTable()}</div>
         </div>
 
-        {showELMErrorModal &&
-          <ELMErrorModal handleCloseModal={this.closeELMErrorModal} errors={externalCqlErrors} />
-        }
+        {showELMErrorModal && <ELMErrorModal handleCloseModal={this.closeELMErrorModal} errors={externalCqlErrors} />}
       </div>
     );
   }

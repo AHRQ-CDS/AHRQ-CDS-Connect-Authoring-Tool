@@ -76,7 +76,7 @@ describe('<Recommendations />', () => {
     renderComponent({ updateRecommendations });
 
     // click delete
-    userEvent.click(screen.getByRole('button', {name: 'remove recommendation'}));
+    userEvent.click(screen.getByRole('button', { name: 'remove recommendation' }));
 
     const dialog = within(screen.getByRole('dialog'));
 

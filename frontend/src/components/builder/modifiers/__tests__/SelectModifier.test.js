@@ -5,14 +5,7 @@ import SelectModifier from '../SelectModifier';
 
 describe('<SelectModifier />', () => {
   const renderComponent = (props = {}) =>
-    render(
-      <SelectModifier
-        handleUpdateModifier={jest.fn()}
-        name="select-modifier-test"
-        value=""
-        {...props}
-      />
-    );
+    render(<SelectModifier handleUpdateModifier={jest.fn()} name="select-modifier-test" value="" {...props} />);
 
   it('calls handleUpdateModifier on selection change', async () => {
     nock('http://localhost')

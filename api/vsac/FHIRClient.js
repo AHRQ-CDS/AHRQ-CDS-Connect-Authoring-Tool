@@ -2,9 +2,7 @@ const rpn = require('request-promise-native');
 const _ = require('lodash');
 const config = require('../config');
 
-
 const VSAC_FHIR_ENDPOINT = config.get('terminologyService');
-
 
 /**
 * Gets the value set for the given oid,
@@ -26,82 +24,78 @@ const codeLookups = {
   'http://unitsofmeasure.org': 'UCUM',
   'http://www.ama-assn.org/go/cpt': 'CPT',
   'http://hl7.org/fhir/sid/cvx': 'CVX'
-}
+};
 
 function getValueSet(oid, username, password) {
   const options = {
     method: 'GET',
     url: `${VSAC_FHIR_ENDPOINT}/ValueSet/${oid}/$expand`,
     headers: {
-      'Accept': 'application/json',
-      'Authorization': `Basic ${new Buffer(`${username}:${password}`).toString('base64')}`
+      Accept: 'application/json',
+      Authorization: `Basic ${new Buffer(`${username}:${password}`).toString('base64')}`
     }
   };
 
-  return rpn(options).then((res) => {
+  return rpn(options).then(res => {
     const response = JSON.parse(res);
     return {
       oid: response.id,
       version: response.meta.versionId,
       displayName: response.name,
-      codes: response.expansion.contains.map((c) => {
+      codes: response.expansion.contains.map(c => {
         return {
           code: c.code,
           codeSystemURI: c.system,
-          codeSystemName: codeLookups[c.system]||c.system,
+          codeSystemName: codeLookups[c.system] || c.system,
           codeSystemVersion: c.version,
           displayName: c.display
-        }
+        };
       })
-    }
+    };
   });
 }
-
 
 function searchForValueSets(search, username, password) {
   const options = {
     method: 'GET',
     url: `${VSAC_FHIR_ENDPOINT}/ValueSet?name:contains=${search}`,
     headers: {
-      'Accept': 'application/json',
-      'Authorization': `Basic ${new Buffer(`${username}:${password}`).toString('base64')}`
+      Accept: 'application/json',
+      Authorization: `Basic ${new Buffer(`${username}:${password}`).toString('base64')}`
     }
   };
 
-  return rpn(options).then((res) => {
+  return rpn(options).then(res => {
     const response = JSON.parse(res);
 
-    const results = (response.entry||[]).map((v, i) => {
+    const results = (response.entry || []).map((v, i) => {
       return {
         name: v.resource.name,
         steward: v.resource.publisher,
         oid: v.resource.id,
         codeSystem: [],
-        codeCount: (v.resource.expansion||{}).total||0
-      }
+        codeCount: (v.resource.expansion || {}).total || 0
+      };
     });
     return {
       _total: response.total,
       count: results.length,
       page: 1,
       results
-    }
+    };
   });
 }
-
-
 
 function getCode(code, system, username, password) {
   const options = {
     method: 'GET',
     url: `${VSAC_FHIR_ENDPOINT}/CodeSystem/$lookup?code=${code}&system=${system}`,
     headers: {
-      'Accept': 'application/json',
-      'Authorization': `Basic ${new Buffer(`${username}:${password}`).toString('base64')}`
+      Accept: 'application/json',
+      Authorization: `Basic ${new Buffer(`${username}:${password}`).toString('base64')}`
     }
   };
-  return rpn(options).then((res) => {
-
+  return rpn(options).then(res => {
     const codeJSON = JSON.parse(res).parameter;
     let codeObject = _.zipObject(_.map(codeJSON, 'name'), _.map(codeJSON, 'valueString'));
     return {
@@ -112,7 +106,7 @@ function getCode(code, system, username, password) {
       code,
       display: codeObject.display
     };
-  })
+  });
 }
 
 function getOneValueSet(username, password) {
@@ -121,11 +115,11 @@ function getOneValueSet(username, password) {
     method: 'GET',
     url: `${VSAC_FHIR_ENDPOINT}/ValueSet/${oneCodeVSOID}`,
     headers: {
-      'Accept': 'application/json',
-      'Authorization': `Basic ${new Buffer(`${username}:${password}`).toString('base64')}`
+      Accept: 'application/json',
+      Authorization: `Basic ${new Buffer(`${username}:${password}`).toString('base64')}`
     }
   };
-  return rpn(options).then((res) => {
+  return rpn(options).then(res => {
     return res;
   });
 }
@@ -135,4 +129,4 @@ module.exports = {
   searchForValueSets,
   getCode,
   getOneValueSet
-}
+};

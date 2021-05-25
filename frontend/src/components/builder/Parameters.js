@@ -20,19 +20,19 @@ export default class Parameters extends Component {
     const parameters = _.clone(this.props.parameters);
     parameters.push(newParameter);
     this.props.updateParameters(parameters);
-  }
+  };
 
-  deleteParameter = (index) => {
+  deleteParameter = index => {
     const parameters = _.cloneDeep(this.props.parameters);
     parameters.splice(index, 1);
     this.props.updateParameters(parameters);
-  }
+  };
 
   updateInstanceOfParameter = (parameter, index) => {
     const parameters = _.clone(this.props.parameters);
     parameters[index] = parameter;
     this.props.updateParameters(parameters);
-  }
+  };
 
   render() {
     return (

@@ -74,13 +74,13 @@ describe('<Root />', () => {
       });
 
       it('renders the Testing page', () => {
-        let { getByText} = renderComponent({ path: '/testing' });
+        let { getByText } = renderComponent({ path: '/testing' });
 
         expect(getByText('Tester Component')).toBeDefined();
       });
 
       it('renders the Artifact page', () => {
-        let { getByText} = renderComponent({ path: '/artifacts' });
+        let { getByText } = renderComponent({ path: '/artifacts' });
 
         expect(getByText('Artifact Component')).toBeDefined();
       });

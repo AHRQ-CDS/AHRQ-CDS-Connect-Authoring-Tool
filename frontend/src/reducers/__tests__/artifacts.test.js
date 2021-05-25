@@ -5,7 +5,9 @@ import reducer from '../artifacts';
 
 // Get the time right now.  Note that tests can fail if the clock changes to the next minute
 // between when the code was run (to get actual) and when the assertion is made (expected).
-function time() { return moment().format('dddd, MMMM Do YYYY, h:mm:ss a'); }
+function time() {
+  return moment().format('dddd, MMMM Do YYYY, h:mm:ss a');
+}
 
 describe('artifacts reducer', () => {
   it('should return the initial state', () => {

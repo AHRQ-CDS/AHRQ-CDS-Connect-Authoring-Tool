@@ -57,7 +57,7 @@ const IfConditionSelect = ({
     return [{ label: 'Recommendations is null', value: '"Recommendation" is null' }]
       .concat(_.sortBy(booleanParameterOptions, ['label']))
       .concat(_.sortBy(subpopulationOptions, ['label']));
-  }, [expTreeExclude.childInstances.length, expTreeInclude.childInstances.length, parameters, subpopulations ]);
+  }, [expTreeExclude.childInstances.length, expTreeInclude.childInstances.length, parameters, subpopulations]);
 
   const selectedOption = options.find(({ value }) => value === ifCondition.value);
 

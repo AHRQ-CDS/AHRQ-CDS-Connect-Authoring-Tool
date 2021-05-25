@@ -40,27 +40,23 @@ export default memo(function TextAreaField({
 
   const labelId = useMemo(() => {
     if (!label) return null;
-    return `TextAreaField-${labelUuid += 1}`;
+    return `TextAreaField-${(labelUuid += 1)}`;
   }, [label]);
-  
+
   return (
     <div className={fieldStyles.field}>
-      {label &&
+      {label && (
         <label htmlFor={labelId} className={fieldStyles.fieldLabel}>
           {label}
-          {isCpgField &&
+          {isCpgField && (
             <span className={clsx(styles.cpgTag, isCpgComplete(name, values) && styles.cpgTagComplete)}>CPG</span>
-          }:
+          )}
+          :
         </label>
-      }
+      )}
 
       <div className={clsx(fieldStyles.fieldInput, fieldStyles.fieldInputFullWidth)}>
-        <FastField
-          component={MuiFastField}
-          id={labelId}
-          name={fieldName}
-          placeholder={placeholder}
-        />
+        <FastField component={MuiFastField} id={labelId} name={fieldName} placeholder={placeholder} />
 
         {helperText && <div className={fieldStyles.helperText}>{helperText}</div>}
       </div>

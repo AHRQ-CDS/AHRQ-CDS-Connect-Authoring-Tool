@@ -6,7 +6,8 @@ export default function Footer() {
       <footer>
         <div className="row row-side-margins hide-on-desktop">
           <div className="col-sm-12" id="top-button-container">
-            <a href="#maincontent" id="top-button">Back to Top
+            <a href="#maincontent" id="top-button">
+              Back to Top
               <img
                 alt="Go back to top"
                 height="25"
@@ -80,7 +81,9 @@ export default function Footer() {
                   <input name="utf8" type="hidden" value="✓" />
 
                   <div role="search">
-                    <label className="usa-sr-only" htmlFor="email">Search</label>
+                    <label className="usa-sr-only" htmlFor="email">
+                      Search
+                    </label>
                     <input className="usa-input email-input" id="email" type="text" name="email" />
                     <input className="usa-button email-update-button" type="submit" name="commit" value="Sign Up" />
                   </div>
@@ -91,8 +94,10 @@ export default function Footer() {
                 <address>
                   <h3 className="header-mobile-top-spacing">Agency for Healthcare Research and Quality</h3>
                   <p className="primary-regular">
-                    5600 Fishers Lane<br />
-                    Rockville, MD 20857<br />
+                    5600 Fishers Lane
+                    <br />
+                    Rockville, MD 20857
+                    <br />
                     Telephone: (301) 427-1364
                   </p>
                 </address>
@@ -104,11 +109,14 @@ export default function Footer() {
         <div id="footer2">
           <div className="row">
             <div className="col-md-12 side-row-margins init-pad">
-                <div className="left-div div-width-partial left-margin">
-
+              <div className="left-div div-width-partial left-margin">
                 <ul className="clearfix">
                   <li className="first">
-                    <a href="https://www.ahrq.gov/cpi/about/careers/index.html" target="_blank" rel="noopener noreferrer">
+                    <a
+                      href="https://www.ahrq.gov/cpi/about/careers/index.html"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
                       Careers
                     </a>
                   </li>
@@ -130,7 +138,9 @@ export default function Footer() {
                   </li>
 
                   <li className="last">
-                    <a href="https://info.ahrq.gov/" target="_blank" rel="noopener noreferrer">FAQs</a>
+                    <a href="https://info.ahrq.gov/" target="_blank" rel="noopener noreferrer">
+                      FAQs
+                    </a>
                   </li>
                 </ul>
               </div>
@@ -158,11 +168,17 @@ export default function Footer() {
                   </li>
 
                   <li>
-                    <a href="https://www.ahrq.gov/policy/eeo/index.html" target="_blank" rel="noopener noreferrer">EEO</a>
+                    <a href="https://www.ahrq.gov/policy/eeo/index.html" target="_blank" rel="noopener noreferrer">
+                      EEO
+                    </a>
                   </li>
 
                   <li>
-                    <a href="https://www.ahrq.gov/policy/electronic/about/policyix.html" target="_blank" rel="noopener noreferrer">
+                    <a
+                      href="https://www.ahrq.gov/policy/electronic/about/policyix.html"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
                       Electronic Policies
                     </a>
                   </li>
@@ -172,7 +188,9 @@ export default function Footer() {
               <div className="left-div div-width-partial">
                 <ul>
                   <li>
-                    <a href="https://www.ahrq.gov/policy/foia/index.html" target="_blank" rel="noopener noreferrer">FOIA</a>
+                    <a href="https://www.ahrq.gov/policy/foia/index.html" target="_blank" rel="noopener noreferrer">
+                      FOIA
+                    </a>
                   </li>
 
                   <li>
@@ -192,7 +210,9 @@ export default function Footer() {
                   </li>
 
                   <li>
-                    <a href="https://oig.hhs.gov/" target="_blank" rel="noopener noreferrer">Inspector General</a>
+                    <a href="https://oig.hhs.gov/" target="_blank" rel="noopener noreferrer">
+                      Inspector General
+                    </a>
                   </li>
                 </ul>
               </div>

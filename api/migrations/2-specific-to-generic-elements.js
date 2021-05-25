@@ -10,7 +10,7 @@ const ValueSets = require('../data/valueSets');
 const pregnancyObjects = require('./utils/pregnancy-objects');
 const breastfeedingObjects = require('./utils/breastfeeding-objects');
 
-module.exports.id = "specific-to-generic-elements";
+module.exports.id = 'specific-to-generic-elements';
 
 // Modifier transformation functions
 
@@ -43,7 +43,9 @@ function transformObservation(childInstance) {
   }
 
   // Update modifiers
-  if (!childInstance.modifiers) { childInstance.modifiers = []; }
+  if (!childInstance.modifiers) {
+    childInstance.modifiers = [];
+  }
   childInstance.modifiers.forEach((modifierParam, i) => {
     let modifier = modifierParam;
     let observationValueSets = ValueSets.observations[parameter.value];
@@ -66,18 +68,18 @@ function transformObservation(childInstance) {
           values: {
             code: null,
             valueSet: observationValueSets.checkInclusionInVS,
-            qualifier: "value is a code from"
+            qualifier: 'value is a code from'
           },
           validator: {
-            type: "requiredIfThenOne",
-            fields: ["qualifier"],
-            args: ["valueSet", "code"]
+            type: 'requiredIfThenOne',
+            fields: ['qualifier'],
+            args: ['valueSet', 'code']
           },
-          returnType: "boolean",
-          inputTypes: ["system_concept"],
-          name: "Qualifier",
-          id: "Qualifier"
-        }
+          returnType: 'boolean',
+          inputTypes: ['system_concept'],
+          name: 'Qualifier',
+          id: 'Qualifier'
+        };
         childInstance.modifiers.splice(i, 1, updatedModier);
         break;
       }
@@ -85,12 +87,12 @@ function transformObservation(childInstance) {
         modifier.id = 'ConvertObservation';
         modifier.name = 'Convert Units';
         modifier.values = {
-          value: "Convert.to_mg_per_dL",
-          templateName: "Convert.to_mg_per_dL"
+          value: 'Convert.to_mg_per_dL',
+          templateName: 'Convert.to_mg_per_dL'
         };
         modifier.validator = {
-          type: "require",
-          fields: ["value"],
+          type: 'require',
+          fields: ['value'],
           args: null
         };
         delete modifier.cqlLibraryFunction;
@@ -115,13 +117,15 @@ function transformObservation(childInstance) {
     if (observationValueSets.concepts) {
       // Add concepts on as well
       let codes = [];
-      observationValueSets.concepts.forEach(concept => concept.codes.forEach(code =>
-        codes.push({
-          code: code.code,
-          codeSystem: code.codeSystem,
-          display: code.display
-        })
-      ));
+      observationValueSets.concepts.forEach(concept =>
+        concept.codes.forEach(code =>
+          codes.push({
+            code: code.code,
+            codeSystem: code.codeSystem,
+            display: code.display
+          })
+        )
+      );
       parameter.codes = codes;
     }
     delete parameter.value;
@@ -163,7 +167,9 @@ function transformMedication(childInstance) {
   }
 
   // Update modifiers
-  if (!childInstance.modifiers) { childInstance.modifiers = []; }
+  if (!childInstance.modifiers) {
+    childInstance.modifiers = [];
+  }
   let modifierIndexesToRemove = [];
   childInstance.modifiers.forEach((modifierParam, i) => {
     let modifier = modifierParam;
@@ -212,7 +218,7 @@ function transformMedication(childInstance) {
       case 'MostRecentMedication': {
         // MostRecentMedication is not valid any more.
         modifierIndexesToRemove.push(i);
-        console.log('Warning: A "MostRecentMedication" expression is being removed as it is not valid.')
+        console.log('Warning: A "MostRecentMedication" expression is being removed as it is not valid.');
         break;
       }
     }
@@ -270,9 +276,9 @@ function transformMedication(childInstance) {
         value: containingOrName
       }
     ],
-    "uniqueId": _.uniqueId('Or'),
-    "childInstances": [ childInstance, childInstanceForStatement ]
-  }
+    uniqueId: _.uniqueId('Or'),
+    childInstances: [childInstance, childInstanceForStatement]
+  };
 
   return containingOr;
 }
@@ -284,7 +290,9 @@ function transformAllergyIntolerance(childInstance) {
   }
 
   // Update modifiers
-  if (!childInstance.modifiers) { childInstance.modifiers = []; }
+  if (!childInstance.modifiers) {
+    childInstance.modifiers = [];
+  }
   childInstance.modifiers.forEach((modifierParam, i) => {
     let modifier = modifierParam;
     switch (modifier.id) {
@@ -304,7 +312,8 @@ function transformAllergyIntolerance(childInstance) {
     parameter.type = 'allergyIntolerance_vsac';
     let allergyIntoleranceValueSets = ValueSets.allergyIntolerances[parameter.value];
     parameter.valueSets = allergyIntoleranceValueSets.allergyIntolerances
-      ? allergyIntoleranceValueSets.allergyIntolerances : [];
+      ? allergyIntoleranceValueSets.allergyIntolerances
+      : [];
     delete parameter.value;
   }
 
@@ -326,7 +335,9 @@ function transformCondition(childInstance) {
   }
 
   // Update modifiers
-  if (!childInstance.modifiers) { childInstance.modifiers = []; }
+  if (!childInstance.modifiers) {
+    childInstance.modifiers = [];
+  }
   childInstance.modifiers.forEach((modifierParam, i) => {
     let modifier = modifierParam;
     switch (modifier.id) {
@@ -353,13 +364,15 @@ function transformCondition(childInstance) {
 
     if (conditionValueSets.concepts) {
       let codes = [];
-      conditionValueSets.concepts.forEach(concept => concept.codes.forEach(code =>
-        codes.push({
-          code: code.code,
-          codeSystem: code.codeSystem,
-          display: code.display
-        })
-      ));
+      conditionValueSets.concepts.forEach(concept =>
+        concept.codes.forEach(code =>
+          codes.push({
+            code: code.code,
+            codeSystem: code.codeSystem,
+            display: code.display
+          })
+        )
+      );
       parameter.codes = codes;
     }
 
@@ -384,7 +397,9 @@ function transformEncounter(childInstance) {
   }
 
   // Update modifiers
-  if (!childInstance.modifiers) { childInstance.modifiers = []; }
+  if (!childInstance.modifiers) {
+    childInstance.modifiers = [];
+  }
   childInstance.modifiers.forEach((modifierParam, i) => {
     let modifier = modifierParam;
     switch (modifier.id) {
@@ -425,7 +440,9 @@ function transformProcedure(childInstance) {
   }
 
   // Update modifiers
-  if (!childInstance.modifiers) { childInstance.modifiers = []; }
+  if (!childInstance.modifiers) {
+    childInstance.modifiers = [];
+  }
   childInstance.modifiers.forEach((modifierParam, i) => {
     let modifier = modifierParam;
     switch (modifier.id) {
@@ -548,7 +565,7 @@ function transformBreastfeedingCMS(childInstance) {
 }
 
 function transformOldModifiers(childInstance) {
-  childInstance.modifiers.forEach((modifier) => {
+  childInstance.modifiers.forEach(modifier => {
     if (modifier.id === 'MostRecentProcedure') {
       modifier.cqlLibraryFunction = 'C3F.MostRecentProcedure';
     } else if (modifier.id === 'MostRecentCondition') {
@@ -615,30 +632,28 @@ module.exports.up = function (done) {
   // Since db operations are asynchronous, use promises to ensure all updates happen before we call done().
   // The promises array collects all the promises which must be resolved before we're done.
   const promises = [];
-  coll.find().forEach((artifact) => {
-    const p = new Promise((resolve, reject) => {
-      let subelements = artifact.subelements;
-      if (!subelements) {
-        artifact.subelements = [];
-      }
-      if (artifact.expTreeInclude && artifact.expTreeInclude.childInstances.length) {
-        parseTree(artifact.expTreeInclude);
-      }
-      if (artifact.expTreeExclude && artifact.expTreeExclude.childInstances.length) {
-        parseTree(artifact.expTreeExclude);
-      }
-      artifact.subpopulations.forEach((subpopulation) => {
-        if (!subpopulation.special && subpopulation.childInstances && subpopulation.childInstances.length) {
-          parseTree(subpopulation);
+  coll.find().forEach(
+    artifact => {
+      const p = new Promise((resolve, reject) => {
+        let subelements = artifact.subelements;
+        if (!subelements) {
+          artifact.subelements = [];
         }
-      });
-      // Subelements are not in master/prod yet.
+        if (artifact.expTreeInclude && artifact.expTreeInclude.childInstances.length) {
+          parseTree(artifact.expTreeInclude);
+        }
+        if (artifact.expTreeExclude && artifact.expTreeExclude.childInstances.length) {
+          parseTree(artifact.expTreeExclude);
+        }
+        artifact.subpopulations.forEach(subpopulation => {
+          if (!subpopulation.special && subpopulation.childInstances && subpopulation.childInstances.length) {
+            parseTree(subpopulation);
+          }
+        });
+        // Subelements are not in master/prod yet.
 
-      // Update the artifact with all the changes made.
-      coll.updateOne(
-        { _id: artifact._id },
-        { '$set': artifact },
-        (err, result) => {
+        // Update the artifact with all the changes made.
+        coll.updateOne({ _id: artifact._id }, { $set: artifact }, (err, result) => {
           if (err) {
             this.log(`${artifact._id}: error:`, err);
             reject(err);
@@ -646,26 +661,27 @@ module.exports.up = function (done) {
             this.log(`${artifact._id} (${artifact.name}): successfully updated.`);
             resolve(result);
           }
-        }
-      );
-    });
-    promises.push(p);
-  }, (err) => {
-    if (err) {
-      this.log('Migration Error:', err);
-      done(err);
-    } else {
-      Promise.all(promises)
-        .then((results) => {
-          this.log(`Migrated ${results.length} artifacts (only applicable artifacts are counted)`);
-          done();
-        })
-        .catch((err) => {
-          this.log('Migration Error:', err);
-          done(err);
         });
+      });
+      promises.push(p);
+    },
+    err => {
+      if (err) {
+        this.log('Migration Error:', err);
+        done(err);
+      } else {
+        Promise.all(promises)
+          .then(results => {
+            this.log(`Migrated ${results.length} artifacts (only applicable artifacts are counted)`);
+            done();
+          })
+          .catch(err => {
+            this.log('Migration Error:', err);
+            done(err);
+          });
+      }
     }
-  });
+  );
 };
 
 module.exports.down = function (done) {

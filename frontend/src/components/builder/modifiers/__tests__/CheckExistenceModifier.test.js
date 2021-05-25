@@ -4,13 +4,7 @@ import CheckExistenceModifier from '../CheckExistenceModifier';
 
 describe('<CheckExistenceModifier />', () => {
   const renderComponent = (props = {}) =>
-    render(
-      <CheckExistenceModifier
-        handleUpdateModifier={jest.fn()}
-        value=""
-        {...props}
-      />
-    );
+    render(<CheckExistenceModifier handleUpdateModifier={jest.fn()} value="" {...props} />);
 
   it('calls handleUpdateModifier on input change', () => {
     const handleUpdateModifier = jest.fn();

@@ -24,8 +24,8 @@ describe('<Parameters />', () => {
         vsacApiKey="key"
         {...props}
       />
-      );
-    };
+    );
+  };
 
   it('renders a list of parameters', () => {
     const { container } = renderComponent();

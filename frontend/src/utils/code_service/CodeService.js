@@ -19,12 +19,9 @@ class CodeService {
    * @returns {Promise.<undefined,Error>} A promise that returns nothing when
    *   resolved and returns an error when rejected.
    */
-  ensureValueSets(
-    valueSetList = [],
-    vsacApiKey
-  ) {
+  ensureValueSets(valueSetList = [], vsacApiKey) {
     // First, filter out the value sets we already have
-    const filteredVSList = valueSetList.filter((vs) => {
+    const filteredVSList = valueSetList.filter(vs => {
       const result = this.findValueSet(vs.id, vs.version);
       return typeof result === 'undefined';
     });

@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faFile } from '@fortawesome/free-solid-svg-icons';
 
-import { Modal }  from 'components/elements';
+import { Modal } from 'components/elements';
 import { renderDate } from 'utils/dates';
 
 import ExternalCqlDetailsSection from './ExternalCqlDetailsSection';
@@ -14,12 +14,12 @@ export default class ExternalCqlDetails extends Component {
     loadExternalCqlLibraryDetails(externalCqlLibrary._id);
   }
 
-  getFhirVersion = (version) => {
+  getFhirVersion = version => {
     if (version === '1.0.2') return '1.0.2 (DSTU2)';
     if (version.startsWith('3.0.')) return `${version} (STU3)`;
     if (version.startsWith('4.0.')) return `${version} (R4)`;
     return version;
-  }
+  };
 
   render() {
     const { openModal, closeModal, externalCqlLibraryDetails, isLoadingExternalCqlDetails } = this.props;
@@ -54,7 +54,9 @@ export default class ExternalCqlDetails extends Component {
             </div>
 
             <div className="library-meta-item">
-              <div className="item-label">FHIR<sup>®</sup> Version</div>
+              <div className="item-label">
+                FHIR<sup>®</sup> Version
+              </div>
               <div className="item-value">{this.getFhirVersion(externalCqlLibraryDetails.fhirVersion)}</div>
             </div>
           </div>

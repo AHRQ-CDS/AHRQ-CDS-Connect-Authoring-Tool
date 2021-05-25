@@ -2,18 +2,18 @@ import _ from 'lodash';
 import { LOAD_TEMPLATES_SUCCESS } from '../actions/types';
 
 export default function templateMerger() {
-  return next => (action) => {
+  return next => action => {
     if (action.type === LOAD_TEMPLATES_SUCCESS) {
       // get just the template entries
       const entryMap = {};
-      action.templates.forEach((template) => {
-        template.entries.forEach((entry) => {
+      action.templates.forEach(template => {
+        template.entries.forEach(entry => {
           entryMap[entry.id] = entry;
         });
       });
 
       // for each entry, if it has an extends field, call mergeInParentTemplate
-      Object.keys(entryMap).forEach((key) => {
+      Object.keys(entryMap).forEach(key => {
         const entry = entryMap[key];
         if (entry.extends) {
           mergeInParentTemplate(entry, entryMap);

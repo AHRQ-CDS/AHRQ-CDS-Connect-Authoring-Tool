@@ -49,14 +49,15 @@
     "axios": "^0.21.1"
   },
   "scripts": {
-    "start": "node ./server.js",
-    "start-dev": "nodemon",
-    "test": "./node_modules/.bin/mocha --reporter spec --recursive",
-    "test-watch": "./node_modules/.bin/mocha --reporter spec --recursive --watch",
-    "test-ci": "./node_modules/.bin/mocha --reporter spec --recursive --no-colors",
-    "lint": "eslint .",
+    "format": "prettier --write \"**/*.+(js|jsx|json|css|md)\"",
     "lint:fix": "eslint --fix .; exit 0",
-    "prepare": "cd .. && husky install api/.husky"
+    "lint": "eslint .",
+    "prepare": "cd .. && husky install api/.husky",
+    "start-dev": "nodemon",
+    "start": "node ./server.js",
+    "test-ci": "./node_modules/.bin/mocha --reporter spec --recursive --no-colors",
+    "test-watch": "./node_modules/.bin/mocha --reporter spec --recursive --watch",
+    "test": "./node_modules/.bin/mocha --reporter spec --recursive"
   },
   "prettier": {
     "trailingComma": "none",

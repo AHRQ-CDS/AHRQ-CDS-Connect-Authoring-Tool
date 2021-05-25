@@ -1,322 +1,322 @@
 import moment from 'moment';
 
 const mockTestResultsDstu2 = {
-  "data": {
-    "localIdPatientResultsMap": {
-      "505bcdd9-5cc3-4ef3-8eea-6d479b1d4dc9": {
-        "Untitled-Artifact": {
-          "10": true,
-          "11": true,
-          "12": true,
-          "13": true,
-          "14": "Do adult things",
-          "16": "Do adult things",
-          "17": "Do adult things",
-          "18": true,
-          "19": null,
-          "21": null,
-          "22": null,
-          "23": null,
-          "24": null,
-          "5": moment().diff(moment('1985-02-04'), 'years'),
-          "6": 18,
-          "7": true,
-          "8": true,
-          "9": true
+  data: {
+    localIdPatientResultsMap: {
+      '505bcdd9-5cc3-4ef3-8eea-6d479b1d4dc9': {
+        'Untitled-Artifact': {
+          10: true,
+          11: true,
+          12: true,
+          13: true,
+          14: 'Do adult things',
+          16: 'Do adult things',
+          17: 'Do adult things',
+          18: true,
+          19: null,
+          21: null,
+          22: null,
+          23: null,
+          24: null,
+          5: moment().diff(moment('1985-02-04'), 'years'),
+          6: 18,
+          7: true,
+          8: true,
+          9: true
         }
       }
     },
-    "patientResults": {
-      "505bcdd9-5cc3-4ef3-8eea-6d479b1d4dc9": {
-        "Errors": null,
-        "InPopulation": true,
-        "Is Adult": true,
-        "MeetsInclusionCriteria": true,
-        "Patient": {
-          "address": [
+    patientResults: {
+      '505bcdd9-5cc3-4ef3-8eea-6d479b1d4dc9': {
+        Errors: null,
+        InPopulation: true,
+        'Is Adult': true,
+        MeetsInclusionCriteria: true,
+        Patient: {
+          address: [
             {
-              "city": {
-                "value": "Worcester"
+              city: {
+                value: 'Worcester'
               },
-              "country": {
-                "value": "US"
+              country: {
+                value: 'US'
               },
-              "extension": [
+              extension: [
                 {
-                  "extension": [
+                  extension: [
                     {
-                      "url": "latitude",
-                      "valueDecimal": {
-                        "value": -71.807783
+                      url: 'latitude',
+                      valueDecimal: {
+                        value: -71.807783
                       }
                     },
                     {
-                      "url": "longitude",
-                      "valueDecimal": {
-                        "value": 42.269478
+                      url: 'longitude',
+                      valueDecimal: {
+                        value: 42.269478
                       }
                     }
                   ],
-                  "url": "http://hl7.org/fhir/StructureDefinition/geolocation"
+                  url: 'http://hl7.org/fhir/StructureDefinition/geolocation'
                 }
               ],
-              "line": [
+              line: [
                 {
-                  "value": "114 Fahey Station Apt 9"
+                  value: '114 Fahey Station Apt 9'
                 }
               ],
-              "postalCode": {
-                "value": "01545"
+              postalCode: {
+                value: '01545'
               },
-              "state": {
-                "value": "Massachusetts"
+              state: {
+                value: 'Massachusetts'
               }
             }
           ],
-          "birthDate": {
-            "value": "1985-02-04"
+          birthDate: {
+            value: '1985-02-04'
           },
-          "communication": [
-             {
-              "language": {
-                "coding": [
-                   {
-                    "code": {
-                      "value": "zh"
+          communication: [
+            {
+              language: {
+                coding: [
+                  {
+                    code: {
+                      value: 'zh'
                     },
-                    "display": {
-                      "value": "Chinese"
+                    display: {
+                      value: 'Chinese'
                     },
-                    "system": {
-                      "value": "urn:ietf:bcp:47"
+                    system: {
+                      value: 'urn:ietf:bcp:47'
                     }
                   }
                 ],
-                "text": {
-                  "value": "Chinese"
+                text: {
+                  value: 'Chinese'
                 }
               }
             }
           ],
-          "extension": [
+          extension: [
             {
-              "url": "http://hl7.org/fhir/StructureDefinition/us-core-race",
-              "valueCodeableConcept": {
-                "coding": [
+              url: 'http://hl7.org/fhir/StructureDefinition/us-core-race',
+              valueCodeableConcept: {
+                coding: [
                   {
-                    "code": {
-                      "value": "2028-9"
+                    code: {
+                      value: '2028-9'
                     },
-                    "display": {
-                      "value": "Asian"
+                    display: {
+                      value: 'Asian'
                     },
-                    "system": {
-                      "value": "http://hl7.org/fhir/v3/Race"
+                    system: {
+                      value: 'http://hl7.org/fhir/v3/Race'
                     }
                   }
                 ],
-                "text": {
-                  "value": "Asian"
+                text: {
+                  value: 'Asian'
                 }
               }
             },
             {
-              "url": "http://hl7.org/fhir/StructureDefinition/us-core-ethnicity",
-              "valueCodeableConcept": {
-                "coding": [
+              url: 'http://hl7.org/fhir/StructureDefinition/us-core-ethnicity',
+              valueCodeableConcept: {
+                coding: [
                   {
-                    "code": {
-                      "value": "2186-5"
+                    code: {
+                      value: '2186-5'
                     },
-                    "display": {
-                      "value": "Not Hispanic or Latino"
+                    display: {
+                      value: 'Not Hispanic or Latino'
                     },
-                    "system": {
-                      "value": "http://hl7.org/fhir/v3/Ethnicity"
+                    system: {
+                      value: 'http://hl7.org/fhir/v3/Ethnicity'
                     }
                   }
                 ],
-                "text": {
-                  "value": "Not Hispanic or Latino"
+                text: {
+                  value: 'Not Hispanic or Latino'
                 }
               }
             },
             {
-              "url": "http://hl7.org/fhir/StructureDefinition/patient-mothersMaidenName",
-              "valueString": {
-                "value": "Lavonne167 Lockman863"
+              url: 'http://hl7.org/fhir/StructureDefinition/patient-mothersMaidenName',
+              valueString: {
+                value: 'Lavonne167 Lockman863'
               }
             },
             {
-              "url": "http://hl7.org/fhir/us/core/StructureDefinition/us-core-birthsex",
-              "valueCode": {
-                "value": "F"
+              url: 'http://hl7.org/fhir/us/core/StructureDefinition/us-core-birthsex',
+              valueCode: {
+                value: 'F'
               }
             },
             {
-              "url": "http://hl7.org/fhir/StructureDefinition/birthPlace",
-              "valueAddress": {
-                "city": {
-                  "value": "Newton"
+              url: 'http://hl7.org/fhir/StructureDefinition/birthPlace',
+              valueAddress: {
+                city: {
+                  value: 'Newton'
                 },
-                "country": {
-                  "value": "US"
+                country: {
+                  value: 'US'
                 },
-                "state": {
-                  "value": "Massachusetts"
+                state: {
+                  value: 'Massachusetts'
                 }
               }
             },
             {
-              "url": "http://synthetichealth.github.io/synthea/disability-adjusted-life-years",
-              "valueDecimal": {
-                "value": 0.01509327630927441
+              url: 'http://synthetichealth.github.io/synthea/disability-adjusted-life-years',
+              valueDecimal: {
+                value: 0.01509327630927441
               }
             },
             {
-              "url": "http://synthetichealth.github.io/synthea/quality-adjusted-life-years",
-              "valueDecimal": {
-              "value": 31.984906723690724
+              url: 'http://synthetichealth.github.io/synthea/quality-adjusted-life-years',
+              valueDecimal: {
+                value: 31.984906723690724
               }
             }
           ],
-          "gender": {
-            "value": "female"
+          gender: {
+            value: 'female'
           },
-          "id": {
-            "value": "505bcdd9-5cc3-4ef3-8eea-6d479b1d4dc9"
+          id: {
+            value: '505bcdd9-5cc3-4ef3-8eea-6d479b1d4dc9'
           },
-          "identifier": [
+          identifier: [
             {
-              "system": {
-                "value": "https://github.com/synthetichealth/synthea"
+              system: {
+                value: 'https://github.com/synthetichealth/synthea'
               },
-              "value": {
-                "value": "649b1d29-f95f-4bbd-8ada-ba3af20222af"
+              value: {
+                value: '649b1d29-f95f-4bbd-8ada-ba3af20222af'
               }
             },
             {
-              "system": {
-                "value": "http://hospital.smarthealthit.org"
+              system: {
+                value: 'http://hospital.smarthealthit.org'
               },
-              "type": {
-                "coding": [
+              type: {
+                coding: [
                   {
-                    "code": {
-                      "value": "MR"
+                    code: {
+                      value: 'MR'
                     },
-                    "system": {
-                      "value": "http://hl7.org/fhir/v2/0203"
+                    system: {
+                      value: 'http://hl7.org/fhir/v2/0203'
                     }
                   }
                 ]
               },
-              "value": {
-                "value": "649b1d29-f95f-4bbd-8ada-ba3af20222af"
+              value: {
+                value: '649b1d29-f95f-4bbd-8ada-ba3af20222af'
               }
             },
             {
-              "system": {
-                "value": "http://hl7.org/fhir/sid/us-ssn"
+              system: {
+                value: 'http://hl7.org/fhir/sid/us-ssn'
               },
-              "type": {
-                "coding": [
+              type: {
+                coding: [
                   {
-                    "code": {
-                      "value": "SB"
+                    code: {
+                      value: 'SB'
                     },
-                    "system": {
-                      "value": "http://hl7.org/fhir/identifier-type"
+                    system: {
+                      value: 'http://hl7.org/fhir/identifier-type'
                     }
                   }
                 ]
               },
-              "value": {
-                "value": "999-89-8439"
+              value: {
+                value: '999-89-8439'
               }
             },
             {
-              "system": {
-                "value": "urn:oid:2.16.840.1.113883.4.3.25"
+              system: {
+                value: 'urn:oid:2.16.840.1.113883.4.3.25'
               },
-              "type": {
-                "coding": [
+              type: {
+                coding: [
                   {
-                    "code": {
-                      "value": "DL"
+                    code: {
+                      value: 'DL'
                     },
-                    "system": {
-                      "value": "http://hl7.org/fhir/v2/0203"
+                    system: {
+                      value: 'http://hl7.org/fhir/v2/0203'
                     }
                   }
                 ]
               },
-              "value": {
-                "value": "S99966785"
+              value: {
+                value: 'S99966785'
               }
             }
           ],
-          "maritalStatus": {
-            "coding": [
+          maritalStatus: {
+            coding: [
               {
-                "code": {
-                  "value": "S"
+                code: {
+                  value: 'S'
                 },
-                "system": {
-                  "value": "http://hl7.org/fhir/v3/MaritalStatus"
+                system: {
+                  value: 'http://hl7.org/fhir/v3/MaritalStatus'
                 }
               }
             ]
           },
-          "multipleBirthBoolean": {
-            "value": false
+          multipleBirthBoolean: {
+            value: false
           },
-          "name": [
+          name: [
             {
-              "family": [
+              family: [
                 {
-                  "value": "Baumbach677"
+                  value: 'Baumbach677'
                 }
               ],
-              "given": [
+              given: [
                 {
-                  "value": "Robin67"
+                  value: 'Robin67'
                 }
               ],
-              "prefix": [
+              prefix: [
                 {
-                  "value": "Ms."
+                  value: 'Ms.'
                 }
               ],
-              "use": {
-                "value": "official"
+              use: {
+                value: 'official'
               }
             }
           ],
-          "telecom": [
+          telecom: [
             {
-              "system": {
-                "value": "phone"
+              system: {
+                value: 'phone'
               },
-              "use": {
-                "value": "home"
+              use: {
+                value: 'home'
               },
-              "value": {
-                "value": "555-605-1169"
+              value: {
+                value: '555-605-1169'
               }
             }
           ],
-          "text": {
-            "status": {
-              "value": "generated"
+          text: {
+            status: {
+              value: 'generated'
             }
           }
         },
-        "Rationale": null,
-        "Recommendation": "Do adult things"
+        Rationale: null,
+        Recommendation: 'Do adult things'
       }
     },
-    "populationResults": {}
+    populationResults: {}
   }
 };
 

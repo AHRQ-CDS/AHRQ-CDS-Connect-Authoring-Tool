@@ -40,9 +40,7 @@ export const nestedReturnTypeErrorGroup = [
                 id: 'observation'
               }
             ],
-            suppressedModifiers: [
-              'ConvertToMgPerdL'
-            ],
+            suppressedModifiers: ['ConvertToMgPerdL'],
             template: 'GenericObservation',
             extends: 'Base',
             suppress: true,
@@ -94,9 +92,7 @@ export const nestedModifierValidationErrorGroup = [
             suppress: true,
             extends: 'Base',
             template: 'GenericObservation',
-            suppressedModifiers: [
-              'ConvertToMgPerdL'
-            ],
+            suppressedModifiers: ['ConvertToMgPerdL'],
             fields: [
               {
                 id: 'element_name',
@@ -171,9 +167,7 @@ export const nestedModifierValidationErrorGroup = [
                 comparisonOperator: null,
                 validator: {
                   type: 'require',
-                  fields: [
-                    'value'
-                  ],
+                  fields: ['value'],
                   args: null
                 },
                 values: {}
@@ -224,9 +218,7 @@ export const nestedElementValidationErrorGroup = [
             cannotHaveModifiers: true,
             validator: {
               type: 'require',
-              fields: [
-                'gender'
-              ],
+              fields: ['gender'],
               args: null
             },
             fields: [
@@ -290,9 +282,7 @@ export const nestedDuplicateElementNamesGroups = [
             cannotHaveModifiers: true,
             validator: {
               type: 'require',
-              fields: [
-                'gender'
-              ],
+              fields: ['gender'],
               args: null
             },
             fields: [
@@ -324,9 +314,7 @@ export const nestedDuplicateElementNamesGroups = [
             cannotHaveModifiers: true,
             validator: {
               type: 'require',
-              fields: [
-                'gender'
-              ],
+              fields: ['gender'],
               args: null
             },
             fields: [
@@ -408,9 +396,7 @@ export const nestedDuplicateGroupNamesGroups = [
             cannotHaveModifiers: true,
             validator: {
               type: 'require',
-              fields: [
-                'gender'
-              ],
+              fields: ['gender'],
               args: null
             },
             fields: [
@@ -459,9 +445,7 @@ export const nestedDuplicateGroupNamesGroups = [
             cannotHaveModifiers: true,
             validator: {
               type: 'require',
-              fields: [
-                'gender'
-              ],
+              fields: ['gender'],
               args: null
             },
             fields: [
@@ -503,9 +487,7 @@ export const nestedBaseElementUseGroups = [
                 cqlLibraryFunction: 'not',
                 cqlTemplate: 'BaseModifier',
                 returnType: 'boolean',
-                inputTypes: [
-                  'boolean'
-                ],
+                inputTypes: ['boolean'],
                 name: 'Not',
                 id: 'BooleanNot'
               }
@@ -607,9 +589,7 @@ export const nonValidatingBaseElementList = [
             id: 'observation'
           }
         ],
-        suppressedModifiers: [
-          'ConvertToMgPerdL'
-        ],
+        suppressedModifiers: ['ConvertToMgPerdL'],
         template: 'GenericObservation',
         extends: 'Base',
         suppress: true,

@@ -5,13 +5,7 @@ import { Analytics } from 'components/base';
 
 describe('<Analytics />', () => {
   const renderComponent = (props = {}) =>
-    render(
-      <Analytics
-        gtmKey="TEST-GTM-KEY"
-        dapURL="http://example.org/dap"
-        {...props}
-      />
-    );
+    render(<Analytics gtmKey="TEST-GTM-KEY" dapURL="http://example.org/dap" {...props} />);
 
   it('renders a noscript tag when GTM/DAP is configured', () => {
     const { container } = renderComponent();

@@ -22,8 +22,9 @@ const Artifact = () => {
   const { mutateAsync: asyncAddArtifact } = useMutation(addArtifact, { onSuccess: resetArtifacts });
   const { mutateAsync: asyncDuplicateArtifact } = useMutation(duplicateArtifact, { onSuccess: resetArtifacts });
   const { mutateAsync: asyncUpdateArtifact } = useMutation(updateArtifact, { onSuccess: resetArtifacts });
-  const handleDuplicateArtifact = useCallback(artifactProps =>
-    asyncDuplicateArtifact({artifactProps}), [asyncDuplicateArtifact]);
+  const handleDuplicateArtifact = useCallback(artifactProps => asyncDuplicateArtifact({ artifactProps }), [
+    asyncDuplicateArtifact
+  ]);
   const handleDeleteArtifact = useCallback(artifact => asyncDeleteArtifact({ artifact }), [asyncDeleteArtifact]);
   const handleAddArtifact = useCallback(artifactProps => asyncAddArtifact({ artifactProps }), [asyncAddArtifact]);
   const handleUpdateArtifact = useCallback(

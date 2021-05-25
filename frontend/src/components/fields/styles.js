@@ -28,7 +28,7 @@ export default makeStyles(
       alignItems: 'center'
     },
     fieldCheckbox: {
-      marginLeft: '20px',
+      marginLeft: '20px'
     },
     fieldContainer: {
       width: '100%'

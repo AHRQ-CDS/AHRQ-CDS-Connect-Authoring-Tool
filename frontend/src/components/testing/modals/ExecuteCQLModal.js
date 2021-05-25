@@ -38,7 +38,7 @@ const ExecuteCQLModal = ({ patients, handleCloseModal, handleExecuteCQL }) => {
     handleCloseModal();
   };
 
-  const selectArtifactToExecute = (artifactName) => {
+  const selectArtifactToExecute = artifactName => {
     const artifact = validArtifactsToExecute.find(artifact => artifact.name === artifactName);
 
     if (artifact) {

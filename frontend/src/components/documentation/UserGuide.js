@@ -6,7 +6,7 @@ import {
   Edit as EditIcon,
   FileCopy as CopyIcon,
   MenuBook as MenuBookIcon,
-  Visibility as VisibilityIcon 
+  Visibility as VisibilityIcon
 } from '@material-ui/icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
@@ -544,7 +544,7 @@ const UserGuide = () => {
                 After clicking "Search", a set of results will be displayed. Each item in the results represents a value
                 set in the VSAC, including its name, Object Identifier (OID), Steward, and the number of codes in the
                 value set. Click on the value set you'd like to add, or to see the contents of a specific value set,
-                click its eye icon <VisibilityIcon fontSize="small" />  under codes.
+                click its eye icon <VisibilityIcon fontSize="small" /> under codes.
               </div>
               <div>
                 <img
@@ -554,12 +554,12 @@ const UserGuide = () => {
                 />
               </div>
               <div>
-                After clicking on a specific value set's eye icon <VisibilityIcon fontSize="small" />, 
-                its full set of codes will be displayed. Each item in the list shows a contained code, its name, and its system.
-                This allows authors to confirm that the value set contents match their intent.
-                If this value set is not a good match or you want to inspect other value sets in the results,
-                click the left arrow button near the top of the dialog. Otherwise, click the specific value set or
-                "Select" button while viewing the contained codes to confirm the selection of the displayed value set.
+                After clicking on a specific value set's eye icon <VisibilityIcon fontSize="small" />, its full set of
+                codes will be displayed. Each item in the list shows a contained code, its name, and its system. This
+                allows authors to confirm that the value set contents match their intent. If this value set is not a
+                good match or you want to inspect other value sets in the results, click the left arrow button near the
+                top of the dialog. Otherwise, click the specific value set or "Select" button while viewing the
+                contained codes to confirm the selection of the displayed value set.
               </div>
               <div>
                 <img
@@ -1697,11 +1697,11 @@ const UserGuide = () => {
                 />
               </div>
               <div>
-                After selecting the External CQL definition, parameter, or function, its name and return type will
-                be reflected in the element's expression phrase and listed in the element's metadata using the label
-                "External CQL Element". If you wish (or if required), you can add expression modifiers to the element 
-                in much the same way as you would any element. In this case, the expression modifiers added to the 
-                use of the External CQL element will not affect the original definition of the External CQL element.
+                After selecting the External CQL definition, parameter, or function, its name and return type will be
+                reflected in the element's expression phrase and listed in the element's metadata using the label
+                "External CQL Element". If you wish (or if required), you can add expression modifiers to the element in
+                much the same way as you would any element. In this case, the expression modifiers added to the use of
+                the External CQL element will not affect the original definition of the External CQL element.
               </div>
               <div>
                 <img
@@ -1711,14 +1711,15 @@ const UserGuide = () => {
                 />
               </div>
               <div>
-                If the External CQL element you select is a function that has required arguments, the appropriate editors
-                will be supplied for you to populate with values.  These editors consist of two dropdowns: one which
-                allows you to select the source of the argument and the other that is used to select a value according to
-                your chosen source.  The available sources for arguments are Base Elements, Editors, External CQL, and 
-                Parameters. Note that Base Elements, External CQL, and Parameters are only available for selection when an 
-                appropriate element exists that matches the type of the argument you are attempting to populate.  If a
-                particular argument source is greyed out within the first dropdown, this is an indication that there are
-                no elements from that source that match the type of your particular function argument.
+                If the External CQL element you select is a function that has required arguments, the appropriate
+                editors will be supplied for you to populate with values. These editors consist of two dropdowns: one
+                which allows you to select the source of the argument and the other that is used to select a value
+                according to your chosen source. The available sources for arguments are Base Elements, Editors,
+                External CQL, and Parameters. Note that Base Elements, External CQL, and Parameters are only available
+                for selection when an appropriate element exists that matches the type of the argument you are
+                attempting to populate. If a particular argument source is greyed out within the first dropdown, this is
+                an indication that there are no elements from that source that match the type of your particular
+                function argument.
               </div>
               <div>
                 <img
@@ -1728,13 +1729,13 @@ const UserGuide = () => {
                 />
               </div>
               <div>
-                Once an argument source is selected, you may populate the second field to complete that particular function
-                argument.  If "Editor" is selected as the argument source, an appropriate editor will be displayed for completion.
-                If one of Base Elements, External CQL, or Parameters is selected, you will be prompted with a second
-                dropdown listing the matching elements of that type.  Note that when using External CQL Elements as arguments
-                you will be restricted to External CQL Functions with zero arguments, External CQL Parameters, and external
-                CQL definitions. You may, however, use elements from a different External CQL library as an argument to an
-                external function of another.
+                Once an argument source is selected, you may populate the second field to complete that particular
+                function argument. If "Editor" is selected as the argument source, an appropriate editor will be
+                displayed for completion. If one of Base Elements, External CQL, or Parameters is selected, you will be
+                prompted with a second dropdown listing the matching elements of that type. Note that when using
+                External CQL Elements as arguments you will be restricted to External CQL Functions with zero arguments,
+                External CQL Parameters, and external CQL definitions. You may, however, use elements from a different
+                External CQL library as an argument to an external function of another.
               </div>
               <div>
                 Note that when an External CQL element is used, it prevents the External CQL library from being deleted
@@ -1761,14 +1762,19 @@ const UserGuide = () => {
                       <li>There exists a Base Element whose return type matches the argument's type.</li>
                       <li>There exists a Parameter whose return type matches the argument's type.</li>
                       <li>There exists an External CQL Element whose return type matches the argument's type.</li>
-                        <ul>
-                          <li>Note: Only External CQL definitions, parameters, and functions with zero arguments
-                             are valid as arguments to external modifiers.</li>
-                        </ul>
-                          <li>The argument's type is one of the following:</li>
                       <ul>
-                        <li>Boolean, Code, Concept, Integer, DateTime, Decimal, Quantity, String, Time, Interval&lt;Integer&gt;,
-                            Interval&lt;DateTime&gt;, Interval&lt;Decimal&gt;, and Interval&lt;Quantity&gt;.</li>
+                        <li>
+                          Note: Only External CQL definitions, parameters, and functions with zero arguments are valid
+                          as arguments to external modifiers.
+                        </li>
+                      </ul>
+                      <li>The argument's type is one of the following:</li>
+                      <ul>
+                        <li>
+                          Boolean, Code, Concept, Integer, DateTime, Decimal, Quantity, String, Time,
+                          Interval&lt;Integer&gt;, Interval&lt;DateTime&gt;, Interval&lt;Decimal&gt;, and
+                          Interval&lt;Quantity&gt;.
+                        </li>
                       </ul>
                     </ul>
                   </li>
@@ -1801,13 +1807,12 @@ const UserGuide = () => {
                 />
               </div>
               <div>
-                Like above with External CQL functions with arguments, the available sources for arguments are 
-                Base Elements, Editors, External CQL, and Parameters. Note that Base Elements,
-                External CQL, and Parameters are only available for selection when an appropriate element
-                exists that matches the type of the argument you are attempting to populate.
-                If a particular argument source is greyed out within the first dropdown,
-                this is an indication that there are no elements from that source that match the type of your particular
-                function argument.
+                Like above with External CQL functions with arguments, the available sources for arguments are Base
+                Elements, Editors, External CQL, and Parameters. Note that Base Elements, External CQL, and Parameters
+                are only available for selection when an appropriate element exists that matches the type of the
+                argument you are attempting to populate. If a particular argument source is greyed out within the first
+                dropdown, this is an indication that there are no elements from that source that match the type of your
+                particular function argument.
               </div>
               <div>
                 <img
@@ -1817,13 +1822,13 @@ const UserGuide = () => {
                 />
               </div>
               <div>
-                Once an argument source is selected, you may populate the second field to complete that particular function
-                argument.  If "Editor" is selected as the argument source, an appropriate editor will be displayed for completion.
-                If one of Base Elements, External CQL, or Parameters is selected, you will be prompted with a second
-                dropdown listing the matching elements of that type.  Note that when using External CQL Elements as arguments
-                you will be restricted to External CQL Functions with zero arguments, External CQL Parameters, and external
-                CQL definitions. You may, however, use elements from a different External CQL library as an argument to an
-                external function of another.
+                Once an argument source is selected, you may populate the second field to complete that particular
+                function argument. If "Editor" is selected as the argument source, an appropriate editor will be
+                displayed for completion. If one of Base Elements, External CQL, or Parameters is selected, you will be
+                prompted with a second dropdown listing the matching elements of that type. Note that when using
+                External CQL Elements as arguments you will be restricted to External CQL Functions with zero arguments,
+                External CQL Parameters, and external CQL definitions. You may, however, use elements from a different
+                External CQL library as an argument to an external function of another.
               </div>
               <div>
                 Similarly to when an External CQL element is used, when an External CQL expression modifier is used, its

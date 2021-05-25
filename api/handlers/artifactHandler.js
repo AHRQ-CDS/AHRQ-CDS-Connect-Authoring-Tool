@@ -1,5 +1,5 @@
-const Artifact = require("../models/artifact");
-const CQLLibrary = require("../models/cqlLibrary");
+const Artifact = require('../models/artifact');
+const CQLLibrary = require('../models/cqlLibrary');
 
 module.exports = {
   allGet,
@@ -7,7 +7,7 @@ module.exports = {
   singlePost,
   singlePut,
   singleDelete,
-  duplicate,
+  duplicate
 };
 
 // Get all artifacts
@@ -56,15 +56,11 @@ function singlePut(req, res) {
   if (req.user) {
     const id = req.body._id;
     const artifact = req.body;
-    Artifact.update(
-      { user: req.user.uid, _id: id },
-      { $set: artifact },
-      (error, response) => {
-        if (error) res.status(500).send(error);
-        else if (response.n === 0) res.sendStatus(404);
-        else res.sendStatus(200);
-      }
-    );
+    Artifact.update({ user: req.user.uid, _id: id }, { $set: artifact }, (error, response) => {
+      if (error) res.status(500).send(error);
+      else if (response.n === 0) res.sendStatus(404);
+      else res.sendStatus(200);
+    });
   } else {
     res.sendStatus(401);
   }
@@ -78,13 +74,10 @@ function singleDelete(req, res) {
       if (error) res.status(500).send(error);
       else if (response.n === 0) res.sendStatus(404);
       else {
-        CQLLibrary.remove(
-          { user: req.user.uid, linkedArtifactId: id },
-          (error, response) => {
-            if (error) res.status(500).send(error);
-            else res.sendStatus(200);
-          }
-        );
+        CQLLibrary.remove({ user: req.user.uid, linkedArtifactId: id }, (error, response) => {
+          if (error) res.status(500).send(error);
+          else res.sendStatus(200);
+        });
       }
     });
   } else {
@@ -94,23 +87,23 @@ function singleDelete(req, res) {
 
 function prepareDuplicateArtifact(artifact, artifactNames) {
   let artifactCopy;
-  if (artifactNames.find((a) => a.name === "Copy of " + artifact.name)) {
+  if (artifactNames.find(a => a.name === 'Copy of ' + artifact.name)) {
     let version = 1;
     let currentName;
 
     do {
       version += 1;
-      currentName = "Copy of " + artifact.name + ` (${version.toString()})`;
-    } while (artifactNames.find((a) => a.name === currentName));
+      currentName = 'Copy of ' + artifact.name + ` (${version.toString()})`;
+    } while (artifactNames.find(a => a.name === currentName));
 
     artifactCopy = { ...artifact, name: currentName };
   } else {
-    artifactCopy = { ...artifact, name: "Copy of " + artifact.name };
+    artifactCopy = { ...artifact, name: 'Copy of ' + artifact.name };
   }
 
-  delete artifactCopy["updatedAt"];
-  delete artifactCopy["createdAt"];
-  delete artifactCopy["_id"];
+  delete artifactCopy['updatedAt'];
+  delete artifactCopy['createdAt'];
+  delete artifactCopy['_id'];
   return artifactCopy;
 }
 
@@ -128,32 +121,29 @@ async function duplicate(req, res) {
         );
 
         Artifact.create(duplicateToInsert)
-          .then((duplicateResponse) => {
-            CQLLibrary.find(
-              { linkedArtifactId: parentID },
-              (error, library) => {
-                if (!error && library.length !== 0) {
-                  library.map((lib) => {
-                    const newLib = {
-                      ...lib._doc, // eslint-disable-line
-                      linkedArtifactId: duplicateResponse._id,
-                    };
-                    delete newLib["createdAt"];
-                    delete newLib["updatedAt"];
-                    delete newLib["_id"];
-                    CQLLibrary.create(newLib, (error) => {
-                      if (error) {
-                        res.status(500).send(error);
-                        return;
-                      }
-                    });
+          .then(duplicateResponse => {
+            CQLLibrary.find({ linkedArtifactId: parentID }, (error, library) => {
+              if (!error && library.length !== 0) {
+                library.map(lib => {
+                  const newLib = {
+                    ...lib._doc, // eslint-disable-line
+                    linkedArtifactId: duplicateResponse._id
+                  };
+                  delete newLib['createdAt'];
+                  delete newLib['updatedAt'];
+                  delete newLib['_id'];
+                  CQLLibrary.create(newLib, error => {
+                    if (error) {
+                      res.status(500).send(error);
+                      return;
+                    }
                   });
-                }
+                });
               }
-            );
+            });
             res.status(200).json(duplicateResponse);
           })
-          .catch((error) => {
+          .catch(error => {
             res.status(500).send(error);
             return;
           });

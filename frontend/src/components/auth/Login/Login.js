@@ -29,8 +29,8 @@ const Login = () => {
   }, [dispatch]);
 
   const handleLogin = useCallback(
-    () => dispatch(loginUser(username, password))
-      .then(response => {
+    () =>
+      dispatch(loginUser(username, password)).then(response => {
         if (response.type === 'LOGIN_SUCCESS') history.push('/artifacts');
       }),
     [dispatch, history, username, password]

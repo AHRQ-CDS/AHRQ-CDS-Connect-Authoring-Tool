@@ -7,8 +7,7 @@ export function getOriginalBaseElement(instance, baseElements) {
     if (referenceField.id === 'parameterReference' || referenceField.id === 'externalCqlReference') {
       return instance;
     }
-    const baseElementReferenced = baseElements.find(element =>
-      element.uniqueId === referenceField.value.id);
+    const baseElementReferenced = baseElements.find(element => element.uniqueId === referenceField.value.id);
     return getOriginalBaseElement(baseElementReferenced, baseElements);
   }
   return instance;
@@ -21,8 +20,7 @@ export function getAllModifiersOnBaseElementUse(instance, baseElements, modifier
     if (referenceField.id === 'parameterReference' || referenceField.id === 'externalCqlReference') {
       return _.cloneDeep(instance.modifiers || []).concat(currentModifiers);
     }
-    const baseElementReferenced = baseElements.find(element =>
-      element.uniqueId === referenceField.value.id);
+    const baseElementReferenced = baseElements.find(element => element.uniqueId === referenceField.value.id);
     currentModifiers = _.cloneDeep(baseElementReferenced.modifiers || []).concat(currentModifiers);
     return getAllModifiersOnBaseElementUse(baseElementReferenced, baseElements, currentModifiers);
   }

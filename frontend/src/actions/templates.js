@@ -30,14 +30,15 @@ function loadTemplatesFailure(error) {
 
 function sendTemplatesRequest() {
   return new Promise((resolve, reject) => {
-    axios.get(`${API_BASE}/config/templates`)
+    axios
+      .get(`${API_BASE}/config/templates`)
       .then(result => resolve(result.data))
       .catch(error => reject(error));
   });
 }
 
 export default function loadTemplates() {
-  return (dispatch) => {
+  return dispatch => {
     dispatch(requestTemplates());
 
     return sendTemplatesRequest()

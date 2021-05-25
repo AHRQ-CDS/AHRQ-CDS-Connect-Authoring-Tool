@@ -60,9 +60,7 @@ export function getElementTemplate(elementTemplateGroups, templateId) {
 }
 
 export function getInstanceByReference(allInstances, referenceField) {
-  return allInstances.find(instance =>
-    Boolean(instance.fields.find(field => _.isEqual(field, referenceField)))
-  );
+  return allInstances.find(instance => Boolean(instance.fields.find(field => _.isEqual(field, referenceField))));
 }
 
 export function getInstanceById(allInstances, instanceId) {

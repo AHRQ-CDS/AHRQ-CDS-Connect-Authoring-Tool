@@ -15,7 +15,7 @@
  */
 'use strict';
 
-module.exports.id = "agerange-to-agerangewithunit";
+module.exports.id = 'agerange-to-agerangewithunit';
 
 function parseTree(element) {
   let children = element.childInstances ? element.childInstances : [];
@@ -23,7 +23,7 @@ function parseTree(element) {
     if ('childInstances' in child) {
       return parseTree(child);
     } else {
-      return parseElement(child); 
+      return parseElement(child);
     }
   });
   element.childInstances = children;
@@ -37,7 +37,7 @@ function parseElement(element) {
       type: 'valueset',
       select: 'demographics/units_of_time',
       name: 'Unit of Time',
-      value: { id: 'a', name: 'years', value: "AgeInYears()" }
+      value: { id: 'a', name: 'years', value: 'AgeInYears()' }
     };
 
     const validator = {
@@ -50,7 +50,7 @@ function parseElement(element) {
     // on production), don't update
     if (element.parameters.length < 4) {
       element.parameters.push(unit);
-      element.validator = validator;  
+      element.validator = validator;
     }
   }
   return element;
@@ -65,28 +65,26 @@ module.exports.up = function (done) {
   // Since db operations are asynchronous, use promises to ensure all updates happen before we call done().
   // The promises array collects all the promises which must be resolved before we're done.
   const promises = [];
-  coll.find().forEach((artifact) => {
-    const p = new Promise((resolve, reject) => {
-      if (artifact.expTreeInclude && artifact.expTreeInclude.childInstances.length) {
-        parseTree(artifact.expTreeInclude);
-      }
-      if (artifact.expTreeExclude && artifact.expTreeExclude.childInstances.length) {
-        parseTree(artifact.expTreeExclude);
-      }
-      artifact.subpopulations.forEach((subpopulation) => {
-        if (!subpopulation.special && subpopulation.childInstances && subpopulation.childInstances.length) {
-          parseTree(subpopulation);
+  coll.find().forEach(
+    artifact => {
+      const p = new Promise((resolve, reject) => {
+        if (artifact.expTreeInclude && artifact.expTreeInclude.childInstances.length) {
+          parseTree(artifact.expTreeInclude);
         }
-      });
-      artifact.baseElements.forEach((baseElement) => {
-        parseElement(baseElement);
-      });
-      
-      // Update the artifact with all the changes made.
-      coll.updateOne(
-        { _id: artifact._id },
-        { '$set': artifact },
-        (err, result) => {
+        if (artifact.expTreeExclude && artifact.expTreeExclude.childInstances.length) {
+          parseTree(artifact.expTreeExclude);
+        }
+        artifact.subpopulations.forEach(subpopulation => {
+          if (!subpopulation.special && subpopulation.childInstances && subpopulation.childInstances.length) {
+            parseTree(subpopulation);
+          }
+        });
+        artifact.baseElements.forEach(baseElement => {
+          parseElement(baseElement);
+        });
+
+        // Update the artifact with all the changes made.
+        coll.updateOne({ _id: artifact._id }, { $set: artifact }, (err, result) => {
           if (err) {
             this.log(`${artifact._id}: error:`, err);
             reject(err);
@@ -94,26 +92,27 @@ module.exports.up = function (done) {
             this.log(`${artifact._id} (${artifact.name}): successfully updated.`);
             resolve(result);
           }
-        }
-      );
-    });
-    promises.push(p);
-  }, (err) => {
-    if (err) {
-      this.log('Migration Error:', err);
-      done(err);
-    } else {
-      Promise.all(promises)
-        .then((results) => {
-          this.log(`Migrated ${results.length} artifacts (only applicable artifacts are counted)`);
-          done();
-        })
-        .catch((err) => {
-          this.log('Migration Error:', err);
-          done(err);
         });
+      });
+      promises.push(p);
+    },
+    err => {
+      if (err) {
+        this.log('Migration Error:', err);
+        done(err);
+      } else {
+        Promise.all(promises)
+          .then(results => {
+            this.log(`Migrated ${results.length} artifacts (only applicable artifacts are counted)`);
+            done();
+          })
+          .catch(err => {
+            this.log('Migration Error:', err);
+            done(err);
+          });
+      }
     }
-  });
+  );
 };
 
 module.exports.down = function (done) {

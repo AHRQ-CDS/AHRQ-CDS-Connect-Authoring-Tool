@@ -6,67 +6,67 @@
 'use strict';
 const _ = require('lodash');
 
-module.exports.id = "libraries-with-inputtypes";
+module.exports.id = 'libraries-with-inputtypes';
 
 const singularTypeMap = {
-  'Boolean': 'boolean',
-  'Code': 'system_code',
-  'Concept': 'system_concept',
-  'Integer': 'integer',
-  'DateTime': 'datetime',
-  'Decimal': 'decimal',
-  'Quantity': 'system_quantity',
-  'String': 'string',
-  'Time': 'time',
-  'Observation': 'observation',
-  'Condition': 'condition',
-  'MedicationStatement': 'medication_statement',
-  'MedicationOrder': 'medication_request',
-  'MedicationRequest': 'medication_request',
-  'Procedure': 'procedure',
-  'AllergyIntolerance': 'allergy_intolerance',
-  'Encounter': 'encounter',
-  'Immunization': 'immunization',
-  'Device': 'device',
-  'Any': 'any'
+  Boolean: 'boolean',
+  Code: 'system_code',
+  Concept: 'system_concept',
+  Integer: 'integer',
+  DateTime: 'datetime',
+  Decimal: 'decimal',
+  Quantity: 'system_quantity',
+  String: 'string',
+  Time: 'time',
+  Observation: 'observation',
+  Condition: 'condition',
+  MedicationStatement: 'medication_statement',
+  MedicationOrder: 'medication_request',
+  MedicationRequest: 'medication_request',
+  Procedure: 'procedure',
+  AllergyIntolerance: 'allergy_intolerance',
+  Encounter: 'encounter',
+  Immunization: 'immunization',
+  Device: 'device',
+  Any: 'any'
 };
 
 const listTypeMap = {
-  'Observation': 'list_of_observations',
-  'Condition': 'list_of_conditions',
-  'MedicationStatement': 'list_of_medication_statements',
-  'MedicationOrder': 'list_of_medication_requests',
-  'MedicationRequest': 'list_of_medication_requests',
-  'Procedure': 'list_of_procedures',
-  'AllergyIntolerance': 'list_of_allergy_intolerances',
-  'Encounter': 'list_of_encounters',
-  'Immunization': 'list_of_immunizations',
-  'Device': 'list_of_devices',
-  'Any': 'list_of_any',
-  'Boolean': 'list_of_booleans',
-  'Code': 'list_of_system_codes',
-  'Concept': 'list_of_system_concepts',
-  'Integer': 'list_of_integers',
-  'DateTime': 'list_of_datetimes',
-  'Decimal': 'list_of_decimals',
-  'Quantity': 'list_of_system_quantities',
-  'String': 'list_of_strings',
-  'Time': 'list_of_times',
-}
+  Observation: 'list_of_observations',
+  Condition: 'list_of_conditions',
+  MedicationStatement: 'list_of_medication_statements',
+  MedicationOrder: 'list_of_medication_requests',
+  MedicationRequest: 'list_of_medication_requests',
+  Procedure: 'list_of_procedures',
+  AllergyIntolerance: 'list_of_allergy_intolerances',
+  Encounter: 'list_of_encounters',
+  Immunization: 'list_of_immunizations',
+  Device: 'list_of_devices',
+  Any: 'list_of_any',
+  Boolean: 'list_of_booleans',
+  Code: 'list_of_system_codes',
+  Concept: 'list_of_system_concepts',
+  Integer: 'list_of_integers',
+  DateTime: 'list_of_datetimes',
+  Decimal: 'list_of_decimals',
+  Quantity: 'list_of_system_quantities',
+  String: 'list_of_strings',
+  Time: 'list_of_times'
+};
 
 const intervalTypeMap = {
-  'Integer': 'interval_of_integer',
-  'DateTime': 'interval_of_datetime',
-  'Decimal': 'interval_of_decimal',
-  'Quantity': 'interval_of_quantity'
-}
+  Integer: 'interval_of_integer',
+  DateTime: 'interval_of_datetime',
+  Decimal: 'interval_of_decimal',
+  Quantity: 'interval_of_quantity'
+};
 
-const getTypeFromELMString = (string) => string.substring(string.indexOf('}') + 1);
+const getTypeFromELMString = string => string.substring(string.indexOf('}') + 1);
 
-const areChoicesKnownTypes = (choices) => {
+const areChoicesKnownTypes = choices => {
   let allChoicesKnown = true;
   const typesOfChoices = [];
-  choices.forEach((choice) => {
+  choices.forEach(choice => {
     if (choice.type === 'NamedTypeSpecifier') {
       const returnTypeOfChoice = getTypeFromELMString(choice.name);
       const convertedType = singularTypeMap[returnTypeOfChoice];
@@ -83,7 +83,7 @@ const areChoicesKnownTypes = (choices) => {
     }
   });
   return { allChoicesKnown, typesOfChoices };
-}
+};
 
 function calculateInputType(definition) {
   let elmType, elmDisplay;
@@ -171,14 +171,12 @@ function mapInputTypes(definitions) {
       const argumentTypes = [];
       definition.operand.forEach(operand => {
         const { elmType, elmDisplay } = calculateInputType(operand);
-        argumentTypes.push({ calculated: (elmType || 'other'), display: elmDisplay });
+        argumentTypes.push({ calculated: elmType || 'other', display: elmDisplay });
       });
       definition.argumentTypes = argumentTypes;
       // The inputTypes should only be equivalent to the input type of the first argument
       // so that external CQL modifiers can use the element return type as this input
-      definition.inputTypes = (definition.argumentTypes.length > 0)
-        ? [definition.argumentTypes[0].calculated]
-        : [];
+      definition.inputTypes = definition.argumentTypes.length > 0 ? [definition.argumentTypes[0].calculated] : [];
     }
   });
   return mappedDefinitions;
@@ -193,13 +191,11 @@ module.exports.up = function (done) {
   // Since db operations are asynchronous, use promises to ensure all updates happen before we call done().
   // The promises array collects all the promises which must be resolved before we're done.
   const promises = [];
-  coll.find().forEach((library) => {
-    const p = new Promise((resolve, reject) => {
-      library.details.functions = mapInputTypes(library.details.functions);
-      coll.updateOne(
-        { _id: library._id },
-        { '$set': library },
-        (err, result) => {
+  coll.find().forEach(
+    library => {
+      const p = new Promise((resolve, reject) => {
+        library.details.functions = mapInputTypes(library.details.functions);
+        coll.updateOne({ _id: library._id }, { $set: library }, (err, result) => {
           if (err) {
             this.log(`${library._id}: error:`, err);
             reject(err);
@@ -207,26 +203,27 @@ module.exports.up = function (done) {
             this.log(`${library._id} (${library.name}): successfully updated.`);
             resolve(result);
           }
-        }
-      );
-    });
-    promises.push(p);
-  }, (err) => {
-    if (err) {
-      this.log('Migration Error:', err);
-      done(err);
-    } else {
-      Promise.all(promises)
-        .then((results) => {
-          this.log(`Migrated ${results.length} cqllibraries`);
-          done();
-        })
-        .catch((err) => {
-          this.log('Migration Error:', err);
-          done(err);
         });
+      });
+      promises.push(p);
+    },
+    err => {
+      if (err) {
+        this.log('Migration Error:', err);
+        done(err);
+      } else {
+        Promise.all(promises)
+          .then(results => {
+            this.log(`Migrated ${results.length} cqllibraries`);
+            done();
+          })
+          .catch(err => {
+            this.log('Migration Error:', err);
+            done(err);
+          });
+      }
     }
-  });
+  );
 };
 
 module.exports.down = function (done) {

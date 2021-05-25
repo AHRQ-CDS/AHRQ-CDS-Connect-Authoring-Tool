@@ -4,7 +4,7 @@
  */
 'use strict';
 
-module.exports.id = "parameters-to-fields";
+module.exports.id = 'parameters-to-fields';
 
 function parseTree(element) {
   // Replace 'parameters' with 'fields'
@@ -45,32 +45,30 @@ module.exports.up = function (done) {
   // Since db operations are asynchronous, use promises to ensure all updates happen before we call done().
   // The promises array collects all the promises which must be resolved before we're done.
   const promises = [];
-  coll.find().forEach((artifact) => {
-    const p = new Promise((resolve, reject) => {
-      if (artifact.expTreeInclude) {
-        parseTree(artifact.expTreeInclude);
-      }
-      if (artifact.expTreeExclude) {
-        parseTree(artifact.expTreeExclude);
-      }
-      artifact.subpopulations.forEach((subpopulation) => {
-        if (!subpopulation.special) {
-          parseTree(subpopulation);
+  coll.find().forEach(
+    artifact => {
+      const p = new Promise((resolve, reject) => {
+        if (artifact.expTreeInclude) {
+          parseTree(artifact.expTreeInclude);
         }
-      });
-      artifact.baseElements.forEach((baseElement) => {
-        if (baseElement.childInstances) {
-          parseTree(baseElement);
-        } else {
-          parseElement(baseElement);
+        if (artifact.expTreeExclude) {
+          parseTree(artifact.expTreeExclude);
         }
-      });
+        artifact.subpopulations.forEach(subpopulation => {
+          if (!subpopulation.special) {
+            parseTree(subpopulation);
+          }
+        });
+        artifact.baseElements.forEach(baseElement => {
+          if (baseElement.childInstances) {
+            parseTree(baseElement);
+          } else {
+            parseElement(baseElement);
+          }
+        });
 
-      // Update the artifact with all the changes made.
-      coll.updateOne(
-        { _id: artifact._id },
-        { '$set': artifact },
-        (err, result) => {
+        // Update the artifact with all the changes made.
+        coll.updateOne({ _id: artifact._id }, { $set: artifact }, (err, result) => {
           if (err) {
             this.log(`${artifact._id}: error:`, err);
             reject(err);
@@ -78,30 +76,30 @@ module.exports.up = function (done) {
             this.log(`${artifact._id} (${artifact.name}): successfully updated.`);
             resolve(result);
           }
-        }
-      );
-    });
-    promises.push(p);
-  }, (err) => {
-    if (err) {
-      this.log('Migration Error:', err);
-      done(err);
-    } else {
-      Promise.all(promises)
-        .then((results) => {
-          this.log(`Migrated ${results.length} artifacts (only applicable artifacts are counted)`);
-          done();
-        })
-        .catch((err) => {
-          this.log('Migration Error:', err);
-          done(err);
         });
+      });
+      promises.push(p);
+    },
+    err => {
+      if (err) {
+        this.log('Migration Error:', err);
+        done(err);
+      } else {
+        Promise.all(promises)
+          .then(results => {
+            this.log(`Migrated ${results.length} artifacts (only applicable artifacts are counted)`);
+            done();
+          })
+          .catch(err => {
+            this.log('Migration Error:', err);
+            done(err);
+          });
+      }
     }
-  });
+  );
 };
 
 module.exports.down = function (done) {
   // use this.db for MongoDB communication, and this.log() for logging
   done();
 };
-

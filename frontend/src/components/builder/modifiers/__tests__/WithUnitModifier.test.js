@@ -4,13 +4,7 @@ import WithUnitModifier from '../WithUnitModifier';
 
 describe('<WithUnitModifier />', () => {
   const renderComponent = (props = {}) =>
-    render(
-      <WithUnitModifier
-        handleUpdateModifier={jest.fn()}
-        unit=""
-        {...props}
-      />
-    );
+    render(<WithUnitModifier handleUpdateModifier={jest.fn()} unit="" {...props} />);
 
   it('calls handleUpdateModifier when selection changes', () => {
     const handleUpdateModifier = jest.fn();

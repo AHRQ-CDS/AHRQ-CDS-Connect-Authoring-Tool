@@ -66,17 +66,17 @@ export default function isBlankArtifact(artifact) {
     return false;
   }
   // If it has more than one error statement (else if), it is NOT blank
-  if (artifact.errorStatement.statements.length > 1) {
+  if (artifact.errorStatement.ifThenClauses.length > 1) {
     return false;
   }
   // If it has exactly one error statement, check if it is blank
-  if (artifact.errorStatement.statements.length === 1) {
-    const st = artifact.errorStatement.statements[0];
-    if (st.child !== null || st.thenClause !== '') {
+  if (artifact.errorStatement.ifThenClauses.length === 1) {
+    const firstIfThenClause = artifact.errorStatement.ifThenClauses[0];
+    if (firstIfThenClause.statements.length > 0 || firstIfThenClause.thenClause !== '') {
       return false;
     }
-    const c = st.condition;
-    if (c.label !== null || c.value !== null) {
+    const firstIfCondition = firstIfThenClause.ifCondition;
+    if (firstIfCondition.label !== null || firstIfCondition.value !== null) {
       return false;
     }
   }

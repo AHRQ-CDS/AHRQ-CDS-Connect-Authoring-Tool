@@ -28,7 +28,9 @@ function CdsToolLinks({ className, numRows }) {
       {cdsToolLinksChunked.map((row, index) => (
         <div key={index}>
           {row.map((link, linkIndex) => (
-            <a key={`${index}-${linkIndex}`} href={link.link}>{link.name}</a>
+            <a key={`${index}-${linkIndex}`} href={link.link}>
+              {link.name}
+            </a>
           ))}
         </div>
       ))}
@@ -42,11 +44,8 @@ export default function CdsFooter() {
       <div className="cds-footer__container">
         <div className="cds-footer__column">
           <div className="cds-footer__header">
-            <img
-              src={`${process.env.PUBLIC_URL}/assets/images/cds-connect-logo.png`}
-              height="35"
-              alt="CDS Connect"
-            /> Clinical Decision Support (CDS)
+            <img src={`${process.env.PUBLIC_URL}/assets/images/cds-connect-logo.png`} height="35" alt="CDS Connect" />{' '}
+            Clinical Decision Support (CDS)
           </div>
 
           <CdsToolLinks className="cds-footer__links footer-wide" numRows={2} />

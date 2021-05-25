@@ -4,14 +4,7 @@ import NumberModifier from '../NumberModifier';
 
 describe('<NumberModifier />', () => {
   const renderComponent = (props = {}) =>
-    render(
-      <NumberModifier
-        handleUpdateModifier={jest.fn()}
-        name="number-modifier-test"
-        value={'0'}
-        {...props}
-      />
-    );
+    render(<NumberModifier handleUpdateModifier={jest.fn()} name="number-modifier-test" value={'0'} {...props} />);
 
   it('calls handleUpdateModifier on input change for integer', () => {
     const handleUpdateModifier = jest.fn();

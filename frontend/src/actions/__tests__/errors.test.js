@@ -11,9 +11,7 @@ describe('error actions', () => {
       const store = mockStore({});
 
       store.dispatch(setErrorMessage('error message'));
-      expect(store.getActions()).toEqual([
-        { type: types.SET_ERROR_MESSAGE, errorMessage: 'error message' }
-      ]);
+      expect(store.getActions()).toEqual([{ type: types.SET_ERROR_MESSAGE, errorMessage: 'error message' }]);
     });
   });
 });

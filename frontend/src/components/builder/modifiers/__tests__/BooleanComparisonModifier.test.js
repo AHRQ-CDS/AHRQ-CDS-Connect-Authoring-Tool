@@ -4,13 +4,7 @@ import BooleanComparisonModifier from '../BooleanComparisonModifier';
 
 describe('<BooleanComparisonModifier />', () => {
   const renderComponent = (props = {}) =>
-    render(
-      <BooleanComparisonModifier
-        handleUpdateModifier={jest.fn()}
-        value=""
-        {...props}
-      />
-    );
+    render(<BooleanComparisonModifier handleUpdateModifier={jest.fn()} value="" {...props} />);
 
   it('calls handleUpdateModifier on input change', () => {
     const handleUpdateModifier = jest.fn();

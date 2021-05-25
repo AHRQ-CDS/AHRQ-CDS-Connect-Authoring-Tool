@@ -16,7 +16,7 @@ const formTemplateMock = [
         fields: [
           { id: 'element_name', type: 'string', name: 'Element Name' },
           { id: 'comment', type: 'textarea', name: 'Comment' }
-        ],
+        ]
       }
     ]
   },
@@ -33,16 +33,14 @@ const formTemplateMock = [
         extends: 'Base',
         template: 'GenericObservation',
         suppressedModifiers: ['ConvertToMgPerdL'], // checkInclusionInVS is assumed to be suppressed
-        fields: [
-          { id: 'observation', type: 'observation_vsac', name: 'Observation' }
-        ]
-      },
+        fields: [{ id: 'observation', type: 'observation_vsac', name: 'Observation' }]
+      }
     ]
   }
 ];
 
 test('Merges template entries', () => {
-  const tester = templateMerger()((action) => {
+  const tester = templateMerger()(action => {
     const template = action.templates[1];
     const extendedEntry = template.entries.find(entry => entry.id === 'GenericObservation_vsac');
     const extendedEntryNameField = getFieldWithId(extendedEntry.fields, 'element_name');

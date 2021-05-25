@@ -17,7 +17,9 @@ const ELMErrorModal = ({ handleCloseModal, errors }) => {
       <div>
         We detected some errors in the ELM files you just used:
         <ul>
-          {uniqueErrors.map((error, index) => <li key={index}>{error}</li>)}
+          {uniqueErrors.map((error, index) => (
+            <li key={index}>{error}</li>
+          ))}
         </ul>
       </div>
     </Modal>

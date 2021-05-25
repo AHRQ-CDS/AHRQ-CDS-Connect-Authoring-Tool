@@ -13,9 +13,7 @@ describe('template actions', () => {
     it('dispatches a LOAD_TEMPLATES_SUCCESS action on successful load', () => {
       const store = mockStore({});
 
-      nock('http://localhost')
-        .get('/authoring/api/config/templates')
-        .reply(200, []);
+      nock('http://localhost').get('/authoring/api/config/templates').reply(200, []);
 
       const expectedActions = [
         { type: types.TEMPLATES_REQUEST },
@@ -32,7 +30,7 @@ describe('template actions', () => {
 
       nock('http://localhost')
         .get('/authoring/api/config/templates')
-        .reply(401, function() {
+        .reply(401, function () {
           this.req.response.statusMessage = 'Unauthorized';
           return { status: 401 };
         });

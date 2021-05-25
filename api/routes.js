@@ -7,7 +7,7 @@ const authRouter = require('./routers/authRouter.js');
 const fhirRouter = require('./routers/fhirRouter');
 const foreseeHandler = require('./handlers/foreseeHandler');
 
-module.exports = (app) => {
+module.exports = app => {
   // Routing for API check
   app.get('/', (req, res) => {
     res.json({ message: 'API Initialized!' });
@@ -38,5 +38,7 @@ module.exports = (app) => {
   app.get('/authoring/api/foresee.js', foreseeHandler);
 
   // Catch all other Api calls
-  app.get('/authoring/api/*', (req, res) => { res.sendStatus(404); });
+  app.get('/authoring/api/*', (req, res) => {
+    res.sendStatus(404);
+  });
 };

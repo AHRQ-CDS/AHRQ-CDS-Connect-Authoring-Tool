@@ -17,8 +17,12 @@ import clsx from 'clsx';
 import _ from 'lodash';
 
 import { findValueAtPath } from 'utils/find';
-import { doesBaseElementInstanceNeedWarning, hasDuplicateName, hasGroupNestedWarning, hasInvalidListWarning }
-  from 'utils/warnings';
+import {
+  doesBaseElementInstanceNeedWarning,
+  hasDuplicateName,
+  hasGroupNestedWarning,
+  hasInvalidListWarning
+} from 'utils/warnings';
 import { getReturnType, getFieldWithId } from 'utils/instances';
 
 import { DeleteConfirmationModal } from 'components/modals';
@@ -26,7 +30,7 @@ import { ReturnTypeTemplate } from 'components/builder/templates';
 import ConjunctionGroup from './ConjunctionGroup';
 import ExpressionPhrase from './ExpressionPhrase';
 import StringField from './fields/StringField';
-import TextAreaField from "./fields/TextAreaField";
+import TextAreaField from './fields/TextAreaField';
 
 const listTypes = [
   'list_of_observations',
@@ -76,81 +80,85 @@ export default class ListGroup extends Component {
 
   collapse = () => {
     this.setState({ isExpanded: false });
-  }
+  };
 
   expand = () => {
     this.setState({ isExpanded: true });
-  }
+  };
 
-  onEnterKey = (e) => {
+  onEnterKey = e => {
     e.which = e.which || e.keyCode;
     if (e.which === 13) {
       if (this.state.isExpanded) this.collapse();
       else this.expand();
     }
-  }
+  };
 
   toggleComment = () => {
     this.setState({ showComment: !this.state.showComment });
-  }
+  };
 
   updateBaseElementList = (data, type, uniqueId) => {
     const newBaseElementLists = _.cloneDeep(this.props.artifact.baseElements);
-    const baseElementIndex = this.props.artifact.baseElements.findIndex(baseElement =>
-      baseElement.uniqueId === uniqueId);
+    const baseElementIndex = this.props.artifact.baseElements.findIndex(
+      baseElement => baseElement.uniqueId === uniqueId
+    );
     const field = getFieldWithId(newBaseElementLists[baseElementIndex].fields, type);
     field.value = data;
 
     this.props.updateBaseElementLists(newBaseElementLists, 'baseElements');
-  }
+  };
 
-  deleteBaseElementList = (uniqueId) => {
+  deleteBaseElementList = uniqueId => {
     const newBaseElementLists = _.cloneDeep(this.props.artifact.baseElements);
-    const baseElementIndex = this.props.artifact.baseElements.findIndex(baseElement =>
-      baseElement.uniqueId === uniqueId);
+    const baseElementIndex = this.props.artifact.baseElements.findIndex(
+      baseElement => baseElement.uniqueId === uniqueId
+    );
     newBaseElementLists.splice(baseElementIndex, 1);
     this.props.updateBaseElementLists(newBaseElementLists, 'baseElements');
-  }
+  };
 
-  openConfirmDeleteModal = (uniqueId) => {
+  openConfirmDeleteModal = uniqueId => {
     const newBaseElementLists = _.cloneDeep(this.props.artifact.baseElements);
-    const baseElementIndex = this.props.artifact.baseElements.findIndex(baseElement =>
-      baseElement.uniqueId === uniqueId);
+    const baseElementIndex = this.props.artifact.baseElements.findIndex(
+      baseElement => baseElement.uniqueId === uniqueId
+    );
     const baseElementListIsInUse = this.isBaseElementListUsed(newBaseElementLists[baseElementIndex]);
     if (!baseElementListIsInUse) {
       this.setState({ showConfirmDeleteModal: true });
     }
-  }
+  };
 
   closeConfirmDeleteModal = () => {
     this.setState({ showConfirmDeleteModal: false });
-  }
+  };
 
   handleDeleteBaseElementList = () => {
     this.deleteBaseElementList(this.props.instance.uniqueId);
     this.closeConfirmDeleteModal();
-  }
+  };
 
-  promoteReturnTypeToList = (returnType) => {
+  promoteReturnTypeToList = returnType => {
     const isSingularElement = singularTypes.find(type => type === returnType);
     if (isSingularElement) {
       return `list_of_${pluralize.plural(returnType)}`;
     }
     return returnType;
-  }
+  };
 
   checkReturnTypeCompatibility = (currentReturnType, incomingReturnType) => {
     const incomingReturnTypeOrPromoted = this.promoteReturnTypeToList(incomingReturnType);
     const isListElement = listTypes.find(type => type === incomingReturnTypeOrPromoted);
-    if (currentReturnType === incomingReturnTypeOrPromoted && (isListElement)) {
+    if (currentReturnType === incomingReturnTypeOrPromoted && isListElement) {
       return incomingReturnTypeOrPromoted;
     }
     return 'list_of_any';
-  }
+  };
 
   checkAndOrReturnTypeCompatibility = (currentReturnType, incomingReturnType, isOnlyElement) => {
-    const booleanAndNull = (_.lowerCase(incomingReturnType) === 'none' && _.lowerCase(currentReturnType) === 'boolean')
-      || (_.lowerCase(incomingReturnType) === 'boolean' && _.lowerCase(currentReturnType) === 'none');
+    const booleanAndNull =
+      (_.lowerCase(incomingReturnType) === 'none' && _.lowerCase(currentReturnType) === 'boolean') ||
+      (_.lowerCase(incomingReturnType) === 'boolean' && _.lowerCase(currentReturnType) === 'none');
 
     if ((currentReturnType === incomingReturnType && _.lowerCase(currentReturnType) === 'boolean') || isOnlyElement) {
       return incomingReturnType;
@@ -158,9 +166,9 @@ export default class ListGroup extends Component {
       return 'boolean';
     }
     return 'invalid';
-  }
+  };
 
-  getReturnTypeOfFullList = (baseElementList) => {
+  getReturnTypeOfFullList = baseElementList => {
     let currentReturnType;
     // Set the initial type to the first child's type to start. If no children, default is 'list_of_any'.
     if (baseElementList.childInstances.length > 0) {
@@ -172,16 +180,17 @@ export default class ListGroup extends Component {
     }
 
     let newReturnType;
-    baseElementList.childInstances.forEach((child) => { // Base Element Lists can only go one child deep
+    baseElementList.childInstances.forEach(child => {
+      // Base Element Lists can only go one child deep
       const incomingReturnType = getReturnType(child.returnType, child.modifiers);
       newReturnType = this.checkReturnTypeCompatibility(currentReturnType, incomingReturnType);
       currentReturnType = newReturnType;
     });
 
     return currentReturnType;
-  }
+  };
 
-  getAndOrReturnTypeOfFullList = (baseElementList) => {
+  getAndOrReturnTypeOfFullList = baseElementList => {
     let currentReturnType;
     // Set the initial type to the first child's type to start. If no children, default is 'list_of_any'.
     if (baseElementList.childInstances.length > 0) {
@@ -193,7 +202,7 @@ export default class ListGroup extends Component {
 
     let newReturnType;
     // Base Element And/Or Conjunctions can go multiple children deep so need recursion to check the type
-    baseElementList.childInstances.forEach((child) => {
+    baseElementList.childInstances.forEach(child => {
       let incomingReturnType = getReturnType(child.returnType, child.modifiers);
       if (child.childInstances) {
         incomingReturnType = this.getAndOrReturnTypeOfFullList(child);
@@ -204,7 +213,7 @@ export default class ListGroup extends Component {
     });
 
     return currentReturnType;
-  }
+  };
 
   addInstance = (name, template, path, baseElement, isAndOrElement) => {
     const baseElementList = _.cloneDeep(baseElement);
@@ -229,11 +238,11 @@ export default class ListGroup extends Component {
       }
     }
     this.props.addInstance(name, template, path, baseElement.uniqueId, undefined, null, newReturnType);
-  }
+  };
 
   editInstance = (treeName, fields, path, editingConjunction, baseElement) => {
     this.props.editInstance(treeName, fields, path, editingConjunction, baseElement.uniqueId);
-  }
+  };
 
   deleteInstance = (treeName, path, toAdd, baseElement, isAndOrElement) => {
     // Temporarily remove the element that will be deleted to correctly calculate return type.
@@ -249,7 +258,7 @@ export default class ListGroup extends Component {
       currentReturnType = this.getReturnTypeOfFullList(baseElementList);
     }
     this.props.deleteInstance(treeName, path, toAdd, baseElement.uniqueId, currentReturnType);
-  }
+  };
 
   updateInstanceModifiers = (t, modifiers, path, index, isAndOrElement) => {
     const baseElementList = _.cloneDeep(this.props.baseElements[index]);
@@ -266,11 +275,11 @@ export default class ListGroup extends Component {
       currentReturnType = this.getReturnTypeOfFullList(baseElementList);
     }
     this.props.updateInstanceModifiers(t, modifiers, path, index, currentReturnType);
-  }
+  };
 
   isBaseElementListUsed = element => (element.usedBy ? element.usedBy.length !== 0 : false);
 
-  hasNestedWarnings = (childInstances) => {
+  hasNestedWarnings = childInstances => {
     const { instanceNames, baseElements, parameters, getAllInstancesInAllTrees, instance } = this.props;
     const isAndOrElement = instance.id === 'And' || instance.id === 'Or';
     const allInstancesInAllTrees = getAllInstancesInAllTrees();
@@ -283,30 +292,26 @@ export default class ListGroup extends Component {
       isAndOrElement
     );
     return hasNestedWarning;
-  }
+  };
 
   renderListGroup = () => {
     const { instance, index, baseElements } = this.props;
     const baseElementListUsed = this.isBaseElementListUsed(instance);
     const isAndOrElement = instance.id === 'And' || instance.id === 'Or';
     let showCheck = true;
-    if (isAndOrElement) showCheck =
-      _.startCase(instance.returnType) === 'Boolean' || instance.childInstances.length === 1;
+    if (isAndOrElement)
+      showCheck = _.startCase(instance.returnType) === 'Boolean' || instance.childInstances.length === 1;
 
     return (
       <div className="card-element__body">
         <div>
-          {isAndOrElement && hasInvalidListWarning(instance.returnType) &&
+          {isAndOrElement && hasInvalidListWarning(instance.returnType) && (
             <div className="warning">
               Warning: Elements in groups combined with and/or must all have return type 'boolean'.
             </div>
-          }
+          )}
 
-          <ExpressionPhrase
-            class="expression expression__group"
-            instance={instance}
-            baseElements={baseElements}
-          />
+          <ExpressionPhrase class="expression expression__group" instance={instance} baseElements={baseElements} />
 
           <ReturnTypeTemplate returnType={_.startCase(instance.returnType)} returnTypeIsValid={showCheck} />
         </div>
@@ -317,11 +322,13 @@ export default class ListGroup extends Component {
           baseElements={this.props.baseElements}
           conversionFunctions={this.props.conversionFunctions}
           deleteInstance={(treeName, path, toAdd) =>
-            this.deleteInstance(treeName, path, toAdd, instance, isAndOrElement)}
+            this.deleteInstance(treeName, path, toAdd, instance, isAndOrElement)
+          }
           disableAddElement={baseElementListUsed}
           disableIndent={!isAndOrElement}
           editInstance={(treeName, fields, path, editingConjunction) =>
-            this.editInstance(treeName, fields, path, editingConjunction, instance)}
+            this.editInstance(treeName, fields, path, editingConjunction, instance)
+          }
           elementUniqueId={instance.uniqueId}
           externalCqlList={this.props.externalCqlList}
           getAllInstances={this.getAllInstances}
@@ -339,30 +346,30 @@ export default class ListGroup extends Component {
           templates={this.props.templates}
           treeName={this.props.treeName}
           updateInstanceModifiers={(t, modifiers, path) =>
-            this.updateInstanceModifiers(t, modifiers, path, index, isAndOrElement)}
+            this.updateInstanceModifiers(t, modifiers, path, index, isAndOrElement)
+          }
           validateReturnType={isAndOrElement}
           vsacApiKey={this.props.vsacApiKey}
         />
       </div>
     );
-  }
+  };
 
   renderList = () => {
-    const {
-      baseElements,
-      getAllInstancesInAllTrees,
-      instance,
-      instanceNames,
-      parameters
-    } = this.props;
+    const { baseElements, getAllInstancesInAllTrees, instance, instanceNames, parameters } = this.props;
     const { isExpanded, showComment, showConfirmDeleteModal } = this.state;
     const name = getFieldWithId(instance.fields, 'element_name').value;
-    const comment = getFieldWithId(instance.fields,'comment').value;
+    const comment = getFieldWithId(instance.fields, 'comment').value;
     const allInstancesInAllTrees = getAllInstancesInAllTrees();
     const elementName = getFieldWithId(instance.fields, 'element_name').value;
 
-    const needsDuplicateNameWarning
-      = hasDuplicateName(instance, instanceNames, baseElements, parameters, allInstancesInAllTrees);
+    const needsDuplicateNameWarning = hasDuplicateName(
+      instance,
+      instanceNames,
+      baseElements,
+      parameters,
+      allInstancesInAllTrees
+    );
     const needsBaseElementWarning = doesBaseElementInstanceNeedWarning(instance, allInstancesInAllTrees);
     const needsIntersectionWarning =
       instance.returnType === 'list_of_any' && instance.name === 'Intersect' && instance.childInstances.length > 0;
@@ -378,7 +385,7 @@ export default class ListGroup extends Component {
       <div className="card-element">
         <div className={headerClass}>
           <div className={headerTopClass}>
-            {isExpanded ?
+            {isExpanded ? (
               <div className="card-element__heading">
                 <div className="card-field">
                   <div className="card-label">List Group:</div>
@@ -387,13 +394,13 @@ export default class ListGroup extends Component {
                     <StringField
                       field={{ id: 'base_element_name', value: name }}
                       handleUpdateField={value => {
-                        this.updateBaseElementList(value.base_element_name, "element_name", instance.uniqueId);
+                        this.updateBaseElementList(value.base_element_name, 'element_name', instance.uniqueId);
                       }}
                     />
                   </div>
                 </div>
 
-                {showComment &&
+                {showComment && (
                   <div className="card-field">
                     <div className="card-label">Comment:</div>
 
@@ -406,37 +413,39 @@ export default class ListGroup extends Component {
                       />
                     </div>
                   </div>
-                }
+                )}
 
-                {needsDuplicateNameWarning && !needsBaseElementWarning &&
+                {needsDuplicateNameWarning && !needsBaseElementWarning && (
                   <div className="warning">Warning: Name already in use. Choose another name.</div>
-                }
+                )}
 
-                {needsBaseElementWarning &&
+                {needsBaseElementWarning && (
                   <div className="warning">
                     Warning: One or more uses of this Base Element have changed. Choose another name.
                   </div>
-                }
+                )}
 
-                {needsIntersectionWarning &&
+                {needsIntersectionWarning && (
                   <div className="warning">
                     Warning: Intersecting different types will always result in an empty list
                   </div>
-                }
+                )}
               </div>
-              :
+            ) : (
               <div className="card-element__heading">
                 <div className="heading-name">
                   {name}:
-                  {needsHasWarningsWarning &&
-                    <div className="warning"><FontAwesomeIcon icon={faExclamationCircle} /> Has warnings</div>
-                  }
+                  {needsHasWarningsWarning && (
+                    <div className="warning">
+                      <FontAwesomeIcon icon={faExclamationCircle} /> Has warnings
+                    </div>
+                  )}
                 </div>
               </div>
-            }
+            )}
 
             <div className="card-element__buttons">
-              {isExpanded &&
+              {isExpanded && (
                 <IconButton
                   aria-label="show comment"
                   className={clsx(hasComment && 'has-comment')}
@@ -445,7 +454,7 @@ export default class ListGroup extends Component {
                 >
                   {hasComment ? <SmsIcon fontSize="small" /> : <ChatBubbleIcon fontSize="small" />}
                 </IconButton>
-              }
+              )}
 
               <IconButton
                 aria-label={`hide ${name}`}
@@ -466,37 +475,37 @@ export default class ListGroup extends Component {
                 </IconButton>
               </span>
 
-              {baseElementListUsed &&
+              {baseElementListUsed && (
                 <UncontrolledTooltip target={`deletebutton-${instance.uniqueId}`} placement="left">
                   To delete this Base Element List, remove all references to it.
                 </UncontrolledTooltip>
-              }
+              )}
             </div>
           </div>
 
-          {!isExpanded &&
+          {!isExpanded && (
             <ExpressionPhrase
               class="expression expression__group expression-collapsed"
               instance={instance}
               baseElements={baseElements}
             />
-          }
+          )}
         </div>
 
         {isExpanded && this.renderListGroup()}
 
-        {showConfirmDeleteModal &&
+        {showConfirmDeleteModal && (
           <DeleteConfirmationModal
             deleteType="List Group"
             handleCloseModal={this.closeConfirmDeleteModal}
             handleDelete={this.handleDeleteBaseElementList}
           >
-            <div>List Group: {elementName ? elementName :'unnamed'}</div>
+            <div>List Group: {elementName ? elementName : 'unnamed'}</div>
           </DeleteConfirmationModal>
-        }
+        )}
       </div>
     );
-  }
+  };
 
   render() {
     return (

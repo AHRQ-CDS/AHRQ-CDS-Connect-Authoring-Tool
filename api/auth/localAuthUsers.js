@@ -3,8 +3,8 @@ let users = {};
 try {
   users = require('../config/local-users.json');
 } catch (err) {
-  if (err.code === "MODULE_NOT_FOUND") {
-    console.log("No users specified.")
+  if (err.code === 'MODULE_NOT_FOUND') {
+    console.log('No users specified.');
   }
 }
 
@@ -14,7 +14,7 @@ function findByUsername(name, cb) {
   for (let i = 0; i < userNames.length; i++) {
     if (userNames[i] === name) {
       // Set up user object to mirror LDAP structure
-      const user = { uid: userNames[i], password: users[userNames[i]]};
+      const user = { uid: userNames[i], password: users[userNames[i]] };
       return cb(null, user);
     }
   }

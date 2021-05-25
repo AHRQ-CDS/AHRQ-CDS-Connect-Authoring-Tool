@@ -22,14 +22,15 @@ function userReceived(username) {
 
 function sendUserRequest() {
   return new Promise((resolve, reject) => {
-    axios.get(`${API_BASE}/auth/user`, { params: { _: +(new Date()) } })
+    axios
+      .get(`${API_BASE}/auth/user`, { params: { _: +new Date() } })
       .then(result => resolve(result.data))
       .catch(error => reject(error));
   });
 }
 
 export function getCurrentUser() {
-  return (dispatch) => {
+  return dispatch => {
     dispatch(requestUser());
 
     return sendUserRequest()
@@ -63,14 +64,15 @@ function loginFailure(error) {
 
 function sendLoginRequest(username, password) {
   return new Promise((resolve, reject) => {
-    axios.post(`${API_BASE}/auth/login`, { username, password })
+    axios
+      .post(`${API_BASE}/auth/login`, { username, password })
       .then(result => resolve(result.data))
       .catch(error => reject(error));
   });
 }
 
 export function loginUser(username, password) {
-  return (dispatch) => {
+  return dispatch => {
     dispatch(requestLogin());
 
     return sendLoginRequest(username, password)
@@ -102,9 +104,10 @@ function logoutFailure(error) {
 }
 
 export function logoutUser() {
-  return (dispatch) => {
+  return dispatch => {
     dispatch(requestLogout());
-    return axios.get(`${API_BASE}/auth/logout`)
+    return axios
+      .get(`${API_BASE}/auth/logout`)
       .then(() => dispatch(logoutSuccess()))
       .catch(error => dispatch(logoutFailure(error)));
   };

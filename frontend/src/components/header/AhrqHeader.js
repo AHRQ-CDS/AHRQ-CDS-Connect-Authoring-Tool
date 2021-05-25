@@ -26,8 +26,7 @@ export default function AhrqHeader() {
               <div className="col-sm-8 col-lg-8 txt-gov-banner">
                 <p className="usa-banner__header-text">
                   <a href="https://www.hhs.gov/">
-                    An official website of the Department of Health &amp; Human
-                    Services
+                    An official website of the Department of Health &amp; Human Services
                   </a>
                 </p>
               </div>
@@ -62,11 +61,7 @@ export default function AhrqHeader() {
                     <div id="utility-nav">
                       <ul className="clearfix">
                         <li className="first">
-                          <a
-                            href="https://search.ahrq.gov/"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                          >
+                          <a href="https://search.ahrq.gov/" target="_blank" rel="noopener noreferrer">
                             Search All AHRQ Sites
                           </a>
                         </li>
@@ -82,11 +77,7 @@ export default function AhrqHeader() {
                         </li>
 
                         <li>
-                          <a
-                            href="https://www.ahrq.gov/contact/index.html"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                          >
+                          <a href="https://www.ahrq.gov/contact/index.html" target="_blank" rel="noopener noreferrer">
                             Contact Us
                           </a>
                         </li>
@@ -102,11 +93,7 @@ export default function AhrqHeader() {
                         </li>
 
                         <li className="last">
-                          <a
-                            href="https://info.ahrq.gov/"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                          >
+                          <a href="https://info.ahrq.gov/" target="_blank" rel="noopener noreferrer">
                             FAQs
                           </a>
                         </li>

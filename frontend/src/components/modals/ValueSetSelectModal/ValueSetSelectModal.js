@@ -16,17 +16,19 @@ const ValueSetSelectModal = ({ handleCloseModal, handleSelectValueSet, readOnly 
   const selectedValueSetRef = useLatest(selectedValueSet);
   const styles = useStyles();
 
-  const handleSaveValueSetSelection = useCallback(valueSet => {
-    handleSelectValueSet(valueSet);
-    handleCloseModal();
-  }, [handleCloseModal, handleSelectValueSet]);
+  const handleSaveValueSetSelection = useCallback(
+    valueSet => {
+      handleSelectValueSet(valueSet);
+      handleCloseModal();
+    },
+    [handleCloseModal, handleSelectValueSet]
+  );
 
   return (
     <Modal
       closeButtonText={readOnly ? 'Close' : 'Cancel'}
       handleCloseModal={handleCloseModal}
-      handleSaveModal={() =>
-        handleSaveValueSetSelection(selectedValueSetRef.current)}
+      handleSaveModal={() => handleSaveValueSetSelection(selectedValueSetRef.current)}
       isOpen
       hasCancelButton
       hasEnterKeySubmit={false}

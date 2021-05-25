@@ -15,15 +15,9 @@ describe('auth actions', () => {
       const store = mockStore({});
       const username = 'myUserName';
 
-      nock('http://localhost')
-        .get('/authoring/api/auth/user')
-        .query(true)
-        .reply(200, { uid: username });
+      nock('http://localhost').get('/authoring/api/auth/user').query(true).reply(200, { uid: username });
 
-      const expectedActions = [
-        { type: types.USER_REQUEST },
-        { type: types.USER_RECEIVED, username }
-      ];
+      const expectedActions = [{ type: types.USER_REQUEST }, { type: types.USER_RECEIVED, username }];
 
       return store.dispatch(actions.getCurrentUser()).then(() => {
         expect(store.getActions()).toEqual(expectedActions);
@@ -33,15 +27,9 @@ describe('auth actions', () => {
     it('sends a USER_RECEIVED action with a null username if the request fails', () => {
       const store = mockStore({});
 
-      nock('http://localhost')
-        .get('/authoring/api/auth/user')
-        .query(true)
-        .reply(403);
+      nock('http://localhost').get('/authoring/api/auth/user').query(true).reply(403);
 
-      const expectedActions = [
-        { type: types.USER_REQUEST },
-        { type: types.USER_RECEIVED, username: null }
-      ];
+      const expectedActions = [{ type: types.USER_REQUEST }, { type: types.USER_RECEIVED, username: null }];
 
       return store.dispatch(actions.getCurrentUser()).then(() => {
         expect(store.getActions()).toEqual(expectedActions);
@@ -56,14 +44,9 @@ describe('auth actions', () => {
       const username = 'myUserName';
       const password = 'myPw';
 
-      nock('http://localhost')
-        .post('/authoring/api/auth/login')
-        .reply(200, { uid: username });
+      nock('http://localhost').post('/authoring/api/auth/login').reply(200, { uid: username });
 
-      const expectedActions = [
-        { type: types.LOGIN_REQUEST },
-        { type: types.LOGIN_SUCCESS, username }
-      ];
+      const expectedActions = [{ type: types.LOGIN_REQUEST }, { type: types.LOGIN_SUCCESS, username }];
 
       return store.dispatch(actions.loginUser(username, password)).then(() => {
         expect(store.getActions()).toEqual(expectedActions);
@@ -77,7 +60,7 @@ describe('auth actions', () => {
 
       nock('http://localhost')
         .post('/authoring/api/auth/login')
-        .reply(403, function() {
+        .reply(403, function () {
           this.req.response.statusMessage = 'Invalid credentials';
           return { status: 403 };
         });
@@ -98,14 +81,9 @@ describe('auth actions', () => {
     it('dispatches a LOGOUT_SUCCESS action upon successful logout', () => {
       const store = mockStore({});
 
-      nock('http://localhost')
-        .get('/authoring/api/auth/logout')
-        .reply(200, {});
+      nock('http://localhost').get('/authoring/api/auth/logout').reply(200, {});
 
-      const expectedActions = [
-        { type: types.LOGOUT_REQUEST },
-        { type: types.LOGOUT_SUCCESS }
-      ];
+      const expectedActions = [{ type: types.LOGOUT_REQUEST }, { type: types.LOGOUT_SUCCESS }];
 
       return store.dispatch(actions.logoutUser()).then(() => {
         expect(store.getActions()).toEqual(expectedActions);
@@ -117,7 +95,7 @@ describe('auth actions', () => {
 
       nock('http://localhost')
         .get('/authoring/api/auth/logout')
-        .reply(500, function() {
+        .reply(500, function () {
           this.req.response.statusMessage = 'Whoops!';
           return { status: 500 };
         });
@@ -139,9 +117,7 @@ describe('auth actions', () => {
       const store = mockStore({});
 
       store.dispatch(actions.setAuthStatus('status message'));
-      expect(store.getActions()).toEqual([
-        { type: types.SET_AUTH_STATUS, status: 'status message' }
-      ]);
+      expect(store.getActions()).toEqual([{ type: types.SET_AUTH_STATUS, status: 'status message' }]);
     });
   });
 });

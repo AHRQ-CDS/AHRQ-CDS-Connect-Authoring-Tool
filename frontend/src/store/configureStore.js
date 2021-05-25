@@ -13,11 +13,7 @@ export default function configureStore(initialState) {
   }
 
   const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose; // eslint-disable-line no-underscore-dangle
-  const store = createStore(
-    rootReducer,
-    initialState,
-    composeEnhancers(applyMiddleware(...middleware))
-  );
+  const store = createStore(rootReducer, initialState, composeEnhancers(applyMiddleware(...middleware)));
 
   return store;
 }

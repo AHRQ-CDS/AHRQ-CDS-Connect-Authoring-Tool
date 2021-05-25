@@ -16,7 +16,7 @@ function login(req, res, next) {
     strategies.push('local');
   }
 
-  passport.authenticate(strategies)(req, res, (err) => {
+  passport.authenticate(strategies)(req, res, err => {
     if (err) {
       next(err);
     } else {

@@ -90,8 +90,9 @@ describe('ifThenAll validator', () => {
     expect(Validators.ifThenAll.check(['test', 'test', 'test'])).toEqual(true);
   });
   it('should provide a good warning message', () => {
-    expect(Validators.ifThenAll.warning(['MyField', 'MyOtherField']))
-      .toEqual('You must specify MyOtherField if you specify MyField.');
+    expect(Validators.ifThenAll.warning(['MyField', 'MyOtherField'])).toEqual(
+      'You must specify MyOtherField if you specify MyField.'
+    );
   });
 });
 
@@ -122,7 +123,8 @@ describe('requiredIfThenOne validator', () => {
     expect(Validators.requiredIfThenOne.check(['test', 'test', 'test'])).toEqual(true);
   });
   it('should provide a good warning message', () => {
-    expect(Validators.requiredIfThenOne.warning(['MyField', 'MySecondField', 'MyThirdField']))
-      .toEqual('You must specify MyField and one of MySecondField, MyThirdField.');
+    expect(Validators.requiredIfThenOne.warning(['MyField', 'MySecondField', 'MyThirdField'])).toEqual(
+      'You must specify MyField and one of MySecondField, MyThirdField.'
+    );
   });
 });

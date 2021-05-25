@@ -12,7 +12,7 @@ module.exports = [
         fields: [
           { id: 'element_name', type: 'string', name: 'Element Name' },
           { id: 'comment', type: 'textarea', name: 'Comment' }
-        ],
+        ]
       }
     ]
   },
@@ -25,28 +25,28 @@ module.exports = [
         id: 'AgeRange',
         name: 'Age Range',
         returnType: 'boolean',
-        validator: {type: 'requiredIfThenOne', fields: ['unit_of_time', 'min_age', 'max_age']},
+        validator: { type: 'requiredIfThenOne', fields: ['unit_of_time', 'min_age', 'max_age'] },
         suppressedModifiers: ['BooleanNot', 'BooleanComparison'],
         fields: [
           { id: 'element_name', type: 'string', name: 'Element Name' },
           { id: 'comment', type: 'textarea', name: 'Comment' },
           { id: 'min_age', type: 'number', typeOfNumber: 'integer', name: 'Minimum Age' },
           { id: 'max_age', type: 'number', typeOfNumber: 'integer', name: 'Maximum Age' },
-          { id: 'unit_of_time', type: 'valueset', select: 'demographics/units_of_time', name: 'Unit of Time' },
-        ],
+          { id: 'unit_of_time', type: 'valueset', select: 'demographics/units_of_time', name: 'Unit of Time' }
+        ]
       },
       {
         id: 'Gender',
         name: 'Gender',
         returnType: 'boolean',
         cannotHaveModifiers: true,
-        validator: {type: 'require', fields: ['gender'], args: null},
+        validator: { type: 'require', fields: ['gender'], args: null },
         fields: [
           { id: 'element_name', type: 'string', name: 'Element Name' },
           { id: 'comment', type: 'textarea', name: 'Comment' },
-          { id: 'gender', type: 'valueset', select: 'demographics/gender', name: 'Gender' },
-        ],
-      },
+          { id: 'gender', type: 'valueset', select: 'demographics/gender', name: 'Gender' }
+        ]
+      }
     ]
   },
   {
@@ -62,10 +62,8 @@ module.exports = [
         extends: 'Base',
         template: 'GenericObservation',
         suppressedModifiers: ['ConvertToMgPerdL'], // checkInclusionInVS is assumed to be suppressed
-        fields: [
-          { id: 'observation', type: 'observation_vsac', name: 'Observation' }
-        ]
-      },
+        fields: [{ id: 'observation', type: 'observation_vsac', name: 'Observation' }]
+      }
     ]
   },
   {
@@ -92,7 +90,7 @@ module.exports = [
           { id: 'element_name', type: 'string', name: 'Group Name' },
           { id: 'comment', type: 'textarea', name: 'Comment' }
         ]
-      },
+      }
     ]
   },
   {
@@ -107,10 +105,8 @@ module.exports = [
         suppress: true,
         extends: 'Base',
         template: 'GenericCondition',
-        fields: [
-          { id: 'condition', type: 'condition_vsac', name: 'Condition' }
-        ]
-      },
+        fields: [{ id: 'condition', type: 'condition_vsac', name: 'Condition' }]
+      }
     ]
   },
   {
@@ -125,9 +121,7 @@ module.exports = [
         suppress: true,
         extends: 'Base',
         template: 'GenericMedicationStatement',
-        fields: [
-          { id: 'medicationStatement', type: 'medicationStatement_vsac', name: 'Medication Statement' }
-        ]
+        fields: [{ id: 'medicationStatement', type: 'medicationStatement_vsac', name: 'Medication Statement' }]
       },
       {
         id: 'GenericMedicationRequest_vsac',
@@ -136,10 +130,8 @@ module.exports = [
         suppress: true,
         extends: 'Base',
         template: 'GenericMedicationRequest',
-        fields: [
-          { id: 'medicationRequest', type: 'medicationRequest_vsac', name: 'Medication Request' }
-        ]
-      },
+        fields: [{ id: 'medicationRequest', type: 'medicationRequest_vsac', name: 'Medication Request' }]
+      }
     ]
   },
   {
@@ -154,10 +146,8 @@ module.exports = [
         suppress: true,
         extends: 'Base',
         template: 'GenericProcedure',
-        fields: [
-          { id: 'procedure', type: 'procedure_vsac', name: 'Procedure' }
-        ]
-      },
+        fields: [{ id: 'procedure', type: 'procedure_vsac', name: 'Procedure' }]
+      }
     ]
   },
   {
@@ -171,10 +161,8 @@ module.exports = [
         type: 'parameter',
         returnType: 'boolean',
         extends: 'Base',
-        fields: [
-          { id: 'default', type: 'boolean', value: 'true', name: 'Default' }
-        ],
-      },
+        fields: [{ id: 'default', type: 'boolean', value: 'true', name: 'Default' }]
+      }
     ]
   },
   {
@@ -189,10 +177,8 @@ module.exports = [
         suppress: true,
         extends: 'Base',
         template: 'GenericEncounter',
-        fields: [
-          { id: 'encounter', type: 'encounter_vsac', name: 'Encounter' }
-        ]
-      },
+        fields: [{ id: 'encounter', type: 'encounter_vsac', name: 'Encounter' }]
+      }
     ]
   },
   {
@@ -207,10 +193,8 @@ module.exports = [
         suppress: true,
         extends: 'Base',
         template: 'GenericAllergyIntolerance',
-        fields: [
-          { id: 'allergyIntolerance', type: 'allergyIntolerance_vsac', name: 'Allergy Intolerance' }
-        ]
-      },
+        fields: [{ id: 'allergyIntolerance', type: 'allergyIntolerance_vsac', name: 'Allergy Intolerance' }]
+      }
     ]
   },
   {
@@ -243,7 +227,7 @@ module.exports = [
           { id: 'element_name', type: 'string', name: 'Group Name' },
           { id: 'comment', type: 'textarea', name: 'Comment' }
         ]
-      },
+      }
     ]
   },
   {
@@ -264,10 +248,8 @@ module.exports = [
         suppress: true,
         extends: 'Base',
         template: 'GenericImmunization',
-        fields: [
-          { id: 'immunization', type: 'immunization_vsac', name: 'Immunization' }
-        ]
-      },
+        fields: [{ id: 'immunization', type: 'immunization_vsac', name: 'Immunization' }]
+      }
     ]
   },
   {
@@ -282,10 +264,8 @@ module.exports = [
         suppress: true,
         extends: 'Base',
         template: 'GenericDevice',
-        fields: [
-          { id: 'device', type: 'device_vsac', name: 'Device' }
-        ]
-      },
+        fields: [{ id: 'device', type: 'device_vsac', name: 'Device' }]
+      }
     ]
   },
   {
@@ -294,16 +274,14 @@ module.exports = [
     name: 'Service Request',
     entries: [
       {
-      id: 'GenericServiceRequest_vsac',
-      name: 'Service Request',
-      returnType: 'list_of_service_requests',
-      suppress: true,
-      extends: 'Base',
-      template: 'GenericServiceRequest',
-      fields: [
-        { id: 'service_request', type: 'service_request_vsac', name: 'Service Request'}
-      ]
-    },
+        id: 'GenericServiceRequest_vsac',
+        name: 'Service Request',
+        returnType: 'list_of_service_requests',
+        suppress: true,
+        extends: 'Base',
+        template: 'GenericServiceRequest',
+        fields: [{ id: 'service_request', type: 'service_request_vsac', name: 'Service Request' }]
+      }
     ]
   }
 ];

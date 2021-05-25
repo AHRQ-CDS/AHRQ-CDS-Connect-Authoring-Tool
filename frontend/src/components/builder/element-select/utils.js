@@ -93,7 +93,10 @@ export const generateElement = ({
               element: selectedCqlEntry.name,
               library: cqlLibrary.name,
               arguments: selectedCqlEntry?.operand
-                ? selectedCqlEntry.operand.map(operand => ({ ...operand, value: { argSource: 'editor', type: getTypeByCqlArgument(operand)} }))
+                ? selectedCqlEntry.operand.map(operand => ({
+                    ...operand,
+                    value: { argSource: 'editor', type: getTypeByCqlArgument(operand) }
+                  }))
                 : undefined
             },
             static: true

@@ -1,7 +1,7 @@
 import React, { useCallback, useState } from 'react';
 import PropTypes from 'prop-types';
 import { IconButton, TableCell, Tooltip } from '@material-ui/core';
-import { Delete as DeleteIcon, Edit as EditIcon, FileCopy as CopyIcon} from '@material-ui/icons';
+import { Delete as DeleteIcon, Edit as EditIcon, FileCopy as CopyIcon } from '@material-ui/icons';
 
 import ArtifactModal from './ArtifactModal';
 import { Link } from 'components/elements';
@@ -44,7 +44,7 @@ const ArtifactTableRow = ({ artifact, handleDeleteArtifact, handleDuplicateArtif
             onClick={() => setShowArtifactModal(true)}
             variant="contained"
           >
-            <EditIcon/>
+            <EditIcon />
           </IconButton>
         </Tooltip>
 
@@ -55,7 +55,7 @@ const ArtifactTableRow = ({ artifact, handleDeleteArtifact, handleDuplicateArtif
             onClick={() => handleDuplicateArtifact(artifact)}
             variant="contained"
           >
-            <CopyIcon/>
+            <CopyIcon />
           </IconButton>
         </Tooltip>
 
@@ -66,7 +66,7 @@ const ArtifactTableRow = ({ artifact, handleDeleteArtifact, handleDuplicateArtif
             onClick={() => setShowDeleteConfirmationModal(true)}
             variant="contained"
           >
-            <DeleteIcon/>
+            <DeleteIcon />
           </IconButton>
         </Tooltip>
       </TableCell>

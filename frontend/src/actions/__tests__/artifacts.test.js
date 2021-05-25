@@ -35,8 +35,9 @@ describe('artifact actions', () => {
       const artifactToUpdate = mockArtifact;
       const props = { id: 2 };
       const artifact = { ...mockArtifact, id: 2 };
-      const names = [ // Names used in mockArtifact
-        { name: 'Doesn\'t Meet Inclusion Criteria', id: 'default-subpopulation-1' },
+      const names = [
+        // Names used in mockArtifact
+        { name: "Doesn't Meet Inclusion Criteria", id: 'default-subpopulation-1' },
         { name: 'Meets Exclusion Criteria', id: 'default-subpopulation-2' },
         { name: 'Subpopulation 1', id: 'And-TEST-1' }
       ];
@@ -49,7 +50,10 @@ describe('artifact actions', () => {
         librariesInUse
       };
 
-      actions.updateArtifact(artifactToUpdate, props)((response) => {
+      actions.updateArtifact(
+        artifactToUpdate,
+        props
+      )(response => {
         expect(response).toEqual(expectedAction);
       });
     });
@@ -85,9 +89,7 @@ describe('artifact actions', () => {
   // ----------------------- LOAD ARTIFACTS -------------------------------- //
   describe('load artifacts', () => {
     it('creates LOAD_ARTIFACTS_SUCCESS after successfully loading artifacts', () => {
-      nock('http://localhost')
-        .get('/authoring/api/artifacts')
-        .reply(200, [mockArtifact]);
+      nock('http://localhost').get('/authoring/api/artifacts').reply(200, [mockArtifact]);
 
       const store = mockStore({ artifacts: [] });
       const expectedActions = [
@@ -106,8 +108,9 @@ describe('artifact actions', () => {
     it('creates LOAD_ARTIFACT_SUCCESS after successfully loading an artifact', () => {
       const id = '1';
       const store = mockStore({ artifacts: [] });
-      const names = [ // Names used in mockArtifact
-        { name: 'Doesn\'t Meet Inclusion Criteria', id: 'default-subpopulation-1' },
+      const names = [
+        // Names used in mockArtifact
+        { name: "Doesn't Meet Inclusion Criteria", id: 'default-subpopulation-1' },
         { name: 'Meets Exclusion Criteria', id: 'default-subpopulation-2' },
         { name: 'Subpopulation 1', id: 'And-TEST-1' }
       ];
@@ -119,9 +122,7 @@ describe('artifact actions', () => {
         { type: types.SET_STATUS_MESSAGE, message: null }
       ];
 
-      nock('http://localhost')
-        .get(`/authoring/api/artifacts/${id}`)
-        .reply(200, [mockArtifact]);
+      nock('http://localhost').get(`/authoring/api/artifacts/${id}`).reply(200, [mockArtifact]);
 
       return store.dispatch(actions.loadArtifact(id)).then(() => {
         expect(store.getActions()).toEqual(expectedActions);
@@ -141,10 +142,7 @@ describe('artifact actions', () => {
       FileSaver.saveAs = jest.fn();
 
       const store = mockStore({ artifacts: [mockArtifact] });
-      const expectedActions = [
-        { type: types.DOWNLOAD_ARTIFACT_REQUEST },
-        { type: types.DOWNLOAD_ARTIFACT_SUCCESS }
-      ];
+      const expectedActions = [{ type: types.DOWNLOAD_ARTIFACT_REQUEST }, { type: types.DOWNLOAD_ARTIFACT_SUCCESS }];
 
       return store.dispatch(actions.downloadArtifact(mockArtifact)).then(() => {
         expect(store.getActions()).toEqual(expectedActions);

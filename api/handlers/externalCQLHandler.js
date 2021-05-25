@@ -13,61 +13,61 @@ const authoringToolExports = [
 ];
 
 const singularTypeMap = {
-  'Boolean': 'boolean',
-  'Code': 'system_code',
-  'Concept': 'system_concept',
-  'Integer': 'integer',
-  'DateTime': 'datetime',
-  'Decimal': 'decimal',
-  'Quantity': 'system_quantity',
-  'String': 'string',
-  'Time': 'time',
-  'Observation': 'observation',
-  'Condition': 'condition',
-  'MedicationStatement': 'medication_statement',
-  'MedicationOrder': 'medication_request',
-  'MedicationRequest': 'medication_request',
-  'Procedure': 'procedure',
-  'AllergyIntolerance': 'allergy_intolerance',
-  'ServiceRequest': 'service_request',
-  'Encounter': 'encounter',
-  'Immunization': 'immunization',
-  'Device': 'device',
-  'Any': 'any'
+  Boolean: 'boolean',
+  Code: 'system_code',
+  Concept: 'system_concept',
+  Integer: 'integer',
+  DateTime: 'datetime',
+  Decimal: 'decimal',
+  Quantity: 'system_quantity',
+  String: 'string',
+  Time: 'time',
+  Observation: 'observation',
+  Condition: 'condition',
+  MedicationStatement: 'medication_statement',
+  MedicationOrder: 'medication_request',
+  MedicationRequest: 'medication_request',
+  Procedure: 'procedure',
+  AllergyIntolerance: 'allergy_intolerance',
+  ServiceRequest: 'service_request',
+  Encounter: 'encounter',
+  Immunization: 'immunization',
+  Device: 'device',
+  Any: 'any'
 };
 
 const listTypeMap = {
-  'Observation': 'list_of_observations',
-  'Condition': 'list_of_conditions',
-  'MedicationStatement': 'list_of_medication_statements',
-  'MedicationOrder': 'list_of_medication_requests',
-  'MedicationRequest': 'list_of_medication_requests',
-  'Procedure': 'list_of_procedures',
-  'AllergyIntolerance': 'list_of_allergy_intolerances',
-  'Encounter': 'list_of_encounters',
-  'Immunization': 'list_of_immunizations',
-  'Device': 'list_of_devices',
-  'Any': 'list_of_any',
-  'Boolean': 'list_of_booleans',
-  'Code': 'list_of_system_codes',
-  'Concept': 'list_of_system_concepts',
-  'Integer': 'list_of_integers',
-  'DateTime': 'list_of_datetimes',
-  'Decimal': 'list_of_decimals',
-  'Quantity': 'list_of_system_quantities',
-  'String': 'list_of_strings',
-  'Time': 'list_of_times',
-  'ServiceRequest': 'list_of_service_requests'
+  Observation: 'list_of_observations',
+  Condition: 'list_of_conditions',
+  MedicationStatement: 'list_of_medication_statements',
+  MedicationOrder: 'list_of_medication_requests',
+  MedicationRequest: 'list_of_medication_requests',
+  Procedure: 'list_of_procedures',
+  AllergyIntolerance: 'list_of_allergy_intolerances',
+  Encounter: 'list_of_encounters',
+  Immunization: 'list_of_immunizations',
+  Device: 'list_of_devices',
+  Any: 'list_of_any',
+  Boolean: 'list_of_booleans',
+  Code: 'list_of_system_codes',
+  Concept: 'list_of_system_concepts',
+  Integer: 'list_of_integers',
+  DateTime: 'list_of_datetimes',
+  Decimal: 'list_of_decimals',
+  Quantity: 'list_of_system_quantities',
+  String: 'list_of_strings',
+  Time: 'list_of_times',
+  ServiceRequest: 'list_of_service_requests'
 };
 
 const intervalTypeMap = {
-  'Integer': 'interval_of_integer',
-  'DateTime': 'interval_of_datetime',
-  'Decimal': 'interval_of_decimal',
-  'Quantity': 'interval_of_quantity'
+  Integer: 'interval_of_integer',
+  DateTime: 'interval_of_datetime',
+  Decimal: 'interval_of_decimal',
+  Quantity: 'interval_of_quantity'
 };
 
-const getTypeFromELMString = (string) => {
+const getTypeFromELMString = string => {
   const namespace = string.split('}')[0].substring(1);
   const elmType = string.substring(string.indexOf('}') + 1);
   const typesFromFHIR = [
@@ -85,14 +85,14 @@ const getTypeFromELMString = (string) => {
   ];
   const isSystem = namespace === 'urn:hl7-org:elm-types:r1';
   const isFHIR = namespace === 'http://hl7.org/fhir';
-  const isValidType = (isSystem || (isFHIR && typesFromFHIR.includes(elmType)));
+  const isValidType = isSystem || (isFHIR && typesFromFHIR.includes(elmType));
   return { elmType, isValidType };
-}
+};
 
-const areChoicesKnownTypes = (choices) => {
+const areChoicesKnownTypes = choices => {
   let allChoicesKnown = true;
   const typesOfChoices = [];
-  choices.forEach((choice) => {
+  choices.forEach(choice => {
     if (choice.type === 'NamedTypeSpecifier') {
       const { elmType, isValidType } = getTypeFromELMString(choice.name);
       const convertedType = isValidType ? singularTypeMap[elmType] : null;
@@ -110,7 +110,7 @@ const areChoicesKnownTypes = (choices) => {
     }
   });
   return { allChoicesKnown, typesOfChoices };
-}
+};
 
 function calculateType(definition) {
   let elmType, elmDisplay, isValidType;
@@ -206,14 +206,12 @@ function mapTypes(definitions) {
       const argumentTypes = [];
       definition.operand.forEach(operand => {
         const { elmType, elmDisplay } = calculateType(operand);
-        argumentTypes.push({ calculated: (elmType || 'other'), display: elmDisplay });
+        argumentTypes.push({ calculated: elmType || 'other', display: elmDisplay });
       });
       definition.argumentTypes = argumentTypes;
       // The inputTypes should only be equivalent to the input type of the first argument
       // so that external CQL modifiers can use the element return type as this input
-      definition.inputTypes = (definition.argumentTypes.length > 0)
-        ? [definition.argumentTypes[0].calculated]
-        : [];
+      definition.inputTypes = definition.argumentTypes.length > 0 ? [definition.argumentTypes[0].calculated] : [];
     }
   });
   return mappedDefinitions;
@@ -224,13 +222,15 @@ function checkMatch(elmResults, files) {
   const fileForELMResult = files.find(file => {
     const matches = libraryAndVersionRegex.exec(file.text);
     const isMatch =
-      matches && (matches[2] === elmResults.name || matches[3] === elmResults.name) && matches[4] === elmResults.version
+      matches &&
+      (matches[2] === elmResults.name || matches[3] === elmResults.name) &&
+      matches[4] === elmResults.version;
     return isMatch;
   });
   return fileForELMResult;
 }
 
-const filterDefinition = def => (def.name !== 'Patient' && def.accessLevel === 'Public');
+const filterDefinition = def => def.name !== 'Patient' && def.accessLevel === 'Public';
 
 const filterCQLFiles = file => {
   const filePathArray = file.path.split('/');
@@ -240,7 +240,7 @@ const filterCQLFiles = file => {
 
 function getCurrentFHIRVersion(libraries) {
   let currentFHIRVersion = ''; // Empty string means no FHIR version set yet;
-  libraries.forEach((lib) => {
+  libraries.forEach(lib => {
     if (lib.fhirVersion) currentFHIRVersion = lib.fhirVersion;
   });
   return currentFHIRVersion;
@@ -255,15 +255,15 @@ const collectLibraryElementsFromElement = (element, libraryName, libraryElements
 
   // Collect any elements that have external CQL functions associated with this library.
   if (element.modifiers) {
-    element.modifiers.forEach((modifier) => {
+    element.modifiers.forEach(modifier => {
       if (modifier.type === 'ExternalModifier' && modifier.libraryName === libraryName) modifierElements.push(element);
     });
   }
-}
+};
 
 const collectLibraryElementsFromTree = (element, libraryName, libraryElements, modifierElements) => {
   let children = element.childInstances ? element.childInstances : [];
-  children = children.map((child) => {
+  children = children.map(child => {
     if (child.childInstances) {
       return collectLibraryElementsFromTree(child, libraryName, libraryElements, modifierElements);
     } else {
@@ -272,19 +272,19 @@ const collectLibraryElementsFromTree = (element, libraryName, libraryElements, m
   });
   element.childInstances = children;
   return element;
-}
+};
 
 const getExternalLibraryAndModifierElements = (artifact, libraryName) => {
   const libraryElements = [];
   const modifierElements = [];
   collectLibraryElementsFromTree(artifact.expTreeInclude, libraryName, libraryElements, modifierElements);
   collectLibraryElementsFromTree(artifact.expTreeExclude, libraryName, libraryElements, modifierElements);
-  artifact.subpopulations.forEach((subpopulation) => {
+  artifact.subpopulations.forEach(subpopulation => {
     if (!subpopulation.special) {
       collectLibraryElementsFromTree(subpopulation, libraryName, libraryElements, modifierElements);
     }
   });
-  artifact.baseElements.forEach((baseElement) => {
+  artifact.baseElements.forEach(baseElement => {
     if (baseElement.childInstances) {
       collectLibraryElementsFromTree(baseElement, libraryName, libraryElements, modifierElements);
     } else {
@@ -292,7 +292,7 @@ const getExternalLibraryAndModifierElements = (artifact, libraryName) => {
     }
   });
   return { libraryElements, modifierElements };
-}
+};
 
 const shouldLibraryBeUpdated = (library, artifact) => {
   const statementReturnTypes = {};
@@ -339,28 +339,28 @@ const shouldLibraryBeUpdated = (library, artifact) => {
   // artifact is using these contents, we cannot update it and we shouldn't make any upload/update
   let returnTypesMatch = true;
   let argsMatch = true;
-  const deleteNestedMetadataProps = (obj) => {
+  const deleteNestedMetadataProps = obj => {
     for (const prop in obj) {
-        // These fields are not useful for comparison and can cause false differences between
-        // data since they are only for metadata
-        if (['annotation', 'localId', 'locator'].includes(prop)) {
-          delete obj[prop];
-        } else if (typeof obj[prop] === 'object') {
-          deleteNestedMetadataProps(obj[prop]);
-        }
+      // These fields are not useful for comparison and can cause false differences between
+      // data since they are only for metadata
+      if (['annotation', 'localId', 'locator'].includes(prop)) {
+        delete obj[prop];
+      } else if (typeof obj[prop] === 'object') {
+        deleteNestedMetadataProps(obj[prop]);
+      }
     }
     return obj;
-  }
+  };
 
-  Object.keys(elementReturnTypes).forEach((key) => {
-    returnTypesMatch = returnTypesMatch && (statementReturnTypes[key] === elementReturnTypes[key]);
+  Object.keys(elementReturnTypes).forEach(key => {
+    returnTypesMatch = returnTypesMatch && statementReturnTypes[key] === elementReturnTypes[key];
     const statementArgsToMatch = deleteNestedMetadataProps(_.cloneDeep(statementArgs[key]));
     const elementArgsToMatch = deleteNestedMetadataProps(_.cloneDeep(elementArgs[key]));
-    argsMatch = argsMatch && (_.isEqual(statementArgsToMatch, elementArgsToMatch));
+    argsMatch = argsMatch && _.isEqual(statementArgsToMatch, elementArgsToMatch);
   });
 
   return returnTypesMatch && argsMatch;
-}
+};
 
 module.exports = {
   allGet,
@@ -420,7 +420,7 @@ function parseELMFiles(elmFiles, artifactId, userId, files) {
     const elmDefs = _.get(library, 'usings.def', []);
     notFHIR = elmDefs.some(def => !['System', 'FHIR'].includes(def.localIdentifier));
     if (notFHIR) break;
-    
+
     // Find FHIR version used by library
     const fhirDef = _.find(elmDefs, { localIdentifier: 'FHIR' });
     elmResults.fhirVersion = _.get(fhirDef, 'version', '');
@@ -430,8 +430,15 @@ function parseELMFiles(elmFiles, artifactId, userId, files) {
     details.fileName = fileForELMResult ? fileForELMResult.filename : '';
     let elmParameters = _.get(library, 'parameters.def', []).filter(filterDefinition);
     let elmDefinitions = _.get(library, 'statements.def', []).filter(filterDefinition);
-    const allowedAttributes =
-      ['accessLevel', 'name', 'type', 'context', 'resultTypeName', 'resultTypeSpecifier', 'operand'];
+    const allowedAttributes = [
+      'accessLevel',
+      'name',
+      'type',
+      'context',
+      'resultTypeName',
+      'resultTypeSpecifier',
+      'operand'
+    ];
     elmParameters = elmParameters.map(def => {
       return _.pick(def, allowedAttributes);
     });
@@ -452,13 +459,13 @@ function parseELMFiles(elmFiles, artifactId, userId, files) {
   return { elmErrors, elmResultsToSave, notFHIR };
 }
 
-function doesUploadedLibraryMatchArtifactName(libraryName, artifactName){
+function doesUploadedLibraryMatchArtifactName(libraryName, artifactName) {
   //the artifact may have spaces, which will be replace by a '-' upon export
   //therefore we will compare the uploaded library with a modified artifact name
-  let tmpArtifactName = artifactName.replace(/\s/g,"-");
+  let tmpArtifactName = artifactName.replace(/\s/g, '-');
   //localeCompare returns 0 if they are equivalent.  the sensitivity option ignores characters with accents
   //https://stackoverflow.com/questions/2140627/how-to-do-case-insensitive-string-comparison
-  return( libraryName.localeCompare(tmpArtifactName, undefined, { sensitivity: 'accent' }) === 0);
+  return libraryName.localeCompare(tmpArtifactName, undefined, { sensitivity: 'accent' }) === 0;
 }
 
 // Post a single external CQL library
@@ -468,18 +475,20 @@ function singlePost(req, res) {
     const artifactId = artifact._id;
     const artifactFHIRVersion = artifact.fhirVersion;
 
-    let duplicateLib = {flag: false, libraryName: ''};
+    let duplicateLib = { flag: false, libraryName: '' };
     const decodedBuffer = Buffer.from(cqlFileContent, 'base64');
 
     if (fileType === 'application/zip') {
       unzipper.Open.buffer(decodedBuffer)
-        .then(async (directory) => {
-          const files = await Promise.all(directory.files.filter(filterCQLFiles).map(async (file) => {
-            const buffer = await file.buffer();
-            const filePathArray = file.path.split('/');
-            const fileName = filePathArray[filePathArray.length - 1];
-            return Promise.resolve( { filename: fileName, type: 'text/plain', text: buffer.toString() });
-          }));
+        .then(async directory => {
+          const files = await Promise.all(
+            directory.files.filter(filterCQLFiles).map(async file => {
+              const buffer = await file.buffer();
+              const filePathArray = file.path.split('/');
+              const fileName = filePathArray[filePathArray.length - 1];
+              return Promise.resolve({ filename: fileName, type: 'text/plain', text: buffer.toString() });
+            })
+          );
           makeCQLtoELMRequest(files, [], (err, elmFiles) => {
             if (err) {
               res.status(500).send(err);
@@ -489,16 +498,23 @@ function singlePost(req, res) {
             const { elmErrors, elmResultsToSave, notFHIR } = parseELMFiles(elmFiles, artifactId, req.user.uid, files);
 
             elmResultsToSave.forEach(elmResult => {
-              if(doesUploadedLibraryMatchArtifactName(elmResult.name, artifact.name)){
+              if (doesUploadedLibraryMatchArtifactName(elmResult.name, artifact.name)) {
                 duplicateLib.flag = true;
                 duplicateLib.libraryName = elmResult.name;
                 duplicateLib.fileName = elmResult.details.fileName;
               }
             });
 
-            if(duplicateLib.flag){
-              res.status(400).send('Upload failed because the external library \'' + duplicateLib.libraryName +
-                '\' in the file \'' + duplicateLib.fileName +'\' shares the same name as the artifact itself.');
+            if (duplicateLib.flag) {
+              res
+                .status(400)
+                .send(
+                  "Upload failed because the external library '" +
+                    duplicateLib.libraryName +
+                    "' in the file '" +
+                    duplicateLib.fileName +
+                    "' shares the same name as the artifact itself."
+                );
               return;
             }
 
@@ -511,64 +527,70 @@ function singlePost(req, res) {
             CQLLibrary.find({ user: req.user.uid, linkedArtifactId: artifactId }, (error, libraries) => {
               if (error) res.status(500).send(error);
               else {
-                const nonAuthoringToolExportLibraries =
-                  _.differenceWith(elmResultsToSave, authoringToolExports, (a, b) => a.name === b.name);
+                const nonAuthoringToolExportLibraries = _.differenceWith(
+                  elmResultsToSave,
+                  authoringToolExports,
+                  (a, b) => a.name === b.name
+                );
                 const authoringToolExportLibraries = _.difference(elmResultsToSave, nonAuthoringToolExportLibraries);
 
                 const nonDuplicateLibraries = _.differenceWith(
                   nonAuthoringToolExportLibraries,
                   libraries,
-                  (a, b) => ((a.name === b.name) && (a.version === b.version))
+                  (a, b) => a.name === b.name && a.version === b.version
                 );
                 const duplicateLibraries = _.difference(nonAuthoringToolExportLibraries, nonDuplicateLibraries);
 
                 const librariesToInsert = _.differenceWith(
                   nonDuplicateLibraries,
                   libraries,
-                  (a, b) => ((a.name === b.name) && (a.version !== b.version))
+                  (a, b) => a.name === b.name && a.version !== b.version
                 );
                 const librariesToUpdate = _.difference(nonDuplicateLibraries, librariesToInsert);
-                
+
                 const newLibFHIRVersion = getCurrentFHIRVersion(elmResultsToSave);
                 const fhirVersion = getCurrentFHIRVersion(libraries);
 
                 // If no FHIR version locked, any version can be uploaded.
                 // If no FHIR version on any libraries being added, they can be added
-                const fhirVersionsMatch = (fhirVersion && newLibFHIRVersion)
-                 ? fhirVersion === newLibFHIRVersion: true;
+                const fhirVersionsMatch = fhirVersion && newLibFHIRVersion ? fhirVersion === newLibFHIRVersion : true;
 
                 // If FHIR Version is locked by the artifact itself, only matching versions can be uploaded.
                 // If the version is unlocked by artifact, any artifact can be uploaded.
-                const artifactFHIRVersionsMatch = (newLibFHIRVersion && artifactFHIRVersion) ?
-                 newLibFHIRVersion === artifactFHIRVersion : true;
+                const artifactFHIRVersionsMatch =
+                  newLibFHIRVersion && artifactFHIRVersion ? newLibFHIRVersion === artifactFHIRVersion : true;
 
                 // If new libraries have no FHIR version or it matches a supported FHIR version, we support it
-                const supportedFHIRVersion = newLibFHIRVersion === '' ||
-                  supportedFHIRVersions.findIndex(v => v === newLibFHIRVersion) !== -1;
+                const supportedFHIRVersion =
+                  newLibFHIRVersion === '' || supportedFHIRVersions.findIndex(v => v === newLibFHIRVersion) !== -1;
 
                 //If repeats of the same library are being uploaded (regardless of version), we will not support this
-                const hasRepeats = (nonAuthoringToolExportLibraries.length !==
-                  (new Set(nonAuthoringToolExportLibraries.map(l => l.name)).size));
-                const exportLibrariesNotUploaded =
-                  authoringToolExportLibraries.map(lib => `library ${lib.name}`).join(', ');
+                const hasRepeats =
+                  nonAuthoringToolExportLibraries.length !==
+                  new Set(nonAuthoringToolExportLibraries.map(l => l.name)).size;
+                const exportLibrariesNotUploaded = authoringToolExportLibraries
+                  .map(lib => `library ${lib.name}`)
+                  .join(', ');
                 const exportLibrariesNotUploadedMessage = `The following were not uploaded because a version of the \
                   library is included by default: ${exportLibrariesNotUploaded}.`;
                 // If any file has an error, upload nothing.
                 if (elmErrors.length > 0) {
                   res.status(400).send(elmErrors);
                 } else if (!fhirVersionsMatch) {
-                  const message = 'A library using a different version of FHIR® is uploaded. Only one FHIR® version \
+                  const message =
+                    'A library using a different version of FHIR® is uploaded. Only one FHIR® version \
                     can be supported at a time.';
                   res.status(400).send(message);
                 } else if (!artifactFHIRVersionsMatch) {
                   const message = `Unable to upload CQL library due to FHIR® version conflict. 
                   Only one FHIR® version can be supported at a time.`;
-                res.status(400).send(message);
+                  res.status(400).send(message);
                 } else if (!supportedFHIRVersion) {
                   res.status(400).send('Unsupported FHIR® version.');
                 } else if (hasRepeats) {
-                  const message = 'More than one library in this package has the same name. Only one library of the \
-                    same name can be uploaded at a time.'
+                  const message =
+                    'More than one library in this package has the same name. Only one library of the \
+                    same name can be uploaded at a time.';
                   res.status(400).send(message);
                 } else {
                   // If a library to update has contents whose names or return types have changed, and the
@@ -584,9 +606,13 @@ function singlePost(req, res) {
                     // Any error that is thrown through updating should either be the same as an error
                     // encountered by the insertion below, or would have already been caught in the
                     // process above to determine whether we should update
-                    Promise.all(librariesToUpdate.map(async (library) => {
-                      return CQLLibrary.update({ user: req.user.uid, name: library.name }, library);
-                    }).map(p => p.catch(e => null)));
+                    Promise.all(
+                      librariesToUpdate
+                        .map(async library => {
+                          return CQLLibrary.update({ user: req.user.uid, name: library.name }, library);
+                        })
+                        .map(p => p.catch(e => null))
+                    );
 
                     CQLLibrary.insertMany(librariesToInsert, (error, response) => {
                       if (error) {
@@ -594,47 +620,57 @@ function singlePost(req, res) {
                       } else if (duplicateLibraries.length > 0) {
                         // NOTE: Really, we should re-run cql-to-elm with the existing version of the duplicate files to
                         // confirm they work with the non-duplicate libraries.
-                        const librariesNotUploaded =
-                          duplicateLibraries.map(lib => `library ${lib.name} version ${lib.version}`).join(', ');
+                        const librariesNotUploaded = duplicateLibraries
+                          .map(lib => `library ${lib.name} version ${lib.version}`)
+                          .join(', ');
                         let message = `The following was not uploaded because a library with identical name \
                           and version already exists: ${librariesNotUploaded}.`;
                         if (exportLibrariesNotUploaded.length > 0) {
                           message = message.concat(` ${exportLibrariesNotUploadedMessage}`);
                         }
                         if (newLibFHIRVersion) {
-                          Artifact.update({ user: req.user.uid, _id: artifactId }, { fhirVersion: newLibFHIRVersion },
+                          Artifact.update(
+                            { user: req.user.uid, _id: artifactId },
+                            { fhirVersion: newLibFHIRVersion },
                             (error, response) => {
                               if (error) res.status(500).send(error);
                               else if (response.n === 0) res.sendStatus(404);
                               else res.status(201).send(message);
-                            });
+                            }
+                          );
                         } else {
                           res.status(201).send(message);
                         }
                       } else {
                         if (exportLibrariesNotUploaded.length > 0) {
                           if (newLibFHIRVersion) {
-                            Artifact.update({ user: req.user.uid, _id: artifactId }, { fhirVersion: newLibFHIRVersion },
+                            Artifact.update(
+                              { user: req.user.uid, _id: artifactId },
+                              { fhirVersion: newLibFHIRVersion },
                               (error, response) => {
                                 if (error) res.status(500).send(error);
                                 else if (response.n === 0) res.sendStatus(404);
                                 else res.status(201).send(exportLibrariesNotUploadedMessage);
-                              });
+                              }
+                            );
                           } else {
                             res.status(201).send(exportLibrariesNotUploadedMessage);
                           }
                         } else {
                           let updateMessage;
-                          if (librariesToUpdate.length > 0) updateMessage =
-                            'One or more of the libraries on this artifact have been updated.';
+                          if (librariesToUpdate.length > 0)
+                            updateMessage = 'One or more of the libraries on this artifact have been updated.';
                           if (newLibFHIRVersion) {
-                            Artifact.update({ user: req.user.uid, _id: artifactId }, { fhirVersion: newLibFHIRVersion },
+                            Artifact.update(
+                              { user: req.user.uid, _id: artifactId },
+                              { fhirVersion: newLibFHIRVersion },
                               (error, response) => {
                                 if (error) res.status(500).send(error);
                                 else if (response.n === 0) res.sendStatus(404);
                                 else if (updateMessage) res.status(201).send(updateMessage);
                                 else res.status(201).json(response);
-                              });
+                              }
+                            );
                           } else {
                             if (updateMessage) res.status(201).send(updateMessage);
                             else res.status(201).json(response);
@@ -643,7 +679,8 @@ function singlePost(req, res) {
                       }
                     });
                   } else {
-                    const message = 'The libraries could not be uploaded/updated because the artifact uses content \
+                    const message =
+                      'The libraries could not be uploaded/updated because the artifact uses content \
                       from at least one library that has changed between versions.';
                     res.status(400).send(message);
                   }
@@ -676,15 +713,20 @@ function singlePost(req, res) {
         }
 
         elmResultsToSave.forEach(elmResult => {
-          if(doesUploadedLibraryMatchArtifactName(elmResult.name, artifact.name)){
+          if (doesUploadedLibraryMatchArtifactName(elmResult.name, artifact.name)) {
             duplicateLib.flag = true;
             duplicateLib.libraryName = elmResult.name;
           }
         });
 
-        if(duplicateLib.flag){
-          res.status(400).send('Upload failed because the external library \'' + duplicateLib.libraryName +
-            '\' shares the same name as the artifact itself.');
+        if (duplicateLib.flag) {
+          res
+            .status(400)
+            .send(
+              "Upload failed because the external library '" +
+                duplicateLib.libraryName +
+                "' shares the same name as the artifact itself."
+            );
           return;
         }
 
@@ -700,42 +742,42 @@ function singlePost(req, res) {
 
             // If no FHIR version locked, any version can be uploaded.
             // If no FHIR version used by the library, it can be uploaded
-            const fhirVersionsMatch = (fhirVersion && newLibFHIRVersion) ? fhirVersion === newLibFHIRVersion : true;
+            const fhirVersionsMatch = fhirVersion && newLibFHIRVersion ? fhirVersion === newLibFHIRVersion : true;
             // If new library has no FHIR version or it matches a supported FHIR version, we support it
-            const supportedFHIRVersion = newLibFHIRVersion === '' ||
-              supportedFHIRVersions.findIndex(v => v === newLibFHIRVersion) !== -1;
+            const supportedFHIRVersion =
+              newLibFHIRVersion === '' || supportedFHIRVersions.findIndex(v => v === newLibFHIRVersion) !== -1;
 
-            const artifactFHIRVersionsMatch = (newLibFHIRVersion && artifactFHIRVersion) ?
-            newLibFHIRVersion === artifactFHIRVersion : true;
-
+            const artifactFHIRVersionsMatch =
+              newLibFHIRVersion && artifactFHIRVersion ? newLibFHIRVersion === artifactFHIRVersion : true;
 
             if (elmErrors.length > 0) {
               res.status(400).send(elmErrors);
             } else if (defaultLibrary) {
               res.status(200).send('Library is already included by default, so it was not uploaded.');
             } else if (!fhirVersionsMatch) {
-              const message = 'A library using a different version of FHIR® is uploaded. Only one FHIR® version can be \
+              const message =
+                'A library using a different version of FHIR® is uploaded. Only one FHIR® version can be \
                 supported at a time.';
               res.status(400).send(message);
             } else if (!supportedFHIRVersion) {
               res.status(400).send('Unsupported FHIR® version.');
-            }  else if (!artifactFHIRVersionsMatch) {
+            } else if (!artifactFHIRVersionsMatch) {
               const message = `Unable to upload CQL library due to FHIR® version conflict. 
               Only one FHIR® version can be supported at a time.`;
-            res.status(400).send(message);
+              res.status(400).send(message);
             } else if (dupName) {
               if (dupVersion) {
                 res.status(200).send('Library with identical name and version already exists.');
               } else {
                 if (shouldLibraryBeUpdated(elmResult, artifact)) {
-                  CQLLibrary.update({ user: req.user.uid, name: elmResult.name }, elmResult,
-                    (error) => {
-                      const message = `Library ${elmResult.name} successfully updated to version ${elmResult.version}.`;
-                      if (error) res.status(500).send(error);
-                      else res.status(200).send(message);
-                    });
+                  CQLLibrary.update({ user: req.user.uid, name: elmResult.name }, elmResult, error => {
+                    const message = `Library ${elmResult.name} successfully updated to version ${elmResult.version}.`;
+                    if (error) res.status(500).send(error);
+                    else res.status(200).send(message);
+                  });
                 } else {
-                  const message = 'Library could not be updated, because the artifact uses content that has \
+                  const message =
+                    'Library could not be updated, because the artifact uses content that has \
                     changed between versions.';
                   res.status(400).send(message);
                 }
@@ -747,12 +789,15 @@ function singlePost(req, res) {
                   // If the new library has a FHIR version, it can only be added if it either first sets a FHIR version
                   // or it matches so update the artifact to that FHIR version
                   if (newLibFHIRVersion) {
-                    Artifact.update({ user: req.user.uid, _id: artifactId }, { fhirVersion: newLibFHIRVersion },
+                    Artifact.update(
+                      { user: req.user.uid, _id: artifactId },
+                      { fhirVersion: newLibFHIRVersion },
                       (error, response) => {
                         if (error) res.status(500).send(error);
                         else if (response.n === 0) res.sendStatus(404);
                         else res.status(201).json(response);
-                      });
+                      }
+                    );
                   } else {
                     res.status(201).json(response);
                   }
@@ -768,43 +813,44 @@ function singlePost(req, res) {
   }
 }
 
-
-
 const getArtifactFHIRVersion = artifact => {
-
-  const parseElementTree = (instance) => {
-    return instance.childInstances && instance.childInstances.some(child => 
-      child.conjunction ? parseElementTree(child) : (child.name === "Service Request"));
-  }
+  const parseElementTree = instance => {
+    return (
+      instance.childInstances &&
+      instance.childInstances.some(child =>
+        child.conjunction ? parseElementTree(child) : child.name === 'Service Request'
+      )
+    );
+  };
 
   let serviceRequestFound = false;
 
-  serviceRequestFound = parseElementTree(artifact.expTreeInclude)
-                    ||  parseElementTree(artifact.expTreeExclude);
-                    
-  artifact.subpopulations.filter(elem => !elem.special).forEach(subpopulation => {
-    serviceRequestFound |= parseElementTree(subpopulation);
+  serviceRequestFound = parseElementTree(artifact.expTreeInclude) || parseElementTree(artifact.expTreeExclude);
+
+  artifact.subpopulations
+    .filter(elem => !elem.special)
+    .forEach(subpopulation => {
+      serviceRequestFound |= parseElementTree(subpopulation);
+    });
+
+  artifact.baseElements.forEach(instance => {
+    if (instance.name === 'Service Request') serviceRequestFound = true;
   });
 
   artifact.baseElements.forEach(instance => {
-      if (instance.name === "Service Request") serviceRequestFound = true;
-  });
-
-  artifact.baseElements.forEach(instance => {
-    const conjunctions = ["Union", "And", "Or", "Intersect"];
-    if (instance.name === "Service Request") serviceRequestFound = true;
+    const conjunctions = ['Union', 'And', 'Or', 'Intersect'];
+    if (instance.name === 'Service Request') serviceRequestFound = true;
     else if (conjunctions.includes(instance.name)) serviceRequestFound |= this.parseElementTree(instance);
-});
-  
+  });
+
   if (serviceRequestFound) {
-      let artifactCopy = _.cloneDeep(artifact);
-      artifactCopy.fhirVersion = "4.0.0";
-      return "4.0.0"
+    let artifactCopy = _.cloneDeep(artifact);
+    artifactCopy.fhirVersion = '4.0.0';
+    return '4.0.0';
+  } else {
+    return '';
   }
-  else { 
-      return ""
-  }
-}
+};
 
 // Delete a single external CQL library
 function singleDelete(req, res) {
@@ -825,14 +871,16 @@ function singleDelete(req, res) {
                 currentFHIRVersion = '4.0.0';
               }
 
-              Artifact.update({ user: req.user.uid, _id: linkedArtifactId }, { fhirVersion: currentFHIRVersion },
+              Artifact.update(
+                { user: req.user.uid, _id: linkedArtifactId },
+                { fhirVersion: currentFHIRVersion },
                 (error, response) => {
                   if (error) res.status(500).send(error);
                   else if (response.n === 0) res.sendStatus(404);
                   else res.status(200);
-                });
+                }
+              );
             });
-
           }
         });
         res.sendStatus(200);

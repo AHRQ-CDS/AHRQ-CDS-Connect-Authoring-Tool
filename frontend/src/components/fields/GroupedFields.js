@@ -39,9 +39,8 @@ const FastGroupedField = memo(({ name, colSize, index, remove, fields }) => {
   );
 });
 
-const FastGroupedFieldArray = memo(({
-    name, label, colSize, buttonText, fields, values, defaultValue, push, remove, isCpgField
-  }) => {
+const FastGroupedFieldArray = memo(
+  ({ name, label, colSize, buttonText, fields, values, defaultValue, push, remove, isCpgField }) => {
     const hasGroupedFields = values[name].length > 0;
     const addGroup = useCallback(() => push(defaultValue), [push, defaultValue]);
     const cpgFieldComplete = isCpgComplete(name, values);
@@ -72,12 +71,7 @@ const FastGroupedFieldArray = memo(({
           )}
 
           <div className={fieldStyles.fieldInput}>
-            <Button
-              color="primary"
-              onClick={addGroup}
-              startIcon={<AddIcon />}
-              variant="contained"
-            >
+            <Button color="primary" onClick={addGroup} startIcon={<AddIcon />} variant="contained">
               {buttonText}
             </Button>
           </div>

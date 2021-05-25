@@ -15,7 +15,7 @@ const TestingParameter = ({ handleUpdateParameter, parameter }) => {
         disableTypography
         title={
           <>
-            <span className={textStyles.bold}>Parameter:{' '}</span>
+            <span className={textStyles.bold}>Parameter: </span>
             {name}
           </>
         }

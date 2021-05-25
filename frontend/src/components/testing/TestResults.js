@@ -25,7 +25,7 @@ const TestResults = ({ artifact, handleOnClose, patientsExecuted, results }) => 
 
   return (
     <Paper className={styles.testResults}>
-      <IconButton className={styles.closeButton} onClick={handleOnClose} >
+      <IconButton className={styles.closeButton} onClick={handleOnClose}>
         <CloseIcon />
       </IconButton>
 
@@ -34,11 +34,11 @@ const TestResults = ({ artifact, handleOnClose, patientsExecuted, results }) => 
 
       <div className={spacingStyles.verticalPadding}>
         {patientsExecuted.map(patient => {
-          const patientId = getPatientId({patient});
+          const patientId = getPatientId({ patient });
           return (
             <TestResultsSection
               key={patientId}
-              patientName={getPatientFullName({patient})}
+              patientName={getPatientFullName({ patient })}
               results={results.patientResults[patientId]}
             />
           );

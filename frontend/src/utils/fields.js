@@ -1,31 +1,33 @@
 import pick from 'lodash/pick';
 
 export function stripContextFields(contextFields) {
-  return contextFields.map(contextField => {
-    const { contextType } = contextField;
+  return contextFields
+    .map(contextField => {
+      const { contextType } = contextField;
 
-    switch (contextType) {
-      case 'gender':
-        return pick(contextField, ['contextType', 'gender']);
-      case 'ageRange':
-        return pick(contextField, ['contextType', 'ageRangeMin', 'ageRangeMax', 'ageRangeUnitOfTime']);
-      case 'clinicalFocus':
-      case 'species':
-        return pick(contextField, ['contextType', 'code', 'system']);
-      case 'userType':
-        return pick(contextField, ['contextType', 'userType']);
-      case 'workflowSetting':
-        return pick(contextField, ['contextType', 'workflowSetting']);
-      case 'workflowTask':
-        return pick(contextField, ['contextType', 'workflowTask']);
-      case 'clinicalVenue':
-        return pick(contextField, ['contextType', 'clinicalVenue']);
-      case 'program':
-        return pick(contextField, ['contextType', 'program']);
-      default:
-        return null;
-    }
-  }).filter(Boolean);
+      switch (contextType) {
+        case 'gender':
+          return pick(contextField, ['contextType', 'gender']);
+        case 'ageRange':
+          return pick(contextField, ['contextType', 'ageRangeMin', 'ageRangeMax', 'ageRangeUnitOfTime']);
+        case 'clinicalFocus':
+        case 'species':
+          return pick(contextField, ['contextType', 'code', 'system']);
+        case 'userType':
+          return pick(contextField, ['contextType', 'userType']);
+        case 'workflowSetting':
+          return pick(contextField, ['contextType', 'workflowSetting']);
+        case 'workflowTask':
+          return pick(contextField, ['contextType', 'workflowTask']);
+        case 'clinicalVenue':
+          return pick(contextField, ['contextType', 'clinicalVenue']);
+        case 'program':
+          return pick(contextField, ['contextType', 'program']);
+        default:
+          return null;
+      }
+    })
+    .filter(Boolean);
 }
 
 export function isCpgComplete(name, values) {

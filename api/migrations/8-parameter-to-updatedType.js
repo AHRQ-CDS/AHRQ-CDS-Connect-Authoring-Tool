@@ -11,18 +11,18 @@
 
 const changeCase = require('change-case');
 
-module.exports.id = "parameter-to-updatedType";
+module.exports.id = 'parameter-to-updatedType';
 
 const parameterTypeMap = {
-  'Boolean': 'boolean',
-  'Code': 'system_code',
-  'Concept': 'system_concept',
-  'Integer': 'integer',
-  'DateTime': 'datetime',
-  'Decimal': 'decimal',
-  'Quantity': 'system_quantity',
-  'String': 'string',
-  'Time': 'time',
+  Boolean: 'boolean',
+  Code: 'system_code',
+  Concept: 'system_concept',
+  Integer: 'integer',
+  DateTime: 'datetime',
+  Decimal: 'decimal',
+  Quantity: 'system_quantity',
+  String: 'string',
+  Time: 'time',
   'Interval<Integer>': 'interval_of_integer',
   'Interval<DateTime>': 'interval_of_datetime',
   'Interval<Decimal>': 'interval_of_decimal',
@@ -30,15 +30,15 @@ const parameterTypeMap = {
 };
 
 const parameterReturnTypeMap = {
-  'boolean': 'boolean',
-  'code': 'system_code',
-  'concept': 'system_concept',
-  'integer': 'integer',
+  boolean: 'boolean',
+  code: 'system_code',
+  concept: 'system_concept',
+  integer: 'integer',
   'date time': 'datetime',
-  'decimal': 'decimal',
-  'quantity': 'system_quantity',
-  'string': 'string',
-  'time': 'time',
+  decimal: 'decimal',
+  quantity: 'system_quantity',
+  string: 'string',
+  time: 'time',
   'interval integer': 'interval_of_integer',
   'interval date time': 'interval_of_datetime',
   'interval decimal': 'interval_of_decimal',
@@ -51,7 +51,7 @@ function parseTree(element, parameterUsedByMap, parameters, baseElements) {
     if ('childInstances' in child) {
       return parseTree(child, parameterUsedByMap, parameters, baseElements);
     } else {
-      return parseElement(child, parameterUsedByMap, parameters, baseElements); 
+      return parseElement(child, parameterUsedByMap, parameters, baseElements);
     }
   });
   element.childInstances = children;
@@ -67,14 +67,14 @@ function parseElement(element, parameterUsedByMap, parameters, baseElements) {
     }
 
     element.parameters.push({
-      id: "parameterReference",
-      name: "reference",
+      id: 'parameterReference',
+      name: 'reference',
       static: true,
-      type: "reference",
+      type: 'reference',
       value: {
         id: parameters.find(p => changeCase['paramCase'](p.name) === element.id)
-        ? parameters.find(p => changeCase['paramCase'](p.name) === element.id).uniqueId
-        : ''
+          ? parameters.find(p => changeCase['paramCase'](p.name) === element.id).uniqueId
+          : ''
       }
     });
 
@@ -108,8 +108,7 @@ function getOriginalBaseElement(instance, baseElements) {
     if (referenceParameter.id === 'parameterReference') {
       return instance;
     }
-    const baseElementReferenced = baseElements.find(element =>
-      element.uniqueId === referenceParameter.value.id);
+    const baseElementReferenced = baseElements.find(element => element.uniqueId === referenceParameter.value.id);
     return getOriginalBaseElement(baseElementReferenced, baseElements);
   }
   return instance;
@@ -124,43 +123,41 @@ module.exports.up = function (done) {
   // Since db operations are asynchronous, use promises to ensure all updates happen before we call done().
   // The promises array collects all the promises which must be resolved before we're done.
   const promises = [];
-  coll.find().forEach((artifact) => {
-    let parameterUsedByMap = {};
+  coll.find().forEach(
+    artifact => {
+      let parameterUsedByMap = {};
 
-    const p = new Promise((resolve, reject) => {
-      if (artifact.expTreeInclude && artifact.expTreeInclude.childInstances.length) {
-        parseTree(artifact.expTreeInclude, parameterUsedByMap, artifact.parameters, artifact.baseElements);
-      }
-      if (artifact.expTreeExclude && artifact.expTreeExclude.childInstances.length) {
-        parseTree(artifact.expTreeExclude, parameterUsedByMap, artifact.parameters, artifact.baseElements);
-      }
-      artifact.subpopulations.forEach((subpopulation) => {
-        if (!subpopulation.special && subpopulation.childInstances && subpopulation.childInstances.length) {
-          parseTree(subpopulation, parameterUsedByMap, artifact.parameters, artifact.baseElements);
+      const p = new Promise((resolve, reject) => {
+        if (artifact.expTreeInclude && artifact.expTreeInclude.childInstances.length) {
+          parseTree(artifact.expTreeInclude, parameterUsedByMap, artifact.parameters, artifact.baseElements);
         }
-      });
-      artifact.baseElements.forEach((baseElement) => {
-        if (baseElement.childInstances && baseElement.childInstances.length) {
-          parseTree(baseElement, parameterUsedByMap, artifact.parameters, artifact.baseElements);
-        } else {
-          parseElement(baseElement, parameterUsedByMap, artifact.parameters, artifact.baseElements);
+        if (artifact.expTreeExclude && artifact.expTreeExclude.childInstances.length) {
+          parseTree(artifact.expTreeExclude, parameterUsedByMap, artifact.parameters, artifact.baseElements);
         }
-      });
+        artifact.subpopulations.forEach(subpopulation => {
+          if (!subpopulation.special && subpopulation.childInstances && subpopulation.childInstances.length) {
+            parseTree(subpopulation, parameterUsedByMap, artifact.parameters, artifact.baseElements);
+          }
+        });
+        artifact.baseElements.forEach(baseElement => {
+          if (baseElement.childInstances && baseElement.childInstances.length) {
+            parseTree(baseElement, parameterUsedByMap, artifact.parameters, artifact.baseElements);
+          } else {
+            parseElement(baseElement, parameterUsedByMap, artifact.parameters, artifact.baseElements);
+          }
+        });
 
-      artifact.parameters.forEach(p => {
-        p.type = parameterTypeMap[p.type] || 'boolean';
-        p.usedBy = parameterUsedByMap[changeCase['paramCase'](p.name)]
-        ? parameterUsedByMap[changeCase['paramCase'](p.name)]
-        : [];
-        
-        if (!p.comment) p.comment = null;
-      });
+        artifact.parameters.forEach(p => {
+          p.type = parameterTypeMap[p.type] || 'boolean';
+          p.usedBy = parameterUsedByMap[changeCase['paramCase'](p.name)]
+            ? parameterUsedByMap[changeCase['paramCase'](p.name)]
+            : [];
 
-      // Update the artifact with all the changes made.
-      coll.updateOne(
-        { _id: artifact._id },
-        { '$set': artifact },
-        (err, result) => {
+          if (!p.comment) p.comment = null;
+        });
+
+        // Update the artifact with all the changes made.
+        coll.updateOne({ _id: artifact._id }, { $set: artifact }, (err, result) => {
           if (err) {
             this.log(`${artifact._id}: error:`, err);
             reject(err);
@@ -168,26 +165,27 @@ module.exports.up = function (done) {
             this.log(`${artifact._id} (${artifact.name}): successfully updated.`);
             resolve(result);
           }
-        }
-      );
-    });
-    promises.push(p);
-  }, (err) => {
-    if (err) {
-      this.log('Migration Error:', err);
-      done(err);
-    } else {
-      Promise.all(promises)
-        .then((results) => {
-          this.log(`Migrated ${results.length} artifacts (only applicable artifacts are counted)`);
-          done();
-        })
-        .catch((err) => {
-          this.log('Migration Error:', err);
-          done(err);
         });
+      });
+      promises.push(p);
+    },
+    err => {
+      if (err) {
+        this.log('Migration Error:', err);
+        done(err);
+      } else {
+        Promise.all(promises)
+          .then(results => {
+            this.log(`Migrated ${results.length} artifacts (only applicable artifacts are counted)`);
+            done();
+          })
+          .catch(err => {
+            this.log('Migration Error:', err);
+            done(err);
+          });
+      }
     }
-  });
+  );
 };
 
 module.exports.down = function (done) {

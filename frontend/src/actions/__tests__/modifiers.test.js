@@ -13,11 +13,9 @@ const mockStore = configureMockStore(middlewares);
 const modifierMap = _.keyBy(localModifiers, 'id');
 const modifiersByInputType = {};
 
-localModifiers.forEach((modifier) => {
-  modifier.inputTypes.forEach((inputType) => {
-    modifiersByInputType[inputType] = (
-      modifiersByInputType[inputType] || []
-    ).concat(modifier);
+localModifiers.forEach(modifier => {
+  modifier.inputTypes.forEach(inputType => {
+    modifiersByInputType[inputType] = (modifiersByInputType[inputType] || []).concat(modifier);
   });
 });
 
@@ -66,9 +64,7 @@ describe('modifiers actions', () => {
     it('dispatches a LOAD_CONVERSION_FUNCTIONS_SUCCESS action on successful load', () => {
       const store = mockStore({});
 
-      nock('http://localhost')
-        .get('/authoring/api/config/conversions')
-        .reply(200, []);
+      nock('http://localhost').get('/authoring/api/config/conversions').reply(200, []);
 
       const expectedActions = [
         { type: types.CONVERSION_FUNCTIONS_REQUEST },
@@ -88,7 +84,7 @@ describe('modifiers actions', () => {
 
       nock('http://localhost')
         .get('/authoring/api/config/conversions')
-        .reply(401, function() {
+        .reply(401, function () {
           this.req.response.statusMessage = 'Unauthorized';
           return { status: 401 };
         });

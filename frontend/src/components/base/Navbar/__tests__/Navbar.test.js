@@ -4,11 +4,7 @@ import { render } from 'utils/test-utils';
 
 describe('<Navbar />', () => {
   it('renders without crashing', () => {
-    const { container } = render(
-      <Navbar
-        isAuthenticated={false}
-      />
-    );
+    const { container } = render(<Navbar isAuthenticated={false} />);
 
     expect(container).not.toBeEmptyDOMElement();
   });

@@ -6,13 +6,7 @@ import QuantityModifier from '../QuantityModifier';
 describe('<QuantityModifier />', () => {
   const renderComponent = (props = {}) =>
     render(
-      <QuantityModifier
-        handleUpdateModifier={jest.fn()}
-        name="quantity-modifier-test"
-        unit=""
-        value={0}
-        {...props}
-      />
+      <QuantityModifier handleUpdateModifier={jest.fn()} name="quantity-modifier-test" unit="" value={0} {...props} />
     );
 
   it('can change the quantity', () => {

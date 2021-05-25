@@ -25,7 +25,7 @@ mongoose.connect(config.get('mongo.url'));
 
 // Configure API to use BodyParser and handle json data
 app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
-app.use(bodyParser.json({limit: '50mb'}));
+app.use(bodyParser.json({ limit: '50mb' }));
 
 // Configure passport authentication
 configPassport(app);
@@ -35,8 +35,11 @@ app.use((req, res, next) => {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Credentials', 'true');
   res.setHeader('Access-Control-Allow-Methods', 'GET,HEAD,OPTIONS,POST,PUT,DELETE');
-  // eslint-disable-next-line max-len
-  res.setHeader('Access-Control-Allow-Headers', 'Access-Control-Allow-Headers, Origin, Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers');
+  res.setHeader(
+    'Access-Control-Allow-Headers',
+    // eslint-disable-next-line max-len
+    'Access-Control-Allow-Headers, Origin, Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers'
+  );
   // Remove caching for most recent authors
   res.setHeader('Cache-Control', 'no-cache');
   next();
@@ -46,7 +49,8 @@ app.use((req, res, next) => {
 routes(app);
 
 // Starts Server
-if (!module.parent) { // check if within a test or not.
+if (!module.parent) {
+  // check if within a test or not.
   if (config.get('migrations.active')) {
     // Run any necessary migrations before starting the server
     console.log('Running Migrations');

@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import _ from 'lodash';
 
-import { Modal }  from 'components/elements';
+import { Modal } from 'components/elements';
 
 const DeleteConfirmationModal = ({ children, deleteType, handleCloseModal, handleDelete }) => (
   <Modal
@@ -13,7 +13,10 @@ const DeleteConfirmationModal = ({ children, deleteType, handleCloseModal, handl
     handleSaveModal={handleDelete}
   >
     <>
-      <h5>Are you sure you want to permanently delete the {children && 'following '}{deleteType}?</h5>
+      <h5>
+        Are you sure you want to permanently delete the {children && 'following '}
+        {deleteType}?
+      </h5>
       {children && children}
     </>
   </Modal>

@@ -11,8 +11,7 @@ module.exports = (req, res) => {
   }
 
   // ForeSee is active, so setup the script w/ the configured src and send it
-  const foreSeeScript =
-`// ForeSee Staging Embed Script v2.01
+  const foreSeeScript = `// ForeSee Staging Embed Script v2.01
 // DO NOT MODIFY BELOW THIS LINE *****************************************
 ;(function (g) {
 var d = document, am = d.createElement('script'), h = d.head || d.getElementsByTagName("head")[0], fsr = 'fsReady',

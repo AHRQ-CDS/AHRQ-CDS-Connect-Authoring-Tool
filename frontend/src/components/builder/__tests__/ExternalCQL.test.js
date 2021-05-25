@@ -31,12 +31,14 @@ describe('<ExternalCQL />', () => {
 
   it('shows a table when there is data', () => {
     const { container, queryByText } = renderComponent({
-      externalCqlList: [{
-        _id: 'lib1',
-        name: 'My external lib',
-        details: {},
-        fhirVersion: '1.0.2'
-      }]
+      externalCqlList: [
+        {
+          _id: 'lib1',
+          name: 'My external lib',
+          details: {},
+          fhirVersion: '1.0.2'
+        }
+      ]
     });
 
     expect(queryByText(/No external CQL libraries to show/)).toBeNull();

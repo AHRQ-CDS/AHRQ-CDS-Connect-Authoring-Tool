@@ -72,7 +72,7 @@ const ArgumentTemplate = ({ argumentLabel, argumentType, argumentValue, handleUp
     else if (argSource === 'externalCql' && getLibraryOptions(matchingExternalCQL).length === 1)
       handleUpdateArgument({
         argSource,
-        selected: getLibraryOptions(matchingExternalCQL)[0].value,
+        selected: getLibraryOptions(matchingExternalCQL)[0].value
       });
     // else if parameter source is selected and there is exactly one parameter, select it
     else if (argSource === 'parameter' && matchingParameters.length === 1)
@@ -164,9 +164,7 @@ const ArgumentTemplate = ({ argumentLabel, argumentType, argumentValue, handleUp
             </div>
           </div>
         )}
-        {argumentValue?.argSource === 'externalCql' &&
-        argumentValue?.selected && 
-        argumentValue?.selected !== '' && (
+        {argumentValue?.argSource === 'externalCql' && argumentValue?.selected && argumentValue?.selected !== '' && (
           <div className={spacingStyles.marginTop}>
             <div className={clsx(fieldStyles.fieldInput, fieldStyles.fieldInputLg)}>
               <Dropdown

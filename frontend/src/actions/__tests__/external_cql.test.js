@@ -14,11 +14,9 @@ const mockStore = configureMockStore(middlewares);
 const modifierMap = _.keyBy(localModifiers, 'id');
 const modifiersByInputType = {};
 
-localModifiers.forEach((modifier) => {
-  modifier.inputTypes.forEach((inputType) => {
-    modifiersByInputType[inputType] = (
-      modifiersByInputType[inputType] || []
-    ).concat(modifier);
+localModifiers.forEach(modifier => {
+  modifier.inputTypes.forEach(inputType => {
+    modifiersByInputType[inputType] = (modifiersByInputType[inputType] || []).concat(modifier);
   });
 });
 
@@ -52,9 +50,7 @@ describe('external cql actions', () => {
       };
       const artifactId = 'abc132';
 
-      nock('http://localhost')
-        .get(`/authoring/api/externalCQL/${artifactId}`)
-        .reply(200, externalCqlList);
+      nock('http://localhost').get(`/authoring/api/externalCQL/${artifactId}`).reply(200, externalCqlList);
 
       const expectedActions = [
         { type: types.EXTERNAL_CQL_LIST_REQUEST },
@@ -71,11 +67,9 @@ describe('external cql actions', () => {
         }
       ];
 
-      return store
-        .dispatch(actions.loadExternalCqlList(artifactId))
-        .then(() => {
-          expect(store.getActions()).toEqual(expectedActions);
-        });
+      return store.dispatch(actions.loadExternalCqlList(artifactId)).then(() => {
+        expect(store.getActions()).toEqual(expectedActions);
+      });
     });
 
     it('dispatches a LOAD_EXTERNAL_CQL_LIST_FAILURE action upon an unsuccessful GET of list', () => {
@@ -88,7 +82,7 @@ describe('external cql actions', () => {
 
       nock('http://localhost')
         .get(`/authoring/api/externalCQL/${artifactId}`)
-        .reply(404, function() {
+        .reply(404, function () {
           this.req.response.statusMessage = 'Not found';
           return { status: 404 };
         });
@@ -108,11 +102,9 @@ describe('external cql actions', () => {
         }
       ];
 
-      return store
-        .dispatch(actions.loadExternalCqlList(artifactId))
-        .then(() => {
-          expect(store.getActions()).toEqual(expectedActions);
-        });
+      return store.dispatch(actions.loadExternalCqlList(artifactId)).then(() => {
+        expect(store.getActions()).toEqual(expectedActions);
+      });
     });
 
     it('correctly calculates library parents after fetching list', () => {
@@ -178,15 +170,10 @@ describe('external cql actions', () => {
         'my-artifact-1': [],
         'cds-connect-conversions-new-2': ['my-artifact-1'],
         'cds-connect-commons-new-2.0.0': ['my-artifact-1'],
-        'fhir-helpers-new-2.0.1': [
-          'my-artifact-1',
-          'cds-connect-commons-new-2.0.0'
-        ]
+        'fhir-helpers-new-2.0.1': ['my-artifact-1', 'cds-connect-commons-new-2.0.0']
       };
 
-      nock('http://localhost')
-        .get(`/authoring/api/externalCQL/${artifactId}`)
-        .reply(200, externalCqlList);
+      nock('http://localhost').get(`/authoring/api/externalCQL/${artifactId}`).reply(200, externalCqlList);
 
       const expectedActions = [
         { type: types.EXTERNAL_CQL_LIST_REQUEST },
@@ -204,11 +191,9 @@ describe('external cql actions', () => {
       ];
 
       // Confirm the parentsOfLibraries object is created correctly when the list is successfully loaded
-      return store
-        .dispatch(actions.loadExternalCqlList(artifactId))
-        .then(() => {
-          expect(store.getActions()).toEqual(expectedActions);
-        });
+      return store.dispatch(actions.loadExternalCqlList(artifactId)).then(() => {
+        expect(store.getActions()).toEqual(expectedActions);
+      });
     });
   });
 
@@ -231,11 +216,9 @@ describe('external cql actions', () => {
         }
       ];
 
-      return store
-        .dispatch(actions.loadExternalCqlLibraryDetails(libraryId))
-        .then(() => {
-          expect(store.getActions()).toEqual(expectedActions);
-        });
+      return store.dispatch(actions.loadExternalCqlLibraryDetails(libraryId)).then(() => {
+        expect(store.getActions()).toEqual(expectedActions);
+      });
     });
 
     it('dispatches a LOAD_EXTERNAL_CQL_LIBRARY_DETAILS_FAILURE action upon an unsuccessful details request', () => {
@@ -244,7 +227,7 @@ describe('external cql actions', () => {
 
       nock('http://localhost')
         .get(`/authoring/api/externalCQL/details/${badLibraryId}`)
-        .reply(404, function() {
+        .reply(404, function () {
           this.req.response.statusMessage = 'Not found';
           return { status: 404 };
         });
@@ -258,11 +241,9 @@ describe('external cql actions', () => {
         }
       ];
 
-      return store
-        .dispatch(actions.loadExternalCqlLibraryDetails(badLibraryId))
-        .then(() => {
-          expect(store.getActions()).toEqual(expectedActions);
-        });
+      return store.dispatch(actions.loadExternalCqlLibraryDetails(badLibraryId)).then(() => {
+        expect(store.getActions()).toEqual(expectedActions);
+      });
     });
   });
 
@@ -413,8 +394,7 @@ describe('external cql actions', () => {
         }
       });
       const badLibrary = { artifact: mockArtifact };
-      const dupLibraryText =
-        'Library with identical name and version already exists.';
+      const dupLibraryText = 'Library with identical name and version already exists.';
       const externalCqlList = [
         { name: 'My Artifact', version: '1', details: { dependencies: [] } },
         {
@@ -613,11 +593,9 @@ describe('external cql actions', () => {
         { type: types.SET_STATUS_MESSAGE, message: null }
       ];
 
-      return store
-        .dispatch(actions.deleteExternalCqlLibrary(libraryId, mockArtifact))
-        .then(() => {
-          expect(store.getActions()).toEqual(expectedActions);
-        });
+      return store.dispatch(actions.deleteExternalCqlLibrary(libraryId, mockArtifact)).then(() => {
+        expect(store.getActions()).toEqual(expectedActions);
+      });
     });
 
     it('dispatches a DELETE_EXTERNAL_CQL_LIBRARY_FAILURE action upon failed delete', () => {
@@ -650,7 +628,7 @@ describe('external cql actions', () => {
         .get(`/authoring/api/artifacts/${mockArtifact._id}`)
         .reply(200, [mockArtifact])
         .delete(`/authoring/api/externalCQL/${libraryId}`)
-        .reply(404, function() {
+        .reply(404, function () {
           this.req.response.statusMessage = 'Not found';
           return { status: 404 };
         });
@@ -688,11 +666,9 @@ describe('external cql actions', () => {
         { type: types.SET_STATUS_MESSAGE, message: null }
       ];
 
-      return store
-        .dispatch(actions.deleteExternalCqlLibrary(libraryId, mockArtifact))
-        .then(() => {
-          expect(store.getActions()).toEqual(expectedActions);
-        });
+      return store.dispatch(actions.deleteExternalCqlLibrary(libraryId, mockArtifact)).then(() => {
+        expect(store.getActions()).toEqual(expectedActions);
+      });
     });
   });
 });

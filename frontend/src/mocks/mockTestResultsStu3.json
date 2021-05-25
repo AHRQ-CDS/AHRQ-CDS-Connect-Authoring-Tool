@@ -1,363 +1,363 @@
 {
-    "data": {
-        "localIdPatientResultsMap": {
-            "a86c13ad-bbc9-40a2-b9b9-f48c7b9619d0": {
-                "Untitled-Artifact": {
-                    "10": null,
-                    "11": null,
-                    "12": null,
-                    "5": null,
-                    "6": null,
-                    "7": null,
-                    "8": null,
-                    "9": null
-                }
-            }
-        },
-        "patientResults": {
-            "a86c13ad-bbc9-40a2-b9b9-f48c7b9619d0": {
-                "Errors": null,
-                "InPopulation": null,
-                "Patient": {
-                    "address": [
-                        {
-                            "city": {
-                                "value": "Revere"
-                            },
-                            "country": {
-                                "value": "US"
-                            },
-                            "extension": [
-                                {
-                                    "extension": [
-                                        {
-                                            "url": "latitude",
-                                            "value": {
-                                                "value": -70.990358
-                                            }
-                                        },
-                                        {
-                                            "url": "longitude",
-                                            "value": {
-                                                "value": 42.421011
-                                            }
-                                        }
-                                    ],
-                                    "url": "http://hl7.org/fhir/StructureDefinition/geolocation"
-                                }
-                            ],
-                            "line": [
-                                {
-                                    "value": "725 Ankunding Tunnel"
-                                }
-                            ],
-                            "postalCode": {
-                                "value": "02151"
-                            },
-                            "state": {
-                                "value": "Massachusetts"
-                            }
-                        }
-                    ],
-                    "birthDate": {
-                        "value": "1986-01-12"
+  "data": {
+    "localIdPatientResultsMap": {
+      "a86c13ad-bbc9-40a2-b9b9-f48c7b9619d0": {
+        "Untitled-Artifact": {
+          "10": null,
+          "11": null,
+          "12": null,
+          "5": null,
+          "6": null,
+          "7": null,
+          "8": null,
+          "9": null
+        }
+      }
+    },
+    "patientResults": {
+      "a86c13ad-bbc9-40a2-b9b9-f48c7b9619d0": {
+        "Errors": null,
+        "InPopulation": null,
+        "Patient": {
+          "address": [
+            {
+              "city": {
+                "value": "Revere"
+              },
+              "country": {
+                "value": "US"
+              },
+              "extension": [
+                {
+                  "extension": [
+                    {
+                      "url": "latitude",
+                      "value": {
+                        "value": -70.990358
+                      }
                     },
-                    "communication": [
-                        {
-                            "language": {
-                                "coding": [
-                                    {
-                                        "code": {
-                                            "value": "en-US"
-                                        },
-                                        "display": {
-                                            "value": "English"
-                                        },
-                                        "system": {
-                                            "value": "urn:ietf:bcp:47"
-                                        }
-                                    }
-                                ],
-                                "text": {
-                                    "value": "English"
-                                }
-                            }
-                        }
-                    ],
-                    "extension": [
-                        {
-                            "extension": [
-                                {
-                                    "url": "ombCategory",
-                                    "value": {
-                                        "code": {
-                                            "value": "2054-5"
-                                        },
-                                        "display": {
-                                            "value": "Black or African American"
-                                        },
-                                        "system": {
-                                            "value": "urn:oid:2.16.840.1.113883.6.238"
-                                        }
-                                    }
-                                },
-                                {
-                                    "url": "text",
-                                    "value": {
-                                        "value": "Black or African American"
-                                    }
-                                }
-                            ],
-                            "url": "http://hl7.org/fhir/us/core/StructureDefinition/us-core-race"
-                        },
-                        {
-                            "extension": [
-                                {
-                                    "url": "ombCategory",
-                                    "value": {
-                                        "code": {
-                                            "value": "2186-5"
-                                        },
-                                        "display": {
-                                            "value": "Not Hispanic or Latino"
-                                        },
-                                        "system": {
-                                            "value": "urn:oid:2.16.840.1.113883.6.238"
-                                        }
-                                    }
-                                },
-                                {
-                                    "url": "text",
-                                    "value": {
-                                        "value": "Not Hispanic or Latino"
-                                    }
-                                }
-                            ],
-                            "url": "http://hl7.org/fhir/us/core/StructureDefinition/us-core-ethnicity"
-                        },
-                        {
-                            "url": "http://hl7.org/fhir/StructureDefinition/patient-mothersMaidenName",
-                            "value": {
-                                "value": "Arline53 Quitzon246"
-                            }
-                        },
-                        {
-                            "url": "http://hl7.org/fhir/us/core/StructureDefinition/us-core-birthsex",
-                            "value": {
-                                "value": "M"
-                            }
-                        },
-                        {
-                            "url": "http://hl7.org/fhir/StructureDefinition/birthPlace",
-                            "value": {
-                                "city": {
-                                    "value": "Abington"
-                                },
-                                "country": {
-                                    "value": "US"
-                                },
-                                "state": {
-                                    "value": "Massachusetts"
-                                }
-                            }
-                        },
-                        {
-                            "url": "http://synthetichealth.github.io/synthea/disability-adjusted-life-years",
-                            "value": {
-                                "value": 0
-                            }
-                        },
-                        {
-                            "url": "http://synthetichealth.github.io/synthea/quality-adjusted-life-years",
-                            "value": {
-                                "value": 31
-                            }
-                        }
-                    ],
-                    "gender": {
-                        "value": "male"
-                    },
-                    "id": {
-                        "value": "a86c13ad-bbc9-40a2-b9b9-f48c7b9619d0"
-                    },
-                    "identifier": [
-                        {
-                            "system": {
-                                "value": "https://github.com/synthetichealth/synthea"
-                            },
-                            "value": {
-                                "value": "5e948297-21c3-4518-bde5-e53ea55704b7"
-                            }
-                        },
-                        {
-                            "system": {
-                                "value": "http://hospital.smarthealthit.org"
-                            },
-                            "type": {
-                                "coding": [
-                                    {
-                                        "code": {
-                                            "value": "MR"
-                                        },
-                                        "display": {
-                                            "value": "Medical Record Number"
-                                        },
-                                        "system": {
-                                            "value": "http://hl7.org/fhir/v2/0203"
-                                        }
-                                    }
-                                ],
-                                "text": {
-                                    "value": "Medical Record Number"
-                                }
-                            },
-                            "value": {
-                                "value": "5e948297-21c3-4518-bde5-e53ea55704b7"
-                            }
-                        },
-                        {
-                            "system": {
-                                "value": "http://hl7.org/fhir/sid/us-ssn"
-                            },
-                            "type": {
-                                "coding": [
-                                    {
-                                        "code": {
-                                            "value": "SB"
-                                        },
-                                        "display": {
-                                            "value": "Social Security Number"
-                                        },
-                                        "system": {
-                                            "value": "http://hl7.org/fhir/identifier-type"
-                                        }
-                                    }
-                                ],
-                                "text": {
-                                    "value": "Social Security Number"
-                                }
-                            },
-                            "value": {
-                                "value": "999-45-4718"
-                            }
-                        },
-                        {
-                            "system": {
-                                "value": "urn:oid:2.16.840.1.113883.4.3.25"
-                            },
-                            "type": {
-                                "coding": [
-                                    {
-                                        "code": {
-                                            "value": "DL"
-                                        },
-                                        "display": {
-                                            "value": "Driver's License"
-                                        },
-                                        "system": {
-                                            "value": "http://hl7.org/fhir/v2/0203"
-                                        }
-                                    }
-                                ],
-                                "text": {
-                                    "value": "Driver's License"
-                                }
-                            },
-                            "value": {
-                                "value": "S99933193"
-                            }
-                        },
-                        {
-                            "system": {
-                                "value": "http://standardhealthrecord.org/fhir/StructureDefinition/passportNumber"
-                            },
-                            "type": {
-                                "coding": [
-                                    {
-                                        "code": {
-                                            "value": "PPN"
-                                        },
-                                        "display": {
-                                            "value": "Passport Number"
-                                        },
-                                        "system": {
-                                            "value": "http://hl7.org/fhir/v2/0203"
-                                        }
-                                    }
-                                ],
-                                "text": {
-                                    "value": "Passport Number"
-                                }
-                            },
-                            "value": {
-                                "value": "X17774266X"
-                            }
-                        }
-                    ],
-                    "maritalStatus": {
-                        "coding": [
-                            {
-                                "code": {
-                                    "value": "S"
-                                },
-                                "display": {
-                                    "value": "S"
-                                },
-                                "system": {
-                                    "value": "http://hl7.org/fhir/v3/MaritalStatus"
-                                }
-                            }
-                        ],
-                        "text": {
-                            "value": "S"
-                        }
-                    },
-                    "multipleBirth": {
-                        "value": false
-                    },
-                    "name": [
-                        {
-                            "family": {
-                                "value": "McClure239"
-                            },
-                            "given": [
-                                {
-                                    "value": "Arnulfo253"
-                                }
-                            ],
-                            "prefix": [
-                                {
-                                    "value": "Mr."
-                                }
-                            ],
-                            "use": {
-                                "value": "official"
-                            }
-                        }
-                    ],
-                    "telecom": [
-                        {
-                            "system": {
-                                "value": "phone"
-                            },
-                            "use": {
-                                "value": "home"
-                            },
-                            "value": {
-                                "value": "555-796-1783"
-                            }
-                        }
-                    ],
-                    "text": {
-                        "status": {
-                            "value": "generated"
-                        }
+                    {
+                      "url": "longitude",
+                      "value": {
+                        "value": 42.421011
+                      }
                     }
-                },
-                "Rationale": null,
-                "Recommendation": null
+                  ],
+                  "url": "http://hl7.org/fhir/StructureDefinition/geolocation"
+                }
+              ],
+              "line": [
+                {
+                  "value": "725 Ankunding Tunnel"
+                }
+              ],
+              "postalCode": {
+                "value": "02151"
+              },
+              "state": {
+                "value": "Massachusetts"
+              }
             }
+          ],
+          "birthDate": {
+            "value": "1986-01-12"
+          },
+          "communication": [
+            {
+              "language": {
+                "coding": [
+                  {
+                    "code": {
+                      "value": "en-US"
+                    },
+                    "display": {
+                      "value": "English"
+                    },
+                    "system": {
+                      "value": "urn:ietf:bcp:47"
+                    }
+                  }
+                ],
+                "text": {
+                  "value": "English"
+                }
+              }
+            }
+          ],
+          "extension": [
+            {
+              "extension": [
+                {
+                  "url": "ombCategory",
+                  "value": {
+                    "code": {
+                      "value": "2054-5"
+                    },
+                    "display": {
+                      "value": "Black or African American"
+                    },
+                    "system": {
+                      "value": "urn:oid:2.16.840.1.113883.6.238"
+                    }
+                  }
+                },
+                {
+                  "url": "text",
+                  "value": {
+                    "value": "Black or African American"
+                  }
+                }
+              ],
+              "url": "http://hl7.org/fhir/us/core/StructureDefinition/us-core-race"
+            },
+            {
+              "extension": [
+                {
+                  "url": "ombCategory",
+                  "value": {
+                    "code": {
+                      "value": "2186-5"
+                    },
+                    "display": {
+                      "value": "Not Hispanic or Latino"
+                    },
+                    "system": {
+                      "value": "urn:oid:2.16.840.1.113883.6.238"
+                    }
+                  }
+                },
+                {
+                  "url": "text",
+                  "value": {
+                    "value": "Not Hispanic or Latino"
+                  }
+                }
+              ],
+              "url": "http://hl7.org/fhir/us/core/StructureDefinition/us-core-ethnicity"
+            },
+            {
+              "url": "http://hl7.org/fhir/StructureDefinition/patient-mothersMaidenName",
+              "value": {
+                "value": "Arline53 Quitzon246"
+              }
+            },
+            {
+              "url": "http://hl7.org/fhir/us/core/StructureDefinition/us-core-birthsex",
+              "value": {
+                "value": "M"
+              }
+            },
+            {
+              "url": "http://hl7.org/fhir/StructureDefinition/birthPlace",
+              "value": {
+                "city": {
+                  "value": "Abington"
+                },
+                "country": {
+                  "value": "US"
+                },
+                "state": {
+                  "value": "Massachusetts"
+                }
+              }
+            },
+            {
+              "url": "http://synthetichealth.github.io/synthea/disability-adjusted-life-years",
+              "value": {
+                "value": 0
+              }
+            },
+            {
+              "url": "http://synthetichealth.github.io/synthea/quality-adjusted-life-years",
+              "value": {
+                "value": 31
+              }
+            }
+          ],
+          "gender": {
+            "value": "male"
+          },
+          "id": {
+            "value": "a86c13ad-bbc9-40a2-b9b9-f48c7b9619d0"
+          },
+          "identifier": [
+            {
+              "system": {
+                "value": "https://github.com/synthetichealth/synthea"
+              },
+              "value": {
+                "value": "5e948297-21c3-4518-bde5-e53ea55704b7"
+              }
+            },
+            {
+              "system": {
+                "value": "http://hospital.smarthealthit.org"
+              },
+              "type": {
+                "coding": [
+                  {
+                    "code": {
+                      "value": "MR"
+                    },
+                    "display": {
+                      "value": "Medical Record Number"
+                    },
+                    "system": {
+                      "value": "http://hl7.org/fhir/v2/0203"
+                    }
+                  }
+                ],
+                "text": {
+                  "value": "Medical Record Number"
+                }
+              },
+              "value": {
+                "value": "5e948297-21c3-4518-bde5-e53ea55704b7"
+              }
+            },
+            {
+              "system": {
+                "value": "http://hl7.org/fhir/sid/us-ssn"
+              },
+              "type": {
+                "coding": [
+                  {
+                    "code": {
+                      "value": "SB"
+                    },
+                    "display": {
+                      "value": "Social Security Number"
+                    },
+                    "system": {
+                      "value": "http://hl7.org/fhir/identifier-type"
+                    }
+                  }
+                ],
+                "text": {
+                  "value": "Social Security Number"
+                }
+              },
+              "value": {
+                "value": "999-45-4718"
+              }
+            },
+            {
+              "system": {
+                "value": "urn:oid:2.16.840.1.113883.4.3.25"
+              },
+              "type": {
+                "coding": [
+                  {
+                    "code": {
+                      "value": "DL"
+                    },
+                    "display": {
+                      "value": "Driver's License"
+                    },
+                    "system": {
+                      "value": "http://hl7.org/fhir/v2/0203"
+                    }
+                  }
+                ],
+                "text": {
+                  "value": "Driver's License"
+                }
+              },
+              "value": {
+                "value": "S99933193"
+              }
+            },
+            {
+              "system": {
+                "value": "http://standardhealthrecord.org/fhir/StructureDefinition/passportNumber"
+              },
+              "type": {
+                "coding": [
+                  {
+                    "code": {
+                      "value": "PPN"
+                    },
+                    "display": {
+                      "value": "Passport Number"
+                    },
+                    "system": {
+                      "value": "http://hl7.org/fhir/v2/0203"
+                    }
+                  }
+                ],
+                "text": {
+                  "value": "Passport Number"
+                }
+              },
+              "value": {
+                "value": "X17774266X"
+              }
+            }
+          ],
+          "maritalStatus": {
+            "coding": [
+              {
+                "code": {
+                  "value": "S"
+                },
+                "display": {
+                  "value": "S"
+                },
+                "system": {
+                  "value": "http://hl7.org/fhir/v3/MaritalStatus"
+                }
+              }
+            ],
+            "text": {
+              "value": "S"
+            }
+          },
+          "multipleBirth": {
+            "value": false
+          },
+          "name": [
+            {
+              "family": {
+                "value": "McClure239"
+              },
+              "given": [
+                {
+                  "value": "Arnulfo253"
+                }
+              ],
+              "prefix": [
+                {
+                  "value": "Mr."
+                }
+              ],
+              "use": {
+                "value": "official"
+              }
+            }
+          ],
+          "telecom": [
+            {
+              "system": {
+                "value": "phone"
+              },
+              "use": {
+                "value": "home"
+              },
+              "value": {
+                "value": "555-796-1783"
+              }
+            }
+          ],
+          "text": {
+            "status": {
+              "value": "generated"
+            }
+          }
         },
-        "populationResults": {}
-    }
+        "Rationale": null,
+        "Recommendation": null
+      }
+    },
+    "populationResults": {}
+  }
 }

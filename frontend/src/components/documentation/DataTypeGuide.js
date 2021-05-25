@@ -579,21 +579,21 @@ const DataTypeGuide = ({ gtmKey, dapURL }) => {
             <h3 id="list-of-observations">List of Observations</h3>
 
             <ul>
-            <li>
+              <li>
                 Average Observation
                 <ul>
                   <li>
                     CQL function: <code>C3F.AverageObservation</code>
                   </li>
                   <li>
-                    Summary: Returns the average value of all valid observations in a 
-                    list. It uses the CQL aggregator method {' '}
-                    <code>Avg()</code> on each observation via <code>value[x]</code> and returns the average value.
+                    Summary: Returns the average value of all valid observations in a list. It uses the CQL aggregator
+                    method <code>Avg()</code> on each observation via <code>value[x]</code> and returns the average
+                    value.
                   </li>
                   <li>Returns: System Quantity</li>
                 </ul>
-            </li>
-            <li>
+              </li>
+              <li>
                 First
                 <ul>
                   <li>
@@ -808,12 +808,10 @@ const DataTypeGuide = ({ gtmKey, dapURL }) => {
                     CQL function: <code>C3F.ServiceRequestLookBack</code>
                   </li>
                   <li>
-                    Summary: Returns a list of Service Requests with <code>authoredOn</code> time
-                    between now and the time period specified by the user.
+                    Summary: Returns a list of Service Requests with <code>authoredOn</code> time between now and the
+                    time period specified by the user.
                   </li>
-                  <li>
-                    Returns: List of Service Requests
-                  </li>
+                  <li>Returns: List of Service Requests</li>
                 </ul>
               </li>
               <li>
@@ -823,12 +821,9 @@ const DataTypeGuide = ({ gtmKey, dapURL }) => {
                     CQL function: <code>C3F.ServiceRequestActiveOrCompleted</code>
                   </li>
                   <li>
-                    Summary: Returns a list of Service Requests with <code>status</code>{' '}codes
-                    active or completed.
+                    Summary: Returns a list of Service Requests with <code>status</code> codes active or completed.
                   </li>
-                  <li>
-                    Returns: List of Service Requests
-                  </li>
+                  <li>Returns: List of Service Requests</li>
                 </ul>
               </li>
               <li>
@@ -838,12 +833,9 @@ const DataTypeGuide = ({ gtmKey, dapURL }) => {
                     CQL function: <code>C3F.ServiceRequestActive</code>
                   </li>
                   <li>
-                    Summary: Returns a list of Service Requests with the <code>status</code>{' '}code
-                    active.
+                    Summary: Returns a list of Service Requests with the <code>status</code> code active.
                   </li>
-                  <li>
-                    Returns: List of Service Requests
-                  </li>
+                  <li>Returns: List of Service Requests</li>
                 </ul>
               </li>
               <li>
@@ -853,12 +845,9 @@ const DataTypeGuide = ({ gtmKey, dapURL }) => {
                     CQL function: <code>C3F.ServiceRequestCompleted</code>
                   </li>
                   <li>
-                    Summary: Returns a list of Service Requests with the <code>status</code>{' '}code
-                    completed.
+                    Summary: Returns a list of Service Requests with the <code>status</code> code completed.
                   </li>
-                  <li>
-                    Returns: List of Service Requests
-                  </li>
+                  <li>Returns: List of Service Requests</li>
                 </ul>
               </li>
               <li>

@@ -6,12 +6,12 @@ const CodeSelectModalFooter = ({ isValidCode }) => (
   <div>
     {isValidCode && <Alert severity="success">Validation Successful!</Alert>}
 
-    {isValidCode === false &&
+    {isValidCode === false && (
       <Alert severity="error">
-        Validation Error: Unable to validate code and/or code system. Please try again, or select
-        this code without validation.
+        Validation Error: Unable to validate code and/or code system. Please try again, or select this code without
+        validation.
       </Alert>
-    }
+    )}
   </div>
 );
 

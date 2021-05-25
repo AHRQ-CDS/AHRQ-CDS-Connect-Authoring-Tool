@@ -13,7 +13,7 @@ export default class Subpopulations extends Component {
 
     const operations = this.props.templates.find(g => g.name === 'Operations');
     const andTemplate = operations.entries.find(e => e.name === 'And');
-    this.baseTemplate = (andTemplate);
+    this.baseTemplate = andTemplate;
 
     this.state = {
       subpopulations: this.props.artifact[this.props.name].filter(sp => !sp.special), // Don't want to allow user interaction with the two default subpopulations added by the system
@@ -22,7 +22,8 @@ export default class Subpopulations extends Component {
     };
   }
 
-  UNSAFE_componentWillReceiveProps(nextProps) { // eslint-disable-line camelcase
+  UNSAFE_componentWillReceiveProps(nextProps) {
+    // eslint-disable-line camelcase
     this.setState({
       subpopulations: nextProps.artifact[this.props.name].filter(sp => !sp.special),
       baseElements: nextProps.artifact[this.props.name],
@@ -35,11 +36,13 @@ export default class Subpopulations extends Component {
     newSubpopulation.name = '';
     newSubpopulation.path = '';
     // eslint-disable-next-line
-    newSubpopulation.subpopulationName = `${_.capitalize(pluralize.singular(this.props.name))} ${this.state[this.props.name].length+1}`;
+    newSubpopulation.subpopulationName = `${_.capitalize(pluralize.singular(this.props.name))} ${
+      this.state[this.props.name].length + 1
+    }`;
     newSubpopulation.expanded = true;
     const newSubpopulations = this.props.artifact[this.props.name].concat([newSubpopulation]);
     this.props.updateSubpopulations(newSubpopulations, this.props.name);
-  }
+  };
 
   setSubpopulationName = (name, uniqueId) => {
     const newSubpopulations = _.cloneDeep(this.props.artifact[this.props.name]);
@@ -48,7 +51,7 @@ export default class Subpopulations extends Component {
 
     this.props.updateSubpopulations(newSubpopulations, this.props.name);
     this.props.updateRecsSubpop(name, uniqueId);
-  }
+  };
 
   render() {
     const newButtonLabel = `New ${pluralize.singular(this.props.name)}`;
@@ -88,11 +91,7 @@ export default class Subpopulations extends Component {
           />
         ))}
 
-        <Button
-          color="primary"
-          onClick={this.addSubpopulation}
-          variant="contained"
-        >
+        <Button color="primary" onClick={this.addSubpopulation} variant="contained">
           {newButtonLabel}
         </Button>
       </div>

@@ -1,10 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Button } from '@material-ui/core';
-import {
-  Delete as DeleteIcon,
-  Visibility as VisibilityIcon
-} from '@material-ui/icons';
+import { Delete as DeleteIcon, Visibility as VisibilityIcon } from '@material-ui/icons';
 import { UncontrolledTooltip } from 'reactstrap';
 
 import { DeleteConfirmationModal } from 'components/modals';
@@ -26,28 +23,28 @@ export default class ExternalCqlTable extends Component {
     };
   }
 
-  getFhirVersion = (version) => {
+  getFhirVersion = version => {
     if (version === '1.0.2') return '1.0.2 (DSTU2)';
     if (version.startsWith('3.0.')) return `${version} (STU3)`;
     if (version.startsWith('4.0.')) return `${version} (R4)`;
     return version;
-  }
+  };
 
   // ----------------------- VIEW DETAILS MODAL ---------------------------- //
 
-  openViewDetailsModal = (externalCqlLibrary) => {
+  openViewDetailsModal = externalCqlLibrary => {
     const { clearAddLibraryErrorsAndMessages } = this.props;
     clearAddLibraryErrorsAndMessages();
     this.setState({ showViewDetailsModal: true, externalCqlLibraryToView: externalCqlLibrary });
-  }
+  };
 
   closeViewDetailsModal = () => {
     this.setState({ showViewDetailsModal: false, externalCqlLibraryToView: null });
-  }
+  };
 
   handleViewDetails = () => {
     this.closeViewDetailsModal();
-  }
+  };
 
   // ----------------------- DELETE MODAL ---------------------------------- //
 
@@ -56,27 +53,26 @@ export default class ExternalCqlTable extends Component {
     const { clearAddLibraryErrorsAndMessages } = this.props;
     clearAddLibraryErrorsAndMessages();
     this.setState({ showConfirmDeleteModal: true, externalCqlLibraryToDelete: externalCqlLibrary });
-  }
+  };
 
   closeConfirmDeleteModal = () => {
     this.setState({ showConfirmDeleteModal: false, externalCqlLibraryToDelete: null });
-  }
+  };
 
   handleDeleteExternalCqlLibrary = () => {
     const { artifact, deleteExternalCqlLibrary } = this.props;
     const { externalCqlLibraryToDelete } = this.state;
     deleteExternalCqlLibrary(externalCqlLibraryToDelete._id, artifact);
     this.closeConfirmDeleteModal();
-  }
+  };
 
   // ----------------------- RENDER ---------------------------------------- //
 
-  renderTableRow = (externalCqlLibrary) => {
+  renderTableRow = externalCqlLibrary => {
     const { librariesInUse } = this.props;
     const libName = changeToCase(externalCqlLibrary.name, 'paramCase');
     const libVersion = externalCqlLibrary.version;
-    const currentLibraryParents =
-      this.props.externalCQLLibraryParents[`${libName}-${libVersion}`] || [];
+    const currentLibraryParents = this.props.externalCQLLibraryParents[`${libName}-${libVersion}`] || [];
     const disableForDependency = currentLibraryParents.length > 0;
     const disableForUse = librariesInUse.includes(externalCqlLibrary.name);
     const disableDelete = disableForDependency || disableForUse;
@@ -121,17 +117,17 @@ export default class ExternalCqlTable extends Component {
             </Button>
           </span>
 
-          {disableForUse &&
+          {disableForUse && (
             <UncontrolledTooltip target={`DeleteLibraryTooltip-${externalCqlLibrary._id}`} placement="left">
               To delete this library, first remove all references to it.
             </UncontrolledTooltip>
-          }
+          )}
 
-          {!disableForUse && disableForDependency &&
+          {!disableForUse && disableForDependency && (
             <UncontrolledTooltip target={`DeleteLibraryTooltip-${externalCqlLibrary._id}`} placement="left">
               To delete this library, first remove all libraries that depend on it.
             </UncontrolledTooltip>
-          }
+          )}
         </td>
       </tr>
     );
@@ -156,10 +152,18 @@ export default class ExternalCqlTable extends Component {
         <table className="external-cql-table__table">
           <thead>
             <tr>
-              <th scope="col" className="external-cql-table__tablecell-wide">Library</th>
-              <th scope="col" className="external-cql-table__tablecell-short">Last Updated</th>
-              <th scope="col" className="external-cql-table__tablecell-short center">Version</th>
-              <th scope="col" className="external-cql-table__tablecell-short">FHIR<sup>®</sup> Version</th>
+              <th scope="col" className="external-cql-table__tablecell-wide">
+                Library
+              </th>
+              <th scope="col" className="external-cql-table__tablecell-short">
+                Last Updated
+              </th>
+              <th scope="col" className="external-cql-table__tablecell-short center">
+                Version
+              </th>
+              <th scope="col" className="external-cql-table__tablecell-short">
+                FHIR<sup>®</sup> Version
+              </th>
               <th></th>
             </tr>
           </thead>
@@ -169,7 +173,7 @@ export default class ExternalCqlTable extends Component {
           </tbody>
         </table>
 
-        {showViewDetailsModal &&
+        {showViewDetailsModal && (
           <ExternalCqlDetails
             openModal={showViewDetailsModal}
             closeModal={this.closeViewDetailsModal}
@@ -178,9 +182,9 @@ export default class ExternalCqlTable extends Component {
             loadExternalCqlLibraryDetails={loadExternalCqlLibraryDetails}
             isLoadingExternalCqlDetails={isLoadingExternalCqlDetails}
           />
-        }
+        )}
 
-        {showConfirmDeleteModal &&
+        {showConfirmDeleteModal && (
           <DeleteConfirmationModal
             deleteType="External CQL Library"
             handleCloseModal={this.closeConfirmDeleteModal}
@@ -188,7 +192,7 @@ export default class ExternalCqlTable extends Component {
           >
             <div>Library: {externalCqlLibraryToDelete.name}</div>
           </DeleteConfirmationModal>
-        }
+        )}
       </div>
     );
   }

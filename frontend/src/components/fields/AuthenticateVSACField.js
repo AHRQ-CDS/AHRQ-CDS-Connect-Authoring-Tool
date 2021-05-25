@@ -34,7 +34,7 @@ const AuthenticateVSACField = () => {
       <div className={styles.listText}>
         Use your UMLS Terminology Services API key to log in to VSAC to access value sets and codes.
       </div>
-      
+
       <div className={styles.list}>
         <div className={styles.listItem}>
           Need an account?

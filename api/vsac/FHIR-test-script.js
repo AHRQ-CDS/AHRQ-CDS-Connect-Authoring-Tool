@@ -3,11 +3,12 @@
  */
 const FHIRClient = require('./FHIRClient');
 
-process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
+process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
 
 if (process.argv.length < 4) {
-  console.error(`Usage: node FHIR-test-script.js <username> <password>` +
-    ` <vsOID_optional> <code_optional> <system_optional>`);
+  console.error(
+    `Usage: node FHIR-test-script.js <username> <password>` + ` <vsOID_optional> <code_optional> <system_optional>`
+  );
   process.exit(1);
 }
 
@@ -24,25 +25,25 @@ if (code === undefined && system === undefined) {
 
 console.log('Check basic auth w/ user:', user, pass);
 FHIRClient.getOneValueSet(user, pass)
-.then(() => {
-  console.log('Logged in');
-  console.log('Getting VS details for', oid);
-  return FHIRClient.getValueSet(oid, user, pass);
-})
-.then((res) => {
-  console.log(res);
-  console.log('Searching for VS w/ keyword Diabetes');
-  return FHIRClient.searchForValueSets("Diabetes", user, pass);
-})
-.then((res) => {
-  console.log(res);
-  console.log('Getting code details for code', code, 'from', system);
-  return FHIRClient.getCode(code, system, user, pass);
-})
-.then((res) => {
-  console.log(res);
-})
-.catch((e) => {
-  console.log('Error:', e.message);
-  process.exit(2);
-});
+  .then(() => {
+    console.log('Logged in');
+    console.log('Getting VS details for', oid);
+    return FHIRClient.getValueSet(oid, user, pass);
+  })
+  .then(res => {
+    console.log(res);
+    console.log('Searching for VS w/ keyword Diabetes');
+    return FHIRClient.searchForValueSets('Diabetes', user, pass);
+  })
+  .then(res => {
+    console.log(res);
+    console.log('Getting code details for code', code, 'from', system);
+    return FHIRClient.getCode(code, system, user, pass);
+  })
+  .then(res => {
+    console.log(res);
+  })
+  .catch(e => {
+    console.log('Error:', e.message);
+    process.exit(2);
+  });

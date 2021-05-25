@@ -27,14 +27,14 @@ export default class Recommendation extends Component {
       text: props.rec.text,
       rationale: props.rec.rationale,
       comment: props.rec.comment,
-      showSubpopulations: !!((props.rec.subpopulations && props.rec.subpopulations.length)),
+      showSubpopulations: !!(props.rec.subpopulations && props.rec.subpopulations.length),
       showRationale: !!props.rec.rationale.length,
-      showComment: !!((props.rec.comment && props.rec.comment.length)),
-      showReordering: (props.rec.length > 1)
+      showComment: !!(props.rec.comment && props.rec.comment.length),
+      showReordering: props.rec.length > 1
     };
   }
 
-  addBlankSubpopulation = (event) => {
+  addBlankSubpopulation = event => {
     event.preventDefault();
 
     const operations = this.props.templates.find(template => template.name === 'Operations');
@@ -45,18 +45,18 @@ export default class Recommendation extends Component {
     newSubpopulation.path = '';
 
     const numOfSpecialSubpopulations = this.props.artifact.subpopulations.filter(sp => sp.special).length;
-    const subPopNumber = (this.props.artifact.subpopulations.length + 1) - numOfSpecialSubpopulations;
+    const subPopNumber = this.props.artifact.subpopulations.length + 1 - numOfSpecialSubpopulations;
     newSubpopulation.subpopulationName = `Subpopulation ${subPopNumber}`;
     newSubpopulation.expanded = true;
     const newSubpopulations = this.props.artifact.subpopulations.concat([newSubpopulation]);
 
     this.props.updateSubpopulations(newSubpopulations);
     this.props.setActiveTab(subpopTabIndex);
-  }
+  };
 
   revealSubpopulations = () => {
     this.setState({ showSubpopulations: true });
-  }
+  };
 
   applySubpopulation = (event, subpopulationOptions) => {
     const subpop = subpopulationOptions.find(option => option.uniqueId === event.target.value);
@@ -78,9 +78,9 @@ export default class Recommendation extends Component {
     });
 
     this.props.updateRecommendations(newRecs);
-  }
+  };
 
-  removeSubpopulation = (i) => {
+  removeSubpopulation = i => {
     const recIndex = this.props.artifact.recommendations.findIndex(rec => rec.uid === this.state.uid);
     const newRecs = update(this.props.artifact.recommendations, {
       [recIndex]: {
@@ -88,23 +88,24 @@ export default class Recommendation extends Component {
       }
     });
 
-    if(this.props.rec.subpopulations.length === 1){
-      this.setState({showSubpopulations:false});
+    if (this.props.rec.subpopulations.length === 1) {
+      this.setState({ showSubpopulations: false });
     }
     this.props.updateRecommendations(newRecs);
-  }
+  };
 
-  getRelevantSubpopulations = () => this.props.artifact.subpopulations.filter((sp) => {
-    let match = false;
+  getRelevantSubpopulations = () =>
+    this.props.artifact.subpopulations.filter(sp => {
+      let match = false;
 
-    _.each(this.props.rec.subpopulations, (appliedSp) => {
-      if (sp.uniqueId === appliedSp.uniqueId) {
-        match = true;
-      }
+      _.each(this.props.rec.subpopulations, appliedSp => {
+        if (sp.uniqueId === appliedSp.uniqueId) {
+          match = true;
+        }
+      });
+
+      return !match;
     });
-
-    return !match;
-  })
 
   handleChange = (name, value) => {
     const newValues = { [name]: value };
@@ -114,25 +115,25 @@ export default class Recommendation extends Component {
     });
 
     this.setState(newState);
-  }
+  };
 
   handleShowRationale = () => {
     this.setState({ showRationale: !this.state.showRationale });
-  }
+  };
 
   removeRationale = () => {
     this.handleChange('rationale', '');
     this.handleShowRationale();
-  }
+  };
 
   removeComment = () => {
     this.handleChange('comment', '');
     this.handleShowComment();
-  }
+  };
 
   handleShowComment = () => {
     this.setState({ showComment: !this.state.showComment });
-  }
+  };
 
   shouldShowSubpopulations = () => Boolean(this.state.showSubpopulations || this.props.rec.subpopulations.length);
 
@@ -175,17 +176,13 @@ export default class Recommendation extends Component {
             />
           </div>
 
-          <Button
-            color="primary"
-            onClick={this.addBlankSubpopulation}
-            variant="contained"
-          >
+          <Button color="primary" onClick={this.addBlankSubpopulation} variant="contained">
             New subpopulation
           </Button>
         </div>
       </div>
     );
-  }
+  };
 
   render() {
     return (
@@ -194,7 +191,7 @@ export default class Recommendation extends Component {
           <div className="recommendation__title">
             <div className="card-element__label"></div>
             <div>
-              {this.shouldShowReorderingButtons() &&
+              {this.shouldShowReorderingButtons() && (
                 <span>
                   <IconButton
                     aria-label="move up recommendation"
@@ -212,7 +209,7 @@ export default class Recommendation extends Component {
                     <ArrowDropDownIcon fontSize="small" />
                   </IconButton>
                 </span>
-              }
+              )}
 
               <IconButton
                 aria-label="remove recommendation"
@@ -241,14 +238,11 @@ export default class Recommendation extends Component {
             variant="outlined"
           />
 
-          {this.state.showRationale &&
+          {this.state.showRationale && (
             <div className="recommendation__rationale">
-              <div className="card-element__label">Rationale...
-                <IconButton
-                  aria-label="remove rationale"
-                  color="primary"
-                  onClick={() => this.removeRationale()}
-                >
+              <div className="card-element__label">
+                Rationale...
+                <IconButton aria-label="remove rationale" color="primary" onClick={() => this.removeRationale()}>
                   <CloseIcon fontSize="small" />
                 </IconButton>
               </div>
@@ -264,16 +258,13 @@ export default class Recommendation extends Component {
                 variant="outlined"
               />
             </div>
-          }
+          )}
 
-          {this.state.showComment &&
+          {this.state.showComment && (
             <div className="recommendation__comment">
-              <div className="card-element__label">Comment...
-                <IconButton
-                  aria-label="remove comment"
-                  color="primary"
-                  onClick={() => this.removeComment()}
-                >
+              <div className="card-element__label">
+                Comment...
+                <IconButton aria-label="remove comment" color="primary" onClick={() => this.removeComment()}>
                   <CloseIcon fontSize="small" />
                 </IconButton>
               </div>
@@ -289,38 +280,26 @@ export default class Recommendation extends Component {
                 variant="outlined"
               />
             </div>
-          }
+          )}
 
           <div className="recommendation__buttons">
-            {!this.state.showRationale &&
-              <Button
-                color="primary"
-                onClick={this.handleShowRationale}
-                variant="contained"
-              >
+            {!this.state.showRationale && (
+              <Button color="primary" onClick={this.handleShowRationale} variant="contained">
                 Add rationale
               </Button>
-            }
+            )}
 
-            {!this.shouldShowSubpopulations() &&
-              <Button
-                color="primary"
-                onClick={this.revealSubpopulations}
-                variant="contained"
-              >
+            {!this.shouldShowSubpopulations() && (
+              <Button color="primary" onClick={this.revealSubpopulations} variant="contained">
                 Add subpopulation
               </Button>
-            }
+            )}
 
-            {!this.state.showComment &&
-              <Button
-                color="primary"
-                onClick={this.handleShowComment}
-                variant="contained"
-              >
+            {!this.state.showComment && (
+              <Button color="primary" onClick={this.handleShowComment} variant="contained">
                 Add comments
               </Button>
-            }
+            )}
           </div>
         </div>
       </div>

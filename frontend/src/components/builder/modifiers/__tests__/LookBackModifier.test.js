@@ -4,14 +4,7 @@ import LookBackModifier from '../LookBackModifier';
 
 describe('<LookBackModifier />', () => {
   const renderComponent = (props = {}) =>
-    render(
-      <LookBackModifier
-        handleUpdateModifier={jest.fn()}
-        unit="days"
-        value={0}
-        {...props}
-      />
-    );
+    render(<LookBackModifier handleUpdateModifier={jest.fn()} unit="days" value={0} {...props} />);
 
   it('calls handleUpdateModifier on input and unit change', () => {
     const handleUpdateModifier = jest.fn();

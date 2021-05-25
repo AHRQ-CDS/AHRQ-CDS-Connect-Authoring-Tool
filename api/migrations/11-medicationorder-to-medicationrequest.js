@@ -4,7 +4,7 @@
  */
 'use strict';
 
-module.exports.id = "medicationorder-to-medicationrequest";
+module.exports.id = 'medicationorder-to-medicationrequest';
 
 function parseTree(element) {
   let children = element.childInstances ? element.childInstances : [];
@@ -20,9 +20,11 @@ function parseTree(element) {
 }
 
 function parseElement(element) {
-  if ((element.id === 'GenericMedicationOrder_vsac')
-  || (element.id && element.id.startsWith('GenericMedicationOrder_vsac') && element.type === 'baseElement')
-  || (element.type === 'externalCqlElement')) {
+  if (
+    element.id === 'GenericMedicationOrder_vsac' ||
+    (element.id && element.id.startsWith('GenericMedicationOrder_vsac') && element.type === 'baseElement') ||
+    element.type === 'externalCqlElement'
+  ) {
     if (element.id === 'GenericMedicationOrder_vsac') {
       element.id = 'GenericMedicationRequest_vsac';
       element.name = 'Medication Request';
@@ -44,11 +46,11 @@ function parseElement(element) {
     }
 
     const baseElementField = element.fields.find(f => f.id === 'baseElementReference');
-    if (baseElementField && baseElementField.value && (baseElementField.value.type === 'Medication Order')) {
+    if (baseElementField && baseElementField.value && baseElementField.value.type === 'Medication Order') {
       baseElementField.value.type = 'Medication Request';
     }
 
-    element.modifiers.forEach((modifier) => {
+    element.modifiers.forEach(modifier => {
       if (modifier.id === 'ActiveMedicationOrder') {
         modifier.id = 'ActiveMedicationRequest';
         modifier.inputTypes = ['list_of_medication_requests'];
@@ -60,16 +62,12 @@ function parseElement(element) {
         modifier.returnType = 'list_of_medication_requests';
         modifier.cqlLibraryFunction = 'C3F.MedicationRequestLookBack';
       } else if (modifier.id === 'CheckExistence') {
-        modifier.inputTypes[
-          modifier.inputTypes.findIndex(t => t === 'medication_order')
-        ] = 'medication_request';
-        modifier.inputTypes[
-          modifier.inputTypes.findIndex(t => t === 'list_of_medication_orders')
-        ] = 'list_of_medication_requests';
+        modifier.inputTypes[modifier.inputTypes.findIndex(t => t === 'medication_order')] = 'medication_request';
+        modifier.inputTypes[modifier.inputTypes.findIndex(t => t === 'list_of_medication_orders')] =
+          'list_of_medication_requests';
       } else if (modifier.id === 'Count' || modifier.id === 'BooleanExists') {
-        modifier.inputTypes[
-          modifier.inputTypes.findIndex(t => t === 'list_of_medication_orders')
-        ] = 'list_of_medication_requests';
+        modifier.inputTypes[modifier.inputTypes.findIndex(t => t === 'list_of_medication_orders')] =
+          'list_of_medication_requests';
       }
     });
   }
@@ -86,32 +84,30 @@ module.exports.up = function (done) {
   // Since db operations are asynchronous, use promises to ensure all updates happen before we call done().
   // The promises array collects all the promises which must be resolved before we're done.
   const promises = [];
-  coll.find().forEach((artifact) => {
-    const p = new Promise((resolve, reject) => {
-      if (artifact.expTreeInclude) {
-        parseTree(artifact.expTreeInclude);
-      }
-      if (artifact.expTreeExclude) {
-        parseTree(artifact.expTreeExclude);
-      }
-      artifact.subpopulations.forEach((subpopulation) => {
-        if (!subpopulation.special) {
-          parseTree(subpopulation);
+  coll.find().forEach(
+    artifact => {
+      const p = new Promise((resolve, reject) => {
+        if (artifact.expTreeInclude) {
+          parseTree(artifact.expTreeInclude);
         }
-      });
-      artifact.baseElements.forEach((baseElement) => {
-        if (baseElement.childInstances) {
-          parseTree(baseElement);
-        } else {
-          parseElement(baseElement);
+        if (artifact.expTreeExclude) {
+          parseTree(artifact.expTreeExclude);
         }
-      });
+        artifact.subpopulations.forEach(subpopulation => {
+          if (!subpopulation.special) {
+            parseTree(subpopulation);
+          }
+        });
+        artifact.baseElements.forEach(baseElement => {
+          if (baseElement.childInstances) {
+            parseTree(baseElement);
+          } else {
+            parseElement(baseElement);
+          }
+        });
 
-      // Update the artifact with all the changes made.
-      coll.updateOne(
-        { _id: artifact._id },
-        { '$set': artifact },
-        (err, result) => {
+        // Update the artifact with all the changes made.
+        coll.updateOne({ _id: artifact._id }, { $set: artifact }, (err, result) => {
           if (err) {
             this.log(`${artifact._id}: error:`, err);
             reject(err);
@@ -119,26 +115,27 @@ module.exports.up = function (done) {
             this.log(`${artifact._id} (${artifact.name}): successfully updated.`);
             resolve(result);
           }
-        }
-      );
-    });
-    promises.push(p);
-  }, (err) => {
-    if (err) {
-      this.log('Migration Error:', err);
-      done(err);
-    } else {
-      Promise.all(promises)
-        .then((results) => {
-          this.log(`Migrated ${results.length} artifacts (only applicable artifacts are counted)`);
-          done();
-        })
-        .catch((err) => {
-          this.log('Migration Error:', err);
-          done(err);
         });
+      });
+      promises.push(p);
+    },
+    err => {
+      if (err) {
+        this.log('Migration Error:', err);
+        done(err);
+      } else {
+        Promise.all(promises)
+          .then(results => {
+            this.log(`Migrated ${results.length} artifacts (only applicable artifacts are counted)`);
+            done();
+          })
+          .catch(err => {
+            this.log('Migration Error:', err);
+            done(err);
+          });
+      }
     }
-  });
+  );
 };
 
 module.exports.down = function (done) {

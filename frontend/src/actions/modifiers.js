@@ -19,8 +19,8 @@ function loadModifiersSuccess(modifiers) {
   const modifierMap = _.keyBy(modifiers, 'id');
   const modifiersByInputType = {};
 
-  modifiers.forEach((modifier) => {
-    modifier.inputTypes.forEach((inputType) => {
+  modifiers.forEach(modifier => {
+    modifier.inputTypes.forEach(inputType => {
       modifiersByInputType[inputType] = (modifiersByInputType[inputType] || []).concat(modifier);
     });
   });
@@ -43,29 +43,48 @@ function loadModifiersFailure(error) {
 function sendModifiersRequest() {
   // We only support editors for these types, so we have to use this list to
   // filter functions for modifiers that we are able to support.
-  const editorTypes = ['boolean', 'system_code', 'system_concept', 'integer', 'datetime', 'decimal', 'system_quantity',
-    'string', 'time', 'interval_of_integer', 'interval_of_datetime', 'interval_of_decimal', 'interval_of_quantity'];
+  const editorTypes = [
+    'boolean',
+    'system_code',
+    'system_concept',
+    'integer',
+    'datetime',
+    'decimal',
+    'system_quantity',
+    'string',
+    'time',
+    'interval_of_integer',
+    'interval_of_datetime',
+    'interval_of_decimal',
+    'interval_of_quantity'
+  ];
   return (dispatch, getState) => {
     return new Promise((resolve, reject) => {
       try {
         const externalCqlList = getState().externalCQL.externalCqlList;
         const externalModifiers = [];
         externalCqlList.forEach(lib => {
-          if ([
-            'CDS_Connect_Commons_for_FHIRv102',
-            'CDS_Connect_Commons_for_FHIRv300',
-            'CDS_Connect_Commons_for_FHIRv400',
-            'CDS_Connect_Conversions',
-            'FHIRHelpers'
-          ].includes(lib.name)) return;
+          if (
+            [
+              'CDS_Connect_Commons_for_FHIRv102',
+              'CDS_Connect_Commons_for_FHIRv300',
+              'CDS_Connect_Commons_for_FHIRv400',
+              'CDS_Connect_Conversions',
+              'FHIRHelpers'
+            ].includes(lib.name)
+          )
+            return;
 
           lib.details.functions.forEach(func => {
             // The ExternalModifier requires a functionName, libraryName,
             // arguments, and argumentTypes field that is not on other modifiers.
             // This is needed for the sake of testing whether external CQL libraries
             // can be deleted or updated or used as modifiers, by checking these details.
-            if ((func.operand.length) >= 1 && (func.argumentTypes.length >= 1)
-              && func.argumentTypes.slice(1).every(type => editorTypes.includes(type.calculated))) {
+            if (
+              func.operand.length >= 1 &&
+              func.argumentTypes.length >= 1 &&
+              func.argumentTypes.slice(1).every(type => editorTypes.includes(type.calculated))
+            ) {
               const functionAndLibraryName = `${func.name} (from ${lib.name})`;
               const modifier = {
                 id: functionAndLibraryName,
@@ -94,7 +113,7 @@ function sendModifiersRequest() {
 }
 
 export function loadModifiers() {
-  return (dispatch) => {
+  return dispatch => {
     dispatch(requestModifiers());
 
     return dispatch(sendModifiersRequest())
@@ -128,14 +147,15 @@ function loadConversionFunctionsFailure(error) {
 
 function sendConversionFunctionsRequest() {
   return new Promise((resolve, reject) => {
-    axios.get(`${API_BASE}/config/conversions`)
+    axios
+      .get(`${API_BASE}/config/conversions`)
       .then(result => resolve(result.data))
       .catch(error => reject(error));
   });
 }
 
 export function loadConversionFunctions() {
-  return (dispatch) => {
+  return dispatch => {
     dispatch(requestConversionFunctions());
 
     return sendConversionFunctionsRequest()

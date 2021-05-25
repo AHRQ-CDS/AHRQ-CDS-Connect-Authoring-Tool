@@ -4,14 +4,7 @@ import StringModifier from '../StringModifier';
 
 describe('<StringModifier />', () => {
   const renderComponent = (props = {}) =>
-    render(
-      <StringModifier
-        handleUpdateModifier={jest.fn()}
-        name="string-modifier-test"
-        value=""
-        {...props}
-      />
-    );
+    render(<StringModifier handleUpdateModifier={jest.fn()} name="string-modifier-test" value="" {...props} />);
 
   it('calls handleUpdateModifier on input change', () => {
     const handleUpdateModifier = jest.fn();

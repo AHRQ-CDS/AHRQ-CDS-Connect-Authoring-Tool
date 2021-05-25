@@ -38,7 +38,7 @@ export default function getProperty(object, path) {
     // Then find the root of the property name (e.g., root of foo.bar[x] is bar)
     const root = property.slice(property.lastIndexOf('.') + 1, property.length - 3);
     // Then find the property in the parent object that starts w/ the root (e.g., barDateTime)
-    property = Object.keys(parent).find(k => (new RegExp(`^${root}[A-Z][a-zA-Z]*$`)).test(k));
+    property = Object.keys(parent).find(k => new RegExp(`^${root}[A-Z][a-zA-Z]*$`).test(k));
     if (property == null) {
       return '';
     }

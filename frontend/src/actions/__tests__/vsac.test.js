@@ -12,8 +12,6 @@ describe('vsac actions', () => {
     const store = mockStore({});
 
     store.dispatch(actions.setVSACApiKey('key'));
-    expect(store.getActions()).toEqual([
-      { type: types.SET_VSAC_API_KEY, apiKey: 'key' }
-    ]);
+    expect(store.getActions()).toEqual([{ type: types.SET_VSAC_API_KEY, apiKey: 'key' }]);
   });
 });

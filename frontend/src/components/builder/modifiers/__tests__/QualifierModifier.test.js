@@ -10,10 +10,12 @@ describe('<QualifierModifier />', () => {
         qualifier=""
         template={{
           ...genericInstance,
-          modifiers: [{
-            id: 'Qualifier',
-            values: {}
-          }]
+          modifiers: [
+            {
+              id: 'Qualifier',
+              values: {}
+            }
+          ]
         }}
         handleUpdateModifier={jest.fn()}
         {...props}
