@@ -1088,8 +1088,8 @@ function applyModifiers(values = [], modifiers = []) {
                 }
                 return null;
               })
-            }; // Certain modifiers (such as lookback) require values, so provide them here
-          }
+            };
+          } else modifierContext.values = modifier.values;
         }
         if (!(modifier.cqlTemplate in modifierMap)) {
           console.error(`Modifier Template could not be found: ${modifier.cqlTemplate}`);
