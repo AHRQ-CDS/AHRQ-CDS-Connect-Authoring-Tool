@@ -89,11 +89,19 @@ export default makeStyles(
     },
     fieldLabel: {
       fontWeight: 'bold',
-      whiteSpace: 'nowrap',
       paddingRight: '1em',
       minWidth: '12.5em',
+      maxWidth: '12.5em',
       textAlign: 'right',
       marginTop: '10px'
+    },
+    fieldLabelGroup: {
+      alignItems: 'center',
+      alignSelf: 'flex-start',
+      display: 'flex',
+      justifyContent: 'flex-end',
+      lineHeight: '1.2',
+      marginTop: '20px'
     },
     fieldLabelShort: {
       marginTop: '0px',
@@ -104,6 +112,9 @@ export default makeStyles(
     },
     fieldLabelTaller: {
       marginTop: '30px'
+    },
+    fieldLabelWithInput: {
+      marginTop: '15px'
     },
     footer: {
       color: theme.palette.common.grayLight,

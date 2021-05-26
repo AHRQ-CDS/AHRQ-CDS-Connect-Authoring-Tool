@@ -8,7 +8,7 @@ import { useField } from 'formik';
 
 import codeSystemOptions from 'data/codeSystemOptions';
 import validateCode from 'queries/validateCode';
-import SelectField from './SelectField';
+import AutocompleteField from './AutocompleteField';
 import TextField from './TextField';
 import { useFieldStyles } from 'styles/hooks';
 import useStyles from './styles';
@@ -16,15 +16,19 @@ import useStyles from './styles';
 const CodeSelectField = ({ namePrefix }) => {
   const codeFieldName = namePrefix ? `${namePrefix}.code` : 'code';
   const systemFieldName = namePrefix ? `${namePrefix}.system` : 'system';
+  const otherFieldName = namePrefix ? `${namePrefix}.other` : 'other';
   const { mutateAsync, data: codeData, isLoading, isSuccess, isError, isIdle, reset } = useMutation(validateCode);
   const vsacApiKey = useSelector(state => state.vsac.apiKey);
   const [{ value: codeFieldValue }] = useField(codeFieldName);
   const [{ value: systemFieldValue }] = useField(systemFieldName);
+  const [{ value: otherFieldValue }] = useField(otherFieldName);
   const prevCodeValue = usePrevious(codeFieldValue);
   const prevSystemValue = usePrevious(systemFieldValue);
+  const prevOtherValue = usePrevious(otherFieldValue);
   const fieldValuesRef = useLatest({
     code: codeFieldValue,
-    system: systemFieldValue
+    system: systemFieldValue,
+    other: otherFieldValue
   });
   const fieldStyles = useFieldStyles();
   const styles = useStyles();
@@ -34,11 +38,12 @@ const CodeSelectField = ({ namePrefix }) => {
 
     if (!system || !code || !vsacApiKey) return;
     const systemId = codeSystemOptions.find(({ value }) => value === system).id;
-
     mutateAsync({ code, system: systemId, apiKey: vsacApiKey });
   }, [mutateAsync, fieldValuesRef, vsacApiKey]);
 
-  const shouldReset = !isIdle && (prevCodeValue !== codeFieldValue || prevSystemValue !== systemFieldValue);
+  const shouldReset =
+    !isIdle &&
+    (prevCodeValue !== codeFieldValue || prevSystemValue !== systemFieldValue || prevOtherValue !== otherFieldValue);
   useEffect(() => {
     if (shouldReset) reset();
   }, [shouldReset, reset]);
@@ -48,7 +53,8 @@ const CodeSelectField = ({ namePrefix }) => {
   return (
     <div className={styles.fieldGroup}>
       <TextField name={codeFieldName} label="Code" />
-      <SelectField name={systemFieldName} label="System" options={codeSystemOptions} />
+      <AutocompleteField name={systemFieldName} label="System" options={codeSystemOptions} />
+      {systemFieldValue === 'Other' && <TextField name={otherFieldName} label="Other" />}
 
       {isError && (
         <Alert className={fieldStyles.field} severity="warning">
@@ -71,7 +77,7 @@ const CodeSelectField = ({ namePrefix }) => {
         <div className={styles.fieldGroupButton}>
           <Button
             color="primary"
-            disabled={isLoading || !codeFieldValue || systemFieldValue == null}
+            disabled={isLoading || !codeFieldValue || !systemFieldValue}
             onClick={handleValidateCode}
             startIcon={isLoading && <CircularProgress size={20} />}
             variant="contained"

@@ -24,15 +24,7 @@ const MuiFastField = ({ field: { name, value, onChange, onBlur }, form: { touche
   />
 );
 
-export default memo(function TextAreaField({
-  name,
-  label,
-  placeholder,
-  colSize = '1',
-  helperText,
-  namePrefix,
-  isCpgField = false
-}) {
+export default memo(function TextAreaField({ name, label, placeholder, helperText, namePrefix, isCpgField = false }) {
   const { values } = useFormikContext();
   const fieldName = namePrefix ? `${namePrefix}.${name}` : name;
   const fieldStyles = useFieldStyles();
@@ -46,10 +38,10 @@ export default memo(function TextAreaField({
   return (
     <div className={fieldStyles.field}>
       {label && (
-        <label htmlFor={labelId} className={fieldStyles.fieldLabel}>
+        <label htmlFor={labelId} className={clsx(fieldStyles.fieldLabel, fieldStyles.fieldLabelGroup)}>
           {label}
           {isCpgField && (
-            <span className={clsx(styles.cpgTag, isCpgComplete(name, values) && styles.cpgTagComplete)}>CPG</span>
+            <div className={clsx(styles.cpgTag, isCpgComplete(name, values) && styles.cpgTagComplete)}>CPG</div>
           )}
           :
         </label>

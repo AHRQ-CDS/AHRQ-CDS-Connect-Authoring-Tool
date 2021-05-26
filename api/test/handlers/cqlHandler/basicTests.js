@@ -32,14 +32,20 @@ const datesCPGArtifact = {
   name: 'Test Artifact With Dates',
   approvalDate: '2020-09-01T04:00:00.000Z',
   lastReviewDate: '2020-09-10T04:00:00.000Z',
-  effectivePeriod: { start: '2020-09-12T04:00:00.000Z', end: '2020-09-19T04:00:00.000Z' }
+  effectivePeriod: {
+    start: '2020-09-12T04:00:00.000Z',
+    end: '2020-09-19T04:00:00.000Z'
+  }
 };
 
 const datesAndContextCPGArtifact = {
   name: 'Test Artifact With Dates and Context',
   approvalDate: '2020-09-01T04:00:00.000Z',
   lastReviewDate: '2020-09-10T04:00:00.000Z',
-  effectivePeriod: { start: '2020-09-12T04:00:00.000Z', end: '2020-09-19T04:00:00.000Z' },
+  effectivePeriod: {
+    start: '2020-09-12T04:00:00.000Z',
+    end: '2020-09-19T04:00:00.000Z'
+  },
   context: [
     { gender: 'male', contextType: 'gender' },
     { system: 'RXNORM', code: '435', contextType: 'clinicalFocus' }
@@ -60,10 +66,15 @@ const baseCPGArtifact = {
   ],
   purpose: 'Testing purposes.',
   usage: 'Only use for testing.',
+  strengthOfRecommendation: { strengthOfRecommendation: 'strong', code: '', system: '' },
+  qualityOfEvidence: { qualityOfEvidence: 'high', code: '', system: '' },
   copyright: 'NULL',
   approvalDate: '2020-09-01T04:00:00.000Z',
   lastReviewDate: '2020-09-10T04:00:00.000Z',
-  effectivePeriod: { start: '2020-09-12T04:00:00.000Z', end: '2020-09-19T04:00:00.000Z' },
+  effectivePeriod: {
+    start: '2020-09-12T04:00:00.000Z',
+    end: '2020-09-19T04:00:00.000Z'
+  },
   topic: [{ system: 'RXNORM', code: '435' }],
   author: [{ author: 'Mr. Tester' }, { author: 'Ms. Tester (no relation)' }],
   reviewer: [{ reviewer: 'Dr. Reviewer' }],
@@ -246,7 +257,14 @@ describe('Basic CQL Handler Tests', () => {
     path: ''
   };
   raw.recommendations = [
-    { uid: 'rec-53', grade: 'A', subpopulations: [], text: 'One rec.', rationale: '', comment: '' }
+    {
+      uid: 'rec-53',
+      grade: 'A',
+      subpopulations: [],
+      text: 'One rec.',
+      rationale: '',
+      comment: ''
+    }
   ];
   raw.subpopulations = [
     {
@@ -356,7 +374,12 @@ describe('Subpopulation tests', () => {
     conjunction: true,
     returnType: 'boolean',
     fields: [
-      { id: 'element_name', type: 'string', name: 'Group Name', value: 'MeetsInclusionCriteria' },
+      {
+        id: 'element_name',
+        type: 'string',
+        name: 'Group Name',
+        value: 'MeetsInclusionCriteria'
+      },
       { id: 'comment', name: 'Comment', type: 'textarea' }
     ],
     uniqueId: 'And-1',
@@ -408,7 +431,12 @@ describe('Subpopulation tests', () => {
     conjunction: true,
     returnType: 'boolean',
     fields: [
-      { id: 'element_name', type: 'string', name: 'Group Name', value: 'MeetsExclusionCriteria' },
+      {
+        id: 'element_name',
+        type: 'string',
+        name: 'Group Name',
+        value: 'MeetsExclusionCriteria'
+      },
       { id: 'comment', name: 'Comment', type: 'textarea' }
     ],
     uniqueId: 'And-2',
@@ -502,8 +530,19 @@ describe('Subpopulation tests', () => {
           name: 'Diabetes',
           extends: 'GenericCondition',
           fields: [
-            { id: 'element_name', value: 'HasDiabetes', type: 'string', name: 'Element Name' },
-            { id: 'condition', static: true, value: 'diabetes', type: 'condition', name: 'Condition' },
+            {
+              id: 'element_name',
+              value: 'HasDiabetes',
+              type: 'string',
+              name: 'Element Name'
+            },
+            {
+              id: 'condition',
+              static: true,
+              value: 'diabetes',
+              type: 'condition',
+              name: 'Condition'
+            },
             { id: 'comment', name: 'Comment', type: 'textarea' }
           ],
           returnType: 'list_of_conditions',
@@ -544,8 +583,18 @@ describe('Subpopulation tests', () => {
           extends: 'Base',
           suppressedModifiers: ['ConvertToMgPerdL'],
           fields: [
-            { id: 'element_name', value: 'My Observation', type: 'string', name: 'Element Name' },
-            { id: 'observation', type: 'observation_vsac', static: true, value: 'Observation' },
+            {
+              id: 'element_name',
+              value: 'My Observation',
+              type: 'string',
+              name: 'Element Name'
+            },
+            {
+              id: 'observation',
+              type: 'observation_vsac',
+              static: true,
+              value: 'Observation'
+            },
             { id: 'comment', name: 'Comment', type: 'textarea' }
           ],
           type: 'element',

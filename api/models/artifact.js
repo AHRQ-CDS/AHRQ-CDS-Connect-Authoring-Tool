@@ -32,6 +32,8 @@ const ArtifactSchema = new Schema(
     reviewer: Array,
     endorser: Array,
     relatedArtifact: Array,
+    strengthOfRecommendation: Object,
+    qualityOfEvidence: Object,
     fhirVersion: String,
     expTreeInclude: Object,
     expTreeExclude: Object,
@@ -54,6 +56,57 @@ ArtifactSchema.methods.toPublishableLibrary = function () {
   let retVal = {};
 
   retVal['resourceType'] = 'Library';
+
+  //handle the extensions
+  if (
+    (this.strengthOfRecommendation && this.strengthOfRecommendation.strengthOfRecommendation) ||
+    (this.qualityOfEvidence && this.qualityOfEvidence.qualityOfEvidence)
+  ) {
+    retVal['extension'] = [];
+    if (this.strengthOfRecommendation && this.strengthOfRecommendation.strengthOfRecommendation) {
+      retVal['extension'].push({
+        url: 'http://hl7.org/fhir/StructureDefinition/cqf-strengthOfRecommendation',
+        valueCodeableConcept: {
+          coding: [
+            this.strengthOfRecommendation.strengthOfRecommendation === 'other'
+              ? {
+                  system:
+                    this.strengthOfRecommendation.system !== 'Other'
+                      ? codeSystems.find(x => x.value === this.strengthOfRecommendation.system)['id']
+                      : this.strengthOfRecommendation.other,
+                  code: this.strengthOfRecommendation.code
+                }
+              : {
+                  system: 'http://terminology.hl7.org/CodeSystem/recommendation-strength',
+                  code: this.strengthOfRecommendation.strengthOfRecommendation
+                }
+          ]
+        }
+      });
+    }
+    if (this.qualityOfEvidence && this.qualityOfEvidence.qualityOfEvidence) {
+      retVal['extension'].push({
+        url: 'http://hl7.org/fhir/StructureDefinition/cqf-qualityOfEvidence',
+        valueCodeableConcept: {
+          coding: [
+            this.qualityOfEvidence.qualityOfEvidence === 'other'
+              ? {
+                  system:
+                    this.qualityOfEvidence.system !== 'Other'
+                      ? codeSystems.find(x => x.value === this.qualityOfEvidence.system)['id']
+                      : this.qualityOfEvidence.other,
+                  code: this.qualityOfEvidence.code
+                }
+              : {
+                  system: 'http://terminology.hl7.org/CodeSystem/evidence-quality',
+                  code: this.qualityOfEvidence.qualityOfEvidence
+                }
+          ]
+        }
+      });
+    }
+  }
+
   retVal['type'] = {
     coding: [
       {
@@ -105,7 +158,7 @@ ArtifactSchema.methods.toPublishableLibrary = function () {
         return {
           coding: [
             {
-              system: codeSystems.find(x => x.value === t.system)['id'],
+              system: t.system !== 'Other' ? codeSystems.find(x => x.value === t.system)['id'] : t.other,
               code: t.code
             }
           ]
@@ -219,7 +272,10 @@ ArtifactSchema.methods.convertContext = function () {
               valueCodeableConcept: {
                 coding: [
                   {
-                    system: codeSystems.find(x => x.value === context['system']).id,
+                    system:
+                      context['system'] !== 'Other'
+                        ? codeSystems.find(x => x.value === context['system']).id
+                        : context['other'],
                     code: context['code']
                   }
                 ]
@@ -314,7 +370,10 @@ ArtifactSchema.methods.convertContext = function () {
               valueCodeableConcept: {
                 coding: [
                   {
-                    system: codeSystems.find(x => x.value === context['system']).id,
+                    system:
+                      context['system'] !== 'Other'
+                        ? codeSystems.find(x => x.value === context['system']).id
+                        : context['other'],
                     code: context['code']
                   }
                 ]

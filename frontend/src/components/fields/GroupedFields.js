@@ -8,7 +8,7 @@ import { isCpgComplete } from 'utils/fields';
 import { useFieldStyles } from 'styles/hooks';
 import useStyles from './styles';
 
-const FastGroupedField = memo(({ name, colSize, index, remove, fields }) => {
+const FastGroupedField = memo(({ name, index, remove, fields }) => {
   const handleRemove = useCallback(() => remove(index), [remove, index]);
   const namePrefix = `${name}[${index}]`;
   const fieldStyles = useFieldStyles();
@@ -40,7 +40,7 @@ const FastGroupedField = memo(({ name, colSize, index, remove, fields }) => {
 });
 
 const FastGroupedFieldArray = memo(
-  ({ name, label, colSize, buttonText, fields, values, defaultValue, push, remove, isCpgField }) => {
+  ({ name, label, buttonText, fields, values, defaultValue, push, remove, isCpgField }) => {
     const hasGroupedFields = values[name].length > 0;
     const addGroup = useCallback(() => push(defaultValue), [push, defaultValue]);
     const cpgFieldComplete = isCpgComplete(name, values);
@@ -49,23 +49,16 @@ const FastGroupedFieldArray = memo(
 
     return (
       <div className={clsx(fieldStyles.field, styles.groupedFields)}>
-        <label htmlFor={name} className={fieldStyles.fieldLabel}>
-          {label}
-          {isCpgField && <span className={clsx(styles.cpgTag, cpgFieldComplete && styles.cpgTagComplete)}>CPG</span>}:
+        <label htmlFor={name} className={clsx(fieldStyles.fieldLabel, fieldStyles.fieldLabelGroup)}>
+          <div>{label}</div>
+          {isCpgField && <div className={clsx(styles.cpgTag, cpgFieldComplete && styles.cpgTagComplete)}>CPG</div>}:
         </label>
 
         <div className={styles.fieldGroups}>
           {hasGroupedFields && (
             <div className={styles.fieldGroup}>
               {values[name].map((value, index) => (
-                <FastGroupedField
-                  name={name}
-                  key={index}
-                  colSize={colSize}
-                  index={index}
-                  remove={remove}
-                  fields={fields}
-                />
+                <FastGroupedField name={name} key={index} index={index} remove={remove} fields={fields} />
               ))}
             </div>
           )}
@@ -84,7 +77,6 @@ const FastGroupedFieldArray = memo(
 export default memo(function GroupedFields({
   name,
   label,
-  colSize = '1',
   buttonText = 'Add',
   fields = [],
   defaultValue = {},
@@ -98,7 +90,6 @@ export default memo(function GroupedFields({
         <FastGroupedFieldArray
           name={name}
           label={label}
-          colSize={colSize}
           buttonText={buttonText}
           fields={fields}
           values={form.values}

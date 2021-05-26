@@ -50,7 +50,6 @@ const DateRangePicker = memo(({ fieldName, helperText, name, rangeType, noDateOp
 export default memo(function DateRangeField({
   name,
   label,
-  colSize = '1',
   helperText,
   noDateOption = false,
   namePrefix,
@@ -64,10 +63,10 @@ export default memo(function DateRangeField({
   return (
     <div className={clsx(fieldStyles.field, styles.fieldCentered)}>
       {label && (
-        <label htmlFor={fieldName} className={fieldStyles.fieldLabel}>
+        <label htmlFor={fieldName} className={clsx(fieldStyles.fieldLabel, fieldStyles.fieldLabelGroup)}>
           {label}
           {isCpgField && (
-            <span className={clsx(styles.cpgTag, isCpgComplete(name, values) && styles.cpgTagComplete)}>CPG</span>
+            <div className={clsx(styles.cpgTag, isCpgComplete(name, values) && styles.cpgTagComplete)}>CPG</div>
           )}
           :
         </label>

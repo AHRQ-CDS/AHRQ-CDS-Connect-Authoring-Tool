@@ -12,7 +12,7 @@ export function stripContextFields(contextFields) {
           return pick(contextField, ['contextType', 'ageRangeMin', 'ageRangeMax', 'ageRangeUnitOfTime']);
         case 'clinicalFocus':
         case 'species':
-          return pick(contextField, ['contextType', 'code', 'system']);
+          return pick(contextField, ['contextType', 'code', 'system', 'other']);
         case 'userType':
           return pick(contextField, ['contextType', 'userType']);
         case 'workflowSetting':
@@ -50,6 +50,22 @@ export function isCpgComplete(name, values) {
       return Boolean(values.purpose);
     case 'usage':
       return Boolean(values.usage);
+    case 'strengthOfRecommendation':
+      return values.strengthOfRecommendation.strengthOfRecommendation === 'other'
+        ? Boolean(
+            values.strengthOfRecommendation.code &&
+              values.strengthOfRecommendation.system &&
+              (values.strengthOfRecommendation.system !== 'Other' || values.strengthOfRecommendation.other)
+          )
+        : Boolean(values.strengthOfRecommendation.strengthOfRecommendation);
+    case 'qualityOfEvidence':
+      return values.qualityOfEvidence.qualityOfEvidence === 'other'
+        ? Boolean(
+            values.qualityOfEvidence.code &&
+              values.qualityOfEvidence.system &&
+              (values.qualityOfEvidence.system !== 'Other' || values.qualityOfEvidence.other)
+          )
+        : Boolean(values.qualityOfEvidence.qualityOfEvidence);
     case 'copyright':
       return Boolean(values.copyright);
     case 'approvalDate':
@@ -60,7 +76,9 @@ export function isCpgComplete(name, values) {
       return Boolean(values.effectivePeriod.start || values.effectivePeriod.end);
     case 'topic':
       if (values.topic.length === 0) return false;
-      return values.topic.every(value => Boolean(value.code && value.system));
+      return values.topic.every(value =>
+        Boolean(value.code && value.system && (value.system !== 'Other' || value.other))
+      );
     case 'author':
       if (values.author.length === 0) return false;
       return values.author.every(value => Boolean(value.author));
@@ -99,7 +117,7 @@ function contextCpgComplete(values) {
       return Boolean((values.ageRangeMin || values.ageRangeMax) && values.ageRangeUnitOfTime);
     case 'clinicalFocus':
     case 'species':
-      return Boolean(values.code && values.system);
+      return Boolean(values.code && values.system && (values.system !== 'Other' || values.other));
     case 'userType':
       return Boolean(values.userType);
     case 'workflowSetting':

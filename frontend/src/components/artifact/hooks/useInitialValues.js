@@ -24,6 +24,18 @@ const useInitialValues = artifactEditing =>
       context: getInitialValue(artifactEditing, 'context', []),
       purpose: getInitialValue(artifactEditing, 'purpose', ''),
       usage: getInitialValue(artifactEditing, 'usage', ''),
+      strengthOfRecommendation: getInitialValue(artifactEditing, 'strengthOfRecommendation', {
+        strengthOfRecommendation: null,
+        code: '',
+        system: '',
+        other: ''
+      }),
+      qualityOfEvidence: getInitialValue(artifactEditing, 'qualityOfEvidence', {
+        qualityOfEvidence: null,
+        code: '',
+        system: '',
+        other: ''
+      }),
       copyright: getInitialValue(artifactEditing, 'copyright', ''),
       approvalDate: getInitialValue(artifactEditing, 'approvalDate', null, stringToDateTransform),
       lastReviewDate: getInitialValue(artifactEditing, 'lastReviewDate', null, stringToDateTransform),

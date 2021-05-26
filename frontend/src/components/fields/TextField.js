@@ -17,7 +17,7 @@ const MuiFastField = ({ field: { name, value, onChange, onBlur }, form: { touche
     name={name}
     onBlur={onBlur}
     onChange={onChange}
-    value={value}
+    value={value || ''}
     variant="outlined"
     {...props}
   />
@@ -28,7 +28,6 @@ export default memo(function TextField({
   label,
   type = 'text',
   placeholder,
-  colSize = '1',
   helperText,
   required = false,
   namePrefix,
@@ -47,11 +46,13 @@ export default memo(function TextField({
   return (
     <div className={fieldStyles.field}>
       {label && (
-        <label htmlFor={labelId} className={fieldStyles.fieldLabel}>
-          {label}
-          {required && <span className={styles.required}>*</span>}
+        <label htmlFor={labelId} className={clsx(fieldStyles.fieldLabel, fieldStyles.fieldLabelGroup)}>
+          <div>
+            {label}
+            {required && <span className={styles.required}>*</span>}
+          </div>
           {isCpgField && (
-            <span className={clsx(styles.cpgTag, isCpgComplete(name, values) && styles.cpgTagComplete)}>CPG</span>
+            <div className={clsx(styles.cpgTag, isCpgComplete(name, values) && styles.cpgTagComplete)}>CPG</div>
           )}
           :
         </label>

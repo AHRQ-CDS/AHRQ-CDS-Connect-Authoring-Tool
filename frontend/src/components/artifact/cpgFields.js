@@ -6,8 +6,8 @@ import {
   DateField,
   DateRangeField,
   GroupedFields,
+  NestedField,
   SelectConditionalField,
-  SelectField,
   TextAreaField,
   TextField
 } from '../fields';
@@ -129,6 +129,20 @@ const unitOfTimeOptions = [
 
 const relatedArtifactOptions = [{ value: 'citation', label: 'Citation' }];
 
+const strengthOfRecommendationOptions = [
+  { value: 'strong', label: 'strong' },
+  { value: 'weak', label: 'weak' },
+  { value: 'other', label: 'other' }
+];
+
+const qualityOfEvidenceOptions = [
+  { value: 'high', label: 'high' },
+  { value: 'moderate', label: 'moderate' },
+  { value: 'low', label: 'low' },
+  { value: 'very-low', label: 'very-low' },
+  { value: 'other', label: 'other' }
+];
+
 // conditions
 
 const contextTypeConditions = {
@@ -137,21 +151,19 @@ const contextTypeConditions = {
       type: 'input',
       name: 'gender',
       label: 'Gender',
-      component: SelectField,
-      options: contextTypeGenderOptions,
-      colSize: '2'
+      component: AutocompleteField,
+      options: contextTypeGenderOptions
     }
   ],
   ageRange: [
-    { name: 'ageRangeMin', label: 'Minimum Age', component: TextField, colSize: '2' },
-    { name: 'ageRangeMax', label: 'Maximum Age', component: TextField, colSize: '2' },
+    { name: 'ageRangeMin', label: 'Minimum Age', component: TextField },
+    { name: 'ageRangeMax', label: 'Maximum Age', component: TextField },
     {
       type: 'input',
       name: 'ageRangeUnitOfTime',
       label: 'Unit of Time',
-      component: SelectField,
-      options: unitOfTimeOptions,
-      colSize: '2'
+      component: AutocompleteField,
+      options: unitOfTimeOptions
     }
   ],
   clinicalFocus: [
@@ -172,7 +184,7 @@ const contextTypeConditions = {
       type: 'input',
       name: 'workflowSetting',
       label: 'Workflow Setting',
-      component: SelectField,
+      component: AutocompleteField,
       options: contextTypeWorkflowSettingOptions
     }
   ],
@@ -227,6 +239,20 @@ const relatedArtifactConditions = {
   ]
 };
 
+const strengthOfRecommendationConditions = {
+  other: [
+    { type: 'button', component: AuthenticateVSACField },
+    { type: 'button', component: CodeSelectField }
+  ]
+};
+
+const qualityOfEvidenceConditions = {
+  other: [
+    { type: 'button', component: AuthenticateVSACField },
+    { type: 'button', component: CodeSelectField }
+  ]
+};
+
 // fields
 
 const contextFields = [
@@ -236,6 +262,26 @@ const contextFields = [
     component: SelectConditionalField,
     options: contextTypeOptions,
     conditions: contextTypeConditions
+  }
+];
+
+const strengthOfRecommendationFields = [
+  {
+    name: 'strengthOfRecommendation',
+    label: 'Value',
+    component: SelectConditionalField,
+    options: strengthOfRecommendationOptions,
+    conditions: strengthOfRecommendationConditions
+  }
+];
+
+const qualityOfEvidenceFields = [
+  {
+    name: 'qualityOfEvidence',
+    label: 'Value',
+    component: SelectConditionalField,
+    options: qualityOfEvidenceOptions,
+    conditions: qualityOfEvidenceConditions
   }
 ];
 
@@ -261,8 +307,8 @@ const relatedArtifactFields = [
 const cpgFields = [
   { name: 'description', label: 'Description', component: TextAreaField },
   { name: 'url', label: 'URL', component: TextField, helperText: urlHelperText },
-  { name: 'status', label: 'Status', component: SelectField, colSize: '2', options: statusOptions },
-  { name: 'experimental', label: 'Experimental', component: SelectField, colSize: '2', options: experimentalOptions },
+  { name: 'status', label: 'Status', component: AutocompleteField, options: statusOptions },
+  { name: 'experimental', label: 'Experimental', component: AutocompleteField, options: experimentalOptions },
   { name: 'publisher', label: 'Publisher', component: TextField, helperText: publisherHelperText },
   {
     name: 'context',
@@ -282,11 +328,36 @@ const cpgFields = [
       clinicalVenue: null,
       program: '',
       code: '',
-      system: null
+      system: null,
+      other: ''
     }
   },
   { name: 'purpose', label: 'Purpose', component: TextAreaField, helperText: purposeHelperText },
   { name: 'usage', label: 'Usage', component: TextAreaField, helperText: usageHelperText },
+  {
+    name: 'strengthOfRecommendation',
+    label: 'Strength of Recommendation',
+    component: NestedField,
+    fields: strengthOfRecommendationFields,
+    defaultValue: {
+      strengthOfRecommendation: null,
+      code: '',
+      system: '',
+      other: ''
+    }
+  },
+  {
+    name: 'qualityOfEvidence',
+    label: 'Quality of Evidence',
+    component: NestedField,
+    fields: qualityOfEvidenceFields,
+    defaultValue: {
+      qualityOfEvidence: null,
+      code: '',
+      system: '',
+      other: ''
+    }
+  },
   { name: 'copyright', label: 'Copyright', component: TextAreaField, helperText: copyrightHelperText },
   { name: 'approvalDate', label: 'Approval Date', component: DateField },
   { name: 'lastReviewDate', label: 'Last Review Date', component: DateField },
@@ -299,7 +370,8 @@ const cpgFields = [
     fields: topicFields,
     defaultValue: {
       code: '',
-      system: null
+      system: null,
+      other: ''
     }
   },
   {

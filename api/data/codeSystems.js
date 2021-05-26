@@ -5,5 +5,5 @@ module.exports = [
   { value: 'NCI', label: 'NCI', id: 'http://ncimeta.nci.nih.gov' },
   { value: 'LOINC', label: 'LOINC', id: 'http://loinc.org' },
   { value: 'RXNORM', label: 'RXNORM', id: 'http://www.nlm.nih.gov/research/umls/rxnorm' },
-  { value: 'Other', label: 'Other', id: 'Other' }
+  { value: 'Other', label: 'Other' }
 ];

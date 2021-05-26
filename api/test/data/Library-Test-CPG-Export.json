@@ -1,5 +1,29 @@
 {
   "resourceType": "Library",
+  "extension": [
+    {
+      "url": "http://hl7.org/fhir/StructureDefinition/cqf-strengthOfRecommendation",
+      "valueCodeableConcept": {
+        "coding": [
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/recommendation-strength",
+            "code": "strong"
+          }
+        ]
+      }
+    },
+    {
+      "url": "http://hl7.org/fhir/StructureDefinition/cqf-qualityOfEvidence",
+      "valueCodeableConcept": {
+        "coding": [
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/evidence-quality",
+            "code": "high"
+          }
+        ]
+      }
+    }
+  ],
   "type": {
     "coding": [
       {

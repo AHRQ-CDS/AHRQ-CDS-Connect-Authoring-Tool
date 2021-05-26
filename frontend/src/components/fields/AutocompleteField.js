@@ -14,9 +14,11 @@ const FormikSelect = ({ field: { name, value, onChange }, form: { setFieldValue 
     setFieldValue
   ]);
   const selectedOption = options.find(option => option.value === value) || null;
+  const fieldStyles = useFieldStyles();
 
   return (
     <Autocomplete
+      className={fieldStyles.fieldInputLg}
       getOptionLabel={option => option?.label || ''}
       id={name}
       onChange={handleChange}
@@ -30,7 +32,6 @@ const FormikSelect = ({ field: { name, value, onChange }, form: { setFieldValue 
 export default memo(function AutocompleteField({
   name,
   label,
-  colSize = '1',
   helperText,
   options = [],
   namePrefix,
@@ -44,10 +45,10 @@ export default memo(function AutocompleteField({
   return (
     <div className={fieldStyles.field}>
       {label && (
-        <label htmlFor={fieldName} className={fieldStyles.fieldLabel}>
-          {label}
+        <label htmlFor={fieldName} className={clsx(fieldStyles.fieldLabel, fieldStyles.fieldLabelGroup)}>
+          <div>{label}</div>
           {isCpgField && (
-            <span className={clsx(styles.cpgTag, isCpgComplete(name, values) && styles.cpgTagComplete)}>CPG</span>
+            <div className={clsx(styles.cpgTag, isCpgComplete(name, values) && styles.cpgTagComplete)}>CPG</div>
           )}
           :
         </label>

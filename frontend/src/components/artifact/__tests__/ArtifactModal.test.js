@@ -16,6 +16,8 @@ const artifactMock = {
   context: [],
   purpose: '',
   usage: '',
+  strengthOfRecommendation: { strengthOfRecommendation: null, code: '', system: '' },
+  qualityOfEvidence: { qualityOfEvidence: null, code: '', system: '' },
   copyright: '',
   approvalDate: null,
   lastReviewDate: null,
@@ -81,8 +83,7 @@ describe('<ArtifactModal />', () => {
 
       const dialog = within(await screen.findByRole('dialog'));
       userEvent.click(dialog.getByText('Show CPG Fields'));
-      const descriptionField = within(dialog.getByText(/Description/));
-      const cpgTag = descriptionField.getByText('CPG');
+      const cpgTag = dialog.getAllByText('CPG')[0];
 
       expect(cpgTag).toHaveAttribute('class', expect.stringContaining('cpgTag'));
       expect(cpgTag).toHaveAttribute('class', expect.not.stringContaining('cpgTagComplete'));
@@ -124,16 +125,24 @@ describe('<ArtifactModal />', () => {
       userEvent.click(screen.getByRole('option', { name: 'draft' }));
       await waitForDropdownToClose();
 
-      userEvent.click(dialog.getByLabelText('Select...')); // experimental
+      userEvent.click(dialog.getAllByLabelText('Select...')[0]); // experimental
       userEvent.click(screen.getByRole('option', { name: 'false' }));
       await waitForDropdownToClose();
 
+      userEvent.click(dialog.getAllByLabelText('Select...')[0]); // strengthOfRecommendation
+      userEvent.click(screen.getByRole('option', { name: 'strong' }));
+      await waitForDropdownToClose();
+
+      userEvent.click(dialog.getAllByLabelText('Select...')[0]); // qualityOfEvidence
+      userEvent.click(screen.getByRole('option', { name: 'high' }));
+      await waitForDropdownToClose();
+
       userEvent.click(dialog.getByText('Add Context'));
-      userEvent.click(dialog.getByLabelText('Select...')); // context type
+      userEvent.click(dialog.getAllByLabelText('Select...')[0]); // context type
       userEvent.click(screen.getByRole('option', { name: 'gender' }));
       await waitForDropdownToClose();
 
-      userEvent.click(dialog.getByLabelText('Select...')); // gender
+      userEvent.click(dialog.getAllByLabelText('Select...')[0]); // gender
       userEvent.click(screen.getByRole('option', { name: 'female' }));
       await waitForDropdownToClose();
 
@@ -155,7 +164,7 @@ describe('<ArtifactModal />', () => {
       });
 
       userEvent.click(dialog.getByText('Add Related Artifact'));
-      userEvent.click(dialog.getByLabelText('Select...')); // related artifact type
+      userEvent.click(dialog.getAllByLabelText('Select...')[0]); // related artifact type
       userEvent.click(screen.getByRole('option', { name: 'Citation' }));
       await waitForDropdownToClose();
 
@@ -185,6 +194,8 @@ describe('<ArtifactModal />', () => {
           context: [{ contextType: 'gender', gender: 'female' }],
           purpose: 'NewArtifactPurpose',
           usage: 'NewArtifactUsage',
+          strengthOfRecommendation: { strengthOfRecommendation: 'strong', code: '', system: '', other: '' },
+          qualityOfEvidence: { qualityOfEvidence: 'high', code: '', system: '', other: '' },
           copyright: 'NewArtifactCopyright',
           // Format dates using this approach so tests pass regardless of the TZ they are run in
           approvalDate: formatISO(new Date(2000, 0, 1)),

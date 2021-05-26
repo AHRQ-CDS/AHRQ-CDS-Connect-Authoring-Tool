@@ -11,7 +11,6 @@ import useStyles from './styles';
 export default memo(function DateField({
   name,
   label,
-  colSize = '1',
   helperText,
   noDateOption = false,
   noDateText = 'No Date',
@@ -34,10 +33,10 @@ export default memo(function DateField({
   return (
     <div className={clsx(fieldStyles.field, styles.fieldCentered)}>
       {label && (
-        <label htmlFor={fieldName} className={fieldStyles.fieldLabel}>
-          {label}
+        <label htmlFor={fieldName} className={clsx(fieldStyles.fieldLabel, fieldStyles.fieldLabelGroup)}>
+          <div>{label}</div>
           {isCpgField && (
-            <span className={clsx(styles.cpgTag, isCpgComplete(name, values) && styles.cpgTagComplete)}>CPG</span>
+            <div className={clsx(styles.cpgTag, isCpgComplete(name, values) && styles.cpgTagComplete)}>CPG</div>
           )}
           :
         </label>
