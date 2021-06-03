@@ -18,6 +18,7 @@ $blue-light: #5178a4;
 $blue-darkest: #071119;
 $blue-link: #004198;
 $light-blue-link: #84b9ff;
+$red-light: #e1756a;
 $red: #961328;
 $green: #41c682;
 $gray-with-opacity: rgba(20, 37, 54, 0.9);
@@ -88,7 +89,12 @@ $navbar-link-active-color: #4a5968;
 $footer-background: #006aaa;
 $footer-background-medium: #0079c1;
 $footer-background-light: #1986c7;
-$footer-background-gradient-1: linear-gradient(to bottom, $footer-background 0%, $footer-background-medium 3%, $footer-background-light 100%);
+$footer-background-gradient-1: linear-gradient(
+  to bottom,
+  $footer-background 0%,
+  $footer-background-medium 3%,
+  $footer-background-light 100%
+);
 $footer-links: #6c1f7e;
 
 //-------------------------- Borders ----------------------------------------//
@@ -133,8 +139,8 @@ $container-large-desktop: $screen-lg + $grid-gutter-width;
 
 //------------------------ Media Queries ------------------------------------//
 
-$break-mobile: $screen-sm - 1;  // mobile and tablet-portrait
-$break-tablet: $screen-md - 1;  // tablet-landscape
+$break-mobile: $screen-sm - 1; // mobile and tablet-portrait
+$break-tablet: $screen-md - 1; // tablet-landscape
 $break-desktop: $screen-lg - 1; // desktop-regular (> desktop-wide)
 
 @mixin respond-to($media) {
@@ -142,39 +148,27 @@ $break-desktop: $screen-lg - 1; // desktop-regular (> desktop-wide)
     @media only screen and (max-width: $break-mobile) {
       @content;
     }
-  }
-
-  @else if $media == tablet {
+  } @else if $media == tablet {
     @media only screen and (min-width: $break-mobile + 1) and (max-width: $break-tablet) {
       @content;
     }
-  }
-
-  @else if $media == desktop {
+  } @else if $media == desktop {
     @media only screen and (min-width: $break-tablet + 1) and (max-width: $break-desktop) {
       @content;
     }
-  }
-
-  @else if $media == desktop-wide {
+  } @else if $media == desktop-wide {
     @media only screen and (min-width: $break-desktop + 1) {
       @content;
     }
-  }
-
-  @else if $media == handheld {
+  } @else if $media == handheld {
     @media only screen and (max-width: $break-tablet) {
       @content;
     }
-  }
-
-  @else if $media == non-handheld {
+  } @else if $media == non-handheld {
     @media only screen and (min-width: $break-tablet +1) {
       @content;
     }
-  }
-
-  @else {
+  } @else {
     @media only screen and (max-width: $media) {
       @content;
     }

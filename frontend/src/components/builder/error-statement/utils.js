@@ -24,3 +24,32 @@ export const getStatementById = (errorStatement, id) => {
 
   return null;
 };
+
+export const ifThenClauseMissingStatementWarning = (ifThenClause, statement) => {
+  if (ifThenClause.ifCondition.value && ifThenClause.statements.length === 0 && ifThenClause.thenClause === '')
+    return 'Then';
+  else if (!ifThenClause.ifCondition.value && (ifThenClause.thenClause !== '' || statement.elseClause !== ''))
+    return 'If';
+};
+
+export const ifThenClauseDisabledIfConditionWarning = (ifThenClause, expTreeInclude, expTreeExclude) => {
+  if (
+    (ifThenClause.ifCondition.uniqueId === 'default-subpopulation-1' && expTreeInclude.childInstances.length === 0) ||
+    (ifThenClause.ifCondition.uniqueId === 'default-subpopulation-2' && expTreeExclude.childInstances.length === 0)
+  )
+    return ifThenClause.ifCondition.label;
+};
+
+export const errorStatementHasWarnings = (errorStatement, expTreeInclude, expTreeExclude) => {
+  for (const ifThenClause of errorStatement.ifThenClauses) {
+    if (
+      ifThenClauseMissingStatementWarning(ifThenClause, errorStatement) ||
+      ifThenClauseDisabledIfConditionWarning(ifThenClause, expTreeInclude, expTreeExclude)
+    )
+      return true;
+    for (const statement of ifThenClause.statements) {
+      return errorStatementHasWarnings(statement, expTreeInclude, expTreeExclude);
+    }
+  }
+  return false;
+};

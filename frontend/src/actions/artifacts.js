@@ -274,12 +274,6 @@ export function updateAndSaveArtifact(artifactToUpdate, props) {
 // ------------------------- INITIALIZE ARTIFACT --------------------------- //
 
 function initializeTrees(andTemplate, orTemplate) {
-  const newSubpopulation = createTemplateInstance(andTemplate);
-  newSubpopulation.name = '';
-  newSubpopulation.path = '';
-  newSubpopulation.subpopulationName = 'Subpopulation 1';
-  newSubpopulation.expanded = true;
-
   const newExpTreeInclude = createTemplateInstance(andTemplate);
   newExpTreeInclude.path = '';
   const newExpTreeIncludeNameField = getFieldWithId(newExpTreeInclude.fields, 'element_name');
@@ -291,7 +285,6 @@ function initializeTrees(andTemplate, orTemplate) {
   if (newExpTreeExcludeNameField) newExpTreeExcludeNameField.value = 'MeetsExclusionCriteria';
 
   return {
-    newSubpopulation,
     newExpTreeInclude,
     newExpTreeExclude
   };
@@ -320,8 +313,7 @@ export function initializeArtifact(andTemplate, orTemplate) {
         subpopulationName: 'Meets Exclusion Criteria',
         special_subpopulationName: '"MeetsExclusionCriteria"',
         uniqueId: 'default-subpopulation-2'
-      },
-      newTrees.newSubpopulation
+      }
     ],
     baseElements: [],
     parameters: [],

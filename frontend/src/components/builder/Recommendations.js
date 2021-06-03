@@ -19,12 +19,6 @@ export default class Recommendations extends Component {
     };
   }
 
-  componentDidMount() {
-    if (this.props.artifact.recommendations.length === 0) {
-      this.addRecommendation();
-    }
-  }
-
   handleModeChange = event => {
     this.setState({ mode: event.target.value });
   };

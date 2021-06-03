@@ -23,8 +23,7 @@ localModifiers.forEach(modifier => {
 // Names used in mockArtifact -  used in multiple tests and never changed
 const mockArtifactNames = [
   { name: "Doesn't Meet Inclusion Criteria", id: 'default-subpopulation-1' },
-  { name: 'Meets Exclusion Criteria', id: 'default-subpopulation-2' },
-  { name: 'Subpopulation 1', id: 'And-TEST-1' }
+  { name: 'Meets Exclusion Criteria', id: 'default-subpopulation-2' }
 ];
 
 describe('external cql actions', () => {

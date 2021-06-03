@@ -7,6 +7,13 @@
         "ignoreAtRules": ["include", "mixin", "if", "else", "extend"]
       }
     ],
-    "no-descending-specificity": null
+    "no-descending-specificity": null,
+    "block-closing-brace-newline-after": [
+      "always",
+      {
+        "ignoreAtRules": ["if", "else"]
+      }
+    ],
+    "at-rule-empty-line-before": null
   }
 }

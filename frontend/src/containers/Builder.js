@@ -5,7 +5,14 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import { Button, IconButton, Menu, MenuItem } from '@material-ui/core';
-import { Edit as EditIcon, GetApp as GetAppIcon, MenuBook as MenuBookIcon, Save as SaveIcon } from '@material-ui/icons';
+import {
+  CheckCircle as CheckCircleIcon,
+  Edit as EditIcon,
+  Error as ErrorIcon,
+  GetApp as GetAppIcon,
+  MenuBook as MenuBookIcon,
+  Save as SaveIcon
+} from '@material-ui/icons';
 import _ from 'lodash';
 
 import loadTemplates from 'actions/templates';
@@ -42,6 +49,9 @@ import Subpopulations from 'components/builder/Subpopulations';
 
 import isBlankArtifact from 'utils/artifacts/isBlankArtifact';
 import { findValueAtPath } from 'utils/find';
+import { hasGroupNestedWarning } from 'utils/warnings';
+import { errorStatementHasWarnings } from 'components/builder/error-statement/utils';
+import { parametersHaveWarnings } from 'components/builder/parameters/utils';
 
 import artifactProps from 'prop-types/artifact';
 
@@ -114,6 +124,69 @@ export class Builder extends Component {
       const elementToScrollTo = document.getElementById(elementId);
       if (elementToScrollTo) elementToScrollTo.scrollIntoView();
     });
+  };
+
+  tabHasContent = tabName => {
+    const { artifact, externalCqlList } = this.props;
+    const { baseElements, errorStatement, parameters, recommendations, subpopulations } = artifact;
+
+    switch (tabName) {
+      case 'expTreeInclude':
+      case 'expTreeExclude':
+        return this.getAllInstances(tabName).length > 0;
+      case 'subpopulations':
+        return (
+          subpopulations.length > 3 ||
+          (subpopulations.length === 3 &&
+            (subpopulations[2].subpopulationName !== 'Subpopulation 1' || subpopulations[2].childInstances.length > 0))
+        );
+      case 'baseElements':
+        return baseElements.length > 0;
+      case 'recommendations':
+        return recommendations.length > 0;
+      case 'parameters':
+        return parameters.length > 0;
+      case 'handleErrors':
+        return errorStatement.ifThenClauses[0].ifCondition.value !== null;
+      case 'externalCQL':
+        return externalCqlList.length > 0;
+      default:
+        return false;
+    }
+  };
+
+  tabHasErrors = tabName => {
+    const { artifact, names } = this.props; // externalCqlList,
+    const allInstancesInAllTrees = this.getAllInstancesInAllTrees();
+    const { baseElements, errorStatement, expTreeInclude, expTreeExclude, parameters, subpopulations } = artifact;
+    const namedParameters = parameters.filter(({ name }) => name?.length);
+
+    switch (tabName) {
+      case 'expTreeInclude':
+      case 'expTreeExclude': {
+        const instances = this.getAllInstances(tabName);
+        return hasGroupNestedWarning(instances, names, baseElements, namedParameters, allInstancesInAllTrees);
+      }
+      case 'subpopulations': {
+        const filteredSubpopulations = subpopulations.filter(({ special }) => !special);
+        const emptySubpopulations = filteredSubpopulations.filter(({ childInstances }) => childInstances.length === 0);
+        const instances = _.flatten(filteredSubpopulations.map(({ childInstances }) => childInstances));
+        return (
+          emptySubpopulations.length > 0 ||
+          hasGroupNestedWarning(instances, names, baseElements, namedParameters, allInstancesInAllTrees)
+        );
+      }
+      case 'baseElements': {
+        return hasGroupNestedWarning(baseElements, names, baseElements, namedParameters, allInstancesInAllTrees, false);
+      }
+      case 'parameters': {
+        return parametersHaveWarnings(parameters, names, allInstancesInAllTrees);
+      }
+      case 'handleErrors':
+        return errorStatementHasWarnings(errorStatement, expTreeInclude, expTreeExclude);
+      default:
+        return false;
+    }
   };
 
   // ----------------------- INSTANCES ------------------------------------- //
@@ -572,15 +645,55 @@ export class Builder extends Component {
           <section className="builder__canvas">
             <Tabs selectedIndex={activeTabIndex} onSelect={tabIndex => this.setActiveTab(tabIndex)}>
               <TabList aria-label="Workspace Tabs">
-                <Tab>Inclusions</Tab>
-                <Tab>Exclusions</Tab>
-                <Tab>Subpopulations</Tab>
-                <Tab>Base Elements</Tab>
-                <Tab>Recommendations</Tab>
-                <Tab>Parameters</Tab>
-                <Tab>Handle Errors</Tab>
-                <Tab className="flex-align-center">
-                  <MenuBookIcon fontSize="small" /> External CQL
+                <Tab>
+                  Inclusions
+                  {this.tabHasContent('expTreeInclude') && !this.tabHasErrors('expTreeInclude') && (
+                    <CheckCircleIcon className="tab-indicator" />
+                  )}
+                  {this.tabHasErrors('expTreeInclude') && <ErrorIcon className="tab-indicator tab-indicator-error" />}
+                </Tab>
+                <Tab>
+                  Exclusions
+                  {this.tabHasContent('expTreeExclude') && !this.tabHasErrors('expTreeExclude') && (
+                    <CheckCircleIcon className="tab-indicator" />
+                  )}
+                  {this.tabHasErrors('expTreeExclude') && <ErrorIcon className="tab-indicator tab-indicator-error" />}
+                </Tab>
+                <Tab>
+                  Subpopulations
+                  {this.tabHasContent('subpopulations') && !this.tabHasErrors('subpopulations') && (
+                    <CheckCircleIcon className="tab-indicator" />
+                  )}
+                  {this.tabHasErrors('subpopulations') && <ErrorIcon className="tab-indicator tab-indicator-error" />}
+                </Tab>
+                <Tab>
+                  Base Elements
+                  {this.tabHasContent('baseElements') && !this.tabHasErrors('baseElements') && (
+                    <CheckCircleIcon className="tab-indicator" />
+                  )}
+                  {this.tabHasErrors('baseElements') && <ErrorIcon className="tab-indicator tab-indicator-error" />}
+                </Tab>
+                <Tab>
+                  Recommendations
+                  {this.tabHasContent('recommendations') && <CheckCircleIcon className="tab-indicator" />}
+                </Tab>
+                <Tab>
+                  Parameters
+                  {this.tabHasContent('parameters') && !this.tabHasErrors('parameters') && (
+                    <CheckCircleIcon className="tab-indicator" />
+                  )}
+                  {this.tabHasErrors('parameters') && <ErrorIcon className="tab-indicator tab-indicator-error" />}
+                </Tab>
+                <Tab>
+                  Handle Errors
+                  {this.tabHasContent('handleErrors') && !this.tabHasErrors('handleErrors') && (
+                    <CheckCircleIcon className="tab-indicator" />
+                  )}
+                  {this.tabHasErrors('handleErrors') && <ErrorIcon className="tab-indicator tab-indicator-error" />}
+                </Tab>
+                <Tab>
+                  <MenuBookIcon className="tab-indicator" /> External CQL
+                  {this.tabHasContent('externalCQL') && <CheckCircleIcon className="tab-indicator" />}
                 </Tab>
               </TabList>
 

@@ -38,8 +38,7 @@ describe('artifact actions', () => {
       const names = [
         // Names used in mockArtifact
         { name: "Doesn't Meet Inclusion Criteria", id: 'default-subpopulation-1' },
-        { name: 'Meets Exclusion Criteria', id: 'default-subpopulation-2' },
-        { name: 'Subpopulation 1', id: 'And-TEST-1' }
+        { name: 'Meets Exclusion Criteria', id: 'default-subpopulation-2' }
       ];
       const librariesInUse = [];
 
@@ -111,8 +110,7 @@ describe('artifact actions', () => {
       const names = [
         // Names used in mockArtifact
         { name: "Doesn't Meet Inclusion Criteria", id: 'default-subpopulation-1' },
-        { name: 'Meets Exclusion Criteria', id: 'default-subpopulation-2' },
-        { name: 'Subpopulation 1', id: 'And-TEST-1' }
+        { name: 'Meets Exclusion Criteria', id: 'default-subpopulation-2' }
       ];
       const librariesInUse = [];
 

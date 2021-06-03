@@ -1,5 +1,7 @@
 .builder {
-  &-wrapper { @include componentWidth; }
+  &-wrapper {
+    @include componentWidth;
+  }
 
   padding: $global-padding;
   padding-bottom: 0;
@@ -42,7 +44,7 @@
       margin-bottom: 5px;
     }
 
-    [role=status] {
+    [role='status'] {
       height: 30px;
       color: $white;
       font-style: italic;
@@ -55,7 +57,7 @@
   }
 
   .react-tabs {
-    [role=tablist] {
+    [role='tablist'] {
       display: flex;
       justify-content: space-between;
       margin: 0 -9999rem;
@@ -67,22 +69,34 @@
       z-index: 2;
     }
 
-    [role=tab] {
-      flex-grow: 1;
-      white-space: nowrap;
-      list-style: none;
-      padding: 0.65em;
-      margin: 0 0.25em;
-      text-align: center;
-      cursor: pointer;
+    [role='tab'] {
+      align-items: center;
       border-radius: $border-radius $border-radius 0 0;
-      font-size: 0.9em;
+      cursor: pointer;
+      display: flex;
+      flex-grow: 1;
+      justify-content: space-around;
+      list-style: none;
+      margin: 0 0.25em;
+      padding: 0.65em;
+      text-align: center;
+      white-space: nowrap;
 
-      &[aria-selected=true] {
+      @include respond-to('1440px') {
+        font-size: 1em;
+      }
+
+      @include respond-to('1200px') {
+        font-size: 0.85em;
+      }
+
+      font-size: 0.72em;
+
+      &[aria-selected='true'] {
         background-color: $white;
       }
 
-      &[aria-selected=false] {
+      &[aria-selected='false'] {
         background-color: $blue;
         color: $white;
 
@@ -110,6 +124,14 @@
     margin-bottom: 20px;
     font-size: 0.9em;
     font-style: italic;
+  }
+
+  .tab-indicator {
+    font-size: 1.1em;
+
+    &-error {
+      color: $red-light;
+    }
   }
 }
 

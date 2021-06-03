@@ -38,18 +38,6 @@ const mockArtifact = {
       special_subpopulationName: '"MeetsExclusionCriteria"',
       subpopulationName: 'Meets Exclusion Criteria',
       uniqueId: 'default-subpopulation-2'
-    },
-    {
-      childInstances: [],
-      conjunction: true,
-      expanded: true,
-      id: 'And',
-      name: '',
-      fields: [],
-      path: '',
-      returnType: 'boolean',
-      subpopulationName: 'Subpopulation 1',
-      uniqueId: 'And-TEST-1'
     }
   ],
   parameters: [],

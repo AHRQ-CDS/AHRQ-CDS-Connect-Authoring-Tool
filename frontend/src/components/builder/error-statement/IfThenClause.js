@@ -10,7 +10,12 @@ import ErrorStatementLabel from './ErrorStatementLabel';
 import IfConditionSelect from './IfConditionSelect';
 import NestedErrorStatement from './NestedErrorStatement';
 import ThenClause from './ThenClause';
-import { generateErrorStatement, getStatementById } from './utils';
+import {
+  generateErrorStatement,
+  getStatementById,
+  ifThenClauseMissingStatementWarning,
+  ifThenClauseDisabledIfConditionWarning
+} from './utils';
 import useStyles from './styles';
 
 const IfThenClause = ({ handleDeleteIfThenClause, handleUpdateErrorStatement, ifThenClause, index, statement }) => {
@@ -23,18 +28,12 @@ const IfThenClause = ({ handleDeleteIfThenClause, handleUpdateErrorStatement, if
   const isRoot = statement.id === 'root';
   const label = ifThenClauseIndex === 0 ? (isRoot ? 'If' : 'And if') : 'Else if';
 
-  let missingStatementWarning;
-  if (ifThenClause.ifCondition.value && ifThenClause.statements.length === 0 && ifThenClause.thenClause === '')
-    missingStatementWarning = 'Then';
-  else if (!ifThenClause.ifCondition.value && (ifThenClause.thenClause !== '' || statement.elseClause !== ''))
-    missingStatementWarning = 'If';
-
-  let disabledIfConditionWarning;
-  if (
-    (ifThenClause.ifCondition.uniqueId === 'default-subpopulation-1' && expTreeInclude.childInstances.length === 0) ||
-    (ifThenClause.ifCondition.uniqueId === 'default-subpopulation-2' && expTreeExclude.childInstances.length === 0)
-  )
-    disabledIfConditionWarning = ifThenClause.ifCondition.label;
+  const missingStatementWarning = ifThenClauseMissingStatementWarning(ifThenClause, statement);
+  const disabledIfConditionWarning = ifThenClauseDisabledIfConditionWarning(
+    ifThenClause,
+    expTreeInclude,
+    expTreeExclude
+  );
 
   const handleToggleNestedStatements = () => {
     const newErrorStatement = _.cloneDeep(errorStatement);
