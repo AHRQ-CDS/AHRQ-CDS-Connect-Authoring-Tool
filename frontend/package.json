@@ -85,6 +85,10 @@
     "stylelint": "^13.8.0",
     "stylelint-config-standard": "^20.0.0"
   },
+  "resolutions": {
+    "glob-parent": "^5.1.2",
+    "normalize-url": "^4.5.1"
+  },
   "scripts": {
     "build": "react-scripts build",
     "start": "react-scripts start",
