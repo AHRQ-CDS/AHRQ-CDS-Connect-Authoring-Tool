@@ -85,7 +85,7 @@ const NumberEditor = ({ handleUpdateEditor, isDecimal = false, isInterval = fals
       </div>
 
       {showInputWarning && (
-        <Alert severity="error">Warning: An entered value is not a valid {isDecimal ? 'Decimal' : 'Integer'}.</Alert>
+        <Alert severity="error">Warning: The entered value is not a valid {isDecimal ? 'Decimal' : 'Integer'}.</Alert>
       )}
     </div>
   );

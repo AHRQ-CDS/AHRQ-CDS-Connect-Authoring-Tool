@@ -427,7 +427,7 @@ export default class ListGroup extends Component {
 
                 {needsIntersectionWarning && (
                   <div className="warning">
-                    Warning: Intersecting different types will always result in an empty list
+                    Warning: Intersecting different types will always result in an empty list.
                   </div>
                 )}
               </div>

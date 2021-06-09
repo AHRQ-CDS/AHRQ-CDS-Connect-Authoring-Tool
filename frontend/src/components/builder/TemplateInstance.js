@@ -486,7 +486,7 @@ export default class TemplateInstance extends Component {
     const returnError =
       !(validateReturnType !== false) || returnType === 'boolean'
         ? null
-        : "Element must have return type 'boolean'. Add expression(s) to change the return type.";
+        : "Element must have return type 'boolean' (true/false). Add expression(s) to change the return type.";
 
     return (
       <div className="card-element__body">

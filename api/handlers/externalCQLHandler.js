@@ -509,18 +509,20 @@ function singlePost(req, res) {
               res
                 .status(400)
                 .send(
-                  "Upload failed because the external library '" +
-                    duplicateLib.libraryName +
-                    "' in the file '" +
-                    duplicateLib.fileName +
-                    "' shares the same name as the artifact itself."
+                  `Unable to upload external CQL because the library '${duplicateLib.libraryName}' in the file ` +
+                    `'${duplicateLib.fileName}' shares the same name as the artifact itself. To fix this, either ` +
+                    'rename this artifact in the CDS Authoring Tool or rename the external CQL library and try again.'
                 );
               return;
             }
 
             if (notFHIR) {
-              res.status(400).send(`None of the libraries were uploaded because at least one
-                uses a data model that is not FHIR®.`);
+              res
+                .status(400)
+                .send(
+                  'Unable to upload external CQL because at least one library uses a data model that is not FHIR®. ' +
+                    'The CDS Authoring Tool only supports external CQL libraries that use the FHIR® data model.'
+                );
               return;
             }
 
@@ -571,26 +573,37 @@ function singlePost(req, res) {
                 const exportLibrariesNotUploaded = authoringToolExportLibraries
                   .map(lib => `library ${lib.name}`)
                   .join(', ');
-                const exportLibrariesNotUploadedMessage = `The following were not uploaded because a version of the \
-                  library is included by default: ${exportLibrariesNotUploaded}.`;
+                const exportLibrariesNotUploadedMessage =
+                  'The following libraries were not uploaded because the CDS Authoring Tool already includes a ' +
+                  `version of the same library by default:  ${exportLibrariesNotUploaded}. No further action is ` +
+                  'necessary.';
                 // If any file has an error, upload nothing.
                 if (elmErrors.length > 0) {
                   res.status(400).send(elmErrors);
                 } else if (!fhirVersionsMatch) {
                   const message =
-                    'A library using a different version of FHIR® is uploaded. Only one FHIR® version \
-                    can be supported at a time.';
+                    'Unable to upload external CQL because a library using a different version of FHIR® is already ' +
+                    'uploaded. Only one FHIR® version can be supported at a time. To fix this, either remove the ' +
+                    'previously uploaded FHIR® libraries or upload new libraries that use the same version of FHIR®.';
                   res.status(400).send(message);
                 } else if (!artifactFHIRVersionsMatch) {
-                  const message = `Unable to upload CQL library due to FHIR® version conflict. 
-                  Only one FHIR® version can be supported at a time.`;
+                  const message =
+                    'Unable to upload external CQL because it uses a different version of FHIR® than this artifact ' +
+                    `requires. To fix this, only upload libraries that use FHIR ${artifactFHIRVersion}.`;
                   res.status(400).send(message);
                 } else if (!supportedFHIRVersion) {
-                  res.status(400).send('Unsupported FHIR® version.');
+                  res
+                    .status(400)
+                    .send(
+                      'Unable to upload external CQL because it uses an unsupported FHIR® version. The CDS Authoring ' +
+                        'Tool currently supports CQL using the following FHIR® versions: 1.0.2, 3.0.0, or 4.0.0. To ' +
+                        'fix this, upload a new library that uses one of the supported versions.'
+                    );
                 } else if (hasRepeats) {
                   const message =
-                    'More than one library in this package has the same name. Only one library of the \
-                    same name can be uploaded at a time.';
+                    'Unable to upload external CQL because more than one library in this package has the same name. ' +
+                    'Only one library of the same name can be uploaded at a time. To fix this, ensure that you only ' +
+                    'upload zip files that contain CQL libraries with unique names.';
                   res.status(400).send(message);
                 } else {
                   // If a library to update has contents whose names or return types have changed, and the
@@ -623,8 +636,9 @@ function singlePost(req, res) {
                         const librariesNotUploaded = duplicateLibraries
                           .map(lib => `library ${lib.name} version ${lib.version}`)
                           .join(', ');
-                        let message = `The following was not uploaded because a library with identical name \
-                          and version already exists: ${librariesNotUploaded}.`;
+                        let message =
+                          'Unable to upload external CQL because a library with an identical name and version ' +
+                          `already exists: ${librariesNotUploaded}.`;
                         if (exportLibrariesNotUploaded.length > 0) {
                           message = message.concat(` ${exportLibrariesNotUploadedMessage}`);
                         }
@@ -659,7 +673,7 @@ function singlePost(req, res) {
                         } else {
                           let updateMessage;
                           if (librariesToUpdate.length > 0)
-                            updateMessage = 'One or more of the libraries on this artifact have been updated.';
+                            updateMessage = 'One or more of the libraries in this artifact have been updated.';
                           if (newLibFHIRVersion) {
                             Artifact.update(
                               { user: req.user.uid, _id: artifactId },
@@ -680,8 +694,10 @@ function singlePost(req, res) {
                     });
                   } else {
                     const message =
-                      'The libraries could not be uploaded/updated because the artifact uses content \
-                      from at least one library that has changed between versions.';
+                      'Unable to upload external CQL because the updated CQL contains incompatible modifications to ' +
+                      'definitions/functions that this CDS artifact currently uses. To fix this, remove uses of the ' +
+                      'affected CQL definitions/functions in this artifact or update the external CQL to retain ' +
+                      'compatible versions of the definitions/functions that this artifact uses.';
                     res.status(400).send(message);
                   }
                 }
@@ -708,7 +724,12 @@ function singlePost(req, res) {
         const { elmErrors, elmResultsToSave, notFHIR } = parseELMFiles(elmFiles, artifactId, req.user.uid, files);
 
         if (notFHIR) {
-          res.status(400).send('Library uses a data model that is not FHIR®.');
+          res
+            .status(400)
+            .send(
+              'Unable to upload external CQL because it uses a data model that is not FHIR®. The CDS Authoring Tool ' +
+                'only supports external CQL libraries that use the FHIR® data model.'
+            );
           return;
         }
 
@@ -723,9 +744,9 @@ function singlePost(req, res) {
           res
             .status(400)
             .send(
-              "Upload failed because the external library '" +
-                duplicateLib.libraryName +
-                "' shares the same name as the artifact itself."
+              `Unable to upload external CQL because the library '${duplicateLib.libraryName}' shares the same name ` +
+                'as the artifact itself. To fix this, either rename this artifact in the CDS Authoring Tool or ' +
+                'rename the external CQL library and try again.'
             );
           return;
         }
@@ -753,21 +774,40 @@ function singlePost(req, res) {
             if (elmErrors.length > 0) {
               res.status(400).send(elmErrors);
             } else if (defaultLibrary) {
-              res.status(200).send('Library is already included by default, so it was not uploaded.');
+              res
+                .status(200)
+                .send(
+                  'The following library was not uploaded because the CDS Authoring Tool already includes a ' +
+                    `version of the same library by default: ${elmResult.name}. No further action is ` +
+                    'necessary.'
+                );
             } else if (!fhirVersionsMatch) {
               const message =
-                'A library using a different version of FHIR® is uploaded. Only one FHIR® version can be \
-                supported at a time.';
+                'Unable to upload external CQL because a library using a different version of FHIR® is already ' +
+                'uploaded. Only one FHIR® version can be supported at a time. To fix this, either remove the ' +
+                'previously uploaded FHIR® libraries or upload new libraries that use the same version of FHIR®.';
               res.status(400).send(message);
             } else if (!supportedFHIRVersion) {
-              res.status(400).send('Unsupported FHIR® version.');
+              res
+                .status(400)
+                .send(
+                  'Unable to upload external CQL because it uses an unsupported FHIR® version. The CDS Authoring ' +
+                    'Tool currently supports CQL using the following FHIR® versions: 1.0.2, 3.0.0, or 4.0.0. To ' +
+                    'fix this, upload a new library that uses one of the supported versions.'
+                );
             } else if (!artifactFHIRVersionsMatch) {
-              const message = `Unable to upload CQL library due to FHIR® version conflict. 
-              Only one FHIR® version can be supported at a time.`;
+              const message =
+                'Unable to upload external CQL because it uses a different version of FHIR® than this artifact ' +
+                `requires. To fix this, only upload libraries that use FHIR ${artifactFHIRVersion}.`;
               res.status(400).send(message);
             } else if (dupName) {
               if (dupVersion) {
-                res.status(200).send('Library with identical name and version already exists.');
+                res
+                  .status(200)
+                  .send(
+                    'Unable to upload external CQL because a library with an identical name and version ' +
+                      `already exists: ${elmResult.name}.`
+                  );
               } else {
                 if (shouldLibraryBeUpdated(elmResult, artifact)) {
                   CQLLibrary.update({ user: req.user.uid, name: elmResult.name }, elmResult, error => {
@@ -777,8 +817,10 @@ function singlePost(req, res) {
                   });
                 } else {
                   const message =
-                    'Library could not be updated, because the artifact uses content that has \
-                    changed between versions.';
+                    'Unable to upload external CQL because the updated CQL contains incompatible modifications to ' +
+                    'definitions/functions that this CDS artifact currently uses. To fix this, remove uses of the ' +
+                    'affected CQL definitions/functions in this artifact or update the external CQL to retain ' +
+                    'compatible versions of the definitions/functions that this artifact uses.';
                   res.status(400).send(message);
                 }
               }

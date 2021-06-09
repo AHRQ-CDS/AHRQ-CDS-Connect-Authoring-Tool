@@ -13,9 +13,7 @@ import { useSpacingStyles } from 'styles/hooks';
 import CodeService from 'utils/code_service/CodeService';
 import useStyles from './styles';
 
-export const validate404ErrorMessage =
-  'Unable to retrieve codes for a value set in this artifact. This is a known issue with' +
-  ' intensional value sets that will be resolved in an upcoming release';
+export const validate404ErrorMessage = 'Unable to retrieve codes for a value set in this artifact.';
 
 const Tester = () => {
   const [elmErrors, setElmErrors] = useState(null);
@@ -58,7 +56,7 @@ const Tester = () => {
 
       setTestResults({ results, patientsExecuted: selectedPatients, artifact });
     } catch (error) {
-      setExecutionError(`Execute failed. Error: ${error.message}`);
+      setExecutionError(`Execution failed. Error: ${error.message}`);
     }
   };
 

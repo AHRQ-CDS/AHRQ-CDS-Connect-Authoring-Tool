@@ -34,7 +34,7 @@ const CodeSelectModalHeader = ({
           Code systems should use their canonical URL. See{' '}
           <Link
             external
-            href="http://build.fhir.org/ig/HL7/cqf-recommendations/documentation-libraries.html"
+            href="http://hl7.org/fhir/uv/cpg/STU1/libraries.html#code-systems"
             text="FHIR® Clinical Guidelines"
           />{' '}
           for more information.

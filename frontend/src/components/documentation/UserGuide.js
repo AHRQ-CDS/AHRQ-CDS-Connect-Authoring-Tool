@@ -569,14 +569,6 @@ const UserGuide = () => {
                 />
               </div>
               <div>
-                NOTE: The VSAC recently introduced a new approach toward authoring value sets that allows value sets to
-                be defined using code filters. These value sets are called intensional value sets, and while the VSAC
-                supports authoring them, it does not yet support retrieving their contents over the FHIR interface that
-                the CDS Authoring Tool uses. If you select an intensional value set, an error will be displayed
-                indicating that the codes cannot be retrieved. You can, however, still select the value set if you are
-                confident it is the one you need.
-              </div>
-              <div>
                 Upon selection of the value set, the element will be updated with the value set association and a name
                 (which defaults to the value set name). Feel free to modify the name to more closely match the final
                 intent of the element. At this point, you can associate additional value sets or codes. These value sets

@@ -213,7 +213,7 @@ export default class Subpopulation extends Component {
     return (
       <div className="card-element__body">
         {this.subpopulationHasOneChildWarning() && (
-          <div className="warning">This subpopulation needs at least one element</div>
+          <div className="warning">This subpopulation needs at least one element.</div>
         )}
 
         <ExpressionPhrase class="expression expression__group" instance={subpopulation} baseElements={baseElements} />

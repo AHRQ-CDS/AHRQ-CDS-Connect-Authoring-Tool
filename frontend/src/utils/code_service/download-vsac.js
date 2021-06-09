@@ -23,11 +23,6 @@ function downloadFromVSAC(apiKey, input, vsDB = {}) {
       // eslint-disable-line consistent-return
       const errors = results.filter(r => r instanceof Error);
       if (errors.length > 0) {
-        // If we have a 404 after successfully creating an artifact with a value set, it is intensional
-        const intensionalError = errors.find(e => e.response.status === 404);
-        if (intensionalError) {
-          return Promise.reject(intensionalError);
-        }
         return Promise.reject(errors[0]);
       }
     });

@@ -167,7 +167,7 @@ export default class ExternalCQL extends Component {
 
                   {showUploadErrorBanner && (
                     <Alert severity="error" onClose={event => this.dismissBanner(event, 'showUploadErrorBanner')}>
-                      Invalid file type.
+                      Invalid file type. Only .cql and .zip files can be uploaded.
                     </Alert>
                   )}
 

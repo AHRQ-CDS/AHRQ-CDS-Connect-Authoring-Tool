@@ -22,7 +22,9 @@ const ExternalCQLTemplate = ({ externalCqlArguments, handleUpdateExternalCqlArgu
   return (
     <div id="external-cql-template">
       {!allArgumentsComplete() && (
-        <Alert severity="warning">All fields for standalone External CQL functions are required.</Alert>
+        <Alert severity="warning">
+          All fields for standalone External CQL functions are required. Enter valid values for each field.
+        </Alert>
       )}
 
       {externalCqlArguments?.map((cqlArgument, index) => (
