@@ -74,23 +74,25 @@ const QualifierModifier = ({ code, handleSelectValueSet, handleUpdateModifier, q
         )}
       </div>
 
-      <div className={fieldStyles.fieldInputGroup}>
-        {Boolean(vsacApiKey) && !valueSet && !code && (
-          <Button
-            className={styles.modifierMargin}
-            color="primary"
-            onClick={qualifierIsCode ? () => setShowCodeSelectModal(true) : () => setShowValueSetViewModal(true)}
-            startIcon={qualifierIsCode ? <LocalHospitalIcon /> : <ListIcon />}
-            variant="contained"
-          >
-            {qualifierIsCode ? 'Add Code' : 'Select Value Set'}
-          </Button>
-        )}
+      {qualifier && (
+        <div className={fieldStyles.fieldInputGroup}>
+          {Boolean(vsacApiKey) && !valueSet && !code && (
+            <Button
+              className={styles.modifierMargin}
+              color="primary"
+              onClick={qualifierIsCode ? () => setShowCodeSelectModal(true) : () => setShowValueSetViewModal(true)}
+              startIcon={qualifierIsCode ? <LocalHospitalIcon /> : <ListIcon />}
+              variant="contained"
+            >
+              {qualifierIsCode ? 'Add Code' : 'Select Value Set'}
+            </Button>
+          )}
 
-        {selection !== '' && <div className={styles.modifierMargin}>{selection}</div>}
-      </div>
+          {selection !== '' && <div className={styles.modifierMargin}>{selection}</div>}
+        </div>
+      )}
 
-      {!Boolean(vsacApiKey) && !code && (
+      {qualifier && !Boolean(vsacApiKey) && !code && (
         <Button
           className={styles.modifierMargin}
           color="primary"

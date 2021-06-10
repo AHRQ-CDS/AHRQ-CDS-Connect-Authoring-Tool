@@ -26,6 +26,9 @@ export default makeStyles(
         width: '100%'
       }
     },
+    horizontalPadding: {
+      margin: '0 10px'
+    },
     indent: {
       borderLeft: `4px solid ${theme.palette.common.grayLighter}`,
       margin: '10px 0',

@@ -11,11 +11,11 @@ export default makeStyles(
       display: 'flex',
       alignItems: 'center',
       flexWrap: 'wrap',
-      padding: '10px 0',
+      padding: '9px 0',
       width: '100%'
     },
     modifierButton: {
-      marginTop: '-30px'
+      marginTop: '-38px'
     },
     modifierHeader: {
       display: 'flex',

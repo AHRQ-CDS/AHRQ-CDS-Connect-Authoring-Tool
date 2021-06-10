@@ -2,7 +2,7 @@ import React from 'react';
 import { createStore } from 'redux';
 import { Provider } from 'react-redux';
 import nock from 'nock';
-import { render, fireEvent, userEvent, screen } from 'utils/test-utils';
+import { render, fireEvent, userEvent, screen, waitFor, within } from 'utils/test-utils';
 import { createTemplateInstance } from 'utils/test_helpers';
 import {
   genericInstance,
@@ -61,7 +61,7 @@ describe('<TemplateInstance />', () => {
               { id: 'element-5', name: 'C' }
             ]
           },
-          modifiers: { modifierMap: {} },
+          modifiers: { modifierMap: {}, modifiersByInputType: modifiersByInputType },
           vsac: { apiKey: 'key' }
         })}
       >
@@ -217,46 +217,34 @@ describe('<TemplateInstance />', () => {
       expect(deleteInstance).toHaveBeenCalledWith('MeetsInclusionCriteria', 'element-3');
     });
 
-    it('cannot add modifiers that change the return type if in use in the artifact', () => {
+    it('cannot add modifiers that change the return type if in use in the artifact', async () => {
       renderBaseElementComponent();
+      userEvent.click(screen.getAllByRole('button', { name: 'Add Modifiers' })[0]);
+      const modal = within(await screen.findByRole('dialog'));
+      userEvent.click(modal.getAllByRole('button', { name: 'Select Modifiers' })[0]);
+      userEvent.click(modal.getByLabelText('Select modifier...'));
 
-      userEvent.click(screen.getByRole('button', { name: 'Add expression' }));
-
-      expect(
-        screen.getByText('Limited expressions displayed because return type cannot change while in use.')
-      ).toBeInTheDocument();
-
-      expect(document.querySelectorAll('.modifier-select-button')).toHaveLength(3);
-      expect(screen.getByRole('button', { name: 'Verified' })).toBeInTheDocument();
-      expect(screen.getByRole('button', { name: 'With Unit' })).toBeInTheDocument();
-      expect(screen.getByRole('button', { name: 'Look Back' })).toBeInTheDocument();
+      await waitFor(() => {
+        expect(screen.queryAllByText('Limited modifiers', { exact: false }).length).toBeGreaterThan(0);
+        expect(screen.queryAllByRole('option').length).toBe(3);
+        expect(screen.getByText('Verified')).toBeInTheDocument();
+        expect(screen.getByText('With Unit')).toBeInTheDocument();
+        expect(screen.getByText('Look Back')).toBeInTheDocument();
+      });
     });
 
-    it('displays all modifiers when not in use', () => {
+    it('displays all modifiers when not in use', async () => {
       renderBaseElementComponent({
         templateInstance: {
           ...baseElementBeingUsed,
           usedBy: []
         }
       });
-
-      userEvent.click(screen.getByRole('button', { name: 'Add expression' }));
-
-      [
-        'Verified',
-        'With Unit',
-        'Average Observation Value',
-        'Highest Observation Value',
-        'Most Recent',
-        'First',
-        'Look Back',
-        'Count',
-        'Exists',
-        'Is (Not) Null?'
-      ].forEach(name => {
-        expect(screen.getByRole('button', { name })).toBeInTheDocument();
-      });
-      expect(document.querySelectorAll('.modifier-select-button')).toHaveLength(10);
+      userEvent.click(screen.getAllByRole('button', { name: 'Add Modifiers' })[0]);
+      const modal = within(await screen.findByRole('dialog'));
+      userEvent.click(modal.getAllByRole('button', { name: 'Select Modifiers' })[0]);
+      userEvent.click(modal.getByLabelText('Select modifier...'));
+      await waitFor(() => expect(screen.queryAllByRole('option').length).toBe(10));
     });
 
     it('can remove modifiers that do not change the return type', () => {
@@ -394,7 +382,7 @@ describe('<TemplateInstance />', () => {
       expect(screen.getByText(/observation:/i)).toBeInTheDocument();
 
       // Only the current elements expressions are listed
-      expect(document.getElementById('modifiers-template')).toHaveTextContent('Expressions:Exists');
+      expect(document.getElementById('modifiers-template')).toHaveTextContent('Modifiers:Exists');
 
       // All expressions and VS included in the phrase
       expect(container.querySelector('.expression-logic')).toHaveTextContent(
@@ -456,17 +444,19 @@ describe('<TemplateInstance />', () => {
       expect(updateInstanceModifiers).not.toBeCalled();
     });
 
-    it('cannot add modifiers that change return type when in use', () => {
+    it('cannot add modifiers that change return type when in use', async () => {
       renderComponent({
         disableAddElement: true,
         templateInstance: templateWithModifiersInstance
       });
+      userEvent.click(screen.getAllByRole('button', { name: 'Add Modifiers' })[0]);
+      const modal = within(await screen.findByRole('dialog'));
+      userEvent.click(modal.getAllByRole('button', { name: 'Select Modifiers' })[0]);
+      userEvent.click(modal.getByLabelText('Select modifier...'));
 
-      userEvent.click(screen.getByRole('button', { name: 'Add expression' }));
-
-      expect(
-        screen.getByText('Limited expressions displayed because return type cannot change while in use.')
-      ).toBeInTheDocument();
+      await waitFor(() => {
+        expect(screen.queryAllByText('Limited modifiers', { exact: false }).length).toBeGreaterThan(0);
+      });
     });
 
     it('cannot be deleted when list in use', () => {

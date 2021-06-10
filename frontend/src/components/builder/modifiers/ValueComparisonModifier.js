@@ -28,7 +28,7 @@ const ValueComparisonModifier = ({ handleUpdateModifier, values }) => {
         className={clsx(fieldStyles.fieldInput, fieldStyles.fieldInputSm)}
         getOptionLabel={option => option?.label || ''}
         id="value-comparison-modifier-minop"
-        onChange={(event, option) => handleUpdateModifier({ minOperator: option?.value || '' })}
+        onChange={(event, option) => handleUpdateModifier({ minOperator: option?.value || null })}
         options={options}
         renderInput={params => <TextField {...params} label="minOp" variant="outlined" />}
         value={options.find(option => option.value === values.minOperator) || null}
@@ -37,7 +37,10 @@ const ValueComparisonModifier = ({ handleUpdateModifier, values }) => {
       <TextField
         className={clsx(fieldStyles.fieldInput, fieldStyles.fieldInputXs)}
         label="minValue"
-        onChange={event => handleUpdateModifier({ minValue: parseFloat(event.target.value) })}
+        onChange={event => {
+          const newValue = parseFloat(event.target.value);
+          handleUpdateModifier({ minValue: isNaN(newValue) ? '' : newValue });
+        }}
         type="number"
         value={values.minValue || values.minValue === 0 ? values.minValue : ''}
         variant="outlined"
@@ -48,7 +51,7 @@ const ValueComparisonModifier = ({ handleUpdateModifier, values }) => {
         className={clsx(fieldStyles.fieldInput, fieldStyles.fieldInputSm)}
         getOptionLabel={option => option?.value || ''}
         id="value-comparison-modifier-maxop"
-        onChange={(event, option) => handleUpdateModifier({ maxOperator: option?.value || '' })}
+        onChange={(event, option) => handleUpdateModifier({ maxOperator: option?.value || null })}
         options={options}
         renderInput={params => <TextField {...params} label="maxOp" variant="outlined" />}
         value={options.find(option => option.value === values.maxOperator) || null}
@@ -57,7 +60,10 @@ const ValueComparisonModifier = ({ handleUpdateModifier, values }) => {
       <TextField
         className={clsx(fieldStyles.fieldInput, fieldStyles.fieldInputXs)}
         label="maxValue"
-        onChange={event => handleUpdateModifier({ maxValue: parseFloat(event.target.value) })}
+        onChange={event => {
+          const newValue = parseFloat(event.target.value);
+          handleUpdateModifier({ maxValue: isNaN(newValue) ? '' : newValue });
+        }}
         type="number"
         value={values.maxValue || values.maxValue === 0 ? values.maxValue : ''}
         variant="outlined"

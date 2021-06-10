@@ -134,25 +134,7 @@ describe('<Builder />', () => {
     expect(instance.name).toEqual('Or');
   });
 
-  it("can update an instance's modifiers", async () => {
-    const store = createMockStore(defaultState);
-    renderComponent({
-      store
-    });
-
-    userEvent.click((await screen.findAllByRole('button', { name: 'Add expression' }, { timeout: 5000 }))[0]);
-    userEvent.click(screen.getByRole('button', { name: 'Is (Not) Null?' }));
-
-    const updateAction = expandAction(_.last(store.getActions()));
-    const [instance] = updateAction.artifact.expTreeInclude.childInstances;
-    const [modifier] = instance.modifiers;
-
-    expect(updateAction.type).toEqual(types.UPDATE_ARTIFACT);
-    expect(modifier.id).toEqual('CheckExistence');
-    expect(modifier.name).toEqual('Is (Not) Null?');
-  }, 10000);
-
-  it('can delete an instance', async () => {
+  it('can delete an instance', () => {
     const store = createMockStore({
       ...defaultState,
       artifacts: {
@@ -190,9 +172,12 @@ describe('<Builder />', () => {
 
       it('should render as a modifier option within a button and dispatch UPDATE_ARTIFACT when added', async () => {
         renderComponent({ store });
-
-        userEvent.click((await screen.findAllByRole('button', { name: 'Add expression' }, { timeout: 5000 }))[0]);
-        userEvent.click(screen.getByRole('button', { name: 'First' }));
+        userEvent.click(screen.getAllByRole('button', { name: 'Add Modifiers' })[0]);
+        const modal = within(await screen.findByRole('dialog'));
+        userEvent.click(modal.getAllByRole('button', { name: 'Select Modifiers' })[0]);
+        userEvent.click(modal.getByLabelText('Select modifier...'));
+        await waitFor(() => userEvent.click(within(screen.queryByRole('listbox')).getByText('First')));
+        userEvent.click(modal.getByRole('button', { name: 'Add' }));
 
         const updateAction = expandAction(_.last(store.getActions()));
         const [instance] = updateAction.artifact.expTreeInclude.childInstances;
@@ -210,9 +195,14 @@ describe('<Builder />', () => {
 
       it('should render as a modifier option within a button and dispatch UPDATE_ARTIFACT when added', async () => {
         renderComponent({ store });
-
-        userEvent.click((await screen.findAllByRole('button', { name: 'Add expression' }, { timeout: 5000 }))[0]);
-        userEvent.click(screen.getByRole('button', { name: 'Average Observation Value' }));
+        userEvent.click(screen.getAllByRole('button', { name: 'Add Modifiers' })[0]);
+        const modal = within(await screen.findByRole('dialog'));
+        userEvent.click(modal.getAllByRole('button', { name: 'Select Modifiers' })[0]);
+        userEvent.click(modal.getByLabelText('Select modifier...'));
+        await waitFor(() =>
+          userEvent.click(within(screen.queryByRole('listbox')).getByText('Average Observation Value'))
+        );
+        userEvent.click(modal.getByRole('button', { name: 'Add' }));
 
         const updateAction = expandAction(_.last(store.getActions()));
         const [instance] = updateAction.artifact.expTreeInclude.childInstances;
@@ -230,9 +220,12 @@ describe('<Builder />', () => {
 
       it('should render as a modifier option within a button and dispatch UPDATE_ARTIFACT when added', async () => {
         renderComponent({ store });
-
-        userEvent.click((await screen.findAllByRole('button', { name: 'Add expression' }, { timeout: 5000 }))[0]);
-        userEvent.click(screen.getByRole('button', { name: 'First' }));
+        userEvent.click(screen.getAllByRole('button', { name: 'Add Modifiers' })[0]);
+        const modal = within(await screen.findByRole('dialog'));
+        userEvent.click(modal.getAllByRole('button', { name: 'Select Modifiers' })[0]);
+        userEvent.click(modal.getByLabelText('Select modifier...'));
+        await waitFor(() => userEvent.click(within(screen.queryByRole('listbox')).getByText('First')));
+        userEvent.click(modal.getByRole('button', { name: 'Add' }));
 
         const updateAction = expandAction(_.last(store.getActions()));
         const [instance] = updateAction.artifact.expTreeInclude.childInstances;
@@ -250,9 +243,12 @@ describe('<Builder />', () => {
 
       it('should render as a modifier option within a button and dispatch UPDATE_ARTIFACT when added', async () => {
         renderComponent({ store });
-
-        userEvent.click((await screen.findAllByRole('button', { name: 'Add expression' }, { timeout: 5000 }))[0]);
-        userEvent.click(screen.getByRole('button', { name: 'First' }));
+        userEvent.click(screen.getAllByRole('button', { name: 'Add Modifiers' })[0]);
+        const modal = within(await screen.findByRole('dialog'));
+        userEvent.click(modal.getAllByRole('button', { name: 'Select Modifiers' })[0]);
+        userEvent.click(modal.getByLabelText('Select modifier...'));
+        await waitFor(() => userEvent.click(within(screen.queryByRole('listbox')).getByText('First')));
+        userEvent.click(modal.getByRole('button', { name: 'Add' }));
 
         const updateAction = expandAction(_.last(store.getActions()));
         const [instance] = updateAction.artifact.expTreeInclude.childInstances;
@@ -270,9 +266,12 @@ describe('<Builder />', () => {
 
       it('should render as a modifier option within a button and dispatch UPDATE_ARTIFACT when added', async () => {
         renderComponent({ store });
-
-        userEvent.click((await screen.findAllByRole('button', { name: 'Add expression' }, { timeout: 5000 }))[0]);
-        userEvent.click(screen.getByRole('button', { name: 'First' }));
+        userEvent.click(screen.getAllByRole('button', { name: 'Add Modifiers' })[0]);
+        const modal = within(await screen.findByRole('dialog'));
+        userEvent.click(modal.getAllByRole('button', { name: 'Select Modifiers' })[0]);
+        userEvent.click(modal.getByLabelText('Select modifier...'));
+        await waitFor(() => userEvent.click(within(screen.queryByRole('listbox')).getByText('First')));
+        userEvent.click(modal.getByRole('button', { name: 'Add' }));
 
         const updateAction = expandAction(_.last(store.getActions()));
         const [instance] = updateAction.artifact.expTreeInclude.childInstances;

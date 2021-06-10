@@ -4,6 +4,7 @@ export { default as DateTimeModifier } from './DateTimeModifier';
 export { default as ExternalModifier } from './ExternalModifier';
 export { default as LabelModifier } from './LabelModifier';
 export { default as LookBackModifier } from './LookBackModifier';
+export { default as ModifierForm } from './ModifierForm';
 export { default as NumberModifier } from './NumberModifier';
 export { default as QualifierModifier } from './QualifierModifier';
 export { default as QuantityModifier } from './QuantityModifier';

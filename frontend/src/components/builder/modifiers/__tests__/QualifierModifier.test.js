@@ -7,6 +7,7 @@ describe('<QualifierModifier />', () => {
   const renderComponent = (props = {}) =>
     render(
       <QualifierModifier
+        handleSelectValueSet={jest.fn()}
         qualifier=""
         template={{
           ...genericInstance,

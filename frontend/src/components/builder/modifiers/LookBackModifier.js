@@ -36,9 +36,12 @@ const LookBackModifier = ({ handleUpdateModifier, unit, value }) => {
       <TextField
         className={clsx(fieldStyles.fieldInput, fieldStyles.fieldInputXs)}
         label="Value"
-        onChange={event => handleUpdateModifier({ value: parseInt(event.target.value, 10) })}
+        onChange={event => {
+          const newValue = parseInt(event.target.value, 10);
+          handleUpdateModifier({ value: isNaN(newValue) ? null : newValue });
+        }}
         type="number"
-        value={value || ''}
+        value={value == null ? '' : value}
         variant="outlined"
       />
 
