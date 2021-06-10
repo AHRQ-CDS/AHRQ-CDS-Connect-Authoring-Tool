@@ -2,6 +2,7 @@ import { makeStyles } from '@material-ui/core/styles';
 
 export default makeStyles(
   theme => ({
+<<<<<<< HEAD
     clearRuleButton: {
       alignSelf: 'center',
       marginLeft: '10px'
@@ -15,6 +16,12 @@ export default makeStyles(
       position: 'absolute',
       right: '10px',
       top: '20px'
+=======
+    deleteButton: {
+      position: 'absolute',
+      top: '12px',
+      right: '10px'
+>>>>>>> 6fcf5dc8 (Merged in query-builder (pull request #465))
     },
     displayModeButton: {
       margin: '0 2em',
@@ -25,6 +32,7 @@ export default makeStyles(
       display: 'flex',
       justifyContent: 'center'
     },
+<<<<<<< HEAD
     indent: {
       margin: '0 0 0 50px',
       width: '100%'
@@ -64,11 +72,17 @@ export default makeStyles(
     modifierCard: {
       margin: 0,
       position: 'relative'
+=======
+    modifierCard: {
+      position: 'relative',
+      margin: 0
+>>>>>>> 6fcf5dc8 (Merged in query-builder (pull request #465))
     },
     modifierCardContent: {
       paddingRight: '60px'
     },
     modifierModalContent: {
+<<<<<<< HEAD
       minHeight: '200px',
       minWidth: '1000px'
     },
@@ -76,12 +90,20 @@ export default makeStyles(
       display: 'flex',
       flexDirection: 'column',
       alignItems: 'center'
+=======
+      minHeight: '200px'
+    },
+    modifierSelectorRow: {
+      padding: '10px 0 10px 58px',
+      position: 'relative'
+>>>>>>> 6fcf5dc8 (Merged in query-builder (pull request #465))
     },
     navHeader: {
       alignItems: 'center',
       display: 'flex',
       marginBottom: '1em'
     },
+<<<<<<< HEAD
     noMarginBottom: {
       marginBottom: '0'
     },
@@ -104,6 +126,34 @@ export default makeStyles(
     },
     rulesCardOdd: {
       backgroundColor: theme.palette.common.white
+=======
+    rowCorner: {
+      backgroundColor: theme.palette.common.gray,
+      left: '0',
+      overflow: 'hidden',
+      position: 'absolute',
+      width: '3px'
+    },
+    rowCornerBottom: {
+      bottom: '0',
+      top: '50%'
+    },
+    rowCornerTee: {
+      bottom: '0',
+      top: '0'
+    },
+    rowCornerTop: {
+      bottom: '50%',
+      top: '0'
+    },
+    rowLine: {
+      backgroundColor: theme.palette.common.gray,
+      height: '3px',
+      left: 0,
+      position: 'absolute',
+      top: '50%',
+      width: '40px'
+>>>>>>> 6fcf5dc8 (Merged in query-builder (pull request #465))
     },
     tag: {
       backgroundColor: theme.palette.common.blueHighlight,
@@ -115,6 +165,7 @@ export default makeStyles(
       textTransform: 'uppercase',
       whiteSpace: 'nowrap'
     },
+<<<<<<< HEAD
     textButton: {
       color: theme.palette.common.blueHighlight,
       fontWeight: 700,
@@ -124,9 +175,15 @@ export default makeStyles(
       marginLeft: '20px',
       marginTop: '40px'
     },
+=======
+>>>>>>> 6fcf5dc8 (Merged in query-builder (pull request #465))
     warningBanner: {
       marginBottom: '20px'
     }
   }),
+<<<<<<< HEAD
   { name: 'Modifier-Modal', index: 1 }
+=======
+  { name: 'Modifier-Modal' }
+>>>>>>> 6fcf5dc8 (Merged in query-builder (pull request #465))
 );
