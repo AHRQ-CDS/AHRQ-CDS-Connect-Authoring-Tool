@@ -172,9 +172,11 @@ describe('<Builder />', () => {
 
       it('should render as a modifier option within a button and dispatch UPDATE_ARTIFACT when added', async () => {
         renderComponent({ store });
+
         userEvent.click(screen.getAllByRole('button', { name: 'Add Modifiers' })[0]);
         const modal = within(await screen.findByRole('dialog'));
         userEvent.click(modal.getAllByRole('button', { name: 'Select Modifiers' })[0]);
+
         userEvent.click(modal.getByLabelText('Select modifier...'));
         await waitFor(() => userEvent.click(within(screen.queryByRole('listbox')).getByText('First')));
         userEvent.click(modal.getByRole('button', { name: 'Add' }));

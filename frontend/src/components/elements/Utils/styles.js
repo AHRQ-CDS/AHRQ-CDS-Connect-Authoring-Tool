@@ -2,27 +2,31 @@ import { makeStyles } from '@material-ui/core/styles';
 
 export default makeStyles(
   theme => ({
-    button: {
-      borderRadius: '5px',
-      height: '40px',
-      margin: '0px',
-      padding: '0px'
-    },
     active: {
-      maxWidth: '60px',
-      minWidth: '60px',
+      display: 'inline-block',
       color: '#EEE',
       backgroundColor: 'rgb(87, 120, 160)',
       '&:hover': {
         backgroundColor: 'rgb(87, 120, 160)'
       }
     },
+    bold: {
+      fontWeight: 'bold'
+    },
+    button: {
+      borderRadius: '5px',
+      height: '40px',
+      margin: '0px',
+      padding: '0px'
+    },
     inactive: {
-      maxWidth: '50px',
-      minWidth: '50px',
+      display: 'inline-block',
       color: '#333',
-      backgroundColor: 'rgb(235, 235, 235)'
+      backgroundColor: 'rgb(235, 235, 235)',
+      '&:hover': {
+        backgroundColor: 'rgb(235, 235, 235)'
+      }
     }
   }),
-  { name: 'AndOrToggle' }
+  { name: 'ToggleSwitch' }
 );
