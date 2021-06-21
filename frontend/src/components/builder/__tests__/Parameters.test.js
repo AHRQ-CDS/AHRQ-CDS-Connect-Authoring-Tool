@@ -19,7 +19,6 @@ describe('<Parameters />', () => {
         getAllInstancesInAllTrees={jest.fn(() => parameters)}
         instanceNames={[]}
         parameters={parameters}
-        scrollToElement={jest.fn()}
         updateParameters={jest.fn()}
         vsacApiKey="key"
         {...props}

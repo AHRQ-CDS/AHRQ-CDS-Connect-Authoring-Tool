@@ -793,6 +793,10 @@ const reduxState = {
       loadModifiersStatus: null
     }
   },
+  navigation: {
+    activeTab: 0,
+    scrollToId: null
+  },
   templates: {
     templates: elementGroups
   },

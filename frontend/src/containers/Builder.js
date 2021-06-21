@@ -16,6 +16,7 @@ import {
 import _ from 'lodash';
 
 import loadTemplates from 'actions/templates';
+import { setActiveTab, setScrollToId } from 'actions/navigation';
 import { loadConversionFunctions, loadModifiers } from 'actions/modifiers';
 import {
   setStatusMessage,
@@ -54,6 +55,7 @@ import { errorStatementHasWarnings } from 'components/builder/error-statement/ut
 import { parametersHaveWarnings } from 'components/builder/parameters/utils';
 
 import artifactProps from 'prop-types/artifact';
+import { Summary } from 'components/builder/summary';
 
 // TODO: This is needed because the tree on this.state is not updated in time. Figure out a better way to handle this
 let localTree;
@@ -66,7 +68,6 @@ export class Builder extends Component {
       showArtifactModal: false,
       showELMErrorModal: false,
       showMenu: false,
-      activeTabIndex: 0,
       uniqueIdCounter: 0,
       downloadMenuAnchorElement: null
     };
@@ -89,6 +90,14 @@ export class Builder extends Component {
     });
   }
 
+  componentDidUpdate(prevProps) {
+    if (this.props.scrollToId !== prevProps.scrollToId) {
+      const elementToScrollTo = document.getElementById(this.props.scrollToId);
+      if (elementToScrollTo) elementToScrollTo.scrollIntoView();
+      this.props.setScrollToId(null);
+    }
+  }
+
   componentWillUnmount() {
     const { artifact, isLoggingOut } = this.props;
 
@@ -103,28 +112,6 @@ export class Builder extends Component {
   }
 
   // ----------------------- TABS ------------------------------------------ //
-
-  setActiveTab = activeTabIndex => {
-    this.setState({ activeTabIndex });
-  };
-
-  scrollToElement = (elementId, referenceType, tabIndex = null) => {
-    const baseElementTabIndex = 3;
-    const parameterTabIndex = 5;
-
-    let activeTabIndex = 0;
-    if (referenceType === 'baseElementReference' || referenceType === 'baseElementArgumentReference')
-      activeTabIndex = baseElementTabIndex;
-    else if (referenceType === 'parameterReference' || referenceType === 'parameterArgumentReference')
-      activeTabIndex = parameterTabIndex;
-    else if (referenceType === 'baseElementUse' || referenceType === 'parameterUse') activeTabIndex = tabIndex;
-    if (activeTabIndex == null) return;
-
-    this.setState({ activeTabIndex }, () => {
-      const elementToScrollTo = document.getElementById(elementId);
-      if (elementToScrollTo) elementToScrollTo.scrollIntoView();
-    });
-  };
 
   tabHasContent = tabName => {
     const { artifact, externalCqlList } = this.props;
@@ -498,7 +485,6 @@ export class Builder extends Component {
           modifiersByInputType={modifiersByInputType}
           parameters={namedParameters}
           root={true}
-          scrollToElement={this.scrollToElement}
           templates={templates}
           treeName={treeName}
           updateInstanceModifiers={this.updateInstanceModifiers}
@@ -583,9 +569,11 @@ export class Builder extends Component {
             </Button>
           </div>
 
-          <div role="status" aria-live="assertive">
-            {statusMessage}
-          </div>
+          {statusMessage && (
+            <div role="status" aria-live="assertive">
+              {statusMessage}
+            </div>
+          )}
         </div>
       </header>
     );
@@ -593,6 +581,7 @@ export class Builder extends Component {
 
   render() {
     const {
+      activeTab,
       addExternalLibrary,
       addExternalCqlLibraryError,
       addExternalCqlLibraryErrorMessage,
@@ -620,7 +609,7 @@ export class Builder extends Component {
       templates,
       vsacApiKey
     } = this.props;
-    const { activeTabIndex, showArtifactModal, showELMErrorModal, uniqueIdCounter } = this.state;
+    const { showArtifactModal, showELMErrorModal, uniqueIdCounter } = this.state;
 
     let namedParameters = [];
     if (artifact) {
@@ -643,8 +632,9 @@ export class Builder extends Component {
           {this.renderHeader()}
 
           <section className="builder__canvas">
-            <Tabs selectedIndex={activeTabIndex} onSelect={tabIndex => this.setActiveTab(tabIndex)}>
+            <Tabs selectedIndex={activeTab} onSelect={tabIndex => this.props.setActiveTab(tabIndex)}>
               <TabList aria-label="Workspace Tabs">
+                <Tab>Summary</Tab>
                 <Tab>
                   Inclusions
                   {this.tabHasContent('expTreeInclude') && !this.tabHasErrors('expTreeInclude') && (
@@ -699,6 +689,10 @@ export class Builder extends Component {
 
               <div className="tab-panel-container">
                 <TabPanel>
+                  <Summary handleOpenArtifactModal={() => this.openArtifactModal()} />
+                </TabPanel>
+
+                <TabPanel>
                   <div className="workspace-blurb">
                     Specify criteria to identify a target population that should receive a recommendation from this
                     artifact. Examples might include an age range, gender, presence of a certain condition, or lab
@@ -742,7 +736,6 @@ export class Builder extends Component {
                     modifiersByInputType={modifiersByInputType}
                     name={'subpopulations'}
                     parameters={namedParameters}
-                    scrollToElement={this.scrollToElement}
                     templates={templates}
                     updateInstanceModifiers={this.updateInstanceModifiers}
                     updateRecsSubpop={this.updateRecsSubpop}
@@ -776,7 +769,6 @@ export class Builder extends Component {
                     modifierMap={modifierMap}
                     modifiersByInputType={modifiersByInputType}
                     parameters={namedParameters}
-                    scrollToElement={this.scrollToElement}
                     templates={templates}
                     treeName="baseElements"
                     updateBaseElementLists={this.updateSubpopulations}
@@ -798,7 +790,7 @@ export class Builder extends Component {
                     templates={templates}
                     updateRecommendations={this.updateRecommendations}
                     updateSubpopulations={this.updateSubpopulations}
-                    setActiveTab={this.setActiveTab}
+                    setActiveTab={this.props.setActiveTab}
                     uniqueIdCounter={uniqueIdCounter}
                     incrementUniqueIdCounter={this.incrementUniqueIdCounter}
                   />
@@ -815,7 +807,6 @@ export class Builder extends Component {
                     getAllInstancesInAllTrees={this.getAllInstancesInAllTrees}
                     instanceNames={names}
                     parameters={artifact.parameters}
-                    scrollToElement={this.scrollToElement}
                     updateParameters={this.updateParameters}
                     vsacApiKey={vsacApiKey}
                   />
@@ -879,6 +870,7 @@ export class Builder extends Component {
 }
 
 Builder.propTypes = {
+  activeTab: PropTypes.number.isRequired,
   addExternalCqlLibraryError: PropTypes.number,
   addExternalCqlLibraryErrorMessage: PropTypes.string,
   addExternalLibrary: PropTypes.func.isRequired,
@@ -905,6 +897,9 @@ Builder.propTypes = {
   modifiersByInputType: PropTypes.object.isRequired,
   names: PropTypes.array.isRequired,
   saveArtifact: PropTypes.func.isRequired,
+  scrollToId: PropTypes.string,
+  setActiveTab: PropTypes.func.isRequired,
+  setScrollToId: PropTypes.func.isRequired,
   setStatusMessage: PropTypes.func.isRequired,
   statusMessage: PropTypes.string,
   templates: PropTypes.array,
@@ -931,6 +926,8 @@ function mapDispatchToProps(dispatch) {
       loadModifiers,
       loadTemplates,
       saveArtifact,
+      setActiveTab,
+      setScrollToId,
       setStatusMessage,
       updateAndSaveArtifact,
       updateArtifact
@@ -942,6 +939,7 @@ function mapDispatchToProps(dispatch) {
 // these props come from the application's state when it is started
 function mapStateToProps(state) {
   return {
+    activeTab: state.navigation.activeTab,
     addExternalCqlLibraryError: state.externalCQL.addExternalCqlLibrary.error,
     addExternalCqlLibraryErrorMessage: state.externalCQL.addExternalCqlLibrary.message,
     artifact: state.artifacts.artifact,
@@ -961,6 +959,7 @@ function mapStateToProps(state) {
     modifierMap: state.modifiers.modifierMap,
     modifiersByInputType: state.modifiers.modifiersByInputType,
     names: state.artifacts.names,
+    scrollToId: state.navigation.scrollToId,
     statusMessage: state.artifacts.statusMessage,
     templates: state.templates.templates,
     vsacApiKey: state.vsac.apiKey

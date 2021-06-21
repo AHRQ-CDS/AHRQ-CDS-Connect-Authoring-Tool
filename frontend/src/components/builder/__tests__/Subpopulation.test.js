@@ -45,7 +45,6 @@ describe('<Subpopulation />', () => {
           modifiersByInputType={{}}
           name=""
           parameters={[]}
-          scrollToElement={jest.fn()}
           setSubpopulationName={jest.fn()}
           subpopulation={subpopulation}
           subpopulationIndex={0}

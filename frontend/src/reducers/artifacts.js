@@ -52,6 +52,9 @@ export default function auth(state = defaultState, action) {
     case types.LOAD_ARTIFACTS_SUCCESS:
       return {
         ...state,
+        artifact: state.artifact
+          ? action.artifacts.find(loadedArtifact => loadedArtifact._id === state.artifact._id)
+          : null,
         artifacts: action.artifacts,
         loadArtifacts: { isLoading: false, loadStatus: 'success' }
       };

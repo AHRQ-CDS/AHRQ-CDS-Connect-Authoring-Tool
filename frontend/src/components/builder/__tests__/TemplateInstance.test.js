@@ -80,7 +80,6 @@ describe('<TemplateInstance />', () => {
           otherInstances={[]}
           parameters={[]}
           renderIndentButtons={jest.fn()}
-          scrollToElement={jest.fn()}
           subpopulationIndex={0}
           templateInstance={templateInstance}
           treeName="MeetsInclusionCriteria"
@@ -194,14 +193,6 @@ describe('<TemplateInstance />', () => {
         templateInstance: baseElementBeingUsed,
         ...props
       });
-
-    it('can navigate to its uses', () => {
-      const scrollToElement = jest.fn();
-      const { getByLabelText } = renderBaseElementComponent({ scrollToElement });
-
-      fireEvent.click(getByLabelText('see element definition'));
-      expect(scrollToElement).toHaveBeenCalledWith('element-2', 'baseElementUse', 0);
-    });
 
     it('cannot be deleted if in use in the artifact', () => {
       const deleteInstance = jest.fn();
@@ -341,14 +332,6 @@ describe('<TemplateInstance />', () => {
       renderBaseElementUseComponent();
 
       expect(screen.getByText(/base element being used/i)).toBeInTheDocument();
-    });
-
-    it('can navigate to original definition', () => {
-      const scrollToElement = jest.fn();
-      renderBaseElementUseComponent({ scrollToElement });
-
-      fireEvent.click(screen.getByRole('button', { name: /see element definition/i }));
-      expect(scrollToElement).toHaveBeenCalledWith('element-1', 'baseElementReference', 0);
     });
   });
 

@@ -391,7 +391,6 @@ export default class ConjunctionGroup extends Component {
               modifiersByInputType={this.props.modifiersByInputType}
               parameters={this.props.parameters}
               root={false}
-              scrollToElement={this.props.scrollToElement}
               subPopulationIndex={this.props.subPopulationIndex}
               templates={templates}
               treeName={treeName}
@@ -430,7 +429,6 @@ export default class ConjunctionGroup extends Component {
           otherInstances={this.props.getAllInstances(this.props.treeName)}
           parameters={this.props.parameters}
           renderIndentButtons={this.renderIndentButtons}
-          scrollToElement={this.props.scrollToElement}
           subpopulationIndex={this.props.subPopulationIndex}
           templateInstance={instance}
           treeName={this.props.treeName}
@@ -499,7 +497,6 @@ ConjunctionGroup.propTypes = {
   options: PropTypes.string,
   parameters: PropTypes.array,
   root: PropTypes.bool.isRequired,
-  scrollToElement: PropTypes.func.isRequired,
   subPopulationIndex: PropTypes.number,
   templates: PropTypes.array,
   treeName: PropTypes.string.isRequired,

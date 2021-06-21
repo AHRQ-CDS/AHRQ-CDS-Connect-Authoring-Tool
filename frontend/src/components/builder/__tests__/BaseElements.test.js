@@ -31,7 +31,6 @@ describe('<BaseElements />', () => {
           modifierMap={{}}
           modifiersByInputType={{}}
           parameters={[]}
-          scrollToElement={jest.fn()}
           templates={[]}
           treeName="baseElements"
           updateBaseElementLists={jest.fn()}

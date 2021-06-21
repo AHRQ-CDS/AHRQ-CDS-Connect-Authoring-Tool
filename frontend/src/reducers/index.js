@@ -1,22 +1,24 @@
 import { combineReducers } from 'redux';
 
 import * as types from '../actions/types';
+import artifactsReducer from './artifacts';
 import authReducer from './auth';
 import errorsReducer from './errors';
-import artifactsReducer from './artifacts';
+import externalCqlReducer from './external_cql';
+import modifiersReducer from './modifiers';
+import navigationReducer from './navigation';
 import templatesReducer from './templates';
 import vsacReducer from './vsac';
-import modifiersReducer from './modifiers';
-import externalCqlReducer from './external_cql';
 
 const appReducer = combineReducers({
+  artifacts: artifactsReducer,
   auth: authReducer,
   errors: errorsReducer,
-  artifacts: artifactsReducer,
-  templates: templatesReducer,
-  vsac: vsacReducer,
+  externalCQL: externalCqlReducer,
   modifiers: modifiersReducer,
-  externalCQL: externalCqlReducer
+  navigation: navigationReducer,
+  templates: templatesReducer,
+  vsac: vsacReducer
 });
 
 const rootReducer = (state, action) => {

@@ -198,7 +198,6 @@ export default class Subpopulation extends Component {
       modifierMap,
       modifiersByInputType,
       parameters,
-      scrollToElement,
       subpopulation,
       subpopulationIndex,
       templates,
@@ -236,7 +235,6 @@ export default class Subpopulation extends Component {
           modifiersByInputType={modifiersByInputType}
           parameters={parameters}
           root={true}
-          scrollToElement={scrollToElement}
           subPopulationIndex={subpopulationIndex}
           templates={templates}
           treeName={treeName}
@@ -277,7 +275,6 @@ Subpopulation.propTypes = {
   modifiersByInputType: PropTypes.object.isRequired,
   name: PropTypes.string.isRequired,
   parameters: PropTypes.array.isRequired,
-  scrollToElement: PropTypes.func,
   setSubpopulationName: PropTypes.func.isRequired,
   subpopulation: PropTypes.object.isRequired,
   subpopulationIndex: PropTypes.number.isRequired,

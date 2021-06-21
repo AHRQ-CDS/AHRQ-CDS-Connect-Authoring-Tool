@@ -73,7 +73,11 @@ describe('artifacts reducer', () => {
     expect(reducer(previousState, action)).toEqual(newState);
 
     action = { type: types.LOAD_ARTIFACTS_SUCCESS, artifacts: ['artifact 1', 'artifact 2'] };
-    newState = { artifacts: ['artifact 1', 'artifact 2'], loadArtifacts: { isLoading: false, loadStatus: 'success' } };
+    newState = {
+      artifacts: ['artifact 1', 'artifact 2'],
+      artifact: null,
+      loadArtifacts: { isLoading: false, loadStatus: 'success' }
+    };
     expect(reducer(previousState, action)).toEqual(newState);
 
     action = { type: types.LOAD_ARTIFACTS_FAILURE, status: 'Test status', statusText: 'Test status message' };

@@ -78,7 +78,6 @@ export default class Subpopulations extends Component {
             modifiersByInputType={this.props.modifiersByInputType}
             name={this.props.name}
             parameters={this.props.parameters}
-            scrollToElement={this.props.scrollToElement}
             setSubpopulationName={this.setSubpopulationName}
             subpopulation={subpop}
             subpopulationIndex={i + this.state.numOfSpecialSubpopulations} // System needs to know true index out of all subpopulations
@@ -117,7 +116,6 @@ Subpopulations.propTypes = {
   modifiersByInputType: PropTypes.object.isRequired,
   name: PropTypes.string.isRequired,
   parameters: PropTypes.array.isRequired,
-  scrollToElement: PropTypes.func,
   templates: PropTypes.array.isRequired,
   updateInstanceModifiers: PropTypes.func.isRequired,
   updateRecsSubpop: PropTypes.func.isRequired,

@@ -51,7 +51,6 @@ describe('<Subpopulations />', () => {
           modifiersByInputType={{}}
           name="subpopulations"
           parameters={[]}
-          scrollToElement={jest.fn()}
           templates={elementGroups}
           updateInstanceModifiers={jest.fn()}
           updateRecsSubpop={jest.fn()}

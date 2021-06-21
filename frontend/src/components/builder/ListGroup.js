@@ -342,7 +342,6 @@ export default class ListGroup extends Component {
           options={isAndOrElement ? '' : 'listOperations'}
           parameters={this.props.parameters}
           root={true}
-          scrollToElement={this.props.scrollToElement}
           templates={this.props.templates}
           treeName={this.props.treeName}
           updateInstanceModifiers={(t, modifiers, path) =>
@@ -534,7 +533,6 @@ ListGroup.propTypes = {
   modifierMap: PropTypes.object.isRequired,
   modifiersByInputType: PropTypes.object.isRequired,
   parameters: PropTypes.array.isRequired,
-  scrollToElement: PropTypes.func.isRequired,
   templates: PropTypes.array,
   treeName: PropTypes.string.isRequired,
   updateBaseElementLists: PropTypes.func.isRequired,

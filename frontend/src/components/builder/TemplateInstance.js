@@ -470,7 +470,6 @@ export default class TemplateInstance extends Component {
       allInstancesInAllTrees,
       baseElements,
       disableAddElement,
-      scrollToElement,
       templateInstance,
       validateReturnType,
       parameters,
@@ -511,7 +510,6 @@ export default class TemplateInstance extends Component {
             externalCqlArguments={externalCqlField.value.arguments ? externalCqlField.value.arguments : []}
             handleUpdateExternalCqlArguments={this.handleUpdateExternalCqlArguments}
             parameters={parameters}
-            scrollToElement={scrollToElement}
             treeName={treeName}
           />
         )}
@@ -538,7 +536,6 @@ export default class TemplateInstance extends Component {
                   arg.value.argSource === 'baseElement' ? 'baseElementArgumentReference' : 'parameterArgumentReference',
                 value: { id: arg.value?.selected, elementName: arg.value?.elementName }
               }}
-              scrollToElement={scrollToElement}
             />
           ))}
 
@@ -546,7 +543,6 @@ export default class TemplateInstance extends Component {
           <ReferenceTemplate
             referenceInstanceTab={getInstanceByReference(allInstancesInAllTrees, referenceField).tab}
             referenceField={referenceField}
-            scrollToElement={scrollToElement}
           />
         )}
 
@@ -558,7 +554,6 @@ export default class TemplateInstance extends Component {
               key={`standalone-${link}-${index}`}
               referenceInstanceTab={getInstanceById(allInstancesInAllTrees, link).tab}
               referenceField={{ id: 'baseElementUse', value: { id: link } }}
-              scrollToElement={scrollToElement}
             />
           ))}
 
@@ -801,7 +796,6 @@ TemplateInstance.propTypes = {
   otherInstances: PropTypes.array.isRequired,
   parameters: PropTypes.array.isRequired,
   renderIndentButtons: PropTypes.func.isRequired,
-  scrollToElement: PropTypes.func.isRequired,
   subpopulationIndex: PropTypes.number,
   templateInstance: PropTypes.object.isRequired,
   treeName: PropTypes.string.isRequired,

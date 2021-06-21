@@ -41,7 +41,6 @@ describe('<ConjunctionGroup />', () => {
           options=""
           parameters={[]}
           root={true}
-          scrollToElement={jest.fn()}
           subPopulationIndex={0}
           templates={elementGroups}
           treeName="MeetsInclusionCriteria"

@@ -1,16 +1,23 @@
 import React from 'react';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
 import { IconButton } from '@material-ui/core';
 import { Link as LinkIcon } from '@material-ui/icons';
 import clsx from 'clsx';
 
+import { setActiveTab, setScrollToId } from 'actions/navigation';
+import { getTabIndexFromName, getTabNameFromIndex } from '../utils';
 import { useFieldStyles, useSpacingStyles } from 'styles/hooks';
 
-const ReferenceTemplate = ({ referenceField, referenceInstanceTab, scrollToElement }) => {
+const ReferenceTemplate = ({ referenceField, referenceInstanceTab }) => {
   const artifactNames = useSelector(state => state.artifacts.names);
+  const dispatch = useDispatch();
   const fieldStyles = useFieldStyles();
   const spacingStyles = useSpacingStyles();
+
+  const baseElementTabIndex = getTabIndexFromName('baseElements');
+  const parameterTabIndex = getTabIndexFromName('parameters');
+  const referenceTabIndex = getTabIndexFromName(referenceInstanceTab);
 
   const getReferenceName = () => {
     switch (referenceField.id) {
@@ -24,14 +31,6 @@ const ReferenceTemplate = ({ referenceField, referenceInstanceTab, scrollToEleme
     }
   };
 
-  // keep in this order
-  const tabLabelMap = {
-    expTreeInclude: 'Inclusions',
-    expTreeExclude: 'Exclusions',
-    subpopulations: 'Subpopulations',
-    baseElements: 'Base Element'
-  };
-
   const referenceLabelMap = {
     baseElementArgumentReference: 'Base Element',
     baseElementReference: 'Base Element',
@@ -42,7 +41,20 @@ const ReferenceTemplate = ({ referenceField, referenceInstanceTab, scrollToEleme
     parameterUse: 'Parameter Use'
   };
 
-  const scrollToTabIndex = Object.keys(tabLabelMap).indexOf(referenceInstanceTab);
+  const handleLinkToElement = () => {
+    let activeTabIndex = 0;
+    if (referenceField.id === 'baseElementReference' || referenceField.id === 'baseElementArgumentReference')
+      activeTabIndex = baseElementTabIndex;
+    else if (referenceField.id === 'parameterReference' || referenceField.id === 'parameterArgumentReference')
+      activeTabIndex = parameterTabIndex;
+    else if (referenceField.id === 'baseElementUse' || referenceField.id === 'parameterUse')
+      activeTabIndex = referenceTabIndex;
+    if (activeTabIndex == null) return;
+
+    dispatch(setScrollToId(referenceField.value.id));
+    dispatch(setActiveTab(activeTabIndex));
+  };
+
   const isUse = referenceField.id === 'baseElementUse' || referenceField.id === 'parameterUse';
 
   return (
@@ -53,16 +65,12 @@ const ReferenceTemplate = ({ referenceField, referenceInstanceTab, scrollToEleme
 
       <div className={fieldStyles.fieldDetails}>
         <div className={fieldStyles.fieldDisplay}>
-          {getReferenceName()} {isUse && <>&#8594; {tabLabelMap[referenceInstanceTab]}</>}
+          {getReferenceName()} {isUse && <>&#8594; {getTabNameFromIndex(referenceTabIndex)}</>}
         </div>
 
         {referenceField.id !== 'externalCqlReference' && (
           <div className={fieldStyles.fieldButtons}>
-            <IconButton
-              aria-label="see element definition"
-              color="primary"
-              onClick={() => scrollToElement(referenceField.value.id, referenceField.id, scrollToTabIndex)}
-            >
+            <IconButton aria-label="see element definition" color="primary" onClick={handleLinkToElement}>
               <LinkIcon fontSize="small" />
             </IconButton>
           </div>
@@ -74,8 +82,7 @@ const ReferenceTemplate = ({ referenceField, referenceInstanceTab, scrollToEleme
 
 ReferenceTemplate.propTypes = {
   referenceField: PropTypes.object.isRequired,
-  referenceInstanceTab: PropTypes.string.isRequired,
-  scrollToElement: PropTypes.func.isRequired
+  referenceInstanceTab: PropTypes.string.isRequired
 };
 
 export default ReferenceTemplate;

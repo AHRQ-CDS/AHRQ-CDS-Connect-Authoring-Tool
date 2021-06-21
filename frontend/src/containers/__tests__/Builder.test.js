@@ -39,6 +39,10 @@ const defaultState = {
     ...reduxState.modifiers,
     modifierMap,
     modifiersByInputType
+  },
+  navigation: {
+    activeTab: 1,
+    scrollToId: null
   }
 };
 
@@ -56,6 +60,10 @@ const getDefaultStateWithInstanceTree = instanceTree => {
       ...reduxState.modifiers,
       modifierMap,
       modifiersByInputType
+    },
+    navigation: {
+      activeTab: 1,
+      scrollToId: null
     }
   };
 };
@@ -185,22 +193,6 @@ describe('<Builder />', () => {
 
     expect(updateAction.type).toEqual(types.UPDATE_ARTIFACT);
     expect(updateAction.artifact.expTreeInclude.childInstances).toHaveLength(0);
-  });
-
-  describe('tabs', () => {
-    it('can switch to the Base Elements tab', () => {
-      const { getByText } = renderComponent();
-
-      fireEvent.click(getByText('Base Elements'));
-      expect(getByText('Base Elements')).toHaveClass('react-tabs__tab--selected');
-    });
-
-    it('can switch to the Parameters tab', () => {
-      const { getByText } = renderComponent();
-
-      fireEvent.click(getByText('Parameters'));
-      expect(getByText('Parameters')).toHaveClass('react-tabs__tab--selected');
-    });
   });
 
   describe('Test that certain modifiers appear given current return type of list_of_observations', () => {

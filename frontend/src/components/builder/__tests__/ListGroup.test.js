@@ -37,7 +37,6 @@ describe('<ListGroup />', () => {
           modifierMap={{}}
           modifiersByInputType={{}}
           parameters={[]}
-          scrollToElement={jest.fn()}
           templates={elementGroups}
           treeName="baseElements"
           updateBaseElementLists={jest.fn()}

@@ -299,7 +299,6 @@ export default class Parameter extends Component {
                       key={`${parameterUse}-${index}`}
                       referenceInstanceTab={useInstance.tab}
                       referenceField={{ id: 'parameterUse', value: { id: parameterUse } }}
-                      scrollToElement={this.props.scrollToElement}
                     />
                   );
                 })}
@@ -352,7 +351,6 @@ Parameter.propTypes = {
   index: PropTypes.number.isRequired,
   instanceNames: PropTypes.array.isRequired,
   name: PropTypes.string,
-  scrollToElement: PropTypes.func.isRequired,
   type: PropTypes.string,
   updateInstanceOfParameter: PropTypes.func.isRequired,
   usedBy: PropTypes.array,

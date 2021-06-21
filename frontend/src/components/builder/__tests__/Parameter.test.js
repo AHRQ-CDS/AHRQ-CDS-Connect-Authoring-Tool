@@ -14,7 +14,6 @@ describe('<Parameter />', () => {
         instanceNames={[]}
         name=""
         type=""
-        scrollToElement={jest.fn()}
         updateInstanceOfParameter={jest.fn()}
         usedBy={[]}
         value={null}

@@ -52,7 +52,6 @@ export default class BaseElements extends Component {
         modifierMap={this.props.modifierMap}
         modifiersByInputType={this.props.modifiersByInputType}
         parameters={this.props.parameters}
-        scrollToElement={this.props.scrollToElement}
         templates={this.props.templates}
         treeName={this.props.treeName}
         updateBaseElementLists={this.props.updateBaseElementLists}
@@ -93,7 +92,6 @@ export default class BaseElements extends Component {
                   otherInstances={[]}
                   parameters={this.props.parameters}
                   renderIndentButtons={() => {}}
-                  scrollToElement={this.props.scrollToElement}
                   templateInstance={s}
                   treeName={this.props.treeName}
                   updateInstanceModifiers={this.props.updateInstanceModifiers}
@@ -128,7 +126,6 @@ BaseElements.propTypes = {
   modifierMap: PropTypes.object.isRequired,
   modifiersByInputType: PropTypes.object.isRequired,
   parameters: PropTypes.array.isRequired,
-  scrollToElement: PropTypes.func.isRequired,
   templates: PropTypes.array.isRequired,
   treeName: PropTypes.string.isRequired,
   updateBaseElementLists: PropTypes.func.isRequired,

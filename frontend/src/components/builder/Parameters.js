@@ -47,7 +47,6 @@ export default class Parameters extends Component {
             index={i}
             instanceNames={this.props.instanceNames}
             name={parameter.name}
-            scrollToElement={this.props.scrollToElement}
             type={parameter.type}
             updateInstanceOfParameter={this.updateInstanceOfParameter}
             usedBy={parameter.usedBy}
@@ -68,7 +67,6 @@ Parameters.propTypes = {
   getAllInstancesInAllTrees: PropTypes.func.isRequired,
   instanceNames: PropTypes.array.isRequired,
   parameters: PropTypes.array.isRequired,
-  scrollToElement: PropTypes.func.isRequired,
   updateParameters: PropTypes.func.isRequired,
   vsacApiKey: PropTypes.string
 };

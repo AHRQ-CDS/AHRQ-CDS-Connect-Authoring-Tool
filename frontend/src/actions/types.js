@@ -75,3 +75,8 @@ export const DELETE_EXTERNAL_CQL_LIBRARY_FAILURE = 'DELETE_EXTERNAL_CQL_LIBRARY_
 // ------------------------- VSAC ------------------------------------------- //
 
 export const SET_VSAC_API_KEY = 'SET_VSAC_API_KEY';
+
+// ------------------------- NAVIGATION ------------------------------------ //
+
+export const SET_ACTIVE_TAB = 'SET_ACTIVE_TAB';
+export const SET_SCROLL_TO_ID = 'SET_SCROLL_TO_ID';
