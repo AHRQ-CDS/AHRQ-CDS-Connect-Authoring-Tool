@@ -1,42 +1,29 @@
 'use strict';
 
-const { v4: uuid } = require('uuid');
+module.exports.id = 'error-statement-conversion-fix';
 
-module.exports.id = 'error-statement-data-structure-change';
-
-const convertNestedStatement = ({ condition, child, thenClause }) => ({
-  ifCondition: condition,
-  statements: child
-    ? [
+const fixArtifactErrorStatement = ({ errorStatement }) => {
+  if (errorStatement.ifThenClauses.length === 0) {
+    return {
+      id: 'root',
+      ifThenClauses: [
         {
-          id: uuid(),
-          ifThenClauses: child.statements.map(statement => convertNestedStatement(statement)),
-          elseClause: child.elseClause || ''
+          ifCondition: { label: null, value: null },
+          statements: [],
+          thenClause: ''
         }
-      ]
-    : [],
-  thenClause: thenClause || ''
-});
+      ],
+      elseClause: errorStatement.elseClause || ''
+    };
+  } else {
+    return errorStatement;
+  }
+};
 
-const convertArtifactErrorStatement = ({ errorStatement }) => ({
-  id: 'root',
-  ifThenClauses:
-    errorStatement.statements.length > 0
-      ? errorStatement.statements.map(statement => convertNestedStatement(statement))
-      : [
-          {
-            ifCondition: { label: null, value: null },
-            statements: [],
-            thenClause: ''
-          }
-        ],
-  elseClause: errorStatement.elseClause || ''
-});
-
-module.exports.convertArtifactErrorStatement = convertArtifactErrorStatement;
+module.exports.fixArtifactErrorStatement = fixArtifactErrorStatement;
 
 module.exports.up = function (done) {
-  this.log('Migrating: error-statement-data-structure-change');
+  this.log('Migrating: error-statement-conversion-fix');
   var coll = this.db.collection('artifacts');
   // NOTE: We can't use the special $[] operator since we're not yet on Mongo 3.6.
   // Instead, we need to iterate the documents and fields using forEach.
@@ -47,7 +34,7 @@ module.exports.up = function (done) {
   coll.find({ errorStatement: { $exists: true } }).forEach(
     artifact => {
       const p = new Promise((resolve, reject) => {
-        artifact.errorStatement = convertArtifactErrorStatement(artifact);
+        artifact.errorStatement = fixArtifactErrorStatement(artifact);
 
         // update the document
         coll.updateOne({ _id: artifact._id }, { $set: artifact }, (err, result) => {

@@ -134,4 +134,20 @@ describe('Error Statement Data Migration', () => {
         elseClause: ''
       });
   });
+
+  it('converts an empty error statement correctly', () => {
+    const result = convertArtifactErrorStatement({
+      errorStatement: {
+        statements: []
+      }
+    });
+
+    expect(result)
+      .excludingEvery('id')
+      .to.deep.equal({
+        id: 'root',
+        ifThenClauses: [{ ifCondition: { value: null, label: null }, statements: [], thenClause: '' }],
+        elseClause: ''
+      });
+  });
 });
