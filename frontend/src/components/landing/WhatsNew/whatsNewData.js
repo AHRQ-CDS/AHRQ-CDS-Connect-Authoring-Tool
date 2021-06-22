@@ -4,6 +4,22 @@ import React from 'react';
 const whatsNewData = [
   {
     id: 1,
+    name: 'Summary Tab & More',
+    ariaLabel: 'Summary Tab & More',
+    image: `${process.env.PUBLIC_URL}/assets/images/whats-new-summary.png`,
+    description: (
+      <>
+        The new Summary tab provides an overview of the artifact, including its name, version, date last changed, date
+        created, and the high-level structure of the CDS logic (inclusions, exclusions, and recommendations). All tabs
+        now have indicator icons that show which tabs have user-provided content and which tabs contain errors. In
+        addition, tabs never scroll out of view, allowing authors to more easily maintain the context of where they are.
+      </>
+    ),
+    linkText: 'Summary Tab Documentation',
+    link: `${process.env.PUBLIC_URL}/documentation#Summary`
+  },
+  {
+    id: 2,
     name: 'Sort & Duplicate Artifacts',
     ariaLabel: 'Sort & Duplicate Artifacts',
     image: `${process.env.PUBLIC_URL}/assets/images/whats-new-artifacts.png`,
@@ -18,7 +34,7 @@ const whatsNewData = [
     link: `${process.env.PUBLIC_URL}/documentation#Managing_Artifacts`
   },
   {
-    id: 2,
+    id: 3,
     name: 'External CQL Functions',
     ariaLabel: 'External CQL Functions',
     image: `${process.env.PUBLIC_URL}/assets/images/whats-new-external-modifiers.png`,
@@ -33,7 +49,7 @@ const whatsNewData = [
     link: `${process.env.PUBLIC_URL}/documentation#Using_External_CQL_Expression_Modifiers`
   },
   {
-    id: 3,
+    id: 4,
     name: (
       <>
         CPG on FHIR<sup>®</sup> Support
@@ -51,18 +67,6 @@ const whatsNewData = [
     linkText: 'CPG Publishable Library',
     link: 'http://build.fhir.org/ig/HL7/cqf-recommendations/StructureDefinition-cpg-publishablelibrary.html',
     linkExternal: true
-  },
-  {
-    id: 4,
-    name: 'Common Functions',
-    ariaLabel: 'Common Functions',
-    image: `${process.env.PUBLIC_URL}/assets/images/whats-new-common-functions.png`,
-    description: (
-      <>
-        Artifact downloads no longer package separate CDS Connect Commons and CDS Connect Conversions libraries.
-        Instead, the primary CQL library will embed any required common functions in its own CQL.
-      </>
-    )
   }
 ];
 

@@ -6,7 +6,9 @@ import {
   Edit as EditIcon,
   FileCopy as CopyIcon,
   MenuBook as MenuBookIcon,
-  Visibility as VisibilityIcon
+  Visibility as VisibilityIcon,
+  CheckCircle as CheckCircleIcon,
+  Error as ErrorIcon
 } from '@material-ui/icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
@@ -363,8 +365,10 @@ const UserGuide = () => {
               </li>
               <li>
                 <strong>Workspace Tabs</strong>: A set of tabs for organizing the different aspects of the CDS Logic:
-                Inclusions, Exclusions, Subpopulations, Base Elements, Recommendations, Parameters, Handle Errors, and
-                External CQL.
+                Summary, Inclusions, Exclusions, Subpopulations, Base Elements, Recommendations, Parameters, Handle
+                Errors, and External CQL. If a tab has a checkmark icon <CheckCircleIcon fontSize="small" />, it
+                contains user-provided content. If a tab has an exclamation icon <ErrorIcon fontSize="small" />, its
+                content contains errors.
               </li>
             </ul>
           </div>
@@ -1078,7 +1082,22 @@ const UserGuide = () => {
           </div>
 
           <div className={styles.h3Wrapper}>
-            <h3 id="Inclusions">3.5 Inclusions Tab</h3>
+            <h3 id="Summary">3.5 Summary Tab</h3>
+            <div>
+              The Summary tab provides an overview of the artifact, including its name, version, date last changed, date
+              created, and the high-level structure of the CDS logic. For the CDS logic, only the inclusions,
+              exclusions, and recommendations are displayed. Each element within the inclusions and exclusions shows its
+              type, name, and a link to the element definition in its respective authoring tab. Each recommendation
+              shows its text, associated subpopulation (if applicable), associated rationale (if applicable), and a link
+              to the recommendation definition within the Recommendations tab.
+            </div>
+            <div>
+              <img alt="" src={screenshotUrl('Summary')} className="img-fluid img-thumbnail rounded mx-auto d-block" />
+            </div>
+          </div>
+
+          <div className={styles.h3Wrapper}>
+            <h3 id="Inclusions">3.6 Inclusions Tab</h3>
             <div>
               Authors use the Inclusions tab to specify the criteria that patients should meet in order to receive a
               recommendation from the artifact. If a patient meets the criteria in the Inclusions tab and does not meet
@@ -1100,7 +1119,7 @@ const UserGuide = () => {
           </div>
 
           <div className={styles.h3Wrapper}>
-            <h3 id="Exclusions">3.6 Exclusions Tab</h3>
+            <h3 id="Exclusions">3.7 Exclusions Tab</h3>
             <div>
               Authors use the Exclusions tab to specify criteria that should disqualify patients from receiving a
               recommendation from the artifact. Even if a patient meets the criteria in the Inclusions tab, the criteria
@@ -1123,7 +1142,7 @@ const UserGuide = () => {
           </div>
 
           <div className={styles.h3Wrapper}>
-            <h3 id="Subpopulations">3.7 Subpopulations Tab</h3>
+            <h3 id="Subpopulations">3.8 Subpopulations Tab</h3>
             <div>
               Authors use the Subpopulations tab to specify criteria that groups patients into subpopulation that can be
               associated with more specific recommendations. While subpopulations are not required, they can be useful
@@ -1146,7 +1165,7 @@ const UserGuide = () => {
           </div>
 
           <div className={styles.h3Wrapper}>
-            <h3 id="Base_Elements">3.8 Base Elements Tab</h3>
+            <h3 id="Base_Elements">3.9 Base Elements Tab</h3>
             <div>
               Authors use Base Elements to create elements that can be re-used across several elements and contexts
               within the artifact. This allows for common elements to be defined once and used, as well as further
@@ -1161,7 +1180,7 @@ const UserGuide = () => {
               />
             </div>
             <div className={styles.h4Wrapper}>
-              <h4 id="Creating_Base_Elements">3.8.1 Creating Base Elements</h4>
+              <h4 id="Creating_Base_Elements">3.9.1 Creating Base Elements</h4>
               <div>
                 Authors specify Base Elements by creating and (optionally) combining elements as described in the
                 sections above. Since these elements are not in the context of specific logical constructs, they are not
@@ -1176,7 +1195,7 @@ const UserGuide = () => {
               </div>
             </div>
             <div className={styles.h4Wrapper}>
-              <h4 id="Using_Base_Elements">3.8.2 Using Base Elements</h4>
+              <h4 id="Using_Base_Elements">3.9.2 Using Base Elements</h4>
               <div>
                 Authors can reference and use Base Elements in the Inclusions tab, Exclusions tab, and Subpopulations
                 tab. To use a base element, it must be created in the Base Elements tab first. After that, use it in any
@@ -1245,7 +1264,7 @@ const UserGuide = () => {
           </div>
 
           <div className={styles.h3Wrapper}>
-            <h3 id="Recommendations">3.9 Recommendations Tab</h3>
+            <h3 id="Recommendations">3.10 Recommendations Tab</h3>
             <div>
               Recommendations are the resulting notices that should be delivered to the clinician after the CDS Artifact
               is executed. Recommendations are written as free text and can have an accompanying Rationale. For the
@@ -1262,7 +1281,7 @@ const UserGuide = () => {
             </div>
 
             <div className={styles.h4Wrapper}>
-              <h4 id="Creating_Recommendations">3.9.1 Creating Recommendations</h4>
+              <h4 id="Creating_Recommendations">3.10.1 Creating Recommendations</h4>
               <div>
                 A blank recommendation is included in the Recommendations tab by default. To create additional
                 recommendations, click the "New recommendation" button. This will add a blank recommendation below the
@@ -1284,7 +1303,7 @@ const UserGuide = () => {
             </div>
 
             <div className={styles.h4Wrapper}>
-              <h4 id="Associating_Recommendations">3.9.2 Associating Recommendations with Subpopulations</h4>
+              <h4 id="Associating_Recommendations">3.10.2 Associating Recommendations with Subpopulations</h4>
               <div>
                 For CDS artifacts that may deliver more than one recommendation, authors must associate recommendations
                 with the subpopulations to which they apply. The CDS Authoring Tool includes the following
@@ -1321,7 +1340,7 @@ const UserGuide = () => {
             </div>
 
             <div className={styles.h4Wrapper}>
-              <h4 id="Managing_Recommendations">3.9.3 Re-ordering and Deleting Recommendations</h4>
+              <h4 id="Managing_Recommendations">3.10.3 Re-ordering and Deleting Recommendations</h4>
               <div>
                 Since patients will receive the first recommendation that applies to them, the order that
                 recommendations are listed will affect how the CDS artifact behaves. In some cases, authors may need to
@@ -1346,7 +1365,7 @@ const UserGuide = () => {
           </div>
 
           <div className={styles.h3Wrapper}>
-            <h3 id="Parameters">3.10 Parameters Tab</h3>
+            <h3 id="Parameters">3.11 Parameters Tab</h3>
             <div>
               Parameters allow authors to create named elements whose values can be supplied by the CDS execution
               environment at run-time. Authors can specify default values for parameters, but are not required to do so.
@@ -1367,7 +1386,7 @@ const UserGuide = () => {
             </div>
 
             <div className={styles.h4Wrapper}>
-              <h4 id="Creating_Parameters">3.10.1 Creating Parameters</h4>
+              <h4 id="Creating_Parameters">3.11.1 Creating Parameters</h4>
               <div>
                 Authors can define as many parameters as they'd like. To create a parameter, click the "New parameter"
                 button. An empty parameter box will be displayed with fields for the parameter name, user-provided
@@ -1404,7 +1423,7 @@ const UserGuide = () => {
             </div>
 
             <div className={styles.h4Wrapper}>
-              <h4 id="Using_Parameters">3.10.2 Using Parameters</h4>
+              <h4 id="Using_Parameters">3.11.2 Using Parameters</h4>
               <div>
                 Authors can reference and use Parameters in the Inclusions tab, Exclusions tab, Subpopulations tab, and
                 Handle Errors tab. To use a parameter, it must be created in the Parameters tab first. After that, use
@@ -1444,7 +1463,7 @@ const UserGuide = () => {
             </div>
 
             <div className={styles.h4Wrapper}>
-              <h4 id="Deleting_Parameters">3.10.3 Deleting Parameters</h4>
+              <h4 id="Deleting_Parameters">3.11.3 Deleting Parameters</h4>
               <div>
                 Authors may want to delete parameters if they were entered by mistake or are no longer applicable. To do
                 this, click the "X" button in the parameter element box. This will immediately delete the parameter
@@ -1463,7 +1482,7 @@ const UserGuide = () => {
           </div>
 
           <div className={styles.h3Wrapper}>
-            <h3 id="Handle_Errors">3.11 Handle Errors Tab</h3>
+            <h3 id="Handle_Errors">3.12 Handle Errors Tab</h3>
             <div>
               Authors use the "Handle Errors" tab to define what messages should be provided to end users when certain
               error conditions arise. For example, an author might want to return an error message if required data is
@@ -1483,7 +1502,7 @@ const UserGuide = () => {
             </div>
 
             <div className={styles.h4Wrapper}>
-              <h4 id="Error_Conditions">3.11.1 Error Conditions</h4>
+              <h4 id="Error_Conditions">3.12.1 Error Conditions</h4>
               <div>
                 Authors specify error handling by chaining together conditional "If" statements, indicating that if a
                 certain condition (or set of conditions) is met, then a certain error message should be returned. By
@@ -1516,7 +1535,7 @@ const UserGuide = () => {
             </div>
 
             <div className={styles.h4Wrapper}>
-              <h4 id="Handle_Errors_If">3.11.2 If Condition Then</h4>
+              <h4 id="Handle_Errors_If">3.12.2 If Condition Then</h4>
               <div>
                 To setup the simplest error handling case, choose a condition from the dropdown menu to the right of the
                 "If" label in the "Errors" box. After you've selected the condition on which the error should be
@@ -1532,7 +1551,7 @@ const UserGuide = () => {
             </div>
 
             <div className={styles.h4Wrapper}>
-              <h4 id="Handle_Errors_And_Also_If">3.11.3 And Also If...</h4>
+              <h4 id="Handle_Errors_And_Also_If">3.12.3 And Also If...</h4>
               <div>
                 To create more complex conditional logic, click on the "And Also If..." button. This allows you to
                 specify more detailed error handling for when the top-level condition is met. Clicking the "And Also
@@ -1543,7 +1562,7 @@ const UserGuide = () => {
             </div>
 
             <div className={styles.h4Wrapper}>
-              <h4 id="Handle_Or_Else_If">3.11.4 Or Else If...</h4>
+              <h4 id="Handle_Or_Else_If">3.12.4 Or Else If...</h4>
               <div>
                 To create alternate error messages for other conditions, click on the "Or Else If..." button. This
                 allows you to choose a condition that will be evaluated only if none of the other "If" or "Else if"
@@ -1553,7 +1572,7 @@ const UserGuide = () => {
             </div>
 
             <div className={styles.h4Wrapper}>
-              <h4 id="Handle_Else">3.11.5 Else</h4>
+              <h4 id="Handle_Else">3.12.5 Else</h4>
               <div>
                 The "Else" text box allows authors to specify an error if no other error messages were generated. This
                 is rarely used at the top-level, as most CDS should not return any error if everything runs smoothly. In
@@ -1565,7 +1584,7 @@ const UserGuide = () => {
           </div>
 
           <div className={styles.h3Wrapper}>
-            <h3 id="External_CQL">3.12 External CQL Tab</h3>
+            <h3 id="External_CQL">3.13 External CQL Tab</h3>
             <div>
               Authors can use the "External CQL" tab to upload CQL files that contain logic that the author wants to use
               in the current CDS artifact. This is useful when you want to re-use existing logic rather than re-write it
@@ -1586,7 +1605,7 @@ const UserGuide = () => {
             </div>
 
             <div className={styles.h4Wrapper}>
-              <h4 id="Uploading_External_CQL">3.12.1 Uploading External CQL</h4>
+              <h4 id="Uploading_External_CQL">3.13.1 Uploading External CQL</h4>
               <div>
                 The CQL Authoring Tool allows CQL files to be uploaded individually or as a group of files contained in
                 a zip file. CQL files that are uploaded individually must not depend on any external libraries aside
@@ -1614,7 +1633,7 @@ const UserGuide = () => {
             </div>
 
             <div className={styles.h4Wrapper}>
-              <h4 id="Reviewing_External_CQL">3.12.2 Managing External CQL</h4>
+              <h4 id="Reviewing_External_CQL">3.13.2 Managing External CQL</h4>
               <div>
                 The "External CQL" tab contains a list of uploaded CQL libraries, showing the following information and
                 controls for each artifact:
@@ -1672,7 +1691,7 @@ const UserGuide = () => {
             </div>
 
             <div className={styles.h4Wrapper}>
-              <h4 id="Using_External_CQL_Elements">3.12.3 Using External CQL Elements</h4>
+              <h4 id="Using_External_CQL_Elements">3.13.3 Using External CQL Elements</h4>
               <div>
                 Authors can reference and use definitions, parameters, and functions from External CQL libraries in the
                 Inclusions tab, Exclusions tab, Subpopulations tab, and Base Elements tab. To use an External CQL
@@ -1740,7 +1759,7 @@ const UserGuide = () => {
             </div>
 
             <div className={styles.h4Wrapper}>
-              <h4 id="Using_External_CQL_Expression_Modifiers">3.12.4 Using External CQL Expression Modifiers</h4>
+              <h4 id="Using_External_CQL_Expression_Modifiers">3.13.4 Using External CQL Expression Modifiers</h4>
               <div>
                 In certain situations, authors can use functions from External CQL libraries as expression modifiers on
                 elements in an artifact. An external function can be used to modify an element in this way if all of the
@@ -2033,24 +2052,12 @@ const UserGuide = () => {
             <div>
               <img
                 alt=""
-                src={screenshotUrl('Test_Results')}
-                className="img-fluid img-thumbnail rounded mx-auto d-block"
-              />
-            </div>
-            <div>
-              To see the individual results for test patients, click the right-arrow button{' '}
-              <FontAwesomeIcon icon={faChevronDown} aria-hidden="true" /> to the right of the patient you want to view
-              results for.
-            </div>
-            <div>
-              <img
-                alt=""
                 src={screenshotUrl('Test_Results_Details')}
                 className="img-fluid img-thumbnail rounded mx-auto d-block"
               />
             </div>
             <div>
-              This lists the five most important CQL result elements for the patient:
+              This lists the five most important CQL result elements for each patient:
               <ul>
                 <li>
                   <strong>MeetsInclusionCriteria</strong>: A green checkmark{' '}
