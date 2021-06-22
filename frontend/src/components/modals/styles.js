@@ -43,5 +43,5 @@ export default makeStyles(
       padding: '1em 2em'
     }
   }),
-  { name: 'Builder-Modals' }
+  { name: 'Builder-Modals', index: 1 }
 );

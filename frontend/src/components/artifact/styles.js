@@ -40,5 +40,5 @@ export default makeStyles(
       color: theme.palette.common.blue
     }
   }),
-  { name: 'Artifact' }
+  { name: 'Artifact', index: 1 }
 );

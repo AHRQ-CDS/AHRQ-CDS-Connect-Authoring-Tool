@@ -74,5 +74,5 @@ export default makeStyles(
       whiteSpace: 'nowrap'
     }
   }),
-  { name: 'Error-Statement' }
+  { name: 'Error-Statement', index: 1 }
 );

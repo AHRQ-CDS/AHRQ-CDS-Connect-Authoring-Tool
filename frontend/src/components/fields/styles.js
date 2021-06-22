@@ -99,5 +99,5 @@ export default makeStyles(
       alignItems: 'flex-start'
     }
   }),
-  { name: 'Artifact-Fields' }
+  { name: 'Artifact-Fields', index: 1 }
 );

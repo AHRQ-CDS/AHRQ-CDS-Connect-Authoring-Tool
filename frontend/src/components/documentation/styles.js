@@ -68,5 +68,5 @@ export default makeStyles(
       paddingLeft: '20px'
     }
   }),
-  { name: 'Documentation' }
+  { name: 'Documentation', index: 1 }
 );

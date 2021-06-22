@@ -51,5 +51,5 @@ export default makeStyles(
       width: '100%'
     }
   }),
-  { name: 'Fields' }
+  { name: 'Fields', index: 1 }
 );

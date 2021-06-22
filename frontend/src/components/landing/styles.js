@@ -190,5 +190,5 @@ export default makeStyles(
       }
     }
   }),
-  { name: 'Landing' }
+  { name: 'Landing', index: 1 }
 );

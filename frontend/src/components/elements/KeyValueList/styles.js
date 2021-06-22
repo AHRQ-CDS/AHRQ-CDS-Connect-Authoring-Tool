@@ -30,5 +30,5 @@ export default makeStyles(
       minWidth: '280px'
     }
   }),
-  { name: 'KeyValueList' }
+  { name: 'KeyValueList', index: 1 }
 );

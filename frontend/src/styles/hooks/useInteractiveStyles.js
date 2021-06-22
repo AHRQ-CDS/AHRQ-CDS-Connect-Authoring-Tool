@@ -6,5 +6,5 @@ export default makeStyles(
       cursor: 'pointer'
     }
   }),
-  { name: 'Interactive' }
+  { name: 'Interactive', index: 1 }
 );

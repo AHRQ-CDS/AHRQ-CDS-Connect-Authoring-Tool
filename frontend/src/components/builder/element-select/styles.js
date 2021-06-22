@@ -24,5 +24,5 @@ export default makeStyles(
       minWidth: '250px'
     }
   }),
-  { name: 'Element-Select' }
+  { name: 'Element-Select', index: 1 }
 );

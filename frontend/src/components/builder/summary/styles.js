@@ -48,5 +48,5 @@ export default makeStyles(
       justifyContent: 'space-between'
     }
   }),
-  { name: 'Summary' }
+  { name: 'Summary', index: 1 }
 );

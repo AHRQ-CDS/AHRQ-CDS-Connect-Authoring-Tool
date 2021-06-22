@@ -21,5 +21,5 @@ export default makeStyles(
       whiteSpace: 'nowrap'
     }
   }),
-  { name: 'Modal' }
+  { name: 'Modal', index: 1 }
 );

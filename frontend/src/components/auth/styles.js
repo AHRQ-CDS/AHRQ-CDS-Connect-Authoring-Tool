@@ -34,5 +34,5 @@ export default makeStyles(
       margin: '10px 0'
     }
   }),
-  { name: 'Auth' }
+  { name: 'Auth', index: 1 }
 );

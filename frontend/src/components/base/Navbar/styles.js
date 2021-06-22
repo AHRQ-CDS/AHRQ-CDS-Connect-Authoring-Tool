@@ -27,5 +27,5 @@ export default makeStyles(
       }
     }
   }),
-  { name: 'Navbar' }
+  { name: 'Navbar', index: 1 }
 );

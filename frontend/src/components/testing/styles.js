@@ -108,5 +108,5 @@ export default makeStyles(
       }
     }
   }),
-  { name: 'Testing' }
+  { name: 'Testing', index: 1 }
 );

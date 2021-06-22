@@ -54,5 +54,5 @@ export default makeStyles(
       margin: '2em 0'
     }
   }),
-  { name: 'Spacing' }
+  { name: 'Spacing', index: 1 }
 );

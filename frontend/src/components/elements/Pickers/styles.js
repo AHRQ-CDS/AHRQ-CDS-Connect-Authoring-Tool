@@ -8,5 +8,5 @@ export default makeStyles(
       }
     }
   }),
-  { name: 'Pickers' }
+  { name: 'Pickers', index: 1 }
 );

@@ -31,5 +31,5 @@ export default makeStyles(
       marginRight: '10px'
     }
   }),
-  { name: 'Modifiers' }
+  { name: 'Modifiers', index: 1 }
 );

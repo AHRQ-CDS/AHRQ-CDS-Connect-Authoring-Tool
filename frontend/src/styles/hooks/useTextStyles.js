@@ -19,5 +19,5 @@ export default makeStyles(
       fontSize: '0.8em'
     }
   }),
-  { name: 'Text' }
+  { name: 'Text', index: 1 }
 );
