@@ -38,6 +38,10 @@ export default makeStyles(
     },
     cpgPercentageLabelZero: {
       color: theme.palette.common.blue
+    },
+    helpLink: {
+      display: 'flex',
+      justifyContent: 'space-between'
     }
   }),
   { name: 'Artifact', index: 1 }

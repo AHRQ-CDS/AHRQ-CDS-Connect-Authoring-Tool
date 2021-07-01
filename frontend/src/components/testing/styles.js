@@ -59,6 +59,12 @@ export default makeStyles(
         marginRight: '20px'
       }
     },
+    helpLinkRow: {
+      display: 'flex'
+    },
+    helpLink: {
+      margin: '2em 0 2em auto'
+    },
     testerInstructions: {
       backgroundColor: theme.palette.common.grayLighter,
       borderRadius: '0.2em',

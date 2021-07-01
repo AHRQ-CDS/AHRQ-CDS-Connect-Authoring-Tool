@@ -57,6 +57,8 @@ import { parametersHaveWarnings } from 'components/builder/parameters/utils';
 import artifactProps from 'prop-types/artifact';
 import { Summary } from 'components/builder/summary';
 
+import { HelpLink } from 'components/elements';
+
 // TODO: This is needed because the tree on this.state is not updated in time. Figure out a better way to handle this
 let localTree;
 
@@ -697,6 +699,7 @@ export class Builder extends Component {
                     Specify criteria to identify a target population that should receive a recommendation from this
                     artifact. Examples might include an age range, gender, presence of a certain condition, or lab
                     results within a specific range.
+                    <HelpLink linkPath="documentation#Inclusions" />
                   </div>
                   {this.renderConjunctionGroup('expTreeInclude')}
                 </TabPanel>
@@ -707,6 +710,7 @@ export class Builder extends Component {
                     therefore, from receiving a recommendation from this artifact. Examples might include pregnancy
                     status, out of bound lab results, or evidence that the recommended therapy is already being used by
                     the patient.
+                    <HelpLink linkPath="documentation#Exclusions" />
                   </div>
                   {this.renderConjunctionGroup('expTreeExclude')}
                 </TabPanel>
@@ -716,6 +720,7 @@ export class Builder extends Component {
                     Specify criteria that further segments the target population into subpopulations that should receive
                     more specific recommendations. An example might be splitting the population by risk score so that
                     higher risk patients receive a stronger recommendation than lower risk patients.
+                    <HelpLink linkPath="documentation#Subpopulations" />
                   </div>
 
                   <Subpopulations
@@ -749,6 +754,7 @@ export class Builder extends Component {
                     Specify individual elements that can be re-used in the Inclusions, Exclusions, and Subpopulations,
                     or should standalone as independent expressions in the resulting artifact. An example might be a lab
                     result value that is referenced multiple times throughout the artifact.
+                    <HelpLink linkPath="documentation#Base_Elements" />
                   </div>
 
                   <BaseElements
@@ -783,6 +789,7 @@ export class Builder extends Component {
                     Specify the text-based recommendations that should be delivered to the clinician when a patient
                     meets the eligible criteria as defined in the artifact. Examples might include recommendations to
                     order a medication, perform a test, or provide the patient educational materials.
+                    <HelpLink linkPath="documentation#Recommendations" />
                   </div>
 
                   <Recommendations
@@ -801,6 +808,7 @@ export class Builder extends Component {
                     Specify named parameters that allow individual implementers to control pre-determined aspects of the
                     artifact in their own environment. Examples might include the option to allow lower grade evidence,
                     thresholds at which recommendations should be provided, or customized age ranges.
+                    <HelpLink linkPath="documentation#Parameters" />
                   </div>
 
                   <Parameters
@@ -817,6 +825,7 @@ export class Builder extends Component {
                     Specify error messages that should be delivered under certain exceptional circumstances when the CDS
                     artifact is executed. An example might be to deliver an error message if the patient would normally
                     receive the recommendation but has been excluded.
+                    <HelpLink linkPath="documentation#Handle_Errors" />
                   </div>
 
                   <ErrorStatement handleUpdateErrorStatement={this.updateErrorStatement} />
@@ -825,6 +834,7 @@ export class Builder extends Component {
                 <TabPanel>
                   <div className="workspace-blurb">
                     Reference external CQL libraries that can be used in Inclusions, Exclusions, and Subpopulations.
+                    <HelpLink linkPath="documentation#External_CQL" />
                   </div>
 
                   <ExternalCQL

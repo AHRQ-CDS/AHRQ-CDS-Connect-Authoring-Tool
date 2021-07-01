@@ -10,11 +10,16 @@ import ArtifactTable from './ArtifactTable';
 import { useSpacingStyles, useTextStyles } from 'styles/hooks';
 import { addArtifact, deleteArtifact, fetchArtifacts, updateArtifact, duplicateArtifact } from 'queries/artifacts';
 
+import { HelpLink } from 'components/elements';
+
+import useStyles from './styles';
+
 const Artifact = () => {
   const [showModal, setShowModal] = useState(false);
   const spacingStyles = useSpacingStyles();
   const textStyles = useTextStyles();
   const queryClient = useQueryClient();
+  const styles = useStyles();
   const { data, error, isLoading, isSuccess } = useQuery('artifacts', () => fetchArtifacts());
   const artifacts = data ?? [];
   const resetArtifacts = () => queryClient.invalidateQueries('artifacts');
@@ -39,9 +44,12 @@ const Artifact = () => {
 
       {isSuccess && (
         <div className={clsx(spacingStyles.minHeight, spacingStyles.verticalPadding)}>
-          <Button color="primary" onClick={() => setShowModal(true)} startIcon={<AddIcon />} variant="contained">
-            Create New Artifact
-          </Button>
+          <div className={styles.helpLink}>
+            <Button color="primary" onClick={() => setShowModal(true)} startIcon={<AddIcon />} variant="contained">
+              Create New Artifact
+            </Button>
+            <HelpLink linkPath="documentation#Creating_and_Managing_Artifacts" showText />
+          </div>
 
           {artifacts.length > 0 ? (
             <ArtifactTable

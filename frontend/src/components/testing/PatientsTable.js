@@ -6,6 +6,7 @@ import { Check as CheckIcon, Lock as LockIcon } from '@material-ui/icons';
 
 import PatientsTableRow from './PatientsTableRow';
 import ExecuteCQLModal from './modals/ExecuteCQLModal';
+import { HelpLink } from 'components/elements';
 import { VSACAuthenticationModal } from 'components/modals';
 import { sortAlphabeticallyByPatientName } from 'utils/sort';
 import { useSpacingStyles, useTableStyles } from 'styles/hooks';
@@ -39,25 +40,31 @@ const PatientsTable = ({ handleExecuteCQL, patients }) => {
 
   return (
     <div className={spacingStyles.verticalPadding} id="patients-table">
-      <div className={styles.patientsTableButtons}>
-        <Button
-          color="primary"
-          disabled={Boolean(vsacApiKey)}
-          onClick={() => setShowVSACAuthenticationModal(true)}
-          variant="contained"
-          startIcon={Boolean(vsacApiKey) ? <CheckIcon /> : <LockIcon />}
-        >
-          {Boolean(vsacApiKey) ? 'VSAC Authenticated' : 'Authenticate VSAC'}
-        </Button>
+      <div className={styles.helpLinkRow}>
+        <div className={styles.patientsTableButtons}>
+          <Button
+            color="primary"
+            disabled={Boolean(vsacApiKey)}
+            onClick={() => setShowVSACAuthenticationModal(true)}
+            variant="contained"
+            startIcon={Boolean(vsacApiKey) ? <CheckIcon /> : <LockIcon />}
+          >
+            {Boolean(vsacApiKey) ? 'VSAC Authenticated' : 'Authenticate VSAC'}
+          </Button>
 
-        <Button
-          color="primary"
-          disabled={!Boolean(vsacApiKey) || selectedPatients.length === 0}
-          onClick={() => setShowExecuteCQLModal(true)}
-          variant="contained"
-        >
-          Execute CQL on Selected Patients
-        </Button>
+          <Button
+            color="primary"
+            disabled={!Boolean(vsacApiKey) || selectedPatients.length === 0}
+            onClick={() => setShowExecuteCQLModal(true)}
+            variant="contained"
+          >
+            Execute CQL on Selected Patients
+          </Button>
+        </div>
+
+        <div className={styles.helpLink}>
+          <HelpLink linkPath="documentation#Testing_Artifacts" showText />
+        </div>
       </div>
 
       <TableContainer>
