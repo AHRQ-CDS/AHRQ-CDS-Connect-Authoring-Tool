@@ -7,6 +7,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import ModifierModalHeader from './ModifierModalHeader';
 import ModifierSelector from './ModifierSelector';
 import ModifierBuilder from './ModifierBuilder';
+import FhirVersionSelect from './FhirVersionSelect';
 import { Modal } from 'components/elements';
 import useStyles from './styles';
 
@@ -18,12 +19,11 @@ const ModifierModal = ({
   hasLimitedModifiers
 }) => {
   const artifact = useSelector(state => state.artifacts.artifact);
-  const dispatch = useDispatch();
-
   const [displayMode, setDisplayMode] = useState(null);
   const [modifiersToAdd, setModifiersToAdd] = useState([]);
-  const [fhirVersion, setFHIRVersion] = useState(artifact.fhirVersion);
-  const modifierModalStyles = useStyles();
+  const [fhirVersion, setFhirVersion] = useState(artifact.fhirVersion);
+  const dispatch = useDispatch();
+  const styles = useStyles();
 
   let modalTitle = 'Add Modifiers';
   if (displayMode === 'selectModifiers') modalTitle = 'Select Modifiers';
@@ -36,9 +36,14 @@ const ModifierModal = ({
   };
 
   const handleReset = () => {
-    setFHIRVersion(artifact.fhirVersion);
+    setFhirVersion(artifact.fhirVersion);
     setDisplayMode(null);
     setModifiersToAdd([]);
+  };
+
+  const handleSetFhirVersion = newVersion => {
+    setFhirVersion(newVersion);
+    setDisplayMode('buildModifier');
   };
 
   return (
@@ -60,11 +65,11 @@ const ModifierModal = ({
       title={modalTitle}
       maxWidth="xl"
     >
-      <div className={modifierModalStyles.modifierModalContent}>
+      <div className={styles.modifierModalContent}>
         {!displayMode && (
-          <div className={modifierModalStyles.displayModeSelector}>
+          <div className={styles.displayModeSelector}>
             <Button
-              className={modifierModalStyles.displayModeButton}
+              className={styles.displayModeButton}
               color="primary"
               onClick={() => setDisplayMode('selectModifiers')}
               variant="contained"
@@ -75,9 +80,9 @@ const ModifierModal = ({
             <span>or</span>
 
             <Button
-              className={modifierModalStyles.displayModeButton}
+              className={styles.displayModeButton}
               color="primary"
-              onClick={() => setDisplayMode('buildModifier')}
+              onClick={() => setDisplayMode(fhirVersion === '' ? 'selectFhirVersion' : 'buildModifier')}
               variant="contained"
             >
               Build New Modifier
@@ -95,12 +100,13 @@ const ModifierModal = ({
           />
         )}
 
+        {displayMode === 'selectFhirVersion' && <FhirVersionSelect handleSetFhirVersion={handleSetFhirVersion} />}
+
         {displayMode === 'buildModifier' && (
           <ModifierBuilder
+            elementInstanceReturnType={elementInstanceReturnType}
             fhirVersion={fhirVersion}
             handleGoBack={handleReset}
-            inputType={elementInstanceReturnType}
-            setFHIRVersion={version => setFHIRVersion(version)}
           />
         )}
       </div>

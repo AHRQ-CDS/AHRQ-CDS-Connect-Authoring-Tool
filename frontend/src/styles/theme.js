@@ -255,6 +255,12 @@ const materialUiOverridesBase = {
       color: colors.blueLink
     }
   },
+  MuiListSubheader: {
+    sticky: {
+      backgroundColor: colors.white,
+      color: colors.grayLight
+    }
+  },
   MuiOutlinedInput: {
     input: {
       padding: '14px',

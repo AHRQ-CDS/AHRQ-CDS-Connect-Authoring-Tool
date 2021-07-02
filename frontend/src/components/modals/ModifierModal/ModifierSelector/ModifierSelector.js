@@ -28,7 +28,7 @@ const ModifierSelector = ({
   const modifiersByInputType = useSelector(state => state.modifiers.modifiersByInputType);
   const fieldStyles = useFieldStyles();
   const spacingStyles = useSpacingStyles();
-  const modifierModalStyles = useStyles();
+  const styles = useStyles();
 
   const newModifiers = elementInstance.modifiers.concat(modifiersToAdd);
   const returnTypeWithNewModifiers =
@@ -66,18 +66,20 @@ const ModifierSelector = ({
   return (
     <>
       {hasLimitedModifiers && (
-        <Alert className={modifierModalStyles.warningBanner} severity="warning">
+        <Alert className={styles.warningBanner} severity="warning">
           Limited modifiers displayed because return type cannot change while in use.
         </Alert>
       )}
 
-      <div className={modifierModalStyles.navHeader}>
+      <div className={styles.navHeader}>
         <IconButton onClick={handleGoBack}>
           <ArrowBackIosIcon fontSize="small" />
         </IconButton>
+
         <div>
-          <div className={modifierModalStyles.tag}>with modifiers</div>
+          <div className={styles.tag}>with modifiers</div>
         </div>
+
         {modifiersToAdd.length > 0 && (
           <div>
             {modifiersToAdd.map((modifierToAdd, index) => (
@@ -107,25 +109,26 @@ const ModifierSelector = ({
           />
         ))}
 
-        <div className={modifierModalStyles.modifierSelectorRow}>
-          <div
-            className={clsx(
-              modifierModalStyles.rowCorner,
-              modifiersToAdd.length > 0 && modifierModalStyles.rowCornerTop
-            )}
-          />
-          <div className={clsx(modifiersToAdd.length > 0 && modifierModalStyles.rowLine)} />
+        <div className={styles.rulesCardGroup}>
+          {modifiersToAdd.length > 0 && (
+            <>
+              <div className={clsx(styles.line, styles.lineHorizontal)}></div>
+              <div className={clsx(styles.line, styles.lineVertical, styles.lineVerticalBottom)}></div>
+            </>
+          )}
 
-          <Dropdown
-            className={fieldStyles.fieldInputXl}
-            disabled={!allModifiersValid(modifiersToAdd)}
-            id="modifier-select"
-            Footer={modifierOptions.some(option => option.isExternal) && <ModifierDropdownFooter />}
-            label="Select modifier..."
-            onChange={event => handleSelectModifier(event.target.value)}
-            options={modifierOptions.sort(sortAlphabeticallyByKey('label'))}
-            renderItem={option => <ModifierDropdownItem option={option} />}
-          />
+          <div className={styles.indent}>
+            <Dropdown
+              className={fieldStyles.fieldInputXl}
+              disabled={!allModifiersValid(modifiersToAdd)}
+              id="modifier-select"
+              Footer={modifierOptions.some(option => option.isExternal) && <ModifierDropdownFooter />}
+              label="Select modifier..."
+              onChange={event => handleSelectModifier(event.target.value)}
+              options={modifierOptions.sort(sortAlphabeticallyByKey('label'))}
+              renderItem={option => <ModifierDropdownItem option={option} />}
+            />
+          </div>
         </div>
       </div>
     </>

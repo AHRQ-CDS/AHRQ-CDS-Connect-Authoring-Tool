@@ -5,6 +5,11 @@ import { Dropdown } from 'components/elements';
 import { useFieldStyles } from 'styles/hooks';
 import useStyles from './styles';
 
+const options = [
+  { label: 'True', value: 'true' },
+  { label: 'False', value: 'false' }
+];
+
 // Operators work by storing their operands within the rules.
 // The stateful variables we write to come directly from the userSpecifiedOperands
 // section of each operator definition in 'operators.json'
@@ -14,22 +19,16 @@ const IsTrueFalse = ({ rule, updateRule }) => {
   const operatorStyles = useStyles();
 
   return (
-    <div className={clsx(operatorStyles.container, fieldStyles.fieldInputLg)}>
-      <div className={operatorStyles.text}>Value must be: </div>
-      <Dropdown
-        label="True/False"
-        onChange={event => {
-          const booleanValue = event.target.value === 'true' ? true : false;
-          const updatedRule = { ...rule, booleanValue: booleanValue };
-          updateRule(updatedRule);
-        }}
-        options={[
-          { label: 'True', value: 'true' },
-          { label: 'False', value: 'false' }
-        ]}
-        value={rule.booleanValue !== undefined ? (rule.booleanValue ? 'true' : 'false') : ''}
-      />
-    </div>
+    <Dropdown
+      className={clsx(operatorStyles.container, fieldStyles.fieldInputSm)}
+      label="Value"
+      onChange={event => {
+        const booleanValue = event.target.value === 'true' ? true : false;
+        updateRule({ ...rule, booleanValue: booleanValue });
+      }}
+      options={options}
+      value={rule.booleanValue != null ? (rule.booleanValue ? 'true' : 'false') : ''}
+    />
   );
 };
 

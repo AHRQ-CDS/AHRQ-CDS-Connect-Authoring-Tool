@@ -1,6 +1,6 @@
 import React, { memo } from 'react';
 import PropTypes from 'prop-types';
-import { Divider, MenuItem, TextField } from '@material-ui/core';
+import { Divider, ListSubheader, MenuItem, TextField } from '@material-ui/core';
 
 const Dropdown = ({
   Footer,
@@ -13,11 +13,15 @@ const Dropdown = ({
   ...props
 }) => (
   <TextField autoComplete="off" fullWidth select value={value || ''} variant="outlined" {...props}>
-    {options.map(option => (
-      <MenuItem key={option[valueKey]} value={option[valueKey]} disabled={option.isDisabled}>
-        {renderItem ? renderItem(option) : option[labelKey]}
-      </MenuItem>
-    ))}
+    {options.map(option =>
+      option.isSubheader ? (
+        <ListSubheader key={option[valueKey]}>{renderItem ? renderItem(option) : option[labelKey]}</ListSubheader>
+      ) : (
+        <MenuItem key={option[valueKey]} value={option[valueKey]} disabled={option.isDisabled}>
+          {renderItem ? renderItem(option) : option[labelKey]}
+        </MenuItem>
+      )
+    )}
 
     {Footer &&
       options.length > 0 && [

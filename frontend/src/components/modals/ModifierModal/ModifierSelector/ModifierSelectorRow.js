@@ -18,7 +18,7 @@ const ModifierSelectorRow = ({
   modifier,
   modifiersToAdd
 }) => {
-  const modifierModalStyles = useStyles();
+  const styles = useStyles();
   const validationWarning = validateModifier(modifier);
   const { canBeRemoved, tooltipText } = modifierCanBeRemoved(
     Boolean(elementInstance.usedBy?.length > 0),
@@ -28,44 +28,41 @@ const ModifierSelectorRow = ({
   );
 
   return (
-    <div className={modifierModalStyles.modifierSelectorRow}>
-      <div
-        className={clsx(
-          modifierModalStyles.rowCorner,
-          isFirst ? modifierModalStyles.rowCornerBottom : modifierModalStyles.rowCornerTee
-        )}
-      />
-      <div className={modifierModalStyles.rowLine} />
+    <div className={styles.rulesCardGroup}>
+      <div className={clsx(styles.line, styles.lineHorizontal)}></div>
+      <div className={clsx(styles.line, styles.lineVertical, isFirst && styles.lineVerticalTop)}></div>
 
-      <Card className={modifierModalStyles.modifierCard}>
-        <CardContent className={modifierModalStyles.modifierCardContent}>
-          <ModifierForm
-            handleSelectValueSet={() => {}} // do nothing, update modifier only
-            handleUpdateModifier={handleUpdateModifier}
-            modifier={modifier}
-          />
+      <div className={styles.indent}>
+        <Card className={styles.modifierCard}>
+          <CardContent className={styles.modifierCardContent}>
+            <ModifierForm
+              handleSelectValueSet={() => {}} // do nothing, update modifier only
+              handleUpdateModifier={handleUpdateModifier}
+              modifier={modifier}
+            />
 
-          {validationWarning && <Alert severity="error">{validationWarning}</Alert>}
+            {validationWarning && <Alert severity="error">{validationWarning}</Alert>}
 
-          <div className={modifierModalStyles.deleteButton}>
-            {tooltipText && (
-              <Tooltip arrow title={tooltipText} placement="left">
-                <span>
-                  <IconButton aria-label="delete modifier" disabled color="primary">
-                    <CloseIcon fontSize="small" />
-                  </IconButton>
-                </span>
-              </Tooltip>
-            )}
+            <div className={styles.deleteButton}>
+              {tooltipText && (
+                <Tooltip arrow title={tooltipText} placement="left">
+                  <span>
+                    <IconButton aria-label="delete modifier" disabled color="primary">
+                      <CloseIcon fontSize="small" />
+                    </IconButton>
+                  </span>
+                </Tooltip>
+              )}
 
-            {canBeRemoved && (
-              <IconButton aria-label="delete modifier" color="primary" onClick={handleRemoveModifier}>
-                <CloseIcon fontSize="small" />
-              </IconButton>
-            )}
-          </div>
-        </CardContent>
-      </Card>
+              {canBeRemoved && (
+                <IconButton aria-label="delete modifier" color="primary" onClick={handleRemoveModifier}>
+                  <CloseIcon fontSize="small" />
+                </IconButton>
+              )}
+            </div>
+          </CardContent>
+        </Card>
+      </div>
     </div>
   );
 };

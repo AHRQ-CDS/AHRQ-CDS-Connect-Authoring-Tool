@@ -35,6 +35,7 @@
     "fontsource-roboto-mono": "^3.0.3",
     "fontsource-source-sans-pro": "^3.0.9",
     "formik": "^2.2.0",
+    "immer": "^9.0.3",
     "immutability-helper": "^3.1.1",
     "lodash": "^4.17.20",
     "moment": "^2.29.1",
