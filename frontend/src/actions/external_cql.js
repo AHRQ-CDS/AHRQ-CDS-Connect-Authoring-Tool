@@ -71,7 +71,7 @@ export function loadExternalCqlList(artifactId) {
     return sendExternalCqlListRequest(artifactId)
       .then(data => dispatch(loadExternalCqlListSuccess(data)))
       .catch(error => dispatch(loadExternalCqlListFailure(error)))
-      .then(() => dispatch(loadModifiers()));
+      .then(() => dispatch(loadModifiers(artifactId)));
   };
 }
 

@@ -1,10 +1,3 @@
-/* eslint-disable object-curly-newline */
-
-// NOTE -- Any cqlTemplates/cqlLibraryFunctions that are `null` are currently in development
-// Any id's that are the same as cqlTemplates are pure coincidence. The id matches within
-// src/components/builder/modifiers while the cqlTemplate matches the cqlTemplate in app/data/cql/modifiers
-// NOTE -- Any modifier that requires text for an expression phrase will need to be added to the list in artifact.js
-
 const elementLists = [
   'list_of_observations',
   'list_of_conditions',
@@ -56,7 +49,7 @@ const everyElement = elementLists.concat([
   'other'
 ]);
 
-const modifiers = [
+const mockModifiers = [
   // Observations
   {
     id: 'VerifiedObservation',
@@ -668,4 +661,4 @@ const modifiers = [
   }
 ];
 
-export default modifiers;
+export default mockModifiers;

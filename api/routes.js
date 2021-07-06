@@ -6,6 +6,7 @@ const cqlRouter = require('./routers/cqlRouter');
 const authRouter = require('./routers/authRouter.js');
 const fhirRouter = require('./routers/fhirRouter');
 const foreseeHandler = require('./handlers/foreseeHandler');
+const modifiersRouter = require('./routers/modifiersRouter');
 
 module.exports = app => {
   // Routing for API check
@@ -36,6 +37,9 @@ module.exports = app => {
 
   // Handling for ForeSee script
   app.get('/authoring/api/foresee.js', foreseeHandler);
+
+  // Routing for Modifiers
+  app.use('/authoring/api/modifiers', modifiersRouter);
 
   // Catch all other Api calls
   app.get('/authoring/api/*', (req, res) => {

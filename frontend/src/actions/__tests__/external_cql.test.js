@@ -6,15 +6,15 @@ import _ from 'lodash';
 import * as actions from '../external_cql';
 import * as types from '../types';
 
-import localModifiers from '../../data/modifiers';
+import mockModifiers from '../../mocks/mockModifiers';
 import mockArtifact from '../../mocks/mockArtifact';
 
 const middlewares = [thunk];
 const mockStore = configureMockStore(middlewares);
-const modifierMap = _.keyBy(localModifiers, 'id');
+const modifierMap = _.keyBy(mockModifiers, 'id');
 const modifiersByInputType = {};
 
-localModifiers.forEach(modifier => {
+mockModifiers.forEach(modifier => {
   modifier.inputTypes.forEach(inputType => {
     modifiersByInputType[inputType] = (modifiersByInputType[inputType] || []).concat(modifier);
   });
@@ -49,7 +49,11 @@ describe('external cql actions', () => {
       };
       const artifactId = 'abc132';
 
-      nock('http://localhost').get(`/authoring/api/externalCQL/${artifactId}`).reply(200, externalCqlList);
+      nock('http://localhost')
+        .get(`/authoring/api/externalCQL/${artifactId}`)
+        .reply(200, externalCqlList)
+        .get(`/authoring/api/modifiers/${artifactId}`)
+        .reply(200, mockModifiers);
 
       const expectedActions = [
         { type: types.EXTERNAL_CQL_LIST_REQUEST },
@@ -84,7 +88,9 @@ describe('external cql actions', () => {
         .reply(404, function () {
           this.req.response.statusMessage = 'Not found';
           return { status: 404 };
-        });
+        })
+        .get(`/authoring/api/modifiers/${artifactId}`)
+        .reply(200, mockModifiers);
 
       const expectedActions = [
         { type: types.EXTERNAL_CQL_LIST_REQUEST },
@@ -172,7 +178,11 @@ describe('external cql actions', () => {
         'fhir-helpers-new-2.0.1': ['my-artifact-1', 'cds-connect-commons-new-2.0.0']
       };
 
-      nock('http://localhost').get(`/authoring/api/externalCQL/${artifactId}`).reply(200, externalCqlList);
+      nock('http://localhost')
+        .get(`/authoring/api/externalCQL/${artifactId}`)
+        .reply(200, externalCqlList)
+        .get(`/authoring/api/modifiers/${artifactId}`)
+        .reply(200, mockModifiers);
 
       const expectedActions = [
         { type: types.EXTERNAL_CQL_LIST_REQUEST },
@@ -275,6 +285,8 @@ describe('external cql actions', () => {
         .reply(200, [mockArtifact])
         .get(`/authoring/api/externalCQL/${mockArtifact._id}`)
         .reply(200, externalCqlList)
+        .get(`/authoring/api/modifiers/${mockArtifact._id}`)
+        .reply(200, mockModifiers)
         .get(`/authoring/api/artifacts/${mockArtifact._id}`)
         .reply(200, [mockArtifact])
         .post('/authoring/api/externalCQL')
@@ -342,6 +354,8 @@ describe('external cql actions', () => {
         .reply(200, [mockArtifact])
         .get(`/authoring/api/externalCQL/${mockArtifact._id}`)
         .reply(200, externalCqlList)
+        .get(`/authoring/api/modifiers/${mockArtifact._id}`)
+        .reply(200, mockModifiers)
         .get(`/authoring/api/artifacts/${mockArtifact._id}`)
         .reply(200, [mockArtifact])
         .post('/authoring/api/externalCQL')
@@ -414,6 +428,8 @@ describe('external cql actions', () => {
         .reply(200, [mockArtifact])
         .get(`/authoring/api/externalCQL/${mockArtifact._id}`)
         .reply(200, externalCqlList)
+        .get(`/authoring/api/modifiers/${mockArtifact._id}`)
+        .reply(200, mockModifiers)
         .get(`/authoring/api/artifacts/${mockArtifact._id}`)
         .reply(200, [mockArtifact])
         .post('/authoring/api/externalCQL')
@@ -484,6 +500,8 @@ describe('external cql actions', () => {
         .reply(200, [mockArtifact])
         .get(`/authoring/api/externalCQL/${mockArtifact._id}`)
         .reply(200, externalCqlList)
+        .get(`/authoring/api/modifiers/${mockArtifact._id}`)
+        .reply(200, mockModifiers)
         .get(`/authoring/api/artifacts/${mockArtifact._id}`)
         .reply(200, [mockArtifact])
         .post('/authoring/api/externalCQL')
@@ -558,6 +576,8 @@ describe('external cql actions', () => {
         .reply(200, [mockArtifact])
         .get(`/authoring/api/externalCQL/${mockArtifact._id}`)
         .reply(200, externalCqlList)
+        .get(`/authoring/api/modifiers/${mockArtifact._id}`)
+        .reply(200, mockModifiers)
         .get(`/authoring/api/artifacts/${mockArtifact._id}`)
         .reply(200, [mockArtifact])
         .delete(`/authoring/api/externalCQL/${libraryId}`)
@@ -624,6 +644,8 @@ describe('external cql actions', () => {
         .reply(200, [mockArtifact])
         .get(`/authoring/api/externalCQL/${mockArtifact._id}`)
         .reply(200, externalCqlList)
+        .get(`/authoring/api/modifiers/${mockArtifact._id}`)
+        .reply(200, mockModifiers)
         .get(`/authoring/api/artifacts/${mockArtifact._id}`)
         .reply(200, [mockArtifact])
         .delete(`/authoring/api/externalCQL/${libraryId}`)

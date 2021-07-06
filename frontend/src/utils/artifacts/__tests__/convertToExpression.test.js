@@ -1,8 +1,8 @@
 import convertToExpression from '../convertToExpression';
-import modifierList from '../../../data/modifiers';
+import mockModifierList from '../../../mocks/mockModifiers';
 
 function getModifier(name, values) {
-  let modifier = modifierList.find(m => m.id === name);
+  let modifier = mockModifierList.find(m => m.id === name);
   if (modifier && values) {
     modifier = Object.assign({}, modifier, { values });
   }

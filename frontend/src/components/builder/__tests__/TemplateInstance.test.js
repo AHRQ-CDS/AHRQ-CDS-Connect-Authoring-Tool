@@ -11,7 +11,7 @@ import {
   genericBaseElementUseInstance
 } from 'utils/test_fixtures';
 import { getFieldWithType } from 'utils/instances';
-import localModifiers from 'data/modifiers';
+import mockModifiers from 'mocks/mockModifiers';
 import TemplateInstance from '../TemplateInstance';
 import mockArtifact from 'mocks/mockArtifact';
 import mockExternalCqlLibrary from 'mocks/mockExternalCQLLibrary';
@@ -40,7 +40,7 @@ const baseElementNotBeingUsed = {
 
 const modifiersByInputType = {};
 
-localModifiers.forEach(modifier => {
+mockModifiers.forEach(modifier => {
   modifier.inputTypes.forEach(inputType => {
     modifiersByInputType[inputType] = (modifiersByInputType[inputType] || []).concat(modifier);
   });

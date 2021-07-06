@@ -17,7 +17,7 @@ import _ from 'lodash';
 
 import loadTemplates from 'actions/templates';
 import { setActiveTab, setScrollToId } from 'actions/navigation';
-import { loadConversionFunctions, loadModifiers } from 'actions/modifiers';
+import { loadConversionFunctions } from 'actions/modifiers';
 import {
   setStatusMessage,
   downloadArtifact,
@@ -88,7 +88,6 @@ export class Builder extends Component {
         this.props.initializeArtifact(andTemplate, orTemplate);
       }
       this.props.loadConversionFunctions();
-      this.props.loadModifiers();
     });
   }
 
@@ -933,7 +932,6 @@ function mapDispatchToProps(dispatch) {
       loadConversionFunctions,
       loadExternalCqlLibraryDetails,
       loadExternalCqlList,
-      loadModifiers,
       loadTemplates,
       saveArtifact,
       setActiveTab,

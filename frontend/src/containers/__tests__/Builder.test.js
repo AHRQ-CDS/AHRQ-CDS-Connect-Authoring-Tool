@@ -4,7 +4,7 @@ import { createMockStore as reduxCreateMockStore } from 'redux-test-utils';
 import _ from 'lodash';
 import nock from 'nock';
 import * as types from 'actions/types';
-import localModifiers from 'data/modifiers';
+import mockModifiers from 'mocks/mockModifiers';
 import { render, fireEvent, userEvent, screen } from 'utils/test-utils';
 import { instanceTree, artifact, reduxState } from 'utils/test_fixtures';
 import { simpleObservationInstanceTree } from 'utils/test_fixtures';
@@ -17,10 +17,10 @@ import mockArtifact from 'mocks/mockArtifact';
 import mockExternalCqlLibrary from 'mocks/mockExternalCQLLibrary';
 import { mockTemplates2 } from 'mocks/mockTemplates';
 
-const modifierMap = _.keyBy(localModifiers, 'id');
+const modifierMap = _.keyBy(mockModifiers, 'id');
 const modifiersByInputType = {};
 
-localModifiers.forEach(modifier => {
+mockModifiers.forEach(modifier => {
   modifier.inputTypes.forEach(inputType => {
     modifiersByInputType[inputType] = (modifiersByInputType[inputType] || []).concat(modifier);
   });
@@ -102,6 +102,8 @@ describe('<Builder />', () => {
       .reply(200, { expansion: [] })
       .get(`/authoring/api/externalCQL/${mockArtifact._id}`)
       .reply(200, [mockExternalCqlLibrary])
+      .get(`/authoring/api/modifiers/${mockArtifact._id}`)
+      .reply(200, mockModifiers)
       .get('/authoring/api/config/templates')
       .reply(200, mockTemplates2);
   });

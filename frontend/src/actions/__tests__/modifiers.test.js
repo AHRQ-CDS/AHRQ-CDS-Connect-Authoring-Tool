@@ -6,14 +6,14 @@ import _ from 'lodash';
 import * as actions from '../modifiers';
 import * as types from '../types';
 
-import localModifiers from '../../data/modifiers';
+import mockModifiers from '../../mocks/mockModifiers';
 
 const middlewares = [thunk];
 const mockStore = configureMockStore(middlewares);
-const modifierMap = _.keyBy(localModifiers, 'id');
+const modifierMap = _.keyBy(mockModifiers, 'id');
 const modifiersByInputType = {};
 
-localModifiers.forEach(modifier => {
+mockModifiers.forEach(modifier => {
   modifier.inputTypes.forEach(inputType => {
     modifiersByInputType[inputType] = (modifiersByInputType[inputType] || []).concat(modifier);
   });
@@ -28,6 +28,8 @@ describe('modifiers actions', () => {
         }
       });
 
+      nock('http://localhost').get('/authoring/api/modifiers/1').reply(200, mockModifiers);
+
       const expectedActions = [
         { type: types.MODIFIERS_REQUEST },
         {
@@ -37,7 +39,7 @@ describe('modifiers actions', () => {
         }
       ];
 
-      return store.dispatch(actions.loadModifiers()).then(() => {
+      return store.dispatch(actions.loadModifiers('1')).then(() => {
         expect(store.getActions()).toEqual(expectedActions);
       });
     });
@@ -45,16 +47,18 @@ describe('modifiers actions', () => {
     it('dispatches a LOAD_MODIFIERS_FAILURE action on failure', () => {
       const store = mockStore({});
 
+      nock('http://localhost').get('/authoring/api/modifiers/1').reply(401);
+
       const expectedActions = [
         { type: types.MODIFIERS_REQUEST },
         {
           type: types.LOAD_MODIFIERS_FAILURE,
           status: 'error',
-          statusText: `Cannot read property 'externalCqlList' of undefined`
+          statusText: 'Request failed with status code 401'
         }
       ];
 
-      return store.dispatch(actions.loadModifiers()).then(() => {
+      return store.dispatch(actions.loadModifiers('1')).then(() => {
         expect(store.getActions()).toEqual(expectedActions);
       });
     });
