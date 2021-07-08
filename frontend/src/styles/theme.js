@@ -287,6 +287,11 @@ const materialUiOverridesBase = {
       }
     }
   },
+  MuiTableCell: {
+    head: {
+      whiteSpace: 'nowrap'
+    }
+  },
   MuiTooltip: {
     arrow: {
       color: colors.black

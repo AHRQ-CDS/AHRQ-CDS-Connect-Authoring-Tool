@@ -1,9 +1,7 @@
 import React from 'react';
 import { render, screen, userEvent } from 'utils/test-utils';
 
-import mockPatientDstu2 from 'mocks/mockPatientDstu2';
-import mockPatientStu3 from 'mocks/mockPatientStu3';
-import mockPatientR4 from 'mocks/mockPatientR4';
+import { mockPatientDstu2, mockPatientStu3, mockPatientR4 } from 'mocks/patients';
 import { getPatientAge } from 'utils/patients';
 import PatientDetailsModal from '../PatientDetailsModal';
 

@@ -68,12 +68,10 @@ export default class Subpopulations extends Component {
             conversionFunctions={this.props.conversionFunctions}
             deleteInstance={this.props.deleteInstance}
             editInstance={this.props.editInstance}
-            externalCqlList={this.props.externalCqlList}
             getAllInstances={this.props.getAllInstances}
             getAllInstancesInAllTrees={this.props.getAllInstancesInAllTrees}
             instanceNames={this.props.instanceNames}
             isLoadingModifiers={this.props.isLoadingModifiers}
-            loadExternalCqlList={this.props.loadExternalCqlList}
             modifierMap={this.props.modifierMap}
             modifiersByInputType={this.props.modifiersByInputType}
             name={this.props.name}
@@ -106,12 +104,10 @@ Subpopulations.propTypes = {
   conversionFunctions: PropTypes.array,
   deleteInstance: PropTypes.func.isRequired,
   editInstance: PropTypes.func.isRequired,
-  externalCqlList: PropTypes.array.isRequired,
   getAllInstances: PropTypes.func.isRequired,
   getAllInstancesInAllTrees: PropTypes.func.isRequired,
   instanceNames: PropTypes.array.isRequired,
   isLoadingModifiers: PropTypes.bool,
-  loadExternalCqlList: PropTypes.func.isRequired,
   modifierMap: PropTypes.object.isRequired,
   modifiersByInputType: PropTypes.object.isRequired,
   name: PropTypes.string.isRequired,

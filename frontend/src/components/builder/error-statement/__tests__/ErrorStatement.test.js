@@ -3,7 +3,7 @@ import { createStore } from 'redux';
 import { Provider } from 'react-redux';
 import { fireEvent, render, userEvent, screen, within } from 'utils/test-utils';
 import ErrorStatement from '../ErrorStatement';
-import mockArtifact from 'mocks/mockArtifact';
+import { mockArtifact } from 'mocks/artifacts';
 
 describe('<ErrorStatement />', () => {
   const mockArtifactWithIfCondition = {

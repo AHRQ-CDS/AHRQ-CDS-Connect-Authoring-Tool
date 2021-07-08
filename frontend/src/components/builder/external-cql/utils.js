@@ -1,4 +1,5 @@
 export const getExternalCqlByType = (externalCqlList, type) => {
+  if (!externalCqlList || externalCqlList.length === 0) return [];
   let eligibleElements = [];
   externalCqlList.forEach(library => {
     library.details.definitions?.forEach(definition => {

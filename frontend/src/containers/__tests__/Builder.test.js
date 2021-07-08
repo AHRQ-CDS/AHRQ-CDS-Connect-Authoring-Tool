@@ -13,11 +13,10 @@ import { simpleProcedureInstanceTree } from 'utils/test_fixtures';
 import { simpleImmunizationInstanceTree } from 'utils/test_fixtures';
 import { getFieldWithId } from 'utils/instances';
 import Builder from '../Builder';
-import mockArtifact from 'mocks/mockArtifact';
-import mockExternalCqlLibrary from 'mocks/mockExternalCQLLibrary';
-import { mockTemplates2 } from 'mocks/mockTemplates';
+import { mockArtifact } from 'mocks/artifacts';
+import { mockExternalCqlLibrary } from 'mocks/external-cql';
+import { mockTemplates } from 'mocks/templates';
 
-const modifierMap = _.keyBy(mockModifiers, 'id');
 const modifiersByInputType = {};
 
 mockModifiers.forEach(modifier => {
@@ -36,9 +35,7 @@ const defaultState = {
     }
   },
   modifiers: {
-    ...reduxState.modifiers,
-    modifierMap,
-    modifiersByInputType
+    ...reduxState.modifiers
   },
   navigation: {
     activeTab: 1,
@@ -57,9 +54,7 @@ const getDefaultStateWithInstanceTree = instanceTree => {
       }
     },
     modifiers: {
-      ...reduxState.modifiers,
-      modifierMap,
-      modifiersByInputType
+      ...reduxState.modifiers
     },
     navigation: {
       activeTab: 1,
@@ -105,25 +100,11 @@ describe('<Builder />', () => {
       .get(`/authoring/api/modifiers/${mockArtifact._id}`)
       .reply(200, mockModifiers)
       .get('/authoring/api/config/templates')
-      .reply(200, mockTemplates2);
+      .reply(200, mockTemplates);
   });
   afterEach(() => nock.cleanAll());
 
-  it('shows loading screen when artifact is not loaded', () => {
-    const { getByText } = renderComponent({
-      store: createMockStore({
-        ...defaultState,
-        artifacts: {
-          ...defaultState.artifacts,
-          artifact: null
-        }
-      })
-    });
-
-    expect(getByText('Loading...')).toBeDefined();
-  });
-
-  it('can edit a template instance', () => {
+  it('can edit a template instance', async () => {
     const store = createMockStore(defaultState);
     renderComponent({ store });
 
@@ -138,7 +119,7 @@ describe('<Builder />', () => {
     expect(nameField.value).toEqual('30 to 45');
   });
 
-  it('can edit a conjunction instance', () => {
+  it('can edit a conjunction instance', async () => {
     const store = createMockStore(defaultState);
     renderComponent({ store });
 
@@ -153,13 +134,13 @@ describe('<Builder />', () => {
     expect(instance.name).toEqual('Or');
   });
 
-  it("can update an instance's modifiers", () => {
+  it("can update an instance's modifiers", async () => {
     const store = createMockStore(defaultState);
     renderComponent({
       store
     });
 
-    userEvent.click(screen.getAllByRole('button', { name: 'Add expression' })[0]);
+    userEvent.click((await screen.findAllByRole('button', { name: 'Add expression' }, { timeout: 2000 }))[0]);
     userEvent.click(screen.getByRole('button', { name: 'Is (Not) Null?' }));
 
     const updateAction = expandAction(_.last(store.getActions()));
@@ -171,7 +152,7 @@ describe('<Builder />', () => {
     expect(modifier.name).toEqual('Is (Not) Null?');
   });
 
-  it('can delete an instance', () => {
+  it('can delete an instance', async () => {
     const store = createMockStore({
       ...defaultState,
       artifacts: {
@@ -186,10 +167,10 @@ describe('<Builder />', () => {
       }
     });
 
-    const { getByLabelText, getByText } = renderComponent({ store });
+    renderComponent({ store });
 
-    fireEvent.click(getByLabelText('remove Age Range'));
-    fireEvent.click(getByText('Delete'));
+    fireEvent.click(screen.getByLabelText('remove Age Range'));
+    fireEvent.click(screen.getByText('Delete'));
 
     const updateAction = expandAction(_.last(store.getActions()));
 
@@ -207,10 +188,10 @@ describe('<Builder />', () => {
     describe('Test FirstObservation modifier.', () => {
       const store = createMockStore(getDefaultStateWithInstanceTree(simpleObservationInstanceTree));
 
-      it('should render as a modifier option within a button and dispatch UPDATE_ARTIFACT when added', () => {
+      it('should render as a modifier option within a button and dispatch UPDATE_ARTIFACT when added', async () => {
         renderComponent({ store });
 
-        userEvent.click(screen.getAllByRole('button', { name: 'Add expression' })[0]);
+        userEvent.click((await screen.findAllByRole('button', { name: 'Add expression' }, { timeout: 2000 }))[0]);
         userEvent.click(screen.getByRole('button', { name: 'First' }));
 
         const updateAction = expandAction(_.last(store.getActions()));
@@ -227,10 +208,10 @@ describe('<Builder />', () => {
     describe('Test AverageObservationValue modifier.', () => {
       const store = createMockStore(getDefaultStateWithInstanceTree(simpleObservationInstanceTree));
 
-      it('should render as a modifier option within a button and dispatch UPDATE_ARTIFACT when added', () => {
+      it('should render as a modifier option within a button and dispatch UPDATE_ARTIFACT when added', async () => {
         renderComponent({ store });
 
-        userEvent.click(screen.getAllByRole('button', { name: 'Add expression' })[0]);
+        userEvent.click((await screen.findAllByRole('button', { name: 'Add expression' }, { timeout: 2000 }))[0]);
         userEvent.click(screen.getByRole('button', { name: 'Average Observation Value' }));
 
         const updateAction = expandAction(_.last(store.getActions()));
@@ -247,10 +228,10 @@ describe('<Builder />', () => {
     describe('Test FirstCondition Modifier.', () => {
       const store = createMockStore(getDefaultStateWithInstanceTree(simpleConditionInstanceTree));
 
-      it('should render as a modifier option within a button and dispatch UPDATE_ARTIFACT when added', () => {
+      it('should render as a modifier option within a button and dispatch UPDATE_ARTIFACT when added', async () => {
         renderComponent({ store });
 
-        userEvent.click(screen.getAllByRole('button', { name: 'Add expression' })[0]);
+        userEvent.click((await screen.findAllByRole('button', { name: 'Add expression' }, { timeout: 2000 }))[0]);
         userEvent.click(screen.getByRole('button', { name: 'First' }));
 
         const updateAction = expandAction(_.last(store.getActions()));
@@ -267,10 +248,10 @@ describe('<Builder />', () => {
     describe('Test FirstProcedure Modifier.', () => {
       const store = createMockStore(getDefaultStateWithInstanceTree(simpleProcedureInstanceTree));
 
-      it('should render as a modifier option within a button and dispatch UPDATE_ARTIFACT when added', () => {
+      it('should render as a modifier option within a button and dispatch UPDATE_ARTIFACT when added', async () => {
         renderComponent({ store });
 
-        userEvent.click(screen.getAllByRole('button', { name: 'Add expression' })[0]);
+        userEvent.click((await screen.findAllByRole('button', { name: 'Add expression' }, { timeout: 2000 }))[0]);
         userEvent.click(screen.getByRole('button', { name: 'First' }));
 
         const updateAction = expandAction(_.last(store.getActions()));
@@ -287,10 +268,10 @@ describe('<Builder />', () => {
     describe('Test FirstImmunization Modifier.', () => {
       const store = createMockStore(getDefaultStateWithInstanceTree(simpleImmunizationInstanceTree));
 
-      it('should render as a modifier option within a button and dispatch UPDATE_ARTIFACT when added', () => {
+      it('should render as a modifier option within a button and dispatch UPDATE_ARTIFACT when added', async () => {
         renderComponent({ store });
 
-        userEvent.click(screen.getAllByRole('button', { name: 'Add expression' })[0]);
+        userEvent.click((await screen.findAllByRole('button', { name: 'Add expression' }, { timeout: 2000 }))[0]);
         userEvent.click(screen.getByRole('button', { name: 'First' }));
 
         const updateAction = expandAction(_.last(store.getActions()));

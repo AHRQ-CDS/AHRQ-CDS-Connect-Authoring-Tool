@@ -1,32 +1,10 @@
 import React from 'react';
 import nock from 'nock';
-import mockPatientR4 from 'mocks/mockPatientR4';
+import { mockPatientR4 } from 'mocks/patients';
 
 import { fireEvent, render, screen, waitFor } from 'utils/test-utils';
+import { createDataTransferEventWithFiles, createFile } from 'utils/test_helpers';
 import PatientDropZone from '../PatientDropZone';
-
-const createDataTransferEventWithFiles = (files = []) => ({
-  dataTransfer: {
-    files,
-    items: files.map(file => ({
-      kind: 'file',
-      size: file.size,
-      type: file.type,
-      getAsFile: () => file
-    })),
-    types: ['Files']
-  }
-});
-
-const createFile = ({ name, size, type, contents = [] }) => {
-  const file = new File(contents, name, { type });
-  Object.defineProperty(file, 'size', {
-    get() {
-      return size;
-    }
-  });
-  return file;
-};
 
 describe('<PatientDropZone />', () => {
   it('renders an error when an invalid file is uploaded', async () => {

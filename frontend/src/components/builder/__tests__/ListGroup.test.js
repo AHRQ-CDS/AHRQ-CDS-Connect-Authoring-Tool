@@ -8,9 +8,9 @@ import { render, userEvent, screen } from 'utils/test-utils';
 import { elementGroups, genericBaseElementUseInstance, genericBaseElementListInstance } from 'utils/test_fixtures';
 import { getFieldWithId } from 'utils/instances';
 import ListGroup from '../ListGroup';
-import mockArtifact from 'mocks/mockArtifact';
-import mockExternalCqlLibrary from 'mocks/mockExternalCQLLibrary';
-import { mockTemplates2 } from 'mocks/mockTemplates';
+import { mockArtifact } from 'mocks/artifacts';
+import { mockExternalCqlLibrary } from 'mocks/external-cql';
+import { mockTemplates } from 'mocks/templates';
 
 describe('<ListGroup />', () => {
   const genericBaseElementListTemplateInstance = createTemplateInstance(genericBaseElementListInstance);
@@ -26,14 +26,12 @@ describe('<ListGroup />', () => {
           conversionFunctions={[]}
           deleteInstance={jest.fn()}
           editInstance={jest.fn()}
-          externalCqlList={[]}
           getAllInstances={() => genericBaseElementListInstance.childInstances}
           getAllInstancesInAllTrees={() => []}
           index={0}
           instance={genericBaseElementListTemplateInstance}
           instanceNames={[]}
           isLoadingModifiers={false}
-          loadExternalCqlList={jest.fn()}
           modifierMap={{}}
           modifiersByInputType={{}}
           parameters={[]}
@@ -53,7 +51,7 @@ describe('<ListGroup />', () => {
       .get(`/authoring/api/externalCQL/${mockArtifact._id}`)
       .reply(200, [mockExternalCqlLibrary])
       .get('/authoring/api/config/templates')
-      .reply(200, mockTemplates2);
+      .reply(200, mockTemplates);
   });
 
   afterEach(() => nock.cleanAll());

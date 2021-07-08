@@ -4,7 +4,6 @@ import * as types from '../actions/types';
 import artifactsReducer from './artifacts';
 import authReducer from './auth';
 import errorsReducer from './errors';
-import externalCqlReducer from './external_cql';
 import modifiersReducer from './modifiers';
 import navigationReducer from './navigation';
 import templatesReducer from './templates';
@@ -14,7 +13,6 @@ const appReducer = combineReducers({
   artifacts: artifactsReducer,
   auth: authReducer,
   errors: errorsReducer,
-  externalCQL: externalCqlReducer,
   modifiers: modifiersReducer,
   navigation: navigationReducer,
   templates: templatesReducer,

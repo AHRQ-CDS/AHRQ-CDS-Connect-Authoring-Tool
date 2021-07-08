@@ -8,15 +8,13 @@ import { Link } from 'components/elements';
 import { DeleteConfirmationModal } from 'components/modals';
 import { renderDate } from 'utils/dates';
 import artifactProps from 'prop-types/artifact';
-import { useTextStyles } from 'styles/hooks';
-
-import useStyles from './styles';
+import { useButtonStyles, useTextStyles } from 'styles/hooks';
 
 const ArtifactTableRow = ({ artifact, handleDeleteArtifact, handleDuplicateArtifact, handleUpdateArtifact }) => {
   const [showArtifactModal, setShowArtifactModal] = useState(false);
   const [showDeleteConfirmationModal, setShowDeleteConfirmationModal] = useState(false);
+  const buttonStyles = useButtonStyles();
   const textStyles = useTextStyles();
-  const styles = useStyles();
 
   const deleteArtifact = useCallback(
     artifact => {
@@ -39,7 +37,7 @@ const ArtifactTableRow = ({ artifact, handleDeleteArtifact, handleDuplicateArtif
       <TableCell align="right" style={{ whiteSpace: 'nowrap' }}>
         <Tooltip title="Edit Info" arrow>
           <IconButton
-            className={styles.artifactButton}
+            className={buttonStyles.iconButton}
             color="primary"
             onClick={() => setShowArtifactModal(true)}
             variant="contained"
@@ -50,7 +48,7 @@ const ArtifactTableRow = ({ artifact, handleDeleteArtifact, handleDuplicateArtif
 
         <Tooltip title="Duplicate" arrow>
           <IconButton
-            className={styles.artifactButton}
+            className={buttonStyles.iconButton}
             color="primary"
             onClick={() => handleDuplicateArtifact(artifact)}
             variant="contained"
@@ -61,7 +59,7 @@ const ArtifactTableRow = ({ artifact, handleDeleteArtifact, handleDuplicateArtif
 
         <Tooltip title="Delete" arrow>
           <IconButton
-            className={styles.artifactButton}
+            className={buttonStyles.iconButton}
             color="secondary"
             onClick={() => setShowDeleteConfirmationModal(true)}
             variant="contained"

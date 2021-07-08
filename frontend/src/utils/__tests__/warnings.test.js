@@ -1,6 +1,6 @@
 import _ from 'lodash';
 import { hasGroupNestedWarning } from '../warnings';
-import mockArtifact from '../../mocks/mockArtifact';
+import { mockArtifact } from 'mocks/artifacts';
 import {
   nestedReturnTypeErrorGroup,
   nestedModifierValidationErrorGroup,
@@ -9,7 +9,7 @@ import {
   nestedDuplicateGroupNamesGroups,
   nestedBaseElementUseGroups,
   nonValidatingBaseElementList
-} from '../../mocks/mockGroupWarnings';
+} from 'mocks/warnings';
 
 test('warning for nested return type warning', () => {
   const artifactWithReturnTypeError = _.cloneDeep(mockArtifact);

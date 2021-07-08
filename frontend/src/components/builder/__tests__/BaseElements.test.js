@@ -6,9 +6,9 @@ import nock from 'nock';
 import BaseElements from '../BaseElements';
 import { render, screen, userEvent } from 'utils/test-utils';
 import { elementGroups, genericBaseElementInstance, genericBaseElementListInstance } from 'utils/test_fixtures';
-import mockArtifact from 'mocks/mockArtifact';
-import mockExternalCqlLibrary from 'mocks/mockExternalCQLLibrary';
-import { mockTemplates2 } from 'mocks/mockTemplates';
+import { mockArtifact } from 'mocks/artifacts';
+import { mockExternalCqlLibrary } from 'mocks/external-cql';
+import { mockTemplates } from 'mocks/templates';
 
 describe('<BaseElements />', () => {
   const renderComponent = (props = {}) =>
@@ -21,13 +21,11 @@ describe('<BaseElements />', () => {
           conversionFunctions={[]}
           deleteInstance={jest.fn()}
           editInstance={jest.fn()}
-          externalCqlList={[]}
           getAllInstances={jest.fn()}
           getAllInstancesInAllTrees={jest.fn(() => [])}
           instance={null}
           instanceNames={[]}
           isLoadingModifiers={false}
-          loadExternalCqlList={jest.fn()}
           modifierMap={{}}
           modifiersByInputType={{}}
           parameters={[]}
@@ -48,7 +46,7 @@ describe('<BaseElements />', () => {
       .get(`/authoring/api/externalCQL/${mockArtifact._id}`)
       .reply(200, [mockExternalCqlLibrary])
       .get('/authoring/api/config/templates')
-      .reply(200, mockTemplates2);
+      .reply(200, mockTemplates);
   });
 
   afterEach(() => nock.cleanAll());

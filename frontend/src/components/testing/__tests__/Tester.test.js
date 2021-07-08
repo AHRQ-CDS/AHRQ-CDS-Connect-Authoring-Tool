@@ -4,13 +4,9 @@ import { Provider } from 'react-redux';
 import { render, screen, userEvent } from 'utils/test-utils';
 import nock from 'nock';
 
-import mockArtifact from 'mocks/mockArtifact';
-import mockPatientDstu2 from 'mocks/mockPatientDstu2';
-import mockPatientStu3 from 'mocks/mockPatientStu3';
-import mockPatientR4 from 'mocks/mockPatientR4';
-import mockElmFilesDstu2 from 'mocks/mockElmFilesDstu2.json';
-import mockElmFilesStu3 from 'mocks/mockElmFilesStu3.json';
-import mockElmFilesR4 from 'mocks/mockElmFilesR4.json';
+import { mockArtifact } from 'mocks/artifacts';
+import { mockPatientDstu2, mockPatientStu3, mockPatientR4 } from 'mocks/patients';
+import { mockElmFilesDstu2, mockElmFilesStu3, mockElmFilesR4 } from 'mocks/elm-files';
 import Tester, { validate404ErrorMessage } from '../Tester';
 
 describe('<Tester />', () => {

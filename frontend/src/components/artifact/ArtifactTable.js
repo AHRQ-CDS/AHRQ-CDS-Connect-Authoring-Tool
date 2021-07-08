@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TableSortLabel } from '@material-ui/core';
 
 import ArtifactTableRow from './ArtifactTableRow';
-import { sortByName, sortByVersion, sortByDateEdited, sortByDateCreated } from 'utils/artifactSort';
+import { sortByName, sortByVersion, sortByDateEdited, sortByDateCreated } from 'utils/sort';
 import artifactProps from 'prop-types/artifact';
 
 const ArtifactTable = ({ artifacts, handleDeleteArtifact, handleDuplicateArtifact, handleUpdateArtifact }) => {

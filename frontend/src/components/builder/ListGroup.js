@@ -330,13 +330,11 @@ export default class ListGroup extends Component {
             this.editInstance(treeName, fields, path, editingConjunction, instance)
           }
           elementUniqueId={instance.uniqueId}
-          externalCqlList={this.props.externalCqlList}
           getAllInstances={this.getAllInstances}
           getAllInstancesInAllTrees={this.props.getAllInstancesInAllTrees}
           instance={this.props.instance}
           instanceNames={this.props.instanceNames}
           isLoadingModifiers={this.props.isLoadingModifiers}
-          loadExternalCqlList={this.props.loadExternalCqlList}
           modifierMap={this.props.modifierMap}
           modifiersByInputType={this.props.modifiersByInputType}
           options={isAndOrElement ? '' : 'listOperations'}
@@ -522,14 +520,12 @@ ListGroup.propTypes = {
   conversionFunctions: PropTypes.array,
   deleteInstance: PropTypes.func.isRequired,
   editInstance: PropTypes.func.isRequired,
-  externalCqlList: PropTypes.array.isRequired,
   getAllInstances: PropTypes.func.isRequired,
   getAllInstancesInAllTrees: PropTypes.func.isRequired,
   index: PropTypes.number.isRequired,
   instance: PropTypes.object.isRequired,
   instanceNames: PropTypes.array.isRequired,
   isLoadingModifiers: PropTypes.bool,
-  loadExternalCqlList: PropTypes.func.isRequired,
   modifierMap: PropTypes.object.isRequired,
   modifiersByInputType: PropTypes.object.isRequired,
   parameters: PropTypes.array.isRequired,

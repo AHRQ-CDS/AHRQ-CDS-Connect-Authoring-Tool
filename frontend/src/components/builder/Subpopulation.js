@@ -190,11 +190,9 @@ export default class Subpopulation extends Component {
       artifact,
       baseElements,
       conversionFunctions,
-      externalCqlList,
       getAllInstancesInAllTrees,
       instanceNames,
       isLoadingModifiers,
-      loadExternalCqlList,
       modifierMap,
       modifiersByInputType,
       parameters,
@@ -224,13 +222,11 @@ export default class Subpopulation extends Component {
           conversionFunctions={conversionFunctions}
           deleteInstance={this.deleteInstance}
           editInstance={this.editInstance}
-          externalCqlList={externalCqlList}
           getAllInstances={this.getAllInstances}
           getAllInstancesInAllTrees={getAllInstancesInAllTrees}
           instance={subpopulation}
           instanceNames={instanceNames}
           isLoadingModifiers={isLoadingModifiers}
-          loadExternalCqlList={loadExternalCqlList}
           modifierMap={modifierMap}
           modifiersByInputType={modifiersByInputType}
           parameters={parameters}
@@ -265,12 +261,10 @@ Subpopulation.propTypes = {
   conversionFunctions: PropTypes.array,
   deleteInstance: PropTypes.func.isRequired,
   editInstance: PropTypes.func.isRequired,
-  externalCqlList: PropTypes.array.isRequired,
   getAllInstances: PropTypes.func.isRequired,
   getAllInstancesInAllTrees: PropTypes.func.isRequired,
   instanceNames: PropTypes.array.isRequired,
   isLoadingModifiers: PropTypes.bool,
-  loadExternalCqlList: PropTypes.func.isRequired,
   modifierMap: PropTypes.object.isRequired,
   modifiersByInputType: PropTypes.object.isRequired,
   name: PropTypes.string.isRequired,

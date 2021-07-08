@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import withGracefulUnmount from 'react-graceful-unmount';
-import { connect } from 'react-redux';
+import { connect, useSelector } from 'react-redux';
+import { useQuery } from 'react-query';
 import { bindActionCreators } from 'redux';
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import { Button, IconButton, Menu, MenuItem } from '@material-ui/core';
@@ -28,14 +29,6 @@ import {
   updateAndSaveArtifact,
   clearArtifactValidationWarnings
 } from 'actions/artifacts';
-import {
-  loadExternalCqlList,
-  loadExternalCqlLibraryDetails,
-  addExternalLibrary,
-  deleteExternalCqlLibrary,
-  clearExternalCqlValidationWarnings,
-  clearAddLibraryErrorsAndMessages
-} from 'actions/external_cql';
 
 import { ELMErrorModal } from 'components/modals';
 import BaseElements from 'components/builder/BaseElements';
@@ -43,10 +36,13 @@ import ConjunctionGroup from 'components/builder/ConjunctionGroup';
 import { ArtifactModal } from 'components/artifact';
 
 import { ErrorStatement } from 'components/builder/error-statement';
-import ExternalCQL from 'components/builder/ExternalCQL';
+import { ExternalCql } from 'components/builder/external-cql';
 import Parameters from 'components/builder/Parameters';
 import Recommendations from 'components/builder/Recommendations';
 import Subpopulations from 'components/builder/Subpopulations';
+
+import { fetchExternalCqlList } from 'queries/external-cql';
+import { fetchModifiers } from 'queries/modifiers';
 
 import isBlankArtifact from 'utils/artifacts/isBlankArtifact';
 import { findValueAtPath } from 'utils/find';
@@ -56,7 +52,6 @@ import { parametersHaveWarnings } from 'components/builder/parameters/utils';
 
 import artifactProps from 'prop-types/artifact';
 import { Summary } from 'components/builder/summary';
-
 import { HelpLink } from 'components/elements';
 
 // TODO: This is needed because the tree on this.state is not updated in time. Figure out a better way to handle this
@@ -76,7 +71,6 @@ export class Builder extends Component {
   }
 
   componentDidMount() {
-    this.props.loadExternalCqlList(this.props.match.params.id);
     this.props.loadTemplates().then(result => {
       // if there is a current artifact, load it, otherwise initialize new artifact
       if (this.props.match.params.id) {
@@ -144,7 +138,7 @@ export class Builder extends Component {
   };
 
   tabHasErrors = tabName => {
-    const { artifact, names } = this.props; // externalCqlList,
+    const { artifact, names } = this.props;
     const allInstancesInAllTrees = this.getAllInstancesInAllTrees();
     const { baseElements, errorStatement, expTreeInclude, expTreeExclude, parameters, subpopulations } = artifact;
     const namedParameters = parameters.filter(({ name }) => name?.length);
@@ -475,13 +469,11 @@ export class Builder extends Component {
           conversionFunctions={conversionFunctions}
           deleteInstance={this.deleteInstance}
           editInstance={this.editInstance}
-          externalCqlList={this.props.externalCqlList}
           getAllInstances={this.getAllInstances}
           getAllInstancesInAllTrees={this.getAllInstancesInAllTrees}
           instance={artifact[treeName]}
           instanceNames={this.props.names}
           isLoadingModifiers={isLoadingModifiers}
-          loadExternalCqlList={this.props.loadExternalCqlList}
           modifierMap={modifierMap}
           modifiersByInputType={modifiersByInputType}
           parameters={namedParameters}
@@ -583,27 +575,10 @@ export class Builder extends Component {
   render() {
     const {
       activeTab,
-      addExternalLibrary,
-      addExternalCqlLibraryError,
-      addExternalCqlLibraryErrorMessage,
       artifact,
-      clearAddLibraryErrorsAndMessages,
-      clearExternalCqlValidationWarnings,
       conversionFunctions,
-      deleteExternalCqlLibrary,
       downloadedArtifact,
-      externalCqlErrors,
-      externalCqlFhirVersion,
-      externalCqlLibrary,
-      externalCqlLibraryDetails,
-      externalCQLLibraryParents,
-      externalCqlList,
-      isLoadingExternalCqlDetails,
-      isAddingExternalCqlLibrary,
       isLoadingModifiers,
-      librariesInUse,
-      loadExternalCqlLibraryDetails,
-      loadExternalCqlList,
       modifierMap,
       modifiersByInputType,
       names,
@@ -730,12 +705,10 @@ export class Builder extends Component {
                     conversionFunctions={conversionFunctions}
                     deleteInstance={this.deleteInstance}
                     editInstance={this.editInstance}
-                    externalCqlList={externalCqlList}
                     getAllInstances={this.getAllInstances}
                     getAllInstancesInAllTrees={this.getAllInstancesInAllTrees}
                     instanceNames={names}
                     isLoadingModifiers={isLoadingModifiers}
-                    loadExternalCqlList={loadExternalCqlList}
                     modifierMap={modifierMap}
                     modifiersByInputType={modifiersByInputType}
                     name={'subpopulations'}
@@ -763,14 +736,12 @@ export class Builder extends Component {
                     conversionFunctions={conversionFunctions}
                     deleteInstance={this.deleteInstance}
                     editInstance={this.editInstance}
-                    externalCqlList={externalCqlList}
                     fhirVersion={artifact.fhirVersion}
                     getAllInstances={this.getAllInstances}
                     getAllInstancesInAllTrees={this.getAllInstancesInAllTrees}
                     instance={artifact}
                     instanceNames={names}
                     isLoadingModifiers={isLoadingModifiers}
-                    loadExternalCqlList={loadExternalCqlList}
                     modifierMap={modifierMap}
                     modifiersByInputType={modifiersByInputType}
                     parameters={namedParameters}
@@ -836,26 +807,7 @@ export class Builder extends Component {
                     <HelpLink linkPath="documentation#External_CQL" />
                   </div>
 
-                  <ExternalCQL
-                    artifact={artifact}
-                    externalCqlList={externalCqlList}
-                    externalCqlLibrary={externalCqlLibrary}
-                    externalCQLLibraryParents={externalCQLLibraryParents}
-                    externalCqlLibraryDetails={externalCqlLibraryDetails}
-                    externalCqlFhirVersion={externalCqlFhirVersion}
-                    externalCqlErrors={externalCqlErrors}
-                    isAddingExternalCqlLibrary={isAddingExternalCqlLibrary}
-                    deleteExternalCqlLibrary={deleteExternalCqlLibrary}
-                    addExternalLibrary={addExternalLibrary}
-                    loadExternalCqlList={loadExternalCqlList}
-                    clearExternalCqlValidationWarnings={clearExternalCqlValidationWarnings}
-                    clearAddLibraryErrorsAndMessages={clearAddLibraryErrorsAndMessages}
-                    loadExternalCqlLibraryDetails={loadExternalCqlLibraryDetails}
-                    isLoadingExternalCqlDetails={isLoadingExternalCqlDetails}
-                    addExternalCqlLibraryError={addExternalCqlLibraryError}
-                    addExternalCqlLibraryErrorMessage={addExternalCqlLibraryErrorMessage}
-                    librariesInUse={librariesInUse}
-                  />
+                  <ExternalCql />
                 </TabPanel>
               </div>
             </Tabs>
@@ -880,27 +832,14 @@ export class Builder extends Component {
 
 Builder.propTypes = {
   activeTab: PropTypes.number.isRequired,
-  addExternalCqlLibraryError: PropTypes.number,
-  addExternalCqlLibraryErrorMessage: PropTypes.string,
-  addExternalLibrary: PropTypes.func.isRequired,
   artifact: artifactProps,
   conversionFunctions: PropTypes.array,
-  deleteExternalCqlLibrary: PropTypes.func.isRequired,
   downloadArtifact: PropTypes.func.isRequired,
-  externalCqlErrors: PropTypes.array,
-  externalCqlFhirVersion: PropTypes.string,
-  externalCqlLibrary: PropTypes.object,
-  externalCqlLibraryDetails: PropTypes.object,
-  externalCQLLibraryParents: PropTypes.object.isRequired,
   externalCqlList: PropTypes.array,
   initializeArtifact: PropTypes.func.isRequired,
-  isAddingExternalCqlLibrary: PropTypes.bool.isRequired,
-  isLoadingExternalCqlDetails: PropTypes.bool.isRequired,
   isLoadingModifiers: PropTypes.bool,
   librariesInUse: PropTypes.array.isRequired,
   loadArtifact: PropTypes.func.isRequired,
-  loadExternalCqlLibraryDetails: PropTypes.func.isRequired,
-  loadExternalCqlList: PropTypes.func.isRequired,
   loadTemplates: PropTypes.func.isRequired,
   modifierMap: PropTypes.object.isRequired,
   modifiersByInputType: PropTypes.object.isRequired,
@@ -921,17 +860,11 @@ Builder.propTypes = {
 function mapDispatchToProps(dispatch) {
   return bindActionCreators(
     {
-      addExternalLibrary,
-      clearAddLibraryErrorsAndMessages,
       clearArtifactValidationWarnings,
-      clearExternalCqlValidationWarnings,
-      deleteExternalCqlLibrary,
       downloadArtifact,
       initializeArtifact,
       loadArtifact,
       loadConversionFunctions,
-      loadExternalCqlLibraryDetails,
-      loadExternalCqlList,
       loadTemplates,
       saveArtifact,
       setActiveTab,
@@ -948,24 +881,11 @@ function mapDispatchToProps(dispatch) {
 function mapStateToProps(state) {
   return {
     activeTab: state.navigation.activeTab,
-    addExternalCqlLibraryError: state.externalCQL.addExternalCqlLibrary.error,
-    addExternalCqlLibraryErrorMessage: state.externalCQL.addExternalCqlLibrary.message,
     artifact: state.artifacts.artifact,
     conversionFunctions: state.modifiers.conversionFunctions,
     downloadedArtifact: state.artifacts.downloadArtifact,
-    externalCqlErrors: state.externalCQL.externalCqlErrors,
-    externalCqlFhirVersion: state.externalCQL.fhirVersion,
-    externalCqlLibrary: state.externalCQL.externalCqlLibrary,
-    externalCqlLibraryDetails: state.externalCQL.externalCqlLibraryDetails,
-    externalCQLLibraryParents: state.externalCQL.externalCQLLibraryParents,
-    externalCqlList: state.externalCQL.externalCqlList,
-    isAddingExternalCqlLibrary: state.externalCQL.addExternalCqlLibrary.isAdding,
-    isLoadingExternalCqlDetails: state.externalCQL.loadExternalCqlLibraryDetails.isLoading,
-    isLoadingModifiers: state.modifiers.loadModifiers.isLoadingModifiers,
     isLoggingOut: state.auth.isLoggingOut,
     librariesInUse: state.artifacts.librariesInUse,
-    modifierMap: state.modifiers.modifierMap,
-    modifiersByInputType: state.modifiers.modifiersByInputType,
     names: state.artifacts.names,
     scrollToId: state.navigation.scrollToId,
     statusMessage: state.artifacts.statusMessage,
@@ -974,4 +894,25 @@ function mapStateToProps(state) {
   };
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(withGracefulUnmount(Builder));
+const BuilderWithQuery = props => {
+  const artifact = useSelector(state => state.artifacts.artifact);
+  const query = { artifactId: artifact?._id };
+  const externalCqlListQuery = useQuery(['externalCql', query], () => fetchExternalCqlList(query), {
+    enabled: query.artifactId != null
+  });
+  const modifiersQuery = useQuery(['modifiers', query], () => fetchModifiers(query), {
+    enabled: query.artifactId != null
+  });
+
+  return (
+    <Builder
+      externalCqlList={externalCqlListQuery.data ?? []}
+      isLoadingModifiers={modifiersQuery.isFetching}
+      modifierMap={modifiersQuery.data?.modifierMap ?? {}}
+      modifiersByInputType={modifiersQuery.data?.modifiersByInputType ?? {}}
+      {...props}
+    />
+  );
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(withGracefulUnmount(BuilderWithQuery));

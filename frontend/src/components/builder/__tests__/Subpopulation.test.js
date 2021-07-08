@@ -5,9 +5,9 @@ import nock from 'nock';
 import { render, fireEvent, userEvent, screen } from 'utils/test-utils';
 import { elementGroups } from 'utils/test_fixtures';
 import Subpopulation from '../Subpopulation';
-import mockArtifact from 'mocks/mockArtifact';
-import mockExternalCqlLibrary from 'mocks/mockExternalCQLLibrary';
-import { mockTemplates2 } from 'mocks/mockTemplates';
+import { mockArtifact } from 'mocks/artifacts';
+import { mockExternalCqlLibrary } from 'mocks/external-cql';
+import { mockTemplates } from 'mocks/templates';
 
 const subpopulationName = 'Subpopulation 1';
 const subpopulation = {
@@ -35,12 +35,10 @@ describe('<Subpopulation />', () => {
           conversionFunctions={[]}
           deleteInstance={jest.fn()}
           editInstance={jest.fn()}
-          externalCqlList={[]}
           getAllInstances={jest.fn()}
           getAllInstancesInAllTrees={jest.fn()}
           instanceNames={[]}
           isLoadingModifiers={false}
-          loadExternalCqlList={jest.fn()}
           modifierMap={{}}
           modifiersByInputType={{}}
           name=""
@@ -64,7 +62,7 @@ describe('<Subpopulation />', () => {
       .get(`/authoring/api/externalCQL/${mockArtifact._id}`)
       .reply(200, [mockExternalCqlLibrary])
       .get('/authoring/api/config/templates')
-      .reply(200, mockTemplates2);
+      .reply(200, mockTemplates);
   });
 
   afterEach(() => nock.cleanAll());

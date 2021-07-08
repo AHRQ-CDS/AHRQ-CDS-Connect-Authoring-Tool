@@ -1,4 +1,4 @@
-import { sortByDateEdited, sortByDateCreated, sortByName, sortByVersion } from '../artifactSort';
+import { sortByDateEdited, sortByDateCreated, sortByName, sortByVersion } from '../sort';
 import getProperty from '../getProperty';
 
 const createMockArtifact = (name, version, lastEdited, created) => {

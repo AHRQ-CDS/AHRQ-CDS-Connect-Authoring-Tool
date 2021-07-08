@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { useSelector } from 'react-redux';
+import { useQuery } from 'react-query';
 import { Block as BlockIcon } from '@material-ui/icons';
 import clsx from 'clsx';
 
@@ -10,15 +11,19 @@ import { isSupportedEditorType } from 'components/builder/editors/utils';
 import { getBaseElementById, getBaseElementName, getBaseElementsByType } from 'components/builder/base-elements/utils';
 import { getParameterById, getParametersByType } from 'components/builder/parameters/utils';
 import { getExternalCqlByType } from 'components/builder/external-cql/utils';
+import { fetchExternalCqlList } from 'queries/external-cql';
 import { useFieldStyles, useSpacingStyles } from 'styles/hooks';
 import changeToCase from 'utils/strings';
 
 const ArgumentTemplate = ({ argumentLabel, argumentType, argumentValue, handleUpdateArgument, isNested }) => {
-  const externalCqlList = useSelector(state => state.externalCQL.externalCqlList);
   const artifact = useSelector(state => state.artifacts.artifact);
   const { baseElements, parameters } = artifact;
   const fieldStyles = useFieldStyles();
   const spacingStyles = useSpacingStyles();
+  const query = { artifactId: artifact._id };
+  const { data: externalCqlList } = useQuery(['externalCql', query], () => fetchExternalCqlList(query), {
+    enabled: artifact._id != null
+  });
 
   const sourceOptions = [
     {

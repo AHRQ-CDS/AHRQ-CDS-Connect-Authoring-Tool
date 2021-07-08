@@ -9,11 +9,6 @@ import createTemplateInstance from 'utils/templates';
 import { getFieldWithId } from 'utils/instances';
 
 export default class BaseElements extends Component {
-  UNSAFE_componentWillMount() {
-    // eslint-disable-line camelcase
-    this.props.loadExternalCqlList(this.props.instance._id);
-  }
-
   addChild = template => {
     const instance = createTemplateInstance(template);
     instance.path = '';
@@ -41,14 +36,12 @@ export default class BaseElements extends Component {
         conversionFunctions={this.props.conversionFunctions}
         deleteInstance={this.props.deleteInstance}
         editInstance={this.props.editInstance}
-        externalCqlList={this.props.externalCqlList}
         getAllInstances={this.props.getAllInstances}
         getAllInstancesInAllTrees={this.props.getAllInstancesInAllTrees}
         index={i}
         instance={s}
         instanceNames={this.props.instanceNames}
         isLoadingModifiers={this.props.isLoadingModifiers}
-        loadExternalCqlList={this.props.loadExternalCqlList}
         modifierMap={this.props.modifierMap}
         modifiersByInputType={this.props.modifiersByInputType}
         parameters={this.props.parameters}
@@ -116,13 +109,11 @@ BaseElements.propTypes = {
   conversionFunctions: PropTypes.array,
   deleteInstance: PropTypes.func.isRequired,
   editInstance: PropTypes.func.isRequired,
-  externalCqlList: PropTypes.array.isRequired,
   getAllInstances: PropTypes.func.isRequired,
   getAllInstancesInAllTrees: PropTypes.func.isRequired,
   instance: PropTypes.object.isRequired,
   instanceNames: PropTypes.array.isRequired,
   isLoadingModifiers: PropTypes.bool,
-  loadExternalCqlList: PropTypes.func.isRequired,
   modifierMap: PropTypes.object.isRequired,
   modifiersByInputType: PropTypes.object.isRequired,
   parameters: PropTypes.array.isRequired,

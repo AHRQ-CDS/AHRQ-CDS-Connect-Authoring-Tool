@@ -4,7 +4,7 @@ export default makeStyles(
   theme => ({
     tabs: {
       backgroundColor: theme.palette.common.ahrqDarkBlue,
-      paddingBottom: '10px'
+      paddingBottom: '10px !important'
     },
     tab: {
       color: theme.palette.common.white,

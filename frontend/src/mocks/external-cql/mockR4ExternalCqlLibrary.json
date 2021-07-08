@@ -1,0 +1,69 @@
+{
+  "_id": "60d62fc5dfceccab6bab8faa",
+  "linkedArtifactId": "60d0a88e7bbe9bc48b483252",
+  "user": "demo",
+  "name": "AgeR4",
+  "version": "1",
+  "fhirVersion": "4.0.0",
+  "details": {
+    "cqlFileText": "library \"AgeR4\" version '1'\n\nusing FHIR version '4.0.0'\n\ncontext Patient\n\ndefine \"AgeR4\":\n  AgeInHours() >= 14\n\ndefine \"GenR4\":\n  Patient.gender.value = 'female'\n\ndefine \"MeetsInclusionCriteriaR4\":\n  \"AgeR4\"\n  and \"GenR4\"\n\ndefine \"InPopulationR4\":\n   \"MeetsInclusionCriteriaR4\"\n\ndefine \"RecommendationR4\":\n  null\n\ndefine \"RationaleR4\":\n  null\ndefine \"ErrorsR4\":\n  null\n",
+    "fileName": "mockR4.cql",
+    "parameters": [],
+    "definitions": [
+      {
+        "accessLevel": "Public",
+        "name": "AgeR4",
+        "context": "Patient",
+        "resultTypeName": "{urn:hl7-org:elm-types:r1}Boolean",
+        "calculatedReturnType": "boolean"
+      },
+      {
+        "accessLevel": "Public",
+        "name": "GenR4",
+        "context": "Patient",
+        "resultTypeName": "{urn:hl7-org:elm-types:r1}Boolean",
+        "calculatedReturnType": "boolean"
+      },
+      {
+        "accessLevel": "Public",
+        "name": "MeetsInclusionCriteriaR4",
+        "context": "Patient",
+        "resultTypeName": "{urn:hl7-org:elm-types:r1}Boolean",
+        "calculatedReturnType": "boolean"
+      },
+      {
+        "accessLevel": "Public",
+        "name": "InPopulationR4",
+        "context": "Patient",
+        "resultTypeName": "{urn:hl7-org:elm-types:r1}Boolean",
+        "calculatedReturnType": "boolean"
+      },
+      {
+        "accessLevel": "Public",
+        "name": "RecommendationR4",
+        "context": "Patient",
+        "resultTypeName": "{urn:hl7-org:elm-types:r1}Any",
+        "calculatedReturnType": "any"
+      },
+      {
+        "accessLevel": "Public",
+        "name": "RationaleR4",
+        "context": "Patient",
+        "resultTypeName": "{urn:hl7-org:elm-types:r1}Any",
+        "calculatedReturnType": "any"
+      },
+      {
+        "accessLevel": "Public",
+        "name": "ErrorsR4",
+        "context": "Patient",
+        "resultTypeName": "{urn:hl7-org:elm-types:r1}Any",
+        "calculatedReturnType": "any"
+      }
+    ],
+    "functions": [],
+    "dependencies": []
+  },
+  "__v": 0,
+  "createdAt": "2021-06-25T19:34:29.743Z",
+  "updatedAt": "2021-06-25T19:34:29.743Z"
+}

@@ -4,9 +4,9 @@ import { Provider } from 'react-redux';
 import nock from 'nock';
 import pluralize from 'pluralize';
 import { fireEvent, render, screen, userEvent, waitFor, within } from 'utils/test-utils';
-import mockArtifact from 'mocks/mockArtifact';
-import mockExternalCqlLibrary from 'mocks/mockExternalCQLLibrary';
-import { mockTemplates2 } from 'mocks/mockTemplates';
+import { mockArtifact } from 'mocks/artifacts';
+import { mockExternalCqlLibrary } from 'mocks/external-cql';
+import { mockTemplates } from 'mocks/templates';
 import changeToCase from 'utils/strings';
 import ElementSelect, { VSAC_OPTIONS } from '../ElementSelect';
 
@@ -43,7 +43,7 @@ describe('<ElementSelect />', () => {
       .get(`/authoring/api/externalCQL/${mockArtifact._id}`)
       .reply(200, [mockExternalCqlLibrary])
       .get('/authoring/api/config/templates')
-      .reply(200, mockTemplates2);
+      .reply(200, mockTemplates);
   });
   afterEach(() => nock.cleanAll());
 
@@ -369,7 +369,7 @@ describe('<ElementSelect />', () => {
       .get(`/authoring/api/externalCQL/${mockArtifact._id}`)
       .reply(200, [])
       .get('/authoring/api/config/templates')
-      .reply(200, mockTemplates2);
+      .reply(200, mockTemplates);
 
     renderComponent({ artifact: mockArtifact });
 

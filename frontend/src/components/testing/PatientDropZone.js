@@ -9,8 +9,7 @@ import clsx from 'clsx';
 import PatientVersionModal from './modals/PatientVersionModal';
 import { addPatient } from 'queries/testing';
 import { getPatientResource, getPatientResourceType } from 'utils/patients';
-import { useSpacingStyles } from 'styles/hooks';
-import useStyles from './styles';
+import { useDropZoneStyles, useSpacingStyles } from 'styles/hooks';
 
 const PatientDropZone = () => {
   const [showPatientUploadedMessage, setShowPatientUploadedMessage] = useState(false);
@@ -25,7 +24,7 @@ const PatientDropZone = () => {
     }
   });
   const spacingStyles = useSpacingStyles();
-  const styles = useStyles();
+  const dropZoneStyles = useDropZoneStyles();
 
   const handleCloseAlert = (event, setClose) => {
     event.stopPropagation();
@@ -74,11 +73,11 @@ const PatientDropZone = () => {
 
   return (
     <div id="patient-drop-zone">
-      <section className={clsx(styles.dropZoneSection, spacingStyles.verticalPadding)}>
+      <section className={clsx(dropZoneStyles.dropZoneSection, spacingStyles.verticalPadding)}>
         <div data-testid="patient-dropzone" {...getRootProps({ className: 'dropzone' })}>
           <input {...getInputProps()} />
 
-          {isAddingPatient ? <CircularProgress /> : <CloudUploadIcon className={styles.dropZoneIcon} />}
+          {isAddingPatient ? <CircularProgress /> : <CloudUploadIcon className={dropZoneStyles.dropZoneIcon} />}
 
           {showUploadError && (
             <Alert
@@ -104,7 +103,7 @@ const PatientDropZone = () => {
             Drop a valid JSON FHIR<sup>®</sup> bundle containing a synthetic patient here, or click to browse.
           </div>
 
-          <div className={styles.dropZoneWarning}>
+          <div className={dropZoneStyles.dropZoneWarning}>
             Do not upload any Personally Identifiable Information (PII) or Protected Health Information (PHI). Upload
             synthetic data only.
           </div>

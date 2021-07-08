@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { useSelector } from 'react-redux';
+import { useQuery } from 'react-query';
 import { IconButton, Tooltip } from '@material-ui/core';
 import { Alert } from '@material-ui/lab';
 import { Close as CloseIcon } from '@material-ui/icons';
@@ -22,6 +23,7 @@ import {
   WithUnitModifier
 } from 'components/builder/modifiers';
 import { getReturnType, validateModifier } from 'utils/instances';
+import { fetchModifiers } from 'queries/modifiers';
 import { useFieldStyles } from 'styles/hooks';
 
 const ModifierTemplate = ({
@@ -33,7 +35,12 @@ const ModifierTemplate = ({
   index,
   modifier
 }) => {
-  const modifierMap = useSelector(state => state.modifiers.modifierMap);
+  const artifact = useSelector(state => state.artifacts.artifact);
+  const query = { artifactId: artifact?._id };
+  const modifiersQuery = useQuery(['modifiers', query], () => fetchModifiers(query), {
+    enabled: query.artifactId != null
+  });
+  const modifierMap = modifiersQuery.data?.modifierMap ?? {};
   const fieldStyles = useFieldStyles();
 
   // Reset values on modifiers that were not previously set or saved in the database

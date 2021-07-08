@@ -1,14 +1,15 @@
 import React from 'react';
 import { createStore } from 'redux';
 import { Provider } from 'react-redux';
+import nock from 'nock';
 import { render, screen } from 'utils/test-utils';
-import mockArtifact from 'mocks/mockArtifact';
+import { mockArtifact } from 'mocks/artifacts';
 import ExternalModifier from '../ExternalModifier';
 
 describe('<ExternalModifier />', () => {
   const renderComponent = ({ artifact = mockArtifact, ...props } = {}) =>
     render(
-      <Provider store={createStore(x => x, { artifacts: { artifact }, externalCQL: { externalCqlList: [] } })}>
+      <Provider store={createStore(x => x, { artifacts: { artifact } })}>
         <ExternalModifier
           argumentTypes={[]}
           handleUpdateModifier={jest.fn()}
@@ -36,6 +37,8 @@ describe('<ExternalModifier />', () => {
   });
 
   it('renders one editor when there are two arguments', () => {
+    nock('http://localhost').get(`/authoring/api/externalCQL/${mockArtifact._id}`).reply(200, []);
+
     renderComponent({
       modifierArguments: [{ name: 'first' }, { name: 'second' }],
       argumentTypes: [{ calculated: 'decimal' }, { calculated: 'integer' }]
@@ -46,6 +49,8 @@ describe('<ExternalModifier />', () => {
   });
 
   it('renders n-1 editors when there are n arguments', () => {
+    nock('http://localhost').get(`/authoring/api/externalCQL/${mockArtifact._id}`).reply(200, []);
+
     // Test with five arguments to verify four editors are present
     renderComponent({
       modifierArguments: [

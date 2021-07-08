@@ -5,9 +5,9 @@ import nock from 'nock';
 import { render, fireEvent, userEvent, screen, within } from 'utils/test-utils';
 import { createTemplateInstance } from 'utils/test_helpers';
 import { instanceTree, elementGroups } from 'utils/test_fixtures';
-import mockArtifact from 'mocks/mockArtifact';
-import mockExternalCqlLibrary from 'mocks/mockExternalCQLLibrary';
-import { mockTemplates2 } from 'mocks/mockTemplates';
+import { mockArtifact } from 'mocks/artifacts';
+import { mockExternalCqlLibrary } from 'mocks/external-cql';
+import { mockTemplates } from 'mocks/templates';
 import ConjunctionGroup from '../ConjunctionGroup';
 
 describe('<ConjunctionGroup />', () => {
@@ -60,7 +60,7 @@ describe('<ConjunctionGroup />', () => {
       .get(`/authoring/api/externalCQL/${mockArtifact._id}`)
       .reply(200, [mockExternalCqlLibrary])
       .get('/authoring/api/config/templates')
-      .reply(200, mockTemplates2);
+      .reply(200, mockTemplates);
   });
 
   afterEach(() => nock.cleanAll());

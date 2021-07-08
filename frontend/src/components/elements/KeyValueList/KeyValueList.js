@@ -28,7 +28,7 @@ KeyValueList.propTypes = {
   dense: PropTypes.bool,
   list: PropTypes.arrayOf(
     PropTypes.shape({
-      key: PropTypes.string.isRequired,
+      key: PropTypes.oneOfType([PropTypes.string, PropTypes.element]).isRequired,
       value: PropTypes.oneOfType([PropTypes.string, PropTypes.element]).isRequired
     })
   ).isRequired

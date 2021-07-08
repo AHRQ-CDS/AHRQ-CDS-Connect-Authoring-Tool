@@ -1,0 +1,69 @@
+{
+  "_id": "60d625cbdfceccab6bab8fa4",
+  "linkedArtifactId": "60d0a88e7bbe9bc48b483252",
+  "user": "demo",
+  "name": "AgeSTU3",
+  "version": "1",
+  "fhirVersion": "3.0.0",
+  "details": {
+    "cqlFileText": "library \"AgeSTU3\" version '1'\r\n\r\nusing FHIR version '3.0.0'\r\n\r\n\r\n\r\n\r\n\r\ncontext Patient\r\n\r\ndefine \"AgeSTU3\":\r\n  AgeInHours() >= 14\r\n\r\ndefine \"GenSTU3\": \r\n  Patient.gender.value = 'female'\r\n\r\ndefine \"MeetsInclusionCriteriaSTU3\":\r\n  \"AgeSTU3\"\r\n  and \"GenSTU3\"\r\n\r\ndefine \"InPopulationSTU3\":\r\n   \"MeetsInclusionCriteriaSTU3\" \r\n\r\ndefine \"RecommendationSTU3\":\r\n  null\r\n\r\ndefine \"RationaleSTU3\":\r\n  null\r\ndefine \"ErrorsSTU3\":\r\n  null\r\n",
+    "fileName": "Age-STU3.cql",
+    "parameters": [],
+    "definitions": [
+      {
+        "accessLevel": "Public",
+        "name": "AgeSTU3",
+        "context": "Patient",
+        "resultTypeName": "{urn:hl7-org:elm-types:r1}Boolean",
+        "calculatedReturnType": "boolean"
+      },
+      {
+        "accessLevel": "Public",
+        "name": "GenSTU3",
+        "context": "Patient",
+        "resultTypeName": "{urn:hl7-org:elm-types:r1}Boolean",
+        "calculatedReturnType": "boolean"
+      },
+      {
+        "accessLevel": "Public",
+        "name": "MeetsInclusionCriteriaSTU3",
+        "context": "Patient",
+        "resultTypeName": "{urn:hl7-org:elm-types:r1}Boolean",
+        "calculatedReturnType": "boolean"
+      },
+      {
+        "accessLevel": "Public",
+        "name": "InPopulationSTU3",
+        "context": "Patient",
+        "resultTypeName": "{urn:hl7-org:elm-types:r1}Boolean",
+        "calculatedReturnType": "boolean"
+      },
+      {
+        "accessLevel": "Public",
+        "name": "RecommendationSTU3",
+        "context": "Patient",
+        "resultTypeName": "{urn:hl7-org:elm-types:r1}Any",
+        "calculatedReturnType": "any"
+      },
+      {
+        "accessLevel": "Public",
+        "name": "RationaleSTU3",
+        "context": "Patient",
+        "resultTypeName": "{urn:hl7-org:elm-types:r1}Any",
+        "calculatedReturnType": "any"
+      },
+      {
+        "accessLevel": "Public",
+        "name": "ErrorsSTU3",
+        "context": "Patient",
+        "resultTypeName": "{urn:hl7-org:elm-types:r1}Any",
+        "calculatedReturnType": "any"
+      }
+    ],
+    "functions": [],
+    "dependencies": []
+  },
+  "__v": 0,
+  "createdAt": "2021-06-25T18:51:55.994Z",
+  "updatedAt": "2021-06-25T18:51:55.994Z"
+}

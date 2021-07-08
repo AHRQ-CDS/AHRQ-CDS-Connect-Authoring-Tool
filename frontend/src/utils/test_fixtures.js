@@ -811,7 +811,7 @@ const reduxState = {
   }
 };
 
-export { default as artifact } from '../mocks/mockArtifact';
+export { default as artifact } from '../mocks/artifacts/mockArtifact';
 export {
   instanceTree,
   emptyInstanceTree,

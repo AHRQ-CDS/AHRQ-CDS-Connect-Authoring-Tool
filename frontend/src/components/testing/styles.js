@@ -5,31 +5,6 @@ export default makeStyles(
     closeButton: {
       float: 'right'
     },
-    dropZoneIcon: {
-      fontSize: '5em'
-    },
-    dropZoneSection: {
-      '& .dropzone': {
-        borderColor: theme.palette.common.gray,
-        borderRadius: '1em',
-        borderStyle: 'dashed',
-        borderWidth: '0.25em',
-        cursor: 'pointer',
-        margin: 'auto',
-        padding: '2em 1em',
-        textAlign: 'center',
-        '&:focus': {
-          borderColor: theme.palette.common.green,
-          outline: 'none'
-        }
-      }
-    },
-    dropZoneWarning: {
-      color: theme.palette.common.red,
-      fontSize: '0.9em',
-      fontStyle: 'italic',
-      margin: '10px 60px'
-    },
     patientCard: {
       alignItems: 'center',
       backgroundColor: theme.palette.common.grayLighter,
