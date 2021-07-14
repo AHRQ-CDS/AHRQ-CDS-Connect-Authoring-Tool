@@ -8,7 +8,7 @@ import clsx from 'clsx';
 import { Dropdown } from 'components/elements';
 import { fetchOperators } from 'queries/modifier-builder';
 import { useFieldStyles } from 'styles/hooks';
-import { IsTrueFalse } from './operators';
+import { CodeConceptNotInValueset, IsTrueFalse } from './operators';
 import useStyles from '../styles';
 
 const RuleCard = ({ handleRemoveRule, handleUpdate, resourceOptions, rule }) => {
@@ -59,6 +59,9 @@ const RuleCard = ({ handleRemoveRule, handleUpdate, resourceOptions, rule }) => 
           switch (operator) {
             case 'isTrueFalse':
               return <IsTrueFalse rule={rule} updateRule={handleUpdate} />;
+
+            case 'codeConceptNotInValueSet':
+              return <CodeConceptNotInValueset rule={rule} updateRule={handleUpdate} />;
 
             default:
               return null;
