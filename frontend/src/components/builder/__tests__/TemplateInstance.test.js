@@ -219,18 +219,20 @@ describe('<TemplateInstance />', () => {
 
     it('cannot add modifiers that change the return type if in use in the artifact', async () => {
       renderBaseElementComponent();
-      userEvent.click(screen.getAllByRole('button', { name: 'Add Modifiers' })[0]);
+
+      userEvent.click((await screen.findAllByRole('button', { name: /Add Modifiers/i }, { timeout: 2000 }))[0]);
       const modal = within(await screen.findByRole('dialog'));
       userEvent.click(modal.getAllByRole('button', { name: 'Select Modifiers' })[0]);
       userEvent.click(modal.getByLabelText('Select modifier...'));
 
       await waitFor(() => {
-        expect(screen.queryAllByText('Limited modifiers', { exact: false }).length).toBeGreaterThan(0);
         expect(screen.queryAllByRole('option').length).toBe(3);
-        expect(screen.getByText('Verified')).toBeInTheDocument();
-        expect(screen.getByText('With Unit')).toBeInTheDocument();
-        expect(screen.getByText('Look Back')).toBeInTheDocument();
       });
+
+      expect(screen.queryAllByText(/Limited modifiers/i).length).toBeGreaterThan(0);
+      expect(screen.getByText('Verified')).toBeInTheDocument();
+      expect(screen.getByText('With Unit')).toBeInTheDocument();
+      expect(screen.getByText('Look Back')).toBeInTheDocument();
     });
 
     it('displays all modifiers when not in use', async () => {

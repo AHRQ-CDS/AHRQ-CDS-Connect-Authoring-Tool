@@ -8,6 +8,7 @@ import { Close as CloseIcon } from '@material-ui/icons';
 import clsx from 'clsx';
 
 import { ModifierForm } from 'components/builder/modifiers';
+import { fetchModifiers } from 'queries/modifiers';
 import { validateModifier } from 'utils/instances';
 import { modifierCanBeRemoved } from 'components/builder/modifiers/utils';
 import { useFieldStyles } from 'styles/hooks';

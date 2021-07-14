@@ -910,7 +910,7 @@ const BuilderWithQuery = props => {
   return (
     <Builder
       externalCqlList={externalCqlListQuery.data ?? []}
-      isLoadingModifiers={modifiersQuery.isFetching}
+      isLoadingModifiers={modifiersQuery.isLoading}
       modifierMap={modifiersQuery.data?.modifierMap ?? {}}
       modifiersByInputType={modifiersQuery.data?.modifiersByInputType ?? {}}
       {...props}

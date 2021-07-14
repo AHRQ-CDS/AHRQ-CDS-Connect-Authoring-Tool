@@ -1,6 +1,7 @@
-import React, { useCallback } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import { useSelector } from 'react-redux';
+import { useQuery } from 'react-query';
 import { Alert } from '@material-ui/lab';
 import { ArrowForward as ArrowForwardIcon } from '@material-ui/icons';
 import { IconButton } from '@material-ui/core';
@@ -13,6 +14,7 @@ import ModifierSelectorRow from './ModifierSelectorRow';
 import ModifierDropdownItem from './ModifierDropdownItem';
 import ModifierDropdownFooter from './ModifierDropdownFooter';
 import { Dropdown } from 'components/elements';
+import { fetchModifiers } from 'queries/modifiers';
 import { sortAlphabeticallyByKey } from 'utils/sort';
 import { allModifiersValid } from 'utils/instances';
 import { useFieldStyles, useSpacingStyles } from 'styles/hooks';
@@ -25,7 +27,12 @@ const ModifierSelector = ({
   modifiersToAdd,
   setModifiersToAdd
 }) => {
-  const modifiersByInputType = useSelector(state => state.modifiers.modifiersByInputType);
+  const artifact = useSelector(state => state.artifacts.artifact);
+  const query = { artifactId: artifact?._id };
+  const modifiersQuery = useQuery(['modifiers', query], () => fetchModifiers(query), {
+    enabled: query.artifactId != null
+  });
+  const modifiersByInputType = modifiersQuery.data?.modifiersByInputType ?? {};
   const fieldStyles = useFieldStyles();
   const spacingStyles = useSpacingStyles();
   const styles = useStyles();
@@ -33,7 +40,7 @@ const ModifierSelector = ({
   const newModifiers = elementInstance.modifiers.concat(modifiersToAdd);
   const returnTypeWithNewModifiers =
     newModifiers.length === 0 ? elementInstance.returnType : newModifiers[newModifiers.length - 1].returnType;
-  let selectableModifiers = modifiersByInputType[returnTypeWithNewModifiers];
+  let selectableModifiers = modifiersByInputType[returnTypeWithNewModifiers] ?? [];
   if (hasLimitedModifiers)
     selectableModifiers = selectableModifiers.filter(({ returnType }) => returnType === elementInstance.returnType);
   const modifierOptions = selectableModifiers.map(selectableModifier => {
@@ -44,24 +51,18 @@ const ModifierSelector = ({
     };
   });
 
-  const handleSelectModifier = useCallback(
-    modifierId => {
-      setTimeout(() => document.activeElement.blur(), 0); // removes focus from dropdown after selection
-      const modifierToAdd = _.cloneDeep(selectableModifiers.find(modifier => modifier.id === modifierId));
-      modifierToAdd.uniqueId = `${modifierId}-${uuidv4()}`;
-      setModifiersToAdd(modifiersToAdd.concat([modifierToAdd]));
-    },
-    [modifiersToAdd, selectableModifiers, setModifiersToAdd]
-  );
+  const handleSelectModifier = modifierId => {
+    setTimeout(() => document.activeElement.blur(), 0); // removes focus from dropdown after selection
+    const modifierToAdd = _.cloneDeep(selectableModifiers.find(modifier => modifier.id === modifierId));
+    modifierToAdd.uniqueId = `${modifierId}-${uuidv4()}`;
+    setModifiersToAdd(modifiersToAdd.concat([modifierToAdd]));
+  };
 
-  const handleUpdateModifier = useCallback(
-    (index, values) => {
-      const newModifiersToAdd = _.cloneDeep(modifiersToAdd);
-      newModifiersToAdd[index].values = { ...newModifiersToAdd[index].values, ...values };
-      setModifiersToAdd(newModifiersToAdd);
-    },
-    [modifiersToAdd, setModifiersToAdd]
-  );
+  const handleUpdateModifier = (index, values) => {
+    const newModifiersToAdd = _.cloneDeep(modifiersToAdd);
+    newModifiersToAdd[index].values = { ...newModifiersToAdd[index].values, ...values };
+    setModifiersToAdd(newModifiersToAdd);
+  };
 
   return (
     <>
