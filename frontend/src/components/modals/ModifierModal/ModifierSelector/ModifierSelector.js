@@ -1,13 +1,7 @@
-<<<<<<< HEAD
 import React from 'react';
 import PropTypes from 'prop-types';
 import { useSelector } from 'react-redux';
 import { useQuery } from 'react-query';
-=======
-import React, { useCallback } from 'react';
-import PropTypes from 'prop-types';
-import { useSelector } from 'react-redux';
->>>>>>> 6fcf5dc8 (Merged in query-builder (pull request #465))
 import { Alert } from '@material-ui/lab';
 import { ArrowForward as ArrowForwardIcon } from '@material-ui/icons';
 import { IconButton } from '@material-ui/core';
@@ -20,10 +14,7 @@ import ModifierSelectorRow from './ModifierSelectorRow';
 import ModifierDropdownItem from './ModifierDropdownItem';
 import ModifierDropdownFooter from './ModifierDropdownFooter';
 import { Dropdown } from 'components/elements';
-<<<<<<< HEAD
 import { fetchModifiers } from 'queries/modifiers';
-=======
->>>>>>> 6fcf5dc8 (Merged in query-builder (pull request #465))
 import { sortAlphabeticallyByKey } from 'utils/sort';
 import { allModifiersValid } from 'utils/instances';
 import { useFieldStyles, useSpacingStyles } from 'styles/hooks';
