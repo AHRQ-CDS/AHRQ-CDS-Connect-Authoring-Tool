@@ -4,6 +4,9 @@ import { useQuery } from 'react-query';
 import { IconButton } from '@material-ui/core';
 import { Clear as ClearIcon } from '@material-ui/icons';
 import clsx from 'clsx';
+import _ from 'lodash';
+
+import { Automagic, QuantityIntervalOverlapsNumericInterval } from './operators';
 
 import { Dropdown } from 'components/elements';
 import { fetchOperators } from 'queries/modifier-builder';
@@ -43,7 +46,6 @@ const RuleCard = ({ handleRemoveRule, handleUpdate, resourceOptions, rule }) => 
           value={resourceProperty}
           SelectProps={{ renderValue: renderPropertySelectValue }}
         />
-
         {resourceProperty && operatorsQuery.isSuccess && (
           <Dropdown
             className={clsx(fieldStyles.fieldInput, fieldStyles.fieldInputLg)}
@@ -57,16 +59,31 @@ const RuleCard = ({ handleRemoveRule, handleUpdate, resourceOptions, rule }) => 
         )}
 
         {(() => {
+          let currentProperty = resourceOptions.find(op => op.value === resourceProperty);
           if (operatorsQuery.data) {
             let operatorData = operatorsQuery.data.find(op => op.id === ruleType);
             if (!operatorData) return null;
+            console.log(ruleType, operatorData);
             switch (ruleType) {
+              // For whatever reason, the editor refuses to wrap despite running off the end of the modal
+              // The below operator component is a fix to reorient it.
+              case 'quantityIntervalOverlapsNumericInterval':
+                return (
+                  <QuantityIntervalOverlapsNumericInterval
+                    operandId={_.first(operatorData.userSelectedOperands).id}
+                    rule={rule}
+                    updateRule={handleUpdate}
+                  />
+                );
               default:
-                return null;
+                return (
+                  <Automagic operator={operatorData} resource={currentProperty} rule={rule} updateRule={handleUpdate} />
+                );
             }
           } else return null;
         })()}
-
+      </div>
+      <div style={{ alignSelf: 'flex-start', marginTop: '0' }}>
         <IconButton className={styles.clearRuleButton} onClick={handleRemoveRule}>
           <ClearIcon />
         </IconButton>

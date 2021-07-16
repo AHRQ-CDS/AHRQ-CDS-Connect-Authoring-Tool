@@ -8,7 +8,15 @@ import clsx from 'clsx';
 import { isInteger } from 'utils/numbers';
 import { useFieldStyles } from 'styles/hooks';
 
-const NumberEditor = ({ errors, fullWidth = true, handleUpdateEditor, isDecimal = false, isInterval = false, value }) => {
+const NumberEditor = ({
+  errors,
+  fullWidth = true,
+  handleUpdateEditor,
+  isDecimal = false,
+  isInterval = false,
+  label = 'Value',
+  value
+}) => {
   const fieldStyles = useFieldStyles();
 
   let firstValue = value || '';
@@ -52,7 +60,7 @@ const NumberEditor = ({ errors, fullWidth = true, handleUpdateEditor, isDecimal 
         <TextField
           className={clsx(fieldStyles.fieldInput, fieldStyles.fieldInputMd)}
           fullWidth
-          label="Value"
+          label={label}
           onChange={event =>
             handleChange(event.target.value, isInterval ? (isDecimal ? 'firstDecimal' : 'firstInteger') : null)
           }
@@ -88,12 +96,13 @@ const NumberEditor = ({ errors, fullWidth = true, handleUpdateEditor, isDecimal 
 };
 
 NumberEditor.propTypes = {
-  handleUpdateEditor: PropTypes.func.isRequired,
-  isDecimal: PropTypes.bool,
-  isInterval: PropTypes.bool,
   errors: PropTypes.shape({
     invalidInput: PropTypes.bool
   }),
+  handleUpdateEditor: PropTypes.func.isRequired,
+  isDecimal: PropTypes.bool,
+  isInterval: PropTypes.bool,
+  label: PropTypes.string,
   value: PropTypes.oneOfType([PropTypes.string, PropTypes.object])
 };
 

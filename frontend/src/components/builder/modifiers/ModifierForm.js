@@ -18,7 +18,7 @@ import {
   WithUnitModifier
 } from 'components/builder/modifiers';
 
-const ModifierForm = ({ elementInstance, index, handleSelectValueSet, handleUpdateModifier, modifier }) => {
+const ModifierForm = ({ elementInstance, handleSelectValueSet, handleUpdateModifier, modifier }) => {
   const handleUpdateModifierValues = values => {
     handleUpdateModifier({ values });
   };
@@ -168,7 +168,6 @@ const ModifierForm = ({ elementInstance, index, handleSelectValueSet, handleUpda
       return (
         <UserDefinedModifier
           elementInstance={elementInstance}
-          index={index}
           handleUpdateModifier={handleUpdateModifier}
           label="Custom Expression"
           modifier={modifier}
@@ -181,7 +180,6 @@ const ModifierForm = ({ elementInstance, index, handleSelectValueSet, handleUpda
 
 ModifierForm.propTypes = {
   elementInstance: PropTypes.object.isRequired,
-  index: PropTypes.number.isRequired,
   handleSelectValueSet: PropTypes.func.isRequired,
   handleUpdateModifier: PropTypes.func.isRequired,
   modifier: PropTypes.object.isRequired

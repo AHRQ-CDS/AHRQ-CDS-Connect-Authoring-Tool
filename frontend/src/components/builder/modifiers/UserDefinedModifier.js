@@ -5,7 +5,7 @@ import EditIcon from '@material-ui/icons/Edit';
 import makeStyles from './styles';
 import { ModifierModal } from '../../modals';
 
-const UserDefinedModifier = ({ elementInstance, index, handleUpdateModifier = undefined, label, modifier }) => {
+const UserDefinedModifier = ({ elementInstance, handleUpdateModifier = undefined, label, modifier }) => {
   const modifierStyles = makeStyles();
   const [showModifierModal, setShowModifierModal] = useState(false);
   return (
@@ -17,10 +17,9 @@ const UserDefinedModifier = ({ elementInstance, index, handleUpdateModifier = un
       {showModifierModal && (
         <ModifierModal
           editDirect={true}
-          editReturnType={elementInstance.modifiers.length - 1 === index}
+          editReturnType={elementInstance.modifiers.length === 1}
           elementInstance={elementInstance}
           elementInstanceReturnType={elementInstance.returnType}
-          index={index}
           handleCloseModal={() => setShowModifierModal(false)}
           handleUpdateModifiers={handleUpdateModifier}
           modifier={modifier}
@@ -32,7 +31,6 @@ const UserDefinedModifier = ({ elementInstance, index, handleUpdateModifier = un
 
 UserDefinedModifier.propTypes = {
   elementInstance: propTypes.object.isRequired,
-  index: propTypes.number.isRequired,
   handleUpdateModifier: propTypes.func.isRequired,
   label: propTypes.string.isRequired,
   modifier: propTypes.object.isRequired

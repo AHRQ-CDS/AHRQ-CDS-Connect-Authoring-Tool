@@ -14,8 +14,8 @@ const ModifierBuilder = ({
   elementInstanceReturnType,
   fhirVersion,
   handleGoBack,
-  modifier,
   setModifiersToAdd,
+  modifier = undefined,
   editDirect = false
 }) => {
   const [modifierTree, setModifierTree] = useState(

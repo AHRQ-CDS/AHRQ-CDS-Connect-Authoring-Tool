@@ -36,6 +36,7 @@ const ModifierSelectorRow = ({
         <Card className={styles.modifierCard}>
           <CardContent className={styles.modifierCardContent}>
             <ModifierForm
+              elementInstance={elementInstance}
               handleSelectValueSet={() => {}} // do nothing, update modifier only
               handleUpdateModifier={handleUpdateModifier}
               modifier={modifier}

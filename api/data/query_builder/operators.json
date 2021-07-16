@@ -87,6 +87,7 @@
       "userSelectedOperands": [
         {
           "id": "notSelectorValue",
+          "name": "List",
           "type": "selector",
           "selectionValues": ["Is Not Empty", "Is Empty"]
         }
@@ -104,6 +105,7 @@
       "userSelectedOperands": [
         {
           "id": "comparisonOperator",
+          "name": "Comparison",
           "type": "selector",
           "selectionValues": ["<", ">", "<=", ">=", "="]
         },
@@ -158,7 +160,7 @@
       ]
     },
     {
-      "id": "codeConceptinListOfConcept",
+      "id": "codeConceptInListOfConcept",
       "name": "Is Within List of Concepts",
       "description": "Check to see if a code, coding, or codable concept matches an element of a list of concepts",
       "operatorTemplate": "",
@@ -171,7 +173,7 @@
           "id": "conceptValue",
           "type": "editor",
           "typeSpecifier": {
-            "type": "NamedTypeSpecifier",
+            "type": "ListTypeSpecifier",
             "editorType": "System.Concept"
           }
         }
@@ -437,6 +439,7 @@
         },
         {
           "id": "timeUnit",
+          "name": "Time Unit",
           "type": "selector",
           "selectionValues": ["years", "months", "weeks", "days", "hours", "minutes"]
         }
@@ -461,16 +464,17 @@
           }
         },
         {
-          "id": "durationUnit",
+          "id": "timeUnit",
+          "name": "Time Unit",
           "type": "selector",
           "selectionValues": ["years", "months", "weeks", "days", "hours", "minutes"]
         }
       ]
     },
     {
-      "id": "dateTimeOccurredBefore",
-      "name": "Occurred Before",
-      "description": "Check if the operand time type occurred before the user specified time",
+      "id": "dateTimeOccurred",
+      "name": "Occurred Before/After",
+      "description": "Check if the operand time type did or did not occur within the user specified time",
       "operatorTemplate": "",
       "primaryOperand": {
         "typeSpecifier": "NamedTypeSpecifier",
@@ -478,65 +482,11 @@
       },
       "userSelectedOperands": [
         {
-          "id": "userSpecifiedDateTime",
-          "type": "editor",
-          "typeSpecifier": {
-            "type": "NamedTypeSpecifier",
-            "editorType": "System.DateTime"
-          }
-        }
-      ]
-    },
-    {
-      "id": "dateTimeOnOrBefore",
-      "name": "Occurred On or Before",
-      "description": "Check if the operand time type occurred on or before the user specified time",
-      "operatorTemplate": "",
-      "primaryOperand": {
-        "typeSpecifier": "NamedTypeSpecifier",
-        "elementTypes": ["FHIR.instant", "System.DateTime", "System.Date", "System.Time"]
-      },
-      "userSelectedOperands": [
-        {
-          "id": "userSpecifiedDateTime",
-          "type": "editor",
-          "typeSpecifier": {
-            "type": "NamedTypeSpecifier",
-            "editorType": "System.DateTime"
-          }
-        }
-      ]
-    },
-    {
-      "id": "dateTimeOccurredAfter",
-      "name": "Occurred After",
-      "description": "Check if the operand time type occurred after the user specified time",
-      "operatorTemplate": "",
-      "primaryOperand": {
-        "typeSpecifier": "NamedTypeSpecifier",
-        "elementTypes": ["FHIR.instant", "System.DateTime", "System.Date", "System.Time"]
-      },
-      "userSelectedOperands": [
-        {
-          "id": "userSpecifiedDateTime",
-          "type": "editor",
-          "typeSpecifier": {
-            "type": "NamedTypeSpecifier",
-            "editorType": "System.DateTime"
-          }
-        }
-      ]
-    },
-    {
-      "id": "dateTimeOccurredOnOrAfter",
-      "name": "Occurred On or After",
-      "description": "Check if the operand time type occurred on or after the user specified time",
-      "operatorTemplate": "",
-      "primaryOperand": {
-        "typeSpecifier": "NamedTypeSpecifier",
-        "elementTypes": ["FHIR.instant", "System.DateTime", "System.Date", "System.Time"]
-      },
-      "userSelectedOperands": [
+          "id": "when",
+          "name": "When...",
+          "type": "selector",
+          "selectionValues": ["Before", "On or Before", "After", "On or After"]
+        },
         {
           "id": "userSpecifiedDateTime",
           "type": "editor",
@@ -559,6 +509,7 @@
       "userSelectedOperands": [
         {
           "id": "userSpecifiedIndex",
+          "name": "Start/End",
           "type": "selector",
           "selectionValues": ["Start", "End"]
         },
@@ -672,11 +623,13 @@
       "userSelectedOperands": [
         {
           "id": "intervalComponent",
+          "name": "Low/High",
           "type": "selector",
-          "selectionValues": ["low", "high"]
+          "selectionValues": ["Low", "High"]
         },
         {
           "id": "comparisonOperator",
+          "name": "Comparison",
           "type": "selector",
           "selectionValues": ["<", ">", "<=", ">=", "="]
         },
@@ -815,11 +768,13 @@
       "userSelectedOperands": [
         {
           "id": "intervalComponent",
+          "name": "Low/High",
           "type": "selector",
-          "selectionValues": ["low", "high"]
+          "selectionValues": ["Low", "High"]
         },
         {
           "id": "comparisonOperator",
+          "name": "Comparison",
           "type": "selector",
           "selectionValues": ["<", ">", "<=", ">=", "="]
         },
@@ -913,6 +868,7 @@
         },
         {
           "id": "lowTimeUnit",
+          "name": "Time Unit",
           "type": "selector",
           "selectionValues": ["years", "months", "weeks", "days", "hours", "minutes"]
         },
@@ -926,6 +882,7 @@
         },
         {
           "id": "highTimeUnit",
+          "name": "Time Unit",
           "type": "selector",
           "selectionValues": ["years", "months", "weeks", "days", "hours", "minutes"]
         }
@@ -943,6 +900,7 @@
       "userSelectedOperands": [
         {
           "id": "comparisonOperator",
+          "name": "Comparison",
           "type": "selector",
           "selectionValues": ["<", ">", "<=", ">=", "="]
         },
@@ -956,6 +914,7 @@
         },
         {
           "id": "timeUnit",
+          "name": "Time Unit",
           "type": "selector",
           "selectionValues": ["years", "months", "weeks", "days", "hours", "minutes"]
         }
