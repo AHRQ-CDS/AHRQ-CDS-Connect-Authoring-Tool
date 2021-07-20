@@ -1,10 +1,10 @@
 import React, { useCallback, useState } from 'react';
 import PropTypes from 'prop-types';
-import { IconButton, TableCell, Tooltip } from '@material-ui/core';
+import { Link as RouterLink } from 'react-router-dom';
+import { IconButton, Link, TableCell, Tooltip } from '@material-ui/core';
 import { Delete as DeleteIcon, Edit as EditIcon, FileCopy as CopyIcon } from '@material-ui/icons';
 
 import ArtifactModal from './ArtifactModal';
-import { Link } from 'components/elements';
 import { DeleteConfirmationModal } from 'components/modals';
 import { renderDate } from 'utils/dates';
 import artifactProps from 'prop-types/artifact';
@@ -27,7 +27,9 @@ const ArtifactTableRow = ({ artifact, handleDeleteArtifact, handleDuplicateArtif
   return (
     <>
       <TableCell className={textStyles.bold}>
-        <Link href={`${process.env.PUBLIC_URL}/build/${artifact._id}`} text={artifact.name} sameTab />
+        <Link component={RouterLink} to={`/build/${artifact._id}`}>
+          {artifact.name}
+        </Link>
       </TableCell>
 
       <TableCell>{artifact.version}</TableCell>

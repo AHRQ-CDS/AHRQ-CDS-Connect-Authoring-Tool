@@ -1,7 +1,6 @@
-/* eslint-disable no-multi-spaces */
 import * as changeCase from 'change-case';
 
-export default function changeToCase(string, desiredCase) {
+export const changeToCase = (string, desiredCase) => {
   const acceptedCases = [
     'camelCase', // test string => testString
     'capitalCase', // test string => Test String
@@ -21,4 +20,21 @@ export default function changeToCase(string, desiredCase) {
   }
 
   return null;
-}
+};
+
+export const startsWithVowel = toCheck => {
+  const vowelRegex = '^[aieouAEIOU].*';
+  return toCheck.match(vowelRegex);
+};
+
+export const valueToString = value => {
+  if (value == null) return '';
+  switch (typeof value) {
+    case 'number':
+      return value.toString();
+    case 'object':
+      return value.str;
+    default:
+      return value;
+  }
+};

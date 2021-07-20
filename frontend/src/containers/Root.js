@@ -17,7 +17,13 @@ import { Landing } from 'components/landing';
 import { PrivateRoute } from 'components/auth';
 import lightTheme from 'styles/theme';
 
-const queryClient = new QueryClient();
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      refetchOnWindowFocus: false
+    }
+  }
+});
 
 const Root = ({ store }) => (
   <Provider store={store}>

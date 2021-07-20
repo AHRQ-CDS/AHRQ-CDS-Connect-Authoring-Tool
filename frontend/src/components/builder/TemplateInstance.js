@@ -530,6 +530,7 @@ export default class TemplateInstance extends Component {
           [...this.getReferenceArguments(referenceField.value.arguments)].map((arg, index) => (
             <ReferenceTemplate
               key={index}
+              elementNames={this.props.instanceNames}
               referenceInstanceTab={getInstanceByReference(allInstancesInAllTrees, referenceField).tab}
               referenceField={{
                 id:
@@ -541,6 +542,7 @@ export default class TemplateInstance extends Component {
 
         {referenceField && (
           <ReferenceTemplate
+            elementNames={this.props.instanceNames}
             referenceInstanceTab={getInstanceByReference(allInstancesInAllTrees, referenceField).tab}
             referenceField={referenceField}
           />
@@ -552,6 +554,7 @@ export default class TemplateInstance extends Component {
           ].map((link, index) => (
             <ReferenceTemplate
               key={`standalone-${link}-${index}`}
+              elementNames={this.props.instanceNames}
               referenceInstanceTab={getInstanceById(allInstancesInAllTrees, link).tab}
               referenceField={{ id: 'baseElementUse', value: { id: link } }}
             />

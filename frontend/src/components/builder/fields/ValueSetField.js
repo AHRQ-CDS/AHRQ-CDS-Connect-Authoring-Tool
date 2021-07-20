@@ -10,7 +10,7 @@ import { useFieldStyles } from 'styles/hooks';
 const ValueSetField = ({ field, handleUpdateField }) => {
   const fieldStyles = useFieldStyles();
   const query = { type: field.select };
-  const { data } = useQuery(['valueSets', query], () => fetchValueSets(query));
+  const { data } = useQuery(['valueSets', query], () => fetchValueSets(query), { staleTime: Infinity });
   const valueSets = data ?? [];
 
   return (

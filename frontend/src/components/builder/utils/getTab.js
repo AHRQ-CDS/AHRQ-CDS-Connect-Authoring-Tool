@@ -10,10 +10,12 @@ const tabLabelMap = {
   externalCql: 'External CQL'
 };
 
-export const getTabNameFromIndex = tabIndex => {
+const getTabIndexFromName = tabName => {
+  return Object.keys(tabLabelMap).indexOf(tabName);
+};
+
+const getTabNameFromIndex = tabIndex => {
   return Object.values(tabLabelMap)[tabIndex];
 };
 
-export const getTabIndexFromName = tabName => {
-  return Object.keys(tabLabelMap).indexOf(tabName);
-};
+export { getTabIndexFromName, getTabNameFromIndex };

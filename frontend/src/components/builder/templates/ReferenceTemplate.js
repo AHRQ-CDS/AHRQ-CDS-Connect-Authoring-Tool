@@ -1,5 +1,5 @@
 import React from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import PropTypes from 'prop-types';
 import { IconButton } from '@material-ui/core';
 import { Link as LinkIcon } from '@material-ui/icons';
@@ -9,8 +9,7 @@ import { setActiveTab, setScrollToId } from 'actions/navigation';
 import { getTabIndexFromName, getTabNameFromIndex } from '../utils';
 import { useFieldStyles, useSpacingStyles } from 'styles/hooks';
 
-const ReferenceTemplate = ({ referenceField, referenceInstanceTab }) => {
-  const artifactNames = useSelector(state => state.artifacts.names);
+const ReferenceTemplate = ({ elementNames, referenceField, referenceInstanceTab }) => {
   const dispatch = useDispatch();
   const fieldStyles = useFieldStyles();
   const spacingStyles = useSpacingStyles();
@@ -27,7 +26,7 @@ const ReferenceTemplate = ({ referenceField, referenceInstanceTab }) => {
       case 'parameterArgumentReference':
         return referenceField.value.elementName;
       default:
-        return artifactNames.find(name => name.id === referenceField.value.id).name || '';
+        return elementNames.find(name => name.id === referenceField.value.id)?.name || '';
     }
   };
 
@@ -81,6 +80,7 @@ const ReferenceTemplate = ({ referenceField, referenceInstanceTab }) => {
 };
 
 ReferenceTemplate.propTypes = {
+  elementNames: PropTypes.array.isRequired,
   referenceField: PropTypes.object.isRequired,
   referenceInstanceTab: PropTypes.string.isRequired
 };

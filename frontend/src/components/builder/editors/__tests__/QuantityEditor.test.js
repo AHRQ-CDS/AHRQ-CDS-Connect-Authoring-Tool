@@ -5,7 +5,7 @@ import QuantityEditor from '../QuantityEditor';
 
 describe('<QuantityEditor />', () => {
   const renderComponent = (props = {}) =>
-    render(<QuantityEditor handleUpdateEditor={jest.fn()} isInterval={false} value={null} {...props} />);
+    render(<QuantityEditor errors={{}} handleUpdateEditor={jest.fn()} isInterval={false} value={null} {...props} />);
 
   describe('Quantity Editor', () => {
     it('calls handleUpdateEditor with valid decimal and no unit', () => {
@@ -60,30 +60,16 @@ describe('<QuantityEditor />', () => {
     });
 
     it('shows warning with invalid value', () => {
-      renderComponent();
-
-      fireEvent.change(screen.getAllByRole('textbox')[0], { target: { value: 'foo' } });
+      renderComponent({ errors: { invalidInput: true } });
 
       expect(screen.getByRole('alert')).toBeInTheDocument();
     });
 
-    it('shows warning with only unit', async () => {
-      const scope = nock('https://clin-table-search.lhc.nlm.nih.gov')
-        .get('/api/ucum/v3/search?terms=mg/dL')
-        .reply(200, [1, ['mg/dL'], null, [['mg/dL', 'milligram per deciliter']]]);
-
-      const handleUpdateEditor = jest.fn();
-      renderComponent({ handleUpdateEditor });
-
-      const unitAutocomplete = screen.getByRole('textbox', { name: 'Unit' });
-      userEvent.click(unitAutocomplete);
-      fireEvent.change(unitAutocomplete, { target: { value: 'mg/dL' } });
-      userEvent.click(await screen.findByRole('option', { name: 'mg/dL (milligram per deciliter)' }));
+    it('shows warning with only unit', () => {
+      renderComponent({ errors: { incompleteInput: true } });
 
       expect(screen.getByRole('alert')).toBeInTheDocument();
-
-      scope.done();
-    }, 30000);
+    });
   });
 
   describe('Interval of Quantity Editor', () => {
@@ -237,38 +223,16 @@ describe('<QuantityEditor />', () => {
       expect(handleUpdateEditor).toBeCalledWith(null);
     });
 
-    it('shows warning with invalid first value', () => {
-      renderComponent({ isInterval: true });
-
-      fireEvent.change(screen.getAllByRole('textbox')[0], { target: { value: 'foo' } });
+    it('shows warning with invalid value', () => {
+      renderComponent({ errors: { invalidInput: true }, isInterval: true });
 
       expect(screen.getByRole('alert')).toBeInTheDocument();
     });
 
-    it('shows warning with invalid second value', () => {
-      renderComponent({ isInterval: true });
-
-      fireEvent.change(screen.getAllByRole('textbox')[1], { target: { value: 'foo' } });
+    it('shows warning with only unit', () => {
+      renderComponent({ errors: { incompleteInput: true }, isInterval: true });
 
       expect(screen.getByRole('alert')).toBeInTheDocument();
     });
-
-    it('shows warning with only unit', async () => {
-      const scope = nock('https://clin-table-search.lhc.nlm.nih.gov')
-        .get('/api/ucum/v3/search?terms=mg/dL')
-        .reply(200, [1, ['mg/dL'], null, [['mg/dL', 'milligram per deciliter']]]);
-
-      const handleUpdateEditor = jest.fn();
-      renderComponent({ handleUpdateEditor, isInterval: true });
-
-      const unitAutocomplete = screen.getByRole('textbox', { name: 'Unit' });
-      userEvent.click(unitAutocomplete);
-      fireEvent.change(unitAutocomplete, { target: { value: 'mg/dL' } });
-      userEvent.click(await screen.findByRole('option', { name: 'mg/dL (milligram per deciliter)' }));
-
-      expect(screen.getByRole('alert')).toBeInTheDocument();
-
-      scope.done();
-    }, 30000);
   });
 });

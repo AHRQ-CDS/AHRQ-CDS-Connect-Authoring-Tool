@@ -4,7 +4,7 @@ import _ from 'lodash';
 
 import { getFieldWithId } from 'utils/instances';
 import { sortAlphabeticallyByKey } from 'utils/sort';
-import changeToCase from 'utils/strings';
+import { changeToCase } from 'utils/strings';
 import { isSupportedEditorType, getTypeByCqlArgument } from 'components/builder/editors/utils';
 
 export const vsacCodeDisplayName = vsacCode =>

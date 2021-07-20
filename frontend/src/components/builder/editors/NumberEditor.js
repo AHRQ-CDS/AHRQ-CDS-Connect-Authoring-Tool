@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import { TextField } from '@material-ui/core';
 import { Alert } from '@material-ui/lab';
@@ -8,8 +8,7 @@ import clsx from 'clsx';
 import { isInteger } from 'utils/numbers';
 import { useFieldStyles } from 'styles/hooks';
 
-const NumberEditor = ({ handleUpdateEditor, isDecimal = false, isInterval = false, value }) => {
-  const [showInputWarning, setShowInputWarning] = useState(false);
+const NumberEditor = ({ errors, handleUpdateEditor, isDecimal = false, isInterval = false, value }) => {
   const fieldStyles = useFieldStyles();
 
   let firstValue = value || '';
@@ -20,9 +19,6 @@ const NumberEditor = ({ handleUpdateEditor, isDecimal = false, isInterval = fals
 
   const handleChange = (newValue, inputType) => {
     if (newValue && Number.isNaN(newValue.valueOf())) return;
-    const regexToTest = isDecimal ? /^-?\d+(\.\d+)?$/ : /^-?\d+$/;
-    setShowInputWarning(newValue && !regexToTest.test(newValue));
-
     if (isInterval) {
       if (isDecimal) {
         const firstDecimal = (inputType === 'firstDecimal' ? newValue : value?.firstDecimal) || null;
@@ -84,7 +80,7 @@ const NumberEditor = ({ handleUpdateEditor, isDecimal = false, isInterval = fals
         )}
       </div>
 
-      {showInputWarning && (
+      {errors?.invalidInput && (
         <Alert severity="error">Warning: The entered value is not a valid {isDecimal ? 'Decimal' : 'Integer'}.</Alert>
       )}
     </div>
@@ -95,6 +91,9 @@ NumberEditor.propTypes = {
   handleUpdateEditor: PropTypes.func.isRequired,
   isDecimal: PropTypes.bool,
   isInterval: PropTypes.bool,
+  errors: PropTypes.shape({
+    invalidInput: PropTypes.bool
+  }),
   value: PropTypes.oneOfType([PropTypes.string, PropTypes.object])
 };
 

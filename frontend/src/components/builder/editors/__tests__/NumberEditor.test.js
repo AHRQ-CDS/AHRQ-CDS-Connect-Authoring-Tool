@@ -5,7 +5,14 @@ import NumberEditor from '../NumberEditor';
 describe('<NumberEditor />', () => {
   const renderComponent = (props = {}) =>
     render(
-      <NumberEditor handleUpdateEditor={jest.fn()} isDecimal={false} isInterval={false} value={null} {...props} />
+      <NumberEditor
+        errors={{}}
+        handleUpdateEditor={jest.fn()}
+        isDecimal={false}
+        isInterval={false}
+        value={null}
+        {...props}
+      />
     );
 
   describe('Integer Editor', () => {
@@ -28,9 +35,7 @@ describe('<NumberEditor />', () => {
     });
 
     it('shows warning with invalid integer', () => {
-      renderComponent();
-
-      fireEvent.change(screen.getByRole('textbox'), { target: { value: 'foo' } });
+      renderComponent({ errors: { invalidInput: true } });
 
       expect(screen.getByRole('alert')).toBeInTheDocument();
     });
@@ -65,9 +70,7 @@ describe('<NumberEditor />', () => {
     });
 
     it('shows warning with invalid decimal', () => {
-      renderComponent({ isDecimal: true });
-
-      fireEvent.change(screen.getByRole('textbox'), { target: { value: 'foo' } });
+      renderComponent({ errors: { invalidInput: true }, isDecimal: true });
 
       expect(screen.getByRole('alert')).toBeInTheDocument();
     });
@@ -130,18 +133,8 @@ describe('<NumberEditor />', () => {
       expect(handleUpdateEditor).toBeCalledWith(null);
     });
 
-    it('shows warning with invalid first integer', () => {
-      renderComponent({ isInterval: true });
-
-      fireEvent.change(screen.getAllByRole('textbox')[0], { target: { value: 'foo' } });
-
-      expect(screen.getByRole('alert')).toBeInTheDocument();
-    });
-
-    it('shows warning with invalid second integer', () => {
-      renderComponent({ isInterval: true });
-
-      fireEvent.change(screen.getAllByRole('textbox')[1], { target: { value: 'foo' } });
+    it('shows warning with invalid integer', () => {
+      renderComponent({ errors: { invalidInput: true }, isInterval: true });
 
       expect(screen.getByRole('alert')).toBeInTheDocument();
     });
@@ -250,18 +243,8 @@ describe('<NumberEditor />', () => {
       expect(handleUpdateEditor).toBeCalledWith(null);
     });
 
-    it('shows warning with invalid first decimal', () => {
-      renderComponent({ isInterval: true, isDecimal: true });
-
-      fireEvent.change(screen.getAllByRole('textbox')[0], { target: { value: 'foo' } });
-
-      expect(screen.getByRole('alert')).toBeInTheDocument();
-    });
-
-    it('shows warning with invalid second decimal', () => {
-      renderComponent({ isInterval: true, isDecimal: true });
-
-      fireEvent.change(screen.getAllByRole('textbox')[1], { target: { value: 'foo' } });
+    it('shows warning with invalid decimal', () => {
+      renderComponent({ errors: { invalidInput: true }, isDecimal: true, isInterval: true });
 
       expect(screen.getByRole('alert')).toBeInTheDocument();
     });

@@ -13,7 +13,7 @@ import {
 } from '@material-ui/core';
 import { ExpandMore as ExpandMoreIcon } from '@material-ui/icons';
 
-import changeToCase from 'utils/strings';
+import { changeToCase } from 'utils/strings';
 
 const ExternalCqlDetailsModalSection = ({ definitions, title }) => {
   return (

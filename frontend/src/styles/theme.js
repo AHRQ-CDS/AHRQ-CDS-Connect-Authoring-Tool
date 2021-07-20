@@ -185,10 +185,7 @@ const materialUiOverridesBase = {
   },
   MuiCardContent: {
     root: {
-      padding: '10px 20px',
-      '&:last-child': {
-        paddingBottom: '10px'
-      }
+      padding: '1em'
     }
   },
   MuiCardHeader: {
@@ -199,6 +196,9 @@ const materialUiOverridesBase = {
     title: {
       fontSize: '1.2em',
       marginLeft: '20px'
+    },
+    action: {
+      marginTop: '10px'
     }
   },
   MuiDialogActions: {

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import { Remove as DashIcon } from '@material-ui/icons';
 import { Alert } from '@material-ui/lab';
@@ -26,8 +26,7 @@ const convertDateTimeForCQL = (newValues, isInterval, isTime) => {
   return date || time ? { date, time, str: date ? (time ? `@${date}T${time}` : `@${date}`) : null } : null;
 };
 
-const DateTimeEditor = ({ handleUpdateEditor, isInterval = false, isTime = false, value }) => {
-  const [showInputWarning, setShowInputWarning] = useState(!isTime && value?.time && !value?.date);
+const DateTimeEditor = ({ errors, handleUpdateEditor, isInterval = false, isTime = false, value }) => {
   const fieldStyles = useFieldStyles();
 
   const handleChange = (newValue, inputType) => {
@@ -39,13 +38,9 @@ const DateTimeEditor = ({ handleUpdateEditor, isInterval = false, isTime = false
       newValues.firstTime = inputType === 'firstTime' ? convertPickerTimeToCQL(newValue) : value?.firstTime || null;
       newValues.secondDate = inputType === 'secondDate' ? convertPickerDateToCQL(newValue) : value?.secondDate || null;
       newValues.secondTime = inputType === 'secondTime' ? convertPickerTimeToCQL(newValue) : value?.secondTime || null;
-      setShowInputWarning(
-        (newValues.firstTime && !newValues.firstDate) || (newValues.secondTime && !newValues.secondDate)
-      );
     } else {
       newValues.date = inputType === 'date' ? convertPickerDateToCQL(newValue) : value?.date || null;
       newValues.time = inputType === 'time' ? convertPickerTimeToCQL(newValue) : value?.time || null;
-      setShowInputWarning(!isTime && newValues.time && !newValues.date);
     }
 
     handleUpdateEditor(convertDateTimeForCQL(newValues, isInterval, isTime));
@@ -85,7 +80,7 @@ const DateTimeEditor = ({ handleUpdateEditor, isInterval = false, isTime = false
         </div>
       )}
 
-      {showInputWarning && <Alert severity="error">Warning: A DateTime must have at least a date.</Alert>}
+      {errors?.incompleteInput && <Alert severity="error">Warning: A DateTime must have at least a date.</Alert>}
     </div>
   );
 };
@@ -94,6 +89,9 @@ DateTimeEditor.propTypes = {
   handleUpdateEditor: PropTypes.func.isRequired,
   isInterval: PropTypes.bool,
   isTime: PropTypes.bool,
+  errors: PropTypes.shape({
+    incompleteInput: PropTypes.bool
+  }),
   value: PropTypes.object
 };
 

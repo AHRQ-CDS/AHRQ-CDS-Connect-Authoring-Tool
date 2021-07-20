@@ -88,12 +88,13 @@ export default makeStyles(
       maxWidth: '450px'
     },
     fieldLabel: {
-      fontWeight: 'bold',
-      paddingRight: '1em',
-      minWidth: '12.5em',
+      fontSize: '0.95em',
+      fontWeight: 600,
+      marginTop: '10px',
       maxWidth: '12.5em',
-      textAlign: 'right',
-      marginTop: '10px'
+      minWidth: '12.5em',
+      paddingRight: '1em',
+      textAlign: 'right'
     },
     fieldLabelGroup: {
       alignItems: 'center',

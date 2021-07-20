@@ -37,7 +37,7 @@ import { ArtifactModal } from 'components/artifact';
 
 import { ErrorStatement } from 'components/builder/error-statement';
 import { ExternalCql } from 'components/builder/external-cql';
-import Parameters from 'components/builder/Parameters';
+import { Parameters } from 'components/builder/parameters';
 import Recommendations from 'components/builder/Recommendations';
 import Subpopulations from 'components/builder/Subpopulations';
 
@@ -49,6 +49,7 @@ import { findValueAtPath } from 'utils/find';
 import { hasGroupNestedWarning } from 'utils/warnings';
 import { errorStatementHasWarnings } from 'components/builder/error-statement/utils';
 import { parametersHaveWarnings } from 'components/builder/parameters/utils';
+import { getAllElements, getElementNames } from 'components/builder/utils';
 
 import artifactProps from 'prop-types/artifact';
 import { Summary } from 'components/builder/summary';
@@ -56,6 +57,13 @@ import { HelpLink } from 'components/elements';
 
 // TODO: This is needed because the tree on this.state is not updated in time. Figure out a better way to handle this
 let localTree;
+
+const TabIcon = ({ hasContent, hasError }) => {
+  if (hasContent && !hasError) return <CheckCircleIcon className="tab-indicator" />;
+  else if (hasError) return <ErrorIcon className="tab-indicator tab-indicator-error" />;
+
+  return null;
+};
 
 export class Builder extends Component {
   constructor(props) {
@@ -105,71 +113,6 @@ export class Builder extends Component {
     // eslint-disable-line camelcase
     this.setState({ showELMErrorModal: newProps.downloadedArtifact.elmErrors.length > 0 });
   }
-
-  // ----------------------- TABS ------------------------------------------ //
-
-  tabHasContent = tabName => {
-    const { artifact, externalCqlList } = this.props;
-    const { baseElements, errorStatement, parameters, recommendations, subpopulations } = artifact;
-
-    switch (tabName) {
-      case 'expTreeInclude':
-      case 'expTreeExclude':
-        return this.getAllInstances(tabName).length > 0;
-      case 'subpopulations':
-        return (
-          subpopulations.length > 3 ||
-          (subpopulations.length === 3 &&
-            (subpopulations[2].subpopulationName !== 'Subpopulation 1' || subpopulations[2].childInstances.length > 0))
-        );
-      case 'baseElements':
-        return baseElements.length > 0;
-      case 'recommendations':
-        return recommendations.length > 0;
-      case 'parameters':
-        return parameters.length > 0;
-      case 'handleErrors':
-        return errorStatement.ifThenClauses[0].ifCondition.value !== null;
-      case 'externalCQL':
-        return externalCqlList.length > 0;
-      default:
-        return false;
-    }
-  };
-
-  tabHasErrors = tabName => {
-    const { artifact, names } = this.props;
-    const allInstancesInAllTrees = this.getAllInstancesInAllTrees();
-    const { baseElements, errorStatement, expTreeInclude, expTreeExclude, parameters, subpopulations } = artifact;
-    const namedParameters = parameters.filter(({ name }) => name?.length);
-
-    switch (tabName) {
-      case 'expTreeInclude':
-      case 'expTreeExclude': {
-        const instances = this.getAllInstances(tabName);
-        return hasGroupNestedWarning(instances, names, baseElements, namedParameters, allInstancesInAllTrees);
-      }
-      case 'subpopulations': {
-        const filteredSubpopulations = subpopulations.filter(({ special }) => !special);
-        const emptySubpopulations = filteredSubpopulations.filter(({ childInstances }) => childInstances.length === 0);
-        const instances = _.flatten(filteredSubpopulations.map(({ childInstances }) => childInstances));
-        return (
-          emptySubpopulations.length > 0 ||
-          hasGroupNestedWarning(instances, names, baseElements, namedParameters, allInstancesInAllTrees)
-        );
-      }
-      case 'baseElements': {
-        return hasGroupNestedWarning(baseElements, names, baseElements, namedParameters, allInstancesInAllTrees, false);
-      }
-      case 'parameters': {
-        return parametersHaveWarnings(parameters, names, allInstancesInAllTrees);
-      }
-      case 'handleErrors':
-        return errorStatementHasWarnings(errorStatement, expTreeInclude, expTreeExclude);
-      default:
-        return false;
-    }
-  };
 
   // ----------------------- INSTANCES ------------------------------------- //
 
@@ -572,6 +515,124 @@ export class Builder extends Component {
     );
   }
 
+  renderTabList() {
+    const { artifact, externalCqlList, names } = this.props;
+    const {
+      baseElements,
+      errorStatement,
+      expTreeInclude,
+      expTreeExclude,
+      parameters,
+      recommendations,
+      subpopulations
+    } = artifact;
+    const allInstancesInAllTrees = this.getAllInstancesInAllTrees();
+    const namedParameters = parameters.filter(({ name }) => name?.length);
+    const allElements = getAllElements(artifact);
+    const elementNames = getElementNames(allElements);
+
+    const filteredSubpopulations = subpopulations.filter(({ special }) => !special);
+    const emptySubpopulations = filteredSubpopulations.filter(({ childInstances }) => childInstances.length === 0);
+    const subpopulationInstances = _.flatten(filteredSubpopulations.map(({ childInstances }) => childInstances));
+
+    const tabMetadata = {
+      expTreeInclude: {
+        hasContent: expTreeInclude.childInstances.length > 0,
+        hasError: hasGroupNestedWarning(
+          this.getAllInstances('expTreeInclude'),
+          names,
+          baseElements,
+          namedParameters,
+          allInstancesInAllTrees
+        )
+      },
+      expTreeExclude: {
+        hasContent: expTreeExclude.childInstances.length > 0,
+        hasError: hasGroupNestedWarning(
+          this.getAllInstances('expTreeExclude'),
+          names,
+          baseElements,
+          namedParameters,
+          allInstancesInAllTrees
+        )
+      },
+      subpopulations: {
+        hasContent:
+          subpopulations.length > 3 ||
+          (subpopulations.length === 3 &&
+            (subpopulations[2].subpopulationName !== 'Subpopulation 1' || subpopulations[2].childInstances.length > 0)),
+        hasError:
+          emptySubpopulations.length > 0 ||
+          hasGroupNestedWarning(subpopulationInstances, names, baseElements, namedParameters, allInstancesInAllTrees)
+      },
+      baseElements: {
+        hasContent: baseElements.length > 0,
+        hasError: hasGroupNestedWarning(
+          baseElements,
+          names,
+          baseElements,
+          namedParameters,
+          allInstancesInAllTrees,
+          false
+        )
+      },
+      recommendations: {
+        hasContent: recommendations.length > 0,
+        hasError: false
+      },
+      parameters: {
+        hasContent: parameters.length > 0,
+        hasError: parametersHaveWarnings(parameters, elementNames)
+      },
+      handleErrors: {
+        hasContent: errorStatement.ifThenClauses[0].ifCondition.value != null,
+        hasError: errorStatementHasWarnings(errorStatement, expTreeInclude, expTreeExclude)
+      },
+      externalCQL: {
+        hasContent: externalCqlList.length > 0,
+        hasError: false
+      }
+    };
+
+    return (
+      <TabList aria-label="Workspace Tabs">
+        <Tab>Summary</Tab>
+        <Tab>
+          Inclusions
+          <TabIcon {...tabMetadata.expTreeInclude} />
+        </Tab>
+        <Tab>
+          Exclusions
+          <TabIcon {...tabMetadata.expTreeExclude} />
+        </Tab>
+        <Tab>
+          Subpopulations
+          <TabIcon {...tabMetadata.subpopulations} />
+        </Tab>
+        <Tab>
+          Base Elements
+          <TabIcon {...tabMetadata.baseElements} />
+        </Tab>
+        <Tab>
+          Recommendations
+          <TabIcon {...tabMetadata.recommendations} />
+        </Tab>
+        <Tab>
+          Parameters
+          <TabIcon {...tabMetadata.parameters} />
+        </Tab>
+        <Tab>
+          Handle Errors
+          <TabIcon {...tabMetadata.handleErrors} />
+        </Tab>
+        <Tab>
+          <MenuBookIcon className="tab-indicator" /> External CQL
+          <TabIcon {...tabMetadata.externalCQL} />
+        </Tab>
+      </TabList>
+    );
+  }
+
   render() {
     const {
       activeTab,
@@ -609,59 +670,7 @@ export class Builder extends Component {
 
           <section className="builder__canvas">
             <Tabs selectedIndex={activeTab} onSelect={tabIndex => this.props.setActiveTab(tabIndex)}>
-              <TabList aria-label="Workspace Tabs">
-                <Tab>Summary</Tab>
-                <Tab>
-                  Inclusions
-                  {this.tabHasContent('expTreeInclude') && !this.tabHasErrors('expTreeInclude') && (
-                    <CheckCircleIcon className="tab-indicator" />
-                  )}
-                  {this.tabHasErrors('expTreeInclude') && <ErrorIcon className="tab-indicator tab-indicator-error" />}
-                </Tab>
-                <Tab>
-                  Exclusions
-                  {this.tabHasContent('expTreeExclude') && !this.tabHasErrors('expTreeExclude') && (
-                    <CheckCircleIcon className="tab-indicator" />
-                  )}
-                  {this.tabHasErrors('expTreeExclude') && <ErrorIcon className="tab-indicator tab-indicator-error" />}
-                </Tab>
-                <Tab>
-                  Subpopulations
-                  {this.tabHasContent('subpopulations') && !this.tabHasErrors('subpopulations') && (
-                    <CheckCircleIcon className="tab-indicator" />
-                  )}
-                  {this.tabHasErrors('subpopulations') && <ErrorIcon className="tab-indicator tab-indicator-error" />}
-                </Tab>
-                <Tab>
-                  Base Elements
-                  {this.tabHasContent('baseElements') && !this.tabHasErrors('baseElements') && (
-                    <CheckCircleIcon className="tab-indicator" />
-                  )}
-                  {this.tabHasErrors('baseElements') && <ErrorIcon className="tab-indicator tab-indicator-error" />}
-                </Tab>
-                <Tab>
-                  Recommendations
-                  {this.tabHasContent('recommendations') && <CheckCircleIcon className="tab-indicator" />}
-                </Tab>
-                <Tab>
-                  Parameters
-                  {this.tabHasContent('parameters') && !this.tabHasErrors('parameters') && (
-                    <CheckCircleIcon className="tab-indicator" />
-                  )}
-                  {this.tabHasErrors('parameters') && <ErrorIcon className="tab-indicator tab-indicator-error" />}
-                </Tab>
-                <Tab>
-                  Handle Errors
-                  {this.tabHasContent('handleErrors') && !this.tabHasErrors('handleErrors') && (
-                    <CheckCircleIcon className="tab-indicator" />
-                  )}
-                  {this.tabHasErrors('handleErrors') && <ErrorIcon className="tab-indicator tab-indicator-error" />}
-                </Tab>
-                <Tab>
-                  <MenuBookIcon className="tab-indicator" /> External CQL
-                  {this.tabHasContent('externalCQL') && <CheckCircleIcon className="tab-indicator" />}
-                </Tab>
-              </TabList>
+              {this.renderTabList()}
 
               <div className="tab-panel-container">
                 <TabPanel>
@@ -781,13 +790,7 @@ export class Builder extends Component {
                     <HelpLink linkPath="documentation#Parameters" />
                   </div>
 
-                  <Parameters
-                    getAllInstancesInAllTrees={this.getAllInstancesInAllTrees}
-                    instanceNames={names}
-                    parameters={artifact.parameters}
-                    updateParameters={this.updateParameters}
-                    vsacApiKey={vsacApiKey}
-                  />
+                  <Parameters handleUpdateParameters={this.updateParameters} />
                 </TabPanel>
 
                 <TabPanel>

@@ -13,7 +13,7 @@ import { getParameterById, getParametersByType } from 'components/builder/parame
 import { getExternalCqlByType } from 'components/builder/external-cql/utils';
 import { fetchExternalCqlList } from 'queries/external-cql';
 import { useFieldStyles, useSpacingStyles } from 'styles/hooks';
-import changeToCase from 'utils/strings';
+import { changeToCase } from 'utils/strings';
 
 const ArgumentTemplate = ({ argumentLabel, argumentType, argumentValue, handleUpdateArgument, isNested }) => {
   const artifact = useSelector(state => state.artifacts.artifact);

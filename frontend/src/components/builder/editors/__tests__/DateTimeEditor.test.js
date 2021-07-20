@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, userEvent, screen, waitFor } from 'utils/test-utils';
+import { render, userEvent, screen } from 'utils/test-utils';
 import DateTimeEditor from '../DateTimeEditor';
 
 describe('<DateTimeEditor />', () => {
@@ -54,18 +54,10 @@ describe('<DateTimeEditor />', () => {
     });
 
     it('shows warning with only time', async () => {
-      renderComponent();
-
-      userEvent.click(screen.getByRole('button', { name: 'change time' }));
-      userEvent.click(screen.getByRole('button', { name: 'OK' }));
-
-      await waitFor(() => expect(screen.queryByRole('button', { name: 'OK' })).toBeNull(), {
-        timeout: 5000,
-        interval: 200
-      });
+      renderComponent({ errors: { incompleteInput: true } });
 
       expect(screen.getByRole('alert')).toBeInTheDocument();
-    }, 30000);
+    });
   });
 
   describe('Interval of DateTime Editor', () => {
@@ -207,32 +199,10 @@ describe('<DateTimeEditor />', () => {
       });
     });
 
-    it('shows warning with only first time', async () => {
-      renderComponent({ isInterval: true });
-
-      userEvent.click(screen.getAllByRole('button', { name: 'change time' })[0]);
-      userEvent.click(screen.getByRole('button', { name: 'OK' }));
-
-      await waitFor(() => expect(screen.queryByRole('button', { name: 'OK' })).toBeNull(), {
-        timeout: 5000,
-        interval: 200
-      });
+    it('shows warning with only time', () => {
+      renderComponent({ errors: { incompleteInput: true }, isInterval: true });
 
       expect(screen.getByRole('alert')).toBeInTheDocument();
-    }, 30000);
-
-    it('shows warning with only second time', async () => {
-      renderComponent({ isInterval: true });
-
-      userEvent.click(screen.getAllByRole('button', { name: 'change time' })[1]);
-      userEvent.click(screen.getByRole('button', { name: 'OK' }));
-
-      await waitFor(() => expect(screen.queryByRole('button', { name: 'OK' })).toBeNull(), {
-        timeout: 5000,
-        interval: 200
-      });
-
-      expect(screen.getByRole('alert')).toBeInTheDocument();
-    }, 30000);
+    });
   });
 });

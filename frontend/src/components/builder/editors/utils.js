@@ -51,3 +51,89 @@ export function getTypeByCqlArgument(cqlArgument) {
   const typeName = operandTypeSpecifier.pointType?.resultTypeName || operandTypeSpecifier.resultTypeName;
   return isInterval ? intervalArgumentTypeMap[typeName] : argumentTypeMap[typeName];
 }
+
+// errors
+
+const isBlank = value => value === '' || value == null;
+const isValidDecimal = value => /^-?\d+(\.\d+)?$/.test(value);
+const isValidInteger = value => /^-?\d+$/.test(value);
+
+const editorErrors = (type, value) => {
+  switch (type) {
+    case 'datetime':
+      return { incompleteInput: Boolean(value?.time && !value?.date) };
+
+    case 'interval_of_datetime':
+      return {
+        incompleteInput: Boolean((value?.firstTime && !value?.firstDate) || (value?.secondTime && !value?.secondDate))
+      };
+
+    case 'decimal':
+      return { invalidInput: !isBlank(value?.decimal) && !isValidDecimal(value?.decimal) };
+
+    case 'interval_of_decimal':
+      return {
+        invalidInput:
+          (!isBlank(value?.firstDecimal) && !isValidDecimal(value?.firstDecimal)) ||
+          (!isBlank(value?.secondDecimal) && !isValidDecimal(value?.secondDecimal))
+      };
+
+    case 'integer':
+      return { invalidInput: !isBlank(value) && !isValidInteger(value) };
+
+    case 'interval_of_integer':
+      return {
+        invalidInput:
+          (!isBlank(value?.firstInteger) && !isValidInteger(value?.firstInteger)) ||
+          (!isBlank(value?.secondInteger) && !isValidInteger(value?.secondInteger))
+      };
+
+    case 'system_quantity':
+      return {
+        invalidInput: Boolean(value) && !isBlank(value?.quantity) && !isValidDecimal(value?.quantity),
+        incompleteInput: Boolean(value?.unit) && isBlank(value?.quantity)
+      };
+
+    case 'interval_of_quantity':
+      return {
+        invalidInput:
+          Boolean(value) &&
+          ((!isBlank(value?.firstQuantity) && !isValidDecimal(value?.firstQuantity)) ||
+            (!isBlank(value?.secondQuantity) && !isValidDecimal(value?.secondQuantity))),
+        incompleteInput: Boolean(value?.unit) && isBlank(value?.firstQuantity) && isBlank(value?.secondQuantity)
+      };
+
+    default:
+      return {};
+  }
+};
+
+const hasErrors = (type, errors) => {
+  switch (type) {
+    case 'datetime':
+    case 'interval_of_datetime':
+      return errors.incompleteInput;
+
+    case 'decimal':
+    case 'integer':
+    case 'interval_of_decimal':
+    case 'interval_of_integer':
+      return errors.invalidInput;
+
+    case 'system_quantity':
+    case 'interval_of_quantity':
+      return errors.invalidInput || errors.incompleteInput;
+
+    default:
+      return false;
+  }
+};
+
+export const getEditorErrors = (type, value) => {
+  const errors = editorErrors(type, value);
+
+  return {
+    errors,
+    hasErrors: hasErrors(type, errors)
+  };
+};

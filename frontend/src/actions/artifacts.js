@@ -4,7 +4,7 @@ import moment from 'moment';
 import FileSaver from 'file-saver';
 import _ from 'lodash';
 
-import changeToCase from 'utils/strings';
+import { changeToCase } from 'utils/strings';
 import createTemplateInstance from 'utils/templates';
 import { getFieldWithType, getFieldWithId } from 'utils/instances';
 import { generateErrorStatement } from 'components/builder/error-statement/utils';

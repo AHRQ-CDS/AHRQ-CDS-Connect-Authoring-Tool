@@ -96,6 +96,8 @@ describe('<TemplateInstance />', () => {
       .persist()
       .get(`/authoring/api/externalCQL/${mockArtifact._id}`)
       .reply(200, [mockExternalCqlLibrary])
+      .get(`/authoring/api/modifiers/${mockArtifact._id}`)
+      .reply(200, mockModifiers)
       .get('/authoring/api/config/templates')
       .reply(200, mockTemplates);
   });

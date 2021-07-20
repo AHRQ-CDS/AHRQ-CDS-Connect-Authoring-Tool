@@ -12,7 +12,7 @@ import {
 } from 'components/builder/editors';
 import { useFieldStyles } from 'styles/hooks';
 
-const EditorsTemplate = ({ handleUpdateEditor, label, isNested, showArgumentType, type, value }) => {
+const EditorsTemplate = ({ errors, handleUpdateEditor, isNested, label, type, value }) => {
   const fieldStyles = useFieldStyles();
 
   const editor = (() => {
@@ -20,11 +20,11 @@ const EditorsTemplate = ({ handleUpdateEditor, label, isNested, showArgumentType
       case 'boolean':
         return <BooleanEditor handleUpdateEditor={handleUpdateEditor} value={value} />;
       case 'datetime':
-        return <DateTimeEditor handleUpdateEditor={handleUpdateEditor} value={value} />;
+        return <DateTimeEditor errors={errors} handleUpdateEditor={handleUpdateEditor} value={value} />;
       case 'decimal':
-        return <NumberEditor handleUpdateEditor={handleUpdateEditor} isDecimal value={value} />;
+        return <NumberEditor errors={errors} handleUpdateEditor={handleUpdateEditor} isDecimal value={value} />;
       case 'integer':
-        return <NumberEditor handleUpdateEditor={handleUpdateEditor} value={value} />;
+        return <NumberEditor errors={errors} handleUpdateEditor={handleUpdateEditor} value={value} />;
       case 'string':
         return <StringEditor handleUpdateEditor={handleUpdateEditor} value={value} />;
       case 'system_code':
@@ -32,17 +32,19 @@ const EditorsTemplate = ({ handleUpdateEditor, label, isNested, showArgumentType
       case 'system_concept':
         return <CodeEditor handleUpdateEditor={handleUpdateEditor} isConcept value={value} />;
       case 'system_quantity':
-        return <QuantityEditor handleUpdateEditor={handleUpdateEditor} value={value} />;
+        return <QuantityEditor errors={errors} handleUpdateEditor={handleUpdateEditor} value={value} />;
       case 'time':
-        return <DateTimeEditor handleUpdateEditor={handleUpdateEditor} isTime value={value} />;
+        return <DateTimeEditor errors={errors} handleUpdateEditor={handleUpdateEditor} isTime value={value} />;
       case 'interval_of_integer':
-        return <NumberEditor handleUpdateEditor={handleUpdateEditor} isInterval value={value} />;
+        return <NumberEditor errors={errors} handleUpdateEditor={handleUpdateEditor} isInterval value={value} />;
       case 'interval_of_datetime':
-        return <DateTimeEditor handleUpdateEditor={handleUpdateEditor} isInterval value={value} />;
+        return <DateTimeEditor errors={errors} handleUpdateEditor={handleUpdateEditor} isInterval value={value} />;
       case 'interval_of_decimal':
-        return <NumberEditor handleUpdateEditor={handleUpdateEditor} isDecimal isInterval value={value} />;
+        return (
+          <NumberEditor errors={errors} handleUpdateEditor={handleUpdateEditor} isDecimal isInterval value={value} />
+        );
       case 'interval_of_quantity':
-        return <QuantityEditor handleUpdateEditor={handleUpdateEditor} isInterval value={value} />;
+        return <QuantityEditor errors={errors} handleUpdateEditor={handleUpdateEditor} isInterval value={value} />;
       default:
         return null;
     }
@@ -66,10 +68,10 @@ const EditorsTemplate = ({ handleUpdateEditor, label, isNested, showArgumentType
 };
 
 EditorsTemplate.propTypes = {
+  errors: PropTypes.object,
   handleUpdateEditor: PropTypes.func.isRequired,
   isNested: PropTypes.bool,
   label: PropTypes.string,
-  showArgumentType: PropTypes.bool,
   type: PropTypes.string.isRequired,
   value: PropTypes.any
 };

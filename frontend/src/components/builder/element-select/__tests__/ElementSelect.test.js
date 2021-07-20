@@ -7,7 +7,7 @@ import { fireEvent, render, screen, userEvent, waitFor, within } from 'utils/tes
 import { mockArtifact } from 'mocks/artifacts';
 import { mockExternalCqlLibrary } from 'mocks/external-cql';
 import { mockTemplates } from 'mocks/templates';
-import changeToCase from 'utils/strings';
+import { changeToCase } from 'utils/strings';
 import ElementSelect, { VSAC_OPTIONS } from '../ElementSelect';
 
 describe('<ElementSelect />', () => {

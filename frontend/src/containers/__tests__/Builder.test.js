@@ -140,7 +140,7 @@ describe('<Builder />', () => {
       store
     });
 
-    userEvent.click((await screen.findAllByRole('button', { name: 'Add expression' }, { timeout: 2000 }))[0]);
+    userEvent.click((await screen.findAllByRole('button', { name: 'Add expression' }, { timeout: 4000 }))[0]);
     userEvent.click(screen.getByRole('button', { name: 'Is (Not) Null?' }));
 
     const updateAction = expandAction(_.last(store.getActions()));
@@ -191,7 +191,7 @@ describe('<Builder />', () => {
       it('should render as a modifier option within a button and dispatch UPDATE_ARTIFACT when added', async () => {
         renderComponent({ store });
 
-        userEvent.click((await screen.findAllByRole('button', { name: 'Add expression' }, { timeout: 2000 }))[0]);
+        userEvent.click((await screen.findAllByRole('button', { name: 'Add expression' }, { timeout: 4000 }))[0]);
         userEvent.click(screen.getByRole('button', { name: 'First' }));
 
         const updateAction = expandAction(_.last(store.getActions()));
@@ -211,7 +211,7 @@ describe('<Builder />', () => {
       it('should render as a modifier option within a button and dispatch UPDATE_ARTIFACT when added', async () => {
         renderComponent({ store });
 
-        userEvent.click((await screen.findAllByRole('button', { name: 'Add expression' }, { timeout: 2000 }))[0]);
+        userEvent.click((await screen.findAllByRole('button', { name: 'Add expression' }, { timeout: 4000 }))[0]);
         userEvent.click(screen.getByRole('button', { name: 'Average Observation Value' }));
 
         const updateAction = expandAction(_.last(store.getActions()));
@@ -231,7 +231,7 @@ describe('<Builder />', () => {
       it('should render as a modifier option within a button and dispatch UPDATE_ARTIFACT when added', async () => {
         renderComponent({ store });
 
-        userEvent.click((await screen.findAllByRole('button', { name: 'Add expression' }, { timeout: 2000 }))[0]);
+        userEvent.click((await screen.findAllByRole('button', { name: 'Add expression' }, { timeout: 4000 }))[0]);
         userEvent.click(screen.getByRole('button', { name: 'First' }));
 
         const updateAction = expandAction(_.last(store.getActions()));
@@ -251,7 +251,7 @@ describe('<Builder />', () => {
       it('should render as a modifier option within a button and dispatch UPDATE_ARTIFACT when added', async () => {
         renderComponent({ store });
 
-        userEvent.click((await screen.findAllByRole('button', { name: 'Add expression' }, { timeout: 2000 }))[0]);
+        userEvent.click((await screen.findAllByRole('button', { name: 'Add expression' }, { timeout: 4000 }))[0]);
         userEvent.click(screen.getByRole('button', { name: 'First' }));
 
         const updateAction = expandAction(_.last(store.getActions()));
@@ -271,7 +271,7 @@ describe('<Builder />', () => {
       it('should render as a modifier option within a button and dispatch UPDATE_ARTIFACT when added', async () => {
         renderComponent({ store });
 
-        userEvent.click((await screen.findAllByRole('button', { name: 'Add expression' }, { timeout: 2000 }))[0]);
+        userEvent.click((await screen.findAllByRole('button', { name: 'Add expression' }, { timeout: 4000 }))[0]);
         userEvent.click(screen.getByRole('button', { name: 'First' }));
 
         const updateAction = expandAction(_.last(store.getActions()));

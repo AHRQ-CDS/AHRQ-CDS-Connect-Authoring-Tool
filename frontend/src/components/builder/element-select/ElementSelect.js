@@ -11,7 +11,7 @@ import ElementSelectActions from './ElementSelectActions';
 import ElementSelectDropdown from './ElementSelectDropdown';
 import { getElementEntries, generateElement } from './utils';
 import { sortAlphabeticallyByKey } from 'utils/sort';
-import changeToCase from 'utils/strings';
+import { changeToCase } from 'utils/strings';
 import { fetchExternalCqlList } from 'queries/external-cql';
 import fetchTemplates from 'queries/fetchTemplates';
 import useStyles from './styles';
@@ -37,7 +37,7 @@ const ElementSelect = ({ excludeListOperations = false, handleAddElement, isDisa
   const artifact = useSelector(state => state.artifacts.artifact);
   const query = { artifactId: artifact._id };
   const { data: externalCqlList } = useQuery(['externalCql', query], () => fetchExternalCqlList(query));
-  const { data: elementTemplates } = useQuery('templates', () => fetchTemplates());
+  const { data: elementTemplates } = useQuery('templates', () => fetchTemplates(), { staleTime: Infinity });
   const styles = useStyles();
 
   const elementOptions = useMemo(() => {
