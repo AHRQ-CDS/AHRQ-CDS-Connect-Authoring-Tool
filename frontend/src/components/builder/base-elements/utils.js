@@ -6,4 +6,4 @@ export const getBaseElementName = baseElement => baseElement.fields.find(field =
 export const getBaseElementsByType = (baseElements, type) =>
   baseElements.filter(baseElement => getBaseElementReturnType(baseElement) === type);
 
-export const getBaseElementById = (baseElements, id) => baseElements.filter(baseElement => baseElement.uniqueId === id);
+export const getBaseElementById = (baseElements, id) => baseElements.find(baseElement => baseElement.uniqueId === id);
