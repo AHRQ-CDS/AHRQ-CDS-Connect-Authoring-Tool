@@ -46,10 +46,32 @@ export function getTypeByCqlArgument(cqlArgument) {
     '{urn:hl7-org:elm-types:r1}Quantity': 'interval_of_quantity'
   };
 
+  // Supported FHIR types
+  const fhirTypeMap = {
+    '{http://hl7.org/fhir}AllergyIntolerance': 'allergy_intolerance',
+    '{http://hl7.org/fhir}Condition': 'condition',
+    '{http://hl7.org/fhir}Device': 'device',
+    '{http://hl7.org/fhir}Encounter': 'encounter',
+    '{http://hl7.org/fhir}Immunization': 'immunization',
+    '{http://hl7.org/fhir}MedicationRequest': 'medication_request',
+    '{http://hl7.org/fhir}MedicationStatement': 'medication_statement',
+    '{http://hl7.org/fhir}MedicationOrder': 'medication_order',
+    '{http://hl7.org/fhir}Observation': 'observation',
+    '{http://hl7.org/fhir}Procedure': 'procedure',
+    '{http://hl7.org/fhir}ServiceRequest': 'service_request'
+  };
+
   const isInterval = Boolean(cqlArgument.operandTypeSpecifier?.pointType?.resultTypeName);
   const operandTypeSpecifier = cqlArgument.operandTypeSpecifier;
-  const typeName = operandTypeSpecifier.pointType?.resultTypeName || operandTypeSpecifier.resultTypeName;
-  return isInterval ? intervalArgumentTypeMap[typeName] : argumentTypeMap[typeName];
+  const typeName =
+    operandTypeSpecifier.pointType?.resultTypeName ||
+    operandTypeSpecifier.resultTypeName ||
+    operandTypeSpecifier.resultTypeSpecifier.elementType.name;
+  if (typeName.startsWith('{http://hl7.org/fhir}'))
+    return operandTypeSpecifier?.resultTypeSpecifier?.type !== 'ListTypeSpecifier'
+      ? fhirTypeMap[typeName]
+      : `list_of_${fhirTypeMap[typeName]}s`;
+  else return isInterval ? intervalArgumentTypeMap[typeName] : argumentTypeMap[typeName];
 }
 
 // errors

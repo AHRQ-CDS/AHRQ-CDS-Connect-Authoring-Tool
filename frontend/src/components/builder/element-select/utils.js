@@ -10,9 +10,36 @@ import { isSupportedEditorType, getTypeByCqlArgument } from 'components/builder/
 export const vsacCodeDisplayName = vsacCode =>
   vsacCode.display?.length < 60 ? vsacCode.display : `${vsacCode.codeSystem.name} ${vsacCode.code}`;
 
-const isSupportedCqlFunction = cqlFunction => {
+const getBaseElementReturnType = baseElement => {
+  if (baseElement.modifiers && baseElement.modifiers.length !== 0) return _.last(baseElement.modifiers).returnType;
+  else return baseElement.returnType;
+};
+
+const getDefinitions = externalCqlLibrary => {
+  return externalCqlLibrary.details.definitions;
+};
+
+const getZeroArgFunctions = externalCqlLibrary => {
+  return externalCqlLibrary.details.functions.filter(func => !func.argumentTypes || func.argumentTypes?.length === 0);
+};
+
+const isSupportedCqlFunction = (cqlFunction, baseElements = [], externalCqlList = []) => {
   if (cqlFunction.operand.length === 0 || !cqlFunction.argumentTypes) return true;
-  return cqlFunction.argumentTypes.every(argType => isSupportedEditorType(argType.calculated));
+
+  return cqlFunction.argumentTypes.every(argType => {
+    return (
+      isSupportedEditorType(argType.calculated) ||
+      baseElements.some(baseElement => getBaseElementReturnType(baseElement) === argType.calculated) ||
+      externalCqlList
+        .map(lib => getDefinitions(lib))
+        .flat()
+        .some(def => def.calculatedReturnType === argType.calculated) ||
+      externalCqlList
+        .map(lib => getZeroArgFunctions(lib))
+        .flat()
+        .some(func => func.calculatedReturnType === argType.calculated)
+    );
+  });
 };
 
 export const generateElement = ({
@@ -68,12 +95,11 @@ export const generateElement = ({
       const cqlLibraryDefinitions = cqlLibrary.details.definitions.concat(cqlLibrary.details.parameters);
       const selectedCqlDefinition = cqlLibraryDefinitions.find(({ name }) => name === cqlOption);
       const cqlLibraryFunctions = cqlLibrary.details.functions.filter(cqlFunction =>
-        isSupportedCqlFunction(cqlFunction)
+        isSupportedCqlFunction(cqlFunction, baseElements, externalCqlList)
       );
       const selectedCqlFunction = cqlLibraryFunctions.find(({ name }) => name === cqlOption);
       const selectedCqlEntry = selectedCqlDefinition || selectedCqlFunction;
       const selectedCqlEntryType = selectedCqlDefinition ? 'GenericStatement' : 'GenericFunction';
-
       return {
         id: uuidv4(),
         name: 'External CQL Element',
@@ -147,6 +173,7 @@ export const generateElement = ({
 };
 
 export const getElementEntries = ({ entryType, artifact, elementTemplates, externalCqlList, parentElementId }) => {
+  let { baseElements } = artifact;
   switch (entryType) {
     case 'baseElements':
       return artifact.baseElements
@@ -170,7 +197,7 @@ export const getElementEntries = ({ entryType, artifact, elementTemplates, exter
       if (!externalCqlList) return [];
       return externalCqlList.map(externalCql => {
         const cqlFunctions = externalCql.details.functions
-          .filter(cqlFunction => isSupportedCqlFunction(cqlFunction))
+          .filter(cqlFunction => isSupportedCqlFunction(cqlFunction, baseElements, externalCqlList))
           .map(cqlFunction => ({
             value: cqlFunction.name,
             label: `${cqlFunction.name} | Function(${cqlFunction.operand.length}) | ${cqlFunction.calculatedReturnType}`
