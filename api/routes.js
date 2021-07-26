@@ -7,6 +7,7 @@ const authRouter = require('./routers/authRouter.js');
 const fhirRouter = require('./routers/fhirRouter');
 const foreseeHandler = require('./handlers/foreseeHandler');
 const modifiersRouter = require('./routers/modifiersRouter');
+const queryRouter = require('./routers/queryRouter');
 
 module.exports = app => {
   // Routing for API check
@@ -40,6 +41,9 @@ module.exports = app => {
 
   // Routing for Modifiers
   app.use('/authoring/api/modifiers', modifiersRouter);
+
+  // Routing for query builder endpoints
+  app.use('/authoring/api/query', queryRouter);
 
   // Catch all other Api calls
   app.get('/authoring/api/*', (req, res) => {
