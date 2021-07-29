@@ -1,7 +1,6 @@
 const config = require('../config');
 const Artifact = require('../models/artifact');
 const CQLLibrary = require('../models/cqlLibrary');
-const operators = require('../data/query_builder/operators.json');
 const _ = require('lodash');
 const slug = require('slug');
 const ejs = require('ejs');
@@ -12,6 +11,13 @@ const glob = require('glob');
 const request = require('request');
 const Busboy = require('busboy');
 const { exportCQL, importCQL, RawCQL } = require('cql-merge');
+
+const queryResources = {
+  dstu2_resources: require('../data/query_builder/dstu2_resources.json'),
+  stu3_resources: require('../data/query_builder/stu3_resources.json'),
+  r4_resources: require('../data/query_builder/r4_resources.json'),
+  operators: require('../data/query_builder/operators.json')
+};
 
 const templatePath = './data/cql/templates';
 const specificPath = './data/cql/specificTemplates';
@@ -111,6 +117,32 @@ const includeLibrariesMap = {
   '1.0.2': includeLibrariesDstu2,
   '3.0.0': includeLibrariesStu3,
   '4.0.0': includeLibrariesR4
+};
+
+const queryResourceMap = {
+  list_of_observations: 'Observation',
+  list_of_conditions: 'Condition',
+  list_of_medication_statements: 'MedicationStatement',
+  list_of_medication_requests: 'MedicationRequest',
+  list_of_procedures: 'Procedure',
+  list_of_allergy_intolerances: 'AllergyIntolerance',
+  list_of_encounters: 'Encounter',
+  list_of_immunizations: 'Immunization',
+  list_of_devices: 'Device',
+  list_of_service_requests: 'ServiceRequest'
+};
+
+const queryAliasMap = {
+  list_of_observations: 'Ob',
+  list_of_conditions: 'Co',
+  list_of_medication_statements: 'MS',
+  list_of_medication_requests: 'MR',
+  list_of_procedures: 'Pr',
+  list_of_allergy_intolerances: 'AI',
+  list_of_encounters: 'En',
+  list_of_immunizations: 'Im',
+  list_of_devices: 'De',
+  list_of_service_requests: 'SR'
 };
 
 // A flag to hold the FHIR version, so that it can be used
@@ -1039,31 +1071,47 @@ function sanitizeCQLString(cqlString) {
 }
 
 // Recurse down the tree of a modifier built in the query builder
-function checkRules(rule, value_name, inputTypes = [], isFirstModifier = false) {
+function checkRules(rule, value_name, inputType, isRoot = false, isFirstModifier = false) {
   // Leaf rule node
   if (rule.ruleType) {
-    const ruleToRender = ruleMap[operators.operators.find(op => op.id === rule.ruleType).operatorTemplate];
-    return ejs.render(ruleToRender, { value_name, ...rule });
+    const ruleToRender =
+      ruleMap[queryResources.operators.operators.find(op => op.id === rule.ruleType).operatorTemplate];
+
+    // The property name may need to be cast in specific syntax for FHIR R4 and STU3
+    let resourceProperty = rule.resourceProperty;
+    if (fhirTarget.version === '4.0.0' || fhirTarget.version === '3.0.0') {
+      const resources =
+        fhirTarget.version === '4.0.0'
+          ? queryResources.r4_resources.resources
+          : queryResources.stu3_resources.resources;
+
+      const choiceElementTypeMap = {};
+      resources
+        .find(r => r.name === queryResourceMap[inputType])
+        .properties.filter(p => p.typeSpecifier.type === 'ChoiceTypeSpecifier')
+        .forEach(c => (choiceElementTypeMap[c.name] = c.typeSpecifier.elementType));
+
+      // If the property is a choice, then since we are in R4 or STU3, we need to cast the property
+      if (!_.isEmpty(choiceElementTypeMap)) {
+        for (const key of Object.keys(choiceElementTypeMap)) {
+          const choiceElementType = choiceElementTypeMap[key].find(e => e.name === rule.resourceProperty);
+          if (choiceElementType) {
+            resourceProperty = `${key} as ${choiceElementType.typeSpecifier.elementType}`;
+            break;
+          }
+        }
+      }
+    }
+
+    return ejs.render(ruleToRender, { ...rule, value_name, resourceProperty });
   }
 
   // Conjunction at root level
-  if (inputTypes.length > 0) {
-    const aliasMap = {
-      list_of_observations: 'Ob',
-      list_of_conditions: 'Co',
-      list_of_medication_statements: 'MS',
-      list_of_medication_requests: 'MR',
-      list_of_procedures: 'Pr',
-      list_of_allergy_intolerances: 'AI',
-      list_of_encounters: 'En',
-      list_of_immunizations: 'Im',
-      list_of_devices: 'De'
-    };
-
+  if (isRoot) {
     // TODO: Revisit this approach as the query builder evolves. We might want a more
     // dynamic method for aliases by type, and we might want to uniquely identify them.
-    const alias = aliasMap[inputTypes[0]] || 'ALIAS';
-    const statements = rule.rules.map(r => checkRules(r, alias));
+    const alias = queryAliasMap[inputType] || 'ALIAS';
+    const statements = rule.rules.map(r => checkRules(r, alias, inputType));
     return ejs.render(ruleMap['RootTemplate'], {
       value_name,
       alias,
@@ -1074,8 +1122,7 @@ function checkRules(rule, value_name, inputTypes = [], isFirstModifier = false) 
   }
 
   // Conjunction within tree
-  let statements = [];
-  if (rule.rules) statements = rule.rules.map(r => checkRules(r, value_name));
+  const statements = rule.rules.map(r => checkRules(r, value_name, inputType));
   return ejs.render(ruleMap['GroupTemplate'], { statements, conjunctionType: rule.conjunctionType });
 }
 
@@ -1088,7 +1135,9 @@ function applyModifiers(values = [], modifiers = []) {
       modifiers.forEach((modifier, index) => {
         // Is a modifier built in the query builder
         if (modifier.where) {
-          newValue = checkRules(modifier.where, newValue, modifier.inputTypes, index === 0);
+          // A query builder modifier will always have exactly one input type
+          const inputType = modifier.inputTypes[0];
+          newValue = checkRules(modifier.where, newValue, inputType, modifier.returnType, index === 0);
         } else {
           if (fhirTarget.version.startsWith('1.0.')) {
             if (modifier.id === 'ActiveMedicationRequest') modifier.cqlLibraryFunction = 'C3F.ActiveMedicationOrder';

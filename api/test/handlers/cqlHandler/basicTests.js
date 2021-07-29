@@ -12,7 +12,7 @@ const testExpandedContext = require('../../data/Library-Test-Expanded-Context');
 const baseArtifact = {
   name: 'a test',
   version: null,
-  dataModel: { name: 'FHIR', version: '1.0.2' },
+  dataModel: { name: 'FHIR', version: '4.0.0' },
   expTreeInclude: {},
   expTreeExclude: {},
   subpopulations: [],
@@ -859,7 +859,7 @@ describe('Modifier tests', () => {
         rules: [
           {
             ruleType: 'isNotNull',
-            resourceProperty: 'clinicalStatus'
+            resourceProperty: 'onsetDateTime'
           },
           {
             conjunctionType: 'or',
@@ -870,7 +870,7 @@ describe('Modifier tests', () => {
               },
               {
                 ruleType: 'isNull',
-                resourceProperty: 'category'
+                resourceProperty: 'clinicalStatus'
               }
             ]
           }
@@ -896,7 +896,7 @@ describe('Modifier tests', () => {
         rules: [
           {
             ruleType: 'isNotNull',
-            resourceProperty: 'clinicalStatus'
+            resourceProperty: 'onsetDateTime'
           },
           {
             conjunctionType: 'or',
@@ -907,7 +907,7 @@ describe('Modifier tests', () => {
               },
               {
                 ruleType: 'isNull',
-                resourceProperty: 'category'
+                resourceProperty: 'clinicalStatus'
               }
             ]
           }
@@ -922,12 +922,23 @@ describe('Modifier tests', () => {
     expect(converted).to.contain('Count(C3F.ActiveOrConfirmedAllergyIntolerance([AllergyIntolerance])) > 0');
   });
 
-  it('Handles standard modifiers', () => {
+  it('Handles query modifiers (R4/STU3)', () => {
     const artifact = buildCQL(rawQuery);
     const converted = artifact.toString();
     expect(converted).to.contain(
-      '[AllergyIntolerance] AI where (AI.clinicalStatus is not null ' +
-        'and (AI.verificationStatus is not null or AI.category is null))'
+      '[AllergyIntolerance] AI where (AI.onset as FHIR.dateTime is not null ' +
+        'and (AI.verificationStatus is not null or AI.clinicalStatus is null))'
+    );
+  });
+
+  it('Handles query modifiers (DSTU2)', () => {
+    const rawQueryDSTU2 = _.cloneDeep(rawQuery);
+    rawQueryDSTU2.dataModel.version = '1.0.2';
+    const artifact = buildCQL(rawQueryDSTU2);
+    const converted = artifact.toString();
+    expect(converted).to.contain(
+      '[AllergyIntolerance] AI where (AI.onsetDateTime is not null ' +
+        'and (AI.verificationStatus is not null or AI.clinicalStatus is null))'
     );
   });
 
@@ -936,7 +947,7 @@ describe('Modifier tests', () => {
     const converted = artifact.toString();
     expect(converted).to.contain(
       '(C3F.ActiveOrConfirmedAllergyIntolerance([AllergyIntolerance])) AI where ' +
-        '(AI.clinicalStatus is not null and (AI.verificationStatus is not null or AI.category is null))'
+        '(AI.onset as FHIR.dateTime is not null and (AI.verificationStatus is not null or AI.clinicalStatus is null))'
     );
   });
 });
