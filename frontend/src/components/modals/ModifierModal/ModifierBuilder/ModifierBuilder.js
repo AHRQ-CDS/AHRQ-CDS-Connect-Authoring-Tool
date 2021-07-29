@@ -10,8 +10,24 @@ import { fetchResource } from 'queries/modifier-builder';
 import { useSpacingStyles } from 'styles/hooks';
 import useStyles from '../styles';
 
-const ModifierBuilder = ({ elementInstanceReturnType, fhirVersion, handleGoBack }) => {
-  const [modifierTree, setModifierTree] = useState({ id: 'root', conjunctionType: 'and', rules: [] });
+const ModifierBuilder = ({
+  elementInstanceReturnType,
+  fhirVersion,
+  handleGoBack,
+  modifier,
+  setModifiersToAdd,
+  editDirect = false
+}) => {
+  const [modifierTree, setModifierTree] = useState(
+    modifier === undefined
+      ? {
+          inputTypes: [elementInstanceReturnType],
+          returnType: undefined,
+          type: 'UserDefinedModifier',
+          where: { id: 'root', conjunctionType: 'and', rules: [] }
+        }
+      : modifier
+  );
   const resourceQuery = useQuery(['resources', { fhirVersion, elementInstanceReturnType }], () =>
     fetchResource(fhirVersion, elementInstanceReturnType)
   );
@@ -19,12 +35,26 @@ const ModifierBuilder = ({ elementInstanceReturnType, fhirVersion, handleGoBack 
   const spacingStyles = useSpacingStyles();
   const styles = useStyles();
 
+  const getTreeReturnType = tree => {
+    // TODO: For now, all query-builder operators return a boolean. No need (yet) for recursion.
+    if (tree.rules.length !== 0) return 'boolean';
+    return undefined;
+  };
+
+  const updateModifierTree = tree => {
+    let updatedTree = { ...modifierTree, returnType: getTreeReturnType(tree), where: tree };
+    setModifierTree(updatedTree);
+    setModifiersToAdd([updatedTree]);
+  };
+
   return (
     <>
       <div className={styles.navHeader}>
-        <IconButton onClick={handleGoBack}>
-          <ArrowBackIosIcon fontSize="small" />
-        </IconButton>
+        {!editDirect && (
+          <IconButton onClick={handleGoBack}>
+            <ArrowBackIosIcon fontSize="small" />
+          </IconButton>
+        )}
 
         <div>
           <div className={styles.tag}>WHERE</div>
@@ -39,9 +69,9 @@ const ModifierBuilder = ({ elementInstanceReturnType, fhirVersion, handleGoBack 
 
       {resourceQuery.isSuccess && (
         <ConjunctionCard
-          rule={modifierTree}
+          rule={modifierTree.where}
           depth={0}
-          handleUpdate={setModifierTree}
+          handleUpdate={updateModifierTree}
           resourceOptions={resourceOptions}
         />
       )}
@@ -52,7 +82,9 @@ const ModifierBuilder = ({ elementInstanceReturnType, fhirVersion, handleGoBack 
 ModifierBuilder.propTypes = {
   elementInstanceReturnType: PropTypes.string.isRequired,
   fhirVersion: PropTypes.string.isRequired,
-  handleGoBack: PropTypes.func.isRequired
+  handleGoBack: PropTypes.func.isRequired,
+  modifiersToAdd: PropTypes.array.isRequired,
+  setModifiersToAdd: PropTypes.func.isRequired
 };
 
 export default ModifierBuilder;

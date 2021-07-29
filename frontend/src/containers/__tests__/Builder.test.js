@@ -25,6 +25,8 @@ mockModifiers.forEach(modifier => {
   });
 });
 
+jest.setTimeout(20000);
+
 const defaultState = {
   ...reduxState,
   artifacts: {
@@ -173,7 +175,7 @@ describe('<Builder />', () => {
       it('should render as a modifier option within a button and dispatch UPDATE_ARTIFACT when added', async () => {
         renderComponent({ store });
 
-        userEvent.click((await screen.findAllByRole('button', { name: /Add Modifiers/i }, { timeout: 2000 }))[0]);
+        userEvent.click((await screen.findAllByRole('button', { name: /Add Modifiers/i }, { timeout: 10000 }))[0]);
         const modal = within(await screen.findByRole('dialog'));
         userEvent.click(modal.getAllByRole('button', { name: 'Select Modifiers' })[0]);
         userEvent.click(modal.getByLabelText('Select modifier...'));
@@ -197,7 +199,7 @@ describe('<Builder />', () => {
       it('should render as a modifier option within a button and dispatch UPDATE_ARTIFACT when added', async () => {
         renderComponent({ store });
 
-        userEvent.click((await screen.findAllByRole('button', { name: /Add Modifiers/i }, { timeout: 2000 }))[0]);
+        userEvent.click((await screen.findAllByRole('button', { name: /Add Modifiers/i }, { timeout: 10000 }))[0]);
         const modal = within(await screen.findByRole('dialog'));
         userEvent.click(modal.getAllByRole('button', { name: 'Select Modifiers' })[0]);
         userEvent.click(modal.getByLabelText('Select modifier...'));
@@ -223,7 +225,7 @@ describe('<Builder />', () => {
       it('should render as a modifier option within a button and dispatch UPDATE_ARTIFACT when added', async () => {
         renderComponent({ store });
 
-        userEvent.click((await screen.findAllByRole('button', { name: /Add Modifiers/i }, { timeout: 2000 }))[0]);
+        userEvent.click((await screen.findAllByRole('button', { name: /Add Modifiers/i }, { timeout: 10000 }))[0]);
         const modal = within(await screen.findByRole('dialog'));
         userEvent.click(modal.getAllByRole('button', { name: 'Select Modifiers' })[0]);
         userEvent.click(modal.getByLabelText('Select modifier...'));
@@ -247,7 +249,7 @@ describe('<Builder />', () => {
       it('should render as a modifier option within a button and dispatch UPDATE_ARTIFACT when added', async () => {
         renderComponent({ store });
 
-        userEvent.click((await screen.findAllByRole('button', { name: /Add Modifiers/i }, { timeout: 2000 }))[0]);
+        userEvent.click((await screen.findAllByRole('button', { name: /Add Modifiers/i }, { timeout: 10000 }))[0]);
         const modal = within(await screen.findByRole('dialog'));
         userEvent.click(modal.getAllByRole('button', { name: 'Select Modifiers' })[0]);
         userEvent.click(modal.getByLabelText('Select modifier...'));
@@ -271,7 +273,7 @@ describe('<Builder />', () => {
       it('should render as a modifier option within a button and dispatch UPDATE_ARTIFACT when added', async () => {
         renderComponent({ store });
 
-        userEvent.click((await screen.findAllByRole('button', { name: /Add Modifiers/i }, { timeout: 2000 }))[0]);
+        userEvent.click((await screen.findAllByRole('button', { name: /Add Modifiers/i }, { timeout: 10000 }))[0]);
         const modal = within(await screen.findByRole('dialog'));
         userEvent.click(modal.getAllByRole('button', { name: 'Select Modifiers' })[0]);
         userEvent.click(modal.getByLabelText('Select modifier...'));

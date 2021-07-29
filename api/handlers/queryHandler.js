@@ -18,7 +18,7 @@ function operatorQuery(req, res) {
 
   if (typeSpecifier && elementType) {
     acceptableTypes.push(elementType);
-    if (elementType.includes('System')) acceptableTypes.push('System.Any');
+    acceptableTypes.push('System.Any');
     let filterArray = operatorArray.filter(obj => {
       return (
         obj.primaryOperand.typeSpecifier === typeSpecifier &&

@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import { Button } from '@material-ui/core';
+import { Button, Tooltip } from '@material-ui/core';
 import { updateArtifact } from 'actions/artifacts';
 import { useSelector, useDispatch } from 'react-redux';
+import _ from 'lodash';
 
 import ModifierModalHeader from './ModifierModalHeader';
 import ModifierSelector from './ModifierSelector';
@@ -11,16 +12,25 @@ import FhirVersionSelect from './FhirVersionSelect';
 import { Modal } from 'components/elements';
 import useStyles from './styles';
 
+// Note: The flag editDirect when set will allow you to edit a single modifier directly.
+// It is used without this flag in TemplateInstance.js -- it shows the entire modal.
+// It is used with  this flag in UserDefinedModifier.js -- it shows only the builder/editor AND
+// handleUpdateModifiers is called with the new modifier only.
+
 const ModifierModal = ({
   elementInstance,
   elementInstanceReturnType,
   handleCloseModal,
   handleUpdateModifiers,
-  hasLimitedModifiers
+  hasLimitedModifiers,
+  editDirect = false,
+  modifier = undefined
 }) => {
   const artifact = useSelector(state => state.artifacts.artifact);
-  const [displayMode, setDisplayMode] = useState(null);
-  const [modifiersToAdd, setModifiersToAdd] = useState([]);
+  const [displayMode, setDisplayMode] = useState(
+    editDirect === true && modifier !== undefined ? 'buildModifier' : undefined
+  );
+  const [modifiersToAdd, setModifiersToAdd] = useState(editDirect === true && modifier !== undefined ? [modifier] : []);
   const [fhirVersion, setFhirVersion] = useState(artifact.fhirVersion);
   const dispatch = useDispatch();
   const styles = useStyles();
@@ -30,8 +40,13 @@ const ModifierModal = ({
   if (displayMode === 'buildModifier') modalTitle = 'Build Modifier';
 
   const handleUpdateInstance = async () => {
-    if (fhirVersion !== artifact.fhirVersion) await dispatch(updateArtifact(artifact, { fhirVersion: fhirVersion }));
-    handleUpdateModifiers(elementInstance.modifiers.concat(modifiersToAdd));
+    if (editDirect) {
+      let modifierToUpdate = _.last(modifiersToAdd);
+      handleUpdateModifiers(modifierToUpdate);
+    } else {
+      if (fhirVersion !== artifact.fhirVersion) await dispatch(updateArtifact(artifact, { fhirVersion: fhirVersion }));
+      handleUpdateModifiers(elementInstance.modifiers.concat(modifiersToAdd));
+    }
     handleCloseModal();
   };
 
@@ -79,14 +94,31 @@ const ModifierModal = ({
 
             <span>or</span>
 
-            <Button
-              className={styles.displayModeButton}
-              color="primary"
-              onClick={() => setDisplayMode(fhirVersion === '' ? 'selectFhirVersion' : 'buildModifier')}
-              variant="contained"
-            >
-              Build New Modifier
-            </Button>
+            {(() => {
+              const wrapInTooltip = (jsxElement, toolTipText) => (
+                <Tooltip arrow title={toolTipText}>
+                  {jsxElement}
+                </Tooltip>
+              );
+
+              let buildButton = (
+                <div>
+                  <Button
+                    className={styles.displayModeButton}
+                    color="primary"
+                    disabled={elementInstance.modifiers.length !== 0}
+                    onClick={() => setDisplayMode(fhirVersion === '' ? 'selectFhirVersion' : 'buildModifier')}
+                    variant="contained"
+                  >
+                    Build New Modifier
+                  </Button>
+                </div>
+              );
+
+              return elementInstance.modifiers.length !== 0
+                ? wrapInTooltip(buildButton, 'Cannot add a custom modifier to another modifier.')
+                : buildButton;
+            })()}
           </div>
         )}
 
@@ -104,9 +136,13 @@ const ModifierModal = ({
 
         {displayMode === 'buildModifier' && (
           <ModifierBuilder
+            editDirect={editDirect}
             elementInstanceReturnType={elementInstanceReturnType}
             fhirVersion={fhirVersion}
             handleGoBack={handleReset}
+            modifiersToAdd={modifiersToAdd}
+            modifier={modifier}
+            setModifiersToAdd={setModifiersToAdd}
           />
         )}
       </div>

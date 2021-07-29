@@ -10,5 +10,6 @@ export { default as QualifierModifier } from './QualifierModifier';
 export { default as QuantityModifier } from './QuantityModifier';
 export { default as SelectModifier } from './SelectModifier';
 export { default as StringModifier } from './StringModifier';
+export { default as UserDefinedModifier } from './UserDefinedModifier';
 export { default as ValueComparisonModifier } from './ValueComparisonModifier';
 export { default as WithUnitModifier } from './WithUnitModifier';

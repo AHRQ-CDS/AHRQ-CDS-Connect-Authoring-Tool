@@ -3,7 +3,13 @@ import { makeStyles } from '@material-ui/core/styles';
 export default makeStyles(
   theme => ({
     clearRuleButton: {
+      alignSelf: 'center',
       marginLeft: '10px'
+    },
+    compactTextButton: {
+      margin: '0',
+      padding: '0',
+      background: 'transparent'
     },
     deleteButton: {
       position: 'absolute',
@@ -66,13 +72,21 @@ export default makeStyles(
       minHeight: '200px',
       minWidth: '1000px'
     },
+    multipleSelect: {
+      display: 'flex',
+      flexDirection: 'column',
+      alignItems: 'center'
+    },
     navHeader: {
       alignItems: 'center',
       display: 'flex',
       marginBottom: '1em'
     },
+    noMarginBottom: {
+      marginBottom: '0'
+    },
     rule: {
-      alignItems: 'center',
+      alignItems: 'flex-start',
       display: 'flex',
       flexWrap: 'wrap',
       width: '100%'

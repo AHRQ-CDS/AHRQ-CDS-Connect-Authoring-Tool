@@ -47,8 +47,11 @@
       "userSelectedOperands": [
         {
           "id": "booleanValue",
-          "type": "Selector",
-          "selectionValues": ["True", "False"]
+          "type": "editor",
+          "typeSpecifier": {
+            "type": "NamedTypeSpecifier",
+            "editorType": "System.Boolean"
+          }
         }
       ]
     },
@@ -80,17 +83,14 @@
       "primaryOperand": {
         "typeSpecifier": "ListTypeSpecifier",
         "elementTypes": ["System.Any"]
-      }
-    },
-    {
-      "id": "listIsNotEmpty",
-      "name": "Is Not Empty",
-      "description": "Check to see if a list is not empty",
-      "operatorTemplate": "",
-      "primaryOperand": {
-        "typeSpecifier": "ListTypeSpecifier",
-        "elementTypes": ["System.Any"]
-      }
+      },
+      "userSelectedOperands": [
+        {
+          "id": "notSelectorValue",
+          "type": "selector",
+          "selectionValues": ["Is Not Empty", "Is Empty"]
+        }
+      ]
     },
     {
       "id": "listLengthComparison",
@@ -104,7 +104,7 @@
       "userSelectedOperands": [
         {
           "id": "comparisonOperator",
-          "type": "Selector",
+          "type": "selector",
           "selectionValues": ["<", ">", "<=", ">=", "="]
         },
         {
@@ -394,7 +394,7 @@
       "userSelectedOperands": [
         {
           "id": "codeValue",
-          "type": "Selector",
+          "type": "selector",
           "selectionRequiresPredefinedCodes": true
         }
       ]
@@ -412,7 +412,7 @@
       "userSelectedOperands": [
         {
           "id": "codeValue",
-          "type": "Selector",
+          "type": "selector",
           "selectionRequiresPredefinedCodes": true
         }
       ]
@@ -427,6 +427,14 @@
         "elementTypes": ["FHIR.instant", "System.DateTime", "System.Date", "System.Time"]
       },
       "userSelectedOperands": [
+        {
+          "id": "durationValue",
+          "type": "editor",
+          "typeSpecifier": {
+            "type": "NamedTypeSpecifier",
+            "editorType": "System.Decimal"
+          }
+        },
         {
           "id": "timeUnit",
           "type": "selector",
@@ -541,7 +549,7 @@
     },
     {
       "id": "dateTimeIntervalComparison",
-      "name": "(Starts | Ends) comparsion",
+      "name": "(Start | End) Occurred On or After",
       "description": "Check if the operand time type occurred on or after the user specified time",
       "operatorTemplate": "",
       "primaryOperand": {
@@ -566,7 +574,7 @@
     },
     {
       "id": "dateTimeIntervalOverlaps",
-      "name": "Overlaps",
+      "name": "Overlaps With",
       "description": "Check if the operand Interval overlaps another",
       "operatorTemplate": "",
       "primaryOperand": {
@@ -664,12 +672,12 @@
       "userSelectedOperands": [
         {
           "id": "intervalComponent",
-          "type": "Selector",
+          "type": "selector",
           "selectionValues": ["low", "high"]
         },
         {
           "id": "comparisonOperator",
-          "type": "Selector",
+          "type": "selector",
           "selectionValues": ["<", ">", "<=", ">=", "="]
         },
         {
@@ -807,12 +815,12 @@
       "userSelectedOperands": [
         {
           "id": "intervalComponent",
-          "type": "Selector",
+          "type": "selector",
           "selectionValues": ["low", "high"]
         },
         {
           "id": "comparisonOperator",
-          "type": "Selector",
+          "type": "selector",
           "selectionValues": ["<", ">", "<=", ">=", "="]
         },
         {

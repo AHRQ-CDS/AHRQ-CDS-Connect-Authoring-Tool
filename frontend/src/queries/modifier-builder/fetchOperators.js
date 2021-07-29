@@ -1,35 +1,33 @@
-import { operators as mockOperators } from 'data/modifier-builder';
+import axios from 'axios';
+import _ from 'lodash';
 
-const { implicitConversionInfo, operators } = mockOperators;
-
-// TODO: hook up to API
-const fetchOperators = async ({ type: typeSpecifier, elementType }) => {
+const fetchOperators = async (implicitConversionInfo, { type: typeSpecifier, elementType }) => {
   const systemElementType = implicitConversionInfo.FHIRToSystem[elementType];
 
-  let systemElementMatcher = () => false;
-  if (systemElementType?.startsWith('Interval<')) {
-    const targetElementType = /Interval<(.+)>/.exec(systemElementType)[1];
-    systemElementMatcher = operator =>
-      operator.primaryOperand.typeSpecifier === 'IntervalTypeSpecifier' &&
-      operator.primaryOperand.elementTypes.includes(targetElementType);
-  } else if (systemElementType?.startsWith('List<')) {
-    const targetElementType = /List<(.+)>/.exec(systemElementType)[1];
-    systemElementMatcher = operator =>
-      operator.primaryOperand.typeSpecifier === 'ListTypeSpecifier' &&
-      operator.primaryOperand.elementTypes.includes(targetElementType);
-  } else if (systemElementType) {
-    systemElementMatcher = operator =>
-      operator.primaryOperand.typeSpecifier === 'NamedTypeSpecifier' &&
-      operator.primaryOperand.elementTypes.includes(systemElementType);
+  let baseTypeOperators,
+    conversionTypeOperators = [];
+  if (systemElementType) {
+    let convertedTargetType, convertedTargetElementType;
+    if (systemElementType?.startsWith('Interval<')) {
+      convertedTargetElementType = /Interval<(.+)>/.exec(systemElementType)[1];
+      convertedTargetType = 'IntervalTypeSpecifier';
+    } else if (systemElementType?.startsWith('List<')) {
+      convertedTargetElementType = /List<(.+)>/.exec(systemElementType)[1];
+      convertedTargetType = 'ListTypeSpecifier';
+    } else if (systemElementType) {
+      convertedTargetElementType = systemElementType;
+      convertedTargetType = 'NamedTypeSpecifier';
+    }
+    conversionTypeOperators = await axios.get(
+      `${process.env.REACT_APP_API_URL}/query/operator?typeSpecifier=${convertedTargetType}&elementType=${convertedTargetElementType}`
+    );
   }
-
-  const matchingOperators = operators.filter(
-    operator =>
-      systemElementMatcher(operator) ||
-      (operator.primaryOperand.typeSpecifier === typeSpecifier &&
-        operator.primaryOperand.elementTypes.some(type => type === elementType || type === 'System.Any'))
+  baseTypeOperators = await axios.get(
+    `${process.env.REACT_APP_API_URL}/query/operator?typeSpecifier=${typeSpecifier}&elementType=${elementType}`
   );
-
+  const matchingOperators = conversionTypeOperators.data
+    ? _.uniqBy([...conversionTypeOperators.data, ...baseTypeOperators.data], operator => operator.id)
+    : baseTypeOperators.data;
   if (matchingOperators.length === 0) throw new Error('Error: No operators Found.');
   return matchingOperators;
 };

@@ -9,6 +9,8 @@ import { mockPatientDstu2, mockPatientStu3, mockPatientR4 } from 'mocks/patients
 import { mockElmFilesDstu2, mockElmFilesStu3, mockElmFilesR4 } from 'mocks/elm-files';
 import Tester, { validate404ErrorMessage } from '../Tester';
 
+jest.setTimeout(10000);
+
 describe('<Tester />', () => {
   const renderComponent = () =>
     render(
@@ -40,7 +42,6 @@ describe('<Tester />', () => {
     };
 
     it('displays CQL validation errors', async () => {
-      jest.setTimeout(10000);
       scope = scope
         .post('/authoring/api/cql/validate', { ...mockArtifact, dataModel: { name: 'FHIR', version: '3.0.0' } })
         .reply(200, {

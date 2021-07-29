@@ -2,6 +2,10 @@ import { makeStyles } from '@material-ui/core/styles';
 
 export default makeStyles(
   theme => ({
+    customModifier: {
+      display: 'flex',
+      justifyContent: 'space-between'
+    },
     dateTimeInput: {
       '& .MuiIconButton-root': {
         padding: '20px 5px'

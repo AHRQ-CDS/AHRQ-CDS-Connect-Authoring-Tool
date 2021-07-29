@@ -1,11 +1,18 @@
 import changeToCase from 'utils/strings';
 import _ from 'lodash';
 
-const propertyToDropdownOption = (property, { options } = {}) => ({
-  label: changeToCase(property.name, 'capitalCase'),
-  value: property.name,
-  typeSpecifier: property.typeSpecifier
-});
+const propertyToDropdownOption = (property, { options } = {}) => {
+  let dropdownOption = {
+    label: changeToCase(property.name, 'capitalCase'),
+    value: property.name,
+    typeSpecifier: property.typeSpecifier
+  };
+
+  if (property.predefinedCodes) dropdownOption['predefinedCodes'] = property.predefinedCodes;
+
+  if (property.allowsCustomCodes) dropdownOption['allowsCustomCodes'] = true;
+  return dropdownOption;
+};
 
 const observationComponentToDropdownOption = property => ({
   label: changeToCase(property.name, 'capitalCase'),

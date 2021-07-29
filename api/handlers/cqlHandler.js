@@ -1074,7 +1074,8 @@ function checkRules(rule, value_name, inputTypes = [], isFirstModifier = false) 
   }
 
   // Conjunction within tree
-  const statements = rule.rules.map(r => checkRules(r, value_name));
+  let statements = [];
+  if (rule.rules) statements = rule.rules.map(r => checkRules(r, value_name));
   return ejs.render(ruleMap['GroupTemplate'], { statements, conjunctionType: rule.conjunctionType });
 }
 

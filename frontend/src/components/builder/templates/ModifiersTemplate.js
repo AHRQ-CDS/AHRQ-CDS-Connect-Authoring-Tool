@@ -43,8 +43,9 @@ const ModifierTemplate = ({
     <div className={fieldStyles.fieldDetails}>
       <div className={fieldStyles.fieldGroup}>
         <ModifierForm
+          elementInstance={elementInstance}
           handleSelectValueSet={handleSelectValueSet}
-          handleUpdateModifier={handleUpdateModifier}
+          handleUpdateModifier={modifier => handleUpdateModifier(index, modifier)}
           index={index}
           modifier={modifier}
         />
@@ -95,7 +96,7 @@ const ModifiersTemplate = ({
             elementInstance={elementInstance}
             handleRemoveModifier={handleRemoveModifier}
             handleSelectValueSet={handleSelectValueSet}
-            handleUpdateModifier={value => handleUpdateModifier(index, value)}
+            handleUpdateModifier={handleUpdateModifier}
             index={index}
             isLastModifier={index + 1 === modifiers.length}
             modifier={modifier}

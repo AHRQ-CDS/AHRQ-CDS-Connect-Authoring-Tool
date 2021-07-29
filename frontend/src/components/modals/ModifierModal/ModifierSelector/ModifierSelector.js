@@ -60,7 +60,7 @@ const ModifierSelector = ({
 
   const handleUpdateModifier = (index, values) => {
     const newModifiersToAdd = _.cloneDeep(modifiersToAdd);
-    newModifiersToAdd[index].values = { ...newModifiersToAdd[index].values, ...values };
+    newModifiersToAdd[index].values = { ...newModifiersToAdd[index].values, ...values.values };
     setModifiersToAdd(newModifiersToAdd);
   };
 

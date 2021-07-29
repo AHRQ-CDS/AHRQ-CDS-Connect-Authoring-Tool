@@ -235,7 +235,7 @@ export default class TemplateInstance extends Component {
 
   handleUpdateModifier = (index, values) => {
     const modifiers = this.props.templateInstance.modifiers;
-    _.assign(modifiers[index].values, values);
+    _.assign(modifiers[index], values);
     this.setAppliedModifiers(modifiers);
   };
 

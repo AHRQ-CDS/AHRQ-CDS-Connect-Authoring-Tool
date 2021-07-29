@@ -258,6 +258,8 @@ function getExpressionSentenceValue(modifier) {
       type: 'post',
       id: modifier.id
     };
+  } else if (modifier.type === 'UserDefinedModifier') {
+    return { type: 'userDefinedModifier' };
   }
   // If the modifier is not listed in the object and it's not from external CQL,
   // return just the name of the modifier to be placed at the end.
@@ -461,10 +463,12 @@ function orderExpressionSentenceArray(
   const descriptorExpression = expressionArray.find(expression => expression.type === 'descriptor');
   const listExpressions = expressionArray.filter(expression => expression.type === 'list');
   const postListExpressions = expressionArray.find(expression => expression.type === 'post-list');
+  const userDefinedExpression = expressionArray.find(expression => expression.type === 'userDefinedModifier');
   const checkExistenceExpression = expressionArray.find(expression => {
     const nulls = ['is null', 'is not null'];
     return nulls.indexOf(expression.modifierText) !== -1;
   });
+
   let otherExpressions = expressionArray.filter(expression => {
     const knownTypes = ['not', 'BooleanExists', 'descriptor', 'list', 'post-list', 'value', 'Count'];
     return knownTypes.indexOf(expression.type) === -1;
@@ -628,6 +632,11 @@ function orderExpressionSentenceArray(
     orderedExpressionArray = addExpressionText(orderedExpressionArray, expression, type);
   });
 
+  // Handle expressions for custom modifiers
+  if (userDefinedExpression) {
+    orderedExpressionArray = orderedExpressionArray.slice(0, -1);
+    orderedExpressionArray.push({ expressionText: 'with additional custom modifier(s)' });
+  }
   return orderedExpressionArray;
 }
 

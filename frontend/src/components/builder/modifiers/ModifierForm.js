@@ -13,16 +13,20 @@ import {
   QuantityModifier,
   SelectModifier,
   StringModifier,
+  UserDefinedModifier,
   ValueComparisonModifier,
   WithUnitModifier
 } from 'components/builder/modifiers';
 
-const ModifierForm = ({ handleSelectValueSet, handleUpdateModifier, modifier }) => {
+const ModifierForm = ({ elementInstance, index, handleSelectValueSet, handleUpdateModifier, modifier }) => {
+  const handleUpdateModifierValues = values => {
+    handleUpdateModifier({ values });
+  };
   switch (modifier.type || modifier.id) {
     case 'ValueComparisonNumber':
       return (
         <ValueComparisonModifier
-          handleUpdateModifier={handleUpdateModifier}
+          handleUpdateModifier={handleUpdateModifierValues}
           values={{
             maxOperator: modifier.values?.maxOperator || '',
             maxValue: modifier.values?.maxValue ?? '',
@@ -34,7 +38,7 @@ const ModifierForm = ({ handleSelectValueSet, handleUpdateModifier, modifier }) 
     case 'ValueComparisonObservation':
       return (
         <ValueComparisonModifier
-          handleUpdateModifier={handleUpdateModifier}
+          handleUpdateModifier={handleUpdateModifierValues}
           values={{
             maxOperator: modifier.values?.maxOperator || '',
             maxValue: modifier.values?.maxValue ?? '',
@@ -47,21 +51,25 @@ const ModifierForm = ({ handleSelectValueSet, handleUpdateModifier, modifier }) 
     case 'LookBack':
       return (
         <LookBackModifier
-          handleUpdateModifier={handleUpdateModifier}
+          handleUpdateModifier={handleUpdateModifierValues}
           unit={modifier.values?.unit}
           value={modifier.values?.value}
         />
       );
     case 'WithUnit':
-      return <WithUnitModifier handleUpdateModifier={handleUpdateModifier} unit={modifier.values?.unit} />;
+      return <WithUnitModifier handleUpdateModifier={handleUpdateModifierValues} unit={modifier.values?.unit} />;
     case 'BooleanComparison':
-      return <BooleanComparisonModifier handleUpdateModifier={handleUpdateModifier} value={modifier.values?.value} />;
+      return (
+        <BooleanComparisonModifier handleUpdateModifier={handleUpdateModifierValues} value={modifier.values?.value} />
+      );
     case 'CheckExistence':
-      return <CheckExistenceModifier handleUpdateModifier={handleUpdateModifier} value={modifier.values?.value} />;
+      return (
+        <CheckExistenceModifier handleUpdateModifier={handleUpdateModifierValues} value={modifier.values?.value} />
+      );
     case 'ConvertObservation':
       return (
         <SelectModifier
-          handleUpdateModifier={handleUpdateModifier}
+          handleUpdateModifier={handleUpdateModifierValues}
           name={modifier.name}
           value={modifier.values?.value}
         />
@@ -71,7 +79,7 @@ const ModifierForm = ({ handleSelectValueSet, handleUpdateModifier, modifier }) 
         <QualifierModifier
           code={modifier.values?.code}
           handleSelectValueSet={handleSelectValueSet}
-          handleUpdateModifier={handleUpdateModifier}
+          handleUpdateModifier={handleUpdateModifierValues}
           qualifier={modifier.values?.qualifier}
           valueSet={modifier.values?.valueSet}
         />
@@ -80,7 +88,7 @@ const ModifierForm = ({ handleSelectValueSet, handleUpdateModifier, modifier }) 
     case 'AfterDateTimePrecise':
       return (
         <DateTimeModifier
-          handleUpdateModifier={handleUpdateModifier}
+          handleUpdateModifier={handleUpdateModifierValues}
           name={modifier.name}
           values={{
             date: modifier.values?.date || '',
@@ -93,7 +101,7 @@ const ModifierForm = ({ handleSelectValueSet, handleUpdateModifier, modifier }) 
     case 'AfterTimePrecise':
       return (
         <DateTimeModifier
-          handleUpdateModifier={handleUpdateModifier}
+          handleUpdateModifier={handleUpdateModifierValues}
           name={modifier.name}
           values={{
             time: modifier.values?.time || '',
@@ -106,7 +114,7 @@ const ModifierForm = ({ handleSelectValueSet, handleUpdateModifier, modifier }) 
     case 'AfterQuantity':
       return (
         <QuantityModifier
-          handleUpdateModifier={handleUpdateModifier}
+          handleUpdateModifier={handleUpdateModifierValues}
           name={modifier.name}
           unit={modifier.values?.unit}
           value={modifier.values?.value}
@@ -120,7 +128,7 @@ const ModifierForm = ({ handleSelectValueSet, handleUpdateModifier, modifier }) 
     case 'AfterDecimal':
       return (
         <NumberModifier
-          handleUpdateModifier={handleUpdateModifier}
+          handleUpdateModifier={handleUpdateModifierValues}
           name={modifier.name}
           value={modifier.values?.value}
         />
@@ -130,7 +138,7 @@ const ModifierForm = ({ handleSelectValueSet, handleUpdateModifier, modifier }) 
     case 'AfterDateTime':
       return (
         <DateTimeModifier
-          handleUpdateModifier={handleUpdateModifier}
+          handleUpdateModifier={handleUpdateModifierValues}
           name={modifier.name}
           values={{ date: modifier.values?.date || '', time: modifier.values?.time || '' }}
         />
@@ -140,7 +148,7 @@ const ModifierForm = ({ handleSelectValueSet, handleUpdateModifier, modifier }) 
     case 'StartsWithString':
       return (
         <StringModifier
-          handleUpdateModifier={handleUpdateModifier}
+          handleUpdateModifier={handleUpdateModifierValues}
           name={modifier.name}
           value={modifier.values?.value}
         />
@@ -149,10 +157,21 @@ const ModifierForm = ({ handleSelectValueSet, handleUpdateModifier, modifier }) 
       return (
         <ExternalModifier
           argumentTypes={modifier.argumentTypes}
-          handleUpdateModifier={handleUpdateModifier}
+          handleUpdateModifier={handleUpdateModifierValues}
           modifierArguments={modifier.arguments}
           name={modifier.name}
           values={modifier.values?.value}
+        />
+      );
+
+    case 'UserDefinedModifier':
+      return (
+        <UserDefinedModifier
+          elementInstance={elementInstance}
+          index={index}
+          handleUpdateModifier={handleUpdateModifier}
+          label="Custom Expression"
+          modifier={modifier}
         />
       );
     default:
@@ -161,6 +180,8 @@ const ModifierForm = ({ handleSelectValueSet, handleUpdateModifier, modifier }) 
 };
 
 ModifierForm.propTypes = {
+  elementInstance: PropTypes.object.isRequired,
+  index: PropTypes.number.isRequired,
   handleSelectValueSet: PropTypes.func.isRequired,
   handleUpdateModifier: PropTypes.func.isRequired,
   modifier: PropTypes.object.isRequired

@@ -13,7 +13,7 @@ const ValuesetEditor = ({ nameValue, oidValue, onChange, label }) => {
   const vsacApiKey = useSelector(state => state.vsac.apiKey);
 
   return (
-    <>
+    <div style={{ marginTop: '10px' }}>
       {showVSACAuthModal && <VSACAuthenticationModal handleCloseModal={() => setShowVSACAuthModal(false)} />}
       {showValueSetSelectModal && (
         <ValueSetSelectModal
@@ -47,7 +47,7 @@ const ValuesetEditor = ({ nameValue, oidValue, onChange, label }) => {
           </IconButton>
         </div>
       )}
-    </>
+    </div>
   );
 };
 

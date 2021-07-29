@@ -1,10 +1,5 @@
-import { dstu2_resources, stu3_resources, r4_resources } from 'data/modifier-builder';
-
-const resourcesDataMap = {
-  '1.0.2': dstu2_resources,
-  '3.0.0': stu3_resources,
-  '4.0.0': r4_resources
-};
+import axios from 'axios';
+import _ from 'lodash';
 
 const resourceMap = {
   list_of_observations: 'Observation',
@@ -20,21 +15,25 @@ const resourceMap = {
   list_of_medication_orders: 'MedicationOrder'
 };
 
-// TODO: hook up to API
 const fetchResource = async (fhirVersion, elementInstanceReturnType) => {
   const resourceName = resourceMap[elementInstanceReturnType];
-  if (resourceName == null) return null;
+  const resourceResponse = await axios.get(
+    `${process.env.REACT_APP_API_URL}/query/resources/${resourceName}?fhirVersion=${fhirVersion}`
+  );
+  let data = resourceResponse.data;
+  let resource = _.first(data);
 
-  let resource = resourcesDataMap[fhirVersion].resources.find(resource => resource.name === resourceName);
   if (resourceName === 'Observation') {
-    const observationComponentResource = resourcesDataMap[fhirVersion].resources.find(
-      resource => resource.name === 'Observation.component'
+    const componentResponse = await axios.get(
+      `${process.env.REACT_APP_API_URL}/query/resources/Observation.component?fhirVersion=${fhirVersion}`
     );
-    resource = { ...resource, component: observationComponentResource };
+
+    resource = { ...resource, component: _.first(componentResponse.data) };
   }
 
-  if (!resource) return new Error('Error fetching resource');
-  return resource;
+  if (data) {
+    return resource;
+  } else return new Error(`Error fetching resource for ${elementInstanceReturnType}`);
 };
 
 export default fetchResource;

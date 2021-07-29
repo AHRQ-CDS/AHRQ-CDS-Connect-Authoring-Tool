@@ -8,17 +8,18 @@ import clsx from 'clsx';
 import { Dropdown } from 'components/elements';
 import { fetchOperators } from 'queries/modifier-builder';
 import { useFieldStyles } from 'styles/hooks';
-import { CodeConceptNotInValueset, IsTrueFalse } from './operators';
+import { useSelector } from 'react-redux';
 import useStyles from '../styles';
 
 const RuleCard = ({ handleRemoveRule, handleUpdate, resourceOptions, rule }) => {
   const fieldStyles = useFieldStyles();
   const styles = useStyles();
-  const { resourceProperty, operator } = rule;
+  const { resourceProperty, ruleType } = rule;
   const ruleOption = resourceProperty ? resourceOptions.find(option => option.value === resourceProperty) : null;
+  const typeConversionInfo = useSelector(state => state.modifiers.typeConversionData);
   const operatorsQuery = useQuery(
     ['operators', ruleOption?.typeSpecifier],
-    () => fetchOperators(ruleOption.typeSpecifier),
+    () => fetchOperators(typeConversionInfo, ruleOption.typeSpecifier),
     {
       enabled: Boolean(ruleOption)
     }
@@ -48,24 +49,22 @@ const RuleCard = ({ handleRemoveRule, handleUpdate, resourceOptions, rule }) => 
             className={clsx(fieldStyles.fieldInput, fieldStyles.fieldInputLg)}
             label="Operator"
             labelKey="name"
-            onChange={event => handleUpdate({ ...rule, operator: event.target.value })}
+            onChange={event => handleUpdate({ ...rule, ruleType: event.target.value })}
             options={operatorsQuery.data}
-            value={operator}
+            value={ruleType}
             valueKey="id"
           />
         )}
 
         {(() => {
-          switch (operator) {
-            case 'isTrueFalse':
-              return <IsTrueFalse rule={rule} updateRule={handleUpdate} />;
-
-            case 'codeConceptNotInValueSet':
-              return <CodeConceptNotInValueset rule={rule} updateRule={handleUpdate} />;
-
-            default:
-              return null;
-          }
+          if (operatorsQuery.data) {
+            let operatorData = operatorsQuery.data.find(op => op.id === ruleType);
+            if (!operatorData) return null;
+            switch (ruleType) {
+              default:
+                return null;
+            }
+          } else return null;
         })()}
 
         <IconButton className={styles.clearRuleButton} onClick={handleRemoveRule}>
