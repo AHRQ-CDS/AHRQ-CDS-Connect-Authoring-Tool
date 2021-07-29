@@ -96,7 +96,7 @@ const ModifiersTemplate = ({
             elementInstance={elementInstance}
             handleRemoveModifier={handleRemoveModifier}
             handleSelectValueSet={handleSelectValueSet}
-            handleUpdateModifier={value => handleUpdateModifier(index, value)}
+            handleUpdateModifier={handleUpdateModifier}
             index={index}
             isLastModifier={index + 1 === modifiers.length}
             modifier={modifier}
