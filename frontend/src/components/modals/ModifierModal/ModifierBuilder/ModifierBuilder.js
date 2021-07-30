@@ -36,8 +36,7 @@ const ModifierBuilder = ({
   const styles = useStyles();
 
   const getTreeReturnType = tree => {
-    // TODO: For now, all query-builder operators return a boolean. No need (yet) for recursion.
-    if (tree.rules.length !== 0) return 'boolean';
+    if (tree.rules.length !== 0) return elementInstanceReturnType;
     return undefined;
   };
 

@@ -41,7 +41,7 @@ const RuleCard = ({ handleRemoveRule, handleUpdate, resourceOptions, rule }) => 
         <Dropdown
           className={clsx(fieldStyles.fieldInput, fieldStyles.fieldInputLg)}
           label="Property"
-          onChange={event => handleUpdate({ id: rule.id, resourceProperty: event.target.value, operator: '' })}
+          onChange={event => handleUpdate({ id: rule.id, resourceProperty: event.target.value })}
           options={resourceOptions}
           value={resourceProperty}
           SelectProps={{ renderValue: renderPropertySelectValue }}
@@ -63,7 +63,6 @@ const RuleCard = ({ handleRemoveRule, handleUpdate, resourceOptions, rule }) => 
           if (operatorsQuery.data) {
             let operatorData = operatorsQuery.data.find(op => op.id === ruleType);
             if (!operatorData) return null;
-            console.log(ruleType, operatorData);
             switch (ruleType) {
               // For whatever reason, the editor refuses to wrap despite running off the end of the modal
               // The below operator component is a fix to reorient it.
@@ -83,7 +82,7 @@ const RuleCard = ({ handleRemoveRule, handleUpdate, resourceOptions, rule }) => 
           } else return null;
         })()}
       </div>
-      <div style={{ alignSelf: 'flex-start', marginTop: '0' }}>
+      <div className={styles.alignIcon}>
         <IconButton className={styles.clearRuleButton} onClick={handleRemoveRule}>
           <ClearIcon />
         </IconButton>

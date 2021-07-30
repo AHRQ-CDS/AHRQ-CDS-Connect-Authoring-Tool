@@ -2,6 +2,10 @@ import { makeStyles } from '@material-ui/core/styles';
 
 export default makeStyles(
   theme => ({
+    alignIcon: {
+      alignSelf: 'flex-start',
+      marginTop: '0'
+    },
     clearRuleButton: {
       alignSelf: 'center',
       marginLeft: '10px'
@@ -10,6 +14,9 @@ export default makeStyles(
       margin: '0',
       padding: '0',
       background: 'transparent'
+    },
+    conceptChip: {
+      maxWidth: '120px'
     },
     deleteButton: {
       position: 'absolute',
@@ -124,6 +131,10 @@ export default makeStyles(
     versionButton: {
       marginLeft: '20px',
       marginTop: '40px'
+    },
+    verticalAlign: {
+      display: 'flex',
+      flexDirection: 'column'
     },
     warningBanner: {
       marginBottom: '20px'

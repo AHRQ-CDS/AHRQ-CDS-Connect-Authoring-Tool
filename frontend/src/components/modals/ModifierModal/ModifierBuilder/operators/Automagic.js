@@ -2,9 +2,11 @@ import React from 'react';
 import { BooleanEditor, CodeEditor, DateTimeEditor, NumberEditor, ValuesetEditor } from 'components/builder/editors';
 import { Dropdown } from 'components/elements';
 
-import { useFieldStyles } from 'styles/hooks';
+import { useFieldStyles, useSpacingStyles } from 'styles/hooks';
 import PredefinedCodeSelection from '../utils/PredefinedCodeSelection';
 import ConceptListEditor from '../utils/ConceptListEditor';
+
+import clsx from 'clsx';
 
 const updateRuleValue = (operandValue, operandId, rule, updateRule) => {
   let newRule = { ...rule };
@@ -14,6 +16,7 @@ const updateRuleValue = (operandValue, operandId, rule, updateRule) => {
 
 const Automagic = ({ operator, resource, rule, updateRule }) => {
   const fieldStyles = useFieldStyles();
+  const spacingStyles = useSpacingStyles();
   if (operator.userSelectedOperands)
     return operator.userSelectedOperands.map((operand, index) => {
       let operandValue;
@@ -29,10 +32,7 @@ const Automagic = ({ operator, resource, rule, updateRule }) => {
                     <ValuesetEditor
                       nameValue={rule?.valueset?.name || ''}
                       oidValue={rule?.valueset?.oid || ''}
-                      onChange={value => {
-                        console.log(value);
-                        updateRuleValue(value, operand.id, rule, updateRule);
-                      }}
+                      onChange={value => updateRuleValue(value, operand.id, rule, updateRule)}
                       label="label"
                     />
                   );
@@ -47,7 +47,12 @@ const Automagic = ({ operator, resource, rule, updateRule }) => {
                 case 'System.Code': // TODO: Add support for List<System.Concept> (It's different!)
                 case 'System.Concept': // TODO: Custom component to store current concept codes. Currently overwritten on edits.
                   if (operand.typeSpecifier.type === 'ListTypeSpecifier') {
-                    return <ConceptListEditor />;
+                    return (
+                      <ConceptListEditor
+                        onChange={values => updateRuleValue(values, operand.id, rule, updateRule)}
+                        values={rule[operand.id] || []}
+                      />
+                    );
                   } else {
                     return (
                       <CodeEditor
@@ -59,7 +64,7 @@ const Automagic = ({ operator, resource, rule, updateRule }) => {
                 case 'System.Integer':
                 case 'System.Decimal':
                   return (
-                    <div style={{ marginRight: '10px' }}>
+                    <div className={spacingStyles.marginRight}>
                       <NumberEditor
                         fullWidth={false}
                         handleUpdateEditor={value => updateRuleValue(value, operand.id, rule, updateRule)}
@@ -94,7 +99,7 @@ const Automagic = ({ operator, resource, rule, updateRule }) => {
             value={rule[operand.id]}
           />
         ) : (
-          <div style={{ paddingRight: '10px', marginTop: '10px' }}>
+          <div className={clsx(spacingStyles.paddingRight, spacingStyles.marginTopHalf)}>
             <Dropdown
               className={fieldStyles.fieldInputMd}
               label={operand.name || 'Select...'}

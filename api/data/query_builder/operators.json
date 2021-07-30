@@ -77,7 +77,7 @@
     },
     {
       "id": "listIsEmpty",
-      "name": "Is Empty",
+      "name": "Is (Not) Empty",
       "description": "Check to see if a list is empty",
       "operatorTemplate": "",
       "primaryOperand": {
@@ -170,7 +170,7 @@
       },
       "userSelectedOperands": [
         {
-          "id": "conceptValue",
+          "id": "conceptValues",
           "type": "editor",
           "typeSpecifier": {
             "type": "ListTypeSpecifier",
@@ -190,7 +190,7 @@
       },
       "userSelectedOperands": [
         {
-          "id": "conceptList",
+          "id": "conceptValues",
           "type": "editor",
           "typeSpecifier": {
             "type": "ListTypeSpecifier",
@@ -270,7 +270,7 @@
       },
       "userSelectedOperands": [
         {
-          "id": "conceptList",
+          "id": "conceptValues",
           "type": "editor",
           "typeSpecifier": {
             "type": "ListTypeSpecifier",
@@ -290,7 +290,7 @@
       },
       "userSelectedOperands": [
         {
-          "id": "conceptList",
+          "id": "conceptValues",
           "type": "editor",
           "typeSpecifier": {
             "type": "ListTypeSpecifier",
@@ -314,7 +314,7 @@
       },
       "userSelectedOperands": [
         {
-          "id": "conceptList",
+          "id": "conceptValues",
           "type": "editor",
           "typeSpecifier": {
             "type": "ListTypeSpecifier",
@@ -499,7 +499,7 @@
     },
     {
       "id": "dateTimeIntervalComparison",
-      "name": "(Start | End) Occurred On or After",
+      "name": "(Start | End) Occurred",
       "description": "Check if the operand time type occurred on or after the user specified time",
       "operatorTemplate": "",
       "primaryOperand": {
@@ -512,6 +512,12 @@
           "name": "Start/End",
           "type": "selector",
           "selectionValues": ["Start", "End"]
+        },
+        {
+          "id": "when",
+          "name": "When...",
+          "type": "selector",
+          "selectionValues": ["Before", "On or Before", "After", "On or After"]
         },
         {
           "id": "userSpecifiedDateTime",

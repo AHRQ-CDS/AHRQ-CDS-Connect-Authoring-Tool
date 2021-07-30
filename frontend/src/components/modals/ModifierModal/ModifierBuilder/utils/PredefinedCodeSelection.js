@@ -1,13 +1,8 @@
-import React, { useState } from 'react';
+import React from 'react';
 import MultipleSelect from './MultipleSelect';
-import { Button } from '@material-ui/core';
-import { TextField } from 'components/fields';
 import useStyles from '../../styles';
-import clsx from 'clsx';
 
 const PredefinedCodeSelection = ({ allowsCustomCodes = false, options, value, onChange }) => {
-  const [showCodeEditor, setShowCodeEditor] = useState(false);
-
   const modalStyles = useStyles();
 
   return (
@@ -15,7 +10,7 @@ const PredefinedCodeSelection = ({ allowsCustomCodes = false, options, value, on
       <div className={modalStyles.multipleSelect}>
         <MultipleSelect
           allowCustom={allowsCustomCodes}
-          onChange={val => onChange(val)}
+          onChange={v => onChange(v)}
           options={options}
           value={value || []}
         />

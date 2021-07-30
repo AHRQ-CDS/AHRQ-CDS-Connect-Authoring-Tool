@@ -6,14 +6,16 @@ import { TextField } from '@material-ui/core';
 import { Edit as EditIcon, LocalHospital as LocalHospitalIcon } from '@material-ui/icons';
 import { ValueSetSelectModal } from 'components/modals';
 import { VSACAuthenticationModal } from 'components/modals';
+import { useSpacingStyles } from 'styles/hooks';
 
 const ValuesetEditor = ({ nameValue, oidValue, onChange, label }) => {
   const [showValueSetSelectModal, setShowValueSetSelectModal] = useState(false);
   const [showVSACAuthModal, setShowVSACAuthModal] = useState(false);
   const vsacApiKey = useSelector(state => state.vsac.apiKey);
+  const spacingStyles = useSpacingStyles();
 
   return (
-    <div style={{ marginTop: '10px' }}>
+    <div className={spacingStyles.marginTopHalf}>
       {showVSACAuthModal && <VSACAuthenticationModal handleCloseModal={() => setShowVSACAuthModal(false)} />}
       {showValueSetSelectModal && (
         <ValueSetSelectModal
