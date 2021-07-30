@@ -39,7 +39,7 @@
       "id": "isTrueFalse",
       "name": "Is True/False?",
       "description": "Check to see if a boolean is true or false",
-      "operatorTemplate": "",
+      "operatorTemplate": "isTrueFalse",
       "primaryOperand": {
         "typeSpecifier": "NamedTypeSpecifier",
         "elementTypes": ["System.Boolean"]

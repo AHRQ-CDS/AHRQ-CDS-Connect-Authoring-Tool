@@ -952,6 +952,183 @@ describe('Modifier tests', () => {
   });
 });
 
+describe('CQL Operator Templates', () => {
+  const raw = _.cloneDeep(baseArtifact);
+  raw.expTreeInclude = {
+    id: 'And',
+    name: '',
+    conjunction: true,
+    returnType: 'boolean',
+    fields: [
+      {
+        id: 'element_name',
+        type: 'string',
+        name: 'Group Name',
+        value: 'MeetsInclusionCriteria'
+      },
+      { id: 'comment', name: 'Comment', type: 'textarea' }
+    ],
+    uniqueId: 'And-1',
+    childInstances: [
+      {
+        id: 'StatinAllergen',
+        name: 'Statin Allergen',
+        extends: 'GenericAllergyIntolerance',
+        fields: [
+          {
+            id: 'element_name',
+            value: 'StatinAllergen',
+            type: 'string',
+            name: 'Element Name'
+          },
+          {
+            id: 'allergyIntolerance',
+            static: true,
+            value: 'statin_allergen',
+            type: 'allergyIntolerance',
+            name: 'Allergy Intolerance'
+          },
+          {
+            id: 'comment',
+            name: 'Comment',
+            type: 'textarea'
+          }
+        ],
+        returnType: 'list_of_allergy_intolerances',
+        type: 'element',
+        uniqueId: 'StatinAllergen-3',
+        modifiers: [
+          {
+            id: 'ActiveOrConfirmedAllergyIntolerance',
+            name: 'Active Or Confirmed',
+            inputTypes: ['list_of_allergy_intolerances'],
+            returnType: 'list_of_allergy_intolerances',
+            cqlTemplate: 'BaseModifier',
+            cqlLibraryFunction: 'C3F.ActiveOrConfirmedAllergyIntolerance'
+          },
+          {
+            id: 'Count',
+            name: 'Count',
+            inputTypes: [
+              'list_of_observations',
+              'list_of_conditions',
+              'list_of_medication_statements',
+              'list_of_medication_requests',
+              'list_of_procedures',
+              'list_of_allergy_intolerances',
+              'list_of_encounters',
+              'list_of_immunizations',
+              'list_of_devices',
+              'list_of_any',
+              'list_of_booleans',
+              'list_of_service_requests',
+              'list_of_system_quantities',
+              'list_of_system_concepts',
+              'list_of_system_codes',
+              'list_of_integers',
+              'list_of_datetimes',
+              'list_of_strings',
+              'list_of_decimals',
+              'list_of_times',
+              'list_of_others'
+            ],
+            returnType: 'integer',
+            cqlTemplate: 'BaseModifier',
+            cqlLibraryFunction: 'Count'
+          },
+          {
+            id: 'ValueComparisonNumber',
+            name: 'Value Comparison',
+            inputTypes: ['integer', 'decimal'],
+            returnType: 'boolean',
+            validator: { type: 'require', fields: ['minValue', 'minOperator'], args: null },
+            values: { minOperator: '>', minValue: 0, maxOperator: undefined, maxValue: '', unit: '' },
+            cqlTemplate: 'ValueComparisonNumber',
+            comparisonOperator: null
+          }
+        ]
+      }
+    ],
+    path: ''
+  };
+  raw.expTreeExclude = {
+    id: 'And',
+    name: '',
+    conjunction: true,
+    returnType: 'boolean',
+    fields: [
+      {
+        id: 'element_name',
+        type: 'string',
+        name: 'Group Name',
+        value: 'MeetsExclusionCriteria'
+      },
+      { id: 'comment', name: 'Comment', type: 'textarea' }
+    ],
+    uniqueId: 'And-2',
+    childInstances: [],
+    path: ''
+  };
+  raw.errorStatement = { ifThenClauses: [], elseClause: '' };
+  const rawBaseQuery = _.cloneDeep(raw);
+
+  beforeEach(() => {
+    rawBaseQuery.expTreeInclude.childInstances[0].modifiers = [
+      {
+        inputTypes: ['list_of_allergy_intolerances'],
+        returnType: 'boolean',
+        where: {}
+      }
+    ];
+  });
+
+  it('Handles isTrueFalse template', () => {
+    const templateTest = {
+      conjunctionType: 'or',
+      rules: [
+        {
+          ruleType: 'isTrueFalse',
+          resourceProperty: 'someBooleanProperty',
+          booleanValue: false
+        },
+        {
+          ruleType: 'isTrueFalse',
+          resourceProperty: 'someBooleanProperty',
+          booleanValue: true
+        }
+      ]
+    };
+    rawBaseQuery.expTreeInclude.childInstances[0].modifiers[0].where = templateTest;
+    const artifact = buildCQL(rawBaseQuery);
+    const converted = artifact.toString();
+    expect(converted).to.contain(
+      '[AllergyIntolerance] AI where ' + '(AI.someBooleanProperty is false or AI.someBooleanProperty is true)'
+    );
+  });
+
+  it('Handles isNull and isNotNull template', () => {
+    const templateTest = {
+      conjunctionType: 'and',
+      rules: [
+        {
+          ruleType: 'isNull',
+          resourceProperty: 'verificationStatus'
+        },
+        {
+          ruleType: 'isNotNull',
+          resourceProperty: 'clinicalStatus'
+        }
+      ]
+    };
+    rawBaseQuery.expTreeInclude.childInstances[0].modifiers[0].where = templateTest;
+    const artifact = buildCQL(rawBaseQuery);
+    const converted = artifact.toString();
+    expect(converted).to.contain(
+      '[AllergyIntolerance] AI where ' + '(AI.verificationStatus is null and AI.clinicalStatus is not null)'
+    );
+  });
+});
+
 describe('CPG Publishable Library tests', () => {
   //function below referenced from https://gist.github.com/Yimiprod/7ee176597fef230d1451
   //using to diff two objects, as _.isEqual returns false if array elements are not in the same order
