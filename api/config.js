@@ -1,5 +1,6 @@
 const convict = require('convict');
 const validator = require('validator');
+const json5 = require('json5');
 const fs = require('fs');
 
 function laxUrl(...protocols) {
@@ -11,6 +12,7 @@ function laxUrl(...protocols) {
 }
 
 // Define the schema
+convict.addParser({ extension: 'json', parse: json5.parse });
 const config = convict({
   env: {
     doc: 'The applicaton environment.',
