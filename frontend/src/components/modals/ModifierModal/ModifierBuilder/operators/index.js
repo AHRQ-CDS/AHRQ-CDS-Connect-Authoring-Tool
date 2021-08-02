@@ -1,2 +1,2 @@
-export { default as Automagic } from './Automagic';
+export { default as OperandTemplate } from './OperandTemplate';
 export { default as QuantityIntervalOverlapsNumericInterval } from './QuantityIntervalOverlapsNumericInterval';

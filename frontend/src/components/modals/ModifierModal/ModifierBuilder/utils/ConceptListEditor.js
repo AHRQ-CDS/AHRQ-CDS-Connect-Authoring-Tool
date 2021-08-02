@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import propTypes from 'prop-types';
 import { Autocomplete } from '@material-ui/lab';
-import { Button, Chip } from '@material-ui/core';
+import { Button, Chip, Tooltip } from '@material-ui/core';
 import TextField from '@material-ui/core/TextField';
 
 import clsx from 'clsx';
@@ -11,7 +11,7 @@ import { CodeSelectModal, VSACAuthenticationModal } from 'components/modals';
 import { useSelector } from 'react-redux';
 import { Lock as LockIcon } from '@material-ui/icons';
 
-const ConceptListEditor = ({ onChange, values }) => {
+const ConceptListEditor = ({ onChange, singular, values }) => {
   const [showVSACAuthModal, setShowVSACAuthModal] = useState(false);
   const vsacApiKey = useSelector(state => state.vsac.apiKey);
 
@@ -49,6 +49,7 @@ const ConceptListEditor = ({ onChange, values }) => {
             <Autocomplete
               className={clsx(fieldStyles.fieldInput, fieldStyles.fieldInputSm, modalStyles.noMarginBottom)}
               disableClearable
+              disabled
               freeSolo
               multiple
               options={[]}
@@ -56,28 +57,43 @@ const ConceptListEditor = ({ onChange, values }) => {
               renderInput={params => <TextField {...params} label="Concept(s)" variant="outlined" />}
               renderTags={tags => {
                 return tags.map((tag, index) => (
-                  <Chip
-                    className={modalStyles.conceptChip}
-                    label={tag.display || tag.code}
-                    onClick={() => {
-                      setEditAtIndex(index);
-                      setShowConceptModal(true);
-                    }}
-                    onDelete={() => handleDeleteConcept(index)}
-                  ></Chip>
+                  <>
+                    <Tooltip arrow title={tag.display || tag.code || ''}>
+                      <Chip
+                        className={modalStyles.conceptChip}
+                        label={tag.display || tag.code}
+                        onClick={() => {
+                          setEditAtIndex(index);
+                          setShowConceptModal(true);
+                        }}
+                        onDelete={() => handleDeleteConcept(index)}
+                      ></Chip>
+                    </Tooltip>
+                  </>
                 ));
               }}
               value={values}
             />
-            <Button
-              className={modalStyles.compactTextButton}
-              onClick={() => {
-                setEditAtIndex(undefined);
-                setShowConceptModal(true);
-              }}
+            <Tooltip
+              arrow
+              title={
+                singular && values.length === 1
+                  ? 'Only one concept is allowed for this resource. Another cannot be added.'
+                  : ''
+              }
             >
-              Add Concept
-            </Button>
+              <Button
+                className={modalStyles.compactTextButton}
+                onClick={() => {
+                  if (!singular || values.length !== 1) {
+                    setEditAtIndex(undefined);
+                    setShowConceptModal(true);
+                  }
+                }}
+              >
+                Add Concept
+              </Button>
+            </Tooltip>
           </div>
 
           {showConceptModal && (

@@ -2,6 +2,11 @@ import { makeStyles } from '@material-ui/core/styles';
 
 export default makeStyles(
   theme => ({
+    agoLabel: {
+      position: 'relative',
+      left: '4px',
+      bottom: '10px'
+    },
     alignIcon: {
       alignSelf: 'flex-start',
       marginTop: '0'
@@ -16,7 +21,9 @@ export default makeStyles(
       background: 'transparent'
     },
     conceptChip: {
-      maxWidth: '120px'
+      margin: 'auto',
+      marginTop: '3px',
+      maxWidth: '165px'
     },
     deleteButton: {
       position: 'absolute',
@@ -35,6 +42,13 @@ export default makeStyles(
     indent: {
       margin: '0 0 0 50px',
       width: '100%'
+    },
+    label: {
+      alignSelf: 'center',
+      fontWeight: 'bold',
+      margin: '0',
+      marginTop: '7px',
+      marginLeft: '3px'
     },
     line: {
       backgroundColor: theme.palette.common.gray,
@@ -68,6 +82,7 @@ export default makeStyles(
       height: '50%',
       top: '50%'
     },
+    marginBottom: { marginBottom: '50px' },
     modifierCard: {
       margin: 0,
       position: 'relative'
@@ -93,6 +108,8 @@ export default makeStyles(
     noMarginBottom: {
       marginBottom: '0'
     },
+    preLabel: { margin: 'auto', marginRight: '12px', fontWeight: 'bold', whiteSpace: 'nowrap' },
+    postLabel: { margin: 'auto', marginLeft: '12px', fontWeight: 'bold', whiteSpace: 'nowrap' },
     rule: {
       alignItems: 'flex-start',
       display: 'flex',

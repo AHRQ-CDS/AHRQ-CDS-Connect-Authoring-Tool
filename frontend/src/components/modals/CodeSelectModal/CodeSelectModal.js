@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import PropTypes from 'prop-types';
 import { useSelector } from 'react-redux';
 import { useMutation } from 'react-query';
@@ -35,10 +35,6 @@ const CodeSelectModal = ({ handleCloseModal, handleSelectCode, initialValue }) =
 
     mutateAsync({ code: codeRef.current, system, apiKey });
   }, [apiKey, codeRef, codeSystemRef, otherCodeSystemRef, mutateAsync]);
-
-  useEffect(() => {
-    if (code !== '' && codeSystem !== null) handleValidateCode();
-  }, [code, codeSystem, handleValidateCode]);
 
   const handleSaveCodeSelection = useCallback(() => {
     const codeSystemId =

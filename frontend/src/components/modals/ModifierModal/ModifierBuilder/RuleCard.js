@@ -1,17 +1,15 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { useQuery } from 'react-query';
+import { useSelector } from 'react-redux';
 import { IconButton } from '@material-ui/core';
 import { Clear as ClearIcon } from '@material-ui/icons';
 import clsx from 'clsx';
 import _ from 'lodash';
-
-import { Automagic, QuantityIntervalOverlapsNumericInterval } from './operators';
-
 import { Dropdown } from 'components/elements';
 import { fetchOperators } from 'queries/modifier-builder';
+import { OperandTemplate, QuantityIntervalOverlapsNumericInterval } from './operators';
 import { useFieldStyles } from 'styles/hooks';
-import { useSelector } from 'react-redux';
 import useStyles from '../styles';
 
 const RuleCard = ({ handleRemoveRule, handleUpdate, resourceOptions, rule }) => {
@@ -76,7 +74,12 @@ const RuleCard = ({ handleRemoveRule, handleUpdate, resourceOptions, rule }) => 
                 );
               default:
                 return (
-                  <Automagic operator={operatorData} resource={currentProperty} rule={rule} updateRule={handleUpdate} />
+                  <OperandTemplate
+                    operator={operatorData}
+                    resource={currentProperty}
+                    rule={rule}
+                    updateRule={handleUpdate}
+                  />
                 );
             }
           } else return null;

@@ -201,12 +201,12 @@
     },
     {
       "id": "codeConceptInValueSet",
-      "name": "Is in Valueset",
+      "name": "Is in Value Set",
       "description": "Check to see if a code, coding, or codable concept is within a valueset",
       "operatorTemplate": "codeConceptInValueSet",
       "primaryOperand": {
         "typeSpecifier": "NamedTypeSpecifier",
-        "elementTypes": ["FHIR.code", "System.Code", "System.concept"]
+        "elementTypes": ["FHIR.code", "System.Code", "System.Concept"]
       },
       "userSelectedOperands": [
         {
@@ -221,7 +221,7 @@
     },
     {
       "id": "codeConceptNotInValueSet",
-      "name": "Is Not in Valueset",
+      "name": "Is Not in Value Set",
       "description": "Check to see if a code, coding, or codable concept is not within a valueset",
       "operatorTemplate": "",
       "primaryOperand": {
@@ -325,7 +325,7 @@
     },
     {
       "id": "listCodeConceptIsPerfectSubsetOfValueset",
-      "name": "All Elements match Valueset",
+      "name": "All Elements match Value Set",
       "description": "",
       "operatorTemplate": "",
       "primaryOperand": {
@@ -345,7 +345,7 @@
     },
     {
       "id": "listCodeConceptIntersectsValueset",
-      "name": "Some Elements Match Valueset",
+      "name": "Some Elements Match Value Set",
       "description": "Check to see if a list of System.Code or System.Concept         intersects (some elements match) elements of a valueset",
       "operatorTemplate": "",
       "primaryOperand": {
@@ -365,7 +365,7 @@
     },
     {
       "id": "listCodeConceptNotIntersectsValueset",
-      "name": "No Elements Match Valueset",
+      "name": "No Elements Match Value Set",
       "description": "Check to see if a list of System.Code or System.Concept does not         intersect (no elements match) elements of a valueset",
       "operatorTemplate": "",
       "primaryOperand": {
@@ -468,6 +468,11 @@
           "name": "Time Unit",
           "type": "selector",
           "selectionValues": ["years", "months", "weeks", "days", "hours", "minutes"]
+        },
+        {
+          "id": "dateTimeTypeOccurredMoreThan_AgoLabel",
+          "type": "label",
+          "value": "ago."
         }
       ]
     },
@@ -602,6 +607,7 @@
         {
           "id": "beginDateTime",
           "type": "editor",
+          "preLabel": "Date 1:",
           "typeSpecifier": {
             "type": "NamedTypeSpecifier",
             "editorType": "System.DateTime"
@@ -610,6 +616,7 @@
         {
           "id": "endDateTime",
           "type": "editor",
+          "preLabel": "Date 2:",
           "typeSpecifier": {
             "type": "NamedTypeSpecifier",
             "editorType": "System.DateTime"
@@ -789,7 +796,7 @@
           "type": "editor",
           "typeSpecifier": {
             "type": "NamedTypeSpecifier",
-            "editorType": "System.Decimal"
+            "editorType": "System.Quantity"
           }
         }
       ]
@@ -816,7 +823,7 @@
     },
     {
       "id": "quantityIntervalContainsQuantity",
-      "name": "Contains Number",
+      "name": "Contains Quantity",
       "description": "Check to see if a number is contained by an interval",
       "operatorTemplate": "",
       "primaryOperand": {
@@ -836,7 +843,7 @@
     },
     {
       "id": "quantityIntervalNotContainsQuantity",
-      "name": "Does Not Contain Number",
+      "name": "Does Not Contain Quantity",
       "description": "Check to see if a number is contained by an interval",
       "operatorTemplate": "",
       "primaryOperand": {
