@@ -250,7 +250,7 @@ export class Builder extends Component {
   };
 
   // subpop_index is an optional parameter, for determining which tree within subpop we are referring to
-  updateInstanceModifiers = (treeName, modifiers, path, subpopIndex, updatedReturnType = null) => {
+  updateInstanceModifiers = async (treeName, modifiers, path, subpopIndex, updatedReturnType = null) => {
     const tree = _.cloneDeep(this.props.artifact[treeName]);
     const valuePath = _.isNumber(subpopIndex) ? tree[subpopIndex] : tree;
     const target = findValueAtPath(valuePath, path);
@@ -259,8 +259,8 @@ export class Builder extends Component {
     if (updatedReturnType) {
       valuePath.returnType = updatedReturnType;
     }
-
-    this.props.updateArtifact(this.props.artifact, { [treeName]: tree });
+    await this.props.updateArtifact(this.props.artifact, { [treeName]: tree });
+    this.updateFHIRVersion();
   };
 
   showELMErrorModal = () => {
@@ -298,7 +298,11 @@ export class Builder extends Component {
     const hasExternalCql =
       externalCqlList && Boolean(externalCqlList.find(cqlLibrary => cqlLibrary.linkedArtifactId === artifact._id));
     const hasServiceRequest = this.instancesInclude(this.getAllInstancesInAllTrees(), 'Service Request');
-    if (hasExternalCql & !hasServiceRequest) return;
+    const hasQueryModifier = this.getAllInstancesInAllTrees().reduce(
+      (acc, instance) => acc || instance.modifiers.some(modifier => modifier.where !== undefined),
+      false
+    );
+    if ((hasExternalCql && !hasServiceRequest) || hasQueryModifier) return;
 
     let updatedArtifact = _.cloneDeep(artifact);
     updatedArtifact.fhirVersion = hasServiceRequest ? '4.0.0' : '';

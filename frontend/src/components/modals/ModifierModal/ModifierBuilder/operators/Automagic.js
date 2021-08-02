@@ -19,7 +19,6 @@ const Automagic = ({ operator, resource, rule, updateRule }) => {
   const spacingStyles = useSpacingStyles();
   if (operator.userSelectedOperands)
     return operator.userSelectedOperands.map((operand, index) => {
-      let operandValue;
       if (operand.type === 'editor') {
         let { editorType, type } = operand.typeSpecifier;
 

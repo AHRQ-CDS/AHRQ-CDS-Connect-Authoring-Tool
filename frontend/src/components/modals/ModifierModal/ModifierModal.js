@@ -9,6 +9,7 @@ import ModifierModalHeader from './ModifierModalHeader';
 import ModifierSelector from './ModifierSelector';
 import ModifierBuilder from './ModifierBuilder';
 import FhirVersionSelect from './FhirVersionSelect';
+import { getIsRuleTreeEmpty } from './ModifierBuilder/utils/utils';
 import { Modal } from 'components/elements';
 import useStyles from './styles';
 
@@ -61,6 +62,14 @@ const ModifierModal = ({
     setDisplayMode('buildModifier');
   };
 
+  const getIsSubmitDisabled = () => {
+    if (displayMode === 'selectModifiers') {
+      return modifiersToAdd.length === 0;
+    } else if (displayMode === 'buildModifier') {
+      return !(modifiersToAdd.length !== 0 && getIsRuleTreeEmpty(modifiersToAdd[0]));
+    } else return true;
+  };
+
   return (
     <Modal
       handleCloseModal={handleCloseModal}
@@ -76,7 +85,7 @@ const ModifierModal = ({
       hasEnterKeySubmit={false}
       isOpen
       submitButtonText="Add"
-      submitDisabled={modifiersToAdd.length === 0}
+      submitDisabled={getIsSubmitDisabled()}
       title={modalTitle}
       maxWidth="xl"
     >
@@ -107,7 +116,11 @@ const ModifierModal = ({
                     className={styles.displayModeButton}
                     color="primary"
                     disabled={elementInstance.modifiers.length !== 0}
-                    onClick={() => setDisplayMode(fhirVersion === '' ? 'selectFhirVersion' : 'buildModifier')}
+                    onClick={() =>
+                      setDisplayMode(
+                        ['1.0.2', '3.0.0', '4.0.0'].includes(fhirVersion) ? 'buildModifier' : 'selectFhirVersion'
+                      )
+                    }
                     variant="contained"
                   >
                     Build New Modifier
