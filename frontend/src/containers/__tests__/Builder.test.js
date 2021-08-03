@@ -150,7 +150,7 @@ describe('<Builder />', () => {
     expect(updateAction.type).toEqual(types.UPDATE_ARTIFACT);
     expect(modifier.id).toEqual('CheckExistence');
     expect(modifier.name).toEqual('Is (Not) Null?');
-  });
+  }, 10000);
 
   it('can delete an instance', async () => {
     const store = createMockStore({
@@ -202,7 +202,7 @@ describe('<Builder />', () => {
         expect(updateAction.type).toEqual(types.UPDATE_ARTIFACT);
         expect(modifier.id).toEqual('FirstObservation');
         expect(modifier.name).toEqual('First');
-      });
+      }, 10000);
     });
 
     describe('Test AverageObservationValue modifier.', () => {
@@ -222,7 +222,7 @@ describe('<Builder />', () => {
         expect(updateAction.type).toEqual(types.UPDATE_ARTIFACT);
         expect(modifier.id).toEqual('AverageObservationValue');
         expect(modifier.name).toEqual('Average Observation Value');
-      });
+      }, 10000);
     });
 
     describe('Test FirstCondition Modifier.', () => {
@@ -242,7 +242,7 @@ describe('<Builder />', () => {
         expect(updateAction.type).toEqual(types.UPDATE_ARTIFACT);
         expect(modifier.id).toEqual('FirstCondition');
         expect(modifier.name).toEqual('First');
-      });
+      }, 10000);
     });
 
     describe('Test FirstProcedure Modifier.', () => {
@@ -262,7 +262,7 @@ describe('<Builder />', () => {
         expect(updateAction.type).toEqual(types.UPDATE_ARTIFACT);
         expect(modifier.id).toEqual('FirstProcedure');
         expect(modifier.name).toEqual('First');
-      });
+      }, 10000);
     });
 
     describe('Test FirstImmunization Modifier.', () => {
@@ -282,7 +282,7 @@ describe('<Builder />', () => {
         expect(updateAction.type).toEqual(types.UPDATE_ARTIFACT);
         expect(modifier.id).toEqual('FirstImmunization');
         expect(modifier.name).toEqual('First');
-      });
+      }, 10000);
     });
   });
 });
