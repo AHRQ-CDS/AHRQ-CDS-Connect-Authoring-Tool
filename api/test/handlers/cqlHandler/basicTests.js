@@ -997,56 +997,7 @@ describe('CQL Operator Templates', () => {
         returnType: 'list_of_allergy_intolerances',
         type: 'element',
         uniqueId: 'StatinAllergen-3',
-        modifiers: [
-          {
-            id: 'ActiveOrConfirmedAllergyIntolerance',
-            name: 'Active Or Confirmed',
-            inputTypes: ['list_of_allergy_intolerances'],
-            returnType: 'list_of_allergy_intolerances',
-            cqlTemplate: 'BaseModifier',
-            cqlLibraryFunction: 'C3F.ActiveOrConfirmedAllergyIntolerance'
-          },
-          {
-            id: 'Count',
-            name: 'Count',
-            inputTypes: [
-              'list_of_observations',
-              'list_of_conditions',
-              'list_of_medication_statements',
-              'list_of_medication_requests',
-              'list_of_procedures',
-              'list_of_allergy_intolerances',
-              'list_of_encounters',
-              'list_of_immunizations',
-              'list_of_devices',
-              'list_of_any',
-              'list_of_booleans',
-              'list_of_service_requests',
-              'list_of_system_quantities',
-              'list_of_system_concepts',
-              'list_of_system_codes',
-              'list_of_integers',
-              'list_of_datetimes',
-              'list_of_strings',
-              'list_of_decimals',
-              'list_of_times',
-              'list_of_others'
-            ],
-            returnType: 'integer',
-            cqlTemplate: 'BaseModifier',
-            cqlLibraryFunction: 'Count'
-          },
-          {
-            id: 'ValueComparisonNumber',
-            name: 'Value Comparison',
-            inputTypes: ['integer', 'decimal'],
-            returnType: 'boolean',
-            validator: { type: 'require', fields: ['minValue', 'minOperator'], args: null },
-            values: { minOperator: '>', minValue: 0, maxOperator: undefined, maxValue: '', unit: '' },
-            cqlTemplate: 'ValueComparisonNumber',
-            comparisonOperator: null
-          }
-        ]
+        modifiers: []
       }
     ],
     path: ''
@@ -1082,6 +1033,28 @@ describe('CQL Operator Templates', () => {
     ];
   });
 
+  it('Handles isNull template', () => {
+    const templateTest = {
+      ruleType: 'isNull',
+      resourceProperty: 'verificationStatus'
+    };
+    rawBaseQuery.expTreeInclude.childInstances[0].modifiers[0].where = templateTest;
+    const artifact = buildCQL(rawBaseQuery);
+    const converted = artifact.toString();
+    expect(converted).to.contain('[AllergyIntolerance] AI where AI.verificationStatus is null');
+  });
+
+  it('Handles isNotNull template', () => {
+    const templateTest = {
+      ruleType: 'isNotNull',
+      resourceProperty: 'verificationStatus'
+    };
+    rawBaseQuery.expTreeInclude.childInstances[0].modifiers[0].where = templateTest;
+    const artifact = buildCQL(rawBaseQuery);
+    const converted = artifact.toString();
+    expect(converted).to.contain('[AllergyIntolerance] AI where AI.verificationStatus is not null');
+  });
+
   it('Handles isTrueFalse template', () => {
     const templateTest = {
       conjunctionType: 'or',
@@ -1102,30 +1075,43 @@ describe('CQL Operator Templates', () => {
     const artifact = buildCQL(rawBaseQuery);
     const converted = artifact.toString();
     expect(converted).to.contain(
-      '[AllergyIntolerance] AI where ' + '(AI.someBooleanProperty is false or AI.someBooleanProperty is true)'
+      '[AllergyIntolerance] AI where (AI.someBooleanProperty is false or AI.someBooleanProperty is true)'
     );
   });
 
-  it('Handles isNull and isNotNull template', () => {
+  it('Handles codeConceptInValueSet template', () => {
     const templateTest = {
-      conjunctionType: 'and',
-      rules: [
-        {
-          ruleType: 'isNull',
-          resourceProperty: 'verificationStatus'
-        },
-        {
-          ruleType: 'isNotNull',
-          resourceProperty: 'clinicalStatus'
-        }
-      ]
+      ruleType: 'codeConceptInValueSet',
+      resourceProperty: 'someCodeProperty',
+      valueset: {
+        name: 'My Value Set',
+        oid: '1.2.3.4.5.6.7.8.9'
+      }
     };
     rawBaseQuery.expTreeInclude.childInstances[0].modifiers[0].where = templateTest;
     const artifact = buildCQL(rawBaseQuery);
     const converted = artifact.toString();
-    expect(converted).to.contain(
-      '[AllergyIntolerance] AI where ' + '(AI.verificationStatus is null and AI.clinicalStatus is not null)'
-    );
+    expect(converted).to.contain(`valueset "My Value Set": 'https://cts.nlm.nih.gov/fhir/ValueSet/1.2.3.4.5.6.7.8.9'`);
+    expect(converted).to.contain('[AllergyIntolerance] AI where AI.someCodeProperty in "My Value Set"');
+  });
+
+  it('Handles codeConceptMatchesConcept template', () => {
+    const templateTest = {
+      ruleType: 'codeConceptMatchesConcept',
+      resourceProperty: 'someCodeProperty',
+      conceptValue: {
+        code: 'Some-Code',
+        display: 'Some Display',
+        system: 'Some-System',
+        uri: 'http://some-system.org'
+      }
+    };
+    rawBaseQuery.expTreeInclude.childInstances[0].modifiers[0].where = templateTest;
+    const artifact = buildCQL(rawBaseQuery);
+    const converted = artifact.toString();
+    expect(converted).to.contain(`codesystem "Some-System": 'http://some-system.org'`);
+    expect(converted).to.contain(`code "Some Display code": 'Some-Code' from "Some-System" display 'Some Display'`);
+    expect(converted).to.contain('[AllergyIntolerance] AI where AI.someCodeProperty ~ "Some Display code"');
   });
 });
 

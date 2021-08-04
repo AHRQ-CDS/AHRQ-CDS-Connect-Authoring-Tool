@@ -59,7 +59,7 @@
       "id": "isNull",
       "name": "Is Null",
       "description": "Check to see if the element is null",
-      "operatorTemplate": "IsNull",
+      "operatorTemplate": "isNull",
       "primaryOperand": {
         "typeSpecifier": "NamedTypeSpecifier",
         "elementTypes": ["System.Any"]
@@ -69,7 +69,7 @@
       "id": "isNotNull",
       "name": "Is Not Null",
       "description": "Check to see if the element is not null",
-      "operatorTemplate": "IsNotNull",
+      "operatorTemplate": "isNotNull",
       "primaryOperand": {
         "typeSpecifier": "NamedTypeSpecifier",
         "elementTypes": ["System.Any"]
@@ -121,7 +121,7 @@
       "id": "codeConceptMatchesConcept",
       "name": "Matches Concept",
       "description": "Check to see if a code, coding, or codable concept matches given concept",
-      "operatorTemplate": "",
+      "operatorTemplate": "codeConceptMatchesConcept",
       "primaryOperand": {
         "typeSpecifier": "NamedTypeSpecifier",
         "elementTypes": ["FHIR.code", "System.Code", "System.Concept"]
@@ -201,7 +201,7 @@
       "id": "codeConceptInValueSet",
       "name": "Is in Valueset",
       "description": "Check to see if a code, coding, or codable concept is within a valueset",
-      "operatorTemplate": "",
+      "operatorTemplate": "codeConceptInValueSet",
       "primaryOperand": {
         "typeSpecifier": "NamedTypeSpecifier",
         "elementTypes": ["FHIR.code", "System.Code", "System.concept"]

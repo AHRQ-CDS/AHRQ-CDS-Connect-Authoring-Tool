@@ -1071,12 +1071,42 @@ function sanitizeCQLString(cqlString) {
 }
 
 // Recurse down the tree of a modifier built in the query builder
-function checkRules(rule, value_name, inputType, isRoot = false, isFirstModifier = false) {
-  // Leaf rule node
+function checkRules(
+  rule,
+  value_name,
+  inputType,
+  codeSystemMap,
+  codeMap,
+  conceptMap,
+  resourceMap,
+  isRoot = false,
+  isFirstModifier = false
+) {
+  // Leaf node
   if (rule.ruleType) {
-    const ruleToRender =
-      ruleMap[queryResources.operators.operators.find(op => op.id === rule.ruleType).operatorTemplate];
+    if (rule.conceptValue || rule.conceptValues) {
+      const conceptValues = rule.conceptValues || [rule.conceptValue];
+      const codes = conceptValues.map(c => {
+        return { code: c.code, codeSystem: { name: c.system, id: c.uri }, display: c.display };
+      });
+      const concepts = [];
+      buildConceptObjectForCodes(codes, concepts);
+      concepts.forEach(concept => addConcepts(concept, codeSystemMap, codeMap, conceptMap));
+    }
+    if (rule.valueset) {
+      resourceMap.set(rule.valueset.name, rule.valueset);
+    }
 
+    const operator = queryResources.operators.operators.find(op => op.id === rule.ruleType);
+    if (!operator) {
+      console.error(`Operator could not be found for rule: ${rule.ruleType}`);
+      return;
+    }
+    const ruleToRender = ruleMap[operator.operatorTemplate];
+    if (!operator.operatorTemplate) {
+      console.error(`No template found for operator: ${operator.name}`);
+      return;
+    }
     // The property name may need to be cast in specific syntax for FHIR R4 and STU3
     let resourceProperty = rule.resourceProperty;
     if (fhirTarget.version === '4.0.0' || fhirTarget.version === '3.0.0') {
@@ -1103,26 +1133,42 @@ function checkRules(rule, value_name, inputType, isRoot = false, isFirstModifier
       }
     }
 
-    return ejs.render(ruleToRender, { ...rule, value_name, resourceProperty });
+    // Leaf at root level
+    if (isRoot) {
+      const alias = queryAliasMap[inputType] || 'ALIAS';
+      const statement = ejs.render(ruleToRender, { ...rule, value_name: alias, resourceProperty });
+      return ejs.render(ruleMap['RootTemplate'], {
+        value_name,
+        alias,
+        isFirstModifier,
+        isLeaf: true,
+        statement
+      });
+    } else {
+      return ejs.render(ruleToRender, { ...rule, value_name, resourceProperty });
+    }
   }
 
   // Conjunction at root level
   if (isRoot) {
-    // TODO: Revisit this approach as the query builder evolves. We might want a more
-    // dynamic method for aliases by type, and we might want to uniquely identify them.
     const alias = queryAliasMap[inputType] || 'ALIAS';
-    const statements = rule.rules.map(r => checkRules(r, alias, inputType));
+    const statements = rule.rules.map(r =>
+      checkRules(r, alias, inputType, codeSystemMap, codeMap, conceptMap, resourceMap)
+    );
     return ejs.render(ruleMap['RootTemplate'], {
       value_name,
       alias,
       isFirstModifier,
+      isLeaf: false,
       statements,
       conjunctionType: rule.conjunctionType
     });
   }
 
   // Conjunction within tree
-  const statements = rule.rules.map(r => checkRules(r, value_name, inputType));
+  const statements = rule.rules.map(r =>
+    checkRules(r, value_name, inputType, codeSystemMap, codeMap, conceptMap, resourceMap)
+  );
   return ejs.render(ruleMap['GroupTemplate'], { statements, conjunctionType: rule.conjunctionType });
 }
 
@@ -1137,7 +1183,17 @@ function applyModifiers(values = [], modifiers = []) {
         if (modifier.where) {
           // A query builder modifier will always have exactly one input type
           const inputType = modifier.inputTypes[0];
-          newValue = checkRules(modifier.where, newValue, inputType, modifier.returnType, index === 0);
+          newValue = checkRules(
+            modifier.where,
+            newValue,
+            inputType,
+            this.codeSystemMap,
+            this.codeMap,
+            this.conceptMap,
+            this.resourceMap,
+            modifier.returnType,
+            index === 0
+          );
         } else {
           if (fhirTarget.version.startsWith('1.0.')) {
             if (modifier.id === 'ActiveMedicationRequest') modifier.cqlLibraryFunction = 'C3F.ActiveMedicationOrder';
@@ -1348,6 +1404,8 @@ function buildConceptObjectForCodes(codes, listOfConcepts) {
       code.code = code.code.replace(/'/g, "\\'").replace(/"/g, '\\"');
       code.display = code.display.replace(/'/g, "\\'");
       code.codeSystem.id = code.codeSystem.id.replace(/'/g, "\\'");
+      // If the codeName variable is ever modified, make sure to update the templates
+      // in api/data/cql/rules that use similar logic (such as codeConceptMatchesConcept)
       const codeName = code.display && code.display.length < 60 ? code.display.replace(/"/g, '\\"') : code.code;
       const concept = {
         name: `${code.codeSystem.name} ${code.code} Concept`,
