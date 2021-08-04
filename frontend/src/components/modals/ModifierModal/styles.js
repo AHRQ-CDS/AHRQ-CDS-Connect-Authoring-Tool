@@ -108,8 +108,8 @@ export default makeStyles(
     noMarginBottom: {
       marginBottom: '0'
     },
-    preLabel: { margin: 'auto', marginRight: '12px', fontWeight: 'bold', whiteSpace: 'nowrap' },
-    postLabel: { margin: 'auto', marginLeft: '12px', fontWeight: 'bold', whiteSpace: 'nowrap' },
+    preLabel: { marginTop: '22px', marginRight: '8px', fontWeight: 'bold', whiteSpace: 'nowrap' },
+    postLabel: { marginTop: '22px', marginLeft: '6px', fontWeight: 'bold', whiteSpace: 'nowrap' },
     rule: {
       alignItems: 'flex-start',
       display: 'flex',

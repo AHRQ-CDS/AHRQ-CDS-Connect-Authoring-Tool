@@ -107,11 +107,19 @@
           "id": "comparisonOperator",
           "name": "Comparison",
           "type": "selector",
-          "selectionValues": ["<", ">", "<=", ">=", "="]
+          "preLabel": "The length of the list is",
+          "selectionValues": [
+            { "value": "<", "name": "less than" },
+            { "value": ">", "name": "greater than" },
+            { "value": "<=", "name": "less or equal to" },
+            { "value": ">=", "name": "greater or equal to" },
+            { "value": "=", "name": "" }
+          ]
         },
         {
           "id": "comparisonValue",
           "type": "editor",
+          "postLabel": "elements long.",
           "typeSpecifier": {
             "type": "NamedTypeSpecifier",
             "editorType": "System.Integer"
@@ -567,6 +575,7 @@
         {
           "id": "userSpecifiedDateTime",
           "type": "editor",
+          "preLabel": "Date:",
           "typeSpecifier": {
             "type": "NamedTypeSpecifier",
             "editorType": "System.DateTime"
@@ -587,6 +596,7 @@
         {
           "id": "userSpecifiedDateTime",
           "type": "editor",
+          "preLabel": "Date:",
           "typeSpecifier": {
             "type": "NamedTypeSpecifier",
             "editorType": "System.DateTime"
@@ -613,6 +623,7 @@
             "editorType": "System.DateTime"
           }
         },
+        { "id": "dateTimeOccursBetween_AndLabel", "type": "label", "value": "and" },
         {
           "id": "endDateTime",
           "type": "editor",
@@ -754,6 +765,7 @@
         {
           "id": "lowQuantity",
           "type": "editor",
+          "preLabel": "Value 1:",
           "typeSpecifier": {
             "type": "NamedTypeSpecifier",
             "editorType": "System.Quantity"
@@ -762,6 +774,7 @@
         {
           "id": "highQuantity",
           "type": "editor",
+          "preLabel": "Value 2:",
           "typeSpecifier": {
             "type": "NamedTypeSpecifier",
             "editorType": "System.Quantity"
@@ -789,7 +802,14 @@
           "id": "comparisonOperator",
           "name": "Comparison",
           "type": "selector",
-          "selectionValues": ["<", ">", "<=", ">=", "="]
+          "preLabel": "is",
+          "selectionValues": [
+            { "value": "<", "name": "less than" },
+            { "value": ">", "name": "greater than" },
+            { "value": "<=", "name": "less or equal to" },
+            { "value": ">=", "name": "greater or equal to" },
+            { "value": "=", "name": "" }
+          ]
         },
         {
           "id": "comparisonOperand",
@@ -814,6 +834,7 @@
         {
           "id": "numericInterval",
           "type": "editor",
+          "preLabel": "Interval:",
           "typeSpecifier": {
             "type": "IntervalTypeSpecifier",
             "editorType": "System.Quantity"
@@ -834,6 +855,7 @@
         {
           "id": "number",
           "type": "editor",
+          "preLabel": "Quantity:",
           "typeSpecifier": {
             "type": "NamedTypeSpecifier",
             "editorType": "System.Quantity"
@@ -854,6 +876,7 @@
         {
           "id": "number",
           "type": "editor",
+          "preLabel": "Quantity:",
           "typeSpecifier": {
             "type": "NamedTypeSpecifier",
             "editorType": "System.Quantity"
@@ -888,6 +911,7 @@
         {
           "id": "highAgeValue",
           "type": "editor",
+          "preLabel": "and",
           "typeSpecifier": {
             "type": "NamedTypeSpecifier",
             "editorType": "System.Integer"
@@ -896,6 +920,7 @@
         {
           "id": "highTimeUnit",
           "name": "Time Unit",
+          "postLabel": "old.",
           "type": "selector",
           "selectionValues": ["years", "months", "weeks", "days", "hours", "minutes"]
         }
@@ -914,8 +939,15 @@
         {
           "id": "comparisonOperator",
           "name": "Comparison",
+          "preLabel": "The age is",
           "type": "selector",
-          "selectionValues": ["<", ">", "<=", ">=", "="]
+          "selectionValues": [
+            { "value": "<", "name": "less than" },
+            { "value": ">", "name": "greater than" },
+            { "value": "<=", "name": "less or equal to" },
+            { "value": ">=", "name": "greater or equal to" },
+            { "value": "=", "name": "" }
+          ]
         },
         {
           "id": "ageValue",
@@ -929,6 +961,7 @@
           "id": "timeUnit",
           "name": "Time Unit",
           "type": "selector",
+          "postLabel": "old.",
           "selectionValues": ["years", "months", "weeks", "days", "hours", "minutes"]
         }
       ]

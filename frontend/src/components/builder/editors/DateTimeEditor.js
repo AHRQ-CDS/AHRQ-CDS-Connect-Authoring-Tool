@@ -26,7 +26,15 @@ const convertDateTimeForCQL = (newValues, isInterval, isTime) => {
   return date || time ? { date, time, str: date ? (time ? `@${date}T${time}` : `@${date}`) : null } : null;
 };
 
-const DateTimeEditor = ({ errors, fullWidth = true, handleUpdateEditor, isInterval = false, isTime = false, value }) => {
+const DateTimeEditor = ({
+  errors,
+  fullWidth = true,
+  handleUpdateEditor,
+  isInterval = false,
+  isTime = false,
+  showLabels = false,
+  value
+}) => {
   const fieldStyles = useFieldStyles();
 
   const handleChange = (newValue, inputType) => {
@@ -49,6 +57,11 @@ const DateTimeEditor = ({ errors, fullWidth = true, handleUpdateEditor, isInterv
   return (
     <div className={fullWidth ? fieldStyles.fieldInputFullWidth : fieldStyles.fieldInputLg} id="date-time-editor">
       <div className={clsx(fieldStyles.fieldInputGroup, fieldStyles.fieldInputGroupJustifyLeft)}>
+        {showLabels && (
+          <div style={{ margin: '0', marginRight: '12px', fontWeight: 'bold', whitespace: 'nowrap' }}>
+            {isTime ? `Time${isInterval ? ' 1' : ''}:` : `Date${isInterval ? ' 1' : ''}:`}
+          </div>
+        )}
         {!isTime && (
           <DatePicker
             onChange={newValue => handleChange(newValue, isInterval ? 'firstDate' : 'date')}
@@ -66,6 +79,12 @@ const DateTimeEditor = ({ errors, fullWidth = true, handleUpdateEditor, isInterv
 
       {isInterval && (
         <div className={clsx(fieldStyles.fieldInputGroup, fieldStyles.fieldInputGroupJustifyLeft)}>
+          {showLabels && (
+            <div style={{ margin: '0', marginRight: '12px', fontWeight: 'bold', whitespace: 'nowrap' }}>
+              {isTime ? `Time${isInterval ? ' 2' : ''}:` : `Date${isInterval ? ' 2' : ''}:`}
+            </div>
+          )}
+
           {!isTime && (
             <DatePicker
               onChange={newValue => handleChange(newValue, 'secondDate')}
@@ -86,12 +105,14 @@ const DateTimeEditor = ({ errors, fullWidth = true, handleUpdateEditor, isInterv
 };
 
 DateTimeEditor.propTypes = {
-  handleUpdateEditor: PropTypes.func.isRequired,
-  isInterval: PropTypes.bool,
-  isTime: PropTypes.bool,
   errors: PropTypes.shape({
     incompleteInput: PropTypes.bool
   }),
+  fullWidth: PropTypes.bool,
+  handleUpdateEditor: PropTypes.func.isRequired,
+  isInterval: PropTypes.bool,
+  isTime: PropTypes.bool,
+  showLabels: PropTypes.bool,
   value: PropTypes.object
 };
 

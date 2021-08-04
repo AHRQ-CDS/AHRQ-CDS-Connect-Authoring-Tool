@@ -1,8 +1,8 @@
 import React from 'react';
+import { Card, CardContent } from '@material-ui/core';
 import clsx from 'clsx';
 import {
   BooleanEditor,
-  CodeEditor,
   DateTimeEditor,
   NumberEditor,
   QuantityEditor,
@@ -35,9 +35,9 @@ const OperandTemplate = ({ operator, resource, rule, updateRule }) => {
     if (preLabel === '' && postLabel === '') return jsxElement;
     return (
       <div className={flexStyles.flex}>
-        <span className={modalStyles.preLabel}>{preLabel}</span>
+        {preLabel !== '' && <span className={modalStyles.preLabel}>{preLabel}</span>}
         {jsxElement}
-        <span className={modalStyles.postLabel}>{postLabel}</span>
+        {postLabel !== '' && <span className={modalStyles.postLabel}>{postLabel}</span>}
       </div>
     );
   };
@@ -103,20 +103,25 @@ const OperandTemplate = ({ operator, resource, rule, updateRule }) => {
                     );
                   case 'System.DateTime':
                     return (
-                      <DateTimeEditor
-                        handleUpdateEditor={value => updateRuleValue(value, operand.id, rule, updateRule)}
-                        isInterval={type === 'IntervalTypeSpecifier'}
-                        isTime={type === 'System.Time'}
-                        value={rule[operand.id] || {}}
-                      />
+                      <div>
+                        <DateTimeEditor
+                          handleUpdateEditor={value => updateRuleValue(value, operand.id, rule, updateRule)}
+                          isInterval={type === 'IntervalTypeSpecifier'}
+                          isTime={type === 'System.Time'}
+                          value={rule[operand.id] || {}}
+                          showLabels={type === 'IntervalTypeSpecifier'}
+                        />
+                      </div>
                     );
                   case 'System.Quantity':
                     return (
-                      <QuantityEditor
-                        handleUpdateEditor={value => updateRuleValue(value, operand.id, rule, updateRule)}
-                        isInterval={operand.typeSpecifier.type === 'IntervalTypeSpecifier'}
-                        value={rule[operand.id] || {}}
-                      />
+                      <div>
+                        <QuantityEditor
+                          handleUpdateEditor={value => updateRuleValue(value, operand.id, rule, updateRule)}
+                          isInterval={operand.typeSpecifier.type === 'IntervalTypeSpecifier'}
+                          value={rule[operand.id] || {}}
+                        />
+                      </div>
                     );
                   default:
                     return null;
@@ -143,11 +148,11 @@ const OperandTemplate = ({ operator, resource, rule, updateRule }) => {
                 label={operand.name || 'Select...'}
                 key={`selector-${index}`}
                 onChange={event => updateRuleValue(event.target.value, operand.id, rule, updateRule)}
-                options={operand.selectionValues.map(val => {
-                  return { name: val };
+                options={operand.selectionValues.map(value => {
+                  return operand.selectionValues.every(option => typeof option === 'object') ? value : { name: value };
                 })}
                 value={rule[operand.id] || ''}
-                valueKey="name"
+                valueKey={operand.selectionValues.every(option => typeof option === 'object') ? 'value' : 'name'}
                 labelKey="name"
               />
             </div>
@@ -157,13 +162,7 @@ const OperandTemplate = ({ operator, resource, rule, updateRule }) => {
         );
       } else if (operand.type === 'label') {
         // Custom labels (as operands) are rendered here.
-        // You can target them by id for custom styling if they don't look right.
-        // switch (operand.id) {
-        //   case 'dateTimeOccursBetweenAgoLabel':
-        //     return <div className={clsx(modalStyles.label, modalStyles.agoLabel)}>{operand.value}</div>
-        // }
         return <div className={modalStyles.label}>{operand.value}</div>;
-        return null;
       } else return null;
     });
   else return null;
