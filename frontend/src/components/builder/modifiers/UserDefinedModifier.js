@@ -22,6 +22,7 @@ const UserDefinedModifier = ({ elementInstance, handleUpdateModifier = undefined
           elementInstanceReturnType={elementInstance.returnType}
           handleCloseModal={() => setShowModifierModal(false)}
           handleUpdateModifiers={handleUpdateModifier}
+          hasLimitedModifiers={false}
           modifier={modifier}
         />
       )}

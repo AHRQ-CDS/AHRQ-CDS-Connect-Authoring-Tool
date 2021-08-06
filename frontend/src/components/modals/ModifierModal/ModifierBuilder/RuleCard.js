@@ -8,7 +8,7 @@ import clsx from 'clsx';
 import _ from 'lodash';
 import { Dropdown } from 'components/elements';
 import { fetchOperators } from 'queries/modifier-builder';
-import { OperandTemplate, QuantityIntervalOverlapsNumericInterval } from './operators';
+import { OperandTemplate } from './operators';
 import { useFieldStyles } from 'styles/hooks';
 import useStyles from '../styles';
 
@@ -62,16 +62,6 @@ const RuleCard = ({ handleRemoveRule, handleUpdate, resourceOptions, rule }) => 
             let operatorData = operatorsQuery.data.find(op => op.id === ruleType);
             if (!operatorData) return null;
             switch (ruleType) {
-              // For whatever reason, the editor refuses to wrap despite running off the end of the modal
-              // The below operator component is a fix to reorient it.
-              case 'quantityIntervalOverlapsNumericInterval':
-                return (
-                  <QuantityIntervalOverlapsNumericInterval
-                    operandId={_.first(operatorData.userSelectedOperands).id}
-                    rule={rule}
-                    updateRule={handleUpdate}
-                  />
-                );
               default:
                 return (
                   <OperandTemplate

@@ -1,6 +1,6 @@
 import React from 'react';
-import { Card, CardContent } from '@material-ui/core';
 import clsx from 'clsx';
+import _ from 'lodash';
 import {
   BooleanEditor,
   DateTimeEditor,
@@ -10,6 +10,7 @@ import {
 } from 'components/builder/editors';
 import { Dropdown } from 'components/elements';
 import ConceptListEditor from '../utils/ConceptListEditor';
+import ConceptEditor from '../utils/ConceptEditor';
 import PredefinedCodeSelection from '../utils/PredefinedCodeSelection';
 import { useFieldStyles, useFlexStyles, useSpacingStyles } from 'styles/hooks';
 import useStyles from '../../styles';
@@ -55,6 +56,7 @@ const OperandTemplate = ({ operator, resource, rule, updateRule }) => {
                   case 'valueset':
                     return (
                       <ValuesetEditor
+                        key={`${rule.id}-${index}`}
                         nameValue={rule?.valueset?.name || ''}
                         oidValue={rule?.valueset?.oid || ''}
                         onChange={value => updateRuleValue(value, operand.id, rule, updateRule)}
@@ -65,25 +67,27 @@ const OperandTemplate = ({ operator, resource, rule, updateRule }) => {
                   case 'System.Boolean':
                     return (
                       <BooleanEditor
+                        key={`${rule.id}-${index}`}
                         handleUpdateEditor={value => updateRuleValue(value, operand.id, rule, updateRule)}
                         value={rule[operand.id] || ''}
                       />
                     );
-                  case 'System.Code': // TODO: Add support for List<System.Concept> (It's different!)
-                  case 'System.Concept': // TODO: Custom component to store current concept codes. Currently overwritten on edits.
+                  case 'System.Code':
+                  case 'System.Concept':
                     if (operand.typeSpecifier.type === 'ListTypeSpecifier') {
                       return (
                         <ConceptListEditor
+                          key={`${rule.id}-${index}`}
                           onChange={values => updateRuleValue(values, operand.id, rule, updateRule)}
                           values={rule[operand.id] || []}
                         />
                       );
                     } else {
                       return (
-                        <ConceptListEditor
-                          onChange={values => updateRuleValue(values, operand.id, rule, updateRule)}
-                          singular
-                          values={rule[operand.id] || []}
+                        <ConceptEditor
+                          key={`${rule.id}-${index}`}
+                          onChange={value => updateRuleValue(value, operand.id, rule, updateRule)}
+                          value={rule[operand.id]}
                         />
                       );
                     }
@@ -92,6 +96,7 @@ const OperandTemplate = ({ operator, resource, rule, updateRule }) => {
                     return (
                       <div className={spacingStyles.marginRight}>
                         <NumberEditor
+                          key={`${rule.id}-${index}`}
                           fullWidth={false}
                           handleUpdateEditor={value => updateRuleValue(value, operand.id, rule, updateRule)}
                           isDecimal={editorType === 'decimal'}
@@ -105,6 +110,7 @@ const OperandTemplate = ({ operator, resource, rule, updateRule }) => {
                     return (
                       <div>
                         <DateTimeEditor
+                          key={`${rule.id}-${index}`}
                           handleUpdateEditor={value => updateRuleValue(value, operand.id, rule, updateRule)}
                           isInterval={type === 'IntervalTypeSpecifier'}
                           isTime={type === 'System.Time'}
@@ -117,6 +123,7 @@ const OperandTemplate = ({ operator, resource, rule, updateRule }) => {
                     return (
                       <div>
                         <QuantityEditor
+                          key={`${rule.id}-${index}`}
                           handleUpdateEditor={value => updateRuleValue(value, operand.id, rule, updateRule)}
                           isInterval={operand.typeSpecifier.type === 'IntervalTypeSpecifier'}
                           value={rule[operand.id] || {}}
@@ -136,6 +143,7 @@ const OperandTemplate = ({ operator, resource, rule, updateRule }) => {
         return applyFieldLabels(
           operand.selectionRequiresPredefinedCodes ? (
             <PredefinedCodeSelection
+              key={`${rule.id}-${index}`}
               allowsCustomCodes={resource.allowsCustomCodes}
               options={resource.predefinedCodes}
               onChange={value => updateRuleValue(value, operand.id, rule, updateRule)}
@@ -146,7 +154,7 @@ const OperandTemplate = ({ operator, resource, rule, updateRule }) => {
               <Dropdown
                 className={fieldStyles.fieldInputMd}
                 label={operand.name || 'Select...'}
-                key={`selector-${index}`}
+                key={`${rule.id}-${index}`}
                 onChange={event => updateRuleValue(event.target.value, operand.id, rule, updateRule)}
                 options={operand.selectionValues.map(value => {
                   return operand.selectionValues.every(option => typeof option === 'object') ? value : { name: value };

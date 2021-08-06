@@ -11,30 +11,20 @@ import { CodeSelectModal, VSACAuthenticationModal } from 'components/modals';
 import { useSelector } from 'react-redux';
 import { Lock as LockIcon } from '@material-ui/icons';
 
-const ConceptListEditor = ({ onChange, singular, values }) => {
+const ConceptEditor = ({ onChange, value }) => {
   const [showVSACAuthModal, setShowVSACAuthModal] = useState(false);
   const vsacApiKey = useSelector(state => state.vsac.apiKey);
 
   const [showConceptModal, setShowConceptModal] = useState(false);
-  const [editAtIndex, setEditAtIndex] = useState();
   const fieldStyles = useFieldStyles();
   const modalStyles = useStyles();
 
   const handleAddConcept = value => {
-    let newValues = [...values].concat([value]);
-    onChange(newValues);
-  };
-
-  const handleEditConcept = (index, value) => {
-    let newValues = [...values];
-    newValues.splice(index, 1, value);
-    onChange(newValues);
+    onChange(value);
   };
 
   const handleDeleteConcept = index => {
-    let newValues = [...values];
-    newValues.splice(index, 1);
-    onChange(newValues);
+    onChange(undefined);
   };
 
   return (
@@ -59,7 +49,6 @@ const ConceptListEditor = ({ onChange, singular, values }) => {
                         className={modalStyles.conceptChip}
                         label={tag.display || tag.code}
                         onClick={() => {
-                          setEditAtIndex(index);
                           setShowConceptModal(true);
                         }}
                         onDelete={() => handleDeleteConcept(index)}
@@ -68,21 +57,18 @@ const ConceptListEditor = ({ onChange, singular, values }) => {
                   </>
                 ));
               }}
-              value={values}
+              value={value ? [value] : []}
             />
             <Tooltip
               arrow
               title={
-                singular && values.length === 1
-                  ? 'Only one concept is allowed for this resource. Another cannot be added.'
-                  : ''
+                value !== undefined ? 'Only one concept is allowed for this resource. Another cannot be added.' : ''
               }
             >
               <Button
                 className={modalStyles.compactTextButton}
                 onClick={() => {
-                  if (!singular || values.length !== 1) {
-                    setEditAtIndex(undefined);
+                  if (value === undefined) {
                     setShowConceptModal(true);
                   }
                 }}
@@ -95,13 +81,9 @@ const ConceptListEditor = ({ onChange, singular, values }) => {
           {showConceptModal && (
             <CodeSelectModal
               handleCloseModal={() => setShowConceptModal(false)}
-              handleSelectCode={
-                editAtIndex === undefined
-                  ? concept => handleAddConcept(concept)
-                  : concept => handleEditConcept(editAtIndex, concept)
-              }
+              handleSelectCode={concept => onChange(concept)}
               isConcept={true}
-              initialValue={editAtIndex === undefined ? undefined : values[editAtIndex]}
+              initialValue={value}
             ></CodeSelectModal>
           )}
         </>
@@ -124,8 +106,8 @@ const ConceptListEditor = ({ onChange, singular, values }) => {
   );
 };
 
-ConceptListEditor.propTypes = {
+ConceptEditor.propTypes = {
   onChange: propTypes.func.isRequired,
-  values: propTypes.array.isRequired
+  value: propTypes.object.isRequired
 };
-export default ConceptListEditor;
+export default ConceptEditor;
