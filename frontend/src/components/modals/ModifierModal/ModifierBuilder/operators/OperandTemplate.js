@@ -1,6 +1,5 @@
 import React from 'react';
 import clsx from 'clsx';
-import _ from 'lodash';
 import {
   BooleanEditor,
   DateTimeEditor,

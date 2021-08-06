@@ -6,7 +6,7 @@ import { ArrowForward as ArrowForwardIcon, Check as CheckIcon } from '@material-
 import clsx from 'clsx';
 
 import ExpressionPhrase from 'components/builder/ExpressionPhrase';
-import changeToCase from 'utils/strings';
+import { changeToCase } from 'utils/strings';
 import { useSpacingStyles } from 'styles/hooks';
 import useStyles from '../styles';
 

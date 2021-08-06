@@ -19,14 +19,6 @@ const ConceptEditor = ({ onChange, value }) => {
   const fieldStyles = useFieldStyles();
   const modalStyles = useStyles();
 
-  const handleAddConcept = value => {
-    onChange(value);
-  };
-
-  const handleDeleteConcept = index => {
-    onChange(undefined);
-  };
-
   return (
     <>
       {Boolean(vsacApiKey) && (
@@ -51,7 +43,7 @@ const ConceptEditor = ({ onChange, value }) => {
                         onClick={() => {
                           setShowConceptModal(true);
                         }}
-                        onDelete={() => handleDeleteConcept(index)}
+                        onDelete={() => onChange(undefined)}
                       ></Chip>
                     </Tooltip>
                   </>

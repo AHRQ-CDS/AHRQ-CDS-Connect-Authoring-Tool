@@ -1,4 +1,4 @@
-import changeToCase from 'utils/strings';
+import { changeToCase } from 'utils/strings';
 import _ from 'lodash';
 
 const propertyToDropdownOption = (property, { options } = {}) => {

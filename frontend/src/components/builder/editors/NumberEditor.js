@@ -99,6 +99,7 @@ NumberEditor.propTypes = {
   errors: PropTypes.shape({
     invalidInput: PropTypes.bool
   }),
+  fullWidth: PropTypes.bool,
   handleUpdateEditor: PropTypes.func.isRequired,
   isDecimal: PropTypes.bool,
   isInterval: PropTypes.bool,

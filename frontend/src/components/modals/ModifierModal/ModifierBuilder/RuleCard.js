@@ -5,7 +5,6 @@ import { useSelector } from 'react-redux';
 import { IconButton } from '@material-ui/core';
 import { Clear as ClearIcon } from '@material-ui/icons';
 import clsx from 'clsx';
-import _ from 'lodash';
 import { Dropdown } from 'components/elements';
 import { fetchOperators } from 'queries/modifier-builder';
 import { OperandTemplate } from './operators';
