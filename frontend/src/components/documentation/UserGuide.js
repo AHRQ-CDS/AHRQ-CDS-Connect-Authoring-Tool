@@ -779,12 +779,12 @@ const UserGuide = () => {
             <div className={styles.h4Wrapper}>
               <h4 id="Modify_Results">3.1.8 Modify Results</h4>
               <div>
-                Once you have the core element defined, including associated value sets and codes (if applicable), its
-                return type will be displayed near the bottom of the element. For elements with FHIR-based types (e.g.,
-                Condition, Observation, etc.), the return-type will be a list of items matching that type (e.g., List of
-                Conditions). In some cases, the default return type is incompatible with the context in which it is used
-                and should be modified to meet the requirements of the context. In other cases, the return type may be
-                compatible, but the author may want to further filter the results.
+                Once you have the core element defined, including associated value sets and codes (if applicable),
+                expression modifiers may be added to alter the element's return type. For elements with FHIR-based types
+                (e.g., Condition, Observation, etc.), the return-type will be a list of items matching that type (e.g.,
+                List of Conditions). In some cases, the default return type is incompatible with the context in which it
+                is used and should be modified to meet the requirements of the context. In other cases, the return type
+                may be compatible, but the author may want to further filter the results.
               </div>
               <div>
                 CDS Authors can use "modifier expressions" to further define or narrow an element's intent. For example,
@@ -796,56 +796,201 @@ const UserGuide = () => {
                 the Inclusions and Exclusions tabs.
               </div>
               <div>
-                To apply an expression modifier to an element, click on the "Expressions" button near the bottom of the
-                element box. When you do this, a set of buttons will be displayed indicating the possible expression
-                modifiers that can be applied to the current element.
+                To apply an expression modifier to an element, click on the "Add Modifiers" button near the bottom of
+                the element box. When you do this, a context menu will be displayed prompting a selection between the
+                options 'Select Modifiers' and 'Build New Modifier'. Selecting modifiers allows for the use of a library
+                of expression modifiers for common use cases. Building a new modifier allows for the easy implementation
+                of modifiers that require custom functionality. Section 3.1.9 covers the selection of 'predefined'
+                modifiers. Section 3.1.10 covers the usage of the expression modifier builder tool.
               </div>
+
               <div>
                 <img
                   alt=""
-                  src={screenshotUrl('Add_Expression')}
+                  src={screenshotUrl('Modifier_Modal')}
+                  className="img-fluid img-thumbnail rounded mx-auto d-block"
+                />
+              </div>
+            </div>
+
+            <div className={styles.h4Wrapper}>
+              <h4 id="Modify_Results_Select">3.1.9 Select Modifiers</h4>
+              <div>
+                The CDS Authoring Tool comes pre-loaded with a variety of expression modifiers for many different common
+                situations. CDS Authors can use "expression modifiers" to further define or narrow an element's intent.
+                To see the available modifiers for your current element, click the 'Select Modfiers' button within the
+                Modifiers context menu. This will display the modifier selection menu.
+              </div>
+              <div>
+                Listed in the header of the modifier selection context menu are the element's expression phrase and its
+                calculated return type. The element's expression phrase provides a human readable sentence that tries to
+                describe the element you have constructed so far. The element's calculated return type will
+                automatically update to provide context on how expression modifier(s) truly 'modify' your expression's
+                return type. Applying the 'Average Observation Value' Modifier to a List of Observations yields the
+                following change to the return type.
+              </div>
+
+              <div>
+                <img
+                  alt=""
+                  src={screenshotUrl('Modifier_Select_Header')}
                   className="img-fluid img-thumbnail rounded mx-auto d-block"
                 />
               </div>
               <div>
-                Expression modifiers can be chained onto one another in succession. The return type from the first
-                expression modifier that is applied will affect the types of expression modifiers that can be applied as
-                the second, and so on. The CDS Authoring Tool performs this filtering for the author automatically,
-                always showing only the expression modifiers that are valid in the current context.
-              </div>
-              <div>
-                Expression modifiers and their value (when applicable) are shown as a list in the main body of the
-                element box. The element type, its associations, and its expression modifiers are also used to display a
-                user-friendly phrase that summarizes the calculated intent of the element. For the example above, the
-                generated phrase would be "There exists a confirmed condition with a code from Diabetes." As you modify
-                the element, the CDS Authoring Tool will update its expression phrase automatically.
+                By clicking the dropdown within this menu, you will be able to see all eligible predefined modifiers
+                available for direct use on your element's current return type. You may also successively chain
+                modifiers within this menu. When you have finished adding your expression modifiers you may press the
+                'Add' button to escape the expression modifiers context menu. Thereafter you will notice that your
+                modifier expressions have been applied to the element.
               </div>
               <div>
                 <img
                   alt=""
-                  src={screenshotUrl('Expression_Phrase')}
+                  src={screenshotUrl('Modifier_Select')}
                   className="img-fluid img-thumbnail rounded mx-auto d-block"
                 />
               </div>
               <div>
-                If you need to remove expression modifiers, you must remove them one at a time, starting with the last
-                one. To remove an expression modifier, click on the "X" on the far right hand side of the expression
-                modifier's row in the element's content. It is currently not possible to directly remove expression
-                modifiers in the middle of the expression modifier list because this might change the current return
-                type at that point and render the rest of the expression modifier list invalid.
+                For some expression modifiers, you may be asked to provide additional information about the operation
+                you would like to perform. One such example of this is comparing a quantity of your choice against your
+                element. Shown below is an added instance of the 'Value Comparison' expression modifier. Note that the
+                'Value Comparison' modifier is applied onto the 'Quantity' type returned by the 'Average Observation
+                Value' expression modifier. The checkmark icon next to the new return type of 'Boolean' indicates that
+                you have successfully created a valid element for inclusion or exclusion.
               </div>
               <div>
                 <img
                   alt=""
-                  src={screenshotUrl('LDL_C_Expressions')}
+                  src={screenshotUrl('Modifier_With_Arguments')}
+                  className="img-fluid img-thumbnail rounded mx-auto d-block"
+                />
+              </div>
+            </div>
+
+            <div>
+              If you need to remove expression modifiers, you must remove them one at a time, starting with the last
+              one. To remove an expression modifier, click on the "X" on the far right hand side of the expression
+              modifier's row in the element's content. It is currently not possible to directly remove expression
+              modifiers in the middle of the expression modifier list because this might change the current return type
+              at that point and render the rest of the expression modifier list invalid.
+            </div>
+            <div>
+              <img
+                alt=""
+                src={screenshotUrl('Modifier_Templates')}
+                className="img-fluid img-thumbnail rounded mx-auto d-block"
+              />
+            </div>
+
+            <div className={styles.h4Wrapper}>
+              <h4 id="Modifier_Builder">3.1.10 Build Modifiers</h4>
+              <div>
+                While the CDS Authoring Tool's library of predefined expression modifiers is extremely robust on its
+                own, there are simply certain situations where more precise control is necessary or desired. The
+                Authoring Tool has a facility for users to create custom expression modifiers and use them alongside its
+                predefined expression modifier collection. Though other features of the tool may provide the greatest
+                flexibility (External CQL), the modifier builder serves as a middle-of-the-road complexity option for
+                intermediate users.
+              </div>
+              <div>
+                To get started, open the expression modifiers context menu by pressing the 'Add Modifiers' button on
+                your element; then click the 'Build New Modifier' button.
+              </div>
+              <div>
+                <img
+                  alt=""
+                  src={screenshotUrl('Modifier_Modal')}
                   className="img-fluid img-thumbnail rounded mx-auto d-block"
                 />
               </div>
               <div>
-                To see the full set of expression modifiers applicable to each element and/or return type, click on the
-                "Data Types" tab on the <a href="documentation">Documentation</a> page. The "External CQL Tab" section
-                of this documentation details the process to add additional expression modifiers to use in an artifact
-                in the CDS Authoring Tool.
+                If your artifact has not been previously locked to a FHIR® version, you will be prompted to select one.
+                If your artifact has been previously locked to a given version, it will be automatically selected for
+                you.
+              </div>
+              <div>
+                <img
+                  alt=""
+                  src={screenshotUrl('Modifier_FHIR_Version')}
+                  className="img-fluid img-thumbnail rounded mx-auto d-block"
+                />
+              </div>
+              <div>
+                Once a FHIR® version has been selected, the modifier builder will be displayed. At the top of the
+                context menu, a banner containing a human readable expression as well as the element's return type will
+                be displayed.
+              </div>
+              <div>
+                <img
+                  alt=""
+                  src={screenshotUrl('Modifier_Select_Header')}
+                  className="img-fluid img-thumbnail rounded mx-auto d-block"
+                />
+              </div>
+              <div>
+                Custom modifier expressions follow a treelike structure, and are built out of smaller building blocks
+                called Rules. A Rule simply dictates what criteria a particular property of your element must match in
+                order to be included. Rules may also be combined with And/Or logic to illustrate more complex behavior.
+                For example, finding all Conditions that have onset in the last 10 weeks OR a status of 'active' OR
+                'recurring' is fairly trivial. Rules may also be put into groups.
+              </div>
+              <div>
+                <img
+                  alt=""
+                  src={screenshotUrl('Modifier_Builder_Example')}
+                  className="img-fluid img-thumbnail rounded mx-auto d-block"
+                />
+              </div>
+              <div>
+                A Rule consists of a subject, an action, and sometimes additional data that you must enter. Most rules
+                have been written such that when all applicable fields are satisfied, the clause will resemble a human
+                readable version of the assembled logic. Like with the Authoring Tool's collection of predefined
+                expression modifiers, there also exists a collection of rules, each tailored to a particular input type.
+                The tool automatically determines and shows you only the operators that are applicable in a given
+                situation. To add a rule you must first select the property that you wish to interact with. The
+                below-pictured property dropdown lists selectable properties of the Condition type. You may notice that
+                some properties are prefixed with a property-choice name. This simply means that the base property you
+                are targeting can automatically be interpreted as different types for different use cases.
+              </div>
+              <div>
+                <img
+                  alt=""
+                  src={screenshotUrl('Modifier_Builder_Property_Dropdown')}
+                  className="img-fluid img-thumbnail rounded mx-auto d-block"
+                />
+              </div>
+              <div>
+                Once the target property is selected, another dropdown will appear allowing you to select the operation
+                you would like to perform. The operation you select may prompt you for some extra information. The
+                custom expression modifier below would return the list of all Conditions with a code from "Maternal High
+                Risk Conditions" that involve a patient older than 45 years old.
+              </div>
+              <div>
+                <img
+                  alt=""
+                  src={screenshotUrl('Modifier_Builder_Rule_Example')}
+                  className="img-fluid img-thumbnail rounded mx-auto d-block"
+                />
+              </div>
+              <div>
+                A Group is a list of zero or more Rules whose values are combined using AND / OR statements. When used
+                as a child element, a group's return type will be aggregated and packaged as an input to its parent
+                element. When one group is inside of another, the larger group can only 'see' the smaller group as one
+                input. In algebra, parentheses group the operations that are performed first (e.g. (4 + 1) x 5 = 25) --
+                Groups have the same function except that they operate over the results of the rules you choose.
+              </div>
+              <div>
+                It is important to note that the most advantageous times to utilize custom expression modifiers. One
+                such time is when trying to search or query through a list of elements belonging to a FHIR-based type
+                (e.g. Condition, Observation, Procedure, etc.). An important fact is that a custom expression can only
+                filter elements of a list, and cannot perform aggregation/reduction (e.g. Change the return type from a
+                List of Observations to Observation). This happens to be the case because custom expression modifiers
+                use a CQL language construct called a 'Query'. The most important distinction between a query operation
+                and an aggregation/reduction operation is that the former returns a list containing any natural number
+                of elements (including zero!) and the latter always returns a singular element. While certain
+                aggregator/reducer expression modifiers may be selected within the expression modifier context menu (See
+                the above sections), aggregation/reduction is not possible within the expression modifier builder.
               </div>
             </div>
           </div>
