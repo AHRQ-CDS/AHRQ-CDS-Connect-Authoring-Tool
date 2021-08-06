@@ -1133,20 +1133,7 @@ function checkRules(
       }
     }
 
-    // Leaf at root level
-    if (isRoot) {
-      const alias = queryAliasMap[inputType] || 'ALIAS';
-      const statement = ejs.render(ruleToRender, { ...rule, value_name: alias, resourceProperty });
-      return ejs.render(ruleMap['RootTemplate'], {
-        value_name,
-        alias,
-        isFirstModifier,
-        isLeaf: true,
-        statement
-      });
-    } else {
-      return ejs.render(ruleToRender, { ...rule, value_name, resourceProperty });
-    }
+    return ejs.render(ruleToRender, { ...rule, value_name, resourceProperty });
   }
 
   // Conjunction at root level
@@ -1159,7 +1146,6 @@ function checkRules(
       value_name,
       alias,
       isFirstModifier,
-      isLeaf: false,
       statements,
       conjunctionType: rule.conjunctionType
     });

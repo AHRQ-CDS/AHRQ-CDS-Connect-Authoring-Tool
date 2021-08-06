@@ -853,7 +853,7 @@ describe('Modifier tests', () => {
   rawQuery.expTreeInclude.childInstances[0].modifiers = [
     {
       inputTypes: ['list_of_allergy_intolerances'],
-      returnType: 'boolean',
+      returnType: 'list_of_allergy_intolerances',
       where: {
         conjunctionType: 'and',
         rules: [
@@ -890,7 +890,7 @@ describe('Modifier tests', () => {
     },
     {
       inputTypes: ['list_of_allergy_intolerances'],
-      returnType: 'boolean',
+      returnType: 'list_of_allergy_intolerances',
       where: {
         conjunctionType: 'and',
         rules: [
@@ -1027,7 +1027,7 @@ describe('CQL Operator Templates', () => {
     rawBaseQuery.expTreeInclude.childInstances[0].modifiers = [
       {
         inputTypes: ['list_of_allergy_intolerances'],
-        returnType: 'boolean',
+        returnType: 'list_of_allergy_intolerances',
         where: {}
       }
     ];
@@ -1035,24 +1035,34 @@ describe('CQL Operator Templates', () => {
 
   it('Handles isNull template', () => {
     const templateTest = {
-      ruleType: 'isNull',
-      resourceProperty: 'verificationStatus'
+      conjunctionType: 'and',
+      rules: [
+        {
+          ruleType: 'isNull',
+          resourceProperty: 'verificationStatus'
+        }
+      ]
     };
     rawBaseQuery.expTreeInclude.childInstances[0].modifiers[0].where = templateTest;
     const artifact = buildCQL(rawBaseQuery);
     const converted = artifact.toString();
-    expect(converted).to.contain('[AllergyIntolerance] AI where AI.verificationStatus is null');
+    expect(converted).to.contain('[AllergyIntolerance] AI where (AI.verificationStatus is null)');
   });
 
   it('Handles isNotNull template', () => {
     const templateTest = {
-      ruleType: 'isNotNull',
-      resourceProperty: 'verificationStatus'
+      conjunctionType: 'and',
+      rules: [
+        {
+          ruleType: 'isNotNull',
+          resourceProperty: 'verificationStatus'
+        }
+      ]
     };
     rawBaseQuery.expTreeInclude.childInstances[0].modifiers[0].where = templateTest;
     const artifact = buildCQL(rawBaseQuery);
     const converted = artifact.toString();
-    expect(converted).to.contain('[AllergyIntolerance] AI where AI.verificationStatus is not null');
+    expect(converted).to.contain('[AllergyIntolerance] AI where (AI.verificationStatus is not null)');
   });
 
   it('Handles isTrueFalse template', () => {
@@ -1081,37 +1091,47 @@ describe('CQL Operator Templates', () => {
 
   it('Handles codeConceptInValueSet template', () => {
     const templateTest = {
-      ruleType: 'codeConceptInValueSet',
-      resourceProperty: 'someCodeProperty',
-      valueset: {
-        name: 'My Value Set',
-        oid: '1.2.3.4.5.6.7.8.9'
-      }
+      conjunctionType: 'and',
+      rules: [
+        {
+          ruleType: 'codeConceptInValueSet',
+          resourceProperty: 'someCodeProperty',
+          valueset: {
+            name: 'My Value Set',
+            oid: '1.2.3.4.5.6.7.8.9'
+          }
+        }
+      ]
     };
     rawBaseQuery.expTreeInclude.childInstances[0].modifiers[0].where = templateTest;
     const artifact = buildCQL(rawBaseQuery);
     const converted = artifact.toString();
     expect(converted).to.contain(`valueset "My Value Set": 'https://cts.nlm.nih.gov/fhir/ValueSet/1.2.3.4.5.6.7.8.9'`);
-    expect(converted).to.contain('[AllergyIntolerance] AI where AI.someCodeProperty in "My Value Set"');
+    expect(converted).to.contain('[AllergyIntolerance] AI where (AI.someCodeProperty in "My Value Set")');
   });
 
   it('Handles codeConceptMatchesConcept template', () => {
     const templateTest = {
-      ruleType: 'codeConceptMatchesConcept',
-      resourceProperty: 'someCodeProperty',
-      conceptValue: {
-        code: 'Some-Code',
-        display: 'Some Display',
-        system: 'Some-System',
-        uri: 'http://some-system.org'
-      }
+      conjunctionType: 'and',
+      rules: [
+        {
+          ruleType: 'codeConceptMatchesConcept',
+          resourceProperty: 'someCodeProperty',
+          conceptValue: {
+            code: 'Some-Code',
+            display: 'Some Display',
+            system: 'Some-System',
+            uri: 'http://some-system.org'
+          }
+        }
+      ]
     };
     rawBaseQuery.expTreeInclude.childInstances[0].modifiers[0].where = templateTest;
     const artifact = buildCQL(rawBaseQuery);
     const converted = artifact.toString();
     expect(converted).to.contain(`codesystem "Some-System": 'http://some-system.org'`);
     expect(converted).to.contain(`code "Some Display code": 'Some-Code' from "Some-System" display 'Some Display'`);
-    expect(converted).to.contain('[AllergyIntolerance] AI where AI.someCodeProperty ~ "Some Display code"');
+    expect(converted).to.contain('[AllergyIntolerance] AI where (AI.someCodeProperty ~ "Some Display code")');
   });
 });
 

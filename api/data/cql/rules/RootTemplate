@@ -1,1 +1,1 @@
-<%if (isFirstModifier) { %><%-value_name%><% } else { %>(<%-value_name%>)<% } %> <%-alias%> where <%if (isLeaf) { %><%-statement%><% } else { %>(<%-statements.join(` ${conjunctionType} `)%>)<% } %>
+<%if (isFirstModifier) { %><%-value_name%><% } else { %>(<%-value_name%>)<% } %> <%-alias%> where (<%-statements.join(` ${conjunctionType} `)%>)

@@ -64,6 +64,13 @@ To add a rule template to `api/data/cql/rules` for an operator in the query buil
 
 1. Create a file for this template in `api/data/cql/rules`
 2. Find the corresponding operator in `api/data/query_builder/operators.json` and update its `operatorTemplate` field to equal the name of the template file
+3. For every rule template that's created, add a test to `api/test/handlers/cqlHandler/basicTests.js`
+
+Note that if any new operator needs to be added to the `api/data/query_builder/operators.json` file, if there is a `userSelectedOperand` that requires a concept value or a valueset value, the field's name *must* match the following:
+
+- `conceptValue` for a singular concept
+- `conceptValues` for a list of concepts
+- `valueset` for a valueset
 
 ### Migrations
 
