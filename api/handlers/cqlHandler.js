@@ -967,6 +967,18 @@ class CqlArtifact {
     });
   }
 
+  links() {
+    let linksText = this.recommendations.map(recommendation => {
+      const conditional = constructOneRecommendationConditional(recommendation);
+      return conditional + (_.isEmpty(recommendation.links) ? 'null' : constructLinks(recommendation.links));
+    });
+    linksText = _.isEmpty(linksText) ? 'null' : linksText.join('\n  else ').concat('\n  else null');
+    return ejs.render(templateMap.BaseTemplate, {
+      element_name: 'Links',
+      cqlString: linksText
+    });
+  }
+
   /*
     this function handles a condition in which the error statement is notionally null, but isn't exactly null
     if this function returns true,  the cql generated will be:
@@ -1001,7 +1013,7 @@ class CqlArtifact {
     const headerString = this.header();
     let fullString =
       `${headerString}${bodyString}\n${this.population()}\n${this.recommendation()}\n` +
-      `${this.rationale()}\n${this.errors()}`;
+      `${this.rationale()}\n${this.links()}\n${this.errors()}`;
     fullString = fullString.replace(/\r\n|\r|\n/g, '\r\n'); // Make all line endings CRLF
     return fullString;
   }
@@ -1117,6 +1129,28 @@ function constructOneRecommendationConditional(recommendation, text) {
     conditionalText = '"InPopulation"'; // TODO: Is there a better way than hard-coding this?
   }
   return `if ${conditionalText} then `;
+}
+
+function constructLinks(links) {
+  let linksText = '';
+  if (!_.isEmpty(links)) {
+    linksText = 'List{ ';
+    linksText += links
+      .map(link => {
+        return (
+          '{ label: ' +
+          (link.label ? `'${sanitizeCQLString(link.label)}'` : "'Link'") +
+          ', url: ' +
+          (link.url ? `'${sanitizeCQLString(link.url)}'` : "'#'") +
+          ', type: ' +
+          (link.type ? `'${link.type}'` : "'absolute'") +
+          ' }'
+        );
+      })
+      .join(', ')
+      .concat(' }');
+  }
+  return linksText;
 }
 
 function constructComment(comment) {

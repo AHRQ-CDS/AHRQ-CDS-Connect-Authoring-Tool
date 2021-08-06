@@ -32,7 +32,9 @@
     flex: 0 0 100%;
     margin-bottom: 2em;
 
-    > div { flex: 1; }
+    > div {
+      flex: 1;
+    }
 
     button {
       margin-left: 10px;
@@ -52,6 +54,20 @@
   .card-element {
     padding: 1em 2em;
   }
+
+  .links {
+    display: flex;
+    justify-content: space-between;
+  }
+}
+
+.heightAdjustments {
+  height: 62px !important;
+  line-height: 1.6em !important;
+}
+
+div.link-text-margin {
+  margin-left: 15px;
 }
 
 div.recommendation-input {

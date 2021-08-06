@@ -8,10 +8,17 @@ const subpop = {
   subpopulationName: 'Test Subpopulation 1'
 };
 
+const link = {
+  type: 'absolute',
+  label: 'Google',
+  url: 'https://google.com'
+};
+
 const rec = {
   uid: 'rec-100',
   grade: 'A',
   subpopulations: [subpop],
+  links: [link],
   text: 'recommendation text',
   rationale: 'rationale text',
   comment: 'comment text'
@@ -63,6 +70,13 @@ describe('<Recommendation />', () => {
     expect(screen.getByPlaceholderText('Add an optional comment')).toHaveValue('comment text');
   });
 
+  it('displays the link text and url', () => {
+    renderComponent();
+
+    expect(screen.getByPlaceholderText('Link Text')).toHaveValue('Google');
+    expect(screen.getByPlaceholderText('Link Address')).toHaveValue('https://google.com');
+  });
+
   it('displays the adds rationale button when there is no rationale', () => {
     renderComponent({
       rec: {
@@ -91,6 +105,21 @@ describe('<Recommendation />', () => {
     userEvent.click(screen.getByRole('button', { name: 'Add comments' }));
 
     expect(screen.getByPlaceholderText('Add an optional comment')).toBeInTheDocument();
+  });
+
+  it.skip('does not display links before clicking the add link button', () => {
+    renderComponent({
+      rec: {
+        ...rec,
+        links: []
+      }
+    });
+
+    expect(screen.queryByPlaceholderText('Link Address')).not.toBeInTheDocument();
+
+    userEvent.click(screen.getByRole('button', { name: 'Add Link' }));
+
+    expect(screen.getByPlaceholderText('Link Address')).toBeInTheDocument();
   });
 
   it('can edit recommendation text', () => {
@@ -131,6 +160,20 @@ describe('<Recommendation />', () => {
     expect(onUpdate).toBeCalledWith(rec.uid, { comment: newText });
   });
 
+  it('can edit link text', () => {
+    const newText = 'Link Text';
+    const newLinks = [{ ...link, label: 'Link Text' }];
+    const onUpdate = jest.fn();
+
+    renderComponent({ onUpdate });
+
+    fireEvent.change(screen.getByPlaceholderText('Link Text'), {
+      target: { name: 'label', value: newText }
+    });
+
+    expect(onUpdate).toBeCalledWith(rec.uid, { links: newLinks });
+  });
+
   it('can remove rationale', () => {
     const newText = '';
     const onUpdate = jest.fn();
@@ -153,6 +196,17 @@ describe('<Recommendation />', () => {
     expect(onUpdate).toBeCalledWith(rec.uid, { comment: newText });
   });
 
+  it('can remove a link', () => {
+    const newLinks = [];
+    const onUpdate = jest.fn();
+
+    renderComponent({ onUpdate });
+
+    userEvent.click(screen.getByLabelText('remove link'));
+
+    expect(onUpdate).toBeCalledWith(rec.uid, { links: newLinks });
+  });
+
   it('renders subpopulations', () => {
     const { container } = renderComponent();
 
@@ -173,6 +227,19 @@ describe('<Recommendation />', () => {
     userEvent.click(screen.getByRole('button', { name: 'Add subpopulation' }));
 
     expect(container.querySelectorAll('.recommendation__subpopulations')).toHaveLength(1);
+  });
+
+  it.skip('can add a link', () => {
+    const { container } = renderComponent({
+      rec: {
+        ...rec,
+        links: []
+      }
+    });
+
+    expect(container.querySelectorAll('.flex')).toHaveLength(0);
+    userEvent.click(screen.getByRole('button', { name: 'Add Link' }));
+    expect(container.querySelectorAll('#link')).toHaveLength(1);
   });
 
   it('displays "No options" when there are no subpopulations to add', () => {
@@ -225,7 +292,7 @@ describe('<Recommendation />', () => {
 
     userEvent.click(screen.getByRole('button', { name: 'New subpopulation' }));
 
-    expect(setActiveTab).toBeCalledWith(2);
+    expect(setActiveTab).toBeCalledWith(3);
   });
 
   it('applies special subpopulations correctly', () => {

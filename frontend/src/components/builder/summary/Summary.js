@@ -39,7 +39,10 @@ const Summary = ({ handleOpenArtifactModal }) => {
           rationale: recommendation.rationale,
           recommendationId: recommendation.uid,
           recommendationText: recommendation.text,
-          subpopulations: recommendation.subpopulations.map(subpopulation => subpopulation.subpopulationName)
+          subpopulations: recommendation.subpopulations.map(subpopulation => subpopulation.subpopulationName),
+          links: recommendation.links.map(link => {
+            return { label: link.label, address: link.type + ':<' + link.url + '>' };
+          })
         }))
       };
     }

@@ -15,7 +15,11 @@ import createTemplateInstance from '../../utils/templates';
 /* eslint-disable jsx-a11y/label-has-for */
 /* eslint-disable jsx-a11y/anchor-is-valid */
 
-const subpopTabIndex = 2;
+const subpopTabIndex = 3;
+const linkTypes = [
+  { label: 'absolute', value: 'absolute' },
+  { label: 'smart', value: 'smart' }
+];
 
 export default class Recommendation extends Component {
   constructor(props) {
@@ -27,6 +31,7 @@ export default class Recommendation extends Component {
       text: props.rec.text,
       rationale: props.rec.rationale,
       comment: props.rec.comment,
+      links: props.rec.links,
       showSubpopulations: !!(props.rec.subpopulations && props.rec.subpopulations.length),
       showRationale: !!props.rec.rationale.length,
       showComment: !!(props.rec.comment && props.rec.comment.length),
@@ -135,9 +140,35 @@ export default class Recommendation extends Component {
     this.setState({ showComment: !this.state.showComment });
   };
 
+  handleChangeLinks = (index, field, value) => {
+    let newLinks = { links: _.cloneDeep(this.state.links) };
+    newLinks.links[index][field] = value;
+    this.props.onUpdate(this.state.uid, newLinks);
+    const newState = update(this.state, { $merge: newLinks });
+    this.setState(newState);
+  };
+
+  addLink = () => {
+    let newLinks = { links: _.cloneDeep(this.state.links) };
+    newLinks.links.push({ type: '', label: '', url: '' });
+    this.props.onUpdate(this.state.uid, newLinks);
+    const newState = update(this.state, { $merge: newLinks });
+    this.setState(newState);
+  };
+
+  removeLink = index => {
+    let newLinks = { links: _.cloneDeep(this.state.links) };
+    newLinks.links.splice(index, 1);
+    this.props.onUpdate(this.state.uid, newLinks);
+    const newState = update(this.state, { $merge: newLinks });
+    this.setState(newState);
+  };
+
   shouldShowSubpopulations = () => Boolean(this.state.showSubpopulations || this.props.rec.subpopulations.length);
 
   shouldShowReorderingButtons = () => this.props.artifact.recommendations.length > 1;
+
+  shouldShowLinks = () => this.props.rec.links && this.props.rec.links.length > 0;
 
   renderSubpopulations = () => {
     const subpopulationOptions = this.getRelevantSubpopulations();
@@ -282,6 +313,56 @@ export default class Recommendation extends Component {
             </div>
           )}
 
+          {this.shouldShowLinks() &&
+            this.props.rec.links.map((link, index) => (
+              <div key={index} id="link">
+                <div className="card-element__label links">
+                  Link{this.props.rec.links.length > 1 && ' ' + (index + 1)}...
+                  <IconButton aria-label="remove link" color="primary" onClick={() => this.removeLink(index)}>
+                    <CloseIcon fontSize="small" />
+                  </IconButton>
+                </div>
+                <div className="flex-1">
+                  <div className="flex">
+                    <div className="flex-col-4">
+                      <Dropdown
+                        InputProps={{
+                          className: 'heightAdjustments'
+                        }}
+                        id={'link' + index + 'type'}
+                        label="Link Type"
+                        options={linkTypes}
+                        value={link.type}
+                        onChange={event => this.handleChangeLinks(index, 'type', event.target.value)}
+                      />
+                    </div>
+
+                    <TextField
+                      className="recommendation-input link-text-margin"
+                      fullWidth
+                      label={null}
+                      multiline
+                      onChange={event => this.handleChangeLinks(index, 'label', event.target.value)}
+                      placeholder="Link Text"
+                      value={link.label}
+                      variant="outlined"
+                    />
+                  </div>
+
+                  <TextField
+                    className="recommendation-input"
+                    fullWidth
+                    label={null}
+                    multiline
+                    onChange={event => this.handleChangeLinks(index, 'url', event.target.value)}
+                    placeholder="Link Address"
+                    value={link.url}
+                    variant="outlined"
+                  />
+                </div>
+              </div>
+            ))}
+
           <div className="recommendation__buttons">
             {!this.state.showRationale && (
               <Button color="primary" onClick={this.handleShowRationale} variant="contained">
@@ -300,6 +381,10 @@ export default class Recommendation extends Component {
                 Add comments
               </Button>
             )}
+
+            <Button color="primary" onClick={this.addLink} variant="contained">
+              Add Link
+            </Button>
           </div>
         </div>
       </div>

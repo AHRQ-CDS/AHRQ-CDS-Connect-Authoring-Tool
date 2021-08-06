@@ -1283,10 +1283,9 @@ const UserGuide = () => {
             <div className={styles.h4Wrapper}>
               <h4 id="Creating_Recommendations">3.10.1 Creating Recommendations</h4>
               <div>
-                A blank recommendation is included in the Recommendations tab by default. To create additional
-                recommendations, click the "New recommendation" button. This will add a blank recommendation below the
-                last recommendation. Note that recommendations are processed in the order they appear, and patients will
-                receive the first recommendation for which they are eligible.
+                To create a recommendation, click the "New recommendation" button. This will add a blank recommendation
+                below the last recommendation, if any exist. Note that recommendations are processed in the order they
+                appear, and patients will receive the first recommendation for which they are eligible.
               </div>
               <div>
                 <img
@@ -1340,7 +1339,23 @@ const UserGuide = () => {
             </div>
 
             <div className={styles.h4Wrapper}>
-              <h4 id="Managing_Recommendations">3.10.3 Re-ordering and Deleting Recommendations</h4>
+              <h4 id="Adding_Links_to_Recommendations">3.10.3 Adding Links to Recommendations</h4>
+              <div>
+                To add links to a recommendation, click the "Add Link" button. For each link, you must select either
+                'absolute' or 'smart' for the link type. Then enter the link text (the text to display) and
+                the link address/url (the destination when clicking on the link). You may add more than one link.
+              </div>
+              <div>
+                <img
+                  alt=""
+                  src={screenshotUrl('Add_Link')}
+                  className="img-fluid img-thumbnail rounded mx-auto d-block"
+                />
+              </div>
+            </div>
+
+            <div className={styles.h4Wrapper}>
+              <h4 id="Managing_Recommendations">3.10.4 Re-ordering and Deleting Recommendations</h4>
               <div>
                 Since patients will receive the first recommendation that applies to them, the order that
                 recommendations are listed will affect how the CDS artifact behaves. In some cases, authors may need to
