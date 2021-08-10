@@ -98,7 +98,6 @@ export default makeStyles(
       display: 'flex',
       flexDirection: 'column',
       alignItems: 'center'
-
     },
     navHeader: {
       alignItems: 'center',
@@ -158,5 +157,4 @@ export default makeStyles(
     }
   }),
   { name: 'Modifier-Modal', index: 1 }
-
 );
