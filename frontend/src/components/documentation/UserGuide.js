@@ -1342,8 +1342,8 @@ const UserGuide = () => {
               <h4 id="Adding_Links_to_Recommendations">3.10.3 Adding Links to Recommendations</h4>
               <div>
                 To add links to a recommendation, click the "Add Link" button. For each link, you must select either
-                'absolute' or 'smart' for the link type. Then enter the link text (the text to display) and
-                the link address/url (the destination when clicking on the link). You may add more than one link.
+                'absolute' or 'smart' for the link type. Then enter the link text (the text to display) and the link
+                address/url (the destination when clicking on the link). You may add more than one link.
               </div>
               <div>
                 <img
