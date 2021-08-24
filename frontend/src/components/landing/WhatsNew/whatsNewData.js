@@ -4,6 +4,22 @@ import React from 'react';
 const whatsNewData = [
   {
     id: 1,
+    name: 'Recommendation Links',
+    ariaLabel: 'Recommendation Links',
+    image: `${process.env.PUBLIC_URL}/assets/images/whats-new-rec-links.png`,
+    description: (
+      <>
+        In addition to specifying recommendation text and rationale, authors can now add links to recommendations. These
+        may be absolute links, such as links to educational materials, source documents, and online calculators, or they
+        may be SMART links to local SMART on FHIR applications. Recommendation links follow the same basic format as the
+        links returned in CDS Hooks cards, having a type (absolute or smart), label, and URL.
+      </>
+    ),
+    linkText: 'Recommendation Links Documentation',
+    link: `${process.env.PUBLIC_URL}/documentation#Adding_Links_to_Recommendations`
+  },
+  {
+    id: 2,
     name: 'Summary Tab & More',
     ariaLabel: 'Summary Tab & More',
     image: `${process.env.PUBLIC_URL}/assets/images/whats-new-summary.png`,
@@ -19,7 +35,7 @@ const whatsNewData = [
     link: `${process.env.PUBLIC_URL}/documentation#Summary`
   },
   {
-    id: 2,
+    id: 3,
     name: 'Sort & Duplicate Artifacts',
     ariaLabel: 'Sort & Duplicate Artifacts',
     image: `${process.env.PUBLIC_URL}/assets/images/whats-new-artifacts.png`,
@@ -34,7 +50,7 @@ const whatsNewData = [
     link: `${process.env.PUBLIC_URL}/documentation#Managing_Artifacts`
   },
   {
-    id: 3,
+    id: 4,
     name: 'External CQL Functions',
     ariaLabel: 'External CQL Functions',
     image: `${process.env.PUBLIC_URL}/assets/images/whats-new-external-modifiers.png`,
@@ -47,26 +63,6 @@ const whatsNewData = [
     ),
     linkText: 'Documentation',
     link: `${process.env.PUBLIC_URL}/documentation#Using_External_CQL_Expression_Modifiers`
-  },
-  {
-    id: 4,
-    name: (
-      <>
-        CPG on FHIR<sup>®</sup> Support
-      </>
-    ),
-    ariaLabel: 'CPG Publishable Library Support',
-    image: `${process.env.PUBLIC_URL}/assets/images/whats-new-cpg-on-fhir.png`,
-    description: (
-      <>
-        CDS Authors can now provide additional metadata about their artifact in a new form based on the FHIR<sup>®</sup>{' '}
-        Clinical Practice Guidelines (a.k.a. CPG on FHIR) Publishable Library profile. The metadata will also be
-        exported automatically as a CPG Publishable library in all CQL downloads.{' '}
-      </>
-    ),
-    linkText: 'CPG Publishable Library',
-    link: 'http://build.fhir.org/ig/HL7/cqf-recommendations/StructureDefinition-cpg-publishablelibrary.html',
-    linkExternal: true
   }
 ];
 
