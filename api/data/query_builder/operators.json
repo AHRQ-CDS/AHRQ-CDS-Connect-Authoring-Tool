@@ -435,7 +435,7 @@
       "id": "dateTimeTypeWithinLast",
       "name": "Occurred Within Last",
       "description": "Check if the operand time type happened within the user specified duration ago",
-      "operatorTemplate": "",
+      "operatorTemplate": "dateTimeTypeWithinLast",
       "primaryOperand": {
         "typeSpecifier": "NamedTypeSpecifier",
         "elementTypes": ["FHIR.instant", "System.DateTime", "System.Date", "System.Time"]
@@ -462,7 +462,7 @@
       "id": "dateTimeTypeOccurredMoreThan",
       "name": "Occurred More Than",
       "description": "Check if the operand time type occurred more than the user specified duration ago",
-      "operatorTemplate": "",
+      "operatorTemplate": "dateTimeTypeOccurredMoreThan",
       "primaryOperand": {
         "typeSpecifier": "NamedTypeSpecifier",
         "elementTypes": ["FHIR.instant", "System.DateTime", "System.Date", "System.Time"]
@@ -491,7 +491,7 @@
       "name": "Occurred Before/After",
       "displayName": "occurred",
       "description": "Check if the operand time type did or did not occur within the user specified time",
-      "operatorTemplate": "",
+      "operatorTemplate": "dateTimeOccurred",
       "primaryOperand": {
         "typeSpecifier": "NamedTypeSpecifier",
         "elementTypes": ["FHIR.instant", "System.DateTime", "System.Date", "System.Time"]
@@ -519,7 +519,7 @@
       "name": "(Start | End) Occurred",
       "displayName": "",
       "description": "Check if the operand time type occurred on or after the user specified time",
-      "operatorTemplate": "",
+      "operatorTemplate": "dateTimeIntervalComparison",
       "primaryOperand": {
         "typeSpecifier": "IntervalTypeSpecifier",
         "elementTypes": ["System.DateTime", "System.Date", "System.Time"]
@@ -552,7 +552,7 @@
       "id": "dateTimeIntervalOverlaps",
       "name": "Overlaps With",
       "description": "Check if the operand Interval overlaps another",
-      "operatorTemplate": "",
+      "operatorTemplate": "dateTimeIntervalOverlaps",
       "primaryOperand": {
         "typeSpecifier": "IntervalTypeSpecifier",
         "elementTypes": ["System.DateTime", "System.Date", "System.Time"]
@@ -574,7 +574,7 @@
       "id": "dateTimeIntervalContains",
       "name": "Contains",
       "description": "Check if the operand Interval contains a date/time",
-      "operatorTemplate": "",
+      "operatorTemplate": "dateTimeIntervalContains",
       "primaryOperand": {
         "typeSpecifier": "IntervalTypeSpecifier",
         "elementTypes": ["System.DateTime", "System.Date", "System.Time"]
@@ -595,7 +595,7 @@
       "id": "dateTimeIntervalNotContains",
       "name": "Does Not Contain",
       "description": "Check if the operand Interval does not contain a date/time",
-      "operatorTemplate": "",
+      "operatorTemplate": "dateTimeIntervalNotContains",
       "primaryOperand": {
         "typeSpecifier": "IntervalTypeSpecifier",
         "elementTypes": ["System.DateTime", "System.Date", "System.Time"]
@@ -616,7 +616,7 @@
       "id": "dateTimeOccursBetween",
       "name": "Occurred Between",
       "description": "Check if the operand time type occurs between ",
-      "operatorTemplate": "",
+      "operatorTemplate": "dateTimeOccursBetween",
       "primaryOperand": {
         "typeSpecifier": "NamedTypeSpecifier",
         "elementTypes": ["FHIR.instant", "System.DateTime", "System.Date", "System.Time"]

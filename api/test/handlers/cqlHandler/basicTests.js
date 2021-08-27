@@ -1133,6 +1133,190 @@ describe('CQL Operator Templates', () => {
     expect(converted).to.contain(`code "Some Display code": 'Some-Code' from "Some-System" display 'Some Display'`);
     expect(converted).to.contain('[AllergyIntolerance] AI where (AI.someCodeProperty ~ "Some Display code")');
   });
+
+  it('Handles dateTimeTypeWithinLast template', () => {
+    const templateTest = {
+      conjunctionType: 'and',
+      rules: [
+        {
+          ruleType: 'dateTimeTypeWithinLast',
+          resourceProperty: 'someDateProperty',
+          durationValue: { decimal: '7', str: '7.0' },
+          timeUnit: 'years'
+        }
+      ]
+    };
+    rawBaseQuery.expTreeInclude.childInstances[0].modifiers[0].where = templateTest;
+    const artifact = buildCQL(rawBaseQuery);
+    const converted = artifact.toString();
+    expect(converted).to.contain(
+      '[AllergyIntolerance] AI where (AI.someDateProperty in Interval[Now() - 7 years , Now()])'
+    );
+  });
+
+  it('Handles dateTimeTypeOccurredMoreThan template', () => {
+    const templateTest = {
+      conjunctionType: 'and',
+      rules: [
+        {
+          ruleType: 'dateTimeTypeOccurredMoreThan',
+          resourceProperty: 'someDateProperty',
+          durationValue: { decimal: '9', str: '9.0' },
+          timeUnit: 'months'
+        }
+      ]
+    };
+    rawBaseQuery.expTreeInclude.childInstances[0].modifiers[0].where = templateTest;
+    const artifact = buildCQL(rawBaseQuery);
+    const converted = artifact.toString();
+    expect(converted).to.contain('[AllergyIntolerance] AI where (AI.someDateProperty more than 9 months before Now())');
+  });
+
+  it('Handles dateTimeOccurred template', () => {
+    const templateTest = {
+      conjunctionType: 'and',
+      rules: [
+        {
+          ruleType: 'dateTimeOccurred',
+          resourceProperty: 'someDateProperty',
+          when: 'On or After',
+          userSpecifiedDateTime: {
+            date: '2021-08-24',
+            time: '07:05:19',
+            str: '@2021-08-24T07:05:19'
+          }
+        }
+      ]
+    };
+    rawBaseQuery.expTreeInclude.childInstances[0].modifiers[0].where = templateTest;
+    const artifact = buildCQL(rawBaseQuery);
+    const converted = artifact.toString();
+    expect(converted).to.contain(
+      '[AllergyIntolerance] AI where (AI.someDateProperty on or after @2021-08-24T07:05:19)'
+    );
+  });
+
+  it('Handles dateTimeIntervalComparison template', () => {
+    const templateTest = {
+      conjunctionType: 'and',
+      rules: [
+        {
+          ruleType: 'dateTimeIntervalComparison',
+          resourceProperty: 'someDateProperty',
+          userSpecifiedIndex: 'Starts',
+          when: 'On or After',
+          userSpecifiedDateTime: {
+            date: '2021-08-24',
+            time: '07:05:19',
+            str: '@2021-08-24T07:05:19'
+          }
+        }
+      ]
+    };
+    rawBaseQuery.expTreeInclude.childInstances[0].modifiers[0].where = templateTest;
+    const artifact = buildCQL(rawBaseQuery);
+    const converted = artifact.toString();
+    expect(converted).to.contain(
+      '[AllergyIntolerance] AI where (AI.someDateProperty starts on or after @2021-08-24T07:05:19)'
+    );
+  });
+
+  it('Handles dateTimeOccursBetween template', () => {
+    const templateTest = {
+      conjunctionType: 'and',
+      rules: [
+        {
+          ruleType: 'dateTimeOccursBetween',
+          resourceProperty: 'someDateProperty',
+          beginDateTime: {
+            date: '2021-08-25',
+            time: '07:04:40',
+            str: '@2021-08-25T07:04:40'
+          },
+          endDateTime: {
+            date: '2021-08-25',
+            time: '07:04:40',
+            str: '@2021-08-25T07:04:40'
+          }
+        }
+      ]
+    };
+    rawBaseQuery.expTreeInclude.childInstances[0].modifiers[0].where = templateTest;
+    const artifact = buildCQL(rawBaseQuery);
+    const converted = artifact.toString();
+    expect(converted).to.contain(
+      '[AllergyIntolerance] AI where (AI.someDateProperty in Interval[@2021-08-25T07:04:40, @2021-08-25T07:04:40])'
+    );
+  });
+
+  it('Handles dateTimeIntervalContains template', () => {
+    const templateTest = {
+      conjunctionType: 'and',
+      rules: [
+        {
+          ruleType: 'dateTimeIntervalContains',
+          resourceProperty: 'someDateProperty',
+          userSpecifiedDateTime: {
+            date: '2021-08-24',
+            time: '07:05:19',
+            str: '@2021-08-24T07:05:19'
+          }
+        }
+      ]
+    };
+    rawBaseQuery.expTreeInclude.childInstances[0].modifiers[0].where = templateTest;
+    const artifact = buildCQL(rawBaseQuery);
+    const converted = artifact.toString();
+    expect(converted).to.contain('[AllergyIntolerance] AI where (AI.someDateProperty contains @2021-08-24T07:05:19)');
+  });
+
+  it('Handles dateTimeIntervalNotContains template', () => {
+    const templateTest = {
+      conjunctionType: 'and',
+      rules: [
+        {
+          ruleType: 'dateTimeIntervalNotContains',
+          resourceProperty: 'someDateProperty',
+          userSpecifiedDateTime: {
+            date: '2021-08-24',
+            time: '07:05:19',
+            str: '@2021-08-24T07:05:19'
+          }
+        }
+      ]
+    };
+    rawBaseQuery.expTreeInclude.childInstances[0].modifiers[0].where = templateTest;
+    const artifact = buildCQL(rawBaseQuery);
+    const converted = artifact.toString();
+    expect(converted).to.contain(
+      '[AllergyIntolerance] AI where (not (AI.someDateProperty contains @2021-08-24T07:05:19))'
+    );
+  });
+
+  it('Handles dateTimeIntervalOverlaps template', () => {
+    const templateTest = {
+      conjunctionType: 'and',
+      rules: [
+        {
+          ruleType: 'dateTimeIntervalOverlaps',
+          resourceProperty: 'someDateProperty',
+          userSpecifiedTimeInterval: {
+            firstDate: '2021-08-25',
+            firstTime: '05:58:40',
+            secondDate: '2021-08-26',
+            secondTime: '07:58:40',
+            str: 'Interval[@2021-08-25T05:58:40,@2021-08-26T07:58:40]'
+          }
+        }
+      ]
+    };
+    rawBaseQuery.expTreeInclude.childInstances[0].modifiers[0].where = templateTest;
+    const artifact = buildCQL(rawBaseQuery);
+    const converted = artifact.toString();
+    expect(converted).to.contain(
+      `[AllergyIntolerance] AI where (AI.someDateProperty overlaps Interval[@2021-08-25T05:58:40,@2021-08-26T07:58:40])`
+    );
+  });
 });
 
 describe('CPG Publishable Library tests', () => {
