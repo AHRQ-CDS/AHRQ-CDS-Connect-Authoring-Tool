@@ -73,7 +73,7 @@ describe('<ArtifactTable />', () => {
   it('allows opening and closing of the edit modal', async () => {
     renderComponent();
 
-    userEvent.click(screen.getAllByRole('button', { name: 'Edit Info' })[0]);
+    userEvent.click(screen.getAllByRole('button', { name: 'edit info' })[0]);
     expect(screen.getByText('Edit Artifact Details')).toBeInTheDocument();
 
     userEvent.click(screen.getByRole('button', { name: 'close' }));
@@ -86,7 +86,7 @@ describe('<ArtifactTable />', () => {
     const handleDeleteArtifact = jest.fn();
     renderComponent({ handleDeleteArtifact });
 
-    userEvent.click(screen.getAllByRole('button', { name: 'Delete' })[0]);
+    userEvent.click(screen.getAllByRole('button', { name: /delete/i })[0]);
     expect(screen.getByText('Delete CDS Artifact Confirmation')).toBeInTheDocument();
 
     const dialog = within(screen.getByRole('dialog'));
@@ -94,7 +94,7 @@ describe('<ArtifactTable />', () => {
     expect(dialog.getByText(/My Second CDS Artifact/)).toBeInTheDocument();
     expect(dialog.getByText(/1\.0\.1/)).toBeInTheDocument();
 
-    userEvent.click(dialog.getByRole('button', { name: 'Delete' }));
+    userEvent.click(dialog.getByRole('button', { name: /delete/i }));
 
     expect(handleDeleteArtifact).toBeCalledWith(artifactsMock[0]);
   });
@@ -103,7 +103,7 @@ describe('<ArtifactTable />', () => {
     const handleDuplicateArtifact = jest.fn();
     renderComponent({ handleDuplicateArtifact });
 
-    userEvent.click(screen.getAllByTitle('Duplicate')[0]);
+    userEvent.click(screen.getAllByRole('button', { name: /duplicate/i })[0]);
 
     expect(handleDuplicateArtifact).toBeCalledWith(artifactsMock[0]);
   });

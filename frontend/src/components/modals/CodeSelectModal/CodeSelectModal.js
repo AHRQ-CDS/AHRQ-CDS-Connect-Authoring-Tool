@@ -56,6 +56,7 @@ const CodeSelectModal = ({ handleCloseModal, handleSelectCode, initialValue }) =
       handleCloseModal={handleCloseModal}
       handleSaveModal={handleSaveCodeSelection}
       hasCancelButton
+      hasEnterKeySubmit={false}
       Header={
         <CodeSelectModalHeader
           code={code}

@@ -3,6 +3,7 @@ import { makeStyles } from '@material-ui/core/styles';
 export default makeStyles(
   theme => ({
     customModifier: {
+      alignItems: 'flex-start',
       display: 'flex',
       justifyContent: 'space-between'
     },

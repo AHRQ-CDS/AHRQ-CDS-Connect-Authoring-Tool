@@ -234,9 +234,10 @@ export default class TemplateInstance extends Component {
   };
 
   handleUpdateModifier = (index, values) => {
-    const modifiers = this.props.templateInstance.modifiers;
-    _.assign(modifiers[index], values);
-    this.setAppliedModifiers(modifiers);
+    const newModifiers = _.cloneDeep(this.props.templateInstance.modifiers);
+    if (values[0]?.where) newModifiers[index] = values[0];
+    else newModifiers[index].values = { ...newModifiers[index].values, ...values };
+    this.setAppliedModifiers(newModifiers);
   };
 
   handleSelectCode = codeData => {
@@ -315,7 +316,7 @@ export default class TemplateInstance extends Component {
 
   renderModifierSelect = () => {
     const { disableAddElement, isLoadingModifiers, templateInstance } = this.props;
-    const { relevantModifiers, returnType, showModifierModal } = this.state;
+    const { relevantModifiers, showModifierModal } = this.state;
     if (isLoadingModifiers) return <div>Loading modifiers...</div>;
 
     if (relevantModifiers.length > 0) {
@@ -334,7 +335,6 @@ export default class TemplateInstance extends Component {
           {showModifierModal && (
             <ModifierModal
               elementInstance={templateInstance}
-              elementInstanceReturnType={returnType}
               handleUpdateModifiers={this.setAppliedModifiers}
               handleCloseModal={() => this.setState({ showModifierModal: false })}
               hasLimitedModifiers={Boolean(this.isBaseElementUsed() || disableAddElement)}
@@ -536,7 +536,6 @@ export default class TemplateInstance extends Component {
             baseElementIsUsed={baseElementIsUsed}
             elementInstance={templateInstance}
             handleRemoveModifier={this.handleRemoveModifier}
-            handleSelectValueSet={this.handleSelectValueSet}
             handleUpdateModifier={this.handleUpdateModifier}
           />
         )}

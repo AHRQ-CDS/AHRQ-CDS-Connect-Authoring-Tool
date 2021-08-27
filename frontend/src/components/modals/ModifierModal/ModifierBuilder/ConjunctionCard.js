@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import PropTypes from 'prop-types';
 import { produce } from 'immer';
 import { Button, Card, IconButton } from '@material-ui/core';
@@ -8,34 +8,48 @@ import clsx from 'clsx';
 
 import RuleCard from './RuleCard';
 import { ToggleSwitch } from 'components/elements';
+import ruleIsComplete from './utils/ruleIsComplete';
 import useStyles from '../styles';
 
-const ConjunctionCard = ({ depth, handleRemoveConjunction, handleUpdate, resourceOptions, rule }) => {
+const ConjunctionCard = ({ depth, handleRemoveConjunction, handleUpdateConjunction, resourceOptions, rule }) => {
   const { conjunctionType, rules } = rule;
   const styles = useStyles();
 
   const handleToggleSwitch = newConjunctionType => {
-    if (newConjunctionType !== conjunctionType) handleUpdate({ ...rule, conjunctionType: newConjunctionType });
+    if (newConjunctionType !== conjunctionType)
+      handleUpdateConjunction({ ...rule, conjunctionType: newConjunctionType });
   };
 
   const addGroup = () => {
-    handleUpdate({
+    handleUpdateConjunction({
       ...rule,
-      rules: [...rules, { id: uuidv4(), conjunctionType: 'and', rules: [] }]
+      rules: [...rules, { id: uuidv4(), conjunctionType: conjunctionType === 'and' ? 'or' : 'and', rules: [] }]
     });
   };
 
   const addRule = () => {
-    handleUpdate({ ...rule, rules: [...rules, { id: uuidv4(), resourceProperty: '', operator: '' }] });
+    handleUpdateConjunction({ ...rule, rules: [...rules, { id: uuidv4(), resourceProperty: '' }] });
   };
 
-  const removeRule = ruleIndex => {
-    handleUpdate(
-      produce(rule, draftRule => {
-        draftRule.rules.splice(ruleIndex, 1);
-      })
-    );
-  };
+  const removeRule = useCallback(
+    ruleIndex =>
+      handleUpdateConjunction(
+        produce(rule, draftRule => {
+          draftRule.rules.splice(ruleIndex, 1);
+        })
+      ),
+    [handleUpdateConjunction, rule]
+  );
+
+  const updateRule = useCallback(
+    (newState, ruleIndex) =>
+      handleUpdateConjunction(
+        produce(rule, draftRule => {
+          draftRule.rules[ruleIndex] = newState;
+        })
+      ),
+    [handleUpdateConjunction, rule]
+  );
 
   return (
     <div className={styles.rulesCardGroup}>
@@ -46,7 +60,15 @@ const ConjunctionCard = ({ depth, handleRemoveConjunction, handleUpdate, resourc
         </>
       )}
 
-      <Card className={clsx(styles.rulesCard, depth !== 0 && styles.indent, depth % 2 === 1 && styles.rulesCardOdd)}>
+      <Card
+        className={clsx(
+          styles.rulesCard,
+          depth !== 0 && styles.indent,
+          depth % 2 === 1 && styles.rulesCardOdd,
+          !ruleIsComplete(rule) && styles.rulesCardGroupIncomplete
+        )}
+        data-testid="modifier-group"
+      >
         <div className={styles.rulesCardGroup}>
           <div className={clsx(styles.line, styles.lineHorizontal, depth !== 0 && styles.lineHorizontalConnect)}></div>
           <div className={clsx(styles.line, styles.lineVertical, styles.lineVerticalTop)}></div>
@@ -54,26 +76,19 @@ const ConjunctionCard = ({ depth, handleRemoveConjunction, handleUpdate, resourc
         </div>
 
         {handleRemoveConjunction && (
-          <IconButton className={styles.deleteButton} onClick={handleRemoveConjunction}>
+          <IconButton aria-label="remove group" className={styles.deleteButton} onClick={handleRemoveConjunction}>
             <ClearIcon />
           </IconButton>
         )}
 
-        {rules.map((nestedRule, index) => {
-          const nestedUpdate = newState =>
-            handleUpdate(
-              produce(rule, draftRule => {
-                draftRule.rules[index] = newState;
-              })
-            );
-
-          return nestedRule.conjunctionType ? (
+        {rules.map((nestedRule, index) =>
+          nestedRule.conjunctionType ? (
             <ConjunctionCard
               key={nestedRule.id}
               rule={nestedRule}
               depth={depth + 1}
               handleRemoveConjunction={() => removeRule(index)}
-              handleUpdate={nestedUpdate}
+              handleUpdateConjunction={newState => updateRule(newState, index)}
               resourceOptions={resourceOptions}
             />
           ) : (
@@ -81,11 +96,11 @@ const ConjunctionCard = ({ depth, handleRemoveConjunction, handleUpdate, resourc
               key={nestedRule.id}
               rule={nestedRule}
               handleRemoveRule={() => removeRule(index)}
-              handleUpdate={nestedUpdate}
+              handleUpdateRule={newState => updateRule(newState, index)}
               resourceOptions={resourceOptions}
             />
-          );
-        })}
+          )
+        )}
 
         <div className={clsx(styles.rulesCardGroup)}>
           <div className={clsx(styles.line, styles.lineHorizontal)}></div>
@@ -109,7 +124,7 @@ const ConjunctionCard = ({ depth, handleRemoveConjunction, handleUpdate, resourc
 ConjunctionCard.propTypes = {
   depth: PropTypes.number.isRequired,
   handleRemoveConjunction: PropTypes.func,
-  handleUpdate: PropTypes.func.isRequired,
+  handleUpdateConjunction: PropTypes.func.isRequired,
   resourceOptions: PropTypes.array.isRequired,
   rule: PropTypes.object.isRequired
 };

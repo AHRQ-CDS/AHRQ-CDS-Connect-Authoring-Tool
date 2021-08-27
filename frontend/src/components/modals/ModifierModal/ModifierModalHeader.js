@@ -10,7 +10,7 @@ import { changeToCase } from 'utils/strings';
 import { useSpacingStyles } from 'styles/hooks';
 import useStyles from '../styles';
 
-const ModifierModalHeader = ({ elementInstance, elementInstanceReturnType, modifiersToAdd }) => {
+const ModifierModalHeader = ({ elementInstance, modifiersToAdd }) => {
   const artifact = useSelector(state => state.artifacts.artifact);
   const { baseElements } = artifact;
   const modifiersReturnType = modifiersToAdd[modifiersToAdd.length - 1]?.returnType;
@@ -21,21 +21,26 @@ const ModifierModalHeader = ({ elementInstance, elementInstanceReturnType, modif
     <Card className={styles.header}>
       <CardContent>
         <div className={styles.headerTag}>
-          <div className={clsx(styles.headerIndicator, styles.headerIndicatorHighlight)}></div>
-          <ExpressionPhrase instance={elementInstance} baseElements={baseElements} />
+          <div className={clsx(styles.headerIndicator, styles.headerIndicatorHighlight)}>
+            <ExpressionPhrase
+              instance={{ ...elementInstance, modifiers: modifiersToAdd }}
+              baseElements={baseElements}
+            />
+          </div>
         </div>
 
         <div className={styles.headerTag}>
-          <div className={styles.headerIndicator}></div>
-          <span className={styles.headerIndicatorLabel}>Return Type:</span>
-          {changeToCase(elementInstanceReturnType, 'capitalCase')}
-          {modifiersReturnType && (
-            <>
-              <ArrowForwardIcon className={spacingStyles.horizontalPadding} fontSize="small" />
-              {modifiersReturnType === 'boolean' && <CheckIcon fontSize="small" />}
-              {changeToCase(modifiersReturnType, 'capitalCase')}
-            </>
-          )}
+          <div className={styles.headerIndicator} data-testid="modifier-return-type">
+            <span className={styles.headerIndicatorLabel}>Return Type:</span>
+            {changeToCase(elementInstance.returnType, 'capitalCase')}
+            {modifiersReturnType && (
+              <>
+                <ArrowForwardIcon className={spacingStyles.horizontalPadding} fontSize="small" />
+                {modifiersReturnType === 'boolean' && <CheckIcon fontSize="small" />}
+                {changeToCase(modifiersReturnType, 'capitalCase')}
+              </>
+            )}
+          </div>
         </div>
       </CardContent>
     </Card>
@@ -44,7 +49,6 @@ const ModifierModalHeader = ({ elementInstance, elementInstanceReturnType, modif
 
 ModifierModalHeader.propTypes = {
   elementInstance: PropTypes.object.isRequired,
-  elementInstanceReturnType: PropTypes.string.isRequired,
   modifiersToAdd: PropTypes.array.isRequired
 };
 

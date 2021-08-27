@@ -30,7 +30,7 @@ describe('<ValueSetListTemplate />', () => {
     const handleDeleteValueSet = jest.fn();
     renderComponent({ valueSets: [valueSet1], handleDeleteValueSet });
 
-    userEvent.click(screen.getByRole('button', { name: /delete value set/ }));
+    userEvent.click(screen.getByRole('button', { name: /delete value set/i }));
 
     expect(handleDeleteValueSet).toBeCalledWith(valueSet1);
   });

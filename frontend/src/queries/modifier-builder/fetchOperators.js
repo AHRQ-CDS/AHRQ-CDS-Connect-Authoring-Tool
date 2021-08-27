@@ -1,11 +1,12 @@
 import axios from 'axios';
 import _ from 'lodash';
 
-const fetchOperators = async (implicitConversionInfo, { type: typeSpecifier, elementType }) => {
+const fetchOperators = async ({ type: typeSpecifier, elementType }) => {
+  const { data: implicitConversionInfo } = await axios.get(`${process.env.REACT_APP_API_URL}/query/implicitconversion`);
   const systemElementType = implicitConversionInfo.FHIRToSystem[elementType];
 
   let baseTypeOperators,
-    conversionTypeOperators = [];
+    conversionTypeOperators = null;
   if (systemElementType) {
     let convertedTargetType, convertedTargetElementType;
     if (systemElementType?.startsWith('Interval<')) {
@@ -18,16 +19,21 @@ const fetchOperators = async (implicitConversionInfo, { type: typeSpecifier, ele
       convertedTargetElementType = systemElementType;
       convertedTargetType = 'NamedTypeSpecifier';
     }
-    conversionTypeOperators = await axios.get(
-      `${process.env.REACT_APP_API_URL}/query/operator?typeSpecifier=${convertedTargetType}&elementType=${convertedTargetElementType}`
-    );
+    conversionTypeOperators = (
+      await axios.get(`${process.env.REACT_APP_API_URL}/query/operator`, {
+        params: { typeSpecifier: convertedTargetType, elementType: convertedTargetElementType }
+      })
+    ).data;
   }
+
   baseTypeOperators = await axios.get(
     `${process.env.REACT_APP_API_URL}/query/operator?typeSpecifier=${typeSpecifier}&elementType=${elementType}`
   );
-  const matchingOperators = conversionTypeOperators.data
-    ? _.uniqBy([...conversionTypeOperators.data, ...baseTypeOperators.data], operator => operator.id)
+
+  const matchingOperators = conversionTypeOperators
+    ? _.uniqBy([...conversionTypeOperators, ...baseTypeOperators.data], operator => operator.id)
     : baseTypeOperators.data;
+
   if (matchingOperators.length === 0) throw new Error('Error: No operators Found.');
   return matchingOperators;
 };

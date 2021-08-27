@@ -6,6 +6,7 @@ import { ArrowBackIos as ArrowBackIosIcon } from '@material-ui/icons';
 
 import ConjunctionCard from './ConjunctionCard';
 import getResourceOptions from './utils/getResourceOptions';
+import getModifierExpression from './utils/getModifierExpression';
 import { fetchResource } from 'queries/modifier-builder';
 import { useSpacingStyles } from 'styles/hooks';
 import useStyles from '../styles';
@@ -14,19 +15,16 @@ const ModifierBuilder = ({
   elementInstanceReturnType,
   fhirVersion,
   handleGoBack,
-  setModifiersToAdd,
-  modifier = undefined,
-  editDirect = false
+  modifierToEdit,
+  setModifiersToAdd
 }) => {
   const [modifierTree, setModifierTree] = useState(
-    modifier === undefined
-      ? {
-          inputTypes: [elementInstanceReturnType],
-          returnType: undefined,
-          type: 'UserDefinedModifier',
-          where: { id: 'root', conjunctionType: 'and', rules: [] }
-        }
-      : modifier
+    modifierToEdit || {
+      inputTypes: [elementInstanceReturnType],
+      returnType: undefined,
+      type: 'UserDefinedModifier',
+      where: { id: 'root', conjunctionType: 'and', rules: [] }
+    }
   );
   const resourceQuery = useQuery(['resources', { fhirVersion, elementInstanceReturnType }], () =>
     fetchResource(fhirVersion, elementInstanceReturnType)
@@ -40,7 +38,7 @@ const ModifierBuilder = ({
     return undefined;
   };
 
-  const updateModifierTree = tree => {
+  const handleUpdateModifierTree = tree => {
     let updatedTree = { ...modifierTree, returnType: getTreeReturnType(tree), where: tree };
     setModifierTree(updatedTree);
     setModifiersToAdd([updatedTree]);
@@ -49,14 +47,17 @@ const ModifierBuilder = ({
   return (
     <>
       <div className={styles.navHeader}>
-        {!editDirect && (
-          <IconButton onClick={handleGoBack}>
-            <ArrowBackIosIcon fontSize="small" />
-          </IconButton>
-        )}
+        <div className={styles.navHeaderGroup}>
+          <div className={styles.navHeaderButtons}>
+            {!modifierToEdit && (
+              <IconButton aria-label="go back" onClick={handleGoBack}>
+                <ArrowBackIosIcon fontSize="small" />
+              </IconButton>
+            )}
+            <div className={styles.tag}>WHERE</div>
+          </div>
 
-        <div>
-          <div className={styles.tag}>WHERE</div>
+          <div className={styles.modifierExpression}>{getModifierExpression(modifierTree)}</div>
         </div>
       </div>
 
@@ -70,7 +71,7 @@ const ModifierBuilder = ({
         <ConjunctionCard
           rule={modifierTree.where}
           depth={0}
-          handleUpdate={updateModifierTree}
+          handleUpdateConjunction={handleUpdateModifierTree}
           resourceOptions={resourceOptions}
         />
       )}

@@ -983,14 +983,15 @@ const UserGuide = () => {
               <div>
                 It is important to note that the most advantageous times to utilize custom expression modifiers. One
                 such time is when trying to search or query through a list of elements belonging to a FHIR-based type
-                (e.g. Condition, Observation, Procedure, etc.). An important fact is that a custom expression can only
-                filter elements of a list, and cannot perform aggregation/reduction (e.g. Change the return type from a
-                List of Observations to Observation). This happens to be the case because custom expression modifiers
-                use a CQL language construct called a 'Query'. The most important distinction between a query operation
-                and an aggregation/reduction operation is that the former returns a list containing any natural number
-                of elements (including zero!) and the latter always returns a singular element. While certain
-                aggregator/reducer expression modifiers may be selected within the expression modifier context menu (See
-                the above sections), aggregation/reduction is not possible within the expression modifier builder.
+                (e.g. Condition, Observation, Procedure, etc.). An important fact is that a custom expression modifier
+                can only filter elements of a list, and cannot perform aggregation/reduction (e.g. Change the return
+                type from a List of Observations to Observation). This happens to be the case because custom expression
+                modifiers use a CQL language construct called a 'Query'. The most important distinction between a query
+                operation and an aggregation/reduction operation is that the former returns a list containing any
+                natural number of elements (including zero!) and the latter always returns a singular element. While
+                certain aggregator/reducer expression modifiers may be selected within the expression modifier context
+                menu (See the above sections), aggregation/reduction is not possible within the expression modifier
+                builder.
               </div>
             </div>
           </div>

@@ -1,29 +1,29 @@
 import React, { useState } from 'react';
 import propTypes from 'prop-types';
 import { IconButton } from '@material-ui/core';
-import EditIcon from '@material-ui/icons/Edit';
-import makeStyles from './styles';
-import { ModifierModal } from '../../modals';
+import { Edit as EditIcon } from '@material-ui/icons';
 
-const UserDefinedModifier = ({ elementInstance, handleUpdateModifier = undefined, label, modifier }) => {
-  const modifierStyles = makeStyles();
+import { ModifierModal } from 'components/modals';
+import makeStyles from './styles';
+
+const UserDefinedModifier = ({ elementInstance, handleUpdateModifier, label, modifier }) => {
   const [showModifierModal, setShowModifierModal] = useState(false);
+  const modifierStyles = makeStyles();
+
   return (
     <div className={modifierStyles.customModifier}>
       <div className={modifierStyles.modifierMargin}>{label}</div>
-      <IconButton onClick={() => setShowModifierModal(true)}>
+
+      <IconButton aria-label="edit" onClick={() => setShowModifierModal(true)}>
         <EditIcon color="primary" fontSize="small" />
       </IconButton>
+
       {showModifierModal && (
         <ModifierModal
-          editDirect={true}
-          editReturnType={elementInstance.modifiers.length === 1}
           elementInstance={elementInstance}
-          elementInstanceReturnType={elementInstance.returnType}
           handleCloseModal={() => setShowModifierModal(false)}
           handleUpdateModifiers={handleUpdateModifier}
-          hasLimitedModifiers={false}
-          modifier={modifier}
+          modifierToEdit={modifier}
         />
       )}
     </div>

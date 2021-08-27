@@ -1,6 +1,7 @@
 import _ from 'lodash';
 import Validators from '../validators';
 import { getFieldWithId } from '../../utils/instances';
+import getModifierExpression from 'components/modals/ModifierModal/ModifierBuilder/utils/getModifierExpression';
 
 function getOperation(operator) {
   switch (operator) {
@@ -153,7 +154,7 @@ function getExpressionSentenceValue(modifier) {
             if (modifier.values.code.display) {
               valueSetText = modifier.values.code.display;
             } else {
-              valueSetText = `${modifier.values.code.code} (${modifier.values.code.codeSystem.name})`;
+              valueSetText = `${modifier.values.code.code} (${modifier.values.code.system})`;
             }
           }
         }
@@ -259,7 +260,7 @@ function getExpressionSentenceValue(modifier) {
       id: modifier.id
     };
   } else if (modifier.type === 'UserDefinedModifier') {
-    return { type: 'userDefinedModifier' };
+    return { type: 'userDefinedModifier', modifierExpression: getModifierExpression(modifier) };
   }
   // If the modifier is not listed in the object and it's not from external CQL,
   // return just the name of the modifier to be placed at the end.
@@ -470,13 +471,22 @@ function orderExpressionSentenceArray(
   });
 
   let otherExpressions = expressionArray.filter(expression => {
-    const knownTypes = ['not', 'BooleanExists', 'descriptor', 'list', 'post-list', 'value', 'Count'];
+    const knownTypes = [
+      'BooleanExists',
+      'Count',
+      'descriptor',
+      'list',
+      'not',
+      'post-list',
+      'userDefinedModifier',
+      'value'
+    ];
     return knownTypes.indexOf(expression.type) === -1;
   });
   let hasStarted = false;
 
   // Count modifier will always refer to a group of elements, so always treat it as plural
-  const returnsPlural = returnType.includes('list_of_') || countExpression;
+  const returnsPlural = returnType?.includes('list_of_') || countExpression;
   const returnsBoolean = returnType === 'boolean';
 
   if (countExpression) {
@@ -633,9 +643,9 @@ function orderExpressionSentenceArray(
   });
 
   // Handle expressions for custom modifiers
-  if (userDefinedExpression) {
-    orderedExpressionArray = orderedExpressionArray.slice(0, -1);
-    orderedExpressionArray.push({ expressionText: 'with additional custom modifier(s)' });
+  if (userDefinedExpression && userDefinedExpression.modifierExpression !== '') {
+    orderedExpressionArray.push({ expressionText: 'with custom modifier' });
+    orderedExpressionArray.push({ expressionText: userDefinedExpression.modifierExpression, isExpression: true });
   }
   return orderedExpressionArray;
 }

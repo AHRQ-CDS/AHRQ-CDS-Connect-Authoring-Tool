@@ -1,13 +1,14 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Card, CardContent, IconButton, Tooltip } from '@material-ui/core';
+import { Card, CardContent, IconButton } from '@material-ui/core';
 import { Alert } from '@material-ui/lab';
 import { Close as CloseIcon } from '@material-ui/icons';
 import clsx from 'clsx';
 
 import { ModifierForm } from 'components/builder/modifiers';
-import { validateModifier } from 'utils/instances';
+import { Tooltip } from 'components/elements';
 import { modifierCanBeRemoved } from 'components/builder/modifiers/utils';
+import { validateModifier } from 'utils/instances';
 import useStyles from '../styles';
 
 const ModifierSelectorRow = ({
@@ -33,11 +34,10 @@ const ModifierSelectorRow = ({
       <div className={clsx(styles.line, styles.lineVertical, isFirst && styles.lineVerticalTop)}></div>
 
       <div className={styles.indent}>
-        <Card className={styles.modifierCard}>
+        <Card className={styles.modifierCard} data-testid="modifier-card">
           <CardContent className={styles.modifierCardContent}>
             <ModifierForm
               elementInstance={elementInstance}
-              handleSelectValueSet={() => {}} // do nothing, update modifier only
               handleUpdateModifier={handleUpdateModifier}
               modifier={modifier}
             />
@@ -45,21 +45,16 @@ const ModifierSelectorRow = ({
             {validationWarning && <Alert severity="error">{validationWarning}</Alert>}
 
             <div className={styles.deleteButton}>
-              {tooltipText && (
-                <Tooltip arrow title={tooltipText} placement="left">
-                  <span>
-                    <IconButton aria-label="delete modifier" disabled color="primary">
-                      <CloseIcon fontSize="small" />
-                    </IconButton>
-                  </span>
-                </Tooltip>
-              )}
-
-              {canBeRemoved && (
-                <IconButton aria-label="delete modifier" color="primary" onClick={handleRemoveModifier}>
+              <Tooltip condition={!canBeRemoved} placement="left" title={tooltipText}>
+                <IconButton
+                  aria-label="delete modifier"
+                  color="primary"
+                  disabled={!canBeRemoved}
+                  onClick={handleRemoveModifier}
+                >
                   <CloseIcon fontSize="small" />
                 </IconButton>
-              )}
+              </Tooltip>
             </div>
           </CardContent>
         </Card>

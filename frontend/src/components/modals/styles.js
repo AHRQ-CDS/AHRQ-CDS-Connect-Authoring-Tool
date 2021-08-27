@@ -17,15 +17,12 @@ export default makeStyles(
       margin: 0
     },
     headerIndicator: {
-      backgroundColor: theme.palette.common.blue,
-      borderRadius: '1px',
-      display: 'inline-block',
-      height: '30px',
-      marginRight: '10px',
-      width: '3px'
+      borderLeft: `3px solid ${theme.palette.common.blue}`,
+      padding: '0 20px',
+      margin: '10px 0'
     },
     headerIndicatorHighlight: {
-      backgroundColor: theme.palette.common.blueHighlight
+      borderColor: theme.palette.common.blueHighlight
     },
     headerIndicatorLabel: {
       fontWeight: 'bold',
@@ -33,8 +30,7 @@ export default makeStyles(
     },
     headerTag: {
       alignItems: 'center',
-      display: 'flex',
-      margin: '10px 0'
+      display: 'flex'
     },
     list: {
       backgroundColor: theme.palette.common.blueDarker,

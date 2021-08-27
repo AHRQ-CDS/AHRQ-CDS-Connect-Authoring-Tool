@@ -38,6 +38,7 @@
     {
       "id": "isTrueFalse",
       "name": "Is True/False?",
+      "displayName": "",
       "description": "Check to see if a boolean is true or false",
       "operatorTemplate": "isTrueFalse",
       "primaryOperand": {
@@ -47,6 +48,7 @@
       "userSelectedOperands": [
         {
           "id": "booleanValue",
+          "preLabel": "is",
           "type": "editor",
           "typeSpecifier": {
             "type": "NamedTypeSpecifier",
@@ -78,6 +80,7 @@
     {
       "id": "listIsEmpty",
       "name": "Is (Not) Empty",
+      "displayName": "list",
       "description": "Check to see if a list is empty",
       "operatorTemplate": "",
       "primaryOperand": {
@@ -96,6 +99,7 @@
     {
       "id": "listLengthComparison",
       "name": "Compare Length",
+      "displayName": "",
       "description": "Perform a numeric comparison on the length of a list",
       "operatorTemplate": "",
       "primaryOperand": {
@@ -106,20 +110,20 @@
         {
           "id": "comparisonOperator",
           "name": "Comparison",
+          "preLabel": "is",
           "type": "selector",
-          "preLabel": "The length of the list is",
           "selectionValues": [
-            { "value": "<", "name": "less than" },
-            { "value": ">", "name": "greater than" },
-            { "value": "<=", "name": "less or equal to" },
-            { "value": ">=", "name": "greater or equal to" },
-            { "value": "=", "name": "" }
+            { "value": "<", "label": "less than" },
+            { "value": ">", "label": "greater than" },
+            { "value": "<=", "label": "less than or equal to" },
+            { "value": ">=", "label": "greater than or equal to" },
+            { "value": "=", "label": "equal to" }
           ]
         },
         {
           "id": "comparisonValue",
           "type": "editor",
-          "postLabel": "elements long.",
+          "postLabel": "elements",
           "typeSpecifier": {
             "type": "NamedTypeSpecifier",
             "editorType": "System.Integer"
@@ -442,7 +446,8 @@
           "type": "editor",
           "typeSpecifier": {
             "type": "NamedTypeSpecifier",
-            "editorType": "System.Decimal"
+            "editorType": "System.Decimal",
+            "displayField": "decimal"
           }
         },
         {
@@ -468,25 +473,23 @@
           "type": "editor",
           "typeSpecifier": {
             "type": "NamedTypeSpecifier",
-            "editorType": "System.Decimal"
+            "editorType": "System.Decimal",
+            "displayField": "decimal"
           }
         },
         {
           "id": "timeUnit",
           "name": "Time Unit",
+          "postLabel": "ago",
           "type": "selector",
           "selectionValues": ["years", "months", "weeks", "days", "hours", "minutes"]
-        },
-        {
-          "id": "dateTimeTypeOccurredMoreThan_AgoLabel",
-          "type": "label",
-          "value": "ago."
         }
       ]
     },
     {
       "id": "dateTimeOccurred",
       "name": "Occurred Before/After",
+      "displayName": "occurred",
       "description": "Check if the operand time type did or did not occur within the user specified time",
       "operatorTemplate": "",
       "primaryOperand": {
@@ -496,7 +499,7 @@
       "userSelectedOperands": [
         {
           "id": "when",
-          "name": "When...",
+          "name": "When",
           "type": "selector",
           "selectionValues": ["Before", "On or Before", "After", "On or After"]
         },
@@ -505,7 +508,8 @@
           "type": "editor",
           "typeSpecifier": {
             "type": "NamedTypeSpecifier",
-            "editorType": "System.DateTime"
+            "editorType": "System.DateTime",
+            "displayField": "str"
           }
         }
       ]
@@ -513,6 +517,7 @@
     {
       "id": "dateTimeIntervalComparison",
       "name": "(Start | End) Occurred",
+      "displayName": "",
       "description": "Check if the operand time type occurred on or after the user specified time",
       "operatorTemplate": "",
       "primaryOperand": {
@@ -522,13 +527,13 @@
       "userSelectedOperands": [
         {
           "id": "userSpecifiedIndex",
-          "name": "Start/End",
+          "name": "Starts/Ends",
           "type": "selector",
-          "selectionValues": ["Start", "End"]
+          "selectionValues": ["Starts", "Ends"]
         },
         {
           "id": "when",
-          "name": "When...",
+          "name": "When",
           "type": "selector",
           "selectionValues": ["Before", "On or Before", "After", "On or After"]
         },
@@ -537,7 +542,8 @@
           "type": "editor",
           "typeSpecifier": {
             "type": "NamedTypeSpecifier",
-            "editorType": "System.DateTime"
+            "editorType": "System.DateTime",
+            "displayField": "str"
           }
         }
       ]
@@ -557,7 +563,9 @@
           "type": "editor",
           "typeSpecifier": {
             "type": "IntervalTypeSpecifier",
-            "editorType": "System.DateTime"
+            "editorType": "System.DateTime",
+            "requiredFields": ["firstDate", "secondDate"],
+            "displayField": "str"
           }
         }
       ]
@@ -575,10 +583,10 @@
         {
           "id": "userSpecifiedDateTime",
           "type": "editor",
-          "preLabel": "Date:",
           "typeSpecifier": {
             "type": "NamedTypeSpecifier",
-            "editorType": "System.DateTime"
+            "editorType": "System.DateTime",
+            "displayField": "str"
           }
         }
       ]
@@ -596,10 +604,10 @@
         {
           "id": "userSpecifiedDateTime",
           "type": "editor",
-          "preLabel": "Date:",
           "typeSpecifier": {
             "type": "NamedTypeSpecifier",
-            "editorType": "System.DateTime"
+            "editorType": "System.DateTime",
+            "displayField": "str"
           }
         }
       ]
@@ -617,20 +625,22 @@
         {
           "id": "beginDateTime",
           "type": "editor",
-          "preLabel": "Date 1:",
+          "postLabel": "and",
           "typeSpecifier": {
             "type": "NamedTypeSpecifier",
-            "editorType": "System.DateTime"
+            "editorType": "System.DateTime",
+            "requiredFields": ["date"],
+            "displayField": "str"
           }
         },
-        { "id": "dateTimeOccursBetween_AndLabel", "type": "label", "value": "and" },
         {
           "id": "endDateTime",
           "type": "editor",
-          "preLabel": "Date 2:",
           "typeSpecifier": {
             "type": "NamedTypeSpecifier",
-            "editorType": "System.DateTime"
+            "editorType": "System.DateTime",
+            "requiredFields": ["date"],
+            "displayField": "str"
           }
         }
       ]
@@ -662,7 +672,9 @@
           "type": "editor",
           "typeSpecifier": {
             "type": "NamedTypeSpecifier",
-            "editorType": "System.Decimal"
+            "editorType": "System.Decimal",
+            "requiredFields": ["quantity", "unit"],
+            "displayField": "str"
           }
         }
       ]
@@ -682,7 +694,9 @@
           "type": "editor",
           "typeSpecifier": {
             "type": "IntervalTypeSpecifier",
-            "editorType": "System.Decimal"
+            "editorType": "System.Decimal",
+            "requiredFields": ["firstQuantity", "secondQuantity", "unit"],
+            "displayField": "str"
           }
         }
       ]
@@ -702,7 +716,9 @@
           "type": "editor",
           "typeSpecifier": {
             "type": "NamedTypeSpecifier",
-            "editorType": "System.Decimal"
+            "editorType": "System.Decimal",
+            "requiredFields": ["quantity", "unit"],
+            "displayField": "str"
           }
         }
       ]
@@ -722,7 +738,9 @@
           "type": "editor",
           "typeSpecifier": {
             "type": "NamedTypeSpecifier",
-            "editorType": "System.Decimal"
+            "editorType": "System.Decimal",
+            "requiredFields": ["quantity", "unit"],
+            "displayField": "str"
           }
         }
       ]
@@ -755,6 +773,7 @@
     {
       "id": "quantityIsBetweenQuantities",
       "name": "Value Is Between",
+      "displayName": "is between",
       "description": "Check to see if a given quantity value falls between two others",
       "operatorTemplate": "",
       "primaryOperand": {
@@ -764,20 +783,23 @@
       "userSelectedOperands": [
         {
           "id": "lowQuantity",
+          "postLabel": "and",
           "type": "editor",
-          "preLabel": "Value 1:",
           "typeSpecifier": {
             "type": "NamedTypeSpecifier",
-            "editorType": "System.Quantity"
+            "editorType": "System.Quantity",
+            "requiredFields": ["quantity", "unit"],
+            "displayField": "str"
           }
         },
         {
           "id": "highQuantity",
           "type": "editor",
-          "preLabel": "Value 2:",
           "typeSpecifier": {
             "type": "NamedTypeSpecifier",
-            "editorType": "System.Quantity"
+            "editorType": "System.Quantity",
+            "requiredFields": ["quantity", "unit"],
+            "displayField": "str"
           }
         }
       ]
@@ -785,6 +807,7 @@
     {
       "id": "quantityIntervalComparison",
       "name": "(High/Low) Value Comparison",
+      "displayName": "",
       "description": "Compare either the high or low value from an interval quantity to a number",
       "operatorTemplate": "",
       "primaryOperand": {
@@ -804,11 +827,11 @@
           "type": "selector",
           "preLabel": "is",
           "selectionValues": [
-            { "value": "<", "name": "less than" },
-            { "value": ">", "name": "greater than" },
-            { "value": "<=", "name": "less or equal to" },
-            { "value": ">=", "name": "greater or equal to" },
-            { "value": "=", "name": "" }
+            { "value": "<", "label": "less than" },
+            { "value": ">", "label": "greater than" },
+            { "value": "<=", "label": "less than or equal to" },
+            { "value": ">=", "label": "greater than or equal to" },
+            { "value": "=", "label": "equal to" }
           ]
         },
         {
@@ -816,7 +839,9 @@
           "type": "editor",
           "typeSpecifier": {
             "type": "NamedTypeSpecifier",
-            "editorType": "System.Quantity"
+            "editorType": "System.Quantity",
+            "requiredFields": ["quantity", "unit"],
+            "displayField": "str"
           }
         }
       ]
@@ -824,6 +849,7 @@
     {
       "id": "quantityIntervalOverlapsQuantityInterval",
       "name": "Overlaps Interval",
+      "displayName": "overlaps",
       "description": "Check to see if two intervals overlap or not",
       "operatorTemplate": "",
       "primaryOperand": {
@@ -834,10 +860,11 @@
         {
           "id": "numericInterval",
           "type": "editor",
-          "preLabel": "Interval:",
           "typeSpecifier": {
             "type": "IntervalTypeSpecifier",
-            "editorType": "System.Quantity"
+            "editorType": "System.Quantity",
+            "requiredFields": ["firstQuantity", "secondQuantity", "unit"],
+            "displayField": "str"
           }
         }
       ]
@@ -855,10 +882,11 @@
         {
           "id": "number",
           "type": "editor",
-          "preLabel": "Quantity:",
           "typeSpecifier": {
             "type": "NamedTypeSpecifier",
-            "editorType": "System.Quantity"
+            "editorType": "System.Quantity",
+            "requiredFields": ["quantity", "unit"],
+            "displayField": "str"
           }
         }
       ]
@@ -876,10 +904,11 @@
         {
           "id": "number",
           "type": "editor",
-          "preLabel": "Quantity:",
           "typeSpecifier": {
             "type": "NamedTypeSpecifier",
-            "editorType": "System.Quantity"
+            "editorType": "System.Quantity",
+            "requiredFields": ["quantity", "unit"],
+            "displayField": "str"
           }
         }
       ]
@@ -920,7 +949,7 @@
         {
           "id": "highTimeUnit",
           "name": "Time Unit",
-          "postLabel": "old.",
+          "postLabel": "old",
           "type": "selector",
           "selectionValues": ["years", "months", "weeks", "days", "hours", "minutes"]
         }
@@ -929,6 +958,7 @@
     {
       "id": "ageComparison",
       "name": "Age Comparision",
+      "displayName": "",
       "description": "Compare two age quantities",
       "operatorTemplate": "",
       "primaryOperand": {
@@ -939,14 +969,14 @@
         {
           "id": "comparisonOperator",
           "name": "Comparison",
-          "preLabel": "The age is",
+          "preLabel": "is",
           "type": "selector",
           "selectionValues": [
-            { "value": "<", "name": "less than" },
-            { "value": ">", "name": "greater than" },
-            { "value": "<=", "name": "less or equal to" },
-            { "value": ">=", "name": "greater or equal to" },
-            { "value": "=", "name": "" }
+            { "value": "<", "label": "less than" },
+            { "value": ">", "label": "greater than" },
+            { "value": "<=", "label": "less than or equal to" },
+            { "value": ">=", "label": "greater than or equal to" },
+            { "value": "=", "label": "equal to" }
           ]
         },
         {
@@ -961,7 +991,7 @@
           "id": "timeUnit",
           "name": "Time Unit",
           "type": "selector",
-          "postLabel": "old.",
+          "postLabel": "old",
           "selectionValues": ["years", "months", "weeks", "days", "hours", "minutes"]
         }
       ]

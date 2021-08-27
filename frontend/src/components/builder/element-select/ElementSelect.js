@@ -168,7 +168,7 @@ const ElementSelect = ({ excludeListOperations = false, handleAddElement, isDisa
           </div>
 
           {selectedOption && (
-            <IconButton onClick={() => handleClearOptions()}>
+            <IconButton aria-label="close" onClick={() => handleClearOptions()}>
               <CloseIcon />
             </IconButton>
           )}

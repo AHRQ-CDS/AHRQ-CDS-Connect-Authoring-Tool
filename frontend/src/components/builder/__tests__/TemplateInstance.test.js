@@ -11,7 +11,7 @@ import {
   genericBaseElementUseInstance
 } from 'utils/test_fixtures';
 import { getFieldWithType } from 'utils/instances';
-import mockModifiers from 'mocks/mockModifiers';
+import mockModifiers from 'mocks/modifiers/mockModifiers';
 import TemplateInstance from '../TemplateInstance';
 import { mockArtifact } from 'mocks/artifacts';
 import { mockExternalCqlLibrary } from 'mocks/external-cql';
@@ -150,7 +150,7 @@ describe('<TemplateInstance />', () => {
 
       renderComponent({ editInstance });
 
-      userEvent.click(screen.getByRole('button', { name: 'delete value set VS' }));
+      userEvent.click(screen.getByRole('button', { name: 'Delete Value Set VS' }));
 
       expect(editInstance).toHaveBeenCalledWith(
         'MeetsInclusionCriteria',
@@ -263,6 +263,7 @@ describe('<TemplateInstance />', () => {
 
       updateInstanceModifiers.mockClear();
       fireEvent.click(screen.getAllByRole('button', { name: 'remove expression' })[0]);
+      userEvent.click(screen.getByRole('button', { name: 'Delete' }));
 
       expect(updateInstanceModifiers).toBeCalled();
     });
@@ -297,6 +298,7 @@ describe('<TemplateInstance />', () => {
 
       updateInstanceModifiers.mockClear();
       fireEvent.click(screen.getAllByRole('button', { name: 'remove expression' })[2]);
+      userEvent.click(screen.getByRole('button', { name: 'Delete' }));
 
       expect(updateInstanceModifiers).toHaveBeenCalledWith(
         'MeetsInclusionCriteria',
@@ -418,7 +420,8 @@ describe('<TemplateInstance />', () => {
 
       updateInstanceModifiers.mockClear();
 
-      fireEvent.click(screen.getAllByRole('button', { name: 'remove expression' })[2]);
+      userEvent.click(screen.getAllByRole('button', { name: 'remove expression' })[2]);
+      userEvent.click(screen.getByRole('button', { name: 'Delete' }));
 
       expect(updateInstanceModifiers).toHaveBeenCalledWith(
         'MeetsInclusionCriteria',

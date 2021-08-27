@@ -15,9 +15,7 @@ export const changeToCase = (string, desiredCase) => {
     'snakeCase' // test string => test_string
   ];
 
-  if (acceptedCases.indexOf(desiredCase) > -1) {
-    return changeCase[desiredCase](string);
-  }
+  if (acceptedCases.indexOf(desiredCase) > -1) return changeCase[desiredCase](string) || string;
 
   return null;
 };

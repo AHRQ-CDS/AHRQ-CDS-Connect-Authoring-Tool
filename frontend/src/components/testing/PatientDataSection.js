@@ -14,10 +14,9 @@ import {
 import { ExpandMore as ExpandMoreIcon } from '@material-ui/icons';
 import clsx from 'clsx';
 
-import { useTableStyles, useTextStyles } from 'styles/hooks';
+import { useTextStyles } from 'styles/hooks';
 
 const PatientDataSection = ({ data, title }) => {
-  const tableStyles = useTableStyles();
   const textStyles = useTextStyles();
 
   if (data.length === 0) return null;
@@ -48,7 +47,7 @@ const PatientDataSection = ({ data, title }) => {
                 {title !== 'Other' && (
                   <TableRow>
                     {Object.keys(data[0]).map((key, index) => (
-                      <TableCell key={index} className={clsx(tableStyles.noWrapCell, textStyles.fontSizeSmall)}>
+                      <TableCell key={index} className={clsx(textStyles.noWrap, textStyles.fontSizeSmall)}>
                         {key}
                       </TableCell>
                     ))}

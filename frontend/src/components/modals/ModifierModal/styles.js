@@ -1,12 +1,7 @@
-import { makeStyles } from '@material-ui/core/styles';
+import { fade, makeStyles } from '@material-ui/core/styles';
 
 export default makeStyles(
   theme => ({
-    agoLabel: {
-      position: 'relative',
-      left: '4px',
-      bottom: '10px'
-    },
     alignIcon: {
       alignSelf: 'flex-start',
       marginTop: '0'
@@ -14,16 +9,6 @@ export default makeStyles(
     clearRuleButton: {
       alignSelf: 'center',
       marginLeft: '10px'
-    },
-    compactTextButton: {
-      margin: '0',
-      padding: '0',
-      background: 'transparent'
-    },
-    conceptChip: {
-      margin: 'auto',
-      marginTop: '3px',
-      maxWidth: '165px'
     },
     deleteButton: {
       position: 'absolute',
@@ -82,7 +67,6 @@ export default makeStyles(
       height: '50%',
       top: '50%'
     },
-    marginBottom: { marginBottom: '50px' },
     modifierCard: {
       margin: 0,
       position: 'relative'
@@ -90,30 +74,37 @@ export default makeStyles(
     modifierCardContent: {
       paddingRight: '60px'
     },
+    modifierExpression: {
+      marginTop: '10px'
+    },
     modifierModalContent: {
       minHeight: '200px',
       minWidth: '1000px'
     },
-    multipleSelect: {
-      display: 'flex',
-      flexDirection: 'column',
-      alignItems: 'center'
-    },
     navHeader: {
-      alignItems: 'center',
-      display: 'flex',
       marginBottom: '1em'
     },
-    noMarginBottom: {
-      marginBottom: '0'
+    navHeaderButtons: {
+      alignItems: 'center',
+      display: 'flex'
     },
-    preLabel: { marginTop: '22px', marginRight: '8px', fontWeight: 'bold', whiteSpace: 'nowrap' },
-    postLabel: { marginTop: '22px', marginLeft: '6px', fontWeight: 'bold', whiteSpace: 'nowrap' },
+    navHeaderGroup: {
+      display: 'flex'
+    },
+    operandGroup: {
+      display: 'flex',
+      alignItems: 'center'
+    },
     rule: {
-      alignItems: 'flex-start',
       display: 'flex',
       flexWrap: 'wrap',
       width: '100%'
+    },
+    ruleLabel: {
+      alignSelf: 'center',
+      fontWeight: 'bold',
+      marginRight: '10px',
+      whiteSpace: 'nowrap'
     },
     rulesCard: {
       marginTop: '0',
@@ -126,17 +117,25 @@ export default makeStyles(
       padding: '10px 0',
       position: 'relative'
     },
+    // keep before rulesCardGroupIncomplete
     rulesCardOdd: {
       backgroundColor: theme.palette.common.white
     },
+    rulesCardGroupIncomplete: {
+      backgroundColor: fade(theme.palette.common.redLight, 0.15)
+    },
     tag: {
+      alignItems: 'center',
       backgroundColor: theme.palette.common.blueHighlight,
       borderRadius: '5px',
       color: theme.palette.common.white,
+      display: 'flex',
       fontSize: '0.9em',
+      height: '40px',
       margin: '0 30px 0 10px',
       padding: '5px 10px',
       textTransform: 'uppercase',
+      width: 'fit-content',
       whiteSpace: 'nowrap'
     },
     textButton: {
@@ -147,10 +146,6 @@ export default makeStyles(
     versionButton: {
       marginLeft: '20px',
       marginTop: '40px'
-    },
-    verticalAlign: {
-      display: 'flex',
-      flexDirection: 'column'
     },
     warningBanner: {
       marginBottom: '20px'

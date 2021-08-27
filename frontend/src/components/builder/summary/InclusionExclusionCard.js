@@ -62,7 +62,7 @@ const InclusionExclusionCard = ({
             ))}
           </div>
 
-          <IconButton onClick={handleLinkToElement}>
+          <IconButton aria-label="link" onClick={handleLinkToElement}>
             <LinkIcon />
           </IconButton>
         </CardContent>

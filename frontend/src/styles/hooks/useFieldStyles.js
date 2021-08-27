@@ -2,6 +2,13 @@ import { makeStyles } from '@material-ui/core/styles';
 
 export default makeStyles(
   theme => ({
+    condensedFieldLabel: {
+      fontWeight: 600,
+      margin: '0'
+    },
+    condensedFieldInput: {
+      margin: '0'
+    },
     field: {
       display: 'flex',
       width: '100%'
@@ -16,9 +23,8 @@ export default makeStyles(
     },
     fieldCard: {
       position: 'relative',
-      width: '100%',
-      padding: '2em',
-      marginBottom: '5px'
+      padding: '1em 2em',
+      marginBottom: '10px'
     },
     fieldCardCloseButton: {
       position: 'absolute',
@@ -87,6 +93,10 @@ export default makeStyles(
       minWidth: '400px',
       maxWidth: '450px'
     },
+    fieldInputXxl: {
+      minWidth: '810px',
+      maxWidth: '860px'
+    },
     fieldLabel: {
       fontSize: '0.95em',
       fontWeight: 600,
@@ -104,12 +114,16 @@ export default makeStyles(
       lineHeight: '1.2',
       marginTop: '20px'
     },
+    fieldLabelNarrow: {
+      maxWidth: '7em',
+      minWidth: '7em'
+    },
     fieldLabelShort: {
       marginTop: '0px',
       paddingBottom: '3px'
     },
     fieldLabelTall: {
-      marginTop: '18px'
+      marginTop: '20px'
     },
     fieldLabelTaller: {
       marginTop: '30px'
@@ -126,9 +140,6 @@ export default makeStyles(
     helperText: {
       fontSize: '0.7em',
       color: theme.palette.common.gray
-    },
-    condensedField: {
-      margin: '0'
     },
     nestedField: {
       display: 'block'

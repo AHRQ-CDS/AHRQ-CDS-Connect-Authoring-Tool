@@ -4,7 +4,7 @@ import { createMockStore as reduxCreateMockStore } from 'redux-test-utils';
 import _ from 'lodash';
 import nock from 'nock';
 import * as types from 'actions/types';
-import mockModifiers from 'mocks/mockModifiers';
+import mockModifiers from 'mocks/modifiers/mockModifiers';
 import { render, fireEvent, userEvent, screen, waitFor, within } from 'utils/test-utils';
 import { instanceTree, artifact, reduxState } from 'utils/test_fixtures';
 import { simpleObservationInstanceTree } from 'utils/test_fixtures';

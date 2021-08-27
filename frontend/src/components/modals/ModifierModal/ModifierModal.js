@@ -1,53 +1,46 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import { Button, Tooltip } from '@material-ui/core';
-import { updateArtifact } from 'actions/artifacts';
-import { useSelector, useDispatch } from 'react-redux';
-import _ from 'lodash';
+import { Button } from '@material-ui/core';
+import { useDispatch, useSelector } from 'react-redux';
 
 import ModifierModalHeader from './ModifierModalHeader';
 import ModifierSelector from './ModifierSelector';
 import ModifierBuilder from './ModifierBuilder';
 import FhirVersionSelect from './FhirVersionSelect';
-import { getIsRuleTreeEmpty } from './ModifierBuilder/utils/utils';
+import { Tooltip } from 'components/elements';
+import { ruleTreeIsEmpty } from './ModifierBuilder/utils/ruleTreeIsEmpty';
 import { Modal } from 'components/elements';
+import { updateArtifact } from 'actions/artifacts';
+import { resourceMap } from 'queries/modifier-builder/fetchResource';
 import useStyles from './styles';
-
-// Note: The flag editDirect when set will allow you to edit a single modifier directly.
-// It is used without this flag in TemplateInstance.js -- it shows the entire modal.
-// It is used with  this flag in UserDefinedModifier.js -- it shows only the builder/editor AND
-// handleUpdateModifiers is called with the new modifier only.
+import ruleIsComplete from './ModifierBuilder/utils/ruleIsComplete';
 
 const ModifierModal = ({
   elementInstance,
-  elementInstanceReturnType,
   handleCloseModal,
   handleUpdateModifiers,
-  hasLimitedModifiers,
-  editDirect = false,
-  modifier = undefined
+  hasLimitedModifiers = false,
+  modifierToEdit
 }) => {
   const artifact = useSelector(state => state.artifacts.artifact);
-  const [displayMode, setDisplayMode] = useState(
-    editDirect === true && modifier !== undefined ? 'buildModifier' : undefined
-  );
-  const [modifiersToAdd, setModifiersToAdd] = useState(editDirect === true && modifier !== undefined ? [modifier] : []);
+  const [displayMode, setDisplayMode] = useState(modifierToEdit ? 'editModifier' : null);
+  const [modifiersToAdd, setModifiersToAdd] = useState(modifierToEdit ? [modifierToEdit] : []);
   const [fhirVersion, setFhirVersion] = useState(artifact.fhirVersion);
   const dispatch = useDispatch();
   const styles = useStyles();
+  const typeSupportedByBuilder =
+    Boolean(resourceMap[elementInstance.returnType]) &&
+    (fhirVersion === '' || resourceMap[elementInstance.returnType].supportedVersions.includes(fhirVersion));
+  const hasModifiers = elementInstance.modifiers?.length !== 0;
 
   let modalTitle = 'Add Modifiers';
   if (displayMode === 'selectModifiers') modalTitle = 'Select Modifiers';
   if (displayMode === 'buildModifier') modalTitle = 'Build Modifier';
+  if (displayMode === 'editModifier') modalTitle = 'Edit Modifier';
 
-  const handleUpdateInstance = async () => {
-    if (editDirect) {
-      let modifierToUpdate = _.last(modifiersToAdd);
-      handleUpdateModifiers(modifierToUpdate);
-    } else {
-      if (fhirVersion !== artifact.fhirVersion) await dispatch(updateArtifact(artifact, { fhirVersion: fhirVersion }));
-      handleUpdateModifiers(elementInstance.modifiers.concat(modifiersToAdd));
-    }
+  const handleSaveModal = async () => {
+    if (fhirVersion !== artifact.fhirVersion) await dispatch(updateArtifact(artifact, { fhirVersion: fhirVersion }));
+    handleUpdateModifiers(modifierToEdit ? modifiersToAdd : elementInstance.modifiers.concat(modifiersToAdd));
     handleCloseModal();
   };
 
@@ -62,30 +55,24 @@ const ModifierModal = ({
     setDisplayMode('buildModifier');
   };
 
-  const getIsSubmitDisabled = () => {
-    if (displayMode === 'selectModifiers') {
-      return modifiersToAdd.length === 0;
-    } else if (displayMode === 'buildModifier') {
-      return !(modifiersToAdd.length !== 0 && getIsRuleTreeEmpty(modifiersToAdd[0]));
-    } else return true;
-  };
+  let submitDisabled = true;
+  if (displayMode === 'selectModifiers') submitDisabled = modifiersToAdd.length === 0;
+  else if (displayMode === 'buildModifier' || displayMode === 'editModifier')
+    submitDisabled =
+      modifiersToAdd.length === 0 ||
+      ruleTreeIsEmpty(modifiersToAdd[0]) ||
+      !modifiersToAdd[0]?.where?.rules?.every(rule => ruleIsComplete(rule));
 
   return (
     <Modal
       handleCloseModal={handleCloseModal}
-      handleSaveModal={handleUpdateInstance}
-      Header={
-        <ModifierModalHeader
-          elementInstance={elementInstance}
-          elementInstanceReturnType={elementInstanceReturnType}
-          modifiersToAdd={modifiersToAdd}
-        />
-      }
+      handleSaveModal={handleSaveModal}
+      Header={<ModifierModalHeader elementInstance={elementInstance} modifiersToAdd={modifiersToAdd} />}
       hasCancelButton
       hasEnterKeySubmit={false}
       isOpen
-      submitButtonText="Add"
-      submitDisabled={getIsSubmitDisabled()}
+      submitButtonText={modifierToEdit ? 'Save' : 'Add'}
+      submitDisabled={submitDisabled}
       title={modalTitle}
       maxWidth="xl"
     >
@@ -103,35 +90,24 @@ const ModifierModal = ({
 
             <span>or</span>
 
-            {(() => {
-              const wrapInTooltip = (jsxElement, toolTipText) => (
-                <Tooltip arrow title={toolTipText}>
-                  {jsxElement}
-                </Tooltip>
-              );
-
-              let buildButton = (
-                <div>
-                  <Button
-                    className={styles.displayModeButton}
-                    color="primary"
-                    disabled={elementInstance.modifiers.length !== 0}
-                    onClick={() =>
-                      setDisplayMode(
-                        ['1.0.2', '3.0.0', '4.0.0'].includes(fhirVersion) ? 'buildModifier' : 'selectFhirVersion'
-                      )
-                    }
-                    variant="contained"
-                  >
-                    Build New Modifier
-                  </Button>
-                </div>
-              );
-
-              return elementInstance.modifiers.length !== 0
-                ? wrapInTooltip(buildButton, 'Cannot add a custom modifier to another modifier.')
-                : buildButton;
-            })()}
+            <Tooltip
+              condition={hasModifiers || !typeSupportedByBuilder}
+              title={hasModifiers ? 'Cannot add a custom modifier to another modifier' : 'Return type not supported'}
+            >
+              <Button
+                className={styles.displayModeButton}
+                color="primary"
+                disabled={hasModifiers || !typeSupportedByBuilder}
+                onClick={() =>
+                  setDisplayMode(
+                    ['1.0.2', '3.0.0', '4.0.0'].includes(fhirVersion) ? 'buildModifier' : 'selectFhirVersion'
+                  )
+                }
+                variant="contained"
+              >
+                Build New Modifier
+              </Button>
+            </Tooltip>
           </div>
         )}
 
@@ -147,14 +123,13 @@ const ModifierModal = ({
 
         {displayMode === 'selectFhirVersion' && <FhirVersionSelect handleSetFhirVersion={handleSetFhirVersion} />}
 
-        {displayMode === 'buildModifier' && (
+        {(displayMode === 'buildModifier' || displayMode === 'editModifier') && (
           <ModifierBuilder
-            editDirect={editDirect}
-            elementInstanceReturnType={elementInstanceReturnType}
+            elementInstanceReturnType={elementInstance.returnType}
             fhirVersion={fhirVersion}
             handleGoBack={handleReset}
             modifiersToAdd={modifiersToAdd}
-            modifier={modifier}
+            modifierToEdit={modifierToEdit}
             setModifiersToAdd={setModifiersToAdd}
           />
         )}
@@ -165,10 +140,10 @@ const ModifierModal = ({
 
 ModifierModal.propTypes = {
   elementInstance: PropTypes.object.isRequired,
-  elementInstanceReturnType: PropTypes.string.isRequired,
   handleCloseModal: PropTypes.func.isRequired,
   handleUpdateModifiers: PropTypes.func.isRequired,
-  hasLimitedModifiers: PropTypes.bool.isRequired
+  hasLimitedModifiers: PropTypes.bool,
+  modifierToEdit: PropTypes.object
 };
 
 export default ModifierModal;

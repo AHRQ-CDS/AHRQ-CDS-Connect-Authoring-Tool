@@ -18,7 +18,7 @@ import _ from 'lodash';
 
 import loadTemplates from 'actions/templates';
 import { setActiveTab, setScrollToId } from 'actions/navigation';
-import { loadConversionFunctions, loadTypeConversionData } from 'actions/modifiers';
+import { loadConversionFunctions } from 'actions/modifiers';
 import {
   setStatusMessage,
   downloadArtifact,
@@ -90,7 +90,6 @@ export class Builder extends Component {
         this.props.initializeArtifact(andTemplate, orTemplate);
       }
       this.props.loadConversionFunctions();
-      this.props.loadTypeConversionData();
     });
   }
 
@@ -295,14 +294,12 @@ export class Builder extends Component {
 
   updateFHIRVersion = () => {
     const { artifact, externalCqlList, updateAndSaveArtifact } = this.props;
+    const allInstances = this.getAllInstancesInAllTrees();
     const hasExternalCql =
       externalCqlList && Boolean(externalCqlList.find(cqlLibrary => cqlLibrary.linkedArtifactId === artifact._id));
-    const hasServiceRequest = this.instancesInclude(this.getAllInstancesInAllTrees(), 'Service Request');
-    const hasQueryModifier = this.getAllInstancesInAllTrees().reduce(
-      (acc, instance) => acc || instance.modifiers.some(modifier => modifier.where !== undefined),
-      false
-    );
-    if ((hasExternalCql && !hasServiceRequest) || hasQueryModifier) return;
+    const hasServiceRequest = this.instancesInclude(allInstances, 'Service Request');
+    const hasCustomModifier = allInstances.some(({ modifiers }) => modifiers?.some(({ where }) => where));
+    if ((hasExternalCql && !hasServiceRequest) || hasCustomModifier) return;
 
     let updatedArtifact = _.cloneDeep(artifact);
     updatedArtifact.fhirVersion = hasServiceRequest ? '4.0.0' : '';
@@ -873,7 +870,6 @@ function mapDispatchToProps(dispatch) {
       initializeArtifact,
       loadArtifact,
       loadConversionFunctions,
-      loadTypeConversionData,
       loadTemplates,
       saveArtifact,
       setActiveTab,

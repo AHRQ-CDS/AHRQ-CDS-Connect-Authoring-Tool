@@ -1,22 +1,22 @@
 import axios from 'axios';
 import _ from 'lodash';
 
-const resourceMap = {
-  list_of_observations: 'Observation',
-  list_of_conditions: 'Condition',
-  list_of_medication_statements: 'MedicationStatement',
-  list_of_medication_requests: 'MedicationRequest',
-  list_of_procedures: 'Procedure',
-  list_of_allergy_intolerances: 'AllergyIntolerance',
-  list_of_encounters: 'Encounter',
-  list_of_immunizations: 'Immunization',
-  list_of_devices: 'Device',
-  list_of_service_requests: 'ServiceRequest',
-  list_of_medication_orders: 'MedicationOrder'
+export const resourceMap = {
+  list_of_allergy_intolerances: { name: 'AllergyIntolerance', supportedVersions: ['1.0.2', '3.0.0', '4.0.0'] },
+  list_of_conditions: { name: 'Condition', supportedVersions: ['1.0.2', '3.0.0', '4.0.0'] },
+  list_of_devices: { name: 'Device', supportedVersions: ['1.0.2', '3.0.0', '4.0.0'] },
+  list_of_encounters: { name: 'Encounter', supportedVersions: ['1.0.2', '3.0.0', '4.0.0'] },
+  list_of_immunizations: { name: 'Immunization', supportedVersions: ['1.0.2', '3.0.0', '4.0.0'] },
+  list_of_medication_orders: { name: 'MedicationOrder', supportedVersions: ['1.0.2'] },
+  list_of_medication_requests: { name: 'MedicationRequest', supportedVersions: ['3.0.0', '4.0.0'] },
+  list_of_medication_statements: { name: 'MedicationStatement', supportedVersions: ['1.0.2', '3.0.0', '4.0.0'] },
+  list_of_observations: { name: 'Observation', supportedVersions: ['1.0.2', '3.0.0', '4.0.0'] },
+  list_of_procedures: { name: 'Procedure', supportedVersions: ['1.0.2', '3.0.0', '4.0.0'] },
+  list_of_service_requests: { name: 'ServiceRequest', supportedVersions: ['4.0.0'] }
 };
 
 const fetchResource = async (fhirVersion, elementInstanceReturnType) => {
-  const resourceName = resourceMap[elementInstanceReturnType];
+  const resourceName = resourceMap[elementInstanceReturnType].name;
   const resourceResponse = await axios.get(
     `${process.env.REACT_APP_API_URL}/query/resources/${resourceName}?fhirVersion=${fhirVersion}`
   );

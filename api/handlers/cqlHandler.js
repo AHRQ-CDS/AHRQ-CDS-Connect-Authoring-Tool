@@ -1083,6 +1083,12 @@ function checkRules(
   isFirstModifier = false
 ) {
   // Leaf node
+  // TODO: Refactor to remove use of rule.ruleType.  We support it for now mainly because all
+  // of the operator template tests assume rule.ruleType and many of them are already in flight
+  // in other PRs.  So for now, the code supports either way: rule.operator or rule.ruleType.
+  if (rule.operator && rule.operator.id) {
+    rule.ruleType = rule.operator.id;
+  }
   if (rule.ruleType) {
     if (rule.conceptValue || rule.conceptValues) {
       const conceptValues = rule.conceptValues || [rule.conceptValue];

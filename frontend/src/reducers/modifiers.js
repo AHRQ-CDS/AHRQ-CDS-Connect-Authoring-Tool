@@ -23,24 +23,6 @@ export default function modifiers(state = defaultState, action) {
         ...state,
         loadConversionFunctions: { isLoadingConversionFunctions: false, loadConversionFunctionsStatus: 'failure' }
       };
-
-    case types.IMPLICIT_CONVERSION_DATA_REQUEST:
-      return {
-        ...state,
-        loadTypeConversionData: { isLoadingTypeConversionData: true, loadTypeConversionDataStatus: null }
-      };
-    case types.LOAD_IMPLICIT_CONVERSION_DATA_SUCCESS:
-      return {
-        ...state,
-        typeConversionData: action.typeConversionData,
-        loadTypeConversionData: { isLoadingTypeConversionData: false, loadTypeConversionDataStatus: 'success' }
-      };
-    case types.LOAD_IMPLICIT_CONVERSION_DATA_FAILURE:
-      return {
-        ...state,
-        loadTypeConversionData: { isLoadingTypeConversionData: false, loadTypeConversionDataStatus: 'failure' }
-      };
-
     default:
       return state;
   }

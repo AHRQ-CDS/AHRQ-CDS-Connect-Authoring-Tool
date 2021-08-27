@@ -60,7 +60,9 @@ const Modal = ({
         open={isOpen}
       >
         <DialogTitle disableTypography>
-          <Typography variant="body1">{title}</Typography>
+          <Typography variant="body1" data-testid={title}>
+            {title}
+          </Typography>
 
           <div>
             <div className={styles.titleIcon}>{hasTitleIcon && TitleIcon}</div>

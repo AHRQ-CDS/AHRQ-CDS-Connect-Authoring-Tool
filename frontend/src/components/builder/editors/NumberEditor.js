@@ -64,6 +64,7 @@ const NumberEditor = ({
           onChange={event =>
             handleChange(event.target.value, isInterval ? (isDecimal ? 'firstDecimal' : 'firstInteger') : null)
           }
+          type="number"
           value={firstValue}
           variant="outlined"
         />
@@ -80,6 +81,7 @@ const NumberEditor = ({
                 onChange={event =>
                   handleChange(event.target.value, isInterval ? (isDecimal ? 'secondDecimal' : 'secondInteger') : null)
                 }
+                type="number"
                 value={secondValue}
                 variant="outlined"
               />

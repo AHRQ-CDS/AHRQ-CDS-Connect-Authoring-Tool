@@ -37,7 +37,7 @@ const ModifierSelector = ({
   const spacingStyles = useSpacingStyles();
   const styles = useStyles();
 
-  const newModifiers = elementInstance.modifiers.concat(modifiersToAdd);
+  const newModifiers = elementInstance.modifiers?.concat(modifiersToAdd) || modifiersToAdd;
   const returnTypeWithNewModifiers =
     newModifiers.length === 0 ? elementInstance.returnType : newModifiers[newModifiers.length - 1].returnType;
   let selectableModifiers = modifiersByInputType[returnTypeWithNewModifiers] ?? [];
@@ -60,7 +60,7 @@ const ModifierSelector = ({
 
   const handleUpdateModifier = (index, values) => {
     const newModifiersToAdd = _.cloneDeep(modifiersToAdd);
-    newModifiersToAdd[index].values = { ...newModifiersToAdd[index].values, ...values.values };
+    newModifiersToAdd[index].values = { ...newModifiersToAdd[index].values, ...values };
     setModifiersToAdd(newModifiersToAdd);
   };
 
@@ -73,26 +73,28 @@ const ModifierSelector = ({
       )}
 
       <div className={styles.navHeader}>
-        <IconButton onClick={handleGoBack}>
-          <ArrowBackIosIcon fontSize="small" />
-        </IconButton>
+        <div className={styles.navHeaderGroup}>
+          <div className={styles.navHeaderButtons}>
+            <IconButton aria-label="go back" onClick={handleGoBack}>
+              <ArrowBackIosIcon fontSize="small" />
+            </IconButton>
 
-        <div>
-          <div className={styles.tag}>with modifiers</div>
-        </div>
-
-        {modifiersToAdd.length > 0 && (
-          <div>
-            {modifiersToAdd.map((modifierToAdd, index) => (
-              <span key={index}>
-                {modifierToAdd.name}
-                {index !== modifiersToAdd.length - 1 && (
-                  <ArrowForwardIcon className={spacingStyles.horizontalPadding} fontSize="small" />
-                )}
-              </span>
-            ))}
+            <div className={styles.tag}>with modifiers</div>
           </div>
-        )}
+
+          {modifiersToAdd.length > 0 && (
+            <div className={styles.modifierExpression}>
+              {modifiersToAdd.map((modifierToAdd, index) => (
+                <span key={index}>
+                  {modifierToAdd.name}
+                  {index !== modifiersToAdd.length - 1 && (
+                    <ArrowForwardIcon className={spacingStyles.horizontalPadding} fontSize="small" />
+                  )}
+                </span>
+              ))}
+            </div>
+          )}
+        </div>
       </div>
 
       <div>
