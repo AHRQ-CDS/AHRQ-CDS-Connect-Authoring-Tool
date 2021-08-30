@@ -1,0 +1,1 @@
+<%-value_name%>.<%-resourceProperty%> overlaps Interval[<%-numericInterval.firstQuantity%> '<%-numericInterval.unit || '1'%>',<%-numericInterval.secondQuantity%> '<%-numericInterval.unit || '1'%>']

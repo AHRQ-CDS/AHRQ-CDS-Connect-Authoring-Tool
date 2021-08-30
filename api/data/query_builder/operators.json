@@ -82,7 +82,7 @@
       "name": "Is (Not) Empty",
       "displayName": "list",
       "description": "Check to see if a list is empty",
-      "operatorTemplate": "",
+      "operatorTemplate": "listIsEmpty",
       "primaryOperand": {
         "typeSpecifier": "ListTypeSpecifier",
         "elementTypes": ["System.Any"]
@@ -92,7 +92,10 @@
           "id": "notSelectorValue",
           "name": "List",
           "type": "selector",
-          "selectionValues": ["Is Not Empty", "Is Empty"]
+          "selectionValues": [
+            { "value": "exists", "label": "Is Not Empty" },
+            { "value": "not exists", "label": "Is Empty" }
+          ]
         }
       ]
     },
@@ -101,7 +104,7 @@
       "name": "Compare Length",
       "displayName": "",
       "description": "Perform a numeric comparison on the length of a list",
-      "operatorTemplate": "",
+      "operatorTemplate": "listLengthComparison",
       "primaryOperand": {
         "typeSpecifier": "ListTypeSpecifier",
         "elementTypes": ["System.Any"]
@@ -155,7 +158,7 @@
       "id": "codeConceptNotMatchesConcept",
       "name": "Does not Match Concept",
       "description": "Check to see if a code, coding, or codable concept does not match a given concept",
-      "operatorTemplate": "",
+      "operatorTemplate": "codeConceptNotMatchesConcept",
       "primaryOperand": {
         "typeSpecifier": "NamedTypeSpecifier",
         "elementTypes": ["FHIR.code", "System.Code", "System.Concept"]
@@ -235,7 +238,7 @@
       "id": "codeConceptNotInValueSet",
       "name": "Is Not in Value Set",
       "description": "Check to see if a code, coding, or codable concept is not within a valueset",
-      "operatorTemplate": "",
+      "operatorTemplate": "codeConceptNotInValueSet",
       "primaryOperand": {
         "typeSpecifier": "NamedTypeSpecifier",
         "elementTypes": ["FHIR.code", "System.Code", "System.Concept"]
@@ -673,7 +676,7 @@
           "typeSpecifier": {
             "type": "NamedTypeSpecifier",
             "editorType": "System.Decimal",
-            "requiredFields": ["quantity", "unit"],
+            "requiredFields": ["quantity"],
             "displayField": "str"
           }
         }
@@ -695,7 +698,7 @@
           "typeSpecifier": {
             "type": "IntervalTypeSpecifier",
             "editorType": "System.Decimal",
-            "requiredFields": ["firstQuantity", "secondQuantity", "unit"],
+            "requiredFields": ["firstQuantity", "secondQuantity"],
             "displayField": "str"
           }
         }
@@ -717,7 +720,7 @@
           "typeSpecifier": {
             "type": "NamedTypeSpecifier",
             "editorType": "System.Decimal",
-            "requiredFields": ["quantity", "unit"],
+            "requiredFields": ["quantity"],
             "displayField": "str"
           }
         }
@@ -739,7 +742,7 @@
           "typeSpecifier": {
             "type": "NamedTypeSpecifier",
             "editorType": "System.Decimal",
-            "requiredFields": ["quantity", "unit"],
+            "requiredFields": ["quantity"],
             "displayField": "str"
           }
         }
@@ -748,10 +751,11 @@
     {
       "id": "quantityComparison",
       "name": "Value Comparison",
+      "displayName": "",
       "description": "Compare two quantities with the same unit",
-      "operatorTemplate": "",
+      "operatorTemplate": "quantityComparison",
       "primaryOperand": {
-        "typeSpecifier": "ListTypeSpecifier",
+        "typeSpecifier": "NamedTypeSpecifier",
         "elementTypes": ["System.Quantity"]
       },
       "userSelectedOperands": [
@@ -765,7 +769,9 @@
           "type": "editor",
           "typeSpecifier": {
             "type": "NamedTypeSpecifier",
-            "editorType": "System.Quantity"
+            "editorType": "System.Quantity",
+            "requiredFields": ["quantity"],
+            "displayField": "str"
           }
         }
       ]
@@ -775,7 +781,7 @@
       "name": "Value Is Between",
       "displayName": "is between",
       "description": "Check to see if a given quantity value falls between two others",
-      "operatorTemplate": "",
+      "operatorTemplate": "quantityIsBetweenQuantities",
       "primaryOperand": {
         "typeSpecifier": "NamedTypeSpecifier",
         "elementTypes": ["System.Quantity"]
@@ -788,7 +794,7 @@
           "typeSpecifier": {
             "type": "NamedTypeSpecifier",
             "editorType": "System.Quantity",
-            "requiredFields": ["quantity", "unit"],
+            "requiredFields": ["quantity"],
             "displayField": "str"
           }
         },
@@ -798,7 +804,7 @@
           "typeSpecifier": {
             "type": "NamedTypeSpecifier",
             "editorType": "System.Quantity",
-            "requiredFields": ["quantity", "unit"],
+            "requiredFields": ["quantity"],
             "displayField": "str"
           }
         }
@@ -809,7 +815,7 @@
       "name": "(High/Low) Value Comparison",
       "displayName": "",
       "description": "Compare either the high or low value from an interval quantity to a number",
-      "operatorTemplate": "",
+      "operatorTemplate": "quantityIntervalComparison",
       "primaryOperand": {
         "typeSpecifier": "IntervalTypeSpecifier",
         "elementTypes": ["System.Quantity"]
@@ -840,7 +846,7 @@
           "typeSpecifier": {
             "type": "NamedTypeSpecifier",
             "editorType": "System.Quantity",
-            "requiredFields": ["quantity", "unit"],
+            "requiredFields": ["quantity"],
             "displayField": "str"
           }
         }
@@ -851,7 +857,7 @@
       "name": "Overlaps Interval",
       "displayName": "overlaps",
       "description": "Check to see if two intervals overlap or not",
-      "operatorTemplate": "",
+      "operatorTemplate": "quantityIntervalOverlapsQuantityInterval",
       "primaryOperand": {
         "typeSpecifier": "IntervalTypeSpecifier",
         "elementTypes": ["System.Quantity"]
@@ -863,7 +869,7 @@
           "typeSpecifier": {
             "type": "IntervalTypeSpecifier",
             "editorType": "System.Quantity",
-            "requiredFields": ["firstQuantity", "secondQuantity", "unit"],
+            "requiredFields": ["firstQuantity", "secondQuantity"],
             "displayField": "str"
           }
         }
@@ -873,7 +879,7 @@
       "id": "quantityIntervalContainsQuantity",
       "name": "Contains Quantity",
       "description": "Check to see if a number is contained by an interval",
-      "operatorTemplate": "",
+      "operatorTemplate": "quantityIntervalContainsQuantity",
       "primaryOperand": {
         "typeSpecifier": "IntervalTypeSpecifier",
         "elementTypes": ["System.Quantity"]
@@ -885,7 +891,7 @@
           "typeSpecifier": {
             "type": "NamedTypeSpecifier",
             "editorType": "System.Quantity",
-            "requiredFields": ["quantity", "unit"],
+            "requiredFields": ["quantity"],
             "displayField": "str"
           }
         }
@@ -895,7 +901,7 @@
       "id": "quantityIntervalNotContainsQuantity",
       "name": "Does Not Contain Quantity",
       "description": "Check to see if a number is contained by an interval",
-      "operatorTemplate": "",
+      "operatorTemplate": "quantityIntervalNotContainsQuantity",
       "primaryOperand": {
         "typeSpecifier": "IntervalTypeSpecifier",
         "elementTypes": ["System.Quantity"]
@@ -907,7 +913,7 @@
           "typeSpecifier": {
             "type": "NamedTypeSpecifier",
             "editorType": "System.Quantity",
-            "requiredFields": ["quantity", "unit"],
+            "requiredFields": ["quantity"],
             "displayField": "str"
           }
         }
@@ -917,7 +923,7 @@
       "id": "ageIsBetweenAges",
       "name": "Age Is Between",
       "description": "Compare two age quantities",
-      "operatorTemplate": "",
+      "operatorTemplate": "ageIsBetweenAges",
       "primaryOperand": {
         "typeSpecifier": "NamedTypeSpecifier",
         "elementTypes": ["FHIR.Age"]
@@ -960,7 +966,7 @@
       "name": "Age Comparision",
       "displayName": "",
       "description": "Compare two age quantities",
-      "operatorTemplate": "",
+      "operatorTemplate": "ageComparison",
       "primaryOperand": {
         "typeSpecifier": "NamedTypeSpecifier",
         "elementTypes": ["FHIR.Age"]

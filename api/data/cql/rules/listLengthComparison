@@ -1,0 +1,1 @@
+Count(<%-value_name%>.<%-resourceProperty%>) <%-comparisonOperator%> <%-comparisonValue%>

@@ -956,7 +956,7 @@ describe('CQL Operator Templates', () => {
   const raw = _.cloneDeep(baseArtifact);
   raw.expTreeInclude = {
     id: 'And',
-    name: '',
+    name: 'And',
     conjunction: true,
     returnType: 'boolean',
     fields: [
@@ -971,40 +971,84 @@ describe('CQL Operator Templates', () => {
     uniqueId: 'And-1',
     childInstances: [
       {
-        id: 'StatinAllergen',
-        name: 'Statin Allergen',
-        extends: 'GenericAllergyIntolerance',
+        id: 'GenericAllergyIntolerance_vsac',
+        name: 'AllergyIntolerance',
+        returnType: 'list_of_allergy_intolerances',
+        suppress: true,
+        extends: 'Base',
+        template: 'GenericAllergyIntolerance',
         fields: [
           {
             id: 'element_name',
-            value: 'StatinAllergen',
             type: 'string',
-            name: 'Element Name'
-          },
-          {
-            id: 'allergyIntolerance',
-            static: true,
-            value: 'statin_allergen',
-            type: 'allergyIntolerance',
-            name: 'Allergy Intolerance'
+            name: 'Element Name',
+            value: 'Statin Allergen'
           },
           {
             id: 'comment',
-            name: 'Comment',
-            type: 'textarea'
+            type: 'textarea',
+            name: 'Comment'
+          },
+          {
+            id: 'allergyIntolerance',
+            type: 'allergyIntolerance_vsac',
+            name: 'Allergy Intolerance',
+            // NO VALUESETS JUST TO KEEP CQL SIMPLER
+            // valueSets: [{
+            //   name: 'Statin Allergen',
+            //   oid: '2.16.840.1.113762.1.4.1110.42'
+            // }],
+            static: true
           }
         ],
-        returnType: 'list_of_allergy_intolerances',
         type: 'element',
-        uniqueId: 'StatinAllergen-3',
+        uniqueId: 'GenericAllergyIntolerance_vsac-3',
+        tab: 'expTreeInclude',
+        modifiers: []
+      },
+      {
+        id: 'GenericObservation_vsac',
+        name: 'Observation',
+        returnType: 'list_of_observations',
+        suppress: true,
+        extends: 'Base',
+        template: 'GenericObservation',
+        suppressedModifiers: ['ConvertToMgPerdL'],
+        fields: [
+          {
+            id: 'element_name',
+            type: 'string',
+            name: 'Element Name',
+            value: 'LDL Cholesterol'
+          },
+          {
+            id: 'comment',
+            type: 'textarea',
+            name: 'Comment'
+          },
+          {
+            id: 'observation',
+            type: 'observation_vsac',
+            name: 'Observation',
+            // NO VALUESETS JUST TO KEEP CQL SIMPLER
+            // valueSets: [{
+            //   name: 'LDL-c',
+            //   oid: '2.16.840.1.113883.3.117.1.7.1.215'
+            // }],
+            static: true
+          }
+        ],
+        type: 'element',
+        uniqueId: 'GenericObservation_vsac-7',
+        tab: 'expTreeInclude',
         modifiers: []
       }
     ],
     path: ''
   };
   raw.expTreeExclude = {
-    id: 'And',
-    name: '',
+    id: 'Or',
+    name: 'Or',
     conjunction: true,
     returnType: 'boolean',
     fields: [
@@ -1016,7 +1060,7 @@ describe('CQL Operator Templates', () => {
       },
       { id: 'comment', name: 'Comment', type: 'textarea' }
     ],
-    uniqueId: 'And-2',
+    uniqueId: 'Or-2',
     childInstances: [],
     path: ''
   };
@@ -1028,7 +1072,34 @@ describe('CQL Operator Templates', () => {
       {
         inputTypes: ['list_of_allergy_intolerances'],
         returnType: 'list_of_allergy_intolerances',
-        where: {}
+        // add a placeholder where clause since an empty where clause is invalid and each test
+        // likely only sets the where clause of the childInstance it is testing
+        where: {
+          conjunctionType: 'and',
+          rules: [
+            {
+              ruleType: 'isNull',
+              resourceProperty: 'placeHolder'
+            }
+          ]
+        }
+      }
+    ];
+    rawBaseQuery.expTreeInclude.childInstances[1].modifiers = [
+      {
+        inputTypes: ['list_of_observations'],
+        returnType: 'list_of_observations',
+        // add a placeholder where clause since an empty where clause is invalid and each test
+        // likely only sets the where clause of the childInstance it is testing
+        where: {
+          conjunctionType: 'and',
+          rules: [
+            {
+              ruleType: 'isNull',
+              resourceProperty: 'placeHolder'
+            }
+          ]
+        }
       }
     ];
   });
@@ -1063,6 +1134,43 @@ describe('CQL Operator Templates', () => {
     const artifact = buildCQL(rawBaseQuery);
     const converted = artifact.toString();
     expect(converted).to.contain('[AllergyIntolerance] AI where (AI.verificationStatus is not null)');
+  });
+
+  it('Handles listIsEmpty template', () => {
+    const templateTest = {
+      conjunctionType: 'and',
+      rules: [
+        {
+          ruleType: 'listIsEmpty',
+          resourceProperty: 'category',
+          notSelectorValue: 'not exists'
+        }
+      ]
+    };
+
+    rawBaseQuery.expTreeInclude.childInstances[0].modifiers[0].where = templateTest;
+    const artifact = buildCQL(rawBaseQuery);
+    const converted = artifact.toString();
+    expect(converted).to.contain('[AllergyIntolerance] AI where (not exists AI.category)');
+  });
+
+  it('Handles listLengthComparison template', () => {
+    const templateTest = {
+      conjunctionType: 'and',
+      rules: [
+        {
+          ruleType: 'listLengthComparison',
+          comparisonOperator: '>',
+          comparisonValue: '3',
+          resourceProperty: 'category'
+        }
+      ]
+    };
+
+    rawBaseQuery.expTreeInclude.childInstances[0].modifiers[0].where = templateTest;
+    const artifact = buildCQL(rawBaseQuery);
+    const converted = artifact.toString();
+    expect(converted).to.contain('[AllergyIntolerance] AI where (Count(AI.category) > 3)');
   });
 
   it('Handles isTrueFalse template', () => {
@@ -1108,6 +1216,27 @@ describe('CQL Operator Templates', () => {
     const converted = artifact.toString();
     expect(converted).to.contain(`valueset "My Value Set": 'https://cts.nlm.nih.gov/fhir/ValueSet/1.2.3.4.5.6.7.8.9'`);
     expect(converted).to.contain('[AllergyIntolerance] AI where (AI.someCodeProperty in "My Value Set")');
+  });
+
+  it('Handles codeConceptNotInValueSet template', () => {
+    const templateTest = {
+      conjunctionType: 'and',
+      rules: [
+        {
+          ruleType: 'codeConceptNotInValueSet',
+          resourceProperty: 'someCodeProperty',
+          valueset: {
+            name: 'My Value Set',
+            oid: '1.2.3.4.5.6.7.8.9'
+          }
+        }
+      ]
+    };
+    rawBaseQuery.expTreeInclude.childInstances[0].modifiers[0].where = templateTest;
+    const artifact = buildCQL(rawBaseQuery);
+    const converted = artifact.toString();
+    expect(converted).to.contain(`valueset "My Value Set": 'https://cts.nlm.nih.gov/fhir/ValueSet/1.2.3.4.5.6.7.8.9'`);
+    expect(converted).to.contain('[AllergyIntolerance] AI where (not (AI.someCodeProperty in "My Value Set"))');
   });
 
   it('Handles codeConceptMatchesConcept template', () => {
@@ -1316,6 +1445,183 @@ describe('CQL Operator Templates', () => {
     expect(converted).to.contain(
       `[AllergyIntolerance] AI where (AI.someDateProperty overlaps Interval[@2021-08-25T05:58:40,@2021-08-26T07:58:40])`
     );
+  });
+
+  it('Handles codeConceptNotMatchesConcept template', () => {
+    const templateTest = {
+      conjunctionType: 'and',
+      rules: [
+        {
+          ruleType: 'codeConceptNotMatchesConcept',
+          resourceProperty: 'someCodeProperty',
+          conceptValue: {
+            code: 'Some-Code',
+            display: 'Some Display',
+            system: 'Some-System',
+            uri: 'http://some-system.org'
+          }
+        }
+      ]
+    };
+    rawBaseQuery.expTreeInclude.childInstances[0].modifiers[0].where = templateTest;
+    const artifact = buildCQL(rawBaseQuery);
+    const converted = artifact.toString();
+    expect(converted).to.contain(`codesystem "Some-System": 'http://some-system.org'`);
+    expect(converted).to.contain(`code "Some Display code": 'Some-Code' from "Some-System" display 'Some Display'`);
+    expect(converted).to.contain('[AllergyIntolerance] AI where (AI.someCodeProperty !~ "Some Display code")');
+  });
+
+  it('Handles quantityComparison template', () => {
+    const templateTest = {
+      conjunctionType: 'and',
+      rules: [
+        {
+          ruleType: 'quantityComparison',
+          comparisonOperator: '>',
+          quantity: { quantity: '3', unit: 'A', str: "3.0 'A'" },
+          resourceProperty: 'valueQuantity'
+        }
+      ]
+    };
+
+    rawBaseQuery.expTreeInclude.childInstances[1].modifiers[0].where = templateTest;
+    const artifact = buildCQL(rawBaseQuery);
+    const converted = artifact.toString();
+    expect(converted).to.contain("[Observation] Ob where (Ob.value as FHIR.Quantity > 3 'A')");
+  });
+
+  it('Handles quantityIsBetweenQuantities template', () => {
+    const templateTest = {
+      conjunctionType: 'and',
+      rules: [
+        {
+          ruleType: 'quantityIsBetweenQuantities',
+          lowQuantity: { quantity: '1', unit: 'a', str: "1.0 'a'" },
+          highQuantity: { quantity: '3', unit: 'a', str: "3.0 'a'" },
+          resourceProperty: 'valueQuantity'
+        }
+      ]
+    };
+
+    rawBaseQuery.expTreeInclude.childInstances[1].modifiers[0].where = templateTest;
+    const artifact = buildCQL(rawBaseQuery);
+    const converted = artifact.toString();
+    expect(converted).to.contain("[Observation] Ob where (Ob.value as FHIR.Quantity between 1 'a' and 3 'a')");
+  });
+
+  it('Handles quantityIntervalComparison template', () => {
+    const templateTest = {
+      conjunctionType: 'and',
+      rules: [
+        {
+          ruleType: 'quantityIntervalComparison',
+          intervalComponent: 'Low',
+          comparisonOperator: '>',
+          comparisonOperand: { quantity: '3', unit: 'A', str: "3.0 'A'" },
+          resourceProperty: 'valueRange'
+        }
+      ]
+    };
+
+    rawBaseQuery.expTreeInclude.childInstances[1].modifiers[0].where = templateTest;
+    const artifact = buildCQL(rawBaseQuery);
+    const converted = artifact.toString();
+    expect(converted).to.contain("[Observation] Ob where ((Ob.value as FHIR.Range).low > 3 'A')");
+  });
+
+  it('Handles quantityIntervalOverlapsQuantityInterval template', () => {
+    const templateTest = {
+      conjunctionType: 'and',
+      rules: [
+        {
+          ruleType: 'quantityIntervalOverlapsQuantityInterval',
+          numericInterval: { firstQuantity: '1', secondQuantity: '3', unit: 'A', str: "Interval[1 'A',3 'A']" },
+          resourceProperty: 'valueRange'
+        }
+      ]
+    };
+
+    rawBaseQuery.expTreeInclude.childInstances[1].modifiers[0].where = templateTest;
+    const artifact = buildCQL(rawBaseQuery);
+    const converted = artifact.toString();
+    expect(converted).to.contain("[Observation] Ob where (Ob.value as FHIR.Range overlaps Interval[1 'A',3 'A'])");
+  });
+
+  it('Handles quantityIntervalContainsQuantity template', () => {
+    const templateTest = {
+      conjunctionType: 'and',
+      rules: [
+        {
+          ruleType: 'quantityIntervalContainsQuantity',
+          number: { quantity: '3', unit: 'A', str: "3.0 'A'" },
+          resourceProperty: 'onsetRange'
+        }
+      ]
+    };
+
+    rawBaseQuery.expTreeInclude.childInstances[0].modifiers[0].where = templateTest;
+    const artifact = buildCQL(rawBaseQuery);
+    const converted = artifact.toString();
+    expect(converted).to.contain("[AllergyIntolerance] AI where (AI.onset as FHIR.Range contains 3 'A')");
+  });
+
+  it('Handles quantityIntervalNotContainsQuantity template', () => {
+    const templateTest = {
+      conjunctionType: 'and',
+      rules: [
+        {
+          ruleType: 'quantityIntervalNotContainsQuantity',
+          number: { quantity: '3', unit: 'A', str: "3.0 'A'" },
+          resourceProperty: 'onsetRange'
+        }
+      ]
+    };
+
+    rawBaseQuery.expTreeInclude.childInstances[0].modifiers[0].where = templateTest;
+    const artifact = buildCQL(rawBaseQuery);
+    const converted = artifact.toString();
+    expect(converted).to.contain("[AllergyIntolerance] AI where (not (AI.onset as FHIR.Range contains 3 'A'))");
+  });
+
+  it('Handles ageComparison template', () => {
+    const templateTest = {
+      conjunctionType: 'and',
+      rules: [
+        {
+          ruleType: 'ageComparison',
+          comparisonOperator: '>',
+          timeUnit: 'years',
+          ageValue: '3',
+          resourceProperty: 'onsetAge'
+        }
+      ]
+    };
+
+    rawBaseQuery.expTreeInclude.childInstances[0].modifiers[0].where = templateTest;
+    const artifact = buildCQL(rawBaseQuery);
+    const converted = artifact.toString();
+    expect(converted).to.contain('[AllergyIntolerance] AI where (AI.onset as FHIR.Age > 3 years)');
+  });
+
+  it('Handles ageIsBetweenAges template', () => {
+    const templateTest = {
+      conjunctionType: 'and',
+      rules: [
+        {
+          ruleType: 'ageIsBetweenAges',
+          lowAgeValue: '1',
+          lowTimeUnit: 'years',
+          highAgeValue: '3',
+          highTimeUnit: 'years',
+          resourceProperty: 'onsetAge'
+        }
+      ]
+    };
+
+    rawBaseQuery.expTreeInclude.childInstances[0].modifiers[0].where = templateTest;
+    const artifact = buildCQL(rawBaseQuery);
+    const converted = artifact.toString();
+    expect(converted).to.contain('[AllergyIntolerance] AI where (AI.onset as FHIR.Age between 1 years and 3 years)');
   });
 });
 
