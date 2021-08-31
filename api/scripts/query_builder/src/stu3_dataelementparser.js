@@ -20,11 +20,6 @@ resources.forEach(resource => {
     let propertyHasPredefinedConcepts =
       property.predefinedConceptCodes && property.predefinedConceptCodes['r3'].length != 0 ? true : false;
 
-    // Skip over Observation.component since we add it manually.
-    if (resource.name + '.' + propertyName === 'Observation.component') {
-      console.log('\t\tSkipped observation.component');
-      return;
-    }
     let dataElementPropertyIndex = dataElements.entry.findIndex(
       entry =>
         entry.resource.id === resource.name + '.' + (propertyIsChoice ? propertyName.slice(0, -3) + 'X' : propertyName)
@@ -92,13 +87,6 @@ resources.forEach(resource => {
     }
   });
 
-  // Hardcode a case for observation so we can add observation.component in as a property.
-  if (resourceToPush.name === 'Observation') {
-    resourceToPush.properties.push({
-      name: 'component',
-      typeSpecifier: { type: 'ListTypeSpecifier', elementType: 'Observation.component' }
-    });
-  }
   if (resourceToPush.properties.length != 0) generatedResources.push(resourceToPush);
 });
 

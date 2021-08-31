@@ -459,35 +459,6 @@ const supportedResourceProperties = [
           r3: true,
           r4: true
         }
-      },
-      {
-        name: { default: 'component' },
-        availability: {
-          r2: true,
-          r3: true,
-          r4: true
-        }
-      }
-    ]
-  },
-  {
-    name: 'Observation.component',
-    properties: [
-      {
-        name: { default: 'code' },
-        availability: {
-          r2: true,
-          r3: true,
-          r4: true
-        }
-      },
-      {
-        name: { default: 'value[x]' },
-        availability: {
-          r2: true,
-          r3: true,
-          r4: true
-        }
       }
     ]
   },

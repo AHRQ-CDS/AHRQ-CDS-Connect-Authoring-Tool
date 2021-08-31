@@ -20,16 +20,8 @@ const fetchResource = async (fhirVersion, elementInstanceReturnType) => {
   const resourceResponse = await axios.get(
     `${process.env.REACT_APP_API_URL}/query/resources/${resourceName}?fhirVersion=${fhirVersion}`
   );
-  let data = resourceResponse.data;
-  let resource = _.first(data);
-
-  if (resourceName === 'Observation') {
-    const componentResponse = await axios.get(
-      `${process.env.REACT_APP_API_URL}/query/resources/Observation.component?fhirVersion=${fhirVersion}`
-    );
-
-    resource = { ...resource, component: _.first(componentResponse.data) };
-  }
+  const data = resourceResponse.data;
+  const resource = _.first(data);
 
   if (data) {
     return resource;

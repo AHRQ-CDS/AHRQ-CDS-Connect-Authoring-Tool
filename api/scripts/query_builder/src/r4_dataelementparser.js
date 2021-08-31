@@ -22,11 +22,6 @@ resources.forEach(resource => {
     let dataElementPropertyIndex = dataElements.entry.findIndex(
       entry => entry.resource.name === resource.name + '.' + propertyName
     );
-    // Skip over Observation.component since we add it manually.
-    if (resource.name + '.' + propertyName === 'Observation.component') {
-      console.log('\t\tSkipped observation.component');
-      return;
-    }
     // If it exists, add it and its type and if it has predefined values.
     if (dataElementPropertyIndex != -1) {
       // Try to find its type
@@ -89,13 +84,6 @@ resources.forEach(resource => {
     } else console.log('Failed to find', `${resource.name}.${propertyName}`);
   });
 
-  // Hardcode a case for observation so we can add observation.component in as a property.
-  if (resourceToPush.name === 'Observation') {
-    resourceToPush.properties.push({
-      name: 'component',
-      typeSpecifier: { type: 'ListTypeSpecifier', elementType: 'Observation.component' }
-    });
-  }
   if (resourceToPush.properties.length != 0) generatedResources.push(resourceToPush);
 });
 
