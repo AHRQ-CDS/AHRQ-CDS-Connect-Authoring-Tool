@@ -1,3 +1,3 @@
 export function isInteger(number) {
-  return Number.isInteger(parseFloat(number)) && !number.endsWith('.0');
+  return Number.isInteger(parseFloat(number)) && !/\.0+$/.test(number);
 }

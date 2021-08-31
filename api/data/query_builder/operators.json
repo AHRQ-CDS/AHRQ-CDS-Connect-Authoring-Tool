@@ -1,22 +1,5 @@
 {
   "implicitConversionInfo": {
-    "systemToFHIR": {
-      "System.Boolean": "FHIR.boolean",
-      "System.Integer": "FHIR.integer",
-      "System.Decimal": "FHIR.decimal",
-      "System.Date": "FHIR.date",
-      "System.DateTime": "FHIR.dateTime",
-      "System.Time": "FHIR.time",
-      "System.String": "FHIR.string",
-      "System.Quantity": "FHIR.Quantity",
-      "System.Ratio": "FHIR.Ratio",
-      "System.Any": "FHIR.Any",
-      "System.Code": "FHIR.Coding",
-      "System.Concept": "FHIR.CodeableConcept",
-      "Interval<System.Date>": "FHIR.Period",
-      "Interval<System.DateTime>": "FHIR.Period",
-      "Interval<System.Quantity>": "FHIR.Range"
-    },
     "FHIRToSystem": {
       "FHIR.boolean": "System.Boolean",
       "FHIR.integer": "System.Integer",

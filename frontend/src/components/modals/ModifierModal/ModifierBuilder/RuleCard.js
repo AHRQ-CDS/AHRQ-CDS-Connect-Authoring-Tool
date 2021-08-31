@@ -31,10 +31,23 @@ const RuleCard = ({ handleRemoveRule, handleUpdateRule, resourceOptions, rule })
     return `${selectedResourceOption.labelPrefix ?? ''}${selectedResourceOption.label}`;
   };
 
-  const operatorOptions = operatorsQuery.data?.filter(
-    // filter out any "Concept Has Value" operators if they don't have any predefined codes
-    operator => operator.id !== 'predefinedConceptComparisonSingular' || ruleOption.predefinedCodes
-  );
+  let operatorOptions = operatorsQuery.data;
+  if (operatorOptions && ruleOption.predefinedCodes && !ruleOption.allowsCustomCodes) {
+    // Only predefined codes allowed, so filter out any operators that have concept operands not using predefined codes
+    operatorOptions = operatorOptions.filter(operator => {
+      const hasPredefinedCodesEditor = operator.userSelectedOperands?.some(op => op.selectionRequiresPredefinedCodes);
+      const hasConceptOrValueSetEditor = operator.userSelectedOperands?.some(op =>
+        ['System.Concept', 'valueset'].includes(op.typeSpecifier?.editorType)
+      );
+      return hasPredefinedCodesEditor || !hasConceptOrValueSetEditor;
+    });
+  } else if (operatorOptions && !ruleOption.predefinedCodes) {
+    // No predefined codes, so filter out any operators that have operands requiring predefined codes
+    operatorOptions = operatorOptions.filter(
+      operator =>
+        !operator.userSelectedOperands || !operator.userSelectedOperands.some(op => op.selectionRequiresPredefinedCodes)
+    );
+  }
 
   return (
     <div className={clsx(styles.rulesCardGroup, !ruleIsComplete(rule) && styles.rulesCardGroupIncomplete)}>

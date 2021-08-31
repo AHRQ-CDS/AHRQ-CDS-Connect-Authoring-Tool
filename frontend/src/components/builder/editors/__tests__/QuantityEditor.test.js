@@ -17,6 +17,25 @@ describe('<QuantityEditor />', () => {
       expect(handleUpdateEditor).toBeCalledWith({ quantity: '0.1', unit: '', str: `0.1 '1'` });
     });
 
+    it('calls handleUpdateEditor with valid decimal having trailing zero and no unit', () => {
+      const handleUpdateEditor = jest.fn();
+      renderComponent({ handleUpdateEditor });
+
+      fireEvent.change(screen.getAllByRole('textbox')[0], { target: { value: '0.0' } });
+
+      expect(handleUpdateEditor).toBeCalledWith({ quantity: '0.0', unit: '', str: `0.0 '1'` });
+    });
+
+    it('calls handleUpdateEditor with valid decimal having multiple trailing zeros and no unit', () => {
+      // NOTE: This test exists because there *was* a bug w/ multiple trailing zeros
+      const handleUpdateEditor = jest.fn();
+      renderComponent({ handleUpdateEditor });
+
+      fireEvent.change(screen.getAllByRole('textbox')[0], { target: { value: '0.000' } });
+
+      expect(handleUpdateEditor).toBeCalledWith({ quantity: '0.000', unit: '', str: `0.000 '1'` });
+    });
+
     it('calls handleUpdateEditor with valid integer and no unit', () => {
       const handleUpdateEditor = jest.fn();
       renderComponent({ handleUpdateEditor });

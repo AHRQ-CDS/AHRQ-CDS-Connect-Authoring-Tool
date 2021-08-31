@@ -17,7 +17,10 @@ const fetchOperators = async ({ type: typeSpecifier, elementType }) => {
       convertedTargetType = 'ListTypeSpecifier';
     } else if (systemElementType) {
       convertedTargetElementType = systemElementType;
-      convertedTargetType = 'NamedTypeSpecifier';
+      // keep typespecifier so it behaves such that:
+      // * FHIR.CodeableConcept -> System.Concept
+      // * List<FHIR.CodeableConcept> -> List<System.Concept>
+      convertedTargetType = typeSpecifier;
     }
     conversionTypeOperators = (
       await axios.get(`${process.env.REACT_APP_API_URL}/query/operator`, {

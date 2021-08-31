@@ -7,8 +7,13 @@ import { ModifierModal } from 'components/modals';
 import { updateArtifact } from 'actions/artifacts';
 import { mockArtifact } from 'mocks/artifacts';
 import mockModifiers from 'mocks/modifiers/mockModifiers';
-import { mockConditionResourceR4 } from 'mocks/modifiers/mockResources';
-import { genericInstanceWithModifiers, instanceTree, simpleConditionInstanceTree } from 'utils/test_fixtures';
+import { mockConditionResourceR4, mockObservationResourceR4 } from 'mocks/modifiers/mockResources';
+import {
+  genericInstanceWithModifiers,
+  instanceTree,
+  simpleConditionInstanceTree,
+  simpleObservationInstanceTree
+} from 'utils/test_fixtures';
 
 jest.mock('actions/artifacts', () => ({
   __esModule: true,
@@ -17,11 +22,13 @@ jest.mock('actions/artifacts', () => ({
 
 describe('<ModifierModal />', () => {
   const apiKey = 'api-1234';
-  const renderComponent = ({ artifact = mockArtifact, ...props } = {}) =>
+  const renderComponent = ({ artifact = mockArtifact, useObservation = false, ...props } = {}) =>
     render(
       <Provider store={createStore(x => x, { artifacts: { artifact }, vsac: { apiKey } })}>
         <ModifierModal
-          elementInstance={simpleConditionInstanceTree.childInstances[0]}
+          elementInstance={
+            (useObservation ? simpleObservationInstanceTree : simpleConditionInstanceTree).childInstances[0]
+          }
           handleCloseModal={jest.fn()}
           handleUpdateModifiers={jest.fn()}
           hasLimitedModifiers={false}
@@ -36,27 +43,10 @@ describe('<ModifierModal />', () => {
       .persist()
       .get(`/authoring/api/modifiers/${mockArtifact._id}`)
       .reply(200, mockModifiers)
-      .get(`/authoring/api/query/resources/Condition?fhirVersion=4.0.0`)
-      .reply(200, [mockConditionResourceR4])
+      .get(new RegExp(`/authoring/api/query/resources/.*`))
+      .reply(200, uri => (/Condition/.test(uri) ? [mockConditionResourceR4] : [mockObservationResourceR4]))
       .get('/authoring/api/query/implicitconversion')
       .reply(200, {
-        systemToFHIR: {
-          'System.Boolean': 'FHIR.boolean',
-          'System.Integer': 'FHIR.integer',
-          'System.Decimal': 'FHIR.decimal',
-          'System.Date': 'FHIR.date',
-          'System.DateTime': 'FHIR.dateTime',
-          'System.Time': 'FHIR.time',
-          'System.String': 'FHIR.string',
-          'System.Quantity': 'FHIR.Quantity',
-          'System.Ratio': 'FHIR.Ratio',
-          'System.Any': 'FHIR.Any',
-          'System.Code': 'FHIR.Coding',
-          'System.Concept': 'FHIR.CodeableConcept',
-          'Interval<System.Date>': 'FHIR.Period',
-          'Interval<System.DateTime>': 'FHIR.Period',
-          'Interval<System.Quantity>': 'FHIR.Range'
-        },
         FHIRToSystem: {
           'FHIR.boolean': 'System.Boolean',
           'FHIR.integer': 'System.Integer',
@@ -74,132 +64,110 @@ describe('<ModifierModal />', () => {
           'FHIR.Range': 'Interval<System.Quantity>'
         }
       })
-      .get('/authoring/api/query/operator?typeSpecifier=NamedTypeSpecifier&elementType=System.Concept')
-      .reply(200, [
-        {
-          id: 'isNull',
-          name: 'Is Null',
-          description: 'Check to see if the element is null',
-          operatorTemplate: 'isNull',
-          primaryOperand: { typeSpecifier: 'NamedTypeSpecifier', elementTypes: ['System.Any'] }
-        },
-        {
-          id: 'isNotNull',
-          name: 'Is Not Null',
-          description: 'Check to see if the element is not null',
-          operatorTemplate: 'isNotNull',
-          primaryOperand: { typeSpecifier: 'NamedTypeSpecifier', elementTypes: ['System.Any'] }
-        },
-        {
-          id: 'codeConceptMatchesConcept',
-          name: 'Matches Concept',
-          description: 'Check to see if a code, coding, or codable concept matches given concept',
-          operatorTemplate: 'codeConceptMatchesConcept',
-          primaryOperand: {
-            typeSpecifier: 'NamedTypeSpecifier',
-            elementTypes: ['FHIR.code', 'System.Code', 'System.Concept']
+      .get(
+        RegExp(
+          '/authoring/api/query/operator\\?typeSpecifier=(Named|List)TypeSpecifier&elementType=(System\\.Concept|FHIR\\.code)'
+        )
+      )
+      .reply(200, uri => {
+        // For simplicity, don't put ALL the possible operators in the mock. Only include ones we use in testing.
+        const operators = [
+          {
+            id: 'isNull',
+            name: 'Is Null',
+            description: 'Check to see if the element is null',
+            operatorTemplate: 'isNull',
+            primaryOperand: { typeSpecifier: 'NamedTypeSpecifier', elementTypes: ['System.Any'] }
           },
-          userSelectedOperands: [
+          {
+            id: 'isNotNull',
+            name: 'Is Not Null',
+            description: 'Check to see if the element is not null',
+            operatorTemplate: 'isNotNull',
+            primaryOperand: { typeSpecifier: 'NamedTypeSpecifier', elementTypes: ['System.Any'] }
+          }
+        ];
+        if (/NamedTypeSpecifier/.test(uri)) {
+          operators.push(
             {
-              id: 'conceptValue',
-              type: 'editor',
-              typeSpecifier: { type: 'NamedTypeSpecifier', editorType: 'System.Concept' }
-            }
-          ]
-        },
-        {
-          id: 'codeConceptNotMatchesConcept',
-          name: 'Does not Match Concept',
-          description: 'Check to see if a code, coding, or codable concept does not match a given concept',
-          operatorTemplate: '',
-          primaryOperand: {
-            typeSpecifier: 'NamedTypeSpecifier',
-            elementTypes: ['FHIR.code', 'System.Code', 'System.Concept']
-          },
-          userSelectedOperands: [
+              id: 'codeConceptMatchesConcept',
+              name: 'Matches Concept',
+              description: 'Check to see if a code, coding, or codable concept matches given concept',
+              operatorTemplate: 'codeConceptMatchesConcept',
+              primaryOperand: {
+                typeSpecifier: 'NamedTypeSpecifier',
+                elementTypes: ['FHIR.code', 'System.Code', 'System.Concept']
+              },
+              userSelectedOperands: [
+                {
+                  id: 'conceptValue',
+                  type: 'editor',
+                  typeSpecifier: { type: 'NamedTypeSpecifier', editorType: 'System.Concept' }
+                }
+              ]
+            },
             {
-              id: 'conceptValue',
-              type: 'editor',
-              typeSpecifier: { type: 'NamedTypeSpecifier', editorType: 'System.Concept' }
+              id: 'predefinedConceptComparisonSingular',
+              note:
+                'Used for single (NamedTypeSpecifier) System.Concept (FHIR.ValueCodeableConcept) and System.Code (FHIR.Coding)',
+              name: 'Concept Has Value',
+              description: 'Check to see if a predefined concept matches an element in a list of predefined concepts',
+              operatorTemplate: '',
+              primaryOperand: {
+                typeSpecifier: 'NamedTypeSpecifier',
+                elementTypes: ['FHIR.code', 'System.Code', 'System.Concept']
+              },
+              userSelectedOperands: [{ id: 'codeValue', type: 'selector', selectionRequiresPredefinedCodes: true }]
             }
-          ]
-        },
-        {
-          id: 'codeConceptInListOfConcept',
-          name: 'Is Within List of Concepts',
-          description: 'Check to see if a code, coding, or codable concept matches an element of a list of concepts',
-          operatorTemplate: '',
-          primaryOperand: {
-            typeSpecifier: 'NamedTypeSpecifier',
-            elementTypes: ['FHIR.code', 'System.Code', 'System.Concept']
-          },
-          userSelectedOperands: [
+          );
+        } else {
+          // Operators for ListTypeSpecifier
+          operators.push(
             {
-              id: 'conceptValues',
-              type: 'editor',
-              typeSpecifier: { type: 'ListTypeSpecifier', editorType: 'System.Concept' }
-            }
-          ]
-        },
-        {
-          id: 'codeConceptNotInListOfConcept',
-          name: 'Is Not Within List of Concepts',
-          description:
-            'Check to see if a code, coding, or codable concept does not match any element of a list of concepts',
-          operatorTemplate: '',
-          primaryOperand: {
-            typeSpecifier: 'NamedTypeSpecifier',
-            elementTypes: ['FHIR.code', 'System.Code', 'System.Concept']
-          },
-          userSelectedOperands: [
+              id: 'listCodeConceptIsPerfectSubsetOfListConcept',
+              name: 'All Elements Match',
+              description:
+                'Check to see if a list of System.Code or System.Concept is a perfect subset of another list of System.Concept',
+              operatorTemplate: '',
+              primaryOperand: {
+                typeSpecifier: 'ListTypeSpecifier',
+                elementTypes: ['FHIR.code', 'System.Code', 'System.Concept']
+              },
+              userSelectedOperands: [
+                {
+                  id: 'conceptValues',
+                  type: 'editor',
+                  typeSpecifier: { type: 'ListTypeSpecifier', editorType: 'System.Concept' }
+                }
+              ]
+            },
             {
-              id: 'conceptValues',
-              type: 'editor',
-              typeSpecifier: { type: 'ListTypeSpecifier', editorType: 'System.Concept' }
+              id: 'predefinedConceptComparisonPlural',
+              note: 'Used for plural (ListTypeSpecifier) FHIR.code',
+              name: 'Concept Has Value',
+              description: 'Check to see if a predefined concept matches an element in a list of predefined concepts',
+              operatorTemplate: '',
+              primaryOperand: {
+                typeSpecifier: 'ListTypeSpecifier',
+                elementTypes: ['FHIR.code', 'System.Code', 'System.Concept']
+              },
+              userSelectedOperands: [
+                {
+                  id: 'codeValue',
+                  type: 'selector',
+                  selectionRequiresPredefinedCodes: true
+                }
+              ]
             }
-          ]
-        },
-        {
-          id: 'codeConceptInValueSet',
-          name: 'Is in Value Set',
-          description: 'Check to see if a code, coding, or codable concept is within a valueset',
-          operatorTemplate: 'codeConceptInValueSet',
-          primaryOperand: {
-            typeSpecifier: 'NamedTypeSpecifier',
-            elementTypes: ['FHIR.code', 'System.Code', 'System.Concept']
-          },
-          userSelectedOperands: [
-            { id: 'valueset', type: 'editor', typeSpecifier: { type: 'NamedTypeSpecifier', editorType: 'valueset' } }
-          ]
-        },
-        {
-          id: 'codeConceptNotInValueSet',
-          name: 'Is Not in Value Set',
-          description: 'Check to see if a code, coding, or codable concept is not within a valueset',
-          operatorTemplate: '',
-          primaryOperand: {
-            typeSpecifier: 'NamedTypeSpecifier',
-            elementTypes: ['FHIR.code', 'System.Code', 'System.Concept']
-          },
-          userSelectedOperands: [
-            { id: 'valueset', type: 'editor', typeSpecifier: { type: 'NamedTypeSpecifier', editorType: 'valueset' } }
-          ]
-        },
-        {
-          id: 'predefinedConceptComparisonSingular',
-          note:
-            'Used for single (NamedTypeSpecifier) System.Concept (FHIR.ValueCodeableConcept) and System.Code (FHIR.Coding)',
-          name: 'Concept Has Value',
-          description: 'Check to see if a predefined concept matches an element in a list of predefined concepts',
-          operatorTemplate: '',
-          primaryOperand: {
-            typeSpecifier: 'NamedTypeSpecifier',
-            elementTypes: ['FHIR.code', 'System.Code', 'System.Concept']
-          },
-          userSelectedOperands: [{ id: 'codeValue', type: 'selector', selectionRequiresPredefinedCodes: true }]
+          );
         }
-      ])
-      .get('/authoring/api/query/operator?typeSpecifier=NamedTypeSpecifier&elementType=FHIR.CodeableConcept')
+        return operators;
+      })
+      .get(
+        RegExp(
+          '/authoring/api/query/operator\\?typeSpecifier=(Named|List)TypeSpecifier&elementType=FHIR\\.CodeableConcept'
+        )
+      )
       .reply(200, [
         {
           id: 'isNull',
@@ -483,6 +451,57 @@ describe('<ModifierModal />', () => {
       userEvent.click(isNullOption);
       await waitForElementToBeRemoved(isNullOption);
       expect(screen.getByRole('button', { name: /is null/i })).toBeInTheDocument();
+    });
+
+    it('includes only predefined code operators when predefined codes are required and custom codes not allowed', async () => {
+      renderComponent({ useObservation: true });
+
+      userEvent.click(screen.getByRole('button', { name: /build new modifier/i }));
+      userEvent.click(screen.getByRole('button', { name: /r4/i }));
+      await waitForElementToBeRemoved(screen.getByRole('progressbar'));
+      userEvent.click(screen.getByRole('button', { name: /add rule/i }));
+      userEvent.click(screen.getByTestId('property-select'));
+      const clinicalStatusOption = await screen.findByRole('option', { name: 'Status' });
+      userEvent.click(clinicalStatusOption);
+      await waitForElementToBeRemoved(clinicalStatusOption);
+
+      userEvent.click(await screen.findByTestId('operator-select'));
+      expect(screen.queryAllByRole('option', { name: /concept has value/i })).toHaveLength(1);
+      expect(screen.queryAllByRole('option', { name: /matches concept/i })).toHaveLength(0);
+    });
+
+    it('includes predefined code operators and custom code operators when predefined codes are required and custom codes are allowed', async () => {
+      renderComponent({ useObservation: true });
+
+      userEvent.click(screen.getByRole('button', { name: /build new modifier/i }));
+      userEvent.click(screen.getByRole('button', { name: /r4/i }));
+      await waitForElementToBeRemoved(screen.getByRole('progressbar'));
+      userEvent.click(screen.getByRole('button', { name: /add rule/i }));
+      userEvent.click(screen.getByTestId('property-select'));
+      const clinicalStatusOption = await screen.findByRole('option', { name: 'Category' });
+      userEvent.click(clinicalStatusOption);
+      await waitForElementToBeRemoved(clinicalStatusOption);
+
+      userEvent.click(await screen.findByTestId('operator-select'));
+      expect(screen.queryAllByRole('option', { name: /concept has value/i })).toHaveLength(1);
+      expect(screen.queryAllByRole('option', { name: /all elements match/i })).toHaveLength(1);
+    });
+
+    it('does not include predefined code operators when no predefined codes are defined', async () => {
+      renderComponent({ useObservation: true });
+
+      userEvent.click(screen.getByRole('button', { name: /build new modifier/i }));
+      userEvent.click(screen.getByRole('button', { name: /r4/i }));
+      await waitForElementToBeRemoved(screen.getByRole('progressbar'));
+      userEvent.click(screen.getByRole('button', { name: /add rule/i }));
+      userEvent.click(screen.getByTestId('property-select'));
+      const clinicalStatusOption = await screen.findByRole('option', { name: 'Value Codeable Concept' });
+      userEvent.click(clinicalStatusOption);
+      await waitForElementToBeRemoved(clinicalStatusOption);
+
+      userEvent.click(await screen.findByTestId('operator-select'));
+      expect(screen.queryAllByRole('option', { name: /concept has value/i })).toHaveLength(0);
+      expect(screen.queryAllByRole('option', { name: /matches concept/i })).toHaveLength(1);
     });
 
     it('can correctly determine when a rule is complete and display the correct modifier expression', async () => {

@@ -51,6 +51,25 @@ describe('<NumberEditor />', () => {
       expect(handleUpdateEditor).toBeCalledWith({ decimal: '0.1', str: '0.1' });
     });
 
+    it('calls handleUpdateEditor with valid decimal having trailing zero', () => {
+      const handleUpdateEditor = jest.fn();
+      renderComponent({ handleUpdateEditor, isDecimal: true });
+
+      fireEvent.change(screen.getByRole('spinbutton'), { target: { value: '0.0' } });
+
+      expect(handleUpdateEditor).toBeCalledWith({ decimal: '0.0', str: '0.0' });
+    });
+
+    it('calls handleUpdateEditor with valid decimal having multiple trailing zeros', () => {
+      // NOTE: This test exists because there *was* a bug w/ multiple trailing zeros
+      const handleUpdateEditor = jest.fn();
+      renderComponent({ handleUpdateEditor, isDecimal: true });
+
+      fireEvent.change(screen.getByRole('spinbutton'), { target: { value: '0.000' } });
+
+      expect(handleUpdateEditor).toBeCalledWith({ decimal: '0.000', str: '0.000' });
+    });
+
     it('calls handleUpdateEditor with valid integer', () => {
       const handleUpdateEditor = jest.fn();
       renderComponent({ handleUpdateEditor, isDecimal: true });

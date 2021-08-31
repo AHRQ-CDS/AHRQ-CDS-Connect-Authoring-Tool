@@ -114,3 +114,174 @@ export const mockConditionResourceR4 = {
     }
   ]
 };
+
+export const mockObservationResourceR4 = {
+  name: 'Observation',
+  properties: [
+    {
+      name: 'status',
+      typeSpecifier: {
+        type: 'NamedTypeSpecifier',
+        elementType: 'FHIR.code'
+      },
+      predefinedCodes: [
+        'registered',
+        'preliminary',
+        'final',
+        'amended',
+        'corrected',
+        'canceled',
+        'entered-in-error',
+        'unknown'
+      ],
+      allowsCustomCodes: false
+    },
+    {
+      name: 'category',
+      typeSpecifier: {
+        type: 'ListTypeSpecifier',
+        elementType: 'FHIR.CodeableConcept'
+      },
+      predefinedCodes: [
+        'social-history',
+        'vital-signs',
+        'imaging',
+        'laboratory',
+        'procedure',
+        'survey',
+        'exam',
+        'therapy',
+        'activity'
+      ],
+      allowsCustomCodes: true
+    },
+    {
+      name: 'effective',
+      typeSpecifier: {
+        type: 'ChoiceTypeSpecifier',
+        elementType: [
+          {
+            name: 'effectiveDateTime',
+            typeSpecifier: {
+              type: 'NamedTypeSpecifier',
+              elementType: 'FHIR.dateTime'
+            }
+          },
+          {
+            name: 'effectivePeriod',
+            typeSpecifier: {
+              type: 'NamedTypeSpecifier',
+              elementType: 'FHIR.Period'
+            }
+          },
+          {
+            name: 'effectiveTiming',
+            typeSpecifier: {
+              type: 'NamedTypeSpecifier',
+              elementType: 'FHIR.Timing'
+            }
+          },
+          {
+            name: 'effectiveInstant',
+            typeSpecifier: {
+              type: 'NamedTypeSpecifier',
+              elementType: 'FHIR.instant'
+            }
+          }
+        ]
+      }
+    },
+    {
+      name: 'issued',
+      typeSpecifier: {
+        type: 'NamedTypeSpecifier',
+        elementType: 'FHIR.instant'
+      }
+    },
+    {
+      name: 'value',
+      typeSpecifier: {
+        type: 'ChoiceTypeSpecifier',
+        elementType: [
+          {
+            name: 'valueQuantity',
+            typeSpecifier: {
+              type: 'NamedTypeSpecifier',
+              elementType: 'FHIR.Quantity'
+            }
+          },
+          {
+            name: 'valueCodeableConcept',
+            typeSpecifier: {
+              type: 'NamedTypeSpecifier',
+              elementType: 'FHIR.CodeableConcept'
+            }
+          },
+          {
+            name: 'valueString',
+            typeSpecifier: {
+              type: 'NamedTypeSpecifier',
+              elementType: 'FHIR.string'
+            }
+          },
+          {
+            name: 'valueBoolean',
+            typeSpecifier: {
+              type: 'NamedTypeSpecifier',
+              elementType: 'FHIR.boolean'
+            }
+          },
+          {
+            name: 'valueInteger',
+            typeSpecifier: {
+              type: 'NamedTypeSpecifier',
+              elementType: 'FHIR.integer'
+            }
+          },
+          {
+            name: 'valueRange',
+            typeSpecifier: {
+              type: 'NamedTypeSpecifier',
+              elementType: 'FHIR.Range'
+            }
+          },
+          {
+            name: 'valueRatio',
+            typeSpecifier: {
+              type: 'NamedTypeSpecifier',
+              elementType: 'FHIR.Ratio'
+            }
+          },
+          {
+            name: 'valueSampledData',
+            typeSpecifier: {
+              type: 'NamedTypeSpecifier',
+              elementType: 'FHIR.SampledData'
+            }
+          },
+          {
+            name: 'valueTime',
+            typeSpecifier: {
+              type: 'NamedTypeSpecifier',
+              elementType: 'FHIR.time'
+            }
+          },
+          {
+            name: 'valueDateTime',
+            typeSpecifier: {
+              type: 'NamedTypeSpecifier',
+              elementType: 'FHIR.dateTime'
+            }
+          },
+          {
+            name: 'valuePeriod',
+            typeSpecifier: {
+              type: 'NamedTypeSpecifier',
+              elementType: 'FHIR.Period'
+            }
+          }
+        ]
+      }
+    }
+  ]
+};
