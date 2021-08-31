@@ -9,6 +9,12 @@ const supportedResourceProperties = [
           r3: true,
           r4: true
         },
+        predefinedConceptSystem: {
+          r4: {
+            name: 'AllergyIntolerance Clinical Status',
+            url: 'http://terminology.hl7.org/CodeSystem/allergyintolerance-clinical'
+          }
+        },
         predefinedConceptCodes: {
           r2: [],
           r3: ['active', 'inactive', 'resolved'],
@@ -21,6 +27,12 @@ const supportedResourceProperties = [
           r2: false,
           r3: true,
           r4: true
+        },
+        predefinedConceptSystem: {
+          r4: {
+            name: 'Allergy Intolerance Verification Status',
+            url: 'http://terminology.hl7.org/CodeSystem/allergyintolerance-verification'
+          }
         },
         predefinedConceptCodes: {
           r2: [],
@@ -103,6 +115,9 @@ const supportedResourceProperties = [
           r3: true,
           r4: true
         },
+        predefinedConceptSystem: {
+          r4: { name: 'Condition Clinical Status', url: 'http://terminology.hl7.org/CodeSystem/condition-clinical' }
+        },
         predefinedConceptCodes: {
           r2: ['active', 'relapse', 'remission', 'resolved'],
           r3: ['active', 'recurrence', 'inactive', 'remission', 'resolved'],
@@ -115,6 +130,12 @@ const supportedResourceProperties = [
           r2: true,
           r3: true,
           r4: true
+        },
+        predefinedConceptSystem: {
+          r4: {
+            name: 'Condition Verification Status',
+            url: 'http://terminology.hl7.org/CodeSystem/condition-ver-status'
+          }
         },
         predefinedConceptCodes: {
           r2: ['provisional', 'differential', 'confirmed', 'refuted', 'entered-in-error', 'unknown'],
@@ -419,6 +440,11 @@ const supportedResourceProperties = [
           r2: true,
           r3: true,
           r4: true
+        },
+        predefinedConceptSystem: {
+          r2: { name: 'Observation Category', url: 'http://hl7.org/fhir/observation-category' },
+          r3: { name: 'Observation Category', url: 'http://hl7.org/fhir/observation-category' },
+          r4: { name: 'Observation Category', url: 'http://terminology.hl7.org/CodeSystem/observation-category' }
         },
         predefinedConceptCodes: {
           r2: ['social-history', 'vital-signs', 'imaging', 'laboratory', 'procedure', 'survey', 'exam', 'therapy'],

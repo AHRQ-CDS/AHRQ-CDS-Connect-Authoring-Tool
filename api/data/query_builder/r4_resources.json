@@ -10,6 +10,10 @@
             "type": "NamedTypeSpecifier",
             "elementType": "FHIR.CodeableConcept"
           },
+          "predefinedSystem": {
+            "name": "AllergyIntolerance Clinical Status",
+            "url": "http://terminology.hl7.org/CodeSystem/allergyintolerance-clinical"
+          },
           "predefinedCodes": ["active", "inactive", "resolved"],
           "allowsCustomCodes": false
         },
@@ -18,6 +22,10 @@
           "typeSpecifier": {
             "type": "NamedTypeSpecifier",
             "elementType": "FHIR.CodeableConcept"
+          },
+          "predefinedSystem": {
+            "name": "Allergy Intolerance Verification Status",
+            "url": "http://terminology.hl7.org/CodeSystem/allergyintolerance-verification"
           },
           "predefinedCodes": ["unconfirmed", "confirmed", "refuted", "entered-in-error"],
           "allowsCustomCodes": false
@@ -101,6 +109,10 @@
             "type": "NamedTypeSpecifier",
             "elementType": "FHIR.CodeableConcept"
           },
+          "predefinedSystem": {
+            "name": "Condition Clinical Status",
+            "url": "http://terminology.hl7.org/CodeSystem/condition-clinical"
+          },
           "predefinedCodes": ["active", "recurrence", "inactive", "remission", "resolved"],
           "allowsCustomCodes": false
         },
@@ -109,6 +121,10 @@
           "typeSpecifier": {
             "type": "NamedTypeSpecifier",
             "elementType": "FHIR.CodeableConcept"
+          },
+          "predefinedSystem": {
+            "name": "Condition Verification Status",
+            "url": "http://terminology.hl7.org/CodeSystem/condition-ver-status"
           },
           "predefinedCodes": ["unconfirmed", "provisional", "differential", "confirmed", "refuted", "entered-in-error"],
           "allowsCustomCodes": false
@@ -451,6 +467,10 @@
           "typeSpecifier": {
             "type": "ListTypeSpecifier",
             "elementType": "FHIR.CodeableConcept"
+          },
+          "predefinedSystem": {
+            "name": "Observation Category",
+            "url": "http://terminology.hl7.org/CodeSystem/observation-category"
           },
           "predefinedCodes": [
             "social-history",

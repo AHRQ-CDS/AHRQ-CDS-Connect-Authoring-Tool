@@ -1263,6 +1263,318 @@ describe('CQL Operator Templates', () => {
     expect(converted).to.contain('[AllergyIntolerance] AI where (AI.someCodeProperty ~ "Some Display code")');
   });
 
+  it('Handles codeConceptInListOfConcept template with FHIR.CodeableConcept property and single code selected', () => {
+    const templateTest = {
+      conjunctionType: 'and',
+      rules: [
+        {
+          ruleType: 'codeConceptInListOfConcept',
+          resourceProperty: 'valueCodeableConcept',
+          conceptValue: {
+            code: 'Some-Code',
+            display: 'Some Display',
+            system: 'Some-System',
+            uri: 'http://some-system.org'
+          }
+        }
+      ]
+    };
+    rawBaseQuery.expTreeInclude.childInstances[1].modifiers[0].where = templateTest;
+    const artifact = buildCQL(rawBaseQuery);
+    const converted = artifact.toString();
+    expect(converted).to.contain(`codesystem "Some-System": 'http://some-system.org'`);
+    expect(converted).to.contain(`code "Some Display code": 'Some-Code' from "Some-System" display 'Some Display'`);
+    expect(converted).to.contain('[Observation] Ob where (Ob.value as FHIR.CodeableConcept ~ "Some Display code")');
+  });
+
+  // eslint-disable-next-line max-len
+  it('Handles codeConceptInListOfConcept template with FHIR.CodeableConcept property and multiple codes selected', () => {
+    const templateTest = {
+      conjunctionType: 'and',
+      rules: [
+        {
+          ruleType: 'codeConceptInListOfConcept',
+          resourceProperty: 'valueCodeableConcept',
+          conceptValues: [
+            {
+              code: 'Some-Code',
+              display: 'Some Display',
+              system: 'Some-System',
+              uri: 'http://some-system.org'
+            },
+            {
+              code: 'Some-Other-Code',
+              display: 'Some Other Display',
+              system: 'Some-Other-System',
+              uri: 'http://some-other-system.org'
+            }
+          ]
+        }
+      ]
+    };
+    rawBaseQuery.expTreeInclude.childInstances[1].modifiers[0].where = templateTest;
+    const artifact = buildCQL(rawBaseQuery);
+    const converted = artifact.toString();
+    expect(converted).to.contain(`codesystem "Some-System": 'http://some-system.org'`);
+    expect(converted).to.contain(`codesystem "Some-Other-System": 'http://some-other-system.org'`);
+    expect(converted).to.contain(`code "Some Display code": 'Some-Code' from "Some-System" display 'Some Display'`);
+    expect(converted).to.contain(
+      `code "Some Other Display code": 'Some-Other-Code' from "Some-Other-System" display 'Some Other Display'`
+    );
+    expect(converted).to.contain(
+      // eslint-disable-next-line max-len
+      '[Observation] Ob where (exists (({"Some Display code", "Some Other Display code"}) CODE where Ob.value as FHIR.CodeableConcept ~ CODE))'
+    );
+  });
+
+  // eslint-disable-next-line max-len
+  it('Handles codeConceptInListOfConcept template with FHIR.CodeableConcept property and disambuguates codes with same name but different systems', () => {
+    const templateTest = {
+      conjunctionType: 'and',
+      rules: [
+        {
+          ruleType: 'codeConceptInListOfConcept',
+          resourceProperty: 'valueCodeableConcept',
+          conceptValues: [
+            {
+              code: 'Some-Code',
+              display: 'Some Display',
+              system: 'Some-System',
+              uri: 'http://some-system.org'
+            },
+            {
+              code: 'Some-Code',
+              display: 'Some Display',
+              system: 'Some-Other-System',
+              uri: 'http://some-other-system.org'
+            }
+          ]
+        }
+      ]
+    };
+    rawBaseQuery.expTreeInclude.childInstances[1].modifiers[0].where = templateTest;
+    const artifact = buildCQL(rawBaseQuery);
+    const converted = artifact.toString();
+    expect(converted).to.contain(`codesystem "Some-System": 'http://some-system.org'`);
+    expect(converted).to.contain(`codesystem "Some-Other-System": 'http://some-other-system.org'`);
+    expect(converted).to.contain(`code "Some Display code": 'Some-Code' from "Some-System" display 'Some Display'`);
+    expect(converted).to.contain(
+      `code "Some Display code_1": 'Some-Code' from "Some-Other-System" display 'Some Display'`
+    );
+    expect(converted).to.contain(
+      // eslint-disable-next-line max-len
+      '[Observation] Ob where (exists (({"Some Display code", "Some Display code_1"}) CODE where Ob.value as FHIR.CodeableConcept ~ CODE))'
+    );
+  });
+
+  // eslint-disable-next-line max-len
+  it('Handles codeConceptNotInListOfConcept template with FHIR.CodeableConcept property and single code selected', () => {
+    const templateTest = {
+      conjunctionType: 'and',
+      rules: [
+        {
+          ruleType: 'codeConceptNotInListOfConcept',
+          resourceProperty: 'valueCodeableConcept',
+          conceptValue: {
+            code: 'Some-Code',
+            display: 'Some Display',
+            system: 'Some-System',
+            uri: 'http://some-system.org'
+          }
+        }
+      ]
+    };
+    rawBaseQuery.expTreeInclude.childInstances[1].modifiers[0].where = templateTest;
+    const artifact = buildCQL(rawBaseQuery);
+    const converted = artifact.toString();
+    expect(converted).to.contain(`codesystem "Some-System": 'http://some-system.org'`);
+    expect(converted).to.contain(`code "Some Display code": 'Some-Code' from "Some-System" display 'Some Display'`);
+    expect(converted).to.contain('[Observation] Ob where (Ob.value as FHIR.CodeableConcept !~ "Some Display code")');
+  });
+
+  // eslint-disable-next-line max-len
+  it('Handles codeConceptNotInListOfConcept template with FHIR.CodeableConcept property and multiple codes selected', () => {
+    const templateTest = {
+      conjunctionType: 'and',
+      rules: [
+        {
+          ruleType: 'codeConceptNotInListOfConcept',
+          resourceProperty: 'valueCodeableConcept',
+          conceptValues: [
+            {
+              code: 'Some-Code',
+              display: 'Some Display',
+              system: 'Some-System',
+              uri: 'http://some-system.org'
+            },
+            {
+              code: 'Some-Other-Code',
+              display: 'Some Other Display',
+              system: 'Some-Other-System',
+              uri: 'http://some-other-system.org'
+            }
+          ]
+        }
+      ]
+    };
+    rawBaseQuery.expTreeInclude.childInstances[1].modifiers[0].where = templateTest;
+    const artifact = buildCQL(rawBaseQuery);
+    const converted = artifact.toString();
+    expect(converted).to.contain(`codesystem "Some-System": 'http://some-system.org'`);
+    expect(converted).to.contain(`codesystem "Some-Other-System": 'http://some-other-system.org'`);
+    expect(converted).to.contain(`code "Some Display code": 'Some-Code' from "Some-System" display 'Some Display'`);
+    expect(converted).to.contain(
+      `code "Some Other Display code": 'Some-Other-Code' from "Some-Other-System" display 'Some Other Display'`
+    );
+    expect(converted).to.contain(
+      // eslint-disable-next-line max-len
+      '[Observation] Ob where (not exists (({"Some Display code", "Some Other Display code"}) CODE where Ob.value as FHIR.CodeableConcept ~ CODE))'
+    );
+  });
+
+  it('Handles predefinedConceptComparisonSingular template with FHIR.code property and single code selected', () => {
+    const templateTest = {
+      conjunctionType: 'and',
+      rules: [
+        {
+          ruleType: 'predefinedConceptComparisonSingular',
+          resourceProperty: 'status',
+          codeValue: ['final']
+        }
+      ]
+    };
+    rawBaseQuery.expTreeInclude.childInstances[1].modifiers[0].where = templateTest;
+    const artifact = buildCQL(rawBaseQuery);
+    const converted = artifact.toString();
+    expect(converted).to.contain("[Observation] Ob where (Ob.status = 'final')");
+  });
+
+  it('Handles predefinedConceptComparisonSingular template with FHIR.code property and multiple codes selected', () => {
+    const templateTest = {
+      conjunctionType: 'and',
+      rules: [
+        {
+          ruleType: 'predefinedConceptComparisonSingular',
+          resourceProperty: 'status',
+          codeValue: ['amended', 'final']
+        }
+      ]
+    };
+    rawBaseQuery.expTreeInclude.childInstances[1].modifiers[0].where = templateTest;
+    const artifact = buildCQL(rawBaseQuery);
+    const converted = artifact.toString();
+    expect(converted).to.contain("[Observation] Ob where (Ob.status in {'amended', 'final'})");
+  });
+
+  // eslint-disable-next-line max-len
+  it('Handles predefinedConceptComparisonSingular template with FHIR.CodeableConcept property and single code selected', () => {
+    const templateTest = {
+      conjunctionType: 'and',
+      rules: [
+        {
+          ruleType: 'predefinedConceptComparisonSingular',
+          resourceProperty: 'clinicalStatus',
+          codeValue: ['active']
+        }
+      ]
+    };
+    rawBaseQuery.expTreeInclude.childInstances[0].modifiers[0].where = templateTest;
+    const artifact = buildCQL(rawBaseQuery);
+    const converted = artifact.toString();
+    expect(converted).to.contain(
+      `codesystem "AllergyIntolerance Clinical Status": 'http://terminology.hl7.org/CodeSystem/allergyintolerance-clinical'`
+    );
+    expect(converted).to.contain(
+      `code "Active code": 'active' from "AllergyIntolerance Clinical Status" display 'Active'`
+    );
+    expect(converted).to.contain('[AllergyIntolerance] AI where (AI.clinicalStatus ~ "Active code")');
+  });
+
+  // eslint-disable-next-line max-len
+  it('Handles predefinedConceptComparisonSingular template with FHIR.CodeableConcept property and multiple codes selected', () => {
+    const templateTest = {
+      conjunctionType: 'and',
+      rules: [
+        {
+          ruleType: 'predefinedConceptComparisonSingular',
+          resourceProperty: 'clinicalStatus',
+          codeValue: ['active', 'resolved']
+        }
+      ]
+    };
+    rawBaseQuery.expTreeInclude.childInstances[0].modifiers[0].where = templateTest;
+    const artifact = buildCQL(rawBaseQuery);
+    const converted = artifact.toString();
+    expect(converted).to.contain(
+      `codesystem "AllergyIntolerance Clinical Status": 'http://terminology.hl7.org/CodeSystem/allergyintolerance-clinical'`
+    );
+    expect(converted).to.contain(
+      `code "Active code": 'active' from "AllergyIntolerance Clinical Status" display 'Active'`
+    );
+    expect(converted).to.contain(
+      `code "Resolved code": 'resolved' from "AllergyIntolerance Clinical Status" display 'Resolved'`
+    );
+    expect(converted).to.contain(
+      '[AllergyIntolerance] AI where (exists (({"Active code", "Resolved code"}) CODE where AI.clinicalStatus ~ CODE))'
+    );
+  });
+
+  // eslint-disable-next-line max-len
+  it('Handles predefinedConceptComparisonPlural template with FHIR.CodeableConcept property and single code selected', () => {
+    const templateTest = {
+      conjunctionType: 'and',
+      rules: [
+        {
+          ruleType: 'predefinedConceptComparisonPlural',
+          resourceProperty: 'category',
+          codeValue: ['vital-signs']
+        }
+      ]
+    };
+    rawBaseQuery.expTreeInclude.childInstances[1].modifiers[0].where = templateTest;
+    const artifact = buildCQL(rawBaseQuery);
+    const converted = artifact.toString();
+    expect(converted).to.contain(
+      `codesystem "Observation Category": 'http://terminology.hl7.org/CodeSystem/observation-category'`
+    );
+    expect(converted).to.contain(
+      `code "Vital Signs code": 'vital-signs' from "Observation Category" display 'Vital Signs'`
+    );
+    expect(converted).to.contain(
+      '[Observation] Ob where (exists ((Ob.category) CODE where CODE ~ "Vital Signs code"))'
+    );
+  });
+
+  // eslint-disable-next-line max-len
+  it('Handles predefinedConceptComparisonPlural template with FHIR.CodeableConcept property and multiple codes selected', () => {
+    const templateTest = {
+      conjunctionType: 'and',
+      rules: [
+        {
+          ruleType: 'predefinedConceptComparisonPlural',
+          resourceProperty: 'category',
+          codeValue: ['vital-signs', 'laboratory']
+        }
+      ]
+    };
+    rawBaseQuery.expTreeInclude.childInstances[1].modifiers[0].where = templateTest;
+    const artifact = buildCQL(rawBaseQuery);
+    const converted = artifact.toString();
+    expect(converted).to.contain(
+      `codesystem "Observation Category": 'http://terminology.hl7.org/CodeSystem/observation-category'`
+    );
+    expect(converted).to.contain(
+      `code "Vital Signs code": 'vital-signs' from "Observation Category" display 'Vital Signs'`
+    );
+    expect(converted).to.contain(
+      `code "Laboratory code": 'laboratory' from "Observation Category" display 'Laboratory'`
+    );
+    expect(converted).to.contain(
+      // eslint-disable-next-line max-len
+      '[Observation] Ob where (exists ((Ob.category) CODE with ({"Vital Signs code", "Laboratory code"}) TARGET_CODE such that CODE ~ TARGET_CODE))'
+    );
+  });
+
   it('Handles dateTimeTypeWithinLast template', () => {
     const templateTest = {
       conjunctionType: 'and',

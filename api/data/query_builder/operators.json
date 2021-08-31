@@ -161,10 +161,10 @@
       "id": "codeConceptInListOfConcept",
       "name": "Is Within List of Concepts",
       "description": "Check to see if a code, coding, or codable concept matches an element of a list of concepts",
-      "operatorTemplate": "",
+      "operatorTemplate": "codeConceptInListOfConcept",
       "primaryOperand": {
         "typeSpecifier": "NamedTypeSpecifier",
-        "elementTypes": ["FHIR.code", "System.Code", "System.Concept"]
+        "elementTypes": ["System.Code", "System.Concept"]
       },
       "userSelectedOperands": [
         {
@@ -181,10 +181,10 @@
       "id": "codeConceptNotInListOfConcept",
       "name": "Is Not Within List of Concepts",
       "description": "Check to see if a code, coding, or codable concept does not match any element of a list of concepts",
-      "operatorTemplate": "",
+      "operatorTemplate": "codeConceptNotInListOfConcept",
       "primaryOperand": {
         "typeSpecifier": "NamedTypeSpecifier",
-        "elementTypes": ["FHIR.code", "System.Code", "System.Concept"]
+        "elementTypes": ["System.Code", "System.Concept"]
       },
       "userSelectedOperands": [
         {
@@ -386,7 +386,7 @@
       "note": "Used for single (NamedTypeSpecifier) System.Concept (FHIR.ValueCodeableConcept) and System.Code (FHIR.Coding)",
       "name": "Concept Has Value",
       "description": "Check to see if a predefined concept matches an element in a list of predefined concepts",
-      "operatorTemplate": "",
+      "operatorTemplate": "predefinedConceptComparisonSingular",
       "primaryOperand": {
         "typeSpecifier": "NamedTypeSpecifier",
         "elementTypes": ["FHIR.code", "System.Code", "System.Concept"]
@@ -404,7 +404,7 @@
       "note": "Used for plural (ListTypeSpecifier) FHIR.code",
       "name": "Concept Has Value",
       "description": "Check to see if a predefined concept matches an element in a list of predefined concepts",
-      "operatorTemplate": "",
+      "operatorTemplate": "predefinedConceptComparisonPlural",
       "primaryOperand": {
         "typeSpecifier": "ListTypeSpecifier",
         "elementTypes": ["FHIR.code", "System.Code", "System.Concept"]

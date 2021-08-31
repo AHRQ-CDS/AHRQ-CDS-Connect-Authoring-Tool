@@ -1090,19 +1090,6 @@ function checkRules(
     rule.ruleType = rule.operator.id;
   }
   if (rule.ruleType) {
-    if (rule.conceptValue || rule.conceptValues) {
-      const conceptValues = rule.conceptValues || [rule.conceptValue];
-      const codes = conceptValues.map(c => {
-        return { code: c.code, codeSystem: { name: c.system, id: c.uri }, display: c.display };
-      });
-      const concepts = [];
-      buildConceptObjectForCodes(codes, concepts);
-      concepts.forEach(concept => addConcepts(concept, codeSystemMap, codeMap, conceptMap));
-    }
-    if (rule.valueset) {
-      resourceMap.set(rule.valueset.name, rule.valueset);
-    }
-
     const operator = queryResources.operators.operators.find(op => op.id === rule.ruleType);
     if (!operator) {
       console.error(`Operator could not be found for rule: ${rule.ruleType}`);
@@ -1113,33 +1100,87 @@ function checkRules(
       console.error(`No template found for operator: ${operator.name}`);
       return;
     }
-    // The property name may need to be cast in specific syntax for FHIR R4 and STU3
+    let resources;
+    switch (fhirTarget.version) {
+      case '1.0.2':
+        resources = queryResources.dstu2_resources.resources;
+        break;
+      case '3.0.0':
+        resources = queryResources.stu3_resources.resources;
+        break;
+      default:
+        resources = queryResources.r4_resources.resources;
+        break;
+    }
+    const resource = resources.find(r => r.name === queryResourceMap[inputType]);
+
     let resourceProperty = rule.resourceProperty;
-    if (fhirTarget.version === '4.0.0' || fhirTarget.version === '3.0.0') {
-      const resources =
-        fhirTarget.version === '4.0.0'
-          ? queryResources.r4_resources.resources
-          : queryResources.stu3_resources.resources;
-
-      const choiceElementTypeMap = {};
-      resources
-        .find(r => r.name === queryResourceMap[inputType])
-        .properties.filter(p => p.typeSpecifier.type === 'ChoiceTypeSpecifier')
-        .forEach(c => (choiceElementTypeMap[c.name] = c.typeSpecifier.elementType));
-
-      // If the property is a choice, then since we are in R4 or STU3, we need to cast the property
-      if (!_.isEmpty(choiceElementTypeMap)) {
-        for (const key of Object.keys(choiceElementTypeMap)) {
-          const choiceElementType = choiceElementTypeMap[key].find(e => e.name === rule.resourceProperty);
-          if (choiceElementType) {
-            resourceProperty = `${key} as ${choiceElementType.typeSpecifier.elementType}`;
-            break;
-          }
+    let resourcePropertyInfo = resource.properties.find(p => p.name === resourceProperty);
+    let typeSpecifier;
+    if (resourcePropertyInfo != null) {
+      typeSpecifier = resourcePropertyInfo.typeSpecifier;
+    } else {
+      // It's a choice type, so get the typeSpecifier from the specific choice
+      const choiceProperties = resource.properties.filter(p => p.typeSpecifier.type === 'ChoiceTypeSpecifier');
+      for (const p of choiceProperties) {
+        const matchingChoice = p.typeSpecifier.elementType.find(c => c.name === resourceProperty);
+        if (matchingChoice) {
+          typeSpecifier = matchingChoice.typeSpecifier;
+          // Choice types need to be cast
+          resourceProperty = `${p.name} as ${typeSpecifier.elementType}`;
+          resourcePropertyInfo = p;
+          break;
         }
       }
     }
 
-    return ejs.render(ruleToRender, { ...rule, value_name, resourceProperty });
+    // Handle codes that need to be added to the top of the CQL file
+    const concepts = [];
+    // First: User-specified concepts (w/ arbitrary systems)
+    if (rule.conceptValue || rule.conceptValues) {
+      const conceptValues = rule.conceptValues || [rule.conceptValue];
+      const codes = conceptValues.map(c => {
+        return { code: c.code, codeSystem: { name: c.system, id: c.uri }, display: c.display };
+      });
+      buildConceptObjectForCodes(codes, concepts);
+    }
+    // Then predefined concepts w/ predefined systems
+    if (
+      rule.codeValue &&
+      resourcePropertyInfo &&
+      resourcePropertyInfo.predefinedSystem &&
+      typeSpecifier.elementType !== 'FHIR.code'
+    ) {
+      const codes = rule.codeValue.map(c => {
+        return {
+          code: c,
+          codeSystem: {
+            name: resourcePropertyInfo.predefinedSystem.name,
+            id: resourcePropertyInfo.predefinedSystem.url
+          },
+          // convert codes like social-history to "Social History" and entered-in-error to "Entered in Error"
+          display: c
+            .split('-')
+            .map(s => (s !== 'in' ? _.upperFirst(s) : s))
+            .join(' ')
+        };
+      });
+      buildConceptObjectForCodes(codes, concepts);
+    }
+    // Then add the concepts to the CQL document and collect the concept names (in case they changed)
+    const codeNames = concepts.map(concept => addConcepts(concept, codeSystemMap, codeMap, conceptMap).name);
+    // Handle ValueSets that need to be added at the top of the CQL file
+    if (rule.valueset) {
+      resourceMap.set(rule.valueset.name, rule.valueset);
+    }
+
+    return ejs.render(ruleToRender, {
+      ...rule,
+      value_name,
+      resourceProperty,
+      typeSpecifier,
+      codeNames
+    });
   }
 
   // Conjunction at root level

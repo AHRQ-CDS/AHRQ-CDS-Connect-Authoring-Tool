@@ -447,6 +447,10 @@
             "type": "ListTypeSpecifier",
             "elementType": "FHIR.CodeableConcept"
           },
+          "predefinedSystem": {
+            "name": "Observation Category",
+            "url": "http://hl7.org/fhir/observation-category"
+          },
           "predefinedCodes": [
             "social-history",
             "vital-signs",

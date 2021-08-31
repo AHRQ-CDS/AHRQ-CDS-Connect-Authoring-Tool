@@ -1,1 +1,1 @@
-<%-value_name%>.<%-resourceProperty%> ~ "<%-conceptValue.display && conceptValue.display.length < 60 ? conceptValue.display.replace(/"/g, '\\"') : conceptValue.code%> code"
+<%-value_name%>.<%-resourceProperty%> ~ "<%-codeNames[0]%>"

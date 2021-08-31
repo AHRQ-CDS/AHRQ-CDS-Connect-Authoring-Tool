@@ -54,6 +54,9 @@ resources.forEach(resource => {
           );
 
           if (propertyHasPredefinedConcepts) {
+            if (property.predefinedConceptSystem && property.predefinedConceptSystem['r2']) {
+              propertyToPush['predefinedSystem'] = property.predefinedConceptSystem['r2'];
+            }
             propertyToPush['predefinedCodes'] = property.predefinedConceptCodes['r2'];
             propertyToPush['allowsCustomCodes'] = property.allowsCustomCodes ? true : false;
             property.predefinedConceptCodes['r2'].forEach(predefCode => {

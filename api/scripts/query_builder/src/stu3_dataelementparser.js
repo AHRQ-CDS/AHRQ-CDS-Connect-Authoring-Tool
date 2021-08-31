@@ -52,6 +52,9 @@ resources.forEach(resource => {
             'FHIR.' + propertyType
           );
           if (propertyHasPredefinedConcepts) {
+            if (property.predefinedConceptSystem && property.predefinedConceptSystem['r3']) {
+              propertyToPush['predefinedSystem'] = property.predefinedConceptSystem['r3'];
+            }
             propertyToPush['predefinedCodes'] = property.predefinedConceptCodes['r3'];
             propertyToPush['allowsCustomCodes'] = property.allowsCustomCodes ? true : false;
             property.predefinedConceptCodes['r3'].forEach(predefCode => {

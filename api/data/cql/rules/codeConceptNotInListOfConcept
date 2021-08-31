@@ -1,0 +1,7 @@
+<%
+  if (codeNames.length === 1) { -%>
+<%-value_name%>.<%-resourceProperty%> !~ "<%-codeNames[0]%>"<%
+  } else { -%>
+not exists (({<%- codeNames.map(c => `"${c}"`).join(', ') %>}) CODE where <%-value_name%>.<%-resourceProperty%> ~ CODE)<%
+  }
+%>
