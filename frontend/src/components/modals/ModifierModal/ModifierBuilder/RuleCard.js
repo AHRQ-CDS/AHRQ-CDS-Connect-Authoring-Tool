@@ -69,7 +69,7 @@ const RuleCard = ({ handleRemoveRule, handleUpdateRule, resourceOptions, rule })
 
         {resourceProperty && operatorsQuery.isSuccess && (
           <Dropdown
-            className={clsx(fieldStyles.fieldInput, fieldStyles.fieldInputLg)}
+            className={clsx(fieldStyles.fieldInput, fieldStyles.fieldInputXl)}
             label="Operator"
             labelKey="name"
             onChange={event =>

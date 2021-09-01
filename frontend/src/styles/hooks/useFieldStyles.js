@@ -94,8 +94,8 @@ export default makeStyles(
       maxWidth: '450px'
     },
     fieldInputXxl: {
-      minWidth: '810px',
-      maxWidth: '860px'
+      minWidth: '910px',
+      maxWidth: '960px'
     },
     fieldLabel: {
       fontSize: '0.95em',

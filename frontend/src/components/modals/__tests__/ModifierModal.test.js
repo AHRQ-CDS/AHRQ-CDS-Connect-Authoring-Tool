@@ -71,27 +71,34 @@ describe('<ModifierModal />', () => {
       )
       .reply(200, uri => {
         // For simplicity, don't put ALL the possible operators in the mock. Only include ones we use in testing.
+        // NOTE: Operators last synced w/ operators.json on Sep 1, 2021.
         const operators = [
           {
             id: 'isNull',
             name: 'Is Null',
             description: 'Check to see if the element is null',
             operatorTemplate: 'isNull',
-            primaryOperand: { typeSpecifier: 'NamedTypeSpecifier', elementTypes: ['System.Any'] }
+            primaryOperand: {
+              typeSpecifier: 'NamedTypeSpecifier',
+              elementTypes: ['System.Any']
+            }
           },
           {
             id: 'isNotNull',
             name: 'Is Not Null',
             description: 'Check to see if the element is not null',
             operatorTemplate: 'isNotNull',
-            primaryOperand: { typeSpecifier: 'NamedTypeSpecifier', elementTypes: ['System.Any'] }
+            primaryOperand: {
+              typeSpecifier: 'NamedTypeSpecifier',
+              elementTypes: ['System.Any']
+            }
           }
         ];
         if (/NamedTypeSpecifier/.test(uri)) {
           operators.push(
             {
               id: 'codeConceptMatchesConcept',
-              name: 'Matches Concept',
+              name: 'Matches',
               description: 'Check to see if a code, coding, or codable concept matches given concept',
               operatorTemplate: 'codeConceptMatchesConcept',
               primaryOperand: {
@@ -102,7 +109,10 @@ describe('<ModifierModal />', () => {
                 {
                   id: 'conceptValue',
                   type: 'editor',
-                  typeSpecifier: { type: 'NamedTypeSpecifier', editorType: 'System.Concept' }
+                  typeSpecifier: {
+                    type: 'NamedTypeSpecifier',
+                    editorType: 'System.Concept'
+                  }
                 }
               ]
             },
@@ -110,14 +120,20 @@ describe('<ModifierModal />', () => {
               id: 'predefinedConceptComparisonSingular',
               note:
                 'Used for single (NamedTypeSpecifier) System.Concept (FHIR.ValueCodeableConcept) and System.Code (FHIR.Coding)',
-              name: 'Concept Has Value',
+              name: 'Matches Standard Code in',
               description: 'Check to see if a predefined concept matches an element in a list of predefined concepts',
-              operatorTemplate: '',
+              operatorTemplate: 'predefinedConceptComparisonSingular',
               primaryOperand: {
                 typeSpecifier: 'NamedTypeSpecifier',
                 elementTypes: ['FHIR.code', 'System.Code', 'System.Concept']
               },
-              userSelectedOperands: [{ id: 'codeValue', type: 'selector', selectionRequiresPredefinedCodes: true }]
+              userSelectedOperands: [
+                {
+                  id: 'codeValue',
+                  type: 'selector',
+                  selectionRequiresPredefinedCodes: true
+                }
+              ]
             }
           );
         } else {
@@ -125,7 +141,7 @@ describe('<ModifierModal />', () => {
           operators.push(
             {
               id: 'listCodeConceptIsPerfectSubsetOfListConcept',
-              name: 'All Elements Match',
+              name: 'Has Only Codes in',
               description:
                 'Check to see if a list of System.Code or System.Concept is a perfect subset of another list of System.Concept',
               operatorTemplate: '',
@@ -137,16 +153,19 @@ describe('<ModifierModal />', () => {
                 {
                   id: 'conceptValues',
                   type: 'editor',
-                  typeSpecifier: { type: 'ListTypeSpecifier', editorType: 'System.Concept' }
+                  typeSpecifier: {
+                    type: 'ListTypeSpecifier',
+                    editorType: 'System.Concept'
+                  }
                 }
               ]
             },
             {
               id: 'predefinedConceptComparisonPlural',
               note: 'Used for plural (ListTypeSpecifier) FHIR.code',
-              name: 'Concept Has Value',
+              name: 'Has at Least One Standard Code in',
               description: 'Check to see if a predefined concept matches an element in a list of predefined concepts',
-              operatorTemplate: '',
+              operatorTemplate: 'predefinedConceptComparisonPlural',
               primaryOperand: {
                 typeSpecifier: 'ListTypeSpecifier',
                 elementTypes: ['FHIR.code', 'System.Code', 'System.Concept']
@@ -174,14 +193,20 @@ describe('<ModifierModal />', () => {
           name: 'Is Null',
           description: 'Check to see if the element is null',
           operatorTemplate: 'isNull',
-          primaryOperand: { typeSpecifier: 'NamedTypeSpecifier', elementTypes: ['System.Any'] }
+          primaryOperand: {
+            typeSpecifier: 'NamedTypeSpecifier',
+            elementTypes: ['System.Any']
+          }
         },
         {
           id: 'isNotNull',
           name: 'Is Not Null',
           description: 'Check to see if the element is not null',
           operatorTemplate: 'isNotNull',
-          primaryOperand: { typeSpecifier: 'NamedTypeSpecifier', elementTypes: ['System.Any'] }
+          primaryOperand: {
+            typeSpecifier: 'NamedTypeSpecifier',
+            elementTypes: ['System.Any']
+          }
         }
       ]);
 
@@ -444,13 +469,13 @@ describe('<ModifierModal />', () => {
       const clinicalStatusOption = await screen.findByRole('option', { name: 'Clinical Status' });
       userEvent.click(clinicalStatusOption);
       await waitForElementToBeRemoved(clinicalStatusOption);
-      expect(screen.queryAllByRole('button', { name: /is null/i })).toHaveLength(0);
+      expect(screen.queryAllByRole('button', { name: /^is null$/i })).toHaveLength(0);
 
       userEvent.click(await screen.findByTestId('operator-select'));
-      const isNullOption = screen.getByRole('option', { name: /is null/i });
+      const isNullOption = screen.getByRole('option', { name: /^is null$/i });
       userEvent.click(isNullOption);
       await waitForElementToBeRemoved(isNullOption);
-      expect(screen.getByRole('button', { name: /is null/i })).toBeInTheDocument();
+      expect(screen.getByRole('button', { name: /^is null$/i })).toBeInTheDocument();
     });
 
     it('includes only predefined code operators when predefined codes are required and custom codes not allowed', async () => {
@@ -466,8 +491,8 @@ describe('<ModifierModal />', () => {
       await waitForElementToBeRemoved(clinicalStatusOption);
 
       userEvent.click(await screen.findByTestId('operator-select'));
-      expect(screen.queryAllByRole('option', { name: /concept has value/i })).toHaveLength(1);
-      expect(screen.queryAllByRole('option', { name: /matches concept/i })).toHaveLength(0);
+      expect(screen.queryAllByRole('option', { name: /^matches standard code in$/i })).toHaveLength(1);
+      expect(screen.queryAllByRole('option', { name: /^matches$/i })).toHaveLength(0);
     });
 
     it('includes predefined code operators and custom code operators when predefined codes are required and custom codes are allowed', async () => {
@@ -483,8 +508,8 @@ describe('<ModifierModal />', () => {
       await waitForElementToBeRemoved(clinicalStatusOption);
 
       userEvent.click(await screen.findByTestId('operator-select'));
-      expect(screen.queryAllByRole('option', { name: /concept has value/i })).toHaveLength(1);
-      expect(screen.queryAllByRole('option', { name: /all elements match/i })).toHaveLength(1);
+      expect(screen.queryAllByRole('option', { name: /^has at least one standard code in$/i })).toHaveLength(1);
+      expect(screen.queryAllByRole('option', { name: /^has only codes in$/i })).toHaveLength(1);
     });
 
     it('does not include predefined code operators when no predefined codes are defined', async () => {
@@ -500,8 +525,8 @@ describe('<ModifierModal />', () => {
       await waitForElementToBeRemoved(clinicalStatusOption);
 
       userEvent.click(await screen.findByTestId('operator-select'));
-      expect(screen.queryAllByRole('option', { name: /concept has value/i })).toHaveLength(0);
-      expect(screen.queryAllByRole('option', { name: /matches concept/i })).toHaveLength(1);
+      expect(screen.queryAllByRole('option', { name: /^matches standard code in$/i })).toHaveLength(0);
+      expect(screen.queryAllByRole('option', { name: /^matches$/i })).toHaveLength(1);
     });
 
     it('can correctly determine when a rule is complete and display the correct modifier expression', async () => {
@@ -518,7 +543,7 @@ describe('<ModifierModal />', () => {
       expect(screen.queryAllByText(/clinical status is null/i)).toHaveLength(0);
 
       userEvent.click(await screen.findByTestId('operator-select'));
-      const isNullOption = screen.getByRole('option', { name: /is null/i });
+      const isNullOption = screen.getByRole('option', { name: /^is null$/i });
       userEvent.click(isNullOption);
       await waitForElementToBeRemoved(isNullOption);
       expect(screen.queryAllByText(/clinical status is null/i)).toHaveLength(2);
@@ -537,7 +562,7 @@ describe('<ModifierModal />', () => {
       userEvent.click(clinicalStatusOption);
       await waitForElementToBeRemoved(clinicalStatusOption);
       userEvent.click(await screen.findByTestId('operator-select'));
-      const isNullOption = screen.getByRole('option', { name: /is null/i });
+      const isNullOption = screen.getByRole('option', { name: /^is null$/i });
       userEvent.click(isNullOption);
       await waitForElementToBeRemoved(isNullOption);
       expect(screen.queryAllByTestId('modifier-rule')).toHaveLength(1);
@@ -608,7 +633,7 @@ describe('<ModifierModal />', () => {
       expect(screen.getByRole('button', { name: /save/i })).toBeInTheDocument();
 
       userEvent.click(await screen.findByTestId('operator-select'));
-      const isNotNullOption = screen.getByRole('option', { name: /is not null/i });
+      const isNotNullOption = screen.getByRole('option', { name: /^is not null$/i });
       userEvent.click(isNotNullOption);
       expect(screen.queryAllByText(/clinical status is not null/i)).toHaveLength(2);
 

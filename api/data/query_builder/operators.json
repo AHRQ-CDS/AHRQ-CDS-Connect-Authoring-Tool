@@ -119,7 +119,7 @@
     },
     {
       "id": "codeConceptMatchesConcept",
-      "name": "Matches Concept",
+      "name": "Matches",
       "description": "Check to see if a code, coding, or codable concept matches given concept",
       "operatorTemplate": "codeConceptMatchesConcept",
       "primaryOperand": {
@@ -139,7 +139,7 @@
     },
     {
       "id": "codeConceptNotMatchesConcept",
-      "name": "Does not Match Concept",
+      "name": "Does Not Match",
       "description": "Check to see if a code, coding, or codable concept does not match a given concept",
       "operatorTemplate": "codeConceptNotMatchesConcept",
       "primaryOperand": {
@@ -159,7 +159,7 @@
     },
     {
       "id": "codeConceptInListOfConcept",
-      "name": "Is Within List of Concepts",
+      "name": "Matches One of",
       "description": "Check to see if a code, coding, or codable concept matches an element of a list of concepts",
       "operatorTemplate": "codeConceptInListOfConcept",
       "primaryOperand": {
@@ -179,7 +179,7 @@
     },
     {
       "id": "codeConceptNotInListOfConcept",
-      "name": "Is Not Within List of Concepts",
+      "name": "Does Not Match Any of",
       "description": "Check to see if a code, coding, or codable concept does not match any element of a list of concepts",
       "operatorTemplate": "codeConceptNotInListOfConcept",
       "primaryOperand": {
@@ -239,7 +239,7 @@
     },
     {
       "id": "listCodeConceptContainsConcept",
-      "name": "Contains Concept",
+      "name": "Contains",
       "description": "Check to see if a list of System.Code or System.Concept contains a Concept",
       "operatorTemplate": "listCodeConceptContainsConcept",
       "primaryOperand": {
@@ -259,7 +259,7 @@
     },
     {
       "id": "listCodeConceptIsPerfectSubsetOfListConcept",
-      "name": "All Elements Match",
+      "name": "Has Only Codes in",
       "description": "Check to see if a list of System.Code or System.Concept is a perfect subset of another list of System.Concept",
       "operatorTemplate": "listCodeConceptIsPerfectSubsetOfListConcept",
       "primaryOperand": {
@@ -279,8 +279,8 @@
     },
     {
       "id": "listCodeConceptIntersectsListConcept",
-      "name": "Some Elements Match",
-      "description": "Check to see if a list of System.Code or System.Concept intersects        (some elements match) another list of System.Concept",
+      "name": "Has at Least One Code in",
+      "description": "Check to see if a list of System.Code or System.Concept intersects (some elements match) another list of System.Concept",
       "operatorTemplate": "listCodeConceptIntersectsListConcept",
       "primaryOperand": {
         "typeSpecifier": "ListTypeSpecifier",
@@ -299,8 +299,8 @@
     },
     {
       "id": "listCodeConceptNotIntersectsListConcept",
-      "name": "No Elements Match",
-      "description": "Check to see if a list of System.Code or System.Concept does         not intersect (no elements match) another list of System.Concept",
+      "name": "Has No Codes in",
+      "description": "Check to see if a list of System.Code or System.Concept does not intersect (no elements match) another list of System.Concept",
       "operatorTemplate": "listCodeConceptNotIntersectsListConcept",
       "primaryOperand": {
         "typeSpecifier": "ListTypeSpecifier",
@@ -323,7 +323,7 @@
     },
     {
       "id": "listCodeConceptIsPerfectSubsetOfValueset",
-      "name": "All Elements match Value Set",
+      "name": "Has Only Codes in Value Set",
       "description": "",
       "operatorTemplate": "listCodeConceptIsPerfectSubsetOfValueset",
       "primaryOperand": {
@@ -343,8 +343,8 @@
     },
     {
       "id": "listCodeConceptIntersectsValueset",
-      "name": "Some Elements Match Value Set",
-      "description": "Check to see if a list of System.Code or System.Concept         intersects (some elements match) elements of a valueset",
+      "name": "Has at Least One Code in Value Set",
+      "description": "Check to see if a list of System.Code or System.Concept intersects (some elements match) elements of a valueset",
       "operatorTemplate": "listCodeConceptIntersectsValueset",
       "primaryOperand": {
         "typeSpecifier": "ListTypeSpecifier",
@@ -363,8 +363,8 @@
     },
     {
       "id": "listCodeConceptNotIntersectsValueset",
-      "name": "No Elements Match Value Set",
-      "description": "Check to see if a list of System.Code or System.Concept does not         intersect (no elements match) elements of a valueset",
+      "name": "Has No Codes in Value Set",
+      "description": "Check to see if a list of System.Code or System.Concept does not intersect (no elements match) elements of a valueset",
       "operatorTemplate": "listCodeConceptNotIntersectsValueset",
       "primaryOperand": {
         "typeSpecifier": "ListTypeSpecifier",
@@ -384,7 +384,7 @@
     {
       "id": "predefinedConceptComparisonSingular",
       "note": "Used for single (NamedTypeSpecifier) System.Concept (FHIR.ValueCodeableConcept) and System.Code (FHIR.Coding)",
-      "name": "Concept Has Value",
+      "name": "Matches Standard Code in",
       "description": "Check to see if a predefined concept matches an element in a list of predefined concepts",
       "operatorTemplate": "predefinedConceptComparisonSingular",
       "primaryOperand": {
@@ -402,7 +402,7 @@
     {
       "id": "predefinedConceptComparisonPlural",
       "note": "Used for plural (ListTypeSpecifier) FHIR.code",
-      "name": "Concept Has Value",
+      "name": "Has at Least One Standard Code in",
       "description": "Check to see if a predefined concept matches an element in a list of predefined concepts",
       "operatorTemplate": "predefinedConceptComparisonPlural",
       "primaryOperand": {
@@ -536,7 +536,7 @@
     },
     {
       "id": "dateTimeIntervalOverlaps",
-      "name": "Overlaps With",
+      "name": "Overlaps",
       "description": "Check if the operand Interval overlaps another",
       "operatorTemplate": "dateTimeIntervalOverlaps",
       "primaryOperand": {
@@ -632,108 +632,8 @@
       ]
     },
     {
-      "id": "numericIntervalComparison",
-      "name": "Value Comparison",
-      "description": "",
-      "operatorTemplate": "",
-      "primaryOperand": {
-        "typeSpecifier": "IntervalTypeSpecifier",
-        "elementTypes": ["System.Integer", "System.Decimal"]
-      },
-      "userSelectedOperands": [
-        {
-          "id": "intervalComponent",
-          "name": "Low/High",
-          "type": "selector",
-          "selectionValues": ["Low", "High"]
-        },
-        {
-          "id": "comparisonOperator",
-          "name": "Comparison",
-          "type": "selector",
-          "selectionValues": ["<", ">", "<=", ">=", "="]
-        },
-        {
-          "id": "comparisonOperand",
-          "type": "editor",
-          "typeSpecifier": {
-            "type": "NamedTypeSpecifier",
-            "editorType": "System.Decimal",
-            "requiredFields": ["quantity"],
-            "displayField": "str"
-          }
-        }
-      ]
-    },
-    {
-      "id": "numericIntervalOverlapsNumericInterval",
-      "name": "Overlaps With",
-      "description": "Check to see if two intervals overlap or not",
-      "operatorTemplate": "",
-      "primaryOperand": {
-        "typeSpecifier": "IntervalTypeSpecifier",
-        "elementTypes": ["System.Integer", "System.Decimal"]
-      },
-      "userSelectedOperands": [
-        {
-          "id": "numericInterval",
-          "type": "editor",
-          "typeSpecifier": {
-            "type": "IntervalTypeSpecifier",
-            "editorType": "System.Decimal",
-            "requiredFields": ["firstQuantity", "secondQuantity"],
-            "displayField": "str"
-          }
-        }
-      ]
-    },
-    {
-      "id": "numericIntervalContainsNumber",
-      "name": "Contains Number",
-      "description": "Check to see if a number is contained by an interval",
-      "operatorTemplate": "",
-      "primaryOperand": {
-        "typeSpecifier": "IntervalTypeSpecifier",
-        "elementTypes": ["System.Integer", "System.Decimal"]
-      },
-      "userSelectedOperands": [
-        {
-          "id": "number",
-          "type": "editor",
-          "typeSpecifier": {
-            "type": "NamedTypeSpecifier",
-            "editorType": "System.Decimal",
-            "requiredFields": ["quantity"],
-            "displayField": "str"
-          }
-        }
-      ]
-    },
-    {
-      "id": "numericIntervalNotContainsNumber",
-      "name": "Does Not Contain Number",
-      "description": "Check to see if a number is contained by an interval",
-      "operatorTemplate": "",
-      "primaryOperand": {
-        "typeSpecifier": "IntervalTypeSpecifier",
-        "elementTypes": ["System.Integer", "System.Decimal"]
-      },
-      "userSelectedOperands": [
-        {
-          "id": "number",
-          "type": "editor",
-          "typeSpecifier": {
-            "type": "NamedTypeSpecifier",
-            "editorType": "System.Decimal",
-            "requiredFields": ["quantity"],
-            "displayField": "str"
-          }
-        }
-      ]
-    },
-    {
       "id": "quantityComparison",
-      "name": "Value Comparison",
+      "name": "Compare",
       "displayName": "",
       "description": "Compare two quantities with the same unit",
       "operatorTemplate": "quantityComparison",
@@ -761,8 +661,7 @@
     },
     {
       "id": "quantityIsBetweenQuantities",
-      "name": "Value Is Between",
-      "displayName": "is between",
+      "name": "Is Between",
       "description": "Check to see if a given quantity value falls between two others",
       "operatorTemplate": "quantityIsBetweenQuantities",
       "primaryOperand": {
@@ -795,7 +694,7 @@
     },
     {
       "id": "quantityIntervalComparison",
-      "name": "(High/Low) Value Comparison",
+      "name": "Compare High/Low",
       "displayName": "",
       "description": "Compare either the high or low value from an interval quantity to a number",
       "operatorTemplate": "quantityIntervalComparison",
@@ -837,8 +736,7 @@
     },
     {
       "id": "quantityIntervalOverlapsQuantityInterval",
-      "name": "Overlaps Interval",
-      "displayName": "overlaps",
+      "name": "Overlaps",
       "description": "Check to see if two intervals overlap or not",
       "operatorTemplate": "quantityIntervalOverlapsQuantityInterval",
       "primaryOperand": {
@@ -860,7 +758,7 @@
     },
     {
       "id": "quantityIntervalContainsQuantity",
-      "name": "Contains Quantity",
+      "name": "Contains",
       "description": "Check to see if a number is contained by an interval",
       "operatorTemplate": "quantityIntervalContainsQuantity",
       "primaryOperand": {
@@ -882,7 +780,7 @@
     },
     {
       "id": "quantityIntervalNotContainsQuantity",
-      "name": "Does Not Contain Quantity",
+      "name": "Does Not Contain",
       "description": "Check to see if a number is contained by an interval",
       "operatorTemplate": "quantityIntervalNotContainsQuantity",
       "primaryOperand": {
@@ -904,7 +802,7 @@
     },
     {
       "id": "ageIsBetweenAges",
-      "name": "Age Is Between",
+      "name": "Is Between",
       "description": "Compare two age quantities",
       "operatorTemplate": "ageIsBetweenAges",
       "primaryOperand": {
@@ -946,7 +844,7 @@
     },
     {
       "id": "ageComparison",
-      "name": "Age Comparision",
+      "name": "Compare",
       "displayName": "",
       "description": "Compare two age quantities",
       "operatorTemplate": "ageComparison",
