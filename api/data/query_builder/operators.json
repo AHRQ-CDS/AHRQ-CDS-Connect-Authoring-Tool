@@ -241,7 +241,7 @@
       "id": "listCodeConceptContainsConcept",
       "name": "Contains Concept",
       "description": "Check to see if a list of System.Code or System.Concept contains a Concept",
-      "operatorTemplate": "",
+      "operatorTemplate": "listCodeConceptContainsConcept",
       "primaryOperand": {
         "typeSpecifier": "ListTypeSpecifier",
         "elementTypes": ["FHIR.code", "System.Code", "System.Concept"]
@@ -261,7 +261,7 @@
       "id": "listCodeConceptIsPerfectSubsetOfListConcept",
       "name": "All Elements Match",
       "description": "Check to see if a list of System.Code or System.Concept is a perfect subset of another list of System.Concept",
-      "operatorTemplate": "",
+      "operatorTemplate": "listCodeConceptIsPerfectSubsetOfListConcept",
       "primaryOperand": {
         "typeSpecifier": "ListTypeSpecifier",
         "elementTypes": ["FHIR.code", "System.Code", "System.Concept"]
@@ -281,7 +281,7 @@
       "id": "listCodeConceptIntersectsListConcept",
       "name": "Some Elements Match",
       "description": "Check to see if a list of System.Code or System.Concept intersects        (some elements match) another list of System.Concept",
-      "operatorTemplate": "",
+      "operatorTemplate": "listCodeConceptIntersectsListConcept",
       "primaryOperand": {
         "typeSpecifier": "ListTypeSpecifier",
         "elementTypes": ["FHIR.code", "System.Code", "System.Concept"]
@@ -301,7 +301,7 @@
       "id": "listCodeConceptNotIntersectsListConcept",
       "name": "No Elements Match",
       "description": "Check to see if a list of System.Code or System.Concept does         not intersect (no elements match) another list of System.Concept",
-      "operatorTemplate": "",
+      "operatorTemplate": "listCodeConceptNotIntersectsListConcept",
       "primaryOperand": {
         "typeSpecifier": "ListTypeSpecifier",
         "elementTypes": ["FHIR.code", "System.Code", "System.Concept"]
@@ -325,7 +325,7 @@
       "id": "listCodeConceptIsPerfectSubsetOfValueset",
       "name": "All Elements match Value Set",
       "description": "",
-      "operatorTemplate": "",
+      "operatorTemplate": "listCodeConceptIsPerfectSubsetOfValueset",
       "primaryOperand": {
         "typeSpecifier": "ListTypeSpecifier",
         "elementTypes": ["FHIR.code", "System.Code", "System.Concept"]
@@ -345,7 +345,7 @@
       "id": "listCodeConceptIntersectsValueset",
       "name": "Some Elements Match Value Set",
       "description": "Check to see if a list of System.Code or System.Concept         intersects (some elements match) elements of a valueset",
-      "operatorTemplate": "",
+      "operatorTemplate": "listCodeConceptIntersectsValueset",
       "primaryOperand": {
         "typeSpecifier": "ListTypeSpecifier",
         "elementTypes": ["FHIR.code", "System.Code", "System.Concept"]
@@ -365,7 +365,7 @@
       "id": "listCodeConceptNotIntersectsValueset",
       "name": "No Elements Match Value Set",
       "description": "Check to see if a list of System.Code or System.Concept does not         intersect (no elements match) elements of a valueset",
-      "operatorTemplate": "",
+      "operatorTemplate": "listCodeConceptNotIntersectsValueset",
       "primaryOperand": {
         "typeSpecifier": "ListTypeSpecifier",
         "elementTypes": ["FHIR.code", "System.Code", "System.Concept"]

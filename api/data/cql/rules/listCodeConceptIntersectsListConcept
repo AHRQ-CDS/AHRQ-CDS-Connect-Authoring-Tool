@@ -1,4 +1,3 @@
-<%# There are no List<FHIR.code> properties, so we only need to handle List<FHIR.CodeableConcept> -%>
 <%
   if (codeNames.length === 1) { -%>
 exists (<%-value_name%>.<%-resourceProperty%> CODE where CODE ~ "<%-codeNames[0]%>")<%

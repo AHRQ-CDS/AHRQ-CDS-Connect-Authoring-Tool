@@ -1,0 +1,7 @@
+<%
+  if (codeNames.length === 1) { -%>
+AllTrue(<%-value_name%>.<%-resourceProperty%> CODE return CODE ~ "<%-codeNames[0]%>")<%
+  } else { -%>
+AllTrue(<%-value_name%>.<%-resourceProperty%> CODE return exists (({<%- codeNames.map(c => `"${c}"`).join(', ') %>}) TARGET_CODE where TARGET_CODE ~ CODE))<%
+  }
+%>

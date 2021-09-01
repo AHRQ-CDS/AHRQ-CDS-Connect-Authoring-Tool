@@ -1432,6 +1432,306 @@ describe('CQL Operator Templates', () => {
     );
   });
 
+  it('Handles listCodeConceptContainsConcept template', () => {
+    const templateTest = {
+      conjunctionType: 'and',
+      rules: [
+        {
+          ruleType: 'listCodeConceptContainsConcept',
+          resourceProperty: 'category',
+          conceptValue: {
+            code: 'Some-Code',
+            display: 'Some Display',
+            system: 'Some-System',
+            uri: 'http://some-system.org'
+          }
+        }
+      ]
+    };
+    rawBaseQuery.expTreeInclude.childInstances[1].modifiers[0].where = templateTest;
+    const artifact = buildCQL(rawBaseQuery);
+    const converted = artifact.toString();
+    expect(converted).to.contain(`codesystem "Some-System": 'http://some-system.org'`);
+    expect(converted).to.contain(`code "Some Display code": 'Some-Code' from "Some-System" display 'Some Display'`);
+    expect(converted).to.contain(
+      // eslint-disable-next-line max-len
+      '[Observation] Ob where (exists (Ob.category CODE where CODE ~ "Some Display code"))'
+    );
+  });
+
+  it('Handles listCodeConceptIsPerfectSubsetOfListConcept template', () => {
+    const templateTest = {
+      conjunctionType: 'and',
+      rules: [
+        {
+          ruleType: 'listCodeConceptIsPerfectSubsetOfListConcept',
+          resourceProperty: 'category',
+          conceptValues: [
+            {
+              code: 'Some-Code',
+              display: 'Some Display',
+              system: 'Some-System',
+              uri: 'http://some-system.org'
+            },
+            {
+              code: 'Some-Other-Code',
+              display: 'Some Other Display',
+              system: 'Some-Other-System',
+              uri: 'http://some-other-system.org'
+            }
+          ]
+        }
+      ]
+    };
+    rawBaseQuery.expTreeInclude.childInstances[1].modifiers[0].where = templateTest;
+    const artifact = buildCQL(rawBaseQuery);
+    const converted = artifact.toString();
+    expect(converted).to.contain(`codesystem "Some-System": 'http://some-system.org'`);
+    expect(converted).to.contain(`codesystem "Some-Other-System": 'http://some-other-system.org'`);
+    expect(converted).to.contain(`code "Some Display code": 'Some-Code' from "Some-System" display 'Some Display'`);
+    expect(converted).to.contain(
+      `code "Some Other Display code": 'Some-Other-Code' from "Some-Other-System" display 'Some Other Display'`
+    );
+    expect(converted).to.contain(
+      // eslint-disable-next-line max-len
+      '[Observation] Ob where (AllTrue(Ob.category CODE return exists (({"Some Display code", "Some Other Display code"}) TARGET_CODE where TARGET_CODE ~ CODE)))'
+    );
+  });
+
+  it('Handles listCodeConceptIsPerfectSubsetOfListConcept template with single code selected', () => {
+    const templateTest = {
+      conjunctionType: 'and',
+      rules: [
+        {
+          ruleType: 'listCodeConceptIsPerfectSubsetOfListConcept',
+          resourceProperty: 'category',
+          conceptValues: [
+            {
+              code: 'Some-Code',
+              display: 'Some Display',
+              system: 'Some-System',
+              uri: 'http://some-system.org'
+            }
+          ]
+        }
+      ]
+    };
+    rawBaseQuery.expTreeInclude.childInstances[1].modifiers[0].where = templateTest;
+    const artifact = buildCQL(rawBaseQuery);
+    const converted = artifact.toString();
+    expect(converted).to.contain(`codesystem "Some-System": 'http://some-system.org'`);
+    expect(converted).to.contain(`code "Some Display code": 'Some-Code' from "Some-System" display 'Some Display'`);
+    expect(converted).to.contain(
+      // eslint-disable-next-line max-len
+      '[Observation] Ob where (AllTrue(Ob.category CODE return CODE ~ "Some Display code"))'
+    );
+  });
+
+  it('Handles listCodeConceptIntersectsListConcept template', () => {
+    const templateTest = {
+      conjunctionType: 'and',
+      rules: [
+        {
+          ruleType: 'listCodeConceptIntersectsListConcept',
+          resourceProperty: 'category',
+          conceptValues: [
+            {
+              code: 'Some-Code',
+              display: 'Some Display',
+              system: 'Some-System',
+              uri: 'http://some-system.org'
+            },
+            {
+              code: 'Some-Other-Code',
+              display: 'Some Other Display',
+              system: 'Some-Other-System',
+              uri: 'http://some-other-system.org'
+            }
+          ]
+        }
+      ]
+    };
+    rawBaseQuery.expTreeInclude.childInstances[1].modifiers[0].where = templateTest;
+    const artifact = buildCQL(rawBaseQuery);
+    const converted = artifact.toString();
+    expect(converted).to.contain(`codesystem "Some-System": 'http://some-system.org'`);
+    expect(converted).to.contain(`codesystem "Some-Other-System": 'http://some-other-system.org'`);
+    expect(converted).to.contain(`code "Some Display code": 'Some-Code' from "Some-System" display 'Some Display'`);
+    expect(converted).to.contain(
+      `code "Some Other Display code": 'Some-Other-Code' from "Some-Other-System" display 'Some Other Display'`
+    );
+    expect(converted).to.contain(
+      // eslint-disable-next-line max-len
+      '[Observation] Ob where (exists (Ob.category CODE with ({"Some Display code", "Some Other Display code"}) TARGET_CODE such that CODE ~ TARGET_CODE))'
+    );
+  });
+
+  it('Handles listCodeConceptIntersectsListConcept template with single code selected', () => {
+    const templateTest = {
+      conjunctionType: 'and',
+      rules: [
+        {
+          ruleType: 'listCodeConceptIntersectsListConcept',
+          resourceProperty: 'category',
+          conceptValues: [
+            {
+              code: 'Some-Code',
+              display: 'Some Display',
+              system: 'Some-System',
+              uri: 'http://some-system.org'
+            }
+          ]
+        }
+      ]
+    };
+    rawBaseQuery.expTreeInclude.childInstances[1].modifiers[0].where = templateTest;
+    const artifact = buildCQL(rawBaseQuery);
+    const converted = artifact.toString();
+    expect(converted).to.contain(`codesystem "Some-System": 'http://some-system.org'`);
+    expect(converted).to.contain(`code "Some Display code": 'Some-Code' from "Some-System" display 'Some Display'`);
+    expect(converted).to.contain(
+      // eslint-disable-next-line max-len
+      '[Observation] Ob where (exists (Ob.category CODE where CODE ~ "Some Display code"))'
+    );
+  });
+
+  it('Handles listCodeConceptNotIntersectsListConcept template', () => {
+    const templateTest = {
+      conjunctionType: 'and',
+      rules: [
+        {
+          ruleType: 'listCodeConceptNotIntersectsListConcept',
+          resourceProperty: 'category',
+          conceptValues: [
+            {
+              code: 'Some-Code',
+              display: 'Some Display',
+              system: 'Some-System',
+              uri: 'http://some-system.org'
+            },
+            {
+              code: 'Some-Other-Code',
+              display: 'Some Other Display',
+              system: 'Some-Other-System',
+              uri: 'http://some-other-system.org'
+            }
+          ]
+        }
+      ]
+    };
+    rawBaseQuery.expTreeInclude.childInstances[1].modifiers[0].where = templateTest;
+    const artifact = buildCQL(rawBaseQuery);
+    const converted = artifact.toString();
+    expect(converted).to.contain(`codesystem "Some-System": 'http://some-system.org'`);
+    expect(converted).to.contain(`codesystem "Some-Other-System": 'http://some-other-system.org'`);
+    expect(converted).to.contain(`code "Some Display code": 'Some-Code' from "Some-System" display 'Some Display'`);
+    expect(converted).to.contain(
+      `code "Some Other Display code": 'Some-Other-Code' from "Some-Other-System" display 'Some Other Display'`
+    );
+    expect(converted).to.contain(
+      // eslint-disable-next-line max-len
+      '[Observation] Ob where (not exists (Ob.category CODE with ({"Some Display code", "Some Other Display code"}) TARGET_CODE such that CODE ~ TARGET_CODE))'
+    );
+  });
+
+  it('Handles listCodeConceptNotIntersectsListConcept template with single code selected', () => {
+    const templateTest = {
+      conjunctionType: 'and',
+      rules: [
+        {
+          ruleType: 'listCodeConceptNotIntersectsListConcept',
+          resourceProperty: 'category',
+          conceptValues: [
+            {
+              code: 'Some-Code',
+              display: 'Some Display',
+              system: 'Some-System',
+              uri: 'http://some-system.org'
+            }
+          ]
+        }
+      ]
+    };
+    rawBaseQuery.expTreeInclude.childInstances[1].modifiers[0].where = templateTest;
+    const artifact = buildCQL(rawBaseQuery);
+    const converted = artifact.toString();
+    expect(converted).to.contain(`codesystem "Some-System": 'http://some-system.org'`);
+    expect(converted).to.contain(`code "Some Display code": 'Some-Code' from "Some-System" display 'Some Display'`);
+    expect(converted).to.contain(
+      // eslint-disable-next-line max-len
+      '[Observation] Ob where (not exists (Ob.category CODE where CODE ~ "Some Display code"))'
+    );
+  });
+
+  it('Handles listCodeConceptIsPerfectSubsetOfValueset template', () => {
+    const templateTest = {
+      conjunctionType: 'and',
+      rules: [
+        {
+          ruleType: 'listCodeConceptIsPerfectSubsetOfValueset',
+          resourceProperty: 'category',
+          valueset: {
+            name: 'Value Set',
+            oid: '2.16'
+          }
+        }
+      ]
+    };
+    rawBaseQuery.expTreeInclude.childInstances[1].modifiers[0].where = templateTest;
+    const artifact = buildCQL(rawBaseQuery);
+    const converted = artifact.toString();
+    expect(converted).to.contain(
+      // eslint-disable-next-line max-len
+      '[Observation] Ob where (AllTrue(Ob.category CODE return CODE in "Value Set"))'
+    );
+  });
+
+  it('Handles listCodeConceptIntersectsValueset template', () => {
+    const templateTest = {
+      conjunctionType: 'and',
+      rules: [
+        {
+          ruleType: 'listCodeConceptIntersectsValueset',
+          resourceProperty: 'category',
+          valueset: {
+            name: 'Value Set',
+            oid: '2.16'
+          }
+        }
+      ]
+    };
+    rawBaseQuery.expTreeInclude.childInstances[1].modifiers[0].where = templateTest;
+    const artifact = buildCQL(rawBaseQuery);
+    const converted = artifact.toString();
+    expect(converted).to.contain(
+      // eslint-disable-next-line max-len
+      '[Observation] Ob where (exists (Ob.category CODE where CODE in "Value Set"))'
+    );
+  });
+
+  it('Handles listCodeConceptNotIntersectsValueset template', () => {
+    const templateTest = {
+      conjunctionType: 'and',
+      rules: [
+        {
+          ruleType: 'listCodeConceptNotIntersectsValueset',
+          resourceProperty: 'category',
+          valueset: {
+            name: 'Value Set',
+            oid: '2.16'
+          }
+        }
+      ]
+    };
+    rawBaseQuery.expTreeInclude.childInstances[1].modifiers[0].where = templateTest;
+    const artifact = buildCQL(rawBaseQuery);
+    const converted = artifact.toString();
+    expect(converted).to.contain(
+      // eslint-disable-next-line max-len
+      '[Observation] Ob where (not exists (Ob.category CODE where CODE in "Value Set"))'
+    );
+  });
+
   it('Handles predefinedConceptComparisonSingular template with FHIR.code property and single code selected', () => {
     const templateTest = {
       conjunctionType: 'and',
@@ -1540,9 +1840,7 @@ describe('CQL Operator Templates', () => {
     expect(converted).to.contain(
       `code "Vital Signs code": 'vital-signs' from "Observation Category" display 'Vital Signs'`
     );
-    expect(converted).to.contain(
-      '[Observation] Ob where (exists ((Ob.category) CODE where CODE ~ "Vital Signs code"))'
-    );
+    expect(converted).to.contain('[Observation] Ob where (exists (Ob.category CODE where CODE ~ "Vital Signs code"))');
   });
 
   // eslint-disable-next-line max-len
@@ -1571,7 +1869,7 @@ describe('CQL Operator Templates', () => {
     );
     expect(converted).to.contain(
       // eslint-disable-next-line max-len
-      '[Observation] Ob where (exists ((Ob.category) CODE with ({"Vital Signs code", "Laboratory code"}) TARGET_CODE such that CODE ~ TARGET_CODE))'
+      '[Observation] Ob where (exists (Ob.category CODE with ({"Vital Signs code", "Laboratory code"}) TARGET_CODE such that CODE ~ TARGET_CODE))'
     );
   });
 

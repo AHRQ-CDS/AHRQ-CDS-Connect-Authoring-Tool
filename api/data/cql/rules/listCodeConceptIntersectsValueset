@@ -1,0 +1,1 @@
+exists (<%-value_name%>.<%-resourceProperty%> CODE where CODE in "<%-valueset.name%>")
