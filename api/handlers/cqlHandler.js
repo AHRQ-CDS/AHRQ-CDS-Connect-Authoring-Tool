@@ -1171,6 +1171,11 @@ function checkRules(
     const codeNames = concepts.map(concept => addConcepts(concept, codeSystemMap, codeMap, conceptMap).name);
     // Handle ValueSets that need to be added at the top of the CQL file
     if (rule.valueset) {
+      rule.valueset.name = `${rule.valueset.name.replace(/"/g, '\\"')} VS`;
+      const count = getCountForUniqueExpressionName(rule.valueset, resourceMap, 'name', 'oid');
+      if (count > 0) {
+        rule.valueset.name = `${rule.valueset.name}_${count}`;
+      }
       resourceMap.set(rule.valueset.name, rule.valueset);
     }
 

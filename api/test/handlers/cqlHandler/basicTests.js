@@ -1214,8 +1214,70 @@ describe('CQL Operator Templates', () => {
     rawBaseQuery.expTreeInclude.childInstances[0].modifiers[0].where = templateTest;
     const artifact = buildCQL(rawBaseQuery);
     const converted = artifact.toString();
-    expect(converted).to.contain(`valueset "My Value Set": 'https://cts.nlm.nih.gov/fhir/ValueSet/1.2.3.4.5.6.7.8.9'`);
-    expect(converted).to.contain('[AllergyIntolerance] AI where (AI.someCodeProperty in "My Value Set")');
+    expect(converted).to.contain(
+      `valueset "My Value Set VS": 'https://cts.nlm.nih.gov/fhir/ValueSet/1.2.3.4.5.6.7.8.9'`
+    );
+    expect(converted).to.contain('[AllergyIntolerance] AI where (AI.someCodeProperty in "My Value Set VS")');
+  });
+
+  it('Handles codeConceptInValueSet template with valueset name containing quote character', () => {
+    const templateTest = {
+      conjunctionType: 'and',
+      rules: [
+        {
+          ruleType: 'codeConceptInValueSet',
+          resourceProperty: 'someCodeProperty',
+          valueset: {
+            name: 'My "Value" Set',
+            oid: '1.2.3.4.5.6.7.8.9'
+          }
+        }
+      ]
+    };
+    rawBaseQuery.expTreeInclude.childInstances[0].modifiers[0].where = templateTest;
+    const artifact = buildCQL(rawBaseQuery);
+    const converted = artifact.toString();
+    expect(converted).to.contain(
+      `valueset "My \\"Value\\" Set VS": 'https://cts.nlm.nih.gov/fhir/ValueSet/1.2.3.4.5.6.7.8.9'`
+    );
+    expect(converted).to.contain('[AllergyIntolerance] AI where (AI.someCodeProperty in "My \\"Value\\" Set VS")');
+  });
+
+  it('Handles codeConceptInValueSet template with two value sets having the same name', () => {
+    const templateTest = {
+      conjunctionType: 'and',
+      rules: [
+        {
+          ruleType: 'codeConceptInValueSet',
+          resourceProperty: 'someCodeProperty',
+          valueset: {
+            name: 'My Value Set',
+            oid: '1.2.3.4.5.6.7.8.9'
+          }
+        },
+        {
+          ruleType: 'codeConceptInValueSet',
+          resourceProperty: 'someOtherCodeProperty',
+          valueset: {
+            name: 'My Value Set',
+            oid: '9.8.7.6.5.4.3.2.1'
+          }
+        }
+      ]
+    };
+    rawBaseQuery.expTreeInclude.childInstances[0].modifiers[0].where = templateTest;
+    const artifact = buildCQL(rawBaseQuery);
+    const converted = artifact.toString();
+    expect(converted).to.contain(
+      `valueset "My Value Set VS": 'https://cts.nlm.nih.gov/fhir/ValueSet/1.2.3.4.5.6.7.8.9'`
+    );
+    expect(converted).to.contain(
+      `valueset "My Value Set VS_1": 'https://cts.nlm.nih.gov/fhir/ValueSet/9.8.7.6.5.4.3.2.1'`
+    );
+    expect(converted).to.contain(
+      // eslint-disable-next-line max-len
+      '[AllergyIntolerance] AI where (AI.someCodeProperty in "My Value Set VS" and AI.someOtherCodeProperty in "My Value Set VS_1")'
+    );
   });
 
   it('Handles codeConceptNotInValueSet template', () => {
@@ -1235,8 +1297,10 @@ describe('CQL Operator Templates', () => {
     rawBaseQuery.expTreeInclude.childInstances[0].modifiers[0].where = templateTest;
     const artifact = buildCQL(rawBaseQuery);
     const converted = artifact.toString();
-    expect(converted).to.contain(`valueset "My Value Set": 'https://cts.nlm.nih.gov/fhir/ValueSet/1.2.3.4.5.6.7.8.9'`);
-    expect(converted).to.contain('[AllergyIntolerance] AI where (not (AI.someCodeProperty in "My Value Set"))');
+    expect(converted).to.contain(
+      `valueset "My Value Set VS": 'https://cts.nlm.nih.gov/fhir/ValueSet/1.2.3.4.5.6.7.8.9'`
+    );
+    expect(converted).to.contain('[AllergyIntolerance] AI where (not (AI.someCodeProperty in "My Value Set VS"))');
   });
 
   it('Handles codeConceptMatchesConcept template', () => {
@@ -1680,9 +1744,10 @@ describe('CQL Operator Templates', () => {
     rawBaseQuery.expTreeInclude.childInstances[1].modifiers[0].where = templateTest;
     const artifact = buildCQL(rawBaseQuery);
     const converted = artifact.toString();
+    expect(converted).to.contain(`valueset "Value Set VS": 'https://cts.nlm.nih.gov/fhir/ValueSet/2.16'`);
     expect(converted).to.contain(
       // eslint-disable-next-line max-len
-      '[Observation] Ob where (AllTrue(Ob.category CODE return CODE in "Value Set"))'
+      '[Observation] Ob where (AllTrue(Ob.category CODE return CODE in "Value Set VS"))'
     );
   });
 
@@ -1703,9 +1768,10 @@ describe('CQL Operator Templates', () => {
     rawBaseQuery.expTreeInclude.childInstances[1].modifiers[0].where = templateTest;
     const artifact = buildCQL(rawBaseQuery);
     const converted = artifact.toString();
+    expect(converted).to.contain(`valueset "Value Set VS": 'https://cts.nlm.nih.gov/fhir/ValueSet/2.16'`);
     expect(converted).to.contain(
       // eslint-disable-next-line max-len
-      '[Observation] Ob where (exists (Ob.category CODE where CODE in "Value Set"))'
+      '[Observation] Ob where (exists (Ob.category CODE where CODE in "Value Set VS"))'
     );
   });
 
@@ -1726,9 +1792,10 @@ describe('CQL Operator Templates', () => {
     rawBaseQuery.expTreeInclude.childInstances[1].modifiers[0].where = templateTest;
     const artifact = buildCQL(rawBaseQuery);
     const converted = artifact.toString();
+    expect(converted).to.contain(`valueset "Value Set VS": 'https://cts.nlm.nih.gov/fhir/ValueSet/2.16'`);
     expect(converted).to.contain(
       // eslint-disable-next-line max-len
-      '[Observation] Ob where (not exists (Ob.category CODE where CODE in "Value Set"))'
+      '[Observation] Ob where (not exists (Ob.category CODE where CODE in "Value Set VS"))'
     );
   });
 

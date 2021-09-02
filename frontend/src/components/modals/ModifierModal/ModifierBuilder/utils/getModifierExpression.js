@@ -32,9 +32,9 @@ const getRuleExpression = rule => {
       let conceptExpression = '';
       const concepts = rule.conceptValues || [rule.conceptValue];
       concepts.forEach((concept, index) => {
-        let display = '';
-        if (concept.display) display = `"${concept.display}"-`;
-        conceptExpression = conceptExpression.concat(display.concat(`${concept.code}-${concept.system}`));
+        conceptExpression = conceptExpression.concat(
+          concept.display ? `"${concept.display}"` : `${concept.system} ${concept.code}`
+        );
         if (index !== concepts.length - 1) conceptExpression = conceptExpression.concat(', ');
       });
       expression = expression.concat(` [${conceptExpression}]`);
