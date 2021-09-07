@@ -24,7 +24,7 @@ const ModifierForm = ({ elementInstance, handleUpdateModifier, modifier }) => {
     case 'ValueComparisonNumber':
       return (
         <ValueComparisonModifier
-          handleUpdateModifier={values => handleUpdateModifier({ values })}
+          handleUpdateModifier={handleUpdateModifier}
           values={{
             maxOperator: modifier.values?.maxOperator || '',
             maxValue: modifier.values?.maxValue ?? '',
@@ -36,7 +36,7 @@ const ModifierForm = ({ elementInstance, handleUpdateModifier, modifier }) => {
     case 'ValueComparisonObservation':
       return (
         <ValueComparisonModifier
-          handleUpdateModifier={values => handleUpdateModifier({ values })}
+          handleUpdateModifier={handleUpdateModifier}
           values={{
             maxOperator: modifier.values?.maxOperator || '',
             maxValue: modifier.values?.maxValue ?? '',
@@ -49,7 +49,7 @@ const ModifierForm = ({ elementInstance, handleUpdateModifier, modifier }) => {
     case 'LookBack':
       return (
         <LookBackModifier
-          handleUpdateModifier={values => handleUpdateModifier({ values })}
+          handleUpdateModifier={handleUpdateModifier}
           unit={modifier.values?.unit}
           value={modifier.values?.value}
         />
@@ -63,7 +63,7 @@ const ModifierForm = ({ elementInstance, handleUpdateModifier, modifier }) => {
     case 'ConvertObservation':
       return (
         <SelectModifier
-          handleUpdateModifier={values => handleUpdateModifier({ values })}
+          handleUpdateModifier={handleUpdateModifier}
           name={modifier.name}
           value={modifier.values?.value}
         />
@@ -72,7 +72,7 @@ const ModifierForm = ({ elementInstance, handleUpdateModifier, modifier }) => {
       return (
         <QualifierModifier
           code={modifier.values?.code}
-          handleUpdateModifier={values => handleUpdateModifier({ values })}
+          handleUpdateModifier={handleUpdateModifier}
           qualifier={modifier.values?.qualifier}
           valueSet={modifier.values?.valueSet}
         />
@@ -81,7 +81,7 @@ const ModifierForm = ({ elementInstance, handleUpdateModifier, modifier }) => {
     case 'AfterDateTimePrecise':
       return (
         <DateTimeModifier
-          handleUpdateModifier={values => handleUpdateModifier({ values })}
+          handleUpdateModifier={handleUpdateModifier}
           name={modifier.name}
           values={{
             date: modifier.values?.date || '',
@@ -94,7 +94,7 @@ const ModifierForm = ({ elementInstance, handleUpdateModifier, modifier }) => {
     case 'AfterTimePrecise':
       return (
         <DateTimeModifier
-          handleUpdateModifier={values => handleUpdateModifier({ values })}
+          handleUpdateModifier={handleUpdateModifier}
           name={modifier.name}
           values={{
             time: modifier.values?.time || '',
@@ -107,7 +107,7 @@ const ModifierForm = ({ elementInstance, handleUpdateModifier, modifier }) => {
     case 'AfterQuantity':
       return (
         <QuantityModifier
-          handleUpdateModifier={values => handleUpdateModifier({ values })}
+          handleUpdateModifier={handleUpdateModifier}
           name={modifier.name}
           unit={modifier.values?.unit}
           value={modifier.values?.value}
@@ -121,7 +121,7 @@ const ModifierForm = ({ elementInstance, handleUpdateModifier, modifier }) => {
     case 'AfterDecimal':
       return (
         <NumberModifier
-          handleUpdateModifier={values => handleUpdateModifier({ values })}
+          handleUpdateModifier={handleUpdateModifier}
           name={modifier.name}
           value={modifier.values?.value}
         />
@@ -131,7 +131,7 @@ const ModifierForm = ({ elementInstance, handleUpdateModifier, modifier }) => {
     case 'AfterDateTime':
       return (
         <DateTimeModifier
-          handleUpdateModifier={values => handleUpdateModifier({ values })}
+          handleUpdateModifier={handleUpdateModifier}
           name={modifier.name}
           values={{ date: modifier.values?.date || '', time: modifier.values?.time || '' }}
         />
@@ -141,7 +141,7 @@ const ModifierForm = ({ elementInstance, handleUpdateModifier, modifier }) => {
     case 'StartsWithString':
       return (
         <StringModifier
-          handleUpdateModifier={values => handleUpdateModifier({ values })}
+          handleUpdateModifier={handleUpdateModifier}
           name={modifier.name}
           value={modifier.values?.value}
         />
@@ -150,7 +150,7 @@ const ModifierForm = ({ elementInstance, handleUpdateModifier, modifier }) => {
       return (
         <ExternalModifier
           argumentTypes={modifier.argumentTypes}
-          handleUpdateModifier={values => handleUpdateModifier({ values })}
+          handleUpdateModifier={handleUpdateModifier}
           modifierArguments={modifier.arguments}
           name={modifier.name}
           values={modifier.values?.value}
