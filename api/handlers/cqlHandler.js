@@ -1126,8 +1126,10 @@ function checkRules(
         const matchingChoice = p.typeSpecifier.elementType.find(c => c.name === resourceProperty);
         if (matchingChoice) {
           typeSpecifier = matchingChoice.typeSpecifier;
-          // Choice types need to be cast
-          resourceProperty = `${p.name} as ${typeSpecifier.elementType}`;
+          // Choice types need to be cast in STU3/R4
+          if (fhirTarget.version !== '1.0.2') {
+            resourceProperty = `${p.name} as ${typeSpecifier.elementType}`;
+          }
           resourcePropertyInfo = p;
           break;
         }

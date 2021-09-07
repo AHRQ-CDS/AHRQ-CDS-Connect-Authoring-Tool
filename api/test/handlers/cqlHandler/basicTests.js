@@ -1104,7 +1104,7 @@ describe('CQL Operator Templates', () => {
     ];
   });
 
-  it('Handles isNull template', () => {
+  it('Handles isNull template for simple property', () => {
     const templateTest = {
       conjunctionType: 'and',
       rules: [
@@ -1118,6 +1118,61 @@ describe('CQL Operator Templates', () => {
     const artifact = buildCQL(rawBaseQuery);
     const converted = artifact.toString();
     expect(converted).to.contain('[AllergyIntolerance] AI where (AI.verificationStatus is null)');
+  });
+
+  it('Handles isNull template for FHIR R4 choice property', () => {
+    const templateTest = {
+      conjunctionType: 'and',
+      rules: [
+        {
+          ruleType: 'isNull',
+          resourceProperty: 'valueQuantity'
+        }
+      ]
+    };
+    rawBaseQuery.expTreeInclude.childInstances[1].modifiers[0].where = templateTest;
+    const artifact = buildCQL(rawBaseQuery);
+    const converted = artifact.toString();
+    // NOTE: valueQuantity --> value as FHIR.Quantity
+    expect(converted).to.contain('[Observation] Ob where (Ob.value as FHIR.Quantity is null)');
+  });
+
+  it('Handles isNull template for FHIR STU3 choice property', () => {
+    const templateTest = {
+      conjunctionType: 'and',
+      rules: [
+        {
+          ruleType: 'isNull',
+          resourceProperty: 'valueQuantity'
+        }
+      ]
+    };
+    const stu3RawBaseQuery = _.cloneDeep(rawBaseQuery);
+    (stu3RawBaseQuery.dataModel = { name: 'FHIR', version: '3.0.0' }),
+      (stu3RawBaseQuery.expTreeInclude.childInstances[1].modifiers[0].where = templateTest);
+    const artifact = buildCQL(stu3RawBaseQuery);
+    const converted = artifact.toString();
+    // NOTE: valueQuantity --> value as FHIR.Quantity
+    expect(converted).to.contain('[Observation] Ob where (Ob.value as FHIR.Quantity is null)');
+  });
+
+  it('Handles isNull template for FHIR DSTU2 choice property', () => {
+    const templateTest = {
+      conjunctionType: 'and',
+      rules: [
+        {
+          ruleType: 'isNull',
+          resourceProperty: 'valueQuantity'
+        }
+      ]
+    };
+    const stu3RawBaseQuery = _.cloneDeep(rawBaseQuery);
+    (stu3RawBaseQuery.dataModel = { name: 'FHIR', version: '1.0.2' }),
+      (stu3RawBaseQuery.expTreeInclude.childInstances[1].modifiers[0].where = templateTest);
+    const artifact = buildCQL(stu3RawBaseQuery);
+    const converted = artifact.toString();
+    // NOTE: valueQuantity stays as-is (no cast)
+    expect(converted).to.contain('[Observation] Ob where (Ob.valueQuantity is null)');
   });
 
   it('Handles isNotNull template', () => {
